@@ -18,14 +18,15 @@ Phase 0 范围外的东西（自动抽取、多 Agent 并行、Graph、Synthesis
 - [ ] 在 VM 本地盘 clone 仓库，例如 `C:\dev\agent-review-room`（不要放在共享文件夹，原因见 README）
 - [ ] 在 GitHub 上给 `main` 开启分支保护（要求 PR 才能合并）
 - [ ] 准备 Reviewer 用的 API key，放进本地 `.env`
-- [ ] 批准或修改：C-01 契约草案、ADR-001
+- [x] 批准 C-01a 契约草案、ADR-001（PR #1）
+- [ ] 批准 C-01b（Phase 0 实体 + IPC）
 
 ## 第 1 步：契约（阻塞后续所有任务）
 
 | ID | 负责 | 内容 | 状态 |
 |---|---|---|---|
-| **C-01a** | Claude | 状态转换表、AgentEvent、权限请求、远端协议、控制面 API、Adapter 接口 | ✅ 草案完成，**待批准** |
-| **C-01b** | Claude | Phase 0 实体：Message、Contribution、PromptSnapshot、Approval、Run 记录；IPC 频道清单 | 待开始 |
+| **C-01a** | Claude | 状态转换表、AgentEvent、权限请求、远端协议、控制面 API、Adapter 接口 | ✅ 已合并（PR #1） |
+| **C-01b** | Claude | Phase 0 实体：Message、Contribution、PromptSnapshot、Approval、Run 记录；IPC 频道清单 | ✅ 草案完成，**待批准** |
 | **S-01** | Claude | AgentServer 骨架 + 14 个测试（Phase 1 预研，不进入 Phase 0 主流程） | ✅ 完成 |
 
 与契约并行：

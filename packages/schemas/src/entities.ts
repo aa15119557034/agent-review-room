@@ -1,0 +1,175 @@
+import { z } from "zod";
+import {
+  ApprovalId,
+  CommitSha,
+  IsoTimestamp,
+  prefixedId,
+  RunId,
+  Sha256Hex,
+  SnapshotId,
+} from "./common";
+import { FailureReason } from "./agent-event";
+import { ApprovalState, RunState, RunSubstate } from "./state-machines";
+
+/**
+ * Phase 0 实体（C-01b）。
+ * 这里定义的是跨 IPC 传输的记录形状。数据库表结构由 D-02 决定，但读出来必须能 parse 成这些类型。
+ */
+
+export const ProjectId = prefixedId("proj");
+export const MessageId = prefixedId("msg");
+export const ContributionId = prefixedId("c");
+
+export type ProjectId = z.infer<typeof ProjectId>;
+export type MessageId = z.infer<typeof MessageId>;
+export type ContributionId = z.infer<typeof ContributionId>;
+
+/** 来源 Agent 的名字，例如 "deepseek"、"codex"、"human"。只是标签，不做枚举限制 */
+export const AgentName = z.string().regex(/^[a-z0-9][a-z0-9-]{0,63}$/);
+
+// ---------------------------------------------------------------- Project
+
+export const Project = z.object({
+  id: ProjectId,
+  name: z.string().min(1).max(200),
+  createdAt: IsoTimestamp,
+});
+export type Project = z.infer<typeof Project>;
+
+// ---------------------------------------------------------------- Message（不可变原始记录）
+
+const messageBase = {
+  id: MessageId,
+  projectId: ProjectId,
+  /** 原文。写入后永不修改（V0.3 §17） */
+  content: z.string().min(1).max(2_000_000),
+  createdAt: IsoTimestamp,
+};
+
+export const Message = z.discriminatedUnion("kind", [
+  /** 用户手动粘贴的 Source Agent 输出或项目材料（AC-1） */
+  z.object({ ...messageBase, kind: z.literal("source_input"), sourceAgent: AgentName }),
+  /** Reviewer 的输出，一定属于某个 run（AC-8） */
+  z.object({ ...messageBase, kind: z.literal("reviewer_output"), sourceAgent: AgentName, runId: RunId }),
+]);
+export type Message = z.infer<typeof Message>;
+
+// ---------------------------------------------------------------- Contribution
+
+export const ContributionType = z.enum([
+  "proposal",
+  "issue",
+  "risk",
+  "counterexample",
+  "correction",
+  "implementation",
+  "review",
+  "decision_candidate",
+  "test_result",
+  "evidence",
+  "open_question",
+]);
+export type ContributionType = z.infer<typeof ContributionType>;
+
+/** 在来源 Message.content 中的位置，单位是 UTF-16 code unit（即 JS 字符串下标），左闭右开 */
+export const TextSelection = z
+  .object({
+    start: z.number().int().nonnegative(),
+    end: z.number().int().positive(),
+  })
+  .refine((s) => s.end > s.start, { message: "end must be greater than start" });
+export type TextSelection = z.infer<typeof TextSelection>;
+
+export const Contribution = z.object({
+  id: ContributionId,
+  projectId: ProjectId,
+  sourceMessageId: MessageId,
+  type: ContributionType,
+  title: z.string().min(1).max(200),
+  /**
+   * 不变量：content === sourceMessage.content.slice(selection.start, selection.end)
+   * 由后端在创建时从 selection 截取，renderer 不提交 content。
+   */
+  content: z.string().min(1),
+  selection: TextSelection,
+  confidence: z.number().min(0).max(1).nullable(),
+  /** Phase 0 只有 human；agent / local_model 留给 Phase 2 的自动抽取 */
+  createdBy: z.enum(["human", "agent", "local_model"]),
+  schemaVersion: z.literal(1),
+  createdAt: IsoTimestamp,
+});
+export type Contribution = z.infer<typeof Contribution>;
+
+// ---------------------------------------------------------------- PromptSnapshot
+
+export const PromptSnapshot = z.object({
+  id: SnapshotId,
+  projectId: ProjectId,
+  /** 实际发给 Reviewer 的完整原文。创建后不可修改（AC-4） */
+  content: z.string().min(1),
+  /** sha256(UTF-8(content))（AC-5） */
+  contentHash: Sha256Hex,
+  /** 这次拼装用的边界 nonce（V0.4 §15） */
+  nonce: z.string().regex(/^[a-f0-9]{16,64}$/),
+  contributionIds: z.array(ContributionId).min(1),
+  /** 用户写的评审任务说明 */
+  taskInstruction: z.string().min(1).max(20_000),
+  reviewerAgent: AgentName,
+  /** Prompt 拼装器版本，改拼装逻辑时递增 */
+  adapterVersion: z.string().min(1),
+  /** 粗略估算，只用于 UI 展示 */
+  tokenEstimate: z.number().int().nonnegative(),
+  /** Phase 0 没有 Synthesis 和 git，以下均为 null */
+  synthesisVersion: z.number().int().nonnegative().nullable(),
+  branch: z.string().nullable(),
+  commitSha: CommitSha.nullable(),
+  createdAt: IsoTimestamp,
+});
+export type PromptSnapshot = z.infer<typeof PromptSnapshot>;
+
+// ---------------------------------------------------------------- Approval
+
+export const Approval = z.object({
+  id: ApprovalId,
+  projectId: ProjectId,
+  snapshotId: SnapshotId,
+  state: ApprovalState,
+  /** 审批时使用的客户端，为以后手机审批留痕 */
+  decidedVia: z.enum(["desktop", "mobile"]).nullable(),
+  reason: z.string().max(2000).nullable(),
+  createdAt: IsoTimestamp,
+  decidedAt: IsoTimestamp.nullable(),
+});
+export type Approval = z.infer<typeof Approval>;
+
+// ---------------------------------------------------------------- Run
+
+export const Run = z.object({
+  id: RunId,
+  projectId: ProjectId,
+  /** 唯一：一个 Approval 最多对应一个 Run */
+  approvalId: ApprovalId,
+  snapshotId: SnapshotId,
+  adapterId: z.string().min(1),
+  state: RunState,
+  /** 只在 RUNNING 时非 null */
+  substate: RunSubstate.nullable(),
+  /** 只在 FAILED 时非 null */
+  failureReason: FailureReason.nullable(),
+  createdAt: IsoTimestamp,
+  startedAt: IsoTimestamp.nullable(),
+  finishedAt: IsoTimestamp.nullable(),
+});
+export type Run = z.infer<typeof Run>;
+
+// ---------------------------------------------------------------- 系统状态
+
+export const SystemStatus = z.object({
+  appVersion: z.string(),
+  /** Reviewer API key 是否已配置。只返回布尔值，key 本身永远不离开 main 进程 */
+  reviewerConfigured: z.boolean(),
+  reviewerAgent: AgentName,
+  /** 启动时修复了多少个中断的 run（V0.4 §24），用于 UI 提示 */
+  recoveredRuns: z.number().int().nonnegative(),
+});
+export type SystemStatus = z.infer<typeof SystemStatus>;
