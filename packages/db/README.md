@@ -75,3 +75,26 @@ pnpm --filter @room/db test
 
 覆盖：迁移幂等、WAL/FK/busy_timeout、FK 与 CHECK 拒绝非法数据、approval_id 唯一、
 不可变 trigger、ULID 单调性、并发写串行化与回滚、AC-10（关库重开后仍可读）。
+
+## Run 生命周期（D-06）
+
+`src/run-lifecycle.ts`：
+
+```ts
+import { createRunFromApproval, transitionRun, finishRun, repairInterruptedRuns } from "@room/db";
+
+const run = await createRunFromApproval(db, queue, { approvalId, adapterId: "api" });
+await transitionRun(db, queue, run.id, "QUEUED", "STARTING", { startedAt: now });
+await transitionRun(db, queue, run.id, "STARTING", "RUNNING", { substate: "active" });
+await finishRun(db, queue, run.id, { from: "RUNNING", terminal: { type: "completed" } });
+```
+
+- **消费 Approval 与创建 Run 同事务**：Approval 必须是 `APPROVED`，`runs.approval_id` 的 UNIQUE
+  保证「一个 Approval 最多一个 Run」；并发重复调用会得到 `ApprovalAlreadyConsumedError`。
+- **所有状态变更走 CAS**：`UPDATE ... WHERE id = ? AND state = :from`，`changes !== 1` 抛
+  `RunStateConflictError`（带上当前实际状态）。合法转换由 `@room/core` 的转换表判定，非法转换在
+  进事务之前就抛 `IllegalTransitionError`。
+- **`finishRun` 原子结束**：CAS 到终态 + 追加终止事件。终止事件重复会被数据库的
+  部分唯一索引拦下（AC-9），整个事务回滚。
+- **`repairInterruptedRuns`**：把 `STARTING` / `RUNNING` 标成 `FAILED(interrupted)`，
+  已经存在终止事件的 run 不会重复追加。
