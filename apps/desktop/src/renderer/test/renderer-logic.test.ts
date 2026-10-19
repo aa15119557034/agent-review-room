@@ -214,3 +214,61 @@ describe("prompt draft", () => {
     assert.equal(store.get().approvals.length, 0);
   });
 });
+
+describe("run results", async () => {
+  const { runTranscript, selectedRun, terminalEvent } = await import("../lib/state");
+
+  async function setup(opts: Parameters<typeof createMockBridge>[0] = {}) {
+    const bridge = createMockBridge({ tickMs: 2, ...opts });
+    const store = createStore(initialState);
+    const actions = createActions(store, createClient(bridge));
+    await actions.start();
+    await actions.createProject("R");
+    const msg = await actions.addSource("deepseek", "abcdef");
+    await actions.createContribution({ sourceMessageId: msg!.id, contributionType: "risk", title: "t", selection: { start: 0, end: 3 } });
+    return { store, actions };
+  }
+  async function approveOnce(store: ReturnType<typeof createStore<AppState>>, actions: ReturnType<typeof createActions>) {
+    const snap = await actions.createSnapshot();
+    const apr = store.get().approvals.find((a) => a.snapshotId === snap!.id)!;
+    return (await actions.approve(apr.id, snap!.contentHash))!;
+  }
+
+  it("streams, then switches to the stored final result; approved run becomes selected", async () => {
+    const { store, actions } = await setup();
+    const run = await approveOnce(store, actions);
+    assert.equal(store.get().selectedRunId, run.id);
+    await sleep(12);
+    const mid = runTranscript(store.get(), run.id);
+    assert.ok(mid.source === "streaming" || mid.source === "empty", `mid-run source ${mid.source}`);
+    await sleep(80);
+    const end = runTranscript(store.get(), run.id);
+    assert.equal(end.source, "final");
+    assert.match(end.text, /mock Reviewer/);
+    assert.equal(terminalEvent(store.get(), run.id)?.type, "completed");
+  });
+
+  it("keeps partial output after a failure and exposes the failure reason", async () => {
+    const { store, actions } = await setup({ reviewerOutcome: "error" });
+    const run = await approveOnce(store, actions);
+    await sleep(80);
+    const s = store.get();
+    assert.equal(s.runs.find((r) => r.id === run.id)?.state, "FAILED");
+    assert.equal(runTranscript(s, run.id).source, "partial");
+    const t = terminalEvent(s, run.id);
+    assert.equal(t?.type === "error" && t.reason, "internal");
+  });
+
+  it("selectedRun falls back to the newest run and follows explicit selection", async () => {
+    const { store, actions } = await setup();
+    const r1 = await approveOnce(store, actions);
+    await sleep(80);
+    const r2 = await approveOnce(store, actions);
+    await sleep(80);
+    assert.equal(selectedRun(store.get())?.id, r2.id);
+    actions.selectRun(r1.id);
+    assert.equal(selectedRun(store.get())?.id, r1.id);
+    store.set((st) => ({ ...st, selectedRunId: null }));
+    assert.equal(selectedRun(store.get())?.id, r2.id);
+  });
+});

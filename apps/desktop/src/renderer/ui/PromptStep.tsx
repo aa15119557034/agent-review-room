@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { APPROVAL_TRANSITIONS, canTransition, type Approval, type PromptSnapshot } from "@room/schemas";
 import { decidedApprovals, readyApproval } from "../lib/state";
 import { useActions, useAppState } from "./hooks";
-import { APPROVAL_STATE_LABEL, CONTRIBUTION_TYPE_LABEL, formatTime } from "./labels";
+import { APPROVAL_STATE_LABEL, CONTRIBUTION_TYPE_LABEL, RUN_STATE_LABEL, formatTime } from "./labels";
 
 // ------------------------------------------------------------ 第 2 步：勾选片段
 
@@ -126,8 +126,13 @@ function PendingApproval({ approval }: { approval: Approval }) {
     if (!canApprove || !snapshot) return;
     setBusy("approve");
     // 带上"此刻屏幕上这份 prompt"的 hash：后端发现不一致会拒绝
-    await actions.approve(approval.id, snapshot.contentHash);
+    const run = await actions.approve(approval.id, snapshot.contentHash);
     setBusy(null);
+    // 批准后把视线带到第 4 步，看 Reviewer 的回复
+    if (run) {
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      document.getElementById("step-result")?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    }
   };
 
   const reject = async (e: FormEvent) => {
@@ -217,6 +222,8 @@ function SnapshotFacts({ snapshot }: { snapshot: PromptSnapshot }) {
 }
 
 function DecidedRow({ approval }: { approval: Approval }) {
+  const actions = useActions();
+  const run = useAppState((s) => s.runs.find((r) => r.approvalId === approval.id));
   // 刚刚批准的那一项播放一次盖章动画；从历史加载的不播放
   const fresh =
     approval.state === "APPROVED" &&
@@ -227,6 +234,18 @@ function DecidedRow({ approval }: { approval: Approval }) {
       <span className="decided-state">{APPROVAL_STATE_LABEL[approval.state]}</span>
       <time dateTime={approval.createdAt}>{formatTime(approval.createdAt)}</time>
       {approval.reason && <span className="decided-reason">{approval.reason}</span>}
+      {run && (
+        <button
+          type="button"
+          className="button-quiet decided-link"
+          onClick={() => {
+            actions.selectRun(run.id);
+            document.getElementById("step-result")?.scrollIntoView({ block: "start" });
+          }}
+        >
+          查看结果（{RUN_STATE_LABEL[run.state]}）
+        </button>
+      )}
       {approval.state === "APPROVED" && <Seal fresh={fresh} />}
     </li>
   );

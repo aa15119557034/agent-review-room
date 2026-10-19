@@ -29,6 +29,8 @@ export interface AppState {
   snapshots: Record<string, PromptSnapshot>;
   /** 正在编辑、还没生成 Snapshot 的 prompt。切换项目时重置 */
   draft: PromptDraft;
+  /** 用户在运行记录里点选的 run；null 表示默认显示最新的一个 */
+  selectedRunId: string | null;
   /** 最近一次操作失败的说明，显示在界面上，由用户关闭 */
   notice: { kind: "error"; message: string } | null;
 }
@@ -55,6 +57,7 @@ export const initialState: AppState = {
   runEvents: {},
   snapshots: {},
   draft: emptyDraft(),
+  selectedRunId: null,
   notice: null,
 };
 
@@ -132,3 +135,38 @@ export const decidedApprovals = (s: AppState) =>
 /** 草稿里勾选的片段，按片段创建顺序排列，并去掉已经不存在的 id */
 export const draftContributions = (s: AppState) =>
   s.contributions.filter((c) => s.draft.contributionIds.includes(c.id));
+
+/** 当前显示的 run：用户点选的，否则最新的 */
+export const selectedRun = (s: AppState) =>
+  (s.selectedRunId ? s.runs.find((r) => r.id === s.selectedRunId) : undefined) ?? runsNewestFirst(s)[0] ?? null;
+
+export interface Transcript {
+  text: string;
+  /**
+   * final     ：已入库的 reviewer_output，权威结果
+   * streaming ：run 还在进行，由 message_delta 拼出来的临时文字
+   * partial   ：run 已结束但没有最终结果（取消 / 失败 / 超时），显示中断前收到的部分
+   * empty     ：还没有任何输出
+   */
+  source: "final" | "streaming" | "partial" | "empty";
+}
+
+/** 纯函数：某个 run 应该显示的文字 */
+export function runTranscript(s: AppState, runId: string): Transcript {
+  const final = s.messages.find((m) => m.kind === "reviewer_output" && m.runId === runId);
+  if (final) return { text: final.content, source: "final" };
+  const events = s.runEvents[runId] ?? [];
+  const complete = events.find((e) => e.type === "message_complete");
+  const text =
+    complete && complete.type === "message_complete"
+      ? complete.text
+      : events.map((e) => (e.type === "message_delta" ? e.text : "")).join("");
+  if (!text) return { text: "", source: "empty" };
+  const run = s.runs.find((r) => r.id === runId);
+  const finished = run ? !["QUEUED", "STARTING", "RUNNING"].includes(run.state) : false;
+  return { text, source: finished ? "partial" : "streaming" };
+}
+
+/** run 的终止事件（用于显示失败原因、取消原因） */
+export const terminalEvent = (s: AppState, runId: string) =>
+  (s.runEvents[runId] ?? []).find((e) => ["completed", "error", "cancelled", "timed_out"].includes(e.type)) ?? null;

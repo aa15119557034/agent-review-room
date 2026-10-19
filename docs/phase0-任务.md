@@ -56,8 +56,8 @@ C-01 批准后开始，先对着 mock 开发。
 |---|---|---|
 | **C-02** ✅ 已合并 | renderer 架构：状态管理；**IPC 客户端直接使用 `ControlCommand / ControlQuery / ControlEvent` 格式**（以后手机 App 复用）；mock 后端；整体布局 | — |
 | **C-03** ✅ 已合并 | Source Input：粘贴 → 选中 → 创建 Contribution | AC-1, 2 |
-| **C-04** ✅ 待合并 | Prompt Preview + 审批：完整原文、hash、token 估算；Approve 时带上 `expectedSnapshotHash` | AC-3, 6 |
-| **C-05** | Run 状态、Reviewer 结果、历史列表 | AC-8, 10 |
+| **C-04** ✅ 已合并 | Prompt Preview + 审批：完整原文、hash、token 估算；Approve 时带上 `expectedSnapshotHash` | AC-3, 6 |
+| **C-05** ✅ 待合并 | Run 状态、Reviewer 结果、历史列表 | AC-8, 10 |
 
 ## 第 3 步：交叉审查
 

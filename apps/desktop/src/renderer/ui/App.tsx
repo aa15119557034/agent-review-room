@@ -1,13 +1,13 @@
 import { useState, type FormEvent } from "react";
-import { currentProject, runsNewestFirst } from "../lib/state";
+import { currentProject } from "../lib/state";
 import { useActions, useAppState, useIsMock } from "./hooks";
 import { SourceStep } from "./SourceStep";
 import { FragmentPicker, PromptStep } from "./PromptStep";
-import { RUN_STATE_LABEL, formatTime, runTone } from "./labels";
+import { ResultStep, RunList } from "./ResultStep";
 
 /**
- * 整体布局：项目 / 三个工作步骤 / 运行记录。
- * 第 1 步 SourceStep（C-03），第 2、3 步 PromptStep（C-04），运行记录的详情由 C-05 填充。
+ * 整体布局：项目 / 四个工作步骤 / 运行记录。
+ * 1 原文（SourceStep）→ 2 片段 → 3 Prompt 与审批（PromptStep）→ 4 评审结果（ResultStep）
  */
 export function App() {
   const connection = useAppState((s) => s.connection);
@@ -119,7 +119,7 @@ function Notice() {
   );
 }
 
-/** 三个步骤确实是有先后顺序的流程，所以用编号 */
+/** 四个步骤确实是有先后顺序的流程，所以用编号 */
 function Workflow() {
   const projectId = useAppState((s) => s.currentProjectId);
 
@@ -154,27 +154,22 @@ function Workflow() {
         </h2>
         <PromptStep />
       </li>
+
+      <li className="step" id="step-result">
+        <h2 className="step-title">
+          <span className="step-no">4</span>评审结果
+        </h2>
+        <ResultStep />
+      </li>
     </ol>
   );
 }
 
 function RunLog() {
-  const runs = useAppState(runsNewestFirst);
   return (
     <aside className="runlog" aria-label="运行记录">
       <h2 className="rail-heading">运行记录</h2>
-      {runs.length === 0 ? (
-        <p className="step-empty">批准后，每次评审都会出现在这里。</p>
-      ) : (
-        <ul className="run-list">
-          {runs.map((r) => (
-            <li key={r.id} className="run" data-tone={runTone(r.state)}>
-              <span className="run-state">{RUN_STATE_LABEL[r.state]}</span>
-              <span className="run-time">{formatTime(r.createdAt)}</span>
-            </li>
-          ))}
-        </ul>
-      )}
+      <RunList />
     </aside>
   );
 }
