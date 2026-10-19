@@ -1,0 +1,32 @@
+{
+  "name": "@room/desktop",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Agent 评审室 桌面端（Electron 主进程 / preload / renderer 宿主）",
+  "main": "./out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "start": "electron-vite preview",
+    "typecheck": "tsc -p tsconfig.json",
+    "rebuild:native": "electron-rebuild -f -w better-sqlite3",
+    "verify:sqlite": "node scripts/verify-sqlite.mjs"
+  },
+  "dependencies": {
+    "@room/schemas": "workspace:*",
+    "better-sqlite3": "^13.0.3",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^4.2.1",
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "electron": "^44.9.0",
+    "electron-vite": "^6.0.0",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.4"
+  }
+}
