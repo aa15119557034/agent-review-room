@@ -1,5 +1,5 @@
 import type { ContributionType, TextSelection } from "@room/schemas";
-import { appendEvents, applyEvent, type AppState } from "./state";
+import { appendEvents, applyEvent, emptyDraft, type AppState } from "./state";
 import { describeFailure, type RoomClient } from "./client";
 import type { Store } from "./store";
 
@@ -25,7 +25,16 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
     if (token !== loadToken) return;
     const runEvents: AppState["runEvents"] = {};
     runs.forEach((r, i) => (runEvents[r.id] = appendEvents(undefined, eventLists[i] ?? [])));
-    store.set((s) => ({ ...s, currentProjectId: projectId, messages, contributions, approvals, runs, runEvents }));
+    store.set((s) => ({
+      ...s,
+      currentProjectId: projectId,
+      messages,
+      contributions,
+      approvals,
+      runs,
+      runEvents,
+      draft: s.currentProjectId === projectId ? s.draft : emptyDraft(),
+    }));
   }
 
   return {
@@ -87,32 +96,64 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
       if (!projectId) return;
       try {
         const c = await client.command({ type: "contribution.create", projectId, ...input });
-        store.set((s) => ({ ...s, contributions: [...s.contributions, c] }));
+        // 新标记的片段默认勾选进 prompt 草稿
+        store.set((s) => ({
+          ...s,
+          contributions: [...s.contributions, c],
+          draft: { ...s.draft, contributionIds: [...s.draft.contributionIds, c.id] },
+        }));
         return c;
       } catch (err) {
         fail(err);
       }
     },
 
-    async createSnapshot(contributionIds: string[], taskInstruction: string) {
-      const projectId = store.get().currentProjectId;
+    toggleDraftContribution(contributionId: string) {
+      store.set((s) => {
+        const ids = s.draft.contributionIds;
+        const next = ids.includes(contributionId) ? ids.filter((i) => i !== contributionId) : [...ids, contributionId];
+        return { ...s, draft: { ...s.draft, contributionIds: next } };
+      });
+    },
+
+    setTaskInstruction(taskInstruction: string) {
+      store.set((s) => ({ ...s, draft: { ...s.draft, taskInstruction } }));
+    },
+
+    /** 用当前草稿生成不可变 Snapshot。草稿保留，方便微调后重新生成 */
+    async createSnapshot() {
+      const { currentProjectId: projectId, draft, contributions } = store.get();
       if (!projectId) return;
+      const contributionIds = contributions.filter((c) => draft.contributionIds.includes(c.id)).map((c) => c.id);
+      if (contributionIds.length === 0 || !draft.taskInstruction.trim()) return;
       try {
         const { snapshot, approval } = await client.command({
           type: "snapshot.create",
           projectId,
           contributionIds,
-          taskInstruction,
+          taskInstruction: draft.taskInstruction.trim(),
         });
         // 旧的待审批项会被后端改成 EXPIRED 并通过事件推过来，这里只加新的
-        store.set((s) => applyEvent(s, { type: "approval.updated", approval }));
+        store.set((s) => ({
+          ...applyEvent(s, { type: "approval.updated", approval }),
+          snapshots: { ...s.snapshots, [snapshot.id]: snapshot },
+        }));
         return snapshot;
       } catch (err) {
         fail(err);
       }
     },
 
-    getSnapshot: (snapshotId: string) => client.query({ type: "snapshots.get", snapshotId }),
+    /** 确保某个 Snapshot 已在本地缓存（审批卡片打开时调用） */
+    async ensureSnapshot(snapshotId: string) {
+      if (store.get().snapshots[snapshotId]) return;
+      try {
+        const snapshot = await client.query({ type: "snapshots.get", snapshotId });
+        store.set((s) => ({ ...s, snapshots: { ...s.snapshots, [snapshot.id]: snapshot } }));
+      } catch (err) {
+        fail(err);
+      }
+    },
 
     async approve(approvalId: string, expectedSnapshotHash: string) {
       try {

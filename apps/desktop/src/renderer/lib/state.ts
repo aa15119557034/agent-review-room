@@ -5,6 +5,7 @@ import type {
   ControlEvent,
   Message,
   Project,
+  PromptSnapshot,
   Run,
   SystemStatus,
 } from "@room/schemas";
@@ -24,9 +25,23 @@ export interface AppState {
   runs: Run[];
   /** runId → 按 seq 递增的事件；只保存当前项目的 run */
   runEvents: Record<string, AgentEvent[]>;
+  /** snapshotId → Snapshot。按需加载，Snapshot 不可变所以可以一直缓存 */
+  snapshots: Record<string, PromptSnapshot>;
+  /** 正在编辑、还没生成 Snapshot 的 prompt。切换项目时重置 */
+  draft: PromptDraft;
   /** 最近一次操作失败的说明，显示在界面上，由用户关闭 */
   notice: { kind: "error"; message: string } | null;
 }
+
+export interface PromptDraft {
+  contributionIds: string[];
+  taskInstruction: string;
+}
+
+export const DEFAULT_TASK =
+  "请审查以下材料：指出其中的错误、风险和遗漏，说明理由；如果有更好的做法，请具体给出。";
+
+export const emptyDraft = (): PromptDraft => ({ contributionIds: [], taskInstruction: DEFAULT_TASK });
 
 export const initialState: AppState = {
   connection: { phase: "connecting" },
@@ -38,6 +53,8 @@ export const initialState: AppState = {
   approvals: [],
   runs: [],
   runEvents: {},
+  snapshots: {},
+  draft: emptyDraft(),
   notice: null,
 };
 
@@ -103,3 +120,15 @@ export const pendingApprovals = (s: AppState) =>
 
 export const runsNewestFirst = (s: AppState) =>
   [...s.runs].sort((a, b) => (a.createdAt < b.createdAt ? 1 : a.createdAt > b.createdAt ? -1 : 0));
+
+/** 当前等待批准的那一项（同一项目最多一个：生成新的会让旧的失效） */
+export const readyApproval = (s: AppState) =>
+  [...s.approvals].reverse().find((a) => a.state === "READY_FOR_REVIEW") ?? null;
+
+/** 已经处理过的审批，新的在前 */
+export const decidedApprovals = (s: AppState) =>
+  s.approvals.filter((a) => a.state !== "READY_FOR_REVIEW" && a.state !== "DRAFT").reverse();
+
+/** 草稿里勾选的片段，按片段创建顺序排列，并去掉已经不存在的 id */
+export const draftContributions = (s: AppState) =>
+  s.contributions.filter((c) => s.draft.contributionIds.includes(c.id));

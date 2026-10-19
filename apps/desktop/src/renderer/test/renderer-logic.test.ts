@@ -56,7 +56,8 @@ describe("mock backend + actions: Phase 0 loop", () => {
     });
     assert.ok(c);
     assert.equal(c.content, "风险：并发写入", "content is cut server-side from the selection");
-    const snap = await actions.createSnapshot([c.id], "请审查");
+    actions.setTaskInstruction("请审查");
+    const snap = await actions.createSnapshot();
     assert.ok(snap);
     const approval = store.get().approvals.find((a) => a.snapshotId === snap.id);
     assert.equal(approval?.state, "READY_FOR_REVIEW");
@@ -98,8 +99,8 @@ describe("mock backend + actions: Phase 0 loop", () => {
 
   it("a new snapshot expires the previous pending approval", async () => {
     const first = await prepareApproval();
-    const c = store.get().contributions[0]!;
-    await actions.createSnapshot([c.id], "换一个问法");
+    actions.setTaskInstruction("换一个问法");
+    await actions.createSnapshot();
     await sleep(5);
     assert.equal(store.get().approvals.find((a) => a.id === first.approval.id)?.state, "EXPIRED");
   });
@@ -170,5 +171,46 @@ describe("selection helpers", async () => {
   it("suggests a short title from the first line", () => {
     assert.equal(suggestTitle("风险：main 进程和 utilityProcess 各自写库\n第二行"), "main 进程和 utilityProcess 各自写库");
     assert.equal(Array.from(suggestTitle("😀".repeat(40))).length, 31);
+  });
+});
+
+describe("prompt draft", () => {
+  it("new fragments are pre-selected, toggling works, and switching projects resets the draft", async () => {
+    const bridge = createMockBridge({ tickMs: 2 });
+    const store = createStore(initialState);
+    const actions = createActions(store, createClient(bridge));
+    await actions.start();
+    await actions.createProject("A");
+    const msg = await actions.addSource("deepseek", "abcdef");
+    const c1 = await actions.createContribution({ sourceMessageId: msg!.id, contributionType: "risk", title: "1", selection: { start: 0, end: 2 } });
+    const c2 = await actions.createContribution({ sourceMessageId: msg!.id, contributionType: "risk", title: "2", selection: { start: 2, end: 4 } });
+    assert.deepEqual(store.get().draft.contributionIds, [c1!.id, c2!.id]);
+    actions.toggleDraftContribution(c1!.id);
+    assert.deepEqual(store.get().draft.contributionIds, [c2!.id]);
+
+    const snap = await actions.createSnapshot();
+    assert.deepEqual(snap?.contributionIds, [c2!.id], "snapshot uses only ticked fragments");
+    assert.ok(store.get().snapshots[snap!.id], "snapshot is cached");
+    assert.deepEqual(store.get().draft.contributionIds, [c2!.id], "draft kept after generating");
+
+    const projectA = store.get().currentProjectId!;
+    await actions.createProject("B");
+    assert.deepEqual(store.get().draft.contributionIds, [], "draft reset for another project");
+    await actions.selectProject(projectA);
+    assert.deepEqual(store.get().draft.contributionIds, [], "draft not resurrected (drafts are per session view)");
+  });
+
+  it("does nothing when no fragment is ticked or the task is blank", async () => {
+    const bridge = createMockBridge({ tickMs: 2 });
+    const store = createStore(initialState);
+    const actions = createActions(store, createClient(bridge));
+    await actions.start();
+    await actions.createProject("A");
+    assert.equal(await actions.createSnapshot(), undefined);
+    const msg = await actions.addSource("deepseek", "abcdef");
+    await actions.createContribution({ sourceMessageId: msg!.id, contributionType: "risk", title: "1", selection: { start: 0, end: 2 } });
+    actions.setTaskInstruction("   ");
+    assert.equal(await actions.createSnapshot(), undefined);
+    assert.equal(store.get().approvals.length, 0);
   });
 });

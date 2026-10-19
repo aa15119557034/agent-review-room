@@ -2,17 +2,12 @@ import { useState, type FormEvent } from "react";
 import { currentProject, runsNewestFirst } from "../lib/state";
 import { useActions, useAppState, useIsMock } from "./hooks";
 import { SourceStep } from "./SourceStep";
-import {
-  APPROVAL_STATE_LABEL,
-  CONTRIBUTION_TYPE_LABEL,
-  RUN_STATE_LABEL,
-  formatTime,
-  runTone,
-} from "./labels";
+import { FragmentPicker, PromptStep } from "./PromptStep";
+import { RUN_STATE_LABEL, formatTime, runTone } from "./labels";
 
 /**
- * C-02：整体布局 + 只读数据展示。
- * 三个工作步骤的交互（粘贴与选取、生成 prompt、审批与运行）分别由 C-03 / C-04 / C-05 填充。
+ * 整体布局：项目 / 三个工作步骤 / 运行记录。
+ * 第 1 步 SourceStep（C-03），第 2、3 步 PromptStep（C-04），运行记录的详情由 C-05 填充。
  */
 export function App() {
   const connection = useAppState((s) => s.connection);
@@ -127,8 +122,6 @@ function Notice() {
 /** 三个步骤确实是有先后顺序的流程，所以用编号 */
 function Workflow() {
   const projectId = useAppState((s) => s.currentProjectId);
-  const contributions = useAppState((s) => s.contributions);
-  const approvals = useAppState((s) => s.approvals);
 
   if (!projectId) {
     return (
@@ -152,37 +145,14 @@ function Workflow() {
         <h2 className="step-title">
           <span className="step-no">2</span>片段
         </h2>
-        {contributions.length === 0 ? (
-          <p className="step-empty">在上面的原文里选中值得评审的一段，标记成片段。</p>
-        ) : (
-          <ul className="fragment-list">
-            {contributions.map((c) => (
-              <li key={c.id} className="fragment">
-                <span className="fragment-type">{CONTRIBUTION_TYPE_LABEL[c.type]}</span>
-                <span className="fragment-title">{c.title}</span>
-                <blockquote className="fragment-quote">{c.content}</blockquote>
-              </li>
-            ))}
-          </ul>
-        )}
+        <FragmentPicker />
       </li>
 
       <li className="step">
         <h2 className="step-title">
           <span className="step-no">3</span>Prompt 与审批
         </h2>
-        {approvals.length === 0 ? (
-          <p className="step-empty">选好片段后生成 prompt，确认无误再批准发送。</p>
-        ) : (
-          <ul className="approval-list">
-            {approvals.map((a) => (
-              <li key={a.id} className="approval" data-state={a.state}>
-                <span>{APPROVAL_STATE_LABEL[a.state]}</span>
-                <span className="approval-time">{formatTime(a.createdAt)}</span>
-              </li>
-            ))}
-          </ul>
-        )}
+        <PromptStep />
       </li>
     </ol>
   );

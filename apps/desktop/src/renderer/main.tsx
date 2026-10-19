@@ -25,6 +25,7 @@ function pickBridge(): { bridge: RoomBridge; isMock: boolean } | null {
       bridge: createMockBridge({
         seed: params.get("mock") !== "empty",
         reviewerOutcome: params.get("outcome") === "error" ? "error" : "complete",
+        reviewerConfigured: params.get("reviewer") !== "off",
       }),
       isMock: true,
     };
