@@ -1,0 +1,25 @@
+{
+  "nodeId": "review-node-1",
+  "host": "127.0.0.1",
+  "port": 7420,
+  "maxConcurrentRuns": 1,
+  "leaseMs": 20000,
+  "heartbeatMs": 5000,
+  "killGraceMs": 5000,
+  "profiles": {
+    "echo": {
+      "command": "node",
+      "args": ["-e", "process.stdin.pipe(process.stdout)"],
+      "cwd": "."
+    },
+    "claude-review": {
+      "command": "claude",
+      "args": ["-p", "--permission-mode", "plan"],
+      "cwd": "/srv/worktrees/review",
+      "envAllowlist": ["PATH", "HOME", "ANTHROPIC_API_KEY"],
+      "verifyCommit": true,
+      "maxIdleTimeoutMs": 300000,
+      "maxTotalTimeoutMs": 1800000
+    }
+  }
+}
