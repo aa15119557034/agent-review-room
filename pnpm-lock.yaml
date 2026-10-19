@@ -96,6 +96,19 @@ importers:
         specifier: ^7.6.13
         version: 7.6.13
 
+  packages/reviewer-client:
+    dependencies:
+      '@room/core':
+        specifier: workspace:*
+        version: link:../core
+      '@room/schemas':
+        specifier: workspace:*
+        version: link:../schemas
+    devDependencies:
+      tsx:
+        specifier: ^4.20.0
+        version: 4.23.15
+
   packages/schemas:
     dependencies:
       zod:
