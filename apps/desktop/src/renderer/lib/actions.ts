@@ -34,6 +34,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
       runs,
       runEvents,
       draft: s.currentProjectId === projectId ? s.draft : emptyDraft(),
+      selectedRunId: s.currentProjectId === projectId ? s.selectedRunId : null,
     }));
   }
 
@@ -158,7 +159,11 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
     async approve(approvalId: string, expectedSnapshotHash: string) {
       try {
         const { approval, run } = await client.command({ type: "approval.approve", approvalId, expectedSnapshotHash });
-        store.set((s) => applyEvent(applyEvent(s, { type: "approval.updated", approval }), { type: "run.updated", run }));
+        store.set((s) => ({
+          ...applyEvent(applyEvent(s, { type: "approval.updated", approval }), { type: "run.updated", run }),
+          // 刚批准的 run 自动成为当前查看的那一个
+          selectedRunId: run.id,
+        }));
         return run;
       } catch (err) {
         fail(err);
@@ -186,6 +191,8 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
         fail(err);
       }
     },
+
+    selectRun: (runId: string) => store.set((s) => ({ ...s, selectedRunId: runId })),
 
     dismissNotice: () => store.set((s) => ({ ...s, notice: null })),
   };

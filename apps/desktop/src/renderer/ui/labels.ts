@@ -1,4 +1,4 @@
-import type { ApprovalState, ContributionType, RunState } from "@room/schemas";
+import type { ApprovalState, ContributionType, FailureReason, RunState } from "@room/schemas";
 
 /** 界面上的中文名称集中在这里，保证同一个东西在各处叫法一致 */
 
@@ -47,4 +47,34 @@ export function formatTime(iso: string): string {
   const d = new Date(iso);
   const pad = (n: number) => String(n).padStart(2, "0");
   return `${d.getMonth() + 1}/${d.getDate()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+/** 失败原因 → 用户能看懂、知道下一步怎么办的说明 */
+export const FAILURE_REASON_LABEL: Record<FailureReason, string> = {
+  interrupted: "应用在评审进行中被关闭，这次评审没有完成。",
+  connection_lost: "和执行节点的连接中断，超过等待时间仍未恢复。",
+  lease_expired: "执行节点长时间没有收到应用的连接，自行停止了评审。",
+  remote_lost: "执行节点已经不认识这次评审（可能重启过）。",
+  remote_rejected: "执行节点拒绝了这次请求。",
+  hash_mismatch: "发送前校验发现 prompt 与批准时的不一致，已拒绝发送。",
+  commit_mismatch: "代码版本与批准时的不一致，已拒绝执行。",
+  spawn_failed: "无法启动评审程序。",
+  process_exit_nonzero: "评审程序异常退出。",
+  output_limit_exceeded: "Reviewer 的输出超过上限，已停止。",
+  postprocess: "评审完成了，但保存结果时出错。",
+  internal: "Reviewer 调用出错。",
+};
+
+export function formatDuration(fromIso: string, toIso: string): string {
+  const sec = Math.max(0, Math.round((new Date(toIso).getTime() - new Date(fromIso).getTime()) / 1000));
+  if (sec < 60) return `${sec} 秒`;
+  const m = Math.floor(sec / 60);
+  return `${m} 分 ${sec % 60} 秒`;
+}
+
+/** 精确到秒，用于同一分钟内的多次运行能区分开 */
+export function formatClock(iso: string): string {
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 }

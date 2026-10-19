@@ -296,7 +296,6 @@ input {
 }
 
 .fragment-list,
-.approval-list,
 .source-list {
   display: grid;
   gap: 0.625rem;
@@ -345,27 +344,6 @@ input {
   font-size: var(--size-s);
 }
 
-.approval {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--rule);
-  background: var(--sheet);
-}
-
-.approval[data-state="READY_FOR_REVIEW"] {
-  border-color: var(--wait);
-}
-
-.approval[data-state="EXPIRED"],
-.approval[data-state="REJECTED"] {
-  color: var(--ink-soft);
-}
-
-.approval-time {
-  color: var(--ink-soft);
-  font-size: var(--size-s);
-}
 
 .empty-desk {
   max-width: 34rem;
@@ -753,6 +731,13 @@ input {
   color: var(--ink-soft);
 }
 
+.decided-link {
+  padding: 0;
+  font-size: var(--size-s);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
 .decided-row .seal {
   margin-left: auto;
 }
@@ -792,6 +777,88 @@ input {
   }
 }
 
+/* ------------------------------------------------------------ 第 4 步：评审结果 */
+
+.result {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--rule);
+  background: var(--sheet);
+}
+
+.result[data-tone="active"] {
+  border-left-color: var(--active);
+}
+
+.result[data-tone="good"] {
+  border-left-color: var(--good);
+}
+
+.result[data-tone="bad"] {
+  border-left-color: var(--bad);
+}
+
+.result-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-size: var(--size-s);
+  color: var(--ink-soft);
+}
+
+.result-state {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.result[data-tone="active"] .result-state {
+  color: var(--active);
+}
+
+.result[data-tone="bad"] .result-state {
+  color: var(--bad);
+}
+
+.result-cancel {
+  margin-left: auto;
+  font-size: var(--size-s);
+}
+
+.result-status {
+  font-size: var(--size-s);
+  color: var(--ink-soft);
+}
+
+.result[data-tone="bad"] .result-status {
+  color: var(--bad);
+}
+
+.result-text {
+  padding: 0.25rem 0;
+  font: var(--size-m) / 1.8 var(--font-ui);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.result-text[data-source="partial"] {
+  color: var(--ink-soft);
+}
+
+.sent-prompt {
+  display: grid;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--rule);
+}
+
+.sent-prompt-meta {
+  font-size: var(--size-s);
+  color: var(--ink-soft);
+}
+
 /* ------------------------------------------------------------ 右栏：运行记录 */
 
 .runlog {
@@ -812,9 +879,23 @@ input {
 .run {
   display: flex;
   justify-content: space-between;
+  width: 100%;
   padding: 0.375rem 0.5rem;
+  border: 0;
   border-left: 3px solid var(--rule);
+  background: none;
   font-size: var(--size-s);
+  text-align: left;
+  cursor: pointer;
+}
+
+.run:hover {
+  background: var(--sheet);
+}
+
+.run[aria-current="true"] {
+  background: var(--sheet);
+  font-weight: 600;
 }
 
 .run[data-tone="active"] {
