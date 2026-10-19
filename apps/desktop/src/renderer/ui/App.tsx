@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { currentProject, runsNewestFirst } from "../lib/state";
 import { useActions, useAppState, useIsMock } from "./hooks";
+import { SourceStep } from "./SourceStep";
 import {
   APPROVAL_STATE_LABEL,
   CONTRIBUTION_TYPE_LABEL,
@@ -126,7 +127,6 @@ function Notice() {
 /** 三个步骤确实是有先后顺序的流程，所以用编号 */
 function Workflow() {
   const projectId = useAppState((s) => s.currentProjectId);
-  const messages = useAppState((s) => s.messages);
   const contributions = useAppState((s) => s.contributions);
   const approvals = useAppState((s) => s.approvals);
 
@@ -139,29 +139,13 @@ function Workflow() {
     );
   }
 
-  const sources = messages.filter((m) => m.kind === "source_input");
-
   return (
     <ol className="steps">
       <li className="step">
         <h2 className="step-title">
           <span className="step-no">1</span>原文
         </h2>
-        {sources.length === 0 ? (
-          <p className="step-empty">还没有原文。把 Agent 的输出粘贴进来。</p>
-        ) : (
-          <ul className="source-list">
-            {sources.map((m) => (
-              <li key={m.id} className="source">
-                <div className="source-meta">
-                  <span className="source-agent">{m.kind === "source_input" ? m.sourceAgent : ""}</span>
-                  <time dateTime={m.createdAt}>{formatTime(m.createdAt)}</time>
-                </div>
-                <pre className="source-text">{m.content}</pre>
-              </li>
-            ))}
-          </ul>
-        )}
+        <SourceStep />
       </li>
 
       <li className="step">
@@ -169,7 +153,7 @@ function Workflow() {
           <span className="step-no">2</span>片段
         </h2>
         {contributions.length === 0 ? (
-          <p className="step-empty">在原文里选中值得评审的一段，标记成片段。</p>
+          <p className="step-empty">在上面的原文里选中值得评审的一段，标记成片段。</p>
         ) : (
           <ul className="fragment-list">
             {contributions.map((c) => (

@@ -142,3 +142,33 @@ describe("mock backend + actions: Phase 0 loop", () => {
     assert.equal(!r.ok && r.error, "validation_failed");
   });
 });
+
+describe("selection helpers", async () => {
+  const { segmentText, suggestTitle, trimSelection } = await import("../lib/selection");
+
+  it("segments always concatenate back to the original text", () => {
+    const content = "第一行\n风险：并发😀写入\n第三行";
+    const segs = segmentText(content, [
+      { id: "a", start: 4, end: 12 },
+      { id: "b", start: 8, end: 16 },
+      { id: "bad", start: 10, end: 999 },
+    ]);
+    assert.equal(segs.map((s) => s.text).join(""), content);
+    assert.deepEqual(segs.find((s) => s.start === 8)?.covers, ["a", "b"]);
+    assert.ok(segs.every((s) => !s.covers.includes("bad")));
+  });
+
+  it("trims whitespace and never splits a surrogate pair", () => {
+    const content = "  a😀b  ";
+    const emoji = content.indexOf("😀");
+    assert.deepEqual(trimSelection(content, { start: 0, end: 8 }), { start: 2, end: 6 });
+    // 只选中 emoji 的后半个 code unit → 扩展到完整字符
+    assert.deepEqual(trimSelection(content, { start: emoji + 1, end: emoji + 2 }), { start: emoji, end: emoji + 2 });
+    assert.equal(trimSelection(content, { start: 0, end: 2 }), null);
+  });
+
+  it("suggests a short title from the first line", () => {
+    assert.equal(suggestTitle("风险：main 进程和 utilityProcess 各自写库\n第二行"), "main 进程和 utilityProcess 各自写库");
+    assert.equal(Array.from(suggestTitle("😀".repeat(40))).length, 31);
+  });
+});
