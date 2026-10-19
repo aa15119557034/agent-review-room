@@ -1,0 +1,21 @@
+node_modules/
+dist/
+out/
+.vite/
+*.log
+
+# 密钥
+.env
+.env.*
+!.env.example
+
+# 运行时数据库（放在 userData，不进仓库）
+*.db
+*.db-wal
+*.db-shm
+
+.DS_Store
+Thumbs.db
+
+# 节点本地配置（含路径等环境信息）
+apps/agent-server/agent-server.config.json
