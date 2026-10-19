@@ -23,12 +23,14 @@ export function openDatabase(file: string, options: OpenDatabaseOptions = {}): S
   const db = new Database(file, readonly ? { readonly: true } : undefined);
   const busyTimeoutMs = options.busyTimeoutMs ?? 5000;
 
+  // busy_timeout 必须在切 WAL 之前：切换 journal_mode 需要锁，
+  // 另一个连接正持锁时应当等待，而不是立刻 SQLITE_BUSY。
+  db.pragma(`busy_timeout = ${busyTimeoutMs}`);
+  db.pragma("foreign_keys = ON");
   if (!readonly) {
     db.pragma("journal_mode = WAL");
     db.pragma("synchronous = NORMAL");
   }
-  db.pragma(`busy_timeout = ${busyTimeoutMs}`);
-  db.pragma("foreign_keys = ON");
 
   if (!readonly) runMigrations(db);
 

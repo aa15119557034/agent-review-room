@@ -52,6 +52,22 @@ export function writeTransaction<T>(
     db.exec("BEGIN IMMEDIATE");
     try {
       const value = work();
+
+      // 把「别放 await」从注释变成保证：work() 若返回 Promise，
+      // COMMIT 会先于它完成，写进去的就是半成品。
+      if (
+        value !== null &&
+        typeof value === "object" &&
+        typeof (value as { then?: unknown }).then === "function"
+      ) {
+        void (value as unknown as Promise<unknown>).catch(() => {
+          // 事务已经回滚，避免未处理的 rejection
+        });
+        throw new Error(
+          "writeTransaction work() must be synchronous: returning a Promise would COMMIT before it settles",
+        );
+      }
+
       db.exec("COMMIT");
       return value;
     } catch (error) {

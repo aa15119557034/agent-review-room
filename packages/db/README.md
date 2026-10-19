@@ -27,6 +27,7 @@ await writeTransaction(db, queue, () => {
 | `prompt_snapshots` | 实际发给 Reviewer 的原文，**不可变** |
 | `approvals` | 审批记录 |
 | `runs` | 执行记录，`approval_id` **UNIQUE** |
+| `run_events` | run 的完整事件流，**只追加**，每个 run 最多一个终止事件 |
 
 ### 几个刻意的决定
 
@@ -39,6 +40,17 @@ await writeTransaction(db, queue, () => {
 5. **不可变用 trigger 兜底**：应用层写错了也改不动历史（AC-4 / V0.3 §17）。
    代价是删除项目会被 FK 的 `ON DELETE RESTRICT` + trigger 拦住 —— Phase 0 不做删除。
 6. **`substate` 只在 RUNNING 非空、`failure_reason` 只在 FAILED 非空**，把 entities.ts 的注释变成约束。
+7. **`run_events` 用部分唯一索引保证每个 run 最多一个终止事件**（AC-9），且只追加、不允许改删。
+8. **Run 必须对应「批准了同一份 snapshot」的 Approval**（AC-7）：`BEFORE INSERT` 触发器校验
+   `approvals.id = runs.approval_id AND approvals.snapshot_id = runs.snapshot_id AND state = 'APPROVED'`。
+   代码传错参数也插不进去；顺带强制「先把 Approval 改成 APPROVED，再插 Run」的顺序。
+   Run 的 `approval_id` / `snapshot_id` / `project_id` 之后不可改。
+9. **跨表一致性**：Contribution 必须与其来源 message 同项目；Approval 必须与其 snapshot 同项目。
+
+### 关于 `synchronous = NORMAL`
+
+WAL 下应用崩溃不丢已提交事务；**但断电可能丢最后几个事务**。Phase 0 接受这个取舍：
+丢的只可能是最后写入的评审记录，且 `-wal` 回放仍会执行。要更强保证可改 `FULL`，代价是每次提交多一次 fsync。
 
 ## 单写者队列
 

@@ -1,4 +1,12 @@
-import { ApprovalState, ContributionType, FailureReason, RunState, RunSubstate } from "@room/schemas";
+import {
+  AgentEvent,
+  ApprovalState,
+  ContributionType,
+  FailureReason,
+  RunState,
+  RunSubstate,
+  TERMINAL_EVENT_TYPES,
+} from "@room/schemas";
 
 /**
  * Phase 0 表结构（D-02）。
@@ -22,6 +30,13 @@ const RUN_STATES = RunState.options;
 const RUN_SUBSTATES = RunSubstate.options;
 const FAILURE_REASONS = FailureReason.options;
 const CONTRIBUTION_TYPES = ContributionType.options;
+/**
+ * AgentEvent 的全部 type 字面量。直接从契约的 discriminated union 取，
+ * 不手抄——契约加一个事件类型，这里的 CHECK 自动跟着变。
+ */
+const AGENT_EVENT_TYPES = (
+  AgentEvent.options as unknown as { shape: { type: { value: string } } }[]
+).map((option) => option.shape.type.value);
 
 /** AgentName 契约：^[a-z0-9][a-z0-9-]{0,63}$ */
 const AGENT_NAME_CHECK = "CHECK (length(source_agent) BETWEEN 1 AND 64 AND source_agent NOT GLOB '*[^a-z0-9-]*')";
@@ -127,6 +142,18 @@ CREATE TABLE runs (
   CHECK (failure_reason IS NULL OR state = 'FAILED')
 ) STRICT;
 
+-- ---------------------------------------------------------------- Run 事件（只追加）
+CREATE TABLE run_events (
+  run_id    TEXT    NOT NULL REFERENCES runs(id) ON DELETE RESTRICT,
+  seq       INTEGER NOT NULL CHECK (seq >= 0),
+  event_id  TEXT    NOT NULL UNIQUE,
+  type      TEXT    NOT NULL ${inCheck("type", AGENT_EVENT_TYPES)},
+  -- 完整 AgentEvent 的 JSON（含 type/seq/ts 之外的字段）
+  payload   TEXT    NOT NULL CHECK (json_valid(payload)),
+  ts        TEXT    NOT NULL,
+  PRIMARY KEY (run_id, seq)
+) STRICT;
+
 -- ---------------------------------------------------------------- 索引
 CREATE INDEX idx_messages_project_created ON messages(project_id, created_at);
 CREATE INDEX idx_messages_run ON messages(run_id) WHERE run_id IS NOT NULL;
@@ -136,6 +163,9 @@ CREATE INDEX idx_approvals_snapshot ON approvals(snapshot_id);
 CREATE INDEX idx_runs_project_created ON runs(project_id, created_at);
 CREATE INDEX idx_runs_state ON runs(state) WHERE state IN ('QUEUED', 'STARTING', 'RUNNING');
 CREATE INDEX idx_snapshots_project_created ON prompt_snapshots(project_id, created_at);
+-- AC-9 的数据库级保证：每个 run 最多一个终止事件
+CREATE UNIQUE INDEX ux_run_events_terminal ON run_events(run_id)
+  WHERE type IN (${quoted(TERMINAL_EVENT_TYPES as unknown as string[])});
 
 -- ---------------------------------------------------------------- 不可变兜底
 CREATE TRIGGER messages_no_update BEFORE UPDATE ON messages
@@ -156,5 +186,64 @@ END;
 CREATE TRIGGER prompt_snapshots_no_delete BEFORE DELETE ON prompt_snapshots
 BEGIN
   SELECT RAISE(ABORT, 'prompt_snapshots are immutable');
+END;
+
+CREATE TRIGGER contributions_no_update BEFORE UPDATE ON contributions
+BEGIN
+  SELECT RAISE(ABORT, 'contributions are immutable');
+END;
+
+CREATE TRIGGER contributions_no_delete BEFORE DELETE ON contributions
+BEGIN
+  SELECT RAISE(ABORT, 'contributions are immutable');
+END;
+
+-- 事件只追加：run_events 是 run 的完整回放记录，不允许改写
+CREATE TRIGGER run_events_no_update BEFORE UPDATE ON run_events
+BEGIN
+  SELECT RAISE(ABORT, 'run_events are append-only');
+END;
+
+CREATE TRIGGER run_events_no_delete BEFORE DELETE ON run_events
+BEGIN
+  SELECT RAISE(ABORT, 'run_events are append-only');
+END;
+
+-- 核心承诺（AC-7）：Run 必须对应「批准了同一份 snapshot」的 Approval。
+-- 「消费 Approval」和「创建 Run」必须同事务，且 Approval 先变成 APPROVED。
+CREATE TRIGGER runs_must_match_approved_approval BEFORE INSERT ON runs
+WHEN NOT EXISTS (
+  SELECT 1 FROM approvals a
+  WHERE a.id = NEW.approval_id
+    AND a.snapshot_id = NEW.snapshot_id
+    AND a.project_id = NEW.project_id
+    AND a.state = 'APPROVED'
+)
+BEGIN
+  SELECT RAISE(ABORT, 'run must match an APPROVED approval of the same snapshot');
+END;
+
+-- Run 的身份字段不可改：否则可以把已存在的 Run 改挂到别的 snapshot / approval 上
+CREATE TRIGGER runs_identity_is_immutable
+BEFORE UPDATE OF approval_id, snapshot_id, project_id ON runs
+WHEN NEW.approval_id IS NOT OLD.approval_id
+  OR NEW.snapshot_id IS NOT OLD.snapshot_id
+  OR NEW.project_id IS NOT OLD.project_id
+BEGIN
+  SELECT RAISE(ABORT, 'run identity is immutable');
+END;
+
+-- 跨表一致性：Contribution 必须属于来源 message 的同一个项目
+CREATE TRIGGER contributions_project_matches_message BEFORE INSERT ON contributions
+WHEN (SELECT project_id FROM messages WHERE id = NEW.source_message_id) IS NOT NEW.project_id
+BEGIN
+  SELECT RAISE(ABORT, 'contribution project must match its source message');
+END;
+
+-- 跨表一致性：Approval 必须属于其 snapshot 的同一个项目
+CREATE TRIGGER approvals_project_matches_snapshot BEFORE INSERT ON approvals
+WHEN (SELECT project_id FROM prompt_snapshots WHERE id = NEW.snapshot_id) IS NOT NEW.project_id
+BEGIN
+  SELECT RAISE(ABORT, 'approval project must match its snapshot');
 END;
 `;

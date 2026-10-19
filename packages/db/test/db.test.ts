@@ -275,3 +275,178 @@ describe("AC-10 重启后历史仍可读取", () => {
     reopened.close();
   });
 });
+
+describe("run_events", () => {
+  function seedApprovedRun(db: SqliteDatabase): { runId: string } {
+    const projectId = seedProject(db);
+    const snapshotId = seedSnapshot(db, projectId);
+    db.prepare(
+      "INSERT INTO approvals (id, project_id, snapshot_id, state, created_at) VALUES ('appr_01', ?, ?, 'APPROVED', ?)",
+    ).run(projectId, snapshotId, NOW);
+    db.prepare(
+      `INSERT INTO runs (id, project_id, approval_id, snapshot_id, adapter_id, state, created_at)
+       VALUES ('run_01', ?, 'appr_01', ?, 'api', 'RUNNING', ?)`,
+    ).run(projectId, snapshotId, NOW);
+    return { runId: "run_01" };
+  }
+
+  const insertEvent = (db: SqliteDatabase, runId: string, seq: number, type: string, payload = "{}") =>
+    db
+      .prepare("INSERT INTO run_events (run_id, seq, event_id, type, payload, ts) VALUES (?, ?, ?, ?, ?, ?)")
+      .run(runId, seq, `${runId}_${seq}`, type, payload, NOW);
+
+  it("appends events in order", () => {
+    const { db } = freshDb();
+    const { runId } = seedApprovedRun(db);
+    insertEvent(db, runId, 0, "message_delta", JSON.stringify({ text: "你" }));
+    insertEvent(db, runId, 1, "completed");
+    assert.equal(count(db, "SELECT count(*) AS n FROM run_events"), 2);
+    db.close();
+  });
+
+  it("allows only one terminal event per run (AC-9)", () => {
+    const { db } = freshDb();
+    const { runId } = seedApprovedRun(db);
+    insertEvent(db, runId, 0, "completed");
+    assert.throws(() => insertEvent(db, runId, 1, "error"), /UNIQUE/);
+    // 非终止事件不受这条索引限制
+    insertEvent(db, runId, 2, "message_delta");
+    db.close();
+  });
+
+  it("is append-only", () => {
+    const { db } = freshDb();
+    const { runId } = seedApprovedRun(db);
+    insertEvent(db, runId, 0, "message_delta");
+    assert.throws(() => db.prepare("UPDATE run_events SET type = 'completed'").run(), /append-only/);
+    assert.throws(() => db.prepare("DELETE FROM run_events").run(), /append-only/);
+    db.close();
+  });
+
+  it("rejects unknown event types", () => {
+    const { db } = freshDb();
+    const { runId } = seedApprovedRun(db);
+    assert.throws(() => insertEvent(db, runId, 0, "not_an_event"), /CHECK/);
+    db.close();
+  });
+});
+
+describe("run must match an approved approval (AC-7)", () => {
+  it("rejects a run whose approval is still DRAFT", () => {
+    const { db } = freshDb();
+    const projectId = seedProject(db);
+    const snapshotId = seedSnapshot(db, projectId);
+    db.prepare(
+      "INSERT INTO approvals (id, project_id, snapshot_id, state, created_at) VALUES ('appr_draft', ?, ?, 'DRAFT', ?)",
+    ).run(projectId, snapshotId, NOW);
+
+    assert.throws(
+      () =>
+        db
+          .prepare(
+            `INSERT INTO runs (id, project_id, approval_id, snapshot_id, adapter_id, state, created_at)
+             VALUES ('run_x', ?, 'appr_draft', ?, 'api', 'QUEUED', ?)`,
+          )
+          .run(projectId, snapshotId, NOW),
+      /APPROVED approval of the same snapshot/,
+    );
+    db.close();
+  });
+
+  it("rejects a run whose snapshot differs from the approved one", () => {
+    const { db } = freshDb();
+    const projectId = seedProject(db);
+    const approvedSnapshot = seedSnapshot(db, projectId, "snap_approved");
+    const otherSnapshot = seedSnapshot(db, projectId, "snap_other");
+    db.prepare(
+      "INSERT INTO approvals (id, project_id, snapshot_id, state, created_at) VALUES ('appr_01', ?, ?, 'APPROVED', ?)",
+    ).run(projectId, approvedSnapshot, NOW);
+
+    assert.throws(
+      () =>
+        db
+          .prepare(
+            `INSERT INTO runs (id, project_id, approval_id, snapshot_id, adapter_id, state, created_at)
+             VALUES ('run_x', ?, 'appr_01', ?, 'api', 'QUEUED', ?)`,
+          )
+          .run(projectId, otherSnapshot, NOW),
+      /APPROVED approval of the same snapshot/,
+    );
+    db.close();
+  });
+
+  it("keeps run identity immutable", () => {
+    const { db } = freshDb();
+    const projectId = seedProject(db);
+    const snapshotId = seedSnapshot(db, projectId);
+    db.prepare(
+      "INSERT INTO approvals (id, project_id, snapshot_id, state, created_at) VALUES ('appr_01', ?, ?, 'APPROVED', ?)",
+    ).run(projectId, snapshotId, NOW);
+    db.prepare(
+      `INSERT INTO runs (id, project_id, approval_id, snapshot_id, adapter_id, state, created_at)
+       VALUES ('run_01', ?, 'appr_01', ?, 'api', 'RUNNING', ?)`,
+    ).run(projectId, snapshotId, NOW);
+
+    assert.throws(
+      () => db.prepare("UPDATE runs SET snapshot_id = 'snap_other' WHERE id = 'run_01'").run(),
+      /identity is immutable/,
+    );
+    // 状态变更本身是允许的
+    db.prepare("UPDATE runs SET state = 'COMPLETED', finished_at = ? WHERE id = 'run_01'").run(NOW);
+    db.close();
+  });
+});
+
+describe("cross-table consistency", () => {
+  it("rejects a contribution from a different project than its message", () => {
+    const { db } = freshDb();
+    const projectA = seedProject(db, "proj_a");
+    seedProject(db, "proj_b");
+    const messageId = seedMessage(db, projectA);
+
+    assert.throws(
+      () =>
+        db
+          .prepare(
+            `INSERT INTO contributions
+               (id, project_id, source_message_id, type, title, content, selection_start, selection_end,
+                confidence, created_by, schema_version, created_at)
+             VALUES ('c_bad', 'proj_b', ?, 'issue', 't', 'c', 0, 1, NULL, 'human', 1, ?)`,
+          )
+          .run(messageId, NOW),
+      /contribution project must match/,
+    );
+    db.close();
+  });
+
+  it("keeps contributions immutable", () => {
+    const { db } = freshDb();
+    const projectId = seedProject(db);
+    const messageId = seedMessage(db, projectId);
+    db.prepare(
+      `INSERT INTO contributions
+         (id, project_id, source_message_id, type, title, content, selection_start, selection_end,
+          confidence, created_by, schema_version, created_at)
+       VALUES ('c_01', ?, ?, 'issue', 't', 'c', 0, 1, NULL, 'human', 1, ?)`,
+    ).run(projectId, messageId, NOW);
+
+    assert.throws(() => db.prepare("UPDATE contributions SET title = 'x'").run(), /immutable/);
+    assert.throws(() => db.prepare("DELETE FROM contributions").run(), /immutable/);
+    db.close();
+  });
+});
+
+describe("writeTransaction guard", () => {
+  it("rejects an async work() instead of committing early", async () => {
+    const { db } = freshDb();
+    const queue = new WriteQueue();
+
+    await assert.rejects(
+      writeTransaction(db, queue, (() => Promise.resolve("late")) as unknown as () => string),
+      /must be synchronous/,
+    );
+    assert.equal(count(db, "SELECT count(*) AS n FROM projects"), 0);
+    db.close();
+  });
+});
+
