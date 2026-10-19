@@ -3,7 +3,17 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "exports": { ".": "./src/index.ts" },
-  "scripts": { "typecheck": "tsc -p ." },
-  "dependencies": { "@room/schemas": "workspace:*" }
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "test": "tsx --test test/*.test.ts"
+  },
+  "dependencies": {
+    "@room/schemas": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.0"
+  }
 }
