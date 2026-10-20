@@ -1,17 +1,32 @@
-import { app, BrowserWindow, nativeTheme, shell } from "electron";
+import { app, BrowserWindow, ipcMain, nativeTheme, safeStorage, shell } from "electron";
 import { join } from "node:path";
+import { openDatabase, repairInterruptedRuns, WriteQueue } from "@room/db";
+import { HttpRemoteAgentAdapter } from "@room/remote-client";
+import { IPC_CHANNELS, type ControlEvent } from "@room/schemas";
+import { createDispatcher } from "./ipc";
+import { RunOrchestrator } from "./orchestrator";
+import { Repository } from "./repository";
+import { SettingsStore } from "./settings";
 
 /**
- * Electron 主进程入口（DeepSeek 负责）。
- * D-01 只负责：创建窗口并加载 renderer；IPC handler 归 D-07，
- * 数据库初始化归 D-02/D-06，这里都不做。
+ * Electron 主进程入口（D-07）。
+ *
+ * 启动顺序对齐 V0.4 §32：初始化 DB → 修复中断的 run → 起 IPC → 开窗口。
+ * Token 只在主进程解密使用，绝不进 renderer / SQLite / 日志。
  */
 
 const isDev = !app.isPackaged;
 
-/** 和 renderer 的 styles.css 里 --paper 对齐，避免启动时闪一下不协调的底色。 */
 function windowBackground(): string {
   return nativeTheme.shouldUseDarkColors ? "#131b1f" : "#e9eeec";
+}
+
+let mainWindow: BrowserWindow | null = null;
+
+function broadcast(event: ControlEvent): void {
+  for (const window of BrowserWindow.getAllWindows()) {
+    window.webContents.send(IPC_CHANNELS.event, event);
+  }
 }
 
 function createWindow(): void {
@@ -29,24 +44,23 @@ function createWindow(): void {
       preload: join(__dirname, "../preload/index.js"),
       contextIsolation: true,
       nodeIntegration: false,
-      // 显式声明：renderer 运行在沙箱里，只能用 preload 暴露的能力
       sandbox: true,
     },
   });
 
-  // 先渲染再显示，避免白屏闪烁
+  mainWindow = window;
   window.once("ready-to-show", () => window.show());
+  window.on("closed", () => {
+    if (mainWindow === window) mainWindow = null;
+  });
 
-  // 外部链接交给系统浏览器，不在应用内开新窗口
   window.webContents.setWindowOpenHandler(({ url }) => {
     void shell.openExternal(url);
     return { action: "deny" };
   });
 
-  // setWindowOpenHandler 管不到页面内导航：任何内容想把主窗口带到外部站点，一律拦下
   window.webContents.on("will-navigate", (event, url) => {
-    const allowed =
-      devServerUrl !== undefined ? url.startsWith(devServerUrl) : url.startsWith("file://");
+    const allowed = devServerUrl !== undefined ? url.startsWith(devServerUrl) : url.startsWith("file://");
     if (!allowed) event.preventDefault();
   });
 
@@ -57,8 +71,65 @@ function createWindow(): void {
   }
 }
 
-void app.whenReady().then(() => {
+async function bootstrap(): Promise<void> {
+  const userData = app.getPath("userData");
+  const db = openDatabase(join(userData, "room.db"));
+  const queue = new WriteQueue();
+  const repo = new Repository(db, queue);
+
+  // §32 第 3 步：上次崩溃留下的 QUEUED / STARTING / RUNNING 统一标成 interrupted
+  const repaired = await repairInterruptedRuns(db, queue);
+
+  const settings = new SettingsStore(join(userData, "settings.json"), safeStorage);
+
+  const orchestrator = new RunOrchestrator({
+    db,
+    queue,
+    emit: broadcast,
+    getRun: (runId) => db.prepare("SELECT * FROM runs WHERE id = ?").get(runId) as never,
+    adapterFactory: async () => {
+      const node = settings.get();
+      const token = settings.getToken();
+      if (node === null || token === null) throw new Error("reviewer node is not configured");
+      const adapter = new HttpRemoteAgentAdapter({
+        nodeId: "review-node",
+        baseUrl: node.baseUrl,
+        profileId: node.profileId,
+        token,
+        heartbeatTimeoutMs: 15_000,
+        reconnectGraceMs: 30_000,
+        requestTimeoutMs: 10_000,
+      });
+      await adapter.initialize();
+      return adapter;
+    },
+  });
+
+  const dispatcher = createDispatcher({
+    repo,
+    settings,
+    orchestrator,
+    appVersion: app.getVersion(),
+    recoveredRuns: repaired.repaired.length,
+    emit: broadcast,
+  });
+
+  ipcMain.handle(IPC_CHANNELS.command, async (_event, request: unknown) => dispatcher.handleCommand(request));
+  ipcMain.handle(IPC_CHANNELS.query, async (_event, request: unknown) => dispatcher.handleQuery(request));
+
+  app.on("before-quit", () => {
+    try {
+      db.close();
+    } catch {
+      // 已经关闭
+    }
+  });
+
   createWindow();
+}
+
+void app.whenReady().then(async () => {
+  await bootstrap();
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();

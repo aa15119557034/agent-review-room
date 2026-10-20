@@ -1,0 +1,190 @@
+import assert from "node:assert/strict";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { after, describe, it } from "node:test";
+import type { AgentAdapter } from "@room/core";
+import { openDatabase, WriteQueue } from "@room/db";
+import type { ControlEvent } from "@room/schemas";
+import { createDispatcher } from "../src/main/ipc";
+import { Repository } from "../src/main/repository";
+import { SettingsStore, type SafeStorageLike } from "../src/main/settings";
+
+const dirs: string[] = [];
+after(() => {
+  for (const d of dirs) {
+    try {
+      rmSync(d, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+    } catch {
+      // Windows 句柄延迟
+    }
+  }
+});
+
+const fakeSafeStorage: SafeStorageLike = {
+  isEncryptionAvailable: () => true,
+  encryptString: (plain) => Buffer.from("enc:" + plain, "utf8"),
+  decryptString: (enc) => enc.toString("utf8").slice(4),
+};
+
+function makeDispatcher(options: { withToken?: boolean } = {}) {
+  const d = mkdtempSync(join(tmpdir(), "room-ipc-"));
+  dirs.push(d);
+  const db = openDatabase(join(d, "test.db"));
+  const queue = new WriteQueue();
+  const repo = new Repository(db, queue);
+  const settings = new SettingsStore(join(d, "settings.json"), fakeSafeStorage);
+  const events: ControlEvent[] = [];
+
+  if (options.withToken === true) {
+    settings.updateReviewerNode({ baseUrl: "http://127.0.0.1:7420", profileId: "claude-review", token: "t".repeat(40) });
+  }
+
+  const started: string[] = [];
+  const orchestrator = {
+    start: async (run: { id: string }) => {
+      started.push(run.id);
+    },
+    cancel: () => true,
+    isRunning: () => false,
+  } as never;
+
+  const dispatcher = createDispatcher({
+    repo,
+    settings,
+    orchestrator,
+    appVersion: "0.0.0-test",
+    recoveredRuns: 0,
+    emit: (event: ControlEvent) => events.push(event),
+  });
+
+  return { dispatcher, events, started, db };
+}
+
+describe("command validation", () => {
+  it("rejects an unknown command type", async () => {
+    const { dispatcher } = makeDispatcher();
+    const result = await dispatcher.handleCommand({ type: "nope" });
+    assert.equal(result.ok, false);
+    assert.equal(result.ok === false ? result.error : null, "validation_failed");
+  });
+
+  it("rejects a well-formed type with bad fields", async () => {
+    const { dispatcher } = makeDispatcher();
+    const result = await dispatcher.handleCommand({ type: "project.create", name: "" });
+    assert.equal(result.ok, false);
+    assert.equal(result.ok === false ? result.error : null, "validation_failed");
+  });
+});
+
+describe("phase 0 flow through the dispatcher", () => {
+  it("creates a project and lists it", async () => {
+    const { dispatcher } = makeDispatcher();
+    const created = await dispatcher.handleCommand({ type: "project.create", name: "评审室" });
+    assert.equal(created.ok, true);
+
+    const listed = await dispatcher.handleQuery({ type: "projects.list" });
+    assert.equal(listed.ok, true);
+    assert.equal(listed.ok === true ? (listed.data as unknown[]).length : -1, 1);
+  });
+
+  it("builds a snapshot and approval from a selection", async () => {
+    const { dispatcher, events } = makeDispatcher();
+    const project = await dispatcher.handleCommand({ type: "project.create", name: "p" });
+    const projectId = (project as { data: { id: string } }).data.id;
+
+    const message = await dispatcher.handleCommand({
+      type: "source.add",
+      projectId,
+      sourceAgent: "deepseek",
+      content: "第一段待审内容",
+    });
+    assert.equal(events.some((e) => e.type === "message.created"), true);
+
+    const messageId = (message as { data: { id: string } }).data.id;
+    const contribution = await dispatcher.handleCommand({
+      type: "contribution.create",
+      projectId,
+      sourceMessageId: messageId,
+      contributionType: "issue",
+      title: "标题",
+      selection: { start: 0, end: 4 },
+    });
+    assert.equal(contribution.ok, true);
+
+    const contributionId = (contribution as { data: { id: string } }).data.id;
+    const snapshot = await dispatcher.handleCommand({
+      type: "snapshot.create",
+      projectId,
+      contributionIds: [contributionId],
+      taskInstruction: "找出漏洞",
+    });
+    assert.equal(snapshot.ok, true);
+    const data = (snapshot as {
+      data: { snapshot: { content: string; contentHash: string; contributionIds: string[] }; approval: { state: string } };
+    }).data;
+    assert.equal(data.approval.state, "READY_FOR_REVIEW");
+    assert.equal(data.snapshot.contributionIds.length, 1);
+    assert.match(data.snapshot.content, /<UNTRUSTED_AGENT_DATA_/);
+    assert.equal(data.snapshot.contentHash.length, 64);
+  });
+
+  it("refuses to approve when the reviewer node is not configured", async () => {
+    const { dispatcher } = makeDispatcher();
+    const result = await dispatcher.handleCommand({
+      type: "approval.approve",
+      approvalId: "apr_01JABCDEFGHJKMNPQRSTVWXYZ0",
+      expectedSnapshotHash: "a".repeat(64),
+    });
+    assert.equal(result.ok, false);
+    assert.equal(result.ok === false ? result.error : null, "reviewer_not_configured");
+  });
+
+  it("marks a stale snapshot hash as stale_snapshot", async () => {
+    const { dispatcher } = makeDispatcher({ withToken: true });
+    const project = await dispatcher.handleCommand({ type: "project.create", name: "p" });
+    const projectId = (project as { data: { id: string } }).data.id;
+    const message = await dispatcher.handleCommand({ type: "source.add", projectId, sourceAgent: "deepseek", content: "abcdef" });
+    const messageId = (message as { data: { id: string } }).data.id;
+    const contribution = await dispatcher.handleCommand({
+      type: "contribution.create",
+      projectId,
+      sourceMessageId: messageId,
+      contributionType: "issue",
+      title: "t",
+      selection: { start: 0, end: 3 },
+    });
+    const contributionId = (contribution as { data: { id: string } }).data.id;
+    const snapshot = await dispatcher.handleCommand({
+      type: "snapshot.create",
+      projectId,
+      contributionIds: [contributionId],
+      taskInstruction: "x",
+    });
+    const approvalId = (snapshot as { data: { approval: { id: string } } }).data.approval.id;
+
+    const result = await dispatcher.handleCommand({ type: "approval.approve", approvalId, expectedSnapshotHash: "b".repeat(64) });
+    assert.equal(result.ok, false);
+    assert.equal(result.ok === false ? result.error : null, "stale_snapshot");
+  });
+});
+
+describe("settings", () => {
+  it("reports no node before configuration and never leaks the token", async () => {
+    const { dispatcher } = makeDispatcher();
+    const before = await dispatcher.handleQuery({ type: "settings.get" });
+    assert.deepEqual((before as { data: unknown }).data, { reviewerNode: null });
+
+    const updated = await dispatcher.handleCommand({
+      type: "settings.updateReviewerNode",
+      baseUrl: "http://127.0.0.1:7420",
+      profileId: "claude-review",
+      token: "t".repeat(40),
+    });
+    assert.equal(updated.ok, true);
+    assert.equal(JSON.stringify(updated).includes("t".repeat(40)), false);
+
+    const status = await dispatcher.handleQuery({ type: "system.status" });
+    assert.equal((status as { data: { reviewerConfigured: boolean } }).data.reviewerConfigured, true);
+  });
+});
