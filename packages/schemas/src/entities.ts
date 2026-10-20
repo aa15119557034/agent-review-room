@@ -114,6 +114,11 @@ export const PromptSnapshot = z.object({
   contributionIds: z.array(ContributionId).min(1),
   /** 用户写的评审任务说明 */
   taskInstruction: z.string().min(1).max(20_000),
+  /**
+   * 生成时 Reviewer 节点设置里的 profileId（未配置时为 "unconfigured"）。
+   * 批准时节点当前的 profileId 必须与它相同，否则拒绝（invalid_state）：
+   * 人批准的是「这份内容发给这个 profile」，不能静默换成别的执行方式。
+   */
   reviewerAgent: AgentName,
   /** Prompt 拼装器版本，改拼装逻辑时递增 */
   adapterVersion: z.string().min(1),
@@ -166,8 +171,9 @@ export type Run = z.infer<typeof Run>;
 
 export const SystemStatus = z.object({
   appVersion: z.string(),
-  /** Reviewer API key 是否已配置。只返回布尔值，key 本身永远不离开 main 进程 */
+  /** Reviewer 节点和 Token 是否都已配置（Token 能解密）。只返回布尔值，Token 永远不离开 main 进程 */
   reviewerConfigured: z.boolean(),
+  /** 当前节点设置里的 profileId；未配置时为 "unconfigured" */
   reviewerAgent: AgentName,
   /** 启动时修复了多少个中断的 run（V0.4 §24），用于 UI 提示 */
   recoveredRuns: z.number().int().nonnegative(),
