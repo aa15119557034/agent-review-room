@@ -10,6 +10,18 @@ process.stdin.on("end", async () => {
     out({ type: "stream_event", event: { type: "content_block_delta", index: 0, delta: { type: "text_delta", text } }, parent_tool_use_id: null, ...extra });
 
   out({ type: "system", subtype: "init", model: "claude-test", session_id: "s1" });
+  if (mode === "slow") {
+    const n = Number(process.env.FAKE_CHUNKS ?? 15);
+    let all = "";
+    for (let i = 0; i < n; i++) {
+      const t = `第${i}段；`;
+      all += t;
+      delta(t);
+      await new Promise((r) => setTimeout(r, Number(process.env.FAKE_DELAY_MS ?? 100)));
+    }
+    out({ type: "result", subtype: "success", is_error: false, result: all });
+    return;
+  }
   if (mode === "noisy") process.stdout.write("Warning: something non-json\n");
 
   const reply = `收到 ${input.length} 个字符。风险😀：并发写入。`;

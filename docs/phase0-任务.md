@@ -76,12 +76,25 @@ C-01 批准后开始，先对着 mock 开发。
 
 ---
 
+## 物理分离部署（ADR-001 已采纳，2026-10-21 提前到 Phase 0）
+
+主控端（UI + SQLite）在 DeepSeek 的电脑；AgentServer 在用户的电脑，`claude -p` 使用用户的 Claude 订阅。
+
+| ID | 负责 | 内容 | 状态 |
+|---|---|---|---|
+| **C-06a** | Claude | 契约：Reviewer 节点设置（Token 只写不读）、`text_delta` / `message_complete`、`incomplete_output` | 待合并 |
+| **S-02** | Claude | AgentServer：监听 0.0.0.0、Token、Windows `.cmd` / `taskkill /T /F`、claude stream-json 解析、setup 脚本（原 D-09） | 待合并 |
+| **S-03** | Claude | `@room/remote-client`：`HttpRemoteAgentAdapter` + `testReviewerNode`（原 D-08） | 待合并 |
+| **C-06b** | Claude | 设置页：填写 / 修改节点地址、评审方式、Token，测试连接 | 待开始 |
+| **D-07** | DeepSeek | main：`settings.*` 处理（Token 用 `safeStorage` 加密保存）；Reviewer 改用 `HttpRemoteAgentAdapter` | 待开始 |
+| **D-02b** | DeepSeek | 迁移 v2：`failure_reason` 的 CHECK 加上 `incomplete_output`（契约新增的值） | 待开始 |
+
 ## Phase 1 待办（现在不做）
 
 | ID | 负责 | 内容 |
 |---|---|---|
-| **D-08** | DeepSeek | 实现 `RemoteAgentAdapter`，严格按接口注释里的行为约定 |
-| **D-09** | DeepSeek | AgentServer 加固：Windows 测试、cross-spawn、pid 文件清理孤儿、权限中继、等人时暂停 idle、TLS |
+| ~~D-08~~ | — | 已由 S-03 完成 |
+| **D-09** | 待定 | AgentServer 剩余加固：pid 文件清理孤儿、权限中继、TLS（Windows 部分已由 S-02 完成） |
 | **R-04** | Claude | 审查 D-08、D-09：断线、租约、裂脑、重复执行 |
 | **D-10** | 待定 | 控制面网络网关（给手机 App 用） |
 
