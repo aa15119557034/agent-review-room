@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, nativeTheme, safeStorage, shell } from "electron";
+import { app, BrowserWindow, dialog, ipcMain, nativeTheme, safeStorage, shell } from "electron";
 import { join } from "node:path";
 import { openDatabase, repairInterruptedRuns, WriteQueue } from "@room/db";
 import { HttpRemoteAgentAdapter } from "@room/remote-client";
@@ -118,6 +118,8 @@ async function bootstrap(): Promise<void> {
   ipcMain.handle(IPC_CHANNELS.query, async (_event, request: unknown) => dispatcher.handleQuery(request));
 
   app.on("before-quit", () => {
+    // 让节点立刻停下，而不是等租约过期（abort 由 orchestrator 统一发出）
+    orchestrator.cancelAll();
     try {
       db.close();
     } catch {
@@ -129,7 +131,15 @@ async function bootstrap(): Promise<void> {
 }
 
 void app.whenReady().then(async () => {
-  await bootstrap();
+  try {
+    await bootstrap();
+  } catch (error) {
+    // 迁移失败 / DB 被锁：以前这里会把 promise 丢掉，窗口不开、进程还挂着
+    const message = error instanceof Error ? error.message : String(error);
+    dialog.showErrorBox("启动失败", "无法初始化本地数据库或设置：\n" + message);
+    app.quit();
+    return;
+  }
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
