@@ -4,6 +4,7 @@ import { useActions, useAppState, useIsMock } from "./hooks";
 import { SourceStep } from "./SourceStep";
 import { FragmentPicker, PromptStep } from "./PromptStep";
 import { ResultStep, RunList } from "./ResultStep";
+import { SettingsView } from "./SettingsView";
 
 /**
  * 整体布局：项目 / 四个工作步骤 / 运行记录。
@@ -25,11 +26,40 @@ export function App() {
     <div className="shell">
       <TopBar />
       <ProjectRail />
-      <main className="desk">
-        <Notice />
-        <Workflow />
-      </main>
+      <Desk />
       <RunLog />
+    </div>
+  );
+}
+
+function Desk() {
+  const view = useAppState((s) => s.view);
+  return (
+    <main className="desk">
+      <Notice />
+      {view === "settings" ? (
+        <SettingsView />
+      ) : (
+        <>
+          <ReviewerSetupHint />
+          <Workflow />
+        </>
+      )}
+    </main>
+  );
+}
+
+/** 还没设置 Reviewer 节点时，在工作台顶部提示一次 */
+function ReviewerSetupHint() {
+  const configured = useAppState((s) => s.status?.reviewerConfigured ?? true);
+  const actions = useActions();
+  if (configured) return null;
+  return (
+    <div className="setup-hint">
+      <p>还没有设置 Reviewer 节点。可以先整理原文和片段，批准发送前需要设置好。</p>
+      <button type="button" className="button-outline" onClick={() => void actions.openSettings()}>
+        去设置
+      </button>
     </div>
   );
 }
@@ -37,6 +67,8 @@ export function App() {
 function TopBar() {
   const project = useAppState(currentProject);
   const status = useAppState((s) => s.status);
+  const view = useAppState((s) => s.view);
+  const actions = useActions();
   const isMock = useIsMock();
   return (
     <header className="topbar">
@@ -49,10 +81,17 @@ function TopBar() {
       )}
       {status && (
         <span className="reviewer-status" data-ok={status.reviewerConfigured}>
-          Reviewer：{status.reviewerAgent}
-          {status.reviewerConfigured ? "" : "（未配置 API key）"}
+          Reviewer：{status.reviewerConfigured ? status.reviewerAgent : "未设置节点"}
         </span>
       )}
+      <button
+        type="button"
+        className="topbar-settings"
+        aria-pressed={view === "settings"}
+        onClick={() => (view === "settings" ? actions.closeSettings() : void actions.openSettings())}
+      >
+        设置
+      </button>
     </header>
   );
 }

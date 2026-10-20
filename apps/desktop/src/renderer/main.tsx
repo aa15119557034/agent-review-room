@@ -25,7 +25,8 @@ function pickBridge(): { bridge: RoomBridge; isMock: boolean } | null {
       bridge: createMockBridge({
         seed: params.get("mock") !== "empty",
         reviewerOutcome: params.get("outcome") === "error" ? "error" : "complete",
-        reviewerConfigured: params.get("reviewer") !== "off",
+        // ?reviewer=off 强制"未配置"；否则看演示数据里有没有设置节点（?mock 有，?mock=empty 没有）
+        ...(params.get("reviewer") === "off" ? { reviewerConfigured: false } : {}),
       }),
       isMock: true,
     };

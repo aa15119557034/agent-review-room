@@ -37,7 +37,7 @@ describe("mock backend + actions: Phase 0 loop", () => {
   let actions: ReturnType<typeof createActions>;
 
   beforeEach(async () => {
-    bridge = createMockBridge({ tickMs: 2 });
+    bridge = createMockBridge({ tickMs: 2, reviewerConfigured: true });
     store = createStore(initialState);
     actions = createActions(store, createClient(bridge));
     await actions.start();
@@ -176,7 +176,7 @@ describe("selection helpers", async () => {
 
 describe("prompt draft", () => {
   it("new fragments are pre-selected, toggling works, and switching projects resets the draft", async () => {
-    const bridge = createMockBridge({ tickMs: 2 });
+    const bridge = createMockBridge({ tickMs: 2, reviewerConfigured: true });
     const store = createStore(initialState);
     const actions = createActions(store, createClient(bridge));
     await actions.start();
@@ -201,7 +201,7 @@ describe("prompt draft", () => {
   });
 
   it("does nothing when no fragment is ticked or the task is blank", async () => {
-    const bridge = createMockBridge({ tickMs: 2 });
+    const bridge = createMockBridge({ tickMs: 2, reviewerConfigured: true });
     const store = createStore(initialState);
     const actions = createActions(store, createClient(bridge));
     await actions.start();
@@ -219,7 +219,7 @@ describe("run results", async () => {
   const { runTranscript, selectedRun, terminalEvent } = await import("../lib/state");
 
   async function setup(opts: Parameters<typeof createMockBridge>[0] = {}) {
-    const bridge = createMockBridge({ tickMs: 2, ...opts });
+    const bridge = createMockBridge({ tickMs: 2, reviewerConfigured: true, ...opts });
     const store = createStore(initialState);
     const actions = createActions(store, createClient(bridge));
     await actions.start();

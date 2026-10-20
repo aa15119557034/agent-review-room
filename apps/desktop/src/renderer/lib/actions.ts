@@ -1,4 +1,4 @@
-import type { ContributionType, TextSelection } from "@room/schemas";
+import type { ContributionType, NodeTestResult, TextSelection } from "@room/schemas";
 import { appendEvents, applyEvent, emptyDraft, type AppState } from "./state";
 import { describeFailure, type RoomClient } from "./client";
 import type { Store } from "./store";
@@ -193,6 +193,42 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
     },
 
     selectRun: (runId: string) => store.set((s) => ({ ...s, selectedRunId: runId })),
+
+    // ---------------------------------------------------------- 设置
+
+    async openSettings() {
+      store.set((s) => ({ ...s, view: "settings" }));
+      try {
+        const { reviewerNode } = await client.query({ type: "settings.get" });
+        store.set((s) => ({ ...s, reviewerNode }));
+      } catch (err) {
+        fail(err);
+      }
+    },
+
+    closeSettings: () => store.set((s) => ({ ...s, view: "desk" })),
+
+    /** 测试连接，不保存。token 留空表示用已保存的 */
+    async testReviewerNode(input: { baseUrl: string; profileId: string; token?: string }): Promise<NodeTestResult | undefined> {
+      try {
+        return await client.command({ type: "settings.testReviewerNode", ...input });
+      } catch (err) {
+        fail(err);
+      }
+    },
+
+    /** 保存节点设置。token 留空表示保留原来的。成功后刷新系统状态（Reviewer 是否可用） */
+    async saveReviewerNode(input: { baseUrl: string; profileId: string; token?: string }): Promise<boolean> {
+      try {
+        const reviewerNode = await client.command({ type: "settings.updateReviewerNode", ...input });
+        const status = await client.query({ type: "system.status" });
+        store.set((s) => ({ ...s, reviewerNode, status }));
+        return true;
+      } catch (err) {
+        fail(err);
+        return false;
+      }
+    },
 
     dismissNotice: () => store.set((s) => ({ ...s, notice: null })),
   };
