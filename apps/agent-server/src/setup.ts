@@ -59,4 +59,4 @@ for (const ip of lanAddresses()) console.log(`  地址：http://${ip}:${config.p
 console.log(`  评审方式：${Object.keys(config.profiles).find((k) => k.startsWith("claude")) ?? Object.keys(config.profiles)[0]}`);
 console.log(`  Token：${token}`);
 console.log("");
-console.log("然后启动：pnpm --filter @room/agent-server start");
+console.log("然后启动：pnpm --filter @room/agent-server run start");

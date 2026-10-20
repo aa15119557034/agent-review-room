@@ -71,7 +71,7 @@ export const TOKEN_MIN_LENGTH = 32;
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): LoadedConfig {
   const configPath = resolve(env["AGENT_SERVER_CONFIG"] ?? "agent-server.config.json");
   if (!existsSync(configPath)) {
-    throw new Error(`找不到配置文件 ${configPath}。先运行一次：pnpm --filter @room/agent-server setup`);
+    throw new Error(`找不到配置文件 ${configPath}。先运行一次：pnpm --filter @room/agent-server run setup`);
   }
   const raw: unknown = JSON.parse(readFileSync(configPath, "utf8"));
   const config = ServerConfig.parse(raw);
@@ -85,7 +85,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): LoadedConfig {
   const token = (env["AGENT_SERVER_TOKEN"] ?? readTokenFile(resolve(baseDir, config.tokenFile))).trim();
   if (token.length < TOKEN_MIN_LENGTH) {
     throw new Error(
-      `Token 太短或不存在（至少 ${TOKEN_MIN_LENGTH} 个字符）。运行 pnpm --filter @room/agent-server setup 生成一个。`,
+      `Token 太短或不存在（至少 ${TOKEN_MIN_LENGTH} 个字符）。运行 pnpm --filter @room/agent-server run setup 生成一个。`,
     );
   }
   return { config, token, configPath };
