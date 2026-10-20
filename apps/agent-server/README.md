@@ -14,23 +14,26 @@
 
 ```powershell
 # 1. 确认 Claude Code 已安装并登录（会用掉一点订阅额度）
-echo 只回复两个字：你好 | claude -p
+#    用英文测试：Windows PowerShell 5.1 往管道写中文默认会变成 "?"（AgentServer 自己写 stdin 用 UTF-8，不受影响）
+"Reply with exactly one word: hello" | claude -p
 
-# 2. 安装依赖（第一次）
-pnpm install
+# 2. 安装依赖（第一次；只装节点需要的部分，不用装 Electron）
+pnpm install --filter "@room/agent-server..."
 
+
+# 注意：setup / start 前面必须有 run——pnpm 自带同名的 `pnpm setup` 命令，不加 run 会跑成那个
 # 3. 一键准备：生成配置、Token、Reviewer 用的空文件夹，并打印要填到主控端的信息
-pnpm --filter @room/agent-server setup
+pnpm --filter @room/agent-server run setup
 
 # 4. 启动
-pnpm --filter @room/agent-server start
+pnpm --filter @room/agent-server run start
 ```
 
 第 3 步会打印类似：
 
 ```
 在主控端的设置页填写：
-  地址：http://192.168.1.20:7420
+  地址：http://192.168.1.20:7420      ← 代理软件的虚拟网卡（198.18.x.x）不会列出来
   评审方式：claude-review
   Token：3f9a…（64 位）
 ```
@@ -69,15 +72,15 @@ netsh advfirewall firewall add rule name="Agent Review Room 7420" dir=in action=
 ## 测试
 
 ```bash
-pnpm --filter @room/agent-server test     # 35 个
+pnpm --filter @room/agent-server test     # 37 个
 ```
 
 Windows 相关逻辑（`.cmd` 包装、taskkill 参数）用注入的模拟环境测试；`claude` 用 `test/fixtures/fake-claude.mjs` 模拟。
 
 ## 已知缺口
 
-- [ ] **还没有在真实 Windows 上跑过**：请在执行节点上按上面步骤运行一次，并跑 `pnpm --filter @room/agent-server test`
-- [ ] `echo … | claude -p` 从 stdin 读 prompt：文档写明支持，但还没在你的电脑上实测（第 1 步就是这个测试）
+- [x] 真实 Windows（执行节点）：`pnpm --filter @room/agent-server test` 35/35 通过；`claude -p "…"` 能返回结果；setup 能生成配置和 Token
+- [ ] stdin 传 prompt 的真机结果、和主控端的第一次端到端评审：联调时补上
 - [ ] 节点被强杀后的孤儿进程清理（pid 文件）
 - [ ] 权限请求中继（Phase 0 不需要：Reviewer 不使用工具）
 - [ ] TLS
