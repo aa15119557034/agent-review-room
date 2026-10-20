@@ -75,3 +75,39 @@ pnpm --filter @room/db test
 
 覆盖：迁移幂等、WAL/FK/busy_timeout、FK 与 CHECK 拒绝非法数据、approval_id 唯一、
 不可变 trigger、ULID 单调性、并发写串行化与回滚、AC-10（关库重开后仍可读）。
+## Run 生命周期（D-06）
+
+```ts
+import { approveAndCreateRun, transitionRun, finishRun, appendRunEvent, repairInterruptedRuns } from "@room/db";
+
+// 一个事务：READY_FOR_REVIEW → APPROVED + 创建 Run
+const { approval, run } = await approveAndCreateRun(db, queue, {
+  approvalId, expectedSnapshotHash, adapterId: "api", decidedVia: "desktop",
+});
+
+await transitionRun(db, queue, run.id, "QUEUED", "STARTING", { startedAt: now });
+await transitionRun(db, queue, run.id, "STARTING", "RUNNING", { substate: "active" });
+await appendRunEvent(db, queue, run.id, { type: "message_delta", payload: { text } });
+await finishRun(db, queue, run.id, { from: "RUNNING", terminal: { type: "completed" } });
+```
+
+### 事务边界
+
+- **`approveAndCreateRun`**：校验 hash → CAS `READY_FOR_REVIEW → APPROVED` → 插入 Run，全在一个事务。
+  不会出现「Approval 卡在 APPROVED 但没有 Run」的死状态。
+- **`finishRun`**：CAS 到终态 + 写终止事件，**同一个事务**。不会出现「终态但没事件」。
+- **`transitionRunTx` / `appendRunEventTx`** 是同步事务体，供组合使用；对外函数只是队列包装。
+
+### 两条约定（D-07 必须遵守）
+
+1. **终止事件只能经 `finishRun` 写入**。`appendRunEvent` 遇到 `completed/error/cancelled/timed_out` 会直接抛错。
+   D-07 收到 adapter 的终止事件时，转交给 `finishRun`，不要自己 append。
+2. **seq / event_id 以数据库为准**。`appendRunEventTx` 返回 `{ seq, eventId, ts }`，推给 renderer 的事件必须用
+   这组值，否则实时事件与重启后 `runs.events` 回放对不上。
+
+### 其他
+
+- `repairInterruptedRuns` 覆盖 `QUEUED` / `STARTING` / `RUNNING`：重启后没人会再启动 QUEUED 的 run，统一标成
+  `FAILED(interrupted)`，用户重新批准即可。
+- `transitionRun` 离开 `RUNNING` 时自动把 `substate` 置空，不会撞 CHECK。
+- `getRunWithEvents` 返回 `{ seq, eventId, type, payload, ts }`。
