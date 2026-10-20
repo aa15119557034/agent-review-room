@@ -124,3 +124,14 @@ SQLite 不能修改 CHECK，所以 v2 走的是「建新表 → 拷数据 → �
 
 注意：`SCHEMA_V1` 的枚举是**运行时**从契约生成的，所以今天用 v1 建的新库已经包含 `incomplete_output`；
 v2 的价值在于把**已经建好的旧库**升级上来。
+
+> 注意：`SCHEMA_V1` 的枚举是**运行时**从契约生成的，所以它会随契约漂移（今天用 v1 建的新库已经包含
+> `incomplete_output`）。v1 / v2 保持现状不动；**从 v3 开始，新迁移里的枚举值必须冻结成字面量**。
+
+### 结果入库
+
+`finishRun` 支持 `reviewerOutput: { content, sourceAgent }`：
+
+- **只有** `terminal.type === "completed"` 才会写 `Message(kind: "reviewer_output")`；
+- 写 Message 和改终态、写终止事件在**同一个事务**里，任一步失败整体回滚；
+- `content` 是 `message_complete.text` 原文，`sourceAgent` 是 snapshot 的 `reviewerAgent`。

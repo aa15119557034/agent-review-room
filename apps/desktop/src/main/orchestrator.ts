@@ -89,11 +89,16 @@ export class RunOrchestrator {
         totalTimeoutMs: this.#deps.totalTimeoutMs ?? 600_000,
       });
 
+      let completedText: string | null = null;
+
       for await (const event of events) {
         if (TERMINAL_EVENTS.has(event.type)) {
-          await this.#finish(run.id, currentState, event);
+          await this.#finish(run.id, currentState, event, completedText, input.reviewerAgent);
           return;
         }
+
+        // 只有 completed 才用它写 reviewer_output；error 时这段文本会被丢弃
+        if (event.type === "message_complete") completedText = event.text;
 
         const stored = await appendRunEvent(this.#deps.db, this.#deps.queue, run.id, {
           type: event.type,
@@ -114,7 +119,7 @@ export class RunOrchestrator {
         runId: run.id,
         seq: -1,
         ts: new Date().toISOString(),
-      } as AgentEvent);
+      } as AgentEvent, null, input.reviewerAgent);
     } catch (error) {
       const current = this.#deps.getRun(run.id);
       if (current !== undefined && (current.state === "STARTING" || current.state === "RUNNING")) {
@@ -126,7 +131,7 @@ export class RunOrchestrator {
           runId: run.id,
           seq: -1,
           ts: new Date().toISOString(),
-        } as AgentEvent);
+        } as AgentEvent, null, input.reviewerAgent);
       }
     } finally {
       this.#active.delete(run.id);
@@ -138,6 +143,7 @@ export class RunOrchestrator {
     from: RunRow["state"],
     event: AgentEvent,
     completedText: string | null,
+    reviewerAgent: string,
   ): Promise<void> {
     let terminal: Parameters<typeof finishRun>[3]["terminal"];
     if (event.type === "error") {

@@ -36,3 +36,20 @@ ABI 稳定，**当前不需要 `electron-rebuild`**：Electron 44.9.0（ABI 149�
 preload **刻意没有暴露任何 IPC 频道**：真正的 `RoomBridge` 由 D-07 按
 `packages/schemas` 的 `control-api.ts` / `ipc.ts` 实现。
 在那之前，窗口加载的 renderer 会显示 `没有找到后端` 的兜底页，这是 C-02 的设计行为，不是故障。
+
+## 已知环境坑（dev）
+
+从 Electron 应用派生的终端（例如 DSH 自己的终端）会继承 `ELECTRON_RUN_AS_NODE=1`，
+此时 `electron-vite dev` 会把主进程当普通 Node 跑，报 `Cannot read properties of undefined (reading 'isPackaged')`。
+启动前先摘掉：
+
+```powershell
+Remove-Item env:ELECTRON_RUN_AS_NODE -ErrorAction SilentlyContinue
+pnpm --filter @room/desktop dev
+```
+
+## 退出时的 run 取消
+
+`before-quit` 会对所有在跑的 run 发 `abort()`，但**不等待节点确认**——
+进程退出后 abort 很可能还没送到节点。真正兜底的是节点侧的租约过期（默认 20s）。
+Phase 0 接受这个取舍：关窗要快，宁可让节点多跑一会儿。
