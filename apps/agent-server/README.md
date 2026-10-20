@@ -1,54 +1,83 @@
-# @room/agent-server — 远端执行节点（骨架）
+# @room/agent-server — 执行节点
 
-负责：DeepSeek（接手维护）｜ 审查：Claude ｜ 骨架作者：Claude（S-01）
+负责：Claude（S-01 骨架、S-02 Windows + Claude CLI）｜ 审查：DeepSeek
 
-运行在隔离的节点上，接收 Orchestrator 的请求，在本地拉起**预先配置好的** CLI，把输出以 NDJSON 流式回传。协议见 `packages/schemas/src/remote-protocol.ts`，设计取舍见 `docs/design/ADR-001-远端执行节点.md`。
+运行在**执行节点电脑**上，接收主控端的评审请求，在本机启动 `claude -p`（使用这台电脑上登录的 Claude 订阅），把回复流式传回主控端。设计见 `docs/design/ADR-001-远端执行节点.md`，协议见 `packages/schemas/src/remote-protocol.ts`。
 
-## 运行
-
-```bash
-cp agent-server.config.example.json agent-server.config.json   # 按节点实际情况修改
-export AGENT_SERVER_TOKEN="$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")"
-pnpm --filter @room/agent-server start
+```
+主控端（DeepSeek 的电脑）  ── 局域网 HTTP + Token ──▶  本机 AgentServer :7420 ──▶ claude -p
 ```
 
-Windows PowerShell：
+## 在执行节点（Windows）上第一次设置
+
+在 PowerShell 里，进入仓库目录：
 
 ```powershell
-$env:AGENT_SERVER_TOKEN = node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+# 1. 确认 Claude Code 已安装并登录（会用掉一点订阅额度）
+echo 只回复两个字：你好 | claude -p
+
+# 2. 安装依赖（第一次）
+pnpm install
+
+# 3. 一键准备：生成配置、Token、Reviewer 用的空文件夹，并打印要填到主控端的信息
+pnpm --filter @room/agent-server setup
+
+# 4. 启动
 pnpm --filter @room/agent-server start
 ```
 
-配置示例里的 `claude-review` 只是示意，命令参数以节点上实际安装的 CLI 为准。`echo` profile 可以直接用来测试连通性。
+第 3 步会打印类似：
 
-## 手动试一下
-
-```bash
-TOKEN=...; BODY='{"protocol":1,"runId":"run_01JAAAAAAAAAAAAAAAAAAAAAAA","profileId":"echo","snapshot":{"id":"snap_01JAAAAAAAAAAAAAAAAAAAAAAA","content":"hello","contentHash":"2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"},"limits":{"idleTimeoutMs":10000,"totalTimeoutMs":60000}}'
-curl -s -H "Authorization: Bearer $TOKEN" -d "$BODY" http://127.0.0.1:7420/v1/runs
-curl -N -H "Authorization: Bearer $TOKEN" "http://127.0.0.1:7420/v1/runs/run_01JAAAAAAAAAAAAAAAAAAAAAAA/events?after=-1"
+```
+在主控端的设置页填写：
+  地址：http://192.168.1.20:7420
+  评审方式：claude-review
+  Token：3f9a…（64 位）
 ```
 
-## 已经保证的（有测试，`pnpm --filter @room/agent-server test`）
+把这三项填到主控端"设置 → Reviewer 节点"，点"测试连接"。
 
-- 每个 run 恰好一个 terminal 事件；seq 从 0 连续递增
-- 没有 token / token 错误 → 401
-- 请求里夹带 `command` 等多余字段 → 400
-- prompt hash 不一致 → 422，不会启动进程
-- 同一 runId 重复提交幂等；内容不同 → 409
-- 取消、idle 超时、非零退出码分别产出对应的 terminal
-- 没人订阅超过 `leaseMs` → 终止整个进程树（Linux 上已验证子进程和孙进程都被杀）
-- 断线重连 `?after=<seq>` 补发漏掉的事件
-- 安静时也有心跳
-- 超过 `maxConcurrentRuns` → 429
-- 中文输出跨 chunk 不乱码
+第一次启动时 Windows 会弹出防火墙提示，选**允许"专用网络"**。如果没弹出、主控端连不上，用管理员 PowerShell 执行：
 
-## 已知缺口（D-09）
+```powershell
+netsh advfirewall firewall add rule name="Agent Review Room 7420" dir=in action=allow protocol=TCP localport=7420 profile=private
+```
 
-- [ ] **Windows 上没测试过。** `taskkill /T /F` 的路径没有跑过
-- [ ] Windows 上 `.cmd` 包装的 CLI（npm 全局安装的大多是）需要 cross-spawn，目前 `shell:false` 会直接启动失败
-- [ ] 节点被强杀后的孤儿进程：需要 pid 文件 + 启动时清理
-- [ ] 权限请求中继（`/permissions/:id` 返回 501）；等待人工期间暂停 idle 计时
-- [ ] TLS（目前是明文 HTTP，只适合本机或 VPN 内）
-- [ ] 只读保证：需要在操作系统层面配置（只读用户 / 只读挂载）
-- [ ] 事件缓冲只在内存里，节点重启后无法补发
+## 安全
+
+- **监听 0.0.0.0**：局域网里的其他电脑能访问。所有请求都必须带 Token，否则 401
+- Token 保存在 `apps/agent-server/agent-server.token`（已在 .gitignore 里），也可以用环境变量 `AGENT_SERVER_TOKEN` 覆盖
+- **局域网内是明文 HTTP**：Token 和 prompt 在网络上不加密，只适合可信的家庭 / 办公网络。跨网络使用请走 Tailscale / WireGuard
+- 请求里不能带命令：只能选这台电脑配置里写好的 profile
+- `claude-review` 在空文件夹 `reviewer-sandbox/` 里运行，权限模式 `dontAsk`（需要批准的工具调用一律拒绝）、`--permission-prompts none`
+
+## Windows 进程管理
+
+- **`.cmd` 兼容**：npm 装的 `claude` 是 `claude.cmd`，不能直接 spawn。AgentServer 按 PATH + PATHEXT 找到真实文件：`.exe` 直接启动；`.cmd` / `.bat` 用 `cmd.exe /d /s /c "…"` 启动。为了安全，**参数里出现 cmd 特殊字符（`^ & | < > % ! " ( )`）会在启动时直接拒绝**，而不是尝试转义
+- **终止进程**：一律 `taskkill /pid <pid> /T /F`，连同整个进程树。经 `cmd.exe` 启动时 pid 是 cmd.exe，`/T` 会把它下面的 node / claude 一起结束
+- **租约**：主控端断开超过 `leaseMs`（默认 20 秒），节点自己结束评审，不会在后台一直消耗额度
+
+## 输出解析（profile.parser）
+
+`claude-stream-json`：解析 `claude -p --output-format stream-json --verbose --include-partial-messages`
+- 增量文字 → `text_delta`（子 agent 的文字不算）
+- 最后的 `result` 行 → `message_complete`（权威结果）+ `completed`
+- **没有 `result` 行就结束 → `error(incomplete_output)`**，即使退出码是 0：被截断的回复不会被当成完整结果
+- `result.is_error` → `error(internal)`，带错误信息
+- 非 JSON 行原样以 stdout `output` 转发，方便排查
+
+## 测试
+
+```bash
+pnpm --filter @room/agent-server test     # 35 个
+```
+
+Windows 相关逻辑（`.cmd` 包装、taskkill 参数）用注入的模拟环境测试；`claude` 用 `test/fixtures/fake-claude.mjs` 模拟。
+
+## 已知缺口
+
+- [ ] **还没有在真实 Windows 上跑过**：请在执行节点上按上面步骤运行一次，并跑 `pnpm --filter @room/agent-server test`
+- [ ] `echo … | claude -p` 从 stdin 读 prompt：文档写明支持，但还没在你的电脑上实测（第 1 步就是这个测试）
+- [ ] 节点被强杀后的孤儿进程清理（pid 文件）
+- [ ] 权限请求中继（Phase 0 不需要：Reviewer 不使用工具）
+- [ ] TLS

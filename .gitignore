@@ -19,3 +19,5 @@ Thumbs.db
 
 # 节点本地配置（含路径等环境信息）
 apps/agent-server/agent-server.config.json
+apps/agent-server/agent-server.token
+apps/agent-server/reviewer-sandbox/
