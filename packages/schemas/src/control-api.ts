@@ -202,7 +202,12 @@ export const COMMANDS = {
     "admin",
   ),
 
-  /** 测试连接（不保存）。token 不传则使用已保存的 */
+  /**
+   * 测试连接（不保存）。
+   * token 不传时：**只有 baseUrl 与已保存的完全相同**才使用已保存的 token，
+   * 否则返回 { reachable: false, error: "no_token" }——防止把 token 发到新填的（可能填错的）地址。
+   * profileId 不参与鉴权，改 profileId 不要求重新输入 token。
+   */
   "settings.testReviewerNode": def(
     z.object({
       type: z.literal("settings.testReviewerNode"),
