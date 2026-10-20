@@ -145,3 +145,96 @@ describe("failures never throw", () => {
     assert.equal(events[0]?.type, "cancelled");
   });
 });
+
+describe("stream integrity (D-05b)", () => {
+  const opts = {
+    signal: new AbortController().signal,
+    onPermissionRequest: async () => ({ decision: "deny" as const, decidedBy: "system" as const }),
+    idleTimeoutMs: 2000,
+    totalTimeoutMs: 5000,
+  };
+
+  const runWith = async (impl: typeof fetch, overrides: Partial<typeof opts> = {}) => {
+    const adapter = createReviewerAdapter({ apiKey: "k", model: "m", fetchImpl: impl });
+    const events: AgentEvent[] = [];
+    for await (const event of adapter.run(
+      "sess_1",
+      RUN_ID,
+      { snapshotId: "snap_01JABCDEFGHJKMNPQRSTVWXYZ0", content: CONTENT, contentHash: HASH },
+      { ...opts, ...overrides },
+    )) {
+      events.push(event);
+    }
+    return events;
+  };
+
+  it("treats a stream that ends without [DONE] as an error, not a result", async () => {
+    const impl = fakeFetch(sse(["半截"], false)).impl;
+    const events = await runWith(impl);
+    const last = events[events.length - 1];
+    assert.equal(last?.type, "error");
+    assert.match(last?.type === "error" ? (last.message ?? "") : "", /without \[DONE\]|unexpectedly/);
+    assert.equal(events.filter((e) => ["completed", "error"].includes(e.type)).length, 1);
+  });
+
+  it("flags finish_reason=length as truncated instead of completed", async () => {
+    const body =
+      "data: " + JSON.stringify({ choices: [{ delta: { content: "截断" }, finish_reason: "length" }] }) + "\n\n" +
+      "data: " + JSON.stringify({ choices: [{ delta: {}, finish_reason: "length" }] }) + "\n\n";
+    const impl = fakeFetch(body).impl;
+    const events = await runWith(impl);
+    const types = events.map((e) => e.type);
+    assert.deepEqual(types, ["message_delta", "message_complete", "error"]);
+    const last = events[events.length - 1];
+    assert.equal(last?.type === "error" ? last.reason : null, "output_limit_exceeded");
+  });
+
+  it("aborts the request and cancels the stream when the consumer breaks", async () => {
+    const encoder = new TextEncoder();
+    let cancelled = false;
+    const body = new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(encoder.encode(sse(["第一块"])));
+        // 故意不 close：模拟还在持续返回的流
+      },
+      cancel() {
+        cancelled = true;
+      },
+    });
+    const impl = (async () => new Response(body, { status: 200 })) as unknown as typeof fetch;
+
+    const adapter = createReviewerAdapter({ apiKey: "k", model: "m", fetchImpl: impl });
+    const seen: AgentEvent[] = [];
+    for await (const event of adapter.run(
+      "sess_1",
+      RUN_ID,
+      { snapshotId: "snap_01JABCDEFGHJKMNPQRSTVWXYZ0", content: CONTENT, contentHash: HASH },
+      opts,
+    )) {
+      seen.push(event);
+      break;
+    }
+
+    assert.equal(seen.length, 1);
+    assert.equal(cancelled, true, "stream must be cancelled after break");
+  });
+
+  it("parses CRLF-separated SSE", async () => {
+    const body = ("data: " + JSON.stringify({ choices: [{ delta: { content: "OK" } }] }) + "\r\n\r\n") +
+      ("data: [DONE]\r\n\r\n");
+    const impl = fakeFetch(body).impl;
+    const events = await runWith(impl);
+    const complete = events.find((e) => e.type === "message_complete");
+    assert.equal(complete?.type === "message_complete" ? complete.text : "", "OK");
+  });
+
+  it("times out on idle when the stream stalls", async () => {
+    const body = new ReadableStream<Uint8Array>({ start() { /* 永不发数据 */ } });
+    const impl = (async () => new Response(body, { status: 200 })) as unknown as typeof fetch;
+
+    const events = await runWith(impl, { idleTimeoutMs: 30, totalTimeoutMs: 5000 });
+    const last = events[events.length - 1];
+    assert.equal(last?.type, "timed_out");
+    assert.equal(last?.type === "timed_out" ? last.kind : null, "idle");
+  });
+});
