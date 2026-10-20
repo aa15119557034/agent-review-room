@@ -17,6 +17,8 @@ export interface RunInput {
   snapshotId: string;
   content: string;
   contentHash: string;
+  /** snapshot 的 reviewerAgent：reviewer_output 的 sourceAgent 用它 */
+  reviewerAgent: string;
 }
 
 export interface OrchestratorDeps {
@@ -131,7 +133,12 @@ export class RunOrchestrator {
     }
   }
 
-  async #finish(runId: string, from: RunRow["state"], event: AgentEvent): Promise<void> {
+  async #finish(
+    runId: string,
+    from: RunRow["state"],
+    event: AgentEvent,
+    completedText: string | null,
+  ): Promise<void> {
     let terminal: Parameters<typeof finishRun>[3]["terminal"];
     if (event.type === "error") {
       terminal = { type: "error", reason: event.reason, ...(event.message === undefined ? {} : { message: event.message }) };
@@ -143,7 +150,31 @@ export class RunOrchestrator {
       terminal = { type: "completed" };
     }
 
-    const finished = await finishRun(this.#deps.db, this.#deps.queue, runId, { from, terminal });
+    const finished = await finishRun(this.#deps.db, this.#deps.queue, runId, {
+      from,
+      terminal,
+      // 只有 completed 才落 reviewer_output；截断/失败的结果不能当正式结论。
+      // 这一步和终态在同一个事务里，见 packages/db 的 finishRun。
+      ...(event.type === "completed" && completedText !== null
+        ? { reviewerOutput: { content: completedText, sourceAgent: reviewerAgent } }
+        : {}),
+    });
+
+    // 契约要求的推送顺序：先 message.created，再 run.updated
+    if (finished.message !== null) {
+      this.#deps.emit({
+        type: "message.created",
+        message: {
+          id: finished.message.id,
+          projectId: finished.message.projectId,
+          kind: "reviewer_output",
+          sourceAgent: finished.message.sourceAgent,
+          runId: finished.message.runId,
+          content: finished.message.content,
+          createdAt: finished.message.createdAt,
+        },
+      });
+    }
     this.#deps.emit({ type: "run.updated", run: toContractRun(finished) });
 
     const events = this.#deps.db
