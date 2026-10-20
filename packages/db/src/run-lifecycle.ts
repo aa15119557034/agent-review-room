@@ -12,15 +12,13 @@ import { type WriteQueue, writeTransaction } from "./write-queue";
 /**
  * Run 生命周期（D-06）。
  *
- * 三条硬约束：
- * 1. 消费 Approval 与创建 Run 在同一事务（AC-6）。runs.approval_id 是 UNIQUE，
- *    所以「一个 Approval 最多一个 Run」由数据库兜底，而不是靠调用方自觉。
- * 2. 恰好一个终止事件（AC-9）：状态机保证终态不可再转，数据库的部分唯一索引
- *    再拦一层；两者都失败时整个事务回滚。
- * 3. 状态变更必须 CAS：UPDATE ... WHERE id = ? AND state = :from，
- *    影响行数不等于 1 就说明别人先改了，抛 RunStateConflictError。
+ * 四条硬约束：
+ * 1. 批准 Approval 与创建 Run 在同一事务（approveAndCreateRun，AC-6）。
+ * 2. 恰好一个终止事件（AC-9）：状态机和数据库的部分唯一索引各拦一层。
+ * 3. 终止事件只能经 finishRun 写入；状态与事件在同一个事务里提交。
+ * 4. 状态变更必须 CAS：UPDATE ... WHERE id = ? AND state = :from。
  *
- * 所有写操作都走 WriteQueue + BEGIN IMMEDIATE（见 write-queue.ts）。
+ * 事务体一律抽成 *Tx 同步函数，供组合使用；对外 API 只是它们的队列包装。
  */
 
 export class ApprovalNotConsumableError extends Error {
@@ -29,10 +27,7 @@ export class ApprovalNotConsumableError extends Error {
   readonly actualState: string | undefined;
 
   constructor(approvalId: string, reason: "not_found" | "not_approved" | "project_mismatch", actualState?: string) {
-    super(
-      "approval " + approvalId + " cannot start a run: " + reason +
-        (actualState === undefined ? "" : " (state=" + actualState + ")"),
-    );
+    super("approval " + approvalId + " cannot start a run: " + reason + (actualState === undefined ? "" : " (state=" + actualState + ")"));
     this.name = "ApprovalNotConsumableError";
     this.approvalId = approvalId;
     this.reason = reason;
@@ -62,11 +57,37 @@ export class RunStateConflictError extends Error {
   }
 }
 
+/** 批准时拿到的 hash 与库里 snapshot 的不一致（停留在旧页面）。 */
+export class StaleSnapshotError extends Error {
+  readonly approvalId: string;
+  constructor(approvalId: string) {
+    super("approval " + approvalId + ": snapshot hash does not match what the user approved");
+    this.name = "StaleSnapshotError";
+    this.approvalId = approvalId;
+  }
+}
+
+/** 审批状态已经变了（别人先批/先拒）。 */
+export class ApprovalDecisionConflictError extends Error {
+  readonly approvalId: string;
+  readonly actualState: string | null;
+  constructor(approvalId: string, actualState: string | null) {
+    super("approval " + approvalId + ": cannot decide, current state is " + (actualState ?? "missing"));
+    this.name = "ApprovalDecisionConflictError";
+    this.approvalId = approvalId;
+    this.actualState = actualState;
+  }
+}
+
 export interface ApprovalRow {
   id: string;
   project_id: string;
   snapshot_id: string;
   state: string;
+  decided_via: string | null;
+  reason: string | null;
+  created_at: string;
+  decided_at: string | null;
 }
 
 export interface RunRow {
@@ -86,7 +107,6 @@ export interface RunRow {
 export interface CreateRunInput {
   approvalId: string;
   adapterId: string;
-  /** 不传就用 approval 的 project_id；传了就必须一致 */
   projectId?: string;
   runId?: string;
   now?: string;
@@ -101,7 +121,29 @@ function readRun(db: SqliteDatabase, runId: string): RunRow | undefined {
   return db.prepare("SELECT * FROM runs WHERE id = ?").get(runId) as RunRow | undefined;
 }
 
-/** 从一个已批准的 Approval 创建 Run（AC-6）。同一事务里校验并插入。 */
+function readApproval(db: SqliteDatabase, approvalId: string): ApprovalRow | undefined {
+  return db.prepare("SELECT * FROM approvals WHERE id = ?").get(approvalId) as ApprovalRow | undefined;
+}
+
+function insertRun(
+  db: SqliteDatabase,
+  runId: string,
+  approval: { id: string; project_id: string; snapshot_id: string },
+  adapterId: string,
+  now: string,
+): void {
+  try {
+    db.prepare(
+      "INSERT INTO runs (id, project_id, approval_id, snapshot_id, adapter_id, state, created_at) " +
+        "VALUES (?, ?, ?, ?, ?, 'QUEUED', ?)",
+    ).run(runId, approval.project_id, approval.id, approval.snapshot_id, adapterId, now);
+  } catch (error) {
+    if (isUniqueViolation(error)) throw new ApprovalAlreadyConsumedError(approval.id);
+    throw error;
+  }
+}
+
+/** 从一个已批准的 Approval 创建 Run。保留给测试与迁移用；D-07 用 approveAndCreateRun。 */
 export async function createRunFromApproval(
   db: SqliteDatabase,
   queue: WriteQueue,
@@ -111,10 +153,7 @@ export async function createRunFromApproval(
   const runId = input.runId ?? "run_" + ulid();
 
   return writeTransaction(db, queue, () => {
-    const approval = db
-      .prepare("SELECT id, project_id, snapshot_id, state FROM approvals WHERE id = ?")
-      .get(input.approvalId) as ApprovalRow | undefined;
-
+    const approval = readApproval(db, input.approvalId);
     if (approval === undefined) throw new ApprovalNotConsumableError(input.approvalId, "not_found");
     if (approval.state !== "APPROVED") {
       throw new ApprovalNotConsumableError(input.approvalId, "not_approved", approval.state);
@@ -123,17 +162,60 @@ export async function createRunFromApproval(
       throw new ApprovalNotConsumableError(input.approvalId, "project_mismatch", approval.state);
     }
 
-    try {
-      db.prepare(
-        "INSERT INTO runs (id, project_id, approval_id, snapshot_id, adapter_id, state, created_at) " +
-          "VALUES (?, ?, ?, ?, ?, 'QUEUED', ?)",
-      ).run(runId, approval.project_id, approval.id, approval.snapshot_id, input.adapterId, now);
-    } catch (error) {
-      if (isUniqueViolation(error)) throw new ApprovalAlreadyConsumedError(input.approvalId);
-      throw error;
+    insertRun(db, runId, approval, input.adapterId, now);
+    return readRun(db, runId)!;
+  });
+}
+
+export interface ApproveAndCreateRunInput {
+  approvalId: string;
+  /** 用户在界面上看到的 snapshot hash（AC-6 的防陈旧批准） */
+  expectedSnapshotHash: string;
+  adapterId: string;
+  decidedVia?: "desktop" | "mobile" | null;
+  runId?: string;
+  now?: string;
+}
+
+/**
+ * 批准并创建 Run —— 一个事务（AC-6）。
+ *
+ * 避免「Approval 卡在 APPROVED 但没有 Run」的死状态：要么都成功，要么都没发生。
+ */
+export async function approveAndCreateRun(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  input: ApproveAndCreateRunInput,
+): Promise<{ approval: ApprovalRow; run: RunRow }> {
+  const now = input.now ?? new Date().toISOString();
+  const runId = input.runId ?? "run_" + ulid();
+
+  return writeTransaction(db, queue, () => {
+    const approval = readApproval(db, input.approvalId);
+    if (approval === undefined) throw new ApprovalNotConsumableError(input.approvalId, "not_found");
+
+    const snapshot = db
+      .prepare("SELECT content_hash FROM prompt_snapshots WHERE id = ?")
+      .get(approval.snapshot_id) as { content_hash: string } | undefined;
+    if (snapshot === undefined) throw new ApprovalNotConsumableError(input.approvalId, "not_found");
+    if (snapshot.content_hash !== input.expectedSnapshotHash) {
+      throw new StaleSnapshotError(input.approvalId);
     }
 
-    return readRun(db, runId)!;
+    const updated = db
+      .prepare(
+        "UPDATE approvals SET state = 'APPROVED', decided_via = ?, decided_at = ? " +
+          "WHERE id = ? AND state = 'READY_FOR_REVIEW'",
+      )
+      .run(input.decidedVia ?? null, now, input.approvalId);
+
+    if (updated.changes !== 1) {
+      throw new ApprovalDecisionConflictError(input.approvalId, approval.state);
+    }
+
+    insertRun(db, runId, approval, input.adapterId, now);
+
+    return { approval: readApproval(db, input.approvalId)!, run: readRun(db, runId)! };
   });
 }
 
@@ -144,15 +226,14 @@ export interface RunPatch {
   finishedAt?: string | null;
 }
 
-/** CAS 状态变更：只有当前状态确实是 from 才更新，否则抛 RunStateConflictError。 */
-export async function transitionRun(
+/** CAS 状态变更的同步事务体。调用方必须已经处在 writeTransaction 里。 */
+export function transitionRunTx(
   db: SqliteDatabase,
-  queue: WriteQueue,
   runId: string,
   from: RunState,
   to: RunState,
   patch: RunPatch = {},
-): Promise<RunRow> {
+): RunRow {
   assertTransition(RUN_TRANSITIONS, "run", from, to);
 
   if (patch.substate !== undefined && patch.substate !== null && !canHaveSubstate(to)) {
@@ -162,38 +243,50 @@ export async function transitionRun(
     throw new IllegalTransitionError("run", from, to);
   }
 
-  return writeTransaction(db, queue, () => {
-    const sets: string[] = ["state = @to"];
-    const params: Record<string, unknown> = { to, id: runId, from };
+  const sets: string[] = ["state = @to"];
+  const params: Record<string, unknown> = { to, id: runId, from };
 
-    if (patch.substate !== undefined) {
-      sets.push("substate = @substate");
-      params["substate"] = patch.substate;
-    }
-    if (patch.failureReason !== undefined) {
-      sets.push("failure_reason = @failureReason");
-      params["failureReason"] = patch.failureReason;
-    }
-    if (patch.startedAt !== undefined) {
-      sets.push("started_at = @startedAt");
-      params["startedAt"] = patch.startedAt;
-    }
-    if (patch.finishedAt !== undefined) {
-      sets.push("finished_at = @finishedAt");
-      params["finishedAt"] = patch.finishedAt;
-    }
+  // 离开 RUNNING 时 substate 必须清空，否则会撞上 CHECK (substate IS NULL OR state = RUNNING)
+  const substate = patch.substate !== undefined ? patch.substate : (canHaveSubstate(to) ? undefined : null);
+  if (substate !== undefined) {
+    sets.push("substate = @substate");
+    params["substate"] = substate;
+  }
+  if (patch.failureReason !== undefined) {
+    sets.push("failure_reason = @failureReason");
+    params["failureReason"] = patch.failureReason;
+  }
+  if (patch.startedAt !== undefined) {
+    sets.push("started_at = @startedAt");
+    params["startedAt"] = patch.startedAt;
+  }
+  if (patch.finishedAt !== undefined) {
+    sets.push("finished_at = @finishedAt");
+    params["finishedAt"] = patch.finishedAt;
+  }
 
-    const result = db
-      .prepare("UPDATE runs SET " + sets.join(", ") + " WHERE id = @id AND state = @from")
-      .run(params);
+  const result = db
+    .prepare("UPDATE runs SET " + sets.join(", ") + " WHERE id = @id AND state = @from")
+    .run(params);
 
-    if (result.changes !== 1) {
-      const current = readRun(db, runId);
-      throw new RunStateConflictError(runId, from, current?.state ?? null);
-    }
+  if (result.changes !== 1) {
+    const current = readRun(db, runId);
+    throw new RunStateConflictError(runId, from, current?.state ?? null);
+  }
 
-    return readRun(db, runId)!;
-  });
+  return readRun(db, runId)!;
+}
+
+/** 对外包装：排队 + 开事务。 */
+export async function transitionRun(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  runId: string,
+  from: RunState,
+  to: RunState,
+  patch: RunPatch = {},
+): Promise<RunRow> {
+  return writeTransaction(db, queue, () => transitionRunTx(db, runId, from, to, patch));
 }
 
 export interface RunEventInput {
@@ -203,34 +296,47 @@ export interface RunEventInput {
   ts?: string;
 }
 
-/** 追加一条 run 事件。终止事件的唯一性由数据库索引兜底（AC-9）。 */
+export interface StoredEvent {
+  seq: number;
+  eventId: string;
+  ts: string;
+}
+
+const TERMINAL_TYPES = new Set(["completed", "error", "cancelled", "timed_out"]);
+
+/** 追加事件的同步事务体。seq / eventId 由数据库分配，调用方不得自己编。 */
+export function appendRunEventTx(
+  db: SqliteDatabase,
+  runId: string,
+  event: RunEventInput,
+  options: { allowTerminal?: boolean } = {},
+): StoredEvent {
+  if (TERMINAL_TYPES.has(event.type) && options.allowTerminal !== true) {
+    throw new Error("terminal event \"" + event.type + "\" must go through finishRun(), not appendRunEvent()");
+  }
+
+  const ts = event.ts ?? new Date().toISOString();
+  const row = db
+    .prepare("SELECT COALESCE(MAX(seq) + 1, 0) AS next FROM run_events WHERE run_id = ?")
+    .get(runId) as { next: number };
+  const seq = row.next;
+  const eventId = event.eventId ?? runId + "_" + seq;
+
+  db.prepare(
+    "INSERT INTO run_events (run_id, seq, event_id, type, payload, ts) VALUES (?, ?, ?, ?, ?, ?)",
+  ).run(runId, seq, eventId, event.type, JSON.stringify(event.payload ?? {}), ts);
+
+  return { seq, eventId, ts };
+}
+
+/** 对外包装。终止类型会被拒绝（见模块头部的约定 3）。 */
 export async function appendRunEvent(
   db: SqliteDatabase,
   queue: WriteQueue,
   runId: string,
   event: RunEventInput,
-): Promise<number> {
-  const ts = event.ts ?? new Date().toISOString();
-
-  return writeTransaction(db, queue, () => {
-    const row = db
-      .prepare("SELECT COALESCE(MAX(seq) + 1, 0) AS next FROM run_events WHERE run_id = ?")
-      .get(runId) as { next: number };
-    const seq = row.next;
-
-    db.prepare(
-      "INSERT INTO run_events (run_id, seq, event_id, type, payload, ts) VALUES (?, ?, ?, ?, ?, ?)",
-    ).run(
-      runId,
-      seq,
-      event.eventId ?? runId + "_" + seq,
-      event.type,
-      JSON.stringify(event.payload ?? {}),
-      ts,
-    );
-
-    return seq;
-  });
+): Promise<StoredEvent> {
+  return writeTransaction(db, queue, () => appendRunEventTx(db, runId, event));
 }
 
 export type TerminalType = "completed" | "error" | "cancelled" | "timed_out";
@@ -253,7 +359,10 @@ export interface FinishRunInput {
   now?: string;
 }
 
-/** 结束一个 Run：CAS 到终态并追加终止事件，同一事务。 */
+/**
+ * 结束一个 Run：CAS 到终态 **和** 写终止事件在**同一个事务**里。
+ * 任何一步失败整体回滚，所以不会出现「终态但没事件」或「有事件但状态没变」。
+ */
 export async function finishRun(
   db: SqliteDatabase,
   queue: WriteQueue,
@@ -265,20 +374,22 @@ export async function finishRun(
 
   assertTransition(RUN_TRANSITIONS, "run", input.from, to);
 
-  await transitionRun(db, queue, runId, input.from, to, {
-    substate: null,
-    failureReason: input.terminal.type === "error" ? (input.terminal.reason ?? "internal") : null,
-    finishedAt: now,
-  });
-
   const payload: Record<string, unknown> = { type: input.terminal.type };
   if (input.terminal.reason !== undefined) payload["reason"] = input.terminal.reason;
   if (input.terminal.message !== undefined) payload["message"] = input.terminal.message;
   if (input.terminal.kind !== undefined) payload["kind"] = input.terminal.kind;
 
-  await appendRunEvent(db, queue, runId, { type: input.terminal.type, ts: now, payload });
+  return writeTransaction(db, queue, () => {
+    transitionRunTx(db, runId, input.from, to, {
+      substate: null,
+      failureReason: input.terminal.type === "error" ? (input.terminal.reason ?? "internal") : null,
+      finishedAt: now,
+    });
 
-  return readRun(db, runId)!;
+    appendRunEventTx(db, runId, { type: input.terminal.type, ts: now, payload }, { allowTerminal: true });
+
+    return readRun(db, runId)!;
+  });
 }
 
 export interface RepairResult {
@@ -287,41 +398,48 @@ export interface RepairResult {
 }
 
 /**
- * 启动修复（V0.4 §32 / §24）：把崩溃遗留的 STARTING / RUNNING 标成 FAILED(interrupted)，
- * 并保证每个被修复的 run 恰好有一条终止事件（AC-9）。
+ * 启动修复（V0.4 §32 / §24）：STARTING / RUNNING / QUEUED 都标成 FAILED(interrupted)。
+ * QUEUED 也要修——Phase 0 没有持久化派发队列，重启后没人会再启动它，用户重新批准即可。
  */
 export async function repairInterruptedRuns(
   db: SqliteDatabase,
   queue: WriteQueue,
   now: string = new Date().toISOString(),
 ): Promise<RepairResult> {
-  const stale = db.prepare("SELECT * FROM runs WHERE state IN ('STARTING', 'RUNNING')").all() as RunRow[];
+  const stale = db
+    .prepare("SELECT * FROM runs WHERE state IN ('QUEUED', 'STARTING', 'RUNNING')")
+    .all() as RunRow[];
 
   const repaired: RunRow[] = [];
   let appendedEvents = 0;
 
   for (const run of stale) {
-    const updated = await transitionRun(db, queue, run.id, run.state, "FAILED", {
-      substate: null,
-      failureReason: "interrupted",
-      finishedAt: now,
-    });
-
-    const terminal = db
-      .prepare(
-        "SELECT 1 AS present FROM run_events WHERE run_id = ? " +
-          "AND type IN ('completed', 'error', 'cancelled', 'timed_out') LIMIT 1",
-      )
-      .get(run.id) as { present: number } | undefined;
-
-    if (terminal === undefined) {
-      await appendRunEvent(db, queue, run.id, {
-        type: "error",
-        ts: now,
-        payload: { type: "error", reason: "interrupted", message: "orchestrator restarted" },
+    const updated = await writeTransaction(db, queue, () => {
+      const next = transitionRunTx(db, run.id, run.state, "FAILED", {
+        substate: null,
+        failureReason: "interrupted",
+        finishedAt: now,
       });
-      appendedEvents += 1;
-    }
+
+      const terminal = db
+        .prepare(
+          "SELECT 1 AS present FROM run_events WHERE run_id = ? " +
+            "AND type IN ('completed', 'error', 'cancelled', 'timed_out') LIMIT 1",
+        )
+        .get(run.id) as { present: number } | undefined;
+
+      if (terminal === undefined) {
+        appendRunEventTx(
+          db,
+          run.id,
+          { type: "error", ts: now, payload: { type: "error", reason: "interrupted", message: "orchestrator restarted" } },
+          { allowTerminal: true },
+        );
+        appendedEvents += 1;
+      }
+
+      return next;
+    });
 
     repaired.push(updated);
   }
@@ -333,11 +451,11 @@ export async function repairInterruptedRuns(
 export function getRunWithEvents(
   db: SqliteDatabase,
   runId: string,
-): { run: RunRow; events: { seq: number; type: string; payload: string; ts: string }[] } | undefined {
+): { run: RunRow; events: { seq: number; eventId: string; type: string; payload: string; ts: string }[] } | undefined {
   const run = readRun(db, runId);
   if (run === undefined) return undefined;
   const events = db
-    .prepare("SELECT seq, type, payload, ts FROM run_events WHERE run_id = ? ORDER BY seq")
-    .all(runId) as { seq: number; type: string; payload: string; ts: string }[];
+    .prepare("SELECT seq, event_id AS eventId, type, payload, ts FROM run_events WHERE run_id = ? ORDER BY seq")
+    .all(runId) as { seq: number; eventId: string; type: string; payload: string; ts: string }[];
   return { run, events };
 }

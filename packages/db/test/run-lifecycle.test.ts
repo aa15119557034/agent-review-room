@@ -9,11 +9,14 @@ import type { SqliteDatabase } from "../src/index";
 import {
   appendRunEvent,
   ApprovalAlreadyConsumedError,
+  ApprovalDecisionConflictError,
   ApprovalNotConsumableError,
+  approveAndCreateRun,
   createRunFromApproval,
   finishRun,
   getRunWithEvents,
   repairInterruptedRuns,
+  StaleSnapshotError,
   RunStateConflictError,
   transitionRun,
 } from "../src/run-lifecycle";
@@ -239,15 +242,31 @@ describe("finishRun (AC-8 / AC-9)", () => {
     db.close();
   });
 
-  it("rejects a second terminal event at the database level", async () => {
+  it("refuses terminal events on appendRunEvent — they must go through finishRun", async () => {
     const { db } = freshDb();
     const queue = new WriteQueue();
     const world = seedWorld(db);
     const run = await createRunFromApproval(db, queue, { approvalId: world.approvalId, adapterId: "api" });
 
-    await appendRunEvent(db, queue, run.id, { type: "completed" });
-    await assert.rejects(appendRunEvent(db, queue, run.id, { type: "error" }), /UNIQUE/);
-    assert.equal(count(db, "SELECT count(*) AS n FROM run_events"), 1);
+    await assert.rejects(
+      appendRunEvent(db, queue, run.id, { type: "completed" }),
+      /must go through finishRun/,
+    );
+    assert.equal(count(db, "SELECT count(*) AS n FROM run_events"), 0);
+    db.close();
+  });
+
+  it("still has the database-level unique index as the last line of defence", async () => {
+    const { db } = freshDb();
+    const queue = new WriteQueue();
+    const world = seedWorld(db);
+    const run = await createRunFromApproval(db, queue, { approvalId: world.approvalId, adapterId: "api" });
+
+    const insert = db.prepare(
+      "INSERT INTO run_events (run_id, seq, event_id, type, payload, ts) VALUES (?, ?, ?, ?, '{}', ?)",
+    );
+    insert.run(run.id, 0, run.id + "_0", "completed", NOW);
+    assert.throws(() => insert.run(run.id, 1, run.id + "_1", "error", NOW), /UNIQUE/);
     db.close();
   });
 });
@@ -297,12 +316,123 @@ describe("repairInterruptedRuns (§32)", () => {
     const run = await createRunFromApproval(db, queue, { approvalId: world.approvalId, adapterId: "api" });
     await transitionRun(db, queue, run.id, "QUEUED", "STARTING");
     await transitionRun(db, queue, run.id, "STARTING", "RUNNING");
-    await appendRunEvent(db, queue, run.id, { type: "completed" });
+    // 模拟「已有终止事件的 RUNNING run」（正常路径不会出现，用 SQL 构造）
+    db.prepare(
+      "INSERT INTO run_events (run_id, seq, event_id, type, payload, ts) VALUES (?, 0, ?, 'completed', '{}', ?)",
+    ).run(run.id, run.id + "_0", NOW);
 
     const result = await repairInterruptedRuns(db, queue, NOW);
     assert.equal(result.repaired.length, 1);
     assert.equal(result.appendedEvents, 0);
     assert.equal(count(db, "SELECT count(*) AS n FROM run_events"), 1);
+    db.close();
+  });
+});
+
+describe("approveAndCreateRun (AC-6 单事务)", () => {
+  it("moves READY_FOR_REVIEW to APPROVED and creates the run in one transaction", async () => {
+    const { db } = freshDb();
+    const queue = new WriteQueue();
+    const world = seedWorld(db, "READY_FOR_REVIEW");
+
+    const result = await approveAndCreateRun(db, queue, {
+      approvalId: world.approvalId,
+      expectedSnapshotHash: "a".repeat(64),
+      adapterId: "api",
+      decidedVia: "desktop",
+      now: NOW,
+    });
+
+    assert.equal(result.approval.state, "APPROVED");
+    assert.equal(result.approval.decided_at, NOW);
+    assert.equal(result.approval.decided_via, "desktop");
+    assert.equal(result.run.state, "QUEUED");
+    assert.equal(result.run.snapshot_id, world.snapshotId);
+    db.close();
+  });
+
+  it("refuses a stale snapshot hash without changing anything", async () => {
+    const { db } = freshDb();
+    const queue = new WriteQueue();
+    const world = seedWorld(db, "READY_FOR_REVIEW");
+
+    await assert.rejects(
+      approveAndCreateRun(db, queue, {
+        approvalId: world.approvalId,
+        expectedSnapshotHash: "b".repeat(64),
+        adapterId: "api",
+      }),
+      StaleSnapshotError,
+    );
+
+    const state = (db.prepare("SELECT state FROM approvals WHERE id = ?").get(world.approvalId) as { state: string }).state;
+    assert.equal(state, "READY_FOR_REVIEW");
+    assert.equal(count(db, "SELECT count(*) AS n FROM runs"), 0);
+    db.close();
+  });
+
+  it("refuses a second decision on the same approval", async () => {
+    const { db } = freshDb();
+    const queue = new WriteQueue();
+    const world = seedWorld(db, "READY_FOR_REVIEW");
+
+    await approveAndCreateRun(db, queue, {
+      approvalId: world.approvalId,
+      expectedSnapshotHash: "a".repeat(64),
+      adapterId: "api",
+    });
+
+    await assert.rejects(
+      approveAndCreateRun(db, queue, {
+        approvalId: world.approvalId,
+        expectedSnapshotHash: "a".repeat(64),
+        adapterId: "api",
+      }),
+      ApprovalDecisionConflictError,
+    );
+    assert.equal(count(db, "SELECT count(*) AS n FROM runs"), 1);
+    db.close();
+  });
+});
+
+describe("extra guarantees", () => {
+  it("repairs QUEUED runs too — nobody will start them after a restart", async () => {
+    const { db } = freshDb();
+    const queue = new WriteQueue();
+    const world = seedWorld(db);
+    const run = await createRunFromApproval(db, queue, { approvalId: world.approvalId, adapterId: "api" });
+
+    const result = await repairInterruptedRuns(db, queue, NOW);
+    assert.equal(result.repaired.length, 1);
+    assert.equal(result.repaired[0]?.state, "FAILED");
+    assert.equal(result.repaired[0]?.failure_reason, "interrupted");
+    assert.equal(count(db, "SELECT count(*) AS n FROM run_events WHERE type = 'error'"), 1);
+    db.close();
+  });
+
+  it("clears substate automatically when leaving RUNNING", async () => {
+    const { db } = freshDb();
+    const queue = new WriteQueue();
+    const world = seedWorld(db);
+    const run = await createRunFromApproval(db, queue, { approvalId: world.approvalId, adapterId: "api" });
+    await transitionRun(db, queue, run.id, "QUEUED", "STARTING");
+    await transitionRun(db, queue, run.id, "STARTING", "RUNNING", { substate: "active" });
+
+    const cancelled = await transitionRun(db, queue, run.id, "RUNNING", "CANCELLED");
+    assert.equal(cancelled.substate, null);
+    db.close();
+  });
+
+  it("exposes eventId in getRunWithEvents", async () => {
+    const { db } = freshDb();
+    const queue = new WriteQueue();
+    const world = seedWorld(db);
+    const run = await createRunFromApproval(db, queue, { approvalId: world.approvalId, adapterId: "api" });
+
+    const stored = await appendRunEvent(db, queue, run.id, { type: "message_delta", payload: { text: "x" } });
+    const view = getRunWithEvents(db, run.id)!;
+    assert.equal(view.events[0]?.eventId, stored.eventId);
+    assert.equal(typeof stored.seq, "number");
     db.close();
   });
 });
