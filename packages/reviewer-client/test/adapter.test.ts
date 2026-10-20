@@ -238,3 +238,50 @@ describe("stream integrity (D-05b)", () => {
     assert.equal(last?.type === "timed_out" ? last.kind : null, "idle");
   });
 });
+
+describe("lifecycle safety (D-05b review)", () => {
+  it("does not leak an unhandled rejection when aborted during connect", async () => {
+    const unhandled: unknown[] = [];
+    const onUnhandled = (reason: unknown): void => {
+      unhandled.push(reason);
+    };
+    process.on("unhandledRejection", onUnhandled);
+
+    try {
+      // fetch 一直挂起，直到 signal abort
+      const impl = ((_url: string, init: RequestInit) =>
+        new Promise((_resolve, reject) => {
+          init.signal?.addEventListener("abort", () => reject(new Error("aborted")));
+        })) as unknown as typeof fetch;
+
+      const adapter = createReviewerAdapter({ apiKey: "k", model: "m", fetchImpl: impl });
+      const controller = new AbortController();
+      const events: AgentEvent[] = [];
+
+      const consuming = (async () => {
+        for await (const event of adapter.run(
+          "sess_1",
+          RUN_ID,
+          { snapshotId: "snap_01JABCDEFGHJKMNPQRSTVWXYZ0", content: CONTENT, contentHash: HASH },
+          {
+            signal: controller.signal,
+            onPermissionRequest: async () => ({ decision: "deny" as const, decidedBy: "system" as const }),
+            idleTimeoutMs: 5000,
+            totalTimeoutMs: 5000,
+          },
+        )) {
+          events.push(event);
+        }
+      })();
+
+      setTimeout(() => controller.abort(), 20);
+      await consuming;
+      await new Promise((resolve) => setTimeout(resolve, 30));
+
+      assert.equal(unhandled.length, 0, "must not produce an unhandled rejection");
+      assert.equal(events[events.length - 1]?.type, "cancelled");
+    } finally {
+      process.off("unhandledRejection", onUnhandled);
+    }
+  });
+});

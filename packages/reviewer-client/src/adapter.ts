@@ -155,6 +155,9 @@ export class ReviewerAdapter implements AgentAdapter {
     const aborted = new Promise<never>((_resolve, reject) => {
       rejectAborted = reject;
     });
+    // 只用于 Promise.race。连接阶段就被取消时它还没被 race 接住，
+    // 不挂空处理会变成 unhandled rejection —— 在 Electron main 里就是整个应用退出。
+    aborted.catch(() => undefined);
     controller.signal.addEventListener("abort", () => rejectAborted(new Error("request aborted")), { once: true });
 
     const totalTimer = setTimeout(() => {
@@ -240,7 +243,7 @@ export class ReviewerAdapter implements AgentAdapter {
       if (!sawDone && finishReason === null) {
         yield emit({
           type: "error",
-          reason: "internal",
+          reason: "incomplete_output",
           message: "stream ended unexpectedly (no [DONE] and no finish_reason); result discarded",
         });
         terminalSent = true;
