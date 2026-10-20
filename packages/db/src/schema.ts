@@ -46,6 +46,43 @@ const REVIEWER_AGENT_CHECK =
 const SHA256_CHECK = (column: string): string =>
   `CHECK (length(${column}) = 64 AND ${column} NOT GLOB '*[^0-9a-f]*')`;
 
+/** runs 表的列与约束（v1 与 v2 共用）。用模板字符串保留 ${...} 插值。 */
+const RUNS_COLUMNS = `  id              TEXT NOT NULL PRIMARY KEY,
+  project_id      TEXT NOT NULL REFERENCES projects(id) ON DELETE RESTRICT,
+  -- 「一个 Approval 最多一个 Run」由唯一约束保证；消费 Approval + 建 Run 必须同事务
+  approval_id     TEXT NOT NULL UNIQUE REFERENCES approvals(id) ON DELETE RESTRICT,
+  snapshot_id     TEXT NOT NULL REFERENCES prompt_snapshots(id) ON DELETE RESTRICT,
+  adapter_id      TEXT NOT NULL CHECK (length(adapter_id) >= 1),
+  state           TEXT NOT NULL ${inCheck("state", RUN_STATES)},
+  substate        TEXT CHECK (substate IS NULL OR substate IN (${quoted(RUN_SUBSTATES)})),
+  failure_reason  TEXT CHECK (failure_reason IS NULL OR failure_reason IN (${quoted(FAILURE_REASONS)})),
+  created_at      TEXT NOT NULL,
+  started_at      TEXT,
+  finished_at     TEXT,
+  -- 契约：substate 只在 RUNNING 时非 null；failureReason 只在 FAILED 时非 null
+  CHECK (substate IS NULL OR state = 'RUNNING'),
+  CHECK (failure_reason IS NULL OR state = 'FAILED')`;
+
+/** runs 的两个触发器（表重建后必须重新挂上） */
+const RUNS_TRIGGERS = "CREATE TRIGGER runs_must_match_approved_approval BEFORE INSERT ON runs\nWHEN NOT EXISTS (\n  SELECT 1 FROM approvals a\n  WHERE a.id = NEW.approval_id\n    AND a.snapshot_id = NEW.snapshot_id\n    AND a.project_id = NEW.project_id\n    AND a.state = 'APPROVED'\n)\nBEGIN\n  SELECT RAISE(ABORT, 'run must match an APPROVED approval of the same snapshot');\nEND;\n\n-- Run 的身份字段不可改：否则可以把已存在的 Run 改挂到别的 snapshot / approval 上\nCREATE TRIGGER runs_identity_is_immutable\nBEFORE UPDATE OF approval_id, snapshot_id, project_id ON runs\nWHEN NEW.approval_id IS NOT OLD.approval_id\n  OR NEW.snapshot_id IS NOT OLD.snapshot_id\n  OR NEW.project_id IS NOT OLD.project_id\nBEGIN\n  SELECT RAISE(ABORT, 'run identity is immutable');\nEND;";
+
+/**
+ * v2：failure_reason 的 CHECK 在 v1 时由枚举生成；契约新增 incomplete_output 后，
+ * 已经建好的数据库不认识新值。SQLite 不能修改 CHECK，只能重建表：
+ * 建新表 → 拷数据 → 删旧表 → 改名 → 重建索引与触发器。
+ * 外键在此期间关闭（由 runMigrations 负责），否则 DROP TABLE runs 会被引用挡住。
+ */
+export const SCHEMA_V2 = [
+  "CREATE TABLE runs_v2 (\n" + RUNS_COLUMNS + "\n) STRICT;",
+  "INSERT INTO runs_v2 (id, project_id, approval_id, snapshot_id, adapter_id, state, substate, failure_reason, created_at, started_at, finished_at)",
+  "SELECT id, project_id, approval_id, snapshot_id, adapter_id, state, substate, failure_reason, created_at, started_at, finished_at FROM runs;",
+  "DROP TABLE runs;",
+  "ALTER TABLE runs_v2 RENAME TO runs;",
+  "CREATE INDEX idx_runs_project_created ON runs(project_id, created_at);",
+  "CREATE INDEX idx_runs_state ON runs(state) WHERE state IN ('QUEUED', 'STARTING', 'RUNNING');",
+  RUNS_TRIGGERS,
+].join("\n");
+
 export const SCHEMA_V1 = `
 -- ---------------------------------------------------------------- 项目
 CREATE TABLE projects (
@@ -125,21 +162,7 @@ CREATE TABLE approvals (
 
 -- ---------------------------------------------------------------- Run
 CREATE TABLE runs (
-  id              TEXT NOT NULL PRIMARY KEY,
-  project_id      TEXT NOT NULL REFERENCES projects(id) ON DELETE RESTRICT,
-  -- 「一个 Approval 最多一个 Run」由唯一约束保证；消费 Approval + 建 Run 必须同事务
-  approval_id     TEXT NOT NULL UNIQUE REFERENCES approvals(id) ON DELETE RESTRICT,
-  snapshot_id     TEXT NOT NULL REFERENCES prompt_snapshots(id) ON DELETE RESTRICT,
-  adapter_id      TEXT NOT NULL CHECK (length(adapter_id) >= 1),
-  state           TEXT NOT NULL ${inCheck("state", RUN_STATES)},
-  substate        TEXT CHECK (substate IS NULL OR substate IN (${quoted(RUN_SUBSTATES)})),
-  failure_reason  TEXT CHECK (failure_reason IS NULL OR failure_reason IN (${quoted(FAILURE_REASONS)})),
-  created_at      TEXT NOT NULL,
-  started_at      TEXT,
-  finished_at     TEXT,
-  -- 契约：substate 只在 RUNNING 时非 null；failureReason 只在 FAILED 时非 null
-  CHECK (substate IS NULL OR state = 'RUNNING'),
-  CHECK (failure_reason IS NULL OR state = 'FAILED')
+${RUNS_COLUMNS}
 ) STRICT;
 
 -- ---------------------------------------------------------------- Run 事件（只追加）
@@ -211,27 +234,7 @@ END;
 
 -- 核心承诺（AC-7）：Run 必须对应「批准了同一份 snapshot」的 Approval。
 -- 「消费 Approval」和「创建 Run」必须同事务，且 Approval 先变成 APPROVED。
-CREATE TRIGGER runs_must_match_approved_approval BEFORE INSERT ON runs
-WHEN NOT EXISTS (
-  SELECT 1 FROM approvals a
-  WHERE a.id = NEW.approval_id
-    AND a.snapshot_id = NEW.snapshot_id
-    AND a.project_id = NEW.project_id
-    AND a.state = 'APPROVED'
-)
-BEGIN
-  SELECT RAISE(ABORT, 'run must match an APPROVED approval of the same snapshot');
-END;
-
--- Run 的身份字段不可改：否则可以把已存在的 Run 改挂到别的 snapshot / approval 上
-CREATE TRIGGER runs_identity_is_immutable
-BEFORE UPDATE OF approval_id, snapshot_id, project_id ON runs
-WHEN NEW.approval_id IS NOT OLD.approval_id
-  OR NEW.snapshot_id IS NOT OLD.snapshot_id
-  OR NEW.project_id IS NOT OLD.project_id
-BEGIN
-  SELECT RAISE(ABORT, 'run identity is immutable');
-END;
+${RUNS_TRIGGERS}
 
 -- 跨表一致性：Contribution 必须属于来源 message 的同一个项目
 CREATE TRIGGER contributions_project_matches_message BEFORE INSERT ON contributions

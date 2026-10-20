@@ -1,5 +1,5 @@
 import type { Database } from "better-sqlite3";
-import { SCHEMA_V1 } from "./schema";
+import { SCHEMA_V1, SCHEMA_V2 } from "./schema";
 
 /**
  * 迁移（D-02）：用 PRAGMA user_version 记版本，每个迁移在自己的事务里跑。
@@ -11,6 +11,11 @@ export interface Migration {
   readonly version: number;
   readonly name: string;
   readonly up: (db: Database) => void;
+  /**
+   * 表重建类迁移需要临时关闭外键（SQLite 要求关外键必须在事务之外），
+   * runMigrations 会在迁移前后自动开关。
+   */
+  readonly disableForeignKeys?: boolean;
 }
 
 export const MIGRATIONS: readonly Migration[] = [
@@ -19,6 +24,14 @@ export const MIGRATIONS: readonly Migration[] = [
     name: "phase0-initial",
     up: (db) => {
       db.exec(SCHEMA_V1);
+    },
+  },
+  {
+    version: 2,
+    name: "runs-failure-reason-incomplete-output",
+    disableForeignKeys: true,
+    up: (db) => {
+      db.exec(SCHEMA_V2);
     },
   },
 ];
@@ -44,20 +57,27 @@ export function runMigrations(db: Database): number {
       );
     }
 
-    db.exec("BEGIN IMMEDIATE");
+    // 外键开关必须在事务外，所以放在 BEGIN 之前；结束时无论如何都恢复
+    if (migration.disableForeignKeys === true) db.pragma("foreign_keys = OFF");
+
     try {
-      migration.up(db);
-      // PRAGMA 不接受参数占位符；version 来自本文件的常量，不是外部输入
-      db.pragma(`user_version = ${migration.version}`);
-      db.exec("COMMIT");
-      applied += 1;
-    } catch (error) {
+      db.exec("BEGIN IMMEDIATE");
       try {
-        db.exec("ROLLBACK");
-      } catch {
-        // 事务可能已被 SQLite 自动回滚
+        migration.up(db);
+        // PRAGMA 不接受参数占位符；version 来自本文件的常量，不是外部输入
+        db.pragma(`user_version = ${migration.version}`);
+        db.exec("COMMIT");
+        applied += 1;
+      } catch (error) {
+        try {
+          db.exec("ROLLBACK");
+        } catch {
+          // 事务可能已被 SQLite 自动回滚
+        }
+        throw error;
       }
-      throw error;
+    } finally {
+      if (migration.disableForeignKeys === true) db.pragma("foreign_keys = ON");
     }
   }
 
