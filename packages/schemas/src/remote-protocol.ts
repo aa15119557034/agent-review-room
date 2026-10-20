@@ -68,6 +68,7 @@ export const RemoteTerminal = z.discriminatedUnion("outcome", [
       "process_exit_nonzero",
       "lease_expired",
       "output_limit_exceeded",
+      "incomplete_output", // 进程正常退出，但解析器没看到完整的结束标记（例如流被截断）
       "node_shutdown",
       "internal",
     ]),
@@ -81,6 +82,13 @@ export const RemoteTerminal = z.discriminatedUnion("outcome", [
 export const RemoteEvent = z.discriminatedUnion("type", [
   z.object({ type: z.literal("started"), ...seqd }),
   z.object({ type: z.literal("output"), ...seqd, stream: z.enum(["stdout", "stderr"]), data: z.string() }),
+  /**
+   * 节点已经解析好的回复文字（profile 配置了 parser 时才会出现，例如 claude-stream-json）。
+   * 有解析器时 stdout 不再以 output 事件转发，stderr 照常转发。
+   */
+  z.object({ type: z.literal("text_delta"), ...seqd, text: z.string() }),
+  /** 完整回复，权威结果。每个 run 最多一次，且一定在 terminal(completed) 之前 */
+  z.object({ type: z.literal("message_complete"), ...seqd, text: z.string() }),
   z.object({ type: z.literal("permission_request"), ...seqd, request: PermissionRequest }),
   z.object({ type: z.literal("terminal"), ...seqd, result: RemoteTerminal }),
   z.object({ type: z.literal("heartbeat"), ts: IsoTimestamp, lastSeq: z.number().int().min(-1) }),

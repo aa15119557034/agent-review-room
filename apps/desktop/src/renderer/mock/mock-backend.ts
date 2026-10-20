@@ -100,6 +100,9 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
     events: new Map<string, AgentEvent[]>(),
   };
   const timers = new Map<string, ReturnType<typeof setTimeout>[]>();
+  // Reviewer 节点设置（token 只存在这里，查询永远不返回）
+  let node: { baseUrl: string; profileId: string; tokenConfigured: boolean } | null = null;
+  let nodeToken: string | null = null;
   const listeners = new Set<(e: ControlEvent) => void>();
 
   const emit = (e: ControlEvent) => {
@@ -329,6 +332,38 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
     async "permission.decide"() {
       throw new MockError("not_found", "Phase 0 没有权限请求");
     },
+
+    async "settings.updateReviewerNode"(req) {
+      const tokenConfigured = req.token !== undefined || (node?.tokenConfigured ?? false);
+      node = { baseUrl: req.baseUrl, profileId: req.profileId, tokenConfigured };
+      if (req.token !== undefined) nodeToken = req.token;
+      return node;
+    },
+
+    async "settings.testReviewerNode"(req) {
+      // mock 规则：地址里含 "offline" 视为连不上；token 以 "bad" 开头视为鉴权失败
+      const token = req.token ?? nodeToken;
+      if (!token) return { reachable: false, error: "no_token", message: "还没有填写 Token" };
+      if (String(req.baseUrl).includes("offline")) {
+        return { reachable: false, error: "unreachable", message: "连接被拒绝（ECONNREFUSED）" };
+      }
+      if (token.startsWith("bad")) return { reachable: false, error: "unauthorized", message: "Token 不正确" };
+      const profiles = ["claude-review", "echo"];
+      return {
+        reachable: true,
+        health: {
+          protocol: 1,
+          nodeId: "mock-node",
+          profiles,
+          activeRuns: 0,
+          maxConcurrentRuns: 1,
+          leaseMs: 20000,
+          heartbeatMs: 5000,
+        },
+        profileAvailable: profiles.includes(req.profileId),
+        latencyMs: 12,
+      };
+    },
   };
 
   // ------------------------------------------------------------ queries
@@ -368,6 +403,9 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
     },
     async "runs.get"(req) {
       return find(db.runs, req.runId, "Run");
+    },
+    async "settings.get"() {
+      return { reviewerNode: node };
     },
     async "runs.events"(req) {
       return (db.events.get(req.runId) ?? []).filter((e) => e.seq > (req.afterSeq ?? -1));
