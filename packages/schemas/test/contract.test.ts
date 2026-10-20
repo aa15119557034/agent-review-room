@@ -128,3 +128,36 @@ describe("entities", () => {
     assert.deepEqual([...TERMINAL_EVENT_TYPES].sort(), ["cancelled", "completed", "error", "timed_out"]);
   });
 });
+
+describe("reviewer node settings", async () => {
+  const { COMMANDS, NodeBaseUrl, QUERIES, ReviewerNodeSettings } = await import("../src/index");
+
+  it("accepts a LAN address and rejects anything with a path, query or credentials", () => {
+    assert.equal(NodeBaseUrl.safeParse("http://192.168.1.20:7420").success, true);
+    assert.equal(NodeBaseUrl.safeParse("https://review-node.local:7420/").success, true);
+    for (const bad of ["192.168.1.20:7420", "ftp://x:1", "http://a/b", "http://a?x=1", "http://u:p@a", "javascript:alert(1)"]) {
+      assert.equal(NodeBaseUrl.safeParse(bad).success, false, bad);
+    }
+  });
+
+  it("never returns the token, only whether it is configured", () => {
+    const parsed = ReviewerNodeSettings.parse({
+      baseUrl: "http://192.168.1.20:7420",
+      profileId: "claude-review",
+      tokenConfigured: true,
+      token: "x".repeat(40),
+    });
+    assert.ok(!("token" in parsed));
+    const get = QUERIES["settings.get"].response.parse({ reviewerNode: { ...parsed, token: "leak".repeat(10) } });
+    assert.ok(!("token" in (get.reviewerNode ?? {})));
+  });
+
+  it("token is optional on update (keep existing) and must be long when given", () => {
+    const req = COMMANDS["settings.updateReviewerNode"].request;
+    const base = { type: "settings.updateReviewerNode", baseUrl: "http://10.0.0.5:7420", profileId: "claude-review" };
+    assert.equal(req.safeParse(base).success, true);
+    assert.equal(req.safeParse({ ...base, token: "short" }).success, false);
+    assert.equal(req.safeParse({ ...base, token: "a".repeat(32) }).success, true);
+    assert.equal(req.safeParse({ ...base, token: "a".repeat(31) + " " }).success, false, "no whitespace");
+  });
+});

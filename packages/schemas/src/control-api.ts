@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { ApprovalId, PermissionRequestId, RunId, Sha256Hex, SnapshotId } from "./common";
+import { NodeHealth, ProfileId } from "./remote-protocol";
 import { AgentEvent } from "./agent-event";
 import { PermissionDecision, PermissionRequest } from "./permission";
 import {
@@ -38,8 +39,57 @@ export const ControlScope = z.enum([
   "approve",    // 批准 / 拒绝
   "permission", // 回答 Agent 的权限请求
   "cancel",     // 取消 run
+  "admin",      // 修改设置（Reviewer 节点地址、Token）
 ]);
 export type ControlScope = z.infer<typeof ControlScope>;
+
+// ================================================================ Reviewer 节点设置（ADR-001 物理分离）
+
+/**
+ * 主控端连接 AgentServer 的地址，例如 http://192.168.1.20:7420 。
+ * 只允许 http / https，不带路径、查询参数和账号信息。
+ */
+export const NodeBaseUrl = z
+  .string()
+  .max(200)
+  .refine((v) => {
+    try {
+      const u = new URL(v);
+      return (u.protocol === "http:" || u.protocol === "https:") && !u.username && !u.password &&
+        (u.pathname === "/" || u.pathname === "") && !u.search && !u.hash;
+    } catch {
+      return false;
+    }
+  }, "需要形如 http://192.168.1.20:7420 的地址");
+
+/**
+ * AgentServer 的 Token。只能写入，永远不会从后端读出来（查询只返回 tokenConfigured）。
+ * main 进程收到后存进系统凭据库（Electron safeStorage），不落 SQLite、不进日志。
+ */
+export const NodeToken = z.string().min(32).max(512).regex(/^[\x21-\x7e]+$/, "Token 只能包含可见 ASCII 字符");
+
+export const ReviewerNodeSettings = z.object({
+  baseUrl: NodeBaseUrl,
+  profileId: ProfileId,
+  tokenConfigured: z.boolean(),
+});
+export type ReviewerNodeSettings = z.infer<typeof ReviewerNodeSettings>;
+
+export const NodeTestResult = z.discriminatedUnion("reachable", [
+  z.object({
+    reachable: z.literal(true),
+    health: NodeHealth,
+    /** 填写的 profileId 是否在节点上存在 */
+    profileAvailable: z.boolean(),
+    latencyMs: z.number().int().nonnegative(),
+  }),
+  z.object({
+    reachable: z.literal(false),
+    error: z.enum(["unreachable", "timeout", "unauthorized", "protocol_mismatch", "no_token"]),
+    message: z.string(),
+  }),
+]);
+export type NodeTestResult = z.infer<typeof NodeTestResult>;
 
 // ================================================================ Commands
 
@@ -139,12 +189,43 @@ export const COMMANDS = {
     z.object({}),
     "permission",
   ),
+
+  /** 保存 Reviewer 节点设置。token 不传表示保留原来的 */
+  "settings.updateReviewerNode": def(
+    z.object({
+      type: z.literal("settings.updateReviewerNode"),
+      baseUrl: NodeBaseUrl,
+      profileId: ProfileId,
+      token: NodeToken.optional(),
+    }),
+    ReviewerNodeSettings,
+    "admin",
+  ),
+
+  /** 测试连接（不保存）。token 不传则使用已保存的 */
+  "settings.testReviewerNode": def(
+    z.object({
+      type: z.literal("settings.testReviewerNode"),
+      baseUrl: NodeBaseUrl,
+      profileId: ProfileId,
+      token: NodeToken.optional(),
+    }),
+    NodeTestResult,
+    "admin",
+  ),
 } as const;
 
 // ================================================================ Queries
 
 export const QUERIES = {
   "system.status": def(z.object({ type: z.literal("system.status") }), SystemStatus, "read"),
+
+  /** 还没配置过节点时 reviewerNode 为 null */
+  "settings.get": def(
+    z.object({ type: z.literal("settings.get") }),
+    z.object({ reviewerNode: ReviewerNodeSettings.nullable() }),
+    "admin",
+  ),
 
   "projects.list": def(z.object({ type: z.literal("projects.list") }), z.array(Project), "read"),
 

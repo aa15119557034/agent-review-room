@@ -77,6 +77,19 @@ renderer 只发 `selection {start, end}`。这样"Contribution 内容一定来�
 **6. API key 永远不离开 main 进程。**
 renderer 只能通过 `system.status` 知道"有没有配置"。
 
+## Reviewer 节点设置（ADR-001 物理分离）
+
+| type | 作用 | scope |
+|---|---|---|
+| `settings.get`（查询） | 读当前节点设置；**只返回 `tokenConfigured`，不返回 Token** | admin |
+| `settings.updateReviewerNode` | 保存地址 / profile / Token；`token` 不传表示保留原来的 | admin |
+| `settings.testReviewerNode` | 用填写的值测试连接，不保存 | admin |
+
+- 地址只接受 `http(s)://主机:端口`，不带路径、查询参数和账号
+- Token 32~512 个可见 ASCII 字符，main 进程用 Electron `safeStorage` 加密保存，不落 SQLite、不进日志
+- 远端协议新增 `text_delta` / `message_complete` 事件：节点按 profile 的解析器把 CLI 输出转成文字
+- 新失败原因 `incomplete_output`：进程退出了，但没看到完整的结束标记（例如流被截断），**不能当作完整结果**
+
 ## 与 V0.4 文档的差异
 
 | V0.4 | 契约 | 原因 |
