@@ -111,3 +111,16 @@ await finishRun(db, queue, run.id, { from: "RUNNING", terminal: { type: "complet
   `FAILED(interrupted)`，用户重新批准即可。
 - `transitionRun` 离开 `RUNNING` 时自动把 `substate` 置空，不会撞 CHECK。
 - `getRunWithEvents` 返回 `{ seq, eventId, type, payload, ts }`。
+
+## 迁移
+
+| 版本 | 内容 |
+| --- | --- |
+| v1 | Phase 0 初始表结构 |
+| v2 | 重建 `runs` 表：`failure_reason` 的 CHECK 需要接受契约新增的 `incomplete_output` |
+
+SQLite 不能修改 CHECK，所以 v2 走的是「建新表 → 拷数据 → 删旧表 → 改名 → 重建索引与触发器」。
+外键在迁移期间临时关闭（`Migration.disableForeignKeys`），因为 `DROP TABLE runs` 会被 `messages` / `run_events` 的引用挡住。
+
+注意：`SCHEMA_V1` 的枚举是**运行时**从契约生成的，所以今天用 v1 建的新库已经包含 `incomplete_output`；
+v2 的价值在于把**已经建好的旧库**升级上来。

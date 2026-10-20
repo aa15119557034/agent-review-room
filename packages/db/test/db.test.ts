@@ -3,7 +3,9 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
+import Database from "better-sqlite3";
 import { currentVersion, openDatabase, ulid, WriteQueue, writeTransaction } from "../src/index";
+import { SCHEMA_V1 } from "../src/schema";
 import type { SqliteDatabase } from "../src/index";
 
 /** 每个测试一个独立库文件，避免互相污染（迁移和触发器的测试尤其需要干净库）。 */
@@ -17,7 +19,13 @@ function freshDb(): { db: SqliteDatabase; file: string } {
 }
 
 after(() => {
-  for (const dir of dirs) rmSync(dir, { recursive: true, force: true });
+  for (const dir of dirs) {
+    try {
+      rmSync(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+    } catch {
+      // Windows 上句柄释放有延迟；残留临时目录不影响结果
+    }
+  }
 });
 
 const NOW = "2026-10-20T00:00:00.000Z";
@@ -62,9 +70,9 @@ function seedSnapshot(db: SqliteDatabase, projectId: string, id = "snap_01"): st
 }
 
 describe("migrations", () => {
-  it("applies v1 on a fresh database", () => {
+  it("applies all migrations on a fresh database", () => {
     const { db } = freshDb();
-    assert.equal(currentVersion(db), 1);
+    assert.equal(currentVersion(db), 2);
 
     const tables = db
       .prepare("SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY name")
@@ -80,7 +88,7 @@ describe("migrations", () => {
     const { db, file } = freshDb();
     db.close();
     const reopened = openDatabase(file);
-    assert.equal(currentVersion(reopened), 1);
+    assert.equal(currentVersion(reopened), 2);
     reopened.close();
   });
 });
@@ -450,3 +458,86 @@ describe("writeTransaction guard", () => {
   });
 });
 
+
+describe("migration v2 (incomplete_output)", () => {
+  it("accepts failure_reason = incomplete_output", () => {
+    const { db } = freshDb();
+    const projectId = seedProject(db);
+    const snapshotId = seedSnapshot(db, projectId);
+    db.prepare(
+      "INSERT INTO approvals (id, project_id, snapshot_id, state, created_at) VALUES ('appr_01', ?, ?, 'APPROVED', ?)",
+    ).run(projectId, snapshotId, NOW);
+    db.prepare(
+      "INSERT INTO runs (id, project_id, approval_id, snapshot_id, adapter_id, state, failure_reason, created_at) " +
+        "VALUES ('run_01', ?, 'appr_01', ?, 'api', 'FAILED', 'incomplete_output', ?)",
+    ).run(projectId, snapshotId, NOW);
+
+    const row = db.prepare("SELECT failure_reason FROM runs WHERE id = 'run_01'").get() as { failure_reason: string };
+    assert.equal(row.failure_reason, "incomplete_output");
+    db.close();
+  });
+
+  it("upgrades a v1 database without losing rows, indexes or triggers", () => {
+    // 独立目录：不能复用 freshDb() 已经建好的库
+    const dir = mkdtempSync(join(tmpdir(), "room-db-legacy-"));
+    dirs.push(dir);
+    const file = join(dir, "legacy.db");
+
+    // 造一个 v1 的库：用 v1 schema 建表，并把版本号停在 1。
+    // 注意：SCHEMA_V1 的枚举是运行时从契约生成的，今天已经包含 incomplete_output；
+    // 这个用例验证的是「重建流程本身」——数据、索引、触发器、外键都要活下来。
+    const legacy = new Database(file);
+    try {
+      legacy.exec(SCHEMA_V1);
+      legacy.pragma("user_version = 1");
+
+      legacy.prepare("INSERT INTO projects (id, name, created_at) VALUES ('proj_old', '旧项目', ?)").run(NOW);
+      legacy.prepare(
+        "INSERT INTO prompt_snapshots (id, project_id, content, content_hash, nonce, contribution_ids, task_instruction, " +
+          "reviewer_agent, adapter_version, token_estimate, created_at) VALUES ('snap_old', 'proj_old', 'b', ?, '0123456789abcdef', " +
+          "'[\"c_1\"]', 't', 'deepseek', 'v1', 1, ?)",
+      ).run("a".repeat(64), NOW);
+      legacy.prepare(
+        "INSERT INTO approvals (id, project_id, snapshot_id, state, created_at) VALUES ('appr_old', 'proj_old', 'snap_old', 'APPROVED', ?)",
+      ).run(NOW);
+      legacy.prepare(
+        "INSERT INTO runs (id, project_id, approval_id, snapshot_id, adapter_id, state, created_at) " +
+          "VALUES ('run_old', 'proj_old', 'appr_old', 'snap_old', 'api', 'COMPLETED', ?)",
+      ).run(NOW);
+    } finally {
+      legacy.close();
+    }
+
+    // 升级到 v2
+    const upgraded = openDatabase(file);
+    assert.equal(currentVersion(upgraded), 2);
+    assert.equal(count(upgraded, "SELECT count(*) AS n FROM runs"), 1);
+    assert.equal(
+      (upgraded.prepare("SELECT state FROM runs WHERE id = 'run_old'").get() as { state: string }).state,
+      "COMPLETED",
+    );
+
+    // 索引和触发器都重建了
+    const indexes = upgraded
+      .prepare("SELECT name FROM sqlite_master WHERE type = 'index' AND tbl_name = 'runs'")
+      .all()
+      .map((r) => (r as { name: string }).name);
+    assert.ok(indexes.includes("idx_runs_state"), "partial index must be recreated");
+
+    assert.throws(
+      () =>
+        upgraded
+          .prepare(
+            "INSERT INTO runs (id, project_id, approval_id, snapshot_id, adapter_id, state, created_at) " +
+              "VALUES ('run_dup', 'proj_old', 'appr_old', 'snap_old', 'api', 'QUEUED', ?)",
+          )
+          .run(NOW),
+      /APPROVED approval of the same snapshot|UNIQUE/,
+      "runs trigger must be recreated after the rebuild",
+    );
+
+    // 升级后的表接受新枚举值
+    upgraded.prepare("UPDATE runs SET state = 'FAILED', failure_reason = 'incomplete_output' WHERE id = 'run_old'").run();
+    upgraded.close();
+  });
+});
