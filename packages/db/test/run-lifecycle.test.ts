@@ -436,3 +436,81 @@ describe("extra guarantees", () => {
     db.close();
   });
 });
+
+describe("reviewer output message (AC-8)", () => {
+  async function runningRun(db: SqliteDatabase, queue: WriteQueue) {
+    const world = seedWorld(db);
+    const run = await createRunFromApproval(db, queue, { approvalId: world.approvalId, adapterId: "api" });
+    await transitionRun(db, queue, run.id, "QUEUED", "STARTING");
+    await transitionRun(db, queue, run.id, "STARTING", "RUNNING");
+    return run;
+  }
+
+  it("stores exactly one reviewer_output when the run completes", async () => {
+    const { db } = freshDb();
+    const queue = new WriteQueue();
+    const run = await runningRun(db, queue);
+
+    const finished = await finishRun(db, queue, run.id, {
+      from: "RUNNING",
+      terminal: { type: "completed" },
+      reviewerOutput: { content: "这是评审结果", sourceAgent: "claude-review" },
+      now: NOW,
+    });
+
+    assert.equal(finished.state, "COMPLETED");
+    assert.ok(finished.message !== null);
+    assert.equal(finished.message?.content, "这是评审结果");
+    assert.equal(finished.message?.sourceAgent, "claude-review");
+    assert.equal(finished.message?.runId, run.id);
+
+    const rows = db.prepare("SELECT * FROM messages WHERE kind = 'reviewer_output'").all() as Record<string, unknown>[];
+    assert.equal(rows.length, 1);
+    assert.equal(rows[0]?.["run_id"], run.id);
+    assert.equal(rows[0]?.["content"], "这是评审结果");
+    db.close();
+  });
+
+  it("does not store output for error / cancelled / timed_out", async () => {
+    for (const terminal of [
+      { type: "error" as const, reason: "internal" as const },
+      { type: "cancelled" as const },
+      { type: "timed_out" as const, kind: "idle" as const },
+    ]) {
+      const { db } = freshDb();
+      const queue = new WriteQueue();
+      const run = await runningRun(db, queue);
+
+      const finished = await finishRun(db, queue, run.id, {
+        from: "RUNNING",
+        terminal,
+        reviewerOutput: { content: "不该被保存", sourceAgent: "claude-review" },
+      });
+
+      assert.equal(finished.message, null);
+      assert.equal(count(db, "SELECT count(*) AS n FROM messages"), 0);
+      db.close();
+    }
+  });
+
+  it("rolls back the terminal state if the message violates constraints", async () => {
+    const { db } = freshDb();
+    const queue = new WriteQueue();
+    const run = await runningRun(db, queue);
+
+    await assert.rejects(
+      finishRun(db, queue, run.id, {
+        from: "RUNNING",
+        terminal: { type: "completed" },
+        // AgentName 契约不允许大写
+        reviewerOutput: { content: "x", sourceAgent: "NOT_VALID" },
+      }),
+      /CHECK/ ,
+    );
+
+    const row = db.prepare("SELECT state FROM runs WHERE id = ?").get(run.id) as { state: string };
+    assert.equal(row.state, "RUNNING", "state must roll back with the failed message insert");
+    assert.equal(count(db, "SELECT count(*) AS n FROM run_events"), 0);
+    db.close();
+  });
+});

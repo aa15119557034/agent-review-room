@@ -121,7 +121,7 @@ export function createDispatcher(deps: IpcDeps) {
           projectId: command.projectId,
           contributionIds: [...command.contributionIds],
           taskInstruction: command.taskInstruction,
-          reviewerAgent: node?.profileId ?? "reviewer",
+          reviewerAgent: node?.profileId ?? "unconfigured",
         });
         deps.emit({ type: "approval.updated", approval: result.approval });
         return result;
@@ -133,10 +133,21 @@ export function createDispatcher(deps: IpcDeps) {
         if (node === null || token === null) {
           throw new ControlFailure("reviewer_not_configured", "请先在设置里配置 Reviewer 节点和 Token");
         }
+        // 批准的是一个具体 Prompt，Reviewer 变了就不能沿用这次批准
+        const pending = repo.getApproval(command.approvalId);
+        const snapshotForRun = repo.getSnapshot(pending.snapshotId);
+        if (snapshotForRun.reviewerAgent !== node.profileId) {
+          throw new ControlFailure(
+            "invalid_state",
+            "Reviewer 设置已变，请重新生成 Prompt",
+          );
+        }
+
         const approved = await repo.approve({
           approvalId: command.approvalId,
           expectedSnapshotHash: command.expectedSnapshotHash,
-          adapterId: "remote:" + node.profileId,
+          // Run 的 adapterId 用 snapshot 里记录的那个，不跟着当前设置走
+          adapterId: snapshotForRun.reviewerAgent,
         });
         deps.emit({ type: "approval.updated", approval: approved.approval });
         deps.emit({ type: "run.updated", run: approved.run });
@@ -161,6 +172,7 @@ export function createDispatcher(deps: IpcDeps) {
             snapshotId: snapshot.id,
             content: snapshot.content,
             contentHash: snapshot.contentHash,
+            reviewerAgent: snapshot.reviewerAgent,
           })
           .catch((error: unknown) => {
             // 只记消息，不记 payload / token

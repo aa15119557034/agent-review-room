@@ -62,7 +62,17 @@ async function setup() {
     adapterId: "fake",
   });
 
-  return { db, queue, run: approved.run, input: { snapshotId: snapshot.id, content: snapshot.content, contentHash: snapshot.contentHash } };
+  return {
+    db,
+    queue,
+    run: approved.run,
+    input: {
+      snapshotId: snapshot.id,
+      content: snapshot.content,
+      contentHash: snapshot.contentHash,
+      reviewerAgent: snapshot.reviewerAgent,
+    },
+  };
 }
 
 describe("RunOrchestrator", () => {
@@ -100,6 +110,20 @@ describe("RunOrchestrator", () => {
     const firstDelta = streamed[0] as { event: { seq: number; eventId: string } };
     assert.equal(firstDelta.event.seq, 0);
     assert.equal(firstDelta.event.eventId, events[0]?.eventId);
+
+    // AC-8：评审结果必须落成 Message(reviewer_output)
+    const messages = db.prepare("SELECT * FROM messages WHERE kind = 'reviewer_output'").all() as Record<string, unknown>[];
+    assert.equal(messages.length, 1);
+    assert.equal(messages[0]?.["content"], "你好");
+    assert.equal(messages[0]?.["run_id"], run.id);
+
+    // 推送顺序：message.created 必须在 run.updated(COMPLETED) 之前
+    const createdIndex = emitted.findIndex((e) => e.type === "message.created");
+    const completedIndex = emitted.findIndex(
+      (e) => e.type === "run.updated" && (e as { run: { state: string } }).run.state === "COMPLETED",
+    );
+    assert.ok(createdIndex >= 0, "message.created must be emitted");
+    assert.ok(completedIndex > createdIndex, "message.created must come before run.updated");
   });
 
   it("cancels a run during STARTING and still writes exactly one terminal event", async () => {
@@ -133,5 +157,9 @@ describe("RunOrchestrator", () => {
       .all(run.id) as { type: string }[];
     assert.equal(terminals.length, 1);
     assert.equal(terminals[0]?.type, "cancelled");
+
+    // 被取消的 run 不写 reviewer_output（source_input 那条不算）
+    const messages = db.prepare("SELECT * FROM messages WHERE kind = 'reviewer_output'").all();
+    assert.equal(messages.length, 0);
   });
 });

@@ -328,6 +328,14 @@ export class Repository {
     return toSnapshot(row);
   }
 
+  getApproval(approvalId: string): Approval {
+    const row = this.#db.prepare("SELECT * FROM approvals WHERE id = ?").get(approvalId) as
+      | Record<string, unknown>
+      | undefined;
+    if (row === undefined) throw new RepositoryError("not_found", "approval not found");
+    return toApproval(row);
+  }
+
   listApprovals(projectId: string, pendingOnly: boolean): Approval[] {
     const sql = pendingOnly
       ? "SELECT * FROM approvals WHERE project_id = ? AND state = 'READY_FOR_REVIEW' ORDER BY created_at DESC"

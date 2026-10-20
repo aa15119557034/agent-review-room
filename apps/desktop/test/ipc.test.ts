@@ -188,3 +188,57 @@ describe("settings", () => {
     assert.equal((status as { data: { reviewerConfigured: boolean } }).data.reviewerConfigured, true);
   });
 });
+
+describe("approve guard", () => {
+  async function seedSnapshot(dispatcher: ReturnType<typeof makeDispatcher>["dispatcher"]) {
+    const project = await dispatcher.handleCommand({ type: "project.create", name: "p" });
+    const projectId = (project as { data: { id: string } }).data.id;
+    const message = await dispatcher.handleCommand({ type: "source.add", projectId, sourceAgent: "deepseek", content: "abcdef" });
+    const messageId = (message as { data: { id: string } }).data.id;
+    const contribution = await dispatcher.handleCommand({
+      type: "contribution.create",
+      projectId,
+      sourceMessageId: messageId,
+      contributionType: "issue",
+      title: "t",
+      selection: { start: 0, end: 3 },
+    });
+    const contributionId = (contribution as { data: { id: string } }).data.id;
+    const snapshot = await dispatcher.handleCommand({
+      type: "snapshot.create",
+      projectId,
+      contributionIds: [contributionId],
+      taskInstruction: "x",
+    });
+    const data = (snapshot as { data: { snapshot: { contentHash: string }; approval: { id: string } } }).data;
+    return { approvalId: data.approval.id, contentHash: data.snapshot.contentHash };
+  }
+
+  it("approves when the reviewer profile still matches the snapshot", async () => {
+    const { dispatcher, started } = makeDispatcher({ withToken: true });
+    const { approvalId, contentHash } = await seedSnapshot(dispatcher);
+
+    const result = await dispatcher.handleCommand({ type: "approval.approve", approvalId, expectedSnapshotHash: contentHash });
+    assert.equal(result.ok, true);
+    assert.equal(started.length, 1, "orchestrator.start must be called");
+
+    const run = (result as { data: { run: { adapterId: string; state: string } } }).data.run;
+    assert.equal(run.adapterId, "claude-review", "adapterId 用 snapshot 里的 reviewerAgent");
+  });
+
+  it("refuses to approve when the reviewer profile changed since the snapshot", async () => {
+    const { dispatcher, started } = makeDispatcher({ withToken: true });
+    const { approvalId, contentHash } = await seedSnapshot(dispatcher);
+
+    await dispatcher.handleCommand({
+      type: "settings.updateReviewerNode",
+      baseUrl: "http://127.0.0.1:7420",
+      profileId: "another-profile",
+    });
+
+    const result = await dispatcher.handleCommand({ type: "approval.approve", approvalId, expectedSnapshotHash: contentHash });
+    assert.equal(result.ok, false);
+    assert.equal(result.ok === false ? result.error : null, "invalid_state");
+    assert.equal(started.length, 0);
+  });
+});

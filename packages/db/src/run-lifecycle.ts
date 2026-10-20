@@ -322,9 +322,17 @@ export function appendRunEventTx(
   const seq = row.next;
   const eventId = event.eventId ?? runId + "_" + seq;
 
+  // payload 里也写入数据库分配的 id / seq / ts：否则库里有「两套 id」，
+  // 回放时要靠上层覆盖，容易漏。这里就让它自洽。
+  const base =
+    event.payload !== null && typeof event.payload === "object"
+      ? (event.payload as Record<string, unknown>)
+      : {};
+  const payload = { ...base, eventId, runId, seq, ts, type: event.type };
+
   db.prepare(
     "INSERT INTO run_events (run_id, seq, event_id, type, payload, ts) VALUES (?, ?, ?, ?, ?, ?)",
-  ).run(runId, seq, eventId, event.type, JSON.stringify(event.payload ?? {}), ts);
+  ).run(runId, seq, eventId, event.type, JSON.stringify(payload), ts);
 
   return { seq, eventId, ts };
 }
@@ -348,6 +356,24 @@ const TERMINAL_TO_STATE: Record<TerminalType, RunState> = {
   timed_out: "TIMED_OUT",
 };
 
+/** Reviewer 的正式结论（只会在 completed 时写入）。 */
+export interface ReviewOutput {
+  /** 原样保存 message_complete.text */
+  readonly content: string;
+  /** snapshot 的 reviewerAgent */
+  readonly sourceAgent: string;
+  readonly messageId?: string;
+}
+
+export interface ReviewMessageRow {
+  id: string;
+  projectId: string;
+  runId: string;
+  sourceAgent: string;
+  content: string;
+  createdAt: string;
+}
+
 export interface FinishRunInput {
   from: RunState;
   terminal: {
@@ -356,8 +382,16 @@ export interface FinishRunInput {
     message?: string;
     kind?: "idle" | "total";
   };
+  /**
+   * 仅当 terminal.type === "completed" 时写入 Message(reviewer_output)。
+   * 和终态在**同一个事务**里，保证「COMPLETED」和「结果已入库」绑在一起。
+   * error / cancelled / timed_out 一律忽略（被截断的结果不能当正式结论）。
+   */
+  reviewerOutput?: ReviewOutput;
   now?: string;
 }
+
+export type FinishedRun = RunRow & { message: ReviewMessageRow | null };
 
 /**
  * 结束一个 Run：CAS 到终态 **和** 写终止事件在**同一个事务**里。
@@ -368,7 +402,7 @@ export async function finishRun(
   queue: WriteQueue,
   runId: string,
   input: FinishRunInput,
-): Promise<RunRow> {
+): Promise<FinishedRun> {
   const to = TERMINAL_TO_STATE[input.terminal.type];
   const now = input.now ?? new Date().toISOString();
 
@@ -388,7 +422,28 @@ export async function finishRun(
 
     appendRunEventTx(db, runId, { type: input.terminal.type, ts: now, payload }, { allowTerminal: true });
 
-    return readRun(db, runId)!;
+    let message: ReviewMessageRow | null = null;
+    if (input.terminal.type === "completed" && input.reviewerOutput !== undefined) {
+      const run = readRun(db, runId)!;
+      const messageId = input.reviewerOutput.messageId ?? "msg_" + ulid();
+      const createdAt = now;
+
+      db.prepare(
+        "INSERT INTO messages (id, project_id, kind, source_agent, run_id, content, created_at) " +
+          "VALUES (?, ?, 'reviewer_output', ?, ?, ?, ?)",
+      ).run(messageId, run.project_id, input.reviewerOutput.sourceAgent, runId, input.reviewerOutput.content, createdAt);
+
+      message = {
+        id: messageId,
+        projectId: run.project_id,
+        runId,
+        sourceAgent: input.reviewerOutput.sourceAgent,
+        content: input.reviewerOutput.content,
+        createdAt,
+      };
+    }
+
+    return { ...readRun(db, runId)!, message };
   });
 }
 
