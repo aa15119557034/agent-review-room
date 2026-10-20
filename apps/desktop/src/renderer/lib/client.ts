@@ -60,7 +60,7 @@ export function describeFailure(err: unknown): string {
     stale_snapshot: "这份 prompt 在你查看之后已经变了，请重新打开预览再批准。",
     already_decided: "这一项已经处理过了。",
     invalid_state: "当前状态下不能执行这个操作。",
-    reviewer_not_configured: "还没有配置 Reviewer 的 API key，请在 .env 里设置后重启应用。",
+    reviewer_not_configured: "还没有设置 Reviewer 节点，请先在“设置”里填写节点地址和 Token。",
     not_found: "要找的记录不存在，可能已被删除。",
   };
   return hint[err.code] ? `${hint[err.code]}（${err.message}）` : err.message;

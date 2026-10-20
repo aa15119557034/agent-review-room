@@ -290,7 +290,7 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
       if (snap.contentHash !== req.expectedSnapshotHash) {
         throw new MockError("stale_snapshot", "prompt hash 与审批时看到的不一致");
       }
-      if (options.reviewerConfigured === false) {
+      if (options.reviewerConfigured === false || (options.reviewerConfigured === undefined && !node?.tokenConfigured)) {
         throw new MockError("reviewer_not_configured", "Reviewer API key 未配置");
       }
       // 以下两步在真实后端里是一个事务
@@ -374,7 +374,8 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
     async "system.status"() {
       return {
         appVersion: "0.0.0-mock",
-        reviewerConfigured: options.reviewerConfigured ?? true,
+        // 显式传了就用传的；否则看节点是否已设置且有 Token
+        reviewerConfigured: options.reviewerConfigured ?? (node !== null && node.tokenConfigured),
         reviewerAgent: "claude",
         recoveredRuns: 0,
       };
@@ -450,7 +451,12 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
     },
   } as unknown as RoomBridge & { reset(): void };
 
-  if (options.seed) void seed(bridge);
+  if (options.seed) {
+    // 演示数据：假装已经设置好了一个节点
+    node = { baseUrl: "http://192.168.1.20:7420", profileId: "claude-review", tokenConfigured: true };
+    nodeToken = "demo".repeat(10);
+    void seed(bridge);
+  }
   return bridge;
 }
 

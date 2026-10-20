@@ -165,7 +165,12 @@ function PendingApproval({ approval }: { approval: Approval }) {
       )}
 
       {!reviewerConfigured && (
-        <p className="field-error">还没有配置 Reviewer 的 API key，暂时不能批准。请在 .env 里设置后重启应用。</p>
+        <p className="field-error">
+          还没有设置 Reviewer 节点，暂时不能批准。{" "}
+          <button type="button" className="link-button" onClick={() => void actions.openSettings()}>
+            去设置
+          </button>
+        </p>
       )}
 
       {rejecting ? (

@@ -6,6 +6,7 @@ import type {
   Message,
   Project,
   PromptSnapshot,
+  ReviewerNodeSettings,
   Run,
   SystemStatus,
 } from "@room/schemas";
@@ -31,6 +32,10 @@ export interface AppState {
   draft: PromptDraft;
   /** 用户在运行记录里点选的 run；null 表示默认显示最新的一个 */
   selectedRunId: string | null;
+  /** 中间区域显示工作台还是设置页 */
+  view: "desk" | "settings";
+  /** Reviewer 节点设置；undefined = 还没读过，null = 从未设置 */
+  reviewerNode: ReviewerNodeSettings | null | undefined;
   /** 最近一次操作失败的说明，显示在界面上，由用户关闭 */
   notice: { kind: "error"; message: string } | null;
 }
@@ -58,6 +63,8 @@ export const initialState: AppState = {
   snapshots: {},
   draft: emptyDraft(),
   selectedRunId: null,
+  view: "desk",
+  reviewerNode: undefined,
   notice: null,
 };
 
