@@ -84,7 +84,8 @@ export class SettingsStore {
   get(): ReviewerNodeSettings | null {
     const node = this.#data.reviewerNode;
     if (node === null) return null;
-    return { baseUrl: node.baseUrl, profileId: node.profileId, tokenConfigured: node.tokenCipher !== null };
+    // tokenConfigured 用「能不能解密」判断，否则会出现设置页说已配置、审批时又说未配置
+    return { baseUrl: node.baseUrl, profileId: node.profileId, tokenConfigured: this.getToken() !== null };
   }
 
   /** 只有主进程用：解密后的 token。 */
@@ -94,7 +95,16 @@ export class SettingsStore {
     try {
       return this.#safeStorage.decryptString(Buffer.from(cipher, "base64"));
     } catch {
-      // 换机器 / 系统凭据损坏：当作没有 token，让用户重填，而不是崩掉
+      // 换机器 / 系统凭据损坏：清掉密文，让状态和实际一致，用户重新填一次
+      const node = this.#data.reviewerNode;
+      if (node !== null) {
+        this.#data = { reviewerNode: { ...node, tokenCipher: null } };
+        try {
+          this.#save();
+        } catch {
+          // 只读目录等情况下保存失败，不影响本次返回 null
+        }
+      }
       return null;
     }
   }

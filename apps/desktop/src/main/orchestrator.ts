@@ -50,6 +50,13 @@ export class RunOrchestrator {
     return true;
   }
 
+  /** 退出前统一取消：让节点立刻停下，而不是等租约过期。 */
+  cancelAll(): number {
+    const count = this.#active.size;
+    for (const controller of this.#active.values()) controller.abort();
+    return count;
+  }
+
   /** 执行一个已经落库的 run。调用方不要 await（IPC 要立刻返回）。 */
   async start(run: RunRow, input: RunInput): Promise<void> {
     const controller = new AbortController();
@@ -83,7 +90,6 @@ export class RunOrchestrator {
       for await (const event of events) {
         if (TERMINAL_EVENTS.has(event.type)) {
           await this.#finish(run.id, currentState, event);
-          currentState = "COMPLETED";
           return;
         }
 

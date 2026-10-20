@@ -155,12 +155,17 @@ export function createDispatcher(deps: IpcDeps) {
           started_at: null,
           finished_at: null,
         };
-        // 立刻返回，执行在后台进行
-        void orchestrator.start(runRow, {
-          snapshotId: snapshot.id,
-          content: snapshot.content,
-          contentHash: snapshot.contentHash,
-        });
+        // 立刻返回，执行在后台进行；兜底必须有人接住，否则会变成 main 的 unhandled rejection
+        void orchestrator
+          .start(runRow, {
+            snapshotId: snapshot.id,
+            content: snapshot.content,
+            contentHash: snapshot.contentHash,
+          })
+          .catch((error: unknown) => {
+            // 只记消息，不记 payload / token
+            console.error("[orchestrator] run failed:", error instanceof Error ? error.message : String(error));
+          });
         return approved;
       }
 
@@ -187,9 +192,17 @@ export function createDispatcher(deps: IpcDeps) {
         });
 
       case "settings.testReviewerNode": {
-        const token = command.token ?? settings.getToken();
+        // 只有地址没变时才复用已保存的 token：否则用户把地址改成别的机器，
+        // 一按「测试连接」就把 token 明文发过去了。
+        const saved = settings.get();
+        const sameTarget = saved !== null && saved.baseUrl === command.baseUrl;
+        const token = command.token ?? (sameTarget ? settings.getToken() : null);
         if (token === null) {
-          return { reachable: false, error: "no_token", message: "还没有配置 Token" };
+          return {
+            reachable: false,
+            error: "no_token",
+            message: sameTarget ? "还没有配置 Token" : "地址变了，请重新输入 Token",
+          };
         }
         return testReviewerNode({ baseUrl: command.baseUrl, token, profileId: command.profileId });
       }
@@ -254,9 +267,13 @@ export function createDispatcher(deps: IpcDeps) {
 
       case "runs.events": {
         const rows = repo.listEvents(query.runId, query.afterSeq ?? -1);
+        // eventId / runId 必须用数据库里的值：payload 里存的是 adapter 自己编的 eventId，
+        // 与直播推送用的 stored.eventId 不同，重放时同一个事件会出现两个 id。
         return rows.map((row) => ({
           ...(row.payload as object),
           type: row.type,
+          eventId: row.eventId,
+          runId: query.runId,
           seq: row.seq,
           ts: row.ts,
         })) as AgentEvent[];

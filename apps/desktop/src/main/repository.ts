@@ -349,11 +349,22 @@ export class Repository {
     return toRun(row);
   }
 
-  listEvents(runId: string, after: number): { seq: number; type: string; payload: unknown; ts: string }[] {
+  listEvents(
+    runId: string,
+    after: number,
+  ): { seq: number; eventId: string; type: string; payload: unknown; ts: string }[] {
     const rows = this.#db
-      .prepare("SELECT seq, type, payload, ts FROM run_events WHERE run_id = ? AND seq > ? ORDER BY seq")
-      .all(runId, after) as { seq: number; type: string; payload: string; ts: string }[];
-    return rows.map((r) => ({ seq: r.seq, type: r.type, payload: JSON.parse(r.payload) as unknown, ts: r.ts }));
+      .prepare(
+        "SELECT seq, event_id AS eventId, type, payload, ts FROM run_events WHERE run_id = ? AND seq > ? ORDER BY seq",
+      )
+      .all(runId, after) as { seq: number; eventId: string; type: string; payload: string; ts: string }[];
+    return rows.map((r) => ({
+      seq: r.seq,
+      eventId: r.eventId,
+      type: r.type,
+      payload: JSON.parse(r.payload) as unknown,
+      ts: r.ts,
+    }));
   }
 }
 
