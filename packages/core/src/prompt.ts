@@ -13,7 +13,7 @@ import type { Contribution } from "@room/schemas";
  */
 
 /** 拼装器版本。改拼装格式必须递增，否则历史 Snapshot 无法解释。 */
-export const PROMPT_ADAPTER_VERSION = "prompt-v1";
+export const PROMPT_ADAPTER_VERSION = "prompt-v2";
 
 /** 32 hex 字符 = 128 位随机。碰撞概率可忽略，同时足够短不影响 token。 */
 const NONCE_BYTES = 16;
@@ -96,10 +96,14 @@ export function estimateTokens(text: string): number {
 }
 
 function renderBlock(contribution: PromptContribution, nonce: string): string {
-  const heading = `## ${contribution.id} · ${contribution.type} · ${contribution.title}`;
+  // 标题 / 类型 / ID 也是待审内容的一部分（Phase 2 起可能由 Agent 生成），
+  // 一律放进边界内——否则标题里的换行和 Markdown 会被当成可信的说明文字。
   return [
-    heading,
     openTag(nonce),
+    "标题：" + contribution.title,
+    "类型：" + contribution.type,
+    "ID：" + contribution.id,
+    "",
     contribution.content,
     closeTag(nonce),
   ].join("\n");
@@ -127,7 +131,10 @@ export function assemblePrompt(options: AssemblePromptOptions): AssembledPrompt 
   let attempts = 0;
 
   for (;;) {
-    const clash = options.contributions.some((contribution) => collides(contribution.content, nonce));
+    // 标题和正文都在边界内，两者都要检查，否则标题可以提前闭合边界
+    const clash = options.contributions.some(
+      (contribution) => collides(contribution.content, nonce) || collides(contribution.title, nonce),
+    );
     if (!clash) break;
 
     // 调用方指定了 nonce 就不能悄悄换一个：那会让「发出去的内容」与预期不符
