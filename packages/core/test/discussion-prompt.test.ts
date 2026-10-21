@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import type { AgentProfile, Message, PlanVersion, Round, RoundSummary, Turn } from "@room/schemas";
-import { createNonce, sha256Hex } from "../prompt";
+import { Stance } from "@room/schemas";
+import { createNonce, sha256Hex } from "../src/prompt";
 import {
   assembleDiscussionBatch,
   assembleDiscussionPrompt,
@@ -10,7 +11,7 @@ import {
   type DiscussionHistoryRound,
   type DiscussionPromptInput,
   type DiscussionRecipient,
-} from "./prompt";
+} from "../src/discussion/prompt";
 
 const projectId = "proj_01" as Round["projectId"];
 const round = (index: number) => ({
@@ -121,12 +122,16 @@ describe("discussion prompt", () => {
       recipient("codex"),
     ]);
     assert.deepEqual(prompts.map((prompt) => prompt.differsFromOthers), [true, false]);
-    assert.ok(!prompts[1].content.includes("只给 Claude"));
+    const second = prompts[1];
+    assert.ok(second);
+    assert.ok(!second.content.includes("只给 Claude"));
   });
 
   it("wraps summary inputs too and asks for structured output", () => {
     const prompt = assembleSummaryPrompt(input(), recipient("claude"));
     assert.match(prompt.content, /planContent/);
+    for (const stance of Stance.options) assert.ok(prompt.content.includes(stance));
+    assert.match(prompt.content, /"kind":"agent"/);
     assert.match(prompt.content, /<UNTRUSTED_DISCUSSION_DATA_/);
     assert.ok(prompt.content.includes("第 1 轮摘要"));
   });
@@ -151,5 +156,10 @@ describe("structured summary", () => {
     assert.equal(parseSummaryOutput("```json\n{}\n```"), null);
     assert.equal(parseSummaryOutput("{bad"), null);
     assert.equal(parseSummaryOutput(valid.replace("agree", "unknown")), null);
+  });
+
+  it("accepts JSON fenced or surrounded by short commentary", () => {
+    assert.deepEqual(parseSummaryOutput(`\`\`\`json\n${valid}\n\`\`\``), parseSummaryOutput(valid));
+    assert.deepEqual(parseSummaryOutput(`汇总如下：\n${valid}\n请查看。`), parseSummaryOutput(valid));
   });
 });
