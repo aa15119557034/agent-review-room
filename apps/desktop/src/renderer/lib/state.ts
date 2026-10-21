@@ -106,6 +106,15 @@ export function applyEvent(state: AppState, event: ControlEvent): AppState {
     case "permission.requested":
       // Phase 0 不会出现；Phase 1 接权限 UI 时处理
       return state;
+
+    // 讨论室事件（C-20），C-21 起由讨论室的状态处理
+    case "round.updated":
+    case "batch.updated":
+    case "turn.updated":
+    case "summary.created":
+    case "plan.updated":
+    case "agent.status":
+      return state;
   }
 }
 

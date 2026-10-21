@@ -12,6 +12,12 @@ export const SnapshotId = prefixedId("snap");
 export const ApprovalId = prefixedId("apr");
 export const PermissionRequestId = prefixedId("perm");
 
+// ---- 讨论室（ADR-002 / C-20）
+export const RoundId = prefixedId("rnd");
+export const BatchId = prefixedId("bat");
+export const TurnId = prefixedId("turn");
+export const PlanVersionId = prefixedId("plan");
+
 /**
  * SHA-256，小写十六进制。
  * 约定：Prompt 的 hash = sha256(UTF-8 编码的 content 原文)，不做任何规范化。
@@ -27,3 +33,7 @@ export type RunId = z.infer<typeof RunId>;
 export type SnapshotId = z.infer<typeof SnapshotId>;
 export type ApprovalId = z.infer<typeof ApprovalId>;
 export type PermissionRequestId = z.infer<typeof PermissionRequestId>;
+export type RoundId = z.infer<typeof RoundId>;
+export type BatchId = z.infer<typeof BatchId>;
+export type TurnId = z.infer<typeof TurnId>;
+export type PlanVersionId = z.infer<typeof PlanVersionId>;

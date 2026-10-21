@@ -27,6 +27,7 @@ export const FailureReason = z.enum([
   "output_limit_exceeded",
   "incomplete_output",    // Reviewer 的输出没有正常结束（流被截断），不能当作完整结果
   "postprocess",          // 自动 commit 等后处理失败（V0.4 §27）
+  "quota_exhausted",      // 额度用尽或被服务商限流（ADR-002）。讨论里显示成「缺席（额度）」，不是"没表态"
   "internal",
 ]);
 

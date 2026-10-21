@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ApprovalId, PermissionRequestId, RunId, Sha256Hex, SnapshotId } from "./common";
+import { ApprovalId, BatchId, PermissionRequestId, PlanVersionId, RoundId, RunId, Sha256Hex, SnapshotId } from "./common";
 import { NodeHealth, ProfileId } from "./remote-protocol";
 import { AgentEvent } from "./agent-event";
 import { PermissionDecision, PermissionRequest } from "./permission";
@@ -18,6 +18,19 @@ import {
   SystemStatus,
   TextSelection,
 } from "./entities";
+import {
+  AgentProfile,
+  AgentStatus,
+  ApprovalBatch,
+  HexColor,
+  HistoryMode,
+  NodeId,
+  PlanVersion,
+  Round,
+  RoundSummary,
+  TaskSource,
+  Turn,
+} from "./discussion";
 
 /**
  * 控制面 API：人 ⇄ Orchestrator。
@@ -90,6 +103,19 @@ export const NodeTestResult = z.discriminatedUnion("reachable", [
   }),
 ]);
 export type NodeTestResult = z.infer<typeof NodeTestResult>;
+
+// ================================================================ 节点（ADR-002：可以有多个 AgentServer）
+
+/** 节点设置。和 ReviewerNodeSettings 一样，Token 只写不读 */
+export const NodeInfo = z.object({
+  id: NodeId,
+  label: z.string().min(1).max(60),
+  baseUrl: NodeBaseUrl,
+  tokenConfigured: z.boolean(),
+});
+export type NodeInfo = z.infer<typeof NodeInfo>;
+
+const uniqueAgents = (xs: readonly string[]) => new Set(xs).size === xs.length;
 
 // ================================================================ Commands
 
@@ -218,6 +244,212 @@ export const COMMANDS = {
     NodeTestResult,
     "admin",
   ),
+
+  // ---------------------------------------------------------------- 讨论室（ADR-002 / C-20，阶段 1A）
+
+  /** 新增或修改一个节点。token 不传表示保留原来的 */
+  "node.upsert": def(
+    z.object({
+      type: z.literal("node.upsert"),
+      id: NodeId,
+      label: z.string().min(1).max(60),
+      baseUrl: NodeBaseUrl,
+      token: NodeToken.optional(),
+    }),
+    NodeInfo,
+    "admin",
+  ),
+
+  /**
+   * 测试某个节点上的某个 profile（不保存）。token 规则同 settings.testReviewerNode：
+   * 不传 token 时，只有 baseUrl 与这个节点已保存的完全相同才使用已保存的 token。
+   */
+  "node.test": def(
+    z.object({
+      type: z.literal("node.test"),
+      id: NodeId,
+      baseUrl: NodeBaseUrl,
+      profileId: ProfileId,
+      token: NodeToken.optional(),
+    }),
+    NodeTestResult,
+    "admin",
+  ),
+
+  /** 修改参与者设置。只传要改的字段 */
+  "agent.update": def(
+    z.object({
+      type: z.literal("agent.update"),
+      id: AgentName,
+      displayName: z.string().min(1).max(40).optional(),
+      color: HexColor.optional(),
+      roleNote: z.string().max(2000).optional(),
+      canDiscuss: z.boolean().optional(),
+      canSummarize: z.boolean().optional(),
+      canExecute: z.boolean().optional(),
+      nodeId: NodeId.nullable().optional(),
+      profileId: ProfileId.nullable().optional(),
+      pausedByUser: z.boolean().optional(),
+      substitute: AgentName.nullable().optional(),
+    }),
+    AgentProfile,
+    "admin",
+  ),
+
+  /** 「只发言」：写进时间线，不发给任何 Agent，不用盖章 */
+  "note.add": def(
+    z.object({
+      type: z.literal("note.add"),
+      projectId: ProjectId,
+      content: z.string().min(1).max(200_000),
+    }),
+    Message,
+    "author",
+  ),
+
+  /**
+   * 起草新的一轮：为每个收件人生成 Snapshot + Approval，打包成一个 initial 批次，等盖章。
+   * 议题里已有 DRAFT / RUNNING / PAUSED / AWAITING_SUMMARY / SUMMARIZING 的轮时返回 invalid_state；
+   * 收件人不在线、未配置、被暂停或额度缺席时返回 agent_unavailable（message 里写明是谁）。
+   */
+  "round.draft": def(
+    z.object({
+      type: z.literal("round.draft"),
+      projectId: ProjectId,
+      recipients: z.array(AgentName).min(1).max(8).refine(uniqueAgents, "收件人不能重复"),
+      task: z.string().min(1).max(20_000),
+      taskSource: TaskSource,
+      planVersionId: PlanVersionId.nullable(),
+      historyMode: HistoryMode,
+    }),
+    z.object({ round: Round, batch: ApprovalBatch }),
+    "author",
+  ),
+
+  /**
+   * 修改还没盖章的一轮（任务、收件人、讨论记录取法）：旧批次 CANCELLED，生成新批次。
+   * 只允许 DRAFT 状态。
+   */
+  "round.redraft": def(
+    z.object({
+      type: z.literal("round.redraft"),
+      roundId: RoundId,
+      recipients: z.array(AgentName).min(1).max(8).refine(uniqueAgents, "收件人不能重复").optional(),
+      task: z.string().min(1).max(20_000).optional(),
+      historyMode: HistoryMode.optional(),
+    }),
+    z.object({ round: Round, batch: ApprovalBatch }),
+    "author",
+  ),
+
+  /**
+   * 盖章。expected 必须**恰好**覆盖批次里的每一项，且每个 contentHash 都和 Snapshot 一致，
+   * 否则整批拒绝（stale_snapshot），一个都不发。批准 + 建 Run 在同一事务里。
+   */
+  "batch.approve": def(
+    z.object({
+      type: z.literal("batch.approve"),
+      batchId: BatchId,
+      expected: z.array(z.object({ approvalId: ApprovalId, contentHash: Sha256Hex })).min(1).max(8),
+    }),
+    z.object({ batch: ApprovalBatch, turns: z.array(Turn) }),
+    "approve",
+  ),
+
+  "batch.reject": def(
+    z.object({ type: z.literal("batch.reject"), batchId: BatchId, reason: z.string().max(2000).optional() }),
+    ApprovalBatch,
+    "approve",
+  ),
+
+  /** 全部暂停：正在答的按"打断"结束（Turn 结局 paused），计时停止 */
+  "round.pause": def(z.object({ type: z.literal("round.pause"), roundId: RoundId }), Round, "cancel"),
+
+  /** 恢复：为结局是 paused 的人生成 resume 批次（内容不变），盖章后回到 RUNNING */
+  "round.resume": def(
+    z.object({ type: z.literal("round.resume"), roundId: RoundId }),
+    z.object({ round: Round, batch: ApprovalBatch }),
+    "author",
+  ),
+
+  /** 结束本轮：没答完的 Turn 结局 round_ended，已写部分保留，进入 AWAITING_SUMMARY */
+  "round.end": def(z.object({ type: z.literal("round.end"), roundId: RoundId }), Round, "cancel"),
+
+  /**
+   * 插话补充。补充本身总是写进时间线（human_note）。
+   * - restart_now: targets 里正在答的人被打断，生成 supplement 批次让他们带上补充重答
+   * - next_round : 不打断，只记下来，下一轮起草时会带上（batch 为 null）
+   * - only       : 只发给 targets（通常一个人），批次里 differsFromOthers = true
+   */
+  "round.supplement": def(
+    z.object({
+      type: z.literal("round.supplement"),
+      roundId: RoundId,
+      content: z.string().min(1).max(200_000),
+      mode: z.enum(["restart_now", "next_round", "only"]),
+      /** restart_now / only 时至少一个（main 校验，不满足返回 validation_failed） */
+      targets: z.array(AgentName).max(8).refine(uniqueAgents, "不能重复"),
+    }),
+    z.object({ note: Message, batch: ApprovalBatch.nullable() }),
+    "author",
+  ),
+
+  /** 单独重试一个人（他上一个 Turn 的结局是 timed_out / failed / absent_quota） */
+  "round.retry": def(
+    z.object({ type: z.literal("round.retry"), roundId: RoundId, agent: AgentName }),
+    ApprovalBatch,
+    "author",
+  ),
+
+  /**
+   * 请汇总者汇总这一轮（AWAITING_SUMMARY 时可用）。发给汇总者也是一次发送，同样要盖章。
+   * 汇总者必须 canSummarize，且不能是本轮任何人的替补。
+   */
+  "round.summarize": def(
+    z.object({ type: z.literal("round.summarize"), roundId: RoundId, summarizer: AgentName }),
+    ApprovalBatch,
+    "author",
+  ),
+
+  /** 回到某一阶段改方向：这一轮作废（记录保留），正在答的全部按 round_ended 结束 */
+  "round.void": def(
+    z.object({ type: z.literal("round.void"), roundId: RoundId, reason: z.string().min(1).max(2000) }),
+    Round,
+    "author",
+  ),
+
+  /** 确认方案草稿：DRAFT → CURRENT，原来的 CURRENT → SUPERSEDED */
+  "plan.confirm": def(
+    z.object({ type: z.literal("plan.confirm"), planVersionId: PlanVersionId }),
+    PlanVersion,
+    "approve",
+  ),
+
+  /** 用户自己改方案：基于 parentId 生成一个新的 DRAFT */
+  "plan.edit": def(
+    z.object({
+      type: z.literal("plan.edit"),
+      parentId: PlanVersionId,
+      content: z.string().min(1).max(200_000),
+      changeNote: z.string().max(2000),
+    }),
+    PlanVersion,
+    "author",
+  ),
+
+  /** 盖章定稿：CURRENT → FINAL。expectedContentHash 和 Snapshot 一样防"看的是旧版本" */
+  "plan.finalize": def(
+    z.object({ type: z.literal("plan.finalize"), planVersionId: PlanVersionId, expectedContentHash: Sha256Hex }),
+    PlanVersion,
+    "approve",
+  ),
+
+  /** 定稿后发现漏了：从 FINAL 派生一个新的 DRAFT，版本链不断 */
+  "plan.derive": def(
+    z.object({ type: z.literal("plan.derive"), planVersionId: PlanVersionId }),
+    PlanVersion,
+    "author",
+  ),
 } as const;
 
 // ================================================================ Queries
@@ -285,6 +517,45 @@ export const QUERIES = {
     z.array(AgentEvent),
     "read",
   ),
+
+  // ---------------------------------------------------------------- 讨论室（ADR-002 / C-20）
+
+  "nodes.list": def(z.object({ type: z.literal("nodes.list") }), z.array(NodeInfo), "admin"),
+
+  "agents.list": def(z.object({ type: z.literal("agents.list") }), z.array(AgentProfile), "read"),
+
+  /** 读不到的额度字段为 null（界面显示「未知」） */
+  "agents.status": def(z.object({ type: z.literal("agents.status") }), z.array(AgentStatus), "read"),
+
+  "rounds.list": def(
+    z.object({ type: z.literal("rounds.list"), projectId: ProjectId }),
+    z.array(Round),
+    "read",
+  ),
+
+  "rounds.get": def(
+    z.object({ type: z.literal("rounds.get"), roundId: RoundId }),
+    z.object({
+      round: Round,
+      batches: z.array(ApprovalBatch),
+      turns: z.array(Turn),
+      summary: RoundSummary.nullable(),
+    }),
+    "read",
+  ),
+
+  /** 确认页用：批次 + 每个收件人的完整 Snapshot（逐字查看） */
+  "batches.get": def(
+    z.object({ type: z.literal("batches.get"), batchId: BatchId }),
+    z.object({ batch: ApprovalBatch, snapshots: z.array(PromptSnapshot) }),
+    "read",
+  ),
+
+  "plans.list": def(
+    z.object({ type: z.literal("plans.list"), projectId: ProjectId }),
+    z.array(PlanVersion),
+    "read",
+  ),
 } as const;
 
 // ================================================================ Unions & helpers
@@ -325,6 +596,7 @@ export const ControlErrorCode = z.enum([
   "stale_snapshot",    // expectedSnapshotHash 与当前 snapshot 不一致
   "already_decided",   // 审批或权限请求已经有结果
   "reviewer_not_configured",
+  "agent_unavailable", // 讨论室：收件人离线、未配置、被暂停或额度缺席
   "internal",
 ]);
 export type ControlErrorCode = z.infer<typeof ControlErrorCode>;
@@ -350,5 +622,12 @@ export const ControlEvent = z.discriminatedUnion("type", [
   z.object({ type: z.literal("run.updated"), run: Run }),
   z.object({ type: z.literal("run.event"), event: AgentEvent }),
   z.object({ type: z.literal("permission.requested"), runId: RunId, request: PermissionRequest }),
+  // ---- 讨论室（ADR-002 / C-20）
+  z.object({ type: z.literal("round.updated"), round: Round }),
+  z.object({ type: z.literal("batch.updated"), batch: ApprovalBatch }),
+  z.object({ type: z.literal("turn.updated"), turn: Turn }),
+  z.object({ type: z.literal("summary.created"), summary: RoundSummary }),
+  z.object({ type: z.literal("plan.updated"), plan: PlanVersion }),
+  z.object({ type: z.literal("agent.status"), status: AgentStatus }),
 ]);
 export type ControlEvent = z.infer<typeof ControlEvent>;

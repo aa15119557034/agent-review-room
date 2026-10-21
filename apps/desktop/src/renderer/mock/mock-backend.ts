@@ -188,7 +188,7 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
 
   // ------------------------------------------------------------ commands
 
-  const commands: { [K in CommandType]: (req: any) => Promise<unknown> } = {
+  const commands: { [K in CommandType]?: (req: any) => Promise<unknown> } = {
     async "project.create"(req) {
       const p: Project = { id: id("proj"), name: req.name, createdAt: now() };
       db.projects.push(p);
@@ -366,11 +366,24 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
     },
   };
 
+  // ------------------------------------------------------------ 讨论室（C-20 契约已定，mock 在 C-21 实现）
+
+  const notYet = async (): Promise<never> => {
+    throw new MockError("internal", "讨论室模式还没有接入演示数据");
+  };
+  Object.assign(commands, {
+    "node.upsert": notYet, "node.test": notYet, "agent.update": notYet, "note.add": notYet,
+    "round.draft": notYet, "round.redraft": notYet, "batch.approve": notYet, "batch.reject": notYet,
+    "round.pause": notYet, "round.resume": notYet, "round.end": notYet, "round.supplement": notYet,
+    "round.retry": notYet, "round.summarize": notYet, "round.void": notYet,
+    "plan.confirm": notYet, "plan.edit": notYet, "plan.finalize": notYet, "plan.derive": notYet,
+  });
+
   // ------------------------------------------------------------ queries
 
   const byProject = <T extends { projectId: string }>(list: T[], pid: string) => list.filter((x) => x.projectId === pid);
 
-  const queries: { [K in QueryType]: (req: any) => Promise<unknown> } = {
+  const queries: { [K in QueryType]?: (req: any) => Promise<unknown> } = {
     async "system.status"() {
       return {
         appVersion: "0.0.0-mock",
@@ -412,6 +425,16 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
       return (db.events.get(req.runId) ?? []).filter((e) => e.seq > (req.afterSeq ?? -1));
     },
   };
+
+  Object.assign(queries, {
+    async "nodes.list"() { return []; },
+    async "agents.list"() { return []; },
+    async "agents.status"() { return []; },
+    async "rounds.list"() { return []; },
+    async "plans.list"() { return []; },
+    "rounds.get": notYet,
+    "batches.get": notYet,
+  });
 
   // ------------------------------------------------------------ dispatch
 
