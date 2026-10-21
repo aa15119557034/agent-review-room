@@ -343,7 +343,14 @@ export const COMMANDS = {
   ),
 
   /**
-   * 盖章。expected 必须**恰好**覆盖批次里的每一项，且每个 contentHash 都和 Snapshot 一致，
+   * 盖章。批次种类决定这一轮怎么变：
+   * - initial：DRAFT → RUNNING
+   * - resume：PAUSED → RUNNING
+   * - supplement / retry：RUNNING 保持；AWAITING_SUMMARY → RUNNING（大家都答完后再补一句或重试某人）
+   * - summary：AWAITING_SUMMARY → SUMMARIZING
+   * 这一批的 Turn 在起草时已经以 pending 建好，盖章时变成 running 并挂上 Run。
+   *
+   * expected 必须**恰好**覆盖批次里的每一项，且每个 contentHash 都和 Snapshot 一致，
    * 否则整批拒绝（stale_snapshot），一个都不发。批准 + 建 Run 在同一事务里。
    */
   "batch.approve": def(
@@ -404,6 +411,7 @@ export const COMMANDS = {
   /**
    * 请汇总者汇总这一轮（AWAITING_SUMMARY 时可用）。发给汇总者也是一次发送，同样要盖章。
    * 汇总者必须 canSummarize，且不能是本轮任何人的替补。
+   * 这一轮没有任何 answered 的发言时返回 invalid_state（没什么可汇总的，界面建议作废）。
    */
   "round.summarize": def(
     z.object({ type: z.literal("round.summarize"), roundId: RoundId, summarizer: AgentName }),

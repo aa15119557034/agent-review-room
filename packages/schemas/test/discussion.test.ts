@@ -54,6 +54,7 @@ describe("round state machine (ADR-002 canvas 0-B)", () => {
     assert.ok(canTransition(ROUND_TRANSITIONS, "PAUSED", "RUNNING"));
     assert.ok(canTransition(ROUND_TRANSITIONS, "PAUSED", "AWAITING_SUMMARY"), "end round while paused");
     assert.ok(canTransition(ROUND_TRANSITIONS, "SUMMARIZING", "AWAITING_SUMMARY"), "summary failed → pick again");
+    assert.ok(canTransition(ROUND_TRANSITIONS, "AWAITING_SUMMARY", "RUNNING"), "retry / supplement after everyone finished");
     assert.ok(!canTransition(ROUND_TRANSITIONS, "DRAFT", "AWAITING_SUMMARY"), "cannot summarize a round nobody answered");
     for (const s of RoundState.options) assert.ok(!canTransition(ROUND_TRANSITIONS, s, s), `${s} self-loop`);
   });
