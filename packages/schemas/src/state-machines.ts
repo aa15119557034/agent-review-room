@@ -78,7 +78,8 @@ export const ROUND_TRANSITIONS: Readonly<Record<RoundState, readonly RoundState[
   DRAFT: ["RUNNING", "VOIDED"],
   RUNNING: ["PAUSED", "AWAITING_SUMMARY", "VOIDED"],
   PAUSED: ["RUNNING", "AWAITING_SUMMARY", "VOIDED"],
-  AWAITING_SUMMARY: ["SUMMARIZING", "VOIDED"],
+  // 大家都有结局之后，还可以单独重试某人或补充（retry / supplement 批次盖章后回到 RUNNING）
+  AWAITING_SUMMARY: ["RUNNING", "SUMMARIZING", "VOIDED"],
   // 汇总失败（失败 / 超时 / 缺席）回到 AWAITING_SUMMARY，可以换人或重试
   SUMMARIZING: ["SUMMARIZED", "AWAITING_SUMMARY", "VOIDED"],
   SUMMARIZED: [],
