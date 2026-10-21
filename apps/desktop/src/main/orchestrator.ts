@@ -1,7 +1,10 @@
 import {
   appendRunEvent,
   finishRun,
+  finishSummaryFromRun,
+  finishTurnFromRun,
   RunStateConflictError,
+  TurnError,
   type RunRow,
   type SqliteDatabase,
   transitionRun,
@@ -27,6 +30,11 @@ export interface RunInput {
   contentHash: string;
   /** snapshot 的 reviewerAgent：reviewer_output 的 sourceAgent 用它 */
   reviewerAgent: string;
+  /**
+   * 讨论室的 Run：结束时不是写 reviewer_output，而是落 Turn 的结局
+   * （汇总者的 Turn 走 finishSummaryFromRun，其他人的走 finishTurnFromRun）。
+   */
+  discussion?: { turnId: string; isSummary: boolean };
 }
 
 export interface OrchestratorDeps {
@@ -101,7 +109,7 @@ export class RunOrchestrator {
 
       for await (const event of events) {
         if (TERMINAL_EVENTS.has(event.type)) {
-          await this.#finish(run.id, currentState, event, completedText, input.reviewerAgent);
+          await this.#finish(run.id, currentState, event, completedText, input.reviewerAgent, input.discussion);
           return;
         }
 
@@ -127,7 +135,7 @@ export class RunOrchestrator {
         runId: run.id,
         seq: -1,
         ts: new Date().toISOString(),
-      } as AgentEvent, null, input.reviewerAgent);
+      } as AgentEvent, null, input.reviewerAgent, input.discussion);
     } catch (error) {
       const current = this.#deps.getRun(run.id);
       if (current !== undefined && (current.state === "STARTING" || current.state === "RUNNING")) {
@@ -139,7 +147,7 @@ export class RunOrchestrator {
           runId: run.id,
           seq: -1,
           ts: new Date().toISOString(),
-        } as AgentEvent, null, input.reviewerAgent);
+        } as AgentEvent, null, input.reviewerAgent, input.discussion);
       }
     } finally {
       this.#active.delete(run.id);
@@ -152,7 +160,12 @@ export class RunOrchestrator {
     event: AgentEvent,
     completedText: string | null,
     reviewerAgent: string,
+    discussion?: RunInput["discussion"],
   ): Promise<void> {
+    if (discussion !== undefined) {
+      await this.#finishDiscussion(runId, event, completedText, discussion);
+      return;
+    }
     let terminal: Parameters<typeof finishRun>[3]["terminal"];
     if (event.type === "error") {
       terminal = { type: "error", reason: event.reason, ...(event.message === undefined ? {} : { message: event.message }) };
@@ -202,6 +215,58 @@ export class RunOrchestrator {
       });
     }
     this.#deps.emit({ type: "run.updated", run: toContractRun(finished) });
+  }
+
+  /**
+   * 讨论室的一次 Run 结束：写 Turn 的结局（汇总者的 Turn 走汇总路径）。
+   * 迟到的结果（Turn 已经不是 running / Run 已经不是活动的）直接丢掉。
+   */
+  async #finishDiscussion(
+    runId: string,
+    event: AgentEvent,
+    completedText: string | null,
+    discussion: { turnId: string; isSummary: boolean },
+  ): Promise<void> {
+    // 失败原因原样透传（quota_exhausted 由 db 层映射成 absent_quota），不要压成 internal
+    const failure = event.type === "error" ? ({ kind: "failed", failureReason: event.reason } as const) : undefined;
+    // 完成了却没有正文：算不完整输出，不能记成"答了但内容为空"
+    const emptyAnswer = event.type === "completed" && (completedText === null || completedText === "");
+
+    try {
+      if (discussion.isSummary) {
+        const result =
+          event.type === "completed" && !emptyAnswer
+            ? ({ kind: "answered", text: completedText ?? "" } as const)
+            : emptyAnswer
+              ? ({ kind: "failed", failureReason: "incomplete_output" } as const)
+            : event.type === "timed_out"
+              ? ({ kind: "timed_out", timeoutKind: event.kind } as const)
+              : failure ?? ({ kind: "failed", failureReason: "internal" } as const);
+        await finishSummaryFromRun(this.#deps.db, this.#deps.queue, { runId, result });
+      } else {
+        const terminal =
+          event.type === "completed" && !emptyAnswer
+            ? ({ kind: "answered", text: completedText ?? "" } as const)
+            : emptyAnswer
+              ? ({ kind: "failed", failureReason: "incomplete_output" } as const)
+            : event.type === "timed_out"
+              ? ({ kind: "timed_out", timeoutKind: event.kind } as const)
+              : event.type === "cancelled"
+                ? ({ kind: "interrupted" } as const)
+                : failure ?? ({ kind: "failed", failureReason: "internal" } as const);
+        await finishTurnFromRun(this.#deps.db, this.#deps.queue, { runId, terminal });
+      }
+    } catch (error) {
+      // 暂停 / 结束本轮 / 打断已经把这个 Turn 或 Run 结掉了，这就是迟到结果
+      if (error instanceof TurnError) {
+        console.warn("[orchestrator] dropped a late discussion result for", runId, "turn", discussion.turnId, error.code);
+        return;
+      }
+      throw error;
+    }
+
+    const current = this.#deps.getRun(runId);
+    if (current !== undefined) this.#deps.emit({ type: "run.updated", run: toContractRun(current) });
 
     const events = this.#deps.db
       .prepare("SELECT seq, event_id AS eventId, type, payload, ts FROM run_events WHERE run_id = ? ORDER BY seq DESC LIMIT 1")
