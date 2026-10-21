@@ -1,0 +1,41 @@
+{
+  "nodeId": "controller-local",
+  "host": "127.0.0.1",
+  "port": 7420,
+  "tokenFile": "agent-server.token",
+  "maxConcurrentRuns": 2,
+  "leaseMs": 20000,
+  "heartbeatMs": 5000,
+  "killGraceMs": 5000,
+  "profiles": {
+    "codex-discuss": {
+      "command": "codex",
+      "args": ["exec", "--json", "--skip-git-repo-check", "--sandbox", "read-only", "--ephemeral", "-"],
+      "cwd": "discuss-sandbox",
+      "parser": "codex-exec-json",
+      "envAllowlist": [
+        "PATH", "HOME", "USERPROFILE", "SYSTEMROOT", "APPDATA", "LOCALAPPDATA", "TEMP", "TMP", "LANG",
+        "CODEX_HOME", "HTTPS_PROXY", "HTTP_PROXY", "NO_PROXY"
+      ],
+      "maxIdleTimeoutMs": 300000,
+      "maxTotalTimeoutMs": 1800000
+    },
+    "deepseek-discuss": {
+      "command": "node",
+      "args": ["../bin/deepseek-chat.mjs", "--model", "deepseek-v4-pro"],
+      "cwd": "discuss-sandbox",
+      "parser": "room-jsonl",
+      "envAllowlist": [
+        "PATH", "HOME", "USERPROFILE", "SYSTEMROOT", "TEMP", "TMP", "LANG",
+        "DEEPSEEK_API_KEY", "HTTPS_PROXY", "HTTP_PROXY", "NO_PROXY"
+      ],
+      "maxIdleTimeoutMs": 300000,
+      "maxTotalTimeoutMs": 1800000
+    },
+    "echo": {
+      "command": "node",
+      "args": ["-e", "process.stdin.pipe(process.stdout)"],
+      "cwd": "discuss-sandbox"
+    }
+  }
+}

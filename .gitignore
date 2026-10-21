@@ -21,3 +21,4 @@ Thumbs.db
 apps/agent-server/agent-server.config.json
 apps/agent-server/agent-server.token
 apps/agent-server/reviewer-sandbox/
+apps/agent-server/discuss-sandbox/

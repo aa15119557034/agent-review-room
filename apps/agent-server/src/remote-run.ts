@@ -3,7 +3,7 @@ import { StringDecoder } from "node:string_decoder";
 import type { RemoteEvent, RemoteTerminal, StartRunRequest } from "@room/schemas";
 import type { Profile, ServerConfig } from "./config";
 import { killTree, spawnDetached } from "./process-tree";
-import { ClaudeStreamJsonParser } from "./parsers/claude-stream-json";
+import { createParser, type OutputParser, type ParserOutput } from "./parsers";
 import { planSpawn } from "./win-command";
 
 type SeqEvent = Exclude<RemoteEvent, { type: "heartbeat" }>;
@@ -27,8 +27,8 @@ export class RemoteRun {
   /** 已决定要杀进程时记下原因；进程真正退出后再产出对应的 terminal */
   private pendingOutcome: RemoteTerminal | undefined;
   private outputBytes = 0;
-  /** profile.parser 为 claude-stream-json 时使用 */
-  private readonly parser: ClaudeStreamJsonParser | null;
+  /** profile.parser 不是 raw 时使用 */
+  private readonly parser: OutputParser | null;
   private seq = 0;
 
   private idleTimer: NodeJS.Timeout | undefined;
@@ -50,7 +50,7 @@ export class RemoteRun {
       totalTimeoutMs: Math.min(req.limits.totalTimeoutMs, profile.maxTotalTimeoutMs),
     };
     this.input = req.snapshot.content;
-    this.parser = profile.parser === "claude-stream-json" ? new ClaudeStreamJsonParser() : null;
+    this.parser = createParser(profile.parser);
   }
 
   private readonly limits: { idleTimeoutMs: number; totalTimeoutMs: number };
@@ -118,18 +118,25 @@ export class RemoteRun {
         this.finish(this.pendingOutcome);
         return;
       }
-      if (code !== 0) {
-        this.finish({ outcome: "error", reason: "process_exit_nonzero", exitCode: code });
-        return;
-      }
       if (!this.parser) {
-        this.finish({ outcome: "completed", exitCode: 0 });
+        if (code !== 0) this.finish({ outcome: "error", reason: "process_exit_nonzero", exitCode: code });
+        else this.finish({ outcome: "completed", exitCode: 0 });
         return;
       }
-      // 有解析器：退出码 0 还不够，必须看到完整的结束标记
+      // 有解析器：退出码 0 还不够，必须看到完整的结束标记。
+      // 退出码非 0 时也先问解析器：CLI 因为额度用尽退出时，原因只写在结构化输出里（C-25）
       const { trailing, verdict } = this.parser.finish();
       this.emitParsed(trailing);
-      if (verdict.ok) {
+      if (!verdict.ok && verdict.reason === "quota_exhausted") {
+        this.finish({ outcome: "error", reason: "quota_exhausted", exitCode: code, message: verdict.message });
+      } else if (code !== 0) {
+        this.finish({
+          outcome: "error",
+          reason: "process_exit_nonzero",
+          exitCode: code,
+          ...(verdict.ok ? {} : { message: verdict.message }),
+        });
+      } else if (verdict.ok) {
         this.push({ type: "message_complete", seq: 0, ts: "", text: verdict.finalText });
         this.finish({ outcome: "completed", exitCode: 0 });
       } else {
@@ -196,7 +203,7 @@ export class RemoteRun {
     else this.push({ type: "output", seq: 0, ts: "", stream, data });
   }
 
-  private emitParsed(items: ReturnType<ClaudeStreamJsonParser["push"]>): void {
+  private emitParsed(items: ParserOutput[]): void {
     for (const item of items) {
       if (item.kind === "text_delta") this.push({ type: "text_delta", seq: 0, ts: "", text: item.text });
       else this.push({ type: "output", seq: 0, ts: "", stream: "stdout", data: item.line + "\n" });

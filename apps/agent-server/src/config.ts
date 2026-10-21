@@ -2,6 +2,7 @@ import { existsSync, readFileSync, statSync } from "node:fs";
 import { dirname, isAbsolute, resolve } from "node:path";
 import { z } from "zod";
 import { ProfileId } from "@room/schemas";
+import { PARSERS } from "./parsers";
 import { planSpawn, type ResolveEnv } from "./win-command";
 
 /**
@@ -26,8 +27,10 @@ const Profile = z
      * stdout 的解析方式：
      * - raw：原样以 output 事件转发
      * - claude-stream-json：解析 `claude -p --output-format stream-json` 的输出，转成 text_delta / message_complete
+     * - codex-exec-json：解析 `codex exec --json` 的输出（S-10）
+     * - room-jsonl：本仓库自带脚本的输出，目前是 bin/deepseek-chat.mjs（S-10）
      */
-    parser: z.enum(["raw", "claude-stream-json"]).default("raw"),
+    parser: z.enum(PARSERS).default("raw"),
     verifyCommit: z.boolean().default(false),
     maxIdleTimeoutMs: z.number().int().positive().default(300_000),
     maxTotalTimeoutMs: z.number().int().positive().default(3_600_000),
