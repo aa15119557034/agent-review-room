@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import type { FailureReason, TurnOutcome } from "@room/schemas";
 import type { SqliteDatabase } from "./database";
 import { appendRunEventTx } from "./run-lifecycle";
@@ -363,4 +364,179 @@ function setTurnOutcomeLoose(db: SqliteDatabase, turnId: string, outcome: string
     ts,
     turnId,
   );
+}
+export type FinishSummaryResult =
+  | {
+      kind: "answered";
+      text: string;
+      /** 结构化汇总；解析不出来就传 null（0-B 第 11 行允许只有全文） */
+      report?: unknown;
+      /** 顺带产生的方案草稿；不传就不建版本 */
+      plan?: { content: string; changeNote: string };
+    }
+  | { kind: "failed"; failureReason: TurnFailureReason }
+  | { kind: "timed_out"; timeoutKind: "idle" | "total" };
+
+export interface FinishSummaryInput {
+  runId: string;
+  result: FinishSummaryResult;
+}
+
+export interface FinishSummaryOutput {
+  turnId: string;
+  roundId: string;
+  messageId: string;
+  roundSummaryId: string | null;
+  planVersionId: string | null;
+  roundState: string;
+}
+
+/**
+ * 汇总者的一次发言（0-B 第 11 行）。
+ *
+ * 成功：`summary` 消息 + `round_summaries` +（可选）方案草稿，轮 `SUMMARIZING → SUMMARIZED`。
+ * 失败（失败 / 超时 / 额度缺席）：轮退回 `AWAITING_SUMMARY`，可以换人或重试。
+ *
+ * 三样记录和 Run 终态在同一个事务里写。
+ */
+export function finishSummaryFromRun(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  input: FinishSummaryInput,
+): Promise<FinishSummaryOutput> {
+  return writeTransaction(db, queue, () => {
+    const turn = loadTurnByRun(db, input.runId);
+    if (turn.is_summary !== 1) throw new TurnError("summary_not_supported", "turn is not a summary turn");
+    const run = db.prepare("SELECT id, state FROM runs WHERE id = ?").get(input.runId) as RunRow | undefined;
+    if (run === undefined) throw new TurnError("turn_not_found", "run not found");
+    if (["COMPLETED", "FAILED", "CANCELLED", "TIMED_OUT"].includes(run.state)) {
+      throw new TurnError("run_not_active", "run " + run.id + " is already " + run.state);
+    }
+
+    const ts = now();
+    const result = input.result;
+
+    if (result.kind !== "answered") {
+      const quota = result.kind === "failed" && result.failureReason === "quota_exhausted";
+      const outcome: TurnOutcome = quota ? "absent_quota" : result.kind === "timed_out" ? "timed_out" : "failed";
+      if (result.kind === "timed_out") {
+        finishRunTx(db, run, { state: "TIMED_OUT", failureReason: null }, { type: "timed_out", payload: { kind: result.timeoutKind } }, ts);
+      } else {
+        finishRunTx(
+          db,
+          run,
+          { state: "FAILED", failureReason: result.failureReason },
+          { type: "error", payload: { reason: result.failureReason } },
+          ts,
+        );
+      }
+      setTurnOutcome(db, turn.id, outcome, null, ts);
+      // 汇总失败 -> 退回待汇总
+      db.prepare("UPDATE rounds SET state = 'AWAITING_SUMMARY' WHERE id = ? AND state = 'SUMMARIZING'").run(turn.round_id);
+      return {
+        turnId: turn.id,
+        roundId: turn.round_id,
+        messageId: "",
+        roundSummaryId: null,
+        planVersionId: null,
+        roundState: currentRoundState(db, turn.round_id),
+      };
+    }
+
+    finishRunTx(db, run, { state: "COMPLETED", failureReason: null }, { type: "completed", payload: { outcome: "completed" } }, ts);
+
+    const messageId = "msg_" + turn.id.slice(5);
+    db.prepare(
+      "INSERT INTO messages (id, project_id, kind, source_agent, run_id, round_id, turn_id, on_behalf_of, content, created_at) " +
+        "SELECT ?, project_id, 'summary', ?, ?, ?, ?, NULL, ?, ? FROM rounds WHERE id = ?",
+    ).run(messageId, turn.agent, input.runId, turn.round_id, turn.id, result.text, ts, turn.round_id);
+
+    const answered = db
+      .prepare("SELECT count(*) AS n FROM turns WHERE round_id = ? AND is_summary = 0 AND outcome = 'answered'")
+      .get(turn.round_id) as { n: number };
+    const expected = db
+      .prepare("SELECT json_array_length(recipients) AS n FROM rounds WHERE id = ?")
+      .get(turn.round_id) as { n: number };
+
+    let planVersionId: string | null = null;
+    if (result.plan !== undefined) {
+      const latest = db
+        .prepare("SELECT id, version FROM plan_versions WHERE project_id = (SELECT project_id FROM rounds WHERE id = ?) ORDER BY version DESC LIMIT 1")
+        .get(turn.round_id) as { id: string; version: number } | undefined;
+      planVersionId = "plan_" + turn.id.slice(5);
+      const projectId = (db.prepare("SELECT project_id FROM rounds WHERE id = ?").get(turn.round_id) as { project_id: string })
+        .project_id;
+      db.prepare(
+        "INSERT INTO plan_versions (id, project_id, version, state, content, content_hash, change_note, based_on_round_id, parent_id, drafted_by_kind, drafted_by_agent, created_at) " +
+          "VALUES (?, ?, ?, 'DRAFT', ?, ?, ?, ?, ?, 'agent', ?, ?)",
+      ).run(
+        planVersionId,
+        projectId,
+        (latest?.version ?? 0) + 1,
+        result.plan.content,
+        createHash("sha256").update(result.plan.content, "utf8").digest("hex"),
+        result.plan.changeNote,
+        turn.round_id,
+        latest?.id ?? null,
+        turn.agent,
+        ts,
+      );
+    }
+
+    const summaryId = "rsum_" + turn.id.slice(5);
+    db.prepare(
+      "INSERT INTO round_summaries (round_id, message_id, summarizer, answered, expected, report, plan_version_id, created_at) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+    ).run(
+      turn.round_id,
+      messageId,
+      turn.agent,
+      answered.n,
+      expected.n,
+      result.report === undefined || result.report === null ? null : JSON.stringify(result.report),
+      planVersionId,
+      ts,
+    );
+
+    db.prepare("UPDATE turns SET outcome = 'answered', reply_message_id = ?, finished_at = ? WHERE id = ? AND outcome = 'running'").run(
+      messageId,
+      ts,
+      turn.id,
+    );
+    db.prepare("UPDATE rounds SET state = 'SUMMARIZED', finished_at = ? WHERE id = ? AND state = 'SUMMARIZING'").run(ts, turn.round_id);
+
+    return {
+      turnId: turn.id,
+      roundId: turn.round_id,
+      messageId,
+      roundSummaryId: summaryId,
+      planVersionId,
+      roundState: currentRoundState(db, turn.round_id),
+    };
+  });
+}
+
+/**
+ * 打断后重发：把"这一轮里这个人上一次被打断的 Turn"和新 Turn 连起来（0-B 第 4 行）。
+ * 只允许连同一轮的 Turn，避免连错。
+ */
+export async function linkSuperseded(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  input: { previousTurnId: string; nextTurnId: string },
+): Promise<void> {
+  await writeTransaction(db, queue, () => {
+    const previous = db.prepare("SELECT id, round_id, outcome, superseded_by FROM turns WHERE id = ?").get(input.previousTurnId) as
+      | { id: string; round_id: string; outcome: string; superseded_by: string | null }
+      | undefined;
+    const next = db.prepare("SELECT id, round_id FROM turns WHERE id = ?").get(input.nextTurnId) as
+      | { id: string; round_id: string }
+      | undefined;
+    if (previous === undefined || next === undefined) throw new TurnError("turn_not_found", "turn not found");
+    if (previous.round_id !== next.round_id) throw new TurnError("turn_not_found", "turns belong to different rounds");
+    if (previous.superseded_by !== null) throw new TurnError("turn_not_running", "turn already superseded");
+    if (previous.outcome !== "interrupted") throw new TurnError("turn_not_running", "previous turn is " + previous.outcome);
+
+    db.prepare("UPDATE turns SET superseded_by = ? WHERE id = ?").run(next.id, previous.id);
+  });
 }

@@ -1,4 +1,12 @@
-import { appendRunEvent, finishRun, type RunRow, type SqliteDatabase, transitionRun, type WriteQueue } from "@room/db";
+import {
+  appendRunEvent,
+  finishRun,
+  RunStateConflictError,
+  type RunRow,
+  type SqliteDatabase,
+  transitionRun,
+  type WriteQueue,
+} from "@room/db";
 import type { AgentAdapter } from "@room/core";
 import type { AgentEvent, ControlEvent } from "@room/schemas";
 
@@ -156,15 +164,23 @@ export class RunOrchestrator {
       terminal = { type: "completed" };
     }
 
-    const finished = await finishRun(this.#deps.db, this.#deps.queue, runId, {
-      from,
-      terminal,
-      // 只有 completed 才落 reviewer_output；截断/失败的结果不能当正式结论。
-      // 这一步和终态在同一个事务里，见 packages/db 的 finishRun。
-      ...(event.type === "completed" && completedText !== null
-        ? { reviewerOutput: { content: completedText, sourceAgent: reviewerAgent } }
-        : {}),
-    });
+    let finished: Awaited<ReturnType<typeof finishRun>>;
+    try {
+      finished = await finishRun(this.#deps.db, this.#deps.queue, runId, {
+        from,
+        terminal,
+        // 只有 completed 才落 reviewer_output；截断/失败的结果不能当正式结论。
+        // 这一步和终态在同一个事务里，见 packages/db 的 finishRun。
+        ...(event.type === "completed" && completedText !== null
+          ? { reviewerOutput: { content: completedText, sourceAgent: reviewerAgent } }
+          : {}),
+      });
+    } catch (error) {
+      // 迟到的结果：讨论室在暂停 / 结束本轮 / 打断时已经把 Run 标成 CANCELLED 了，
+      // 这时适配器再吐一个 completed/cancelled 就是过期的，直接丢掉，别让进程挂着异常。
+      if (error instanceof RunStateConflictError) return;
+      throw error;
+    }
 
     // 契约要求的推送顺序：先 message.created，再 run.updated
     if (finished.message !== null) {
