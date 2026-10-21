@@ -10,6 +10,7 @@ import {
   FailureReason,
   Message,
   NodeInfo,
+  PromptSnapshot,
   PLAN_TRANSITIONS,
   PlanState,
   QUERIES,
@@ -161,6 +162,18 @@ describe("discussion commands", () => {
 });
 
 describe("discussion records", () => {
+  it("a discussion snapshot has no contributions, but snapshot.create still needs at least one", () => {
+    const snap = {
+      id: `snap_${ID}`, projectId: `proj_${ID}`, content: "x", contentHash: HASH, nonce: "a".repeat(16),
+      contributionIds: [], taskInstruction: "t", reviewerAgent: "deepseek", adapterVersion: "discussion-1",
+      tokenEstimate: 1, synthesisVersion: null, branch: null, commitSha: null, createdAt: TS,
+    };
+    assert.equal(PromptSnapshot.safeParse(snap).success, true);
+    assert.equal(COMMANDS["snapshot.create"].request.safeParse({
+      type: "snapshot.create", projectId: `proj_${ID}`, contributionIds: [], taskInstruction: "t",
+    }).success, false);
+  });
+
   it("a batch marks recipients that got different content", () => {
     const b = ApprovalBatch.parse({
       id: `bat_${ID}`,
