@@ -237,6 +237,20 @@ const toAgent = (row: Record<string, unknown>): AgentProfile => ({
   substitute: (row["substitute"] as string | null) ?? null,
 });
 
+export interface UpsertAgentInput {
+  id: string;
+  displayName?: string;
+  color?: string;
+  roleNote?: string;
+  canDiscuss?: boolean;
+  canSummarize?: boolean;
+  canExecute?: boolean;
+  nodeId?: string | null;
+  profileId?: string | null;
+  pausedByUser?: boolean;
+  substitute?: string | null;
+}
+
 export interface CreateSnapshotInput {
   projectId: string;
   contributionIds: string[];
@@ -552,6 +566,64 @@ export class Repository {
     return toAgent(row);
   }
 
+  /** 新建或修改参与者。已有就只改传进来的字段；没有就按默认值补全建一条。 */
+  async upsertAgent(input: UpsertAgentInput): Promise<AgentProfile> {
+    const updatedAt = now();
+    await writeTransaction(this.#db, this.#queue, () => {
+      const existing = this.getAgentRow(input.id);
+
+      if (existing === undefined) {
+        this.#db
+          .prepare(
+            "INSERT INTO agents (id, display_name, color, role_note, can_discuss, can_summarize, can_execute, " +
+              "node_id, profile_id, paused_by_user, substitute, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+          )
+          .run(
+            input.id,
+            input.displayName ?? input.id,
+            input.color ?? "#5b6b66",
+            input.roleNote ?? "",
+            (input.canDiscuss ?? true) ? 1 : 0,
+            (input.canSummarize ?? false) ? 1 : 0,
+            (input.canExecute ?? false) ? 1 : 0,
+            input.nodeId ?? null,
+            input.profileId ?? null,
+            (input.pausedByUser ?? false) ? 1 : 0,
+            input.substitute ?? null,
+            updatedAt,
+            updatedAt,
+          );
+        return;
+      }
+
+      const columns: [keyof UpsertAgentInput, string][] = [
+        ["displayName", "display_name"],
+        ["color", "color"],
+        ["roleNote", "role_note"],
+        ["canDiscuss", "can_discuss"],
+        ["canSummarize", "can_summarize"],
+        ["canExecute", "can_execute"],
+        ["nodeId", "node_id"],
+        ["profileId", "profile_id"],
+        ["pausedByUser", "paused_by_user"],
+        ["substitute", "substitute"],
+      ];
+      const sets: string[] = [];
+      const params: unknown[] = [];
+      for (const [key, column] of columns) {
+        const value = input[key];
+        if (value === undefined) continue;
+        sets.push(column + " = ?");
+        params.push(typeof value === "boolean" ? (value ? 1 : 0) : value);
+      }
+      sets.push("updated_at = ?");
+      params.push(updatedAt, input.id);
+      this.#db.prepare("UPDATE agents SET " + sets.join(", ") + " WHERE id = ?").run(...(params as never[]));
+    });
+
+    return this.getAgent(input.id);
+  }
+
   listMessagesByRound(roundId: string): Message[] {
     return (
       this.#db.prepare("SELECT * FROM messages WHERE round_id = ? ORDER BY created_at, rowid").all(roundId) as Record<string, unknown>[]
@@ -721,29 +793,15 @@ export class Repository {
   }
 
   /**
-   * 这个 Agent 在这个议题里最新一次发言的结局与结束时间（用来判断「额度缺席」是否还在有效期内）。
+   * 这个 Agent 在所有议题里最新一次发言的结局与结束时间。
+   * 额度是按账号算的：不按议题过滤；汇总时额度用尽也算缺席，所以也不过滤 is_summary。
    * 结束时间优先用 finished_at，老数据没有就用 created_at。
    */
-  latestTurnOutcome(
-    projectId: string,
-    agentId: string,
-  ): { outcome: string; finishedAt: string | null } | null {
-    const row = this.#db
-      .prepare(
-        "SELECT t.outcome AS outcome, COALESCE(t.finished_at, t.created_at) AS finished_at FROM turns t " +
-          "JOIN rounds r ON r.id = t.round_id " +
-          "WHERE r.project_id = ? AND t.agent = ? AND t.is_summary = 0 ORDER BY t.created_at DESC, t.rowid DESC LIMIT 1",
-      )
-      .get(projectId, agentId) as { outcome: string; finished_at: string | null } | undefined;
-    return row === undefined ? null : { outcome: row.outcome, finishedAt: row.finished_at };
-  }
-
-  /** 这个 Agent 在所有议题里最新一次发言的结局（agents.status 用，不按议题过滤） */
   latestTurnOutcomeGlobal(agentId: string): { outcome: string; finishedAt: string | null } | null {
     const row = this.#db
       .prepare(
         "SELECT t.outcome AS outcome, COALESCE(t.finished_at, t.created_at) AS finished_at FROM turns t " +
-          "WHERE t.agent = ? AND t.is_summary = 0 ORDER BY t.created_at DESC, t.rowid DESC LIMIT 1",
+          "WHERE t.agent = ? ORDER BY t.created_at DESC, t.rowid DESC LIMIT 1",
       )
       .get(agentId) as { outcome: string; finished_at: string | null } | undefined;
     return row === undefined ? null : { outcome: row.outcome, finishedAt: row.finished_at };

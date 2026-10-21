@@ -7,10 +7,15 @@ import {
 import {
   approveBatch,
   BatchApproveError,
+  confirmPlan as confirmPlanTx,
   createRoundDraft,
   createSummaryDraft,
+  finalizePlan as finalizePlanTx,
   newRoundId,
+  PlanError,
+  rejectBatch,
   RoundDraftError,
+  TurnError,
   type SqliteDatabase,
   type WriteQueue,
 } from "@room/db";
@@ -115,7 +120,7 @@ export class DiscussionService {
       throw new DiscussionError("invalid_state", "这个议题的第 " + active.index + " 轮还没结束");
     }
 
-    await this.#checkRecipients(command.recipients, project.id, "discuss");
+    await this.#checkRecipients(command.recipients, "discuss");
     const agents: AgentProfile[] = command.recipients.map((agentId) => repo.getAgent(agentId));
 
     const plan = command.planVersionId === null ? null : this.#loadPlan(project.id, command.planVersionId);
@@ -250,7 +255,7 @@ export class DiscussionService {
       throw new DiscussionError("invalid_state", "这一轮没有任何回答，没什么可汇总的；可以改方向（作废这一轮）");
     }
 
-    await this.#checkRecipients([command.summarizer], round.projectId, "summarize");
+    await this.#checkRecipients([command.summarizer], "summarize");
     const summarizer = repo.getAgent(command.summarizer);
     if (repo.hasTurnAsSubstitute(round.id, summarizer.id)) {
       throw new DiscussionError("invalid_state", summarizer.displayName + " 在这一轮当过替补，不能再做汇总");
@@ -287,6 +292,96 @@ export class DiscussionService {
     for (const turn of repo.listTurnsByBatch(batch.id)) emit({ type: "turn.updated", turn });
     for (const item of batch.items) emit({ type: "approval.updated", approval: repo.getApproval(item.approvalId) });
     return batch;
+  }
+
+  /**
+   * agent.update：新建或修改参与者（契约里没有单独的 create，第一条就靠它建）。
+   * 新建时必须有 displayName 和 color；其余字段有默认值。
+   */
+  async updateAgent(command: CommandRequest<"agent.update">): Promise<AgentProfile> {
+    const { repo, emit } = this.#deps;
+    const existing = repo.getAgentRow(command.id);
+    if (existing === undefined && (command.displayName === undefined || command.color === undefined)) {
+      throw new DiscussionError("validation_failed", "新建参与者需要 displayName 和 color");
+    }
+    if (command.substitute !== undefined && command.substitute !== null) {
+      if (command.substitute === command.id) throw new DiscussionError("validation_failed", "不能当自己的替补");
+      if (repo.getAgentRow(command.substitute) === undefined) {
+        throw new DiscussionError("validation_failed", "替补 " + command.substitute + " 还没有配置");
+      }
+    }
+    if (command.nodeId !== undefined && command.nodeId !== null && repo.getNodeRow(command.nodeId) === undefined) {
+      throw new DiscussionError("validation_failed", "节点 " + command.nodeId + " 还没有配置");
+    }
+
+    const { type: _type, ...patch } = command;
+    const agent = await repo.upsertAgent(patch);
+    emit({ type: "agent.status", status: await this.agentStatus(agent.id) });
+    return agent;
+  }
+
+  /** batch.reject：只作废这一批（Approval / pending Turn 一起），轮状态不变 */
+  async reject(command: CommandRequest<"batch.reject">): Promise<ApprovalBatch> {
+    const { repo, db, queue, emit } = this.#deps;
+    repo.getBatch(command.batchId); // 不存在时先报 not_found
+    try {
+      await rejectBatch(db, queue, command.batchId);
+    } catch (error) {
+      if (error instanceof TurnError && error.code === "batch_not_ready") {
+        throw new DiscussionError("already_decided", "这一批已经处理过了");
+      }
+      throw error;
+    }
+
+    const batch = repo.getBatch(command.batchId);
+    for (const item of batch.items) emit({ type: "approval.updated", approval: repo.getApproval(item.approvalId) });
+    emit({ type: "batch.updated", batch });
+    for (const turn of repo.listTurnsByBatch(batch.id)) {
+      if (turn.outcome === "rejected") emit({ type: "turn.updated", turn });
+    }
+    return batch;
+  }
+
+  /** plan.confirm：草稿 → 当前；原来的 CURRENT → SUPERSEDED，两个都要推 plan.updated */
+  async confirmPlan(command: CommandRequest<"plan.confirm">): Promise<PlanVersion> {
+    const { repo, db, queue, emit } = this.#deps;
+    let result: Awaited<ReturnType<typeof confirmPlanTx>>;
+    try {
+      result = await confirmPlanTx(db, queue, command.planVersionId);
+    } catch (error) {
+      throw mapPlanError(error);
+    }
+    for (const superseded of result.superseded) {
+      emit({ type: "plan.updated", plan: repo.getPlan(superseded.id) });
+    }
+    const plan = repo.getPlan(result.plan.id);
+    emit({ type: "plan.updated", plan });
+    return plan;
+  }
+
+  /** plan.finalize：盖章定稿，校验指纹（看的是旧版本就 stale_snapshot） */
+  async finalizePlan(command: CommandRequest<"plan.finalize">): Promise<PlanVersion> {
+    const { repo, db, queue, emit } = this.#deps;
+    let row: Awaited<ReturnType<typeof finalizePlanTx>>;
+    try {
+      row = await finalizePlanTx(db, queue, {
+        planVersionId: command.planVersionId,
+        expectedContentHash: command.expectedContentHash,
+      });
+    } catch (error) {
+      throw mapPlanError(error);
+    }
+    const plan = repo.getPlan(row.id);
+    emit({ type: "plan.updated", plan });
+    return plan;
+  }
+
+  /** 单个参与者的状态（agent.update 之后推 agent.status 用） */
+  async agentStatus(agentId: string): Promise<AgentStatus> {
+    const statuses = await this.agentStatuses();
+    const found = statuses.find((status) => status.agent === agentId);
+    if (found === undefined) throw new DiscussionError("not_found", "参与者 " + agentId + " 不存在");
+    return found;
   }
 
   /**
@@ -406,7 +501,7 @@ export class DiscussionService {
    * - 节点离线 / 没有这个 profile：不发
    * - 节点的 Token 没有配置：不发（多节点各自的 Token 存在设置文件里，D-22c）
    */
-  async #checkRecipients(agentIds: readonly string[], projectId: string, need: AvailabilityNeed): Promise<void> {
+  async #checkRecipients(agentIds: readonly string[], need: AvailabilityNeed): Promise<void> {
     const { repo, settings } = this.#deps;
     const pending: PendingRecipient[] = [];
     /** 每个节点自己的凭据（地址 + 解密后的 Token），同一个节点只取一次 */
@@ -428,7 +523,8 @@ export class DiscussionService {
         throw new DiscussionError("agent_unavailable", displayName + " 没有开启「可以做汇总」");
       }
 
-      const latest = repo.latestTurnOutcome(projectId, agentId);
+      // 额度按账号算：所有议题里最新一次发言（含汇总）都算数
+      const latest = repo.latestTurnOutcomeGlobal(agentId);
       if (latest !== null && latest.outcome === "absent_quota" && this.#isRecentQuotaAbsence(latest.finishedAt)) {
         throw new DiscussionError("agent_unavailable", displayName + " 额度用尽（缺席）");
       }
@@ -508,6 +604,18 @@ function mapApproveError(error: unknown): unknown {
       return new DiscussionError("already_decided", "这一批已经处理过了");
     case "hash_mismatch":
       return new DiscussionError("stale_snapshot", "要发送的内容和你看到的不一致，请重新打开确认页");
+    default:
+      return new DiscussionError("invalid_state", error.message);
+  }
+}
+
+function mapPlanError(error: unknown): unknown {
+  if (!(error instanceof PlanError)) return error;
+  switch (error.code) {
+    case "plan_not_found":
+      return new DiscussionError("not_found", error.message);
+    case "hash_mismatch":
+      return new DiscussionError("stale_snapshot", "方案内容和你看到的不一致，请重新打开");
     default:
       return new DiscussionError("invalid_state", error.message);
   }
