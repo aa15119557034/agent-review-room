@@ -352,7 +352,10 @@ function Composer() {
   const interjecting = round !== null && ["RUNNING", "PAUSED", "AWAITING_SUMMARY"].includes(round.state);
   const nextIndex = d.rounds.length + 1;
   const plan = displayedPlan(d);
-  const { mode, targets } = d.ui.interject;
+  const paused = round?.state === "PAUSED";
+  // 暂停中只能「放进下一轮」：要立刻发出去的补充得先恢复
+  const mode = paused ? "next_round" : d.ui.interject.mode;
+  const { targets } = d.ui.interject;
 
   return (
     <div className="composer">
@@ -361,10 +364,11 @@ function Composer() {
         <fieldset className="interject">
           <legend>插话：补充或改方向（第 {round!.index} 轮）</legend>
           <div className="interject-modes">
-            <label><input type="radio" name="interject-mode" checked={mode === "restart_now"} onChange={() => actions.setInterjectMode("restart_now")} /> 立刻打断，带上补充重答（旧的标「被打断」并保留）</label>
+            <label><input type="radio" name="interject-mode" checked={mode === "restart_now"} disabled={paused} onChange={() => actions.setInterjectMode("restart_now")} /> 立刻打断，带上补充重答（旧的标「被打断」并保留）</label>
             <label><input type="radio" name="interject-mode" checked={mode === "next_round"} onChange={() => actions.setInterjectMode("next_round")} /> 不打断，放进下一轮</label>
-            <label><input type="radio" name="interject-mode" checked={mode === "only"} onChange={() => actions.setInterjectMode("only")} /> 只发给某个人（会标「他收到了额外信息」）</label>
+            <label><input type="radio" name="interject-mode" checked={mode === "only"} disabled={paused} onChange={() => actions.setInterjectMode("only")} /> 只发给某个人（会标「他收到了额外信息」）</label>
           </div>
+          {paused && <p className="step-hint">暂停中只能记下来放进下一轮；要立刻带上补充重答，先点「恢复」。</p>}
           {mode !== "next_round" && (
             <div className="composer-recipients">
               <span>发给：</span>
