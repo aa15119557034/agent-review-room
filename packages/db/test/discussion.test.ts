@@ -7,6 +7,7 @@ import { after, describe, it } from "node:test";
 import {
   approveBatch,
   BatchApproveError,
+  createDraftTurns,
   openDatabase,
   ulid,
   WriteQueue,
@@ -37,7 +38,7 @@ interface Fixture {
 }
 
 /** 一个「已经拼好 Prompt、等盖章」的批次：round(DRAFT) + batch(READY_FOR_REVIEW) + N 份 snapshot/approval */
-function seedBatch(recipients: string[], kind = "initial"): Fixture {
+async function seedBatch(recipients: string[], kind = "initial", draft = true): Promise<Fixture> {
   const dir = mkdtempSync(join(tmpdir(), "room-db-d21-"));
   dirs.push(dir);
   const db = openDatabase(join(dir, "test.db"));
@@ -74,6 +75,8 @@ function seedBatch(recipients: string[], kind = "initial"): Fixture {
     return { recipient, approvalId, snapshotId, contentHash };
   });
 
+  if (draft) await createDraftTurns(db, queue, batchId);
+
   return { db, queue, projectId, roundId, batchId, items };
 }
 
@@ -81,7 +84,7 @@ const count = (db: SqliteDatabase, sql: string): number => (db.prepare(sql).get(
 
 describe("approveBatch：一次盖章 = N 个 Run", () => {
   it("两个人一起盖章：两个 Run、两个 Turn、两个 Approval 全部落地", async () => {
-    const f = seedBatch(["deepseek", "codex"]);
+    const f = await seedBatch(["deepseek", "codex"]);
 
     const result = await approveBatch(f.db, f.queue, {
       batchId: f.batchId,
@@ -111,7 +114,7 @@ describe("approveBatch：一次盖章 = N 个 Run", () => {
   });
 
   it("指纹对不上就整批不发，一条都不写", async () => {
-    const f = seedBatch(["deepseek", "codex"]);
+    const f = await seedBatch(["deepseek", "codex"]);
     const tampered = f.items.map((item, i) => ({
       approvalId: item.approvalId,
       expectedContentHash: i === 0 ? "b".repeat(64) : item.contentHash,
@@ -123,7 +126,9 @@ describe("approveBatch：一次盖章 = N 个 Run", () => {
     );
 
     assert.equal(count(f.db, "SELECT count(*) AS n FROM runs"), 0);
-    assert.equal(count(f.db, "SELECT count(*) AS n FROM turns"), 0);
+    // 起草时建的 pending Turn 还在，但没有一条变成 running
+    assert.equal(count(f.db, "SELECT count(*) AS n FROM turns WHERE outcome = 'running'"), 0);
+    assert.equal(count(f.db, "SELECT count(*) AS n FROM turns WHERE outcome = 'pending'"), 2);
     assert.equal(count(f.db, "SELECT count(*) AS n FROM approvals WHERE state = 'APPROVED'"), 0);
     assert.equal(
       (f.db.prepare("SELECT state FROM batches WHERE id = ?").get(f.batchId) as { state: string }).state,
@@ -137,7 +142,7 @@ describe("approveBatch：一次盖章 = N 个 Run", () => {
   });
 
   it("少盖一个人也不行（不能只发一半）", async () => {
-    const f = seedBatch(["deepseek", "codex"]);
+    const f = await seedBatch(["deepseek", "codex"]);
     await assert.rejects(
       () =>
         approveBatch(f.db, f.queue, {
@@ -152,7 +157,7 @@ describe("approveBatch：一次盖章 = N 个 Run", () => {
   });
 
   it("有一个 Approval 已经不在 READY_FOR_REVIEW，整批回滚", async () => {
-    const f = seedBatch(["deepseek", "codex"]);
+    const f = await seedBatch(["deepseek", "codex"]);
     f.db.prepare("UPDATE approvals SET state = 'CANCELLED' WHERE id = ?").run(f.items[1]!.approvalId);
 
     await assert.rejects(
@@ -172,7 +177,7 @@ describe("approveBatch：一次盖章 = N 个 Run", () => {
   });
 
   it("重复盖章被拒（批次已经不是 READY_FOR_REVIEW）", async () => {
-    const f = seedBatch(["deepseek"]);
+    const f = await seedBatch(["deepseek"]);
     const items = f.items.map((item) => ({ approvalId: item.approvalId, expectedContentHash: item.contentHash }));
     await approveBatch(f.db, f.queue, { batchId: f.batchId, items, via: "desktop" });
 
@@ -181,6 +186,115 @@ describe("approveBatch：一次盖章 = N 个 Run", () => {
       (error: unknown) => error instanceof BatchApproveError && error.code === "batch_not_ready",
     );
     assert.equal(count(f.db, "SELECT count(*) AS n FROM runs"), 1);
+    f.db.close();
+  });
+});
+
+describe("approveBatch：按批次种类转换这一轮", () => {
+  it("resume：PAUSED → RUNNING", async () => {
+    const f = await seedBatch(["deepseek"], "resume", false);
+    f.db.prepare("UPDATE rounds SET state = 'PAUSED' WHERE id = ?").run(f.roundId);
+    await createDraftTurns(f.db, f.queue, f.batchId);
+
+    await approveBatch(f.db, f.queue, {
+      batchId: f.batchId,
+      items: f.items.map((item) => ({ approvalId: item.approvalId, expectedContentHash: item.contentHash })),
+      via: "desktop",
+    });
+    assert.equal(
+      (f.db.prepare("SELECT state FROM rounds WHERE id = ?").get(f.roundId) as { state: string }).state,
+      "RUNNING",
+    );
+    f.db.close();
+  });
+
+  it("summary：AWAITING_SUMMARY → SUMMARIZING", async () => {
+    const f = await seedBatch(["claude"], "summary", false);
+    f.db.prepare("UPDATE rounds SET state = 'AWAITING_SUMMARY' WHERE id = ?").run(f.roundId);
+    await createDraftTurns(f.db, f.queue, f.batchId);
+
+    await approveBatch(f.db, f.queue, {
+      batchId: f.batchId,
+      items: f.items.map((item) => ({ approvalId: item.approvalId, expectedContentHash: item.contentHash })),
+      via: "desktop",
+    });
+    assert.equal(
+      (f.db.prepare("SELECT state FROM rounds WHERE id = ?").get(f.roundId) as { state: string }).state,
+      "SUMMARIZING",
+    );
+    assert.equal(
+      (f.db.prepare("SELECT is_summary FROM turns LIMIT 1").get() as { is_summary: number }).is_summary,
+      1,
+    );
+    f.db.close();
+  });
+
+  it("supplement：AWAITING_SUMMARY → RUNNING（C-20c 补的转换）", async () => {
+    const f = await seedBatch(["deepseek"], "supplement", false);
+    f.db.prepare("UPDATE rounds SET state = 'AWAITING_SUMMARY' WHERE id = ?").run(f.roundId);
+    await createDraftTurns(f.db, f.queue, f.batchId);
+
+    await approveBatch(f.db, f.queue, {
+      batchId: f.batchId,
+      items: f.items.map((item) => ({ approvalId: item.approvalId, expectedContentHash: item.contentHash })),
+      via: "desktop",
+    });
+    assert.equal(
+      (f.db.prepare("SELECT state FROM rounds WHERE id = ?").get(f.roundId) as { state: string }).state,
+      "RUNNING",
+    );
+    f.db.close();
+  });
+
+  it("retry：RUNNING 不变（不重复写状态）", async () => {
+    const f = await seedBatch(["deepseek"], "retry", false);
+    f.db.prepare("UPDATE rounds SET state = 'RUNNING' WHERE id = ?").run(f.roundId);
+    await createDraftTurns(f.db, f.queue, f.batchId);
+
+    await approveBatch(f.db, f.queue, {
+      batchId: f.batchId,
+      items: f.items.map((item) => ({ approvalId: item.approvalId, expectedContentHash: item.contentHash })),
+      via: "desktop",
+    });
+    assert.equal(
+      (f.db.prepare("SELECT state FROM rounds WHERE id = ?").get(f.roundId) as { state: string }).state,
+      "RUNNING",
+    );
+    f.db.close();
+  });
+
+  it("SUMMARIZED 之后不能再塞 initial 批次", async () => {
+    const f = await seedBatch(["deepseek"], "initial", false);
+    f.db.prepare("UPDATE rounds SET state = 'SUMMARIZED' WHERE id = ?").run(f.roundId);
+    await createDraftTurns(f.db, f.queue, f.batchId);
+
+    await assert.rejects(
+      () =>
+        approveBatch(f.db, f.queue, {
+          batchId: f.batchId,
+          items: f.items.map((item) => ({ approvalId: item.approvalId, expectedContentHash: item.contentHash })),
+          via: "desktop",
+        }),
+      (error: unknown) => error instanceof BatchApproveError && error.code === "round_transition_invalid",
+    );
+    assert.equal(count(f.db, "SELECT count(*) AS n FROM runs"), 0);
+    f.db.close();
+  });
+
+  it("没有起草（没有 pending Turn）就盖章会被拒，且不写 Run", async () => {
+    const f = await seedBatch(["deepseek"], "initial", false);
+
+    await assert.rejects(
+      () =>
+        approveBatch(f.db, f.queue, {
+          batchId: f.batchId,
+          items: f.items.map((item) => ({ approvalId: item.approvalId, expectedContentHash: item.contentHash })),
+          via: "desktop",
+        }),
+      (error: unknown) => error instanceof BatchApproveError && error.code === "turn_not_pending",
+    );
+    assert.equal(count(f.db, "SELECT count(*) AS n FROM runs"), 0);
+    assert.equal(count(f.db, "SELECT count(*) AS n FROM approvals WHERE state = 'APPROVED'"), 0);
     f.db.close();
   });
 });
