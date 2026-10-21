@@ -74,6 +74,14 @@ describe("codex exec --json parser", () => {
     assert.equal(!v.ok && v.reason, "internal");
   });
 
+  it("real `codex exec --json` output from the controller (Codex v0.163.0): warning item is not a failure", () => {
+    // 2026-10-21 DeepSeek 在主控机上抓的原文。第 2 行是 item.completed + type "error"（功能开关警告），不是失败
+    const p = new CodexExecJsonParser();
+    const out = p.push(readFileSync(join(here, "fixtures", "codex-real-hello.jsonl"), "utf8"));
+    assert.deepEqual(out, [{ kind: "text_delta", text: "hello" }]);
+    assert.deepEqual(p.finish().verdict, { ok: true, finalText: "hello" });
+  });
+
   it("completed turn with no agent_message is not a successful answer", () => {
     const p = new CodexExecJsonParser();
     p.push(line({ type: "turn.completed", usage: {} }));
