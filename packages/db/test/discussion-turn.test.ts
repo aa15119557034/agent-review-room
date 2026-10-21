@@ -16,6 +16,7 @@ import {
   ulid,
   WriteQueue,
 } from "../src/index";
+import { AgentEvent } from "@room/schemas";
 import type { SqliteDatabase } from "../src/index";
 
 const dirs: string[] = [];
@@ -169,7 +170,7 @@ describe("finishTurnFromRun：Run 终态 → Turn 结局", () => {
     const f = await seedApproved(["deepseek"]);
     const result = await finishTurnFromRun(f.db, f.queue, {
       runId: f.runIds["deepseek"]!,
-      terminal: { kind: "timed_out", partialText: "写到一半" },
+      terminal: { kind: "timed_out", timeoutKind: "idle", partialText: "写到一半" },
     });
     assert.equal(result.outcome, "timed_out");
     assert.equal(
@@ -301,5 +302,124 @@ describe("rejectBatch：只作废这一批", () => {
       (error: unknown) => error instanceof TurnError && error.code === "batch_not_ready",
     );
     db.close();
+  });
+});
+
+/** 造一张"已起草、等盖章"的批次（用来验证暂停/结束本轮会把它作废） */
+function addPendingBatch(f: Fx, recipients: string[]): { batchId: string; approvalIds: string[]; turnIds: string[] } {
+  const projectId = (f.db.prepare("SELECT project_id FROM rounds WHERE id = ?").get(f.roundId) as { project_id: string }).project_id;
+  const batchId = "bat_" + ulid();
+  f.db.prepare("INSERT INTO batches (id, project_id, round_id, kind, state, created_at) VALUES (?, ?, ?, 'supplement', 'READY_FOR_REVIEW', ?)").run(
+    batchId,
+    projectId,
+    f.roundId,
+    NOW,
+  );
+
+  const approvalIds: string[] = [];
+  for (const recipient of recipients) {
+    const content = "补充给 " + recipient;
+    const contentHash = sha(content);
+    const snapshotId = "snap_" + ulid();
+    const approvalId = "apr_" + ulid();
+    f.db.prepare(
+      "INSERT INTO prompt_snapshots (id, project_id, content, content_hash, nonce, contribution_ids, task_instruction, " +
+        "reviewer_agent, adapter_version, token_estimate, created_at) VALUES (?, ?, ?, ?, '0123456789abcdef', '[]', '任务', ?, 'prompt-v3', 10, ?)",
+    ).run(snapshotId, projectId, content, contentHash, recipient, NOW);
+    f.db.prepare("INSERT INTO approvals (id, project_id, snapshot_id, state, created_at) VALUES (?, ?, ?, 'READY_FOR_REVIEW', ?)").run(
+      approvalId,
+      projectId,
+      snapshotId,
+      NOW,
+    );
+    f.db.prepare(
+      "INSERT INTO batch_items (batch_id, recipient, approval_id, snapshot_id, content_hash, token_estimate) VALUES (?, ?, ?, ?, ?, 10)",
+    ).run(batchId, recipient, approvalId, snapshotId, contentHash);
+    approvalIds.push(approvalId);
+  }
+
+  // 起草（这里直接插 pending Turn，避免再跑一次 createDraftTurns 的异步）
+  const turnIds: string[] = [];
+  const rows = f.db.prepare("SELECT recipient, approval_id FROM batch_items WHERE batch_id = ?").all(batchId) as {
+    recipient: string;
+    approval_id: string;
+  }[];
+  for (const row of rows) {
+    const turnId = "turn_" + ulid();
+    f.db
+      .prepare(
+        "INSERT INTO turns (id, round_id, batch_id, agent, is_summary, approval_id, run_id, outcome, created_at) " +
+          "VALUES (?, ?, ?, ?, 0, ?, NULL, 'pending', ?)",
+      )
+      .run(turnId, f.roundId, batchId, row.recipient, row.approval_id, NOW);
+    turnIds.push(turnId);
+  }
+  return { batchId, approvalIds, turnIds };
+}
+
+describe("终止事件与契约一致", () => {
+  it("四种终止事件的 payload 都能被 AgentEvent 解析", async () => {
+    const cases: { terminal: unknown; expect: string }[] = [
+      { terminal: { kind: "answered", text: "x" }, expect: "completed" },
+      { terminal: { kind: "failed", failureReason: "internal" }, expect: "error" },
+      { terminal: { kind: "timed_out", timeoutKind: "total" }, expect: "timed_out" },
+      { terminal: { kind: "paused" }, expect: "cancelled" },
+    ];
+
+    for (const item of cases) {
+      const f = await seedApproved(["deepseek"]);
+      await finishTurnFromRun(f.db, f.queue, { runId: f.runIds["deepseek"]!, terminal: item.terminal as never });
+      const row = f.db
+        .prepare("SELECT type, payload FROM run_events WHERE type IN ('completed','error','cancelled','timed_out')")
+        .get() as { type: string; payload: string };
+      assert.equal(row.type, item.expect);
+      const parsed = AgentEvent.parse(JSON.parse(row.payload));
+      assert.equal(parsed.type, item.expect);
+      if (parsed.type === "timed_out") assert.equal(parsed.kind, "total");
+      f.db.close();
+    }
+  });
+
+  it("汇总的 Turn 先拒绝（第四片再做）", async () => {
+    const f = await seedApproved(["claude"]);
+    f.db.prepare("UPDATE turns SET is_summary = 1 WHERE id = ?").run(f.turnIds["claude"]!);
+
+    await assert.rejects(
+      () => finishTurnFromRun(f.db, f.queue, { runId: f.runIds["claude"]!, terminal: { kind: "answered", text: "汇总" } }),
+      (error: unknown) => error instanceof TurnError && error.code === "summary_not_supported",
+    );
+    assert.equal(count(f.db, "SELECT count(*) AS n FROM messages"), 0);
+    f.db.close();
+  });
+});
+
+describe("暂停 / 结束本轮会作废待盖章的批次", () => {
+  it("结束本轮：批次 CANCELLED、Approval CANCELLED、pending Turn rejected", async () => {
+    const f = await seedApproved(["deepseek"]);
+    const pending = addPendingBatch(f, ["deepseek"]);
+
+    const result = await endRound(f.db, f.queue, { roundId: f.roundId });
+    assert.equal(result.cancelledBatches, 1);
+    assert.equal((f.db.prepare("SELECT state FROM batches WHERE id = ?").get(pending.batchId) as { state: string }).state, "CANCELLED");
+    assert.equal(
+      (f.db.prepare("SELECT state FROM approvals WHERE id = ?").get(pending.approvalIds[0]!) as { state: string }).state,
+      "CANCELLED",
+    );
+    assert.equal(
+      (f.db.prepare("SELECT outcome FROM turns WHERE id = ?").get(pending.turnIds[0]!) as { outcome: string }).outcome,
+      "rejected",
+    );
+    f.db.close();
+  });
+
+  it("暂停：同样作废待盖章批次（否则一次 resume 就能把轮拉回 RUNNING）", async () => {
+    const f = await seedApproved(["deepseek"]);
+    const pending = addPendingBatch(f, ["codex"]);
+
+    const result = await pauseRound(f.db, f.queue, { roundId: f.roundId });
+    assert.equal(result.cancelledBatches, 1);
+    assert.equal((f.db.prepare("SELECT state FROM batches WHERE id = ?").get(pending.batchId) as { state: string }).state, "CANCELLED");
+    assert.equal(count(f.db, "SELECT count(*) AS n FROM turns WHERE outcome = 'rejected'"), 1);
+    f.db.close();
   });
 });

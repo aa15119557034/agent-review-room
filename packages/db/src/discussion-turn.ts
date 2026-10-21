@@ -1,3 +1,4 @@
+import type { FailureReason, TurnOutcome } from "@room/schemas";
 import type { SqliteDatabase } from "./database";
 import { appendRunEventTx } from "./run-lifecycle";
 import { writeTransaction, type WriteQueue } from "./write-queue";
@@ -9,34 +10,17 @@ import { writeTransaction, type WriteQueue } from "./write-queue";
  * 否则会出现「Run 完成了但没有回答」或者「有回答但 Run 还没完成」这种半截状态。
  */
 
-export type TurnOutcomeTerminal =
-  | "answered"
-  | "failed"
-  | "timed_out"
-  | "absent_quota"
-  | "paused"
-  | "round_ended"
-  | "interrupted";
+/** 从契约推导，别手写枚举（手写就会和 FailureReason / TurnOutcome 漂移） */
+export type TurnFailureReason = FailureReason;
 
-export type TurnFailureReason =
-  | "hash_mismatch"
-  | "commit_mismatch"
-  | "spawn_failed"
-  | "process_exit_nonzero"
-  | "output_limit_exceeded"
-  | "incomplete_output"
-  | "postprocess"
-  | "quota_exhausted"
-  | "connection_lost"
-  | "lease_expired"
-  | "remote_lost"
-  | "remote_rejected"
-  | "internal";
+/** Turn 的终态结局：契约里除了 pending / running / rejected 之外的那些 */
+export type TurnOutcomeTerminal = Exclude<TurnOutcome, "pending" | "running" | "rejected">;
 
 export type FinishTurnTerminal =
   | { kind: "answered"; text: string }
   | { kind: "failed"; failureReason: TurnFailureReason; partialText?: string | null }
-  | { kind: "timed_out"; partialText?: string | null }
+  /** kind 是 AgentEvent.timed_out 的必填字段（idle / total 超时） */
+  | { kind: "timed_out"; timeoutKind: "idle" | "total"; partialText?: string | null }
   | { kind: "paused" | "round_ended" | "interrupted"; partialText?: string | null };
 
 export interface FinishTurnInput {
@@ -59,7 +43,8 @@ export type TurnErrorCode =
   | "turn_not_running"
   | "run_not_active"
   | "round_not_active"
-  | "batch_not_ready";
+  | "batch_not_ready"
+  | "summary_not_supported";
 
 export class TurnError extends Error {
   readonly code: TurnErrorCode;
@@ -143,6 +128,10 @@ export function finishTurnFromRun(
 ): Promise<FinishTurnResult> {
   return writeTransaction(db, queue, () => {
     const turn = loadTurnByRun(db, input.runId);
+    // 汇总的写入（summary 消息 + RoundSummary）在第四片单独做，这里先拒绝，避免写出半截
+    if (turn.is_summary === 1) {
+      throw new TurnError("summary_not_supported", "summary turns are handled in a later slice");
+    }
     const run = db.prepare("SELECT id, state FROM runs WHERE id = ?").get(input.runId) as RunRow | undefined;
     if (run === undefined) throw new TurnError("turn_not_found", "run not found");
     if (["COMPLETED", "FAILED", "CANCELLED", "TIMED_OUT"].includes(run.state)) {
@@ -190,7 +179,13 @@ export function finishTurnFromRun(
       setTurnOutcome(db, turn.id, outcome, terminal.partialText ?? null, ts);
     } else if (terminal.kind === "timed_out") {
       outcome = "timed_out";
-      finishRunTx(db, run, { state: "TIMED_OUT", failureReason: null }, { type: "timed_out", payload: {} }, ts);
+      finishRunTx(
+        db,
+        run,
+        { state: "TIMED_OUT", failureReason: null },
+        { type: "timed_out", payload: { kind: terminal.timeoutKind } },
+        ts,
+      );
       setTurnOutcome(db, turn.id, outcome, terminal.partialText ?? null, ts);
     } else {
       outcome = terminal.kind;
@@ -251,7 +246,11 @@ export interface PauseRoundInput {
  * 计时用 `rounds.active_ms` 累计：暂停时把这一段加进去，并把 `started_at` 清空；
  * 恢复时 approveBatch 会把 `started_at` 重新填上。
  */
-export function pauseRound(db: SqliteDatabase, queue: WriteQueue, input: PauseRoundInput): Promise<{ paused: number }> {
+export function pauseRound(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  input: PauseRoundInput,
+): Promise<{ paused: number; cancelledBatches: number }> {
   return writeTransaction(db, queue, () => {
     const round = db.prepare("SELECT id, state, started_at, active_ms FROM rounds WHERE id = ?").get(input.roundId) as
       | { id: string; state: string; started_at: string | null; active_ms: number }
@@ -261,20 +260,26 @@ export function pauseRound(db: SqliteDatabase, queue: WriteQueue, input: PauseRo
 
     const ts = now();
     const paused = cancelRunningTurns(db, round.id, "paused", input.partialText ?? {}, ts);
+    // 暂停之后这一轮不能还留着"待盖章"的批次：用户再点一次就会把暂停的轮又拉回 RUNNING
+    const cancelledBatches = cancelOpenBatchesTx(db, round.id, ts);
 
     const elapsed = round.started_at === null ? 0 : Math.max(0, Date.parse(ts) - Date.parse(round.started_at));
     db.prepare("UPDATE rounds SET state = 'PAUSED', started_at = NULL, active_ms = ? WHERE id = ? AND state = 'RUNNING'").run(
       round.active_ms + elapsed,
       round.id,
     );
-    return { paused };
+    return { paused, cancelledBatches };
   });
 }
 
 /**
  * 结束本轮（0-B 第 3 行）：没答完的标 `round_ended`（已写部分保留），轮直接进待汇总。
  */
-export function endRound(db: SqliteDatabase, queue: WriteQueue, input: PauseRoundInput): Promise<{ ended: number }> {
+export function endRound(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  input: PauseRoundInput,
+): Promise<{ ended: number; cancelledBatches: number }> {
   return writeTransaction(db, queue, () => {
     const round = db.prepare("SELECT id, state, started_at, active_ms FROM rounds WHERE id = ?").get(input.roundId) as
       | { id: string; state: string; started_at: string | null; active_ms: number }
@@ -286,13 +291,39 @@ export function endRound(db: SqliteDatabase, queue: WriteQueue, input: PauseRoun
 
     const ts = now();
     const ended = cancelRunningTurns(db, round.id, "round_ended", input.partialText ?? {}, ts);
+    const cancelledBatches = cancelOpenBatchesTx(db, round.id, ts);
     const elapsed = round.started_at === null ? 0 : Math.max(0, Date.parse(ts) - Date.parse(round.started_at));
 
     db.prepare(
       "UPDATE rounds SET state = 'AWAITING_SUMMARY', started_at = NULL, finished_at = ?, active_ms = ? WHERE id = ? AND state = ?",
     ).run(ts, round.active_ms + elapsed, round.id, round.state);
-    return { ended };
+    return { ended, cancelledBatches };
   });
+}
+
+/**
+ * 作废这一轮还没盖章的批次（0-B 第 3/5 行的补充规则）：
+ * 批次 `CANCELLED`、成员 Approval `CANCELLED`、对应的 `pending` Turn 记 `rejected`。
+ *
+ * 不这么做的话：暂停/结束本轮之后，用户手里那张"待盖章"的批次还能盖下去，
+ * 一个 `resume` 就能把已经进汇总的轮又拉回 RUNNING。
+ */
+function cancelOpenBatchesTx(db: SqliteDatabase, roundId: string, ts: string): number {
+  db.prepare(
+    "UPDATE approvals SET state = 'CANCELLED', decided_at = ? WHERE state IN ('DRAFT', 'READY_FOR_REVIEW') AND id IN (" +
+      "SELECT bi.approval_id FROM batch_items bi JOIN batches b ON b.id = bi.batch_id WHERE b.round_id = ?)",
+  ).run(ts, roundId);
+
+  const batches = db
+    .prepare("UPDATE batches SET state = 'CANCELLED', decided_at = ? WHERE round_id = ? AND state IN ('DRAFT', 'READY_FOR_REVIEW')")
+    .run(ts, roundId);
+
+  db.prepare(
+    "UPDATE turns SET outcome = 'rejected', finished_at = ? WHERE outcome = 'pending' AND batch_id IN (" +
+      "SELECT id FROM batches WHERE round_id = ?)",
+  ).run(ts, roundId);
+
+  return batches.changes;
 }
 
 function cancelRunningTurns(
