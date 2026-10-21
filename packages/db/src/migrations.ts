@@ -1,5 +1,6 @@
 import type { Database } from "better-sqlite3";
 import { SCHEMA_V1, SCHEMA_V2 } from "./schema";
+import { SCHEMA_V3, SCHEMA_V3_REBUILD } from "./schema-v3";
 
 /**
  * 迁移（D-02）：用 PRAGMA user_version 记版本，每个迁移在自己的事务里跑。
@@ -32,6 +33,15 @@ export const MIGRATIONS: readonly Migration[] = [
     disableForeignKeys: true,
     up: (db) => {
       db.exec(SCHEMA_V2);
+    },
+  },
+  {
+    version: 3,
+    name: "discussion-room",
+    disableForeignKeys: true,
+    up: (db) => {
+      db.exec(SCHEMA_V3);
+      db.exec(SCHEMA_V3_REBUILD);
     },
   },
 ];
