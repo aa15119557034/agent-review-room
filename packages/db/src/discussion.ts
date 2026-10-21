@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
-import { canTransition, ROUND_TRANSITIONS, type RoundState } from "@room/schemas";
+import { canTransition, ROUND_TRANSITIONS, type BatchKind, type RoundState } from "@room/schemas";
 import type { SqliteDatabase } from "./database";
 import { writeTransaction, type WriteQueue } from "./write-queue";
 
@@ -99,7 +99,7 @@ interface ApprovalRow {
  *
  * 能不能转由契约的 ROUND_TRANSITIONS 查表决定（C-20c 补上了 AWAITING_SUMMARY → RUNNING）。
  */
-const ROUND_TARGET: Readonly<Record<string, RoundState>> = {
+const ROUND_TARGET: Readonly<Record<BatchKind, RoundState>> = {
   initial: "RUNNING",
   resume: "RUNNING",
   supplement: "RUNNING",
@@ -114,7 +114,7 @@ const ROUND_TARGET: Readonly<Record<string, RoundState>> = {
  * - `initial` 在 PAUSED 盖章（PAUSED → RUNNING 合法，但那时应该用 resume）
  * - `summary` 在已经 SUMMARIZING 时再盖一次（会变成两个汇总同时在跑）
  */
-const ALLOWED_FROM: Readonly<Record<string, readonly RoundState[]>> = {
+const ALLOWED_FROM: Readonly<Record<BatchKind, readonly RoundState[]>> = {
   initial: ["DRAFT"],
   resume: ["PAUSED"],
   supplement: ["RUNNING", "AWAITING_SUMMARY"],
@@ -197,8 +197,10 @@ export function approveBatch(
       | undefined;
     if (round === undefined) throw new BatchApproveError("batch_not_found", "round not found");
 
-    const target = ROUND_TARGET[batch.kind];
-    const allowedFrom = ALLOWED_FROM[batch.kind];
+    // 库里的 kind 是 TEXT，先按 BatchKind 取，再保留运行期兜底（老的 / 手写的行）
+    const kind = batch.kind as BatchKind;
+    const target = ROUND_TARGET[kind] as RoundState | undefined;
+    const allowedFrom = ALLOWED_FROM[kind] as readonly RoundState[] | undefined;
     if (target === undefined || allowedFrom === undefined) {
       throw new BatchApproveError("round_transition_invalid", `unknown batch kind ${batch.kind}`);
     }
