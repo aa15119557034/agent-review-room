@@ -2,6 +2,7 @@ import type { ContributionType, NodeTestResult, TextSelection } from "@room/sche
 import { appendEvents, applyEvent, emptyDraft, type AppState } from "./state";
 import { describeFailure, type RoomClient } from "./client";
 import type { Store } from "./store";
+import { createDiscussionActions } from "./discussion-actions";
 
 /**
  * 所有会访问后端的操作都在这里。UI 组件只调用这些函数，不直接碰 client。
@@ -9,6 +10,8 @@ import type { Store } from "./store";
  */
 export function createActions(store: Store<AppState>, client: RoomClient) {
   const fail = (err: unknown) => store.set((s) => ({ ...s, notice: { kind: "error", message: describeFailure(err) } }));
+
+  const disc = createDiscussionActions(store, client, fail);
 
   /** 防止快速切换项目时，旧项目的查询结果覆盖新项目 */
   let loadToken = 0;
@@ -35,10 +38,17 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
       runEvents,
       draft: s.currentProjectId === projectId ? s.draft : emptyDraft(),
       selectedRunId: s.currentProjectId === projectId ? s.selectedRunId : null,
+      disc:
+        s.currentProjectId === projectId
+          ? s.disc
+          : { ...s.disc, rounds: [], batches: [], turns: [], summaries: [], plans: [], confirm: null },
     }));
+    await disc.loadTopic(projectId);
   }
 
   return {
+    ...disc,
+
     /** 启动：订阅事件 → 读系统状态和项目列表 → 打开第一个项目 */
     async start(): Promise<() => void> {
       // 先订阅再查询：查询期间推来的事件不会丢；重复的由 applyEvent 去重
@@ -49,6 +59,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
           client.query({ type: "projects.list" }),
         ]);
         store.set((s) => ({ ...s, status, projects, connection: { phase: "ready" } }));
+        await disc.loadAgents();
         const first = projects[0];
         if (first) await loadProject(first.id);
       } catch (err) {
@@ -206,7 +217,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
       }
     },
 
-    closeSettings: () => store.set((s) => ({ ...s, view: "desk" })),
+    closeSettings: () => store.set((s) => ({ ...s, view: "discussion" })),
 
     /** 测试连接，不保存。token 留空表示用已保存的 */
     async testReviewerNode(input: { baseUrl: string; profileId: string; token?: string }): Promise<NodeTestResult | undefined> {

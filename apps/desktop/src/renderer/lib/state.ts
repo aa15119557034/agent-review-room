@@ -10,6 +10,7 @@ import type {
   Run,
   SystemStatus,
 } from "@room/schemas";
+import { applyDiscussionEvent, initialDiscussion, type DiscussionState } from "./discussion";
 
 /**
  * renderer 的全部状态。只存从后端拿到的数据和少量 UI 状态，不在前端推导业务状态
@@ -32,8 +33,10 @@ export interface AppState {
   draft: PromptDraft;
   /** 用户在运行记录里点选的 run；null 表示默认显示最新的一个 */
   selectedRunId: string | null;
-  /** 中间区域显示工作台还是设置页 */
-  view: "desk" | "settings";
+  /** 顶栏切换：讨论室（主页）、单次评审（Phase 0 工作台）、设置 */
+  view: "discussion" | "desk" | "settings";
+  /** 讨论室（C-21） */
+  disc: DiscussionState;
   /** Reviewer 节点设置；undefined = 还没读过，null = 从未设置 */
   reviewerNode: ReviewerNodeSettings | null | undefined;
   /** 最近一次操作失败的说明，显示在界面上，由用户关闭 */
@@ -63,7 +66,8 @@ export const initialState: AppState = {
   snapshots: {},
   draft: emptyDraft(),
   selectedRunId: null,
-  view: "desk",
+  view: "discussion",
+  disc: initialDiscussion,
   reviewerNode: undefined,
   notice: null,
 };
@@ -107,14 +111,15 @@ export function applyEvent(state: AppState, event: ControlEvent): AppState {
       // Phase 0 不会出现；Phase 1 接权限 UI 时处理
       return state;
 
-    // 讨论室事件（C-20），C-21 起由讨论室的状态处理
     case "round.updated":
     case "batch.updated":
     case "turn.updated":
     case "summary.created":
     case "plan.updated":
-    case "agent.status":
-      return state;
+    case "agent.status": {
+      const disc = applyDiscussionEvent(state.disc, event, pid);
+      return disc === state.disc ? state : { ...state, disc };
+    }
   }
 }
 
