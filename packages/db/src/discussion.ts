@@ -60,7 +60,7 @@ function ulid(): string {
   }
   const bytes = Buffer.from(randomUUID().replace(/-/g, ""), "hex");
   let randomPart = "";
-  for (let i = 0; i < 16; i += 1) randomPart += alphabet[bytes[i] % 32];
+  for (let i = 0; i < 16; i += 1) randomPart += alphabet[bytes[i]! % 32];
   return timePart + randomPart;
 }
 

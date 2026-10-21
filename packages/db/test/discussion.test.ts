@@ -42,7 +42,7 @@ async function seedBatch(recipients: string[], kind = "initial", draft = true): 
   const dir = mkdtempSync(join(tmpdir(), "room-db-d21-"));
   dirs.push(dir);
   const db = openDatabase(join(dir, "test.db"));
-  const queue = new WriteQueue(db);
+  const queue = new WriteQueue();
 
   const projectId = "proj_" + ulid();
   const roundId = "rnd_" + ulid();

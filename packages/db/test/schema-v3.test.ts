@@ -352,7 +352,7 @@ describe("v3 约束：事务与不可变", () => {
     const { projectId, snapshotId, approvalId } = seedApprovedRun(db);
     const roundId = seedRound(db, projectId);
 
-    const queue = new WriteQueue(db);
+    const queue = new WriteQueue();
     await assert.rejects(
       () =>
         writeTransaction(db, queue, () => {
