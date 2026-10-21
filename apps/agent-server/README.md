@@ -46,6 +46,56 @@ pnpm --filter @room/agent-server run start
 netsh advfirewall firewall add rule name="Agent Review Room 7420" dir=in action=allow protocol=TCP localport=7420 profile=private
 ```
 
+## 主控机本机节点（S-10：讨论室里的 Codex 和 DeepSeek）
+
+主控机（DeepSeek + GPT 那台）上也跑一个 AgentServer，**只监听 127.0.0.1**（局域网里别的电脑连不上），给讨论室提供两种方式：
+
+| profile | 实际运行 | 用的是谁的额度 |
+|---|---|---|
+| `codex-discuss` | `codex exec --json --skip-git-repo-check --sandbox read-only --ephemeral -` | 这台电脑上 `codex login` 登录的 ChatGPT 账号 |
+| `deepseek-discuss` | `node ../bin/deepseek-chat.mjs --model deepseek-v4-pro` | 环境变量 `DEEPSEEK_API_KEY` 对应的 API 余额 |
+
+```
+主控端 ──127.0.0.1──▶ 本机 AgentServer :7420 ──▶ codex exec / deepseek-chat.mjs
+       ──局域网────▶ 你的电脑 AgentServer :7420 ──▶ claude -p          （Phase 0 已有）
+```
+
+在主控机的 PowerShell 里，进入仓库目录：
+
+```powershell
+# 1. 装 Codex 命令行并用 ChatGPT 账号登录（会打开浏览器）
+npm install -g @openai/codex
+codex login
+#    测试：应该回一个 hello（会用掉一点额度）
+"Reply with exactly one word: hello" | codex exec --skip-git-repo-check -
+
+# 2. 设置 DeepSeek 的 API Key（只存在这台电脑的用户环境变量里，不进仓库、不进日志）
+#    把 sk-… 换成你自己的 Key；设置后要**关掉 PowerShell 重新打开**才生效
+[Environment]::SetEnvironmentVariable("DEEPSEEK_API_KEY", "sk-…", "User")
+
+# 3. 安装依赖（第一次）
+pnpm install --filter "@room/agent-server..."
+
+# 4. 生成本机配置（注意 -- --local）
+pnpm --filter @room/agent-server run setup -- --local
+
+# 5. 启动
+pnpm --filter @room/agent-server run start
+```
+
+第 4 步会打印 `地址：http://127.0.0.1:7420`、`可用的方式：codex-discuss、deepseek-discuss` 和 Token。没设置 Key 时会提示，但不会打印 Key 本身。
+
+模型名写在配置文件 `deepseek-discuss.args` 里（`--model deepseek-v4-pro`），想换便宜的就改成 `deepseek-flash`。
+
+**额度用尽**（C-25）：解析器从结构化输出里认出"额度用尽 / 限流"时，节点报告 `error(quota_exhausted)`，讨论里显示为「缺席（额度）」，其他人继续：
+- Codex：`turn.failed` 或未完成时的 `error`，消息里有 usage limit / rate limit 等
+- DeepSeek：HTTP 402（余额不足）或 429（限流）
+- Claude：`result.is_error` 且消息里有 usage limit，或 `api_error_status: 429`
+
+认不出来的失败照旧是 `process_exit_nonzero` / `internal`，不猜。
+
+**额度显示（1B，待实测）**：5 小时 / 每周用量只读官方提供的数据——Claude 的 statusline JSON（`rate_limits`），Codex 的 `codex app-server` 接口（`account/rateLimits/read`），DeepSeek 的 `GET /user/balance`。不读本机登录凭据、不调用未公开的接口；读不到就显示「未知」。真机结果联调时写在这里。
+
 ## 安全
 
 - **监听 0.0.0.0**：局域网里的其他电脑能访问。所有请求都必须带 Token，否则 401
@@ -69,18 +119,29 @@ netsh advfirewall firewall add rule name="Agent Review Room 7420" dir=in action=
 - `result.is_error` → `error(internal)`，带错误信息
 - 非 JSON 行原样以 stdout `output` 转发，方便排查
 
+`codex-exec-json`：解析 `codex exec --json`
+- 每条 `agent_message` → `text_delta`（多条之间空一行）；**最后一条**是权威结果（和 `codex exec -o` 一致）
+- 必须看到 `turn.completed` 才算完成；单独的 `error` 事件可能只是重连提示，不算失败
+- `reasoning`、命令执行等其他条目不算回答
+
+`room-jsonl`：本仓库自带脚本（`bin/deepseek-chat.mjs`）的输出，每行 `delta` / `done` / `error`；必须有 `done` 才算完成
+
+所有解析器：退出码非 0 时也先看解析结论——额度用尽的 CLI 往往以非 0 退出，原因只在结构化输出里
+
 ## 测试
 
 ```bash
-pnpm --filter @room/agent-server test     # 37 个
+pnpm --filter @room/agent-server test     # 58 个
 ```
 
-Windows 相关逻辑（`.cmd` 包装、taskkill 参数）用注入的模拟环境测试；`claude` 用 `test/fixtures/fake-claude.mjs` 模拟。
+Windows 相关逻辑（`.cmd` 包装、taskkill 参数）用注入的模拟环境测试；`claude` 用 `test/fixtures/fake-claude.mjs`、`codex` 用 `test/fixtures/fake-codex.mjs` 模拟；`deepseek-chat.mjs` 对着测试里起的假 DeepSeek 服务跑（不联网、不用真 Key）。
 
 ## 已知缺口
 
 - [x] 真实 Windows（执行节点）：`pnpm --filter @room/agent-server test` 35/35 通过；`claude -p "…"` 能返回结果；setup 能生成配置和 Token
 - [ ] stdin 传 prompt 的真机结果、和主控端的第一次端到端评审：联调时补上
+- [ ] S-10 真机：`codex exec --json` 的真实输出（特别是额度用尽时的消息原文）、DeepSeek 真实 Key、三个 Agent 各回答一次真实问题
+- [ ] `codex exec` 在 Windows 上是否需要 `--sandbox read-only` 之外的设置（例如沙箱不可用时的提示）
 - [ ] 节点被强杀后的孤儿进程清理（pid 文件）
 - [ ] 权限请求中继（Phase 0 不需要：Reviewer 不使用工具）
 - [ ] TLS
