@@ -183,6 +183,27 @@ describe("discussion mock follows canvas 0-B", () => {
     assert.ok(turns.every((t) => t.outcome === "round_ended"));
   });
 
+  it("a round nobody answered can be ended but not summarized", async () => {
+    const { bridge, cmd } = setup({ tickMs: 50 });
+    const pid = await newTopic(cmd);
+    const { round, batch } = await cmd<{ round: Round; batch: ApprovalBatch }>(draftReq(pid));
+    await cmd(stamp(batch));
+    const ended = await cmd<Round>({ type: "round.end", roundId: round.id });
+    assert.equal(ended.state, "AWAITING_SUMMARY");
+    const r = await bridge.command({ type: "round.summarize", roundId: round.id, summarizer: "claude" } as never);
+    assert.equal(!r.ok && r.error, "invalid_state");
+  });
+
+  it("rejecting the first stamp leaves the round as a draft that can be redrafted", async () => {
+    const { cmd } = setup();
+    const pid = await newTopic(cmd);
+    const { round, batch } = await cmd<{ round: Round; batch: ApprovalBatch }>(draftReq(pid));
+    await cmd({ type: "batch.reject", batchId: batch.id, reason: "再想想" });
+    const { round: again, batch: b2 } = await cmd<{ round: Round; batch: ApprovalBatch }>({ type: "round.redraft", roundId: round.id, task: "改过的任务" });
+    assert.equal(again.state, "DRAFT");
+    assert.equal(b2.state, "READY_FOR_REVIEW");
+  });
+
   it("void (改方向): round VOIDED with reason, records kept", async () => {
     const { cmd, q } = setup({ tickMs: 20 });
     const pid = await newTopic(cmd);

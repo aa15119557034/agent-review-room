@@ -439,6 +439,7 @@ function RoundControls() {
   if (!round) return null;
   const waiting = pendingBatches(d).find((b) => b.roundId === round.id);
   const summarizers = d.agents.filter((a) => a.canSummarize);
+  const anyAnswer = d.turns.some((t) => t.roundId === round.id && !t.isSummary && t.outcome === "answered");
   return (
     <div className="round-controls" data-state={round.state}>
       <b>第 {round.index} 轮 · {ROUND_STATE_LABEL[round.state]}</b>
@@ -456,7 +457,10 @@ function RoundControls() {
           <button type="button" className="button-outline" onClick={() => void actions.endRound(round.id)}>结束本轮 → 汇总</button>
         </>
       )}
-      {round.state === "AWAITING_SUMMARY" && !waiting &&
+      {round.state === "AWAITING_SUMMARY" && !waiting && !anyAnswer && (
+        <span className="round-time">这一轮没有任何回答，没什么可汇总的，可以改方向（作废这一轮）。</span>
+      )}
+      {round.state === "AWAITING_SUMMARY" && !waiting && anyAnswer &&
         summarizers.map((s) => (
           <button key={s.id} type="button" className="button-primary" onClick={() => void actions.summarize(round.id, s.id)}>
             请 {s.displayName} 汇总

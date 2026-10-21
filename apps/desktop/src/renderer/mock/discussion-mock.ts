@@ -609,6 +609,9 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
     async "round.summarize"(req: any) {
       const round = getRound(req.roundId);
       if (round.state !== "AWAITING_SUMMARY") throw new MockError("invalid_state", "这一轮还不能汇总");
+      if (!roundTurns(round.id).some((t) => !t.isSummary && t.outcome === "answered")) {
+        throw new MockError("invalid_state", "这一轮没有任何回答，没什么可汇总的；可以改方向（作废这一轮）");
+      }
       const s = agent(req.summarizer);
       if (!s.canSummarize) throw new MockError("agent_unavailable", `${s.displayName} 没有开启「可以做汇总」`);
       if (roundTurns(round.id).some((t) => t.onBehalfOf !== null && t.agent === s.id)) {
