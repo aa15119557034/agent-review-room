@@ -7,6 +7,7 @@
     "setup": "tsx src/setup.ts",
     "start": "tsx src/main.ts",
     "typecheck": "tsc -p .",
+    "try": "tsx src/try-run.ts",
     "test": "tsx --test test/*.test.ts"
   },
   "dependencies": {

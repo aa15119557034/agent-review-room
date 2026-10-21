@@ -1,0 +1,5 @@
+{"type":"thread.started","thread_id":"01a15ea3-6f0c-7342-8cc2-bd8ba334f5d0"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Under-development features enabled: respect_system_proxy. ..."}}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_1","type":"agent_message","text":"hello"}}
+{"type":"turn.completed","usage":{"input_tokens":21263,"cached_input_tokens":12928,"output_tokens":5,"reasoning_output_tokens":0}}

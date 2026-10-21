@@ -83,6 +83,15 @@ pnpm --filter @room/agent-server run setup -- --local
 pnpm --filter @room/agent-server run start
 ```
 
+启动后，在**另一个** PowerShell 窗口里各试一次（不经过主控端，直接问本机节点；会用掉一点额度）：
+
+```powershell
+pnpm --filter @room/agent-server run try -- codex-discuss "用一句话介绍你自己"
+pnpm --filter @room/agent-server run try -- deepseek-discuss "用一句话介绍你自己"
+```
+
+回复会实时打印出来，最后一行是 `—— 结束：completed …`（成功）或 `—— 结束：error（原因）…`。
+
 第 4 步会打印 `地址：http://127.0.0.1:7420`、`可用的方式：codex-discuss、deepseek-discuss` 和 Token。没设置 Key 时会提示，但不会打印 Key 本身。
 
 模型名写在配置文件 `deepseek-discuss.args` 里（`--model deepseek-v4-pro`），想换便宜的就改成 `deepseek-flash`。
@@ -131,7 +140,7 @@ pnpm --filter @room/agent-server run start
 ## 测试
 
 ```bash
-pnpm --filter @room/agent-server test     # 58 个
+pnpm --filter @room/agent-server test     # 59 个
 ```
 
 Windows 相关逻辑（`.cmd` 包装、taskkill 参数）用注入的模拟环境测试；`claude` 用 `test/fixtures/fake-claude.mjs`、`codex` 用 `test/fixtures/fake-codex.mjs` 模拟；`deepseek-chat.mjs` 对着测试里起的假 DeepSeek 服务跑（不联网、不用真 Key）。
