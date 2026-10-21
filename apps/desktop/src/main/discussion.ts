@@ -51,7 +51,8 @@ export class DiscussionError extends Error {
 
 export interface NodeProbeResult {
   reachable: boolean;
-  profileAvailable: boolean;
+  /** 节点上可用的 profile 列表（/v1/health 的 profiles） */
+  profiles: string[];
   message?: string;
 }
 
@@ -63,10 +64,24 @@ export interface DiscussionDeps {
   readonly orchestrator: RunOrchestrator;
   readonly emit: (event: ControlEvent) => void;
   /** 测试注入；默认打节点的 /v1/health */
-  readonly probeNode?: (params: { baseUrl: string; token: string | null; profileId: string }) => Promise<NodeProbeResult>;
+  readonly probeNode?: (params: { baseUrl: string; token: string; profileId: string }) => Promise<NodeProbeResult>;
 }
 
 type AvailabilityNeed = "discuss" | "summarize";
+
+/**
+ * 额度缺席只在 5 小时内算数：过了这段时间可能是额度重置了，不能一直挡着。
+ * 1A 还没有真正的额度接口，这是按「上一次发言的结局」做的近似。
+ */
+const QUOTA_ABSENT_WINDOW_MS = 5 * 60 * 60 * 1000;
+
+interface PendingRecipient {
+  agentId: string;
+  displayName: string;
+  nodeId: string;
+  baseUrl: string;
+  profileId: string;
+}
 
 /** 和 ux_round_active 一致：这些状态的轮没结束，不能再起草新的一轮 */
 const ACTIVE_ROUND_STATES: ReadonlySet<Round["state"]> = new Set<Round["state"]>([
@@ -100,11 +115,8 @@ export class DiscussionService {
       throw new DiscussionError("invalid_state", "这个议题的第 " + active.index + " 轮还没结束");
     }
 
-    const agents: AgentProfile[] = [];
-    for (const agentId of command.recipients) {
-      await this.#assertAvailable(agentId, project.id, "discuss");
-      agents.push(repo.getAgent(agentId));
-    }
+    await this.#checkRecipients(command.recipients, project.id, "discuss");
+    const agents: AgentProfile[] = command.recipients.map((agentId) => repo.getAgent(agentId));
 
     const plan = command.planVersionId === null ? null : this.#loadPlan(project.id, command.planVersionId);
     const roundId = newRoundId();
@@ -192,13 +204,18 @@ export class DiscussionService {
     for (const turn of turns) emit({ type: "turn.updated", turn });
     emit({ type: "round.updated", round });
 
-    for (const runId of result.runIds) {
+    // 先把每个 Run 和它的 Turn / Snapshot 全部配好对，再统一 start：
+    // 配对时抛错的话一个 Run 都还没起跑，不会出现「一半已经发出去」。
+    const launches = result.runIds.map((runId) => {
       const run = repo.getRunRow(runId);
       const turn = turns.find((candidate) => candidate.runId === runId);
       if (turn === undefined) {
         throw new DiscussionError("internal", "run " + runId + " has no turn");
       }
-      const snapshot = repo.getSnapshot(run.snapshot_id);
+      return { run, turn, snapshot: repo.getSnapshot(run.snapshot_id) };
+    });
+
+    for (const { run, turn, snapshot } of launches) {
       // 立刻返回，执行在后台进行；兜底必须有人接住，否则会变成 main 的 unhandled rejection
       void orchestrator
         .start(run, {
@@ -233,7 +250,7 @@ export class DiscussionService {
       throw new DiscussionError("invalid_state", "这一轮没有任何回答，没什么可汇总的；可以改方向（作废这一轮）");
     }
 
-    await this.#assertAvailable(command.summarizer, round.projectId, "summarize");
+    await this.#checkRecipients([command.summarizer], round.projectId, "summarize");
     const summarizer = repo.getAgent(command.summarizer);
     if (repo.hasTurnAsSubstitute(round.id, summarizer.id)) {
       throw new DiscussionError("invalid_state", summarizer.displayName + " 在这一轮当过替补，不能再做汇总");
@@ -303,67 +320,105 @@ export class DiscussionService {
   }
 
   /**
-   * 收件人现在能不能发。判断顺序和 mock 的 availability 一致，另外补两条真实世界才有的：
-   * - 额度缺席：这个人在本议题里最新一次发言是 absent_quota（1A 还没有额度接口，先按结局算）
-   * - 节点离线：拿已保存的那个节点的 Token 打 /v1/health，连不上 / 没有这个 profile 就不发
+   * 一批收件人现在能不能发。
+   *
+   * 先做本地判断（配置 / 暂停 / 额度 / 节点地址），再把要探的节点**按节点去重、并发**探一次：
+   * 三个人在同一个节点上只打一次 /v1/health，而不是每人一次。
+   *
+   * - 额度缺席：本议题里这个人最新一次发言是 absent_quota，且结束时间在 5 小时内
+   *   （更早的可能是额度重置了，放行；1A 还没有真正的额度接口）
+   * - 节点离线 / 没有这个 profile：不发
    *
    * 多节点各自的 Token 还没有地方存，所以非「已配置节点」上的 Agent 会被判成不可用——
-   * 这是 S-10 / 1B 的缺口，不是这里的临时判断。
+   * 那是 D-22c 的事。
    */
-  async #assertAvailable(agentId: string, projectId: string, need: AvailabilityNeed): Promise<void> {
+  async #checkRecipients(agentIds: readonly string[], projectId: string, need: AvailabilityNeed): Promise<void> {
     const { repo, settings } = this.#deps;
-    const row = repo.getAgentRow(agentId);
-    if (row === undefined) {
-      throw new DiscussionError("agent_unavailable", "参与者 " + agentId + " 还没有配置");
-    }
-    const displayName = row["display_name"] as string;
-    if (row["paused_by_user"] === 1) {
-      throw new DiscussionError("agent_unavailable", displayName + " 被手动暂停了");
-    }
-    if (need === "discuss" && row["can_discuss"] !== 1) {
-      throw new DiscussionError("agent_unavailable", displayName + " 没有开启「参与讨论」");
-    }
-    if (need === "summarize" && row["can_summarize"] !== 1) {
-      throw new DiscussionError("agent_unavailable", displayName + " 没有开启「可以做汇总」");
-    }
-    if (repo.latestTurnOutcome(projectId, agentId) === "absent_quota") {
-      throw new DiscussionError("agent_unavailable", displayName + " 额度用尽（缺席）");
-    }
-
-    const nodeId = row["node_id"] as string | null;
-    const profileId = row["profile_id"] as string | null;
-    if (nodeId === null || profileId === null) {
-      throw new DiscussionError("agent_unavailable", displayName + " 还没有配置节点或 profile");
-    }
-    const node = repo.getNodeRow(nodeId);
-    if (node === undefined || node.base_url === null) {
-      throw new DiscussionError("agent_unavailable", displayName + " 所在的节点 " + nodeId + " 还没有配置地址");
-    }
-
     const configured = settings.get();
     const token = settings.getToken();
-    if (configured === null || configured.baseUrl !== node.base_url) {
-      throw new DiscussionError(
-        "agent_unavailable",
-        displayName + " 所在的节点还没有接通（目前只保存了一个节点的 Token）",
-      );
+    const pending: PendingRecipient[] = [];
+
+    for (const agentId of agentIds) {
+      const row = repo.getAgentRow(agentId);
+      if (row === undefined) {
+        throw new DiscussionError("agent_unavailable", "参与者 " + agentId + " 还没有配置");
+      }
+      const displayName = row["display_name"] as string;
+      if (row["paused_by_user"] === 1) {
+        throw new DiscussionError("agent_unavailable", displayName + " 被手动暂停了");
+      }
+      if (need === "discuss" && row["can_discuss"] !== 1) {
+        throw new DiscussionError("agent_unavailable", displayName + " 没有开启「参与讨论」");
+      }
+      if (need === "summarize" && row["can_summarize"] !== 1) {
+        throw new DiscussionError("agent_unavailable", displayName + " 没有开启「可以做汇总」");
+      }
+
+      const latest = repo.latestTurnOutcome(projectId, agentId);
+      if (latest !== null && latest.outcome === "absent_quota" && this.#isRecentQuotaAbsence(latest.finishedAt)) {
+        throw new DiscussionError("agent_unavailable", displayName + " 额度用尽（缺席）");
+      }
+
+      const nodeId = row["node_id"] as string | null;
+      const profileId = row["profile_id"] as string | null;
+      if (nodeId === null || profileId === null) {
+        throw new DiscussionError("agent_unavailable", displayName + " 还没有配置节点或 profile");
+      }
+      const node = repo.getNodeRow(nodeId);
+      if (node === undefined || node.base_url === null) {
+        throw new DiscussionError("agent_unavailable", displayName + " 所在的节点 " + nodeId + " 还没有配置地址");
+      }
+      if (configured === null || token === null || configured.baseUrl !== node.base_url) {
+        throw new DiscussionError(
+          "agent_unavailable",
+          displayName + " 所在的节点还没有接通（目前只保存了一个节点的 Token）",
+        );
+      }
+
+      pending.push({ agentId, displayName, nodeId, baseUrl: node.base_url, profileId });
     }
 
-    const probe = await this.#probe({ baseUrl: node.base_url, token, profileId });
-    if (!probe.reachable) {
-      throw new DiscussionError("agent_unavailable", displayName + " 所在的节点离线" + (probe.message === undefined ? "" : "：" + probe.message));
-    }
-    if (!probe.profileAvailable) {
-      throw new DiscussionError("agent_unavailable", displayName + " 的 profile " + profileId + " 不在节点上");
+    if (pending.length === 0) return;
+
+    // 同一个节点只探一次；不同节点之间并发
+    const byNode = new Map<string, PendingRecipient[]>();
+    for (const item of pending) byNode.set(item.nodeId, [...(byNode.get(item.nodeId) ?? []), item]);
+
+    const probes = new Map<string, NodeProbeResult>();
+    await Promise.all(
+      [...byNode.values()].map(async (items) => {
+        const first = items[0]!;
+        probes.set(first.nodeId, await this.#probe({ baseUrl: first.baseUrl, token: token as string, profileId: first.profileId }));
+      }),
+    );
+
+    for (const item of pending) {
+      const probe = probes.get(item.nodeId)!;
+      if (!probe.reachable) {
+        throw new DiscussionError(
+          "agent_unavailable",
+          item.displayName + " 所在的节点离线" + (probe.message === undefined ? "" : "：" + probe.message),
+        );
+      }
+      if (!probe.profiles.includes(item.profileId)) {
+        throw new DiscussionError("agent_unavailable", item.displayName + " 的 profile " + item.profileId + " 不在节点上");
+      }
     }
   }
 
-  async #probe(params: { baseUrl: string; token: string | null; profileId: string }): Promise<NodeProbeResult> {
+  /** 5 小时内算「还缺席」；时间戳缺失或解析不了就当过期（放行） */
+  #isRecentQuotaAbsence(finishedAt: string | null): boolean {
+    if (finishedAt === null) return false;
+    const at = Date.parse(finishedAt);
+    return Number.isFinite(at) && Date.now() - at <= QUOTA_ABSENT_WINDOW_MS;
+  }
+
+  async #probe(params: { baseUrl: string; token: string; profileId: string }): Promise<NodeProbeResult> {
     if (this.#deps.probeNode !== undefined) return this.#deps.probeNode(params);
     const result = await testReviewerNode({ ...params, timeoutMs: 3_000 });
     return result.reachable
-      ? { reachable: true, profileAvailable: result.profileAvailable }
-      : { reachable: false, profileAvailable: false, message: result.message };
+      ? { reachable: true, profiles: result.health.profiles }
+      : { reachable: false, profiles: [], message: result.message };
   }
 }
 

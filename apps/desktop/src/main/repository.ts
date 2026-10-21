@@ -688,15 +688,22 @@ export class Repository {
     ).n;
   }
 
-  /** 这个 Agent 在这个议题里最新一次发言的结局（用来判断「额度缺席」） */
-  latestTurnOutcome(projectId: string, agentId: string): string | null {
+  /**
+   * 这个 Agent 在这个议题里最新一次发言的结局与结束时间（用来判断「额度缺席」是否还在有效期内）。
+   * 结束时间优先用 finished_at，老数据没有就用 created_at。
+   */
+  latestTurnOutcome(
+    projectId: string,
+    agentId: string,
+  ): { outcome: string; finishedAt: string | null } | null {
     const row = this.#db
       .prepare(
-        "SELECT t.outcome FROM turns t JOIN rounds r ON r.id = t.round_id " +
+        "SELECT t.outcome AS outcome, COALESCE(t.finished_at, t.created_at) AS finished_at FROM turns t " +
+          "JOIN rounds r ON r.id = t.round_id " +
           "WHERE r.project_id = ? AND t.agent = ? AND t.is_summary = 0 ORDER BY t.created_at DESC, t.rowid DESC LIMIT 1",
       )
-      .get(projectId, agentId) as { outcome: string } | undefined;
-    return row?.outcome ?? null;
+      .get(projectId, agentId) as { outcome: string; finished_at: string | null } | undefined;
+    return row === undefined ? null : { outcome: row.outcome, finishedAt: row.finished_at };
   }
 
   /** 这个人在这一轮当过替补吗（当过就不能当汇总者） */

@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
 import type { AgentAdapter } from "@room/core";
-import { openDatabase, type RunRow, WriteQueue } from "@room/db";
+import { openDatabase, type RunRow, ulid, WriteQueue } from "@room/db";
 import type { AgentEvent, ControlEvent } from "@room/schemas";
 import { DiscussionService, type NodeProbeResult } from "../src/main/discussion";
 import { createDispatcher } from "../src/main/ipc";
@@ -81,11 +81,13 @@ interface Harness {
   orchestrator: RunOrchestrator;
   events: ControlEvent[];
   started: RunRow[];
+  /** 节点探针被调用了几次、探的哪个 profile（用来验证按节点去重） */
+  probeCalls: string[];
   projectId: string;
 }
 
 async function makeHarness(options: {
-  probe?: (params: { baseUrl: string; token: string | null; profileId: string }) => Promise<NodeProbeResult>;
+  probe?: (params: { baseUrl: string; token: string; profileId: string }) => Promise<NodeProbeResult>;
   scripts?: Map<string, Record<string, unknown>[]>;
 } = {}): Promise<Harness> {
   const dir = mkdtempSync(join(tmpdir(), "room-discussion-ipc-"));
@@ -114,7 +116,17 @@ async function makeHarness(options: {
   const events: ControlEvent[] = [];
   const started: RunRow[] = [];
   const scripts = options.scripts ?? new Map<string, Record<string, unknown>[]>();
-  const probe = options.probe ?? (async () => ({ reachable: true, profileAvailable: true }));
+  const probeCalls: string[] = [];
+  const nodeProbe =
+    options.probe ??
+    (async () => ({
+      reachable: true,
+      profiles: ["claude-review", "deepseek-discuss", "codex-discuss"],
+    }));
+  const probe = async (params: { baseUrl: string; token: string; profileId: string }): Promise<NodeProbeResult> => {
+    probeCalls.push(params.profileId);
+    return nodeProbe(params);
+  };
 
   let service: DiscussionService | null = null;
   const orchestrator = new RunOrchestrator({
@@ -147,7 +159,7 @@ async function makeHarness(options: {
 
   const project = await dispatcher.handleCommand({ type: "project.create", name: "议题" });
   const projectId = (project as { data: { id: string } }).data.id;
-  return { db, dispatcher, repo, orchestrator, events, started, projectId };
+  return { db, dispatcher, repo, orchestrator, events, started, probeCalls, projectId };
 }
 
 function draft(
@@ -210,6 +222,8 @@ describe("round.draft：起草一轮", () => {
     }
     assert.match(snapshots[0]!.content, /Codex/);
     assert.match(snapshots[1]!.content, /DeepSeek/);
+    // 两个收件人在同一个节点上：只探一次
+    assert.equal(h.probeCalls.length, 1, "同一个节点只探一次");
 
     // 事件：轮、批次、每个 Turn、每个 Approval
     assert.ok(h.events.some((e) => e.type === "round.updated"));
@@ -250,7 +264,7 @@ describe("round.draft：收件人不可用", () => {
 
   it("节点离线", async () => {
     const h = await makeHarness({
-      probe: async () => ({ reachable: false, profileAvailable: false, message: "connection refused" }),
+      probe: async () => ({ reachable: false, profiles: [], message: "connection refused" }),
     });
     const result = await draft(h, ["deepseek"]);
     assert.equal(failure(result).error, "agent_unavailable");
@@ -259,7 +273,7 @@ describe("round.draft：收件人不可用", () => {
   });
 
   it("节点上没有这个 profile", async () => {
-    const h = await makeHarness({ probe: async () => ({ reachable: true, profileAvailable: false }) });
+    const h = await makeHarness({ probe: async () => ({ reachable: true, profiles: ["claude-review"] }) });
     const result = await draft(h, ["deepseek"]);
     assert.equal(failure(result).error, "agent_unavailable");
     assert.match(failure(result).message, /profile/);
@@ -289,6 +303,45 @@ describe("round.draft：收件人不可用", () => {
     const next = await draft(h, ["deepseek"]);
     assert.equal(failure(next).error, "agent_unavailable");
     assert.match(failure(next).message, /额度用尽/);
+    await close(h);
+  });
+
+  it("6 小时前额度缺席的，现在可以起草（超过 5 小时就不算缺席）", async () => {
+    const h = await makeHarness();
+    const roundId = "rnd_" + ulid();
+    const snapshotId = "snap_" + ulid();
+    const approvalId = "apr_" + ulid();
+    const batchId = "bat_" + ulid();
+    const old = new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString();
+
+    h.db
+      .prepare(
+        "INSERT INTO prompt_snapshots (id, project_id, content, content_hash, nonce, contribution_ids, task_instruction, " +
+          "reviewer_agent, adapter_version, token_estimate, created_at) " +
+          "VALUES (?, ?, '旧 Prompt', ?, '0123456789abcdef', '[]', '旧任务', 'deepseek', 'discussion-v2', 1, ?)",
+      )
+      .run(snapshotId, h.projectId, sha("旧 Prompt"), old);
+    h.db
+      .prepare("INSERT INTO approvals (id, project_id, snapshot_id, state, created_at) VALUES (?, ?, ?, 'APPROVED', ?)")
+      .run(approvalId, h.projectId, snapshotId, old);
+    h.db
+      .prepare(
+        "INSERT INTO rounds (id, project_id, round_index, state, task, task_source, recipients, history_mode, created_at) " +
+          "VALUES (?, ?, 1, 'SUMMARIZED', '上一轮', 'human', '[\"deepseek\"]', 'recent_with_summaries', ?)",
+      )
+      .run(roundId, h.projectId, old);
+    h.db
+      .prepare("INSERT INTO batches (id, project_id, round_id, kind, state, created_at) VALUES (?, ?, ?, 'initial', 'APPROVED', ?)")
+      .run(batchId, h.projectId, roundId, old);
+    h.db
+      .prepare(
+        "INSERT INTO turns (id, round_id, batch_id, agent, is_summary, approval_id, run_id, outcome, created_at, finished_at) " +
+          "VALUES (?, ?, ?, 'deepseek', 0, ?, NULL, 'absent_quota', ?, ?)",
+      )
+      .run("turn_" + ulid(), roundId, batchId, approvalId, old, old);
+
+    const result = await draft(h, ["deepseek"]);
+    assert.equal(result.ok, true, JSON.stringify(result));
     await close(h);
   });
 });
