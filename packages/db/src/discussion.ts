@@ -213,7 +213,12 @@ export function createDraftTurns(db: SqliteDatabase, queue: WriteQueue, batchId:
   });
 }
 
-export type RoundDraftErrorCode = "invalid_input" | "round_active" | "hash_mismatch";
+export type RoundDraftErrorCode =
+  | "invalid_input"
+  | "round_active"
+  | "hash_mismatch"
+  | "round_not_found"
+  | "round_not_awaiting_summary";
 
 export class RoundDraftError extends Error {
   readonly code: RoundDraftErrorCode;
@@ -243,19 +248,29 @@ export interface RoundDraftPrompt {
 
 export interface RoundDraftRecipient {
   agent: string;
-  /** 替补代答时为被代答的人 */
-  onBehalfOf?: string | null;
   prompt: RoundDraftPrompt;
 }
 
 export interface CreateRoundDraftInput {
   projectId: string;
+  /**
+   * 调用方在拼 Prompt 时就要知道这一轮的 id（契约实体里有），可以先自己生成再传进来。
+   * 不传就由 db 生成。
+   */
+  roundId?: string;
   recipients: readonly RoundDraftRecipient[];
   task: string;
   taskSource: TaskSource;
   planVersionId?: string | null;
   historyMode: HistoryMode;
   /** 讨论记录被压缩的说明，确认页展示 */
+  compressedRounds?: readonly CompressedRound[];
+}
+
+export interface CreateSummaryDraftInput {
+  roundId: string;
+  /** 汇总批次只有一个收件人（汇总者） */
+  recipients: readonly RoundDraftRecipient[];
   compressedRounds?: readonly CompressedRound[];
 }
 
@@ -268,16 +283,114 @@ const ACTIVE_ROUND_STATES: readonly RoundState[] = [
   "SUMMARIZING",
 ];
 
+/** 每一批最多 8 个收件人（契约与 rounds.recipients 的 CHECK 一致），且不能重复 */
+function assertRecipients(recipients: readonly RoundDraftRecipient[]): void {
+  if (recipients.length < 1 || recipients.length > 8) {
+    throw new RoundDraftError("invalid_input", "a batch needs 1-8 recipients");
+  }
+  const seen = new Set<string>();
+  for (const recipient of recipients) {
+    if (seen.has(recipient.agent)) {
+      throw new RoundDraftError("invalid_input", `duplicate recipient ${recipient.agent}`);
+    }
+    seen.add(recipient.agent);
+  }
+}
+
+/**
+ * 把一批收件人落到库里：批次 + 每人的 Snapshot / Approval / batch_item / pending Turn。
+ * 调用方必须已经处在事务里（这里不做 BEGIN）。
+ *
+ * Turn 在盖章之前就要存在：确认页要显示「谁会被发」，拒盖时标成 rejected，
+ * 盖章时把同一条 Turn 从 pending 改成 running（turns.approval_id 是 UNIQUE）。
+ *
+ * 替补代答这一片还没做：on_behalf_of 一律写 NULL。做替补时 recipients 里记的是「座位」
+ * （onBehalfOf ?? agent），替补本人作为 agent 另记。
+ */
+function insertBatchTx(
+  db: SqliteDatabase,
+  input: {
+    projectId: string;
+    roundId: string;
+    kind: BatchKind;
+    /** 这一轮的任务，写进 Snapshot 的 task_instruction（确认页会显示） */
+    taskText: string;
+    recipients: readonly RoundDraftRecipient[];
+    compressedRounds: readonly CompressedRound[];
+    createdAt: string;
+  },
+): string {
+  const batchId = newBatchId();
+  db.prepare(
+    "INSERT INTO batches (id, project_id, round_id, kind, state, compressed_rounds, created_at) " +
+      "VALUES (?, ?, ?, ?, 'READY_FOR_REVIEW', ?, ?)",
+  ).run(batchId, input.projectId, input.roundId, input.kind, JSON.stringify(input.compressedRounds), input.createdAt);
+
+  for (const recipient of input.recipients) {
+    const prompt = recipient.prompt;
+    const contentHash = createHash("sha256").update(prompt.content, "utf8").digest("hex");
+    if (contentHash !== prompt.contentHash) {
+      throw new RoundDraftError("hash_mismatch", `prompt of ${recipient.agent} does not match its hash`);
+    }
+
+    const snapshotId = newSnapshotId();
+    const approvalId = newApprovalId();
+    db.prepare(
+      "INSERT INTO prompt_snapshots (id, project_id, content, content_hash, nonce, contribution_ids, task_instruction, " +
+        "reviewer_agent, adapter_version, token_estimate, created_at) VALUES (?, ?, ?, ?, ?, '[]', ?, ?, ?, ?, ?)",
+    ).run(
+      snapshotId,
+      input.projectId,
+      prompt.content,
+      contentHash,
+      prompt.nonce,
+      input.taskText,
+      recipient.agent,
+      prompt.adapterVersion,
+      prompt.tokenEstimate,
+      input.createdAt,
+    );
+
+    db.prepare(
+      "INSERT INTO approvals (id, project_id, snapshot_id, state, created_at) VALUES (?, ?, ?, 'READY_FOR_REVIEW', ?)",
+    ).run(approvalId, input.projectId, snapshotId, input.createdAt);
+
+    db.prepare(
+      "INSERT INTO batch_items (batch_id, recipient, on_behalf_of, approval_id, snapshot_id, content_hash, differs_from_others, token_estimate) " +
+        "VALUES (?, ?, NULL, ?, ?, ?, ?, ?)",
+    ).run(
+      batchId,
+      recipient.agent,
+      approvalId,
+      snapshotId,
+      contentHash,
+      prompt.differsFromOthers ? 1 : 0,
+      prompt.tokenEstimate,
+    );
+
+    db.prepare(
+      "INSERT INTO turns (id, round_id, batch_id, agent, on_behalf_of, is_summary, approval_id, run_id, outcome, created_at) " +
+        "VALUES (?, ?, ?, ?, NULL, ?, ?, NULL, 'pending', ?)",
+    ).run(
+      newTurnId(),
+      input.roundId,
+      batchId,
+      recipient.agent,
+      input.kind === "summary" ? 1 : 0,
+      approvalId,
+      input.createdAt,
+    );
+  }
+
+  return batchId;
+}
+
 /**
  * 起草一轮（round.draft 的写入部分）：**一个事务**里建出
  * 一轮 + 每个收件人的 Snapshot / Approval + 一个批次 + 每人的 batch_item 与 pending Turn。
  *
- * Turn 在盖章之前就要存在：确认页要显示「谁会被发」，拒盖时标成 rejected，
- * 盖章时把同一条 Turn 从 pending 改成 running（turns.approval_id 是 UNIQUE）。
- * 所以这里必须和批次一起建，不能等盖章再补。
- *
- * 这里的批次固定是 initial：resume / supplement / retry / summary 都是在**已有的轮**上加批次，
- * 不走这个入口（它们在 D-22 的 PR B 里做）。
+ * 批次固定是 initial；resume / supplement / retry 是在已有的轮上加批次，
+ * summary 走下面的 createSummaryDraft。
  */
 export function createRoundDraft(
   db: SqliteDatabase,
@@ -285,20 +398,7 @@ export function createRoundDraft(
   input: CreateRoundDraftInput,
 ): Promise<{ round: RoundRow; batch: ApprovalBatchRow }> {
   return writeTransaction(db, queue, () => {
-    const recipients = input.recipients;
-    if (recipients.length < 1 || recipients.length > 8) {
-      throw new RoundDraftError("invalid_input", "a round needs 1-8 recipients");
-    }
-    const seen = new Set<string>();
-    for (const recipient of recipients) {
-      if (seen.has(recipient.agent)) {
-        throw new RoundDraftError("invalid_input", `duplicate recipient ${recipient.agent}`);
-      }
-      seen.add(recipient.agent);
-      if ((recipient.onBehalfOf ?? null) === recipient.agent) {
-        throw new RoundDraftError("invalid_input", `an agent cannot substitute for itself: ${recipient.agent}`);
-      }
-    }
+    assertRecipients(input.recipients);
 
     // 先查一遍是为了给调用方一个能读的错误；并发时由 ux_round_active 唯一索引兜底
     const active = db
@@ -321,8 +421,7 @@ export function createRoundDraft(
     }
 
     const createdAt = now();
-    const roundId = newRoundId();
-    const batchId = newBatchId();
+    const roundId = input.roundId ?? newRoundId();
     // 作废的轮也占号，所以取 max + 1 而不是 count + 1
     const roundIndex = (
       db.prepare("SELECT COALESCE(MAX(round_index), 0) + 1 AS n FROM rounds WHERE project_id = ?").get(input.projectId) as { n: number }
@@ -337,80 +436,84 @@ export function createRoundDraft(
       roundIndex,
       input.task,
       input.taskSource,
-      JSON.stringify(recipients.map((recipient) => recipient.agent)),
+      JSON.stringify(input.recipients.map((recipient) => recipient.agent)),
       input.planVersionId ?? null,
       input.historyMode,
       createdAt,
     );
 
-    db.prepare(
-      "INSERT INTO batches (id, project_id, round_id, kind, state, compressed_rounds, created_at) " +
-        "VALUES (?, ?, ?, ?, 'READY_FOR_REVIEW', ?, ?)",
-    ).run(batchId, input.projectId, roundId, "initial", JSON.stringify(input.compressedRounds ?? []), createdAt);
-
-    for (const recipient of recipients) {
-      const prompt = recipient.prompt;
-      const contentHash = createHash("sha256").update(prompt.content, "utf8").digest("hex");
-      if (contentHash !== prompt.contentHash) {
-        throw new RoundDraftError("hash_mismatch", `prompt of ${recipient.agent} does not match its hash`);
-      }
-
-      const snapshotId = newSnapshotId();
-      const approvalId = newApprovalId();
-      db.prepare(
-        "INSERT INTO prompt_snapshots (id, project_id, content, content_hash, nonce, contribution_ids, task_instruction, " +
-          "reviewer_agent, adapter_version, token_estimate, created_at) VALUES (?, ?, ?, ?, ?, '[]', ?, ?, ?, ?, ?)",
-      ).run(
-        snapshotId,
-        input.projectId,
-        prompt.content,
-        contentHash,
-        prompt.nonce,
-        input.task,
-        recipient.agent,
-        prompt.adapterVersion,
-        prompt.tokenEstimate,
-        createdAt,
-      );
-
-      db.prepare(
-        "INSERT INTO approvals (id, project_id, snapshot_id, state, created_at) VALUES (?, ?, ?, 'READY_FOR_REVIEW', ?)",
-      ).run(approvalId, input.projectId, snapshotId, createdAt);
-
-      db.prepare(
-        "INSERT INTO batch_items (batch_id, recipient, on_behalf_of, approval_id, snapshot_id, content_hash, differs_from_others, token_estimate) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-      ).run(
-        batchId,
-        recipient.agent,
-        recipient.onBehalfOf ?? null,
-        approvalId,
-        snapshotId,
-        contentHash,
-        prompt.differsFromOthers ? 1 : 0,
-        prompt.tokenEstimate,
-      );
-
-      db.prepare(
-        "INSERT INTO turns (id, round_id, batch_id, agent, on_behalf_of, is_summary, approval_id, run_id, outcome, created_at) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?, NULL, 'pending', ?)",
-      ).run(
-        newTurnId(),
-        roundId,
-        batchId,
-        recipient.agent,
-        recipient.onBehalfOf ?? null,
-        0,
-        approvalId,
-        createdAt,
-      );
-    }
+    const batchId = insertBatchTx(db, {
+      projectId: input.projectId,
+      roundId,
+      kind: "initial",
+      taskText: input.task,
+      recipients: input.recipients,
+      compressedRounds: input.compressedRounds ?? [],
+      createdAt,
+    });
 
     return {
       round: db.prepare("SELECT * FROM rounds WHERE id = ?").get(roundId) as RoundRow,
       batch: db.prepare("SELECT * FROM batches WHERE id = ?").get(batchId) as ApprovalBatchRow,
     };
   });
+}
+
+/**
+ * 汇总批次（round.summarize 的写入部分）：在**已有的轮**上加一张 summary 批次 + pending Turn。
+ *
+ * - 轮必须是 AWAITING_SUMMARY（SUMMARIZING 说明已经有汇总在跑，SUMMARIZED 已经汇总过）
+ * - 同一轮里还没盖章的 summary 批次先作废，不留两张待盖章的汇总单
+ * - 汇总者的 Prompt 由 @room/core 的 assembleSummaryPrompt 拼好传进来
+ */
+export function createSummaryDraft(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  input: CreateSummaryDraftInput,
+): Promise<{ batch: ApprovalBatchRow }> {
+  return writeTransaction(db, queue, () => {
+    if (input.recipients.length !== 1) {
+      throw new RoundDraftError("invalid_input", "a summary batch has exactly one recipient");
+    }
+    assertRecipients(input.recipients);
+
+    const round = db.prepare("SELECT id, project_id, state, task FROM rounds WHERE id = ?").get(input.roundId) as
+      | { id: string; project_id: string; state: string; task: string }
+      | undefined;
+    if (round === undefined) throw new RoundDraftError("round_not_found", "round not found");
+    if (round.state !== "AWAITING_SUMMARY") {
+      throw new RoundDraftError("round_not_awaiting_summary", `round is ${round.state}`);
+    }
+
+    const createdAt = now();
+    cancelOpenSummaryBatchesTx(db, round.id, createdAt);
+    const batchId = insertBatchTx(db, {
+      projectId: round.project_id,
+      roundId: round.id,
+      kind: "summary",
+      taskText: round.task,
+      recipients: input.recipients,
+      compressedRounds: input.compressedRounds ?? [],
+      createdAt,
+    });
+
+    return { batch: db.prepare("SELECT * FROM batches WHERE id = ?").get(batchId) as ApprovalBatchRow };
+  });
+}
+
+/** 重新请求汇总时，作废旧的那张待盖章 summary 批次（只动 summary 这一种） */
+function cancelOpenSummaryBatchesTx(db: SqliteDatabase, roundId: string, ts: string): void {
+  db.prepare(
+    "UPDATE approvals SET state = 'CANCELLED', decided_at = ? WHERE state IN ('DRAFT', 'READY_FOR_REVIEW') AND id IN (" +
+      "SELECT bi.approval_id FROM batch_items bi JOIN batches b ON b.id = bi.batch_id WHERE b.round_id = ? AND b.kind = 'summary')",
+  ).run(ts, roundId);
+  db.prepare(
+    "UPDATE batches SET state = 'CANCELLED', decided_at = ? WHERE round_id = ? AND kind = 'summary' AND state IN ('DRAFT', 'READY_FOR_REVIEW')",
+  ).run(ts, roundId);
+  db.prepare(
+    "UPDATE turns SET outcome = 'rejected', finished_at = ? WHERE outcome = 'pending' AND batch_id IN (" +
+      "SELECT id FROM batches WHERE round_id = ? AND kind = 'summary')",
+  ).run(ts, roundId);
 }
 
 /**
