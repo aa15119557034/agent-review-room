@@ -385,7 +385,8 @@ export interface FinishSummaryInput {
 export interface FinishSummaryOutput {
   turnId: string;
   roundId: string;
-  messageId: string;
+  /** 只有成功的汇总才有消息 */
+  messageId: string | null;
   roundSummaryId: string | null;
   planVersionId: string | null;
   roundState: string;
@@ -413,6 +414,12 @@ export function finishSummaryFromRun(
       throw new TurnError("run_not_active", "run " + run.id + " is already " + run.state);
     }
 
+    // 汇总只能在 SUMMARIZING 的轮上发生；否则说明这一轮已经被结束 / 作废 / 已经汇总过
+    const round = db.prepare("SELECT state FROM rounds WHERE id = ?").get(turn.round_id) as { state: string } | undefined;
+    if (round === undefined || round.state !== "SUMMARIZING") {
+      throw new TurnError("round_not_active", "round is " + (round?.state ?? "missing"));
+    }
+
     const ts = now();
     const result = input.result;
 
@@ -431,12 +438,15 @@ export function finishSummaryFromRun(
         );
       }
       setTurnOutcome(db, turn.id, outcome, null, ts);
-      // 汇总失败 -> 退回待汇总
-      db.prepare("UPDATE rounds SET state = 'AWAITING_SUMMARY' WHERE id = ? AND state = 'SUMMARIZING'").run(turn.round_id);
+      // 汇总失败 -> 退回待汇总（CAS：轮已经被别人改过就整体失败，不能悄悄吞掉）
+      const moved = db
+        .prepare("UPDATE rounds SET state = 'AWAITING_SUMMARY' WHERE id = ? AND state = 'SUMMARIZING'")
+        .run(turn.round_id);
+      if (moved.changes !== 1) throw new TurnError("round_not_active", "round changed concurrently");
       return {
         turnId: turn.id,
         roundId: turn.round_id,
-        messageId: "",
+        messageId: null,
         roundSummaryId: null,
         planVersionId: null,
         roundState: currentRoundState(db, turn.round_id),
@@ -451,8 +461,16 @@ export function finishSummaryFromRun(
         "SELECT ?, project_id, 'summary', ?, ?, ?, ?, NULL, ?, ? FROM rounds WHERE id = ?",
     ).run(messageId, turn.agent, input.runId, turn.round_id, turn.id, result.text, ts, turn.round_id);
 
+    // 按"人"算，不按 Turn 算：
+    // - 同一个人被打断后重答，只取最新一次
+    // - 替补代答（on_behalf_of 非空）不等于原来那个人答了
     const answered = db
-      .prepare("SELECT count(*) AS n FROM turns WHERE round_id = ? AND is_summary = 0 AND outcome = 'answered'")
+      .prepare(
+        "SELECT count(*) AS n FROM (" +
+          "SELECT agent, on_behalf_of, outcome, ROW_NUMBER() OVER (PARTITION BY agent ORDER BY created_at DESC, rowid DESC) AS rn " +
+          "FROM turns WHERE round_id = ? AND is_summary = 0" +
+          ") WHERE rn = 1 AND outcome = 'answered' AND on_behalf_of IS NULL",
+      )
       .get(turn.round_id) as { n: number };
     const expected = db
       .prepare("SELECT json_array_length(recipients) AS n FROM rounds WHERE id = ?")

@@ -178,7 +178,11 @@ export class RunOrchestrator {
     } catch (error) {
       // 迟到的结果：讨论室在暂停 / 结束本轮 / 打断时已经把 Run 标成 CANCELLED 了，
       // 这时适配器再吐一个 completed/cancelled 就是过期的，直接丢掉，别让进程挂着异常。
-      if (error instanceof RunStateConflictError) return;
+      if (error instanceof RunStateConflictError) {
+        // 迟到结果：讨论室已经把 Run 标成 CANCELLED / 换了新的 Turn，这里只记一行，不覆盖状态
+        console.warn("[orchestrator] dropped a late result for", runId, "from", from);
+        return;
+      }
       throw error;
     }
 

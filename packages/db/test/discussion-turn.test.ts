@@ -311,13 +311,14 @@ describe("rejectBatch：只作废这一批", () => {
 });
 
 /** 造一张"已起草、等盖章"的批次（用来验证暂停/结束本轮会把它作废） */
-function addPendingBatch(f: Fx, recipients: string[]): { batchId: string; approvalIds: string[]; turnIds: string[] } {
+function addPendingBatch(f: Fx, recipients: string[], kind = "supplement"): { batchId: string; approvalIds: string[]; turnIds: string[] } {
   const projectId = (f.db.prepare("SELECT project_id FROM rounds WHERE id = ?").get(f.roundId) as { project_id: string }).project_id;
   const batchId = "bat_" + ulid();
-  f.db.prepare("INSERT INTO batches (id, project_id, round_id, kind, state, created_at) VALUES (?, ?, ?, 'supplement', 'READY_FOR_REVIEW', ?)").run(
+  f.db.prepare("INSERT INTO batches (id, project_id, round_id, kind, state, created_at) VALUES (?, ?, ?, ?, 'READY_FOR_REVIEW', ?)").run(
     batchId,
     projectId,
     f.roundId,
+    kind,
     NOW,
   );
 
@@ -354,9 +355,9 @@ function addPendingBatch(f: Fx, recipients: string[]): { batchId: string; approv
     f.db
       .prepare(
         "INSERT INTO turns (id, round_id, batch_id, agent, is_summary, approval_id, run_id, outcome, created_at) " +
-          "VALUES (?, ?, ?, ?, 0, ?, NULL, 'pending', ?)",
+          "VALUES (?, ?, ?, ?, ?, ?, NULL, 'pending', ?)",
       )
-      .run(turnId, f.roundId, batchId, row.recipient, row.approval_id, NOW);
+      .run(turnId, f.roundId, batchId, row.recipient, kind === "summary" ? 1 : 0, row.approval_id, NOW);
     turnIds.push(turnId);
   }
   return { batchId, approvalIds, turnIds };
@@ -533,6 +534,60 @@ describe("linkSuperseded：打断后重发", () => {
       superseded_by: string;
     };
     assert.equal(row.superseded_by, approved.turnIds[0]);
+    f.db.close();
+  });
+});
+
+describe("汇总的 answered 按人算", () => {
+  it("同一个人答两次只算一次（只取最新一次发言）", async () => {
+    const f = await seedApproved(["deepseek"]);
+    // 第一次回答
+    await finishTurnFromRun(f.db, f.queue, { runId: f.runIds["deepseek"]!, terminal: { kind: "answered", text: "第一版" } });
+
+    // 打断后重答：同一轮的第二次发言
+    const pending = addPendingBatch(f, ["deepseek"]);
+    const approved = await approveBatch(f.db, f.queue, {
+      batchId: pending.batchId,
+      items: pending.approvalIds.map((id) => ({
+        approvalId: id,
+        expectedContentHash: (f.db.prepare("SELECT content_hash FROM batch_items WHERE approval_id = ?").get(id) as { content_hash: string })
+          .content_hash,
+      })),
+      via: "desktop",
+    });
+    await finishTurnFromRun(f.db, f.queue, { runId: approved.runIds[0]!, terminal: { kind: "answered", text: "第二版" } });
+
+    // 再开一张 summary 批次
+    const summaryBatch = addPendingBatch(f, ["claude"], "summary");
+    const summaryApproved = await approveBatch(f.db, f.queue, {
+      batchId: summaryBatch.batchId,
+      items: summaryBatch.approvalIds.map((id) => ({
+        approvalId: id,
+        expectedContentHash: (f.db.prepare("SELECT content_hash FROM batch_items WHERE approval_id = ?").get(id) as { content_hash: string })
+          .content_hash,
+      })),
+      via: "desktop",
+    });
+    const out = await finishSummaryFromRun(f.db, f.queue, {
+      runId: summaryApproved.runIds[0]!,
+      result: { kind: "answered", text: "汇总" },
+    });
+
+    const row = f.db.prepare("SELECT answered FROM round_summaries WHERE round_id = ?").get(f.roundId) as { answered: number };
+    assert.equal(row.answered, 1, "同一个人两次发言只算一次");
+    assert.ok(out.messageId);
+    f.db.close();
+  });
+
+  it("这一轮不是 SUMMARIZING 时不能汇总", async () => {
+    const f = await seedApproved(["claude"], "summary");
+    // 把轮从 AWAITING_SUMMARY 强行留在 RUNNING，模拟"已经结束/改方向"的情况
+    f.db.prepare("UPDATE rounds SET state = 'RUNNING' WHERE id = ?").run(f.roundId);
+
+    await assert.rejects(
+      () => finishSummaryFromRun(f.db, f.queue, { runId: f.runIds["claude"]!, result: { kind: "answered", text: "x" } }),
+      (error: unknown) => error instanceof TurnError && error.code === "round_not_active",
+    );
     f.db.close();
   });
 });
