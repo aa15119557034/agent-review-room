@@ -10,6 +10,7 @@ import {
   formatActive,
   openRound,
   pendingBatches,
+  stages,
   timeline,
   turnText,
   type DiscussionState,
@@ -18,6 +19,7 @@ import {
 import { useActions, useAppState } from "../hooks";
 import { formatClock } from "../labels";
 import { ConfirmView } from "./ConfirmView";
+import { ReviewView } from "./ReviewView";
 
 /**
  * 讨论室主页（C-21，画布「① 主页 · 讨论」）。
@@ -26,6 +28,7 @@ import { ConfirmView } from "./ConfirmView";
 export function DiscussionView({ notice }: { notice: ReactNode }) {
   const available = useAppState((s) => s.disc.available);
   const confirm = useAppState((s) => s.disc.confirm);
+  const page = useAppState((s) => s.disc.ui.page);
   const railCollapsed = useAppState((s) => s.disc.ui.railCollapsed);
   const sideCollapsed = useAppState((s) => s.disc.ui.sideCollapsed);
 
@@ -44,7 +47,7 @@ export function DiscussionView({ notice }: { notice: ReactNode }) {
       <TopicRail />
       <main className="disc-main">
         {notice}
-        {confirm ? <ConfirmView /> : <Conversation />}
+        {confirm ? <ConfirmView /> : page.kind === "review" ? <ReviewView roundId={page.roundId} /> : <Conversation />}
       </main>
       <SidePanel />
     </div>
@@ -162,9 +165,30 @@ function Conversation() {
         <button type="button" className="button-link" onClick={() => actions.setAllRounds(true)}>全部收起</button>
         <button type="button" className="button-link" onClick={() => actions.setAllRounds(false)}>全部展开</button>
       </header>
+      <StageBar />
       <Timeline />
       <Composer />
     </>
+  );
+}
+
+function StageBar() {
+  const list = useAppState((s) => stages(s.disc));
+  const actions = useActions();
+  if (list.length <= 3) return null;
+  return (
+    <nav className="stage-bar" aria-label="阶段">
+      {list.map((st, i) => (
+        <span key={st.key} className="stage-item">
+          {i > 0 && <span aria-hidden="true" className="stage-sep">—</span>}
+          {st.roundId && st.label.startsWith("汇总") && st.state === "done" ? (
+            <button type="button" className="stage" data-state={st.state} onClick={() => actions.openReview(st.roundId!)}>{st.label}</button>
+          ) : (
+            <span className="stage" data-state={st.state} aria-current={st.state === "current" ? "step" : undefined}>{st.label}</span>
+          )}
+        </span>
+      ))}
+    </nav>
   );
 }
 
@@ -258,6 +282,7 @@ function TurnCard({ turn, reply }: { turn: Turn; reply: Message | null }) {
 
 function SummaryCard({ entry }: { entry: Extract<TimelineEntry, { kind: "summary" }> }) {
   const d = useAppState((s) => s.disc);
+  const actions = useActions();
   const events = useAppState((s) => (entry.turn.runId ? s.runEvents[entry.turn.runId] : undefined));
   const { text, live } = turnText(entry.turn, entry.reply, events);
   const sum = entry.summary;
@@ -278,6 +303,11 @@ function SummaryCard({ entry }: { entry: Extract<TimelineEntry, { kind: "summary
         <LongText id={entry.turn.id} text={text} live={live} />
       )}
       {sum?.report?.extraInfoNotes.map((n) => <p key={n} className="extra-info">{n}</p>)}
+      {sum && (
+        <button type="button" className="button-outline summary-open" onClick={() => actions.openReview(entry.round.id)}>
+          打开汇总与方案{plan ? ` v${plan.version}` : ""}
+        </button>
+      )}
     </Bubble>
   );
 }
@@ -319,49 +349,83 @@ function Composer() {
   const round = openRound(d);
   const { text, recipients } = d.ui.composer;
   const discussants = d.agents.filter((a) => a.canDiscuss);
-  const blocked = round !== null;
+  const interjecting = round !== null && ["RUNNING", "PAUSED", "AWAITING_SUMMARY"].includes(round.state);
   const nextIndex = d.rounds.length + 1;
   const plan = displayedPlan(d);
+  const { mode, targets } = d.ui.interject;
 
   return (
     <div className="composer">
       <RoundControls />
-      <div className="composer-recipients">
-        <span>下一轮发给：</span>
-        {discussants.map((a) => {
-          const st = d.status[a.id]?.availability ?? "available";
-          const unavailable = st !== "available";
-          return (
-            <label key={a.id} className="recipient-chip" data-unavailable={unavailable || undefined} style={{ "--agent": a.color } as CSSProperties}>
-              <input type="checkbox" checked={recipients.includes(a.id)} disabled={unavailable} onChange={() => actions.toggleRecipient(a.id)} />
-              {a.displayName}
-              {unavailable && <span>（{st === "absent_quota" ? "缺席" : st === "offline" ? "离线" : st === "paused_by_user" ? "已暂停" : "未配置"}）</span>}
-            </label>
-          );
-        })}
-        {plan?.state === "CURRENT" && <span className="composer-attach">附带：方案 v{plan.version}</span>}
-      </div>
+      {interjecting ? (
+        <fieldset className="interject">
+          <legend>插话：补充或改方向（第 {round!.index} 轮）</legend>
+          <div className="interject-modes">
+            <label><input type="radio" name="interject-mode" checked={mode === "restart_now"} onChange={() => actions.setInterjectMode("restart_now")} /> 立刻打断，带上补充重答（旧的标「被打断」并保留）</label>
+            <label><input type="radio" name="interject-mode" checked={mode === "next_round"} onChange={() => actions.setInterjectMode("next_round")} /> 不打断，放进下一轮</label>
+            <label><input type="radio" name="interject-mode" checked={mode === "only"} onChange={() => actions.setInterjectMode("only")} /> 只发给某个人（会标「他收到了额外信息」）</label>
+          </div>
+          {mode !== "next_round" && (
+            <div className="composer-recipients">
+              <span>发给：</span>
+              {round!.recipients.map((aid) => (
+                <label key={aid} className="recipient-chip" style={{ "--agent": agentColor(d, aid) } as CSSProperties}>
+                  <input type="checkbox" checked={targets.includes(aid)} onChange={() => actions.toggleInterjectTarget(aid)} />
+                  {agentName(d, aid)}
+                </label>
+              ))}
+            </div>
+          )}
+        </fieldset>
+      ) : (
+        <div className="composer-recipients">
+          <span>下一轮发给：</span>
+          {discussants.map((a) => {
+            const st = d.status[a.id]?.availability ?? "available";
+            const unavailable = st !== "available";
+            return (
+              <label key={a.id} className="recipient-chip" data-unavailable={unavailable || undefined} style={{ "--agent": a.color } as CSSProperties}>
+                <input type="checkbox" checked={recipients.includes(a.id)} disabled={unavailable} onChange={() => actions.toggleRecipient(a.id)} />
+                {a.displayName}
+                {unavailable && <span>（{st === "absent_quota" ? "缺席" : st === "offline" ? "离线" : st === "paused_by_user" ? "已暂停" : "未配置"}）</span>}
+              </label>
+            );
+          })}
+          {plan?.state === "CURRENT" && <span className="composer-attach">附带：方案 v{plan.version}</span>}
+        </div>
+      )}
       <div className="composer-row">
         <label htmlFor="composer" className="visually-hidden">发言</label>
         <textarea
           id="composer"
           rows={2}
           value={text}
-          placeholder={blocked ? "在两轮之间说点什么（只发言，不发给 Agent）" : "写下议题，或者下一轮的任务……"}
+          placeholder={interjecting ? "补充什么，或者想改什么方向……" : round ? "这一轮还在等盖章，可以先说点什么（只发言）" : "写下议题，或者下一轮的任务……"}
           onChange={(e) => actions.setComposerText(e.target.value)}
         />
         <button type="button" className="button-outline" disabled={!text.trim()} onClick={() => void actions.addNote()}>
           只发言
         </button>
-        <button
-          type="button"
-          className="button-primary"
-          disabled={blocked || !text.trim() || recipients.length === 0}
-          title={blocked ? `第 ${round?.index} 轮还没结束` : undefined}
-          onClick={() => void actions.draftRound()}
-        >
-          预览并发起第 {nextIndex} 轮
-        </button>
+        {interjecting ? (
+          <button
+            type="button"
+            className="button-primary"
+            disabled={!text.trim() || (mode !== "next_round" && targets.length === 0)}
+            onClick={() => void actions.supplement()}
+          >
+            {mode === "next_round" ? "记下来，放进下一轮" : "预览并发送补充"}
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="button-primary"
+            disabled={round !== null || !text.trim() || recipients.length === 0}
+            title={round ? `第 ${round.index} 轮还没结束` : undefined}
+            onClick={() => void actions.draftRound()}
+          >
+            预览并发起第 {nextIndex} 轮
+          </button>
+        )}
       </div>
     </div>
   );
@@ -378,6 +442,7 @@ function RoundControls() {
   return (
     <div className="round-controls" data-state={round.state}>
       <b>第 {round.index} 轮 · {ROUND_STATE_LABEL[round.state]}</b>
+      {round.activeMs > 0 && <span className="round-time">用时 {formatActive(round.activeMs)}{round.state === "PAUSED" ? "（暂停中不计时）" : ""}</span>}
       {waiting && <button type="button" className="button-seal-small" onClick={() => void actions.openConfirm(waiting.id)}>去盖章</button>}
       {round.state === "RUNNING" && (
         <>
@@ -397,7 +462,36 @@ function RoundControls() {
             请 {s.displayName} 汇总
           </button>
         ))}
+      <span className="spacer" />
+      <VoidRound roundId={round.id} />
     </div>
+  );
+}
+
+/** 改方向：作废这一轮要写原因（Electron 不支持 window.prompt，用行内表单） */
+function VoidRound({ roundId }: { roundId: string }) {
+  const actions = useActions();
+  const [open, setOpen] = useState(false);
+  const [reason, setReason] = useState("");
+  if (!open) {
+    return <button type="button" className="button-link" onClick={() => setOpen(true)}>改方向（作废这一轮）</button>;
+  }
+  return (
+    <form
+      className="void-form"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (!reason.trim()) return;
+        void actions.voidRound(roundId, reason.trim());
+        setOpen(false);
+        setReason("");
+      }}
+    >
+      <label htmlFor="void-reason">这一轮会标成「作废」，记录保留。为什么改方向？</label>
+      <input id="void-reason" autoFocus value={reason} maxLength={2000} onChange={(e) => setReason(e.target.value)} />
+      <button type="submit" className="button-outline" disabled={!reason.trim()}>作废这一轮</button>
+      <button type="button" className="button-link" onClick={() => setOpen(false)}>取消</button>
+    </form>
   );
 }
 
@@ -428,6 +522,14 @@ function SidePanel() {
             <p className="side-note">{plan.changeNote}{plan.draftedBy.kind === "agent" ? ` · ${agentName(d, plan.draftedBy.agent)} 起草` : " · 你改的"}</p>
             {plan.state === "DRAFT" && (
               <button type="button" className="button-outline" onClick={() => void actions.confirmPlan(plan.id)}>确认这一版</button>
+            )}
+            {plan.state === "CURRENT" && (
+              <button type="button" className="button-seal" onClick={() => void actions.finalizePlan(plan.id, plan.contentHash)}>
+                盖章定稿 v{plan.version}
+              </button>
+            )}
+            {plan.state === "FINAL" && (
+              <button type="button" className="button-outline" onClick={() => void actions.derivePlan(plan.id)}>从 v{plan.version} 派生下一版</button>
             )}
           </>
         ) : (
