@@ -354,7 +354,8 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
   }
 
   async function completeSummary(round: Round, m: Message, summarizer: AgentProfile) {
-    const turns = roundTurns(round.id).filter((t) => !t.isSummary);
+    // 每人只看自己最新一次真正发出去的发言：替补代答不算原来那个人答了，被拒 / 没盖章的不算（和 D-21 一致）
+    const turns = roundTurns(round.id).filter((t) => !t.isSummary && t.onBehalfOf === null && t.outcome !== "pending" && t.outcome !== "rejected");
     const latest = new Map<string, Turn>();
     for (const t of turns) latest.set(t.agent, t);
     const answered = [...latest.values()].filter((t) => t.outcome === "answered").length;
