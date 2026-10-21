@@ -97,6 +97,8 @@ async function makeHarness(options: {
   const repo = new Repository(db, queue);
   const settings = new SettingsStore(join(dir, "settings.json"), fakeSafeStorage);
   settings.updateReviewerNode({ baseUrl: NODE_URL, profileId: "claude-review", token: "t".repeat(40) });
+  // 多节点（D-22c）：agents 都在 controller-local 上，凭据按节点存
+  settings.upsertNode("controller-local", { baseUrl: NODE_URL, token: "t".repeat(40) });
 
   const now = new Date().toISOString();
   db.prepare("INSERT INTO nodes (id, display_name, base_url, created_at) VALUES (?, ?, ?, ?)").run(

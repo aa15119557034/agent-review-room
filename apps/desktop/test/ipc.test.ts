@@ -7,6 +7,7 @@ import type { AgentAdapter } from "@room/core";
 import { openDatabase, WriteQueue } from "@room/db";
 import type { ControlEvent } from "@room/schemas";
 import { createDispatcher } from "../src/main/ipc";
+import { NodeService } from "../src/main/nodes";
 import { Repository } from "../src/main/repository";
 import { SettingsStore, type SafeStorageLike } from "../src/main/settings";
 
@@ -49,10 +50,18 @@ function makeDispatcher(options: { withToken?: boolean } = {}) {
     isRunning: () => false,
   } as never;
 
+  const nodes = new NodeService({
+    repo,
+    settings,
+    probe: async () => ({ reachable: false, error: "unreachable", message: "unused in these tests" }),
+  });
+
   const dispatcher = createDispatcher({
     repo,
     settings,
     orchestrator,
+    discussion: {} as never,
+    nodes,
     appVersion: "0.0.0-test",
     recoveredRuns: 0,
     emit: (event: ControlEvent) => events.push(event),

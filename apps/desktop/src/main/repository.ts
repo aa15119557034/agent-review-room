@@ -564,6 +564,26 @@ export class Repository {
       | undefined;
   }
 
+  listNodeRows(): { id: string; display_name: string; base_url: string | null }[] {
+    return this.#db.prepare("SELECT id, display_name, base_url FROM nodes ORDER BY id").all() as {
+      id: string;
+      display_name: string;
+      base_url: string | null;
+    }[];
+  }
+
+  async upsertNodeRow(input: { id: string; label: string; baseUrl: string }): Promise<void> {
+    const createdAt = now();
+    await writeTransaction(this.#db, this.#queue, () => {
+      this.#db
+        .prepare(
+          "INSERT INTO nodes (id, display_name, base_url, created_at) VALUES (?, ?, ?, ?) " +
+            "ON CONFLICT(id) DO UPDATE SET display_name = excluded.display_name, base_url = excluded.base_url",
+        )
+        .run(input.id, input.label, input.baseUrl, createdAt);
+    });
+  }
+
   nextRoundIndex(projectId: string): number {
     return (
       this.#db.prepare("SELECT COALESCE(MAX(round_index), 0) + 1 AS n FROM rounds WHERE project_id = ?").get(projectId) as { n: number }

@@ -14,6 +14,7 @@ import {
   type QueryRequest,
 } from "@room/schemas";
 import { DiscussionError, type DiscussionService } from "./discussion";
+import type { NodeService } from "./nodes";
 import type { RunOrchestrator } from "./orchestrator";
 import { Repository, RepositoryError } from "./repository";
 import { SettingsError, type SettingsStore } from "./settings";
@@ -30,6 +31,7 @@ export interface IpcDeps {
   readonly settings: SettingsStore;
   readonly orchestrator: RunOrchestrator;
   readonly discussion: DiscussionService;
+  readonly nodes: NodeService;
   readonly appVersion: string;
   readonly recoveredRuns: number;
   readonly emit: (event: ControlEvent) => void;
@@ -211,6 +213,12 @@ export function createDispatcher(deps: IpcDeps) {
       case "round.summarize":
         return deps.discussion.summarize(command);
 
+      case "node.upsert":
+        return deps.nodes.upsert(command);
+
+      case "node.test":
+        return deps.nodes.test(command);
+
       case "settings.updateReviewerNode":
         return settings.updateReviewerNode({
           baseUrl: command.baseUrl,
@@ -291,6 +299,9 @@ export function createDispatcher(deps: IpcDeps) {
 
       case "agents.list":
         return repo.listAgents();
+
+      case "nodes.list":
+        return deps.nodes.list();
 
       case "runs.get":
         return repo.getRun(query.runId);
