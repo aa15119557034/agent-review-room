@@ -225,6 +225,36 @@ export function createDispatcher(deps: IpcDeps) {
       case "plan.finalize":
         return deps.discussion.finalizePlan(command);
 
+      case "round.pause":
+        return deps.discussion.pause(command);
+
+      case "round.end":
+        return deps.discussion.end(command);
+
+      case "round.resume":
+        return deps.discussion.resume(command);
+
+      case "round.supplement":
+        return deps.discussion.supplement(command);
+
+      case "round.retry":
+        return deps.discussion.retry(command);
+
+      case "round.void":
+        return deps.discussion.voidRound(command);
+
+      case "round.redraft":
+        return deps.discussion.redraft(command);
+
+      case "note.add":
+        return deps.discussion.addNote(command);
+
+      case "plan.edit":
+        return deps.discussion.editPlan(command);
+
+      case "plan.derive":
+        return deps.discussion.derivePlan(command);
+
       case "node.upsert":
         return deps.nodes.upsert(command);
 

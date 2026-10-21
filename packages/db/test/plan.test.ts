@@ -4,7 +4,7 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
-import { confirmPlan, finalizePlan, openDatabase, PlanError, ulid, WriteQueue } from "../src/index";
+import { confirmPlan, derivePlan, editPlan, finalizePlan, openDatabase, PlanError, ulid, WriteQueue } from "../src/index";
 import type { SqliteDatabase } from "../src/index";
 
 /**
@@ -110,8 +110,9 @@ describe("finalizePlan：盖章定稿（校验指纹）", () => {
     const plan = insertPlan(f, { version: 1, state: "CURRENT", content: "# 方案 v1" });
 
     const finalized = await finalizePlan(f.db, f.queue, { planVersionId: plan.id, expectedContentHash: plan.contentHash });
-    assert.equal(finalized.state, "FINAL");
-    assert.ok(finalized.decided_at);
+    assert.equal(finalized.plan.state, "FINAL");
+    assert.ok(finalized.plan.decided_at);
+    assert.deepEqual(finalized.superseded, []);
     assert.equal(stateOf(f, plan.id), "FINAL");
     f.db.close();
   });
@@ -140,6 +141,70 @@ describe("finalizePlan：盖章定稿（校验指纹）", () => {
     await assert.rejects(
       () => finalizePlan(f.db, f.queue, { planVersionId: final.id, expectedContentHash: final.contentHash }),
       (error: unknown) => error instanceof PlanError && error.code === "plan_not_current",
+    );
+    f.db.close();
+  });
+
+  it("定稿 → 派生 → 确认 → 再定稿：旧的 FINAL 变成 SUPERSEDED（C-26）", async () => {
+    const f = makeFixture();
+    const v1 = insertPlan(f, { version: 1, state: "CURRENT", content: "# 方案 v1" });
+    const first = await finalizePlan(f.db, f.queue, { planVersionId: v1.id, expectedContentHash: v1.contentHash });
+    assert.equal(first.plan.state, "FINAL");
+
+    const derived = await derivePlan(f.db, f.queue, v1.id);
+    assert.equal(derived.version, 2);
+    assert.equal(derived.state, "DRAFT");
+    assert.equal(derived.parent_id, v1.id);
+    assert.equal(derived.content, "# 方案 v1", "派生版本内容不变");
+
+    const confirmed = await confirmPlan(f.db, f.queue, derived.id);
+    assert.equal(confirmed.plan.state, "CURRENT");
+
+    const second = await finalizePlan(f.db, f.queue, {
+      planVersionId: derived.id,
+      expectedContentHash: derived.content_hash,
+    });
+    assert.equal(second.plan.state, "FINAL");
+    assert.deepEqual(
+      second.superseded.map((plan) => plan.id),
+      [v1.id],
+      "旧的 FINAL 在同一事务里被取代",
+    );
+    const old = f.db.prepare("SELECT state, superseded_reason FROM plan_versions WHERE id = ?").get(v1.id) as {
+      state: string;
+      superseded_reason: string | null;
+    };
+    assert.equal(old.state, "SUPERSEDED");
+    assert.ok(old.superseded_reason);
+    assert.equal(stateOf(f, derived.id), "FINAL");
+    f.db.close();
+  });
+});
+
+describe("editPlan / derivePlan", () => {
+  it("plan.edit 基于 parentId 生成新 DRAFT，并作废其它草稿", async () => {
+    const f = makeFixture();
+    const parent = insertPlan(f, { version: 1, state: "CURRENT", content: "# 当前" });
+    const oldDraft = insertPlan(f, { version: 2, state: "DRAFT", content: "# 旧草稿" });
+
+    const result = await editPlan(f.db, f.queue, { parentId: parent.id, content: "# 改过的方案", changeNote: "+1 条" });
+    assert.equal(result.plan.version, 3);
+    assert.equal(result.plan.state, "DRAFT");
+    assert.equal(result.plan.parent_id, parent.id);
+    assert.equal(result.plan.based_on_round_id, null, "沿用 parent 的 based_on_round_id");
+    assert.equal(result.plan.drafted_by_kind, "human");
+    assert.deepEqual(result.superseded.map((plan) => plan.id), [oldDraft.id]);
+    assert.equal(stateOf(f, oldDraft.id), "SUPERSEDED");
+    assert.equal(stateOf(f, parent.id), "CURRENT", "parent 不动");
+    f.db.close();
+  });
+
+  it("plan.derive 只能从 FINAL 派生", async () => {
+    const f = makeFixture();
+    const current = insertPlan(f, { version: 1, state: "CURRENT", content: "# 当前" });
+    await assert.rejects(
+      () => derivePlan(f.db, f.queue, current.id),
+      (error: unknown) => error instanceof PlanError && error.code === "plan_not_final",
     );
     f.db.close();
   });

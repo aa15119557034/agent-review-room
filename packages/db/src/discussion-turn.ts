@@ -217,7 +217,12 @@ function setTurnOutcome(db: SqliteDatabase, turnId: string, outcome: string, par
  * 盖章被拒（0-B 补充规则）：只作废这一批——批次 `REJECTED`、成员 Approval `REJECTED`、
  * 这一批的 `pending` Turn 记 `rejected`，**Round 状态不动**。
  */
-export function rejectBatch(db: SqliteDatabase, queue: WriteQueue, batchId: string): Promise<{ batchId: string }> {
+export function rejectBatch(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  batchId: string,
+  reason?: string,
+): Promise<{ batchId: string }> {
   return writeTransaction(db, queue, () => {
     const batch = db.prepare("SELECT id, state FROM batches WHERE id = ?").get(batchId) as
       | { id: string; state: string }
@@ -228,9 +233,9 @@ export function rejectBatch(db: SqliteDatabase, queue: WriteQueue, batchId: stri
     const ts = now();
     db.prepare("UPDATE batches SET state = 'REJECTED', decided_at = ? WHERE id = ? AND state = 'READY_FOR_REVIEW'").run(ts, batchId);
     db.prepare(
-      "UPDATE approvals SET state = 'REJECTED', decided_at = ? WHERE state = 'READY_FOR_REVIEW' AND id IN " +
+      "UPDATE approvals SET state = 'REJECTED', reason = ?, decided_at = ? WHERE state = 'READY_FOR_REVIEW' AND id IN " +
         "(SELECT approval_id FROM batch_items WHERE batch_id = ?)",
-    ).run(ts, batchId);
+    ).run(reason ?? null, ts, batchId);
     db.prepare("UPDATE turns SET outcome = 'rejected', finished_at = ? WHERE batch_id = ? AND outcome = 'pending'").run(ts, batchId);
     return { batchId };
   });
@@ -309,7 +314,7 @@ export function endRound(
  * 不这么做的话：暂停/结束本轮之后，用户手里那张"待盖章"的批次还能盖下去，
  * 一个 `resume` 就能把已经进汇总的轮又拉回 RUNNING。
  */
-function cancelOpenBatchesTx(db: SqliteDatabase, roundId: string, ts: string): number {
+export function cancelOpenBatchesTx(db: SqliteDatabase, roundId: string, ts: string): number {
   db.prepare(
     "UPDATE approvals SET state = 'CANCELLED', decided_at = ? WHERE state IN ('DRAFT', 'READY_FOR_REVIEW') AND id IN (" +
       "SELECT bi.approval_id FROM batch_items bi JOIN batches b ON b.id = bi.batch_id WHERE b.round_id = ?)",
@@ -327,7 +332,7 @@ function cancelOpenBatchesTx(db: SqliteDatabase, roundId: string, ts: string): n
   return batches.changes;
 }
 
-function cancelRunningTurns(
+export function cancelRunningTurns(
   db: SqliteDatabase,
   roundId: string,
   outcome: "paused" | "round_ended" | "interrupted",
