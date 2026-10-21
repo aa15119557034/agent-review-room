@@ -139,7 +139,11 @@ export const PromptSnapshot = z.object({
   contentHash: Sha256Hex,
   /** 这次拼装用的边界 nonce（V0.4 §15） */
   nonce: z.string().regex(/^[a-f0-9]{16,64}$/),
-  contributionIds: z.array(ContributionId).min(1),
+  /**
+   * 单次评审（Phase 0）的 Snapshot 至少一个片段——由 snapshot.create 的入参保证（min 1）。
+   * 讨论室（C-20）的 Snapshot 由讨论记录拼成，没有片段，这里为空数组。
+   */
+  contributionIds: z.array(ContributionId),
   /** 用户写的评审任务说明 */
   taskInstruction: z.string().min(1).max(20_000),
   /**
