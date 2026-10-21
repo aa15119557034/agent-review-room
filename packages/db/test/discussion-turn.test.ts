@@ -591,3 +591,46 @@ describe("汇总的 answered 按人算", () => {
     f.db.close();
   });
 });
+
+describe("answered 的边界情况", () => {
+  async function summaryWith(extraTurns: (f: Fx) => void): Promise<number> {
+    const f = await seedApproved(["deepseek"]);
+    await finishTurnFromRun(f.db, f.queue, { runId: f.runIds["deepseek"]!, terminal: { kind: "answered", text: "正式回答" } });
+    extraTurns(f);
+
+    const summaryBatch = addPendingBatch(f, ["claude"], "summary");
+    const approved = await approveBatch(f.db, f.queue, {
+      batchId: summaryBatch.batchId,
+      items: summaryBatch.approvalIds.map((id) => ({
+        approvalId: id,
+        expectedContentHash: (f.db.prepare("SELECT content_hash FROM batch_items WHERE approval_id = ?").get(id) as { content_hash: string })
+          .content_hash,
+      })),
+      via: "desktop",
+    });
+    await finishSummaryFromRun(f.db, f.queue, { runId: approved.runIds[0]!, result: { kind: "answered", text: "汇总" } });
+    const row = f.db.prepare("SELECT answered FROM round_summaries WHERE round_id = ?").get(f.roundId) as { answered: number };
+    f.db.close();
+    return row.answered;
+  }
+
+  it("自己答了又替别人代答：代答那条不算他答了", async () => {
+    const answered = await summaryWith((f) => {
+      const other = addPendingBatch(f, ["deepseek"]);
+      // 这条 Turn 是"代 codex 答"（失败了）。如果 on_behalf_of 过滤没生效，
+      // 它就会成为 deepseek 的最新一条，answered 会变成 0。
+      f.db
+        .prepare("UPDATE turns SET on_behalf_of = 'codex', outcome = 'failed' WHERE id = ?")
+        .run(other.turnIds[0]!);
+    });
+    assert.equal(answered, 1);
+  });
+
+  it("答完以后追问被拒：被拒的那条不影响他已经答过", async () => {
+    const answered = await summaryWith((f) => {
+      const retry = addPendingBatch(f, ["deepseek"]);
+      f.db.prepare("UPDATE turns SET outcome = 'rejected' WHERE id = ?").run(retry.turnIds[0]!);
+    });
+    assert.equal(answered, 1);
+  });
+});

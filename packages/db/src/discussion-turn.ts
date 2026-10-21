@@ -466,10 +466,12 @@ export function finishSummaryFromRun(
     // - 替补代答（on_behalf_of 非空）不等于原来那个人答了
     const answered = db
       .prepare(
+        // 先过滤再取最新一条：替补代答的 Turn、待盖章 / 被拒的 Turn 不该参与"谁答了"的判定
         "SELECT count(*) AS n FROM (" +
-          "SELECT agent, on_behalf_of, outcome, ROW_NUMBER() OVER (PARTITION BY agent ORDER BY created_at DESC, rowid DESC) AS rn " +
-          "FROM turns WHERE round_id = ? AND is_summary = 0" +
-          ") WHERE rn = 1 AND outcome = 'answered' AND on_behalf_of IS NULL",
+          "SELECT agent, outcome, ROW_NUMBER() OVER (PARTITION BY agent ORDER BY created_at DESC, rowid DESC) AS rn " +
+          "FROM turns WHERE round_id = ? AND is_summary = 0 " +
+          "AND on_behalf_of IS NULL AND outcome NOT IN ('pending', 'rejected')" +
+          ") WHERE rn = 1 AND outcome = 'answered'",
       )
       .get(turn.round_id) as { n: number };
     const expected = db
