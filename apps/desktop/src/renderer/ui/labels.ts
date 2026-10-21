@@ -63,6 +63,7 @@ export const FAILURE_REASON_LABEL: Record<FailureReason, string> = {
   output_limit_exceeded: "Reviewer 的输出超过上限，已停止。",
   incomplete_output: "Reviewer 的回复没有正常结束（可能被截断），不能当作完整结果。",
   postprocess: "评审完成了，但保存结果时出错。",
+  quota_exhausted: "额度用尽或被限流，这次缺席。",
   internal: "Reviewer 调用出错。",
 };
 

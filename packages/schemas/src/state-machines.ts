@@ -59,6 +59,71 @@ export const RUN_TRANSITIONS: Readonly<Record<RunState, readonly RunState[]>> = 
 export const RunSubstate = z.enum(["active", "waiting_for_human", "disconnected"]);
 export type RunSubstate = z.infer<typeof RunSubstate>;
 
+// ================================================================ 讨论室（ADR-002 / C-20）
+
+/**
+ * 一轮讨论的状态（画布 0-B）。
+ * - DRAFT            : 收件人和内容已生成，等盖章
+ * - RUNNING          : 已盖章，有人在答
+ * - PAUSED           : 用户暂停；正在答的已按"打断"结束，计时停止
+ * - AWAITING_SUMMARY : 所有人都有结局，或用户点了「结束本轮」
+ * - SUMMARIZING      : 汇总请求已盖章，汇总者在写
+ * - SUMMARIZED       : 汇总完成，产生了方案新版本（终态；下一轮是新的 Round）
+ * - VOIDED           : 用户回到某一阶段改方向，这一轮作废（终态，记录保留）
+ */
+export const RoundState = z.enum(["DRAFT", "RUNNING", "PAUSED", "AWAITING_SUMMARY", "SUMMARIZING", "SUMMARIZED", "VOIDED"]);
+export type RoundState = z.infer<typeof RoundState>;
+
+export const ROUND_TRANSITIONS: Readonly<Record<RoundState, readonly RoundState[]>> = {
+  DRAFT: ["RUNNING", "VOIDED"],
+  RUNNING: ["PAUSED", "AWAITING_SUMMARY", "VOIDED"],
+  PAUSED: ["RUNNING", "AWAITING_SUMMARY", "VOIDED"],
+  AWAITING_SUMMARY: ["SUMMARIZING", "VOIDED"],
+  // 汇总失败（失败 / 超时 / 缺席）回到 AWAITING_SUMMARY，可以换人或重试
+  SUMMARIZING: ["SUMMARIZED", "AWAITING_SUMMARY", "VOIDED"],
+  SUMMARIZED: [],
+  VOIDED: [],
+};
+
+/**
+ * 方案版本的状态。版本链只增不改：修改 = 新版本。
+ * - DRAFT      : 汇总者或用户起草，等用户确认
+ * - CURRENT    : 用户确认的当前版本（每个议题最多一个）
+ * - FINAL      : 用户盖章定稿（终态）。以后发现漏了，从它派生一个新的 DRAFT
+ * - SUPERSEDED : 被更新的版本取代，或草稿被放弃（终态）
+ */
+export const PlanState = z.enum(["DRAFT", "CURRENT", "FINAL", "SUPERSEDED"]);
+export type PlanState = z.infer<typeof PlanState>;
+
+export const PLAN_TRANSITIONS: Readonly<Record<PlanState, readonly PlanState[]>> = {
+  DRAFT: ["CURRENT", "SUPERSEDED"],
+  CURRENT: ["FINAL", "SUPERSEDED"],
+  FINAL: [],
+  SUPERSEDED: [],
+};
+
+/**
+ * 一个人在一轮里的一次发言（Turn）的结局。Run 的状态机不变，Turn 只是给讨论用的标签：
+ * 同一个人被打断后重新回答，是同一轮里的两个 Turn。
+ */
+export const TurnOutcome = z.enum([
+  "pending",            // 已生成内容，等盖章
+  "running",
+  "answered",           // Run COMPLETED，且有正式回答
+  "interrupted",        // 用户打断（会有一个新 Turn 接着）
+  "round_ended",        // 用户点「结束本轮」时还没答完
+  "paused",             // 用户暂停时还没答完（恢复后会有新 Turn）
+  "absent_quota",       // Run FAILED(quota_exhausted)：缺席（额度）
+  "timed_out",
+  "failed",             // 其他失败，可以单独重试
+  "rejected",           // 用户没有盖章（拒绝了这批）
+]);
+export type TurnOutcome = z.infer<typeof TurnOutcome>;
+
+export const TERMINAL_TURN_OUTCOMES = [
+  "answered", "interrupted", "round_ended", "paused", "absent_quota", "timed_out", "failed", "rejected",
+] as const satisfies readonly TurnOutcome[];
+
 export const canTransition = <S extends string>(
   table: Readonly<Record<S, readonly S[]>>,
   from: S,

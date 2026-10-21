@@ -4,9 +4,11 @@ import {
   CommitSha,
   IsoTimestamp,
   prefixedId,
+  RoundId,
   RunId,
   Sha256Hex,
   SnapshotId,
+  TurnId,
 } from "./common";
 import { FailureReason } from "./agent-event";
 import { ApprovalState, RunState, RunSubstate } from "./state-machines";
@@ -51,6 +53,32 @@ export const Message = z.discriminatedUnion("kind", [
   z.object({ ...messageBase, kind: z.literal("source_input"), sourceAgent: AgentName }),
   /** Reviewer 的输出，一定属于某个 run（AC-8） */
   z.object({ ...messageBase, kind: z.literal("reviewer_output"), sourceAgent: AgentName, runId: RunId }),
+
+  // ---- 讨论室（ADR-002 / C-20）。以下三种只出现在讨论议题里
+  /** 用户的议题或插话（「只发言」不会发给任何 Agent）。roundId 为 null 表示在两轮之间说的 */
+  z.object({ ...messageBase, kind: z.literal("human_note"), roundId: RoundId.nullable() }),
+  /**
+   * Agent 在某一轮的正式回答。只在 Turn 结局为 answered 时写入，和 Run 的终态同一事务。
+   * onBehalfOf 非 null 表示替补代答（标「代 X」），汇总时单独一栏、不算票
+   */
+  z.object({
+    ...messageBase,
+    kind: z.literal("agent_reply"),
+    sourceAgent: AgentName,
+    onBehalfOf: AgentName.nullable(),
+    roundId: RoundId,
+    turnId: TurnId,
+    runId: RunId,
+  }),
+  /** 汇总者的汇总全文。结构化部分（谁同意了什么）在 RoundSummary 里 */
+  z.object({
+    ...messageBase,
+    kind: z.literal("summary"),
+    sourceAgent: AgentName,
+    roundId: RoundId,
+    turnId: TurnId,
+    runId: RunId,
+  }),
 ]);
 export type Message = z.infer<typeof Message>;
 
