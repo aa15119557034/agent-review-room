@@ -445,7 +445,10 @@ export const COMMANDS = {
     "author",
   ),
 
-  /** 盖章定稿：CURRENT → FINAL。expectedContentHash 和 Snapshot 一样防"看的是旧版本" */
+  /**
+   * 盖章定稿：CURRENT → FINAL。expectedContentHash 和 Snapshot 一样防"看的是旧版本"。
+   * 这个议题已经有 FINAL（之前定过稿、后来派生出新版本）时，旧的 FINAL 在同一事务里变成 SUPERSEDED（C-26）
+   */
   "plan.finalize": def(
     z.object({ type: z.literal("plan.finalize"), planVersionId: PlanVersionId, expectedContentHash: Sha256Hex }),
     PlanVersion,

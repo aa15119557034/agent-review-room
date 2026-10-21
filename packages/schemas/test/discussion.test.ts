@@ -62,9 +62,10 @@ describe("round state machine (ADR-002 canvas 0-B)", () => {
 });
 
 describe("plan version state machine", () => {
-  it("FINAL and SUPERSEDED are terminal; a draft must be confirmed before it can be finalized", () => {
-    assert.deepEqual(PLAN_TRANSITIONS.FINAL, []);
+  it("SUPERSEDED is terminal; FINAL only leaves when a derived version is finalized; a draft must be confirmed first", () => {
+    assert.deepEqual(PLAN_TRANSITIONS.FINAL, ["SUPERSEDED"]);
     assert.deepEqual(PLAN_TRANSITIONS.SUPERSEDED, []);
+    assert.ok(!canTransition(PLAN_TRANSITIONS, "FINAL", "CURRENT"), "a finalized plan is never edited back");
     assert.ok(!canTransition(PLAN_TRANSITIONS, "DRAFT", "FINAL"));
     assert.ok(canTransition(PLAN_TRANSITIONS, "CURRENT", "FINAL"));
     for (const s of PlanState.options) assert.ok(reachableTerminal(PLAN_TRANSITIONS, s, ["FINAL", "SUPERSEDED"]), s);
