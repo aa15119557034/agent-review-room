@@ -2121,3 +2121,68 @@ button.stage:hover {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* ---------------------------------------------------------------- C-27 节点与参与者 */
+.node-editor,
+.agent-editor {
+  margin: 0.75rem 0 0;
+  padding: 0.75rem 0.875rem;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--sheet);
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+}
+.agent-editor {
+  border-left-width: 4px;
+}
+.node-editor legend,
+.agent-editor legend {
+  padding: 0 0.375rem;
+  font-weight: 600;
+}
+.node-id {
+  font-family: var(--font-text);
+  font-size: var(--size-s);
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+.node-token {
+  margin-left: 0.5rem;
+  font-size: var(--size-s);
+  font-weight: 400;
+  color: var(--wait);
+}
+.node-token[data-ok="true"] {
+  color: var(--good);
+}
+.node-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 0.5rem 0.75rem;
+}
+.node-fields label,
+.agent-editor .field-label {
+  display: grid;
+  gap: 0.25rem;
+  font-size: var(--size-s);
+  color: var(--ink-soft);
+}
+.node-fields .settings-input {
+  width: 100%;
+  min-width: 0;
+}
+.node-fields input[type="color"] {
+  min-height: 2rem;
+  width: 3.5rem;
+}
+.settings .settings-form + .settings-form {
+  margin-top: 1.75rem;
+}
+.agent-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  font-size: var(--size-s);
+}

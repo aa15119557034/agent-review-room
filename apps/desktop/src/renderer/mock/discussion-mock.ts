@@ -97,7 +97,7 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
     agents: structuredClone(SEED_AGENTS),
     nodes: [
       { id: "user-pc", label: "你的电脑", baseUrl: "http://192.168.190.10:7420", tokenConfigured: true },
-      { id: "controller-local", label: "主控机（本机）", baseUrl: "http://127.0.0.1:7421", tokenConfigured: true },
+      { id: "controller-local", label: "主控机（本机）", baseUrl: "http://127.0.0.1:7420", tokenConfigured: true },
     ] as NodeInfo[],
     rounds: [] as Round[],
     batches: [] as ApprovalBatch[],
@@ -417,7 +417,9 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
   const commands = {
     async "node.upsert"(req: any) {
       const existing = d.nodes.find((n) => n.id === req.id);
-      const n: NodeInfo = { id: req.id, label: req.label, baseUrl: req.baseUrl, tokenConfigured: req.token !== undefined || (existing?.tokenConfigured ?? false) };
+      // 和 D-22c 一致：地址变了又没给新 Token，旧 Token 作废
+      const keep = existing !== undefined && existing.baseUrl === req.baseUrl && existing.tokenConfigured;
+      const n: NodeInfo = { id: req.id, label: req.label, baseUrl: req.baseUrl, tokenConfigured: req.token !== undefined || keep };
       d.nodes = [...d.nodes.filter((x) => x.id !== req.id), n];
       return n;
     },
@@ -435,8 +437,16 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
     },
 
     async "agent.update"(req: any) {
-      const a = agent(req.id);
       const { type: _t, id: _i, ...patch } = req;
+      // 和 D-22e 一致：不存在就新建，新建必须给名字和颜色
+      if (!d.agents.some((x) => x.id === req.id)) {
+        if (!req.displayName || !req.color) throw new MockError("validation_failed", "新建参与者需要名字和颜色");
+        d.agents.push({
+          id: req.id, displayName: req.displayName, color: req.color, avatarRef: null, roleNote: "",
+          canDiscuss: true, canSummarize: false, canExecute: false, nodeId: null, profileId: null, pausedByUser: false, substitute: null,
+        });
+      }
+      const a = agent(req.id);
       if (patch.substitute !== undefined && patch.substitute !== null && patch.substitute === a.id) {
         throw new MockError("validation_failed", "不能当自己的替补");
       }
