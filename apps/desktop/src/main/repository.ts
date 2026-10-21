@@ -1,6 +1,20 @@
 import { assemblePrompt } from "@room/core";
 import { approveAndCreateRun, type RunRow, type SqliteDatabase, ulid, type WriteQueue, writeTransaction } from "@room/db";
-import type { Approval, Contribution, Message, Project, PromptSnapshot, Run } from "@room/schemas";
+import type {
+  AgentProfile,
+  Approval,
+  ApprovalBatch,
+  BatchItem,
+  Contribution,
+  Message,
+  PlanVersion,
+  Project,
+  PromptSnapshot,
+  Round,
+  RoundSummary,
+  Run,
+  Turn,
+} from "@room/schemas";
 
 /**
  * 控制面的数据读写（D-07）。
@@ -32,10 +46,36 @@ const toMessage = (row: Record<string, unknown>): Message => {
     projectId: row["project_id"] as string,
     content: row["content"] as string,
     createdAt: row["created_at"] as string,
-    sourceAgent: row["source_agent"] as string,
   };
-  if (row["kind"] === "reviewer_output") return { ...base, kind: "reviewer_output", runId: row["run_id"] as string };
-  return { ...base, kind: "source_input" };
+  const kind = row["kind"];
+  if (kind === "reviewer_output") {
+    return { ...base, kind, sourceAgent: row["source_agent"] as string, runId: row["run_id"] as string };
+  }
+  if (kind === "human_note") {
+    return { ...base, kind, roundId: (row["round_id"] as string | null) ?? null };
+  }
+  if (kind === "agent_reply") {
+    return {
+      ...base,
+      kind,
+      sourceAgent: row["source_agent"] as string,
+      onBehalfOf: (row["on_behalf_of"] as string | null) ?? null,
+      roundId: row["round_id"] as string,
+      turnId: row["turn_id"] as string,
+      runId: row["run_id"] as string,
+    };
+  }
+  if (kind === "summary") {
+    return {
+      ...base,
+      kind,
+      sourceAgent: row["source_agent"] as string,
+      roundId: row["round_id"] as string,
+      turnId: row["turn_id"] as string,
+      runId: row["run_id"] as string,
+    };
+  }
+  return { ...base, kind: "source_input", sourceAgent: row["source_agent"] as string };
 };
 
 const toContribution = (row: Record<string, unknown>): Contribution => ({
@@ -92,6 +132,109 @@ const toRun = (row: RunRow): Run => ({
   createdAt: row.created_at,
   startedAt: row.started_at,
   finishedAt: row.finished_at,
+});
+
+
+const toRound = (row: Record<string, unknown>): Round => ({
+  id: row["id"] as string,
+  projectId: row["project_id"] as string,
+  index: row["round_index"] as number,
+  state: row["state"] as Round["state"],
+  task: row["task"] as string,
+  taskSource: row["task_source"] as Round["taskSource"],
+  recipients: JSON.parse(row["recipients"] as string) as string[],
+  planVersionId: (row["plan_version_id"] as string | null) ?? null,
+  historyMode: row["history_mode"] as Round["historyMode"],
+  voidReason: (row["void_reason"] as string | null) ?? null,
+  activeMs: row["active_ms"] as number,
+  createdAt: row["created_at"] as string,
+  startedAt: (row["started_at"] as string | null) ?? null,
+  finishedAt: (row["finished_at"] as string | null) ?? null,
+});
+
+const toBatchItem = (row: Record<string, unknown>): BatchItem => ({
+  recipient: row["recipient"] as string,
+  onBehalfOf: (row["on_behalf_of"] as string | null) ?? null,
+  approvalId: row["approval_id"] as string,
+  snapshotId: row["snapshot_id"] as string,
+  contentHash: row["content_hash"] as string,
+  differsFromOthers: row["differs_from_others"] === 1,
+  tokenEstimate: row["token_estimate"] as number,
+});
+
+const toBatch = (row: Record<string, unknown>, items: BatchItem[]): ApprovalBatch => ({
+  id: row["id"] as string,
+  projectId: row["project_id"] as string,
+  roundId: row["round_id"] as string,
+  kind: row["kind"] as ApprovalBatch["kind"],
+  state: row["state"] as ApprovalBatch["state"],
+  items,
+  compressedRounds: JSON.parse(row["compressed_rounds"] as string) as ApprovalBatch["compressedRounds"],
+  decidedVia: (row["decided_via"] as ApprovalBatch["decidedVia"]) ?? null,
+  createdAt: row["created_at"] as string,
+  decidedAt: (row["decided_at"] as string | null) ?? null,
+});
+
+const toTurn = (row: Record<string, unknown>): Turn => ({
+  id: row["id"] as string,
+  roundId: row["round_id"] as string,
+  batchId: row["batch_id"] as string,
+  agent: row["agent"] as string,
+  onBehalfOf: (row["on_behalf_of"] as string | null) ?? null,
+  isSummary: row["is_summary"] === 1,
+  approvalId: row["approval_id"] as string,
+  runId: (row["run_id"] as string | null) ?? null,
+  outcome: row["outcome"] as Turn["outcome"],
+  partialText: (row["partial_text"] as string | null) ?? null,
+  replyMessageId: (row["reply_message_id"] as string | null) ?? null,
+  supersededBy: (row["superseded_by"] as string | null) ?? null,
+  createdAt: row["created_at"] as string,
+  finishedAt: (row["finished_at"] as string | null) ?? null,
+});
+
+const toRoundSummary = (row: Record<string, unknown>): RoundSummary => ({
+  roundId: row["round_id"] as string,
+  messageId: row["message_id"] as string,
+  summarizer: row["summarizer"] as string,
+  answered: row["answered"] as number,
+  expected: row["expected"] as number,
+  report: row["report"] === null ? null : (JSON.parse(row["report"] as string) as RoundSummary["report"]),
+  planVersionId: (row["plan_version_id"] as string | null) ?? null,
+  createdAt: row["created_at"] as string,
+});
+
+const toPlan = (row: Record<string, unknown>): PlanVersion => ({
+  id: row["id"] as string,
+  projectId: row["project_id"] as string,
+  version: row["version"] as number,
+  state: row["state"] as PlanVersion["state"],
+  content: row["content"] as string,
+  contentHash: row["content_hash"] as string,
+  changeNote: row["change_note"] as string,
+  basedOnRoundId: (row["based_on_round_id"] as string | null) ?? null,
+  parentId: (row["parent_id"] as string | null) ?? null,
+  draftedBy:
+    row["drafted_by_kind"] === "agent"
+      ? { kind: "agent", agent: row["drafted_by_agent"] as string }
+      : { kind: "human" },
+  supersededReason: (row["superseded_reason"] as string | null) ?? null,
+  createdAt: row["created_at"] as string,
+  decidedAt: (row["decided_at"] as string | null) ?? null,
+});
+
+const toAgent = (row: Record<string, unknown>): AgentProfile => ({
+  id: row["id"] as string,
+  displayName: row["display_name"] as string,
+  color: row["color"] as string,
+  avatarRef: (row["avatar_ref"] as string | null) ?? null,
+  roleNote: row["role_note"] as string,
+  canDiscuss: row["can_discuss"] === 1,
+  canSummarize: row["can_summarize"] === 1,
+  canExecute: row["can_execute"] === 1,
+  nodeId: (row["node_id"] as string | null) ?? null,
+  profileId: (row["profile_id"] as string | null) ?? null,
+  pausedByUser: row["paused_by_user"] === 1,
+  substitute: (row["substitute"] as string | null) ?? null,
 });
 
 export interface CreateSnapshotInput {
@@ -373,6 +516,197 @@ export class Repository {
       payload: JSON.parse(r.payload) as unknown,
       ts: r.ts,
     }));
+  }
+
+  // ---------------------------------------------------------------- 讨论室（ADR-002 / C-20）
+
+  getProject(projectId: string): Project {
+    const row = this.#db.prepare("SELECT * FROM projects WHERE id = ?").get(projectId) as Record<string, unknown> | undefined;
+    if (row === undefined) throw new RepositoryError("not_found", "project not found");
+    return toProject(row);
+  }
+
+  getRunRow(runId: string): RunRow {
+    const row = this.#db.prepare("SELECT * FROM runs WHERE id = ?").get(runId) as RunRow | undefined;
+    if (row === undefined) throw new RepositoryError("not_found", "run not found");
+    return row;
+  }
+
+  getMessage(messageId: string): Message {
+    const row = this.#db.prepare("SELECT * FROM messages WHERE id = ?").get(messageId) as Record<string, unknown> | undefined;
+    if (row === undefined) throw new RepositoryError("not_found", "message not found");
+    return toMessage(row);
+  }
+
+  listAgents(): AgentProfile[] {
+    return (this.#db.prepare("SELECT * FROM agents ORDER BY id").all() as Record<string, unknown>[]).map(toAgent);
+  }
+
+  getAgentRow(agentId: string): Record<string, unknown> | undefined {
+    return this.#db.prepare("SELECT * FROM agents WHERE id = ?").get(agentId) as Record<string, unknown> | undefined;
+  }
+
+  getAgent(agentId: string): AgentProfile {
+    const row = this.getAgentRow(agentId);
+    if (row === undefined) throw new RepositoryError("not_found", "agent not found");
+    return toAgent(row);
+  }
+
+  listMessagesByRound(roundId: string): Message[] {
+    return (
+      this.#db.prepare("SELECT * FROM messages WHERE round_id = ? ORDER BY created_at, rowid").all(roundId) as Record<string, unknown>[]
+    ).map(toMessage);
+  }
+
+  getNodeRow(nodeId: string): { id: string; base_url: string | null } | undefined {
+    return this.#db.prepare("SELECT id, base_url FROM nodes WHERE id = ?").get(nodeId) as
+      | { id: string; base_url: string | null }
+      | undefined;
+  }
+
+  nextRoundIndex(projectId: string): number {
+    return (
+      this.#db.prepare("SELECT COALESCE(MAX(round_index), 0) + 1 AS n FROM rounds WHERE project_id = ?").get(projectId) as { n: number }
+    ).n;
+  }
+
+  listRounds(projectId: string): Round[] {
+    return (
+      this.#db.prepare("SELECT * FROM rounds WHERE project_id = ? ORDER BY round_index").all(projectId) as Record<string, unknown>[]
+    ).map(toRound);
+  }
+
+  getRound(roundId: string): Round {
+    const row = this.#db.prepare("SELECT * FROM rounds WHERE id = ?").get(roundId) as Record<string, unknown> | undefined;
+    if (row === undefined) throw new RepositoryError("not_found", "round not found");
+    return toRound(row);
+  }
+
+  listBatchItems(batchId: string): BatchItem[] {
+    return (
+      this.#db.prepare("SELECT * FROM batch_items WHERE batch_id = ? ORDER BY recipient").all(batchId) as Record<string, unknown>[]
+    ).map(toBatchItem);
+  }
+
+  listBatches(roundId: string): ApprovalBatch[] {
+    return (
+      this.#db.prepare("SELECT * FROM batches WHERE round_id = ? ORDER BY created_at").all(roundId) as Record<string, unknown>[]
+    ).map((row) => toBatch(row, this.listBatchItems(row["id"] as string)));
+  }
+
+  getBatch(batchId: string): ApprovalBatch {
+    const row = this.#db.prepare("SELECT * FROM batches WHERE id = ?").get(batchId) as Record<string, unknown> | undefined;
+    if (row === undefined) throw new RepositoryError("not_found", "batch not found");
+    return toBatch(row, this.listBatchItems(batchId));
+  }
+
+  listTurns(roundId: string): Turn[] {
+    return (
+      this.#db.prepare("SELECT * FROM turns WHERE round_id = ? ORDER BY created_at, rowid").all(roundId) as Record<string, unknown>[]
+    ).map(toTurn);
+  }
+
+  listTurnsByBatch(batchId: string): Turn[] {
+    return (
+      this.#db.prepare("SELECT * FROM turns WHERE batch_id = ? ORDER BY created_at, rowid").all(batchId) as Record<string, unknown>[]
+    ).map(toTurn);
+  }
+
+  getTurn(turnId: string): Turn {
+    const row = this.#db.prepare("SELECT * FROM turns WHERE id = ?").get(turnId) as Record<string, unknown> | undefined;
+    if (row === undefined) throw new RepositoryError("not_found", "turn not found");
+    return toTurn(row);
+  }
+
+  getTurnByApproval(approvalId: string): Turn {
+    const row = this.#db.prepare("SELECT * FROM turns WHERE approval_id = ?").get(approvalId) as Record<string, unknown> | undefined;
+    if (row === undefined) throw new RepositoryError("not_found", "turn not found");
+    return toTurn(row);
+  }
+
+  getRoundSummary(roundId: string): RoundSummary | null {
+    const row = this.#db.prepare("SELECT * FROM round_summaries WHERE round_id = ?").get(roundId) as Record<string, unknown> | undefined;
+    return row === undefined ? null : toRoundSummary(row);
+  }
+
+  getPlan(planVersionId: string): PlanVersion {
+    const row = this.#db.prepare("SELECT * FROM plan_versions WHERE id = ?").get(planVersionId) as Record<string, unknown> | undefined;
+    if (row === undefined) throw new RepositoryError("not_found", "plan version not found");
+    return toPlan(row);
+  }
+
+  listPlans(projectId: string): PlanVersion[] {
+    return (
+      this.#db.prepare("SELECT * FROM plan_versions WHERE project_id = ? ORDER BY version").all(projectId) as Record<string, unknown>[]
+    ).map(toPlan);
+  }
+
+  /**
+   * 拼讨论 Prompt 用的历史：只取**已经汇总**的轮（作废 / 未结束的不发给 Agent）。
+   * 每轮带上它的消息、Turn 和汇总，core 自己决定最近两轮发全文、更早的用摘要。
+   */
+  discussionHistory(
+    projectId: string,
+    beforeIndex: number,
+  ): {
+    round: Round;
+    messages: Message[];
+    turns: Turn[];
+    summary: { record: RoundSummary; message: Extract<Message, { kind: "summary" }> } | null;
+  }[] {
+    const rounds = (
+      this.#db
+        .prepare("SELECT * FROM rounds WHERE project_id = ? AND state = 'SUMMARIZED' AND round_index < ? ORDER BY round_index")
+        .all(projectId, beforeIndex) as Record<string, unknown>[]
+    ).map(toRound);
+
+    return rounds.map((round) => {
+      const messages = (
+        this.#db.prepare("SELECT * FROM messages WHERE round_id = ? ORDER BY created_at, rowid").all(round.id) as Record<string, unknown>[]
+      ).map(toMessage);
+      const turns = (
+        this.#db.prepare("SELECT * FROM turns WHERE round_id = ? ORDER BY created_at, rowid").all(round.id) as Record<string, unknown>[]
+      ).map(toTurn);
+      const record = this.getRoundSummary(round.id);
+      const message = record === null ? undefined : messages.find((m) => m.id === record.messageId);
+      return {
+        round,
+        messages,
+        turns,
+        // core 只认 kind = summary 的那条；对不上就当作没有汇总（不让它悄悄变成别的消息）
+        summary: record !== null && message !== undefined && message.kind === "summary" ? { record, message } : null,
+      };
+    });
+  }
+
+  /** 这一轮有没有「正式回答」——没有的话不允许汇总（0-B 补充规则） */
+  countAnsweredTurns(roundId: string): number {
+    return (
+      this.#db
+        .prepare("SELECT count(*) AS n FROM turns WHERE round_id = ? AND is_summary = 0 AND outcome = 'answered'")
+        .get(roundId) as { n: number }
+    ).n;
+  }
+
+  /** 这个 Agent 在这个议题里最新一次发言的结局（用来判断「额度缺席」） */
+  latestTurnOutcome(projectId: string, agentId: string): string | null {
+    const row = this.#db
+      .prepare(
+        "SELECT t.outcome FROM turns t JOIN rounds r ON r.id = t.round_id " +
+          "WHERE r.project_id = ? AND t.agent = ? AND t.is_summary = 0 ORDER BY t.created_at DESC, t.rowid DESC LIMIT 1",
+      )
+      .get(projectId, agentId) as { outcome: string } | undefined;
+    return row?.outcome ?? null;
+  }
+
+  /** 这个人在这一轮当过替补吗（当过就不能当汇总者） */
+  hasTurnAsSubstitute(roundId: string, agentId: string): boolean {
+    const row = this.#db
+      .prepare(
+        "SELECT 1 AS yes FROM turns WHERE round_id = ? AND agent = ? AND on_behalf_of IS NOT NULL AND is_summary = 0 LIMIT 1",
+      )
+      .get(roundId, agentId) as { yes: number } | undefined;
+    return row !== undefined;
   }
 }
 

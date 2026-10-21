@@ -10,7 +10,7 @@ import {
   transitionRun,
   type WriteQueue,
 } from "@room/db";
-import type { AgentAdapter } from "@room/core";
+import { parseSummaryOutput, type AgentAdapter } from "@room/core";
 import type { AgentEvent, ControlEvent } from "@room/schemas";
 
 /**
@@ -37,11 +37,28 @@ export interface RunInput {
   discussion?: { turnId: string; isSummary: boolean };
 }
 
+/**
+ * 讨论室的一次发言收尾后要推给界面的事实。由 main 侧映射成契约对象再 emit
+ * （这里不 import repository，避免 Orchestrator 依赖读模型）。
+ */
+export interface DiscussionSettlement {
+  turnId: string;
+  roundId: string;
+  /** 正式回答 / 汇总的消息；失败或超时为 null */
+  messageId: string | null;
+  /** 只有成功的汇总才有 */
+  roundSummaryId: string | null;
+  /** 汇总顺带产生的方案草稿 */
+  planVersionId: string | null;
+}
+
 export interface OrchestratorDeps {
   readonly db: SqliteDatabase;
   readonly queue: WriteQueue;
-  /** 每次 run 新建一个 adapter，方便用设置里的最新配置 */
-  readonly adapterFactory: () => Promise<AgentAdapter>;
+  /** 每次 run 新建一个 adapter；讨论室的 Run 按 run.adapter_id 选 profile */
+  readonly adapterFactory: (run: RunRow) => Promise<AgentAdapter>;
+  /** 讨论室的 Run 收尾后回调（main 用它推 message.created / turn.updated …） */
+  readonly onDiscussionSettled?: (settlement: DiscussionSettlement) => void;
   readonly emit: (event: ControlEvent) => void;
   readonly getRun: (runId: string) => RunRow | undefined;
   readonly idleTimeoutMs?: number;
@@ -58,6 +75,11 @@ export class RunOrchestrator {
 
   isRunning(runId: string): boolean {
     return this.#active.has(runId);
+  }
+
+  /** 还有几个 Run 在跑（优雅退出 / 测试用） */
+  activeCount(): number {
+    return this.#active.size;
   }
 
   /** 请求取消；真正的终止事件仍由 adapter 产出，保证恰好一个。 */
@@ -89,7 +111,7 @@ export class RunOrchestrator {
       currentState = starting.state;
       this.#deps.emit({ type: "run.updated", run: toContractRun(starting) });
 
-      const adapter = await this.#deps.adapterFactory();
+      const adapter = await this.#deps.adapterFactory(run);
       const session = await adapter.startSession({ projectId: run.project_id });
 
       const running = await transitionRun(this.#deps.db, this.#deps.queue, run.id, "STARTING", "RUNNING", {
@@ -232,17 +254,37 @@ export class RunOrchestrator {
     // 完成了却没有正文：算不完整输出，不能记成"答了但内容为空"
     const emptyAnswer = event.type === "completed" && (completedText === null || completedText === "");
 
+    let settlement: DiscussionSettlement;
     try {
       if (discussion.isSummary) {
-        const result =
-          event.type === "completed" && !emptyAnswer
-            ? ({ kind: "answered", text: completedText ?? "" } as const)
-            : emptyAnswer
-              ? ({ kind: "failed", failureReason: "incomplete_output" } as const)
-            : event.type === "timed_out"
-              ? ({ kind: "timed_out", timeoutKind: event.kind } as const)
-              : failure ?? ({ kind: "failed", failureReason: "internal" } as const);
-        await finishSummaryFromRun(this.#deps.db, this.#deps.queue, { runId, result });
+        let result: Parameters<typeof finishSummaryFromRun>[2]["result"];
+        if (event.type === "completed" && !emptyAnswer) {
+          // 汇总者按约定输出一个 JSON（X-20 的 parseSummaryOutput）。解析失败也保留全文，
+          // 只是没有结构化 report / 方案草稿 —— 0-B 第 11 行允许。
+          const parsed = parseSummaryOutput(completedText ?? "");
+          result = {
+            kind: "answered",
+            text: completedText ?? "",
+            ...(parsed === null ? {} : { report: parsed.report }),
+            ...(parsed === null || parsed.planContent === null
+              ? {}
+              : { plan: { content: parsed.planContent, changeNote: this.#roundChangeNote(discussion.turnId) } }),
+          };
+        } else if (emptyAnswer) {
+          result = { kind: "failed", failureReason: "incomplete_output" };
+        } else if (event.type === "timed_out") {
+          result = { kind: "timed_out", timeoutKind: event.kind };
+        } else {
+          result = failure ?? { kind: "failed", failureReason: "internal" };
+        }
+        const finished = await finishSummaryFromRun(this.#deps.db, this.#deps.queue, { runId, result });
+        settlement = {
+          turnId: finished.turnId,
+          roundId: finished.roundId,
+          messageId: finished.messageId,
+          roundSummaryId: finished.roundSummaryId,
+          planVersionId: finished.planVersionId,
+        };
       } else {
         const terminal =
           event.type === "completed" && !emptyAnswer
@@ -254,7 +296,14 @@ export class RunOrchestrator {
               : event.type === "cancelled"
                 ? ({ kind: "interrupted" } as const)
                 : failure ?? ({ kind: "failed", failureReason: "internal" } as const);
-        await finishTurnFromRun(this.#deps.db, this.#deps.queue, { runId, terminal });
+        const finished = await finishTurnFromRun(this.#deps.db, this.#deps.queue, { runId, terminal });
+        settlement = {
+          turnId: finished.turnId,
+          roundId: finished.roundId,
+          messageId: finished.messageId,
+          roundSummaryId: null,
+          planVersionId: null,
+        };
       }
     } catch (error) {
       // 暂停 / 结束本轮 / 打断已经把这个 Turn 或 Run 结掉了，这就是迟到结果
@@ -264,6 +313,9 @@ export class RunOrchestrator {
       }
       throw error;
     }
+
+    // 讨论室自己的推送（message.created / turn.updated / round.updated / summary.created / plan.updated）
+    this.#deps.onDiscussionSettled?.(settlement);
 
     const current = this.#deps.getRun(runId);
     if (current !== undefined) this.#deps.emit({ type: "run.updated", run: toContractRun(current) });
@@ -277,6 +329,14 @@ export class RunOrchestrator {
         event: { ...(JSON.parse(events.payload) as object), eventId: events.eventId, runId, seq: events.seq, ts: events.ts } as AgentEvent,
       });
     }
+  }
+
+  /** 汇总产生的方案草稿的变化说明（1A 不做 diff，只写它来自哪一轮） */
+  #roundChangeNote(turnId: string): string {
+    const row = this.#deps.db
+      .prepare("SELECT r.round_index AS round_index FROM turns t JOIN rounds r ON r.id = t.round_id WHERE t.id = ?")
+      .get(turnId) as { round_index: number } | undefined;
+    return row === undefined ? "由汇总生成" : `由第 ${row.round_index} 轮汇总生成`;
   }
 }
 
