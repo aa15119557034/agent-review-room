@@ -232,6 +232,23 @@ describe("discussion mock follows canvas 0-B", () => {
     assert.equal(later.batch, null);
   });
 
+  it("summary counts people, not turns: a rejected follow-up does not undo an earlier answer", async () => {
+    const { cmd, q } = setup();
+    const pid = await newTopic(cmd);
+    const { round, batch } = await cmd<{ round: Round; batch: ApprovalBatch }>(draftReq(pid));
+    await cmd(stamp(batch));
+    await until(async () => (await q<{ round: Round }>({ type: "rounds.get", roundId: round.id })).round.state === "AWAITING_SUMMARY");
+    const { batch: only } = await cmd<{ batch: ApprovalBatch }>({
+      type: "round.supplement", roundId: round.id, content: "再问一句", mode: "only", targets: ["codex"],
+    });
+    await cmd({ type: "batch.reject", batchId: only.id, reason: "算了" });
+    const sum = await cmd<ApprovalBatch>({ type: "round.summarize", roundId: round.id, summarizer: "claude" });
+    await cmd(stamp(sum));
+    await until(async () => (await q<{ round: Round }>({ type: "rounds.get", roundId: round.id })).round.state === "SUMMARIZED");
+    const got = await q<{ summary: { answered: number; expected: number } }>({ type: "rounds.get", roundId: round.id });
+    assert.deepEqual([got.summary.answered, got.summary.expected], [2, 2]);
+  });
+
   it("void (改方向): round VOIDED with reason, records kept", async () => {
     const { cmd, q } = setup({ tickMs: 20 });
     const pid = await newTopic(cmd);
