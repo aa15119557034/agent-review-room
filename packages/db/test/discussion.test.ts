@@ -298,3 +298,62 @@ describe("approveBatch：按批次种类转换这一轮", () => {
     f.db.close();
   });
 });
+
+describe("approveBatch：这种批次能不能从当前状态出发", () => {
+  it("resume 在 AWAITING_SUMMARY 被拒（表里允许转 RUNNING，但语义上只能从 PAUSED）", async () => {
+    const f = await seedBatch(["deepseek"], "resume", false);
+    f.db.prepare("UPDATE rounds SET state = 'AWAITING_SUMMARY' WHERE id = ?").run(f.roundId);
+    await createDraftTurns(f.db, f.queue, f.batchId);
+
+    await assert.rejects(
+      () =>
+        approveBatch(f.db, f.queue, {
+          batchId: f.batchId,
+          items: f.items.map((item) => ({ approvalId: item.approvalId, expectedContentHash: item.contentHash })),
+          via: "desktop",
+        }),
+      (error: unknown) => error instanceof BatchApproveError && error.code === "round_transition_invalid",
+    );
+    assert.equal(count(f.db, "SELECT count(*) AS n FROM runs"), 0);
+    assert.equal(
+      (f.db.prepare("SELECT state FROM rounds WHERE id = ?").get(f.roundId) as { state: string }).state,
+      "AWAITING_SUMMARY",
+    );
+    f.db.close();
+  });
+
+  it("summary 在已经 SUMMARIZING 时再盖一次被拒（不能有两个汇总在跑）", async () => {
+    const f = await seedBatch(["claude"], "summary", false);
+    f.db.prepare("UPDATE rounds SET state = 'SUMMARIZING' WHERE id = ?").run(f.roundId);
+    await createDraftTurns(f.db, f.queue, f.batchId);
+
+    await assert.rejects(
+      () =>
+        approveBatch(f.db, f.queue, {
+          batchId: f.batchId,
+          items: f.items.map((item) => ({ approvalId: item.approvalId, expectedContentHash: item.contentHash })),
+          via: "desktop",
+        }),
+      (error: unknown) => error instanceof BatchApproveError && error.code === "round_transition_invalid",
+    );
+    assert.equal(count(f.db, "SELECT count(*) AS n FROM runs"), 0);
+    f.db.close();
+  });
+
+  it("initial 在 PAUSED 被拒（那时应该走 resume）", async () => {
+    const f = await seedBatch(["deepseek"], "initial", false);
+    f.db.prepare("UPDATE rounds SET state = 'PAUSED' WHERE id = ?").run(f.roundId);
+    await createDraftTurns(f.db, f.queue, f.batchId);
+
+    await assert.rejects(
+      () =>
+        approveBatch(f.db, f.queue, {
+          batchId: f.batchId,
+          items: f.items.map((item) => ({ approvalId: item.approvalId, expectedContentHash: item.contentHash })),
+          via: "desktop",
+        }),
+      (error: unknown) => error instanceof BatchApproveError && error.code === "round_transition_invalid",
+    );
+    f.db.close();
+  });
+});

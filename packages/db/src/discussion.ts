@@ -108,6 +108,21 @@ const ROUND_TARGET: Readonly<Record<string, RoundState>> = {
 };
 
 /**
+ * 这种批次**只能从哪些状态出发**。只查 ROUND_TRANSITIONS 不够：那张表回答的是
+ * 「X 能不能变成 Y」，会放过语义上不该发生的事——
+ * - `resume` 在 AWAITING_SUMMARY 盖章（表里允许 AWAITING_SUMMARY → RUNNING，但 resume 只能从 PAUSED）
+ * - `initial` 在 PAUSED 盖章（PAUSED → RUNNING 合法，但那时应该用 resume）
+ * - `summary` 在已经 SUMMARIZING 时再盖一次（会变成两个汇总同时在跑）
+ */
+const ALLOWED_FROM: Readonly<Record<string, readonly RoundState[]>> = {
+  initial: ["DRAFT"],
+  resume: ["PAUSED"],
+  supplement: ["RUNNING", "AWAITING_SUMMARY"],
+  retry: ["RUNNING", "AWAITING_SUMMARY"],
+  summary: ["AWAITING_SUMMARY"],
+};
+
+/**
  * 起草：为批次里每个收件人建一条 `pending` 的 Turn（还没有 Run）。
  *
  * 契约要求 Turn 在盖章之前就存在：确认页要显示「谁会被发」，拒盖时要能标成 `rejected`，
@@ -156,9 +171,9 @@ export function createDraftTurns(db: SqliteDatabase, queue: WriteQueue, batchId:
  * 一次事务里做完五件事：
  * 1. 每个 Approval 从 READY_FOR_REVIEW 变 APPROVED（CAS，改不动就整体回滚）
  * 2. 每个收件人一个 Run（QUEUED）
- * 3. 每个收件人一个 Turn（running，指向 Run）
+ * 3. 起草时建好的那条 `pending` Turn 改成 `running` 并挂上 run_id（不是新建）
  * 4. Batch 变 APPROVED
- * 5. Round 从 DRAFT 变 RUNNING
+ * 5. Round 按批次种类转到目标状态（见 ROUND_TARGET / ALLOWED_FROM）
  *
  * 发送前逐个校验指纹：库里存的 content_hash、调用方传上来的 expectedContentHash、
  * 以及用 snapshot.content 现算的 sha256，三者必须一致。
@@ -183,8 +198,15 @@ export function approveBatch(
     if (round === undefined) throw new BatchApproveError("batch_not_found", "round not found");
 
     const target = ROUND_TARGET[batch.kind];
-    if (target === undefined) {
+    const allowedFrom = ALLOWED_FROM[batch.kind];
+    if (target === undefined || allowedFrom === undefined) {
       throw new BatchApproveError("round_transition_invalid", `unknown batch kind ${batch.kind}`);
+    }
+    if (!allowedFrom.includes(round.state as RoundState)) {
+      throw new BatchApproveError(
+        "round_transition_invalid",
+        `${batch.kind} cannot start from ${round.state} (allowed: ${allowedFrom.join(", ")})`,
+      );
     }
     if (round.state !== target && !canTransition(ROUND_TRANSITIONS, round.state as RoundState, target)) {
       throw new BatchApproveError("round_transition_invalid", `${round.state} -> ${target} (${batch.kind}) is not allowed`);
