@@ -110,16 +110,19 @@ export function resolveRunTarget(
   settings: SettingsStore,
   run: RunRow,
 ): RunTarget {
-  const agent = db
-    .prepare(
-      "SELECT a.id AS agent, a.node_id AS node_id, a.profile_id AS profile_id " +
-        "FROM turns t JOIN agents a ON a.id = t.agent WHERE t.run_id = ?",
-    )
-    .get(run.id) as { agent: string; node_id: string | null; profile_id: string | null } | undefined;
+  // 先看有没有 Turn：有 Turn 的 Run 一定是讨论室的，必须按 agent -> node 走，
+  // 不能因为查不到 agent 就悄悄回落到 Phase 0 的 Reviewer 设置
+  const turn = db.prepare("SELECT agent FROM turns WHERE run_id = ?").get(run.id) as { agent: string } | undefined;
 
-  if (agent !== undefined) {
+  if (turn !== undefined) {
+    const agent = db.prepare("SELECT node_id, profile_id FROM agents WHERE id = ?").get(turn.agent) as
+      | { node_id: string | null; profile_id: string | null }
+      | undefined;
+    if (agent === undefined) {
+      throw new Error("参与者 " + turn.agent + " 还没有配置");
+    }
     if (agent.node_id === null || agent.profile_id === null) {
-      throw new Error("参与者 " + agent.agent + " 还没有配置节点或 profile");
+      throw new Error("参与者 " + turn.agent + " 还没有配置节点或 profile");
     }
     const node = db.prepare("SELECT base_url FROM nodes WHERE id = ?").get(agent.node_id) as
       | { base_url: string | null }
@@ -130,6 +133,9 @@ export function resolveRunTarget(
     const credential = settings.getNode(agent.node_id);
     if (credential === null) {
       throw new Error("节点 " + agent.node_id + " 的 Token 还没有配置");
+    }
+    if (credential.baseUrl !== node.base_url) {
+      throw new Error("节点 " + agent.node_id + " 的地址和保存的 Token 不一致，请重新配置这个节点");
     }
     return {
       nodeId: agent.node_id,

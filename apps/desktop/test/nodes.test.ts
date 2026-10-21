@@ -176,6 +176,69 @@ describe("node.upsert / nodes.list / node.test", () => {
   });
 });
 
+describe("地址变了又没给新 Token：旧 Token 必须清掉", () => {
+  it("node.upsert：清空该节点的 Token，tokenConfigured 变回 false", async () => {
+    const env = makeEnv();
+    const service = new NodeService({
+      repo: env.repo,
+      settings: env.settings,
+      probe: async () => ({ reachable: false, error: "unreachable", message: "not used" }),
+    });
+    await service.upsert({ type: "node.upsert", id: "controller-local", label: "主控机", baseUrl: NODE_URL, token: TOKEN });
+    assert.equal(env.settings.getNode("controller-local")?.token, TOKEN);
+
+    // 地址改了、没给新 Token
+    const moved = await service.upsert({
+      type: "node.upsert",
+      id: "controller-local",
+      label: "主控机",
+      baseUrl: "http://127.0.0.1:7777",
+    });
+
+    assert.equal(moved.tokenConfigured, false);
+    assert.equal(env.settings.getNode("controller-local"), null, "旧 Token 不能跟着新地址走");
+    assert.equal(env.settings.hasNodeToken("controller-local", "http://127.0.0.1:7777"), false);
+
+    // 重新填 Token 后恢复
+    const filled = await service.upsert({
+      type: "node.upsert",
+      id: "controller-local",
+      label: "主控机",
+      baseUrl: "http://127.0.0.1:7777",
+      token: TOKEN,
+    });
+    assert.equal(filled.tokenConfigured, true);
+    env.db.close();
+  });
+
+  it("updateReviewerNode：同样清空（user-pc 也一起清）", () => {
+    const env = makeEnv();
+    env.settings.updateReviewerNode({ baseUrl: LEGACY_URL, profileId: "claude-review", token: TOKEN });
+
+    const moved = env.settings.updateReviewerNode({ baseUrl: "http://127.0.0.1:8888", profileId: "claude-review" });
+
+    assert.equal(moved.tokenConfigured, false);
+    assert.equal(env.settings.getToken(), null);
+    assert.equal(env.settings.getNode("user-pc"), null, "user-pc 同步清空");
+    env.db.close();
+  });
+
+  it("地址不变时不传 Token：保留原来的 Token", async () => {
+    const env = makeEnv();
+    const service = new NodeService({
+      repo: env.repo,
+      settings: env.settings,
+      probe: async () => ({ reachable: false, error: "unreachable", message: "not used" }),
+    });
+    await service.upsert({ type: "node.upsert", id: "controller-local", label: "主控机", baseUrl: NODE_URL, token: TOKEN });
+
+    const saved = await service.upsert({ type: "node.upsert", id: "controller-local", label: "新名字", baseUrl: NODE_URL });
+    assert.equal(saved.tokenConfigured, true);
+    assert.equal(env.settings.getNode("controller-local")?.token, TOKEN);
+    env.db.close();
+  });
+});
+
 describe("resolveRunTarget：Run 该连哪个节点", () => {
   async function seedRun(env: Env, adapterId: string, options: { withTurn: boolean; saveToken: boolean }) {
     const now = new Date().toISOString();
@@ -268,6 +331,26 @@ describe("resolveRunTarget：Run 该连哪个节点", () => {
     const run = await seedRun(env, "remote:deepseek-discuss", { withTurn: true, saveToken: false });
 
     assert.throws(() => resolveRunTarget(env.db, env.settings, run), /Token/);
+    env.db.close();
+  });
+
+  it("Turn 存在但查不到 agent：报错，不回落到 Phase 0 的设置", async () => {
+    const env = makeEnv();
+    const run = await seedRun(env, "remote:deepseek-discuss", { withTurn: true, saveToken: true });
+    // Reviewer 设置是配好的：如果错误地回落到 Phase 0，这个用例就会「成功」
+    env.db.prepare("DELETE FROM agents WHERE id = 'deepseek'").run();
+
+    assert.throws(() => resolveRunTarget(env.db, env.settings, run), /参与者 deepseek/);
+    env.db.close();
+  });
+
+  it("节点表的地址和保存的 Token 不一致：直接报错", async () => {
+    const env = makeEnv();
+    const run = await seedRun(env, "remote:deepseek-discuss", { withTurn: true, saveToken: true });
+    // 只改设置文件里的地址（模拟 DB 与设置不一致）
+    env.settings.upsertNode("controller-local", { baseUrl: "http://127.0.0.1:7777", token: TOKEN });
+
+    assert.throws(() => resolveRunTarget(env.db, env.settings, run), /地址和保存的 Token 不一致/);
     env.db.close();
   });
 });

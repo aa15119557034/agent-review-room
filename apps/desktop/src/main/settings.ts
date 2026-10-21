@@ -131,7 +131,8 @@ export class SettingsStore {
   }
 
   updateReviewerNode(input: UpdateReviewerNodeInput): ReviewerNodeSettings {
-    let tokenCipher = this.#data.reviewerNode?.tokenCipher ?? null;
+    const previous = this.#data.reviewerNode;
+    let tokenCipher = previous?.tokenCipher ?? null;
 
     if (input.token !== undefined) {
       if (!this.#safeStorage.isEncryptionAvailable()) {
@@ -141,6 +142,9 @@ export class SettingsStore {
         );
       }
       tokenCipher = this.#safeStorage.encryptString(input.token).toString("base64");
+    } else if (previous !== null && previous.baseUrl !== input.baseUrl) {
+      // 地址变了又没给新 Token：旧 Token 不能跟着新地址走，清掉等用户重填
+      tokenCipher = null;
     }
 
     this.#data = {
@@ -194,7 +198,10 @@ export class SettingsStore {
     }
   }
 
-  /** 保存节点地址；token 不传表示保留原来的 */
+  /**
+   * 保存节点地址。token 不传时：地址没变就保留原来的 Token；
+   * **地址变了就清空**（旧 Token 不能跟着新地址走），tokenConfigured 变回 false。
+   */
   upsertNode(nodeId: string, input: { baseUrl: string; token?: string | undefined }): void {
     const existing = this.#data.nodes[nodeId];
     let tokenCipher = existing?.tokenCipher ?? null;
@@ -207,6 +214,8 @@ export class SettingsStore {
         );
       }
       tokenCipher = this.#safeStorage.encryptString(input.token).toString("base64");
+    } else if (existing !== undefined && existing.baseUrl !== input.baseUrl) {
+      tokenCipher = null;
     }
 
     const reviewer = this.#data.reviewerNode;
