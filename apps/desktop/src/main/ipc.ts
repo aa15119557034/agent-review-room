@@ -213,6 +213,18 @@ export function createDispatcher(deps: IpcDeps) {
       case "round.summarize":
         return deps.discussion.summarize(command);
 
+      case "agent.update":
+        return deps.discussion.updateAgent(command);
+
+      case "batch.reject":
+        return deps.discussion.reject(command);
+
+      case "plan.confirm":
+        return deps.discussion.confirmPlan(command);
+
+      case "plan.finalize":
+        return deps.discussion.finalizePlan(command);
+
       case "node.upsert":
         return deps.nodes.upsert(command);
 
