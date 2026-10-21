@@ -90,7 +90,8 @@ export const ROUND_TRANSITIONS: Readonly<Record<RoundState, readonly RoundState[
  * 方案版本的状态。版本链只增不改：修改 = 新版本。
  * - DRAFT      : 汇总者或用户起草，等用户确认
  * - CURRENT    : 用户确认的当前版本（每个议题最多一个）
- * - FINAL      : 用户盖章定稿（终态）。以后发现漏了，从它派生一个新的 DRAFT
+ * - FINAL      : 用户盖章定稿（每个议题最多一个）。以后发现漏了，从它派生一个新的 DRAFT；
+ *                派生版本定稿时，旧的 FINAL 在同一事务里变成 SUPERSEDED（C-26）
  * - SUPERSEDED : 被更新的版本取代，或草稿被放弃（终态）
  */
 export const PlanState = z.enum(["DRAFT", "CURRENT", "FINAL", "SUPERSEDED"]);
@@ -99,7 +100,8 @@ export type PlanState = z.infer<typeof PlanState>;
 export const PLAN_TRANSITIONS: Readonly<Record<PlanState, readonly PlanState[]>> = {
   DRAFT: ["CURRENT", "SUPERSEDED"],
   CURRENT: ["FINAL", "SUPERSEDED"],
-  FINAL: [],
+  // 只有一种情况会离开 FINAL：从它派生的新版本被定稿（C-26）
+  FINAL: ["SUPERSEDED"],
   SUPERSEDED: [],
 };
 
