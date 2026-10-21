@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { openDatabase, repairInterruptedRuns, WriteQueue } from "@room/db";
 import { HttpRemoteAgentAdapter } from "@room/remote-client";
 import { IPC_CHANNELS, type ControlEvent } from "@room/schemas";
+import { DiscussionService } from "./discussion";
 import { createDispatcher } from "./ipc";
 import { RunOrchestrator } from "./orchestrator";
 import { Repository } from "./repository";
@@ -82,19 +83,28 @@ async function bootstrap(): Promise<void> {
 
   const settings = new SettingsStore(join(userData, "settings.json"), safeStorage);
 
+  let discussion: DiscussionService | null = null;
+
   const orchestrator = new RunOrchestrator({
     db,
     queue,
     emit: broadcast,
     getRun: (runId) => db.prepare("SELECT * FROM runs WHERE id = ?").get(runId) as never,
-    adapterFactory: async () => {
+    // 讨论室的收尾要推 message.created / turn.updated / round.updated …，交给 DiscussionService
+    onDiscussionSettled: (settlement) => discussion?.settled(settlement),
+    adapterFactory: async (run) => {
       const node = settings.get();
       const token = settings.getToken();
       if (node === null || token === null) throw new Error("reviewer node is not configured");
+      // 讨论室的 Run 用收件人自己的 profile（approveBatch 把 adapter_id 记成 remote:<profile>）；
+      // Phase 0 的 Run 记的是 snapshot 的 reviewerAgent。
+      const profileId = run.adapter_id.startsWith("remote:")
+        ? run.adapter_id.slice("remote:".length)
+        : run.adapter_id;
       const adapter = new HttpRemoteAgentAdapter({
         nodeId: "review-node",
         baseUrl: node.baseUrl,
-        profileId: node.profileId,
+        profileId,
         token,
         heartbeatTimeoutMs: 15_000,
         reconnectGraceMs: 30_000,
@@ -105,10 +115,20 @@ async function bootstrap(): Promise<void> {
     },
   });
 
+  discussion = new DiscussionService({
+    db,
+    queue,
+    repo,
+    settings,
+    orchestrator,
+    emit: broadcast,
+  });
+
   const dispatcher = createDispatcher({
     repo,
     settings,
     orchestrator,
+    discussion,
     appVersion: app.getVersion(),
     recoveredRuns: repaired.repaired.length,
     emit: broadcast,

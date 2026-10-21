@@ -13,6 +13,7 @@ import {
   type ControlResult,
   type QueryRequest,
 } from "@room/schemas";
+import { DiscussionError, type DiscussionService } from "./discussion";
 import type { RunOrchestrator } from "./orchestrator";
 import { Repository, RepositoryError } from "./repository";
 import { SettingsError, type SettingsStore } from "./settings";
@@ -28,6 +29,7 @@ export interface IpcDeps {
   readonly repo: Repository;
   readonly settings: SettingsStore;
   readonly orchestrator: RunOrchestrator;
+  readonly discussion: DiscussionService;
   readonly appVersion: string;
   readonly recoveredRuns: number;
   readonly emit: (event: ControlEvent) => void;
@@ -51,6 +53,9 @@ const errorResult = (error: ControlErrorCode, message: string): ControlResult<un
 
 function mapError(error: unknown): ControlResult<unknown> {
   if (error instanceof ControlFailure) {
+    return errorResult(error.code, error.message);
+  }
+  if (error instanceof DiscussionError) {
     return errorResult(error.code, error.message);
   }
   if (error instanceof StaleSnapshotError) {
@@ -196,6 +201,16 @@ export function createDispatcher(deps: IpcDeps) {
         // Phase 0 的 Reviewer 走节点，不产生权限请求
         return {};
 
+      // ---------------------------------------------------------------- 讨论室（D-22 / PR B）
+      case "round.draft":
+        return deps.discussion.draft(command);
+
+      case "batch.approve":
+        return deps.discussion.approve(command);
+
+      case "round.summarize":
+        return deps.discussion.summarize(command);
+
       case "settings.updateReviewerNode":
         return settings.updateReviewerNode({
           baseUrl: command.baseUrl,
@@ -273,6 +288,9 @@ export function createDispatcher(deps: IpcDeps) {
 
       case "runs.list":
         return repo.listRuns(query.projectId, query.limit ?? 20);
+
+      case "agents.list":
+        return repo.listAgents();
 
       case "runs.get":
         return repo.getRun(query.runId);

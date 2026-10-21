@@ -9,6 +9,7 @@ import {
   BatchApproveError,
   createDraftTurns,
   createRoundDraft,
+  createSummaryDraft,
   openDatabase,
   RoundDraftError,
   ulid,
@@ -373,12 +374,11 @@ function draftProject(prefix = "room-db-draft-"): { db: SqliteDatabase; queue: W
 /** 交给 createRoundDraft 的收件人：Prompt 由 core 拼，这里只造和它一样形状的数据 */
 function draftRecipient(
   agent: string,
-  options: { onBehalfOf?: string | null; content?: string; contentHash?: string; differsFromOthers?: boolean } = {},
+  options: { content?: string; contentHash?: string; differsFromOthers?: boolean } = {},
 ): RoundDraftRecipient {
   const content = options.content ?? "发给 " + agent + " 的讨论 Prompt";
   return {
     agent,
-    onBehalfOf: options.onBehalfOf ?? null,
     prompt: {
       content,
       contentHash: options.contentHash ?? sha(content),
@@ -588,11 +588,11 @@ describe("createRoundDraft：起草一轮", () => {
     f.db.close();
   });
 
-  it("替补代答与「只发给他」的标记照抄进 batch_item / Turn", async () => {
+  it("「只发给他」的标记照抄进 batch_item；替补这一片还不写 on_behalf_of", async () => {
     const f = draftProject();
     const { batch } = await createRoundDraft(f.db, f.queue, {
       projectId: f.projectId,
-      recipients: [draftRecipient("claude", { onBehalfOf: "codex", differsFromOthers: true })],
+      recipients: [draftRecipient("claude", { differsFromOthers: true })],
       task: "本轮任务",
       taskSource: "human",
       historyMode: "recent_with_summaries",
@@ -606,7 +606,8 @@ describe("createRoundDraft：起草一轮", () => {
       outcome: string;
     };
     assert.equal(turn.agent, "claude");
-    assert.equal(turn.on_behalf_of, "codex");
+    // 契约的 round.draft 没有 onBehalfOf：替补那一片再做，这里一律 NULL
+    assert.equal(turn.on_behalf_of, null);
     assert.equal(turn.is_summary, 0);
     assert.equal(turn.outcome, "pending");
     const item = f.db.prepare("SELECT recipient, on_behalf_of, differs_from_others FROM batch_items").get() as {
@@ -614,7 +615,93 @@ describe("createRoundDraft：起草一轮", () => {
       on_behalf_of: string | null;
       differs_from_others: number;
     };
-    assert.deepEqual(item, { recipient: "claude", on_behalf_of: "codex", differs_from_others: 1 });
+    assert.deepEqual(item, { recipient: "claude", on_behalf_of: null, differs_from_others: 1 });
+    f.db.close();
+  });
+});
+
+function summaryProject(): { db: SqliteDatabase; queue: WriteQueue; projectId: string; roundId: string } {
+  const f = draftProject("room-db-summary-");
+  const roundId = "rnd_" + ulid();
+  f.db
+    .prepare(
+      "INSERT INTO rounds (id, project_id, round_index, state, task, task_source, recipients, history_mode, created_at) " +
+        "VALUES (?, ?, 1, 'AWAITING_SUMMARY', '本轮任务', 'human', '[\"deepseek\",\"codex\"]', 'recent_with_summaries', ?)",
+    )
+    .run(roundId, f.projectId, NOW);
+  return { ...f, roundId };
+}
+
+describe("createSummaryDraft：给已有的轮加汇总批次", () => {
+  it("AWAITING_SUMMARY 的轮上建 summary 批次，Turn 记 is_summary，轮状态不变", async () => {
+    const f = summaryProject();
+
+    const { batch } = await createSummaryDraft(f.db, f.queue, {
+      roundId: f.roundId,
+      recipients: [draftRecipient("claude")],
+      compressedRounds: [{ roundIndex: 1, summaryMessageId: "msg_0123456789abcdefghijklmn", summarizer: "claude" }],
+    });
+
+    assert.equal(batch.kind, "summary");
+    assert.equal(batch.state, "READY_FOR_REVIEW");
+    assert.equal(batch.round_id, f.roundId);
+    assert.equal(count(f.db, "SELECT count(*) AS n FROM prompt_snapshots"), 1);
+    assert.equal(count(f.db, "SELECT count(*) AS n FROM approvals WHERE state = 'READY_FOR_REVIEW'"), 1);
+    assert.equal(count(f.db, "SELECT count(*) AS n FROM batch_items"), 1);
+    const turn = f.db.prepare("SELECT agent, is_summary, outcome, run_id FROM turns").get() as {
+      agent: string;
+      is_summary: number;
+      outcome: string;
+      run_id: string | null;
+    };
+    assert.deepEqual(turn, { agent: "claude", is_summary: 1, outcome: "pending", run_id: null });
+    // 汇总不改变轮的状态（盖章时才 AWAITING_SUMMARY -> SUMMARIZING）
+    assert.equal(
+      (f.db.prepare("SELECT state FROM rounds WHERE id = ?").get(f.roundId) as { state: string }).state,
+      "AWAITING_SUMMARY",
+    );
+    f.db.close();
+  });
+
+  it("轮不在 AWAITING_SUMMARY 时拒绝，一条都不写", async () => {
+    const f = summaryProject();
+    f.db.prepare("UPDATE rounds SET state = 'RUNNING' WHERE id = ?").run(f.roundId);
+
+    await assert.rejects(
+      () => createSummaryDraft(f.db, f.queue, { roundId: f.roundId, recipients: [draftRecipient("claude")] }),
+      (error: unknown) => error instanceof RoundDraftError && error.code === "round_not_awaiting_summary",
+    );
+    assert.equal(count(f.db, "SELECT count(*) AS n FROM batches"), 0);
+    assert.equal(count(f.db, "SELECT count(*) AS n FROM prompt_snapshots"), 0);
+    f.db.close();
+  });
+
+  it("重新请求汇总：旧的待盖章 summary 批次作废（含 pending Turn），只留新的一张", async () => {
+    const f = summaryProject();
+    const first = await createSummaryDraft(f.db, f.queue, { roundId: f.roundId, recipients: [draftRecipient("claude")] });
+
+    const second = await createSummaryDraft(f.db, f.queue, { roundId: f.roundId, recipients: [draftRecipient("deepseek")] });
+
+    assert.notEqual(second.batch.id, first.batch.id);
+    const firstBatch = f.db.prepare("SELECT state FROM batches WHERE id = ?").get(first.batch.id) as { state: string };
+    assert.equal(firstBatch.state, "CANCELLED");
+    assert.equal(count(f.db, "SELECT count(*) AS n FROM batches WHERE state = 'READY_FOR_REVIEW'"), 1);
+    assert.equal(count(f.db, "SELECT count(*) AS n FROM approvals WHERE state = 'CANCELLED'"), 1);
+    assert.equal(count(f.db, "SELECT count(*) AS n FROM turns WHERE outcome = 'rejected'"), 1);
+    assert.equal(count(f.db, "SELECT count(*) AS n FROM turns WHERE outcome = 'pending'"), 1);
+    f.db.close();
+  });
+
+  it("收件人不是一个就拒绝", async () => {
+    const f = summaryProject();
+    await assert.rejects(
+      () =>
+        createSummaryDraft(f.db, f.queue, {
+          roundId: f.roundId,
+          recipients: [draftRecipient("claude"), draftRecipient("deepseek")],
+        }),
+      (error: unknown) => error instanceof RoundDraftError && error.code === "invalid_input",
+    );
     f.db.close();
   });
 });
