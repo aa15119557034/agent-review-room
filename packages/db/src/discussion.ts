@@ -1,5 +1,13 @@
 import { createHash, randomUUID } from "node:crypto";
-import { canTransition, ROUND_TRANSITIONS, type BatchKind, type RoundState } from "@room/schemas";
+import {
+  canTransition,
+  ROUND_TRANSITIONS,
+  type ApprovalBatch,
+  type BatchKind,
+  type HistoryMode,
+  type RoundState,
+  type TaskSource,
+} from "@room/schemas";
 import type { SqliteDatabase } from "./database";
 import { writeTransaction, type WriteQueue } from "./write-queue";
 
@@ -66,6 +74,10 @@ function ulid(): string {
 
 export const newRunId = (): string => "run_" + ulid();
 export const newTurnId = (): string => "turn_" + ulid();
+export const newRoundId = (): string => "rnd_" + ulid();
+export const newBatchId = (): string => "bat_" + ulid();
+export const newSnapshotId = (): string => "snap_" + ulid();
+export const newApprovalId = (): string => "apr_" + ulid();
 
 interface BatchRow {
   id: string;
@@ -88,6 +100,42 @@ interface ApprovalRow {
   project_id: string;
   snapshot_id: string;
   state: string;
+}
+
+/** 确认页要展示的「压缩了哪几轮」，契约里定义 */
+type CompressedRound = ApprovalBatch["compressedRounds"][number];
+
+/** rounds 的完整库行（createRoundDraft 返回原始行，映射成契约实体是 IPC 的事） */
+export interface RoundRow {
+  id: string;
+  project_id: string;
+  round_index: number;
+  state: RoundState;
+  task: string;
+  task_source: TaskSource;
+  /** JSON 数组文本，和库里一致 */
+  recipients: string;
+  plan_version_id: string | null;
+  history_mode: HistoryMode;
+  void_reason: string | null;
+  active_ms: number;
+  created_at: string;
+  started_at: string | null;
+  finished_at: string | null;
+}
+
+/** batches 的完整库行 */
+export interface ApprovalBatchRow {
+  id: string;
+  project_id: string;
+  round_id: string;
+  kind: BatchKind;
+  state: string;
+  /** JSON 数组文本，和库里一致 */
+  compressed_rounds: string;
+  decided_via: string | null;
+  created_at: string;
+  decided_at: string | null;
 }
 
 /**
@@ -162,6 +210,206 @@ export function createDraftTurns(db: SqliteDatabase, queue: WriteQueue, batchId:
       turnIds.push(turnId);
     }
     return turnIds;
+  });
+}
+
+export type RoundDraftErrorCode = "invalid_input" | "round_active" | "hash_mismatch";
+
+export class RoundDraftError extends Error {
+  readonly code: RoundDraftErrorCode;
+  constructor(code: RoundDraftErrorCode, message: string) {
+    super(message);
+    this.name = "RoundDraftError";
+    this.code = code;
+  }
+}
+
+/**
+ * 一个收件人的 Prompt。**内容由 @room/core 的 assembleDiscussionBatch 拼好再传进来**，
+ * db 不做拼装；这里只核对 contentHash，免得存进去的指纹和内容对不上、盖章时才炸。
+ */
+export interface RoundDraftPrompt {
+  content: string;
+  /** sha256(UTF-8(content))，由调用方算出；db 会再算一次核对 */
+  contentHash: string;
+  /** 不可信边界用的 nonce */
+  nonce: string;
+  /** 拼装器版本，例如 discussion-v2 */
+  adapterVersion: string;
+  tokenEstimate: number;
+  /** 这份内容和同批其他人不一样（只给他一个人的补充、额外信息） */
+  differsFromOthers: boolean;
+}
+
+export interface RoundDraftRecipient {
+  agent: string;
+  /** 替补代答时为被代答的人 */
+  onBehalfOf?: string | null;
+  prompt: RoundDraftPrompt;
+}
+
+export interface CreateRoundDraftInput {
+  projectId: string;
+  recipients: readonly RoundDraftRecipient[];
+  task: string;
+  taskSource: TaskSource;
+  planVersionId?: string | null;
+  historyMode: HistoryMode;
+  /** 讨论记录被压缩的说明，确认页展示 */
+  compressedRounds?: readonly CompressedRound[];
+}
+
+/** 议题里「还没结束」的轮：同一议题同时只允许一个（ux_round_active 兜底） */
+const ACTIVE_ROUND_STATES: readonly RoundState[] = [
+  "DRAFT",
+  "RUNNING",
+  "PAUSED",
+  "AWAITING_SUMMARY",
+  "SUMMARIZING",
+];
+
+/**
+ * 起草一轮（round.draft 的写入部分）：**一个事务**里建出
+ * 一轮 + 每个收件人的 Snapshot / Approval + 一个批次 + 每人的 batch_item 与 pending Turn。
+ *
+ * Turn 在盖章之前就要存在：确认页要显示「谁会被发」，拒盖时标成 rejected，
+ * 盖章时把同一条 Turn 从 pending 改成 running（turns.approval_id 是 UNIQUE）。
+ * 所以这里必须和批次一起建，不能等盖章再补。
+ *
+ * 这里的批次固定是 initial：resume / supplement / retry / summary 都是在**已有的轮**上加批次，
+ * 不走这个入口（它们在 D-22 的 PR B 里做）。
+ */
+export function createRoundDraft(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  input: CreateRoundDraftInput,
+): Promise<{ round: RoundRow; batch: ApprovalBatchRow }> {
+  return writeTransaction(db, queue, () => {
+    const recipients = input.recipients;
+    if (recipients.length < 1 || recipients.length > 8) {
+      throw new RoundDraftError("invalid_input", "a round needs 1-8 recipients");
+    }
+    const seen = new Set<string>();
+    for (const recipient of recipients) {
+      if (seen.has(recipient.agent)) {
+        throw new RoundDraftError("invalid_input", `duplicate recipient ${recipient.agent}`);
+      }
+      seen.add(recipient.agent);
+      if ((recipient.onBehalfOf ?? null) === recipient.agent) {
+        throw new RoundDraftError("invalid_input", `an agent cannot substitute for itself: ${recipient.agent}`);
+      }
+    }
+
+    // 先查一遍是为了给调用方一个能读的错误；并发时由 ux_round_active 唯一索引兜底
+    const active = db
+      .prepare(
+        `SELECT id, state FROM rounds WHERE project_id = ? AND state IN (${ACTIVE_ROUND_STATES.map(() => "?").join(", ")}) LIMIT 1`,
+      )
+      .get(input.projectId, ...ACTIVE_ROUND_STATES) as { id: string; state: string } | undefined;
+    if (active !== undefined) {
+      throw new RoundDraftError("round_active", `round ${active.id} is still ${active.state}`);
+    }
+
+    // 外键只保证方案存在，不保证是同一个议题的
+    if (input.planVersionId !== undefined && input.planVersionId !== null) {
+      const plan = db.prepare("SELECT project_id FROM plan_versions WHERE id = ?").get(input.planVersionId) as
+        | { project_id: string }
+        | undefined;
+      if (plan === undefined || plan.project_id !== input.projectId) {
+        throw new RoundDraftError("invalid_input", `plan ${input.planVersionId} does not belong to this project`);
+      }
+    }
+
+    const createdAt = now();
+    const roundId = newRoundId();
+    const batchId = newBatchId();
+    // 作废的轮也占号，所以取 max + 1 而不是 count + 1
+    const roundIndex = (
+      db.prepare("SELECT COALESCE(MAX(round_index), 0) + 1 AS n FROM rounds WHERE project_id = ?").get(input.projectId) as { n: number }
+    ).n;
+
+    db.prepare(
+      "INSERT INTO rounds (id, project_id, round_index, state, task, task_source, recipients, plan_version_id, history_mode, created_at) " +
+        "VALUES (?, ?, ?, 'DRAFT', ?, ?, ?, ?, ?, ?)",
+    ).run(
+      roundId,
+      input.projectId,
+      roundIndex,
+      input.task,
+      input.taskSource,
+      JSON.stringify(recipients.map((recipient) => recipient.agent)),
+      input.planVersionId ?? null,
+      input.historyMode,
+      createdAt,
+    );
+
+    db.prepare(
+      "INSERT INTO batches (id, project_id, round_id, kind, state, compressed_rounds, created_at) " +
+        "VALUES (?, ?, ?, ?, 'READY_FOR_REVIEW', ?, ?)",
+    ).run(batchId, input.projectId, roundId, "initial", JSON.stringify(input.compressedRounds ?? []), createdAt);
+
+    for (const recipient of recipients) {
+      const prompt = recipient.prompt;
+      const contentHash = createHash("sha256").update(prompt.content, "utf8").digest("hex");
+      if (contentHash !== prompt.contentHash) {
+        throw new RoundDraftError("hash_mismatch", `prompt of ${recipient.agent} does not match its hash`);
+      }
+
+      const snapshotId = newSnapshotId();
+      const approvalId = newApprovalId();
+      db.prepare(
+        "INSERT INTO prompt_snapshots (id, project_id, content, content_hash, nonce, contribution_ids, task_instruction, " +
+          "reviewer_agent, adapter_version, token_estimate, created_at) VALUES (?, ?, ?, ?, ?, '[]', ?, ?, ?, ?, ?)",
+      ).run(
+        snapshotId,
+        input.projectId,
+        prompt.content,
+        contentHash,
+        prompt.nonce,
+        input.task,
+        recipient.agent,
+        prompt.adapterVersion,
+        prompt.tokenEstimate,
+        createdAt,
+      );
+
+      db.prepare(
+        "INSERT INTO approvals (id, project_id, snapshot_id, state, created_at) VALUES (?, ?, ?, 'READY_FOR_REVIEW', ?)",
+      ).run(approvalId, input.projectId, snapshotId, createdAt);
+
+      db.prepare(
+        "INSERT INTO batch_items (batch_id, recipient, on_behalf_of, approval_id, snapshot_id, content_hash, differs_from_others, token_estimate) " +
+          "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      ).run(
+        batchId,
+        recipient.agent,
+        recipient.onBehalfOf ?? null,
+        approvalId,
+        snapshotId,
+        contentHash,
+        prompt.differsFromOthers ? 1 : 0,
+        prompt.tokenEstimate,
+      );
+
+      db.prepare(
+        "INSERT INTO turns (id, round_id, batch_id, agent, on_behalf_of, is_summary, approval_id, run_id, outcome, created_at) " +
+          "VALUES (?, ?, ?, ?, ?, ?, ?, NULL, 'pending', ?)",
+      ).run(
+        newTurnId(),
+        roundId,
+        batchId,
+        recipient.agent,
+        recipient.onBehalfOf ?? null,
+        0,
+        approvalId,
+        createdAt,
+      );
+    }
+
+    return {
+      round: db.prepare("SELECT * FROM rounds WHERE id = ?").get(roundId) as RoundRow,
+      batch: db.prepare("SELECT * FROM batches WHERE id = ?").get(batchId) as ApprovalBatchRow,
+    };
   });
 }
 
