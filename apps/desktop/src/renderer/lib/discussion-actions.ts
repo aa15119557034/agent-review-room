@@ -249,7 +249,9 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
       const round = [...d.rounds].sort((a, b) => b.index - a.index).find((r) => ["RUNNING", "PAUSED", "AWAITING_SUMMARY"].includes(r.state));
       const text = d.ui.composer.text.trim();
       if (!round || !text) return;
-      const { mode, targets } = d.ui.interject;
+      const { targets } = d.ui.interject;
+      // 暂停中只能「放进下一轮」（要发出去的补充只能在进行中 / 待汇总时盖章，见 D-21 ALLOWED_FROM）
+      const mode = round.state === "PAUSED" ? "next_round" : d.ui.interject.mode;
       try {
         const { note, batch } = await client.command({ type: "round.supplement", roundId: round.id, content: text, mode, targets: mode === "next_round" ? [] : targets });
         store.set((s) => applyEvent({ ...s, disc: { ...s.disc, ui: { ...s.disc.ui, composer: { ...s.disc.ui.composer, text: "" } } } }, { type: "message.created", message: note }));

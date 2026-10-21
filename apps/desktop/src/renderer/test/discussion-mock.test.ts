@@ -204,6 +204,34 @@ describe("discussion mock follows canvas 0-B", () => {
     assert.equal(b2.state, "READY_FOR_REVIEW");
   });
 
+  it("end round cancels a supplement that was never stamped (it cannot pull the round back to RUNNING)", async () => {
+    const { bridge, cmd, q } = setup({ tickMs: 20 });
+    const pid = await newTopic(cmd);
+    const { round, batch } = await cmd<{ round: Round; batch: ApprovalBatch }>(draftReq(pid));
+    await cmd(stamp(batch));
+    const { batch: sup } = await cmd<{ batch: ApprovalBatch }>({
+      type: "round.supplement", roundId: round.id, content: "补充", mode: "only", targets: ["codex"],
+    });
+    await cmd({ type: "round.end", roundId: round.id });
+    const { batch: after } = await q<{ batch: ApprovalBatch }>({ type: "batches.get", batchId: sup.id });
+    assert.equal(after.state, "CANCELLED");
+    const r = await bridge.command(stamp(sup) as never);
+    assert.equal(r.ok, false);
+  });
+
+  it("while paused, only 'next round' notes are allowed; sending supplements needs resume first", async () => {
+    const { bridge, cmd } = setup({ tickMs: 20 });
+    const pid = await newTopic(cmd);
+    const { round, batch } = await cmd<{ round: Round; batch: ApprovalBatch }>(draftReq(pid));
+    await cmd(stamp(batch));
+    await sleep(40);
+    await cmd({ type: "round.pause", roundId: round.id });
+    const now = await bridge.command({ type: "round.supplement", roundId: round.id, content: "x", mode: "restart_now", targets: ["deepseek"] } as never);
+    assert.equal(!now.ok && now.error, "invalid_state");
+    const later = await cmd<{ batch: ApprovalBatch | null }>({ type: "round.supplement", roundId: round.id, content: "下一轮再说", mode: "next_round", targets: [] });
+    assert.equal(later.batch, null);
+  });
+
   it("void (改方向): round VOIDED with reason, records kept", async () => {
     const { cmd, q } = setup({ tickMs: 20 });
     const pid = await newTopic(cmd);

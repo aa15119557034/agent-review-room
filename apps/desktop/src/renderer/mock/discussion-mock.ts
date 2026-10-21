@@ -539,6 +539,8 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
       const round = getRound(req.roundId);
       if (round.state !== "RUNNING") throw new MockError("invalid_state", "只有进行中的一轮可以暂停");
       for (const t of roundTurns(round.id)) stopTurn(t, "paused", "用户暂停");
+      // 还没盖章的补充 / 重试作废：恢复时只会有一张 resume 批次
+      for (const b of d.batches) if (b.roundId === round.id) cancelBatch(b, "本轮已暂停");
       setRound(round, "PAUSED");
       return clone(round);
     },
@@ -574,6 +576,10 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
       const round = getRound(req.roundId);
       if (!["RUNNING", "PAUSED", "AWAITING_SUMMARY", "DRAFT"].includes(round.state)) throw new MockError("invalid_state", "这一轮已经结束");
       if (req.mode !== "next_round" && req.targets.length === 0) throw new MockError("validation_failed", "请选择要发给谁");
+      // 要发出去的补充（立刻打断 / 只发给某人）和 D-21 的 ALLOWED_FROM 一致：只能在进行中或待汇总时
+      if (req.mode !== "next_round" && round.state !== "RUNNING" && round.state !== "AWAITING_SUMMARY") {
+        throw new MockError("invalid_state", round.state === "PAUSED" ? "暂停中：先恢复，或者选「放进下一轮」" : "这一轮还没开始");
+      }
       const note: Message = { id: id("msg"), projectId: round.projectId, kind: "human_note", roundId: round.id, content: req.content, createdAt: now() };
       db.messages.push(note);
       emit({ type: "message.created", message: clone(note) });
