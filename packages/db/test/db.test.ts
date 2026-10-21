@@ -72,7 +72,7 @@ function seedSnapshot(db: SqliteDatabase, projectId: string, id = "snap_01"): st
 describe("migrations", () => {
   it("applies all migrations on a fresh database", () => {
     const { db } = freshDb();
-    assert.equal(currentVersion(db), 2);
+    assert.equal(currentVersion(db), 3);
 
     const tables = db
       .prepare("SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY name")
@@ -88,7 +88,7 @@ describe("migrations", () => {
     const { db, file } = freshDb();
     db.close();
     const reopened = openDatabase(file);
-    assert.equal(currentVersion(reopened), 2);
+    assert.equal(currentVersion(reopened), 3);
     reopened.close();
   });
 });
@@ -510,7 +510,7 @@ describe("migration v2 (incomplete_output)", () => {
 
     // 升级到 v2
     const upgraded = openDatabase(file);
-    assert.equal(currentVersion(upgraded), 2);
+    assert.equal(currentVersion(upgraded), 3);
     assert.equal(count(upgraded, "SELECT count(*) AS n FROM runs"), 1);
     assert.equal(
       (upgraded.prepare("SELECT state FROM runs WHERE id = 'run_old'").get() as { state: string }).state,
