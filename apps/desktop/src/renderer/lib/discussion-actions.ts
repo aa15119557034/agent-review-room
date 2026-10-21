@@ -68,6 +68,7 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
             turns,
             summaries: details.flatMap((x) => (x.summary ? [x.summary] : [])),
             confirm: null,
+            ui: { ...s.disc.ui, page: { kind: "timeline" } },
           },
         };
       });
@@ -232,7 +233,79 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
       }
     },
 
-    // ---------------------------------------------------------- 方案（C-24 会加完整页面）
+    // ---------------------------------------------------------- 插话 / 改方向（C-23）
+
+    setInterjectMode: (mode: DiscussionState["ui"]["interject"]["mode"]) =>
+      setUi((u) => ({ ...u, interject: { ...u.interject, mode } })),
+    toggleInterjectTarget: (agentId: string) =>
+      setUi((u) => {
+        const t = u.interject.targets;
+        return { ...u, interject: { ...u.interject, targets: t.includes(agentId) ? t.filter((x) => x !== agentId) : [...t, agentId] } };
+      }),
+
+    /** 一轮进行中时发补充。立刻打断 / 只发给某人会生成新批次 → 确认页盖章；放进下一轮只记下来 */
+    async supplement() {
+      const d = store.get().disc;
+      const round = [...d.rounds].sort((a, b) => b.index - a.index).find((r) => ["RUNNING", "PAUSED", "AWAITING_SUMMARY"].includes(r.state));
+      const text = d.ui.composer.text.trim();
+      if (!round || !text) return;
+      const { mode, targets } = d.ui.interject;
+      try {
+        const { note, batch } = await client.command({ type: "round.supplement", roundId: round.id, content: text, mode, targets: mode === "next_round" ? [] : targets });
+        store.set((s) => applyEvent({ ...s, disc: { ...s.disc, ui: { ...s.disc.ui, composer: { ...s.disc.ui.composer, text: "" } } } }, { type: "message.created", message: note }));
+        if (batch) {
+          take(null, batch);
+          await openConfirm(batch.id);
+        }
+      } catch (err) {
+        fail(err);
+      }
+    },
+
+    /** 回到某一阶段改方向：这一轮作废（记录保留） */
+    async voidRound(roundId: string, reason: string) {
+      try {
+        take(await client.command({ type: "round.void", roundId, reason }), null);
+        const plans = await client.query({ type: "plans.list", projectId: pid()! });
+        setDisc((d) => ({ ...d, plans }));
+      } catch (err) {
+        fail(err);
+      }
+    },
+
+    // ---------------------------------------------------------- 汇总与方案（C-24）
+
+    openReview: (roundId: string) => setUi((u) => ({ ...u, page: { kind: "review", roundId } })),
+    closeReview: () => setUi((u) => ({ ...u, page: { kind: "timeline" } })),
+
+    async editPlan(parentId: string, content: string, changeNote: string) {
+      try {
+        const plan = await client.command({ type: "plan.edit", parentId, content, changeNote });
+        store.set((s) => applyEvent(s, { type: "plan.updated", plan }));
+        return plan;
+      } catch (err) {
+        fail(err);
+      }
+    },
+
+    /** 盖章定稿：交上看到的 contentHash，内容变了就拒绝 */
+    async finalizePlan(planVersionId: string, expectedContentHash: string) {
+      try {
+        const plan = await client.command({ type: "plan.finalize", planVersionId, expectedContentHash });
+        store.set((s) => applyEvent(s, { type: "plan.updated", plan }));
+      } catch (err) {
+        fail(err);
+      }
+    },
+
+    async derivePlan(planVersionId: string) {
+      try {
+        const plan = await client.command({ type: "plan.derive", planVersionId });
+        store.set((s) => applyEvent(s, { type: "plan.updated", plan }));
+      } catch (err) {
+        fail(err);
+      }
+    },
 
     async confirmPlan(planVersionId: string) {
       try {
