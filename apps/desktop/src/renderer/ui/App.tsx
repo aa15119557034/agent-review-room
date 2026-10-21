@@ -5,6 +5,7 @@ import { SourceStep } from "./SourceStep";
 import { FragmentPicker, PromptStep } from "./PromptStep";
 import { ResultStep, RunList } from "./ResultStep";
 import { SettingsView } from "./SettingsView";
+import { DiscussionView, QuotaChips } from "./discussion/DiscussionView";
 
 /**
  * 整体布局：项目 / 四个工作步骤 / 运行记录。
@@ -19,6 +20,19 @@ export function App() {
         <h1>无法连接后端</h1>
         <p>{connection.message}</p>
         <p>请重启应用。如果一直出现，把这段文字发给开发者。</p>
+      </div>
+    );
+  }
+  return <Shell />;
+}
+
+function Shell() {
+  const view = useAppState((s) => s.view);
+  if (view === "discussion") {
+    return (
+      <div className="shell shell-discussion">
+        <TopBar />
+        <DiscussionView notice={<Notice />} />
       </div>
     );
   }
@@ -73,25 +87,39 @@ function TopBar() {
   return (
     <header className="topbar">
       <span className="wordmark">Agent 评审室</span>
-      <span className="topbar-project">{project?.name ?? "未选择项目"}</span>
+      {view !== "discussion" && <span className="topbar-project">{project?.name ?? "未选择项目"}</span>}
       {isMock && (
         <span className="mock-flag" title="数据只存在内存里，不会调用真实的 Reviewer">
           演示数据
         </span>
       )}
-      {status && (
+      {view === "discussion" && <QuotaChips />}
+      {view !== "discussion" && status && (
         <span className="reviewer-status" data-ok={status.reviewerConfigured}>
           Reviewer：{status.reviewerConfigured ? status.reviewerAgent : "未设置节点"}
         </span>
       )}
-      <button
-        type="button"
-        className="topbar-settings"
-        aria-pressed={view === "settings"}
-        onClick={() => (view === "settings" ? actions.closeSettings() : void actions.openSettings())}
-      >
-        设置
-      </button>
+      <nav className="topnav" aria-label="主导航">
+        <button type="button" aria-current={view === "discussion" ? "page" : undefined} onClick={actions.goDiscussion}>
+          讨论
+        </button>
+        <button type="button" disabled title="阶段 1C">
+          执行
+        </button>
+        <button type="button" disabled title="阶段 1B">
+          参与者
+        </button>
+        <button type="button" aria-current={view === "desk" ? "page" : undefined} onClick={actions.goDesk}>
+          单次评审
+        </button>
+        <button
+          type="button"
+          aria-current={view === "settings" ? "page" : undefined}
+          onClick={() => (view === "settings" ? actions.closeSettings() : void actions.openSettings())}
+        >
+          设置
+        </button>
+      </nav>
     </header>
   );
 }
@@ -144,7 +172,7 @@ function ProjectRail() {
   );
 }
 
-function Notice() {
+export function Notice() {
   const notice = useAppState((s) => s.notice);
   const actions = useActions();
   if (!notice) return null;
