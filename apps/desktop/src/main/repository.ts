@@ -608,6 +608,18 @@ export class Repository {
     ).map(toBatchItem);
   }
 
+  /** 确认页用：批次里的每个收件人对应一份完整 Snapshot，顺序和 batch.items 一致 */
+  listSnapshotsForBatch(batchId: string): PromptSnapshot[] {
+    return (
+      this.#db
+        .prepare(
+          "SELECT s.* FROM prompt_snapshots s JOIN batch_items bi ON bi.snapshot_id = s.id " +
+            "WHERE bi.batch_id = ? ORDER BY bi.recipient",
+        )
+        .all(batchId) as Record<string, unknown>[]
+    ).map(toSnapshot);
+  }
+
   listBatches(roundId: string): ApprovalBatch[] {
     return (
       this.#db.prepare("SELECT * FROM batches WHERE round_id = ? ORDER BY created_at").all(roundId) as Record<string, unknown>[]
@@ -723,6 +735,17 @@ export class Repository {
           "WHERE r.project_id = ? AND t.agent = ? AND t.is_summary = 0 ORDER BY t.created_at DESC, t.rowid DESC LIMIT 1",
       )
       .get(projectId, agentId) as { outcome: string; finished_at: string | null } | undefined;
+    return row === undefined ? null : { outcome: row.outcome, finishedAt: row.finished_at };
+  }
+
+  /** 这个 Agent 在所有议题里最新一次发言的结局（agents.status 用，不按议题过滤） */
+  latestTurnOutcomeGlobal(agentId: string): { outcome: string; finishedAt: string | null } | null {
+    const row = this.#db
+      .prepare(
+        "SELECT t.outcome AS outcome, COALESCE(t.finished_at, t.created_at) AS finished_at FROM turns t " +
+          "WHERE t.agent = ? AND t.is_summary = 0 ORDER BY t.created_at DESC, t.rowid DESC LIMIT 1",
+      )
+      .get(agentId) as { outcome: string; finished_at: string | null } | undefined;
     return row === undefined ? null : { outcome: row.outcome, finishedAt: row.finished_at };
   }
 

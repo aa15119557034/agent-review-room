@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { after, describe, it } from "node:test";
 import type { AgentAdapter } from "@room/core";
 import { openDatabase, type RunRow, ulid, WriteQueue } from "@room/db";
-import type { AgentEvent, ControlEvent } from "@room/schemas";
+import { ControlEvent, type AgentEvent } from "@room/schemas";
 import { DiscussionService, type NodeProbeResult } from "../src/main/discussion";
 import { createDispatcher } from "../src/main/ipc";
 import { RunOrchestrator } from "../src/main/orchestrator";
@@ -116,6 +116,10 @@ async function makeHarness(options: {
   addAgent.run("codex", "Codex", "#1f6b55", "务实派：关注实现成本", 1, 0, "codex-discuss", now, now);
 
   const events: ControlEvent[] = [];
+  // 每条 emit 都过一次契约校验：事件形状不对，测试立刻失败
+  const record = (e: ControlEvent): void => {
+    events.push(ControlEvent.parse(e));
+  };
   const started: RunRow[] = [];
   const scripts = options.scripts ?? new Map<string, Record<string, unknown>[]>();
   const probeCalls: string[] = [];
@@ -134,7 +138,7 @@ async function makeHarness(options: {
   const orchestrator = new RunOrchestrator({
     db,
     queue,
-    emit: (e) => events.push(e),
+    emit: record,
     getRun: (runId) => db.prepare("SELECT * FROM runs WHERE id = ?").get(runId) as never,
     adapterFactory: async (run) => {
       started.push(run);
@@ -147,7 +151,7 @@ async function makeHarness(options: {
     onDiscussionSettled: (settlement) => service?.settled(settlement),
   });
 
-  service = new DiscussionService({ db, queue, repo, settings, orchestrator, emit: (e) => events.push(e), probeNode: probe });
+  service = new DiscussionService({ db, queue, repo, settings, orchestrator, emit: record, probeNode: probe });
 
   const dispatcher = createDispatcher({
     repo,
@@ -156,7 +160,7 @@ async function makeHarness(options: {
     discussion: service,
     appVersion: "0.0.0-test",
     recoveredRuns: 0,
-    emit: (e) => events.push(e),
+    emit: record,
   });
 
   const project = await dispatcher.handleCommand({ type: "project.create", name: "议题" });
@@ -526,3 +530,159 @@ describe("round.summarize：汇总也要盖章", () => {
     await close(h);
   });
 });
+
+describe("讨论室读取（rounds.list / rounds.get / batches.get / plans.list / agents.status）", () => {
+  async function approveBatchOf(h: Harness, batch: { id: string; items: { approvalId: string; contentHash: string }[] }) {
+    return h.dispatcher.handleCommand({
+      type: "batch.approve",
+      batchId: batch.id,
+      expected: batch.items.map((item) => ({ approvalId: item.approvalId, contentHash: item.contentHash })),
+    });
+  }
+
+  it("起草之后：rounds.list / rounds.get / batches.get 都能读出轮、批次、Turn 和逐字 Snapshot", async () => {
+    const h = await makeHarness();
+    const created = (await draft(h, ["deepseek", "codex"])) as unknown as {
+      data: { round: { id: string }; batch: { id: string; items: { approvalId: string; contentHash: string }[] } };
+    };
+    const { round, batch } = created.data;
+
+    const listed = (await h.dispatcher.handleQuery({ type: "rounds.list", projectId: h.projectId })) as any;
+    assert.equal(listed.ok, true, JSON.stringify(listed));
+    assert.equal(listed.data.length, 1);
+    assert.equal(listed.data[0].id, round.id);
+    assert.equal(listed.data[0].state, "DRAFT");
+
+    const got = (await h.dispatcher.handleQuery({ type: "rounds.get", roundId: round.id })) as any;
+    assert.equal(got.ok, true, JSON.stringify(got));
+    assert.equal(got.data.round.id, round.id);
+    assert.equal(got.data.batches.length, 1);
+    assert.equal(got.data.batches[0].id, batch.id);
+    assert.equal(got.data.turns.length, 2);
+    assert.equal(got.data.summary, null);
+
+    const batchView = (await h.dispatcher.handleQuery({ type: "batches.get", batchId: batch.id })) as any;
+    assert.equal(batchView.ok, true, JSON.stringify(batchView));
+    assert.equal(batchView.data.batch.id, batch.id);
+    assert.equal(batchView.data.snapshots.length, 2);
+    const hashes = new Set(batchView.data.batch.items.map((item: any) => item.contentHash));
+    for (const snapshot of batchView.data.snapshots) {
+      assert.equal(snapshot.contentHash, sha(snapshot.content), "逐字查看的内容要能对上指纹");
+      assert.equal(hashes.has(snapshot.contentHash), true);
+    }
+    await close(h);
+  });
+
+  it("汇总之后：rounds.get.summary 与 plans.list 能读到 RoundSummary 和方案 v1", async () => {
+    const h = await makeHarness({
+      scripts: new Map([["remote:claude-review", [{ type: "message_complete", text: SUMMARY_JSON }, { type: "completed" }]]]),
+    });
+    const created = (await draft(h, ["deepseek"])) as unknown as {
+      data: { round: { id: string }; batch: { id: string; items: { approvalId: string; contentHash: string }[] } };
+    };
+    const roundId = created.data.round.id;
+    await approveBatchOf(h, created.data.batch);
+    await waitFor(
+      () => (h.db.prepare("SELECT state FROM rounds WHERE id = ?").get(roundId) as { state: string }).state === "AWAITING_SUMMARY",
+      "awaiting summary",
+    );
+
+    const requested = (await h.dispatcher.handleCommand({ type: "round.summarize", roundId, summarizer: "claude" })) as any;
+    assert.equal(requested.ok, true, JSON.stringify(requested));
+    await approveBatchOf(h, requested.data);
+    await waitFor(
+      () => (h.db.prepare("SELECT state FROM rounds WHERE id = ?").get(roundId) as { state: string }).state === "SUMMARIZED",
+      "summarized",
+    );
+
+    const plans = (await h.dispatcher.handleQuery({ type: "plans.list", projectId: h.projectId })) as any;
+    assert.equal(plans.ok, true, JSON.stringify(plans));
+    assert.equal(plans.data.length, 1);
+    assert.equal(plans.data[0].version, 1);
+    assert.equal(plans.data[0].state, "DRAFT");
+    assert.equal(plans.data[0].content, "# 方案 v1\n第一版");
+
+    const got = (await h.dispatcher.handleQuery({ type: "rounds.get", roundId })) as any;
+    assert.equal(got.ok, true, JSON.stringify(got));
+    assert.ok(got.data.summary, "汇总之后 rounds.get 里要有 summary");
+    assert.deepEqual(got.data.summary.report.risks, ["风险一"]);
+    await close(h);
+  });
+
+  it("agents.status：可用 / 未配置 / 暂停", async () => {
+    const h = await makeHarness();
+    const statuses = (await h.dispatcher.handleQuery({ type: "agents.status" })) as any;
+    assert.equal(statuses.ok, true, JSON.stringify(statuses));
+    assert.deepEqual(
+      statuses.data.map((s: any) => [s.agent, s.availability]),
+      [
+        ["claude", "available"],
+        ["codex", "available"],
+        ["deepseek", "available"],
+      ],
+    );
+    // 1A 读不到的字段一律 null，不猜
+    assert.equal(statuses.data[0].billing, "unknown");
+    assert.equal(statuses.data[0].fiveHour, null);
+    assert.equal(statuses.data[0].model, null);
+
+    h.db.prepare("UPDATE agents SET paused_by_user = 1 WHERE id = 'codex'").run();
+    h.db.prepare("UPDATE agents SET node_id = NULL WHERE id = 'claude'").run();
+    const changed = (await h.dispatcher.handleQuery({ type: "agents.status" })) as any;
+    const byAgent = Object.fromEntries(changed.data.map((s: any) => [s.agent, s.availability]));
+    assert.equal(byAgent["claude"], "unconfigured");
+    assert.equal(byAgent["codex"], "paused_by_user");
+    await close(h);
+  });
+
+  it("agents.status：节点离线", async () => {
+    const h = await makeHarness({ probe: async () => ({ reachable: false, profiles: [], message: "down" }) });
+    const statuses = (await h.dispatcher.handleQuery({ type: "agents.status" })) as any;
+    assert.equal(statuses.ok, true, JSON.stringify(statuses));
+    assert.deepEqual(
+      statuses.data.map((s: any) => s.availability),
+      ["offline", "offline", "offline"],
+    );
+    await close(h);
+  });
+
+  it("agents.status：5 小时内额度缺席", async () => {
+    const h = await makeHarness();
+    const now = new Date().toISOString();
+    const roundId = "rnd_" + ulid();
+    const snapshotId = "snap_" + ulid();
+    const approvalId = "apr_" + ulid();
+    const batchId = "bat_" + ulid();
+    h.db
+      .prepare(
+        "INSERT INTO prompt_snapshots (id, project_id, content, content_hash, nonce, contribution_ids, task_instruction, " +
+          "reviewer_agent, adapter_version, token_estimate, created_at) " +
+          "VALUES (?, ?, '旧 Prompt', ?, '0123456789abcdef', '[]', '旧任务', 'deepseek', 'discussion-v2', 1, ?)",
+      )
+      .run(snapshotId, h.projectId, sha("旧 Prompt"), now);
+    h.db
+      .prepare("INSERT INTO approvals (id, project_id, snapshot_id, state, created_at) VALUES (?, ?, ?, 'APPROVED', ?)")
+      .run(approvalId, h.projectId, snapshotId, now);
+    h.db
+      .prepare(
+        "INSERT INTO rounds (id, project_id, round_index, state, task, task_source, recipients, history_mode, created_at) " +
+          "VALUES (?, ?, 1, 'SUMMARIZED', '上一轮', 'human', '[\"deepseek\"]', 'recent_with_summaries', ?)",
+      )
+      .run(roundId, h.projectId, now);
+    h.db
+      .prepare("INSERT INTO batches (id, project_id, round_id, kind, state, created_at) VALUES (?, ?, ?, 'initial', 'APPROVED', ?)")
+      .run(batchId, h.projectId, roundId, now);
+    h.db
+      .prepare(
+        "INSERT INTO turns (id, round_id, batch_id, agent, is_summary, approval_id, run_id, outcome, created_at, finished_at) " +
+          "VALUES (?, ?, ?, 'deepseek', 0, ?, NULL, 'absent_quota', ?, ?)",
+      )
+      .run("turn_" + ulid(), roundId, batchId, approvalId, now, now);
+
+    const statuses = (await h.dispatcher.handleQuery({ type: "agents.status" })) as any;
+    const byAgent = Object.fromEntries(statuses.data.map((s: any) => [s.agent, s.availability]));
+    assert.equal(byAgent["deepseek"], "absent_quota");
+    await close(h);
+  });
+});
+
