@@ -8,6 +8,7 @@ import {
   ControlEvent,
   ControlQuery,
   FailureReason,
+  RemoteTerminal,
   Message,
   NodeInfo,
   PromptSnapshot,
@@ -77,6 +78,11 @@ describe("turn outcomes", () => {
   });
   it("quota exhaustion is a failure reason (缺席), not a crash", () => {
     assert.ok(FailureReason.options.includes("quota_exhausted"));
+    // 节点也能报告它（C-25），而且每个节点原因都能映射到 FailureReason（node_shutdown 除外，映射成 remote_lost）
+    const terminal = RemoteTerminal.parse({ outcome: "error", reason: "quota_exhausted", exitCode: 1, message: "usage limit" });
+    assert.equal(terminal.outcome, "error");
+    const remoteReasons = (RemoteTerminal.options[1].shape.reason.options as readonly string[]).filter((r) => r !== "node_shutdown");
+    for (const r of remoteReasons) assert.ok((FailureReason.options as readonly string[]).includes(r), r);
   });
 });
 

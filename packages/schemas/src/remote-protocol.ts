@@ -69,6 +69,12 @@ export const RemoteTerminal = z.discriminatedUnion("outcome", [
       "lease_expired",
       "output_limit_exceeded",
       "incomplete_output", // 进程正常退出，但解析器没看到完整的结束标记（例如流被截断）
+      /**
+       * 服务商明确说额度用尽或被限流（C-25 / ADR-002）。只在解析器从 CLI 的结构化输出里
+       * 认出来时才用；认不出来的失败仍然是 process_exit_nonzero / internal，不猜。
+       * 主控端原样映射成 FailureReason.quota_exhausted → Turn `absent_quota`。
+       */
+      "quota_exhausted",
       "node_shutdown",
       "internal",
     ]),
