@@ -76,7 +76,6 @@ type AvailabilityNeed = "discuss" | "summarize";
 const QUOTA_ABSENT_WINDOW_MS = 5 * 60 * 60 * 1000;
 
 interface PendingRecipient {
-  agentId: string;
   displayName: string;
   nodeId: string;
   baseUrl: string;
@@ -328,15 +327,13 @@ export class DiscussionService {
    * - 额度缺席：本议题里这个人最新一次发言是 absent_quota，且结束时间在 5 小时内
    *   （更早的可能是额度重置了，放行；1A 还没有真正的额度接口）
    * - 节点离线 / 没有这个 profile：不发
-   *
-   * 多节点各自的 Token 还没有地方存，所以非「已配置节点」上的 Agent 会被判成不可用——
-   * 那是 D-22c 的事。
+   * - 节点的 Token 没有配置：不发（多节点各自的 Token 存在设置文件里，D-22c）
    */
   async #checkRecipients(agentIds: readonly string[], projectId: string, need: AvailabilityNeed): Promise<void> {
     const { repo, settings } = this.#deps;
-    const configured = settings.get();
-    const token = settings.getToken();
     const pending: PendingRecipient[] = [];
+    /** 每个节点自己的凭据（地址 + 解密后的 Token），同一个节点只取一次 */
+    const credentials = new Map<string, { baseUrl: string; token: string }>();
 
     for (const agentId of agentIds) {
       const row = repo.getAgentRow(agentId);
@@ -368,14 +365,13 @@ export class DiscussionService {
       if (node === undefined || node.base_url === null) {
         throw new DiscussionError("agent_unavailable", displayName + " 所在的节点 " + nodeId + " 还没有配置地址");
       }
-      if (configured === null || token === null || configured.baseUrl !== node.base_url) {
-        throw new DiscussionError(
-          "agent_unavailable",
-          displayName + " 所在的节点还没有接通（目前只保存了一个节点的 Token）",
-        );
+      const credential = settings.getNode(nodeId);
+      if (credential === null || credential.baseUrl !== node.base_url) {
+        throw new DiscussionError("agent_unavailable", displayName + " 所在的节点 " + nodeId + " 的 Token 还没有配置");
       }
+      credentials.set(nodeId, credential);
 
-      pending.push({ agentId, displayName, nodeId, baseUrl: node.base_url, profileId });
+      pending.push({ displayName, nodeId, baseUrl: node.base_url, profileId });
     }
 
     if (pending.length === 0) return;
@@ -388,7 +384,11 @@ export class DiscussionService {
     await Promise.all(
       [...byNode.values()].map(async (items) => {
         const first = items[0]!;
-        probes.set(first.nodeId, await this.#probe({ baseUrl: first.baseUrl, token: token as string, profileId: first.profileId }));
+        const credential = credentials.get(first.nodeId)!;
+        probes.set(
+          first.nodeId,
+          await this.#probe({ baseUrl: first.baseUrl, token: credential.token, profileId: first.profileId }),
+        );
       }),
     );
 

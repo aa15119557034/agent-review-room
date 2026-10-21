@@ -68,14 +68,20 @@ describe("SettingsStore", () => {
     assert.equal(store.getToken(), token);
   });
 
-  it("keeps the existing token when updating without one", () => {
+  it("keeps the token when the address is unchanged, clears it when the address changes", () => {
     const store = new SettingsStore(tempFile(), fakeSafeStorage);
     store.updateReviewerNode({ baseUrl: "http://10.0.0.1:7420", profileId: "p1", token: "b".repeat(40) });
-    const updated = store.updateReviewerNode({ baseUrl: "http://10.0.0.2:7420", profileId: "p2" });
 
-    assert.equal(updated.baseUrl, "http://10.0.0.2:7420");
-    assert.equal(updated.tokenConfigured, true);
+    // 地址没变、不传 Token：保留
+    const same = store.updateReviewerNode({ baseUrl: "http://10.0.0.1:7420", profileId: "p2" });
+    assert.equal(same.tokenConfigured, true);
     assert.equal(store.getToken(), "b".repeat(40));
+
+    // 地址变了、不传 Token：旧 Token 不能跟着新地址走
+    const moved = store.updateReviewerNode({ baseUrl: "http://10.0.0.2:7420", profileId: "p2" });
+    assert.equal(moved.baseUrl, "http://10.0.0.2:7420");
+    assert.equal(moved.tokenConfigured, false);
+    assert.equal(store.getToken(), null);
   });
 
   it("refuses to store a token when encryption is unavailable", () => {
