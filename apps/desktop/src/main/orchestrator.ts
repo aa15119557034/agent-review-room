@@ -109,7 +109,7 @@ export class RunOrchestrator {
 
       for await (const event of events) {
         if (TERMINAL_EVENTS.has(event.type)) {
-          await this.#finish(run.id, currentState, event, completedText, input.reviewerAgent);
+          await this.#finish(run.id, currentState, event, completedText, input.reviewerAgent, input.discussion);
           return;
         }
 
@@ -135,7 +135,7 @@ export class RunOrchestrator {
         runId: run.id,
         seq: -1,
         ts: new Date().toISOString(),
-      } as AgentEvent, null, input.reviewerAgent);
+      } as AgentEvent, null, input.reviewerAgent, input.discussion);
     } catch (error) {
       const current = this.#deps.getRun(run.id);
       if (current !== undefined && (current.state === "STARTING" || current.state === "RUNNING")) {
@@ -147,7 +147,7 @@ export class RunOrchestrator {
           runId: run.id,
           seq: -1,
           ts: new Date().toISOString(),
-        } as AgentEvent, null, input.reviewerAgent);
+        } as AgentEvent, null, input.reviewerAgent, input.discussion);
       }
     } finally {
       this.#active.delete(run.id);
@@ -227,26 +227,28 @@ export class RunOrchestrator {
     completedText: string | null,
     discussion: { turnId: string; isSummary: boolean },
   ): Promise<void> {
-    const failure =
-      event.type === "error"
-        ? event.reason === "quota_exhausted"
-          ? ({ kind: "failed", failureReason: "quota_exhausted" } as const)
-          : ({ kind: "failed", failureReason: "internal" } as const)
-        : undefined;
+    // 失败原因原样透传（quota_exhausted 由 db 层映射成 absent_quota），不要压成 internal
+    const failure = event.type === "error" ? ({ kind: "failed", failureReason: event.reason } as const) : undefined;
+    // 完成了却没有正文：算不完整输出，不能记成"答了但内容为空"
+    const emptyAnswer = event.type === "completed" && (completedText === null || completedText === "");
 
     try {
       if (discussion.isSummary) {
         const result =
-          event.type === "completed"
+          event.type === "completed" && !emptyAnswer
             ? ({ kind: "answered", text: completedText ?? "" } as const)
+            : emptyAnswer
+              ? ({ kind: "failed", failureReason: "incomplete_output" } as const)
             : event.type === "timed_out"
               ? ({ kind: "timed_out", timeoutKind: event.kind } as const)
               : failure ?? ({ kind: "failed", failureReason: "internal" } as const);
         await finishSummaryFromRun(this.#deps.db, this.#deps.queue, { runId, result });
       } else {
         const terminal =
-          event.type === "completed"
+          event.type === "completed" && !emptyAnswer
             ? ({ kind: "answered", text: completedText ?? "" } as const)
+            : emptyAnswer
+              ? ({ kind: "failed", failureReason: "incomplete_output" } as const)
             : event.type === "timed_out"
               ? ({ kind: "timed_out", timeoutKind: event.kind } as const)
               : event.type === "cancelled"
