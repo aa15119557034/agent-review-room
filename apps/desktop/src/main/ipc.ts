@@ -252,7 +252,7 @@ export function createDispatcher(deps: IpcDeps) {
     const query = parsed.data as QueryRequest;
 
     try {
-      const data = runQuery(query);
+      const data = await runQuery(query);
       const responseSchema = QUERIES[query.type as keyof typeof QUERIES].response;
       const checked = responseSchema.safeParse(data);
       if (!checked.success) {
@@ -264,7 +264,7 @@ export function createDispatcher(deps: IpcDeps) {
     }
   }
 
-  function runQuery(query: QueryRequest): unknown {
+  async function runQuery(query: QueryRequest): Promise<unknown> {
     switch (query.type) {
       case "system.status": {
         const node = settings.get();
@@ -305,6 +305,29 @@ export function createDispatcher(deps: IpcDeps) {
 
       case "runs.get":
         return repo.getRun(query.runId);
+
+      // ---------------------------------------------------------------- 讨论室（D-22d 读取）
+      case "rounds.list":
+        return repo.listRounds(query.projectId);
+
+      case "rounds.get":
+        return {
+          round: repo.getRound(query.roundId),
+          batches: repo.listBatches(query.roundId),
+          turns: repo.listTurns(query.roundId),
+          summary: repo.getRoundSummary(query.roundId),
+        };
+
+      case "batches.get": {
+        const batch = repo.getBatch(query.batchId);
+        return { batch, snapshots: repo.listSnapshotsForBatch(batch.id) };
+      }
+
+      case "plans.list":
+        return repo.listPlans(query.projectId);
+
+      case "agents.status":
+        return deps.discussion.agentStatuses();
 
       case "runs.events": {
         const rows = repo.listEvents(query.runId, query.afterSeq ?? -1);

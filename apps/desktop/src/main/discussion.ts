@@ -17,6 +17,7 @@ import {
 import { testReviewerNode } from "@room/remote-client";
 import type {
   AgentProfile,
+  AgentStatus,
   ApprovalBatch,
   CommandRequest,
   ControlErrorCode,
@@ -286,6 +287,82 @@ export class DiscussionService {
     for (const turn of repo.listTurnsByBatch(batch.id)) emit({ type: "turn.updated", turn });
     for (const item of batch.items) emit({ type: "approval.updated", approval: repo.getApproval(item.approvalId) });
     return batch;
+  }
+
+  /**
+   * agents.status：参与者现在能不能用。和 round.draft 的判断尽量一致，但**不抛错**，
+   * 只把状态算出来给界面显示。
+   *
+   * 1A 拿不到额度 / 模型 / 上下文用量，这些字段一律 null（界面显示「未知」），不猜。
+   */
+  async agentStatuses(): Promise<AgentStatus[]> {
+    const { repo, settings } = this.#deps;
+    const agents = repo.listAgents();
+
+    const targets: { nodeId: string; baseUrl: string; token: string; profileId: string }[] = [];
+    for (const agent of agents) {
+      if (agent.nodeId === null || agent.profileId === null) continue;
+      const node = repo.getNodeRow(agent.nodeId);
+      const credential = settings.getNode(agent.nodeId);
+      if (node === undefined || node.base_url === null || credential === null || credential.baseUrl !== node.base_url) {
+        continue;
+      }
+      targets.push({
+        nodeId: agent.nodeId,
+        baseUrl: credential.baseUrl,
+        token: credential.token,
+        profileId: agent.profileId,
+      });
+    }
+
+    // 同一个节点只探一次
+    const byNode = new Map<string, (typeof targets)[number]>();
+    for (const target of targets) if (!byNode.has(target.nodeId)) byNode.set(target.nodeId, target);
+    const probes = new Map<string, NodeProbeResult>();
+    await Promise.all(
+      [...byNode.values()].map(async (target) => {
+        probes.set(
+          target.nodeId,
+          await this.#probe({ baseUrl: target.baseUrl, token: target.token, profileId: target.profileId }),
+        );
+      }),
+    );
+
+    const updatedAt = new Date().toISOString();
+    return agents.map((agent) => ({
+      agent: agent.id,
+      availability: this.#availabilityOf(agent, probes),
+      // 1A 不知道计费方式 / 额度 / 模型 / 上下文，全部 null，界面显示「未知」
+      billing: "unknown",
+      fiveHour: null,
+      weekly: null,
+      balance: null,
+      contextUsedPercent: null,
+      compactions: null,
+      model: null,
+      effort: null,
+      updatedAt,
+    }));
+  }
+
+  #availabilityOf(agent: AgentProfile, probes: Map<string, NodeProbeResult>): AgentStatus["availability"] {
+    if (agent.nodeId === null || agent.profileId === null) return "unconfigured";
+    if (agent.pausedByUser) return "paused_by_user";
+
+    const latest = this.#deps.repo.latestTurnOutcomeGlobal(agent.id);
+    if (latest !== null && latest.outcome === "absent_quota" && this.#isRecentQuotaAbsence(latest.finishedAt)) {
+      return "absent_quota";
+    }
+
+    const node = this.#deps.repo.getNodeRow(agent.nodeId);
+    const credential = this.#deps.settings.getNode(agent.nodeId);
+    if (node === undefined || node.base_url === null || credential === null || credential.baseUrl !== node.base_url) {
+      return "unconfigured";
+    }
+
+    const probe = probes.get(agent.nodeId);
+    if (probe === undefined || !probe.reachable || !probe.profiles.includes(agent.profileId)) return "offline";
+    return "available";
   }
 
   /**
