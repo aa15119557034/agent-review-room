@@ -1,4 +1,4 @@
-import type { ApprovalBatch, Round } from "@room/schemas";
+import type { ApprovalBatch, CommandRequest, NodeInfo, NodeTestResult, Round } from "@room/schemas";
 import { ControlFailure, type RoomClient } from "./client";
 import { appendEvents, applyEvent, type AppState } from "./state";
 import { initialDiscussion, type DiscussionState } from "./discussion";
@@ -10,6 +10,9 @@ import type { Store } from "./store";
  * 真实后端在 D-21 之前不认识讨论室的查询——那时 disc.available = false，
  * 讨论室页面显示"还没上线"，单次评审照常可用。
  */
+/** agent.update 的请求（去掉 type） */
+export type AgentPatch = Omit<CommandRequest<"agent.update">, "type">;
+
 export function createDiscussionActions(store: Store<AppState>, client: RoomClient, fail: (err: unknown) => void) {
   const setDisc = (f: (d: DiscussionState) => DiscussionState) => store.set((s) => ({ ...s, disc: f(s.disc) }));
   const setUi = (f: (u: DiscussionState["ui"]) => DiscussionState["ui"]) => setDisc((d) => ({ ...d, ui: f(d.ui) }));
@@ -96,9 +99,55 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
     }
   }
 
+  // ------------------------------------------------------------ 节点与参与者（设置页，C-27）
+
+  /** 设置页用：节点列表（Token 只有 tokenConfigured，永远拿不到值） */
+  async function loadNodes(): Promise<NodeInfo[] | undefined> {
+    try {
+      return await client.query({ type: "nodes.list" });
+    } catch (err) {
+      fail(err);
+      return undefined;
+    }
+  }
+
+  async function upsertNode(input: { id: string; label: string; baseUrl: string; token?: string }): Promise<NodeInfo | undefined> {
+    try {
+      return await client.command({ type: "node.upsert", ...input });
+    } catch (err) {
+      fail(err);
+      return undefined;
+    }
+  }
+
+  async function testNode(input: { id: string; baseUrl: string; profileId: string; token?: string }): Promise<NodeTestResult | undefined> {
+    try {
+      return await client.command({ type: "node.test", ...input });
+    } catch (err) {
+      fail(err);
+      return undefined;
+    }
+  }
+
+  /** 改一个参与者（不存在时由后端新建，新建必须带名字和颜色）。成功后刷新参与者和状态 */
+  async function updateAgent(patch: AgentPatch): Promise<boolean> {
+    try {
+      await client.command({ type: "agent.update", ...patch });
+      await loadAgents();
+      return true;
+    } catch (err) {
+      fail(err);
+      return false;
+    }
+  }
+
   return {
     loadAgents,
     loadTopic,
+    loadNodes,
+    upsertNode,
+    testNode,
+    updateAgent,
 
     // ---------------------------------------------------------- 界面开关
     toggleRail: () => setUi((u) => ({ ...u, railCollapsed: !u.railCollapsed })),

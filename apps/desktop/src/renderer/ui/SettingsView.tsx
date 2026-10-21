@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { NodeBaseUrl, NodeToken, ProfileId, type NodeTestResult } from "@room/schemas";
 import { useActions, useAppState } from "./hooks";
+import { NodesAndAgents } from "./NodesAndAgents";
 
 const DEFAULT_PROFILE = "claude-review";
 
@@ -14,7 +15,7 @@ const TEST_ERROR: Record<Extract<NodeTestResult, { reachable: false }>["error"],
 };
 
 /**
- * 设置页：Reviewer 节点（ADR-001 物理分离）。
+ * 设置页：Reviewer 节点（ADR-001 物理分离），以及讨论室的节点与参与者（C-27）。
  * Token 只写不读：保存后输入框清空，界面只显示"已保存"，永远拿不到已保存的值。
  */
 export function SettingsView() {
@@ -162,6 +163,8 @@ export function SettingsView() {
 
         {result && <TestResult result={result} profileId={profileId.trim()} />}
       </form>
+
+      <NodesAndAgents />
     </section>
   );
 }
