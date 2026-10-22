@@ -166,10 +166,11 @@ export function timeline(d: DiscussionState, messages: Message[]): TimelineEntry
 /** 一个 Turn 应该显示的文字和来源 */
 export function turnText(turn: Turn, reply: Message | null, events: AgentEvent[] | undefined): { text: string; live: boolean } {
   if (reply) return { text: reply.content, live: false };
-  if (turn.outcome === "running") {
-    return { text: (events ?? []).map((e) => (e.type === "message_delta" ? e.text : "")).join(""), live: true };
-  }
-  return { text: turn.partialText ?? "", live: false };
+  const streamed = (events ?? []).map((e) => (e.type === "message_delta" ? e.text : "")).join("");
+  if (turn.outcome === "running") return { text: streamed, live: true };
+  // 停下来的发言（暂停 / 打断 / 结束本轮 / 超时）：以记录里的 partialText 为准；
+  // 记录里没有时用这个 Run 已收到的文字兜底，不让已经写出来的部分在界面上消失
+  return { text: turn.partialText ?? streamed, live: false };
 }
 
 export const OUTCOME_LABEL: Record<Turn["outcome"], string> = {
