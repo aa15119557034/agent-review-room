@@ -303,8 +303,10 @@ describe("structured summary", () => {
     assert.equal(parseSummaryOutput(valid.replace('"planContent":"# 方案"', '"planContent":42')), null);
   });
 
-  it("keeps a valid report when the plan is blank or null without gaps", () => {
+  it("keeps a valid report when the plan is missing, blank, or null without gaps", () => {
     const report = parseSummaryOutput(valid)?.report;
+    assert.ok(report);
+    assert.deepEqual(parseSummaryOutput(JSON.stringify({ report })), { report, planContent: null });
     for (const planContent of ['""', '"   "', 'null']) {
       assert.deepEqual(parseSummaryOutput(valid.replace('"planContent":"# 方案"', `"planContent":${planContent}`)), {
         report,
