@@ -252,7 +252,7 @@ export function parseSummaryOutput(text: string): ParsedSummaryOutput | null {
   const candidate = value as Record<string, unknown>;
   const report = RoundSummarySchema.shape.report.unwrap().safeParse(candidate.report);
   if (!report.success) return null;
-  const planContent = candidate.planContent;
+  const planContent = candidate.planContent ?? null;
   if (planContent !== null && typeof planContent !== "string") return null;
   if (planContent !== null && planContent.trim().length > 0 &&
     !PlanVersionSchema.shape.content.safeParse(planContent).success) return null;
