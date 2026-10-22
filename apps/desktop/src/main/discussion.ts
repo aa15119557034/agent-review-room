@@ -8,14 +8,23 @@ import {
   approveBatch,
   BatchApproveError,
   confirmPlan as confirmPlanTx,
+  createBatchDraft,
+  createResumeBatch,
   createRoundDraft,
   createSummaryDraft,
+  derivePlan as derivePlanTx,
+  editPlan as editPlanTx,
+  endRound,
   finalizePlan as finalizePlanTx,
+  interruptTurns,
   newRoundId,
+  pauseRound,
   PlanError,
+  redraftRound,
   rejectBatch,
   RoundDraftError,
   TurnError,
+  voidRound as voidRoundTx,
   type SqliteDatabase,
   type WriteQueue,
 } from "@room/db";
@@ -27,6 +36,7 @@ import type {
   CommandRequest,
   ControlErrorCode,
   ControlEvent,
+  Message,
   PlanVersion,
   Round,
   Turn,
@@ -294,6 +304,401 @@ export class DiscussionService {
     return batch;
   }
 
+  // ---------------------------------------------------------------- 一轮的控制（D-22f）
+
+  /** round.pause：先落库（Turn paused、Run CANCELLED），再 abort 适配器——反过来会留下「已 abort、db 还没标」的窗口 */
+  async pause(command: CommandRequest<"round.pause">): Promise<Round> {
+    const { repo, db, queue, emit, orchestrator } = this.#deps;
+    const before = repo.getRound(command.roundId);
+    const running = this.#runningRuns(before.id);
+    // 已经写出来的部分：从 run_events 的 message_delta 拼回来，和界面流式显示的是同一段
+    const partialText = this.#partialTextOf(before.id);
+
+    try {
+      await pauseRound(db, queue, { roundId: before.id, partialText });
+    } catch (error) {
+      throw mapTurnError(error);
+    }
+
+    const round = repo.getRound(before.id);
+    for (const turn of repo.listTurns(round.id)) {
+      if (turn.outcome === "paused") emit({ type: "turn.updated", turn });
+    }
+    for (const runId of running) emit({ type: "run.updated", run: repo.getRun(runId) });
+    emit({ type: "round.updated", round });
+
+    for (const runId of running) orchestrator.cancel(runId);
+    return round;
+  }
+
+  /** round.end：没答完的 Turn 记 round_ended，轮进待汇总；同样是先落库再 abort */
+  async end(command: CommandRequest<"round.end">): Promise<Round> {
+    const { repo, db, queue, emit, orchestrator } = this.#deps;
+    const before = repo.getRound(command.roundId);
+    const running = this.#runningRuns(before.id);
+    const partialText = this.#partialTextOf(before.id);
+
+    try {
+      await endRound(db, queue, { roundId: before.id, partialText });
+    } catch (error) {
+      throw mapTurnError(error);
+    }
+
+    const round = repo.getRound(before.id);
+    for (const turn of repo.listTurns(round.id)) {
+      if (turn.outcome === "round_ended") emit({ type: "turn.updated", turn });
+    }
+    for (const runId of running) emit({ type: "run.updated", run: repo.getRun(runId) });
+    emit({ type: "round.updated", round });
+
+    for (const runId of running) orchestrator.cancel(runId);
+    return round;
+  }
+
+  /** round.resume：内容不变，复用原来的 Snapshot 重新盖章 */
+  async resume(command: CommandRequest<"round.resume">): Promise<{ round: Round; batch: ApprovalBatch }> {
+    const { repo, db, queue, emit } = this.#deps;
+    const round = repo.getRound(command.roundId);
+    if (round.state !== "PAUSED") throw new DiscussionError("invalid_state", "这一轮没有暂停");
+
+    const latest = this.#latestTurns(round.id);
+    const agents = [...latest.values()].filter((turn) => turn.outcome === "paused").map((turn) => turn.agent);
+    if (agents.length === 0) throw new DiscussionError("invalid_state", "暂停时没有人在回答，没什么可恢复的");
+
+    let created: Awaited<ReturnType<typeof createResumeBatch>>;
+    try {
+      created = await createResumeBatch(db, queue, { roundId: round.id, agents });
+    } catch (error) {
+      throw mapDraftError(error);
+    }
+
+    const batch = repo.getBatch(created.batch.id);
+    emit({ type: "batch.updated", batch });
+    for (const item of batch.items) emit({ type: "approval.updated", approval: repo.getApproval(item.approvalId) });
+    for (const turn of repo.listTurns(round.id)) {
+      if (turn.batchId === batch.id || turn.supersededBy !== null) emit({ type: "turn.updated", turn });
+    }
+    return { round: repo.getRound(round.id), batch };
+  }
+
+  /**
+   * round.supplement：补充总是先写进时间线（human_note）。
+   * - next_round：只记下来，下一轮起草时带上
+   * - restart_now：打断 targets 里正在答的人，带着补充重答
+   * - only：只发给 targets（differsFromOthers = true）
+   *
+   * 补充内容是**用户写的**，但 @room/core 目前只有「不可信资料」这一条额外文本通道，
+   * 所以先放进 materials / extraMaterials；等 X-20 增加可信补充通道再换。
+   */
+  async supplement(
+    command: CommandRequest<"round.supplement">,
+  ): Promise<{ note: Message; batch: ApprovalBatch | null }> {
+    const { repo, db, queue, emit } = this.#deps;
+    const round = repo.getRound(command.roundId);
+    if (round.state === "SUMMARIZED" || round.state === "VOIDED") {
+      throw new DiscussionError("invalid_state", "这一轮已经结束");
+    }
+    if (command.mode !== "next_round" && command.targets.length === 0) {
+      throw new DiscussionError("validation_failed", "请选择要发给谁");
+    }
+    if (command.mode !== "next_round" && round.state !== "RUNNING" && round.state !== "AWAITING_SUMMARY") {
+      throw new DiscussionError("invalid_state", "现在只能把补充放进下一轮");
+    }
+
+    // 「只发言」的两轮之间：DRAFT 时 roundId 记 null（和 mock 一致）
+    const note = await repo.addNote(round.projectId, command.content, round.state === "DRAFT" ? null : round.id);
+    emit({ type: "message.created", message: note });
+    if (command.mode === "next_round") return { note, batch: null };
+
+    await this.#checkRecipients(command.targets, "discuss");
+    const agents = command.targets.map((agentId) => repo.getAgent(agentId));
+    const plan = round.planVersionId === null ? null : this.#loadPlan(round.projectId, round.planVersionId);
+    const extra = { name: "补充", content: command.content };
+    const prompts = assembleDiscussionBatch(
+      {
+        round,
+        history: this.#historyWithCurrent(round),
+        materials: command.mode === "only" ? [] : [extra],
+        plan,
+        nonce: createNonce(),
+      },
+      agents.map((profile) => ({
+        profile,
+        onBehalfOf: null,
+        extraMaterials: command.mode === "only" ? [extra] : [],
+      })),
+    );
+
+    const supersede: { oldTurnId: string; agent: string }[] = [];
+    let interrupted: { turnId: string; runId: string | null }[] = [];
+    if (command.mode === "restart_now") {
+      interrupted = (
+        await interruptTurns(db, queue, {
+          roundId: round.id,
+          agents: command.targets,
+          partialText: this.#partialTextOf(round.id, command.targets),
+        })
+      ).interrupted;
+      const latest = this.#latestTurns(round.id);
+      for (const agent of command.targets) {
+        const previous = latest.get(agent);
+        if (previous !== undefined) supersede.push({ oldTurnId: previous.id, agent });
+      }
+    }
+
+    let created: Awaited<ReturnType<typeof createBatchDraft>>;
+    try {
+      created = await createBatchDraft(db, queue, {
+        roundId: round.id,
+        kind: "supplement",
+        recipients: agents.map((profile, index) => ({ agent: profile.id, prompt: prompts[index]! })),
+        compressedRounds: prompts[0]?.compressedRounds ?? [],
+        supersede,
+      });
+    } catch (error) {
+      throw mapDraftError(error);
+    }
+
+    const batch = repo.getBatch(created.batch.id);
+    emit({ type: "batch.updated", batch });
+    for (const item of batch.items) emit({ type: "approval.updated", approval: repo.getApproval(item.approvalId) });
+    for (const turn of repo.listTurns(round.id)) {
+      if (turn.batchId === batch.id || turn.supersededBy !== null) emit({ type: "turn.updated", turn });
+    }
+    for (const item of interrupted) {
+      if (item.runId !== null) emit({ type: "run.updated", run: repo.getRun(item.runId) });
+    }
+    return { note, batch };
+  }
+
+  /** round.retry：单独重试一个结局是 failed / timed_out / absent_quota 的人 */
+  async retry(command: CommandRequest<"round.retry">): Promise<ApprovalBatch> {
+    const { repo, db, queue, emit } = this.#deps;
+    const round = repo.getRound(command.roundId);
+    if (round.state === "SUMMARIZED" || round.state === "VOIDED") {
+      throw new DiscussionError("invalid_state", "这一轮已经结束");
+    }
+
+    const previous = this.#latestTurns(round.id).get(command.agent);
+    if (previous === undefined || !["timed_out", "failed", "absent_quota"].includes(previous.outcome)) {
+      throw new DiscussionError("invalid_state", "这个人不需要重试");
+    }
+
+    // 重试就是用来处理失败 / 超时 / 额度缺席的，所以不按「额度缺席」挡
+    await this.#checkRecipients([command.agent], "discuss", { allowAbsentQuota: true });
+    const agent = repo.getAgent(command.agent);
+    const plan = round.planVersionId === null ? null : this.#loadPlan(round.projectId, round.planVersionId);
+    const prompts = assembleDiscussionBatch(
+      { round, history: this.#historyWithCurrent(round), materials: [], plan, nonce: createNonce() },
+      [{ profile: agent, onBehalfOf: null, extraMaterials: [] }],
+    );
+
+    let created: Awaited<ReturnType<typeof createBatchDraft>>;
+    try {
+      created = await createBatchDraft(db, queue, {
+        roundId: round.id,
+        kind: "retry",
+        recipients: [{ agent: agent.id, prompt: prompts[0]! }],
+        compressedRounds: prompts[0]?.compressedRounds ?? [],
+        supersede: [{ oldTurnId: previous.id, agent: agent.id }],
+      });
+    } catch (error) {
+      throw mapDraftError(error);
+    }
+
+    const batch = repo.getBatch(created.batch.id);
+    emit({ type: "batch.updated", batch });
+    for (const item of batch.items) emit({ type: "approval.updated", approval: repo.getApproval(item.approvalId) });
+    for (const turn of repo.listTurns(round.id)) {
+      if (turn.batchId === batch.id || turn.supersededBy !== null) emit({ type: "turn.updated", turn });
+    }
+    return batch;
+  }
+
+  /** round.void：回到某一阶段改方向，记录全部保留 */
+  async voidRound(command: CommandRequest<"round.void">): Promise<Round> {
+    const { repo, db, queue, emit, orchestrator } = this.#deps;
+    const before = repo.getRound(command.roundId);
+    const running = this.#runningRuns(before.id);
+
+    let result: Awaited<ReturnType<typeof voidRoundTx>>;
+    try {
+      result = await voidRoundTx(db, queue, {
+        roundId: before.id,
+        reason: command.reason,
+        partialText: this.#partialTextOf(before.id),
+      });
+    } catch (error) {
+      throw mapDraftError(error);
+    }
+
+    const round = repo.getRound(result.round.id);
+    for (const turn of repo.listTurns(round.id)) {
+      if (turn.outcome === "round_ended") emit({ type: "turn.updated", turn });
+    }
+    for (const runId of running) emit({ type: "run.updated", run: repo.getRun(runId) });
+    for (const planVersionId of result.supersededPlanIds) {
+      emit({ type: "plan.updated", plan: repo.getPlan(planVersionId) });
+    }
+    emit({ type: "round.updated", round });
+
+    for (const runId of running) orchestrator.cancel(runId);
+    return round;
+  }
+
+  /** round.redraft：修改还没盖章的一轮（任务 / 收件人 / 记录取法） */
+  async redraft(command: CommandRequest<"round.redraft">): Promise<{ round: Round; batch: ApprovalBatch }> {
+    const { repo, db, queue, emit } = this.#deps;
+    const round = repo.getRound(command.roundId);
+    if (round.state !== "DRAFT") throw new DiscussionError("invalid_state", "只有还没盖章的一轮可以修改");
+
+    const recipients = command.recipients === undefined ? round.recipients : [...command.recipients];
+    const task = command.task ?? round.task;
+    const historyMode = command.historyMode ?? round.historyMode;
+
+    await this.#checkRecipients(recipients, "discuss");
+    const agents = recipients.map((agentId) => repo.getAgent(agentId));
+    const plan = round.planVersionId === null ? null : this.#loadPlan(round.projectId, round.planVersionId);
+    const forPrompt: Round = {
+      ...round,
+      task,
+      taskSource: "human",
+      recipients,
+      historyMode,
+    };
+    const prompts = assembleDiscussionBatch(
+      {
+        round: forPrompt,
+        history: repo.discussionHistory(round.projectId, round.index),
+        materials: [],
+        plan,
+        nonce: createNonce(),
+      },
+      agents.map((profile) => ({ profile, onBehalfOf: null, extraMaterials: [] })),
+    );
+
+    let created: Awaited<ReturnType<typeof redraftRound>>;
+    try {
+      created = await redraftRound(db, queue, {
+        roundId: round.id,
+        task,
+        recipientAgents: recipients,
+        historyMode,
+        prompts: agents.map((profile, index) => ({ agent: profile.id, prompt: prompts[index]! })),
+        compressedRounds: prompts[0]?.compressedRounds ?? [],
+      });
+    } catch (error) {
+      throw mapDraftError(error);
+    }
+
+    const updated = repo.getRound(created.round.id);
+    const batch = repo.getBatch(created.batch.id);
+    emit({ type: "round.updated", round: updated });
+    emit({ type: "batch.updated", batch });
+    for (const item of batch.items) emit({ type: "approval.updated", approval: repo.getApproval(item.approvalId) });
+    for (const turn of repo.listTurnsByBatch(batch.id)) emit({ type: "turn.updated", turn });
+    return { round: updated, batch };
+  }
+
+  /** note.add：「只发言」，不发给任何 Agent，不用盖章 */
+  async addNote(command: CommandRequest<"note.add">): Promise<Message> {
+    const { repo, emit } = this.#deps;
+    const project = repo.getProject(command.projectId);
+    const active = repo.listRounds(project.id).find((round) => ACTIVE_ROUND_STATES.has(round.state));
+    const roundId = active !== undefined && active.state !== "DRAFT" ? active.id : null;
+    const note = await repo.addNote(project.id, command.content, roundId);
+    emit({ type: "message.created", message: note });
+    return note;
+  }
+
+  /** plan.edit：用户自己改方案，生成新的 DRAFT，其它草稿作废 */
+  async editPlan(command: CommandRequest<"plan.edit">): Promise<PlanVersion> {
+    const { repo, db, queue, emit } = this.#deps;
+    let result: Awaited<ReturnType<typeof editPlanTx>>;
+    try {
+      result = await editPlanTx(db, queue, {
+        parentId: command.parentId,
+        content: command.content,
+        changeNote: command.changeNote,
+      });
+    } catch (error) {
+      throw mapPlanError(error);
+    }
+    for (const superseded of result.superseded) emit({ type: "plan.updated", plan: repo.getPlan(superseded.id) });
+    const plan = repo.getPlan(result.plan.id);
+    emit({ type: "plan.updated", plan });
+    return plan;
+  }
+
+  /** plan.derive：从 FINAL 派生新的 DRAFT */
+  async derivePlan(command: CommandRequest<"plan.derive">): Promise<PlanVersion> {
+    const { repo, db, queue, emit } = this.#deps;
+    let row: Awaited<ReturnType<typeof derivePlanTx>>;
+    try {
+      row = await derivePlanTx(db, queue, command.planVersionId);
+    } catch (error) {
+      throw mapPlanError(error);
+    }
+    const plan = repo.getPlan(row.id);
+    emit({ type: "plan.updated", plan });
+    return plan;
+  }
+
+  /**
+   * 正在跑的 Turn 已经写出来的部分：把该 Run 的 message_delta 按 seq 拼起来，
+   * 按 turnId 返回。暂停 / 结束本轮 / 作废 / 打断重答都要带着它落库（0-B 第 3、4、5 行）。
+   */
+  #partialTextOf(roundId: string, agents?: readonly string[]): Record<string, string> {
+    const partial: Record<string, string> = {};
+    for (const turn of this.#deps.repo.listTurns(roundId)) {
+      if (turn.outcome !== "running" || turn.runId === null) continue;
+      if (agents !== undefined && !agents.includes(turn.agent)) continue;
+      const rows = this.#deps.db
+        .prepare("SELECT payload FROM run_events WHERE run_id = ? AND type = 'message_delta' ORDER BY seq")
+        .all(turn.runId) as { payload: string }[];
+      const text = rows
+        .map((row) => {
+          try {
+            const payload = JSON.parse(row.payload) as { text?: unknown };
+            return typeof payload.text === "string" ? payload.text : "";
+          } catch {
+            return "";
+          }
+        })
+        .join("");
+      if (text !== "") partial[turn.id] = text;
+    }
+    return partial;
+  }
+
+  #runningRuns(roundId: string): string[] {
+    return this.#deps.repo
+      .listTurns(roundId)
+      .filter((turn) => turn.outcome === "running" && turn.runId !== null)
+      .map((turn) => turn.runId as string);
+  }
+
+  /** 每个人最新一次非汇总发言（按创建顺序覆盖） */
+  #latestTurns(roundId: string): Map<string, Turn> {
+    const latest = new Map<string, Turn>();
+    for (const turn of this.#deps.repo.listTurns(roundId)) {
+      if (!turn.isSummary) latest.set(turn.agent, turn);
+    }
+    return latest;
+  }
+
+  /** 总结 / 补充 / 重试时，要让 Agent 看到本轮已经发生的发言 */
+  #historyWithCurrent(round: Round): DiscussionHistoryRound[] {
+    const history: DiscussionHistoryRound[] = this.#deps.repo.discussionHistory(round.projectId, round.index + 1);
+    history.push({
+      round,
+      messages: this.#deps.repo.listMessagesByRound(round.id),
+      turns: this.#deps.repo.listTurns(round.id),
+      summary: null,
+    });
+    return history;
+  }
+
   /**
    * agent.update：新建或修改参与者（契约里没有单独的 create，第一条就靠它建）。
    * 新建时必须有 displayName 和 color；其余字段有默认值。
@@ -325,7 +730,7 @@ export class DiscussionService {
     const { repo, db, queue, emit } = this.#deps;
     repo.getBatch(command.batchId); // 不存在时先报 not_found
     try {
-      await rejectBatch(db, queue, command.batchId);
+      await rejectBatch(db, queue, command.batchId, command.reason);
     } catch (error) {
       if (error instanceof TurnError && error.code === "batch_not_ready") {
         throw new DiscussionError("already_decided", "这一批已经处理过了");
@@ -371,7 +776,8 @@ export class DiscussionService {
     } catch (error) {
       throw mapPlanError(error);
     }
-    const plan = repo.getPlan(row.id);
+    for (const superseded of row.superseded) emit({ type: "plan.updated", plan: repo.getPlan(superseded.id) });
+    const plan = repo.getPlan(row.plan.id);
     emit({ type: "plan.updated", plan });
     return plan;
   }
@@ -501,7 +907,11 @@ export class DiscussionService {
    * - 节点离线 / 没有这个 profile：不发
    * - 节点的 Token 没有配置：不发（多节点各自的 Token 存在设置文件里，D-22c）
    */
-  async #checkRecipients(agentIds: readonly string[], need: AvailabilityNeed): Promise<void> {
+  async #checkRecipients(
+    agentIds: readonly string[],
+    need: AvailabilityNeed,
+    options: { allowAbsentQuota?: boolean } = {},
+  ): Promise<void> {
     const { repo, settings } = this.#deps;
     const pending: PendingRecipient[] = [];
     /** 每个节点自己的凭据（地址 + 解密后的 Token），同一个节点只取一次 */
@@ -523,9 +933,15 @@ export class DiscussionService {
         throw new DiscussionError("agent_unavailable", displayName + " 没有开启「可以做汇总」");
       }
 
-      // 额度按账号算：所有议题里最新一次发言（含汇总）都算数
+      // 额度按账号算：所有议题里最新一次发言（含汇总）都算数。
+      // 重试自己就是用来处理失败 / 缺席的，所以 round.retry 传 allowAbsentQuota 跳过这一条。
       const latest = repo.latestTurnOutcomeGlobal(agentId);
-      if (latest !== null && latest.outcome === "absent_quota" && this.#isRecentQuotaAbsence(latest.finishedAt)) {
+      if (
+        options.allowAbsentQuota !== true &&
+        latest !== null &&
+        latest.outcome === "absent_quota" &&
+        this.#isRecentQuotaAbsence(latest.finishedAt)
+      ) {
         throw new DiscussionError("agent_unavailable", displayName + " 额度用尽（缺席）");
       }
 
@@ -632,7 +1048,19 @@ function mapDraftError(error: unknown): unknown {
       return new DiscussionError("invalid_state", "这一轮不在待汇总状态");
     case "invalid_input":
       return new DiscussionError("validation_failed", error.message);
+    case "round_not_draft":
+    case "round_not_paused":
+    case "round_not_active":
+    case "turn_not_retryable":
+      return new DiscussionError("invalid_state", error.message);
     default:
       return new DiscussionError("internal", error.message);
   }
+}
+
+function mapTurnError(error: unknown): unknown {
+  if (error instanceof TurnError && error.code === "round_not_active") {
+    return new DiscussionError("invalid_state", error.message);
+  }
+  return error;
 }

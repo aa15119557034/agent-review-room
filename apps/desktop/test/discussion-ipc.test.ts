@@ -90,6 +90,8 @@ interface Harness {
 async function makeHarness(options: {
   probe?: (params: { baseUrl: string; token: string; profileId: string }) => Promise<NodeProbeResult>;
   scripts?: Map<string, Record<string, unknown>[]>;
+  /** 这些 adapter_id 的 Run 不自己结束，一直等到被 abort（测暂停 / 打断 / 结束本轮用） */
+  holdProfiles?: string[];
 } = {}): Promise<Harness> {
   const dir = mkdtempSync(join(tmpdir(), "room-discussion-ipc-"));
   dirs.push(dir);
@@ -143,6 +145,19 @@ async function makeHarness(options: {
     getRun: (runId) => db.prepare("SELECT * FROM runs WHERE id = ?").get(runId) as never,
     adapterFactory: async (run) => {
       started.push(run);
+      if ((options.holdProfiles ?? []).includes(run.adapter_id)) {
+        return fakeAdapter(async function* (_sessionId, runId, _input, opts) {
+          let seq = 0;
+          // 先吐脚本里的内容（测试里用 message_delta 模拟"已经写了半页"），再挂住等 abort
+          for (const part of scripts.get(run.adapter_id) ?? []) yield event(runId, seq++, part);
+          if (!opts.signal.aborted) {
+            await new Promise<void>((resolve) => {
+              opts.signal.addEventListener("abort", () => resolve(), { once: true });
+            });
+          }
+          yield event(runId, seq++, { type: "cancelled", reason: "aborted" });
+        });
+      }
       const script = scripts.get(run.adapter_id) ?? ANSWER;
       return fakeAdapter(async function* (_sessionId, runId) {
         let seq = 0;
@@ -931,3 +946,359 @@ describe("plan.confirm / plan.finalize", () => {
 });
 
 
+
+describe("round.pause / round.resume：先落库再 abort", () => {
+  it("暂停 → 恢复复用同一 Snapshot（内容与指纹不变）", async () => {
+    const h = await makeHarness({ holdProfiles: ["remote:deepseek-discuss"] });
+    const created = (await draft(h, ["deepseek"])) as unknown as {
+      data: { round: { id: string }; batch: BatchLike };
+    };
+    const roundId = created.data.round.id;
+    await approveBatchOf(h, created.data.batch);
+    await waitFor(
+      () => (h.db.prepare("SELECT outcome FROM turns").get() as { outcome: string }).outcome === "running",
+      "turn running",
+    );
+
+    const paused = (await h.dispatcher.handleCommand({ type: "round.pause", roundId })) as any;
+    assert.equal(paused.ok, true, JSON.stringify(paused));
+    assert.equal(paused.data.state, "PAUSED");
+    assert.equal(
+      (h.db.prepare("SELECT state FROM runs").get() as { state: string }).state,
+      "CANCELLED",
+      "先落库：Run 已经是 CANCELLED",
+    );
+    assert.equal((h.db.prepare("SELECT outcome FROM turns").get() as { outcome: string }).outcome, "paused");
+
+    const originalSnapshot = (h.db.prepare("SELECT snapshot_id FROM batch_items ORDER BY recipient LIMIT 1").get() as {
+      snapshot_id: string;
+    }).snapshot_id;
+    const resumed = (await h.dispatcher.handleCommand({ type: "round.resume", roundId })) as any;
+    assert.equal(resumed.ok, true, JSON.stringify(resumed));
+    assert.equal(resumed.data.round.state, "PAUSED", "盖章前轮还是暂停中");
+    assert.equal(resumed.data.batch.kind, "resume");
+    assert.equal(resumed.data.batch.items[0].snapshotId, originalSnapshot, "复用原来的 Snapshot");
+    assert.equal(
+      (h.db.prepare("SELECT state FROM batches WHERE id = ?").get(resumed.data.batch.id) as { state: string }).state,
+      "READY_FOR_REVIEW",
+    );
+
+    await approveBatchOf(h, resumed.data.batch);
+    assert.equal(
+      (h.db.prepare("SELECT state FROM rounds WHERE id = ?").get(roundId) as { state: string }).state,
+      "RUNNING",
+    );
+    h.orchestrator.cancelAll();
+    await close(h);
+  });
+
+  it("暂停时把 run_events 里的 message_delta 拼进 partial_text（已写部分保留）", async () => {
+    const h = await makeHarness({
+      holdProfiles: ["remote:deepseek-discuss"],
+      scripts: new Map([
+        [
+          "remote:deepseek-discuss",
+          [
+            { type: "message_delta", text: "第一段，" },
+            { type: "message_delta", text: "第二段" },
+          ],
+        ],
+      ]),
+    });
+    const created = (await draft(h, ["deepseek"])) as unknown as { data: { round: { id: string }; batch: BatchLike } };
+    const roundId = created.data.round.id;
+    await approveBatchOf(h, created.data.batch);
+    await waitFor(
+      () =>
+        (h.db.prepare("SELECT count(*) AS n FROM run_events WHERE type = 'message_delta'").get() as { n: number }).n === 2,
+      "two message deltas",
+    );
+
+    const paused = (await h.dispatcher.handleCommand({ type: "round.pause", roundId })) as any;
+    assert.equal(paused.ok, true, JSON.stringify(paused));
+    const turn = h.db.prepare("SELECT partial_text FROM turns").get() as { partial_text: string | null };
+    assert.equal(turn.partial_text, "第一段，第二段", "已写部分要按 seq 拼起来落库");
+    h.orchestrator.cancelAll();
+    await close(h);
+  });
+
+  it("结束本轮把没答完的标 round_ended；再结束返回 invalid_state", async () => {
+    const h = await makeHarness({ holdProfiles: ["remote:deepseek-discuss"] });
+    const created = (await draft(h, ["deepseek"])) as unknown as { data: { round: { id: string }; batch: BatchLike } };
+    const roundId = created.data.round.id;
+    await approveBatchOf(h, created.data.batch);
+    await waitFor(
+      () => (h.db.prepare("SELECT outcome FROM turns").get() as { outcome: string }).outcome === "running",
+      "turn running",
+    );
+
+    const ended = (await h.dispatcher.handleCommand({ type: "round.end", roundId })) as any;
+    assert.equal(ended.ok, true, JSON.stringify(ended));
+    assert.equal(ended.data.state, "AWAITING_SUMMARY");
+    assert.equal((h.db.prepare("SELECT outcome FROM turns").get() as { outcome: string }).outcome, "round_ended");
+    assert.equal((h.db.prepare("SELECT state FROM runs").get() as { state: string }).state, "CANCELLED");
+
+    const again = await h.dispatcher.handleCommand({ type: "round.end", roundId });
+    assert.equal(failure(again).error, "invalid_state");
+    h.orchestrator.cancelAll();
+    await close(h);
+  });
+});
+
+describe("round.supplement / round.retry / round.void", () => {
+  it("restart_now：打断正在答的人，旧 Turn interrupted、新批次 supplement", async () => {
+    const h = await makeHarness({ holdProfiles: ["remote:deepseek-discuss"] });
+    const created = (await draft(h, ["deepseek"])) as unknown as { data: { round: { id: string }; batch: BatchLike } };
+    const roundId = created.data.round.id;
+    await approveBatchOf(h, created.data.batch);
+    await waitFor(
+      () => (h.db.prepare("SELECT outcome FROM turns").get() as { outcome: string }).outcome === "running",
+      "turn running",
+    );
+
+    const result = (await h.dispatcher.handleCommand({
+      type: "round.supplement",
+      roundId,
+      content: "再补一句：先看失败路径",
+      mode: "restart_now",
+      targets: ["deepseek"],
+    })) as any;
+    assert.equal(result.ok, true, JSON.stringify(result));
+    assert.equal(result.data.note.kind, "human_note");
+    assert.equal(result.data.note.roundId, roundId);
+    assert.equal(result.data.batch.kind, "supplement");
+
+    const turns = h.db.prepare("SELECT id, outcome, superseded_by FROM turns ORDER BY rowid").all() as {
+      id: string;
+      outcome: string;
+      superseded_by: string | null;
+    }[];
+    assert.equal(turns[0]!.outcome, "interrupted");
+    assert.ok(turns[0]!.superseded_by, "旧 Turn 接到新 Turn");
+    assert.equal(turns[1]!.outcome, "pending");
+
+    const prompt = h.db
+      .prepare("SELECT content FROM prompt_snapshots ORDER BY created_at DESC LIMIT 1")
+      .get() as { content: string };
+    assert.match(prompt.content, /再补一句：先看失败路径/);
+    h.orchestrator.cancelAll();
+    await close(h);
+  });
+
+  it("only：只发给一个人，标 differsFromOthers", async () => {
+    const h = await makeHarness();
+    const created = (await draft(h, ["deepseek"])) as unknown as { data: { round: { id: string }; batch: BatchLike } };
+    const roundId = created.data.round.id;
+    await approveBatchOf(h, created.data.batch);
+    await waitFor(
+      () => (h.db.prepare("SELECT state FROM rounds WHERE id = ?").get(roundId) as { state: string }).state === "AWAITING_SUMMARY",
+      "awaiting summary",
+    );
+
+    const result = (await h.dispatcher.handleCommand({
+      type: "round.supplement",
+      roundId,
+      content: "只给 Codex 看",
+      mode: "only",
+      targets: ["codex"],
+    })) as any;
+    assert.equal(result.ok, true, JSON.stringify(result));
+    assert.equal(result.data.batch.kind, "supplement");
+    assert.equal(result.data.batch.items.length, 1);
+    assert.equal(result.data.batch.items[0].recipient, "codex");
+    assert.equal(result.data.batch.items[0].differsFromOthers, true);
+    await close(h);
+  });
+
+  it("retry：只重试失败的人，旧 Turn 被新 Turn 接上", async () => {
+    const h = await makeHarness({
+      scripts: new Map([["remote:deepseek-discuss", [{ type: "error", reason: "internal" }]]]),
+    });
+    const created = (await draft(h, ["deepseek"])) as unknown as { data: { round: { id: string }; batch: BatchLike } };
+    const roundId = created.data.round.id;
+    await approveBatchOf(h, created.data.batch);
+    await waitFor(
+      () => (h.db.prepare("SELECT outcome FROM turns").get() as { outcome: string }).outcome === "failed",
+      "failed turn",
+    );
+
+    const retried = (await h.dispatcher.handleCommand({ type: "round.retry", roundId, agent: "deepseek" })) as any;
+    assert.equal(retried.ok, true, JSON.stringify(retried));
+    assert.equal(retried.data.kind, "retry");
+    assert.equal(retried.data.items[0].recipient, "deepseek");
+    assert.ok(
+      (h.db.prepare("SELECT superseded_by FROM turns ORDER BY rowid LIMIT 1").get() as { superseded_by: string })
+        .superseded_by,
+    );
+    await close(h);
+  });
+
+  it("retry：额度缺席的人也能重试（不被 round.draft 的缺席判断挡住）", async () => {
+    const h = await makeHarness({
+      scripts: new Map([["remote:deepseek-discuss", [{ type: "error", reason: "quota_exhausted" }]]]),
+    });
+    const created = (await draft(h, ["deepseek"])) as unknown as { data: { round: { id: string }; batch: BatchLike } };
+    const roundId = created.data.round.id;
+    await approveBatchOf(h, created.data.batch);
+    await waitFor(
+      () => (h.db.prepare("SELECT outcome FROM turns").get() as { outcome: string }).outcome === "absent_quota",
+      "quota turn",
+    );
+
+    const retried = (await h.dispatcher.handleCommand({ type: "round.retry", roundId, agent: "deepseek" })) as any;
+    assert.equal(retried.ok, true, JSON.stringify(retried));
+    assert.equal(retried.data.kind, "retry");
+    await close(h);
+  });
+
+  it("void：轮到 VOIDED（记录保留），再操作返回 invalid_state", async () => {
+    const h = await makeHarness();
+    const created = (await draft(h, ["deepseek"])) as unknown as { data: { round: { id: string }; batch: BatchLike } };
+    const roundId = created.data.round.id;
+    const approved = await approveBatchOf(h, created.data.batch);
+    assert.equal(approved.ok, true);
+    await waitFor(
+      () => (h.db.prepare("SELECT state FROM rounds WHERE id = ?").get(roundId) as { state: string }).state === "AWAITING_SUMMARY",
+      "awaiting summary",
+    );
+
+    const voided = (await h.dispatcher.handleCommand({ type: "round.void", roundId, reason: "方向变了" })) as any;
+    assert.equal(voided.ok, true, JSON.stringify(voided));
+    assert.equal(voided.data.state, "VOIDED");
+    assert.equal(voided.data.voidReason, "方向变了");
+    assert.equal((h.db.prepare("SELECT count(*) AS n FROM messages").get() as { n: number }).n > 0, true, "记录保留");
+
+    const again = await h.dispatcher.handleCommand({ type: "round.void", roundId, reason: "再作废一次" });
+    assert.equal(failure(again).error, "invalid_state");
+    await close(h);
+  });
+});
+
+describe("round.redraft / note.add", () => {
+  it("redraft：改任务和收件人，旧批次 CANCELLED，新 initial 批次", async () => {
+    const h = await makeHarness();
+    const created = (await draft(h, ["deepseek"])) as unknown as { data: { round: { id: string }; batch: BatchLike } };
+    const roundId = created.data.round.id;
+
+    const redrafted = (await h.dispatcher.handleCommand({
+      type: "round.redraft",
+      roundId,
+      recipients: ["codex"],
+      task: "换个问题",
+      historyMode: "full",
+    })) as any;
+    assert.equal(redrafted.ok, true, JSON.stringify(redrafted));
+    assert.equal(redrafted.data.round.task, "换个问题");
+    assert.deepEqual(redrafted.data.round.recipients, ["codex"]);
+    assert.equal(redrafted.data.round.historyMode, "full");
+    assert.equal(redrafted.data.batch.kind, "initial");
+    assert.equal(redrafted.data.batch.items[0].recipient, "codex");
+
+    const old = h.db.prepare("SELECT state FROM batches WHERE id = ?").get(created.data.batch.id) as { state: string };
+    assert.equal(old.state, "CANCELLED");
+    await close(h);
+  });
+
+  it("note.add：写进时间线；轮进行中带 roundId，否则为 null", async () => {
+    const h = await makeHarness();
+    const created = (await draft(h, ["deepseek"])) as unknown as { data: { round: { id: string }; batch: BatchLike } };
+    const roundId = created.data.round.id;
+
+    const before = (await h.dispatcher.handleCommand({ type: "note.add", projectId: h.projectId, content: "先记一句" })) as any;
+    assert.equal(before.ok, true, JSON.stringify(before));
+    assert.equal(before.data.kind, "human_note");
+    assert.equal(before.data.roundId, null);
+
+    await approveBatchOf(h, created.data.batch);
+    await waitFor(
+      () => (h.db.prepare("SELECT state FROM rounds WHERE id = ?").get(roundId) as { state: string }).state === "AWAITING_SUMMARY",
+      "awaiting summary",
+    );
+    const during = (await h.dispatcher.handleCommand({ type: "note.add", projectId: h.projectId, content: "进行中记一句" })) as any;
+    assert.equal(during.data.roundId, roundId);
+    assert.ok(h.events.some((e) => e.type === "message.created" && (e as any).message.kind === "human_note"));
+    await close(h);
+  });
+});
+
+describe("方案：定稿 → 派生 → 确认 → 再定稿（C-26），edit / derive", () => {
+  it("派生版本定稿时旧 FINAL 变 SUPERSEDED；edit 生成新草稿", async () => {
+    const h = await makeHarness({
+      scripts: new Map([["remote:claude-review", [{ type: "message_complete", text: SUMMARY_JSON }, { type: "completed" }]]]),
+    });
+    const { planId: v1Id, contentHash: v1Hash } = await makePlan(h);
+
+    assert.equal((await h.dispatcher.handleCommand({ type: "plan.confirm", planVersionId: v1Id })).ok, true);
+    const v1Final = (await h.dispatcher.handleCommand({
+      type: "plan.finalize",
+      planVersionId: v1Id,
+      expectedContentHash: v1Hash,
+    })) as any;
+    assert.equal(v1Final.ok, true, JSON.stringify(v1Final));
+    assert.equal(v1Final.data.state, "FINAL");
+
+    const derived = (await h.dispatcher.handleCommand({ type: "plan.derive", planVersionId: v1Id })) as any;
+    assert.equal(derived.ok, true, JSON.stringify(derived));
+    assert.equal(derived.data.version, 2);
+    assert.equal(derived.data.state, "DRAFT");
+    assert.equal(derived.data.parentId, v1Id);
+    assert.equal(derived.data.content, "# 方案 v1\n第一版", "派生内容不变");
+
+    assert.equal((await h.dispatcher.handleCommand({ type: "plan.confirm", planVersionId: derived.data.id })).ok, true);
+    const v2Final = (await h.dispatcher.handleCommand({
+      type: "plan.finalize",
+      planVersionId: derived.data.id,
+      expectedContentHash: derived.data.contentHash,
+    })) as any;
+    assert.equal(v2Final.ok, true, JSON.stringify(v2Final));
+    assert.equal(v2Final.data.state, "FINAL");
+
+    const v1Row = h.db.prepare("SELECT state, superseded_reason FROM plan_versions WHERE id = ?").get(v1Id) as {
+      state: string;
+      superseded_reason: string | null;
+    };
+    assert.equal(v1Row.state, "SUPERSEDED");
+    assert.ok(v1Row.superseded_reason);
+    assert.ok(
+      h.events.some(
+        (e) => e.type === "plan.updated" && (e as any).plan.id === v1Id && (e as any).plan.state === "SUPERSEDED",
+      ),
+      "旧 FINAL 的 plan.updated 也要推",
+    );
+
+    const edited = (await h.dispatcher.handleCommand({
+      type: "plan.edit",
+      parentId: derived.data.id,
+      content: "# 方案 v3",
+      changeNote: "再补一条",
+    })) as any;
+    assert.equal(edited.ok, true, JSON.stringify(edited));
+    assert.equal(edited.data.version, 3);
+    assert.equal(edited.data.state, "DRAFT");
+    assert.equal(edited.data.parentId, derived.data.id);
+    assert.equal(
+      (h.db.prepare("SELECT state FROM plan_versions WHERE id = ?").get(derived.data.id) as { state: string }).state,
+      "FINAL",
+      "从 FINAL 编辑不会把 FINAL 变成别的",
+    );
+    await close(h);
+  });
+});
+
+describe("batch.reject：拒绝原因落库", () => {
+  it("Approval.reason 记下用户填的原因", async () => {
+    const h = await makeHarness();
+    const created = (await draft(h, ["deepseek", "codex"])) as unknown as { data: { batch: BatchLike } };
+    const rejected = await h.dispatcher.handleCommand({
+      type: "batch.reject",
+      batchId: created.data.batch.id,
+      reason: "先补背景",
+    });
+    assert.equal(rejected.ok, true, JSON.stringify(rejected));
+
+    const reasons = h.db.prepare("SELECT reason FROM approvals WHERE state = 'REJECTED'").all() as { reason: string | null }[];
+    assert.equal(reasons.length, 2);
+    assert.ok(reasons.every((row) => row.reason === "先补背景"));
+    await close(h);
+  });
+});

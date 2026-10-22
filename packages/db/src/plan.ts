@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import type { SqliteDatabase } from "./database";
+import { ulid } from "./ulid";
 import { writeTransaction, type WriteQueue } from "./write-queue";
 
 /**
@@ -10,7 +11,12 @@ import { writeTransaction, type WriteQueue } from "./write-queue";
  * - 内容不可改：定稿时重算 sha256(content)，必须同时等于调用方看到的指纹和库里存的指纹
  */
 
-export type PlanErrorCode = "plan_not_found" | "plan_not_draft" | "plan_not_current" | "hash_mismatch";
+export type PlanErrorCode =
+  | "plan_not_found"
+  | "plan_not_draft"
+  | "plan_not_current"
+  | "plan_not_final"
+  | "hash_mismatch";
 
 export class PlanError extends Error {
   readonly code: PlanErrorCode;
@@ -84,12 +90,15 @@ export function confirmPlan(
 /**
  * 盖章定稿：CURRENT → FINAL。校验指纹（三处一致：内容现算、库里存的、调用方看到的），
  * 这样「看的是旧版本」不会被悄悄定稿。
+ *
+ * C-26：这个议题已经有 FINAL（之前定过稿、后来派生出新版本）时，旧的 FINAL 在同一事务里
+ * 变成 SUPERSEDED；返回被取代的版本，调用方要把它们的 plan.updated 也推出去。
  */
 export function finalizePlan(
   db: SqliteDatabase,
   queue: WriteQueue,
   input: { planVersionId: string; expectedContentHash: string },
-): Promise<PlanVersionRow> {
+): Promise<{ plan: PlanVersionRow; superseded: PlanVersionRow[] }> {
   return writeTransaction(db, queue, () => {
     const plan = readPlan(db, input.planVersionId);
     if (plan === undefined) throw new PlanError("plan_not_found", "plan version not found");
@@ -100,10 +109,125 @@ export function finalizePlan(
       throw new PlanError("hash_mismatch", "plan content does not match its hash");
     }
 
+    const decidedAt = now();
+    const previous = db
+      .prepare("SELECT id FROM plan_versions WHERE project_id = ? AND state = 'FINAL' AND id <> ?")
+      .all(plan.project_id, plan.id) as { id: string }[];
+    for (const row of previous) {
+      db.prepare(
+        "UPDATE plan_versions SET state = 'SUPERSEDED', superseded_reason = ?, decided_at = ? WHERE id = ? AND state = 'FINAL'",
+      ).run("被新定稿的版本取代", decidedAt, row.id);
+    }
+
     const changed = db
       .prepare("UPDATE plan_versions SET state = 'FINAL', decided_at = ? WHERE id = ? AND state = 'CURRENT'")
-      .run(now(), plan.id);
+      .run(decidedAt, plan.id);
     if (changed.changes !== 1) throw new PlanError("plan_not_current", "plan changed concurrently");
-    return readPlan(db, plan.id)!;
+
+    return {
+      plan: readPlan(db, plan.id)!,
+      superseded: previous.map((row) => readPlan(db, row.id)!),
+    };
   });
 }
+
+function nextVersion(db: SqliteDatabase, projectId: string): number {
+  return (
+    db.prepare("SELECT COALESCE(MAX(version), 0) + 1 AS n FROM plan_versions WHERE project_id = ?").get(projectId) as { n: number }
+  ).n;
+}
+
+function insertPlanVersion(
+  db: SqliteDatabase,
+  input: {
+    projectId: string;
+    version: number;
+    content: string;
+    contentHash: string;
+    changeNote: string;
+    basedOnRoundId: string | null;
+    parentId: string | null;
+    createdAt: string;
+  },
+): string {
+  const id = "plan_" + ulid();
+  db.prepare(
+    "INSERT INTO plan_versions (id, project_id, version, state, content, content_hash, change_note, based_on_round_id, " +
+      "parent_id, drafted_by_kind, drafted_by_agent, created_at) VALUES (?, ?, ?, 'DRAFT', ?, ?, ?, ?, ?, 'human', NULL, ?)",
+  ).run(
+    id,
+    input.projectId,
+    input.version,
+    input.content,
+    input.contentHash,
+    input.changeNote,
+    input.basedOnRoundId,
+    input.parentId,
+    input.createdAt,
+  );
+  return id;
+}
+
+/**
+ * 用户自己改方案（plan.edit）：基于 parentId 生成一个新的 DRAFT。
+ * 项目里其它还没确认的 DRAFT 一起作废，避免出现两个互相冲突的草稿。
+ */
+export function editPlan(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  input: { parentId: string; content: string; changeNote: string },
+): Promise<{ plan: PlanVersionRow; superseded: PlanVersionRow[] }> {
+  return writeTransaction(db, queue, () => {
+    const parent = readPlan(db, input.parentId);
+    if (parent === undefined) throw new PlanError("plan_not_found", "plan version not found");
+
+    const createdAt = now();
+    const previous = db
+      .prepare("SELECT id FROM plan_versions WHERE project_id = ? AND state = 'DRAFT'")
+      .all(parent.project_id) as { id: string }[];
+    for (const row of previous) {
+      db.prepare(
+        "UPDATE plan_versions SET state = 'SUPERSEDED', superseded_reason = ?, decided_at = ? WHERE id = ? AND state = 'DRAFT'",
+      ).run("被你改过的版本取代", createdAt, row.id);
+    }
+
+    const id = insertPlanVersion(db, {
+      projectId: parent.project_id,
+      version: nextVersion(db, parent.project_id),
+      content: input.content,
+      contentHash: createHash("sha256").update(input.content, "utf8").digest("hex"),
+      changeNote: input.changeNote,
+      basedOnRoundId: parent.based_on_round_id,
+      parentId: parent.id,
+      createdAt,
+    });
+
+    return {
+      plan: readPlan(db, id)!,
+      superseded: previous.map((row) => readPlan(db, row.id)!),
+    };
+  });
+}
+
+/** 定稿后发现漏了（plan.derive）：从 FINAL 派生一个新的 DRAFT，版本链不断 */
+export function derivePlan(db: SqliteDatabase, queue: WriteQueue, planVersionId: string): Promise<PlanVersionRow> {
+  return writeTransaction(db, queue, () => {
+    const parent = readPlan(db, planVersionId);
+    if (parent === undefined) throw new PlanError("plan_not_found", "plan version not found");
+    if (parent.state !== "FINAL") throw new PlanError("plan_not_final", "plan is " + parent.state);
+
+    const createdAt = now();
+    const id = insertPlanVersion(db, {
+      projectId: parent.project_id,
+      version: nextVersion(db, parent.project_id),
+      content: parent.content,
+      contentHash: parent.content_hash,
+      changeNote: "从 v" + parent.version + " 派生",
+      basedOnRoundId: parent.based_on_round_id,
+      parentId: parent.id,
+      createdAt,
+    });
+    return readPlan(db, id)!;
+  });
+}
+

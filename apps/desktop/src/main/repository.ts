@@ -290,6 +290,21 @@ export class Repository {
     return { id, projectId, kind: "source_input", sourceAgent, content, createdAt };
   }
 
+  /** 「只发言」：写进时间线，不发给任何 Agent，也不用盖章 */
+  async addNote(projectId: string, content: string, roundId: string | null): Promise<Message> {
+    const id = "msg_" + ulid();
+    const createdAt = now();
+    await writeTransaction(this.#db, this.#queue, () => {
+      this.#db
+        .prepare(
+          "INSERT INTO messages (id, project_id, kind, source_agent, run_id, round_id, turn_id, on_behalf_of, content, created_at) " +
+            "VALUES (?, ?, 'human_note', NULL, NULL, ?, NULL, NULL, ?, ?)",
+        )
+        .run(id, projectId, roundId, content, createdAt);
+    });
+    return { id, projectId, kind: "human_note", roundId, content, createdAt };
+  }
+
   async createContribution(input: {
     projectId: string;
     sourceMessageId: string;

@@ -9,6 +9,8 @@ import {
   type TaskSource,
 } from "@room/schemas";
 import type { SqliteDatabase } from "./database";
+import { appendRunEventTx } from "./run-lifecycle";
+import { cancelOpenBatchesTx, cancelRunningTurns } from "./discussion-turn";
 import { writeTransaction, type WriteQueue } from "./write-queue";
 
 /**
@@ -218,7 +220,11 @@ export type RoundDraftErrorCode =
   | "round_active"
   | "hash_mismatch"
   | "round_not_found"
-  | "round_not_awaiting_summary";
+  | "round_not_awaiting_summary"
+  | "round_not_draft"
+  | "round_not_paused"
+  | "round_not_active"
+  | "turn_not_retryable";
 
 export class RoundDraftError extends Error {
   readonly code: RoundDraftErrorCode;
@@ -319,8 +325,9 @@ function insertBatchTx(
     compressedRounds: readonly CompressedRound[];
     createdAt: string;
   },
-): string {
+): { batchId: string; turnIds: Map<string, string> } {
   const batchId = newBatchId();
+  const turnIds = new Map<string, string>();
   db.prepare(
     "INSERT INTO batches (id, project_id, round_id, kind, state, compressed_rounds, created_at) " +
       "VALUES (?, ?, ?, ?, 'READY_FOR_REVIEW', ?, ?)",
@@ -368,11 +375,12 @@ function insertBatchTx(
       prompt.tokenEstimate,
     );
 
+    const turnId = newTurnId();
     db.prepare(
       "INSERT INTO turns (id, round_id, batch_id, agent, on_behalf_of, is_summary, approval_id, run_id, outcome, created_at) " +
         "VALUES (?, ?, ?, ?, NULL, ?, ?, NULL, 'pending', ?)",
     ).run(
-      newTurnId(),
+      turnId,
       input.roundId,
       batchId,
       recipient.agent,
@@ -380,9 +388,10 @@ function insertBatchTx(
       approvalId,
       input.createdAt,
     );
+    turnIds.set(recipient.agent, turnId);
   }
 
-  return batchId;
+  return { batchId, turnIds };
 }
 
 /**
@@ -442,7 +451,7 @@ export function createRoundDraft(
       createdAt,
     );
 
-    const batchId = insertBatchTx(db, {
+    const { batchId } = insertBatchTx(db, {
       projectId: input.projectId,
       roundId,
       kind: "initial",
@@ -487,7 +496,7 @@ export function createSummaryDraft(
 
     const createdAt = now();
     cancelOpenSummaryBatchesTx(db, round.id, createdAt);
-    const batchId = insertBatchTx(db, {
+    const { batchId } = insertBatchTx(db, {
       projectId: round.project_id,
       roundId: round.id,
       kind: "summary",
@@ -498,6 +507,293 @@ export function createSummaryDraft(
     });
 
     return { batch: db.prepare("SELECT * FROM batches WHERE id = ?").get(batchId) as ApprovalBatchRow };
+  });
+}
+
+
+/** 作废一轮里某一种还没盖章的批次（supplement / retry / initial …） */
+function cancelOpenBatchesByKindTx(db: SqliteDatabase, roundId: string, kind: BatchKind, ts: string): void {
+  db.prepare(
+    "UPDATE approvals SET state = 'CANCELLED', decided_at = ? WHERE state IN ('DRAFT', 'READY_FOR_REVIEW') AND id IN (" +
+      "SELECT bi.approval_id FROM batch_items bi JOIN batches b ON b.id = bi.batch_id WHERE b.round_id = ? AND b.kind = ?)",
+  ).run(ts, roundId, kind);
+  db.prepare(
+    "UPDATE batches SET state = 'CANCELLED', decided_at = ? WHERE round_id = ? AND kind = ? AND state IN ('DRAFT', 'READY_FOR_REVIEW')",
+  ).run(ts, roundId, kind);
+  db.prepare(
+    "UPDATE turns SET outcome = 'rejected', finished_at = ? WHERE outcome = 'pending' AND batch_id IN (" +
+      "SELECT id FROM batches WHERE round_id = ? AND kind = ?)",
+  ).run(ts, roundId, kind);
+}
+
+export interface CreateBatchDraftInput {
+  roundId: string;
+  kind: BatchKind;
+  recipients: readonly RoundDraftRecipient[];
+  compressedRounds?: readonly CompressedRound[];
+  /** 建之前把这一轮里这种 kind 的待盖章批次作废（重新补充 / 重试同一批时用） */
+  cancelOpenKind?: BatchKind;
+  /** 旧的 Turn 接到新 Turn 上（打断 / 补充 / 重试） */
+  supersede?: readonly { oldTurnId: string; agent: string }[];
+}
+
+/**
+ * 在**已有的轮**上加一张批次（supplement / retry / 重新起草等）：
+ * 每个收件人一份新 Snapshot + Approval + batch_item + pending Turn，和起草共用 insertBatchTx。
+ */
+export function createBatchDraft(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  input: CreateBatchDraftInput,
+): Promise<{ batch: ApprovalBatchRow }> {
+  return writeTransaction(db, queue, () => {
+    assertRecipients(input.recipients);
+    const round = db.prepare("SELECT id, project_id, state, task FROM rounds WHERE id = ?").get(input.roundId) as
+      | { id: string; project_id: string; state: string; task: string }
+      | undefined;
+    if (round === undefined) throw new RoundDraftError("round_not_found", "round not found");
+    if (round.state === "SUMMARIZED" || round.state === "VOIDED") {
+      throw new RoundDraftError("round_not_active", "round is " + round.state);
+    }
+
+    const createdAt = now();
+    if (input.cancelOpenKind !== undefined) {
+      cancelOpenBatchesByKindTx(db, round.id, input.cancelOpenKind, createdAt);
+    }
+
+    const { batchId, turnIds } = insertBatchTx(db, {
+      projectId: round.project_id,
+      roundId: round.id,
+      kind: input.kind,
+      taskText: round.task,
+      recipients: input.recipients,
+      compressedRounds: input.compressedRounds ?? [],
+      createdAt,
+    });
+
+    for (const link of input.supersede ?? []) {
+      const next = turnIds.get(link.agent);
+      if (next !== undefined) {
+        db.prepare("UPDATE turns SET superseded_by = ? WHERE id = ? AND superseded_by IS NULL").run(next, link.oldTurnId);
+      }
+    }
+
+    return { batch: db.prepare("SELECT * FROM batches WHERE id = ?").get(batchId) as ApprovalBatchRow };
+  });
+}
+
+export interface CreateResumeBatchInput {
+  roundId: string;
+  /** 暂停后要重新发的人（通常是结局为 paused 的那些） */
+  agents: readonly string[];
+}
+
+/**
+ * 恢复（0-B 第 6 行）：内容不变，一键重新盖章。
+ *
+ * 直接复用原来那次的 Snapshot（不再拼一次 Prompt）：这样「恢复」发出去的内容和指纹
+ * 与暂停前完全一致；每个收件人新建一个 Approval + batch_item + pending Turn，
+ * 旧的 paused Turn 用 superseded_by 接上。
+ */
+export function createResumeBatch(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  input: CreateResumeBatchInput,
+): Promise<{ batch: ApprovalBatchRow }> {
+  return writeTransaction(db, queue, () => {
+    if (input.agents.length < 1 || input.agents.length > 8) {
+      throw new RoundDraftError("invalid_input", "a resume batch needs 1-8 agents");
+    }
+    const round = db.prepare("SELECT id, project_id, state FROM rounds WHERE id = ?").get(input.roundId) as
+      | { id: string; project_id: string; state: string }
+      | undefined;
+    if (round === undefined) throw new RoundDraftError("round_not_found", "round not found");
+    if (round.state !== "PAUSED") throw new RoundDraftError("round_not_paused", "round is " + round.state);
+
+    const previous = input.agents.map((agent) => {
+      const row = db
+        .prepare(
+          "SELECT t.id AS turn_id, a.snapshot_id AS snapshot_id, s.content_hash AS content_hash, b.compressed_rounds AS compressed_rounds " +
+            "FROM turns t JOIN approvals a ON a.id = t.approval_id JOIN prompt_snapshots s ON s.id = a.snapshot_id " +
+            "JOIN batches b ON b.id = t.batch_id " +
+            "WHERE t.round_id = ? AND t.agent = ? AND t.is_summary = 0 AND t.outcome = 'paused' " +
+            "ORDER BY t.created_at DESC, t.rowid DESC LIMIT 1",
+        )
+        .get(round.id, agent) as
+        | { turn_id: string; snapshot_id: string; content_hash: string; compressed_rounds: string }
+        | undefined;
+      if (row === undefined) throw new RoundDraftError("turn_not_retryable", agent + " has no paused turn");
+      return { agent, ...row };
+    });
+
+    const createdAt = now();
+    const batchId = newBatchId();
+    db.prepare(
+      "INSERT INTO batches (id, project_id, round_id, kind, state, compressed_rounds, created_at) " +
+        "VALUES (?, ?, ?, 'resume', 'READY_FOR_REVIEW', ?, ?)",
+    ).run(batchId, round.project_id, round.id, previous[0]!.compressed_rounds, createdAt);
+
+    for (const item of previous) {
+      const approvalId = newApprovalId();
+      db.prepare(
+        "INSERT INTO approvals (id, project_id, snapshot_id, state, created_at) VALUES (?, ?, ?, 'READY_FOR_REVIEW', ?)",
+      ).run(approvalId, round.project_id, item.snapshot_id, createdAt);
+      db.prepare(
+        "INSERT INTO batch_items (batch_id, recipient, on_behalf_of, approval_id, snapshot_id, content_hash, differs_from_others, token_estimate) " +
+          "VALUES (?, ?, NULL, ?, ?, ?, 0, 0)",
+      ).run(batchId, item.agent, approvalId, item.snapshot_id, item.content_hash);
+      const turnId = newTurnId();
+      db.prepare(
+        "INSERT INTO turns (id, round_id, batch_id, agent, on_behalf_of, is_summary, approval_id, run_id, outcome, created_at) " +
+          "VALUES (?, ?, ?, ?, NULL, 0, ?, NULL, 'pending', ?)",
+      ).run(turnId, round.id, batchId, item.agent, approvalId, createdAt);
+      db.prepare("UPDATE turns SET superseded_by = ? WHERE id = ? AND superseded_by IS NULL").run(turnId, item.turn_id);
+    }
+
+    return { batch: db.prepare("SELECT * FROM batches WHERE id = ?").get(batchId) as ApprovalBatchRow };
+  });
+}
+
+export interface InterruptTurnsInput {
+  roundId: string;
+  agents: readonly string[];
+  /** 每人已经写出来的部分，按 turnId 传；没有就不存 */
+  partialText?: Readonly<Record<string, string>>;
+}
+
+/**
+ * 打断指定的人（0-B 第 4 行）：Run CANCELLED + 唯一的 cancelled 终止事件，Turn 记 interrupted，
+ * 已经写出来的部分保留。只处理正在跑的 Turn。
+ */
+export function interruptTurns(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  input: InterruptTurnsInput,
+): Promise<{ interrupted: { turnId: string; runId: string | null }[] }> {
+  return writeTransaction(db, queue, () => {
+    const ts = now();
+    const interrupted: { turnId: string; runId: string | null }[] = [];
+
+    for (const agent of input.agents) {
+      const turn = db
+        .prepare(
+          "SELECT id, run_id FROM turns WHERE round_id = ? AND agent = ? AND is_summary = 0 AND outcome = 'running' " +
+            "ORDER BY created_at DESC, rowid DESC LIMIT 1",
+        )
+        .get(input.roundId, agent) as { id: string; run_id: string | null } | undefined;
+      if (turn === undefined) continue;
+
+      if (turn.run_id !== null) {
+        const changed = db
+          .prepare(
+            "UPDATE runs SET state = 'CANCELLED', finished_at = ?, substate = NULL WHERE id = ? AND state IN ('QUEUED', 'STARTING', 'RUNNING')",
+          )
+          .run(ts, turn.run_id);
+        if (changed.changes === 1) {
+          appendRunEventTx(db, turn.run_id, { type: "cancelled", payload: { reason: "interrupted" }, ts }, { allowTerminal: true });
+        }
+      }
+      db.prepare("UPDATE turns SET outcome = 'interrupted', partial_text = ?, finished_at = ? WHERE id = ? AND outcome = 'running'").run(
+        input.partialText?.[turn.id] ?? null,
+        ts,
+        turn.id,
+      );
+      interrupted.push({ turnId: turn.id, runId: turn.run_id });
+    }
+
+    return { interrupted };
+  });
+}
+
+export interface VoidRoundInput {
+  roundId: string;
+  reason: string;
+  /** 正在跑的 Turn 已经写出来的部分，按 turnId 传 */
+  partialText?: Readonly<Record<string, string>>;
+}
+
+/**
+ * 作废这一轮（0-B 第 13 行）：记录全部保留。
+ * 正在跑的按 round_ended 结束、待盖章的批次作废、基于这一轮的方案草稿 → SUPERSEDED。
+ */
+export function voidRound(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  input: VoidRoundInput,
+): Promise<{ round: RoundRow; supersededPlanIds: string[]; endedTurns: number; cancelledBatches: number }> {
+  return writeTransaction(db, queue, () => {
+    const round = db.prepare("SELECT * FROM rounds WHERE id = ?").get(input.roundId) as RoundRow | undefined;
+    if (round === undefined) throw new RoundDraftError("round_not_found", "round not found");
+    if (!ACTIVE_ROUND_STATES.includes(round.state)) {
+      throw new RoundDraftError("round_not_active", "round is " + round.state);
+    }
+
+    const ts = now();
+    const endedTurns = cancelRunningTurns(db, round.id, "round_ended", input.partialText ?? {}, ts);
+    const cancelledBatches = cancelOpenBatchesTx(db, round.id, ts);
+
+    db.prepare("UPDATE rounds SET state = 'VOIDED', void_reason = ?, finished_at = ? WHERE id = ?").run(input.reason, ts, round.id);
+
+    const plans = db
+      .prepare("SELECT id FROM plan_versions WHERE based_on_round_id = ? AND state = 'DRAFT'")
+      .all(round.id) as { id: string }[];
+    db.prepare(
+      "UPDATE plan_versions SET state = 'SUPERSEDED', superseded_reason = ?, decided_at = ? WHERE based_on_round_id = ? AND state = 'DRAFT'",
+    ).run("第 " + round.round_index + " 轮作废：" + input.reason, ts, round.id);
+
+    return {
+      round: db.prepare("SELECT * FROM rounds WHERE id = ?").get(round.id) as RoundRow,
+      supersededPlanIds: plans.map((plan) => plan.id),
+      endedTurns,
+      cancelledBatches,
+    };
+  });
+}
+
+export interface RedraftRoundInput {
+  roundId: string;
+  task: string;
+  recipientAgents: readonly string[];
+  historyMode: HistoryMode;
+  /** 按新任务 / 新收件人重新拼好的 Prompt */
+  prompts: readonly RoundDraftRecipient[];
+  compressedRounds?: readonly CompressedRound[];
+}
+
+/** 修改还没盖章的一轮：任务 / 收件人 / 讨论记录取法；旧批次作废，生成新的 initial 批次 */
+export function redraftRound(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  input: RedraftRoundInput,
+): Promise<{ round: RoundRow; batch: ApprovalBatchRow }> {
+  return writeTransaction(db, queue, () => {
+    assertRecipients(input.prompts);
+    const round = db.prepare("SELECT id, project_id, state FROM rounds WHERE id = ?").get(input.roundId) as
+      | { id: string; project_id: string; state: string }
+      | undefined;
+    if (round === undefined) throw new RoundDraftError("round_not_found", "round not found");
+    if (round.state !== "DRAFT") throw new RoundDraftError("round_not_draft", "round is " + round.state);
+
+    const createdAt = now();
+    cancelOpenBatchesTx(db, round.id, createdAt);
+    db.prepare(
+      "UPDATE rounds SET task = ?, task_source = 'human', recipients = ?, history_mode = ? WHERE id = ? AND state = 'DRAFT'",
+    ).run(input.task, JSON.stringify(input.recipientAgents), input.historyMode, round.id);
+
+    const { batchId } = insertBatchTx(db, {
+      projectId: round.project_id,
+      roundId: round.id,
+      kind: "initial",
+      taskText: input.task,
+      recipients: input.prompts,
+      compressedRounds: input.compressedRounds ?? [],
+      createdAt,
+    });
+
+    return {
+      round: db.prepare("SELECT * FROM rounds WHERE id = ?").get(round.id) as RoundRow,
+      batch: db.prepare("SELECT * FROM batches WHERE id = ?").get(batchId) as ApprovalBatchRow,
+    };
   });
 }
 
