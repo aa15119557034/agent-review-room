@@ -1054,6 +1054,8 @@ function mapPlanError(error: unknown): unknown {
       return new DiscussionError("stale_snapshot", "方案内容和你看到的不一致，请重新打开");
     case "plan_exists":
       return new DiscussionError("invalid_state", "这个议题已经有方案版本了，请用「我来改」");
+    case "plan_not_latest":
+      return new DiscussionError("invalid_state", "已经有更新的方案版本了，请从最新版本派生，或先确认/定稿它");
     default:
       return new DiscussionError("invalid_state", error.message);
   }

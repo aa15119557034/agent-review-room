@@ -17,6 +17,7 @@ export type PlanErrorCode =
   | "plan_not_current"
   | "plan_not_final"
   | "plan_exists"
+  | "plan_not_latest"
   | "hash_mismatch";
 
 export class PlanError extends Error {
@@ -252,6 +253,20 @@ export function derivePlan(
     const parent = readPlan(db, planVersionId);
     if (parent === undefined) throw new PlanError("plan_not_found", "plan version not found");
     if (parent.state !== "FINAL") throw new PlanError("plan_not_final", "plan is " + parent.state);
+
+    // 只能从「最新的有效版本」派生：已经有更新的 FINAL / CURRENT / DRAFT 时，
+    // 再从旧版本派生只会克隆出一份内容相同的空版本（v2、v3…无限叠）。
+    const latest = db
+      .prepare(
+        "SELECT MAX(version) AS version FROM plan_versions WHERE project_id = ? AND state IN ('FINAL', 'CURRENT', 'DRAFT')",
+      )
+      .get(parent.project_id) as { version: number | null };
+    if (latest.version !== null && latest.version > parent.version) {
+      throw new PlanError(
+        "plan_not_latest",
+        "plan v" + parent.version + " is not the latest active version (v" + latest.version + " exists)",
+      );
+    }
 
     const createdAt = now();
     // 和 plan.edit 一样：一个议题同时只能有一个 DRAFT。
