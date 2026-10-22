@@ -11,7 +11,8 @@
     "typecheck": "tsc -p tsconfig.json && tsc -p src/renderer/tsconfig.json",
     "rebuild:native": "electron-rebuild -f -w better-sqlite3",
     "verify:sqlite": "node scripts/verify-sqlite.mjs",
-    "test": "tsx --test test/*.test.ts"
+    "test": "tsx --test test/*.test.ts",
+    "test:e2e": "tsx --test e2e/*.test.ts"
   },
   "dependencies": {
     "@room/core": "workspace:*",
