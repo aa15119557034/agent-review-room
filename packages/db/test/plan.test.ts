@@ -151,7 +151,7 @@ describe("finalizePlan：盖章定稿（校验指纹）", () => {
     const first = await finalizePlan(f.db, f.queue, { planVersionId: v1.id, expectedContentHash: v1.contentHash });
     assert.equal(first.plan.state, "FINAL");
 
-    const derived = await derivePlan(f.db, f.queue, v1.id);
+    const derived = (await derivePlan(f.db, f.queue, v1.id)).plan;
     assert.equal(derived.version, 2);
     assert.equal(derived.state, "DRAFT");
     assert.equal(derived.parent_id, v1.id);
@@ -196,6 +196,31 @@ describe("editPlan / derivePlan", () => {
     assert.deepEqual(result.superseded.map((plan) => plan.id), [oldDraft.id]);
     assert.equal(stateOf(f, oldDraft.id), "SUPERSEDED");
     assert.equal(stateOf(f, parent.id), "CURRENT", "parent 不动");
+    f.db.close();
+  });
+
+  it("连点 plan.derive 不会叠出多个空版本：旧版本不是最新的就拒绝", async () => {
+    const f = makeFixture();
+    const v1 = insertPlan(f, { version: 1, state: "FINAL", content: "# 定稿" });
+    const v2 = (await derivePlan(f.db, f.queue, v1.id)).plan;
+
+    await assert.rejects(
+      () => derivePlan(f.db, f.queue, v1.id),
+      (error: unknown) => error instanceof PlanError && error.code === "plan_not_latest",
+    );
+    assert.equal(stateOf(f, v2.id), "DRAFT", "v2 还是唯一的草稿");
+    assert.equal(
+      (f.db.prepare("SELECT count(*) AS n FROM plan_versions WHERE project_id = ? AND state = 'DRAFT'").get(f.projectId) as { n: number }).n,
+      1,
+      "同一议题只能有一个 DRAFT",
+    );
+
+    // 定稿 v2 之后，v2 是最新的有效版本，可以从它派生 v3
+    await confirmPlan(f.db, f.queue, v2.id);
+    await finalizePlan(f.db, f.queue, { planVersionId: v2.id, expectedContentHash: v2.content_hash });
+    const v3 = (await derivePlan(f.db, f.queue, v2.id)).plan;
+    assert.equal(v3.version, 3);
+    assert.equal(v3.parent_id, v2.id);
     f.db.close();
   });
 

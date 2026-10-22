@@ -649,16 +649,17 @@ export class DiscussionService {
     return plan;
   }
 
-  /** plan.derive：从 FINAL 派生新的 DRAFT */
+  /** plan.derive：从 FINAL 派生新的 DRAFT（同时作废其它未确认的草稿） */
   async derivePlan(command: CommandRequest<"plan.derive">): Promise<PlanVersion> {
     const { repo, db, queue, emit } = this.#deps;
-    let row: Awaited<ReturnType<typeof derivePlanTx>>;
+    let result: Awaited<ReturnType<typeof derivePlanTx>>;
     try {
-      row = await derivePlanTx(db, queue, command.planVersionId);
+      result = await derivePlanTx(db, queue, command.planVersionId);
     } catch (error) {
       throw mapPlanError(error);
     }
-    const plan = repo.getPlan(row.id);
+    for (const superseded of result.superseded) emit({ type: "plan.updated", plan: repo.getPlan(superseded.id) });
+    const plan = repo.getPlan(result.plan.id);
     emit({ type: "plan.updated", plan });
     return plan;
   }
@@ -1053,6 +1054,8 @@ function mapPlanError(error: unknown): unknown {
       return new DiscussionError("stale_snapshot", "方案内容和你看到的不一致，请重新打开");
     case "plan_exists":
       return new DiscussionError("invalid_state", "这个议题已经有方案版本了，请用「我来改」");
+    case "plan_not_latest":
+      return new DiscussionError("invalid_state", "已经有更新的方案版本了，请从最新版本派生，或先确认/定稿它");
     default:
       return new DiscussionError("invalid_state", error.message);
   }
