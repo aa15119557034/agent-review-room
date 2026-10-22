@@ -433,6 +433,21 @@ export const COMMANDS = {
     "approve",
   ),
 
+  /**
+   * 用户写第一版方案（C-28）：这个议题还没有任何方案版本时使用，生成 v1 DRAFT（drafted_by = human，parentId = null）。
+   * 已经有版本时返回 invalid_state，改用 plan.edit。用于汇总没有给出方案、而用户想自己起草的情况。
+   */
+  "plan.create": def(
+    z.object({
+      type: z.literal("plan.create"),
+      projectId: ProjectId,
+      content: z.string().min(1).max(200_000),
+      changeNote: z.string().max(2000),
+    }),
+    PlanVersion,
+    "author",
+  ),
+
   /** 用户自己改方案：基于 parentId 生成一个新的 DRAFT */
   "plan.edit": def(
     z.object({

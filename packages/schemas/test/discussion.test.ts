@@ -135,13 +135,20 @@ describe("discussion commands", () => {
     for (const t of [
       "node.upsert", "node.test", "agent.update", "note.add", "round.draft", "round.redraft", "batch.approve",
       "batch.reject", "round.pause", "round.resume", "round.end", "round.supplement", "round.retry",
-      "round.summarize", "round.void", "plan.confirm", "plan.edit", "plan.finalize", "plan.derive",
+      "round.summarize", "round.void", "plan.create", "plan.confirm", "plan.edit", "plan.finalize", "plan.derive",
     ]) assert.ok(t in COMMANDS, t);
     for (const t of ["nodes.list", "agents.list", "agents.status", "rounds.list", "rounds.get", "batches.get", "plans.list"]) {
       assert.ok(t in QUERIES, t);
       assert.equal(ControlQuery.safeParse({ type: t, projectId: `proj_${ID}`, roundId: `rnd_${ID}`, batchId: `bat_${ID}` }).success, true, t);
     }
     assert.equal(ControlCommand.safeParse(draft).success, true);
+  });
+
+  it("plan.create (C-28) needs a project and non-empty content", () => {
+    const ok = { type: "plan.create", projectId: `proj_${ID}`, content: "# 方案 v1", changeNote: "用户起草第一版" };
+    assert.equal(ControlCommand.safeParse(ok).success, true);
+    assert.equal(ControlCommand.safeParse({ ...ok, content: "" }).success, false);
+    assert.equal(ControlCommand.safeParse({ ...ok, projectId: undefined }).success, false);
   });
 
   it("round.draft rejects duplicate or missing recipients", () => {
