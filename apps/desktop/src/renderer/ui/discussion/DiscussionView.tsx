@@ -6,7 +6,9 @@ import {
   TASK_SOURCE_LABEL,
   agentColor,
   agentName,
+  canDerive,
   displayedPlan,
+  planForNextRound,
   formatActive,
   openRound,
   pendingBatches,
@@ -352,7 +354,7 @@ function Composer() {
   const discussants = d.agents.filter((a) => a.canDiscuss);
   const interjecting = round !== null && ["RUNNING", "PAUSED", "AWAITING_SUMMARY"].includes(round.state);
   const nextIndex = d.rounds.length + 1;
-  const plan = displayedPlan(d);
+  const attached = planForNextRound(d);
   const paused = round?.state === "PAUSED";
   // 暂停中只能「放进下一轮」：要立刻发出去的补充得先恢复
   const mode = paused ? "next_round" : d.ui.interject.mode;
@@ -396,7 +398,7 @@ function Composer() {
               </label>
             );
           })}
-          {plan?.state === "CURRENT" && <span className="composer-attach">附带：方案 v{plan.version}</span>}
+          {attached && <span className="composer-attach">附带：方案 v{attached.version}{attached.state === "FINAL" ? "（定稿）" : ""}</span>}
         </div>
       )}
       <div className="composer-row">
@@ -537,7 +539,7 @@ function SidePanel() {
                 盖章定稿 v{plan.version}
               </button>
             )}
-            {plan.state === "FINAL" && (
+            {canDerive(d, plan) && (
               <button type="button" className="button-outline" onClick={() => void actions.derivePlan(plan.id)}>从 v{plan.version} 派生下一版</button>
             )}
           </>

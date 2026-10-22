@@ -1,6 +1,6 @@
 import { useState, type CSSProperties } from "react";
 import type { PlanVersion } from "@room/schemas";
-import { STANCE_LABEL, agentColor, agentName, diffLines } from "../../lib/discussion";
+import { STANCE_LABEL, agentColor, agentName, canDerive, diffLines } from "../../lib/discussion";
 import { useActions, useAppState } from "../hooks";
 import { formatClock } from "../labels";
 import { FirstPlan } from "./FirstPlan";
@@ -212,7 +212,7 @@ function PlanActions({ plan, roundIndex }: { plan: PlanVersion | undefined; roun
             </button>
           )}
           {live.state === "DRAFT" && <p className="side-note">先确认这一版，才能盖章定稿。</p>}
-          {live.state === "FINAL" && (
+          {canDerive(d, live) && (
             <button type="button" className="action-card" onClick={() => void actions.derivePlan(live.id)}>
               <b>从 v{live.version} 派生下一版</b>
               <span>定稿后发现漏了：继续讨论，版本链不断</span>
