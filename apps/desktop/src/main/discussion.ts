@@ -388,8 +388,8 @@ export class DiscussionService {
    * - restart_now：打断 targets 里正在答的人，带着补充重答
    * - only：只发给 targets（differsFromOthers = true）
    *
-   * 补充内容是**用户写的**，但 @room/core 目前只有「不可信资料」这一条额外文本通道，
-   * 所以先放进 materials / extraMaterials；等 X-20 增加可信补充通道再换。
+   * 补充内容是**用户写的指令**：走 @room/core 的可信通道（userSupplement），
+   * 放在「本轮任务」之后、不可信边界之外；only 模式同时把整批标成 differsFromOthers。
    */
   async supplement(
     command: CommandRequest<"round.supplement">,
@@ -414,20 +414,17 @@ export class DiscussionService {
     await this.#checkRecipients(command.targets, "discuss");
     const agents = command.targets.map((agentId) => repo.getAgent(agentId));
     const plan = round.planVersionId === null ? null : this.#loadPlan(round.projectId, round.planVersionId);
-    const extra = { name: "补充", content: command.content };
     const prompts = assembleDiscussionBatch(
       {
         round,
         history: this.#historyWithCurrent(round),
-        materials: command.mode === "only" ? [] : [extra],
+        materials: [],
         plan,
+        userSupplement: command.content,
+        supplementOnly: command.mode === "only",
         nonce: createNonce(),
       },
-      agents.map((profile) => ({
-        profile,
-        onBehalfOf: null,
-        extraMaterials: command.mode === "only" ? [extra] : [],
-      })),
+      agents.map((profile) => ({ profile, onBehalfOf: null, extraMaterials: [] })),
     );
 
     const supersede: { oldTurnId: string; agent: string }[] = [];

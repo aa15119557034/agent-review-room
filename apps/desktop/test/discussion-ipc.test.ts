@@ -1081,6 +1081,11 @@ describe("round.supplement / round.retry / round.void", () => {
       .prepare("SELECT content FROM prompt_snapshots ORDER BY created_at DESC LIMIT 1")
       .get() as { content: string };
     assert.match(prompt.content, /再补一句：先看失败路径/);
+    // 补充走可信通道：在最后一个 </UNTRUSTED...> 之后，而不是边界里的资料
+    const boundaryEnd = prompt.content.lastIndexOf("</UNTRUSTED");
+    const trusted = prompt.content.indexOf("# 用户补充");
+    assert.ok(trusted > boundaryEnd, "补充正文要出现在不可信边界之外");
+    assert.match(prompt.content.slice(trusted), /再补一句：先看失败路径/);
     h.orchestrator.cancelAll();
     await close(h);
   });
@@ -1107,6 +1112,14 @@ describe("round.supplement / round.retry / round.void", () => {
     assert.equal(result.data.batch.items.length, 1);
     assert.equal(result.data.batch.items[0].recipient, "codex");
     assert.equal(result.data.batch.items[0].differsFromOthers, true);
+
+    const prompt = h.db
+      .prepare("SELECT content FROM prompt_snapshots ORDER BY created_at DESC LIMIT 1")
+      .get() as { content: string };
+    const boundaryEnd = prompt.content.lastIndexOf("</UNTRUSTED");
+    const trusted = prompt.content.indexOf("# 用户补充");
+    assert.ok(trusted > boundaryEnd, "only 模式的补充也要在边界之外");
+    assert.match(prompt.content.slice(trusted), /只给 Codex 看/);
     await close(h);
   });
 
