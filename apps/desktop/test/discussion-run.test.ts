@@ -203,6 +203,48 @@ describe("讨论室的 Run 结束 → Turn 的结局（0-B）", () => {
     f.db.close();
   });
 
+  it("第一次 QUEUED → STARTING 失败：Run FAILED(internal)，Turn failed，轮进待汇总", async () => {
+    const f = await discussionFixture();
+    // 用触发器模拟「第一次状态转换就抛错」：Run 会停在 QUEUED，这正是之前会卡死的情况
+    f.db.exec(
+      "CREATE TRIGGER fail_start BEFORE UPDATE ON runs WHEN NEW.state = 'STARTING' " +
+        "BEGIN SELECT RAISE(ABORT, 'simulated transition failure'); END;",
+    );
+
+    let adapterUsed = false;
+    const orchestrator = new RunOrchestrator({
+      db: f.db,
+      queue: f.queue,
+      emit: () => undefined,
+      getRun: (id) => f.db.prepare("SELECT * FROM runs WHERE id = ?").get(id) as never,
+      adapterFactory: async () => {
+        adapterUsed = true;
+        return fakeAdapter(async function* () {
+          yield event(f.run.id, 0, { type: "completed" });
+        });
+      },
+    });
+
+    await orchestrator.start(f.run, { ...f.input, discussion: { turnId: f.turnId, isSummary: f.isSummary } });
+    f.db.exec("DROP TRIGGER fail_start");
+
+    assert.equal(adapterUsed, false, "STARTING 没成功就不该起 adapter");
+    const run = runRow(f.db, f.run.id);
+    assert.equal(run.state, "FAILED");
+    assert.equal(run.failure_reason, "internal");
+    assert.equal(turnRow(f.db, f.turnId).outcome, "failed", "讨论的 Turn 不能一直 running");
+    assert.equal(roundState(f.db, f.roundId), "AWAITING_SUMMARY", "所有 Turn 都有结局，轮要进待汇总");
+    assert.equal(
+      count(f.db, "SELECT count(*) AS n FROM run_events WHERE type IN ('completed','error','cancelled','timed_out')"),
+      1,
+    );
+    const terminal = f.db
+      .prepare("SELECT type FROM run_events WHERE type IN ('completed','error','cancelled','timed_out')")
+      .get() as { type: string };
+    assert.equal(terminal.type, "error");
+    f.db.close();
+  });
+
   it("失败原因原样透传：process_exit_nonzero 不被压成 internal", async () => {
     const f = await discussionFixture();
 
