@@ -477,6 +477,45 @@ describe("finishSummaryFromRun：汇总写入（0-B 第 11 行）", () => {
     f.db.close();
   });
 
+  it("汇总方案挂在本轮用的方案上，而不是版本号最大的那个", async () => {
+    const f = await seedApproved(["claude"], "summary");
+    const projectId = (f.db.prepare("SELECT project_id FROM rounds WHERE id = ?").get(f.roundId) as { project_id: string })
+      .project_id;
+    const v1 = "plan_" + ulid();
+    const v2 = "plan_" + ulid();
+    f.db
+      .prepare(
+        "INSERT INTO plan_versions (id, project_id, version, state, content, content_hash, change_note, drafted_by_kind, drafted_by_agent, created_at) " +
+          "VALUES (?, ?, 1, 'FINAL', '# v1', ?, '', 'agent', 'claude', ?)",
+      )
+      .run(v1, projectId, sha("# v1"), NOW);
+    f.db
+      .prepare(
+        "INSERT INTO plan_versions (id, project_id, version, state, content, content_hash, change_note, parent_id, drafted_by_kind, drafted_by_agent, created_at) " +
+          "VALUES (?, ?, 2, 'SUPERSEDED', '# v2', ?, '', ?, 'agent', 'claude', ?)",
+      )
+      .run(v2, projectId, sha("# v2"), v1, NOW);
+    f.db.prepare("UPDATE rounds SET plan_version_id = ? WHERE id = ?").run(v1, f.roundId);
+
+    const out = await finishSummaryFromRun(f.db, f.queue, {
+      runId: f.runIds["claude"]!,
+      result: {
+        kind: "answered",
+        text: "汇总全文",
+        report: { points: [], risks: [], gaps: [], alternatives: [], extraInfoNotes: [] },
+        plan: { content: "# v2 内容", changeNote: "第 3 轮修订" },
+      },
+    });
+
+    const plan = f.db.prepare("SELECT version, parent_id FROM plan_versions WHERE id = ?").get(out.planVersionId!) as {
+      version: number;
+      parent_id: string | null;
+    };
+    assert.equal(plan.version, 3, "版本号还是接着最大的排");
+    assert.equal(plan.parent_id, v1, "父版本是本轮用的 v1，不是版本号最大的 v2");
+    f.db.close();
+  });
+
   it("汇总者额度用尽：轮退回待汇总，Turn 记缺席", async () => {
     const f = await seedApproved(["claude"], "summary");
     const out = await finishSummaryFromRun(f.db, f.queue, {
