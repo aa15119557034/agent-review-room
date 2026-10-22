@@ -20,6 +20,7 @@ import { useActions, useAppState } from "../hooks";
 import { formatClock } from "../labels";
 import { ConfirmView } from "./ConfirmView";
 import { ReviewView } from "./ReviewView";
+import { FirstPlan } from "./FirstPlan";
 
 /**
  * 讨论室主页（C-21，画布「① 主页 · 讨论」）。
@@ -541,7 +542,10 @@ function SidePanel() {
             )}
           </>
         ) : (
-          <p className="side-note">第一轮汇总后会出现方案草稿。</p>
+          <>
+            <p className="side-note">汇总后会出现方案草稿；也可以自己先写一版。</p>
+            {d.plans.length === 0 && <FirstPlan compact />}
+          </>
         )}
         <p className="side-note">讨论不会自己停，什么时候定稿由你决定。</p>
       </details>
