@@ -153,19 +153,53 @@ $ pnpm -r typecheck
 | --- | --- |
 | 一个真实议题跑 3 轮 | ✅ 3 轮全部 `SUMMARIZED` |
 | 每轮都有汇总 | ✅ 3 条 `summary` 消息 + 3 条 `RoundSummary`，`report` 都能解析 |
-| 每个 Run 恰好一个终止事件 | ✅ 12 个 Run 全满足 |
+| 每个 Run 恰好一个终止事件 | ✅ 12 个 Run 全满足（实际查询见 §7.1） |
 | 方案版本链 | ✅ v1 → v2，v2 为 FINAL，v1 SUPERSEDED |
 | 盖章后内容不可改 | ✅ 第 1 轮盖章后 `round.redraft` 返回 `invalid_state`；定稿校验 contentHash |
 | 重启后完整读回 | ✅ digest `922f1a76c575b45c` 前后一致 |
 | 0-B 的 13 种情况 | ✅ 13/13；第 10 条部分覆盖（见 §5） |
 | 单元测试 / 类型检查 | ✅ §6 |
 
+### 7.1 终止事件核对（实际查询）
+
+```sql
+SELECT r.id AS run_id, r.state, count(e.seq) AS terminals
+FROM runs r
+JOIN run_events e ON e.run_id = r.id
+WHERE e.type IN ('completed','error','cancelled','timed_out')
+  AND r.id IN (
+    SELECT run_id FROM turns
+    WHERE round_id IN (SELECT id FROM rounds WHERE project_id = 'proj_01M5HVQXAN0964MT9REWB330EG')
+      AND run_id IS NOT NULL
+  )
+GROUP BY r.id
+ORDER BY r.id;
+```
+
+输出（12 行，`terminals` 全部是 1）：
+
+```
+run_id                          state      terminals
+run_01M5HW0J7CC1D7EVD8GJG7WZFD  COMPLETED  1
+run_01M5HW0J7D433WQ598SYTTBMES  COMPLETED  1
+run_01M5HW0J7DY1VW4Q5G1SVDY9M5  COMPLETED  1
+run_01M5HX9CRF8ZZPNP1TQ3JH512V  COMPLETED  1
+run_01M5HZYD8421X7ZK27HPG5F7HS  COMPLETED  1
+run_01M5HZYD84G3CFJC5XB925BB3H  COMPLETED  1
+run_01M5HZYD851SMHT54BX82HDZ13  COMPLETED  1
+run_01M5J0F33RJHGT0T8EXEAK6BVS  COMPLETED  1
+run_01M5J8FHHSMKPCTH9RZD4SQ5PT  COMPLETED  1
+run_01M5J8FHHTB5S90B8JTPSJRF6G  COMPLETED  1
+run_01M5J8FHHTBR97AJ47HXE02Q6J  COMPLETED  1
+run_01M5J8QWQSXR6TP8CVHC8960DH  COMPLETED  1
+```
+
 ## 8. 已知限制 / 后续
 
 1. **替补**：契约还没有 `round.draft` 的替补参数，0-B #10 只做到「写库模拟 + 下游校验」。
 2. **额度**：1A 没有额度接口，界面显示「额度未知」；缺席判断用的是「上一次发言结局」的 5 小时近似。
 3. **方案版本号**：v2 是数据修复后的编号（v13 → v2），因为中间有 11 个误操作产生的空克隆被删除。代码侧 #66 已经阻止再次发生。
-4. **Token**：截图里 Token 输入框都是「已保存（不显示）」；controller-local 的 Token 是主进程从 `agent-server.token` 直接读入输入框的，没有经过对话或日志。
+4. **Token**：截图里 Token 输入框都是「已保存（不显示）」。user-pc 的 Token 是 Phase 0 的 Reviewer 设置迁移过来的；controller-local 的 Token **不是产品功能**——联调时 DeepSeek 用脚本读取 `apps/agent-server/agent-server.token`，再通过调试端口把值填进设置页的输入框（没有回显、没有写日志、没有经过对话），随后点「测试连接 → 保存节点」。正式使用时仍应由用户在节点上执行 `setup` 拿到 Token 后自己粘贴。
 5. 手机端、执行阶段、任务拆分不在 1A 范围。
 
 ## 9. 结论
