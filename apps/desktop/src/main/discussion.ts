@@ -311,9 +311,11 @@ export class DiscussionService {
     const { repo, db, queue, emit, orchestrator } = this.#deps;
     const before = repo.getRound(command.roundId);
     const running = this.#runningRuns(before.id);
+    // 已经写出来的部分：从 run_events 的 message_delta 拼回来，和界面流式显示的是同一段
+    const partialText = this.#partialTextOf(before.id);
 
     try {
-      await pauseRound(db, queue, { roundId: before.id });
+      await pauseRound(db, queue, { roundId: before.id, partialText });
     } catch (error) {
       throw mapTurnError(error);
     }
@@ -334,9 +336,10 @@ export class DiscussionService {
     const { repo, db, queue, emit, orchestrator } = this.#deps;
     const before = repo.getRound(command.roundId);
     const running = this.#runningRuns(before.id);
+    const partialText = this.#partialTextOf(before.id);
 
     try {
-      await endRound(db, queue, { roundId: before.id });
+      await endRound(db, queue, { roundId: before.id, partialText });
     } catch (error) {
       throw mapTurnError(error);
     }
@@ -430,7 +433,11 @@ export class DiscussionService {
     let interrupted: { turnId: string; runId: string | null }[] = [];
     if (command.mode === "restart_now") {
       interrupted = (
-        await interruptTurns(db, queue, { roundId: round.id, agents: command.targets })
+        await interruptTurns(db, queue, {
+          roundId: round.id,
+          agents: command.targets,
+          partialText: this.#partialTextOf(round.id, command.targets),
+        })
       ).interrupted;
       const latest = this.#latestTurns(round.id);
       for (const agent of command.targets) {
@@ -516,7 +523,11 @@ export class DiscussionService {
 
     let result: Awaited<ReturnType<typeof voidRoundTx>>;
     try {
-      result = await voidRoundTx(db, queue, { roundId: before.id, reason: command.reason });
+      result = await voidRoundTx(db, queue, {
+        roundId: before.id,
+        reason: command.reason,
+        partialText: this.#partialTextOf(before.id),
+      });
     } catch (error) {
       throw mapDraftError(error);
     }
@@ -631,6 +642,33 @@ export class DiscussionService {
     const plan = repo.getPlan(row.id);
     emit({ type: "plan.updated", plan });
     return plan;
+  }
+
+  /**
+   * 正在跑的 Turn 已经写出来的部分：把该 Run 的 message_delta 按 seq 拼起来，
+   * 按 turnId 返回。暂停 / 结束本轮 / 作废 / 打断重答都要带着它落库（0-B 第 3、4、5 行）。
+   */
+  #partialTextOf(roundId: string, agents?: readonly string[]): Record<string, string> {
+    const partial: Record<string, string> = {};
+    for (const turn of this.#deps.repo.listTurns(roundId)) {
+      if (turn.outcome !== "running" || turn.runId === null) continue;
+      if (agents !== undefined && !agents.includes(turn.agent)) continue;
+      const rows = this.#deps.db
+        .prepare("SELECT payload FROM run_events WHERE run_id = ? AND type = 'message_delta' ORDER BY seq")
+        .all(turn.runId) as { payload: string }[];
+      const text = rows
+        .map((row) => {
+          try {
+            const payload = JSON.parse(row.payload) as { text?: unknown };
+            return typeof payload.text === "string" ? payload.text : "";
+          } catch {
+            return "";
+          }
+        })
+        .join("");
+      if (text !== "") partial[turn.id] = text;
+    }
+    return partial;
   }
 
   #runningRuns(roundId: string): string[] {

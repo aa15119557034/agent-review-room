@@ -708,6 +708,8 @@ export function interruptTurns(
 export interface VoidRoundInput {
   roundId: string;
   reason: string;
+  /** 正在跑的 Turn 已经写出来的部分，按 turnId 传 */
+  partialText?: Readonly<Record<string, string>>;
 }
 
 /**
@@ -727,7 +729,7 @@ export function voidRound(
     }
 
     const ts = now();
-    const endedTurns = cancelRunningTurns(db, round.id, "round_ended", {}, ts);
+    const endedTurns = cancelRunningTurns(db, round.id, "round_ended", input.partialText ?? {}, ts);
     const cancelledBatches = cancelOpenBatchesTx(db, round.id, ts);
 
     db.prepare("UPDATE rounds SET state = 'VOIDED', void_reason = ?, finished_at = ? WHERE id = ?").run(input.reason, ts, round.id);

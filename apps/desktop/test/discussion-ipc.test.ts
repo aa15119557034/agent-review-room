@@ -147,12 +147,15 @@ async function makeHarness(options: {
       started.push(run);
       if ((options.holdProfiles ?? []).includes(run.adapter_id)) {
         return fakeAdapter(async function* (_sessionId, runId, _input, opts) {
+          let seq = 0;
+          // 先吐脚本里的内容（测试里用 message_delta 模拟"已经写了半页"），再挂住等 abort
+          for (const part of scripts.get(run.adapter_id) ?? []) yield event(runId, seq++, part);
           if (!opts.signal.aborted) {
             await new Promise<void>((resolve) => {
               opts.signal.addEventListener("abort", () => resolve(), { once: true });
             });
           }
-          yield event(runId, 0, { type: "cancelled", reason: "aborted" });
+          yield event(runId, seq++, { type: "cancelled", reason: "aborted" });
         });
       }
       const script = scripts.get(run.adapter_id) ?? ANSWER;
@@ -985,6 +988,36 @@ describe("round.pause / round.resume：先落库再 abort", () => {
       (h.db.prepare("SELECT state FROM rounds WHERE id = ?").get(roundId) as { state: string }).state,
       "RUNNING",
     );
+    h.orchestrator.cancelAll();
+    await close(h);
+  });
+
+  it("暂停时把 run_events 里的 message_delta 拼进 partial_text（已写部分保留）", async () => {
+    const h = await makeHarness({
+      holdProfiles: ["remote:deepseek-discuss"],
+      scripts: new Map([
+        [
+          "remote:deepseek-discuss",
+          [
+            { type: "message_delta", text: "第一段，" },
+            { type: "message_delta", text: "第二段" },
+          ],
+        ],
+      ]),
+    });
+    const created = (await draft(h, ["deepseek"])) as unknown as { data: { round: { id: string }; batch: BatchLike } };
+    const roundId = created.data.round.id;
+    await approveBatchOf(h, created.data.batch);
+    await waitFor(
+      () =>
+        (h.db.prepare("SELECT count(*) AS n FROM run_events WHERE type = 'message_delta'").get() as { n: number }).n === 2,
+      "two message deltas",
+    );
+
+    const paused = (await h.dispatcher.handleCommand({ type: "round.pause", roundId })) as any;
+    assert.equal(paused.ok, true, JSON.stringify(paused));
+    const turn = h.db.prepare("SELECT partial_text FROM turns").get() as { partial_text: string | null };
+    assert.equal(turn.partial_text, "第一段，第二段", "已写部分要按 seq 拼起来落库");
     h.orchestrator.cancelAll();
     await close(h);
   });
