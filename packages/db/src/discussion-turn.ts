@@ -488,6 +488,17 @@ export function finishSummaryFromRun(
       const latest = db
         .prepare("SELECT id, version FROM plan_versions WHERE project_id = (SELECT project_id FROM rounds WHERE id = ?) ORDER BY version DESC LIMIT 1")
         .get(turn.round_id) as { id: string; version: number } | undefined;
+      // 汇总是在「本轮用的那个方案」上修订的，父版本应该指向它，而不是凑巧版本号最大的那个。
+      // （后者在版本链里出现被作废的旧版本时，会把新方案挂到错误的父节点上。）
+      const roundPlan = db
+        .prepare("SELECT plan_version_id FROM rounds WHERE id = ?")
+        .get(turn.round_id) as { plan_version_id: string | null };
+      const parent =
+        roundPlan.plan_version_id === null
+          ? latest
+          : (db.prepare("SELECT id, version FROM plan_versions WHERE id = ?").get(roundPlan.plan_version_id) as
+              | { id: string; version: number }
+              | undefined);
       planVersionId = "plan_" + turn.id.slice(5);
       const projectId = (db.prepare("SELECT project_id FROM rounds WHERE id = ?").get(turn.round_id) as { project_id: string })
         .project_id;
@@ -502,7 +513,7 @@ export function finishSummaryFromRun(
         createHash("sha256").update(result.plan.content, "utf8").digest("hex"),
         result.plan.changeNote,
         turn.round_id,
-        latest?.id ?? null,
+        parent?.id ?? null,
         turn.agent,
         ts,
       );
