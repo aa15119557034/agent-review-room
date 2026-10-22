@@ -280,3 +280,18 @@ describe("discussion mock follows canvas 0-B", () => {
   });
 });
 
+
+describe("plan.create (C-28)", () => {
+  it("writes v1 when the topic has no plan yet, then refuses a second create", async () => {
+    const { bridge, cmd, q } = setup();
+    const pid = await newTopic(cmd);
+    const v1 = await cmd<{ version: number; state: string; parentId: string | null; draftedBy: { kind: string } }>({
+      type: "plan.create", projectId: pid, content: "# 方案\n1. 先做讨论室", changeNote: "你写的第一版",
+    });
+    assert.deepEqual([v1.version, v1.state, v1.parentId, v1.draftedBy.kind], [1, "DRAFT", null, "human"]);
+    const again = await bridge.command({ type: "plan.create", projectId: pid, content: "x", changeNote: "" } as never);
+    assert.equal(!again.ok && again.error, "invalid_state");
+    const plans = await q<unknown[]>({ type: "plans.list", projectId: pid });
+    assert.equal(plans.length, 1);
+  });
+});

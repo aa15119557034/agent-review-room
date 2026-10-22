@@ -3,6 +3,7 @@ import type { PlanVersion } from "@room/schemas";
 import { STANCE_LABEL, agentColor, agentName, diffLines } from "../../lib/discussion";
 import { useActions, useAppState } from "../hooks";
 import { formatClock } from "../labels";
+import { FirstPlan } from "./FirstPlan";
 
 /**
  * 汇总与方案版本（C-24，画布「①-3 汇总 → 方案新版本」）。
@@ -160,7 +161,10 @@ function PlanActions({ plan, roundIndex }: { plan: PlanVersion | undefined; roun
     <aside className="review-actions" aria-label="接下来怎么办">
       <p className="confirm-label">接下来怎么办？</p>
       {!live ? (
-        <p className="side-note">这次汇总没有产生方案。</p>
+        <>
+          <p className="side-note">这次汇总没有产生方案。</p>
+          {d.plans.length === 0 && <FirstPlan />}
+        </>
       ) : (
         <>
           <p className="side-note">方案 v{live.version} · {live.state === "DRAFT" ? "草稿，等你确认" : live.state === "CURRENT" ? "当前版本" : live.state === "FINAL" ? "已定稿" : "已被取代"}</p>

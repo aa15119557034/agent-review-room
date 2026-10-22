@@ -329,6 +329,19 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
     openReview: (roundId: string) => setUi((u) => ({ ...u, page: { kind: "review", roundId } })),
     closeReview: () => setUi((u) => ({ ...u, page: { kind: "timeline" } })),
 
+    /** 议题还没有任何方案时，自己写第一版（C-28） */
+    async createPlan(content: string, changeNote: string) {
+      const projectId = pid();
+      if (!projectId) return;
+      try {
+        const plan = await client.command({ type: "plan.create", projectId, content, changeNote });
+        store.set((s) => applyEvent(s, { type: "plan.updated", plan }));
+        return plan;
+      } catch (err) {
+        fail(err);
+      }
+    },
+
     async editPlan(parentId: string, content: string, changeNote: string) {
       try {
         const plan = await client.command({ type: "plan.edit", parentId, content, changeNote });

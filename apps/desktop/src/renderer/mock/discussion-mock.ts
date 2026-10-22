@@ -657,6 +657,21 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
       return clone(p);
     },
 
+    // C-28：议题还没有任何方案版本时，用户写第一版
+    async "plan.create"(req: any) {
+      find(db.projects, req.projectId, "议题");
+      if (d.plans.some((p) => p.projectId === req.projectId)) throw new MockError("invalid_state", "这个议题已经有方案了，请在现有版本上改");
+      const p: PlanVersion = {
+        id: id("plan"), projectId: req.projectId, version: 1, state: "DRAFT",
+        content: req.content, contentHash: await sha256Hex(req.content), changeNote: req.changeNote,
+        basedOnRoundId: null, parentId: null, draftedBy: { kind: "human" },
+        supersededReason: null, createdAt: now(), decidedAt: null,
+      };
+      d.plans.push(p);
+      emitPlan(p);
+      return clone(p);
+    },
+
     async "plan.edit"(req: any) {
       const parent = find(d.plans, req.parentId, "方案");
       const versions = d.plans.filter((p) => p.projectId === parent.projectId);
