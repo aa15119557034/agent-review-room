@@ -160,7 +160,12 @@ export class RunOrchestrator {
       } as AgentEvent, null, input.reviewerAgent, input.discussion);
     } catch (error) {
       const current = this.#deps.getRun(run.id);
-      if (current !== undefined && (current.state === "STARTING" || current.state === "RUNNING")) {
+      // QUEUED 也要收尾：第一次 transitionRun(QUEUED → STARTING) 失败时（比如数据库忙 / 被触发器拒绝），
+      // Run 还停在 QUEUED，讨论的 Turn 会一直是 running，这一轮永远到不了待汇总。
+      if (
+        current !== undefined &&
+        (current.state === "QUEUED" || current.state === "STARTING" || current.state === "RUNNING")
+      ) {
         await this.#finish(run.id, current.state, {
           type: "error",
           reason: "internal",
