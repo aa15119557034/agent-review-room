@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import type { AgentEvent, PlanVersion, Round, RoundSummary, Turn } from "@room/schemas";
-import { diffLines, initialDiscussion, stages, turnText } from "../lib/discussion";
+import { canDerive, diffLines, displayedPlan, initialDiscussion, planForNextRound, stages, turnText } from "../lib/discussion";
 
 const TS = "2026-10-21T00:00:00.000Z";
 const round = (index: number, state: Round["state"]): Round => ({
@@ -45,5 +45,26 @@ describe("turn text", () => {
   });
   it("a running turn streams live", () => {
     assert.deepEqual(turnText(turn("running", null), null, evs), { text: "已经写了一半", live: true });
+  });
+});
+
+describe("which plan goes where (after finalize)", () => {
+  const plan = (version: number, state: PlanVersion["state"]) => ({ id: `plan_${version}`, version, state }) as unknown as PlanVersion;
+  const withPlans = (...plans: PlanVersion[]) => ({ ...initialDiscussion, plans });
+
+  it("after finalizing, the next round carries the latest FINAL", () => {
+    assert.equal(planForNextRound(withPlans(plan(1, "SUPERSEDED"), plan(2, "FINAL")))?.id, "plan_2");
+  });
+  it("CURRENT wins over an older FINAL; unconfirmed drafts are never attached", () => {
+    assert.equal(planForNextRound(withPlans(plan(1, "FINAL"), plan(2, "CURRENT"), plan(3, "DRAFT")))?.id, "plan_2");
+    assert.equal(planForNextRound(withPlans(plan(1, "DRAFT"))), null);
+  });
+  it("the side panel shows the newest active version, not the first FINAL in the list", () => {
+    assert.equal(displayedPlan(withPlans(plan(1, "FINAL"), plan(2, "CURRENT")))?.id, "plan_2");
+  });
+  it("derive is offered only on the newest version, and only once it is FINAL", () => {
+    const d = withPlans(plan(1, "FINAL"), plan(2, "DRAFT"));
+    assert.equal(canDerive(d, plan(1, "FINAL")), false, "v2 already exists");
+    assert.equal(canDerive(withPlans(plan(1, "SUPERSEDED"), plan(2, "FINAL")), plan(2, "FINAL")), true);
   });
 });

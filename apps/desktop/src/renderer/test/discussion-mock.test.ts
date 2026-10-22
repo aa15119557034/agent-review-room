@@ -295,3 +295,17 @@ describe("plan.create (C-28)", () => {
     assert.equal(plans.length, 1);
   });
 });
+
+describe("plan.derive (aligned with D-22k)", () => {
+  it("a second derive from the same FINAL is refused instead of stacking empty versions", async () => {
+    const { bridge, cmd } = setup();
+    const pid = await newTopic(cmd);
+    const v1 = await cmd<{ id: string; contentHash: string }>({ type: "plan.create", projectId: pid, content: "# 方案", changeNote: "" });
+    await cmd({ type: "plan.confirm", planVersionId: v1.id });
+    await cmd({ type: "plan.finalize", planVersionId: v1.id, expectedContentHash: v1.contentHash });
+    const v2 = await cmd<{ version: number }>({ type: "plan.derive", planVersionId: v1.id });
+    assert.equal(v2.version, 2);
+    const again = await bridge.command({ type: "plan.derive", planVersionId: v1.id } as never);
+    assert.equal(!again.ok && again.error, "invalid_state");
+  });
+});

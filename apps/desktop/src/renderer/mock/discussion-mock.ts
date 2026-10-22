@@ -699,6 +699,10 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
       const parent = find(d.plans, req.planVersionId, "方案");
       if (parent.state !== "FINAL") throw new MockError("invalid_state", "只有定稿的版本可以派生");
       const versions = d.plans.filter((p) => p.projectId === parent.projectId);
+      // 和 D-22k 一致：只能从最新的有效版本派生；派生时作废其它草稿
+      const active = versions.filter((v) => v.state === "FINAL" || v.state === "CURRENT" || v.state === "DRAFT");
+      if (active.some((v) => v.version > parent.version)) throw new MockError("invalid_state", "已经有更新的方案版本了，请从最新版本派生，或先确认/定稿它");
+      for (const q of versions) if (q.state === "DRAFT") setPlan(q, "SUPERSEDED", { supersededReason: "被新派生的版本取代" });
       const p: PlanVersion = {
         ...clone(parent), id: id("plan"), version: Math.max(...versions.map((v) => v.version)) + 1, state: "DRAFT",
         changeNote: `从 v${parent.version} 派生`, parentId: parent.id, draftedBy: { kind: "human" }, createdAt: now(), decidedAt: null,

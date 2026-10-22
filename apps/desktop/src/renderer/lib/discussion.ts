@@ -116,10 +116,24 @@ export const openRound = (d: DiscussionState): Round | null =>
 export const pendingBatches = (d: DiscussionState) => d.batches.filter((b) => b.state === "READY_FOR_REVIEW");
 
 /** 右侧显示的方案：当前确认的，否则最新的草稿 */
+const newest = (plans: readonly PlanVersion[]) => [...plans].sort((a, b) => b.version - a.version)[0] ?? null;
+
+/** 右栏显示哪一版：最新的有效版本（草稿比当前 / 定稿新时显示草稿） */
 export function displayedPlan(d: DiscussionState): PlanVersion | null {
-  const current = d.plans.find((p) => p.state === "CURRENT" || p.state === "FINAL");
-  const latestDraft = [...d.plans].filter((p) => p.state === "DRAFT").sort((a, b) => b.version - a.version)[0];
-  return latestDraft && (!current || latestDraft.version > current.version) ? latestDraft : current ?? null;
+  return newest(d.plans.filter((p) => p.state === "CURRENT" || p.state === "FINAL" || p.state === "DRAFT"));
+}
+
+/**
+ * 下一轮附带哪一版：当前版本；没有当前版本时，用最新的定稿（定稿以后继续讨论，带的就是定稿）。
+ * 没确认的草稿不带——它还没被用户认可。
+ */
+export function planForNextRound(d: DiscussionState): PlanVersion | null {
+  return newest(d.plans.filter((p) => p.state === "CURRENT")) ?? newest(d.plans.filter((p) => p.state === "FINAL"));
+}
+
+/** 只能从最新的有效版本派生，而且它必须已经定稿（和 D-22k 一致；避免连点叠出空版本） */
+export function canDerive(d: DiscussionState, plan: PlanVersion): boolean {
+  return plan.state === "FINAL" && displayedPlan(d)?.id === plan.id;
 }
 
 export const agentName = (d: DiscussionState, id: string) => d.agents.find((a) => a.id === id)?.displayName ?? id;

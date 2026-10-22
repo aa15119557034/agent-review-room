@@ -1,7 +1,7 @@
 import type { ApprovalBatch, CommandRequest, NodeInfo, NodeTestResult, Round } from "@room/schemas";
 import { ControlFailure, type RoomClient } from "./client";
 import { appendEvents, applyEvent, type AppState } from "./state";
-import { initialDiscussion, type DiscussionState } from "./discussion";
+import { initialDiscussion, planForNextRound, type DiscussionState } from "./discussion";
 import type { Store } from "./store";
 
 /**
@@ -141,6 +141,8 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
     }
   }
 
+  const deriving = new Set<string>();
+
   return {
     loadAgents,
     loadTopic,
@@ -187,7 +189,7 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
       const projectId = pid();
       const { text, recipients } = store.get().disc.ui.composer;
       if (!projectId || !text.trim() || recipients.length === 0) return;
-      const current = store.get().disc.plans.find((p) => p.state === "CURRENT");
+      const current = planForNextRound(store.get().disc);
       try {
         const { round, batch } = await client.command({
           type: "round.draft",
@@ -363,11 +365,16 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
     },
 
     async derivePlan(planVersionId: string) {
+      // 连点只发一次（真机上连点叠出过 v2…v12）
+      if (deriving.has(planVersionId)) return;
+      deriving.add(planVersionId);
       try {
         const plan = await client.command({ type: "plan.derive", planVersionId });
         store.set((s) => applyEvent(s, { type: "plan.updated", plan }));
       } catch (err) {
         fail(err);
+      } finally {
+        deriving.delete(planVersionId);
       }
     },
 
