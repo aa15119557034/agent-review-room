@@ -1302,3 +1302,34 @@ describe("batch.reject：拒绝原因落库", () => {
     await close(h);
   });
 });
+
+describe("plan.create：用户写第一版（C-28）", () => {
+  it("议题没有方案时生成 v1 DRAFT（human）并推 plan.updated；再次调用 invalid_state", async () => {
+    const h = await makeHarness();
+    const created = (await h.dispatcher.handleCommand({
+      type: "plan.create",
+      projectId: h.projectId,
+      content: "# 你写的第一版\n1. 先把讨论室跑通",
+      changeNote: "你写的第一版",
+    })) as any;
+    assert.equal(created.ok, true, JSON.stringify(created));
+    assert.equal(created.data.version, 1);
+    assert.equal(created.data.state, "DRAFT");
+    assert.equal(created.data.parentId, null);
+    assert.equal(created.data.draftedBy.kind, "human");
+    assert.ok(h.events.some((e) => e.type === "plan.updated" && (e as any).plan.id === created.data.id));
+
+    const again = await h.dispatcher.handleCommand({
+      type: "plan.create",
+      projectId: h.projectId,
+      content: "# 第二版",
+      changeNote: "",
+    });
+    assert.equal(failure(again).error, "invalid_state");
+    assert.equal(
+      (h.db.prepare("SELECT count(*) AS n FROM plan_versions WHERE project_id = ?").get(h.projectId) as { n: number }).n,
+      1,
+    );
+    await close(h);
+  });
+});

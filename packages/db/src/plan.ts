@@ -16,6 +16,7 @@ export type PlanErrorCode =
   | "plan_not_draft"
   | "plan_not_current"
   | "plan_not_final"
+  | "plan_exists"
   | "hash_mismatch";
 
 export class PlanError extends Error {
@@ -166,6 +167,38 @@ function insertPlanVersion(
     input.createdAt,
   );
   return id;
+}
+
+/**
+ * 用户自己写第一版方案（plan.create）：只有议题还**没有任何版本**时才能用。
+ * 用于汇总没有给出方案（planContent = null）、而用户想自己起草的情况。
+ */
+export function createPlan(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  input: { projectId: string; content: string; changeNote: string },
+): Promise<PlanVersionRow> {
+  return writeTransaction(db, queue, () => {
+    const existing = db.prepare("SELECT id FROM plan_versions WHERE project_id = ? LIMIT 1").get(input.projectId) as
+      | { id: string }
+      | undefined;
+    if (existing !== undefined) {
+      throw new PlanError("plan_exists", "this project already has a plan version; use plan.edit");
+    }
+
+    const createdAt = now();
+    const id = insertPlanVersion(db, {
+      projectId: input.projectId,
+      version: 1,
+      content: input.content,
+      contentHash: createHash("sha256").update(input.content, "utf8").digest("hex"),
+      changeNote: input.changeNote,
+      basedOnRoundId: null,
+      parentId: null,
+      createdAt,
+    });
+    return readPlan(db, id)!;
+  });
 }
 
 /**

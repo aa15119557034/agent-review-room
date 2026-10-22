@@ -4,7 +4,7 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
-import { confirmPlan, derivePlan, editPlan, finalizePlan, openDatabase, PlanError, ulid, WriteQueue } from "../src/index";
+import { confirmPlan, createPlan, derivePlan, editPlan, finalizePlan, openDatabase, PlanError, ulid, WriteQueue } from "../src/index";
 import type { SqliteDatabase } from "../src/index";
 
 /**
@@ -205,6 +205,35 @@ describe("editPlan / derivePlan", () => {
     await assert.rejects(
       () => derivePlan(f.db, f.queue, current.id),
       (error: unknown) => error instanceof PlanError && error.code === "plan_not_final",
+    );
+    f.db.close();
+  });
+});
+
+describe("createPlan：用户写第一版（C-28）", () => {
+  it("议题还没有版本时生成 v1 DRAFT（human），再次调用被拒", async () => {
+    const f = makeFixture();
+    const plan = await createPlan(f.db, f.queue, {
+      projectId: f.projectId,
+      content: "# 你写的第一版",
+      changeNote: "你写的第一版",
+    });
+
+    assert.equal(plan.version, 1);
+    assert.equal(plan.state, "DRAFT");
+    assert.equal(plan.parent_id, null);
+    assert.equal(plan.based_on_round_id, null);
+    assert.equal(plan.drafted_by_kind, "human");
+    assert.equal(plan.content_hash, sha("# 你写的第一版"));
+    assert.equal(plan.change_note, "你写的第一版");
+
+    await assert.rejects(
+      () => createPlan(f.db, f.queue, { projectId: f.projectId, content: "第二版", changeNote: "" }),
+      (error: unknown) => error instanceof PlanError && error.code === "plan_exists",
+    );
+    assert.equal(
+      (f.db.prepare("SELECT count(*) AS n FROM plan_versions WHERE project_id = ?").get(f.projectId) as { n: number }).n,
+      1,
     );
     f.db.close();
   });
