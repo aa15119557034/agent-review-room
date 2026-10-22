@@ -649,16 +649,17 @@ export class DiscussionService {
     return plan;
   }
 
-  /** plan.derive：从 FINAL 派生新的 DRAFT */
+  /** plan.derive：从 FINAL 派生新的 DRAFT（同时作废其它未确认的草稿） */
   async derivePlan(command: CommandRequest<"plan.derive">): Promise<PlanVersion> {
     const { repo, db, queue, emit } = this.#deps;
-    let row: Awaited<ReturnType<typeof derivePlanTx>>;
+    let result: Awaited<ReturnType<typeof derivePlanTx>>;
     try {
-      row = await derivePlanTx(db, queue, command.planVersionId);
+      result = await derivePlanTx(db, queue, command.planVersionId);
     } catch (error) {
       throw mapPlanError(error);
     }
-    const plan = repo.getPlan(row.id);
+    for (const superseded of result.superseded) emit({ type: "plan.updated", plan: repo.getPlan(superseded.id) });
+    const plan = repo.getPlan(result.plan.id);
     emit({ type: "plan.updated", plan });
     return plan;
   }

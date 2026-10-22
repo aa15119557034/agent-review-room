@@ -243,13 +243,28 @@ export function editPlan(
 }
 
 /** 定稿后发现漏了（plan.derive）：从 FINAL 派生一个新的 DRAFT，版本链不断 */
-export function derivePlan(db: SqliteDatabase, queue: WriteQueue, planVersionId: string): Promise<PlanVersionRow> {
+export function derivePlan(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  planVersionId: string,
+): Promise<{ plan: PlanVersionRow; superseded: PlanVersionRow[] }> {
   return writeTransaction(db, queue, () => {
     const parent = readPlan(db, planVersionId);
     if (parent === undefined) throw new PlanError("plan_not_found", "plan version not found");
     if (parent.state !== "FINAL") throw new PlanError("plan_not_final", "plan is " + parent.state);
 
     const createdAt = now();
+    // 和 plan.edit 一样：一个议题同时只能有一个 DRAFT。
+    // 连点「派生下一版」不应该叠出多个草稿（v2、v3…都还挂在 v1 下面）。
+    const previous = db
+      .prepare("SELECT id FROM plan_versions WHERE project_id = ? AND state = 'DRAFT'")
+      .all(parent.project_id) as { id: string }[];
+    for (const row of previous) {
+      db.prepare(
+        "UPDATE plan_versions SET state = 'SUPERSEDED', superseded_reason = ?, decided_at = ? WHERE id = ? AND state = 'DRAFT'",
+      ).run("被新派生的版本取代", createdAt, row.id);
+    }
+
     const id = insertPlanVersion(db, {
       projectId: parent.project_id,
       version: nextVersion(db, parent.project_id),
@@ -260,7 +275,7 @@ export function derivePlan(db: SqliteDatabase, queue: WriteQueue, planVersionId:
       parentId: parent.id,
       createdAt,
     });
-    return readPlan(db, id)!;
+    return { plan: readPlan(db, id)!, superseded: previous.map((row) => readPlan(db, row.id)!) };
   });
 }
 

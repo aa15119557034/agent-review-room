@@ -151,7 +151,7 @@ describe("finalizePlan：盖章定稿（校验指纹）", () => {
     const first = await finalizePlan(f.db, f.queue, { planVersionId: v1.id, expectedContentHash: v1.contentHash });
     assert.equal(first.plan.state, "FINAL");
 
-    const derived = await derivePlan(f.db, f.queue, v1.id);
+    const derived = (await derivePlan(f.db, f.queue, v1.id)).plan;
     assert.equal(derived.version, 2);
     assert.equal(derived.state, "DRAFT");
     assert.equal(derived.parent_id, v1.id);
@@ -196,6 +196,24 @@ describe("editPlan / derivePlan", () => {
     assert.deepEqual(result.superseded.map((plan) => plan.id), [oldDraft.id]);
     assert.equal(stateOf(f, oldDraft.id), "SUPERSEDED");
     assert.equal(stateOf(f, parent.id), "CURRENT", "parent 不动");
+    f.db.close();
+  });
+
+  it("连点 plan.derive 不会叠出多个 DRAFT：旧的草稿被新派生的取代", async () => {
+    const f = makeFixture();
+    const v1 = insertPlan(f, { version: 1, state: "FINAL", content: "# 定稿" });
+    const v2 = (await derivePlan(f.db, f.queue, v1.id)).plan;
+    const second = await derivePlan(f.db, f.queue, v1.id);
+
+    assert.equal(second.plan.version, 3);
+    assert.deepEqual(second.superseded.map((p) => p.id), [v2.id]);
+    assert.equal(stateOf(f, v2.id), "SUPERSEDED");
+    assert.equal(stateOf(f, second.plan.id), "DRAFT");
+    assert.equal(
+      (f.db.prepare("SELECT count(*) AS n FROM plan_versions WHERE project_id = ? AND state = 'DRAFT'").get(f.projectId) as { n: number }).n,
+      1,
+      "同一议题只能有一个 DRAFT",
+    );
     f.db.close();
   });
 
