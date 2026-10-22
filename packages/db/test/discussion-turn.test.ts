@@ -11,6 +11,7 @@ import {
   finishTurnFromRun,
   openDatabase,
   pauseRound,
+  voidRound,
   finishSummaryFromRun,
   linkSuperseded,
   rejectBatch,
@@ -632,5 +633,23 @@ describe("answered 的边界情况", () => {
       f.db.prepare("UPDATE turns SET outcome = 'rejected' WHERE id = ?").run(retry.turnIds[0]!);
     });
     assert.equal(answered, 1);
+  });
+});
+
+describe("voidRound：作废的轮也累计 active_ms", () => {
+  it("作废时把正在跑的这段加进 active_ms，清空 started_at，记下原因", async () => {
+    const f = await seedApproved(["deepseek"]);
+    f.db
+      .prepare("UPDATE rounds SET started_at = ? WHERE id = ?")
+      .run(new Date(Date.now() - 5000).toISOString(), f.roundId);
+
+    const result = await voidRound(f.db, f.queue, { roundId: f.roundId, reason: "方向变了" });
+
+    assert.equal(result.round.state, "VOIDED");
+    assert.equal(result.round.void_reason, "方向变了");
+    assert.equal(result.round.started_at, null);
+    assert.ok(result.round.active_ms >= 5000, "作废前跑的那一段要累计进去");
+    assert.equal(count(f.db, "SELECT count(*) AS n FROM turns WHERE outcome = 'round_ended'"), 1);
+    f.db.close();
   });
 });
