@@ -731,8 +731,12 @@ export function voidRound(
     const ts = now();
     const endedTurns = cancelRunningTurns(db, round.id, "round_ended", input.partialText ?? {}, ts);
     const cancelledBatches = cancelOpenBatchesTx(db, round.id, ts);
+    // 作废也要把正在跑的这段时间累计进 active_ms（和 pause / end 一致），否则界面上「用了多久」会少一段
+    const elapsed = round.started_at === null ? 0 : Math.max(0, Date.parse(ts) - Date.parse(round.started_at));
 
-    db.prepare("UPDATE rounds SET state = 'VOIDED', void_reason = ?, finished_at = ? WHERE id = ?").run(input.reason, ts, round.id);
+    db.prepare(
+      "UPDATE rounds SET state = 'VOIDED', void_reason = ?, started_at = NULL, active_ms = ?, finished_at = ? WHERE id = ?",
+    ).run(input.reason, round.active_ms + elapsed, ts, round.id);
 
     const plans = db
       .prepare("SELECT id FROM plan_versions WHERE based_on_round_id = ? AND state = 'DRAFT'")
