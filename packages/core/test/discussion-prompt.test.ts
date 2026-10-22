@@ -300,10 +300,17 @@ describe("structured summary", () => {
     assert.equal(parseSummaryOutput("```json\n{}\n```"), null);
     assert.equal(parseSummaryOutput("{bad"), null);
     assert.equal(parseSummaryOutput(valid.replace("agree", "unknown")), null);
-    assert.equal(parseSummaryOutput(valid.replace('"planContent":"# 方案"', '"planContent":"   "')), null);
-    assert.equal(parseSummaryOutput(valid.replace('"planContent":"# 方案"', '"planContent":null')), null);
-    assert.ok(parseSummaryOutput(valid.replace('"gaps":[]', '"gaps":["本轮没有可落实的内容"]')
-      .replace('"planContent":"# 方案"', '"planContent":null')));
+    assert.equal(parseSummaryOutput(valid.replace('"planContent":"# 方案"', '"planContent":42')), null);
+  });
+
+  it("keeps a valid report when the plan is blank or null without gaps", () => {
+    const report = parseSummaryOutput(valid)?.report;
+    for (const planContent of ['""', '"   "', 'null']) {
+      assert.deepEqual(parseSummaryOutput(valid.replace('"planContent":"# 方案"', `"planContent":${planContent}`)), {
+        report,
+        planContent: null,
+      });
+    }
   });
 
   it("accepts JSON fenced or surrounded by short commentary", () => {

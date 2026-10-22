@@ -251,9 +251,10 @@ export function parseSummaryOutput(text: string): ParsedSummaryOutput | null {
   if (value === null || typeof value !== "object" || Array.isArray(value)) return null;
   const candidate = value as Record<string, unknown>;
   const report = RoundSummarySchema.shape.report.unwrap().safeParse(candidate.report);
-  if (!report.success || !(candidate.planContent === null ||
-    PlanVersionSchema.shape.content.safeParse(candidate.planContent).success)) return null;
-  if (typeof candidate.planContent === "string" && candidate.planContent.trim().length === 0) return null;
-  if (candidate.planContent === null && report.data.gaps.length === 0) return null;
-  return { report: report.data, planContent: candidate.planContent as string | null };
+  if (!report.success) return null;
+  const planContent = candidate.planContent;
+  if (planContent !== null && typeof planContent !== "string") return null;
+  if (planContent !== null && planContent.trim().length > 0 &&
+    !PlanVersionSchema.shape.content.safeParse(planContent).success) return null;
+  return { report: report.data, planContent: planContent?.trim() ? planContent : null };
 }
