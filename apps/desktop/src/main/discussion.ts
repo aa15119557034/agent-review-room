@@ -9,6 +9,7 @@ import {
   BatchApproveError,
   confirmPlan as confirmPlanTx,
   createBatchDraft,
+  createPlan as createPlanTx,
   createResumeBatch,
   createRoundDraft,
   createSummaryDraft,
@@ -611,6 +612,27 @@ export class DiscussionService {
     return note;
   }
 
+  /** plan.create：议题还没有任何方案时，用户自己写第一版（v1 DRAFT） */
+  async createPlan(command: CommandRequest<"plan.create">): Promise<PlanVersion> {
+    const { repo, db, queue, emit } = this.#deps;
+    repo.getProject(command.projectId); // 不存在时先报 not_found
+
+    let row: Awaited<ReturnType<typeof createPlanTx>>;
+    try {
+      row = await createPlanTx(db, queue, {
+        projectId: command.projectId,
+        content: command.content,
+        changeNote: command.changeNote,
+      });
+    } catch (error) {
+      throw mapPlanError(error);
+    }
+
+    const plan = repo.getPlan(row.id);
+    emit({ type: "plan.updated", plan });
+    return plan;
+  }
+
   /** plan.edit：用户自己改方案，生成新的 DRAFT，其它草稿作废 */
   async editPlan(command: CommandRequest<"plan.edit">): Promise<PlanVersion> {
     const { repo, db, queue, emit } = this.#deps;
@@ -1032,6 +1054,8 @@ function mapPlanError(error: unknown): unknown {
       return new DiscussionError("not_found", error.message);
     case "hash_mismatch":
       return new DiscussionError("stale_snapshot", "方案内容和你看到的不一致，请重新打开");
+    case "plan_exists":
+      return new DiscussionError("invalid_state", "这个议题已经有方案版本了，请用「我来改」");
     default:
       return new DiscussionError("invalid_state", error.message);
   }

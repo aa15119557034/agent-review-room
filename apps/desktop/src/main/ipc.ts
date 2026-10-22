@@ -249,6 +249,9 @@ export function createDispatcher(deps: IpcDeps) {
       case "note.add":
         return deps.discussion.addNote(command);
 
+      case "plan.create":
+        return deps.discussion.createPlan(command);
+
       case "plan.edit":
         return deps.discussion.editPlan(command);
 
