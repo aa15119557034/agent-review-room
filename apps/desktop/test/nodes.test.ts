@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
 import { approveAndCreateRun, openDatabase, ulid, WriteQueue } from "@room/db";
-import type { NodeHealth, NodeTestResult } from "@room/schemas";
+import type { BatchModel, NodeHealth, NodeTestResult } from "@room/schemas";
 import { migrateLegacyReviewerNode, NodeService, resolveRunTarget } from "../src/main/nodes";
 import { Repository } from "../src/main/repository";
 import { SettingsStore, type SafeStorageLike } from "../src/main/settings";
@@ -240,7 +240,11 @@ describe("地址变了又没给新 Token：旧 Token 必须清掉", () => {
 });
 
 describe("resolveRunTarget：Run 该连哪个节点", () => {
-  async function seedRun(env: Env, adapterId: string, options: { withTurn: boolean; saveToken: boolean }) {
+  async function seedRun(
+    env: Env,
+    adapterId: string,
+    options: { withTurn: boolean; saveToken: boolean; model?: BatchModel | null },
+  ) {
     const now = new Date().toISOString();
     env.db
       .prepare("INSERT INTO nodes (id, display_name, base_url, created_at) VALUES (?, ?, ?, ?)")
@@ -295,6 +299,21 @@ describe("resolveRunTarget：Run 该连哪个节点", () => {
             "VALUES (?, ?, ?, 'deepseek', 0, ?, ?, 'running', ?)",
         )
         .run("turn_" + ulid(), roundId, batchId, approved.run.approval_id, approved.run.id, now);
+
+      if (options.model !== undefined) {
+        env.db
+          .prepare(
+            "INSERT INTO batch_items (batch_id, recipient, on_behalf_of, approval_id, snapshot_id, content_hash, differs_from_others, token_estimate, model) " +
+              "VALUES (?, 'deepseek', NULL, ?, ?, ?, 0, 0, ?)",
+          )
+          .run(
+            batchId,
+            approved.run.approval_id,
+            approved.run.snapshot_id,
+            snapshot.contentHash,
+            options.model === null ? null : JSON.stringify(options.model),
+          );
+      }
     }
 
     return approved.run;
@@ -310,6 +329,26 @@ describe("resolveRunTarget：Run 该连哪个节点", () => {
       token: TOKEN,
       profileId: "deepseek-discuss",
     });
+    env.db.close();
+  });
+
+  it("C-40：批次项有模型时 target.model 是投影后的 RunModel", async () => {
+    const env = makeEnv();
+    const run = await seedRun(env, "remote:deepseek-discuss", {
+      withTurn: true,
+      saveToken: true,
+      model: { model: "deepseek-flash", effort: "high", usedFallback: false, effortSource: "configured" },
+    });
+
+    assert.deepEqual(resolveRunTarget(env.db, env.settings, run).model, { model: "deepseek-flash", effort: "high" });
+    env.db.close();
+  });
+
+  it("C-40：旧批次 model = null 时 target 不带 model（StartRun 省略）", async () => {
+    const env = makeEnv();
+    const run = await seedRun(env, "remote:deepseek-discuss", { withTurn: true, saveToken: true, model: null });
+
+    assert.equal("model" in resolveRunTarget(env.db, env.settings, run), false);
     env.db.close();
   });
 
