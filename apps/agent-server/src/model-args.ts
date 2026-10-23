@@ -60,6 +60,7 @@ export function modelConfigProblems(profile: ModelProfile): string[] {
   }
   if (!profile.modelArgs.some((a) => a.includes("{model}"))) problems.push("有 models 清单时 modelArgs 必须包含 {model}");
   if (profile.modelArgs.some((a) => a.includes("{effort}"))) problems.push("{effort} 要写在 effortArgs 里");
+  if (profile.effortArgs.some((a) => a.includes("{model}"))) problems.push("{model} 要写在 modelArgs 里");
   const hasEfforts = profile.models.some((m) => m.efforts.length > 0);
   if (hasEfforts && !profile.effortArgs.some((a) => a.includes("{effort}"))) {
     problems.push("有带强度档位的模型时 effortArgs 必须包含 {effort}");

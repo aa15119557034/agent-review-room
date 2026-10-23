@@ -24,7 +24,7 @@ if (!profileId || !prompt || (options["effort"] !== undefined && options["model"
   console.error('用法：pnpm --filter @room/agent-server run try -- <profile> [--model <模型> [--effort <档位>]] "问题"');
   process.exit(2);
 }
-const model = options["model"] === undefined ? undefined : { model: options["model"], effort: options["effort"] ?? null };
+
 
 let loaded: ReturnType<typeof loadConfig>;
 try {
@@ -38,6 +38,17 @@ if (!config.profiles[profileId]) {
   console.error(`没有这个 profile：${profileId}。可用的：${Object.keys(config.profiles).join("、")}`);
   process.exit(2);
 }
+// 只给了 --model：用配置里这个模型的推荐档位（没有档位的模型就是 null）
+const model =
+  options["model"] === undefined
+    ? undefined
+    : {
+        model: options["model"],
+        effort:
+          options["effort"] ??
+          config.profiles[profileId]!.models.find((m) => m.id === options["model"])?.defaultEffort ??
+          null,
+      };
 const host = config.host === "0.0.0.0" || config.host === "::" ? "127.0.0.1" : config.host;
 const base = `http://${host}:${config.port}`;
 const auth = { authorization: `Bearer ${token}`, "content-type": "application/json" };

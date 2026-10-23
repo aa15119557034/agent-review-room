@@ -114,6 +114,8 @@ function readTokenFile(path: string): string {
  */
 export function validateProfiles(config: ServerConfig, r?: ResolveEnv): string[] {
   const problems: string[] = [];
+  // health 的 profileModels 每个 profile 一条，契约上限 64
+  if (Object.keys(config.profiles).length > 64) problems.push("profile 最多 64 个");
   for (const [id, p] of Object.entries(config.profiles)) {
     if (new Set(p.models.map((m) => m.id)).size !== p.models.length) problems.push(`profile "${id}": 模型 id 重复`);
     for (const m of modelConfigProblems(p)) problems.push(`profile "${id}": ${m}`);

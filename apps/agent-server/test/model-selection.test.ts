@@ -67,6 +67,7 @@ describe("model config checks", () => {
       [{ modelArgs: ["-m"] }, /modelArgs 必须包含 \{model\}/],
       [{ effortArgs: [] }, /effortArgs 必须包含 \{effort\}/],
       [{ args: ["{model-args}", "{model-args}"] }, /只能出现一次/],
+      [{ effortArgs: ["--effort", "{effort}", "{model}"] }, /\{model\} 要写在 modelArgs 里/],
       [{ args: ["--model", "{model}"] }, /不能直接写/],
       [{ models: [] }, /没有 models 清单/],
       [{ models: [flat] }, /effortArgs 应该为空/],
