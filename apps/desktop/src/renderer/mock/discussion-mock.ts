@@ -11,9 +11,12 @@ import {
   type ApprovalState,
   type BatchItem,
   type BatchKind,
+  type BatchModel,
   type ControlEvent,
   type Message,
+  type ModelOption,
   type NodeInfo,
+  type ProfileModels,
   type PlanState,
   type PlanVersion,
   type Project,
@@ -28,6 +31,8 @@ import {
   type TurnOutcome,
 } from "@room/schemas";
 import { MockError, id, now, randomHex, sha256Hex } from "./util";
+import { pickModel } from "../lib/models";
+import { RECOMMENDED_MODELS } from "../lib/presets";
 
 /**
  * 讨论室的内存实现（C-21）。规则照 ADR-002 和画布「0-B 一轮的状态与记录」：
@@ -46,7 +51,42 @@ export interface DiscussionMockOptions {
   quotaMidway?: string[];
   /** 下一次回答以失败结束的 Agent（只触发一次） */
   failOnce?: string[];
+  /** 节点上「暂时没有」的模型 id（演示首选不可用 → 用备选） */
+  missingModels?: string[];
+  /** 节点不报 profileModels（老节点） */
+  noProfileModels?: boolean;
 }
+
+const level = (id: string, displayName: string, note: string | null = null) => ({ id, displayName, note });
+const CLAUDE_LEVELS = [level("low", "低"), level("medium", "中等", "推荐"), level("high", "高"), level("xhigh", "超高"), level("max", "最高", "约 4 倍用量")];
+const CODEX_LEVELS = [level("low", "低"), level("medium", "中等"), level("high", "高"), level("xhigh", "超高"), level("max", "最高"), level("ultra", "极限")];
+
+/** mock 节点上报的模型（C-40）。真实名字和档位以 S-22 实测为准 */
+export const MOCK_PROFILE_MODELS: ProfileModels[] = [
+  {
+    profileId: "claude-review",
+    models: [
+      { id: "claude-opus-5-5", displayName: "Opus 5.5", efforts: CLAUDE_LEVELS, defaultEffort: "medium" },
+      { id: "claude-sonnet-5-5", displayName: "Sonnet 5.5", efforts: CLAUDE_LEVELS, defaultEffort: "medium" },
+    ],
+  },
+  {
+    profileId: "deepseek-discuss",
+    models: [
+      {
+        id: "deepseek-flash", displayName: "V4.1 Flash 1017",
+        efforts: [level("off", "关"), level("low", "低"), level("high", "高"), level("max", "最高")], defaultEffort: "high",
+      },
+    ],
+  },
+  {
+    profileId: "codex-discuss",
+    models: [
+      { id: "gpt-6.1-sol", displayName: "GPT-6.1 Sol", efforts: CODEX_LEVELS, defaultEffort: "low" },
+      { id: "gpt-6-astra", displayName: "GPT-6 Astra", efforts: CODEX_LEVELS, defaultEffort: "low" },
+    ],
+  },
+];
 
 export interface DiscussionContext {
   db: {
@@ -73,18 +113,21 @@ const SEED_AGENTS: AgentProfile[] = [
     roleNote: "汇总者：找出一致、分歧和遗漏，补充风险，起草方案新版本。",
     canDiscuss: true, canSummarize: true, canExecute: true, nodeId: "user-pc", profileId: "claude-review",
     pausedByUser: false, substitute: null,
+    modelSettings: RECOMMENDED_MODELS.claude,
   },
   {
     id: "deepseek", displayName: "DeepSeek", color: "#2f5aa0", avatarRef: null,
     roleNote: "后端视角：关注数据一致性、状态机和失败路径。",
     canDiscuss: true, canSummarize: false, canExecute: true, nodeId: "controller-local", profileId: "deepseek-discuss",
     pausedByUser: false, substitute: null,
+    modelSettings: RECOMMENDED_MODELS.deepseek,
   },
   {
     id: "codex", displayName: "Codex", color: "#1f6b55", avatarRef: null,
     roleNote: "务实派：关注实现成本和可维护性，看到过度设计要直说。",
     canDiscuss: true, canSummarize: false, canExecute: true, nodeId: "controller-local", profileId: "codex-discuss",
     pausedByUser: false, substitute: "deepseek",
+    modelSettings: RECOMMENDED_MODELS.codex,
   },
 ];
 
@@ -108,6 +151,11 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
   const absent = new Set(options.absentAgents ?? []);
   const quotaMidway = new Set(options.quotaMidway ?? []);
   const failOnce = new Set(options.failOnce ?? []);
+  const missingModels = new Set(options.missingModels ?? []);
+  const profileModels = (): ProfileModels[] | undefined =>
+    options.noProfileModels
+      ? undefined
+      : MOCK_PROFILE_MODELS.map((p) => ({ ...p, models: p.models.filter((m: ModelOption) => !missingModels.has(m.id)) }));
   /** 暂停开始的时间，用来算 activeMs */
   const runningSince = new Map<string, number>();
 
@@ -226,7 +274,17 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
     return { content, nonce, compressedRounds };
   }
 
-  async function makeItem(round: Round, recipient: AgentProfile, extra: string | null, kind: BatchKind, differs: boolean) {
+  /** 按 C-40 的规则定下模型；节点上没有首选也没有备选 → agent_unavailable */
+  function chooseModel(recipient: AgentProfile, kind: BatchKind, previous: BatchModel | null | undefined): BatchModel | null {
+    const models = profileModels()?.find((p) => p.profileId === recipient.profileId)?.models;
+    const r = pickModel(recipient.modelSettings, models, kind === "summary" ? "summary" : "discussion", previous);
+    if (!r.ok) throw new MockError("agent_unavailable", `${recipient.displayName}：${r.message}`);
+    return r.model;
+  }
+
+  async function makeItem(
+    round: Round, recipient: AgentProfile, extra: string | null, kind: BatchKind, differs: boolean, model: BatchModel | null,
+  ) {
     const { content, nonce, compressedRounds } = assemble(round, recipient, extra, kind);
     const snapshot: PromptSnapshot = {
       id: id("snap"), projectId: round.projectId, content, contentHash: await sha256Hex(content), nonce,
@@ -242,7 +300,7 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
     emit({ type: "approval.updated", approval: clone(approval) });
     const item: BatchItem = {
       recipient: recipient.id, onBehalfOf: null, approvalId: approval.id, snapshotId: snapshot.id,
-      contentHash: snapshot.contentHash, differsFromOthers: differs, tokenEstimate: snapshot.tokenEstimate,
+      contentHash: snapshot.contentHash, differsFromOthers: differs, tokenEstimate: snapshot.tokenEstimate, model,
     };
     return { item, compressedRounds };
   }
@@ -252,8 +310,15 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
       const av = availability(a);
       if (av !== "available") throw new MockError("agent_unavailable", `${a.displayName} 现在不能参与（${av}）`);
     }
+    // 重试 / 恢复先沿用原来那个 Turn 的模型（C-40）
+    const previous = (aid: string) => {
+      if (kind !== "retry" && kind !== "resume") return undefined;
+      const t = latestTurn(round.id, aid);
+      return t ? d.batches.find((b) => b.id === t.batchId)?.items.find((i) => i.approvalId === t.approvalId)?.model : undefined;
+    };
+    const models = recipients.map((a) => chooseModel(a, kind, previous(a.id)));
     const made = [];
-    for (const a of recipients) made.push(await makeItem(round, a, extra, kind, differs));
+    for (const [i, a] of recipients.entries()) made.push(await makeItem(round, a, extra, kind, differs, models[i]!));
     const batch: ApprovalBatch = {
       id: id("bat"), projectId: round.projectId, roundId: round.id, kind, state: "READY_FOR_REVIEW",
       items: made.map((m) => m.item), compressedRounds: made[0]?.compressedRounds ?? [],
@@ -430,7 +495,11 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
       if (!token) return { reachable: false, error: "no_token", message: saved ? "地址变了，请重新输入 Token" : "还没有填写 Token" };
       return {
         reachable: true,
-        health: { protocol: 1, nodeId: req.id, profiles: ["claude-review", "deepseek-discuss", "codex-discuss"], activeRuns: 0, maxConcurrentRuns: 2, leaseMs: 20000, heartbeatMs: 5000 },
+        health: {
+          protocol: 1, nodeId: req.id, profiles: ["claude-review", "deepseek-discuss", "codex-discuss"],
+          activeRuns: 0, maxConcurrentRuns: 2, leaseMs: 20000, heartbeatMs: 5000,
+          ...(profileModels() ? { profileModels: profileModels() } : {}),
+        },
         profileAvailable: true,
         latencyMs: 9,
       };
@@ -444,6 +513,7 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
         d.agents.push({
           id: req.id, displayName: req.displayName, color: req.color, avatarRef: null, roleNote: "",
           canDiscuss: true, canSummarize: false, canExecute: false, nodeId: null, profileId: null, pausedByUser: false, substitute: null,
+          modelSettings: { primaryModel: null, fallbackModel: null, effort: { chat: null, discussion: null, summary: null } },
         });
       }
       const a = agent(req.id);
@@ -499,9 +569,21 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
     async "batch.approve"(req: any) {
       const b = find(d.batches, req.batchId, "批次");
       if (b.state !== "READY_FOR_REVIEW") throw new MockError("already_decided", `这一批当前是 ${b.state}`);
-      const expected = new Map((req.expected as { approvalId: string; contentHash: string }[]).map((e) => [e.approvalId, e.contentHash]));
-      if (expected.size !== b.items.length || b.items.some((it) => expected.get(it.approvalId) !== it.contentHash)) {
+      type Expected = { approvalId: string; contentHash: string; model: { model: string; effort: string | null } | null };
+      const expected = new Map((req.expected as Expected[]).map((e) => [e.approvalId, e]));
+      if (expected.size !== b.items.length || b.items.some((it) => expected.get(it.approvalId)?.contentHash !== it.contentHash)) {
         throw new MockError("stale_snapshot", "要发送的内容和你看到的不一致，请重新打开确认页");
+      }
+      // C-40：模型和强度也算进盖章指纹，只比较 model 和 effort
+      for (const it of b.items) {
+        const e = expected.get(it.approvalId)!.model;
+        const who = agent(it.recipient).displayName;
+        if ((e === null) !== (it.model === null) || (e && it.model && e.model !== it.model.model)) {
+          throw new MockError("stale_snapshot", `${who} 的模型和你看到的不一致，请重新打开确认页`);
+        }
+        if (e && it.model && e.effort !== it.model.effort) {
+          throw new MockError("stale_snapshot", `${who} 的思考强度和你看到的不一致，请重新打开确认页`);
+        }
       }
       const round = getRound(b.roundId);
       if (round.state === "VOIDED" || round.state === "SUMMARIZED") throw new MockError("invalid_state", "这一轮已经结束");
