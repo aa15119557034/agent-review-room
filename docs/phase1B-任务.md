@@ -1,6 +1,6 @@
 # 任务板 · Phase 1B：外观、聊天空间、参与者、讨论室待办
 
-依据：`docs/design/ADR-002-讨论室模式.md`、`docs/design/ADR-003-聊天空间.md`（提议中）。
+依据：`docs/design/ADR-002-讨论室模式.md`、`docs/design/ADR-003-聊天空间.md`（提议中）、`docs/design/ADR-004-多模态和插件.md`（提议中）。
 顺序按用户 2026-10-23 的选择：外观 → 聊天空间 → 参与者（控制台、额度、替补）→ 讨论室待办（原「工作部分」，已并进讨论室标签）。
 
 可以并行（汐评审意见）：C-32 → D-30、C-39 → D-33 不必等外观验收，可以和 C-34 同时进行。
@@ -44,11 +44,28 @@
 | **D-30** | DeepSeek | 头像上传 / 读取（main 里存进 userData，renderer 只拿引用）：按文件头判断真实类型、大小上限、原子写、文件名用 ULID、替换时清旧文件 | C-32 | 重启后头像还在；非图片（含改扩展名的 exe）被拒；引用不存在或用途不对被拒；选图对话框可注入，单测覆盖（CI 打不开系统对话框） |
 | **C-33** | Claude | 外观：苹果风格 + 微信用法（画布《1B 外观草案》）；桌面和手机布局；讨论室按新排版重做（三栏、轮次胶囊、汇总标签、新建议题页、按住盖章、右栏可收起）；动画尊重「减少动态效果」 | C-32 | 用户看过说「不粗糙了」；按住盖章：按 999ms 松手、再推进时钟过 1 秒，`batch.approve` / `plan.finalize` 调用 0 次、状态不变；移出 / 失焦 / 页面隐藏 / 变灰清计时；按满只发一次；普通点击和键盘绕不过 |
 
+## 1B-M 多模态（ADR-004，排在 1B-0 之后、1B-2 之前）
+
+能脱离聊天先做的先做，在讨论室里验证；沉浸模式随 1B-2 一起做。验收细节见 ADR-004「分阶段」。
+
+| ID | 负责 | 内容 | 依赖 |
+|---|---|---|---|
+| **C-42** | Claude | 契约：`ModelOption.vision`、`StartRun.attachments`、ChartSpec、DrawRequest、GeneratedImage、SpeechClip、VoiceProfile、MediaIntent、沉浸模式设置、画图选路记录 | ADR-004 |
+| **S-23** | Claude | 节点：实测三家看图并上报 `vision`；attachments 交给 CLI；`codex-image` profile 实测 | C-42 |
+| **D-36** | DeepSeek | 图片处理（去 EXIF、缩放、去重）；StartRun 带图；讨论室材料带图算进指纹 | C-42 |
+| **D-37** | DeepSeek | 语音合成：spike（CosyVoice / IndexTTS2 / GPT-SoVITS 盲听）→ 独立进程、按 hash 缓存 | C-42 |
+| **D-38** | DeepSeek | 画图：ComfyUI（固定工作流、只连本机）+ `codex-image`；Codex 额度任一窗口 ≥85% 或读不到就走本机 | C-42、S-23 |
+| **D-39** | DeepSeek | 沉浸模式：媒体意图、自动画图 / 语音、硬上限、退回成卡片、「停」 | C-34、D-37、D-38 |
+| **C-43** | Claude | 界面：发图看图、图表、画图请求卡、播放、「用语音回」、声音设置、沉浸模式设置 | C-42 |
+| **X-34** | Codex | Prompt：图片当不可信材料、`room-chart` 和媒体意图说明；e2e 讨论室带图一轮 | C-42、D-36 |
+
+S-21（读额度）在 1B-3。它做好之前读不到 Codex 额度，按规则一律走本机画图，所以 D-38 不用等它。
+
 ## 1B-2 聊天空间
 
 | ID | 负责 | 内容 | 依赖 | 验收 |
 |---|---|---|---|---|
-| **C-34** | Claude | 契约：Conversation / ChatMessage（结构化的 @ 收件人、`replacesMessageId`、撤回状态）/ 回答位（唯一键 用户消息 id + Agent，独立的 `ChatSlotOutcome`）、语音 / 表情 / 文件字段、参与者「能看图」标记、记忆槽位和记忆清单（只存 id + hash）、Run 上的 Snapshot hash 与最终 hash、`chatPersona` / `memorySource`、聊天命令 / 查询 / 事件、`chat.toTopic` | ADR-003 | 用户批准 |
+| **C-34** | Claude | 契约：Conversation / ChatMessage（结构化的 @ 收件人、`replacesMessageId`、撤回状态）/ 回答位（唯一键 用户消息 id + Agent，独立的 `ChatSlotOutcome`）、语音 / 表情 / 文件字段（图片、画图、语音合成的类型引用 C-42，不重复定义）、记忆槽位和记忆清单（只存 id + hash）、Run 上的 Snapshot hash 与最终 hash、`chatPersona` / `memorySource`、聊天命令 / 查询 / 事件、`chat.toTopic` | ADR-003 | 用户批准 |
 | **D-31a** | DeepSeek | 迁移 v4 + 读写模型：会话 / 聊天消息 / 回答位、新字段（可空）；索引（会话按最近活跃、消息按会话+时间分页）；迁移前自动备份 `room.db.bak-v3`，一个事务做完，可安全重跑 | C-34 | **拿 1A 真库副本**迁移：旧数据 digest 不变、新表为空、`foreign_key_check` 通过；迁移后重启全部读回 |
 | **D-31b** | DeepSeek | 发送与回答编排（@ 规则、撤回 / 重新编辑见 ADR-003 §2）：回答位 + Run 同一事务；不可用的人记缺席、其他人继续；单独重试；防重复（用户消息 id）；硬上限；聊天 Run 进中断修复 | D-31a | 每个 Run 恰好一个终止事件；没点名时只有明确 `skip` 才记「不回答」（空输出 / 超时 / 缺席各走各的；单聊和被点名的 `skip` 算失败）；5 分钟撤回 / 重新编辑（先落库再中止，撤回瞬间答完的结果被丢弃；旧 Snapshot 不能被重试重放；重新编辑是新消息，旧回答位不复活）；3 人中 1 人失败：看得出是谁、能单独重试、不重发另外两人；强杀后重启没有转圈的 Run |
 | **D-31c** | DeepSeek | 一键转议题：选中的消息作为初始材料，建议题和材料在同一事务；已撤回的消息不能选 | D-31b | 转出的议题能正常跑一轮 |
