@@ -68,6 +68,7 @@ import {
   VoiceRecording,
 } from "./chat";
 import { DrawRequest, DrawRoutePreview, MediaJob, MediaJobId, MediaScope, MediaSource } from "./media";
+import { SpeechClip, VoiceOption, VoiceProfile } from "./speech";
 
 /**
  * 控制面 API：人 ⇄ Orchestrator。
@@ -339,6 +340,8 @@ export const COMMANDS = {
       chatPersona: AgentProfile.shape.chatPersona.optional(),
       chatProfileId: ProfileId.nullable().optional(),
       memorySource: MemorySource.optional(),
+      /** C-42c：null = 不用语音；voiceId 必须在 voices.list 里，否则 validation_failed */
+      voice: VoiceProfile.nullable().optional(),
     }),
     AgentProfile,
     "admin",
@@ -777,6 +780,20 @@ export const COMMANDS = {
    * 一次性的：沉浸模式仍然开着。返回被取消的任务
    */
   "media.stop": def(z.object({ type: z.literal("media.stop"), scope: MediaScope }), z.array(MediaJob), "cancel"),
+
+  /**
+   * C-42c：你点了一条秘书回答的「播放」（authorization = user_play）。source 指向那条回答，main 自己取正文做朗读过滤，
+   * 不接受 renderer 传来的文字。缓存命中直接返回音频；否则建一个语音任务。
+   * 秘书没选声音、回答过滤后为空或超过 SPEAK_MAX_CHARS：validation_failed
+   */
+  "speech.play": def(
+    z.object({ type: z.literal("speech.play"), source: MediaSource }),
+    z.discriminatedUnion("cached", [
+      z.object({ cached: z.literal(true), clip: SpeechClip }),
+      z.object({ cached: z.literal(false), job: MediaJob }),
+    ]),
+    "author",
+  ),
 } as const;
 
 /** 按键排序的 JSON（数组保持顺序），用来给发送意图判等 */
@@ -967,6 +984,9 @@ export const QUERIES = {
     DrawRoutePreview,
     "read",
   ),
+
+  /** C-42c：能选的声音（来自本机语音合成引擎）；引擎没装好时为空数组 */
+  "voices.list": def(z.object({ type: z.literal("voices.list") }), z.array(VoiceOption).max(200), "read"),
 
   "media.get": def(z.object({ type: z.literal("media.get"), jobId: MediaJobId }), MediaJob, "read"),
 
