@@ -1,19 +1,22 @@
 import { assemblePrompt } from "@room/core";
 import { approveAndCreateRun, type RunRow, type SqliteDatabase, ulid, type WriteQueue, writeTransaction } from "@room/db";
-import type {
-  AgentProfile,
-  Approval,
-  ApprovalBatch,
-  BatchItem,
+import {
+  AgentModelSettings,
+  BatchModel,
+  DEFAULT_AGENT_MODEL_SETTINGS,
+  type AgentProfile,
+  type Approval,
+  type ApprovalBatch,
+  type BatchItem,
   Contribution,
-  Message,
-  PlanVersion,
-  Project,
-  PromptSnapshot,
-  Round,
-  RoundSummary,
-  Run,
-  Turn,
+  type Message,
+  type PlanVersion,
+  type Project,
+  type PromptSnapshot,
+  type Round,
+  type RoundSummary,
+  type Run,
+  type Turn,
 } from "@room/schemas";
 
 /**
@@ -160,7 +163,18 @@ const toBatchItem = (row: Record<string, unknown>): BatchItem => ({
   contentHash: row["content_hash"] as string,
   differsFromOthers: row["differs_from_others"] === 1,
   tokenEstimate: row["token_estimate"] as number,
+  model: row["model"] === null || row["model"] === undefined ? null : BatchModel.parse(JSON.parse(row["model"] as string)),
 });
+
+const toModelSettings = (raw: unknown): AgentModelSettings => {
+  if (typeof raw !== "string") return DEFAULT_AGENT_MODEL_SETTINGS;
+  try {
+    const parsed = AgentModelSettings.safeParse(JSON.parse(raw));
+    return parsed.success ? parsed.data : DEFAULT_AGENT_MODEL_SETTINGS;
+  } catch {
+    return DEFAULT_AGENT_MODEL_SETTINGS;
+  }
+};
 
 const toBatch = (row: Record<string, unknown>, items: BatchItem[]): ApprovalBatch => ({
   id: row["id"] as string,
@@ -235,6 +249,7 @@ const toAgent = (row: Record<string, unknown>): AgentProfile => ({
   profileId: (row["profile_id"] as string | null) ?? null,
   pausedByUser: row["paused_by_user"] === 1,
   substitute: (row["substitute"] as string | null) ?? null,
+  modelSettings: toModelSettings(row["model_settings"]),
 });
 
 export interface UpsertAgentInput {
@@ -249,6 +264,8 @@ export interface UpsertAgentInput {
   profileId?: string | null;
   pausedByUser?: boolean;
   substitute?: string | null;
+  /** C-40：整份替换（不按字段合并）；省略 = 不改 */
+  modelSettings?: AgentModelSettings;
 }
 
 export interface CreateSnapshotInput {
@@ -591,7 +608,7 @@ export class Repository {
         this.#db
           .prepare(
             "INSERT INTO agents (id, display_name, color, role_note, can_discuss, can_summarize, can_execute, " +
-              "node_id, profile_id, paused_by_user, substitute, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+              "node_id, profile_id, paused_by_user, substitute, model_settings, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
           )
           .run(
             input.id,
@@ -605,6 +622,7 @@ export class Repository {
             input.profileId ?? null,
             (input.pausedByUser ?? false) ? 1 : 0,
             input.substitute ?? null,
+            input.modelSettings === undefined ? null : JSON.stringify(input.modelSettings),
             updatedAt,
             updatedAt,
           );
@@ -622,6 +640,7 @@ export class Repository {
         ["profileId", "profile_id"],
         ["pausedByUser", "paused_by_user"],
         ["substitute", "substitute"],
+        ["modelSettings", "model_settings"],
       ];
       const sets: string[] = [];
       const params: unknown[] = [];
@@ -629,7 +648,9 @@ export class Repository {
         const value = input[key];
         if (value === undefined) continue;
         sets.push(column + " = ?");
-        params.push(typeof value === "boolean" ? (value ? 1 : 0) : value);
+        params.push(
+          key === "modelSettings" ? JSON.stringify(value) : typeof value === "boolean" ? (value ? 1 : 0) : value,
+        );
       }
       sets.push("updated_at = ?");
       params.push(updatedAt, input.id);
@@ -643,6 +664,14 @@ export class Repository {
     return (
       this.#db.prepare("SELECT * FROM messages WHERE round_id = ? ORDER BY created_at, rowid").all(roundId) as Record<string, unknown>[]
     ).map(toMessage);
+  }
+
+  /** C-40：重试 / 恢复时取原来那一项的模型（没有 = undefined，不是「null 模型」） */
+  getBatchItemByApproval(approvalId: string): BatchItem | undefined {
+    const row = this.#db.prepare("SELECT * FROM batch_items WHERE approval_id = ?").get(approvalId) as
+      | Record<string, unknown>
+      | undefined;
+    return row === undefined ? undefined : toBatchItem(row);
   }
 
   getNodeRow(nodeId: string): { id: string; base_url: string | null } | undefined {

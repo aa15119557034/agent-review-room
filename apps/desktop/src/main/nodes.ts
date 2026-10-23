@@ -1,6 +1,6 @@
 import type { RunRow, SqliteDatabase } from "@room/db";
 import { testReviewerNode } from "@room/remote-client";
-import type { CommandRequest, NodeInfo, NodeTestResult } from "@room/schemas";
+import { BatchModel, toRunModel, type CommandRequest, type NodeInfo, type NodeTestResult, type RunModel } from "@room/schemas";
 import type { Repository } from "./repository";
 import { LEGACY_NODE_ID, type SettingsStore } from "./settings";
 
@@ -97,6 +97,20 @@ export interface RunTarget {
   baseUrl: string;
   token: string;
   profileId: string;
+  /** C-40：这一项盖章时定下的模型；没有 = 用 profile 自带模型 */
+  model?: RunModel;
+}
+
+/**
+ * C-40：Run 对应的批次项里定下的模型，投影成 StartRun 的 RunModel。
+ * 没有 Turn / 没有批次项（Phase 0）或旧批次 model = null → undefined（StartRun 省略 model）。
+ */
+export function resolveRunModel(db: SqliteDatabase, run: RunRow): RunModel | undefined {
+  const row = db.prepare("SELECT model FROM batch_items WHERE approval_id = ?").get(run.approval_id) as
+    | { model: string | null }
+    | undefined;
+  if (row === undefined || row.model === null) return undefined;
+  return toRunModel(BatchModel.parse(JSON.parse(row.model)));
 }
 
 /**
@@ -137,11 +151,13 @@ export function resolveRunTarget(
     if (credential.baseUrl !== node.base_url) {
       throw new Error("节点 " + agent.node_id + " 的地址和保存的 Token 不一致，请重新配置这个节点");
     }
+    const model = resolveRunModel(db, run);
     return {
       nodeId: agent.node_id,
       baseUrl: credential.baseUrl,
       token: credential.token,
       profileId: agent.profile_id,
+      ...(model === undefined ? {} : { model }),
     };
   }
 

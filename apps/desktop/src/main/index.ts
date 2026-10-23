@@ -97,12 +97,14 @@ async function bootstrap(): Promise<void> {
     onDiscussionSettled: (settlement) => discussion?.settled(settlement),
     adapterFactory: async (run) => {
       // 讨论室：agent -> node -> 地址与 Token；Phase 0 的评审 Run 沿用原来的 Reviewer 设置
+      // C-40 的 model 也在 target 里：和 e2e harness 共用 nodes.ts 的同一份查询
       const target = resolveRunTarget(db, settings, run);
       const adapter = new HttpRemoteAgentAdapter({
         nodeId: target.nodeId,
         baseUrl: target.baseUrl,
         profileId: target.profileId,
         token: target.token,
+        ...(target.model === undefined ? {} : { model: target.model }),
         heartbeatTimeoutMs: 15_000,
         reconnectGraceMs: 30_000,
         requestTimeoutMs: 10_000,

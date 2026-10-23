@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { after, describe, it } from "node:test";
 import type { AgentAdapter } from "@room/core";
 import { openDatabase, type RunRow, ulid, WriteQueue } from "@room/db";
-import { ControlEvent, type AgentEvent } from "@room/schemas";
+import { ControlEvent, DEFAULT_AGENT_MODEL_SETTINGS, type AgentEvent, type BatchModel, type ModelOption, type ProfileModels } from "@room/schemas";
 import { DiscussionService, type NodeProbeResult } from "../src/main/discussion";
 import { createDispatcher } from "../src/main/ipc";
 import { RunOrchestrator } from "../src/main/orchestrator";
@@ -92,6 +92,8 @@ async function makeHarness(options: {
   scripts?: Map<string, Record<string, unknown>[]>;
   /** 这些 adapter_id 的 Run 不自己结束，一直等到被 abort（测暂停 / 打断 / 结束本轮用） */
   holdProfiles?: string[];
+  /** C-40：节点 health 上报的 profileModels；不传 = 老节点 */
+  profileModels?: ProfileModels[];
 } = {}): Promise<Harness> {
   const dir = mkdtempSync(join(tmpdir(), "room-discussion-ipc-"));
   dirs.push(dir);
@@ -131,6 +133,7 @@ async function makeHarness(options: {
     (async () => ({
       reachable: true,
       profiles: ["claude-review", "deepseek-discuss", "codex-discuss"],
+      ...(options.profileModels === undefined ? {} : { profileModels: options.profileModels }),
     }));
   const probe = async (params: { baseUrl: string; token: string; profileId: string }): Promise<NodeProbeResult> => {
     probeCalls.push(params.profileId);
@@ -221,14 +224,24 @@ async function close(h: Harness): Promise<void> {
 
 interface BatchLike {
   id: string;
-  items: { approvalId: string; contentHash: string }[];
+  items: { approvalId: string; contentHash: string; model: BatchModel | null }[];
 }
+
+const expectedOf = (item: BatchLike["items"][number]) => ({
+  approvalId: item.approvalId,
+  contentHash: item.contentHash,
+  model: item.model === null ? null : { model: item.model.model, effort: item.model.effort },
+});
 
 async function approveBatchOf(h: Harness, batch: BatchLike) {
   return h.dispatcher.handleCommand({
     type: "batch.approve",
     batchId: batch.id,
-    expected: batch.items.map((item) => ({ approvalId: item.approvalId, contentHash: item.contentHash })),
+    expected: batch.items.map((item) => ({
+      approvalId: item.approvalId,
+      contentHash: item.contentHash,
+      model: item.model === null ? null : { model: item.model.model, effort: item.model.effort },
+    })),
   });
 }
 
@@ -349,7 +362,7 @@ describe("round.draft：收件人不可用", () => {
     const approved = await h.dispatcher.handleCommand({
       type: "batch.approve",
       batchId: (created as unknown as { data: { batch: { id: string } } }).data.batch.id,
-      expected: data.batch.items.map((item) => ({ approvalId: item.approvalId, contentHash: item.contentHash })),
+      expected: data.batch.items.map((item) => (expectedOf(item))),
     });
     assert.equal(approved.ok, true);
 
@@ -464,7 +477,7 @@ describe("batch.approve：一次盖章 = N 个 Run", () => {
     const result = await h.dispatcher.handleCommand({
       type: "batch.approve",
       batchId: created.data.batch.id,
-      expected: created.data.batch.items.map((item) => ({ approvalId: item.approvalId, contentHash: item.contentHash })),
+      expected: created.data.batch.items.map((item) => (expectedOf(item))),
     });
 
     assert.equal(result.ok, true, JSON.stringify(result));
@@ -507,7 +520,7 @@ describe("batch.approve：一次盖章 = N 个 Run", () => {
     const result = await h.dispatcher.handleCommand({
       type: "batch.approve",
       batchId: created.data.batch.id,
-      expected: [{ approvalId: created.data.batch.items[0]!.approvalId, contentHash: "b".repeat(64) }],
+      expected: [{ ...expectedOf(created.data.batch.items[0]!), contentHash: "b".repeat(64) }],
     });
 
     assert.equal(failure(result).error, "stale_snapshot");
@@ -521,7 +534,7 @@ describe("batch.approve：一次盖章 = N 个 Run", () => {
     const created = (await draft(h, ["deepseek"])) as unknown as {
       data: { batch: { id: string; items: { approvalId: string; contentHash: string }[] } };
     };
-    const expected = created.data.batch.items.map((item) => ({ approvalId: item.approvalId, contentHash: item.contentHash }));
+    const expected = created.data.batch.items.map((item) => (expectedOf(item)));
     assert.equal((await h.dispatcher.handleCommand({ type: "batch.approve", batchId: created.data.batch.id, expected })).ok, true);
 
     const again = await h.dispatcher.handleCommand({ type: "batch.approve", batchId: created.data.batch.id, expected });
@@ -542,7 +555,7 @@ describe("round.summarize：汇总也要盖章", () => {
     await h.dispatcher.handleCommand({
       type: "batch.approve",
       batchId: created.data.batch.id,
-      expected: created.data.batch.items.map((item) => ({ approvalId: item.approvalId, contentHash: item.contentHash })),
+      expected: created.data.batch.items.map((item) => (expectedOf(item))),
     });
     await waitFor(
       () => (h.db.prepare("SELECT state FROM rounds WHERE id = ?").get(roundId) as { state: string }).state === "AWAITING_SUMMARY",
@@ -567,7 +580,7 @@ describe("round.summarize：汇总也要盖章", () => {
     const approved = await h.dispatcher.handleCommand({
       type: "batch.approve",
       batchId: batch.id,
-      expected: batch.items.map((item: any) => ({ approvalId: item.approvalId, contentHash: item.contentHash })),
+      expected: batch.items.map((item: any) => (expectedOf(item))),
     });
     assert.equal(approved.ok, true, JSON.stringify(approved));
 
@@ -638,7 +651,7 @@ describe("讨论室读取（rounds.list / rounds.get / batches.get / plans.list 
     return h.dispatcher.handleCommand({
       type: "batch.approve",
       batchId: batch.id,
-      expected: batch.items.map((item) => ({ approvalId: item.approvalId, contentHash: item.contentHash })),
+      expected: batch.items.map((item) => (expectedOf(item))),
     });
   }
 
@@ -1343,6 +1356,238 @@ describe("plan.create：用户写第一版（C-28）", () => {
       (h.db.prepare("SELECT count(*) AS n FROM plan_versions WHERE project_id = ?").get(h.projectId) as { n: number }).n,
       1,
     );
+    await close(h);
+  });
+});
+
+describe("C-40 模型选择", () => {
+  const levels = [
+    { id: "low", displayName: "低", note: null },
+    { id: "medium", displayName: "中等", note: null },
+    { id: "high", displayName: "高", note: null },
+  ];
+  const deepseekFlash = { id: "deepseek-flash", displayName: "DeepSeek Flash", efforts: levels, defaultEffort: "medium" };
+  const modelOf = (h: Harness, batchId: string, recipient: string): BatchModel | null => {
+    const row = h.db
+      .prepare("SELECT model FROM batch_items WHERE batch_id = ? AND recipient = ?")
+      .get(batchId, recipient) as { model: string | null };
+    return row.model === null ? null : (JSON.parse(row.model) as BatchModel);
+  };
+  it("没设置过的参与者读回默认值，保存后整份替换", async () => {
+    const h = await makeHarness();
+    assert.deepEqual(h.repo.getAgent("deepseek").modelSettings, DEFAULT_AGENT_MODEL_SETTINGS);
+    await setModelSettings(h, "deepseek-flash", null, "high");
+    assert.deepEqual(h.repo.getAgent("deepseek").modelSettings, {
+      primaryModel: "deepseek-flash",
+      fallbackModel: null,
+      effort: { chat: null, discussion: "high", summary: null },
+    });
+    await close(h);
+  });
+
+  const setModelSettings = async (h: Harness, primaryModel: string | null, fallbackModel: string | null, discussion: string | null) => {
+    const updated = await h.dispatcher.handleCommand({
+      type: "agent.update",
+      id: "deepseek",
+      modelSettings: { primaryModel, fallbackModel, effort: { chat: null, discussion, summary: null } },
+    });
+    assert.equal(updated.ok, true, JSON.stringify(updated));
+  };
+
+  it("跟随 profile 的四条路径都得到 model = null", async () => {
+    const cases: { name: string; options: Parameters<typeof makeHarness>[0] }[] = [
+      { name: "节点没报 profileModels", options: {} },
+      {
+        name: "没有这个 profile",
+        options: { profileModels: [{ profileId: "codex-discuss", models: [deepseekFlash] }] },
+      },
+      { name: "models 为空", options: { profileModels: [{ profileId: "deepseek-discuss", models: [] }] } },
+      { name: "首选为 null", options: { profileModels: [{ profileId: "deepseek-discuss", models: [deepseekFlash] }] } },
+    ];
+    for (const item of cases) {
+      const h = await makeHarness(item.options);
+      if (item.name !== "首选为 null") await setModelSettings(h, "deepseek-flash", null, "high");
+      const created = (await draft(h, ["deepseek"])) as unknown as { data: { batch: BatchLike } };
+      assert.equal(modelOf(h, created.data.batch.id, "deepseek"), null, item.name);
+      await close(h);
+    }
+  });
+
+  it("首选可用：configured 强度", async () => {
+    const h = await makeHarness({ profileModels: [{ profileId: "deepseek-discuss", models: [deepseekFlash] }] });
+    await setModelSettings(h, "deepseek-flash", null, "high");
+    const created = (await draft(h, ["deepseek"])) as unknown as { data: { batch: BatchLike } };
+    assert.deepEqual(modelOf(h, created.data.batch.id, "deepseek"), {
+      model: "deepseek-flash",
+      effort: "high",
+      usedFallback: false,
+      effortSource: "configured",
+    });
+    await close(h);
+  });
+
+  it("首选不可用、备选可用：usedFallback + node_default 强度", async () => {
+    const limited = { id: "deepseek-flash", displayName: "DeepSeek Flash", efforts: levels.slice(0, 2), defaultEffort: "medium" };
+    const h = await makeHarness({ profileModels: [{ profileId: "deepseek-discuss", models: [limited] }] });
+    await setModelSettings(h, "deepseek-pro", "deepseek-flash", "high");
+    const created = (await draft(h, ["deepseek"])) as unknown as { data: { batch: BatchLike } };
+    assert.deepEqual(modelOf(h, created.data.batch.id, "deepseek"), {
+      model: "deepseek-flash",
+      effort: "medium",
+      usedFallback: true,
+      effortSource: "node_default",
+    });
+    await close(h);
+  });
+
+  it("首选和备选都不可用：agent_unavailable，整批不生成", async () => {
+    const h = await makeHarness({ profileModels: [{ profileId: "deepseek-discuss", models: [deepseekFlash] }] });
+    await setModelSettings(h, "deepseek-pro", "deepseek-ultra", "medium");
+    const result = await draft(h, ["deepseek"]);
+    assert.equal(failure(result).error, "agent_unavailable");
+    assert.match(failure(result).message, /deepseek-pro/);
+    assert.equal((h.db.prepare("SELECT count(*) AS n FROM batches").get() as { n: number }).n, 0);
+    await close(h);
+  });
+
+  it("模型没有档位：effort = null，effortSource = none", async () => {
+    const bare = { id: "deepseek-flash", displayName: "DeepSeek Flash", efforts: [], defaultEffort: null };
+    const h = await makeHarness({ profileModels: [{ profileId: "deepseek-discuss", models: [bare] }] });
+    await setModelSettings(h, "deepseek-flash", null, "high");
+    const created = (await draft(h, ["deepseek"])) as unknown as { data: { batch: BatchLike } };
+    assert.deepEqual(modelOf(h, created.data.batch.id, "deepseek"), {
+      model: "deepseek-flash",
+      effort: null,
+      usedFallback: false,
+      effortSource: "none",
+    });
+    await close(h);
+  });
+
+  it("盖章时模型 / 强度不一致：整批 stale_snapshot，一个 Run 都不起", async () => {
+    const h = await makeHarness({ profileModels: [{ profileId: "deepseek-discuss", models: [deepseekFlash] }] });
+    await setModelSettings(h, "deepseek-flash", null, "high");
+    const created = (await draft(h, ["deepseek"])) as unknown as { data: { batch: BatchLike } };
+    const batch = created.data.batch;
+    const good = expectedOf(batch.items[0]!);
+
+    for (const wrong of [
+      { ...good, model: { model: "deepseek-other", effort: "high" } },
+      { ...good, model: { model: "deepseek-flash", effort: "low" } },
+      { ...good, model: null },
+    ]) {
+      const result = await h.dispatcher.handleCommand({ type: "batch.approve", batchId: batch.id, expected: [wrong] });
+      assert.equal(failure(result).error, "stale_snapshot", JSON.stringify(wrong));
+      assert.equal((h.db.prepare("SELECT count(*) AS n FROM runs").get() as { n: number }).n, 0);
+      assert.equal((h.db.prepare("SELECT state FROM batches WHERE id = ?").get(batch.id) as { state: string }).state, "READY_FOR_REVIEW");
+    }
+
+    const ok = await approveBatchOf(h, batch);
+    assert.equal(ok.ok, true, JSON.stringify(ok));
+    await close(h);
+  });
+
+  it("重试沿用原模型", async () => {
+    const h = await makeHarness({
+      scripts: new Map([["remote:deepseek-discuss", [{ type: "error", reason: "internal" }]]]),
+      probe: async () => ({
+        reachable: true,
+        profiles: ["claude-review", "deepseek-discuss", "codex-discuss"],
+        profileModels: [{ profileId: "deepseek-discuss", models: [deepseekFlash] }],
+      }),
+    });
+    await setModelSettings(h, "deepseek-flash", null, "high");
+    const created = (await draft(h, ["deepseek"])) as unknown as { data: { round: { id: string }; batch: BatchLike } };
+    const roundId = created.data.round.id;
+    const first = modelOf(h, created.data.batch.id, "deepseek");
+    await approveBatchOf(h, created.data.batch);
+    await waitFor(
+      () => (h.db.prepare("SELECT outcome FROM turns WHERE round_id = ? AND is_summary = 0 ORDER BY rowid DESC LIMIT 1").get(roundId) as { outcome: string }).outcome === "failed",
+      "failed",
+    );
+
+    const retried = (await h.dispatcher.handleCommand({ type: "round.retry", roundId, agent: "deepseek" })) as {
+      ok: boolean;
+      data: BatchLike;
+    };
+    assert.equal(retried.ok, true, JSON.stringify(retried));
+    assert.deepEqual(modelOf(h, retried.data.id, "deepseek"), first, "重试沿用原模型");
+    await close(h);
+  });
+
+  it("重试时原模型不可用：重选", async () => {
+    let models: ModelOption[] = [deepseekFlash];
+    const h = await makeHarness({
+      scripts: new Map([["remote:deepseek-discuss", [{ type: "error", reason: "internal" }]]]),
+      probe: async () => ({
+        reachable: true,
+        profiles: ["claude-review", "deepseek-discuss", "codex-discuss"],
+        profileModels: [{ profileId: "deepseek-discuss", models }],
+      }),
+    });
+    await setModelSettings(h, "deepseek-flash", null, "high");
+    const created = (await draft(h, ["deepseek"])) as unknown as { data: { round: { id: string }; batch: BatchLike } };
+    const roundId = created.data.round.id;
+    await approveBatchOf(h, created.data.batch);
+    await waitFor(
+      () => (h.db.prepare("SELECT outcome FROM turns WHERE round_id = ? AND is_summary = 0 ORDER BY rowid DESC LIMIT 1").get(roundId) as { outcome: string }).outcome === "failed",
+      "failed",
+    );
+
+    models = [];
+    const retried = (await h.dispatcher.handleCommand({ type: "round.retry", roundId, agent: "deepseek" })) as {
+      ok: boolean;
+      data: BatchLike;
+    };
+    assert.equal(retried.ok, true, JSON.stringify(retried));
+    assert.equal(modelOf(h, retried.data.id, "deepseek"), null, "原模型不可用时遵循 profile → null");
+    await close(h);
+  });
+
+  it("恢复沿用原模型；原模型不可用时重选", async () => {
+    let models: ModelOption[] = [deepseekFlash];
+    const h = await makeHarness({
+      holdProfiles: ["remote:deepseek-discuss"],
+      probe: async () => ({
+        reachable: true,
+        profiles: ["claude-review", "deepseek-discuss", "codex-discuss"],
+        profileModels: [{ profileId: "deepseek-discuss", models }],
+      }),
+    });
+    await setModelSettings(h, "deepseek-flash", null, "high");
+    const created = (await draft(h, ["deepseek"])) as unknown as { data: { round: { id: string }; batch: BatchLike } };
+    const roundId = created.data.round.id;
+    await approveBatchOf(h, created.data.batch);
+    await waitFor(
+      () => (h.db.prepare("SELECT outcome FROM turns WHERE round_id = ? AND is_summary = 0 ORDER BY rowid DESC LIMIT 1").get(roundId) as { outcome: string }).outcome === "running",
+      "running",
+    );
+    await h.dispatcher.handleCommand({ type: "round.pause", roundId });
+    const resumed = (await h.dispatcher.handleCommand({ type: "round.resume", roundId })) as {
+      ok: boolean;
+      data: { batch: BatchLike };
+    };
+    assert.equal(resumed.ok, true, JSON.stringify(resumed));
+    assert.deepEqual(modelOf(h, resumed.data.batch.id, "deepseek"), {
+      model: "deepseek-flash",
+      effort: "high",
+      usedFallback: false,
+      effortSource: "configured",
+    });
+
+    await approveBatchOf(h, resumed.data.batch);
+    await waitFor(
+      () => (h.db.prepare("SELECT outcome FROM turns WHERE round_id = ? AND is_summary = 0 ORDER BY rowid DESC LIMIT 1").get(roundId) as { outcome: string }).outcome === "running",
+      "running again",
+    );
+    models = [];
+    await h.dispatcher.handleCommand({ type: "round.pause", roundId });
+    const resumed2 = (await h.dispatcher.handleCommand({ type: "round.resume", roundId })) as {
+      ok: boolean;
+      data: { batch: BatchLike };
+    };
+    assert.equal(resumed2.ok, true, JSON.stringify(resumed2));
+    assert.equal(modelOf(h, resumed2.data.batch.id, "deepseek"), null, "原模型不可用时遵循 profile → null");
     await close(h);
   });
 });

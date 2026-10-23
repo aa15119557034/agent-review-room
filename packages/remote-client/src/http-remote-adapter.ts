@@ -14,6 +14,7 @@ import {
   REMOTE_PROTOCOL_VERSION,
   RemoteEvent,
   RemoteRunSummary,
+  RunModel,
   isTerminalEvent,
   type AgentEvent,
   type FailureReason,
@@ -40,6 +41,8 @@ import { z } from "zod";
 export interface HttpRemoteAgentAdapterOptions extends RemoteNodeConfig {
   /** 由 main 进程从系统凭据库读出后传入；本模块不读环境变量、不写日志 */
   token: string;
+  /** C-40：这一批盖章时定下的模型/强度；不传 = profile 自带模型 */
+  model?: RunModel;
   fetchImpl?: typeof fetch;
   adapterId?: string;
   /** 断线后每次重连前等待多久，默认 500ms */
@@ -75,6 +78,7 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
   readonly node: Readonly<RemoteNodeConfig>;
 
   readonly #token: string;
+  readonly #model: RunModel | undefined;
   readonly #fetch: typeof fetch;
   readonly #reconnectDelayMs: number;
   readonly #cancelConfirmMs: number;
@@ -82,10 +86,11 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
   readonly #log: (m: string) => void;
 
   constructor(options: HttpRemoteAgentAdapterOptions) {
-    const { token, fetchImpl, adapterId, reconnectDelayMs, cancelConfirmMs, startAttempts, log, ...node } = options;
+    const { token, model, fetchImpl, adapterId, reconnectDelayMs, cancelConfirmMs, startAttempts, log, ...node } = options;
     if (token.length < 32) throw new Error("remote node token must be at least 32 characters");
     this.node = Object.freeze({ ...node, baseUrl: node.baseUrl.replace(/\/+$/, "") });
     this.#token = token;
+    this.#model = model;
     this.#fetch = fetchImpl ?? globalThis.fetch;
     this.id = adapterId ?? `remote:${node.nodeId}:${node.profileId}`;
     this.#reconnectDelayMs = reconnectDelayMs ?? 500;
@@ -344,6 +349,8 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
         ...(input.commitSha ? { commitSha: input.commitSha } : {}),
       },
       limits: { idleTimeoutMs: opts.idleTimeoutMs, totalTimeoutMs: opts.totalTimeoutMs },
+      // C-40：null = profile 自带模型，字段整个省略（不是传 null）
+      ...(this.#model === undefined ? {} : { model: this.#model }),
     });
 
     let lastError = "";

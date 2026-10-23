@@ -34,12 +34,14 @@ import type {
   AgentProfile,
   AgentStatus,
   ApprovalBatch,
+  BatchModel,
   CommandRequest,
   ControlErrorCode,
   ControlEvent,
   Message,
   PlanVersion,
   Round,
+  RunOccasion,
   Turn,
 } from "@room/schemas";
 import type { DiscussionSettlement, RunOrchestrator } from "./orchestrator";
@@ -70,6 +72,8 @@ export interface NodeProbeResult {
   reachable: boolean;
   /** 节点上可用的 profile 列表（/v1/health 的 profiles） */
   profiles: string[];
+  /** C-40：节点按 profile 上报的模型和强度；老节点没有这个字段 */
+  profileModels?: import("@room/schemas").ProfileModels[];
   message?: string;
 }
 
@@ -131,8 +135,9 @@ export class DiscussionService {
       throw new DiscussionError("invalid_state", "这个议题的第 " + active.index + " 轮还没结束");
     }
 
-    await this.#checkRecipients(command.recipients, "discuss");
+    const probes = await this.#checkRecipients(command.recipients, "discuss");
     const agents: AgentProfile[] = command.recipients.map((agentId) => repo.getAgent(agentId));
+    const models = this.#selectModels(agents, "discussion", probes);
 
     const plan = command.planVersionId === null ? null : this.#loadPlan(project.id, command.planVersionId);
     const roundId = newRoundId();
@@ -173,6 +178,7 @@ export class DiscussionService {
         recipients: agents.map((profile, index) => ({
           agent: profile.id,
           prompt: prompts[index]!,
+          model: models.get(profile.id) ?? null,
         })),
         task: command.task,
         taskSource: command.taskSource,
@@ -204,7 +210,11 @@ export class DiscussionService {
     try {
       result = await approveBatch(db, queue, {
         batchId: command.batchId,
-        items: command.expected.map((item) => ({ approvalId: item.approvalId, expectedContentHash: item.contentHash })),
+        items: command.expected.map((item) => ({
+          approvalId: item.approvalId,
+          expectedContentHash: item.contentHash,
+          model: item.model,
+        })),
         via: "desktop",
       });
     } catch (error) {
@@ -266,8 +276,9 @@ export class DiscussionService {
       throw new DiscussionError("invalid_state", "这一轮没有任何回答，没什么可汇总的；可以改方向（作废这一轮）");
     }
 
-    await this.#checkRecipients([command.summarizer], "summarize");
+    const probes = await this.#checkRecipients([command.summarizer], "summarize");
     const summarizer = repo.getAgent(command.summarizer);
+    const summarizerModel = this.#selectModels([summarizer], "summary", probes).get(summarizer.id) ?? null;
     if (repo.hasTurnAsSubstitute(round.id, summarizer.id)) {
       throw new DiscussionError("invalid_state", summarizer.displayName + " 在这一轮当过替补，不能再做汇总");
     }
@@ -291,7 +302,7 @@ export class DiscussionService {
     try {
       created = await createSummaryDraft(db, queue, {
         roundId: round.id,
-        recipients: [{ agent: summarizer.id, prompt }],
+        recipients: [{ agent: summarizer.id, prompt, model: summarizerModel }],
         compressedRounds: prompt.compressedRounds,
       });
     } catch (error) {
@@ -363,12 +374,24 @@ export class DiscussionService {
     if (round.state !== "PAUSED") throw new DiscussionError("invalid_state", "这一轮没有暂停");
 
     const latest = this.#latestTurns(round.id);
-    const agents = [...latest.values()].filter((turn) => turn.outcome === "paused").map((turn) => turn.agent);
+    const paused = [...latest.values()].filter((turn) => turn.outcome === "paused");
+    const agents = paused.map((turn) => turn.agent);
     if (agents.length === 0) throw new DiscussionError("invalid_state", "暂停时没有人在回答，没什么可恢复的");
+
+    const profiles = agents.map((agentId) => repo.getAgent(agentId));
+    const probes = await this.#checkRecipients(agents, "discuss");
+    const reuse = new Map<string, BatchModel | null>(
+      paused.map((turn) => [turn.agent, repo.getBatchItemByApproval(turn.approvalId)?.model ?? null]),
+    );
+    const models = this.#selectModels(profiles, "discussion", probes, reuse);
 
     let created: Awaited<ReturnType<typeof createResumeBatch>>;
     try {
-      created = await createResumeBatch(db, queue, { roundId: round.id, agents });
+      created = await createResumeBatch(db, queue, {
+        roundId: round.id,
+        agents,
+        models: Object.fromEntries(models),
+      });
     } catch (error) {
       throw mapDraftError(error);
     }
@@ -411,8 +434,9 @@ export class DiscussionService {
     emit({ type: "message.created", message: note });
     if (command.mode === "next_round") return { note, batch: null };
 
-    await this.#checkRecipients(command.targets, "discuss");
+    const probes = await this.#checkRecipients(command.targets, "discuss");
     const agents = command.targets.map((agentId) => repo.getAgent(agentId));
+    const models = this.#selectModels(agents, "discussion", probes);
     const plan = round.planVersionId === null ? null : this.#loadPlan(round.projectId, round.planVersionId);
     const prompts = assembleDiscussionBatch(
       {
@@ -449,7 +473,11 @@ export class DiscussionService {
       created = await createBatchDraft(db, queue, {
         roundId: round.id,
         kind: "supplement",
-        recipients: agents.map((profile, index) => ({ agent: profile.id, prompt: prompts[index]! })),
+        recipients: agents.map((profile, index) => ({
+          agent: profile.id,
+          prompt: prompts[index]!,
+          model: models.get(profile.id) ?? null,
+        })),
         compressedRounds: prompts[0]?.compressedRounds ?? [],
         supersede,
       });
@@ -483,8 +511,11 @@ export class DiscussionService {
     }
 
     // 重试就是用来处理失败 / 超时 / 额度缺席的，所以不按「额度缺席」挡
-    await this.#checkRecipients([command.agent], "discuss", { allowAbsentQuota: true });
+    const probes = await this.#checkRecipients([command.agent], "discuss", { allowAbsentQuota: true });
     const agent = repo.getAgent(command.agent);
+    const previousItem = repo.getBatchItemByApproval(previous.approvalId);
+    const reuse = new Map<string, BatchModel | null>([[agent.id, previousItem?.model ?? null]]);
+    const models = this.#selectModels([agent], "discussion", probes, reuse);
     const plan = round.planVersionId === null ? null : this.#loadPlan(round.projectId, round.planVersionId);
     const prompts = assembleDiscussionBatch(
       { round, history: this.#historyWithCurrent(round), materials: [], plan, nonce: createNonce() },
@@ -496,7 +527,7 @@ export class DiscussionService {
       created = await createBatchDraft(db, queue, {
         roundId: round.id,
         kind: "retry",
-        recipients: [{ agent: agent.id, prompt: prompts[0]! }],
+        recipients: [{ agent: agent.id, prompt: prompts[0]!, model: models.get(agent.id) ?? null }],
         compressedRounds: prompts[0]?.compressedRounds ?? [],
         supersede: [{ oldTurnId: previous.id, agent: agent.id }],
       });
@@ -554,8 +585,9 @@ export class DiscussionService {
     const task = command.task ?? round.task;
     const historyMode = command.historyMode ?? round.historyMode;
 
-    await this.#checkRecipients(recipients, "discuss");
+    const probes = await this.#checkRecipients(recipients, "discuss");
     const agents = recipients.map((agentId) => repo.getAgent(agentId));
+    const models = this.#selectModels(agents, "discussion", probes);
     const plan = round.planVersionId === null ? null : this.#loadPlan(round.projectId, round.planVersionId);
     const forPrompt: Round = {
       ...round,
@@ -582,7 +614,11 @@ export class DiscussionService {
         task,
         recipientAgents: recipients,
         historyMode,
-        prompts: agents.map((profile, index) => ({ agent: profile.id, prompt: prompts[index]! })),
+        prompts: agents.map((profile, index) => ({
+          agent: profile.id,
+          prompt: prompts[index]!,
+          model: models.get(profile.id) ?? null,
+        })),
         compressedRounds: prompts[0]?.compressedRounds ?? [],
       });
     } catch (error) {
@@ -917,6 +953,91 @@ export class DiscussionService {
   }
 
   /**
+   * C-40：按参与者的模型设置和节点上报的 profileModels 定下这一批的模型。
+   * 规则见 @room/schemas 的 AgentModelSettings 注释；reuse 用于重试 / 恢复沿用原模型。
+   */
+  #selectModels(
+    agents: readonly AgentProfile[],
+    occasion: RunOccasion,
+    probes: Map<string, NodeProbeResult>,
+    reuse?: ReadonlyMap<string, BatchModel | null>,
+  ): Map<string, BatchModel | null> {
+    const selected = new Map<string, BatchModel | null>();
+    for (const agent of agents) {
+      const models =
+        agent.nodeId !== null && agent.profileId !== null
+          ? probes.get(agent.nodeId)?.profileModels?.find((profile) => profile.profileId === agent.profileId)?.models
+          : undefined;
+
+      const original = reuse?.get(agent.id);
+      if (
+        original !== undefined &&
+        original !== null &&
+        models !== undefined &&
+        models.some(
+          (option) =>
+            option.id === original.model &&
+            (original.effort === null || option.efforts.some((level) => level.id === original.effort)),
+        )
+      ) {
+        selected.set(agent.id, original);
+        continue;
+      }
+
+      selected.set(agent.id, this.#selectOneModel(agent, occasion, models));
+    }
+    return selected;
+  }
+
+  #selectOneModel(
+    agent: AgentProfile,
+    occasion: RunOccasion,
+    models: readonly import("@room/schemas").ModelOption[] | undefined,
+  ): BatchModel | null {
+    // 1. 跟随 profile：没报 profileModels / 没有这个 profile / models 为空 / 首选为 null
+    if (models === undefined || models.length === 0 || agent.modelSettings.primaryModel === null) return null;
+
+    const primary = models.find((option) => option.id === agent.modelSettings.primaryModel);
+    const chosen =
+      primary ??
+      (agent.modelSettings.fallbackModel === null
+        ? undefined
+        : models.find((option) => option.id === agent.modelSettings.fallbackModel));
+    if (chosen === undefined) {
+      const wanted = [agent.modelSettings.primaryModel, agent.modelSettings.fallbackModel]
+        .filter((id): id is string => id !== null)
+        .join(" / ");
+      throw new DiscussionError(
+        "agent_unavailable",
+        agent.displayName + " 的模型不可用：" + wanted + " 都不在节点上（profile " + (agent.profileId ?? "?") + "）",
+      );
+    }
+
+    let effort: string | null;
+    let effortSource: BatchModel["effortSource"];
+    if (chosen.efforts.length === 0) {
+      effort = null;
+      effortSource = "none";
+    } else {
+      const configured = agent.modelSettings.effort[occasion];
+      if (configured !== null && chosen.efforts.some((level) => level.id === configured)) {
+        effort = configured;
+        effortSource = "configured";
+      } else {
+        effort = chosen.defaultEffort ?? null;
+        effortSource = "node_default";
+      }
+    }
+
+    return {
+      model: chosen.id,
+      effort,
+      usedFallback: primary === undefined,
+      effortSource,
+    };
+  }
+
+  /**
    * 一批收件人现在能不能发。
    *
    * 先做本地判断（配置 / 暂停 / 额度 / 节点地址），再把要探的节点**按节点去重、并发**探一次：
@@ -931,7 +1052,7 @@ export class DiscussionService {
     agentIds: readonly string[],
     need: AvailabilityNeed,
     options: { allowAbsentQuota?: boolean } = {},
-  ): Promise<void> {
+  ): Promise<Map<string, NodeProbeResult>> {
     const { repo, settings } = this.#deps;
     const pending: PendingRecipient[] = [];
     /** 每个节点自己的凭据（地址 + 解密后的 Token），同一个节点只取一次 */
@@ -983,7 +1104,7 @@ export class DiscussionService {
       pending.push({ displayName, nodeId, baseUrl: node.base_url, profileId });
     }
 
-    if (pending.length === 0) return;
+    if (pending.length === 0) return new Map();
 
     // 同一个节点只探一次；不同节点之间并发
     const byNode = new Map<string, PendingRecipient[]>();
@@ -1013,6 +1134,8 @@ export class DiscussionService {
         throw new DiscussionError("agent_unavailable", item.displayName + " 的 profile " + item.profileId + " 不在节点上");
       }
     }
+
+    return probes;
   }
 
   /** 5 小时内算「还缺席」；时间戳缺失或解析不了就当过期（放行） */
@@ -1026,7 +1149,11 @@ export class DiscussionService {
     if (this.#deps.probeNode !== undefined) return this.#deps.probeNode(params);
     const result = await testReviewerNode({ ...params, timeoutMs: 3_000 });
     return result.reachable
-      ? { reachable: true, profiles: result.health.profiles }
+      ? {
+          reachable: true,
+          profiles: result.health.profiles,
+          ...(result.health.profileModels === undefined ? {} : { profileModels: result.health.profileModels }),
+        }
       : { reachable: false, profiles: [], message: result.message };
   }
 }
@@ -1040,6 +1167,8 @@ function mapApproveError(error: unknown): unknown {
       return new DiscussionError("already_decided", "这一批已经处理过了");
     case "hash_mismatch":
       return new DiscussionError("stale_snapshot", "要发送的内容和你看到的不一致，请重新打开确认页");
+    case "model_mismatch":
+      return new DiscussionError("stale_snapshot", error.message);
     default:
       return new DiscussionError("invalid_state", error.message);
   }
