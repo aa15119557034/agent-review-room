@@ -403,8 +403,9 @@ export const COMMANDS = {
    * expected 必须**恰好**覆盖批次里的每一项，且每个 contentHash 都和 Snapshot 一致，
    * 否则整批拒绝（stale_snapshot），一个都不发。批准 + 建 Run 在同一事务里。
    *
-   * C-40：模型和强度也算进盖章指纹。每项的 model 必须和 BatchItem.model 完全一致
-   * （model、effort 都比较；两边都是 null 也算一致），否则同样整批 stale_snapshot。
+   * C-40：模型和强度也算进盖章指纹。每项只比较 model 和 effort 两个字段（usedFallback / effortSource 不比较，
+   * 不要整体 deepEqual）；两边都是 null 算一致，一边 null 一边不是算不一致。不一致同样整批 stale_snapshot，
+   * message 里写明是哪个人、是模型还是强度对不上（不要只说「内容已变化」）。
    * 盖章时 main 不重新挑模型；人批准的是「这份内容、用这个模型和强度、发给这个人」。
    */
   "batch.approve": def(

@@ -43,11 +43,16 @@ export type RunOccasion = z.infer<typeof RunOccasion>;
  *
  * 起草（round.draft / round.redraft / round.summarize / 补充 / 重试 / 恢复 等所有生成批次的命令）时，
  * main 对每个收件人按下面的顺序定下 BatchItem.model，定下之后这一批就不再变：
- * 1. 节点没报 profileModels，或 primaryModel 为 null → model = null（用 profile 自带的模型）
- * 2. primaryModel 在节点为这个 profile 上报的 models 里 → 用首选
+ * 1. 下面任一情况 → model = null（用 profile 自带的模型和强度，各场合的 effort 不用）：
+ *    节点没报 profileModels；profileModels 里没有这个 profile；这个 profile 的 models 为空（模型写死）；primaryModel 为 null
+ * 2. primaryModel 在这个 profile 的 models 里 → 用首选
  * 3. 否则 fallbackModel 在里面 → 用备选，usedFallback = true
  * 4. 都不在 → agent_unavailable（message 里写明是谁、哪个模型不可用），整批不生成
- * 强度：用这个场合的 effort；它不在所选模型的 efforts 里（包括设为 null）→ 用节点报的 defaultEffort。
+ * 强度（只在选中了模型时）：这个场合的 effort 在所选模型的 efforts 里 → 用它，effortSource = "configured"；
+ * 否则（包括设为 null、或档位名在这个模型上不存在）→ 用节点报的 defaultEffort，effortSource = "node_default"；
+ * 所选模型没有档位（efforts 为空）→ effort = null，effortSource = "none"。
+ * 重试（retry）和恢复（resume）：先沿用被重试 / 恢复的那个 Turn 原来的 BatchItem.model（原来是 null 就照上面重选）；
+ * 节点已不支持它时，再按上面 1～4 重选。确认页每次都逐人显示模型和强度。
  * 盖章之后不再换模型：运行时节点拒绝（unknown_model）就按 remote_rejected 失败，额度用尽照旧走缺席 / 替补。
  */
 export const AgentModelSettings = z.object({
@@ -78,7 +83,12 @@ export const DEFAULT_AGENT_MODEL_SETTINGS: AgentModelSettings = {
 export const BatchModel = RunModel.extend({
   /** 首选不可用、改用了备选。确认页要标出来 */
   usedFallback: z.boolean(),
-}).strict();
+  /**
+   * effort 从哪来：configured = 用户设的这个场合的档位；node_default = 用户设的不在这个模型的档位里（或没设），
+   * 改用节点的 defaultEffort，确认页要标出来；none = 这个模型没有档位，effort 为 null
+   */
+  effortSource: z.enum(["configured", "node_default", "none"]),
+}).strict().refine((m) => (m.effortSource === "none") === (m.effort === null), "没有档位时 effort 为 null，反之亦然");
 export type BatchModel = z.infer<typeof BatchModel>;
 
 export const AgentProfile = z.object({

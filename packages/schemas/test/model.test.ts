@@ -111,7 +111,7 @@ describe("model selection (C-40)", () => {
     );
   });
 
-  it("BatchItem.model: null for profile default, otherwise model + effort + usedFallback", () => {
+  it("BatchItem.model: null for profile default, otherwise model + effort + usedFallback + effortSource", () => {
     const item = {
       recipient: "claude",
       onBehalfOf: null,
@@ -123,9 +123,15 @@ describe("model selection (C-40)", () => {
     };
     assert.equal(BatchItem.safeParse(item).success, false, "model is required (null allowed)");
     assert.ok(BatchItem.safeParse({ ...item, model: null }).success);
-    assert.ok(
-      BatchItem.safeParse({ ...item, model: { model: "claude-sonnet-5-5", effort: "high", usedFallback: true } }).success,
-    );
+    const sonnet = { model: "claude-sonnet-5-5", effort: "high", usedFallback: true, effortSource: "configured" };
+    assert.ok(BatchItem.safeParse({ ...item, model: sonnet }).success);
+    assert.ok(BatchItem.safeParse({ ...item, model: { ...sonnet, effortSource: "node_default" } }).success);
+    assert.equal(BatchItem.safeParse({ ...item, model: { ...sonnet, usedFallback: undefined } }).success, false);
+    assert.equal(BatchItem.safeParse({ ...item, model: { ...sonnet, effortSource: undefined } }).success, false);
+    // 没有档位 <=> effort 为 null
+    assert.ok(BatchItem.safeParse({ ...item, model: { ...sonnet, effort: null, effortSource: "none" } }).success);
+    assert.equal(BatchItem.safeParse({ ...item, model: { ...sonnet, effort: null, effortSource: "configured" } }).success, false);
+    assert.equal(BatchItem.safeParse({ ...item, model: { ...sonnet, effortSource: "none" } }).success, false);
   });
 
   it("batch.approve: the stamp covers model and effort for every item", () => {
