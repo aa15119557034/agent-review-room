@@ -10,6 +10,7 @@
 | `agent-event.ts` | Orchestrator 内部统一事件、失败原因 | 已合并 |
 | `remote-protocol.ts` | Orchestrator ⇄ AgentServer 协议 v1（ADR-001） | 已合并 |
 | `entities.ts` | Phase 0 实体：Project、Message、Contribution、PromptSnapshot、Approval、Run、SystemStatus | C-01b 草案 |
+| `chat.ts` | 聊天空间（ADR-003 / C-34）：会话、消息、回答位、聊天 Snapshot / Run、历史摘要、语音、表情 | C-34 草案 |
 | `control-api.ts` | 人 ⇄ Orchestrator：命令 / 查询登记表、结果、事件；桌面和手机共用 | C-01b 草案 |
 | `ipc.ts` | Electron IPC 的三个频道和 `window.room` 类型 | C-01b 草案 |
 

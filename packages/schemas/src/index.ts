@@ -5,6 +5,7 @@ export * from "./state-machines";
 export * from "./entities";
 export * from "./appearance";
 export * from "./discussion";
+export * from "./chat";
 export * from "./remote-protocol";
 export * from "./control-api";
 export * from "./ipc";

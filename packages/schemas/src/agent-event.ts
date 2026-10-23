@@ -1,6 +1,7 @@
 import { z } from "zod";
-import { IsoTimestamp, RunId } from "./common";
+import { IsoTimestamp, RunId, Sha256Hex } from "./common";
 import { PermissionDecision, PermissionRequest } from "./permission";
+import { MemoryManifest } from "./remote-protocol";
 
 /**
  * Orchestrator 内部统一的 Agent 事件（V0.3 §23 / V0.4 §22）。
@@ -47,6 +48,13 @@ export const AgentEvent = z.discriminatedUnion("type", [
     type: z.literal("status"),
     /** RUNNING 的内部子状态，不改变 Run 的主状态 */
     substate: z.enum(["active", "waiting_for_human", "disconnected"]),
+  }),
+  /** C-34：聊天 Run 的最终 hash 和记忆清单（节点的 prompt_final 原样映射）。最多一次，不是终止事件 */
+  z.object({
+    ...base,
+    type: z.literal("prompt_final"),
+    finalPromptHash: Sha256Hex,
+    memory: MemoryManifest.nullable(),
   }),
   // ---- 终止事件：每个 run 恰好一个 ----
   z.object({ ...base, type: z.literal("completed") }),

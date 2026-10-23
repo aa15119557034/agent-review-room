@@ -18,6 +18,11 @@ export const BatchId = prefixedId("bat");
 export const TurnId = prefixedId("turn");
 export const PlanVersionId = prefixedId("plan");
 
+// ---- 聊天空间（ADR-003 / C-34）。放在这里是因为 entities.ts（议题来源、聊天材料）也要用
+export const ConversationId = prefixedId("conv");
+/** 你发的消息的 id 由发送方生成（防重复，见 chat.send）；秘书的消息由 main 生成 */
+export const ChatMessageId = prefixedId("cmsg");
+
 /**
  * SHA-256，小写十六进制。
  * 约定：Prompt 的 hash = sha256(UTF-8 编码的 content 原文)，不做任何规范化。
@@ -37,3 +42,5 @@ export type RoundId = z.infer<typeof RoundId>;
 export type BatchId = z.infer<typeof BatchId>;
 export type TurnId = z.infer<typeof TurnId>;
 export type PlanVersionId = z.infer<typeof PlanVersionId>;
+export type ConversationId = z.infer<typeof ConversationId>;
+export type ChatMessageId = z.infer<typeof ChatMessageId>;

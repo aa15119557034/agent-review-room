@@ -98,6 +98,20 @@ export type BatchModel = z.infer<typeof BatchModel>;
 /** BatchModel → RunModel：去掉只给人看的两个标记 */
 export const toRunModel = (m: BatchModel): RunModel => ({ model: m.model, effort: m.effort });
 
+/**
+ * 参与者的记忆来源配置（ADR-003 §2 / C-34）。
+ * - nodeFolder：聊天回答前由节点读它自己配置的记忆文件夹。**主控端只存这个开关**，不存路径、不存正文；
+ *   这个聊天 profile 不在 NodeHealth.memoryProfiles 里时，界面显示「此记忆来源不可用」
+ * 本会话的历史（最近的全文 + 更早的摘要）总是带上，不用配置。claude.ai / ChatGPT / DeepSeek 网页里的云端记忆读不到，也不去读本机凭据。
+ */
+export const MemorySource = z.object({ nodeFolder: z.boolean() }).strict();
+export type MemorySource = z.infer<typeof MemorySource>;
+
+export const DEFAULT_MEMORY_SOURCE: MemorySource = { nodeFolder: false };
+
+/** 聊天人设的上限（ADR-003「上限另定」）。和 CHAT_LIMITS.chatPersonaMaxChars 相同 */
+export const CHAT_PERSONA_MAX_CHARS = 50_000;
+
 export const AgentProfile = z.object({
   /** 也是消息里的 sourceAgent，例如 "claude"、"deepseek"、"codex" */
   id: AgentName,
@@ -120,6 +134,18 @@ export const AgentProfile = z.object({
   substitute: AgentName.nullable(),
   /** C-40：首选 / 备选模型和各场合的思考强度 */
   modelSettings: AgentModelSettings,
+  /**
+   * C-34：聊天人设（完整版，可以很长），和讨论室的三句 roleNote 分开。在可信指令区，因为是你写的。
+   * 空字符串 = 还没写，聊天时只用 roleNote
+   */
+  chatPersona: z.string().max(CHAT_PERSONA_MAX_CHARS),
+  /**
+   * C-34：聊天用的 profile（例如 "claude-chat"），和 profileId（讨论用）分开：只读、无工具，Codex 用单独的 CODEX_HOME（S-20）。
+   * 和 profileId 在同一个节点（nodeId）上。null = 没配，聊天里这位的回答位记 unavailable(unconfigured)
+   */
+  chatProfileId: ProfileId.nullable(),
+  /** C-34：记忆来源 */
+  memorySource: MemorySource,
 });
 export type AgentProfile = z.infer<typeof AgentProfile>;
 
