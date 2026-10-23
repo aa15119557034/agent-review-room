@@ -10,7 +10,35 @@
   "profiles": {
     "codex-discuss": {
       "command": "codex",
-      "args": ["exec", "--json", "--skip-git-repo-check", "--sandbox", "read-only", "--ephemeral", "-"],
+      "args": ["exec", "--json", "--skip-git-repo-check", "--sandbox", "read-only", "--ephemeral", "{model-args}", "-"],
+      "models": [
+        {
+          "id": "gpt-6.1-sol",
+          "displayName": "GPT-6.1 Sol",
+          "efforts": [
+            {"id": "low", "displayName": "低", "note": null},
+            {"id": "medium", "displayName": "中等", "note": null},
+            {"id": "high", "displayName": "高", "note": null},
+            {"id": "xhigh", "displayName": "超高", "note": null},
+            {"id": "max", "displayName": "最高", "note": null}
+          ],
+          "defaultEffort": "low"
+        },
+        {
+          "id": "gpt-6-astra",
+          "displayName": "GPT-6 Astra",
+          "efforts": [
+            {"id": "low", "displayName": "低", "note": null},
+            {"id": "medium", "displayName": "中等", "note": null},
+            {"id": "high", "displayName": "高", "note": null},
+            {"id": "xhigh", "displayName": "超高", "note": null},
+            {"id": "max", "displayName": "最高", "note": null}
+          ],
+          "defaultEffort": "low"
+        }
+      ],
+      "modelArgs": ["-m", "{model}"],
+      "effortArgs": ["-c", "model_reasoning_effort={effort}"],
       "cwd": "discuss-sandbox",
       "parser": "codex-exec-json",
       "envAllowlist": [
@@ -22,7 +50,21 @@
     },
     "deepseek-discuss": {
       "command": "node",
-      "args": ["../bin/deepseek-chat.mjs", "--model", "deepseek-v4-pro"],
+      "args": ["../bin/deepseek-chat.mjs"],
+      "models": [
+        {
+          "id": "deepseek-flash",
+          "displayName": "V4.1 Flash 1017",
+          "efforts": [
+            {"id": "low", "displayName": "低", "note": null},
+            {"id": "high", "displayName": "高", "note": null},
+            {"id": "max", "displayName": "最高", "note": null}
+          ],
+          "defaultEffort": "high"
+        }
+      ],
+      "modelArgs": ["--model", "{model}"],
+      "effortArgs": ["--effort", "{effort}"],
       "cwd": "discuss-sandbox",
       "parser": "room-jsonl",
       "envAllowlist": [

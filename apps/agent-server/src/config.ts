@@ -1,9 +1,10 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { dirname, isAbsolute, resolve } from "node:path";
 import { z } from "zod";
-import { ProfileId } from "@room/schemas";
+import { ModelOption, ProfileId } from "@room/schemas";
 import { PARSERS } from "./parsers";
 import { planSpawn, type ResolveEnv } from "./win-command";
+import { buildArgs, modelConfigProblems } from "./model-args";
 
 /**
  * 节点本地配置。能跑什么命令只由这里决定，远端请求只能按 profileId 选择。
@@ -32,6 +33,15 @@ const Profile = z
      */
     parser: z.enum(PARSERS).default("raw"),
     verifyCommit: z.boolean().default(false),
+    /**
+     * S-22：这个 profile 能选的模型和强度，原样在 health 里上报。空 = 模型写死在 args 里，不接受选择。
+     * 档位从弱到强排；名字要用 CLI 实测过的（有的 CLI 遇到不认识的档位只警告不报错，节点靠这份清单拒绝）。
+     */
+    models: z.array(ModelOption).max(16).default([]),
+    /** 选了模型时加的参数，{model} 换成模型 id，例如 ["--model", "{model}"] */
+    modelArgs: z.array(z.string()).default([]),
+    /** 模型有档位时再加的参数，{effort} 换成档位 id，例如 ["--effort", "{effort}"] */
+    effortArgs: z.array(z.string()).default([]),
     maxIdleTimeoutMs: z.number().int().positive().default(300_000),
     maxTotalTimeoutMs: z.number().int().positive().default(3_600_000),
   })
@@ -105,10 +115,24 @@ function readTokenFile(path: string): string {
 export function validateProfiles(config: ServerConfig, r?: ResolveEnv): string[] {
   const problems: string[] = [];
   for (const [id, p] of Object.entries(config.profiles)) {
-    try {
-      planSpawn(p.command, p.args, r);
-    } catch (err) {
-      problems.push(`profile "${id}": ${(err as Error).message}`);
+    if (new Set(p.models.map((m) => m.id)).size !== p.models.length) problems.push(`profile "${id}": 模型 id 重复`);
+    for (const m of modelConfigProblems(p)) problems.push(`profile "${id}": ${m}`);
+    // 每个模型、每个档位拼出来的命令都要能安全启动（Windows .cmd 的参数检查也在 planSpawn 里）
+    const variants = [
+      buildArgs(p),
+      ...p.models.flatMap((m) =>
+        m.efforts.length === 0
+          ? [buildArgs(p, { model: m.id, effort: null })]
+          : m.efforts.map((e) => buildArgs(p, { model: m.id, effort: e.id })),
+      ),
+    ];
+    for (const args of variants) {
+      try {
+        planSpawn(p.command, args, r);
+      } catch (err) {
+        problems.push(`profile "${id}": ${(err as Error).message}`);
+        break;
+      }
     }
     const exists = r?.exists ?? existsSync;
     if (!exists(p.cwd) || (!r && !statSync(p.cwd).isDirectory())) {

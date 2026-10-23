@@ -5,6 +5,7 @@ import type { Profile, ServerConfig } from "./config";
 import { killTree, spawnDetached } from "./process-tree";
 import { createParser, type OutputParser, type ParserOutput } from "./parsers";
 import { planSpawn } from "./win-command";
+import { buildArgs } from "./model-args";
 
 type SeqEvent = Exclude<RemoteEvent, { type: "heartbeat" }>;
 type Subscriber = (event: RemoteEvent) => void;
@@ -19,6 +20,8 @@ export class RemoteRun {
   readonly runId: string;
   readonly profileId: string;
   readonly contentHash: string;
+  /** 请求里的模型和强度；undefined = 用 profile 自带的 */
+  readonly model: StartRunRequest["model"];
 
   private readonly events: SeqEvent[] = [];
   private readonly subscribers = new Set<Subscriber>();
@@ -45,6 +48,7 @@ export class RemoteRun {
     this.runId = req.runId;
     this.profileId = req.profileId;
     this.contentHash = req.snapshot.contentHash;
+    this.model = req.model;
     this.limits = {
       idleTimeoutMs: Math.min(req.limits.idleTimeoutMs, profile.maxIdleTimeoutMs),
       totalTimeoutMs: Math.min(req.limits.totalTimeoutMs, profile.maxTotalTimeoutMs),
@@ -81,7 +85,7 @@ export class RemoteRun {
     let child: ChildProcess;
     try {
       // Windows 上 .cmd / .bat 会被包装成 cmd.exe /d /s /c "…"，见 win-command.ts
-      const plan = planSpawn(this.profile.command, this.profile.args);
+      const plan = planSpawn(this.profile.command, buildArgs(this.profile, this.model));
       child = spawn(plan.file, plan.args, {
         cwd: this.profile.cwd,
         env: buildEnv(this.profile),
