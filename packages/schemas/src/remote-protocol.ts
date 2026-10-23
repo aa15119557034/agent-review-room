@@ -13,6 +13,8 @@ import { StartRunAttachments, VisionSupport, attachmentManifestBlock } from "./a
  *   GET  /v1/runs/:runId/events?after=<seq>       NDJSON 流：先补发 seq > after 的事件，再推实时事件
  *   POST /v1/runs/:runId/cancel                   CancelRunRequest
  *   POST /v1/runs/:runId/permissions/:requestId   PermissionDecision（Phase 1，骨架返回 501）
+ *   GET  /v1/runs/:runId/artifacts/:sha256        C-42b：取回 image Run 画出来的图（原始字节）
+ *   GET  /v1/profiles/:profileId/quota            C-42b：这个 profile 的订阅额度（RemoteProfileQuota）
  *
  * 关键规则：
  * 1. Payload 里不允许出现命令。只能选节点本地配置好的 profileId。（.strict() 拒绝多余字段）
@@ -143,6 +145,49 @@ export const MemorySlot = z
   .strict();
 export type MemorySlot = z.infer<typeof MemorySlot>;
 
+/**
+ * C-42b：Run 的种类。省略 = text（Phase 0 起的文字回答）。
+ * image = 让 profile 画一张图（只有节点配置里标了能画图的 profile 接受，否则 unsupported_kind）：
+ * - snapshot.content 是主控端按固定模板写好的画图指令（含提示词和尺寸），节点照样校验 hash，不改写
+ * - 不能带 attachments
+ * - 画完在 terminal(completed) 里带上 artifact（一张）；画不出来按 error 结束
+ */
+export const RunKind = z.enum(["text", "image"]);
+export type RunKind = z.infer<typeof RunKind>;
+
+/** image Run 画出来的图。字节用 GET /v1/runs/:runId/artifacts/:sha256 取 */
+export const RemoteArtifact = z
+  .object({
+    sha256: Sha256Hex,
+    mime: z.enum(["image/png", "image/jpeg", "image/webp"]),
+    bytes: z.number().int().min(1).max(10 * 1024 * 1024),
+  })
+  .strict();
+export type RemoteArtifact = z.infer<typeof RemoteArtifact>;
+
+/**
+ * 订阅额度的一个窗口（S-24：Codex 的 account/rateLimits/read）。读不到就整个为 null，不猜。
+ * C-36 的额度状态复用这个形状
+ */
+export const RemoteQuotaWindow = z.object({
+  usedPercent: z.number().min(0).max(100),
+  windowMinutes: z.number().int().positive().nullable(),
+  resetsAt: IsoTimestamp.nullable(),
+});
+export type RemoteQuotaWindow = z.infer<typeof RemoteQuotaWindow>;
+
+/**
+ * GET /v1/profiles/:profileId/quota 的结果。节点读订阅额度的超时不超过 2 秒，超时 / 出错时
+ * 各项为 null（不是 0）。只有 capabilities.quota 为 true 的节点提供这个端点
+ */
+export const RemoteProfileQuota = z.object({
+  fiveHour: RemoteQuotaWindow.nullable(),
+  weekly: RemoteQuotaWindow.nullable(),
+  /** 是否已经在用付费 credits；读不到为 null */
+  creditsInUse: z.boolean().nullable(),
+  readAt: IsoTimestamp,
+});
+export type RemoteProfileQuota = z.infer<typeof RemoteProfileQuota>;
 
 export const RunLimits = z
   .object({
@@ -198,6 +243,8 @@ export const StartRunRequest = z
      * 节点按自己配置的映射把图交给 CLI，不往 content 里加任何文字；用完删临时文件。
      */
     attachments: StartRunAttachments.optional(),
+    /** C-42b：省略 = text */
+    kind: RunKind.optional(),
   })
   .strict()
   .refine(
@@ -207,7 +254,8 @@ export const StartRunRequest = z
   .refine(
     (r) => r.attachments === undefined || r.snapshot.content.startsWith(attachmentManifestBlock(r.attachments)),
     "带图时 snapshot.content 要以这组附件的清单块开头",
-  );
+  )
+  .refine((r) => r.kind !== "image" || r.attachments === undefined, "image Run 不能带附件");
 
 export const StartRunResponse = z.object({
   runId: RunId,
@@ -219,7 +267,16 @@ export const StartRunResponse = z.object({
 const seqd = { seq: z.number().int().nonnegative(), ts: IsoTimestamp };
 
 export const RemoteTerminal = z.discriminatedUnion("outcome", [
-  z.object({ outcome: z.literal("completed"), exitCode: z.literal(0) }),
+  z.object({
+    outcome: z.literal("completed"),
+    exitCode: z.literal(0),
+    /**
+     * C-42b：image Run 画好的图（text Run 没有这个字段）。主控端用 artifacts 端点取回字节、校验 sha256 / 类型 / 大小后
+     * 存成 generated 图片。节点在取回成功后、或 Run 结束后超过 leaseMs 仍没人取时删除文件。
+     * image Run 完成却没有 artifact：节点改报 error(incomplete_output)
+     */
+    artifact: RemoteArtifact.optional(),
+  }),
   z.object({
     outcome: z.literal("error"),
     reason: z.enum([
@@ -300,7 +357,16 @@ export const NodeHealth = z.object({
    * C-42a：节点支持的可选能力。不报 = 都不支持（老节点）。
    * attachments：能收 StartRun.attachments，且请求体上限不小于 NODE_MIN_BODY_BYTES_WITH_ATTACHMENTS
    */
-  capabilities: z.object({ attachments: z.boolean().optional() }).optional(),
+  capabilities: z
+    .object({
+      attachments: z.boolean().optional(),
+      /** C-42b：接受 kind = "image" 的 Run 和 artifacts 端点；imageProfiles 列出能画图的 profile */
+      imageRuns: z.boolean().optional(),
+      imageProfiles: z.array(ProfileId).max(16).optional(),
+      /** C-42b：提供 GET /v1/profiles/:profileId/quota */
+      quota: z.boolean().optional(),
+    })
+    .optional(),
 }).refine(
   (h) => (h.memoryProfiles ?? []).every((p) => h.profiles.includes(p)),
   "memoryProfiles 里的 profile 必须都在 profiles 里",
@@ -321,6 +387,7 @@ export const RemoteErrorCode = z.enum([
   "unknown_profile",
   "unknown_model", // C-40：模型或强度不在这个 profile 上报的列表里
   "vision_unsupported", // C-42a：带了图，但这一次用的模型上报的看图能力不是 yes
+  "unsupported_kind", // C-42b：这个 profile 不接受这种 Run（例如不能画图的 profile 收到 image）
   "hash_mismatch",
   "commit_mismatch",
   "run_id_conflict",
