@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { AppearanceSettings, ChatBackground, ImagePurpose, ImageRef } from "./appearance";
 import { ApprovalId, BatchId, PermissionRequestId, PlanVersionId, RoundId, RunId, Sha256Hex, SnapshotId } from "./common";
-import { NodeHealth, ProfileId } from "./remote-protocol";
+import { NodeHealth, ProfileId, RunModel } from "./remote-protocol";
 import { AgentEvent } from "./agent-event";
 import { PermissionDecision, PermissionRequest } from "./permission";
 import {
@@ -20,6 +20,7 @@ import {
   TextSelection,
 } from "./entities";
 import {
+  AgentModelSettings,
   AgentProfile,
   AgentStatus,
   ApprovalBatch,
@@ -297,6 +298,8 @@ export const COMMANDS = {
       substitute: AgentName.nullable().optional(),
       /** C-32：先用 image.pick 拿到引用再传进来；null = 去掉头像 */
       avatarRef: ImageRef.nullable().optional(),
+      /** C-40：整份替换，不做字段级合并。只校验格式，不连节点 */
+      modelSettings: AgentModelSettings.optional(),
     }),
     AgentProfile,
     "admin",
@@ -399,12 +402,20 @@ export const COMMANDS = {
    *
    * expected 必须**恰好**覆盖批次里的每一项，且每个 contentHash 都和 Snapshot 一致，
    * 否则整批拒绝（stale_snapshot），一个都不发。批准 + 建 Run 在同一事务里。
+   *
+   * C-40：模型和强度也算进盖章指纹。每项只比较 model 和 effort 两个字段（usedFallback / effortSource 不比较，
+   * 不要整体 deepEqual）；两边都是 null 算一致，一边 null 一边不是算不一致。不一致同样整批 stale_snapshot，
+   * message 里写明是哪个人、是模型还是强度对不上（不要只说「内容已变化」）。
+   * 盖章时 main 不重新挑模型；人批准的是「这份内容、用这个模型和强度、发给这个人」。
    */
   "batch.approve": def(
     z.object({
       type: z.literal("batch.approve"),
       batchId: BatchId,
-      expected: z.array(z.object({ approvalId: ApprovalId, contentHash: Sha256Hex })).min(1).max(8),
+      expected: z
+        .array(z.object({ approvalId: ApprovalId, contentHash: Sha256Hex, model: RunModel.nullable() }))
+        .min(1)
+        .max(8),
     }),
     z.object({ batch: ApprovalBatch, turns: z.array(Turn) }),
     "approve",

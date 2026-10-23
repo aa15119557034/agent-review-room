@@ -160,7 +160,7 @@ describe("discussion commands", () => {
     const approve = COMMANDS["batch.approve"].request;
     assert.equal(approve.safeParse({ type: "batch.approve", batchId: `bat_${ID}`, expected: [] }).success, false);
     assert.equal(
-      approve.safeParse({ type: "batch.approve", batchId: `bat_${ID}`, expected: [{ approvalId: `apr_${ID}`, contentHash: HASH }] }).success,
+      approve.safeParse({ type: "batch.approve", batchId: `bat_${ID}`, expected: [{ approvalId: `apr_${ID}`, contentHash: HASH, model: null }] }).success,
       true,
     );
   });
@@ -198,7 +198,7 @@ describe("discussion records", () => {
       state: "READY_FOR_REVIEW",
       items: [{
         recipient: "codex", onBehalfOf: null, approvalId: `apr_${ID}`, snapshotId: `snap_${ID}`,
-        contentHash: HASH, differsFromOthers: true, tokenEstimate: 1200,
+        contentHash: HASH, differsFromOthers: true, tokenEstimate: 1200, model: null,
       }],
       compressedRounds: [{ roundIndex: 1, summaryMessageId: `msg_${ID}`, summarizer: "claude" }],
       decidedVia: null,
