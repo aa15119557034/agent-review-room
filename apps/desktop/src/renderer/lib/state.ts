@@ -129,6 +129,8 @@ export function applyEvent(state: AppState, event: ControlEvent): AppState {
     case "chat.run.updated":
     case "chat.summary.updated":
     case "chat.voice.updated":
+    case "media.updated":
+      // C-42b：画图 / 语音任务的界面在 C-43 接，这之前先不处理
       return state;
   }
 }
