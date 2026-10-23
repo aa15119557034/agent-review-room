@@ -44,30 +44,36 @@
 | **D-30** | DeepSeek | 头像上传 / 读取（main 里存进 userData，renderer 只拿引用）：按文件头判断真实类型、大小上限、原子写、文件名用 ULID、替换时清旧文件 | C-32 | 重启后头像还在；非图片（含改扩展名的 exe）被拒；引用不存在或用途不对被拒；选图对话框可注入，单测覆盖（CI 打不开系统对话框） |
 | **C-33** | Claude | 外观：苹果风格 + 微信用法（画布《1B 外观草案》）；桌面和手机布局；讨论室按新排版重做（三栏、轮次胶囊、汇总标签、新建议题页、按住盖章、右栏可收起）；动画尊重「减少动态效果」 | C-32 | 用户看过说「不粗糙了」；按住盖章：按 999ms 松手、再推进时钟过 1 秒，`batch.approve` / `plan.finalize` 调用 0 次、状态不变；移出 / 失焦 / 页面隐藏 / 变灰清计时；按满只发一次；普通点击和键盘绕不过 |
 
-## 1B-M 多模态（ADR-004，排在 1B-0 之后、1B-2 之前）
+## 1B-M 多模态（ADR-004）
 
-能脱离聊天先做的先做，在讨论室里验证；沉浸模式随 1B-2 一起做。验收细节见 ADR-004「分阶段」。
+按林离评审拆成两段：**1B-M1** 在 1B-0 之后，可以和 C-34 并行；**1B-M2**（D-39 沉浸模式）随 1B-2，等 C-34、D-31b 落地后再做。验收细节见 ADR-004「分阶段」。
 
-| ID | 负责 | 内容 | 依赖 |
-|---|---|---|---|
-| **C-42** | Claude | 契约：`ModelOption.vision`、`StartRun.attachments`、ChartSpec、DrawRequest、GeneratedImage、SpeechClip、VoiceProfile、MediaIntent、沉浸模式设置、画图选路记录 | ADR-004 |
-| **S-23** | Claude | 节点：实测三家看图并上报 `vision`；attachments 交给 CLI；`codex-image` profile 实测 | C-42 |
-| **D-36** | DeepSeek | 图片处理（去 EXIF、缩放、去重）；StartRun 带图；讨论室材料带图算进指纹 | C-42 |
-| **D-37** | DeepSeek | 语音合成：spike（CosyVoice / IndexTTS2 / GPT-SoVITS 盲听）→ 独立进程、按 hash 缓存 | C-42 |
-| **S-24** | Claude | 节点：读 Codex 额度（`account/rateLimits/read`）并上报；S-21 的 Codex 部分提前，类型在 C-42 定、C-36 复用 | C-42 |
-| **D-38** | DeepSeek | 画图：ComfyUI（固定工作流、只连本机）+ `codex-image`；Codex 额度任一窗口 ≥85% 或读不到就走本机，Codex 一次一张 | C-42、S-23、S-24 |
-| **D-39** | DeepSeek | 沉浸模式：媒体意图、自动画图 / 语音、硬上限、退回成卡片、「停」 | C-34、D-37、D-38 |
-| **C-43** | Claude | 界面：发图看图、图表、画图请求卡、播放、「用语音回」、声音设置、沉浸模式设置 | C-42 |
-| **X-34** | Codex | Prompt：图片当不可信材料、`room-chart` 和媒体意图说明；e2e 讨论室带图一轮 | C-42、D-36 |
+| ID | 负责 | 内容 | 依赖 | 估算 |
+|---|---|---|---|---|
+| **C-42a** | Claude | 契约：图片、附件清单、`vision` 三态、`capabilities.attachments`、图片引用表和用途 | ADR-004 | 0.5 天 |
+| **C-42b** | Claude | 契约：MediaJob、`kind: "image"` 的 Run、生成图回传、DrawRequest、GeneratedImage、Codex 额度 | ADR-004 | 1 天 |
+| **C-42c** | Claude | 契约：SpeechClip、VoiceProfile、`replyAsVoice` | ADR-004 | 0.5 天 |
+| **C-42d** | Claude | 契约：ChartSpec、MediaIntent、沉浸模式设置 | ADR-004 | 0.5 天 |
+| **S-23** | Claude | 节点：看图实测、收附件并按清单校验、请求体 16 MB、`kind: "image"` Run 和生成图回传 | C-42a、C-42b | 2～3 天 |
+| **S-24** | Claude | 节点：读 Codex 额度（2 秒超时）并上报、实测单图消耗；S-21 的 Codex 部分提前，C-36 复用 | C-42b | 1 天 |
+| **D-36a** | DeepSeek | 图片处理管道（去全部元数据、转正、确定性输出、拒动图 / HEIC） | C-42a | 1.5～2 天 |
+| **D-36b** | DeepSeek | 附件清单进指纹、盖章和起跑重读比对、图片本体 + 引用表、数据库迁移 | C-42a、D-36a | 1.5～2 天 |
+| **D-37a** | DeepSeek | 语音合成试听（三个候选盲听） | C-42c | 2～3 天 |
+| **D-37b** | DeepSeek | 语音合成集成（独立进程、缓存、MediaJob） | D-37a | 2～3 天 |
+| **D-38a** | DeepSeek | 画图 · 本机 ComfyUI、全局显卡队列、MediaJob | C-42b | 2～3 天 |
+| **D-38b** | DeepSeek | 画图 · 林离 + 85% 选路 + 回退 | C-42b、S-23、S-24、D-38a | 2～3 天 |
+| **C-43** | Claude | 界面：图片、图表、画图卡、语音、沉浸设置和「停」、议题材料带图 | C-42a～d | 3～4 天 |
+| **X-34** | Codex | Prompt：图片和清单进资料区、图表 / 媒体意图说明；确定性 e2e | C-42a、C-42d、D-36b | 2～3 天 |
+| **D-39** | DeepSeek | 沉浸模式（1B-M2） | C-34、D-31b、D-37b、D-38b、C-43、X-34 | 4～6 天 |
 
-订阅优先画图要读得到 Codex 额度，所以 S-21 的 Codex 部分提前成 S-24，D-38 依赖它（汐评审意见）；S-21 剩下的 Claude、DeepSeek 额度仍在 1B-3。
+排法：D-36 和 C-34 并行；D-37a 先做，用户选定后再 D-37b；D-38a 不等 S-23；D-39 排在 D-31b 之后。D-36～D-39 合计约 15～22 天，和 D-31a/b/c 都是汐的活，1B-2 大约推后 1～2 周。
 
 ## 1B-2 聊天空间
 
 | ID | 负责 | 内容 | 依赖 | 验收 |
 |---|---|---|---|---|
-| **C-34** | Claude | 契约：Conversation / ChatMessage（结构化的 @ 收件人、`replacesMessageId`、撤回状态）/ 回答位（唯一键 用户消息 id + Agent，独立的 `ChatSlotOutcome`）、语音 / 表情 / 文件字段（图片、画图、语音合成的类型引用 C-42，不重复定义）、记忆槽位和记忆清单（只存 id + hash）、Run 上的 Snapshot hash 与最终 hash、`chatPersona` / `memorySource`、聊天命令 / 查询 / 事件、`chat.toTopic` | ADR-003 | 用户批准 |
-| **D-31a** | DeepSeek | 迁移 v4 + 读写模型：会话 / 聊天消息 / 回答位、新字段（可空）；索引（会话按最近活跃、消息按会话+时间分页）；迁移前自动备份 `room.db.bak-v3`，一个事务做完，可安全重跑 | C-34 | **拿 1A 真库副本**迁移：旧数据 digest 不变、新表为空、`foreign_key_check` 通过；迁移后重启全部读回 |
+| **C-34** | Claude | 契约：Conversation / ChatMessage（结构化的 @ 收件人、`replacesMessageId`、撤回状态）/ 回答位（唯一键 用户消息 id + Agent，独立的 `ChatSlotOutcome`）、语音 / 表情 / 文件字段（图片、画图、语音合成的类型引用 C-42a～d，不重复定义）、记忆槽位和记忆清单（只存 id + hash）、Run 上的 Snapshot hash 与最终 hash、`chatPersona` / `memorySource`、聊天命令 / 查询 / 事件、`chat.toTopic` | ADR-003 | 用户批准 |
+| **D-31a** | DeepSeek | 迁移（编号按合并顺序取下一个；v4 已被 D-35 用掉，D-36b 也要一个）+ 读写模型：会话 / 聊天消息 / 回答位、新字段（可空）；索引（会话按最近活跃、消息按会话+时间分页）；迁移前自动备份 `room.db.bak-v<旧版本>`，一个事务做完，可安全重跑 | C-34 | **拿 1A 真库副本**迁移：旧数据 digest 不变、新表为空、`foreign_key_check` 通过；迁移后重启全部读回 |
 | **D-31b** | DeepSeek | 发送与回答编排（@ 规则、撤回 / 重新编辑见 ADR-003 §2）：回答位 + Run 同一事务；不可用的人记缺席、其他人继续；单独重试；防重复（用户消息 id）；硬上限；聊天 Run 进中断修复 | D-31a | 每个 Run 恰好一个终止事件；没点名时只有明确 `skip` 才记「不回答」（空输出 / 超时 / 缺席各走各的；单聊和被点名的 `skip` 算失败）；5 分钟撤回 / 重新编辑（先落库再中止，撤回瞬间答完的结果被丢弃；旧 Snapshot 不能被重试重放；重新编辑是新消息，旧回答位不复活）；3 人中 1 人失败：看得出是谁、能单独重试、不重发另外两人；强杀后重启没有转圈的 Run |
 | **D-31c** | DeepSeek | 一键转议题：选中的消息作为初始材料，建议题和材料在同一事务；已撤回的消息不能选 | D-31b | 转出的议题能正常跑一轮 |
 | **X-30** | Codex | `core/src/discussion/` 旁边加聊天 Prompt 拼装：聊天人设 →（不可信边界：会话历史压缩、历史摘要、Agent 发言、附件、记忆槽位）→ 当前用户消息；导出边界包裹函数给节点填记忆用 | C-34 | 同一输入 hash 相同；用已知 nonce 在记忆文件名 / 正文、历史消息 / 摘要、附件里伪造结束标签，都不能闭合边界；断言当前用户消息在边界外，Agent 消息和摘要在边界内 |
