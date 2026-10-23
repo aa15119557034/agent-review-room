@@ -79,7 +79,11 @@ export const DEFAULT_AGENT_MODEL_SETTINGS: AgentModelSettings = {
   effort: { chat: null, discussion: null, summary: null },
 };
 
-/** 批次里定下的模型。确认页逐人显示，盖章时要原样回传（见 batch.approve） */
+/**
+ * 批次里定下的模型。确认页逐人显示。
+ * 盖章（batch.approve 的 expected.model）和 StartRun.model 都只收 RunModel（{ model, effort }，strict），
+ * 不能把整个 BatchModel 传过去，要先用 toRunModel 投影；usedFallback / effortSource 只留在批次和确认页里。
+ */
 export const BatchModel = RunModel.extend({
   /** 首选不可用、改用了备选。确认页要标出来 */
   usedFallback: z.boolean(),
@@ -90,6 +94,9 @@ export const BatchModel = RunModel.extend({
   effortSource: z.enum(["configured", "node_default", "none"]),
 }).strict().refine((m) => (m.effortSource === "none") === (m.effort === null), "没有档位时 effort 为 null，反之亦然");
 export type BatchModel = z.infer<typeof BatchModel>;
+
+/** BatchModel → RunModel：去掉只给人看的两个标记 */
+export const toRunModel = (m: BatchModel): RunModel => ({ model: m.model, effort: m.effort });
 
 export const AgentProfile = z.object({
   /** 也是消息里的 sourceAgent，例如 "claude"、"deepseek"、"codex" */
@@ -199,7 +206,9 @@ export const BatchItem = z.object({
   tokenEstimate: z.number().int().nonnegative(),
   /**
    * C-40：起草时定下的模型和强度（规则见 AgentModelSettings）；null = 用 profile 自带的模型。
-   * 1A 时期的旧批次读出来是 null。Run 启动时原样放进 StartRun.model。
+   * 1A 时期的旧批次读出来是 null。
+   * 传输时：非 null → 盖章回传和 StartRun.model 都用 toRunModel(model)；
+   * null → 盖章回传 model: null，StartRun **省略** model 字段（不能传 null）。
    */
   model: BatchModel.nullable(),
 });

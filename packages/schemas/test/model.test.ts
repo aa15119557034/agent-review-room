@@ -11,6 +11,7 @@ import {
   NodeHealth,
   RemoteErrorCode,
   StartRunRequest,
+  toRunModel,
 } from "../src/index";
 
 const ID = "01JAAAAAAAAAAAAAAAAAAAAAAA";
@@ -143,5 +144,20 @@ describe("model selection (C-40)", () => {
     assert.ok(
       approve.safeParse({ ...base, expected: [{ ...entry, model: { model: "deepseek-flash", effort: "high" } }] }).success,
     );
+  });
+
+  it("BatchModel must be projected with toRunModel before approve / StartRun", () => {
+    const full = { model: "gpt-6-astra", effort: "high", usedFallback: true, effortSource: "configured" as const };
+    const approve = COMMANDS["batch.approve"].request;
+    const entry = { approvalId: `apr_${ID}`, contentHash: HASH };
+    const base = { type: "batch.approve", batchId: `bat_${ID}` };
+    assert.equal(approve.safeParse({ ...base, expected: [{ ...entry, model: full }] }).success, false);
+    assert.equal(StartRunRequest.safeParse({ ...startRun, model: full }).success, false);
+    const projected = toRunModel(full);
+    assert.deepEqual(projected, { model: "gpt-6-astra", effort: "high" });
+    assert.ok(approve.safeParse({ ...base, expected: [{ ...entry, model: projected }] }).success);
+    assert.ok(StartRunRequest.safeParse({ ...startRun, model: projected }).success);
+    // BatchItem.model 为 null：盖章回传 null，StartRun 省略 model，不能传 null
+    assert.equal(StartRunRequest.safeParse({ ...startRun, model: null }).success, false);
   });
 });

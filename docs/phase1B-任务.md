@@ -26,14 +26,15 @@
 
 用户定的默认值：汐固定 DeepSeek V4.1 Flash 1017（`deepseek-flash`），强度「高」；C酱 首选 Opus 5.5、备选 Sonnet 5.5；林离 首选 GPT-6.1 Sol、备选 GPT-6 Astra。C酱和林离：聊天、讨论室发言用「中等」，汇总用「高」。备选只在起草时换（确认页写明），盖章后不再换。
 
-合并顺序（汐的评审）：C-40 先不单独合并，等 D-35 和 C-41 做好后三个连着合，不留类型检查变红的窗口。
+合并顺序（汐的评审）：C-40 先不单独合并，等 D-35、C-41 和 X-33 做好后连着合，不留类型检查变红的窗口。
 
 | ID | 负责 | 内容 | 依赖 | 验收 |
 |---|---|---|---|---|
 | **C-40** | Claude | 契约：节点 health 按 profile 报可用模型和强度档位（`profileModels`）；`StartRun.model`；`unknown_model`；参与者的 `modelSettings`（首选 / 备选 / 三个场合的强度）；`BatchItem.model`；`batch.approve` 的 `expected` 带 model | — | 用户批准 |
 | **S-22** | Claude | 节点：用 `run try` 实测三家 CLI 的准确模型名和档位名（要明确回答 deepseek-flash 有没有可传的强度参数），写进节点配置并在 health 里上报；把 `StartRun.model` 翻译成 CLI 参数（不在列表里就拒绝，不就近取档）；DeepSeek 默认改成 `deepseek-flash` | C-40 | 每个 profile 用每个模型各跑一次真实请求；传列表外的模型 / 档位被拒（`unknown_model`）；CLI 参数只来自节点配置里的映射，不直接拼请求里的字符串 |
 | **D-35** | DeepSeek | 迁移 + 保存 `modelSettings`；起草时按 C-40 的规则定下 `BatchItem.model`；盖章时比对 `expected.model`；Run 启动时带上 `StartRun.model`；老节点（不报 `profileModels`）不带 | C-40 | 单测覆盖：首选可用 / 只有备选可用 / 都不可用（`agent_unavailable`）；跟随 profile 的四条路径（没报 `profileModels`、没有这个 profile、`models: []`、首选为 null）；强度 `configured` / `node_default` / `none`；重试和恢复沿用原模型、原模型不可用时重选；`expected.model` 的模型不一致、强度不一致、null 对非 null 各自整批 `stale_snapshot`（message 写明是谁、哪一项），`usedFallback` / `effortSource` 不同不影响；1A 真库副本迁移后旧批次 `model` 读出来是 null、参与者是 `DEFAULT_AGENT_MODEL_SETTINGS`、旧批次仍能盖章。节点探测结果要带上 `profileModels`（现在只有 `profiles`） |
-| **C-41** | Claude | 界面：秘书资料页的模型选择和强度拉条（档位由节点报告，弹性动画）、确认页逐人显示模型和强度、用了备选时标出；mock 同步 | C-40 | mock 下三位都能改并保存；确认页标出用了备选的人和强度改用节点默认的人；模型没有档位时拉条不出现，显示「这个模型没有强度档位」，不能看起来设置成功 |
+| **C-41** | Claude | 界面：推荐配置写入用户定的默认值（Codex 节点默认是 `low`，所以 `medium` / `high` 要明确保存）；秘书资料页的模型选择和强度拉条（档位由节点报告，弹性动画）、确认页逐人显示模型和强度、用了备选时标出；mock 同步 | C-40 | mock 下三位都能改并保存；确认页标出用了备选的人和强度改用节点默认的人；模型没有档位时拉条不出现，显示「这个模型没有强度档位」，不能看起来设置成功 |
+| **X-33** | Codex | e2e 适配和补测：`harness` 的批次类型复用 `ApprovalBatch["items"]`，`expected` 用 `toRunModel` 从真实批次逐项构造（不一律填 null）；FakeNode 可选上报 `profileModels`，记录实际 StartRun 的 model | D-35、C-41 | 老节点：批次和 expected 都是 null，StartRun 省略 model；可选模型：讨论发言 `medium`、汇总 `high`，首选不可用时节点收到备选 id，传输里没有 `usedFallback` / `effortSource`；只改 expected 的模型 / 强度 / null 互换各自整批 `stale_snapshot`，没有新 Run、假节点没有新 StartRun（内容 hash 不变） |
 
 ## 1B-1 外观
 
