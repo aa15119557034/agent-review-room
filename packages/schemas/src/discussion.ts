@@ -12,7 +12,7 @@ import {
 } from "./common";
 import { AgentName, MessageId, ProjectId } from "./entities";
 import { ApprovalState, PlanState, RoundState, TurnOutcome } from "./state-machines";
-import { ProfileId } from "./remote-protocol";
+import { EffortId, ModelId, ProfileId, RunModel } from "./remote-protocol";
 import { ImageRef } from "./appearance";
 
 /**
@@ -34,6 +34,53 @@ export type NodeId = z.infer<typeof NodeId>;
 /** 头像颜色等用到的 #rrggbb */
 export const HexColor = z.string().regex(/^#[0-9a-f]{6}$/);
 
+/** 在什么场合发言。每个场合各有默认的思考强度（C-40） */
+export const RunOccasion = z.enum(["chat", "discussion", "summary"]);
+export type RunOccasion = z.infer<typeof RunOccasion>;
+
+/**
+ * 参与者的模型设置（C-40）。保存时只校验格式，不连节点；是否可用在起草时按节点当时的上报判断。
+ *
+ * 起草（round.draft / round.redraft / round.summarize / 补充 / 重试 / 恢复 等所有生成批次的命令）时，
+ * main 对每个收件人按下面的顺序定下 BatchItem.model，定下之后这一批就不再变：
+ * 1. 节点没报 profileModels，或 primaryModel 为 null → model = null（用 profile 自带的模型）
+ * 2. primaryModel 在节点为这个 profile 上报的 models 里 → 用首选
+ * 3. 否则 fallbackModel 在里面 → 用备选，usedFallback = true
+ * 4. 都不在 → agent_unavailable（message 里写明是谁、哪个模型不可用），整批不生成
+ * 强度：用这个场合的 effort；它不在所选模型的 efforts 里（包括设为 null）→ 用节点报的 defaultEffort。
+ * 盖章之后不再换模型：运行时节点拒绝（unknown_model）就按 remote_rejected 失败，额度用尽照旧走缺席 / 替补。
+ */
+export const AgentModelSettings = z.object({
+  /** null = 不选，用节点 profile 自带的模型 */
+  primaryModel: ModelId.nullable(),
+  /** 首选不可用时的备选；null = 没有备选。不能和首选相同 */
+  fallbackModel: ModelId.nullable(),
+  /** 各场合的思考强度；null = 用节点报的 defaultEffort */
+  effort: z.object({
+    chat: EffortId.nullable(),
+    discussion: EffortId.nullable(),
+    summary: EffortId.nullable(),
+  }),
+}).refine(
+  (s) => s.fallbackModel === null || (s.primaryModel !== null && s.fallbackModel !== s.primaryModel),
+  "备选模型要和首选不同，且必须先设了首选",
+);
+export type AgentModelSettings = z.infer<typeof AgentModelSettings>;
+
+/** 没有设置过的参与者：全部跟随节点 */
+export const DEFAULT_AGENT_MODEL_SETTINGS: AgentModelSettings = {
+  primaryModel: null,
+  fallbackModel: null,
+  effort: { chat: null, discussion: null, summary: null },
+};
+
+/** 批次里定下的模型。确认页逐人显示，盖章时要原样回传（见 batch.approve） */
+export const BatchModel = RunModel.extend({
+  /** 首选不可用、改用了备选。确认页要标出来 */
+  usedFallback: z.boolean(),
+}).strict();
+export type BatchModel = z.infer<typeof BatchModel>;
+
 export const AgentProfile = z.object({
   /** 也是消息里的 sourceAgent，例如 "claude"、"deepseek"、"codex" */
   id: AgentName,
@@ -54,6 +101,8 @@ export const AgentProfile = z.object({
   pausedByUser: z.boolean(),
   /** 额度用尽时，讨论里由谁替补；null = 不找替补，记为缺席。替补不能是本议题的汇总者 */
   substitute: AgentName.nullable(),
+  /** C-40：首选 / 备选模型和各场合的思考强度 */
+  modelSettings: AgentModelSettings,
 });
 export type AgentProfile = z.infer<typeof AgentProfile>;
 
@@ -138,6 +187,11 @@ export const BatchItem = z.object({
   /** 这份内容和同批其他人不一样（例如只给他的补充）。界面要标「他收到了额外信息」 */
   differsFromOthers: z.boolean(),
   tokenEstimate: z.number().int().nonnegative(),
+  /**
+   * C-40：起草时定下的模型和强度（规则见 AgentModelSettings）；null = 用 profile 自带的模型。
+   * 1A 时期的旧批次读出来是 null。Run 启动时原样放进 StartRun.model。
+   */
+  model: BatchModel.nullable(),
 });
 export type BatchItem = z.infer<typeof BatchItem>;
 

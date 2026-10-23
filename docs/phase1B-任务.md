@@ -22,6 +22,17 @@
 - [ ] 1B-2 开始前：在主控机上给聊天用的 Codex 登录一次（新的 `CODEX_HOME`，Claude 带着做）
 - [ ] 1B-2 开始前：告诉 Claude 每位的「记忆文件夹」放在哪台电脑的哪里（比如汐的 V0.4.1 记忆）
 
+## 1B-0 模型选择（用户 2026-10-23 定为最优先，排在 C-34 之前）
+
+用户定的默认值：汐固定 DeepSeek V4.1 Flash 1017（`deepseek-flash`），强度「高」；C酱 首选 Opus 5.5、备选 Sonnet 5.5；林离 首选 GPT-6.1 Sol、备选 GPT-6 Astra。C酱和林离：聊天、讨论室发言用「中等」，汇总用「高」。备选只在起草时换（确认页写明），盖章后不再换。
+
+| ID | 负责 | 内容 | 依赖 | 验收 |
+|---|---|---|---|---|
+| **C-40** | Claude | 契约：节点 health 按 profile 报可用模型和强度档位（`profileModels`）；`StartRun.model`；`unknown_model`；参与者的 `modelSettings`（首选 / 备选 / 三个场合的强度）；`BatchItem.model`；`batch.approve` 的 `expected` 带 model | — | 用户批准 |
+| **S-22** | Claude | 节点：用 `run try` 实测三家 CLI 的准确模型名和档位名，写进节点配置并在 health 里上报；把 `StartRun.model` 翻译成 CLI 参数（不在列表里就拒绝，不就近取档）；DeepSeek 默认改成 `deepseek-flash` | C-40 | 每个 profile 用每个模型各跑一次真实请求；传列表外的模型 / 档位被拒（`unknown_model`）；CLI 参数只来自节点配置里的映射，不直接拼请求里的字符串 |
+| **D-35** | DeepSeek | 迁移 + 保存 `modelSettings`；起草时按 C-40 的规则定下 `BatchItem.model`；盖章时比对 `expected.model`；Run 启动时带上 `StartRun.model`；老节点（不报 `profileModels`）不带 | C-40 | 首选可用 / 只有备选可用 / 都不可用（`agent_unavailable`）/ 老节点 四种情况各有单测；`expected.model` 不一致整批 `stale_snapshot`；1A 真库副本迁移后旧批次 `model` 读出来是 null |
+| **C-41** | Claude | 界面：秘书资料页的模型选择和强度拉条（档位由节点报告，弹性动画）、确认页逐人显示模型和强度、用了备选时标出；mock 同步 | C-40 | mock 下三位都能改并保存；用了备选的人在确认页有标记 |
+
 ## 1B-1 外观
 
 | ID | 负责 | 内容 | 依赖 | 验收 |

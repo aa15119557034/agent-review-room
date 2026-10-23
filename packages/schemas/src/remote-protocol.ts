@@ -24,6 +24,61 @@ export const REMOTE_PROTOCOL_VERSION = 1 as const;
 
 export const ProfileId = z.string().regex(/^[a-z0-9][a-z0-9-]{0,63}$/);
 
+// ---------------------------------------------------------------- 模型选择（C-40，阶段 1B）
+
+/**
+ * 模型的 API 名，例如 "claude-opus-5-5"、"deepseek-flash"。节点把它翻译成 CLI 参数，所以只允许
+ * 字母、数字、点、下划线、连字符，不能以 "-" 开头（防止被当成命令行选项）。
+ */
+export const ModelId = z.string().regex(/^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$/);
+export type ModelId = z.infer<typeof ModelId>;
+
+/** 思考强度档位的 id，例如 "low"、"medium"、"high"、"xhigh"、"max"、"off"。准确名字由节点实测后上报 */
+export const EffortId = z.string().regex(/^[a-z0-9][a-z0-9_-]{0,31}$/);
+export type EffortId = z.infer<typeof EffortId>;
+
+export const EffortLevel = z.object({
+  id: EffortId,
+  /** 界面拉条上的字，例如「中等」 */
+  displayName: z.string().min(1).max(20),
+  /** 给人看的提示，例如「约 4 倍用量」；没有就是 null */
+  note: z.string().max(80).nullable(),
+});
+export type EffortLevel = z.infer<typeof EffortLevel>;
+
+export const ModelOption = z.object({
+  id: ModelId,
+  displayName: z.string().min(1).max(40),
+  /**
+   * 这个模型能用的思考强度，**从弱到强排好序**，界面拉条按这个顺序画。
+   * 空数组 = 这个模型没有强度可调，StartRun 里 effort 只能是 null。
+   */
+  efforts: z.array(EffortLevel).max(8),
+  /** 节点推荐的档位，必须在 efforts 里；efforts 为空时为 null */
+  defaultEffort: EffortId.nullable(),
+}).refine(
+  (m) => (m.efforts.length === 0 ? m.defaultEffort === null : m.efforts.some((e) => e.id === m.defaultEffort)),
+  "defaultEffort 必须是 efforts 里的一档；没有档位时为 null",
+).refine((m) => new Set(m.efforts.map((e) => e.id)).size === m.efforts.length, "档位 id 不能重复");
+export type ModelOption = z.infer<typeof ModelOption>;
+
+/** 一个 profile 能用哪些模型。models 为空 = 这个 profile 的模型写死在节点配置里，不接受选择 */
+export const ProfileModels = z.object({
+  profileId: ProfileId,
+  models: z.array(ModelOption).max(16),
+}).refine((p) => new Set(p.models.map((m) => m.id)).size === p.models.length, "模型 id 不能重复");
+export type ProfileModels = z.infer<typeof ProfileModels>;
+
+/** StartRun 里指定的模型和强度 */
+export const RunModel = z
+  .object({
+    model: ModelId,
+    /** 模型没有档位时为 null */
+    effort: EffortId.nullable(),
+  })
+  .strict();
+export type RunModel = z.infer<typeof RunModel>;
+
 export const RunLimits = z
   .object({
     idleTimeoutMs: z.number().int().min(1_000).max(3_600_000),
@@ -47,6 +102,13 @@ export const StartRunRequest = z
       })
       .strict(),
     limits: RunLimits,
+    /**
+     * C-40：用哪个模型、什么强度。不传 = 用 profile 配置里自带的模型（Phase 0 / 1A 的行为）。
+     * 节点先核对 model 在这个 profile 上报的 models 里、effort 在这个模型的 efforts 里，
+     * 不在就拒绝（unknown_model），不换成别的、不就近取档。节点自己把它翻译成 CLI 参数，请求里仍然没有命令。
+     * profile 的 models 为空（模型写死）时传了 model 也拒绝（unknown_model）。
+     */
+    model: RunModel.optional(),
   })
   .strict();
 
@@ -112,6 +174,15 @@ export const NodeHealth = z.object({
   maxConcurrentRuns: z.number().int().positive(),
   leaseMs: z.number().int().positive(),
   heartbeatMs: z.number().int().positive(),
+  /**
+   * C-40：每个 profile 能用的模型和强度。只列 profiles 里有的 profile，每个最多出现一次。
+   * 老节点不报这个字段 = 不支持选模型，主控端不在 StartRun 里带 model。
+   */
+  profileModels: z
+    .array(ProfileModels)
+    .max(64)
+    .refine((list) => new Set(list.map((p) => p.profileId)).size === list.length, "同一个 profile 只能出现一次")
+    .optional(),
 });
 
 export const RemoteRunSummary = z.object({
@@ -127,6 +198,7 @@ export const RemoteErrorCode = z.enum([
   "bad_request",
   "not_found",
   "unknown_profile",
+  "unknown_model", // C-40：模型或强度不在这个 profile 上报的列表里
   "hash_mismatch",
   "commit_mismatch",
   "run_id_conflict",
