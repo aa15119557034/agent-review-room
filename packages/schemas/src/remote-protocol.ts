@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { CommitSha, IsoTimestamp, RunId, Sha256Hex, SnapshotId } from "./common";
 import { PermissionDecision, PermissionRequest } from "./permission";
+import { StartRunAttachments, VisionSupport } from "./attachments";
 
 /**
  * Orchestrator（控制面） ⇄ AgentServer（执行面）协议 v1。
@@ -56,6 +57,11 @@ export const ModelOption = z.object({
   efforts: z.array(EffortLevel).max(8),
   /** 节点推荐的档位，必须在 efforts 里；efforts 为空时为 null */
   defaultEffort: EffortId.nullable(),
+  /**
+   * C-42a：这个模型能不能看图，节点用带暗号的测试图实测（S-23）。不报 = unknown。
+   * 只有 yes 才发图；no / unknown 收到「[图片：名字]」占位。不会为了看图自动换成备选模型
+   */
+  vision: VisionSupport.optional(),
 }).refine(
   (m) => (m.efforts.length === 0 ? m.defaultEffort === null : m.efforts.some((e) => e.id === m.defaultEffort)),
   "defaultEffort 必须是 efforts 里的一档；没有档位时为 null",
@@ -171,6 +177,14 @@ export const StartRunRequest = z
      * 幂等：同一个 runId 重复提交时 chat 也要一致，否则 run_id_conflict。
      */
     chat: z.object({ memory: MemorySlot.nullable() }).strict().optional(),
+    /**
+     * C-42a：随附的图片，只发给 health.capabilities.attachments 为 true 的节点，且所选模型 vision 为 yes。
+     * 节点必须逐张检查：sha256(解码后的字节) === sha256、字节数 === bytes、
+     * snapshot.content 里含有 attachmentManifestLine(这一张)；任何一项不对 → hash_mismatch，整个请求拒绝。
+     * 幂等（同一个 runId 重复提交）时附件的 sha256 列表也要一致，否则 run_id_conflict。
+     * 节点按自己配置的映射把图交给 CLI，不往 content 里加任何文字；用完删临时文件。
+     */
+    attachments: StartRunAttachments.optional(),
   })
   .strict()
   .refine(
@@ -265,6 +279,11 @@ export const NodeHealth = z.object({
    * 老节点不报 = 都没有，开了 memorySource.nodeFolder 的人界面显示「此记忆来源不可用」，Snapshot 仍留槽位、节点填「不可用」
    */
   memoryProfiles: z.array(ProfileId).max(64).optional(),
+  /**
+   * C-42a：节点支持的可选能力。不报 = 都不支持（老节点）。
+   * attachments：能收 StartRun.attachments，且请求体上限不小于 NODE_MIN_BODY_BYTES_WITH_ATTACHMENTS
+   */
+  capabilities: z.object({ attachments: z.boolean().optional() }).optional(),
 }).refine(
   (h) => (h.memoryProfiles ?? []).every((p) => h.profiles.includes(p)),
   "memoryProfiles 里的 profile 必须都在 profiles 里",

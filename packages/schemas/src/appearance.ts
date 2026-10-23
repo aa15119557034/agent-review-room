@@ -19,6 +19,11 @@ import { prefixedId } from "./common";
  * - 注册为只读、不可导航的 scheme（不能当页面打开，不能写）
  * - 只允许 png / jpeg / webp：**不允许 SVG**，因为 SVG 里可以带脚本和外链，作为图片显示也有风险；以后要加 SVG 先改契约
  *
+ * C-42a（ADR-004）起，同一套引用规则也用于聊天图片、议题材料、生成的图和表情：
+ * - 每个 ImageRef 是一条「引用记录」，有自己的用途；字节按处理后的 sha256 去重存一份，多个 ImageRef 可以共用同一份字节
+ *   （例如同一张图既是头像又发在聊天里：两个 ImageRef、两种用途、一份字节）
+ * - 用途校验看 ImageRef 自己的用途；清理时删掉没人用的 ImageRef，字节在没有任何 ImageRef 指向时才删
+ *
  * 外观设置存在 main 的 settings.json（和节点设置放在一起），不进数据库；没设置过时 appearance.get 返回 DEFAULT_APPEARANCE。
  * 1A 的数据库里 avatar_ref 是任意字符串（实际都是 null）：main 读到不是 ImageRef 格式的值一律当 null，迁移 v4 顺手清成 null。
  */
@@ -34,13 +39,28 @@ export const IMAGE_URL_SCHEME = "room-image";
 export const ImageMime = z.enum(["image/png", "image/jpeg", "image/webp"]);
 export type ImageMime = z.infer<typeof ImageMime>;
 
-/** 图片用途决定大小上限 */
-export const ImagePurpose = z.enum(["avatar", "background"]);
+/**
+ * 图片用途决定大小上限和能用在哪里。
+ * chat / material / generated / sticker 是 C-42a 加的：聊天图片、议题材料、画出来的图、表情库
+ */
+export const ImagePurpose = z.enum(["avatar", "background", "chat", "material", "generated", "sticker"]);
 export type ImagePurpose = z.infer<typeof ImagePurpose>;
 
+/** 能通过 image.pick 选的用途；generated 只能由画图模块产生 */
+export const PickableImagePurpose = ImagePurpose.exclude(["generated"]);
+export type PickableImagePurpose = z.infer<typeof PickableImagePurpose>;
+
+/**
+ * 存下来的图片最大字节数。chat / material 是**处理后**的大小（处理前的上限见 ATTACHMENT_LIMITS.inputMaxBytes）；
+ * generated 是画图模块收回来的原图上限
+ */
 export const IMAGE_MAX_BYTES: Readonly<Record<ImagePurpose, number>> = {
   avatar: 2 * 1024 * 1024,
   background: 8 * 1024 * 1024,
+  chat: 2 * 1024 * 1024,
+  material: 2 * 1024 * 1024,
+  generated: 10 * 1024 * 1024,
+  sticker: 1024 * 1024,
 };
 
 /** 聊天背景：内置的几种，或者自己的图片 */

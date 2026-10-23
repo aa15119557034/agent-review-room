@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AppearanceSettings, ChatBackground, ImagePurpose, ImageRef } from "./appearance";
+import { AppearanceSettings, ChatBackground, ImageRef, PickableImagePurpose } from "./appearance";
 import {
   ApprovalId,
   BatchId,
@@ -364,10 +364,11 @@ export const COMMANDS = {
   /**
    * 打开系统的选图对话框（由 main 打开，renderer 不传路径）。
    * 取消返回 null；类型不对（按文件头判断）或超过 IMAGE_MAX_BYTES[purpose]：validation_failed。
+   * C-42a：chat / material 先按 ATTACHMENT_LIMITS 处理（去元数据、转正、缩放），处理后再判断大小；动图和 HEIC 拒绝。
    * 选中的图先存下来、还没被引用；之后 agent.update / appearance.update 用上它才算数，没用上的由 main 清理
    */
   "image.pick": def(
-    z.object({ type: z.literal("image.pick"), purpose: ImagePurpose }),
+    z.object({ type: z.literal("image.pick"), purpose: PickableImagePurpose }),
     z.object({ ref: ImageRef }).nullable(),
     "admin",
   ),
@@ -445,6 +446,10 @@ export const COMMANDS = {
    * 不要整体 deepEqual）；两边都是 null 算一致，一边 null 一边不是算不一致。不一致同样整批 stale_snapshot，
    * message 里写明是哪个人、是模型还是强度对不上（不要只说「内容已变化」）。
    * 盖章时 main 不重新挑模型；人批准的是「这份内容、用这个模型和强度、发给这个人」。
+   *
+   * C-42a：带图的项，main 在同一事务前重新读每个图片文件、算 sha256，和 Snapshot.attachments 逐张比对；
+   * 任何一张缺失或对不上 → 整批 stale_snapshot（message 写明是谁的第几张图），一个 Run 都不建。
+   * 起跑前（发 StartRun 之前）再比一次，对不上这个 Run 记失败，不发出去。
    */
   "batch.approve": def(
     z.object({
