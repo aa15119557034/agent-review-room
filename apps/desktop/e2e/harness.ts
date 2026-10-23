@@ -141,6 +141,7 @@ export async function makeE2E(options: {
         baseUrl: target.baseUrl,
         profileId: target.profileId,
         token: target.token,
+        ...(target.model === undefined ? {} : { model: target.model }),
         heartbeatTimeoutMs: 2_000,
         reconnectGraceMs: 6_000,
         requestTimeoutMs: 3_000,
