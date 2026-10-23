@@ -54,12 +54,13 @@
 | **S-23** | Claude | 节点：实测三家看图并上报 `vision`；attachments 交给 CLI；`codex-image` profile 实测 | C-42 |
 | **D-36** | DeepSeek | 图片处理（去 EXIF、缩放、去重）；StartRun 带图；讨论室材料带图算进指纹 | C-42 |
 | **D-37** | DeepSeek | 语音合成：spike（CosyVoice / IndexTTS2 / GPT-SoVITS 盲听）→ 独立进程、按 hash 缓存 | C-42 |
-| **D-38** | DeepSeek | 画图：ComfyUI（固定工作流、只连本机）+ `codex-image`；Codex 额度任一窗口 ≥85% 或读不到就走本机 | C-42、S-23 |
+| **S-24** | Claude | 节点：读 Codex 额度（`account/rateLimits/read`）并上报；S-21 的 Codex 部分提前，类型在 C-42 定、C-36 复用 | C-42 |
+| **D-38** | DeepSeek | 画图：ComfyUI（固定工作流、只连本机）+ `codex-image`；Codex 额度任一窗口 ≥85% 或读不到就走本机，Codex 一次一张 | C-42、S-23、S-24 |
 | **D-39** | DeepSeek | 沉浸模式：媒体意图、自动画图 / 语音、硬上限、退回成卡片、「停」 | C-34、D-37、D-38 |
 | **C-43** | Claude | 界面：发图看图、图表、画图请求卡、播放、「用语音回」、声音设置、沉浸模式设置 | C-42 |
 | **X-34** | Codex | Prompt：图片当不可信材料、`room-chart` 和媒体意图说明；e2e 讨论室带图一轮 | C-42、D-36 |
 
-S-21（读额度）在 1B-3。它做好之前读不到 Codex 额度，按规则一律走本机画图，所以 D-38 不用等它。
+订阅优先画图要读得到 Codex 额度，所以 S-21 的 Codex 部分提前成 S-24，D-38 依赖它（汐评审意见）；S-21 剩下的 Claude、DeepSeek 额度仍在 1B-3。
 
 ## 1B-2 聊天空间
 
@@ -81,7 +82,7 @@ S-21（读额度）在 1B-3。它做好之前读不到 Codex 额度，按规则�
 | ID | 负责 | 内容 | 依赖 | 验收 |
 |---|---|---|---|---|
 | **C-36** | Claude | 契约：`round.draft` 的替补参数、额度状态（按 profile 报告，读不到 = 未知） | — | 用户批准 |
-| **S-21** | Claude | 节点实测并上报额度：Claude `rate_limits`、Codex `account/rateLimits/read`、DeepSeek 余额 | C-36 | 读得到的显示数字，读不到的显示「未知」，不猜 |
+| **S-21** | Claude | 节点实测并上报额度：Claude `rate_limits`、DeepSeek 余额（Codex 部分已提前到 1B-M 的 S-24） | C-36 | 读得到的显示数字，读不到的显示「未知」，不猜 |
 | **D-32** | DeepSeek | 额度汇总（不猜，只聚合 C-36 上报的）、自动缺席、替补派发；替补链防环、替补也不可用时记缺席；同一人同一轮不重复记缺席 | C-36 | 额度用尽 → 自动缺席，汇总表正确显示 |
 | **C-37** | Claude | Agent 控制台（每位一页：状态、额度、正在答什么、历史、暂停 / 恢复、替补设置） | C-36 | mock 下所有状态都能显示 |
 | **X-32** | Codex | 把 0-B #10 从「写库模拟」改成走替补命令 | D-32 | #10 完整覆盖 |
