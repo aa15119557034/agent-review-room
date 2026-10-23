@@ -20,7 +20,8 @@
             {"id": "medium", "displayName": "中等", "note": null},
             {"id": "high", "displayName": "高", "note": null},
             {"id": "xhigh", "displayName": "超高", "note": null},
-            {"id": "max", "displayName": "最高", "note": null}
+            {"id": "max", "displayName": "最高", "note": null},
+            {"id": "ultra", "displayName": "极限", "note": null}
           ],
           "defaultEffort": "low"
         },
@@ -32,7 +33,8 @@
             {"id": "medium", "displayName": "中等", "note": null},
             {"id": "high", "displayName": "高", "note": null},
             {"id": "xhigh", "displayName": "超高", "note": null},
-            {"id": "max", "displayName": "最高", "note": null}
+            {"id": "max", "displayName": "最高", "note": null},
+            {"id": "ultra", "displayName": "极限", "note": null}
           ],
           "defaultEffort": "low"
         }

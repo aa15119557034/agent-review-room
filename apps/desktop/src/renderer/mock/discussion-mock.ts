@@ -59,7 +59,7 @@ export interface DiscussionMockOptions {
 
 const level = (id: string, displayName: string, note: string | null = null) => ({ id, displayName, note });
 const CLAUDE_LEVELS = [level("low", "低"), level("medium", "中等", "推荐"), level("high", "高"), level("xhigh", "超高"), level("max", "最高", "约 4 倍用量")];
-const CODEX_LEVELS = [level("low", "低"), level("medium", "中等"), level("high", "高"), level("xhigh", "超高"), level("max", "最高")];
+const CODEX_LEVELS = [level("low", "低"), level("medium", "中等"), level("high", "高"), level("xhigh", "超高"), level("max", "最高"), level("ultra", "极限")];
 
 /** mock 节点上报的模型（C-40），名字和档位照 S-22 实测（节点示例配置里是同一份） */
 export const MOCK_PROFILE_MODELS: ProfileModels[] = [

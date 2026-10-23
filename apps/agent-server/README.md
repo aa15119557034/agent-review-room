@@ -110,7 +110,7 @@ pnpm --filter @room/agent-server run try -- deepseek-discuss "用一句话介绍
 | profile | `modelArgs` | `effortArgs` | 清单（2026-10-23 实测） |
 |---|---|---|---|
 | `claude-review` | `--model {model}` | `--effort {effort}` | `claude-opus-5-5`、`claude-sonnet-5-5`；low / medium / high / xhigh / max |
-| `codex-discuss` | `-m {model}` | `-c model_reasoning_effort={effort}` | `gpt-6.1-sol`、`gpt-6-astra`；low / medium / high / xhigh / max |
+| `codex-discuss` | `-m {model}` | `-c model_reasoning_effort={effort}` | `gpt-6.1-sol`、`gpt-6-astra`；low / medium / high / xhigh / max / ultra |
 | `deepseek-discuss` | `--model {model}` | `--effort {effort}`（脚本发成 `reasoning_effort`） | `deepseek-flash`；low / high / max |
 
 - 参数默认加在 `args` 最后；`args` 里写了 `"{model-args}"` 就插在那个位置（Codex 要插在最后的 `-` 前面）

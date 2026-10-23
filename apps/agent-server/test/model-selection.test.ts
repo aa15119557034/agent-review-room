@@ -126,7 +126,9 @@ describe("example configs carry the measured catalogs and the user's defaults", 
 
   it("levels the CLIs rejected or don't have are not offered", () => {
     assert.notEqual(checkModel(local.profiles["deepseek-discuss"]!, { model: "deepseek-flash", effort: "off" }), null);
-    assert.notEqual(checkModel(local.profiles["codex-discuss"]!, { model: "gpt-6.1-sol", effort: "ultra" }), null);
+    assert.notEqual(checkModel(local.profiles["codex-discuss"]!, { model: "gpt-6.1-sol", effort: "none" }), null);
+    // ultra：CLI 接受（启动信息里是 reasoning effort: ultra），Codex 应用里 GPT-6 Astra 也有这一档
+    assert.equal(checkModel(local.profiles["codex-discuss"]!, { model: "gpt-6-astra", effort: "ultra" }), null);
     for (const cfg of [reviewer, local]) {
       for (const p of Object.values(cfg.profiles)) assert.deepEqual(modelConfigProblems(p), []);
       // 写死的 --model 和清单不能同时存在
