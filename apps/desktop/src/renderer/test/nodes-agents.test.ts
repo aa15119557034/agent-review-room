@@ -24,7 +24,11 @@ describe("recommended configuration", () => {
   });
 
   it("role notes describe the job, and stay short", () => {
-    for (const a of RECOMMENDED_AGENTS) assert.ok((a.roleNote ?? "").length > 0 && (a.roleNote ?? "").length <= 40, a.id);
+    for (const a of RECOMMENDED_AGENTS) {
+      const note = a.roleNote ?? "";
+      assert.equal(note.split("\n").length, 3, a.id + " 三句");
+      assert.ok(note.length <= 400 && AgentProfile.shape.roleNote.safeParse(note).success, a.id);
+    }
   });
 });
 

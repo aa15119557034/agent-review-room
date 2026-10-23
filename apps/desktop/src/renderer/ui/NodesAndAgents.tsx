@@ -182,8 +182,8 @@ function AgentsSection({ nodes }: { nodes: NodeInfo[] }) {
     <section className="settings-form" aria-labelledby="agents-title">
       <h2 className="settings-section" id="agents-title">参与者</h2>
       <p className="step-hint">
-        每个参与者在哪个节点、用哪个 profile。推荐配置：C酱 在「你的电脑」（claude-review，负责汇总），
-        DeepSeek 和 Codex 在「主控机」（deepseek-discuss / codex-discuss）。角色设定只写分工，可以随时改。
+        每个参与者在哪个节点、用哪个 profile。推荐配置：三位都是你的秘书。C酱（首席秘书，负责汇总）在「你的电脑」（claude-review），
+        汐（DeepSeek）和林离（Codex）在「主控机」（deepseek-discuss / codex-discuss）。角色设定可以随时改。
       </p>
       <div className="settings-actions">
         <button type="button" className="button-outline" disabled={applying} onClick={applyPreset}>
