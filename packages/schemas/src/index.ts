@@ -7,6 +7,8 @@ export * from "./appearance";
 export * from "./attachments";
 export * from "./media";
 export * from "./speech";
+export * from "./chart";
+export * from "./immersive";
 export * from "./discussion";
 export * from "./chat";
 export * from "./remote-protocol";

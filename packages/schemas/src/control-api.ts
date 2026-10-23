@@ -68,6 +68,7 @@ import {
   VoiceRecording,
 } from "./chat";
 import { DrawRequest, DrawRoutePreview, MediaJob, MediaJobId, MediaScope, MediaSource } from "./media";
+import { ImmersiveSettings, ImmersiveUsage } from "./immersive";
 import { SpeechClip, VoiceOption, VoiceProfile } from "./speech";
 
 /**
@@ -803,6 +804,16 @@ export const COMMANDS = {
     ]),
     "author",
   ),
+
+  /**
+   * C-42d：改一个聊天会话的沉浸模式设置（整份替换）。会话 id 的格式由 C-34 定。
+   * 从开到关时，这个会话所有 queued / running 的媒体任务取消（cancelReason = immersive_off）
+   */
+  "immersive.update": def(
+    z.object({ type: z.literal("immersive.update"), conversationId: ConversationId, settings: ImmersiveSettings }),
+    ImmersiveSettings,
+    "author",
+  ),
 } as const;
 
 /** 按键排序的 JSON（数组保持顺序），用来给发送意图判等 */
@@ -998,6 +1009,13 @@ export const QUERIES = {
 
   /** C-42c：能选的声音（来自本机语音合成引擎）；引擎没装好时为空数组 */
   "voices.list": def(z.object({ type: z.literal("voices.list") }), z.array(VoiceOption).max(200), "read"),
+
+  /** C-42d：会话的沉浸模式设置和最近 60 分钟的用量；没设置过返回 DEFAULT_IMMERSIVE_SETTINGS */
+  "immersive.get": def(
+    z.object({ type: z.literal("immersive.get"), conversationId: ConversationId }),
+    z.object({ settings: ImmersiveSettings, usage: ImmersiveUsage }),
+    "read",
+  ),
 
   "media.get": def(z.object({ type: z.literal("media.get"), jobId: MediaJobId }), MediaJob, "read"),
 
