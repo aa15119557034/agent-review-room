@@ -80,7 +80,7 @@ describe("0-B 一轮的状态与记录（X-21）", () => {
     await approveOf(h, { data: { batch } });
     await waitFor(() => roundState(h, roundId) === "RUNNING", "running");
     assert.equal(roundState(h, roundId), "RUNNING");
-    assert.equal(h.db.prepare("SELECT count(*) AS n FROM runs").get<{ n: number }>().n, 2);
+    assert.equal((h.db.prepare("SELECT count(*) AS n FROM runs").get() as { n: number }).n, 2);
 
     const again = await h.dispatcher.handleCommand({ type: "round.redraft", roundId });
     assert.equal(failure(again).error, "invalid_state", "盖章后内容不能改");
@@ -344,7 +344,7 @@ describe("0-B 一轮的状态与记录（X-21）", () => {
     assert.equal(summary.answered, 1);
     assert.equal(summary.expected, 1);
     assert.ok(summary.plan_version_id);
-    assert.equal(h.db.prepare("SELECT count(*) AS n FROM messages WHERE kind = 'summary'").get<{ n: number }>().n, 1);
+    assert.equal((h.db.prepare("SELECT count(*) AS n FROM messages WHERE kind = 'summary'").get() as { n: number }).n, 1);
 
     // 汇总失败：轮退回 AWAITING_SUMMARY，不写 summary / RoundSummary
     const second = await openRound(h, ["deepseek"], { task: "再来一轮" });

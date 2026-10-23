@@ -6,10 +6,10 @@ import { join } from "node:path";
 import { after } from "node:test";
 import { openDatabase, type RunRow, WriteQueue } from "@room/db";
 import { HttpRemoteAgentAdapter } from "@room/remote-client";
-import { ControlEvent } from "@room/schemas";
+import { ControlEvent, toRunModel, type ApprovalBatch, type CommandRequest, type NodeHealth } from "@room/schemas";
 import { DiscussionService } from "../src/main/discussion";
 import { createDispatcher } from "../src/main/ipc";
-import { resolveRunTarget } from "../src/main/nodes";
+import { NodeService, resolveRunTarget } from "../src/main/nodes";
 import { RunOrchestrator } from "../src/main/orchestrator";
 import { Repository } from "../src/main/repository";
 import { SettingsStore, type SafeStorageLike } from "../src/main/settings";
@@ -73,6 +73,8 @@ export const ANSWER_JSON = JSON.stringify({
 export async function makeE2E(options: {
   userPc?: Record<string, NodeBehavior | readonly NodeBehavior[]>;
   controller?: Record<string, NodeBehavior | readonly NodeBehavior[]>;
+  userPcModels?: NodeHealth["profileModels"];
+  controllerModels?: NodeHealth["profileModels"];
 } = {}): Promise<E2E> {
   const dir = mkdtempSync(join(tmpdir(), "room-e2e-"));
   dirs.push(dir);
@@ -85,6 +87,7 @@ export async function makeE2E(options: {
     profiles: ["claude-review"],
     token: "u".repeat(40),
     behavior: options.userPc,
+    profileModels: options.userPcModels,
     heartbeatMs: 80,
     leaseMs: 1_000,
   });
@@ -93,6 +96,7 @@ export async function makeE2E(options: {
     profiles: ["deepseek-discuss", "codex-discuss"],
     token: "c".repeat(40),
     behavior: options.controller,
+    profileModels: options.controllerModels,
     heartbeatMs: 80,
     leaseMs: 1_000,
   });
@@ -137,6 +141,7 @@ export async function makeE2E(options: {
         baseUrl: target.baseUrl,
         profileId: target.profileId,
         token: target.token,
+        ...(target.model === undefined ? {} : { model: target.model }),
         heartbeatTimeoutMs: 2_000,
         reconnectGraceMs: 6_000,
         requestTimeoutMs: 3_000,
@@ -154,6 +159,7 @@ export async function makeE2E(options: {
     settings,
     orchestrator,
     discussion,
+    nodes: new NodeService({ repo, settings }),
     appVersion: "0.0.0-e2e",
     recoveredRuns: 0,
     emit,
@@ -211,15 +217,23 @@ export interface BatchLike {
   id: string;
   kind: string;
   state: string;
-  items: { approvalId: string; contentHash: string; recipient: string; differsFromOthers: boolean }[];
+  items: ApprovalBatch["items"];
+}
+
+export function approveRequest(batch: BatchLike): CommandRequest<"batch.approve"> {
+  return {
+    type: "batch.approve",
+    batchId: batch.id,
+    expected: batch.items.map((item) => ({
+      approvalId: item.approvalId,
+      contentHash: item.contentHash,
+      model: item.model === null ? null : toRunModel(item.model),
+    })),
+  };
 }
 
 export async function approve(h: E2E, batch: BatchLike) {
-  return h.dispatcher.handleCommand({
-    type: "batch.approve",
-    batchId: batch.id,
-    expected: batch.items.map((item) => ({ approvalId: item.approvalId, contentHash: item.contentHash })),
-  });
+  return h.dispatcher.handleCommand(approveRequest(batch));
 }
 
 export async function approveOf(h: E2E, result: unknown): Promise<BatchLike> {

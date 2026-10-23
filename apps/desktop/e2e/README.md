@@ -1,4 +1,4 @@
-# 0-B 端到端测试（X-21）
+# 讨论室端到端测试（X-21 / X-33）
 
 ADR-002 附录 A 的 13 种情况，一条测试对应一行，名字按行号：
 
@@ -13,6 +13,32 @@ ADR-002 附录 A 的 13 种情况，一条测试对应一行，名字按行号�
 
 ```
 pnpm --filter @room/desktop test:e2e
+```
+
+从仓库根目录单独检查 e2e 类型：
+
+```
+pnpm exec tsc -p apps/desktop/e2e/tsconfig.json
+```
+
+## X-33 模型选择
+
+依赖 C-40 契约、D-35 真后端和 C-41 同步后的工作树。只有 C-40 时，集成用例会在参与者设置或批次返回值的契约校验处失败。
+
+`model-selection.test.ts` 继续走真的 dispatcher / DB / Orchestrator / HTTP adapter：
+
+| 用例 | 验证 |
+|---|---|
+| #1 老节点 | 即使保存了模型设置，未报告 `profileModels` 时批次和 expected 仍是 null，HTTP StartRun 省略 model |
+| #2 场合强度 | 同一 Codex profile 讨论用 medium、汇总用 high；节点默认特意设成 low；实际请求只有 model / effort |
+| #3 备选 | health 只提供备选，批次标记 usedFallback，HTTP 请求用备选 id |
+| #4～#7 指纹不匹配 | 只改最后一个收件人的 expected 模型、强度、选定值→null、null→选定值；hash 不变；整批 stale_snapshot、零新 Run / HTTP 请求；原值仍能批准且仅发出应有的两个 Run |
+
+`harness.approveRequest()` 复用契约的 `toRunModel`，逐项从真实批次构造 expected。`FakeNode` 的模型能力可选上报，默认保持老节点行为；`starts` 保留实际 model 是否存在的区别。`fake-node.test.ts` 可独立验证这个 HTTP 记录边界，不需要 D-35：
+
+```
+pnpm --filter @room/desktop exec tsx --test e2e/fake-node.test.ts
+pnpm --filter @room/desktop exec tsx --test e2e/model-selection.test.ts
 ```
 
 ## 用的是什么
