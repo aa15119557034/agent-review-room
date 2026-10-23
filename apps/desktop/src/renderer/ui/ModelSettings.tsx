@@ -121,7 +121,11 @@ function EffortSlider({
   const id = useId();
 
   return (
-    <div className="effort" style={{ "--pos": last === 0 ? 0 : index / last } as CSSProperties}>
+    <div
+      className="effort"
+      data-top={last > 0 && index === last}
+      style={{ "--pos": last === 0 ? 0 : index / last } as CSSProperties}
+    >
       <label htmlFor={id} className="effort-label">
         {label}
         <span className="effort-value" key={level.id}>

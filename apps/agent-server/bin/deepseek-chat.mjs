@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 // DeepSeek 讨论用的小程序（S-10）。由 AgentServer 的 deepseek-discuss profile 启动：
 //
-//   node ../bin/deepseek-chat.mjs --model deepseek-v4-pro
+//   node ../bin/deepseek-chat.mjs --model deepseek-flash --effort high
 //
+// - --model 默认 deepseek-flash；--effort 原样作为 reasoning_effort 发出，不传就用接口默认（S-22 实测：
+//   deepseek-flash / deepseek-v4-pro 的档位是 low / high / max，默认 high，错的档位接口直接报错）
 // - 从 stdin 读完整的 Prompt（主控端拼好、用户盖过章的内容），原样作为一条 user 消息发出
 // - API Key 只从本机环境变量 DEEPSEEK_API_KEY 读取；不打印、不写文件、不回传
 // - stdout 每行一个 JSON（格式见 src/parsers/room-jsonl.ts）：delta / done / error
@@ -11,7 +13,8 @@
 // 只用 Node 自带的 fetch，不依赖任何 npm 包，方便在节点上直接运行。
 
 const args = parseArgs(process.argv.slice(2));
-const model = args.model ?? "deepseek-v4-pro";
+const model = args.model ?? "deepseek-flash";
+const effort = args.effort || undefined;
 const baseUrl = (args["base-url"] ?? "https://api.deepseek.com").replace(/\/+$/, "");
 const maxTokens = args["max-tokens"] ? Number(args["max-tokens"]) : undefined;
 
@@ -40,6 +43,7 @@ async function main() {
         model,
         messages: [{ role: "user", content: prompt }],
         stream: true,
+        ...(effort ? { reasoning_effort: effort } : {}),
         ...(maxTokens ? { max_tokens: maxTokens } : {}),
       }),
     });

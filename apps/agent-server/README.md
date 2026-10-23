@@ -52,8 +52,8 @@ netsh advfirewall firewall add rule name="Agent Review Room 7420" dir=in action=
 
 | profile | 实际运行 | 用的是谁的额度 |
 |---|---|---|
-| `codex-discuss` | `codex exec --json --skip-git-repo-check --sandbox read-only --ephemeral -` | 这台电脑上 `codex login` 登录的 ChatGPT 账号 |
-| `deepseek-discuss` | `node ../bin/deepseek-chat.mjs --model deepseek-v4-pro` | 环境变量 `DEEPSEEK_API_KEY` 对应的 API 余额 |
+| `codex-discuss` | `codex exec --json --skip-git-repo-check --sandbox read-only --ephemeral [-m 模型 -c model_reasoning_effort=档位] -` | 这台电脑上 `codex login` 登录的 ChatGPT 账号 |
+| `deepseek-discuss` | `node ../bin/deepseek-chat.mjs [--model 模型 --effort 档位]`（不传默认 `deepseek-flash`） | 环境变量 `DEEPSEEK_API_KEY` 对应的 API 余额 |
 
 ```
 主控端 ──127.0.0.1──▶ 本机 AgentServer :7420 ──▶ codex exec / deepseek-chat.mjs
@@ -94,8 +94,6 @@ pnpm --filter @room/agent-server run try -- deepseek-discuss "用一句话介绍
 
 第 4 步会打印 `地址：http://127.0.0.1:7420`、`可用的方式：codex-discuss、deepseek-discuss` 和 Token。没设置 Key 时会提示，但不会打印 Key 本身。
 
-模型名写在配置文件 `deepseek-discuss.args` 里（`--model deepseek-v4-pro`），想换便宜的就改成 `deepseek-flash`。
-
 **额度用尽**（C-25）：解析器从结构化输出里认出"额度用尽 / 限流"时，节点报告 `error(quota_exhausted)`，讨论里显示为「缺席（额度）」，其他人继续：
 - Codex：`turn.failed` 或未完成时的 `error`，消息里有 usage limit / rate limit 等
 - DeepSeek：HTTP 402（余额不足）或 429（限流）
@@ -104,6 +102,30 @@ pnpm --filter @room/agent-server run try -- deepseek-discuss "用一句话介绍
 认不出来的失败照旧是 `process_exit_nonzero` / `internal`，不猜。
 
 **额度显示（1B，待实测）**：5 小时 / 每周用量只读官方提供的数据——Claude 的 statusline JSON（`rate_limits`），Codex 的 `codex app-server` 接口（`account/rateLimits/read`），DeepSeek 的 `GET /user/balance`。不读本机登录凭据、不调用未公开的接口；读不到就显示「未知」。真机结果联调时写在这里。
+
+## 模型和思考强度（S-22）
+
+每个 profile 能选哪些模型、每个模型有哪些强度档位，写在配置文件的 `models` 里，节点在 `/v1/health` 原样上报（`profileModels`），秘书资料页的下拉框和拉条就是按它画的。主控端在 StartRun 里只传模型 id 和档位 id，节点先核对清单（不在清单里就拒绝 `unknown_model`，不换模型、不就近取档），再按 `modelArgs` / `effortArgs` 把它翻译成命令行参数：
+
+| profile | `modelArgs` | `effortArgs` | 清单（2026-10-23 实测） |
+|---|---|---|---|
+| `claude-review` | `--model {model}` | `--effort {effort}` | `claude-opus-5-5`、`claude-sonnet-5-5`；low / medium / high / xhigh / max |
+| `codex-discuss` | `-m {model}` | `-c model_reasoning_effort={effort}` | `gpt-6.1-sol`、`gpt-6-astra`；low / medium / high / xhigh / max / ultra |
+| `deepseek-discuss` | `--model {model}` | `--effort {effort}`（脚本发成 `reasoning_effort`） | `deepseek-flash`；low / high / max |
+
+- 参数默认加在 `args` 最后；`args` 里写了 `"{model-args}"` 就插在那个位置（Codex 要插在最后的 `-` 前面）
+- 请求里没带模型（老主控端，或秘书设成「跟随 profile」）时，什么都不加，用 CLI 自己的默认
+- `models` 为空的 profile 上报 `models: []`，表示模型写死在 `args` 里，带模型的请求会被拒绝
+- 档位名一定要用实测过的：`claude` 遇到不认识的 `--effort` 只打警告、照常回答，所以只能靠这份清单拦住
+- 启动时会把每个模型、每个档位拼出来的命令都检查一遍，配错了直接报出来
+
+试某个模型和档位：
+
+```powershell
+pnpm --filter @room/agent-server run try -- codex-discuss --model gpt-6.1-sol --effort medium "Reply with exactly one word: hello"
+```
+
+**已经有配置文件的电脑**：`setup` 不会覆盖已有的配置。把 `agent-server.config.json` 改名备份，再运行一次 `setup`（Reviewer 电脑不带参数，主控机带 `-- --local`），Token 会沿用。自己改过配置的话，照示例把 `models`、`modelArgs`、`effortArgs` 三项抄过去，并去掉 `args` 里原来写死的 `--model …`。
 
 ## 安全
 

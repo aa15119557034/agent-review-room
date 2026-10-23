@@ -18,6 +18,34 @@
         "--permission-mode", "dontAsk",
         "--permission-prompts", "none"
       ],
+      "models": [
+        {
+          "id": "claude-opus-5-5",
+          "displayName": "Opus 5.5",
+          "efforts": [
+            {"id": "low", "displayName": "低", "note": null},
+            {"id": "medium", "displayName": "中等", "note": "推荐"},
+            {"id": "high", "displayName": "高", "note": null},
+            {"id": "xhigh", "displayName": "超高", "note": null},
+            {"id": "max", "displayName": "最高", "note": null}
+          ],
+          "defaultEffort": "medium"
+        },
+        {
+          "id": "claude-sonnet-5-5",
+          "displayName": "Sonnet 5.5",
+          "efforts": [
+            {"id": "low", "displayName": "低", "note": null},
+            {"id": "medium", "displayName": "中等", "note": "推荐"},
+            {"id": "high", "displayName": "高", "note": null},
+            {"id": "xhigh", "displayName": "超高", "note": null},
+            {"id": "max", "displayName": "最高", "note": null}
+          ],
+          "defaultEffort": "medium"
+        }
+      ],
+      "modelArgs": ["--model", "{model}"],
+      "effortArgs": ["--effort", "{effort}"],
       "cwd": "reviewer-sandbox",
       "parser": "claude-stream-json",
       "maxIdleTimeoutMs": 300000,

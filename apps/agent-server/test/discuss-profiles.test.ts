@@ -205,9 +205,13 @@ describe("bin/deepseek-chat.mjs", () => {
   });
   after(() => fake.close());
 
-  function run(prompt: string, env: Record<string, string | undefined> = { DEEPSEEK_API_KEY: "sk-test-not-real" }) {
+  function run(
+    prompt: string,
+    env: Record<string, string | undefined> = { DEEPSEEK_API_KEY: "sk-test-not-real" },
+    modelArgs: string[] = ["--model", "m-test"],
+  ) {
     return new Promise<{ code: number | null; lines: Record<string, unknown>[]; stdout: string; stderr: string }>((resolve) => {
-      const child = spawn(process.execPath, [join(appDir, "bin", "deepseek-chat.mjs"), "--model", "m-test", "--base-url", baseUrl], {
+      const child = spawn(process.execPath, [join(appDir, "bin", "deepseek-chat.mjs"), ...modelArgs, "--base-url", baseUrl], {
         env: { PATH: process.env["PATH"], ...env },
       });
       let stdout = "";
@@ -235,6 +239,15 @@ describe("bin/deepseek-chat.mjs", () => {
     assert.equal(last.body?.["stream"], true);
     assert.deepEqual(last.body?.["messages"], [{ role: "user", content: "请讨论：方案 A" }]);
     assert.ok(!r.stdout.includes("sk-test-not-real") && !r.stderr.includes("sk-test-not-real"), "key never printed");
+  });
+
+  it("S-22: --effort goes out as reasoning_effort; without flags it is deepseek-flash and the API's default effort", async () => {
+    await run("hi", undefined, ["--model", "deepseek-flash", "--effort", "max"]);
+    assert.equal(seen.at(-1)?.body?.["model"], "deepseek-flash");
+    assert.equal(seen.at(-1)?.body?.["reasoning_effort"], "max");
+    await run("hi", undefined, []);
+    assert.equal(seen.at(-1)?.body?.["model"], "deepseek-flash");
+    assert.ok(!("reasoning_effort" in (seen.at(-1)?.body ?? {})));
   });
 
   it("402 insufficient balance → error with quota=true, exit 1", async () => {
