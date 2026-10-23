@@ -84,7 +84,7 @@ function seedRound(db: SqliteDatabase, projectId: string) {
 describe("迁移 v3", () => {
   it("新库直接建到 v3，并包含讨论室的全部表", () => {
     const { db } = freshDb();
-    assert.equal(currentVersion(db), 3);
+    assert.equal(currentVersion(db), 4);
 
     const tables = db
       .prepare("SELECT name FROM sqlite_master WHERE type = 'table'")
@@ -129,7 +129,7 @@ describe("迁移 v3", () => {
     legacy.close();
 
     const upgraded = openDatabase(file);
-    assert.equal(currentVersion(upgraded), 3);
+    assert.equal(currentVersion(upgraded), 4);
     assert.equal((upgraded.prepare("SELECT count(*) AS n FROM runs").get() as { n: number }).n, 1);
     assert.equal((upgraded.prepare("SELECT count(*) AS n FROM messages").get() as { n: number }).n, 1);
     assert.equal(

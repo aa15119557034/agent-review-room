@@ -2,7 +2,7 @@ import { app, BrowserWindow, dialog, ipcMain, nativeTheme, safeStorage, shell } 
 import { join } from "node:path";
 import { openDatabase, repairInterruptedRuns, WriteQueue } from "@room/db";
 import { HttpRemoteAgentAdapter } from "@room/remote-client";
-import { IPC_CHANNELS, type ControlEvent } from "@room/schemas";
+import { BatchModel, IPC_CHANNELS, toRunModel, type ControlEvent } from "@room/schemas";
 import { DiscussionService } from "./discussion";
 import { createDispatcher } from "./ipc";
 import { migrateLegacyReviewerNode, NodeService, resolveRunTarget } from "./nodes";
@@ -98,11 +98,20 @@ async function bootstrap(): Promise<void> {
     adapterFactory: async (run) => {
       // 讨论室：agent -> node -> 地址与 Token；Phase 0 的评审 Run 沿用原来的 Reviewer 设置
       const target = resolveRunTarget(db, settings, run);
+      // C-40：这一项盖章时定下的模型；null / 没有 = 不传 model，用 profile 自带
+      const item = db.prepare("SELECT model FROM batch_items WHERE approval_id = ?").get(run.approval_id) as
+        | { model: string | null }
+        | undefined;
+      const model =
+        item?.model === null || item?.model === undefined
+          ? undefined
+          : toRunModel(BatchModel.parse(JSON.parse(item.model)));
       const adapter = new HttpRemoteAgentAdapter({
         nodeId: target.nodeId,
         baseUrl: target.baseUrl,
         profileId: target.profileId,
         token: target.token,
+        ...(model === undefined ? {} : { model }),
         heartbeatTimeoutMs: 15_000,
         reconnectGraceMs: 30_000,
         requestTimeoutMs: 10_000,

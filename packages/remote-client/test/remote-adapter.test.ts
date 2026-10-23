@@ -1,6 +1,7 @@
 import { after, describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { createHash, randomInt } from "node:crypto";
+import { createServer } from "node:http";
 import { createServer as createTcpServer, connect, type Server as TcpServer, type Socket } from "node:net";
 import type { AddressInfo } from "node:net";
 import { dirname, join } from "node:path";
@@ -324,5 +325,70 @@ describe("testReviewerNode (settings page)", () => {
     assert.equal(!none.reachable && none.error, "no_token");
     const down = await testReviewerNode({ baseUrl: "http://127.0.0.1:9", token: TOKEN, profileId: "claude-ok", timeoutMs: 500 });
     assert.equal(!down.reachable && down.error, "unreachable");
+  });
+});
+
+describe("C-40 StartRun.model", () => {
+  it("model 原样放进 StartRun；没有 model 时字段整个省略", async () => {
+    const bodies: Record<string, unknown>[] = [];
+    const server = createServer((req, res) => {
+      let raw = "";
+      req.on("data", (chunk) => (raw += chunk));
+      req.on("end", () => {
+        if (req.method === "POST" && req.url === "/v1/runs") {
+          const body = JSON.parse(raw) as Record<string, unknown>;
+          bodies.push(body);
+          res.writeHead(202, { "content-type": "application/json" });
+          res.end(JSON.stringify({ runId: body.runId, status: "accepted", eventsPath: "/v1/runs/" + String(body.runId) + "/events" }));
+          return;
+        }
+        if (req.method === "GET" && req.url?.includes("/events")) {
+          res.writeHead(200, { "content-type": "application/x-ndjson" });
+          res.write(JSON.stringify({ type: "terminal", seq: 0, ts: new Date().toISOString(), result: { outcome: "completed", exitCode: 0 } }) + "\n");
+          res.end();
+          return;
+        }
+        res.writeHead(404);
+        res.end();
+      });
+    });
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", () => resolve()));
+    const port = (server.address() as AddressInfo).port;
+    cleanups.push(() => new Promise<void>((resolve) => server.close(() => resolve())));
+
+    const make = (model?: { model: string; effort: string | null }) =>
+      new HttpRemoteAgentAdapter({
+        nodeId: "node-test",
+        baseUrl: "http://127.0.0.1:" + port,
+        profileId: "claude-ok",
+        token: TOKEN,
+        heartbeatTimeoutMs: 1_000,
+        reconnectGraceMs: 3_000,
+        requestTimeoutMs: 1_000,
+        ...(model === undefined ? {} : { model }),
+      });
+
+    const withModel = make({ model: "deepseek-flash", effort: "high" });
+    const content = "hello";
+    for await (const _event of withModel.run("s", ("run_" + ulid()) as never, { snapshotId: "snap_" + ulid(), content, contentHash: sha(content) } as never, {
+      signal: new AbortController().signal,
+      onPermissionRequest: async () => ({ decision: "deny", decidedBy: "system" }),
+      idleTimeoutMs: 10_000,
+      totalTimeoutMs: 20_000,
+    })) {
+      // 只需要触发一次 StartRun
+    }
+    assert.deepEqual(bodies[0]!.model, { model: "deepseek-flash", effort: "high" });
+
+    const without = make();
+    for await (const _event of without.run("s", ("run_" + ulid()) as never, { snapshotId: "snap_" + ulid(), content, contentHash: sha(content) } as never, {
+      signal: new AbortController().signal,
+      onPermissionRequest: async () => ({ decision: "deny", decidedBy: "system" }),
+      idleTimeoutMs: 10_000,
+      totalTimeoutMs: 20_000,
+    })) {
+      // 同上
+    }
+    assert.equal("model" in bodies[1]!, false);
   });
 });

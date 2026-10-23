@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { after } from "node:test";
 import { openDatabase, type RunRow, WriteQueue } from "@room/db";
 import { HttpRemoteAgentAdapter } from "@room/remote-client";
-import { ControlEvent } from "@room/schemas";
+import { ControlEvent, type BatchModel } from "@room/schemas";
 import { DiscussionService } from "../src/main/discussion";
 import { createDispatcher } from "../src/main/ipc";
 import { resolveRunTarget } from "../src/main/nodes";
@@ -211,14 +211,18 @@ export interface BatchLike {
   id: string;
   kind: string;
   state: string;
-  items: { approvalId: string; contentHash: string; recipient: string; differsFromOthers: boolean }[];
+  items: { approvalId: string; contentHash: string; recipient: string; differsFromOthers: boolean; model: BatchModel | null }[];
 }
 
 export async function approve(h: E2E, batch: BatchLike) {
   return h.dispatcher.handleCommand({
     type: "batch.approve",
     batchId: batch.id,
-    expected: batch.items.map((item) => ({ approvalId: item.approvalId, contentHash: item.contentHash })),
+    expected: batch.items.map((item) => ({
+      approvalId: item.approvalId,
+      contentHash: item.contentHash,
+      model: item.model === null ? null : { model: item.model.model, effort: item.model.effort },
+    })),
   });
 }
 

@@ -4,6 +4,7 @@ import {
   ROUND_TRANSITIONS,
   type ApprovalBatch,
   type BatchKind,
+  type BatchModel,
   type HistoryMode,
   type RoundState,
   type TaskSource,
@@ -26,6 +27,7 @@ export type BatchApproveErrorCode =
   | "item_missing"
   | "approval_not_ready"
   | "hash_mismatch"
+  | "model_mismatch"
   | "round_transition_invalid"
   | "turn_not_pending";
 
@@ -42,6 +44,8 @@ export interface BatchApproveItem {
   approvalId: string;
   /** 确认页上展示的指纹；和库里、和内容重算出来的都必须一致 */
   expectedContentHash: string;
+  /** C-40：确认页上展示的模型和强度；省略 / null = profile 自带 */
+  model?: { model: string; effort: string | null } | null;
 }
 
 export interface ApproveBatchInput {
@@ -95,6 +99,7 @@ interface ItemRow {
   approval_id: string;
   snapshot_id: string;
   content_hash: string;
+  model: string | null;
 }
 
 interface ApprovalRow {
@@ -189,7 +194,7 @@ export function createDraftTurns(db: SqliteDatabase, queue: WriteQueue, batchId:
     }
 
     const items = db
-      .prepare("SELECT recipient, on_behalf_of, approval_id, snapshot_id, content_hash FROM batch_items WHERE batch_id = ? ORDER BY recipient")
+      .prepare("SELECT recipient, on_behalf_of, approval_id, snapshot_id, content_hash, model FROM batch_items WHERE batch_id = ? ORDER BY recipient")
       .all(batch.id) as ItemRow[];
 
     const createdAt = now();
@@ -255,6 +260,8 @@ export interface RoundDraftPrompt {
 export interface RoundDraftRecipient {
   agent: string;
   prompt: RoundDraftPrompt;
+  /** C-40：起草时定下的模型和强度；省略 / null = 用 profile 自带模型 */
+  model?: BatchModel | null;
 }
 
 export interface CreateRoundDraftInput {
@@ -363,8 +370,8 @@ function insertBatchTx(
     ).run(approvalId, input.projectId, snapshotId, input.createdAt);
 
     db.prepare(
-      "INSERT INTO batch_items (batch_id, recipient, on_behalf_of, approval_id, snapshot_id, content_hash, differs_from_others, token_estimate) " +
-        "VALUES (?, ?, NULL, ?, ?, ?, ?, ?)",
+      "INSERT INTO batch_items (batch_id, recipient, on_behalf_of, approval_id, snapshot_id, content_hash, differs_from_others, token_estimate, model) " +
+        "VALUES (?, ?, NULL, ?, ?, ?, ?, ?, ?)",
     ).run(
       batchId,
       recipient.agent,
@@ -373,6 +380,7 @@ function insertBatchTx(
       contentHash,
       prompt.differsFromOthers ? 1 : 0,
       prompt.tokenEstimate,
+      recipient.model === null || recipient.model === undefined ? null : JSON.stringify(recipient.model),
     );
 
     const turnId = newTurnId();
@@ -586,6 +594,11 @@ export interface CreateResumeBatchInput {
   roundId: string;
   /** 暂停后要重新发的人（通常是结局为 paused 的那些） */
   agents: readonly string[];
+  /**
+   * C-40：恢复时沿用原模型；节点已不支持原模型时由调用方重选后在这里覆盖。
+   * 不传 = 原样复制暂停前那条 batch_item 的 model。
+   */
+  models?: Readonly<Record<string, BatchModel | null>>;
 }
 
 /**
@@ -613,17 +626,22 @@ export function createResumeBatch(
     const previous = input.agents.map((agent) => {
       const row = db
         .prepare(
-          "SELECT t.id AS turn_id, a.snapshot_id AS snapshot_id, s.content_hash AS content_hash, b.compressed_rounds AS compressed_rounds " +
+          "SELECT t.id AS turn_id, a.snapshot_id AS snapshot_id, s.content_hash AS content_hash, b.compressed_rounds AS compressed_rounds, bi.model AS model " +
             "FROM turns t JOIN approvals a ON a.id = t.approval_id JOIN prompt_snapshots s ON s.id = a.snapshot_id " +
-            "JOIN batches b ON b.id = t.batch_id " +
+            "JOIN batches b ON b.id = t.batch_id JOIN batch_items bi ON bi.approval_id = t.approval_id " +
             "WHERE t.round_id = ? AND t.agent = ? AND t.is_summary = 0 AND t.outcome = 'paused' " +
             "ORDER BY t.created_at DESC, t.rowid DESC LIMIT 1",
         )
         .get(round.id, agent) as
-        | { turn_id: string; snapshot_id: string; content_hash: string; compressed_rounds: string }
+        | { turn_id: string; snapshot_id: string; content_hash: string; compressed_rounds: string; model: string | null }
         | undefined;
       if (row === undefined) throw new RoundDraftError("turn_not_retryable", agent + " has no paused turn");
-      return { agent, ...row };
+      const override =
+        input.models !== undefined && Object.prototype.hasOwnProperty.call(input.models, agent)
+          ? input.models[agent] ?? null
+          : undefined;
+      const model = override !== undefined ? override : row.model === null ? null : (JSON.parse(row.model) as BatchModel);
+      return { agent, turn_id: row.turn_id, snapshot_id: row.snapshot_id, content_hash: row.content_hash, compressed_rounds: row.compressed_rounds, model };
     });
 
     const createdAt = now();
@@ -639,9 +657,9 @@ export function createResumeBatch(
         "INSERT INTO approvals (id, project_id, snapshot_id, state, created_at) VALUES (?, ?, ?, 'READY_FOR_REVIEW', ?)",
       ).run(approvalId, round.project_id, item.snapshot_id, createdAt);
       db.prepare(
-        "INSERT INTO batch_items (batch_id, recipient, on_behalf_of, approval_id, snapshot_id, content_hash, differs_from_others, token_estimate) " +
-          "VALUES (?, ?, NULL, ?, ?, ?, 0, 0)",
-      ).run(batchId, item.agent, approvalId, item.snapshot_id, item.content_hash);
+        "INSERT INTO batch_items (batch_id, recipient, on_behalf_of, approval_id, snapshot_id, content_hash, differs_from_others, token_estimate, model) " +
+          "VALUES (?, ?, NULL, ?, ?, ?, 0, 0, ?)",
+      ).run(batchId, item.agent, approvalId, item.snapshot_id, item.content_hash, item.model === null ? null : JSON.stringify(item.model));
       const turnId = newTurnId();
       db.prepare(
         "INSERT INTO turns (id, round_id, batch_id, agent, on_behalf_of, is_summary, approval_id, run_id, outcome, created_at) " +
@@ -866,7 +884,7 @@ export function approveBatch(
     }
 
     const items = db
-      .prepare("SELECT recipient, on_behalf_of, approval_id, snapshot_id, content_hash FROM batch_items WHERE batch_id = ? ORDER BY recipient")
+      .prepare("SELECT recipient, on_behalf_of, approval_id, snapshot_id, content_hash, model FROM batch_items WHERE batch_id = ? ORDER BY recipient")
       .all(batch.id) as ItemRow[];
 
     // 必须一次盖完整批：少一项就不发，避免「一半人收到、一半人没收到」
@@ -899,6 +917,27 @@ export function approveBatch(
       const actual = createHash("sha256").update(snapshot.content, "utf8").digest("hex");
       if (actual !== snapshot.content_hash || actual !== item.content_hash || actual !== submitted.expectedContentHash) {
         throw new BatchApproveError("hash_mismatch", `snapshot content of ${item.recipient} does not match its hash`);
+      }
+
+      // C-40：模型/强度也是盖章指纹的一部分。只比较 model + effort；
+      // BatchItem 里的 usedFallback / effortSource 是给人看的，不参与。
+      const stored = item.model === null ? null : (JSON.parse(item.model) as { model: string; effort: string | null });
+      const approvedModel = submitted.model ?? null;
+      const sameModel =
+        stored === null
+          ? approvedModel === null
+          : approvedModel !== null && approvedModel.model === stored.model && approvedModel.effort === stored.effort;
+      if (!sameModel) {
+        const what =
+          stored === null || approvedModel === null
+            ? "model"
+            : stored.model !== approvedModel.model
+              ? "model"
+              : "effort";
+        throw new BatchApproveError(
+          "model_mismatch",
+          `${what} of ${item.recipient} changed: approved ${JSON.stringify(approvedModel)}, batch has ${JSON.stringify(stored)}`,
+        );
       }
 
       const changed = db
