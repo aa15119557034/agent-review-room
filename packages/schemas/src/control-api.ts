@@ -108,6 +108,9 @@ export type NodeTestResult = z.infer<typeof NodeTestResult>;
 // ================================================================ 节点（ADR-002：可以有多个 AgentServer）
 
 /** 节点设置。和 ReviewerNodeSettings 一样，Token 只写不读 */
+/** 主控机本机节点的 id（S-10 / C-27 的推荐配置）。node.importLocalToken 只对它可用 */
+export const LOCAL_NODE_ID = "controller-local";
+
 export const NodeInfo = z.object({
   id: NodeId,
   label: z.string().min(1).max(60),
@@ -301,13 +304,16 @@ export const COMMANDS = {
 
   /**
    * 主控机节点一键读取本机 Token（C-39）。
-   * - 只对 baseUrl 是本机回环地址（127.0.0.1 / localhost / [::1]）的节点可用，否则 invalid_state
-   * - Token 文件的位置由 main 自己的配置决定，**请求里不能带路径**
-   * - 读到的值按 NodeToken 校验，只写进 safeStorage，不回显、不写日志；返回值里只有 tokenConfigured
-   * - 节点不存在或本机没有 Token 文件：not_found；内容不合格：validation_failed
+   * - 只对 id 是 LOCAL_NODE_ID（"controller-local"）**并且** baseUrl 是本机回环地址（127.0.0.1 / localhost / [::1]）的节点可用，
+   *   否则 invalid_state
+   * - Token 文件的位置：main 的 settings.json 里的 `localAgentServerTokenFile`（只在 main 里，不经过控制 API，renderer 改不了）；
+   *   没配置时用主控机 AgentServer 的默认位置。**请求里不能带路径**
+   * - 读到的值按 NodeToken 校验，只写进 safeStorage，不回显；日志里不写 token，也不写文件路径
+   * - 失败分类：节点不存在或 Token 文件不存在 → not_found；文件读不了（权限等）→ internal；内容不合 NodeToken → validation_failed
+   * - 成功后 renderer 自己再调一次 node.test（这条命令只负责导入）
    */
   "node.importLocalToken": def(
-    z.object({ type: z.literal("node.importLocalToken"), id: NodeId }),
+    z.object({ type: z.literal("node.importLocalToken"), id: z.literal(LOCAL_NODE_ID) }),
     NodeInfo,
     "admin",
   ),
@@ -329,7 +335,7 @@ export const COMMANDS = {
   "appearance.update": def(
     z.object({
       type: z.literal("appearance.update"),
-      userDisplayName: z.string().min(1).max(40).optional(),
+      userDisplayName: z.string().trim().min(1).max(40).optional(),
       userAvatarRef: ImageRef.nullable().optional(),
       chatBackground: ChatBackground.optional(),
     }),

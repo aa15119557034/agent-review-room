@@ -10,6 +10,7 @@ import {
   DEFAULT_APPEARANCE,
   IMAGE_MAX_BYTES,
   ImageRef,
+  LOCAL_NODE_ID,
   QUERIES,
 } from "../src/index";
 
@@ -49,6 +50,19 @@ describe("appearance (C-32)", () => {
     assert.ok(COMMANDS["image.pick"].response.safeParse({ ref: REF }).success);
   });
 
+  it("display name cannot be only spaces", () => {
+    assert.equal(ControlCommand.safeParse({ type: "appearance.update", userDisplayName: "   " }).success, false);
+    assert.equal(AppearanceSettings.safeParse({ ...DEFAULT_APPEARANCE, userDisplayName: "  " }).success, false);
+    const r = ControlCommand.safeParse({ type: "appearance.update", userDisplayName: " 江浩 " });
+    assert.ok(r.success && "userDisplayName" in r.data && r.data.userDisplayName === "江浩");
+  });
+
+  it("appearance.update accepts a single field and both background kinds", () => {
+    assert.ok(ControlCommand.safeParse({ type: "appearance.update", chatBackground: { kind: "image", ref: REF } }).success);
+    assert.ok(ControlCommand.safeParse({ type: "appearance.update", chatBackground: { kind: "preset", id: "plain" } }).success);
+    assert.ok(ControlCommand.safeParse({ type: "appearance.update" }).success);
+  });
+
   it("appearance.update and appearance.get", () => {
     assert.ok(ControlCommand.safeParse({ type: "appearance.update", chatBackground: { kind: "preset", id: "night" } }).success);
     assert.ok(ControlCommand.safeParse({ type: "appearance.update", userAvatarRef: null }).success);
@@ -59,8 +73,9 @@ describe("appearance (C-32)", () => {
 });
 
 describe("node.importLocalToken (C-39)", () => {
-  it("takes only a node id: no path, no token", () => {
-    assert.ok(ControlCommand.safeParse({ type: "node.importLocalToken", id: "controller-local" }).success);
+  it("takes only the local node id: no path, no token, no other node", () => {
+    assert.ok(ControlCommand.safeParse({ type: "node.importLocalToken", id: LOCAL_NODE_ID }).success);
+    assert.equal(ControlCommand.safeParse({ type: "node.importLocalToken", id: "user-pc" }).success, false);
     const strict = COMMANDS["node.importLocalToken"].request.strict();
     assert.equal(strict.safeParse({ type: "node.importLocalToken", id: "controller-local", path: "C:\\x" }).success, false);
     assert.equal(strict.safeParse({ type: "node.importLocalToken", id: "controller-local", token: "a".repeat(40) }).success, false);
