@@ -13,6 +13,7 @@ import {
 import { AgentName, MessageId, ProjectId } from "./entities";
 import { ApprovalState, PlanState, RoundState, TurnOutcome } from "./state-machines";
 import { ProfileId } from "./remote-protocol";
+import { ImageRef } from "./appearance";
 
 /**
  * 讨论室模式的实体（ADR-002 / C-20，阶段 1A）。
@@ -38,8 +39,8 @@ export const AgentProfile = z.object({
   id: AgentName,
   displayName: z.string().min(1).max(40),
   color: HexColor,
-  /** 头像图片的引用；null 时显示首字母。图片存储方式在 1B 定 */
-  avatarRef: z.string().max(200).nullable(),
+  /** 头像图片的引用（C-32，见 appearance.ts）；null 时显示首字 */
+  avatarRef: ImageRef.nullable(),
   /** 角色设定，加在发给它的指令最前面（不在不可信边界里，因为是用户写的） */
   roleNote: z.string().max(2000),
   canDiscuss: z.boolean(),
