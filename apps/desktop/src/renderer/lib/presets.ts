@@ -1,3 +1,4 @@
+import type { AgentModelSettings } from "@room/schemas";
 import type { AgentPatch } from "./discussion-actions";
 
 /**
@@ -19,6 +20,29 @@ export const RECOMMENDED_NODES: readonly { id: string; label: string; baseUrl: s
   },
 ];
 
+/**
+ * 模型和思考强度（C-40，用户 2026-10-23 定）：汐固定 deepseek-flash、高；C酱和林离有备选，
+ * 聊天和讨论室发言用中等、汇总用高。Codex 节点自己的默认是 low，所以这里要明确写上。
+ * 模型 id 和档位 id 以 S-22 在节点上实测的为准。
+ */
+export const RECOMMENDED_MODELS: Readonly<Record<"claude" | "deepseek" | "codex", AgentModelSettings>> = {
+  claude: {
+    primaryModel: "claude-opus-5-5",
+    fallbackModel: "claude-sonnet-5-5",
+    effort: { chat: "medium", discussion: "medium", summary: "high" },
+  },
+  deepseek: {
+    primaryModel: "deepseek-flash",
+    fallbackModel: null,
+    effort: { chat: "high", discussion: "high", summary: "high" },
+  },
+  codex: {
+    primaryModel: "gpt-6.1-sol",
+    fallbackModel: "gpt-6-astra",
+    effort: { chat: "medium", discussion: "medium", summary: "high" },
+  },
+};
+
 export const RECOMMENDED_AGENTS: readonly (AgentPatch & { displayName: string; color: string })[] = [
   {
     id: "claude",
@@ -33,6 +57,7 @@ export const RECOMMENDED_AGENTS: readonly (AgentPatch & { displayName: string; c
     canSummarize: true,
     nodeId: USER_PC_NODE,
     profileId: "claude-review",
+    modelSettings: RECOMMENDED_MODELS.claude,
   },
   {
     id: "deepseek",
@@ -47,6 +72,7 @@ export const RECOMMENDED_AGENTS: readonly (AgentPatch & { displayName: string; c
     canSummarize: false,
     nodeId: CONTROLLER_NODE,
     profileId: "deepseek-discuss",
+    modelSettings: RECOMMENDED_MODELS.deepseek,
   },
   {
     id: "codex",
@@ -61,5 +87,6 @@ export const RECOMMENDED_AGENTS: readonly (AgentPatch & { displayName: string; c
     canSummarize: false,
     nodeId: CONTROLLER_NODE,
     profileId: "codex-discuss",
+    modelSettings: RECOMMENDED_MODELS.codex,
   },
 ];

@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import type { ApprovalBatch, ControlEvent, Round, Turn } from "@room/schemas";
+import { toRunModel, type ApprovalBatch, type ControlEvent, type Round, type Turn } from "@room/schemas";
 import { createMockBridge, type MockOptions } from "../mock/mock-backend";
 
 /**
@@ -28,7 +28,11 @@ function setup(opts: MockOptions = {}) {
 const stamp = (b: ApprovalBatch) => ({
   type: "batch.approve",
   batchId: b.id,
-  expected: b.items.map((i) => ({ approvalId: i.approvalId, contentHash: i.contentHash })),
+  expected: b.items.map((i) => ({
+    approvalId: i.approvalId,
+    contentHash: i.contentHash,
+    model: i.model === null ? null : toRunModel(i.model),
+  })),
 });
 
 async function until(check: () => Promise<boolean>, ms = 2000) {

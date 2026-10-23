@@ -2186,3 +2186,76 @@ button.stage:hover {
   gap: 0.25rem 1rem;
   font-size: var(--size-s);
 }
+
+/* ------------------------------------------------------------ 模型和思考强度（C-41） */
+
+.model-fieldset {
+  border: 1px solid var(--rule);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem 0.75rem;
+  margin: 0.75rem 0;
+}
+.model-fieldset > legend {
+  font-size: var(--size-s);
+  color: var(--ink-soft);
+  padding: 0 0.25rem;
+}
+.model-settings {
+  display: grid;
+  gap: 0.75rem;
+}
+.effort {
+  display: grid;
+  gap: 0.25rem;
+}
+.effort-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: var(--size-s);
+  color: var(--ink-soft);
+}
+.effort-value {
+  color: var(--ink);
+  font-weight: 600;
+  /* 换档时弹一下：回弹曲线；「减少动态效果」时由全局规则关掉 */
+  animation: effort-pop 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.effort-value small {
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+@keyframes effort-pop {
+  from {
+    transform: scale(0.85);
+    opacity: 0.4;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.effort input[type="range"] {
+  width: 100%;
+  accent-color: var(--active);
+}
+.effort input[type="range"]::-webkit-slider-thumb {
+  transition: transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.effort input[type="range"]:active::-webkit-slider-thumb {
+  transform: scale(1.25);
+}
+.effort-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--size-s);
+  color: var(--ink-soft);
+}
+.effort-ticks [data-on="true"] {
+  color: var(--active);
+  font-weight: 600;
+}
+.recipient-model {
+  font-size: var(--size-s);
+  color: var(--ink-soft);
+}

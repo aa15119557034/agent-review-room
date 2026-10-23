@@ -1,6 +1,7 @@
 import { useState, type CSSProperties } from "react";
 import type { BatchKind } from "@room/schemas";
 import { agentColor, agentName } from "../../lib/discussion";
+import { effortLabel, modelLabel } from "../../lib/models";
 import { useActions, useAppState } from "../hooks";
 
 /**
@@ -59,6 +60,16 @@ export function ConfirmView() {
               <span>约 {i.tokenEstimate.toLocaleString()} tokens</span>
               <code>指纹 {i.contentHash.slice(0, 6)}…{i.contentHash.slice(-4)}</code>
               {i.differsFromOthers && <span className="extra-info">他会收到额外信息</span>}
+              {i.model === null ? (
+                <span className="recipient-model">模型：profile 自带的</span>
+              ) : (
+                <span className="recipient-model">
+                  {modelLabel(d.models[i.recipient] ?? undefined, i.model.model)} ·{" "}
+                  {effortLabel(d.models[i.recipient] ?? undefined, i.model.model, i.model.effort)}
+                </span>
+              )}
+              {i.model?.usedFallback && <span className="extra-info">首选用不了，用的是备选</span>}
+              {i.model?.effortSource === "node_default" && <span className="extra-info">你设的强度这个模型没有，用的是节点默认</span>}
             </button>
           ))}
           {allSame && <p className="confirm-note">{c.batch.items.length} 个人收到的内容<b>完全相同</b>（指纹一样）。</p>}
@@ -92,7 +103,7 @@ export function ConfirmView() {
           <p className="confirm-label">盖章后会发生什么</p>
           <ul>
             <li>{c.batch.items.map((i) => agentName(d, i.recipient)).join("、")} 同时开始</li>
-            <li>发出去的内容和这里看到的一字不差</li>
+            <li>发出去的内容和这里看到的一字不差，用的模型和思考强度也和左边写的一样</li>
             <li><b>盖章后不能撤回</b>，要更正只能之后再补充</li>
           </ul>
           <p className="confirm-note">预计约 {total.toLocaleString()} tokens（按字数估算，可能差 ±20%）</p>

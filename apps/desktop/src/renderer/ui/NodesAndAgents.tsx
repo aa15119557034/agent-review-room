@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import { HexColor, NodeBaseUrl, NodeToken, ProfileId, type AgentProfile, type NodeInfo, type NodeTestResult } from "@room/schemas";
+import { AgentModelSettings, HexColor, NodeBaseUrl, NodeToken, ProfileId, type AgentProfile, type NodeInfo, type NodeTestResult } from "@room/schemas";
 import { RECOMMENDED_AGENTS, RECOMMENDED_NODES } from "../lib/presets";
 import { useActions, useAppState } from "./hooks";
+import { ModelSettings } from "./ModelSettings";
 
 /**
  * 设置页：节点与参与者（C-27）。讨论室要知道「谁在哪台电脑的哪个 profile 上」。
@@ -18,7 +19,8 @@ export function NodesAndAgents() {
 
   useEffect(() => {
     void reload();
-    void actions.loadAgents();
+    // 先拿到参与者，再按他们所在的节点问能用哪些模型（C-41）
+    void actions.loadAgents().then(() => actions.loadModels());
   }, [reload, actions]);
 
   return (
@@ -175,6 +177,7 @@ function AgentsSection({ nodes }: { nodes: NodeInfo[] }) {
     for (const a of RECOMMENDED_AGENTS) {
       if (!(await actions.updateAgent(a))) break;
     }
+    await actions.loadModels();
     setApplying(false);
   };
 
@@ -199,6 +202,7 @@ function AgentsSection({ nodes }: { nodes: NodeInfo[] }) {
 
 function AgentEditor({ agent, nodes }: { agent: AgentProfile; nodes: NodeInfo[] }) {
   const actions = useActions();
+  const models = useAppState((s) => s.disc.models[agent.id]);
   const [draft, setDraft] = useState(agent);
   const [busy, setBusy] = useState(false);
   useEffect(() => setDraft(agent), [agent]);
@@ -206,7 +210,8 @@ function AgentEditor({ agent, nodes }: { agent: AgentProfile; nodes: NodeInfo[] 
   const set = <K extends keyof AgentProfile>(k: K, v: AgentProfile[K]) => setDraft((d) => ({ ...d, [k]: v }));
   const profileOk = draft.profileId === null || ProfileId.safeParse(draft.profileId).success;
   const colorOk = HexColor.safeParse(draft.color).success;
-  const valid = draft.displayName.trim().length > 0 && profileOk && colorOk;
+  const modelsOk = AgentModelSettings.safeParse(draft.modelSettings).success;
+  const valid = draft.displayName.trim().length > 0 && profileOk && colorOk && modelsOk;
   const dirty = JSON.stringify(draft) !== JSON.stringify(agent);
 
   const save = async () => {
@@ -221,6 +226,7 @@ function AgentEditor({ agent, nodes }: { agent: AgentProfile; nodes: NodeInfo[] 
       pausedByUser: draft.pausedByUser,
       nodeId: draft.nodeId,
       profileId: draft.profileId,
+      modelSettings: draft.modelSettings,
     });
     setBusy(false);
   };
@@ -266,6 +272,10 @@ function AgentEditor({ agent, nodes }: { agent: AgentProfile; nodes: NodeInfo[] 
         <label><input type="checkbox" checked={draft.canSummarize} onChange={(e) => set("canSummarize", e.target.checked)} /> 可以做汇总</label>
         <label><input type="checkbox" checked={draft.pausedByUser} onChange={(e) => set("pausedByUser", e.target.checked)} /> 暂停（不发给他）</label>
       </div>
+      <fieldset className="model-fieldset">
+        <legend>模型和思考强度</legend>
+        <ModelSettings value={draft.modelSettings} models={models} onChange={(v) => set("modelSettings", v)} />
+      </fieldset>
       <label className="field-label">
         角色设定（只写分工，会放在发给他的内容最前面）
         <textarea className="settings-input" rows={2} maxLength={2000} value={draft.roleNote} onChange={(e) => set("roleNote", e.target.value)} />

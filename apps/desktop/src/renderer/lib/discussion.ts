@@ -5,6 +5,7 @@ import type {
   ApprovalBatch,
   ControlEvent,
   Message,
+  ModelOption,
   PlanVersion,
   PromptSnapshot,
   Round,
@@ -27,6 +28,11 @@ export interface DiscussionState {
   turns: Turn[];
   summaries: RoundSummary[];
   plans: PlanVersion[];
+  /**
+   * 每位参与者能选的模型（C-41，从节点 health 的 profileModels 来）。
+   * 没有这个 key = 还没问过；null = 问过但节点没报（老节点、连不上、没有这个 profile）
+   */
+  models: Record<string, ModelOption[] | null>;
   /** 确认页正在看的批次（含每个收件人的完整 Snapshot） */
   confirm: { batch: ApprovalBatch; snapshots: PromptSnapshot[] } | null;
   ui: {
@@ -53,6 +59,7 @@ export const initialDiscussion: DiscussionState = {
   turns: [],
   summaries: [],
   plans: [],
+  models: {},
   confirm: null,
   ui: {
     railCollapsed: false,

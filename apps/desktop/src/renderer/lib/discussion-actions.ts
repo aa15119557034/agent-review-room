@@ -1,7 +1,8 @@
-import type { ApprovalBatch, CommandRequest, NodeInfo, NodeTestResult, Round } from "@room/schemas";
+import { toRunModel, type ApprovalBatch, type CommandRequest, type NodeInfo, type NodeTestResult, type Round } from "@room/schemas";
 import { ControlFailure, type RoomClient } from "./client";
 import { appendEvents, applyEvent, type AppState } from "./state";
 import { initialDiscussion, planForNextRound, type DiscussionState } from "./discussion";
+import { modelsFor } from "./models";
 import type { Store } from "./store";
 
 /**
@@ -96,7 +97,36 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
       setDisc((d) => ({ ...d, confirm, batches: d.batches.some((b) => b.id === confirm.batch.id) ? d.batches : [...d.batches, confirm.batch] }));
     } catch (err) {
       fail(err);
+      return;
     }
+    // 确认页要显示模型的名字；没问过节点就顺便问一次
+    if (Object.keys(store.get().disc.models).length === 0) await loadModels();
+  }
+
+  /**
+   * 问每位参与者所在的节点能用哪些模型（C-41）。用 node.test：不传 token，main 只在地址没变时用已保存的。
+   * 这是探测，失败不弹提示，记为 null（界面显示「节点没有上报」）。
+   */
+  async function loadModels() {
+    let nodes: NodeInfo[];
+    try {
+      nodes = await client.query({ type: "nodes.list" });
+    } catch {
+      return;
+    }
+    const entries = await Promise.all(
+      store.get().disc.agents.map(async (a) => {
+        const node = nodes.find((n) => n.id === a.nodeId);
+        if (!node || !node.tokenConfigured || a.profileId === null) return [a.id, null] as const;
+        try {
+          const r = await client.command({ type: "node.test", id: node.id, baseUrl: node.baseUrl, profileId: a.profileId });
+          return [a.id, r.reachable ? modelsFor(r.health, a.profileId) ?? null : null] as const;
+        } catch {
+          return [a.id, null] as const;
+        }
+      }),
+    );
+    setDisc((d) => ({ ...d, models: Object.fromEntries(entries) }));
   }
 
   // ------------------------------------------------------------ 节点与参与者（设置页，C-27）
@@ -149,6 +179,7 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
     loadNodes,
     upsertNode,
     testNode,
+    loadModels,
     updateAgent,
 
     // ---------------------------------------------------------- 界面开关
@@ -219,7 +250,12 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
         const { batch } = await client.command({
           type: "batch.approve",
           batchId: c.batch.id,
-          expected: c.batch.items.map((i) => ({ approvalId: i.approvalId, contentHash: i.contentHash })),
+          // C-40：模型和强度也算进盖章指纹；只交 { model, effort }
+          expected: c.batch.items.map((i) => ({
+            approvalId: i.approvalId,
+            contentHash: i.contentHash,
+            model: i.model === null ? null : toRunModel(i.model),
+          })),
         });
         take(null, batch);
         setDisc((d) => ({ ...d, confirm: null }));
