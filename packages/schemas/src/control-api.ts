@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { AppearanceSettings, ChatBackground, ImagePurpose, ImageRef } from "./appearance";
 import { ApprovalId, BatchId, PermissionRequestId, PlanVersionId, RoundId, RunId, Sha256Hex, SnapshotId } from "./common";
 import { NodeHealth, ProfileId } from "./remote-protocol";
 import { AgentEvent } from "./agent-event";
@@ -107,6 +108,9 @@ export type NodeTestResult = z.infer<typeof NodeTestResult>;
 // ================================================================ 节点（ADR-002：可以有多个 AgentServer）
 
 /** 节点设置。和 ReviewerNodeSettings 一样，Token 只写不读 */
+/** 主控机本机节点的 id（S-10 / C-27 的推荐配置）。node.importLocalToken 只对它可用 */
+export const LOCAL_NODE_ID = "controller-local";
+
 export const NodeInfo = z.object({
   id: NodeId,
   label: z.string().min(1).max(60),
@@ -291,8 +295,51 @@ export const COMMANDS = {
       profileId: ProfileId.nullable().optional(),
       pausedByUser: z.boolean().optional(),
       substitute: AgentName.nullable().optional(),
+      /** C-32：先用 image.pick 拿到引用再传进来；null = 去掉头像 */
+      avatarRef: ImageRef.nullable().optional(),
     }),
     AgentProfile,
+    "admin",
+  ),
+
+  /**
+   * 主控机节点一键读取本机 Token（C-39）。
+   * - 只对 id 是 LOCAL_NODE_ID（"controller-local"）**并且** baseUrl 是本机回环地址（127.0.0.1 / localhost / [::1]）的节点可用，
+   *   否则 invalid_state
+   * - Token 文件的位置：main 的 settings.json 里的 `localAgentServerTokenFile`（只在 main 里，不经过控制 API，renderer 改不了）；
+   *   没配置时用主控机 AgentServer 的默认位置。**请求里不能带路径**
+   * - 读到的值按 NodeToken 校验，只写进 safeStorage，不回显；日志里不写 token，也不写文件路径
+   * - 失败分类：节点不存在或 Token 文件不存在 → not_found；文件读不了（权限等）→ internal；内容不合 NodeToken → validation_failed
+   * - 成功后 renderer 自己再调一次 node.test（这条命令只负责导入）
+   */
+  "node.importLocalToken": def(
+    z.object({ type: z.literal("node.importLocalToken"), id: z.literal(LOCAL_NODE_ID) }),
+    NodeInfo,
+    "admin",
+  ),
+
+  // ---------------------------------------------------------------- 外观（C-32，阶段 1B-1）
+
+  /**
+   * 打开系统的选图对话框（由 main 打开，renderer 不传路径）。
+   * 取消返回 null；类型不对（按文件头判断）或超过 IMAGE_MAX_BYTES[purpose]：validation_failed。
+   * 选中的图先存下来、还没被引用；之后 agent.update / appearance.update 用上它才算数，没用上的由 main 清理
+   */
+  "image.pick": def(
+    z.object({ type: z.literal("image.pick"), purpose: ImagePurpose }),
+    z.object({ ref: ImageRef }).nullable(),
+    "admin",
+  ),
+
+  /** 修改外观设置。只传要改的字段；换下来的旧图片如果没人再用，main 删除 */
+  "appearance.update": def(
+    z.object({
+      type: z.literal("appearance.update"),
+      userDisplayName: z.string().trim().min(1).max(40).optional(),
+      userAvatarRef: ImageRef.nullable().optional(),
+      chatBackground: ChatBackground.optional(),
+    }),
+    AppearanceSettings,
     "admin",
   ),
 
@@ -489,6 +536,9 @@ export const QUERIES = {
     z.object({ reviewerNode: ReviewerNodeSettings.nullable() }),
     "admin",
   ),
+
+  /** 外观设置（C-32）。还没设置过时返回 DEFAULT_APPEARANCE */
+  "appearance.get": def(z.object({ type: z.literal("appearance.get") }), AppearanceSettings, "read"),
 
   "projects.list": def(z.object({ type: z.literal("projects.list") }), z.array(Project), "read"),
 
