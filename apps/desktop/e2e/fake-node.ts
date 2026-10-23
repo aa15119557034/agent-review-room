@@ -1,6 +1,6 @@
 import { createHash, timingSafeEqual } from "node:crypto";
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from "node:http";
-import { REMOTE_PROTOCOL_VERSION, StartRunRequest, type RemoteEvent } from "@room/schemas";
+import { REMOTE_PROTOCOL_VERSION, StartRunRequest, type NodeHealth, type RemoteEvent } from "@room/schemas";
 
 /**
  * X-21 的「假节点」：一个按 AgentServer 协议说话的本地 HTTP 服务。
@@ -20,17 +20,24 @@ export interface FakeNodeOptions {
   nodeId: string;
   profiles: readonly string[];
   token: string;
+  /** 不传时模拟 1A 老节点；传入时 health 原样上报模型能力 */
+  profileModels?: NodeHealth["profileModels"];
   /** 每个 profile 默认的行为；测试可以随时 setBehavior 覆盖 */
   behavior?: Record<string, NodeBehavior | readonly NodeBehavior[]>;
   heartbeatMs?: number;
   leaseMs?: number;
 }
 
+type SequencedEvent = Exclude<RemoteEvent, { type: "heartbeat" }>;
+type EventPayload<Event = SequencedEvent> = Event extends SequencedEvent
+  ? Omit<Event, "seq" | "ts"> & { ts?: string }
+  : never;
+
 interface RunState {
   runId: string;
   profileId: string;
   contentHash: string;
-  events: RemoteEvent[];
+  events: SequencedEvent[];
   subscribers: Set<(e: RemoteEvent) => void>;
   finished: boolean;
   timer: NodeJS.Timeout | null;
@@ -43,6 +50,8 @@ export interface RecordedStart {
   snapshotId: string;
   idleTimeoutMs: number;
   totalTimeoutMs: number;
+  /** 保留字段是否存在的区别：老节点请求应省略它，不能是 null */
+  model?: StartRunRequest["model"];
 }
 
 const sha = (text: string) => createHash("sha256").update(text, "utf8").digest("hex");
@@ -51,6 +60,7 @@ export class FakeNode {
   readonly nodeId: string;
   readonly profiles: readonly string[];
   readonly token: string;
+  readonly profileModels: NodeHealth["profileModels"];
   readonly heartbeatMs: number;
   readonly leaseMs: number;
   readonly starts: RecordedStart[] = [];
@@ -66,6 +76,7 @@ export class FakeNode {
     this.nodeId = options.nodeId;
     this.profiles = options.profiles;
     this.token = options.token;
+    this.profileModels = options.profileModels;
     this.heartbeatMs = options.heartbeatMs ?? 100;
     this.leaseMs = options.leaseMs ?? 1_000;
     for (const [profile, behavior] of Object.entries(options.behavior ?? {})) {
@@ -94,7 +105,10 @@ export class FakeNode {
     this.#port = (this.#server.address() as { port: number }).port;
     this.#heartbeat = setInterval(() => {
       for (const run of this.#runs.values()) {
-        if (!run.finished) this.#emit(run, { type: "heartbeat", ts: new Date().toISOString(), lastSeq: run.events.length - 1 });
+        if (!run.finished) {
+          // heartbeat 没有 seq，不写入可重放的事件序列。
+          for (const sub of run.subscribers) sub({ type: "heartbeat", ts: new Date().toISOString(), lastSeq: run.events.length - 1 });
+        }
       }
     }, this.heartbeatMs);
     this.#heartbeat.unref();
@@ -119,9 +133,9 @@ export class FakeNode {
     }
   }
 
-  #emit(run: RunState, event: Omit<RemoteEvent, "seq" | "ts"> & { ts?: string }): void {
+  #emit(run: RunState, event: EventPayload): void {
     if (run.finished) return;
-    const full = { ...event, seq: run.events.length, ts: event.ts ?? new Date().toISOString() } as RemoteEvent;
+    const full = { ...event, seq: run.events.length, ts: event.ts ?? new Date().toISOString() } as SequencedEvent;
     run.events.push(full);
     for (const sub of run.subscribers) sub(full);
     if (full.type === "terminal") run.finished = true;
@@ -182,6 +196,7 @@ export class FakeNode {
         maxConcurrentRuns: 4,
         leaseMs: this.leaseMs,
         heartbeatMs: this.heartbeatMs,
+        ...(this.profileModels === undefined ? {} : { profileModels: this.profileModels }),
       });
       return;
     }
@@ -228,6 +243,7 @@ export class FakeNode {
         snapshotId: body.snapshot.id,
         idleTimeoutMs: body.limits.idleTimeoutMs,
         totalTimeoutMs: body.limits.totalTimeoutMs,
+        ...(body.model === undefined ? {} : { model: body.model }),
       });
       const queue = this.#behaviors.get(body.profileId) ?? [];
       const behavior = queue.shift() ?? { kind: "answer", text: "默认回答" };
