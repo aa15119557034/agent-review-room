@@ -2,6 +2,7 @@ import { z } from "zod";
 import { AppearanceSettings, ChatBackground, ImageRef, PickableImagePurpose } from "./appearance";
 import {
   ApprovalId,
+  AudioRef,
   BatchId,
   ChatMessageId,
   ConversationId,
@@ -46,7 +47,6 @@ import {
   Turn,
 } from "./discussion";
 import {
-  AudioRef,
   CHAT_LIMITS,
   ChatAttachment,
   ChatContentInput,
@@ -653,6 +653,11 @@ export const COMMANDS = {
       mentions: ChatMentions,
       quoteMessageId: ChatMessageId.nullable(),
       replacesMessageId: ChatMessageId.nullable(),
+      /**
+       * C-42c：「用语音回」开关。你在话里说「用语音回我」时，renderer 在发送前只看这一条、自动点亮，你发送前看得到也能关。
+       * 省略 = 没开。main 原样存到 UserChatMessage.replyAsVoice
+       */
+      replyAsVoice: z.literal(true).optional(),
     }),
     z.object({ message: UserChatMessage, slots: z.array(ChatReplySlot).max(CHAT_LIMITS.maxRecipients), runs: z.array(ChatRun) }),
     "author",
@@ -816,6 +821,8 @@ export const chatSendIntentJson = (req: CommandRequest<"chat.send">): string =>
     mentions: req.mentions,
     quoteMessageId: req.quoteMessageId,
     replacesMessageId: req.replacesMessageId,
+    // C-42c：只在开了时才进意图，所以没开的发送和 C-42c 之前算出来的 hash 一样
+    ...(req.replyAsVoice ? { replyAsVoice: true } : {}),
   });
 
 // ================================================================ Queries

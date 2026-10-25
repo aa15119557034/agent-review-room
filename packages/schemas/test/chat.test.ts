@@ -452,6 +452,21 @@ describe("review round 1 (汐 / 林离 on 919ea67)", () => {
     assert.ok(!chatSendIntentJson(send).includes(MSG), "messageId is the key, not part of the intent");
   });
 
+  it("C-42c: replyAsVoice is part of the intent only when on; old intents are unchanged", () => {
+    const send = {
+      type: "chat.send" as const, conversationId: CONV, messageId: MSG, content: { kind: "text" as const, text: "hi", attachments: [] },
+      mentions: { kind: "none" as const }, quoteMessageId: null, replacesMessageId: null,
+    };
+    assert.equal(
+      chatSendIntentJson(send),
+      `{"content":{"attachments":[],"kind":"text","text":"hi"},"conversationId":"${CONV}","mentions":{"kind":"none"},"quoteMessageId":null,"replacesMessageId":null}`,
+    );
+    assert.notEqual(chatSendIntentJson({ ...send, replyAsVoice: true }), chatSendIntentJson(send));
+    const req = COMMANDS["chat.send"].request;
+    assert.ok(req.safeParse({ ...send, replyAsVoice: true }).success);
+    assert.equal(req.safeParse({ ...send, replyAsVoice: false }).success, false, "off = omitted");
+  });
+
   it("chat.send only takes references; metadata comes from main's records", () => {
     assert.ok(ChatContentInput.safeParse({ kind: "text", text: "", attachments: [{ kind: "file", ref: `file_${ID}` }] }).success);
     assert.equal(
