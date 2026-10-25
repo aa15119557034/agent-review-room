@@ -5,9 +5,12 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
 import Database from "better-sqlite3";
-import { ChatMessage, ChatReplySlot, ChatRun, ChatSnapshot, Conversation } from "@room/schemas";
+import { ChatMessage, ChatReplySlot, ChatRun, ChatSnapshot, Conversation, UserChatMessage } from "@room/schemas";
 import {
   ChatRunStateConflictError,
+  chatRecipients,
+  chatRequired,
+  createChatSend,
   createConversation,
   currentVersion,
   findDirectConversation,
@@ -898,4 +901,144 @@ describe("chat runs and snapshots (v6)", () => {
     }
   });
 });
+describe("chat send transaction (D-31b)", () => {
+  function fresh(): { db: Database.Database; queue: WriteQueue } {
+    return { db: openDatabase(tempFile("room-chat-send-")), queue: new WriteQueue() };
+  }
 
+  const userMessage = (conversationId: string, text = "在吗"): UserChatMessage => ({
+    id: newChatMessageId(),
+    conversationId,
+    createdAt: at(0),
+    sender: "user",
+    content: { kind: "text", text, attachments: [] },
+    mentions: { kind: "none" },
+    quoteMessageId: null,
+    replacesMessageId: null,
+    state: "sent",
+    retractedAt: null,
+  });
+
+  const snapshotFor = (conversationId: string, userMessageId: string, agent: string): ChatSnapshot => ({
+    id: "snap_" + ulid(),
+    purpose: "reply",
+    conversationId,
+    userMessageId,
+    agent,
+    content: "聊天上下文\n\n当前消息：在吗",
+    contentHash: "a".repeat(64),
+    nonce: "0123456789abcdef",
+    memorySlot: null,
+    includedMessageIds: [userMessageId],
+    includedSummaryIds: [],
+    adapterVersion: "chat-v1",
+    tokenEstimate: 8,
+    createdAt: at(0),
+  });
+
+  it("applies the @ rules: direct, @all, @some, no mention", async () => {
+    const { db, queue } = fresh();
+    try {
+      const direct = await createConversation(db, queue, { members: { kind: "direct", agent: "deepseek" }, title: null });
+      assert.deepEqual(chatRecipients(direct, { kind: "none" }), ["deepseek"]);
+      assert.equal(chatRequired(direct, { kind: "none" }, "deepseek"), true);
+      assert.throws(() => chatRecipients(direct, { kind: "all" }));
+
+      const group = await createConversation(db, queue, {
+        members: { kind: "group", agents: ["claude", "codex", "deepseek"] },
+        title: null,
+      });
+      assert.deepEqual(chatRecipients(group, { kind: "all" }), ["claude", "codex", "deepseek"]);
+      assert.deepEqual(chatRecipients(group, { kind: "agents", agents: ["codex"] }), ["codex"]);
+      assert.equal(chatRequired(group, { kind: "agents", agents: ["codex"] }, "codex"), true);
+      assert.deepEqual(chatRecipients(group, { kind: "none" }), ["claude", "codex", "deepseek"]);
+      assert.equal(chatRequired(group, { kind: "none" }, "codex"), false);
+      assert.throws(() => chatRecipients(group, { kind: "agents", agents: ["nobody"] }));
+    } finally {
+      db.close();
+    }
+  });
+
+  it("writes message + slots + snapshots + runs in one transaction, absent people get no run", async () => {
+    const { db, queue } = fresh();
+    try {
+      const group = await createConversation(db, queue, {
+        members: { kind: "group", agents: ["claude", "codex"] },
+        title: null,
+      });
+      const message = userMessage(group.id);
+      const result = createChatSend(db, {
+        message,
+        requestHash: "b".repeat(64),
+        createdAt: at(0),
+        recipients: [
+          { agent: "claude", required: true, availability: { kind: "available" } },
+          { agent: "codex", required: true, availability: { kind: "unavailable", reason: "offline" } },
+        ],
+        snapshots: new Map([["claude", snapshotFor(group.id, message.id, "claude")]]),
+        adapterIds: new Map([["claude", "remote:claude-chat"]]),
+      });
+
+      assert.equal(result.slots.length, 2);
+      assert.equal(result.runs.length, 1);
+      const claude = result.slots.find((s) => s.agent === "claude");
+      const codex = result.slots.find((s) => s.agent === "codex");
+      assert.equal(claude?.outcome, "running");
+      assert.equal(claude?.runId, result.runs[0]?.id);
+      assert.equal(codex?.outcome, "unavailable");
+      assert.equal(codex?.unavailableReason, "offline");
+      assert.equal(codex?.runId, null);
+      assert.equal(codex?.finishedAt, at(0));
+      ChatReplySlot.parse(claude);
+      ChatReplySlot.parse(codex);
+
+      // 回答位的 Run 挂在 claude 的 snapshot 上，消息的 request_hash 落库
+      assert.equal(getChatRun(db, result.runs[0]!.id)?.snapshotHash, "a".repeat(64));
+      const stored = db.prepare("SELECT request_hash FROM chat_messages WHERE id = ?").get(message.id) as {
+        request_hash: string;
+      };
+      assert.equal(stored.request_hash, "b".repeat(64));
+
+      // 同一个 messageId 再发一次：事务体拒绝（IPC 层的防重复会先返回第一次的结果）
+      assert.throws(
+        () =>
+          createChatSend(db, {
+            message,
+            requestHash: "b".repeat(64),
+            createdAt: at(1),
+            recipients: [{ agent: "claude", required: true, availability: { kind: "available" } }],
+            snapshots: new Map([["claude", snapshotFor(group.id, message.id, "claude")]]),
+            adapterIds: new Map([["claude", "remote:claude-chat"]]),
+          }),
+        /already exists/,
+      );
+    } finally {
+      db.close();
+    }
+  });
+
+  it("keeps absent_quota slots without a run and lets everyone be unavailable", async () => {
+    const { db, queue } = fresh();
+    try {
+      const conversation = await createConversation(db, queue, {
+        members: { kind: "direct", agent: "deepseek" },
+        title: null,
+      });
+      const message = userMessage(conversation.id);
+      const result = createChatSend(db, {
+        message,
+        requestHash: null,
+        createdAt: at(0),
+        recipients: [{ agent: "deepseek", required: true, availability: { kind: "absent_quota" } }],
+        snapshots: new Map(),
+        adapterIds: new Map(),
+      });
+      assert.equal(result.slots[0]?.outcome, "absent_quota");
+      assert.equal(result.slots[0]?.runId, null);
+      assert.equal(result.runs.length, 0);
+      assert.equal((db.prepare("SELECT count(*) AS n FROM chat_snapshots").get() as { n: number }).n, 0);
+    } finally {
+      db.close();
+    }
+  });
+});

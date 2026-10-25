@@ -958,3 +958,135 @@ export async function repairInterruptedChatRuns(
   }
   return { repaired };
 }
+// ================================================================ 一次发送的事务体（D-31b 第二段）
+
+export type ChatSendAvailability =
+  | { kind: "available" }
+  | { kind: "absent_quota" }
+  | { kind: "unavailable"; reason: "offline" | "unconfigured" | "paused_by_user" };
+
+export interface ChatSendRecipient {
+  agent: string;
+  required: boolean;
+  availability: ChatSendAvailability;
+}
+
+/**
+ * @ 规则（ADR-003 §2 / C-34）：谁是收件人、谁必须回答。
+ * - 单聊：对方，required = true
+ * - 群聊 @所有人：全部成员，required = true
+ * - 群聊 @某几位：只有被点到的人，required = true；没点到的不建回答位
+ * - 群聊没点名：全部成员，required = false（可以 skip）
+ */
+export function chatRecipients(conversation: Conversation, mentions: ChatMentions): string[] {
+  const members = conversation.members;
+  if (conversation.kind === "direct") {
+    if (mentions.kind !== "none") throw new Error("a direct chat only accepts mentions = none");
+    return [...members];
+  }
+  if (mentions.kind === "none" || mentions.kind === "all") return [...members];
+  for (const agent of mentions.agents) {
+    if (!members.includes(agent)) throw new Error("mentioned agent " + agent + " is not in this conversation");
+  }
+  return [...mentions.agents];
+}
+
+/** 收件人是否必须回答（单聊 / 被点名 = true；群聊没点名 = false） */
+export function chatRequired(conversation: Conversation, mentions: ChatMentions, agent: string): boolean {
+  return conversation.kind === "direct" || mentions.kind === "all" || mentions.kind === "agents";
+}
+
+export interface CreateChatSendInput {
+  /** 已经算好的收件人和可用性（main 的 ChatService 负责探测节点） */
+  recipients: readonly ChatSendRecipient[];
+  message: UserChatMessage;
+  /** 只对你发的消息有意义：chatSendIntentJson 的 sha256 */
+  requestHash: string | null;
+  /** 给每位收件人拼好的 Snapshot（key = agent） */
+  snapshots: ReadonlyMap<string, ChatSnapshot>;
+  /** Run 的 adapterId（例如 "remote:deepseek-chat"） */
+  adapterIds: ReadonlyMap<string, string>;
+  createdAt: string;
+}
+
+export interface CreateChatSendResult {
+  message: UserChatMessage;
+  slots: ChatReplySlot[];
+  runs: ChatRun[];
+}
+
+/**
+ * 一条消息的落库：消息 + 回答位 +（能答的人的）Snapshot 和 Run，**必须在调用方的事务里跑**。
+ *
+ * - 不能答的人直接记 unavailable / absent_quota，没有 Run；其他人照常（聊天不像讨论室整条失败）
+ * - 一个能答的人都没有也算成功
+ * - 唯一键 (userMessageId, agent) 由表保证；这里先查一遍，防止调用方重复发送同一条消息
+ */
+export function createChatSend(db: SqliteDatabase, input: CreateChatSendInput): CreateChatSendResult {
+  const message = ChatMessageSchema.parse(input.message);
+  if (message.sender !== "user") throw new Error("chat send must create a user message");
+  if (db.prepare("SELECT 1 FROM chat_messages WHERE id = ?").get(message.id) !== undefined) {
+    throw new Error("chat message already exists: " + message.id);
+  }
+
+  insertChatMessage(db, { message, requestHash: input.requestHash });
+
+  const slots: ChatReplySlot[] = [];
+  const runs: ChatRun[] = [];
+
+  for (const recipient of input.recipients) {
+    const snapshot = input.snapshots.get(recipient.agent);
+    const adapterId = input.adapterIds.get(recipient.agent);
+    const canAnswer = recipient.availability.kind === "available";
+    if (canAnswer && (snapshot === undefined || adapterId === undefined)) {
+      throw new Error("missing snapshot or adapter for " + recipient.agent);
+    }
+
+    const slotId = newChatSlotId();
+    const runId = "run_" + ulid();
+    const slot: ChatReplySlot = {
+      id: slotId,
+      conversationId: message.conversationId,
+      userMessageId: message.id,
+      agent: recipient.agent,
+      required: recipient.required,
+      outcome: canAnswer ? "running" : recipient.availability.kind === "absent_quota" ? "absent_quota" : "unavailable",
+      runId: canAnswer ? runId : null,
+      attempt: 1,
+      replyMessageId: null,
+      failure: null,
+      unavailableReason: recipient.availability.kind === "unavailable" ? recipient.availability.reason : null,
+      createdAt: input.createdAt,
+      finishedAt: canAnswer ? null : input.createdAt,
+    };
+    insertChatSlot(db, slot);
+    slots.push(slot);
+
+    if (!canAnswer || snapshot === undefined || adapterId === undefined) continue;
+    insertChatSnapshot(db, snapshot);
+    const run: ChatRun = {
+      id: runId,
+      kind: "chat",
+      purpose: "reply",
+      conversationId: message.conversationId,
+      slotId,
+      agent: recipient.agent,
+      snapshotId: snapshot.id,
+      snapshotHash: snapshot.contentHash,
+      finalPromptHash: null,
+      memoryManifest: null,
+      model: null,
+      adapterId,
+      state: "QUEUED",
+      substate: null,
+      failureReason: null,
+      createdAt: input.createdAt,
+      startedAt: null,
+      finishedAt: null,
+    };
+    insertChatRun(db, run);
+    runs.push(run);
+  }
+
+  return { message, slots, runs };
+}
