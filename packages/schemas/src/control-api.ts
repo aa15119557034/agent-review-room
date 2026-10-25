@@ -783,7 +783,7 @@ export const COMMANDS = {
 
   /**
    * C-42c：你点了一条秘书回答的「播放」（authorization = user_play）。source 指向那条回答，main 自己取正文做朗读过滤，
-   * 不接受 renderer 传来的文字。缓存命中直接返回音频；否则建一个语音任务。
+   * 不接受 renderer 传来的文字。缓存（键见 speech.ts，含语速）命中直接返回音频；否则建一个语音任务。
    * 秘书没选声音、回答过滤后为空或超过 SPEAK_MAX_CHARS：validation_failed
    */
   "speech.play": def(

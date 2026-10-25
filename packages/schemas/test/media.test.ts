@@ -10,7 +10,9 @@ import {
   NodeHealth,
   RemoteEvent,
   RemoteProfileQuota,
+  SpeechClip,
   StartRunRequest,
+  VoiceOption,
   canTransition,
 } from "../src/index";
 
@@ -181,6 +183,7 @@ describe("speech (C-42c)", () => {
     id: `spch_${ID}`,
     textHash: sha("d"),
     voiceId: "whale-soft",
+    speed: 1,
     engine: "cosyvoice",
     engineVersion: "2.0",
     audioRef: `aud_${ID}`,
@@ -197,6 +200,16 @@ describe("speech (C-42c)", () => {
     assert.ok(MediaJob.safeParse({ ...speechJob, ...ended, speech: clip }).success);
     assert.equal(MediaJob.safeParse({ ...speechJob, ...ended, speech: clip, result }).success, false);
     assert.equal(MediaJob.safeParse({ ...done, speech: clip }).success, false);
+  });
+
+  it("SpeechClip records the speed it was synthesized at; voice option is strict", () => {
+    const { speed: _s, ...noSpeed } = clip;
+    assert.equal(SpeechClip.safeParse(noSpeed).success, false, "speed is part of the cache key");
+    assert.equal(SpeechClip.safeParse({ ...clip, speed: 3 }).success, false);
+    assert.equal(SpeechClip.safeParse({ ...clip, text: "原文" }).success, false, "strict");
+    const opt = { id: "whale-soft", displayName: "小鲸鱼", engine: "indextts2", source: "preset", sampleRef: null };
+    assert.ok(VoiceOption.safeParse(opt).success, "all three candidate engines stay readable");
+    assert.equal(VoiceOption.safeParse({ ...opt, path: "C:/a.wav" }).success, false);
   });
 
   it("speech.play takes a source, never raw text; voice settings are strict", () => {
