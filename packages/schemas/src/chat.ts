@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ChatMessageId, ConversationId, IsoTimestamp, prefixedId, RunId, Sha256Hex, SnapshotId } from "./common";
+import { AudioRef, ChatMessageId, ConversationId, IsoTimestamp, prefixedId, RunId, Sha256Hex, SnapshotId } from "./common";
 import { FailureReason } from "./agent-event";
 import { RunState, RunSubstate } from "./state-machines";
 import { AgentName } from "./entities";
@@ -31,19 +31,15 @@ import { ATTACHMENT_LIMITS, AttachmentManifest, attachmentManifestBlock } from "
 export const ChatSlotId = prefixedId("slot");
 /** 聊天里的非图片文件（图片仍用 ImageRef，同一套引用规则，C-32） */
 export const FileRef = prefixedId("file");
-/** 录音（16k 单声道，main 转好后存的那一份） */
-export const AudioRef = prefixedId("aud");
 export const StickerId = prefixedId("stk");
 export const ChatSummaryId = prefixedId("csum");
 
 export type ChatSlotId = z.infer<typeof ChatSlotId>;
 export type FileRef = z.infer<typeof FileRef>;
-export type AudioRef = z.infer<typeof AudioRef>;
 export type StickerId = z.infer<typeof StickerId>;
 export type ChatSummaryId = z.infer<typeof ChatSummaryId>;
 
-/** renderer 播放录音用 `room-audio://aud_…`；规则和 room-image 一样（只认引用、只读、不可导航、不拼路径） */
-export const AUDIO_URL_SCHEME = "room-audio";
+// 录音引用 AudioRef 和播放用的 AUDIO_URL_SCHEME 在 common.ts（C-42c 的合成语音也用）
 
 // ================================================================ 上限（后端强制，不只靠界面）
 
@@ -281,6 +277,11 @@ export const UserChatMessage = z
     quoteMessageId: ChatMessageId.nullable(),
     /** 重新编辑：指向被撤回的原消息，显示在原来的位置，带「已重新编辑」标记 */
     replacesMessageId: ChatMessageId.nullable(),
+    /**
+     * C-42c：「用语音回」。true = 这条消息的回答都合成语音（authorization = reply_as_voice）。
+     * 省略 = 没开（旧消息也是省略）。只看这个开关，不看秘书输出里的 speak
+     */
+    replyAsVoice: z.literal(true).optional(),
     state: ChatMessageState,
     retractedAt: IsoTimestamp.nullable(),
   })

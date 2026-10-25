@@ -2,6 +2,7 @@ import { z } from "zod";
 import { AppearanceSettings, ChatBackground, ImageRef, PickableImagePurpose } from "./appearance";
 import {
   ApprovalId,
+  AudioRef,
   BatchId,
   ChatMessageId,
   ConversationId,
@@ -46,7 +47,6 @@ import {
   Turn,
 } from "./discussion";
 import {
-  AudioRef,
   CHAT_LIMITS,
   ChatAttachment,
   ChatContentInput,
@@ -68,6 +68,7 @@ import {
   VoiceRecording,
 } from "./chat";
 import { DrawRequest, DrawRoutePreview, MediaJob, MediaJobId, MediaScope, MediaSource } from "./media";
+import { SpeechClip, VoiceOption, VoiceProfile } from "./speech";
 
 /**
  * 控制面 API：人 ⇄ Orchestrator。
@@ -339,6 +340,8 @@ export const COMMANDS = {
       chatPersona: AgentProfile.shape.chatPersona.optional(),
       chatProfileId: ProfileId.nullable().optional(),
       memorySource: MemorySource.optional(),
+      /** C-42c：null = 不用语音；voiceId 必须在 voices.list 里，否则 validation_failed */
+      voice: VoiceProfile.nullable().optional(),
     }),
     AgentProfile,
     "admin",
@@ -650,6 +653,11 @@ export const COMMANDS = {
       mentions: ChatMentions,
       quoteMessageId: ChatMessageId.nullable(),
       replacesMessageId: ChatMessageId.nullable(),
+      /**
+       * C-42c：「用语音回」开关。你在话里说「用语音回我」时，renderer 在发送前只看这一条、自动点亮，你发送前看得到也能关。
+       * 省略 = 没开。main 原样存到 UserChatMessage.replyAsVoice
+       */
+      replyAsVoice: z.literal(true).optional(),
     }),
     z.object({ message: UserChatMessage, slots: z.array(ChatReplySlot).max(CHAT_LIMITS.maxRecipients), runs: z.array(ChatRun) }),
     "author",
@@ -756,6 +764,8 @@ export const COMMANDS = {
    * - backend = codex（手动）：额度 ≥ 阈值或读不到时，confirmOverThreshold 必须为 true，否则 invalid_state（message 写明当前百分比）；
    *   ≥ 100% 或在用 credits 时一律 invalid_state
    * - 同一个 source + 同样的 draw 已经有没结束的任务时，返回那个任务，不重复建
+   * - source 由 main 按存下来的消息核对：消息不存在、不在这个会话 / 议题里，或 source.agent 和那条消息的作者对不上 → validation_failed。
+   *   任务里记的 source 用 main 查到的，不用 renderer 传来的
    * 返回新建（queued）的任务；之后的变化走 media.updated 事件
    */
   "draw.start": def(
@@ -777,6 +787,22 @@ export const COMMANDS = {
    * 一次性的：沉浸模式仍然开着。返回被取消的任务
    */
   "media.stop": def(z.object({ type: z.literal("media.stop"), scope: MediaScope }), z.array(MediaJob), "cancel"),
+
+  /**
+   * C-42c：你点了一条秘书回答的「播放」（authorization = user_play）。source 指向那条回答，main 自己取正文做朗读过滤，
+   * 不接受 renderer 传来的文字。缓存（键见 speech.ts，含语速）命中直接返回音频；否则建一个语音任务。
+   * - source 以存下来的回答为准：消息不存在、不是秘书的回答，或 source.agent 和那条回答的作者对不上 → validation_failed。
+   *   用谁的声音只看那条回答的作者，不看 renderer 传来的 agent
+   * - 秘书没选声音、回答过滤后为空或超过 SPEAK_MAX_CHARS：validation_failed
+   */
+  "speech.play": def(
+    z.object({ type: z.literal("speech.play"), source: MediaSource }),
+    z.discriminatedUnion("cached", [
+      z.object({ cached: z.literal(true), clip: SpeechClip }),
+      z.object({ cached: z.literal(false), job: MediaJob }),
+    ]),
+    "author",
+  ),
 } as const;
 
 /** 按键排序的 JSON（数组保持顺序），用来给发送意图判等 */
@@ -795,6 +821,8 @@ export const chatSendIntentJson = (req: CommandRequest<"chat.send">): string =>
     mentions: req.mentions,
     quoteMessageId: req.quoteMessageId,
     replacesMessageId: req.replacesMessageId,
+    // C-42c：只在开了时才进意图，所以没开的发送和 C-42c 之前算出来的 hash 一样
+    ...(req.replyAsVoice ? { replyAsVoice: true } : {}),
   });
 
 // ================================================================ Queries
@@ -967,6 +995,9 @@ export const QUERIES = {
     DrawRoutePreview,
     "read",
   ),
+
+  /** C-42c：能选的声音（来自本机语音合成引擎）；引擎没装好时为空数组 */
+  "voices.list": def(z.object({ type: z.literal("voices.list") }), z.array(VoiceOption).max(200), "read"),
 
   "media.get": def(z.object({ type: z.literal("media.get"), jobId: MediaJobId }), MediaJob, "read"),
 

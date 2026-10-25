@@ -15,6 +15,7 @@ import { ApprovalState, PlanState, RoundState, TurnOutcome } from "./state-machi
 import { EffortId, ModelId, ProfileId, RunModel } from "./remote-protocol";
 import { ImageRef } from "./appearance";
 import { AttachmentManifest } from "./attachments";
+import { VoiceProfile } from "./speech";
 
 /**
  * 讨论室模式的实体（ADR-002 / C-20，阶段 1A）。
@@ -147,6 +148,8 @@ export const AgentProfile = z.object({
   chatProfileId: ProfileId.nullable(),
   /** C-34：记忆来源 */
   memorySource: MemorySource,
+  /** C-42c：秘书的声音；没有 = 还没选，不合成语音 */
+  voice: VoiceProfile.nullable().optional(),
 });
 export type AgentProfile = z.infer<typeof AgentProfile>;
 

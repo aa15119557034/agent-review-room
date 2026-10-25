@@ -10,7 +10,9 @@ import {
   NodeHealth,
   RemoteEvent,
   RemoteProfileQuota,
+  SpeechClip,
   StartRunRequest,
+  VoiceOption,
   canTransition,
 } from "../src/index";
 
@@ -30,6 +32,7 @@ const job = {
   route: null,
   remoteRunId: null,
   result: null,
+  speech: null,
   failure: null,
   cancelReason: null,
   createdAt: NOW,
@@ -172,5 +175,52 @@ describe("media jobs (C-42b)", () => {
     const swapped = { ...job.source, conversationId: `cmsg_${ID}`, messageId: `conv_${ID}` };
     assert.equal(MediaJob.safeParse({ ...job, source: swapped }).success, false, "chat ids use C-34's prefixes");
     assert.ok(ControlEvent.safeParse({ type: "media.updated", job }).success);
+  });
+});
+
+describe("speech (C-42c)", () => {
+  const clip = {
+    id: `spch_${ID}`,
+    textHash: sha("d"),
+    voiceId: "whale-soft",
+    speed: 1,
+    engine: "cosyvoice",
+    engineVersion: "2.0",
+    audioRef: `aud_${ID}`,
+    mime: "audio/ogg",
+    durationMs: 3200,
+    createdAt: NOW,
+  };
+  const speechJob = { ...job, kind: "speech", authorization: "user_play", draw: null };
+  const ended = { state: "succeeded", startedAt: "2026-10-23T18:00:05+08:00", finishedAt: "2026-10-23T18:00:09+08:00" };
+
+  it("speech job: succeeded needs a clip; no draw fields", () => {
+    assert.ok(MediaJob.safeParse(speechJob).success);
+    assert.equal(MediaJob.safeParse({ ...speechJob, ...ended }).success, false);
+    assert.ok(MediaJob.safeParse({ ...speechJob, ...ended, speech: clip }).success);
+    assert.equal(MediaJob.safeParse({ ...speechJob, ...ended, speech: clip, result }).success, false);
+    assert.equal(MediaJob.safeParse({ ...done, speech: clip }).success, false);
+  });
+
+  it("SpeechClip records the speed it was synthesized at; voice option is strict", () => {
+    const { speed: _s, ...noSpeed } = clip;
+    assert.equal(SpeechClip.safeParse(noSpeed).success, false, "speed is part of the cache key");
+    assert.equal(SpeechClip.safeParse({ ...clip, speed: 3 }).success, false);
+    assert.equal(SpeechClip.safeParse({ ...clip, text: "原文" }).success, false, "strict");
+    const opt = { id: "whale-soft", displayName: "小鲸鱼", engine: "indextts2", source: "preset", sampleRef: null };
+    assert.ok(VoiceOption.safeParse(opt).success, "all three candidate engines stay readable");
+    assert.equal(VoiceOption.safeParse({ ...opt, path: "C:/a.wav" }).success, false);
+  });
+
+  it("speech.play takes a source, never raw text; voice settings are strict", () => {
+    const req = COMMANDS["speech.play"].request;
+    assert.ok(req.safeParse({ type: "speech.play", source: job.source }).success);
+    assert.equal(req.safeParse({ type: "speech.play", source: job.source, text: "随便念" }).success, true, "extra keys are stripped, not used");
+    assert.equal("text" in (req.parse({ type: "speech.play", source: job.source, text: "x" }) as object), false);
+    const upd = COMMANDS["agent.update"].request;
+    assert.ok(upd.safeParse({ type: "agent.update", id: "claude", voice: { voiceId: "whale-soft", speed: 1 } }).success);
+    assert.ok(upd.safeParse({ type: "agent.update", id: "claude", voice: null }).success);
+    assert.equal(upd.safeParse({ type: "agent.update", id: "claude", voice: { voiceId: "whale-soft", speed: 5 } }).success, false);
+    assert.equal(upd.safeParse({ type: "agent.update", id: "claude", voice: { voiceId: "x", speed: 1, refAudioPath: "C:/a.wav" } }).success, false);
   });
 });

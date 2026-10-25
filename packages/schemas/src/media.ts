@@ -4,6 +4,7 @@ import { ImageRef } from "./appearance";
 import { AgentName, MessageId, ProjectId } from "./entities";
 import { MediaJobState } from "./state-machines";
 import { RemoteProfileQuota } from "./remote-protocol";
+import { SpeechClip } from "./speech";
 
 /**
  * 媒体任务：画图和语音合成（C-42b，ADR-004 §3 / §3a，阶段 1B-M1）。
@@ -172,6 +173,8 @@ export const MediaJob = z
     remoteRunId: RunId.nullable(),
     /** succeeded 的画图任务必填 */
     result: GeneratedImage.nullable(),
+    /** C-42c：succeeded 的语音任务必填 */
+    speech: SpeechClip.nullable(),
     failure: z.object({ reason: MediaFailureReason, message: z.string().max(2000) }).nullable(),
     cancelReason: MediaCancelReason.nullable(),
     createdAt: IsoTimestamp,
@@ -207,7 +210,9 @@ export const MediaJob = z
     (j) => (j.kind === "draw" ? DRAW_AUTHORIZATIONS : SPEECH_AUTHORIZATIONS).includes(j.authorization),
     "授权方式要和任务种类对得上（画图只能 user_tap / immersive）",
   )
-  .refine((j) => j.authorization !== "immersive" || j.source.kind === "chat", "沉浸模式只在聊天里");
+  .refine((j) => j.authorization !== "immersive" || j.source.kind === "chat", "沉浸模式只在聊天里")
+  .refine((j) => j.kind !== "speech" || (j.state === "succeeded") === (j.speech !== null), "语音成功必须有音频")
+  .refine((j) => j.kind === "draw" ? j.speech === null : j.result === null && j.route === null, "结果要和任务种类对得上");
 export type MediaJob = z.infer<typeof MediaJob>;
 
 /**

@@ -23,6 +23,13 @@ export const ConversationId = prefixedId("conv");
 /** 你发的消息的 id 由发送方生成（防重复，见 chat.send）；秘书的消息由 main 生成 */
 export const ChatMessageId = prefixedId("cmsg");
 
+// ---- 音频（C-34 的录音和 C-42c 的合成语音共用）。放在这里避免 chat.ts 和 speech.ts 互相引用
+/** 音频引用：录音（16k 单声道，main 转好后存的那一份）或合成的语音 */
+export const AudioRef = prefixedId("aud");
+export type AudioRef = z.infer<typeof AudioRef>;
+/** renderer 播放音频用 `room-audio://aud_…`；规则和 room-image 一样（只认引用、只读、不可导航、不拼路径） */
+export const AUDIO_URL_SCHEME = "room-audio";
+
 /**
  * SHA-256，小写十六进制。
  * 约定：Prompt 的 hash = sha256(UTF-8 编码的 content 原文)，不做任何规范化。
