@@ -22,7 +22,7 @@ import { ATTACHMENT_LIMITS, AttachmentManifest, attachmentManifestBlock } from "
  * - C-42a：图片附件的附件清单（AttachmentManifest）、`ModelOption.vision` 三态（「能看图」看模型，不看人，
  *   所以 AgentProfile 上**没有**「能看图」标记）、ImagePurpose 新增 chat / sticker / material / generated、每条消息的图片张数上限
  * - C-42c：你发的消息上的 `replyAsVoice`
- * - C-42d：ChatAgentOutput 的 reply 分支上的 `speak` / `draw`、Conversation 上的沉浸模式设置
+ * - C-42d：ChatAgentOutput 的 reply 分支上的 `speak` / `draw`；沉浸模式设置按会话存，用 immersive.get / immersive.update
  * C-34 先合并时，这些字段都不存在，旧数据读出来照样合法；C-42 合并后各自按自己的规则补。
  */
 
@@ -442,7 +442,9 @@ export type ChatReplySlot = z.infer<typeof ChatReplySlot>;
  * 聊天 Run 的输出（message_complete 的全文）必须**整段**是一个 JSON 对象（首尾空白可以有，别的不行）：
  * - { "kind": "reply", "text": "…" }
  * - { "kind": "skip" }
- * 两种都 strict，多一个字段就是 parse_error（C-42d 会在 reply 上加 speak / draw，那时再放开这两个字段）。
+ * 两种都 strict，多一个字段就是 parse_error。reply 上另外允许 speak / draw 两个媒体意图入口（C-42d）：
+ * 这一层不校验它们的内容，由 extractMediaIntent（immersive.ts）各自校验，不合格只丢那一项、不让整条回答失败；
+ * skip 带了它们照样是 parse_error。
  * 解析失败按失败记，**不降级成 skip**；只有完整合法的 reply 才建消息。
  * 单聊或被点名的人给出 skip → failed(skip_not_allowed)，不能悄悄显示成「不回答」。
  * 分类顺序：整段输出去空白后为空 → empty_output；不是 JSON 或不合下面的 schema → parse_error；
@@ -453,6 +455,9 @@ export const ChatAgentOutput = z.discriminatedUnion("kind", [
     .object({
       kind: z.literal("reply"),
       text: z.string().max(CHAT_LIMITS.replyMaxChars).refine((t) => t.trim().length > 0, "empty_output"),
+      /** C-42d：媒体意图入口，内容见 extractMediaIntent */
+      speak: z.unknown().optional(),
+      draw: z.unknown().optional(),
     })
     .strict(),
   z.object({ kind: z.literal("skip") }).strict(),

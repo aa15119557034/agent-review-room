@@ -1,11 +1,12 @@
 import { z } from "zod";
 import { IsoTimestamp } from "./common";
 import { DrawSize, DRAW_PROMPT_MAX_CHARS } from "./media";
+import type { ChatAgentOutput } from "./chat";
 
 /**
  * 媒体意图和沉浸模式（C-42d，ADR-004 §3a，阶段 1B-M2 实现，契约先定）。
  *
- * 秘书的回答是一个结构化信封（和 ADR-003 群聊的 reply / skip 是同一个结构，C-34 直接用这里的 AgentReplyEnvelope）：
+ * 秘书的回答就是 C-34 的 ChatAgentOutput（reply / skip），C-42d 只在 reply 分支上加 speak / draw 两个入口（见 chat.ts）：
  * - 信封解析失败（不是合法 JSON、kind 不对、skip 带了别的字段、reply 没有正文）→ 这个回答位按 ADR-003 记失败，
  *   不降级成 skip，不执行任何媒体意图
  * - 单聊或被点名的人给出 skip 仍是失败（ADR-003）
@@ -37,26 +38,12 @@ export const MediaIntent = z
   .strict();
 export type MediaIntent = z.infer<typeof MediaIntent>;
 
-/** 秘书回答的信封。speak / draw 在这一层先不校验内容，见 extractMediaIntent */
-export const AgentReplyEnvelope = z.discriminatedUnion("kind", [
-  z
-    .object({
-      kind: z.literal("reply"),
-      text: z.string().trim().min(1).max(200_000),
-      speak: z.unknown().optional(),
-      draw: z.unknown().optional(),
-    })
-    .strict(),
-  z.object({ kind: z.literal("skip") }).strict(),
-]);
-export type AgentReplyEnvelope = z.infer<typeof AgentReplyEnvelope>;
-
 /**
  * 从合法的 reply 信封里取媒体意图，speak 和 draw 分开校验：
  * - intent：合格的那几项；一项都没有为 null
  * - dropped：有没有哪一项因为不合格被丢掉（调用方记下原始值）
  */
-export function extractMediaIntent(env: Extract<AgentReplyEnvelope, { kind: "reply" }>): {
+export function extractMediaIntent(env: Extract<ChatAgentOutput, { kind: "reply" }>): {
   intent: MediaIntent | null;
   dropped: boolean;
 } {

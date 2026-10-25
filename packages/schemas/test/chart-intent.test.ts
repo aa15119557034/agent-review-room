@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import {
-  AgentReplyEnvelope,
+  ChatAgentOutput,
   CHART_LIMITS,
   COMMANDS,
   DEFAULT_IMMERSIVE_SETTINGS,
@@ -47,17 +47,17 @@ describe("chart (C-42d)", () => {
 
 describe("media intent & immersive (C-42d)", () => {
   it("envelope: skip with media fields is a parse failure; reply needs text", () => {
-    assert.ok(AgentReplyEnvelope.safeParse({ kind: "skip" }).success);
-    assert.equal(AgentReplyEnvelope.safeParse({ kind: "skip", draw: { prompt: "x", size: "1024x1024" } }).success, false);
-    assert.equal(AgentReplyEnvelope.safeParse({ kind: "skip", speak: true }).success, false);
-    assert.equal(AgentReplyEnvelope.safeParse({ kind: "reply", text: "  " }).success, false);
-    assert.equal(AgentReplyEnvelope.safeParse({ kind: "reply", text: "好", tool: "rm" }).success, false);
+    assert.ok(ChatAgentOutput.safeParse({ kind: "skip" }).success);
+    assert.equal(ChatAgentOutput.safeParse({ kind: "skip", draw: { prompt: "x", size: "1024x1024" } }).success, false);
+    assert.equal(ChatAgentOutput.safeParse({ kind: "skip", speak: true }).success, false);
+    assert.equal(ChatAgentOutput.safeParse({ kind: "reply", text: "  " }).success, false);
+    assert.equal(ChatAgentOutput.safeParse({ kind: "reply", text: "好", tool: "rm" }).success, false);
   });
 
   it("valid envelope with bad media fields keeps the text and drops only the bad field", () => {
-    const ok = AgentReplyEnvelope.parse({ kind: "reply", text: "给你画", draw: { prompt: "小鲸鱼", size: "1024x1024" }, speak: true });
+    const ok = ChatAgentOutput.parse({ kind: "reply", text: "给你画", draw: { prompt: "小鲸鱼", size: "1024x1024" }, speak: true });
     assert.deepEqual(extractMediaIntent(ok as never), { intent: { speak: true, draw: { prompt: "小鲸鱼", size: "1024x1024" } }, dropped: false });
-    const plain = AgentReplyEnvelope.parse({ kind: "reply", text: "好" });
+    const plain = ChatAgentOutput.parse({ kind: "reply", text: "好" });
     assert.deepEqual(extractMediaIntent(plain as never), { intent: null, dropped: false });
     for (const media of [
       { draw: { prompt: "x", size: "8192x8192" } },
@@ -65,10 +65,10 @@ describe("media intent & immersive (C-42d)", () => {
       { draw: { prompt: "x", size: "1024x1024", backend: "codex" } },
       { speak: "yes" },
     ]) {
-      const env = AgentReplyEnvelope.parse({ kind: "reply", text: "好", ...media });
+      const env = ChatAgentOutput.parse({ kind: "reply", text: "好", ...media });
       assert.deepEqual(extractMediaIntent(env as never), { intent: null, dropped: true }, JSON.stringify(media));
     }
-    const env = (media: object) => AgentReplyEnvelope.parse({ kind: "reply", text: "好", ...media }) as never;
+    const env = (media: object) => ChatAgentOutput.parse({ kind: "reply", text: "好", ...media }) as never;
     const d = { prompt: "小鲸鱼", size: "1024x1024" };
     assert.deepEqual(extractMediaIntent(env({ speak: false })), { intent: null, dropped: false }, "speak: false = not set");
     assert.deepEqual(extractMediaIntent(env({ speak: false, draw: d })), { intent: { draw: d }, dropped: false });
