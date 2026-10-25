@@ -120,6 +120,16 @@ export function applyEvent(state: AppState, event: ControlEvent): AppState {
       const disc = applyDiscussionEvent(state.disc, event, pid);
       return disc === state.disc ? state : { ...state, disc };
     }
+
+    // 聊天空间（C-34）的事件由聊天界面（C-35）自己处理
+    case "chat.conversation.updated":
+    case "chat.message.created":
+    case "chat.message.updated":
+    case "chat.slot.updated":
+    case "chat.run.updated":
+    case "chat.summary.updated":
+    case "chat.voice.updated":
+      return state;
   }
 }
 

@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
 import Database from "better-sqlite3";
-import { currentVersion, openDatabase, ulid, WriteQueue, writeTransaction } from "../src/index";
+import { currentVersion, LATEST_SCHEMA_VERSION, openDatabase, ulid, WriteQueue, writeTransaction } from "../src/index";
 import { SCHEMA_V1 } from "../src/schema";
 import type { SqliteDatabase } from "../src/index";
 
@@ -72,13 +72,24 @@ function seedSnapshot(db: SqliteDatabase, projectId: string, id = "snap_01"): st
 describe("migrations", () => {
   it("applies all migrations on a fresh database", () => {
     const { db } = freshDb();
-    assert.equal(currentVersion(db), 4);
+    assert.equal(currentVersion(db), LATEST_SCHEMA_VERSION);
 
     const tables = db
       .prepare("SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY name")
       .all()
       .map((row) => (row as { name: string }).name);
-    for (const expected of ["projects", "messages", "contributions", "prompt_snapshots", "approvals", "runs"]) {
+    for (const expected of [
+      "projects",
+      "messages",
+      "contributions",
+      "prompt_snapshots",
+      "approvals",
+      "runs",
+      "conversations",
+      "conversation_members",
+      "chat_messages",
+      "chat_reply_slots",
+    ]) {
       assert.ok(tables.includes(expected), `missing table ${expected}`);
     }
     db.close();
@@ -88,7 +99,7 @@ describe("migrations", () => {
     const { db, file } = freshDb();
     db.close();
     const reopened = openDatabase(file);
-    assert.equal(currentVersion(reopened), 4);
+    assert.equal(currentVersion(reopened), LATEST_SCHEMA_VERSION);
     reopened.close();
   });
 });
@@ -510,7 +521,7 @@ describe("migration v2 (incomplete_output)", () => {
 
     // 升级到 v2
     const upgraded = openDatabase(file);
-    assert.equal(currentVersion(upgraded), 4);
+    assert.equal(currentVersion(upgraded), LATEST_SCHEMA_VERSION);
     assert.equal(count(upgraded, "SELECT count(*) AS n FROM runs"), 1);
     assert.equal(
       (upgraded.prepare("SELECT state FROM runs WHERE id = 'run_old'").get() as { state: string }).state,

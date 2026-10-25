@@ -4,6 +4,8 @@ import {
   AgentModelSettings,
   BatchModel,
   DEFAULT_AGENT_MODEL_SETTINGS,
+  DEFAULT_MEMORY_SOURCE,
+  MemorySource,
   type AgentProfile,
   type Approval,
   type ApprovalBatch,
@@ -40,6 +42,8 @@ const now = (): string => new Date().toISOString();
 const toProject = (row: Record<string, unknown>): Project => ({
   id: row["id"] as string,
   name: row["name"] as string,
+  // C-34：从哪个聊天会话转来；老数据 / 手动建的为 null
+  fromConversationId: (row["from_conversation_id"] as string | null) ?? null,
   createdAt: row["created_at"] as string,
 });
 
@@ -236,6 +240,16 @@ const toPlan = (row: Record<string, unknown>): PlanVersion => ({
   decidedAt: (row["decided_at"] as string | null) ?? null,
 });
 
+const toMemorySource = (raw: unknown): MemorySource => {
+  if (typeof raw !== "string") return DEFAULT_MEMORY_SOURCE;
+  try {
+    const parsed = MemorySource.safeParse(JSON.parse(raw));
+    return parsed.success ? parsed.data : DEFAULT_MEMORY_SOURCE;
+  } catch {
+    return DEFAULT_MEMORY_SOURCE;
+  }
+};
+
 const toAgent = (row: Record<string, unknown>): AgentProfile => ({
   id: row["id"] as string,
   displayName: row["display_name"] as string,
@@ -250,6 +264,10 @@ const toAgent = (row: Record<string, unknown>): AgentProfile => ({
   pausedByUser: row["paused_by_user"] === 1,
   substitute: (row["substitute"] as string | null) ?? null,
   modelSettings: toModelSettings(row["model_settings"]),
+  // C-34：聊天人设 / 聊天 profile / 记忆来源；老行是 NULL，读出来用默认值
+  chatPersona: (row["chat_persona"] as string | null) ?? "",
+  chatProfileId: (row["chat_profile_id"] as string | null) ?? null,
+  memorySource: toMemorySource(row["memory_source"]),
 });
 
 export interface UpsertAgentInput {
@@ -266,6 +284,10 @@ export interface UpsertAgentInput {
   substitute?: string | null;
   /** C-40：整份替换（不按字段合并）；省略 = 不改 */
   modelSettings?: AgentModelSettings;
+  /** C-34：聊天人设、聊天 profile、记忆来源；省略 = 不改 */
+  chatPersona?: string;
+  chatProfileId?: string | null;
+  memorySource?: MemorySource;
 }
 
 export interface CreateSnapshotInput {
@@ -290,7 +312,7 @@ export class Repository {
     await writeTransaction(this.#db, this.#queue, () => {
       this.#db.prepare("INSERT INTO projects (id, name, created_at) VALUES (?, ?, ?)").run(id, name, createdAt);
     });
-    return { id, name, createdAt };
+    return { id, name, fromConversationId: null, createdAt };
   }
 
   async addSource(projectId: string, sourceAgent: string, content: string): Promise<Message> {
@@ -608,7 +630,8 @@ export class Repository {
         this.#db
           .prepare(
             "INSERT INTO agents (id, display_name, color, role_note, can_discuss, can_summarize, can_execute, " +
-              "node_id, profile_id, paused_by_user, substitute, model_settings, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+              "node_id, profile_id, paused_by_user, substitute, model_settings, chat_persona, chat_profile_id, memory_source, " +
+              "created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
           )
           .run(
             input.id,
@@ -623,6 +646,9 @@ export class Repository {
             (input.pausedByUser ?? false) ? 1 : 0,
             input.substitute ?? null,
             input.modelSettings === undefined ? null : JSON.stringify(input.modelSettings),
+            input.chatPersona ?? null,
+            input.chatProfileId ?? null,
+            input.memorySource === undefined ? null : JSON.stringify(input.memorySource),
             updatedAt,
             updatedAt,
           );
@@ -641,6 +667,9 @@ export class Repository {
         ["pausedByUser", "paused_by_user"],
         ["substitute", "substitute"],
         ["modelSettings", "model_settings"],
+        ["chatPersona", "chat_persona"],
+        ["chatProfileId", "chat_profile_id"],
+        ["memorySource", "memory_source"],
       ];
       const sets: string[] = [];
       const params: unknown[] = [];
@@ -649,7 +678,11 @@ export class Repository {
         if (value === undefined) continue;
         sets.push(column + " = ?");
         params.push(
-          key === "modelSettings" ? JSON.stringify(value) : typeof value === "boolean" ? (value ? 1 : 0) : value,
+          key === "modelSettings" || key === "memorySource"
+            ? JSON.stringify(value)
+            : typeof value === "boolean"
+              ? value ? 1 : 0
+              : value,
         );
       }
       sets.push("updated_at = ?");

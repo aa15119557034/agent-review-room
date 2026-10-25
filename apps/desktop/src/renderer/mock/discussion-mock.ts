@@ -1,4 +1,5 @@
 import {
+  DEFAULT_MEMORY_SOURCE,
   APPROVAL_TRANSITIONS,
   PLAN_TRANSITIONS,
   ROUND_TRANSITIONS,
@@ -114,6 +115,7 @@ const SEED_AGENTS: AgentProfile[] = [
     canDiscuss: true, canSummarize: true, canExecute: true, nodeId: "user-pc", profileId: "claude-review",
     pausedByUser: false, substitute: null,
     modelSettings: RECOMMENDED_MODELS.claude,
+    chatPersona: "", chatProfileId: null, memorySource: DEFAULT_MEMORY_SOURCE,
   },
   {
     id: "deepseek", displayName: "DeepSeek", color: "#2f5aa0", avatarRef: null,
@@ -121,6 +123,7 @@ const SEED_AGENTS: AgentProfile[] = [
     canDiscuss: true, canSummarize: false, canExecute: true, nodeId: "controller-local", profileId: "deepseek-discuss",
     pausedByUser: false, substitute: null,
     modelSettings: RECOMMENDED_MODELS.deepseek,
+    chatPersona: "", chatProfileId: null, memorySource: DEFAULT_MEMORY_SOURCE,
   },
   {
     id: "codex", displayName: "Codex", color: "#1f6b55", avatarRef: null,
@@ -128,6 +131,7 @@ const SEED_AGENTS: AgentProfile[] = [
     canDiscuss: true, canSummarize: false, canExecute: true, nodeId: "controller-local", profileId: "codex-discuss",
     pausedByUser: false, substitute: "deepseek",
     modelSettings: RECOMMENDED_MODELS.codex,
+    chatPersona: "", chatProfileId: null, memorySource: DEFAULT_MEMORY_SOURCE,
   },
 ];
 
@@ -514,6 +518,7 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
           id: req.id, displayName: req.displayName, color: req.color, avatarRef: null, roleNote: "",
           canDiscuss: true, canSummarize: false, canExecute: false, nodeId: null, profileId: null, pausedByUser: false, substitute: null,
           modelSettings: { primaryModel: null, fallbackModel: null, effort: { chat: null, discussion: null, summary: null } },
+          chatPersona: "", chatProfileId: null, memorySource: DEFAULT_MEMORY_SOURCE,
         });
       }
       const a = agent(req.id);
