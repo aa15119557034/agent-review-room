@@ -759,6 +759,8 @@ export const COMMANDS = {
    * - backend = codex（手动）：额度 ≥ 阈值或读不到时，confirmOverThreshold 必须为 true，否则 invalid_state（message 写明当前百分比）；
    *   ≥ 100% 或在用 credits 时一律 invalid_state
    * - 同一个 source + 同样的 draw 已经有没结束的任务时，返回那个任务，不重复建
+   * - source 由 main 按存下来的消息核对：消息不存在、不在这个会话 / 议题里，或 source.agent 和那条消息的作者对不上 → validation_failed。
+   *   任务里记的 source 用 main 查到的，不用 renderer 传来的
    * 返回新建（queued）的任务；之后的变化走 media.updated 事件
    */
   "draw.start": def(
@@ -784,7 +786,9 @@ export const COMMANDS = {
   /**
    * C-42c：你点了一条秘书回答的「播放」（authorization = user_play）。source 指向那条回答，main 自己取正文做朗读过滤，
    * 不接受 renderer 传来的文字。缓存（键见 speech.ts，含语速）命中直接返回音频；否则建一个语音任务。
-   * 秘书没选声音、回答过滤后为空或超过 SPEAK_MAX_CHARS：validation_failed
+   * - source 以存下来的回答为准：消息不存在、不是秘书的回答，或 source.agent 和那条回答的作者对不上 → validation_failed。
+   *   用谁的声音只看那条回答的作者，不看 renderer 传来的 agent
+   * - 秘书没选声音、回答过滤后为空或超过 SPEAK_MAX_CHARS：validation_failed
    */
   "speech.play": def(
     z.object({ type: z.literal("speech.play"), source: MediaSource }),
