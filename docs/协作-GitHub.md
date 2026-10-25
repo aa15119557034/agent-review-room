@@ -22,11 +22,13 @@
 
 同一个 Agent 在不同地方叫法不同，认这几个名字：
 
-| 本名 | 文档里的名字 | 代码/分支里 | 主要目录 |
-|---|---|---|---|
-| C酱 | **C酱（首席秘书）** | `claude` / `claude/` | `packages/schemas`、`renderer`、`apps/agent-server`、`packages/remote-client` |
-| 汐 | **汐（后端）** | `deepseek` / `deepseek/` | `packages/db`、`packages/core`（discussion 除外）、`main`/`preload`、根配置 |
-| 林离 | **林离（测试）** | `codex` / `codex/` | `packages/core/src/discussion`、`apps/desktop/e2e` |
+| 本名 | 文档里的名字 | 代码 / 分支 / commit 前缀 |
+|---|---|---|
+| C酱 | **C酱** | `claude` / `claude/` / `[claude]` |
+| 汐 | **汐（后端）** | `deepseek` / `deepseek/` / `[deepseek]` |
+| 林离 | **林离（测试）** | `codex` / `codex/` / `[codex]` |
+
+目录归谁、谁审谁，**只看 `docs/分工.md` 第 2 节**，本文不重复第二份。
 
 ## 2. 每个新会话的开场步骤
 
@@ -44,7 +46,7 @@
   Invoke-RestMethod "https://api.github.com/repos/aa15119557034/agent-review-room/issues/88/comments" -Headers $h
   Invoke-RestMethod "https://api.github.com/repos/aa15119557034/agent-review-room/pulls/88/files" -Headers $h
   ```
-- **C酱 的云端会话**有 `gh` 和 GitHub MCP 工具，用 `gh pr view 88 --comments` / `gh pr diff 88` 即可。
+- **C酱 的云端会话没有 `gh`**，用 GitHub MCP 工具读 PR、diff 和评论。
 
 ## 3. 信息放哪里
 
