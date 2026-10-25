@@ -89,7 +89,8 @@ CREATE TABLE chat_runs (
   started_at        TEXT,
   finished_at       TEXT,
   CHECK ((purpose = 'reply') = (slot_id IS NOT NULL)),
-  CHECK (substate IS NULL OR state = 'RUNNING'),
+  -- RUNNING ⇔ 有子状态（和契约 ChatRun 的 refine 一致）
+  CHECK ((state = 'RUNNING') = (substate IS NOT NULL)),
   CHECK (failure_reason IS NULL OR state = 'FAILED'),
   -- 同一个回答位的同一次尝试最多一个 Run（重试必须 attempt + 1）
   UNIQUE (slot_id, attempt)
@@ -102,7 +103,8 @@ CREATE INDEX idx_chat_runs_active ON chat_runs(state) WHERE state IN ('QUEUED', 
 
 -- Run 的身份字段不可改（否则可以把它改挂到别的回答位 / Snapshot 上）
 CREATE TRIGGER chat_runs_identity_immutable
-BEFORE UPDATE OF id, kind, purpose, conversation_id, slot_id, agent, snapshot_id, attempt, created_at ON chat_runs
+BEFORE UPDATE OF id, kind, purpose, conversation_id, slot_id, agent, snapshot_id, snapshot_hash, model, adapter_id,
+  attempt, created_at ON chat_runs
 WHEN NEW.id IS NOT OLD.id
   OR NEW.kind IS NOT OLD.kind
   OR NEW.purpose IS NOT OLD.purpose
@@ -110,6 +112,9 @@ WHEN NEW.id IS NOT OLD.id
   OR NEW.slot_id IS NOT OLD.slot_id
   OR NEW.agent IS NOT OLD.agent
   OR NEW.snapshot_id IS NOT OLD.snapshot_id
+  OR NEW.snapshot_hash IS NOT OLD.snapshot_hash
+  OR NEW.model IS NOT OLD.model
+  OR NEW.adapter_id IS NOT OLD.adapter_id
   OR NEW.attempt IS NOT OLD.attempt
   OR NEW.created_at IS NOT OLD.created_at
 BEGIN
