@@ -5,17 +5,26 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
 import Database from "better-sqlite3";
-import { ChatMessage, ChatReplySlot, Conversation } from "@room/schemas";
+import { ChatMessage, ChatReplySlot, ChatRun, ChatSnapshot, Conversation } from "@room/schemas";
 import {
+  ChatRunStateConflictError,
   createConversation,
   currentVersion,
   findDirectConversation,
+  finishChatRun,
   getChatMessage,
+  getChatRun,
   getChatSlot,
+  getChatSnapshot,
   getConversation,
   insertChatMessage,
+  insertChatRun,
   insertChatSlot,
+  insertChatSnapshot,
   LATEST_SCHEMA_VERSION,
+  recordChatPromptFinal,
+  repairInterruptedChatRuns,
+  transitionChatRun,
   listChatMessages,
   listChatSlotsForMessages,
   listConversations,
@@ -533,3 +542,360 @@ describe("chat models", () => {
     }
   });
 });
+describe("chat runs and snapshots (v6)", () => {
+  function fresh(): { db: Database.Database; queue: WriteQueue } {
+    return { db: openDatabase(tempFile("room-chat-run-")), queue: new WriteQueue() };
+  }
+
+  async function seed(db: Database.Database, queue: WriteQueue) {
+    const conversation = await createConversation(db, queue, {
+      members: { kind: "direct", agent: "deepseek" },
+      title: null,
+      createdAt: at(0),
+    });
+    const message: ChatMessage = {
+      id: newChatMessageId(),
+      conversationId: conversation.id,
+      createdAt: at(0),
+      sender: "user",
+      content: { kind: "text", text: "在吗", attachments: [] },
+      mentions: { kind: "none" },
+      quoteMessageId: null,
+      replacesMessageId: null,
+      state: "sent",
+      retractedAt: null,
+    };
+    insertChatMessage(db, { message });
+
+    const slot: ChatReplySlot = {
+      id: "slot_" + ulid(),
+      conversationId: conversation.id,
+      userMessageId: message.id,
+      agent: "deepseek",
+      required: true,
+      outcome: "running",
+      runId: "run_" + ulid(),
+      attempt: 1,
+      replyMessageId: null,
+      failure: null,
+      unavailableReason: null,
+      createdAt: at(0),
+      finishedAt: null,
+    };
+    const snapshot: ChatSnapshot = {
+      id: "snap_" + ulid(),
+      purpose: "reply",
+      conversationId: conversation.id,
+      userMessageId: message.id,
+      agent: "deepseek",
+      content: "你在和一个用户聊天。\n\n当前消息：在吗",
+      contentHash: "a".repeat(64),
+      nonce: "0123456789abcdef",
+      memorySlot: null,
+      includedMessageIds: [message.id],
+      includedSummaryIds: [],
+      adapterVersion: "chat-v1",
+      tokenEstimate: 12,
+      createdAt: at(0),
+    };
+    const run: ChatRun = {
+      id: slot.runId as string,
+      kind: "chat",
+      purpose: "reply",
+      conversationId: conversation.id,
+      slotId: slot.id,
+      agent: "deepseek",
+      snapshotId: snapshot.id,
+      snapshotHash: snapshot.contentHash,
+      finalPromptHash: null,
+      memoryManifest: null,
+      model: null,
+      adapterId: "remote:deepseek-chat",
+      state: "QUEUED",
+      substate: null,
+      failureReason: null,
+      createdAt: at(0),
+      startedAt: null,
+      finishedAt: null,
+    };
+    insertChatSnapshot(db, snapshot);
+    insertChatSlot(db, slot);
+    insertChatRun(db, run);
+    return { conversation, message, slot, snapshot, run };
+  }
+
+  it("stores an immutable snapshot and a run chained to its slot", async () => {
+    const { db, queue } = fresh();
+    try {
+      const { run, snapshot, slot } = await seed(db, queue);
+      assert.deepEqual(getChatSnapshot(db, snapshot.id), snapshot);
+      assert.equal(getChatRun(db, run.id)?.slotId, slot.id);
+
+      assert.throws(() => db.prepare("UPDATE chat_snapshots SET content = 'x' WHERE id = ?").run(snapshot.id), /immutable/);
+      assert.throws(() => db.prepare("DELETE FROM chat_snapshots WHERE id = ?").run(snapshot.id), /immutable/);
+      assert.throws(() => db.prepare("UPDATE chat_runs SET slot_id = NULL WHERE id = ?").run(run.id), /immutable/);
+      // 同一个回答位、同一个 attempt 只能有一个 Run
+      assert.throws(
+        () =>
+          insertChatRun(db, {
+            ...run,
+            id: "run_" + ulid(),
+          }),
+        /UNIQUE|current attempt/,
+      );
+    } finally {
+      db.close();
+    }
+  });
+
+  const startRun = (db: Database.Database, runId: string): void => {
+    transitionChatRun(db, runId, "QUEUED", "STARTING", { startedAt: at(1) });
+    transitionChatRun(db, runId, "STARTING", "RUNNING", { substate: "active" });
+  };
+
+  it("finishes answered: run COMPLETED + slot answered + exactly one reply message", async () => {
+    const { db, queue } = fresh();
+    try {
+      const { run, slot } = await seed(db, queue);
+      startRun(db, run.id);
+      const finished = await finishChatRun(db, queue, {
+        runId: run.id,
+        from: "RUNNING",
+        terminal: { kind: "answered", text: "在。" },
+        finishedAt: at(5),
+      });
+
+      assert.equal(finished.run.state, "COMPLETED");
+      assert.equal(finished.run.finishedAt, at(5));
+      assert.equal(finished.slot?.outcome, "answered");
+      assert.equal(finished.slot?.replyMessageId, finished.message?.id);
+      ChatReplySlot.parse(finished.slot);
+      assert.equal(finished.message?.text, "在。");
+      assert.equal(finished.message?.inReplyTo, slot.userMessageId);
+      assert.equal(finished.message?.slotId, slot.id);
+      ChatMessage.parse(finished.message);
+
+      // 同一个 Run 不能结两次（迟到的结果）
+      await assert.rejects(
+        finishChatRun(db, queue, { runId: run.id, from: "RUNNING", terminal: { kind: "answered", text: "再来一次" } }),
+        ChatRunStateConflictError,
+      );
+      assert.equal(
+        (db.prepare("SELECT count(*) AS n FROM chat_messages WHERE sender = 'agent'").get() as { n: number }).n,
+        1,
+      );
+    } finally {
+      db.close();
+    }
+  });
+
+  it("maps failures and skips, drops late results for retracted slots", async () => {
+    const { db, queue } = fresh();
+    try {
+      const first = await seed(db, queue);
+      startRun(db, first.run.id);
+      const failed = await finishChatRun(db, queue, {
+        runId: first.run.id,
+        from: "RUNNING",
+        terminal: { kind: "failed", failure: { kind: "run_failed", message: "节点挂了" }, failureReason: "internal" },
+      });
+      assert.equal(failed.run.state, "FAILED");
+      assert.equal(failed.run.failureReason, "internal");
+      assert.equal(failed.slot?.outcome, "failed");
+      assert.equal(failed.slot?.failure?.kind, "run_failed");
+      assert.equal(failed.message, null);
+
+      // 必须回答的人给出 skip：Run 正常结束（COMPLETED），回答位记 failed(skip_not_allowed)
+      const second = await seed(db, queue);
+      startRun(db, second.run.id);
+      const skipped = await finishChatRun(db, queue, {
+        runId: second.run.id,
+        from: "RUNNING",
+        terminal: { kind: "skipped" },
+      });
+      assert.equal(skipped.run.state, "COMPLETED");
+      assert.equal(skipped.run.failureReason, null);
+      assert.equal(skipped.slot?.outcome, "failed");
+      assert.equal(skipped.slot?.failure?.kind, "skip_not_allowed");
+
+      // 撤回之后才答完：Run 照常收尾，回答位保持 retracted、不写消息
+      const third = await seed(db, queue);
+      startRun(db, third.run.id);
+      retractChatMessage(db, third.message.id, at(3));
+      updateChatSlot(db, { ...third.slot, outcome: "retracted", finishedAt: at(3) });
+      const late = await finishChatRun(db, queue, {
+        runId: third.run.id,
+        from: "RUNNING",
+        terminal: { kind: "answered", text: "迟到的回答" },
+      });
+      assert.equal(late.run.state, "COMPLETED");
+      assert.equal(late.slot?.outcome, "retracted");
+      assert.equal(late.message, null);
+    } finally {
+      db.close();
+    }
+  });
+
+  it("records prompt_final once and keeps the first value", async () => {
+    const { db, queue } = fresh();
+    try {
+      const { run, snapshot } = await seed(db, queue);
+      // 没有记忆槽位：最终 hash 必须等于 snapshotHash、清单必须为 null
+      assert.equal(recordChatPromptFinal(db, run.id, "c".repeat(64), null), false);
+      assert.equal(recordChatPromptFinal(db, run.id, snapshot.contentHash, null), true);
+      assert.equal(recordChatPromptFinal(db, run.id, snapshot.contentHash, null), false, "只记第一次");
+      assert.equal(getChatRun(db, run.id)?.finalPromptHash, snapshot.contentHash);
+
+      startRun(db, run.id);
+      const finished = await finishChatRun(db, queue, {
+        runId: run.id,
+        from: "RUNNING",
+        terminal: { kind: "answered", text: "好" },
+      });
+      assert.equal(finished.message?.memoryEntriesUsed, null);
+    } finally {
+      db.close();
+    }
+  });
+
+  it("旧尝试的迟到结果只收尾自己，不动新尝试的回答位", async () => {
+    const { db, queue } = fresh();
+    try {
+      const { run, slot } = await seed(db, queue);
+      startRun(db, run.id);
+      // 用户取消这次尝试，然后重试：回答位指向 run2（attempt 2），run2 还没结束
+      updateChatSlot(db, { ...slot, outcome: "cancelled", finishedAt: at(2) });
+      const run2 = "run_" + ulid();
+      updateChatSlot(db, { ...slot, outcome: "running", runId: run2, attempt: 2, finishedAt: null });
+
+      const late = await finishChatRun(db, queue, {
+        runId: run.id,
+        from: "RUNNING",
+        terminal: { kind: "answered", text: "旧尝试的回答" },
+      });
+      assert.equal(late.run.state, "COMPLETED");
+      assert.equal(late.message, null, "旧尝试不写回答消息");
+      assert.equal(late.slot?.outcome, "running", "新尝试的回答位不被旧结果改掉");
+      assert.equal(late.slot?.runId, run2);
+      assert.equal(late.slot?.attempt, 2);
+    } finally {
+      db.close();
+    }
+  });
+
+  it("transitionChatRun 只能走 RUN_TRANSITIONS，且 RUNNING 必须有子状态", async () => {
+    const { db, queue } = fresh();
+    try {
+      const { run } = await seed(db, queue);
+      assert.throws(() => transitionChatRun(db, run.id, "QUEUED", "RUNNING"), /illegal transition/);
+      transitionChatRun(db, run.id, "QUEUED", "STARTING", { startedAt: at(1) });
+      assert.throws(() => transitionChatRun(db, run.id, "STARTING", "RUNNING"), /substate/);
+      transitionChatRun(db, run.id, "STARTING", "RUNNING", { substate: "active" });
+      assert.throws(() => transitionChatRun(db, run.id, "RUNNING", "COMPLETED"), /finishChatRun/);
+      assert.throws(() => transitionChatRun(db, run.id, "RUNNING", "QUEUED"), /illegal transition/);
+
+      const disconnected = transitionChatRun(db, run.id, "RUNNING", "RUNNING", { substate: "disconnected" });
+      assert.equal(disconnected.substate, "disconnected");
+      assert.equal(disconnected.failureReason, null);
+    } finally {
+      db.close();
+    }
+  });
+
+  it("insertChatRun 核对 Snapshot / 回答位的一致性", async () => {
+    const { db, queue } = fresh();
+    try {
+      const { run, snapshot } = await seed(db, queue);
+      assert.throws(
+        () => insertChatRun(db, { ...run, id: "run_" + ulid(), snapshotHash: "b".repeat(64) }),
+        /snapshotHash/,
+      );
+      assert.throws(
+        () => insertChatRun(db, { ...run, id: "run_" + ulid(), agent: "codex" }),
+        /agent/,
+      );
+      assert.throws(
+        () => insertChatRun(db, { ...run, id: "run_" + ulid(), purpose: "history_summary", slotId: null }),
+        /purpose/,
+      );
+      assert.ok(getChatSnapshot(db, snapshot.id) !== null);
+    } finally {
+      db.close();
+    }
+  });
+
+  it("prompt_final 在没有记忆槽位时核对 hash / 清单", async () => {
+    const { db, queue } = fresh();
+    try {
+      const { run, snapshot } = await seed(db, queue);
+      assert.equal(recordChatPromptFinal(db, run.id, "b".repeat(64), null), false, "hash 必须等于 snapshotHash");
+      assert.equal(
+        recordChatPromptFinal(db, run.id, snapshot.contentHash, { status: "filled", entries: [{ id: "a.md", sha256: "c".repeat(64) }] }),
+        false,
+        "没有槽位就不该有记忆清单",
+      );
+      assert.equal(recordChatPromptFinal(db, run.id, snapshot.contentHash, null), true);
+    } finally {
+      db.close();
+    }
+  });
+
+  it("冻结 Run 上发送时定下的列", async () => {
+    const { db, queue } = fresh();
+    try {
+      const { run } = await seed(db, queue);
+      for (const sql of [
+        "UPDATE chat_runs SET snapshot_hash = ? WHERE id = ?",
+        "UPDATE chat_runs SET adapter_id = ? WHERE id = ?",
+        "UPDATE chat_runs SET model = ? WHERE id = ?",
+      ]) {
+        assert.throws(
+          () => db.prepare(sql).run(sql.includes("model") ? JSON.stringify({ model: "x" }) : "b".repeat(64), run.id),
+          /immutable/,
+        );
+      }
+    } finally {
+      db.close();
+    }
+  });
+
+  it("FAILED 必须有失败原因（数据库层反例）", async () => {
+    const { db, queue } = fresh();
+    try {
+      const { run } = await seed(db, queue);
+      startRun(db, run.id);
+      assert.throws(() => db.prepare("UPDATE chat_runs SET state = 'FAILED' WHERE id = ?").run(run.id), /CHECK/);
+      assert.throws(
+        () => db.prepare("UPDATE chat_runs SET state = 'COMPLETED', failure_reason = 'internal' WHERE id = ?").run(run.id),
+        /CHECK/,
+      );
+    } finally {
+      db.close();
+    }
+  });
+
+  it("repairs interrupted runs and their slots on restart", async () => {
+    const { db, queue } = fresh();
+    try {
+      const { run, slot } = await seed(db, queue);
+      // 停在 RUNNING 的 Run：模拟强杀后的状态
+      db.prepare("UPDATE chat_runs SET state = 'RUNNING', substate = 'active', started_at = ? WHERE id = ?").run(at(1), run.id);
+
+      const repaired = await repairInterruptedChatRuns(db, queue);
+      assert.deepEqual(repaired.repaired, [run.id]);
+      const after = getChatRun(db, run.id);
+      assert.equal(after?.state, "FAILED");
+      assert.equal(after?.failureReason, "interrupted");
+      assert.equal(after?.substate, null);
+      const storedSlot = getChatSlot(db, slot.id);
+      assert.equal(storedSlot?.outcome, "failed");
+      assert.equal(storedSlot?.failure?.kind, "interrupted");
+
+      // 再跑一次是幂等的
+      assert.deepEqual((await repairInterruptedChatRuns(db, queue)).repaired, []);
+    } finally {
+      db.close();
+    }
+  });
+});
+

@@ -5,16 +5,25 @@ import type {
   ChatMentions,
   ChatMessage,
   ChatReplySlot,
+  ChatRun,
   ChatSlotFailure,
   ChatSlotOutcome,
+  ChatSnapshot,
   Conversation,
   ConversationMembers,
+  FailureReason,
+  MemoryManifest,
+  RunState,
+  RunSubstate,
   UserChatMessage,
 } from "@room/schemas";
 import {
   CHAT_SLOT_TRANSITIONS,
+  RUN_TRANSITIONS,
   ChatMessage as ChatMessageSchema,
   ChatReplySlot as ChatReplySlotSchema,
+  ChatRun as ChatRunSchema,
+  ChatSnapshot as ChatSnapshotSchema,
 } from "@room/schemas";
 import { assertTransition } from "@room/core";
 import type { SqliteDatabase } from "./database";
@@ -556,3 +565,396 @@ export function updateChatSlot(db: SqliteDatabase, slot: ChatReplySlot): void {
   if (result.changes !== 1) throw new Error("chat reply slot not found: " + parsed.id);
 }
 
+// ================================================================ Snapshot（不可变）
+
+export interface ChatSnapshotRow {
+  id: string;
+  purpose: "reply" | "history_summary";
+  conversation_id: string;
+  user_message_id: string | null;
+  agent: string;
+  content: string;
+  content_hash: string;
+  nonce: string;
+  memory_slot: string | null;
+  attachments: string | null;
+  included_message_ids: string;
+  included_summary_ids: string;
+  adapter_version: string;
+  token_estimate: number;
+  created_at: string;
+}
+
+const toChatSnapshot = (row: ChatSnapshotRow): ChatSnapshot => {
+  const snapshot: ChatSnapshot = {
+    id: row.id,
+    purpose: row.purpose,
+    conversationId: row.conversation_id,
+    userMessageId: row.user_message_id,
+    agent: row.agent,
+    content: row.content,
+    contentHash: row.content_hash,
+    nonce: row.nonce,
+    memorySlot: row.memory_slot === null ? null : (JSON.parse(row.memory_slot) as ChatSnapshot["memorySlot"]),
+    includedMessageIds: JSON.parse(row.included_message_ids) as string[],
+    includedSummaryIds: JSON.parse(row.included_summary_ids) as string[],
+    adapterVersion: row.adapter_version,
+    tokenEstimate: row.token_estimate,
+    createdAt: row.created_at,
+  };
+  // 可选字段：不传和传 undefined 是两回事，数据库里 NULL 就是没有
+  if (row.attachments !== null) snapshot.attachments = JSON.parse(row.attachments) as NonNullable<ChatSnapshot["attachments"]>;
+  return snapshot;
+};
+
+/** 写一份 Snapshot。**必须在调用方的事务里跑**（和消息、回答位、Run 同一个事务）。 */
+export function insertChatSnapshot(db: SqliteDatabase, snapshot: ChatSnapshot): void {
+  const parsed = ChatSnapshotSchema.parse(snapshot);
+  db.prepare(
+    "INSERT INTO chat_snapshots (id, purpose, conversation_id, user_message_id, agent, content, content_hash, nonce, " +
+      "memory_slot, attachments, included_message_ids, included_summary_ids, adapter_version, token_estimate, created_at) " +
+      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+  ).run(
+    parsed.id,
+    parsed.purpose,
+    parsed.conversationId,
+    parsed.userMessageId,
+    parsed.agent,
+    parsed.content,
+    parsed.contentHash,
+    parsed.nonce,
+    parsed.memorySlot === null ? null : JSON.stringify(parsed.memorySlot),
+    parsed.attachments === undefined ? null : JSON.stringify(parsed.attachments),
+    JSON.stringify(parsed.includedMessageIds),
+    JSON.stringify(parsed.includedSummaryIds),
+    parsed.adapterVersion,
+    parsed.tokenEstimate,
+    parsed.createdAt,
+  );
+}
+
+export function getChatSnapshot(db: SqliteDatabase, snapshotId: string): ChatSnapshot | null {
+  const row = db.prepare("SELECT * FROM chat_snapshots WHERE id = ?").get(snapshotId) as ChatSnapshotRow | undefined;
+  return row === undefined ? null : toChatSnapshot(row);
+}
+
+// ================================================================ Run
+
+export interface ChatRunRow {
+  id: string;
+  kind: "chat";
+  purpose: "reply" | "history_summary";
+  conversation_id: string;
+  slot_id: string | null;
+  agent: string;
+  snapshot_id: string;
+  snapshot_hash: string;
+  final_prompt_hash: string | null;
+  memory_manifest: string | null;
+  model: string | null;
+  adapter_id: string;
+  state: RunState;
+  substate: "active" | "waiting_for_human" | "disconnected" | null;
+  failure_reason: FailureReason | null;
+  attempt: number;
+  created_at: string;
+  started_at: string | null;
+  finished_at: string | null;
+}
+
+const toChatRun = (row: ChatRunRow): ChatRun => ({
+  id: row.id,
+  kind: "chat",
+  purpose: row.purpose,
+  conversationId: row.conversation_id,
+  slotId: row.slot_id,
+  agent: row.agent,
+  snapshotId: row.snapshot_id,
+  snapshotHash: row.snapshot_hash,
+  finalPromptHash: row.final_prompt_hash,
+  memoryManifest: row.memory_manifest === null ? null : (JSON.parse(row.memory_manifest) as MemoryManifest),
+  model: row.model === null ? null : (JSON.parse(row.model) as ChatRun["model"]),
+  adapterId: row.adapter_id,
+  state: row.state,
+  substate: row.substate,
+  failureReason: row.failure_reason,
+  createdAt: row.created_at,
+  startedAt: row.started_at,
+  finishedAt: row.finished_at,
+});
+
+/** 迟到结果：Run 已经被别的路径结掉了（撤回 / 取消 / 中断修复），不能再改。 */
+export class ChatRunStateConflictError extends Error {
+  constructor(
+    readonly runId: string,
+    readonly expected: RunState,
+    readonly actual: RunState | null,
+  ) {
+    super("chat run " + runId + " is " + (actual ?? "missing") + ", expected " + expected);
+    this.name = "ChatRunStateConflictError";
+  }
+}
+
+export function getChatRun(db: SqliteDatabase, runId: string): ChatRun | null {
+  const row = db.prepare("SELECT * FROM chat_runs WHERE id = ?").get(runId) as ChatRunRow | undefined;
+  return row === undefined ? null : toChatRun(row);
+}
+
+export function listChatRunsForSlot(db: SqliteDatabase, slotId: string): ChatRun[] {
+  return (
+    db.prepare("SELECT * FROM chat_runs WHERE slot_id = ? ORDER BY attempt").all(slotId) as ChatRunRow[]
+  ).map(toChatRun);
+}
+
+/** 建一个聊天 Run。**必须在调用方的事务里跑**（和 Snapshot、回答位同一个事务）。 */
+export function insertChatRun(db: SqliteDatabase, run: ChatRun): void {
+  const parsed = ChatRunSchema.parse(run);
+
+  // 和 Snapshot / 回答位对一遍：调用方传错一个 id 就建不出「Run 指向别人的会话」这种行
+  const snapshot = getChatSnapshot(db, parsed.snapshotId);
+  if (snapshot === null) throw new Error("chat snapshot not found: " + parsed.snapshotId);
+  if (snapshot.contentHash !== parsed.snapshotHash) throw new Error("chat run snapshotHash does not match the snapshot");
+  if (snapshot.purpose !== parsed.purpose) throw new Error("chat run purpose does not match the snapshot");
+  if (snapshot.conversationId !== parsed.conversationId) throw new Error("chat run conversation does not match the snapshot");
+  if (snapshot.agent !== parsed.agent) throw new Error("chat run agent does not match the snapshot");
+
+  const slot = parsed.slotId === null ? null : getChatSlot(db, parsed.slotId);
+  if (parsed.purpose === "reply") {
+    if (slot === null) throw new Error("chat run has no reply slot: " + parsed.id);
+    if (slot.agent !== parsed.agent) throw new Error("chat run agent does not match its slot");
+    if (slot.conversationId !== parsed.conversationId) throw new Error("chat run conversation does not match its slot");
+    if (slot.runId !== parsed.id) throw new Error("chat run is not the slot's current attempt");
+    if (snapshot.userMessageId !== slot.userMessageId) throw new Error("chat run snapshot answers another message");
+  } else if (slot !== null) {
+    throw new Error("a history_summary run must not have a reply slot");
+  }
+
+  db.prepare(
+    "INSERT INTO chat_runs (id, kind, purpose, conversation_id, slot_id, agent, snapshot_id, snapshot_hash, " +
+      "final_prompt_hash, memory_manifest, model, adapter_id, state, substate, failure_reason, attempt, created_at, " +
+      "started_at, finished_at) VALUES (?, 'chat', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+  ).run(
+    parsed.id,
+    parsed.purpose,
+    parsed.conversationId,
+    parsed.slotId,
+    parsed.agent,
+    parsed.snapshotId,
+    parsed.snapshotHash,
+    parsed.finalPromptHash,
+    parsed.memoryManifest === null ? null : JSON.stringify(parsed.memoryManifest),
+    parsed.model === null ? null : JSON.stringify(parsed.model),
+    parsed.adapterId,
+    parsed.state,
+    parsed.substate,
+    parsed.failureReason,
+    slot?.attempt ?? 1,
+    parsed.createdAt,
+    parsed.startedAt,
+    parsed.finishedAt,
+  );
+}
+
+/**
+ * 状态迁移（QUEUED → STARTING → RUNNING），CAS 失败就是迟到 / 重复的结果。**在调用方事务里跑**。
+ *
+ * - 必须走 RUN_TRANSITIONS；**终态只能经 finishChatRun**（否则会出现「COMPLETED 但没有 finished_at、回答位还在转」）
+ * - 转成 RUNNING 必须带 substate（契约：RUNNING ⇔ substate 非 null）；from = to 只允许 RUNNING 换子状态
+ * - failure_reason 不在这里碰（只有 finishChatRun 写）
+ */
+export function transitionChatRun(
+  db: SqliteDatabase,
+  runId: string,
+  from: RunState,
+  to: RunState,
+  patch: { substate?: RunSubstate; startedAt?: string } = {},
+): ChatRun {
+  if (from === to) {
+    if (from !== "RUNNING") throw new Error("only a RUNNING chat run can change its substate");
+  } else {
+    assertTransition(RUN_TRANSITIONS, "run", from, to);
+    if (RUN_TRANSITIONS[to].length === 0) {
+      throw new Error("terminal chat run state must go through finishChatRun: " + to);
+    }
+  }
+
+  const substate = to === "RUNNING" ? (patch.substate ?? null) : null;
+  if (to === "RUNNING" && substate === null) throw new Error("a RUNNING chat run needs a substate");
+
+  const result = db
+    .prepare("UPDATE chat_runs SET state = ?, substate = ?, started_at = COALESCE(?, started_at) WHERE id = ? AND state = ?")
+    .run(to, substate, patch.startedAt ?? null, runId, from);
+  if (result.changes !== 1) {
+    const current = getChatRun(db, runId);
+    throw new ChatRunStateConflictError(runId, from, current?.state ?? null);
+  }
+  return getChatRun(db, runId) as ChatRun;
+}
+
+/**
+ * 节点的 prompt_final：记下最终 hash 和记忆清单。每个 Run 最多一次。
+ * **在调用方事务里跑**；重复回报返回 false（不覆盖第一次的权威值）。
+ *
+ * 没有记忆槽位时，契约要求 memory 为 null、finalPromptHash 等于 snapshotHash；对不上就不记。
+ */
+export function recordChatPromptFinal(
+  db: SqliteDatabase,
+  runId: string,
+  finalPromptHash: string,
+  memory: MemoryManifest | null,
+): boolean {
+  const run = getChatRun(db, runId);
+  if (run === null) return false;
+  const snapshot = getChatSnapshot(db, run.snapshotId);
+  if (snapshot === null) return false;
+  if (snapshot.memorySlot === null) {
+    if (memory !== null) return false;
+    if (finalPromptHash !== run.snapshotHash) return false;
+  }
+
+  const result = db
+    .prepare("UPDATE chat_runs SET final_prompt_hash = ?, memory_manifest = ? WHERE id = ? AND final_prompt_hash IS NULL")
+    .run(finalPromptHash, memory === null ? null : JSON.stringify(memory), runId);
+  return result.changes === 1;
+}
+
+export type ChatRunTerminal =
+  | { kind: "answered"; text: string }
+  | { kind: "skipped" }
+  | { kind: "absent_quota" }
+  | { kind: "failed"; failure: ChatSlotFailure; failureReason?: FailureReason }
+  | { kind: "cancelled" }
+  | { kind: "timed_out" };
+
+export interface FinishChatRunInput {
+  runId: string;
+  /** 调用方看到的当前状态；和数据库不一致就说明是迟到 / 重复的结果 */
+  from: RunState;
+  terminal: ChatRunTerminal;
+  finishedAt?: string;
+}
+
+export interface FinishChatRunResult {
+  run: ChatRun;
+  slot: ChatReplySlot | null;
+  message: AgentChatMessage | null;
+}
+
+/** failed 里哪些是「Run 正常结束、对输出分类得到的失败」——Run 记 COMPLETED，不记 FAILED */
+const POST_COMPLETION_FAILURES = new Set<ChatSlotFailure["kind"]>(["empty_output", "parse_error", "skip_not_allowed"]);
+
+/**
+ * 结掉一个聊天 Run：Run 终态、回答位结局、秘书的回答消息，**同一个事务**。
+ *
+ * - 回答位必须是**这次尝试**（slot.runId === run.id）而且还在 running 才会被改；旧尝试的迟到结果只收尾 Run 自己
+ * - Run 的状态走 RUN_TRANSITIONS（例如 RUNNING → COMPLETED / FAILED / TIMED_OUT）
+ * - empty_output / parse_error / skip_not_allowed 是输出分类，Run 记 COMPLETED；run_failed / interrupted 记 FAILED
+ * - 必须回答的人给出 skip → failed(skip_not_allowed)，不能没有结局
+ */
+export function finishChatRun(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  input: FinishChatRunInput,
+): Promise<FinishChatRunResult> {
+  return writeTransaction(db, queue, () => {
+    const run = getChatRun(db, input.runId);
+    if (run === null) throw new ChatRunStateConflictError(input.runId, input.from, null);
+    if (run.state !== input.from) throw new ChatRunStateConflictError(input.runId, input.from, run.state);
+
+    const finishedAt = input.finishedAt ?? new Date().toISOString();
+    let slot = run.slotId === null ? null : getChatSlot(db, run.slotId);
+    const currentAttempt = slot !== null && slot.runId === run.id && slot.outcome === "running";
+
+    let terminal: ChatRunTerminal = input.terminal;
+    if (currentAttempt && terminal.kind === "skipped" && slot !== null && slot.required) {
+      terminal = { kind: "failed", failure: { kind: "skip_not_allowed", message: "单聊或被点名的人必须回答，不能 skip" } };
+    }
+
+    const state: RunState =
+      terminal.kind === "answered" || terminal.kind === "skipped"
+        ? "COMPLETED"
+        : terminal.kind === "cancelled"
+          ? "CANCELLED"
+          : terminal.kind === "timed_out"
+            ? "TIMED_OUT"
+            : terminal.kind === "absent_quota"
+              ? "FAILED"
+              : POST_COMPLETION_FAILURES.has(terminal.failure.kind)
+                ? "COMPLETED"
+                : "FAILED";
+
+    let failureReason: FailureReason | null = null;
+    if (state === "FAILED") {
+      failureReason = terminal.kind === "absent_quota" ? "quota_exhausted" : input.terminal.kind === "failed" ? (input.terminal.failureReason ?? null) : null;
+      if (failureReason === null) throw new Error("a FAILED chat run needs a failure reason");
+    }
+
+    assertTransition(RUN_TRANSITIONS, "run", input.from, state);
+    db.prepare(
+      "UPDATE chat_runs SET state = ?, substate = NULL, failure_reason = ?, finished_at = ? WHERE id = ? AND state = ?",
+    ).run(state, failureReason, finishedAt, input.runId, input.from);
+
+    let message: AgentChatMessage | null = null;
+    if (currentAttempt && slot !== null) {
+      if (terminal.kind === "answered") {
+        const question = getChatMessage(db, slot.userMessageId);
+        if (question === null || question.sender !== "user") throw new Error("chat reply slot has no user message");
+        message = {
+          id: newChatMessageId(),
+          conversationId: slot.conversationId,
+          createdAt: finishedAt,
+          sender: "agent",
+          agent: slot.agent,
+          text: terminal.text,
+          inReplyTo: slot.userMessageId,
+          slotId: slot.id,
+          runId: run.id,
+          memoryEntriesUsed: run.memoryManifest === null ? null : run.memoryManifest.entries.length,
+        };
+        insertChatMessage(db, { message });
+        slot = { ...slot, outcome: "answered", replyMessageId: message.id, finishedAt };
+      } else if (terminal.kind === "skipped") {
+        slot = { ...slot, outcome: "skipped", finishedAt };
+      } else if (terminal.kind === "absent_quota") {
+        slot = { ...slot, outcome: "absent_quota", finishedAt };
+      } else if (terminal.kind === "cancelled") {
+        slot = { ...slot, outcome: "cancelled", finishedAt };
+      } else if (terminal.kind === "timed_out") {
+        slot = { ...slot, outcome: "failed", failure: { kind: "timed_out", message: "回答超时" }, finishedAt };
+      } else {
+        slot = { ...slot, outcome: "failed", failure: terminal.failure, finishedAt };
+      }
+      updateChatSlot(db, slot);
+    }
+
+    return { run: getChatRun(db, input.runId) as ChatRun, slot, message };
+  });
+}
+
+/**
+ * 启动时修复：上次崩溃留下的 QUEUED / STARTING / RUNNING 聊天 Run 统一标成 FAILED(interrupted)，
+ * 回答位跟着记 failed(interrupted)，不留转圈的「回答中」。
+ */
+export async function repairInterruptedChatRuns(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+): Promise<{ repaired: string[] }> {
+  const rows = db
+    .prepare("SELECT id, state FROM chat_runs WHERE state IN ('QUEUED', 'STARTING', 'RUNNING') ORDER BY created_at")
+    .all() as { id: string; state: RunState }[];
+  const repaired: string[] = [];
+  for (const row of rows) {
+    try {
+      await finishChatRun(db, queue, {
+        runId: row.id,
+        from: row.state,
+        terminal: { kind: "failed", failure: { kind: "interrupted", message: "应用重启，这次回答中断了" }, failureReason: "interrupted" },
+      });
+      repaired.push(row.id);
+    } catch (error) {
+      // 别的路径已经把它结掉了（取消 / 撤回）：跳过，别让启动失败
+      if (!(error instanceof ChatRunStateConflictError)) throw error;
+    }
+  }
+  return { repaired };
+}

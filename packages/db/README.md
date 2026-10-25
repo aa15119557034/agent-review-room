@@ -67,6 +67,15 @@ WAL 下应用崩溃不丢已提交事务；**但断电可能丢最后几个事�
 - **升级前自动备份**：`openDatabase` 发现版本要升，先 `VACUUM INTO <file>.bak-v<旧版本>`（WAL 里没合并的页也在里面），
   只备份一次（失败重跑不会覆盖）；`:memory:` 和新库跳过，测试里用 `backupBeforeMigrate: false` 关掉。
 
+## 迁移 v6：聊天 Run 与 Snapshot（D-31b 第一段）
+
+| 表 | 说明 |
+|---|---|
+| `chat_snapshots` | 主控端拼好的一份聊天 Prompt，**不可变**（trigger 拦 UPDATE/DELETE）；`memory_slot` / `attachments` 存 JSON |
+| `chat_runs` | `kind = "chat"` 的 Run：`UNIQUE (slot_id, attempt)`（重试必须 attempt + 1）；身份字段不可改；已有 `FAILED(interrupted)` 的中断修复 |
+
+聊天 Run 不进讨论室的 `runs` 表（那张表的 `project_id` / `approval_id` 是 NOT NULL，还有「必须匹配已批准的 approval」触发器）。收尾在 `finishChatRun` 里一个事务做完：Run 终态 + 回答位结局 + 秘书的回答消息。
+
 ## 单写者队列
 
 `WriteQueue` 把写操作串成一条链，`writeTransaction` 用 `BEGIN IMMEDIATE`。

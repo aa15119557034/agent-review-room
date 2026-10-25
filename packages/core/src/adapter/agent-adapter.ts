@@ -1,4 +1,4 @@
-import type { AgentEvent, PermissionDecision, PermissionRequest, RunId } from "@room/schemas";
+import type { AgentEvent, MemorySlot, PermissionDecision, PermissionRequest, RunId } from "@room/schemas";
 
 /** V0.4 §19 的 AgentAdapter，加上了 Phase 0 需要的最少类型。 */
 
@@ -26,6 +26,11 @@ export interface AgentInput {
   content: string;
   contentHash: string;
   commitSha?: string;
+  /**
+   * C-34 聊天 Run 才有：节点按槽位填记忆，并回报 prompt_final。
+   * 不传 = 讨论室 / 单次评审（行为不变）。
+   */
+  chat?: { memory: MemorySlot | null };
 }
 
 export interface RunOptions {
