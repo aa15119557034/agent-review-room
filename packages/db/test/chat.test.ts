@@ -1,0 +1,439 @@
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { existsSync, mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { after, describe, it } from "node:test";
+import Database from "better-sqlite3";
+import { ChatMessage, ChatReplySlot, Conversation } from "@room/schemas";
+import {
+  createConversation,
+  currentVersion,
+  findDirectConversation,
+  getChatMessage,
+  getChatSlot,
+  getConversation,
+  insertChatMessage,
+  insertChatSlot,
+  LATEST_SCHEMA_VERSION,
+  listChatMessages,
+  listChatSlotsForMessages,
+  listConversations,
+  markConversationRead,
+  newChatMessageId,
+  newConversationId,
+  openDatabase,
+  retractChatMessage,
+  updateChatSlot,
+  updateConversation,
+  ulid,
+  WriteQueue,
+} from "../src/index";
+import { SCHEMA_V1 } from "../src/schema";
+import { SCHEMA_V2 } from "../src/schema";
+import { SCHEMA_V3, SCHEMA_V3_REBUILD } from "../src/schema-v3";
+import { SCHEMA_V4 } from "../src/schema-v4";
+
+const dirs: string[] = [];
+after(() => {
+  for (const dir of dirs) {
+    try {
+      rmSync(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+    } catch {
+      // Windows 上句柄释放有延迟；残留临时目录不影响结果
+    }
+  }
+});
+
+const T = "2026-10-26T00:00:00.000Z";
+const at = (seconds: number): string => new Date(Date.parse(T) + seconds * 1000).toISOString();
+const count = (db: Database.Database, table: string): number =>
+  (db.prepare("SELECT count(*) AS n FROM " + table).get() as { n: number }).n;
+
+function tempFile(prefix: string): string {
+  const dir = mkdtempSync(join(tmpdir(), prefix));
+  dirs.push(dir);
+  return join(dir, "room.db");
+}
+
+/** 造一个 v4 的真库（迁移 1～4 的 SQL 顺序跑一遍），用来验证升级 */
+function buildV4(file: string): void {
+  const raw = new Database(file);
+  raw.pragma("foreign_keys = OFF");
+  raw.exec(SCHEMA_V1);
+  raw.exec(SCHEMA_V2);
+  raw.exec(SCHEMA_V3);
+  raw.exec(SCHEMA_V3_REBUILD);
+  raw.exec(SCHEMA_V4);
+  raw.pragma("user_version = 4");
+
+  raw
+    .prepare("INSERT INTO projects (id, name, created_at) VALUES ('proj_old', '旧议题', ?)")
+    .run(at(0));
+  raw
+    .prepare(
+      "INSERT INTO agents (id, display_name, color, role_note, can_discuss, can_summarize, can_execute, " +
+        "paused_by_user, created_at, updated_at) VALUES ('deepseek', '汐', '#2f5aa0', '旧人设', 1, 1, 0, 0, ?, ?)",
+    )
+    .run(at(0), at(0));
+  raw
+    .prepare(
+      "INSERT INTO messages (id, project_id, kind, source_agent, run_id, content, created_at) " +
+        "VALUES ('msg_old', 'proj_old', 'source_input', 'deepseek', NULL, '旧材料', ?)",
+    )
+    .run(at(0));
+  raw
+    .prepare(
+      "INSERT INTO prompt_snapshots (id, project_id, content, content_hash, nonce, contribution_ids, task_instruction, " +
+        "reviewer_agent, adapter_version, token_estimate, created_at) VALUES ('snap_old', 'proj_old', 'b', ?, " +
+        "'0123456789abcdef', '[]', 't', 'deepseek', 'v1', 1, ?)",
+    )
+    .run("a".repeat(64), at(0));
+  raw
+    .prepare("INSERT INTO approvals (id, project_id, snapshot_id, state, created_at) VALUES ('apr_old', 'proj_old', 'snap_old', 'APPROVED', ?)")
+    .run(at(0));
+  raw
+    .prepare(
+      "INSERT INTO runs (id, project_id, approval_id, snapshot_id, adapter_id, state, created_at) " +
+        "VALUES ('run_old', 'proj_old', 'apr_old', 'snap_old', 'api', 'COMPLETED', ?)",
+    )
+    .run(at(0));
+  raw.close();
+}
+
+/** 旧表的数据指纹：只取 v5 之前就存在的列，迁移前后必须一模一样 */
+function oldDataDigest(db: Database.Database): string {
+  const data = {
+    projects: db.prepare("SELECT id, name, created_at FROM projects ORDER BY id").all(),
+    agents: db
+      .prepare(
+        "SELECT id, display_name, color, role_note, can_discuss, can_summarize, can_execute, node_id, profile_id, " +
+          "paused_by_user, substitute, created_at, updated_at FROM agents ORDER BY id",
+      )
+      .all(),
+    messages: db.prepare("SELECT id, project_id, kind, source_agent, run_id, content, created_at FROM messages ORDER BY id").all(),
+  };
+  return createHash("sha256").update(JSON.stringify(data)).digest("hex");
+}
+
+describe("migration v5 (chat space)", () => {
+  it("upgrades a v4 database: old digest unchanged, new tables empty, backup written, fk ok", () => {
+    const file = tempFile("room-v5-");
+    buildV4(file);
+
+    const before = new Database(file, { readonly: true });
+    const digestBefore = oldDataDigest(before);
+    before.close();
+
+    const db = openDatabase(file);
+    try {
+      assert.equal(currentVersion(db), LATEST_SCHEMA_VERSION);
+      assert.ok(LATEST_SCHEMA_VERSION >= 5);
+
+      // 旧数据一个字节都没变
+      assert.equal(oldDataDigest(db), digestBefore, "old rows must not change");
+
+      // 新表都是空的
+      for (const table of ["conversations", "conversation_members", "chat_messages", "chat_reply_slots"]) {
+        assert.equal(count(db, table), 0, table + " must start empty");
+      }
+
+      // 新列存在、旧行是 NULL（读的时候由 repository 补默认值）
+      const agentColumns = (db.prepare("PRAGMA table_info(agents)").all() as { name: string }[]).map((c) => c.name);
+      for (const column of ["chat_persona", "chat_profile_id", "memory_source"]) {
+        assert.ok(agentColumns.includes(column), column);
+      }
+      const projectColumns = (db.prepare("PRAGMA table_info(projects)").all() as { name: string }[]).map((c) => c.name);
+      assert.ok(projectColumns.includes("from_conversation_id"));
+
+      const agent = db
+        .prepare("SELECT chat_persona, chat_profile_id, memory_source FROM agents WHERE id = 'deepseek'")
+        .get() as { chat_persona: string | null; chat_profile_id: string | null; memory_source: string | null };
+      assert.equal(agent.chat_persona, null);
+      assert.equal(agent.chat_profile_id, null);
+      assert.equal(agent.memory_source, null);
+
+      // 索引也在
+      const indexes = (db.prepare("SELECT name FROM sqlite_master WHERE type = 'index' AND tbl_name = 'chat_messages'").all() as {
+        name: string;
+      }[]).map((r) => r.name);
+      assert.ok(indexes.includes("idx_chat_messages_conversation"));
+
+      assert.deepEqual(db.pragma("foreign_key_check"), []);
+    } finally {
+      db.close();
+    }
+
+    // 迁移前的备份：版本停在 4，旧数据还在，没有 v5 的表
+    const backup = file + ".bak-v4";
+    assert.ok(existsSync(backup), "backup must exist");
+    const old = new Database(backup, { readonly: true });
+    try {
+      assert.equal(old.pragma("user_version", { simple: true }), 4);
+      assert.equal(oldDataDigest(old), digestBefore);
+      const tables = (old.prepare("SELECT name FROM sqlite_master WHERE type = 'table'").all() as { name: string }[]).map(
+        (r) => r.name,
+      );
+      assert.ok(!tables.includes("chat_messages"), "backup is the pre-migration state");
+    } finally {
+      old.close();
+    }
+  });
+
+  it("reopens without redoing the migration and keeps the original backup", () => {
+    const file = tempFile("room-v5-reopen-");
+    buildV4(file);
+
+    const first = openDatabase(file);
+    const digest = oldDataDigest(first);
+    first.close();
+    const backupBefore = new Database(file + ".bak-v4", { readonly: true });
+    const backupDigest = oldDataDigest(backupBefore);
+    backupBefore.close();
+
+    const second = openDatabase(file);
+    try {
+      assert.equal(currentVersion(second), LATEST_SCHEMA_VERSION);
+      assert.equal(oldDataDigest(second), digest);
+      assert.deepEqual(second.pragma("foreign_key_check"), []);
+    } finally {
+      second.close();
+    }
+
+    const backupAfter = new Database(file + ".bak-v4", { readonly: true });
+    assert.equal(oldDataDigest(backupAfter), backupDigest, "backup is not overwritten by a later open");
+    assert.equal(backupAfter.pragma("user_version", { simple: true }), 4);
+    backupAfter.close();
+  });
+
+  it("writes no backup for a brand-new database or when disabled", () => {
+    const fresh = tempFile("room-v5-fresh-");
+    const db = openDatabase(fresh);
+    db.close();
+    assert.equal(existsSync(fresh + ".bak-v0"), false);
+    assert.equal(existsSync(fresh + ".bak-v4"), false);
+
+    const legacy = tempFile("room-v5-nobackup-");
+    buildV4(legacy);
+    const migrated = openDatabase(legacy, { backupBeforeMigrate: false });
+    migrated.close();
+    assert.equal(existsSync(legacy + ".bak-v4"), false);
+  });
+});
+
+describe("chat models", () => {
+  function fresh(): { db: Database.Database; queue: WriteQueue } {
+    return { db: openDatabase(tempFile("room-chat-")), queue: new WriteQueue() };
+  }
+
+  const userMessage = (conversationId: string, id: string, text: string, createdAt: string): ChatMessage => ({
+    id,
+    conversationId,
+    createdAt,
+    sender: "user",
+    content: { kind: "text", text, attachments: [] },
+    mentions: { kind: "none" },
+    quoteMessageId: null,
+    replacesMessageId: null,
+    state: "sent",
+    retractedAt: null,
+  });
+
+  it("creates one direct conversation per agent and keeps group member order", async () => {
+    const { db, queue } = fresh();
+    try {
+      const direct = await createConversation(db, queue, { members: { kind: "direct", agent: "deepseek" }, title: null });
+      Conversation.parse(direct);
+      assert.equal(direct.kind, "direct");
+      assert.deepEqual(direct.members, ["deepseek"]);
+      assert.equal(direct.title, null);
+
+      const again = await createConversation(db, queue, { members: { kind: "direct", agent: "deepseek" }, title: null });
+      assert.equal(again.id, direct.id, "existing direct conversation is returned");
+      assert.equal(count(db, "conversations"), 1);
+      assert.equal(findDirectConversation(db, "deepseek")?.id, direct.id);
+
+      const group = await createConversation(db, queue, {
+        members: { kind: "group", agents: ["claude", "codex", "deepseek"] },
+        title: "三个人",
+      });
+      Conversation.parse(group);
+      assert.deepEqual(group.members, ["claude", "codex", "deepseek"]);
+      assert.equal(getConversation(db, group.id)?.title, "三个人");
+
+      await assert.rejects(
+        createConversation(db, queue, { members: { kind: "group", agents: ["claude", "claude"] }, title: null }),
+      );
+    } finally {
+      db.close();
+    }
+  });
+
+  it("updates settings, replaces group members, and never lets a direct chat change members", async () => {
+    const { db, queue } = fresh();
+    try {
+      const group = await createConversation(db, queue, { members: { kind: "group", agents: ["claude", "codex"] }, title: null });
+      const updated = await updateConversation(db, queue, group.id, {
+        title: "改名",
+        pinned: true,
+        members: ["deepseek", "codex"],
+      });
+      assert.equal(updated?.title, "改名");
+      assert.equal(updated?.pinned, true);
+      assert.deepEqual(updated?.members, ["deepseek", "codex"]);
+
+      const direct = await createConversation(db, queue, { members: { kind: "direct", agent: "claude" }, title: null });
+      await assert.rejects(updateConversation(db, queue, direct.id, { members: ["claude", "codex"] }));
+
+      // 置顶的排在前面
+      const list = listConversations(db);
+      assert.equal(list[0].id, group.id);
+      assert.equal(list[0].pinned, true);
+
+      // 不存在的会话
+      assert.equal(await updateConversation(db, queue, "conv_" + ulid(), { title: "x" }), null);
+    } finally {
+      db.close();
+    }
+  });
+
+  it("marks read forward only", async () => {
+    const { db, queue } = fresh();
+    try {
+      const conversation = await createConversation(db, queue, { members: { kind: "direct", agent: "deepseek" }, title: null });
+      const first = userMessage(conversation.id, newChatMessageId(), "a", at(0));
+      const second = userMessage(conversation.id, newChatMessageId(), "b", at(10));
+      insertChatMessage(db, { message: first });
+      insertChatMessage(db, { message: second });
+
+      const readSecond = await markConversationRead(db, queue, conversation.id, second.id);
+      assert.equal(readSecond?.lastReadMessageId, second.id);
+
+      const back = await markConversationRead(db, queue, conversation.id, first.id);
+      assert.equal(back?.lastReadMessageId, second.id, "older message is ignored");
+
+      assert.equal(await markConversationRead(db, queue, conversation.id, newChatMessageId()), null);
+    } finally {
+      db.close();
+    }
+  });
+
+  it("stores both senders, pages newest-first, retracts in place", async () => {
+    const { db, queue } = fresh();
+    try {
+      const conversation = await createConversation(db, queue, { members: { kind: "direct", agent: "deepseek" }, title: null });
+      const m1 = userMessage(conversation.id, newChatMessageId(), "一", at(0));
+      const m2 = userMessage(conversation.id, newChatMessageId(), "二", at(10));
+      const m3 = userMessage(conversation.id, newChatMessageId(), "三", at(20));
+      for (const m of [m1, m2, m3]) insertChatMessage(db, { message: m, requestHash: "b".repeat(64) });
+
+      assert.equal(getConversation(db, conversation.id)?.lastActivityAt, at(20));
+
+      const page1 = listChatMessages(db, conversation.id, null, 2);
+      assert.deepEqual(
+        page1.messages.map((m) => m.id),
+        [m3.id, m2.id],
+      );
+      assert.deepEqual(page1.nextCursor, { createdAt: at(10), id: m2.id });
+
+      const page2 = listChatMessages(db, conversation.id, page1.nextCursor, 2);
+      assert.deepEqual(
+        page2.messages.map((m) => m.id),
+        [m1.id],
+      );
+      assert.equal(page2.nextCursor, null);
+
+      const retracted = retractChatMessage(db, m2.id, at(30));
+      assert.ok(retracted !== null);
+      ChatMessage.parse(retracted);
+      assert.equal(retracted.state, "retracted");
+      assert.equal(retracted.retractedAt, at(30));
+      assert.equal(retractChatMessage(db, m2.id, at(40)), null, "already retracted");
+
+      // 撤回之后别的字段仍然不能改
+      assert.throws(() => db.prepare("UPDATE chat_messages SET content = '{}' WHERE id = ?").run(m1.id), /immutable/);
+      assert.throws(() => db.prepare("DELETE FROM chat_messages WHERE id = ?").run(m1.id), /immutable/);
+    } finally {
+      db.close();
+    }
+  });
+
+  it("keeps one reply slot per (message, agent) and updates it in place", async () => {
+    const { db, queue } = fresh();
+    try {
+      const conversation = await createConversation(db, queue, { members: { kind: "direct", agent: "deepseek" }, title: null });
+      const message = userMessage(conversation.id, newChatMessageId(), "在吗", at(0));
+      insertChatMessage(db, { message });
+
+      const runId = "run_" + ulid();
+      const slot: ChatReplySlot = {
+        id: "slot_" + ulid(),
+        conversationId: conversation.id,
+        userMessageId: message.id,
+        agent: "deepseek",
+        required: true,
+        outcome: "running",
+        runId,
+        attempt: 1,
+        replyMessageId: null,
+        failure: null,
+        unavailableReason: null,
+        createdAt: at(0),
+        finishedAt: null,
+      };
+      insertChatSlot(db, slot);
+      ChatReplySlot.parse(getChatSlot(db, slot.id));
+      assert.deepEqual(
+        listChatSlotsForMessages(db, [message.id]).map((s) => s.id),
+        [slot.id],
+      );
+
+      assert.throws(() => insertChatSlot(db, { ...slot, id: "slot_" + ulid() }), /UNIQUE/);
+
+      const reply: ChatMessage = {
+        id: newChatMessageId(),
+        conversationId: conversation.id,
+        createdAt: at(5),
+        sender: "agent",
+        agent: "deepseek",
+        text: "在",
+        inReplyTo: message.id,
+        slotId: slot.id,
+        runId,
+        memoryEntriesUsed: null,
+      };
+      insertChatMessage(db, { message: reply });
+      const answered: ChatReplySlot = {
+        ...slot,
+        outcome: "answered",
+        replyMessageId: reply.id,
+        finishedAt: at(5),
+      };
+      updateChatSlot(db, answered);
+      const stored = getChatSlot(db, slot.id);
+      assert.equal(stored?.outcome, "answered");
+      assert.equal(stored?.replyMessageId, reply.id);
+      ChatReplySlot.parse(stored);
+
+      // 回答位的身份字段不能改
+      assert.throws(
+        () => db.prepare("UPDATE chat_reply_slots SET agent = 'codex' WHERE id = ?").run(slot.id),
+        /immutable/,
+      );
+      assert.throws(() => db.prepare("DELETE FROM chat_reply_slots WHERE id = ?").run(slot.id), /never deleted/);
+    } finally {
+      db.close();
+    }
+  });
+
+  it("refuses to delete conversations", async () => {
+    const { db, queue } = fresh();
+    try {
+      const conversation = await createConversation(db, queue, { members: { kind: "direct", agent: "deepseek" }, title: null });
+      assert.throws(() => db.prepare("DELETE FROM conversations WHERE id = ?").run(conversation.id), /never deleted/);
+      assert.throws(() => db.prepare("UPDATE conversations SET kind = 'group' WHERE id = ?").run(conversation.id), /immutable/);
+    } finally {
+      db.close();
+    }
+  });
+});

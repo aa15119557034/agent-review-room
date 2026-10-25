@@ -857,6 +857,34 @@ describe("agent.update：把参与者配到各自节点", () => {
     await close(h);
   });
 
+  it("C-34：聊天人设 / 聊天 profile / 记忆来源存下来、读回来；老行用默认值", async () => {
+    const h = await makeHarness();
+    const updated = await h.dispatcher.handleCommand({
+      type: "agent.update",
+      id: "claude",
+      chatPersona: "你是 C酱，说话直接。",
+      chatProfileId: "claude-chat",
+      memorySource: { nodeFolder: true },
+    });
+    assert.equal(updated.ok, true, JSON.stringify(updated));
+    const profile = (updated as unknown as { data: Record<string, unknown> }).data;
+    assert.equal(profile["chatPersona"], "你是 C酱，说话直接。");
+    assert.equal(profile["chatProfileId"], "claude-chat");
+    assert.deepEqual(profile["memorySource"], { nodeFolder: true });
+
+    const listed = (await h.dispatcher.handleQuery({ type: "agents.list" })) as any;
+    const claude = listed.data.find((agent: any) => agent.id === "claude");
+    assert.equal(claude.chatProfileId, "claude-chat", "改完再读回来");
+    assert.deepEqual(claude.memorySource, { nodeFolder: true });
+
+    // 没设置过的参与者：空人设 + 默认记忆来源（v5 加列时旧行是 NULL）
+    const codex = listed.data.find((agent: any) => agent.id === "codex");
+    assert.equal(codex.chatPersona, "");
+    assert.equal(codex.chatProfileId, null);
+    assert.deepEqual(codex.memorySource, { nodeFolder: false });
+    await close(h);
+  });
+
   it("新建时缺 displayName / color、替补不存在、节点不存在、替补是自己，都按 validation_failed 拒绝", async () => {
     const h = await makeHarness();
     const attempts = [
