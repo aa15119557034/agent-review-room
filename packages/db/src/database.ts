@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, renameSync, rmSync } from "node:fs";
 import Database from "better-sqlite3";
 import { currentVersion, LATEST_SCHEMA_VERSION, runMigrations } from "./migrations";
 import { BACKUP_SUFFIX } from "./schema-v5";
@@ -60,6 +60,11 @@ function maybeBackupBeforeMigrate(db: SqliteDatabase, file: string, enabled: boo
 
   const target = file + BACKUP_SUFFIX + version;
   if (existsSync(target)) return;
+
+  // 先写到 .tmp 再改名：VACUUM 写一半被强杀 / 磁盘满时，不会留下一个「看起来存在但是坏的」备份
+  const staging = target + ".tmp";
+  if (existsSync(staging)) rmSync(staging, { force: true });
   // 值来自调用方的文件路径，按 SQL 字符串转义（Windows 反斜杠在单引号里是普通字符）
-  db.exec("VACUUM INTO '" + target.replace(/'/g, "''") + "'");
+  db.exec("VACUUM INTO '" + staging.replace(/'/g, "''") + "'");
+  renameSync(staging, target);
 }

@@ -11,7 +11,12 @@ import type {
   ConversationMembers,
   UserChatMessage,
 } from "@room/schemas";
-import { ChatMessage as ChatMessageSchema, ChatReplySlot as ChatReplySlotSchema } from "@room/schemas";
+import {
+  CHAT_SLOT_TRANSITIONS,
+  ChatMessage as ChatMessageSchema,
+  ChatReplySlot as ChatReplySlotSchema,
+} from "@room/schemas";
+import { assertTransition } from "@room/core";
 import type { SqliteDatabase } from "./database";
 import { ulid } from "./ulid";
 import { writeTransaction, type WriteQueue } from "./write-queue";
@@ -214,7 +219,9 @@ export function createConversation(
     }
 
     const agents = input.members.kind === "direct" ? [input.members.agent] : [...input.members.agents];
-    if (agents.length < 1 || agents.length > 8 || new Set(agents).size !== agents.length) {
+    // 单聊恰好 1 位，群聊 2～8 位（和 Conversation 的 refine 对齐，绕过 Zod 直接调用也建不出坏数据）
+    const minMembers = input.members.kind === "direct" ? 1 : 2;
+    if (agents.length < minMembers || agents.length > 8 || new Set(agents).size !== agents.length) {
       throw new Error("conversation members out of range");
     }
 
@@ -392,6 +399,21 @@ export function insertChatMessage(db: SqliteDatabase, input: InsertChatMessageIn
   const message = ChatMessageSchema.parse(input.message);
 
   if (message.sender === "user") {
+    // 引用 / 重新编辑必须指向同一个会话的消息（跨会话引用会让拼 Prompt 和撤回审计读错人）
+    for (const referenced of [message.quoteMessageId, message.replacesMessageId]) {
+      if (referenced === null) continue;
+      const row = db.prepare("SELECT conversation_id, sender FROM chat_messages WHERE id = ?").get(referenced) as
+        | { conversation_id: string; sender: string }
+        | undefined;
+      if (row === undefined) throw new Error("referenced chat message not found: " + referenced);
+      if (row.conversation_id !== message.conversationId) {
+        throw new Error("referenced chat message is from another conversation");
+      }
+      if (referenced === message.replacesMessageId && row.sender !== "user") {
+        throw new Error("only your own message can be re-edited");
+      }
+    }
+
     db.prepare(
       "INSERT INTO chat_messages (id, conversation_id, sender, created_at, content, mentions, quote_message_id, " +
         "replaces_message_id, state, retracted_at, request_hash) VALUES (?, ?, 'user', ?, ?, ?, ?, ?, ?, NULL, ?)",
@@ -407,6 +429,20 @@ export function insertChatMessage(db: SqliteDatabase, input: InsertChatMessageIn
       input.requestHash ?? null,
     );
   } else {
+    // 回答必须和它的回答位同一组：同会话、同一位 Agent、回答的就是那条消息、就是当前这次尝试的 Run
+    const slotRow = db.prepare("SELECT * FROM chat_reply_slots WHERE id = ?").get(message.slotId) as ChatSlotRow | undefined;
+    if (slotRow === undefined) throw new Error("chat reply slot not found: " + message.slotId);
+    if (slotRow.conversation_id !== message.conversationId) throw new Error("reply slot belongs to another conversation");
+    if (slotRow.agent !== message.agent) throw new Error("reply slot belongs to another agent");
+    if (slotRow.user_message_id !== message.inReplyTo) throw new Error("reply slot answers another message");
+    if (slotRow.run_id !== message.runId) throw new Error("run does not match the slot's current attempt");
+    const parent = db.prepare("SELECT sender, state FROM chat_messages WHERE id = ?").get(message.inReplyTo) as
+      | { sender: string; state: string }
+      | undefined;
+    if (parent?.sender !== "user") throw new Error("agent reply must answer a user message");
+    // 消息已撤回 = 之后的上下文里不再有它，迟到的回答不能落库（契约：撤回瞬间答完的结果丢弃）
+    if (parent.state !== "sent") throw new Error("agent reply must answer a message that is still in context");
+
     db.prepare(
       "INSERT INTO chat_messages (id, conversation_id, sender, created_at, agent, text, in_reply_to, slot_id, run_id, " +
         "memory_entries_used) VALUES (?, ?, 'agent', ?, ?, ?, ?, ?, ?, ?)",
@@ -474,9 +510,34 @@ export function insertChatSlot(db: SqliteDatabase, slot: ChatReplySlot): void {
   );
 }
 
-/** 改回答位的可变字段（身份字段有触发器挡着）。**必须在调用方的事务里跑** */
+/**
+ * 改回答位的可变字段（身份字段有触发器挡着）。**必须在调用方的事务里跑**。
+ *
+ * 状态只能按 CHAT_SLOT_TRANSITIONS 走：retracted 是终态，迟到结果改不回去；重试（→ running）必须 attempt + 1，
+ * 其余转换 attempt / runId 都不许变。数据库层兜底，D-31b 漏判一次也不会把撤回的回答放回来。
+ */
 export function updateChatSlot(db: SqliteDatabase, slot: ChatReplySlot): void {
   const parsed = ChatReplySlotSchema.parse(slot);
+  const row = db.prepare("SELECT * FROM chat_reply_slots WHERE id = ?").get(parsed.id) as ChatSlotRow | undefined;
+  if (row === undefined) throw new Error("chat reply slot not found: " + parsed.id);
+  const previous = toChatSlot(row);
+
+  if (parsed.outcome !== previous.outcome) {
+    assertTransition(CHAT_SLOT_TRANSITIONS, "chat slot", previous.outcome, parsed.outcome);
+    if (parsed.outcome === "running") {
+      // 重试：同一条消息、同一位 Agent 的第 attempt 次尝试，旧的 Run 归档
+      if (parsed.attempt !== previous.attempt + 1) {
+        throw new Error(
+          "retrying a chat slot must increment attempt: " + previous.attempt + " -> " + parsed.attempt,
+        );
+      }
+    } else if (parsed.attempt !== previous.attempt || parsed.runId !== previous.runId) {
+      throw new Error("only a retry may change attempt / runId of a chat slot");
+    }
+  } else if (parsed.attempt !== previous.attempt || parsed.runId !== previous.runId) {
+    throw new Error("attempt / runId only change when retrying (chat slot " + parsed.id + ")");
+  }
+
   const result = db
     .prepare(
       "UPDATE chat_reply_slots SET outcome = ?, run_id = ?, attempt = ?, reply_message_id = ?, failure = ?, " +

@@ -99,6 +99,11 @@ WHEN NOT (
   AND NEW.agent IS OLD.agent AND NEW.text IS OLD.text AND NEW.in_reply_to IS OLD.in_reply_to
   AND NEW.slot_id IS OLD.slot_id AND NEW.run_id IS OLD.run_id
   AND NEW.memory_entries_used IS OLD.memory_entries_used
+  -- 撤回只能 sent → retracted 一次：不能撤销撤回、也不能改撤回时间
+  AND (
+    (NEW.state IS OLD.state AND NEW.retracted_at IS OLD.retracted_at)
+    OR (OLD.state = 'sent' AND NEW.state = 'retracted')
+  )
 )
 BEGIN
   SELECT RAISE(ABORT, 'chat messages are immutable except retraction');
@@ -128,7 +133,18 @@ CREATE TABLE chat_reply_slots (
   created_at         TEXT NOT NULL,
   finished_at        TEXT,
   -- 唯一键：(userMessageId, agent)。一条消息对同一个人只有一个回答位，重试只换 attempt
-  UNIQUE (user_message_id, agent)
+  UNIQUE (user_message_id, agent),
+  -- 和契约 ChatReplySlot 的 refine 对齐；撤回时保留撤回前的值，所以 retracted 一律豁免
+  CHECK (outcome <> 'answered' OR reply_message_id IS NOT NULL),
+  CHECK (reply_message_id IS NULL OR outcome IN ('answered', 'retracted')),
+  CHECK (outcome <> 'failed' OR failure IS NOT NULL),
+  CHECK (failure IS NULL OR outcome IN ('failed', 'retracted')),
+  CHECK (outcome <> 'unavailable' OR unavailable_reason IS NOT NULL),
+  CHECK (unavailable_reason IS NULL OR outcome IN ('unavailable', 'retracted')),
+  CHECK (outcome NOT IN ('running', 'answered', 'skipped', 'failed', 'cancelled') OR run_id IS NOT NULL),
+  CHECK (outcome <> 'unavailable' OR run_id IS NULL),
+  CHECK ((outcome = 'running') = (finished_at IS NULL)),
+  CHECK (NOT (required = 1 AND outcome = 'skipped'))
 ) STRICT;
 
 CREATE INDEX idx_chat_slots_conversation ON chat_reply_slots(conversation_id);

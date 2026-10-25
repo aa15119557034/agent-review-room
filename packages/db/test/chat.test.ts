@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { existsSync, mkdtempSync, rmSync } from "node:fs";
+import { existsSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
@@ -206,6 +206,22 @@ describe("migration v5 (chat space)", () => {
     backupAfter.close();
   });
 
+  it("cleans up a half-written backup and only leaves a complete one", () => {
+    const file = tempFile("room-v5-partial-");
+    buildV4(file);
+    // 上一次 VACUUM 写到一半被杀：留下一个 .tmp
+    writeFileSync(file + ".bak-v4.tmp", "half written");
+
+    const db = openDatabase(file);
+    db.close();
+
+    assert.ok(existsSync(file + ".bak-v4"), "backup must be complete");
+    assert.equal(existsSync(file + ".bak-v4.tmp"), false, "staging file must be gone");
+    const backup = new Database(file + ".bak-v4", { readonly: true });
+    assert.equal(backup.pragma("user_version", { simple: true }), 4);
+    backup.close();
+  });
+
   it("writes no backup for a brand-new database or when disabled", () => {
     const fresh = tempFile("room-v5-fresh-");
     const db = openDatabase(fresh);
@@ -264,6 +280,10 @@ describe("chat models", () => {
       await assert.rejects(
         createConversation(db, queue, { members: { kind: "group", agents: ["claude", "claude"] }, title: null }),
       );
+      // 群聊至少 2 位（绕过 Zod 直接调用也建不出一位的群聊）
+      await assert.rejects(
+        createConversation(db, queue, { members: { kind: "group", agents: ["claude"] }, title: null }),
+      );
     } finally {
       db.close();
     }
@@ -287,8 +307,10 @@ describe("chat models", () => {
 
       // 置顶的排在前面
       const list = listConversations(db);
-      assert.equal(list[0].id, group.id);
-      assert.equal(list[0].pinned, true);
+      const first = list[0];
+      assert.ok(first !== undefined);
+      assert.equal(first.id, group.id);
+      assert.equal(first.pinned, true);
 
       // 不存在的会话
       assert.equal(await updateConversation(db, queue, "conv_" + ulid(), { title: "x" }), null);
@@ -350,9 +372,19 @@ describe("chat models", () => {
       assert.equal(retracted.retractedAt, at(30));
       assert.equal(retractChatMessage(db, m2.id, at(40)), null, "already retracted");
 
-      // 撤回之后别的字段仍然不能改
+      // 撤回之后别的字段仍然不能改，也不能撤销撤回、不能改撤回时间
       assert.throws(() => db.prepare("UPDATE chat_messages SET content = '{}' WHERE id = ?").run(m1.id), /immutable/);
       assert.throws(() => db.prepare("DELETE FROM chat_messages WHERE id = ?").run(m1.id), /immutable/);
+      assert.throws(
+        () => db.prepare("UPDATE chat_messages SET state = 'sent', retracted_at = NULL WHERE id = ?").run(m2.id),
+        /immutable/,
+        "撤回不能撤销",
+      );
+      assert.throws(
+        () => db.prepare("UPDATE chat_messages SET retracted_at = ? WHERE id = ?").run(at(40), m2.id),
+        /immutable/,
+        "撤回时间不能改",
+      );
     } finally {
       db.close();
     }
@@ -390,30 +422,94 @@ describe("chat models", () => {
 
       assert.throws(() => insertChatSlot(db, { ...slot, id: "slot_" + ulid() }), /UNIQUE/);
 
+      // running → failed → running 只能按转换表走，重试必须 attempt + 1
+      const failed: ChatReplySlot = {
+        ...slot,
+        outcome: "failed",
+        failure: { kind: "run_failed", message: "第一次失败了" },
+        finishedAt: at(5),
+      };
+      updateChatSlot(db, failed);
+      assert.throws(() => updateChatSlot(db, { ...slot, finishedAt: null }), /attempt/, "重试要把 attempt 加一");
+
+      const runId2 = "run_" + ulid();
+      const retried: ChatReplySlot = { ...slot, outcome: "running", runId: runId2, attempt: 2, finishedAt: null };
+      updateChatSlot(db, retried);
+      assert.equal(getChatSlot(db, slot.id)?.outcome, "running");
+
       const reply: ChatMessage = {
         id: newChatMessageId(),
         conversationId: conversation.id,
-        createdAt: at(5),
+        createdAt: at(6),
         sender: "agent",
         agent: "deepseek",
         text: "在",
         inReplyTo: message.id,
         slotId: slot.id,
-        runId,
+        runId: runId2,
         memoryEntriesUsed: null,
       };
       insertChatMessage(db, { message: reply });
+      // 回答必须和回答位同一组：Run 不对、回答的不是那条消息，都插不进去
+      assert.throws(
+        () => insertChatMessage(db, { message: { ...reply, id: newChatMessageId(), runId: "run_" + ulid() } }),
+        /run does not match/,
+      );
+      assert.throws(
+        () => insertChatMessage(db, { message: { ...reply, id: newChatMessageId(), inReplyTo: "cmsg_" + ulid() } }),
+        /answers another message/,
+      );
+
       const answered: ChatReplySlot = {
-        ...slot,
+        ...retried,
         outcome: "answered",
         replyMessageId: reply.id,
-        finishedAt: at(5),
+        finishedAt: at(6),
       };
       updateChatSlot(db, answered);
       const stored = getChatSlot(db, slot.id);
       assert.equal(stored?.outcome, "answered");
       assert.equal(stored?.replyMessageId, reply.id);
+      assert.equal(stored?.attempt, 2);
       ChatReplySlot.parse(stored);
+
+      // answered 不能直接变 failed；撤回可以，而且保留 replyMessageId（审计用）
+      assert.throws(
+        () =>
+          updateChatSlot(db, {
+            ...answered,
+            outcome: "failed",
+            replyMessageId: null,
+            failure: { kind: "run_failed", message: "x" },
+          }),
+        /illegal transition/,
+      );
+      const retracted: ChatReplySlot = { ...answered, outcome: "retracted" };
+      updateChatSlot(db, retracted);
+      const afterRetract = getChatSlot(db, slot.id);
+      assert.equal(afterRetract?.outcome, "retracted");
+      assert.equal(afterRetract?.replyMessageId, reply.id, "撤回保留回答");
+      ChatReplySlot.parse(afterRetract);
+      assert.throws(
+        () =>
+          updateChatSlot(db, {
+            ...answered,
+            outcome: "running",
+            attempt: 3,
+            runId: "run_" + ulid(),
+            replyMessageId: null,
+            finishedAt: null,
+          }),
+        /illegal transition/,
+        "retracted 是终态",
+      );
+
+      // 消息撤回之后，迟到的回答不能再写进来
+      retractChatMessage(db, message.id, at(9));
+      assert.throws(
+        () => insertChatMessage(db, { message: { ...reply, id: newChatMessageId() } }),
+        /still in context/,
+      );
 
       // 回答位的身份字段不能改
       assert.throws(
