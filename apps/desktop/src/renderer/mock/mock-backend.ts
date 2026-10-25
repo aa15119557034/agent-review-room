@@ -155,7 +155,7 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
 
   const commands: { [K in CommandType]?: (req: any) => Promise<unknown> } = {
     async "project.create"(req) {
-      const p: Project = { id: id("proj"), name: req.name, createdAt: now() };
+      const p: Project = { id: id("proj"), name: req.name, fromConversationId: null, createdAt: now() };
       db.projects.push(p);
       return p;
     },
