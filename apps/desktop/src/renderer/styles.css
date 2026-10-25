@@ -2236,14 +2236,68 @@ button.stage:hover {
   }
 }
 .effort input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
   width: 100%;
-  accent-color: var(--active);
+  height: 1.75rem;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+/* 轨道：拉到哪儿就填到哪儿（--pos 由组件给，0..1） */
+.effort input[type="range"]::-webkit-slider-runnable-track {
+  height: 0.5rem;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--active) calc(var(--pos) * 100%), var(--rule) 0);
 }
 .effort input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: -0.375rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.3);
   transition: transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .effort input[type="range"]:active::-webkit-slider-thumb {
   transform: scale(1.25);
+}
+.effort input[type="range"]:focus-visible {
+  outline: 2px solid var(--active);
+  outline-offset: 2px;
+  border-radius: 999px;
+}
+/*
+ * 最高一档：紫色渐变 + 流动的星光。三层小白点（格子和轨道一样高，每列一颗）按各自的格子大小平移一整格，渐变对称、平移两倍宽，
+ * 所以首尾接得上；「减少动态效果」时全局规则关掉动画，只留静止的渐变
+ */
+.effort[data-top="true"] input[type="range"]::-webkit-slider-runnable-track {
+  height: 0.75rem;
+  background:
+    radial-gradient(circle, rgb(255 255 255 / 0.95) 0 1px, transparent 1.5px) 0 -2px / 23px 12px,
+    radial-gradient(circle, rgb(255 255 255 / 0.55) 0 1px, transparent 1.5px) 9px 3px / 37px 12px,
+    radial-gradient(circle, rgb(255 255 255 / 0.8) 0 1.5px, transparent 2px) 30px 0 / 61px 12px,
+    linear-gradient(90deg, #3b3fd8, #7c5cf0, #c084fc, #7c5cf0, #3b3fd8) 0 0 / 200% 100%;
+  box-shadow: 0 0 10px rgb(139 92 246 / 0.45);
+  animation: effort-sparkle 4s linear infinite;
+}
+@keyframes effort-sparkle {
+  to {
+    background-position: 23px -2px, -28px 3px, 91px 0, 200% 0;
+  }
+}
+.effort[data-top="true"] input[type="range"]::-webkit-slider-thumb {
+  margin-top: -0.25rem;
+}
+.effort[data-top="true"] .effort-value {
+  background: linear-gradient(90deg, #6d5df6, #b56cf7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.effort[data-top="true"] .effort-ticks [data-on="true"] {
+  color: #8b5cf6;
 }
 .effort-ticks {
   display: flex;

@@ -4,7 +4,9 @@
  *
  *   pnpm --filter @room/agent-server run try -- deepseek-discuss "用一句话介绍你自己"
  *   pnpm --filter @room/agent-server run try -- codex-discuss "用一句话介绍你自己"
+ *   pnpm --filter @room/agent-server run try -- codex-discuss --model gpt-6.1-sol --effort medium "用一句话介绍你自己"
  *
+ * --model / --effort 走和主控端一样的 StartRun.model（S-22），不在配置清单里会被节点拒绝。
  * Token 从本机配置读取，不打印。AgentServer 需要先在另一个窗口里启动。
  */
 import { createHash, randomInt } from "node:crypto";
@@ -12,11 +14,17 @@ import { RemoteEvent } from "@room/schemas";
 import { loadConfig } from "./config";
 
 const [profileId, ...rest] = process.argv.slice(2).filter((a) => a !== "--");
+const options: Record<string, string> = {};
+while (rest[0] === "--model" || rest[0] === "--effort") {
+  const [flag, value] = rest.splice(0, 2);
+  options[flag!.slice(2)] = value ?? "";
+}
 const prompt = rest.join(" ");
-if (!profileId || !prompt) {
-  console.error('用法：pnpm --filter @room/agent-server run try -- <profile> "问题"');
+if (!profileId || !prompt || (options["effort"] !== undefined && options["model"] === undefined)) {
+  console.error('用法：pnpm --filter @room/agent-server run try -- <profile> [--model <模型> [--effort <档位>]] "问题"');
   process.exit(2);
 }
+
 
 let loaded: ReturnType<typeof loadConfig>;
 try {
@@ -30,6 +38,17 @@ if (!config.profiles[profileId]) {
   console.error(`没有这个 profile：${profileId}。可用的：${Object.keys(config.profiles).join("、")}`);
   process.exit(2);
 }
+// 只给了 --model：用配置里这个模型的推荐档位（没有档位的模型就是 null）
+const model =
+  options["model"] === undefined
+    ? undefined
+    : {
+        model: options["model"],
+        effort:
+          options["effort"] ??
+          config.profiles[profileId]!.models.find((m) => m.id === options["model"])?.defaultEffort ??
+          null,
+      };
 const host = config.host === "0.0.0.0" || config.host === "::" ? "127.0.0.1" : config.host;
 const base = `http://${host}:${config.port}`;
 const auth = { authorization: `Bearer ${token}`, "content-type": "application/json" };
@@ -50,6 +69,7 @@ try {
       profileId,
       snapshot: { id: "snap_" + ulid(), content: prompt, contentHash: createHash("sha256").update(prompt, "utf8").digest("hex") },
       limits: { idleTimeoutMs: 300_000, totalTimeoutMs: 1_800_000 },
+      ...(model ? { model } : {}),
     }),
   });
 } catch {

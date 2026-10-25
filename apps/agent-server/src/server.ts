@@ -14,6 +14,7 @@ import {
 } from "@room/schemas";
 import type { Profile, ServerConfig } from "./config";
 import { RemoteRun } from "./remote-run";
+import { checkModel } from "./model-args";
 
 const execFileP = promisify(execFile);
 
@@ -74,6 +75,8 @@ export function createAgentServer(cfg: ServerConfig, token: string): AgentServer
         maxConcurrentRuns: cfg.maxConcurrentRuns,
         leaseMs: cfg.leaseMs,
         heartbeatMs: cfg.heartbeatMs,
+        // S-22：每个 profile 都报，models 为空 = 模型写死在节点配置里
+        profileModels: Object.entries(cfg.profiles).map(([profileId, p]) => ({ profileId, models: p.models })),
       };
       return sendJson(res, 200, body);
     }
@@ -136,7 +139,11 @@ export function createAgentServer(cfg: ServerConfig, token: string): AgentServer
     // 幂等：同一个 runId 重复提交
     const existing = runs.get(reqBody.runId);
     if (existing) {
-      if (existing.profileId === reqBody.profileId && existing.contentHash === reqBody.snapshot.contentHash) {
+      if (
+        existing.profileId === reqBody.profileId &&
+        existing.contentHash === reqBody.snapshot.contentHash &&
+        sameModel(existing.model, reqBody.model)
+      ) {
         return sendJson(res, 200, startResponse(reqBody.runId, "already_exists"));
       }
       throw new HttpError(409, "run_id_conflict", "runId already used with a different payload");
@@ -144,6 +151,11 @@ export function createAgentServer(cfg: ServerConfig, token: string): AgentServer
 
     const profile = cfg.profiles[reqBody.profileId];
     if (!profile) throw new HttpError(400, "unknown_profile", "unknown profileId");
+
+    if (reqBody.model) {
+      const problem = checkModel(profile, reqBody.model);
+      if (problem) throw new HttpError(400, "unknown_model", problem);
+    }
 
     const actual = createHash("sha256").update(reqBody.snapshot.content, "utf8").digest("hex");
     if (actual !== reqBody.snapshot.contentHash) {
@@ -248,6 +260,10 @@ async function verifyCommit(profile: Profile, expected: string): Promise<void> {
     if (err instanceof HttpError) throw err;
     throw new HttpError(409, "commit_mismatch", "could not verify commit in profile cwd");
   }
+}
+
+function sameModel(a: StartRunRequest["model"], b: StartRunRequest["model"]): boolean {
+  return a?.model === b?.model && a?.effort === b?.effort;
 }
 
 function startResponse(runId: StartRunResponse["runId"], status: StartRunResponse["status"]): StartRunResponse {
