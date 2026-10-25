@@ -49,7 +49,9 @@ import {
   AudioRef,
   CHAT_LIMITS,
   ChatAttachment,
-  ChatContent,
+  ChatContentInput,
+  ConversationMembers,
+  GroupMembers,
   ChatCursor,
   ChatHistorySummary,
   ChatMentions,
@@ -59,7 +61,6 @@ import {
   ChatSlotId,
   ChatSnapshot,
   Conversation,
-  ConversationKind,
   ConversationListItem,
   Sticker,
   StickerId,
@@ -575,14 +576,13 @@ export const COMMANDS = {
   // 聊天不盖章：下面没有一条命令会改文件、跑命令或改讨论室的结果。要变成动作只能 chat.toTopic。
 
   /**
-   * 新建会话。单聊：members 恰好 1 位，mentions 只能是 none；和这位已经有单聊时返回原来那个，不新建。
-   * 群聊：2～8 位，不重复。成员必须是已有的参与者（not_found）
+   * 新建会话。单聊（members.kind = direct）：和这位已经有单聊时返回原来那个，不新建。
+   * 群聊：2～8 位，不重复（入参就校验，不会建出一位的群聊）。成员必须是已有的参与者（not_found）
    */
   "chat.conversation.create": def(
     z.object({
       type: z.literal("chat.conversation.create"),
-      kind: ConversationKind,
-      members: z.array(AgentName).min(1).max(CHAT_LIMITS.maxRecipients).refine(uniqueAgents, "成员不能重复"),
+      members: ConversationMembers,
       title: z.string().trim().min(1).max(60).nullable(),
     }),
     Conversation,
@@ -600,7 +600,7 @@ export const COMMANDS = {
       title: z.string().trim().min(1).max(60).nullable().optional(),
       pinned: z.boolean().optional(),
       muted: z.boolean().optional(),
-      members: z.array(AgentName).min(2).max(CHAT_LIMITS.maxRecipients).refine(uniqueAgents, "成员不能重复").optional(),
+      members: GroupMembers.optional(),
     }),
     Conversation,
     "author",
@@ -616,12 +616,18 @@ export const COMMANDS = {
   /**
    * 发一条消息。打字就发，不盖章。
    *
-   * - **防重复**：messageId 由发送方生成。同一个 id 再发一次、内容完全一样 → 原样返回第一次的结果，不新建回答位和 Run；
-   *   同一个 id 内容不一样 → idempotency_conflict
+   * 检查顺序：① 入参 schema → ② 防重复 → ③ 限流 → ④ 其余校验 → ⑤ 一个事务建消息、回答位、Run。
+   * - **防重复**：messageId 由发送方生成。判等看整条发送意图 chatSendIntentJson(req)（conversationId、content、mentions、
+   *   quoteMessageId、replacesMessageId，按键排序的 JSON），main 把它的 sha256 和消息一起落库，重启后仍有效：
+   *   同一个 id、意图相同 → 原样返回第一次的结果，不新建回答位和 Run，**也不占限流名额**（所以网络重试不会变成 rate_limited）；
+   *   同一个 id、意图任一字段不同 → idempotency_conflict。
+   *   只有成功的发送会落库：第一次被拒（rate_limited / validation_failed / invalid_state）什么都没建，同一个 id 再发按新的一次处理
    * - **上限**：每个会话最近 60 秒最多 CHAT_LIMITS.messagesPerMinute 条，超了 rate_limited（什么都不建）
+   * - content 只带引用（ChatContentInput），附件 / 录音 / 表情的元数据由 main 从自己的记录填，不信客户端
    * - mentions：单聊只能是 none；agents 里的人必须都是成员（validation_failed）
    * - 附件 / 录音 / 表情的引用必须存在、属于聊天（validation_failed）；录音必须 ready
-   * - quoteMessageId：必须在同一个会话里，不能是已撤回的
+   * - quoteMessageId：必须在同一个会话里，并且没有被排除（isExcludedFromContext：已撤回的消息、回答已撤回消息的秘书回答都不能引用），
+   *   否则 invalid_state
    * - replacesMessageId（重新编辑）：必须是同一个会话里**你的、已撤回的**消息，撤回不超过 CHAT_LIMITS.reeditWindowMs，
    *   而且还没被别的消息替换过，否则 invalid_state。重新编辑是一条新消息、新回答位（同样的 @ 规则）；旧回答位和旧 Run 归档，不复活
    *
@@ -633,7 +639,7 @@ export const COMMANDS = {
       type: z.literal("chat.send"),
       conversationId: ConversationId,
       messageId: ChatMessageId,
-      content: ChatContent,
+      content: ChatContentInput,
       mentions: ChatMentions,
       quoteMessageId: ChatMessageId.nullable(),
       replacesMessageId: ChatMessageId.nullable(),
@@ -656,7 +662,7 @@ export const COMMANDS = {
   /**
    * 单独重试一个回答位（结局是 failed / absent_quota / unavailable / cancelled），其他人不重发。
    * **重新拼一份 Snapshot**（不重放旧的），attempt + 1，新建 Run。这位现在仍然不能答 → agent_unavailable，回答位不变。
-   * 消息已撤回 → invalid_state
+   * 消息已撤回、或这位已经不在会话成员里（被移出群）→ invalid_state，回答位不变
    */
   "chat.retry": def(
     z.object({ type: z.literal("chat.retry"), slotId: ChatSlotId }),
@@ -720,7 +726,8 @@ export const COMMANDS = {
 
   /**
    * 一键转议题：选中的消息 → 新议题 + 一条 chat_material 初始材料（同一事务）。之后照讨论室流程盖章发送，创建本身不发给任何人。
-   * messageIds 必须都在这个会话里、不重复；有已撤回的消息、或回答的是已撤回消息的秘书回答 → invalid_state
+   * messageIds 必须都在这个会话里、不重复；有被排除的消息（isExcludedFromContext）→ invalid_state。
+   * 整理出的材料超过 Message.content 的上限（2,000,000 字）→ validation_failed，在事务开始前检查，不会留下没有材料的议题
    */
   "chat.toTopic": def(
     z.object({
@@ -733,6 +740,24 @@ export const COMMANDS = {
     "author",
   ),
 } as const;
+
+/** 按键排序的 JSON（数组保持顺序），用来给发送意图判等 */
+const stableJson = (v: unknown): string =>
+  Array.isArray(v)
+    ? `[${v.map(stableJson).join(",")}]`
+    : v !== null && typeof v === "object"
+      ? `{${Object.keys(v as object).sort().map((k) => `${JSON.stringify(k)}:${stableJson((v as Record<string, unknown>)[k])}`).join(",")}}`
+      : JSON.stringify(v);
+
+/** chat.send 的发送意图（防重复判等用）：除 type、messageId 以外的全部字段，按键排序的 JSON。main 存它的 sha256 */
+export const chatSendIntentJson = (req: CommandRequest<"chat.send">): string =>
+  stableJson({
+    conversationId: req.conversationId,
+    content: req.content,
+    mentions: req.mentions,
+    quoteMessageId: req.quoteMessageId,
+    replacesMessageId: req.replacesMessageId,
+  });
 
 // ================================================================ Queries
 

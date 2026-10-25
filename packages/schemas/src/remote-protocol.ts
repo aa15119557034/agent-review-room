@@ -82,13 +82,16 @@ export type RunModel = z.infer<typeof RunModel>;
 // ---------------------------------------------------------------- 聊天的记忆槽位（C-34，阶段 1B-2）
 
 /**
- * 记忆条目 id：节点给的、相对于记忆文件夹的名字，例如 "L1/identity.md"。
- * 不能是绝对路径、不能有 ".." 段、不能有反斜杠，只用来事后核对「用了哪几条」。
+ * 记忆条目 id：节点给的、相对于记忆文件夹的名字，例如 "L1/identity.md"、"メモ/café.md"。
+ * 不能是绝对路径、不能有 "." / ".." / 空段、不能有反斜杠和控制字符，只用来事后核对「用了哪几条」。
  */
 export const MemoryEntryId = z
   .string()
-  .regex(/^[A-Za-z0-9\u4e00-\u9fff][A-Za-z0-9\u4e00-\u9fff ._/-]{0,199}$/)
-  .refine((v) => !v.split("/").some((seg) => seg === ".." || seg === "." || seg === ""), "不能有空段、. 或 ..");
+  .min(1)
+  .max(200)
+  // 不能有控制字符和 Windows 文件名里不允许的 \ : * ? " < > |（所以也不会有盘符和反斜杠路径）
+  .regex(/^[^\u0000-\u001f\u007f\\:*?"<>|]+$/)
+  .refine((v) => !v.split("/").some((seg) => seg === ".." || seg === "." || seg.trim() === ""), "不能有空段、. 或 ..");
 export type MemoryEntryId = z.infer<typeof MemoryEntryId>;
 
 /**
@@ -112,6 +115,9 @@ export type MemoryManifest = z.infer<typeof MemoryManifest>;
  * content 里**恰好出现一次** marker（X-30 生成，带本次 nonce），节点把它换成用同一个包裹函数（core 导出）包好的记忆。
  * marker 出现 0 次或多于 1 次，节点拒绝（bad_request）。
  */
+/** marker 在 content 里恰好出现一次（ChatSnapshot 和 StartRun 都用这条） */
+export const occursExactlyOnce = (content: string, marker: string): boolean => content.split(marker).length === 2;
+
 export const MemorySlot = z
   .object({
     nonce: z.string().regex(/^[a-f0-9]{16,64}$/),
@@ -157,12 +163,16 @@ export const StartRunRequest = z
      *   读这个 profile 配置的记忆文件夹，用 core 导出的包裹函数（同一个 nonce）把记忆换进去，然后才交给 CLI。
      *   marker 不是恰好一次 → bad_request。节点**不能往 Prompt 里加槽位以外的任何文字**
      * - memory 为 null：原样发 content
-     * 两种情况节点都在开始交给 CLI 之前发一次 prompt_final 事件（最终 hash + 记忆清单）。
+     * 两种情况都按 RemoteEvent.prompt_final 的规则发一次 prompt_final（最终 hash + 记忆清单）。
      * 幂等：同一个 runId 重复提交时 chat 也要一致，否则 run_id_conflict。
      */
     chat: z.object({ memory: MemorySlot.nullable() }).strict().optional(),
   })
-  .strict();
+  .strict()
+  .refine(
+    (r) => !r.chat?.memory || occursExactlyOnce(r.snapshot.content, r.chat.memory.marker),
+    "chat.memory.marker 必须在 snapshot.content 里恰好出现一次",
+  );
 
 export const StartRunResponse = z.object({
   runId: RunId,
@@ -211,9 +221,9 @@ export const RemoteEvent = z.discriminatedUnion("type", [
   z.object({ type: z.literal("message_complete"), ...seqd, text: z.string() }),
   z.object({ type: z.literal("permission_request"), ...seqd, request: PermissionRequest }),
   /**
-   * C-34：只在 StartRun 带了 chat 时出现，每个 run 恰好一次，在任何 text_delta / output / message_complete 之前。
-   * finalPromptHash = sha256(UTF-8(实际交给 CLI 的全文))；没有记忆槽位时等于 contentHash，memory 为 null。
-   * 节点在发出这个事件之前就失败了（例如 spawn_failed），可以没有这个事件
+   * C-34：只在 StartRun 带了 chat 时出现。PROMPT_FINAL_RULE：节点拼好最终 Prompt 之后、交给 CLI 之前恰好一次，
+   * 在任何 text_delta / output / message_complete 之前；拼好之前就失败（校验、读记忆出错、取消）可以没有。
+   * finalPromptHash = sha256(UTF-8(实际交给 CLI 的全文))；没有记忆槽位时等于 contentHash，memory 为 null
    */
   z.object({
     type: z.literal("prompt_final"),
@@ -251,7 +261,10 @@ export const NodeHealth = z.object({
    * 老节点不报 = 都没有，开了 memorySource.nodeFolder 的人界面显示「此记忆来源不可用」，Snapshot 仍留槽位、节点填「不可用」
    */
   memoryProfiles: z.array(ProfileId).max(64).optional(),
-});
+}).refine(
+  (h) => (h.memoryProfiles ?? []).every((p) => h.profiles.includes(p)),
+  "memoryProfiles 里的 profile 必须都在 profiles 里",
+);
 
 export const RemoteRunSummary = z.object({
   runId: RunId,

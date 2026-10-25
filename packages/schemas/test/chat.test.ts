@@ -2,6 +2,10 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import {
   AgentChatMessage,
+  ChatContentInput,
+  ChatSnapshot,
+  chatSendIntentJson,
+  isExcludedFromContext,
   AgentEvent,
   AgentProfile,
   CHAT_LIMITS,
@@ -208,8 +212,10 @@ describe("agent output", () => {
 
 describe("memory", () => {
   it("entry ids stay inside the memory folder", () => {
-    for (const ok of ["L1/identity.md", "汐/锚点.md", "notes 2026.md"]) assert.ok(MemoryEntryId.safeParse(ok).success, ok);
-    for (const bad of ["../x", "a/../b", "/etc/passwd", "C:/x", "a\\b", "a//b", "./a", ""]) {
+    for (const ok of ["L1/identity.md", "汐/锚点.md", "notes 2026.md", "café.md", "メモ.md", "🧠.md"]) {
+      assert.ok(MemoryEntryId.safeParse(ok).success, ok);
+    }
+    for (const bad of ["../x", "a/../b", "/etc/passwd", "C:/x", "a\\b", "a//b", "./a", "", "a/ /b", "a\nb", "a?.md"]) {
       assert.equal(MemoryEntryId.safeParse(bad).success, false, bad);
     }
   });
@@ -250,8 +256,13 @@ describe("chat runs and the node protocol", () => {
     assert.ok(StartRunRequest.safeParse(start).success, "discussion runs unchanged");
     assert.ok(StartRunRequest.safeParse({ ...start, chat: { memory: null } }).success);
     const slot = { nonce: "0123456789abcdef", marker: "<<memory-slot 0123456789abcdef>>" };
-    assert.ok(StartRunRequest.safeParse({ ...start, chat: { memory: slot } }).success);
-    assert.equal(StartRunRequest.safeParse({ ...start, chat: { memory: { ...slot, path: "C:/mem" } } }).success, false);
+    const withSlot = { ...start, snapshot: { ...start.snapshot, content: `a ${slot.marker} b` } };
+    assert.ok(StartRunRequest.safeParse({ ...withSlot, chat: { memory: slot } }).success);
+    assert.equal(StartRunRequest.safeParse({ ...start, chat: { memory: slot } }).success, false, "marker missing");
+    const twice = { ...start, snapshot: { ...start.snapshot, content: `${slot.marker}${slot.marker}` } };
+    assert.equal(StartRunRequest.safeParse({ ...twice, chat: { memory: slot } }).success, false, "marker twice");
+    const start2 = withSlot;
+    assert.equal(StartRunRequest.safeParse({ ...start2, chat: { memory: { ...slot, path: "C:/mem" } } }).success, false);
     assert.equal(StartRunRequest.safeParse({ ...start, chat: { memory: null, tools: true } }).success, false);
   });
 
@@ -341,5 +352,125 @@ describe("chat commands, queries, events", () => {
 
   it("events parse", () => {
     assert.ok(ControlEvent.safeParse({ type: "chat.voice.updated", recording: { audio: `aud_${ID}`, durationMs: 1, status: "failed", transcript: null, error: "x", createdAt: TS } }).success);
+  });
+});
+
+describe("review round 1 (汐 / 林离 on 919ea67)", () => {
+  const snap = {
+    id: `snap_${ID}`, purpose: "reply", conversationId: CONV, userMessageId: MSG, agent: "deepseek",
+    content: "hello", contentHash: HASH, nonce: "0123456789abcdef", memorySlot: null,
+    includedMessageIds: [MSG], includedSummaryIds: [], adapterVersion: "1", tokenEstimate: 1, createdAt: TS,
+  };
+
+  it("a history-summary snapshot has no user message but needs sources", () => {
+    assert.ok(ChatSnapshot.safeParse(snap).success);
+    assert.ok(ChatSnapshot.safeParse({ ...snap, purpose: "history_summary", userMessageId: null }).success);
+    assert.equal(ChatSnapshot.safeParse({ ...snap, purpose: "history_summary" }).success, false, "summary with a user message");
+    assert.equal(ChatSnapshot.safeParse({ ...snap, userMessageId: null }).success, false, "reply without one");
+    assert.equal(
+      ChatSnapshot.safeParse({ ...snap, purpose: "history_summary", userMessageId: null, includedMessageIds: [] }).success,
+      false,
+      "summary without sources",
+    );
+  });
+
+  it("memory slot marker occurs exactly once and shares the snapshot nonce", () => {
+    const slot = { nonce: snap.nonce, marker: "<<memory-slot 0123456789abcdef>>" };
+    assert.ok(ChatSnapshot.safeParse({ ...snap, content: `x${slot.marker}y`, memorySlot: slot }).success);
+    assert.equal(ChatSnapshot.safeParse({ ...snap, memorySlot: slot }).success, false, "missing");
+    assert.equal(ChatSnapshot.safeParse({ ...snap, content: slot.marker + slot.marker, memorySlot: slot }).success, false, "twice");
+    assert.equal(
+      ChatSnapshot.safeParse({ ...snap, content: `x${slot.marker}`, memorySlot: { ...slot, nonce: "f".repeat(16) } }).success,
+      false,
+      "different nonce",
+    );
+  });
+
+  it("conversation.create rejects a 1-member group and a 2-member direct chat", () => {
+    const req = COMMANDS["chat.conversation.create"].request;
+    assert.ok(req.safeParse({ type: "chat.conversation.create", members: { kind: "direct", agent: "deepseek" }, title: null }).success);
+    assert.ok(req.safeParse({ type: "chat.conversation.create", members: { kind: "group", agents: ["deepseek", "codex"] }, title: null }).success);
+    assert.equal(req.safeParse({ type: "chat.conversation.create", members: { kind: "group", agents: ["deepseek"] }, title: null }).success, false);
+    assert.equal(
+      req.safeParse({ type: "chat.conversation.create", members: { kind: "direct", agent: "deepseek", agents: ["codex"] }, title: null }).success,
+      false,
+    );
+  });
+
+  it("finished slots must point at their run", () => {
+    const slot = {
+      id: `slot_${ID}`, conversationId: CONV, userMessageId: MSG, agent: "deepseek", required: false,
+      outcome: "answered", runId: null, attempt: 1, replyMessageId: `cmsg_${ID2}`, failure: null,
+      unavailableReason: null, createdAt: TS, finishedAt: TS,
+    };
+    assert.equal(ChatReplySlot.safeParse(slot).success, false, "answered without run");
+    assert.equal(ChatReplySlot.safeParse({ ...slot, outcome: "skipped", replyMessageId: null }).success, false);
+    assert.ok(ChatReplySlot.safeParse({ ...slot, runId: `run_${ID}` }).success);
+    assert.ok(ChatReplySlot.safeParse({ ...slot, outcome: "absent_quota", replyMessageId: null }).success, "quota known at send");
+  });
+
+  it("node health: memoryProfiles must be reported profiles", () => {
+    const health = { protocol: 1, nodeId: "n", profiles: ["claude-chat"], activeRuns: 0, maxConcurrentRuns: 1, leaseMs: 1, heartbeatMs: 1 };
+    assert.equal(NodeHealth.safeParse({ ...health, memoryProfiles: ["codex-chat"] }).success, false);
+  });
+
+  it("a blank reply can never become an answer", () => {
+    assert.equal(ChatAgentOutput.safeParse({ kind: "reply", text: "   \n" }).success, false);
+    const reply = {
+      id: `cmsg_${ID2}`, conversationId: CONV, createdAt: TS, sender: "agent", agent: "deepseek", text: "  ",
+      inReplyTo: MSG, slotId: `slot_${ID}`, runId: `run_${ID}`, memoryEntriesUsed: null,
+    };
+    assert.equal(AgentChatMessage.safeParse(reply).success, false);
+  });
+
+  it("replies to a retracted message are excluded (quote, topic, prompt)", () => {
+    const user = UserChatMessage.parse({
+      id: MSG, conversationId: CONV, createdAt: TS, sender: "user", content: text("hi"), mentions: { kind: "none" },
+      quoteMessageId: null, replacesMessageId: null, state: "retracted", retractedAt: TS,
+    });
+    const reply = AgentChatMessage.parse({
+      id: `cmsg_${ID2}`, conversationId: CONV, createdAt: TS, sender: "agent", agent: "deepseek", text: "嗯",
+      inReplyTo: MSG, slotId: `slot_${ID}`, runId: `run_${ID}`, memoryEntriesUsed: null,
+    });
+    const find = (id: string) => (id === MSG ? user : undefined);
+    assert.equal(isExcludedFromContext(user, find), true);
+    assert.equal(isExcludedFromContext(reply, find), true);
+    const sent = { ...user, state: "sent" as const, retractedAt: null };
+    assert.equal(isExcludedFromContext(reply, () => sent), false);
+  });
+
+  it("idempotency compares the whole send intent", () => {
+    const send = {
+      type: "chat.send" as const, conversationId: CONV, messageId: MSG, content: { kind: "text" as const, text: "hi", attachments: [] },
+      mentions: { kind: "none" as const }, quoteMessageId: null, replacesMessageId: null,
+    };
+    const base = chatSendIntentJson(send);
+    assert.equal(chatSendIntentJson({ ...send, content: { attachments: [], text: "hi", kind: "text" } }), base, "key order does not matter");
+    assert.notEqual(chatSendIntentJson({ ...send, mentions: { kind: "all" } }), base, "mentions");
+    assert.notEqual(chatSendIntentJson({ ...send, quoteMessageId: `cmsg_${ID2}` }), base, "quote");
+    assert.notEqual(chatSendIntentJson({ ...send, conversationId: `conv_${ID2}` }), base, "conversation");
+    assert.ok(!chatSendIntentJson(send).includes(MSG), "messageId is the key, not part of the intent");
+  });
+
+  it("chat.send only takes references; metadata comes from main's records", () => {
+    assert.ok(ChatContentInput.safeParse({ kind: "text", text: "", attachments: [{ kind: "file", ref: `file_${ID}` }] }).success);
+    assert.equal(
+      ChatContentInput.safeParse({ kind: "text", text: "x", attachments: [{ kind: "file", ref: `file_${ID}`, isText: true }] }).success,
+      false,
+      "forged isText",
+    );
+    assert.equal(
+      ChatContentInput.safeParse({ kind: "text", text: "x", attachments: [{ kind: "file", ref: `file_${ID}`, sha256: HASH }] }).success,
+      false,
+      "forged sha256",
+    );
+    assert.equal(ChatContentInput.safeParse({ kind: "sticker", stickerId: `stk_${ID}`, label: "伪造" }).success, false, "forged label");
+    assert.equal(
+      ChatContentInput.safeParse({ kind: "voice", audio: `aud_${ID}`, transcriptText: "hi", durationMs: 1 }).success,
+      false,
+      "forged duration",
+    );
+    const dup = { kind: "image", ref: `img_${ID}` };
+    assert.equal(ChatContentInput.safeParse({ kind: "text", text: "", attachments: [dup, dup] }).success, false, "same attachment twice");
   });
 });

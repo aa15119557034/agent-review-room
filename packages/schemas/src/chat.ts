@@ -4,7 +4,7 @@ import { FailureReason } from "./agent-event";
 import { RunState, RunSubstate } from "./state-machines";
 import { AgentName } from "./entities";
 import { BatchModel, CHAT_PERSONA_MAX_CHARS } from "./discussion";
-import { MemoryManifest, MemorySlot } from "./remote-protocol";
+import { MemoryManifest, MemorySlot, occursExactlyOnce } from "./remote-protocol";
 import { ImageRef } from "./appearance";
 
 /**
@@ -81,6 +81,18 @@ export const ConversationKind = z.enum(["direct", "group"]);
 export type ConversationKind = z.infer<typeof ConversationKind>;
 
 const uniqueAgents = (xs: readonly string[]) => new Set(xs).size === xs.length;
+
+const groupMembers = z.array(AgentName).min(2).max(CHAT_LIMITS.maxRecipients).refine(uniqueAgents, "成员不能重复");
+
+/** 新建会话时的成员：单聊恰好一位，群聊 2～8 位、不重复。chat.conversation.create 的入参用它，所以入参就挡住「一位的群聊」 */
+export const ConversationMembers = z.discriminatedUnion("kind", [
+  z.object({ kind: z.literal("direct"), agent: AgentName }).strict(),
+  z.object({ kind: z.literal("group"), agents: groupMembers }).strict(),
+]);
+export type ConversationMembers = z.infer<typeof ConversationMembers>;
+
+/** 群聊改成员（chat.conversation.update）用的同一条规则 */
+export const GroupMembers = groupMembers;
 
 /**
  * 单聊 = 你 + 一位；群聊 = 你 + 2～8 位。
@@ -199,6 +211,44 @@ export const ChatContent = z.discriminatedUnion("kind", [
   );
 export type ChatContent = z.infer<typeof ChatContent>;
 
+/**
+ * chat.send 里你交上来的内容：**只有引用和你自己写的字**，其余元数据由 main 从自己的记录里填，不信客户端：
+ * - 附件：只传 ref。name / mime / bytes / sha256 / isText 由 main 按 chat.attachment.pick 时存下的记录填
+ * - 语音：只传 audio 和你（可能改过的）转写文字。durationMs、language、engine 从 VoiceRecording 填；
+ *   录音必须是 ready；transcriptText 和引擎原样转写逐字相同 → source = transcribed，否则 edited
+ * - 表情：只传 stickerId。image 和 label 发送时从表情库抄
+ * 引用不存在、不属于聊天、录音不是 ready → validation_failed。存进 UserChatMessage 的是 main 填完的 ChatContent。
+ */
+export const ChatAttachmentInput = z.discriminatedUnion("kind", [
+  z.object({ kind: z.literal("image"), ref: ImageRef }).strict(),
+  z.object({ kind: z.literal("file"), ref: FileRef }).strict(),
+]);
+export type ChatAttachmentInput = z.infer<typeof ChatAttachmentInput>;
+
+export const ChatContentInput = z.discriminatedUnion("kind", [
+  z
+    .object({
+      kind: z.literal("text"),
+      text: z.string().max(CHAT_LIMITS.textMaxChars),
+      attachments: z.array(ChatAttachmentInput).max(CHAT_LIMITS.attachmentsPerMessage),
+    })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("voice"),
+      audio: AudioRef,
+      transcriptText: z.string().trim().min(1).max(CHAT_LIMITS.textMaxChars),
+    })
+    .strict(),
+  z.object({ kind: z.literal("sticker"), stickerId: StickerId }).strict(),
+]).refine((c) => c.kind !== "text" || c.text.trim().length > 0 || c.attachments.length > 0, "正文和附件不能都为空")
+  .refine(
+    (c) => c.kind !== "text" || c.attachments.filter((a) => a.kind === "image").length <= CHAT_LIMITS.imagesPerMessage,
+    `一条消息最多 ${CHAT_LIMITS.imagesPerMessage} 张图片`,
+  )
+  .refine((c) => c.kind !== "text" || new Set(c.attachments.map((a) => a.ref)).size === c.attachments.length, "同一个附件不能放两次");
+export type ChatContentInput = z.infer<typeof ChatContentInput>;
+
 // ================================================================ 消息
 
 /**
@@ -223,7 +273,10 @@ export const UserChatMessage = z
     sender: z.literal("user"),
     content: ChatContent,
     mentions: ChatMentions,
-    /** 引用的那条消息；它的内容按资料进不可信边界，引用里的 @ 不算点名。被引用的消息后来撤回了，之后的 Prompt 不再带它 */
+    /**
+     * 引用的那条消息；它的内容按资料进不可信边界，引用里的 @ 不算点名。
+     * 被引用的消息「已被排除」（见 isExcludedFromContext）时，之后的 Prompt 不再带它
+     */
     quoteMessageId: ChatMessageId.nullable(),
     /** 重新编辑：指向被撤回的原消息，显示在原来的位置，带「已重新编辑」标记 */
     replacesMessageId: ChatMessageId.nullable(),
@@ -235,8 +288,9 @@ export const UserChatMessage = z
 export type UserChatMessage = z.infer<typeof UserChatMessage>;
 
 /**
- * 秘书的回答。只在回答位结局为 answered 时写入，和 Run 的终态同一事务。秘书的消息不能撤回。
- * 它回答的那条消息被撤回后，这条回答也从之后的上下文里排除（记录保留）。
+ * 秘书的回答。只在回答位结局为 answered 时写入，和 Run 的终态同一事务。秘书的消息不能撤回，记录本身也不变。
+ * 它回答的那条消息被撤回后，这条回答也从之后的上下文里排除（记录保留）；界面靠 chat.slot.updated（回答位变 retracted）知道，
+ * 没有 chat.message.updated。
  */
 export const AgentChatMessage = z
   .object({
@@ -244,7 +298,7 @@ export const AgentChatMessage = z
     sender: z.literal("agent"),
     agent: AgentName,
     /** 1B 秘书只发文字 */
-    text: z.string().min(1).max(CHAT_LIMITS.replyMaxChars),
+    text: z.string().max(CHAT_LIMITS.replyMaxChars).refine((t) => t.trim().length > 0, "回答不能是空白"),
     /** 回答的是哪条你发的消息、哪个回答位、哪个 Run */
     inReplyTo: ChatMessageId,
     slotId: ChatSlotId,
@@ -257,6 +311,16 @@ export type AgentChatMessage = z.infer<typeof AgentChatMessage>;
 
 export const ChatMessage = z.union([UserChatMessage, AgentChatMessage]);
 export type ChatMessage = z.infer<typeof ChatMessage>;
+
+/**
+ * 一条消息是否已从之后的上下文里排除（ADR-003 §2）。拼 Snapshot、写摘要、引用（quoteMessageId）、转议题都用这一条规则：
+ * - 你的消息：已撤回
+ * - 秘书的回答：它回答的那条（inReplyTo）已撤回
+ * 被排除的消息不能被新消息引用、不能被转议题（invalid_state），也不能进新的 Snapshot / 摘要。
+ * inReplyToOf 由调用方按 inReplyTo 查出那条你的消息传进来。
+ */
+export const isExcludedFromContext = (m: ChatMessage, inReplyToOf: (id: string) => UserChatMessage | undefined): boolean =>
+  m.sender === "user" ? m.state === "retracted" : inReplyToOf(m.inReplyTo)?.state !== "sent";
 
 // ================================================================ 回答位
 
@@ -325,7 +389,11 @@ export type ChatSlotFailure = z.infer<typeof ChatSlotFailure>;
  * - 群聊 mentions = agents：只有被点到的人，required = true；没点到的人这条不建回答位
  * - 群聊 mentions = none：全部成员，required = false（可以 skip）
  *
- * 迟到结果：回答位已经是 retracted / cancelled 之后才到的 Run 结果一律丢弃，不会把回答位改回 answered。
+ * 迟到结果（D-31b 必须这样实现，X-31 要测「旧 Run 在新尝试开始之后才结束」）：
+ * - 处理任何 Run 事件前，先核对 event.runId === slot.runId（当前这次尝试）。不相等 = 旧尝试：只更新那个 ChatRun 自己的记录，
+ *   **回答位、回答消息一概不动**
+ * - 相等但回答位已经是 retracted / cancelled：结果丢弃，不会改回 answered
+ * - 唯一约束 (slotId, attempt)：连点两次重试只建一个 Run
  */
 export const ChatReplySlot = z
   .object({
@@ -353,7 +421,10 @@ export const ChatReplySlot = z
   .refine((s) => (s.outcome === "answered") === (s.replyMessageId !== null), "只有 answered 有回答")
   .refine((s) => (s.outcome === "failed") === (s.failure !== null), "只有 failed 有 failure")
   .refine((s) => (s.outcome === "unavailable") === (s.unavailableReason !== null), "只有 unavailable 有原因")
-  .refine((s) => s.outcome !== "running" || s.runId !== null, "running 必须有 Run")
+  .refine(
+    (s) => !["running", "answered", "skipped", "failed", "cancelled"].includes(s.outcome) || s.runId !== null,
+    "running / answered / skipped / failed / cancelled 必须有 Run",
+  )
   .refine((s) => s.outcome !== "unavailable" || s.runId === null, "unavailable 是发送时判断的，没有 Run")
   .refine((s) => (s.outcome === "running") === (s.finishedAt === null), "只有 running 没有结束时间")
   .refine((s) => !(s.required && s.outcome === "skipped"), "必须回答的人不能是 skipped（应为 failed/skip_not_allowed）");
@@ -368,10 +439,16 @@ export type ChatReplySlot = z.infer<typeof ChatReplySlot>;
  * 两种都 strict，多一个字段就是 parse_error（C-42d 会在 reply 上加 speak / draw，那时再放开这两个字段）。
  * 解析失败按失败记，**不降级成 skip**；只有完整合法的 reply 才建消息。
  * 单聊或被点名的人给出 skip → failed(skip_not_allowed)，不能悄悄显示成「不回答」。
- * text 去掉首尾空白后为空 → failed(empty_output)。
+ * 分类顺序：整段输出去空白后为空 → empty_output；不是 JSON 或不合下面的 schema → parse_error；
+ * 合法 JSON、kind 为 reply 但 text 去空白后为空 → empty_output（schema 也拒绝它，所以空白回答不可能变成 answered）。
  */
 export const ChatAgentOutput = z.discriminatedUnion("kind", [
-  z.object({ kind: z.literal("reply"), text: z.string().max(CHAT_LIMITS.replyMaxChars) }).strict(),
+  z
+    .object({
+      kind: z.literal("reply"),
+      text: z.string().max(CHAT_LIMITS.replyMaxChars).refine((t) => t.trim().length > 0, "empty_output"),
+    })
+    .strict(),
   z.object({ kind: z.literal("skip") }).strict(),
 ]);
 export type ChatAgentOutput = z.infer<typeof ChatAgentOutput>;
@@ -384,27 +461,40 @@ export type ChatAgentOutput = z.infer<typeof ChatAgentOutput>;
  * 聊天的 Snapshot：主控端拼的部分，不可变、落库、算 hash。和讨论室的 PromptSnapshot 共用 snap_ 的 id 空间，
  * 所以节点那边（StartRun.snapshot）没有区别。
  * 每次尝试（包括重试）都**重新拼一份新的** Snapshot：撤回之后旧 Snapshot 不能被重发。
+ * purpose 和用它的 ChatRun.purpose 相同：
+ * - reply          ：回答 userMessageId 那条消息（非 null）
+ * - history_summary：给较早的历史写摘要，userMessageId 为 null；includedMessageIds 至少一条，
+ *                    并且等于这次生成的 ChatHistorySummary.sourceMessageIds（同一次拼装）
  */
-export const ChatSnapshot = z.object({
-  id: SnapshotId,
-  conversationId: ConversationId,
-  userMessageId: ChatMessageId,
-  agent: AgentName,
-  /** 主控端拼好的全文（含记忆槽位 marker，不含记忆正文） */
-  content: z.string().min(1).max(2_000_000),
-  /** sha256(UTF-8(content)) */
-  contentHash: Sha256Hex,
-  /** 这次拼装用的边界 nonce */
-  nonce: z.string().regex(/^[a-f0-9]{16,64}$/),
-  /** 没开节点记忆时为 null */
-  memorySlot: MemorySlot.nullable(),
-  /** 拼进来的消息（历史、引用、当前这条）和摘要。撤回审计用：撤回后拼的 Snapshot 不能含被撤回的 id */
-  includedMessageIds: z.array(ChatMessageId).max(10_000),
-  includedSummaryIds: z.array(ChatSummaryId).max(100),
-  adapterVersion: z.string().min(1),
-  tokenEstimate: z.number().int().nonnegative(),
-  createdAt: IsoTimestamp,
-});
+export const ChatSnapshot = z
+  .object({
+    id: SnapshotId,
+    purpose: z.enum(["reply", "history_summary"]),
+    conversationId: ConversationId,
+    userMessageId: ChatMessageId.nullable(),
+    agent: AgentName,
+    /** 主控端拼好的全文（含记忆槽位 marker，不含记忆正文） */
+    content: z.string().min(1).max(2_000_000),
+    /** sha256(UTF-8(content)) */
+    contentHash: Sha256Hex,
+    /**
+     * 这次拼装用的边界 nonce。一份 Snapshot 只有一个 nonce：主控端包历史 / 摘要 / 附件用它，
+     * 节点包记忆也用它（所以 memorySlot.nonce 必须等于它）
+     */
+    nonce: z.string().regex(/^[a-f0-9]{16,64}$/),
+    /** 没开节点记忆时为 null。marker 在 content 里必须恰好出现一次 */
+    memorySlot: MemorySlot.nullable(),
+    /** 拼进来的消息（历史、引用、当前这条）和摘要。撤回审计用：撤回后拼的 Snapshot 不能含被排除的消息 id（见 isExcludedFromContext） */
+    includedMessageIds: z.array(ChatMessageId).max(10_000),
+    includedSummaryIds: z.array(ChatSummaryId).max(100),
+    adapterVersion: z.string().min(1),
+    tokenEstimate: z.number().int().nonnegative(),
+    createdAt: IsoTimestamp,
+  })
+  .refine((s) => (s.purpose === "reply") === (s.userMessageId !== null), "只有 reply 有 userMessageId")
+  .refine((s) => s.purpose !== "history_summary" || s.includedMessageIds.length > 0, "摘要至少要有一条来源消息")
+  .refine((s) => s.memorySlot === null || s.memorySlot.nonce === s.nonce, "记忆槽位和 Snapshot 用同一个 nonce")
+  .refine((s) => s.memorySlot === null || occursExactlyOnce(s.content, s.memorySlot.marker), "记忆槽位 marker 必须在 content 里恰好出现一次");
 export type ChatSnapshot = z.infer<typeof ChatSnapshot>;
 
 /**

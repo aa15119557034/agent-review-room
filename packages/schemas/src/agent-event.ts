@@ -49,7 +49,10 @@ export const AgentEvent = z.discriminatedUnion("type", [
     /** RUNNING 的内部子状态，不改变 Run 的主状态 */
     substate: z.enum(["active", "waiting_for_human", "disconnected"]),
   }),
-  /** C-34：聊天 Run 的最终 hash 和记忆清单（节点的 prompt_final 原样映射）。最多一次，不是终止事件 */
+  /**
+   * C-34：聊天 Run 的最终 hash 和记忆清单（节点的 prompt_final 原样映射），不是终止事件。
+   * 出现规则和 RemoteEvent.prompt_final 相同：节点拼好最终 Prompt 之后恰好一次；拼好之前就失败可以没有
+   */
   z.object({
     ...base,
     type: z.literal("prompt_final"),
