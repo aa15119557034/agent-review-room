@@ -1,6 +1,6 @@
 export { openDatabase } from "./database";
 export type { OpenDatabaseOptions, SqliteDatabase } from "./database";
-export { currentVersion, MIGRATIONS, runMigrations } from "./migrations";
+export { currentVersion, LATEST_SCHEMA_VERSION, MIGRATIONS, runMigrations } from "./migrations";
 export type { Migration } from "./migrations";
 export { SCHEMA_V1 } from "./schema";
 export { isUlid, ulid } from "./ulid";
@@ -9,3 +9,4 @@ export * from "./run-lifecycle";
 export * from "./discussion";
 export * from "./plan";
 export * from "./discussion-turn";
+export * from "./chat";

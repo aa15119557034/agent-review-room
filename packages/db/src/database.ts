@@ -1,5 +1,7 @@
+import { existsSync, renameSync, rmSync } from "node:fs";
 import Database from "better-sqlite3";
-import { runMigrations } from "./migrations";
+import { currentVersion, LATEST_SCHEMA_VERSION, runMigrations } from "./migrations";
+import { BACKUP_SUFFIX } from "./schema-v5";
 
 export type SqliteDatabase = Database.Database;
 
@@ -7,6 +9,11 @@ export interface OpenDatabaseOptions {
   readonly?: boolean;
   /** 等锁上限（毫秒），默认 5000 */
   busyTimeoutMs?: number;
+  /**
+   * 升版本前先备份成 `<file>.bak-v<旧版本>`（D-31a）。
+   * 默认开；`:memory:` 和新库（版本 0）自动跳过；测试里传 false 关掉。
+   */
+  backupBeforeMigrate?: boolean;
 }
 
 /**
@@ -32,7 +39,32 @@ export function openDatabase(file: string, options: OpenDatabaseOptions = {}): S
     db.pragma("synchronous = NORMAL");
   }
 
-  if (!readonly) runMigrations(db);
+  if (!readonly) {
+    maybeBackupBeforeMigrate(db, file, options.backupBeforeMigrate !== false);
+    runMigrations(db);
+  }
 
   return db;
+}
+
+/**
+ * 迁移前把库原样备份一份（D-31a：升级失败还能退回去）。
+ *
+ * 用 `VACUUM INTO` 而不是复制文件：WAL 里还没合并的页也在备份里，备份文件本身也是干净的（没有 -wal / -shm）。
+ * 只备份一次：第一次升级尝试失败、数据库还停在旧版本时，重跑不会再覆盖那份「升级前」的备份。
+ */
+function maybeBackupBeforeMigrate(db: SqliteDatabase, file: string, enabled: boolean): void {
+  if (!enabled || file === ":memory:") return;
+  const version = currentVersion(db);
+  if (version === 0 || version >= LATEST_SCHEMA_VERSION) return;
+
+  const target = file + BACKUP_SUFFIX + version;
+  if (existsSync(target)) return;
+
+  // 先写到 .tmp 再改名：VACUUM 写一半被强杀 / 磁盘满时，不会留下一个「看起来存在但是坏的」备份
+  const staging = target + ".tmp";
+  if (existsSync(staging)) rmSync(staging, { force: true });
+  // 值来自调用方的文件路径，按 SQL 字符串转义（Windows 反斜杠在单引号里是普通字符）
+  db.exec("VACUUM INTO '" + staging.replace(/'/g, "''") + "'");
+  renameSync(staging, target);
 }
