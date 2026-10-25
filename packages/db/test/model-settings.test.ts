@@ -4,8 +4,10 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
 import Database from "better-sqlite3";
-import { currentVersion, openDatabase } from "../src/index";
-import { SCHEMA_V3 } from "../src/schema-v3";
+import { currentVersion, LATEST_SCHEMA_VERSION, openDatabase } from "../src/index";
+import { SCHEMA_V2 } from "../src/schema";
+import { SCHEMA_V1 } from "../src/schema";
+import { SCHEMA_V3, SCHEMA_V3_REBUILD } from "../src/schema-v3";
 
 const dirs: string[] = [];
 after(() => {
@@ -25,7 +27,11 @@ describe("迁移 v4：模型选择", () => {
     const file = join(dir, "legacy.db");
     const raw = new Database(file);
     raw.pragma("foreign_keys = OFF");
+    // 一个真实的 v3 库：v5 给 projects 加列，所以 fixture 要按 v1→v3 的顺序建全
+    raw.exec(SCHEMA_V1);
+    raw.exec(SCHEMA_V2);
     raw.exec(SCHEMA_V3);
+    raw.exec(SCHEMA_V3_REBUILD);
     raw.pragma("user_version = 3");
     raw
       .prepare(
@@ -37,7 +43,7 @@ describe("迁移 v4：模型选择", () => {
 
     const db = openDatabase(file);
     try {
-      assert.equal(currentVersion(db), 4);
+      assert.equal(currentVersion(db), LATEST_SCHEMA_VERSION);
       const agentColumns = db.prepare("PRAGMA table_info(agents)").all() as { name: string }[];
       const batchColumns = db.prepare("PRAGMA table_info(batch_items)").all() as { name: string }[];
       assert.ok(agentColumns.some((column) => column.name === "model_settings"));
@@ -57,10 +63,10 @@ describe("迁移 v4：模型选择", () => {
     dirs.push(dir);
     const file = join(dir, "new.db");
     const db = openDatabase(file);
-    assert.equal(currentVersion(db), 4);
+    assert.equal(currentVersion(db), LATEST_SCHEMA_VERSION);
     db.close();
     const reopened = openDatabase(file);
-    assert.equal(currentVersion(reopened), 4);
+    assert.equal(currentVersion(reopened), LATEST_SCHEMA_VERSION);
     reopened.close();
   });
 });

@@ -1,6 +1,17 @@
 import { z } from "zod";
 import { AppearanceSettings, ChatBackground, ImagePurpose, ImageRef } from "./appearance";
-import { ApprovalId, BatchId, PermissionRequestId, PlanVersionId, RoundId, RunId, Sha256Hex, SnapshotId } from "./common";
+import {
+  ApprovalId,
+  BatchId,
+  ChatMessageId,
+  ConversationId,
+  PermissionRequestId,
+  PlanVersionId,
+  RoundId,
+  RunId,
+  Sha256Hex,
+  SnapshotId,
+} from "./common";
 import { NodeHealth, ProfileId, RunModel } from "./remote-protocol";
 import { AgentEvent } from "./agent-event";
 import { PermissionDecision, PermissionRequest } from "./permission";
@@ -26,6 +37,7 @@ import {
   ApprovalBatch,
   HexColor,
   HistoryMode,
+  MemorySource,
   NodeId,
   PlanVersion,
   Round,
@@ -33,6 +45,28 @@ import {
   TaskSource,
   Turn,
 } from "./discussion";
+import {
+  AudioRef,
+  CHAT_LIMITS,
+  ChatAttachment,
+  ChatContentInput,
+  ConversationMembers,
+  GroupMembers,
+  ChatCursor,
+  ChatHistorySummary,
+  ChatMentions,
+  ChatMessage,
+  ChatReplySlot,
+  ChatRun,
+  ChatSlotId,
+  ChatSnapshot,
+  Conversation,
+  ConversationListItem,
+  Sticker,
+  StickerId,
+  UserChatMessage,
+  VoiceRecording,
+} from "./chat";
 
 /**
  * 控制面 API：人 ⇄ Orchestrator。
@@ -300,6 +334,10 @@ export const COMMANDS = {
       avatarRef: ImageRef.nullable().optional(),
       /** C-40：整份替换，不做字段级合并。只校验格式，不连节点 */
       modelSettings: AgentModelSettings.optional(),
+      /** C-34：聊天人设、聊天 profile、记忆来源 */
+      chatPersona: AgentProfile.shape.chatPersona.optional(),
+      chatProfileId: ProfileId.nullable().optional(),
+      memorySource: MemorySource.optional(),
     }),
     AgentProfile,
     "admin",
@@ -534,7 +572,194 @@ export const COMMANDS = {
     PlanVersion,
     "author",
   ),
+  // ---------------------------------------------------------------- 聊天空间（ADR-003 / C-34，阶段 1B-2）
+  // 聊天不盖章：下面没有一条命令会改文件、跑命令或改讨论室的结果。要变成动作只能 chat.toTopic。
+
+  /**
+   * 新建会话。单聊（members.kind = direct）：和这位已经有单聊时返回原来那个，不新建。
+   * 群聊：2～8 位，不重复（入参就校验，不会建出一位的群聊）。成员必须是已有的参与者（not_found）
+   */
+  "chat.conversation.create": def(
+    z.object({
+      type: z.literal("chat.conversation.create"),
+      members: ConversationMembers,
+      title: z.string().trim().min(1).max(60).nullable(),
+    }),
+    Conversation,
+    "author",
+  ),
+
+  /**
+   * 改会话设置。只传要改的字段。members 只对群聊（单聊传了 → invalid_state），改完仍要 2～8 位；
+   * 移出的人正在答的回答位照常答完，之后的消息不再建他的回答位
+   */
+  "chat.conversation.update": def(
+    z.object({
+      type: z.literal("chat.conversation.update"),
+      conversationId: ConversationId,
+      title: z.string().trim().min(1).max(60).nullable().optional(),
+      pinned: z.boolean().optional(),
+      muted: z.boolean().optional(),
+      members: GroupMembers.optional(),
+    }),
+    Conversation,
+    "author",
+  ),
+
+  /** 读到这一条为止（只能往后挪，比当前的旧就忽略） */
+  "chat.conversation.markRead": def(
+    z.object({ type: z.literal("chat.conversation.markRead"), conversationId: ConversationId, messageId: ChatMessageId }),
+    Conversation,
+    "read",
+  ),
+
+  /**
+   * 发一条消息。打字就发，不盖章。
+   *
+   * 检查顺序：① 入参 schema → ② 防重复 → ③ 限流 → ④ 其余校验 → ⑤ 一个事务建消息、回答位、Run。
+   * - **防重复**：messageId 由发送方生成。判等看整条发送意图 chatSendIntentJson(req)（conversationId、content、mentions、
+   *   quoteMessageId、replacesMessageId，按键排序的 JSON），main 把它的 sha256 和消息一起落库，重启后仍有效：
+   *   同一个 id、意图相同 → 原样返回第一次的结果，不新建回答位和 Run，**也不占限流名额**（所以网络重试不会变成 rate_limited）；
+   *   同一个 id、意图任一字段不同 → idempotency_conflict。
+   *   只有成功的发送会落库：第一次被拒（rate_limited / validation_failed / invalid_state）什么都没建，同一个 id 再发按新的一次处理。
+   *   两个同 id 请求同时到达、都没查到记录时：后提交的那个插入消息撞主键 → 回滚，重读记录再按上面的规则返回（意图相同返回第一次的结果），不报 internal
+   * - **上限**：每个会话最近 60 秒最多 CHAT_LIMITS.messagesPerMinute 条，超了 rate_limited（什么都不建）
+   * - content 只带引用（ChatContentInput），附件 / 录音 / 表情的元数据由 main 从自己的记录填，不信客户端
+   * - mentions：单聊只能是 none；agents 里的人必须都是成员（validation_failed）
+   * - 附件 / 录音 / 表情的引用必须存在、属于聊天（validation_failed）；录音必须 ready
+   * - quoteMessageId：必须在同一个会话里，并且没有被排除（isExcludedFromContext：已撤回的消息、回答已撤回消息的秘书回答都不能引用），
+   *   否则 invalid_state
+   * - replacesMessageId（重新编辑）：必须是同一个会话里**你的、已撤回的**消息，撤回不超过 CHAT_LIMITS.reeditWindowMs，
+   *   而且还没被别的消息替换过，否则 invalid_state。重新编辑是一条新消息、新回答位（同样的 @ 规则）；旧回答位和旧 Run 归档，不复活
+   *
+   * 回答位按 ChatReplySlot 的规则建，**所有回答位和 Run 在同一个事务里**；不能答的人直接记 unavailable / absent_quota，
+   * 其他人照常。每个 Run 的模型按 modelSettings 的「聊天」场合定。一个能答的人都没有时也照样成功（回答位全是缺席），不报错。
+   */
+  "chat.send": def(
+    z.object({
+      type: z.literal("chat.send"),
+      conversationId: ConversationId,
+      messageId: ChatMessageId,
+      content: ChatContentInput,
+      mentions: ChatMentions,
+      quoteMessageId: ChatMessageId.nullable(),
+      replacesMessageId: ChatMessageId.nullable(),
+    }),
+    z.object({ message: UserChatMessage, slots: z.array(ChatReplySlot).max(CHAT_LIMITS.maxRecipients), runs: z.array(ChatRun) }),
+    "author",
+  ),
+
+  /**
+   * 撤回自己的消息。只能撤回你发的、CHAT_LIMITS.retractWindowMs 以内的（按主控机时间），否则 invalid_state；已撤回的再撤 → invalid_state。
+   * 顺序：先在一个事务里落库（消息 retracted、它的回答位全部 retracted——replyMessageId / failure / unavailableReason 保留原值不清空、
+   * 包含它或它的回答的摘要 stale、发出取消请求），
+   * 再中止正在答的 Run（Run 结局 CANCELLED，仍然恰好一个终止事件）。撤回瞬间刚好答完的结果按迟到结果丢弃
+   */
+  "chat.retract": def(
+    z.object({ type: z.literal("chat.retract"), messageId: ChatMessageId }),
+    z.object({ message: UserChatMessage, slots: z.array(ChatReplySlot) }),
+    "author",
+  ),
+
+  /**
+   * 单独重试一个回答位（结局是 failed / absent_quota / unavailable / cancelled），其他人不重发。
+   * **重新拼一份 Snapshot**（不重放旧的），attempt + 1，新建 Run。这位现在仍然不能答 → agent_unavailable，回答位不变。
+   * 消息已撤回、或这位已经不在会话成员里（被移出群）→ invalid_state，回答位不变
+   */
+  "chat.retry": def(
+    z.object({ type: z.literal("chat.retry"), slotId: ChatSlotId }),
+    z.object({ slot: ChatReplySlot, run: ChatRun }),
+    "author",
+  ),
+
+  /** 停掉一个正在答的回答位：先落库（cancelled），再取消 Run；之后到的结果丢弃。不是 running → invalid_state */
+  "chat.cancelReply": def(
+    z.object({ type: z.literal("chat.cancelReply"), slotId: ChatSlotId }),
+    ChatReplySlot,
+    "cancel",
+  ),
+
+  /**
+   * 选一个附件（main 打开系统对话框，renderer 不传路径）。取消返回 null。
+   * 按文件头判断类型；image 只收 png / jpeg / webp（没有 GIF，处理规则见 C-42a）；超过上限 validation_failed。
+   * 按内容去重（D-34a）。选了没发的由 main 按 C-32 的规则清理
+   */
+  "chat.attachment.pick": def(
+    z.object({ type: z.literal("chat.attachment.pick"), kind: z.enum(["image", "file"]) }),
+    ChatAttachment.nullable(),
+    "author",
+  ),
+
+  /**
+   * 交一段录音给 main（renderer 录的，没有文件路径）。main 转成 16k 单声道存下，返回 transcribing，
+   * 转写完成后推 chat.voice.updated。超过 CHAT_LIMITS.voiceMaxMs 或 voiceImportMaxBytes → validation_failed。
+   * 转写只在主控机本地做（D-34b），不上传第三方
+   */
+  "chat.voice.import": def(
+    z.object({
+      type: z.literal("chat.voice.import"),
+      format: z.enum(["wav", "webm", "ogg"]),
+      /** 原始录音的 base64。解码后不超过 CHAT_LIMITS.voiceImportMaxBytes */
+      data: z.string().min(1).max(Math.ceil(CHAT_LIMITS.voiceImportMaxBytes / 3) * 4).regex(/^[A-Za-z0-9+/]+={0,2}$/),
+    }),
+    VoiceRecording,
+    "author",
+  ),
+
+  /** 往表情库里加一张（main 打开选图对话框；只收静态 png / jpeg / webp）。取消返回 null；超过 CHAT_LIMITS.stickersMax → invalid_state */
+  "chat.sticker.add": def(
+    z.object({ type: z.literal("chat.sticker.add"), label: z.string().trim().min(1).max(40) }),
+    Sticker.nullable(),
+    "author",
+  ),
+
+  "chat.sticker.update": def(
+    z.object({ type: z.literal("chat.sticker.update"), stickerId: StickerId, label: z.string().trim().min(1).max(40) }),
+    Sticker,
+    "author",
+  ),
+
+  /** 从表情库移除。已经发出去的消息里的表情不受影响（图片还被消息引用，不会被清理） */
+  "chat.sticker.remove": def(
+    z.object({ type: z.literal("chat.sticker.remove"), stickerId: StickerId }),
+    z.object({}),
+    "author",
+  ),
+
+  /**
+   * 一键转议题：选中的消息 → 新议题 + 一条 chat_material 初始材料（同一事务）。之后照讨论室流程盖章发送，创建本身不发给任何人。
+   * messageIds 必须都在这个会话里、不重复；有被排除的消息（isExcludedFromContext）→ invalid_state。
+   * 整理出的材料超过 Message.content 的上限（2,000,000 字）→ validation_failed，在事务开始前检查，不会留下没有材料的议题
+   */
+  "chat.toTopic": def(
+    z.object({
+      type: z.literal("chat.toTopic"),
+      conversationId: ConversationId,
+      messageIds: z.array(ChatMessageId).min(1).max(CHAT_LIMITS.toTopicMaxMessages).refine((xs) => new Set(xs).size === xs.length, "不能重复"),
+      name: z.string().min(1).max(200),
+    }),
+    z.object({ project: Project, material: Message }),
+    "author",
+  ),
 } as const;
+
+/** 按键排序的 JSON（数组保持顺序），用来给发送意图判等 */
+const stableJson = (v: unknown): string =>
+  Array.isArray(v)
+    ? `[${v.map(stableJson).join(",")}]`
+    : v !== null && typeof v === "object"
+      ? `{${Object.keys(v as object).sort().map((k) => `${JSON.stringify(k)}:${stableJson((v as Record<string, unknown>)[k])}`).join(",")}}`
+      : JSON.stringify(v);
+
+/** chat.send 的发送意图（防重复判等用）：除 type、messageId 以外的全部字段，按键排序的 JSON。main 存它的 sha256 */
+export const chatSendIntentJson = (req: CommandRequest<"chat.send">): string =>
+  stableJson({
+    conversationId: req.conversationId,
+    content: req.content,
+    mentions: req.mentions,
+    quoteMessageId: req.quoteMessageId,
+    replacesMessageId: req.replacesMessageId,
+  });
 
 // ================================================================ Queries
 
@@ -643,6 +868,62 @@ export const QUERIES = {
     z.array(PlanVersion),
     "read",
   ),
+  // ---------------------------------------------------------------- 聊天空间（C-34）
+
+  /** 会话列表：置顶的在前，其余按 lastActivityAt 倒序 */
+  "chat.conversations.list": def(
+    z.object({ type: z.literal("chat.conversations.list") }),
+    z.array(ConversationListItem),
+    "read",
+  ),
+
+  "chat.conversations.get": def(
+    z.object({ type: z.literal("chat.conversations.get"), conversationId: ConversationId }),
+    Conversation,
+    "read",
+  ),
+
+  /**
+   * 消息分页，按 (createdAt, id) 倒序：不传 before 从最新开始；nextCursor 为 null 表示到头了。
+   * 已撤回的消息也返回（界面显示「你撤回了一条消息」，详情里能看原文）。
+   * slots 是本页里你发的消息的全部回答位
+   */
+  "chat.messages.list": def(
+    z.object({
+      type: z.literal("chat.messages.list"),
+      conversationId: ConversationId,
+      before: ChatCursor.optional(),
+      limit: z.number().int().min(1).max(100).optional(),
+    }),
+    z.object({ messages: z.array(ChatMessage), slots: z.array(ChatReplySlot), nextCursor: ChatCursor.nullable() }),
+    "read",
+  ),
+
+  /** 一个回答位的所有尝试（attempt 从小到大） */
+  "chat.slots.runs": def(
+    z.object({ type: z.literal("chat.slots.runs"), slotId: ChatSlotId }),
+    z.array(ChatRun),
+    "read",
+  ),
+
+  "chat.runs.get": def(z.object({ type: z.literal("chat.runs.get"), runId: RunId }), ChatRun, "read"),
+
+  /** 逐字查看主控端拼的部分（不含记忆正文，主控端没有） */
+  "chat.snapshots.get": def(
+    z.object({ type: z.literal("chat.snapshots.get"), snapshotId: SnapshotId }),
+    ChatSnapshot,
+    "read",
+  ),
+
+  "chat.summaries.list": def(
+    z.object({ type: z.literal("chat.summaries.list"), conversationId: ConversationId }),
+    z.array(ChatHistorySummary),
+    "read",
+  ),
+
+  "chat.voice.get": def(z.object({ type: z.literal("chat.voice.get"), audio: AudioRef }), VoiceRecording, "read"),
+
+  "chat.stickers.list": def(z.object({ type: z.literal("chat.stickers.list") }), z.array(Sticker), "read"),
 } as const;
 
 // ================================================================ Unions & helpers
@@ -683,7 +964,9 @@ export const ControlErrorCode = z.enum([
   "stale_snapshot",    // expectedSnapshotHash 与当前 snapshot 不一致
   "already_decided",   // 审批或权限请求已经有结果
   "reviewer_not_configured",
-  "agent_unavailable", // 讨论室：收件人离线、未配置、被暂停或额度缺席
+  "agent_unavailable", // 讨论室：收件人离线、未配置、被暂停或额度缺席；聊天：重试时这位仍然不能答
+  "rate_limited",      // C-34：聊天每个会话每分钟的条数超了
+  "idempotency_conflict", // C-34：同一个 messageId 发了不一样的内容
   "internal",
 ]);
 export type ControlErrorCode = z.infer<typeof ControlErrorCode>;
@@ -716,5 +999,14 @@ export const ControlEvent = z.discriminatedUnion("type", [
   z.object({ type: z.literal("summary.created"), summary: RoundSummary }),
   z.object({ type: z.literal("plan.updated"), plan: PlanVersion }),
   z.object({ type: z.literal("agent.status"), status: AgentStatus }),
+  // ---- 聊天空间（C-34）。秘书回答的流式文字照旧是 run.event
+  z.object({ type: z.literal("chat.conversation.updated"), conversation: Conversation }),
+  z.object({ type: z.literal("chat.message.created"), message: ChatMessage }),
+  /** 只有你的消息会更新（撤回） */
+  z.object({ type: z.literal("chat.message.updated"), message: UserChatMessage }),
+  z.object({ type: z.literal("chat.slot.updated"), slot: ChatReplySlot }),
+  z.object({ type: z.literal("chat.run.updated"), run: ChatRun }),
+  z.object({ type: z.literal("chat.summary.updated"), summary: ChatHistorySummary }),
+  z.object({ type: z.literal("chat.voice.updated"), recording: VoiceRecording }),
 ]);
 export type ControlEvent = z.infer<typeof ControlEvent>;

@@ -1,7 +1,9 @@
 import { z } from "zod";
 import {
   ApprovalId,
+  ChatMessageId,
   CommitSha,
+  ConversationId,
   IsoTimestamp,
   prefixedId,
   RoundId,
@@ -34,6 +36,8 @@ export const AgentName = z.string().regex(/^[a-z0-9][a-z0-9-]{0,63}$/);
 export const Project = z.object({
   id: ProjectId,
   name: z.string().min(1).max(200),
+  /** C-34：从哪个聊天会话转来（chat.toTopic）；不是转来的为 null */
+  fromConversationId: ConversationId.nullable(),
   createdAt: IsoTimestamp,
 });
 export type Project = z.infer<typeof Project>;
@@ -78,6 +82,18 @@ export const Message = z.discriminatedUnion("kind", [
     roundId: RoundId,
     turnId: TurnId,
     runId: RunId,
+  }),
+  /**
+   * C-34：从聊天转来的初始材料（chat.toTopic），和议题在同一事务里建。
+   * content 是 main 按选中消息的时间顺序整理出的文字记录（谁、什么时候、说了什么；语音用转写，表情用说明，
+   * 图片和文件用「[图片：文件名]」「[文件：文件名]」占位），之后按附件规则进不可信边界。
+   * 被撤回的消息不能选（invalid_state）；它的回答也不能选
+   */
+  z.object({
+    ...messageBase,
+    kind: z.literal("chat_material"),
+    conversationId: ConversationId,
+    chatMessageIds: z.array(ChatMessageId).min(1).max(200),
   }),
 ]);
 export type Message = z.infer<typeof Message>;

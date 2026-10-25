@@ -2,6 +2,7 @@ import type { Database } from "better-sqlite3";
 import { SCHEMA_V1, SCHEMA_V2 } from "./schema";
 import { SCHEMA_V3, SCHEMA_V3_REBUILD } from "./schema-v3";
 import { SCHEMA_V4 } from "./schema-v4";
+import { SCHEMA_V5 } from "./schema-v5";
 
 /**
  * 迁移（D-02）：用 PRAGMA user_version 记版本，每个迁移在自己的事务里跑。
@@ -52,7 +53,17 @@ export const MIGRATIONS: readonly Migration[] = [
       db.exec(SCHEMA_V4);
     },
   },
+  {
+    version: 5,
+    name: "chat-space",
+    up: (db) => {
+      db.exec(SCHEMA_V5);
+    },
+  },
 ];
+
+/** 当前代码支持的最新 schema 版本 */
+export const LATEST_SCHEMA_VERSION: number = MIGRATIONS[MIGRATIONS.length - 1]?.version ?? 0;
 
 /** 当前数据库的 schema 版本（新库为 0）。 */
 export function currentVersion(db: Database): number {

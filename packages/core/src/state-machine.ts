@@ -19,7 +19,7 @@ import {
 
 export type TransitionTable<S extends string> = Readonly<Record<S, readonly S[]>>;
 
-export type EntityKind = "approval" | "run";
+export type EntityKind = "approval" | "run" | "chat slot";
 
 /** 非法转换。带上 entity/from/to，方便 D-06 在错误路径里直接落库或记日志。 */
 export class IllegalTransitionError extends Error {

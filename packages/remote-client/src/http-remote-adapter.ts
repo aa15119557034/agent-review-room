@@ -445,6 +445,8 @@ export function mapRemoteEvent(ev: Exclude<RemoteEvent, { type: "heartbeat" }>):
       return { type: "message_delta", text: ev.text };
     case "message_complete":
       return { type: "message_complete", text: ev.text };
+    case "prompt_final": // C-34：聊天 Run 的最终 hash 和记忆清单，原样转发
+      return { type: "prompt_final", finalPromptHash: ev.finalPromptHash, memory: ev.memory };
     case "terminal":
       return mapTerminal(ev.result);
   }

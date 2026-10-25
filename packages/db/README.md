@@ -52,6 +52,21 @@ await writeTransaction(db, queue, () => {
 WAL 下应用崩溃不丢已提交事务；**但断电可能丢最后几个事务**。Phase 0 接受这个取舍：
 丢的只可能是最后写入的评审记录，且 `-wal` 回放仍会执行。要更强保证可改 `FULL`，代价是每次提交多一次 fsync。
 
+## 迁移 v5：聊天空间（D-31a）
+
+| 表 | 说明 |
+|---|---|
+| `conversations` | 会话；单聊一个 Agent 只能有一个（`direct_agent` 部分唯一索引），`last_read_message_id` 指到 `chat_messages` |
+| `conversation_members` | 成员和顺序（2～8 位，`ordinal` 在会话内唯一） |
+| `chat_messages` | 聊天消息。你发的消息只能改 `state` / `retracted_at`（撤回），其余列有 trigger 拦；秘书的消息完全不可变 |
+| `chat_reply_slots` | 一条消息 × 一位 Agent 一个回答位（`UNIQUE (user_message_id, agent)`）；重试只换 `attempt` / `run_id`，不新建回答位 |
+
+- `projects.from_conversation_id`、`agents.chat_persona` / `chat_profile_id` / `memory_source` 都是**可空新列**：
+  旧行是 NULL，读的时候由 `main/repository` 补默认值（`""` / `null` / `{ nodeFolder: false }`）。
+- 聊天 Run / Snapshot 的建表留给 D-31b，所以 `chat_messages.run_id`、`chat_reply_slots.run_id` 现在是纯 TEXT，没有外键。
+- **升级前自动备份**：`openDatabase` 发现版本要升，先 `VACUUM INTO <file>.bak-v<旧版本>`（WAL 里没合并的页也在里面），
+  只备份一次（失败重跑不会覆盖）；`:memory:` 和新库跳过，测试里用 `backupBeforeMigrate: false` 关掉。
+
 ## 单写者队列
 
 `WriteQueue` 把写操作串成一条链，`writeTransaction` 用 `BEGIN IMMEDIATE`。
