@@ -116,6 +116,18 @@ describe("media jobs (C-42b)", () => {
     assert.equal(MediaJob.safeParse({ ...auto, intentHash: null }).success, false);
     assert.equal(MediaJob.safeParse({ ...auto, source: { ...job.source, agent: null } }).success, false);
     assert.equal(MediaJob.safeParse({ ...job, intentHash: sha("d") }).success, false, "user_tap has no intentHash");
+    const topic = { kind: "topic", messageId: `msg_${ID}`, agent: "codex" };
+    assert.equal(MediaJob.safeParse({ ...auto, source: topic }).success, false, "no immersive mode in topics");
+    assert.ok(MediaJob.safeParse({ ...job, source: topic }).success, "tapping 画 in a topic is fine");
+  });
+
+  it("MediaJob: authorization must fit the job kind", () => {
+    for (const a of ["user_play", "reply_as_voice"]) {
+      assert.equal(MediaJob.safeParse({ ...job, authorization: a }).success, false, `draw cannot be ${a}`);
+    }
+    const speech = { ...job, kind: "speech", draw: null };
+    for (const a of ["user_play", "reply_as_voice"]) assert.ok(MediaJob.safeParse({ ...speech, authorization: a }).success, a);
+    assert.equal(MediaJob.safeParse({ ...speech, authorization: "user_tap" }).success, false, "speech is not user_tap");
   });
 
   it("DrawRequest: size whitelist, prompt length, strict", () => {

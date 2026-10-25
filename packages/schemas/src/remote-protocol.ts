@@ -243,7 +243,10 @@ export const StartRunRequest = z
      * 节点按自己配置的映射把图交给 CLI，不往 content 里加任何文字；用完删临时文件。
      */
     attachments: StartRunAttachments.optional(),
-    /** C-42b：省略 = text */
+    /**
+     * C-42b：省略 = text。kind 也是 runId 幂等比较的一部分（先按「省略 = text」归一化再比）：
+     * 同一个 runId 先 text 后 image（或反过来）→ run_id_conflict，不能回 already_exists
+     */
     kind: RunKind.optional(),
   })
   .strict()

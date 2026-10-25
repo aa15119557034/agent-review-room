@@ -30,10 +30,15 @@ export type MediaJobKind = z.infer<typeof MediaJobKind>;
  * - user_tap       : 你点了请求卡上的「画」，或用了 /画
  * - user_play      : 你点了「播放」
  * - reply_as_voice : 你这条消息开了「用语音回」（C-42c）
- * - immersive      : 会话开着沉浸模式，秘书的媒体意图自动执行（C-42d）
+ * - immersive      : 会话开着沉浸模式，秘书的媒体意图自动执行（C-42d）。只在聊天里有，讨论室没有沉浸模式
+ *
+ * 和任务种类绑定：画图只能是 user_tap / immersive；语音只能是 user_play / reply_as_voice / immersive
  */
 export const MediaAuthorization = z.enum(["user_tap", "user_play", "reply_as_voice", "immersive"]);
 export type MediaAuthorization = z.infer<typeof MediaAuthorization>;
+
+const DRAW_AUTHORIZATIONS: readonly MediaAuthorization[] = ["user_tap", "immersive"];
+const SPEECH_AUTHORIZATIONS: readonly MediaAuthorization[] = ["user_play", "reply_as_voice", "immersive"];
 
 /**
  * 任务从哪来。聊天的 id 格式由 C-34 定，这里先按「前缀_ULID」收；C-34 合并后收紧成具体类型。
@@ -198,7 +203,12 @@ export const MediaJob = z
       (j.result.backend === j.route?.backend && j.result.prompt === j.draw?.prompt && j.result.size === j.draw?.size),
     "结果的后端 / 提示词 / 尺寸要和请求、选路一致",
   )
-  .refine((j) => j.route?.fallbackReason !== "session_local_only" || j.authorization === "immersive", "session_local_only 只用于沉浸模式");
+  .refine((j) => j.route?.fallbackReason !== "session_local_only" || j.authorization === "immersive", "session_local_only 只用于沉浸模式")
+  .refine(
+    (j) => (j.kind === "draw" ? DRAW_AUTHORIZATIONS : SPEECH_AUTHORIZATIONS).includes(j.authorization),
+    "授权方式要和任务种类对得上（画图只能 user_tap / immersive）",
+  )
+  .refine((j) => j.authorization !== "immersive" || j.source.kind === "chat", "沉浸模式只在聊天里");
 export type MediaJob = z.infer<typeof MediaJob>;
 
 /**
