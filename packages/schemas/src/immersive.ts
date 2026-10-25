@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { IsoTimestamp } from "./common";
 import { DrawSize, DRAW_PROMPT_MAX_CHARS } from "./media";
 
 /**
@@ -8,8 +9,8 @@ import { DrawSize, DRAW_PROMPT_MAX_CHARS } from "./media";
  * - 信封解析失败（不是合法 JSON、kind 不对、skip 带了别的字段、reply 没有正文）→ 这个回答位按 ADR-003 记失败，
  *   不降级成 skip，不执行任何媒体意图
  * - 单聊或被点名的人给出 skip 仍是失败（ADR-003）
- * - 信封合法后，speak / draw 再单独用 MediaIntent 校验：不合格（超长、尺寸不在白名单、多余字段）只丢掉媒体意图、
- *   照常显示文字，并记下原始意图；不让整条回答失败
+ * - 信封合法后，speak 和 draw **各自**校验：哪一项不合格（超长、尺寸不在白名单、多余字段）就只丢那一项、
+ *   另一项照常用；文字照常显示，并记下丢掉的原始值；不让整条回答失败。speak: false 等于没写，不算丢
  * - 只认结构化字段；正文里写「我给你画一张」不算
  *
  * 媒体意图怎么用：
@@ -51,19 +52,24 @@ export const AgentReplyEnvelope = z.discriminatedUnion("kind", [
 export type AgentReplyEnvelope = z.infer<typeof AgentReplyEnvelope>;
 
 /**
- * 从合法的 reply 信封里取媒体意图。没有意图 → intent 为 null、dropped 为 false；
- * 有但不合格 → intent 为 null、dropped 为 true（调用方记下原始值）
+ * 从合法的 reply 信封里取媒体意图，speak 和 draw 分开校验：
+ * - intent：合格的那几项；一项都没有为 null
+ * - dropped：有没有哪一项因为不合格被丢掉（调用方记下原始值）
  */
 export function extractMediaIntent(env: Extract<AgentReplyEnvelope, { kind: "reply" }>): {
   intent: MediaIntent | null;
   dropped: boolean;
 } {
-  const raw: Record<string, unknown> = {};
-  if (env.speak !== undefined) raw.speak = env.speak;
-  if (env.draw !== undefined) raw.draw = env.draw;
-  if (Object.keys(raw).length === 0) return { intent: null, dropped: false };
-  const r = MediaIntent.safeParse(raw);
-  return r.success ? { intent: r.data, dropped: false } : { intent: null, dropped: true };
+  const intent: MediaIntent = {};
+  let dropped = false;
+  if (env.speak === true) intent.speak = true;
+  else if (env.speak !== undefined && env.speak !== false) dropped = true;
+  if (env.draw !== undefined) {
+    const d = DrawIntent.safeParse(env.draw);
+    if (d.success) intent.draw = d.data;
+    else dropped = true;
+  }
+  return { intent: Object.keys(intent).length > 0 ? intent : null, dropped };
 }
 
 /** 沉浸模式能设的最大值（后端强制；设置只能调低） */
@@ -101,8 +107,12 @@ export const DEFAULT_IMMERSIVE_SETTINGS: ImmersiveSettings = {
   voiceClipsPerHour: IMMERSIVE_LIMITS.voiceClipsPerHour,
 };
 
-/** 最近 60 分钟用了多少（给界面和 Prompt 里的「剩余次数」用） */
+/**
+ * 最近 60 分钟用了多少（给界面和 Prompt 里的「剩余次数」用）。
+ * 是 main 在 asOf 那一刻按数据库里的占位记录算好的快照，界面不自己推算；窗口是 (asOf - 60 分钟, asOf]
+ */
 export const ImmersiveUsage = z.object({
+  asOf: IsoTimestamp,
   drawsLastHour: z.number().int().nonnegative(),
   voiceClipsLastHour: z.number().int().nonnegative(),
 });

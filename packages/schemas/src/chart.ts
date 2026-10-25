@@ -110,10 +110,17 @@ export const ChartSpec = ChartSpecBase.superRefine((c, ctx) => {
 });
 export type ChartSpec = z.infer<typeof ChartSpec>;
 
-const depthOf = (v: unknown, d = 0): number =>
-  v !== null && typeof v === "object"
-    ? Object.values(v as Record<string, unknown>).reduce<number>((m, x) => Math.max(m, depthOf(x, d + 1)), d + 1)
-    : d;
+/** 嵌套是否超过 max 层。用显式栈不递归：几万层的 [[[…]]] 也不会把调用栈撑爆 */
+const deeperThan = (root: unknown, max: number): boolean => {
+  const stack: Array<[unknown, number]> = [[root, 0]];
+  while (stack.length > 0) {
+    const [v, d] = stack.pop()!;
+    if (v === null || typeof v !== "object") continue;
+    if (d + 1 > max) return true;
+    for (const x of Object.values(v as Record<string, unknown>)) stack.push([x, d + 1]);
+  }
+  return false;
+};
 
 /**
  * 解析 ```room-chart 代码块的原文。先查字节数，再 JSON.parse，再查深度，最后按 ChartSpec 校验。
@@ -127,7 +134,7 @@ export function parseChartSpec(raw: string): { ok: true; chart: ChartSpec } | { 
   } catch {
     return { ok: false, reason: "not_json" };
   }
-  if (depthOf(value) > CHART_LIMITS.maxDepth) return { ok: false, reason: "too_deep" };
+  if (deeperThan(value, CHART_LIMITS.maxDepth)) return { ok: false, reason: "too_deep" };
   const r = ChartSpec.safeParse(value);
   return r.success ? { ok: true, chart: r.data } : { ok: false, reason: "invalid" };
 }
