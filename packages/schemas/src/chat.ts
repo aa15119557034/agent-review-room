@@ -6,6 +6,7 @@ import { AgentName } from "./entities";
 import { BatchModel, CHAT_PERSONA_MAX_CHARS } from "./discussion";
 import { MemoryManifest, MemorySlot, occursExactlyOnce } from "./remote-protocol";
 import { ImageRef } from "./appearance";
+import { ATTACHMENT_LIMITS, AttachmentManifest, attachmentManifestBlock } from "./attachments";
 
 /**
  * 聊天空间（ADR-003 / C-34，阶段 1B-2）。
@@ -60,8 +61,8 @@ export const CHAT_LIMITS = {
   replyMaxChars: 200_000,
   /** 一条消息最多几个附件（图片 + 文件合计；图片张数另有 C-42a 的上限） */
   attachmentsPerMessage: 9,
-  /** 其中图片最多 4 张（ADR-004 §2）。C-42a 合并后改成引用它的 ATTACHMENT_LIMITS.perMessage */
-  imagesPerMessage: 4,
+  /** 其中图片最多几张（ADR-004 §2，C-42a） */
+  imagesPerMessage: ATTACHMENT_LIMITS.perMessage,
   /** 单个文件（非图片）的上限，D-34a 可以提议调整 */
   fileMaxBytes: 20 * 1024 * 1024,
   /** 录音最长 5 分钟 */
@@ -488,6 +489,12 @@ export const ChatSnapshot = z
     nonce: z.string().regex(/^[a-f0-9]{16,64}$/),
     /** 没开节点记忆时为 null。marker 在 content 里必须恰好出现一次 */
     memorySlot: MemorySlot.nullable(),
+    /**
+     * C-42a：这一次实际发给这位秘书的图片清单（权威），规则同 PromptSnapshot.attachments：
+     * content 以 attachmentManifestBlock(attachments) 开头（记忆槽位 marker 在它后面）。
+     * 省略 = 没带图（包括这次用的模型看不了图、只收到「[图片：文件名]」占位的情况）
+     */
+    attachments: AttachmentManifest.optional(),
     /** 拼进来的消息（历史、引用、当前这条）和摘要。撤回审计用：撤回后拼的 Snapshot 不能含被排除的消息 id（见 isExcludedFromContext） */
     includedMessageIds: z.array(ChatMessageId).min(1).max(10_000),
     includedSummaryIds: z.array(ChatSummaryId).max(100),
@@ -497,7 +504,11 @@ export const ChatSnapshot = z
   })
   .refine((s) => (s.purpose === "reply") === (s.userMessageId !== null), "只有 reply 有 userMessageId")
   .refine((s) => s.memorySlot === null || s.memorySlot.nonce === s.nonce, "记忆槽位和 Snapshot 用同一个 nonce")
-  .refine((s) => s.memorySlot === null || occursExactlyOnce(s.content, s.memorySlot.marker), "记忆槽位 marker 必须在 content 里恰好出现一次");
+  .refine((s) => s.memorySlot === null || occursExactlyOnce(s.content, s.memorySlot.marker), "记忆槽位 marker 必须在 content 里恰好出现一次")
+  .refine(
+    (s) => s.attachments === undefined || s.content.startsWith(attachmentManifestBlock(s.attachments)),
+    "带图时 content 要以附件清单块开头",
+  );
 export type ChatSnapshot = z.infer<typeof ChatSnapshot>;
 
 /**

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { CommitSha, IsoTimestamp, RunId, Sha256Hex, SnapshotId } from "./common";
 import { PermissionDecision, PermissionRequest } from "./permission";
-import { StartRunAttachments, VisionSupport } from "./attachments";
+import { StartRunAttachments, VisionSupport, attachmentManifestBlock } from "./attachments";
 
 /**
  * Orchestrator（控制面） ⇄ AgentServer（执行面）协议 v1。
@@ -203,6 +203,10 @@ export const StartRunRequest = z
   .refine(
     (r) => !r.chat?.memory || occursExactlyOnce(r.snapshot.content, r.chat.memory.marker),
     "chat.memory.marker 必须在 snapshot.content 里恰好出现一次",
+  )
+  .refine(
+    (r) => r.attachments === undefined || r.snapshot.content.startsWith(attachmentManifestBlock(r.attachments)),
+    "带图时 snapshot.content 要以这组附件的清单块开头",
   );
 
 export const StartRunResponse = z.object({

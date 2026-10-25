@@ -4,6 +4,8 @@ import {
   ATTACHMENT_LIMITS,
   AttachmentManifest,
   BatchItem,
+  CHAT_LIMITS,
+  ChatSnapshot,
   COMMANDS,
   IMAGE_MAX_BYTES,
   NODE_MIN_BODY_BYTES_WITH_ATTACHMENTS,
@@ -35,7 +37,13 @@ const startRun = {
   snapshot: { id: `snap_${ID}`, content: "hi", contentHash: sha("b") },
   limits: { idleTimeoutMs: 60_000, totalTimeoutMs: 600_000 },
 };
-const att = (index: number, c: string) => ({ index, mime: "image/png", bytes: 3, sha256: sha(c), data: "AAAA" });
+const att = (index: number, c: string) => ({ index, mime: "image/png" as const, bytes: 3, sha256: sha(c), data: "AAAA" });
+/** 带图的 StartRun：content 以清单块开头 */
+const withAtt = (attachments: Array<ReturnType<typeof att> & Record<string, unknown>>) => ({
+  ...startRun,
+  snapshot: { ...startRun.snapshot, content: `${attachmentManifestBlock(attachments)}hi` },
+  attachments,
+});
 
 describe("attachments (C-42a)", () => {
   it("AttachmentManifest: indices 1..n, no duplicate image, total bytes capped", () => {
@@ -93,21 +101,46 @@ describe("attachments (C-42a)", () => {
 
   it("StartRunRequest: attachments optional; base64 length must match bytes; strict", () => {
     assert.ok(StartRunRequest.safeParse(startRun).success);
-    assert.ok(StartRunRequest.safeParse({ ...startRun, attachments: [att(1, "a"), att(2, "c")] }).success);
-    assert.equal(StartRunRequest.safeParse({ ...startRun, attachments: [] }).success, false);
-    assert.equal(StartRunRequest.safeParse({ ...startRun, attachments: [att(2, "a")] }).success, false);
-    assert.equal(StartRunRequest.safeParse({ ...startRun, attachments: [{ ...att(1, "a"), data: "AAAAAAAA" }] }).success, false);
-    assert.equal(StartRunRequest.safeParse({ ...startRun, attachments: [{ ...att(1, "a"), data: "AA\nA" }] }).success, false);
-    assert.equal(StartRunRequest.safeParse({ ...startRun, attachments: [{ ...att(1, "a"), path: "/etc/passwd" }] }).success, false);
+    assert.ok(StartRunRequest.safeParse(withAtt([att(1, "a"), att(2, "c")])).success);
+    assert.equal(StartRunRequest.safeParse(withAtt([])).success, false);
+    assert.equal(StartRunRequest.safeParse(withAtt([att(2, "a")])).success, false);
+    assert.equal(StartRunRequest.safeParse(withAtt([{ ...att(1, "a"), data: "AAAAAAAA" }])).success, false);
+    assert.equal(StartRunRequest.safeParse(withAtt([{ ...att(1, "a"), data: "AA\nA" }])).success, false);
+    assert.equal(StartRunRequest.safeParse(withAtt([{ ...att(1, "a"), path: "/etc/passwd" }])).success, false);
   });
 
   it("StartRunAttachment: decoded length must equal bytes; no duplicate image", () => {
-    const one = (bytes: number, data: string) => StartRunRequest.safeParse({ ...startRun, attachments: [{ ...att(1, "a"), bytes, data }] });
+    const one = (bytes: number, data: string) => StartRunRequest.safeParse(withAtt([{ ...att(1, "a"), bytes, data }]));
     assert.ok(one(1, "AA==").success);
     assert.ok(one(2, "AAA=").success);
     assert.equal(one(2, "AAAA").success, false, "AAAA 解码是 3 字节");
     assert.equal(one(2, "AA==").success, false, "AA== 解码是 1 字节");
-    assert.equal(StartRunRequest.safeParse({ ...startRun, attachments: [att(1, "a"), att(2, "a")] }).success, false);
+    assert.equal(StartRunRequest.safeParse(withAtt([att(1, "a"), att(2, "a")])).success, false);
+  });
+
+  it("with attachments, content must start with their manifest block (StartRun and ChatSnapshot)", () => {
+    const atts = [att(1, "a")];
+    assert.equal(
+      StartRunRequest.safeParse({ ...startRun, attachments: atts }).success,
+      false,
+      "content without the block",
+    );
+    assert.equal(
+      StartRunRequest.safeParse({ ...startRun, snapshot: { ...startRun.snapshot, content: `hi\n${attachmentManifestBlock(atts)}` }, attachments: atts }).success,
+      false,
+      "block not at the start (e.g. forged in the body)",
+    );
+    const es = [entry(1, "a")];
+    const snap = {
+      id: `snap_${ID}`, purpose: "reply", conversationId: `conv_${ID}`, userMessageId: `cmsg_${ID}`, agent: "claude",
+      content: `${attachmentManifestBlock(es)}hello`, contentHash: sha("b"), nonce: "0123456789abcdef", memorySlot: null,
+      includedMessageIds: [`cmsg_${ID}`], includedSummaryIds: [], adapterVersion: "1", tokenEstimate: 1, createdAt: "2026-10-25T18:00:00+08:00",
+    };
+    assert.ok(ChatSnapshot.safeParse(snap).success);
+    assert.ok(ChatSnapshot.safeParse({ ...snap, content: "hello" }).success, "no attachments field = no images");
+    assert.ok(ChatSnapshot.safeParse({ ...snap, attachments: es }).success);
+    assert.equal(ChatSnapshot.safeParse({ ...snap, content: "hello", attachments: es }).success, false);
+    assert.equal(CHAT_LIMITS.imagesPerMessage, ATTACHMENT_LIMITS.perMessage);
   });
 
   it("node body limit fits the largest legal StartRun", () => {
