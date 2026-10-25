@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { CommitSha, IsoTimestamp, RunId, Sha256Hex, SnapshotId } from "./common";
 import { PermissionDecision, PermissionRequest } from "./permission";
+import { StartRunAttachments, VisionSupport, attachmentManifestBlock } from "./attachments";
 
 /**
  * Orchestrator（控制面） ⇄ AgentServer（执行面）协议 v1。
@@ -56,6 +57,11 @@ export const ModelOption = z.object({
   efforts: z.array(EffortLevel).max(8),
   /** 节点推荐的档位，必须在 efforts 里；efforts 为空时为 null */
   defaultEffort: EffortId.nullable(),
+  /**
+   * C-42a：这个模型能不能看图，节点用带暗号的测试图实测（S-23）。不报 = unknown。
+   * 只有 yes 才发图；no / unknown 收到「[图片：名字]」占位。不会为了看图自动换成备选模型
+   */
+  vision: VisionSupport.optional(),
 }).refine(
   (m) => (m.efforts.length === 0 ? m.defaultEffort === null : m.efforts.some((e) => e.id === m.defaultEffort)),
   "defaultEffort 必须是 efforts 里的一档；没有档位时为 null",
@@ -66,7 +72,14 @@ export type ModelOption = z.infer<typeof ModelOption>;
 export const ProfileModels = z.object({
   profileId: ProfileId,
   models: z.array(ModelOption).max(16),
-}).refine((p) => new Set(p.models.map((m) => m.id)).size === p.models.length, "模型 id 不能重复");
+  /**
+   * C-42a：models 为空（模型写死）时，那个写死的模型能不能看图，和 ModelOption.vision 同样实测。不报 = unknown。
+   * models 不为空时不能带这个字段（看图能力报在各个 ModelOption 上）
+   */
+  fixedModelVision: VisionSupport.optional(),
+})
+  .refine((p) => new Set(p.models.map((m) => m.id)).size === p.models.length, "模型 id 不能重复")
+  .refine((p) => p.models.length === 0 || p.fixedModelVision === undefined, "有模型列表时看图能力报在 ModelOption.vision 上");
 export type ProfileModels = z.infer<typeof ProfileModels>;
 
 /** StartRun 里指定的模型和强度 */
@@ -171,11 +184,29 @@ export const StartRunRequest = z
      * 幂等：同一个 runId 重复提交时 chat 也要一致，否则 run_id_conflict。
      */
     chat: z.object({ memory: MemorySlot.nullable() }).strict().optional(),
+    /**
+     * C-42a：随附的图片，只发给 health.capabilities.attachments 为 true 的节点，且**这一次实际用的模型**看图能力为 yes：
+     * - 传了 model：那个 ModelOption.vision === "yes"
+     * - 没传 model（只允许 profile 的 models 为空、模型写死）：ProfileModels.fixedModelVision === "yes"
+     * - profile 有模型列表却没传 model 时不能带图
+     * 节点按自己上报的值再核对一次，不满足 → vision_unsupported，整个请求拒绝（不丢图继续跑）。
+     *
+     * 节点必须逐张检查：sha256(解码后的字节) === sha256、字节数 === bytes；
+     * 并且 snapshot.content **以** attachmentManifestBlock(这组附件) **开头**（逐字相等，见 attachments.ts）。
+     * 只认开头这一块：正文里就算有人写了一模一样的清单行也不算数。任何一项不对 → hash_mismatch，整个请求拒绝。
+     * 幂等（同一个 runId 重复提交）时附件的 sha256 列表也要一致，否则 run_id_conflict。
+     * 节点按自己配置的映射把图交给 CLI，不往 content 里加任何文字；用完删临时文件。
+     */
+    attachments: StartRunAttachments.optional(),
   })
   .strict()
   .refine(
     (r) => !r.chat?.memory || occursExactlyOnce(r.snapshot.content, r.chat.memory.marker),
     "chat.memory.marker 必须在 snapshot.content 里恰好出现一次",
+  )
+  .refine(
+    (r) => r.attachments === undefined || r.snapshot.content.startsWith(attachmentManifestBlock(r.attachments)),
+    "带图时 snapshot.content 要以这组附件的清单块开头",
   );
 
 export const StartRunResponse = z.object({
@@ -265,6 +296,11 @@ export const NodeHealth = z.object({
    * 老节点不报 = 都没有，开了 memorySource.nodeFolder 的人界面显示「此记忆来源不可用」，Snapshot 仍留槽位、节点填「不可用」
    */
   memoryProfiles: z.array(ProfileId).max(64).optional(),
+  /**
+   * C-42a：节点支持的可选能力。不报 = 都不支持（老节点）。
+   * attachments：能收 StartRun.attachments，且请求体上限不小于 NODE_MIN_BODY_BYTES_WITH_ATTACHMENTS
+   */
+  capabilities: z.object({ attachments: z.boolean().optional() }).optional(),
 }).refine(
   (h) => (h.memoryProfiles ?? []).every((p) => h.profiles.includes(p)),
   "memoryProfiles 里的 profile 必须都在 profiles 里",
@@ -284,6 +320,7 @@ export const RemoteErrorCode = z.enum([
   "not_found",
   "unknown_profile",
   "unknown_model", // C-40：模型或强度不在这个 profile 上报的列表里
+  "vision_unsupported", // C-42a：带了图，但这一次用的模型上报的看图能力不是 yes
   "hash_mismatch",
   "commit_mismatch",
   "run_id_conflict",

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { AttachmentManifest } from "./attachments";
 import {
   ApprovalId,
   ChatMessageId,
@@ -176,6 +177,11 @@ export const PromptSnapshot = z.object({
   synthesisVersion: z.number().int().nonnegative().nullable(),
   branch: z.string().nullable(),
   commitSha: CommitSha.nullable(),
+  /**
+   * C-42a：这份内容附带的图片清单（权威记录）。不带图时省略；1A 及以前的 Snapshot 读出来没有这个字段。
+   * 清单也以 attachmentManifestBlock 写在 content 开头，所以 contentHash 已经覆盖它
+   */
+  attachments: AttachmentManifest.optional(),
   createdAt: IsoTimestamp,
 });
 export type PromptSnapshot = z.infer<typeof PromptSnapshot>;

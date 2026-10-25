@@ -14,6 +14,7 @@ import { AgentName, MessageId, ProjectId } from "./entities";
 import { ApprovalState, PlanState, RoundState, TurnOutcome } from "./state-machines";
 import { EffortId, ModelId, ProfileId, RunModel } from "./remote-protocol";
 import { ImageRef } from "./appearance";
+import { AttachmentManifest } from "./attachments";
 
 /**
  * 讨论室模式的实体（ADR-002 / C-20，阶段 1A）。
@@ -237,6 +238,12 @@ export const BatchItem = z.object({
    * null → 盖章回传 model: null，StartRun **省略** model 字段（不能传 null）。
    */
   model: BatchModel.nullable(),
+  /**
+   * C-42a：这个人这一次实际带上的图片清单，确认页逐张列出（缩略图用 ref）。
+   * 在建 Snapshot 的同一个事务里从 Snapshot.attachments 复制，必须相等，不另外拼。
+   * 省略 = 没带图（包括所选模型看不了图、只收到占位文字的情况）
+   */
+  attachments: AttachmentManifest.optional(),
 });
 export type BatchItem = z.infer<typeof BatchItem>;
 

@@ -4,6 +4,7 @@ export * from "./agent-event";
 export * from "./state-machines";
 export * from "./entities";
 export * from "./appearance";
+export * from "./attachments";
 export * from "./discussion";
 export * from "./chat";
 export * from "./remote-protocol";
