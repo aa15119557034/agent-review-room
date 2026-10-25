@@ -18,6 +18,16 @@
 
 不在表里的话，按字面意思理解；拿不准身份就先在会话里问一句，不要猜着动手。
 
+## 1.5 名字对照
+
+同一个 Agent 在不同地方叫法不同，认这几个名字：
+
+| 本名 | 文档里的名字 | 代码/分支里 | 主要目录 |
+|---|---|---|---|
+| C酱 | **C酱（首席秘书）** | `claude` / `claude/` | `packages/schemas`、`renderer`、`apps/agent-server`、`packages/remote-client` |
+| 汐 | **汐（后端）** | `deepseek` / `deepseek/` | `packages/db`、`packages/core`（discussion 除外）、`main`/`preload`、根配置 |
+| 林离 | **林离（测试）** | `codex` / `codex/` | `packages/core/src/discussion`、`apps/desktop/e2e` |
+
 ## 2. 每个新会话的开场步骤
 
 1. `git fetch origin && git switch main && git pull --rebase`
@@ -26,7 +36,15 @@
 4. 需要时读 `docs/phase1B-任务.md`（任务和依赖）、`docs/design/`（ADR）
 5. 用一两句话告诉江浩：你是谁、什么身份、准备做什么，然后开始
 
-读 GitHub 的方式：有 `gh` 就用 `gh pr view 88 --comments`、`gh pr diff 88`；Claude 云端会话用 GitHub MCP 工具。
+读 GitHub 的方式：
+
+- **主控机（汐、林离）没有装 `gh`**，用 `git` + REST API。取 token 与常用调用见 `docs/工作区须知.md` 第 3 节。
+  最小可用：
+  ```powershell
+  Invoke-RestMethod "https://api.github.com/repos/aa15119557034/agent-review-room/issues/88/comments" -Headers $h
+  Invoke-RestMethod "https://api.github.com/repos/aa15119557034/agent-review-room/pulls/88/files" -Headers $h
+  ```
+- **C酱 的云端会话**有 `gh` 和 GitHub MCP 工具，用 `gh pr view 88 --comments` / `gh pr diff 88` 即可。
 
 ## 3. 信息放哪里
 
@@ -67,10 +85,12 @@ PR 描述就是给评审的开场白，评审只靠它就能开始。按 `.githu
 **【林离 · 实测】**
 ```
 
+**第二行可以补任务号/轮次**，方便回溯，例如 `R-20 第一片`、`D-21 (2/3)`。不是必须，但推荐。
+
 评审意见每条写：
 
 - `文件:行号`
-- 严重程度：**必须改** / **建议** / **疑问**
+- 严重程度：**必须改** / **建议** / **疑问**（文字为主；想用符号就用 `🔴 必须改` / `🟡 建议`，两者等价）
 - 失败场景：什么输入、什么状态下会出错
 
 作者回复每条评审意见，只有两种：
@@ -96,6 +116,8 @@ PR 描述就是给评审的开场白，评审只靠它就能开始。按 `.githu
 ```
 
 下一个会话收到 `接着做 #N` 时，从这条评论开始读。
+
+本地的交接稿（`E:\...\D-22-交接.md` 这种）只在写的时候自己看，**没进 PR 评论就等于没交接**。
 
 ## 7. 江浩要做的
 
