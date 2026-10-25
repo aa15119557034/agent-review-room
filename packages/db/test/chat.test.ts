@@ -859,6 +859,21 @@ describe("chat runs and snapshots (v6)", () => {
     }
   });
 
+  it("FAILED 必须有失败原因（数据库层反例）", async () => {
+    const { db, queue } = fresh();
+    try {
+      const { run } = await seed(db, queue);
+      startRun(db, run.id);
+      assert.throws(() => db.prepare("UPDATE chat_runs SET state = 'FAILED' WHERE id = ?").run(run.id), /CHECK/);
+      assert.throws(
+        () => db.prepare("UPDATE chat_runs SET state = 'COMPLETED', failure_reason = 'internal' WHERE id = ?").run(run.id),
+        /CHECK/,
+      );
+    } finally {
+      db.close();
+    }
+  });
+
   it("repairs interrupted runs and their slots on restart", async () => {
     const { db, queue } = fresh();
     try {

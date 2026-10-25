@@ -89,9 +89,9 @@ CREATE TABLE chat_runs (
   started_at        TEXT,
   finished_at       TEXT,
   CHECK ((purpose = 'reply') = (slot_id IS NOT NULL)),
-  -- RUNNING ⇔ 有子状态（和契约 ChatRun 的 refine 一致）
+  -- RUNNING ⇔ 有子状态、FAILED ⇔ 有失败原因（和契约 ChatRun 的 refine 一致）
   CHECK ((state = 'RUNNING') = (substate IS NOT NULL)),
-  CHECK (failure_reason IS NULL OR state = 'FAILED'),
+  CHECK ((state = 'FAILED') = (failure_reason IS NOT NULL)),
   -- 同一个回答位的同一次尝试最多一个 Run（重试必须 attempt + 1）
   UNIQUE (slot_id, attempt)
 ) STRICT;
