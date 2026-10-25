@@ -621,7 +621,8 @@ export const COMMANDS = {
    *   quoteMessageId、replacesMessageId，按键排序的 JSON），main 把它的 sha256 和消息一起落库，重启后仍有效：
    *   同一个 id、意图相同 → 原样返回第一次的结果，不新建回答位和 Run，**也不占限流名额**（所以网络重试不会变成 rate_limited）；
    *   同一个 id、意图任一字段不同 → idempotency_conflict。
-   *   只有成功的发送会落库：第一次被拒（rate_limited / validation_failed / invalid_state）什么都没建，同一个 id 再发按新的一次处理
+   *   只有成功的发送会落库：第一次被拒（rate_limited / validation_failed / invalid_state）什么都没建，同一个 id 再发按新的一次处理。
+   *   两个同 id 请求同时到达、都没查到记录时：后提交的那个插入消息撞主键 → 回滚，重读记录再按上面的规则返回（意图相同返回第一次的结果），不报 internal
    * - **上限**：每个会话最近 60 秒最多 CHAT_LIMITS.messagesPerMinute 条，超了 rate_limited（什么都不建）
    * - content 只带引用（ChatContentInput），附件 / 录音 / 表情的元数据由 main 从自己的记录填，不信客户端
    * - mentions：单聊只能是 none；agents 里的人必须都是成员（validation_failed）
@@ -650,7 +651,8 @@ export const COMMANDS = {
 
   /**
    * 撤回自己的消息。只能撤回你发的、CHAT_LIMITS.retractWindowMs 以内的（按主控机时间），否则 invalid_state；已撤回的再撤 → invalid_state。
-   * 顺序：先在一个事务里落库（消息 retracted、它的回答位全部 retracted、包含它或它的回答的摘要 stale、发出取消请求），
+   * 顺序：先在一个事务里落库（消息 retracted、它的回答位全部 retracted——replyMessageId / failure / unavailableReason 保留原值不清空、
+   * 包含它或它的回答的摘要 stale、发出取消请求），
    * 再中止正在答的 Run（Run 结局 CANCELLED，仍然恰好一个终止事件）。撤回瞬间刚好答完的结果按迟到结果丢弃
    */
   "chat.retract": def(

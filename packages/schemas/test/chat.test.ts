@@ -215,7 +215,7 @@ describe("memory", () => {
     for (const ok of ["L1/identity.md", "汐/锚点.md", "notes 2026.md", "café.md", "メモ.md", "🧠.md"]) {
       assert.ok(MemoryEntryId.safeParse(ok).success, ok);
     }
-    for (const bad of ["../x", "a/../b", "/etc/passwd", "C:/x", "a\\b", "a//b", "./a", "", "a/ /b", "a\nb", "a?.md"]) {
+    for (const bad of ["../x", "a/../b", "/etc/passwd", "C:/x", "a\\b", "a//b", "./a", "", "a/ /b", "a\nb", "a?.md", "a/.. /b", "a/. /b", "a/b. ", "a/b "]) {
       assert.equal(MemoryEntryId.safeParse(bad).success, false, bad);
     }
   });
@@ -472,5 +472,31 @@ describe("review round 1 (汐 / 林离 on 919ea67)", () => {
     );
     const dup = { kind: "image", ref: `img_${ID}` };
     assert.equal(ChatContentInput.safeParse({ kind: "text", text: "", attachments: [dup, dup] }).success, false, "same attachment twice");
+  });
+});
+
+describe("review round 2 (汐 on 6d8a06f)", () => {
+  const slot = {
+    id: `slot_${ID}`, conversationId: CONV, userMessageId: MSG, agent: "deepseek", required: false,
+    outcome: "retracted", runId: `run_${ID}`, attempt: 1, replyMessageId: null, failure: null,
+    unavailableReason: null, createdAt: TS, finishedAt: TS,
+  };
+
+  it("a retracted slot keeps what it had before (reply / failure / reason)", () => {
+    assert.ok(ChatReplySlot.safeParse(slot).success);
+    assert.ok(ChatReplySlot.safeParse({ ...slot, replyMessageId: `cmsg_${ID2}` }).success, "was answered");
+    assert.ok(ChatReplySlot.safeParse({ ...slot, failure: { kind: "timed_out", message: "x" } }).success, "was failed");
+    assert.ok(ChatReplySlot.safeParse({ ...slot, runId: null, unavailableReason: "offline" }).success, "was unavailable");
+    assert.equal(ChatReplySlot.safeParse({ ...slot, outcome: "cancelled", replyMessageId: `cmsg_${ID2}` }).success, false);
+    assert.equal(ChatReplySlot.safeParse({ ...slot, outcome: "running", finishedAt: null, failure: { kind: "timed_out", message: "x" } }).success, false, "retry clears failure");
+  });
+
+  it("a reply snapshot always includes at least the current message", () => {
+    const snap = {
+      id: `snap_${ID}`, purpose: "reply", conversationId: CONV, userMessageId: MSG, agent: "deepseek",
+      content: "hello", contentHash: HASH, nonce: "0123456789abcdef", memorySlot: null,
+      includedMessageIds: [], includedSummaryIds: [], adapterVersion: "1", tokenEstimate: 1, createdAt: TS,
+    };
+    assert.equal(ChatSnapshot.safeParse(snap).success, false);
   });
 });

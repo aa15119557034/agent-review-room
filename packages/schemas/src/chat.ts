@@ -104,7 +104,7 @@ export const Conversation = z
     kind: ConversationKind,
     /** 秘书成员（不含你）。单聊恰好 1 位，群聊 2～8 位，不重复 */
     members: z.array(AgentName).min(1).max(CHAT_LIMITS.maxRecipients).refine(uniqueAgents, "成员不能重复"),
-    /** 单聊为 null（显示对方名字）；群聊可以为 null（显示成员名拼起来） */
+    /** 你起的名字（单聊相当于备注名）；null 时单聊显示对方名字，群聊显示成员名拼起来 */
     title: z.string().trim().min(1).max(60).nullable(),
     pinned: z.boolean(),
     /** 免打扰：不弹通知，未读只显示小红点不显示数字 */
@@ -317,7 +317,7 @@ export type ChatMessage = z.infer<typeof ChatMessage>;
  * - 你的消息：已撤回
  * - 秘书的回答：它回答的那条（inReplyTo）已撤回
  * 被排除的消息不能被新消息引用、不能被转议题（invalid_state），也不能进新的 Snapshot / 摘要。
- * inReplyToOf 由调用方按 inReplyTo 查出那条你的消息传进来。
+ * inReplyToOf 由调用方按 inReplyTo 查出那条你的消息传进来；查不到（返回 undefined）**按已排除处理**（宁严勿松），调用方不用另外判断。
  */
 export const isExcludedFromContext = (m: ChatMessage, inReplyToOf: (id: string) => UserChatMessage | undefined): boolean =>
   m.sender === "user" ? m.state === "retracted" : inReplyToOf(m.inReplyTo)?.state !== "sent";
@@ -408,7 +408,7 @@ export const ChatReplySlot = z
     runId: RunId.nullable(),
     /** 第几次尝试，从 1 开始；每次重试 +1。旧的 Run 归档保留 */
     attempt: z.number().int().positive(),
-    /** answered 时指向回答 */
+    /** answered 时指向回答；撤回后保留 */
     replyMessageId: ChatMessageId.nullable(),
     /** 只在 failed 时非 null */
     failure: ChatSlotFailure.nullable(),
@@ -418,9 +418,13 @@ export const ChatReplySlot = z
     /** running 时为 null */
     finishedAt: IsoTimestamp.nullable(),
   })
-  .refine((s) => (s.outcome === "answered") === (s.replyMessageId !== null), "只有 answered 有回答")
-  .refine((s) => (s.outcome === "failed") === (s.failure !== null), "只有 failed 有 failure")
-  .refine((s) => (s.outcome === "unavailable") === (s.unavailableReason !== null), "只有 unavailable 有原因")
+  // 撤回时保留撤回前的 replyMessageId / failure / unavailableReason（审计用），所以 retracted 两样都允许
+  .refine((s) => (s.outcome === "answered" ? s.replyMessageId !== null : s.replyMessageId === null || s.outcome === "retracted"), "只有 answered（或撤回前已答的 retracted）有回答")
+  .refine((s) => (s.outcome === "failed" ? s.failure !== null : s.failure === null || s.outcome === "retracted"), "只有 failed（或撤回前失败的 retracted）有 failure")
+  .refine(
+    (s) => (s.outcome === "unavailable" ? s.unavailableReason !== null : s.unavailableReason === null || s.outcome === "retracted"),
+    "只有 unavailable（或撤回前不能答的 retracted）有原因",
+  )
   .refine(
     (s) => !["running", "answered", "skipped", "failed", "cancelled"].includes(s.outcome) || s.runId !== null,
     "running / answered / skipped / failed / cancelled 必须有 Run",
@@ -485,14 +489,13 @@ export const ChatSnapshot = z
     /** 没开节点记忆时为 null。marker 在 content 里必须恰好出现一次 */
     memorySlot: MemorySlot.nullable(),
     /** 拼进来的消息（历史、引用、当前这条）和摘要。撤回审计用：撤回后拼的 Snapshot 不能含被排除的消息 id（见 isExcludedFromContext） */
-    includedMessageIds: z.array(ChatMessageId).max(10_000),
+    includedMessageIds: z.array(ChatMessageId).min(1).max(10_000),
     includedSummaryIds: z.array(ChatSummaryId).max(100),
     adapterVersion: z.string().min(1),
     tokenEstimate: z.number().int().nonnegative(),
     createdAt: IsoTimestamp,
   })
   .refine((s) => (s.purpose === "reply") === (s.userMessageId !== null), "只有 reply 有 userMessageId")
-  .refine((s) => s.purpose !== "history_summary" || s.includedMessageIds.length > 0, "摘要至少要有一条来源消息")
   .refine((s) => s.memorySlot === null || s.memorySlot.nonce === s.nonce, "记忆槽位和 Snapshot 用同一个 nonce")
   .refine((s) => s.memorySlot === null || occursExactlyOnce(s.content, s.memorySlot.marker), "记忆槽位 marker 必须在 content 里恰好出现一次");
 export type ChatSnapshot = z.infer<typeof ChatSnapshot>;

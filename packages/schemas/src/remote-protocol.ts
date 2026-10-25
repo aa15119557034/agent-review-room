@@ -91,7 +91,11 @@ export const MemoryEntryId = z
   .max(200)
   // 不能有控制字符和 Windows 文件名里不允许的 \ : * ? " < > |（所以也不会有盘符和反斜杠路径）
   .regex(/^[^\u0000-\u001f\u007f\\:*?"<>|]+$/)
-  .refine((v) => !v.split("/").some((seg) => seg === ".." || seg === "." || seg.trim() === ""), "不能有空段、. 或 ..");
+  // Windows 会吃掉段尾的空格和点（"a/.. /b" 实际是 "a/../b"），所以段尾不能是空格或点，比较前也先 trim
+  .refine(
+    (v) => !v.split("/").some((seg) => [".", "..", ""].includes(seg.trim()) || /[. ]$/.test(seg)),
+    "不能有空段、. 或 ..，段尾不能是空格或点",
+  );
 export type MemoryEntryId = z.infer<typeof MemoryEntryId>;
 
 /**
@@ -110,14 +114,14 @@ export const MemoryManifest = z
   .refine((m) => new Set(m.entries.map((e) => e.id)).size === m.entries.length, "条目不能重复");
 export type MemoryManifest = z.infer<typeof MemoryManifest>;
 
+/** marker 在 content 里恰好出现一次（ChatSnapshot 和 StartRun 都用这条） */
+export const occursExactlyOnce = (content: string, marker: string): boolean => content.split(marker).length === 2;
+
 /**
  * Snapshot 里的记忆槽位。主控端拼好除记忆以外的全部内容，留一个槽位：
  * content 里**恰好出现一次** marker（X-30 生成，带本次 nonce），节点把它换成用同一个包裹函数（core 导出）包好的记忆。
  * marker 出现 0 次或多于 1 次，节点拒绝（bad_request）。
  */
-/** marker 在 content 里恰好出现一次（ChatSnapshot 和 StartRun 都用这条） */
-export const occursExactlyOnce = (content: string, marker: string): boolean => content.split(marker).length === 2;
-
 export const MemorySlot = z
   .object({
     nonce: z.string().regex(/^[a-f0-9]{16,64}$/),
