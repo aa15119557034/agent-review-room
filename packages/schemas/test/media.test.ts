@@ -189,13 +189,14 @@ describe("speech (C-42c)", () => {
     createdAt: NOW,
   };
   const speechJob = { ...job, kind: "speech", authorization: "user_play", draw: null };
+  const ended = { state: "succeeded", startedAt: "2026-10-23T18:00:05+08:00", finishedAt: "2026-10-23T18:00:09+08:00" };
 
   it("speech job: succeeded needs a clip; no draw fields", () => {
     assert.ok(MediaJob.safeParse(speechJob).success);
-    assert.equal(MediaJob.safeParse({ ...speechJob, state: "succeeded" }).success, false);
-    assert.ok(MediaJob.safeParse({ ...speechJob, state: "succeeded", speech: clip }).success);
-    assert.equal(MediaJob.safeParse({ ...speechJob, state: "succeeded", speech: clip, result }).success, false);
-    assert.equal(MediaJob.safeParse({ ...job, state: "succeeded", result, speech: clip }).success, false);
+    assert.equal(MediaJob.safeParse({ ...speechJob, ...ended }).success, false);
+    assert.ok(MediaJob.safeParse({ ...speechJob, ...ended, speech: clip }).success);
+    assert.equal(MediaJob.safeParse({ ...speechJob, ...ended, speech: clip, result }).success, false);
+    assert.equal(MediaJob.safeParse({ ...done, speech: clip }).success, false);
   });
 
   it("speech.play takes a source, never raw text; voice settings are strict", () => {
