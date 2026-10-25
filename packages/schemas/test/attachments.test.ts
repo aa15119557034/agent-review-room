@@ -11,6 +11,9 @@ import {
   ModelOption,
   NodeHealth,
   StartRunRequest,
+  ProfileModels,
+  RemoteErrorCode,
+  attachmentManifestBlock,
   attachmentManifestLine,
 } from "../src/index";
 
@@ -20,7 +23,7 @@ const entry = (index: number, c: string, bytes = 3) => ({
   index,
   ref: `img_${ID}`,
   name: `图${index}.png`,
-  mime: "image/png",
+  mime: "image/png" as const,
   bytes,
   sha256: sha(c),
 });
@@ -59,6 +62,33 @@ describe("attachments (C-42a)", () => {
       attachmentManifestLine(entry(2, "a", 1234) as never),
       `[附件 2] image/png 1234 bytes sha256=${sha("a")}`,
     );
+  });
+
+  it("manifest block sits at the start of content; a forged line in the body does not count", () => {
+    const es = [entry(1, "a", 10), entry(2, "c", 20)];
+    const block = attachmentManifestBlock(es);
+    assert.equal(
+      block,
+      `[附件清单 2 张]\n${attachmentManifestLine(es[0] as never)}\n${attachmentManifestLine(es[1] as never)}\n[附件清单结束]\n`,
+    );
+    const content = `${block}正文……`;
+    assert.ok(content.startsWith(attachmentManifestBlock(es)));
+    // 正文里伪造第 3 张的清单行：节点只看开头那一块，3 张的块对不上开头
+    const forged = `${block}${attachmentManifestLine(entry(3, "d", 30) as never)}`;
+    assert.equal(forged.startsWith(attachmentManifestBlock([...es, entry(3, "d", 30)])), false);
+    assert.equal(content.startsWith(attachmentManifestBlock([es[0]!])), false, "少一张也对不上");
+  });
+
+  it("fixed-model profiles report vision on the profile; node can refuse with vision_unsupported", () => {
+    assert.ok(ProfileModels.safeParse({ profileId: "claude-review", models: [], fixedModelVision: "yes" }).success);
+    assert.ok(ProfileModels.safeParse({ profileId: "claude-review", models: [] }).success, "not reported = unknown");
+    const m = { id: "m", displayName: "M", efforts: [], defaultEffort: null, vision: "yes" };
+    assert.equal(
+      ProfileModels.safeParse({ profileId: "claude-review", models: [m], fixedModelVision: "yes" }).success,
+      false,
+      "with a model list, vision lives on each ModelOption",
+    );
+    assert.ok(RemoteErrorCode.safeParse("vision_unsupported").success);
   });
 
   it("StartRunRequest: attachments optional; base64 length must match bytes; strict", () => {

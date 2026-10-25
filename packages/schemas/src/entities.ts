@@ -179,7 +179,7 @@ export const PromptSnapshot = z.object({
   commitSha: CommitSha.nullable(),
   /**
    * C-42a：这份内容附带的图片清单（权威记录）。不带图时省略；1A 及以前的 Snapshot 读出来没有这个字段。
-   * 清单的每一行也写在 content 里（attachmentManifestLine），所以 contentHash 已经覆盖它
+   * 清单也以 attachmentManifestBlock 写在 content 开头，所以 contentHash 已经覆盖它
    */
   attachments: AttachmentManifest.optional(),
   createdAt: IsoTimestamp,

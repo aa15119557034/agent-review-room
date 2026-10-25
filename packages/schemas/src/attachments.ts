@@ -13,12 +13,13 @@ import { ImageMime, ImageRef } from "./appearance";
  * - 处理后超过 imageMaxBytes：validation_failed
  *
  * 指纹（D-36b）：
- * - Snapshot 的 content 里写附件清单，每张一行 `attachmentManifestLine(entry)`，放在不可信资料区；
- *   文件名另行转义后放在同一区里（拼装归 X-34）。contentHash = sha256(content) 的算法不变，所以清单变了 hash 就变
+ * - Snapshot 的 content **开头**是附件清单块 `attachmentManifestBlock(entries)`（由拼装器从 Snapshot.attachments 生成，
+ *   正文、资料、秘书的话都排在它后面，所以不可信文字到不了开头）。文件名不进这一块，转义后放在不可信资料区（拼装归 X-34）。
+ *   contentHash = sha256(content) 的算法不变，所以清单变了 hash 就变
  * - PromptSnapshot.attachments 存这份清单（权威）。BatchItem.attachments 在建 Snapshot 的同一个事务里从它复制，
  *   不另外拼；D-36b 验收要断言两者相等（确认页看到的就是要发的）
  * - batch.approve 和起跑前，main 各重新读一次每个文件、算 sha256 和清单比对，任何一张对不上 → 整批 stale_snapshot，不建 Run
- * - StartRun.attachments 带上字节；节点检查每张 sha256 和字节一致、并且 content 里含有它的清单行，否则 hash_mismatch
+ * - StartRun.attachments 带上字节；节点检查每张 sha256 和字节一致、并且 content 以这组附件的清单块开头，否则 hash_mismatch
  *
  * 能不能看图看**这一次所用的模型**：ModelOption.vision（见 remote-protocol.ts）。
  */
@@ -90,12 +91,19 @@ export const AttachmentManifest = z
   );
 export type AttachmentManifest = z.infer<typeof AttachmentManifest>;
 
-/**
- * 清单在 content 里的一行（不含文件名，文件名由拼装器转义后另写）。节点用它确认附件确实在被批准的内容里。
- * 格式固定，改格式要改契约。
- */
-export const attachmentManifestLine = (e: Pick<AttachmentManifestEntry, "index" | "mime" | "bytes" | "sha256">): string =>
+type ManifestLineFields = Pick<AttachmentManifestEntry, "index" | "mime" | "bytes" | "sha256">;
+
+/** 清单块里的一行（不含文件名）。格式固定，改格式要改契约 */
+export const attachmentManifestLine = (e: ManifestLineFields): string =>
   `[附件 ${e.index}] ${e.mime} ${e.bytes} bytes sha256=${e.sha256}`;
+
+/**
+ * content 开头的附件清单块：开头行、每张一行（按编号）、结尾行，最后一个换行。
+ * 节点用「content 以它开头」确认这组附件就是被批准的那组；格式固定，改格式要改契约。
+ * 没带图时不写这一块
+ */
+export const attachmentManifestBlock = (entries: readonly ManifestLineFields[]): string =>
+  [`[附件清单 ${entries.length} 张]`, ...entries.map(attachmentManifestLine), "[附件清单结束]", ""].join("\n");
 
 /** base64 解码后的字节数（不真解码） */
 const base64DecodedLength = (data: string) => (data.length / 4) * 3 - (data.endsWith("==") ? 2 : data.endsWith("=") ? 1 : 0);
