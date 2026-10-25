@@ -60,6 +60,8 @@ export const CHAT_LIMITS = {
   replyMaxChars: 200_000,
   /** 一条消息最多几个附件（图片 + 文件合计；图片张数另有 C-42a 的上限） */
   attachmentsPerMessage: 9,
+  /** 其中图片最多 4 张（ADR-004 §2）。C-42a 合并后改成引用它的 ATTACHMENT_LIMITS.perMessage */
+  imagesPerMessage: 4,
   /** 单个文件（非图片）的上限，D-34a 可以提议调整 */
   fileMaxBytes: 20 * 1024 * 1024,
   /** 录音最长 5 分钟 */
@@ -190,7 +192,11 @@ export const ChatContent = z.discriminatedUnion("kind", [
       label: z.string().trim().min(1).max(40),
     })
     .strict(),
-]).refine((c) => c.kind !== "text" || c.text.trim().length > 0 || c.attachments.length > 0, "正文和附件不能都为空");
+]).refine((c) => c.kind !== "text" || c.text.trim().length > 0 || c.attachments.length > 0, "正文和附件不能都为空")
+  .refine(
+    (c) => c.kind !== "text" || c.attachments.filter((a) => a.kind === "image").length <= CHAT_LIMITS.imagesPerMessage,
+    `一条消息最多 ${CHAT_LIMITS.imagesPerMessage} 张图片`,
+  );
 export type ChatContent = z.infer<typeof ChatContent>;
 
 // ================================================================ 消息

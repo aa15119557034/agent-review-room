@@ -122,6 +122,16 @@ describe("user messages", () => {
     );
   });
 
+  it("at most 4 images per message, 9 attachments in total", () => {
+    const img = (i: number) => ({ kind: "image", ref: `img_${ID}`, name: `${i}.png` });
+    const file = (i: number) => ({ kind: "file", ref: `file_${ID}`, name: `${i}.txt`, mime: "text/plain", bytes: 1, sha256: HASH, isText: true });
+    const msg = (atts: unknown[]) => ({ kind: "text", text: "", attachments: atts });
+    assert.ok(ChatContent.safeParse(msg([0, 1, 2, 3].map(img))).success);
+    assert.equal(ChatContent.safeParse(msg([0, 1, 2, 3, 4].map(img))).success, false, "5 images");
+    assert.ok(ChatContent.safeParse(msg([...[0, 1, 2, 3].map(img), ...[0, 1, 2, 3, 4].map(file)])).success, "4 + 5 = 9");
+    assert.equal(ChatContent.safeParse(msg([0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(file))).success, false, "10 attachments");
+  });
+
   it("voice carries a transcript; sticker carries its label", () => {
     const voice = {
       kind: "voice", audio: `aud_${ID}`, durationMs: 3200,
