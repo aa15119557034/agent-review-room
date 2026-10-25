@@ -6,6 +6,7 @@ import {
   BatchItem,
   COMMANDS,
   IMAGE_MAX_BYTES,
+  NODE_MIN_BODY_BYTES_WITH_ATTACHMENTS,
   ImagePurpose,
   ModelOption,
   NodeHealth,
@@ -15,7 +16,14 @@ import {
 
 const ID = "01JAAAAAAAAAAAAAAAAAAAAAAA";
 const sha = (c: string) => c.repeat(64);
-const entry = (index: number, c: string, bytes = 3) => ({ index, name: `图${index}.png`, mime: "image/png", bytes, sha256: sha(c) });
+const entry = (index: number, c: string, bytes = 3) => ({
+  index,
+  ref: `img_${ID}`,
+  name: `图${index}.png`,
+  mime: "image/png",
+  bytes,
+  sha256: sha(c),
+});
 
 const startRun = {
   protocol: 1,
@@ -28,7 +36,7 @@ const att = (index: number, c: string) => ({ index, mime: "image/png", bytes: 3,
 
 describe("attachments (C-42a)", () => {
   it("AttachmentManifest: indices 1..n, no duplicate image, total bytes capped", () => {
-    assert.ok(AttachmentManifest.safeParse([]).success);
+    assert.equal(AttachmentManifest.safeParse([]).success, false, "没带图就省略，不写空数组");
     assert.ok(AttachmentManifest.safeParse([entry(1, "a"), entry(2, "c")]).success);
     assert.equal(AttachmentManifest.safeParse([entry(2, "a")]).success, false);
     assert.equal(AttachmentManifest.safeParse([entry(1, "a"), entry(3, "c")]).success, false);
@@ -40,6 +48,10 @@ describe("attachments (C-42a)", () => {
     assert.equal(AttachmentManifest.safeParse(big).success, false, "7 × 2 MB > 12 MB");
     assert.equal(AttachmentManifest.safeParse([{ ...entry(1, "a"), mime: "image/gif" }]).success, false);
     assert.equal(AttachmentManifest.safeParse([{ ...entry(1, "a"), path: "C:/x.png" }]).success, false);
+    assert.ok(AttachmentManifest.safeParse([{ ...entry(1, "a"), name: "x".repeat(255) }]).success, "和聊天附件同为 255");
+    assert.equal(AttachmentManifest.safeParse([{ ...entry(1, "a"), name: "x".repeat(256) }]).success, false);
+    const { ref: _ref, ...noRef } = entry(1, "a");
+    assert.equal(AttachmentManifest.safeParse([noRef]).success, false, "要有 ref 给确认页显示");
   });
 
   it("manifest line format is fixed (the node looks for it in content)", () => {
@@ -57,6 +69,21 @@ describe("attachments (C-42a)", () => {
     assert.equal(StartRunRequest.safeParse({ ...startRun, attachments: [{ ...att(1, "a"), data: "AAAAAAAA" }] }).success, false);
     assert.equal(StartRunRequest.safeParse({ ...startRun, attachments: [{ ...att(1, "a"), data: "AA\nA" }] }).success, false);
     assert.equal(StartRunRequest.safeParse({ ...startRun, attachments: [{ ...att(1, "a"), path: "/etc/passwd" }] }).success, false);
+  });
+
+  it("StartRunAttachment: decoded length must equal bytes; no duplicate image", () => {
+    const one = (bytes: number, data: string) => StartRunRequest.safeParse({ ...startRun, attachments: [{ ...att(1, "a"), bytes, data }] });
+    assert.ok(one(1, "AA==").success);
+    assert.ok(one(2, "AAA=").success);
+    assert.equal(one(2, "AAAA").success, false, "AAAA 解码是 3 字节");
+    assert.equal(one(2, "AA==").success, false, "AA== 解码是 1 字节");
+    assert.equal(StartRunRequest.safeParse({ ...startRun, attachments: [att(1, "a"), att(2, "a")] }).success, false);
+  });
+
+  it("node body limit fits the largest legal StartRun", () => {
+    const maxBase64 = Math.ceil(ATTACHMENT_LIMITS.perSnapshotBytes / 3) * 4;
+    const maxContentJson = 2_000_000 * 6; // 每个 UTF-16 单元最坏转义成 \uXXXX
+    assert.ok(NODE_MIN_BODY_BYTES_WITH_ATTACHMENTS >= maxBase64 + maxContentJson + 64 * 1024);
   });
 
   it("ModelOption.vision is optional and three-state; NodeHealth.capabilities optional", () => {

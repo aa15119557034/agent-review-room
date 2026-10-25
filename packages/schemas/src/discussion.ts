@@ -239,7 +239,8 @@ export const BatchItem = z.object({
    */
   model: BatchModel.nullable(),
   /**
-   * C-42a：这个人这一次实际带上的图片清单，和 Snapshot.attachments 相同，确认页逐张列出。
+   * C-42a：这个人这一次实际带上的图片清单，确认页逐张列出（缩略图用 ref）。
+   * 在建 Snapshot 的同一个事务里从 Snapshot.attachments 复制，必须相等，不另外拼。
    * 省略 = 没带图（包括所选模型看不了图、只收到占位文字的情况）
    */
   attachments: AttachmentManifest.optional(),

@@ -180,7 +180,8 @@ export const StartRunRequest = z
     /**
      * C-42a：随附的图片，只发给 health.capabilities.attachments 为 true 的节点，且所选模型 vision 为 yes。
      * 节点必须逐张检查：sha256(解码后的字节) === sha256、字节数 === bytes、
-     * snapshot.content 里含有 attachmentManifestLine(这一张)；任何一项不对 → hash_mismatch，整个请求拒绝。
+     * snapshot.content 里含有 attachmentManifestLine(这一张)，并且 content 里的清单行和附件一一对应（多一行少一张都不行）；
+     * 任何一项不对 → hash_mismatch，整个请求拒绝。
      * 幂等（同一个 runId 重复提交）时附件的 sha256 列表也要一致，否则 run_id_conflict。
      * 节点按自己配置的映射把图交给 CLI，不往 content 里加任何文字；用完删临时文件。
      */
