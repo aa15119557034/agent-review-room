@@ -127,6 +127,24 @@ export const TERMINAL_TURN_OUTCOMES = [
   "answered", "interrupted", "round_ended", "paused", "absent_quota", "timed_out", "failed", "rejected",
 ] as const satisfies readonly TurnOutcome[];
 
+// ================================================================ 媒体任务（ADR-004 / C-42b）
+
+/**
+ * 画图 / 语音合成任务的状态。每个任务恰好一个终态（succeeded / failed / cancelled / timed_out）。
+ * queued → cancelled 时退回沉浸模式的名额；running 之后不管结局都占名额（C-42d）
+ */
+export const MediaJobState = z.enum(["queued", "running", "succeeded", "failed", "cancelled", "timed_out"]);
+export type MediaJobState = z.infer<typeof MediaJobState>;
+
+export const MEDIA_JOB_TRANSITIONS: Readonly<Record<MediaJobState, readonly MediaJobState[]>> = {
+  queued: ["running", "cancelled", "failed"],
+  running: ["succeeded", "failed", "cancelled", "timed_out"],
+  succeeded: [],
+  failed: [],
+  cancelled: [],
+  timed_out: [],
+};
+
 export const canTransition = <S extends string>(
   table: Readonly<Record<S, readonly S[]>>,
   from: S,

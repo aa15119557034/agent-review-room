@@ -67,6 +67,7 @@ import {
   UserChatMessage,
   VoiceRecording,
 } from "./chat";
+import { DrawRequest, DrawRoutePreview, MediaJob, MediaJobId, MediaScope, MediaSource } from "./media";
 
 /**
  * 控制面 API：人 ⇄ Orchestrator。
@@ -746,6 +747,36 @@ export const COMMANDS = {
     z.object({ project: Project, material: Message }),
     "author",
   ),
+
+  // ---------------------------------------------------------------- 媒体任务（C-42b，ADR-004）
+
+  /**
+   * 画一张图：你点了请求卡上的「画」，或用了 /画（authorization = user_tap）。沉浸模式的自动画图不走这条命令，由 main 内部发起。
+   * - backend = auto：按 85% 规则选路（见 media.ts）
+   * - backend = codex（手动）：额度 ≥ 阈值或读不到时，confirmOverThreshold 必须为 true，否则 invalid_state（message 写明当前百分比）；
+   *   ≥ 100% 或在用 credits 时一律 invalid_state
+   * - 同一个 source + 同样的 draw 已经有没结束的任务时，返回那个任务，不重复建
+   * 返回新建（queued）的任务；之后的变化走 media.updated 事件
+   */
+  "draw.start": def(
+    z.object({
+      type: z.literal("draw.start"),
+      request: DrawRequest,
+      source: MediaSource,
+      confirmOverThreshold: z.boolean().optional(),
+    }),
+    MediaJob,
+    "author",
+  ),
+
+  /** 取消一个任务（queued 或 running）。已经结束的：invalid_state */
+  "media.cancel": def(z.object({ type: z.literal("media.cancel"), jobId: MediaJobId }), MediaJob, "cancel"),
+
+  /**
+   * 会话 / 议题的「停」：取消这个范围里所有 queued 和 running 的任务（cancelReason = user_stop），取消之后才到的结果丢弃。
+   * 一次性的：沉浸模式仍然开着。返回被取消的任务
+   */
+  "media.stop": def(z.object({ type: z.literal("media.stop"), scope: MediaScope }), z.array(MediaJob), "cancel"),
 } as const;
 
 /** 按键排序的 JSON（数组保持顺序），用来给发送意图判等 */
@@ -929,6 +960,18 @@ export const QUERIES = {
   "chat.voice.get": def(z.object({ type: z.literal("chat.voice.get"), audio: AudioRef }), VoiceRecording, "read"),
 
   "chat.stickers.list": def(z.object({ type: z.literal("chat.stickers.list") }), z.array(Sticker), "read"),
+
+  /** C-42b：请求卡打开时预览这次会走哪条路（会现读一次 Codex 额度，2 秒超时） */
+  "draw.preview": def(
+    z.object({ type: z.literal("draw.preview"), request: DrawRequest }),
+    DrawRoutePreview,
+    "read",
+  ),
+
+  "media.get": def(z.object({ type: z.literal("media.get"), jobId: MediaJobId }), MediaJob, "read"),
+
+  /** 一个范围里的媒体任务，按创建时间倒序，最多 200 条 */
+  "media.list": def(z.object({ type: z.literal("media.list"), scope: MediaScope }), z.array(MediaJob).max(200), "read"),
 } as const;
 
 // ================================================================ Unions & helpers
@@ -1013,5 +1056,7 @@ export const ControlEvent = z.discriminatedUnion("type", [
   z.object({ type: z.literal("chat.run.updated"), run: ChatRun }),
   z.object({ type: z.literal("chat.summary.updated"), summary: ChatHistorySummary }),
   z.object({ type: z.literal("chat.voice.updated"), recording: VoiceRecording }),
+  // ---- 媒体任务（C-42b）
+  z.object({ type: z.literal("media.updated"), job: MediaJob }),
 ]);
 export type ControlEvent = z.infer<typeof ControlEvent>;
