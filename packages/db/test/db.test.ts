@@ -89,6 +89,8 @@ describe("migrations", () => {
       "conversation_members",
       "chat_messages",
       "chat_reply_slots",
+      "chat_snapshots",
+      "chat_runs",
     ]) {
       assert.ok(tables.includes(expected), `missing table ${expected}`);
     }

@@ -351,6 +351,8 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
       limits: { idleTimeoutMs: opts.idleTimeoutMs, totalTimeoutMs: opts.totalTimeoutMs },
       // C-40：null = profile 自带模型，字段整个省略（不是传 null）
       ...(this.#model === undefined ? {} : { model: this.#model }),
+      // C-34：聊天 Run 才带 chat；讨论室 / 单次评审不带（节点行为不变）
+      ...(input.chat === undefined ? {} : { chat: input.chat }),
     });
 
     let lastError = "";

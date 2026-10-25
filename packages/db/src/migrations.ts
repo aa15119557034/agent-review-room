@@ -3,6 +3,7 @@ import { SCHEMA_V1, SCHEMA_V2 } from "./schema";
 import { SCHEMA_V3, SCHEMA_V3_REBUILD } from "./schema-v3";
 import { SCHEMA_V4 } from "./schema-v4";
 import { SCHEMA_V5 } from "./schema-v5";
+import { SCHEMA_V6 } from "./schema-v6";
 
 /**
  * 迁移（D-02）：用 PRAGMA user_version 记版本，每个迁移在自己的事务里跑。
@@ -58,6 +59,13 @@ export const MIGRATIONS: readonly Migration[] = [
     name: "chat-space",
     up: (db) => {
       db.exec(SCHEMA_V5);
+    },
+  },
+  {
+    version: 6,
+    name: "chat-runs-and-snapshots",
+    up: (db) => {
+      db.exec(SCHEMA_V6);
     },
   },
 ];
