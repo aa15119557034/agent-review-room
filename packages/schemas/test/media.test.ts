@@ -116,7 +116,7 @@ describe("media jobs (C-42b)", () => {
     assert.equal(MediaJob.safeParse({ ...auto, intentHash: null }).success, false);
     assert.equal(MediaJob.safeParse({ ...auto, source: { ...job.source, agent: null } }).success, false);
     assert.equal(MediaJob.safeParse({ ...job, intentHash: sha("d") }).success, false, "user_tap has no intentHash");
-    const topic = { kind: "topic", messageId: `msg_${ID}`, agent: "codex" };
+    const topic = { kind: "topic", projectId: `proj_${ID}`, messageId: `msg_${ID}`, agent: "codex" };
     assert.equal(MediaJob.safeParse({ ...auto, source: topic }).success, false, "no immersive mode in topics");
     assert.ok(MediaJob.safeParse({ ...job, source: topic }).success, "tapping 画 in a topic is fine");
   });
@@ -169,6 +169,8 @@ describe("media jobs (C-42b)", () => {
   it("commands, queries and event are registered", () => {
     assert.ok(COMMANDS["draw.start"].request.safeParse({ type: "draw.start", request: draw, source: job.source }).success);
     assert.ok(COMMANDS["media.stop"].request.safeParse({ type: "media.stop", scope: { kind: "chat", conversationId: `conv_${ID}` } }).success);
+    const swapped = { ...job.source, conversationId: `cmsg_${ID}`, messageId: `conv_${ID}` };
+    assert.equal(MediaJob.safeParse({ ...job, source: swapped }).success, false, "chat ids use C-34's prefixes");
     assert.ok(ControlEvent.safeParse({ type: "media.updated", job }).success);
   });
 });

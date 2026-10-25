@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { IsoTimestamp, RunId, Sha256Hex, prefixedId } from "./common";
+import { ChatMessageId, ConversationId, IsoTimestamp, RunId, Sha256Hex, prefixedId } from "./common";
 import { ImageRef } from "./appearance";
-import { AgentName } from "./entities";
+import { AgentName, MessageId, ProjectId } from "./entities";
 import { MediaJobState } from "./state-machines";
 import { RemoteProfileQuota } from "./remote-protocol";
 
@@ -41,20 +41,19 @@ const DRAW_AUTHORIZATIONS: readonly MediaAuthorization[] = ["user_tap", "immersi
 const SPEECH_AUTHORIZATIONS: readonly MediaAuthorization[] = ["user_play", "reply_as_voice", "immersive"];
 
 /**
- * 任务从哪来。聊天的 id 格式由 C-34 定，这里先按「前缀_ULID」收；C-34 合并后收紧成具体类型。
+ * 任务从哪来：聊天里的一条消息（C-34 的 ConversationId / ChatMessageId），或讨论室议题里的一条消息。
  * agent = 提出这个意图的秘书；你自己用 /画 时为 null
  */
-const OpaqueId = z.string().regex(/^[a-z]{2,8}_[0-9A-HJKMNP-TV-Z]{26}$/);
 export const MediaSource = z.discriminatedUnion("kind", [
-  z.object({ kind: z.literal("chat"), conversationId: OpaqueId, messageId: OpaqueId, agent: AgentName.nullable() }).strict(),
-  z.object({ kind: z.literal("topic"), messageId: OpaqueId, agent: AgentName.nullable() }).strict(),
+  z.object({ kind: z.literal("chat"), conversationId: ConversationId, messageId: ChatMessageId, agent: AgentName.nullable() }).strict(),
+  z.object({ kind: z.literal("topic"), projectId: ProjectId, messageId: MessageId, agent: AgentName.nullable() }).strict(),
 ]);
 export type MediaSource = z.infer<typeof MediaSource>;
 
 /** 「停」和列表的范围：一个聊天会话，或一个议题 */
 export const MediaScope = z.discriminatedUnion("kind", [
-  z.object({ kind: z.literal("chat"), conversationId: OpaqueId }).strict(),
-  z.object({ kind: z.literal("topic"), projectId: OpaqueId }).strict(),
+  z.object({ kind: z.literal("chat"), conversationId: ConversationId }).strict(),
+  z.object({ kind: z.literal("topic"), projectId: ProjectId }).strict(),
 ]);
 export type MediaScope = z.infer<typeof MediaScope>;
 
