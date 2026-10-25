@@ -47,6 +47,18 @@ const result = {
   workflowHash: sha("c"),
 };
 
+const route = {
+  backend: "comfyui",
+  manual: false,
+  confirmedOverThreshold: false,
+  fallbackReason: "quota_threshold",
+  quotaBefore: null,
+  quotaAfter: null,
+};
+const T1 = "2026-10-23T18:00:05+08:00";
+const T2 = "2026-10-23T18:00:40+08:00";
+const done = { ...job, state: "succeeded", route, result, startedAt: T1, finishedAt: T2 };
+
 describe("media jobs (C-42b)", () => {
   it("exactly one terminal state: terminal states have no way out", () => {
     for (const s of ["succeeded", "failed", "cancelled", "timed_out"] as const) {
@@ -61,13 +73,49 @@ describe("media jobs (C-42b)", () => {
   it("MediaJob: state and failure / cancelReason / result must agree", () => {
     assert.ok(MediaJob.safeParse(job).success);
     assert.equal(MediaJob.safeParse({ ...job, draw: null }).success, false, "draw job needs draw");
-    assert.equal(MediaJob.safeParse({ ...job, state: "failed" }).success, false, "failed needs failure");
-    assert.ok(MediaJob.safeParse({ ...job, state: "failed", failure: { reason: "quota_exhausted", message: "x" } }).success);
-    assert.equal(MediaJob.safeParse({ ...job, state: "cancelled" }).success, false, "cancelled needs reason");
-    assert.ok(MediaJob.safeParse({ ...job, state: "cancelled", cancelReason: "app_restart" }).success);
-    assert.equal(MediaJob.safeParse({ ...job, state: "succeeded" }).success, false, "succeeded draw needs result");
-    assert.ok(MediaJob.safeParse({ ...job, state: "succeeded", result }).success);
+    const fail = { reason: "backend_unavailable", message: "x" };
+    assert.equal(MediaJob.safeParse({ ...job, state: "failed", finishedAt: T2 }).success, false, "failed needs failure");
+    assert.ok(MediaJob.safeParse({ ...job, state: "failed", failure: fail, finishedAt: T2 }).success, "failed straight from queued");
+    assert.equal(MediaJob.safeParse({ ...job, state: "cancelled", finishedAt: T2 }).success, false, "cancelled needs reason");
+    assert.ok(MediaJob.safeParse({ ...job, state: "cancelled", cancelReason: "app_restart", finishedAt: T2 }).success);
+    assert.equal(MediaJob.safeParse({ ...done, result: null }).success, false, "succeeded draw needs result");
+    assert.ok(MediaJob.safeParse(done).success);
     assert.equal(MediaJob.safeParse({ ...job, authorization: "model_said_so" }).success, false);
+  });
+
+  it("MediaJob: timestamps follow the state", () => {
+    assert.equal(MediaJob.safeParse({ ...job, startedAt: T1 }).success, false, "queued has not started");
+    assert.ok(MediaJob.safeParse({ ...job, state: "running", startedAt: T1, route }).success);
+    assert.equal(MediaJob.safeParse({ ...job, state: "running" }).success, false, "running needs startedAt");
+    assert.equal(MediaJob.safeParse({ ...job, state: "running", startedAt: T1, finishedAt: T2 }).success, false);
+    assert.equal(MediaJob.safeParse({ ...done, finishedAt: null }).success, false, "terminal needs finishedAt");
+    assert.equal(MediaJob.safeParse({ ...done, startedAt: null }).success, false, "succeeded must have started");
+    assert.equal(MediaJob.safeParse({ ...job, state: "timed_out", finishedAt: T2 }).success, false, "timed_out must have started");
+    assert.ok(MediaJob.safeParse({ ...job, state: "timed_out", startedAt: T1, finishedAt: T2 }).success);
+  });
+
+  it("MediaJob: route, result and request agree", () => {
+    assert.equal(MediaJob.safeParse({ ...done, route: null }).success, false, "result needs a route");
+    assert.equal(MediaJob.safeParse({ ...done, result: { ...result, backend: "codex" } }).success, false, "backend mismatch");
+    assert.equal(MediaJob.safeParse({ ...done, result: { ...result, size: "1536x1024" } }).success, false, "size mismatch");
+    assert.equal(MediaJob.safeParse({ ...done, result: { ...result, prompt: "别的" } }).success, false, "prompt mismatch");
+    assert.equal(MediaJob.safeParse({ ...done, remoteRunId: `run_${ID}` }).success, false, "remoteRunId only on codex");
+    const codex = { ...route, backend: "codex", fallbackReason: null };
+    assert.ok(MediaJob.safeParse({ ...done, route: codex, remoteRunId: `run_${ID}`, result: { ...result, backend: "codex", workflowHash: null } }).success);
+    assert.equal(MediaJob.safeParse({ ...done, result: { ...result, seed: 2 ** 32 } }).success, false, "seed is 32-bit");
+    assert.equal(
+      MediaJob.safeParse({ ...done, route: { ...route, fallbackReason: "session_local_only" } }).success,
+      false,
+      "session_local_only is for immersive only",
+    );
+  });
+
+  it("MediaJob: only immersive jobs carry intentHash and need the proposing agent", () => {
+    const auto = { ...job, authorization: "immersive", intentHash: sha("d") };
+    assert.ok(MediaJob.safeParse(auto).success);
+    assert.equal(MediaJob.safeParse({ ...auto, intentHash: null }).success, false);
+    assert.equal(MediaJob.safeParse({ ...auto, source: { ...job.source, agent: null } }).success, false);
+    assert.equal(MediaJob.safeParse({ ...job, intentHash: sha("d") }).success, false, "user_tap has no intentHash");
   });
 
   it("DrawRequest: size whitelist, prompt length, strict", () => {

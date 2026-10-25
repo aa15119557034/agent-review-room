@@ -86,7 +86,8 @@ export const DrawFallbackReason = z.enum([
   "quota_unknown",         // 读不到 / 超时 / 少了某个窗口
   "credits_in_use",        // 已经在用 credits
   "codex_unavailable",     // 节点离线、忙、unknown_model、不支持 image Run
-  "session_local_only",    // 这个会话关掉了「自动画图用订阅」
+  "session_local_only",    // 这个会话关掉了「自动画图用订阅」。只用于沉浸模式自动画（authorization = immersive），
+                           // 你点出来的画图（含请求卡）不受这个开关影响，所以 draw.preview 不会返回它
 ]);
 export type DrawFallbackReason = z.infer<typeof DrawFallbackReason>;
 
@@ -118,7 +119,8 @@ export const GeneratedImage = z.object({
   model: z.string().max(120).nullable(),
   prompt: z.string().max(DRAW_PROMPT_MAX_CHARS),
   size: DrawSize,
-  seed: z.number().int().nonnegative().nullable(),
+  /** 应用只生成 32 位种子（JS number 能精确表示），工作流里自带的更大种子不用 */
+  seed: z.number().int().nonnegative().max(0xffff_ffff).nullable(),
   /** comfyui 工作流 JSON 的 sha256；codex 为 null */
   workflowHash: Sha256Hex.nullable(),
 });
@@ -131,7 +133,7 @@ export const MediaFailureReason = z.enum([
   "quota_exhausted",       // 画到一半 Codex 额度用完（不自动重画，给「改用本机」）
   "generation_failed",     // 模型或工作流报错
   "artifact_invalid",      // 取回的图 sha256 / 类型 / 大小不对
-  "gpu_queue_timeout",     // 显卡排队超时
+  "gpu_queue_timeout",     // 显卡排队超时（还在 queued 就等太久 → failed）。开始以后超过总时限才是 timed_out 状态
   "internal",
 ]);
 export type MediaFailureReason = z.infer<typeof MediaFailureReason>;
@@ -154,7 +156,8 @@ export const MediaJob = z
     authorization: MediaAuthorization,
     source: MediaSource,
     /**
-     * 去重键的一部分：同一条消息、同一位秘书、同一个意图只生成一次。你点出来的任务为 null
+     * 去重键的一部分：同一条消息、同一位秘书、同一个意图只生成一次。
+     * 只有 immersive 带（且 source.agent 必须是那位秘书）；其余授权为 null
      */
     intentHash: Sha256Hex.nullable(),
     /** kind = draw 时必填 */
@@ -174,10 +177,34 @@ export const MediaJob = z
   .refine((j) => (j.kind === "draw") === (j.draw !== null), "draw 只在画图任务上有")
   .refine((j) => (j.state === "failed") === (j.failure !== null), "只有 failed 带 failure")
   .refine((j) => (j.state === "cancelled") === (j.cancelReason !== null), "只有 cancelled 带 cancelReason")
-  .refine((j) => j.kind !== "draw" || (j.state === "succeeded") === (j.result !== null), "画图成功必须有结果");
+  .refine((j) => j.kind !== "draw" || (j.state === "succeeded") === (j.result !== null), "画图成功必须有结果")
+  // 时间：queued 没开始；running 开始了没结束；终态都有结束时间；succeeded / timed_out 一定开始过
+  .refine((j) => j.state !== "queued" || (j.startedAt === null && j.finishedAt === null), "queued 不能有开始 / 结束时间")
+  .refine((j) => j.state !== "running" || (j.startedAt !== null && j.finishedAt === null), "running 要有开始时间、不能有结束时间")
+  .refine((j) => j.state === "queued" || j.state === "running" || j.finishedAt !== null, "终态要有结束时间")
+  .refine((j) => (j.state !== "succeeded" && j.state !== "timed_out") || j.startedAt !== null, "succeeded / timed_out 要有开始时间")
+  // 授权和去重键
+  .refine(
+    (j) => (j.authorization === "immersive") === (j.intentHash !== null) && (j.authorization !== "immersive" || j.source.agent !== null),
+    "只有 immersive 带 intentHash，且要有提出意图的秘书",
+  )
+  // 选路和结果一致
+  .refine((j) => j.kind === "draw" || (j.route === null && j.remoteRunId === null), "只有画图任务有 route / remoteRunId")
+  .refine((j) => j.remoteRunId === null || j.route?.backend === "codex", "remoteRunId 只在走林离时有")
+  .refine((j) => j.result === null || j.route !== null, "有结果就要有选路记录")
+  .refine(
+    (j) =>
+      j.result === null ||
+      (j.result.backend === j.route?.backend && j.result.prompt === j.draw?.prompt && j.result.size === j.draw?.size),
+    "结果的后端 / 提示词 / 尺寸要和请求、选路一致",
+  )
+  .refine((j) => j.route?.fallbackReason !== "session_local_only" || j.authorization === "immersive", "session_local_only 只用于沉浸模式");
 export type MediaJob = z.infer<typeof MediaJob>;
 
-/** 选路预览：请求卡打开时显示「这次会用林离（额度 42%）」或「会用本机，因为……」 */
+/**
+ * 选路预览：请求卡打开时显示「这次会用林离（额度 42%）」或「会用本机，因为……」。
+ * 请求卡点出来的是 user_tap，不受会话的「自动画图用订阅」影响，所以不需要会话信息，fallbackReason 不会是 session_local_only
+ */
 export const DrawRoutePreview = z.object({
   backend: DrawBackend.nullable(),
   fallbackReason: DrawFallbackReason.nullable(),
