@@ -683,6 +683,17 @@ const toChatRun = (row: ChatRunRow): ChatRun => ({
   finishedAt: row.finished_at,
 });
 
+/**
+ * 发送前的准备（读会话、拼 Snapshot）和提交之间会话变了（成员 / 类型）。
+ * 调用方必须重建 Snapshot 再发；不能按旧成员建回答位。
+ */
+export class ChatSendConflictError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ChatSendConflictError";
+  }
+}
+
 /** 迟到结果：Run 已经被别的路径结掉了（撤回 / 取消 / 中断修复），不能再改。 */
 export class ChatRunStateConflictError extends Error {
   constructor(
@@ -957,4 +968,179 @@ export async function repairInterruptedChatRuns(
     }
   }
   return { repaired };
+}
+// ================================================================ 一次发送的事务体（D-31b 第二段）
+
+export type ChatSendAvailability =
+  | { kind: "available" }
+  | { kind: "absent_quota" }
+  | { kind: "unavailable"; reason: "offline" | "unconfigured" | "paused_by_user" };
+
+export interface ChatSendRecipient {
+  agent: string;
+  required: boolean;
+  availability: ChatSendAvailability;
+}
+
+/**
+ * @ 规则（ADR-003 §2 / C-34）：谁是收件人、谁必须回答。
+ * - 单聊：对方，required = true
+ * - 群聊 @所有人：全部成员，required = true
+ * - 群聊 @某几位：只有被点到的人，required = true；没点到的不建回答位
+ * - 群聊没点名：全部成员，required = false（可以 skip）
+ */
+export function chatRecipients(conversation: Conversation, mentions: ChatMentions): string[] {
+  const members = conversation.members;
+  if (conversation.kind === "direct") {
+    if (mentions.kind !== "none") throw new Error("a direct chat only accepts mentions = none");
+    return [...members];
+  }
+  if (mentions.kind === "none" || mentions.kind === "all") return [...members];
+  for (const agent of mentions.agents) {
+    if (!members.includes(agent)) throw new Error("mentioned agent " + agent + " is not in this conversation");
+  }
+  return [...mentions.agents];
+}
+
+/**
+ * 收件人是否必须回答：单聊、@所有人、以及「@某几位里的本人」= true；
+ * 群聊没点名、或者 @某几位时没被点到的人 = false。
+ */
+export function chatRequired(conversation: Conversation, mentions: ChatMentions, agent: string): boolean {
+  if (conversation.kind === "direct") return true;
+  if (mentions.kind === "all") return true;
+  return mentions.kind === "agents" && mentions.agents.includes(agent);
+}
+
+export interface CreateChatSendInput {
+  /** 消息所在的会话；收件人和 required 由 chatRecipients / chatRequired 自己算，不信调用方 */
+  conversation: Conversation;
+  message: UserChatMessage;
+  /** 只对你发的消息有意义：chatSendIntentJson 的 sha256 */
+  requestHash: string | null;
+  /** 每位成员的可用性（main 的 ChatService 探测节点）；没传的按 available 处理 */
+  availability: ReadonlyMap<string, ChatSendAvailability>;
+  /** 给能答的人拼好的 Snapshot（key = agent） */
+  snapshots: ReadonlyMap<string, ChatSnapshot>;
+  /** Run 的 adapterId（例如 "remote:deepseek-chat"） */
+  adapterIds: ReadonlyMap<string, string>;
+  createdAt: string;
+}
+
+export interface CreateChatSendResult {
+  message: UserChatMessage;
+  slots: ChatReplySlot[];
+  runs: ChatRun[];
+}
+
+/**
+ * 一条消息的落库：消息 + 回答位 +（能答的人的）Snapshot 和 Run，**在同一个事务里**。
+ *
+ * - 收件人 / required 由 chatRecipients / chatRequired 按会话和 mentions 算，调用方只提供「每位能不能答」
+ * - 不能答的人直接记 unavailable / absent_quota，没有 Run；其他人照常（聊天不像讨论室整条失败）
+ * - 一个能答的人都没有也算成功
+ * - 中途任何一步失败（缺 Snapshot、insertChatRun 不一致）整次回滚，不会留下半套消息 / 回答位
+ */
+export function createChatSend(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  input: CreateChatSendInput,
+): Promise<CreateChatSendResult> {
+  return writeTransaction(db, queue, () => {
+    const message = ChatMessageSchema.parse(input.message);
+    if (message.sender !== "user") throw new Error("chat send must create a user message");
+    if (message.conversationId !== input.conversation.id) throw new Error("chat message belongs to another conversation");
+    if (db.prepare("SELECT 1 FROM chat_messages WHERE id = ?").get(message.id) !== undefined) {
+      throw new Error("chat message already exists: " + message.id);
+    }
+
+    // 拼 Snapshot 是在事务外做的，中间用户可能改了成员：在同一个事务里重读会话，
+    // 和调用方看到的名单不一致就整次拒绝（调用方重建 Snapshot 再发），不能按旧成员建回答位。
+    const conversation = getConversation(db, message.conversationId);
+    if (conversation === null) throw new ChatSendConflictError("conversation " + message.conversationId + " disappeared");
+    if (conversation.kind !== input.conversation.kind) {
+      throw new ChatSendConflictError("conversation kind changed while the snapshots were being built");
+    }
+    const previous = [...input.conversation.members].sort();
+    const current = [...conversation.members].sort();
+    if (previous.length !== current.length || previous.some((agent, index) => agent !== current[index])) {
+      throw new ChatSendConflictError("conversation members changed while the snapshots were being built");
+    }
+
+    // availability 是每位收件人的探测结果，必须由调用方显式给出。
+    // 不能把「漏传」解释成「能答」：用户暂停的秘书会因此照样开始回答。
+    const recipients: ChatSendRecipient[] = chatRecipients(conversation, message.mentions).map((agent) => {
+      const availability = input.availability.get(agent);
+      if (availability === undefined) throw new Error("missing availability for chat recipient " + agent);
+      return {
+        agent,
+        required: chatRequired(conversation, message.mentions, agent),
+        availability,
+      };
+    });
+
+    insertChatMessage(db, { message, requestHash: input.requestHash });
+
+    const slots: ChatReplySlot[] = [];
+    const runs: ChatRun[] = [];
+
+    for (const recipient of recipients) {
+    const snapshot = input.snapshots.get(recipient.agent);
+    const adapterId = input.adapterIds.get(recipient.agent);
+    const canAnswer = recipient.availability.kind === "available";
+    if (canAnswer && (snapshot === undefined || adapterId === undefined)) {
+      throw new Error("missing snapshot or adapter for " + recipient.agent);
+    }
+    if (canAnswer && snapshot !== undefined && !snapshot.includedMessageIds.includes(message.id)) {
+      throw new Error("snapshot of " + recipient.agent + " does not include the current message");
+    }
+
+    const slotId = newChatSlotId();
+    const runId = "run_" + ulid();
+    const slot: ChatReplySlot = {
+      id: slotId,
+      conversationId: message.conversationId,
+      userMessageId: message.id,
+      agent: recipient.agent,
+      required: recipient.required,
+      outcome: canAnswer ? "running" : recipient.availability.kind === "absent_quota" ? "absent_quota" : "unavailable",
+      runId: canAnswer ? runId : null,
+      attempt: 1,
+      replyMessageId: null,
+      failure: null,
+      unavailableReason: recipient.availability.kind === "unavailable" ? recipient.availability.reason : null,
+      createdAt: input.createdAt,
+      finishedAt: canAnswer ? null : input.createdAt,
+    };
+    insertChatSlot(db, slot);
+    slots.push(slot);
+
+    if (!canAnswer || snapshot === undefined || adapterId === undefined) continue;
+    insertChatSnapshot(db, snapshot);
+    const run: ChatRun = {
+      id: runId,
+      kind: "chat",
+      purpose: "reply",
+      conversationId: message.conversationId,
+      slotId,
+      agent: recipient.agent,
+      snapshotId: snapshot.id,
+      snapshotHash: snapshot.contentHash,
+      finalPromptHash: null,
+      memoryManifest: null,
+      model: null,
+      adapterId,
+      state: "QUEUED",
+      substate: null,
+      failureReason: null,
+      createdAt: input.createdAt,
+      startedAt: null,
+      finishedAt: null,
+    };
+    insertChatRun(db, run);
+    runs.push(run);
+  }
+
+    return { message, slots, runs };
+  });
 }
