@@ -107,7 +107,7 @@ const MAX_DEPTH = 16;
  * 不是 .md / .txt 的普通文件直接忽略（包括 .gitkeep 这类），不算问题；「隐藏」只看名字以 . 开头（ADR-003 §2a）。
  * 文件夹按真实路径记 visited、限制深度：万一有 lstat 认不出的重解析点造成环，也不会无限递归。
  */
-function listSection(agentRoot: string, section: string, skipped: Map<string, string>): Candidate[] {
+function listSection(agentRoot: string, section: string, skipped: Map<string, string>, notices: string[]): Candidate[] {
   const out: Candidate[] = [];
   const visited = new Set<string>();
   const walk = (dir: string, rel: string, depth: number) => {
@@ -151,7 +151,9 @@ function listSection(agentRoot: string, section: string, skipped: Map<string, st
       // 不是文件夹、名字又不是 .md / .txt 的，不算候选，也不算问题（包括 .gitkeep 和这类名字的链接：反正不跟随）
       if (!stat.isDirectory() && !TEXT_FILE.test(name)) continue;
       if (name.startsWith(".")) {
-        skipped.set(id, "隐藏文件");
+        // 隐藏文件夹（.git 这类）不进去、只提示，不算 core 不合格；隐藏的 .md / .txt 算跳过
+        if (stat.isDirectory()) notices.push(`跳过 ${id}：隐藏文件夹，不进去`);
+        else skipped.set(id, "隐藏文件");
         continue;
       }
       if (stat.isSymbolicLink()) {
@@ -236,7 +238,7 @@ export function selectMemory(agentDir: string): MemorySelection {
   const { budgetChars } = settings.settings;
 
   const skipped = new Map<string, string>();
-  const [core, notes, journal] = SECTIONS.map((s) => listSection(root, s, skipped)) as [Candidate[], Candidate[], Candidate[]];
+  const [core, notes, journal] = SECTIONS.map((s) => listSection(root, s, skipped, warnings)) as [Candidate[], Candidate[], Candidate[]];
 
   // ---- core：每次都带，一条都不能少
   const coreSkipped = [...skipped].filter(([id]) => id === "core" || id.startsWith("core/"));

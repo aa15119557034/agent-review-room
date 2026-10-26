@@ -114,11 +114,12 @@ describe("journal and notes", () => {
     assert.ok(sel.warnings.some((w) => w.includes("journal/notes.md")));
   });
 
-  it("journal dates that do not exist are skipped; non-.md/.txt files (even dotfiles like .gitkeep) are ignored, also in core", () => {
-    const dir = agentDir({ "core/a.md": "c", "core/.gitkeep": "", "core/readme.bin": "x", "journal/2026/02-31.md": "x", "journal/2024/02-29.md": "leap" });
+  it("journal dates that do not exist are skipped; non-.md/.txt files (even .gitkeep) and hidden folders (.git) are ignored, also in core", () => {
+    const dir = agentDir({ "core/a.md": "c", "core/.gitkeep": "", "core/readme.bin": "x", "core/.git/HEAD.md": "x", "journal/2026/02-31.md": "x", "journal/2024/02-29.md": "leap" });
     const sel = selectMemory(dir);
     assert.deepEqual(ids(sel), ["core/a.md", "journal/2024/02-29.md"]);
     assert.ok(sel.warnings.some((w) => w.includes("02-31") && w.includes("日期不存在")));
+    assert.ok(sel.warnings.some((w) => w.includes("core/.git") && w.includes("隐藏文件夹")));
   });
 
   it("folders nested deeper than 16 levels are skipped", () => {

@@ -196,6 +196,6 @@ Windows 相关逻辑（`.cmd` 包装、taskkill 参数）用注入的模拟环�
 
 主控机上按 §2a「切换顺序」：先装 `codex`（7421）；汐的 D-40 迁移完成后才装 `deepseek`（7420）。
 
-节点配置新增的字段：`homeDir`、`agent`（填了以后只能跑 `<agent>-` 开头的 profile）、`runAsUser`（进程账号不对就拒绝启动）、聊天 profile 的 `memory: { "dir": "memory/<agent>", "provider": "folder" }`。启动时会检查 `homeDir` 在本机 NTFS 盘上，并按规则读一遍记忆，只打印条数和跳过的原因，不打印正文。
+节点配置新增的字段：`homeDir`、`agent`（填了以后只能跑 `<agent>-` 开头的 profile）、`runAsUser`（进程账号不对就拒绝启动）、聊天 profile 的 `memory: { "dir": "memory/<agent>", "provider": "folder" }`。安装脚本会先把节点打成一个文件（`pnpm --filter @room/agent-server run bundle` → `dist/agent-server.mjs`），`node\app` 里只有它和 `bin\`，没有 `node_modules`；计划任务直接用 Program Files 里的 `node.exe` 运行它。不用安装脚本、手工配置的节点：`homeDir` 和它的上级不能是任何链接、junction 或挂载点（节点用 `lstat` 查，卷挂载点 Node 不一定认得出，以安装脚本的检查为准）。启动时会检查 `homeDir` 在本机 NTFS 盘上，并按规则读一遍记忆，只打印条数和跳过的原因，不打印正文。
 
 现在还**不会**把记忆填进聊天：那一步要用 X-30 的包裹函数，合并后做第二段；在那之前 health 不报 `memoryProfiles`。

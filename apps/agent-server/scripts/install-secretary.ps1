@@ -59,8 +59,12 @@ while ($p) {
 if ($HomeDir.StartsWith("\\")) { Fail "AgentRoom 不能放在网络路径上" }
 if ($HomeDir.TrimEnd("\") -eq [IO.Path]::GetPathRoot($HomeDir).TrimEnd("\")) { Fail "AgentRoom 不能是盘的根目录，要建一个文件夹（比如 D:\AgentRoom）" }
 # ADR-003 §2a：不放进任何用户目录（低权限账号不该能读用户目录）
-$usersRoot = Split-Path -Parent $env:USERPROFILE
-if (($HomeDir + "\").StartsWith($usersRoot + "\", [StringComparison]::OrdinalIgnoreCase)) { Fail "AgentRoom 不能放在用户目录（$usersRoot）下面" }
+# 当前用户目录的上级、任何盘上的 \Users、这台电脑上每个账号的用户目录，都不行
+$userRoots = @((Split-Path -Parent $env:USERPROFILE)) + @(Get-CimInstance Win32_UserProfile | ForEach-Object { $_.LocalPath })
+foreach ($r in $userRoots) {
+  if ($r -and ($HomeDir + "\").StartsWith($r.TrimEnd("\") + "\", [StringComparison]::OrdinalIgnoreCase)) { Fail "AgentRoom 不能放在用户目录（$r）下面" }
+}
+if ($HomeDir -match '^[A-Za-z]:\\Users(\\|$)') { Fail "AgentRoom 不能放在 Users 文件夹下面" }
 $drive = [IO.DriveInfo]::new([IO.Path]::GetPathRoot($HomeDir))
 if ($drive.DriveFormat -ne "NTFS" -or $drive.DriveType -ne "Fixed") {
   Fail "$HomeDir 所在的盘是 $($drive.DriveFormat) / $($drive.DriveType)。必须是本机 NTFS 盘（FAT、exFAT、网络盘、可移动盘上权限不生效）"
@@ -86,17 +90,24 @@ if ($TokenReader -ne "") {
   try { $readerSid = ([Security.Principal.NTAccount]$TokenReader).Translate([Security.Principal.SecurityIdentifier]).Value }
   catch { Fail "找不到账号 $TokenReader" }
   # Everyone、已验证用户、交互式用户、Users、Guests
-  if ($readerSid -in @("S-1-1-0", "S-1-5-11", "S-1-5-4", "S-1-5-32-545", "S-1-5-32-546") -or $readerSid -like "S-1-5-32-*") {
-    Fail "TokenReader 必须是一个具体的账号（运行桌面端的那个），不能是 $TokenReader 这样的组"
+  # 只接受本机的一个用户账号，或者正在运行脚本的人自己：组（本机组、域组、内置组）、SYSTEM / 服务账号一律不行
+  $isLocalUser = [bool](Get-LocalUser -SID $readerSid -ErrorAction SilentlyContinue)
+  if (-not ($isLocalUser -or $readerSid -eq $me.User.Value)) {
+    Fail "TokenReader 必须是本机的一个用户账号（运行桌面端的那个），不能是 $TokenReader"
   }
 }
 $memory = Join-Path $HomeDir "memory\$Agent"
 $nodeApp = Join-Path $HomeDir "node\app"
 $nodeMine = Join-Path $HomeDir "node\$Agent"
 if (-not (Test-Path -LiteralPath $ConfigTemplate)) { Fail "找不到配置模板 $ConfigTemplate" }
-if (-not (Test-Path (Join-Path $AppSource "apps\agent-server\node_modules\.bin\tsx.cmd"))) {
-  Fail "找不到 tsx：先在 $AppSource 里运行 pnpm install --filter `"@room/agent-server...`""
-}
+# 节点打成一个文件（scripts/bundle.mjs），node\app 里不放 node_modules：pnpm 的包是 junction，和「AgentRoom 里不能有链接」冲突
+& pnpm --dir $AppSource --filter "@room/agent-server" run bundle | Out-Null
+$bundle = Join-Path $AppSource "apps\agent-server\dist\agent-server.mjs"
+if ($LASTEXITCODE -ne 0 -or -not (Test-Path $bundle)) { Fail "打包节点失败：先在 $AppSource 里运行 pnpm install --filter `"@room/agent-server...`"，再重试" }
+# Node 必须装在秘书账号读得到的地方（官方安装包装到 Program Files）
+$nodeExe = (Get-Command node.exe -ErrorAction SilentlyContinue).Source
+if (-not $nodeExe) { Fail "找不到 node.exe" }
+foreach ($r in $userRoots) { if ($r -and $nodeExe.StartsWith($r.TrimEnd("\") + "\", [StringComparison]::OrdinalIgnoreCase)) { Fail "Node 装在用户目录里（$nodeExe），秘书账号读不到。请用官方安装包装到 Program Files" } }
 $template = Get-Content -Raw -Encoding UTF8 $ConfigTemplate | ConvertFrom-Json
 $profiles = [ordered]@{}
 foreach ($p in $template.profiles.PSObject.Properties) {
@@ -158,10 +169,11 @@ if (-not (Test-Path $readme)) {
 }
 
 Step "复制节点程序到 $nodeApp"
-# node\app 对所有秘书账号可读：配置、Token、.env、备份一律不复制，复制完再查一遍
-$secretFiles = @("agent-server.config*.json", "*.token", ".env*", "*.bak", "settings.json")
-robocopy $AppSource $nodeApp /MIR /XJ /XD .git /XF @secretFiles /NFL /NDL /NJH /NJS /NP | Out-Null
-if ($LASTEXITCODE -ge 8) { Fail "复制节点程序失败（robocopy $LASTEXITCODE）" }
+# 只放打包好的节点和 bin\ 里的脚本：没有 node_modules、没有配置和 Token
+Get-ChildItem -LiteralPath $nodeApp -Force | Remove-Item -Recurse -Force
+Copy-Item -LiteralPath $bundle -Destination (Join-Path $nodeApp "agent-server.mjs")
+Copy-Item -LiteralPath (Join-Path $AppSource "apps\agent-server\bin") -Destination (Join-Path $nodeApp "bin") -Recurse
+$secretFiles = @("agent-server.config*.json", "agent-server.token", ".env*")
 $leaked = Get-ChildItem -LiteralPath $nodeApp -Recurse -Force -File -Include $secretFiles -ErrorAction SilentlyContinue
 if ($leaked) { Fail "node\app 里还有不该复制的文件：$($leaked[0].FullName)" }
 
@@ -223,10 +235,8 @@ if ($TokenReader -ne "") {
 
 # ---- 6. 计划任务
 Step "注册计划任务 AgentRoom-$Agent"
-$tsx = Join-Path $nodeApp "apps\agent-server\node_modules\.bin\tsx.cmd"
-$main = Join-Path $nodeApp "apps\agent-server\src\main.ts"
-if (-not (Test-Path $tsx)) { Fail "找不到 $tsx（复制程序后不见了）" }
-$action = New-ScheduledTaskAction -Execute $tsx -Argument "`"$main`"" -WorkingDirectory $nodeMine
+$main = Join-Path $nodeApp "agent-server.mjs"
+$action = New-ScheduledTaskAction -Execute $nodeExe -Argument "`"$main`"" -WorkingDirectory $nodeMine
 $trigger = New-ScheduledTaskTrigger -AtStartup
 $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit ([TimeSpan]::Zero) -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)
 Register-ScheduledTask -TaskName "AgentRoom-$Agent" -Action $action -Trigger $trigger -Settings $settings -User $account -Password $password -RunLevel Limited -Force | Out-Null
