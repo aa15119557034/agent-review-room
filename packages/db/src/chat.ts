@@ -2,6 +2,7 @@ import type {
   AgentChatMessage,
   BatchModel,
   ChatContent,
+  Project,
   ChatCursor,
   ChatMentions,
   ChatMessage,
@@ -14,6 +15,7 @@ import type {
   ConversationMembers,
   FailureReason,
   MemoryManifest,
+  Message,
   RunState,
   RunSubstate,
   UserChatMessage,
@@ -1176,5 +1178,68 @@ export function createChatSend(
   }
 
     return { message, slots, runs };
+  });
+}
+// ================================================================ 一键转议题（D-31c）
+
+export interface CreateChatToTopicInput {
+  projectId: string;
+  materialId: string;
+  conversationId: string;
+  name: string;
+  /** 选中的聊天消息（按时间排好序；服务层负责校验） */
+  chatMessageIds: readonly string[];
+  /** 拼好的材料正文 */
+  content: string;
+  createdAt: string;
+}
+
+/**
+ * 从聊天建一个议题：项目 + 一条 chat_material 初始材料，**同一个事务**。
+ * 内容长度 / 已撤回 / 重复的校验都在服务层、事务开始之前做。
+ */
+export function createChatToTopic(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  input: CreateChatToTopicInput,
+): Promise<{ project: Project; material: Message }> {
+  return writeTransaction(db, queue, () => {
+    db.prepare("INSERT INTO projects (id, name, from_conversation_id, created_at) VALUES (?, ?, ?, ?)").run(
+      input.projectId,
+      input.name,
+      input.conversationId,
+      input.createdAt,
+    );
+    db.prepare(
+      "INSERT INTO messages (id, project_id, kind, conversation_id, chat_message_ids, content, created_at) " +
+        "VALUES (?, ?, 'chat_material', ?, ?, ?, ?)",
+    ).run(
+      input.materialId,
+      input.projectId,
+      input.conversationId,
+      JSON.stringify(input.chatMessageIds),
+      input.content,
+      input.createdAt,
+    );
+
+    const project = db.prepare("SELECT * FROM projects WHERE id = ?").get(input.projectId) as Record<string, unknown>;
+    const material = db.prepare("SELECT * FROM messages WHERE id = ?").get(input.materialId) as Record<string, unknown>;
+    return {
+      project: {
+        id: project["id"] as string,
+        name: project["name"] as string,
+        fromConversationId: (project["from_conversation_id"] as string | null) ?? null,
+        createdAt: project["created_at"] as string,
+      },
+      material: {
+        id: material["id"] as string,
+        projectId: material["project_id"] as string,
+        kind: "chat_material",
+        conversationId: material["conversation_id"] as string,
+        chatMessageIds: JSON.parse(material["chat_message_ids"] as string) as string[],
+        content: material["content"] as string,
+        createdAt: material["created_at"] as string,
+      },
+    };
   });
 }

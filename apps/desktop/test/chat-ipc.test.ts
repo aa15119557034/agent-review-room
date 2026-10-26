@@ -642,6 +642,116 @@ describe("chat service (D-31b)", () => {
     }
   });
 
+  it("converts selected messages into a topic with one chat_material", async () => {
+    const h = await makeHarness({ scripts: { deepseek: reply("我也觉得") } });
+    try {
+      await h.chat.send(send(h.conversationId, userMessageId(140), "把这段转成议题"));
+      await settle(h.chat);
+      const page = h.chat.listMessages({ type: "chat.messages.list", conversationId: h.conversationId, limit: 10 } as never);
+      const ids = page.messages.map((message) => message.id);
+
+      const result = await h.chat.toTopic({
+        type: "chat.toTopic",
+        conversationId: h.conversationId,
+        messageIds: ids,
+        name: "从聊天来的议题",
+      } as never);
+
+      assert.equal(result.project.name, "从聊天来的议题");
+      assert.equal(result.project.fromConversationId, h.conversationId);
+      assert.equal(result.material.kind, "chat_material");
+      assert.deepEqual([...result.material.chatMessageIds].sort(), [...ids].sort());
+      assert.ok(result.material.content.includes("把这段转成议题"));
+      assert.ok(result.material.content.includes("我也觉得"));
+      assert.ok(result.material.content.includes("汐"), "秘书用显示名");
+
+      // repository 读得出来（讨论室后面直接用它当材料）
+      const stored = h.repo.getMessage(result.material.id);
+      assert.equal(stored.kind, "chat_material");
+      if (stored.kind === "chat_material") assert.deepEqual([...stored.chatMessageIds].sort(), [...ids].sort());
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("refuses to convert retracted messages or messages from another conversation", async () => {
+    const h = await makeHarness();
+    try {
+      const sent = await h.chat.send(send(h.conversationId, userMessageId(141), "撤回我"));
+      await settle(h.chat);
+      await h.chat.retract({ type: "chat.retract", messageId: sent.message.id } as never);
+      await assert.rejects(
+        h.chat.toTopic({
+          type: "chat.toTopic",
+          conversationId: h.conversationId,
+          messageIds: [sent.message.id],
+          name: "不该建出来",
+        } as never),
+        (error: unknown) => (error as { code?: string }).code === "invalid_state",
+      );
+
+      const other = await h.chat.createConversation({
+        type: "chat.conversation.create",
+        members: { kind: "direct", agent: "codex" },
+        title: null,
+      } as never);
+      await assert.rejects(
+        h.chat.toTopic({
+          type: "chat.toTopic",
+          conversationId: h.conversationId,
+          messageIds: [userMessageId(142)],
+          name: "别处的消息",
+        } as never),
+        (error: unknown) => (error as { code?: string }).code === "validation_failed",
+      );
+      assert.notEqual(other.id, h.conversationId);
+
+      await assert.rejects(
+        h.chat.toTopic({
+          type: "chat.toTopic",
+          conversationId: h.conversationId,
+          messageIds: [userMessageId(143), userMessageId(143)],
+          name: "重复",
+        } as never),
+        (error: unknown) => (error as { code?: string }).code === "validation_failed",
+      );
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("refuses to build a material larger than the message limit", async () => {
+    const h = await makeHarness();
+    try {
+      const ids: string[] = [];
+      for (let index = 0; index < 101; index += 1) {
+        const id = "cmsg_" + String(index).padStart(26, "0");
+        ids.push(id);
+        insertChatMessage(h.db, {
+          message: {
+            id,
+            conversationId: h.conversationId,
+            createdAt: NOW,
+            sender: "user",
+            content: { kind: "text", text: "长".repeat(20_000), attachments: [] },
+            mentions: { kind: "none" },
+            quoteMessageId: null,
+            replacesMessageId: null,
+            state: "sent",
+            retractedAt: null,
+          },
+        });
+      }
+      await assert.rejects(
+        h.chat.toTopic({ type: "chat.toTopic", conversationId: h.conversationId, messageIds: ids, name: "太大" } as never),
+        (error: unknown) => (error as { code?: string }).code === "validation_failed",
+      );
+      assert.equal((h.db.prepare("SELECT count(*) AS n FROM projects").get() as { n: number }).n, 0);
+    } finally {
+      h.db.close();
+    }
+  });
+
   it("retracts a message and its slots", async () => {
     const h = await makeHarness({ scripts: { deepseek: reply("答完了") } });
     try {

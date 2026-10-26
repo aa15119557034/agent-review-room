@@ -313,6 +313,8 @@ export function createDispatcher(deps: IpcDeps) {
         return chatService().retry(command);
       case "chat.cancelReply":
         return chatService().cancelReply(command);
+      case "chat.toTopic":
+        return chatService().toTopic(command);
 
       // 还没上线：明确拒绝，不要返回 undefined 让出参校验兜成 internal
       case "chat.attachment.pick":
@@ -320,8 +322,7 @@ export function createDispatcher(deps: IpcDeps) {
       case "chat.sticker.add":
       case "chat.sticker.update":
       case "chat.sticker.remove":
-      case "chat.toTopic":
-        throw new ChatError("validation_failed", "这个功能还没上线（D-31c / D-34 / D-36）");
+        throw new ChatError("validation_failed", "这个功能还没上线（D-34 / D-36）");
     }
   }
 

@@ -12,6 +12,7 @@ import {
   chatRecipients,
   chatRequired,
   createChatSend,
+  createChatToTopic,
   createConversation,
   currentVersion,
   findDirectConversation,
@@ -46,6 +47,8 @@ import { SCHEMA_V1 } from "../src/schema";
 import { SCHEMA_V2 } from "../src/schema";
 import { SCHEMA_V3, SCHEMA_V3_REBUILD } from "../src/schema-v3";
 import { SCHEMA_V4 } from "../src/schema-v4";
+import { SCHEMA_V5 } from "../src/schema-v5";
+import { SCHEMA_V6 } from "../src/schema-v6";
 
 const dirs: string[] = [];
 after(() => {
@@ -1150,6 +1153,86 @@ describe("chat send transaction (D-31b)", () => {
         assert.equal((db.prepare("SELECT count(*) AS n FROM " + table).get() as { n: number }).n, 0, table);
       }
       assert.equal(getConversation(db, group.id)?.lastActivityAt, before, "会话活跃时间也不能变");
+    } finally {
+      db.close();
+    }
+  });
+});
+describe("migration v7 (chat material)", () => {
+  it("rebuilds messages without losing rows, keeps triggers, and accepts chat_material", () => {
+    const file = tempFile("room-v7-");
+    const raw = new Database(file);
+    raw.pragma("foreign_keys = OFF");
+    raw.exec(SCHEMA_V1);
+    raw.exec(SCHEMA_V2);
+    raw.exec(SCHEMA_V3);
+    raw.exec(SCHEMA_V3_REBUILD);
+    raw.exec(SCHEMA_V4);
+    raw.exec(SCHEMA_V5);
+    raw.exec(SCHEMA_V6);
+    raw.pragma("user_version = 6");
+
+    raw.prepare("INSERT INTO projects (id, name, created_at) VALUES ('proj_old', '旧议题', ?)").run(at(0));
+    raw.prepare(
+      "INSERT INTO conversations (id, kind, direct_agent, title, pinned, muted, last_read_message_id, last_activity_at, created_at) " +
+        "VALUES ('conv_old', 'direct', 'deepseek', NULL, 0, 0, NULL, ?, ?)",
+    ).run(at(0), at(0));
+    raw.prepare(
+      "INSERT INTO messages (id, project_id, kind, source_agent, content, created_at) VALUES ('msg_old', 'proj_old', 'source_input', 'deepseek', '旧材料', ?)",
+    ).run(at(0));
+    raw.close();
+
+    const db = openDatabase(file);
+    try {
+      assert.equal(currentVersion(db), 7);
+      assert.equal((db.prepare("SELECT count(*) AS n FROM messages").get() as { n: number }).n, 1);
+      assert.equal((db.prepare("SELECT content FROM messages WHERE id = 'msg_old'").get() as { content: string }).content, "旧材料");
+      assert.deepEqual(db.pragma("foreign_key_check"), []);
+
+      // 新 kind 可以写
+      db.prepare(
+        "INSERT INTO messages (id, project_id, kind, conversation_id, chat_message_ids, content, created_at) " +
+          "VALUES ('msg_mat', 'proj_old', 'chat_material', 'conv_old', '[\"cmsg_x\"]', '材料', ?)",
+      ).run(at(0));
+      // 消息仍然不可变
+      assert.throws(() => db.prepare("UPDATE messages SET content = 'x' WHERE id = 'msg_mat'").run(), /immutable/);
+      assert.throws(() => db.prepare("DELETE FROM messages WHERE id = 'msg_mat'").run(), /immutable/);
+      // chat_material 必须带会话和消息 id
+      assert.throws(
+        () =>
+          db.prepare(
+            "INSERT INTO messages (id, project_id, kind, content, created_at) VALUES ('msg_bad', 'proj_old', 'chat_material', 'x', ?)",
+          ).run(at(0)),
+        /CHECK/,
+      );
+    } finally {
+      db.close();
+    }
+  });
+
+  it("creates the topic and its chat_material in one transaction", async () => {
+    const { db, queue } = { db: openDatabase(tempFile("room-v7-topic-")), queue: new WriteQueue() };
+    try {
+      const conversation = await createConversation(db, queue, {
+        members: { kind: "direct", agent: "deepseek" },
+        title: null,
+        createdAt: at(0),
+      });
+      const materialIds = ["cmsg_" + "0".repeat(26), "cmsg_" + "1".repeat(26)];
+      const result = await createChatToTopic(db, queue, {
+        projectId: "proj_" + ulid(),
+        materialId: "msg_" + ulid(),
+        conversationId: conversation.id,
+        name: "从聊天来的议题",
+        chatMessageIds: materialIds,
+        content: "整理好的材料",
+        createdAt: at(0),
+      });
+
+      assert.equal(result.project.fromConversationId, conversation.id);
+      assert.equal(result.material.kind, "chat_material");
+      assert.deepEqual(result.material.chatMessageIds, materialIds);
+      assert.equal(result.material.projectId, result.project.id);
     } finally {
       db.close();
     }
