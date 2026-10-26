@@ -68,7 +68,7 @@ export function createChatMock(ctx: ChatMockContext, options: ChatMockOptions = 
     runs: [] as ChatRun[],
     snapshots: [] as ChatSnapshot[],
     /** messageId → 发送意图和第一次的结果 */
-    sent: new Map<string, { intent: string; result: { message: UserChatMessage; slots: ChatReplySlot[]; runs: ChatRun[] } }>(),
+    sent: new Map<string, string>(),
   };
   const offline = new Set(options.offlineAgents ?? []);
   const failOnce = new Set(options.failOnce ?? []);
@@ -101,10 +101,15 @@ export function createChatMock(ctx: ChatMockContext, options: ChatMockOptions = 
     return m?.sender === "user" ? m : undefined;
   };
   const excluded = (m: ChatMessage) => isExcludedFromContext(m, userMessage);
+  const message_ = (mid: string) => {
+    const m = userMessage(mid);
+    if (!m) throw new MockError("not_found", `消息 ${mid} 不存在`);
+    return m;
+  };
 
-  /** 发送时这位能不能答 */
+  /** 发送时这位能不能答（和 D-31b 一样看聊天 profile，不看讨论用的 profileId） */
   const unavailableReason = (a: AgentProfile): ChatReplySlot["unavailableReason"] =>
-    a.nodeId === null || a.profileId === null ? "unconfigured" : a.pausedByUser ? "paused_by_user" : offline.has(a.id) ? "offline" : null;
+    a.nodeId === null || a.chatProfileId === null ? "unconfigured" : a.pausedByUser ? "paused_by_user" : offline.has(a.id) ? "offline" : null;
 
   const touch = (conv: Conversation, at: string) => {
     conv.lastActivityAt = at;
@@ -298,10 +303,14 @@ export function createChatMock(ctx: ChatMockContext, options: ChatMockOptions = 
       await ready;
       // ② 防重复（不占限流名额）
       const intent = chatSendIntentJson(req);
-      const first = c.sent.get(req.messageId);
-      if (first) {
-        if (first.intent !== intent) throw new MockError("idempotency_conflict", "同一个 messageId 发了不一样的内容");
-        return clone(first.result);
+      const firstIntent = c.sent.get(req.messageId);
+      if (firstIntent !== undefined) {
+        if (firstIntent !== intent) throw new MockError("idempotency_conflict", "同一个 messageId 发了不一样的内容");
+        // 和 D-31b 一样按现在的状态返回（回答位可能已经答完了），不是发送那一刻的副本
+        const message = message_(req.messageId);
+        const slots = c.slots.filter((s) => s.userMessageId === req.messageId);
+        const runs = c.runs.filter((r) => slots.some((s) => s.id === r.slotId));
+        return clone({ message, slots, runs });
       }
       const conv = conversation(req.conversationId);
       // ③ 限流
@@ -365,7 +374,7 @@ export function createChatMock(ctx: ChatMockContext, options: ChatMockOptions = 
         slots.push(s);
       }
       const result = clone({ message: um, slots, runs });
-      c.sent.set(um.id, { intent, result });
+      c.sent.set(um.id, intent);
       emit({ type: "chat.message.created", message: clone(um) });
       slots.forEach((s) => emit({ type: "chat.slot.updated", slot: clone(s) }));
       runs.forEach((r) => emit({ type: "chat.run.updated", run: clone(r) }));

@@ -1,6 +1,6 @@
 import type { ChatMentions, ConversationMembers, ControlEvent, Project } from "@room/schemas";
 import { ControlFailure, type RoomClient } from "./client";
-import { appendEvents, type AppState } from "./state";
+import type { AppState } from "./state";
 import {
   draftOf,
   emptyDraft,
@@ -66,18 +66,6 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
     }
   }
 
-  /** 把回答中的那些 Run 已经收到的流式文字补上（打开会话时） */
-  async function loadRunningEvents(runIds: string[]) {
-    const ids = runIds.filter((id) => !store.get().runEvents[id]);
-    if (!ids.length) return;
-    const evs = await Promise.all(ids.map((runId) => client.query({ type: "runs.events", runId }).catch(() => [])));
-    store.set((s) => {
-      const runEvents = { ...s.runEvents };
-      ids.forEach((id, i) => (runEvents[id] = appendEvents(runEvents[id], evs[i] ?? [])));
-      return { ...s, runEvents };
-    });
-  }
-
   let openToken = 0;
 
   async function openConversation(conversationId: string) {
@@ -92,7 +80,8 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
         slots: mergeSlots([], page.slots),
         nextCursor: page.nextCursor,
       }));
-      await loadRunningEvents(page.slots.filter((s) => s.outcome === "running" && s.runId).map((s) => s.runId!));
+      // 回答到一半关掉再打开：之前的流式文字补不回来（main 的聊天事件只推不存，契约也没有回放查询），
+      // 只显示「正在想…」，之后到的照常显示，答完以 chat.message.created 的正文为准
       await markRead();
       refreshListSoon();
     } catch (err) {

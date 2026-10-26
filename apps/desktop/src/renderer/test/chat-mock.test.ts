@@ -134,6 +134,9 @@ describe("chat mock follows C-34", () => {
     assert.equal((await raw({ ...req, content: text("改了") })).error, "idempotency_conflict");
     const page = await settled(q, conv.id);
     assert.equal(page.messages.filter((m) => m.sender === "user").length, 1);
+    // 答完之后再重发：返回现在的状态（已答），不是发送那一刻的 running
+    const c = await cmd<{ slots: ChatReplySlot[] }>(req);
+    assert.deepEqual(c.slots.map((s) => s.outcome), ["answered"]);
   });
 
   it("retract stops running answers (cancelled, one terminal event), then re-edit is a new message", async () => {

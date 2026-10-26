@@ -470,7 +470,7 @@ function MessageMenu({ message, now, children }: { message: ChatMessage; now: nu
         <div className="chat-menu" role="menu" onClick={(e) => e.stopPropagation()}>
           {item("复制", () => void navigator.clipboard?.writeText(messageText(message)))}
           {item("引用", () => actions.chat.quote(message.id), !usable)}
-          {item("多选", () => actions.chat.startSelect(usable ? message.id : undefined))}
+          {item("多选", () => actions.chat.startSelect(message.id), !usable)}
           {canRetract(message, now) && item("撤回", () => void actions.chat.retract(message.id))}
           {item("详情", () => actions.chat.openSheet({ kind: "message", messageId: message.id }))}
         </div>
