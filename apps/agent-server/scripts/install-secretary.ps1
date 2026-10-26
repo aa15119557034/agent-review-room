@@ -164,6 +164,53 @@ $template.port = $Port
 # 主控机上的节点 id 按 §2a：林离 controller-local-codex；C酱在江浩的电脑上，沿用模板里的 id
 if ($Agent -eq "codex") { $template.nodeId = "controller-local-codex" }
 
+# ---- 1.5 命令行：在建账号之前装好、试运行，装不上就什么都不动（只删这次新建的 cli 文件夹）
+# 原生命令写 stderr 时，5.1 在 $ErrorActionPreference = Stop 下会直接抛错、跳过退出码检查：临时改成 Continue，输出合并成文字
+function Invoke-Native([scriptblock]$run) {
+  $saved = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try { @(& $run 2>&1 | ForEach-Object { "$_" }) } finally { $ErrorActionPreference = $saved }
+}
+function Npm-Install([string[]]$specs, [string]$registry = "") {
+  $extra = @(); if ($registry) { $extra = @("--registry=$registry") }
+  $out = Invoke-Native { & $npmCmd install --prefix $cliDir --include=optional --no-fund --no-audit --loglevel=error @extra @specs }
+  return @{ ok = ($LASTEXITCODE -eq 0); out = ($out -join "`n") }
+}
+# 这次新建的文件夹（从里到外）：失败时删掉 cli，外面几层只在空着的时候删
+$cliNewDirs = @($cliDir, $nodeMine, (Join-Path $HomeDir "node"), $HomeDir) | Where-Object { -not (Test-Path -LiteralPath $_) }
+function Fail-Cli($msg) {
+  foreach ($d in $cliNewDirs) {
+    if (-not (Test-Path -LiteralPath $d)) { continue }
+    if ($d -eq $cliDir) { Remove-Item -LiteralPath $d -Recurse -Force -ErrorAction SilentlyContinue }
+    elseif (-not (Get-ChildItem -LiteralPath $d -Force)) { Remove-Item -LiteralPath $d -Force -ErrorAction SilentlyContinue }
+  }
+  Fail $msg
+}
+Step "安装 $cliPackage 到 $cliDir"
+# 已经装过就是升级到最新；npm 的普通安装不建链接（node\<秘书> 里也不能有链接，预检会查）
+New-Item -ItemType Directory -Force -Path $cliDir | Out-Null
+$r = Npm-Install @($cliPackage)
+if (-not $r.ok -or -not (Test-Path -LiteralPath $cliCmd)) { Fail-Cli "安装 $cliPackage 失败。检查网络后重试：`n$($r.out)" }
+# 平台原生包（比如 @openai/codex-win32-x64）是 optionalDependencies，镜像没同步时 npm 会悄悄跳过：缺了就按清单单独装，
+# 配置的镜像装不上再试官方源
+$arch = @{ AMD64 = "x64"; ARM64 = "arm64" }[$env:PROCESSOR_ARCHITECTURE]
+$pkgJson = Join-Path $cliDir ("node_modules\" + $cliPackage.Replace("/", "\") + "\package.json")
+$optional = (Get-Content -Raw -Encoding UTF8 $pkgJson | ConvertFrom-Json).PSObject.Properties["optionalDependencies"]
+if ($arch -and $optional) {
+  foreach ($dep in $optional.Value.PSObject.Properties) {
+    if ($dep.Name -notlike "*win32-$arch*") { continue }
+    if (Test-Path -LiteralPath (Join-Path $cliDir ("node_modules\" + $dep.Name.Replace("/", "\")))) { continue }
+    Write-Host "  补装平台包 $($dep.Name)（$($dep.Value)）"
+    $spec = "$($dep.Name)@$($dep.Value)"
+    $r = Npm-Install @($spec)
+    if (-not $r.ok) { $r = Npm-Install @($spec) "https://registry.npmjs.org" }
+    if (-not $r.ok) { Fail-Cli "补装 $spec 失败：`n$($r.out)" }
+  }
+}
+$versionOut = Invoke-Native { & $cliCmd --version }
+if ($LASTEXITCODE -ne 0 -or -not $versionOut) { Fail-Cli "$cliCmd 装好了但运行不了：`n$($versionOut -join "`n")" }
+Write-Host "  $Agent 版本：$($versionOut[0])"
+
 # ---- 2. 账号
 $user = "agentroom-$Agent"
 # 随机密码：32 字节随机数 + 固定的大小写 / 数字 / 符号后缀（满足复杂度要求）；不保存、不显示
@@ -186,16 +233,6 @@ foreach ($d in @($HomeDir, (Join-Path $HomeDir "memory"), $memory, $nodeMine, (J
   New-Item -ItemType Directory -Force -Path $d | Out-Null
 }
 foreach ($s in @("core", "notes", "journal", "inbox", "ext")) { New-Item -ItemType Directory -Force -Path (Join-Path $memory $s) | Out-Null }
-
-Step "安装 $cliPackage 到 $cliDir"
-# 已经装过就是升级到最新；npm 的普通安装不建链接（node\<秘书> 里也不能有链接，预检会查）
-New-Item -ItemType Directory -Force -Path $cliDir | Out-Null
-& $npmCmd install --prefix $cliDir --no-fund --no-audit --loglevel=error $cliPackage | Out-Null
-if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $cliCmd)) { Fail "安装 $cliPackage 失败（$cliCmd 不存在）。检查网络后重试" }
-# 不要写 2>$null：5.1 里 $ErrorActionPreference = Stop 时，重定向原生命令的 stderr 会直接抛错
-$cliVersion = (& $cliCmd --version | Select-Object -First 1)
-if ($LASTEXITCODE -ne 0 -or -not $cliVersion) { Fail "$cliCmd 装好了但运行不了" }
-Write-Host "  $Agent 版本：$cliVersion"
 
 $utf8 = [Text.UTF8Encoding]::new($false)
 $settingsPath = Join-Path $memory "memory.json"
@@ -300,7 +337,7 @@ if ($TokenReader -ne "") {
 # 「不管是否登录都运行」要求账号有「作为批处理作业登录」（SeBatchLogonRight）。带密码注册任务时 Windows 不会自动给，
 # 没有它任务能注册、schtasks /run 也报成功，但实际不会启动（LastTaskResult 267011）。用 LSA 接口加，不依赖系统语言
 Step "授予 $user「作为批处理作业登录」"
-Add-Type -TypeDefinition @"
+if (-not ("AgentRoomLsa" -as [type])) { Add-Type -TypeDefinition @"
 using System;
 using System.Runtime.InteropServices;
 public static class AgentRoomLsa {
@@ -327,7 +364,7 @@ public static class AgentRoomLsa {
     } finally { LsaClose(policy); }
   }
 }
-"@
+"@ }
 $accountSid = ([Security.Principal.NTAccount]$account).Translate([Security.Principal.SecurityIdentifier])
 $sidBytes = [byte[]]::new($accountSid.BinaryLength)
 $accountSid.GetBinaryForm($sidBytes, 0)
