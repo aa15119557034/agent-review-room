@@ -192,9 +192,10 @@ if (Test-Path -LiteralPath $binDir) {
   $want = @(Get-ChildItem -LiteralPath $binDir -Recurse -Force -File)
   $got = @(Get-ChildItem -LiteralPath (Join-Path $nodeAppNew "bin") -Recurse -Force -File)
   if ($want.Count -ne $got.Count) { Fail "复制 bin\ 不完整（应有 $($want.Count) 个文件，复制了 $($got.Count) 个）" }
-  # 每个文件都对一遍内容
+  # 每个文件都对一遍内容（相对路径按 Get-Item 的完整路径算，AppSource 是相对路径时也对得上）
+  $binFull = (Get-Item -LiteralPath $binDir).FullName.TrimEnd("\")
   foreach ($f in $want) {
-    $copy = Join-Path (Join-Path $nodeAppNew "bin") $f.FullName.Substring($binDir.Length).TrimStart("\")
+    $copy = Join-Path (Join-Path $nodeAppNew "bin") $f.FullName.Substring($binFull.Length).TrimStart("\")
     if (-not (Test-Path -LiteralPath $copy) -or (Get-FileHash -LiteralPath $f.FullName).Hash -ne (Get-FileHash -LiteralPath $copy).Hash) { Fail "复制 bin\ 不完整：$copy 和源文件不一样" }
   }
 }
