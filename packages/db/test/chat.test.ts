@@ -1023,6 +1023,64 @@ describe("chat send transaction (D-31b)", () => {
     }
   });
 
+  it("rejects a send when a recipient's availability is missing (snapshot present)", async () => {
+    const { db, queue } = fresh();
+    try {
+      const group = await createConversation(db, queue, {
+        members: { kind: "group", agents: ["claude", "codex"] },
+        title: null,
+      });
+      const message = userMessage(group.id);
+      await assert.rejects(
+        createChatSend(db, queue, {
+          conversation: group,
+          message,
+          requestHash: null,
+          createdAt: at(0),
+          // 只探测了 claude：codex 的 paused_by_user / 离线都不能被默认成「能答」
+          availability: new Map([["claude", { kind: "available" as const }]]),
+          snapshots: new Map([["claude", snapshotFor(group.id, message.id, "claude")]]),
+          adapterIds: new Map([["claude", "remote:claude-chat"]]),
+        }),
+        /missing availability for chat recipient codex/,
+      );
+      for (const table of ["chat_messages", "chat_reply_slots", "chat_snapshots", "chat_runs"]) {
+        assert.equal((db.prepare("SELECT count(*) AS n FROM " + table).get() as { n: number }).n, 0, table);
+      }
+    } finally {
+      db.close();
+    }
+  });
+
+  it("rejects missing availability before anything is written, even without a snapshot", async () => {
+    const { db, queue } = fresh();
+    try {
+      const group = await createConversation(db, queue, {
+        members: { kind: "group", agents: ["claude", "codex"] },
+        title: null,
+      });
+      const message = userMessage(group.id);
+      await assert.rejects(
+        createChatSend(db, queue, {
+          conversation: group,
+          message,
+          requestHash: null,
+          createdAt: at(0),
+          availability: new Map([["claude", { kind: "available" as const }]]),
+          snapshots: new Map(),
+          adapterIds: new Map(),
+        }),
+        /missing availability for chat recipient codex/,
+        "先报数据缺失，而不是先报缺 Snapshot",
+      );
+      assert.equal((db.prepare("SELECT count(*) AS n FROM chat_messages").get() as { n: number }).n, 0);
+      assert.equal((db.prepare("SELECT count(*) AS n FROM chat_reply_slots").get() as { n: number }).n, 0);
+      assert.equal(getConversation(db, group.id)?.lastActivityAt !== undefined, true);
+    } finally {
+      db.close();
+    }
+  });
+
   it("rejects a send prepared against stale conversation members", async () => {
     const { db, queue } = fresh();
     try {

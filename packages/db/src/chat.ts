@@ -1067,11 +1067,17 @@ export function createChatSend(
       throw new ChatSendConflictError("conversation members changed while the snapshots were being built");
     }
 
-    const recipients: ChatSendRecipient[] = chatRecipients(conversation, message.mentions).map((agent) => ({
-      agent,
-      required: chatRequired(conversation, message.mentions, agent),
-      availability: input.availability.get(agent) ?? { kind: "available" },
-    }));
+    // availability 是每位收件人的探测结果，必须由调用方显式给出。
+    // 不能把「漏传」解释成「能答」：用户暂停的秘书会因此照样开始回答。
+    const recipients: ChatSendRecipient[] = chatRecipients(conversation, message.mentions).map((agent) => {
+      const availability = input.availability.get(agent);
+      if (availability === undefined) throw new Error("missing availability for chat recipient " + agent);
+      return {
+        agent,
+        required: chatRequired(conversation, message.mentions, agent),
+        availability,
+      };
+    });
 
     insertChatMessage(db, { message, requestHash: input.requestHash });
 
