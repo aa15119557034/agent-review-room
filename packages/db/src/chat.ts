@@ -684,6 +684,25 @@ const toChatRun = (row: ChatRunRow): ChatRun => ({
 });
 
 /**
+ * 并发发送：同一个 messageId 已经落库（另一个请求先提交了）。
+ * 调用方应当重新读那条消息，按防重复规则返回第一次的结果，而不是报 internal。
+ */
+export class ChatSendDuplicateMessageError extends Error {
+  constructor(readonly messageId: string) {
+    super("chat message already exists: " + messageId);
+    this.name = "ChatSendDuplicateMessageError";
+  }
+}
+
+/** 事务里的限流兜底：并发发送时事务外那次计数会漏 */
+export class ChatSendRateLimitError extends Error {
+  constructor(max: number) {
+    super("chat rate limit exceeded: " + max + " messages per minute");
+    this.name = "ChatSendRateLimitError";
+  }
+}
+
+/**
  * 发送前的准备（读会话、拼 Snapshot）和提交之间会话变了（成员 / 类型）。
  * 调用方必须重建 Snapshot 再发；不能按旧成员建回答位。
  */
@@ -1025,6 +1044,8 @@ export interface CreateChatSendInput {
   /** Run 的 adapterId（例如 "remote:deepseek-chat"） */
   adapterIds: ReadonlyMap<string, string>;
   createdAt: string;
+  /** 限流兜底：在这个事务里再数一次（并发发送时事务外那次会漏） */
+  rateLimit?: { since: string; max: number };
 }
 
 export interface CreateChatSendResult {
@@ -1051,7 +1072,17 @@ export function createChatSend(
     if (message.sender !== "user") throw new Error("chat send must create a user message");
     if (message.conversationId !== input.conversation.id) throw new Error("chat message belongs to another conversation");
     if (db.prepare("SELECT 1 FROM chat_messages WHERE id = ?").get(message.id) !== undefined) {
-      throw new Error("chat message already exists: " + message.id);
+      throw new ChatSendDuplicateMessageError(message.id);
+    }
+
+    // 限流也在这个事务里再数一次：事务外那次和真正写入之间隔着探测的 await，并发时能一起越过去
+    if (input.rateLimit !== undefined) {
+      const recent = db
+        .prepare(
+          "SELECT count(*) AS n FROM chat_messages WHERE conversation_id = ? AND sender = 'user' AND created_at > ?",
+        )
+        .get(message.conversationId, input.rateLimit.since) as { n: number };
+      if (recent.n >= input.rateLimit.max) throw new ChatSendRateLimitError(input.rateLimit.max);
     }
 
     // 拼 Snapshot 是在事务外做的，中间用户可能改了成员：在同一个事务里重读会话，

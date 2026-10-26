@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { openDatabase, repairInterruptedRuns, WriteQueue } from "@room/db";
 import { HttpRemoteAgentAdapter } from "@room/remote-client";
 import { IPC_CHANNELS, type ControlEvent } from "@room/schemas";
+import { ChatService } from "./chat";
 import { DiscussionService } from "./discussion";
 import { createDispatcher } from "./ipc";
 import { migrateLegacyReviewerNode, NodeService, resolveRunTarget } from "./nodes";
@@ -125,14 +126,38 @@ async function bootstrap(): Promise<void> {
 
   const nodes = new NodeService({ repo, settings });
 
+  // D-31b：聊天服务。Run 走各自的聊天 profile（只读、无工具），和讨论室的 Run 分开
+  const chat = new ChatService({
+    db,
+    queue,
+    repo,
+    settings,
+    emit: broadcast,
+    adapterFactory: async (target) => {
+      const adapter = new HttpRemoteAgentAdapter({
+        nodeId: target.nodeId,
+        baseUrl: target.baseUrl,
+        profileId: target.profileId,
+        token: target.token,
+        heartbeatTimeoutMs: 15_000,
+        reconnectGraceMs: 30_000,
+        requestTimeoutMs: 10_000,
+      });
+      await adapter.initialize();
+      return adapter;
+    },
+  });
+  const repairedChat = await chat.repairInterrupted();
+
   const dispatcher = createDispatcher({
     repo,
     settings,
     orchestrator,
     discussion,
+    chat,
     nodes,
     appVersion: app.getVersion(),
-    recoveredRuns: repaired.repaired.length,
+    recoveredRuns: repaired.repaired.length + repairedChat,
     emit: broadcast,
   });
 
@@ -140,8 +165,9 @@ async function bootstrap(): Promise<void> {
   ipcMain.handle(IPC_CHANNELS.query, async (_event, request: unknown) => dispatcher.handleQuery(request));
 
   app.on("before-quit", () => {
-    // 让节点立刻停下，而不是等租约过期（abort 由 orchestrator 统一发出）
+    // 让节点立刻停下，而不是等租约过期（abort 由 orchestrator / chat 统一发出）
     orchestrator.cancelAll();
+    chat.cancelAll();
     try {
       db.close();
     } catch {
