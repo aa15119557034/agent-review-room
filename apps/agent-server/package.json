@@ -8,10 +8,14 @@
     "start": "tsx src/main.ts",
     "typecheck": "tsc -p .",
     "try": "tsx src/try-run.ts",
-    "test": "tsx --test test/*.test.ts"
+    "test": "tsx --test test/*.test.ts",
+    "bundle": "node scripts/bundle.mjs"
   },
   "dependencies": {
     "@room/schemas": "workspace:*",
     "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
   }
 }

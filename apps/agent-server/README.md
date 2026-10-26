@@ -176,3 +176,30 @@ Windows 相关逻辑（`.cmd` 包装、taskkill 参数）用注入的模拟环�
 - [ ] 节点被强杀后的孤儿进程清理（pid 文件）
 - [ ] 权限请求中继（Phase 0 不需要：Reviewer 不使用工具）
 - [ ] TLS
+
+## 秘书的记忆文件夹和独立账号（S-20 第一段）
+
+规则见 `docs/design/ADR-003-聊天空间.md` §2a。每位秘书在她所在的电脑上有：
+
+- `<AgentRoom>\memory\<秘书>\`：记忆（`core` 每次都带，`journal` 按日期，`notes` 按修改时间，`memory.json` 定预算）
+- `<AgentRoom>\node\<秘书>\`：她的节点配置、Token、命令行的工作目录
+- 低权限账号 `agentroom-<秘书>`，计划任务 `AgentRoom-<秘书>` 以这个账号开机启动节点
+
+用**以管理员身份运行的 Windows PowerShell**（`powershell.exe`，不是 `pwsh`）一次装一位。现在只能装 `codex` 和 `claude`：`deepseek` 要等 D-40 和第二段（API Key 怎么给新账号）之后，脚本会拒绝：
+
+```powershell
+# 先装依赖（打包要用 esbuild）；Node 要 22 或更高，用官方安装包装到 Program Files
+pnpm install --frozen-lockfile
+.\apps\agent-server\scripts\install-secretary.ps1 -Agent codex -HomeDir D:\AgentRoom -Port 7421 `
+  -ConfigTemplate .\apps\agent-server\agent-server.config.json -AppSource (Get-Location) -TokenReader $env:USERNAME
+```
+
+`-TokenReader` 只能是本机的一个用户账号，或者正在运行脚本的这个账号（域账号、组都会被拒绝）。以前装过 #98 早期版本、`node\app` 里有 `node_modules` 的，先用 `rmdir /s /q` 删掉整个 `node\app` 再装。
+
+现在的模板只有讨论 profile（比如 `codex-discuss`），没有 `<秘书>-chat` 也能装：账号、文件夹、权限、计划任务照装，聊天 profile 和读记忆在第二段加。
+
+主控机上按 §2a「切换顺序」：先装 `codex`（7421）；汐的 D-40 迁移完成后才装 `deepseek`（7420）。
+
+节点配置新增的字段：`homeDir`、`agent`（填了以后只能跑 `<agent>-` 开头的 profile）、`runAsUser`（进程账号不对就拒绝启动）、聊天 profile 的 `memory: { "dir": "memory/<agent>", "provider": "folder" }`。安装脚本会先把节点打成一个文件（`pnpm --filter @room/agent-server run bundle` → `dist/agent-server.mjs`），`node\app` 里只有它和 `bin\`，没有 `node_modules`；重装时新程序先放进 `node\app.new`，复制、校验、设权限、注册计划任务都成功后才替换 `node\app`，中途失败时其他秘书正在用的旧版本不动；计划任务直接用 Program Files 里的 `node.exe` 运行它。不用安装脚本、手工配置的节点：`homeDir` 和它的上级不能是任何链接、junction 或挂载点（节点用 `lstat` 查，卷挂载点 Node 不一定认得出，以安装脚本的检查为准）。启动时会检查 `homeDir` 在本机 NTFS 盘上，并按规则读一遍记忆，只打印条数和跳过的原因，不打印正文。
+
+现在还**不会**把记忆填进聊天：那一步要用 X-30 的包裹函数，合并后做第二段；在那之前 health 不报 `memoryProfiles`。
