@@ -79,7 +79,7 @@ function Assert-NoReparse([string]$root) {
   while ($stack.Count -gt 0) {
     $dir = $stack.Pop()
     foreach ($item in @(Get-ChildItem -LiteralPath $dir -Force -ErrorAction Stop)) {
-      if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) { Fail "$($item.FullName) 是链接、junction 或挂载点：AgentRoom 里面不能有。先删掉再装（以前装过旧版本、node\app 里有 node_modules 的，用 cmd 的 rmdir /s /q 删掉整个 node\app）" }
+      if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) { Fail "$($item.FullName) 是链接、junction 或挂载点：AgentRoom 里面不能有。先删掉再装（以前装过旧版本、node\app、node\app.new 或 node\app.old 里有 node_modules 的，用 cmd 的 rmdir /s /q 删掉那个文件夹）" }
       if ($item.PSIsContainer) { $stack.Push($item.FullName) }  # 不进重解析点（上面已经拒绝），所以不会绕圈
     }
   }
@@ -95,6 +95,12 @@ if ($TokenReader -ne "") {
   if (-not ($isLocalUser -or $readerSid -eq $me.User.Value)) {
     Fail "TokenReader 必须是本机的一个用户账号（运行桌面端的那个），不能是 $TokenReader"
   }
+  # 以 SYSTEM / 服务账号运行脚本时 $me 自己就是服务账号：真人账号的 SID 是 S-1-5-21-…（本机、域、微软账号）或 S-1-12-1-…（Entra 账号），
+  # 其他的（S-1-5-18/19/20、S-1-5-80-… 等）一律不行
+  if (-not ($readerSid.StartsWith("S-1-5-21-") -or $readerSid.StartsWith("S-1-12-1-"))) { Fail "TokenReader 不能是系统或服务账号（$TokenReader）：要填运行桌面端的那个人的账号" }
+  # 秘书和插件的节点账号也不行：她们不该读到别人的 Token。按 SID 解析回来的账号名判断，不看输入的写法
+  $readerName = ([Security.Principal.SecurityIdentifier]$readerSid).Translate([Security.Principal.NTAccount]).Value
+  if ($readerName -match '(^|\\)agentroom-') { Fail "TokenReader 不能是秘书或插件的节点账号（$readerName）" }
 }
 $memory = Join-Path $HomeDir "memory\$Agent"
 $nodeApp = Join-Path $HomeDir "node\app"
@@ -181,13 +187,25 @@ New-Item -ItemType Directory -Path $nodeAppNew | Out-Null
 # 只放打包好的节点和 bin\ 里的脚本：没有 node_modules、没有配置和 Token
 Copy-Item -LiteralPath $bundle -Destination (Join-Path $nodeAppNew "agent-server.mjs")
 $binDir = Join-Path $AppSource "apps\agent-server\bin"
+# bin\ 源目录里不能有链接：逐文件 hash 按路径前缀取相对路径，链接会让路径对不上，也可能把别处的文件复制进来
+if (Test-Path -LiteralPath $binDir) {
+  if ((Get-Item -LiteralPath $binDir -Force).Attributes -band [IO.FileAttributes]::ReparsePoint) { Fail "$binDir 是链接或 junction" }
+  $binLink = Get-ChildItem -LiteralPath $binDir -Recurse -Force -Attributes ReparsePoint -ErrorAction SilentlyContinue | Select-Object -First 1
+  if ($binLink) { Fail "$binDir 里有链接或 junction：$($binLink.FullName)" }
+}
 if (Test-Path -LiteralPath $binDir) { Copy-Item -LiteralPath $binDir -Destination (Join-Path $nodeAppNew "bin") -Recurse }
 # 校验：复制出来的和打包出来的逐字节一样
 if ((Get-FileHash -LiteralPath $bundle).Hash -ne (Get-FileHash -LiteralPath (Join-Path $nodeAppNew "agent-server.mjs")).Hash) { Fail "复制节点程序不完整（app.new 里的和打包出来的不一样）" }
 if (Test-Path -LiteralPath $binDir) {
-  $want = @(Get-ChildItem -LiteralPath $binDir -Recurse -Force -File).Count
-  $got = @(Get-ChildItem -LiteralPath (Join-Path $nodeAppNew "bin") -Recurse -Force -File).Count
-  if ($want -ne $got) { Fail "复制 bin\ 不完整（应有 $want 个文件，复制了 $got 个）" }
+  $want = @(Get-ChildItem -LiteralPath $binDir -Recurse -Force -File)
+  $got = @(Get-ChildItem -LiteralPath (Join-Path $nodeAppNew "bin") -Recurse -Force -File)
+  if ($want.Count -ne $got.Count) { Fail "复制 bin\ 不完整（应有 $($want.Count) 个文件，复制了 $($got.Count) 个）" }
+  # 每个文件都对一遍内容（相对路径按 Get-Item 的完整路径算，AppSource 是相对路径时也对得上）
+  $binFull = (Get-Item -LiteralPath $binDir).FullName.TrimEnd("\")
+  foreach ($f in $want) {
+    $copy = Join-Path (Join-Path $nodeAppNew "bin") $f.FullName.Substring($binFull.Length).TrimStart("\")
+    if (-not (Test-Path -LiteralPath $copy) -or (Get-FileHash -LiteralPath $f.FullName).Hash -ne (Get-FileHash -LiteralPath $copy).Hash) { Fail "复制 bin\ 不完整：$copy 和源文件不一样" }
+  }
 }
 $secretFiles = @("agent-server.config*.json", "agent-server.token", ".env*")
 $leaked = Get-ChildItem -LiteralPath $nodeAppNew -Recurse -Force -File -Include $secretFiles -ErrorAction SilentlyContinue

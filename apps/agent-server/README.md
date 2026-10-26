@@ -194,7 +194,9 @@ pnpm install --frozen-lockfile
   -ConfigTemplate .\apps\agent-server\agent-server.config.json -AppSource (Get-Location) -TokenReader $env:USERNAME
 ```
 
-`-TokenReader` 只能是本机的一个用户账号，或者正在运行脚本的这个账号（域账号、组都会被拒绝）。以前装过 #98 早期版本、`node\app` 里有 `node_modules` 的，先用 `rmdir /s /q` 删掉整个 `node\app` 再装。
+`-TokenReader` 只能是本机的一个用户账号，或者正在运行脚本的这个账号（这一条可以是域账号或 Entra 账号）；其他域账号、组都会被拒绝。`-TokenReader` 也不能是 SYSTEM、服务账号或 `agentroom-` 开头的节点账号。以前装过 #98 早期版本、`node\app`（或 `node\app.new`、`node\app.old`）里有 `node_modules` 的，先用 `rmdir /s /q` 删掉那个文件夹再装。
+
+重装替换程序时是两次改名（`node\app` → `app.old`，`app.new` → `app`）。如果正好在两次改名之间断电，`node\app` 会不见、所有秘书的节点都起不来；这时把 `node\app.old` 改名回 `app`，再重跑安装脚本（脚本发现这种情况也会拒绝继续并提示这一步）。
 
 现在的模板只有讨论 profile（比如 `codex-discuss`），没有 `<秘书>-chat` 也能装：账号、文件夹、权限、计划任务照装，聊天 profile 和读记忆在第二段加。
 
