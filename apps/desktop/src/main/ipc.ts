@@ -13,6 +13,7 @@ import {
   type ControlResult,
   type QueryRequest,
 } from "@room/schemas";
+import { ChatError, type ChatService } from "./chat";
 import { DiscussionError, type DiscussionService } from "./discussion";
 import type { NodeService } from "./nodes";
 import type { RunOrchestrator } from "./orchestrator";
@@ -31,6 +32,8 @@ export interface IpcDeps {
   readonly settings: SettingsStore;
   readonly orchestrator: RunOrchestrator;
   readonly discussion: DiscussionService;
+  /** D-31b：聊天服务；测试里可以不传（那时 chat.* 返回 internal） */
+  readonly chat?: ChatService;
   readonly nodes: NodeService;
   readonly appVersion: string;
   readonly recoveredRuns: number;
@@ -60,6 +63,9 @@ function mapError(error: unknown): ControlResult<unknown> {
   if (error instanceof DiscussionError) {
     return errorResult(error.code, error.message);
   }
+  if (error instanceof ChatError) {
+    return errorResult(error.code, error.message);
+  }
   if (error instanceof StaleSnapshotError) {
     return errorResult("stale_snapshot" as never, "这份 Prompt 已经变了，请重新预览再批准");
   }
@@ -81,6 +87,11 @@ function mapError(error: unknown): ControlResult<unknown> {
 
 export function createDispatcher(deps: IpcDeps) {
   const { repo, settings, orchestrator } = deps;
+
+  const chatService = (): ChatService => {
+    if (deps.chat === undefined) throw new ControlFailure("internal", "聊天服务没有启动");
+    return deps.chat;
+  };
 
   async function handleCommand(raw: unknown): Promise<ControlResult<unknown>> {
     const parsed = ControlCommand.safeParse(raw);
@@ -286,6 +297,31 @@ export function createDispatcher(deps: IpcDeps) {
         }
         return testReviewerNode({ baseUrl: command.baseUrl, token, profileId: command.profileId });
       }
+
+      // ---------------------------------------------------------------- 聊天（D-31b）
+      case "chat.conversation.create":
+        return chatService().createConversation(command);
+      case "chat.conversation.update":
+        return chatService().updateConversation(command);
+      case "chat.conversation.markRead":
+        return chatService().markRead(command);
+      case "chat.send":
+        return chatService().send(command);
+      case "chat.retract":
+        return chatService().retract(command);
+      case "chat.retry":
+        return chatService().retry(command);
+      case "chat.cancelReply":
+        return chatService().cancelReply(command);
+
+      // 还没上线：明确拒绝，不要返回 undefined 让出参校验兜成 internal
+      case "chat.attachment.pick":
+      case "chat.voice.import":
+      case "chat.sticker.add":
+      case "chat.sticker.update":
+      case "chat.sticker.remove":
+      case "chat.toTopic":
+        throw new ChatError("validation_failed", "这个功能还没上线（D-31c / D-34 / D-36）");
     }
   }
 
@@ -387,6 +423,27 @@ export function createDispatcher(deps: IpcDeps) {
           ts: row.ts,
         })) as AgentEvent[];
       }
+
+      // ---------------------------------------------------------------- 聊天（D-31b）
+      case "chat.conversations.list":
+        return chatService().listConversations();
+      case "chat.conversations.get":
+        return chatService().getConversation(query.conversationId);
+      case "chat.messages.list":
+        return chatService().listMessages(query);
+      case "chat.slots.runs":
+        return chatService().listSlotRuns(query.slotId);
+      case "chat.runs.get":
+        return chatService().getRun(query.runId);
+      case "chat.snapshots.get":
+        return chatService().getSnapshot(query.snapshotId);
+      case "chat.summaries.list":
+        // 历史摘要还没接（X-30 / 下一段）
+        return [];
+      case "chat.stickers.list":
+        return [];
+      case "chat.voice.get":
+        throw new ChatError("not_found", "录音还没上线（D-34）");
     }
   }
 
