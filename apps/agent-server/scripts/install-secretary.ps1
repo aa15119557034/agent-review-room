@@ -13,7 +13,7 @@ S-20：在这台电脑上给一位秘书安排「家」（ADR-003 §2a）。用�
   7. 打开一个以这个账号运行的窗口，在里面登录这位秘书的命令行（Claude / Codex）
 
 主控机上按 ADR-003 §2a「切换顺序」：先装 codex（7421）；D-40 迁移完成后才装 deepseek（7420）。
-已有的记忆、文件不会被覆盖；重复运行只补缺的、重设权限。
+已有的记忆、文件不会被覆盖；重复运行只补缺的、重设权限。node\app 的程序整份换成新版本：先在 node\app.new 里准备、校验、设好权限，所有步骤都成功后最后才换上，中途失败时旧版本原样不动。
 #>
 #Requires -Version 5.1
 [CmdletBinding()]
@@ -98,6 +98,9 @@ if ($TokenReader -ne "") {
 }
 $memory = Join-Path $HomeDir "memory\$Agent"
 $nodeApp = Join-Path $HomeDir "node\app"
+# 新程序先放在 app.new 里准备好、校验好、设好权限，最后一步才换上；中途失败时 node\app 原样不动（其他秘书的节点也在用它）
+$nodeAppNew = Join-Path $HomeDir "node\app.new"
+$nodeAppOld = Join-Path $HomeDir "node\app.old"
 $nodeMine = Join-Path $HomeDir "node\$Agent"
 if (-not (Test-Path -LiteralPath $ConfigTemplate)) { Fail "找不到配置模板 $ConfigTemplate" }
 # 节点打成一个文件（scripts/bundle.mjs），node\app 里不放 node_modules：pnpm 的包是 junction，和「AgentRoom 里不能有链接」冲突
@@ -146,7 +149,7 @@ if (Get-LocalUser -Name $user -ErrorAction SilentlyContinue) {
 $account = "$env:COMPUTERNAME\$user"
 
 # ---- 3. 文件夹
-foreach ($d in @($HomeDir, (Join-Path $HomeDir "memory"), $memory, $nodeApp, $nodeMine, (Join-Path $nodeMine "sandbox"))) {
+foreach ($d in @($HomeDir, (Join-Path $HomeDir "memory"), $memory, $nodeMine, (Join-Path $nodeMine "sandbox"))) {
   New-Item -ItemType Directory -Force -Path $d | Out-Null
 }
 foreach ($s in @("core", "notes", "journal", "inbox", "ext")) { New-Item -ItemType Directory -Force -Path (Join-Path $memory $s) | Out-Null }
@@ -170,15 +173,25 @@ if (-not (Test-Path $readme)) {
 "@, $utf8)
 }
 
-Step "复制节点程序到 $nodeApp"
+Step "准备新的节点程序 $nodeAppNew"
+# 上次失败留下的 app.new / app.old 是本脚本自己复制的（预检已确认里面没有链接），直接删
+if (-not (Test-Path -LiteralPath $nodeApp) -and (Test-Path -LiteralPath $nodeAppOld)) { Fail "node\app 不见了、app.old 还在：先把 app.old 改名回 app 再重试" }
+foreach ($d in @($nodeAppNew, $nodeAppOld)) { if (Test-Path -LiteralPath $d) { Remove-Item -LiteralPath $d -Recurse -Force } }
+New-Item -ItemType Directory -Path $nodeAppNew | Out-Null
 # 只放打包好的节点和 bin\ 里的脚本：没有 node_modules、没有配置和 Token
-Get-ChildItem -LiteralPath $nodeApp -Force | Remove-Item -Recurse -Force
-Copy-Item -LiteralPath $bundle -Destination (Join-Path $nodeApp "agent-server.mjs")
+Copy-Item -LiteralPath $bundle -Destination (Join-Path $nodeAppNew "agent-server.mjs")
 $binDir = Join-Path $AppSource "apps\agent-server\bin"
-if (Test-Path -LiteralPath $binDir) { Copy-Item -LiteralPath $binDir -Destination (Join-Path $nodeApp "bin") -Recurse }
+if (Test-Path -LiteralPath $binDir) { Copy-Item -LiteralPath $binDir -Destination (Join-Path $nodeAppNew "bin") -Recurse }
+# 校验：复制出来的和打包出来的逐字节一样
+if ((Get-FileHash -LiteralPath $bundle).Hash -ne (Get-FileHash -LiteralPath (Join-Path $nodeAppNew "agent-server.mjs")).Hash) { Fail "复制节点程序不完整（app.new 里的和打包出来的不一样）" }
+if (Test-Path -LiteralPath $binDir) {
+  $want = @(Get-ChildItem -LiteralPath $binDir -Recurse -Force -File).Count
+  $got = @(Get-ChildItem -LiteralPath (Join-Path $nodeAppNew "bin") -Recurse -Force -File).Count
+  if ($want -ne $got) { Fail "复制 bin\ 不完整（应有 $want 个文件，复制了 $got 个）" }
+}
 $secretFiles = @("agent-server.config*.json", "agent-server.token", ".env*")
-$leaked = Get-ChildItem -LiteralPath $nodeApp -Recurse -Force -File -Include $secretFiles -ErrorAction SilentlyContinue
-if ($leaked) { Fail "node\app 里还有不该复制的文件：$($leaked[0].FullName)" }
+$leaked = Get-ChildItem -LiteralPath $nodeAppNew -Recurse -Force -File -Include $secretFiles -ErrorAction SilentlyContinue
+if ($leaked) { Fail "app.new 里有不该复制的文件：$($leaked[0].FullName)" }
 
 # ---- 4. 权限
 # 每次都整份重建，不在旧的上面加：以前手工给过的、换掉的 TokenReader，重跑后都不再有权限
@@ -203,8 +216,8 @@ $readApp = @($secretaries | ForEach-Object { "${_}:(OI)(CI)(RX)" })
 Set-OnlyAcl $HomeDir (@("${owner}:(OI)(CI)F") + $traverse)
 Set-OnlyAcl (Join-Path $HomeDir "memory") (@("${owner}:(OI)(CI)F") + $traverse)
 Set-OnlyAcl (Join-Path $HomeDir "node") (@("${owner}:(OI)(CI)F") + $traverse)
-# 程序树整棵重建：子文件上以前留下的写权限也要清掉（所有秘书都会执行这里的程序）
-Set-OnlyAcl $nodeApp (@("${owner}:(OI)(CI)F") + $readApp) -Tree
+# 程序树整棵重建：子文件上以前留下的写权限也要清掉（所有秘书都会执行这里的程序）。设在 app.new 上，换上去后就是这份
+Set-OnlyAcl $nodeAppNew (@("${owner}:(OI)(CI)F") + $readApp) -Tree
 # 这位秘书的记忆：整棵树重建。文件夹本身和 memory.json 她能读（不继承，所以 inbox / ext 她没有权限）
 Set-OnlyAcl $memory @("${owner}:(OI)(CI)F", "${account}:(RX)") -Tree
 icacls $settingsPath /grant:r "${account}:(R)" /Q | Out-Null; Icacls-Ok $settingsPath
@@ -248,6 +261,23 @@ Register-ScheduledTask -TaskName "AgentRoom-$Agent" -Action $action -Trigger $tr
 # ---- 防火墙：只放这个端口、只放专用网络
 if (-not (Get-NetFirewallRule -DisplayName "AgentRoom $Agent $Port" -ErrorAction SilentlyContinue)) {
   New-NetFirewallRule -DisplayName "AgentRoom $Agent $Port" -Direction Inbound -Protocol TCP -LocalPort $Port -Action Allow -Profile Private | Out-Null
+}
+
+# ---- 换上新程序：前面任何一步失败都不会走到这里，node\app 还是旧的
+Step "换上新的节点程序"
+if (Test-Path -LiteralPath $nodeApp) {
+  # node\app 里有文件被占用时改名会失败：这时什么都没动，旧版本照常可用
+  try { [IO.Directory]::Move($nodeApp, $nodeAppOld) } catch { Fail "node\app 正在被占用，没有替换，旧版本照常可用；关掉占用的程序后重试：$($_.Exception.Message)" }
+}
+try {
+  [IO.Directory]::Move($nodeAppNew, $nodeApp)
+} catch {
+  if (Test-Path -LiteralPath $nodeAppOld) { [IO.Directory]::Move($nodeAppOld, $nodeApp) }
+  Fail "换上新程序失败，已恢复旧的 node\app：$($_.Exception.Message)"
+}
+# 已经运行的节点不受影响（程序启动时读一次）；重启后用新版本。旧版本删不掉只提示，下次安装时再删
+if (Test-Path -LiteralPath $nodeAppOld) {
+  try { Remove-Item -LiteralPath $nodeAppOld -Recurse -Force } catch { Write-Host "  旧程序 $nodeAppOld 没删掉（可能有文件被占用），不影响使用；下次安装会再删" -ForegroundColor Yellow }
 }
 
 # ---- 7. 在这个账号下登录命令行
