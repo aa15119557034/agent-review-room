@@ -95,10 +95,12 @@ if ($TokenReader -ne "") {
   if (-not ($isLocalUser -or $readerSid -eq $me.User.Value)) {
     Fail "TokenReader 必须是本机的一个用户账号（运行桌面端的那个），不能是 $TokenReader"
   }
-  # 以 SYSTEM / 服务账号运行脚本时 $me 自己就是服务账号：真人账号的 SID 都是 S-1-5-21-…，其他的（S-1-5-18/19/20、S-1-5-80-… 等）一律不行
-  if (-not $readerSid.StartsWith("S-1-5-21-")) { Fail "TokenReader 不能是系统或服务账号（$TokenReader）：要填运行桌面端的那个人的账号" }
-  # 秘书和插件的节点账号也不行：她们不该读到别人的 Token
-  if ($TokenReader -match '(^|\\)agentroom-') { Fail "TokenReader 不能是秘书或插件的节点账号（$TokenReader）" }
+  # 以 SYSTEM / 服务账号运行脚本时 $me 自己就是服务账号：真人账号的 SID 是 S-1-5-21-…（本机、域、微软账号）或 S-1-12-1-…（Entra 账号），
+  # 其他的（S-1-5-18/19/20、S-1-5-80-… 等）一律不行
+  if (-not ($readerSid.StartsWith("S-1-5-21-") -or $readerSid.StartsWith("S-1-12-1-"))) { Fail "TokenReader 不能是系统或服务账号（$TokenReader）：要填运行桌面端的那个人的账号" }
+  # 秘书和插件的节点账号也不行：她们不该读到别人的 Token。按 SID 解析回来的账号名判断，不看输入的写法
+  $readerName = ([Security.Principal.SecurityIdentifier]$readerSid).Translate([Security.Principal.NTAccount]).Value
+  if ($readerName -match '(^|\\)agentroom-') { Fail "TokenReader 不能是秘书或插件的节点账号（$readerName）" }
 }
 $memory = Join-Path $HomeDir "memory\$Agent"
 $nodeApp = Join-Path $HomeDir "node\app"
@@ -185,6 +187,12 @@ New-Item -ItemType Directory -Path $nodeAppNew | Out-Null
 # 只放打包好的节点和 bin\ 里的脚本：没有 node_modules、没有配置和 Token
 Copy-Item -LiteralPath $bundle -Destination (Join-Path $nodeAppNew "agent-server.mjs")
 $binDir = Join-Path $AppSource "apps\agent-server\bin"
+# bin\ 源目录里不能有链接：逐文件 hash 按路径前缀取相对路径，链接会让路径对不上，也可能把别处的文件复制进来
+if (Test-Path -LiteralPath $binDir) {
+  if ((Get-Item -LiteralPath $binDir -Force).Attributes -band [IO.FileAttributes]::ReparsePoint) { Fail "$binDir 是链接或 junction" }
+  $binLink = Get-ChildItem -LiteralPath $binDir -Recurse -Force -Attributes ReparsePoint -ErrorAction SilentlyContinue | Select-Object -First 1
+  if ($binLink) { Fail "$binDir 里有链接或 junction：$($binLink.FullName)" }
+}
 if (Test-Path -LiteralPath $binDir) { Copy-Item -LiteralPath $binDir -Destination (Join-Path $nodeAppNew "bin") -Recurse }
 # 校验：复制出来的和打包出来的逐字节一样
 if ((Get-FileHash -LiteralPath $bundle).Hash -ne (Get-FileHash -LiteralPath (Join-Path $nodeAppNew "agent-server.mjs")).Hash) { Fail "复制节点程序不完整（app.new 里的和打包出来的不一样）" }
