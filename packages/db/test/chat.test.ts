@@ -355,7 +355,12 @@ describe("chat models", () => {
   it("stores both senders, pages newest-first, retracts in place", async () => {
     const { db, queue } = fresh();
     try {
-      const conversation = await createConversation(db, queue, { members: { kind: "direct", agent: "deepseek" }, title: null });
+      // 会话的创建时间也要固定：lastActivityAt 只往前走，用真实时间会让这个用例随运行时钟漂移
+      const conversation = await createConversation(db, queue, {
+        members: { kind: "direct", agent: "deepseek" },
+        title: null,
+        createdAt: at(0),
+      });
       const m1 = userMessage(conversation.id, newChatMessageId(), "一", at(0));
       const m2 = userMessage(conversation.id, newChatMessageId(), "二", at(10));
       const m3 = userMessage(conversation.id, newChatMessageId(), "三", at(20));
@@ -931,7 +936,7 @@ describe("chat send transaction (D-31b)", () => {
     memorySlot: null,
     includedMessageIds: [userMessageId],
     includedSummaryIds: [],
-    adapterVersion: "chat-v1",
+    adapterVersion: "chat-v2",
     tokenEstimate: 8,
     createdAt: at(0),
   });
@@ -951,6 +956,7 @@ describe("chat send transaction (D-31b)", () => {
       assert.deepEqual(chatRecipients(group, { kind: "all" }), ["claude", "codex", "deepseek"]);
       assert.deepEqual(chatRecipients(group, { kind: "agents", agents: ["codex"] }), ["codex"]);
       assert.equal(chatRequired(group, { kind: "agents", agents: ["codex"] }, "codex"), true);
+      assert.equal(chatRequired(group, { kind: "agents", agents: ["codex"] }, "claude"), false, "没被点到的人不必回答");
       assert.deepEqual(chatRecipients(group, { kind: "none" }), ["claude", "codex", "deepseek"]);
       assert.equal(chatRequired(group, { kind: "none" }, "codex"), false);
       assert.throws(() => chatRecipients(group, { kind: "agents", agents: ["nobody"] }));
@@ -967,14 +973,15 @@ describe("chat send transaction (D-31b)", () => {
         title: null,
       });
       const message = userMessage(group.id);
-      const result = createChatSend(db, {
+      const result = await createChatSend(db, queue, {
+        conversation: group,
         message,
         requestHash: "b".repeat(64),
         createdAt: at(0),
-        recipients: [
-          { agent: "claude", required: true, availability: { kind: "available" } },
-          { agent: "codex", required: true, availability: { kind: "unavailable", reason: "offline" } },
-        ],
+        availability: new Map([
+          ["claude", { kind: "available" as const }],
+          ["codex", { kind: "unavailable" as const, reason: "offline" as const }],
+        ]),
         snapshots: new Map([["claude", snapshotFor(group.id, message.id, "claude")]]),
         adapterIds: new Map([["claude", "remote:claude-chat"]]),
       });
@@ -984,32 +991,30 @@ describe("chat send transaction (D-31b)", () => {
       const claude = result.slots.find((s) => s.agent === "claude");
       const codex = result.slots.find((s) => s.agent === "codex");
       assert.equal(claude?.outcome, "running");
+      assert.equal(claude?.required, false, "群聊没点名时不是必须回答");
       assert.equal(claude?.runId, result.runs[0]?.id);
       assert.equal(codex?.outcome, "unavailable");
       assert.equal(codex?.unavailableReason, "offline");
       assert.equal(codex?.runId, null);
-      assert.equal(codex?.finishedAt, at(0));
       ChatReplySlot.parse(claude);
       ChatReplySlot.parse(codex);
 
-      // 回答位的 Run 挂在 claude 的 snapshot 上，消息的 request_hash 落库
       assert.equal(getChatRun(db, result.runs[0]!.id)?.snapshotHash, "a".repeat(64));
       const stored = db.prepare("SELECT request_hash FROM chat_messages WHERE id = ?").get(message.id) as {
         request_hash: string;
       };
       assert.equal(stored.request_hash, "b".repeat(64));
 
-      // 同一个 messageId 再发一次：事务体拒绝（IPC 层的防重复会先返回第一次的结果）
-      assert.throws(
-        () =>
-          createChatSend(db, {
-            message,
-            requestHash: "b".repeat(64),
-            createdAt: at(1),
-            recipients: [{ agent: "claude", required: true, availability: { kind: "available" } }],
-            snapshots: new Map([["claude", snapshotFor(group.id, message.id, "claude")]]),
-            adapterIds: new Map([["claude", "remote:claude-chat"]]),
-          }),
+      await assert.rejects(
+        createChatSend(db, queue, {
+          conversation: group,
+          message,
+          requestHash: "b".repeat(64),
+          createdAt: at(1),
+          availability: new Map([["claude", { kind: "available" as const }]]),
+          snapshots: new Map([["claude", snapshotFor(group.id, message.id, "claude")]]),
+          adapterIds: new Map([["claude", "remote:claude-chat"]]),
+        }),
         /already exists/,
       );
     } finally {
@@ -1017,26 +1022,40 @@ describe("chat send transaction (D-31b)", () => {
     }
   });
 
-  it("keeps absent_quota slots without a run and lets everyone be unavailable", async () => {
+  it("rolls the whole send back when a later recipient lacks its snapshot", async () => {
     const { db, queue } = fresh();
     try {
-      const conversation = await createConversation(db, queue, {
-        members: { kind: "direct", agent: "deepseek" },
+      const group = await createConversation(db, queue, {
+        members: { kind: "group", agents: ["claude", "codex"] },
         title: null,
       });
-      const message = userMessage(conversation.id);
-      const result = createChatSend(db, {
-        message,
-        requestHash: null,
-        createdAt: at(0),
-        recipients: [{ agent: "deepseek", required: true, availability: { kind: "absent_quota" } }],
-        snapshots: new Map(),
-        adapterIds: new Map(),
-      });
-      assert.equal(result.slots[0]?.outcome, "absent_quota");
-      assert.equal(result.slots[0]?.runId, null);
-      assert.equal(result.runs.length, 0);
-      assert.equal((db.prepare("SELECT count(*) AS n FROM chat_snapshots").get() as { n: number }).n, 0);
+      const before = getConversation(db, group.id)?.lastActivityAt;
+      const message = userMessage(group.id);
+
+      await assert.rejects(
+        createChatSend(db, queue, {
+          conversation: group,
+          message,
+          requestHash: null,
+          createdAt: at(0),
+          availability: new Map([
+            ["claude", { kind: "available" as const }],
+            ["codex", { kind: "available" as const }],
+          ]),
+          // 只给了 claude 的 Snapshot：轮到 codex 时抛错，整次发送必须回滚
+          snapshots: new Map([["claude", snapshotFor(group.id, message.id, "claude")]]),
+          adapterIds: new Map([
+            ["claude", "remote:claude-chat"],
+            ["codex", "remote:codex-chat"],
+          ]),
+        }),
+        /missing snapshot or adapter for codex/,
+      );
+
+      for (const table of ["chat_messages", "chat_reply_slots", "chat_snapshots", "chat_runs"]) {
+        assert.equal((db.prepare("SELECT count(*) AS n FROM " + table).get() as { n: number }).n, 0, table);
+      }
+      assert.equal(getConversation(db, group.id)?.lastActivityAt, before, "会话活跃时间也不能变");
     } finally {
       db.close();
     }

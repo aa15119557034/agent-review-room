@@ -991,18 +991,25 @@ export function chatRecipients(conversation: Conversation, mentions: ChatMention
   return [...mentions.agents];
 }
 
-/** 收件人是否必须回答（单聊 / 被点名 = true；群聊没点名 = false） */
+/**
+ * 收件人是否必须回答：单聊、@所有人、以及「@某几位里的本人」= true；
+ * 群聊没点名、或者 @某几位时没被点到的人 = false。
+ */
 export function chatRequired(conversation: Conversation, mentions: ChatMentions, agent: string): boolean {
-  return conversation.kind === "direct" || mentions.kind === "all" || mentions.kind === "agents";
+  if (conversation.kind === "direct") return true;
+  if (mentions.kind === "all") return true;
+  return mentions.kind === "agents" && mentions.agents.includes(agent);
 }
 
 export interface CreateChatSendInput {
-  /** 已经算好的收件人和可用性（main 的 ChatService 负责探测节点） */
-  recipients: readonly ChatSendRecipient[];
+  /** 消息所在的会话；收件人和 required 由 chatRecipients / chatRequired 自己算，不信调用方 */
+  conversation: Conversation;
   message: UserChatMessage;
   /** 只对你发的消息有意义：chatSendIntentJson 的 sha256 */
   requestHash: string | null;
-  /** 给每位收件人拼好的 Snapshot（key = agent） */
+  /** 每位成员的可用性（main 的 ChatService 探测节点）；没传的按 available 处理 */
+  availability: ReadonlyMap<string, ChatSendAvailability>;
+  /** 给能答的人拼好的 Snapshot（key = agent） */
   snapshots: ReadonlyMap<string, ChatSnapshot>;
   /** Run 的 adapterId（例如 "remote:deepseek-chat"） */
   adapterIds: ReadonlyMap<string, string>;
@@ -1016,30 +1023,46 @@ export interface CreateChatSendResult {
 }
 
 /**
- * 一条消息的落库：消息 + 回答位 +（能答的人的）Snapshot 和 Run，**必须在调用方的事务里跑**。
+ * 一条消息的落库：消息 + 回答位 +（能答的人的）Snapshot 和 Run，**在同一个事务里**。
  *
+ * - 收件人 / required 由 chatRecipients / chatRequired 按会话和 mentions 算，调用方只提供「每位能不能答」
  * - 不能答的人直接记 unavailable / absent_quota，没有 Run；其他人照常（聊天不像讨论室整条失败）
  * - 一个能答的人都没有也算成功
- * - 唯一键 (userMessageId, agent) 由表保证；这里先查一遍，防止调用方重复发送同一条消息
+ * - 中途任何一步失败（缺 Snapshot、insertChatRun 不一致）整次回滚，不会留下半套消息 / 回答位
  */
-export function createChatSend(db: SqliteDatabase, input: CreateChatSendInput): CreateChatSendResult {
-  const message = ChatMessageSchema.parse(input.message);
-  if (message.sender !== "user") throw new Error("chat send must create a user message");
-  if (db.prepare("SELECT 1 FROM chat_messages WHERE id = ?").get(message.id) !== undefined) {
-    throw new Error("chat message already exists: " + message.id);
-  }
+export function createChatSend(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  input: CreateChatSendInput,
+): Promise<CreateChatSendResult> {
+  return writeTransaction(db, queue, () => {
+    const message = ChatMessageSchema.parse(input.message);
+    if (message.sender !== "user") throw new Error("chat send must create a user message");
+    if (message.conversationId !== input.conversation.id) throw new Error("chat message belongs to another conversation");
+    if (db.prepare("SELECT 1 FROM chat_messages WHERE id = ?").get(message.id) !== undefined) {
+      throw new Error("chat message already exists: " + message.id);
+    }
 
-  insertChatMessage(db, { message, requestHash: input.requestHash });
+    const recipients: ChatSendRecipient[] = chatRecipients(input.conversation, message.mentions).map((agent) => ({
+      agent,
+      required: chatRequired(input.conversation, message.mentions, agent),
+      availability: input.availability.get(agent) ?? { kind: "available" },
+    }));
 
-  const slots: ChatReplySlot[] = [];
-  const runs: ChatRun[] = [];
+    insertChatMessage(db, { message, requestHash: input.requestHash });
 
-  for (const recipient of input.recipients) {
+    const slots: ChatReplySlot[] = [];
+    const runs: ChatRun[] = [];
+
+    for (const recipient of recipients) {
     const snapshot = input.snapshots.get(recipient.agent);
     const adapterId = input.adapterIds.get(recipient.agent);
     const canAnswer = recipient.availability.kind === "available";
     if (canAnswer && (snapshot === undefined || adapterId === undefined)) {
       throw new Error("missing snapshot or adapter for " + recipient.agent);
+    }
+    if (canAnswer && snapshot !== undefined && !snapshot.includedMessageIds.includes(message.id)) {
+      throw new Error("snapshot of " + recipient.agent + " does not include the current message");
     }
 
     const slotId = newChatSlotId();
@@ -1088,5 +1111,6 @@ export function createChatSend(db: SqliteDatabase, input: CreateChatSendInput): 
     runs.push(run);
   }
 
-  return { message, slots, runs };
+    return { message, slots, runs };
+  });
 }
