@@ -1,4 +1,6 @@
 import { loadConfig, validateProfiles } from "./config";
+import { selectMemory } from "./memory-folder";
+import { identityProblems, memoryDirOf } from "./node-identity";
 import { lanAddresses } from "./net-info";
 import { createAgentServer } from "./server";
 
@@ -11,11 +13,20 @@ try {
 }
 const { config, token, configPath } = loaded;
 
-const problems = validateProfiles(config);
+const problems = [...validateProfiles(config), ...identityProblems(config)];
 if (problems.length) {
   console.error(`[agent-server] 配置有问题（${configPath}）：`);
   for (const p of problems) console.error(`  - ${p}`);
   process.exit(1);
+}
+
+// S-20：启动时按规则读一遍记忆，只报结果，不打印正文。
+// 填槽位要等 X-30 的包裹函数，在那之前 health 不报 memoryProfiles（主控端会显示「此记忆来源不可用」）
+if (Object.values(config.profiles).some((p) => p.memory)) {
+  const sel = selectMemory(memoryDirOf(config));
+  if (sel.status === "unavailable") console.warn(`[agent-server] 记忆不可用：${sel.reason}`);
+  else console.log(`[agent-server] 记忆可用：${sel.entries.length} 条`);
+  for (const w of sel.warnings) console.warn(`[agent-server] 记忆：${w}`);
 }
 
 const agent = createAgentServer(config, token);

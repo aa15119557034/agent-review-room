@@ -44,6 +44,11 @@ const Profile = z
     effortArgs: z.array(z.string()).default([]),
     maxIdleTimeoutMs: z.number().int().positive().default(300_000),
     maxTotalTimeoutMs: z.number().int().positive().default(3_600_000),
+    /**
+     * S-20：聊天时读的记忆文件夹（ADR-003 §2a）。只有 id 以 -chat 结尾的 profile 能配。
+     * dir 只能是 `memory/<agent>`，相对节点配置的 homeDir；provider 1B 只有 folder
+     */
+    memory: z.object({ dir: z.string().min(1), provider: z.literal("folder") }).strict().optional(),
   })
   .strict();
 
@@ -67,6 +72,12 @@ export const ServerConfig = z
     maxOutputBytes: z.number().int().positive().default(16 * 1024 * 1024),
     finishedRunTtlMs: z.number().int().positive().default(10 * 60_000),
     profiles: z.record(ProfileId, Profile),
+    /** S-20：这台电脑的 <AgentRoom>（绝对路径，本机 NTFS）。配了记忆的节点必填 */
+    homeDir: z.string().min(1).optional(),
+    /** S-20：这个节点属于哪位秘书。填了以后所有 profile id 必须以 `<agent>-` 开头；配了记忆的节点必填 */
+    agent: z.enum(["claude", "deepseek", "codex"]).optional(),
+    /** S-20：节点必须以这个 Windows 账号运行（计划任务里的 agentroom-<秘书>），不对就拒绝启动 */
+    runAsUser: z.string().min(1).optional(),
   })
   .strict();
 

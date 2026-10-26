@@ -176,3 +176,24 @@ Windows 相关逻辑（`.cmd` 包装、taskkill 参数）用注入的模拟环�
 - [ ] 节点被强杀后的孤儿进程清理（pid 文件）
 - [ ] 权限请求中继（Phase 0 不需要：Reviewer 不使用工具）
 - [ ] TLS
+
+## 秘书的记忆文件夹和独立账号（S-20 第一段）
+
+规则见 `docs/design/ADR-003-聊天空间.md` §2a。每位秘书在她所在的电脑上有：
+
+- `<AgentRoom>\memory\<秘书>\`：记忆（`core` 每次都带，`journal` 按日期，`notes` 按修改时间，`memory.json` 定预算）
+- `<AgentRoom>\node\<秘书>\`：她的节点配置、Token、命令行的工作目录
+- 低权限账号 `agentroom-<秘书>`，计划任务 `AgentRoom-<秘书>` 以这个账号开机启动节点
+
+用管理员 PowerShell 一次装一位：
+
+```powershell
+.\apps\agent-server\scripts\install-secretary.ps1 -Agent codex -HomeDir D:\AgentRoom -Port 7421 `
+  -ConfigTemplate .\apps\agent-server\agent-server.config.json -AppSource (Get-Location) -TokenReader $env:USERNAME
+```
+
+主控机上按 §2a「切换顺序」：先装 `codex`（7421）；汐的 D-40 迁移完成后才装 `deepseek`（7420）。
+
+节点配置新增的字段：`homeDir`、`agent`（填了以后只能跑 `<agent>-` 开头的 profile）、`runAsUser`（进程账号不对就拒绝启动）、聊天 profile 的 `memory: { "dir": "memory/<agent>", "provider": "folder" }`。启动时会检查 `homeDir` 在本机 NTFS 盘上，并按规则读一遍记忆，只打印条数和跳过的原因，不打印正文。
+
+现在还**不会**把记忆填进聊天：那一步要用 X-30 的包裹函数，合并后做第二段；在那之前 health 不报 `memoryProfiles`。
