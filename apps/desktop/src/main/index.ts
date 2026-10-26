@@ -139,6 +139,7 @@ async function bootstrap(): Promise<void> {
         baseUrl: target.baseUrl,
         profileId: target.profileId,
         token: target.token,
+        ...(target.model === undefined ? {} : { model: target.model }),
         heartbeatTimeoutMs: 15_000,
         reconnectGraceMs: 30_000,
         requestTimeoutMs: 10_000,

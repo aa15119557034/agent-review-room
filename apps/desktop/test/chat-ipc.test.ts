@@ -3,8 +3,23 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
-import { openDatabase, WriteQueue } from "@room/db";
-import { CHAT_LIMITS, ControlEvent, type AgentEvent, type CommandRequest } from "@room/schemas";
+import {
+  insertChatMessage,
+  insertChatRun,
+  insertChatSlot,
+  insertChatSnapshot,
+  openDatabase,
+  ulid,
+  WriteQueue,
+} from "@room/db";
+import {
+  CHAT_LIMITS,
+  ControlEvent,
+  type AgentEvent,
+  type AgentModelSettings,
+  type CommandRequest,
+  type ProfileModels,
+} from "@room/schemas";
 import type { AgentAdapter } from "@room/core";
 import { ChatService, type ChatRunTarget } from "../src/main/chat";
 import { Repository } from "../src/main/repository";
@@ -70,10 +85,20 @@ interface Harness {
   db: ReturnType<typeof openDatabase>;
   events: ControlEvent[];
   conversationId: string;
+  /** 每次 adapterFactory 收到的目标（看模型有没有传下去） */
+  targets: ChatRunTarget[];
 }
 
 async function makeHarness(
-  options: { scripts?: Record<string, Script>; paused?: string[]; unavailableProfiles?: string[] } = {},
+  options: {
+    scripts?: Record<string, Script>;
+    paused?: string[];
+    unavailableProfiles?: string[];
+    /** 这些 agent 的 adapter 一直等到被 abort 才结束（测取消 / 中断修复） */
+    hold?: string[];
+    profileModels?: ProfileModels[];
+    modelSettings?: Record<string, AgentModelSettings>;
+  } = {},
 ): Promise<Harness> {
   const dir = mkdtempSync(join(tmpdir(), "room-chat-ipc-"));
   dirs.push(dir);
@@ -96,15 +121,40 @@ async function makeHarness(
     );
   }
 
+  for (const [agentId, settings] of Object.entries(options.modelSettings ?? {})) {
+    db.prepare("UPDATE agents SET model_settings = ? WHERE id = ?").run(JSON.stringify(settings), agentId);
+  }
+
   const scripts = options.scripts ?? {};
   const events: ControlEvent[] = [];
+  const targets: ChatRunTarget[] = [];
+  const held = new Set(options.hold ?? []);
   const chat = new ChatService({
     db,
     queue,
     repo,
     settings,
     emit: (event) => events.push(ControlEvent.parse(event)),
-    adapterFactory: async (target: ChatRunTarget) => fakeAdapter(scripts[target.agent] ?? reply("好的")),
+    adapterFactory: async (target: ChatRunTarget) => {
+      targets.push(target);
+      if (held.has(target.agent)) {
+        return {
+          id: "hold",
+          kind: "api" as const,
+          initialize: async () => ({ streaming: true, permissionRequests: false, readOnly: true }),
+          startSession: async () => ({ sessionId: "hold", adapterId: "hold" }),
+          closeSession: async () => undefined,
+          run: async function* (_sessionId, runId, _input, opts) {
+            await new Promise<void>((resolve) => {
+              if (opts.signal.aborted) resolve();
+              else opts.signal.addEventListener("abort", () => resolve(), { once: true });
+            });
+            yield { eventId: runId + "-0", runId, seq: 0, ts: NOW, type: "cancelled" } as AgentEvent;
+          },
+        };
+      }
+      return fakeAdapter(scripts[target.agent] ?? reply("好的"));
+    },
     probe: async (params) => ({
       reachable: true,
       health: {
@@ -115,6 +165,7 @@ async function makeHarness(
         maxConcurrentRuns: 4,
         leaseMs: 30_000,
         heartbeatMs: 5_000,
+        ...(options.profileModels === undefined ? {} : { profileModels: options.profileModels }),
       },
       // profileAvailable 是 per-profile 的：同节点上不同秘书不能共用一次探测结果
       profileAvailable: !(options.unavailableProfiles ?? []).includes(params.profileId),
@@ -128,7 +179,7 @@ async function makeHarness(
     members: { kind: "direct", agent: "deepseek" },
     title: null,
   } as never);
-  return { chat, repo, db, events, conversationId: conversation.id };
+  return { chat, repo, db, events, conversationId: conversation.id, targets };
 }
 
 const userMessageId = (n: number): string => "cmsg_" + String(n).padStart(26, "0");
@@ -386,6 +437,206 @@ describe("chat service (D-31b)", () => {
       const item = h.chat.listConversations().find((entry) => entry.conversation.id === h.conversationId);
       assert.ok(item !== undefined);
       assert.equal(item.unreadCount, 1, "只有秘书那一条算未读");
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("selects the chat model from modelSettings and passes it to the node", async () => {
+    const efforts = [
+      { id: "low", displayName: "低", note: null },
+      { id: "high", displayName: "高", note: null },
+    ];
+    const h = await makeHarness({
+      modelSettings: {
+        deepseek: { primaryModel: "deepseek-flash", fallbackModel: null, effort: { chat: "high", discussion: null, summary: null } },
+      },
+      profileModels: [
+        {
+          profileId: "deepseek-chat",
+          models: [{ id: "deepseek-flash", displayName: "Flash", efforts, defaultEffort: "low" }],
+        },
+      ],
+    });
+    try {
+      const sent = await h.chat.send(send(h.conversationId, userMessageId(100), "用哪个模型？"));
+      const run = h.chat.getRun(sent.runs[0]!.id);
+      assert.deepEqual(run.model, { model: "deepseek-flash", effort: "high", usedFallback: false, effortSource: "configured" });
+      await settle(h.chat);
+      // adapter 是异步起的：等 Run 跑完再看节点收到的目标
+      assert.deepEqual(h.targets[0]?.model, { model: "deepseek-flash", effort: "high" });
+      assert.equal(h.targets[0]?.profileId, "deepseek-chat");
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("falls back to the fallback model and marks usedFallback", async () => {
+    const h = await makeHarness({
+      modelSettings: {
+        deepseek: { primaryModel: "missing-model", fallbackModel: "deepseek-flash", effort: { chat: null, discussion: null, summary: null } },
+      },
+      profileModels: [
+        {
+          profileId: "deepseek-chat",
+          models: [{ id: "deepseek-flash", displayName: "Flash", efforts: [{ id: "low", displayName: "低", note: null }], defaultEffort: "low" }],
+        },
+      ],
+    });
+    try {
+      const sent = await h.chat.send(send(h.conversationId, userMessageId(101), "备选"));
+      assert.deepEqual(h.chat.getRun(sent.runs[0]!.id).model, {
+        model: "deepseek-flash",
+        effort: "low",
+        usedFallback: true,
+        effortSource: "node_default",
+      });
+      await settle(h.chat);
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("marks the slot unavailable when neither configured model exists", async () => {
+    const h = await makeHarness({
+      modelSettings: {
+        deepseek: { primaryModel: "ghost-a", fallbackModel: "ghost-b", effort: { chat: null, discussion: null, summary: null } },
+      },
+      profileModels: [
+        { profileId: "deepseek-chat", models: [{ id: "deepseek-flash", displayName: "Flash", efforts: [], defaultEffort: null }] },
+      ],
+    });
+    try {
+      const sent = await h.chat.send(send(h.conversationId, userMessageId(102), "模型都不在"));
+      assert.equal(sent.slots[0]?.outcome, "unavailable");
+      assert.equal(sent.slots[0]?.unavailableReason, "unconfigured");
+      assert.equal(sent.runs.length, 0);
+      assert.equal(h.targets.length, 0);
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("re-edits a retracted message as a new message with new slots", async () => {
+    const h = await makeHarness();
+    try {
+      const first = await h.chat.send(send(h.conversationId, userMessageId(110), "打错了"));
+      await settle(h.chat);
+      await h.chat.retract({ type: "chat.retract", messageId: first.message.id } as never);
+
+      const edited = await h.chat.send({
+        ...send(h.conversationId, userMessageId(111), "改好了"),
+        replacesMessageId: first.message.id,
+      });
+      assert.equal(edited.message.replacesMessageId, first.message.id);
+      assert.equal(edited.slots[0]?.outcome, "running");
+      const old = h.chat.listMessages({ type: "chat.messages.list", conversationId: h.conversationId, limit: 20 } as never);
+      assert.equal(old.messages.find((message) => message.id === first.message.id)?.state, "retracted");
+      assert.equal(old.slots.find((slot) => slot.userMessageId === first.message.id)?.outcome, "retracted");
+      await settle(h.chat);
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("cancels a running reply and lets the late terminal close only the run", async () => {
+    const h = await makeHarness({ hold: ["deepseek"] });
+    try {
+      const sent = await h.chat.send(send(h.conversationId, userMessageId(120), "慢慢答"));
+      const cancelled = await h.chat.cancelReply({ type: "chat.cancelReply", slotId: sent.slots[0]!.id } as never);
+      assert.equal(cancelled.outcome, "cancelled");
+      await settle(h.chat);
+      const runs = h.chat.listSlotRuns(sent.slots[0]!.id);
+      assert.equal(runs[0]?.state, "CANCELLED");
+      assert.equal(h.chat.listMessages({ type: "chat.messages.list", conversationId: h.conversationId, limit: 10 } as never).slots[0]?.outcome, "cancelled");
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("repairs an interrupted chat run on startup", async () => {
+    const h = await makeHarness();
+    try {
+      // 直接造一个「上次崩溃时停在 RUNNING」的库状态（不经过 ChatService.send，避免和活着的执行器抢）
+      const messageId = userMessageId(130);
+      insertChatMessage(h.db, {
+        message: {
+          id: messageId,
+          conversationId: h.conversationId,
+          createdAt: NOW,
+          sender: "user",
+          content: { kind: "text", text: "重启前", attachments: [] },
+          mentions: { kind: "none" },
+          quoteMessageId: null,
+          replacesMessageId: null,
+          state: "sent",
+          retractedAt: null,
+        },
+      });
+      const slotId = "slot_" + ulid();
+      const runId = "run_" + ulid();
+      insertChatSlot(h.db, {
+        id: slotId,
+        conversationId: h.conversationId,
+        userMessageId: messageId,
+        agent: "deepseek",
+        required: true,
+        outcome: "running",
+        runId,
+        attempt: 1,
+        replyMessageId: null,
+        failure: null,
+        unavailableReason: null,
+        createdAt: NOW,
+        finishedAt: null,
+      });
+      insertChatSnapshot(h.db, {
+        id: "snap_" + ulid(),
+        purpose: "reply",
+        conversationId: h.conversationId,
+        userMessageId: messageId,
+        agent: "deepseek",
+        content: "上下文",
+        contentHash: "a".repeat(64),
+        nonce: "0123456789abcdef",
+        memorySlot: null,
+        includedMessageIds: [messageId],
+        includedSummaryIds: [],
+        adapterVersion: "chat-v2",
+        tokenEstimate: 1,
+        createdAt: NOW,
+      });
+      const snapshotId = h.db.prepare("SELECT id FROM chat_snapshots").get() as { id: string };
+      insertChatRun(h.db, {
+        id: runId,
+        kind: "chat",
+        purpose: "reply",
+        conversationId: h.conversationId,
+        slotId,
+        agent: "deepseek",
+        snapshotId: snapshotId.id,
+        snapshotHash: "a".repeat(64),
+        finalPromptHash: null,
+        memoryManifest: null,
+        model: null,
+        adapterId: "remote:deepseek-chat",
+        state: "QUEUED",
+        substate: null,
+        failureReason: null,
+        createdAt: NOW,
+        startedAt: null,
+        finishedAt: null,
+      });
+      h.db.prepare("UPDATE chat_runs SET state = 'RUNNING', substate = 'active', started_at = ? WHERE id = ?").run(NOW, runId);
+
+      const repaired = await h.chat.repairInterrupted();
+      assert.equal(repaired, 1);
+      const runs = h.chat.listSlotRuns(slotId);
+      assert.equal(runs[0]?.state, "FAILED");
+      assert.equal(runs[0]?.failureReason, "interrupted");
+      const page = h.chat.listMessages({ type: "chat.messages.list", conversationId: h.conversationId, limit: 10 } as never);
+      assert.equal(page.slots[0]?.outcome, "failed");
+      assert.equal(page.slots[0]?.failure?.kind, "interrupted");
     } finally {
       h.db.close();
     }

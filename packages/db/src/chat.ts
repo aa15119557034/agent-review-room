@@ -1,5 +1,6 @@
 import type {
   AgentChatMessage,
+  BatchModel,
   ChatContent,
   ChatCursor,
   ChatMentions,
@@ -1043,6 +1044,8 @@ export interface CreateChatSendInput {
   snapshots: ReadonlyMap<string, ChatSnapshot>;
   /** Run 的 adapterId（例如 "remote:deepseek-chat"） */
   adapterIds: ReadonlyMap<string, string>;
+  /** 每位收件人这次用的模型（C-40 的规则在 main 里算好）；没传 = null（用 profile 自带） */
+  models?: ReadonlyMap<string, BatchModel | null>;
   createdAt: string;
   /** 限流兜底：在这个事务里再数一次（并发发送时事务外那次会漏） */
   rateLimit?: { since: string; max: number };
@@ -1159,7 +1162,7 @@ export function createChatSend(
       snapshotHash: snapshot.contentHash,
       finalPromptHash: null,
       memoryManifest: null,
-      model: null,
+      model: input.models?.get(recipient.agent) ?? null,
       adapterId,
       state: "QUEUED",
       substate: null,

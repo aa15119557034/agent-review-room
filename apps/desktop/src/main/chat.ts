@@ -16,8 +16,11 @@ import {
   type ControlEvent,
   type Conversation,
   type ConversationListItem,
+  type BatchModel,
+  type NodeHealth,
   type NodeTestResult,
   type QueryRequest,
+  type RunModel,
   type UserChatMessage,
 } from "@room/schemas";
 import {
@@ -55,6 +58,12 @@ import {
   type WriteQueue,
 } from "@room/db";
 import { testReviewerNode } from "@room/remote-client";
+import {
+  ChatModelUnavailableError,
+  chatRunModel,
+  reuseOrSelectChatModel,
+  selectChatModel,
+} from "./chat-model";
 import { buildChatSnapshot } from "./chat-prompt";
 import type { Repository } from "./repository";
 import type { SettingsStore } from "./settings";
@@ -85,6 +94,8 @@ export interface ChatRunTarget {
   token: string;
   profileId: string;
   adapterId: string;
+  /** C-40：这次定下的模型（{ model, effort }）；省略 = profile 自带 */
+  model?: { model: string; effort: string | null };
 }
 
 export interface ChatServiceDeps {
@@ -258,7 +269,35 @@ export class ChatService {
     const recipients = chatRecipients(conversation, command.mentions);
     const availability = new Map<string, ChatSendAvailability>();
     const probes = new Map<string, Promise<NodeTestResult>>();
-    for (const agentId of recipients) availability.set(agentId, await this.#availabilityOf(agentId, agents, probes));
+    const probeResults = new Map<string, NodeTestResult>();
+    for (const agentId of recipients) {
+      availability.set(agentId, await this.#availabilityOf(agentId, agents, probes, probeResults));
+    }
+
+    // 模型：按 modelSettings 的「聊天」场合定下来；模型配置错了就当这个人缺席，不整条失败
+    const models = new Map<string, BatchModel | null>();
+    for (const agentId of recipients) {
+      const agent = agents.get(agentId);
+      if (agent === undefined) continue;
+      if (availability.get(agentId)?.kind !== "available" || agent.chatProfileId === null) {
+        models.set(agentId, null);
+        continue;
+      }
+      try {
+        models.set(
+          agentId,
+          selectChatModel(
+            agent,
+            agent.chatProfileId,
+            profileModelsOf(probeResults.get(probeKeyOf(agent.nodeId, agent.chatProfileId))),
+          ),
+        );
+      } catch (error) {
+        if (!(error instanceof ChatModelUnavailableError)) throw error;
+        availability.set(agentId, { kind: "unavailable", reason: "unconfigured" });
+        models.set(agentId, null);
+      }
+    }
 
     // ⑤ 拼 Snapshot（只能答的人）
     const history = listChatMessages(db, conversation.id, null, 100).messages.slice().reverse();
@@ -296,6 +335,7 @@ export class ChatService {
         availability,
         snapshots,
         adapterIds,
+        models,
         rateLimit: { since, max: CHAT_LIMITS.messagesPerMinute },
       });
     } catch (error) {
@@ -377,9 +417,25 @@ export class ChatService {
     if (!conversation.members.includes(slot.agent)) throw new ChatError("invalid_state", slot.agent + " 已经不在这个会话里");
 
     const agent = repo.getAgent(slot.agent);
-    const availability = await this.#availabilityOf(slot.agent, new Map([[agent.id, agent]]), new Map());
+    const probes = new Map<string, Promise<NodeTestResult>>();
+    const probeResults = new Map<string, NodeTestResult>();
+    const availability = await this.#availabilityOf(slot.agent, new Map([[agent.id, agent]]), probes, probeResults);
     if (availability.kind !== "available" || agent.chatProfileId === null) {
       throw new ChatError("agent_unavailable", slot.agent + " 现在还是不能答");
+    }
+    // 重试先沿用上一次的模型；节点已经不支持它再重选
+    const previousModel = slot.runId === null ? null : (getChatRun(db, slot.runId)?.model ?? null);
+    let model: BatchModel | null;
+    try {
+      model = reuseOrSelectChatModel(
+        agent,
+        agent.chatProfileId,
+        profileModelsOf(probeResults.get(probeKeyOf(agent.nodeId, agent.chatProfileId))),
+        previousModel,
+      );
+    } catch (error) {
+      if (error instanceof ChatModelUnavailableError) throw new ChatError("agent_unavailable", error.message);
+      throw error;
     }
 
     const now = this.#now();
@@ -429,7 +485,7 @@ export class ChatService {
         snapshotHash: snapshot.contentHash,
         finalPromptHash: null,
         memoryManifest: null,
-        model: null,
+        model,
         adapterId: "remote:" + agent.chatProfileId,
         state: "QUEUED",
         substate: null,
@@ -559,7 +615,7 @@ export class ChatService {
 
     try {
       const agent = repo.getAgent(run.agent);
-      const target = this.#targetOf(agent);
+      const target = this.#targetOf(agent, run);
       current = (
         await writeTransaction(db, queue, () => transitionChatRun(db, run.id, current, "STARTING", { startedAt: this.#now() }))
       ).state;
@@ -716,6 +772,7 @@ export class ChatService {
     agentId: string,
     agents: Map<string, AgentProfile>,
     probes: Map<string, Promise<NodeTestResult>>,
+    results?: Map<string, NodeTestResult>,
   ): Promise<ChatSendAvailability> {
     const agent = agents.get(agentId) ?? this.#deps.repo.getAgent(agentId);
     if (agent.pausedByUser) return { kind: "unavailable", reason: "paused_by_user" };
@@ -727,7 +784,7 @@ export class ChatService {
     }
 
     // 同一个节点上的不同 profile 是两次独立的探测：profileAvailable 是 per-profile 的
-    const probeKey = agent.nodeId + "\u0000" + agent.chatProfileId;
+    const probeKey = probeKeyOf(agent.nodeId, agent.chatProfileId);
     let probe = probes.get(probeKey);
     if (probe === undefined) {
       probe = (this.#deps.probe ?? testReviewerNode)({
@@ -738,11 +795,12 @@ export class ChatService {
       probes.set(probeKey, probe);
     }
     const result = await probe;
+    results?.set(probeKey, result);
     if (!result.reachable) return { kind: "unavailable", reason: "offline" };
     return result.profileAvailable ? { kind: "available" } : { kind: "unavailable", reason: "offline" };
   }
 
-  #targetOf(agent: AgentProfile): ChatRunTarget {
+  #targetOf(agent: AgentProfile, run: ChatRun): ChatRunTarget {
     if (agent.nodeId === null || agent.chatProfileId === null) {
       throw new ChatError("agent_unavailable", agent.id + " 没有配置聊天节点 / profile");
     }
@@ -759,6 +817,17 @@ export class ChatService {
       token: credential.token,
       profileId: agent.chatProfileId,
       adapterId: "remote:" + agent.chatProfileId,
+      ...(chatRunModel(run.model) === undefined ? {} : { model: chatRunModel(run.model) as RunModel }),
     };
   }
+}
+
+/** 节点上报的 profileModels；够不着节点 / 老节点时为 undefined */
+function profileModelsOf(result: NodeTestResult | undefined): NodeHealth["profileModels"] | undefined {
+  return result !== undefined && result.reachable ? result.health.profileModels : undefined;
+}
+
+/** 探测缓存的 key：同一个节点上的不同 profile 是两次独立的探测 */
+function probeKeyOf(nodeId: string | null, profileId: string | null): string {
+  return (nodeId ?? "") + "\u0000" + (profileId ?? "");
 }
