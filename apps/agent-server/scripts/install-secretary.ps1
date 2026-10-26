@@ -79,7 +79,7 @@ function Assert-NoReparse([string]$root) {
   while ($stack.Count -gt 0) {
     $dir = $stack.Pop()
     foreach ($item in @(Get-ChildItem -LiteralPath $dir -Force -ErrorAction Stop)) {
-      if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) { Fail "$($item.FullName) 是链接、junction 或挂载点：AgentRoom 里面不能有。先删掉再装" }
+      if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) { Fail "$($item.FullName) 是链接、junction 或挂载点：AgentRoom 里面不能有。先删掉再装（以前装过旧版本、node\app 里有 node_modules 的，用 cmd 的 rmdir /s /q 删掉整个 node\app）" }
       if ($item.PSIsContainer) { $stack.Push($item.FullName) }  # 不进重解析点（上面已经拒绝），所以不会绕圈
     }
   }
@@ -107,6 +107,8 @@ if ($LASTEXITCODE -ne 0 -or -not (Test-Path $bundle)) { Fail "打包节点失败
 # Node 必须装在秘书账号读得到的地方（官方安装包装到 Program Files）
 $nodeExe = (Get-Command node.exe -ErrorAction SilentlyContinue).Source
 if (-not $nodeExe) { Fail "找不到 node.exe" }
+$nodeMajor = [int]((& $nodeExe --version).TrimStart("v").Split(".")[0])
+if ($nodeMajor -lt 22) { Fail "Node 版本太低（$(& $nodeExe --version)），要 22 或更高" }
 foreach ($r in $userRoots) { if ($r -and $nodeExe.StartsWith($r.TrimEnd("\") + "\", [StringComparison]::OrdinalIgnoreCase)) { Fail "Node 装在用户目录里（$nodeExe），秘书账号读不到。请用官方安装包装到 Program Files" } }
 $template = Get-Content -Raw -Encoding UTF8 $ConfigTemplate | ConvertFrom-Json
 $profiles = [ordered]@{}
@@ -172,7 +174,8 @@ Step "复制节点程序到 $nodeApp"
 # 只放打包好的节点和 bin\ 里的脚本：没有 node_modules、没有配置和 Token
 Get-ChildItem -LiteralPath $nodeApp -Force | Remove-Item -Recurse -Force
 Copy-Item -LiteralPath $bundle -Destination (Join-Path $nodeApp "agent-server.mjs")
-Copy-Item -LiteralPath (Join-Path $AppSource "apps\agent-server\bin") -Destination (Join-Path $nodeApp "bin") -Recurse
+$binDir = Join-Path $AppSource "apps\agent-server\bin"
+if (Test-Path -LiteralPath $binDir) { Copy-Item -LiteralPath $binDir -Destination (Join-Path $nodeApp "bin") -Recurse }
 $secretFiles = @("agent-server.config*.json", "agent-server.token", ".env*")
 $leaked = Get-ChildItem -LiteralPath $nodeApp -Recurse -Force -File -Include $secretFiles -ErrorAction SilentlyContinue
 if ($leaked) { Fail "node\app 里还有不该复制的文件：$($leaked[0].FullName)" }

@@ -188,9 +188,13 @@ Windows 相关逻辑（`.cmd` 包装、taskkill 参数）用注入的模拟环�
 用**以管理员身份运行的 Windows PowerShell**（`powershell.exe`，不是 `pwsh`）一次装一位。现在只能装 `codex` 和 `claude`：`deepseek` 要等 D-40 和第二段（API Key 怎么给新账号）之后，脚本会拒绝：
 
 ```powershell
+# 先装依赖（打包要用 esbuild）；Node 要 22 或更高，用官方安装包装到 Program Files
+pnpm install --frozen-lockfile
 .\apps\agent-server\scripts\install-secretary.ps1 -Agent codex -HomeDir D:\AgentRoom -Port 7421 `
   -ConfigTemplate .\apps\agent-server\agent-server.config.json -AppSource (Get-Location) -TokenReader $env:USERNAME
 ```
+
+`-TokenReader` 只能是本机的一个用户账号，或者正在运行脚本的这个账号（域账号、组都会被拒绝）。以前装过 #98 早期版本、`node\app` 里有 `node_modules` 的，先用 `rmdir /s /q` 删掉整个 `node\app` 再装。
 
 现在的模板只有讨论 profile（比如 `codex-discuss`），没有 `<秘书>-chat` 也能装：账号、文件夹、权限、计划任务照装，聊天 profile 和读记忆在第二段加。
 
