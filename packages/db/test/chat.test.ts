@@ -12,6 +12,7 @@ import {
   chatRecipients,
   chatRequired,
   createChatSend,
+  ChatToTopicConflictError,
   createChatToTopic,
   createConversation,
   currentVersion,
@@ -1218,7 +1219,23 @@ describe("migration v7 (chat material)", () => {
         title: null,
         createdAt: at(0),
       });
-      const materialIds = ["cmsg_" + "0".repeat(26), "cmsg_" + "1".repeat(26)];
+      const materialIds = [newChatMessageId(), newChatMessageId()];
+      for (const [index, id] of materialIds.entries()) {
+        insertChatMessage(db, {
+          message: {
+            id,
+            conversationId: conversation.id,
+            createdAt: at(index),
+            sender: "user",
+            content: { kind: "text", text: "材料 " + index, attachments: [] },
+            mentions: { kind: "none" },
+            quoteMessageId: null,
+            replacesMessageId: null,
+            state: "sent",
+            retractedAt: null,
+          },
+        });
+      }
       const result = await createChatToTopic(db, queue, {
         projectId: "proj_" + ulid(),
         materialId: "msg_" + ulid(),
@@ -1233,6 +1250,50 @@ describe("migration v7 (chat material)", () => {
       assert.equal(result.material.kind, "chat_material");
       assert.deepEqual(result.material.chatMessageIds, materialIds);
       assert.equal(result.material.projectId, result.project.id);
+    } finally {
+      db.close();
+    }
+  });
+});
+describe("createChatToTopic guards", () => {
+  it("rejects selected messages that were retracted before the transaction", async () => {
+    const { db, queue } = { db: openDatabase(tempFile("room-topic-guard-")), queue: new WriteQueue() };
+    try {
+      const conversation = await createConversation(db, queue, {
+        members: { kind: "direct", agent: "deepseek" },
+        title: null,
+        createdAt: at(0),
+      });
+      const messageId = newChatMessageId();
+      insertChatMessage(db, {
+        message: {
+          id: messageId,
+          conversationId: conversation.id,
+          createdAt: at(0),
+          sender: "user",
+          content: { kind: "text", text: "会被撤回", attachments: [] },
+          mentions: { kind: "none" },
+          quoteMessageId: null,
+          replacesMessageId: null,
+          state: "sent",
+          retractedAt: null,
+        },
+      });
+      retractChatMessage(db, messageId, at(5));
+
+      await assert.rejects(
+        createChatToTopic(db, queue, {
+          projectId: "proj_" + ulid(),
+          materialId: "msg_" + ulid(),
+          conversationId: conversation.id,
+          name: "不该建出来",
+          chatMessageIds: [messageId],
+          content: "材料",
+          createdAt: at(5),
+        }),
+        ChatToTopicConflictError,
+      );
+      assert.equal((db.prepare("SELECT count(*) AS n FROM projects").get() as { n: number }).n, 0);
     } finally {
       db.close();
     }

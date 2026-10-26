@@ -3,6 +3,7 @@ import {
   assembleSummaryPrompt,
   createNonce,
   type DiscussionHistoryRound,
+  type DiscussionMaterial,
 } from "@room/core";
 import {
   approveBatch,
@@ -163,7 +164,7 @@ export class DiscussionService {
       {
         round: roundForPrompt,
         history: repo.discussionHistory(project.id, roundIndex),
-        materials: [],
+        materials: this.#materialsFor(project.id),
         plan,
         nonce: createNonce(),
       },
@@ -294,7 +295,7 @@ export class DiscussionService {
     });
 
     const prompt = assembleSummaryPrompt(
-      { round, history, materials: [], plan, nonce: createNonce() },
+      { round, history, materials: this.#materialsFor(round.projectId), plan, nonce: createNonce() },
       { profile: summarizer, onBehalfOf: null, extraMaterials: [] },
     );
 
@@ -442,7 +443,7 @@ export class DiscussionService {
       {
         round,
         history: this.#historyWithCurrent(round),
-        materials: [],
+        materials: this.#materialsFor(round.projectId),
         plan,
         userSupplement: command.content,
         supplementOnly: command.mode === "only",
@@ -518,7 +519,7 @@ export class DiscussionService {
     const models = this.#selectModels([agent], "discussion", probes, reuse);
     const plan = round.planVersionId === null ? null : this.#loadPlan(round.projectId, round.planVersionId);
     const prompts = assembleDiscussionBatch(
-      { round, history: this.#historyWithCurrent(round), materials: [], plan, nonce: createNonce() },
+      { round, history: this.#historyWithCurrent(round), materials: this.#materialsFor(round.projectId), plan, nonce: createNonce() },
       [{ profile: agent, onBehalfOf: null, extraMaterials: [] }],
     );
 
@@ -600,7 +601,7 @@ export class DiscussionService {
       {
         round: forPrompt,
         history: repo.discussionHistory(round.projectId, round.index),
-        materials: [],
+        materials: this.#materialsFor(round.projectId),
         plan,
         nonce: createNonce(),
       },
@@ -942,6 +943,24 @@ export class DiscussionService {
       if (summary !== null) emit({ type: "summary.created", summary });
     }
     emit({ type: "round.updated", round: repo.getRound(settlement.roundId) });
+  }
+
+  /**
+   * C-34 / D-31c：这个议题从聊天转来的初始材料。
+   * ADR-004：议题材料**每轮都带**（不只第 1 轮），和附件一样进不可信边界。
+   */
+  #materialsFor(projectId: string): DiscussionMaterial[] {
+    const rows = this.#deps.db
+      .prepare(
+        "SELECT m.content AS content, m.conversation_id AS conversationId, c.title AS title " +
+          "FROM messages m LEFT JOIN conversations c ON c.id = m.conversation_id " +
+          "WHERE m.project_id = ? AND m.kind = 'chat_material' ORDER BY m.created_at, m.id",
+      )
+      .all(projectId) as { content: string; conversationId: string; title: string | null }[];
+    return rows.map((row) => ({
+      name: "聊天记录（" + (row.title ?? row.conversationId) + "）",
+      content: row.content,
+    }));
   }
 
   #loadPlan(projectId: string, planVersionId: string): PlanVersion {

@@ -29,6 +29,7 @@ import {
   ChatSendConflictError,
   ChatSendDuplicateMessageError,
   ChatSendRateLimitError,
+  ChatToTopicConflictError,
   chatRecipients,
   createChatSend,
   createChatToTopic,
@@ -395,15 +396,20 @@ export class ChatService {
     }
 
     const now = this.#now();
-    return createChatToTopic(db, this.#deps.queue, {
-      projectId: "proj_" + ulid(),
-      materialId: "msg_" + ulid(),
-      conversationId: conversation.id,
-      name: command.name,
-      chatMessageIds: ordered.map((message) => message.id),
-      content,
-      createdAt: now,
-    });
+    try {
+      return await createChatToTopic(db, this.#deps.queue, {
+        projectId: "proj_" + ulid(),
+        materialId: "msg_" + ulid(),
+        conversationId: conversation.id,
+        name: command.name,
+        chatMessageIds: ordered.map((message) => message.id),
+        content,
+        createdAt: now,
+      });
+    } catch (error) {
+      if (error instanceof ChatToTopicConflictError) throw new ChatError("invalid_state", error.message);
+      throw error;
+    }
   }
 
   // ================================================================ 撤回 / 重试 / 取消

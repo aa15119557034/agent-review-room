@@ -687,6 +687,17 @@ const toChatRun = (row: ChatRunRow): ChatRun => ({
 });
 
 /**
+ * 转议题时选中的消息在事务里已经不是「可进上下文」的状态（被撤回了 / 被别的消息替换掉了 / 不在这个会话）。
+ * 服务层映射成 invalid_state。
+ */
+export class ChatToTopicConflictError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ChatToTopicConflictError";
+  }
+}
+
+/**
  * 并发发送：同一个 messageId 已经落库（另一个请求先提交了）。
  * 调用方应当重新读那条消息，按防重复规则返回第一次的结果，而不是报 internal。
  */
@@ -1204,6 +1215,28 @@ export function createChatToTopic(
   input: CreateChatToTopicInput,
 ): Promise<{ project: Project; material: Message }> {
   return writeTransaction(db, queue, () => {
+    // 选消息发生在事务外：事务里按 id 重读一次，撤回 / 跨会话都在这儿兜住，不让被撤回的原文进材料
+    const placeholders = input.chatMessageIds.map(() => "?").join(", ");
+    const rows = db
+      .prepare(
+        "SELECT m.id AS id, m.sender AS sender, m.state AS state, p.state AS parentState " +
+          "FROM chat_messages m LEFT JOIN chat_messages p ON p.id = m.in_reply_to " +
+          "WHERE m.conversation_id = ? AND m.id IN (" + placeholders + ")",
+      )
+      .all(input.conversationId, ...input.chatMessageIds) as {
+      id: string;
+      sender: "user" | "agent";
+      state: "sent" | "retracted" | null;
+      parentState: "sent" | "retracted" | null;
+    }[];
+    if (rows.length !== input.chatMessageIds.length) {
+      throw new ChatToTopicConflictError("selected chat messages are missing or belong to another conversation");
+    }
+    for (const row of rows) {
+      const inContext = row.sender === "user" ? row.state === "sent" : row.parentState === "sent";
+      if (!inContext) throw new ChatToTopicConflictError("chat message " + row.id + " is no longer in context");
+    }
+
     db.prepare("INSERT INTO projects (id, name, from_conversation_id, created_at) VALUES (?, ?, ?, ?)").run(
       input.projectId,
       input.name,
