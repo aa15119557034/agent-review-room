@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { ChatMessage, ChatSnapshot, type UserChatMessage } from "@room/schemas";
 import { PromptBoundaryCollisionError } from "@room/core";
-import { buildChatSnapshot, CHAT_HISTORY_MAX_MESSAGES } from "../src/main/chat-prompt";
+import { buildChatSnapshot, CHAT_HISTORY_MAX_CHARS, CHAT_HISTORY_MAX_MESSAGES } from "../src/main/chat-prompt";
 import { createHash } from "node:crypto";
 
 const ID = "0".repeat(26);
@@ -109,6 +109,33 @@ describe("chat prompt (D-31b)", () => {
     const snapshot = build(history, { inReplyToOf: () => undefined });
     assert.equal(snapshot.includedMessageIds.length, CHAT_HISTORY_MAX_MESSAGES + 1, "窗口 + 当前这条");
     assert.ok(!snapshot.includedMessageIds.includes((history[0] as UserChatMessage).id), "最旧的几条被丢掉");
+  });
+
+  it("drops a single overlong message instead of blowing the budget", () => {
+    // 秘书回答上限 20 万字（契约 replyMaxChars），单条就能超过 6 万字预算
+    const huge = agent("9", "deepseek", "长".repeat(70_000), first.id);
+    const snapshot = build([huge]);
+    assert.deepEqual(snapshot.includedMessageIds, [current.id], "超预算的单条不进 Prompt，也不进审计");
+    assert.ok(snapshot.content.length < CHAT_HISTORY_MAX_CHARS);
+  });
+
+  it("drops an overlong quote instead of letting it bypass the budget", () => {
+    const hugeQuote = agent("9", "deepseek", "引".repeat(70_000), first.id);
+    const snapshot = build([], { quote: hugeQuote });
+    assert.deepEqual(snapshot.includedMessageIds, [current.id]);
+    assert.ok(!snapshot.content.includes("被引用的消息"));
+    assert.ok(snapshot.content.length < CHAT_HISTORY_MAX_CHARS);
+  });
+
+  it("counts the quote against the history budget", () => {
+    const quote = agent("9", "deepseek", "引".repeat(40_000), first.id);
+    const older = user("2", "旧".repeat(15_000));
+    const newer = user("4", "新".repeat(15_000));
+    const snapshot = build([older, newer], { quote });
+    assert.ok(snapshot.includedMessageIds.includes(quote.id));
+    assert.ok(snapshot.includedMessageIds.includes(newer.id));
+    assert.ok(!snapshot.includedMessageIds.includes(older.id), "引用占掉预算后，更早的历史被挤掉");
+    assert.ok(snapshot.content.length < CHAT_HISTORY_MAX_CHARS + 2_000);
   });
 
   it("refuses attachment-only messages instead of silently dropping them", () => {

@@ -683,6 +683,17 @@ const toChatRun = (row: ChatRunRow): ChatRun => ({
   finishedAt: row.finished_at,
 });
 
+/**
+ * 发送前的准备（读会话、拼 Snapshot）和提交之间会话变了（成员 / 类型）。
+ * 调用方必须重建 Snapshot 再发；不能按旧成员建回答位。
+ */
+export class ChatSendConflictError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ChatSendConflictError";
+  }
+}
+
 /** 迟到结果：Run 已经被别的路径结掉了（撤回 / 取消 / 中断修复），不能再改。 */
 export class ChatRunStateConflictError extends Error {
   constructor(
@@ -1043,9 +1054,22 @@ export function createChatSend(
       throw new Error("chat message already exists: " + message.id);
     }
 
-    const recipients: ChatSendRecipient[] = chatRecipients(input.conversation, message.mentions).map((agent) => ({
+    // 拼 Snapshot 是在事务外做的，中间用户可能改了成员：在同一个事务里重读会话，
+    // 和调用方看到的名单不一致就整次拒绝（调用方重建 Snapshot 再发），不能按旧成员建回答位。
+    const conversation = getConversation(db, message.conversationId);
+    if (conversation === null) throw new ChatSendConflictError("conversation " + message.conversationId + " disappeared");
+    if (conversation.kind !== input.conversation.kind) {
+      throw new ChatSendConflictError("conversation kind changed while the snapshots were being built");
+    }
+    const previous = [...input.conversation.members].sort();
+    const current = [...conversation.members].sort();
+    if (previous.length !== current.length || previous.some((agent, index) => agent !== current[index])) {
+      throw new ChatSendConflictError("conversation members changed while the snapshots were being built");
+    }
+
+    const recipients: ChatSendRecipient[] = chatRecipients(conversation, message.mentions).map((agent) => ({
       agent,
-      required: chatRequired(input.conversation, message.mentions, agent),
+      required: chatRequired(conversation, message.mentions, agent),
       availability: input.availability.get(agent) ?? { kind: "available" },
     }));
 

@@ -83,17 +83,27 @@ function renderMessage(
   return name + "：" + message.text;
 }
 
-/** 从最新往前取，最多 MAX_MESSAGES 条、MAX_CHARS 字符；返回旧的在前 */
-function windowHistory(messages: readonly ChatMessage[], render: (message: ChatMessage) => string): ChatMessage[] {
+/**
+ * 从最新往前取，最多 MAX_MESSAGES 条；字符预算由调用方给（已经扣掉引用）。
+ *
+ * 单条超过剩余预算时**直接停**，不拼它、也不拼更早的：宁可让最近的这一条不进上下文，
+ * 也不能让一条 15 万字的回答把整个 Prompt 撑爆（契约 replyMaxChars 是 20 万字）。
+ * 被丢掉的消息不会进 includedMessageIds。
+ */
+function windowHistory(
+  messages: readonly ChatMessage[],
+  render: (message: ChatMessage) => string,
+  budget: number,
+): ChatMessage[] {
   const picked: ChatMessage[] = [];
-  let chars = 0;
+  let remaining = budget;
   for (let index = messages.length - 1; index >= 0; index -= 1) {
+    if (picked.length >= CHAT_HISTORY_MAX_MESSAGES) break;
     const message = messages[index] as ChatMessage;
     const length = render(message).length;
-    if (picked.length >= CHAT_HISTORY_MAX_MESSAGES) break;
-    if (picked.length > 0 && chars + length > CHAT_HISTORY_MAX_CHARS) break;
+    if (length > remaining) break;
     picked.unshift(message);
-    chars += length;
+    remaining -= length;
   }
   return picked;
 }
@@ -106,8 +116,12 @@ export function buildChatSnapshot(input: BuildChatSnapshotInput): ChatSnapshot {
   const render = (message: ChatMessage): string => renderMessage(message, input.agent, displayNameOf);
   const excluded = (message: ChatMessage): boolean => isExcludedFromContext(message, input.inReplyToOf);
 
-  const history = windowHistory(input.history.filter((message) => !excluded(message)), render);
-  const quote = input.quote !== null && !excluded(input.quote) ? input.quote : null;
+  // 引用也占预算：超过整个预算的引用直接丢掉（不进 Prompt，也不进 includedMessageIds）
+  const quoteCandidate = input.quote !== null && !excluded(input.quote) ? input.quote : null;
+  const quoteFragment = quoteCandidate === null ? null : render(quoteCandidate);
+  const quote = quoteFragment !== null && quoteFragment.length <= CHAT_HISTORY_MAX_CHARS ? quoteCandidate : null;
+  const budget = CHAT_HISTORY_MAX_CHARS - (quote === null ? 0 : (quoteFragment as string).length);
+  const history = windowHistory(input.history.filter((message) => !excluded(message)), render, budget);
 
   const nonce = input.nonce ?? createNonce();
   const open = "<" + UNTRUSTED_OPEN + nonce + ">";

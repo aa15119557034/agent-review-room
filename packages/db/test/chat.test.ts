@@ -8,6 +8,7 @@ import Database from "better-sqlite3";
 import { ChatMessage, ChatReplySlot, ChatRun, ChatSnapshot, Conversation, UserChatMessage } from "@room/schemas";
 import {
   ChatRunStateConflictError,
+  ChatSendConflictError,
   chatRecipients,
   chatRequired,
   createChatSend,
@@ -1017,6 +1018,41 @@ describe("chat send transaction (D-31b)", () => {
         }),
         /already exists/,
       );
+    } finally {
+      db.close();
+    }
+  });
+
+  it("rejects a send prepared against stale conversation members", async () => {
+    const { db, queue } = fresh();
+    try {
+      const group = await createConversation(db, queue, {
+        members: { kind: "group", agents: ["claude", "codex"] },
+        title: null,
+      });
+      const stale = getConversation(db, group.id);
+      assert.ok(stale !== null);
+      // 拼 Snapshot 期间成员被改了：调用方还在用旧名单
+      await updateConversation(db, queue, group.id, { members: ["claude", "deepseek"] });
+
+      const message = userMessage(group.id);
+      await assert.rejects(
+        createChatSend(db, queue, {
+          conversation: stale,
+          message,
+          requestHash: null,
+          createdAt: at(0),
+          availability: new Map([
+            ["claude", { kind: "available" as const }],
+            ["codex", { kind: "available" as const }],
+          ]),
+          snapshots: new Map([["claude", snapshotFor(group.id, message.id, "claude")]]),
+          adapterIds: new Map([["claude", "remote:claude-chat"]]),
+        }),
+        ChatSendConflictError,
+      );
+      assert.equal((db.prepare("SELECT count(*) AS n FROM chat_messages").get() as { n: number }).n, 0);
+      assert.equal((db.prepare("SELECT count(*) AS n FROM chat_reply_slots").get() as { n: number }).n, 0);
     } finally {
       db.close();
     }
