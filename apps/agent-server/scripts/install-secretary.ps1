@@ -62,6 +62,32 @@ if ($drive.DriveFormat -ne "NTFS" -or $drive.DriveType -ne "Fixed") {
   Fail "$HomeDir 所在的盘是 $($drive.DriveFormat) / $($drive.DriveType)。必须是本机 NTFS 盘（FAT、exFAT、网络盘、可移动盘上权限不生效）"
 }
 
+# ---- 1b. 预检：会失败的检查都放在改账号、复制程序、改权限之前，避免装一半
+$memory = Join-Path $HomeDir "memory\$Agent"
+$nodeApp = Join-Path $HomeDir "node\app"
+$nodeMine = Join-Path $HomeDir "node\$Agent"
+if (-not (Test-Path -LiteralPath $ConfigTemplate)) { Fail "找不到配置模板 $ConfigTemplate" }
+if (-not (Test-Path (Join-Path $AppSource "apps\agent-server\node_modules\.bin\tsx.cmd"))) {
+  Fail "找不到 tsx：先在 $AppSource 里运行 pnpm install --filter `"@room/agent-server...`""
+}
+$template = Get-Content -Raw -Encoding UTF8 $ConfigTemplate | ConvertFrom-Json
+$profiles = [ordered]@{}
+foreach ($p in $template.profiles.PSObject.Properties) {
+  if (-not $p.Name.StartsWith("$Agent-")) { continue }  # 节点也会拒绝别人的 profile
+  $p.Value.cwd = (Join-Path $nodeMine "sandbox")
+  if ($p.Name -eq "$Agent-chat") {
+    $p.Value | Add-Member -Force -NotePropertyName memory -NotePropertyValue ([ordered]@{ dir = "memory/$Agent"; provider = "folder" })
+  }
+  $profiles[$p.Name] = $p.Value
+}
+if ($profiles.Count -eq 0) { Fail "模板里没有 $Agent- 开头的 profile" }
+# 第一段允许没有聊天 profile（现在的模板只有讨论 profile）：记忆文件夹照建，聊天 profile 和记忆配置在第二段加
+$hasChat = $profiles.Contains("$Agent-chat")
+$template.profiles = [pscustomobject]$profiles
+$template.port = $Port
+# 主控机上的节点 id 按 §2a：林离 controller-local-codex；C酱在江浩的电脑上，沿用模板里的 id
+if ($Agent -eq "codex") { $template.nodeId = "controller-local-codex" }
+
 # ---- 2. 账号
 $user = "agentroom-$Agent"
 # 随机密码：32 字节随机数 + 固定的大小写 / 数字 / 符号后缀（满足复杂度要求）；不保存、不显示
@@ -80,9 +106,6 @@ if (Get-LocalUser -Name $user -ErrorAction SilentlyContinue) {
 $account = "$env:COMPUTERNAME\$user"
 
 # ---- 3. 文件夹
-$memory = Join-Path $HomeDir "memory\$Agent"
-$nodeApp = Join-Path $HomeDir "node\app"
-$nodeMine = Join-Path $HomeDir "node\$Agent"
 foreach ($d in @($HomeDir, (Join-Path $HomeDir "memory"), $memory, $nodeApp, $nodeMine, (Join-Path $nodeMine "sandbox"))) {
   New-Item -ItemType Directory -Force -Path $d | Out-Null
 }
@@ -137,7 +160,8 @@ $readApp = @($secretaries | ForEach-Object { "${_}:(OI)(CI)(RX)" })
 Set-OnlyAcl $HomeDir (@("${owner}:(OI)(CI)F") + $traverse)
 Set-OnlyAcl (Join-Path $HomeDir "memory") (@("${owner}:(OI)(CI)F") + $traverse)
 Set-OnlyAcl (Join-Path $HomeDir "node") (@("${owner}:(OI)(CI)F") + $traverse)
-Set-OnlyAcl $nodeApp (@("${owner}:(OI)(CI)F") + $readApp)
+# 程序树整棵重建：子文件上以前留下的写权限也要清掉（所有秘书都会执行这里的程序）
+Set-OnlyAcl $nodeApp (@("${owner}:(OI)(CI)F") + $readApp) -Tree
 # 这位秘书的记忆：整棵树重建。文件夹本身和 memory.json 她能读（不继承，所以 inbox / ext 她没有权限）
 Set-OnlyAcl $memory @("${owner}:(OI)(CI)F", "${account}:(RX)") -Tree
 icacls $settingsPath /grant:r "${account}:(R)" /Q | Out-Null; Icacls-Ok $settingsPath
@@ -147,22 +171,7 @@ Set-OnlyAcl $nodeMine @("${account}:(OI)(CI)(RX)") -Tree
 icacls (Join-Path $nodeMine "sandbox") /grant:r "${account}:(OI)(CI)M" /Q | Out-Null; Icacls-Ok sandbox
 
 # ---- 5. 配置和 Token
-$template = Get-Content -Raw -Encoding UTF8 $ConfigTemplate | ConvertFrom-Json
-$profiles = [ordered]@{}
-foreach ($p in $template.profiles.PSObject.Properties) {
-  if (-not $p.Name.StartsWith("$Agent-")) { continue }  # 节点也会拒绝别人的 profile
-  $p.Value.cwd = (Join-Path $nodeMine "sandbox")
-  if ($p.Name -eq "$Agent-chat") {
-    $p.Value | Add-Member -Force -NotePropertyName memory -NotePropertyValue ([ordered]@{ dir = "memory/$Agent"; provider = "folder" })
-  }
-  $profiles[$p.Name] = $p.Value
-}
-if ($profiles.Count -eq 0) { Fail "模板里没有 $Agent- 开头的 profile" }
-if (-not $profiles.Contains("$Agent-chat")) { Fail "模板里没有 $Agent-chat profile：没有地方配记忆" }
-$template.profiles = [pscustomobject]$profiles
-$template.port = $Port
-# 主控机上的节点 id 按 §2a：林离 controller-local-codex；C酱在江浩的电脑上，沿用模板里的 id
-if ($Agent -eq "codex") { $template.nodeId = "controller-local-codex" }
+
 foreach ($kv in @(@("homeDir", $HomeDir), @("agent", $Agent), @("runAsUser", $user), @("tokenFile", "agent-server.token"))) {
   $template | Add-Member -Force -NotePropertyName $kv[0] -NotePropertyValue $kv[1]
 }
@@ -186,7 +195,7 @@ if ($TokenReader -ne "") {
 Step "注册计划任务 AgentRoom-$Agent"
 $tsx = Join-Path $nodeApp "apps\agent-server\node_modules\.bin\tsx.cmd"
 $main = Join-Path $nodeApp "apps\agent-server\src\main.ts"
-if (-not (Test-Path $tsx)) { Fail "找不到 $tsx：先在 $AppSource 里运行 pnpm install --filter `"@room/agent-server...`"" }
+if (-not (Test-Path $tsx)) { Fail "找不到 $tsx（复制程序后不见了）" }
 $action = New-ScheduledTaskAction -Execute $tsx -Argument "`"$main`"" -WorkingDirectory $nodeMine
 $trigger = New-ScheduledTaskTrigger -AtStartup
 $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit ([TimeSpan]::Zero) -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)
@@ -214,4 +223,5 @@ $password = $null
 Write-Host ""
 Write-Host "✓ $Agent 安排好了" -ForegroundColor Green
 Write-Host "  记忆文件夹：$memory（把记忆放进 core / notes / journal）"
+if (-not $hasChat) { Write-Host "  模板里还没有 $Agent-chat：记忆文件夹已建好，聊天 profile 和读记忆在 S-20 第二段加上" -ForegroundColor Yellow }
 Write-Host "  节点：http://127.0.0.1:$Port（开机自动启动；现在启动：Start-ScheduledTask AgentRoom-$Agent）"

@@ -192,6 +192,8 @@ Windows 相关逻辑（`.cmd` 包装、taskkill 参数）用注入的模拟环�
   -ConfigTemplate .\apps\agent-server\agent-server.config.json -AppSource (Get-Location) -TokenReader $env:USERNAME
 ```
 
+现在的模板只有讨论 profile（比如 `codex-discuss`），没有 `<秘书>-chat` 也能装：账号、文件夹、权限、计划任务照装，聊天 profile 和读记忆在第二段加。
+
 主控机上按 §2a「切换顺序」：先装 `codex`（7421）；汐的 D-40 迁移完成后才装 `deepseek`（7420）。
 
 节点配置新增的字段：`homeDir`、`agent`（填了以后只能跑 `<agent>-` 开头的 profile）、`runAsUser`（进程账号不对就拒绝启动）、聊天 profile 的 `memory: { "dir": "memory/<agent>", "provider": "folder" }`。启动时会检查 `homeDir` 在本机 NTFS 盘上，并按规则读一遍记忆，只打印条数和跳过的原因，不打印正文。
