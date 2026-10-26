@@ -22,6 +22,8 @@ import {
 } from "@room/schemas";
 import {
   ChatSendConflictError,
+  ChatSendDuplicateMessageError,
+  ChatSendRateLimitError,
   chatRecipients,
   createChatSend,
   createConversation,
@@ -189,14 +191,7 @@ export class ChatService {
     const intentHash = sha256Hex(chatSendIntentJson(command));
 
     // ① 防重复：同一个 id、意图相同 → 返回第一次的结果（不占限流名额）
-    const existing = getChatMessage(db, command.messageId);
-    if (existing !== null) {
-      const stored = db.prepare("SELECT request_hash FROM chat_messages WHERE id = ?").get(command.messageId) as
-        | { request_hash: string | null }
-        | undefined;
-      if (stored?.request_hash !== intentHash) throw new ChatError("idempotency_conflict", "同一个 messageId 发了不一样的内容");
-      return this.#sendResult(existing as UserChatMessage);
-    }
+    if (getChatMessage(db, command.messageId) !== null) return this.#replaySend(command.messageId, intentHash);
 
     const conversation = getConversation(db, command.conversationId);
     if (conversation === null) throw new ChatError("not_found", "会话不存在");
@@ -301,9 +296,15 @@ export class ChatService {
         availability,
         snapshots,
         adapterIds,
+        rateLimit: { since, max: CHAT_LIMITS.messagesPerMinute },
       });
     } catch (error) {
       if (error instanceof ChatSendConflictError) throw new ChatError("invalid_state", error.message);
+      // 并发：另一个同 id 请求先提交了 → 回滚后重新读，按防重复规则返回
+      if (error instanceof ChatSendDuplicateMessageError) return this.#replaySend(command.messageId, intentHash);
+      if (error instanceof ChatSendRateLimitError) {
+        throw new ChatError("rate_limited", "这个会话每分钟最多 " + CHAT_LIMITS.messagesPerMinute + " 条，稍等一下");
+      }
       throw error;
     }
 
@@ -383,10 +384,14 @@ export class ChatService {
 
     const now = this.#now();
     const agents = new Map(repo.listAgents().map((item) => [item.id, item]));
+    // 重试的语境 = 原消息之前的历史：不能让它在回答 A 时看到后来才发的 B、C
     const history = listChatMessages(db, conversation.id, null, 100)
       .messages.slice()
       .reverse()
-      .filter((item) => item.id !== message.id);
+      .filter(
+        (item) =>
+          item.createdAt < message.createdAt || (item.createdAt === message.createdAt && item.id < message.id),
+      );
     const runId = "run_" + ulid();
     const snapshot = buildChatSnapshot({
       snapshotId: "snap_" + ulid(),
@@ -465,9 +470,12 @@ export class ChatService {
         .get(conversation.id) as { id: string } | undefined;
       const lastMessage = lastRow === undefined ? null : getChatMessage(db, lastRow.id);
       let unreadCount = 0;
+      // 未读只算秘书发来的：你自己发的消息不该顶出红点
       if (conversation.lastReadMessageId === null) {
         unreadCount = (
-          db.prepare("SELECT count(*) AS n FROM chat_messages WHERE conversation_id = ?").get(conversation.id) as { n: number }
+          db
+            .prepare("SELECT count(*) AS n FROM chat_messages WHERE conversation_id = ? AND sender = 'agent'")
+            .get(conversation.id) as { n: number }
         ).n;
       } else {
         const cursor = getChatMessage(db, conversation.lastReadMessageId);
@@ -475,7 +483,8 @@ export class ChatService {
           unreadCount = (
             db
               .prepare(
-                "SELECT count(*) AS n FROM chat_messages WHERE conversation_id = ? AND (created_at > ? OR (created_at = ? AND id > ?))",
+                "SELECT count(*) AS n FROM chat_messages WHERE conversation_id = ? AND sender = 'agent' " +
+                  "AND (created_at > ? OR (created_at = ? AND id > ?))",
               )
               .get(conversation.id, cursor.createdAt, cursor.createdAt, cursor.id) as { n: number }
           ).n;
@@ -607,10 +616,17 @@ export class ChatService {
               parseFailed = true;
             }
             const parsed = parseFailed ? null : ChatAgentOutput.safeParse(output);
+            // reply 的 text 去空白后为空也算交了白卷（schema 会拒绝它，但这是 empty_output 不是格式坏）
+            const blankReply =
+              typeof output === "object" &&
+              output !== null &&
+              (output as { kind?: unknown }).kind === "reply" &&
+              typeof (output as { text?: unknown }).text === "string" &&
+              ((output as { text: string }).text.trim().length === 0);
             if (parsed === null || !parsed.success) {
               await finish({
                 kind: "failed",
-                failure: { kind: blank ? "empty_output" : "parse_error", message: "输出不是合法的聊天 JSON" },
+                failure: { kind: blank || blankReply ? "empty_output" : "parse_error", message: "输出不是合法的聊天 JSON" },
               });
             } else if (parsed.data.kind === "skip") {
               await finish({ kind: "skipped" });
@@ -660,6 +676,17 @@ export class ChatService {
 
   // ================================================================ 内部
 
+  /** 防重复的统一出口：意图相同返回第一次的结果，不同就报冲突 */
+  #replaySend(messageId: string, intentHash: string): { message: UserChatMessage; slots: ChatReplySlot[]; runs: ChatRun[] } {
+    const message = getChatMessage(this.#deps.db, messageId);
+    if (message === null || message.sender !== "user") throw new ChatError("internal", "chat message disappeared");
+    const stored = this.#deps.db.prepare("SELECT request_hash FROM chat_messages WHERE id = ?").get(messageId) as
+      | { request_hash: string | null }
+      | undefined;
+    if (stored?.request_hash !== intentHash) throw new ChatError("idempotency_conflict", "同一个 messageId 发了不一样的内容");
+    return this.#sendResult(message);
+  }
+
   #sendResult(message: UserChatMessage): { message: UserChatMessage; slots: ChatReplySlot[]; runs: ChatRun[] } {
     const slots = listChatSlotsForMessage(this.#deps.db, message.id);
     return { message, slots, runs: slots.flatMap((slot) => listChatRunsForSlot(this.#deps.db, slot.id)) };
@@ -699,14 +726,16 @@ export class ChatService {
       return { kind: "unavailable", reason: "unconfigured" };
     }
 
-    let probe = probes.get(agent.nodeId);
+    // 同一个节点上的不同 profile 是两次独立的探测：profileAvailable 是 per-profile 的
+    const probeKey = agent.nodeId + "\u0000" + agent.chatProfileId;
+    let probe = probes.get(probeKey);
     if (probe === undefined) {
       probe = (this.#deps.probe ?? testReviewerNode)({
         baseUrl: credential.baseUrl,
         token: credential.token,
         profileId: agent.chatProfileId,
       });
-      probes.set(agent.nodeId, probe);
+      probes.set(probeKey, probe);
     }
     const result = await probe;
     if (!result.reachable) return { kind: "unavailable", reason: "offline" };

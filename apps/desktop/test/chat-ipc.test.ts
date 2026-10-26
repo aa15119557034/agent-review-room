@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
 import { openDatabase, WriteQueue } from "@room/db";
-import { ControlEvent, type AgentEvent, type CommandRequest } from "@room/schemas";
+import { CHAT_LIMITS, ControlEvent, type AgentEvent, type CommandRequest } from "@room/schemas";
 import type { AgentAdapter } from "@room/core";
 import { ChatService, type ChatRunTarget } from "../src/main/chat";
 import { Repository } from "../src/main/repository";
@@ -72,7 +72,9 @@ interface Harness {
   conversationId: string;
 }
 
-async function makeHarness(options: { scripts?: Record<string, Script>; paused?: string[] } = {}): Promise<Harness> {
+async function makeHarness(
+  options: { scripts?: Record<string, Script>; paused?: string[]; unavailableProfiles?: string[] } = {},
+): Promise<Harness> {
   const dir = mkdtempSync(join(tmpdir(), "room-chat-ipc-"));
   dirs.push(dir);
   const db = openDatabase(join(dir, "test.db"));
@@ -103,7 +105,7 @@ async function makeHarness(options: { scripts?: Record<string, Script>; paused?:
     settings,
     emit: (event) => events.push(ControlEvent.parse(event)),
     adapterFactory: async (target: ChatRunTarget) => fakeAdapter(scripts[target.agent] ?? reply("好的")),
-    probe: async () => ({
+    probe: async (params) => ({
       reachable: true,
       health: {
         protocol: 1,
@@ -114,7 +116,8 @@ async function makeHarness(options: { scripts?: Record<string, Script>; paused?:
         leaseMs: 30_000,
         heartbeatMs: 5_000,
       },
-      profileAvailable: true,
+      // profileAvailable 是 per-profile 的：同节点上不同秘书不能共用一次探测结果
+      profileAvailable: !(options.unavailableProfiles ?? []).includes(params.profileId),
       latencyMs: 1,
     }),
     now: () => NOW,
@@ -278,6 +281,111 @@ describe("chat service (D-31b)", () => {
       assert.equal(runs.length, 2);
       assert.equal(runs[1]?.state, "COMPLETED");
       assert.equal(after.messages.filter((message) => message.sender === "agent").length, 1);
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("probes per profile even on the same node", async () => {
+    const h = await makeHarness({ unavailableProfiles: ["codex-chat"] });
+    try {
+      const group = await h.chat.createConversation({
+        type: "chat.conversation.create",
+        members: { kind: "group", agents: ["claude", "codex"] },
+        title: null,
+      } as never);
+      const sent = await h.chat.send(send(group.id, userMessageId(60), "都在吗"));
+      const byAgent = Object.fromEntries(sent.slots.map((slot) => [slot.agent, slot]));
+      assert.equal(byAgent["claude"]?.outcome, "running");
+      assert.equal(byAgent["codex"]?.outcome, "unavailable");
+      assert.equal(byAgent["codex"]?.unavailableReason, "offline");
+      assert.equal(sent.runs.length, 1, "只有 claude 起 Run");
+      await settle(h.chat);
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("two concurrent sends with the same messageId return the first result, not internal", async () => {
+    const h = await makeHarness();
+    try {
+      const command = send(h.conversationId, userMessageId(70), "并发同一条");
+      const results = await Promise.allSettled([h.chat.send(command), h.chat.send(command)]);
+      assert.equal(results.filter((result) => result.status === "fulfilled").length, 2, JSON.stringify(results));
+      const ids = new Set(
+        results.map((result) => (result as PromiseFulfilledResult<{ message: { id: string } }>).value.message.id),
+      );
+      assert.equal(ids.size, 1);
+      const stored = h.db.prepare("SELECT count(*) AS n FROM chat_messages WHERE sender = 'user'").get() as { n: number };
+      assert.equal(stored.n, 1);
+      await settle(h.chat);
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("cannot exceed the per-minute limit with concurrent sends", async () => {
+    const h = await makeHarness();
+    try {
+      const results = await Promise.allSettled(
+        Array.from({ length: 7 }, (_, index) => h.chat.send(send(h.conversationId, userMessageId(80 + index), "并发 " + index))),
+      );
+      const rejected = results.filter((result) => result.status === "rejected");
+      assert.equal(rejected.length, 1);
+      assert.equal((rejected[0] as PromiseRejectedResult).reason.code, "rate_limited");
+      const stored = h.db.prepare("SELECT count(*) AS n FROM chat_messages WHERE sender = 'user'").get() as { n: number };
+      assert.equal(stored.n, CHAT_LIMITS.messagesPerMinute);
+      await settle(h.chat);
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("classifies a blank reply as empty_output, not parse_error", async () => {
+    const h = await makeHarness({ scripts: { deepseek: reply("   ") } });
+    try {
+      const sent = await h.chat.send(send(h.conversationId, userMessageId(90), "说点什么"));
+      await settle(h.chat);
+      const page = h.chat.listMessages({ type: "chat.messages.list", conversationId: h.conversationId, limit: 10 } as never);
+      assert.equal(page.slots[0]?.outcome, "failed");
+      assert.equal(page.slots[0]?.failure?.kind, "empty_output");
+      assert.equal(page.messages.length, 1);
+      assert.equal(h.chat.listSlotRuns(sent.slots[0]!.id)[0]?.state, "COMPLETED");
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("retries with the context from before the original message", async () => {
+    const scripts: Record<string, Script> = { deepseek: [{ type: "error", reason: "internal", message: "boom" }] };
+    const h = await makeHarness({ scripts });
+    try {
+      const first = await h.chat.send(send(h.conversationId, userMessageId(95), "问题 A"));
+      await settle(h.chat);
+      scripts["deepseek"] = reply("好的");
+      await h.chat.send(send(h.conversationId, userMessageId(96), "后来的 B"));
+      await h.chat.send(send(h.conversationId, userMessageId(97), "后来的 C"));
+      await settle(h.chat);
+
+      const retried = await h.chat.retry({ type: "chat.retry", slotId: first.slots[0]!.id } as never);
+      const snapshot = h.chat.getSnapshot(retried.run.snapshotId);
+      assert.ok(!snapshot.includedMessageIds.includes(userMessageId(96)), "重试看不到 B");
+      assert.ok(!snapshot.includedMessageIds.includes(userMessageId(97)), "重试看不到 C");
+      assert.ok(snapshot.includedMessageIds.includes(userMessageId(95)), "能看到原来的问题");
+      await settle(h.chat);
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("counts only agent messages as unread", async () => {
+    const h = await makeHarness();
+    try {
+      await h.chat.send(send(h.conversationId, userMessageId(98), "在吗"));
+      await settle(h.chat);
+      const item = h.chat.listConversations().find((entry) => entry.conversation.id === h.conversationId);
+      assert.ok(item !== undefined);
+      assert.equal(item.unreadCount, 1, "只有秘书那一条算未读");
     } finally {
       h.db.close();
     }
