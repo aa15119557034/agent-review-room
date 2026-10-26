@@ -1,0 +1,291 @@
+import type { ChatMentions, ConversationMembers, ControlEvent, Project } from "@room/schemas";
+import { ControlFailure, type RoomClient } from "./client";
+import { appendEvents, type AppState } from "./state";
+import {
+  draftOf,
+  emptyDraft,
+  mergeMessages,
+  mergeSlots,
+  pruneMentions,
+  toggleMention,
+  type ChatDraft,
+  type ChatState,
+} from "./chat";
+import { newId } from "./ids";
+import type { Store } from "./store";
+
+/**
+ * 聊天空间的操作（C-35）。规则和其他 actions 一样：失败写进 notice，不向上抛。
+ * 聊天不盖章：这里没有一条操作会改文件或跑命令；要变成动作只能 toTopic（进讨论室再盖章）。
+ */
+export interface ChatHooks {
+  /** 转议题成功后：把议题加进列表并切到讨论室 */
+  openTopic(project: Project): Promise<void>;
+}
+
+/** 一页拉多少条消息 */
+const PAGE = 50;
+/** 聊天事件到了之后多久重新拉会话列表（合并一串事件） */
+const LIST_REFRESH_MS = 150;
+
+export function createChatActions(store: Store<AppState>, client: RoomClient, fail: (err: unknown) => void, hooks: ChatHooks) {
+  const setChat = (f: (c: ChatState) => ChatState) => store.set((s) => ({ ...s, chat: f(s.chat) }));
+  const chat = () => store.get().chat;
+
+  const notSupported = (err: unknown) =>
+    err instanceof ControlFailure && (err.code === "validation_failed" || err.code === "internal");
+
+  async function loadConversations() {
+    try {
+      const list = await client.query({ type: "chat.conversations.list" });
+      setChat((c) => ({ ...c, available: true, list }));
+    } catch (err) {
+      if (notSupported(err) && chat().list === null) setChat((c) => ({ ...c, available: false }));
+      else fail(err);
+    }
+  }
+
+  let refreshTimer: ReturnType<typeof setTimeout> | null = null;
+  const refreshListSoon = () => {
+    if (refreshTimer) return;
+    refreshTimer = setTimeout(() => {
+      refreshTimer = null;
+      void loadConversations();
+    }, LIST_REFRESH_MS);
+  };
+
+  /** 读到最新一条（只往后挪，后端也会忽略更旧的） */
+  async function markRead() {
+    const { currentId, messages } = chat();
+    const last = messages[messages.length - 1];
+    if (!currentId || !last) return;
+    try {
+      await client.command({ type: "chat.conversation.markRead", conversationId: currentId, messageId: last.id });
+    } catch {
+      // 只是已读标记，失败不打扰
+    }
+  }
+
+  /** 把回答中的那些 Run 已经收到的流式文字补上（打开会话时） */
+  async function loadRunningEvents(runIds: string[]) {
+    const ids = runIds.filter((id) => !store.get().runEvents[id]);
+    if (!ids.length) return;
+    const evs = await Promise.all(ids.map((runId) => client.query({ type: "runs.events", runId }).catch(() => [])));
+    store.set((s) => {
+      const runEvents = { ...s.runEvents };
+      ids.forEach((id, i) => (runEvents[id] = appendEvents(runEvents[id], evs[i] ?? [])));
+      return { ...s, runEvents };
+    });
+  }
+
+  let openToken = 0;
+
+  async function openConversation(conversationId: string) {
+    const token = ++openToken;
+    setChat((c) => ({ ...c, currentId: conversationId, messages: [], slots: [], nextCursor: null, selecting: null, sheet: null }));
+    try {
+      const page = await client.query({ type: "chat.messages.list", conversationId, limit: PAGE });
+      if (token !== openToken) return;
+      setChat((c) => ({
+        ...c,
+        messages: mergeMessages([], page.messages),
+        slots: mergeSlots([], page.slots),
+        nextCursor: page.nextCursor,
+      }));
+      await loadRunningEvents(page.slots.filter((s) => s.outcome === "running" && s.runId).map((s) => s.runId!));
+      await markRead();
+      refreshListSoon();
+    } catch (err) {
+      fail(err);
+    }
+  }
+
+  const draftPatch = (patch: Partial<ChatDraft>) =>
+    setChat((c) => {
+      if (!c.currentId) return c;
+      // 草稿一改，之前那次没拿到结果的发送就作废了（意图变了就是新的一次）
+      const next = { ...draftOf(c, c.currentId), ...patch, messageId: patch.messageId ?? null };
+      return { ...c, drafts: { ...c.drafts, [c.currentId]: next } };
+    });
+
+  return {
+    loadConversations,
+
+    /** 聊天事件的副作用：未读数、「回答中」以 main 为准，重新拉列表；正在看的会话来了新消息就标已读 */
+    onChatEvent(e: ControlEvent) {
+      if (!e.type.startsWith("chat.")) return;
+      refreshListSoon();
+      if (e.type === "chat.message.created" && e.message.conversationId === chat().currentId) void markRead();
+    },
+
+    openConversation,
+
+    /** 手机宽度下「返回」到会话列表 */
+    closeConversation: () => setChat((c) => ({ ...c, currentId: null, selecting: null, sheet: null })),
+
+    async loadOlder() {
+      const { currentId, nextCursor } = chat();
+      if (!currentId || !nextCursor) return;
+      try {
+        const page = await client.query({ type: "chat.messages.list", conversationId: currentId, before: nextCursor, limit: PAGE });
+        setChat((c) =>
+          c.currentId !== currentId
+            ? c
+            : { ...c, messages: mergeMessages(c.messages, page.messages), slots: mergeSlots(c.slots, page.slots), nextCursor: page.nextCursor },
+        );
+      } catch (err) {
+        fail(err);
+      }
+    },
+
+    openSheet: (sheet: ChatState["sheet"]) => setChat((c) => ({ ...c, sheet })),
+    closeSheet: () => setChat((c) => ({ ...c, sheet: null })),
+
+    async createConversation(members: ConversationMembers, title: string | null) {
+      try {
+        const conv = await client.command({ type: "chat.conversation.create", members, title });
+        await loadConversations();
+        await openConversation(conv.id);
+      } catch (err) {
+        fail(err);
+      }
+    },
+
+    /** 改名、置顶、免打扰、群成员。只传要改的 */
+    async updateConversation(patch: { title?: string | null; pinned?: boolean; muted?: boolean; members?: string[] }) {
+      const conversationId = chat().currentId;
+      if (!conversationId) return;
+      try {
+        const conv = await client.command({ type: "chat.conversation.update", conversationId, ...patch });
+        setChat((c) => ({
+          ...c,
+          drafts: c.drafts[conv.id] ? { ...c.drafts, [conv.id]: { ...c.drafts[conv.id]!, mentions: pruneMentions(c.drafts[conv.id]!.mentions, conv.members) } } : c.drafts,
+        }));
+        await loadConversations();
+      } catch (err) {
+        fail(err);
+      }
+    },
+
+    setDraftText: (text: string) => draftPatch({ text }),
+    toggleMention: (pick: "all" | string) =>
+      draftPatch({ mentions: toggleMention(draftOf(chat(), chat().currentId).mentions, pick) }),
+    setMentions: (mentions: ChatMentions) => draftPatch({ mentions }),
+    quote: (messageId: string | null) => draftPatch({ quoteMessageId: messageId }),
+    cancelReedit: () => draftPatch({ replacesMessageId: null }),
+
+    /** 重新编辑：把撤回的原文放回输入框（@ 和引用一起带回来），发出去是一条新消息 */
+    startReedit(messageId: string) {
+      const m = chat().messages.find((x) => x.id === messageId);
+      if (!m || m.sender !== "user" || m.content.kind !== "text") return;
+      draftPatch({ text: m.content.text, mentions: m.mentions, quoteMessageId: m.quoteMessageId, replacesMessageId: m.id });
+    },
+
+    async send() {
+      const c = chat();
+      const conversationId = c.currentId;
+      const conv = c.list?.find((x) => x.conversation.id === conversationId)?.conversation;
+      if (!conversationId || !conv) return;
+      const draft = draftOf(c, conversationId);
+      if (!draft.text.trim()) return;
+      // 同一次发送（上次没拿到结果）沿用原来的 id，main 按 id 防重复
+      const messageId = draft.messageId ?? newId("cmsg");
+      setChat((x) => ({ ...x, drafts: { ...x.drafts, [conversationId]: { ...draft, messageId } } }));
+      try {
+        const r = await client.command({
+          type: "chat.send",
+          conversationId,
+          messageId,
+          content: { kind: "text", text: draft.text, attachments: [] },
+          mentions: conv.kind === "direct" ? { kind: "none" } : draft.mentions,
+          quoteMessageId: draft.quoteMessageId,
+          replacesMessageId: draft.replacesMessageId,
+        });
+        setChat((x) => {
+          // 草稿在等结果期间又改过（messageId 被清掉）就别覆盖
+          const still = x.drafts[conversationId]?.messageId === messageId;
+          const drafts = still ? { ...x.drafts, [conversationId]: emptyDraft() } : x.drafts;
+          if (x.currentId !== conversationId) return { ...x, drafts };
+          return { ...x, drafts, messages: mergeMessages(x.messages, [r.message]), slots: mergeSlots(x.slots, r.slots) };
+        });
+        refreshListSoon();
+      } catch (err) {
+        // 后端明确拒绝了 = 什么都没建，下次是新的一次；连不上 = 不知道建没建，留着 id 原样再发
+        if (!(err instanceof ControlFailure && err.code === "internal")) {
+          setChat((x) => {
+            const d = x.drafts[conversationId];
+            return d?.messageId === messageId ? { ...x, drafts: { ...x.drafts, [conversationId]: { ...d, messageId: null } } } : x;
+          });
+        }
+        fail(err);
+      }
+    },
+
+    async retract(messageId: string) {
+      try {
+        const r = await client.command({ type: "chat.retract", messageId });
+        setChat((c) => ({ ...c, messages: mergeMessages(c.messages, [r.message]), slots: mergeSlots(c.slots, r.slots) }));
+        refreshListSoon();
+      } catch (err) {
+        fail(err);
+      }
+    },
+
+    async retry(slotId: string) {
+      try {
+        const r = await client.command({ type: "chat.retry", slotId });
+        setChat((c) => ({ ...c, slots: mergeSlots(c.slots, [r.slot]) }));
+      } catch (err) {
+        fail(err);
+      }
+    },
+
+    async cancelReply(slotId: string) {
+      try {
+        const slot = await client.command({ type: "chat.cancelReply", slotId });
+        setChat((c) => ({ ...c, slots: mergeSlots(c.slots, [slot]) }));
+      } catch (err) {
+        fail(err);
+      }
+    },
+
+    // ---------------------------------------------------------- 多选 → 转议题
+
+    startSelect: (messageId?: string) => setChat((c) => ({ ...c, selecting: messageId ? [messageId] : [], sheet: null })),
+    cancelSelect: () => setChat((c) => ({ ...c, selecting: null })),
+    toggleSelect: (messageId: string) =>
+      setChat((c) =>
+        !c.selecting
+          ? c
+          : { ...c, selecting: c.selecting.includes(messageId) ? c.selecting.filter((x) => x !== messageId) : [...c.selecting, messageId] },
+      ),
+
+    async toTopic(name: string) {
+      const { currentId, selecting, messages } = chat();
+      if (!currentId || !selecting?.length) return;
+      // 按时间顺序交（main 也会按时间整理，这里只是让请求好读）
+      const messageIds = messages.filter((m) => selecting.includes(m.id)).map((m) => m.id);
+      try {
+        const { project } = await client.command({ type: "chat.toTopic", conversationId: currentId, messageIds, name });
+        setChat((c) => ({ ...c, selecting: null }));
+        await hooks.openTopic(project);
+      } catch (err) {
+        fail(err);
+      }
+    },
+
+    /** 记忆来源详情：这次回答的 ChatRun（记忆清单在上面） */
+    async loadChatRun(runId: string) {
+      if (chat().runs[runId]) return;
+      try {
+        const run = await client.query({ type: "chat.runs.get", runId });
+        setChat((c) => ({ ...c, runs: { ...c.runs, [run.id]: run } }));
+      } catch (err) {
+        fail(err);
+      }
+    },
+
+  };
+}
+
+export type ChatActions = ReturnType<typeof createChatActions>;

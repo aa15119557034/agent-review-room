@@ -45,11 +45,14 @@ export interface MockOptions {
   seed?: boolean;
   /** 讨论室：模拟额度缺席、中途额度用尽、失败 */
   discussion?: DiscussionMockOptions;
+  /** 聊天（C-35）：模拟连不上、失败、额度用尽、记忆来源 */
+  chat?: ChatMockOptions;
 }
 
 export { MockError, id, now, sha256Hex, randomHex } from "./util";
 import { MockError, id, now, sha256Hex, randomHex } from "./util";
 import { createDiscussionMock, type DiscussionMockOptions } from "./discussion-mock";
+import { createChatMock, type ChatMockOptions } from "./chat-mock";
 
 export function createMockBridge(options: MockOptions = {}): RoomBridge & { reset(): void } {
   const tickMs = options.tickMs ?? 120;
@@ -339,6 +342,14 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
   );
   Object.assign(commands, discussion.commands);
 
+  // ------------------------------------------------------------ 聊天（C-35）
+
+  const chat = createChatMock(
+    { db, emit, pushEvent, agents: discussion.agents, timers, tickMs },
+    { seed: options.seed, ...options.chat },
+  );
+  Object.assign(commands, chat.commands);
+
   // ------------------------------------------------------------ queries
 
   const byProject = <T extends { projectId: string }>(list: T[], pid: string) => list.filter((x) => x.projectId === pid);
@@ -387,6 +398,7 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
   };
 
   Object.assign(queries, discussion.queries);
+  Object.assign(queries, chat.queries);
 
   // ------------------------------------------------------------ dispatch
 
@@ -417,6 +429,7 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
     },
     reset() {
       discussion.reset();
+      chat.reset();
       timers.forEach((hs) => hs.forEach(clearTimeout));
       timers.clear();
       for (const k of Object.keys(db) as (keyof typeof db)[]) {

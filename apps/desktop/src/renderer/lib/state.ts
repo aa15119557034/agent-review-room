@@ -11,6 +11,7 @@ import type {
   SystemStatus,
 } from "@room/schemas";
 import { applyDiscussionEvent, initialDiscussion, type DiscussionState } from "./discussion";
+import { applyChatEvent, initialChat, isChatRun, type ChatState } from "./chat";
 
 /**
  * renderer 的全部状态。只存从后端拿到的数据和少量 UI 状态，不在前端推导业务状态
@@ -33,10 +34,12 @@ export interface AppState {
   draft: PromptDraft;
   /** 用户在运行记录里点选的 run；null 表示默认显示最新的一个 */
   selectedRunId: string | null;
-  /** 顶栏切换：讨论室（主页）、单次评审（Phase 0 工作台）、设置 */
-  view: "discussion" | "desk" | "settings";
+  /** 顶栏切换：聊天（C-35）、讨论室（主页）、单次评审（Phase 0 工作台）、设置 */
+  view: "chat" | "discussion" | "desk" | "settings";
   /** 讨论室（C-21） */
   disc: DiscussionState;
+  /** 聊天空间（C-35） */
+  chat: ChatState;
   /** Reviewer 节点设置；undefined = 还没读过，null = 从未设置 */
   reviewerNode: ReviewerNodeSettings | null | undefined;
   /** 最近一次操作失败的说明，显示在界面上，由用户关闭 */
@@ -68,6 +71,7 @@ export const initialState: AppState = {
   selectedRunId: null,
   view: "discussion",
   disc: initialDiscussion,
+  chat: initialChat,
   reviewerNode: undefined,
   notice: null,
 };
@@ -103,7 +107,8 @@ export function applyEvent(state: AppState, event: ControlEvent): AppState {
 
     case "run.event": {
       const runId = event.event.runId;
-      if (!state.runs.some((r) => r.id === runId)) return state;
+      // 聊天回答的流式文字也走 run.event（按当前会话的回答位认）
+      if (!state.runs.some((r) => r.id === runId) && !isChatRun(state.chat, runId)) return state;
       return { ...state, runEvents: { ...state.runEvents, [runId]: appendEvents(state.runEvents[runId], [event.event]) } };
     }
 
@@ -121,12 +126,16 @@ export function applyEvent(state: AppState, event: ControlEvent): AppState {
       return disc === state.disc ? state : { ...state, disc };
     }
 
-    // 聊天空间（C-34）的事件由聊天界面（C-35）自己处理
+    // 聊天空间（C-34 / C-35）
     case "chat.conversation.updated":
     case "chat.message.created":
     case "chat.message.updated":
     case "chat.slot.updated":
-    case "chat.run.updated":
+    case "chat.run.updated": {
+      const chat = applyChatEvent(state.chat, event);
+      return chat === state.chat ? state : { ...state, chat };
+    }
+    // 摘要在界面上不显示；语音、表情要等 D-34
     case "chat.summary.updated":
     case "chat.voice.updated":
     case "media.updated":

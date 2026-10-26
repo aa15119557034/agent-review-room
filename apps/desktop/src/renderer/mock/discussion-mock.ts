@@ -249,6 +249,8 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
     }
     for (const m of db.messages) {
       if (m.projectId === projectId && m.kind === "human_note" && m.roundId === null) lines.push(`[你] ${m.content}`);
+      // 从聊天转来的材料（C-34：每一轮都带）
+      if (m.projectId === projectId && m.kind === "chat_material") lines.unshift(`[聊天材料] ${m.content}`);
     }
     return { lines, compressedRounds };
   }
@@ -824,6 +826,8 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
   return {
     commands,
     queries,
+    /** 聊天 mock 用同一份参与者 */
+    agents: () => d.agents,
     reset() {
       d.rounds.length = 0;
       d.batches.length = 0;
