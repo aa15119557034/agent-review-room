@@ -57,6 +57,9 @@ export function identityProblems(config: ServerConfig, probe: IdentityProbe = sy
   const memoryProfiles = Object.entries(config.profiles).filter(([, p]) => p.memory);
   const path = probe.platform === "win32" ? win32 : posix;
 
+  if (agent !== undefined && runAsUser !== undefined && bareUser(runAsUser) !== `agentroom-${agent}`) {
+    problems.push(`runAsUser 只能是 agentroom-${agent}，现在是 ${runAsUser}`);
+  }
   if (runAsUser !== undefined && bareUser(probe.currentUser()) !== bareUser(runAsUser)) {
     problems.push(`节点必须以账号 ${runAsUser} 运行，现在是 ${probe.currentUser()}。用计划任务启动，不要从自己的会话里直接运行`);
   }
@@ -69,6 +72,8 @@ export function identityProblems(config: ServerConfig, probe: IdentityProbe = sy
 
   if (memoryProfiles.length === 0) return problems;
   if (agent === undefined) problems.push("配了记忆的节点必须填 agent");
+  // 不填 runAsUser 就等于用谁的账号跑都行（比如江浩的账号，他对记忆是完全控制），隔离失效
+  if (runAsUser === undefined) problems.push(`配了记忆的节点必须填 runAsUser（agentroom-${agent ?? "<agent>"}）`);
   if (homeDir === undefined) problems.push("配了记忆的节点必须填 homeDir");
   else if (!path.isAbsolute(homeDir)) problems.push("homeDir 必须是绝对路径");
   if (problems.length) return problems;
@@ -78,21 +83,27 @@ export function identityProblems(config: ServerConfig, probe: IdentityProbe = sy
     if (p.memory!.dir !== `memory/${agent}`) problems.push(`profile "${id}"：memory.dir 只能是 memory/${agent}，现在是 ${p.memory!.dir}`);
   }
 
+  const norm = (s: string) => {
+    const t = path.normalize(s).replace(/[\\/]+$/, "");
+    return probe.platform === "win32" ? t.toLowerCase() : t;
+  };
+  // homeDir 自己（和它的上级）不能是链接 / junction / 挂载点：真实路径必须等于配置的路径，
+  // 否则盘检查查的是链接所在的盘，真正的文件可能在网络盘上
+  const home = probe.realpath(homeDir!);
+  if (!home) return [...problems, `homeDir 不存在或读不了：${homeDir}`];
+  if (norm(home) !== norm(homeDir!)) return [...problems, `homeDir 不能是链接或 junction（真实路径是 ${home}）`];
+
   if (probe.platform === "win32") {
-    const v = probe.volume(homeDir!);
-    if (!v) problems.push(`查不到 homeDir 所在的盘（${homeDir}）`);
+    const v = probe.volume(home);
+    if (!v) problems.push(`查不到 homeDir 所在的盘（${home}）`);
     else if (v.format !== "NTFS" || v.type !== "Fixed") {
       problems.push(`homeDir 必须在本机 NTFS 盘上（现在是 ${v.format} / ${v.type}）：FAT、exFAT、网络盘、可移动盘上权限不生效`);
     }
   }
 
   // 真实路径必须正好是 <homeDir>/memory/<agent>（防止 homeDir 里的 memory 或 <agent> 是指到别处的链接）
-  const home = probe.realpath(homeDir!);
   const dir = probe.realpath(path.join(homeDir!, "memory", agent!));
-  if (home && dir) {
-    const norm = (s: string) => (probe.platform === "win32" ? s.toLowerCase() : s);
-    if (norm(dir) !== norm(path.join(home, "memory", agent!))) problems.push(`记忆文件夹的真实路径不在 homeDir/memory/${agent} 下：${dir}`);
-  }
-  // 文件夹还没建不算配置错误：启动后这个来源是 unavailable
+  if (dir && norm(dir) !== norm(path.join(home, "memory", agent!))) problems.push(`记忆文件夹的真实路径不在 homeDir/memory/${agent} 下：${dir}`);
+  // 记忆文件夹还没建不算配置错误：启动后这个来源是 unavailable
   return problems;
 }

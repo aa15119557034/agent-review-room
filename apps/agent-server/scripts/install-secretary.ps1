@@ -15,6 +15,7 @@ S-20：在这台电脑上给一位秘书安排「家」（ADR-003 §2a）。用�
 主控机上按 ADR-003 §2a「切换顺序」：先装 codex（7421）；D-40 迁移完成后才装 deepseek（7420）。
 已有的记忆、文件不会被覆盖；重复运行只补缺的、重设权限。
 #>
+#Requires -Version 5.1
 [CmdletBinding()]
 param(
   [Parameter(Mandatory)][ValidateSet("claude", "deepseek", "codex")][string]$Agent,
@@ -33,6 +34,11 @@ Set-StrictMode -Version Latest
 function Fail($msg) { Write-Host "✗ $msg" -ForegroundColor Red; exit 1 }
 function Step($msg) { Write-Host "→ $msg" -ForegroundColor Cyan }
 
+# 建账号用的 LocalAccounts 模块在 PowerShell 7 里不一定能直接用：只认 Windows 自带的 PowerShell 5.1
+if ($PSVersionTable.PSEdition -ne "Desktop") { Fail "请用 Windows 自带的 PowerShell（powershell.exe，以管理员身份运行），不要用 pwsh" }
+# DeepSeek 的 API Key 在新账号下怎么给还没定（S-20 第二段），而且按 §2a 汐要等 D-40 之后才切
+if ($Agent -eq "deepseek") { Fail "deepseek 现在还不能装：等 D-40 迁移完成、S-20 第二段安排好 API Key 之后再装（ADR-003 §2a 切换顺序）" }
+
 $me = [Security.Principal.WindowsIdentity]::GetCurrent()
 if (-not ([Security.Principal.WindowsPrincipal]$me).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
   Fail "请用「以管理员身份运行」的 PowerShell"
@@ -41,6 +47,16 @@ $owner = $me.Name  # 运行脚本的人（江浩）：记忆完全控制
 
 # ---- 1. 盘
 $HomeDir = [IO.Path]::GetFullPath($HomeDir).TrimEnd("\")
+# HomeDir 和它的每一级上级都不能是 junction / 符号链接 / 挂载点：否则查的是链接所在的盘，文件实际可能在网络盘上
+$p = $HomeDir
+while ($p) {
+  if (Test-Path -LiteralPath $p) {
+    $item = Get-Item -LiteralPath $p -Force
+    if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) { Fail "$p 是链接、junction 或挂载点。AgentRoom 要放在普通文件夹里" }
+  }
+  $p = Split-Path -Parent $p
+}
+if ($HomeDir.StartsWith("\\")) { Fail "AgentRoom 不能放在网络路径上" }
 $drive = [IO.DriveInfo]::new([IO.Path]::GetPathRoot($HomeDir))
 if ($drive.DriveFormat -ne "NTFS" -or $drive.DriveType -ne "Fixed") {
   Fail "$HomeDir 所在的盘是 $($drive.DriveFormat) / $($drive.DriveType)。必须是本机 NTFS 盘（FAT、exFAT、网络盘、可移动盘上权限不生效）"
@@ -48,8 +64,10 @@ if ($drive.DriveFormat -ne "NTFS" -or $drive.DriveType -ne "Fixed") {
 
 # ---- 2. 账号
 $user = "agentroom-$Agent"
-Add-Type -AssemblyName System.Web
-$password = [Web.Security.Membership]::GeneratePassword(32, 6)
+# 随机密码：32 字节随机数 + 固定的大小写 / 数字 / 符号后缀（满足复杂度要求）；不保存、不显示
+$bytes = [byte[]]::new(32)
+[Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
+$password = [Convert]::ToBase64String($bytes) + "aA1!"
 $secure = ConvertTo-SecureString $password -AsPlainText -Force
 if (Get-LocalUser -Name $user -ErrorAction SilentlyContinue) {
   Step "账号 $user 已存在，重设密码（旧计划任务会一起更新）"
@@ -90,31 +108,43 @@ if (-not (Test-Path $readme)) {
 }
 
 Step "复制节点程序到 $nodeApp"
-robocopy $AppSource $nodeApp /MIR /XD .git /NFL /NDL /NJH /NJS /NP | Out-Null
+# node\app 对所有秘书账号可读：配置、Token、.env、备份一律不复制，复制完再查一遍
+$secretFiles = @("agent-server.config*.json", "*.token", ".env*", "*.bak", "settings.json")
+robocopy $AppSource $nodeApp /MIR /XD .git /XF @secretFiles /NFL /NDL /NJH /NJS /NP | Out-Null
 if ($LASTEXITCODE -ge 8) { Fail "复制节点程序失败（robocopy $LASTEXITCODE）" }
+$leaked = Get-ChildItem -LiteralPath $nodeApp -Recurse -Force -File -Include $secretFiles -ErrorAction SilentlyContinue
+if ($leaked) { Fail "node\app 里还有不该复制的文件：$($leaked[0].FullName)" }
 
 # ---- 4. 权限
-function Reset-Acl([string]$path, [string[]]$grants) {
-  icacls $path /inheritance:r /Q | Out-Null
-  icacls $path /grant:r "*S-1-5-32-544:(OI)(CI)F" "*S-1-5-18:(OI)(CI)F" /Q | Out-Null  # 管理员组、SYSTEM
-  foreach ($g in $grants) { icacls $path /grant:r $g /Q | Out-Null }
-  if ($LASTEXITCODE -ne 0) { Fail "设置权限失败：$path" }
+# 每次都整份重建，不在旧的上面加：以前手工给过的、换掉的 TokenReader，重跑后都不再有权限
+function Icacls-Ok { if ($LASTEXITCODE -ne 0) { Fail "设置权限失败：$args" } }
+function Set-OnlyAcl([string]$path, [string[]]$grants, [switch]$Tree) {
+  if ($Tree) { icacls $path /reset /T /C /Q | Out-Null; Icacls-Ok $path }  # 子项的显式权限也清掉，改成只继承
+  icacls $path /inheritance:r /Q | Out-Null; Icacls-Ok $path
+  # 去掉 /reset 之后可能还在的显式项：只留管理员组、SYSTEM 和下面列的
+  $keep = @("*S-1-5-32-544:(OI)(CI)F", "*S-1-5-18:(OI)(CI)F") + $grants
+  $acl = Get-Acl -LiteralPath $path
+  foreach ($rule in @($acl.Access | Where-Object { -not $_.IsInherited })) { [void]$acl.RemoveAccessRuleAll($rule) }
+  Set-Acl -LiteralPath $path -AclObject $acl
+  icacls $path /grant:r @keep /Q | Out-Null; Icacls-Ok $path
 }
 Step "设权限"
-# 根目录：关掉继承（很多盘根目录默认给「已验证用户」改子文件夹的权限）；各账号只能穿过
-Reset-Acl $HomeDir @("${owner}:(OI)(CI)F")
-Reset-Acl (Join-Path $HomeDir "memory") @("${owner}:(OI)(CI)F")
-# 节点启动时要查 homeDir 和 memory 的真实路径：这两个文件夹本身给她 RX，不往下继承
-foreach ($d in @($HomeDir, (Join-Path $HomeDir "memory"), (Join-Path $HomeDir "node"))) { icacls $d /grant "${account}:(RX)" /Q | Out-Null }
-# 这位秘书的文件夹本身和 memory.json：她能读，但不往子文件夹继承（inbox / ext 她没有权限）
-Reset-Acl $memory @("${owner}:(OI)(CI)F", "${account}:(RX)")
-icacls $settingsPath /grant:r "${account}:(R)" /Q | Out-Null
-foreach ($s in @("core", "notes", "journal")) { icacls (Join-Path $memory $s) /grant:r "${account}:(OI)(CI)(RX)" /Q | Out-Null }
-# 节点程序：只读
-icacls $nodeApp /grant "${account}:(OI)(CI)(RX)" /Q | Out-Null
-# 配置和 Token：只有她和管理员（江浩不在这里，Token 另外单给）
-Reset-Acl $nodeMine @("${account}:(OI)(CI)(RX)")
-icacls (Join-Path $nodeMine "sandbox") /grant "${account}:(OI)(CI)M" /Q | Out-Null
+# 这台电脑上所有秘书的节点账号（不含以后的插件账号 agentroom-plg-*）：共用的文件夹给她们「能穿过、能读程序」
+$secretaries = @(Get-LocalUser | Where-Object { $_.Name -like "agentroom-*" -and $_.Name -notlike "agentroom-plg-*" } | ForEach-Object { "$env:COMPUTERNAME\$($_.Name)" })
+$traverse = @($secretaries | ForEach-Object { "${_}:(RX)" })          # 只这一层，不往下继承
+$readApp = @($secretaries | ForEach-Object { "${_}:(OI)(CI)(RX)" })
+# 根目录：关掉继承（很多盘根目录默认给「已验证用户」改子文件夹的权限）
+Set-OnlyAcl $HomeDir (@("${owner}:(OI)(CI)F") + $traverse)
+Set-OnlyAcl (Join-Path $HomeDir "memory") (@("${owner}:(OI)(CI)F") + $traverse)
+Set-OnlyAcl (Join-Path $HomeDir "node") (@("${owner}:(OI)(CI)F") + $traverse)
+Set-OnlyAcl $nodeApp (@("${owner}:(OI)(CI)F") + $readApp)
+# 这位秘书的记忆：整棵树重建。文件夹本身和 memory.json 她能读（不继承，所以 inbox / ext 她没有权限）
+Set-OnlyAcl $memory @("${owner}:(OI)(CI)F", "${account}:(RX)") -Tree
+icacls $settingsPath /grant:r "${account}:(R)" /Q | Out-Null; Icacls-Ok $settingsPath
+foreach ($s in @("core", "notes", "journal")) { icacls (Join-Path $memory $s) /grant:r "${account}:(OI)(CI)(RX)" /Q | Out-Null; Icacls-Ok $s }
+# 配置和 Token：整棵树重建，只有她和管理员（江浩不在这里，Token 另外单给）
+Set-OnlyAcl $nodeMine @("${account}:(OI)(CI)(RX)") -Tree
+icacls (Join-Path $nodeMine "sandbox") /grant:r "${account}:(OI)(CI)M" /Q | Out-Null; Icacls-Ok sandbox
 
 # ---- 5. 配置和 Token
 $template = Get-Content -Raw -Encoding UTF8 $ConfigTemplate | ConvertFrom-Json
@@ -128,8 +158,11 @@ foreach ($p in $template.profiles.PSObject.Properties) {
   $profiles[$p.Name] = $p.Value
 }
 if ($profiles.Count -eq 0) { Fail "模板里没有 $Agent- 开头的 profile" }
+if (-not $profiles.Contains("$Agent-chat")) { Fail "模板里没有 $Agent-chat profile：没有地方配记忆" }
 $template.profiles = [pscustomobject]$profiles
 $template.port = $Port
+# 主控机上的节点 id 按 §2a：林离 controller-local-codex；C酱在江浩的电脑上，沿用模板里的 id
+if ($Agent -eq "codex") { $template.nodeId = "controller-local-codex" }
 foreach ($kv in @(@("homeDir", $HomeDir), @("agent", $Agent), @("runAsUser", $user), @("tokenFile", "agent-server.token"))) {
   $template | Add-Member -Force -NotePropertyName $kv[0] -NotePropertyValue $kv[1]
 }
@@ -142,9 +175,11 @@ if (-not (Test-Path $tokenPath)) {
   [Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
   [IO.File]::WriteAllText($tokenPath, (($bytes | ForEach-Object { $_.ToString("x2") }) -join "") + "`n", $utf8)
 }
+# Token 文件只继承 node\<秘书> 的权限（刚整棵树重建过），再按这次的 TokenReader 单给一份只读
+icacls $tokenPath /reset /Q | Out-Null; Icacls-Ok $tokenPath
 if ($TokenReader -ne "") {
   # 只给 Token 这一个文件只读，不给文件夹（ADR-003 §2a：桌面端以普通账号一键导入）
-  icacls $tokenPath /grant "${TokenReader}:(R)" /Q | Out-Null
+  icacls $tokenPath /grant:r "${TokenReader}:(R)" /Q | Out-Null; Icacls-Ok $tokenPath
 }
 
 # ---- 6. 计划任务

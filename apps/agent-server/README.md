@@ -185,7 +185,7 @@ Windows 相关逻辑（`.cmd` 包装、taskkill 参数）用注入的模拟环�
 - `<AgentRoom>\node\<秘书>\`：她的节点配置、Token、命令行的工作目录
 - 低权限账号 `agentroom-<秘书>`，计划任务 `AgentRoom-<秘书>` 以这个账号开机启动节点
 
-用管理员 PowerShell 一次装一位：
+用**以管理员身份运行的 Windows PowerShell**（`powershell.exe`，不是 `pwsh`）一次装一位。现在只能装 `codex` 和 `claude`：`deepseek` 要等 D-40 和第二段（API Key 怎么给新账号）之后，脚本会拒绝：
 
 ```powershell
 .\apps\agent-server\scripts\install-secretary.ps1 -Agent codex -HomeDir D:\AgentRoom -Port 7421 `

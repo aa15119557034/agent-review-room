@@ -113,6 +113,20 @@ describe("journal and notes", () => {
     assert.ok(sel.warnings.some((w) => w.includes("journal/notes.md")));
   });
 
+  it("journal dates that do not exist are skipped; non-.md/.txt files (even dotfiles like .gitkeep) are ignored, also in core", () => {
+    const dir = agentDir({ "core/a.md": "c", "core/.gitkeep": "", "core/readme.bin": "x", "journal/2026/02-31.md": "x", "journal/2024/02-29.md": "leap" });
+    const sel = selectMemory(dir);
+    assert.deepEqual(ids(sel), ["core/a.md", "journal/2024/02-29.md"]);
+    assert.ok(sel.warnings.some((w) => w.includes("02-31") && w.includes("日期不存在")));
+  });
+
+  it("folders nested deeper than 16 levels are skipped", () => {
+    const deep = `notes/${Array.from({ length: 17 }, (_, i) => `d${i}`).join("/")}/x.md`;
+    const sel = selectMemory(agentDir({ "core/a.md": "c", [deep]: "x", "notes/d0/y.md": "y" }));
+    assert.deepEqual(ids(sel), ["core/a.md", "notes/d0/y.md"]);
+    assert.ok(sel.warnings.some((w) => w.includes("嵌套超过")));
+  });
+
   it("an entry that does not fit is skipped and later shorter ones still go in; stops at 200 entries", () => {
     const dir = agentDir({ "core/a.md": "c".repeat(500), "journal/2026/01-02.md": "x".repeat(600), "journal/2026/01-01.md": "y".repeat(400) });
     assert.deepEqual(ids(selectMemory(dir)), ["core/a.md", "journal/2026/01-01.md"]);
@@ -169,29 +183,53 @@ describe("links never leave the memory folder", () => {
   mkdirSync(join(outside, "dir"));
   writeFileSync(join(outside, "dir", "secret.md"), "SENTINEL-DIR");
 
+  // Windows 上文件夹用 junction（不需要管理员）；文件符号链接要开发者模式或管理员，建不了就跳过那一步
+  const dirLink = (target: string, path: string) => symlinkSync(target, path, process.platform === "win32" ? "junction" : "dir");
+  const fileLink = (target: string, path: string): boolean => {
+    try {
+      symlinkSync(target, path, "file");
+      return true;
+    } catch (err) {
+      if (process.platform === "win32" && (err as NodeJS.ErrnoException).code === "EPERM") return false;
+      throw err;
+    }
+  };
+
   const noSentinel = (s: MemorySelection) => {
     if (s.status !== "unavailable") for (const e of s.entries) assert.ok(!e.text.includes("SENTINEL"), e.id);
   };
 
-  it("file and directory symlinks in notes are skipped", () => {
+  it("file symlinks and directory links (junctions on Windows) in notes are skipped", (t) => {
     const dir = agentDir({ "core/a.md": "c" });
     mkdirSync(join(dir, "notes"));
-    symlinkSync(join(outside, "agent-server.token"), join(dir, "notes", "token.md"));
-    symlinkSync(join(outside, "dir"), join(dir, "notes", "linked"), "dir");
+    const madeFileLink = fileLink(join(outside, "agent-server.token"), join(dir, "notes", "token.md"));
+    if (!madeFileLink) t.diagnostic("Windows 普通权限建不了文件符号链接：这一步没测（junction 照测）");
+    dirLink(join(outside, "dir"), join(dir, "notes", "linked"));
     const sel = selectMemory(dir);
     assert.deepEqual(ids(sel), ["core/a.md"]);
     noSentinel(sel);
-    assert.ok(sel.warnings.some((w) => w.includes("notes/token.md")));
+    if (madeFileLink) assert.ok(sel.warnings.some((w) => w.includes("notes/token.md")));
     assert.ok(sel.warnings.some((w) => w.includes("notes/linked")));
   });
 
-  it("a symlinked notes/ or core/ section is refused", () => {
+  it("a linked notes/ or core/ section is refused", () => {
     const dir = agentDir({ "core/a.md": "c" });
-    symlinkSync(join(outside, "dir"), join(dir, "notes"), "dir");
+    dirLink(join(outside, "dir"), join(dir, "notes"));
     noSentinel(selectMemory(dir));
     const dir2 = agentDir({});
-    symlinkSync(join(outside, "dir"), join(dir2, "core"), "dir");
+    dirLink(join(outside, "dir"), join(dir2, "core"));
     assert.match(reason(selectMemory(dir2)), /core/);
+  });
+
+  it("memory.json that is a link or hard link is refused before reading", (t) => {
+    const big = join(outside, "big.json");
+    writeFileSync(big, " ".repeat(10_000) + JSON.stringify({ version: 1, budgetChars: 1_000, maxFileBytes: 4_096 }));
+    const dir = agentDir({ "core/a.md": "c" }, null);
+    linkSync(big, join(dir, "memory.json"));
+    assert.match(reason(selectMemory(dir)), /硬链接/);
+    const dir2 = agentDir({ "core/a.md": "c" }, null);
+    if (fileLink(big, join(dir2, "memory.json"))) assert.match(reason(selectMemory(dir2)), /不是普通文件/);
+    else t.diagnostic("Windows 普通权限建不了文件符号链接：这一步没测");
   });
 
   it("hard links are skipped (they are not reparse points)", () => {
@@ -245,6 +283,14 @@ describe("identityProblems", () => {
     assert.match(identityProblems(cfg(), probe({ currentUser: () => "jianghao" })).join(), /必须以账号 agentroom-deepseek 运行/);
   });
 
+  it("runAsUser is required with memory and must be agentroom-<agent>", () => {
+    assert.match(identityProblems(cfg({ runAsUser: undefined }), probe({ currentUser: () => "jianghao" })).join(), /必须填 runAsUser/);
+    for (const u of ["jianghao", "agentroom-codex", "HOST\\agentroom-codex"]) {
+      assert.match(identityProblems(cfg({ runAsUser: u }), probe({ currentUser: () => u })).join(), /runAsUser 只能是 agentroom-deepseek/, u);
+    }
+    assert.deepEqual(identityProblems(cfg({ runAsUser: "HOST\\agentroom-deepseek" }), probe()), []);
+  });
+
   it("refuses another secretary's profiles on this node (Codex never runs under 汐's account)", () => {
     const p = identityProblems(cfg({}, { "deepseek-chat": { command: "node", cwd: "." }, "codex-discuss": { command: "codex", cwd: "." } }), probe());
     assert.match(p.join(), /codex-discuss" 不属于 deepseek/);
@@ -264,6 +310,19 @@ describe("identityProblems", () => {
       assert.match(identityProblems(cfg(), probe({ volume: () => v })).join(), /本机 NTFS/, JSON.stringify(v));
     }
     assert.match(identityProblems(cfg(), probe({ volume: () => null })).join(), /查不到/);
+  });
+
+  it("homeDir that is a link / junction / mount point is refused, and the volume is checked on the real path", () => {
+    const toShare = (p: string) => p.replace("D:\\AgentRoom", "\\\\server\\share\\AgentRoom");
+    let checked = "";
+    const volume = (p: string) => {
+      checked = p;
+      return { format: "NTFS", type: "Fixed" };
+    };
+    assert.match(identityProblems(cfg(), probe({ realpath: toShare, volume })).join(), /不能是链接或 junction/);
+    assert.match(identityProblems(cfg(), probe({ realpath: () => null })).join(), /不存在或读不了/);
+    identityProblems(cfg(), probe({ realpath: (p) => p.replace("D:", "d:"), volume }));
+    assert.equal(checked, "d:\\AgentRoom");
   });
 
   it("memory folder whose real path leaves homeDir/memory/<agent> is refused", () => {

@@ -72,9 +72,15 @@ const sameOrInside = (root: string, p: string): boolean => {
 };
 
 export function readMemorySettings(agentDir: string): { ok: true; settings: MemorySettings } | { ok: false; reason: string } {
+  const path = join(agentDir, "memory.json");
   let raw: string;
   try {
-    const buf = readFileSync(join(agentDir, "memory.json"));
+    // 先 lstat 再读：链接、硬链接、设备文件、大文件都在读之前拒掉
+    const st = lstatSync(path, { bigint: true });
+    if (!st.isFile()) return { ok: false, reason: "memory.json 不是普通文件" };
+    if (st.nlink > 1n) return { ok: false, reason: "memory.json 有硬链接" };
+    if (st.size > 4_096n) return { ok: false, reason: "memory.json 太大" };
+    const buf = readFileSync(path);
     if (buf.length > 4_096) return { ok: false, reason: "memory.json 太大" };
     raw = new TextDecoder("utf-8", { fatal: true }).decode(buf);
   } catch (err) {
@@ -92,13 +98,39 @@ export function readMemorySettings(agentDir: string): { ok: true; settings: Memo
   return { ok: true, settings: parsed.data };
 }
 
+/** 子文件夹最多嵌套这么多层 */
+const MAX_DEPTH = 16;
+
 /**
  * 列出一个分区下的候选文件。不跟随符号链接 / junction（lstat 看到的链接一律跳过），
  * 子文件夹照样不跟随；真实路径必须还在这位秘书的文件夹里。
+ * 不是 .md / .txt 的普通文件直接忽略（包括 .gitkeep 这类），不算问题；「隐藏」只看名字以 . 开头（ADR-003 §2a）。
+ * 文件夹按真实路径记 visited、限制深度：万一有 lstat 认不出的重解析点造成环，也不会无限递归。
  */
 function listSection(agentRoot: string, section: string, skipped: Map<string, string>): Candidate[] {
   const out: Candidate[] = [];
-  const walk = (dir: string, rel: string) => {
+  const visited = new Set<string>();
+  const walk = (dir: string, rel: string, depth: number) => {
+    let realDir: string;
+    try {
+      realDir = realpathSync.native(dir);
+    } catch {
+      skipped.set(rel, "读不了真实路径");
+      return;
+    }
+    if (!sameOrInside(agentRoot, realDir)) {
+      skipped.set(rel, "真实路径不在记忆文件夹里");
+      return;
+    }
+    if (visited.has(realDir)) {
+      skipped.set(rel, "文件夹重复出现（环）");
+      return;
+    }
+    visited.add(realDir);
+    if (depth > MAX_DEPTH) {
+      skipped.set(rel, `嵌套超过 ${MAX_DEPTH} 层`);
+      return;
+    }
     let names: string[];
     try {
       names = readdirSync(dir);
@@ -109,10 +141,6 @@ function listSection(agentRoot: string, section: string, skipped: Map<string, st
     for (const name of names) {
       const path = join(dir, name);
       const id = `${rel}/${name}`;
-      if (name.startsWith(".")) {
-        skipped.set(id, "隐藏文件");
-        continue;
-      }
       let stat: BigIntStats;
       try {
         stat = lstatSync(path, { bigint: true });
@@ -120,19 +148,23 @@ function listSection(agentRoot: string, section: string, skipped: Map<string, st
         skipped.set(id, "读不了");
         continue;
       }
+      if (stat.isFile() && !TEXT_FILE.test(name)) continue; // 别的类型不算候选，也不算问题
+      if (name.startsWith(".")) {
+        skipped.set(id, "隐藏文件");
+        continue;
+      }
       if (stat.isSymbolicLink()) {
         skipped.set(id, "符号链接 / junction，不跟随");
         continue;
       }
       if (stat.isDirectory()) {
-        walk(path, id);
+        walk(path, id, depth + 1);
         continue;
       }
       if (!stat.isFile()) {
         skipped.set(id, "不是普通文件");
         continue;
       }
-      if (!TEXT_FILE.test(name)) continue; // 别的类型不算候选，也不算问题
       let real: string;
       try {
         real = realpathSync.native(path);
@@ -158,7 +190,7 @@ function listSection(agentRoot: string, section: string, skipped: Map<string, st
     skipped.set(section, "不是普通文件夹");
     return out;
   }
-  walk(top, section);
+  walk(top, section, 0);
   return out;
 }
 
@@ -233,6 +265,12 @@ export function selectMemory(agentDir: string): MemorySelection {
     const m = JOURNAL_NAME.exec(c.id);
     if (!m) {
       warnings.push(`跳过 ${c.id}：journal 文件名不合格式（journal/YYYY/MM-DD.md 或 MM-DD-<别的>.md）`);
+      continue;
+    }
+    const [y, mo, d] = [Number(m[1]), Number(m[2]), Number(m[3])];
+    const day = new Date(Date.UTC(y, mo - 1, d));
+    if (day.getUTCFullYear() !== y || day.getUTCMonth() !== mo - 1 || day.getUTCDate() !== d) {
+      warnings.push(`跳过 ${c.id}：日期不存在`);
       continue;
     }
     dated.push({ c, key: `${m[1]}${m[2]}${m[3]}` });
