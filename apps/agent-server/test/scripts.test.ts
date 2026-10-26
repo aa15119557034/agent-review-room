@@ -12,6 +12,7 @@ describe("install scripts", () => {
       const bytes = readFileSync(join(scripts, name));
       if (!bytes.some((b) => b > 0x7f)) continue;
       assert.deepEqual([...bytes.subarray(0, 3)], [0xef, 0xbb, 0xbf], `${name} has no UTF-8 BOM`);
+      assert.doesNotThrow(() => new TextDecoder("utf-8", { fatal: true }).decode(bytes), `${name} is not valid UTF-8`);
     }
   });
 });
