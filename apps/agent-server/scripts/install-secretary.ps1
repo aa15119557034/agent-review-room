@@ -1,4 +1,4 @@
-<#
+﻿<#
 S-20：在这台电脑上给一位秘书安排「家」（ADR-003 §2a）。用管理员 PowerShell 运行，一次一位秘书：
 
   .\install-secretary.ps1 -Agent codex -HomeDir D:\AgentRoom -Port 7421 -ConfigTemplate <现有节点配置> -AppSource <仓库目录>
