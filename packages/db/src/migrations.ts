@@ -4,6 +4,7 @@ import { SCHEMA_V3, SCHEMA_V3_REBUILD } from "./schema-v3";
 import { SCHEMA_V4 } from "./schema-v4";
 import { SCHEMA_V5 } from "./schema-v5";
 import { SCHEMA_V6 } from "./schema-v6";
+import { SCHEMA_V7 } from "./schema-v7";
 
 /**
  * 迁移（D-02）：用 PRAGMA user_version 记版本，每个迁移在自己的事务里跑。
@@ -66,6 +67,15 @@ export const MIGRATIONS: readonly Migration[] = [
     name: "chat-runs-and-snapshots",
     up: (db) => {
       db.exec(SCHEMA_V6);
+    },
+  },
+  {
+    version: 7,
+    name: "chat-material-message",
+    // 重建 messages：DROP 时会被 contributions 的外键挡住
+    disableForeignKeys: true,
+    up: (db) => {
+      db.exec(SCHEMA_V7);
     },
   },
 ];

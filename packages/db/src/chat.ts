@@ -2,6 +2,7 @@ import type {
   AgentChatMessage,
   BatchModel,
   ChatContent,
+  Project,
   ChatCursor,
   ChatMentions,
   ChatMessage,
@@ -14,6 +15,7 @@ import type {
   ConversationMembers,
   FailureReason,
   MemoryManifest,
+  Message,
   RunState,
   RunSubstate,
   UserChatMessage,
@@ -685,6 +687,17 @@ const toChatRun = (row: ChatRunRow): ChatRun => ({
 });
 
 /**
+ * 转议题时选中的消息在事务里已经不是「可进上下文」的状态（被撤回了 / 被别的消息替换掉了 / 不在这个会话）。
+ * 服务层映射成 invalid_state。
+ */
+export class ChatToTopicConflictError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ChatToTopicConflictError";
+  }
+}
+
+/**
  * 并发发送：同一个 messageId 已经落库（另一个请求先提交了）。
  * 调用方应当重新读那条消息，按防重复规则返回第一次的结果，而不是报 internal。
  */
@@ -1176,5 +1189,90 @@ export function createChatSend(
   }
 
     return { message, slots, runs };
+  });
+}
+// ================================================================ 一键转议题（D-31c）
+
+export interface CreateChatToTopicInput {
+  projectId: string;
+  materialId: string;
+  conversationId: string;
+  name: string;
+  /** 选中的聊天消息（按时间排好序；服务层负责校验） */
+  chatMessageIds: readonly string[];
+  /** 拼好的材料正文 */
+  content: string;
+  createdAt: string;
+}
+
+/**
+ * 从聊天建一个议题：项目 + 一条 chat_material 初始材料，**同一个事务**。
+ * 内容长度 / 已撤回 / 重复的校验都在服务层、事务开始之前做。
+ */
+export function createChatToTopic(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  input: CreateChatToTopicInput,
+): Promise<{ project: Project; material: Message }> {
+  return writeTransaction(db, queue, () => {
+    // 选消息发生在事务外：事务里按 id 重读一次，撤回 / 跨会话都在这儿兜住，不让被撤回的原文进材料
+    const placeholders = input.chatMessageIds.map(() => "?").join(", ");
+    const rows = db
+      .prepare(
+        "SELECT m.id AS id, m.sender AS sender, m.state AS state, p.state AS parentState " +
+          "FROM chat_messages m LEFT JOIN chat_messages p ON p.id = m.in_reply_to " +
+          "WHERE m.conversation_id = ? AND m.id IN (" + placeholders + ")",
+      )
+      .all(input.conversationId, ...input.chatMessageIds) as {
+      id: string;
+      sender: "user" | "agent";
+      state: "sent" | "retracted" | null;
+      parentState: "sent" | "retracted" | null;
+    }[];
+    if (rows.length !== input.chatMessageIds.length) {
+      throw new ChatToTopicConflictError("selected chat messages are missing or belong to another conversation");
+    }
+    for (const row of rows) {
+      const inContext = row.sender === "user" ? row.state === "sent" : row.parentState === "sent";
+      if (!inContext) throw new ChatToTopicConflictError("chat message " + row.id + " is no longer in context");
+    }
+
+    db.prepare("INSERT INTO projects (id, name, from_conversation_id, created_at) VALUES (?, ?, ?, ?)").run(
+      input.projectId,
+      input.name,
+      input.conversationId,
+      input.createdAt,
+    );
+    db.prepare(
+      "INSERT INTO messages (id, project_id, kind, conversation_id, chat_message_ids, content, created_at) " +
+        "VALUES (?, ?, 'chat_material', ?, ?, ?, ?)",
+    ).run(
+      input.materialId,
+      input.projectId,
+      input.conversationId,
+      JSON.stringify(input.chatMessageIds),
+      input.content,
+      input.createdAt,
+    );
+
+    const project = db.prepare("SELECT * FROM projects WHERE id = ?").get(input.projectId) as Record<string, unknown>;
+    const material = db.prepare("SELECT * FROM messages WHERE id = ?").get(input.materialId) as Record<string, unknown>;
+    return {
+      project: {
+        id: project["id"] as string,
+        name: project["name"] as string,
+        fromConversationId: (project["from_conversation_id"] as string | null) ?? null,
+        createdAt: project["created_at"] as string,
+      },
+      material: {
+        id: material["id"] as string,
+        projectId: material["project_id"] as string,
+        kind: "chat_material",
+        conversationId: material["conversation_id"] as string,
+        chatMessageIds: JSON.parse(material["chat_message_ids"] as string) as string[],
+        content: material["content"] as string,
+        createdAt: material["created_at"] as string,
+      },
+    };
   });
 }

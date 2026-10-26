@@ -17,7 +17,9 @@ import {
   type Conversation,
   type ConversationListItem,
   type BatchModel,
+  type Message,
   type NodeHealth,
+  type Project,
   type NodeTestResult,
   type QueryRequest,
   type RunModel,
@@ -27,8 +29,10 @@ import {
   ChatSendConflictError,
   ChatSendDuplicateMessageError,
   ChatSendRateLimitError,
+  ChatToTopicConflictError,
   chatRecipients,
   createChatSend,
+  createChatToTopic,
   createConversation,
   finishChatRun,
   getChatMessage,
@@ -64,6 +68,7 @@ import {
   reuseOrSelectChatModel,
   selectChatModel,
 } from "./chat-model";
+import { CHAT_MATERIAL_MAX_CHARS, renderChatMaterial } from "./chat-material";
 import { buildChatSnapshot } from "./chat-prompt";
 import type { Repository } from "./repository";
 import type { SettingsStore } from "./settings";
@@ -355,6 +360,56 @@ export class ChatService {
       this.#execute(run);
     }
     return result;
+  }
+
+  /** 一键转议题：选中的消息 → 新议题 + 一条 chat_material 材料，同一个事务 */
+  async toTopic(
+    command: CommandRequest<"chat.toTopic">,
+  ): Promise<{ project: Project; material: Message }> {
+    const { db } = this.#deps;
+    const conversation = getConversation(db, command.conversationId);
+    if (conversation === null) throw new ChatError("not_found", "会话不存在");
+    if (new Set(command.messageIds).size !== command.messageIds.length) {
+      throw new ChatError("validation_failed", "同一条消息不能选两次");
+    }
+
+    const messages = command.messageIds.map((messageId) => {
+      const message = getChatMessage(db, messageId);
+      if (message === null || message.conversationId !== conversation.id) {
+        throw new ChatError("validation_failed", "选中的消息不在这个会话里：" + messageId);
+      }
+      return message;
+    });
+
+    // 已撤回的消息、以及回答已撤回消息的秘书发言，都不能选（和拼 Snapshot / 引用同一套规则）
+    if (messages.some((message) => isExcludedFromContext(message, this.#inReplyToOf))) {
+      throw new ChatError("invalid_state", "选中的消息里有已撤回的（或回答已撤回消息的发言），不能转议题");
+    }
+
+    const ordered = [...messages].sort((left, right) =>
+      left.createdAt === right.createdAt ? (left.id < right.id ? -1 : 1) : left.createdAt < right.createdAt ? -1 : 1,
+    );
+    const agents = new Map(this.#deps.repo.listAgents().map((agent) => [agent.id, agent]));
+    const content = renderChatMaterial(ordered, (agentId) => agents.get(agentId)?.displayName ?? agentId);
+    if (content.length > CHAT_MATERIAL_MAX_CHARS) {
+      throw new ChatError("validation_failed", "选中的消息太多，整理出来的材料超过 200 万字，少选几条");
+    }
+
+    const now = this.#now();
+    try {
+      return await createChatToTopic(db, this.#deps.queue, {
+        projectId: "proj_" + ulid(),
+        materialId: "msg_" + ulid(),
+        conversationId: conversation.id,
+        name: command.name,
+        chatMessageIds: ordered.map((message) => message.id),
+        content,
+        createdAt: now,
+      });
+    } catch (error) {
+      if (error instanceof ChatToTopicConflictError) throw new ChatError("invalid_state", error.message);
+      throw error;
+    }
   }
 
   // ================================================================ 撤回 / 重试 / 取消

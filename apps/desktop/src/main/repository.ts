@@ -82,6 +82,15 @@ const toMessage = (row: Record<string, unknown>): Message => {
       runId: row["run_id"] as string,
     };
   }
+  // C-34 / D-31c：从聊天转来的初始材料
+  if (kind === "chat_material") {
+    return {
+      ...base,
+      kind,
+      conversationId: row["conversation_id"] as string,
+      chatMessageIds: JSON.parse(row["chat_message_ids"] as string) as string[],
+    };
+  }
   return { ...base, kind: "source_input", sourceAgent: row["source_agent"] as string };
 };
 

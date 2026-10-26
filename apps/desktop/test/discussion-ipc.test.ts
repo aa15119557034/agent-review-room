@@ -1619,3 +1619,44 @@ describe("C-40 模型选择", () => {
     await close(h);
   });
 });
+
+describe("C-34 聊天材料进讨论室（D-31c）", () => {
+  it("round.draft 把 chat_material 带进每一位的 Snapshot 资料区", async () => {
+    const h = await makeHarness();
+    try {
+      const now = new Date().toISOString();
+      const conversationId = "conv_" + "0".repeat(26);
+      h.db
+        .prepare(
+          "INSERT INTO conversations (id, kind, direct_agent, title, pinned, muted, last_read_message_id, last_activity_at, created_at) " +
+            "VALUES (?, 'direct', 'deepseek', '方案讨论', 0, 0, NULL, ?, ?)",
+        )
+        .run(conversationId, now, now);
+      h.db
+        .prepare(
+          "INSERT INTO messages (id, project_id, kind, conversation_id, chat_message_ids, content, created_at) " +
+            "VALUES (?, ?, 'chat_material', ?, ?, ?, ?)",
+        )
+        .run(
+          "msg_" + "0".repeat(26),
+          h.projectId,
+          conversationId,
+          JSON.stringify(["cmsg_" + "0".repeat(26)]),
+          "转来的材料：方案有三个风险",
+          now,
+        );
+
+      const result = await draft(h, ["deepseek"]);
+      assert.equal(result.ok, true, JSON.stringify(result));
+
+      const snapshots = h.db.prepare("SELECT content FROM prompt_snapshots").all() as { content: string }[];
+      assert.equal(snapshots.length, 1);
+      for (const snapshot of snapshots) {
+        assert.ok(snapshot.content.includes("转来的材料：方案有三个风险"), "材料正文进了 Prompt");
+        assert.ok(snapshot.content.includes("聊天记录（方案讨论）"), "材料名带来源会话");
+      }
+    } finally {
+      await close(h);
+    }
+  });
+});
