@@ -9,7 +9,8 @@ S-20：在这台电脑上给一位秘书安排「家」（ADR-003 §2a）。用�
   3. 建 <HomeDir>\memory\<秘书>\ 的布局、memory.json、README.md；建 node\app、node\<秘书>\
   4. 设权限：<HomeDir> 关掉继承；记忆正文这位秘书只读，inbox / ext 她没有权限；配置和 Token 只有她和管理员能读
   5. 生成这位秘书的节点配置（homeDir / agent / runAsUser / port / 聊天 profile 的 memory）和 Token
-  6. 注册计划任务：开机启动、不管是否登录都运行、身份是 agentroom-<秘书>
+  6. 给 agentroom-<秘书> 装一份她自己的命令行（npm 装到 node\<秘书>\cli，profile 里写绝对路径）；
+     授予「作为批处理作业登录」；注册计划任务：开机启动、不管是否登录都运行、身份是 agentroom-<秘书>
   7. 打开一个以这个账号运行的窗口，在里面登录这位秘书的命令行（Claude / Codex）
 
 主控机上按 ADR-003 §2a「切换顺序」：先装 codex（7421）；D-40 迁移完成后才装 deepseek（7420）。
@@ -136,12 +137,20 @@ $nodeExe = (Get-Command node.exe -ErrorAction SilentlyContinue).Source
 if (-not $nodeExe) { Fail "找不到 node.exe" }
 $nodeMajor = [int]((& $nodeExe --version).TrimStart("v").Split(".")[0])
 if ($nodeMajor -lt 22) { Fail "Node 版本太低（$(& $nodeExe --version)），要 22 或更高" }
+# 命令行（Claude / Codex）给这位秘书单独装一份：江浩用 npm 装的在他自己的用户目录里（AppData\Roaming\npm），秘书账号读不到
+$npmCmd = Join-Path (Split-Path -Parent $nodeExe) "npm.cmd"
+if (-not (Test-Path -LiteralPath $npmCmd)) { Fail "找不到 $npmCmd（Node 的官方安装包会带 npm）" }
+$cliPackage = @{ claude = "@anthropic-ai/claude-code"; codex = "@openai/codex" }[$Agent]
+$cliDir = Join-Path $nodeMine "cli"
+$cliCmd = Join-Path $cliDir "node_modules\.bin\$Agent.cmd"
 foreach ($r in $userRoots) { if ($r -and $nodeExe.StartsWith($r.TrimEnd("\") + "\", [StringComparison]::OrdinalIgnoreCase)) { Fail "Node 装在用户目录里（$nodeExe），秘书账号读不到。请用官方安装包装到 Program Files" } }
 $template = Get-Content -Raw -Encoding UTF8 $ConfigTemplate | ConvertFrom-Json
 $profiles = [ordered]@{}
 foreach ($p in $template.profiles.PSObject.Properties) {
   if (-not $p.Name.StartsWith("$Agent-")) { continue }  # 节点也会拒绝别人的 profile
   $p.Value.cwd = (Join-Path $nodeMine "sandbox")
+  # 模板里写的裸命令名（codex / codex.cmd / codex.ps1）换成她自己那份的绝对路径；别的命令（比如 node）不动
+  if ([IO.Path]::GetFileNameWithoutExtension([string]$p.Value.command) -eq $Agent) { $p.Value.command = $cliCmd }
   if ($p.Name -eq "$Agent-chat") {
     $p.Value | Add-Member -Force -NotePropertyName memory -NotePropertyValue ([ordered]@{ dir = "memory/$Agent"; provider = "folder" })
   }
@@ -177,6 +186,16 @@ foreach ($d in @($HomeDir, (Join-Path $HomeDir "memory"), $memory, $nodeMine, (J
   New-Item -ItemType Directory -Force -Path $d | Out-Null
 }
 foreach ($s in @("core", "notes", "journal", "inbox", "ext")) { New-Item -ItemType Directory -Force -Path (Join-Path $memory $s) | Out-Null }
+
+Step "安装 $cliPackage 到 $cliDir"
+# 已经装过就是升级到最新；npm 的普通安装不建链接（node\<秘书> 里也不能有链接，预检会查）
+New-Item -ItemType Directory -Force -Path $cliDir | Out-Null
+& $npmCmd install --prefix $cliDir --no-fund --no-audit --loglevel=error $cliPackage | Out-Null
+if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $cliCmd)) { Fail "安装 $cliPackage 失败（$cliCmd 不存在）。检查网络后重试" }
+# 不要写 2>$null：5.1 里 $ErrorActionPreference = Stop 时，重定向原生命令的 stderr 会直接抛错
+$cliVersion = (& $cliCmd --version | Select-Object -First 1)
+if ($LASTEXITCODE -ne 0 -or -not $cliVersion) { Fail "$cliCmd 装好了但运行不了" }
+Write-Host "  $Agent 版本：$cliVersion"
 
 $utf8 = [Text.UTF8Encoding]::new($false)
 $settingsPath = Join-Path $memory "memory.json"
@@ -278,13 +297,49 @@ if ($TokenReader -ne "") {
 }
 
 # ---- 6. 计划任务
+# 「不管是否登录都运行」要求账号有「作为批处理作业登录」（SeBatchLogonRight）。带密码注册任务时 Windows 不会自动给，
+# 没有它任务能注册、schtasks /run 也报成功，但实际不会启动（LastTaskResult 267011）。用 LSA 接口加，不依赖系统语言
+Step "授予 $user「作为批处理作业登录」"
+Add-Type -TypeDefinition @"
+using System;
+using System.Runtime.InteropServices;
+public static class AgentRoomLsa {
+  [StructLayout(LayoutKind.Sequential)] struct LsaString { public ushort Length; public ushort MaximumLength; public IntPtr Buffer; }
+  [StructLayout(LayoutKind.Sequential)] struct LsaAttributes { public int Length; public IntPtr RootDirectory; public IntPtr ObjectName; public uint Attributes; public IntPtr SecurityDescriptor; public IntPtr SecurityQualityOfService; }
+  [DllImport("advapi32.dll")] static extern uint LsaOpenPolicy(IntPtr system, ref LsaAttributes attributes, uint access, out IntPtr policy);
+  [DllImport("advapi32.dll")] static extern uint LsaAddAccountRights(IntPtr policy, byte[] sid, LsaString[] rights, uint count);
+  [DllImport("advapi32.dll")] static extern uint LsaClose(IntPtr policy);
+  [DllImport("advapi32.dll")] static extern int LsaNtStatusToWinError(uint status);
+  public static int Grant(byte[] sid, string right) {
+    var attributes = new LsaAttributes();
+    attributes.Length = Marshal.SizeOf(typeof(LsaAttributes));
+    IntPtr policy;
+    // POLICY_CREATE_ACCOUNT | POLICY_LOOKUP_NAMES
+    uint status = LsaOpenPolicy(IntPtr.Zero, ref attributes, 0x10 | 0x800, out policy);
+    if (status != 0) return LsaNtStatusToWinError(status);
+    try {
+      var name = new LsaString();
+      name.Buffer = Marshal.StringToHGlobalUni(right);
+      name.Length = (ushort)(right.Length * 2);
+      name.MaximumLength = (ushort)(name.Length + 2);
+      try { status = LsaAddAccountRights(policy, sid, new[] { name }, 1); } finally { Marshal.FreeHGlobal(name.Buffer); }
+      return status == 0 ? 0 : LsaNtStatusToWinError(status);
+    } finally { LsaClose(policy); }
+  }
+}
+"@
+$accountSid = ([Security.Principal.NTAccount]$account).Translate([Security.Principal.SecurityIdentifier])
+$sidBytes = [byte[]]::new($accountSid.BinaryLength)
+$accountSid.GetBinaryForm($sidBytes, 0)
+$lsaError = [AgentRoomLsa]::Grant($sidBytes, "SeBatchLogonRight")
+if ($lsaError -ne 0) { Fail "授予「作为批处理作业登录」失败（Windows 错误 $lsaError）" }
+
 Step "注册计划任务 AgentRoom-$Agent"
 $main = Join-Path $nodeApp "agent-server.mjs"
 $action = New-ScheduledTaskAction -Execute $nodeExe -Argument "`"$main`"" -WorkingDirectory $nodeMine
 $trigger = New-ScheduledTaskTrigger -AtStartup
 $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit ([TimeSpan]::Zero) -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)
 Register-ScheduledTask -TaskName "AgentRoom-$Agent" -Action $action -Trigger $trigger -Settings $settings -User $account -Password $password -RunLevel Limited -Force | Out-Null
-# 低权限账号需要「作为批处理作业登录」：Register-ScheduledTask 带密码注册时 Windows 会自动授予
 
 # ---- 防火墙：只放这个端口、只放专用网络
 if (-not (Get-NetFirewallRule -DisplayName "AgentRoom $Agent $Port" -ErrorAction SilentlyContinue)) {
@@ -310,8 +365,8 @@ if (Test-Path -LiteralPath $nodeAppOld) {
 
 # ---- 7. 在这个账号下登录命令行
 $login = switch ($Agent) {
-  "claude" { "claude" }    # 第一次运行会让你登录 Claude 账号
-  "codex" { "codex login" }
+  "claude" { "`"$cliCmd`"" }    # 第一次运行会让你登录 Claude 账号
+  "codex" { "`"$cliCmd`" login" }
   "deepseek" { "" }        # DeepSeek 用 API Key，见 README
 }
 if ($login -ne "") {
