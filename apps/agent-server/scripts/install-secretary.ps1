@@ -79,7 +79,7 @@ function Assert-NoReparse([string]$root) {
   while ($stack.Count -gt 0) {
     $dir = $stack.Pop()
     foreach ($item in @(Get-ChildItem -LiteralPath $dir -Force -ErrorAction Stop)) {
-      if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) { Fail "$($item.FullName) 是链接、junction 或挂载点：AgentRoom 里面不能有。先删掉再装（以前装过旧版本、node\app 里有 node_modules 的，用 cmd 的 rmdir /s /q 删掉整个 node\app）" }
+      if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) { Fail "$($item.FullName) 是链接、junction 或挂载点：AgentRoom 里面不能有。先删掉再装（以前装过旧版本、node\app、node\app.new 或 node\app.old 里有 node_modules 的，用 cmd 的 rmdir /s /q 删掉那个文件夹）" }
       if ($item.PSIsContainer) { $stack.Push($item.FullName) }  # 不进重解析点（上面已经拒绝），所以不会绕圈
     }
   }
@@ -95,6 +95,10 @@ if ($TokenReader -ne "") {
   if (-not ($isLocalUser -or $readerSid -eq $me.User.Value)) {
     Fail "TokenReader 必须是本机的一个用户账号（运行桌面端的那个），不能是 $TokenReader"
   }
+  # 以 SYSTEM / 服务账号运行脚本时 $me 自己就是服务账号：真人账号的 SID 都是 S-1-5-21-…，其他的（S-1-5-18/19/20、S-1-5-80-… 等）一律不行
+  if (-not $readerSid.StartsWith("S-1-5-21-")) { Fail "TokenReader 不能是系统或服务账号（$TokenReader）：要填运行桌面端的那个人的账号" }
+  # 秘书和插件的节点账号也不行：她们不该读到别人的 Token
+  if ($TokenReader -match '(^|\\)agentroom-') { Fail "TokenReader 不能是秘书或插件的节点账号（$TokenReader）" }
 }
 $memory = Join-Path $HomeDir "memory\$Agent"
 $nodeApp = Join-Path $HomeDir "node\app"
@@ -185,9 +189,14 @@ if (Test-Path -LiteralPath $binDir) { Copy-Item -LiteralPath $binDir -Destinatio
 # 校验：复制出来的和打包出来的逐字节一样
 if ((Get-FileHash -LiteralPath $bundle).Hash -ne (Get-FileHash -LiteralPath (Join-Path $nodeAppNew "agent-server.mjs")).Hash) { Fail "复制节点程序不完整（app.new 里的和打包出来的不一样）" }
 if (Test-Path -LiteralPath $binDir) {
-  $want = @(Get-ChildItem -LiteralPath $binDir -Recurse -Force -File).Count
-  $got = @(Get-ChildItem -LiteralPath (Join-Path $nodeAppNew "bin") -Recurse -Force -File).Count
-  if ($want -ne $got) { Fail "复制 bin\ 不完整（应有 $want 个文件，复制了 $got 个）" }
+  $want = @(Get-ChildItem -LiteralPath $binDir -Recurse -Force -File)
+  $got = @(Get-ChildItem -LiteralPath (Join-Path $nodeAppNew "bin") -Recurse -Force -File)
+  if ($want.Count -ne $got.Count) { Fail "复制 bin\ 不完整（应有 $($want.Count) 个文件，复制了 $($got.Count) 个）" }
+  # 每个文件都对一遍内容
+  foreach ($f in $want) {
+    $copy = Join-Path (Join-Path $nodeAppNew "bin") $f.FullName.Substring($binDir.Length).TrimStart("\")
+    if (-not (Test-Path -LiteralPath $copy) -or (Get-FileHash -LiteralPath $f.FullName).Hash -ne (Get-FileHash -LiteralPath $copy).Hash) { Fail "复制 bin\ 不完整：$copy 和源文件不一样" }
+  }
 }
 $secretFiles = @("agent-server.config*.json", "agent-server.token", ".env*")
 $leaked = Get-ChildItem -LiteralPath $nodeAppNew -Recurse -Force -File -Include $secretFiles -ErrorAction SilentlyContinue
