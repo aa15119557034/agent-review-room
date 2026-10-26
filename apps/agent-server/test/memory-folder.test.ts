@@ -55,8 +55,9 @@ describe("core", () => {
   it("is always first, sorted by code point, and missing / empty core is unavailable", () => {
     assert.match(reason(selectMemory(agentDir({ "notes/a.md": "a" }))), /core 不存在或是空的/);
     assert.match(reason(selectMemory(agentDir({ "core/readme.bin": "x", "notes/a.md": "a" }))), /core 不存在或是空的/);
-    const dir = agentDir({ "core/b.md": "b", "core/B.md": "B", "core/a.txt": "a", "notes/n.md": "n" });
-    assert.deepEqual(ids(selectMemory(dir)), ["core/B.md", "core/a.txt", "core/b.md", "notes/n.md"]);
+    // 不用 b.md / B.md 这种只差大小写的一对：Windows 上它们是同一个文件
+    const dir = agentDir({ "core/b.md": "b", "core/C.md": "C", "core/a.txt": "a", "notes/n.md": "n" });
+    assert.deepEqual(ids(selectMemory(dir)), ["core/C.md", "core/a.txt", "core/b.md", "notes/n.md"]);
   });
 
   it("over budget, over maxFileBytes, non-UTF-8 or > 200 files → whole source unavailable", () => {
@@ -204,12 +205,22 @@ describe("links never leave the memory folder", () => {
     mkdirSync(join(dir, "notes"));
     const madeFileLink = fileLink(join(outside, "agent-server.token"), join(dir, "notes", "token.md"));
     if (!madeFileLink) t.diagnostic("Windows 普通权限建不了文件符号链接：这一步没测（junction 照测）");
+    dirLink(join(outside, "dir"), join(dir, "notes", "linked.md"));
     dirLink(join(outside, "dir"), join(dir, "notes", "linked"));
     const sel = selectMemory(dir);
     assert.deepEqual(ids(sel), ["core/a.md"]);
     noSentinel(sel);
     if (madeFileLink) assert.ok(sel.warnings.some((w) => w.includes("notes/token.md")));
-    assert.ok(sel.warnings.some((w) => w.includes("notes/linked")));
+    assert.ok(sel.warnings.some((w) => w.includes("notes/linked.md")));
+  });
+
+  it("links whose names are not .md / .txt are ignored like other non-memory files, also in core", () => {
+    const dir = agentDir({ "core/a.md": "c" });
+    dirLink(join(outside, "dir"), join(dir, "core", "link.bin"));
+    dirLink(join(outside, "dir"), join(dir, "core", ".gitkeep"));
+    const sel = selectMemory(dir);
+    assert.deepEqual(ids(sel), ["core/a.md"]);
+    noSentinel(sel);
   });
 
   it("a linked notes/ or core/ section is refused", () => {
@@ -227,6 +238,12 @@ describe("links never leave the memory folder", () => {
     const dir = agentDir({ "core/a.md": "c" }, null);
     linkSync(big, join(dir, "memory.json"));
     assert.match(reason(selectMemory(dir)), /硬链接/);
+    const dir3 = agentDir({ "core/a.md": "c" }, null);
+    writeFileSync(join(dir3, "memory.json"), " ".repeat(4_097));
+    assert.match(reason(selectMemory(dir3)), /太大/);
+    const dir4 = agentDir({ "core/a.md": "c" }, null);
+    mkdirSync(join(dir4, "memory.json"));
+    assert.match(reason(selectMemory(dir4)), /不是普通文件/);
     const dir2 = agentDir({ "core/a.md": "c" }, null);
     if (fileLink(big, join(dir2, "memory.json"))) assert.match(reason(selectMemory(dir2)), /不是普通文件/);
     else t.diagnostic("Windows 普通权限建不了文件符号链接：这一步没测");
@@ -259,6 +276,7 @@ describe("identityProblems", () => {
     currentUser: () => "HOST\\agentroom-deepseek",
     volume: () => ({ format: "NTFS", type: "Fixed" }),
     realpath: (p) => p,
+    isLink: () => false,
     platform: "win32",
     ...over,
   });
@@ -321,6 +339,9 @@ describe("identityProblems", () => {
     };
     assert.match(identityProblems(cfg(), probe({ realpath: toShare, volume })).join(), /不能是链接或 junction/);
     assert.match(identityProblems(cfg(), probe({ realpath: () => null })).join(), /不存在或读不了/);
+    // 卷挂载点：真实路径字符串不变，但路径本身（或上级）是重解析点
+    assert.match(identityProblems(cfg(), probe({ isLink: (p) => p === "D:\\AgentRoom" })).join(), /挂载点/);
+    assert.match(identityProblems(cfg(), probe({ isLink: (p) => p === "D:\\" })).join(), /挂载点/);
     identityProblems(cfg(), probe({ realpath: (p) => p.replace("D:", "d:"), volume }));
     assert.equal(checked, "d:\\AgentRoom");
   });

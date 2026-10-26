@@ -148,7 +148,8 @@ function listSection(agentRoot: string, section: string, skipped: Map<string, st
         skipped.set(id, "读不了");
         continue;
       }
-      if (stat.isFile() && !TEXT_FILE.test(name)) continue; // 别的类型不算候选，也不算问题
+      // 不是文件夹、名字又不是 .md / .txt 的，不算候选，也不算问题（包括 .gitkeep 和这类名字的链接：反正不跟随）
+      if (!stat.isDirectory() && !TEXT_FILE.test(name)) continue;
       if (name.startsWith(".")) {
         skipped.set(id, "隐藏文件");
         continue;

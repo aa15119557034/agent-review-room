@@ -57,12 +57,39 @@ while ($p) {
   $p = Split-Path -Parent $p
 }
 if ($HomeDir.StartsWith("\\")) { Fail "AgentRoom 不能放在网络路径上" }
+if ($HomeDir.TrimEnd("\") -eq [IO.Path]::GetPathRoot($HomeDir).TrimEnd("\")) { Fail "AgentRoom 不能是盘的根目录，要建一个文件夹（比如 D:\AgentRoom）" }
+# ADR-003 §2a：不放进任何用户目录（低权限账号不该能读用户目录）
+$usersRoot = Split-Path -Parent $env:USERPROFILE
+if (($HomeDir + "\").StartsWith($usersRoot + "\", [StringComparison]::OrdinalIgnoreCase)) { Fail "AgentRoom 不能放在用户目录（$usersRoot）下面" }
 $drive = [IO.DriveInfo]::new([IO.Path]::GetPathRoot($HomeDir))
 if ($drive.DriveFormat -ne "NTFS" -or $drive.DriveType -ne "Fixed") {
   Fail "$HomeDir 所在的盘是 $($drive.DriveFormat) / $($drive.DriveType)。必须是本机 NTFS 盘（FAT、exFAT、网络盘、可移动盘上权限不生效）"
 }
 
 # ---- 1b. 预检：会失败的检查都放在改账号、复制程序、改权限之前，避免装一半
+# HomeDir 下面任何一处是 junction / 链接 / 挂载点都拒绝：icacls /T、robocopy、写文件都可能顺着它写到外面去
+function Assert-NoReparse([string]$root) {
+  if (-not (Test-Path -LiteralPath $root)) { return }
+  $stack = [Collections.Generic.Stack[string]]::new()
+  $stack.Push($root)
+  while ($stack.Count -gt 0) {
+    $dir = $stack.Pop()
+    foreach ($item in @(Get-ChildItem -LiteralPath $dir -Force -ErrorAction Stop)) {
+      if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) { Fail "$($item.FullName) 是链接、junction 或挂载点：AgentRoom 里面不能有。先删掉再装" }
+      if ($item.PSIsContainer) { $stack.Push($item.FullName) }  # 不进重解析点（上面已经拒绝），所以不会绕圈
+    }
+  }
+}
+Assert-NoReparse $HomeDir
+# TokenReader 只能是一个具体的人（运行桌面端的账号），不能是一群人
+if ($TokenReader -ne "") {
+  try { $readerSid = ([Security.Principal.NTAccount]$TokenReader).Translate([Security.Principal.SecurityIdentifier]).Value }
+  catch { Fail "找不到账号 $TokenReader" }
+  # Everyone、已验证用户、交互式用户、Users、Guests
+  if ($readerSid -in @("S-1-1-0", "S-1-5-11", "S-1-5-4", "S-1-5-32-545", "S-1-5-32-546") -or $readerSid -like "S-1-5-32-*") {
+    Fail "TokenReader 必须是一个具体的账号（运行桌面端的那个），不能是 $TokenReader 这样的组"
+  }
+}
 $memory = Join-Path $HomeDir "memory\$Agent"
 $nodeApp = Join-Path $HomeDir "node\app"
 $nodeMine = Join-Path $HomeDir "node\$Agent"
@@ -133,7 +160,7 @@ if (-not (Test-Path $readme)) {
 Step "复制节点程序到 $nodeApp"
 # node\app 对所有秘书账号可读：配置、Token、.env、备份一律不复制，复制完再查一遍
 $secretFiles = @("agent-server.config*.json", "*.token", ".env*", "*.bak", "settings.json")
-robocopy $AppSource $nodeApp /MIR /XD .git /XF @secretFiles /NFL /NDL /NJH /NJS /NP | Out-Null
+robocopy $AppSource $nodeApp /MIR /XJ /XD .git /XF @secretFiles /NFL /NDL /NJH /NJS /NP | Out-Null
 if ($LASTEXITCODE -ge 8) { Fail "复制节点程序失败（robocopy $LASTEXITCODE）" }
 $leaked = Get-ChildItem -LiteralPath $nodeApp -Recurse -Force -File -Include $secretFiles -ErrorAction SilentlyContinue
 if ($leaked) { Fail "node\app 里还有不该复制的文件：$($leaked[0].FullName)" }
@@ -153,7 +180,8 @@ function Set-OnlyAcl([string]$path, [string[]]$grants, [switch]$Tree) {
 }
 Step "设权限"
 # 这台电脑上所有秘书的节点账号（不含以后的插件账号 agentroom-plg-*）：共用的文件夹给她们「能穿过、能读程序」
-$secretaries = @(Get-LocalUser | Where-Object { $_.Name -like "agentroom-*" -and $_.Name -notlike "agentroom-plg-*" } | ForEach-Object { "$env:COMPUTERNAME\$($_.Name)" })
+# 只认三个固定的名字、并且是启用的账号；不用通配符，免得旧的或手工建的同名前缀账号也被授权
+$secretaries = @(Get-LocalUser | Where-Object { $_.Enabled -and $_.Name -in @("agentroom-claude", "agentroom-deepseek", "agentroom-codex") } | ForEach-Object { "$env:COMPUTERNAME\$($_.Name)" })
 $traverse = @($secretaries | ForEach-Object { "${_}:(RX)" })          # 只这一层，不往下继承
 $readApp = @($secretaries | ForEach-Object { "${_}:(OI)(CI)(RX)" })
 # 根目录：关掉继承（很多盘根目录默认给「已验证用户」改子文件夹的权限）
@@ -189,6 +217,8 @@ icacls $tokenPath /reset /Q | Out-Null; Icacls-Ok $tokenPath
 if ($TokenReader -ne "") {
   # 只给 Token 这一个文件只读，不给文件夹（ADR-003 §2a：桌面端以普通账号一键导入）
   icacls $tokenPath /grant:r "${TokenReader}:(R)" /Q | Out-Null; Icacls-Ok $tokenPath
+  # 一路上的文件夹只给「穿过」（X，不继承、不能列目录），标准账号也能打开这个文件
+  foreach ($d in @($HomeDir, (Join-Path $HomeDir "node"), $nodeMine)) { icacls $d /grant "${TokenReader}:(X)" /Q | Out-Null; Icacls-Ok $d }
 }
 
 # ---- 6. 计划任务

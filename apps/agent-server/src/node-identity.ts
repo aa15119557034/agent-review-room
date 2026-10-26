@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { realpathSync } from "node:fs";
+import { lstatSync, realpathSync } from "node:fs";
 import { userInfo } from "node:os";
 import { join, posix, win32 } from "node:path";
 import type { ServerConfig } from "./config";
@@ -16,6 +16,8 @@ export interface IdentityProbe {
   volume(path: string): { format: string; type: string } | null;
   /** 真实路径；不存在返回 null */
   realpath(path: string): string | null;
+  /** 这个路径本身是不是链接 / junction（lstat 判断）；不存在算 false */
+  isLink(path: string): boolean;
   platform: NodeJS.Platform;
 }
 
@@ -27,6 +29,13 @@ export const systemProbe: IdentityProbe = {
       return realpathSync.native(p);
     } catch {
       return null;
+    }
+  },
+  isLink: (p) => {
+    try {
+      return lstatSync(p).isSymbolicLink();
+    } catch {
+      return false;
     }
   },
   platform: process.platform,
@@ -91,6 +100,11 @@ export function identityProblems(config: ServerConfig, probe: IdentityProbe = sy
   // 否则盘检查查的是链接所在的盘，真正的文件可能在网络盘上
   const home = probe.realpath(homeDir!);
   if (!home) return [...problems, `homeDir 不存在或读不了：${homeDir}`];
+  // 卷挂载点不一定改变真实路径的字符串，所以再逐级看一遍是不是链接（安装脚本另外按 ReparsePoint 属性查）
+  for (let p = homeDir!; ; p = path.dirname(p)) {
+    if (probe.isLink(p)) return [...problems, `homeDir 不能在链接、junction 或挂载点下面：${p}`];
+    if (path.dirname(p) === p) break;
+  }
   if (norm(home) !== norm(homeDir!)) return [...problems, `homeDir 不能是链接或 junction（真实路径是 ${home}）`];
 
   if (probe.platform === "win32") {
