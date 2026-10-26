@@ -113,6 +113,24 @@ if (-not (Test-Path -LiteralPath $ConfigTemplate)) { Fail "找不到配置模板
 & pnpm --dir $AppSource --filter "@room/agent-server" run bundle | Out-Null
 $bundle = Join-Path $AppSource "apps\agent-server\dist\agent-server.mjs"
 if ($LASTEXITCODE -ne 0 -or -not (Test-Path $bundle)) { Fail "打包节点失败：先在 $AppSource 里运行 pnpm install --filter `"@room/agent-server...`"，再重试" }
+# 要复制进 node\app 的只有 bundle 和 bin\：建账号、建文件夹之前先把源检查完，不合格就什么都不动
+$binDir = Join-Path $AppSource "apps\agent-server\bin"
+# bin\ 源目录里不能有链接：逐文件 hash 按路径前缀取相对路径，链接会让路径对不上，也可能把别处的文件复制进来
+if (Test-Path -LiteralPath $binDir) {
+  if ((Get-Item -LiteralPath $binDir -Force).Attributes -band [IO.FileAttributes]::ReparsePoint) { Fail "$binDir 是链接或 junction" }
+  $binLink = Get-ChildItem -LiteralPath $binDir -Recurse -Force -Attributes ReparsePoint -ErrorAction SilentlyContinue | Select-Object -First 1
+  if ($binLink) { Fail "$binDir 里有链接或 junction：$($binLink.FullName)" }
+}
+# 配置、Token、.env 不能进 node\app（所有秘书都能读）。用 -like 逐个比文件名：Windows PowerShell 5.1 里
+# Get-ChildItem -LiteralPath -Include 不按名字过滤，会把所有文件都当成匹配
+$secretFiles = @("agent-server.config*.json", "agent-server.token", ".env*")
+function Find-SecretFile([string]$dir) {
+  if (-not (Test-Path -LiteralPath $dir)) { return $null }
+  Get-ChildItem -LiteralPath $dir -Recurse -Force -File -ErrorAction SilentlyContinue |
+    Where-Object { $n = $_.Name; @($secretFiles | Where-Object { $n -like $_ }).Count -gt 0 } | Select-Object -First 1
+}
+$leakedSource = Find-SecretFile $binDir
+if ($leakedSource) { Fail "$binDir 里有不该复制到 node\app 的文件：$($leakedSource.FullName)" }
 # Node 必须装在秘书账号读得到的地方（官方安装包装到 Program Files）
 $nodeExe = (Get-Command node.exe -ErrorAction SilentlyContinue).Source
 if (-not $nodeExe) { Fail "找不到 node.exe" }
@@ -186,13 +204,6 @@ foreach ($d in @($nodeAppNew, $nodeAppOld)) { if (Test-Path -LiteralPath $d) { R
 New-Item -ItemType Directory -Path $nodeAppNew | Out-Null
 # 只放打包好的节点和 bin\ 里的脚本：没有 node_modules、没有配置和 Token
 Copy-Item -LiteralPath $bundle -Destination (Join-Path $nodeAppNew "agent-server.mjs")
-$binDir = Join-Path $AppSource "apps\agent-server\bin"
-# bin\ 源目录里不能有链接：逐文件 hash 按路径前缀取相对路径，链接会让路径对不上，也可能把别处的文件复制进来
-if (Test-Path -LiteralPath $binDir) {
-  if ((Get-Item -LiteralPath $binDir -Force).Attributes -band [IO.FileAttributes]::ReparsePoint) { Fail "$binDir 是链接或 junction" }
-  $binLink = Get-ChildItem -LiteralPath $binDir -Recurse -Force -Attributes ReparsePoint -ErrorAction SilentlyContinue | Select-Object -First 1
-  if ($binLink) { Fail "$binDir 里有链接或 junction：$($binLink.FullName)" }
-}
 if (Test-Path -LiteralPath $binDir) { Copy-Item -LiteralPath $binDir -Destination (Join-Path $nodeAppNew "bin") -Recurse }
 # 校验：复制出来的和打包出来的逐字节一样
 if ((Get-FileHash -LiteralPath $bundle).Hash -ne (Get-FileHash -LiteralPath (Join-Path $nodeAppNew "agent-server.mjs")).Hash) { Fail "复制节点程序不完整（app.new 里的和打包出来的不一样）" }
@@ -207,9 +218,8 @@ if (Test-Path -LiteralPath $binDir) {
     if (-not (Test-Path -LiteralPath $copy) -or (Get-FileHash -LiteralPath $f.FullName).Hash -ne (Get-FileHash -LiteralPath $copy).Hash) { Fail "复制 bin\ 不完整：$copy 和源文件不一样" }
   }
 }
-$secretFiles = @("agent-server.config*.json", "agent-server.token", ".env*")
-$leaked = Get-ChildItem -LiteralPath $nodeAppNew -Recurse -Force -File -Include $secretFiles -ErrorAction SilentlyContinue
-if ($leaked) { Fail "app.new 里有不该复制的文件：$($leaked[0].FullName)" }
+$leaked = Find-SecretFile $nodeAppNew
+if ($leaked) { Fail "app.new 里有不该复制的文件：$($leaked.FullName)" }
 
 # ---- 4. 权限
 # 每次都整份重建，不在旧的上面加：以前手工给过的、换掉的 TokenReader，重跑后都不再有权限
