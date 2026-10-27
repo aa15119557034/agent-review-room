@@ -180,6 +180,7 @@ async function bootstrap(): Promise<void> {
     repo,
     settings,
     emit: broadcast,
+    readFileText: (ref) => mediaStore.readFileText(ref),
     adapterFactory: async (target) => {
       const adapter = new HttpRemoteAgentAdapter({
         nodeId: target.nodeId,

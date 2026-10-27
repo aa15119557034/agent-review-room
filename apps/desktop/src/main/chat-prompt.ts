@@ -1,5 +1,12 @@
 import { createNonce, estimateTokens, PromptBoundaryCollisionError, sha256Hex } from "@room/core";
-import { ChatSnapshot, isExcludedFromContext, type ChatMessage, type UserChatMessage } from "@room/schemas";
+import {
+  attachmentManifestBlock,
+  ChatSnapshot,
+  isExcludedFromContext,
+  type AttachmentManifestEntry,
+  type ChatMessage,
+  type UserChatMessage,
+} from "@room/schemas";
 
 /**
  * 聊天 Prompt 的拼装（D-31b 的过渡实现）。
@@ -48,19 +55,27 @@ export interface BuildChatSnapshotInput {
   /** 其他参与者的显示名；查不到用 agent id */
   displayNameOf?: (agentId: string) => string;
   createdAt: string;
+  /**
+   * C-42a：这一次实际发给这位秘书的图片清单（权威）。有图时 content 必须以
+   * attachmentManifestBlock(attachments) 开头——ChatSnapshot 的 refine 会核。
+   */
+  attachments?: readonly AttachmentManifestEntry[];
+  /** 随消息带来的文件：名字（进资料区，要转义）和能当文本读的正文（也进资料区） */
+  files?: readonly ChatPromptFile[];
   /** 测试用；生产环境不要传 */
   nonce?: string;
 }
 
-/** 文字和表情能进 Prompt（表情渲染成「[表情：说明]」）；附件等 D-36b 的清单、语音等 D-34b */
+export interface ChatPromptFile {
+  name: string;
+  /** 非文本文件没有正文（只给占位行） */
+  text: string | null;
+}
+
+/** 文字和表情能进 Prompt（表情渲染成「[表情：说明]」）；附件和文件也支持，语音等 D-34b */
 function assertSupported(message: UserChatMessage): void {
-  const content = message.content;
-  if (content.kind === "voice") {
+  if (message.content.kind === "voice") {
     throw new Error("chat prompt: voice messages are not supported until D-34b lands");
-  }
-  if (content.kind === "text" && content.attachments.length > 0) {
-    // 先明确拒掉：悄悄丢附件比发送失败更糟（C-42a 的清单和「[图片：文件名]」占位是 D-36b 的事）
-    throw new Error("chat prompt: attachments are not supported until D-36b lands");
   }
 }
 
@@ -69,6 +84,21 @@ function currentTextOf(content: UserChatMessage["content"]): string {
   if (content.kind === "text") return content.text;
   if (content.kind === "sticker") return "[表情：" + content.label + "]";
   return "[语音] " + content.transcript.text;
+}
+
+/**
+ * 文件名进资料区之前转义：去掉换行 / 控制字符 / 尖括号 / 方括号 / 反斜杠——
+ * 文件名也是不可信数据，不能让它伪造清单行、边界或「图 N」。
+ */
+export function escapeAttachmentName(name: string): string {
+  return Array.from(name, (ch) => {
+    const code = ch.codePointAt(0) ?? 0;
+    if (code < 0x20 || code === 0x7f) return " ";
+    if ("<>[]\\".includes(ch)) return "_";
+    return ch;
+  })
+    .join("")
+    .slice(0, 255);
 }
 
 function renderMessage(
@@ -135,9 +165,16 @@ export function buildChatSnapshot(input: BuildChatSnapshotInput): ChatSnapshot {
   const close = "</" + UNTRUSTED_OPEN + nonce + ">";
 
   // 不可信内容里出现本轮标签 = 可以伪造边界。和 core 的 assemblePrompt 一样：拒绝（随机 nonce 下实际不会发生）
-  for (const fragment of [...(quote === null ? [] : [render(quote)]), ...history.map(render)]) {
+  const fileFragments = (input.files ?? []).map(
+    (file) => "[文件：" + escapeAttachmentName(file.name) + "]" + (file.text === null ? "" : "\n" + file.text),
+  );
+  for (const fragment of [...(quote === null ? [] : [render(quote)]), ...history.map(render), ...fileFragments]) {
     if (fragment.includes(open) || fragment.includes(close)) throw new PromptBoundaryCollisionError(nonce);
   }
+
+  const manifest =
+    input.attachments === undefined || input.attachments.length === 0 ? undefined : input.attachments;
+  const manifestText = manifest === undefined ? "" : attachmentManifestBlock(manifest);
 
   const blocks: string[] = [];
   blocks.push("你是 " + input.agent.displayName + "，正在和用户聊天。");
@@ -148,11 +185,17 @@ export function buildChatSnapshot(input: BuildChatSnapshotInput): ChatSnapshot {
   if (quote !== null) blocks.push("被引用的消息：\n" + open + "\n" + render(quote) + "\n" + close);
   blocks.push("历史消息（" + history.length + " 条）：");
   for (const message of history) blocks.push(open + "\n" + render(message) + "\n" + close);
+  if (fileFragments.length > 0) {
+    blocks.push("随消息带来的文件（" + fileFragments.length + " 个）：");
+    for (const fragment of fileFragments) blocks.push(open + "\n" + fragment + "\n" + close);
+  }
   blocks.push("");
   blocks.push("当前消息（用户刚刚发的，可信）：");
   blocks.push(currentText);
 
-  const content = blocks.join("\n");
+  // 有图时清单放在最前面（C-42a：content 必须以 attachmentManifestBlock 开头）
+  const body = blocks.join("\n");
+  const content = manifestText === "" ? body : manifestText + "\n\n" + body;
   const included = [...history.map((message) => message.id), ...(quote === null ? [] : [quote.id]), input.userMessage.id];
   return ChatSnapshot.parse({
     id: input.snapshotId,
@@ -169,6 +212,7 @@ export function buildChatSnapshot(input: BuildChatSnapshotInput): ChatSnapshot {
     adapterVersion: CHAT_PROMPT_VERSION,
     tokenEstimate: estimateTokens(content),
     createdAt: input.createdAt,
+    ...(manifest === undefined ? {} : { attachments: manifest }),
   });
 }
 

@@ -8,6 +8,8 @@ import {
   insertChatRun,
   insertChatSlot,
   insertChatSnapshot,
+  getChatSnapshot,
+  insertFile,
   insertImageRef,
   insertSticker,
   openDatabase,
@@ -22,7 +24,7 @@ import {
   type CommandRequest,
   type ProfileModels,
 } from "@room/schemas";
-import type { AgentAdapter } from "@room/core";
+import { sha256Hex, type AgentAdapter } from "@room/core";
 import { ChatService, type ChatRunTarget } from "../src/main/chat";
 import { CHAT_MATERIAL_MAX_CHARS, CHAT_MATERIAL_PROMPT_HEADROOM } from "../src/main/chat-material";
 import { Repository } from "../src/main/repository";
@@ -98,6 +100,8 @@ interface Harness {
   conversationId: string;
   /** 每次 adapterFactory 收到的目标（看模型有没有传下去） */
   targets: ChatRunTarget[];
+  /** D-36b：file ref → 文本（测试注入） */
+  fileTexts: Map<string, string>;
 }
 
 async function makeHarness(
@@ -119,6 +123,7 @@ async function makeHarness(
   const queue = new WriteQueue();
   const repo = new Repository(db, queue);
   const settings = new SettingsStore(join(dir, "settings.json"), fakeSafeStorage);
+  const fileTexts = new Map<string, string>();
   settings.upsertNode("controller-local", { baseUrl: NODE_URL, token: "t".repeat(40) });
   await repo.upsertNodeRow({ id: "controller-local", label: "主控机", baseUrl: NODE_URL });
 
@@ -148,6 +153,7 @@ async function makeHarness(
     repo,
     settings,
     emit: (event) => events.push(ControlEvent.parse(event)),
+    readFileText: (ref) => fileTexts.get(ref) ?? null,
     adapterFactory: async (target: ChatRunTarget) => {
       targets.push(target);
       if (held.has(target.agent)) {
@@ -192,7 +198,7 @@ async function makeHarness(
     members: { kind: "direct", agent: "deepseek" },
     title: null,
   } as never);
-  return { chat, repo, db, events, conversationId: conversation.id, targets };
+  return { chat, repo, db, events, conversationId: conversation.id, targets, fileTexts };
 }
 
 const userMessageId = (n: number): string => "cmsg_" + String(n).padStart(26, "0");
@@ -217,29 +223,56 @@ function send(conversationId: string, messageId: string, text: string): CommandR
   };
 }
 
-describe("chat send attachments (D-34a)", () => {
-  it("rejects attachments until D-36b, and sends stickers that exist in the library", async () => {
+describe("chat send attachments (D-34a / D-36b)", () => {
+  it("sends a text file (content goes into the prompt), rejects images until S-23, and sends stickers", async () => {
     const h = await makeHarness();
     const validation = (error: unknown) => (error as { code?: string }).code === "validation_failed";
     try {
-      const base = send(h.conversationId, userMessageId(21), "看图");
-      // 附件要等 D-36b 的 Prompt 清单：现在明确拒绝，不悄悄降级
-      await assert.rejects(
-        () => h.chat.send({ ...base, content: { kind: "text", text: "看图", attachments: [{ kind: "image", ref: `img_${ulid()}` }] } }),
-        validation,
-      );
+      // 图片：引用校验过了，但节点还收不了图（S-23），明确拒绝
+      const imageRef = `img_${ulid()}`;
+      insertImageRef(h.db, {
+        ref: imageRef as never,
+        purpose: "chat",
+        sha256: "e".repeat(64),
+        mime: "image/png",
+        bytes: 2048,
+        width: 64,
+        height: 64,
+        createdAt: NOW,
+      });
       await assert.rejects(
         () =>
           h.chat.send({
-            ...base,
-            content: {
-              kind: "text",
-              text: "看文件",
-              attachments: [{ kind: "file", ref: `file_${ulid()}`, name: "a.txt", mime: "text/plain", bytes: 3, sha256: "a".repeat(64), isText: true }],
-            },
+            ...send(h.conversationId, userMessageId(21), "看图"),
+            content: { kind: "text", text: "看图", attachments: [{ kind: "image", ref: imageRef }] },
           }),
-        validation,
+        (error: unknown) => validation(error) && /S-23/.test((error as Error).message),
       );
+
+      // 文件：真的存过、能当文本读，就能发；正文进 Prompt 的资料区，指纹跟着变
+      const fileRef = `file_${ulid()}`;
+      insertFile(h.db, {
+        ref: fileRef as never,
+        sha256: "f".repeat(64),
+        name: "说明.md",
+        mime: "text/plain",
+        bytes: 24,
+        isText: true,
+        createdAt: NOW,
+      });
+      h.fileTexts.set(fileRef, "上面这段是文件里的正文。");
+      const sentFile = await h.chat.send({
+        ...send(h.conversationId, userMessageId(24), "看文件"),
+        content: { kind: "text", text: "看文件", attachments: [{ kind: "file", ref: fileRef, name: "说明.md" }] },
+      });
+      const snapshotId = sentFile.runs[0]?.snapshotId;
+      assert.ok(snapshotId !== undefined);
+      const snapshot = getChatSnapshot(h.db, snapshotId!);
+      assert.ok(snapshot !== null);
+      assert.ok(snapshot!.content.includes("[文件：说明.md]"));
+      assert.ok(snapshot!.content.includes("上面这段是文件里的正文。"));
+      assert.equal(snapshot!.contentHash, sha256Hex(snapshot!.content));
+      assert.equal(snapshot!.attachments, undefined);
 
       // 表情：库里没有就拒，有就发得出去
       await assert.rejects(
@@ -1027,4 +1060,8 @@ describe("chat service (D-31b)", () => {
     }
   });
 });
+
+
+
+
 

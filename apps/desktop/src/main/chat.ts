@@ -18,6 +18,8 @@ import {
   type Conversation,
   type ConversationListItem,
   type BatchModel,
+  type ChatAttachment,
+  type ChatAttachmentInput,
   type Message,
   type NodeHealth,
   type Project,
@@ -41,6 +43,8 @@ import {
   getChatSlot,
   getChatSnapshot,
   getConversation,
+  getFile,
+  getImageRef,
   getSticker,
   insertChatRun,
   insertChatSnapshot,
@@ -115,6 +119,8 @@ export interface ChatServiceDeps {
   readonly adapterFactory: (target: ChatRunTarget) => Promise<AgentAdapter>;
   /** 节点探测；默认真的打节点 */
   readonly probe?: (params: { baseUrl: string; token: string; profileId: string }) => Promise<NodeTestResult>;
+  /** D-36b：把文件 ref 读成文本（非文本文件返回 null）；测试注入假的 */
+  readonly readFileText?: (ref: string) => string | null;
   readonly now?: () => string;
   readonly idleTimeoutMs?: number;
   readonly totalTimeoutMs?: number;
@@ -310,6 +316,12 @@ export class ChatService {
 
     // ⑤ 拼 Snapshot（只能答的人）
     const history = listChatMessages(db, conversation.id, null, 100).messages.slice().reverse();
+    const promptFiles =
+      content.kind === "text"
+        ? content.attachments
+            .filter((attachment) => attachment.kind === "file")
+            .map((attachment) => ({ name: attachment.name, text: this.#deps.readFileText?.(attachment.ref) ?? null }))
+        : [];
     const snapshots = new Map<string, ChatSnapshot>();
     const adapterIds = new Map<string, string>();
     for (const agentId of recipients) {
@@ -327,6 +339,7 @@ export class ChatService {
           quote: command.quoteMessageId === null ? null : getChatMessage(db, command.quoteMessageId),
           inReplyToOf: this.#inReplyToOf,
           displayNameOf: (id) => agents.get(id)?.displayName ?? id,
+          ...(promptFiles.length === 0 ? {} : { files: promptFiles }),
           createdAt: now,
         }),
       );
@@ -834,15 +847,15 @@ export class ChatService {
   }
 
   /**
-   * ChatContentInput → ChatContent。表情已经上线（D-34a）；图片 / 文件附件要等 Prompt 清单（D-36b），
-   * 语音要等 D-34b——都明确拒绝，不悄悄降级。
+   * ChatContentInput → ChatContent。
+   * - 文件（D-36b）：校验引用后带进消息；能当文本读的正文会进 Prompt 的资料区
+   * - 图片：引用校验先做，但**节点还不能收图**（S-23 还没合），现在明确拒绝，不悄悄降级
+   * - 语音：等 D-34b
    */
   #resolveContent(input: ChatContentInput): ChatContent {
     if (input.kind === "text") {
-      if (input.attachments.length > 0) {
-        throw new ChatError("validation_failed", "图片 / 文件附件要等 Prompt 清单上线（D-36b），先发文字");
-      }
-      return { kind: "text", text: input.text, attachments: [] };
+      const attachments = input.attachments.map((attachment) => this.#resolveAttachment(attachment));
+      return { kind: "text", text: input.text, attachments };
     }
     if (input.kind === "sticker") {
       // C-34：发送时只传 stickerId，image 和 label 从表情库抄一份记在消息上
@@ -851,6 +864,29 @@ export class ChatService {
       return { kind: "sticker", stickerId: sticker.id, image: sticker.image, label: sticker.label };
     }
     throw new ChatError("validation_failed", "语音还没上线（D-34b），先发文字或语音转写成文字");
+  }
+
+  /** 校验一个附件引用，返回记进消息的那份（文件字段从库里抄，renderer 只拿 ref） */
+  #resolveAttachment(attachment: ChatAttachmentInput): ChatAttachment {
+    if (attachment.kind === "image") {
+      const image = getImageRef(this.#deps.db, attachment.ref);
+      if (image === null || image.purpose !== "chat") {
+        throw new ChatError("validation_failed", "图片引用不存在（或者不是聊天图片），请重新选一张");
+      }
+      // 节点收图（S-23）还没合：现在带图发不出去，明确拒绝
+      throw new ChatError("validation_failed", "节点还不能收图（S-23 还没合），先把图片去掉");
+    }
+    const file = getFile(this.#deps.db, attachment.ref);
+    if (file === null) throw new ChatError("validation_failed", "文件引用不存在，请重新选一个");
+    return {
+      kind: "file",
+      ref: file.ref,
+      name: file.name,
+      mime: file.mime,
+      bytes: file.bytes,
+      sha256: file.sha256,
+      isText: file.isText,
+    };
   }
 
   async #availabilityOf(
