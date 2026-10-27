@@ -85,6 +85,7 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
           ? c
           : { ...c, messages: mergeMessages(c.messages, page.messages), slots: mergeSlots(c.slots, page.slots), nextCursor: page.nextCursor },
       );
+      void media.loadJobs(conversationId, page.messages.map((m) => m.id));
       // 回答到一半关掉再打开：之前的流式文字补不回来（main 的聊天事件只推不存，契约也没有回放查询），
       // 只显示「正在想…」，之后到的照常显示，答完以 chat.message.created 的正文为准
       await markRead();
@@ -128,6 +129,7 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
             ? c
             : { ...c, messages: mergeMessages(c.messages, page.messages), slots: mergeSlots(c.slots, page.slots), nextCursor: page.nextCursor },
         );
+        void media.loadJobs(currentId, page.messages.map((m) => m.id));
       } catch (err) {
         fail(err);
       }

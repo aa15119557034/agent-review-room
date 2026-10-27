@@ -1,4 +1,4 @@
-import type { DrawRequest, DrawRoutePreview, ImmersiveSettings, MediaSource, NodeInfo, VoiceOption } from "@room/schemas";
+import { MEDIA_LIST_MESSAGE_IDS_MAX, type DrawRequest, type DrawRoutePreview, type ImmersiveSettings, type MediaJob, type MediaSource, type NodeInfo, type VoiceOption } from "@room/schemas";
 import type { RoomClient } from "./client";
 import { chatVision, jobActive, jobsOf, mergeJobs, type VisionHint } from "./media";
 import { draftOf, initialMedia, type ChatDraft, type ChatMediaState, type ChatState } from "./chat";
@@ -24,21 +24,37 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
     });
 
   /**
-   * 打开会话时：这个会话的媒体任务和沉浸模式设置。后端还没实现这些查询时安静地不显示（不弹错误），
-   * 免得在 D-38 / D-39 之前每次打开会话都报错
+   * 打开会话时：清掉上个会话的媒体状态，读沉浸模式设置。媒体任务等消息那页到了再按消息查（loadJobs）。
+   * 后端还没实现这些查询时安静地不显示（不弹错误），免得在 D-38 / D-39 之前每次打开会话都报错
    */
   async function loadForConversation(conversationId: string) {
     setMedia((m) => ({ ...m, jobs: [], immersive: null, clips: {}, playing: null, playQueue: [] }));
-    const [jobs, immersive] = await Promise.all([
-      client.query({ type: "media.list", scope: { kind: "chat", conversationId } }).catch(() => null),
-      client.query({ type: "immersive.get", conversationId }).catch(() => null),
-    ]);
+    const immersive = await client.query({ type: "immersive.get", conversationId }).catch(() => null);
+    setChat((c) => (c.currentId !== conversationId ? c : { ...c, media: { ...c.media, immersive: immersive ?? c.media.immersive } }));
+  }
+
+  /**
+   * 这些消息的媒体任务（C-42f：media.list 按消息查，每批 MEDIA_LIST_MESSAGE_IDS_MAX 条）。
+   * 每条消息每一类都查得到最新几条和最近一次成功的，会话里任务再多，旧消息的图也找得回来、请求卡不会重复出现。
+   * 某一批失败就跳过那一批，不弹错误（同 loadForConversation）
+   */
+  async function loadJobs(conversationId: string, messageIds: readonly string[]) {
+    const ids = [...new Set(messageIds)];
+    const batches: string[][] = [];
+    for (let i = 0; i < ids.length; i += MEDIA_LIST_MESSAGE_IDS_MAX) batches.push(ids.slice(i, i + MEDIA_LIST_MESSAGE_IDS_MAX));
+    const results = await Promise.all(
+      batches.map((messageIds) =>
+        client.query({ type: "media.list", scope: { kind: "chat", conversationId }, messageIds }).catch((): MediaJob[] => []),
+      ),
+    );
+    const jobs = results.flat();
+    if (jobs.length === 0) return;
     setChat((c) => {
       if (c.currentId !== conversationId) return c;
       const clips = { ...c.media.clips };
-      for (const j of jobs ?? []) if (j.kind === "speech" && j.speech && j.source.kind === "chat") clips[j.source.messageId] ??= j.speech;
+      for (const j of jobs) if (j.kind === "speech" && j.speech && j.source.kind === "chat") clips[j.source.messageId] ??= j.speech;
       // 查询期间推来的事件可能更新：合并，不覆盖
-      return { ...c, media: { ...c.media, jobs: mergeJobs(jobs ?? [], c.media.jobs), immersive: immersive ?? c.media.immersive, clips } };
+      return { ...c, media: { ...c.media, jobs: mergeJobs(jobs, c.media.jobs), clips } };
     });
   }
 
@@ -77,6 +93,7 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
 
   return {
     loadForConversation,
+    loadJobs,
     loadVision,
     loadStickers,
     reset: () => setMedia(() => initialMedia),
@@ -295,8 +312,8 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
             ? c
             : { ...c, media: { ...c.media, immersive: { settings: saved, usage: usage ?? c.media.immersive?.usage ?? emptyUsage() } } },
         );
-        // 从开到关：main 取消了这个会话所有任务，拉一次最新的
-        if (!saved.enabled) await loadForConversation(conversationId);
+        // 从开到关：main 取消了这个会话所有任务，按已加载的消息拉一次最新的
+        if (!saved.enabled && chat().currentId === conversationId) await loadJobs(conversationId, chat().messages.map((m) => m.id));
       } catch (err) {
         fail(err);
       }

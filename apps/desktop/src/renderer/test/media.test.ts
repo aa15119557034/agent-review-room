@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { CHART_FENCE, SPEAK_MAX_CHARS, type AgentChatMessage, type AgentProfile, type ChatMessage, type MediaJob, type NodeHealth } from "@room/schemas";
+import { CHART_FENCE, MEDIA_LIST_MESSAGE_IDS_MAX, SPEAK_MAX_CHARS, type AgentChatMessage, type AgentProfile, type ChatMessage, type MediaJob, type NodeHealth } from "@room/schemas";
 import { createMockBridge, type MockOptions } from "../mock/mock-backend";
 import { createActions } from "../lib/actions";
 import { applyMediaJob, initialMedia, type ChatDraft, type ChatState } from "../lib/chat";
@@ -150,10 +150,33 @@ describe("media lib", () => {
 
 describe("C-43 through the UI actions (mock)", () => {
   function app(opts: MockOptions = {}) {
-    const bridge = createMockBridge({ tickMs: 1, reviewerConfigured: true, ...opts });
+    const mock = createMockBridge({ tickMs: 1, reviewerConfigured: true, ...opts });
+    // 测试能看到发出去的查询，也能把某个命令的回包扣住，等测试放行（模拟对话框开着、IPC 慢）
+    const queries: { type: string; messageIds?: string[] }[] = [];
+    const held = new Map<string, Promise<void>>();
+    const bridge: typeof mock = {
+      ...mock,
+      query: ((r: { type: string; messageIds?: string[] }) => {
+        queries.push(structuredClone(r));
+        return mock.query(r as never);
+      }) as typeof mock.query,
+      command: (async (r: { type: string }) => {
+        const result = await mock.command(r as never);
+        await held.get(r.type);
+        return result;
+      }) as typeof mock.command,
+    };
+    const hold = (type: string) => {
+      let release!: () => void;
+      held.set(type, new Promise<void>((r) => (release = r)));
+      return () => {
+        held.delete(type);
+        release();
+      };
+    };
     const store = createStore(initialState);
     const actions = createActions(store, createClient(bridge));
-    return { store, actions };
+    return { store, actions, queries, hold };
   }
   const agentReply = (msgs: readonly ChatMessage[]) => msgs.filter((m): m is AgentChatMessage => m.sender === "agent").at(-1);
   const jobsOf = (store: ReturnType<typeof app>["store"], kind: MediaJob["kind"]) => store.get().chat.media.jobs.filter((j) => j.kind === kind);
@@ -340,7 +363,7 @@ describe("C-43 through the UI actions (mock)", () => {
   });
 
   it("while a recording uploads you can't add files, and a late draw result only closes its own card (林离 #115)", async () => {
-    const { store, actions } = app();
+    const { store, actions, hold } = app();
     await actions.start();
     actions.goChat();
     await actions.chat.createConversation({ kind: "direct", agent: "deepseek" }, null);
@@ -372,13 +395,82 @@ describe("C-43 through the UI actions (mock)", () => {
     await p;
     assert.deepEqual(store.get().chat.sheet, { kind: "draw", messageId: "cmsg_other", prompt: "别的" });
 
-    // 选文件对话框开着时切了会话：附件进开始时的会话
+    // 选文件对话框开着时切了会话：回包扣到切换完成后才放行，附件进开始时的会话（林离 #115）
+    const release = hold("chat.attachment.pick");
     const picking = actions.chat.media.pickAttachment("image");
     await actions.chat.createConversation({ kind: "direct", agent: "claude" }, null);
     const b = store.get().chat.currentId!;
+    assert.notEqual(b, a);
+    assert.equal(store.get().chat.drafts[a]!.attachments.length, 0, "reply still held");
+    release();
     await picking;
     assert.equal(store.get().chat.drafts[a]!.attachments.length, 1);
     assert.equal(store.get().chat.drafts[b]?.attachments.length ?? 0, 0);
+  });
+
+  it("reopening a chat finds an old drawing behind many later cancels; no request card again (林离 #116)", async () => {
+    const { store, actions, queries } = app();
+    await actions.start();
+    actions.goChat();
+    await actions.chat.createConversation({ kind: "direct", agent: "deepseek" }, null);
+    const a = store.get().chat.currentId!;
+    actions.chat.setDraftText("画一张");
+    await actions.chat.send();
+    await until(() => !!agentReply(store.get().chat.messages));
+    const reply = agentReply(store.get().chat.messages)!;
+    const src = { kind: "chat" as const, conversationId: a, messageId: reply.id, agent: reply.agent };
+    const d = { ...reply.mediaIntent!.draw!, backend: "comfyui" as const };
+    assert.equal(await actions.chat.media.startDraw(d, src, false), true);
+    await until(() => jobsOf(store, "draw").some((j) => j.state === "succeeded"));
+    const ok = jobsOf(store, "draw").find((j) => j.state === "succeeded")!;
+    for (let i = 0; i < 6; i++) {
+      assert.equal(await actions.chat.media.startDraw(d, src, false), true);
+      const j = jobsOf(store, "draw").find((x) => x.state === "queued" || x.state === "running")!;
+      await actions.chat.media.cancelJob(j.id);
+      await until(() => jobsOf(store, "draw").every((x) => x.state !== "queued" && x.state !== "running"));
+    }
+    assert.equal(jobsOf(store, "draw").length, 7);
+    assert.ok(jobsOf(store, "draw").filter((j) => j.id !== ok.id).every((j) => j.state === "cancelled"), "later ones all cancelled");
+
+    // 换个会话再回来：按消息查，成功的那张排在 6 次取消后面也查得到
+    await actions.chat.createConversation({ kind: "direct", agent: "claude" }, null);
+    queries.length = 0;
+    await actions.chat.openConversation(a);
+    await until(() => jobsOf(store, "draw").length > 0);
+    const back = agentReply(store.get().chat.messages)!;
+    assert.ok(jobsOf(store, "draw").some((j) => j.id === ok.id && j.state === "succeeded"));
+    assert.equal(jobsOf(store, "draw").length, 6, "latest 5 + the old success");
+    assert.equal(showDrawCard(back, store.get().chat.media.jobs), false);
+    const lists = queries.filter((q) => q.type === "media.list");
+    assert.ok(lists.length > 0 && lists.every((q) => q.messageIds && q.messageIds.length > 0));
+  });
+
+  it("media.list goes by message, at most MEDIA_LIST_MESSAGE_IDS_MAX ids per query; ids never repeat", async () => {
+    const { store, actions, queries } = app();
+    await actions.start();
+    actions.goChat();
+    await actions.chat.createConversation({ kind: "direct", agent: "deepseek" }, null);
+    const a = store.get().chat.currentId!;
+    // 每分钟只能发 6 条，凑不出一页 14 条以上的真消息：直接按 30 个 id 查（mock 里查不到任务的 id 返回空）
+    const ids = Array.from({ length: 30 }, (_, i) => `cmsg_${String(i).padStart(26, "0")}`);
+    queries.length = 0;
+    await actions.chat.media.loadJobs(a, [...ids, ids[0]!]);
+    const lists = queries.filter((q) => q.type === "media.list");
+    assert.equal(lists.length, Math.ceil(ids.length / MEDIA_LIST_MESSAGE_IDS_MAX));
+    assert.ok(lists.every((q) => q.messageIds!.length <= MEDIA_LIST_MESSAGE_IDS_MAX));
+    assert.deepEqual(lists.flatMap((q) => q.messageIds!), ids);
+    assert.equal(store.get().notice, null);
+
+    // 打开会话：按那页消息的 id 查
+    actions.chat.setDraftText("你好");
+    await actions.chat.send();
+    await until(() => !!agentReply(store.get().chat.messages));
+    await actions.chat.createConversation({ kind: "direct", agent: "claude" }, null);
+    queries.length = 0;
+    await actions.chat.openConversation(a);
+    await until(() => queries.some((q) => q.type === "media.list"));
+    const loaded = store.get().chat.messages.map((m) => m.id).sort();
+    assert.deepEqual(queries.filter((q) => q.type === "media.list").flatMap((q) => q.messageIds!).sort(), loaded);
   });
 
   it("retracting a message cancels the media jobs of its answers", async () => {

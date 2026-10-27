@@ -3,6 +3,7 @@ import {
   DEFAULT_IMMERSIVE_SETTINGS,
   MEDIA_JOB_TRANSITIONS,
   canTransition,
+  pickMessageMediaJobs,
   type AgentChatMessage,
   type AgentProfile,
   type ChatAttachment,
@@ -470,13 +471,15 @@ export function createMediaMock(ctx: MediaMockContext, options: MediaMockOptions
       if (!j) throw new MockError("not_found", `任务 ${req.jobId} 不存在`);
       return clone(j);
     },
-    async "media.list"(req: { scope: { kind: string; conversationId?: string } }) {
-      return clone(
-        m.jobs
-          .filter((j) => j.source.kind === "chat" && req.scope.kind === "chat" && j.source.conversationId === req.scope.conversationId)
-          .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
-          .slice(0, 200),
-      );
+    async "media.list"(req: { scope: { kind: string; conversationId?: string }; messageIds?: string[] }) {
+      if (req.messageIds && req.scope.kind !== "chat") throw new MockError("validation_failed", "messageIds 只用于聊天范围");
+      const inScope = m.jobs.filter((j) => j.source.kind === "chat" && req.scope.kind === "chat" && j.source.conversationId === req.scope.conversationId);
+      // C-42f：按消息查时每条消息每一类只给最新几条 + 最近一次成功的 + 最近一个没结束的（和 main 同一个挑法）
+      const ids = req.messageIds ? new Set(req.messageIds) : null;
+      const picked = ids
+        ? pickMessageMediaJobs(inScope.filter((j) => j.source.kind === "chat" && ids.has(j.source.messageId)))
+        : inScope.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+      return clone(picked.slice(0, 200));
     },
   };
 

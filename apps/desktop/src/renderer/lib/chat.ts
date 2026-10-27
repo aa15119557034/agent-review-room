@@ -77,8 +77,8 @@ export interface ChatMediaState {
   playing: string | null;
   playQueue: string[];
   /**
-   * 这次运行里你点过「画」的消息（不随会话切换清空）。media.list 只给最近 200 条任务，
-   * 更早的任务查不到时，靠它提醒「画过了」，免得再点一次又花一份额度（汐 #115）
+   * 这次运行里你点过「画」的消息（不随会话切换清空）。任务按消息查（C-42f），正常都查得到；
+   * 后端还没实现 media.list、查询失败时，靠它提醒「画过了」，免得再点一次又花一份额度（汐 #115）
    */
   drawRequested: Record<string, true>;
   /** 正在发 draw.start 的消息：结果回来前不能再发一次 */
