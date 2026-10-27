@@ -54,19 +54,21 @@
 | **C-42b** | Claude | 契约：MediaJob、`kind: "image"` 的 Run、生成图回传、DrawRequest、GeneratedImage、Codex 额度 | ADR-004 | 1 天 |
 | **C-42c** | Claude | 契约：SpeechClip、VoiceProfile、`replyAsVoice` | ADR-004 | 0.5 天 |
 | **C-42d** | Claude | 契约：ChartSpec、MediaIntent、沉浸模式设置 | ADR-004 | 0.5 天 |
+| **C-42e** | Claude | 契约补漏（C-43 开工时发现）：秘书回答上存合格的媒体意图 `mediaIntent` 和沉浸模式退回原因 `immersiveDeferred`，界面才能显示画图请求卡 /「想用语音说」 | C-42d | 0.2 天 |
 | **S-23** | Claude | 节点：看图实测、收附件并按清单校验、请求体 16 MB、`kind: "image"` Run 和生成图回传 | C-42a、C-42b | 2～3 天 |
 | **S-24** | Claude | 节点：读 Codex 额度（2 秒超时）并上报、实测单图消耗；S-21 的 Codex 部分提前，C-36 复用 | C-42b | 1 天 |
 | **D-36a** | DeepSeek | 图片处理管道（去全部元数据、转正、确定性输出、拒动图 / HEIC） | C-42a | 1.5～2 天 |
 | **D-36b** | DeepSeek | 附件清单进指纹、盖章和起跑重读比对、图片本体 + 引用表、数据库迁移 | C-42a、D-36a | 1.5～2 天 |
 | **D-37a** | DeepSeek | 语音合成试听（三个候选盲听） | C-42c | 2～3 天 |
-| **D-37b** | DeepSeek | 语音合成集成（独立进程、缓存、MediaJob） | D-37a | 2～3 天 |
-| **D-38a** | DeepSeek | 画图 · 本机 ComfyUI、全局显卡队列、MediaJob | C-42b | 2～3 天 |
+| **D-37b** | DeepSeek | 语音合成集成（独立进程、缓存、MediaJob）；朗读文本只用契约的 `speakableText`，不另写过滤 | D-37a | 2～3 天 |
+| **D-31d** | DeepSeek | 秘书回答存 `mediaIntent`（C-42e）：迁移给 `chat_messages` 加可空列（旧行读回省略）、`insertChatMessage` / `toChatMessage` 读写、写回答时调 `extractMediaIntent`（里面用契约里的 `speakableText` 判 speak 字数），被丢的原始值记审计；`immersiveDeferred` 留给 D-39 | C-42e、D-31b | 0.5 天 |
+| **D-38a** | DeepSeek | 画图 · 本机 ComfyUI、全局显卡队列、MediaJob。验收含：沉浸模式的自动意图要么有任务（本机画不了就立刻 `failed(backend_unavailable)`），要么有 `immersiveDeferred`，不能都没有 | C-42b | 2～3 天 |
 | **D-38b** | DeepSeek | 画图 · 林离 + 85% 选路 + 回退 | C-42b、S-23、S-24、D-38a | 2～3 天 |
-| **C-43** | Claude | 界面：图片、图表、画图卡、语音、沉浸设置和「停」、议题材料带图 | C-42a～d | 3～4 天 |
+| **C-43** | Claude | 界面：图片、图表、画图卡、语音、沉浸设置和「停」、议题材料带图（先对着 mock 做，接真后端要 D-31d） | C-42a～e | 3～4 天 |
 | **X-34** | Codex | Prompt：图片和清单进资料区、图表 / 媒体意图说明；确定性 e2e | C-42a、C-42d、D-36b | 2～3 天 |
-| **D-39** | DeepSeek | 沉浸模式（1B-M2） | C-34、D-31b、D-37b、D-38b、C-43、X-34 | 4～6 天 |
+| **D-39** | DeepSeek | 沉浸模式（1B-M2），含写 `immersiveDeferred` | C-34、D-31b、D-31d、D-37b、D-38b、C-43、X-34 | 4～6 天 |
 
-排法：D-36 和 C-34 并行；D-37a 先做，用户选定后再 D-37b；D-38a 不等 S-23；D-39 排在 D-31b 之后。D-36～D-39 合计约 15～22 天，和 D-31a/b/c 都是汐的活，1B-2 大约推后 1～2 周。
+排法：D-31d 先做（小，C-43 接真后端靠它）；D-36 和 C-34 并行；D-37a 先做，用户选定后再 D-37b；D-38a 不等 S-23；D-39 排在 D-31b 之后。D-36～D-39 合计约 15～22 天，和 D-31a/b/c 都是汐的活，1B-2 大约推后 1～2 周。
 
 ## 1B-2 聊天空间
 

@@ -7,6 +7,8 @@ import {
   DEFAULT_IMMERSIVE_SETTINGS,
   ImmersiveSettings,
   extractMediaIntent,
+  SPEAK_MAX_CHARS,
+  speakableText,
   parseChartSpec,
 } from "../src/index";
 
@@ -78,6 +80,44 @@ describe("media intent & immersive (C-42d)", () => {
       { intent: { speak: true }, dropped: true },
       "keep the good speak",
     );
+  });
+
+  it("speak only counts for a speakable text of 1..SPEAK_MAX_CHARS chars, by the same speakableText speech uses", () => {
+    const d = { prompt: "小鲸鱼", size: "1024x1024" };
+    const reply = (text: string) => ChatAgentOutput.parse({ kind: "reply", text, speak: true, draw: d }) as never;
+    const said = "说".repeat(SPEAK_MAX_CHARS);
+    assert.deepEqual(extractMediaIntent(reply(said)), { intent: { speak: true, draw: d }, dropped: false });
+    assert.deepEqual(extractMediaIntent(reply(said + "多")), { intent: { draw: d }, dropped: true }, "too long: keep only draw");
+    // 原文 2500 多字，其中代码块 600 字：过滤后在上限内，照样能说（林离的例子）
+    const withCode = "说".repeat(1900) + "\n```ts\n" + "x".repeat(600) + "\n```\n";
+    assert.ok(withCode.length > SPEAK_MAX_CHARS);
+    assert.deepEqual(extractMediaIntent(reply(withCode)), { intent: { speak: true, draw: d }, dropped: false });
+    assert.deepEqual(extractMediaIntent(reply("```\ncode only\n```")), { intent: { draw: d }, dropped: true }, "nothing left to read aloud");
+    // 判 speak 和合成用的是同一个函数：结果和直接拿 speakableText 量出来的一致
+    for (const text of [said, said + "多", withCode, "看 https://example.com 🎉 [表情：比心]"]) {
+      const n = speakableText(text).length;
+      assert.equal(extractMediaIntent(reply(text)).intent?.speak === true, n > 0 && n <= SPEAK_MAX_CHARS, text.slice(0, 20));
+    }
+  });
+
+  it("speakableText keeps only the spoken part", () => {
+    assert.equal(speakableText("先看图：\n\n```room-chart\n{\"type\":\"bar\"}\n```\n\n汐开的最多。"), "先看图：\n汐开的最多。");
+    assert.equal(speakableText("详见[这份文档](https://example.com/a)，或者 https://x.dev/b 。"), "详见这份文档，或者 。");
+    assert.equal(speakableText("![图](https://example.com/a.png)好的 👍🏻 [表情：比心]"), "好的");
+    assert.equal(speakableText("改 `extractMediaIntent` 就行"), "改 extractMediaIntent 就行");
+    assert.equal(speakableText("没闭合的\n```\nconst a = 1"), "没闭合的");
+    assert.equal(speakableText("  \n "), "");
+    assert.equal(speakableText("你看[图 3：截图.png]这里 🇨🇳 1️⃣"), "你看这里 1");
+  });
+
+  it("speakableText stays linear on a 200k reply full of unmatched brackets", () => {
+    for (const junk of ["[", "![", "[表情"]) {
+      const text = junk.repeat(Math.floor(200_000 / junk.length));
+      const t0 = performance.now();
+      speakableText(text);
+      const ms = performance.now() - t0;
+      assert.ok(ms < 3000, `${junk}: ${Math.round(ms)} ms`);
+    }
   });
 
   it("immersive settings: off by default, caps can only go down", () => {

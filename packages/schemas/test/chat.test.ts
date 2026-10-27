@@ -2,6 +2,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import {
   AgentChatMessage,
+  ChatMessage,
   ChatContentInput,
   ChatSnapshot,
   chatSendIntentJson,
@@ -162,6 +163,31 @@ describe("user messages", () => {
     assert.ok(AgentChatMessage.safeParse(reply).success);
     assert.equal(AgentChatMessage.safeParse({ ...reply, state: "retracted" }).success, false);
     assert.equal(AgentChatMessage.safeParse({ ...reply, mentions: { kind: "all" } }).success, false);
+  });
+
+  it("C-42e: agent messages keep only valid media intents; deferral only for intents the reply carries", () => {
+    const reply = {
+      id: `cmsg_${ID2}`, conversationId: CONV, createdAt: TS, sender: "agent", agent: "deepseek", text: "给你画一张",
+      inReplyTo: MSG, slotId: `slot_${ID}`, runId: `run_${ID}`, memoryEntriesUsed: null,
+    };
+    const draw = { prompt: "小鲸鱼", size: "1024x1024" };
+    assert.ok(AgentChatMessage.safeParse({ ...reply, mediaIntent: { draw } }).success);
+    assert.ok(AgentChatMessage.safeParse({ ...reply, mediaIntent: { speak: true, draw } }).success);
+    assert.ok(ChatMessage.safeParse({ ...reply, mediaIntent: { speak: true } }).success);
+    assert.equal(AgentChatMessage.safeParse({ ...reply, mediaIntent: {} }).success, false, "empty intent is omitted");
+    assert.equal(AgentChatMessage.safeParse({ ...reply, mediaIntent: { draw: { ...draw, size: "8192x8192" } } }).success, false);
+    assert.equal(AgentChatMessage.safeParse({ ...reply, mediaIntent: { draw: { ...draw, backend: "codex" } } }).success, false);
+    assert.equal(AgentChatMessage.safeParse({ ...reply, mediaIntent: { speak: false } }).success, false);
+    assert.ok(AgentChatMessage.safeParse({ ...reply, mediaIntent: { draw }, immersiveDeferred: { draw: "hourly_limit" } }).success);
+    assert.equal(AgentChatMessage.safeParse({ ...reply, mediaIntent: { draw }, immersiveDeferred: { speak: "hourly_limit" } }).success, false);
+    assert.equal(AgentChatMessage.safeParse({ ...reply, immersiveDeferred: { draw: "hourly_limit" } }).success, false);
+    assert.equal(AgentChatMessage.safeParse({ ...reply, mediaIntent: { draw }, immersiveDeferred: {} }).success, false);
+    assert.equal(AgentChatMessage.safeParse({ ...reply, mediaIntent: { draw }, immersiveDeferred: { draw: "gpu_busy" } }).success, false);
+    assert.ok(AgentChatMessage.safeParse({ ...reply, mediaIntent: { speak: true }, immersiveDeferred: { speak: "hourly_limit" } }).success);
+    assert.ok(
+      AgentChatMessage.safeParse({ ...reply, mediaIntent: { speak: true, draw }, immersiveDeferred: { speak: "hourly_limit", draw: "hourly_limit" } }).success,
+    );
+    assert.equal(AgentChatMessage.safeParse({ ...reply, mediaIntent: { speak: true }, immersiveDeferred: { draw: "hourly_limit" } }).success, false);
   });
 });
 
