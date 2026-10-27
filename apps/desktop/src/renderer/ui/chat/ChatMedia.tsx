@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import {
   CHAT_LIMITS,
   DRAW_PROMPT_MAX_CHARS,
@@ -170,7 +170,23 @@ export function AgentMedia({ message, conv }: { message: AgentChatMessage; conv:
   );
 }
 
+/** 你自己的消息下面：用「照这条画一张」从这条发起的画图（任务、进度、画好的图、失败和重试） */
+export function UserDraws({ message, conv }: { message: UserChatMessage; conv: Conversation }) {
+  const jobs = useAppState((s) => s.chat.media.jobs);
+  const draws = jobsOf(jobs, message.id, "draw");
+  if (draws.length === 0) return null;
+  return (
+    <div className="agent-media">
+      {draws.map((j) => (
+        <DrawJobView key={j.id} job={j} message={message} conv={conv} />
+      ))}
+    </div>
+  );
+}
+
 function SpeechLine({ message }: { message: AgentChatMessage }) {
+  // 流式回答时历史消息会跟着重渲染：朗读过滤只在正文变了才重算
+  const speakable = useMemo(() => canSpeak(message.text), [message.text]);
   const jobs = useAppState((s) => jobsOf(s.chat.media.jobs, message.id, "speech"));
   const clip = useAppState((s) => s.chat.media.clips[message.id]);
   const playing = useAppState((s) => s.chat.media.playing === message.id);
@@ -212,7 +228,7 @@ function SpeechLine({ message }: { message: AgentChatMessage }) {
       </p>
     );
   }
-  if (!canSpeak(message.text)) return null;
+  if (!speakable) return null;
   const wants = message.mediaIntent?.speak === true;
   return (
     <p className="speech-line">
@@ -251,7 +267,7 @@ function DrawOffer({ message, lastFailed, drawnEarlier }: { message: AgentChatMe
   );
 }
 
-function DrawJobView({ job, message, conv }: { job: MediaJob; message: AgentChatMessage; conv: Conversation }) {
+function DrawJobView({ job, message, conv }: { job: MediaJob; message: AgentChatMessage | UserChatMessage; conv: Conversation }) {
   const actions = useActions();
   const [zoom, setZoom] = useState(false);
   const starting = useAppState((s) => s.chat.media.drawStarting[message.id] === true);
@@ -306,7 +322,7 @@ function DrawJobView({ job, message, conv }: { job: MediaJob; message: AgentChat
           onClick={() =>
             void actions.chat.media.startDraw(
               { ...job.draw!, backend: "comfyui" },
-              { kind: "chat", conversationId: conv.id, messageId: message.id, agent: message.agent },
+              { kind: "chat", conversationId: conv.id, messageId: message.id, agent: message.sender === "agent" ? message.agent : null },
               false,
             )
           }
@@ -607,6 +623,8 @@ export function RecordButton({ disabled }: { disabled?: boolean }) {
     cancelled: boolean;
   } | null>(null);
   const alive = useRef(true);
+  /** 麦克风授权弹窗还没回来：这期间再点不重复启动（不然会开出两个 MediaRecorder，前一个没人停） */
+  const starting = useRef(false);
 
   // 组件卸载（离开聊天页；ChatView 按会话 key，切会话也会卸载）= 取消这段录音
   useEffect(() => {
@@ -630,13 +648,16 @@ export function RecordButton({ disabled }: { disabled?: boolean }) {
       return;
     }
     const target = conversationId;
-    if (!target) return;
+    if (!target || starting.current || rec.current) return;
+    starting.current = true;
     let stream: MediaStream;
     try {
       stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch {
       if (alive.current) setError("没有麦克风权限");
       return;
+    } finally {
+      starting.current = false;
     }
     // 授权弹窗回来时已经离开了：马上释放麦克风，不开始录
     if (!alive.current) {

@@ -281,6 +281,21 @@ describe("C-43 through the UI actions (mock)", () => {
     assert.deepEqual(store.get().chat.media.drawStarting, {});
   });
 
+  it("「照这条画一张」 on your own message: the job belongs to that message (shown under it, 汐 #115)", async () => {
+    const { store, actions } = app();
+    await actions.start();
+    actions.goChat();
+    await actions.chat.createConversation({ kind: "direct", agent: "claude" }, null);
+    actions.chat.setDraftText("一只小鲸鱼");
+    await actions.chat.send();
+    const mine = store.get().chat.messages.find((m) => m.sender === "user")!;
+    const src = { kind: "chat" as const, conversationId: mine.conversationId, messageId: mine.id, agent: null };
+    assert.equal(await actions.chat.media.startDraw({ prompt: "一只小鲸鱼", size: "1024x1024", backend: "comfyui" }, src, false), true);
+    await until(() => jobsOf(store, "draw")[0]?.state === "succeeded");
+    const j = jobsOf(store, "draw")[0]!;
+    assert.deepEqual([j.source.kind === "chat" && j.source.messageId, j.source.kind === "chat" && j.source.agent], [mine.id, null]);
+  });
+
   it("re-edit puts the text back but not the old attachments or voice", async () => {
     const { store, actions } = app();
     await actions.start();

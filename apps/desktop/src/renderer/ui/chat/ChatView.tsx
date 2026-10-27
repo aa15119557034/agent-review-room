@@ -34,6 +34,7 @@ import {
   ImmersiveSection,
   MediaHead,
   RecordButton,
+  UserDraws,
   SpeechPlayer,
   StickerPanel,
   UserContent,
@@ -374,6 +375,7 @@ function Entry({ entry, now, conv }: { entry: TimelineEntry; now: number; conv: 
         <MessageMenu message={um} now={now}>
           <UserContent message={um} />
         </MessageMenu>
+        {um.state !== "retracted" && <UserDraws message={um} conv={conv} />}
         <SlotLine slots={entry.slots} />
       </div>
     </li>
