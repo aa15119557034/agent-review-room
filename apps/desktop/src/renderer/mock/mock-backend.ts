@@ -47,14 +47,17 @@ export interface MockOptions {
   discussion?: DiscussionMockOptions;
   /** 聊天（C-35）：模拟连不上、失败、额度用尽、记忆来源 */
   chat?: ChatMockOptions;
+  /** 多模态（C-43）：林离额度、本机 ComfyUI */
+  media?: MediaMockOptions;
 }
 
 export { MockError, id, now, sha256Hex, randomHex } from "./util";
 import { MockError, id, now, sha256Hex, randomHex } from "./util";
 import { createDiscussionMock, type DiscussionMockOptions } from "./discussion-mock";
 import { createChatMock, type ChatMockOptions } from "./chat-mock";
+import { createMediaMock, type MediaMockOptions } from "./media-mock";
 
-export function createMockBridge(options: MockOptions = {}): RoomBridge & { reset(): void } {
+export function createMockBridge(options: MockOptions = {}): RoomBridge & { reset(): void; mediaUrl(ref: string): string | undefined } {
   const tickMs = options.tickMs ?? 120;
   let reviewerOutcome = options.reviewerOutcome ?? "complete";
 
@@ -344,11 +347,18 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
 
   // ------------------------------------------------------------ 聊天（C-35）
 
+  // 多模态（C-43）：附件、录音、表情、画图、语音、沉浸模式。核对 source 要查聊天消息，所以晚绑定
+  const media = createMediaMock(
+    { emit, agents: discussion.agents, chatMessage: (mid) => chat.lookup(mid), tickMs },
+    options.media,
+  );
+  if (options.seed) void media.seed();
+
   const chat = createChatMock(
-    { db, emit, pushEvent, agents: discussion.agents, timers, tickMs },
+    { db, emit, pushEvent, agents: discussion.agents, timers, tickMs, media: media.hooks },
     { seed: options.seed, ...options.chat },
   );
-  Object.assign(commands, chat.commands);
+  Object.assign(commands, chat.commands, media.commands);
 
   // ------------------------------------------------------------ queries
 
@@ -398,7 +408,7 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
   };
 
   Object.assign(queries, discussion.queries);
-  Object.assign(queries, chat.queries);
+  Object.assign(queries, chat.queries, media.queries);
 
   // ------------------------------------------------------------ dispatch
 
@@ -427,9 +437,12 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
       listeners.add(listener);
       return () => listeners.delete(listener);
     },
+    /** 浏览器里没有 room-image:// / room-audio://：把 mock 的引用换成 data: 地址（只在 ?mock 时用） */
+    mediaUrl: (ref: string) => media.hooks.url(ref),
     reset() {
       discussion.reset();
       chat.reset();
+      media.reset();
       timers.forEach((hs) => hs.forEach(clearTimeout));
       timers.clear();
       for (const k of Object.keys(db) as (keyof typeof db)[]) {
@@ -438,7 +451,7 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
         else v.clear();
       }
     },
-  } as unknown as RoomBridge & { reset(): void };
+  } as unknown as RoomBridge & { reset(): void; mediaUrl(ref: string): string | undefined };
 
   if (options.seed) {
     // 演示数据：假装已经设置好了一个节点

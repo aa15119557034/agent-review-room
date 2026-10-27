@@ -2,6 +2,7 @@ import {
   CHAT_LIMITS,
   CHAT_SLOT_TRANSITIONS,
   type AgentChatMessage,
+  type ChatAttachment,
   type ChatCursor,
   type ChatMentions,
   type ChatMessage,
@@ -11,8 +12,15 @@ import {
   type Conversation,
   type ConversationListItem,
   type ControlEvent,
+  type ImmersiveSettings,
+  type ImmersiveUsage,
+  type MediaJob,
+  type SpeechClip,
+  type Sticker,
   type UserChatMessage,
+  type VoiceRecording,
 } from "@room/schemas";
+import { mergeJobs, stripCharts, type VisionHint } from "./media";
 
 /**
  * 聊天空间的状态（C-35，契约 C-34）。和讨论室一样放在同一个 store 里（AppState.chat），
@@ -40,9 +48,46 @@ export interface ChatState {
   drafts: Record<string, ChatDraft>;
   /** 多选（转议题）：选中的消息 id；null = 没在多选 */
   selecting: string[] | null;
-  /** 浮层：新建会话、会话设置、消息详情 */
-  sheet: null | { kind: "new" } | { kind: "settings" } | { kind: "message"; messageId: string };
+  /** 浮层：新建会话、会话设置、消息详情、画图请求卡 */
+  sheet:
+    | null
+    | { kind: "new" }
+    | { kind: "settings" }
+    | { kind: "message"; messageId: string }
+    | { kind: "draw"; messageId: string; prompt: string };
+  /** 多模态（C-43） */
+  media: ChatMediaState;
 }
+
+/** 多模态的状态（C-43，契约 C-42a～e）。任务的结局只看后端（media.updated），前端不推导 */
+export interface ChatMediaState {
+  /** 当前会话的媒体任务（画图、语音合成） */
+  jobs: MediaJob[];
+  /** 当前会话的沉浸模式设置和用量；null = 还没拉到（或后端还不认识） */
+  immersive: { settings: ImmersiveSettings; usage: ImmersiveUsage } | null;
+  /** 表情库；null = 还没拉过 */
+  stickers: Sticker[] | null;
+  /** 每位秘书现在的聊天模型能不能看图（只是提示） */
+  vision: Record<string, VisionHint>;
+  /** 你录的、还在转写或等你发送的录音（按 AudioRef） */
+  recordings: Record<string, VoiceRecording>;
+  /** 播过的合成语音：回答的消息 id → 音频 */
+  clips: Record<string, SpeechClip>;
+  /** 正在播的回答（消息 id），和排着队等自动播的 */
+  playing: string | null;
+  playQueue: string[];
+}
+
+export const initialMedia: ChatMediaState = {
+  jobs: [],
+  immersive: null,
+  stickers: null,
+  vision: {},
+  recordings: {},
+  clips: {},
+  playing: null,
+  playQueue: [],
+};
 
 export interface ChatDraft {
   text: string;
@@ -50,6 +95,14 @@ export interface ChatDraft {
   quoteMessageId: string | null;
   /** 重新编辑：被撤回的那条 */
   replacesMessageId: string | null;
+  /** 选好的附件（main 存好、去过元数据之后的记录），发送时只交 ref */
+  attachments: ChatAttachment[];
+  /** 录好的语音：发的是（可能改过的）转写文字；有它时这条是语音消息，不带正文和附件 */
+  voice: { audio: string; text: string } | null;
+  /** 「用语音回」开关（C-42c） */
+  replyAsVoice: boolean;
+  /** 你手动拨过开关之后，就不再按说法自动点亮（免得你关掉又被打开） */
+  replyAsVoiceTouched: boolean;
   /**
    * 发出去但没拿到结果（IPC 断了）时留着，原样再发 = 同一次发送（main 按 id 防重复）。
    * 草稿任何一处改动都会清掉它：意图变了就是新的一次，否则会撞 idempotency_conflict
@@ -62,6 +115,10 @@ export const emptyDraft = (): ChatDraft => ({
   mentions: { kind: "none" },
   quoteMessageId: null,
   replacesMessageId: null,
+  attachments: [],
+  voice: null,
+  replyAsVoice: false,
+  replyAsVoiceTouched: false,
   messageId: null,
 });
 
@@ -76,6 +133,7 @@ export const initialChat: ChatState = {
   drafts: {},
   selecting: null,
   sheet: null,
+  media: initialMedia,
 };
 
 // ---------------------------------------------------------------- 合并
@@ -137,9 +195,44 @@ export function applyChatEvent(c: ChatState, event: ControlEvent): ChatState {
       // 只更新已经拉过的（看记忆来源详情时），不主动收集
       if (!c.runs[event.run.id]) return c;
       return { ...c, runs: { ...c.runs, [event.run.id]: event.run } };
+    case "media.updated":
+      return applyMediaJob(c, event.job);
+    case "chat.voice.updated": {
+      // 只收自己正在录的（发出去之后就不管了）
+      const rec = event.recording;
+      if (!c.media.recordings[rec.audio]) return c;
+      const media = { ...c.media, recordings: { ...c.media.recordings, [rec.audio]: rec } };
+      // 转写好了：草稿里这段录音的文字还空着就填上，给你发送前改
+      const drafts = { ...c.drafts };
+      if (rec.status === "ready") {
+        for (const [cid, d] of Object.entries(drafts)) {
+          if (d.voice?.audio === rec.audio && d.voice.text === "") drafts[cid] = { ...d, voice: { ...d.voice, text: rec.transcript!.text } };
+        }
+      }
+      return { ...c, media, drafts };
+    }
     default:
       return c;
   }
+}
+
+/**
+ * 媒体任务的变化。语音合成好了（这次事件才变成 succeeded）：记下音频，排进自动播放队列（按完成的顺序播）。
+ * 自动播只在会话开着、窗口在前台时真的播，见 ui 的播放器；你点「播放」合成的也走这里
+ */
+export function applyMediaJob(c: ChatState, job: MediaJob): ChatState {
+  const src = job.source;
+  if (src.kind !== "chat" || src.conversationId !== c.currentId) return c;
+  const old = c.media.jobs.find((j) => j.id === job.id);
+  const jobs = mergeJobs(c.media.jobs, [job]);
+  if (jobs.find((j) => j.id === job.id) !== job) return { ...c, media: { ...c.media, jobs } };
+  let { clips, playing, playQueue } = c.media;
+  if (job.kind === "speech" && job.state === "succeeded" && job.speech && old?.state !== "succeeded") {
+    clips = { ...clips, [src.messageId]: job.speech };
+    if (playing === null) playing = src.messageId;
+    else if (playing !== src.messageId && !playQueue.includes(src.messageId)) playQueue = [...playQueue, src.messageId];
+  }
+  return { ...c, media: { ...c.media, jobs, clips, playing, playQueue } };
 }
 
 /** 这个 run 是不是当前会话某个回答位的（流式文字要收下） */
@@ -162,7 +255,7 @@ export function conversationTitle(conv: Conversation, name: (agent: string) => s
 /** 会话列表里最后一条的预览 */
 export function previewText(m: ChatMessage | null, name: (agent: string) => string): string {
   if (!m) return "还没有消息";
-  if (m.sender === "agent") return `${name(m.agent)}：${oneLine(m.text)}`;
+  if (m.sender === "agent") return `${name(m.agent)}：${oneLine(stripCharts(m.text))}`;
   if (m.state === "retracted") return "你撤回了一条消息";
   return `你：${oneLine(contentText(m))}`;
 }

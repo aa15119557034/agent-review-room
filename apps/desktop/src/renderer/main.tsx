@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import type { RoomBridge } from "@room/schemas";
 import { createActions } from "./lib/actions";
 import { createClient } from "./lib/client";
+import { setMediaResolver } from "./lib/media";
 import { initialState } from "./lib/state";
 import { createStore } from "./lib/store";
 import { createMockBridge } from "./mock/mock-backend";
@@ -21,15 +22,21 @@ function pickBridge(): { bridge: RoomBridge; isMock: boolean } | null {
   if (real) return { bridge: real, isMock: false };
   const params = new URLSearchParams(location.search);
   if (params.has("mock")) {
-    return {
-      bridge: createMockBridge({
-        seed: params.get("mock") !== "empty",
-        reviewerOutcome: params.get("outcome") === "error" ? "error" : "complete",
-        // ?reviewer=off 强制"未配置"；否则看演示数据里有没有设置节点（?mock 有，?mock=empty 没有）
-        ...(params.get("reviewer") === "off" ? { reviewerConfigured: false } : {}),
-      }),
-      isMock: true,
-    };
+    const quota = params.get("quota");
+    const bridge = createMockBridge({
+      seed: params.get("mock") !== "empty",
+      reviewerOutcome: params.get("outcome") === "error" ? "error" : "complete",
+      // ?reviewer=off 强制"未配置"；否则看演示数据里有没有设置节点（?mock 有，?mock=empty 没有）
+      ...(params.get("reviewer") === "off" ? { reviewerConfigured: false } : {}),
+      // 多模态：?quota=90 林离额度 90%（?quota=unknown 读不到）、?comfyui=off 本机没开
+      media: {
+        ...(quota !== null ? { codexQuotaPercent: quota === "unknown" ? null : Number(quota) } : {}),
+        ...(params.get("comfyui") === "off" ? { comfyui: false } : {}),
+      },
+    });
+    // 浏览器里没有 room-image:// 和 room-audio://，mock 的图片和声音换成 data: 地址
+    setMediaResolver(bridge.mediaUrl);
+    return { bridge, isMock: true };
   }
   return null;
 }

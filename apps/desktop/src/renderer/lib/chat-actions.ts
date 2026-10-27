@@ -1,4 +1,4 @@
-import type { ChatMentions, ConversationMembers, ControlEvent, Project } from "@room/schemas";
+import type { ChatContentInput, ChatMentions, ConversationMembers, ControlEvent, Project } from "@room/schemas";
 import { ControlFailure, type RoomClient } from "./client";
 import type { AppState } from "./state";
 import {
@@ -12,6 +12,8 @@ import {
   type ChatState,
 } from "./chat";
 import { newId } from "./ids";
+import { asksForVoiceReply } from "./media";
+import { createMediaActions } from "./media-actions";
 import type { Store } from "./store";
 
 /**
@@ -66,11 +68,14 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
     }
   }
 
+  const media = createMediaActions(store, client, fail);
+
   let openToken = 0;
 
   async function openConversation(conversationId: string) {
     const token = ++openToken;
     setChat((c) => ({ ...c, currentId: conversationId, messages: [], slots: [], nextCursor: null, selecting: null, sheet: null }));
+    void media.loadForConversation(conversationId);
     try {
       const page = await client.query({ type: "chat.messages.list", conversationId, limit: PAGE });
       if (token !== openToken) return;
@@ -98,6 +103,7 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
     });
 
   return {
+    media,
     loadConversations,
 
     /** 聊天事件的副作用：未读数、「回答中」以 main 为准，重新拉列表；正在看的会话来了新消息就标已读 */
@@ -156,7 +162,11 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
       }
     },
 
-    setDraftText: (text: string) => draftPatch({ text }),
+    /** 打字。没手动拨过「用语音回」时，按这一条里有没有「用语音回我」这类说法自动点亮 / 熄灭 */
+    setDraftText: (text: string) => {
+      const d = draftOf(chat(), chat().currentId);
+      draftPatch(d.replyAsVoiceTouched ? { text } : { text, replyAsVoice: asksForVoiceReply(text) });
+    },
     toggleMention: (pick: "all" | string) =>
       draftPatch({ mentions: toggleMention(draftOf(chat(), chat().currentId).mentions, pick) }),
     setMentions: (mentions: ChatMentions) => draftPatch({ mentions }),
@@ -167,7 +177,15 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
     startReedit(messageId: string) {
       const m = chat().messages.find((x) => x.id === messageId);
       if (!m || m.sender !== "user" || m.content.kind !== "text") return;
-      draftPatch({ text: m.content.text, mentions: m.mentions, quoteMessageId: m.quoteMessageId, replacesMessageId: m.id });
+      // 附件要重新选（撤回后 main 可能已经清掉没被引用的文件）；「用语音回」照原来的
+      draftPatch({
+        text: m.content.text,
+        mentions: m.mentions,
+        quoteMessageId: m.quoteMessageId,
+        replacesMessageId: m.id,
+        replyAsVoice: m.replyAsVoice === true,
+        replyAsVoiceTouched: m.replyAsVoice === true,
+      });
     },
 
     async send() {
@@ -176,7 +194,8 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
       const conv = c.list?.find((x) => x.conversation.id === conversationId)?.conversation;
       if (!conversationId || !conv) return;
       const draft = draftOf(c, conversationId);
-      if (!draft.text.trim()) return;
+      const content = draftContent(draft);
+      if (!content) return;
       // 同一次发送（上次没拿到结果）沿用原来的 id，main 按 id 防重复
       const messageId = draft.messageId ?? newId("cmsg");
       setChat((x) => ({ ...x, drafts: { ...x.drafts, [conversationId]: { ...draft, messageId } } }));
@@ -185,10 +204,11 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
           type: "chat.send",
           conversationId,
           messageId,
-          content: { kind: "text", text: draft.text, attachments: [] },
+          content,
           mentions: conv.kind === "direct" ? { kind: "none" } : draft.mentions,
           quoteMessageId: draft.quoteMessageId,
           replacesMessageId: draft.replacesMessageId,
+          ...(draft.replyAsVoice ? { replyAsVoice: true as const } : {}),
         });
         setChat((x) => {
           // 草稿在等结果期间又改过（messageId 被清掉）就别覆盖
@@ -206,6 +226,31 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
             return d?.messageId === messageId ? { ...x, drafts: { ...x.drafts, [conversationId]: { ...d, messageId: null } } } : x;
           });
         }
+        fail(err);
+      }
+    },
+
+    /** 发一个表情：点了就发，不进草稿（@ 和「用语音回」照草稿里的） */
+    async sendSticker(stickerId: string) {
+      const c = chat();
+      const conversationId = c.currentId;
+      const conv = c.list?.find((x) => x.conversation.id === conversationId)?.conversation;
+      if (!conversationId || !conv) return;
+      const draft = draftOf(c, conversationId);
+      try {
+        const r = await client.command({
+          type: "chat.send",
+          conversationId,
+          messageId: newId("cmsg"),
+          content: { kind: "sticker", stickerId },
+          mentions: conv.kind === "direct" ? { kind: "none" } : draft.mentions,
+          quoteMessageId: null,
+          replacesMessageId: null,
+          ...(draft.replyAsVoice ? { replyAsVoice: true as const } : {}),
+        });
+        setChat((x) => (x.currentId !== conversationId ? x : { ...x, messages: mergeMessages(x.messages, [r.message]), slots: mergeSlots(x.slots, r.slots) }));
+        refreshListSoon();
+      } catch (err) {
         fail(err);
       }
     },
@@ -278,6 +323,17 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
     },
 
   };
+}
+
+/**
+ * 草稿 → chat.send 的 content：有录音就是语音消息（只交 audio 和你改过的转写），
+ * 否则是正文 + 附件（只交 ref，其余元数据 main 自己填）。什么都没有返回 null
+ */
+export function draftContent(d: ChatDraft): ChatContentInput | null {
+  if (d.voice) return d.voice.text.trim() ? { kind: "voice", audio: d.voice.audio, transcriptText: d.voice.text.trim() } : null;
+  if (!d.text.trim() && d.attachments.length === 0) return null;
+  const attachments = d.attachments.map((a) => (a.kind === "image" ? { kind: "image" as const, ref: a.ref } : { kind: "file" as const, ref: a.ref }));
+  return { kind: "text", text: d.text, attachments };
 }
 
 export type ChatActions = ReturnType<typeof createChatActions>;

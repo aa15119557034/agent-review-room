@@ -1,13 +1,17 @@
 import {
   CHAT_LIMITS,
   CHAT_SLOT_TRANSITIONS,
+  CHART_FENCE,
+  ChatAgentOutput,
   RUN_TRANSITIONS,
   canTransition,
   chatSendIntentJson,
+  extractMediaIntent,
   isExcludedFromContext,
   type AgentChatMessage,
   type AgentEvent,
   type AgentProfile,
+  type ChatContent,
   type ChatMessage,
   type ChatReplySlot,
   type ChatRun,
@@ -24,6 +28,7 @@ import {
   type UserChatMessage,
 } from "@room/schemas";
 import { MockError, id, now, randomHex, sha256Hex } from "./util";
+import type { createMediaMock } from "./media-mock";
 
 /**
  * 聊天空间的内存实现（C-35 开发用，契约 C-34）。规则照 control-api 里 chat.* 的注释：
@@ -55,6 +60,8 @@ export interface ChatMockContext {
   agents(): AgentProfile[];
   timers: Map<string, ReturnType<typeof setTimeout>[]>;
   tickMs: number;
+  /** 多模态（C-43）：附件 / 录音 / 表情的记录、沉浸模式和自动任务 */
+  media: ReturnType<typeof createMediaMock>["hooks"];
 }
 
 const DEFAULT_MEMORY: Record<string, MemoryManifest["status"]> = { claude: "filled", deepseek: "unavailable" };
@@ -181,7 +188,7 @@ export function createChatMock(ctx: ChatMockContext, options: ChatMockOptions = 
     const fail = failOnce.delete(aid) ? "failed" : quotaOnce.delete(aid) ? "quota" : null;
     // 没点名时 Codex 这条不回（演示「这条没有回」）
     const skip = !s.required && aid === "codex";
-    const output = skip ? JSON.stringify({ kind: "skip" }) : JSON.stringify({ kind: "reply", text: replyText(aid, textOf(um), conv.kind) });
+    const output = skip ? JSON.stringify({ kind: "skip" }) : JSON.stringify(replyOutput(aid, um, conv.kind));
     const chunks = output.match(/[\s\S]{1,12}/g) ?? [output];
     const manifest = manifestFor(aid);
 
@@ -221,16 +228,24 @@ export function createChatMock(ctx: ChatMockContext, options: ChatMockOptions = 
         if (skip) return finish("COMPLETED", "skipped");
         const live = s.runId === run.id && s.outcome === "running";
         if (!live) return finish("COMPLETED", null);
+        // 和 D-31b / D-39 一样：整段信封合法才建消息，媒体意图各自校验，合格的存在消息上（C-42e）
+        const env = ChatAgentOutput.parse(JSON.parse(output));
+        if (env.kind !== "reply") return finish("COMPLETED", "skipped");
+        const { intent } = extractMediaIntent(env);
+        const plan = ctx.media.planReply(conv.id, intent ?? undefined, um.replyAsVoice === true);
         const reply: AgentChatMessage = {
           id: id("cmsg"), conversationId: conv.id, createdAt: now(), sender: "agent", agent: aid,
-          text: (JSON.parse(output) as { text: string }).text, inReplyTo: um.id, slotId: s.id, runId: run.id,
+          text: env.text, inReplyTo: um.id, slotId: s.id, runId: run.id,
           memoryEntriesUsed: manifest === null ? null : manifest.entries.length,
+          ...(intent ? { mediaIntent: intent } : {}),
+          ...(plan.deferred ? { immersiveDeferred: plan.deferred } : {}),
         };
         c.messages.push(reply);
         // 真实后端里回答、回答位、Run 终态是同一个事务
         emit({ type: "chat.message.created", message: clone(reply) });
         finish("COMPLETED", "answered", { replyMessageId: reply.id });
         touch(conv, reply.createdAt);
+        void ctx.media.afterReply(reply, plan.auto);
       });
     }
     const handles = steps.map((step, i) =>
@@ -319,10 +334,8 @@ export function createChatMock(ctx: ChatMockContext, options: ChatMockOptions = 
       if (recent.length >= CHAT_LIMITS.messagesPerMinute) {
         throw new MockError("rate_limited", `每个会话每分钟最多 ${CHAT_LIMITS.messagesPerMinute} 条`);
       }
-      // ④ 其余校验
-      if (req.content.kind !== "text" || req.content.attachments.length > 0) {
-        throw new MockError("validation_failed", "mock 里还没有附件 / 语音 / 表情（D-34）");
-      }
+      // ④ 其余校验。附件 / 录音 / 表情的元数据由「main」按自己的记录填，不信客户端
+      const content = fillContent(req.content);
       if (conv.kind === "direct" && req.mentions.kind !== "none") throw new MockError("validation_failed", "单聊不能 @");
       if (req.mentions.kind === "agents" && req.mentions.agents.some((a) => !conv.members.includes(a))) {
         throw new MockError("validation_failed", "@ 的人不在这个会话里");
@@ -345,8 +358,9 @@ export function createChatMock(ctx: ChatMockContext, options: ChatMockOptions = 
       const at = now();
       const um: UserChatMessage = {
         id: req.messageId, conversationId: conv.id, createdAt: at, sender: "user",
-        content: { kind: "text", text: req.content.text, attachments: [] },
+        content,
         mentions: req.mentions, quoteMessageId: req.quoteMessageId, replacesMessageId: req.replacesMessageId,
+        ...(req.replyAsVoice ? { replyAsVoice: true as const } : {}),
         state: "sent", retractedAt: null,
       };
       c.messages.push(um);
@@ -396,6 +410,8 @@ export function createChatMock(ctx: ChatMockContext, options: ChatMockOptions = 
       for (const s of slots) if (s.outcome !== "retracted") setSlot(s, "retracted", { finishedAt: s.finishedAt ?? now() });
       emit({ type: "chat.message.updated", message: clone(m) });
       toCancel.forEach((rid) => cancelRun(rid, "消息已撤回"));
+      // 这条和它的回答的媒体任务一起取消（ADR-004 §3a）
+      ctx.media.cancelFor([m.id, ...slots.flatMap((s) => (s.replyMessageId ? [s.replyMessageId] : []))], "message_withdrawn");
       return clone({ message: m, slots });
     },
 
@@ -445,23 +461,22 @@ export function createChatMock(ctx: ChatMockContext, options: ChatMockOptions = 
       ctx.db.messages.push(material);
       return clone({ project, material });
     },
-
-    async "chat.attachment.pick"() {
-      throw new MockError("validation_failed", "这个功能还没上线（D-34 / D-36）");
-    },
-    async "chat.voice.import"() {
-      throw new MockError("validation_failed", "这个功能还没上线（D-34 / D-36）");
-    },
-    async "chat.sticker.add"() {
-      throw new MockError("validation_failed", "这个功能还没上线（D-34 / D-36）");
-    },
-    async "chat.sticker.update"() {
-      throw new MockError("validation_failed", "这个功能还没上线（D-34 / D-36）");
-    },
-    async "chat.sticker.remove"() {
-      throw new MockError("validation_failed", "这个功能还没上线（D-34 / D-36）");
-    },
   };
+
+  /** chat.send 的内容 → 存下来的内容（只认引用，名字 / 类型 / 转写引擎都从记录里抄） */
+  function fillContent(input: CommandRequest<"chat.send">["content"]): ChatContent {
+    if (input.kind === "text") return { kind: "text", text: input.text, attachments: input.attachments.map((a) => ctx.media.attachment(a.ref)) };
+    if (input.kind === "sticker") {
+      const st = ctx.media.sticker(input.stickerId);
+      return { kind: "sticker", stickerId: st.id, image: st.image, label: st.label };
+    }
+    const rec = ctx.media.recording(input.audio);
+    const original = rec.transcript!;
+    return {
+      kind: "voice", audio: rec.audio, durationMs: rec.durationMs,
+      transcript: { ...original, text: input.transcriptText, source: input.transcriptText === original.text ? "transcribed" : "edited" },
+    };
+  }
 
   // ------------------------------------------------------------ queries
 
@@ -531,21 +546,18 @@ export function createChatMock(ctx: ChatMockContext, options: ChatMockOptions = 
     async "chat.summaries.list"() {
       return [];
     },
-    async "chat.stickers.list"() {
-      return [];
-    },
-    async "chat.voice.get"() {
-      throw new MockError("not_found", "mock 里没有录音");
-    },
   };
 
   // ------------------------------------------------------------ 演示数据
 
   /** 直接造一条已经答完的记录（演示用，不走定时器） */
-  async function seedExchange(conv: Conversation, text: string, mentions: UserChatMessage["mentions"], minutesAgo: number, skippers: string[] = []) {
+  async function seedExchange(
+    conv: Conversation, text: string, mentions: UserChatMessage["mentions"], minutesAgo: number, skippers: string[] = [],
+    content: ChatContent = { kind: "text", text, attachments: [] },
+  ) {
     const at = new Date(Date.now() - minutesAgo * 60_000).toISOString();
     const um: UserChatMessage = {
-      id: id("cmsg"), conversationId: conv.id, createdAt: at, sender: "user", content: { kind: "text", text, attachments: [] },
+      id: id("cmsg"), conversationId: conv.id, createdAt: at, sender: "user", content,
       mentions, quoteMessageId: null, replacesMessageId: null, state: "sent", retractedAt: null,
     };
     c.messages.push(um);
@@ -565,9 +577,12 @@ export function createChatMock(ctx: ChatMockContext, options: ChatMockOptions = 
       if (skippers.includes(aid) && !required) {
         s.outcome = "skipped";
       } else {
+        const env = ChatAgentOutput.parse(replyOutput(aid, um, conv.kind));
+        const intent = env.kind === "reply" ? extractMediaIntent(env).intent : null;
         const reply: AgentChatMessage = {
-          id: id("cmsg"), conversationId: conv.id, createdAt: done, sender: "agent", agent: aid, text: replyText(aid, text, conv.kind),
+          id: id("cmsg"), conversationId: conv.id, createdAt: done, sender: "agent", agent: aid, text: env.kind === "reply" ? env.text : "",
           inReplyTo: um.id, slotId: s.id, runId: run.id, memoryEntriesUsed: manifest === null ? null : manifest.entries.length,
+          ...(intent ? { mediaIntent: intent } : {}),
         };
         c.messages.push(reply);
         s.outcome = "answered";
@@ -590,6 +605,10 @@ export function createChatMock(ctx: ChatMockContext, options: ChatMockOptions = 
     const group = mk("group", ids, "三位秘书", true);
     await seedExchange(group, "下周先做聊天界面还是参与者控制台？", { kind: "none" }, 90, ["codex"]);
     await seedExchange(group, "汐，聊天后端还差什么？", { kind: "agents", agents: [ids.includes("deepseek") ? "deepseek" : ids[1]!] }, 40);
+    // 多模态演示（C-43）：带图提问，C酱 回一张图表，汐 提议画一张
+    const photo = await ctx.media.seedAttachment("image");
+    const q = "这是白板照片。给我做个图表对比一下三位这周的工作量，再画一张小鲸鱼当会话头像";
+    await seedExchange(group, q, { kind: "all" }, 30, [], { kind: "text", text: q, attachments: [photo] });
     const direct = mk("direct", [ids[0]!], null, false);
     await seedExchange(direct, "今天 #99 的评审怎么样？", { kind: "none" }, 20);
     // 单聊读到最后一条；群聊留着未读
@@ -602,6 +621,8 @@ export function createChatMock(ctx: ChatMockContext, options: ChatMockOptions = 
   return {
     commands,
     queries,
+    /** 给多模态 mock 核对 source 用 */
+    lookup: (messageId: string) => c.messages.find((x) => x.id === messageId),
     reset() {
       c.conversations.length = 0;
       c.messages.length = 0;
@@ -616,9 +637,36 @@ export function createChatMock(ctx: ChatMockContext, options: ChatMockOptions = 
 const order = (a: ChatMessage, b: ChatMessage) =>
   a.createdAt < b.createdAt ? -1 : a.createdAt > b.createdAt ? 1 : a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
 
-const textOf = (m: UserChatMessage) => (m.content.kind === "text" ? m.content.text : m.content.kind === "voice" ? m.content.transcript.text : `[表情：${m.content.label}]`);
+const textOf = (m: UserChatMessage) =>
+  m.content.kind === "text"
+    ? [m.content.text, ...m.content.attachments.map((a) => (a.kind === "image" ? `[图片：${a.name}]` : `[文件：${a.name}]`))].filter(Boolean).join(" ")
+    : m.content.kind === "voice"
+      ? m.content.transcript.text
+      : `[表情：${m.content.label}]`;
 
 // ------------------------------------------------------------ 假内容
+
+/**
+ * 秘书的假输出（ChatAgentOutput）。按你的话演示多模态：
+ * - 说到「图表 / 对比」：C酱 回一段 ```room-chart（林离回一段格式不对的，演示退回成代码块）
+ * - 说到「画」：汐 提议画一张（draw 意图）
+ * - 开了「用语音回」或说到「语音」：带 speak 意图
+ */
+function replyOutput(aid: string, um: UserChatMessage, kind: Conversation["kind"]) {
+  const question = textOf(um);
+  let text = replyText(aid, question, kind);
+  if (/图表|对比/.test(question)) {
+    if (aid === "claude") {
+      const chart = { type: "bar", title: "这周的工作量（PR 数）", yLabel: "个", categories: ["C酱", "汐", "林离"], series: [{ name: "开的", values: [6, 9, 2] }, { name: "审的", values: [7, 4, 5] }] };
+      text = `按这周合并的记录粗算了一下：\n\n\`\`\`${CHART_FENCE}\n${JSON.stringify(chart, null, 1)}\n\`\`\`\n\n汐开的最多，林离审得多。`;
+    } else if (aid === "codex") {
+      text = `我也画一个：\n\n\`\`\`${CHART_FENCE}\n{"type":"pie","slices":[{"label":"测试","value":3}],"onClick":"x"}\n\`\`\``;
+    }
+  }
+  const draw = /画/.test(question) && aid === "deepseek" ? { prompt: "一只圆滚滚的小鲸鱼，水彩风格，浅蓝背景，适合当头像", size: "1024x1024" } : undefined;
+  const speak = um.replyAsVoice === true || /语音/.test(question) ? true : undefined;
+  return { kind: "reply" as const, text, ...(speak ? { speak } : {}), ...(draw ? { draw } : {}) };
+}
 
 function replyText(aid: string, question: string, kind: Conversation["kind"]): string {
   const byAgent: Record<string, string> = {

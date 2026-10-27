@@ -19,6 +19,8 @@ import {
   type TimelineEntry,
 } from "../../lib/discussion";
 import { useActions, useAppState } from "../hooks";
+import { ReplyBody } from "../Chart";
+import { hasChart } from "../../lib/media";
 import { formatClock } from "../labels";
 import { ConfirmView } from "./ConfirmView";
 import { ReviewView } from "./ReviewView";
@@ -338,6 +340,8 @@ const FOLD_AT = 300;
 function LongText({ id, text, live = false }: { id: string; text: string; live?: boolean }) {
   const expanded = useAppState((s) => !!s.disc.ui.expanded[id]);
   const actions = useActions();
+  // 带 ```room-chart 的发言 / 汇总（C-43）：图表画出来，不折叠（折一半会把图表切断）
+  if (!live && hasChart(text)) return <ReplyBody text={text} className="long-text" />;
   const long = !live && text.length > FOLD_AT;
   const shown = long && !expanded ? text.slice(0, FOLD_AT) + "……" : text;
   return (

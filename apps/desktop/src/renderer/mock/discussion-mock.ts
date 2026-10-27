@@ -87,6 +87,25 @@ export const MOCK_PROFILE_MODELS: ProfileModels[] = [
       { id: "gpt-6-astra", displayName: "GPT-6 Astra", efforts: CODEX_LEVELS, defaultEffort: "low" },
     ],
   },
+  // 聊天 profile（C-34）。看图能力（C-42a）是演示用的假值：真实值等 S-23 实测，现在不预设谁能看
+  {
+    profileId: "claude-chat",
+    models: [
+      { id: "claude-opus-5-5", displayName: "Opus 5.5", efforts: CLAUDE_LEVELS, defaultEffort: "medium", vision: "yes" },
+      { id: "claude-sonnet-5-5", displayName: "Sonnet 5.5", efforts: CLAUDE_LEVELS, defaultEffort: "medium", vision: "yes" },
+    ],
+  },
+  {
+    profileId: "deepseek-chat",
+    models: [{ id: "deepseek-flash", displayName: "V4.1 Flash 1017", efforts: [level("low", "低"), level("high", "高"), level("max", "最高")], defaultEffort: "high" }],
+  },
+  {
+    profileId: "codex-chat",
+    models: [
+      { id: "gpt-6.1-sol", displayName: "GPT-6.1 Sol", efforts: CODEX_LEVELS, defaultEffort: "low", vision: "no" },
+      { id: "gpt-6-astra", displayName: "GPT-6 Astra", efforts: CODEX_LEVELS, defaultEffort: "low", vision: "yes" },
+    ],
+  },
 ];
 
 export interface DiscussionContext {
@@ -116,6 +135,8 @@ const SEED_AGENTS: AgentProfile[] = [
     pausedByUser: false, substitute: null,
     modelSettings: RECOMMENDED_MODELS.claude,
     chatPersona: "", chatProfileId: "claude-chat", memorySource: DEFAULT_MEMORY_SOURCE,
+    // C-42c：演示「播放」。另外两位没选声音（播放按钮提示去设置里选）
+    voice: { voiceId: "qingning", speed: 1 },
   },
   {
     id: "deepseek", displayName: "DeepSeek", color: "#2f5aa0", avatarRef: null,
@@ -502,8 +523,9 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
       return {
         reachable: true,
         health: {
-          protocol: 1, nodeId: req.id, profiles: ["claude-review", "deepseek-discuss", "codex-discuss"],
+          protocol: 1, nodeId: req.id, profiles: ["claude-review", "deepseek-discuss", "codex-discuss", "claude-chat", "deepseek-chat", "codex-chat"],
           activeRuns: 0, maxConcurrentRuns: 2, leaseMs: 20000, heartbeatMs: 5000,
+          capabilities: { attachments: true },
           ...(profileModels() ? { profileModels: profileModels() } : {}),
         },
         profileAvailable: true,

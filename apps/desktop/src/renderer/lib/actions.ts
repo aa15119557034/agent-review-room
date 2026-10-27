@@ -78,6 +78,8 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
         store.set((s) => ({ ...s, status, projects, connection: { phase: "ready" } }));
         await disc.loadAgents();
         await chat.loadConversations();
+        // 聊天输入框的「谁看不了图」提示（C-43）：探测，失败不弹提示
+        void chat.media.loadVision();
         const first = projects[0];
         if (first) await loadProject(first.id);
       } catch (err) {

@@ -27,6 +27,18 @@
 
   --rail-w: 13.5rem;
   --log-w: 15rem;
+
+  /* 图表（C-43）：8 种分得清的颜色，没有朱红（朱红只留给盖章） */
+  --chart-1: #2c6a6e;
+  --chart-2: #b07a1e;
+  --chart-3: #5b6fb0;
+  --chart-4: #6c8f4a;
+  --chart-5: #8a5a8c;
+  --chart-6: #3d8fb8;
+  --chart-7: #9a6a52;
+  --chart-8: #6b7a80;
+  /* 沉浸模式的小标记 */
+  --immersive: #7a5cb0;
   color-scheme: light;
 }
 
@@ -43,6 +55,15 @@
     --bad: #e07a66;
     --wait: #d7a64c;
     --focus: #6fb3b5;
+    --chart-1: #6fb3b5;
+    --chart-2: #d7a64c;
+    --chart-3: #8fa0e0;
+    --chart-4: #9cc17a;
+    --chart-5: #c08fc2;
+    --chart-6: #72bde0;
+    --chart-7: #cf9a80;
+    --chart-8: #9fb0b6;
+    --immersive: #b59ae6;
     color-scheme: dark;
   }
 }
@@ -2813,6 +2834,11 @@ button.stage:hover {
   gap: 0.5rem;
 }
 
+/* 录了音时文字输入行藏起来（display:flex 会盖过 hidden 属性） */
+.chat-input-row[hidden] {
+  display: none;
+}
+
 .chat-input-row textarea,
 .chat-input-row input {
   flex: 1 1 auto;
@@ -3036,5 +3062,634 @@ button.stage:hover {
   .chat-sheet {
     width: 100%;
     border-radius: 1rem 1rem 0 0;
+  }
+}
+
+
+/* ============================================================ 多模态（C-43） */
+
+/* ---------------------------------------------------- 图表 */
+
+.reply-body {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.chart {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.6rem;
+  background: var(--paper);
+  max-width: 28rem;
+}
+
+.chart figcaption {
+  font-size: var(--size-s);
+  font-weight: 600;
+}
+
+.chart-svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.chart-pie {
+  max-width: 12rem;
+  justify-self: center;
+}
+
+.chart-svg text {
+  font-size: 9px;
+  fill: var(--ink-soft);
+  stroke: none;
+}
+
+.chart-svg .chart-axis-label {
+  fill: var(--ink);
+}
+
+.chart-grid {
+  stroke: var(--rule);
+  stroke-width: 0.5;
+}
+
+.chart-zero {
+  stroke: var(--ink-soft);
+  stroke-width: 0.8;
+}
+
+.chart-line {
+  fill: none;
+  stroke-width: 1.8;
+}
+
+.chart-svg rect,
+.chart-svg circle,
+.chart-slice {
+  stroke-width: 0;
+}
+
+.chart-slice {
+  stroke: var(--paper) !important;
+  stroke-width: 1;
+}
+
+.chart-empty {
+  fill: none;
+  stroke: var(--rule);
+  stroke-dasharray: 4 3;
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+}
+
+.chart-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.chart-legend svg {
+  width: 0.65rem;
+  height: 0.65rem;
+}
+
+.chart-data summary {
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.chart-table-wrap {
+  overflow-x: auto;
+}
+
+.chart-table {
+  border-collapse: collapse;
+  font-size: var(--size-s);
+}
+
+.chart-table th,
+.chart-table td {
+  padding: 0.2rem 0.5rem;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.chart-table td[data-num] {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.chart-bad {
+  border-style: dashed;
+  border-color: var(--wait);
+}
+
+.chart-bad figcaption {
+  color: var(--wait);
+  font-weight: 400;
+}
+
+.chart-bad pre {
+  max-height: 12rem;
+  overflow: auto;
+  font: 0.75rem / 1.5 var(--font-text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ---------------------------------------------------- 图片、文件、表情 */
+
+.chat-images {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 8rem));
+  gap: 0.3rem;
+  margin-bottom: 0.35rem;
+}
+
+.chat-images[data-count="1"] {
+  grid-template-columns: minmax(0, 14rem);
+}
+
+.chat-images button,
+.draw-result > button {
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: var(--rule);
+  cursor: zoom-in;
+}
+
+.chat-images img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.chat-file {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.35rem;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.5rem;
+  background: var(--sheet);
+}
+
+.chat-file-icon {
+  grid-row: span 2;
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.35rem;
+  background: var(--paper);
+  font-size: var(--size-s);
+  color: var(--ink-soft);
+}
+
+.chat-file-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-file-meta {
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+}
+
+.chat-sticker {
+  display: block;
+  width: 7rem;
+  height: 7rem;
+  object-fit: contain;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: rgb(0 0 0 / 0.8);
+  color: #eee;
+  font-size: var(--size-s);
+  cursor: zoom-out;
+}
+
+.lightbox img {
+  max-width: 100%;
+  max-height: 85vh;
+  object-fit: contain;
+}
+
+/* ---------------------------------------------------- 语音 */
+
+.chat-voice {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.chat-transcript {
+  font-size: var(--size-s);
+  color: var(--ink-soft);
+}
+
+.voice-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 5em;
+  max-width: 100%;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--sheet);
+  font-size: var(--size-s);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.voice-pill-agent {
+  border-color: color-mix(in srgb, var(--agent, var(--active)) 45%, var(--rule));
+}
+
+.voice-wave {
+  flex: 1 1 auto;
+  height: 0.6rem;
+  background: repeating-linear-gradient(90deg, currentColor 0 2px, transparent 2px 5px);
+  opacity: 0.35;
+  mask: linear-gradient(transparent 20%, #000 20% 80%, transparent 80%);
+}
+
+.voice-pill[data-playing] .voice-wave {
+  opacity: 0.8;
+}
+
+.agent-media {
+  display: grid;
+  gap: 0.35rem;
+  justify-items: start;
+}
+
+.agent-media:empty {
+  display: none;
+}
+
+.speech-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--size-s);
+}
+
+.tag-immersive {
+  border-color: var(--immersive);
+  color: var(--immersive);
+}
+
+/* ---------------------------------------------------- 画图 */
+
+.draw-offer {
+  display: grid;
+  gap: 0.35rem;
+  justify-items: start;
+  padding: 0.5rem 0.7rem;
+  border: 1px dashed var(--rule);
+  border-radius: 0.6rem;
+  font-size: var(--size-s);
+}
+
+.draw-prompt {
+  color: var(--ink-soft);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.draw-job {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.draw-job[data-state="failed"],
+.draw-job[data-state="timed_out"] {
+  color: var(--bad);
+}
+
+.draw-result {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0;
+  max-width: 16rem;
+}
+
+.draw-result img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.draw-result figcaption {
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+}
+
+.draw-result summary {
+  cursor: pointer;
+}
+
+.draw-card textarea,
+.voice-draft textarea {
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.5rem;
+  background: var(--paper);
+  font: inherit;
+  color: var(--ink);
+  resize: vertical;
+}
+
+.seg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+}
+
+.seg label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: pointer;
+}
+
+.chat-stop {
+  padding: 0.15rem 0.7rem;
+  border-radius: 999px;
+  font-size: var(--size-s);
+}
+
+.immersive .chat-field input {
+  max-width: 6rem;
+}
+
+/* ---------------------------------------------------- 输入框：工具条、附件、录音、表情 */
+
+.chat-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.tool-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.6rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: none;
+  font-size: var(--size-s);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.tool-button:hover:not(:disabled),
+.tool-button[aria-expanded="true"] {
+  color: var(--ink);
+  border-color: var(--ink-soft);
+}
+
+.tool-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.tool-button[data-recording] {
+  border-color: var(--bad);
+  color: var(--bad);
+  font-variant-numeric: tabular-nums;
+}
+
+.rec-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--bad);
+  animation: rec-blink 1s steps(2, start) infinite;
+}
+
+@keyframes rec-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+.voice-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: var(--size-s);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.voice-toggle:has(input:checked) {
+  color: var(--active);
+}
+
+.attach-tray {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.attach-tray ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.attach-tray li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: 14rem;
+  padding: 0.2rem 0.25rem 0.2rem 0.2rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.5rem;
+  background: var(--sheet);
+  font-size: var(--size-s);
+}
+
+.attach-tray img,
+.attach-tray .chat-file-icon {
+  flex: 0 0 auto;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.35rem;
+  object-fit: cover;
+}
+
+.attach-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attach-tray button {
+  border: 0;
+  background: none;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.vision-warning {
+  color: var(--wait);
+}
+
+.voice-draft {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.6rem;
+  background: var(--sheet);
+}
+
+.voice-draft-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sticker-panel {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.6rem;
+  background: var(--sheet);
+}
+
+.sticker-panel ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(4rem, 1fr));
+  gap: 0.35rem;
+  max-height: 12rem;
+  overflow-y: auto;
+}
+
+.sticker-panel li {
+  position: relative;
+}
+
+.sticker-panel li > button:first-child {
+  display: block;
+  width: 100%;
+  padding: 0.2rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  background: none;
+  cursor: pointer;
+}
+
+.sticker-panel li > button:first-child:hover {
+  border-color: var(--rule);
+}
+
+.sticker-panel img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
+.sticker-remove {
+  position: absolute;
+  top: -0.3rem;
+  right: -0.3rem;
+  width: 1.3rem;
+  height: 1.3rem;
+  border: 0;
+  border-radius: 50%;
+  background: var(--bad);
+  color: #fff;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* 秘书资料页：声音 */
+.voice-settings {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.voice-settings input[type="range"] {
+  width: 8rem;
+}
+
+/* 讨论室确认页：这次带的图 */
+.confirm-attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.confirm-attachments li {
+  display: grid;
+  gap: 0.15rem;
+  width: 5.5rem;
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+}
+
+.confirm-attachments img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 0.35rem;
+  border: 1px solid var(--rule);
+}
+
+.confirm-attachments span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .chat-images {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tool-button {
+    padding: 0.25rem 0.55rem;
   }
 }
