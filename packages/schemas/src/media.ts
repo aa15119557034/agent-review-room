@@ -59,12 +59,16 @@ export const MediaScope = z.discriminatedUnion("kind", [
 export type MediaScope = z.infer<typeof MediaScope>;
 
 /**
- * C-42f：media.list 按消息查时，一次最多几条消息、每条消息每一类（画图 / 语音）最多返回几条任务。
- * 消息数 × 类数 × 每类条数 不超过返回上限 200：每条消息都查得到（不被别的消息挤掉），
- * 一类也挤不掉另一类（反复播放攒下的语音任务不会把画图任务挤出去，汐 #116）
+ * C-42f：media.list 按消息查时，每条消息每一类（画图 / 语音）返回：
+ * - 最新的 MEDIA_LIST_PER_MESSAGE_KIND_LATEST 条；
+ * - 再加上最新一条成功的、最新一条还没结束的（queued / running），如果它们不在上面那几条里（林离 #116：
+ *   成功画过图之后又失败 / 取消了好几次，旧图不能被挤掉，否则请求卡会重新出现、重复花额度）。
+ * 所以每条每类最多 MEDIA_LIST_PER_MESSAGE_KIND_MAX 条。消息数 × 类数 × 每类最多条数 不超过返回上限 200：
+ * 每条消息都查得到（不被别的消息挤掉），一类也挤不掉另一类（汐 #116）。挑法见 pickMessageMediaJobs
  */
-export const MEDIA_LIST_MESSAGE_IDS_MAX = 20;
-export const MEDIA_LIST_PER_MESSAGE_KIND_MAX = 5;
+export const MEDIA_LIST_PER_MESSAGE_KIND_LATEST = 5;
+export const MEDIA_LIST_PER_MESSAGE_KIND_MAX = MEDIA_LIST_PER_MESSAGE_KIND_LATEST + 2;
+export const MEDIA_LIST_MESSAGE_IDS_MAX = 14;
 
 // ================================================================ 画图
 
@@ -222,6 +226,37 @@ export const MediaJob = z
   .refine((j) => j.kind !== "speech" || (j.state === "succeeded") === (j.speech !== null), "语音成功必须有音频")
   .refine((j) => j.kind === "draw" ? j.speech === null : j.result === null && j.route === null, "结果要和任务种类对得上");
 export type MediaJob = z.infer<typeof MediaJob>;
+
+type PickableJob = Pick<MediaJob, "id" | "kind" | "state" | "source" | "createdAt">;
+const newerFirst = (a: PickableJob, b: PickableJob) =>
+  a.createdAt !== b.createdAt ? (a.createdAt < b.createdAt ? 1 : -1) : a.id < b.id ? 1 : a.id > b.id ? -1 : 0;
+
+/**
+ * C-42f：media.list 带 messageIds 时该返回哪些任务（参考实现，main 可以用 SQL 实现同样的结果，renderer 的 mock 直接用它）。
+ * 输入是这个范围里、source.messageId 在 messageIds 里的全部任务；输出按创建时间倒序（同一时间按 id 倒序）。
+ * 每条消息每一类：最新 MEDIA_LIST_PER_MESSAGE_KIND_LATEST 条 + 最新一条 succeeded + 最新一条 queued / running。
+ */
+export function pickMessageMediaJobs<J extends PickableJob>(jobs: readonly J[]): J[] {
+  const groups = new Map<string, J[]>();
+  for (const j of jobs) {
+    if (j.source.kind !== "chat") continue;
+    const key = `${j.source.messageId}\u0000${j.kind}`;
+    const g = groups.get(key);
+    if (g) g.push(j);
+    else groups.set(key, [j]);
+  }
+  const out: J[] = [];
+  for (const g of groups.values()) {
+    g.sort(newerFirst);
+    const keep = new Set(g.slice(0, MEDIA_LIST_PER_MESSAGE_KIND_LATEST));
+    const succeeded = g.find((j) => j.state === "succeeded");
+    const active = g.find((j) => j.state === "queued" || j.state === "running");
+    if (succeeded) keep.add(succeeded);
+    if (active) keep.add(active);
+    out.push(...keep);
+  }
+  return out.sort(newerFirst);
+}
 
 /**
  * 选路预览：请求卡打开时显示「这次会用林离（额度 42%）」或「会用本机，因为……」。
