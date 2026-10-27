@@ -156,6 +156,8 @@ function VoiceNote({ src, durationMs }: { src: string; durationMs: number }) {
 export function AgentMedia({ message, conv }: { message: AgentChatMessage; conv: Conversation }) {
   const jobs = useAppState((s) => s.chat.media.jobs);
   const requested = useAppState((s) => s.chat.media.drawRequested[message.id] === true);
+  const lookup = useAppState((s) => s.chat.media.jobsLookup[message.id]);
+  const actions = useActions();
   const draws = jobsOf(jobs, message.id, "draw");
   return (
     <div className="agent-media">
@@ -163,7 +165,15 @@ export function AgentMedia({ message, conv }: { message: AgentChatMessage; conv:
       {draws.map((j) => (
         <DrawJobView key={j.id} job={j} message={message} conv={conv} />
       ))}
-      {showDrawCard(message, jobs) && (
+      {lookup === "failed" && message.mediaIntent?.draw && !draws.some((j) => jobActive(j) || j.state === "succeeded") && (
+        <p className="chat-note">
+          没查到这条的画图记录，可能已经画过。
+          <button type="button" className="button-link" onClick={() => void actions.chat.media.loadJobs(conv.id, [message.id])}>
+            重新查
+          </button>
+        </p>
+      )}
+      {showDrawCard(message, jobs, lookup) && (
         <DrawOffer message={message} lastFailed={draws.filter((j) => !jobActive(j)).at(-1)} drawnEarlier={draws.length === 0 && requested} />
       )}
     </div>

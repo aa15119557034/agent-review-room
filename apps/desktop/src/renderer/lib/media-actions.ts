@@ -24,38 +24,68 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
     });
 
   /**
+   * 打开会话的代次：同一个会话关了再开（A → B → A），第一次打开时发出、晚到的查询不能写进第二次（林离 #117）。
+   * 只在打开会话时加一；加载更早的消息、沉浸模式关掉后的重查都算这一次打开
+   */
+  let openGen = 0;
+
+  /**
    * 打开会话时：清掉上个会话的媒体状态，读沉浸模式设置。媒体任务等消息那页到了再按消息查（loadJobs）。
    * 后端还没实现这些查询时安静地不显示（不弹错误），免得在 D-38 / D-39 之前每次打开会话都报错
    */
   async function loadForConversation(conversationId: string) {
-    setMedia((m) => ({ ...m, jobs: [], immersive: null, clips: {}, playing: null, playQueue: [] }));
+    const gen = ++openGen;
+    setMedia((m) => ({ ...m, jobs: [], immersive: null, clips: {}, playing: null, playQueue: [], jobsLookup: {} }));
     const immersive = await client.query({ type: "immersive.get", conversationId }).catch(() => null);
+    if (gen !== openGen) return;
     setChat((c) => (c.currentId !== conversationId ? c : { ...c, media: { ...c.media, immersive: immersive ?? c.media.immersive } }));
   }
 
   /**
    * 这些消息的媒体任务（C-42f：media.list 按消息查，每批 MEDIA_LIST_MESSAGE_IDS_MAX 条）。
    * 每条消息每一类都查得到最新几条和最近一次成功的，会话里任务再多，旧消息的图也找得回来、请求卡不会重复出现。
-   * 某一批失败就跳过那一批，不弹错误（同 loadForConversation）
+   * 查询期间这些消息记成 loading；某一批失败不弹错误（同 loadForConversation），那批消息记成 failed，
+   * 界面不把它们当成「没画过」，给「重新查」（林离 #117）
    */
   async function loadJobs(conversationId: string, messageIds: readonly string[]) {
+    const gen = openGen;
+    const live = (c: ChatState) => gen === openGen && c.currentId === conversationId;
     const ids = [...new Set(messageIds)];
+    if (ids.length === 0) return;
+    const lookup = (c: ChatState, batch: readonly string[], v: "loading" | "failed" | null) => {
+      const next = { ...c.media.jobsLookup };
+      for (const id of batch) {
+        if (v) next[id] = v;
+        else delete next[id];
+      }
+      return next;
+    };
+    setChat((c) => (live(c) ? { ...c, media: { ...c.media, jobsLookup: lookup(c, ids, "loading") } } : c));
     const batches: string[][] = [];
     for (let i = 0; i < ids.length; i += MEDIA_LIST_MESSAGE_IDS_MAX) batches.push(ids.slice(i, i + MEDIA_LIST_MESSAGE_IDS_MAX));
-    const results = await Promise.all(
-      batches.map((messageIds) =>
-        client.query({ type: "media.list", scope: { kind: "chat", conversationId }, messageIds }).catch((): MediaJob[] => []),
-      ),
+    await Promise.all(
+      batches.map(async (batch) => {
+        let jobs: MediaJob[];
+        try {
+          jobs = await client.query({ type: "media.list", scope: { kind: "chat", conversationId }, messageIds: batch });
+        } catch {
+          setChat((c) => (live(c) ? { ...c, media: { ...c.media, jobsLookup: lookup(c, batch, "failed") } } : c));
+          return;
+        }
+        setChat((c) => {
+          if (!live(c)) return c;
+          // 同一条回答播过好几次：用最新合成的那段，不让先到的旧片段占住（林离 #117）
+          const clips = { ...c.media.clips };
+          for (const j of jobs) {
+            if (j.kind !== "speech" || !j.speech || j.source.kind !== "chat") continue;
+            const had = clips[j.source.messageId];
+            if (!had || had.createdAt < j.speech.createdAt) clips[j.source.messageId] = j.speech;
+          }
+          // 查询期间推来的事件可能更新：合并，不覆盖
+          return { ...c, media: { ...c.media, jobs: mergeJobs(jobs, c.media.jobs), clips, jobsLookup: lookup(c, batch, null) } };
+        });
+      }),
     );
-    const jobs = results.flat();
-    if (jobs.length === 0) return;
-    setChat((c) => {
-      if (c.currentId !== conversationId) return c;
-      const clips = { ...c.media.clips };
-      for (const j of jobs) if (j.kind === "speech" && j.speech && j.source.kind === "chat") clips[j.source.messageId] ??= j.speech;
-      // 查询期间推来的事件可能更新：合并，不覆盖
-      return { ...c, media: { ...c.media, jobs: mergeJobs(jobs, c.media.jobs), clips } };
-    });
   }
 
   /** 每位秘书「聊天」用的模型能不能看图：用 node.test 问一次聊天 profile（探测，失败不弹提示，记成 offline） */

@@ -85,6 +85,11 @@ export interface ChatMediaState {
   drawStarting: Record<string, true>;
   /** 正在上传 / 转写录音的会话：这期间不能加附件（录音回来会占掉草稿，林离 #115） */
   voiceImporting: Record<string, true>;
+  /**
+   * 媒体任务还没确认的消息：loading = 正在查，failed = 那一批 media.list 失败了。
+   * 这两种都不能当成「没有任务」放出画图入口，否则画过的会被当成没画过、重复花额度（林离 #117）
+   */
+  jobsLookup: Record<string, "loading" | "failed">;
 }
 
 export const initialMedia: ChatMediaState = {
@@ -99,6 +104,7 @@ export const initialMedia: ChatMediaState = {
   drawRequested: {},
   drawStarting: {},
   voiceImporting: {},
+  jobsLookup: {},
 };
 
 export interface ChatDraft {
