@@ -62,6 +62,9 @@ export function describeFailure(err: unknown): string {
     invalid_state: "当前状态下不能执行这个操作。",
     reviewer_not_configured: "还没有设置 Reviewer 节点，请先在“设置”里填写节点地址和 Token。",
     not_found: "要找的记录不存在，可能已被删除。",
+    rate_limited: "发得太快了：每个会话每分钟最多 6 条，稍等一下再发。",
+    idempotency_conflict: "这条消息和之前没发成功的那次内容不一样，请重新发送。",
+    agent_unavailable: "这位现在还是不能回答。",
   };
   return hint[err.code] ? `${hint[err.code]}（${err.message}）` : err.message;
 }

@@ -3,6 +3,7 @@ import { appendEvents, applyEvent, emptyDraft, type AppState } from "./state";
 import { describeFailure, type RoomClient } from "./client";
 import type { Store } from "./store";
 import { createDiscussionActions } from "./discussion-actions";
+import { createChatActions } from "./chat-actions";
 
 /**
  * 所有会访问后端的操作都在这里。UI 组件只调用这些函数，不直接碰 client。
@@ -12,6 +13,13 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
   const fail = (err: unknown) => store.set((s) => ({ ...s, notice: { kind: "error", message: describeFailure(err) } }));
 
   const disc = createDiscussionActions(store, client, fail);
+  const chat = createChatActions(store, client, fail, {
+    // 转议题成功：把新议题加进列表，切到讨论室打开它
+    async openTopic(project) {
+      store.set((s) => ({ ...s, projects: s.projects.some((p) => p.id === project.id) ? s.projects : [...s.projects, project], view: "discussion" }));
+      await loadProject(project.id).catch(fail);
+    },
+  });
 
   /** 防止快速切换项目时，旧项目的查询结果覆盖新项目 */
   let loadToken = 0;
@@ -48,11 +56,20 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
 
   return {
     ...disc,
+    chat,
+
+    goChat() {
+      store.set((s) => ({ ...s, view: "chat" }));
+      void chat.loadConversations();
+    },
 
     /** 启动：订阅事件 → 读系统状态和项目列表 → 打开第一个项目 */
     async start(): Promise<() => void> {
       // 先订阅再查询：查询期间推来的事件不会丢；重复的由 applyEvent 去重
-      const unsubscribe = client.onEvent((e) => store.set((s) => applyEvent(s, e)));
+      const unsubscribe = client.onEvent((e) => {
+        store.set((s) => applyEvent(s, e));
+        chat.onChatEvent(e);
+      });
       try {
         const [status, projects] = await Promise.all([
           client.query({ type: "system.status" }),
@@ -60,6 +77,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
         ]);
         store.set((s) => ({ ...s, status, projects, connection: { phase: "ready" } }));
         await disc.loadAgents();
+        await chat.loadConversations();
         const first = projects[0];
         if (first) await loadProject(first.id);
       } catch (err) {

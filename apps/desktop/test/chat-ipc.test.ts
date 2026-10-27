@@ -99,6 +99,8 @@ async function makeHarness(
     hold?: string[];
     profileModels?: ProfileModels[];
     modelSettings?: Record<string, AgentModelSettings>;
+    /** 可控时钟（撤回 / 重新编辑的时间窗口） */
+    now?: () => string;
   } = {},
 ): Promise<Harness> {
   const dir = mkdtempSync(join(tmpdir(), "room-chat-ipc-"));
@@ -172,7 +174,7 @@ async function makeHarness(
       profileAvailable: !(options.unavailableProfiles ?? []).includes(params.profileId),
       latencyMs: 1,
     }),
-    now: () => NOW,
+    now: options.now ?? (() => NOW),
   });
 
   const conversation = await chat.createConversation({
@@ -817,6 +819,56 @@ describe("chat service (D-31b)", () => {
         "只有一个新消息指向原消息",
       );
       await settle(h.chat);
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("re-edit window counts from retracting, not from sending", async () => {
+    let clock = NOW;
+    const at = (minutes: number) => new Date(Date.parse(NOW) + minutes * 60_000).toISOString();
+    const h = await makeHarness({ now: () => clock });
+    try {
+      const sent = await h.chat.send(send(h.conversationId, userMessageId(150), "早发的"));
+      await settle(h.chat);
+      // 第 4 分钟撤回：距离「发出」已经快 5 分钟
+      clock = at(4);
+      await h.chat.retract({ type: "chat.retract", messageId: sent.message.id } as never);
+      // 撤回后再过 4 分钟（距发出 8 分钟）：仍能重新编辑
+      clock = at(8);
+      const edited = await h.chat.send({
+        ...send(h.conversationId, userMessageId(151), "改好了"),
+        replacesMessageId: sent.message.id,
+      });
+      assert.equal(edited.message.replacesMessageId, sent.message.id);
+      await settle(h.chat);
+
+      // 另一条：撤回后超过 5 分钟就不能再编辑
+      const second = await h.chat.send(send(h.conversationId, userMessageId(152), "第二条"));
+      await settle(h.chat);
+      clock = at(9);
+      await h.chat.retract({ type: "chat.retract", messageId: second.message.id } as never);
+      clock = at(14);
+      await assert.rejects(
+        h.chat.send({ ...send(h.conversationId, userMessageId(153), "太晚了"), replacesMessageId: second.message.id }),
+        (error: unknown) => (error as { code?: string }).code === "invalid_state",
+      );
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("retract window is exclusive at exactly five minutes", async () => {
+    let clock = NOW;
+    const h = await makeHarness({ now: () => clock });
+    try {
+      const sent = await h.chat.send(send(h.conversationId, userMessageId(154), "卡点"));
+      await settle(h.chat);
+      clock = new Date(Date.parse(NOW) + CHAT_LIMITS.retractWindowMs).toISOString();
+      await assert.rejects(
+        h.chat.retract({ type: "chat.retract", messageId: sent.message.id } as never),
+        (error: unknown) => (error as { code?: string }).code === "invalid_state",
+      );
     } finally {
       h.db.close();
     }
