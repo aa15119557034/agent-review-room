@@ -23,6 +23,7 @@ import type {
 import {
   CHAT_SLOT_TRANSITIONS,
   RUN_TRANSITIONS,
+  isExcludedFromContext,
   ChatMessage as ChatMessageSchema,
   ChatReplySlot as ChatReplySlotSchema,
   ChatRun as ChatRunSchema,
@@ -1101,6 +1102,34 @@ export function createChatSend(
       if (recent.n >= input.rateLimit.max) throw new ChatSendRateLimitError(input.rateLimit.max);
     }
 
+    // 引用 / 重新编辑的校验发生在事务外，中间隔着节点探测的 await：
+    // 被引用的消息可能刚被撤回、被重新编辑的原消息可能刚被另一个窗口替换掉。这里在写事务里再核一次。
+    if (message.quoteMessageId !== null) {
+      const quote = getChatMessage(db, message.quoteMessageId);
+      if (quote === null || quote.conversationId !== message.conversationId) {
+        throw new ChatSendConflictError("quoted message is not in this conversation");
+      }
+      if (isExcludedFromContext(quote, parentOf(db))) {
+        throw new ChatSendConflictError("quoted message is no longer in context (retracted after the check)");
+      }
+    }
+    if (message.replacesMessageId !== null) {
+      const original = getChatMessage(db, message.replacesMessageId);
+      if (
+        original === null ||
+        original.sender !== "user" ||
+        original.conversationId !== message.conversationId ||
+        original.state !== "retracted"
+      ) {
+        throw new ChatSendConflictError("the message being re-edited is no longer a retracted message in this conversation");
+      }
+      if (
+        db.prepare("SELECT 1 FROM chat_messages WHERE replaces_message_id = ?").get(original.id) !== undefined
+      ) {
+        throw new ChatSendConflictError("this message was already re-edited by a concurrent send");
+      }
+    }
+
     // 拼 Snapshot 是在事务外做的，中间用户可能改了成员：在同一个事务里重读会话，
     // 和调用方看到的名单不一致就整次拒绝（调用方重建 Snapshot 再发），不能按旧成员建回答位。
     const conversation = getConversation(db, message.conversationId);
@@ -1209,6 +1238,14 @@ export interface CreateChatToTopicInput {
  * 从聊天建一个议题：项目 + 一条 chat_material 初始材料，**同一个事务**。
  * 内容长度 / 已撤回 / 重复的校验都在服务层、事务开始之前做。
  */
+/** isExcludedFromContext 需要的「回答的是哪条你发的消息」查询 */
+function parentOf(db: SqliteDatabase): (messageId: string) => UserChatMessage | undefined {
+  return (messageId) => {
+    const message = getChatMessage(db, messageId);
+    return message !== null && message.sender === "user" ? message : undefined;
+  };
+}
+
 export function createChatToTopic(
   db: SqliteDatabase,
   queue: WriteQueue,

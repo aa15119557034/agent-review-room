@@ -68,7 +68,7 @@ import {
   reuseOrSelectChatModel,
   selectChatModel,
 } from "./chat-model";
-import { CHAT_MATERIAL_MAX_CHARS, renderChatMaterial } from "./chat-material";
+import { CHAT_MATERIAL_MAX_CHARS, CHAT_MATERIAL_PROMPT_HEADROOM, renderChatMaterial } from "./chat-material";
 import { buildChatSnapshot } from "./chat-prompt";
 import type { Repository } from "./repository";
 import type { SettingsStore } from "./settings";
@@ -393,8 +393,11 @@ export class ChatService {
     );
     const agents = new Map(this.#deps.repo.listAgents().map((agent) => [agent.id, agent]));
     const content = renderChatMaterial(ordered, (agentId) => agents.get(agentId)?.displayName ?? agentId);
-    if (content.length > CHAT_MATERIAL_MAX_CHARS) {
-      throw new ChatError("validation_failed", "选中的消息太多，整理出来的材料超过 200 万字，少选几条");
+    if (content.length > CHAT_MATERIAL_MAX_CHARS - CHAT_MATERIAL_PROMPT_HEADROOM) {
+      throw new ChatError(
+        "validation_failed",
+        "选中的消息太多，整理出来的材料太长（约 190 万字上限，要留出 Prompt 边界和任务的余量），少选几条",
+      );
     }
 
     const now = this.#now();

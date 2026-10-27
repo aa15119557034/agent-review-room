@@ -229,7 +229,9 @@ export type RoundDraftErrorCode =
   | "round_not_draft"
   | "round_not_paused"
   | "round_not_active"
-  | "turn_not_retryable";
+  | "turn_not_retryable"
+  // 拼 Prompt 之后、写 Snapshot 的事务之前，材料里的聊天消息被撤回了
+  | "chat_material_changed";
 
 export class RoundDraftError extends Error {
   readonly code: RoundDraftErrorCode;
@@ -278,6 +280,8 @@ export interface CreateRoundDraftInput {
   historyMode: HistoryMode;
   /** 讨论记录被压缩的说明，确认页展示 */
   compressedRounds?: readonly CompressedRound[];
+  /** 这次实际放进材料的聊天消息 id（写事务里复核是否刚被撤回） */
+  chatMaterialSourceIds?: readonly string[];
 }
 
 export interface CreateSummaryDraftInput {
@@ -285,6 +289,32 @@ export interface CreateSummaryDraftInput {
   /** 汇总批次只有一个收件人（汇总者） */
   recipients: readonly RoundDraftRecipient[];
   compressedRounds?: readonly CompressedRound[];
+  chatMaterialSourceIds?: readonly string[];
+}
+
+/**
+ * 写 Snapshot 的事务里复核聊天材料来源（C-34 / D-31c）。
+ * 拼 Prompt 是同步读、写库要排队：中间可能有 chat.retract 先提交，那样新 Snapshot 会带上刚撤回的原文
+ * （ADR-003：撤回之后新建的 Prompt / Run 都不再带它）。只检查这次实际放进材料里的消息。
+ */
+function assertChatMaterialSourcesCurrentTx(db: SqliteDatabase, ids: readonly string[]): void {
+  if (ids.length === 0) return;
+  const rows = db
+    .prepare(
+      "SELECT m.id AS id, m.sender AS sender, m.state AS state, p.state AS parentState " +
+        "FROM chat_messages m LEFT JOIN chat_messages p ON p.id = m.in_reply_to " +
+        "WHERE m.id IN (" + ids.map(() => "?").join(", ") + ")",
+    )
+    .all(...ids) as { id: string; sender: "user" | "agent"; state: string | null; parentState: string | null }[];
+  for (const row of rows) {
+    const inContext = row.sender === "user" ? row.state === "sent" : row.parentState === "sent";
+    if (!inContext) {
+      throw new RoundDraftError(
+        "chat_material_changed",
+        "chat material source " + row.id + " was retracted while the prompt was being built",
+      );
+    }
+  }
 }
 
 /** 议题里「还没结束」的轮：同一议题同时只允许一个（ux_round_active 兜底） */
@@ -416,6 +446,7 @@ export function createRoundDraft(
 ): Promise<{ round: RoundRow; batch: ApprovalBatchRow }> {
   return writeTransaction(db, queue, () => {
     assertRecipients(input.recipients);
+    assertChatMaterialSourcesCurrentTx(db, input.chatMaterialSourceIds ?? []);
 
     // 先查一遍是为了给调用方一个能读的错误；并发时由 ux_round_active 唯一索引兜底
     const active = db
@@ -493,6 +524,7 @@ export function createSummaryDraft(
       throw new RoundDraftError("invalid_input", "a summary batch has exactly one recipient");
     }
     assertRecipients(input.recipients);
+    assertChatMaterialSourcesCurrentTx(db, input.chatMaterialSourceIds ?? []);
 
     const round = db.prepare("SELECT id, project_id, state, task FROM rounds WHERE id = ?").get(input.roundId) as
       | { id: string; project_id: string; state: string; task: string }
@@ -543,6 +575,7 @@ export interface CreateBatchDraftInput {
   cancelOpenKind?: BatchKind;
   /** 旧的 Turn 接到新 Turn 上（打断 / 补充 / 重试） */
   supersede?: readonly { oldTurnId: string; agent: string }[];
+  chatMaterialSourceIds?: readonly string[];
 }
 
 /**
@@ -556,6 +589,7 @@ export function createBatchDraft(
 ): Promise<{ batch: ApprovalBatchRow }> {
   return writeTransaction(db, queue, () => {
     assertRecipients(input.recipients);
+    assertChatMaterialSourcesCurrentTx(db, input.chatMaterialSourceIds ?? []);
     const round = db.prepare("SELECT id, project_id, state, task FROM rounds WHERE id = ?").get(input.roundId) as
       | { id: string; project_id: string; state: string; task: string }
       | undefined;
@@ -780,6 +814,7 @@ export interface RedraftRoundInput {
   /** 按新任务 / 新收件人重新拼好的 Prompt */
   prompts: readonly RoundDraftRecipient[];
   compressedRounds?: readonly CompressedRound[];
+  chatMaterialSourceIds?: readonly string[];
 }
 
 /** 修改还没盖章的一轮：任务 / 收件人 / 讨论记录取法；旧批次作废，生成新的 initial 批次 */
@@ -790,6 +825,7 @@ export function redraftRound(
 ): Promise<{ round: RoundRow; batch: ApprovalBatchRow }> {
   return writeTransaction(db, queue, () => {
     assertRecipients(input.prompts);
+    assertChatMaterialSourcesCurrentTx(db, input.chatMaterialSourceIds ?? []);
     const round = db.prepare("SELECT id, project_id, state FROM rounds WHERE id = ?").get(input.roundId) as
       | { id: string; project_id: string; state: string }
       | undefined;

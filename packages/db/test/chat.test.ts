@@ -946,6 +946,49 @@ describe("chat send transaction (D-31b)", () => {
     createdAt: at(0),
   });
 
+  it("re-checks the quote and the re-edit target inside the write transaction", async () => {
+    const { db, queue } = fresh();
+    try {
+      const direct = await createConversation(db, queue, { members: { kind: "direct", agent: "deepseek" }, title: null });
+      const send = (message: UserChatMessage) =>
+        createChatSend(db, queue, {
+          conversation: direct,
+          message,
+          requestHash: "c".repeat(64),
+          createdAt: at(2),
+          availability: new Map([["deepseek", { kind: "unavailable" as const, reason: "offline" as const }]]),
+          snapshots: new Map(),
+          adapterIds: new Map(),
+        });
+
+      // 引用：事务外检查之后，被引用的消息被撤回了
+      const quoted = userMessage(direct.id, "会被撤回");
+      insertChatMessage(db, { message: quoted });
+      retractChatMessage(db, quoted.id, at(1));
+      await assert.rejects(
+        send({ ...userMessage(direct.id, "引用它"), quoteMessageId: quoted.id }),
+        ChatSendConflictError,
+      );
+      assert.equal((db.prepare("SELECT count(*) AS n FROM chat_messages WHERE quote_message_id = ?").get(quoted.id) as { n: number }).n, 0);
+
+      // 重新编辑：两个不同的新 id 都指向同一条已撤回消息，第二个在事务里被拦
+      const original = userMessage(direct.id, "原文");
+      insertChatMessage(db, { message: original });
+      retractChatMessage(db, original.id, at(1));
+      await send({ ...userMessage(direct.id, "改一"), replacesMessageId: original.id });
+      await assert.rejects(
+        send({ ...userMessage(direct.id, "改二"), replacesMessageId: original.id }),
+        ChatSendConflictError,
+      );
+      assert.equal(
+        (db.prepare("SELECT count(*) AS n FROM chat_messages WHERE replaces_message_id = ?").get(original.id) as { n: number }).n,
+        1,
+      );
+    } finally {
+      db.close();
+    }
+  });
+
   it("applies the @ rules: direct, @all, @some, no mention", async () => {
     const { db, queue } = fresh();
     try {
