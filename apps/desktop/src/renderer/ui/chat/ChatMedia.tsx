@@ -596,17 +596,32 @@ export function RecordButton({ disabled }: { disabled?: boolean }) {
   const [state, setState] = useState<"idle" | "recording" | "sending">("idle");
   const [elapsed, setElapsed] = useState(0);
   const [error, setError] = useState<string | null>(null);
-  const rec = useRef<{ recorder: MediaRecorder; stream: MediaStream; started: number; timer: ReturnType<typeof setInterval> } | null>(null);
+  // 录音开始时就定下是哪个会话的（林离 #115）：之后切会话也只进这个会话的草稿
+  const conversationId = useAppState((s) => s.chat.currentId);
+  const rec = useRef<{
+    recorder: MediaRecorder;
+    stream: MediaStream;
+    started: number;
+    timer: ReturnType<typeof setInterval>;
+    /** 卸载 / 切走时取消：释放麦克风，不导入 */
+    cancelled: boolean;
+  } | null>(null);
+  const alive = useRef(true);
 
-  useEffect(() => () => stopAll(), []);
-
-  function stopAll() {
-    const r = rec.current;
-    if (!r) return;
-    clearInterval(r.timer);
-    if (r.recorder.state !== "inactive") r.recorder.stop();
-    r.stream.getTracks().forEach((t) => t.stop());
-  }
+  // 组件卸载（离开聊天页；ChatView 按会话 key，切会话也会卸载）= 取消这段录音
+  useEffect(() => {
+    alive.current = true;
+    return () => {
+      alive.current = false;
+      const r = rec.current;
+      if (!r) return;
+      r.cancelled = true;
+      clearInterval(r.timer);
+      if (r.recorder.state !== "inactive") r.recorder.stop();
+      r.stream.getTracks().forEach((t) => t.stop());
+      rec.current = null;
+    };
+  }, []);
 
   async function start() {
     setError(null);
@@ -614,11 +629,18 @@ export function RecordButton({ disabled }: { disabled?: boolean }) {
       setError("这个环境不能录音");
       return;
     }
+    const target = conversationId;
+    if (!target) return;
     let stream: MediaStream;
     try {
       stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch {
-      setError("没有麦克风权限");
+      if (alive.current) setError("没有麦克风权限");
+      return;
+    }
+    // 授权弹窗回来时已经离开了：马上释放麦克风，不开始录
+    if (!alive.current) {
+      stream.getTracks().forEach((t) => t.stop());
       return;
     }
     const mime = ["audio/webm;codecs=opus", "audio/ogg;codecs=opus", "audio/webm"].find((m) => MediaRecorder.isTypeSupported(m));
@@ -627,6 +649,7 @@ export function RecordButton({ disabled }: { disabled?: boolean }) {
     recorder.ondataavailable = (e) => e.data.size && chunks.push(e.data);
     recorder.onstop = async () => {
       stream.getTracks().forEach((t) => t.stop());
+      if (entry.cancelled || !alive.current) return;
       const blob = new Blob(chunks, { type: recorder.mimeType });
       if (blob.size === 0) return setState("idle");
       if (blob.size > CHAT_LIMITS.voiceImportMaxBytes) {
@@ -635,8 +658,8 @@ export function RecordButton({ disabled }: { disabled?: boolean }) {
       }
       setState("sending");
       const format = recorder.mimeType.includes("ogg") ? "ogg" : "webm";
-      await actions.chat.media.importVoice(format, await toBase64(blob));
-      setState("idle");
+      await actions.chat.media.importVoice(target, format, await toBase64(blob));
+      if (alive.current) setState("idle");
     };
     const started = Date.now();
     const timer = setInterval(() => {
@@ -644,7 +667,8 @@ export function RecordButton({ disabled }: { disabled?: boolean }) {
       setElapsed(ms);
       if (ms >= CHAT_LIMITS.voiceMaxMs) stop();
     }, 250);
-    rec.current = { recorder, stream, started, timer };
+    const entry = { recorder, stream, started, timer, cancelled: false };
+    rec.current = entry;
     recorder.start();
     setElapsed(0);
     setState("recording");

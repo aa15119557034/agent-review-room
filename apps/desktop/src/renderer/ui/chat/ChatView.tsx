@@ -593,7 +593,7 @@ function Composer({ conv }: { conv: Conversation }) {
         <button type="button" className="tool-button" disabled={!!draft.voice || tooManyFiles} onClick={() => void actions.chat.media.pickAttachment("file")}>
           📎 文件
         </button>
-        <RecordButton disabled={!!draft.voice || draft.attachments.length > 0} />
+        <RecordButton key={conv.id} disabled={!!draft.voice || draft.attachments.length > 0} />
         <button type="button" className="tool-button" aria-expanded={stickers} onClick={() => setStickers((v) => !v)}>
           ☺ 表情
         </button>

@@ -100,10 +100,11 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
 
     // ---------------------------------------------------------- 录音（D-34b）
 
-    /** 交一段录好的音（renderer 录的，没有路径）。转写完成前先显示「转写中」，好了把转写放进输入框给你改 */
-    async importVoice(format: "webm" | "ogg" | "wav", data: string) {
-      const conversationId = chat().currentId;
-      if (!conversationId) return;
+    /**
+     * 交一段录好的音（renderer 录的，没有路径）。转写完成前先显示「转写中」，好了把转写放进输入框给你改。
+     * conversationId 是开始录音时的会话：录音过程中切了会话，也只写回原来那个会话的草稿
+     */
+    async importVoice(conversationId: string, format: "webm" | "ogg" | "wav", data: string) {
       try {
         const rec = await client.command({ type: "chat.voice.import", format, data });
         setChat((c) => {
@@ -209,7 +210,10 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
     async cancelJob(jobId: string) {
       try {
         const job = await client.command({ type: "media.cancel", jobId });
-        setMedia((m) => ({ ...m, jobs: mergeJobs(m.jobs, [job]) }));
+        // 回包前可能已经切到别的会话：只并进任务所属的那个会话
+        setChat((c) =>
+          job.source.kind === "chat" && job.source.conversationId === c.currentId ? { ...c, media: { ...c.media, jobs: mergeJobs(c.media.jobs, [job]) } } : c,
+        );
       } catch (err) {
         fail(err);
       }

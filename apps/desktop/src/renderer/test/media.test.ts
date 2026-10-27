@@ -298,6 +298,32 @@ describe("C-43 through the UI actions (mock)", () => {
     assert.deepEqual([d.text, d.attachments, d.voice, d.replacesMessageId], ["看看这个", [], null, mine.id]);
   });
 
+  it("a recording and a late cancel stay with the conversation they started in (林离 #115)", async () => {
+    const { store, actions } = app();
+    await actions.start();
+    actions.goChat();
+    await actions.chat.createConversation({ kind: "direct", agent: "deepseek" }, null);
+    const a = store.get().chat.currentId!;
+    actions.chat.setDraftText("画一张");
+    await actions.chat.send();
+    await until(() => !!agentReply(store.get().chat.messages));
+    const reply = agentReply(store.get().chat.messages)!;
+    const src = { kind: "chat" as const, conversationId: a, messageId: reply.id, agent: reply.agent };
+    await actions.chat.media.startDraw({ ...reply.mediaIntent!.draw!, backend: "comfyui" }, src, false);
+    const jobId = jobsOf(store, "draw")[0]!.id;
+
+    await actions.chat.createConversation({ kind: "direct", agent: "claude" }, null);
+    const b = store.get().chat.currentId!;
+    assert.notEqual(a, b);
+    // 在 A 录的音，停的时候已经在 B：只进 A 的草稿
+    await actions.chat.media.importVoice(a, "webm", "AAAA");
+    assert.ok(store.get().chat.drafts[a]?.voice);
+    assert.equal(store.get().chat.drafts[b]?.voice ?? null, null);
+    // A 的任务取消回包到了 B：不并进 B
+    await actions.chat.media.cancelJob(jobId);
+    assert.ok(store.get().chat.media.jobs.every((j) => j.source.kind === "chat" && j.source.conversationId === b));
+  });
+
   it("retracting a message cancels the media jobs of its answers", async () => {
     const { store, actions } = app();
     await actions.start();
