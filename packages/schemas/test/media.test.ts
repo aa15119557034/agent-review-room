@@ -5,15 +5,21 @@ import {
   ControlEvent,
   DrawRequest,
   MEDIA_JOB_TRANSITIONS,
+  MEDIA_LIST_MESSAGE_IDS_MAX,
+  MEDIA_LIST_PER_MESSAGE_KIND_LATEST,
+  MEDIA_LIST_PER_MESSAGE_KIND_MAX,
+  MediaJobKind,
   MediaJob,
   MediaJobState,
   NodeHealth,
+  QUERIES,
   RemoteEvent,
   RemoteProfileQuota,
   SpeechClip,
   StartRunRequest,
   VoiceOption,
   canTransition,
+  pickMessageMediaJobs,
 } from "../src/index";
 
 const ID = "01JAAAAAAAAAAAAAAAAAAAAAAA";
@@ -222,5 +228,87 @@ describe("speech (C-42c)", () => {
     assert.ok(upd.safeParse({ type: "agent.update", id: "claude", voice: null }).success);
     assert.equal(upd.safeParse({ type: "agent.update", id: "claude", voice: { voiceId: "whale-soft", speed: 5 } }).success, false);
     assert.equal(upd.safeParse({ type: "agent.update", id: "claude", voice: { voiceId: "x", speed: 1, refAudioPath: "C:/a.wav" } }).success, false);
+  });
+});
+
+describe("media.list by message (C-42f)", () => {
+  const q = QUERIES["media.list"].request;
+  const scope = { kind: "chat", conversationId: `conv_${ID}` };
+  const msg = (n: number) => `cmsg_01JAAAAAAAAAAAAAAAAAAAA${String(n).padStart(3, "0")}`;
+
+  it("messageIds is optional, 1..MEDIA_LIST_MESSAGE_IDS_MAX, no duplicates", () => {
+    assert.ok(q.safeParse({ type: "media.list", scope }).success);
+    assert.ok(q.safeParse({ type: "media.list", scope, messageIds: [msg(1), msg(2)] }).success);
+    const max = Array.from({ length: MEDIA_LIST_MESSAGE_IDS_MAX }, (_, i) => msg(i));
+    assert.ok(q.safeParse({ type: "media.list", scope, messageIds: max }).success);
+    assert.equal(q.safeParse({ type: "media.list", scope, messageIds: [...max, msg(999)] }).success, false);
+    assert.equal(q.safeParse({ type: "media.list", scope, messageIds: [] }).success, false, "omit instead of empty");
+    assert.equal(q.safeParse({ type: "media.list", scope, messageIds: [msg(1), msg(1)] }).success, false);
+    assert.equal(q.safeParse({ type: "media.list", scope, messageIds: ["run_x"] }).success, false);
+  });
+
+  it("every asked message fits: ids × per-message cap ≤ the 200 response cap", () => {
+    assert.ok(MEDIA_LIST_MESSAGE_IDS_MAX * MediaJobKind.options.length * MEDIA_LIST_PER_MESSAGE_KIND_MAX <= 200);
+    assert.ok(QUERIES["media.list"].response.safeParse(Array(200).fill(job)).success);
+    assert.equal(QUERIES["media.list"].response.safeParse(Array(201).fill(job)).success, false);
+  });
+
+  // 只看挑选用到的字段
+  type J = { id: string; kind: "draw" | "speech"; state: MediaJobState; source: { kind: "chat"; conversationId: string; messageId: string; agent: null }; createdAt: string };
+  let seq = 0;
+  const mk = (messageId: string, kind: J["kind"], state: MediaJobState): J => {
+    seq++;
+    const n = String(seq).padStart(4, "0");
+    return { id: `mjob_${n}`, kind, state, source: { kind: "chat", conversationId: `conv_${ID}`, messageId, agent: null }, createdAt: new Date(Date.UTC(2026, 9, 27) + seq * 1000).toISOString() };
+  };
+
+  it("a success older than the latest N failures / cancels is still returned (林离 #116)", () => {
+    const m = msg(1);
+    const ok = mk(m, "draw", "succeeded");
+    const later = Array.from({ length: MEDIA_LIST_PER_MESSAGE_KIND_LATEST + 3 }, (_, i) => mk(m, "draw", i % 2 ? "failed" : "cancelled"));
+    const picked = pickMessageMediaJobs([ok, ...later]);
+    assert.ok(picked.includes(ok), "old success kept");
+    assert.equal(picked.length, MEDIA_LIST_PER_MESSAGE_KIND_LATEST + 1);
+    assert.deepEqual(picked.slice(0, MEDIA_LIST_PER_MESSAGE_KIND_LATEST), later.slice(-MEDIA_LIST_PER_MESSAGE_KIND_LATEST).reverse());
+    assert.equal(picked.at(-1), ok, "newest first overall");
+  });
+
+  it("an old unfinished job is kept too; only the latest success / unfinished one is added", () => {
+    const m = msg(2);
+    const oldOk = mk(m, "draw", "succeeded");
+    const ok = mk(m, "draw", "succeeded");
+    const running = mk(m, "draw", "running");
+    const later = Array.from({ length: 10 }, () => mk(m, "draw", "failed"));
+    const picked = pickMessageMediaJobs([oldOk, ok, running, ...later]);
+    assert.ok(picked.includes(ok) && picked.includes(running));
+    assert.ok(!picked.includes(oldOk));
+    assert.equal(picked.length, MEDIA_LIST_PER_MESSAGE_KIND_MAX);
+  });
+
+  it("caps per message and per kind; one kind or one message never pushes out another", () => {
+    const ids = Array.from({ length: MEDIA_LIST_MESSAGE_IDS_MAX }, (_, i) => msg(100 + i));
+    const jobs: J[] = [];
+    for (const id of ids) {
+      jobs.push(mk(id, "draw", "succeeded"), mk(id, "draw", "running"));
+      for (let i = 0; i < 12; i++) jobs.push(mk(id, "draw", "failed"));
+      jobs.push(mk(id, "speech", "succeeded"), mk(id, "speech", "running"));
+      for (let i = 0; i < 30; i++) jobs.push(mk(id, "speech", "cancelled"));
+    }
+    const picked = pickMessageMediaJobs(jobs);
+    assert.equal(picked.length, ids.length * MediaJobKind.options.length * MEDIA_LIST_PER_MESSAGE_KIND_MAX);
+    assert.ok(picked.length <= 200);
+    for (const id of ids)
+      for (const kind of MediaJobKind.options) {
+        const mine = picked.filter((j) => j.source.messageId === id && j.kind === kind);
+        assert.ok(mine.some((j) => j.state === "succeeded") && mine.some((j) => j.state === "running"), `${id} ${kind}`);
+      }
+    for (let i = 1; i < picked.length; i++) assert.ok(picked[i - 1]!.createdAt >= picked[i]!.createdAt);
+  });
+
+  it("few jobs come back unchanged, newest first", () => {
+    const a = mk(msg(3), "draw", "failed");
+    const b = mk(msg(3), "speech", "succeeded");
+    assert.deepEqual(pickMessageMediaJobs([a, b]), [b, a]);
+    assert.deepEqual(pickMessageMediaJobs([]), []);
   });
 });

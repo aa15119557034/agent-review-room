@@ -67,7 +67,7 @@ import {
   UserChatMessage,
   VoiceRecording,
 } from "./chat";
-import { DrawRequest, DrawRoutePreview, MediaJob, MediaJobId, MediaScope, MediaSource } from "./media";
+import { DrawRequest, DrawRoutePreview, MediaJob, MediaJobId, MEDIA_LIST_MESSAGE_IDS_MAX, MediaScope, MediaSource } from "./media";
 import { ImmersiveSettings, ImmersiveUsage } from "./immersive";
 import { SpeechClip, VoiceOption, VoiceProfile } from "./speech";
 
@@ -1019,8 +1019,33 @@ export const QUERIES = {
 
   "media.get": def(z.object({ type: z.literal("media.get"), jobId: MediaJobId }), MediaJob, "read"),
 
-  /** 一个范围里的媒体任务，按创建时间倒序，最多 200 条 */
-  "media.list": def(z.object({ type: z.literal("media.list"), scope: MediaScope }), z.array(MediaJob).max(200), "read"),
+  /**
+   * 一个范围里的媒体任务，按创建时间倒序，最多 200 条。
+   * C-42f：messageIds（只用于 chat 范围）= 只要这些消息的任务（source.messageId 在其中）。界面按当前加载的那页消息去查，
+   * 会话累计超过 200 条任务后旧消息的图仍然找得回来，请求卡也不会因为查不到任务而重复出现。
+   * - 每条消息每一类（draw / speech）返回最新 MEDIA_LIST_PER_MESSAGE_KIND_LATEST 条，再加最新一条成功的、最新一条没结束的
+   *   （不在前面那几条里时），每类最多 MEDIA_LIST_PER_MESSAGE_KIND_MAX 条；挑法和 media.ts 的 pickMessageMediaJobs 一致。
+   *   成功画过的图不会被后来的几次失败 / 取消挤掉，界面据此判断请求卡要不要出现（林离 #116）。
+   *   messageIds 最多 MEDIA_LIST_MESSAGE_IDS_MAX 个。14 × 2 类 × 7 = 196 ≤ 200，所以一次查询**每条消息、每一类都查得到**，
+   *   不会被别的消息或另一类的任务挤掉（汐 #116）。客户端按 14 条消息一批查、结果合并。
+   *   更早的失败 / 取消记录只在 media.get 里，界面不需要
+   * - 和 scope 取交集：不属于这个会话的 id 查不到任务，不报错
+   * - topic 范围带 messageIds → validation_failed（main 校验；请求体在判别联合里，schema 层加不了跨字段校验）
+   */
+  "media.list": def(
+    z.object({
+      type: z.literal("media.list"),
+      scope: MediaScope,
+      messageIds: z
+        .array(ChatMessageId)
+        .min(1)
+        .max(MEDIA_LIST_MESSAGE_IDS_MAX)
+        .refine((xs) => new Set(xs).size === xs.length, "不能重复")
+        .optional(),
+    }),
+    z.array(MediaJob).max(200),
+    "read",
+  ),
 } as const;
 
 // ================================================================ Unions & helpers

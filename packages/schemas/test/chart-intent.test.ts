@@ -108,6 +108,8 @@ describe("media intent & immersive (C-42d)", () => {
     assert.equal(speakableText("没闭合的\n```\nconst a = 1"), "没闭合的");
     assert.equal(speakableText("  \n "), "");
     assert.equal(speakableText("你看[图 3：截图.png]这里 🇨🇳 1️⃣"), "你看这里 1");
+    // 「[我画的图：提示词]」提示词最长 DRAW_PROMPT_MAX_CHARS（1000）：整段占位都不念（汐 #113）
+    assert.equal(speakableText(`画好了[我画的图：${"鲸".repeat(1000)}]`), "画好了");
   });
 
   it("speakableText stays linear on a 200k reply full of unmatched brackets", () => {
