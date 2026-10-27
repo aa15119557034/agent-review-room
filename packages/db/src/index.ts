@@ -11,3 +11,5 @@ export * from "./plan";
 export * from "./discussion-turn";
 export * from "./chat";
 export * from "./media";
+export * from "./media-jobs";
+
