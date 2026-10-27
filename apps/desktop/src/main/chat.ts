@@ -247,7 +247,9 @@ export class ChatService {
         throw new ChatError("invalid_state", "只能重新编辑你自己的消息");
       }
       if (replaced.state !== "retracted") throw new ChatError("invalid_state", "只有已撤回的消息能重新编辑");
-      if (Date.parse(now) - Date.parse(replaced.createdAt) > CHAT_LIMITS.reeditWindowMs) {
+      // 契约：窗口从**撤回**算起（不是从发出算起），和 renderer 的 canReedit / mock 一致
+      if (replaced.retractedAt === null) throw new ChatError("internal", "retracted message without retractedAt");
+      if (Date.parse(now) - Date.parse(replaced.retractedAt) >= CHAT_LIMITS.reeditWindowMs) {
         throw new ChatError("invalid_state", "超过重新编辑的时间窗口");
       }
       if (db.prepare("SELECT 1 FROM chat_messages WHERE replaces_message_id = ?").get(replaced.id) !== undefined) {
@@ -423,7 +425,7 @@ export class ChatService {
     if (message.state === "retracted") throw new ChatError("invalid_state", "这条消息已经撤回了");
 
     const now = this.#now();
-    if (Date.parse(now) - Date.parse(message.createdAt) > CHAT_LIMITS.retractWindowMs) {
+    if (Date.parse(now) - Date.parse(message.createdAt) >= CHAT_LIMITS.retractWindowMs) {
       throw new ChatError("invalid_state", "超过撤回时间窗口");
     }
 
