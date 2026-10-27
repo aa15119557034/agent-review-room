@@ -1023,7 +1023,9 @@ export const QUERIES = {
    * 一个范围里的媒体任务，按创建时间倒序，最多 200 条。
    * C-42f：messageIds（只用于 chat 范围）= 只要这些消息的任务（source.messageId 在其中）。界面按当前加载的那页消息去查，
    * 会话累计超过 200 条任务后旧消息的图仍然找得回来，请求卡也不会因为查不到任务而重复出现。
-   * topic 范围带 messageIds → validation_failed（main 校验）
+   * - 结果仍然最多 200 条：客户端按页查（每次 ≤ 50 条消息）再合并；某一批正好返回 200 条，说明可能截断，把这批对半再查
+   * - 和 scope 取交集：不属于这个会话的 id 查不到任务，不报错
+   * - topic 范围带 messageIds → validation_failed（main 校验；请求体在判别联合里，schema 层加不了跨字段校验）
    */
   "media.list": def(
     z.object({
