@@ -6,6 +6,7 @@ import {
   DrawRequest,
   MEDIA_JOB_TRANSITIONS,
   MEDIA_LIST_MESSAGE_IDS_MAX,
+  MEDIA_LIST_PER_MESSAGE_MAX,
   MediaJob,
   MediaJobState,
   NodeHealth,
@@ -241,5 +242,11 @@ describe("media.list by message (C-42f)", () => {
     assert.equal(q.safeParse({ type: "media.list", scope, messageIds: [] }).success, false, "omit instead of empty");
     assert.equal(q.safeParse({ type: "media.list", scope, messageIds: [msg(1), msg(1)] }).success, false);
     assert.equal(q.safeParse({ type: "media.list", scope, messageIds: ["run_x"] }).success, false);
+  });
+
+  it("every asked message fits: ids × per-message cap ≤ the 200 response cap", () => {
+    assert.ok(MEDIA_LIST_MESSAGE_IDS_MAX * MEDIA_LIST_PER_MESSAGE_MAX <= 200);
+    assert.ok(QUERIES["media.list"].response.safeParse(Array(200).fill(job)).success);
+    assert.equal(QUERIES["media.list"].response.safeParse(Array(201).fill(job)).success, false);
   });
 });

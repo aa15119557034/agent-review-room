@@ -58,8 +58,12 @@ export const MediaScope = z.discriminatedUnion("kind", [
 ]);
 export type MediaScope = z.infer<typeof MediaScope>;
 
-/** C-42f：media.list 一次最多按多少条消息查（界面一页消息 + 余量） */
-export const MEDIA_LIST_MESSAGE_IDS_MAX = 100;
+/**
+ * C-42f：media.list 按消息查时，一次最多几条消息、每条消息最多返回几条任务。
+ * 相乘不超过返回上限 200，保证每条消息都查得到（不被别的消息挤掉）
+ */
+export const MEDIA_LIST_MESSAGE_IDS_MAX = 20;
+export const MEDIA_LIST_PER_MESSAGE_MAX = 10;
 
 // ================================================================ 画图
 

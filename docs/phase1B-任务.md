@@ -55,7 +55,7 @@
 | **C-42c** | Claude | 契约：SpeechClip、VoiceProfile、`replyAsVoice` | ADR-004 | 0.5 天 |
 | **C-42d** | Claude | 契约：ChartSpec、MediaIntent、沉浸模式设置 | ADR-004 | 0.5 天 |
 | **C-42e** | Claude | 契约补漏（C-43 开工时发现）：秘书回答上存合格的媒体意图 `mediaIntent` 和沉浸模式退回原因 `immersiveDeferred`，界面才能显示画图请求卡 /「想用语音说」 | C-42d | 0.2 天 |
-| **C-42f** | Claude | 契约小补（#114 汐提出）：`media.list` 加可选 `messageIds`（只用于 chat 范围，最多 100 个），会话累计超过 200 条任务后旧消息的图仍找得回来、请求卡不重复出现；`speakableText` 的占位上界放到 1200（「[我画的图：1000 字提示词]」加前缀） | C-42e | 0.2 天 |
+| **C-42f** | Claude | 契约小补（#114 汐提出）：`media.list` 加可选 `messageIds`（只用于 chat 范围，最多 20 个，每条消息返回最新 10 条任务，保证每条都查得到），会话累计超过 200 条任务后旧消息的图仍找得回来、请求卡不重复出现；`speakableText` 的占位匹配上界放到 1200（提示词最长 1000 字，加上「[我画的图：」前缀） | C-42e | 0.2 天 |
 | **S-23** | Claude | 节点：看图实测、收附件并按清单校验、请求体 16 MB、`kind: "image"` Run 和生成图回传 | C-42a、C-42b | 2～3 天 |
 | **S-24** | Claude | 节点：读 Codex 额度（2 秒超时）并上报、实测单图消耗；S-21 的 Codex 部分提前，C-36 复用 | C-42b | 1 天 |
 | **D-36a** | DeepSeek | 图片处理管道（去全部元数据、转正、确定性输出、拒动图 / HEIC） | C-42a | 1.5～2 天 |
