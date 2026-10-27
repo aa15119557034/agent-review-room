@@ -183,10 +183,17 @@ export class MediaJobsService {
       if (next === undefined) return;
       const waited = Date.parse(this.deps.now()) - Date.parse(next.createdAt);
       if (waited > QUEUE_TIMEOUT_MS) {
-        await this.#fail(next, "gpu_queue_timeout", "显卡排队超过 2 分钟");
+        await this.#fail(next, "gpu_queue_timeout", "显卡排队超过 2 分钟").catch(ignoreConflict);
         continue;
       }
-      await this.#run(next);
+      // 一个任务出任何意外都不能让整条队列停下来：记成 failed(internal)，接着跑下一个
+      try {
+        await this.#run(next);
+      } catch (error) {
+        if (!(error instanceof MediaJobStateConflictError)) {
+          await this.#fail(next, "internal", error instanceof Error ? error.message : String(error)).catch(ignoreConflict);
+        }
+      }
     }
   }
 

@@ -246,6 +246,37 @@ describe("media jobs service (D-38a)", () => {
     }
   });
 
+  it("previews「画不了」when there is no ComfyUI configured", async () => {
+    const h = await makeHarness({ comfy: null });
+    try {
+      const preview = await h.service.preview(request());
+      assert.equal(preview.backend, null);
+      assert.equal(preview.comfyuiAvailable, false);
+      assert.equal(preview.codexManual, "blocked");
+    } finally {
+      h.db.close();
+    }
+  });
+  it("turns an unexpected error into failed(internal) and keeps the queue moving", async () => {
+    const comfy = fakeComfy();
+    const draw = comfy.client.draw;
+    (comfy.client as unknown as { draw: typeof draw }).draw = async (input) => {
+      if (input.prompt === "会炸") throw new TypeError("boom");
+      return draw(input);
+    };
+    const h = await makeHarness({ comfy });
+    try {
+      const boom = await h.service.start(request({ prompt: "会炸" }), source(h), false);
+      const next = await h.service.start(request({ prompt: "正常" }), source(h), false);
+      await until(() => getMediaJob(h.db, boom.id)?.state === "failed");
+      assert.equal(h.service.get(boom.id).failure?.reason, "internal");
+      // 队列不能因为前一个任务抛异常就停住
+      await until(() => getMediaJob(h.db, next.id)?.state === "succeeded");
+    } finally {
+      h.db.close();
+    }
+  });
+
   it("maps ComfyUI timeout and generation errors to the right failure reasons", async () => {
     const timeoutComfy = fakeComfy();
     timeoutComfy.failure = new ComfyUiError("timeout", "超时");
@@ -318,5 +349,7 @@ describe("media jobs service (D-38a)", () => {
     }
   });
 });
+
+
 
 
