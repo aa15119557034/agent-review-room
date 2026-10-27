@@ -1,0 +1,97 @@
+import assert from "node:assert/strict";
+import { existsSync, mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { after, describe, it } from "node:test";
+import Database from "better-sqlite3";
+import { currentVersion, LATEST_SCHEMA_VERSION, openDatabase } from "../src/index";
+import { SCHEMA_V1 } from "../src/schema";
+
+const dirs: string[] = [];
+after(() => {
+  for (const dir of dirs) {
+    try {
+      rmSync(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+    } catch {
+      // Windows 上句柄释放有延迟
+    }
+  }
+});
+
+const NOW = "2026-10-27T00:00:00.000Z";
+
+describe("migration chain (v1 → latest)", () => {
+  it("upgrades a v1 database in one go: data kept, every table present, backup written once", () => {
+    const dir = mkdtempSync(join(tmpdir(), "room-db-chain-"));
+    dirs.push(dir);
+    const file = join(dir, "legacy.db");
+
+    const legacy = new Database(file);
+    try {
+      legacy.exec(SCHEMA_V1);
+      legacy.pragma("user_version = 1");
+      legacy.prepare("INSERT INTO projects (id, name, created_at) VALUES ('proj_old', '旧项目', ?)").run(NOW);
+      legacy
+        .prepare(
+          "INSERT INTO prompt_snapshots (id, project_id, content, content_hash, nonce, contribution_ids, task_instruction, " +
+            "reviewer_agent, adapter_version, token_estimate, created_at) VALUES ('snap_old', 'proj_old', 'b', ?, '0123456789abcdef', " +
+            "'[\"c_1\"]', 't', 'deepseek', 'v1', 1, ?)",
+        )
+        .run("a".repeat(64), NOW);
+      legacy
+        .prepare(
+          "INSERT INTO approvals (id, project_id, snapshot_id, state, created_at) VALUES ('appr_old', 'proj_old', 'snap_old', 'APPROVED', ?)",
+        )
+        .run(NOW);
+      legacy
+        .prepare(
+          "INSERT INTO runs (id, project_id, approval_id, snapshot_id, adapter_id, state, created_at) " +
+            "VALUES ('run_old', 'proj_old', 'appr_old', 'snap_old', 'api', 'COMPLETED', ?)",
+        )
+        .run(NOW);
+    } finally {
+      legacy.close();
+    }
+
+    const db = openDatabase(file);
+    try {
+      assert.equal(currentVersion(db), LATEST_SCHEMA_VERSION);
+      assert.ok(LATEST_SCHEMA_VERSION >= 11);
+      const tables = (db.prepare("SELECT name FROM sqlite_master WHERE type = 'table'").all() as { name: string }[]).map(
+        (t) => t.name,
+      );
+      for (const table of [
+        "projects",
+        "runs",
+        "conversations",
+        "chat_messages",
+        "chat_reply_slots",
+        "chat_snapshots",
+        "images",
+        "files",
+        "chat_stickers",
+        "media_jobs",
+      ]) {
+        assert.ok(tables.includes(table), `missing table ${table}`);
+      }
+      assert.equal((db.prepare("SELECT count(*) AS n FROM projects").get() as { n: number }).n, 1);
+      assert.equal((db.prepare("SELECT count(*) AS n FROM runs").get() as { n: number }).n, 1);
+      assert.deepEqual(db.pragma("foreign_key_check"), []);
+      // 迁移前的状态还在（v1 的 run 仍然是 COMPLETED）
+      assert.equal((db.prepare("SELECT state FROM runs WHERE id = 'run_old'").get() as { state: string }).state, "COMPLETED");
+    } finally {
+      db.close();
+    }
+    assert.ok(existsSync(file + ".bak-v1"));
+
+    // 再开一次：已经是最新版本，不再迁移、也不覆盖备份
+    const again = openDatabase(file);
+    try {
+      assert.equal(currentVersion(again), LATEST_SCHEMA_VERSION);
+      assert.equal((again.prepare("SELECT count(*) AS n FROM projects").get() as { n: number }).n, 1);
+    } finally {
+      again.close();
+    }
+  });
+});
+
