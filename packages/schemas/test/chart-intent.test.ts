@@ -107,6 +107,17 @@ describe("media intent & immersive (C-42d)", () => {
     assert.equal(speakableText("改 `extractMediaIntent` 就行"), "改 extractMediaIntent 就行");
     assert.equal(speakableText("没闭合的\n```\nconst a = 1"), "没闭合的");
     assert.equal(speakableText("  \n "), "");
+    assert.equal(speakableText("你看[图 3：截图.png]这里 🇨🇳 1️⃣"), "你看这里 1");
+  });
+
+  it("speakableText stays linear on a 200k reply full of unmatched brackets", () => {
+    for (const junk of ["[", "![", "[表情"]) {
+      const text = junk.repeat(Math.floor(200_000 / junk.length));
+      const t0 = performance.now();
+      speakableText(text);
+      const ms = performance.now() - t0;
+      assert.ok(ms < 3000, `${junk}: ${Math.round(ms)} ms`);
+    }
   });
 
   it("immersive settings: off by default, caps can only go down", () => {

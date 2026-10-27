@@ -33,18 +33,19 @@ export const SPEAK_MAX_CHARS = 2000;
  * 朗读过滤（ADR-004 §4，借 SillyTavern 的朗读选项）：只留「说话的部分」。纯函数，同一段正文在哪里算结果都一样：
  * - 代码块（包括 ```room-chart 图表数据）整段去掉；没闭合的代码块从开头去到结尾
  * - 图片链接去掉；文字链接 [文字](地址) 只留文字；裸网址去掉
- * - 表情说明去掉：「[表情：…]」「[图片：…]」「[文件：…]」「[语音]」「[图表]」这类占位，和 emoji
+ * - 表情说明去掉：「[表情：…]」「[图片：…]」「[图 3：…]」「[文件：…]」「[语音]」「[图表]」这类占位，和 emoji（含国旗、keycap）
  * - 行内代码 `x` 留下里面的字；空白合并，首尾去掉
- * 字数按 String.length 算（和 CHAT_LIMITS 一致）
+ * 字数按 String.length 算（和 CHAT_LIMITS 一致）。
+ * 会在写回答的事务里跑、正文最长 20 万字：方括号里的量词都有上界，不成对的「[」不会让正则平方级回溯（汐评审实测）
  */
 export function speakableText(text: string): string {
   return text
     .replace(/```[\s\S]*?(```|$)/g, "\n")
-    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
-    .replace(/\[([^\]]*)\]\((?:https?:\/\/|mailto:)[^)]*\)/g, "$1")
+    .replace(/!\[[^\]\n]{0,200}\]\([^)\n]{0,2000}\)/g, "")
+    .replace(/\[([^\]\n]{0,300})\]\((?:https?:\/\/|mailto:)[^)\n]{0,2000}\)/g, "$1")
     .replace(/(?:https?:\/\/|www\.)[^\s)）」』，。]+/g, "")
-    .replace(/\[(?:表情|图片|文件|语音|图表|我画的图)[^\]\n]*\]/g, "")
-    .replace(/[\p{Extended_Pictographic}\u{FE0F}\u{200D}\u{1F3FB}-\u{1F3FF}]/gu, "")
+    .replace(/\[(?:表情|图片|文件|语音|图表|我画的图|图 ?\d+[：:])[^\]\n]{0,200}\]/g, "")
+    .replace(/[\p{Extended_Pictographic}\p{Regional_Indicator}\u{FE0F}\u{200D}\u{20E3}\u{1F3FB}-\u{1F3FF}]/gu, "")
     .replace(/`([^`\n]*)`/g, "$1")
     .replace(/[ \t]+/g, " ")
     .replace(/\s*\n\s*/g, "\n")
