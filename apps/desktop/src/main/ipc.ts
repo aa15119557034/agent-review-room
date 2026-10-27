@@ -15,6 +15,7 @@ import {
 } from "@room/schemas";
 import { ChatError, type ChatService } from "./chat";
 import { DiscussionError, type DiscussionService } from "./discussion";
+import type { MediaJobsService } from "./media-jobs";
 import type { MediaService } from "./media";
 import type { NodeService } from "./nodes";
 import type { RunOrchestrator } from "./orchestrator";
@@ -37,6 +38,8 @@ export interface IpcDeps {
   readonly chat?: ChatService;
   /** D-34a：聊天文件和表情库（选文件对话框、按内容去重） */
   readonly media?: MediaService;
+  /** D-38a：画图任务（本机 ComfyUI + 全局队列） */
+  readonly jobs?: MediaJobsService;
   readonly nodes: NodeService;
   readonly appVersion: string;
   readonly recoveredRuns: number;
@@ -94,6 +97,11 @@ export function createDispatcher(deps: IpcDeps) {
   const chatService = (): ChatService => {
     if (deps.chat === undefined) throw new ControlFailure("internal", "聊天服务没有启动");
     return deps.chat;
+  };
+
+  const jobsService = (): MediaJobsService => {
+    if (deps.jobs === undefined) throw new ControlFailure("internal", "画图服务没有启动");
+    return deps.jobs;
   };
 
   const mediaService = (): MediaService => {
@@ -334,6 +342,14 @@ export function createDispatcher(deps: IpcDeps) {
       case "chat.sticker.remove":
         return mediaService().removeSticker(command.stickerId);
 
+      // D-38a：画图任务
+      case "draw.start":
+        return jobsService().start(command.request, command.source, command.confirmOverThreshold === true);
+      case "media.cancel":
+        return jobsService().cancel(command.jobId);
+      case "media.stop":
+        return jobsService().stop(command.scope);
+
       // 还没上线：明确拒绝，不要返回 undefined 让出参校验兜成 internal
       case "chat.voice.import":
         throw new ChatError("validation_failed", "语音还没上线（D-34b）");
@@ -459,6 +475,14 @@ export function createDispatcher(deps: IpcDeps) {
         return mediaService().listStickers();
       case "chat.voice.get":
         throw new ChatError("not_found", "录音还没上线（D-34）");
+
+      // D-38a：画图任务
+      case "draw.preview":
+        return jobsService().preview(query.request);
+      case "media.get":
+        return jobsService().get(query.jobId);
+      case "media.list":
+        return jobsService().list(query.scope, query.messageIds);
     }
   }
 
@@ -466,4 +490,5 @@ export function createDispatcher(deps: IpcDeps) {
 }
 
 export { APPROVAL_TRANSITIONS };
+
 

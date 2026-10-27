@@ -23,8 +23,9 @@ import {
   type ImagePurpose,
   type ImageRef,
 } from "@room/schemas";
+import sharp from "sharp";
 import { sniffFile } from "./file-sniff";
-import { ImageRejectedError, processImage } from "./image";
+import { ImageRejectedError, processImage, sniffImage } from "./image";
 
 /**
  * 图片本体 + 引用记录（D-36b 第一段，契约 C-32 / C-42a）。
@@ -64,6 +65,44 @@ export class MediaStore {
       bytes: processed.bytes.length,
       width: processed.width,
       height: processed.height,
+      createdAt: now,
+    };
+    insertImageRef(this.db, record);
+    return record;
+  }
+
+  /**
+   * 存一张「画出来的图」：不做管道（原图就是最终结果），只按文件头认类型、按上限截、按 sha256 去重。
+   * 用途固定 generated；字节照样存 userData/images/<sha256>。
+   */
+  async addGeneratedImage(input: Buffer, now: string = new Date().toISOString()): Promise<ImageRefRecord> {
+    if (input.length === 0) throw new ImageRejectedError("unsupported_type", "画图模块返回了空文件");
+    if (input.length > IMAGE_MAX_BYTES.generated) {
+      throw new ImageRejectedError("input_too_big", "画出来的图太大了（上限 10 MB）");
+    }
+    const sniffed = sniffImage(input);
+    if (sniffed === null || sniffed.kind === "gif" || sniffed.kind === "heic") {
+      throw new ImageRejectedError("unsupported_type", "画图模块返回的不是 png / jpeg / webp");
+    }
+    if (sniffed.animated) throw new ImageRejectedError("animated", "画图模块返回了动图");
+
+    const sha256 = createHash("sha256").update(input).digest("hex");
+    const existing = findImageRefBySha(this.db, "generated", sha256);
+    if (existing !== null) return existing;
+
+    const meta = await sharp(input, { limitInputPixels: false }).metadata();
+    if (meta.width === undefined || meta.height === undefined) {
+      throw new ImageRejectedError("decode_failed", "画出来的图读不出尺寸");
+    }
+    this.writeBytes(sha256, input);
+    const record: ImageRefRecord = {
+      ref: ImageRefSchema.parse(`img_${ulid()}`),
+      purpose: "generated",
+      sha256,
+      mime: sniffed.kind === "png" ? "image/png" : sniffed.kind === "jpeg" ? "image/jpeg" : "image/webp",
+      bytes: input.length,
+      width: meta.width,
+      height: meta.height,
       createdAt: now,
     };
     insertImageRef(this.db, record);
@@ -214,3 +253,5 @@ function displayNameOf(name: string): string {
   const safe = trimmed.length === 0 ? "未命名" : trimmed;
   return safe.length > 255 ? safe.slice(0, 255) : safe;
 }
+
+
