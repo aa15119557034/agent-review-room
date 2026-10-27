@@ -6,7 +6,8 @@ import {
   DrawRequest,
   MEDIA_JOB_TRANSITIONS,
   MEDIA_LIST_MESSAGE_IDS_MAX,
-  MEDIA_LIST_PER_MESSAGE_MAX,
+  MEDIA_LIST_PER_MESSAGE_KIND_MAX,
+  MediaJobKind,
   MediaJob,
   MediaJobState,
   NodeHealth,
@@ -245,7 +246,7 @@ describe("media.list by message (C-42f)", () => {
   });
 
   it("every asked message fits: ids × per-message cap ≤ the 200 response cap", () => {
-    assert.ok(MEDIA_LIST_MESSAGE_IDS_MAX * MEDIA_LIST_PER_MESSAGE_MAX <= 200);
+    assert.ok(MEDIA_LIST_MESSAGE_IDS_MAX * MediaJobKind.options.length * MEDIA_LIST_PER_MESSAGE_KIND_MAX <= 200);
     assert.ok(QUERIES["media.list"].response.safeParse(Array(200).fill(job)).success);
     assert.equal(QUERIES["media.list"].response.safeParse(Array(201).fill(job)).success, false);
   });

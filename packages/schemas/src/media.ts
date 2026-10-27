@@ -59,11 +59,12 @@ export const MediaScope = z.discriminatedUnion("kind", [
 export type MediaScope = z.infer<typeof MediaScope>;
 
 /**
- * C-42f：media.list 按消息查时，一次最多几条消息、每条消息最多返回几条任务。
- * 相乘不超过返回上限 200，保证每条消息都查得到（不被别的消息挤掉）
+ * C-42f：media.list 按消息查时，一次最多几条消息、每条消息每一类（画图 / 语音）最多返回几条任务。
+ * 消息数 × 类数 × 每类条数 不超过返回上限 200：每条消息都查得到（不被别的消息挤掉），
+ * 一类也挤不掉另一类（反复播放攒下的语音任务不会把画图任务挤出去，汐 #116）
  */
 export const MEDIA_LIST_MESSAGE_IDS_MAX = 20;
-export const MEDIA_LIST_PER_MESSAGE_MAX = 10;
+export const MEDIA_LIST_PER_MESSAGE_KIND_MAX = 5;
 
 // ================================================================ 画图
 

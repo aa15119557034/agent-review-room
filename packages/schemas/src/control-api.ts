@@ -1023,9 +1023,10 @@ export const QUERIES = {
    * 一个范围里的媒体任务，按创建时间倒序，最多 200 条。
    * C-42f：messageIds（只用于 chat 范围）= 只要这些消息的任务（source.messageId 在其中）。界面按当前加载的那页消息去查，
    * 会话累计超过 200 条任务后旧消息的图仍然找得回来，请求卡也不会因为查不到任务而重复出现。
-   * - 每条消息只返回它最新的 MEDIA_LIST_PER_MESSAGE_MAX 条任务（按创建时间倒序）；messageIds 最多 MEDIA_LIST_MESSAGE_IDS_MAX 个，
-   *   两者相乘 = 200，所以一次查询**每条消息都查得到**，不会有消息被别的消息的任务挤掉（林离 #116）。
-   *   客户端按 20 条消息一批查、结果合并；某条消息的任务超过 10 条时，只看得到最新的 10 条
+   * - 每条消息每一类（draw / speech）只返回最新的 MEDIA_LIST_PER_MESSAGE_KIND_MAX 条，整体仍按创建时间倒序；
+   *   messageIds 最多 MEDIA_LIST_MESSAGE_IDS_MAX 个。20 × 2 类 × 5 = 200，所以一次查询**每条消息、每一类都查得到**，
+   *   不会被别的消息或另一类的任务挤掉（林离、汐 #116）。
+   *   客户端按 20 条消息一批查、结果合并；某条消息某一类超过 5 条时只看得到最新的 5 条
    *   （界面判「在画 / 画好了」用最新的就够；更早的只在 media.get 里）
    * - 和 scope 取交集：不属于这个会话的 id 查不到任务，不报错
    * - topic 范围带 messageIds → validation_failed（main 校验；请求体在判别联合里，schema 层加不了跨字段校验）
