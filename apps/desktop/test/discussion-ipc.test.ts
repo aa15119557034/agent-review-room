@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
 import type { AgentAdapter } from "@room/core";
-import { openDatabase, type RunRow, ulid, WriteQueue } from "@room/db";
+import { insertChatMessage, openDatabase, retractChatMessage, type RunRow, ulid, WriteQueue } from "@room/db";
 import { ControlEvent, DEFAULT_AGENT_MODEL_SETTINGS, type AgentEvent, type BatchModel, type ModelOption, type ProfileModels } from "@room/schemas";
 import { DiscussionService, type NodeProbeResult } from "../src/main/discussion";
 import { createDispatcher } from "../src/main/ipc";
@@ -1621,30 +1621,51 @@ describe("C-40 模型选择", () => {
 });
 
 describe("C-34 聊天材料进讨论室（D-31c）", () => {
+  const CONVERSATION = "conv_" + "0".repeat(26);
+
+  function seedConversation(h: Awaited<ReturnType<typeof makeHarness>>): string {
+    const now = new Date().toISOString();
+    h.db
+      .prepare(
+        "INSERT INTO conversations (id, kind, direct_agent, title, pinned, muted, last_read_message_id, last_activity_at, created_at) " +
+          "VALUES (?, 'direct', 'deepseek', '方案讨论', 0, 0, NULL, ?, ?)",
+      )
+      .run(CONVERSATION, now, now);
+    return now;
+  }
+
+  function addMessage(h: Awaited<ReturnType<typeof makeHarness>>, id: string, text: string, createdAt: string): void {
+    insertChatMessage(h.db, {
+      message: {
+        id,
+        conversationId: CONVERSATION,
+        createdAt,
+        sender: "user",
+        content: { kind: "text", text, attachments: [] },
+        mentions: { kind: "none" },
+        quoteMessageId: null,
+        replacesMessageId: null,
+        state: "sent",
+        retractedAt: null,
+      },
+    });
+  }
+
+  function addMaterial(h: Awaited<ReturnType<typeof makeHarness>>, ids: string[], content: string, createdAt: string): void {
+    h.db
+      .prepare(
+        "INSERT INTO messages (id, project_id, kind, conversation_id, chat_message_ids, content, created_at) " +
+          "VALUES (?, ?, 'chat_material', ?, ?, ?, ?)",
+      )
+      .run("msg_" + "0".repeat(26), h.projectId, CONVERSATION, JSON.stringify(ids), content, createdAt);
+  }
+
   it("round.draft 把 chat_material 带进每一位的 Snapshot 资料区", async () => {
     const h = await makeHarness();
     try {
-      const now = new Date().toISOString();
-      const conversationId = "conv_" + "0".repeat(26);
-      h.db
-        .prepare(
-          "INSERT INTO conversations (id, kind, direct_agent, title, pinned, muted, last_read_message_id, last_activity_at, created_at) " +
-            "VALUES (?, 'direct', 'deepseek', '方案讨论', 0, 0, NULL, ?, ?)",
-        )
-        .run(conversationId, now, now);
-      h.db
-        .prepare(
-          "INSERT INTO messages (id, project_id, kind, conversation_id, chat_message_ids, content, created_at) " +
-            "VALUES (?, ?, 'chat_material', ?, ?, ?, ?)",
-        )
-        .run(
-          "msg_" + "0".repeat(26),
-          h.projectId,
-          conversationId,
-          JSON.stringify(["cmsg_" + "0".repeat(26)]),
-          "转来的材料：方案有三个风险",
-          now,
-        );
+      const now = seedConversation(h);
+      addMessage(h, "cmsg_" + "0".repeat(26), "转来的材料：方案有三个风险", now);
+      addMaterial(h, ["cmsg_" + "0".repeat(26)], "转来的材料：方案有三个风险", now);
 
       const result = await draft(h, ["deepseek"]);
       assert.equal(result.ok, true, JSON.stringify(result));
@@ -1655,6 +1676,67 @@ describe("C-34 聊天材料进讨论室（D-31c）", () => {
         assert.ok(snapshot.content.includes("转来的材料：方案有三个风险"), "材料正文进了 Prompt");
         assert.ok(snapshot.content.includes("聊天记录（方案讨论）"), "材料名带来源会话");
       }
+    } finally {
+      await close(h);
+    }
+  });
+
+  it("转议题后原消息被撤回：新 Prompt 不再带它，其他消息照常", async () => {
+    const h = await makeHarness();
+    try {
+      const now = seedConversation(h);
+      addMessage(h, "cmsg_" + "1".repeat(26), "第一句会被撤回", now);
+      addMessage(h, "cmsg_" + "2".repeat(26), "第二句要留着", now);
+      addMaterial(
+        h,
+        ["cmsg_" + "1".repeat(26), "cmsg_" + "2".repeat(26)],
+        "旧文本：第一句会被撤回 / 第二句要留着",
+        now,
+      );
+      // 转议题之后才撤回（ADR-003：撤回之后新建的 Prompt / Run 都不再带它）
+      retractChatMessage(h.db, "cmsg_" + "1".repeat(26), new Date(Date.parse(now) + 60_000).toISOString());
+
+      const result = await draft(h, ["deepseek"]);
+      assert.equal(result.ok, true, JSON.stringify(result));
+      const snapshot = h.db.prepare("SELECT content FROM prompt_snapshots").get() as { content: string };
+      assert.ok(!snapshot.content.includes("第一句会被撤回"), "撤回的原文不能进新 Prompt");
+      assert.ok(snapshot.content.includes("第二句要留着"), "没撤回的照常");
+      assert.ok(snapshot.content.includes("聊天记录（方案讨论）"));
+    } finally {
+      await close(h);
+    }
+  });
+
+  it("选中的消息全撤回后，这份材料整个不进 Prompt", async () => {
+    const h = await makeHarness();
+    try {
+      const now = seedConversation(h);
+      addMessage(h, "cmsg_" + "3".repeat(26), "整条都要撤回", now);
+      addMaterial(h, ["cmsg_" + "3".repeat(26)], "转来的材料：整条都要撤回", now);
+      retractChatMessage(h.db, "cmsg_" + "3".repeat(26), new Date(Date.parse(now) + 60_000).toISOString());
+
+      const result = await draft(h, ["deepseek"]);
+      assert.equal(result.ok, true, JSON.stringify(result));
+      const snapshot = h.db.prepare("SELECT content FROM prompt_snapshots").get() as { content: string };
+      assert.ok(!snapshot.content.includes("聊天记录（方案讨论）"), "没有剩余内容就不带这份材料");
+      assert.ok(!snapshot.content.includes("整条都要撤回"));
+    } finally {
+      await close(h);
+    }
+  });
+
+  it("最终 Prompt 超过节点上限时拒绝起草，不发给节点", async () => {
+    const h = await makeHarness();
+    try {
+      const now = seedConversation(h);
+      // 来源消息读不到 → 用材料里存的文本（这里的意图是让最终 Prompt 贴近 2,000,000 上限）
+      addMaterial(h, ["cmsg_" + "9".repeat(26)], "长".repeat(2_000_000), now);
+
+      const result = await draft(h, ["deepseek"]);
+      assert.equal(result.ok, false);
+      assert.equal(failure(result).error, "validation_failed");
+      assert.equal((h.db.prepare("SELECT count(*) AS n FROM rounds").get() as { n: number }).n, 0);
+      assert.equal((h.db.prepare("SELECT count(*) AS n FROM prompt_snapshots").get() as { n: number }).n, 0);
     } finally {
       await close(h);
     }

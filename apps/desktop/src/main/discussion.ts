@@ -8,6 +8,7 @@ import {
 import {
   approveBatch,
   BatchApproveError,
+  getChatMessage,
   confirmPlan as confirmPlanTx,
   createBatchDraft,
   createPlan as createPlanTx,
@@ -44,7 +45,10 @@ import type {
   Round,
   RunOccasion,
   Turn,
+  ChatMessage,
 } from "@room/schemas";
+import { isExcludedFromContext } from "@room/schemas";
+import { renderChatMaterial } from "./chat-material";
 import type { DiscussionSettlement, RunOrchestrator } from "./orchestrator";
 import type { Repository } from "./repository";
 import type { SettingsStore } from "./settings";
@@ -66,6 +70,24 @@ export class DiscussionError extends Error {
     super(message);
     this.name = "DiscussionError";
     this.code = code;
+  }
+}
+
+/**
+ * 节点对 StartRunRequest.snapshot.content 的上限（remote-protocol.ts）。
+ * 材料接近上限时，边界标签、本轮任务和本轮历史会把最终 Prompt 顶过这个数：在起草时明确报错，
+ * 而不是把请求发给节点再被拒。
+ */
+const MAX_PROMPT_CHARS = 2_000_000;
+
+function assertPromptFits(prompts: readonly { content: string }[]): void {
+  for (const prompt of prompts) {
+    if (prompt.content.length > MAX_PROMPT_CHARS) {
+      throw new DiscussionError(
+        "validation_failed",
+        "这一轮的 Prompt 超过节点上限（2,000,000 字），请把材料、任务或补充改短",
+      );
+    }
   }
 }
 
@@ -170,6 +192,7 @@ export class DiscussionService {
       },
       agents.map((profile) => ({ profile, onBehalfOf: null, extraMaterials: [] })),
     );
+    assertPromptFits(prompts);
 
     let created: Awaited<ReturnType<typeof createRoundDraft>>;
     try {
@@ -298,6 +321,7 @@ export class DiscussionService {
       { round, history, materials: this.#materialsFor(round.projectId), plan, nonce: createNonce() },
       { profile: summarizer, onBehalfOf: null, extraMaterials: [] },
     );
+    assertPromptFits([prompt]);
 
     let created: Awaited<ReturnType<typeof createSummaryDraft>>;
     try {
@@ -451,6 +475,7 @@ export class DiscussionService {
       },
       agents.map((profile) => ({ profile, onBehalfOf: null, extraMaterials: [] })),
     );
+    assertPromptFits(prompts);
 
     const supersede: { oldTurnId: string; agent: string }[] = [];
     let interrupted: { turnId: string; runId: string | null }[] = [];
@@ -522,6 +547,7 @@ export class DiscussionService {
       { round, history: this.#historyWithCurrent(round), materials: this.#materialsFor(round.projectId), plan, nonce: createNonce() },
       [{ profile: agent, onBehalfOf: null, extraMaterials: [] }],
     );
+    assertPromptFits(prompts);
 
     let created: Awaited<ReturnType<typeof createBatchDraft>>;
     try {
@@ -607,6 +633,7 @@ export class DiscussionService {
       },
       agents.map((profile) => ({ profile, onBehalfOf: null, extraMaterials: [] })),
     );
+    assertPromptFits(prompts);
 
     let created: Awaited<ReturnType<typeof redraftRound>>;
     try {
@@ -948,19 +975,50 @@ export class DiscussionService {
   /**
    * C-34 / D-31c：这个议题从聊天转来的初始材料。
    * ADR-004：议题材料**每轮都带**（不只第 1 轮），和附件一样进不可信边界。
+   *
+   * 材料里存的是转议题那一刻的文本，但来源消息之后可能被撤回（ADR-003：撤回之后新建的 Prompt
+   * 不再带它）。所以每次拼 Prompt 都按 chat_message_ids 重读来源消息，把已排除的挑掉再重新整理；
+   * 全被撤回了就不带这份材料。旧 Snapshot 不变（它存的是当时的文本）。
    */
   #materialsFor(projectId: string): DiscussionMaterial[] {
-    const rows = this.#deps.db
+    const { db } = this.#deps;
+    const rows = db
       .prepare(
-        "SELECT m.content AS content, m.conversation_id AS conversationId, c.title AS title " +
+        "SELECT m.chat_message_ids AS messageIds, m.content AS content, m.conversation_id AS conversationId, c.title AS title " +
           "FROM messages m LEFT JOIN conversations c ON c.id = m.conversation_id " +
           "WHERE m.project_id = ? AND m.kind = 'chat_material' ORDER BY m.created_at, m.id",
       )
-      .all(projectId) as { content: string; conversationId: string; title: string | null }[];
-    return rows.map((row) => ({
-      name: "聊天记录（" + (row.title ?? row.conversationId) + "）",
-      content: row.content,
-    }));
+      .all(projectId) as { messageIds: string; content: string; conversationId: string; title: string | null }[];
+
+    const agents = new Map(this.#deps.repo.listAgents().map((agent) => [agent.id, agent]));
+    const displayNameOf = (agentId: string) => agents.get(agentId)?.displayName ?? agentId;
+    const parentOf = (messageId: string) => {
+      const message = getChatMessage(db, messageId);
+      return message !== null && message.sender === "user" ? message : undefined;
+    };
+
+    const materials: DiscussionMaterial[] = [];
+    for (const row of rows) {
+      const ids = JSON.parse(row.messageIds) as string[];
+      const found = ids
+        .map((id) => getChatMessage(db, id))
+        .filter((message): message is ChatMessage => message !== null);
+      // 来源消息一条都读不到（理论上不会发生；聊天消息不删）就退回转议题时存的文本，别把材料整个丢掉
+      if (found.length === 0) {
+        materials.push({ name: "聊天记录（" + (row.title ?? row.conversationId) + "）", content: row.content });
+        continue;
+      }
+      const kept = found.filter((message) => !isExcludedFromContext(message, parentOf));
+      if (kept.length === 0) continue;
+      const ordered = kept.sort((left, right) =>
+        left.createdAt === right.createdAt ? (left.id < right.id ? -1 : 1) : left.createdAt < right.createdAt ? -1 : 1,
+      );
+      materials.push({
+        name: "聊天记录（" + (row.title ?? row.conversationId) + "）",
+        content: renderChatMaterial(ordered, displayNameOf),
+      });
+    }
+    return materials;
   }
 
   #loadPlan(projectId: string, planVersionId: string): PlanVersion {

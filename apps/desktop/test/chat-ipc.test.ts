@@ -22,6 +22,7 @@ import {
 } from "@room/schemas";
 import type { AgentAdapter } from "@room/core";
 import { ChatService, type ChatRunTarget } from "../src/main/chat";
+import { CHAT_MATERIAL_MAX_CHARS, CHAT_MATERIAL_PROMPT_HEADROOM } from "../src/main/chat-material";
 import { Repository } from "../src/main/repository";
 import { SettingsStore, type SafeStorageLike } from "../src/main/settings";
 
@@ -720,6 +721,48 @@ describe("chat service (D-31b)", () => {
     }
   });
 
+  it("leaves headroom between the material cap and the node prompt limit", async () => {
+    const h = await makeHarness();
+    try {
+      const ids: string[] = [];
+      for (let index = 0; index < 99; index += 1) {
+        const id = "cmsg_" + String(index).padStart(26, "0");
+        ids.push(id);
+        insertChatMessage(h.db, {
+          message: {
+            id,
+            conversationId: h.conversationId,
+            createdAt: NOW,
+            sender: "user",
+            content: { kind: "text", text: "长".repeat(20_000), attachments: [] },
+            mentions: { kind: "none" },
+            quoteMessageId: null,
+            replacesMessageId: null,
+            state: "sent",
+            retractedAt: null,
+          },
+        });
+      }
+
+      // 99 条 × 2 万字 = 198 万，超过「2,000,000 − Prompt 余量」
+      await assert.rejects(
+        h.chat.toTopic({ type: "chat.toTopic", conversationId: h.conversationId, messageIds: ids, name: "太大" } as never),
+        (error: unknown) => (error as { code?: string }).code === "validation_failed",
+      );
+      // 98 条可以，材料本身离节点上限还有余量
+      const ok = await h.chat.toTopic({
+        type: "chat.toTopic",
+        conversationId: h.conversationId,
+        messageIds: ids.slice(0, 98),
+        name: "刚好",
+      } as never);
+      assert.ok(ok.material.content.length > 1_900_000);
+      assert.ok(ok.material.content.length <= CHAT_MATERIAL_MAX_CHARS - CHAT_MATERIAL_PROMPT_HEADROOM);
+    } finally {
+      h.db.close();
+    }
+  });
+
   it("refuses to build a material larger than the message limit", async () => {
     const h = await makeHarness();
     try {
@@ -747,6 +790,33 @@ describe("chat service (D-31b)", () => {
         (error: unknown) => (error as { code?: string }).code === "validation_failed",
       );
       assert.equal((h.db.prepare("SELECT count(*) AS n FROM projects").get() as { n: number }).n, 0);
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("refuses a second concurrent re-edit of the same message", async () => {
+    const h = await makeHarness();
+    try {
+      const sent = await h.chat.send(send(h.conversationId, userMessageId(160), "原文"));
+      await settle(h.chat);
+      await h.chat.retract({ type: "chat.retract", messageId: sent.message.id } as never);
+
+      const results = await Promise.allSettled([
+        h.chat.send({ ...send(h.conversationId, userMessageId(161), "改一"), replacesMessageId: sent.message.id }),
+        h.chat.send({ ...send(h.conversationId, userMessageId(162), "改二"), replacesMessageId: sent.message.id }),
+      ]);
+      const fulfilled = results.filter((result) => result.status === "fulfilled");
+      const rejected = results.filter((result) => result.status === "rejected");
+      assert.equal(fulfilled.length, 1, JSON.stringify(results));
+      assert.equal(rejected.length, 1);
+      assert.equal((rejected[0] as PromiseRejectedResult).reason.code, "invalid_state");
+      assert.equal(
+        (h.db.prepare("SELECT count(*) AS n FROM chat_messages WHERE replaces_message_id = ?").get(sent.message.id) as { n: number }).n,
+        1,
+        "只有一个新消息指向原消息",
+      );
+      await settle(h.chat);
     } finally {
       h.db.close();
     }

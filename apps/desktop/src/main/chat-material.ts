@@ -4,6 +4,14 @@ import type { ChatMessage } from "@room/schemas";
 export const CHAT_MATERIAL_MAX_CHARS = 2_000_000;
 
 /**
+ * 转议题时给最终 Prompt 留的余量：边界标签、本轮任务、本轮历史都加在材料外面，
+ * 节点对 StartRunRequest.snapshot.content 的上限也是 2,000,000（remote-protocol.ts）。
+ * 材料超过「上限 − 余量」就不让建议题，免得议题建出来却永远发不出去；
+ * 超出余量的部分（比如任务特别长）由 discussion.ts 的 assertPromptFits 在起草时兜住。
+ */
+export const CHAT_MATERIAL_PROMPT_HEADROOM = 32_768;
+
+/**
  * 把选中的聊天消息整理成议题的初始材料（纯文本）。
  *
  * - 谁、什么时候、说了什么，按时间顺序
