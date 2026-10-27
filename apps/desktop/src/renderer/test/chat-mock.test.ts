@@ -244,3 +244,104 @@ describe("C-35 acceptance through the UI actions (mock)", () => {
     assert.equal(store.get().chat.drafts[cid]?.messageId, null);
   });
 });
+
+describe("out-of-order responses (林离 #106)", () => {
+  /** 包一层 mock：点名的命令 / 查询先算好结果，等 release() 才交出去（模拟慢返回） */
+  function delayed(opts: MockOptions = {}) {
+    const bridge = createMockBridge({ tickMs: 1, reviewerConfigured: true, ...opts });
+    const held = new Set<string>();
+    const waiting: (() => void)[] = [];
+    const hold = <T>(type: string, p: Promise<T>): Promise<T> => {
+      if (!held.has(type)) return p;
+      // 闸门在调用时就建好：结果先算出来（后端已经取到那一页），release 之后才交给调用方
+      const gate = new Promise<void>((res) => waiting.push(res));
+      return Promise.all([p, gate]).then(([r]) => r);
+    };
+    const wrapped = {
+      command: (req: { type: string }) => hold(req.type, bridge.command(req as never)),
+      query: (req: { type: string }) => hold(req.type, bridge.query(req as never)),
+      onEvent: bridge.onEvent,
+    } as unknown as typeof bridge;
+    const store = createStore(initialState);
+    const actions = createActions(store, createClient(wrapped));
+    return {
+      bridge, store, actions,
+      hold: (type: string) => held.add(type),
+      unhold: (type: string) => held.delete(type),
+      release: async () => {
+        await sleep(10);
+        waiting.splice(0).forEach((f) => f());
+        await sleep(10);
+      },
+    };
+  }
+
+  it("a retract / retry / stop that returns after switching conversations is not written into the new one", async () => {
+    const t = delayed({ tickMs: 60, chat: { failOnce: ["claude"] } });
+    await t.actions.start();
+    await t.actions.chat.createConversation({ kind: "direct", agent: "deepseek" }, null);
+    const a = t.store.get().chat.currentId!;
+    t.actions.chat.setDraftText("A 里的话");
+    await t.actions.chat.send();
+    const runningA = t.store.get().chat.slots[0]!;
+    const sentA = t.store.get().chat.messages[0]!;
+
+    await t.actions.chat.createConversation({ kind: "direct", agent: "claude" }, null);
+    t.actions.chat.setDraftText("B 里的话");
+    await t.actions.chat.send();
+    await until(() => t.store.get().chat.slots[0]?.outcome === "failed");
+    const failedB = t.store.get().chat.slots[0]!;
+
+    // 在 A 里点撤回 / 停，返回前切到 B
+    await t.actions.chat.openConversation(a);
+    t.hold("chat.retract");
+    t.hold("chat.cancelReply");
+    // 先停（回答位还在 running），再撤回
+    const pendingCancel = t.actions.chat.cancelReply(runningA.id);
+    await sleep(5);
+    const pendingRetract = t.actions.chat.retract(sentA.id);
+    t.unhold("chat.retract");
+    t.unhold("chat.cancelReply");
+    await t.actions.chat.openConversation(failedB.conversationId);
+    await t.release();
+    await Promise.all([pendingRetract, pendingCancel]);
+
+    const b = t.store.get().chat;
+    assert.equal(b.currentId, failedB.conversationId);
+    assert.ok(b.messages.every((m) => m.conversationId === failedB.conversationId));
+    assert.ok(b.slots.every((s) => s.conversationId === failedB.conversationId));
+
+    // 在 B 里点重试，返回前切到 A
+    t.hold("chat.retry");
+    const pendingRetry = t.actions.chat.retry(failedB.id);
+    t.unhold("chat.retry");
+    await t.actions.chat.openConversation(a);
+    await t.release();
+    await pendingRetry;
+    const aState = t.store.get().chat;
+    assert.ok(aState.slots.every((s) => s.conversationId === a));
+    assert.equal(t.store.get().notice, null);
+  });
+
+  it("events that arrive while the conversation is loading are kept when the (older) page lands", async () => {
+    const t = delayed({ tickMs: 5 });
+    await t.actions.start();
+    await t.actions.chat.createConversation({ kind: "direct", agent: "deepseek" }, null);
+    const cid = t.store.get().chat.currentId!;
+    t.actions.chat.closeConversation();
+
+    // 打开会话：查询先拿到空页，但晚点返回
+    t.hold("chat.messages.list");
+    const opening = t.actions.chat.openConversation(cid);
+    t.unhold("chat.messages.list");
+    // 返回前，这个会话里发生了一整轮问答（事件先到）
+    await t.bridge.command(sendReq(cid, "事件先到") as never);
+    await until(() => t.store.get().chat.slots.some((s) => s.outcome === "answered") && t.store.get().chat.messages.length === 2);
+    await t.release();
+    await opening;
+
+    const c = t.store.get().chat;
+    assert.equal(c.messages.length, 2, "旧的空页没有把事件带来的消息清掉");
+    assert.deepEqual(c.slots.map((s) => s.outcome), ["answered"]);
+  });
+});

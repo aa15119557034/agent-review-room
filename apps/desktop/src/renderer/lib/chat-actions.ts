@@ -74,12 +74,12 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
     try {
       const page = await client.query({ type: "chat.messages.list", conversationId, limit: PAGE });
       if (token !== openToken) return;
-      setChat((c) => ({
-        ...c,
-        messages: mergeMessages([], page.messages),
-        slots: mergeSlots([], page.slots),
-        nextCursor: page.nextCursor,
-      }));
+      // 等查询期间推来的事件已经合进来了，查询结果可能比它们旧：合并，不覆盖（规则见 mergeMessages / slotIsNewer）
+      setChat((c) =>
+        c.currentId !== conversationId
+          ? c
+          : { ...c, messages: mergeMessages(c.messages, page.messages), slots: mergeSlots(c.slots, page.slots), nextCursor: page.nextCursor },
+      );
       // 回答到一半关掉再打开：之前的流式文字补不回来（main 的聊天事件只推不存，契约也没有回放查询），
       // 只显示「正在想…」，之后到的照常显示，答完以 chat.message.created 的正文为准
       await markRead();
@@ -213,7 +213,10 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
     async retract(messageId: string) {
       try {
         const r = await client.command({ type: "chat.retract", messageId });
-        setChat((c) => ({ ...c, messages: mergeMessages(c.messages, [r.message]), slots: mergeSlots(c.slots, r.slots) }));
+        // 等返回期间可能已经切到别的会话：只写回它自己的会话
+        setChat((c) =>
+          c.currentId !== r.message.conversationId ? c : { ...c, messages: mergeMessages(c.messages, [r.message]), slots: mergeSlots(c.slots, r.slots) },
+        );
         refreshListSoon();
       } catch (err) {
         fail(err);
@@ -223,7 +226,7 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
     async retry(slotId: string) {
       try {
         const r = await client.command({ type: "chat.retry", slotId });
-        setChat((c) => ({ ...c, slots: mergeSlots(c.slots, [r.slot]) }));
+        setChat((c) => (c.currentId !== r.slot.conversationId ? c : { ...c, slots: mergeSlots(c.slots, [r.slot]) }));
       } catch (err) {
         fail(err);
       }
@@ -232,7 +235,7 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
     async cancelReply(slotId: string) {
       try {
         const slot = await client.command({ type: "chat.cancelReply", slotId });
-        setChat((c) => ({ ...c, slots: mergeSlots(c.slots, [slot]) }));
+        setChat((c) => (c.currentId !== slot.conversationId ? c : { ...c, slots: mergeSlots(c.slots, [slot]) }));
       } catch (err) {
         fail(err);
       }
