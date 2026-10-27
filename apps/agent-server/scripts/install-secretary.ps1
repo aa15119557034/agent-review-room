@@ -143,6 +143,9 @@ if (-not (Test-Path -LiteralPath $npmCmd)) { Fail "找不到 $npmCmd（Node 的�
 $cliPackage = @{ claude = "@anthropic-ai/claude-code"; codex = "@openai/codex" }[$Agent]
 $cliDir = Join-Path $nodeMine "cli"
 $cliCmd = Join-Path $cliDir "node_modules\.bin\$Agent.cmd"
+# Codex 的登录信息固定放在 node\codex\codex-home（CODEX_HOME），不放在账号的用户目录里：
+# 用户目录在计划任务 / 换密码 / 临时配置文件时不一定是同一个，实测登录后 auth.json 会不见（#102 第 12 轮）
+$codexHome = Join-Path $nodeMine "codex-home"
 foreach ($r in $userRoots) { if ($r -and $nodeExe.StartsWith($r.TrimEnd("\") + "\", [StringComparison]::OrdinalIgnoreCase)) { Fail "Node 装在用户目录里（$nodeExe），秘书账号读不到。请用官方安装包装到 Program Files" } }
 $template = Get-Content -Raw -Encoding UTF8 $ConfigTemplate | ConvertFrom-Json
 $profiles = [ordered]@{}
@@ -151,6 +154,10 @@ foreach ($p in $template.profiles.PSObject.Properties) {
   $p.Value.cwd = (Join-Path $nodeMine "sandbox")
   # 模板里写的裸命令名（codex / codex.cmd / codex.ps1）换成她自己那份的绝对路径；别的命令（比如 node）不动
   if ([IO.Path]::GetFileNameWithoutExtension([string]$p.Value.command) -eq $Agent) { $p.Value.command = $cliCmd }
+  if ($Agent -eq "codex") {
+    if (-not $p.Value.PSObject.Properties["env"]) { $p.Value | Add-Member -NotePropertyName env -NotePropertyValue ([pscustomobject]@{}) }
+    $p.Value.env | Add-Member -Force -NotePropertyName CODEX_HOME -NotePropertyValue $codexHome
+  }
   if ($p.Name -eq "$Agent-chat") {
     $p.Value | Add-Member -Force -NotePropertyName memory -NotePropertyValue ([ordered]@{ dir = "memory/$Agent"; provider = "folder" })
   }
@@ -273,6 +280,7 @@ $account = "$env:COMPUTERNAME\$user"
 foreach ($d in @($HomeDir, (Join-Path $HomeDir "memory"), $memory, $nodeMine, (Join-Path $nodeMine "sandbox"))) {
   New-Item -ItemType Directory -Force -Path $d | Out-Null
 }
+if ($Agent -eq "codex") { New-Item -ItemType Directory -Force -Path $codexHome | Out-Null }
 foreach ($s in @("core", "notes", "journal", "inbox", "ext")) { New-Item -ItemType Directory -Force -Path (Join-Path $memory $s) | Out-Null }
 
 $utf8 = [Text.UTF8Encoding]::new($false)
@@ -350,6 +358,8 @@ foreach ($s in @("core", "notes", "journal")) { icacls (Join-Path $memory $s) /g
 # 配置和 Token：整棵树重建，只有她和管理员（江浩不在这里，Token 另外单给）
 Set-OnlyAcl $nodeMine @("${account}:(OI)(CI)(RX)") -Tree
 icacls (Join-Path $nodeMine "sandbox") /grant:r "${account}:(OI)(CI)M" /Q | Out-Null; Icacls-Ok sandbox
+# 登录信息她要能写（登录、刷新 Token）；只有她和管理员，江浩和别的秘书都没有权限
+if ($Agent -eq "codex") { icacls $codexHome /grant:r "${account}:(OI)(CI)M" /Q | Out-Null; Icacls-Ok codex-home }
 
 # ---- 5. 配置和 Token
 
@@ -444,7 +454,7 @@ if (Test-Path -LiteralPath $nodeAppOld) {
 # ---- 7. 在这个账号下登录命令行
 $login = switch ($Agent) {
   "claude" { "`"$cliCmd`"" }    # 第一次运行会让你登录 Claude 账号
-  "codex" { "`"$cliCmd`" login" }
+  "codex" { "set `"CODEX_HOME=$codexHome`" && `"$cliCmd`" login && `"$cliCmd`" login status" }
   "deepseek" { "" }        # DeepSeek 用 API Key，见 README
 }
 if ($login -ne "") {
