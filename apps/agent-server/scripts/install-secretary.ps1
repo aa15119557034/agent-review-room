@@ -216,21 +216,30 @@ if ($arch -and $optional) {
     $spec = "$($dep.Name)@$($dep.Value)"
     $r = Npm-InstallWithFallback @($spec)
     if (-not $r.ok) {
-      # 网络不稳时最后一招：运行脚本的人（江浩）自己用 npm -g 装过同一个版本的话，直接复制那份平台包，不再下载
+      # 网络不稳时最后一招：运行脚本的人（江浩）自己用 npm -g 装过这个平台包的话，直接复制那份，不再下载。
+      # 版本不同时先把主包重装成同一个版本（主包小，下得动），两边版本一致再复制
       $wantVersion = ($dep.Value -replace '^npm:.*@', '')
-      $globalRoot = (Invoke-Native { & $npmCmd root -g } | Select-Object -First 1)
+      $globalRoot = @(Invoke-Native { & $npmCmd root -g })[0]
       $local = $null
+      $localVersion = $null
       if ($globalRoot) {
         $rel = $dep.Name.Replace("/", "\")
         foreach ($c in @((Join-Path $globalRoot $rel), (Join-Path $globalRoot ($cliPackage.Replace("/", "\") + "\node_modules\" + $rel)))) {
           $pj = Join-Path $c "package.json"
-          if ((Test-Path -LiteralPath $pj) -and ((Get-Content -Raw -Encoding UTF8 $pj | ConvertFrom-Json).version -eq $wantVersion)) { $local = $c; break }
+          if (Test-Path -LiteralPath $pj) { $local = $c; $localVersion = (Get-Content -Raw -Encoding UTF8 $pj | ConvertFrom-Json).version; break }
         }
       }
       if (-not $local) {
-        Fail-Cli "补装 $spec 失败（网络），本机也没有同版本（$wantVersion）的现成包可以复制：`n$($r.out)`n可以先在自己的账号里运行 npm install -g $cliPackage@latest，再重跑这个脚本"
+        Fail-Cli "补装 $spec 失败（网络），本机也没有现成的 $($dep.Name) 可以复制：`n$($r.out)`n可以先在自己的账号里运行 npm install -g $cliPackage，再重跑这个脚本"
       }
-      Write-Host "  下载失败，改用本机已装的同版本平台包：$local" -ForegroundColor Yellow
+      if ($localVersion -ne $wantVersion) {
+        # 平台包版本形如 0.163.0-win32-x64，主包版本是去掉后缀的那段
+        $baseVersion = $localVersion -replace "-win32-.*$", ""
+        Write-Host "  本机现成的平台包是 $localVersion（要的是 $wantVersion）：把 $cliPackage 重装成 $baseVersion" -ForegroundColor Yellow
+        $r = Npm-InstallWithFallback @("$cliPackage@$baseVersion")
+        if (-not $r.ok) { Fail-Cli "把 $cliPackage 重装成 $baseVersion 失败：`n$($r.out)" }
+      }
+      Write-Host "  下载失败，改用本机已装的平台包：$local" -ForegroundColor Yellow
       $dest = Join-Path $cliDir ("node_modules\" + $dep.Name.Replace("/", "\"))
       if (Test-Path -LiteralPath $dest) { Remove-Item -LiteralPath $dest -Recurse -Force }
       New-Item -ItemType Directory -Force -Path (Split-Path -Parent $dest) | Out-Null
@@ -240,7 +249,8 @@ if ($arch -and $optional) {
 }
 $versionOut = Invoke-Native { & $cliCmd --version }
 if ($LASTEXITCODE -ne 0 -or -not $versionOut) { Fail-Cli "$cliCmd 装好了但运行不了：`n$($versionOut -join "`n")" }
-Write-Host "  $Agent 版本：$($versionOut[0])"
+# 只有一行输出时函数返回的是字符串不是数组，[0] 会取到第一个字符
+Write-Host "  $Agent 版本：$(@($versionOut)[0])"
 
 # ---- 2. 账号
 $user = "agentroom-$Agent"
