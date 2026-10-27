@@ -50,6 +50,7 @@ import { SCHEMA_V3, SCHEMA_V3_REBUILD } from "../src/schema-v3";
 import { SCHEMA_V4 } from "../src/schema-v4";
 import { SCHEMA_V5 } from "../src/schema-v5";
 import { SCHEMA_V6 } from "../src/schema-v6";
+import { SCHEMA_V7 } from "../src/schema-v7";
 
 const dirs: string[] = [];
 after(() => {
@@ -1228,7 +1229,8 @@ describe("migration v7 (chat material)", () => {
 
     const db = openDatabase(file);
     try {
-      assert.equal(currentVersion(db), 7);
+      assert.equal(currentVersion(db), LATEST_SCHEMA_VERSION);
+      assert.ok(LATEST_SCHEMA_VERSION >= 7);
       assert.equal((db.prepare("SELECT count(*) AS n FROM messages").get() as { n: number }).n, 1);
       assert.equal((db.prepare("SELECT content FROM messages WHERE id = 'msg_old'").get() as { content: string }).content, "旧材料");
       assert.deepEqual(db.pragma("foreign_key_check"), []);
@@ -1337,6 +1339,201 @@ describe("createChatToTopic guards", () => {
         ChatToTopicConflictError,
       );
       assert.equal((db.prepare("SELECT count(*) AS n FROM projects").get() as { n: number }).n, 0);
+    } finally {
+      db.close();
+    }
+  });
+});
+
+describe("migration v8 (chat media intent)", () => {
+  it("adds media_intent, keeps old rows unchanged, and plugs the new column into the immutability trigger", () => {
+    const file = tempFile("room-v8-");
+    const raw = new Database(file);
+    raw.pragma("foreign_keys = OFF");
+    raw.exec(SCHEMA_V1);
+    raw.exec(SCHEMA_V2);
+    raw.exec(SCHEMA_V3);
+    raw.exec(SCHEMA_V3_REBUILD);
+    raw.exec(SCHEMA_V4);
+    raw.exec(SCHEMA_V5);
+    raw.exec(SCHEMA_V6);
+    raw.exec(SCHEMA_V7);
+    raw.pragma("user_version = 7");
+
+    raw
+      .prepare(
+        "INSERT INTO conversations (id, kind, direct_agent, title, pinned, muted, last_read_message_id, last_activity_at, created_at) " +
+          "VALUES ('conv_old', 'direct', 'deepseek', NULL, 0, 0, NULL, ?, ?)",
+      )
+      .run(at(0), at(0));
+    raw
+      .prepare(
+        "INSERT INTO chat_messages (id, conversation_id, sender, created_at, content, mentions, state) " +
+          "VALUES ('cmsg_old', 'conv_old', 'user', ?, ?, ?, 'sent')",
+      )
+      .run(at(0), JSON.stringify({ kind: "text", text: "旧消息", attachments: [] }), JSON.stringify({ kind: "none" }));
+    raw.close();
+
+    const db = openDatabase(file);
+    try {
+      assert.equal(currentVersion(db), LATEST_SCHEMA_VERSION);
+      assert.ok(LATEST_SCHEMA_VERSION >= 8);
+
+      // 旧行一个字节没变，新列是 NULL；读出来省略 mediaIntent
+      const row = db.prepare("SELECT content, media_intent FROM chat_messages WHERE id = 'cmsg_old'").get() as {
+        content: string;
+        media_intent: string | null;
+      };
+      assert.equal((JSON.parse(row.content) as { text: string }).text, "旧消息");
+      assert.equal(row.media_intent, null);
+      const stored = getChatMessage(db, "cmsg_old");
+      assert.ok(stored !== null && stored.sender === "user");
+      assert.equal("mediaIntent" in stored, false, "旧行省略媒体意图");
+
+      // 列和 CHECK 都在：不是 JSON 对象就写不进去
+      const columns = (db.prepare("PRAGMA table_info(chat_messages)").all() as { name: string }[]).map((c) => c.name);
+      assert.ok(columns.includes("media_intent"));
+      assert.throws(
+        () =>
+          db
+            .prepare(
+              "INSERT INTO chat_messages (id, conversation_id, sender, created_at, content, mentions, state, media_intent) " +
+                "VALUES ('cmsg_bad', 'conv_old', 'user', ?, ?, ?, 'sent', ?)",
+            )
+            .run(at(1), JSON.stringify({ kind: "text", text: "x", attachments: [] }), JSON.stringify({ kind: "none" }), "not json"),
+        /CHECK/,
+      );
+
+      // 加列之后消息仍然不可变：改 media_intent 也被触发器拦下；撤回照旧可以
+      assert.throws(
+        () => db.prepare("UPDATE chat_messages SET media_intent = ? WHERE id = 'cmsg_old'").run('{"speak":true}'),
+        /immutable/,
+      );
+      assert.ok(retractChatMessage(db, "cmsg_old", at(10)) !== null);
+
+      assert.deepEqual(db.pragma("foreign_key_check"), []);
+    } finally {
+      db.close();
+    }
+
+    assert.ok(existsSync(file + ".bak-v7"), "migration backup must exist");
+  });
+});
+
+describe("chat media intent (C-42e / D-31d)", () => {
+  const userMessage = (conversationId: string, id: string, text: string, createdAt: string): ChatMessage => ({
+    id,
+    conversationId,
+    createdAt,
+    sender: "user",
+    content: { kind: "text", text, attachments: [] },
+    mentions: { kind: "none" },
+    quoteMessageId: null,
+    replacesMessageId: null,
+    state: "sent",
+    retractedAt: null,
+  });
+
+  it("stores the qualified intent with the reply, reads it back, and omits it when there is none", async () => {
+    const { db, queue } = { db: openDatabase(tempFile("room-media-intent-")), queue: new WriteQueue() };
+    try {
+      const conversation = await createConversation(db, queue, {
+        members: { kind: "direct", agent: "deepseek" },
+        title: null,
+        createdAt: at(0),
+      });
+      let questionIndex = 0;
+      /** 造一条你发的消息 + 它正在跑的回答位，返回插入回答要用到的那几样 */
+      const prepare = () => {
+        const question = userMessage(conversation.id, newChatMessageId(), "问一句", at(questionIndex++));
+        insertChatMessage(db, { message: question });
+        const runId = "run_" + ulid();
+        const slot: ChatReplySlot = {
+          id: "slot_" + ulid(),
+          conversationId: conversation.id,
+          userMessageId: question.id,
+          agent: "deepseek",
+          required: true,
+          outcome: "running",
+          runId,
+          attempt: 1,
+          replyMessageId: null,
+          failure: null,
+          unavailableReason: null,
+          createdAt: at(0),
+          finishedAt: null,
+        };
+        insertChatSlot(db, slot);
+        return { question, runId, slot };
+      };
+
+      const first = prepare();
+      const draw = { prompt: "小鲸鱼", size: "1024x1024" as const };
+      const withMedia: ChatMessage = {
+        id: newChatMessageId(),
+        conversationId: conversation.id,
+        createdAt: at(1),
+        sender: "agent",
+        agent: "deepseek",
+        text: "给你画一张",
+        inReplyTo: first.question.id,
+        slotId: first.slot.id,
+        runId: first.runId,
+        memoryEntriesUsed: null,
+        mediaIntent: { speak: true, draw },
+      };
+      insertChatMessage(db, { message: withMedia });
+
+      const readBack = getChatMessage(db, withMedia.id);
+      assert.ok(readBack !== null && readBack.sender === "agent");
+      assert.deepEqual(readBack.mediaIntent, { speak: true, draw });
+      ChatMessage.parse(readBack);
+
+      // 一项都没有就是不传 → 列是 NULL → 读出来没有这个键
+      const second = prepare();
+      const plain: ChatMessage = {
+        id: newChatMessageId(),
+        conversationId: conversation.id,
+        createdAt: at(2),
+        sender: "agent",
+        agent: "deepseek",
+        text: "好的",
+        inReplyTo: second.question.id,
+        slotId: second.slot.id,
+        runId: second.runId,
+        memoryEntriesUsed: null,
+      };
+      insertChatMessage(db, { message: plain });
+      const plainStored = getChatMessage(db, plain.id);
+      assert.ok(plainStored !== null);
+      assert.equal("mediaIntent" in plainStored, false);
+      assert.equal(
+        (db.prepare("SELECT media_intent FROM chat_messages WHERE id = ?").get(plain.id) as { media_intent: string | null }).media_intent,
+        null,
+      );
+
+      // immersiveDeferred 的列留给 D-39：现在传会明确报错，不会悄悄丢掉
+      const third = prepare();
+      assert.throws(
+        () =>
+          insertChatMessage(db, {
+            message: {
+              id: newChatMessageId(),
+              conversationId: conversation.id,
+              createdAt: at(3),
+              sender: "agent",
+              agent: "deepseek",
+              text: "好",
+              inReplyTo: third.question.id,
+              slotId: third.slot.id,
+              runId: third.runId,
+              memoryEntriesUsed: null,
+              mediaIntent: { draw: { prompt: "小鲸鱼", size: "1024x1024" } },
+              immersiveDeferred: { draw: "hourly_limit" },
+            },
+          }),
+        /D-39/,
+      );
     } finally {
       db.close();
     }
