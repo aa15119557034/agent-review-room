@@ -505,6 +505,7 @@ function MessageMenu({ message, now, children }: { message: ChatMessage; now: nu
 function Composer({ conv }: { conv: Conversation }) {
   const draft = useAppState((s) => draftOf(s.chat, s.chat.currentId));
   const messages = useAppState((s) => s.chat.messages);
+  const importing = useAppState((s) => s.chat.media.voiceImporting[conv.id] === true);
   const actions = useActions();
   const { name } = useNames();
   const [picker, setPicker] = useState(false);
@@ -589,13 +590,13 @@ function Composer({ conv }: { conv: Conversation }) {
       <VoiceDraft />
       {stickers && <StickerPanel onClose={() => setStickers(false)} />}
       <div className="chat-tools" role="toolbar" aria-label="附件和语音">
-        <button type="button" className="tool-button" disabled={!!draft.voice || tooManyFiles} onClick={() => void actions.chat.media.pickAttachment("image")}>
+        <button type="button" className="tool-button" disabled={!!draft.voice || importing || tooManyFiles} onClick={() => void actions.chat.media.pickAttachment("image")}>
           🖼 图片
         </button>
-        <button type="button" className="tool-button" disabled={!!draft.voice || tooManyFiles} onClick={() => void actions.chat.media.pickAttachment("file")}>
+        <button type="button" className="tool-button" disabled={!!draft.voice || importing || tooManyFiles} onClick={() => void actions.chat.media.pickAttachment("file")}>
           📎 文件
         </button>
-        <RecordButton key={conv.id} disabled={!!draft.voice || draft.attachments.length > 0} />
+        <RecordButton key={conv.id} disabled={!!draft.voice || importing || draft.attachments.length > 0} />
         <button type="button" className="tool-button" aria-expanded={stickers} onClick={() => setStickers((v) => !v)}>
           ☺ 表情
         </button>

@@ -83,6 +83,8 @@ export interface ChatMediaState {
   drawRequested: Record<string, true>;
   /** 正在发 draw.start 的消息：结果回来前不能再发一次 */
   drawStarting: Record<string, true>;
+  /** 正在上传 / 转写录音的会话：这期间不能加附件（录音回来会占掉草稿，林离 #115） */
+  voiceImporting: Record<string, true>;
 }
 
 export const initialMedia: ChatMediaState = {
@@ -96,6 +98,7 @@ export const initialMedia: ChatMediaState = {
   playQueue: [],
   drawRequested: {},
   drawStarting: {},
+  voiceImporting: {},
 };
 
 export interface ChatDraft {

@@ -339,6 +339,40 @@ describe("C-43 through the UI actions (mock)", () => {
     assert.ok(store.get().chat.media.jobs.every((j) => j.source.kind === "chat" && j.source.conversationId === b));
   });
 
+  it("while a recording uploads you can't add files, and a late draw result only closes its own card (林离 #115)", async () => {
+    const { store, actions } = app();
+    await actions.start();
+    actions.goChat();
+    await actions.chat.createConversation({ kind: "direct", agent: "deepseek" }, null);
+    const a = store.get().chat.currentId!;
+    const importing = actions.chat.media.importVoice(a, "webm", "AAAA");
+    assert.equal(store.get().chat.media.voiceImporting[a], true);
+    await actions.chat.media.pickAttachment("image");
+    await importing;
+    const d = store.get().chat.drafts[a]!;
+    assert.deepEqual([!!d.voice, d.attachments.length], [true, 0]);
+    assert.deepEqual(store.get().chat.media.voiceImporting, {});
+
+    // 草稿里已经有附件时录音回来：不丢附件，录音不放进去，并提示
+    actions.chat.media.cancelVoice();
+    await actions.chat.media.pickAttachment("file");
+    await actions.chat.media.importVoice(a, "webm", "AAAA");
+    const d2 = store.get().chat.drafts[a]!;
+    assert.deepEqual([d2.voice, d2.attachments.length], [null, 1]);
+    assert.ok(store.get().notice);
+
+    // A 的画图回包到达时你开着 B 的请求卡：不关 B 的卡
+    actions.chat.setDraftText("画一张");
+    await actions.chat.send();
+    await until(() => !!agentReply(store.get().chat.messages));
+    const reply = agentReply(store.get().chat.messages)!;
+    const src = { kind: "chat" as const, conversationId: a, messageId: reply.id, agent: reply.agent };
+    const p = actions.chat.media.startDraw({ ...reply.mediaIntent!.draw!, backend: "comfyui" }, src, false);
+    actions.chat.media.openDrawCard("cmsg_other", "别的");
+    await p;
+    assert.deepEqual(store.get().chat.sheet, { kind: "draw", messageId: "cmsg_other", prompt: "别的" });
+  });
+
   it("retracting a message cancels the media jobs of its answers", async () => {
     const { store, actions } = app();
     await actions.start();

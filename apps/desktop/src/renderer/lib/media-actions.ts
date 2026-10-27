@@ -84,9 +84,13 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
 
     async pickAttachment(kind: "image" | "file") {
       try {
+        const conversationId = chat().currentId;
+        if (!conversationId || chat().media.voiceImporting[conversationId]) return;
         const a = await client.command({ type: "chat.attachment.pick", kind });
         if (!a) return;
-        const d = draftOf(chat(), chat().currentId);
+        const d = draftOf(chat(), conversationId);
+        // 选文件的对话框开着时录好了音：不覆盖录音，告诉你
+        if (d.voice) return fail(new Error("草稿里已经有一段录音了，这个附件没放进去。要发附件先取消录音"));
         // 同一个文件选两次（main 按内容去重，ref 相同）只放一份
         if (d.attachments.some((x) => x.ref === a.ref)) return;
         draftPatch({ attachments: [...d.attachments, a], voice: null });
@@ -105,20 +109,33 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
      * conversationId 是开始录音时的会话：录音过程中切了会话，也只写回原来那个会话的草稿
      */
     async importVoice(conversationId: string, format: "webm" | "ogg" | "wav", data: string) {
+      setMedia((m) => ({ ...m, voiceImporting: { ...m.voiceImporting, [conversationId]: true } }));
       try {
         const rec = await client.command({ type: "chat.voice.import", format, data });
+        let kept = true;
         setChat((c) => {
           const recordings = { ...c.media.recordings, [rec.audio]: rec };
           const prev = draftOf(c, conversationId);
+          // 上传期间草稿里多了附件（理论上按钮锁着，防万一）：不静默丢附件，录音不放进去
+          if (prev.attachments.length > 0 || prev.voice) {
+            kept = false;
+            return { ...c, media: { ...c.media, recordings } };
+          }
           const voice = { audio: rec.audio, text: rec.status === "ready" ? rec.transcript!.text : "" };
           return {
             ...c,
             media: { ...c.media, recordings },
-            drafts: { ...c.drafts, [conversationId]: { ...prev, voice, attachments: [], messageId: null } },
+            drafts: { ...c.drafts, [conversationId]: { ...prev, voice, messageId: null } },
           };
         });
+        if (!kept) fail(new Error("草稿里已经有附件或录音，这段录音没放进去"));
       } catch (err) {
         fail(err);
+      } finally {
+        setMedia((m) => {
+          const { [conversationId]: _, ...rest } = m.voiceImporting;
+          return { ...m, voiceImporting: rest };
+        });
       }
     },
     setVoiceText: (text: string) => {
@@ -189,9 +206,11 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
         });
         setChat((c) => {
           const drawRequested = { ...c.media.drawRequested, [key]: true as const };
+          // 只关这条消息的请求卡：回包前切到别的会话、打开了别的卡，不能把那张关掉（林离 #115）
+          const mine = c.sheet?.kind === "draw" && c.sheet.messageId === key && source.conversationId === c.currentId;
           return {
             ...c,
-            sheet: c.sheet?.kind === "draw" ? null : c.sheet,
+            sheet: mine ? null : c.sheet,
             media:
               source.conversationId === c.currentId
                 ? { ...c.media, jobs: mergeJobs(c.media.jobs, [job]), drawRequested }
