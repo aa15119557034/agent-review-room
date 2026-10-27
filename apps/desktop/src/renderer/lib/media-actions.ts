@@ -16,10 +16,11 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
   const chat = () => store.get().chat;
 
   /** 改当前会话的草稿；和 chat-actions 一样，一改就作废上次没拿到结果的那次发送 */
-  const draftPatch = (patch: Partial<ChatDraft>) =>
+  const draftPatch = (patch: Partial<ChatDraft>, conversationId?: string) =>
     setChat((c) => {
-      if (!c.currentId) return c;
-      return { ...c, drafts: { ...c.drafts, [c.currentId]: { ...draftOf(c, c.currentId), ...patch, messageId: null } } };
+      const id = conversationId ?? c.currentId;
+      if (!id) return c;
+      return { ...c, drafts: { ...c.drafts, [id]: { ...draftOf(c, id), ...patch, messageId: null } } };
     });
 
   /**
@@ -93,7 +94,8 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
         if (d.voice) return fail(new Error("草稿里已经有一段录音了，这个附件没放进去。要发附件先取消录音"));
         // 同一个文件选两次（main 按内容去重，ref 相同）只放一份
         if (d.attachments.some((x) => x.ref === a.ref)) return;
-        draftPatch({ attachments: [...d.attachments, a], voice: null });
+        // 写回开始选文件时的会话（对话框开着时切了会话也不串，汐 #115）
+        draftPatch({ attachments: [...d.attachments, a], voice: null }, conversationId);
       } catch (err) {
         fail(err);
       }

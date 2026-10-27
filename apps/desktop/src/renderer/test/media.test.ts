@@ -371,6 +371,14 @@ describe("C-43 through the UI actions (mock)", () => {
     actions.chat.media.openDrawCard("cmsg_other", "别的");
     await p;
     assert.deepEqual(store.get().chat.sheet, { kind: "draw", messageId: "cmsg_other", prompt: "别的" });
+
+    // 选文件对话框开着时切了会话：附件进开始时的会话
+    const picking = actions.chat.media.pickAttachment("image");
+    await actions.chat.createConversation({ kind: "direct", agent: "claude" }, null);
+    const b = store.get().chat.currentId!;
+    await picking;
+    assert.equal(store.get().chat.drafts[a]!.attachments.length, 1);
+    assert.equal(store.get().chat.drafts[b]?.attachments.length ?? 0, 0);
   });
 
   it("retracting a message cancels the media jobs of its answers", async () => {
