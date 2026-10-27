@@ -41,6 +41,7 @@ import {
   getChatSlot,
   getChatSnapshot,
   getConversation,
+  getSticker,
   insertChatRun,
   insertChatSnapshot,
   listChatMessages,
@@ -232,6 +233,12 @@ export class ChatService {
       }
     }
     const content = this.#resolveContent(command.content);
+
+    // C-34：表情引用必须还在库里（renderer 只拿到 stickerId）。图片 / 文件的引用校验等
+    // D-36b 让附件能真正发出去时再加，这里是它要落的位置
+    if (content.kind === "sticker" && getSticker(db, content.stickerId) === null) {
+      throw new ChatError("validation_failed", "这个表情已经不在表情库里了");
+    }
 
     if (command.quoteMessageId !== null) {
       const quote = getChatMessage(db, command.quoteMessageId);
@@ -832,15 +839,24 @@ export class ChatService {
     return agent.chatPersona.trim().length > 0 ? agent.chatPersona : agent.roleNote;
   }
 
-  /** ChatContentInput → ChatContent：附件 / 语音 / 表情落地前明确拒绝，不悄悄降级 */
+  /**
+   * ChatContentInput → ChatContent。表情已经上线（D-34a）；图片 / 文件附件要等 Prompt 清单（D-36b），
+   * 语音要等 D-34b——都明确拒绝，不悄悄降级。
+   */
   #resolveContent(input: ChatContentInput): ChatContent {
     if (input.kind === "text") {
       if (input.attachments.length > 0) {
-        throw new ChatError("validation_failed", "附件还没上线（D-34 / D-36），先把附件去掉再发");
+        throw new ChatError("validation_failed", "图片 / 文件附件要等 Prompt 清单上线（D-36b），先发文字");
       }
       return { kind: "text", text: input.text, attachments: [] };
     }
-    throw new ChatError("validation_failed", "语音 / 表情还没上线（D-34），先发文字");
+    if (input.kind === "sticker") {
+      // C-34：发送时只传 stickerId，image 和 label 从表情库抄一份记在消息上
+      const sticker = getSticker(this.#deps.db, input.stickerId);
+      if (sticker === null) throw new ChatError("validation_failed", "这个表情已经不在表情库里了");
+      return { kind: "sticker", stickerId: sticker.id, image: sticker.image, label: sticker.label };
+    }
+    throw new ChatError("validation_failed", "语音还没上线（D-34b），先发文字或语音转写成文字");
   }
 
   async #availabilityOf(
@@ -906,3 +922,5 @@ function profileModelsOf(result: NodeTestResult | undefined): NodeHealth["profil
 function probeKeyOf(nodeId: string | null, profileId: string | null): string {
   return (nodeId ?? "") + "\u0000" + (profileId ?? "");
 }
+
+

@@ -52,16 +52,23 @@ export interface BuildChatSnapshotInput {
   nonce?: string;
 }
 
-/** 只有文字消息能进 Prompt；语音 / 表情 / 附件各自的落地跟进（D-34 / D-36） */
+/** 文字和表情能进 Prompt（表情渲染成「[表情：说明]」）；附件等 D-36b 的清单、语音等 D-34b */
 function assertSupported(message: UserChatMessage): void {
   const content = message.content;
-  if (content.kind !== "text") {
-    throw new Error("chat prompt: " + content.kind + " messages are not supported until D-34 lands");
+  if (content.kind === "voice") {
+    throw new Error("chat prompt: voice messages are not supported until D-34b lands");
   }
-  if (content.attachments.length > 0) {
-    // 先明确拒掉：悄悄丢附件比发送失败更糟（C-42a 的清单和「[图片：文件名]」占位是 D-36 的事）
-    throw new Error("chat prompt: attachments are not supported until D-36 lands");
+  if (content.kind === "text" && content.attachments.length > 0) {
+    // 先明确拒掉：悄悄丢附件比发送失败更糟（C-42a 的清单和「[图片：文件名]」占位是 D-36b 的事）
+    throw new Error("chat prompt: attachments are not supported until D-36b lands");
   }
+}
+
+/** 当前这条（你刚发的）在 Prompt 里的样子：文字原样；表情只给说明，不给图 */
+function currentTextOf(content: UserChatMessage["content"]): string {
+  if (content.kind === "text") return content.text;
+  if (content.kind === "sticker") return "[表情：" + content.label + "]";
+  return "[语音] " + content.transcript.text;
 }
 
 function renderMessage(
@@ -111,7 +118,7 @@ function windowHistory(
 export function buildChatSnapshot(input: BuildChatSnapshotInput): ChatSnapshot {
   assertSupported(input.userMessage);
   // assertSupported 只是运行时检查，这里再窄一次类型
-  const currentText = input.userMessage.content.kind === "text" ? input.userMessage.content.text : "";
+  const currentText = currentTextOf(input.userMessage.content);
   const displayNameOf = input.displayNameOf ?? ((agentId: string) => agentId);
   const render = (message: ChatMessage): string => renderMessage(message, input.agent, displayNameOf);
   const excluded = (message: ChatMessage): boolean => isExcludedFromContext(message, input.inReplyToOf);
@@ -164,3 +171,4 @@ export function buildChatSnapshot(input: BuildChatSnapshotInput): ChatSnapshot {
     createdAt: input.createdAt,
   });
 }
+

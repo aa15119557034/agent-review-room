@@ -28,8 +28,9 @@ function tempDir(prefix: string): string {
 function setup(): { store: MediaStore; db: SqliteDatabase; images: string } {
   const root = tempDir("room-media-store-");
   const images = join(root, "images");
+  const files = join(root, "files");
   const db = openDatabase(join(root, "room.db"));
-  return { store: new MediaStore(images, db), db, images };
+  return { store: new MediaStore(images, files, db), db, images };
 }
 
 const jpeg = () =>

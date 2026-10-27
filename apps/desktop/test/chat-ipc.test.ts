@@ -8,6 +8,8 @@ import {
   insertChatRun,
   insertChatSlot,
   insertChatSnapshot,
+  insertImageRef,
+  insertSticker,
   openDatabase,
   ulid,
   WriteQueue,
@@ -215,6 +217,60 @@ function send(conversationId: string, messageId: string, text: string): CommandR
   };
 }
 
+describe("chat send attachments (D-34a)", () => {
+  it("rejects attachments until D-36b, and sends stickers that exist in the library", async () => {
+    const h = await makeHarness();
+    const validation = (error: unknown) => (error as { code?: string }).code === "validation_failed";
+    try {
+      const base = send(h.conversationId, userMessageId(21), "看图");
+      // 附件要等 D-36b 的 Prompt 清单：现在明确拒绝，不悄悄降级
+      await assert.rejects(
+        () => h.chat.send({ ...base, content: { kind: "text", text: "看图", attachments: [{ kind: "image", ref: `img_${ulid()}` }] } }),
+        validation,
+      );
+      await assert.rejects(
+        () =>
+          h.chat.send({
+            ...base,
+            content: {
+              kind: "text",
+              text: "看文件",
+              attachments: [{ kind: "file", ref: `file_${ulid()}`, name: "a.txt", mime: "text/plain", bytes: 3, sha256: "a".repeat(64), isText: true }],
+            },
+          }),
+        validation,
+      );
+
+      // 表情：库里没有就拒，有就发得出去
+      await assert.rejects(
+        () => h.chat.send({ ...send(h.conversationId, userMessageId(22), "表情"), content: { kind: "sticker", stickerId: `stk_${ulid()}` } }),
+        validation,
+        "unknown sticker",
+      );
+      const stickerImage = `img_${ulid()}`;
+      insertImageRef(h.db, {
+        ref: stickerImage as never,
+        purpose: "sticker",
+        sha256: "b".repeat(64),
+        mime: "image/png",
+        bytes: 100,
+        width: 10,
+        height: 10,
+        createdAt: NOW,
+      });
+      const stickerId = `stk_${ulid()}`;
+      insertSticker(h.db, { id: stickerId as never, image: stickerImage as never, label: "比心", createdAt: NOW });
+      const sentSticker = await h.chat.send({
+        ...send(h.conversationId, userMessageId(23), "表情"),
+        content: { kind: "sticker", stickerId },
+      });
+      assert.equal(sentSticker.message.content.kind, "sticker");
+      await settle(h.chat);
+    } finally {
+      h.db.close();
+    }
+  });
+});
 describe("chat service (D-31b)", () => {
   it("sends a direct message, runs it and stores the reply", async () => {
     const h = await makeHarness({ scripts: { deepseek: reply("在。") } });
@@ -971,3 +1027,4 @@ describe("chat service (D-31b)", () => {
     }
   });
 });
+
