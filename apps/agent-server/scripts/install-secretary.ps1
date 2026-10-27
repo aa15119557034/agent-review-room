@@ -215,7 +215,27 @@ if ($arch -and $optional) {
     Write-Host "  补装平台包 $($dep.Name)（$($dep.Value)）"
     $spec = "$($dep.Name)@$($dep.Value)"
     $r = Npm-InstallWithFallback @($spec)
-    if (-not $r.ok) { Fail-Cli "补装 $spec 失败：`n$($r.out)" }
+    if (-not $r.ok) {
+      # 网络不稳时最后一招：运行脚本的人（江浩）自己用 npm -g 装过同一个版本的话，直接复制那份平台包，不再下载
+      $wantVersion = ($dep.Value -replace '^npm:.*@', '')
+      $globalRoot = (Invoke-Native { & $npmCmd root -g } | Select-Object -First 1)
+      $local = $null
+      if ($globalRoot) {
+        $rel = $dep.Name.Replace("/", "\")
+        foreach ($c in @((Join-Path $globalRoot $rel), (Join-Path $globalRoot ($cliPackage.Replace("/", "\") + "\node_modules\" + $rel)))) {
+          $pj = Join-Path $c "package.json"
+          if ((Test-Path -LiteralPath $pj) -and ((Get-Content -Raw -Encoding UTF8 $pj | ConvertFrom-Json).version -eq $wantVersion)) { $local = $c; break }
+        }
+      }
+      if (-not $local) {
+        Fail-Cli "补装 $spec 失败（网络），本机也没有同版本（$wantVersion）的现成包可以复制：`n$($r.out)`n可以先在自己的账号里运行 npm install -g $cliPackage@latest，再重跑这个脚本"
+      }
+      Write-Host "  下载失败，改用本机已装的同版本平台包：$local" -ForegroundColor Yellow
+      $dest = Join-Path $cliDir ("node_modules\" + $dep.Name.Replace("/", "\"))
+      if (Test-Path -LiteralPath $dest) { Remove-Item -LiteralPath $dest -Recurse -Force }
+      New-Item -ItemType Directory -Force -Path (Split-Path -Parent $dest) | Out-Null
+      Copy-Item -LiteralPath $local -Destination $dest -Recurse
+    }
   }
 }
 $versionOut = Invoke-Native { & $cliCmd --version }
