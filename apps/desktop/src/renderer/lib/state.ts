@@ -131,15 +131,15 @@ export function applyEvent(state: AppState, event: ControlEvent): AppState {
     case "chat.message.created":
     case "chat.message.updated":
     case "chat.slot.updated":
-    case "chat.run.updated": {
+    case "chat.run.updated":
+    // 多模态（C-43）：录音转写、画图 / 语音任务
+    case "chat.voice.updated":
+    case "media.updated": {
       const chat = applyChatEvent(state.chat, event);
       return chat === state.chat ? state : { ...state, chat };
     }
-    // 摘要在界面上不显示；语音、表情要等 D-34
+    // 摘要在界面上不显示
     case "chat.summary.updated":
-    case "chat.voice.updated":
-    case "media.updated":
-      // C-42b：画图 / 语音任务的界面在 C-43 接，这之前先不处理
       return state;
   }
 }

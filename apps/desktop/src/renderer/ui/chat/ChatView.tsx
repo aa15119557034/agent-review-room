@@ -23,7 +23,23 @@ import {
   type TimelineEntry,
 } from "../../lib/chat";
 import { agentColor, agentName } from "../../lib/discussion";
+import { stripCharts } from "../../lib/media";
+import { draftContent } from "../../lib/chat-actions";
+import { ReplyBody } from "../Chart";
 import { useActions, useAppState } from "../hooks";
+import {
+  AgentMedia,
+  AttachmentTray,
+  DrawSheetBody,
+  ImmersiveSection,
+  MediaHead,
+  RecordButton,
+  UserDraws,
+  SpeechPlayer,
+  StickerPanel,
+  UserContent,
+  VoiceDraft,
+} from "./ChatMedia";
 
 /**
  * 聊天空间（C-35）。按手机宽度设计：窄屏一次只显示一栏（会话列表 ↔ 会话），宽屏是同样的两栏放宽。
@@ -52,6 +68,8 @@ export function ChatView({ notice }: { notice: ReactNode }) {
       {sheet?.kind === "new" && <NewConversationSheet />}
       {sheet?.kind === "settings" && <SettingsSheet />}
       {sheet?.kind === "message" && <MessageSheet messageId={sheet.messageId} />}
+      {sheet?.kind === "draw" && <DrawSheet messageId={sheet.messageId} prompt={sheet.prompt} />}
+      <SpeechPlayer />
     </div>
   );
 }
@@ -188,6 +206,7 @@ function ConversationPane() {
           {conv.kind === "group" && <span className="chat-list-count">（{conv.members.length + 1}）</span>}
         </h2>
         <span className="spacer" />
+        <MediaHead />
         <button type="button" className="icon-button" aria-label="会话设置" onClick={() => actions.chat.openSheet({ kind: "settings" })}>
           ⋯
         </button>
@@ -238,7 +257,7 @@ function Timeline({ conv }: { conv: Conversation }) {
       )}
       <ol>
         {entries.map((e) => (
-          <Entry key={e.message.id} entry={e} now={now} />
+          <Entry key={e.message.id} entry={e} now={now} conv={conv} />
         ))}
         {live.map((sl, i) => {
           const text = partialReplyText(liveText[i] ?? "");
@@ -264,7 +283,7 @@ function Timeline({ conv }: { conv: Conversation }) {
   );
 }
 
-function Entry({ entry, now }: { entry: TimelineEntry; now: number }) {
+function Entry({ entry, now, conv }: { entry: TimelineEntry; now: number; conv: Conversation }) {
   const selecting = useAppState((s) => s.chat.selecting);
   const messages = useAppState((s) => s.chat.messages);
   const actions = useActions();
@@ -330,9 +349,10 @@ function Entry({ entry, now }: { entry: TimelineEntry; now: number }) {
           {entry.replyTo && <QuoteLine message={entry.replyTo} prefix="回复" />}
           <MessageMenu message={am} now={now}>
             <div className="chat-bubble">
-              <p className="chat-text">{am.text}</p>
+              <ReplyBody text={am.text} />
             </div>
           </MessageMenu>
+          {!entry.excluded && <AgentMedia message={am} conv={conv} />}
           {entry.excluded && <p className="chat-note">你撤回了提问，这条回答之后不再发给秘书</p>}
         </div>
       </li>
@@ -348,14 +368,14 @@ function Entry({ entry, now }: { entry: TimelineEntry; now: number }) {
         <div className="chat-meta">
           {shortTime(um.createdAt, now)}
           {entry.reedited && <span className="tag">已重新编辑</span>}
+          {um.replyAsVoice && <span className="tag" title="这条的回答会合成语音">要语音回</span>}
           <Mentions message={um} />
         </div>
         {quoted && <QuoteLine message={quoted} prefix="引用" />}
         <MessageMenu message={um} now={now}>
-          <div className="chat-bubble">
-            <p className="chat-text">{contentText(um)}</p>
-          </div>
+          <UserContent message={um} />
         </MessageMenu>
+        {um.state !== "retracted" && <UserDraws message={um} conv={conv} />}
         <SlotLine slots={entry.slots} />
       </div>
     </li>
@@ -371,7 +391,7 @@ function Mentions({ message }: { message: UserChatMessage }) {
 function QuoteLine({ message, prefix }: { message: ChatMessage; prefix: string }) {
   const { name } = useNames();
   const who = message.sender === "user" ? "你" : name(message.agent);
-  const text = message.sender === "user" && message.state === "retracted" ? "（已撤回）" : messageText(message);
+  const text = message.sender === "user" && message.state === "retracted" ? "（已撤回）" : stripCharts(messageText(message));
   return (
     <p className="chat-quote">
       {prefix} {who}：{text.replace(/\s+/g, " ").slice(0, 60)}
@@ -471,6 +491,7 @@ function MessageMenu({ message, now, children }: { message: ChatMessage; now: nu
           {item("复制", () => void navigator.clipboard?.writeText(messageText(message)))}
           {item("引用", () => actions.chat.quote(message.id), !usable)}
           {item("多选", () => actions.chat.startSelect(message.id), !usable)}
+          {item("照这条画一张", () => actions.chat.media.openDrawCard(message.id, stripCharts(messageText(message)).slice(0, 1000)), !usable)}
           {canRetract(message, now) && item("撤回", () => void actions.chat.retract(message.id))}
           {item("详情", () => actions.chat.openSheet({ kind: "message", messageId: message.id }))}
         </div>
@@ -484,19 +505,24 @@ function MessageMenu({ message, now, children }: { message: ChatMessage; now: nu
 function Composer({ conv }: { conv: Conversation }) {
   const draft = useAppState((s) => draftOf(s.chat, s.chat.currentId));
   const messages = useAppState((s) => s.chat.messages);
+  const importing = useAppState((s) => s.chat.media.voiceImporting[conv.id] === true);
   const actions = useActions();
   const { name } = useNames();
   const [picker, setPicker] = useState(false);
+  const [stickers, setStickers] = useState(false);
   const input = useRef<HTMLTextAreaElement>(null);
   const quoted = draft.quoteMessageId ? messages.find((m) => m.id === draft.quoteMessageId) : undefined;
   const isGroup = conv.kind === "group";
   const tooLong = draft.text.length > CHAT_LIMITS.textMaxChars;
-  const canSend = draft.text.trim().length > 0 && !tooLong;
+  const tooManyImages = draft.attachments.filter((a) => a.kind === "image").length > CHAT_LIMITS.imagesPerMessage;
+  const tooManyFiles = draft.attachments.length >= CHAT_LIMITS.attachmentsPerMessage;
+  const canSend = draftContent(draft) !== null && !tooLong && !tooManyImages;
 
   const send = (e?: FormEvent) => {
     e?.preventDefault();
     if (!canSend) return;
     setPicker(false);
+    setStickers(false);
     void actions.chat.send();
   };
 
@@ -541,7 +567,7 @@ function Composer({ conv }: { conv: Conversation }) {
       {quoted && (
         <p className="chat-composer-bar">
           <span className="chat-composer-quote">
-            引用 {quoted.sender === "user" ? "你" : name(quoted.agent)}：{messageText(quoted).replace(/\s+/g, " ").slice(0, 60)}
+            引用 {quoted.sender === "user" ? "你" : name(quoted.agent)}：{stripCharts(messageText(quoted)).replace(/\s+/g, " ").slice(0, 60)}
           </span>
           <button type="button" className="button-link" onClick={() => actions.chat.quote(null)}>
             取消
@@ -560,7 +586,27 @@ function Composer({ conv }: { conv: Conversation }) {
           ))}
         </ul>
       )}
-      <div className="chat-input-row">
+      <AttachmentTray conv={conv} />
+      <VoiceDraft />
+      {stickers && <StickerPanel onClose={() => setStickers(false)} />}
+      <div className="chat-tools" role="toolbar" aria-label="附件和语音">
+        <button type="button" className="tool-button" disabled={!!draft.voice || importing || tooManyFiles} onClick={() => void actions.chat.media.pickAttachment("image")}>
+          🖼 图片
+        </button>
+        <button type="button" className="tool-button" disabled={!!draft.voice || importing || tooManyFiles} onClick={() => void actions.chat.media.pickAttachment("file")}>
+          📎 文件
+        </button>
+        <RecordButton key={conv.id} disabled={!!draft.voice || importing || draft.attachments.length > 0} />
+        <button type="button" className="tool-button" aria-expanded={stickers} onClick={() => setStickers((v) => !v)}>
+          ☺ 表情
+        </button>
+        <span className="spacer" />
+        <label className="voice-toggle" title="打开后，这条消息的回答都会用语音发（在主控机本地合成）。你在话里说「用语音回我」也会自动打开">
+          <input type="checkbox" checked={draft.replyAsVoice} onChange={(e) => actions.chat.media.setReplyAsVoice(e.target.checked)} />
+          用语音回
+        </label>
+      </div>
+      <div className="chat-input-row" hidden={!!draft.voice}>
         <textarea
           ref={input}
           rows={1}
@@ -601,7 +647,16 @@ function Composer({ conv }: { conv: Conversation }) {
           </div>
         )}
       </div>
+      {draft.voice && (
+        <div className="chat-input-row chat-voice-send">
+          <span className="spacer" />
+          <button type="button" className="button-primary" disabled={!canSend} onClick={() => send()}>
+            发送语音
+          </button>
+        </div>
+      )}
       <p className="chat-hint">
+        {draft.replyAsVoice && "这条的回答会用语音发 · "}
         {tooLong ? <span className="field-error">太长了：最多 {CHAT_LIMITS.textMaxChars} 字</span> : mentionHint(conv, isGroup ? draft.mentions : { kind: "none" }, name)}
         {isGroup && draft.mentions.kind === "none" && /@\S/.test(draft.text) && " · 正文里打的 @ 不算点名，要从弹出的列表里选"}
       </p>
@@ -758,10 +813,22 @@ function SettingsSheet() {
             </button>
           </fieldset>
         )}
+        <ImmersiveSection />
         <button type="button" className="button-outline" onClick={() => actions.chat.startSelect()}>
           多选消息，转成议题
         </button>
       </div>
+    </Sheet>
+  );
+}
+
+function DrawSheet({ messageId, prompt }: { messageId: string; prompt: string }) {
+  const conv = useAppState((s) => currentConversation(s.chat));
+  const actions = useActions();
+  if (!conv) return null;
+  return (
+    <Sheet title="画一张图" onClose={actions.chat.closeSheet}>
+      <DrawSheetBody messageId={messageId} prompt={prompt} conv={conv} />
     </Sheet>
   );
 }
@@ -787,6 +854,12 @@ function MessageSheet({ messageId }: { messageId: string }) {
           </p>
         )}
         <pre className="chat-detail-text">{messageText(m)}</pre>
+        {m.sender === "user" && m.content.kind === "voice" && (
+          <p className="chat-note">
+            转写：{m.content.transcript.engine.engine} / {m.content.transcript.engine.model}
+            {m.content.transcript.source === "edited" ? "，发送前你改过" : ""}
+          </p>
+        )}
         {m.sender === "agent" && <MemoryDetail message={m} run={run} />}
       </div>
     </Sheet>

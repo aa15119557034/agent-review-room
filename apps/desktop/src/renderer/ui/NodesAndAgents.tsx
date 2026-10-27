@@ -3,6 +3,7 @@ import { AgentModelSettings, HexColor, NodeBaseUrl, NodeToken, ProfileId, type A
 import { RECOMMENDED_AGENTS, RECOMMENDED_NODES } from "../lib/presets";
 import { useActions, useAppState } from "./hooks";
 import { ModelSettings } from "./ModelSettings";
+import { VoiceSettings } from "./VoiceSettings";
 
 /**
  * 设置页：节点与参与者（C-27）。讨论室要知道「谁在哪台电脑的哪个 profile 上」。
@@ -227,6 +228,7 @@ function AgentEditor({ agent, nodes }: { agent: AgentProfile; nodes: NodeInfo[] 
       nodeId: draft.nodeId,
       profileId: draft.profileId,
       modelSettings: draft.modelSettings,
+      ...(draft.voice !== agent.voice ? { voice: draft.voice ?? null } : {}),
     });
     setBusy(false);
   };
@@ -275,6 +277,10 @@ function AgentEditor({ agent, nodes }: { agent: AgentProfile; nodes: NodeInfo[] 
       <fieldset className="model-fieldset">
         <legend>模型和思考强度</legend>
         <ModelSettings value={draft.modelSettings} models={models} onChange={(v) => set("modelSettings", v)} />
+      </fieldset>
+      <fieldset className="model-fieldset">
+        <legend>声音（聊天里的「播放」和「用语音回」）</legend>
+        <VoiceSettings value={draft.voice} onChange={(v) => set("voice", v)} />
       </fieldset>
       <label className="field-label">
         角色设定（只写分工，会放在发给他的内容最前面）

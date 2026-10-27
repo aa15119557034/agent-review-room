@@ -3,6 +3,7 @@ import type { BatchKind } from "@room/schemas";
 import { agentColor, agentName } from "../../lib/discussion";
 import { effortLabel, modelLabel } from "../../lib/models";
 import { useActions, useAppState } from "../hooks";
+import { imageSrc } from "../../lib/media";
 
 /**
  * 发送前确认（C-22，画布「①-1 发送前确认」）。
@@ -69,6 +70,11 @@ export function ConfirmView() {
                 </span>
               )}
               {i.model?.usedFallback && <span className="extra-info">首选用不了，用的是备选</span>}
+              {i.attachments ? (
+                <span className="recipient-model">带 {i.attachments.length} 张图</span>
+              ) : (
+                c.batch.items.some((x) => x.attachments) && <span className="extra-info">这次看不到图</span>
+              )}
               {i.model?.effortSource === "node_default" && <span className="extra-info">你设的强度这个模型没有，用的是节点默认</span>}
             </button>
           ))}
@@ -91,6 +97,27 @@ export function ConfirmView() {
                 ))}
               </ul>
             </details>
+          )}
+          {item && !item.attachments && c.batch.items.some((i) => i.attachments) && (
+            <p className="confirm-warn">{agentName(d, item.recipient)} 这次看不到图（模型看不了或还没测过），只收到「[图片：文件名]」占位文字。</p>
+          )}
+          {item?.attachments && (
+            <section aria-label="这次带的图">
+              <p className="confirm-label">
+                这次带给 {agentName(d, item.recipient)} 的图（{item.attachments.length} 张，按清单逐张核对后才发）
+              </p>
+              <ul className="confirm-attachments">
+                {item.attachments.map((a) => (
+                  <li key={a.index}>
+                    <img src={imageSrc(a.ref)} alt={`图 ${a.index}：${a.name}`} />
+                    <span title={a.name}>
+                      图 {a.index} · {a.name}
+                    </span>
+                    <code title={a.sha256}>{a.sha256.slice(0, 8)}</code>
+                  </li>
+                ))}
+              </ul>
+            </section>
           )}
           {snapshot ? (
             <pre className="confirm-prompt" aria-label={`发给 ${agentName(d, item!.recipient)} 的完整内容`}>{snapshot.content}</pre>
