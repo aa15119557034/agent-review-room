@@ -55,10 +55,11 @@
 | **C-42c** | Claude | 契约：SpeechClip、VoiceProfile、`replyAsVoice` | ADR-004 | 0.5 天 |
 | **C-42d** | Claude | 契约：ChartSpec、MediaIntent、沉浸模式设置 | ADR-004 | 0.5 天 |
 | **C-42e** | Claude | 契约补漏（C-43 开工时发现）：秘书回答上存合格的媒体意图 `mediaIntent` 和沉浸模式退回原因 `immersiveDeferred`，界面才能显示画图请求卡 /「想用语音说」 | C-42d | 0.2 天 |
+| **C-42f** | Claude | 契约小补（#114 汐提出）：`media.list` 加可选 `messageIds`（只用于 chat 范围，最多 100 个），会话累计超过 200 条任务后旧消息的图仍找得回来、请求卡不重复出现；`speakableText` 的占位上界放到 1000（「[我画的图：提示词]」） | C-42e | 0.2 天 |
 | **S-23** | Claude | 节点：看图实测、收附件并按清单校验、请求体 16 MB、`kind: "image"` Run 和生成图回传 | C-42a、C-42b | 2～3 天 |
 | **S-24** | Claude | 节点：读 Codex 额度（2 秒超时）并上报、实测单图消耗；S-21 的 Codex 部分提前，C-36 复用 | C-42b | 1 天 |
 | **D-36a** | DeepSeek | 图片处理管道（去全部元数据、转正、确定性输出、拒动图 / HEIC） | C-42a | 1.5～2 天 |
-| **D-36b** | DeepSeek | 附件清单进指纹、盖章和起跑重读比对、图片本体 + 引用表、数据库迁移 | C-42a、D-36a | 1.5～2 天 |
+| **D-36b** | DeepSeek | 附件清单进指纹、盖章和起跑重读比对、图片本体 + 引用表、数据库迁移；main 注册 `room-image://`（按引用表查本体、只读、不可导航、只认 `img_…`，其余 404） | C-42a、D-36a | 1.5～2 天 |
 | **D-37a** | DeepSeek | 语音合成试听（三个候选盲听） | C-42c | 2～3 天 |
 | **D-37b** | DeepSeek | 语音合成集成（独立进程、缓存、MediaJob）；朗读文本只用契约的 `speakableText`，不另写过滤 | D-37a | 2～3 天 |
 | **D-31d** | DeepSeek | 秘书回答存 `mediaIntent`（C-42e）：迁移给 `chat_messages` 加可空列（旧行读回省略）、`insertChatMessage` / `toChatMessage` 读写、写回答时调 `extractMediaIntent`（里面用契约里的 `speakableText` 判 speak 字数），被丢的原始值记审计；`immersiveDeferred` 留给 D-39 | C-42e、D-31b | 0.5 天 |
@@ -82,7 +83,7 @@
 | **S-20** | Claude | 节点：三个聊天 profile（无工具；Codex 单独 `CODEX_HOME`）；节点填记忆槽位并回报记忆清单和最终 hash；节点用低权限账号运行的说明和脚本。按 ADR-003 §2a：在每台电脑选定的 `<AgentRoom>`（不一定在 C 盘，必须本机 NTFS，写进节点配置 `homeDir`）下建布局和权限；一位秘书一个账号一个节点（计划任务以 `agentroom-<秘书>` 运行，`runAsUser` 不对就拒绝启动）；profile 的 `memory` 配置和「文件夹」读法（预算、core 规则、排序按 §2a）；主控机按 §2a「切换顺序」：先起 7421（`agentroom-codex`），D-40 迁移完成后才把 7420 切成 `agentroom-deepseek` 并建汐的记忆文件夹 | C-34、X-30 | **三条分开测，都用真实启动的三个 profile**：① 不能用工具：检查启动参数的工具 / 权限配置，实际尝试调命令被拒；② 文件隔离：能读指定记忆，尝试写 / 删 / 改记忆文件、读写用户数据里的哨兵文件全部被拒，前后文件 hash 不变；`..`、Windows junction / 符号链接越不出记忆目录。③ 账号隔离：切换完成后实际在跑的林离讨论 / 聊天 profile 读汐的记忆文件夹、读汐节点的 Token 被系统拒绝；7420 配置里带 `codex-*` 时节点拒绝启动；节点进程的用户是 `agentroom-*`，用江浩的账号启动被节点拒绝；④ 挑记忆的边界：core 缺失或为空 / core 超预算 / core 有文件超 `maxFileBytes` / core 超 200 个 → `unavailable`；`journal` 两种文件名混用时按日期排对；`memory.dir` 指向别的秘书的文件夹时启动报错；`memory.json` 缺失 / 损坏 / 越界 → `unavailable`；非 NTFS 的 `homeDir` 被拒；`mklink /H` 硬链接被跳过；同一份文件用 `robocopy /COPY:DAT` 复制后挑出的清单不变。（系统运行库、登录信息和临时缓存不在「其他用户数据」范围内，验收里写明） |
 | **C-35** | Claude | 聊天界面（按手机宽度设计）：会话列表、单聊 / 群聊、@、记忆来源标记、选消息转议题 | C-34 | mock 下跑通单聊、群聊、转议题 |
 | **D-34a** | DeepSeek | 聊天文件 + 静态表情库（沿用 C-32 引用规则；按内容去重；大小 / 数量上限；1B 不解析 PDF / Word） | C-34 | 文件按文件头判断类型；GIF 被拒；重启后都在（2～3 天） |
-| **D-34b** | DeepSeek | 语音转写：先 spike（10 段真实录音，在主控机 CPU 上测速度、错字率、加载时间、内存），再集成为独立进程 | C-34 | 断网也能转写；快于实时（3～5 天，含 spike） |
+| **D-34b** | DeepSeek | 语音转写：先 spike（10 段真实录音，在主控机 CPU 上测速度、错字率、加载时间、内存），再集成为独立进程；main 注册 `room-audio://`（和 D-37b 合成的语音共用一个处理器，规则同 `room-image://`，只认 `aud_…`） | C-34 | 断网也能转写；快于实时（3～5 天，含 spike） |
 | **X-31** | Codex | e2e：聊天 → 转议题 → 跑一轮；@ 规则（单聊、@一人、@所有人、没点名的 reply / skip 混合、正文里打 @ 但没选人、空输出 / 超时 vs 明确 skip，没有自动下一轮）；撤回（用唯一哨兵串：撤回后发给每位的 Snapshot、节点请求、压缩历史、转议题材料都不含它，数据库审计仍能读到；5 分钟边界；别人的消息不能撤；迟到结果不回流；重新编辑后旧回答位不复活） | D-31c、C-35 | 自动测试通过 |
 
 ## 1B-3 参与者

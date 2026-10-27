@@ -58,6 +58,9 @@ export const MediaScope = z.discriminatedUnion("kind", [
 ]);
 export type MediaScope = z.infer<typeof MediaScope>;
 
+/** C-42f：media.list 一次最多按多少条消息查（界面一页消息 + 余量） */
+export const MEDIA_LIST_MESSAGE_IDS_MAX = 100;
+
 // ================================================================ 画图
 
 export const DrawBackend = z.enum(["codex", "comfyui"]);

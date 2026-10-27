@@ -5,9 +5,11 @@ import {
   ControlEvent,
   DrawRequest,
   MEDIA_JOB_TRANSITIONS,
+  MEDIA_LIST_MESSAGE_IDS_MAX,
   MediaJob,
   MediaJobState,
   NodeHealth,
+  QUERIES,
   RemoteEvent,
   RemoteProfileQuota,
   SpeechClip,
@@ -222,5 +224,22 @@ describe("speech (C-42c)", () => {
     assert.ok(upd.safeParse({ type: "agent.update", id: "claude", voice: null }).success);
     assert.equal(upd.safeParse({ type: "agent.update", id: "claude", voice: { voiceId: "whale-soft", speed: 5 } }).success, false);
     assert.equal(upd.safeParse({ type: "agent.update", id: "claude", voice: { voiceId: "x", speed: 1, refAudioPath: "C:/a.wav" } }).success, false);
+  });
+});
+
+describe("media.list by message (C-42f)", () => {
+  const q = QUERIES["media.list"].request;
+  const scope = { kind: "chat", conversationId: `conv_${ID}` };
+  const msg = (n: number) => `cmsg_01JAAAAAAAAAAAAAAAAAAAA${String(n).padStart(3, "0")}`;
+
+  it("messageIds is optional, 1..MEDIA_LIST_MESSAGE_IDS_MAX, no duplicates", () => {
+    assert.ok(q.safeParse({ type: "media.list", scope }).success);
+    assert.ok(q.safeParse({ type: "media.list", scope, messageIds: [msg(1), msg(2)] }).success);
+    const max = Array.from({ length: MEDIA_LIST_MESSAGE_IDS_MAX }, (_, i) => msg(i));
+    assert.ok(q.safeParse({ type: "media.list", scope, messageIds: max }).success);
+    assert.equal(q.safeParse({ type: "media.list", scope, messageIds: [...max, msg(999)] }).success, false);
+    assert.equal(q.safeParse({ type: "media.list", scope, messageIds: [] }).success, false, "omit instead of empty");
+    assert.equal(q.safeParse({ type: "media.list", scope, messageIds: [msg(1), msg(1)] }).success, false);
+    assert.equal(q.safeParse({ type: "media.list", scope, messageIds: ["run_x"] }).success, false);
   });
 });

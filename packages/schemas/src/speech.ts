@@ -44,7 +44,7 @@ export function speakableText(text: string): string {
     .replace(/!\[[^\]\n]{0,200}\]\([^)\n]{0,2000}\)/g, "")
     .replace(/\[([^\]\n]{0,300})\]\((?:https?:\/\/|mailto:)[^)\n]{0,2000}\)/g, "$1")
     .replace(/(?:https?:\/\/|www\.)[^\s)）」』，。]+/g, "")
-    .replace(/\[(?:表情|图片|文件|语音|图表|我画的图|图 ?\d+[：:])[^\]\n]{0,200}\]/g, "")
+    .replace(/\[(?:表情|图片|文件|语音|图表|我画的图|图 ?\d+[：:])[^\]\n]{0,1200}\]/g, "")
     .replace(/[\p{Extended_Pictographic}\p{Regional_Indicator}\u{FE0F}\u{200D}\u{20E3}\u{1F3FB}-\u{1F3FF}]/gu, "")
     .replace(/`([^`\n]*)`/g, "$1")
     .replace(/[ \t]+/g, " ")
