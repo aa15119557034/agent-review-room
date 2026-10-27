@@ -194,7 +194,7 @@ pnpm install --frozen-lockfile
   -ConfigTemplate .\apps\agent-server\agent-server.config.json -AppSource (Get-Location) -TokenReader $env:USERNAME
 ```
 
-`-TokenReader` 只能是本机的一个用户账号，或者正在运行脚本的这个账号（这一条可以是域账号或 Entra 账号）；其他域账号、组都会被拒绝。秘书账号读不到江浩用户目录里 npm 装的 `claude` / `codex`，所以脚本会用 npm 给她单独装一份到 `node\<秘书>\cli`（要能上网），并把模板里 `command` 是 `claude` / `codex` 的 profile 改成这份的绝对路径（`node_modules\.bin\<秘书>.cmd`）；脚本还会给她「作为批处理作业登录」的权限，没有这个权限计划任务不会真正启动。`-TokenReader` 也不能是 SYSTEM、服务账号或 `agentroom-` 开头的节点账号。以前装过 #98 早期版本、`node\app`（或 `node\app.new`、`node\app.old`）里有 `node_modules` 的，先用 `rmdir /s /q` 删掉那个文件夹再装。
+`-TokenReader` 只能是本机的一个用户账号，或者正在运行脚本的这个账号（这一条可以是域账号或 Entra 账号）；其他域账号、组都会被拒绝。秘书账号读不到江浩用户目录里 npm 装的 `claude` / `codex`，所以脚本会用 npm 给她单独装一份到 `node\<秘书>\cli`（要能访问 npm 源；配置的源（比如镜像）装不上时会再试 `registry.npmjs.org`；平台原生包（比如 `@openai/codex-win32-x64`）没装上会单独补装；这一步在建账号之前，装不上就什么都不动），并把模板里 `command` 是 `claude` / `codex` 的 profile 改成这份的绝对路径（`node_modules\.bin\<秘书>.cmd`）；脚本还会给她「作为批处理作业登录」的权限，没有这个权限计划任务不会真正启动。`-TokenReader` 也不能是 SYSTEM、服务账号或 `agentroom-` 开头的节点账号。以前装过 #98 早期版本、`node\app`（或 `node\app.new`、`node\app.old`）里有 `node_modules` 的，先用 `rmdir /s /q` 删掉那个文件夹再装。
 
 重装替换程序时是两次改名（`node\app` → `app.old`，`app.new` → `app`）。如果正好在两次改名之间断电，`node\app` 会不见、所有秘书的节点都起不来；这时把 `node\app.old` 改名回 `app`，再重跑安装脚本（脚本发现这种情况也会拒绝继续并提示这一步）。
 
