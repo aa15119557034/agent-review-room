@@ -226,6 +226,12 @@ function Entry({ entry }: { entry: TimelineEntry }) {
           <LongText id={entry.message.id} text={entry.message.content} />
         </Bubble>
       );
+    case "material":
+      return (
+        <Bubble who="聊天" color="var(--ink-soft)" meta={`从聊天转来的材料 · ${entry.message.chatMessageIds.length} 条消息 · ${formatClock(entry.message.createdAt)}`}>
+          <LongText id={entry.message.id} text={entry.message.content} />
+        </Bubble>
+      );
     case "turn":
       return <TurnCard turn={entry.turn} reply={entry.reply} />;
     case "summary":

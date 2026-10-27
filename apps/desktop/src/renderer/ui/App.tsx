@@ -6,6 +6,7 @@ import { FragmentPicker, PromptStep } from "./PromptStep";
 import { ResultStep, RunList } from "./ResultStep";
 import { SettingsView } from "./SettingsView";
 import { DiscussionView, QuotaChips } from "./discussion/DiscussionView";
+import { ChatView } from "./chat/ChatView";
 
 /**
  * 整体布局：项目 / 四个工作步骤 / 运行记录。
@@ -28,6 +29,14 @@ export function App() {
 
 function Shell() {
   const view = useAppState((s) => s.view);
+  if (view === "chat") {
+    return (
+      <div className="shell shell-chat">
+        <TopBar />
+        <ChatView notice={<Notice />} />
+      </div>
+    );
+  }
   if (view === "discussion") {
     return (
       <div className="shell shell-discussion">
@@ -87,19 +96,23 @@ function TopBar() {
   return (
     <header className="topbar">
       <span className="wordmark">Agent 评审室</span>
-      {view !== "discussion" && <span className="topbar-project">{project?.name ?? "未选择项目"}</span>}
+      {(view === "desk" || view === "settings") && <span className="topbar-project">{project?.name ?? "未选择项目"}</span>}
       {isMock && (
         <span className="mock-flag" title="数据只存在内存里，不会调用真实的 Reviewer">
           演示数据
         </span>
       )}
       {view === "discussion" && <QuotaChips />}
-      {view !== "discussion" && status && (
+      {(view === "desk" || view === "settings") && status && (
         <span className="reviewer-status" data-ok={status.reviewerConfigured}>
           Reviewer：{status.reviewerConfigured ? status.reviewerAgent : "未设置节点"}
         </span>
       )}
       <nav className="topnav" aria-label="主导航">
+        <button type="button" aria-current={view === "chat" ? "page" : undefined} onClick={actions.goChat}>
+          聊天
+          <ChatUnread />
+        </button>
         <button type="button" aria-current={view === "discussion" ? "page" : undefined} onClick={actions.goDiscussion}>
           讨论
         </button>
@@ -170,6 +183,13 @@ function ProjectRail() {
       </form>
     </nav>
   );
+}
+
+/** 顶栏「聊天」上的未读数（免打扰的会话不算） */
+function ChatUnread() {
+  const n = useAppState((s) => (s.chat.list ?? []).reduce((sum, x) => sum + (x.conversation.muted ? 0 : x.unreadCount), 0));
+  if (!n) return null;
+  return <span className="chat-badge" aria-label={`${n} 条未读`}>{n > 99 ? "99+" : n}</span>;
 }
 
 export function Notice() {

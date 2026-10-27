@@ -148,6 +148,8 @@ export const agentColor = (d: DiscussionState, id: string) => d.agents.find((a) 
 
 export type TimelineEntry =
   | { kind: "note"; key: string; message: Extract<Message, { kind: "human_note" }> }
+  /** 从聊天转来的初始材料（chat.toTopic，C-35） */
+  | { kind: "material"; key: string; message: Extract<Message, { kind: "chat_material" }> }
   | { kind: "round"; key: string; round: Round; batches: ApprovalBatch[] }
   | { kind: "turn"; key: string; round: Round; turn: Turn; reply: Message | null }
   | { kind: "summary"; key: string; round: Round; turn: Turn; reply: Message | null; summary: RoundSummary | null };
@@ -176,8 +178,8 @@ export function timeline(d: DiscussionState, messages: Message[]): TimelineEntry
     }
   }
   for (const m of messages) {
-    if (m.kind !== "human_note") continue;
-    out.push({ ts: m.createdAt, order: 1, entry: { kind: "note", key: m.id, message: m } });
+    if (m.kind === "human_note") out.push({ ts: m.createdAt, order: 1, entry: { kind: "note", key: m.id, message: m } });
+    if (m.kind === "chat_material") out.push({ ts: m.createdAt, order: 0, entry: { kind: "material", key: m.id, message: m } });
   }
   return out
     .sort((a, b) => (a.ts < b.ts ? -1 : a.ts > b.ts ? 1 : a.order - b.order))

@@ -11,8 +11,11 @@ renderer/
 │  ├─ store.ts              极简状态容器（不引入第三方状态库）
 │  ├─ state.ts              AppState、事件合并（按 seq 去重）、selector
 │  ├─ client.ts             window.room 的薄封装，ok:false → ControlFailure
-│  └─ actions.ts            所有访问后端的操作；失败写入 state.notice，不向上抛
+│  ├─ actions.ts            所有访问后端的操作；失败写入 state.notice，不向上抛
+│  ├─ chat.ts               聊天（C-35）的状态、事件合并、时间线和 @ 规则（纯函数）
+│  └─ chat-actions.ts       聊天的操作（发送防重复、撤回、重试、转议题）
 ├─ mock/mock-backend.ts     内存版后端，实现同一个 RoomBridge，遵守状态机，出参按契约校验
+│                           （讨论室在 discussion-mock.ts，聊天在 chat-mock.ts）
 ├─ ui/                      React 组件（只读状态 + 调用 actions）
 └─ test/                    逻辑层测试（node:test）
 ```
@@ -34,6 +37,7 @@ pnpm exec tsx --test apps/desktop/src/renderer/test/*.test.ts
 #   ?mock            预置演示数据
 #   ?mock=empty      空白状态
 #   ?mock&outcome=error   让 Reviewer 调用失败
+#   聊天（顶栏「聊天」）：?mock 预置一个群聊和一个单聊；没点名时 Codex 会「这条没有回」
 ```
 
 ## 需要 D-01 提供的依赖
