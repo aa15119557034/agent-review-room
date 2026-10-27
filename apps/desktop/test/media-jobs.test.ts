@@ -212,6 +212,40 @@ describe("media jobs service (D-38a)", () => {
     }
   });
 
+  it("fails a job that waited longer than the queue timeout (gpu_queue_timeout)", async () => {
+    const h = await makeHarness();
+    try {
+      // 三分钟前就排上队的任务：轮到它时已经超过 2 分钟的上限
+      const stale: MediaJob = {
+        id: `mjob_${ulid()}`,
+        kind: "draw",
+        state: "queued",
+        authorization: "user_tap",
+        source: { kind: "chat", conversationId: h.conversationId, messageId: h.message.id, agent: null },
+        intentHash: null,
+        draw: { prompt: "排太久了", size: "1024x1024", backend: "comfyui" },
+        route: null,
+        remoteRunId: null,
+        result: null,
+        speech: null,
+        failure: null,
+        cancelReason: null,
+        createdAt: new Date(Date.parse(T) - 3 * 60_000).toISOString(),
+        startedAt: null,
+        finishedAt: null,
+      };
+      insertMediaJob(h.db, stale);
+
+      const fresh = await h.service.start(request({ prompt: "后来的" }), source(h), false);
+      await until(() => getMediaJob(h.db, stale.id)?.state === "failed");
+      assert.equal(h.service.get(stale.id).failure?.reason, "gpu_queue_timeout");
+      // 排队的那个失败了，后来的一样要正常画出来
+      await until(() => getMediaJob(h.db, fresh.id)?.state === "succeeded");
+    } finally {
+      h.db.close();
+    }
+  });
+
   it("maps ComfyUI timeout and generation errors to the right failure reasons", async () => {
     const timeoutComfy = fakeComfy();
     timeoutComfy.failure = new ComfyUiError("timeout", "超时");
