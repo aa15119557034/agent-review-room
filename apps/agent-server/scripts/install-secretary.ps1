@@ -165,16 +165,16 @@ $template.port = $Port
 if ($Agent -eq "codex") { $template.nodeId = "controller-local-codex" }
 
 # ---- 1.5 命令行：在建账号之前装好、试运行，装不上就什么都不动（只删这次新建的 cli 文件夹）
-# 原生命令写 stderr 时，5.1 在 $ErrorActionPreference = Stop 下会直接抛错、跳过退出码检查：临时改成 Continue，输出合并成文字
+# 原生命令写 stderr 时，5.1 在 $ErrorActionPreference = Stop 下会直接抛错、跳过退出码检查：临时改成 SilentlyContinue，输出合并成文字
 function Invoke-Native([scriptblock]$run) {
   $saved = $ErrorActionPreference
-  $ErrorActionPreference = "Continue"
+  $ErrorActionPreference = "SilentlyContinue"
   # stderr 行是 ErrorRecord：只取它的文字，免得显示成 PowerShell 的红色错误
   try { @(& $run 2>&1 | ForEach-Object { if ($_ -is [Management.Automation.ErrorRecord]) { $_.Exception.Message } else { "$_" } }) } finally { $ErrorActionPreference = $saved }
 }
 function Npm-Install([string[]]$specs, [string]$registry = "") {
   $extra = @(); if ($registry) { $extra = @("--registry=$registry") }
-  $out = Invoke-Native { & $npmCmd install --prefix $cliDir --include=optional --no-fund --no-audit --loglevel=error @extra @specs }
+  $out = Invoke-Native { & $npmCmd install --prefix $cliDir --include=optional --no-fund --no-audit --loglevel=error --fetch-retries=5 --fetch-retry-maxtimeout=120000 --fetch-timeout=300000 @extra @specs }
   # 失败时只留最后 15 行，够看出原因
   return @{ ok = ($LASTEXITCODE -eq 0); out = (@($out | Select-Object -Last 15) -join "`n") }
 }
