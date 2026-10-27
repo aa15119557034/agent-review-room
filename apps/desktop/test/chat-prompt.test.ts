@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { ChatMessage, ChatSnapshot, type UserChatMessage } from "@room/schemas";
 import { PromptBoundaryCollisionError } from "@room/core";
-import { buildChatSnapshot, CHAT_HISTORY_MAX_CHARS, CHAT_HISTORY_MAX_MESSAGES } from "../src/main/chat-prompt";
+import { buildChatSnapshot, capChatFileTexts, CHAT_HISTORY_MAX_CHARS, CHAT_HISTORY_MAX_MESSAGES } from "../src/main/chat-prompt";
 import { attachmentManifestBlock } from "@room/schemas";
 import { createHash } from "node:crypto";
 
@@ -64,6 +64,25 @@ describe("chat prompt (D-31b)", () => {
       ...extra,
     });
 
+  it("caps file text so a big file cannot blow the prompt (per file and total)", () => {
+    const short = capChatFileTexts([{ name: "短.md", text: "短正文" }]);
+    assert.deepEqual(short, [{ name: "短.md", text: "短正文" }]);
+
+    const one = capChatFileTexts([{ name: "长.md", text: "a".repeat(200_000) }]);
+    const kept = one[0]?.text ?? "";
+    assert.ok(kept.length < 200_000, "被截断");
+    assert.ok(kept.includes("（正文过长，只读了前 60000 字）"));
+
+    // 两个都超长：第二个只剩总预算里的部分，第三个完全放不进去
+    const many = capChatFileTexts([
+      { name: "a.md", text: "a".repeat(90_000) },
+      { name: "b.md", text: "b".repeat(90_000) },
+      { name: "c.md", text: "c".repeat(10) },
+    ]);
+    assert.ok((many[0]?.text ?? "").includes("只读了前 60000 字"));
+    assert.ok((many[1]?.text ?? "").includes("只读了前 60000 字"));
+    assert.ok((many[2]?.text ?? "").includes("没有放进 Prompt"));
+  });
   it("puts the image manifest first, keeps the hash over it, and hides file text inside the boundary", () => {
     const manifest = [
       {
@@ -214,6 +233,8 @@ describe("chat prompt (D-31b)", () => {
     assert.throws(() => build([forged], { inReplyToOf: () => undefined }), PromptBoundaryCollisionError);
   });
 });
+
+
 
 
 

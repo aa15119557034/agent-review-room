@@ -75,7 +75,7 @@ import {
   selectChatModel,
 } from "./chat-model";
 import { CHAT_MATERIAL_MAX_CHARS, CHAT_MATERIAL_PROMPT_HEADROOM, renderChatMaterial } from "./chat-material";
-import { buildChatSnapshot } from "./chat-prompt";
+import { buildChatSnapshot, capChatFileTexts } from "./chat-prompt";
 import type { Repository } from "./repository";
 import type { SettingsStore } from "./settings";
 
@@ -318,9 +318,11 @@ export class ChatService {
     const history = listChatMessages(db, conversation.id, null, 100).messages.slice().reverse();
     const promptFiles =
       content.kind === "text"
-        ? content.attachments
-            .filter((attachment) => attachment.kind === "file")
-            .map((attachment) => ({ name: attachment.name, text: this.#deps.readFileText?.(attachment.ref) ?? null }))
+        ? capChatFileTexts(
+            content.attachments
+              .filter((attachment) => attachment.kind === "file")
+              .map((attachment) => ({ name: attachment.name, text: this.#deps.readFileText?.(attachment.ref) ?? null })),
+          )
         : [];
     const snapshots = new Map<string, ChatSnapshot>();
     const adapterIds = new Map<string, string>();

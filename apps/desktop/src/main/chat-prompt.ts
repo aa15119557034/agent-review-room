@@ -31,6 +31,39 @@ export const CHAT_PROMPT_VERSION = "chat-v2";
 export const CHAT_HISTORY_MAX_MESSAGES = 40;
 export const CHAT_HISTORY_MAX_CHARS = 60_000;
 
+/**
+ * 文件正文进 Prompt 的预算：单个文件最多 6 万字，一条消息合计最多 12 万字。
+ * 文件本身可以到 20 MB——全塞进去会撑爆节点请求（也让一次回答贵得离谱），所以超出的部分截断并写清楚。
+ */
+export const CHAT_FILE_TEXT_MAX_CHARS = 60_000;
+export const CHAT_FILE_TEXT_TOTAL_MAX_CHARS = 120_000;
+
+export interface ChatPromptFile {
+  name: string;
+  /** 非文本文件没有正文（只给占位行） */
+  text: string | null;
+}
+
+/** 按上面的预算截断文件正文；截断的位置留一句说明，别让秘书以为文件就这么长 */
+export function capChatFileTexts(files: readonly ChatPromptFile[]): ChatPromptFile[] {
+  let remaining = CHAT_FILE_TEXT_TOTAL_MAX_CHARS;
+  return files.map((file) => {
+    if (file.text === null) return file;
+    const limit = Math.min(CHAT_FILE_TEXT_MAX_CHARS, remaining);
+    if (file.text.length <= limit) {
+      remaining -= file.text.length;
+      return file;
+    }
+    const kept = file.text.slice(0, Math.max(0, limit));
+    remaining = Math.max(0, remaining - kept.length);
+    const marker =
+      limit === 0
+        ? "\n（文件正文太长，后面的文件没有放进 Prompt）"
+        : `\n（正文过长，只读了前 ${kept.length} 字）`;
+    return { name: file.name, text: kept + marker };
+  });
+}
+
 const UNTRUSTED_OPEN = "UNTRUSTED_CHAT_DATA_";
 
 export interface ChatPromptAgent {
@@ -64,12 +97,6 @@ export interface BuildChatSnapshotInput {
   files?: readonly ChatPromptFile[];
   /** 测试用；生产环境不要传 */
   nonce?: string;
-}
-
-export interface ChatPromptFile {
-  name: string;
-  /** 非文本文件没有正文（只给占位行） */
-  text: string | null;
 }
 
 /** 文字和表情能进 Prompt（表情渲染成「[表情：说明]」）；附件和文件也支持，语音等 D-34b */
@@ -215,4 +242,5 @@ export function buildChatSnapshot(input: BuildChatSnapshotInput): ChatSnapshot {
     ...(manifest === undefined ? {} : { attachments: manifest }),
   });
 }
+
 
