@@ -169,12 +169,23 @@ if ($Agent -eq "codex") { $template.nodeId = "controller-local-codex" }
 function Invoke-Native([scriptblock]$run) {
   $saved = $ErrorActionPreference
   $ErrorActionPreference = "Continue"
-  try { @(& $run 2>&1 | ForEach-Object { "$_" }) } finally { $ErrorActionPreference = $saved }
+  # stderr 行是 ErrorRecord：只取它的文字，免得显示成 PowerShell 的红色错误
+  try { @(& $run 2>&1 | ForEach-Object { if ($_ -is [Management.Automation.ErrorRecord]) { $_.Exception.Message } else { "$_" } }) } finally { $ErrorActionPreference = $saved }
 }
 function Npm-Install([string[]]$specs, [string]$registry = "") {
   $extra = @(); if ($registry) { $extra = @("--registry=$registry") }
   $out = Invoke-Native { & $npmCmd install --prefix $cliDir --include=optional --no-fund --no-audit --loglevel=error @extra @specs }
-  return @{ ok = ($LASTEXITCODE -eq 0); out = ($out -join "`n") }
+  # 失败时只留最后 15 行，够看出原因
+  return @{ ok = ($LASTEXITCODE -eq 0); out = (@($out | Select-Object -Last 15) -join "`n") }
+}
+# 先用 npm 配置的源（比如镜像），不行再用官方源试一次
+function Npm-InstallWithFallback([string[]]$specs) {
+  $r = Npm-Install $specs
+  if (-not $r.ok) {
+    Write-Host "  配置的 npm 源失败，改用 registry.npmjs.org 再试一次" -ForegroundColor Yellow
+    $r = Npm-Install $specs "https://registry.npmjs.org"
+  }
+  return $r
 }
 # 这次新建的文件夹（从里到外）：失败时删掉 cli，外面几层只在空着的时候删
 $cliNewDirs = @($cliDir, $nodeMine, (Join-Path $HomeDir "node"), $HomeDir) | Where-Object { -not (Test-Path -LiteralPath $_) }
@@ -184,12 +195,13 @@ function Fail-Cli($msg) {
     if ($d -eq $cliDir) { Remove-Item -LiteralPath $d -Recurse -Force -ErrorAction SilentlyContinue }
     elseif (-not (Get-ChildItem -LiteralPath $d -Force)) { Remove-Item -LiteralPath $d -Force -ErrorAction SilentlyContinue }
   }
+  if ($cliNewDirs -notcontains $cliDir) { Write-Host "  $cliDir 是以前装的，这次没装完可能不完整；节点还在用旧配置，下次重跑会补齐" -ForegroundColor Yellow }
   Fail $msg
 }
 Step "安装 $cliPackage 到 $cliDir"
 # 已经装过就是升级到最新；npm 的普通安装不建链接（node\<秘书> 里也不能有链接，预检会查）
 New-Item -ItemType Directory -Force -Path $cliDir | Out-Null
-$r = Npm-Install @($cliPackage)
+$r = Npm-InstallWithFallback @($cliPackage)
 if (-not $r.ok -or -not (Test-Path -LiteralPath $cliCmd)) { Fail-Cli "安装 $cliPackage 失败。检查网络后重试：`n$($r.out)" }
 # 平台原生包（比如 @openai/codex-win32-x64）是 optionalDependencies，镜像没同步时 npm 会悄悄跳过：缺了就按清单单独装，
 # 配置的镜像装不上再试官方源
@@ -202,8 +214,7 @@ if ($arch -and $optional) {
     if (Test-Path -LiteralPath (Join-Path $cliDir ("node_modules\" + $dep.Name.Replace("/", "\")))) { continue }
     Write-Host "  补装平台包 $($dep.Name)（$($dep.Value)）"
     $spec = "$($dep.Name)@$($dep.Value)"
-    $r = Npm-Install @($spec)
-    if (-not $r.ok) { $r = Npm-Install @($spec) "https://registry.npmjs.org" }
+    $r = Npm-InstallWithFallback @($spec)
     if (-not $r.ok) { Fail-Cli "补装 $spec 失败：`n$($r.out)" }
   }
 }
