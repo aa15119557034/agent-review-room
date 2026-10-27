@@ -6,6 +6,7 @@ import { SCHEMA_V5 } from "./schema-v5";
 import { SCHEMA_V6 } from "./schema-v6";
 import { SCHEMA_V7 } from "./schema-v7";
 import { SCHEMA_V8 } from "./schema-v8";
+import { SCHEMA_V9 } from "./schema-v9";
 
 /**
  * 迁移（D-02）：用 PRAGMA user_version 记版本，每个迁移在自己的事务里跑。
@@ -84,6 +85,13 @@ export const MIGRATIONS: readonly Migration[] = [
     name: "chat-media-intent",
     up: (db) => {
       db.exec(SCHEMA_V8);
+    },
+  },
+  {
+    version: 9,
+    name: "image-refs",
+    up: (db) => {
+      db.exec(SCHEMA_V9);
     },
   },
 ];
