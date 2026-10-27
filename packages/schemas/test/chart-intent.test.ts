@@ -8,6 +8,7 @@ import {
   ImmersiveSettings,
   extractMediaIntent,
   SPEAK_MAX_CHARS,
+  speakableText,
   parseChartSpec,
 } from "../src/index";
 
@@ -57,9 +58,9 @@ describe("media intent & immersive (C-42d)", () => {
 
   it("valid envelope with bad media fields keeps the text and drops only the bad field", () => {
     const ok = ChatAgentOutput.parse({ kind: "reply", text: "给你画", draw: { prompt: "小鲸鱼", size: "1024x1024" }, speak: true });
-    assert.deepEqual(extractMediaIntent(ok as never, 2), { intent: { speak: true, draw: { prompt: "小鲸鱼", size: "1024x1024" } }, dropped: false });
+    assert.deepEqual(extractMediaIntent(ok as never), { intent: { speak: true, draw: { prompt: "小鲸鱼", size: "1024x1024" } }, dropped: false });
     const plain = ChatAgentOutput.parse({ kind: "reply", text: "好" });
-    assert.deepEqual(extractMediaIntent(plain as never, 2), { intent: null, dropped: false });
+    assert.deepEqual(extractMediaIntent(plain as never), { intent: null, dropped: false });
     for (const media of [
       { draw: { prompt: "x", size: "8192x8192" } },
       { draw: { prompt: "x".repeat(1001), size: "1024x1024" } },
@@ -67,28 +68,45 @@ describe("media intent & immersive (C-42d)", () => {
       { speak: "yes" },
     ]) {
       const env = ChatAgentOutput.parse({ kind: "reply", text: "好", ...media });
-      assert.deepEqual(extractMediaIntent(env as never, 2), { intent: null, dropped: true }, JSON.stringify(media));
+      assert.deepEqual(extractMediaIntent(env as never), { intent: null, dropped: true }, JSON.stringify(media));
     }
     const env = (media: object) => ChatAgentOutput.parse({ kind: "reply", text: "好", ...media }) as never;
     const d = { prompt: "小鲸鱼", size: "1024x1024" };
-    assert.deepEqual(extractMediaIntent(env({ speak: false }), 2), { intent: null, dropped: false }, "speak: false = not set");
-    assert.deepEqual(extractMediaIntent(env({ speak: false, draw: d }), 2), { intent: { draw: d }, dropped: false });
-    assert.deepEqual(extractMediaIntent(env({ speak: "yes", draw: d }), 2), { intent: { draw: d }, dropped: true }, "keep the good draw");
+    assert.deepEqual(extractMediaIntent(env({ speak: false })), { intent: null, dropped: false }, "speak: false = not set");
+    assert.deepEqual(extractMediaIntent(env({ speak: false, draw: d })), { intent: { draw: d }, dropped: false });
+    assert.deepEqual(extractMediaIntent(env({ speak: "yes", draw: d })), { intent: { draw: d }, dropped: true }, "keep the good draw");
     assert.deepEqual(
-      extractMediaIntent(env({ speak: true, draw: { ...d, size: "8192x8192" } }), 2),
+      extractMediaIntent(env({ speak: true, draw: { ...d, size: "8192x8192" } })),
       { intent: { speak: true }, dropped: true },
       "keep the good speak",
     );
   });
 
-  it("speak only counts for a speakable text of 1..SPEAK_MAX_CHARS chars (after the read-aloud filter)", () => {
+  it("speak only counts for a speakable text of 1..SPEAK_MAX_CHARS chars, by the same speakableText speech uses", () => {
     const d = { prompt: "小鲸鱼", size: "1024x1024" };
-    const env = ChatAgentOutput.parse({ kind: "reply", text: "长".repeat(SPEAK_MAX_CHARS + 1), speak: true, draw: d }) as never;
-    assert.deepEqual(extractMediaIntent(env, SPEAK_MAX_CHARS), { intent: { speak: true, draw: d }, dropped: false });
-    assert.deepEqual(extractMediaIntent(env, SPEAK_MAX_CHARS + 1), { intent: { draw: d }, dropped: true }, "too long: keep only draw");
-    assert.deepEqual(extractMediaIntent(env, 0), { intent: { draw: d }, dropped: true }, "nothing left to read aloud");
-    const onlySpeak = ChatAgentOutput.parse({ kind: "reply", text: "好", speak: true }) as never;
-    assert.deepEqual(extractMediaIntent(onlySpeak, SPEAK_MAX_CHARS + 1), { intent: null, dropped: true });
+    const reply = (text: string) => ChatAgentOutput.parse({ kind: "reply", text, speak: true, draw: d }) as never;
+    const said = "说".repeat(SPEAK_MAX_CHARS);
+    assert.deepEqual(extractMediaIntent(reply(said)), { intent: { speak: true, draw: d }, dropped: false });
+    assert.deepEqual(extractMediaIntent(reply(said + "多")), { intent: { draw: d }, dropped: true }, "too long: keep only draw");
+    // 原文 2500 多字，其中代码块 600 字：过滤后在上限内，照样能说（林离的例子）
+    const withCode = "说".repeat(1900) + "\n```ts\n" + "x".repeat(600) + "\n```\n";
+    assert.ok(withCode.length > SPEAK_MAX_CHARS);
+    assert.deepEqual(extractMediaIntent(reply(withCode)), { intent: { speak: true, draw: d }, dropped: false });
+    assert.deepEqual(extractMediaIntent(reply("```\ncode only\n```")), { intent: { draw: d }, dropped: true }, "nothing left to read aloud");
+    // 判 speak 和合成用的是同一个函数：结果和直接拿 speakableText 量出来的一致
+    for (const text of [said, said + "多", withCode, "看 https://example.com 🎉 [表情：比心]"]) {
+      const n = speakableText(text).length;
+      assert.equal(extractMediaIntent(reply(text)).intent?.speak === true, n > 0 && n <= SPEAK_MAX_CHARS, text.slice(0, 20));
+    }
+  });
+
+  it("speakableText keeps only the spoken part", () => {
+    assert.equal(speakableText("先看图：\n\n```room-chart\n{\"type\":\"bar\"}\n```\n\n汐开的最多。"), "先看图：\n汐开的最多。");
+    assert.equal(speakableText("详见[这份文档](https://example.com/a)，或者 https://x.dev/b 。"), "详见这份文档，或者 。");
+    assert.equal(speakableText("![图](https://example.com/a.png)好的 👍🏻 [表情：比心]"), "好的");
+    assert.equal(speakableText("改 `extractMediaIntent` 就行"), "改 extractMediaIntent 就行");
+    assert.equal(speakableText("没闭合的\n```\nconst a = 1"), "没闭合的");
+    assert.equal(speakableText("  \n "), "");
   });
 
   it("immersive settings: off by default, caps can only go down", () => {

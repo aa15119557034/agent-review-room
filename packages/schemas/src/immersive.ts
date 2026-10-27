@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { IsoTimestamp } from "./common";
 import { DrawSize, DRAW_PROMPT_MAX_CHARS } from "./media";
-import { SPEAK_MAX_CHARS } from "./speech";
+import { SPEAK_MAX_CHARS, speakableText } from "./speech";
 import type { ChatAgentOutput } from "./chat";
 
 /**
@@ -63,21 +63,19 @@ export type ImmersiveDeferral = z.infer<typeof ImmersiveDeferral>;
  * - intent：合格的那几项；一项都没有为 null
  * - dropped：有没有哪一项因为不合格被丢掉（调用方记下原始值）
  *
- * speakableChars：回答正文经过朗读过滤（去代码块、图表数据、链接、表情说明，D-37b，和 speech.play 用同一个函数）之后的字数。
- * speak 只对 1～SPEAK_MAX_CHARS 字的朗读文本生效（ADR-004 §3a）；超过或过滤后为空就丢掉 speak（dropped = true），
- * 文字照常显示。这样存下来的 mediaIntent.speak 一定是合成得了的，界面不会出现点了播放却被拒的按钮
+ * speak 只对朗读文本（speakableText，和 speech.play、D-37b 同一个函数）为 1～SPEAK_MAX_CHARS 字的回答生效（ADR-004 §3a）；
+ * 超过或过滤后为空就丢掉 speak（dropped = true），文字照常显示。这样存下来的 mediaIntent.speak 一定是合成得了的，
+ * 界面不会出现点了播放却被拒的按钮
  */
-export function extractMediaIntent(
-  env: Extract<ChatAgentOutput, { kind: "reply" }>,
-  speakableChars: number,
-): {
+export function extractMediaIntent(env: Extract<ChatAgentOutput, { kind: "reply" }>): {
   intent: MediaIntent | null;
   dropped: boolean;
 } {
   const intent: MediaIntent = {};
   let dropped = false;
   if (env.speak === true) {
-    if (speakableChars > 0 && speakableChars <= SPEAK_MAX_CHARS) intent.speak = true;
+    const n = speakableText(env.text).length;
+    if (n > 0 && n <= SPEAK_MAX_CHARS) intent.speak = true;
     else dropped = true;
   } else if (env.speak !== undefined && env.speak !== false) dropped = true;
   if (env.draw !== undefined) {

@@ -790,7 +790,7 @@ export const COMMANDS = {
   "media.stop": def(z.object({ type: z.literal("media.stop"), scope: MediaScope }), z.array(MediaJob), "cancel"),
 
   /**
-   * C-42c：你点了一条秘书回答的「播放」（authorization = user_play）。source 指向那条回答，main 自己取正文做朗读过滤，
+   * C-42c：你点了一条秘书回答的「播放」（authorization = user_play）。source 指向那条回答，main 自己取正文做朗读过滤（speakableText），
    * 不接受 renderer 传来的文字。缓存（键见 speech.ts，含语速）命中直接返回音频；否则建一个语音任务。
    * - source 以存下来的回答为准：消息不存在、不是秘书的回答，或 source.agent 和那条回答的作者对不上 → validation_failed。
    *   用谁的声音只看那条回答的作者，不看 renderer 传来的 agent
