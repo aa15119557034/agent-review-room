@@ -182,11 +182,12 @@ export class DiscussionService {
       finishedAt: null,
     };
 
+    const materials = this.#materialsFor(project.id);
     const prompts = assembleDiscussionBatch(
       {
         round: roundForPrompt,
         history: repo.discussionHistory(project.id, roundIndex),
-        materials: this.#materialsFor(project.id),
+        materials: materials.materials,
         plan,
         nonce: createNonce(),
       },
@@ -209,6 +210,7 @@ export class DiscussionService {
         planVersionId: command.planVersionId,
         historyMode: command.historyMode,
         compressedRounds: prompts[0]?.compressedRounds ?? [],
+        chatMaterialSourceIds: materials.sourceMessageIds,
       });
     } catch (error) {
       throw mapDraftError(error);
@@ -317,8 +319,9 @@ export class DiscussionService {
       summary: null,
     });
 
+    const materials = this.#materialsFor(round.projectId);
     const prompt = assembleSummaryPrompt(
-      { round, history, materials: this.#materialsFor(round.projectId), plan, nonce: createNonce() },
+      { round, history, materials: materials.materials, plan, nonce: createNonce() },
       { profile: summarizer, onBehalfOf: null, extraMaterials: [] },
     );
     assertPromptFits([prompt]);
@@ -329,6 +332,7 @@ export class DiscussionService {
         roundId: round.id,
         recipients: [{ agent: summarizer.id, prompt, model: summarizerModel }],
         compressedRounds: prompt.compressedRounds,
+        chatMaterialSourceIds: materials.sourceMessageIds,
       });
     } catch (error) {
       throw mapDraftError(error);
@@ -463,11 +467,12 @@ export class DiscussionService {
     const agents = command.targets.map((agentId) => repo.getAgent(agentId));
     const models = this.#selectModels(agents, "discussion", probes);
     const plan = round.planVersionId === null ? null : this.#loadPlan(round.projectId, round.planVersionId);
+    const materials = this.#materialsFor(round.projectId);
     const prompts = assembleDiscussionBatch(
       {
         round,
         history: this.#historyWithCurrent(round),
-        materials: this.#materialsFor(round.projectId),
+        materials: materials.materials,
         plan,
         userSupplement: command.content,
         supplementOnly: command.mode === "only",
@@ -475,6 +480,8 @@ export class DiscussionService {
       },
       agents.map((profile) => ({ profile, onBehalfOf: null, extraMaterials: [] })),
     );
+    // 注意：补充 note 已经先落库了（和 agent_unavailable 一样：批次没建成、补充留在时间线）。
+    // 所以这里超限也遵循同一个语义，不回滚 note——改这一点属于产品语义，不在这个修复里动。
     assertPromptFits(prompts);
 
     const supersede: { oldTurnId: string; agent: string }[] = [];
@@ -506,6 +513,7 @@ export class DiscussionService {
         })),
         compressedRounds: prompts[0]?.compressedRounds ?? [],
         supersede,
+        chatMaterialSourceIds: materials.sourceMessageIds,
       });
     } catch (error) {
       throw mapDraftError(error);
@@ -543,8 +551,9 @@ export class DiscussionService {
     const reuse = new Map<string, BatchModel | null>([[agent.id, previousItem?.model ?? null]]);
     const models = this.#selectModels([agent], "discussion", probes, reuse);
     const plan = round.planVersionId === null ? null : this.#loadPlan(round.projectId, round.planVersionId);
+    const materials = this.#materialsFor(round.projectId);
     const prompts = assembleDiscussionBatch(
-      { round, history: this.#historyWithCurrent(round), materials: this.#materialsFor(round.projectId), plan, nonce: createNonce() },
+      { round, history: this.#historyWithCurrent(round), materials: materials.materials, plan, nonce: createNonce() },
       [{ profile: agent, onBehalfOf: null, extraMaterials: [] }],
     );
     assertPromptFits(prompts);
@@ -557,6 +566,7 @@ export class DiscussionService {
         recipients: [{ agent: agent.id, prompt: prompts[0]!, model: models.get(agent.id) ?? null }],
         compressedRounds: prompts[0]?.compressedRounds ?? [],
         supersede: [{ oldTurnId: previous.id, agent: agent.id }],
+        chatMaterialSourceIds: materials.sourceMessageIds,
       });
     } catch (error) {
       throw mapDraftError(error);
@@ -623,11 +633,12 @@ export class DiscussionService {
       recipients,
       historyMode,
     };
+    const materials = this.#materialsFor(round.projectId);
     const prompts = assembleDiscussionBatch(
       {
         round: forPrompt,
         history: repo.discussionHistory(round.projectId, round.index),
-        materials: this.#materialsFor(round.projectId),
+        materials: materials.materials,
         plan,
         nonce: createNonce(),
       },
@@ -648,6 +659,7 @@ export class DiscussionService {
           model: models.get(profile.id) ?? null,
         })),
         compressedRounds: prompts[0]?.compressedRounds ?? [],
+        chatMaterialSourceIds: materials.sourceMessageIds,
       });
     } catch (error) {
       throw mapDraftError(error);
@@ -980,7 +992,7 @@ export class DiscussionService {
    * 不再带它）。所以每次拼 Prompt 都按 chat_message_ids 重读来源消息，把已排除的挑掉再重新整理；
    * 全被撤回了就不带这份材料。旧 Snapshot 不变（它存的是当时的文本）。
    */
-  #materialsFor(projectId: string): DiscussionMaterial[] {
+  #materialsFor(projectId: string): { materials: DiscussionMaterial[]; sourceMessageIds: string[] } {
     const { db } = this.#deps;
     const rows = db
       .prepare(
@@ -998,6 +1010,7 @@ export class DiscussionService {
     };
 
     const materials: DiscussionMaterial[] = [];
+    const sourceMessageIds: string[] = [];
     for (const row of rows) {
       const ids = JSON.parse(row.messageIds) as string[];
       const found = ids
@@ -1010,6 +1023,7 @@ export class DiscussionService {
       }
       const kept = found.filter((message) => !isExcludedFromContext(message, parentOf));
       if (kept.length === 0) continue;
+      for (const message of kept) sourceMessageIds.push(message.id);
       const ordered = kept.sort((left, right) =>
         left.createdAt === right.createdAt ? (left.id < right.id ? -1 : 1) : left.createdAt < right.createdAt ? -1 : 1,
       );
@@ -1018,7 +1032,8 @@ export class DiscussionService {
         content: renderChatMaterial(ordered, displayNameOf),
       });
     }
-    return materials;
+    // 这些消息在写入 Snapshot 的事务里还要再核一次：拼 Prompt 到拿到写锁之间可能被撤回
+    return { materials, sourceMessageIds: [...new Set(sourceMessageIds)] };
   }
 
   #loadPlan(projectId: string, planVersionId: string): PlanVersion {
@@ -1278,6 +1293,8 @@ function mapDraftError(error: unknown): unknown {
       return new DiscussionError("invalid_state", "这一轮不在待汇总状态");
     case "invalid_input":
       return new DiscussionError("validation_failed", error.message);
+    case "chat_material_changed":
+      return new DiscussionError("invalid_state", "材料里的聊天消息刚被撤回，请重新发起这一次");
     case "round_not_draft":
     case "round_not_paused":
     case "round_not_active":

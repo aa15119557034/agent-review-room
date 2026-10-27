@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
 import type { AgentAdapter } from "@room/core";
-import { insertChatMessage, openDatabase, retractChatMessage, type RunRow, ulid, WriteQueue } from "@room/db";
+import { createRoundDraft, insertChatMessage, openDatabase, retractChatMessage, RoundDraftError, type RunRow, ulid, WriteQueue } from "@room/db";
 import { ControlEvent, DEFAULT_AGENT_MODEL_SETTINGS, type AgentEvent, type BatchModel, type ModelOption, type ProfileModels } from "@room/schemas";
 import { DiscussionService, type NodeProbeResult } from "../src/main/discussion";
 import { createDispatcher } from "../src/main/ipc";
@@ -84,6 +84,7 @@ interface Harness {
   /** 节点探针被调用了几次、探的哪个 profile（用来验证按节点去重） */
   probeCalls: string[];
   settings: SettingsStore;
+  queue: WriteQueue;
   projectId: string;
 }
 
@@ -184,7 +185,7 @@ async function makeHarness(options: {
 
   const project = await dispatcher.handleCommand({ type: "project.create", name: "议题" });
   const projectId = (project as { data: { id: string } }).data.id;
-  return { db, dispatcher, repo, orchestrator, events, started, probeCalls, settings, projectId };
+  return { db, dispatcher, repo, orchestrator, events, started, probeCalls, settings, queue, projectId };
 }
 
 function draft(
@@ -1735,6 +1736,64 @@ describe("C-34 聊天材料进讨论室（D-31c）", () => {
       const result = await draft(h, ["deepseek"]);
       assert.equal(result.ok, false);
       assert.equal(failure(result).error, "validation_failed");
+      assert.equal((h.db.prepare("SELECT count(*) AS n FROM rounds").get() as { n: number }).n, 0);
+      assert.equal((h.db.prepare("SELECT count(*) AS n FROM prompt_snapshots").get() as { n: number }).n, 0);
+    } finally {
+      await close(h);
+    }
+  });
+});
+
+describe("C-34 材料来源在写事务里复核（D-31c）", () => {
+  it("Prompt 拼好之后来源被撤回：createRoundDraft 拒绝写入", async () => {
+    const h = await makeHarness();
+    try {
+      const now = new Date().toISOString();
+      const conversationId = "conv_" + "1".repeat(26);
+      h.db
+        .prepare(
+          "INSERT INTO conversations (id, kind, direct_agent, title, pinned, muted, last_read_message_id, last_activity_at, created_at) " +
+            "VALUES (?, 'direct', 'deepseek', '方案讨论', 0, 0, NULL, ?, ?)",
+        )
+        .run(conversationId, now, now);
+      const messageId = "cmsg_" + "1".repeat(26);
+      insertChatMessage(h.db, {
+        message: {
+          id: messageId,
+          conversationId,
+          createdAt: now,
+          sender: "user",
+          content: { kind: "text", text: "会被撤回的原文", attachments: [] },
+          mentions: { kind: "none" },
+          quoteMessageId: null,
+          replacesMessageId: null,
+          state: "sent",
+          retractedAt: null,
+        },
+      });
+
+      // 模拟：Prompt 已经用旧材料拼好（含原文），拿到写锁之前来源被撤回
+      retractChatMessage(h.db, messageId, now);
+      const content = "材料正文：会被撤回的原文";
+      const prompt = {
+        content,
+        contentHash: sha(content),
+        nonce: "0123456789abcdef",
+        adapterVersion: "discussion-v4",
+        tokenEstimate: 3,
+        differsFromOthers: false,
+      };
+      await assert.rejects(
+        createRoundDraft(h.db, h.queue, {
+          projectId: h.projectId,
+          recipients: [{ agent: "deepseek", prompt }],
+          task: "再写重一点",
+          taskSource: "human",
+          historyMode: "recent_with_summaries",
+          chatMaterialSourceIds: [messageId],
+        }),
+        (error: unknown) => error instanceof RoundDraftError && error.code === "chat_material_changed",
+      );
       assert.equal((h.db.prepare("SELECT count(*) AS n FROM rounds").get() as { n: number }).n, 0);
       assert.equal((h.db.prepare("SELECT count(*) AS n FROM prompt_snapshots").get() as { n: number }).n, 0);
     } finally {
