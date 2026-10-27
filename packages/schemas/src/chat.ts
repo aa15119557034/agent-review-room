@@ -7,6 +7,7 @@ import { BatchModel, CHAT_PERSONA_MAX_CHARS } from "./discussion";
 import { MemoryManifest, MemorySlot, occursExactlyOnce } from "./remote-protocol";
 import { ImageRef } from "./appearance";
 import { ATTACHMENT_LIMITS, AttachmentManifest, attachmentManifestBlock } from "./attachments";
+import { ImmersiveDeferral, MediaIntent } from "./immersive";
 
 /**
  * 聊天空间（ADR-003 / C-34，阶段 1B-2）。
@@ -23,6 +24,7 @@ import { ATTACHMENT_LIMITS, AttachmentManifest, attachmentManifestBlock } from "
  *   所以 AgentProfile 上**没有**「能看图」标记）、ImagePurpose 新增 chat / sticker / material / generated、每条消息的图片张数上限
  * - C-42c：你发的消息上的 `replyAsVoice`
  * - C-42d：ChatAgentOutput 的 reply 分支上的 `speak` / `draw`；沉浸模式设置按会话存，用 immersive.get / immersive.update
+ * - C-42e：秘书回答上存下合格的媒体意图（AgentChatMessage.mediaIntent）和沉浸模式的退回原因（immersiveDeferred）
  * C-34 先合并时，这些字段都不存在，旧数据读出来照样合法；C-42 合并后各自按自己的规则补。
  */
 
@@ -307,8 +309,27 @@ export const AgentChatMessage = z
     runId: RunId,
     /** 界面的「记忆来源」小标记：这次用到了几条节点记忆；没有记忆槽位为 null。来自 ChatRun.memoryManifest */
     memoryEntriesUsed: z.number().int().nonnegative().nullable(),
+    /**
+     * C-42e：这条回答里合格的媒体意图（extractMediaIntent 的 intent），和回答同一个事务写入；一项都没有就省略。
+     * 被丢掉的不合格原始值不在这里（只进审计记录）。界面靠它显示：
+     * - draw ：画图请求卡（沉浸模式关着，或被退回时）；沉浸模式自动画的任务用 media.list 按 source.messageId = 这条 找到
+     * - speak：「秘书想用语音说」的播放按钮（关着时不自动合成，见 C-42c / C-42d）
+     */
+    mediaIntent: MediaIntent.refine((i) => i.speak !== undefined || i.draw !== undefined, "没有媒体意图就省略").optional(),
+    /**
+     * C-42e：沉浸模式开着、但意图没有自动执行（见 ImmersiveDeferral）。只能退回这条确实带了的意图；
+     * 沉浸模式关着时省略（本来就不自动执行）
+     */
+    immersiveDeferred: ImmersiveDeferral.optional(),
   })
-  .strict();
+  .strict()
+  .refine(
+    (m) =>
+      m.immersiveDeferred === undefined ||
+      ((m.immersiveDeferred.speak === undefined || m.mediaIntent?.speak === true) &&
+        (m.immersiveDeferred.draw === undefined || m.mediaIntent?.draw !== undefined)),
+    "只能退回这条回答带了的媒体意图",
+  );
 export type AgentChatMessage = z.infer<typeof AgentChatMessage>;
 
 export const ChatMessage = z.union([UserChatMessage, AgentChatMessage]);

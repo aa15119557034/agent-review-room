@@ -39,6 +39,21 @@ export const MediaIntent = z
 export type MediaIntent = z.infer<typeof MediaIntent>;
 
 /**
+ * C-42e：沉浸模式开着、媒体意图却没有自动执行，在写回答的同一个事务里定下的原因（界面照原因把它显示成请求卡 / 播放按钮）：
+ * - hourly_limit：入队占名额时，这个会话最近 60 分钟的自动画图 / 自动语音已经到上限
+ * 入队之后才发生的退回（显卡排队超时、ComfyUI 没开）不在这里：任务本身会 failed（gpu_queue_timeout / backend_unavailable），
+ * 界面看任务的结局
+ */
+export const ImmersiveDeferReason = z.enum(["hourly_limit"]);
+export type ImmersiveDeferReason = z.infer<typeof ImmersiveDeferReason>;
+
+export const ImmersiveDeferral = z
+  .object({ speak: ImmersiveDeferReason.optional(), draw: ImmersiveDeferReason.optional() })
+  .strict()
+  .refine((d) => d.speak !== undefined || d.draw !== undefined, "没有被退回就省略");
+export type ImmersiveDeferral = z.infer<typeof ImmersiveDeferral>;
+
+/**
  * 从合法的 reply 信封里取媒体意图，speak 和 draw 分开校验：
  * - intent：合格的那几项；一项都没有为 null
  * - dropped：有没有哪一项因为不合格被丢掉（调用方记下原始值）
