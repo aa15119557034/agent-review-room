@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { IsoTimestamp } from "./common";
 import { DrawSize, DRAW_PROMPT_MAX_CHARS } from "./media";
+import { SPEAK_MAX_CHARS } from "./speech";
 import type { ChatAgentOutput } from "./chat";
 
 /**
@@ -42,7 +43,11 @@ export type MediaIntent = z.infer<typeof MediaIntent>;
  * C-42e：沉浸模式开着、媒体意图却没有自动执行，在写回答的同一个事务里定下的原因（界面照原因把它显示成请求卡 / 播放按钮）：
  * - hourly_limit：入队占名额时，这个会话最近 60 分钟的自动画图 / 自动语音已经到上限
  * 入队之后才发生的退回（显卡排队超时、ComfyUI 没开）不在这里：任务本身会 failed（gpu_queue_timeout / backend_unavailable），
- * 界面看任务的结局
+ * 界面看任务的结局。
+ *
+ * 不变量（D-38a / D-39 的验收）：沉浸模式开着时，mediaIntent 里的每一项要么有一条 authorization = immersive 的 MediaJob
+ * （本机也画不了时允许立刻 failed(backend_unavailable)），要么在 immersiveDeferred 里有原因，不能两样都没有。
+ * 这是写回答那一刻的记录：之后你手动点「画」/「播放」也不改它，界面以任务和语音片段的现状为准
  */
 export const ImmersiveDeferReason = z.enum(["hourly_limit"]);
 export type ImmersiveDeferReason = z.infer<typeof ImmersiveDeferReason>;
@@ -57,15 +62,24 @@ export type ImmersiveDeferral = z.infer<typeof ImmersiveDeferral>;
  * 从合法的 reply 信封里取媒体意图，speak 和 draw 分开校验：
  * - intent：合格的那几项；一项都没有为 null
  * - dropped：有没有哪一项因为不合格被丢掉（调用方记下原始值）
+ *
+ * speakableChars：回答正文经过朗读过滤（去代码块、图表数据、链接、表情说明，D-37b，和 speech.play 用同一个函数）之后的字数。
+ * speak 只对 1～SPEAK_MAX_CHARS 字的朗读文本生效（ADR-004 §3a）；超过或过滤后为空就丢掉 speak（dropped = true），
+ * 文字照常显示。这样存下来的 mediaIntent.speak 一定是合成得了的，界面不会出现点了播放却被拒的按钮
  */
-export function extractMediaIntent(env: Extract<ChatAgentOutput, { kind: "reply" }>): {
+export function extractMediaIntent(
+  env: Extract<ChatAgentOutput, { kind: "reply" }>,
+  speakableChars: number,
+): {
   intent: MediaIntent | null;
   dropped: boolean;
 } {
   const intent: MediaIntent = {};
   let dropped = false;
-  if (env.speak === true) intent.speak = true;
-  else if (env.speak !== undefined && env.speak !== false) dropped = true;
+  if (env.speak === true) {
+    if (speakableChars > 0 && speakableChars <= SPEAK_MAX_CHARS) intent.speak = true;
+    else dropped = true;
+  } else if (env.speak !== undefined && env.speak !== false) dropped = true;
   if (env.draw !== undefined) {
     const d = DrawIntent.safeParse(env.draw);
     if (d.success) intent.draw = d.data;

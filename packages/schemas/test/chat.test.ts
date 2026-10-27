@@ -183,6 +183,11 @@ describe("user messages", () => {
     assert.equal(AgentChatMessage.safeParse({ ...reply, immersiveDeferred: { draw: "hourly_limit" } }).success, false);
     assert.equal(AgentChatMessage.safeParse({ ...reply, mediaIntent: { draw }, immersiveDeferred: {} }).success, false);
     assert.equal(AgentChatMessage.safeParse({ ...reply, mediaIntent: { draw }, immersiveDeferred: { draw: "gpu_busy" } }).success, false);
+    assert.ok(AgentChatMessage.safeParse({ ...reply, mediaIntent: { speak: true }, immersiveDeferred: { speak: "hourly_limit" } }).success);
+    assert.ok(
+      AgentChatMessage.safeParse({ ...reply, mediaIntent: { speak: true, draw }, immersiveDeferred: { speak: "hourly_limit", draw: "hourly_limit" } }).success,
+    );
+    assert.equal(AgentChatMessage.safeParse({ ...reply, mediaIntent: { speak: true }, immersiveDeferred: { draw: "hourly_limit" } }).success, false);
   });
 });
 

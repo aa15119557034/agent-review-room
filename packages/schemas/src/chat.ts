@@ -301,7 +301,7 @@ export const AgentChatMessage = z
     ...chatMessageBase,
     sender: z.literal("agent"),
     agent: AgentName,
-    /** 1B 秘书只发文字 */
+    /** 正文（正本）。秘书不发图片和音频本身；想画图 / 想用语音说放在下面的 mediaIntent */
     text: z.string().max(CHAT_LIMITS.replyMaxChars).refine((t) => t.trim().length > 0, "回答不能是空白"),
     /** 回答的是哪条你发的消息、哪个回答位、哪个 Run */
     inReplyTo: ChatMessageId,
@@ -310,15 +310,17 @@ export const AgentChatMessage = z
     /** 界面的「记忆来源」小标记：这次用到了几条节点记忆；没有记忆槽位为 null。来自 ChatRun.memoryManifest */
     memoryEntriesUsed: z.number().int().nonnegative().nullable(),
     /**
-     * C-42e：这条回答里合格的媒体意图（extractMediaIntent 的 intent），和回答同一个事务写入；一项都没有就省略。
-     * 被丢掉的不合格原始值不在这里（只进审计记录）。界面靠它显示：
-     * - draw ：画图请求卡（沉浸模式关着，或被退回时）；沉浸模式自动画的任务用 media.list 按 source.messageId = 这条 找到
-     * - speak：「秘书想用语音说」的播放按钮（关着时不自动合成，见 C-42c / C-42d）
+     * C-42e：这条回答里合格的媒体意图（extractMediaIntent 的 intent），和回答同一个事务写入，沉浸模式关着也照存；一项都没有就省略。
+     * 被丢掉的不合格原始值不在这里：Run 的原始输出（message_complete）里本来就有，调用方另记一条审计日志，界面不显示。
+     * 界面靠它显示：
+     * - draw ：画图请求卡（沉浸模式关着，或被退回时）；相关的任务：media.list 列这个会话的媒体任务，客户端按 source.messageId 过滤
+     * - speak：「秘书想用语音说」的播放按钮（关着时不自动合成，见 C-42c / C-42d）；只有朗读文本在上限内才会有
+     * 你那条消息被撤回后（回答位变 retracted），界面不再显示这条回答的请求卡和播放按钮；记录本身不变
      */
     mediaIntent: MediaIntent.refine((i) => i.speak !== undefined || i.draw !== undefined, "没有媒体意图就省略").optional(),
     /**
      * C-42e：沉浸模式开着、但意图没有自动执行（见 ImmersiveDeferral）。只能退回这条确实带了的意图；
-     * 沉浸模式关着时省略（本来就不自动执行）
+     * 沉浸模式关着时省略（本来就不自动执行）。是写入那一刻的记录，之后手动执行了也不改：界面以任务 / 语音片段为准
      */
     immersiveDeferred: ImmersiveDeferral.optional(),
   })

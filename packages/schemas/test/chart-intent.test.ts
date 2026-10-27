@@ -7,6 +7,7 @@ import {
   DEFAULT_IMMERSIVE_SETTINGS,
   ImmersiveSettings,
   extractMediaIntent,
+  SPEAK_MAX_CHARS,
   parseChartSpec,
 } from "../src/index";
 
@@ -56,9 +57,9 @@ describe("media intent & immersive (C-42d)", () => {
 
   it("valid envelope with bad media fields keeps the text and drops only the bad field", () => {
     const ok = ChatAgentOutput.parse({ kind: "reply", text: "给你画", draw: { prompt: "小鲸鱼", size: "1024x1024" }, speak: true });
-    assert.deepEqual(extractMediaIntent(ok as never), { intent: { speak: true, draw: { prompt: "小鲸鱼", size: "1024x1024" } }, dropped: false });
+    assert.deepEqual(extractMediaIntent(ok as never, 2), { intent: { speak: true, draw: { prompt: "小鲸鱼", size: "1024x1024" } }, dropped: false });
     const plain = ChatAgentOutput.parse({ kind: "reply", text: "好" });
-    assert.deepEqual(extractMediaIntent(plain as never), { intent: null, dropped: false });
+    assert.deepEqual(extractMediaIntent(plain as never, 2), { intent: null, dropped: false });
     for (const media of [
       { draw: { prompt: "x", size: "8192x8192" } },
       { draw: { prompt: "x".repeat(1001), size: "1024x1024" } },
@@ -66,18 +67,28 @@ describe("media intent & immersive (C-42d)", () => {
       { speak: "yes" },
     ]) {
       const env = ChatAgentOutput.parse({ kind: "reply", text: "好", ...media });
-      assert.deepEqual(extractMediaIntent(env as never), { intent: null, dropped: true }, JSON.stringify(media));
+      assert.deepEqual(extractMediaIntent(env as never, 2), { intent: null, dropped: true }, JSON.stringify(media));
     }
     const env = (media: object) => ChatAgentOutput.parse({ kind: "reply", text: "好", ...media }) as never;
     const d = { prompt: "小鲸鱼", size: "1024x1024" };
-    assert.deepEqual(extractMediaIntent(env({ speak: false })), { intent: null, dropped: false }, "speak: false = not set");
-    assert.deepEqual(extractMediaIntent(env({ speak: false, draw: d })), { intent: { draw: d }, dropped: false });
-    assert.deepEqual(extractMediaIntent(env({ speak: "yes", draw: d })), { intent: { draw: d }, dropped: true }, "keep the good draw");
+    assert.deepEqual(extractMediaIntent(env({ speak: false }), 2), { intent: null, dropped: false }, "speak: false = not set");
+    assert.deepEqual(extractMediaIntent(env({ speak: false, draw: d }), 2), { intent: { draw: d }, dropped: false });
+    assert.deepEqual(extractMediaIntent(env({ speak: "yes", draw: d }), 2), { intent: { draw: d }, dropped: true }, "keep the good draw");
     assert.deepEqual(
-      extractMediaIntent(env({ speak: true, draw: { ...d, size: "8192x8192" } })),
+      extractMediaIntent(env({ speak: true, draw: { ...d, size: "8192x8192" } }), 2),
       { intent: { speak: true }, dropped: true },
       "keep the good speak",
     );
+  });
+
+  it("speak only counts for a speakable text of 1..SPEAK_MAX_CHARS chars (after the read-aloud filter)", () => {
+    const d = { prompt: "小鲸鱼", size: "1024x1024" };
+    const env = ChatAgentOutput.parse({ kind: "reply", text: "长".repeat(SPEAK_MAX_CHARS + 1), speak: true, draw: d }) as never;
+    assert.deepEqual(extractMediaIntent(env, SPEAK_MAX_CHARS), { intent: { speak: true, draw: d }, dropped: false });
+    assert.deepEqual(extractMediaIntent(env, SPEAK_MAX_CHARS + 1), { intent: { draw: d }, dropped: true }, "too long: keep only draw");
+    assert.deepEqual(extractMediaIntent(env, 0), { intent: { draw: d }, dropped: true }, "nothing left to read aloud");
+    const onlySpeak = ChatAgentOutput.parse({ kind: "reply", text: "好", speak: true }) as never;
+    assert.deepEqual(extractMediaIntent(onlySpeak, SPEAK_MAX_CHARS + 1), { intent: null, dropped: true });
   });
 
   it("immersive settings: off by default, caps can only go down", () => {
