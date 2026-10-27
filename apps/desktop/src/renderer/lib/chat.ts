@@ -76,6 +76,13 @@ export interface ChatMediaState {
   /** 正在播的回答（消息 id），和排着队等自动播的 */
   playing: string | null;
   playQueue: string[];
+  /**
+   * 这次运行里你点过「画」的消息（不随会话切换清空）。media.list 只给最近 200 条任务，
+   * 更早的任务查不到时，靠它提醒「画过了」，免得再点一次又花一份额度（汐 #115）
+   */
+  drawRequested: Record<string, true>;
+  /** 正在发 draw.start 的消息：结果回来前不能再发一次 */
+  drawStarting: Record<string, true>;
 }
 
 export const initialMedia: ChatMediaState = {
@@ -87,6 +94,8 @@ export const initialMedia: ChatMediaState = {
   clips: {},
   playing: null,
   playQueue: [],
+  drawRequested: {},
+  drawStarting: {},
 };
 
 export interface ChatDraft {

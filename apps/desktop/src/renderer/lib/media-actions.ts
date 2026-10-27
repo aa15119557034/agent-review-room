@@ -1,6 +1,6 @@
 import type { DrawRequest, DrawRoutePreview, ImmersiveSettings, MediaSource, NodeInfo, VoiceOption } from "@room/schemas";
 import type { RoomClient } from "./client";
-import { chatVision, mergeJobs, type VisionHint } from "./media";
+import { chatVision, jobActive, jobsOf, mergeJobs, type VisionHint } from "./media";
 import { draftOf, initialMedia, type ChatDraft, type ChatMediaState, type ChatState } from "./chat";
 import type { AppState } from "./state";
 import type { Store } from "./store";
@@ -64,6 +64,7 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
     setMedia((m) => ({ ...m, vision: Object.fromEntries(entries) }));
   }
 
+  /** 表情面板是你自己打开的：读不到就提示（和后台加载的媒体任务、沉浸设置不同，那些静默跳过） */
   async function loadStickers() {
     try {
       const stickers = await client.query({ type: "chat.stickers.list" });
@@ -160,8 +161,24 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
       }
     },
 
-    /** 你点了「画」（authorization = user_tap）。成功就关掉卡片，之后的进度看 media.updated */
+    /**
+     * 你点了「画」（authorization = user_tap）。成功就关掉卡片，之后的进度看 media.updated。
+     * 同一条消息已经在画、或者上一次 draw.start 还没回来，就不再发（卡片和「改用本机画」不会一下建两个任务）
+     */
     async startDraw(request: DrawRequest, source: MediaSource, confirmOverThreshold: boolean): Promise<boolean> {
+      if (source.kind !== "chat") return false;
+      const key = source.messageId;
+      const m = chat().media;
+      if (m.drawStarting[key] || jobsOf(m.jobs, key, "draw").some(jobActive)) {
+        fail(new Error("这条已经在画了，等它画完或先取消"));
+        return false;
+      }
+      setMedia((x) => ({ ...x, drawStarting: { ...x.drawStarting, [key]: true } }));
+      const done = () =>
+        setMedia((x) => {
+          const { [key]: _, ...rest } = x.drawStarting;
+          return { ...x, drawStarting: rest };
+        });
       try {
         const job = await client.command({
           type: "draw.start",
@@ -169,15 +186,23 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
           source,
           ...(confirmOverThreshold ? { confirmOverThreshold: true } : {}),
         });
-        setChat((c) => ({
-          ...c,
-          sheet: c.sheet?.kind === "draw" ? null : c.sheet,
-          media: source.kind === "chat" && source.conversationId === c.currentId ? { ...c.media, jobs: mergeJobs(c.media.jobs, [job]) } : c.media,
-        }));
+        setChat((c) => {
+          const drawRequested = { ...c.media.drawRequested, [key]: true as const };
+          return {
+            ...c,
+            sheet: c.sheet?.kind === "draw" ? null : c.sheet,
+            media:
+              source.conversationId === c.currentId
+                ? { ...c.media, jobs: mergeJobs(c.media.jobs, [job]), drawRequested }
+                : { ...c.media, drawRequested },
+          };
+        });
         return true;
       } catch (err) {
         fail(err);
         return false;
+      } finally {
+        done();
       }
     },
 

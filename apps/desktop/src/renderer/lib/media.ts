@@ -5,6 +5,7 @@ import {
   IMAGE_URL_SCHEME,
   MEDIA_JOB_TRANSITIONS,
   SPEAK_MAX_CHARS,
+  speakableText,
   canTransition,
   parseChartSpec,
   type AgentChatMessage,
@@ -163,11 +164,15 @@ export const jobsOf = (jobs: readonly MediaJob[], messageId: string, kind?: Medi
  * 秘书回答下面的画图请求卡要不要显示（mediaIntent.draw 存在时）：
  * - 有一个还没结束或者画成了的任务 → 不显示卡片，显示任务本身
  * - 沉浸模式自动画的任务因为显卡排队超时 / 本机没开失败了 → 退回成卡片（ADR-004 §3a）
+ * - 最近一次是林离额度用完失败 → 不显示卡片，失败那行有「改用本机画」，一处入口，不会一下建两个任务
  * - 其余（关着沉浸模式、超过每小时上限、你取消了、失败了）→ 显示卡片，可以再点「画」
  */
 export function showDrawCard(m: AgentChatMessage, jobs: readonly MediaJob[]): boolean {
   if (!m.mediaIntent?.draw) return false;
-  return !jobsOf(jobs, m.id, "draw").some((j) => jobActive(j) || j.state === "succeeded");
+  const draws = jobsOf(jobs, m.id, "draw");
+  if (draws.some((j) => jobActive(j) || j.state === "succeeded")) return false;
+  const last = draws.at(-1);
+  return !(last && canRetryLocally(last));
 }
 
 export const JOB_STATE_LABEL: Record<MediaJob["state"], string> = {
@@ -245,8 +250,11 @@ export const CODEX_MANUAL_LABEL: Record<DrawRoutePreview["codexManual"], string 
 
 // ---------------------------------------------------------------- 语音
 
-/** 朗读前的粗略长度检查（真正的朗读过滤在 main，D-37b）：明显超长就不显示「播放」 */
-export const tooLongToSpeak = (text: string) => text.length > SPEAK_MAX_CHARS * 4;
+/** 能不能念：和 main 判 speak、speech.play、D-37b 合成用同一个 speakableText（C-42e），不另算 */
+export function canSpeak(text: string): boolean {
+  const n = speakableText(text).length;
+  return n > 0 && n <= SPEAK_MAX_CHARS;
+}
 
 export function durationText(ms: number): string {
   const s = Math.max(1, Math.round(ms / 1000));

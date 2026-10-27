@@ -1,12 +1,12 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { CHART_FENCE, type AgentChatMessage, type AgentProfile, type ChatMessage, type MediaJob, type NodeHealth } from "@room/schemas";
+import { CHART_FENCE, SPEAK_MAX_CHARS, type AgentChatMessage, type AgentProfile, type ChatMessage, type MediaJob, type NodeHealth } from "@room/schemas";
 import { createMockBridge, type MockOptions } from "../mock/mock-backend";
 import { createActions } from "../lib/actions";
 import { applyMediaJob, initialMedia, type ChatDraft, type ChatState } from "../lib/chat";
 import { draftContent } from "../lib/chat-actions";
 import { createClient } from "../lib/client";
-import { asksForVoiceReply, chatVision, mergeJobs, routeText, showDrawCard, splitReply, stripCharts } from "../lib/media";
+import { asksForVoiceReply, canSpeak, chatVision, mergeJobs, routeText, showDrawCard, splitReply, stripCharts } from "../lib/media";
 import { initialState } from "../lib/state";
 import { createStore } from "../lib/store";
 
@@ -100,6 +100,15 @@ describe("media lib", () => {
     // 沉浸模式自动画失败（显卡排队超时）→ 退回成卡片，可以再点「画」
     assert.equal(showDrawCard(m, [job({ id: "j1", state: "failed", authorization: "immersive" })]), true);
     assert.equal(showDrawCard(m, [job({ id: "j1", state: "cancelled" })]), true);
+    // 林离额度用完：入口只留失败那行的「改用本机画」，不再同时出卡片
+    assert.equal(showDrawCard(m, [job({ id: "j1", state: "failed", failure: { reason: "quota_exhausted", message: "x" } })]), false);
+  });
+
+  it("canSpeak uses the contract's speakableText, like main does (汐 #115)", () => {
+    assert.equal(canSpeak("说".repeat(SPEAK_MAX_CHARS)), true);
+    assert.equal(canSpeak("说".repeat(SPEAK_MAX_CHARS + 1)), false);
+    assert.equal(canSpeak("说".repeat(1900) + "\n```ts\n" + "x".repeat(9000) + "\n```"), true, "long code block is not read aloud");
+    assert.equal(canSpeak("```\nonly code\n```"), false);
   });
 
   it("routeText says who drew it and the quota before", () => {
@@ -248,6 +257,45 @@ describe("C-43 through the UI actions (mock)", () => {
     assert.equal(r1!.immersiveDeferred, undefined);
     assert.deepEqual(r2!.immersiveDeferred, { draw: "hourly_limit" });
     assert.equal(showDrawCard(r2!, store.get().chat.media.jobs), true);
+  });
+
+  it("one draw at a time per message: a second start while the first is in flight or running is refused", async () => {
+    const { store, actions } = app();
+    await actions.start();
+    actions.goChat();
+    await actions.chat.createConversation({ kind: "direct", agent: "deepseek" }, null);
+    actions.chat.setDraftText("画一张");
+    await actions.chat.send();
+    await until(() => !!agentReply(store.get().chat.messages));
+    const reply = agentReply(store.get().chat.messages)!;
+    const src = { kind: "chat" as const, conversationId: reply.conversationId, messageId: reply.id, agent: reply.agent };
+    const d = reply.mediaIntent!.draw!;
+    const [a, b] = await Promise.all([
+      actions.chat.media.startDraw({ ...d, backend: "comfyui" }, src, false),
+      actions.chat.media.startDraw({ ...d, backend: "auto" }, src, false),
+    ]);
+    assert.deepEqual([a, b], [true, false]);
+    assert.equal(await actions.chat.media.startDraw({ ...d, backend: "codex" }, src, false), false, "still running");
+    assert.equal(jobsOf(store, "draw").length, 1);
+    assert.equal(store.get().chat.media.drawRequested[reply.id], true);
+    assert.deepEqual(store.get().chat.media.drawStarting, {});
+  });
+
+  it("re-edit puts the text back but not the old attachments or voice", async () => {
+    const { store, actions } = app();
+    await actions.start();
+    actions.goChat();
+    await actions.chat.createConversation({ kind: "direct", agent: "claude" }, null);
+    actions.chat.setDraftText("看看这个");
+    await actions.chat.send();
+    const mine = store.get().chat.messages.find((m) => m.sender === "user")!;
+    await actions.chat.retract(mine.id);
+    await actions.chat.media.pickAttachment("image");
+    const cid = store.get().chat.currentId!;
+    assert.equal(store.get().chat.drafts[cid]!.attachments.length, 1);
+    actions.chat.startReedit(mine.id);
+    const d = store.get().chat.drafts[cid]!;
+    assert.deepEqual([d.text, d.attachments, d.voice, d.replacesMessageId], ["看看这个", [], null, mine.id]);
   });
 
   it("retracting a message cancels the media jobs of its answers", async () => {

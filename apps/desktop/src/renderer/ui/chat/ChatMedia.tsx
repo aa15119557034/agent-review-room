@@ -25,7 +25,7 @@ import {
   routePreviewText,
   routeText,
   showDrawCard,
-  tooLongToSpeak,
+  canSpeak,
   visionWarnings,
   voiceBubbleWidth,
   JOB_STATE_LABEL,
@@ -155,6 +155,7 @@ function VoiceNote({ src, durationMs }: { src: string; durationMs: number }) {
 /** 语音（播放 / 合成中 / 自动合成的语音气泡）和画图（请求卡 / 任务 / 画好的图） */
 export function AgentMedia({ message, conv }: { message: AgentChatMessage; conv: Conversation }) {
   const jobs = useAppState((s) => s.chat.media.jobs);
+  const requested = useAppState((s) => s.chat.media.drawRequested[message.id] === true);
   const draws = jobsOf(jobs, message.id, "draw");
   return (
     <div className="agent-media">
@@ -162,7 +163,9 @@ export function AgentMedia({ message, conv }: { message: AgentChatMessage; conv:
       {draws.map((j) => (
         <DrawJobView key={j.id} job={j} message={message} conv={conv} />
       ))}
-      {showDrawCard(message, jobs) && <DrawOffer message={message} lastFailed={draws.filter((j) => !jobActive(j)).at(-1)} />}
+      {showDrawCard(message, jobs) && (
+        <DrawOffer message={message} lastFailed={draws.filter((j) => !jobActive(j)).at(-1)} drawnEarlier={draws.length === 0 && requested} />
+      )}
     </div>
   );
 }
@@ -209,7 +212,7 @@ function SpeechLine({ message }: { message: AgentChatMessage }) {
       </p>
     );
   }
-  if (tooLongToSpeak(message.text)) return null;
+  if (!canSpeak(message.text)) return null;
   const wants = message.mediaIntent?.speak === true;
   return (
     <p className="speech-line">
@@ -229,7 +232,7 @@ function SpeechLine({ message }: { message: AgentChatMessage }) {
   );
 }
 
-function DrawOffer({ message, lastFailed }: { message: AgentChatMessage; lastFailed: MediaJob | undefined }) {
+function DrawOffer({ message, lastFailed, drawnEarlier }: { message: AgentChatMessage; lastFailed: MediaJob | undefined; drawnEarlier: boolean }) {
   const actions = useActions();
   const name = useAppState((s) => s.disc.agents.find((a) => a.id === message.agent)?.displayName ?? message.agent);
   const draw = message.mediaIntent!.draw!;
@@ -240,8 +243,9 @@ function DrawOffer({ message, lastFailed }: { message: AgentChatMessage; lastFai
       </p>
       {message.immersiveDeferred?.draw === "hourly_limit" && <p className="chat-note">沉浸模式这个小时自动画图的名额用完了，等你点。</p>}
       {lastFailed && <p className="chat-note">上次：{jobEndText(lastFailed)}</p>}
+      {drawnEarlier && <p className="chat-note">这条你已经让画过了（图在较早的记录里，这里没加载到）。再画会再花一次额度。</p>}
       <button type="button" className="button-outline" onClick={() => actions.chat.media.openDrawCard(message.id, draw.prompt)}>
-        画…
+        {drawnEarlier ? "再画一张…" : "画…"}
       </button>
     </div>
   );
@@ -250,6 +254,10 @@ function DrawOffer({ message, lastFailed }: { message: AgentChatMessage; lastFai
 function DrawJobView({ job, message, conv }: { job: MediaJob; message: AgentChatMessage; conv: Conversation }) {
   const actions = useActions();
   const [zoom, setZoom] = useState(false);
+  const starting = useAppState((s) => s.chat.media.drawStarting[message.id] === true);
+  // 只有这条消息最近的那个任务给重试入口（showDrawCard 这时不显示卡片，入口只有这一处）
+  const latest = useAppState((s) => jobsOf(s.chat.media.jobs, message.id, "draw").at(-1)?.id === job.id);
+  const retry = latest && canRetryLocally(job);
   const immersive = job.authorization === "immersive" ? <span className="tag tag-immersive">沉浸</span> : null;
   if (jobActive(job)) {
     return (
@@ -290,10 +298,11 @@ function DrawJobView({ job, message, conv }: { job: MediaJob; message: AgentChat
     <p className="draw-job chat-note" data-state={job.state}>
       {immersive}🎨 {jobEndText(job)}
       {job.failure?.message && <span title={job.failure.message}> · {job.failure.message.slice(0, 60)}</span>}
-      {canRetryLocally(job) && job.draw && (
+      {retry && job.draw && (
         <button
           type="button"
           className="button-link"
+          disabled={starting}
           onClick={() =>
             void actions.chat.media.startDraw(
               { ...job.draw!, backend: "comfyui" },
@@ -303,6 +312,11 @@ function DrawJobView({ job, message, conv }: { job: MediaJob; message: AgentChat
           }
         >
           改用本机画
+        </button>
+      )}
+      {retry && job.draw && (
+        <button type="button" className="button-link" disabled={starting} onClick={() => actions.chat.media.openDrawCard(message.id, job.draw!.prompt)}>
+          换个画法…
         </button>
       )}
     </p>
@@ -341,7 +355,8 @@ export function DrawSheetBody({ messageId, prompt: initial, conv }: { messageId:
   const manualCodex = backend === "codex" && preview ? preview.codexManual : "none";
   const blocked = manualCodex === "blocked" || (preview !== undefined && preview !== null && preview.backend === null);
   const needConfirm = manualCodex === "confirm" && !confirming;
-  const ok = trimmed.length > 0 && trimmed.length <= DRAW_PROMPT_MAX_CHARS && !blocked && !busy;
+  // 预览还没回来（null）先不让点：可能正好是林离额度用满，main 会拒
+  const ok = trimmed.length > 0 && trimmed.length <= DRAW_PROMPT_MAX_CHARS && !blocked && !busy && preview !== null;
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -430,7 +445,7 @@ export function MediaHead() {
 export function ImmersiveSection() {
   const state = useAppState((s) => s.chat.media.immersive);
   const actions = useActions();
-  if (!state) return <p className="chat-note">沉浸模式：后端还没上线（D-39）。</p>;
+  if (!state) return <p className="chat-note">沉浸模式：暂时读不到设置（D-39 上线之前是正常的）。</p>;
   const { settings, usage } = state;
   const save = (patch: Partial<ImmersiveSettings>) => void actions.chat.media.updateImmersive({ ...settings, ...patch });
   return (

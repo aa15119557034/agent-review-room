@@ -185,6 +185,8 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
         replacesMessageId: m.id,
         replyAsVoice: m.replyAsVoice === true,
         replyAsVoiceTouched: m.replyAsVoice === true,
+        attachments: [],
+        voice: null,
       });
     },
 
