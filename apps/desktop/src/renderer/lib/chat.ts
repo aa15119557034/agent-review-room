@@ -246,7 +246,9 @@ export function applyMediaJob(c: ChatState, job: MediaJob): ChatState {
   if (jobs.find((j) => j.id === job.id) !== job) return { ...c, media: { ...c.media, jobs } };
   let { clips, playing, playQueue } = c.media;
   if (job.kind === "speech" && job.state === "succeeded" && job.speech && old?.state !== "succeeded") {
-    clips = { ...clips, [src.messageId]: job.speech };
+    // 和按消息查时一样：同一条回答有好几段时留合成时间最新的（汐 #117）
+    const had = clips[src.messageId];
+    if (!had || had.createdAt <= job.speech.createdAt) clips = { ...clips, [src.messageId]: job.speech };
     if (playing === null) playing = src.messageId;
     else if (playing !== src.messageId && !playQueue.includes(src.messageId)) playQueue = [...playQueue, src.messageId];
   }

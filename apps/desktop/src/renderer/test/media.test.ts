@@ -155,14 +155,14 @@ describe("C-43 through the UI actions (mock)", () => {
     // 测试能看到发出去的查询，也能把某个命令的回包扣住，等测试放行（模拟对话框开着、IPC 慢）
     const queries: { type: string; messageIds?: string[] }[] = [];
     const held = new Map<string, Promise<void>>();
-    // 发出时在这里的查询失败（回包仍按 hold 放行）
+    // 发出时在这里的查询失败（回包仍按 hold 放行）；"media.list#messageIds" 只让按消息查的失败
     const failing = new Set<string>();
     const bridge: typeof mock = {
       ...mock,
       query: (async (r: { type: string; messageIds?: string[] }) => {
         queries.push(structuredClone(r));
         const gate = held.get(r.type);
-        const fails = failing.has(r.type);
+        const fails = failing.has(r.type) || (!!r.messageIds && failing.has(`${r.type}#messageIds`));
         await gate;
         if (fails) return { ok: false, error: "internal", message: "数据库忙" };
         return mock.query(r as never);
@@ -451,7 +451,7 @@ describe("C-43 through the UI actions (mock)", () => {
     assert.equal(jobsOf(store, "draw").length, 6, "latest 5 + the old success");
     assert.equal(showDrawCard(back, store.get().chat.media.jobs), false);
     const lists = queries.filter((q) => q.type === "media.list");
-    assert.ok(lists.length > 0 && lists.every((q) => q.messageIds && q.messageIds.length > 0));
+    assert.ok(lists.some((q) => q.messageIds && q.messageIds.length > 0));
   });
 
   it("a failed media.list is not「never drawn」: no first-time draw card until a lookup succeeds (林离 #117)", async () => {
@@ -516,13 +516,95 @@ describe("C-43 through the UI actions (mock)", () => {
     assert.equal(store.get().chat.media.jobsLookup[reply.id], undefined, "late failure from the first visit is dropped");
   });
 
+  it("switching away for good: a late lookup for A doesn't touch B (汐 #117)", async () => {
+    const { store, actions, hold } = app();
+    await actions.start();
+    actions.goChat();
+    await actions.chat.createConversation({ kind: "direct", agent: "deepseek" }, null);
+    const a = store.get().chat.currentId!;
+    actions.chat.setDraftText("画一张");
+    await actions.chat.send();
+    await until(() => !!agentReply(store.get().chat.messages));
+    const reply = agentReply(store.get().chat.messages)!;
+    await actions.chat.media.startDraw({ ...reply.mediaIntent!.draw!, backend: "comfyui" }, { kind: "chat", conversationId: a, messageId: reply.id, agent: reply.agent }, false);
+    await until(() => jobsOf(store, "draw").some((j) => j.state === "succeeded"));
+    await actions.chat.createConversation({ kind: "direct", agent: "claude" }, null);
+    const release = hold("media.list");
+    await actions.chat.openConversation(a);
+    await actions.chat.createConversation({ kind: "direct", agent: "codex" }, null);
+    release();
+    await sleep(20);
+    assert.notEqual(store.get().chat.currentId, a);
+    assert.deepEqual(store.get().chat.media.jobs, []);
+    assert.deepEqual(store.get().chat.media.jobsLookup, {});
+  });
+
+  it("an unfinished job whose message isn't loaded still counts for 「停」 (汐 #117)", async () => {
+    const running = job({ id: "mjob_run", state: "running", startedAt: at(1), source: { kind: "chat", conversationId: "conv_1", messageId: "cmsg_old", agent: null } });
+    const done = job({ id: "mjob_done", state: "cancelled", cancelReason: "user_cancel", finishedAt: at(2) });
+    const client = {
+      // 整会话那次给两条；按消息查（这里没加载 cmsg_old）什么也没有
+      query: (r: { type: string; messageIds?: string[] }) =>
+        r.type !== "media.list" ? Promise.reject(new Error("not here")) : Promise.resolve(r.messageIds ? [] : [running, done]),
+      command: () => Promise.reject(new Error("not here")),
+      onEvent: () => () => {},
+    } as unknown as RoomClient;
+    const store = createStore({ ...initialState, chat: { ...initialState.chat, currentId: "conv_1" } });
+    const media = createMediaActions(store, client, () => {});
+    await media.loadForConversation("conv_1");
+    await media.loadJobs("conv_1", ["cmsg_a"]);
+    assert.deepEqual(store.get().chat.media.jobs.map((j) => j.id), ["mjob_run"], "only unfinished ones from the whole-conversation query");
+  });
+
+  it("the draw card re-checks a message whose lookup failed (汐 #117)", async () => {
+    const { store, actions, failing } = app();
+    await actions.start();
+    actions.goChat();
+    await actions.chat.createConversation({ kind: "direct", agent: "deepseek" }, null);
+    const a = store.get().chat.currentId!;
+    actions.chat.setDraftText("你好");
+    await actions.chat.send();
+    await until(() => !!agentReply(store.get().chat.messages));
+    const mine = store.get().chat.messages.find((m) => m.sender === "user")!;
+    await actions.chat.createConversation({ kind: "direct", agent: "codex" }, null);
+    failing.add("media.list");
+    await actions.chat.openConversation(a);
+    await until(() => store.get().chat.media.jobsLookup[mine.id] === "failed");
+    failing.clear();
+    actions.chat.media.openDrawCard(mine.id, "x");
+    assert.equal(store.get().chat.sheet?.kind, "draw");
+    await until(() => store.get().chat.media.jobsLookup[mine.id] === undefined);
+
+    // 「重新查」一次查全部没查到的
+    failing.add("media.list");
+    await actions.chat.media.loadJobs(a, store.get().chat.messages.map((m) => m.id));
+    assert.ok(store.get().chat.messages.every((m) => store.get().chat.media.jobsLookup[m.id] === "failed"));
+    failing.clear();
+    actions.chat.media.retryLookups();
+    await until(() => Object.keys(store.get().chat.media.jobsLookup).length === 0);
+  });
+
+  it("applyMediaJob keeps the newest clip, like the lookup does (汐 #117)", () => {
+    const speechJob = (n: number, state: MediaJob["state"]) =>
+      job({ id: `mjob_${n}`, kind: "speech", state, authorization: "user_play", draw: null, speech: state === "succeeded" ? clip(n) : null, createdAt: at(n), startedAt: at(n), finishedAt: state === "running" ? null : at(n) });
+    let c: ChatState = { ...initialState.chat, currentId: "conv_1", media: { ...initialMedia, clips: { cmsg_a: clip(9)! } } };
+    c = applyMediaJob(c, speechJob(5, "succeeded"));
+    assert.equal(c.media.clips["cmsg_a"]?.id, "spch_9", "an older clip finishing later doesn't replace it");
+    c = applyMediaJob(c, speechJob(12, "succeeded"));
+    assert.equal(c.media.clips["cmsg_a"]?.id, "spch_12");
+  });
+
   it("voice clips: the newest synthesized one wins, whatever order lookups land in (林离 #117)", async () => {
     const speechJob = (n: number) =>
       job({ id: `mjob_${n}`, kind: "speech", state: "succeeded", authorization: "user_play", draw: null, speech: clip(n), createdAt: at(n), startedAt: at(n), finishedAt: at(n) });
     const pending: ((jobs: MediaJob[]) => void)[] = [];
     const client = {
-      query: (r: { type: string }) =>
-        r.type === "media.list" ? new Promise<MediaJob[]>((res) => pending.push(res)) : Promise.reject(new Error("not here")),
+      query: (r: { type: string; messageIds?: string[] }) =>
+        r.type !== "media.list"
+          ? Promise.reject(new Error("not here"))
+          : r.messageIds
+            ? new Promise<MediaJob[]>((res) => pending.push(res))
+            : Promise.resolve([]),
       command: () => Promise.reject(new Error("not here")),
       onEvent: () => () => {},
     } as unknown as RoomClient;
@@ -565,7 +647,7 @@ describe("C-43 through the UI actions (mock)", () => {
     const ids = Array.from({ length: 30 }, (_, i) => `cmsg_${String(i).padStart(26, "0")}`);
     queries.length = 0;
     await actions.chat.media.loadJobs(a, [...ids, ids[0]!]);
-    const lists = queries.filter((q) => q.type === "media.list");
+    const lists = queries.filter((q) => q.type === "media.list" && q.messageIds);
     assert.equal(lists.length, Math.ceil(ids.length / MEDIA_LIST_MESSAGE_IDS_MAX));
     assert.ok(lists.every((q) => q.messageIds!.length <= MEDIA_LIST_MESSAGE_IDS_MAX));
     assert.deepEqual(lists.flatMap((q) => q.messageIds!), ids);
@@ -578,9 +660,9 @@ describe("C-43 through the UI actions (mock)", () => {
     await actions.chat.createConversation({ kind: "direct", agent: "claude" }, null);
     queries.length = 0;
     await actions.chat.openConversation(a);
-    await until(() => queries.some((q) => q.type === "media.list"));
+    await until(() => queries.some((q) => q.type === "media.list" && q.messageIds));
     const loaded = store.get().chat.messages.map((m) => m.id).sort();
-    assert.deepEqual(queries.filter((q) => q.type === "media.list").flatMap((q) => q.messageIds!).sort(), loaded);
+    assert.deepEqual(queries.filter((q) => q.type === "media.list" && q.messageIds).flatMap((q) => q.messageIds!).sort(), loaded);
   });
 
   it("retracting a message cancels the media jobs of its answers", async () => {

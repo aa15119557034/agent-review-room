@@ -36,9 +36,18 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
   async function loadForConversation(conversationId: string) {
     const gen = ++openGen;
     setMedia((m) => ({ ...m, jobs: [], immersive: null, clips: {}, playing: null, playQueue: [], jobsLookup: {} }));
-    const immersive = await client.query({ type: "immersive.get", conversationId }).catch(() => null);
+    // 还没结束的任务另外按整个会话查一次：它的消息可能不在已加载的那几页，「停」也要算上它（汐 #117）
+    const [immersive, recent] = await Promise.all([
+      client.query({ type: "immersive.get", conversationId }).catch(() => null),
+      client.query({ type: "media.list", scope: { kind: "chat", conversationId } }).catch(() => null),
+    ]);
     if (gen !== openGen) return;
-    setChat((c) => (c.currentId !== conversationId ? c : { ...c, media: { ...c.media, immersive: immersive ?? c.media.immersive } }));
+    const active = (recent ?? []).filter(jobActive);
+    setChat((c) =>
+      c.currentId !== conversationId
+        ? c
+        : { ...c, media: { ...c.media, immersive: immersive ?? c.media.immersive, jobs: mergeJobs(active, c.media.jobs) } },
+    );
   }
 
   /**
@@ -217,7 +226,19 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
 
     // ---------------------------------------------------------- 画图（D-38）
 
-    openDrawCard: (messageId: string, prompt: string) => setChat((c) => ({ ...c, sheet: { kind: "draw", messageId, prompt } })),
+    /** 画图卡。这条的任务没查到（failed）时顺便再查一次，卡上也会提醒「可能已经画过」（汐 #117） */
+    openDrawCard(messageId: string, prompt: string) {
+      setChat((c) => ({ ...c, sheet: { kind: "draw", messageId, prompt } }));
+      const c = chat();
+      if (c.currentId && c.media.jobsLookup[messageId] === "failed") void loadJobs(c.currentId, [messageId]);
+    },
+
+    /** 把当前会话里所有没查到的消息再查一次（一批失败后不用一条一条点，汐 #117） */
+    retryLookups() {
+      const c = chat();
+      const failed = Object.keys(c.media.jobsLookup).filter((id) => c.media.jobsLookup[id] === "failed");
+      if (c.currentId && failed.length > 0) void loadJobs(c.currentId, failed);
+    },
 
     /** 请求卡打开 / 改了路时预览走哪条路（main 现读一次额度）。失败返回 undefined，卡片上显示「预览不了」 */
     async previewDraw(request: DrawRequest): Promise<DrawRoutePreview | undefined> {
