@@ -7,7 +7,7 @@ import { applyMediaJob, initialMedia, type ChatDraft, type ChatState } from "../
 import { draftContent } from "../lib/chat-actions";
 import { createClient, type RoomClient } from "../lib/client";
 import { createMediaActions } from "../lib/media-actions";
-import { asksForVoiceReply, canSpeak, chatVision, mergeJobs, routeText, showDrawCard, splitReply, stripCharts } from "../lib/media";
+import { asksForVoiceReply, canSpeak, chatVision, jobActive, mergeJobs, routeText, showDrawCard, splitReply, stripCharts } from "../lib/media";
 import { initialState } from "../lib/state";
 import { createStore } from "../lib/store";
 
@@ -582,6 +582,16 @@ describe("C-43 through the UI actions (mock)", () => {
     failing.clear();
     actions.chat.media.retryLookups();
     await until(() => Object.keys(store.get().chat.media.jobsLookup).length === 0);
+  });
+
+  it("a job pushed later for a message that isn't loaded still counts for 「停」 (汐 #117)", () => {
+    let c: ChatState = { ...initialState.chat, currentId: "conv_1", media: { ...initialMedia } };
+    const running = job({ id: "mjob_r", state: "running", startedAt: at(1), source: { kind: "chat", conversationId: "conv_1", messageId: "cmsg_not_loaded", agent: null } });
+    c = applyMediaJob(c, running);
+    // MediaHead 的「停（N）」按 jobs 里没结束的任务计数
+    assert.equal(c.media.jobs.filter(jobActive).length, 1);
+    c = applyMediaJob(c, { ...running, state: "cancelled", cancelReason: "user_stop", finishedAt: at(2) } as MediaJob);
+    assert.equal(c.media.jobs.filter(jobActive).length, 0);
   });
 
   it("applyMediaJob keeps the newest clip, like the lookup does (汐 #117)", () => {
