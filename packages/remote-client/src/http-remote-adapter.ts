@@ -16,7 +16,10 @@ import {
   RemoteRunSummary,
   RunModel,
   StartRunAttachments,
+  attachmentImageBlock,
+  attachmentManifestBlock,
   imageBlockPlaced,
+  imageSlotNonce,
   isTerminalEvent,
   type AgentEvent,
   type FailureReason,
@@ -82,7 +85,15 @@ function checkImages(input: AgentInput): string | null {
   if (input.attachments === undefined || input.imageSlot === undefined) return "图片和图片位置标记要成对出现";
   const parsed = StartRunAttachments.safeParse(input.attachments);
   if (!parsed.success) return "图片清单格式不对";
-  if (!imageBlockPlaced(input.content, parsed.data, input.imageSlot)) return "prompt 里的图片清单或图片资料块和这组图片对不上";
+  if (!imageBlockPlaced(input.content, parsed.data, input.imageSlot)) {
+    // 拆开说是哪一项，真机排查时少跑几轮（判断本身仍以 imageBlockPlaced 为准）
+    const nonce = imageSlotNonce(input.imageSlot);
+    if (!input.content.startsWith(attachmentManifestBlock(parsed.data))) return "prompt 开头的图片清单块和这组图片对不上";
+    if (nonce === null) return "图片位置标记格式不对";
+    if (input.content.split(attachmentImageBlock(nonce, parsed.data.length)).length !== 2) return "prompt 里的图片资料块缺失、重复或不在清单块之后";
+    if (input.content.split(input.imageSlot).length !== 2) return "图片位置标记在 prompt 里没有恰好出现一次";
+    return "图片资料块不在清单块之后";
+  }
   for (const image of parsed.data) {
     const bytes = Buffer.from(image.data, "base64");
     if (bytes.length !== image.bytes || createHash("sha256").update(bytes).digest("hex") !== image.sha256) {

@@ -460,6 +460,8 @@ describe("C-40 StartRun.model", () => {
       ["只有图没有标记", { ...good, imageSlot: undefined }],
       ["只有标记没有图", { ...good, attachments: undefined }],
       ["sha256 对不上", { ...good, attachments: [{ ...image, sha256: "0".repeat(64) }] }],
+      ["bytes 和实际不符", { ...good, attachments: [{ ...image, bytes: 999 }] }],
+      ["编号不连续", { ...good, attachments: [image, { ...image, index: 3, sha256: "1".repeat(64) }] }],
       ["content 没有图片资料块", (() => {
         const c = attachmentManifestBlock([image] as never) + "当前消息：看看这张图";
         return { ...good, content: c, contentHash: sha(c) };
@@ -470,6 +472,7 @@ describe("C-40 StartRun.model", () => {
       const last = events.at(-1)!;
       assert.equal(last.type, "error", what);
       assert.equal((last as { reason: string }).reason, "hash_mismatch", what);
+      assert.match((last as { message: string }).message, /^发送前校验失败：/, what);
       assertWellFormed(events);
     }
     assert.equal(bodies.length, 2, "坏输入一个请求都没发");
