@@ -687,6 +687,21 @@ describe("X-34b 聊天图片送到节点", () => {
       assert.equal(blind.attachments, undefined, "看不到图的不带图");
       assert.equal(blind.imageSlot, undefined);
       assert.match(blind.snapshot.content, /\[图片：图片\.png\]/, "只给名字占位");
+
+      // 落库的清单：ref / name 也锁住（清单块里不含它们，content 只能间接验证）
+      const stored = h.db.prepare("SELECT attachments FROM chat_snapshots WHERE id = ?").get(seen.snapshot.id) as { attachments: string };
+      assert.deepEqual(JSON.parse(stored.attachments), [{ index: 1, ref, name: "图片.png", mime: "image/png", bytes: PNG.length, sha256: PNG_SHA }]);
+
+      // 图只跟着它自己那条消息走：下一条纯文字消息不再带图，历史里只剩名字占位
+      h.nodes.controller.setBehavior("deepseek-chat", reply("好"));
+      h.nodes.controller.setBehavior("codex-chat", reply("好"));
+      const next = await send(h, conv, "那接着说");
+      await settled(h, next.messageId);
+      const followUp = h.nodes.controller.bodies.filter((b) => b.profileId === "deepseek-chat").at(-1)!;
+      assert.notEqual(followUp.runId, seen.runId);
+      assert.equal(followUp.attachments, undefined, "第二条不再带图");
+      assert.equal(followUp.imageSlot, undefined);
+      assert.match(followUp.snapshot.content, /\[图片：图片\.png\]/, "历史里给名字占位");
     } finally {
       await h.close();
     }
