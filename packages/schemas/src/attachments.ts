@@ -147,7 +147,7 @@ export const imageSlotNonce = (marker: string): string | null => /^\[图片位�
 const occursOnce = (content: string, part: string): boolean => content.split(part).length === 2;
 
 /**
- * 图片资料块放得对不对：标记格式对、块（按标记里的 nonce 和图片张数生成）恰好一次且整个在清单块之后、标记恰好一次。
+ * 图片资料块放得对不对：content 以清单块开头、标记格式对、块（按标记里的 nonce 和图片张数生成）恰好一次且整个在清单块之后、标记恰好一次。
  * 不检查「在当前用户消息之前」（见上面的说明）
  */
 export const imageBlockPlaced = (
@@ -158,10 +158,12 @@ export const imageBlockPlaced = (
   const nonce = imageSlotNonce(marker);
   if (nonce === null) return false;
   const block = attachmentImageBlock(nonce, entries.length);
+  const manifest = attachmentManifestBlock(entries);
   return (
+    content.startsWith(manifest) &&
     occursOnce(content, block) &&
     occursOnce(content, marker) &&
-    content.indexOf(block) >= attachmentManifestBlock(entries).length
+    content.indexOf(block) >= manifest.length
   );
 };
 

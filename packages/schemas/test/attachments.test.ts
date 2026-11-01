@@ -206,6 +206,19 @@ describe("attachments (C-42a)", () => {
       synthesisVersion: null, branch: null, commitSha: null, attachments: es, imageSlot: SLOT, createdAt: "2026-10-25T18:00:00+08:00",
     };
     assert.ok(PromptSnapshot.safeParse(prompt).success);
+    // 林离 #130 复审：有图片资料块、却没有附件清单（用足够长的文字顶替清单的长度）
+    const noManifest = { ...prompt, content: `${"x".repeat(eb.length)}${BLOCK()}\n议题` };
+    assert.equal(PromptSnapshot.safeParse(noManifest).success, false, "image block without the manifest block");
+    assert.equal(
+      PromptSnapshot.safeParse({ ...noManifest, imageSlot: undefined, content: "议题" }).success,
+      false,
+      "attachments without the manifest block (no slot either)",
+    );
+    assert.equal(
+      ChatSnapshot.safeParse({ ...snap, content: `${"x".repeat(eb.length)}${BLOCK()}\nhello` }).success,
+      false,
+      "same for chat",
+    );
     assert.equal(PromptSnapshot.safeParse({ ...prompt, content: `${eb}材料 ${SLOT}\n议题` }).success, false, "bare slot without the block");
     const { attachments: _a, imageSlot: _s, ...plain } = prompt;
     assert.ok(PromptSnapshot.safeParse({ ...plain, content: "议题" }).success, "old snapshots without images still parse");

@@ -3,6 +3,7 @@ import {
   AttachmentImageSlot,
   AttachmentManifest,
   attachmentImageSlotMarker,
+  attachmentManifestBlock,
   imageBlockPlaced,
 } from "./attachments";
 import {
@@ -194,6 +195,10 @@ export const PromptSnapshot = z.object({
   imageSlot: AttachmentImageSlot.optional(),
   createdAt: IsoTimestamp,
 })
+  .refine(
+    (s) => s.attachments === undefined || s.content.startsWith(attachmentManifestBlock(s.attachments)),
+    "带图时 content 要以附件清单块开头",
+  )
   .refine((s) => s.imageSlot === undefined || s.attachments !== undefined, "不带图时不能有 imageSlot")
   .refine(
     (s) =>
