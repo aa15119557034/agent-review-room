@@ -162,8 +162,9 @@ export class ComfyUiClient {
         return { image, seed: input.seed, model: this.modelName(), workflowHash: this.workflowHash() };
       }
     } catch (error) {
-      // 超时的时候让 ComfyUI 也停下来，别继续占着显卡（C酱 #123）；取消由调用方发 cancelActive
-      if (!opts.signal?.aborted && deadline.signal.aborted) await this.interrupt();
+      // 超时：像取消一样收尾——先删我们的队列项，只有确认在跑才打断，
+      // 不能把用户在 ComfyUI 里手动跑的任务一起停掉（C酱 #123）
+      if (!opts.signal?.aborted && deadline.signal.aborted) await this.cancelActive();
       throw error;
     } finally {
       clearTimeout(timer);

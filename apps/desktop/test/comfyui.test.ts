@@ -148,6 +148,8 @@ describe("ComfyUI client (D-38a)", () => {
 
     const stuck = fakeServer(image);
     stuck.history = "pending";
+    // 我们的 prompt 正在跑：超时要删队列并打断
+    stuck.queueRunning = ["p1"];
     await assert.rejects(
       () => client(stuck, { totalTimeoutMs: 40 }).draw({ prompt: "x", size: "1024x1024", seed: 1 }),
       (e: unknown) => e instanceof ComfyUiError && e.code === "timeout",
@@ -165,6 +167,19 @@ describe("ComfyUI client (D-38a)", () => {
 
     // 超时也要让 ComfyUI 停下来（C酱 #123）
     assert.ok(stuck.interrupts >= 1, "timeout triggers interrupt");
+  });
+
+  it("on timeout it only deletes a queued prompt instead of interrupting someone else's (C酱 #123)", async () => {
+    const server = fakeServer(await pngBytes());
+    server.history = "pending";
+    // 用户在 ComfyUI 里手动跑 A，我们的 B 还在队列里
+    server.queueRunning = ["external-a"];
+    await assert.rejects(
+      () => client(server, { totalTimeoutMs: 40 }).draw({ prompt: "x", size: "1024x1024", seed: 1 }),
+      (e: unknown) => e instanceof ComfyUiError && e.code === "timeout",
+    );
+    assert.deepEqual(server.queueDeletes, [["p1"]]);
+    assert.equal(server.interrupts, 0);
   });
 
   it("cancelActive deletes our prompt from the queue, then interrupts", async () => {
@@ -277,6 +292,7 @@ describe("ComfyUI client (D-38a)", () => {
     assert.equal(loadComfyUiConfigFile(bad), null);
   });
 });
+
 
 
 
