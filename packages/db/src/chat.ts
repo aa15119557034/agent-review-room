@@ -98,6 +98,8 @@ export interface ChatMessageRow {
   memory_entries_used: number | null;
   /** C-42e / D-31d：合格的媒体意图（JSON，NULL = 这条回答没有） */
   media_intent: string | null;
+  /** C-42c / D-37b（v17）：你这条消息开了「用语音回」；秘书的消息是 NULL */
+  reply_as_voice: number | null;
 }
 
 const toChatMessage = (row: ChatMessageRow): ChatMessage => {
@@ -113,6 +115,7 @@ const toChatMessage = (row: ChatMessageRow): ChatMessage => {
       replacesMessageId: row.replaces_message_id,
       state: row.state as "sent" | "retracted",
       retractedAt: row.retracted_at,
+      ...(row.reply_as_voice === 1 ? { replyAsVoice: true as const } : {}),
     };
     return message;
   }
@@ -436,7 +439,8 @@ export function insertChatMessage(db: SqliteDatabase, input: InsertChatMessageIn
 
     db.prepare(
       "INSERT INTO chat_messages (id, conversation_id, sender, created_at, content, mentions, quote_message_id, " +
-        "replaces_message_id, state, retracted_at, request_hash) VALUES (?, ?, 'user', ?, ?, ?, ?, ?, ?, NULL, ?)",
+        "replaces_message_id, state, retracted_at, reply_as_voice, request_hash) " +
+        "VALUES (?, ?, 'user', ?, ?, ?, ?, ?, ?, NULL, ?, ?)",
     ).run(
       message.id,
       message.conversationId,
@@ -446,6 +450,8 @@ export function insertChatMessage(db: SqliteDatabase, input: InsertChatMessageIn
       message.quoteMessageId,
       message.replacesMessageId,
       message.state,
+      // C-42c / D-37b：只在用户消息上；没开时存 NULL（契约里就是「不传」）
+      message.replyAsVoice === true ? 1 : null,
       input.requestHash ?? null,
     );
   } else {

@@ -264,6 +264,27 @@ describe("speech.play (D-37b)", () => {
     }
   });
 
+  it("queues a reply_as_voice job even on a cache hit, and finishes it without calling the engine again", async () => {
+    const h = await makeHarness();
+    try {
+      const first = await h.service.play(sourceOf(h), { authorization: "reply_as_voice" });
+      await settle(h.service);
+      const firstJob = getMediaJob(h.db, (first as { job: MediaJob }).job.id)!;
+      assert.equal(firstJob.authorization, "reply_as_voice");
+      assert.equal(firstJob.state, "succeeded");
+      const clip = firstJob.speech!;
+
+      const again = await h.service.play(sourceOf(h), { authorization: "reply_as_voice" });
+      const secondJob = getMediaJob(h.db, (again as { job: MediaJob }).job.id)!;
+      assert.notEqual(secondJob.id, firstJob.id, "自动合成每次都建任务（界面按任务显示有没有语音）");
+      assert.equal(secondJob.state, "succeeded");
+      assert.equal(secondJob.speech?.id, clip.id, "命中缓存用同一个片段");
+      assert.equal(h.runner.calls.length, 1, "缓存命中不调引擎");
+    } finally {
+      h.db.close();
+    }
+  });
+
   it("marks the job failed when the engine errors out, and serves 206 for a ranged request", async () => {
     const h = await makeHarness();
     try {

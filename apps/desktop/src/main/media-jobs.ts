@@ -155,7 +155,11 @@ export class MediaJobsService {
    * - 秘书没选声音（AgentProfile.voice 为空）→ validation_failed「还没选声音」
    * - 缓存命中（同一段文本 + 声音 + 语速 + 引擎 + 版本）直接返回片段；否则建一个语音任务排队
    */
-  async play(source: MediaSource): Promise<{ cached: true; clip: SpeechClip } | { cached: false; job: MediaJob }> {
+  async play(
+    source: MediaSource,
+    options: { authorization?: "user_play" | "reply_as_voice" } = {},
+  ): Promise<{ cached: true; clip: SpeechClip } | { cached: false; job: MediaJob }> {
+    const authorization = options.authorization ?? "user_play";
     if (source.kind !== "chat") throw new ChatError("validation_failed", "现在只支持播放聊天里的回答");
     const runner = this.deps.tts?.() ?? null;
     if (runner === null || !runner.available()) {
@@ -190,11 +194,13 @@ export class MediaJobsService {
       engineVersion: runner.engineVersion,
     } as const;
     const cached = findSpeechClip(this.deps.db, key);
-    if (cached !== null) return { cached: true, clip: cached };
+    // 手动播放：命中缓存直接给片段；「用语音回」自动合成时仍要建任务（界面按任务显示这条回答有没有语音），
+    // 只是命中缓存的任务会立刻成功，不再调引擎
+    if (cached !== null && authorization === "user_play") return { cached: true, clip: cached };
 
     const pending = this.#speech;
     const active = listActiveMediaJobs(this.deps.db).find((job) => {
-      if (job.kind !== "speech" || job.authorization !== "user_play" || !sameSource(job.source, source)) return false;
+      if (job.kind !== "speech" || job.authorization !== authorization || !sameSource(job.source, source)) return false;
       const request = pending.get(job.id);
       return request?.textHash === textHash && request.voice.id === voice.voiceId && request.speed === voice.speed;
     });
@@ -205,7 +211,7 @@ export class MediaJobsService {
       id: `mjob_${ulid()}`,
       kind: "speech",
       state: "queued",
-      authorization: "user_play",
+      authorization,
       source,
       intentHash: null,
       draw: null,
@@ -222,6 +228,12 @@ export class MediaJobsService {
     this.#speech.set(job.id, { text, textHash, voice: profile, speed: voice.speed });
     await writeTransaction(this.deps.db, this.deps.queue, () => insertMediaJob(this.deps.db, job));
     this.#emit(job);
+    // 命中缓存（只有「用语音回」会走到这里）：任务立刻成功，不调引擎
+    if (cached !== null) {
+      await this.#transition(job.id, "queued", "running", {});
+      await this.#commitSpeech(job, cached, { insert: false });
+      return { cached: false, job: getMediaJob(this.deps.db, job.id) ?? job };
+    }
     this.#pump();
     return { cached: false, job };
   }
@@ -519,7 +531,7 @@ export class MediaJobsService {
   }
 
   /** 语音结果落库：和「来源消息是否已撤回」同一个事务（和画图一样的口径） */
-  async #commitSpeech(job: MediaJob, clip: SpeechClip): Promise<boolean> {
+  async #commitSpeech(job: MediaJob, clip: SpeechClip, options: { insert: boolean } = { insert: true }): Promise<boolean> {
     let succeeded = true;
     const applied = await writeTransaction(this.deps.db, this.deps.queue, () => {
       if (this.#sourceWithdrawn(job)) {
@@ -532,7 +544,7 @@ export class MediaJobsService {
           patch: { cancelReason: "message_withdrawn" },
         });
       }
-      insertSpeechClip(this.deps.db, clip);
+      if (options.insert) insertSpeechClip(this.deps.db, clip);
       return transitionMediaJob(this.deps.db, {
         id: job.id,
         from: "running",
