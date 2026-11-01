@@ -7,6 +7,7 @@ import { SCHEMA_V6 } from "./schema-v6";
 import { SCHEMA_V7 } from "./schema-v7";
 import { SCHEMA_V8 } from "./schema-v8";
 import { SCHEMA_V9 } from "./schema-v9";
+import { SCHEMA_V10 } from "./schema-v10";
 
 /**
  * 迁移（D-02）：用 PRAGMA user_version 记版本，每个迁移在自己的事务里跑。
@@ -94,6 +95,13 @@ export const MIGRATIONS: readonly Migration[] = [
       db.exec(SCHEMA_V9);
     },
   },
+  {
+    version: 10,
+    name: "chat-files-and-stickers",
+    up: (db) => {
+      db.exec(SCHEMA_V10);
+    },
+  },
 ];
 
 /** 当前代码支持的最新 schema 版本 */
@@ -146,3 +154,5 @@ export function runMigrations(db: Database): number {
 
   return applied;
 }
+
+

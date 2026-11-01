@@ -6,6 +6,7 @@ import { IMAGE_URL_SCHEME, IPC_CHANNELS, type ControlEvent } from "@room/schemas
 import { ChatService } from "./chat";
 import { DiscussionService } from "./discussion";
 import { createDispatcher } from "./ipc";
+import { MediaService } from "./media";
 import { createImageProtocolHandler, MediaStore } from "./media-store";
 import { migrateLegacyReviewerNode, NodeService, resolveRunTarget } from "./nodes";
 import { RunOrchestrator } from "./orchestrator";
@@ -90,8 +91,23 @@ async function bootstrap(): Promise<void> {
   const repo = new Repository(db, queue);
 
   // D-36b：图片本体和引用表；renderer 用 room-image://<ref> 显示，main 只按记录映射到文件
-  const media = new MediaStore(join(userData, "images"), db);
-  protocol.handle(IMAGE_URL_SCHEME, createImageProtocolHandler(media));
+  const mediaStore = new MediaStore(join(userData, "images"), join(userData, "files"), db);
+  protocol.handle(IMAGE_URL_SCHEME, createImageProtocolHandler(mediaStore));
+  // D-34a：选文件 / 表情用的对话框。renderer 只拿 ref，拿不到路径
+  const media = new MediaService({
+    db,
+    store: mediaStore,
+    now: () => new Date().toISOString(),
+    openFileDialog: async (options) => {
+      const result = await dialog.showOpenDialog({
+        title: options.title,
+        properties: ["openFile"],
+        filters: options.filters,
+      });
+      if (result.canceled || result.filePaths.length === 0) return null;
+      return result.filePaths[0] ?? null;
+    },
+  });
 
   // §32 第 3 步：上次崩溃留下的 QUEUED / STARTING / RUNNING 统一标成 interrupted
   const repaired = await repairInterruptedRuns(db, queue);
@@ -169,6 +185,7 @@ async function bootstrap(): Promise<void> {
     orchestrator,
     discussion,
     chat,
+    media,
     nodes,
     appVersion: app.getVersion(),
     recoveredRuns: repaired.repaired.length + repairedChat,
@@ -211,3 +228,4 @@ void app.whenReady().then(async () => {
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
+

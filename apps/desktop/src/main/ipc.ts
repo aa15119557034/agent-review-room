@@ -15,6 +15,7 @@ import {
 } from "@room/schemas";
 import { ChatError, type ChatService } from "./chat";
 import { DiscussionError, type DiscussionService } from "./discussion";
+import type { MediaService } from "./media";
 import type { NodeService } from "./nodes";
 import type { RunOrchestrator } from "./orchestrator";
 import { Repository, RepositoryError } from "./repository";
@@ -34,6 +35,8 @@ export interface IpcDeps {
   readonly discussion: DiscussionService;
   /** D-31b：聊天服务；测试里可以不传（那时 chat.* 返回 internal） */
   readonly chat?: ChatService;
+  /** D-34a：聊天文件和表情库（选文件对话框、按内容去重） */
+  readonly media?: MediaService;
   readonly nodes: NodeService;
   readonly appVersion: string;
   readonly recoveredRuns: number;
@@ -91,6 +94,11 @@ export function createDispatcher(deps: IpcDeps) {
   const chatService = (): ChatService => {
     if (deps.chat === undefined) throw new ControlFailure("internal", "聊天服务没有启动");
     return deps.chat;
+  };
+
+  const mediaService = (): MediaService => {
+    if (deps.media === undefined) throw new ControlFailure("internal", "媒体服务没有启动");
+    return deps.media;
   };
 
   async function handleCommand(raw: unknown): Promise<ControlResult<unknown>> {
@@ -316,13 +324,19 @@ export function createDispatcher(deps: IpcDeps) {
       case "chat.toTopic":
         return chatService().toTopic(command);
 
-      // 还没上线：明确拒绝，不要返回 undefined 让出参校验兜成 internal
+      // D-34a：文件和表情库
       case "chat.attachment.pick":
-      case "chat.voice.import":
+        return mediaService().pickAttachment(command.kind);
       case "chat.sticker.add":
+        return mediaService().addSticker(command.label);
       case "chat.sticker.update":
+        return mediaService().updateSticker(command.stickerId, command.label);
       case "chat.sticker.remove":
-        throw new ChatError("validation_failed", "这个功能还没上线（D-34 / D-36）");
+        return mediaService().removeSticker(command.stickerId);
+
+      // 还没上线：明确拒绝，不要返回 undefined 让出参校验兜成 internal
+      case "chat.voice.import":
+        throw new ChatError("validation_failed", "语音还没上线（D-34b）");
     }
   }
 
@@ -442,7 +456,7 @@ export function createDispatcher(deps: IpcDeps) {
         // 历史摘要还没接（X-30 / 下一段）
         return [];
       case "chat.stickers.list":
-        return [];
+        return mediaService().listStickers();
       case "chat.voice.get":
         throw new ChatError("not_found", "录音还没上线（D-34）");
     }
@@ -452,3 +466,4 @@ export function createDispatcher(deps: IpcDeps) {
 }
 
 export { APPROVAL_TRANSITIONS };
+

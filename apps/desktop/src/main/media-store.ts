@@ -1,16 +1,29 @@
+import { createHash } from "node:crypto";
 import { unlinkSync, existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
+  findFileBySha,
   findImageRefBySha,
+  getFile,
   getImageRef,
   imageShaInUse,
+  insertFile,
   insertImageRef,
   ulid,
+  type FileRefRecord,
   type ImageRefRecord,
   type SqliteDatabase,
 } from "@room/db";
-import { IMAGE_MAX_BYTES, ImageRef as ImageRefSchema, type ImagePurpose, type ImageRef } from "@room/schemas";
+import {
+  CHAT_LIMITS,
+  FileRef as FileRefSchema,
+  IMAGE_MAX_BYTES,
+  ImageRef as ImageRefSchema,
+  type ImagePurpose,
+  type ImageRef,
+} from "@room/schemas";
+import { sniffFile } from "./file-sniff";
 import { ImageRejectedError, processImage } from "./image";
 
 /**
@@ -26,9 +39,11 @@ import { ImageRejectedError, processImage } from "./image";
 export class MediaStore {
   constructor(
     private readonly imagesDir: string,
+    private readonly filesDir: string,
     private readonly db: SqliteDatabase,
   ) {
     mkdirSync(imagesDir, { recursive: true });
+    mkdirSync(filesDir, { recursive: true });
   }
 
   /**
@@ -74,6 +89,43 @@ export class MediaStore {
     return imageShaInUse(this.db, sha256);
   }
 
+  /**
+   * 保存一个聊天文件（D-34a）：按文件头判类型、按内容去重（同一份字节只有一个 FileRef）。
+   * 大小上限 CHAT_LIMITS.fileMaxBytes（20 MB）；空文件拒绝。
+   */
+  addFile(input: Buffer, name: string, now: string = new Date().toISOString()): FileRefRecord {
+    if (input.length === 0) throw new FileRejectedError("empty_file", "这个文件是空的");
+    if (input.length > CHAT_LIMITS.fileMaxBytes) {
+      throw new FileRejectedError("file_too_big", "文件太大了（上限 20 MB）");
+    }
+    const sha256 = createHash("sha256").update(input).digest("hex");
+    const existing = findFileBySha(this.db, sha256);
+    if (existing !== null) return existing;
+
+    const sniffed = sniffFile(input);
+    const displayName = displayNameOf(name);
+    this.writeFileBytes(sha256, input);
+    const record: FileRefRecord = {
+      ref: FileRefSchema.parse(`file_${ulid()}`),
+      sha256,
+      name: displayName,
+      mime: sniffed.mime,
+      bytes: input.length,
+      isText: sniffed.isText,
+      createdAt: now,
+    };
+    insertFile(this.db, record);
+    return record;
+  }
+
+  /** 文件引用对应的路径和类型；没有记录 / 文件丢了返回 null */
+  resolveFile(ref: string): { file: string; mime: string } | null {
+    const record = getFile(this.db, ref);
+    if (record === null) return null;
+    const file = this.fileFile(record.sha256);
+    return existsSync(file) ? { file, mime: record.mime } : null;
+  }
+
   /** 没有任何引用时删掉磁盘上的字节；返回是否真的删了 */
   dropUnreferencedBytes(sha256: string): boolean {
     if (imageShaInUse(this.db, sha256)) return false;
@@ -87,10 +139,22 @@ export class MediaStore {
     return join(this.imagesDir, sha256);
   }
 
+  private fileFile(sha256: string): string {
+    return join(this.filesDir, sha256);
+  }
+
   private writeBytes(sha256: string, bytes: Buffer): void {
     const target = this.imageFile(sha256);
     if (existsSync(target)) return;
     const tmp = join(this.imagesDir, `${sha256}.${process.pid}.tmp`);
+    writeFileSync(tmp, bytes);
+    renameSync(tmp, target);
+  }
+
+  private writeFileBytes(sha256: string, bytes: Buffer): void {
+    const target = this.fileFile(sha256);
+    if (existsSync(target)) return;
+    const tmp = join(this.filesDir, `${sha256}.${process.pid}.tmp`);
     writeFileSync(tmp, bytes);
     renameSync(tmp, target);
   }
@@ -131,3 +195,22 @@ export function createImageProtocolHandler(store: MediaStore): (request: Request
 }
 
 export { ImageRejectedError };
+
+/** 聊天文件不能收（空文件 / 太大）。main 翻成 validation_failed */
+export class FileRejectedError extends Error {
+  readonly code: "empty_file" | "file_too_big";
+
+  constructor(code: "empty_file" | "file_too_big", message: string) {
+    super(message);
+    this.name = "FileRejectedError";
+    this.code = code;
+  }
+}
+
+/** 只留文件名本身（不要路径），去首尾空白，最长 255 */
+function displayNameOf(name: string): string {
+  const base = name.split(/[\\/]/).pop() ?? name;
+  const trimmed = base.trim();
+  const safe = trimmed.length === 0 ? "未命名" : trimmed;
+  return safe.length > 255 ? safe.slice(0, 255) : safe;
+}

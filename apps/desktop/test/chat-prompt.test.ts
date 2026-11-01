@@ -63,6 +63,28 @@ describe("chat prompt (D-31b)", () => {
       ...extra,
     });
 
+  it("renders a sticker message as「[表情：说明]」in the current message", () => {
+    const stickerMessage = ChatMessage.parse({
+      id: "cmsg_" + "9".repeat(26),
+      conversationId: CONV,
+      createdAt: TS,
+      sender: "user",
+      content: {
+        kind: "sticker",
+        stickerId: "stk_" + ID,
+        image: "img_" + ID,
+        label: "小鲸鱼比心",
+      },
+      mentions: { kind: "none" },
+      quoteMessageId: null,
+      replacesMessageId: null,
+      state: "sent",
+      retractedAt: null,
+    }) as UserChatMessage;
+    const snapshot = build([], { userMessage: stickerMessage });
+    assert.match(snapshot.content, /当前消息（用户刚刚发的，可信）：\n\[表情：小鲸鱼比心\]$/);
+    assert.equal(snapshot.includedMessageIds.at(-1), stickerMessage.id);
+  });
   it("labels speakers by display name and keeps the current message outside the boundary", () => {
     const snapshot = build([first, selfReply]);
     const open = "<UNTRUSTED_CHAT_DATA_" + NONCE + ">";
@@ -159,3 +181,4 @@ describe("chat prompt (D-31b)", () => {
     assert.throws(() => build([forged], { inReplyToOf: () => undefined }), PromptBoundaryCollisionError);
   });
 });
+

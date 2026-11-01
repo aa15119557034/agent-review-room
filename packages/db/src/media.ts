@@ -1,10 +1,16 @@
 import {
+  CHAT_LIMITS,
+  FileRef as FileRefSchema,
   ImageMime as ImageMimeSchema,
   ImagePurpose as ImagePurposeSchema,
   ImageRef as ImageRefSchema,
+  Sticker as StickerSchema,
+  StickerId as StickerIdSchema,
+  type FileRef,
   type ImageMime,
   type ImagePurpose,
   type ImageRef,
+  type Sticker,
 } from "@room/schemas";
 import type { SqliteDatabase } from "./database";
 
@@ -106,4 +112,127 @@ export function deleteImageRef(db: SqliteDatabase, ref: string): boolean {
 export function imageShaInUse(db: SqliteDatabase, sha256: string): boolean {
   const row = db.prepare("SELECT 1 AS one FROM images WHERE sha256 = ? LIMIT 1").get(sha256) as { one: number } | undefined;
   return row !== undefined;
+}
+
+// ================================================================ 聊天文件（D-34a）
+
+export interface FileRefRecord {
+  ref: FileRef;
+  sha256: string;
+  /** 第一次选它时的文件名（给人看的；后面同一份内容复用这个名字） */
+  name: string;
+  mime: string;
+  bytes: number;
+  /** 能当 UTF-8 文本读：只有这类文件的正文会进 Prompt */
+  isText: boolean;
+  createdAt: string;
+}
+
+interface FileRefRow {
+  ref: string;
+  sha256: string;
+  name: string;
+  mime: string;
+  bytes: number;
+  is_text: number;
+  created_at: string;
+}
+
+const MIME_PATTERN = /^[a-z0-9.+-]+\/[a-z0-9.+-]+$/;
+
+const toFileRecord = (row: FileRefRow): FileRefRecord => ({
+  ref: FileRefSchema.parse(row.ref),
+  sha256: row.sha256,
+  name: row.name,
+  mime: row.mime,
+  bytes: row.bytes,
+  isText: row.is_text === 1,
+  createdAt: row.created_at,
+});
+
+export function insertFile(db: SqliteDatabase, record: FileRefRecord): void {
+  FileRefSchema.parse(record.ref);
+  if (!/^[0-9a-f]{64}$/.test(record.sha256)) throw new Error("file sha256 must be 64 lowercase hex chars");
+  const name = record.name.trim();
+  if (name.length < 1 || name.length > 255) throw new Error("file name must be 1..255 chars");
+  if (!MIME_PATTERN.test(record.mime) || record.mime.length > 100) throw new Error("file mime is invalid");
+  if (!Number.isInteger(record.bytes) || record.bytes <= 0 || record.bytes > CHAT_LIMITS.fileMaxBytes) {
+    throw new Error("file size is out of range");
+  }
+  db.prepare(
+    "INSERT INTO files (ref, sha256, name, mime, bytes, is_text, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+  ).run(record.ref, record.sha256, name, record.mime, record.bytes, record.isText ? 1 : 0, record.createdAt);
+}
+
+export function getFile(db: SqliteDatabase, ref: string): FileRefRecord | null {
+  if (!FileRefSchema.safeParse(ref).success) return null;
+  const row = db.prepare("SELECT * FROM files WHERE ref = ?").get(ref) as FileRefRow | undefined;
+  return row === undefined ? null : toFileRecord(row);
+}
+
+/** 按内容去重：同一份字节只有一个 file ref */
+export function findFileBySha(db: SqliteDatabase, sha256: string): FileRefRecord | null {
+  const row = db.prepare("SELECT * FROM files WHERE sha256 = ?").get(sha256) as FileRefRow | undefined;
+  return row === undefined ? null : toFileRecord(row);
+}
+
+// ================================================================ 表情库（D-34a）
+
+export function countStickers(db: SqliteDatabase): number {
+  return (db.prepare("SELECT count(*) AS n FROM chat_stickers").get() as { n: number }).n;
+}
+
+export function listStickers(db: SqliteDatabase): Sticker[] {
+  const rows = db.prepare("SELECT * FROM chat_stickers ORDER BY created_at DESC, id DESC").all() as {
+    id: string;
+    image_ref: string;
+    label: string;
+    created_at: string;
+  }[];
+  return rows.map((row) => StickerSchema.parse({ id: row.id, image: row.image_ref, label: row.label, createdAt: row.created_at }));
+}
+
+export function getSticker(db: SqliteDatabase, id: string): Sticker | null {
+  if (!StickerIdSchema.safeParse(id).success) return null;
+  const row = db.prepare("SELECT * FROM chat_stickers WHERE id = ?").get(id) as
+    | { id: string; image_ref: string; label: string; created_at: string }
+    | undefined;
+  return row === undefined
+    ? null
+    : StickerSchema.parse({ id: row.id, image: row.image_ref, label: row.label, createdAt: row.created_at });
+}
+
+/** 表情库满了（CHAT_LIMITS.stickersMax）时抛这个；main 翻成 validation_failed */
+export class StickerLimitError extends Error {
+  constructor(readonly max: number) {
+    super(`表情库最多 ${max} 个`);
+    this.name = "StickerLimitError";
+  }
+}
+
+/** 加一个表情：图片必须是已经存好的 sticker 用途引用 */
+export function insertSticker(db: SqliteDatabase, sticker: Sticker): void {
+  StickerSchema.parse(sticker);
+  const image = getImageRef(db, sticker.image);
+  if (image === null || image.purpose !== "sticker") throw new Error("sticker image must be a stored sticker-purpose image");
+  if (countStickers(db) >= CHAT_LIMITS.stickersMax) throw new StickerLimitError(CHAT_LIMITS.stickersMax);
+  db.prepare("INSERT INTO chat_stickers (id, image_ref, label, created_at) VALUES (?, ?, ?, ?)").run(
+    sticker.id,
+    sticker.image,
+    sticker.label.trim(),
+    sticker.createdAt,
+  );
+}
+
+export function updateStickerLabel(db: SqliteDatabase, id: string, label: string): Sticker | null {
+  if (!StickerIdSchema.safeParse(id).success) return null;
+  const trimmed = label.trim();
+  if (trimmed.length < 1 || trimmed.length > 40) throw new Error("sticker label must be 1..40 chars");
+  const result = db.prepare("UPDATE chat_stickers SET label = ? WHERE id = ?").run(trimmed, id);
+  return result.changes > 0 ? getSticker(db, id) : null;
+}
+
+export function deleteSticker(db: SqliteDatabase, id: string): boolean {
+  if (!StickerIdSchema.safeParse(id).success) return false;
+  return db.prepare("DELETE FROM chat_stickers WHERE id = ?").run(id).changes > 0;
 }
