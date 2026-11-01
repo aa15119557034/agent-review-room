@@ -504,7 +504,9 @@ describe("review round 1 (汐 / 林离 on 919ea67)", () => {
     assert.equal(img({ name: "   " }).success, false, "blank");
     assert.equal(img({ name: "a".repeat(256) }).success, false, "too long");
     assert.ok(img({ name: "a".repeat(255) }).success);
-    for (const bad of ["C:\\Users\\me\\cat.png", "dir/cat.png", "cat\npng", "cat\tpng", "cat\u0000.png", "cat\u007f.png"]) {
+    for (const bad of ["C:\\Users\\me\\cat.png", "dir/cat.png", "cat\npng", "cat\tpng", "cat\u0000.png", "cat\u007f.png",
+      // 汐 #150：C1、双向控制、零宽、行/段分隔
+      "cat\u0085.png", "gnp.\u202Etac", "a\u2066b.png", "a\u200Eb.png", "a\u200Bb.png", "a\u2028b.png", "a\u2029b.png", "a\uFEFFb.png"]) {
       assert.equal(img({ name: bad }).success, false, JSON.stringify(bad));
     }
     assert.equal(img({ mime: "image/png" }).success, false, "still no other metadata");
