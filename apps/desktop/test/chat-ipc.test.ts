@@ -80,6 +80,14 @@ function skip(): Script {
   ];
 }
 
+/** C-42e：回答里带媒体意图（speak / draw 原样放进信封，内容合不合格由 extractMediaIntent 判） */
+function replyWithMedia(text: string, media: Record<string, unknown>): Script {
+  return [
+    { type: "message_complete", text: JSON.stringify({ kind: "reply", text, ...media }) },
+    { type: "completed" },
+  ];
+}
+
 interface Harness {
   chat: ChatService;
   repo: Repository;
@@ -234,6 +242,75 @@ describe("chat service (D-31b)", () => {
       assert.ok(h.events.some((event) => event.type === "chat.slot.updated" && (event as never as { slot: { outcome: string } }).slot.outcome === "answered"));
     } finally {
       h.db.close();
+    }
+  });
+
+  it("stores the qualified media intent with the reply and logs the dropped ones (C-42e / D-31d)", async () => {
+    const warnings: string[] = [];
+    const originalWarn = console.warn;
+    console.warn = (...args: unknown[]) => {
+      warnings.push(args.map((arg) => String(arg)).join(" "));
+    };
+    const lastReply = (h: Harness) => {
+      const page = h.chat.listMessages({ type: "chat.messages.list", conversationId: h.conversationId, limit: 20 } as never);
+      return page.messages.find((message) => message.sender === "agent");
+    };
+    try {
+      // 合格的两项都存进去
+      const draw = { prompt: "小鲸鱼", size: "1024x1024" };
+      const h = await makeHarness({ scripts: { deepseek: replyWithMedia("给你画一张", { speak: true, draw }) } });
+      try {
+        await h.chat.send(send(h.conversationId, userMessageId(11), "画一张"));
+        await settle(h.chat);
+        const agent = lastReply(h);
+        assert.ok(agent !== undefined && agent.sender === "agent");
+        assert.deepEqual(agent.mediaIntent, { speak: true, draw });
+        assert.deepEqual(warnings, []);
+        // 界面拿到的是 chat.message.created 里这条（不是重新查一次），媒体意图要一起带上。
+        // 发消息时也会推一条 created（你那条），所以取最后一条秘书的
+        const created = h.events
+          .filter((event): event is Extract<ControlEvent, { type: "chat.message.created" }> => event.type === "chat.message.created")
+          .at(-1);
+        assert.ok(created !== undefined);
+        assert.deepEqual(created.message.sender === "agent" ? created.message.mediaIntent : undefined, { speak: true, draw });
+      } finally {
+        h.db.close();
+      }
+
+      // 朗读过滤后超过 2000 字：speak 丢掉、draw 保留，丢掉的原值进审计日志
+      const long = "说".repeat(2500);
+      const h2 = await makeHarness({ scripts: { deepseek: replyWithMedia(long, { speak: true, draw }) } });
+      try {
+        await h2.chat.send(send(h2.conversationId, userMessageId(12), "画一张"));
+        await settle(h2.chat);
+        const agent = lastReply(h2);
+        assert.ok(agent !== undefined && agent.sender === "agent");
+        assert.deepEqual(agent.mediaIntent, { draw });
+        assert.equal(warnings.length, 1);
+        assert.match(warnings[0]!, /dropped an invalid media intent/);
+        assert.match(warnings[0]!, /"speak":true/);
+      } finally {
+        h2.db.close();
+      }
+
+      // 尺寸不合格：draw 丢掉、speak 保留；一项都不合格时不传 mediaIntent（列是 NULL）
+      const h3 = await makeHarness({
+        scripts: {
+          deepseek: replyWithMedia("好", { speak: true, draw: { prompt: "小鲸鱼", size: "8192x8192" } }),
+        },
+      });
+      try {
+        await h3.chat.send(send(h3.conversationId, userMessageId(13), "画一张"));
+        await settle(h3.chat);
+        const agent = lastReply(h3);
+        assert.ok(agent !== undefined && agent.sender === "agent");
+        assert.deepEqual(agent.mediaIntent, { speak: true });
+        assert.equal(warnings.length, 2);
+      } finally {
+        h3.db.close();
+      }
+    } finally {
+      console.warn = originalWarn;
     }
   });
 

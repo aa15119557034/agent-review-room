@@ -3,6 +3,7 @@ import {
   CHAT_LIMITS,
   ChatAgentOutput,
   chatSendIntentJson,
+  extractMediaIntent,
   isExcludedFromContext,
   type AgentProfile,
   type ChatContent,
@@ -747,7 +748,21 @@ export class ChatService {
             } else if (parsed.data.kind === "skip") {
               await finish({ kind: "skipped" });
             } else {
-              await finish({ kind: "answered", text: parsed.data.text });
+              // C-42e / D-31d：合格的媒体意图和回答一起落库；不合格的那几项只进审计日志（ADR-004 §3a，
+              // 「结构合法但媒体字段超限，只丢掉媒体意图、照常显示文字，并记下原始意图」）。
+              // 原始值可能很长（比如超长的 draw 提示词），日志截断到 2000 字，别让一条回答把日志撑爆
+              const media = extractMediaIntent(parsed.data);
+              if (media.dropped) {
+                console.warn(
+                  "[chat] dropped an invalid media intent",
+                  JSON.stringify({ runId: run.id, agent: run.agent, speak: parsed.data.speak, draw: parsed.data.draw }).slice(0, 2000),
+                );
+              }
+              await finish({
+                kind: "answered",
+                text: parsed.data.text,
+                ...(media.intent === null ? {} : { mediaIntent: media.intent }),
+              });
             }
           } else if (event.type === "error") {
             if (event.reason === "quota_exhausted") await finish({ kind: "absent_quota" });

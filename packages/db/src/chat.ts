@@ -14,6 +14,7 @@ import type {
   Conversation,
   ConversationMembers,
   FailureReason,
+  MediaIntent,
   MemoryManifest,
   Message,
   RunState,
@@ -93,6 +94,8 @@ export interface ChatMessageRow {
   slot_id: string | null;
   run_id: string | null;
   memory_entries_used: number | null;
+  /** C-42e / D-31d：合格的媒体意图（JSON，NULL = 这条回答没有） */
+  media_intent: string | null;
 }
 
 const toChatMessage = (row: ChatMessageRow): ChatMessage => {
@@ -122,6 +125,8 @@ const toChatMessage = (row: ChatMessageRow): ChatMessage => {
     slotId: row.slot_id as string,
     runId: row.run_id as string,
     memoryEntriesUsed: row.memory_entries_used,
+    // C-42e：旧行（D-31d 之前）这一列是 NULL，省略就是「没有媒体意图」
+    ...(row.media_intent === null ? {} : { mediaIntent: JSON.parse(row.media_intent) as MediaIntent }),
   };
   return message;
 };
@@ -455,10 +460,14 @@ export function insertChatMessage(db: SqliteDatabase, input: InsertChatMessageIn
     if (parent?.sender !== "user") throw new Error("agent reply must answer a user message");
     // 消息已撤回 = 之后的上下文里不再有它，迟到的回答不能落库（契约：撤回瞬间答完的结果丢弃）
     if (parent.state !== "sent") throw new Error("agent reply must answer a message that is still in context");
+    // C-42e 的另一个字段（沉浸模式退回原因）的列留给 D-39；现在悄悄丢掉会让人以为写进去了
+    if (message.immersiveDeferred !== undefined) {
+      throw new Error("immersiveDeferred is not stored yet (D-39 adds the column)");
+    }
 
     db.prepare(
       "INSERT INTO chat_messages (id, conversation_id, sender, created_at, agent, text, in_reply_to, slot_id, run_id, " +
-        "memory_entries_used) VALUES (?, ?, 'agent', ?, ?, ?, ?, ?, ?, ?)",
+        "memory_entries_used, media_intent) VALUES (?, ?, 'agent', ?, ?, ?, ?, ?, ?, ?, ?)",
     ).run(
       message.id,
       message.conversationId,
@@ -469,6 +478,7 @@ export function insertChatMessage(db: SqliteDatabase, input: InsertChatMessageIn
       message.slotId,
       message.runId,
       message.memoryEntriesUsed,
+      message.mediaIntent === undefined ? null : JSON.stringify(message.mediaIntent),
     );
   }
 
@@ -864,7 +874,11 @@ export function recordChatPromptFinal(
 }
 
 export type ChatRunTerminal =
-  | { kind: "answered"; text: string }
+  /**
+   * C-42e / D-31d：mediaIntent 是 extractMediaIntent 的合格结果，和这条回答在同一个事务里落库；
+   * 调用方一项都没合格就不传（不是传空对象——空对象在契约里不合法）。被丢掉的原始值由调用方记日志
+   */
+  | { kind: "answered"; text: string; mediaIntent?: MediaIntent }
   | { kind: "skipped" }
   | { kind: "absent_quota" }
   | { kind: "failed"; failure: ChatSlotFailure; failureReason?: FailureReason }
@@ -955,6 +969,7 @@ export function finishChatRun(
           slotId: slot.id,
           runId: run.id,
           memoryEntriesUsed: run.memoryManifest === null ? null : run.memoryManifest.entries.length,
+          ...(terminal.mediaIntent === undefined ? {} : { mediaIntent: terminal.mediaIntent }),
         };
         insertChatMessage(db, { message });
         slot = { ...slot, outcome: "answered", replyMessageId: message.id, finishedAt };
