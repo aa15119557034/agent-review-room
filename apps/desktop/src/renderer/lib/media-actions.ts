@@ -42,7 +42,11 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
   async function loadForConversation(conversationId: string) {
     const gen = ++openGen;
     latestLookup.clear();
-    setMedia((m) => ({ ...m, jobs: [], immersive: null, clips: {}, playing: null, playQueue: [], jobsLookup: {} }));
+    setMedia((m) => ({
+      ...m, jobs: [], immersive: null, clips: {}, playing: null, playQueue: [], jobsLookup: {},
+      // 查失败的 Run 换个会话再回来时重新查
+      imagesSent: Object.fromEntries(Object.entries(m.imagesSent).filter(([, v]) => v !== "failed")),
+    }));
     // 还没结束的任务另外按整个会话查一次：它的消息可能不在已加载的那几页，「停」也要算上它（汐 #117）
     const [immersive, recent] = await Promise.all([
       client.query({ type: "immersive.get", conversationId }).catch(() => null),
@@ -130,6 +134,32 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
     setMedia((m) => ({ ...m, vision: Object.fromEntries(entries) }));
   }
 
+  /** 正在查的 Run：同一个 Run 不重复查（每次渲染都会叫 loadImagesSent） */
+  const imagesSentLoading = new Set<string>();
+
+  /**
+   * C-45：这几个 Run 实际带了几张图。先拿 Run（已经在 chat.runs 里的不再拉）找到 Snapshot，再看 Snapshot.attachments。
+   * 只是提示：查不到记 failed、不弹错误，也不自动重试（下次打开会话时组件会再叫）
+   */
+  async function loadImagesSent(runIds: readonly string[]) {
+    const todo = runIds.filter((r) => chat().media.imagesSent[r] === undefined && !imagesSentLoading.has(r));
+    for (const r of todo) imagesSentLoading.add(r);
+    await Promise.all(
+      todo.map(async (runId) => {
+        let result: number | "failed";
+        try {
+          const run = chat().runs[runId] ?? (await client.query({ type: "chat.runs.get", runId }));
+          const snapshot = await client.query({ type: "chat.snapshots.get", snapshotId: run.snapshotId });
+          result = snapshot.attachments?.length ?? 0;
+        } catch {
+          result = "failed";
+        }
+        imagesSentLoading.delete(runId);
+        setMedia((m) => ({ ...m, imagesSent: { ...m.imagesSent, [runId]: result } }));
+      }),
+    );
+  }
+
   /** 表情面板是你自己打开的：读不到就提示（和后台加载的媒体任务、沉浸设置不同，那些静默跳过） */
   async function loadStickers() {
     try {
@@ -144,6 +174,7 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
     loadForConversation,
     loadJobs,
     loadVision,
+    loadImagesSent,
     loadStickers,
     reset: () => setMedia(() => initialMedia),
 
