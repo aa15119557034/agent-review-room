@@ -684,6 +684,8 @@ export interface ChatSnapshotRow {
   nonce: string;
   memory_slot: string | null;
   attachments: string | null;
+  /** C-42g / X-34b：带图时的图片位置标记（v15 才有的列；老行是 NULL） */
+  image_slot: string | null;
   included_message_ids: string;
   included_summary_ids: string;
   adapter_version: string;
@@ -710,6 +712,7 @@ const toChatSnapshot = (row: ChatSnapshotRow): ChatSnapshot => {
   };
   // 可选字段：不传和传 undefined 是两回事，数据库里 NULL 就是没有
   if (row.attachments !== null) snapshot.attachments = JSON.parse(row.attachments) as NonNullable<ChatSnapshot["attachments"]>;
+  if (row.image_slot !== null) snapshot.imageSlot = row.image_slot as NonNullable<ChatSnapshot["imageSlot"]>;
   return snapshot;
 };
 
@@ -718,8 +721,8 @@ export function insertChatSnapshot(db: SqliteDatabase, snapshot: ChatSnapshot): 
   const parsed = ChatSnapshotSchema.parse(snapshot);
   db.prepare(
     "INSERT INTO chat_snapshots (id, purpose, conversation_id, user_message_id, agent, content, content_hash, nonce, " +
-      "memory_slot, attachments, included_message_ids, included_summary_ids, adapter_version, token_estimate, created_at) " +
-      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "memory_slot, attachments, image_slot, included_message_ids, included_summary_ids, adapter_version, token_estimate, " +
+      "created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
   ).run(
     parsed.id,
     parsed.purpose,
@@ -731,6 +734,7 @@ export function insertChatSnapshot(db: SqliteDatabase, snapshot: ChatSnapshot): 
     parsed.nonce,
     parsed.memorySlot === null ? null : JSON.stringify(parsed.memorySlot),
     parsed.attachments === undefined ? null : JSON.stringify(parsed.attachments),
+    parsed.imageSlot === undefined ? null : parsed.imageSlot,
     JSON.stringify(parsed.includedMessageIds),
     JSON.stringify(parsed.includedSummaryIds),
     parsed.adapterVersion,

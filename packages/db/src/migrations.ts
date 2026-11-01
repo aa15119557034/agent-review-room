@@ -12,6 +12,7 @@ import { SCHEMA_V11 } from "./schema-v11";
 import { SCHEMA_V12 } from "./schema-v12";
 import { SCHEMA_V13 } from "./schema-v13";
 import { SCHEMA_V14 } from "./schema-v14";
+import { SCHEMA_V15 } from "./schema-v15";
 
 /**
  * 迁移（D-02）：用 PRAGMA user_version 记版本，每个迁移在自己的事务里跑。
@@ -132,6 +133,13 @@ export const MIGRATIONS: readonly Migration[] = [
     name: "chat-history-summaries",
     up: (db) => {
       db.exec(SCHEMA_V14);
+    },
+  },
+  {
+    version: 15,
+    name: "chat-snapshot-image-slot",
+    up: (db) => {
+      db.exec(SCHEMA_V15);
     },
   },
 ];
