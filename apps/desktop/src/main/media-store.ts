@@ -1,4 +1,5 @@
 import { unlinkSync, existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
   findImageRefBySha,
@@ -109,9 +110,14 @@ export function createImageProtocolHandler(store: MediaStore): (request: Request
     }
     if (url.protocol !== "room-image:") return new Response("not found", { status: 404 });
     if (url.pathname !== "" && url.pathname !== "/") return new Response("not found", { status: 404 });
-    const hit = store.resolveImage(url.host);
+    // Chromium 对 standard scheme 会把 host 转成小写（Node 里不会，所以测试摸不到）。
+    // ImageRef 的 ULID 是大写，这里把 ref 规范回去；前缀不对就让 getImageRef 去拒。
+    const host = url.host;
+    const ref = host.startsWith("img_") ? "img_" + host.slice(4).toUpperCase() : host;
+    const hit = store.resolveImage(ref);
     if (hit === null) return new Response("not found", { status: 404 });
-    const bytes = readFileSync(hit.file);
+    // 别在主进程里同步读整张图（最大 10 MB）：一屏几十张会卡住界面
+    const bytes = await readFile(hit.file);
     return new Response(bytes, {
       status: 200,
       headers: {
