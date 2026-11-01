@@ -110,13 +110,6 @@ export interface BuildChatSnapshotInput {
   nonce?: string;
 }
 
-/** 文字和表情能进 Prompt（表情渲染成「[表情：说明]」）；附件和文件也支持，语音等 D-34b */
-function assertSupported(message: UserChatMessage): void {
-  if (message.content.kind === "voice") {
-    throw new Error("chat prompt: voice messages are not supported until D-34b lands");
-  }
-}
-
 /** 当前这条（你刚发的）在 Prompt 里的样子：文字原样；表情只给说明，不给图 */
 function currentTextOf(content: UserChatMessage["content"]): string {
   if (content.kind === "text") return content.text;
@@ -184,8 +177,6 @@ function windowHistory(
 }
 
 export function buildChatSnapshot(input: BuildChatSnapshotInput): ChatSnapshot {
-  assertSupported(input.userMessage);
-  // assertSupported 只是运行时检查，这里再窄一次类型
   const currentText = currentTextOf(input.userMessage.content);
   const displayNameOf = input.displayNameOf ?? ((agentId: string) => agentId);
   const render = (message: ChatMessage): string => renderMessage(message, input.agent, displayNameOf);
@@ -219,7 +210,7 @@ export function buildChatSnapshot(input: BuildChatSnapshotInput): ChatSnapshot {
   const protectedParts = [open, close, `<图片资料-${nonce}>`, `</图片资料-${nonce}>`, attachmentImageSlotMarker(nonce), `<CHAT_MEMORY_SLOT_${nonce}>`];
 
   // 不可信内容里出现本轮标签 = 可以伪造边界。和 core 的 assemblePrompt 一样：拒绝（随机 nonce 下实际不会发生）
-  const fileFragments = (input.files ?? []).map(
+  const fileFragments = capChatFileTexts(input.files ?? []).map(
     (file) => "[文件：" + escapeAttachmentName(file.name) + "]" + (file.text === null ? "" : "\n" + file.text),
   );
   for (const fragment of [...(quote === null ? [] : [render(quote)]), ...history.map(render), ...fileFragments, ...summaries.map((s) => s.content), input.memorySource ?? ""]) {
@@ -253,7 +244,7 @@ export function buildChatSnapshot(input: BuildChatSnapshotInput): ChatSnapshot {
   // 有图时清单放在最前面（C-42a：content 必须以 attachmentManifestBlock 开头）
   const body = blocks.join("\n");
   const content = manifestText === "" ? body : manifestText + "\n\n" + body;
-  const included = [...history.map((message) => message.id), ...(quote === null ? [] : [quote.id]), input.userMessage.id];
+  const included = [...new Set([...history.map((message) => message.id), ...(quote === null ? [] : [quote.id]), input.userMessage.id])];
   return ChatSnapshot.parse({
     id: input.snapshotId,
     purpose: "reply",

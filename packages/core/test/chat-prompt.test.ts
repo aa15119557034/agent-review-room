@@ -291,6 +291,27 @@ describe("chat prompt (X-30)", () => {
     assert.deepEqual(excluded.includedSummaryIds, []);
     assert.ok(!excluded.content.includes("旧摘要"));
   });
+
+  it("renders current and historical voice transcripts as text", () => {
+    const voice = ChatMessage.parse({
+      id: "cmsg_" + "8".repeat(26), conversationId: CONV, createdAt: TS, sender: "user",
+      content: { kind: "voice", audio: "aud_" + ID, durationMs: 1000,
+        transcript: { text: "语音转写", language: "zh-CN", source: "transcribed", engine: { engine: "test", model: "test" } } },
+      mentions: { kind: "none" }, quoteMessageId: null, replacesMessageId: null,
+      state: "sent", retractedAt: null,
+    }) as UserChatMessage;
+    const currentVoice = ChatMessage.parse({ ...voice, id: "cmsg_" + "9".repeat(26) }) as UserChatMessage;
+    const snapshot = build([voice], { userMessage: currentVoice });
+    assert.ok(snapshot.content.includes("用户：[语音] 语音转写"));
+    assert.ok(snapshot.content.endsWith("当前消息（用户刚刚发的，可信）：\n[语音] 语音转写"));
+  });
+
+  it("caps file text inside the builder and deduplicates a quoted history message", () => {
+    const snapshot = build([first], { quote: first, files: [{ name: "long.txt", text: "a".repeat(200_000) }] });
+    assert.deepEqual(snapshot.includedMessageIds, [first.id, current.id]);
+    assert.ok(snapshot.content.includes("只读了前 60000 字"));
+    assert.ok(snapshot.content.length < 100_000);
+  });
 });
 
 
