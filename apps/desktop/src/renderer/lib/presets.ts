@@ -1,24 +1,40 @@
-import type { AgentModelSettings } from "@room/schemas";
+import { LOCAL_CODEX_NODE_ID, LOCAL_NODE_ID, LOCAL_NODE_IDS, type AgentModelSettings, type LocalNodeId } from "@room/schemas";
 import type { AgentPatch } from "./discussion-actions";
 
 /**
- * 推荐配置（C-27）：Claude 在用户电脑上，Codex 和 DeepSeek 在主控机本机节点上（S-10）。
+ * 推荐配置（C-27）：Claude 在用户电脑上，Codex 和 DeepSeek 在主控机上（S-10）。
+ * ADR-003 §2a 之后主控机一位秘书一个节点：汐 controller-local（7420），林离 controller-local-codex（7421）。
  * 角色设定：三位都是江浩的秘书，各三句（性格 + 底线 + 分工），2026-10-23 和用户商定。
  * C酱 是首席秘书＝负责统筹和汇总，不是上级；人设里不写偏爱，汇总才公正。
  */
 
 export const USER_PC_NODE = "user-pc";
-export const CONTROLLER_NODE = "controller-local";
+/** 汐（DeepSeek）的节点，主控机 7420 */
+export const CONTROLLER_NODE = LOCAL_NODE_ID;
+/** 林离（Codex）的节点，主控机 7421（C-44 / D-40） */
+export const CONTROLLER_CODEX_NODE = LOCAL_CODEX_NODE_ID;
 
 export const RECOMMENDED_NODES: readonly { id: string; label: string; baseUrl: string | null; hint: string }[] = [
   { id: USER_PC_NODE, label: "你的电脑", baseUrl: null, hint: "Claude 所在的电脑。地址和 Token 来自上面的「Reviewer 节点」，已自动迁移" },
   {
     id: CONTROLLER_NODE,
-    label: "主控机（本机）",
+    label: "主控机（汐）",
     baseUrl: "http://127.0.0.1:7420",
-    hint: "Codex 和 DeepSeek 所在的这台电脑。Token 是本机运行 run setup -- --local 时显示的那个",
+    hint: "主控机上汐（DeepSeek）的节点。Token 可以用下面的「一键导入本机 Token」读进来",
+  },
+  {
+    id: CONTROLLER_CODEX_NODE,
+    label: "主控机（林离）",
+    baseUrl: "http://127.0.0.1:7421",
+    hint: "主控机上林离（Codex）的节点。Token 可以用下面的「一键导入本机 Token」读进来",
   },
 ];
+
+/** 能一键导入本机 Token 的推荐节点（契约 LOCAL_NODE_IDS，顺序跟推荐配置走） */
+export const LOCAL_RECOMMENDED_NODES = RECOMMENDED_NODES.filter(
+  (n): n is (typeof RECOMMENDED_NODES)[number] & { id: LocalNodeId; baseUrl: string } =>
+    (LOCAL_NODE_IDS as readonly string[]).includes(n.id) && n.baseUrl !== null,
+);
 
 /**
  * 模型和思考强度（C-40，用户 2026-10-23 定）：汐固定 deepseek-flash、高；C酱和林离有备选，
@@ -85,7 +101,7 @@ export const RECOMMENDED_AGENTS: readonly (AgentPatch & { displayName: string; c
     ].join("\n"),
     canDiscuss: true,
     canSummarize: false,
-    nodeId: CONTROLLER_NODE,
+    nodeId: CONTROLLER_CODEX_NODE,
     profileId: "codex-discuss",
     modelSettings: RECOMMENDED_MODELS.codex,
   },

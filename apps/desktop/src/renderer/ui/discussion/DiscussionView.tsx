@@ -18,6 +18,7 @@ import {
   type DiscussionState,
   type TimelineEntry,
 } from "../../lib/discussion";
+import { RECOMMENDED_NODES } from "../../lib/presets";
 import { useActions, useAppState } from "../hooks";
 import { ReplyBody } from "../Chart";
 import { hasChart } from "../../lib/media";
@@ -577,7 +578,8 @@ function SidePanel() {
 function AgentCard({ d, id }: { d: DiscussionState; id: string }) {
   const a = d.agents.find((x) => x.id === id)!;
   const st = d.status[id];
-  const node = a.nodeId === "user-pc" ? "你的电脑" : a.nodeId === "controller-local" ? "主控机" : a.nodeId ?? "未配置节点";
+  // 推荐节点用推荐配置里的名字（主控机拆成汐 / 林离两个节点，D-40），其它节点显示 id
+  const node = a.nodeId === null ? "未配置节点" : (RECOMMENDED_NODES.find((n) => n.id === a.nodeId)?.label ?? a.nodeId);
   return (
     <li className="agent-card" data-state={st?.availability ?? "unknown"} style={{ "--agent": a.color } as CSSProperties}>
       <div className="agent-card-head">

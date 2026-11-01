@@ -1,4 +1,4 @@
-import { toRunModel, type ApprovalBatch, type CommandRequest, type NodeInfo, type NodeTestResult, type Round } from "@room/schemas";
+import { toRunModel, type ApprovalBatch, type CommandRequest, type LocalNodeId, type NodeInfo, type NodeTestResult, type Round } from "@room/schemas";
 import { ControlFailure, type RoomClient } from "./client";
 import { appendEvents, applyEvent, type AppState } from "./state";
 import { initialDiscussion, planForNextRound, type DiscussionState } from "./discussion";
@@ -159,6 +159,22 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
     }
   }
 
+  /**
+   * C-44：从本机读 Token 存进这个节点（路径只在 main 里，renderer 只给 id）。
+   * 失败不弹全局错误，返回错误码和说明，由设置页按节点显示。成功后由调用方再调一次 node.test。
+   */
+  async function importLocalToken(
+    id: LocalNodeId,
+  ): Promise<{ ok: true; node: NodeInfo } | { ok: false; code: string; message: string }> {
+    try {
+      return { ok: true, node: await client.command({ type: "node.importLocalToken", id }) };
+    } catch (err) {
+      if (err instanceof ControlFailure) return { ok: false, code: err.code, message: err.message };
+      fail(err);
+      return { ok: false, code: "internal", message: "导入失败" };
+    }
+  }
+
   /** 改一个参与者（不存在时由后端新建，新建必须带名字和颜色）。成功后刷新参与者和状态 */
   async function updateAgent(patch: AgentPatch): Promise<boolean> {
     try {
@@ -179,6 +195,7 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
     loadNodes,
     upsertNode,
     testNode,
+    importLocalToken,
     loadModels,
     updateAgent,
 
