@@ -149,7 +149,7 @@ const SEED_AGENTS: AgentProfile[] = [
   {
     id: "codex", displayName: "Codex", color: "#1f6b55", avatarRef: null,
     roleNote: "务实派：关注实现成本和可维护性，看到过度设计要直说。",
-    canDiscuss: true, canSummarize: false, canExecute: true, nodeId: "controller-local", profileId: "codex-discuss",
+    canDiscuss: true, canSummarize: false, canExecute: true, nodeId: "controller-local-codex", profileId: "codex-discuss",
     pausedByUser: false, substitute: "deepseek",
     modelSettings: RECOMMENDED_MODELS.codex,
     chatPersona: "", chatProfileId: "codex-chat", memorySource: DEFAULT_MEMORY_SOURCE,
@@ -165,7 +165,8 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
     agents: structuredClone(SEED_AGENTS),
     nodes: [
       { id: "user-pc", label: "你的电脑", baseUrl: "http://192.168.190.10:7420", tokenConfigured: true },
-      { id: "controller-local", label: "主控机（本机）", baseUrl: "http://127.0.0.1:7420", tokenConfigured: true },
+      { id: "controller-local", label: "主控机（汐）", baseUrl: "http://127.0.0.1:7420", tokenConfigured: true },
+      { id: "controller-local-codex", label: "主控机（林离）", baseUrl: "http://127.0.0.1:7421", tokenConfigured: true },
     ] as NodeInfo[],
     rounds: [] as Round[],
     batches: [] as ApprovalBatch[],
@@ -512,6 +513,19 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
       // 和 D-22c 一致：地址变了又没给新 Token，旧 Token 作废
       const keep = existing !== undefined && existing.baseUrl === req.baseUrl && existing.tokenConfigured;
       const n: NodeInfo = { id: req.id, label: req.label, baseUrl: req.baseUrl, tokenConfigured: req.token !== undefined || keep };
+      d.nodes = [...d.nodes.filter((x) => x.id !== req.id), n];
+      return n;
+    },
+
+    // 和 C-44 / D-40 一致：节点要先在列表里、地址要是回环地址；mock 里本机 Token 文件总是在
+    async "node.importLocalToken"(req: any) {
+      const saved = d.nodes.find((n) => n.id === req.id);
+      if (!saved) throw new MockError("not_found", `节点 ${req.id} 还没保存`);
+      const host = new URL(saved.baseUrl).hostname;
+      if (!["127.0.0.1", "localhost", "[::1]"].includes(host)) {
+        throw new MockError("invalid_state", `节点 ${req.id} 的地址不是本机，不能从本机导入 Token`);
+      }
+      const n: NodeInfo = { ...saved, tokenConfigured: true };
       d.nodes = [...d.nodes.filter((x) => x.id !== req.id), n];
       return n;
     },
