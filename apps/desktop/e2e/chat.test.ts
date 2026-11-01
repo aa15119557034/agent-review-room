@@ -336,7 +336,7 @@ describe("X-31 撤回", () => {
       // 摘要生成还没上线（D-41 只做了存 / 读 / 失效），这里按契约直接写库：三条摘要各自来自一个 history_summary Run
       const plain = summarize(h, conv, c.now(), [before.messageId], "前面在聊正常的事");
       const coversSecret = summarize(h, conv, c.now(), [secret.messageId], "用户说了 " + SENTINEL);
-      // 只覆盖秘书复述的那条（摘要切段切在一问一答之间）：靠 core 按「回答已撤回消息的发言」排除兜住
+      // 只覆盖秘书复述的那条（摘要切段切在一问一答之间）：D-41b 之前靠 core 排除兜住，之后它自己也变 stale
       const coversEcho = summarize(h, conv, c.now(), [echoId], "汐复述了 " + SENTINEL);
 
       c.advance(15_000);
@@ -353,13 +353,14 @@ describe("X-31 撤回", () => {
       await ok(h, { type: "chat.retract", messageId: secret.messageId });
       const listed = (await h.dispatcher.handleQuery({ type: "chat.summaries.list", conversationId: conv })) as Ok<{ id: string; state: string }[]>;
       assert.equal(listed.data.find((s) => s.id === coversSecret.id)?.state, "stale", "覆盖撤回消息的摘要变 stale");
-      // 现状：只覆盖秘书复述的摘要还是 current（markChatSummariesStale 只按用户消息 id 查），靠 core 排除兜住。
-      // 汐的后续补丁会把「回答这条消息的发言」一起标 stale，到时这里改成 "stale"
-      assert.equal(listed.data.find((s) => s.id === coversEcho.id)?.state, "current");
-      assert.ok(
-        h.events.some((e) => e.type === "chat.summary.updated" && e.summary.id === coversSecret.id && e.summary.state === "stale"),
-        "推了 chat.summary.updated",
-      );
+      // D-41b 之后：只覆盖秘书复述的摘要**也**一起标 stale（它不是「撤回」本身，但来源是那条已撤回消息）
+      assert.equal(listed.data.find((s) => s.id === coversEcho.id)?.state, "stale", "只覆盖复述的摘要一起变 stale");
+      for (const id of [coversSecret.id, coversEcho.id]) {
+        assert.ok(
+          h.events.some((e) => e.type === "chat.summary.updated" && e.summary.id === id && e.summary.state === "stale"),
+          "推了 chat.summary.updated：" + id,
+        );
+      }
 
       c.advance(15_000);
       const after = await send(h, conv, "撤回之后的新消息");

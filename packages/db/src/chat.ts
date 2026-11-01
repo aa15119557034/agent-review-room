@@ -506,6 +506,16 @@ export function retractChatMessage(db: SqliteDatabase, messageId: string, retrac
 // 契约（C-34）的 ChatHistorySummary。X-30 定了形状、D-41 落地存哪儿：
 // 「记下来源消息：其中任何一条被撤回，摘要在同一事务里变成 stale，stale 的摘要不再进任何 Snapshot」。
 
+/**
+ * 撤回这条消息之后，哪些消息也不再进上下文：**它自己 + 回答它的那些发言**
+ * （ADR-003 §2：回答已撤回消息的发言一起排除，`isExcludedFromContext` 就是这么判的）。
+ * 覆盖到其中任何一条的摘要都该一起标 stale——只按「用户消息 id」查会漏掉切在一问一答之间的摘要（D-41b）。
+ */
+export function excludedMessageIdsForRetract(db: SqliteDatabase, messageId: string): string[] {
+  const replies = db.prepare("SELECT id FROM chat_messages WHERE in_reply_to = ?").all(messageId) as { id: string }[];
+  return [messageId, ...replies.map((row) => row.id)];
+}
+
 interface ChatSummaryRow {
   id: string;
   conversation_id: string;

@@ -64,7 +64,7 @@ pnpm --filter @room/desktop exec tsx --test e2e/model-selection.test.ts
 | #4 没点名 | reply / skip 混合；空输出、超时、半截 JSON 各自记失败，不算 skip；没有自动下一轮 |
 | #5 正文 @ 没选人 | 按没点名处理 |
 | #6 撤回哨兵 | 撤回后新 Snapshot、节点请求、转议题材料都不含哨兵（含复述它的秘书回答）；数据库原文还在 |
-| #6b 压缩历史 | 覆盖撤回消息的摘要变 stale、推 `chat.summary.updated`；之后节点请求和落库 Snapshot 都不含哨兵（含只覆盖秘书复述的摘要）；无关摘要照常进；摘要原文还在库里 |
+| #6b 压缩历史 | 覆盖撤回消息的摘要变 stale、推 `chat.summary.updated`（只覆盖秘书复述的那条也一起 stale，D-41b）；之后节点请求和落库 Snapshot 都不含哨兵；无关摘要照常进；摘要原文还在库里 |
 | #7 五分钟边界 | 差 1 毫秒能撤、正好五分钟不能；秘书的消息不能撤 |
 | #8 迟到结果 | 节点不理 cancel、撤回后才交卷：回答位仍是 retracted，没有回答消息 |
 | #9 停掉再重试 | 旧 Run 在新尝试开始后才交卷，不改当前尝试；重试重新拼 Snapshot |

@@ -8,6 +8,7 @@ import { ChatRun, ChatSnapshot } from "@room/schemas";
 import {
   createConversation,
   currentVersion,
+  excludedMessageIdsForRetract,
   insertChatMessage,
   insertChatRun,
   insertChatSnapshot,
@@ -170,6 +171,7 @@ describe("chat history summaries (v14 / D-41)", () => {
       const m2 = userMessage(conversation.id, "留着");
       insertChatMessage(db, { message: m1 });
       insertChatMessage(db, { message: m2 });
+
       const run = historySummaryRun(db, conversation.id, [m1.id, m2.id]);
       const covering = summary(conversation.id, run, [m1.id, m2.id], "两条都覆盖");
       const otherRun = historySummaryRun(db, conversation.id, [m2.id]);
@@ -177,11 +179,15 @@ describe("chat history summaries (v14 / D-41)", () => {
       insertChatSummary(db, covering);
       insertChatSummary(db, unrelated);
 
+      // 「它自己 + 回答它的发言」：这里没有回答，所以只有它自己
+      // （有回答的情形在 apps/desktop 的 chat-ipc.test.ts 里用真回答位测）
+      assert.deepEqual(excludedMessageIdsForRetract(db, m1.id), [m1.id]);
+
       db.exec("BEGIN IMMEDIATE");
       try {
         const retracted = retractChatMessage(db, m1.id, TS);
         assert.ok(retracted !== null);
-        const changed = markChatSummariesStale(db, [m1.id]);
+        const changed = markChatSummariesStale(db, excludedMessageIdsForRetract(db, m1.id));
         db.exec("COMMIT");
         assert.deepEqual(changed.map((s) => s.id), [covering.id]);
         assert.equal(changed[0]!.state, "stale");

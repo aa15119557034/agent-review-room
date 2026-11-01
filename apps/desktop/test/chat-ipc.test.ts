@@ -287,11 +287,11 @@ describe("chat send attachments (D-34a / D-36b)", () => {
       h.db.close();
     }
   });
-  it("sends a text file (content goes into the prompt), rejects images until S-23, and sends stickers", async () => {
+  it("sends a text file (content goes into the prompt), rejects images until the controller->node image path is wired, and sends stickers", async () => {
     const h = await makeHarness();
     const validation = (error: unknown) => (error as { code?: string }).code === "validation_failed";
     try {
-      // 图片：引用校验过了，但节点还收不了图（S-23），明确拒绝
+      // 图片：引用校验过了，但主控端到节点的带图链路还没接完，明确拒绝
       const imageRef = `img_${ulid()}`;
       insertImageRef(h.db, {
         ref: imageRef as never,
@@ -309,7 +309,7 @@ describe("chat send attachments (D-34a / D-36b)", () => {
             ...send(h.conversationId, userMessageId(21), "看图"),
             content: { kind: "text", text: "看图", attachments: [{ kind: "image", ref: imageRef }] },
           }),
-        (error: unknown) => validation(error) && /S-23/.test((error as Error).message),
+        (error: unknown) => validation(error) && /发不到节点/.test((error as Error).message),
       );
 
       // 文件：真的存过、能当文本读，就能发；正文进 Prompt 的资料区，指纹跟着变
@@ -1196,30 +1196,40 @@ describe("chat prompt wiring (D-41)", () => {
     const h = await makeHarness();
     try {
       const first = await h.chat.send(send(h.conversationId, userMessageId(43), "第一句"));
+      await settle(h.chat);
       const coveringMessageId = userMessageId(43);
       const summaryRun = historySummaryRun(h, [coveringMessageId]);
       const currentSummary = summary(h, summaryRun, [coveringMessageId], "第一句在讲部署");
       insertChatSummary(h.db, currentSummary);
 
+      // D-41b：只覆盖「秘书复述这条消息」的摘要（切段切在一问一答之间）也要一起失效
+      const replyId = (h.db.prepare("SELECT id FROM chat_messages WHERE in_reply_to = ?").get(coveringMessageId) as { id: string }).id;
+      const echoSummary = summary(h, historySummaryRun(h, [replyId]), [replyId], "汐复述了第一句");
+      insertChatSummary(h.db, echoSummary);
+
       const sent = await h.chat.send(send(h.conversationId, userMessageId(44), "接着说"));
       const snapshot = getChatSnapshot(h.db, sent.runs[0]!.snapshotId)!;
       assert.ok(snapshot.content.includes("第一句在讲部署"), "current 的摘要进 Prompt");
-      assert.deepEqual(snapshot.includedSummaryIds, [currentSummary.id]);
+      assert.deepEqual(snapshot.includedSummaryIds, [currentSummary.id, echoSummary.id]);
 
-      // 撤回覆盖到的消息：摘要变 stale、推一次事件，之后的 Prompt 不再带它
+      // 撤回覆盖到的消息：两条摘要都变 stale、各推一次事件，之后的 Prompt 都不再带
       h.events.length = 0;
       await h.chat.retract({ type: "chat.retract", messageId: first.message.id } as never);
-      const stale = listChatSummaries(h.db, h.conversationId).find((s) => s.id === currentSummary.id)!;
-      assert.equal(stale.state, "stale");
+      const stale = listChatSummaries(h.db, h.conversationId);
+      assert.equal(stale.find((s) => s.id === currentSummary.id)?.state, "stale", "覆盖撤回消息的摘要");
+      assert.equal(stale.find((s) => s.id === echoSummary.id)?.state, "stale", "只覆盖复述的摘要一起失效");
       assert.deepEqual(
-        h.events.filter((e) => e.type === "chat.summary.updated").map((e) => (e as { summary: { id: string } }).summary.id),
-        [currentSummary.id],
+        h.events
+          .filter((e) => e.type === "chat.summary.updated")
+          .map((e) => (e as { summary: { id: string } }).summary.id)
+          .sort(),
+        [currentSummary.id, echoSummary.id].sort(),
       );
-      assert.deepEqual(h.chat.listSummaries(h.conversationId).map((s) => s.state), ["stale"]);
 
       const after = await h.chat.send(send(h.conversationId, userMessageId(45), "再说一句"));
       const afterSnapshot = getChatSnapshot(h.db, after.runs[0]!.snapshotId)!;
       assert.ok(!afterSnapshot.content.includes("第一句在讲部署"), "stale 的摘要不进任何 Snapshot");
+      assert.ok(!afterSnapshot.content.includes("汐复述了第一句"), "只覆盖复述的摘要也不进");
       assert.deepEqual(afterSnapshot.includedSummaryIds, []);
     } finally {
       h.db.close();
