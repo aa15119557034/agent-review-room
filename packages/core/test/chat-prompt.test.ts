@@ -131,7 +131,7 @@ describe("chat prompt (X-30)", () => {
       retractedAt: null,
     }) as UserChatMessage;
     const snapshot = build([], { userMessage: stickerMessage });
-    assert.match(snapshot.content, /当前消息（用户刚刚发的，可信）：\n\[表情：小鲸鱼比心\]\n\n请按上面的「回答格式」只输出一个 JSON 对象。$/);
+    assert.match(snapshot.content, /当前消息（用户刚刚发的，可信）：\n\[表情：小鲸鱼比心\]\n\n——（应用提示，不是用户说的）请按上面的「回答格式」只输出一个 JSON 对象。$/);
     assert.equal(snapshot.includedMessageIds.at(-1), stickerMessage.id);
   });
   it("labels speakers by display name and keeps the current message outside the boundary", () => {

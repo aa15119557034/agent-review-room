@@ -13,6 +13,7 @@ import {
 import {
   buildChatSnapshot,
   chatOutputInstructions,
+  CHAT_OUTPUT_EXAMPLES,
   CHAT_OUTPUT_REMINDER,
   CHAT_PROMPT_VERSION,
   escapePlaceholderText,
@@ -105,24 +106,17 @@ describe("chat prompt output format (X-34)", () => {
 
   it("every JSON example in the instructions is accepted by the contract parsers", () => {
     const text = chatOutputInstructions(undefined);
-    const objects = [...text.matchAll(/\{"(?:kind|type)".*?\}(?=[，。；、]|$)/gmu)].map((m) => m[0]);
-    const envelopes = objects.filter((o) => o.startsWith('{"kind"') && !o.includes("你要说的话"));
-    const charts = objects.filter((o) => o.startsWith('{"type"'));
-    // bar 和 line 共用一个例子
-    assert.equal(charts.length, 4, charts.join(" | "));
-    const withLine = [...charts, charts[0]!.replace('"type":"bar"', '"type":"line"')];
-    for (const chart of withLine) assert.equal(parseChartSpec(chart).ok, true, chart);
-    assert.ok(envelopes.length >= 2, envelopes.join(" | "));
-    for (const envelope of envelopes) {
+    const { replyTemplate, skip, draw, charts } = CHAT_OUTPUT_EXAMPLES;
+    for (const example of [replyTemplate, skip, draw, ...Object.values(charts)]) assert.ok(text.includes(example), "说明里用了例子：" + example);
+    for (const envelope of [replyTemplate, skip, draw]) {
       const parsed = ChatAgentOutput.safeParse(JSON.parse(envelope));
       assert.ok(parsed.success, envelope);
-      if (parsed.data.kind === "reply") {
-        const media = extractMediaIntent(parsed.data);
-        assert.equal(media.dropped, false, envelope);
-      }
+      if (parsed.data.kind === "reply") assert.equal(extractMediaIntent(parsed.data).dropped, false, envelope);
     }
-    // reply 模板本身也能解析
-    assert.ok(ChatAgentOutput.safeParse({ kind: "reply", text: "你要说的话" }).success);
+    assert.ok(JSON.parse(draw).draw, "画图例子真的带 draw");
+    const chartJsons = [...Object.values(charts), charts["bar / line"].replace('"type":"bar"', '"type":"line"')];
+    for (const chart of chartJsons) assert.equal(parseChartSpec(chart).ok, true, chart);
+    assert.deepEqual(new Set(chartJsons.map((c) => (JSON.parse(c) as { type: string }).type)), new Set(["bar", "line", "scatter", "pie", "table"]));
     assert.ok(text.includes("```" + CHART_FENCE));
     for (const size of DrawSize.options) assert.ok(text.includes(size), size);
   });
