@@ -121,6 +121,8 @@ export interface ChatServiceDeps {
   readonly probe?: (params: { baseUrl: string; token: string; profileId: string }) => Promise<NodeTestResult>;
   /** D-36b：把文件 ref 读成文本（非文本文件返回 null）；测试注入假的 */
   readonly readFileText?: (ref: string) => string | null;
+  /** 撤回时收掉从这条消息 / 它的回答发起的画图任务（ADR-004 §3a）；没传 = 不做 */
+  readonly cancelMediaJobs?: (messageIds: readonly string[]) => Promise<void>;
   readonly now?: () => string;
   readonly idleTimeoutMs?: number;
   readonly totalTimeoutMs?: number;
@@ -483,6 +485,11 @@ export class ChatService {
       if (run !== null && (run.state === "QUEUED" || run.state === "STARTING" || run.state === "RUNNING")) {
         this.#active.get(run.id)?.abort();
       }
+    }
+    // 撤回也要收掉从这条消息（和它下面的回答）发起的画图任务（ADR-004 §3a）
+    if (this.#deps.cancelMediaJobs !== undefined) {
+      const replies = db.prepare("SELECT id FROM chat_messages WHERE in_reply_to = ?").all(message.id) as { id: string }[];
+      await this.#deps.cancelMediaJobs([message.id, ...replies.map((reply) => reply.id)]).catch(() => undefined);
     }
     this.#emit({ type: "chat.message.updated", message: result.message });
     for (const slot of result.slots) this.#emit({ type: "chat.slot.updated", slot });
@@ -964,6 +971,7 @@ function profileModelsOf(result: NodeTestResult | undefined): NodeHealth["profil
 function probeKeyOf(nodeId: string | null, profileId: string | null): string {
   return (nodeId ?? "") + "\u0000" + (profileId ?? "");
 }
+
 
 
 

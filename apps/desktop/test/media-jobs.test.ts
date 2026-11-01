@@ -354,6 +354,20 @@ describe("media jobs service (D-38a)", () => {
     }
   });
 
+  it("cancels jobs sourced from a withdrawn message with message_withdrawn (ADR-004 §3a)", async () => {
+    const h = await makeHarness();
+    try {
+      const job = await h.service.start(request(), source(h), false);
+      const cancelled = await h.service.cancelBySourceMessageIds([h.message.id]);
+      assert.ok(cancelled.some((item) => item.id === job.id));
+      await until(() => getMediaJob(h.db, job.id)?.state === "cancelled");
+      assert.equal(h.service.get(job.id).cancelReason, "message_withdrawn");
+      await until(() => !h.service.busy());
+      await new Promise((r) => setTimeout(r, 10));
+    } finally {
+      h.db.close();
+    }
+  });
   it("cancelling right after start still ends cancelled (the queued→running race)", async () => {
     const h = await makeHarness();
     try {
@@ -479,6 +493,7 @@ describe("media jobs service (D-38a)", () => {
     }
   });
 });
+
 
 
 

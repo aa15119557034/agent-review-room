@@ -152,10 +152,27 @@ export class MediaJobsService {
 
   /** 会话 / 议题的「停」：取消这个范围里所有排队和正在跑的任务（cancelReason = user_stop） */
   async stop(scope: MediaScope): Promise<MediaJob[]> {
-    const active = listActiveMediaJobs(this.deps.db).filter((job) => inScope(job, scope));
+    return this.#cancelAll(listActiveMediaJobs(this.deps.db).filter((job) => inScope(job, scope)), "user_stop");
+  }
+
+  /**
+   * 消息被撤回（ADR-004 §3a）：取消从这条消息、以及它下面回答发起的排队/在跑任务。
+   * 原因记 message_withdrawn，界面据此把请求卡收回。
+   */
+  async cancelBySourceMessageIds(messageIds: readonly string[]): Promise<MediaJob[]> {
+    const set = new Set(messageIds);
+    if (set.size === 0) return [];
+    const affected = listActiveMediaJobs(this.deps.db).filter(
+      (job) => job.source.kind === "chat" && set.has(job.source.messageId),
+    );
+    return this.#cancelAll(affected, "message_withdrawn");
+  }
+
+  /** 批量取消：先记原因、abort、让 ComfyUI 停，再按最新状态重试转换（冲突不算失败） */
+  async #cancelAll(jobs: readonly MediaJob[], reason: MediaJob["cancelReason"]): Promise<MediaJob[]> {
     const cancelled: MediaJob[] = [];
-    for (const job of active) {
-      this.#cancelIntent.set(job.id, "user_stop");
+    for (const job of jobs) {
+      this.#cancelIntent.set(job.id, reason);
       this.#running.get(job.id)?.abort();
       if (job.state === "running") void this.deps.comfy()?.cancelActive();
       // 和 cancel 一样：冲突就按最新状态重试，别把「刚开跑」当成失败
@@ -166,7 +183,7 @@ export class MediaJobsService {
           break;
         }
         try {
-          cancelled.push(await this.#transition(job.id, current.state, "cancelled", { cancelReason: "user_stop" }));
+          cancelled.push(await this.#transition(job.id, current.state, "cancelled", { cancelReason: reason }));
           this.#cancelIntent.delete(job.id);
           break;
         } catch (error) {
@@ -412,6 +429,7 @@ const sameSource = (a: MediaSource, b: MediaSource): boolean => JSON.stringify(a
 const ignoreConflict = (error: unknown): void => {
   if (!(error instanceof MediaJobStateConflictError)) throw error;
 };
+
 
 
 
