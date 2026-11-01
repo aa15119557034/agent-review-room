@@ -1,6 +1,18 @@
+import { existsSync, readFileSync, realpathSync } from "node:fs";
+import { resolve } from "node:path";
 import type { RunRow, SqliteDatabase } from "@room/db";
 import { testReviewerNode } from "@room/remote-client";
-import { BatchModel, toRunModel, type CommandRequest, type NodeInfo, type NodeTestResult, type RunModel } from "@room/schemas";
+import {
+  BatchModel,
+  LOCAL_NODE_IDS,
+  NodeToken,
+  toRunModel,
+  type CommandRequest,
+  type LocalNodeId,
+  type NodeInfo,
+  type NodeTestResult,
+  type RunModel,
+} from "@room/schemas";
 import type { Repository } from "./repository";
 import { LEGACY_NODE_ID, type SettingsStore } from "./settings";
 
@@ -11,6 +23,47 @@ import { LEGACY_NODE_ID, type SettingsStore } from "./settings";
  * - 只在 main 里解密使用（settings.getNode），**绝不**返回给 renderer、不写日志、不进 SQLite
  * - 查询只暴露 tokenConfigured
  */
+
+/** 业务失败：ipc 里会映射成契约错误码（不是 bug，也不是未预期异常） */
+export class NodeServiceError extends Error {
+  constructor(
+    readonly code: "not_found" | "invalid_state" | "validation_failed" | "internal",
+    message: string,
+  ) {
+    super(message);
+    this.name = "NodeServiceError";
+  }
+}
+
+/** 本机回环地址（ADR-003 §2a / C-44）：只给这三种写法放行 */
+const LOOPBACK_HOSTS = new Set(["127.0.0.1", "localhost", "[::1]"]);
+
+const isLoopback = (baseUrl: string): boolean => {
+  try {
+    const url = new URL(baseUrl);
+    return (url.protocol === "http:" || url.protocol === "https:") && LOOPBACK_HOSTS.has(url.hostname);
+  } catch {
+    return false;
+  }
+};
+
+/**
+ * 「同一个文件」的判法（C-44）：先 realpath（junction / 符号链接 / `..` 都解析掉），
+ * Windows 再按不区分大小写比较；文件还不存在时退回绝对路径比较。
+ */
+function sameFile(a: string, b: string): boolean {
+  const normalize = (path: string): string => {
+    let real = path;
+    try {
+      real = realpathSync.native(path);
+    } catch {
+      // 文件不存在 / 不可读：按绝对路径比较
+    }
+    const abs = resolve(real);
+    return process.platform === "win32" ? abs.toLowerCase() : abs;
+  };
+  return normalize(a) === normalize(b);
+}
 
 export type NodeProbe = (params: {
   baseUrl: string;
@@ -72,6 +125,60 @@ export class NodeService {
     }
     const probe = this.#deps.probe ?? testReviewerNode;
     return probe({ baseUrl: command.baseUrl, token, profileId: command.profileId, timeoutMs: 5_000 });
+  }
+
+  /**
+   * C-44 / D-40：从本机读这个节点的 Token 并保存（一键导入）。
+   *
+   * - 只对 `LOCAL_NODE_IDS` 里的 id（入参 schema 已经卡住）**并且**节点的 baseUrl 是回环地址的节点可用
+   * - 路径只来自 main 设置（`localAgentServerTokenFiles` → 旧键 → `<AgentRoom>` 默认），请求里带不了路径
+   * - 两个本机节点解析到同一个文件 → invalid_state（同一份 Token 不能给两个节点）
+   * - 读到的值按 NodeToken 校验，只进 safeStorage，不回显；错误信息里也不写路径和内容
+   * - 不在这里测连接：成功返回后 renderer 自己再调一次 node.test（契约 C-44）
+   */
+  async importLocalToken(command: CommandRequest<"node.importLocalToken">): Promise<NodeInfo> {
+    const id = command.id;
+    const row = this.#deps.repo.listNodeRows().find((node) => node.id === id);
+    if (row === undefined || row.base_url === null) {
+      throw new NodeServiceError("not_found", "节点 " + id + " 还没有添加到节点列表（先在设置里加这个节点的地址）");
+    }
+    if (!isLoopback(row.base_url)) {
+      throw new NodeServiceError("invalid_state", "节点 " + id + " 的地址不是本机回环地址，不能从本机读 Token");
+    }
+
+    const file = this.#deps.settings.getLocalTokenFile(id);
+    if (file === null) {
+      throw new NodeServiceError(
+        "not_found",
+        "没有配置 " + id + " 的 Token 文件路径（`localAgentServerTokenFiles`），也没有 `agentRoom` 用来推默认位置",
+      );
+    }
+    // 同一份 Token 给了两个节点：两个 id 谁都不许导（契约要求说明是哪两个 id，不写路径）
+    for (const other of LOCAL_NODE_IDS) {
+      if (other === id) continue;
+      const otherFile = this.#deps.settings.getLocalTokenFile(other);
+      if (otherFile !== null && sameFile(file, otherFile)) {
+        throw new NodeServiceError("invalid_state", other + " 和 " + id + " 指向同一个 Token 文件，不能共用一份 Token");
+      }
+    }
+
+    if (!existsSync(file)) {
+      throw new NodeServiceError("not_found", id + " 的 Token 文件不存在：先在本机节点上生成 Token 再导入");
+    }
+    let raw: string;
+    try {
+      raw = readFileSync(file, "utf8");
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code ?? "unknown";
+      throw new NodeServiceError("internal", "读不了 " + id + " 的 Token 文件（" + code + "）");
+    }
+    const parsed = NodeToken.safeParse(raw.trim());
+    if (!parsed.success) {
+      throw new NodeServiceError("validation_failed", id + " 的 Token 文件内容不像是 Token（长度或字符不对）");
+    }
+
+    this.#deps.settings.upsertNode(id, { baseUrl: row.base_url, token: parsed.data });
+    return { id, label: row.display_name, baseUrl: row.base_url, tokenConfigured: true };
   }
 }
 

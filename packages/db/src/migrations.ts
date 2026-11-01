@@ -10,6 +10,7 @@ import { SCHEMA_V9 } from "./schema-v9";
 import { SCHEMA_V10 } from "./schema-v10";
 import { SCHEMA_V11 } from "./schema-v11";
 import { SCHEMA_V12 } from "./schema-v12";
+import { SCHEMA_V13 } from "./schema-v13";
 
 /**
  * 迁移（D-02）：用 PRAGMA user_version 记版本，每个迁移在自己的事务里跑。
@@ -116,6 +117,13 @@ export const MIGRATIONS: readonly Migration[] = [
     name: "voice-recordings",
     up: (db) => {
       db.exec(SCHEMA_V12);
+    },
+  },
+  {
+    version: 13,
+    name: "controller-local-codex-node",
+    up: (db) => {
+      db.exec(SCHEMA_V13);
     },
   },
 ];

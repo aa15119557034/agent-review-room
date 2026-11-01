@@ -19,7 +19,7 @@ import { ChatError, type ChatService } from "./chat";
 import { DiscussionError, type DiscussionService } from "./discussion";
 import type { MediaJobsService } from "./media-jobs";
 import type { MediaService } from "./media";
-import type { NodeService } from "./nodes";
+import { NodeServiceError, type NodeService } from "./nodes";
 import type { RunOrchestrator } from "./orchestrator";
 import { Repository, RepositoryError } from "./repository";
 import { SettingsError, type SettingsStore } from "./settings";
@@ -89,6 +89,9 @@ function mapError(error: unknown): ControlResult<unknown> {
   }
   if (error instanceof SettingsError) {
     return errorResult("internal" as never, error.message);
+  }
+  if (error instanceof NodeServiceError) {
+    return errorResult(error.code as never, error.message);
   }
   return errorResult("internal" as never, error instanceof Error ? error.message : String(error));
 }
@@ -362,7 +365,7 @@ export function createDispatcher(deps: IpcDeps) {
       case "appearance.update":
         throw new ChatError("validation_failed", "外观设置还没上线（D-39）");
       case "node.importLocalToken":
-        throw new ChatError("validation_failed", "本机节点 Token 导入还没上线");
+        return deps.nodes.importLocalToken(command);
       case "chat.voice.import":
         throw new ChatError("validation_failed", "语音还没上线（D-34b）");
     }

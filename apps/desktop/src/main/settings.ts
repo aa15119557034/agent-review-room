@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
-import type { ReviewerNodeSettings } from "@room/schemas";
+import { join } from "node:path";
+import { LOCAL_NODE_ID, LocalNodeId, type ReviewerNodeSettings } from "@room/schemas";
 
 /**
  * Reviewer 节点设置（D-07）。
@@ -43,6 +44,21 @@ interface StoredSettings {
   reviewerNode: StoredReviewerNode | null;
   /** 多节点（ADR-002 / D-22c）：按节点 id 存地址与 Token，Token 只写不读 */
   nodes: Record<string, StoredNode>;
+  /**
+   * D-40：`<AgentRoom>`（ADR-003 §2a）。和节点配置里的 `homeDir` 是同一个值——
+   * 安装时选一次，这里复用，用来推本机节点 Token 的默认位置。只在 main 里用。
+   */
+  agentRoom: string | null;
+  /**
+   * C-44 / D-40：每个本机节点 id（`controller-local` / `controller-local-codex`）自己的 Token 文件路径。
+   * 只在 main 里用，不经过控制 API，renderer 改不了，也不写日志。
+   */
+  localAgentServerTokenFiles: Record<string, string>;
+  /**
+   * C-39 的旧键（单个路径）：只当作 controller-local 的路径读；D-40 读到就迁进
+   * `localAgentServerTokenFiles`，不能拿来给 controller-local-codex。
+   */
+  localAgentServerTokenFile: string | null;
 }
 
 /** 旧设置里的 Reviewer 节点自动迁移成这个节点 */
@@ -68,17 +84,30 @@ export class SettingsStore {
   }
 
   #load(): StoredSettings {
-    if (!existsSync(this.#file)) return { reviewerNode: null, nodes: {} };
+    if (!existsSync(this.#file)) return { reviewerNode: null, nodes: {}, agentRoom: null, localAgentServerTokenFiles: {}, localAgentServerTokenFile: null };
     try {
-      const parsed = JSON.parse(readFileSync(this.#file, "utf8")) as { reviewerNode?: unknown; nodes?: unknown };
+      const parsed = JSON.parse(readFileSync(this.#file, "utf8")) as {
+        reviewerNode?: unknown;
+        nodes?: unknown;
+        agentRoom?: unknown;
+        localAgentServerTokenFiles?: unknown;
+        localAgentServerTokenFile?: unknown;
+      };
       const reviewerNode = parseReviewerNode(parsed.reviewerNode);
       const nodes = parseNodes(parsed.nodes);
+      const base: StoredSettings = {
+        reviewerNode,
+        nodes,
+        agentRoom: parseAgentRoom(parsed.agentRoom),
+        localAgentServerTokenFiles: parseLocalTokenFiles(parsed.localAgentServerTokenFiles),
+        localAgentServerTokenFile: parseAgentRoom(parsed.localAgentServerTokenFile),
+      };
 
       // 旧设置文件（没有 nodes 字段）：把原来的 Reviewer 节点迁移成 user-pc。
       // 迁移后单次评审照常能用，多节点也有地方放 Token。
       if (parsed.nodes === undefined && reviewerNode !== null && nodes[LEGACY_NODE_ID] === undefined) {
         const migrated: StoredSettings = {
-          reviewerNode,
+          ...base,
           nodes: { [LEGACY_NODE_ID]: { baseUrl: reviewerNode.baseUrl, tokenCipher: reviewerNode.tokenCipher } },
         };
         this.#data = migrated;
@@ -90,10 +119,10 @@ export class SettingsStore {
         return migrated;
       }
 
-      return { reviewerNode, nodes };
+      return base;
     } catch {
       // 设置文件损坏：当作未配置，不阻止应用启动
-      return { reviewerNode: null, nodes: {} };
+      return { reviewerNode: null, nodes: {}, agentRoom: null, localAgentServerTokenFiles: {}, localAgentServerTokenFile: null };
     }
   }
 
@@ -148,6 +177,7 @@ export class SettingsStore {
     }
 
     this.#data = {
+      ...this.#data,
       reviewerNode: { baseUrl: input.baseUrl, profileId: input.profileId, tokenCipher },
       // 单次评审的 Reviewer 节点就是 user-pc，两边保持一致
       nodes: { ...this.#data.nodes, [LEGACY_NODE_ID]: { baseUrl: input.baseUrl, tokenCipher } },
@@ -220,6 +250,7 @@ export class SettingsStore {
 
     const reviewer = this.#data.reviewerNode;
     this.#data = {
+      ...this.#data,
       // user-pc 同时就是单次评审的那个节点：地址与 Token 保持同步
       reviewerNode:
         nodeId === LEGACY_NODE_ID && reviewer !== null ? { ...reviewer, baseUrl: input.baseUrl, tokenCipher } : reviewer,
@@ -239,6 +270,61 @@ export class SettingsStore {
         [LEGACY_NODE_ID]: { baseUrl: reviewer.baseUrl, tokenCipher: reviewer.tokenCipher },
       },
     };
+    this.#save();
+  }
+
+  // ---------------------------------------------------------------- 本机节点（C-44 / D-40）
+
+  /** `<AgentRoom>`（ADR-003 §2a）：推本机节点 Token 的默认位置要用它 */
+  getAgentRoom(): string | null {
+    return this.#data.agentRoom;
+  }
+
+  /**
+   * 这个本机节点的 Token 文件路径（C-44）：
+   * 1. `localAgentServerTokenFiles[id]`
+   * 2. 旧键 `localAgentServerTokenFile`（**只对 controller-local**；读到就写进新表，不再双轨）
+   * 3. `<AgentRoom>\node\<秘书>\agent-server.token`（controller-local → deepseek，controller-local-codex → codex）
+   *
+   * 都没有返回 null——调用方报 not_found，不猜路径（契约 C-44）。
+   */
+  getLocalTokenFile(nodeId: LocalNodeId): string | null {
+    const map = this.#data.localAgentServerTokenFiles;
+    const explicit = map[nodeId];
+    if (explicit !== undefined) return explicit;
+
+    const legacy = this.#data.localAgentServerTokenFile;
+    if (legacy !== null && nodeId === LOCAL_NODE_ID) {
+      this.#data = { ...this.#data, localAgentServerTokenFiles: { ...map, [nodeId]: legacy } };
+      try {
+        this.#save();
+      } catch {
+        // 只读目录等情况下写不进去，本次照样返回
+      }
+      return legacy;
+    }
+
+    const room = this.#data.agentRoom;
+    if (room === null) return null;
+    return join(room, "node", nodeId === LOCAL_NODE_ID ? "deepseek" : "codex", "agent-server.token");
+  }
+
+  /**
+   * 只在 main 里用：写这个本机节点的 Token 文件路径（C-44）。
+   * 没有对应的控制 API（renderer 改不了），现在由安装 / 首启推荐配置 / 测试写设置时用。
+   * 传 null 清掉这一项，回落到旧键或 `agentRoom` 默认位置。
+   */
+  setLocalTokenFile(nodeId: LocalNodeId, file: string | null): void {
+    const files = { ...this.#data.localAgentServerTokenFiles };
+    if (file === null) delete files[nodeId];
+    else files[nodeId] = file;
+    this.#data = { ...this.#data, localAgentServerTokenFiles: files };
+    this.#save();
+  }
+
+  /** 只在 main 里用：`<AgentRoom>`（和节点配置的 `homeDir` 同一个值，D-40） */
+  setAgentRoom(room: string | null): void {
+    this.#data = { ...this.#data, agentRoom: room === null || room.trim() === "" ? null : room.trim() };
     this.#save();
   }
 }
@@ -268,4 +354,24 @@ function parseNodes(value: unknown): Record<string, StoredNode> {
     };
   }
   return nodes;
+}
+
+/** `agentRoom` / 旧键 `localAgentServerTokenFile`：去掉空白，空串等于没配 */
+function parseAgentRoom(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  return trimmed === "" ? null : trimmed;
+}
+
+/** `localAgentServerTokenFiles`：只认白名单里的 id（C-44），值必须是非空字符串 */
+function parseLocalTokenFiles(value: unknown): Record<string, string> {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) return {};
+  const files: Record<string, string> = {};
+  for (const [id, entry] of Object.entries(value as Record<string, unknown>)) {
+    if (!LocalNodeId.safeParse(id).success) continue;
+    if (typeof entry !== "string") continue;
+    const trimmed = entry.trim();
+    if (trimmed !== "") files[id] = trimmed;
+  }
+  return files;
 }
