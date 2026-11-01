@@ -96,7 +96,7 @@ function Assert-NoReparse([string]$root) {
 # （比如在江浩自己的窗口里）用这个 CODEX_HOME 跑过一次 codex，里面就会留下 agentroom-codex 和管理员都打不开的文件，codex 启动时报
 # 「failed to initialize in-process app-server client: access denied」，预检也读不了（汐 #138 / #139 实测）。
 # icacls /T 进不了打不开的文件夹，所以一层一层来：先把这一层所有子项的所有者交给管理员组、权限改回只继承（/L：链接只改它自己，
-# 不碰它指向的地方），这时才列得出下一层；不进任何链接 / junction。后面第 4 步会按规则整棵重建权限。
+# 不碰它指向的地方），这时才列得出下一层（stderr 不重定向：5.1 在 Stop 下 2>&1 会把原生命令的报错变成异常）；不进任何链接 / junction。后面第 4 步会按规则整棵重建权限。
 # tmp\、cache\、plugins\cache\ 是 codex 自己会重建的临时目录和缓存（里面还有它建的链接），修好权限后直接删掉
 function Repair-Tree([string]$dir) {
   icacls $dir /setowner "*S-1-5-32-544" /C /L /Q | Out-Null
@@ -105,8 +105,8 @@ function Repair-Tree([string]$dir) {
   $stack.Push($dir)
   while ($stack.Count -gt 0) {
     $d = $stack.Pop()
-    icacls (Join-Path $d "*") /setowner "*S-1-5-32-544" /C /L /Q 2>&1 | Out-Null
-    icacls (Join-Path $d "*") /reset /C /L /Q 2>&1 | Out-Null
+    icacls (Join-Path $d "*") /setowner "*S-1-5-32-544" /C /L /Q | Out-Null
+    icacls (Join-Path $d "*") /reset /C /L /Q | Out-Null
     foreach ($item in @(Get-ChildItem -LiteralPath $d -Force -Directory -ErrorAction SilentlyContinue)) {
       if (-not ($item.Attributes -band [IO.FileAttributes]::ReparsePoint)) { $stack.Push($item.FullName) }
     }
@@ -118,7 +118,7 @@ if ($Agent -eq "codex" -and (Test-Path -LiteralPath $codexHomePre)) {
   Repair-Tree $codexHomePre
   foreach ($rel in @("tmp", "cache", "plugins\cache")) {
     $d = Join-Path $codexHomePre $rel
-    if (Test-Path -LiteralPath $d) { cmd /c rmdir /s /q "$d" 2>&1 | Out-Null }  # rmdir /s 只删链接本身，不进链接指向的地方
+    if (Test-Path -LiteralPath $d) { cmd /c rmdir /s /q "$d" | Out-Null }  # rmdir /s 只删链接本身，不进链接指向的地方
     if (Test-Path -LiteralPath $d) { Fail "删不掉 $d（codex 自己的临时目录 / 缓存）：先停掉计划任务 AgentRoom-codex 和所有 codex 进程再重试" }
   }
   Get-ChildItem -LiteralPath $codexHomePre -Recurse -Force -ErrorAction SilentlyContinue -ErrorVariable aclErrors | Out-Null
