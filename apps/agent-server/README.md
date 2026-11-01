@@ -160,6 +160,7 @@ pnpm --filter @room/agent-server run vision-test -- deepseek-discuss --model dee
 - 只从这次 Run 自己的子目录里取图：进程正常结束后取最新的一张（按文件头认 png / jpeg / webp，最多 10 MB），在终止事件里报 sha256、类型、字节数；没有图就是 `error(incomplete_output)`
 - 结束时（不管成败）只删这次 Run 的子目录。根目录里别的文件、别的 Run 的子目录一概不碰，所以**不要把 outputDir 指向 CLI 自己的共享目录**（例如 Codex 的 `$CODEX_HOME\generated_images`：那里的文件证明不了是这次 Run 画的）
 - 图读进节点内存，主控端用 `GET /v1/runs/<runId>/artifacts/<sha256>`（要 Token）取。取过之后再留 `leaseMs`，断线可以重取；结束后超过 `leaseMs` 没人取、或最后一次取过之后超过 `leaseMs`，就丢掉
+- 节点启动时清掉根目录下上次没来得及删的 `run_<ULID>` 文件夹（只删这种名字的文件夹）
 - 同一个画图 profile 同时只画一张（第二张 `node_busy`，ADR-004 §3 Codex 一次一张）；不同 profile 可以共用根目录，各取各的
 - Codex 默认把图存在 `$CODEX_HOME\generated_images`，节点不去那里拿。要让 Codex 把图放进这次 Run 的目录，候选做法是 `codex exec -C {image-output-dir} --sandbox workspace-write …` 并在画图指令里让它把图复制到工作目录，**待主控机实测**
 
@@ -198,7 +199,7 @@ pnpm --filter @room/agent-server run vision-test -- deepseek-discuss --model dee
 ## 测试
 
 ```bash
-pnpm --filter @room/agent-server test     # 125 个
+pnpm --filter @room/agent-server test     # 126 个
 ```
 
 Windows 相关逻辑（`.cmd` 包装、taskkill 参数）用注入的模拟环境测试；`claude` 用 `test/fixtures/fake-claude.mjs`、`codex` 用 `test/fixtures/fake-codex.mjs` 模拟；`deepseek-chat.mjs` 对着测试里起的假 DeepSeek 服务跑（不联网、不用真 Key）。

@@ -20,6 +20,7 @@ import type { Profile, ServerConfig } from "./config";
 import { RemoteRun } from "./remote-run";
 import { checkModel } from "./model-args";
 import { attachmentProblem, profileMaySeeImages, visionOf } from "./images";
+import { sweepStaleRunDirs } from "./image-artifact";
 
 const execFileP = promisify(execFile);
 
@@ -47,6 +48,11 @@ export function createAgentServer(cfg: ServerConfig, token: string): AgentServer
   const imageProfiles = Object.entries(cfg.profiles)
     .filter(([, p]) => p.imageRun)
     .map(([id]) => id);
+  // 上次节点崩在清理之前留下的画图 Run 目录：启动时清掉
+  for (const root of new Set(Object.values(cfg.profiles).flatMap((p) => (p.imageRun ? [p.imageRun.outputDir] : [])))) {
+    const removed = sweepStaleRunDirs(root);
+    if (removed.length > 0) console.log(`[agent-server] removed ${removed.length} leftover image run folder(s) in ${root}`);
+  }
 
   // 定期清理结束超过 TTL 的 run
   const gc = setInterval(() => {

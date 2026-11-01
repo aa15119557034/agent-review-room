@@ -397,6 +397,27 @@ describe("S-23 image runs (kind: image)", () => {
   });
 });
 
+describe("S-23 leftover run folders", () => {
+  it("汐 #131: on start the node removes leftover run_<ULID> folders in its image root, and nothing else", async () => {
+    const root = mkdtempSync(join(tmpdir(), "s23-sweep-"));
+    const left = join(root, "run_01JAAAAAAAAAAAAAAAAAAAAAAA");
+    mkdirSync(left);
+    writeFileSync(join(left, "half.png"), "x");
+    mkdirSync(join(root, "keep-me"));
+    writeFileSync(join(root, "run_01JAAAAAAAAAAAAAAAAAAAAAAB.png"), "a file, not a folder");
+    const srv = createAgentServer(
+      { ...cfg, profiles: { d: { ...cfg.profiles["draw"]!, imageRun: { outputDir: root } } } },
+      TOKEN,
+    );
+    try {
+      assert.deepEqual(readdirSync(root).sort(), ["keep-me", "run_01JAAAAAAAAAAAAAAAAAAAAAAB.png"]);
+    } finally {
+      await srv.close();
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+});
+
 describe("S-23 config and stdin helpers", () => {
   const base = { command: "x", cwd: "." };
   const p = (o: Record<string, unknown>) => ServerConfig.parse({ nodeId: "n", profiles: { a: { ...base, ...o } } }).profiles["a"]!;

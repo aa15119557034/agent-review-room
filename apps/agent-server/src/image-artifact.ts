@@ -80,3 +80,23 @@ export function collectArtifact(dir: string): HeldArtifact | { problem: string }
   }
   return { problem: tooLarge ? "generated image is larger than 10 MB" : "no generated image found" };
 }
+
+/**
+ * 节点启动时清掉上次没来得及删的 Run 目录（节点崩在清理之前会留下来，汐 #131）。
+ * 只删根目录下名字是 run_<ULID> 的目录；根目录是节点专用的，启动时还没有任何 Run，所以这些都是旧的
+ */
+export function sweepStaleRunDirs(root: string): string[] {
+  let entries: import("node:fs").Dirent[];
+  try {
+    entries = readdirSync(root, { withFileTypes: true });
+  } catch {
+    return [];
+  }
+  const removed: string[] = [];
+  for (const e of entries) {
+    if (!e.isDirectory() || !/^run_[0-9A-HJKMNP-TV-Z]{26}$/.test(e.name)) continue;
+    rmSync(join(root, e.name), { recursive: true, force: true });
+    removed.push(e.name);
+  }
+  return removed;
+}
