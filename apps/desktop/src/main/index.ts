@@ -1,11 +1,12 @@
-import { app, BrowserWindow, dialog, ipcMain, nativeTheme, safeStorage, shell } from "electron";
+import { app, BrowserWindow, dialog, ipcMain, nativeTheme, protocol, safeStorage, shell } from "electron";
 import { join } from "node:path";
 import { openDatabase, repairInterruptedRuns, WriteQueue } from "@room/db";
 import { HttpRemoteAgentAdapter } from "@room/remote-client";
-import { IPC_CHANNELS, type ControlEvent } from "@room/schemas";
+import { IMAGE_URL_SCHEME, IPC_CHANNELS, type ControlEvent } from "@room/schemas";
 import { ChatService } from "./chat";
 import { DiscussionService } from "./discussion";
 import { createDispatcher } from "./ipc";
+import { createImageProtocolHandler, MediaStore } from "./media-store";
 import { migrateLegacyReviewerNode, NodeService, resolveRunTarget } from "./nodes";
 import { RunOrchestrator } from "./orchestrator";
 import { Repository } from "./repository";
@@ -17,6 +18,14 @@ import { SettingsStore } from "./settings";
  * 启动顺序对齐 V0.4 §32：初始化 DB → 修复中断的 run → 起 IPC → 开窗口。
  * Token 只在主进程解密使用，绝不进 renderer / SQLite / 日志。
  */
+
+// D-36b：room-image:// 必须在 app ready 之前登记；只读、不导航、不当页面打开
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: IMAGE_URL_SCHEME,
+    privileges: { standard: true, secure: true, supportFetchAPI: true, corsEnabled: false },
+  },
+]);
 
 const isDev = !app.isPackaged;
 
@@ -79,6 +88,10 @@ async function bootstrap(): Promise<void> {
   const db = openDatabase(join(userData, "room.db"));
   const queue = new WriteQueue();
   const repo = new Repository(db, queue);
+
+  // D-36b：图片本体和引用表；renderer 用 room-image://<ref> 显示，main 只按记录映射到文件
+  const media = new MediaStore(join(userData, "images"), db);
+  protocol.handle(IMAGE_URL_SCHEME, createImageProtocolHandler(media));
 
   // §32 第 3 步：上次崩溃留下的 QUEUED / STARTING / RUNNING 统一标成 interrupted
   const repaired = await repairInterruptedRuns(db, queue);
