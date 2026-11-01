@@ -234,12 +234,6 @@ export class ChatService {
     }
     const content = this.#resolveContent(command.content);
 
-    // C-34：表情引用必须还在库里（renderer 只拿到 stickerId）。图片 / 文件的引用校验等
-    // D-36b 让附件能真正发出去时再加，这里是它要落的位置
-    if (content.kind === "sticker" && getSticker(db, content.stickerId) === null) {
-      throw new ChatError("validation_failed", "这个表情已经不在表情库里了");
-    }
-
     if (command.quoteMessageId !== null) {
       const quote = getChatMessage(db, command.quoteMessageId);
       if (quote === null || quote.conversationId !== conversation.id) {
@@ -922,5 +916,6 @@ function profileModelsOf(result: NodeTestResult | undefined): NodeHealth["profil
 function probeKeyOf(nodeId: string | null, profileId: string | null): string {
   return (nodeId ?? "") + "\u0000" + (profileId ?? "");
 }
+
 
 

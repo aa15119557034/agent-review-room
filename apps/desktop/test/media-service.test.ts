@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, rmSync, truncateSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
@@ -134,6 +134,23 @@ describe("media service (D-34a)", () => {
     }
   });
 
+  it("rejects an oversized file by its size before reading it into memory", async () => {
+    const h = makeHarness();
+    try {
+      // 稀疏文件：只占元数据，不真的写 2 GB
+      const huge = join(h.root, "huge.bin");
+      writeFileSync(huge, "");
+      truncateSync(huge, 2_100_000_000);
+      h.queue.push(huge);
+      await assert.rejects(
+        () => h.service.pickAttachment("file"),
+        (error: unknown) => error instanceof ChatError && error.code === "validation_failed" && /太大/.test(error.message),
+        "超限要在读取之前就拒，而不是先读进内存再报「读不了」",
+      );
+    } finally {
+      h.db.close();
+    }
+  });
   it("adds, lists, renames, and removes stickers; enforces the label and the library cap", async () => {
     const h = makeHarness();
     try {
@@ -167,9 +184,11 @@ describe("media service (D-34a)", () => {
         insertSticker(h.db, { id: `stk_${ulid()}`, image: image.ref, label: "满", createdAt: "2026-10-27T00:00:00.000Z" });
       }
       h.queue.push(await writeImage(h.root, "再来一个.png"));
-      await assert.rejects(() => h.service.addSticker("再加一个"), isChatError("validation_failed"));
+      await assert.rejects(() => h.service.addSticker("再加一个"), isChatError("invalid_state"));
     } finally {
       h.db.close();
     }
   });
 });
+
+

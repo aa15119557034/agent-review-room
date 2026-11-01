@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 import {
   countStickers,
   deleteSticker,
@@ -12,6 +12,7 @@ import {
   type SqliteDatabase,
 } from "@room/db";
 import {
+  ATTACHMENT_LIMITS,
   CHAT_LIMITS,
   Sticker as StickerSchema,
   StickerId as StickerIdSchema,
@@ -57,6 +58,9 @@ export class MediaService {
     });
     if (path === null) return null;
     const name = baseName(path);
+    // 先看字节数再读：1.5 GB 的视频不该先搬进主进程内存才被拒（C酱 #121）
+    const limit = kind === "image" ? ATTACHMENT_LIMITS.inputMaxBytes : CHAT_LIMITS.fileMaxBytes;
+    statSize(path, limit);
     let bytes: Buffer;
     try {
       bytes = readFileSync(path);
@@ -85,10 +89,11 @@ export class MediaService {
     const trimmed = label.trim();
     if (trimmed.length < 1 || trimmed.length > 40) throw new ChatError("validation_failed", "表情说明要 1～40 个字");
     if (countStickers(this.deps.db) >= CHAT_LIMITS.stickersMax) {
-      throw new ChatError("validation_failed", `表情库最多 ${CHAT_LIMITS.stickersMax} 个`);
+      throw new ChatError("invalid_state", `表情库最多 ${CHAT_LIMITS.stickersMax} 个`);
     }
     const path = await this.deps.openFileDialog({ title: "选一张表情图片", filters: [IMAGE_FILTER] });
     if (path === null) return null;
+    statSize(path, ATTACHMENT_LIMITS.inputMaxBytes);
     let bytes: Buffer;
     try {
       bytes = readFileSync(path);
@@ -105,7 +110,7 @@ export class MediaService {
     try {
       insertSticker(this.deps.db, sticker);
     } catch (error) {
-      if (error instanceof StickerLimitError) throw new ChatError("validation_failed", error.message);
+      if (error instanceof StickerLimitError) throw new ChatError("invalid_state", error.message);
       throw error;
     }
     return sticker;
@@ -151,3 +156,19 @@ export class MediaService {
 const baseName = (path: string): string => path.split(/[\\/]/).pop() ?? path;
 
 
+
+
+
+/** 读文件之前先看大小（超限就别搬进内存）；stat 失败按读不了处理 */
+function statSize(path: string, limit: number): number {
+  let size: number;
+  try {
+    size = statSync(path).size;
+  } catch {
+    throw new ChatError("validation_failed", "这个文件读不了（可能被移走了）");
+  }
+  if (size > limit) {
+    throw new ChatError("validation_failed", `文件太大了（上限 ${Math.round(limit / 1024 / 1024)} MB）`);
+  }
+  return size;
+}
