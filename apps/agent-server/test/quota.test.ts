@@ -7,7 +7,8 @@ import type { AddressInfo } from "node:net";
 import { CODEX_QUOTA_READ_TIMEOUT_MS, NodeHealth, RemoteProfileQuota } from "@room/schemas";
 import { ServerConfig, type Profile } from "../src/config";
 import { createAgentServer, type AgentServer } from "../src/server";
-import { createQuotaReader, mapCodexRateLimits, readCodexQuota } from "../src/quota";
+import { claudeAccountOf, createClaudeQuotaStore, createQuotaReader, mapClaudeRateLimit, mapCodexRateLimits, mapDeepSeekBalance, readCodexQuota, readDeepSeekBalance } from "../src/quota";
+import { validateProfiles } from "../src/config";
 
 /**
  * S-24：读 Codex 订阅额度。「codex app-server」是一个 node 小脚本，按 stdio JSON-RPC 回话：
@@ -315,5 +316,140 @@ describe("GET /v1/profiles/:id/quota", () => {
     } finally {
       await other.close();
     }
+  });
+});
+
+// ---------------------------------------------------------------- S-21
+
+describe("S-21: Claude quota from rate_limit_event", () => {
+  const info = (patch: Record<string, unknown> = {}) => ({
+    status: "allowed", resetsAt: RESET_5H, rateLimitType: "five_hour", isUsingOverage: false,
+    unifiedWindows: {
+      five_hour: { utilization: 0.11, resetsAt: RESET_5H, status: "allowed" },
+      seven_day: { utilization: 0.31, resetsAt: RESET_WEEK, status: "allowed" },
+    },
+    ...patch,
+  });
+
+  it("maps utilization (0–1) to percent with window lengths and reset times", () => {
+    const q = mapClaudeRateLimit(info(), READ_AT);
+    assert.deepEqual(q.fiveHour, { usedPercent: 11, windowMinutes: 300, resetsAt: new Date(RESET_5H * 1000).toISOString() });
+    assert.equal(q.weekly?.usedPercent, 31);
+    assert.equal(q.weekly?.windowMinutes, 10080);
+    assert.equal(q.creditsInUse, false);
+    assert.equal(q.readAt, READ_AT.toISOString());
+  });
+
+  it("a rejected window counts as 100; over 1 caps at 100; bad numbers are null", () => {
+    const q = mapClaudeRateLimit(info({
+      unifiedWindows: { five_hour: { utilization: 0.4, status: "rejected" }, seven_day: { utilization: 1.7 } },
+    }), READ_AT);
+    assert.equal(q.fiveHour?.usedPercent, 100);
+    assert.equal(q.weekly?.usedPercent, 100);
+    const bad = mapClaudeRateLimit(info({ unifiedWindows: { five_hour: { utilization: "x" }, seven_day: { utilization: -1 } } }), READ_AT);
+    assert.deepEqual([bad.fiveHour, bad.weekly], [null, null]);
+  });
+
+  it("without unifiedWindows only a rejected top-level window is known; never guessed otherwise", () => {
+    const rejected = mapClaudeRateLimit({ status: "rejected", rateLimitType: "seven_day", resetsAt: RESET_WEEK }, READ_AT);
+    assert.equal(rejected.weekly?.usedPercent, 100);
+    assert.equal(rejected.fiveHour, null);
+    const allowed = mapClaudeRateLimit({ status: "allowed", rateLimitType: "five_hour" }, READ_AT);
+    assert.deepEqual([allowed.fiveHour, allowed.weekly, allowed.creditsInUse], [null, null, null]);
+    assert.deepEqual([mapClaudeRateLimit(null, READ_AT).fiveHour, mapClaudeRateLimit("x", READ_AT).weekly], [null, null]);
+  });
+
+  it("the store keeps the latest per account, and garbage never overwrites good data", () => {
+    const store = createClaudeQuotaStore(() => READ_AT);
+    assert.equal(store.read("claude").fiveHour, null, "nothing seen yet");
+    store.record("claude", info());
+    store.record("claude", { nonsense: true });
+    assert.equal(store.read("claude").fiveHour?.usedPercent, 11);
+    assert.equal(store.read("other").fiveHour, null, "accounts are separate");
+  });
+
+  it("which account a profile's runs belong to", () => {
+    const p = (patch: Partial<Profile>) => ({ parser: "raw", quota: undefined, ...patch }) as unknown as Profile;
+    assert.equal(claudeAccountOf(p({ parser: "claude-stream-json" })), "claude");
+    assert.equal(claudeAccountOf(p({ parser: "claude-stream-json", quota: { source: "claude-stream", account: "work" } })), "work");
+    assert.equal(claudeAccountOf(p({ parser: "codex-exec-json" })), null);
+  });
+});
+
+describe("S-21: DeepSeek balance", () => {
+  const body = { is_available: true, balance_infos: [{ currency: "USD", total_balance: "2.00" }, { currency: "CNY", total_balance: "110.50", granted_balance: "10.00", topped_up_balance: "100.50" }] };
+
+  it("prefers CNY, takes total_balance as is; subscription windows stay null", () => {
+    const q = mapDeepSeekBalance(body, READ_AT);
+    assert.deepEqual(q.balance, { amount: "110.50", currency: "CNY" });
+    assert.deepEqual([q.fiveHour, q.weekly, q.creditsInUse], [null, null, null]);
+    assert.ok(RemoteProfileQuota.safeParse(q).success);
+    assert.deepEqual(mapDeepSeekBalance({ balance_infos: [{ currency: "USD", total_balance: 3 }] }, READ_AT).balance, { amount: "3", currency: "USD" });
+  });
+
+  it("anything unexpected is unknown (null), never 0", () => {
+    for (const b of [null, {}, { balance_infos: [] }, { balance_infos: [{ currency: "CNY", total_balance: "lots" }] }]) {
+      assert.equal(mapDeepSeekBalance(b, READ_AT).balance, null, JSON.stringify(b));
+    }
+  });
+
+  const dsProfile = (patch: Record<string, unknown> = {}) =>
+    ServerConfig.parse({
+      nodeId: "n", port: 1,
+      profiles: { ds: { command: NODE, cwd: ".", envAllowlist: ["S21_KEY"], quota: { source: "deepseek-balance", apiKeyEnv: "S21_KEY" }, ...patch } },
+    }).profiles.ds!;
+
+  it("reads with the key from the allowlisted env var; the key goes only into the header", async () => {
+    process.env.S21_KEY = "sk-test-s21";
+    try {
+      const seen: { url: string; auth: string | null }[] = [];
+      const fake = (async (url: string, init: RequestInit) => {
+        seen.push({ url, auth: new Headers(init.headers).get("authorization") });
+        return new Response(JSON.stringify(body), { status: 200 });
+      }) as unknown as typeof fetch;
+      const q = await readDeepSeekBalance(dsProfile(), { fetch: fake, now: () => READ_AT, log: () => {} });
+      assert.equal(q.balance?.amount, "110.50");
+      assert.deepEqual(seen, [{ url: "https://api.deepseek.com/user/balance", auth: "Bearer sk-test-s21" }]);
+    } finally {
+      delete process.env.S21_KEY;
+    }
+  });
+
+  it("no key / HTTP error / network error / timeout → unknown, and the log never contains the key", async () => {
+    const logs: string[] = [];
+    const log = (m: string) => logs.push(m);
+    const ok = (async () => new Response(JSON.stringify(body))) as unknown as typeof fetch;
+    assert.equal((await readDeepSeekBalance(dsProfile(), { fetch: ok, log })).balance ?? null, null, "key not set");
+    process.env.S21_KEY = "sk-test-s21";
+    try {
+      const status = (async () => new Response("no", { status: 401 })) as unknown as typeof fetch;
+      assert.equal((await readDeepSeekBalance(dsProfile(), { fetch: status, log })).balance ?? null, null);
+      const boom = (async () => { throw new Error("ECONNRESET"); }) as unknown as typeof fetch;
+      assert.equal((await readDeepSeekBalance(dsProfile(), { fetch: boom, log })).balance ?? null, null);
+      const hang = ((_u: string, init: RequestInit) =>
+        new Promise((_r, reject) => {
+          // AbortSignal.timeout 的计时器不占住事件循环（真节点有 HTTP 服务占着）；测试里自己占一下
+          const keep = setTimeout(() => {}, 5000);
+          init.signal!.addEventListener("abort", () => {
+            clearTimeout(keep);
+            reject(new Error("aborted"));
+          });
+        })) as unknown as typeof fetch;
+      const t0 = Date.now();
+      assert.equal((await readDeepSeekBalance(dsProfile(), { fetch: hang, log, timeoutMs: 50 })).balance ?? null, null);
+      assert.ok(Date.now() - t0 < CODEX_QUOTA_READ_TIMEOUT_MS);
+      assert.equal(logs.length, 4);
+      assert.ok(logs.every((l) => !l.includes("sk-test-s21")));
+    } finally {
+      delete process.env.S21_KEY;
+    }
+  });
+
+  it("config checks: the key env must be allowlisted; claude-stream needs the claude parser", () => {
+    const cfg = (profiles: Record<string, unknown>) => ServerConfig.parse({ nodeId: "n", port: 1, profiles });
+    const problems = (profiles: Record<string, unknown>) => validateProfiles(cfg(profiles)).join("\n");
+    assert.match(problems({ ds: { command: NODE, cwd: ".", quota: { source: "deepseek-balance" } } }), /envAllowlist 要包含 DEEPSEEK_API_KEY/);
+    assert.match(problems({ c: { command: NODE, cwd: ".", quota: { source: "claude-stream" } } }), /parser 要是 claude-stream-json/);
+    assert.equal(problems({ c: { command: NODE, cwd: ".", parser: "claude-stream-json", quota: { source: "claude-stream" } } }), "");
   });
 });

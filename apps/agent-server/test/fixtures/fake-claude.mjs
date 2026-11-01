@@ -10,6 +10,20 @@ process.stdin.on("end", async () => {
     out({ type: "stream_event", event: { type: "content_block_delta", index: 0, delta: { type: "text_delta", text } }, parent_tool_use_id: null, ...extra });
 
   out({ type: "system", subtype: "init", model: "claude-test", session_id: "s1" });
+  // S-21：claude 2.1.x 顺带输出的额度（形状照 2026-11-01 实测）
+  if (process.env.FAKE_RATE) {
+    out({
+      type: "rate_limit_event",
+      rate_limit_info: {
+        status: "allowed", resetsAt: 1793577600, rateLimitType: "five_hour", overageStatus: "rejected", isUsingOverage: false,
+        unifiedWindows: {
+          five_hour: { utilization: Number(process.env.FAKE_RATE), resetsAt: 1793577600, status: "allowed" },
+          seven_day: { utilization: 0.31, resetsAt: 1793962800, status: "allowed" },
+        },
+      },
+      uuid: "u1", session_id: "s1",
+    });
+  }
   if (mode === "slow") {
     const n = Number(process.env.FAKE_CHUNKS ?? 15);
     let all = "";

@@ -84,11 +84,36 @@ const Profile = z
      * 2 秒读不到报「未知」。环境变量和跑 Run 一样只给 envAllowlist，Codex 的登录在 CODEX_HOME 里，所以要放行它
      */
     quota: z
-      .object({
-        source: z.literal("codex-app-server"),
-        args: z.array(z.string()).default(["app-server"]),
-      })
-      .strict()
+      .discriminatedUnion("source", [
+        z
+          .object({
+            source: z.literal("codex-app-server"),
+            args: z.array(z.string()).default(["app-server"]),
+          })
+          .strict(),
+        /**
+         * S-21：Claude 不单独读额度——每次跑 `claude -p --output-format stream-json` 时 CLI 会顺带输出 rate_limit_event，
+         * 节点记下最近一次（同一个 account 的所有 claude-stream-json profile 共用，一个节点一个账号时用默认值就行）。
+         * 不额外花额度；节点刚启动、还没跑过 Run 时报「未知」
+         */
+        z
+          .object({
+            source: z.literal("claude-stream"),
+            account: z.string().min(1).max(40).default("claude"),
+          })
+          .strict(),
+        /**
+         * S-21：DeepSeek 按量计费，读余额 GET <baseUrl>/user/balance。API Key 从环境变量 apiKeyEnv 读
+         * （必须在 envAllowlist 里，和跑 Run 一样），不打印、不回传；2 秒读不到报「未知」
+         */
+        z
+          .object({
+            source: z.literal("deepseek-balance"),
+            baseUrl: z.string().url().default("https://api.deepseek.com"),
+            apiKeyEnv: z.string().regex(/^[A-Z_][A-Z0-9_]*$/).default("DEEPSEEK_API_KEY"),
+          })
+          .strict(),
+      ])
       .optional(),
   })
   .strict();
@@ -275,6 +300,12 @@ export function imageConfigProblems(p: Profile): string[] {
   }
   if (p.images?.input === "openai-content-json" && p.parser !== "room-jsonl") {
     problems.push("images.input 为 openai-content-json 时 parser 要是 room-jsonl（本仓库脚本）");
+  }
+  if (p.quota?.source === "claude-stream" && p.parser !== "claude-stream-json") {
+    problems.push("quota.source 为 claude-stream 时 parser 要是 claude-stream-json（额度从它的输出里读）");
+  }
+  if (p.quota?.source === "deepseek-balance" && !p.envAllowlist.includes(p.quota.apiKeyEnv)) {
+    problems.push(`quota.source 为 deepseek-balance 时 envAllowlist 要包含 ${p.quota.apiKeyEnv}`);
   }
   if (p.imageRun && p.images) problems.push("画图 profile 不收图（image Run 不能带附件），不要同时配 images");
   if (p.imageRun && p.memory) problems.push("画图 profile 不读记忆");

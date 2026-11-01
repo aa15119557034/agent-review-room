@@ -54,6 +54,7 @@
     "deepseek-discuss": {
       "command": "node",
       "args": ["../bin/deepseek-chat.mjs"],
+      "quota": {"source": "deepseek-balance"},
       "models": [
         {
           "id": "deepseek-flash",

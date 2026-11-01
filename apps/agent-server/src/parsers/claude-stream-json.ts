@@ -41,6 +41,10 @@ export class ClaudeStreamJsonParser extends JsonLinesParser {
       }
       return;
     }
+    if (o["type"] === "rate_limit_event") {
+      out.push({ kind: "rate_limit", info: o["rate_limit_info"] });
+      return;
+    }
     if (o["type"] === "result") this.result = o as unknown as ResultLine;
   }
 
