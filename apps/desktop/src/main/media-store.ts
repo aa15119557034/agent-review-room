@@ -157,6 +157,20 @@ export class MediaStore {
     return record;
   }
 
+  /** D-36b：把文件 ref 读成 UTF-8 文本（只有 is_text 的文件会读）；非文本 / 读不到都返回 null */
+  readFileText(ref: string): string | null {
+    const record = getFile(this.db, ref);
+    if (record === null || !record.isText) return null;
+    const hit = this.resolveFile(ref);
+    if (hit === null) return null;
+    try {
+      return readFileSync(hit.file, "utf8");
+    } catch {
+      // 文件本体丢了 / 读不出来：调用方要靠记录里的 isText 区分「本来不是文本」和「文本读不到」
+      return null;
+    }
+  }
+
   /** 文件引用对应的路径和类型；没有记录 / 文件丢了返回 null */
   resolveFile(ref: string): { file: string; mime: string } | null {
     const record = getFile(this.db, ref);
@@ -253,5 +267,7 @@ function displayNameOf(name: string): string {
   const safe = trimmed.length === 0 ? "未命名" : trimmed;
   return safe.length > 255 ? safe.slice(0, 255) : safe;
 }
+
+
 
 
