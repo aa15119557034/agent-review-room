@@ -113,6 +113,9 @@
 | **D-33** | DeepSeek | 实现 C-39：只对 `controller-local`（之后由 C-44 扩成本机节点白名单）；token 路径来自节点配置，**不能由 renderer 传路径**；校验长度、只进 safeStorage、不回显不写日志；导入后自动测一次连接。可以和 D-30 并成一个 PR |
 | **C-44** | Claude | （S-20 配套，不算小活；依赖 C-39 / D-33 已合并；验收：用户批准）契约：`node.importLocalToken` 的 id 改成本机节点白名单（`controller-local`、`controller-local-codex`），每个 id 一个 main 里的 Token 文件路径（ADR-003 §2a） |
 | **D-40** | DeepSeek | （S-20 配套，不算小活；依赖 C-44；迁移编号按 D-31a 的规则；真库副本验收）实现 C-44；推荐配置里林离改指 `controller-local-codex`（7421）；数据库里林离的参与者迁到新节点，真库副本验证讨论和聊天都走新节点 ；验收：桌面端以江浩的普通账号（不提权）一键导入 7420、7421 两份 Token 并连接成功 |
+| **C-42i** | Claude | 契约小补：`chat.send` 里图片附件可带 `chat.attachment.pick` 返回的原文件名（`ChatImageInputName`，可选，只用于显示和资料区图名，不能带路径和控制字符）；不带时 main 照旧用「图片.<扩展名>」。文件名仍只从 main 的记录取 |
+| **D-43** | DeepSeek | 实现 C-42i（依赖 C-42i）：`main/chat.ts` 的 `#resolveAttachment` 有 `name` 就用它，没有才用「图片.<扩展名>」占位；补 chat-ipc 测试（带名字 → 消息、清单、资料区都是原名；不带 → 占位不变） |
+| **C-45** | Claude | 界面（依赖 C-42i；接真后端要 D-43）：发图时带上原文件名；发出去的带图消息下面按这次实际的 Snapshot 标出「某某这次看不到图」（`chat.snapshots.get` 的 `attachments` 为准，不按发送前的探测猜） |
 
 ## 1B 验收
 

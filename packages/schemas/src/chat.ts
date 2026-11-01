@@ -218,15 +218,33 @@ export const ChatContent = z.discriminatedUnion("kind", [
 export type ChatContent = z.infer<typeof ChatContent>;
 
 /**
+ * C-42i：图片附件随 chat.send 带上的原文件名。只是个名字：去掉首尾空白后 1～255 字，
+ * 不能有路径分隔符（/ \\）、控制字符（Cc：C0、DEL、C1）、格式字符（Cf：双向控制 U+202A–202E / U+2066–2069、
+ * U+200E/200F、零宽 U+200B 等）和行/段分隔符（U+2028 / U+2029）——防界面上的名字被伪装、防在 Prompt 里插一行（汐 #150）。
+ * 进 Prompt 时照旧由拼装器转义（X-30），这里不负责转义。main 在 pick 返回前也会规范化（D-43），这里是第二道防线
+ */
+export const ChatImageInputName = z
+  .string()
+  .trim()
+  .min(1)
+  .max(255)
+  .regex(/^[^/\\\p{Cc}\p{Cf}\p{Zl}\p{Zp}]+$/u, "图片名不能带路径、控制字符或隐藏的格式字符");
+export type ChatImageInputName = z.infer<typeof ChatImageInputName>;
+
+/**
  * chat.send 里你交上来的内容：**只有引用和你自己写的字**，其余元数据由 main 从自己的记录里填，不信客户端：
- * - 附件：只传 ref。name / mime / bytes / sha256 / isText 由 main 按 chat.attachment.pick 时存下的记录填
+ * - 附件：只传 ref。name / mime / bytes / sha256 / isText 由 main 按 chat.attachment.pick 时存下的记录填。
+ *   例外（C-42i）：图片按内容去重，同一个 ref 可能来自不同文件名，main 记不住「这一次」叫什么，
+ *   所以图片可以带上 chat.attachment.pick 返回的 name（只用于显示和资料区里转义后的图名，不参与任何校验）；
+ *   不带时 main 用「图片.<扩展名>」占位。文件的 name 仍然只从 main 的记录里取
  * - 语音：只传 audio 和你（可能改过的）转写文字。durationMs、language、engine 从 VoiceRecording 填；
  *   录音必须是 ready；transcriptText 和引擎原样转写逐字相同 → source = transcribed，否则 edited
  * - 表情：只传 stickerId。image 和 label 发送时从表情库抄
  * 引用不存在、不属于聊天、录音不是 ready → validation_failed。存进 UserChatMessage 的是 main 填完的 ChatContent。
  */
+
 export const ChatAttachmentInput = z.discriminatedUnion("kind", [
-  z.object({ kind: z.literal("image"), ref: ImageRef }).strict(),
+  z.object({ kind: z.literal("image"), ref: ImageRef, name: ChatImageInputName.optional() }).strict(),
   z.object({ kind: z.literal("file"), ref: FileRef }).strict(),
 ]);
 export type ChatAttachmentInput = z.infer<typeof ChatAttachmentInput>;
