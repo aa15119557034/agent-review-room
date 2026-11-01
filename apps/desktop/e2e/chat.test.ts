@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { ulid } from "@room/db";
-import { CHAT_LIMITS, type CommandRequest } from "@room/schemas";
-import { ANSWER_JSON, approveOf, draft, failure, makeE2E, sleep, waitFor, waitRoundDone, type BatchLike, type E2E } from "./harness";
+import { insertChatRun, insertChatSnapshot, insertChatSummary, ulid } from "@room/db";
+import { CHAT_LIMITS, ChatHistorySummary, ChatRun, ChatSnapshot, type CommandRequest } from "@room/schemas";
+import { ANSWER_JSON, approveOf, draft, failure, makeE2E, sha, sleep, waitFor, waitRoundDone, type BatchLike, type E2E } from "./harness";
 import type { NodeBehavior } from "./fake-node";
 
 /**
@@ -79,6 +79,63 @@ function slotsOf(h: E2E, messageId: string): Map<string, { outcome: string; fail
 async function settled(h: E2E, messageId: string): Promise<ReturnType<typeof slotsOf>> {
   await waitFor(() => [...slotsOf(h, messageId).values()].every((s) => s.outcome !== "running") && h.chat.activeCount() === 0, "slots of " + messageId);
   return slotsOf(h, messageId);
+}
+
+/** 按契约直接写一条历史摘要（连同写它的 history_summary Snapshot + Run）。摘要生成上线后改走真流程 */
+function summarize(h: E2E, conversationId: string, at: string, covered: string[], text: string): ChatHistorySummary {
+  const content = "历史资料\n" + covered.join("\n");
+  const snapshot = ChatSnapshot.parse({
+    id: "snap_" + ulid(),
+    purpose: "history_summary",
+    conversationId,
+    userMessageId: null,
+    agent: "deepseek",
+    content,
+    contentHash: sha(content),
+    nonce: "0123456789abcdef",
+    memorySlot: null,
+    includedMessageIds: covered,
+    includedSummaryIds: [],
+    adapterVersion: "chat-v4",
+    tokenEstimate: 10,
+    createdAt: at,
+  });
+  insertChatSnapshot(h.db, snapshot);
+  const run = ChatRun.parse({
+    id: "run_" + ulid(),
+    kind: "chat",
+    purpose: "history_summary",
+    conversationId,
+    slotId: null,
+    agent: "deepseek",
+    snapshotId: snapshot.id,
+    snapshotHash: snapshot.contentHash,
+    finalPromptHash: null,
+    memoryManifest: null,
+    model: null,
+    adapterId: "remote:deepseek-chat",
+    state: "QUEUED",
+    substate: null,
+    failureReason: null,
+    attempt: 1,
+    createdAt: at,
+    startedAt: null,
+    finishedAt: null,
+  });
+  insertChatRun(h.db, run);
+  const summary = ChatHistorySummary.parse({
+    id: "csum_" + ulid(),
+    conversationId,
+    sourceMessageIds: covered,
+    content: text,
+    contentHash: sha(text),
+    state: "current",
+    runId: run.id,
+    agent: "deepseek",
+    createdAt: at,
+  });
+  insertChatSummary(h.db, summary);
+  return summary;
 }
 
 function chatStarts(h: E2E) {
@@ -261,6 +318,65 @@ describe("X-31 撤回", () => {
     }
   });
 
+  it("#6b 撤回后压缩历史（摘要）也不含哨兵：覆盖撤回消息的摘要变 stale，不再发给节点", async () => {
+    const c = clock();
+    const h = await makeE2E({ now: c.now });
+    try {
+      const conv = await conversation(h, { kind: "direct", agent: "deepseek" });
+      h.nodes.controller.setBehavior("deepseek-chat", [reply("好"), reply("收到 " + SENTINEL), reply("好"), reply("好")]);
+
+      const before = await send(h, conv, "先说个正常的");
+      await settled(h, before.messageId);
+      c.advance(15_000);
+      const secret = await send(h, conv, "这条要撤回 " + SENTINEL);
+      await settled(h, secret.messageId);
+      const echoId = (h.db.prepare("SELECT id FROM chat_messages WHERE in_reply_to = ?").get(secret.messageId) as { id: string }).id;
+
+      // 摘要生成还没上线（D-41 只做了存 / 读 / 失效），这里按契约直接写库：三条摘要各自来自一个 history_summary Run
+      const plain = summarize(h, conv, c.now(), [before.messageId], "前面在聊正常的事");
+      const coversSecret = summarize(h, conv, c.now(), [secret.messageId], "用户说了 " + SENTINEL);
+      // 只覆盖秘书复述的那条（摘要切段切在一问一答之间）：靠 core 按「回答已撤回消息的发言」排除兜住
+      const coversEcho = summarize(h, conv, c.now(), [echoId], "汐复述了 " + SENTINEL);
+
+      c.advance(15_000);
+      const probe = await send(h, conv, "摘要进去了吗");
+      await settled(h, probe.messageId);
+      const probeBody = h.nodes.controller.bodies.at(-1)!;
+      assert.deepEqual(
+        [...probeBody.snapshot.content.matchAll(/历史摘要 (csum_\w+)/g)].map((m) => m[1]),
+        [plain.id, coversSecret.id, coversEcho.id],
+        "撤回前三条摘要都发给了节点（证明摘要这条路是通的）",
+      );
+
+      c.advance(30_000);
+      await ok(h, { type: "chat.retract", messageId: secret.messageId });
+      const listed = (await h.dispatcher.handleQuery({ type: "chat.summaries.list", conversationId: conv })) as Ok<{ id: string; state: string }[]>;
+      assert.equal(listed.data.find((s) => s.id === coversSecret.id)?.state, "stale", "覆盖撤回消息的摘要变 stale");
+      assert.ok(
+        h.events.some((e) => e.type === "chat.summary.updated" && e.summary.id === coversSecret.id && e.summary.state === "stale"),
+        "推了 chat.summary.updated",
+      );
+
+      c.advance(15_000);
+      const after = await send(h, conv, "撤回之后的新消息");
+      await settled(h, after.messageId);
+      const afterBody = h.nodes.controller.bodies.at(-1)!;
+      assert.ok(!afterBody.snapshot.content.includes(SENTINEL), "节点请求（含压缩历史）不含哨兵");
+      assert.ok(afterBody.snapshot.content.includes("前面在聊正常的事"), "无关的摘要照常进");
+      const snap = h.db.prepare("SELECT content, included_summary_ids FROM chat_snapshots WHERE user_message_id = ?").get(after.messageId) as {
+        content: string;
+        included_summary_ids: string;
+      };
+      assert.ok(!snap.content.includes(SENTINEL), "落库的 Snapshot 也不含");
+      assert.deepEqual(JSON.parse(snap.included_summary_ids), [plain.id]);
+      // 审计：摘要原文还在库里
+      const audit = h.db.prepare("SELECT content FROM chat_summaries WHERE id = ?").get(coversSecret.id) as { content: string };
+      assert.ok(audit.content.includes(SENTINEL));
+    } finally {
+      await h.close();
+    }
+  });
+
   it("#7 五分钟边界：差 1 毫秒能撤，正好五分钟不能；秘书的消息不能撤", async () => {
     const c = clock();
     const h = await makeE2E({ now: c.now });
@@ -406,6 +522,64 @@ describe("X-31 聊天 → 转议题 → 跑一轮", () => {
       const discuss = h.nodes.controller.bodies.filter((b) => b.profileId.endsWith("-discuss"));
       assert.equal(discuss.length, 2);
       for (const body of discuss) assert.ok(body.snapshot.content.includes("要先备份"), body.profileId + " 收到聊天材料");
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+describe("X-34b 媒体意图（确定性部分）", () => {
+  function mediaJobCount(h: E2E): number {
+    return (h.db.prepare("SELECT COUNT(*) AS n FROM media_jobs").get() as { n: number }).n;
+  }
+  const raw = (text: string): NodeBehavior => ({ kind: "answer", text });
+  const DRAW = { prompt: "一只小鲸鱼", size: "1024x1024" };
+
+  it("#12 畸形媒体意图（skip + draw、半截 JSON）记失败（parse_error），没有回答消息，也没有任何媒体任务", async () => {
+    const h = await makeE2E();
+    try {
+      // 群聊没点名：skip 本身是允许的，失败只能是因为格式坏
+      const conv = await conversation(h, { kind: "group", agents: ["codex", "deepseek"] });
+      h.nodes.controller.setBehavior("deepseek-chat", raw(JSON.stringify({ kind: "skip", draw: DRAW })));
+      h.nodes.controller.setBehavior("codex-chat", raw('{"kind":"reply","text":"给你画","draw":{"prompt":"小鲸'));
+      const sent = await send(h, conv, "随便聊聊");
+      const slots = await settled(h, sent.messageId);
+      for (const agent of ["deepseek", "codex"]) {
+        assert.equal(slots.get(agent)?.outcome, "failed", agent);
+        assert.equal(slots.get(agent)?.failure, "parse_error", agent);
+      }
+      assert.deepEqual(agentReplies(h, sent.messageId), []);
+      await sleep(100);
+      assert.equal(mediaJobCount(h), 0);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("#13 沉浸模式关着、没开「用语音回」：带 speak / draw 的回答照常显示，意图只记在消息上，不合成、不画", async () => {
+    const h = await makeE2E();
+    try {
+      const conv = await conversation(h, { kind: "direct", agent: "deepseek" });
+      const immersive = (await h.dispatcher.handleQuery({ type: "immersive.get", conversationId: conv })) as Ok<{ settings: { enabled: boolean } }>;
+      assert.equal(immersive.data.settings.enabled, false, "默认关着");
+
+      h.nodes.controller.setBehavior("deepseek-chat", [
+        raw(JSON.stringify({ kind: "reply", text: "你好呀", speak: true })),
+        raw(JSON.stringify({ kind: "reply", text: "画好了给你看", draw: DRAW })),
+        // 超限的媒体字段：只丢意图、文字照常（ADR-004 §3a）
+        raw(JSON.stringify({ kind: "reply", text: "这个不行", speak: "大声点", draw: { prompt: "", size: "8x8" } })),
+      ]);
+      const intents: (string | null)[] = [];
+      for (const text of ["打个招呼", "画一张小鲸鱼", "再来"]) {
+        const sent = await send(h, conv, text);
+        const slots = await settled(h, sent.messageId);
+        assert.equal(slots.get("deepseek")?.outcome, "answered", text);
+        const row = h.db.prepare("SELECT media_intent FROM chat_messages WHERE in_reply_to = ?").get(sent.messageId) as { media_intent: string | null };
+        intents.push(row.media_intent);
+      }
+      assert.deepEqual(intents.map((i) => (i === null ? null : JSON.parse(i))), [{ speak: true }, { draw: DRAW }, null]);
+      await sleep(100);
+      assert.equal(mediaJobCount(h), 0, "关着时意图只出卡片，不自动建任务");
     } finally {
       await h.close();
     }
