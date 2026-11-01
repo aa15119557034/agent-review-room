@@ -380,7 +380,8 @@ export const COMMANDS = {
    * - 成功后 renderer 自己再调一次 node.test（这条命令只负责导入）；一键导入两份 = renderer 按 id 各调一次
    */
   "node.importLocalToken": def(
-    z.object({ type: z.literal("node.importLocalToken"), id: LocalNodeId }),
+    // strict：带 path / token / tokenFile 等多余字段在入参校验就被拒（validation_failed），不是悄悄剥掉
+    z.object({ type: z.literal("node.importLocalToken"), id: LocalNodeId }).strict(),
     NodeInfo,
     "admin",
   ),

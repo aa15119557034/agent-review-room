@@ -104,9 +104,11 @@ describe("node.importLocalToken whitelist (C-44)", () => {
     }
   });
 
-  it("still no path or token in the request for the codex node", () => {
-    const strict = COMMANDS["node.importLocalToken"].request.strict();
-    assert.equal(strict.safeParse({ type: "node.importLocalToken", id: LOCAL_CODEX_NODE_ID, path: "C:\\x" }).success, false);
-    assert.equal(strict.safeParse({ type: "node.importLocalToken", id: LOCAL_CODEX_NODE_ID, tokenFile: "x" }).success, false);
+  it("rejects extra fields (path / token / tokenFile) at the real command boundary", () => {
+    for (const id of LOCAL_NODE_IDS) {
+      for (const extra of [{ path: "C:\\x" }, { tokenFile: "x" }, { token: "a".repeat(40) }]) {
+        assert.equal(ControlCommand.safeParse({ type: "node.importLocalToken", id, ...extra }).success, false, `${id} ${Object.keys(extra)[0]}`);
+      }
+    }
   });
 });
