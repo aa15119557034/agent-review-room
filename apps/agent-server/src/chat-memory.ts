@@ -19,6 +19,13 @@ export const MEMORY_TEXT_EMPTY = "（记忆文件夹里没有可用的条目）"
 export const MEMORY_LABEL_UNAVAILABLE = "节点记忆：";
 export const MEMORY_TEXT_UNAVAILABLE = "（此记忆来源不可用）";
 
+/** content 里的 marker 不是恰好一次（schema 本该已经拒掉）：server 转成 bad_request */
+export class MemorySlotError extends Error {
+  constructor() {
+    super("chat.memory.marker must occur exactly once in snapshot.content");
+  }
+}
+
 export interface PreparedPrompt {
   /** 实际交给 CLI 的文字（marker 已换成记忆；没有槽位时就是原 content） */
   content: string;
@@ -96,7 +103,9 @@ export function preparePrompt(
   for (const w of sel.warnings) log(`记忆：${w}`);
   const rendered = renderMemory(slot, sel, otherNonces);
   if (rendered.reason) log(`记忆不可用：${rendered.reason}`);
-  const [before, after] = content.split(slot.marker) as [string, string];
-  const final = before + rendered.text + after;
+  const parts = content.split(slot.marker);
+  // StartRunRequest 的 schema 已经保证恰好一次；这里再守一道，别拼出 "undefined"
+  if (parts.length !== 2) throw new MemorySlotError();
+  const final = parts[0]! + rendered.text + parts[1]!;
   return { content: final, promptFinal: { finalPromptHash: sha256(final), memory: rendered.manifest } };
 }

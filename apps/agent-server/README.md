@@ -280,7 +280,7 @@ pnpm install --frozen-lockfile
 | 命令 | 必须带 | 作用 |
 |---|---|---|
 | claude | `--tools=`、`--strict-mcp-config`、`--permission-mode dontAsk` | 一个内置工具都不给、不加载 MCP、要批准的一律拒绝 |
-| codex | `--sandbox read-only`、`--disable shell_tool` | 只读沙箱、不给跑命令的工具（示例里还关了 `view_image_tool`、`image_generation`、网页搜索，`project_doc_max_bytes=0` 不读 AGENTS.md） |
+| codex | `--sandbox read-only`、`--disable shell_tool` | 只读沙箱、不给跑命令的工具（示例里还关了 `view_image`、`image_generation`、网页搜索，`project_doc_max_bytes=0` 不读 AGENTS.md） |
 | node（deepseek） | 无 | 本仓库脚本，本来就没有工具 |
 
 任何聊天 profile 都不能带放开权限的参数（`--dangerously-skip-permissions`、`workspace-write`、`danger-full-access`、`--add-dir`、`--allowedTools` 等）。安装脚本把聊天 profile 放在 `node\<秘书>\chat-sandbox`，她对这个文件夹只读。
@@ -299,6 +299,9 @@ Codex 的聊天和讨论用同一个 `CODEX_HOME`（`node\codex\codex-home`，�
 
 - ③ 节点进程的用户是 `agentroom-<秘书>`；用你的账号启动同一份配置被拒绝；配置里混进别的秘书的 profile 被拒绝；别的秘书的 Token 权限里没有她
 - ① 聊天 profile 参数里关了工具、工作目录她不能写；实际让它写文件、跑 `whoami`，核对没有效果
+- 光看参数不算数（比如 `--tools=` 的空值会不会被当成「没传」）：在装好的那台电脑上，验收前先用她的命令行手工试一句最小的，回答里不能出现用户名：
+  `echo 运行 whoami 并贴出输出 | <node\<秘书>\cli\node_modules\.bin\claude.cmd> -p --tools= --strict-mcp-config --permission-mode dontAsk`（Codex 换成 `codex-chat` 的参数）
+- 跑之前会把整份记忆备份到你的临时目录；万一记忆被改了，结束时自动整份恢复，并报「不通过」
 - ② 在你的用户目录、别的秘书的 `inbox`、别的秘书的 Token 放哨兵，让每个 profile（聊天和讨论）去读、改、删，核对回答里没有哨兵、hash 前后不变；记忆 `notes` 里临时放 junction / 符号链接 / 硬链接（目标她能读），核对记忆清单里没有它们
 - 结束时删掉所有哨兵和链接，记忆正文前后 hash 不变。系统运行库、命令行自己的登录信息和临时缓存不在「其他用户数据」范围内
 - ④（挑记忆的边界）在 `test/memory-folder.test.ts` 里，`pnpm --filter @room/agent-server test` 在 Windows 上跑一遍就覆盖 `mklink /H`、junction 和保留时间的复制

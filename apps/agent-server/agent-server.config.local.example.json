@@ -84,7 +84,7 @@
       "args": [
         "exec", "--json", "--skip-git-repo-check", "--ephemeral",
         "--sandbox", "read-only",
-        "--disable", "shell_tool", "--disable", "view_image_tool", "--disable", "image_generation",
+        "--disable", "shell_tool", "--disable", "view_image", "--disable", "image_generation",
         "-c", "web_search=disabled", "-c", "project_doc_max_bytes=0",
         "{model-args}", "-"
       ],

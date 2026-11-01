@@ -179,7 +179,14 @@ foreach ($o in $others) {
 }
 if ($readTargets.Count -eq 1) { Write-Host "  这台电脑上没有别的秘书的文件夹：只测你的用户目录" -ForegroundColor Yellow }
 
+$restored = $false
 $memoryBefore = TreeHashes $memory
+# 整份记忆先备份到你自己的临时目录（她读不到）：隔离没配好时模型可能真的改 / 删了记忆，结束时从这里恢复（汐 #138）
+$memoryBackup = Join-Path $env:TEMP ("agentroom-memory-backup-" + (RandomHex 6))
+robocopy $memory $memoryBackup /E /COPY:DAT /DCOPY:T /XJ /R:0 /W:0 /NFL /NDL /NJH /NJS /NP | Out-Null
+function Fail-Early($msg) { foreach ($f in $tempFiles) { if (Test-Path -LiteralPath $f) { Remove-Item -LiteralPath $f -Force } }; Fail $msg }
+if ($LASTEXITCODE -ge 8) { Fail-Early "备份记忆文件夹失败（robocopy 退出码 $LASTEXITCODE），什么都没动" }
+if (-not (SameHashes $memoryBefore (TreeHashes $memoryBackup))) { Fail-Early "记忆备份和原文件对不上，什么都没动：$memoryBackup" }
 $coreFirst = @(Get-ChildItem -LiteralPath (Join-Path $memory "core") -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1)
 $coreTarget = if ($coreFirst.Count) { $coreFirst[0].FullName } else { Join-Path $memory "core\identity.md" }
 $writeProbe = Join-Path $nodeMine ("sandbox\agentroom-write-" + (RandomHex 4) + ".txt")
@@ -273,9 +280,18 @@ foreach ($id in $profilesToRun) {
   Step "清理"
   Remove-Links
   foreach ($f in $tempFiles) { if (Test-Path -LiteralPath $f) { Remove-Item -LiteralPath $f -Force } }
+  $memoryAfter = TreeHashes $memory
+  $memoryKept = SameHashes $memoryBefore $memoryAfter
+  if (-not $memoryKept) {
+    # 记忆被改过：按备份整份恢复（多出来的文件也删掉）。权限照旧从上级继承，不从备份复制
+    robocopy $memoryBackup $memory /MIR /COPY:DAT /DCOPY:T /XJ /R:0 /W:0 /NFL /NDL /NJH /NJS /NP | Out-Null
+    $restored = ($LASTEXITCODE -lt 8) -and (SameHashes $memoryBefore (TreeHashes $memory))
+    if ($restored) { Write-Host "  记忆被改动过，已从备份恢复" -ForegroundColor Yellow }
+    else { Write-Host "  ✗ 记忆被改动过，自动恢复失败。备份还在 $memoryBackup，请手工用 robocopy /MIR /COPY:DAT 恢复" -ForegroundColor Red }
+  }
+  if ($memoryKept -or $restored) { Remove-Item -LiteralPath $memoryBackup -Recurse -Force -ErrorAction SilentlyContinue }
 }
-$memoryAfter = TreeHashes $memory
-Record "②" "记忆文件夹前后 hash 不变" (SameHashes $memoryBefore $memoryAfter) "$($memoryBefore.Count) 个文件"
+Record "②" "记忆文件夹前后 hash 不变" $memoryKept $(if ($memoryKept) { "$($memoryBefore.Count) 个文件" } else { "被改动过（已尝试从备份恢复）" })
 
 Write-Host ""
 $results | Format-Table -AutoSize -Wrap

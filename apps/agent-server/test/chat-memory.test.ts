@@ -5,6 +5,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "nod
 import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { wrapChatUntrusted } from "@room/core";
 import { NodeHealth, RemoteEvent } from "@room/schemas";
 import { chatProfileProblems, ServerConfig } from "../src/config";
@@ -230,11 +231,14 @@ describe("chat profiles may only talk", () => {
     for (const bad of ["--dangerously-skip-permissions", "workspace-write", "danger-full-access", "--add-dir", "--allowedTools"]) {
       assert.ok(chatProfileProblems("deepseek-chat", p("node", [bad])).length > 0, bad);
     }
+    assert.ok(chatProfileProblems("codex-chat", p("node", ["-c", "sandbox_mode=workspace-write"])).length > 0);
     assert.deepEqual(chatProfileProblems("codex-discuss", p("codex", ["--sandbox", "workspace-write"])), []);
+    // 只按整个参数比：路径、提示词里带这些字不算（汐 #138）
+    assert.deepEqual(chatProfileProblems("deepseek-chat", p("node", ["D:\\workspace-write-notes\\x.mjs", "--note=acceptEdits-later"])), []);
   });
 
   it("the chat profiles in both example configs pass", () => {
-    const appDir = join(dirname(new URL(import.meta.url).pathname), "..");
+    const appDir = join(dirname(fileURLToPath(import.meta.url)), "..");
     for (const file of ["agent-server.config.example.json", "agent-server.config.local.example.json"]) {
       const cfg = ServerConfig.parse(JSON.parse(readFileSync(join(appDir, file), "utf8")));
       const chats = Object.keys(cfg.profiles).filter((id) => id.endsWith("-chat"));

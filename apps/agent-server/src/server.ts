@@ -20,7 +20,7 @@ import {
 } from "@room/schemas";
 import type { Profile, ServerConfig } from "./config";
 import { RemoteRun, chatKeyOf } from "./remote-run";
-import { preparePrompt, selectForProfile } from "./chat-memory";
+import { MemorySlotError, preparePrompt, selectForProfile } from "./chat-memory";
 import { checkModel } from "./model-args";
 import { attachmentProblem, profileMaySeeImages, visionOf } from "./images";
 import { sweepStaleRunDirs } from "./image-artifact";
@@ -271,9 +271,15 @@ export function createAgentServer(
 
     // S-20：聊天 Run 在这里读记忆、换槽位（读不到也不失败，槽位里换成「不可用」）。日志只写原因，不写正文
     const otherNonces = reqBody.imageSlot ? [imageSlotNonce(reqBody.imageSlot) ?? ""].filter(Boolean) : [];
-    const prepared = preparePrompt(cfg, profile, reqBody.snapshot.content, reqBody.chat, otherNonces, (line) =>
-      console.warn(`[agent-server] run ${reqBody.runId}：${line}`),
-    );
+    let prepared: ReturnType<typeof preparePrompt>;
+    try {
+      prepared = preparePrompt(cfg, profile, reqBody.snapshot.content, reqBody.chat, otherNonces, (line) =>
+        console.warn(`[agent-server] run ${reqBody.runId}：${line}`),
+      );
+    } catch (err) {
+      if (err instanceof MemorySlotError) throw new HttpError(400, "bad_request", "invalid fields: chat.memory.marker");
+      throw err;
+    }
     if (profile.memory && reqBody.chat?.memory) memoryHealth.record(reqBody.profileId, prepared.promptFinal?.memory?.status);
     const run = new RemoteRun(reqBody, profile, cfg, (r) => {
       console.log(`[agent-server] run ${r.runId} finished`);
