@@ -3,6 +3,8 @@ import { testReviewerNode } from "@room/remote-client";
 import {
   APPROVAL_TRANSITIONS,
   COMMANDS,
+  DEFAULT_APPEARANCE,
+  DEFAULT_IMMERSIVE_SETTINGS,
   ControlCommand,
   ControlQuery,
   QUERIES,
@@ -351,6 +353,16 @@ export function createDispatcher(deps: IpcDeps) {
         return jobsService().stop(command.scope);
 
       // 还没上线：明确拒绝，不要返回 undefined 让出参校验兜成 internal
+      case "speech.play":
+        throw new ChatError("validation_failed", "语音播放还没上线（D-37b）");
+      case "immersive.update":
+        throw new ChatError("validation_failed", "沉浸模式还没上线（D-39）");
+      case "image.pick":
+        throw new ChatError("validation_failed", "头像 / 背景选图还没上线（D-39）");
+      case "appearance.update":
+        throw new ChatError("validation_failed", "外观设置还没上线（D-39）");
+      case "node.importLocalToken":
+        throw new ChatError("validation_failed", "本机节点 Token 导入还没上线");
       case "chat.voice.import":
         throw new ChatError("validation_failed", "语音还没上线（D-34b）");
     }
@@ -476,6 +488,17 @@ export function createDispatcher(deps: IpcDeps) {
       case "chat.voice.get":
         throw new ChatError("not_found", "录音还没上线（D-34）");
 
+      // 还没接但界面会查：返回契约里的默认值，别让界面看到英文的 internal 错误
+      case "appearance.get":
+        return DEFAULT_APPEARANCE;
+      case "voices.list":
+        return [];
+      case "immersive.get":
+        return {
+          settings: DEFAULT_IMMERSIVE_SETTINGS,
+          usage: { asOf: new Date().toISOString(), drawsLastHour: 0, voiceClipsLastHour: 0 },
+        };
+
       // D-38a：画图任务
       case "draw.preview":
         return jobsService().preview(query.request);
@@ -490,5 +513,3 @@ export function createDispatcher(deps: IpcDeps) {
 }
 
 export { APPROVAL_TRANSITIONS };
-
-

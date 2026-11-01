@@ -102,6 +102,8 @@ interface Harness {
   targets: ChatRunTarget[];
   /** D-36b：file ref → 文本（测试注入） */
   fileTexts: Map<string, string>;
+  /** 撤回时 main 会通知它取消画图任务（ADR-004 §3a） */
+  cancelledMedia: string[][];
 }
 
 async function makeHarness(
@@ -115,6 +117,8 @@ async function makeHarness(
     modelSettings?: Record<string, AgentModelSettings>;
     /** 可控时钟（撤回 / 重新编辑的时间窗口） */
     now?: () => string;
+    /** 取消画图任务先失败几次（测撤回不被拖垮、会重试） */
+    cancelMediaFails?: number;
   } = {},
 ): Promise<Harness> {
   const dir = mkdtempSync(join(tmpdir(), "room-chat-ipc-"));
@@ -124,6 +128,7 @@ async function makeHarness(
   const repo = new Repository(db, queue);
   const settings = new SettingsStore(join(dir, "settings.json"), fakeSafeStorage);
   const fileTexts = new Map<string, string>();
+  const cancelledMedia: string[][] = [];
   settings.upsertNode("controller-local", { baseUrl: NODE_URL, token: "t".repeat(40) });
   await repo.upsertNodeRow({ id: "controller-local", label: "主控机", baseUrl: NODE_URL });
 
@@ -154,6 +159,13 @@ async function makeHarness(
     settings,
     emit: (event) => events.push(ControlEvent.parse(event)),
     readFileText: (ref) => fileTexts.get(ref) ?? null,
+    cancelMediaJobs: async (messageIds) => {
+      if ((options.cancelMediaFails ?? 0) > 0) {
+        options.cancelMediaFails = (options.cancelMediaFails ?? 0) - 1;
+        throw new Error("画图服务暂时不可用");
+      }
+      cancelledMedia.push([...messageIds]);
+    },
     adapterFactory: async (target: ChatRunTarget) => {
       targets.push(target);
       if (held.has(target.agent)) {
@@ -198,7 +210,7 @@ async function makeHarness(
     members: { kind: "direct", agent: "deepseek" },
     title: null,
   } as never);
-  return { chat, repo, db, events, conversationId: conversation.id, targets, fileTexts };
+  return { chat, repo, db, events, conversationId: conversation.id, targets, fileTexts, cancelledMedia };
 }
 
 const userMessageId = (n: number): string => "cmsg_" + String(n).padStart(26, "0");
@@ -732,6 +744,34 @@ describe("chat service (D-31b)", () => {
     }
   });
 
+  it("a failing media cancel does not break the retract and is retried once", async () => {
+    const h = await makeHarness({ cancelMediaFails: 1 });
+    try {
+      const sent = await h.chat.send(send(h.conversationId, userMessageId(121), "画一张"));
+      await settle(h.chat);
+      const retracted = await h.chat.retract({ type: "chat.retract", messageId: sent.message.id } as never);
+      assert.equal(retracted.message.state, "retracted");
+      // 第二次尝试成功，回调收到了 id
+      assert.ok(h.cancelledMedia.at(-1)?.includes(sent.message.id));
+    } finally {
+      h.db.close();
+    }
+  });
+  it("retracting a message also tells main to cancel draw jobs from it and its replies (ADR-004 §3a)", async () => {
+    const h = await makeHarness({ scripts: { deepseek: reply("画好啦") } });
+    try {
+      const sent = await h.chat.send(send(h.conversationId, userMessageId(120), "画一张"));
+      await settle(h.chat);
+      const replyRow = h.db
+        .prepare("SELECT id FROM chat_messages WHERE conversation_id = ? AND sender = 'agent' LIMIT 1")
+        .get(h.conversationId) as { id: string } | undefined;
+      assert.ok(replyRow !== undefined);
+      await h.chat.retract({ type: "chat.retract", messageId: sent.message.id } as never);
+      assert.deepEqual(h.cancelledMedia.at(-1)?.slice().sort(), [sent.message.id, replyRow.id].sort());
+    } finally {
+      h.db.close();
+    }
+  });
   it("re-edits a retracted message as a new message with new slots", async () => {
     const h = await makeHarness();
     try {
@@ -1106,9 +1146,3 @@ describe("chat service (D-31b)", () => {
     }
   });
 });
-
-
-
-
-
-

@@ -121,6 +121,8 @@ export interface ChatServiceDeps {
   readonly probe?: (params: { baseUrl: string; token: string; profileId: string }) => Promise<NodeTestResult>;
   /** D-36b：把文件 ref 读成文本（非文本文件返回 null）；测试注入假的 */
   readonly readFileText?: (ref: string) => string | null;
+  /** 撤回时收掉从这条消息 / 它的回答发起的画图任务（ADR-004 §3a）；没传 = 不做 */
+  readonly cancelMediaJobs?: (messageIds: readonly string[]) => Promise<void>;
   readonly now?: () => string;
   readonly idleTimeoutMs?: number;
   readonly totalTimeoutMs?: number;
@@ -482,6 +484,21 @@ export class ChatService {
       const run = getChatRun(db, slot.runId);
       if (run !== null && (run.state === "QUEUED" || run.state === "STARTING" || run.state === "RUNNING")) {
         this.#active.get(run.id)?.abort();
+      }
+    }
+    // 撤回也要收掉从这条消息（和它下面的回答）发起的画图任务（ADR-004 §3a）
+    if (this.#deps.cancelMediaJobs !== undefined) {
+      const replies = db.prepare("SELECT id FROM chat_messages WHERE in_reply_to = ?").all(message.id) as { id: string }[];
+      const ids = [message.id, ...replies.map((reply) => reply.id)];
+      for (let attempt = 0; attempt < 2; attempt += 1) {
+        try {
+          await this.#deps.cancelMediaJobs(ids);
+          break;
+        } catch (error) {
+          // 取消失败不能让撤回本身失败；但也不能静默——留日志，结果落库前还会按来源消息状态再挡一次（林离 #129）
+          if (attempt === 0) continue;
+          console.warn("[chat] 撤回后取消画图任务失败：", error instanceof Error ? error.message : String(error));
+        }
       }
     }
     this.#emit({ type: "chat.message.updated", message: result.message });
@@ -964,6 +981,3 @@ function profileModelsOf(result: NodeTestResult | undefined): NodeHealth["profil
 function probeKeyOf(nodeId: string | null, profileId: string | null): string {
   return (nodeId ?? "") + "\u0000" + (profileId ?? "");
 }
-
-
-

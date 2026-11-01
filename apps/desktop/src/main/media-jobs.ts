@@ -152,10 +152,27 @@ export class MediaJobsService {
 
   /** 会话 / 议题的「停」：取消这个范围里所有排队和正在跑的任务（cancelReason = user_stop） */
   async stop(scope: MediaScope): Promise<MediaJob[]> {
-    const active = listActiveMediaJobs(this.deps.db).filter((job) => inScope(job, scope));
+    return this.#cancelAll(listActiveMediaJobs(this.deps.db).filter((job) => inScope(job, scope)), "user_stop");
+  }
+
+  /**
+   * 消息被撤回（ADR-004 §3a）：取消从这条消息、以及它下面回答发起的排队/在跑任务。
+   * 原因记 message_withdrawn，界面据此把请求卡收回。
+   */
+  async cancelBySourceMessageIds(messageIds: readonly string[]): Promise<MediaJob[]> {
+    const set = new Set(messageIds);
+    if (set.size === 0) return [];
+    const affected = listActiveMediaJobs(this.deps.db).filter(
+      (job) => job.source.kind === "chat" && set.has(job.source.messageId),
+    );
+    return this.#cancelAll(affected, "message_withdrawn");
+  }
+
+  /** 批量取消：先记原因、abort、让 ComfyUI 停，再按最新状态重试转换（冲突不算失败） */
+  async #cancelAll(jobs: readonly MediaJob[], reason: MediaJob["cancelReason"]): Promise<MediaJob[]> {
     const cancelled: MediaJob[] = [];
-    for (const job of active) {
-      this.#cancelIntent.set(job.id, "user_stop");
+    for (const job of jobs) {
+      this.#cancelIntent.set(job.id, reason);
       this.#running.get(job.id)?.abort();
       if (job.state === "running") void this.deps.comfy()?.cancelActive();
       // 和 cancel 一样：冲突就按最新状态重试，别把「刚开跑」当成失败
@@ -166,7 +183,7 @@ export class MediaJobsService {
           break;
         }
         try {
-          cancelled.push(await this.#transition(job.id, current.state, "cancelled", { cancelReason: "user_stop" }));
+          cancelled.push(await this.#transition(job.id, current.state, "cancelled", { cancelReason: reason }));
           this.#cancelIntent.delete(job.id);
           break;
         } catch (error) {
@@ -277,9 +294,15 @@ export class MediaJobsService {
         await this.#settleCancelled(job.id);
         return;
       }
-      let image;
+      // 撤回已经落库：图还没存就别存了（林离 #129：撤回后返回的图不能进图片库）
+      if (this.#sourceWithdrawn(job)) {
+        this.#cancelIntent.set(job.id, "message_withdrawn");
+        await this.#settleCancelled(job.id);
+        return;
+      }
+      let saved;
       try {
-        image = await this.deps.store.addGeneratedImage(result.image, this.deps.now());
+        saved = await this.deps.store.addGeneratedImageDetailed(result.image, this.deps.now());
       } catch (error) {
         if (error instanceof ImageRejectedError) {
           await this.#fail(job, "artifact_invalid", error.message);
@@ -287,8 +310,9 @@ export class MediaJobsService {
         }
         throw error;
       }
+      const image = saved.record;
       try {
-        await this.#transition(job.id, "running", "succeeded", {
+        const committed = await this.#commitSuccess(job, {
           route: {
             backend: "comfyui",
             manual: false,
@@ -308,13 +332,59 @@ export class MediaJobsService {
             workflowHash: result.workflowHash,
           },
         });
+        // 存图之后、落库之前这段时间被撤回了：把这次新建的引用和字节清掉（共享的图不能动）
+        if (!committed) {
+          if (saved.created) this.deps.store.deleteImage(image.ref);
+          return;
+        }
       } catch (error) {
-        if (error instanceof MediaJobStateConflictError) return; // 取消抢先了
-        throw error;
+        if (!(error instanceof MediaJobStateConflictError)) throw error;
+        if (saved.created) this.deps.store.deleteImage(image.ref);
+        return;
       }
     } finally {
       this.#running.delete(job.id);
     }
+  }
+
+  /**
+   * 结果落库：和「来源消息是否已撤回」的检查放在**同一个事务**里（林离 #129）。
+   * 撤回提交和取消回调之间回图的窗口，靠这里挡住——不会再落成 succeeded。
+   * 返回 true = 存成成功，false = 因为撤回被取消（调用方据此清掉刚画的图）。
+   */
+  async #commitSuccess(
+    job: MediaJob,
+    patch: { route?: MediaJob["route"]; result?: MediaJob["result"] },
+  ): Promise<boolean> {
+    let succeeded = true;
+    const applied = await writeTransaction(this.deps.db, this.deps.queue, () => {
+      if (this.#sourceWithdrawn(job)) {
+        succeeded = false;
+        return transitionMediaJob(this.deps.db, {
+          id: job.id,
+          from: "running",
+          to: "cancelled",
+          now: this.deps.now(),
+          patch: { cancelReason: "message_withdrawn" },
+        });
+      }
+      return transitionMediaJob(this.deps.db, { id: job.id, from: "running", to: "succeeded", now: this.deps.now(), patch });
+    });
+    this.#emit(applied);
+    return succeeded;
+  }
+
+  /** 来源消息（回答的话，还有它回答的那条）是不是已经撤回（ADR-004 §3a） */
+  #sourceWithdrawn(job: MediaJob): boolean {
+    if (job.source.kind !== "chat") return false;
+    const message = getChatMessage(this.deps.db, job.source.messageId);
+    if (message === null) return false;
+    if ("state" in message && message.state === "retracted") return true;
+    if (message.sender === "agent") {
+      const parent = getChatMessage(this.deps.db, message.inReplyTo);
+      if (parent !== null && "state" in parent && parent.state !== "sent") return true;
+    }
+    return false;
   }
 
   /**
@@ -412,9 +482,3 @@ const sameSource = (a: MediaSource, b: MediaSource): boolean => JSON.stringify(a
 const ignoreConflict = (error: unknown): void => {
   if (!(error instanceof MediaJobStateConflictError)) throw error;
 };
-
-
-
-
-
-

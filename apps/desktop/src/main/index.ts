@@ -181,6 +181,9 @@ async function bootstrap(): Promise<void> {
     settings,
     emit: broadcast,
     readFileText: (ref) => mediaStore.readFileText(ref),
+    cancelMediaJobs: async (messageIds) => {
+      await jobs.cancelBySourceMessageIds(messageIds);
+    },
     adapterFactory: async (target) => {
       const adapter = new HttpRemoteAgentAdapter({
         nodeId: target.nodeId,
@@ -248,6 +251,3 @@ void app.whenReady().then(async () => {
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
-
-
-

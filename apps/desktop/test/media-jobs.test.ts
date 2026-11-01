@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, readdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
@@ -43,10 +43,12 @@ interface FakeComfy {
   interrupted: number;
   available: boolean;
   failure: Error | null;
+  /** 测试用：draw 等这个 promise 放行（模拟「回图比撤回晚」的时序） */
+  gate: Promise<void> | null;
 }
 
 function fakeComfy(): FakeComfy {
-  const state: FakeComfy = { client: null as never, calls: 0, interrupted: 0, available: true, failure: null };
+  const state: FakeComfy = { client: null as never, calls: 0, interrupted: 0, available: true, failure: null, gate: null };
   state.client = {
     isUp: async () => state.available,
     modelName: () => "qwen-image",
@@ -60,6 +62,7 @@ function fakeComfy(): FakeComfy {
     draw: async (input: { prompt: string; size: string; seed: number }) => {
       state.calls += 1;
       if (state.failure !== null) throw state.failure;
+      if (state.gate !== null) await state.gate;
       return { image: await png(), seed: input.seed, model: "qwen-image", workflowHash: "b".repeat(64) };
     },
   } as unknown as ComfyUiClient;
@@ -112,7 +115,7 @@ async function makeHarness(opts: { comfy?: FakeComfy | null } = {}): Promise<Har
     retractedAt: null,
   } as ChatMessage as UserChatMessage;
   insertChatMessage(db, { message });
-  return { service, db, comfy, events, conversationId: conversation.id, message };
+  return { service, db, comfy, events, conversationId: conversation.id, message, imagesDir: join(root, "images") };
 }
 
 const request = (patch: Partial<DrawRequest> = {}): DrawRequest => ({
@@ -354,6 +357,50 @@ describe("media jobs service (D-38a)", () => {
     }
   });
 
+  it("drops a result that arrives after the source message was retracted (林离 #129)", async () => {
+    const h = await makeHarness();
+    let release!: () => void;
+    h.comfy.gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    try {
+      const job = await h.service.start(request(), source(h), false);
+      await until(() => getMediaJob(h.db, job.id)?.state === "running");
+      // 撤回先落库，取消回调还没来；这时画图正好回图
+      retractChatMessage(h.db, h.message.id, T);
+      release();
+      await until(() => {
+        const state = getMediaJob(h.db, job.id)?.state;
+        return state === "cancelled" || state === "succeeded";
+      });
+      const after = h.service.get(job.id);
+      assert.equal(after.state, "cancelled", "撤回之后到的图不能落成成功");
+      assert.equal(after.cancelReason, "message_withdrawn");
+      assert.equal(after.result, null);
+      // 图也不能落进图片库：撤回后的结果不产生 images 记录，也不留字节（林离 #129）
+      const images = h.db.prepare("SELECT COUNT(*) AS n FROM images").get() as { n: number };
+      assert.equal(images.n, 0);
+      assert.deepEqual(readdirSync(h.imagesDir), []);
+      await until(() => !h.service.busy());
+      await new Promise((r) => setTimeout(r, 10));
+    } finally {
+      h.db.close();
+    }
+  });
+  it("cancels jobs sourced from a withdrawn message with message_withdrawn (ADR-004 §3a)", async () => {
+    const h = await makeHarness();
+    try {
+      const job = await h.service.start(request(), source(h), false);
+      const cancelled = await h.service.cancelBySourceMessageIds([h.message.id]);
+      assert.ok(cancelled.some((item) => item.id === job.id));
+      await until(() => getMediaJob(h.db, job.id)?.state === "cancelled");
+      assert.equal(h.service.get(job.id).cancelReason, "message_withdrawn");
+      await until(() => !h.service.busy());
+      await new Promise((r) => setTimeout(r, 10));
+    } finally {
+      h.db.close();
+    }
+  });
   it("cancelling right after start still ends cancelled (the queued→running race)", async () => {
     const h = await makeHarness();
     try {
@@ -479,11 +526,3 @@ describe("media jobs service (D-38a)", () => {
     }
   });
 });
-
-
-
-
-
-
-
-
