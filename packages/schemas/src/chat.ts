@@ -6,7 +6,14 @@ import { AgentName } from "./entities";
 import { BatchModel, CHAT_PERSONA_MAX_CHARS } from "./discussion";
 import { MemoryManifest, MemorySlot, occursExactlyOnce } from "./remote-protocol";
 import { ImageRef } from "./appearance";
-import { ATTACHMENT_LIMITS, AttachmentManifest, attachmentManifestBlock } from "./attachments";
+import {
+  ATTACHMENT_LIMITS,
+  AttachmentImageSlot,
+  AttachmentManifest,
+  attachmentImageSlotMarker,
+  attachmentManifestBlock,
+  imageBlockPlaced,
+} from "./attachments";
 import { ImmersiveDeferral, MediaIntent } from "./immersive";
 
 /**
@@ -524,6 +531,11 @@ export const ChatSnapshot = z
      * 省略 = 没带图（包括这次用的模型看不了图、只收到「[图片：文件名]」占位的情况）
      */
     attachments: AttachmentManifest.optional(),
+    /**
+     * C-42g：图片位置标记 = attachmentImageSlotMarker(nonce)。不带图时省略；带图却没有标记的 Snapshot 暂时能存，但起跑不了（StartRun 带图必须有 imageSlot）；这是过渡，D-36b / X-34 的拼装器都写上图片资料块后收紧成「有 attachments 就必须有 imageSlot」。
+     * content 里有恰好一块 attachmentImageBlock(nonce, 张数)、在清单块后面、在当前用户消息之前（最后一条由拼装器验收保证，见 attachments.ts）。起跑时原样放进 StartRun.imageSlot
+     */
+    imageSlot: AttachmentImageSlot.optional(),
     /** 拼进来的消息（历史、引用、当前这条）和摘要。撤回审计用：撤回后拼的 Snapshot 不能含被排除的消息 id（见 isExcludedFromContext） */
     includedMessageIds: z.array(ChatMessageId).min(1).max(10_000),
     includedSummaryIds: z.array(ChatSummaryId).max(100),
@@ -537,6 +549,15 @@ export const ChatSnapshot = z
   .refine(
     (s) => s.attachments === undefined || s.content.startsWith(attachmentManifestBlock(s.attachments)),
     "带图时 content 要以附件清单块开头",
+  )
+  .refine((s) => s.imageSlot === undefined || s.attachments !== undefined, "不带图时不能有 imageSlot")
+  .refine(
+    (s) =>
+      s.attachments === undefined ||
+      s.imageSlot === undefined ||
+      (s.imageSlot === attachmentImageSlotMarker(s.nonce) &&
+        imageBlockPlaced(s.content, s.attachments, s.imageSlot)),
+    "imageSlot 要用这份 Snapshot 的 nonce，content 里恰好一块图片资料块，在清单块后面，标记只在块里出现一次",
   );
 export type ChatSnapshot = z.infer<typeof ChatSnapshot>;
 
