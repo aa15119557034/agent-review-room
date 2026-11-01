@@ -8,6 +8,7 @@ import { SCHEMA_V7 } from "./schema-v7";
 import { SCHEMA_V8 } from "./schema-v8";
 import { SCHEMA_V9 } from "./schema-v9";
 import { SCHEMA_V10 } from "./schema-v10";
+import { SCHEMA_V11 } from "./schema-v11";
 
 /**
  * 迁移（D-02）：用 PRAGMA user_version 记版本，每个迁移在自己的事务里跑。
@@ -102,6 +103,13 @@ export const MIGRATIONS: readonly Migration[] = [
       db.exec(SCHEMA_V10);
     },
   },
+  {
+    version: 11,
+    name: "media-jobs",
+    up: (db) => {
+      db.exec(SCHEMA_V11);
+    },
+  },
 ];
 
 /** 当前代码支持的最新 schema 版本 */
@@ -154,5 +162,6 @@ export function runMigrations(db: Database): number {
 
   return applied;
 }
+
 
 
