@@ -146,8 +146,17 @@ export type NodeTestResult = z.infer<typeof NodeTestResult>;
 // ================================================================ 节点（ADR-002：可以有多个 AgentServer）
 
 /** 节点设置。和 ReviewerNodeSettings 一样，Token 只写不读 */
-/** 主控机本机节点的 id（S-10 / C-27 的推荐配置）。node.importLocalToken 只对它可用 */
+/** 主控机本机节点的 id（S-10 / C-27 的推荐配置；ADR-003 §2a 拆分后是汐的节点，7420） */
 export const LOCAL_NODE_ID = "controller-local";
+/** C-44：主控机上林离的节点（ADR-003 §2a，7421，以 agentroom-codex 运行） */
+export const LOCAL_CODEX_NODE_ID = "controller-local-codex";
+/**
+ * C-44：主控机本机节点白名单。node.importLocalToken 只对这些 id 可用。
+ * 加新的本机节点要改这里（契约 PR），不能由设置或 renderer 扩
+ */
+export const LOCAL_NODE_IDS = [LOCAL_NODE_ID, LOCAL_CODEX_NODE_ID] as const;
+export const LocalNodeId = z.enum(LOCAL_NODE_IDS);
+export type LocalNodeId = z.infer<typeof LocalNodeId>;
 
 export const NodeInfo = z.object({
   id: NodeId,
@@ -349,17 +358,22 @@ export const COMMANDS = {
   ),
 
   /**
-   * 主控机节点一键读取本机 Token（C-39）。
-   * - 只对 id 是 LOCAL_NODE_ID（"controller-local"）**并且** baseUrl 是本机回环地址（127.0.0.1 / localhost / [::1]）的节点可用，
-   *   否则 invalid_state
-   * - Token 文件的位置：main 的 settings.json 里的 `localAgentServerTokenFile`（只在 main 里，不经过控制 API，renderer 改不了）；
-   *   没配置时用主控机 AgentServer 的默认位置。**请求里不能带路径**
-   * - 读到的值按 NodeToken 校验，只写进 safeStorage，不回显；日志里不写 token，也不写文件路径
+   * 主控机节点一键读取本机 Token（C-39；C-44 扩成本机节点白名单）。
+   * - 只对 id 在 LOCAL_NODE_IDS 里（"controller-local"、"controller-local-codex"）**并且** baseUrl 是本机回环地址
+   *   （127.0.0.1 / localhost / [::1]）的节点可用；id 在白名单里但节点的 baseUrl 不是回环地址 → invalid_state；
+   *   id 不在白名单里 → 入参校验就拒绝（validation_failed）
+   * - Token 文件的位置：**每个 id 一个路径**，在 main 的 settings.json 里的 `localAgentServerTokenFiles`
+   *   （键是 LocalNodeId，值是文件路径；只在 main 里，不经过控制 API，renderer 改不了）。
+   *   某个 id 没配置时用它的默认位置：`<AgentRoom>\node\deepseek\agent-server.token`（controller-local）、
+   *   `<AgentRoom>\node\codex\agent-server.token`（controller-local-codex），`<AgentRoom>` 由 main 设置给出（ADR-003 §2a）。
+   *   旧设置 `localAgentServerTokenFile`（C-39，单个路径）只当作 controller-local 的路径读；不能拿来给 controller-local-codex。
+   *   **请求里不能带路径**；两个 id 解析出的路径相同（同一份 Token 给了两个节点）时，导入任何一个都返回 invalid_state
+   * - 读到的值按 NodeToken 校验，只写进这个 id 对应节点的 safeStorage 槽位，不回显；日志里不写 token，也不写文件路径
    * - 失败分类：节点不存在或 Token 文件不存在 → not_found；文件读不了（权限等）→ internal；内容不合 NodeToken → validation_failed
-   * - 成功后 renderer 自己再调一次 node.test（这条命令只负责导入）
+   * - 成功后 renderer 自己再调一次 node.test（这条命令只负责导入）；一键导入两份 = renderer 按 id 各调一次
    */
   "node.importLocalToken": def(
-    z.object({ type: z.literal("node.importLocalToken"), id: z.literal(LOCAL_NODE_ID) }),
+    z.object({ type: z.literal("node.importLocalToken"), id: LocalNodeId }),
     NodeInfo,
     "admin",
   ),
