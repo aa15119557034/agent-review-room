@@ -28,6 +28,12 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
    * 只在打开会话时加一；加载更早的消息、沉浸模式关掉后的重查都算这一次打开
    */
   let openGen = 0;
+  /**
+   * 每条消息最近一次查询的序号：同一次打开里查询会重叠（首屏还没回来又因为关了沉浸模式重查），
+   * 只有这条消息最近发出的那次才改它的查询状态，旧的失败晚到不能盖掉新的成功（林离 #117）
+   */
+  let lookupSeq = 0;
+  const latestLookup = new Map<string, number>();
 
   /**
    * 打开会话时：清掉上个会话的媒体状态，读沉浸模式设置。媒体任务等消息那页到了再按消息查（loadJobs）。
@@ -35,6 +41,7 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
    */
   async function loadForConversation(conversationId: string) {
     const gen = ++openGen;
+    latestLookup.clear();
     setMedia((m) => ({ ...m, jobs: [], immersive: null, clips: {}, playing: null, playQueue: [], jobsLookup: {} }));
     // 还没结束的任务另外按整个会话查一次：它的消息可能不在已加载的那几页，「停」也要算上它（汐 #117）
     const [immersive, recent] = await Promise.all([
@@ -61,9 +68,12 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
     const live = (c: ChatState) => gen === openGen && c.currentId === conversationId;
     const ids = [...new Set(messageIds)];
     if (ids.length === 0) return;
+    const seq = ++lookupSeq;
+    for (const id of ids) latestLookup.set(id, seq);
     const lookup = (c: ChatState, batch: readonly string[], v: "loading" | "failed" | null) => {
       const next = { ...c.media.jobsLookup };
       for (const id of batch) {
+        if (latestLookup.get(id) !== seq) continue;
         if (v) next[id] = v;
         else delete next[id];
       }

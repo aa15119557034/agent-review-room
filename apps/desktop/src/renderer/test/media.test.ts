@@ -604,6 +604,32 @@ describe("C-43 through the UI actions (mock)", () => {
     assert.equal(c.media.clips["cmsg_a"]?.id, "spch_12");
   });
 
+  it("overlapping lookups in one visit: an older failure landing late doesn't undo a newer success (林离 #117)", async () => {
+    const pending: { res: (jobs: MediaJob[]) => void; rej: (e: Error) => void }[] = [];
+    const client = {
+      query: (r: { type: string; messageIds?: string[] }) =>
+        r.type !== "media.list"
+          ? Promise.reject(new Error("not here"))
+          : r.messageIds
+            ? new Promise<MediaJob[]>((res, rej) => pending.push({ res, rej }))
+            : Promise.resolve([]),
+      command: () => Promise.reject(new Error("not here")),
+      onEvent: () => () => {},
+    } as unknown as RoomClient;
+    const store = createStore({ ...initialState, chat: { ...initialState.chat, currentId: "conv_1" } });
+    const media = createMediaActions(store, client, () => {});
+    await media.loadForConversation("conv_1");
+    const q1 = media.loadJobs("conv_1", ["cmsg_a", "cmsg_b"]); // 首屏
+    const q2 = media.loadJobs("conv_1", ["cmsg_a"]); // 比如关了沉浸模式后的重查
+    pending[1]!.res([]);
+    await q2;
+    pending[0]!.rej(new Error("数据库忙"));
+    await q1;
+    const lookup = store.get().chat.media.jobsLookup;
+    assert.equal(lookup["cmsg_a"], undefined, "the newer success stands");
+    assert.equal(lookup["cmsg_b"], "failed", "only asked once, so its failure counts");
+  });
+
   it("voice clips: the newest synthesized one wins, whatever order lookups land in (林离 #117)", async () => {
     const speechJob = (n: number) =>
       job({ id: `mjob_${n}`, kind: "speech", state: "succeeded", authorization: "user_play", draw: null, speech: clip(n), createdAt: at(n), startedAt: at(n), finishedAt: at(n) });
