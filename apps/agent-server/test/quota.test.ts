@@ -136,7 +136,7 @@ describe("mapCodexRateLimits", () => {
       [true, withCredits, false],
       [false, withCredits, true],
       [false, { hasCredits: false, unlimited: true, balance: null }, true],
-      [false, { hasCredits: false, unlimited: false, balance: null }, false],
+      [false, { hasCredits: false, unlimited: false, balance: null }, null],
       [false, null, null],
       [null, withCredits, null],
       [undefined, withCredits, null],
@@ -144,6 +144,18 @@ describe("mapCodexRateLimits", () => {
     for (const [allowed, credits, want] of cases) {
       const q = mapCodexRateLimits({ ...NORMAL, ordinaryUsageAllowed: allowed, rateLimits: snapshot(win(1, 300, null), win(1, 10080, null), credits) }, READ_AT);
       assert.equal(q.creditsInUse, want, `${String(allowed)} / ${JSON.stringify(credits)}`);
+    }
+  });
+
+  it("backend says no ordinary usage: low percentages are dropped, so the 85% rule can never pick Codex (林离 #133)", () => {
+    for (const credits of [{ hasCredits: false, unlimited: false, balance: null }, null, { hasCredits: true, unlimited: false, balance: "3" }]) {
+      const q = mapCodexRateLimits(
+        { ...NORMAL, ordinaryUsageAllowed: false, rateLimits: snapshot(win(20, 300, RESET_5H), win(30, 10080, RESET_WEEK), credits) },
+        READ_AT,
+      );
+      assert.equal(q.fiveHour, null, JSON.stringify(credits));
+      assert.equal(q.weekly, null, JSON.stringify(credits));
+      assert.notEqual(q.creditsInUse, false, "never claims credits are not in use");
     }
   });
 

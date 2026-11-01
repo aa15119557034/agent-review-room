@@ -174,7 +174,7 @@ pnpm --filter @room/agent-server run vision-test -- deepseek-discuss --model dee
 - `envAllowlist` 要放行 `CODEX_HOME`（登录信息在那里），和跑 Run 一样不给别的变量
 - **2 秒读不到就报「未知」**（含启动 app-server 的时间）：超时、出错、没登录、断网、字段缺失，对应各项都是 `null`，不是 0；端点仍然返回 200。失败原因记在节点日志里
 - 窗口按长度认：300 分钟是 5 小时，10080 分钟是每周；长度缺失或是别的值，那一项报 `null`，不按位置猜
-- `creditsInUse`：订阅额度还能用 → `false`；订阅额度已用尽且账户有 credits（或不限量）→ `true`；读不准 → `null`
+- `creditsInUse`：订阅额度还能用 → `false`；后端说不许再用订阅额度（`ordinaryUsageAllowed: false`）时，**两个窗口一律报 `null`**（百分比再低也不信，保证走本机），账户有 credits（或不限量）→ `true`，否则 `null`；读不准 → `null`
 - 同一个 profile 同时只起一个 app-server，同时来的请求共用这一次的结果
 - health 里 `capabilities.quota: true` 表示这个节点提供这个端点；没配 quota 的 profile 返回 404 `not_found`
 
@@ -221,7 +221,7 @@ pnpm --filter @room/agent-server run quota -- codex-discuss
 ## 测试
 
 ```bash
-pnpm --filter @room/agent-server test     # 145 个
+pnpm --filter @room/agent-server test     # 146 个
 ```
 
 Windows 相关逻辑（`.cmd` 包装、taskkill 参数）用注入的模拟环境测试；`claude` 用 `test/fixtures/fake-claude.mjs`、`codex` 用 `test/fixtures/fake-codex.mjs` 模拟；`deepseek-chat.mjs` 对着测试里起的假 DeepSeek 服务跑（不联网、不用真 Key）。

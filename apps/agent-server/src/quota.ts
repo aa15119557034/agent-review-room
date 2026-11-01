@@ -60,9 +60,10 @@ function toWindow(w: CodexWindow): RemoteQuotaWindow | null {
  * account/rateLimits/read 的 result → RemoteProfileQuota。
  * - 优先用 rateLimitsByLimitId.codex，没有再用兼容的 rateLimits
  * - 窗口按 windowDurationMins 认：300 = 5 小时，10080 = 每周；长度缺失或是别的值，那一项为 null
- * - creditsInUse：ordinaryUsageAllowed 为 true → false（还在用订阅里的额度）；
- *   为 false（订阅额度已用尽）且账户有 credits / 不限量 → true；为 false 且确定没有 credits → false
- *   （这时窗口会是 100%，照样不走 Codex）；其余读不准的情况 → null
+ * - ordinaryUsageAllowed 为 true → creditsInUse = false（还在用订阅里的额度）
+ * - ordinaryUsageAllowed 为 false（后端不许再用订阅额度）→ 两个窗口一律 null，不管百分比多少，
+ *   保证按现有选路规则（读不到就走本机）一定不走 Codex；账户有 credits / 不限量时 creditsInUse = true，否则 null
+ * - ordinaryUsageAllowed 缺失或为 null → creditsInUse = null
  */
 export function mapCodexRateLimits(result: unknown, readAt: Date): RemoteProfileQuota {
   const out = unknownQuota(readAt);
@@ -83,9 +84,12 @@ export function mapCodexRateLimits(result: unknown, readAt: Date): RemoteProfile
   const allowed = result.ordinaryUsageAllowed;
   if (allowed === true) out.creditsInUse = false;
   else if (allowed === false) {
+    // 后端明确不许再用订阅额度（林离 #133）：百分比再低也不能信（Codex 协议说不能从百分比推断恢复），
+    // 两个窗口都报 null（读不到）→ 主控端按 quota_unknown 走本机；有 credits 时 creditsInUse 为 true
+    out.fiveHour = null;
+    out.weekly = null;
     const credits = snap && isObj(snap.credits) ? snap.credits : null;
     if (credits && (credits.hasCredits === true || credits.unlimited === true)) out.creditsInUse = true;
-    else if (credits && credits.hasCredits === false && credits.unlimited === false) out.creditsInUse = false;
   }
 
   // 最后按契约再核一遍；对不上就整体当读不到
