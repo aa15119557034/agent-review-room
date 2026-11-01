@@ -257,6 +257,8 @@ pnpm install --frozen-lockfile
 
 重装替换程序时是两次改名（`node\app` → `app.old`，`app.new` → `app`）。如果正好在两次改名之间断电，`node\app` 会不见、所有秘书的节点都起不来；这时把 `node\app.old` 改名回 `app`，再重跑安装脚本（脚本发现这种情况也会拒绝继续并提示这一步）。
 
+`-CliVersion 0.163.0` 这类参数可以指定命令行的版本（不填 = npm 上最新的）。新版本在秘书的低权限账号下跑不起来时，用它退回实测过的版本。
+
 模板里没有 `<秘书>-chat` 也能装（账号、文件夹、权限、计划任务照装），但聊天读不到记忆，脚本最后会提示换模板重跑。
 
 **汐（deepseek）**：不装命令行。脚本会问 DeepSeek 的 API Key（输入时不显示；重装时直接回车 = 保留已有的），存进 `node\deepseek\deepseek-api-key.txt`，只有 `agentroom-deepseek` 和管理员能读；profile 里用 `envFiles` 在每次启动时现读，不再从环境变量读。模板里的 `../bin/deepseek-chat.mjs` 会换成 `node\app\bin` 里的绝对路径。

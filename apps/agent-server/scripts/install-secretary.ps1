@@ -30,7 +30,9 @@ param(
   # 主控机上：桌面端以这个账号运行，一键导入要能读 Token（只给 Token 这一个文件只读）
   [string]$TokenReader = "",
   # 汐（deepseek）只能在 D-40 迁移完成、林离已经走 7421 之后装（ADR-003 §2a 切换顺序第 4 步）：装的时候加这个开关表示确认
-  [switch]$AfterD40
+  [switch]$AfterD40,
+  # 命令行装哪个版本（比如 0.163.0）。不填 = npm 上最新的。新版本在低权限账号下跑不起来时，用它退回实测过的版本
+  [ValidatePattern('^(\d+\.\d+\.\d+([-.][0-9A-Za-z.]+)?)?$')][string]$CliVersion = ""
 )
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
@@ -226,7 +228,8 @@ if ($Agent -ne "deepseek") {
 Step "安装 $cliPackage 到 $cliDir"
 # 已经装过就是升级到最新；npm 的普通安装不建链接（node\<秘书> 里也不能有链接，预检会查）
 New-Item -ItemType Directory -Force -Path $cliDir | Out-Null
-$r = Npm-InstallWithFallback @($cliPackage)
+$cliSpec = if ($CliVersion) { "$cliPackage@$CliVersion" } else { $cliPackage }
+$r = Npm-InstallWithFallback @($cliSpec)
 if (-not $r.ok -or -not (Test-Path -LiteralPath $cliCmd)) { Fail-Cli "安装 $cliPackage 失败。检查网络后重试：`n$($r.out)" }
 # 平台原生包（比如 @openai/codex-win32-x64）是 optionalDependencies，镜像没同步时 npm 会悄悄跳过：缺了就按清单单独装，
 # 配置的镜像装不上再试官方源
@@ -260,6 +263,7 @@ if ($arch -and $optional) {
       if ($localVersion -ne $wantVersion) {
         # 平台包版本形如 0.163.0-win32-x64，主包版本是去掉后缀的那段
         $baseVersion = $localVersion -replace "-win32-.*$", ""
+        if ($CliVersion -and $baseVersion -ne $CliVersion) { Fail-Cli "补装 $spec 失败（网络），本机现成的平台包是 $localVersion，和 -CliVersion $CliVersion 对不上：`n$($r.out)" }
         Write-Host "  本机现成的平台包是 $localVersion（要的是 $wantVersion）：把 $cliPackage 重装成 $baseVersion" -ForegroundColor Yellow
         $r = Npm-InstallWithFallback @("$cliPackage@$baseVersion")
         if (-not $r.ok) { Fail-Cli "把 $cliPackage 重装成 $baseVersion 失败：`n$($r.out)" }
@@ -276,6 +280,7 @@ $versionOut = Invoke-Native { & $cliCmd --version }
 if ($LASTEXITCODE -ne 0 -or -not $versionOut) { Fail-Cli "$cliCmd 装好了但运行不了：`n$($versionOut -join "`n")" }
 # 只有一行输出时函数返回的是字符串不是数组，[0] 会取到第一个字符
 Write-Host "  $Agent 版本：$(@($versionOut)[0])"
+if ($CliVersion -and -not (@($versionOut)[0] -match [regex]::Escape($CliVersion))) { Fail-Cli "装好的版本是 $(@($versionOut)[0])，不是 -CliVersion $CliVersion" }
 }
 
 # DeepSeek 的 API Key：节点账号读不到江浩的环境变量，所以存成 node\deepseek\deepseek-api-key.txt（只有她的账号和管理员能读），
