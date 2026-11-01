@@ -164,7 +164,7 @@ pnpm --filter @room/agent-server run vision-test -- deepseek-discuss --model dee
 - 同一个画图 profile 同时只画一张（第二张 `node_busy`，ADR-004 §3 Codex 一次一张）；不同 profile 可以共用根目录，各取各的
 - Codex 默认把图存在 `$CODEX_HOME\generated_images`，节点不去那里拿。做法：`codex exec -C {image-output-dir} --sandbox workspace-write …`，画图指令里让它「画完把图复制到当前工作目录」。主控机实测（#131，codex-cli 0.163.0、gpt-6-sol）**一次成功**：约 163 秒，图出现在 Run 目录。这依赖模型照做，D-38b 走 Codex 前再连测 2～3 次
 - 注意：Codex 自己在 `generated_images` 里也会留一份（每张约 2.3 MB），节点不删，需要时手动清
-- 讨论/聊天用的 Codex profile 加 `--disable image_generation`（实测能挡住自己画图，模型会先问），避免顺手画图白烧额度
+- 讨论/聊天用的 Codex profile 加 `--disable image_generation`（实测能挡住自己画图，模型会先问），避免顺手画图白烧额度。被挡住后模型可能提议改走要 `OPENAI_API_KEY` 的 CLI 画图，`envAllowlist` 里没有这个变量，所以也走不通
 
 ## 安全
 
