@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { dirname, isAbsolute, resolve } from "node:path";
 import { z } from "zod";
-import { ModelOption, ProfileId } from "@room/schemas";
+import { ModelOption, NODE_MIN_BODY_BYTES_WITH_ATTACHMENTS, ProfileId, VisionSupport } from "@room/schemas";
 import { PARSERS } from "./parsers";
 import { planSpawn, type ResolveEnv } from "./win-command";
 import { buildArgs, modelConfigProblems } from "./model-args";
@@ -49,6 +49,27 @@ const Profile = z
      * dir 只能是 `memory/<agent>`，相对节点配置的 homeDir；provider 1B 只有 folder
      */
     memory: z.object({ dir: z.string().min(1), provider: z.literal("folder") }).strict().optional(),
+    /**
+     * S-23：带图时怎么把图交给 CLI（契约 C-42g：「标记前文字 → 图片块 → 标记后文字」都写进 stdin）。
+     * - claude-stream-json：claude -p 的 stream-json 输入，args 填 ["--input-format", "stream-json"]
+     * - openai-content-json：bin/deepseek-chat.mjs，args 填 ["--input-format", "content-json"]
+     * args 只在这次带图时加在最后。没配 = 这个 profile 收不了图，模型的 vision 不能报 yes。
+     * Codex 的 exec 只能用 -i 把图放在全部文字前面，做不到这个顺序，所以不提供命令行参数的交法（ADR-004 §2）
+     */
+    images: z
+      .object({
+        input: z.enum(["claude-stream-json", "openai-content-json"]),
+        args: z.array(z.string()).default([]),
+      })
+      .strict()
+      .optional(),
+    /** S-23：models 为空（模型写死）时那个模型能不能看图，用 vision-test 实测后填。不填 = unknown */
+    fixedModelVision: VisionSupport.optional(),
+    /**
+     * S-23：画图 profile（契约 C-42b 的 kind = "image"）。只接受 image Run，不接受文字 Run。
+     * outputDir：CLI 把画好的图写到哪（Codex 是 <CODEX_HOME>/generated_images），相对路径相对配置文件
+     */
+    imageRun: z.object({ outputDir: z.string().min(1) }).strict().optional(),
   })
   .strict();
 
@@ -68,7 +89,11 @@ export const ServerConfig = z
     leaseMs: z.number().int().positive().default(20_000),
     heartbeatMs: z.number().int().positive().default(5_000),
     killGraceMs: z.number().int().positive().default(5_000),
-    maxBodyBytes: z.number().int().positive().default(4 * 1024 * 1024),
+    /**
+     * 请求体上限。S-23 起默认等于契约的 NODE_MIN_BODY_BYTES_WITH_ATTACHMENTS（约 28.4 MB，8 张图 base64 + 最长的 content）；
+     * 调小到它以下时节点不报 capabilities.attachments（主控端不会给它发图）
+     */
+    maxBodyBytes: z.number().int().positive().default(NODE_MIN_BODY_BYTES_WITH_ATTACHMENTS),
     maxOutputBytes: z.number().int().positive().default(16 * 1024 * 1024),
     finishedRunTtlMs: z.number().int().positive().default(10 * 60_000),
     profiles: z.record(ProfileId, Profile),
@@ -104,6 +129,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): LoadedConfig {
   // 相对路径一律相对于配置文件所在目录，避免"从哪个目录启动"影响行为
   for (const p of Object.values(config.profiles)) {
     if (!isAbsolute(p.cwd)) p.cwd = resolve(baseDir, p.cwd);
+    if (p.imageRun && !isAbsolute(p.imageRun.outputDir)) p.imageRun.outputDir = resolve(baseDir, p.imageRun.outputDir);
   }
 
   const token = (env["AGENT_SERVER_TOKEN"] ?? readTokenFile(resolve(baseDir, config.tokenFile))).trim();
@@ -130,7 +156,9 @@ export function validateProfiles(config: ServerConfig, r?: ResolveEnv): string[]
   for (const [id, p] of Object.entries(config.profiles)) {
     if (new Set(p.models.map((m) => m.id)).size !== p.models.length) problems.push(`profile "${id}": 模型 id 重复`);
     for (const m of modelConfigProblems(p)) problems.push(`profile "${id}": ${m}`);
+    for (const m of imageConfigProblems(p)) problems.push(`profile "${id}": ${m}`);
     // 每个模型、每个档位拼出来的命令都要能安全启动（Windows .cmd 的参数检查也在 planSpawn 里）
+    const withImages = (args: string[]) => (p.images ? [args, [...args, ...p.images.args]] : [args]);
     const variants = [
       buildArgs(p),
       ...p.models.flatMap((m) =>
@@ -139,7 +167,7 @@ export function validateProfiles(config: ServerConfig, r?: ResolveEnv): string[]
           : m.efforts.map((e) => buildArgs(p, { model: m.id, effort: e.id })),
       ),
     ];
-    for (const args of variants) {
+    for (const args of variants.flatMap(withImages)) {
       try {
         planSpawn(p.command, args, r);
       } catch (err) {
@@ -152,5 +180,24 @@ export function validateProfiles(config: ServerConfig, r?: ResolveEnv): string[]
       problems.push(`profile "${id}": 工作目录不存在：${p.cwd}`);
     }
   }
+  return problems;
+}
+
+/** S-23：看图 / 画图配置要配得上 */
+export function imageConfigProblems(p: Profile): string[] {
+  const problems: string[] = [];
+  if (p.fixedModelVision !== undefined && p.models.length > 0) {
+    problems.push("有 models 清单时看图能力写在每个模型的 vision 上，不写 fixedModelVision");
+  }
+  const saysYes = p.fixedModelVision === "yes" || p.models.some((m) => m.vision === "yes");
+  if (saysYes && !p.images) problems.push("有模型报 vision: yes，但没配 images（不知道怎么把图交给 CLI）");
+  if (p.images?.input === "claude-stream-json" && p.parser !== "claude-stream-json") {
+    problems.push("images.input 为 claude-stream-json 时 parser 也要是 claude-stream-json");
+  }
+  if (p.images?.input === "openai-content-json" && p.parser !== "room-jsonl") {
+    problems.push("images.input 为 openai-content-json 时 parser 要是 room-jsonl（本仓库脚本）");
+  }
+  if (p.imageRun && p.images) problems.push("画图 profile 不收图（image Run 不能带附件），不要同时配 images");
+  if (p.imageRun && p.memory) problems.push("画图 profile 不读记忆");
   return problems;
 }

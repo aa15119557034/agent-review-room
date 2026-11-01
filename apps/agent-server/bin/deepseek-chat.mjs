@@ -6,6 +6,8 @@
 // - --model 默认 deepseek-flash；--effort 原样作为 reasoning_effort 发出，不传就用接口默认（S-22 实测：
 //   deepseek-flash / deepseek-v4-pro 的档位是 low / high / max，默认 high，错的档位接口直接报错）
 // - 从 stdin 读完整的 Prompt（主控端拼好、用户盖过章的内容），原样作为一条 user 消息发出
+// - S-23：--input-format content-json 时 stdin 是节点写好的 {"content":[…]}（文字块和 data: URL 图片块，顺序由节点按
+//   契约 C-42g 排好），原样作为这条 user 消息的 content 发出。模型能不能看图由 vision-test 实测，不在这里判断
 // - API Key 只从本机环境变量 DEEPSEEK_API_KEY 读取；不打印、不写文件、不回传
 // - stdout 每行一个 JSON（格式见 src/parsers/room-jsonl.ts）：delta / done / error
 // - 402（余额不足）和 429（限流）报告为 quota=true，讨论里显示为「缺席（额度）」
@@ -30,8 +32,15 @@ async function main() {
   const key = process.env.DEEPSEEK_API_KEY;
   if (!key) return fail("这台电脑上没有设置 DEEPSEEK_API_KEY 环境变量");
 
-  const prompt = await readStdin();
-  if (!prompt.trim()) return fail("Prompt 是空的");
+  const raw = await readStdin();
+  let prompt = raw;
+  if (args["input-format"] === "content-json") {
+    try {
+      prompt = contentBlocks(JSON.parse(raw));
+    } catch (err) {
+      return fail(`带图的输入格式不对：${err instanceof Error ? err.message : String(err)}`);
+    }
+  } else if (!raw.trim()) return fail("Prompt 是空的");
 
   // 主控端取消时 AgentServer 会杀掉本进程，连接随之断开，不需要自己处理 abort
   let res;
@@ -97,6 +106,23 @@ async function main() {
   if (!sawDone && !finishReason) return fail("DeepSeek 的回复在结束之前中断");
   if (finishReason === "insufficient_system_resource") return fail("DeepSeek 服务端资源不足，回复被中断");
   out({ type: "done", text, finishReason });
+}
+
+/** 只放行文字块和 data: URL 的图片块，别的一概拒绝 */
+function contentBlocks(input) {
+  const blocks = input?.content;
+  if (!Array.isArray(blocks) || blocks.length === 0) throw new Error("content 要是非空数组");
+  for (const b of blocks) {
+    const ok =
+      (b?.type === "text" && typeof b.text === "string" && Object.keys(b).length === 2) ||
+      (b?.type === "image_url" &&
+        Object.keys(b).length === 2 &&
+        typeof b.image_url?.url === "string" &&
+        Object.keys(b.image_url).length === 1 &&
+        /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/]+=*$/.test(b.image_url.url));
+    if (!ok) throw new Error("content 里只能有文字块和 data: URL 图片块");
+  }
+  return blocks;
 }
 
 function readStdin() {

@@ -4,6 +4,7 @@ import { createServer, type IncomingMessage, type Server, type ServerResponse } 
 import { promisify } from "node:util";
 import {
   CancelRunRequest,
+  NODE_MIN_BODY_BYTES_WITH_ATTACHMENTS,
   REMOTE_PROTOCOL_VERSION,
   StartRunRequest,
   type NodeHealth,
@@ -15,8 +16,11 @@ import {
 import type { Profile, ServerConfig } from "./config";
 import { RemoteRun } from "./remote-run";
 import { checkModel } from "./model-args";
+import { attachmentProblem, profileMaySeeImages, visionOf } from "./images";
 
 const execFileP = promisify(execFile);
+/** StartRunRequest 里「content 以清单块开头」那条 refine 的消息（schemas/remote-protocol.ts） */
+const MANIFEST_MISMATCH = "带图时 snapshot.content 要以这组附件的清单块开头";
 
 class HttpError extends Error {
   constructor(
@@ -39,6 +43,9 @@ export function createAgentServer(cfg: ServerConfig, token: string): AgentServer
   const tokenDigest = sha256Buf(token);
 
   const activeCount = () => [...runs.values()].filter((r) => !r.isFinished).length;
+  const imageProfiles = Object.entries(cfg.profiles)
+    .filter(([, p]) => p.imageRun)
+    .map(([id]) => id);
 
   // 定期清理结束超过 TTL 的 run
   const gc = setInterval(() => {
@@ -76,7 +83,17 @@ export function createAgentServer(cfg: ServerConfig, token: string): AgentServer
         leaseMs: cfg.leaseMs,
         heartbeatMs: cfg.heartbeatMs,
         // S-22：每个 profile 都报，models 为空 = 模型写死在节点配置里
-        profileModels: Object.entries(cfg.profiles).map(([profileId, p]) => ({ profileId, models: p.models })),
+        profileModels: Object.entries(cfg.profiles).map(([profileId, p]) => ({
+          profileId,
+          models: p.models,
+          ...(p.models.length === 0 && p.fixedModelVision !== undefined ? { fixedModelVision: p.fixedModelVision } : {}),
+        })),
+        // S-23：能收图 = 请求体够大并且至少一个 profile 配了交图方式、有模型实测能看
+        capabilities: {
+          attachments: cfg.maxBodyBytes >= NODE_MIN_BODY_BYTES_WITH_ATTACHMENTS && Object.values(cfg.profiles).some(profileMaySeeImages),
+          imageRuns: imageProfiles.length > 0,
+          ...(imageProfiles.length > 0 ? { imageProfiles } : {}),
+        },
       };
       return sendJson(res, 200, body);
     }
@@ -119,6 +136,20 @@ export function createAgentServer(cfg: ServerConfig, token: string): AgentServer
       return sendJson(res, 202, { ok: true });
     }
 
+    // GET /v1/runs/:id/artifacts/:sha256（契约 C-42b）：取回 image Run 画好的图，取完就丢
+    if (req.method === "GET" && parts.length === 5 && parts[3] === "artifacts") {
+      const held = run.artifact;
+      if (!held || held.meta.sha256 !== parts[4]) throw new HttpError(404, "not_found", "no such artifact");
+      res.writeHead(200, {
+        "content-type": held.meta.mime,
+        "content-length": String(held.bytes.length),
+        "cache-control": "no-store",
+      });
+      res.on("finish", () => run.dropArtifact());
+      res.end(held.bytes);
+      return;
+    }
+
     // POST /v1/runs/:id/permissions/:requestId — Phase 1
     if (req.method === "POST" && parts.length === 5 && parts[3] === "permissions") {
       throw new HttpError(501, "not_implemented", "permission relay is not implemented in the Phase 0 skeleton");
@@ -130,6 +161,10 @@ export function createAgentServer(cfg: ServerConfig, token: string): AgentServer
   async function startRun(raw: unknown, res: ServerResponse): Promise<void> {
     const parsed = StartRunRequest.safeParse(raw);
     if (!parsed.success) {
+      // C-42a：清单块对不上这组附件按 hash_mismatch 报（契约），其余字段问题是 bad_request
+      if (parsed.error.issues.some((i) => i.message === MANIFEST_MISMATCH)) {
+        throw new HttpError(422, "hash_mismatch", "attachments do not match the manifest block at the start of content");
+      }
       // 只返回字段路径，不回显内容
       const paths = parsed.error.issues.map((i) => i.path.join(".") || "(root)");
       throw new HttpError(400, "bad_request", `invalid fields: ${[...new Set(paths)].join(", ")}`);
@@ -142,7 +177,9 @@ export function createAgentServer(cfg: ServerConfig, token: string): AgentServer
       if (
         existing.profileId === reqBody.profileId &&
         existing.contentHash === reqBody.snapshot.contentHash &&
-        sameModel(existing.model, reqBody.model)
+        sameModel(existing.model, reqBody.model) &&
+        existing.kind === (reqBody.kind ?? "text") &&
+        sameList(existing.attachmentShas, (reqBody.attachments ?? []).map((a) => a.sha256))
       ) {
         return sendJson(res, 200, startResponse(reqBody.runId, "already_exists"));
       }
@@ -157,9 +194,27 @@ export function createAgentServer(cfg: ServerConfig, token: string): AgentServer
       if (problem) throw new HttpError(400, "unknown_model", problem);
     }
 
+    // C-42b：画图 profile 只接 image Run，别的 profile 不接 image Run
+    const kind = reqBody.kind ?? "text";
+    if ((kind === "image") !== (profile.imageRun !== undefined)) {
+      throw new HttpError(400, "unsupported_kind", `profile does not accept ${kind} runs`);
+    }
+
+    // C-42a：带图时这一次用的模型必须实测能看，并且 profile 配了交图方式；不满足整个拒绝，不丢图继续跑
+    if (reqBody.attachments) {
+      const vision = visionOf(profile, reqBody.model);
+      if (vision !== "yes" || !profile.images) {
+        throw new HttpError(400, "vision_unsupported", `the model for this run reports vision: ${vision}`);
+      }
+    }
+
     const actual = createHash("sha256").update(reqBody.snapshot.content, "utf8").digest("hex");
     if (actual !== reqBody.snapshot.contentHash) {
       throw new HttpError(422, "hash_mismatch", "snapshot content does not match contentHash");
+    }
+    if (reqBody.attachments) {
+      const problem = attachmentProblem(reqBody.attachments);
+      if (problem) throw new HttpError(422, "hash_mismatch", problem);
     }
 
     if (profile.verifyCommit && reqBody.snapshot.commitSha) {
@@ -168,6 +223,10 @@ export function createAgentServer(cfg: ServerConfig, token: string): AgentServer
 
     if (activeCount() >= cfg.maxConcurrentRuns) {
       throw new HttpError(429, "node_busy", "node is at maxConcurrentRuns");
+    }
+    // 画图一个 profile 同时只跑一张：图是按「输出目录里新出现的文件」认的，两张同时画分不清是谁的
+    if (kind === "image" && [...runs.values()].some((r) => !r.isFinished && r.profileId === reqBody.profileId)) {
+      throw new HttpError(429, "node_busy", "this image profile is already drawing");
     }
 
     const run = new RemoteRun(reqBody, profile, cfg, (r) => {
@@ -264,6 +323,10 @@ async function verifyCommit(profile: Profile, expected: string): Promise<void> {
 
 function sameModel(a: StartRunRequest["model"], b: StartRunRequest["model"]): boolean {
   return a?.model === b?.model && a?.effort === b?.effort;
+}
+
+function sameList(a: readonly string[], b: readonly string[]): boolean {
+  return a.length === b.length && a.every((x, i) => x === b[i]);
 }
 
 function startResponse(runId: StartRunResponse["runId"], status: StartRunResponse["status"]): StartRunResponse {

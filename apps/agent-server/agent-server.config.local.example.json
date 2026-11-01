@@ -67,6 +67,7 @@
       ],
       "modelArgs": ["--model", "{model}"],
       "effortArgs": ["--effort", "{effort}"],
+      "images": {"input": "openai-content-json", "args": ["--input-format", "content-json"]},
       "cwd": "discuss-sandbox",
       "parser": "room-jsonl",
       "envAllowlist": [

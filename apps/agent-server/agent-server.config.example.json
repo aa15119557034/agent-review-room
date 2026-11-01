@@ -46,6 +46,7 @@
       ],
       "modelArgs": ["--model", "{model}"],
       "effortArgs": ["--effort", "{effort}"],
+      "images": {"input": "claude-stream-json", "args": ["--input-format", "stream-json"]},
       "cwd": "reviewer-sandbox",
       "parser": "claude-stream-json",
       "maxIdleTimeoutMs": 300000,
