@@ -1402,6 +1402,31 @@ describe("chat images (C-42a / X-34b)", () => {
     }
   });
 
+  it("dedupes the same image attached twice (the manifest requires a unique sha256)", async () => {
+    const { h, ref } = await imageEnv({ capabilities: { attachments: true } });
+    try {
+      const sent = await h.chat.send({
+        ...imageMessage(ref, 64),
+        conversationId: h.conversationId,
+        content: {
+          kind: "text",
+          text: "两张一样的",
+          attachments: [
+            { kind: "image", ref },
+            { kind: "image", ref },
+          ],
+        },
+      });
+      await settle(h.chat);
+      assert.equal(sent.message.content.kind === "text" ? sent.message.content.attachments.length : 0, 2, "消息原样存两条");
+      const snapshot = getChatSnapshot(h.db, sent.runs[0]!.snapshotId)!;
+      assert.equal(snapshot.attachments?.length, 1, "清单里只留一张（不然 AttachmentManifest 会抛 ZodError）");
+      assert.equal((h.runInputs[0]!.input.attachments as unknown[]).length, 1, "StartRun 里也只带一张");
+    } finally {
+      h.db.close();
+    }
+  });
+
   it("fails the run before sending anything when the image bytes are gone from the local store", async () => {
     const { h, ref } = await imageEnv({ capabilities: { attachments: true }, withBytes: false });
     try {

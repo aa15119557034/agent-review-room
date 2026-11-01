@@ -188,16 +188,23 @@ export class ChatService {
   /**
    * 一条消息里带的图（引用在 `#resolveContent` 已经校验过）：拼 Prompt 和起跑都要用。
    * mime / bytes / sha256 从图片记录取（renderer 只给 ref 和名字）。
+   *
+   * **按 sha256 去重**：同一张图拖进来两次（同一个 ref）时，`AttachmentManifest` 的
+   * 「同一张图在一个 Snapshot 里只出现一次」会抛 ZodError（C酱 #148 评审）。这里保留第一次出现的名字，
+   * 用户不会觉得自己做错了什么；消息本身（落库的 content）仍保持用户发来的样子。
    */
   #imagesOf(content: ChatContent): ChatImageForPrompt[] {
     if (content.kind !== "text") return [];
     const images: ChatImageForPrompt[] = [];
+    const seen = new Set<string>();
     for (const attachment of content.attachments) {
       if (attachment.kind !== "image") continue;
       const record = getImageRef(this.#deps.db, attachment.ref);
       if (record === null || record.purpose !== "chat") {
         throw new ChatError("validation_failed", "图片「" + attachment.name + "」找不到了，请重新选一张");
       }
+      if (seen.has(record.sha256)) continue;
+      seen.add(record.sha256);
       images.push({ ref: record.ref, name: attachment.name, mime: record.mime, bytes: record.bytes, sha256: record.sha256 });
     }
     return images;
