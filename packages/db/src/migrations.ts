@@ -9,6 +9,7 @@ import { SCHEMA_V8 } from "./schema-v8";
 import { SCHEMA_V9 } from "./schema-v9";
 import { SCHEMA_V10 } from "./schema-v10";
 import { SCHEMA_V11 } from "./schema-v11";
+import { SCHEMA_V12 } from "./schema-v12";
 
 /**
  * 迁移（D-02）：用 PRAGMA user_version 记版本，每个迁移在自己的事务里跑。
@@ -110,6 +111,13 @@ export const MIGRATIONS: readonly Migration[] = [
       db.exec(SCHEMA_V11);
     },
   },
+  {
+    version: 12,
+    name: "voice-recordings",
+    up: (db) => {
+      db.exec(SCHEMA_V12);
+    },
+  },
 ];
 
 /** 当前代码支持的最新 schema 版本 */
@@ -162,6 +170,7 @@ export function runMigrations(db: Database): number {
 
   return applied;
 }
+
 
 
 

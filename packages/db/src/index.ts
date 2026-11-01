@@ -12,4 +12,6 @@ export * from "./discussion-turn";
 export * from "./chat";
 export * from "./media";
 export * from "./media-jobs";
+export * from "./voice";
+
 
