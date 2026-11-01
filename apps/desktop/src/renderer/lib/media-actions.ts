@@ -134,6 +134,7 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
     setMedia((m) => ({ ...m, vision: Object.fromEntries(entries) }));
   }
 
+  const IMAGES_SENT_CONCURRENCY = 3;
   /** 正在查的 Run：同一个 Run 不重复查（每次渲染都会叫 loadImagesSent） */
   const imagesSentLoading = new Set<string>();
 
@@ -144,20 +145,25 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
   async function loadImagesSent(runIds: readonly string[]) {
     const todo = runIds.filter((r) => chat().media.imagesSent[r] === undefined && !imagesSentLoading.has(r));
     for (const r of todo) imagesSentLoading.add(r);
-    await Promise.all(
-      todo.map(async (runId) => {
-        let result: number | "failed";
-        try {
-          const run = chat().runs[runId] ?? (await client.query({ type: "chat.runs.get", runId }));
-          const snapshot = await client.query({ type: "chat.snapshots.get", snapshotId: run.snapshotId });
-          result = snapshot.attachments?.length ?? 0;
-        } catch {
-          result = "failed";
-        }
-        imagesSentLoading.delete(runId);
-        setMedia((m) => ({ ...m, imagesSent: { ...m.imagesSent, [runId]: result } }));
-      }),
-    );
+    // 一个 Snapshot 最长 2 MB：老会话里一次几十个时别同时发，最多 3 个并行（汐 #151）
+    const queue = [...todo];
+    const worker = async () => {
+      for (let runId = queue.shift(); runId !== undefined; runId = queue.shift()) await loadOne(runId);
+    };
+    await Promise.all(Array.from({ length: Math.min(IMAGES_SENT_CONCURRENCY, queue.length) }, worker));
+  }
+
+  async function loadOne(runId: string) {
+    let result: number | "failed";
+    try {
+      const run = chat().runs[runId] ?? (await client.query({ type: "chat.runs.get", runId }));
+      const snapshot = await client.query({ type: "chat.snapshots.get", snapshotId: run.snapshotId });
+      result = snapshot.attachments?.length ?? 0;
+    } catch {
+      result = "failed";
+    }
+    imagesSentLoading.delete(runId);
+    setMedia((m) => ({ ...m, imagesSent: { ...m.imagesSent, [runId]: result } }));
   }
 
   /** 表情面板是你自己打开的：读不到就提示（和后台加载的媒体任务、沉浸设置不同，那些静默跳过） */

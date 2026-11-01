@@ -168,6 +168,11 @@ describe("media lib", () => {
     assert.deepEqual(slotsToCheckImages(slots).map((s) => s.runId), ["run_a", "run_b", "run_c"]);
     assert.deepEqual(agentsWithoutImages(slots, { run_a: 1, run_b: 0, run_c: "failed", run_d: 0 }), ["codex"]);
     assert.deepEqual(agentsWithoutImages(slots, {}), [], "not looked up yet");
+    // 汐 #151：还在答 / 失败 / 停掉的不标（失败那行已经说明了）；skipped 照标
+    for (const outcome of ["running", "failed", "cancelled"]) {
+      assert.deepEqual(agentsWithoutImages([slot("codex", "run_b", outcome)], { run_b: 0 }), [], outcome);
+    }
+    assert.deepEqual(agentsWithoutImages([slot("codex", "run_b", "skipped")], { run_b: 0 }), ["codex"]);
   });
 });
 
@@ -366,7 +371,7 @@ describe("C-43 through the UI actions (mock)", () => {
     assert.equal(content.attachments[0]!.name, picked.name, "not 图片.png");
 
     const slots = () => store.get().chat.slots.filter((x) => x.userMessageId === mine().id);
-    await until(() => slots().length === 2 && slots().every((x) => x.runId !== null));
+    await until(() => slots().length === 2 && slots().every((x) => x.outcome === "answered" || x.outcome === "skipped"));
     const runIds = slots().map((x) => x.runId!);
     // 组件每次渲染都会叫：同一个 Run 只查一次
     await Promise.all([actions.chat.media.loadImagesSent(runIds), actions.chat.media.loadImagesSent(runIds)]);
@@ -393,6 +398,27 @@ describe("C-43 through the UI actions (mock)", () => {
     assert.equal(sent("codex"), undefined);
     await actions.chat.media.loadImagesSent(runIds);
     assert.equal(sent("codex"), 0);
+  });
+
+  it("C-45: at most 3 snapshots are fetched at once (汐 #151)", async () => {
+    let inFlight = 0;
+    let peak = 0;
+    const client = {
+      query: async (r: { type: string; runId?: string; snapshotId?: string }) => {
+        inFlight++;
+        peak = Math.max(peak, inFlight);
+        await sleep(3);
+        inFlight--;
+        if (r.type === "chat.runs.get") return { snapshotId: `snap_${r.runId}` };
+        return { attachments: undefined };
+      },
+    } as unknown as RoomClient;
+    const store = createStore(initialState);
+    const media = createMediaActions(store, client, () => {});
+    const ids = Array.from({ length: 10 }, (_, i) => `run_${i}`);
+    await media.loadImagesSent(ids);
+    assert.ok(peak <= 3, `peak ${peak}`);
+    assert.deepEqual(Object.values(store.get().chat.media.imagesSent), Array(10).fill(0));
   });
 
   it("re-edit puts the text back but not the old attachments or voice", async () => {

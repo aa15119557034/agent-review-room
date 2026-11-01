@@ -134,11 +134,12 @@ export const slotsToCheckImages = (slots: readonly ChatReplySlot[]): ChatReplySl
 
 /**
  * C-45：这条带图消息，哪几位这次没收到图（这位当前这次尝试的 Snapshot 不带 attachments）。
- * 还没查到 / 查失败的不算，宁可不标也不乱标
+ * 还没查到 / 查失败的不算，宁可不标也不乱标。只标已经答完（answered / skipped）的：
+ * 还在答的等结果出来再说，失败 / 停掉的那行已经说明了情况，不再并排一行（汐 #151）
  */
 export function agentsWithoutImages(slots: readonly ChatReplySlot[], imagesSent: Readonly<Record<string, number | "failed">>): string[] {
   return slotsToCheckImages(slots)
-    .filter((s) => imagesSent[s.runId!] === 0)
+    .filter((s) => (s.outcome === "answered" || s.outcome === "skipped") && imagesSent[s.runId!] === 0)
     .map((s) => s.agent);
 }
 
