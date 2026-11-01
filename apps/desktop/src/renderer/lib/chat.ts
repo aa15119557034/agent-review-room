@@ -77,14 +77,19 @@ export interface ChatMediaState {
   playing: string | null;
   playQueue: string[];
   /**
-   * 这次运行里你点过「画」的消息（不随会话切换清空）。media.list 只给最近 200 条任务，
-   * 更早的任务查不到时，靠它提醒「画过了」，免得再点一次又花一份额度（汐 #115）
+   * 这次运行里你点过「画」的消息（不随会话切换清空）。任务按消息查（C-42f），正常都查得到；
+   * 后端还没实现 media.list、查询失败时，靠它提醒「画过了」，免得再点一次又花一份额度（汐 #115）
    */
   drawRequested: Record<string, true>;
   /** 正在发 draw.start 的消息：结果回来前不能再发一次 */
   drawStarting: Record<string, true>;
   /** 正在上传 / 转写录音的会话：这期间不能加附件（录音回来会占掉草稿，林离 #115） */
   voiceImporting: Record<string, true>;
+  /**
+   * 媒体任务还没确认的消息：loading = 正在查，failed = 那一批 media.list 失败了。
+   * 这两种都不能当成「没有任务」放出画图入口，否则画过的会被当成没画过、重复花额度（林离 #117）
+   */
+  jobsLookup: Record<string, "loading" | "failed">;
 }
 
 export const initialMedia: ChatMediaState = {
@@ -99,6 +104,7 @@ export const initialMedia: ChatMediaState = {
   drawRequested: {},
   drawStarting: {},
   voiceImporting: {},
+  jobsLookup: {},
 };
 
 export interface ChatDraft {
@@ -240,7 +246,9 @@ export function applyMediaJob(c: ChatState, job: MediaJob): ChatState {
   if (jobs.find((j) => j.id === job.id) !== job) return { ...c, media: { ...c.media, jobs } };
   let { clips, playing, playQueue } = c.media;
   if (job.kind === "speech" && job.state === "succeeded" && job.speech && old?.state !== "succeeded") {
-    clips = { ...clips, [src.messageId]: job.speech };
+    // 和按消息查时一样：同一条回答有好几段时留合成时间最新的（汐 #117）
+    const had = clips[src.messageId];
+    if (!had || had.createdAt <= job.speech.createdAt) clips = { ...clips, [src.messageId]: job.speech };
     if (playing === null) playing = src.messageId;
     else if (playing !== src.messageId && !playQueue.includes(src.messageId)) playQueue = [...playQueue, src.messageId];
   }

@@ -1,4 +1,4 @@
-import type { DrawRequest, DrawRoutePreview, ImmersiveSettings, MediaSource, NodeInfo, VoiceOption } from "@room/schemas";
+import { MEDIA_LIST_MESSAGE_IDS_MAX, type DrawRequest, type DrawRoutePreview, type ImmersiveSettings, type MediaJob, type MediaSource, type NodeInfo, type VoiceOption } from "@room/schemas";
 import type { RoomClient } from "./client";
 import { chatVision, jobActive, jobsOf, mergeJobs, type VisionHint } from "./media";
 import { draftOf, initialMedia, type ChatDraft, type ChatMediaState, type ChatState } from "./chat";
@@ -24,22 +24,87 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
     });
 
   /**
-   * 打开会话时：这个会话的媒体任务和沉浸模式设置。后端还没实现这些查询时安静地不显示（不弹错误），
-   * 免得在 D-38 / D-39 之前每次打开会话都报错
+   * 打开会话的代次：同一个会话关了再开（A → B → A），第一次打开时发出、晚到的查询不能写进第二次（林离 #117）。
+   * 只在打开会话时加一；加载更早的消息、沉浸模式关掉后的重查都算这一次打开
+   */
+  let openGen = 0;
+  /**
+   * 每条消息最近一次查询的序号：同一次打开里查询会重叠（首屏还没回来又因为关了沉浸模式重查），
+   * 只有这条消息最近发出的那次才改它的查询状态，旧的失败晚到不能盖掉新的成功（林离 #117）
+   */
+  let lookupSeq = 0;
+  const latestLookup = new Map<string, number>();
+
+  /**
+   * 打开会话时：清掉上个会话的媒体状态，读沉浸模式设置。媒体任务等消息那页到了再按消息查（loadJobs）。
+   * 后端还没实现这些查询时安静地不显示（不弹错误），免得在 D-38 / D-39 之前每次打开会话都报错
    */
   async function loadForConversation(conversationId: string) {
-    setMedia((m) => ({ ...m, jobs: [], immersive: null, clips: {}, playing: null, playQueue: [] }));
-    const [jobs, immersive] = await Promise.all([
-      client.query({ type: "media.list", scope: { kind: "chat", conversationId } }).catch(() => null),
+    const gen = ++openGen;
+    latestLookup.clear();
+    setMedia((m) => ({ ...m, jobs: [], immersive: null, clips: {}, playing: null, playQueue: [], jobsLookup: {} }));
+    // 还没结束的任务另外按整个会话查一次：它的消息可能不在已加载的那几页，「停」也要算上它（汐 #117）
+    const [immersive, recent] = await Promise.all([
       client.query({ type: "immersive.get", conversationId }).catch(() => null),
+      client.query({ type: "media.list", scope: { kind: "chat", conversationId } }).catch(() => null),
     ]);
-    setChat((c) => {
-      if (c.currentId !== conversationId) return c;
-      const clips = { ...c.media.clips };
-      for (const j of jobs ?? []) if (j.kind === "speech" && j.speech && j.source.kind === "chat") clips[j.source.messageId] ??= j.speech;
-      // 查询期间推来的事件可能更新：合并，不覆盖
-      return { ...c, media: { ...c.media, jobs: mergeJobs(jobs ?? [], c.media.jobs), immersive: immersive ?? c.media.immersive, clips } };
-    });
+    if (gen !== openGen) return;
+    const active = (recent ?? []).filter(jobActive);
+    setChat((c) =>
+      c.currentId !== conversationId
+        ? c
+        : { ...c, media: { ...c.media, immersive: immersive ?? c.media.immersive, jobs: mergeJobs(active, c.media.jobs) } },
+    );
+  }
+
+  /**
+   * 这些消息的媒体任务（C-42f：media.list 按消息查，每批 MEDIA_LIST_MESSAGE_IDS_MAX 条）。
+   * 每条消息每一类都查得到最新几条和最近一次成功的，会话里任务再多，旧消息的图也找得回来、请求卡不会重复出现。
+   * 查询期间这些消息记成 loading；某一批失败不弹错误（同 loadForConversation），那批消息记成 failed，
+   * 界面不把它们当成「没画过」，给「重新查」（林离 #117）
+   */
+  async function loadJobs(conversationId: string, messageIds: readonly string[]) {
+    const gen = openGen;
+    const live = (c: ChatState) => gen === openGen && c.currentId === conversationId;
+    const ids = [...new Set(messageIds)];
+    if (ids.length === 0) return;
+    const seq = ++lookupSeq;
+    for (const id of ids) latestLookup.set(id, seq);
+    const lookup = (c: ChatState, batch: readonly string[], v: "loading" | "failed" | null) => {
+      const next = { ...c.media.jobsLookup };
+      for (const id of batch) {
+        if (latestLookup.get(id) !== seq) continue;
+        if (v) next[id] = v;
+        else delete next[id];
+      }
+      return next;
+    };
+    setChat((c) => (live(c) ? { ...c, media: { ...c.media, jobsLookup: lookup(c, ids, "loading") } } : c));
+    const batches: string[][] = [];
+    for (let i = 0; i < ids.length; i += MEDIA_LIST_MESSAGE_IDS_MAX) batches.push(ids.slice(i, i + MEDIA_LIST_MESSAGE_IDS_MAX));
+    await Promise.all(
+      batches.map(async (batch) => {
+        let jobs: MediaJob[];
+        try {
+          jobs = await client.query({ type: "media.list", scope: { kind: "chat", conversationId }, messageIds: batch });
+        } catch {
+          setChat((c) => (live(c) ? { ...c, media: { ...c.media, jobsLookup: lookup(c, batch, "failed") } } : c));
+          return;
+        }
+        setChat((c) => {
+          if (!live(c)) return c;
+          // 同一条回答播过好几次：用最新合成的那段，不让先到的旧片段占住（林离 #117）
+          const clips = { ...c.media.clips };
+          for (const j of jobs) {
+            if (j.kind !== "speech" || !j.speech || j.source.kind !== "chat") continue;
+            const had = clips[j.source.messageId];
+            if (!had || had.createdAt < j.speech.createdAt) clips[j.source.messageId] = j.speech;
+          }
+          // 查询期间推来的事件可能更新：合并，不覆盖
+          return { ...c, media: { ...c.media, jobs: mergeJobs(jobs, c.media.jobs), clips, jobsLookup: lookup(c, batch, null) } };
+        });
+      }),
+    );
   }
 
   /** 每位秘书「聊天」用的模型能不能看图：用 node.test 问一次聊天 profile（探测，失败不弹提示，记成 offline） */
@@ -77,6 +142,7 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
 
   return {
     loadForConversation,
+    loadJobs,
     loadVision,
     loadStickers,
     reset: () => setMedia(() => initialMedia),
@@ -170,7 +236,19 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
 
     // ---------------------------------------------------------- 画图（D-38）
 
-    openDrawCard: (messageId: string, prompt: string) => setChat((c) => ({ ...c, sheet: { kind: "draw", messageId, prompt } })),
+    /** 画图卡。这条的任务没查到（failed）时顺便再查一次，卡上也会提醒「可能已经画过」（汐 #117） */
+    openDrawCard(messageId: string, prompt: string) {
+      setChat((c) => ({ ...c, sheet: { kind: "draw", messageId, prompt } }));
+      const c = chat();
+      if (c.currentId && c.media.jobsLookup[messageId] === "failed") void loadJobs(c.currentId, [messageId]);
+    },
+
+    /** 把当前会话里所有没查到的消息再查一次（一批失败后不用一条一条点，汐 #117） */
+    retryLookups() {
+      const c = chat();
+      const failed = Object.keys(c.media.jobsLookup).filter((id) => c.media.jobsLookup[id] === "failed");
+      if (c.currentId && failed.length > 0) void loadJobs(c.currentId, failed);
+    },
 
     /** 请求卡打开 / 改了路时预览走哪条路（main 现读一次额度）。失败返回 undefined，卡片上显示「预览不了」 */
     async previewDraw(request: DrawRequest): Promise<DrawRoutePreview | undefined> {
@@ -295,8 +373,8 @@ export function createMediaActions(store: Store<AppState>, client: RoomClient, f
             ? c
             : { ...c, media: { ...c.media, immersive: { settings: saved, usage: usage ?? c.media.immersive?.usage ?? emptyUsage() } } },
         );
-        // 从开到关：main 取消了这个会话所有任务，拉一次最新的
-        if (!saved.enabled) await loadForConversation(conversationId);
+        // 从开到关：main 取消了这个会话所有任务，按已加载的消息拉一次最新的
+        if (!saved.enabled && chat().currentId === conversationId) await loadJobs(conversationId, chat().messages.map((m) => m.id));
       } catch (err) {
         fail(err);
       }

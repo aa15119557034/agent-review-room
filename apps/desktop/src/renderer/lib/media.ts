@@ -166,9 +166,10 @@ export const jobsOf = (jobs: readonly MediaJob[], messageId: string, kind?: Medi
  * - 沉浸模式自动画的任务因为显卡排队超时 / 本机没开失败了 → 退回成卡片（ADR-004 §3a）
  * - 最近一次是林离额度用完失败 → 不显示卡片，失败那行有「改用本机画」，一处入口，不会一下建两个任务
  * - 其余（关着沉浸模式、超过每小时上限、你取消了、失败了）→ 显示卡片，可以再点「画」
+ * - 这条消息的任务还在查、或者查失败了（lookup）→ 不显示：没查到不等于没画过（林离 #117）
  */
-export function showDrawCard(m: AgentChatMessage, jobs: readonly MediaJob[]): boolean {
-  if (!m.mediaIntent?.draw) return false;
+export function showDrawCard(m: AgentChatMessage, jobs: readonly MediaJob[], lookup?: "loading" | "failed"): boolean {
+  if (!m.mediaIntent?.draw || lookup) return false;
   const draws = jobsOf(jobs, m.id, "draw");
   if (draws.some((j) => jobActive(j) || j.state === "succeeded")) return false;
   const last = draws.at(-1);

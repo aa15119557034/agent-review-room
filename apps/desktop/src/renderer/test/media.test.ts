@@ -1,12 +1,13 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { CHART_FENCE, SPEAK_MAX_CHARS, type AgentChatMessage, type AgentProfile, type ChatMessage, type MediaJob, type NodeHealth } from "@room/schemas";
+import { CHART_FENCE, MEDIA_LIST_MESSAGE_IDS_MAX, SPEAK_MAX_CHARS, type AgentChatMessage, type AgentProfile, type ChatMessage, type MediaJob, type NodeHealth } from "@room/schemas";
 import { createMockBridge, type MockOptions } from "../mock/mock-backend";
 import { createActions } from "../lib/actions";
 import { applyMediaJob, initialMedia, type ChatDraft, type ChatState } from "../lib/chat";
 import { draftContent } from "../lib/chat-actions";
-import { createClient } from "../lib/client";
-import { asksForVoiceReply, canSpeak, chatVision, mergeJobs, routeText, showDrawCard, splitReply, stripCharts } from "../lib/media";
+import { createClient, type RoomClient } from "../lib/client";
+import { createMediaActions } from "../lib/media-actions";
+import { asksForVoiceReply, canSpeak, chatVision, jobActive, mergeJobs, routeText, showDrawCard, splitReply, stripCharts } from "../lib/media";
 import { initialState } from "../lib/state";
 import { createStore } from "../lib/store";
 
@@ -150,10 +151,41 @@ describe("media lib", () => {
 
 describe("C-43 through the UI actions (mock)", () => {
   function app(opts: MockOptions = {}) {
-    const bridge = createMockBridge({ tickMs: 1, reviewerConfigured: true, ...opts });
+    const mock = createMockBridge({ tickMs: 1, reviewerConfigured: true, ...opts });
+    // 测试能看到发出去的查询，也能把某个命令的回包扣住，等测试放行（模拟对话框开着、IPC 慢）
+    const queries: { type: string; messageIds?: string[] }[] = [];
+    const held = new Map<string, Promise<void>>();
+    // 发出时在这里的查询失败（回包仍按 hold 放行）；"media.list#messageIds" 只让按消息查的失败
+    const failing = new Set<string>();
+    const bridge: typeof mock = {
+      ...mock,
+      query: (async (r: { type: string; messageIds?: string[] }) => {
+        queries.push(structuredClone(r));
+        const gate = held.get(r.type);
+        const fails = failing.has(r.type) || (!!r.messageIds && failing.has(`${r.type}#messageIds`));
+        await gate;
+        if (fails) return { ok: false, error: "internal", message: "数据库忙" };
+        return mock.query(r as never);
+      }) as typeof mock.query,
+      command: (async (r: { type: string }) => {
+        const result = await mock.command(r as never);
+        await held.get(r.type);
+        return result;
+      }) as typeof mock.command,
+    };
+    const hold = (type: string) => {
+      let release!: () => void;
+      held.set(type, new Promise<void>((r) => (release = r)));
+      return () => {
+        held.delete(type);
+        release();
+      };
+    };
     const store = createStore(initialState);
     const actions = createActions(store, createClient(bridge));
-    return { store, actions };
+    // 之后发出的不再扣住；已经扣住的仍要等 release
+    const stopHolding = (type: string) => held.delete(type);
+    return { store, actions, queries, hold, stopHolding, failing };
   }
   const agentReply = (msgs: readonly ChatMessage[]) => msgs.filter((m): m is AgentChatMessage => m.sender === "agent").at(-1);
   const jobsOf = (store: ReturnType<typeof app>["store"], kind: MediaJob["kind"]) => store.get().chat.media.jobs.filter((j) => j.kind === kind);
@@ -340,7 +372,7 @@ describe("C-43 through the UI actions (mock)", () => {
   });
 
   it("while a recording uploads you can't add files, and a late draw result only closes its own card (林离 #115)", async () => {
-    const { store, actions } = app();
+    const { store, actions, hold } = app();
     await actions.start();
     actions.goChat();
     await actions.chat.createConversation({ kind: "direct", agent: "deepseek" }, null);
@@ -372,13 +404,301 @@ describe("C-43 through the UI actions (mock)", () => {
     await p;
     assert.deepEqual(store.get().chat.sheet, { kind: "draw", messageId: "cmsg_other", prompt: "别的" });
 
-    // 选文件对话框开着时切了会话：附件进开始时的会话
+    // 选文件对话框开着时切了会话：回包扣到切换完成后才放行，附件进开始时的会话（林离 #115）
+    const release = hold("chat.attachment.pick");
     const picking = actions.chat.media.pickAttachment("image");
     await actions.chat.createConversation({ kind: "direct", agent: "claude" }, null);
     const b = store.get().chat.currentId!;
+    assert.notEqual(b, a);
+    assert.equal(store.get().chat.drafts[a]!.attachments.length, 0, "reply still held");
+    release();
     await picking;
     assert.equal(store.get().chat.drafts[a]!.attachments.length, 1);
     assert.equal(store.get().chat.drafts[b]?.attachments.length ?? 0, 0);
+  });
+
+  it("reopening a chat finds an old drawing behind many later cancels; no request card again (林离 #116)", async () => {
+    const { store, actions, queries } = app();
+    await actions.start();
+    actions.goChat();
+    await actions.chat.createConversation({ kind: "direct", agent: "deepseek" }, null);
+    const a = store.get().chat.currentId!;
+    actions.chat.setDraftText("画一张");
+    await actions.chat.send();
+    await until(() => !!agentReply(store.get().chat.messages));
+    const reply = agentReply(store.get().chat.messages)!;
+    const src = { kind: "chat" as const, conversationId: a, messageId: reply.id, agent: reply.agent };
+    const d = { ...reply.mediaIntent!.draw!, backend: "comfyui" as const };
+    assert.equal(await actions.chat.media.startDraw(d, src, false), true);
+    await until(() => jobsOf(store, "draw").some((j) => j.state === "succeeded"));
+    const ok = jobsOf(store, "draw").find((j) => j.state === "succeeded")!;
+    for (let i = 0; i < 6; i++) {
+      assert.equal(await actions.chat.media.startDraw(d, src, false), true);
+      const j = jobsOf(store, "draw").find((x) => x.state === "queued" || x.state === "running")!;
+      await actions.chat.media.cancelJob(j.id);
+      await until(() => jobsOf(store, "draw").every((x) => x.state !== "queued" && x.state !== "running"));
+    }
+    assert.equal(jobsOf(store, "draw").length, 7);
+    assert.ok(jobsOf(store, "draw").filter((j) => j.id !== ok.id).every((j) => j.state === "cancelled"), "later ones all cancelled");
+
+    // 换个会话再回来：按消息查，成功的那张排在 6 次取消后面也查得到
+    await actions.chat.createConversation({ kind: "direct", agent: "claude" }, null);
+    queries.length = 0;
+    await actions.chat.openConversation(a);
+    await until(() => jobsOf(store, "draw").length > 0);
+    const back = agentReply(store.get().chat.messages)!;
+    assert.ok(jobsOf(store, "draw").some((j) => j.id === ok.id && j.state === "succeeded"));
+    assert.equal(jobsOf(store, "draw").length, 6, "latest 5 + the old success");
+    assert.equal(showDrawCard(back, store.get().chat.media.jobs), false);
+    const lists = queries.filter((q) => q.type === "media.list");
+    assert.ok(lists.some((q) => q.messageIds && q.messageIds.length > 0));
+  });
+
+  it("a failed media.list is not「never drawn」: no first-time draw card until a lookup succeeds (林离 #117)", async () => {
+    const { store, actions, failing } = app();
+    await actions.start();
+    actions.goChat();
+    await actions.chat.createConversation({ kind: "direct", agent: "deepseek" }, null);
+    const a = store.get().chat.currentId!;
+    actions.chat.setDraftText("画一张");
+    await actions.chat.send();
+    await until(() => !!agentReply(store.get().chat.messages));
+    const reply = agentReply(store.get().chat.messages)!;
+    const src = { kind: "chat" as const, conversationId: a, messageId: reply.id, agent: reply.agent };
+    await actions.chat.media.startDraw({ ...reply.mediaIntent!.draw!, backend: "comfyui" }, src, false);
+    await until(() => jobsOf(store, "draw").some((j) => j.state === "succeeded"));
+
+    // 像重启过一样：本次运行的「点过画」记录清空，再打开会话时 media.list 失败
+    await actions.chat.createConversation({ kind: "direct", agent: "claude" }, null);
+    store.set((s) => ({ ...s, chat: { ...s.chat, media: { ...s.chat.media, drawRequested: {} } } }));
+    failing.add("media.list");
+    await actions.chat.openConversation(a);
+    await until(() => store.get().chat.media.jobsLookup[reply.id] === "failed");
+    const media = () => store.get().chat.media;
+    assert.equal(jobsOf(store, "draw").length, 0);
+    assert.equal(showDrawCard(reply, media().jobs, media().jobsLookup[reply.id]), false, "not offered as a first draw");
+    assert.equal(store.get().notice, null, "quiet");
+
+    // 「重新查」成功：画好的图回来，仍然没有请求卡
+    failing.clear();
+    await actions.chat.media.loadJobs(a, [reply.id]);
+    assert.equal(media().jobsLookup[reply.id], undefined);
+    assert.ok(jobsOf(store, "draw").some((j) => j.state === "succeeded"));
+    assert.equal(showDrawCard(reply, media().jobs, media().jobsLookup[reply.id]), false);
+  });
+
+  it("A → B → A: a lookup from the first visit landing late doesn't touch the second (林离 #117)", async () => {
+    const { store, actions, failing, hold, stopHolding } = app();
+    await actions.start();
+    actions.goChat();
+    await actions.chat.createConversation({ kind: "direct", agent: "deepseek" }, null);
+    const a = store.get().chat.currentId!;
+    actions.chat.setDraftText("你好");
+    await actions.chat.send();
+    await until(() => !!agentReply(store.get().chat.messages));
+    const reply = agentReply(store.get().chat.messages)!;
+    await actions.chat.createConversation({ kind: "direct", agent: "claude" }, null);
+    const b = store.get().chat.currentId!;
+
+    // 第一次回到 A：查询扣住，放行时失败
+    const release = hold("media.list");
+    failing.add("media.list");
+    await actions.chat.openConversation(a);
+    await actions.chat.openConversation(b);
+    // 第二次回到 A：查询正常，先回来
+    stopHolding("media.list");
+    failing.clear();
+    await actions.chat.openConversation(a);
+    await until(() => !!store.get().chat.messages.length && store.get().chat.media.jobsLookup[reply.id] === undefined);
+    // 第一次的失败这时才到
+    release();
+    await sleep(20);
+    assert.equal(store.get().chat.media.jobsLookup[reply.id], undefined, "late failure from the first visit is dropped");
+  });
+
+  it("switching away for good: a late lookup for A doesn't touch B (汐 #117)", async () => {
+    const { store, actions, hold } = app();
+    await actions.start();
+    actions.goChat();
+    await actions.chat.createConversation({ kind: "direct", agent: "deepseek" }, null);
+    const a = store.get().chat.currentId!;
+    actions.chat.setDraftText("画一张");
+    await actions.chat.send();
+    await until(() => !!agentReply(store.get().chat.messages));
+    const reply = agentReply(store.get().chat.messages)!;
+    await actions.chat.media.startDraw({ ...reply.mediaIntent!.draw!, backend: "comfyui" }, { kind: "chat", conversationId: a, messageId: reply.id, agent: reply.agent }, false);
+    await until(() => jobsOf(store, "draw").some((j) => j.state === "succeeded"));
+    await actions.chat.createConversation({ kind: "direct", agent: "claude" }, null);
+    const release = hold("media.list");
+    await actions.chat.openConversation(a);
+    await actions.chat.createConversation({ kind: "direct", agent: "codex" }, null);
+    release();
+    await sleep(20);
+    assert.notEqual(store.get().chat.currentId, a);
+    assert.deepEqual(store.get().chat.media.jobs, []);
+    assert.deepEqual(store.get().chat.media.jobsLookup, {});
+  });
+
+  it("an unfinished job whose message isn't loaded still counts for 「停」 (汐 #117)", async () => {
+    const running = job({ id: "mjob_run", state: "running", startedAt: at(1), source: { kind: "chat", conversationId: "conv_1", messageId: "cmsg_old", agent: null } });
+    const done = job({ id: "mjob_done", state: "cancelled", cancelReason: "user_cancel", finishedAt: at(2) });
+    const client = {
+      // 整会话那次给两条；按消息查（这里没加载 cmsg_old）什么也没有
+      query: (r: { type: string; messageIds?: string[] }) =>
+        r.type !== "media.list" ? Promise.reject(new Error("not here")) : Promise.resolve(r.messageIds ? [] : [running, done]),
+      command: () => Promise.reject(new Error("not here")),
+      onEvent: () => () => {},
+    } as unknown as RoomClient;
+    const store = createStore({ ...initialState, chat: { ...initialState.chat, currentId: "conv_1" } });
+    const media = createMediaActions(store, client, () => {});
+    await media.loadForConversation("conv_1");
+    await media.loadJobs("conv_1", ["cmsg_a"]);
+    assert.deepEqual(store.get().chat.media.jobs.map((j) => j.id), ["mjob_run"], "only unfinished ones from the whole-conversation query");
+  });
+
+  it("the draw card re-checks a message whose lookup failed (汐 #117)", async () => {
+    const { store, actions, failing } = app();
+    await actions.start();
+    actions.goChat();
+    await actions.chat.createConversation({ kind: "direct", agent: "deepseek" }, null);
+    const a = store.get().chat.currentId!;
+    actions.chat.setDraftText("你好");
+    await actions.chat.send();
+    await until(() => !!agentReply(store.get().chat.messages));
+    const mine = store.get().chat.messages.find((m) => m.sender === "user")!;
+    await actions.chat.createConversation({ kind: "direct", agent: "codex" }, null);
+    failing.add("media.list");
+    await actions.chat.openConversation(a);
+    await until(() => store.get().chat.media.jobsLookup[mine.id] === "failed");
+    failing.clear();
+    actions.chat.media.openDrawCard(mine.id, "x");
+    assert.equal(store.get().chat.sheet?.kind, "draw");
+    await until(() => store.get().chat.media.jobsLookup[mine.id] === undefined);
+
+    // 「重新查」一次查全部没查到的
+    failing.add("media.list");
+    await actions.chat.media.loadJobs(a, store.get().chat.messages.map((m) => m.id));
+    assert.ok(store.get().chat.messages.every((m) => store.get().chat.media.jobsLookup[m.id] === "failed"));
+    failing.clear();
+    actions.chat.media.retryLookups();
+    await until(() => Object.keys(store.get().chat.media.jobsLookup).length === 0);
+  });
+
+  it("a job pushed later for a message that isn't loaded still counts for 「停」 (汐 #117)", () => {
+    let c: ChatState = { ...initialState.chat, currentId: "conv_1", media: { ...initialMedia } };
+    const running = job({ id: "mjob_r", state: "running", startedAt: at(1), source: { kind: "chat", conversationId: "conv_1", messageId: "cmsg_not_loaded", agent: null } });
+    c = applyMediaJob(c, running);
+    // MediaHead 的「停（N）」按 jobs 里没结束的任务计数
+    assert.equal(c.media.jobs.filter(jobActive).length, 1);
+    c = applyMediaJob(c, { ...running, state: "cancelled", cancelReason: "user_stop", finishedAt: at(2) } as MediaJob);
+    assert.equal(c.media.jobs.filter(jobActive).length, 0);
+  });
+
+  it("applyMediaJob keeps the newest clip, like the lookup does (汐 #117)", () => {
+    const speechJob = (n: number, state: MediaJob["state"]) =>
+      job({ id: `mjob_${n}`, kind: "speech", state, authorization: "user_play", draw: null, speech: state === "succeeded" ? clip(n) : null, createdAt: at(n), startedAt: at(n), finishedAt: state === "running" ? null : at(n) });
+    let c: ChatState = { ...initialState.chat, currentId: "conv_1", media: { ...initialMedia, clips: { cmsg_a: clip(9)! } } };
+    c = applyMediaJob(c, speechJob(5, "succeeded"));
+    assert.equal(c.media.clips["cmsg_a"]?.id, "spch_9", "an older clip finishing later doesn't replace it");
+    c = applyMediaJob(c, speechJob(12, "succeeded"));
+    assert.equal(c.media.clips["cmsg_a"]?.id, "spch_12");
+  });
+
+  it("overlapping lookups in one visit: an older failure landing late doesn't undo a newer success (林离 #117)", async () => {
+    const pending: { res: (jobs: MediaJob[]) => void; rej: (e: Error) => void }[] = [];
+    const client = {
+      query: (r: { type: string; messageIds?: string[] }) =>
+        r.type !== "media.list"
+          ? Promise.reject(new Error("not here"))
+          : r.messageIds
+            ? new Promise<MediaJob[]>((res, rej) => pending.push({ res, rej }))
+            : Promise.resolve([]),
+      command: () => Promise.reject(new Error("not here")),
+      onEvent: () => () => {},
+    } as unknown as RoomClient;
+    const store = createStore({ ...initialState, chat: { ...initialState.chat, currentId: "conv_1" } });
+    const media = createMediaActions(store, client, () => {});
+    await media.loadForConversation("conv_1");
+    const q1 = media.loadJobs("conv_1", ["cmsg_a", "cmsg_b"]); // 首屏
+    const q2 = media.loadJobs("conv_1", ["cmsg_a"]); // 比如关了沉浸模式后的重查
+    pending[1]!.res([]);
+    await q2;
+    pending[0]!.rej(new Error("数据库忙"));
+    await q1;
+    const lookup = store.get().chat.media.jobsLookup;
+    assert.equal(lookup["cmsg_a"], undefined, "the newer success stands");
+    assert.equal(lookup["cmsg_b"], "failed", "only asked once, so its failure counts");
+  });
+
+  it("voice clips: the newest synthesized one wins, whatever order lookups land in (林离 #117)", async () => {
+    const speechJob = (n: number) =>
+      job({ id: `mjob_${n}`, kind: "speech", state: "succeeded", authorization: "user_play", draw: null, speech: clip(n), createdAt: at(n), startedAt: at(n), finishedAt: at(n) });
+    const pending: ((jobs: MediaJob[]) => void)[] = [];
+    const client = {
+      query: (r: { type: string; messageIds?: string[] }) =>
+        r.type !== "media.list"
+          ? Promise.reject(new Error("not here"))
+          : r.messageIds
+            ? new Promise<MediaJob[]>((res) => pending.push(res))
+            : Promise.resolve([]),
+      command: () => Promise.reject(new Error("not here")),
+      onEvent: () => () => {},
+    } as unknown as RoomClient;
+    const store = createStore({ ...initialState, chat: { ...initialState.chat, currentId: "conv_1" } });
+    const media = createMediaActions(store, client, () => {});
+
+    // 同一次打开：旧的先到、新的后到 → 换成新的；再来一个旧的 → 不退回
+    void media.loadForConversation("conv_1");
+    const q1 = media.loadJobs("conv_1", ["cmsg_a"]);
+    const q2 = media.loadJobs("conv_1", ["cmsg_a"]);
+    const q3 = media.loadJobs("conv_1", ["cmsg_a"]);
+    pending[0]!([speechJob(3)]);
+    await q1;
+    pending[1]!([speechJob(9)]);
+    await q2;
+    pending[2]!([speechJob(4)]);
+    await q3;
+    assert.equal(store.get().chat.media.clips["cmsg_a"]?.id, "spch_9");
+
+    // 关了再开（A → B → A）：第一次打开的查询晚到，整批丢掉（那次打开的状态已经清了），哪怕里面的片段更新
+    pending.length = 0;
+    void media.loadForConversation("conv_1");
+    const old = media.loadJobs("conv_1", ["cmsg_a"]);
+    void media.loadForConversation("conv_1");
+    const fresh = media.loadJobs("conv_1", ["cmsg_a"]);
+    pending[1]!([speechJob(5)]);
+    await fresh;
+    pending[0]!([speechJob(7)]);
+    await old;
+    assert.equal(store.get().chat.media.clips["cmsg_a"]?.id, "spch_5");
+  });
+
+  it("media.list goes by message, at most MEDIA_LIST_MESSAGE_IDS_MAX ids per query; ids never repeat", async () => {
+    const { store, actions, queries } = app();
+    await actions.start();
+    actions.goChat();
+    await actions.chat.createConversation({ kind: "direct", agent: "deepseek" }, null);
+    const a = store.get().chat.currentId!;
+    // 每分钟只能发 6 条，凑不出一页 14 条以上的真消息：直接按 30 个 id 查（mock 里查不到任务的 id 返回空）
+    const ids = Array.from({ length: 30 }, (_, i) => `cmsg_${String(i).padStart(26, "0")}`);
+    queries.length = 0;
+    await actions.chat.media.loadJobs(a, [...ids, ids[0]!]);
+    const lists = queries.filter((q) => q.type === "media.list" && q.messageIds);
+    assert.equal(lists.length, Math.ceil(ids.length / MEDIA_LIST_MESSAGE_IDS_MAX));
+    assert.ok(lists.every((q) => q.messageIds!.length <= MEDIA_LIST_MESSAGE_IDS_MAX));
+    assert.deepEqual(lists.flatMap((q) => q.messageIds!), ids);
+    assert.equal(store.get().notice, null);
+
+    // 打开会话：按那页消息的 id 查
+    actions.chat.setDraftText("你好");
+    await actions.chat.send();
+    await until(() => !!agentReply(store.get().chat.messages));
+    await actions.chat.createConversation({ kind: "direct", agent: "claude" }, null);
+    queries.length = 0;
+    await actions.chat.openConversation(a);
+    await until(() => queries.some((q) => q.type === "media.list" && q.messageIds));
+    const loaded = store.get().chat.messages.map((m) => m.id).sort();
+    assert.deepEqual(queries.filter((q) => q.type === "media.list" && q.messageIds).flatMap((q) => q.messageIds!).sort(), loaded);
   });
 
   it("retracting a message cancels the media jobs of its answers", async () => {

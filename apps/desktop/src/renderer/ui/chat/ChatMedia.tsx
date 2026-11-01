@@ -156,6 +156,8 @@ function VoiceNote({ src, durationMs }: { src: string; durationMs: number }) {
 export function AgentMedia({ message, conv }: { message: AgentChatMessage; conv: Conversation }) {
   const jobs = useAppState((s) => s.chat.media.jobs);
   const requested = useAppState((s) => s.chat.media.drawRequested[message.id] === true);
+  const lookup = useAppState((s) => s.chat.media.jobsLookup[message.id]);
+  const actions = useActions();
   const draws = jobsOf(jobs, message.id, "draw");
   return (
     <div className="agent-media">
@@ -163,7 +165,15 @@ export function AgentMedia({ message, conv }: { message: AgentChatMessage; conv:
       {draws.map((j) => (
         <DrawJobView key={j.id} job={j} message={message} conv={conv} />
       ))}
-      {showDrawCard(message, jobs) && (
+      {lookup === "failed" && message.mediaIntent?.draw && !draws.some((j) => jobActive(j) || j.state === "succeeded") && (
+        <p className="chat-note">
+          没查到这条的画图记录，可能已经画过。
+          <button type="button" className="button-link" onClick={() => actions.chat.media.retryLookups()}>
+            重新查
+          </button>
+        </p>
+      )}
+      {showDrawCard(message, jobs, lookup) && (
         <DrawOffer message={message} lastFailed={draws.filter((j) => !jobActive(j)).at(-1)} drawnEarlier={draws.length === 0 && requested} />
       )}
     </div>
@@ -352,6 +362,7 @@ export function DrawSheetBody({ messageId, prompt: initial, conv }: { messageId:
   const [preview, setPreview] = useState<DrawRoutePreview | null | undefined>(null);
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
+  const lookup = useAppState((s) => s.chat.media.jobsLookup[messageId]);
   const trimmed = prompt.trim();
   const request: DrawRequest = { prompt: trimmed || "-", size, backend };
 
@@ -372,7 +383,8 @@ export function DrawSheetBody({ messageId, prompt: initial, conv }: { messageId:
   const blocked = manualCodex === "blocked" || (preview !== undefined && preview !== null && preview.backend === null);
   const needConfirm = manualCodex === "confirm" && !confirming;
   // 预览还没回来（null）先不让点：可能正好是林离额度用满，main 会拒
-  const ok = trimmed.length > 0 && trimmed.length <= DRAW_PROMPT_MAX_CHARS && !blocked && !busy && preview !== null;
+  // 这条的画图记录还在查：等查完再让点，免得画过的又画一次（汐 #117）
+  const ok = trimmed.length > 0 && trimmed.length <= DRAW_PROMPT_MAX_CHARS && !blocked && !busy && preview !== null && lookup !== "loading";
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -385,6 +397,15 @@ export function DrawSheetBody({ messageId, prompt: initial, conv }: { messageId:
 
   return (
     <form className="chat-sheet-body draw-card" onSubmit={submit}>
+      {lookup === "loading" && <p className="chat-note">正在查这条的画图记录…</p>}
+      {lookup === "failed" && (
+        <p className="chat-note">
+          这条的画图记录没查到，可能已经画过，再画会再花一次额度。
+          <button type="button" className="button-link" onClick={() => actions.chat.media.retryLookups()}>
+            重新查
+          </button>
+        </p>
+      )}
       <label className="chat-field">
         画什么（秘书写的，你可以改）
         <textarea rows={4} maxLength={DRAW_PROMPT_MAX_CHARS} value={prompt} onChange={(e) => setPrompt(e.target.value)} />
