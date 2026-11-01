@@ -1,4 +1,5 @@
-import { buildChatSnapshot, capChatFileTexts, sha256Hex, type AgentAdapter } from "@room/core";
+import { createHash } from "node:crypto";
+import { buildChatSnapshot, capChatFileTexts, escapeAttachmentName, sha256Hex, type AgentAdapter } from "@room/core";
 import {
   CHAT_LIMITS,
   ChatAgentOutput,
@@ -6,6 +7,7 @@ import {
   extractMediaIntent,
   isExcludedFromContext,
   type AgentProfile,
+  type AttachmentManifestEntry,
   type ChatContent,
   type ChatContentInput,
   type ChatHistorySummary,
@@ -21,12 +23,14 @@ import {
   type BatchModel,
   type ChatAttachment,
   type ChatAttachmentInput,
+  type ImageRef,
   type Message,
   type NodeHealth,
   type Project,
   type NodeTestResult,
   type QueryRequest,
   type RunModel,
+  StartRunAttachments,
   type UserChatMessage,
 } from "@room/schemas";
 import {
@@ -114,6 +118,15 @@ export interface ChatRunTarget {
   model?: { model: string; effort: string | null };
 }
 
+/** 一条消息里的图（引用已校验过）：拼 Prompt 和起跑都从这份取 */
+interface ChatImageForPrompt {
+  readonly ref: ImageRef;
+  readonly name: string;
+  readonly mime: "image/png" | "image/jpeg" | "image/webp";
+  readonly bytes: number;
+  readonly sha256: string;
+}
+
 export interface ChatServiceDeps {
   readonly db: SqliteDatabase;
   readonly queue: WriteQueue;
@@ -126,6 +139,8 @@ export interface ChatServiceDeps {
   readonly probe?: (params: { baseUrl: string; token: string; profileId: string }) => Promise<NodeTestResult>;
   /** D-36b：把文件 ref 读成文本（非文本文件返回 null）；测试注入假的 */
   readonly readFileText?: (ref: string) => string | null;
+  /** C-42a / X-34b：把图片 ref 读成本体；没传 = 这个进程里没有图片库（带图的 Run 会失败） */
+  readonly readImage?: (ref: ImageRef) => Buffer | null;
   /** 撤回时收掉从这条消息 / 它的回答发起的画图任务（ADR-004 §3a）；没传 = 不做 */
   readonly cancelMediaJobs?: (messageIds: readonly string[]) => Promise<void>;
   readonly now?: () => string;
@@ -166,6 +181,81 @@ export class ChatService {
   /** 本会话的历史摘要（契约 chat.summaries.list）：current 和 stale 都给，界面自己决定怎么显示 */
   listSummaries(conversationId: string): ChatHistorySummary[] {
     return listChatSummaries(this.#deps.db, conversationId);
+  }
+
+  // ---------------------------------------------------------------- 图片（C-42a / X-34b）
+
+  /**
+   * 一条消息里带的图（引用在 `#resolveContent` 已经校验过）：拼 Prompt 和起跑都要用。
+   * mime / bytes / sha256 从图片记录取（renderer 只给 ref 和名字）。
+   */
+  #imagesOf(content: ChatContent): ChatImageForPrompt[] {
+    if (content.kind !== "text") return [];
+    const images: ChatImageForPrompt[] = [];
+    for (const attachment of content.attachments) {
+      if (attachment.kind !== "image") continue;
+      const record = getImageRef(this.#deps.db, attachment.ref);
+      if (record === null || record.purpose !== "chat") {
+        throw new ChatError("validation_failed", "图片「" + attachment.name + "」找不到了，请重新选一张");
+      }
+      images.push({ ref: record.ref, name: attachment.name, mime: record.mime, bytes: record.bytes, sha256: record.sha256 });
+    }
+    return images;
+  }
+
+  /** 探测结果里的 health（节点够不着 / 没答时是 undefined），给「能不能带图」用 */
+  #healthOf(probes: Map<string, NodeTestResult>, nodeId: string | null, profileId: string): NodeHealth | undefined {
+    if (nodeId === null) return undefined;
+    const result = probes.get(probeKeyOf(nodeId, profileId));
+    return result !== undefined && result.reachable ? result.health : undefined;
+  }
+
+  /** 这次能给这位带图吗：节点报 `capabilities.attachments`，且**这次用的模型** vision 是 yes（契约 StartRun 的规则） */
+  #canSendImages(health: NodeHealth | undefined, profileId: string, model: BatchModel | null): boolean {
+    if (health?.capabilities?.attachments !== true) return false;
+    const entry = health.profileModels?.find((profile) => profile.profileId === profileId);
+    if (entry === undefined) return false;
+    if (model === null) return entry.models.length === 0 && entry.fixedModelVision === "yes";
+    return entry.models.find((option) => option.id === model.model)?.vision === "yes";
+  }
+
+  /** 看不到图的人：正文后面补「[图片：名字]」占位（ADR-004 §2），图片本体不发 */
+  #withImagePlaceholders(message: UserChatMessage, images: readonly ChatImageForPrompt[]): UserChatMessage {
+    if (images.length === 0 || message.content.kind !== "text") return message;
+    const placeholders = images.map((image) => "[图片：" + escapeAttachmentName(image.name) + "]").join(" ");
+    const text = (message.content.text + "\n" + placeholders).trim();
+    return { ...message, content: { ...message.content, text } };
+  }
+
+  /** 进 Snapshot / 起跑用的清单（编号从 1 开始） */
+  #imageManifest(images: readonly ChatImageForPrompt[]): AttachmentManifestEntry[] {
+    return images.map((image, index) => ({
+      index: index + 1,
+      ref: image.ref,
+      name: image.name,
+      mime: image.mime,
+      bytes: image.bytes,
+      sha256: image.sha256,
+    }));
+  }
+
+  /**
+   * 起跑前把清单变成带字节的 `StartRunAttachments`（C-42a）：从图片库读本体、核 sha256，再交给 Adapter。
+   * 读不到 / 对不上就是本机数据坏了：这次 Run 直接失败，不静默丢图继续跑。
+   */
+  #startRunAttachments(manifest: readonly AttachmentManifestEntry[]): StartRunAttachments {
+    const items = manifest.map((entry) => {
+      const bytes = this.#deps.readImage?.(entry.ref) ?? null;
+      if (bytes === null) {
+        throw new ChatError("internal", "图片「" + entry.name + "」在本机找不到了，这次回答没法带图");
+      }
+      if (bytes.length !== entry.bytes || createHash("sha256").update(bytes).digest("hex") !== entry.sha256) {
+        throw new ChatError("internal", "图片「" + entry.name + "」和记录的指纹对不上，这次回答没法带图");
+      }
+      return { index: entry.index, mime: entry.mime, bytes: entry.bytes, sha256: entry.sha256, data: bytes.toString("base64") };
+    });
+    // 自检（编号连续、sha 不重复、合计不超限、base64 长度）：不合规就在起跑前失败，别指望节点兜
+    return StartRunAttachments.parse(items);
   }
 
   #emit(event: ControlEvent): void {
@@ -267,6 +357,7 @@ export class ChatService {
       }
     }
     const content = this.#resolveContent(command.content);
+    const images = this.#imagesOf(content);
 
     if (command.quoteMessageId !== null) {
       const quote = getChatMessage(db, command.quoteMessageId);
@@ -369,12 +460,20 @@ export class ChatService {
       if (availability.get(agentId)?.kind !== "available") continue;
       const agent = agents.get(agentId);
       if (agent === undefined || agent.chatProfileId === null) throw new ChatError("internal", "available agent is not configured: " + agentId);
+      // C-42a：这位能看到图（节点支持带图 + 这次模型 vision=yes）才把图片清单拼进去；看不到的只给名字占位
+      const withImages =
+        images.length > 0 &&
+        this.#canSendImages(
+          this.#healthOf(probeResults, agent.nodeId, agent.chatProfileId),
+          agent.chatProfileId,
+          models.get(agentId) ?? null,
+        );
       snapshots.set(
         agentId,
         buildChatSnapshot({
           snapshotId: "snap_" + ulid(),
           conversationId: conversation.id,
-          userMessage: message,
+          userMessage: withImages ? message : this.#withImagePlaceholders(message, images),
           agent: { id: agent.id, displayName: agent.displayName, persona: this.#personaOf(agent) },
           history,
           ...(summaries.length === 0 ? {} : { summaries }),
@@ -384,6 +483,7 @@ export class ChatService {
           displayNameOf: (id) => agents.get(id)?.displayName ?? id,
           replyRequired: chatRequired(conversation, message.mentions, agent.id),
           ...(promptFiles.length === 0 ? {} : { files: promptFiles }),
+          ...(withImages ? { attachments: this.#imageManifest(images) } : {}),
           createdAt: now,
         }),
       );
@@ -589,10 +689,19 @@ export class ChatService {
       );
     const runId = "run_" + ulid();
     const summaries = this.#summariesFor(conversation.id);
+    // C-42a：重试也要按节点能力和这次的模型重新决定「带不带图」（模型可能已经变了）
+    const images = this.#imagesOf(message.content);
+    const withImages =
+      images.length > 0 &&
+      this.#canSendImages(
+        this.#healthOf(probeResults, agent.nodeId, agent.chatProfileId),
+        agent.chatProfileId,
+        model,
+      );
     const snapshot = buildChatSnapshot({
       snapshotId: "snap_" + ulid(),
       conversationId: conversation.id,
-      userMessage: message,
+      userMessage: withImages ? message : this.#withImagePlaceholders(message, images),
       agent: { id: agent.id, displayName: agent.displayName, persona: this.#personaOf(agent) },
       history,
       ...(summaries.length === 0 ? {} : { summaries }),
@@ -601,6 +710,7 @@ export class ChatService {
       inReplyToOf: this.#inReplyToOf,
       displayNameOf: (id) => agents.get(id)?.displayName ?? id,
       replyRequired: slot.required,
+      ...(withImages ? { attachments: this.#imageManifest(images) } : {}),
       createdAt: now,
     });
 
@@ -774,6 +884,11 @@ export class ChatService {
 
       const snapshot = getChatSnapshot(db, run.snapshotId);
       if (snapshot === null) throw new Error("chat snapshot missing: " + run.snapshotId);
+      // C-42a / C-42g / X-34b：带图的 Snapshot 起跑时要把字节和图片位置标记一起交给 Adapter
+      const attachments = snapshot.attachments === undefined ? undefined : this.#startRunAttachments(snapshot.attachments);
+      if (attachments !== undefined && snapshot.imageSlot === undefined) {
+        throw new ChatError("internal", "这份 Snapshot 说要带图，但没有图片位置标记，起跑不了");
+      }
 
       let completedText: string | null = null;
       const events = adapter.run(
@@ -784,6 +899,7 @@ export class ChatService {
           content: snapshot.content,
           contentHash: snapshot.contentHash,
           chat: { memory: snapshot.memorySlot },
+          ...(attachments === undefined ? {} : { attachments, imageSlot: snapshot.imageSlot }),
         },
         {
           signal: controller.signal,
@@ -942,10 +1058,11 @@ export class ChatService {
       if (image === null || image.purpose !== "chat") {
         throw new ChatError("validation_failed", "图片引用不存在（或者不是聊天图片），请重新选一张");
       }
-      // 节点这边 S-23 早就支持收图了，现在缺的是「主控端把图发给节点」这条链：
-      // remote-client 的 HTTP 适配器还不会把 AgentInput.attachments / imageSlot 放进 StartRun 请求（X-34b 那半是 C酱的）。
-      // 在那之前明确拒绝，不悄悄降级成「只发占位文字」——D-41b 之后这里要多拼清单、起跑时带附件，见 PR 说明
-      throw new ChatError("validation_failed", "聊天里的图现在还发不到节点（正在接），先把图片去掉");
+      // C-42a / X-34b：引用有效就放行；能不能真的带图给这位，到拼 Snapshot 时按节点能力和模型 vision 决定。
+      // renderer 发过来的命令里图片只有 ref（ChatAttachmentInput），原文件名不随命令传——
+      // 这里按 mime 给一个占位名，进 Prompt 时显示成「[图 N：图片.png]」
+      const ext = image.mime === "image/png" ? "png" : image.mime === "image/jpeg" ? "jpg" : "webp";
+      return { kind: "image", ref: image.ref, name: "图片." + ext };
     }
     const file = getFile(this.#deps.db, attachment.ref);
     if (file === null) throw new ChatError("validation_failed", "文件引用不存在，请重新选一个");

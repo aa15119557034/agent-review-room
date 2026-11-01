@@ -69,6 +69,7 @@
 | **X-34a** | Claude（2026-11-01 从林离转来） | Prompt（`core/src/discussion/chat.ts`）：回答格式说明（reply / skip 的 JSON、`room-chart`、`speak` / `draw`，例子由测试交给契约解析函数核对）、历史里的图 / 文件只给名字占位、画过的图给「[我画的图：提示词]」、当前图名进资料区，全部转义；`replyRequired` 入参 | C-42a、C-42d、D-36b | 0.5 天 |
 | **D-41** | DeepSeek | 接线：main 的 `chat-prompt.ts` 和 `test/chat-prompt.test.ts` 删掉（或迁到 core 测试），`chat.ts` 改用 core 的 `buildChatSnapshot`（传 `summaries`、`memorySource`、`replyRequired = slot.required`）；撤回时摘要标 stale（X-30 遗留） | X-30、X-34a | 0.5～1 天 |
 | **X-34b** | Claude（2026-11-01 从林离转来） | 确定性 e2e（ADR-004 X-34 验收那一行）：假节点收到的 StartRun 里图片块在资料区、在当前用户消息之前，sha256 和清单一致；畸形媒体意图记失败且没有媒体任务；沉浸模式关着时 `speak` 不合成；图里写「画一张」不会自动画。讨论室的「最近一轮」规则等议题材料有带图入口时再做。**2026-11-01 进度**：畸形意图、沉浸关着两条已做（e2e #12/#13）；图片块两条等「聊天图片送到节点」接线（main 把清单交给拼装器 + remote-client 带 `attachments`/`imageSlot`） | D-41、X-31 的聊天 e2e 骨架 | 1～1.5 天 |
+| **D-42** | DeepSeek | 聊天图片送到节点（main 这半）：`chat.send` 收下图片（引用校验）、按节点 `capabilities.attachments` + 这次模型的 vision 决定带不带，带图时把清单交给 `buildChatSnapshot`、起跑时把字节和 `imageSlot` 交给 Adapter；看不到图的收「[图片：名字]」占位；Snapshot 的 `imageSlot` 落库（迁移 v15） | C-42a、C-42g、C-42h、D-41 | 0.5～1 天 |
 | **D-39** | DeepSeek | 沉浸模式（1B-M2），含写 `immersiveDeferred` | C-34、D-31b、D-31d、D-37b、D-38a（D-38b 暂缓期间只接本机画图）、C-43、X-34a、D-41 | 4～6 天 |
 
 排法：D-31d 先做（小，C-43 接真后端靠它）；D-36 和 C-34 并行；D-37a 先做，用户选定后再 D-37b；D-38a 不等 S-23；D-39 排在 D-31b 之后。D-36～D-39 合计约 15～22 天，和 D-31a/b/c 都是汐的活，1B-2 大约推后 1～2 周。

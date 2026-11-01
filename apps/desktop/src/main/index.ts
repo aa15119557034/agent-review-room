@@ -181,6 +181,8 @@ async function bootstrap(): Promise<void> {
     settings,
     emit: broadcast,
     readFileText: (ref) => mediaStore.readFileText(ref),
+    // C-42a / X-34b：带图聊天要读图片本体（字节只在 main 里，不进 renderer）
+    readImage: (ref) => mediaStore.readImage(ref),
     cancelMediaJobs: async (messageIds) => {
       await jobs.cancelBySourceMessageIds(messageIds);
     },

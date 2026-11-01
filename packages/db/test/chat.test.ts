@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
 import Database from "better-sqlite3";
-import { ChatMessage, ChatReplySlot, ChatRun, ChatSnapshot, Conversation, UserChatMessage } from "@room/schemas";
+import { ChatMessage, ChatReplySlot, ChatRun, ChatSnapshot, Conversation, UserChatMessage, attachmentImageBlock, attachmentImageSlotMarker, attachmentManifestBlock } from "@room/schemas";
 import {
   ChatRunStateConflictError,
   ChatSendConflictError,
@@ -644,6 +644,23 @@ describe("chat runs and snapshots (v6)", () => {
       const { run, snapshot, slot } = await seed(db, queue);
       assert.deepEqual(getChatSnapshot(db, snapshot.id), snapshot);
       assert.equal(getChatRun(db, run.id)?.slotId, slot.id);
+
+      // C-42g / X-34b（v15）：带图的 Snapshot 要把清单和图片位置标记一起存下来、原样读回
+      const manifest = [
+        { index: 1, ref: "img_" + ulid(), name: "图片.png", mime: "image/png" as const, bytes: 2048, sha256: "b".repeat(64) },
+      ];
+      const imageContent =
+        attachmentManifestBlock(manifest) + "历史……\n" + attachmentImageBlock(snapshot.nonce, 1) + "\n当前消息：看看这张";
+      const withImage: ChatSnapshot = {
+        ...snapshot,
+        id: "snap_" + ulid(),
+        content: imageContent,
+        contentHash: createHash("sha256").update(imageContent, "utf8").digest("hex"),
+        attachments: manifest,
+        imageSlot: attachmentImageSlotMarker(snapshot.nonce),
+      };
+      insertChatSnapshot(db, withImage);
+      assert.deepEqual(getChatSnapshot(db, withImage.id), withImage, "附件清单和图片位置标记都存下来");
 
       assert.throws(() => db.prepare("UPDATE chat_snapshots SET content = 'x' WHERE id = ?").run(snapshot.id), /immutable/);
       assert.throws(() => db.prepare("DELETE FROM chat_snapshots WHERE id = ?").run(snapshot.id), /immutable/);

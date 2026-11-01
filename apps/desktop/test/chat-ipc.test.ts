@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -24,6 +25,9 @@ import {
   ChatRun,
   ChatSnapshot,
   ControlEvent,
+  attachmentImageBlock,
+  attachmentImageSlotMarker,
+  attachmentManifestBlock,
   type AgentEvent,
   type AgentModelSettings,
   type CommandRequest,
@@ -109,6 +113,8 @@ interface Harness {
   fileTexts: Map<string, string>;
   /** 撤回时 main 会通知它取消画图任务（ADR-004 §3a） */
   cancelledMedia: string[][];
+  /** C-42a：每次 adapter.run 收到的输入（看带没带图、带的是什么） */
+  runInputs: { agent: string; input: { attachments?: unknown; imageSlot?: unknown; content: string } }[];
 }
 
 async function makeHarness(
@@ -120,6 +126,10 @@ async function makeHarness(
     hold?: string[];
     profileModels?: ProfileModels[];
     modelSettings?: Record<string, AgentModelSettings>;
+    /** C-42a：节点报的能力（不传 = 老节点，什么都不支持） */
+    capabilities?: { attachments?: boolean };
+    /** C-42a：图片库里的字节（ref → Buffer）；不传 = 没图，带图会起跑失败 */
+    imageBytes?: Map<string, Buffer>;
     /** 可控时钟（撤回 / 重新编辑的时间窗口） */
     now?: () => string;
     /** 取消画图任务先失败几次（测撤回不被拖垮、会重试） */
@@ -134,6 +144,8 @@ async function makeHarness(
   const settings = new SettingsStore(join(dir, "settings.json"), fakeSafeStorage);
   const fileTexts = new Map<string, string>();
   const cancelledMedia: string[][] = [];
+  const imageBytes = options.imageBytes ?? new Map<string, Buffer>();
+  const runInputs: Harness["runInputs"] = [];
   settings.upsertNode("controller-local", { baseUrl: NODE_URL, token: "t".repeat(40) });
   await repo.upsertNodeRow({ id: "controller-local", label: "主控机", baseUrl: NODE_URL });
 
@@ -164,6 +176,7 @@ async function makeHarness(
     settings,
     emit: (event) => events.push(ControlEvent.parse(event)),
     readFileText: (ref) => fileTexts.get(ref) ?? null,
+    readImage: (ref) => imageBytes.get(ref) ?? null,
     cancelMediaJobs: async (messageIds) => {
       if ((options.cancelMediaFails ?? 0) > 0) {
         options.cancelMediaFails = (options.cancelMediaFails ?? 0) - 1;
@@ -189,7 +202,14 @@ async function makeHarness(
           },
         };
       }
-      return fakeAdapter(scripts[target.agent] ?? reply("好的"));
+      const inner = fakeAdapter(scripts[target.agent] ?? reply("好的"));
+      return {
+        ...inner,
+        run: (sessionId, runId, input, opts) => {
+          runInputs.push({ agent: target.agent as string, input: input as never });
+          return inner.run(sessionId, runId, input, opts);
+        },
+      };
     },
     probe: async (params) => ({
       reachable: true,
@@ -202,6 +222,7 @@ async function makeHarness(
         leaseMs: 30_000,
         heartbeatMs: 5_000,
         ...(options.profileModels === undefined ? {} : { profileModels: options.profileModels }),
+        ...(options.capabilities === undefined ? {} : { capabilities: options.capabilities }),
       },
       // profileAvailable 是 per-profile 的：同节点上不同秘书不能共用一次探测结果
       profileAvailable: !(options.unavailableProfiles ?? []).includes(params.profileId),
@@ -215,7 +236,7 @@ async function makeHarness(
     members: { kind: "direct", agent: "deepseek" },
     title: null,
   } as never);
-  return { chat, repo, db, events, conversationId: conversation.id, targets, fileTexts, cancelledMedia };
+  return { chat, repo, db, events, conversationId: conversation.id, targets, fileTexts, cancelledMedia, runInputs };
 }
 
 const userMessageId = (n: number): string => "cmsg_" + String(n).padStart(26, "0");
@@ -287,11 +308,11 @@ describe("chat send attachments (D-34a / D-36b)", () => {
       h.db.close();
     }
   });
-  it("sends a text file (content goes into the prompt), rejects images until the controller->node image path is wired, and sends stickers", async () => {
+  it("sends a text file (content goes into the prompt), turns images into placeholders for a node that cannot take them, and sends stickers", async () => {
     const h = await makeHarness();
     const validation = (error: unknown) => (error as { code?: string }).code === "validation_failed";
     try {
-      // 图片：引用校验过了，但主控端到节点的带图链路还没接完，明确拒绝
+      // 图片：引用有效就收下；但这位节点没报 capabilities.attachments，图发不过去 → 正文里给名字占位
       const imageRef = `img_${ulid()}`;
       insertImageRef(h.db, {
         ref: imageRef as never,
@@ -303,14 +324,15 @@ describe("chat send attachments (D-34a / D-36b)", () => {
         height: 64,
         createdAt: NOW,
       });
-      await assert.rejects(
-        () =>
-          h.chat.send({
-            ...send(h.conversationId, userMessageId(21), "看图"),
-            content: { kind: "text", text: "看图", attachments: [{ kind: "image", ref: imageRef }] },
-          }),
-        (error: unknown) => validation(error) && /发不到节点/.test((error as Error).message),
-      );
+      const sentImage = await h.chat.send({
+        ...send(h.conversationId, userMessageId(21), "看图"),
+        content: { kind: "text", text: "看图", attachments: [{ kind: "image", ref: imageRef }] },
+      });
+      await settle(h.chat);
+      const imageSnapshot = getChatSnapshot(h.db, sentImage.runs[0]!.snapshotId)!;
+      assert.equal(imageSnapshot.attachments, undefined, "节点不支持带图：Snapshot 里没有附件清单");
+      assert.ok(imageSnapshot.content.includes("[图片：图片.png]"), "看不到图的人拿到名字占位（ADR-004 §2）");
+      assert.equal(h.runInputs[0]?.input.attachments, undefined, "StartRun 里不带图");
 
       // 文件：真的存过、能当文本读，就能发；正文进 Prompt 的资料区，指纹跟着变
       const fileRef = `file_${ulid()}`;
@@ -1295,3 +1317,103 @@ function summary(h: Harness, runId: string, covered: string[], text: string) {
     createdAt: NOW,
   });
 }
+
+describe("chat images (C-42a / X-34b)", () => {
+  const PNG = Buffer.from("89504e470d0a1a0a0000000d49484452", "hex");
+  const shaBytes = (b: Buffer) => createHash("sha256").update(b).digest("hex");
+  const visionModels = (vision: "yes" | "no" | "unknown") => [
+    {
+      profileId: "deepseek-chat",
+      models: [{ id: "deepseek-flash", displayName: "DeepSeek", efforts: [], defaultEffort: null, vision }],
+    },
+  ];
+  const modelSettings: AgentModelSettings = {
+    primaryModel: "deepseek-flash",
+    fallbackModel: null,
+    effort: { chat: null, discussion: null, summary: null },
+  };
+
+  async function imageEnv(options: { capabilities?: { attachments?: boolean }; vision?: "yes" | "no" | "unknown"; withBytes?: boolean }) {
+    const ref = `img_${ulid()}`;
+    const h = await makeHarness({
+      profileModels: visionModels(options.vision ?? "yes"),
+      modelSettings: { deepseek: modelSettings },
+      ...(options.capabilities === undefined ? {} : { capabilities: options.capabilities }),
+      ...(options.withBytes === false ? {} : { imageBytes: new Map([[ref, PNG]]) }),
+    });
+    insertImageRef(h.db, {
+      ref: ref as never,
+      purpose: "chat",
+      sha256: shaBytes(PNG),
+      mime: "image/png",
+      bytes: PNG.length,
+      width: 2,
+      height: 2,
+      createdAt: NOW,
+    });
+    return { h, ref };
+  }
+
+  const imageMessage = (ref: string, n: number) => ({
+    ...send(userMessageId(0), userMessageId(n), "看看这张"),
+    content: { kind: "text" as const, text: "看看这张", attachments: [{ kind: "image" as const, ref }] },
+  });
+
+  it("sends the manifest, the image block and the bytes when the node and the model can take images", async () => {
+    const { h, ref } = await imageEnv({ capabilities: { attachments: true } });
+    try {
+      const sent = await h.chat.send({ ...imageMessage(ref, 61), conversationId: h.conversationId });
+      await settle(h.chat);
+      const snapshot = getChatSnapshot(h.db, sent.runs[0]!.snapshotId)!;
+      const manifest = [{ index: 1, ref, name: "图片.png", mime: "image/png", bytes: PNG.length, sha256: shaBytes(PNG) }];
+      assert.deepEqual(snapshot.attachments, manifest, "清单按图片记录补齐（mime / bytes / sha256）");
+      assert.equal(snapshot.imageSlot, attachmentImageSlotMarker(snapshot.nonce), "图片位置标记用 Snapshot 的 nonce");
+      assert.ok(snapshot.content.startsWith(attachmentManifestBlock(manifest)), "content 以清单块开头");
+      assert.ok(snapshot.content.includes("[图 1：图片.png]"), "图名进资料区");
+      assert.ok(snapshot.content.includes(attachmentImageBlock(snapshot.nonce, 1)), "图片资料块在 content 里");
+      const input = h.runInputs[0]!.input as { attachments?: { index: number; data: string; sha256: string }[]; imageSlot?: string };
+      assert.equal(input.attachments?.[0]?.data, PNG.toString("base64"), "字节原样交给 Adapter");
+      assert.equal(input.attachments?.[0]?.sha256, shaBytes(PNG));
+      assert.equal(input.imageSlot, snapshot.imageSlot);
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("gives 「[图片：名字]」 placeholders without sending bytes when the model cannot see images or the node is old", async () => {
+    const cases = [
+      { capabilities: { attachments: true }, vision: "no" as const },
+      { capabilities: { attachments: true }, vision: "unknown" as const },
+      { vision: "yes" as const },
+    ];
+    for (const options of cases) {
+      const { h, ref } = await imageEnv(options);
+      try {
+        const sent = await h.chat.send({ ...imageMessage(ref, 62), conversationId: h.conversationId });
+        await settle(h.chat);
+        const snapshot = getChatSnapshot(h.db, sent.runs[0]!.snapshotId)!;
+        assert.equal(snapshot.attachments, undefined, JSON.stringify(options));
+        assert.ok(snapshot.content.includes("[图片：图片.png]"), JSON.stringify(options));
+        assert.ok(!snapshot.content.includes("[图 1：图片.png]"), "没有清单就不列图名");
+        assert.equal(h.runInputs[0]?.input.attachments, undefined, JSON.stringify(options));
+      } finally {
+        h.db.close();
+      }
+    }
+  });
+
+  it("fails the run before sending anything when the image bytes are gone from the local store", async () => {
+    const { h, ref } = await imageEnv({ capabilities: { attachments: true }, withBytes: false });
+    try {
+      const sent = await h.chat.send({ ...imageMessage(ref, 63), conversationId: h.conversationId });
+      await settle(h.chat);
+      const list = h.chat.listMessages({ type: "chat.messages.list", conversationId: h.conversationId, limit: 10 } as never);
+      const slot = list.slots.find((item) => item.userMessageId === sent.message.id)!;
+      assert.equal(slot.outcome, "failed");
+      assert.equal(slot.failure?.kind, "run_failed");
+      assert.equal(h.runInputs.length, 0, "起跑前就失败，一个请求都没发");
+    } finally {
+      h.db.close();
+    }
+  });
+});
