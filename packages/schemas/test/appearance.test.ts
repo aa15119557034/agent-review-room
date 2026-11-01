@@ -13,6 +13,7 @@ import {
   LOCAL_NODE_ID,
   LOCAL_CODEX_NODE_ID,
   LOCAL_NODE_IDS,
+  NodeId,
   QUERIES,
 } from "../src/index";
 
@@ -97,6 +98,7 @@ describe("node.importLocalToken whitelist (C-44)", () => {
       assert.ok(ControlCommand.safeParse({ type: "node.importLocalToken", id }).success, id);
     }
     assert.equal(LOCAL_CODEX_NODE_ID, "controller-local-codex");
+    for (const id of LOCAL_NODE_IDS) assert.ok(NodeId.safeParse(id).success, `${id} must be a valid NodeId`);
     for (const id of ["user-pc", "controller-local-deepseek", "Controller-Local", "", "controller-local "]) {
       assert.equal(ControlCommand.safeParse({ type: "node.importLocalToken", id }).success, false, id);
     }

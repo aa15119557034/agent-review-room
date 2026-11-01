@@ -365,10 +365,17 @@ export const COMMANDS = {
    * - Token 文件的位置：**每个 id 一个路径**，在 main 的 settings.json 里的 `localAgentServerTokenFiles`
    *   （键是 LocalNodeId，值是文件路径；只在 main 里，不经过控制 API，renderer 改不了）。
    *   某个 id 没配置时用它的默认位置：`<AgentRoom>\node\deepseek\agent-server.token`（controller-local）、
-   *   `<AgentRoom>\node\codex\agent-server.token`（controller-local-codex），`<AgentRoom>` 由 main 设置给出（ADR-003 §2a）。
-   *   旧设置 `localAgentServerTokenFile`（C-39，单个路径）只当作 controller-local 的路径读；不能拿来给 controller-local-codex。
-   *   **请求里不能带路径**；两个 id 解析出的路径相同（同一份 Token 给了两个节点）时，导入任何一个都返回 invalid_state
+   *   `<AgentRoom>\node\codex\agent-server.token`（controller-local-codex）。`<AgentRoom>` 是 main 设置里的 `agentRoom`
+   *   （D-40 加，和节点配置的 `homeDir` 是同一个值，安装时选一次，主控端复用；ADR-003 §2a）。
+   *   这个 id 的路径没配置、`agentRoom` 也没有 → not_found（提示去设置里填），不猜路径。
+   *   旧设置 `localAgentServerTokenFile`（C-39，单个路径）只当作 controller-local 的路径读，D-40 读到时写进
+   *   `localAgentServerTokenFiles["controller-local"]`；不能拿来给 controller-local-codex。
+   *   **请求里不能带路径**；两个 id 解析出的是同一个文件（同一份 Token 给了两个节点）时，导入任何一个都返回 invalid_state，
+   *   错误信息说明是哪两个 id 指向了同一个文件（不写路径）。「同一个文件」按 realpath 判断：Windows 上不区分大小写，
+   *   `\` 和 `/` 等价，`..`、junction、符号链接都先解析再比较
    * - 读到的值按 NodeToken 校验，只写进这个 id 对应节点的 safeStorage 槽位，不回显；日志里不写 token，也不写文件路径
+   * - 前提：导入前节点要已经在节点列表里（推荐配置是 controller-local → http://127.0.0.1:7420、
+   *   controller-local-codex → http://127.0.0.1:7421，D-40 的首启推荐配置把两条都种进去）
    * - 失败分类：节点不存在或 Token 文件不存在 → not_found；文件读不了（权限等）→ internal；内容不合 NodeToken → validation_failed
    * - 成功后 renderer 自己再调一次 node.test（这条命令只负责导入）；一键导入两份 = renderer 按 id 各调一次
    */
