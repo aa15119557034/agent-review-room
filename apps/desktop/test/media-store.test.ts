@@ -120,6 +120,49 @@ describe("media store (D-36b)", () => {
       db.close();
     }
   });
+
+  it("stores generated pictures as-is (generated purpose), dedupes, and rejects non-images", async () => {
+    const { store, db, images } = setup();
+    try {
+      const bytes = await jpeg();
+      const first = await store.addGeneratedImage(bytes);
+      assert.equal(first.purpose, "generated");
+      assert.equal(first.mime, "image/jpeg");
+      assert.deepEqual([first.width, first.height], [100, 60]);
+      assert.ok(existsSync(join(images, first.sha256)));
+
+      // 同一份字节（比如同一张图又被画了一次）：复用同一个 ref
+      const again = await store.addGeneratedImage(bytes);
+      assert.equal(again.ref, first.ref);
+      assert.equal(readdirSync(images).length, 1);
+
+      // 不是图片 / 空文件：拒
+      await assert.rejects(() => store.addGeneratedImage(Buffer.from("not an image")), (error: unknown) => {
+        return (error as { code?: string }).code === "unsupported_type";
+      });
+      await assert.rejects(() => store.addGeneratedImage(Buffer.alloc(0)), (error: unknown) => {
+        return (error as { code?: string }).code === "unsupported_type";
+      });
+    } finally {
+      db.close();
+    }
+  });
+
+  it("reads text files back as UTF-8 and returns null for binary or unknown refs", async () => {
+    const { store, db } = setup();
+    try {
+      const text = store.addFile(Buffer.from("# 说明\n正文"), "说明.md");
+      assert.equal(store.readFileText(text.ref), "# 说明\n正文");
+
+      const binary = store.addFile(Buffer.from([0x50, 0x4b, 0x03, 0x04, 0x00]), "a.zip");
+      assert.equal(binary.isText, false);
+      assert.equal(store.readFileText(binary.ref), null);
+      assert.equal(store.readFileText("file_" + "0".repeat(26)), null);
+      assert.equal(store.readFileText("file_notaulid"), null);
+    } finally {
+      db.close();
+    }
+  });
 });
 
 
