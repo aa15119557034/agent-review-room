@@ -186,6 +186,22 @@ pnpm --filter @room/agent-server run quota -- codex-discuss
 
 打印一行 JSON。验收：读到的百分比要和 Codex 自己显示的一致（Codex 里 `/status`）；画一张图前后各读一次，差值就是单图消耗，写进验收记录；超过 10% 要拿回来请江浩重新定 85% 这条线。主控机实测（#133，codex-cli 0.163.0，已登录）：读到的数字和 Codex 原始返回一致；画一张图 5 小时窗口 +4%、每周 +1%，没超过 10%，85% 线不用重定；读一次约 2 秒，机器忙时偶尔超过 2 秒报「未知」（按规则走本机）。云端没登录的 codex 0.166.0 实测：161 ms 返回，各项为 `null`，日志记「codex account authentication required to read rate limits」。
 
+### Claude 和 DeepSeek 的额度（S-21，契约 C-36）
+
+同一个端点，按 profile 配的 `quota.source` 读：
+
+- **Claude**：`"quota": {"source": "claude-stream"}`（示例配置的 `claude-review` 已加）。Claude 没有单独查额度的命令，但 `claude -p --output-format stream-json` 每次跑都会顺带输出一行 `rate_limit_event`（2.1.x 实测：`unifiedWindows.five_hour / seven_day` 的 `utilization` 是 0～1 的比例，`resetsAt` 是 Unix 秒，`isUsingOverage` 表示在不在扣超额）。节点把**这台节点上任何 claude-stream-json profile 的最近一次**记下来，读的时候直接给，不额外花额度
+  - 换算：`usedPercent = utilization × 100`（超过 100 按 100），窗口 `status: "rejected"` 记 100；`creditsInUse = isUsingOverage`
+  - 只在内存里：**节点刚启动、还没跑过 Run 时各项为 `null`（未知）**，主控端不会因此判缺席
+  - 一个节点一个 Claude 账号时不用改；同一节点上有两个账号时给各自的 profile 配不同的 `"account"`
+  - 这个 source 要求 profile 的 `parser` 是 `claude-stream-json`（启动时检查）
+- **DeepSeek**：`"quota": {"source": "deepseek-balance"}`（示例配置的 `deepseek-discuss` 已加）。读 `GET https://api.deepseek.com/user/balance`，有人民币用人民币，`total_balance` 原样当余额（字符串），订阅窗口为 `null`
+  - API Key 从环境变量 `DEEPSEEK_API_KEY` 读（可用 `apiKeyEnv` 改名），**必须在 `envAllowlist` 里**（启动时检查）；只放进请求头，不打印、不回传
+  - 2 秒读不到、HTTP 出错、没设 Key → 各项 `null`，原因记日志（日志里没有 Key）
+  - 实测：`pnpm --filter @room/agent-server run quota -- deepseek-discuss`
+
+主控端怎么用：`quotaState()`（契约）——任一窗口 ≥ 100% 或余额 ≤ 0 是用完，全部读不到是**未知（不算缺席）**。
+
 ## 安全
 
 - **监听 0.0.0.0**：局域网里的其他电脑能访问。所有请求都必须带 Token，否则 401

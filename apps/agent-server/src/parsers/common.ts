@@ -7,7 +7,9 @@
 
 export type ParserOutput =
   | { kind: "text_delta"; text: string }
-  | { kind: "unparsed"; line: string };
+  | { kind: "unparsed"; line: string }
+  /** S-21：CLI 顺带报的额度（Claude 的 rate_limit_event.rate_limit_info）。不转发给主控端，只交给节点记下 */
+  | { kind: "rate_limit"; info: unknown };
 
 export type ParserVerdict =
   | { ok: true; finalText: string }

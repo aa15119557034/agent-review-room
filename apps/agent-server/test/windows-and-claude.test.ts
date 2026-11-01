@@ -6,7 +6,7 @@ import type { ChildProcess } from "node:child_process";
 import type { AddressInfo } from "node:net";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import { RemoteEvent } from "@room/schemas";
+import { RemoteEvent, RemoteProfileQuota } from "@room/schemas";
 import { ServerConfig, validateProfiles } from "../src/config";
 import { ClaudeStreamJsonParser } from "../src/parsers/claude-stream-json";
 import { killTree } from "../src/process-tree";
@@ -198,6 +198,9 @@ describe("agent-server with the claude-stream-json profile", () => {
         "claude-error": profile("error"),
         "claude-noisy": profile("noisy"),
         "claude-split": profile("split"),
+        // S-21：两个 profile 同一个账号：一个跑，另一个（配了 quota）读得到
+        "claude-rate": { ...profile("success"), env: { FAKE_MODE: "success", FAKE_RATE: "0.42" } },
+        "claude-quota": { ...profile("success"), quota: { source: "claude-stream" } },
       },
     });
     agent = createAgentServer(cfg, TOKEN);
@@ -245,6 +248,21 @@ describe("agent-server with the claude-stream-json profile", () => {
     const iFinal = es.findIndex((e) => e.type === "message_complete");
     const iTerm = es.findIndex((e) => e.type === "terminal");
     assert.ok(iFinal < iTerm, "message_complete comes before terminal");
+  });
+
+  it("S-21: the rate_limit_event of any run on the account becomes that account's quota; it is not forwarded", async () => {
+    const read = async () =>
+      RemoteProfileQuota.parse(await (await fetch(`${base}/v1/profiles/claude-quota/quota`, { headers: auth })).json());
+    const before = await read();
+    assert.deepEqual([before.fiveHour, before.weekly, before.creditsInUse], [null, null, null], "no run yet → unknown");
+    const es = await runProfile("claude-rate");
+    assert.equal(es.filter((e) => e.type === "output").length, 0, "the raw event is not forwarded");
+    const q = await read();
+    assert.equal(q.fiveHour?.usedPercent, 42);
+    assert.equal(q.fiveHour?.windowMinutes, 300);
+    assert.equal(q.weekly?.usedPercent, 31);
+    assert.equal(q.weekly?.resetsAt, new Date(1793962800 * 1000).toISOString());
+    assert.equal(q.creditsInUse, false);
   });
 
   it("a stream without a result line ends as error(incomplete_output) — never as completed", async () => {

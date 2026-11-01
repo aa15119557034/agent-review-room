@@ -1,6 +1,6 @@
 import { spawn, type ChildProcess } from "node:child_process";
 import { StringDecoder } from "node:string_decoder";
-import { CODEX_QUOTA_READ_TIMEOUT_MS, RemoteProfileQuota, type RemoteQuotaWindow } from "@room/schemas";
+import { CODEX_QUOTA_READ_TIMEOUT_MS, RemoteBalance, RemoteProfileQuota, type RemoteQuotaWindow } from "@room/schemas";
 import type { Profile } from "./config";
 import { killTree, spawnDetached } from "./process-tree";
 import { planSpawn } from "./win-command";
@@ -124,7 +124,7 @@ export function readCodexQuota(profile: Profile, opts: QuotaReadOptions = {}): P
   const now = opts.now ?? (() => new Date());
   const log = opts.log ?? ((m: string) => console.warn(m));
   const quota = profile.quota;
-  if (!quota) return Promise.resolve(unknownQuota(now()));
+  if (quota?.source !== "codex-app-server") return Promise.resolve(unknownQuota(now()));
 
   return new Promise((resolve) => {
     let done = false;
@@ -197,6 +197,116 @@ export function readCodexQuota(profile: Profile, opts: QuotaReadOptions = {}): P
 
     send({ id: 1, method: "initialize", params: { clientInfo: { name: "agent-room", title: null, version: "1" }, capabilities: null } });
   });
+}
+
+// ---------------------------------------------------------------- S-21：Claude（从 Run 的输出里记）
+
+/**
+ * Claude 的 rate_limit_event.rate_limit_info → RemoteProfileQuota（2.1.x 实测形状）：
+ *   { status, resetsAt, rateLimitType, isUsingOverage, overageStatus,
+ *     unifiedWindows: { five_hour: { utilization: 0.11, resetsAt: <Unix 秒>, status }, seven_day: {…} } }
+ * - utilization 是 0～1 的比例 → usedPercent ×100（超过 100 按 100）；窗口 status 是 rejected 时按 100
+ * - 没有 unifiedWindows 时，用顶层 rateLimitType + status：rejected 的那个窗口记 100，其余未知（不猜百分比）
+ * - isUsingOverage 是布尔 → creditsInUse；字段对不上的那项 null
+ */
+export function mapClaudeRateLimit(info: unknown, readAt: Date): RemoteProfileQuota {
+  const out = unknownQuota(readAt);
+  if (!isObj(info)) return out;
+  const resets = (v: unknown): string | null => {
+    if (typeof v !== "number" || !Number.isFinite(v) || v <= 0) return null;
+    const d = new Date(v * 1000);
+    return Number.isNaN(d.getTime()) ? null : d.toISOString();
+  };
+  const toWin = (w: unknown, minutes: number): RemoteQuotaWindow | null => {
+    if (!isObj(w)) return null;
+    if (w.status === "rejected") return { usedPercent: 100, windowMinutes: minutes, resetsAt: resets(w.resetsAt) };
+    const u = w.utilization;
+    if (typeof u !== "number" || !Number.isFinite(u) || u < 0) return null;
+    // 保留 1 位小数：0.29 × 100 不带出 28.999999999999996（汐 #156）
+    return { usedPercent: Math.min(Math.round(u * 1000) / 10, 100), windowMinutes: minutes, resetsAt: resets(w.resetsAt) };
+  };
+  const windows = isObj(info.unifiedWindows) ? info.unifiedWindows : null;
+  if (windows) {
+    out.fiveHour = toWin(windows.five_hour, FIVE_HOUR_MINUTES);
+    out.weekly = toWin(windows.seven_day, WEEKLY_MINUTES);
+  } else if (info.status === "rejected") {
+    const w = { usedPercent: 100, resetsAt: resets(info.resetsAt) };
+    if (info.rateLimitType === "five_hour") out.fiveHour = { ...w, windowMinutes: FIVE_HOUR_MINUTES };
+    else if (info.rateLimitType === "seven_day") out.weekly = { ...w, windowMinutes: WEEKLY_MINUTES };
+  }
+  if (typeof info.isUsingOverage === "boolean") out.creditsInUse = info.isUsingOverage;
+  const checked = RemoteProfileQuota.safeParse(out);
+  return checked.success ? checked.data : unknownQuota(readAt);
+}
+
+/** 每个 Claude 账号最近一次从 Run 输出里看到的额度。只在内存里：节点重启后到下一次 Run 之前报「未知」 */
+export function createClaudeQuotaStore(now: () => Date = () => new Date()) {
+  const latest = new Map<string, RemoteProfileQuota>();
+  return {
+    record(account: string, info: unknown): void {
+      const q = mapClaudeRateLimit(info, now());
+      // 什么都没认出来就不覆盖上一次的好数据
+      if (q.fiveHour === null && q.weekly === null && q.creditsInUse === null) return;
+      latest.set(account, q);
+    },
+    read(account: string): RemoteProfileQuota {
+      return latest.get(account) ?? unknownQuota(now());
+    },
+  };
+}
+export type ClaudeQuotaStore = ReturnType<typeof createClaudeQuotaStore>;
+
+/** 这个 profile 的 Run 输出里的额度记在哪个 Claude 账号下（没配 quota 的 claude-stream-json profile 记在默认账号） */
+export const claudeAccountOf = (profile: Profile): string | null =>
+  profile.parser !== "claude-stream-json" ? null : profile.quota?.source === "claude-stream" ? profile.quota.account : "claude";
+
+// ---------------------------------------------------------------- S-21：DeepSeek 余额
+
+/**
+ * GET <baseUrl>/user/balance 的结果 → RemoteProfileQuota（只填 balance）：
+ *   { is_available: true, balance_infos: [{ currency: "CNY", total_balance: "110.00", granted_balance, topped_up_balance }] }
+ * 有 CNY 用 CNY，否则第一项；total_balance 原样当金额（格式对不上就 null）。订阅窗口一律 null
+ */
+export function mapDeepSeekBalance(body: unknown, readAt: Date, log: (m: string) => void = () => {}): RemoteProfileQuota {
+  const out: RemoteProfileQuota = { ...unknownQuota(readAt), balance: null };
+  if (!isObj(body) || !Array.isArray(body.balance_infos)) return out;
+  // is_available = false：账号现在不能调 API（停用 / 冻结），但契约里没有「不可用」这一态，硬说成余额 0 不对；
+  // 余额照报，记一行日志，真跑时由 Run 的 quota_exhausted 兜（汐 #156）
+  if (body.is_available === false) log("[agent-server] deepseek balance: is_available=false (account cannot call the API right now)");
+  const infos = body.balance_infos.filter(isObj);
+  const pick = infos.find((i) => i.currency === "CNY") ?? infos[0];
+  if (!pick) return out;
+  const amount = typeof pick.total_balance === "number" ? String(pick.total_balance) : pick.total_balance;
+  const balance = RemoteBalance.safeParse({ amount, currency: pick.currency });
+  if (balance.success) out.balance = balance.data;
+  return out;
+}
+
+export async function readDeepSeekBalance(profile: Profile, opts: QuotaReadOptions & { fetch?: typeof fetch } = {}): Promise<RemoteProfileQuota> {
+  const now = opts.now ?? (() => new Date());
+  const log = opts.log ?? ((m: string) => console.warn(m));
+  const quota = profile.quota;
+  if (quota?.source !== "deepseek-balance") return unknownQuota(now());
+  const key = profile.envAllowlist.includes(quota.apiKeyEnv) ? process.env[quota.apiKeyEnv] : undefined;
+  if (!key) {
+    log(`[agent-server] quota read failed: ${quota.apiKeyEnv} is not set`);
+    return unknownQuota(now());
+  }
+  const timeoutMs = Math.min(opts.timeoutMs ?? CODEX_QUOTA_READ_TIMEOUT_MS, CODEX_QUOTA_READ_TIMEOUT_MS);
+  try {
+    const res = await (opts.fetch ?? fetch)(`${quota.baseUrl.replace(/\/+$/, "")}/user/balance`, {
+      headers: { authorization: `Bearer ${key}`, accept: "application/json" },
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+    if (!res.ok) {
+      log(`[agent-server] quota read failed: balance HTTP ${res.status}`);
+      return unknownQuota(now());
+    }
+    return mapDeepSeekBalance(await res.json(), now(), log);
+  } catch (err) {
+    log(`[agent-server] quota read failed: balance ${errorText(err)}`);
+    return unknownQuota(now());
+  }
 }
 
 /** 同一个 profile 同时只起一个 app-server：读到一半又来请求就共用结果 */

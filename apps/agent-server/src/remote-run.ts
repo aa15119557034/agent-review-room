@@ -64,6 +64,8 @@ export class RemoteRun {
     private readonly onFinished: (run: RemoteRun) => void,
     /** S-20：聊天 Run 换好记忆槽位的文字和要发的 prompt_final；不传 = 原样发 content */
     prepared: PreparedPrompt = { content: req.snapshot.content, promptFinal: null },
+    /** S-21：CLI 顺带报的额度交给节点记下（不进事件流） */
+    private readonly onRateLimit?: (info: unknown) => void,
   ) {
     this.runId = req.runId;
     this.profileId = req.profileId;
@@ -280,6 +282,7 @@ export class RemoteRun {
   private emitParsed(items: ParserOutput[]): void {
     for (const item of items) {
       if (item.kind === "text_delta") this.push({ type: "text_delta", seq: 0, ts: "", text: item.text });
+      else if (item.kind === "rate_limit") this.onRateLimit?.(item.info);
       else this.push({ type: "output", seq: 0, ts: "", stream: "stdout", data: item.line + "\n" });
     }
   }

@@ -24,7 +24,7 @@ import { MemorySlotError, preparePrompt, selectForProfile } from "./chat-memory"
 import { checkModel } from "./model-args";
 import { attachmentProblem, profileMaySeeImages, visionOf } from "./images";
 import { sweepStaleRunDirs } from "./image-artifact";
-import { createQuotaReader } from "./quota";
+import { claudeAccountOf, createClaudeQuotaStore, createQuotaReader, readCodexQuota, readDeepSeekBalance } from "./quota";
 
 const execFileP = promisify(execFile);
 
@@ -53,7 +53,17 @@ export function createAgentServer(
   const runs = new Map<string, RemoteRun>();
   const tokenDigest = sha256Buf(token);
 
-  const readQuota = createQuotaReader(quotaRead);
+  // S-21：Claude 的额度从 Run 的输出里记（rate_limit_event），读的时候直接给最近一次
+  const claudeQuota = createClaudeQuotaStore();
+  const readQuota = createQuotaReader(
+    quotaRead ??
+      ((_id, p) =>
+        p.quota?.source === "claude-stream"
+          ? Promise.resolve(claudeQuota.read(p.quota.account))
+          : p.quota?.source === "deepseek-balance"
+            ? readDeepSeekBalance(p)
+            : readCodexQuota(p)),
+  );
   const activeCount = () => [...runs.values()].filter((r) => !r.isFinished).length;
   const imageProfiles = Object.entries(cfg.profiles)
     .filter(([, p]) => p.imageRun)
@@ -281,9 +291,17 @@ export function createAgentServer(
       throw err;
     }
     if (profile.memory && reqBody.chat?.memory) memoryHealth.record(reqBody.profileId, prepared.promptFinal?.memory?.status);
-    const run = new RemoteRun(reqBody, profile, cfg, (r) => {
-      console.log(`[agent-server] run ${r.runId} finished`);
-    }, prepared);
+    const account = claudeAccountOf(profile);
+    const run = new RemoteRun(
+      reqBody,
+      profile,
+      cfg,
+      (r) => {
+        console.log(`[agent-server] run ${r.runId} finished`);
+      },
+      prepared,
+      account === null ? undefined : (info) => claudeQuota.record(account, info),
+    );
     runs.set(run.runId, run);
     run.start();
     console.log(`[agent-server] run ${run.runId} started (profile=${run.profileId})`);

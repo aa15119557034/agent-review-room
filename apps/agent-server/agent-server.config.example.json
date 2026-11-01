@@ -10,6 +10,7 @@
   "profiles": {
     "claude-review": {
       "command": "claude",
+      "quota": {"source": "claude-stream"},
       "args": [
         "-p",
         "--output-format", "stream-json",
