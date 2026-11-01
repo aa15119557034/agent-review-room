@@ -64,10 +64,10 @@
 | **D-37b** | DeepSeek | 语音合成集成（独立进程、缓存、MediaJob）；朗读文本只用契约的 `speakableText`，不另写过滤 | D-37a | 2～3 天 |
 | **D-31d** | DeepSeek | 秘书回答存 `mediaIntent`（C-42e）：迁移给 `chat_messages` 加可空列（旧行读回省略）、`insertChatMessage` / `toChatMessage` 读写、写回答时调 `extractMediaIntent`（里面用契约里的 `speakableText` 判 speak 字数），被丢的原始值记审计；`immersiveDeferred` 留给 D-39 | C-42e、D-31b | 0.5 天 |
 | **D-38a** | DeepSeek | 画图 · 本机 ComfyUI、全局显卡队列、MediaJob。验收含：沉浸模式的自动意图要么有任务（本机画不了就立刻 `failed(backend_unavailable)`），要么有 `immersiveDeferred`，不能都没有 | C-42b | 2～3 天 |
-| **D-38b** | DeepSeek | 画图 · 林离 + 85% 选路 + 回退 | C-42b、S-23、S-24、D-38a | 2～3 天 |
+| **D-38b** | DeepSeek | **暂缓**（2026-11-01 用户决定画图先只走本机，ADR-004 §3；恢复前先由江浩决定，再看 #133 的单图实测和当时 5 小时窗口的余量定 85% 线）。画图 · 林离 + 85% 选路 + 回退 | C-42b、S-23、S-24、D-38a | 2～3 天 |
 | **C-43** | Claude | 界面：图片、图表、画图卡、语音、沉浸设置和「停」、议题材料带图（先对着 mock 做，接真后端要 D-31d） | C-42a～e | 3～4 天 |
 | **X-34** | Codex | Prompt：图片和清单进资料区、图表 / 媒体意图说明；确定性 e2e | C-42a、C-42d、D-36b | 2～3 天 |
-| **D-39** | DeepSeek | 沉浸模式（1B-M2），含写 `immersiveDeferred` | C-34、D-31b、D-31d、D-37b、D-38b、C-43、X-34 | 4～6 天 |
+| **D-39** | DeepSeek | 沉浸模式（1B-M2），含写 `immersiveDeferred` | C-34、D-31b、D-31d、D-37b、D-38a（D-38b 暂缓期间只接本机画图）、C-43、X-34 | 4～6 天 |
 
 排法：D-31d 先做（小，C-43 接真后端靠它）；D-36 和 C-34 并行；D-37a 先做，用户选定后再 D-37b；D-38a 不等 S-23；D-39 排在 D-31b 之后。D-36～D-39 合计约 15～22 天，和 D-31a/b/c 都是汐的活，1B-2 大约推后 1～2 周。
 
