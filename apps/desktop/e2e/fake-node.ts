@@ -93,6 +93,11 @@ export class FakeNode {
     return "http://127.0.0.1:" + this.#port;
   }
 
+  /** X-31：节点这边这个 Run 已经发出终止事件（不理 cancel 的 late 行为也算交卷） */
+  isFinished(runId: string): boolean {
+    return this.#runs.get(runId)?.finished === true;
+  }
+
   /** 下一次（或接下来几次）这个 profile 的行为 */
   setBehavior(profile: string, behavior: NodeBehavior | readonly NodeBehavior[]): void {
     this.#behaviors.set(profile, Array.isArray(behavior) ? [...behavior] : [behavior as NodeBehavior]);

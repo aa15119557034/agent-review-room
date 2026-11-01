@@ -282,6 +282,19 @@ describe("X-31 撤回", () => {
       const agentMessage = (h.db.prepare("SELECT id FROM chat_messages WHERE in_reply_to = ?").get(a.messageId) as { id: string }).id;
       const refused = await h.dispatcher.handleCommand({ type: "chat.retract", messageId: agentMessage });
       assert.equal(refused.ok, false, "秘书的消息不能撤");
+
+      // 群聊里另一位秘书的消息也不能撤（ADR-003：别人的消息不能撤）
+      const group = await conversation(h, { kind: "group", agents: ["codex", "deepseek"] });
+      h.nodes.controller.setBehavior("codex-chat", reply("林离说"));
+      h.nodes.controller.setBehavior("deepseek-chat", reply("汐说"));
+      c.advance(60_000);
+      const asked = await send(h, group, "你们说", { mentions: { kind: "all" } });
+      await settled(h, asked.messageId);
+      for (const other of h.db.prepare("SELECT id FROM chat_messages WHERE in_reply_to = ?").all(asked.messageId) as { id: string }[]) {
+        const no = await h.dispatcher.handleCommand({ type: "chat.retract", messageId: other.id });
+        assert.equal(no.ok, false, "群聊里秘书的消息不能撤");
+      }
+      assert.ok(agentReplies(h, asked.messageId).length === 2);
     } finally {
       await h.close();
     }
@@ -295,7 +308,9 @@ describe("X-31 撤回", () => {
       const sent = await send(h, conv, "问一句");
       await waitFor(() => h.nodes.controller.bodies.length === 1, "run started");
       await ok(h, { type: "chat.retract", messageId: sent.messageId });
-      await sleep(700); // 节点不理 cancel，400ms 后照样交卷
+      // 节点不理 cancel，400ms 后照样交卷：等节点真的发出终止事件，再等主控端收尾（不靠固定 sleep）
+      const lateRunId = h.nodes.controller.bodies[0]!.runId;
+      await waitFor(() => h.nodes.controller.isFinished(lateRunId), "节点交卷");
       await waitFor(() => h.chat.activeCount() === 0, "run settled");
       assert.equal(slotsOf(h, sent.messageId).get("deepseek")?.outcome, "retracted");
       assert.deepEqual(agentReplies(h, sent.messageId), []);
@@ -319,7 +334,10 @@ describe("X-31 撤回", () => {
       await waitFor(() => slotsOf(h, sent.messageId).get("deepseek")?.outcome === "cancelled", "cancelled");
       const retried = await ok<{ run: { id: string } }>(h, { type: "chat.retry", slotId });
       await waitFor(() => h.nodes.controller.bodies.length === 2, "second run");
-      await sleep(700); // 旧尝试交卷
+      // 等旧尝试在节点那边真的交卷（不靠固定 sleep），再给主控端一点时间处理迟到的事件流
+      const oldRunId = h.nodes.controller.bodies[0]!.runId;
+      await waitFor(() => h.nodes.controller.isFinished(oldRunId), "旧尝试交卷");
+      await sleep(100);
       const slot = slotsOf(h, sent.messageId).get("deepseek");
       assert.equal(slot?.attempt, 2);
       assert.equal(slot?.runId, retried.run.id);
