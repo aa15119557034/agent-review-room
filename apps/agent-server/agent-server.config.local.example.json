@@ -43,6 +43,7 @@
       "effortArgs": ["-c", "model_reasoning_effort={effort}"],
       "cwd": "discuss-sandbox",
       "parser": "codex-exec-json",
+      "quota": {"source": "codex-app-server"},
       "envAllowlist": [
         "PATH", "HOME", "USERPROFILE", "SYSTEMROOT", "APPDATA", "LOCALAPPDATA", "TEMP", "TMP", "LANG",
         "CODEX_HOME", "HTTPS_PROXY", "HTTP_PROXY", "NO_PROXY"

@@ -72,6 +72,18 @@ const Profile = z
      * 节点只从这个子目录取图、只删这个子目录。不要指向 CLI 自己的共享目录（例如 $CODEX_HOME/generated_images）
      */
     imageRun: z.object({ outputDir: z.string().min(1) }).strict().optional(),
+    /**
+     * S-24：这个 profile 的订阅额度怎么读（契约 C-42b 的 GET /v1/profiles/:profileId/quota）。
+     * codex-app-server：用同一个 command 起 `codex app-server`（args 默认 ["app-server"]），读 account/rateLimits/read，
+     * 2 秒读不到报「未知」。环境变量和跑 Run 一样只给 envAllowlist，Codex 的登录在 CODEX_HOME 里，所以要放行它
+     */
+    quota: z
+      .object({
+        source: z.literal("codex-app-server"),
+        args: z.array(z.string()).default(["app-server"]),
+      })
+      .strict()
+      .optional(),
   })
   .strict();
 
