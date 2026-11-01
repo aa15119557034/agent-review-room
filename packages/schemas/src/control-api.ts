@@ -10,8 +10,10 @@ import {
   PlanVersionId,
   RoundId,
   RunId,
+  IsoTimestamp,
   Sha256Hex,
   SnapshotId,
+  TurnId,
 } from "./common";
 import { NodeHealth, ProfileId, RunModel } from "./remote-protocol";
 import { AgentEvent } from "./agent-event";
@@ -71,6 +73,47 @@ import {
 import { DrawRequest, DrawRoutePreview, MediaJob, MediaJobId, MEDIA_LIST_MESSAGE_IDS_MAX, MediaScope, MediaSource } from "./media";
 import { ImmersiveSettings, ImmersiveUsage } from "./immersive";
 import { SpeechClip, VoiceOption, VoiceProfile } from "./speech";
+
+// ---------------------------------------------------------------- C-37a：秘书控制台「正在答什么 / 历史」
+
+/** 预览最多多少字（main 截断，超出的部分不传） */
+export const AGENT_ACTIVITY_PREVIEW_MAX = 200;
+
+/**
+ * 一位秘书的一次「被问到」：讨论里的一个 Turn，或者聊天里的一个回答位（只有 purpose = reply 的；历史摘要 Run 不算）。
+ * 只是把已有的记录换个角度列出来，不新增状态；结局以 turn.outcome / slot.outcome 为准，界面不自己推导。
+ * - 替补代答：Turn.agent 是实际答的人，列在**他**的控制台里（onBehalfOf 写着代谁）；被替补的人那边不列
+ * - preview：问的是什么的前 AGENT_ACTIVITY_PREVIEW_MAX 字。讨论 = Round.task；聊天 = 那条用户消息的正文。
+ *   **用户消息已撤回 → null**（撤回的原文只在审计里，控制台不显示）；只有图片 / 语音没有文字 → null
+ */
+export const AgentActivityItem = z.discriminatedUnion("kind", [
+  z
+    .object({
+      kind: z.literal("discussion"),
+      projectId: ProjectId,
+      /** 议题名，显示用（= Project.name） */
+      projectName: Project.shape.name,
+      roundId: RoundId,
+      roundIndex: Round.shape.index,
+      turn: Turn,
+      preview: z.string().max(AGENT_ACTIVITY_PREVIEW_MAX).nullable(),
+    })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("chat"),
+      /** 整个会话（界面用它算显示名：title，或者成员名拼起来） */
+      conversation: Conversation,
+      slot: ChatReplySlot,
+      preview: z.string().max(AGENT_ACTIVITY_PREVIEW_MAX).nullable(),
+    })
+    .strict(),
+]);
+export type AgentActivityItem = z.infer<typeof AgentActivityItem>;
+
+/** 历史分页游标：按 (createdAt, id) 倒序；id 是 TurnId 或 ChatSlotId */
+export const AgentActivityCursor = z.object({ createdAt: IsoTimestamp, id: z.union([TurnId, ChatSlotId]) }).strict();
+export type AgentActivityCursor = z.infer<typeof AgentActivityCursor>;
 
 /**
  * 控制面 API：人 ⇄ Orchestrator。
@@ -960,6 +1003,31 @@ export const QUERIES = {
 
   /** 读不到的额度字段为 null（界面显示「未知」） */
   "agents.status": def(z.object({ type: z.literal("agents.status") }), z.array(AgentStatus), "read"),
+
+  /**
+   * C-37a：秘书控制台用，一位秘书正在答什么、最近答过什么（讨论 + 聊天放在一起）。
+   * - current：还没结束的——Turn 的 outcome 是 pending / running，回答位的 outcome 是 running。按 createdAt 正序，全部返回
+   *   （受讨论和聊天各自的上限约束，不会很多；不分页）
+   * - recent ：已经结束的，按 (createdAt, id) 倒序，一页 limit 条（默认 20）；nextCursor 为 null 表示到头了。
+   *   before 是上一页的 nextCursor，传了 before 时 current 返回空数组（只翻历史）
+   * - 被作废（VOIDED）的轮里的 Turn 照常列出，结局照旧
+   * - agent 不存在 → not_found
+   * 推送：不新增事件。界面收到 turn.updated / chat.slot.updated 里是这位的，就重新查第一页（或者按 id 就地替换）
+   */
+  "agents.activity": def(
+    z.object({
+      type: z.literal("agents.activity"),
+      agent: AgentName,
+      before: AgentActivityCursor.optional(),
+      limit: z.number().int().min(1).max(100).optional(),
+    }),
+    z.object({
+      current: z.array(AgentActivityItem),
+      recent: z.array(AgentActivityItem),
+      nextCursor: AgentActivityCursor.nullable(),
+    }),
+    "read",
+  ),
 
   "rounds.list": def(
     z.object({ type: z.literal("rounds.list"), projectId: ProjectId }),
