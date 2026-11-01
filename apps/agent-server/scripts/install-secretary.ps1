@@ -92,21 +92,37 @@ function Assert-NoReparse([string]$root) {
     }
   }
 }
-# Codex 自己的 CODEX_HOME：它会把 auth.json、tmp\ 设成只有创建者能访问；只要有别的账号（比如在江浩自己的窗口里）
-# 用这个 CODEX_HOME 跑过一次 codex，里面就会留下 agentroom-codex 和管理员都打不开的文件，codex 启动时报
+# Codex 自己的 CODEX_HOME：它会把 auth.json、tmp\、cache\、plugins\cache\ 下的文件设成只有创建者能访问；只要有别的账号
+# （比如在江浩自己的窗口里）用这个 CODEX_HOME 跑过一次 codex，里面就会留下 agentroom-codex 和管理员都打不开的文件，codex 启动时报
 # 「failed to initialize in-process app-server client: access denied」，预检也读不了（汐 #138 / #139 实测）。
-# 这里先把整棵树的所有者交给管理员组、权限改回只继承（后面第 4 步会按规则整棵重建）；tmp\ 是 codex 每次运行的临时目录
-# （里面有它自己建的链接），直接删掉，下次运行会重建
+# icacls /T 进不了打不开的文件夹，所以一层一层来：先把这一层所有子项的所有者交给管理员组、权限改回只继承（/L：链接只改它自己，
+# 不碰它指向的地方），这时才列得出下一层；不进任何链接 / junction。后面第 4 步会按规则整棵重建权限。
+# tmp\、cache\、plugins\cache\ 是 codex 自己会重建的临时目录和缓存（里面还有它建的链接），修好权限后直接删掉
+function Repair-Tree([string]$dir) {
+  icacls $dir /setowner "*S-1-5-32-544" /C /L /Q | Out-Null
+  icacls $dir /reset /C /L /Q | Out-Null
+  $stack = [Collections.Generic.Stack[string]]::new()
+  $stack.Push($dir)
+  while ($stack.Count -gt 0) {
+    $d = $stack.Pop()
+    icacls (Join-Path $d "*") /setowner "*S-1-5-32-544" /C /L /Q 2>&1 | Out-Null
+    icacls (Join-Path $d "*") /reset /C /L /Q 2>&1 | Out-Null
+    foreach ($item in @(Get-ChildItem -LiteralPath $d -Force -Directory -ErrorAction SilentlyContinue)) {
+      if (-not ($item.Attributes -band [IO.FileAttributes]::ReparsePoint)) { $stack.Push($item.FullName) }
+    }
+  }
+}
 $codexHomePre = Join-Path $HomeDir "node\codex\codex-home"
 if ($Agent -eq "codex" -and (Test-Path -LiteralPath $codexHomePre)) {
-  Step "修复 $codexHomePre 的所有者和权限"
-  icacls $codexHomePre /setowner "*S-1-5-32-544" /T /C /Q | Out-Null
-  icacls $codexHomePre /reset /T /C /Q | Out-Null
-  $codexTmp = Join-Path $codexHomePre "tmp"
-  if (Test-Path -LiteralPath $codexTmp) { cmd /c rmdir /s /q "$codexTmp" | Out-Null }  # rmdir /s 只删链接本身，不进链接指向的地方
-  if (Test-Path -LiteralPath $codexTmp) { Fail "删不掉 $codexTmp（codex 的临时目录）：先停掉计划任务 AgentRoom-codex 和所有 codex 进程再重试" }
+  Step "修复 $codexHomePre 的所有者和权限、删掉 codex 的临时目录和缓存"
+  Repair-Tree $codexHomePre
+  foreach ($rel in @("tmp", "cache", "plugins\cache")) {
+    $d = Join-Path $codexHomePre $rel
+    if (Test-Path -LiteralPath $d) { cmd /c rmdir /s /q "$d" 2>&1 | Out-Null }  # rmdir /s 只删链接本身，不进链接指向的地方
+    if (Test-Path -LiteralPath $d) { Fail "删不掉 $d（codex 自己的临时目录 / 缓存）：先停掉计划任务 AgentRoom-codex 和所有 codex 进程再重试" }
+  }
   Get-ChildItem -LiteralPath $codexHomePre -Recurse -Force -ErrorAction SilentlyContinue -ErrorVariable aclErrors | Out-Null
-  if ($aclErrors) { Fail "$codexHomePre 里还有打不开的文件：$($aclErrors[0].TargetObject)。先停掉 codex 进程再重试" }
+  if ($aclErrors) { Fail "$codexHomePre 里还有打不开的文件：$($aclErrors[0].TargetObject)。先停掉 codex 进程再重试；还不行就把 auth.json 以外的都删掉（登录窗口里重新登录也可以）" }
 }
 Assert-NoReparse $HomeDir
 # TokenReader 只能是一个具体的人（运行桌面端的账号），不能是一群人
