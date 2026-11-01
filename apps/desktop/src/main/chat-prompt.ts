@@ -140,7 +140,7 @@ function renderMessage(
         ? content.text
         : content.kind === "voice"
           ? "[语音] " + content.transcript.text
-          : "[表情] " + content.label;
+          : "[表情：" + content.label + "]";
     return "用户：" + text;
   }
   const name = message.agent === agent.id ? agent.displayName + "（你自己）" : displayNameOf(message.agent);
@@ -242,5 +242,6 @@ export function buildChatSnapshot(input: BuildChatSnapshotInput): ChatSnapshot {
     ...(manifest === undefined ? {} : { attachments: manifest }),
   });
 }
+
 
 
