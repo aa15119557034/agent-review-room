@@ -127,7 +127,10 @@ function LocalTokenImport({ nodes, onDone }: { nodes: NodeInfo[]; onDone: () => 
 function importFailureText(code: string, message: string): string {
   switch (code) {
     case "not_found":
-      return `没找到 Token 文件（${message}）。这台电脑上装过这位秘书的节点吗？`;
+      // main 的 not_found 有两种：没配 agentRoom（新机器，D-40 只在 main 的 settings.json 里读）；或 Token 文件不存在
+      return message.includes("agentRoom")
+        ? `这台电脑还没设置 AgentRoom 目录（${message}）。装节点时选的那个目录要写进桌面端 settings.json 的 agentRoom`
+        : `没找到 Token 文件（${message}）。这台电脑上装过这位秘书的节点吗？`;
     case "invalid_state":
       return `不能从本机导入（${message}）`;
     case "validation_failed":

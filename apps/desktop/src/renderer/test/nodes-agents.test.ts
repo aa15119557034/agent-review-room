@@ -1,8 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { AgentProfile, COMMANDS, type NodeInfo } from "@room/schemas";
+import { AgentProfile, COMMANDS, LOCAL_NODE_IDS, type NodeInfo } from "@room/schemas";
 import { createMockBridge } from "../mock/mock-backend";
-import { LOCAL_NODE_IDS } from "@room/schemas";
 import {
   CONTROLLER_CODEX_NODE,
   CONTROLLER_NODE,
