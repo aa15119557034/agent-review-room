@@ -321,7 +321,17 @@ export class ChatService {
         ? capChatFileTexts(
             content.attachments
               .filter((attachment) => attachment.kind === "file")
-              .map((attachment) => ({ name: attachment.name, text: this.#deps.readFileText?.(attachment.ref) ?? null })),
+              .map((attachment) => {
+                const text = this.#deps.readFileText?.(attachment.ref) ?? null;
+                // 记录说是文本、却读不到正文：文件本体丢了。别把「读了」演成「没读到」（林离 #124）
+                if (attachment.isText && text === null) {
+                  throw new ChatError(
+                    "validation_failed",
+                    `文件「${attachment.name}」找不到了，请重新选一次`,
+                  );
+                }
+                return { name: attachment.name, text };
+              }),
           )
         : [];
     const snapshots = new Map<string, ChatSnapshot>();

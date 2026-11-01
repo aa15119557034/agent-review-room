@@ -224,6 +224,52 @@ function send(conversationId: string, messageId: string, text: string): CommandR
 }
 
 describe("chat send attachments (D-34a / D-36b)", () => {
+  it("refuses to send when a text file's bytes are gone, but binary files still go (林离 #124)", async () => {
+    const h = await makeHarness();
+    try {
+      // 记录说是文本文件，但 userData/files/<sha> 已经不在了
+      const lost = `file_${ulid()}`;
+      insertFile(h.db, {
+        ref: lost as never,
+        sha256: "a".repeat(64),
+        name: "说明.md",
+        mime: "text/plain",
+        bytes: 12,
+        isText: true,
+        createdAt: NOW,
+      });
+      await assert.rejects(
+        () =>
+          h.chat.send({
+            ...send(h.conversationId, userMessageId(31), "看文件"),
+            content: { kind: "text", text: "看文件", attachments: [{ kind: "file", ref: lost, name: "说明.md" }] },
+          }),
+        (error: unknown) =>
+          (error as { code?: string }).code === "validation_failed" && /找不到/.test((error as Error).message),
+        "文本文件本体丢了要明确报错，不能只留一个文件名",
+      );
+
+      // 二进制文件本来就没有正文：照常发
+      const binary = `file_${ulid()}`;
+      insertFile(h.db, {
+        ref: binary as never,
+        sha256: "b".repeat(64),
+        name: "a.zip",
+        mime: "application/zip",
+        bytes: 10,
+        isText: false,
+        createdAt: NOW,
+      });
+      const sent = await h.chat.send({
+        ...send(h.conversationId, userMessageId(32), "看压缩包"),
+        content: { kind: "text", text: "看压缩包", attachments: [{ kind: "file", ref: binary, name: "a.zip" }] },
+      });
+      assert.equal(sent.message.content.kind, "text");
+      await settle(h.chat);
+    } finally {
+      h.db.close();
+    }
+  });
   it("sends a text file (content goes into the prompt), rejects images until S-23, and sends stickers", async () => {
     const h = await makeHarness();
     const validation = (error: unknown) => (error as { code?: string }).code === "validation_failed";
@@ -1060,6 +1106,7 @@ describe("chat service (D-31b)", () => {
     }
   });
 });
+
 
 
 
