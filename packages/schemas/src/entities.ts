@@ -188,7 +188,7 @@ export const PromptSnapshot = z.object({
    */
   attachments: AttachmentManifest.optional(),
   /**
-   * C-42g：图片位置标记 = attachmentImageSlotMarker(nonce)。不带图时省略；带图却没有标记的 Snapshot 能存，但起跑不了（StartRun 带图必须有 imageSlot）。
+   * C-42g：图片位置标记 = attachmentImageSlotMarker(nonce)。不带图时省略；带图却没有标记的 Snapshot 暂时能存，但起跑不了（StartRun 带图必须有 imageSlot）；这是过渡，D-36b / X-34 的拼装器都写上图片资料块后收紧成「有 attachments 就必须有 imageSlot」。
    * content 里有恰好一块 attachmentImageBlock(nonce, 张数)、在清单块后面、在当前用户消息之前（最后一条由拼装器验收保证，见 attachments.ts）。起跑时原样放进 StartRun.imageSlot
    */
   imageSlot: AttachmentImageSlot.optional(),

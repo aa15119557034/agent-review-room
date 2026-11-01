@@ -143,6 +143,7 @@ export type AttachmentImageSlot = z.infer<typeof AttachmentImageSlot>;
 /** 从标记里取 nonce（格式不对返回 null） */
 export const imageSlotNonce = (marker: string): string | null => /^\[图片位置 ([a-f0-9]{16,64})\]$/.exec(marker)?.[1] ?? null;
 
+/** 同 remote-protocol.ts 的 occursExactlyOnce；那个文件 import 本文件，这里不能反过来 import，所以各写一份 */
 const occursOnce = (content: string, part: string): boolean => content.split(part).length === 2;
 
 /**

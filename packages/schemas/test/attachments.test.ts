@@ -158,6 +158,7 @@ describe("attachments (C-42a)", () => {
     const run = (content: string, extra: Record<string, unknown> = {}) =>
       StartRunRequest.safeParse({ ...startRun, snapshot: { ...startRun.snapshot, content }, attachments: atts, imageSlot: SLOT, ...extra }).success;
     assert.ok(run(`${block}${BLOCK()}\n当前消息：hi`));
+    assert.ok(run(`${block}${BLOCK()}`), "block right after the manifest block (index === manifest length) is fine");
     assert.equal(run(`${block}资料\nhi`), false, "block missing from content");
     assert.equal(run(`${block}资料：${SLOT}\nhi`), false, "a bare marker outside the image block");
     assert.equal(run(`${block}${BLOCK()}\n${BLOCK()}\nhi`), false, "block twice");

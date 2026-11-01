@@ -250,7 +250,9 @@ export const StartRunRequest = z
      */
     attachments: StartRunAttachments.optional(),
     /**
-     * C-42g：图片位置标记（见 attachments.ts 的 attachmentImageSlotMarker / attachmentImageBlock），等于这份 Snapshot 的 imageSlot。
+     * C-42g：图片位置标记（见 attachments.ts 的 attachmentImageSlotMarker / attachmentImageBlock）。
+     * 主控端从 Snapshot.imageSlot 原样带过来（Snapshot 上已核过它用的是 Snapshot 的 nonce）；节点拿不到 Snapshot 的 nonce，
+     * 只按标记里自带的 nonce 核图片资料块。
      * 带 attachments 时必须有、不带时不能有；content 里要有恰好一块图片资料块（在清单块后面），标记只在块里出现一次，否则 bad_request。
      * 节点把图片块紧接在标记后面交给 CLI，不删标记、不加文字
      */
@@ -339,7 +341,9 @@ export const RemoteEvent = z.discriminatedUnion("type", [
    * C-34：只在 StartRun 带了 chat 时出现。PROMPT_FINAL_RULE：节点拼好最终 Prompt 之后、交给 CLI 之前恰好一次，
    * 在任何 text_delta / output / message_complete 之前；拼好之前就失败（校验、读记忆出错、取消）可以没有。
    * finalPromptHash = sha256(UTF-8(实际交给 CLI 的全文))；没有记忆槽位时等于 contentHash，memory 为 null。
-   * C-42g：带图时「全文」只算文字（按顺序拼起来，不含图片块；图片已经按 sha256 逐张校验过）
+   * C-42g：带图时「全文」= 交给 CLI 的全部文字块按顺序直接拼起来（不含图片块，图片已逐张按 sha256 校验）。
+   * 节点不改不删文字、标记也留在文字里，所以没有记忆槽位时它就等于 sha256(UTF-8(content)) = contentHash；
+   * 有记忆槽位时等于 sha256(UTF-8(把 marker 换成记忆之后的 content))，和不带图时一样
    */
   z.object({
     type: z.literal("prompt_final"),
