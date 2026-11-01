@@ -34,6 +34,12 @@ import { draftOf } from "../../lib/chat";
 import { useActions, useAppState } from "../hooks";
 
 /**
+ * 2026-11-01 用户决定画图先只走本机，林离画图（D-38b）暂缓（ADR-004 §3）。
+ * 暂缓期间界面不提供「林离」这条路、也不显示「自动画图用订阅」开关；恢复 D-38b 时改成 false
+ */
+export const CODEX_DRAWING_PAUSED = true;
+
+/**
  * 聊天里的多模态（C-43，契约 C-42a～e）。
  * - 图片 / 声音只用 room-image:// / room-audio://（mock 下换成 data:），renderer 拿不到路径
  * - 生成任务的进度和结局只看后端推来的 MediaJob；取消、「停」之后到的结果由后端丢掉
@@ -424,12 +430,16 @@ export function DrawSheetBody({ messageId, prompt: initial, conv }: { messageId:
       <fieldset>
         <legend>用哪条路</legend>
         <div className="seg">
-          {(
-            [
-              ["auto", "自动（先林离，到 85% 换本机）"],
-              ["codex", "林离"],
-              ["comfyui", "本机"],
-            ] as const
+          {(CODEX_DRAWING_PAUSED
+            ? ([
+                ["auto", "自动（目前只用本机）"],
+                ["comfyui", "本机"],
+              ] as const)
+            : ([
+                ["auto", "自动（先林离，到 85% 换本机）"],
+                ["codex", "林离"],
+                ["comfyui", "本机"],
+              ] as const)
           ).map(([v, label]) => (
             <label key={v}>
               <input type="radio" name="draw-backend" checked={backend === v} onChange={() => setBackend(v)} />
@@ -514,10 +524,14 @@ export function ImmersiveSection() {
               onChange={(e) => save({ voiceClipsPerHour: clampInt(e.target.value, IMMERSIVE_LIMITS.voiceClipsPerHour) })}
             />
           </label>
-          <label className="chat-toggle">
-            <input type="checkbox" checked={settings.autoDrawUsesSubscription} onChange={(e) => save({ autoDrawUsesSubscription: e.target.checked })} />
-            自动画图可以用林离的订阅（到 85% 换本机）；关掉就只用本机，提示词不离开主控机
-          </label>
+          {CODEX_DRAWING_PAUSED ? (
+            <p className="chat-note">自动画图目前只用本机，提示词不离开主控机。</p>
+          ) : (
+            <label className="chat-toggle">
+              <input type="checkbox" checked={settings.autoDrawUsesSubscription} onChange={(e) => save({ autoDrawUsesSubscription: e.target.checked })} />
+              自动画图可以用林离的订阅（到 85% 换本机）；关掉就只用本机，提示词不离开主控机
+            </label>
+          )}
           <p className="chat-note">
             最近 60 分钟：自动画了 {usage.drawsLastHour} 张，自动发了 {usage.voiceClipsLastHour} 段语音。超过上限的退回成请求卡等你点。
           </p>
