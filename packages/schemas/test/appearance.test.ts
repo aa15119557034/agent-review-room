@@ -11,6 +11,9 @@ import {
   IMAGE_MAX_BYTES,
   ImageRef,
   LOCAL_NODE_ID,
+  LOCAL_CODEX_NODE_ID,
+  LOCAL_NODE_IDS,
+  NodeId,
   QUERIES,
 } from "../src/index";
 
@@ -85,5 +88,27 @@ describe("node.importLocalToken (C-39)", () => {
   it("response is NodeInfo (tokenConfigured only, never the token)", () => {
     const shape = Object.keys(COMMANDS["node.importLocalToken"].response.shape);
     assert.deepEqual(shape.sort(), ["baseUrl", "id", "label", "tokenConfigured"]);
+  });
+});
+
+describe("node.importLocalToken whitelist (C-44)", () => {
+  it("accepts both controller nodes, nothing else", () => {
+    assert.deepEqual([...LOCAL_NODE_IDS], ["controller-local", "controller-local-codex"]);
+    for (const id of LOCAL_NODE_IDS) {
+      assert.ok(ControlCommand.safeParse({ type: "node.importLocalToken", id }).success, id);
+    }
+    assert.equal(LOCAL_CODEX_NODE_ID, "controller-local-codex");
+    for (const id of LOCAL_NODE_IDS) assert.ok(NodeId.safeParse(id).success, `${id} must be a valid NodeId`);
+    for (const id of ["user-pc", "controller-local-deepseek", "Controller-Local", "", "controller-local "]) {
+      assert.equal(ControlCommand.safeParse({ type: "node.importLocalToken", id }).success, false, id);
+    }
+  });
+
+  it("rejects extra fields (path / token / tokenFile) at the real command boundary", () => {
+    for (const id of LOCAL_NODE_IDS) {
+      for (const extra of [{ path: "C:\\x" }, { tokenFile: "x" }, { token: "a".repeat(40) }]) {
+        assert.equal(ControlCommand.safeParse({ type: "node.importLocalToken", id, ...extra }).success, false, `${id} ${Object.keys(extra)[0]}`);
+      }
+    }
   });
 });
