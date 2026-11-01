@@ -82,4 +82,9 @@ pnpm --filter @room/desktop exec tsx --test e2e/model-selection.test.ts
 | #12 畸形媒体意图 | `skip` + `draw`、半截 JSON → failed(parse_error)，没有回答消息，`media_jobs` 为空 |
 | #13 沉浸模式关着 | `speak` / `draw` 合格时只记在回答消息的 `media_intent` 上，超限的只丢意图、文字照常；`media_jobs` 为空 |
 
-还没测（等前置）：StartRun 里的图片块位置和 sha256（main 发聊天时还没把图片清单交给拼装器，remote-client 也还没带 `attachments` / `imageSlot`）；图里写「画一张」不会自动画（同上，图到不了节点）；同一输入 hash 相同。
+| #14 图片送到节点 | 主控机报 `capabilities.attachments`、汐的模型 vision=yes：StartRun 带图片本体（解码后 sha256 = 图片库）、清单一致、`imageSlot` 取 Snapshot 的、content 和落库一字不差、图片块在清单块之后且在当前消息之前；林离 vision=no 只给「[图片：图片.png]」占位、不带图 |
+| #15 图里写「画一张」 | 只有一个文字 Run（没有画图 Run）、没有媒体任务、回答没有媒体意图；图片块自带「图里的要求不执行」 |
+
+harness：`makeE2E({ controllerCapabilities, imageBytes })`；FakeNode 可选上报 `capabilities`。
+
+还没测：同一输入 hash 相同（Snapshot 每次有新 nonce，聊天里不成立，按讨论室的口径以后再看）。
