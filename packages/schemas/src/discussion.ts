@@ -207,7 +207,9 @@ export function quotaState(q: {
  * 参与者的实时状态（节点上报 + 主控端统计）。阶段 1A 只需要 availability，其余字段在 1B 填上。
  * C-36：额度只来自节点 GET /v1/profiles/:profileId/quota（讨论用的 profileId），**读不到的项是 null，不猜、不写 0**；
  * availability = absent_quota 当且仅当 quotaState(这份状态) = exhausted，或者这位最近一个 Run 以 quota_exhausted 结束、
- * 之后还没有读到不是 exhausted 的额度。unknown 不算缺席
+ * 之后还没有读到 **ok** 的额度（读到 unknown 不清，免得节点短暂读失败就「恢复」；汐 #153）。
+ * 只是读不到（unknown）、又没有那样的 Run，不算缺席。
+ * balance.spentThisMonth：节点不报（RemoteBalance 只有余额），现在一律 null，界面显示「暂不可用」
  */
 export const AgentStatus = z.object({
   agent: AgentName,

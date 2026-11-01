@@ -465,7 +465,8 @@ export const COMMANDS = {
       task: z.string().min(1).max(20_000).optional(),
       historyMode: HistoryMode.optional(),
       /**
-       * C-36：省略 = 沿用旧批次里的替补（按 onBehalfOf 读回）；改了收件人后某对的 absent 不在了，那一对丢掉，
+       * C-36：省略 = 沿用旧批次里的替补（按 onBehalfOf 读回）；改了收件人后某对的 absent 不在了，那一对丢掉；
+       * 某对的 substitute 现在成了收件人（你想让他自己答），那一对也丢掉、absent 照常按自己能不能答处理（汐 #153）。
        * 新加的收件人不自动找替补。传了 = 整份替换，规则同 round.draft
        */
       substitutes: RoundSubstitutions.optional(),
@@ -550,7 +551,9 @@ export const COMMANDS = {
    * C-36：带 substitute = 改由这位代他答（典型：答到一半额度用完 → 「让替补代答」）。
    * 规则同 round.draft 的 substitutes：substitute 不是这一轮已经有 Turn 的人、canDiscuss、现在能答，否则 validation_failed / agent_unavailable。
    * 新 Turn 的 agent = substitute、onBehalfOf = agent；批次照旧是 retry。agent 本身已经是替补（onBehalfOf 非 null）时，
-   * 重试的还是他、仍然代原来那位；这时不能再带 substitute（不做替补链）→ validation_failed
+   * 重试的还是他、仍然代原来那位；这时不能再带 substitute（不做替补链）→ validation_failed。
+   * substitute 等于 agent（自己替自己）→ validation_failed：命令请求要放进 ControlCommand 的 discriminatedUnion，
+   * 不能在对象上加 refine，所以这一条由 main 校验（界面的替补下拉也不列他自己）
    */
   "round.retry": def(
     z.object({ type: z.literal("round.retry"), roundId: RoundId, agent: AgentName, substitute: AgentName.optional() }),
