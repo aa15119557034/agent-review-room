@@ -513,6 +513,3 @@ export function createDispatcher(deps: IpcDeps) {
 }
 
 export { APPROVAL_TRANSITIONS };
-
-
-

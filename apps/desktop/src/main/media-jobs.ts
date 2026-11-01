@@ -305,7 +305,7 @@ export class MediaJobsService {
         throw error;
       }
       try {
-        await this.#transition(job.id, "running", "succeeded", {
+        await this.#commitSuccess(job, {
           route: {
             backend: "comfyui",
             manual: false,
@@ -332,6 +332,42 @@ export class MediaJobsService {
     } finally {
       this.#running.delete(job.id);
     }
+  }
+
+  /**
+   * 结果落库：和「来源消息是否已撤回」的检查放在**同一个事务**里（林离 #129）。
+   * 撤回提交和取消回调之间回图的窗口，靠这里挡住——不会再落成 succeeded。
+   */
+  async #commitSuccess(
+    job: MediaJob,
+    patch: { route?: MediaJob["route"]; result?: MediaJob["result"] },
+  ): Promise<void> {
+    const applied = await writeTransaction(this.deps.db, this.deps.queue, () => {
+      if (this.#sourceWithdrawn(job)) {
+        return transitionMediaJob(this.deps.db, {
+          id: job.id,
+          from: "running",
+          to: "cancelled",
+          now: this.deps.now(),
+          patch: { cancelReason: "message_withdrawn" },
+        });
+      }
+      return transitionMediaJob(this.deps.db, { id: job.id, from: "running", to: "succeeded", now: this.deps.now(), patch });
+    });
+    this.#emit(applied);
+  }
+
+  /** 来源消息（回答的话，还有它回答的那条）是不是已经撤回（ADR-004 §3a） */
+  #sourceWithdrawn(job: MediaJob): boolean {
+    if (job.source.kind !== "chat") return false;
+    const message = getChatMessage(this.deps.db, job.source.messageId);
+    if (message === null) return false;
+    if ("state" in message && message.state === "retracted") return true;
+    if (message.sender === "agent") {
+      const parent = getChatMessage(this.deps.db, message.inReplyTo);
+      if (parent !== null && "state" in parent && parent.state !== "sent") return true;
+    }
+    return false;
   }
 
   /**
@@ -429,10 +465,3 @@ const sameSource = (a: MediaSource, b: MediaSource): boolean => JSON.stringify(a
 const ignoreConflict = (error: unknown): void => {
   if (!(error instanceof MediaJobStateConflictError)) throw error;
 };
-
-
-
-
-
-
-

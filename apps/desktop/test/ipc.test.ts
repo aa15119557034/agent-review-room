@@ -290,4 +290,3 @@ describe("approve guard", () => {
     assert.equal(started.length, 0);
   });
 });
-
