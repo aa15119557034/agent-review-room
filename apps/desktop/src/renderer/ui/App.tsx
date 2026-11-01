@@ -7,6 +7,7 @@ import { ResultStep, RunList } from "./ResultStep";
 import { SettingsView } from "./SettingsView";
 import { DiscussionView, QuotaChips } from "./discussion/DiscussionView";
 import { ChatView } from "./chat/ChatView";
+import { ConsoleView } from "./ConsoleView";
 
 /**
  * 整体布局：项目 / 四个工作步骤 / 运行记录。
@@ -34,6 +35,14 @@ function Shell() {
       <div className="shell shell-chat">
         <TopBar />
         <ChatView notice={<Notice />} />
+      </div>
+    );
+  }
+  if (view === "console") {
+    return (
+      <div className="shell shell-console">
+        <TopBar />
+        <ConsoleView notice={<Notice />} />
       </div>
     );
   }
@@ -119,8 +128,8 @@ function TopBar() {
         <button type="button" disabled title="阶段 1C">
           执行
         </button>
-        <button type="button" disabled title="阶段 1B">
-          参与者
+        <button type="button" aria-current={view === "console" ? "page" : undefined} onClick={() => void actions.agentConsole.open()}>
+          秘书
         </button>
         <button type="button" aria-current={view === "desk" ? "page" : undefined} onClick={actions.goDesk}>
           单次评审

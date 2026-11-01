@@ -56,6 +56,7 @@ import { MockError, id, now, sha256Hex, randomHex } from "./util";
 import { createDiscussionMock, type DiscussionMockOptions } from "./discussion-mock";
 import { createChatMock, type ChatMockOptions } from "./chat-mock";
 import { createMediaMock, type MediaMockOptions } from "./media-mock";
+import { createActivityQuery } from "./activity-mock";
 
 export function createMockBridge(options: MockOptions = {}): RoomBridge & { reset(): void; mediaUrl(ref: string): string | undefined } {
   const tickMs = options.tickMs ?? 120;
@@ -409,6 +410,13 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
 
   Object.assign(queries, discussion.queries);
   Object.assign(queries, chat.queries, media.queries);
+  // 控制台（C-37a）：讨论的 Turn + 聊天的回答位
+  queries["agents.activity"] = createActivityQuery({
+    agentExists: (a) => discussion.agents().some((x) => x.id === a),
+    projects: () => db.projects,
+    discussion: discussion.activityData,
+    chat: chat.activityData,
+  }) as never;
 
   // ------------------------------------------------------------ dispatch
 
