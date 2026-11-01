@@ -12,6 +12,9 @@ import type { SqliteDatabase } from "./database";
  * - ready / failed 之后不再改（转写结果以第一份为准；要重来就重新导入）
  *
  * 转写本身（本地 ASR）不在这里：那是主控机上的另一个进程，等 D-34b 的形态定下来再接。
+ *
+ * TODO(D-34b 接 ASR 时)：应用重启后遗留的 transcribing 要收尾成 failed（「应用重启，转写中断」），
+ * 否则界面会一直转圈——留给接转写引擎那一段。
  */
 
 interface VoiceRecordingRow {
@@ -94,6 +97,9 @@ export function markVoiceReady(db: SqliteDatabase, audioRef: string, transcript:
   const current = getVoiceRecording(db, audioRef);
   if (current === null) throw new VoiceStatusConflictError(audioRef, "transcribing", null);
   if (current.status !== "transcribing") throw new VoiceStatusConflictError(audioRef, "transcribing", current.status);
+  // 先按契约校验再写库：空转写（静音录音常见）会在这里被拒，不会把坏行写进去（C酱 #126）
+  const next: VoiceRecording = { ...current, status: "ready", transcript, error: null };
+  VoiceRecordingSchema.parse(next);
   db.prepare(
     "UPDATE voice_recordings SET status = 'ready', transcript = ?, error = NULL WHERE audio_ref = ? AND status = 'transcribing'",
   ).run(JSON.stringify(transcript), audioRef);
@@ -107,9 +113,11 @@ export function markVoiceFailed(db: SqliteDatabase, audioRef: string, error: str
   const current = getVoiceRecording(db, audioRef);
   if (current === null) throw new VoiceStatusConflictError(audioRef, "transcribing", null);
   if (current.status !== "transcribing") throw new VoiceStatusConflictError(audioRef, "transcribing", current.status);
+  VoiceRecordingSchema.parse({ ...current, status: "failed", transcript: null, error: message });
   db.prepare(
     "UPDATE voice_recordings SET status = 'failed', error = ?, transcript = NULL WHERE audio_ref = ? AND status = 'transcribing'",
   ).run(message, audioRef);
   return getVoiceRecording(db, audioRef) as VoiceRecording;
 }
+
 

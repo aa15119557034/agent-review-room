@@ -133,6 +133,49 @@ describe("voice recordings (D-34b 第一段)", () => {
     }
   });
 
+  it("rejects an empty transcript before writing (a silent recording must not break the list)", () => {
+    const db = fresh();
+    try {
+      insertVoiceRecording(db, { recording: recording(), sha256: SHA, mime: "audio/wav", bytes: 1024 });
+      // 静音录音常见：引擎返回空字符串 / 只有空格
+      assert.throws(
+        () => markVoiceReady(db, AUDIO, { ...transcript, text: "   " }),
+        (error: unknown) => error instanceof Error && !(error instanceof VoiceStatusConflictError),
+      );
+      // 库里还是 transcribing，列表照常能读（C酱 #126）
+      assert.equal(getVoiceRecording(db, AUDIO)?.status, "transcribing");
+      assert.equal(listVoiceRecordings(db).length, 1);
+    } finally {
+      db.close();
+    }
+  });
+
+  it("keeps sha256 unique and blocks updates after the terminal state", () => {
+    const db = fresh();
+    try {
+      insertVoiceRecording(db, { recording: recording(), sha256: SHA, mime: "audio/wav", bytes: 1024 });
+      const other = "aud_01JBBBBBBBBBBBBBBBBBBBBBBB";
+      assert.throws(
+        () =>
+          insertVoiceRecording(db, {
+            recording: recording({ audio: other as never }),
+            sha256: SHA,
+            mime: "audio/wav",
+            bytes: 1024,
+          }),
+        /UNIQUE/,
+      );
+
+      markVoiceReady(db, AUDIO, transcript);
+      assert.throws(
+        () => db.prepare("UPDATE voice_recordings SET error = 'x' WHERE audio_ref = ?").run(AUDIO),
+        /final/,
+      );
+    } finally {
+      db.close();
+    }
+  });
+
   it("marks a recording failed with a reason, and enforces the contract", () => {
     const db = fresh();
     try {
@@ -173,3 +216,4 @@ describe("voice recordings (D-34b 第一段)", () => {
     }
   });
 });
+
