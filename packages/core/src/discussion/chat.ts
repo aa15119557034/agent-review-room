@@ -1,6 +1,8 @@
 import { createNonce, estimateTokens, PromptBoundaryCollisionError, sha256Hex } from "../prompt";
 import {
   attachmentManifestBlock,
+  attachmentImageBlock,
+  attachmentImageSlotMarker,
   ChatSnapshot,
   isExcludedFromContext,
   type AttachmentManifestEntry,
@@ -194,22 +196,34 @@ export function buildChatSnapshot(input: BuildChatSnapshotInput): ChatSnapshot {
   const quoteFragment = quoteCandidate === null ? null : render(quoteCandidate);
   const quote = quoteFragment !== null && quoteFragment.length <= CHAT_HISTORY_MAX_CHARS ? quoteCandidate : null;
   const budget = CHAT_HISTORY_MAX_CHARS - (quote === null ? 0 : (quoteFragment as string).length);
-  const summaries = (input.summaries ?? []).filter((summary) => summary.state === "current");
+  const excludedIds = new Set(input.history.filter(excluded).map((message) => message.id));
+  const candidates = (input.summaries ?? []).filter((summary) =>
+    summary.state === "current" && !summary.sourceMessageIds.some((id) => excludedIds.has(id)));
+  let summaryBudget = budget;
+  const summaries: ChatHistorySummary[] = [];
+  for (let i = candidates.length - 1; i >= 0; i--) {
+    const summary = candidates[i]!;
+    if (summary.content.length > summaryBudget) break;
+    summaries.unshift(summary);
+    summaryBudget -= summary.content.length;
+  }
   if (summaries.some((summary) => summary.conversationId !== input.conversationId)) throw new Error("foreign chat summary");
   const summarized = new Set(summaries.flatMap((summary) => summary.sourceMessageIds));
-  const history = windowHistory(input.history.filter((message) => !excluded(message) && !summarized.has(message.id)), render, budget);
+  const history = windowHistory(input.history.filter((message) => !excluded(message) && !summarized.has(message.id)), render, summaryBudget);
 
   const nonce = input.nonce ?? createNonce();
   const open = "<" + UNTRUSTED_OPEN + nonce + ">";
   const close = "</" + UNTRUSTED_OPEN + nonce + ">";
   const memorySlot = input.memorySource == null ? null : { nonce, marker: `<CHAT_MEMORY_SLOT_${nonce}>` };
+  const imageSlot = input.attachments?.length ? attachmentImageSlotMarker(nonce) : undefined;
+  const protectedParts = [open, close, `<图片资料-${nonce}>`, `</图片资料-${nonce}>`, attachmentImageSlotMarker(nonce), `<CHAT_MEMORY_SLOT_${nonce}>`];
 
   // 不可信内容里出现本轮标签 = 可以伪造边界。和 core 的 assemblePrompt 一样：拒绝（随机 nonce 下实际不会发生）
   const fileFragments = (input.files ?? []).map(
     (file) => "[文件：" + escapeAttachmentName(file.name) + "]" + (file.text === null ? "" : "\n" + file.text),
   );
   for (const fragment of [...(quote === null ? [] : [render(quote)]), ...history.map(render), ...fileFragments, ...summaries.map((s) => s.content), input.memorySource ?? ""]) {
-    if (fragment.includes(open) || fragment.includes(close)) throw new PromptBoundaryCollisionError(nonce);
+    if (protectedParts.some((part) => fragment.includes(part))) throw new PromptBoundaryCollisionError(nonce);
   }
 
   const manifest =
@@ -230,7 +244,8 @@ export function buildChatSnapshot(input: BuildChatSnapshotInput): ChatSnapshot {
     blocks.push("随消息带来的文件（" + fileFragments.length + " 个）：");
     for (const fragment of fileFragments) blocks.push(open + "\n" + fragment + "\n" + close);
   }
-  if (memorySlot) blocks.push(wrapChatUntrusted(nonce, "节点记忆来源与槽位", `${input.memorySource}\n${memorySlot.marker}`));
+  if (memorySlot) blocks.push(`节点记忆来源：${input.memorySource}\n${memorySlot.marker}`);
+  if (manifest) blocks.push(attachmentImageBlock(nonce, manifest.length));
   blocks.push("");
   blocks.push("当前消息（用户刚刚发的，可信）：");
   blocks.push(currentText);
@@ -249,6 +264,7 @@ export function buildChatSnapshot(input: BuildChatSnapshotInput): ChatSnapshot {
     contentHash: sha256Hex(content),
     nonce,
     memorySlot,
+    ...(imageSlot === undefined ? {} : { imageSlot }),
     includedMessageIds: included,
     includedSummaryIds: summaries.map((summary) => summary.id),
     adapterVersion: CHAT_PROMPT_VERSION,
