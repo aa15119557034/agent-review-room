@@ -8,7 +8,9 @@ import {
   insertChatRun,
   insertChatSlot,
   insertChatSnapshot,
+  insertChatSummary,
   getChatSnapshot,
+  listChatSummaries,
   insertFile,
   insertImageRef,
   insertSticker,
@@ -18,6 +20,9 @@ import {
 } from "@room/db";
 import {
   CHAT_LIMITS,
+  ChatHistorySummary,
+  ChatRun,
+  ChatSnapshot,
   ControlEvent,
   type AgentEvent,
   type AgentModelSettings,
@@ -1146,3 +1151,137 @@ describe("chat service (D-31b)", () => {
     }
   });
 });
+
+describe("chat prompt wiring (D-41)", () => {
+  it("uses the core builder: format instructions first, reminder last, and the required rule in a direct chat", async () => {
+    const h = await makeHarness();
+    try {
+      const sent = await h.chat.send(send(h.conversationId, userMessageId(41), "在吗"));
+      const snapshot = getChatSnapshot(h.db, sent.runs[0]!.snapshotId)!;
+      assert.equal(snapshot.adapterVersion, "chat-v4");
+      assert.ok(snapshot.content.includes("回答格式（必须遵守）："));
+      assert.ok(
+        snapshot.content.trimEnd().endsWith("请按上面的「回答格式」只输出一个 JSON 对象。"),
+        "结尾要再提醒一次",
+      );
+      assert.match(snapshot.content, /必须回答，不能用 skip/);
+      assert.equal(snapshot.memorySlot, null, "记忆来源关着的时候不给节点槽位");
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("tells unmentioned group members they may skip", async () => {
+    const h = await makeHarness();
+    try {
+      const group = await h.chat.createConversation({
+        type: "chat.conversation.create",
+        members: { kind: "group", agents: ["deepseek", "codex"] },
+        title: null,
+      } as never);
+      const sent = await h.chat.send(send(group.id, userMessageId(42), "随便聊聊"));
+      await settle(h.chat);
+      assert.equal(sent.runs.length, 2);
+      for (const run of sent.runs) {
+        const snapshot = getChatSnapshot(h.db, run.snapshotId)!;
+        assert.match(snapshot.content, /没有点名你：觉得不需要你说话时回 skip/);
+        assert.doesNotMatch(snapshot.content, /必须回答，不能用 skip/);
+      }
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("puts current summaries in the prompt, leaves stale ones out, and marks them stale on retract", async () => {
+    const h = await makeHarness();
+    try {
+      const first = await h.chat.send(send(h.conversationId, userMessageId(43), "第一句"));
+      const coveringMessageId = userMessageId(43);
+      const summaryRun = historySummaryRun(h, [coveringMessageId]);
+      const currentSummary = summary(h, summaryRun, [coveringMessageId], "第一句在讲部署");
+      insertChatSummary(h.db, currentSummary);
+
+      const sent = await h.chat.send(send(h.conversationId, userMessageId(44), "接着说"));
+      const snapshot = getChatSnapshot(h.db, sent.runs[0]!.snapshotId)!;
+      assert.ok(snapshot.content.includes("第一句在讲部署"), "current 的摘要进 Prompt");
+      assert.deepEqual(snapshot.includedSummaryIds, [currentSummary.id]);
+
+      // 撤回覆盖到的消息：摘要变 stale、推一次事件，之后的 Prompt 不再带它
+      h.events.length = 0;
+      await h.chat.retract({ type: "chat.retract", messageId: first.message.id } as never);
+      const stale = listChatSummaries(h.db, h.conversationId).find((s) => s.id === currentSummary.id)!;
+      assert.equal(stale.state, "stale");
+      assert.deepEqual(
+        h.events.filter((e) => e.type === "chat.summary.updated").map((e) => (e as { summary: { id: string } }).summary.id),
+        [currentSummary.id],
+      );
+      assert.deepEqual(h.chat.listSummaries(h.conversationId).map((s) => s.state), ["stale"]);
+
+      const after = await h.chat.send(send(h.conversationId, userMessageId(45), "再说一句"));
+      const afterSnapshot = getChatSnapshot(h.db, after.runs[0]!.snapshotId)!;
+      assert.ok(!afterSnapshot.content.includes("第一句在讲部署"), "stale 的摘要不进任何 Snapshot");
+      assert.deepEqual(afterSnapshot.includedSummaryIds, []);
+    } finally {
+      h.db.close();
+    }
+  });
+});
+
+/** 摘要来自一个 history_summary 的聊天 Run：先 Snapshot，再 Run（测试里直接写库） */
+function historySummaryRun(h: Harness, covered: string[]): string {
+  const content = "历史资料\n" + covered.join("\n");
+  const snapshot = ChatSnapshot.parse({
+    id: "snap_" + ulid(),
+    purpose: "history_summary",
+    conversationId: h.conversationId,
+    userMessageId: null,
+    agent: "deepseek",
+    content,
+    contentHash: sha256Hex(content),
+    nonce: "0123456789abcdef",
+    memorySlot: null,
+    includedMessageIds: covered,
+    includedSummaryIds: [],
+    adapterVersion: "chat-v4",
+    tokenEstimate: 10,
+    createdAt: NOW,
+  });
+  insertChatSnapshot(h.db, snapshot);
+  const run = ChatRun.parse({
+    id: "run_" + ulid(),
+    kind: "chat",
+    purpose: "history_summary",
+    conversationId: h.conversationId,
+    slotId: null,
+    agent: "deepseek",
+    snapshotId: snapshot.id,
+    snapshotHash: snapshot.contentHash,
+    finalPromptHash: null,
+    memoryManifest: null,
+    model: null,
+    adapterId: "remote:deepseek-chat",
+    state: "QUEUED",
+    substate: null,
+    failureReason: null,
+    attempt: 1,
+    createdAt: NOW,
+    startedAt: null,
+    finishedAt: null,
+  });
+  insertChatRun(h.db, run);
+  return run.id;
+}
+
+function summary(h: Harness, runId: string, covered: string[], text: string) {
+  return ChatHistorySummary.parse({
+    id: "csum_" + ulid(),
+    conversationId: h.conversationId,
+    sourceMessageIds: covered,
+    content: text,
+    contentHash: sha256Hex(text),
+    state: "current",
+    runId,
+    agent: "deepseek",
+    createdAt: NOW,
+  });
+}

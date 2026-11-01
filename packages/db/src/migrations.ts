@@ -11,6 +11,7 @@ import { SCHEMA_V10 } from "./schema-v10";
 import { SCHEMA_V11 } from "./schema-v11";
 import { SCHEMA_V12 } from "./schema-v12";
 import { SCHEMA_V13 } from "./schema-v13";
+import { SCHEMA_V14 } from "./schema-v14";
 
 /**
  * 迁移（D-02）：用 PRAGMA user_version 记版本，每个迁移在自己的事务里跑。
@@ -124,6 +125,13 @@ export const MIGRATIONS: readonly Migration[] = [
     name: "controller-local-codex-node",
     up: (db) => {
       db.exec(SCHEMA_V13);
+    },
+  },
+  {
+    version: 14,
+    name: "chat-history-summaries",
+    up: (db) => {
+      db.exec(SCHEMA_V14);
     },
   },
 ];

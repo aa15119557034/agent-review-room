@@ -484,8 +484,7 @@ export function createDispatcher(deps: IpcDeps) {
       case "chat.snapshots.get":
         return chatService().getSnapshot(query.snapshotId);
       case "chat.summaries.list":
-        // 历史摘要还没接（X-30 / 下一段）
-        return [];
+        return chatService().listSummaries(query.conversationId);
       case "chat.stickers.list":
         return mediaService().listStickers();
       case "chat.voice.get":

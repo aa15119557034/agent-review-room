@@ -1,4 +1,4 @@
-import { sha256Hex, type AgentAdapter } from "@room/core";
+import { buildChatSnapshot, capChatFileTexts, sha256Hex, type AgentAdapter } from "@room/core";
 import {
   CHAT_LIMITS,
   ChatAgentOutput,
@@ -8,6 +8,7 @@ import {
   type AgentProfile,
   type ChatContent,
   type ChatContentInput,
+  type ChatHistorySummary,
   type ChatMessage,
   type ChatReplySlot,
   type ChatRun,
@@ -34,6 +35,7 @@ import {
   ChatSendRateLimitError,
   ChatToTopicConflictError,
   chatRecipients,
+  chatRequired,
   createChatSend,
   createChatToTopic,
   createConversation,
@@ -52,7 +54,9 @@ import {
   listChatRunsForSlot,
   listChatSlotsForMessage,
   listChatSlotsForMessages,
+  listChatSummaries,
   listConversations,
+  markChatSummariesStale,
   markConversationRead,
   recordChatPromptFinal,
   repairInterruptedChatRuns,
@@ -75,7 +79,6 @@ import {
   selectChatModel,
 } from "./chat-model";
 import { CHAT_MATERIAL_MAX_CHARS, CHAT_MATERIAL_PROMPT_HEADROOM, renderChatMaterial } from "./chat-material";
-import { buildChatSnapshot, capChatFileTexts } from "./chat-prompt";
 import type { Repository } from "./repository";
 import type { SettingsStore } from "./settings";
 
@@ -85,7 +88,8 @@ import type { SettingsStore } from "./settings";
  * 边界：
  * - 落库（消息 + 回答位 + Snapshot + Run）在 @room/db 的 createChatSend 里，一个事务
  * - 这里的职责是「防重复 → 限流 → 校验 → 探测 → 拼 Snapshot → 提交 → 启动 Run → 事件回落」
- * - Prompt 拼装是过渡实现（chat-prompt.ts），X-30 合并后替换
+ * - Prompt 拼装用 core 的 `buildChatSnapshot`（X-30 / X-34a），main 只负责把历史、摘要、记忆来源、
+ *   引用、附件和「必须回答吗」交过去；记忆正文由节点填槽位（ADR-003 §2a）
  * - 附件 / 语音 / 表情 / 转议题 / 历史摘要不在这一段
  */
 
@@ -140,6 +144,27 @@ export class ChatService {
 
   #now(): string {
     return (this.#deps.now ?? (() => new Date().toISOString()))();
+  }
+
+  /**
+   * 进 Prompt 的历史摘要（X-30 / D-41）：只取 current，stale 的（来源消息被撤回过）不进任何 Snapshot。
+   * 顺序按时间正序，和 core 拼 Prompt 的顺序一致。
+   */
+  #summariesFor(conversationId: string): ChatHistorySummary[] {
+    return listChatSummaries(this.#deps.db, conversationId).filter((summary) => summary.state === "current");
+  }
+
+  /**
+   * 记忆来源（ADR-003 §2a）：这位秘书开了「节点文件夹记忆」才给节点一个槽位，节点自己在本机读 memory/<秘书>/；
+   * 正文永远不进 main。关掉时返回 null，Snapshot 里也就没有槽位。
+   */
+  #memorySourceOf(agent: AgentProfile): string | null {
+    return agent.memorySource.nodeFolder ? "节点记忆（memory/" + agent.id + "，由节点在本机读取）" : null;
+  }
+
+  /** 本会话的历史摘要（契约 chat.summaries.list）：current 和 stale 都给，界面自己决定怎么显示 */
+  listSummaries(conversationId: string): ChatHistorySummary[] {
+    return listChatSummaries(this.#deps.db, conversationId);
   }
 
   #emit(event: ControlEvent): void {
@@ -338,6 +363,7 @@ export class ChatService {
         : [];
     const snapshots = new Map<string, ChatSnapshot>();
     const adapterIds = new Map<string, string>();
+    const summaries = this.#summariesFor(conversation.id);
     for (const agentId of recipients) {
       if (availability.get(agentId)?.kind !== "available") continue;
       const agent = agents.get(agentId);
@@ -350,9 +376,12 @@ export class ChatService {
           userMessage: message,
           agent: { id: agent.id, displayName: agent.displayName, persona: this.#personaOf(agent) },
           history,
+          ...(summaries.length === 0 ? {} : { summaries }),
+          memorySource: this.#memorySourceOf(agent),
           quote: command.quoteMessageId === null ? null : getChatMessage(db, command.quoteMessageId),
           inReplyToOf: this.#inReplyToOf,
           displayNameOf: (id) => agents.get(id)?.displayName ?? id,
+          replyRequired: chatRequired(conversation, message.mentions, agent.id),
           ...(promptFiles.length === 0 ? {} : { files: promptFiles }),
           createdAt: now,
         }),
@@ -465,6 +494,8 @@ export class ChatService {
     const result = await writeTransaction(db, queue, () => {
       const updated = retractChatMessage(db, message.id, now);
       if (updated === null) throw new ChatError("invalid_state", "这条消息已经撤回了");
+      // X-30 / D-41：覆盖了这条消息的历史摘要，在同一个事务里变成 stale，之后不再进任何 Snapshot
+      const staleSummaries = markChatSummariesStale(db, [message.id]);
       const after: ChatReplySlot[] = [];
       for (const slot of slots) {
         if (slot.outcome === "retracted") {
@@ -475,8 +506,10 @@ export class ChatService {
         updateChatSlot(db, next);
         after.push(next);
       }
-      return { message: updated, slots: after };
+      return { message: updated, slots: after, staleSummaries };
     });
+
+    for (const summary of result.staleSummaries) this.#emit({ type: "chat.summary.updated", summary });
 
     // 先落库再中止：迟到的结果会被 finishChatRun 丢掉（回答位已经不是 running）
     for (const slot of result.slots) {
@@ -553,15 +586,19 @@ export class ChatService {
           item.createdAt < message.createdAt || (item.createdAt === message.createdAt && item.id < message.id),
       );
     const runId = "run_" + ulid();
+    const summaries = this.#summariesFor(conversation.id);
     const snapshot = buildChatSnapshot({
       snapshotId: "snap_" + ulid(),
       conversationId: conversation.id,
       userMessage: message,
       agent: { id: agent.id, displayName: agent.displayName, persona: this.#personaOf(agent) },
       history,
+      ...(summaries.length === 0 ? {} : { summaries }),
+      memorySource: this.#memorySourceOf(agent),
       quote: message.quoteMessageId === null ? null : getChatMessage(db, message.quoteMessageId),
       inReplyToOf: this.#inReplyToOf,
       displayNameOf: (id) => agents.get(id)?.displayName ?? id,
+      replyRequired: slot.required,
       createdAt: now,
     });
 
