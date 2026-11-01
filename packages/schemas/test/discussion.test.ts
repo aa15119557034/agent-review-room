@@ -20,6 +20,9 @@ import {
   TERMINAL_TURN_OUTCOMES,
   TurnOutcome,
   canTransition,
+  quotaState,
+  RemoteProfileQuota,
+  RoundSubstitutions,
 } from "../src/index";
 
 const ID = "01JAAAAAAAAAAAAAAAAAAAAAAA";
@@ -154,6 +157,45 @@ describe("discussion commands", () => {
   it("round.draft rejects duplicate or missing recipients", () => {
     assert.equal(ControlCommand.safeParse({ ...draft, recipients: ["deepseek", "deepseek"] }).success, false);
     assert.equal(ControlCommand.safeParse({ ...draft, recipients: [] }).success, false);
+  });
+
+  it("C-36: substitutes on round.draft / redraft / retry", () => {
+    const sub = (absent: string, substitute: string) => ({ absent, substitute });
+    assert.equal(ControlCommand.safeParse(draft).success, true, "omitted = automatic");
+    assert.equal(ControlCommand.safeParse({ ...draft, substitutes: [] }).success, true, "empty = nobody substitutes");
+    assert.equal(ControlCommand.safeParse({ ...draft, substitutes: [sub("codex", "claude")] }).success, true);
+    assert.equal(ControlCommand.safeParse({ ...draft, substitutes: [{ ...sub("codex", "claude"), extra: 1 }] }).success, false, "strict");
+    const bad = (xs: unknown, why: string) => assert.equal(RoundSubstitutions.safeParse(xs).success, false, why);
+    bad([sub("codex", "codex")], "self");
+    bad([sub("codex", "claude"), sub("codex", "deepseek")], "two substitutes for one person");
+    bad([sub("codex", "claude"), sub("deepseek", "claude")], "one substitute for two people");
+    bad([sub("codex", "claude"), sub("claude", "deepseek")], "no chains");
+    assert.equal(ControlCommand.safeParse({ type: "round.redraft", roundId: `rnd_${ID}`, substitutes: [sub("codex", "claude")] }).success, true);
+    assert.equal(ControlCommand.safeParse({ type: "round.retry", roundId: `rnd_${ID}`, agent: "codex" }).success, true);
+    assert.equal(ControlCommand.safeParse({ type: "round.retry", roundId: `rnd_${ID}`, agent: "codex", substitute: "claude" }).success, true);
+  });
+
+  it("C-36: quotaState — unknown is not exhausted", () => {
+    const w = (usedPercent: number) => ({ usedPercent });
+    assert.equal(quotaState({ fiveHour: null, weekly: null }), "unknown");
+    assert.equal(quotaState({ fiveHour: null, weekly: null, balance: null }), "unknown");
+    assert.equal(quotaState({ fiveHour: w(99.9), weekly: null }), "ok");
+    assert.equal(quotaState({ fiveHour: w(40), weekly: w(100) }), "exhausted");
+    assert.equal(quotaState({ fiveHour: null, weekly: null, balance: { amount: "38.20" } }), "ok");
+    assert.equal(quotaState({ fiveHour: null, weekly: null, balance: { amount: "0" } }), "exhausted");
+    assert.equal(quotaState({ fiveHour: null, weekly: null, balance: { amount: "-1.5" } }), "exhausted");
+    assert.equal(quotaState({ fiveHour: w(10), weekly: null, balance: { amount: "0.00" } }), "exhausted");
+  });
+
+  it("C-36: a node's quota may carry an API balance; old nodes without it still parse", () => {
+    const base = { fiveHour: null, weekly: null, creditsInUse: null, readAt: TS };
+    assert.ok(RemoteProfileQuota.safeParse(base).success, "old node");
+    assert.ok(RemoteProfileQuota.safeParse({ ...base, balance: null }).success);
+    assert.ok(RemoteProfileQuota.safeParse({ ...base, balance: { amount: "38.20", currency: "CNY" } }).success);
+    for (const amount of ["", "1e3", "abc", "1.1234567", "１２"]) {
+      assert.equal(RemoteProfileQuota.safeParse({ ...base, balance: { amount, currency: "CNY" } }).success, false, amount);
+    }
+    assert.equal(RemoteProfileQuota.safeParse({ ...base, balance: { amount: "1", currency: "" } }).success, false);
   });
 
   it("stamping a batch needs the expected hash of every item", () => {

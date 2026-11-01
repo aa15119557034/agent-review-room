@@ -183,14 +183,29 @@ export const RemoteQuotaWindow = z.object({
 export type RemoteQuotaWindow = z.infer<typeof RemoteQuotaWindow>;
 
 /**
+ * C-36：按量计费（API）的余额。金额是十进制字符串（原样显示，不换算），currency 是 ISO 4217 或服务商原样的代码
+ */
+export const RemoteBalance = z
+  .object({
+    amount: z.string().regex(/^-?\d{1,12}(\.\d{1,6})?$/),
+    currency: z.string().min(1).max(8),
+  })
+  .strict();
+export type RemoteBalance = z.infer<typeof RemoteBalance>;
+
+/**
  * GET /v1/profiles/:profileId/quota 的结果。节点读订阅额度的超时不超过 2 秒，超时 / 出错时
- * 各项为 null（不是 0）。只有 capabilities.quota 为 true 的节点提供这个端点
+ * 各项为 null（不是 0）。只有 capabilities.quota 为 true 的节点提供这个端点。
+ * C-36：不只 Codex——Claude 的 rate_limits 填 fiveHour / weekly，DeepSeek 这类按量计费的填 balance（订阅窗口为 null）。
+ * 一项都读不到时照样返回 200、各项 null，不返回错误（「未知」由 quotaState 判断）
  */
 export const RemoteProfileQuota = z.object({
   fiveHour: RemoteQuotaWindow.nullable(),
   weekly: RemoteQuotaWindow.nullable(),
   /** 是否已经在用付费 credits；读不到为 null */
   creditsInUse: z.boolean().nullable(),
+  /** C-36：按量计费的余额；订阅制、或读不到为 null。老节点不报 = null */
+  balance: RemoteBalance.nullable().optional(),
   readAt: IsoTimestamp,
 });
 export type RemoteProfileQuota = z.infer<typeof RemoteProfileQuota>;
