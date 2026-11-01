@@ -493,6 +493,28 @@ describe("review round 1 (汐 / 林离 on 919ea67)", () => {
     assert.equal(req.safeParse({ ...send, replyAsVoice: false }).success, false, "off = omitted");
   });
 
+  it("C-42i: an image may carry its picked file name (display only); files still may not", () => {
+    const img = (extra: object) =>
+      ChatContentInput.safeParse({ kind: "text", text: "", attachments: [{ kind: "image", ref: `img_${ID}`, ...extra }] });
+    assert.ok(img({}).success, "name is optional");
+    assert.ok(img({ name: "猫猫 截图 (2).PNG" }).success);
+    const parsed = img({ name: "  cat.png  " });
+    assert.deepEqual(parsed.success && parsed.data.kind === "text" && parsed.data.attachments, [{ kind: "image", ref: `img_${ID}`, name: "cat.png" }], "trimmed");
+    assert.equal(img({ name: "" }).success, false, "empty");
+    assert.equal(img({ name: "   " }).success, false, "blank");
+    assert.equal(img({ name: "a".repeat(256) }).success, false, "too long");
+    assert.ok(img({ name: "a".repeat(255) }).success);
+    for (const bad of ["C:\\Users\\me\\cat.png", "dir/cat.png", "cat\npng", "cat\tpng", "cat\u0000.png", "cat\u007f.png"]) {
+      assert.equal(img({ name: bad }).success, false, JSON.stringify(bad));
+    }
+    assert.equal(img({ mime: "image/png" }).success, false, "still no other metadata");
+    assert.equal(
+      ChatContentInput.safeParse({ kind: "text", text: "", attachments: [{ kind: "file", ref: `file_${ID}`, name: "a.txt" }] }).success,
+      false,
+      "file names come only from main",
+    );
+  });
+
   it("chat.send only takes references; metadata comes from main's records", () => {
     assert.ok(ChatContentInput.safeParse({ kind: "text", text: "", attachments: [{ kind: "file", ref: `file_${ID}` }] }).success);
     assert.equal(
