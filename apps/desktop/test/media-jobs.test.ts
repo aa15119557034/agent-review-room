@@ -85,7 +85,7 @@ async function makeHarness(opts: { comfy?: FakeComfy | null } = {}): Promise<Har
   dirs.push(root);
   const db = openDatabase(join(root, "room.db"));
   const queue = new WriteQueue();
-  const store = new MediaStore(join(root, "images"), join(root, "files"), db);
+  const store = new MediaStore(join(root, "images"), join(root, "files"), join(root, "audio"), db);
   const comfy = opts.comfy === undefined ? fakeComfy() : opts.comfy;
   const events: ControlEvent[] = [];
   const service = new MediaJobsService({

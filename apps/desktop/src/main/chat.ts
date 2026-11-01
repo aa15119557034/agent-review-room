@@ -24,6 +24,7 @@ import {
   type ChatAttachment,
   type ChatAttachmentInput,
   type ImageRef,
+  type MediaSource,
   type Message,
   type NodeHealth,
   type Project,
@@ -143,6 +144,8 @@ export interface ChatServiceDeps {
   readonly readImage?: (ref: ImageRef) => Buffer | null;
   /** 撤回时收掉从这条消息 / 它的回答发起的画图任务（ADR-004 §3a）；没传 = 不做 */
   readonly cancelMediaJobs?: (messageIds: readonly string[]) => Promise<void>;
+  /** D-37b：那条消息开了「用语音回」时，回答落库后给它排语音合成；没传 = 不自动合成 */
+  readonly speakAnswer?: (source: MediaSource) => Promise<unknown>;
   readonly now?: () => string;
   readonly idleTimeoutMs?: number;
   readonly totalTimeoutMs?: number;
@@ -871,6 +874,22 @@ export class ChatService {
       if (result.message !== null) this.#emit({ type: "chat.message.created", message: result.message });
       if (result.slot !== null) this.#emit({ type: "chat.slot.updated", slot: result.slot });
       this.#emit({ type: "chat.run.updated", run: result.run });
+      // C-42c / D-37b：你这条消息开了「用语音回」→ 给这条回答排一个语音任务（authorization = reply_as_voice）。
+      // 失败不能影响聊天本身：只留日志，界面那边「播放」仍然可以手动点
+      if (terminal.kind === "answered" && result.message !== null && this.#deps.speakAnswer !== undefined) {
+        const slot = run.slotId === null ? null : getChatSlot(db, run.slotId);
+        const parent = slot === null ? null : getChatMessage(db, slot.userMessageId);
+        if (parent !== null && parent.sender === "user" && parent.replyAsVoice === true) {
+          void this.#deps.speakAnswer({
+            kind: "chat",
+            conversationId: run.conversationId,
+            messageId: result.message.id,
+            agent: run.agent,
+          }).catch((error: unknown) => {
+            console.warn("[chat] 自动语音合成没排上：", error instanceof Error ? error.message : String(error));
+          });
+        }
+      }
     };
 
     try {

@@ -93,7 +93,6 @@ describe("not-yet-launched commands and queries", () => {
   it("rejects commands that are not wired yet with a clear message", async () => {
     const { dispatcher } = makeDispatcher();
     const commands = [
-      { type: "speech.play", source: { kind: "chat", conversationId: CONV, messageId: MSG, agent: null } },
       { type: "immersive.update", conversationId: CONV, settings: { enabled: false, autoDrawUsesSubscription: true, drawsPerHour: 3, voiceClipsPerHour: 2 } },
       { type: "image.pick", purpose: "avatar" },
       { type: "appearance.update", userDisplayName: "江浩" },

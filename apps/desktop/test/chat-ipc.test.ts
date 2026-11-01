@@ -146,6 +146,7 @@ async function makeHarness(
   const cancelledMedia: string[][] = [];
   const imageBytes = options.imageBytes ?? new Map<string, Buffer>();
   const runInputs: Harness["runInputs"] = [];
+  const speakRequests: Harness["speakRequests"] = [];
   settings.upsertNode("controller-local", { baseUrl: NODE_URL, token: "t".repeat(40) });
   await repo.upsertNodeRow({ id: "controller-local", label: "主控机", baseUrl: NODE_URL });
 
@@ -177,6 +178,9 @@ async function makeHarness(
     emit: (event) => events.push(ControlEvent.parse(event)),
     readFileText: (ref) => fileTexts.get(ref) ?? null,
     readImage: (ref) => imageBytes.get(ref) ?? null,
+    speakAnswer: async (source) => {
+      speakRequests.push({ messageId: source.messageId, agent: source.agent });
+    },
     cancelMediaJobs: async (messageIds) => {
       if ((options.cancelMediaFails ?? 0) > 0) {
         options.cancelMediaFails = (options.cancelMediaFails ?? 0) - 1;
@@ -236,7 +240,7 @@ async function makeHarness(
     members: { kind: "direct", agent: "deepseek" },
     title: null,
   } as never);
-  return { chat, repo, db, events, conversationId: conversation.id, targets, fileTexts, cancelledMedia, runInputs };
+  return { chat, repo, db, events, conversationId: conversation.id, targets, fileTexts, cancelledMedia, runInputs, speakRequests };
 }
 
 const userMessageId = (n: number): string => "cmsg_" + String(n).padStart(26, "0");
@@ -1437,6 +1441,29 @@ describe("chat images (C-42a / X-34b)", () => {
       assert.equal(slot.outcome, "failed");
       assert.equal(slot.failure?.kind, "run_failed");
       assert.equal(h.runInputs.length, 0, "起跑前就失败，一个请求都没发");
+    } finally {
+      h.db.close();
+    }
+  });
+});
+
+describe("replyAsVoice (D-37b)", () => {
+  it("排语音合成：只有开了「用语音回」的用户消息，回答落库后 main 才让语音服务合成", async () => {
+    const h = await makeHarness({ scripts: { deepseek: reply("好的") } });
+    try {
+      const plain = await h.chat.send(send(h.conversationId, userMessageId(71), "普通消息"));
+      await settle(h.chat);
+      assert.equal(h.speakRequests.length, 0, "没开语音回就不合成");
+
+      const voice = await h.chat.send({
+        ...send(h.conversationId, userMessageId(72), "用语音回我"),
+        replyAsVoice: true,
+      } as never);
+      await settle(h.chat);
+      await new Promise((resolve) => setTimeout(resolve, 20)); // speakAnswer 是落库之后异步排的
+      const answer = (h.db.prepare("SELECT id FROM chat_messages WHERE in_reply_to = ?").get(voice.message.id) as { id: string }).id;
+      assert.deepEqual(h.speakRequests, [{ messageId: answer, agent: "deepseek" }], "回答落库后才排合成");
+      assert.ok(plain.message.id !== voice.message.id);
     } finally {
       h.db.close();
     }
