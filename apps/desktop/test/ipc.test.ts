@@ -97,7 +97,6 @@ describe("not-yet-launched commands and queries", () => {
       { type: "immersive.update", conversationId: CONV, settings: { enabled: false, autoDrawUsesSubscription: true, drawsPerHour: 3, voiceClipsPerHour: 2 } },
       { type: "image.pick", purpose: "avatar" },
       { type: "appearance.update", userDisplayName: "江浩" },
-      { type: "node.importLocalToken", id: "controller-local" },
     ];
     for (const command of commands) {
       const result = await dispatcher.handleCommand(command);
