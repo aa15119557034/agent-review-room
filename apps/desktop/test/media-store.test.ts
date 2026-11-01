@@ -148,6 +148,30 @@ describe("media store (D-36b)", () => {
     }
   });
 
+  it("deletes a freshly drawn image (and its bytes) when it is the only reference (林离 #129)", async () => {
+    const { store, db, images } = setup();
+    try {
+      const bytes = await jpeg();
+      const { record, created } = await store.addGeneratedImageDetailed(bytes);
+      assert.equal(created, true);
+      assert.equal(readdirSync(images).length, 1);
+
+      assert.equal(store.deleteImage(record.ref), true);
+      assert.equal(readdirSync(images).length, 0, "没有别的引用了，字节也要删掉");
+
+      // 同一份字节再次画出来：新建引用 + created
+      const again = await store.addGeneratedImageDetailed(bytes);
+      assert.equal(again.created, true);
+      // 再画一次（去重）：不是新建，不能删别人的图
+      const third = await store.addGeneratedImageDetailed(bytes);
+      assert.equal(third.created, false);
+      assert.equal(third.record.ref, again.record.ref);
+      assert.equal(store.deleteImage(third.record.ref), true);
+      assert.equal(readdirSync(images).length, 0);
+    } finally {
+      db.close();
+    }
+  });
   it("reads text files back as UTF-8 and returns null for binary or unknown refs", async () => {
     const { store, db } = setup();
     try {
@@ -164,6 +188,3 @@ describe("media store (D-36b)", () => {
     }
   });
 });
-
-
-

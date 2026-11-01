@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, readdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
@@ -115,7 +115,7 @@ async function makeHarness(opts: { comfy?: FakeComfy | null } = {}): Promise<Har
     retractedAt: null,
   } as ChatMessage as UserChatMessage;
   insertChatMessage(db, { message });
-  return { service, db, comfy, events, conversationId: conversation.id, message };
+  return { service, db, comfy, events, conversationId: conversation.id, message, imagesDir: join(root, "images") };
 }
 
 const request = (patch: Partial<DrawRequest> = {}): DrawRequest => ({
@@ -377,6 +377,10 @@ describe("media jobs service (D-38a)", () => {
       assert.equal(after.state, "cancelled", "撤回之后到的图不能落成成功");
       assert.equal(after.cancelReason, "message_withdrawn");
       assert.equal(after.result, null);
+      // 图也不能落进图片库：撤回后的结果不产生 images 记录，也不留字节（林离 #129）
+      const images = h.db.prepare("SELECT COUNT(*) AS n FROM images").get() as { n: number };
+      assert.equal(images.n, 0);
+      assert.deepEqual(readdirSync(h.imagesDir), []);
       await until(() => !h.service.busy());
       await new Promise((r) => setTimeout(r, 10));
     } finally {

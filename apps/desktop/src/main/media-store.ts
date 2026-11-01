@@ -1,8 +1,9 @@
 import { createHash } from "node:crypto";
-import { unlinkSync, existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { unlinkSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
+  deleteImageRef,
   findFileBySha,
   findImageRefBySha,
   getFile,
@@ -76,6 +77,17 @@ export class MediaStore {
    * 用途固定 generated；字节照样存 userData/images/<sha256>。
    */
   async addGeneratedImage(input: Buffer, now: string = new Date().toISOString()): Promise<ImageRefRecord> {
+    return (await this.addGeneratedImageDetailed(input, now)).record;
+  }
+
+  /**
+   * 同 addGeneratedImage，但告诉调用方这次有没有真的新建引用（`created`）。
+   * 撤回后要清掉「刚画出来、结果又作废」的图时，只能删自己新建的那份（林离 #129）。
+   */
+  async addGeneratedImageDetailed(
+    input: Buffer,
+    now: string = new Date().toISOString(),
+  ): Promise<{ record: ImageRefRecord; created: boolean }> {
     if (input.length === 0) throw new ImageRejectedError("unsupported_type", "画图模块返回了空文件");
     if (input.length > IMAGE_MAX_BYTES.generated) {
       throw new ImageRejectedError("input_too_big", "画出来的图太大了（上限 10 MB）");
@@ -88,7 +100,7 @@ export class MediaStore {
 
     const sha256 = createHash("sha256").update(input).digest("hex");
     const existing = findImageRefBySha(this.db, "generated", sha256);
-    if (existing !== null) return existing;
+    if (existing !== null) return { record: existing, created: false };
 
     const meta = await sharp(input, { limitInputPixels: false }).metadata();
     if (meta.width === undefined || meta.height === undefined) {
@@ -106,7 +118,25 @@ export class MediaStore {
       createdAt: now,
     };
     insertImageRef(this.db, record);
-    return record;
+    return { record, created: true };
+  }
+
+  /**
+   * 删掉一条图片引用；没有别的引用共用这份字节时连文件一起删（找不到 / 删不掉都返回 false）。
+   * 只用于「刚新建、结果又作废」的那张，不能拿来删共享的图。
+   */
+  deleteImage(ref: ImageRef): boolean {
+    const record = getImageRef(this.db, ref);
+    if (record === null) return false;
+    const removed = deleteImageRef(this.db, ref);
+    if (removed && !imageShaInUse(this.db, record.sha256)) {
+      try {
+        rmSync(this.imageFile(record.sha256), { force: true });
+      } catch {
+        // 删不掉就留着，以后清理再处理
+      }
+    }
+    return removed;
   }
 
   /** `room-image://<ref>` 要的文件路径和类型；ref 不合法 / 没有记录 / 文件丢了都返回 null（调用方回 404） */
@@ -267,7 +297,3 @@ function displayNameOf(name: string): string {
   const safe = trimmed.length === 0 ? "未命名" : trimmed;
   return safe.length > 255 ? safe.slice(0, 255) : safe;
 }
-
-
-
-
