@@ -1,5 +1,10 @@
 import { z } from "zod";
-import { AttachmentManifest } from "./attachments";
+import {
+  AttachmentImageSlot,
+  AttachmentManifest,
+  attachmentImageSlotMarker,
+  imageSlotPlacedAfterManifest,
+} from "./attachments";
 import {
   ApprovalId,
   ChatMessageId,
@@ -182,8 +187,22 @@ export const PromptSnapshot = z.object({
    * 清单也以 attachmentManifestBlock 写在 content 开头，所以 contentHash 已经覆盖它
    */
   attachments: AttachmentManifest.optional(),
+  /**
+   * C-42g：图片位置标记 = attachmentImageSlotMarker(nonce)。不带图时省略；带图却没有标记的 Snapshot 能存，但起跑不了（StartRun 带图必须有 imageSlot）。
+   * 在 content 里恰好一次、在清单块后面、在不可信资料区里（见 attachments.ts）。起跑时原样放进 StartRun.imageSlot
+   */
+  imageSlot: AttachmentImageSlot.optional(),
   createdAt: IsoTimestamp,
-});
+})
+  .refine((s) => s.imageSlot === undefined || s.attachments !== undefined, "不带图时不能有 imageSlot")
+  .refine(
+    (s) =>
+      s.attachments === undefined ||
+      s.imageSlot === undefined ||
+      (s.imageSlot === attachmentImageSlotMarker(s.nonce) &&
+        imageSlotPlacedAfterManifest(s.content, s.attachments, s.imageSlot)),
+    "imageSlot 要用这份 Snapshot 的 nonce，在 content 里恰好一次，并且在清单块后面",
+  );
 export type PromptSnapshot = z.infer<typeof PromptSnapshot>;
 
 // ---------------------------------------------------------------- Approval
