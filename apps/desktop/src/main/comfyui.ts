@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 /**
  * ComfyUI 客户端（D-38a，ADR-004 §3）。
@@ -49,6 +50,8 @@ export interface ComfyUiDrawResult {
   seed: number;
   /** 工作流里写死的模型名（拿不到为 null） */
   model: string | null;
+  /** 工作流 JSON（填字段之前的模板）的 sha256：来源记录要用（ADR-004 §3） */
+  workflowHash: string;
 }
 
 export class ComfyUiError extends Error {
@@ -111,7 +114,7 @@ export class ComfyUiClient {
    * 按固定工作流画一张：填提示词 / 宽 / 高 / 种子 → POST /prompt → 轮询 /history → 取图。
    * 失败分四种：不可用（连不上）、被拒（HTTP 非 2xx）、超时、输出不对。
    */
-  async draw(input: ComfyUiDrawInput): Promise<ComfyUiDrawResult> {
+  async draw(input: ComfyUiDrawInput, opts: { signal?: AbortSignal } = {}): Promise<ComfyUiDrawResult> {
     const [width, height] = parseSize(input.size);
     const prompt = this.#buildPrompt({ prompt: input.prompt, width, height, seed: input.seed });
     const clientId = `room-${Date.now()}-${Math.trunc(Math.random() * 1e6)}`;
@@ -138,19 +141,47 @@ export class ComfyUiClient {
     const deadline = Date.now() + totalTimeout;
     try {
       while (Date.now() < deadline) {
+        if (opts.signal?.aborted) throw new ComfyUiError("cancelled", "任务被取消了");
         await sleep(Math.min(interval, Math.max(0, deadline - Date.now())));
         const entry = await this.#historyEntry(promptId);
         if (entry === null) continue;
         if (entry.status !== "completed") {
           throw new ComfyUiError("rejected", `ComfyUI 这次没画成（${String(entry.status)}）`);
         }
-        const image = await this.#fetchImage(entry.images[0]);
-        return { image, seed: input.seed, model: this.modelName() };
+        const output = entry.images.find((image) => image.type === "output") ?? entry.images[0];
+        const image = await this.#fetchImage(output);
+        return { image, seed: input.seed, model: this.modelName(), workflowHash: this.workflowHash() };
       }
+      // 超时也别让 ComfyUI 继续占着显卡把这张画完（C酱 #123）
+      await this.interrupt();
       throw new ComfyUiError("timeout", "ComfyUI 画图超时");
     } finally {
       this.#activePromptId = null;
     }
+  }
+
+  /** 工作流模板（填字段之前）的 sha256，来源记录要用 */
+  workflowHash(): string {
+    return createHash("sha256").update(JSON.stringify(this.#cfg.workflow), "utf8").digest("hex");
+  }
+
+  /**
+   * 取消当前任务：先把我们的 prompt 从 ComfyUI 队列里删掉，再打断正在跑的那个（ADR §122）。
+   * 队列里没有（已经在跑）时 delete 是空操作，interrupt 负责让它停下来。
+   */
+  async cancelActive(): Promise<void> {
+    const id = this.#activePromptId;
+    if (id === null) return;
+    try {
+      await this.#fetch(new URL("/queue", this.#cfg.baseUrl), {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ delete: [id] }),
+      });
+    } catch {
+      // 删队列失败就靠 interrupt
+    }
+    await this.interrupt();
   }
 
   /** 打断正在跑的任务（「停」/取消用）。没有在跑的任务就什么都不做 */
@@ -238,6 +269,14 @@ export function loadComfyUiConfigFile(path: string): ComfyUiConfig | null {
     if (!existsSync(path)) return null;
     const raw = JSON.parse(readFileSync(path, "utf8")) as Partial<ComfyUiConfig>;
     if (typeof raw.baseUrl !== "string" || raw.workflow === null || typeof raw.workflow !== "object") return null;
+    // 只连本机：提示词里有你的聊天内容，不能发到别的机器上（ADR-004 §3）
+    let url: URL;
+    try {
+      url = new URL(raw.baseUrl);
+    } catch {
+      return null;
+    }
+    if (url.protocol !== "http:" || !LOOPBACK_HOSTS.has(url.hostname)) return null;
     const mapping = raw.mapping as ComfyUiMapping | undefined;
     if (mapping === undefined) return null;
     for (const key of ["prompt", "width", "height", "seed"] as const) {
@@ -256,3 +295,10 @@ export function loadComfyUiConfigFile(path: string): ComfyUiConfig | null {
     return null;
   }
 }
+
+
+
+
+
+/** ComfyUI 只允许本机：127.0.0.1 / localhost / [::1]（ADR-004 §3） */
+const LOOPBACK_HOSTS = new Set(["127.0.0.1", "localhost", "[::1]"]);

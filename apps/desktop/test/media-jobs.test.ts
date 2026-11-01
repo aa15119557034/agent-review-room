@@ -10,6 +10,7 @@ import {
   insertChatMessage,
   insertMediaJob,
   openDatabase,
+  retractChatMessage,
   ulid,
   WriteQueue,
   type SqliteDatabase,
@@ -49,13 +50,17 @@ function fakeComfy(): FakeComfy {
   state.client = {
     isUp: async () => state.available,
     modelName: () => "qwen-image",
+    workflowHash: () => "b".repeat(64),
     interrupt: async () => {
+      state.interrupted += 1;
+    },
+    cancelActive: async () => {
       state.interrupted += 1;
     },
     draw: async (input: { prompt: string; size: string; seed: number }) => {
       state.calls += 1;
       if (state.failure !== null) throw state.failure;
-      return { image: await png(), seed: input.seed, model: "qwen-image" };
+      return { image: await png(), seed: input.seed, model: "qwen-image", workflowHash: "b".repeat(64) };
     },
   } as unknown as ComfyUiClient;
   return state;
@@ -348,7 +353,136 @@ describe("media jobs service (D-38a)", () => {
       h.db.close();
     }
   });
+
+  it("cancelling right after start still ends cancelled (the queued→running race)", async () => {
+    const h = await makeHarness();
+    try {
+      const job = await h.service.start(request(), source(h), false);
+      // 刚开跑的时候点取消：写队列里 running 可能排在 cancelled 前面（C酱 #123）
+      await h.service.cancel(job.id).catch((error) => {
+        if ((error as { code?: string }).code !== "invalid_state") throw error;
+      });
+      await until(() => {
+        const state = getMediaJob(h.db, job.id)?.state;
+        return state === "cancelled" || state === "succeeded";
+      });
+      const final = h.service.get(job.id);
+      assert.notEqual(final.state, "running", "不能永远停在 running");
+      assert.ok(final.finishedAt !== null);
+      await until(() => !h.service.busy());
+      await new Promise((r) => setTimeout(r, 10));
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("「停」right after start also settles every task", async () => {
+    const h = await makeHarness();
+    try {
+      const a = await h.service.start(request({ prompt: "一" }), source(h), false);
+      const b = await h.service.start(request({ prompt: "二" }), source(h), false);
+      await h.service.stop({ kind: "chat", conversationId: h.conversationId });
+      await until(() =>
+        [a, b].every((job) => {
+          const state = getMediaJob(h.db, job.id)?.state;
+          return state === "cancelled" || state === "succeeded";
+        }),
+      );
+      for (const job of [a, b]) {
+        assert.notEqual(h.service.get(job.id).state, "running");
+        assert.ok(h.service.get(job.id).finishedAt !== null);
+      }
+      await until(() => !h.service.busy());
+      await new Promise((r) => setTimeout(r, 10));
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("repairs leftover queued / running jobs on startup as cancelled(app_restart)", async () => {
+    const h = await makeHarness();
+    try {
+      const base: MediaJob = {
+        id: `mjob_${ulid()}`,
+        kind: "draw",
+        state: "queued",
+        authorization: "user_tap",
+        source: { kind: "chat", conversationId: h.conversationId, messageId: h.message.id, agent: null },
+        intentHash: null,
+        draw: { prompt: "排队中", size: "1024x1024", backend: "comfyui" },
+        route: null,
+        remoteRunId: null,
+        result: null,
+        speech: null,
+        failure: null,
+        cancelReason: null,
+        createdAt: T,
+        startedAt: null,
+        finishedAt: null,
+      };
+      const queued: MediaJob = base;
+      const running: MediaJob = { ...base, id: `mjob_${ulid()}`, state: "running", startedAt: T };
+      const done: MediaJob = {
+        ...base,
+        id: `mjob_${ulid()}`,
+        state: "cancelled",
+        cancelReason: "user_cancel",
+        startedAt: T,
+        finishedAt: T,
+      };
+      insertMediaJob(h.db, queued);
+      insertMediaJob(h.db, running);
+      insertMediaJob(h.db, done);
+
+      const repaired = await h.service.repairInterrupted();
+      assert.equal(repaired, 2);
+      for (const job of [queued, running]) {
+        const after = h.service.get(job.id);
+        assert.equal(after.state, "cancelled");
+        assert.equal(after.cancelReason, "app_restart");
+        assert.ok(after.finishedAt !== null);
+      }
+      assert.equal(h.service.get(done.id).cancelReason, "user_cancel", "终态的不动");
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("records the workflow hash in the result (ADR-004 §3)", async () => {
+    const h = await makeHarness();
+    try {
+      const job = await h.service.start(request(), source(h), false);
+      await until(() => getMediaJob(h.db, job.id)?.state === "succeeded");
+      assert.match(h.service.get(job.id).result?.workflowHash ?? "", /^[0-9a-f]{64}$/);
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("refuses to draw from a retracted message", async () => {
+    const h = await makeHarness();
+    try {
+      const retracted = `cmsg_${ulid()}`;
+      insertChatMessage(h.db, { message: { ...h.message, id: retracted } as never });
+      retractChatMessage(h.db, retracted, T);
+      await assert.rejects(
+        () =>
+          h.service.start(
+            request(),
+            { kind: "chat", conversationId: h.conversationId, messageId: retracted, agent: null },
+            false,
+          ),
+        (error: unknown) => (error as { code?: string }).code === "validation_failed",
+      );
+    } finally {
+      h.db.close();
+    }
+  });
 });
+
+
+
+
 
 
 

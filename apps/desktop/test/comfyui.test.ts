@@ -3,6 +3,7 @@ import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
+import { createHash } from "node:crypto";
 import sharp from "sharp";
 import { ComfyUiClient, ComfyUiError, loadComfyUiConfigFile } from "../src/main/comfyui";
 
@@ -42,6 +43,8 @@ interface FakeServer {
   interrupts: number;
   history: "pending" | "completed";
   failPrompt: boolean;
+  queueDeletes: string[][];
+  views: string[];
 }
 
 function fakeServer(image: Buffer): FakeServer {
@@ -51,6 +54,8 @@ function fakeServer(image: Buffer): FakeServer {
     interrupts: 0,
     history: "completed",
     failPrompt: false,
+    queueDeletes: [],
+    views: [],
   };
   server.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
     const url = new URL(typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url);
@@ -64,6 +69,11 @@ function fakeServer(image: Buffer): FakeServer {
       server.interrupts += 1;
       return new Response("", { status: 200 });
     }
+    if (url.pathname === "/queue" && init?.method === "POST") {
+      const body = JSON.parse(String(init.body)) as { delete?: string[] };
+      server.queueDeletes.push(body.delete ?? []);
+      return new Response("{}", { status: 200 });
+    }
     if (url.pathname === "/history/p1") {
       const body =
         server.history === "pending"
@@ -76,7 +86,10 @@ function fakeServer(image: Buffer): FakeServer {
             };
       return new Response(JSON.stringify(body), { status: 200 });
     }
-    if (url.pathname === "/view") return new Response(image, { status: 200 });
+    if (url.pathname === "/view") {
+      server.views.push(url.searchParams.get("filename") ?? "");
+      return new Response(image, { status: 200 });
+    }
     return new Response("not found", { status: 404 });
   }) as typeof fetch;
   return server;
@@ -99,6 +112,9 @@ describe("ComfyUI client (D-38a)", () => {
     assert.ok(result.image.equals(image));
     assert.equal(result.seed, 7);
     assert.equal(result.model, "qwen-image.safetensors");
+    // 工作流 hash：填字段之前的模板的 sha256（C酱 #123）
+    const expected = createHash("sha256").update(JSON.stringify(workflow), "utf8").digest("hex");
+    assert.equal(result.workflowHash, expected);
 
     const sent = server.promptBodies[0]?.prompt ?? {};
     assert.equal(sent["6"]?.inputs.text, "小鲸鱼");
@@ -140,6 +156,48 @@ describe("ComfyUI client (D-38a)", () => {
     await running.interrupt();
     assert.equal(interrupted.interrupts, 1);
     await pending;
+
+    // 超时也要让 ComfyUI 停下来（C酱 #123）
+    assert.ok(stuck.interrupts >= 1, "timeout triggers interrupt");
+  });
+
+  it("cancelActive deletes our prompt from the queue, then interrupts", async () => {
+    const server = fakeServer(await pngBytes());
+    server.history = "pending";
+    const c = client(server, { totalTimeoutMs: 200 });
+    const pending = c.draw({ prompt: "x", size: "1024x1024", seed: 1 }).catch(() => undefined);
+    await new Promise((r) => setTimeout(r, 30));
+    await c.cancelActive();
+    assert.deepEqual(server.queueDeletes, [["p1"]]);
+    assert.equal(server.interrupts, 1);
+    await pending;
+  });
+
+  it("prefers the SaveImage output over a preview image", async () => {
+    const image = await pngBytes();
+    const server = fakeServer(image);
+    // 让 /history 返回 PreviewImage（temp）在前、SaveImage（output）在后
+    const originalFetch = server.fetch;
+    server.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
+      const url = new URL(typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url);
+      if (url.pathname === "/history/p1") {
+        return new Response(
+          JSON.stringify({
+            p1: {
+              status: { completed: true, status_str: "success" },
+              outputs: {
+                "8": { images: [{ filename: "preview.png", subfolder: "", type: "temp" }] },
+                "9": { images: [{ filename: "final.png", subfolder: "", type: "output" }] },
+              },
+            },
+          }),
+          { status: 200 },
+        );
+      }
+      return originalFetch(input, init);
+    }) as typeof fetch;
+    await client(server).draw({ prompt: "x", size: "1024x1024", seed: 1 });
+    assert.deepEqual(server.views, ["final.png"]);
   });
 
   it("loads the config file and returns null for missing / broken configs", () => {
@@ -158,3 +216,6 @@ describe("ComfyUI client (D-38a)", () => {
     assert.equal(loadComfyUiConfigFile(bad), null);
   });
 });
+
+
+

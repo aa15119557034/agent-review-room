@@ -59,6 +59,8 @@ export class MediaJobsService {
   #pumping = false;
   /** 正在跑的任务 → 本次运行的 AbortController（取消时用） */
   readonly #running = new Map<string, AbortController>();
+  /** 取消原因：cancel / stop 先记下，等 #run 收尾时用（谁先到都不丢） */
+  readonly #cancelIntent = new Map<string, MediaJob["cancelReason"]>();
 
   constructor(private readonly deps: MediaJobsDeps) {}
 
@@ -126,10 +128,26 @@ export class MediaJobsService {
     const job = getMediaJob(this.deps.db, jobId);
     if (job === null) throw new ChatError("not_found", "任务不存在");
     if (job.state !== "queued" && job.state !== "running") throw new ChatError("invalid_state", "这个任务已经结束了");
-    const controller = this.#running.get(jobId);
-    controller?.abort();
-    if (job.state === "running") void this.deps.comfy()?.interrupt();
-    return this.#transition(jobId, job.state, "cancelled", { cancelReason: "user_cancel" });
+    this.#cancelIntent.set(jobId, "user_cancel");
+    this.#running.get(jobId)?.abort();
+    if (job.state === "running") void this.deps.comfy()?.cancelActive();
+    // 读到 queued 时 #run 可能刚好把它写成 running（写队列里 running 在前）：冲突就按最新状态再来一次
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const current = getMediaJob(this.deps.db, jobId);
+      if (current === null) throw new ChatError("not_found", "任务不存在");
+      if (current.state !== "queued" && current.state !== "running") {
+        this.#cancelIntent.delete(jobId);
+        throw new ChatError("invalid_state", "这个任务已经结束了");
+      }
+      try {
+        const cancelled = await this.#transition(jobId, current.state, "cancelled", { cancelReason: "user_cancel" });
+        this.#cancelIntent.delete(jobId);
+        return cancelled;
+      } catch (error) {
+        if (!(error instanceof MediaJobStateConflictError)) throw error;
+      }
+    }
+    throw new ChatError("invalid_state", "这个任务已经结束了");
   }
 
   /** 会话 / 议题的「停」：取消这个范围里所有排队和正在跑的任务（cancelReason = user_stop） */
@@ -137,13 +155,23 @@ export class MediaJobsService {
     const active = listActiveMediaJobs(this.deps.db).filter((job) => inScope(job, scope));
     const cancelled: MediaJob[] = [];
     for (const job of active) {
-      try {
-        if (job.state === "running") void this.deps.comfy()?.interrupt();
-        this.#running.get(job.id)?.abort();
-        cancelled.push(await this.#transition(job.id, job.state, "cancelled", { cancelReason: "user_stop" }));
-      } catch (error) {
-        // 刚好自己结束了：跳过，不因为一个任务失败停掉整次「停」
-        if (!(error instanceof MediaJobStateConflictError) && !(error instanceof ChatError)) throw error;
+      this.#cancelIntent.set(job.id, "user_stop");
+      this.#running.get(job.id)?.abort();
+      if (job.state === "running") void this.deps.comfy()?.cancelActive();
+      // 和 cancel 一样：冲突就按最新状态重试，别把「刚开跑」当成失败
+      for (let attempt = 0; attempt < 3; attempt++) {
+        const current = getMediaJob(this.deps.db, job.id);
+        if (current === null || (current.state !== "queued" && current.state !== "running")) {
+          this.#cancelIntent.delete(job.id);
+          break;
+        }
+        try {
+          cancelled.push(await this.#transition(job.id, current.state, "cancelled", { cancelReason: "user_stop" }));
+          this.#cancelIntent.delete(job.id);
+          break;
+        } catch (error) {
+          if (!(error instanceof MediaJobStateConflictError)) throw error;
+        }
       }
     }
     return cancelled;
@@ -164,6 +192,11 @@ export class MediaJobsService {
     const job = getMediaJob(this.deps.db, jobId);
     if (job === null) throw new ChatError("not_found", "任务不存在");
     return job;
+  }
+
+  /** 队列是否还有事在做（诊断 / 测试用：等它空下来再关数据库） */
+  busy(): boolean {
+    return this.#pumping;
   }
 
   // ---------------------------------------------------------------- 队列
@@ -215,10 +248,17 @@ export class MediaJobsService {
       const seed = this.deps.seed?.() ?? Math.trunc(Math.random() * 0xffff_ffff);
       let result;
       try {
-        result = await client.draw({ prompt: draw.prompt, size: draw.size, seed });
+        result = await client.draw({ prompt: draw.prompt, size: draw.size, seed }, { signal: controller.signal });
       } catch (error) {
-        if (controller.signal.aborted) return; // 已经被取消并收尾了
+        if (controller.signal.aborted) {
+          await this.#settleCancelled(job.id);
+          return;
+        }
         if (error instanceof ComfyUiError) {
+          if (error.code === "cancelled") {
+            await this.#settleCancelled(job.id);
+            return;
+          }
           if (error.code === "timeout") {
             await this.#transition(job.id, "running", "timed_out", {}).catch(ignoreConflict);
             return;
@@ -233,7 +273,10 @@ export class MediaJobsService {
         await this.#fail(job, "internal", error instanceof Error ? error.message : String(error));
         return;
       }
-      if (controller.signal.aborted) return;
+      if (controller.signal.aborted) {
+        await this.#settleCancelled(job.id);
+        return;
+      }
       let image;
       try {
         image = await this.deps.store.addGeneratedImage(result.image, this.deps.now());
@@ -262,7 +305,7 @@ export class MediaJobsService {
             prompt: draw.prompt,
             size: draw.size,
             seed: result.seed,
-            workflowHash: null,
+            workflowHash: result.workflowHash,
           },
         });
       } catch (error) {
@@ -272,6 +315,41 @@ export class MediaJobsService {
     } finally {
       this.#running.delete(job.id);
     }
+  }
+
+  /**
+   * 取消之后收尾：只要还在 queued / running 就转成 cancelled（原因记在 #cancelIntent）。
+   * 取消和 #run 谁先到都行，另一方看到冲突就跳过——任务一定会落到终态（C酱 #123）。
+   */
+  async #settleCancelled(jobId: string): Promise<void> {
+    const current = getMediaJob(this.deps.db, jobId);
+    if (current === null) return;
+    if (current.state !== "queued" && current.state !== "running") {
+      this.#cancelIntent.delete(jobId);
+      return;
+    }
+    await this.#transition(jobId, current.state, "cancelled", {
+      cancelReason: this.#cancelIntent.get(jobId) ?? "user_cancel",
+    }).catch(ignoreConflict);
+    this.#cancelIntent.delete(jobId);
+  }
+
+  /**
+   * 启动时收尾：上一次崩掉 / 被强杀留下的 queued / running 一律记成 cancelled(app_restart)
+   * （契约 media.ts：「不留『生成中』」）。每条都会推一次 media.updated。
+   */
+  async repairInterrupted(): Promise<number> {
+    let repaired = 0;
+    for (const job of listActiveMediaJobs(this.deps.db)) {
+      try {
+        await this.#transition(job.id, job.state, "cancelled", { cancelReason: "app_restart" });
+        this.#cancelIntent.delete(job.id);
+        repaired += 1;
+      } catch (error) {
+        if (!(error instanceof MediaJobStateConflictError)) throw error;
+      }
+    }
+    return repaired;
   }
 
   async #fail(job: MediaJob, reason: MediaFailureReason, message: string): Promise<void> {
@@ -317,6 +395,10 @@ export class MediaJobsService {
     if (message.sender === "user" && source.agent !== null) {
       throw new ChatError("validation_failed", "你自己发的消息，agent 应该是 null");
     }
+    // 撤回的消息不画（和 cancelReason = message_withdrawn 的语义对上，C酱 #123）
+    if ("state" in message && message.state !== "sent") {
+      throw new ChatError("validation_failed", "这条消息已经撤回了，不能再画");
+    }
   }
 }
 
@@ -330,4 +412,9 @@ const sameSource = (a: MediaSource, b: MediaSource): boolean => JSON.stringify(a
 const ignoreConflict = (error: unknown): void => {
   if (!(error instanceof MediaJobStateConflictError)) throw error;
 };
+
+
+
+
+
 

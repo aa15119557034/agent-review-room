@@ -108,6 +108,10 @@ async function bootstrap(): Promise<void> {
     now: () => new Date().toISOString(),
   });
 
+  // 上次崩掉 / 被强杀留下的画图任务统一收尾（契约 media.ts：不留「生成中」）
+  const repairedMedia = await jobs.repairInterrupted();
+  if (repairedMedia > 0) console.warn(`[media] 收尾了 ${repairedMedia} 个上次没跑完的画图任务`);
+
   const media = new MediaService({
     db,
     store: mediaStore,
@@ -243,5 +247,6 @@ void app.whenReady().then(async () => {
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
+
 
 
