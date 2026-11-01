@@ -60,8 +60,8 @@
 | **S-24** | Claude | 节点：读 Codex 额度（2 秒超时）并上报、实测单图消耗；S-21 的 Codex 部分提前，C-36 复用 | C-42b | 1 天 |
 | **D-36a** | DeepSeek | 图片处理管道（去全部元数据、转正、确定性输出、拒动图 / HEIC） | C-42a | 1.5～2 天 |
 | **D-36b** | DeepSeek | 附件清单进指纹、盖章和起跑重读比对、图片本体 + 引用表、数据库迁移；main 注册 `room-image://`（按引用表查本体、只读、不可导航、只认 `img_…`，其余 404） | C-42a、D-36a | 1.5～2 天 |
-| **D-37a** | DeepSeek | 语音合成试听（三个候选盲听） | C-42c | 2～3 天 |
-| **D-37b** | DeepSeek | 语音合成集成（独立进程、缓存、MediaJob）；朗读文本只用契约的 `speakableText`，不另写过滤 | D-37a | 2～3 天 |
+| **D-37a** | DeepSeek | 语音合成试听（三个候选盲听）：三个引擎各自装好、同一句 + 同一参考音合成，样音在 `E:\AI\TTS\samples`（A/B/C + 说明.md + 揭晓表）。**2026-10-29 做完，2026-11-01 江浩盲听选 A = IndexTTS2** | C-42c | 2～3 天 |
+| **D-37b** | DeepSeek | 语音合成集成（独立进程、缓存、MediaJob）；朗读文本只用契约的 `speakableText`，不另写过滤。**2026-11-02 已合并（#152）**：`apps/desktop/tts/runner.py` 侧车 + 迁移 v16（`audio_refs` / `speech_clips`）+ v17（`reply_as_voice` 落库）+ `speech.play` / `voices.list` / `room-audio://`（Range）+ 「用语音回」自动合成；本机 IndexTTS2 已换 CUDA torch，热启动约 7 秒 / 4 秒音频 | D-37a | 2～3 天 |
 | **D-31d** | DeepSeek | 秘书回答存 `mediaIntent`（C-42e）：迁移给 `chat_messages` 加可空列（旧行读回省略）、`insertChatMessage` / `toChatMessage` 读写、写回答时调 `extractMediaIntent`（里面用契约里的 `speakableText` 判 speak 字数），被丢的原始值记审计；`immersiveDeferred` 留给 D-39 | C-42e、D-31b | 0.5 天 |
 | **D-38a** | DeepSeek | 画图 · 本机 ComfyUI、全局显卡队列、MediaJob。验收含：沉浸模式的自动意图要么有任务（本机画不了就立刻 `failed(backend_unavailable)`），要么有 `immersiveDeferred`，不能都没有 | C-42b | 2～3 天 |
 | **D-38b** | DeepSeek | **暂缓**（2026-11-01 用户决定画图先只走本机，ADR-004 §3；恢复前先由江浩决定，再看 #133 的单图实测和当时 5 小时窗口的余量定 85% 线）。画图 · 林离 + 85% 选路 + 回退 | C-42b、S-23、S-24、D-38a | 2～3 天 |
