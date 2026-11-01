@@ -64,6 +64,7 @@ pnpm --filter @room/desktop exec tsx --test e2e/model-selection.test.ts
 | #4 没点名 | reply / skip 混合；空输出、超时、半截 JSON 各自记失败，不算 skip；没有自动下一轮 |
 | #5 正文 @ 没选人 | 按没点名处理 |
 | #6 撤回哨兵 | 撤回后新 Snapshot、节点请求、转议题材料都不含哨兵（含复述它的秘书回答）；数据库原文还在 |
+| #6b 压缩历史 | 覆盖撤回消息的摘要变 stale、推 `chat.summary.updated`；之后节点请求和落库 Snapshot 都不含哨兵（含只覆盖秘书复述的摘要）；无关摘要照常进；摘要原文还在库里 |
 | #7 五分钟边界 | 差 1 毫秒能撤、正好五分钟不能；秘书的消息不能撤 |
 | #8 迟到结果 | 节点不理 cancel、撤回后才交卷：回答位仍是 retracted，没有回答消息 |
 | #9 停掉再重试 | 旧 Run 在新尝试开始后才交卷，不改当前尝试；重试重新拼 Snapshot |
@@ -72,4 +73,13 @@ pnpm --filter @room/desktop exec tsx --test e2e/model-selection.test.ts
 
 假节点新增 `late` 行为（不理 cancel，到点照样交卷）和 `bodies`（完整 StartRun 请求体）。
 
-还没测：压缩历史（main 还没生成历史摘要，等 D-41 接 core 拼装器后补）。
+摘要生成还没上线（D-41 只做了存 / 读 / 失效），#6b 按契约直接写库造摘要；生成上线后改走真流程。
+
+## X-34b 媒体意图（确定性部分）
+
+| 用例 | 验证 |
+|---|---|
+| #12 畸形媒体意图 | `skip` + `draw`、半截 JSON → failed(parse_error)，没有回答消息，`media_jobs` 为空 |
+| #13 沉浸模式关着 | `speak` / `draw` 合格时只记在回答消息的 `media_intent` 上，超限的只丢意图、文字照常；`media_jobs` 为空 |
+
+还没测（等前置）：StartRun 里的图片块位置和 sha256（main 发聊天时还没把图片清单交给拼装器，remote-client 也还没带 `attachments` / `imageSlot`）；图里写「画一张」不会自动画（同上，图到不了节点）；同一输入 hash 相同。
