@@ -577,7 +577,7 @@ function SidePanel() {
 function AgentCard({ d, id }: { d: DiscussionState; id: string }) {
   const a = d.agents.find((x) => x.id === id)!;
   const st = d.status[id];
-  const node = a.nodeId === "user-pc" ? "你的电脑" : a.nodeId === "controller-local" ? "主控机" : a.nodeId === "controller-local-codex" ? "主控机（林离）" : a.nodeId ?? "未配置节点";
+  const node = a.nodeId === "user-pc" ? "你的电脑" : a.nodeId === "controller-local" ? "主控机" : a.nodeId ?? "未配置节点";
   return (
     <li className="agent-card" data-state={st?.availability ?? "unknown"} style={{ "--agent": a.color } as CSSProperties}>
       <div className="agent-card-head">
