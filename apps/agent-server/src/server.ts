@@ -120,7 +120,10 @@ export function createAgentServer(
       const profile = Object.hasOwn(cfg.profiles, profileId) ? cfg.profiles[profileId] : undefined;
       if (!profile) throw new HttpError(404, "unknown_profile", "unknown profile");
       if (!profile.quota) throw new HttpError(404, "not_found", "this profile has no quota source");
-      return sendJson(res, 200, await readQuota(profileId, profile));
+      const q = await readQuota(profileId, profile);
+      // 额度是实时值，不让中间缓存 / Electron 的 HTTP 缓存留旧数字（汐 #133）
+      res.setHeader("cache-control", "no-store");
+      return sendJson(res, 200, q);
     }
 
     if (parts[1] !== "runs") throw new HttpError(404, "not_found", "unknown path");

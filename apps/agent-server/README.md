@@ -184,7 +184,7 @@ pnpm --filter @room/agent-server run vision-test -- deepseek-discuss --model dee
 pnpm --filter @room/agent-server run quota -- codex-discuss
 ```
 
-打印一行 JSON。验收：读到的百分比要和 Codex 自己显示的一致（Codex 里 `/status`）；画一张图前后各读一次，差值就是单图消耗，写进验收记录；超过 10% 要拿回来请江浩重新定 85% 这条线。云端没登录的 codex 0.166.0 实测：161 ms 返回，各项为 `null`，日志记「codex account authentication required to read rate limits」。
+打印一行 JSON。验收：读到的百分比要和 Codex 自己显示的一致（Codex 里 `/status`）；画一张图前后各读一次，差值就是单图消耗，写进验收记录；超过 10% 要拿回来请江浩重新定 85% 这条线。主控机实测（#133，codex-cli 0.163.0，已登录）：读到的数字和 Codex 原始返回一致；画一张图 5 小时窗口 +4%、每周 +1%，没超过 10%，85% 线不用重定；读一次约 2 秒，机器忙时偶尔超过 2 秒报「未知」（按规则走本机）。云端没登录的 codex 0.166.0 实测：161 ms 返回，各项为 `null`，日志记「codex account authentication required to read rate limits」。
 
 ## 安全
 

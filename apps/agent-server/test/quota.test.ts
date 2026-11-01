@@ -287,6 +287,7 @@ describe("GET /v1/profiles/:id/quota", () => {
   it("returns the quota for a profile with a quota source", async () => {
     const res = await fetch(`${base}/v1/profiles/codex-image/quota`, { headers: auth });
     assert.equal(res.status, 200);
+    assert.equal(res.headers.get("cache-control"), "no-store");
     const q = RemoteProfileQuota.parse(await res.json());
     assert.equal(q.fiveHour?.usedPercent, 42);
     assert.equal(reads, 1);

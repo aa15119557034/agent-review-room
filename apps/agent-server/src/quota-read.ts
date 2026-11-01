@@ -26,7 +26,9 @@ async function main(): Promise<void> {
   const t0 = Date.now();
   const q = await readCodexQuota(profile, { log: (m) => console.error(m) });
   console.log(JSON.stringify({ test: "S-24 quota", profileId, tookMs: Date.now() - t0, ...q }));
-  process.exit(q.fiveHour && q.weekly && q.creditsInUse !== null ? 0 : 1);
+  const complete = q.fiveHour && q.weekly && q.creditsInUse !== null;
+  if (!complete) console.error("本次有读不到的项（原因见上面的日志）；不是工具坏了，可以再读一次。主控端遇到读不到会改用本机画");
+  process.exit(complete ? 0 : 1);
 }
 
 main().catch((err: unknown) => {
