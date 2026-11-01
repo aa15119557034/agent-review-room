@@ -1,13 +1,13 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { CHART_FENCE, MEDIA_LIST_MESSAGE_IDS_MAX, SPEAK_MAX_CHARS, type AgentChatMessage, type AgentProfile, type ChatMessage, type MediaJob, type NodeHealth } from "@room/schemas";
+import { CHART_FENCE, ChatSnapshot, MEDIA_LIST_MESSAGE_IDS_MAX, SPEAK_MAX_CHARS, type AgentChatMessage, type AgentProfile, type ChatMessage, type ChatReplySlot, type MediaJob, type NodeHealth } from "@room/schemas";
 import { createMockBridge, type MockOptions } from "../mock/mock-backend";
 import { createActions } from "../lib/actions";
 import { applyMediaJob, initialMedia, type ChatDraft, type ChatState } from "../lib/chat";
 import { draftContent } from "../lib/chat-actions";
 import { createClient, type RoomClient } from "../lib/client";
 import { createMediaActions } from "../lib/media-actions";
-import { asksForVoiceReply, canSpeak, chatVision, jobActive, mergeJobs, routeText, showDrawCard, splitReply, stripCharts } from "../lib/media";
+import { agentsWithoutImages, asksForVoiceReply, canSpeak, slotsToCheckImages, chatVision, jobActive, mergeJobs, routeText, showDrawCard, splitReply, stripCharts } from "../lib/media";
 import { initialState } from "../lib/state";
 import { createStore } from "../lib/store";
 
@@ -143,9 +143,36 @@ describe("media lib", () => {
     assert.equal(draftContent(d), null);
     assert.equal(draftContent({ ...d, voice: { audio: "aud_1", text: "  " } }), null);
     assert.deepEqual(draftContent({ ...d, voice: { audio: "aud_1", text: " 你好 " } }), { kind: "voice", audio: "aud_1", transcriptText: "你好" });
-    assert.deepEqual(draftContent({ ...d, attachments: [{ kind: "image", ref: "img_1", name: "a.jpg" }] }), {
-      kind: "text", text: "", attachments: [{ kind: "image", ref: "img_1" }],
-    });
+    // C-42i：图片带上原文件名；文件只交 ref
+    assert.deepEqual(
+      draftContent({
+        ...d,
+        attachments: [
+          { kind: "image", ref: "img_1", name: "a.jpg" },
+          { kind: "file", ref: "file_1", name: "n.md", mime: "text/markdown", bytes: 1, sha256: "a".repeat(64), isText: true },
+        ],
+      } as unknown as ChatDraft),
+      { kind: "text", text: "", attachments: [{ kind: "image", ref: "img_1", name: "a.jpg" }, { kind: "file", ref: "file_1" }] },
+    );
+    // 名字不合契约（带换行 / 路径）就不带，main 用占位名，不让整条发不出去
+    for (const bad of ["a\nb.jpg", "x/y.png"]) {
+      assert.deepEqual(draftContent({ ...d, attachments: [{ kind: "image", ref: "img_1", name: bad }] } as unknown as ChatDraft), {
+        kind: "text", text: "", attachments: [{ kind: "image", ref: "img_1" }],
+      });
+    }
+  });
+
+  it("agentsWithoutImages: only runs whose snapshot carried no images; unknown / failed / retracted stay unmarked (C-45)", () => {
+    const slot = (agent: string, runId: string | null, outcome = "answered") => ({ agent, runId, outcome }) as unknown as ChatReplySlot;
+    const slots = [slot("claude", "run_a"), slot("codex", "run_b"), slot("deepseek", "run_c"), slot("x", null, "unavailable"), slot("y", "run_d", "retracted")];
+    assert.deepEqual(slotsToCheckImages(slots).map((s) => s.runId), ["run_a", "run_b", "run_c"]);
+    assert.deepEqual(agentsWithoutImages(slots, { run_a: 1, run_b: 0, run_c: "failed", run_d: 0 }), ["codex"]);
+    assert.deepEqual(agentsWithoutImages(slots, {}), [], "not looked up yet");
+    // 汐 #151：还在答 / 失败 / 停掉的不标（失败那行已经说明了）；skipped 照标
+    for (const outcome of ["running", "failed", "cancelled"]) {
+      assert.deepEqual(agentsWithoutImages([slot("codex", "run_b", outcome)], { run_b: 0 }), [], outcome);
+    }
+    assert.deepEqual(agentsWithoutImages([slot("codex", "run_b", "skipped")], { run_b: 0 }), ["codex"]);
   });
 });
 
@@ -185,7 +212,7 @@ describe("C-43 through the UI actions (mock)", () => {
     const actions = createActions(store, createClient(bridge));
     // 之后发出的不再扣住；已经扣住的仍要等 release
     const stopHolding = (type: string) => held.delete(type);
-    return { store, actions, queries, hold, stopHolding, failing };
+    return { store, actions, queries, hold, stopHolding, failing, mock };
   }
   const agentReply = (msgs: readonly ChatMessage[]) => msgs.filter((m): m is AgentChatMessage => m.sender === "agent").at(-1);
   const jobsOf = (store: ReturnType<typeof app>["store"], kind: MediaJob["kind"]) => store.get().chat.media.jobs.filter((j) => j.kind === kind);
@@ -326,6 +353,72 @@ describe("C-43 through the UI actions (mock)", () => {
     await until(() => jobsOf(store, "draw")[0]?.state === "succeeded");
     const j = jobsOf(store, "draw")[0]!;
     assert.deepEqual([j.source.kind === "chat" && j.source.messageId, j.source.kind === "chat" && j.source.agent], [mine.id, null]);
+  });
+
+  it("C-45: the sent image keeps its file name, and the one who didn't get it is marked from the real snapshot", async () => {
+    const { store, actions, queries, failing, mock } = app();
+    await actions.start();
+    actions.goChat();
+    await actions.chat.createConversation({ kind: "group", agents: ["claude", "codex"] }, "看图");
+    await actions.chat.media.pickAttachment("image");
+    const cid = store.get().chat.currentId!;
+    const picked = store.get().chat.drafts[cid]!.attachments[0]!;
+    actions.chat.setDraftText("看看这张");
+    await actions.chat.send();
+    const mine = () => store.get().chat.messages.find((m) => m.sender === "user")!;
+    const content = mine().content;
+    assert.ok(content.kind === "text");
+    assert.equal(content.attachments[0]!.name, picked.name, "not 图片.png");
+
+    const slots = () => store.get().chat.slots.filter((x) => x.userMessageId === mine().id);
+    await until(() => slots().length === 2 && slots().every((x) => x.outcome === "answered" || x.outcome === "skipped"));
+    const runIds = slots().map((x) => x.runId!);
+    // 组件每次渲染都会叫：同一个 Run 只查一次
+    await Promise.all([actions.chat.media.loadImagesSent(runIds), actions.chat.media.loadImagesSent(runIds)]);
+    assert.equal(queries.filter((q) => q.type === "chat.snapshots.get").length, 2);
+    assert.deepEqual(agentsWithoutImages(slots(), store.get().chat.media.imagesSent), ["codex"]);
+    const sent = (agent: string) => store.get().chat.media.imagesSent[slots().find((x) => x.agent === agent)!.runId!];
+    assert.equal(sent("claude"), 1);
+    // mock 拼的带图 Snapshot 本身合契约（清单块开头、图片资料块、imageSlot）
+    for (const runId of runIds) {
+      const run = (await mock.query({ type: "chat.runs.get", runId } as never)) as { ok: true; data: { snapshotId: string } };
+      const snap = await mock.query({ type: "chat.snapshots.get", snapshotId: run.data.snapshotId } as never);
+      assert.ok(ChatSnapshot.safeParse((snap as { data: unknown }).data).success, JSON.stringify(snap).slice(0, 300));
+    }
+
+    // 查不到：不标，也不弹错误；换个会话再回来会重新查
+    store.set((st) => ({ ...st, chat: { ...st.chat, media: { ...st.chat.media, imagesSent: {} } } }));
+    failing.add("chat.snapshots.get");
+    await actions.chat.media.loadImagesSent(runIds);
+    assert.equal(sent("codex"), "failed");
+    assert.deepEqual(agentsWithoutImages(slots(), store.get().chat.media.imagesSent), []);
+    assert.equal(store.get().notice, null);
+    failing.delete("chat.snapshots.get");
+    await actions.chat.openConversation(cid);
+    assert.equal(sent("codex"), undefined);
+    await actions.chat.media.loadImagesSent(runIds);
+    assert.equal(sent("codex"), 0);
+  });
+
+  it("C-45: at most 3 snapshots are fetched at once (汐 #151)", async () => {
+    let inFlight = 0;
+    let peak = 0;
+    const client = {
+      query: async (r: { type: string; runId?: string; snapshotId?: string }) => {
+        inFlight++;
+        peak = Math.max(peak, inFlight);
+        await sleep(3);
+        inFlight--;
+        if (r.type === "chat.runs.get") return { snapshotId: `snap_${r.runId}` };
+        return { attachments: undefined };
+      },
+    } as unknown as RoomClient;
+    const store = createStore(initialState);
+    const media = createMediaActions(store, client, () => {});
+    const ids = Array.from({ length: 10 }, (_, i) => `run_${i}`);
+    await media.loadImagesSent(ids);
+    assert.ok(peak <= 3, `peak ${peak}`);
+    assert.deepEqual(Object.values(store.get().chat.media.imagesSent), Array(10).fill(0));
   });
 
   it("re-edit puts the text back but not the old attachments or voice", async () => {

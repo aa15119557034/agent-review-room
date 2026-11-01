@@ -90,6 +90,12 @@ export interface ChatMediaState {
    * 这两种都不能当成「没有任务」放出画图入口，否则画过的会被当成没画过、重复花额度（林离 #117）
    */
   jobsLookup: Record<string, "loading" | "failed">;
+  /**
+   * C-45：带图消息的每个 Run 实际带了几张图（查 chat.snapshots.get 的 attachments，没有 = 0）。
+   * 以这次真的拼出来的 Snapshot 为准，不按发送前的探测猜；failed = 没查到，不显示提示。
+   * Snapshot 不会变，所以切会话也不清
+   */
+  imagesSent: Record<string, number | "failed">;
 }
 
 export const initialMedia: ChatMediaState = {
@@ -105,6 +111,7 @@ export const initialMedia: ChatMediaState = {
   drawStarting: {},
   voiceImporting: {},
   jobsLookup: {},
+  imagesSent: {},
 };
 
 export interface ChatDraft {

@@ -10,6 +10,7 @@ import {
   parseChartSpec,
   type AgentChatMessage,
   type AgentProfile,
+  type ChatReplySlot,
   type ChartSpec,
   type DrawFallbackReason,
   type DrawRoute,
@@ -125,6 +126,21 @@ export function visionWarnings(
     .map((a) => [a, vision[a] ?? "offline"] as const)
     .filter(([, v]) => v !== "yes")
     .map(([a, v]) => `${name(a)}（当前模型）${VISION_LABEL[v as Exclude<VisionHint, "yes">]}，只会收到「[图片：文件名]」`);
+}
+
+/** C-45：带图消息的回答位里，哪些要查「这次带了几张图」（有 Run、没撤回） */
+export const slotsToCheckImages = (slots: readonly ChatReplySlot[]): ChatReplySlot[] =>
+  slots.filter((s) => s.runId !== null && s.outcome !== "retracted");
+
+/**
+ * C-45：这条带图消息，哪几位这次没收到图（这位当前这次尝试的 Snapshot 不带 attachments）。
+ * 还没查到 / 查失败的不算，宁可不标也不乱标。只标已经答完（answered / skipped）的：
+ * 还在答的等结果出来再说，失败 / 停掉的那行已经说明了情况，不再并排一行（汐 #151）
+ */
+export function agentsWithoutImages(slots: readonly ChatReplySlot[], imagesSent: Readonly<Record<string, number | "failed">>): string[] {
+  return slotsToCheckImages(slots)
+    .filter((s) => (s.outcome === "answered" || s.outcome === "skipped") && imagesSent[s.runId!] === 0)
+    .map((s) => s.agent);
 }
 
 // ---------------------------------------------------------------- 用语音回（ADR-004 §4）

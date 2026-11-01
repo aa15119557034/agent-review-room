@@ -6,6 +6,7 @@ import {
   IMMERSIVE_LIMITS,
   type AgentChatMessage,
   type ChatAttachment,
+  type ChatReplySlot,
   type Conversation,
   type DrawRequest,
   type DrawRoutePreview,
@@ -27,6 +28,8 @@ import {
   showDrawCard,
   canSpeak,
   visionWarnings,
+  agentsWithoutImages,
+  slotsToCheckImages,
   voiceBubbleWidth,
   JOB_STATE_LABEL,
 } from "../../lib/media";
@@ -570,6 +573,33 @@ export function SpeechPlayer() {
     void a.play().catch(() => actions.chat.media.playEnded());
   }, [playing, clip, actions]);
   return <audio ref={ref} hidden onEnded={() => actions.chat.media.playEnded()} onError={() => playing && actions.chat.media.playEnded()} />;
+}
+
+// ================================================================ 发出去的带图消息
+
+/**
+ * C-45：你发的带图消息下面，标出这次哪几位看不到图（ADR-004 §2）。
+ * 看的是每位当前这次尝试实际拼出来的 Snapshot（重试会换 Run，重新查），不是发送前的探测
+ */
+export function ImagesSeenLine({ message, slots }: { message: UserChatMessage; slots: ChatReplySlot[] }) {
+  const imagesSent = useAppState((s) => s.chat.media.imagesSent);
+  const names = useAppState((s) => s.disc.agents);
+  const actions = useActions();
+  const hasImage = message.content.kind === "text" && message.content.attachments.some((a) => a.kind === "image");
+  const runIds = hasImage ? slotsToCheckImages(slots).map((s) => s.runId!) : [];
+  const key = runIds.join(",");
+  useEffect(() => {
+    if (runIds.length > 0) void actions.chat.media.loadImagesSent(runIds);
+  }, [key, actions]);
+  if (!hasImage || message.state === "retracted") return null;
+  const blind = agentsWithoutImages(slots, imagesSent);
+  if (blind.length === 0) return null;
+  const who = blind.map((a) => names.find((x) => x.id === a)?.displayName ?? a).join("、");
+  return (
+    <p className="chat-note vision-warning" title="这位这次用的模型看不了图（或者节点还不能收图），只收到「[图片：文件名]」">
+      {who} 这次看不到图，只收到图片名字
+    </p>
+  );
 }
 
 // ================================================================ 输入框

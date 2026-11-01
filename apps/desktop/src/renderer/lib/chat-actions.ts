@@ -1,4 +1,4 @@
-import type { ChatContentInput, ChatMentions, ConversationMembers, ControlEvent, Project } from "@room/schemas";
+import { ChatImageInputName, type ChatContentInput, type ChatMentions, type ConversationMembers, type ControlEvent, type Project } from "@room/schemas";
 import { ControlFailure, type RoomClient } from "./client";
 import type { AppState } from "./state";
 import {
@@ -336,7 +336,12 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
 export function draftContent(d: ChatDraft): ChatContentInput | null {
   if (d.voice) return d.voice.text.trim() ? { kind: "voice", audio: d.voice.audio, transcriptText: d.voice.text.trim() } : null;
   if (!d.text.trim() && d.attachments.length === 0) return null;
-  const attachments = d.attachments.map((a) => (a.kind === "image" ? { kind: "image" as const, ref: a.ref } : { kind: "file" as const, ref: a.ref }));
+  // C-42i：图片带上选的时候的原文件名（同一张图按内容去重，main 记不住这次叫什么）；名字不合格就不带，main 用占位名
+  const attachments = d.attachments.map((a) =>
+    a.kind === "image"
+      ? { kind: "image" as const, ref: a.ref, ...(ChatImageInputName.safeParse(a.name).success ? { name: a.name.trim() } : {}) }
+      : { kind: "file" as const, ref: a.ref },
+  );
   return { kind: "text", text: d.text, attachments };
 }
 
