@@ -33,10 +33,14 @@ export interface TtsConfig {
   modelDir: string;
   /** 一次合成最多等多久 */
   timeoutMs?: number;
+  /** 起进程 + 加载模型最多等多久（默认 120 秒） */
+  loadTimeoutMs?: number;
   voices: TtsVoiceConfig[];
 }
 
 const DEFAULT_TIMEOUT_MS = 180_000;
+/** 起进程 + 加载模型最多等多久（C酱 #152 必须改 2）：卡住就把整条显卡队列拖死，所以必须有上限 */
+const DEFAULT_LOAD_TIMEOUT_MS = 120_000;
 
 /** 配置缺失 / python 或脚本不存在 / 进程起不来 */
 export class TtsUnavailableError extends Error {
@@ -103,6 +107,7 @@ export function loadTtsConfigFile(path: string): TtsConfig | null {
       script: raw.script,
       modelDir: raw.modelDir,
       ...(typeof raw.timeoutMs === "number" ? { timeoutMs: raw.timeoutMs } : {}),
+      ...(typeof raw.loadTimeoutMs === "number" ? { loadTimeoutMs: raw.loadTimeoutMs } : {}),
       voices,
     };
   } catch {
@@ -126,7 +131,9 @@ export function voiceOptionsOf(config: TtsConfig): VoiceOption[] {
  */
 export class TtsRunner {
   #child: ChildProcessWithoutNullStreams | null = null;
-  #ready: Promise<void> | null = null;
+  /** 这次启动的 promise（只在还没 ready 时有意义） */
+  #loading: Promise<void> | null = null;
+  #ready = false;
   /** stdout 按行切好、等着回应的请求 */
   #pending: { id: string; resolve: (reply: RunnerReply) => void; reject: (error: Error) => void } | null = null;
   #buffer = "";
@@ -151,34 +158,88 @@ export class TtsRunner {
     return existsSync(this.config.python) && existsSync(this.config.script);
   }
 
-  async #start(): Promise<void> {
+  /**
+   * 杀掉当前进程并立刻清掉引用（C酱 #152 建议 3）。
+   * 立刻清很重要：旧进程的 exit 可能晚于下一次 #start，如果那时才清会把新进程的引用一起清掉。
+   */
+  #kill(reason?: Error): void {
+    const child = this.#child;
+    this.#child = null;
+    this.#loading = null;
+    this.#ready = false;
+    this.#buffer = "";
+    const pending = this.#pending;
+    this.#pending = null;
+    if (child !== null) {
+      child.removeAllListeners("exit");
+      child.kill();
+    }
+    if (reason !== undefined) pending?.reject(reason);
+    else pending?.reject(new TtsFailedError("语音合成被取消"));
+  }
+
+  /**
+   * 起进程并等 `ready`。C酱 #152 必须改 2：加载阶段也要有超时、也要听取消，
+   * 否则卡在加载时整条显卡队列（画图 + 语音共用）都不动。
+   */
+  async #start(signal: AbortSignal): Promise<void> {
     if (!this.available()) throw new TtsUnavailableError("语音合成的 python 或脚本找不到，检查 userData/tts.json");
-    if (this.#ready !== null) return this.#ready;
-    this.#ready = new Promise<void>((resolve, reject) => {
-      const child = spawn(this.config.python, [this.config.script], {
-        cwd: this.config.modelDir,
-        env: { ...process.env, PYTHONIOENCODING: "utf-8", PYTHONUTF8: "1", INDEXTTS_MODEL_DIR: this.config.modelDir },
-        stdio: ["pipe", "pipe", "pipe"],
-        windowsHide: true,
-      });
-      this.#child = child;
+    if (this.#child !== null && this.#ready) return;
+    if (this.#child !== null && this.#loading !== null) return this.#loading;
+
+    const loadTimeoutMs = this.config.loadTimeoutMs ?? DEFAULT_LOAD_TIMEOUT_MS;
+    const child = spawn(this.config.python, [this.config.script], {
+      cwd: this.config.modelDir,
+      env: { ...process.env, PYTHONIOENCODING: "utf-8", PYTHONUTF8: "1", INDEXTTS_MODEL_DIR: this.config.modelDir },
+      stdio: ["pipe", "pipe", "pipe"],
+      windowsHide: true,
+    });
+    this.#child = child;
+    this.#ready = false;
+
+    this.#loading = new Promise<void>((resolve, reject) => {
       let settled = false;
+      const cleanup = () => {
+        clearTimeout(timer);
+        signal.removeEventListener("abort", onAbort);
+      };
       const fail = (error: Error) => {
         if (settled) return;
         settled = true;
+        cleanup();
+        // 这次启动失败：把进程和引用一起清掉，下一次重新起
+        this.#loading = null;
+        this.#kill();
         reject(error);
       };
+      const timer = setTimeout(() => {
+        fail(new TtsUnavailableError("语音合成进程加载超时（" + Math.round(loadTimeoutMs / 1000) + " 秒）"));
+      }, loadTimeoutMs);
+      const onAbort = () => fail(new TtsFailedError("语音合成启动时被取消"));
+      signal.addEventListener("abort", onAbort, { once: true });
+
       child.stdout.setEncoding("utf8");
       child.stdout.on("data", (chunk: string) => {
+        if (this.#child !== child) return;
         this.#buffer += chunk;
         let index = this.#buffer.indexOf("\n");
         while (index >= 0) {
           const line = this.#buffer.slice(0, index).trim();
           this.#buffer = this.#buffer.slice(index + 1);
-          if (line !== "") this.#onLine(line, () => {
-            settled = true;
-            resolve();
-          }, fail);
+          if (line !== "") {
+            this.#onLine(
+              line,
+              () => {
+                if (settled) return;
+                settled = true;
+                cleanup();
+                this.#ready = true;
+                this.#loading = null;
+                resolve();
+              },
+              fail,
+            );
+          }
           index = this.#buffer.indexOf("\n");
         }
       });
@@ -189,16 +250,27 @@ export class TtsRunner {
       });
       child.on("error", (error) => fail(new TtsUnavailableError("语音合成进程起不来：" + error.message)));
       child.on("exit", (code) => {
-        this.#child = null;
-        this.#ready = null;
-        const error = new TtsUnavailableError("语音合成进程退出了（code " + String(code) + "）");
-        fail(error);
+        // 不是「当前这个进程」的 exit（上一轮已经被 kill 掉的），忽略
+        if (this.#child !== child) return;
+        const wasReady = this.#ready;
         const pending = this.#pending;
         this.#pending = null;
-        pending?.reject(error);
+        this.#child = null;
+        this.#loading = null;
+        this.#ready = false;
+        this.#buffer = "";
+        const message = "语音合成进程退出了（code " + String(code) + "）";
+        if (!settled) {
+          settled = true;
+          cleanup();
+          reject(new TtsUnavailableError(message));
+        }
+        // 已经在合成中途：算这次合成失败（generation_failed），不是「起不来」
+        if (pending !== null) pending.reject(new TtsFailedError(message));
+        void wasReady;
       });
     });
-    return this.#ready;
+    return this.#loading;
   }
 
   #onLine(line: string, onReady: () => void, onFail: (error: Error) => void): void {
@@ -234,7 +306,12 @@ export class TtsRunner {
     speed: number;
     signal: AbortSignal;
   }): Promise<TtsSynthesis> {
-    await this.#start();
+    await this.#start(input.signal);
+    // 加载期间被取消：不再写 stdin，也别让 GPU 白跑一遍
+    if (input.signal.aborted) {
+      this.#kill(new TtsFailedError("语音合成被取消"));
+      throw new TtsFailedError("语音合成被取消");
+    }
     if (this.#pending !== null) throw new TtsFailedError("上一段语音还没合成完");
     const child = this.#child;
     if (child === null) throw new TtsUnavailableError("语音合成进程不在了");
@@ -245,14 +322,14 @@ export class TtsRunner {
     const reply = await new Promise<RunnerReply>((resolve, reject) => {
       const timer = setTimeout(() => {
         if (this.#pending?.id === id) this.#pending = null;
-        // 超时就把进程杀掉，下次重新起（模型加载一次也就十几秒，别留着卡住的进程）
-        this.#child?.kill();
+        // 超时就把进程杀掉，下次重新起（别留着卡住的进程）
+        this.#kill();
         reject(new TtsFailedError("语音合成超时"));
       }, timeoutMs);
       const onAbort = () => {
         clearTimeout(timer);
         if (this.#pending?.id === id) this.#pending = null;
-        this.#child?.kill();
+        this.#kill();
         reject(new TtsFailedError("语音合成被取消"));
       };
       input.signal.addEventListener("abort", onAbort, { once: true });
@@ -276,7 +353,10 @@ export class TtsRunner {
           text: input.text,
           out: outPath,
           speed: input.speed,
-          voice: input.voice.source === "reference" ? { source: "reference", refAudio: input.voice.refAudio } : { source: "preset", preset: input.voice.preset ?? null },
+          voice:
+            input.voice.source === "reference"
+              ? { source: "reference", refAudio: input.voice.refAudio }
+              : { source: "preset", preset: input.voice.preset ?? null },
         }) + "\n",
       );
     });
@@ -302,8 +382,6 @@ export class TtsRunner {
   }
 
   dispose(): void {
-    this.#child?.kill();
-    this.#child = null;
-    this.#ready = null;
+    this.#kill();
   }
 }

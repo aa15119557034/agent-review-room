@@ -3,6 +3,8 @@ import { unlinkSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync, wr
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
+  audioShaInUse,
+  deleteAudioRef,
   deleteImageRef,
   findAudioRefBySha,
   findFileBySha,
@@ -61,15 +63,39 @@ export class MediaStore {
    * 和图片一样按内容去重：同一份字节只有一个 `aud_` ref。
    */
   addAudio(input: Buffer, mime: AudioMime, now: string = new Date().toISOString()): AudioRefRecord {
+    return this.addAudioDetailed(input, mime, now).record;
+  }
+
+  /** 和 addGeneratedImageDetailed 一样：告诉调用方这次有没有真的新建引用（取消后要回滚） */
+  addAudioDetailed(
+    input: Buffer,
+    mime: AudioMime,
+    now: string = new Date().toISOString(),
+  ): { record: AudioRefRecord; created: boolean } {
     if (input.length === 0) throw new ImageRejectedError("input_too_big", "这段音频是空的");
     const sha256 = createHash("sha256").update(input).digest("hex");
     const existing = findAudioRefBySha(this.db, sha256);
-    if (existing !== null && existing.mime === mime) return existing;
+    if (existing !== null && existing.mime === mime) return { record: existing, created: false };
     const ref = AudioRefSchema.parse("aud_" + ulid());
     this.writeAudioBytes(sha256, input);
     const record: AudioRefRecord = { ref, sha256, mime, bytes: input.length, createdAt: now };
     insertAudioRef(this.db, record);
-    return record;
+    return { record, created: true };
+  }
+
+  /** 删掉一条音频引用和它的字节（只在「刚建就作废」时用；被别处引用时不动） */
+  deleteAudio(ref: string): boolean {
+    const record = getAudioRef(this.db, ref);
+    if (record === null) return false;
+    const removed = deleteAudioRef(this.db, ref);
+    if (removed && !audioShaInUse(this.db, record.sha256)) {
+      try {
+        rmSync(this.audioFile(record.sha256), { force: true });
+      } catch {
+        // 删不掉就留着，不影响正确性
+      }
+    }
+    return removed;
   }
 
   /** `room-audio://` 要的文件路径和类型；ref 不合法 / 没有记录 / 文件丢了都返回 null */

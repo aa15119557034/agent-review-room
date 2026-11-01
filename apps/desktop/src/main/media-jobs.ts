@@ -200,7 +200,8 @@ export class MediaJobsService {
 
     const pending = this.#speech;
     const active = listActiveMediaJobs(this.deps.db).find((job) => {
-      if (job.kind !== "speech" || job.authorization !== authorization || !sameSource(job.source, source)) return false;
+      // 同一来源 + 同一段文本 / 声音 / 语速：不管是哪个授权建的，都算同一个（C酱 #152 必须改 1）
+      if (job.kind !== "speech" || !sameSource(job.source, source)) return false;
       const request = pending.get(job.id);
       return request?.textHash === textHash && request.voice.id === voice.voiceId && request.speed === voice.speed;
     });
@@ -486,6 +487,19 @@ export class MediaJobsService {
         await this.#settleCancelled(job.id);
         return;
       }
+      // C酱 #152 必须改 1：排队期间可能已经有人把同一段合成好了（自动任务和手动播放撞在一起），
+      // 命中缓存就不再调引擎，也不会去撞 speech_clips 的唯一索引
+      const already = findSpeechClip(this.deps.db, {
+        textHash: request.textHash,
+        voiceId: request.voice.id,
+        speed: request.speed,
+        engine: runner.engine,
+        engineVersion: runner.engineVersion,
+      });
+      if (already !== null) {
+        await this.#commitSpeech(job, already, { insert: false });
+        return;
+      }
       let synth;
       try {
         synth = await runner.synthesize({
@@ -509,7 +523,8 @@ export class MediaJobsService {
         }
         throw error;
       }
-      const audio = this.deps.store.addAudio(synth.bytes, synth.mime, this.deps.now());
+      const saved = this.deps.store.addAudioDetailed(synth.bytes, synth.mime, this.deps.now());
+      const audio = saved.record;
       const clip: SpeechClip = {
         id: `spch_${ulid()}` as SpeechClip["id"],
         textHash: request.textHash,
@@ -522,8 +537,18 @@ export class MediaJobsService {
         durationMs: synth.durationMs,
         createdAt: this.deps.now(),
       };
-      const committed = await this.#commitSpeech(job, clip);
-      if (!committed) return;
+      try {
+        const committed = await this.#commitSpeech(job, clip);
+        // 存音频之后、落库之前被取消 / 撤回：把这次新建的引用和字节清掉（C酱 #152 建议 4）
+        if (!committed) {
+          if (saved.created) this.deps.store.deleteAudio(audio.ref);
+          return;
+        }
+      } catch (error) {
+        if (!(error instanceof MediaJobStateConflictError)) throw error;
+        if (saved.created) this.deps.store.deleteAudio(audio.ref);
+        return;
+      }
     } finally {
       this.#speech.delete(job.id);
       this.#running.delete(job.id);

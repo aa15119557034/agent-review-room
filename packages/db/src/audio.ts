@@ -49,6 +49,10 @@ export function findAudioRefBySha(db: SqliteDatabase, sha256: string): AudioRefR
   return row === undefined ? null : toAudioRef(row);
 }
 
+export function deleteAudioRef(db: SqliteDatabase, ref: string): boolean {
+  return db.prepare("DELETE FROM audio_refs WHERE ref = ?").run(ref).changes > 0;
+}
+
 /** 这份字节还有没有引用（清理时用） */
 export function audioShaInUse(db: SqliteDatabase, sha256: string): boolean {
   return db.prepare("SELECT 1 FROM audio_refs WHERE sha256 = ?").get(sha256) !== undefined;

@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
 import { mkdtempSync, rmSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
@@ -21,7 +23,7 @@ import type { ChatMessage, ChatRun, ChatReplySlot, ChatSnapshot, ControlEvent, M
 import { MediaJobsService } from "../src/main/media-jobs";
 import { createAudioProtocolHandler, MediaStore } from "../src/main/media-store";
 import type { TtsRunner } from "../src/main/tts";
-import { TtsFailedError, voiceOptionsOf, type TtsConfig } from "../src/main/tts";
+import { TtsFailedError, TtsRunner, TtsUnavailableError, voiceOptionsOf, type TtsConfig } from "../src/main/tts";
 
 /**
  * D-37b：播放（speech.play）这一条路。
@@ -331,5 +333,94 @@ describe("tts config (D-37b)", () => {
     assert.deepEqual(voiceOptionsOf(config), [
       { id: "xiaoyu", displayName: "小雨", engine: "indextts2", source: "reference", sampleRef: null },
     ]);
+  });
+});
+
+describe("TtsRunner 进程生命周期（C酱 #152）", () => {
+  const fixtures = join(dirname(fileURLToPath(import.meta.url)), "fixtures");
+  const base = (script: string, patch: Partial<TtsConfig> = {}): TtsConfig => ({
+    engine: "indextts2",
+    engineVersion: "fake-1",
+    // 用 node 冒充 python：spawn(execPath, [script]) 一样是「起一个子进程说行协议」
+    python: process.execPath,
+    script: join(fixtures, script),
+    modelDir: fixtures,
+    voices: [{ id: "xiaoyu", displayName: "小雨", source: "reference", refAudio: "ref.wav" }],
+    ...patch,
+  });
+  const voice = { id: "xiaoyu", displayName: "小雨", source: "reference", refAudio: "ref.wav" } as const;
+
+  it("加载超时不会把队列卡死：到点杀进程、报 backend_unavailable 那一类错误", async () => {
+    const runner = new TtsRunner(base("tts-hang.mjs", { loadTimeoutMs: 300 }));
+    try {
+      const started = Date.now();
+      await assert.rejects(
+        () => runner.synthesize({ text: "你好", voice: voice as never, speed: 1, signal: new AbortController().signal }),
+        (error: unknown) => error instanceof TtsUnavailableError && /加载超时/.test((error as Error).message),
+      );
+      assert.ok(Date.now() - started < 5_000, "不会一直等下去");
+    } finally {
+      runner.dispose();
+    }
+  });
+
+  it("加载期间被取消：不再往 stdin 写、进程被杀掉", async () => {
+    const runner = new TtsRunner(base("tts-hang.mjs", { loadTimeoutMs: 30_000 }));
+    const controller = new AbortController();
+    try {
+      const pending = runner.synthesize({
+        text: "你好",
+        voice: voice as never,
+        speed: 1,
+        signal: controller.signal,
+      });
+      setTimeout(() => controller.abort(), 100);
+      await assert.rejects(() => pending, (error: unknown) => /取消/.test((error as Error).message));
+    } finally {
+      runner.dispose();
+    }
+  });
+
+  it("杀掉进程之后下一次合成会重新起（引用不会串到旧进程上）", async () => {
+    const runner = new TtsRunner(base("tts-ok.mjs"));
+    try {
+      const first = await runner.synthesize({ text: "第一句", voice: voice as never, speed: 1, signal: new AbortController().signal });
+      assert.ok(first.bytes.length > 0);
+      runner.dispose(); // 相当于超时 / 取消把进程杀了
+      const second = await runner.synthesize({ text: "第二句", voice: voice as never, speed: 1, signal: new AbortController().signal });
+      assert.ok(second.bytes.length > 0, "重启之后还能合成");
+    } finally {
+      runner.dispose();
+    }
+  });
+});
+
+describe("语音任务去重（C酱 #152 必须改 1）", () => {
+  it("自动任务还没跑完时点「播放」：复用同一个任务，不重复合成", async () => {
+    const h = await makeHarness();
+    try {
+      let release!: () => void;
+      h.runner.gate = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      const auto = await h.service.play(sourceOf(h), { authorization: "reply_as_voice" });
+      for (let i = 0; i < 400 && h.runner.calls.length === 0; i += 1) await new Promise((r) => setTimeout(r, 5));
+      assert.equal(h.runner.calls.length, 1, "自动任务已经在合成");
+
+      const manual = await h.service.play(sourceOf(h));
+      assert.equal(
+        (manual as { job: MediaJob }).job.id,
+        (auto as { job: MediaJob }).job.id,
+        "同一来源 + 同一段文本：直接复用那个在跑的任务",
+      );
+
+      release();
+      await settle(h.service);
+      assert.equal(getMediaJob(h.db, (auto as { job: MediaJob }).job.id)!.state, "succeeded");
+      assert.equal(h.runner.calls.length, 1, "引擎只调一次，没有第二次合成");
+      assert.equal(listMediaJobs(h.db, { kind: "chat", conversationId: h.conversationId }).length, 1);
+    } finally {
+      h.db.close();
+    }
   });
 });
