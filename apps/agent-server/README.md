@@ -152,7 +152,7 @@ pnpm --filter @room/agent-server run vision-test -- claude-review --model claude
 pnpm --filter @room/agent-server run vision-test -- deepseek-discuss --model deepseek-flash
 ```
 
-每次随机画一张 6 位数字的测试图，按真 Run 的顺序交给 CLI，回答里的数字和图上完全一样才算通过（多一位少一位都不算）。每个模型连测 3 次，3 次都过才写 yes（云端用 Haiku 5.5 改版过程中跑过 9 次，有 2 次认错：一次把 0 认成 3，一次多读一位）。不用先启动节点。最后打印一行 JSON 验收记录，贴到 PR 或 issue 里；通过了再把那个模型的 `"vision": "yes"` 写进配置，重启节点。
+每次随机画一张 6 位数字的测试图，按真 Run 的顺序交给 CLI，回答里的数字和图上完全一样才算通过（多一位少一位都不算）。每个模型连测 3 次，3 次都过才写 yes（云端用 Haiku 5.5 改版过程中跑过 9 次，有 2 次认错：一次把 0 认成 3，一次多读一位）。不用先启动节点。最后打印一行 JSON 验收记录，贴到 PR 或 issue 里；通过了再把那个模型的 `"vision": "yes"` 写进配置，重启节点。已实测：deepseek-flash（content-json）主控机 3/3 通过（#131），示例配置已写 yes。
 
 **画图 profile**（契约 C-42b，`kind: "image"`）：配了 `imageRun` 的 profile 只接画图 Run，别的 profile 不接画图 Run（`unsupported_kind`）。
 
@@ -162,7 +162,9 @@ pnpm --filter @room/agent-server run vision-test -- deepseek-discuss --model dee
 - 图读进节点内存，主控端用 `GET /v1/runs/<runId>/artifacts/<sha256>`（要 Token）取。取过之后再留 `leaseMs`，断线可以重取；结束后超过 `leaseMs` 没人取、或最后一次取过之后超过 `leaseMs`，就丢掉
 - 节点启动时清掉根目录下上次没来得及删的 `run_<ULID>` 文件夹（只删这种名字的文件夹）
 - 同一个画图 profile 同时只画一张（第二张 `node_busy`，ADR-004 §3 Codex 一次一张）；不同 profile 可以共用根目录，各取各的
-- Codex 默认把图存在 `$CODEX_HOME\generated_images`，节点不去那里拿。要让 Codex 把图放进这次 Run 的目录，候选做法是 `codex exec -C {image-output-dir} --sandbox workspace-write …` 并在画图指令里让它把图复制到工作目录，**待主控机实测**
+- Codex 默认把图存在 `$CODEX_HOME\generated_images`，节点不去那里拿。做法：`codex exec -C {image-output-dir} --sandbox workspace-write …`，画图指令里让它「画完把图复制到当前工作目录」。主控机实测（#131，codex-cli 0.163.0、gpt-6-sol）**一次成功**：约 163 秒，图出现在 Run 目录。这依赖模型照做，D-38b 走 Codex 前再连测 2～3 次
+- 注意：Codex 自己在 `generated_images` 里也会留一份（每张约 2.3 MB），节点不删，需要时手动清
+- 讨论/聊天用的 Codex profile 加 `--disable image_generation`（实测能挡住自己画图，模型会先问），避免顺手画图白烧额度
 
 ## 安全
 
