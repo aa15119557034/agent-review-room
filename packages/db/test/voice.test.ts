@@ -150,7 +150,7 @@ describe("voice recordings (D-34b 第一段)", () => {
     }
   });
 
-  it("keeps sha256 unique and blocks updates after the terminal state", () => {
+  it("keeps sha256 unique for live recordings and blocks updates after the terminal state", () => {
     const db = fresh();
     try {
       insertVoiceRecording(db, { recording: recording(), sha256: SHA, mime: "audio/wav", bytes: 1024 });
@@ -171,6 +171,28 @@ describe("voice recordings (D-34b 第一段)", () => {
         () => db.prepare("UPDATE voice_recordings SET error = 'x' WHERE audio_ref = ?").run(AUDIO),
         /final/,
       );
+    } finally {
+      db.close();
+    }
+  });
+
+  it("lets the same audio be imported again after a failed transcription (林离 #126)", () => {
+    const db = fresh();
+    try {
+      insertVoiceRecording(db, { recording: recording(), sha256: SHA, mime: "audio/wav", bytes: 1024 });
+      markVoiceFailed(db, AUDIO, "转写引擎临时出错");
+
+      // 同一个文件重新导入：新建一条 transcribing，历史上那条 failed 还留着
+      const retry = "aud_01JBBBBBBBBBBBBBBBBBBBBBBB";
+      insertVoiceRecording(db, {
+        recording: recording({ audio: retry as never }),
+        sha256: SHA,
+        mime: "audio/wav",
+        bytes: 1024,
+      });
+      assert.equal(getVoiceRecording(db, retry)?.status, "transcribing");
+      assert.equal(getVoiceRecording(db, AUDIO)?.status, "failed");
+      assert.equal(listVoiceRecordings(db).length, 2);
     } finally {
       db.close();
     }

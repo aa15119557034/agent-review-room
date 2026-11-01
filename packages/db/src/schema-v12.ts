@@ -24,8 +24,9 @@ CREATE TABLE voice_recordings (
 
 CREATE INDEX idx_voice_recordings_created ON voice_recordings(created_at DESC, audio_ref DESC);
 
--- 按内容去重：同一段录音（同一个 sha256）只有一条（C酱 #126）
-CREATE UNIQUE INDEX ux_voice_recordings_sha256 ON voice_recordings(sha256);
+-- 同一段音频同时只允许一条「还在用」的记录（transcribing / ready）；
+-- failed 的留着做历史，用户可以用同一个文件重新导入（林离 #126）
+CREATE UNIQUE INDEX ux_voice_recordings_sha256_live ON voice_recordings(sha256) WHERE status <> 'failed';
 
 -- 转写结束以后不再改：要重来就重新导入（和 media_jobs 的终态触发器一样，C酱 #126）
 CREATE TRIGGER voice_recordings_terminal_final BEFORE UPDATE ON voice_recordings
@@ -34,3 +35,4 @@ BEGIN
   SELECT RAISE(ABORT, 'voice recordings are final once transcribed');
 END;
 `;
+
