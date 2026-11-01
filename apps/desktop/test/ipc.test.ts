@@ -86,6 +86,45 @@ describe("command validation", () => {
   });
 });
 
+describe("not-yet-launched commands and queries", () => {
+  const CONV = "conv_01JAAAAAAAAAAAAAAAAAAAAAAA";
+  const MSG = "cmsg_01JAAAAAAAAAAAAAAAAAAAAAAA";
+
+  it("rejects commands that are not wired yet with a clear message", async () => {
+    const { dispatcher } = makeDispatcher();
+    const commands = [
+      { type: "speech.play", source: { kind: "chat", conversationId: CONV, messageId: MSG, agent: null } },
+      { type: "immersive.update", conversationId: CONV, settings: { enabled: false, autoDrawUsesSubscription: true, drawsPerHour: 3, voiceClipsPerHour: 2 } },
+      { type: "image.pick", purpose: "avatar" },
+      { type: "appearance.update", userDisplayName: "江浩" },
+      { type: "node.importLocalToken", id: "controller-local" },
+    ];
+    for (const command of commands) {
+      const result = await dispatcher.handleCommand(command);
+      assert.equal(result.ok, false, command.type);
+      assert.equal(result.ok === false ? result.error : null, "validation_failed", command.type);
+      assert.match(result.ok === false ? result.message : "", /还没上线/, command.type);
+    }
+  });
+
+  it("answers the queries the UI makes with contract defaults", async () => {
+    const { dispatcher } = makeDispatcher();
+
+    const appearance = await dispatcher.handleQuery({ type: "appearance.get" });
+    assert.equal(appearance.ok, true);
+    assert.equal(appearance.ok === true ? (appearance.data as { userDisplayName: string }).userDisplayName : "", "我");
+
+    const voices = await dispatcher.handleQuery({ type: "voices.list" });
+    assert.equal(voices.ok, true);
+    assert.deepEqual(voices.ok === true ? voices.data : null, []);
+
+    const immersive = await dispatcher.handleQuery({ type: "immersive.get", conversationId: CONV });
+    assert.equal(immersive.ok, true);
+    const data = (immersive as { data: { settings: { enabled: boolean }; usage: { drawsLastHour: number } } }).data;
+    assert.equal(data.settings.enabled, false);
+    assert.equal(data.usage.drawsLastHour, 0);
+  });
+});
 describe("phase 0 flow through the dispatcher", () => {
   it("creates a project and lists it", async () => {
     const { dispatcher } = makeDispatcher();
@@ -251,3 +290,4 @@ describe("approve guard", () => {
     assert.equal(started.length, 0);
   });
 });
+
