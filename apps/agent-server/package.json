@@ -9,6 +9,7 @@
     "typecheck": "tsc -p .",
     "try": "tsx src/try-run.ts",
     "vision-test": "tsx src/vision-test.ts",
+    "quota": "tsx src/quota-read.ts",
     "test": "tsx --test test/*.test.ts",
     "bundle": "node scripts/bundle.mjs"
   },

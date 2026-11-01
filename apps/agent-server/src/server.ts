@@ -12,6 +12,7 @@ import {
   StartRunRequest,
   type NodeHealth,
   type RemoteErrorCode,
+  type RemoteProfileQuota,
   type RemoteEvent,
   type RemoteRunSummary,
   type StartRunResponse,
@@ -21,6 +22,7 @@ import { RemoteRun } from "./remote-run";
 import { checkModel } from "./model-args";
 import { attachmentProblem, profileMaySeeImages, visionOf } from "./images";
 import { sweepStaleRunDirs } from "./image-artifact";
+import { createQuotaReader } from "./quota";
 
 const execFileP = promisify(execFile);
 
@@ -40,10 +42,16 @@ export interface AgentServer {
   close(): Promise<void>;
 }
 
-export function createAgentServer(cfg: ServerConfig, token: string): AgentServer {
+export function createAgentServer(
+  cfg: ServerConfig,
+  token: string,
+  /** 测试可替换读额度的方式；默认起 codex app-server */
+  quotaRead?: (profileId: string, profile: Profile) => Promise<RemoteProfileQuota>,
+): AgentServer {
   const runs = new Map<string, RemoteRun>();
   const tokenDigest = sha256Buf(token);
 
+  const readQuota = createQuotaReader(quotaRead);
   const activeCount = () => [...runs.values()].filter((r) => !r.isFinished).length;
   const imageProfiles = Object.entries(cfg.profiles)
     .filter(([, p]) => p.imageRun)
@@ -100,9 +108,22 @@ export function createAgentServer(cfg: ServerConfig, token: string): AgentServer
           attachments: cfg.maxBodyBytes >= NODE_MIN_BODY_BYTES_WITH_ATTACHMENTS && Object.values(cfg.profiles).some(profileMaySeeImages),
           imageRuns: imageProfiles.length > 0,
           ...(imageProfiles.length > 0 ? { imageProfiles } : {}),
+          quota: Object.values(cfg.profiles).some((p) => p.quota),
         },
       };
       return sendJson(res, 200, body);
+    }
+
+    // GET /v1/profiles/:profileId/quota（契约 C-42b，S-24）：读不到时各项为 null，仍是 200
+    if (req.method === "GET" && parts.length === 4 && parts[1] === "profiles" && parts[3] === "quota") {
+      const profileId = parts[2]!;
+      const profile = Object.hasOwn(cfg.profiles, profileId) ? cfg.profiles[profileId] : undefined;
+      if (!profile) throw new HttpError(404, "unknown_profile", "unknown profile");
+      if (!profile.quota) throw new HttpError(404, "not_found", "this profile has no quota source");
+      const q = await readQuota(profileId, profile);
+      // 额度是实时值，不让中间缓存 / Electron 的 HTTP 缓存留旧数字（汐 #133）
+      res.setHeader("cache-control", "no-store");
+      return sendJson(res, 200, q);
     }
 
     if (parts[1] !== "runs") throw new HttpError(404, "not_found", "unknown path");

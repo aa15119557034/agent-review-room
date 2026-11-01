@@ -166,6 +166,26 @@ pnpm --filter @room/agent-server run vision-test -- deepseek-discuss --model dee
 - 注意：Codex 自己在 `generated_images` 里也会留一份（每张约 2.3 MB），节点不删，需要时手动清
 - 讨论/聊天用的 Codex profile 加 `--disable image_generation`（实测能挡住自己画图，模型会先问），避免顺手画图白烧额度。被挡住后模型可能提议改走要 `OPENAI_API_KEY` 的 CLI 画图，`envAllowlist` 里没有这个变量，所以也走不通
 
+## 读 Codex 额度（S-24）
+
+契约 C-42b 的 `GET /v1/profiles/<profileId>/quota`：返回 5 小时窗口、每周窗口各用了百分之多少、什么时候重置，以及是否已经在扣付费 credits。主控端画图选路（D-38b：任一窗口 ≥ 85% 就走本机）靠它。
+
+- 配置：在 Codex 的 profile 上加 `"quota": {"source": "codex-app-server"}`（示例配置的 `codex-discuss` 已加）。节点用同一个 `command` 起 `codex app-server`，按 stdio JSON-RPC 依次发 `initialize` → `initialized` → `account/rateLimits/read`，拿到结果就结束进程。额度是账号级的，配在哪个 Codex profile 上读到的都一样
+- `envAllowlist` 要放行 `CODEX_HOME`（登录信息在那里），和跑 Run 一样不给别的变量
+- **2 秒读不到就报「未知」**（含启动 app-server 的时间）：超时、出错、没登录、断网、字段缺失，对应各项都是 `null`，不是 0；端点仍然返回 200。失败原因记在节点日志里
+- 窗口按长度认：300 分钟是 5 小时，10080 分钟是每周；长度缺失或是别的值，那一项报 `null`，不按位置猜
+- `creditsInUse`：订阅额度还能用 → `false`；后端说不许再用订阅额度（`ordinaryUsageAllowed: false`）时，**两个窗口一律报 `null`**（百分比再低也不信，保证走本机），账户有 credits（或不限量）→ `true`，否则 `null`；读不准 → `null`
+- 同一个 profile 同时只起一个 app-server，同时来的请求共用这一次的结果
+- health 里 `capabilities.quota: true` 表示这个节点提供这个端点；没配 quota 的 profile 返回 404 `not_found`
+
+实测（不用先启动节点）：
+
+```powershell
+pnpm --filter @room/agent-server run quota -- codex-discuss
+```
+
+打印一行 JSON。验收：读到的百分比要和 Codex 自己显示的一致（Codex 里 `/status`）；画一张图前后各读一次，差值就是单图消耗，写进验收记录；超过 10% 要拿回来请江浩重新定 85% 这条线。主控机实测（#133，codex-cli 0.163.0，已登录）：读到的数字和 Codex 原始返回一致；画一张图 5 小时窗口 +4%、每周 +1%，没超过 10%，85% 线不用重定；读一次约 2 秒，机器忙时偶尔超过 2 秒报「未知」（按规则走本机）。云端没登录的 codex 0.166.0 实测：161 ms 返回，各项为 `null`，日志记「codex account authentication required to read rate limits」。
+
 ## 安全
 
 - **监听 0.0.0.0**：局域网里的其他电脑能访问。所有请求都必须带 Token，否则 401
@@ -201,7 +221,7 @@ pnpm --filter @room/agent-server run vision-test -- deepseek-discuss --model dee
 ## 测试
 
 ```bash
-pnpm --filter @room/agent-server test     # 126 个
+pnpm --filter @room/agent-server test     # 146 个
 ```
 
 Windows 相关逻辑（`.cmd` 包装、taskkill 参数）用注入的模拟环境测试；`claude` 用 `test/fixtures/fake-claude.mjs`、`codex` 用 `test/fixtures/fake-codex.mjs` 模拟；`deepseek-chat.mjs` 对着测试里起的假 DeepSeek 服务跑（不联网、不用真 Key）。

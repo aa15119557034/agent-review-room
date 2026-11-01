@@ -170,7 +170,7 @@ describe("S-23 health", () => {
   it("reports attachments / image runs and the fixed model's vision", async () => {
     const res = await fetch(`${base}/v1/health`, { headers: auth });
     const h = NodeHealth.parse(await res.json());
-    assert.deepEqual(h.capabilities, { attachments: true, imageRuns: true, imageProfiles: ["draw", "draw-slow", "draw-none", "draw-hang", "draw-a", "draw-b"] });
+    assert.deepEqual(h.capabilities, { attachments: true, imageRuns: true, imageProfiles: ["draw", "draw-slow", "draw-none", "draw-hang", "draw-a", "draw-b"], quota: false });
     assert.equal(h.profileModels?.find((p) => p.profileId === "fixed-see")?.fixedModelVision, "yes");
     assert.equal(h.profileModels?.find((p) => p.profileId === "fixed-untested")?.fixedModelVision, undefined, "not tested = not reported");
     assert.equal(h.profileModels?.find((p) => p.profileId === "see")?.models.find((m) => m.id === "m-see")?.vision, "yes");
