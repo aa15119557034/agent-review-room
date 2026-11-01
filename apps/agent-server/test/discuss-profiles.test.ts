@@ -151,6 +151,9 @@ describe("controller-local example config", () => {
     assert.equal(p.parser, "codex-exec-json");
     for (const a of ["exec", "--json", "--skip-git-repo-check", "--ephemeral", "-"]) assert.ok(p.args.includes(a), a);
     assert.equal(p.args[p.args.indexOf("--sandbox") + 1], "read-only");
+    // 汐 #131 实测：讨论/聊天时不让 Codex 自己画图（不白烧额度、不往 generated_images 塞图）
+    assert.equal(p.args[p.args.indexOf("--disable") + 1], "image_generation");
+    assert.ok(p.args.indexOf("--disable") < p.args.indexOf("-"), "--disable must come before the stdin marker");
   });
 
   it("the DeepSeek key reaches only the deepseek profile, never via fixed env", () => {

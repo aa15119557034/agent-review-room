@@ -10,7 +10,7 @@
   "profiles": {
     "codex-discuss": {
       "command": "codex",
-      "args": ["exec", "--json", "--skip-git-repo-check", "--sandbox", "read-only", "--ephemeral", "{model-args}", "-"],
+      "args": ["exec", "--json", "--skip-git-repo-check", "--disable", "image_generation", "--sandbox", "read-only", "--ephemeral", "{model-args}", "-"],
       "models": [
         {
           "id": "gpt-6.1-sol",
@@ -62,7 +62,8 @@
             {"id": "high", "displayName": "高", "note": null},
             {"id": "max", "displayName": "最高", "note": null}
           ],
-          "defaultEffort": "high"
+          "defaultEffort": "high",
+          "vision": "yes"
         }
       ],
       "modelArgs": ["--model", "{model}"],
