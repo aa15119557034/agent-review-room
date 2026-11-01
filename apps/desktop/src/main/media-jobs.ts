@@ -1,7 +1,9 @@
 import {
+  findSpeechClip,
   getChatMessage,
   getMediaJob,
   insertMediaJob,
+  insertSpeechClip,
   listActiveMediaJobs,
   listMediaJobs,
   listMediaJobsForMessages,
@@ -16,6 +18,8 @@ import {
   IMMERSIVE_LIMITS,
   MediaJob as MediaJobSchema,
   pickMessageMediaJobs,
+  SPEAK_MAX_CHARS,
+  speakableText,
   type ControlEvent,
   type DrawRequest,
   type DrawRoutePreview,
@@ -23,11 +27,16 @@ import {
   type MediaJob,
   type MediaScope,
   type MediaSource,
+  type SpeechClip,
+  type VoiceProfile,
 } from "@room/schemas";
+import { sha256Hex } from "@room/core";
 import { ChatError } from "./chat";
 import type { ComfyUiClient } from "./comfyui";
 import { ComfyUiError } from "./comfyui";
 import { ImageRejectedError, type MediaStore } from "./media-store";
+import type { TtsRunner, TtsVoiceConfig } from "./tts";
+import { TtsFailedError, TtsUnavailableError } from "./tts";
 
 /**
  * 媒体任务（画图）的编排（D-38a，契约 C-42b / ADR-004 §3）。
@@ -48,9 +57,21 @@ export interface MediaJobsDeps {
   emit: (event: ControlEvent) => void;
   /** 当前可用的 ComfyUI 客户端；没配置 / 连不上返回 null */
   comfy: () => ComfyUiClient | null;
+  /** D-37b：语音合成的独立进程；没配置返回 null（播放显示「还没配好声音」） */
+  tts?: () => TtsRunner | null;
+  /** D-37b：按 agent id 取人设（拿声音设置）；不传 = 不支持语音 */
+  agentOf?: (agentId: string) => { voice?: VoiceProfile | null } | null;
   now: () => string;
   /** 每张图的种子（测试注入固定值） */
   seed?: () => number;
+}
+
+/** 一次语音合成请求（在队列里等的时候先记着：MediaJob 本身不存文本） */
+interface PendingSpeech {
+  text: string;
+  textHash: string;
+  voice: TtsVoiceConfig;
+  speed: number;
 }
 
 const QUEUE_TIMEOUT_MS = IMMERSIVE_LIMITS.gpuQueueTimeoutMs;
@@ -61,6 +82,8 @@ export class MediaJobsService {
   readonly #running = new Map<string, AbortController>();
   /** 取消原因：cancel / stop 先记下，等 #run 收尾时用（谁先到都不丢） */
   readonly #cancelIntent = new Map<string, MediaJob["cancelReason"]>();
+  /** D-37b：等着的语音请求（jobId → 文本 / 声音 / 语速）。重启就丢，遗留任务本来也会被记成 cancelled(app_restart) */
+  readonly #speech = new Map<string, PendingSpeech>();
 
   constructor(private readonly deps: MediaJobsDeps) {}
 
@@ -122,6 +145,85 @@ export class MediaJobsService {
     this.#emit(job);
     this.#pump();
     return job;
+  }
+
+  /**
+   * D-37b：你点了「播放」（authorization = user_play）。
+   *
+   * - source 以库里的回答为准：必须是秘书的回答，作者和 source.agent 对不上 / 已撤回 → validation_failed
+   * - 朗读文本只用契约的 `speakableText`；过滤后为空或超过 SPEAK_MAX_CHARS 不合成
+   * - 秘书没选声音（AgentProfile.voice 为空）→ validation_failed「还没选声音」
+   * - 缓存命中（同一段文本 + 声音 + 语速 + 引擎 + 版本）直接返回片段；否则建一个语音任务排队
+   */
+  async play(source: MediaSource): Promise<{ cached: true; clip: SpeechClip } | { cached: false; job: MediaJob }> {
+    if (source.kind !== "chat") throw new ChatError("validation_failed", "现在只支持播放聊天里的回答");
+    const runner = this.deps.tts?.() ?? null;
+    if (runner === null || !runner.available()) {
+      throw new ChatError("validation_failed", "语音合成还没配好（userData/tts.json），先别播放");
+    }
+    const message = getChatMessage(this.deps.db, source.messageId);
+    if (message === null || message.conversationId !== source.conversationId) {
+      throw new ChatError("validation_failed", "这条消息不在这个会话里");
+    }
+    if (message.sender !== "agent") throw new ChatError("validation_failed", "只能播放秘书的回答");
+    if (source.agent !== null && source.agent !== message.agent) throw new ChatError("validation_failed", "消息的作者对不上");
+    if (this.#sourceWithdrawn({ source })) {
+      throw new ChatError("validation_failed", "这条消息已经撤回了，不能再播放");
+    }
+
+    const agent = this.deps.agentOf?.(message.agent) ?? null;
+    const voice = agent?.voice ?? null;
+    if (voice === null || voice === undefined) throw new ChatError("validation_failed", "这位秘书还没选声音");
+    const profile = runner.voice(voice.voiceId);
+    if (profile === null) throw new ChatError("validation_failed", "选的声音不在配置里（userData/tts.json）");
+
+    const text = speakableText(message.text);
+    if (text.length === 0) throw new ChatError("validation_failed", "这条回答没有能朗读的文字");
+    if (text.length > SPEAK_MAX_CHARS) throw new ChatError("validation_failed", "这条回答太长，不适合朗读");
+
+    const textHash = sha256Hex(text);
+    const key = {
+      textHash,
+      voiceId: voice.voiceId,
+      speed: voice.speed,
+      engine: runner.engine,
+      engineVersion: runner.engineVersion,
+    } as const;
+    const cached = findSpeechClip(this.deps.db, key);
+    if (cached !== null) return { cached: true, clip: cached };
+
+    const pending = this.#speech;
+    const active = listActiveMediaJobs(this.deps.db).find((job) => {
+      if (job.kind !== "speech" || job.authorization !== "user_play" || !sameSource(job.source, source)) return false;
+      const request = pending.get(job.id);
+      return request?.textHash === textHash && request.voice.id === voice.voiceId && request.speed === voice.speed;
+    });
+    if (active !== undefined) return { cached: false, job: active };
+
+    const now = this.deps.now();
+    const job: MediaJob = MediaJobSchema.parse({
+      id: `mjob_${ulid()}`,
+      kind: "speech",
+      state: "queued",
+      authorization: "user_play",
+      source,
+      intentHash: null,
+      draw: null,
+      route: null,
+      remoteRunId: null,
+      result: null,
+      speech: null,
+      failure: null,
+      cancelReason: null,
+      createdAt: now,
+      startedAt: null,
+      finishedAt: null,
+    });
+    this.#speech.set(job.id, { text, textHash, voice: profile, speed: voice.speed });
+    await writeTransaction(this.deps.db, this.deps.queue, () => insertMediaJob(this.deps.db, job));
+    this.#emit(job);
+    this.#pump();
+    return { cached: false, job };
   }
 
   async cancel(jobId: string): Promise<MediaJob> {
@@ -252,6 +354,10 @@ export class MediaJobsService {
     this.#running.set(job.id, controller);
     try {
       await this.#transition(job.id, "queued", "running", {});
+      if (job.kind === "speech") {
+        await this.#runSpeech(job, controller);
+        return;
+      }
       const client = this.deps.comfy();
       if (client === null || !(await client.isUp())) {
         await this.#fail(job, "backend_unavailable", "本机 ComfyUI 没开");
@@ -348,6 +454,98 @@ export class MediaJobsService {
   }
 
   /**
+   * 跑一个语音任务（D-37b）：串行调独立进程 → 字节存进 MediaStore → 片段落库（缓存索引）→ succeeded。
+   * 失败分类：引擎起不来 / 没配置 → backend_unavailable；引擎报错、超时 → generation_failed；
+   * 被取消 → cancelled（原因在 #cancelIntent）；来源消息已撤回 → cancelled(message_withdrawn)，和画图一致。
+   */
+  async #runSpeech(job: MediaJob, controller: AbortController): Promise<void> {
+    try {
+      const request = this.#speech.get(job.id);
+      if (request === undefined) {
+        await this.#fail(job, "internal", "语音请求丢了（应用重启过？）");
+        return;
+      }
+      const runner = this.deps.tts?.() ?? null;
+      if (runner === null || !runner.available()) {
+        await this.#fail(job, "backend_unavailable", "语音合成还没配好（userData/tts.json）");
+        return;
+      }
+      if (this.#sourceWithdrawn(job)) {
+        await this.#settleCancelled(job.id);
+        return;
+      }
+      let synth;
+      try {
+        synth = await runner.synthesize({
+          text: request.text,
+          voice: request.voice,
+          speed: request.speed,
+          signal: controller.signal,
+        });
+      } catch (error) {
+        if (controller.signal.aborted) {
+          await this.#settleCancelled(job.id);
+          return;
+        }
+        if (error instanceof TtsUnavailableError) {
+          await this.#fail(job, "backend_unavailable", error.message);
+          return;
+        }
+        if (error instanceof TtsFailedError) {
+          await this.#fail(job, "generation_failed", error.message);
+          return;
+        }
+        throw error;
+      }
+      const audio = this.deps.store.addAudio(synth.bytes, synth.mime, this.deps.now());
+      const clip: SpeechClip = {
+        id: `spch_${ulid()}` as SpeechClip["id"],
+        textHash: request.textHash,
+        voiceId: request.voice.id,
+        speed: request.speed,
+        engine: runner.engine,
+        engineVersion: runner.engineVersion,
+        audioRef: audio.ref,
+        mime: audio.mime,
+        durationMs: synth.durationMs,
+        createdAt: this.deps.now(),
+      };
+      const committed = await this.#commitSpeech(job, clip);
+      if (!committed) return;
+    } finally {
+      this.#speech.delete(job.id);
+      this.#running.delete(job.id);
+    }
+  }
+
+  /** 语音结果落库：和「来源消息是否已撤回」同一个事务（和画图一样的口径） */
+  async #commitSpeech(job: MediaJob, clip: SpeechClip): Promise<boolean> {
+    let succeeded = true;
+    const applied = await writeTransaction(this.deps.db, this.deps.queue, () => {
+      if (this.#sourceWithdrawn(job)) {
+        succeeded = false;
+        return transitionMediaJob(this.deps.db, {
+          id: job.id,
+          from: "running",
+          to: "cancelled",
+          now: this.deps.now(),
+          patch: { cancelReason: "message_withdrawn" },
+        });
+      }
+      insertSpeechClip(this.deps.db, clip);
+      return transitionMediaJob(this.deps.db, {
+        id: job.id,
+        from: "running",
+        to: "succeeded",
+        now: this.deps.now(),
+        patch: { speech: clip },
+      });
+    });
+    this.#emit(applied);
+    return succeeded;
+  }
+
+  /**
    * 结果落库：和「来源消息是否已撤回」的检查放在**同一个事务**里（林离 #129）。
    * 撤回提交和取消回调之间回图的窗口，靠这里挡住——不会再落成 succeeded。
    * 返回 true = 存成成功，false = 因为撤回被取消（调用方据此清掉刚画的图）。
@@ -375,9 +573,10 @@ export class MediaJobsService {
   }
 
   /** 来源消息（回答的话，还有它回答的那条）是不是已经撤回（ADR-004 §3a） */
-  #sourceWithdrawn(job: MediaJob): boolean {
-    if (job.source.kind !== "chat") return false;
-    const message = getChatMessage(this.deps.db, job.source.messageId);
+  #sourceWithdrawn(job: Pick<MediaJob, "source">): boolean {
+    const source = job.source;
+    if (source.kind !== "chat") return false;
+    const message = getChatMessage(this.deps.db, source.messageId);
     if (message === null) return false;
     if ("state" in message && message.state === "retracted") return true;
     if (message.sender === "agent") {
@@ -435,6 +634,7 @@ export class MediaJobsService {
     patch: {
       route?: MediaJob["route"];
       result?: MediaJob["result"];
+      speech?: MediaJob["speech"];
       failure?: MediaJob["failure"];
       cancelReason?: MediaJob["cancelReason"];
       startedAt?: string;

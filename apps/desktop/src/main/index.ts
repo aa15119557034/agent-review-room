@@ -2,18 +2,19 @@ import { app, BrowserWindow, dialog, ipcMain, nativeTheme, protocol, safeStorage
 import { join } from "node:path";
 import { openDatabase, repairInterruptedRuns, WriteQueue } from "@room/db";
 import { HttpRemoteAgentAdapter } from "@room/remote-client";
-import { IMAGE_URL_SCHEME, IPC_CHANNELS, type ControlEvent } from "@room/schemas";
+import { IMAGE_URL_SCHEME, AUDIO_URL_SCHEME, IPC_CHANNELS, type ControlEvent } from "@room/schemas";
 import { ChatService } from "./chat";
 import { DiscussionService } from "./discussion";
 import { createDispatcher } from "./ipc";
 import { ComfyUiClient, loadComfyUiConfigFile } from "./comfyui";
 import { MediaService } from "./media";
 import { MediaJobsService } from "./media-jobs";
-import { createImageProtocolHandler, MediaStore } from "./media-store";
+import { createAudioProtocolHandler, createImageProtocolHandler, MediaStore } from "./media-store";
 import { migrateLegacyReviewerNode, NodeService, resolveRunTarget } from "./nodes";
 import { RunOrchestrator } from "./orchestrator";
 import { Repository } from "./repository";
 import { SettingsStore } from "./settings";
+import { loadTtsConfigFile, TtsRunner, voiceOptionsOf } from "./tts";
 
 /**
  * Electron 主进程入口（D-07）。
@@ -93,18 +94,25 @@ async function bootstrap(): Promise<void> {
   const repo = new Repository(db, queue);
 
   // D-36b：图片本体和引用表；renderer 用 room-image://<ref> 显示，main 只按记录映射到文件
-  const mediaStore = new MediaStore(join(userData, "images"), join(userData, "files"), db);
+  const mediaStore = new MediaStore(join(userData, "images"), join(userData, "files"), join(userData, "audio"), db);
   protocol.handle(IMAGE_URL_SCHEME, createImageProtocolHandler(mediaStore));
   // D-34a：选文件 / 表情用的对话框。renderer 只拿 ref，拿不到路径
   const comfyConfig = loadComfyUiConfigFile(join(userData, "comfyui.json"));
   if (comfyConfig === null) console.warn("[comfyui] 没有配置 userData/comfyui.json，本机画图不可用");
   const comfyClient = comfyConfig === null ? null : new ComfyUiClient(comfyConfig);
+  // D-37b：语音合成的独立进程（配置在 userData/tts.json；没配置就是 null，「播放」会明确报没配好）
+  const ttsConfig = loadTtsConfigFile(join(userData, "tts.json"));
+  if (ttsConfig === null) console.warn("[tts] 没有配置 userData/tts.json，语音合成不可用");
+  const ttsRunner = ttsConfig === null ? null : new TtsRunner(ttsConfig);
+  protocol.handle(AUDIO_URL_SCHEME, createAudioProtocolHandler(mediaStore));
   const jobs = new MediaJobsService({
     db,
     queue,
     store: mediaStore,
     emit: broadcast,
     comfy: () => comfyClient,
+    tts: () => ttsRunner,
+    agentOf: (agentId) => repo.getAgent(agentId),
     now: () => new Date().toISOString(),
   });
 
@@ -211,6 +219,7 @@ async function bootstrap(): Promise<void> {
     chat,
     media,
     jobs,
+    voices: () => (ttsConfig === null ? [] : voiceOptionsOf(ttsConfig)),
     nodes,
     appVersion: app.getVersion(),
     recoveredRuns: repaired.repaired.length + repairedChat,
@@ -224,6 +233,8 @@ async function bootstrap(): Promise<void> {
     // 让节点立刻停下，而不是等租约过期（abort 由 orchestrator / chat 统一发出）
     orchestrator.cancelAll();
     chat.cancelAll();
+    // 语音合成的子进程也一起收掉，别留后台进程
+    ttsRunner?.dispose();
     try {
       db.close();
     } catch {

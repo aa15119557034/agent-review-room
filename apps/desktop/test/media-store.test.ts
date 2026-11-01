@@ -30,7 +30,7 @@ function setup(): { store: MediaStore; db: SqliteDatabase; images: string } {
   const images = join(root, "images");
   const files = join(root, "files");
   const db = openDatabase(join(root, "room.db"));
-  return { store: new MediaStore(images, files, db), db, images };
+  return { store: new MediaStore(images, files, join(root, "audio"), db), db, images };
 }
 
 const jpeg = () =>

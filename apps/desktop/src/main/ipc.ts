@@ -14,6 +14,7 @@ import {
   type ControlEvent,
   type ControlResult,
   type QueryRequest,
+  type VoiceOption,
 } from "@room/schemas";
 import { ChatError, type ChatService } from "./chat";
 import { DiscussionError, type DiscussionService } from "./discussion";
@@ -42,6 +43,8 @@ export interface IpcDeps {
   readonly media?: MediaService;
   /** D-38a：画图任务（本机 ComfyUI + 全局队列） */
   readonly jobs?: MediaJobsService;
+  /** D-37b：可选的声音（userData/tts.json）；没配置 = 空列表 */
+  readonly voices?: () => VoiceOption[];
   readonly nodes: NodeService;
   readonly appVersion: string;
   readonly recoveredRuns: number;
@@ -357,7 +360,7 @@ export function createDispatcher(deps: IpcDeps) {
 
       // 还没上线：明确拒绝，不要返回 undefined 让出参校验兜成 internal
       case "speech.play":
-        throw new ChatError("validation_failed", "语音播放还没上线（D-37b）");
+        return jobsService().play(command.source);
       case "immersive.update":
         throw new ChatError("validation_failed", "沉浸模式还没上线（D-39）");
       case "image.pick":
@@ -494,7 +497,7 @@ export function createDispatcher(deps: IpcDeps) {
       case "appearance.get":
         return DEFAULT_APPEARANCE;
       case "voices.list":
-        return [];
+        return deps.voices?.() ?? [];
       case "immersive.get":
         return {
           settings: DEFAULT_IMMERSIVE_SETTINGS,

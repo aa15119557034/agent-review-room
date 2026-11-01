@@ -4,23 +4,29 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
   deleteImageRef,
+  findAudioRefBySha,
   findFileBySha,
   findImageRefBySha,
+  getAudioRef,
   getFile,
   getImageRef,
   imageShaInUse,
+  insertAudioRef,
   insertFile,
   insertImageRef,
   ulid,
+  type AudioRefRecord,
   type FileRefRecord,
   type ImageRefRecord,
   type SqliteDatabase,
 } from "@room/db";
 import {
+  AudioRef as AudioRefSchema,
   CHAT_LIMITS,
   FileRef as FileRefSchema,
   IMAGE_MAX_BYTES,
   ImageRef as ImageRefSchema,
+  type AudioMime,
   type ImagePurpose,
   type ImageRef,
 } from "@room/schemas";
@@ -42,10 +48,42 @@ export class MediaStore {
   constructor(
     private readonly imagesDir: string,
     private readonly filesDir: string,
+    private readonly audioDir: string,
     private readonly db: SqliteDatabase,
   ) {
     mkdirSync(imagesDir, { recursive: true });
     mkdirSync(filesDir, { recursive: true });
+    mkdirSync(audioDir, { recursive: true });
+  }
+
+  /**
+   * 存一段音频（D-37b 合成出来的语音；D-34b 的录音以后也走这里）。
+   * 和图片一样按内容去重：同一份字节只有一个 `aud_` ref。
+   */
+  addAudio(input: Buffer, mime: AudioMime, now: string = new Date().toISOString()): AudioRefRecord {
+    if (input.length === 0) throw new ImageRejectedError("input_too_big", "这段音频是空的");
+    const sha256 = createHash("sha256").update(input).digest("hex");
+    const existing = findAudioRefBySha(this.db, sha256);
+    if (existing !== null && existing.mime === mime) return existing;
+    const ref = AudioRefSchema.parse("aud_" + ulid());
+    this.writeAudioBytes(sha256, input);
+    const record: AudioRefRecord = { ref, sha256, mime, bytes: input.length, createdAt: now };
+    insertAudioRef(this.db, record);
+    return record;
+  }
+
+  /** `room-audio://` 要的文件路径和类型；ref 不合法 / 没有记录 / 文件丢了都返回 null */
+  resolveAudio(ref: string): { file: string; mime: AudioMime } | null {
+    const record = getAudioRef(this.db, ref);
+    if (record === null) return null;
+    const file = this.audioFile(record.sha256);
+    return existsSync(file) ? { file, mime: record.mime } : null;
+  }
+
+  /** 只读：把 ref 对应的音频字节读出来 */
+  readAudio(ref: string): Buffer | null {
+    const hit = this.resolveAudio(ref);
+    return hit === null ? null : readFileSync(hit.file);
   }
 
   /**
@@ -226,6 +264,18 @@ export class MediaStore {
     return join(this.filesDir, sha256);
   }
 
+  private audioFile(sha256: string): string {
+    return join(this.audioDir, sha256);
+  }
+
+  private writeAudioBytes(sha256: string, bytes: Buffer): void {
+    const target = this.audioFile(sha256);
+    if (existsSync(target)) return;
+    const tmp = join(this.audioDir, `${sha256}.${process.pid}.tmp`);
+    writeFileSync(tmp, bytes);
+    renameSync(tmp, target);
+  }
+
   private writeBytes(sha256: string, bytes: Buffer): void {
     const target = this.imageFile(sha256);
     if (existsSync(target)) return;
@@ -278,6 +328,80 @@ export function createImageProtocolHandler(store: MediaStore): (request: Request
 }
 
 export { ImageRejectedError };
+
+/**
+ * `room-audio://<ref>` 的处理函数（D-37b）。规则和 room-image 一样：只认 `<ref>` 形式的 host，
+ * path 必须是空或 "/"，其余一律 404；路径只来自数据库里的 sha256。
+ *
+ * 和图片不同的地方：`<audio>` 播放会带 Range 头（拖动进度条、边下边播），所以要支持 206；
+ * 不认识 / 越界的 Range 就当整段返回（浏览器也接受）。
+ */
+export function createAudioProtocolHandler(store: MediaStore): (request: Request) => Promise<Response> {
+  return async (request) => {
+    let url: URL;
+    try {
+      url = new URL(request.url);
+    } catch {
+      return new Response("bad request", { status: 400 });
+    }
+    if (url.protocol !== "room-audio:") return new Response("not found", { status: 404 });
+    if (url.pathname !== "" && url.pathname !== "/") return new Response("not found", { status: 404 });
+    // Chromium 把 standard scheme 的 host 转成小写；AudioRef 的 ULID 是大写，规范回去再查表
+    const host = url.host;
+    const ref = host.startsWith("aud_") ? "aud_" + host.slice(4).toUpperCase() : host;
+    const hit = store.resolveAudio(ref);
+    if (hit === null) return new Response("not found", { status: 404 });
+    const bytes = await readFile(hit.file);
+    const range = parseRange(request.headers.get("range"), bytes.length);
+    if (range === null) {
+      return new Response(bytes, {
+        status: 200,
+        headers: {
+          "content-type": hit.mime,
+          "content-length": String(bytes.length),
+          "accept-ranges": "bytes",
+          // 引用不可变（同一段音频只有一个 ref），可以长期缓存
+          "cache-control": "private, max-age=31536000, immutable",
+        },
+      });
+    }
+    const slice = bytes.subarray(range.start, range.end + 1);
+    return new Response(slice, {
+      status: 206,
+      headers: {
+        "content-type": hit.mime,
+        "content-length": String(slice.length),
+        "content-range": `bytes ${range.start}-${range.end}/${bytes.length}`,
+        "accept-ranges": "bytes",
+        "cache-control": "private, max-age=31536000, immutable",
+      },
+    });
+  };
+}
+
+/** 只认单段 `bytes=a-b` / `bytes=a-`；格式不对或越界时返回 null（按整段处理） */
+function parseRange(header: string | null, total: number): { start: number; end: number } | null {
+  if (header === null) return null;
+  const match = /^bytes=(\d*)-(\d*)$/.exec(header.trim());
+  if (match === null) return null;
+  const [, rawStart, rawEnd] = match;
+  if (rawStart === "" && rawEnd === "") return null;
+  let start: number;
+  let end: number;
+  if (rawStart === "") {
+    // bytes=-500：最后 500 字节
+    const tail = Number(rawEnd);
+    if (!Number.isFinite(tail) || tail <= 0) return null;
+    start = Math.max(0, total - tail);
+    end = total - 1;
+  } else {
+    start = Number(rawStart);
+    end = rawEnd === "" ? total - 1 : Number(rawEnd);
+  }
+  if (!Number.isFinite(start) || !Number.isFinite(end)) return null;
+  if (start < 0 || end < start || start >= total) return null;
+  return { start, end: Math.min(end, total - 1) };
+}
 
 /** 聊天文件不能收（空文件 / 太大）。main 翻成 validation_failed */
 export class FileRejectedError extends Error {

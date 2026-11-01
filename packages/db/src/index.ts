@@ -10,7 +10,9 @@ export * from "./discussion";
 export * from "./plan";
 export * from "./discussion-turn";
 export * from "./chat";
+export * from "./audio";
 export * from "./media";
+export * from "./speech";
 export * from "./media-jobs";
 export * from "./voice";
 
