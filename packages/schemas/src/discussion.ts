@@ -160,7 +160,57 @@ export const QuotaWindow = z.object({
 });
 export type QuotaWindow = z.infer<typeof QuotaWindow>;
 
-/** 参与者的实时状态（节点上报 + 主控端统计）。阶段 1A 只需要 availability，其余字段在 1B 填上 */
+/**
+ * C-36：这一轮谁替谁答（ADR-002 §3「替补代答」，状态表 #10）。
+ * - absent    ：本来要答的人，必须在这一轮的收件人里
+ * - substitute：代他答的人，**不在**收件人里（一个人一轮只有一个 Turn），也不能同时是别人的 absent（不做替补链）
+ * 批次里对应一项 recipient = substitute、onBehalfOf = absent；发给替补的 Snapshot 用替补自己的角色设定，
+ * 不带被替补者的 roleNote，题面里写明「代 X 回答」。替补不能当这一轮的汇总者（round.summarize 已经拒绝）
+ */
+export const RoundSubstitution = z
+  .object({ absent: AgentName, substitute: AgentName })
+  .strict()
+  .refine((x) => x.absent !== x.substitute, "不能自己替自己");
+export type RoundSubstitution = z.infer<typeof RoundSubstitution>;
+
+export const RoundSubstitutions = z
+  .array(RoundSubstitution)
+  .max(8)
+  .refine((xs) => new Set(xs.map((x) => x.absent)).size === xs.length, "同一个人只能有一位替补")
+  .refine((xs) => new Set(xs.map((x) => x.substitute)).size === xs.length, "一位替补一轮只代一个人")
+  .refine((xs) => xs.every((x) => !xs.some((y) => y.absent === x.substitute)), "替补自己不能也缺席（不做替补链）");
+export type RoundSubstitutions = z.infer<typeof RoundSubstitutions>;
+
+/**
+ * C-36：一个 profile 的额度读出来是什么状态（D-32 判断自动缺席、C-37 控制台显示都用它，不各写一套）：
+ * - exhausted：任一窗口 usedPercent ≥ 100，或者余额 ≤ 0
+ * - ok       ：读到了至少一项，而且都没用完
+ * - unknown  ：什么都没读到（节点不支持、超时、出错）。**未知不等于用完**：不因此自动缺席
+ */
+export type QuotaState = "ok" | "exhausted" | "unknown";
+
+export function quotaState(q: {
+  fiveHour: { usedPercent: number } | null;
+  weekly: { usedPercent: number } | null;
+  balance?: { amount: string } | null;
+}): QuotaState {
+  const windows = [q.fiveHour, q.weekly].filter((w): w is { usedPercent: number } => w !== null);
+  const amount = q.balance ? Number(q.balance.amount) : null;
+  const known = windows.length > 0 || (amount !== null && Number.isFinite(amount));
+  if (!known) return "unknown";
+  if (windows.some((w) => w.usedPercent >= 100)) return "exhausted";
+  if (amount !== null && Number.isFinite(amount) && amount <= 0) return "exhausted";
+  return "ok";
+}
+
+/**
+ * 参与者的实时状态（节点上报 + 主控端统计）。阶段 1A 只需要 availability，其余字段在 1B 填上。
+ * C-36：额度只来自节点 GET /v1/profiles/:profileId/quota（讨论用的 profileId），**读不到的项是 null，不猜、不写 0**；
+ * availability = absent_quota 当且仅当 quotaState(这份状态) = exhausted，或者这位最近一个 Run 以 quota_exhausted 结束、
+ * 之后还没有读到 **ok** 的额度（读到 unknown 不清，免得节点短暂读失败就「恢复」；汐 #153）。
+ * 只是读不到（unknown）、又没有那样的 Run，不算缺席。
+ * balance.spentThisMonth：节点不报（RemoteBalance 只有余额），现在一律 null，界面显示「暂不可用」
+ */
 export const AgentStatus = z.object({
   agent: AgentName,
   availability: z.enum(["available", "offline", "unconfigured", "paused_by_user", "absent_quota"]),

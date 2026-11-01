@@ -42,6 +42,7 @@ import {
   NodeId,
   PlanVersion,
   Round,
+  RoundSubstitutions,
   RoundSummary,
   TaskSource,
   Turn,
@@ -427,6 +428,14 @@ export const COMMANDS = {
    * 起草新的一轮：为每个收件人生成 Snapshot + Approval，打包成一个 initial 批次，等盖章。
    * 议题里已有 DRAFT / RUNNING / PAUSED / AWAITING_SUMMARY / SUMMARIZING 的轮时返回 invalid_state；
    * 收件人不在线、未配置、被暂停或额度缺席时返回 agent_unavailable（message 里写明是谁）。
+   *
+   * C-36 替补（substitutes）：
+   * - 省略 = 自动：收件人里 availability 是 absent_quota、设了 AgentProfile.substitute 的人，由那位替补代答；
+   *   替补也不能答、已经在收件人里、或者会形成链的，这个人照旧 agent_unavailable（不再往下找）
+   * - 传了（可以是空数组）= 就按这份来，不再自动找；空数组 = 这一轮谁都不替
+   * - 每一对：absent 在 recipients 里；substitute 不在 recipients 里、canDiscuss、现在能答；不满足 → validation_failed / agent_unavailable
+   * - 被替补的人自己能不能答不检查（你可以主动让别人替一个能答的人）
+   * 返回的批次里每一对对应一项 recipient = substitute、onBehalfOf = absent
    */
   "round.draft": def(
     z.object({
@@ -437,6 +446,8 @@ export const COMMANDS = {
       taskSource: TaskSource,
       planVersionId: PlanVersionId.nullable(),
       historyMode: HistoryMode,
+      /** C-36：见上。省略 = 按参与者设置自动找替补 */
+      substitutes: RoundSubstitutions.optional(),
     }),
     z.object({ round: Round, batch: ApprovalBatch }),
     "author",
@@ -453,6 +464,12 @@ export const COMMANDS = {
       recipients: z.array(AgentName).min(1).max(8).refine(uniqueAgents, "收件人不能重复").optional(),
       task: z.string().min(1).max(20_000).optional(),
       historyMode: HistoryMode.optional(),
+      /**
+       * C-36：省略 = 沿用旧批次里的替补（按 onBehalfOf 读回）；改了收件人后某对的 absent 不在了，那一对丢掉；
+       * 某对的 substitute 现在成了收件人（你想让他自己答），那一对也丢掉、absent 照常按自己能不能答处理（汐 #153）。
+       * 新加的收件人不自动找替补。传了 = 整份替换，规则同 round.draft
+       */
+      substitutes: RoundSubstitutions.optional(),
     }),
     z.object({ round: Round, batch: ApprovalBatch }),
     "author",
@@ -529,9 +546,17 @@ export const COMMANDS = {
     "author",
   ),
 
-  /** 单独重试一个人（他上一个 Turn 的结局是 timed_out / failed / absent_quota） */
+  /**
+   * 单独重试一个人（他上一个 Turn 的结局是 timed_out / failed / absent_quota）。
+   * C-36：带 substitute = 改由这位代他答（典型：答到一半额度用完 → 「让替补代答」）。
+   * 规则同 round.draft 的 substitutes：substitute 不是这一轮已经有 Turn 的人、canDiscuss、现在能答，否则 validation_failed / agent_unavailable。
+   * 新 Turn 的 agent = substitute、onBehalfOf = agent；批次照旧是 retry。agent 本身已经是替补（onBehalfOf 非 null）时，
+   * 重试的还是他、仍然代原来那位；这时不能再带 substitute（不做替补链）→ validation_failed。
+   * substitute 等于 agent（自己替自己）→ validation_failed：命令请求要放进 ControlCommand 的 discriminatedUnion，
+   * 不能在对象上加 refine，所以这一条由 main 校验（界面的替补下拉也不列他自己）
+   */
   "round.retry": def(
-    z.object({ type: z.literal("round.retry"), roundId: RoundId, agent: AgentName }),
+    z.object({ type: z.literal("round.retry"), roundId: RoundId, agent: AgentName, substitute: AgentName.optional() }),
     ApprovalBatch,
     "author",
   ),
