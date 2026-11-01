@@ -6,7 +6,7 @@ import {
   StartRunAttachments,
   VisionSupport,
   attachmentManifestBlock,
-  imageSlotPlacedAfterManifest,
+  imageBlockPlaced,
 } from "./attachments";
 
 /**
@@ -250,8 +250,8 @@ export const StartRunRequest = z
      */
     attachments: StartRunAttachments.optional(),
     /**
-     * C-42g：图片位置标记（见 attachments.ts 的 attachmentImageSlotMarker），等于这份 Snapshot 的 imageSlot。
-     * 带 attachments 时必须有、不带时不能有；在 content 里恰好一次、在清单块后面，否则 bad_request。
+     * C-42g：图片位置标记（见 attachments.ts 的 attachmentImageSlotMarker / attachmentImageBlock），等于这份 Snapshot 的 imageSlot。
+     * 带 attachments 时必须有、不带时不能有；content 里要有恰好一块图片资料块（在清单块后面），标记只在块里出现一次，否则 bad_request。
      * 节点把图片块紧接在标记后面交给 CLI，不删标记、不加文字
      */
     imageSlot: AttachmentImageSlot.optional(),
@@ -275,8 +275,8 @@ export const StartRunRequest = z
     (r) =>
       r.attachments === undefined ||
       r.imageSlot === undefined ||
-      imageSlotPlacedAfterManifest(r.snapshot.content, r.attachments, r.imageSlot),
-    "imageSlot 要在 content 里恰好出现一次，并且在附件清单块后面",
+      imageBlockPlaced(r.snapshot.content, r.attachments, r.imageSlot),
+    "content 里要有恰好一块图片资料块（attachmentImageBlock），在附件清单块后面，标记只在块里出现一次",
   )
   .refine((r) => r.kind !== "image" || r.attachments === undefined, "image Run 不能带附件");
 
