@@ -1,4 +1,5 @@
 import { spawn, type ChildProcess } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { StringDecoder } from "node:string_decoder";
 import type { RemoteArtifact, RemoteEvent, RemoteTerminal, RunKind, StartRunRequest } from "@room/schemas";
 import type { Profile, ServerConfig } from "./config";
@@ -7,6 +8,7 @@ import { createParser, type OutputParser, type ParserOutput } from "./parsers";
 import { planSpawn } from "./win-command";
 import { buildArgs } from "./model-args";
 import { imageStdin } from "./images";
+import type { PreparedPrompt } from "./chat-memory";
 import {
   IMAGE_OUTPUT_DIR_ENV,
   IMAGE_OUTPUT_DIR_PLACEHOLDER,
@@ -36,6 +38,8 @@ export class RemoteRun {
   readonly kind: RunKind;
   /** 随附图片的 sha256（按编号），幂等比较用；没带图为空 */
   readonly attachmentShas: readonly string[];
+  /** StartRun.chat 原样序列化（没带 = "none"），幂等比较用 */
+  readonly chatKey: string;
 
   private readonly events: SeqEvent[] = [];
   private readonly subscribers = new Set<Subscriber>();
@@ -58,6 +62,8 @@ export class RemoteRun {
     private readonly profile: Profile,
     private readonly cfg: ServerConfig,
     private readonly onFinished: (run: RemoteRun) => void,
+    /** S-20：聊天 Run 换好记忆槽位的文字和要发的 prompt_final；不传 = 原样发 content */
+    prepared: PreparedPrompt = { content: req.snapshot.content, promptFinal: null },
   ) {
     this.runId = req.runId;
     this.profileId = req.profileId;
@@ -65,22 +71,25 @@ export class RemoteRun {
     this.model = req.model;
     this.kind = req.kind ?? "text";
     this.attachmentShas = (req.attachments ?? []).map((a) => a.sha256);
+    this.chatKey = chatKeyOf(req.chat);
+    this.promptFinal = prepared.promptFinal;
     this.limits = {
       idleTimeoutMs: Math.min(req.limits.idleTimeoutMs, profile.maxIdleTimeoutMs),
       totalTimeoutMs: Math.min(req.limits.totalTimeoutMs, profile.maxTotalTimeoutMs),
     };
     // 带图：按 profile.images 把文字和图片块写进 stdin（server.ts 已核对过字节、看图能力和 images 配置）
     if (req.attachments && req.imageSlot && profile.images) {
-      this.input = imageStdin(profile.images.input, req.snapshot.content, req.imageSlot, req.attachments);
+      this.input = imageStdin(profile.images.input, prepared.content, req.imageSlot, req.attachments);
       this.extraArgs = profile.images.args;
     } else {
-      this.input = req.snapshot.content;
+      this.input = prepared.content;
       this.extraArgs = [];
     }
     this.parser = createParser(profile.parser);
   }
 
   private readonly limits: { idleTimeoutMs: number; totalTimeoutMs: number };
+  private readonly promptFinal: PreparedPrompt["promptFinal"];
   private readonly input: string;
   private readonly extraArgs: readonly string[];
   /** image Run：只属于这次 Run 的输出目录（建好之后才有） */
@@ -129,6 +138,9 @@ export class RemoteRun {
       this.limits.totalTimeoutMs,
     );
     this.resetIdle();
+
+    // C-34 PROMPT_FINAL_RULE：Prompt 已经拼好（构造时换好了槽位），交给 CLI 之前恰好一次，在任何输出之前
+    if (this.promptFinal) this.push({ type: "prompt_final", seq: 0, ts: "", ...this.promptFinal });
 
     let child: ChildProcess;
     try {
@@ -363,11 +375,27 @@ export class RemoteRun {
   }
 }
 
+/** 幂等比较用：没带 chat 和 chat.memory 为 null 不一样（后者要发 prompt_final） */
+export const chatKeyOf = (chat: StartRunRequest["chat"]): string =>
+  chat === undefined ? "none" : chat.memory === null ? "no-memory" : JSON.stringify([chat.memory.nonce, chat.memory.marker]);
+
 function buildEnv(profile: Profile): NodeJS.ProcessEnv {
   const env: NodeJS.ProcessEnv = {};
   for (const key of profile.envAllowlist) {
     const v = process.env[key];
     if (v !== undefined) env[key] = v;
   }
-  return { ...env, ...profile.env };
+  // S-20：密钥从文件现读（只有这位秘书的账号能读那个文件）；读不到就抛错，调用方按 spawn_failed 结束，消息里只有路径
+  const fromFiles: NodeJS.ProcessEnv = {};
+  for (const [key, file] of Object.entries(profile.envFiles)) {
+    let value: string;
+    try {
+      value = readFileSync(file, "utf8").trim();
+    } catch (err) {
+      throw new Error(`读不了 envFiles.${key}（${file}）：${(err as NodeJS.ErrnoException).code ?? "error"}`);
+    }
+    if (value === "") throw new Error(`envFiles.${key}（${file}）是空的`);
+    fromFiles[key] = value;
+  }
+  return { ...env, ...profile.env, ...fromFiles };
 }

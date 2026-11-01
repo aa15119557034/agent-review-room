@@ -9,6 +9,7 @@ import {
   StartRunAttachments,
   attachmentManifestBlock,
   imageBlockPlaced,
+  imageSlotNonce,
   StartRunRequest,
   type NodeHealth,
   type RemoteErrorCode,
@@ -18,7 +19,8 @@ import {
   type StartRunResponse,
 } from "@room/schemas";
 import type { Profile, ServerConfig } from "./config";
-import { RemoteRun } from "./remote-run";
+import { RemoteRun, chatKeyOf } from "./remote-run";
+import { preparePrompt, selectForProfile } from "./chat-memory";
 import { checkModel } from "./model-args";
 import { attachmentProblem, profileMaySeeImages, visionOf } from "./images";
 import { sweepStaleRunDirs } from "./image-artifact";
@@ -62,6 +64,8 @@ export function createAgentServer(
     if (removed.length > 0) console.log(`[agent-server] removed ${removed.length} leftover image run folder(s) in ${root}`);
   }
 
+  const memoryHealth = createMemoryHealth(cfg);
+
   // 定期清理结束超过 TTL 的 run
   const gc = setInterval(() => {
     const now = Date.now();
@@ -103,6 +107,8 @@ export function createAgentServer(
           models: p.models,
           ...(p.models.length === 0 && p.fixedModelVision !== undefined ? { fixedModelVision: p.fixedModelVision } : {}),
         })),
+        // S-20：配了记忆、现在按规则读得到的聊天 profile（不合格的不报，界面显示「此记忆来源不可用」）
+        memoryProfiles: memoryHealth.available(),
         // S-23：能收图 = 请求体够大并且至少一个 profile 配了交图方式、有模型实测能看
         capabilities: {
           attachments: cfg.maxBodyBytes >= NODE_MIN_BODY_BYTES_WITH_ATTACHMENTS && Object.values(cfg.profiles).some(profileMaySeeImages),
@@ -212,6 +218,7 @@ export function createAgentServer(
         existing.contentHash === reqBody.snapshot.contentHash &&
         sameModel(existing.model, reqBody.model) &&
         existing.kind === (reqBody.kind ?? "text") &&
+        existing.chatKey === chatKeyOf(reqBody.chat) &&
         sameList(existing.attachmentShas, (reqBody.attachments ?? []).map((a) => a.sha256))
       ) {
         return sendJson(res, 200, startResponse(reqBody.runId, "already_exists"));
@@ -262,9 +269,15 @@ export function createAgentServer(
       throw new HttpError(429, "node_busy", "this image profile is already drawing");
     }
 
+    // S-20：聊天 Run 在这里读记忆、换槽位（读不到也不失败，槽位里换成「不可用」）。日志只写原因，不写正文
+    const otherNonces = reqBody.imageSlot ? [imageSlotNonce(reqBody.imageSlot) ?? ""].filter(Boolean) : [];
+    const prepared = preparePrompt(cfg, profile, reqBody.snapshot.content, reqBody.chat, otherNonces, (line) =>
+      console.warn(`[agent-server] run ${reqBody.runId}：${line}`),
+    );
+    if (profile.memory && reqBody.chat?.memory) memoryHealth.record(reqBody.profileId, prepared.promptFinal?.memory?.status);
     const run = new RemoteRun(reqBody, profile, cfg, (r) => {
       console.log(`[agent-server] run ${r.runId} finished`);
-    });
+    }, prepared);
     runs.set(run.runId, run);
     run.start();
     console.log(`[agent-server] run ${run.runId} started (profile=${run.profileId})`);
@@ -381,6 +394,33 @@ function startResponse(runId: StartRunResponse["runId"], status: StartRunRespons
 function sendJson(res: ServerResponse, status: number, body: unknown): void {
   res.writeHead(status, { "content-type": "application/json; charset=utf-8" });
   res.end(JSON.stringify(body));
+}
+
+/** 启动时按规则检查一遍记忆（ADR-003 §2a）；之后每次聊天 Run 读的结果和 health 都会刷新，health 最多一分钟重读一次 */
+export const MEMORY_HEALTH_TTL_MS = 60_000;
+
+function createMemoryHealth(cfg: ServerConfig, now: () => number = Date.now) {
+  const state = new Map<string, { ok: boolean; at: number }>();
+  const ids = Object.entries(cfg.profiles)
+    .filter(([, p]) => p.memory)
+    .map(([id]) => id);
+  const check = (id: string) => {
+    const ok = selectForProfile(cfg, cfg.profiles[id]!).status !== "unavailable";
+    state.set(id, { ok, at: now() });
+  };
+  for (const id of ids) check(id);
+  return {
+    available(): string[] {
+      for (const id of ids) {
+        const s = state.get(id);
+        if (!s || now() - s.at > MEMORY_HEALTH_TTL_MS) check(id);
+      }
+      return ids.filter((id) => state.get(id)?.ok);
+    },
+    record(id: string, status: string | undefined): void {
+      if (ids.includes(id) && status !== undefined) state.set(id, { ok: status !== "unavailable", at: now() });
+    },
+  };
 }
 
 function sha256Buf(s: string): Buffer {

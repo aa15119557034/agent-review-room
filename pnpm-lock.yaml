@@ -20,6 +20,9 @@ importers:
 
   apps/agent-server:
     dependencies:
+      '@room/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@room/schemas':
         specifier: workspace:*
         version: link:../../packages/schemas

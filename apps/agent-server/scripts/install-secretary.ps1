@@ -6,6 +6,7 @@ S-20：在这台电脑上给一位秘书安排「家」（ADR-003 §2a）。用�
 做的事：
   1. 检查 HomeDir 在本机 NTFS 盘上
   2. 建低权限账号 agentroom-<秘书>（随机密码，只在本次运行里用，不保存、不显示）
+     deepseek 不装命令行，改为输入 API Key，存进 node\deepseek\deepseek-api-key.txt（只有她的账号和管理员能读）
   3. 建 <HomeDir>\memory\<秘书>\ 的布局、memory.json、README.md；建 node\app、node\<秘书>\
   4. 设权限：<HomeDir> 关掉继承；记忆正文这位秘书只读，inbox / ext 她没有权限；配置和 Token 只有她和管理员能读
   5. 生成这位秘书的节点配置（homeDir / agent / runAsUser / port / 聊天 profile 的 memory）和 Token
@@ -13,7 +14,7 @@ S-20：在这台电脑上给一位秘书安排「家」（ADR-003 §2a）。用�
      授予「作为批处理作业登录」；注册计划任务：开机启动、不管是否登录都运行、身份是 agentroom-<秘书>
   7. 打开一个以这个账号运行的窗口，在里面登录这位秘书的命令行（Claude / Codex）
 
-主控机上按 ADR-003 §2a「切换顺序」：先装 codex（7421）；D-40 迁移完成后才装 deepseek（7420）。
+主控机上按 ADR-003 §2a「切换顺序」：先装 codex（7421）；D-40 迁移完成后才装 deepseek（7420，要加 -AfterD40）。
 已有的记忆、文件不会被覆盖；重复运行只补缺的、重设权限。node\app 的程序整份换成新版本：先在 node\app.new 里准备、校验、设好权限，所有步骤都成功后最后才换上，中途失败时旧版本原样不动。
 #>
 #Requires -Version 5.1
@@ -27,7 +28,9 @@ param(
   # 仓库目录，会复制到 <HomeDir>\node\app（不含 .git）
   [Parameter(Mandatory)][string]$AppSource,
   # 主控机上：桌面端以这个账号运行，一键导入要能读 Token（只给 Token 这一个文件只读）
-  [string]$TokenReader = ""
+  [string]$TokenReader = "",
+  # 汐（deepseek）只能在 D-40 迁移完成、林离已经走 7421 之后装（ADR-003 §2a 切换顺序第 4 步）：装的时候加这个开关表示确认
+  [switch]$AfterD40
 )
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
@@ -37,8 +40,10 @@ function Step($msg) { Write-Host "→ $msg" -ForegroundColor Cyan }
 
 # 建账号用的 LocalAccounts 模块在 PowerShell 7 里不一定能直接用：只认 Windows 自带的 PowerShell 5.1
 if ($PSVersionTable.PSEdition -ne "Desktop") { Fail "请用 Windows 自带的 PowerShell（powershell.exe，以管理员身份运行），不要用 pwsh" }
-# DeepSeek 的 API Key 在新账号下怎么给还没定（S-20 第二段），而且按 §2a 汐要等 D-40 之后才切
-if ($Agent -eq "deepseek") { Fail "deepseek 现在还不能装：等 D-40 迁移完成、S-20 第二段安排好 API Key 之后再装（ADR-003 §2a 切换顺序）" }
+# 按 §2a 汐要等 D-40 之后才切：7420 现在还带着 codex-*，以 agentroom-deepseek 起它会让 Codex 跑在汐的账号下
+if ($Agent -eq "deepseek" -and -not $AfterD40) {
+  Fail "deepseek 要等 D-40 迁移完成、林离的讨论和聊天都走 7421 之后再装（ADR-003 §2a 切换顺序）。确认已经完成后加 -AfterD40 重跑"
+}
 
 $me = [Security.Principal.WindowsIdentity]::GetCurrent()
 if (-not ([Security.Principal.WindowsPrincipal]$me).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
@@ -146,12 +151,23 @@ $cliCmd = Join-Path $cliDir "node_modules\.bin\$Agent.cmd"
 # Codex 的登录信息固定放在 node\codex\codex-home（CODEX_HOME），不放在账号的用户目录里：
 # 用户目录在计划任务 / 换密码 / 临时配置文件时不一定是同一个，实测登录后 auth.json 会不见（#102 第 12 轮）
 $codexHome = Join-Path $nodeMine "codex-home"
+$deepseekKey = Join-Path $nodeMine "deepseek-api-key.txt"
 foreach ($r in $userRoots) { if ($r -and $nodeExe.StartsWith($r.TrimEnd("\") + "\", [StringComparison]::OrdinalIgnoreCase)) { Fail "Node 装在用户目录里（$nodeExe），秘书账号读不到。请用官方安装包装到 Program Files" } }
 $template = Get-Content -Raw -Encoding UTF8 $ConfigTemplate | ConvertFrom-Json
 $profiles = [ordered]@{}
 foreach ($p in $template.profiles.PSObject.Properties) {
   if (-not $p.Name.StartsWith("$Agent-")) { continue }  # 节点也会拒绝别人的 profile
-  $p.Value.cwd = (Join-Path $nodeMine "sandbox")
+  # 聊天 profile 在只读的 chat-sandbox 里跑（她没有写权限）；讨论 profile 在 sandbox 里
+  $p.Value.cwd = if ($p.Name -eq "$Agent-chat") { Join-Path $nodeMine "chat-sandbox" } else { Join-Path $nodeMine "sandbox" }
+  # 模板里相对 cwd 写的 ../bin/xxx（比如 deepseek-chat.mjs）换成 node\app\bin 里的绝对路径
+  if ($p.Value.PSObject.Properties["args"]) {
+    $p.Value.args = @($p.Value.args | ForEach-Object { if ($_ -like "../bin/*") { Join-Path $nodeApp ("bin\" + $_.Substring(7).Replace("/", "\")) } else { $_ } })
+  }
+  if ($Agent -eq "deepseek") {
+    # Key 不走环境变量（新账号没有），改从文件读
+    if ($p.Value.PSObject.Properties["envAllowlist"]) { $p.Value.envAllowlist = @($p.Value.envAllowlist | Where-Object { $_ -ne "DEEPSEEK_API_KEY" }) }
+    $p.Value | Add-Member -Force -NotePropertyName envFiles -NotePropertyValue ([ordered]@{ DEEPSEEK_API_KEY = $deepseekKey })
+  }
   # 模板里写的裸命令名（codex / codex.cmd / codex.ps1）换成她自己那份的绝对路径；别的命令（比如 node）不动
   if ([IO.Path]::GetFileNameWithoutExtension([string]$p.Value.command) -eq $Agent) { $p.Value.command = $cliCmd }
   if ($Agent -eq "codex") {
@@ -164,7 +180,7 @@ foreach ($p in $template.profiles.PSObject.Properties) {
   $profiles[$p.Name] = $p.Value
 }
 if ($profiles.Count -eq 0) { Fail "模板里没有 $Agent- 开头的 profile" }
-# 第一段允许没有聊天 profile（现在的模板只有讨论 profile）：记忆文件夹照建，聊天 profile 和记忆配置在第二段加
+# 模板里没有聊天 profile 也能装（比如拿旧的节点配置当模板）：记忆文件夹照建，结束时提示换成仓库里的示例模板
 $hasChat = $profiles.Contains("$Agent-chat")
 $template.profiles = [pscustomobject]$profiles
 $template.port = $Port
@@ -205,6 +221,8 @@ function Fail-Cli($msg) {
   if ($cliNewDirs -notcontains $cliDir) { Write-Host "  $cliDir 是以前装的，这次没装完可能不完整；节点还在用旧配置，下次重跑会补齐" -ForegroundColor Yellow }
   Fail $msg
 }
+# DeepSeek 不用命令行（节点用 node 跑 bin\deepseek-chat.mjs），这一步跳过
+if ($Agent -ne "deepseek") {
 Step "安装 $cliPackage 到 $cliDir"
 # 已经装过就是升级到最新；npm 的普通安装不建链接（node\<秘书> 里也不能有链接，预检会查）
 New-Item -ItemType Directory -Force -Path $cliDir | Out-Null
@@ -258,6 +276,21 @@ $versionOut = Invoke-Native { & $cliCmd --version }
 if ($LASTEXITCODE -ne 0 -or -not $versionOut) { Fail-Cli "$cliCmd 装好了但运行不了：`n$($versionOut -join "`n")" }
 # 只有一行输出时函数返回的是字符串不是数组，[0] 会取到第一个字符
 Write-Host "  $Agent 版本：$(@($versionOut)[0])"
+}
+
+# DeepSeek 的 API Key：节点账号读不到江浩的环境变量，所以存成 node\deepseek\deepseek-api-key.txt（只有她的账号和管理员能读），
+# profile 用 envFiles 在每次启动时现读。这里只先问，写文件在设好权限之后
+$apiKeyPlain = $null
+if ($Agent -eq "deepseek") {
+  $existingKey = Test-Path -LiteralPath $deepseekKey
+  $prompt = if ($existingKey) { "DeepSeek API Key（直接回车 = 保留已有的）" } else { "DeepSeek API Key" }
+  $keySecure = Read-Host -AsSecureString $prompt
+  $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($keySecure)
+  try { $apiKeyPlain = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr).Trim() } finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr) }
+  if ($apiKeyPlain -eq "") { $apiKeyPlain = $null }
+  if (-not $apiKeyPlain -and -not $existingKey) { Fail "没有输入 API Key" }
+  if ($apiKeyPlain -and $apiKeyPlain -match '\s') { Fail "API Key 里不能有空白字符" }
+}
 
 # ---- 2. 账号
 $user = "agentroom-$Agent"
@@ -277,7 +310,7 @@ if (Get-LocalUser -Name $user -ErrorAction SilentlyContinue) {
 $account = "$env:COMPUTERNAME\$user"
 
 # ---- 3. 文件夹
-foreach ($d in @($HomeDir, (Join-Path $HomeDir "memory"), $memory, $nodeMine, (Join-Path $nodeMine "sandbox"))) {
+foreach ($d in @($HomeDir, (Join-Path $HomeDir "memory"), $memory, $nodeMine, (Join-Path $nodeMine "sandbox"), (Join-Path $nodeMine "chat-sandbox"))) {
   New-Item -ItemType Directory -Force -Path $d | Out-Null
 }
 if ($Agent -eq "codex") { New-Item -ItemType Directory -Force -Path $codexHome | Out-Null }
@@ -360,6 +393,12 @@ Set-OnlyAcl $nodeMine @("${account}:(OI)(CI)(RX)") -Tree
 icacls (Join-Path $nodeMine "sandbox") /grant:r "${account}:(OI)(CI)M" /Q | Out-Null; Icacls-Ok sandbox
 # 登录信息她要能写（登录、刷新 Token）；只有她和管理员，江浩和别的秘书都没有权限
 if ($Agent -eq "codex") { icacls $codexHome /grant:r "${account}:(OI)(CI)M" /Q | Out-Null; Icacls-Ok codex-home }
+# DeepSeek 的 Key：继承 node\<秘书> 刚重建的权限（她只读、管理员），不单给任何人
+if ($apiKeyPlain) {
+  [IO.File]::WriteAllText($deepseekKey, $apiKeyPlain + "`n", [Text.UTF8Encoding]::new($false))
+  $apiKeyPlain = $null
+}
+if ($Agent -eq "deepseek") { icacls $deepseekKey /reset /Q | Out-Null; Icacls-Ok $deepseekKey }
 
 # ---- 5. 配置和 Token
 
@@ -467,5 +506,6 @@ $password = $null
 Write-Host ""
 Write-Host "✓ $Agent 安排好了" -ForegroundColor Green
 Write-Host "  记忆文件夹：$memory（把记忆放进 core / notes / journal）"
-if (-not $hasChat) { Write-Host "  模板里还没有 $Agent-chat：记忆文件夹已建好，聊天 profile 和读记忆在 S-20 第二段加上" -ForegroundColor Yellow }
+if (-not $hasChat) { Write-Host "  模板里没有 $Agent-chat：记忆文件夹已建好，但聊天读不到记忆。用仓库里的 agent-server.config(.local).example.json 当模板重跑一次" -ForegroundColor Yellow }
+Write-Host "  验收（S-20 ①②③）：.\apps\agent-server\scripts\verify-isolation.ps1 -Agent $Agent -HomeDir $HomeDir -Port $Port"
 Write-Host "  节点：http://127.0.0.1:$Port（开机自动启动；现在启动：Start-ScheduledTask AgentRoom-$Agent）"

@@ -52,6 +52,52 @@
       "maxIdleTimeoutMs": 300000,
       "maxTotalTimeoutMs": 1800000
     },
+    "claude-chat": {
+      "command": "claude",
+      "args": [
+        "-p",
+        "--output-format", "stream-json",
+        "--verbose",
+        "--include-partial-messages",
+        "--tools=",
+        "--strict-mcp-config",
+        "--permission-mode", "dontAsk",
+        "--permission-prompts", "none"
+      ],
+      "models": [
+        {
+          "id": "claude-opus-5-5",
+          "displayName": "Opus 5.5",
+          "efforts": [
+            {"id": "low", "displayName": "低", "note": null},
+            {"id": "medium", "displayName": "中等", "note": "推荐"},
+            {"id": "high", "displayName": "高", "note": null},
+            {"id": "xhigh", "displayName": "超高", "note": null},
+            {"id": "max", "displayName": "最高", "note": null}
+          ],
+          "defaultEffort": "medium"
+        },
+        {
+          "id": "claude-sonnet-5-5",
+          "displayName": "Sonnet 5.5",
+          "efforts": [
+            {"id": "low", "displayName": "低", "note": null},
+            {"id": "medium", "displayName": "中等", "note": "推荐"},
+            {"id": "high", "displayName": "高", "note": null},
+            {"id": "xhigh", "displayName": "超高", "note": null},
+            {"id": "max", "displayName": "最高", "note": null}
+          ],
+          "defaultEffort": "medium"
+        }
+      ],
+      "modelArgs": ["--model", "{model}"],
+      "effortArgs": ["--effort", "{effort}"],
+      "images": {"input": "claude-stream-json", "args": ["--input-format", "stream-json"]},
+      "cwd": "chat-sandbox",
+      "parser": "claude-stream-json",
+      "maxIdleTimeoutMs": 300000,
+      "maxTotalTimeoutMs": 900000
+    },
     "echo": {
       "command": "node",
       "args": ["-e", "process.stdin.pipe(process.stdout)"],
