@@ -1,4 +1,12 @@
-import type { AgentEvent, MemorySlot, PermissionDecision, PermissionRequest, RunId } from "@room/schemas";
+import type {
+  AgentEvent,
+  AttachmentImageSlot,
+  MemorySlot,
+  PermissionDecision,
+  PermissionRequest,
+  RunId,
+  StartRunAttachments,
+} from "@room/schemas";
 
 /** V0.4 §19 的 AgentAdapter，加上了 Phase 0 需要的最少类型。 */
 
@@ -31,6 +39,13 @@ export interface AgentInput {
    * 不传 = 讨论室 / 单次评审（行为不变）。
    */
   chat?: { memory: MemorySlot | null };
+  /**
+   * C-42a / C-42g：这次带给节点的图片（本体 base64 + sha256），和 imageSlot 成对出现：都传或都不传。
+   * 调用方（main）按 Snapshot.attachments 从图片库读本体，imageSlot 原样取 Snapshot.imageSlot；
+   * Adapter 只负责原样放进 StartRun，不改 content、不重算清单。远端以外的 Adapter 不支持带图时应拒绝（error 终止事件），不能丢图继续跑。
+   */
+  attachments?: StartRunAttachments;
+  imageSlot?: AttachmentImageSlot;
 }
 
 export interface RunOptions {
