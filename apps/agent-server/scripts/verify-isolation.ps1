@@ -149,6 +149,7 @@ else {
 if ($SkipModelRuns) {
   foreach ($f in $tempFiles) { if (Test-Path -LiteralPath $f) { Remove-Item -LiteralPath $f -Force } }
   Write-Host ""; $results | Format-Table -AutoSize -Wrap
+  Write-Host "-SkipModelRuns：只验证了 ③ 和 ① 里不调模型的部分；① ② 里让模型实际去读、写、跑命令的检查没有执行，不能当成全部通过。" -ForegroundColor Yellow
   if (@($results | Where-Object { $_.结果 -ne "通过" }).Count) { exit 1 } else { exit 0 }
 }
 
@@ -343,6 +344,7 @@ try {
   }
 }
 Record "②" "清理干净（这次建的链接、哨兵、临时目录都删掉了）" ($cleanupProblems.Count -eq 0) ($cleanupProblems -join "；")
+if (-not $backupOk) { Record "②" "记忆文件夹前后 hash 不变" $false "未检查：备份没成功，模型部分没有执行" }
 if ($backupOk) { Record "②" "记忆文件夹前后 hash 不变" $memoryKept $(if ($memoryKept) { "$($memoryBefore.Count) 个文件" } else { "被改动过（$(if ($restored) { '已从备份恢复' } else { '恢复失败' })）" }) }
 
 Write-Host ""
