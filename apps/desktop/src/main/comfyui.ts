@@ -118,44 +118,55 @@ export class ComfyUiClient {
     const [width, height] = parseSize(input.size);
     const prompt = this.#buildPrompt({ prompt: input.prompt, width, height, seed: input.seed });
     const clientId = `room-${Date.now()}-${Math.trunc(Math.random() * 1e6)}`;
-
-    let promptId: string;
-    try {
-      const res = await this.#fetch(new URL("/prompt", this.#cfg.baseUrl), {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ prompt, client_id: clientId }),
-      });
-      if (!res.ok) throw new ComfyUiError("rejected", `ComfyUI 拒绝了这次请求（HTTP ${res.status}）`);
-      const body = (await res.json()) as { prompt_id?: unknown };
-      if (typeof body.prompt_id !== "string") throw new ComfyUiError("bad_output", "ComfyUI 没有返回 prompt_id");
-      promptId = body.prompt_id;
-    } catch (error) {
-      if (error instanceof ComfyUiError) throw error;
-      throw new ComfyUiError("unavailable", "连不上 ComfyUI（127.0.0.1:8188）");
-    }
-    this.#activePromptId = promptId;
-
-    const totalTimeout = this.#cfg.totalTimeoutMs ?? DEFAULT_TOTAL_TIMEOUT_MS;
     const interval = this.#cfg.pollIntervalMs ?? DEFAULT_POLL_INTERVAL_MS;
-    const deadline = Date.now() + totalTimeout;
+
+    // 总时限从 draw() 一开始算（不是等 /prompt 回来才算）；所有请求都吃这个 signal（林离 #123）
+    const deadline = new AbortController();
+    const timer = setTimeout(() => deadline.abort(), this.#cfg.totalTimeoutMs ?? DEFAULT_TOTAL_TIMEOUT_MS);
+    const signal = combineSignals(opts.signal, deadline.signal);
+    const abortCause = (): ComfyUiError =>
+      opts.signal?.aborted ? new ComfyUiError("cancelled", "任务被取消了") : new ComfyUiError("timeout", "ComfyUI 画图超时");
+
     try {
-      while (Date.now() < deadline) {
-        if (opts.signal?.aborted) throw new ComfyUiError("cancelled", "任务被取消了");
-        await sleep(Math.min(interval, Math.max(0, deadline - Date.now())));
-        const entry = await this.#historyEntry(promptId);
+      if (signal.aborted) throw abortCause();
+      let promptId: string;
+      try {
+        const res = await this.#fetch(new URL("/prompt", this.#cfg.baseUrl), {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ prompt, client_id: clientId }),
+          signal,
+        });
+        if (!res.ok) throw new ComfyUiError("rejected", `ComfyUI 拒绝了这次请求（HTTP ${res.status}）`);
+        const body = (await res.json()) as { prompt_id?: unknown };
+        if (typeof body.prompt_id !== "string") throw new ComfyUiError("bad_output", "ComfyUI 没有返回 prompt_id");
+        promptId = body.prompt_id;
+      } catch (error) {
+        if (signal.aborted) throw abortCause();
+        if (error instanceof ComfyUiError) throw error;
+        throw new ComfyUiError("unavailable", "连不上 ComfyUI（127.0.0.1:8188）");
+      }
+      this.#activePromptId = promptId;
+
+      for (;;) {
+        if (signal.aborted) throw abortCause();
+        await sleep(interval);
+        if (signal.aborted) throw abortCause();
+        const entry = await this.#historyEntry(promptId, signal);
         if (entry === null) continue;
         if (entry.status !== "completed") {
           throw new ComfyUiError("rejected", `ComfyUI 这次没画成（${String(entry.status)}）`);
         }
         const output = entry.images.find((image) => image.type === "output") ?? entry.images[0];
-        const image = await this.#fetchImage(output);
+        const image = await this.#fetchImage(output, signal);
         return { image, seed: input.seed, model: this.modelName(), workflowHash: this.workflowHash() };
       }
-      // 超时也别让 ComfyUI 继续占着显卡把这张画完（C酱 #123）
-      await this.interrupt();
-      throw new ComfyUiError("timeout", "ComfyUI 画图超时");
+    } catch (error) {
+      // 超时的时候让 ComfyUI 也停下来，别继续占着显卡（C酱 #123）；取消由调用方发 cancelActive
+      if (!opts.signal?.aborted && deadline.signal.aborted) await this.interrupt();
+      throw error;
     } finally {
+      clearTimeout(timer);
       this.#activePromptId = null;
     }
   }
@@ -166,12 +177,13 @@ export class ComfyUiClient {
   }
 
   /**
-   * 取消当前任务：先把我们的 prompt 从 ComfyUI 队列里删掉，再打断正在跑的那个（ADR §122）。
-   * 队列里没有（已经在跑）时 delete 是空操作，interrupt 负责让它停下来。
+   * 取消当前任务：先把我们的 prompt 从 ComfyUI 队列里删掉；只有确认它**正在跑**才打断，
+   * 否则会误停用户在 ComfyUI 里手动跑的别的任务（林离/C酱 #123）。
    */
   async cancelActive(): Promise<void> {
     const id = this.#activePromptId;
     if (id === null) return;
+    const running = await this.#isRunning(id);
     try {
       await this.#fetch(new URL("/queue", this.#cfg.baseUrl), {
         method: "POST",
@@ -179,9 +191,21 @@ export class ComfyUiClient {
         body: JSON.stringify({ delete: [id] }),
       });
     } catch {
-      // 删队列失败就靠 interrupt
+      // 删队列失败就靠下面的 interrupt（如果确认在跑）
     }
-    await this.interrupt();
+    if (running) await this.interrupt();
+  }
+
+  /** GET /queue 看我们的 prompt 是不是正在执行的那个（不是就只排队，删掉就行） */
+  async #isRunning(promptId: string): Promise<boolean> {
+    try {
+      const res = await this.#fetch(new URL("/queue", this.#cfg.baseUrl));
+      if (!res.ok) return false;
+      const body = (await res.json()) as { queue_running?: unknown[] };
+      return (body.queue_running ?? []).some((entry) => Array.isArray(entry) && entry[1] === promptId);
+    } catch {
+      return false;
+    }
   }
 
   /** 打断正在跑的任务（「停」/取消用）。没有在跑的任务就什么都不做 */
@@ -210,8 +234,8 @@ export class ComfyUiClient {
     return workflow;
   }
 
-  async #historyEntry(promptId: string): Promise<{ status: string; images: { filename: string; subfolder: string; type: string }[] } | null> {
-    const res = await this.#fetch(new URL(`/history/${encodeURIComponent(promptId)}`, this.#cfg.baseUrl));
+  async #historyEntry(promptId: string, signal?: AbortSignal): Promise<{ status: string; images: { filename: string; subfolder: string; type: string }[] } | null> {
+    const res = await this.#fetch(new URL(`/history/${encodeURIComponent(promptId)}`, this.#cfg.baseUrl), { signal });
     if (!res.ok) {
       if (res.status === 404) return null;
       throw new ComfyUiError("unavailable", `读 ComfyUI 任务状态失败（HTTP ${res.status}）`);
@@ -231,13 +255,13 @@ export class ComfyUiClient {
     return { status, images };
   }
 
-  async #fetchImage(image: { filename: string; subfolder: string; type: string } | undefined): Promise<Buffer> {
+  async #fetchImage(image: { filename: string; subfolder: string; type: string } | undefined, signal?: AbortSignal): Promise<Buffer> {
     if (image === undefined) throw new ComfyUiError("bad_output", "ComfyUI 说画完了，但没给图");
     const url = new URL("/view", this.#cfg.baseUrl);
     url.searchParams.set("filename", image.filename);
     url.searchParams.set("subfolder", image.subfolder);
     url.searchParams.set("type", image.type);
-    const res = await this.#fetch(url);
+    const res = await this.#fetch(url, { signal });
     if (!res.ok) throw new ComfyUiError("unavailable", `取图失败（HTTP ${res.status}）`);
     return Buffer.from(await res.arrayBuffer());
   }
@@ -302,3 +326,20 @@ export function loadComfyUiConfigFile(path: string): ComfyUiConfig | null {
 
 /** ComfyUI 只允许本机：127.0.0.1 / localhost / [::1]（ADR-004 §3） */
 const LOOPBACK_HOSTS = new Set(["127.0.0.1", "localhost", "[::1]"]);
+
+
+/** 把取消 signal 和总时限 signal 合成一个（Node 20+ 的 AbortSignal.any 在类型里不一定有） */
+const combineSignals = (...signals: (AbortSignal | undefined)[]): AbortSignal => {
+  const present = signals.filter((signal): signal is AbortSignal => signal !== undefined);
+  if (present.length === 1) return present[0] as AbortSignal;
+  const controller = new AbortController();
+  for (const signal of present) {
+    if (signal.aborted) {
+      controller.abort();
+      break;
+    }
+    signal.addEventListener("abort", () => controller.abort(), { once: true });
+  }
+  return controller.signal;
+};
+

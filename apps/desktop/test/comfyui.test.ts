@@ -45,6 +45,8 @@ interface FakeServer {
   failPrompt: boolean;
   queueDeletes: string[][];
   views: string[];
+  /** GET /queue 时假装正在跑的 promptId（外部任务） */
+  queueRunning: string[];
 }
 
 function fakeServer(image: Buffer): FakeServer {
@@ -56,6 +58,7 @@ function fakeServer(image: Buffer): FakeServer {
     failPrompt: false,
     queueDeletes: [],
     views: [],
+    queueRunning: [],
   };
   server.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
     const url = new URL(typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url);
@@ -68,6 +71,9 @@ function fakeServer(image: Buffer): FakeServer {
     if (url.pathname === "/interrupt") {
       server.interrupts += 1;
       return new Response("", { status: 200 });
+    }
+    if (url.pathname === "/queue" && (init?.method ?? "GET") === "GET") {
+      return new Response(JSON.stringify({ queue_running: server.queueRunning.map((id, i) => [i, id]) }), { status: 200 });
     }
     if (url.pathname === "/queue" && init?.method === "POST") {
       const body = JSON.parse(String(init.body)) as { delete?: string[] };
@@ -164,6 +170,7 @@ describe("ComfyUI client (D-38a)", () => {
   it("cancelActive deletes our prompt from the queue, then interrupts", async () => {
     const server = fakeServer(await pngBytes());
     server.history = "pending";
+    server.queueRunning = ["p1"];
     const c = client(server, { totalTimeoutMs: 200 });
     const pending = c.draw({ prompt: "x", size: "1024x1024", seed: 1 }).catch(() => undefined);
     await new Promise((r) => setTimeout(r, 30));
@@ -200,6 +207,60 @@ describe("ComfyUI client (D-38a)", () => {
     assert.deepEqual(server.views, ["final.png"]);
   });
 
+  it("cancelling only interrupts when our prompt is the one running (林离 #123)", async () => {
+    // 用户在 ComfyUI 里手动跑 A，我们的 B 还在队列里：删 B、不打断 A
+    const queuedOnly = fakeServer(await pngBytes());
+    queuedOnly.history = "pending";
+    queuedOnly.queueRunning = ["external-a"];
+    const c1 = client(queuedOnly, { totalTimeoutMs: 500 });
+    const p1 = c1.draw({ prompt: "x", size: "1024x1024", seed: 1 }).catch(() => undefined);
+    await new Promise((r) => setTimeout(r, 30));
+    await c1.cancelActive();
+    assert.deepEqual(queuedOnly.queueDeletes, [["p1"]]);
+    assert.equal(queuedOnly.interrupts, 0, "B 只是排队，不能打断别人的 A");
+    await p1;
+
+    // 我们的 B 正在跑：删队列 + 打断
+    const running = fakeServer(await pngBytes());
+    running.history = "pending";
+    running.queueRunning = ["p1"];
+    const c2 = client(running, { totalTimeoutMs: 500 });
+    const p2 = c2.draw({ prompt: "x", size: "1024x1024", seed: 1 }).catch(() => undefined);
+    await new Promise((r) => setTimeout(r, 30));
+    await c2.cancelActive();
+    assert.equal(running.interrupts, 1);
+    await p2;
+  });
+
+  it("a hanging /prompt request can be cancelled or times out (林离 #123)", async () => {
+    const image = await pngBytes();
+    const hang = fakeServer(image);
+    const originalFetch = hang.fetch;
+    hang.fetch = ((input: string | URL | Request, init?: RequestInit) => {
+      const url = new URL(typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url);
+      if (url.pathname === "/prompt") {
+        return new Promise((_resolve, reject) => {
+          init?.signal?.addEventListener("abort", () => reject(new Error("aborted")));
+        });
+      }
+      return originalFetch(input, init);
+    }) as typeof fetch;
+
+    const controller = new AbortController();
+    const cancelled = client(hang, { totalTimeoutMs: 5000 }).draw(
+      { prompt: "x", size: "1024x1024", seed: 1 },
+      { signal: controller.signal },
+    );
+    const outcome = cancelled.catch((error: unknown) => error);
+    setTimeout(() => controller.abort(), 20);
+    const error = await outcome;
+    assert.ok(error instanceof ComfyUiError && error.code === "cancelled");
+
+    // 没有取消时，总时限从 draw() 开始就计时，挂住的请求也会超时
+    const timeout = client(hang, { totalTimeoutMs: 60 }).draw({ prompt: "x", size: "1024x1024", seed: 1 });
+    const timeoutError = await timeout.catch((e: unknown) => e);
+    assert.ok(timeoutError instanceof ComfyUiError && timeoutError.code === "timeout");
+  });
   it("loads the config file and returns null for missing / broken configs", () => {
     const dir = mkdtempSync(join(tmpdir(), "room-comfy-config-"));
     dirs.push(dir);
@@ -216,6 +277,10 @@ describe("ComfyUI client (D-38a)", () => {
     assert.equal(loadComfyUiConfigFile(bad), null);
   });
 });
+
+
+
+
 
 
 
