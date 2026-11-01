@@ -15,6 +15,8 @@ import {
   RemoteEvent,
   RemoteRunSummary,
   RunModel,
+  StartRunAttachments,
+  imageBlockPlaced,
   isTerminalEvent,
   type AgentEvent,
   type FailureReason,
@@ -70,6 +72,25 @@ export class NodeRequestError extends Error {
 }
 
 const sha256Hex = (s: string) => createHash("sha256").update(s, "utf8").digest("hex");
+
+/**
+ * 带图的 AgentInput 自检：attachments / imageSlot 成对；附件格式对；content 以清单块开头、图片资料块放得对；
+ * 每张图解码后的 sha256 和字节数和声明的一致。返回问题描述，没问题返回 null
+ */
+function checkImages(input: AgentInput): string | null {
+  if (input.attachments === undefined && input.imageSlot === undefined) return null;
+  if (input.attachments === undefined || input.imageSlot === undefined) return "图片和图片位置标记要成对出现";
+  const parsed = StartRunAttachments.safeParse(input.attachments);
+  if (!parsed.success) return "图片清单格式不对";
+  if (!imageBlockPlaced(input.content, parsed.data, input.imageSlot)) return "prompt 里的图片清单或图片资料块和这组图片对不上";
+  for (const image of parsed.data) {
+    const bytes = Buffer.from(image.data, "base64");
+    if (bytes.length !== image.bytes || createHash("sha256").update(bytes).digest("hex") !== image.sha256) {
+      return `图 ${image.index} 的内容和指纹不一致`;
+    }
+  }
+  return null;
+}
 const ErrorBody = z.object({ error: z.string(), message: z.string() }).partial();
 
 export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
@@ -201,6 +222,12 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
     // 发送前本地再校验一次：内容和 hash 对不上，一个字都不发
     if (sha256Hex(input.content) !== input.contentHash) {
       yield emit({ type: "error", reason: "hash_mismatch", message: "发送前校验失败：prompt 内容与指纹不一致" });
+      return;
+    }
+    // C-42h：带图时本地先核一遍（节点还会再核）。不对就一个字都不发，不丢图继续跑
+    const imageProblem = checkImages(input);
+    if (imageProblem !== null) {
+      yield emit({ type: "error", reason: "hash_mismatch", message: "发送前校验失败：" + imageProblem });
       return;
     }
     if (opts.signal.aborted) {
@@ -353,6 +380,8 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
       ...(this.#model === undefined ? {} : { model: this.#model }),
       // C-34：聊天 Run 才带 chat；讨论室 / 单次评审不带（节点行为不变）
       ...(input.chat === undefined ? {} : { chat: input.chat }),
+      // C-42a / C-42g / C-42h：图片本体和位置标记原样带上（发送前已核过），不改 content
+      ...(input.attachments === undefined ? {} : { attachments: input.attachments, imageSlot: input.imageSlot }),
     });
 
     let lastError = "";
