@@ -7,6 +7,7 @@ import { after } from "node:test";
 import { openDatabase, type RunRow, WriteQueue } from "@room/db";
 import { HttpRemoteAgentAdapter } from "@room/remote-client";
 import { ControlEvent, toRunModel, type ApprovalBatch, type CommandRequest, type NodeHealth } from "@room/schemas";
+import { ChatService } from "../src/main/chat";
 import { DiscussionService } from "../src/main/discussion";
 import { createDispatcher } from "../src/main/ipc";
 import { NodeService, resolveRunTarget } from "../src/main/nodes";
@@ -50,6 +51,7 @@ export interface E2E {
   events: ControlEvent[];
   projectId: string;
   nodes: { userPc: FakeNode; controller: FakeNode };
+  chat: ChatService;
   close: () => Promise<void>;
 }
 
@@ -75,6 +77,8 @@ export async function makeE2E(options: {
   controller?: Record<string, NodeBehavior | readonly NodeBehavior[]>;
   userPcModels?: NodeHealth["profileModels"];
   controllerModels?: NodeHealth["profileModels"];
+  /** X-31：聊天服务的时钟（撤回 / 重新编辑窗口、限流）；不传用真时间 */
+  now?: () => string;
 } = {}): Promise<E2E> {
   const dir = mkdtempSync(join(tmpdir(), "room-e2e-"));
   dirs.push(dir);
@@ -84,7 +88,7 @@ export async function makeE2E(options: {
 
   const userPc = new FakeNode({
     nodeId: "user-pc",
-    profiles: ["claude-review"],
+    profiles: ["claude-review", "claude-chat"],
     token: "u".repeat(40),
     behavior: options.userPc,
     profileModels: options.userPcModels,
@@ -93,7 +97,7 @@ export async function makeE2E(options: {
   });
   const controller = new FakeNode({
     nodeId: "controller-local",
-    profiles: ["deepseek-discuss", "codex-discuss"],
+    profiles: ["deepseek-discuss", "codex-discuss", "deepseek-chat", "codex-chat"],
     token: "c".repeat(40),
     behavior: options.controller,
     profileModels: options.controllerModels,
@@ -119,6 +123,8 @@ export async function makeE2E(options: {
   addAgent.run("claude", "C酱", "#a0522d", "从整体看问题", 1, 1, "user-pc", "claude-review", now, now);
   addAgent.run("codex", "Codex", "#1f6b55", "务实", 1, 0, "controller-local", "codex-discuss", now, now);
   addAgent.run("deepseek", "DeepSeek", "#2f5aa0", "后端视角", 1, 0, "controller-local", "deepseek-discuss", now, now);
+  // X-31：聊天 profile（ADR-003：和讨论分开，只读无工具）
+  for (const id of ["claude", "codex", "deepseek"]) db.prepare("UPDATE agents SET chat_profile_id = ? WHERE id = ?").run(id + "-chat", id);
 
   const events: ControlEvent[] = [];
   const emit = (event: ControlEvent): void => {
@@ -154,11 +160,38 @@ export async function makeE2E(options: {
   });
 
   discussion = new DiscussionService({ db, queue, repo, settings, orchestrator, emit });
+  const chat = new ChatService({
+    db,
+    queue,
+    repo,
+    settings,
+    emit,
+    ...(options.now === undefined ? {} : { now: options.now }),
+    idleTimeoutMs: 5_000,
+    totalTimeoutMs: 15_000,
+    adapterFactory: async (target) => {
+      const adapter = new HttpRemoteAgentAdapter({
+        nodeId: target.nodeId,
+        baseUrl: target.baseUrl,
+        profileId: target.profileId,
+        token: target.token,
+        ...(target.model === undefined ? {} : { model: target.model }),
+        heartbeatTimeoutMs: 2_000,
+        reconnectGraceMs: 6_000,
+        requestTimeoutMs: 3_000,
+        startAttempts: 1,
+        reconnectDelayMs: 50,
+      });
+      await adapter.initialize();
+      return adapter;
+    },
+  });
   const dispatcher = createDispatcher({
     repo,
     settings,
     orchestrator,
     discussion,
+    chat,
     nodes: new NodeService({ repo, settings }),
     appVersion: "0.0.0-e2e",
     recoveredRuns: 0,
@@ -174,14 +207,15 @@ export async function makeE2E(options: {
   const close = async (): Promise<void> => {
     // 正常测试结束时已经没有活跃 Run；hold 类用例还没答完，先取消再等它收尾
     orchestrator.cancelAll();
+    chat.cancelAll();
     const deadline = Date.now() + 3_000;
-    while (orchestrator.activeCount() > 0 && Date.now() < deadline) await new Promise((r) => setTimeout(r, 20));
+    while ((orchestrator.activeCount() > 0 || chat.activeCount() > 0) && Date.now() < deadline) await new Promise((r) => setTimeout(r, 20));
     await userPc.stop();
     await controller.stop();
     db.close();
   };
 
-  return { db, dispatcher, repo, orchestrator, settings, events, projectId: created.data.id, nodes: { userPc, controller }, close };
+  return { db, dispatcher, repo, orchestrator, settings, events, projectId: created.data.id, nodes: { userPc, controller }, chat, close };
 }
 
 export function failure(result: { ok: boolean }): { error: string; message: string } {

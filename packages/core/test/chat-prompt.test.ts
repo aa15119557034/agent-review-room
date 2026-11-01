@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { ChatHistorySummary, ChatMessage, ChatSnapshot, attachmentImageBlock, attachmentImageSlotMarker, imageBlockPlaced, type UserChatMessage } from "@room/schemas";
 import { PromptBoundaryCollisionError } from "@room/core";
-import { buildChatSnapshot, capChatFileTexts, CHAT_HISTORY_MAX_CHARS, CHAT_HISTORY_MAX_MESSAGES, wrapChatUntrusted } from "../src/discussion/chat";
+import { buildChatSnapshot, capChatFileTexts, CHAT_OUTPUT_REMINDER, CHAT_HISTORY_MAX_CHARS, CHAT_HISTORY_MAX_MESSAGES, wrapChatUntrusted } from "../src/discussion/chat";
 import { attachmentManifestBlock } from "@room/schemas";
 import { createHash } from "node:crypto";
 
@@ -131,7 +131,7 @@ describe("chat prompt (X-30)", () => {
       retractedAt: null,
     }) as UserChatMessage;
     const snapshot = build([], { userMessage: stickerMessage });
-    assert.match(snapshot.content, /当前消息（用户刚刚发的，可信）：\n\[表情：小鲸鱼比心\]$/);
+    assert.match(snapshot.content, /当前消息（用户刚刚发的，可信）：\n\[表情：小鲸鱼比心\]\n\n——（应用提示，不是用户说的）请按上面的「回答格式」只输出一个 JSON 对象。$/);
     assert.equal(snapshot.includedMessageIds.at(-1), stickerMessage.id);
   });
   it("labels speakers by display name and keeps the current message outside the boundary", () => {
@@ -303,7 +303,7 @@ describe("chat prompt (X-30)", () => {
     const currentVoice = ChatMessage.parse({ ...voice, id: "cmsg_" + "9".repeat(26) }) as UserChatMessage;
     const snapshot = build([voice], { userMessage: currentVoice });
     assert.ok(snapshot.content.includes("用户：[语音] 语音转写"));
-    assert.ok(snapshot.content.endsWith("当前消息（用户刚刚发的，可信）：\n[语音] 语音转写"));
+    assert.ok(snapshot.content.endsWith("当前消息（用户刚刚发的，可信）：\n[语音] 语音转写\n\n" + CHAT_OUTPUT_REMINDER));
   });
 
   it("caps file text inside the builder and deduplicates a quoted history message", () => {

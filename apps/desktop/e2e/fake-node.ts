@@ -14,7 +14,9 @@ export type NodeBehavior =
   | { kind: "hold"; deltas?: readonly string[] }
   | { kind: "error"; reason: "quota_exhausted" | "process_exit_nonzero" | "internal"; message?: string }
   | { kind: "timeout"; timeoutKind?: "idle" | "total" }
-  | { kind: "cancelled"; reason?: string };
+  | { kind: "cancelled"; reason?: string }
+  /** X-31：不理 cancel，过 delayMs 照样答完（模拟撤回 / 取消瞬间刚好答完的迟到结果） */
+  | { kind: "late"; text: string; delayMs: number };
 
 export interface FakeNodeOptions {
   nodeId: string;
@@ -41,6 +43,7 @@ interface RunState {
   subscribers: Set<(e: RemoteEvent) => void>;
   finished: boolean;
   timer: NodeJS.Timeout | null;
+  ignoreCancel?: boolean;
 }
 
 export interface RecordedStart {
@@ -65,6 +68,8 @@ export class FakeNode {
   readonly leaseMs: number;
   readonly starts: RecordedStart[] = [];
   readonly requests: string[] = [];
+  /** X-31：节点实际收到的完整 StartRun 请求体（看 Snapshot 原文里有没有撤回的内容） */
+  readonly bodies: StartRunRequest[] = [];
 
   #server: Server | null = null;
   #port = 0;
@@ -86,6 +91,11 @@ export class FakeNode {
 
   get url(): string {
     return "http://127.0.0.1:" + this.#port;
+  }
+
+  /** X-31：节点这边这个 Run 已经发出终止事件（不理 cancel 的 late 行为也算交卷） */
+  isFinished(runId: string): boolean {
+    return this.#runs.get(runId)?.finished === true;
   }
 
   /** 下一次（或接下来几次）这个 profile 的行为 */
@@ -171,6 +181,12 @@ export class FakeNode {
         this.#finish(run, { outcome: "timed_out", kind: behavior.timeoutKind ?? "idle" }, 20);
       } else if (behavior.kind === "cancelled") {
         this.#finish(run, { outcome: "cancelled", reason: behavior.reason ?? "fake cancelled" }, 5);
+      } else if (behavior.kind === "late") {
+        run.ignoreCancel = true;
+        run.timer = setTimeout(() => {
+          this.#emit(run, { type: "message_complete", text: behavior.text });
+          this.#emit(run, { type: "terminal", result: { outcome: "completed", exitCode: 0 } });
+        }, behavior.delayMs);
       }
       // hold：什么都不做，等 cancel / stop
     };
@@ -236,6 +252,7 @@ export class FakeNode {
         timer: null,
       };
       this.#runs.set(body.runId, run);
+      this.bodies.push(body);
       this.starts.push({
         runId: body.runId,
         profileId: body.profileId,
@@ -274,7 +291,7 @@ export class FakeNode {
     }
 
     if (req.method === "POST" && parts.length === 4 && parts[3] === "cancel") {
-      if (!run.finished) this.#finish(run, { outcome: "cancelled", reason: "cancelled by controller" }, 2);
+      if (!run.finished && run.ignoreCancel !== true) this.#finish(run, { outcome: "cancelled", reason: "cancelled by controller" }, 2);
       this.#json(res, 202, { ok: true });
       return;
     }
