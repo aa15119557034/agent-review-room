@@ -30,7 +30,9 @@ param(
   # 主控机上：桌面端以这个账号运行，一键导入要能读 Token（只给 Token 这一个文件只读）
   [string]$TokenReader = "",
   # 汐（deepseek）只能在 D-40 迁移完成、林离已经走 7421 之后装（ADR-003 §2a 切换顺序第 4 步）：装的时候加这个开关表示确认
-  [switch]$AfterD40
+  [switch]$AfterD40,
+  # 命令行装哪个版本（比如 0.163.0）。不填 = npm 上最新的。新版本在低权限账号下跑不起来时，用它退回实测过的版本
+  [ValidatePattern('^(\d+\.\d+\.\d+([-.][0-9A-Za-z.]+)?)?$')][string]$CliVersion = ""
 )
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
@@ -89,6 +91,46 @@ function Assert-NoReparse([string]$root) {
       if ($item.PSIsContainer) { $stack.Push($item.FullName) }  # 不进重解析点（上面已经拒绝），所以不会绕圈
     }
   }
+}
+# Codex 自己的 CODEX_HOME：它会把 auth.json、tmp\、cache\、plugins\cache\ 下的文件设成只有创建者能访问；只要有别的账号
+# （比如在江浩自己的窗口里）用这个 CODEX_HOME 跑过一次 codex，里面就会留下 agentroom-codex 和管理员都打不开的文件，codex 启动时报
+# 「failed to initialize in-process app-server client: access denied」，预检也读不了（汐 #138 / #139 实测）。
+# icacls /T 进不了打不开的文件夹，所以一层一层来：先把这一层所有子项的所有者交给管理员组、权限改回只继承（/L：链接只改它自己，
+# 不碰它指向的地方），这时才列得出下一层（stderr 不重定向：5.1 在 Stop 下 2>&1 会把原生命令的报错变成异常）；不进任何链接 / junction。后面第 4 步会按规则整棵重建权限。
+# tmp\、cache\、plugins\cache\ 是 codex 自己会重建的临时目录和缓存（里面还有它建的链接），修好权限后直接删掉
+function Repair-Tree([string]$dir) {
+  icacls $dir /setowner "*S-1-5-32-544" /C /L /Q | Out-Null
+  icacls $dir /reset /C /L /Q | Out-Null
+  $stack = [Collections.Generic.Stack[string]]::new()
+  $stack.Push($dir)
+  while ($stack.Count -gt 0) {
+    $d = $stack.Pop()
+    icacls (Join-Path $d "*") /setowner "*S-1-5-32-544" /C /L /Q | Out-Null
+    icacls (Join-Path $d "*") /reset /C /L /Q | Out-Null
+    foreach ($item in @(Get-ChildItem -LiteralPath $d -Force -Directory -ErrorAction SilentlyContinue)) {
+      if (-not ($item.Attributes -band [IO.FileAttributes]::ReparsePoint)) { $stack.Push($item.FullName) }
+    }
+  }
+}
+$codexHomePre = Join-Path $HomeDir "node\codex\codex-home"
+if ($Agent -eq "codex" -and (Test-Path -LiteralPath $codexHomePre)) {
+  Step "修复 $codexHomePre 的所有者和权限、删掉 codex 的临时目录和缓存"
+  Repair-Tree $codexHomePre
+  # 删不掉的（里面还有管理员也打不开的文件，汐 #139 实测 plugins\cache\openai-curated-remote\app-*）整个挪出 AgentRoom：
+  # 同一个盘里改名只动这个文件夹本身，不用打开里面的东西，也不顺着链接走。挪到 <HomeDir>-trash\，之后可以手动删，留着也不影响
+  $trash = "$HomeDir-trash\codex-home-" + (Get-Date -Format "yyyyMMdd-HHmmss")
+  foreach ($rel in @("tmp", "cache", "plugins\cache")) {
+    $d = Join-Path $codexHomePre $rel
+    if (Test-Path -LiteralPath $d) { cmd /c rmdir /s /q "$d" | Out-Null }  # rmdir /s 只删链接本身，不进链接指向的地方
+    if (Test-Path -LiteralPath $d) {
+      $dest = Join-Path $trash ($rel -replace '\\', '-')
+      New-Item -ItemType Directory -Force -Path $trash | Out-Null
+      try { [IO.Directory]::Move($d, $dest) } catch { Fail "删不掉也挪不走 $d（codex 自己的临时目录 / 缓存）：先停掉计划任务 AgentRoom-codex 和所有 codex 进程再重试（$($_.Exception.Message)）" }
+      Write-Host "  $d 里有打不开的文件，已整个挪到 $dest（codex 会重建；那个文件夹以后可以手动删）" -ForegroundColor Yellow
+    }
+  }
+  Get-ChildItem -LiteralPath $codexHomePre -Recurse -Force -ErrorAction SilentlyContinue -ErrorVariable aclErrors | Out-Null
+  if ($aclErrors) { Fail "$codexHomePre 里还有打不开的文件：$($aclErrors[0].TargetObject)。先停掉 codex 进程再重试；还不行就把 auth.json 以外的都删掉（登录窗口里重新登录也可以）" }
 }
 Assert-NoReparse $HomeDir
 # TokenReader 只能是一个具体的人（运行桌面端的账号），不能是一群人
@@ -226,7 +268,8 @@ if ($Agent -ne "deepseek") {
 Step "安装 $cliPackage 到 $cliDir"
 # 已经装过就是升级到最新；npm 的普通安装不建链接（node\<秘书> 里也不能有链接，预检会查）
 New-Item -ItemType Directory -Force -Path $cliDir | Out-Null
-$r = Npm-InstallWithFallback @($cliPackage)
+$cliSpec = if ($CliVersion) { "$cliPackage@$CliVersion" } else { $cliPackage }
+$r = Npm-InstallWithFallback @($cliSpec)
 if (-not $r.ok -or -not (Test-Path -LiteralPath $cliCmd)) { Fail-Cli "安装 $cliPackage 失败。检查网络后重试：`n$($r.out)" }
 # 平台原生包（比如 @openai/codex-win32-x64）是 optionalDependencies，镜像没同步时 npm 会悄悄跳过：缺了就按清单单独装，
 # 配置的镜像装不上再试官方源
@@ -260,6 +303,7 @@ if ($arch -and $optional) {
       if ($localVersion -ne $wantVersion) {
         # 平台包版本形如 0.163.0-win32-x64，主包版本是去掉后缀的那段
         $baseVersion = $localVersion -replace "-win32-.*$", ""
+        if ($CliVersion -and $baseVersion -ne $CliVersion) { Fail-Cli "补装 $spec 失败（网络），本机现成的平台包是 $localVersion，和 -CliVersion $CliVersion 对不上：`n$($r.out)" }
         Write-Host "  本机现成的平台包是 $localVersion（要的是 $wantVersion）：把 $cliPackage 重装成 $baseVersion" -ForegroundColor Yellow
         $r = Npm-InstallWithFallback @("$cliPackage@$baseVersion")
         if (-not $r.ok) { Fail-Cli "把 $cliPackage 重装成 $baseVersion 失败：`n$($r.out)" }
@@ -276,6 +320,7 @@ $versionOut = Invoke-Native { & $cliCmd --version }
 if ($LASTEXITCODE -ne 0 -or -not $versionOut) { Fail-Cli "$cliCmd 装好了但运行不了：`n$($versionOut -join "`n")" }
 # 只有一行输出时函数返回的是字符串不是数组，[0] 会取到第一个字符
 Write-Host "  $Agent 版本：$(@($versionOut)[0])"
+if ($CliVersion -and -not (@($versionOut)[0] -match [regex]::Escape($CliVersion))) { Fail-Cli "装好的版本是 $(@($versionOut)[0])，不是 -CliVersion $CliVersion" }
 }
 
 # DeepSeek 的 API Key：节点账号读不到江浩的环境变量，所以存成 node\deepseek\deepseek-api-key.txt（只有她的账号和管理员能读），
