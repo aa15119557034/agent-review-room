@@ -1,0 +1,49 @@
+{
+  "_comment": "放到 userData 里改名 comfyui.json（Windows: %APPDATA%\\@room\\desktop\\comfyui.json）。workflow 是 ComfyUI 里「导出为 API 格式」的 JSON，mapping 指定要替换的四个字段。",
+  "baseUrl": "http://127.0.0.1:8188",
+  "workflow": {
+    "1": { "class_type": "UnetLoaderGGUF", "inputs": { "unet_name": "qwen-image-2.1-Q4_K_M.gguf" } },
+    "2": {
+      "class_type": "CLIPLoader",
+      "inputs": { "clip_name": "qwen3vl_8b_w4a8_heretic.safetensors", "type": "qwen_image", "device": "default" }
+    },
+    "3": { "class_type": "VAELoader", "inputs": { "vae_name": "qwen_image_2.1_vae_bf16.safetensors" } },
+    "4": {
+      "class_type": "LoraLoaderModelOnly",
+      "inputs": {
+        "model": ["1", 0],
+        "lora_name": "Qwen\\Qwen-Image-2.1-viggle-turbo-4step-lora-r64.safetensors",
+        "strength_model": 1.0
+      }
+    },
+    "5": {
+      "class_type": "TextEncodeQwenImage21",
+      "inputs": { "clip": ["2", 0], "prompt": "", "negative_prompt": "", "resolution": 1024, "images": {} }
+    },
+    "6": { "class_type": "EmptySD3LatentImage", "inputs": { "width": 1024, "height": 1024, "batch_size": 1 } },
+    "7": {
+      "class_type": "KSampler",
+      "inputs": {
+        "model": ["4", 0],
+        "seed": 42,
+        "steps": 4,
+        "cfg": 1.0,
+        "sampler_name": "euler",
+        "scheduler": "simple",
+        "positive": ["5", 0],
+        "negative": ["5", 1],
+        "latent_image": ["6", 0],
+        "denoise": 1.0
+      }
+    },
+    "8": { "class_type": "VAEDecode", "inputs": { "samples": ["7", 0], "vae": ["3", 0] } },
+    "9": { "class_type": "SaveImage", "inputs": { "images": ["8", 0], "filename_prefix": "xi-room" } }
+  },
+  "mapping": {
+    "prompt": { "node": "5", "field": "prompt" },
+    "width": { "node": "6", "field": "width" },
+    "height": { "node": "6", "field": "height" },
+    "seed": { "node": "7", "field": "seed" }
+  },
+  "totalTimeoutMs": 300000
+}

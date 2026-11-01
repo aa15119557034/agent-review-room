@@ -6,7 +6,9 @@ import { IMAGE_URL_SCHEME, IPC_CHANNELS, type ControlEvent } from "@room/schemas
 import { ChatService } from "./chat";
 import { DiscussionService } from "./discussion";
 import { createDispatcher } from "./ipc";
+import { ComfyUiClient, loadComfyUiConfigFile } from "./comfyui";
 import { MediaService } from "./media";
+import { MediaJobsService } from "./media-jobs";
 import { createImageProtocolHandler, MediaStore } from "./media-store";
 import { migrateLegacyReviewerNode, NodeService, resolveRunTarget } from "./nodes";
 import { RunOrchestrator } from "./orchestrator";
@@ -94,6 +96,22 @@ async function bootstrap(): Promise<void> {
   const mediaStore = new MediaStore(join(userData, "images"), join(userData, "files"), db);
   protocol.handle(IMAGE_URL_SCHEME, createImageProtocolHandler(mediaStore));
   // D-34a：选文件 / 表情用的对话框。renderer 只拿 ref，拿不到路径
+  const comfyConfig = loadComfyUiConfigFile(join(userData, "comfyui.json"));
+  if (comfyConfig === null) console.warn("[comfyui] 没有配置 userData/comfyui.json，本机画图不可用");
+  const comfyClient = comfyConfig === null ? null : new ComfyUiClient(comfyConfig);
+  const jobs = new MediaJobsService({
+    db,
+    queue,
+    store: mediaStore,
+    emit: broadcast,
+    comfy: () => comfyClient,
+    now: () => new Date().toISOString(),
+  });
+
+  // 上次崩掉 / 被强杀留下的画图任务统一收尾（契约 media.ts：不留「生成中」）
+  const repairedMedia = await jobs.repairInterrupted();
+  if (repairedMedia > 0) console.warn(`[media] 收尾了 ${repairedMedia} 个上次没跑完的画图任务`);
+
   const media = new MediaService({
     db,
     store: mediaStore,
@@ -186,6 +204,7 @@ async function bootstrap(): Promise<void> {
     discussion,
     chat,
     media,
+    jobs,
     nodes,
     appVersion: app.getVersion(),
     recoveredRuns: repaired.repaired.length + repairedChat,
@@ -228,4 +247,6 @@ void app.whenReady().then(async () => {
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
+
+
 

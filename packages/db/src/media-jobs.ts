@@ -123,6 +123,30 @@ export function listActiveMediaJobs(db: SqliteDatabase): MediaJob[] {
   return rows.map(toJob);
 }
 
+/**
+ * C-42f：按消息查（给 media.list 的 messageIds）。
+ * 返回**这些消息的全部任务**（不再截 200）：每消息每类挑几条是调用方的事（schemas 的 pickMessageMediaJobs），
+ * 先截断会丢掉「更早但成功过」的那条。
+ */
+export function listMediaJobsForMessages(
+  db: SqliteDatabase,
+  conversationId: string,
+  messageIds: readonly string[],
+): MediaJob[] {
+  if (messageIds.length === 0) return [];
+  const placeholders = messageIds.map(() => "?").join(", ");
+  const rows = db
+    .prepare(
+      "SELECT * FROM media_jobs WHERE json_extract(source, '$.kind') = 'chat' " +
+        "AND json_extract(source, '$.conversationId') = ? " +
+        "AND json_extract(source, '$.messageId') IN (" +
+        placeholders +
+        ") ORDER BY created_at DESC, id DESC",
+    )
+    .all(conversationId, ...messageIds) as MediaJobRow[];
+  return rows.map(toJob);
+}
+
 export class MediaJobStateConflictError extends Error {
   constructor(
     readonly jobId: string,
