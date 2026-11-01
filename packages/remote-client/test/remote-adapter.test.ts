@@ -6,7 +6,7 @@ import { createServer as createTcpServer, connect, type Server as TcpServer, typ
 import type { AddressInfo } from "node:net";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { AgentEvent } from "@room/schemas";
+import { attachmentImageBlock, attachmentImageSlotMarker, attachmentManifestBlock, type AgentEvent } from "@room/schemas";
 // 集成测试：直接使用真实的 AgentServer（测试专用的相对路径引用）
 import { ServerConfig } from "../../../apps/agent-server/src/config";
 import { createAgentServer, type AgentServer } from "../../../apps/agent-server/src/server";
@@ -390,5 +390,91 @@ describe("C-40 StartRun.model", () => {
       // 同上
     }
     assert.equal("model" in bodies[1]!, false);
+  });
+
+  it("带图：attachments / imageSlot 原样放进 StartRun；成对、清单、图片块、sha256 有一项不对就一个字都不发（C-42h）", async () => {
+    const bodies: Record<string, unknown>[] = [];
+    const server = createServer((req, res) => {
+      let raw = "";
+      req.on("data", (chunk) => (raw += chunk));
+      req.on("end", () => {
+        if (req.method === "POST" && req.url === "/v1/runs") {
+          const body = JSON.parse(raw) as Record<string, unknown>;
+          bodies.push(body);
+          res.writeHead(202, { "content-type": "application/json" });
+          res.end(JSON.stringify({ runId: body.runId, status: "accepted", eventsPath: "/v1/runs/" + String(body.runId) + "/events" }));
+          return;
+        }
+        if (req.method === "GET" && req.url?.includes("/events")) {
+          res.writeHead(200, { "content-type": "application/x-ndjson" });
+          res.write(JSON.stringify({ type: "terminal", seq: 0, ts: new Date().toISOString(), result: { outcome: "completed", exitCode: 0 } }) + "\n");
+          res.end();
+          return;
+        }
+        res.writeHead(404);
+        res.end();
+      });
+    });
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", () => resolve()));
+    const port = (server.address() as AddressInfo).port;
+    cleanups.push(() => new Promise<void>((resolve) => server.close(() => resolve())));
+    const adapter = new HttpRemoteAgentAdapter({
+      nodeId: "node-test",
+      baseUrl: "http://127.0.0.1:" + port,
+      profileId: "claude-ok",
+      token: TOKEN,
+      heartbeatTimeoutMs: 1_000,
+      reconnectGraceMs: 3_000,
+      requestTimeoutMs: 1_000,
+    });
+    const runOnce = async (inp: Record<string, unknown>) => {
+      const events: AgentEvent[] = [];
+      for await (const e of adapter.run("s", ("run_" + ulid()) as never, inp as never, {
+        signal: new AbortController().signal,
+        onPermissionRequest: async () => ({ decision: "deny", decidedBy: "system" }),
+        idleTimeoutMs: 10_000,
+        totalTimeoutMs: 20_000,
+      })) events.push(e);
+      return events;
+    };
+
+    const png = Buffer.from("89504e470d0a1a0a0000000d49484452", "hex");
+    const image = { index: 1, mime: "image/png", bytes: png.length, sha256: createHash("sha256").update(png).digest("hex"), data: png.toString("base64") };
+    const nonce = "0123456789abcdef";
+    const slot = attachmentImageSlotMarker(nonce);
+    const content = attachmentManifestBlock([image] as never) + "历史……\n" + attachmentImageBlock(nonce, 1) + "\n当前消息：看看这张图";
+    const good = { snapshotId: "snap_" + ulid(), content, contentHash: sha(content), attachments: [image], imageSlot: slot };
+
+    const ok = await runOnce(good);
+    assert.equal(ok.at(-1)!.type, "completed");
+    assert.equal(bodies.length, 1);
+    assert.deepEqual(bodies[0]!.attachments, [image], "图片原样带上");
+    assert.equal(bodies[0]!.imageSlot, slot);
+    assert.equal((bodies[0]!.snapshot as { content: string }).content, content, "content 一个字不改");
+
+    // 不带图：两个字段都不出现
+    await runOnce({ snapshotId: "snap_" + ulid(), content: "hi", contentHash: sha("hi") });
+    assert.equal("attachments" in bodies[1]! || "imageSlot" in bodies[1]!, false);
+
+    const bad: [string, Record<string, unknown>][] = [
+      ["只有图没有标记", { ...good, imageSlot: undefined }],
+      ["只有标记没有图", { ...good, attachments: undefined }],
+      ["sha256 对不上", { ...good, attachments: [{ ...image, sha256: "0".repeat(64) }] }],
+      ["bytes 和实际不符", { ...good, attachments: [{ ...image, bytes: 999 }] }],
+      ["编号不连续", { ...good, attachments: [image, { ...image, index: 3, sha256: "1".repeat(64) }] }],
+      ["content 没有图片资料块", (() => {
+        const c = attachmentManifestBlock([image] as never) + "当前消息：看看这张图";
+        return { ...good, content: c, contentHash: sha(c) };
+      })()],
+    ];
+    for (const [what, inp] of bad) {
+      const events = await runOnce(inp);
+      const last = events.at(-1)!;
+      assert.equal(last.type, "error", what);
+      assert.equal((last as { reason: string }).reason, "hash_mismatch", what);
+      assert.match((last as { message: string }).message, /^发送前校验失败：/, what);
+      assertWellFormed(events);
+    }
+    assert.equal(bodies.length, 2, "坏输入一个请求都没发");
   });
 });
