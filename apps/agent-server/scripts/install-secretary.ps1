@@ -92,6 +92,22 @@ function Assert-NoReparse([string]$root) {
     }
   }
 }
+# Codex 自己的 CODEX_HOME：它会把 auth.json、tmp\ 设成只有创建者能访问；只要有别的账号（比如在江浩自己的窗口里）
+# 用这个 CODEX_HOME 跑过一次 codex，里面就会留下 agentroom-codex 和管理员都打不开的文件，codex 启动时报
+# 「failed to initialize in-process app-server client: access denied」，预检也读不了（汐 #138 / #139 实测）。
+# 这里先把整棵树的所有者交给管理员组、权限改回只继承（后面第 4 步会按规则整棵重建）；tmp\ 是 codex 每次运行的临时目录
+# （里面有它自己建的链接），直接删掉，下次运行会重建
+$codexHomePre = Join-Path $HomeDir "node\codex\codex-home"
+if ($Agent -eq "codex" -and (Test-Path -LiteralPath $codexHomePre)) {
+  Step "修复 $codexHomePre 的所有者和权限"
+  icacls $codexHomePre /setowner "*S-1-5-32-544" /T /C /Q | Out-Null
+  icacls $codexHomePre /reset /T /C /Q | Out-Null
+  $codexTmp = Join-Path $codexHomePre "tmp"
+  if (Test-Path -LiteralPath $codexTmp) { cmd /c rmdir /s /q "$codexTmp" | Out-Null }  # rmdir /s 只删链接本身，不进链接指向的地方
+  if (Test-Path -LiteralPath $codexTmp) { Fail "删不掉 $codexTmp（codex 的临时目录）：先停掉计划任务 AgentRoom-codex 和所有 codex 进程再重试" }
+  Get-ChildItem -LiteralPath $codexHomePre -Recurse -Force -ErrorAction SilentlyContinue -ErrorVariable aclErrors | Out-Null
+  if ($aclErrors) { Fail "$codexHomePre 里还有打不开的文件：$($aclErrors[0].TargetObject)。先停掉 codex 进程再重试" }
+}
 Assert-NoReparse $HomeDir
 # TokenReader 只能是一个具体的人（运行桌面端的账号），不能是一群人
 if ($TokenReader -ne "") {
