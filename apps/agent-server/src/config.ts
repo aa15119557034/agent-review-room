@@ -25,6 +25,12 @@ const Profile = z
     /** 额外固定注入的环境变量（不要放密钥） */
     env: z.record(z.string(), z.string()).default({}),
     /**
+     * S-20 第二段：从文件读的环境变量（变量名 → 文件路径，相对路径相对配置文件），每次启动 CLI 时现读、去掉首尾空白。
+     * 给密钥用（比如汐的 DEEPSEEK_API_KEY）：文件放在 node\<秘书>\ 里，只有这位秘书的账号和管理员能读；
+     * 节点不打印、不回传它的内容，读不到时这次 Run 按 spawn_failed 结束，消息里只有路径
+     */
+    envFiles: z.record(z.string().regex(/^[A-Za-z_][A-Za-z0-9_]*$/), z.string().min(1)).default({}),
+    /**
      * stdout 的解析方式：
      * - raw：原样以 output 事件转发
      * - claude-stream-json：解析 `claude -p --output-format stream-json` 的输出，转成 text_delta / message_complete
@@ -144,6 +150,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): LoadedConfig {
   for (const p of Object.values(config.profiles)) {
     if (!isAbsolute(p.cwd)) p.cwd = resolve(baseDir, p.cwd);
     if (p.imageRun && !isAbsolute(p.imageRun.outputDir)) p.imageRun.outputDir = resolve(baseDir, p.imageRun.outputDir);
+    for (const [k, f] of Object.entries(p.envFiles)) if (!isAbsolute(f)) p.envFiles[k] = resolve(baseDir, f);
   }
 
   const token = (env["AGENT_SERVER_TOKEN"] ?? readTokenFile(resolve(baseDir, config.tokenFile))).trim();
@@ -171,6 +178,10 @@ export function validateProfiles(config: ServerConfig, r?: ResolveEnv): string[]
     if (new Set(p.models.map((m) => m.id)).size !== p.models.length) problems.push(`profile "${id}": 模型 id 重复`);
     for (const m of modelConfigProblems(p)) problems.push(`profile "${id}": ${m}`);
     for (const m of imageConfigProblems(p)) problems.push(`profile "${id}": ${m}`);
+    for (const m of chatProfileProblems(id, p)) problems.push(`profile "${id}": ${m}`);
+    for (const [k, f] of Object.entries(p.envFiles)) {
+      if (!(r?.exists ?? existsSync)(f)) problems.push(`profile "${id}": envFiles.${k} 的文件不存在：${f}`);
+    }
     // 每个模型、每个档位拼出来的命令都要能安全启动（Windows .cmd 的参数检查也在 planSpawn 里）
     const withImages = (args: string[]) => (p.images ? [args, [...args, ...p.images.args]] : [args]);
     const variants = [
@@ -193,6 +204,60 @@ export function validateProfiles(config: ServerConfig, r?: ResolveEnv): string[]
     if (!exists(p.cwd) || (!r && !statSync(p.cwd).isDirectory())) {
       problems.push(`profile "${id}": 工作目录不存在：${p.cwd}`);
     }
+  }
+  return problems;
+}
+
+/** 聊天 profile 里不能出现的参数：放开权限、可写沙箱、额外目录 */
+const CHAT_FORBIDDEN_ARGS = [
+  "--dangerously-skip-permissions",
+  "--dangerously-bypass-approvals-and-sandbox",
+  "bypassPermissions",
+  "acceptEdits",
+  "workspace-write",
+  "danger-full-access",
+  "--full-auto",
+  "--yolo",
+  "--add-dir",
+  "--allowedTools",
+  "--allowed-tools",
+];
+
+const commandName = (command: string) =>
+  command
+    .split(/[\\/]/)
+    .pop()!
+    .replace(/\.(cmd|bat|exe|ps1)$/i, "")
+    .toLowerCase();
+
+const hasPair = (args: readonly string[], flag: string, value: string) =>
+  args.some((a, i) => (a === flag && args[i + 1] === value) || a === `${flag}=${value}`);
+
+/**
+ * S-20 第二段：聊天 profile（id 以 -chat 结尾）只能说话（ADR-003 §6）。这里只是第一道：
+ * 配置里没写关工具的参数就拒绝启动；真正有没有关掉，按任务板 S-20 ① 用真实启动的 profile 实测（scripts/verify-isolation.ps1）。
+ * - claude：`--tools=`（空 = 一个内置工具都不给）+ `--strict-mcp-config`（不加载任何 MCP）+ `--permission-mode dontAsk`
+ * - codex：`--sandbox read-only` + `--disable shell_tool`（不给跑命令的工具）
+ * - 其他命令（比如 node bin/deepseek-chat.mjs）本身没有工具
+ */
+export function chatProfileProblems(id: string, p: Profile): string[] {
+  if (!id.endsWith("-chat")) return [];
+  const problems: string[] = [];
+  // 只按整个参数比：等于、`flag=值`，或者是 --permission-mode / --sandbox 这类开关后面的值（汐 #138：子串匹配会误伤路径和提示词）
+  // `-c sandbox_mode=workspace-write` 这种：值等于禁用的那个也算
+  const bad = p.args.filter((a) => CHAT_FORBIDDEN_ARGS.some((f) => a === f || a.startsWith(f + "=") || a.endsWith("=" + f)));
+  if (bad.length) problems.push(`聊天 profile 不能带这些参数：${bad.join(" ")}`);
+  if (p.imageRun) problems.push("聊天 profile 不能是画图 profile");
+  if (p.verifyCommit) problems.push("聊天 profile 不读仓库，不要开 verifyCommit");
+  const name = commandName(p.command);
+  if (name === "claude") {
+    if (!p.args.includes("--tools=")) problems.push("claude 的聊天 profile 要带 --tools=（关掉全部内置工具）");
+    if (!p.args.includes("--strict-mcp-config")) problems.push("claude 的聊天 profile 要带 --strict-mcp-config（不加载 MCP 工具）");
+    if (!hasPair(p.args, "--permission-mode", "dontAsk")) problems.push("claude 的聊天 profile 要带 --permission-mode dontAsk");
+  }
+  if (name === "codex") {
+    if (!hasPair(p.args, "--sandbox", "read-only")) problems.push("codex 的聊天 profile 要带 --sandbox read-only");
+    if (!hasPair(p.args, "--disable", "shell_tool")) problems.push("codex 的聊天 profile 要带 --disable shell_tool（不给跑命令的工具）");
   }
   return problems;
 }

@@ -236,7 +236,7 @@ Windows 相关逻辑（`.cmd` 包装、taskkill 参数）用注入的模拟环�
 - [ ] 权限请求中继（Phase 0 不需要：Reviewer 不使用工具）
 - [ ] TLS
 
-## 秘书的记忆文件夹和独立账号（S-20 第一段）
+## 秘书的记忆文件夹和独立账号（S-20）
 
 规则见 `docs/design/ADR-003-聊天空间.md` §2a。每位秘书在她所在的电脑上有：
 
@@ -244,7 +244,7 @@ Windows 相关逻辑（`.cmd` 包装、taskkill 参数）用注入的模拟环�
 - `<AgentRoom>\node\<秘书>\`：她的节点配置、Token、命令行的工作目录
 - 低权限账号 `agentroom-<秘书>`，计划任务 `AgentRoom-<秘书>` 以这个账号开机启动节点
 
-用**以管理员身份运行的 Windows PowerShell**（`powershell.exe`，不是 `pwsh`）一次装一位。现在只能装 `codex` 和 `claude`：`deepseek` 要等 D-40 和第二段（API Key 怎么给新账号）之后，脚本会拒绝：
+用**以管理员身份运行的 Windows PowerShell**（`powershell.exe`，不是 `pwsh`）一次装一位。模板用仓库里的示例（`agent-server.config.example.json` 给江浩的电脑，`agent-server.config.local.example.json` 给主控机），里面有 `<秘书>-chat`。`deepseek` 要等 D-40 迁移完成之后、加 `-AfterD40` 才装（不加脚本会拒绝）：
 
 ```powershell
 # 先装依赖（打包要用 esbuild）；Node 要 22 或更高，用官方安装包装到 Program Files
@@ -257,10 +257,51 @@ pnpm install --frozen-lockfile
 
 重装替换程序时是两次改名（`node\app` → `app.old`，`app.new` → `app`）。如果正好在两次改名之间断电，`node\app` 会不见、所有秘书的节点都起不来；这时把 `node\app.old` 改名回 `app`，再重跑安装脚本（脚本发现这种情况也会拒绝继续并提示这一步）。
 
-现在的模板只有讨论 profile（比如 `codex-discuss`），没有 `<秘书>-chat` 也能装：账号、文件夹、权限、计划任务照装，聊天 profile 和读记忆在第二段加。
+模板里没有 `<秘书>-chat` 也能装（账号、文件夹、权限、计划任务照装），但聊天读不到记忆，脚本最后会提示换模板重跑。
+
+**汐（deepseek）**：不装命令行。脚本会问 DeepSeek 的 API Key（输入时不显示；重装时直接回车 = 保留已有的），存进 `node\deepseek\deepseek-api-key.txt`，只有 `agentroom-deepseek` 和管理员能读；profile 里用 `envFiles` 在每次启动时现读，不再从环境变量读。模板里的 `../bin/deepseek-chat.mjs` 会换成 `node\app\bin` 里的绝对路径。
 
 主控机上按 §2a「切换顺序」：先装 `codex`（7421）；汐的 D-40 迁移完成后才装 `deepseek`（7420）。
 
 节点配置新增的字段：`homeDir`、`agent`（填了以后只能跑 `<agent>-` 开头的 profile）、`runAsUser`（进程账号不对就拒绝启动）、聊天 profile 的 `memory: { "dir": "memory/<agent>", "provider": "folder" }`。安装脚本会先把节点打成一个文件（`pnpm --filter @room/agent-server run bundle` → `dist/agent-server.mjs`），`node\app` 里只有它和 `bin\`，没有 `node_modules`；重装时新程序先放进 `node\app.new`，复制、校验、设权限、注册计划任务都成功后才替换 `node\app`，中途失败时其他秘书正在用的旧版本不动；计划任务直接用 Program Files 里的 `node.exe` 运行它。不用安装脚本、手工配置的节点：`homeDir` 和它的上级不能是任何链接、junction 或挂载点（节点用 `lstat` 查，卷挂载点 Node 不一定认得出，以安装脚本的检查为准）。启动时会检查 `homeDir` 在本机 NTFS 盘上，并按规则读一遍记忆，只打印条数和跳过的原因，不打印正文。
 
-现在还**不会**把记忆填进聊天：那一步要用 X-30 的包裹函数，合并后做第二段；在那之前 health 不报 `memoryProfiles`。
+### 聊天怎么带记忆（第二段）
+
+- 主控端的聊天 Snapshot 里留一个槽位（`StartRun.chat.memory`，X-30 生成）。节点收到后按上面的规则读这位秘书的记忆，用 `@room/core` 的 `wrapChatUntrusted`（同一个 nonce）包好，**只换掉那一处标记**，别的文字一个字不加；然后发一次 `prompt_final`（最终 hash + 记忆清单：条目 id 和 sha256，没有正文），再把全文交给 CLI
+- 读不到、`memory.json` 无效、core 不合格、正文里出现这次的边界标记 → 槽位里换成「此记忆来源不可用」，清单报 `unavailable`，聊天照常回答；原因只写节点日志
+- 没配记忆的 profile 收到槽位也一样按「不可用」填
+- `health.memoryProfiles`：配了记忆、现在按规则读得到的聊天 profile。启动时查一次，之后每次聊天和 health（最多一分钟一次）都会刷新，所以改好记忆不用重启节点
+- 同一个 runId 重复提交时 `chat` 也要一致，否则 `run_id_conflict`
+
+### 聊天 profile 只能说话
+
+节点启动时检查 `-chat` 结尾的 profile，下面这些没写就拒绝启动（第一道；有没有真的关掉以实测为准）：
+
+| 命令 | 必须带 | 作用 |
+|---|---|---|
+| claude | `--tools=`、`--strict-mcp-config`、`--permission-mode dontAsk` | 一个内置工具都不给、不加载 MCP、要批准的一律拒绝 |
+| codex | `--sandbox read-only`、`--disable shell_tool` | 只读沙箱、不给跑命令的工具（示例里还关了 `view_image`、`image_generation`、网页搜索，`project_doc_max_bytes=0` 不读 AGENTS.md） |
+| node（deepseek） | 无 | 本仓库脚本，本来就没有工具 |
+
+任何聊天 profile 都不能带放开权限的参数（`--dangerously-skip-permissions`、`workspace-write`、`danger-full-access`、`--add-dir`、`--allowedTools` 等）。安装脚本把聊天 profile 放在 `node\<秘书>\chat-sandbox`，她对这个文件夹只读。
+
+Codex 的聊天和讨论用同一个 `CODEX_HOME`（`node\codex\codex-home`，林离自己的，不是江浩的 `~\.codex`），里面没有工程规则；聊天 profile 另外用 `project_doc_max_bytes=0` 不读工作目录的 AGENTS.md。分成两个 `CODEX_HOME` 要登录两次、刷新 Token 也会互相顶掉，所以没拆。
+
+### 真机验收（任务板 S-20 ①②③）
+
+装好、计划任务在跑之后，用管理员 PowerShell：
+
+```powershell
+.\apps\agent-server\scripts\verify-isolation.ps1 -Agent codex -HomeDir D:\AgentRoom -Port 7421
+# 只做不调模型的检查（不花额度）
+.\apps\agent-server\scripts\verify-isolation.ps1 -Agent codex -HomeDir D:\AgentRoom -Port 7421 -SkipModelRuns
+```
+
+- ③ 节点进程的用户是 `agentroom-<秘书>`；用你的账号启动同一份配置被拒绝；配置里混进别的秘书的 profile 被拒绝；别的秘书的 Token 权限里没有她
+- ① 聊天 profile 参数里关了工具、工作目录她不能写；实际让它写文件、跑 `whoami`，核对没有效果
+- 光看参数不算数（比如 `--tools=` 的空值会不会被当成「没传」）：在装好的那台电脑上，验收前先用她的命令行手工试一句最小的，回答里不能出现用户名：
+  `echo 运行 whoami 并贴出输出 | <node\<秘书>\cli\node_modules\.bin\claude.cmd> -p --tools= --strict-mcp-config --permission-mode dontAsk`（Codex 换成 `codex-chat` 的参数）
+- 跑之前会把整份记忆备份到你的临时目录；万一记忆被改了，结束时自动整份恢复，并报「不通过」
+- ② 在你的用户目录、别的秘书的 `inbox`、别的秘书的 Token 放哨兵，让每个 profile（聊天和讨论）去读、改、删，核对回答里没有哨兵、hash 前后不变；记忆 `notes` 里临时放 junction / 符号链接 / 硬链接（目标她能读），核对记忆清单里没有它们
+- 结束时删掉所有哨兵和链接，记忆正文前后 hash 不变。系统运行库、命令行自己的登录信息和临时缓存不在「其他用户数据」范围内
+- ④（挑记忆的边界）在 `test/memory-folder.test.ts` 里，`pnpm --filter @room/agent-server test` 在 Windows 上跑一遍就覆盖 `mklink /H`、junction 和保留时间的复制

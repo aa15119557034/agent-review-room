@@ -79,6 +79,82 @@
       "maxIdleTimeoutMs": 300000,
       "maxTotalTimeoutMs": 1800000
     },
+    "codex-chat": {
+      "command": "codex",
+      "args": [
+        "exec", "--json", "--skip-git-repo-check", "--ephemeral",
+        "--sandbox", "read-only",
+        "--disable", "shell_tool", "--disable", "view_image", "--disable", "image_generation",
+        "-c", "web_search=disabled", "-c", "project_doc_max_bytes=0",
+        "{model-args}", "-"
+      ],
+      "models": [
+        {
+          "id": "gpt-6.1-sol",
+          "displayName": "GPT-6.1 Sol",
+          "efforts": [
+            {"id": "low", "displayName": "低", "note": null},
+            {"id": "medium", "displayName": "中等", "note": null},
+            {"id": "high", "displayName": "高", "note": null},
+            {"id": "xhigh", "displayName": "超高", "note": null},
+            {"id": "max", "displayName": "最高", "note": null},
+            {"id": "ultra", "displayName": "极限", "note": null}
+          ],
+          "defaultEffort": "low"
+        },
+        {
+          "id": "gpt-6-astra",
+          "displayName": "GPT-6 Astra",
+          "efforts": [
+            {"id": "low", "displayName": "低", "note": null},
+            {"id": "medium", "displayName": "中等", "note": null},
+            {"id": "high", "displayName": "高", "note": null},
+            {"id": "xhigh", "displayName": "超高", "note": null},
+            {"id": "max", "displayName": "最高", "note": null},
+            {"id": "ultra", "displayName": "极限", "note": null}
+          ],
+          "defaultEffort": "low"
+        }
+      ],
+      "modelArgs": ["-m", "{model}"],
+      "effortArgs": ["-c", "model_reasoning_effort={effort}"],
+      "cwd": "chat-sandbox",
+      "parser": "codex-exec-json",
+      "envAllowlist": [
+        "PATH", "HOME", "USERPROFILE", "SYSTEMROOT", "APPDATA", "LOCALAPPDATA", "TEMP", "TMP", "LANG",
+        "CODEX_HOME", "HTTPS_PROXY", "HTTP_PROXY", "NO_PROXY"
+      ],
+      "maxIdleTimeoutMs": 300000,
+      "maxTotalTimeoutMs": 900000
+    },
+    "deepseek-chat": {
+      "command": "node",
+      "args": ["../bin/deepseek-chat.mjs"],
+      "models": [
+        {
+          "id": "deepseek-flash",
+          "displayName": "V4.1 Flash 1017",
+          "efforts": [
+            {"id": "low", "displayName": "低", "note": null},
+            {"id": "high", "displayName": "高", "note": null},
+            {"id": "max", "displayName": "最高", "note": null}
+          ],
+          "defaultEffort": "high",
+          "vision": "yes"
+        }
+      ],
+      "modelArgs": ["--model", "{model}"],
+      "effortArgs": ["--effort", "{effort}"],
+      "images": {"input": "openai-content-json", "args": ["--input-format", "content-json"]},
+      "cwd": "chat-sandbox",
+      "parser": "room-jsonl",
+      "envAllowlist": [
+        "PATH", "HOME", "USERPROFILE", "SYSTEMROOT", "TEMP", "TMP", "LANG",
+        "DEEPSEEK_API_KEY", "HTTPS_PROXY", "HTTP_PROXY", "NO_PROXY"
+      ],
+      "maxIdleTimeoutMs": 300000,
+      "maxTotalTimeoutMs": 900000
+    },
     "echo": {
       "command": "node",
       "args": ["-e", "process.stdin.pipe(process.stdout)"],
