@@ -116,10 +116,18 @@ $codexHomePre = Join-Path $HomeDir "node\codex\codex-home"
 if ($Agent -eq "codex" -and (Test-Path -LiteralPath $codexHomePre)) {
   Step "修复 $codexHomePre 的所有者和权限、删掉 codex 的临时目录和缓存"
   Repair-Tree $codexHomePre
+  # 删不掉的（里面还有管理员也打不开的文件，汐 #139 实测 plugins\cache\openai-curated-remote\app-*）整个挪出 AgentRoom：
+  # 同一个盘里改名只动这个文件夹本身，不用打开里面的东西，也不顺着链接走。挪到 <HomeDir>-trash\，之后可以手动删，留着也不影响
+  $trash = "$HomeDir-trash\codex-home-" + (Get-Date -Format "yyyyMMdd-HHmmss")
   foreach ($rel in @("tmp", "cache", "plugins\cache")) {
     $d = Join-Path $codexHomePre $rel
     if (Test-Path -LiteralPath $d) { cmd /c rmdir /s /q "$d" | Out-Null }  # rmdir /s 只删链接本身，不进链接指向的地方
-    if (Test-Path -LiteralPath $d) { Fail "删不掉 $d（codex 自己的临时目录 / 缓存）：先停掉计划任务 AgentRoom-codex 和所有 codex 进程再重试" }
+    if (Test-Path -LiteralPath $d) {
+      $dest = Join-Path $trash ($rel -replace '\\', '-')
+      New-Item -ItemType Directory -Force -Path $trash | Out-Null
+      try { [IO.Directory]::Move($d, $dest) } catch { Fail "删不掉也挪不走 $d（codex 自己的临时目录 / 缓存）：先停掉计划任务 AgentRoom-codex 和所有 codex 进程再重试（$($_.Exception.Message)）" }
+      Write-Host "  $d 里有打不开的文件，已整个挪到 $dest（codex 会重建；那个文件夹以后可以手动删）" -ForegroundColor Yellow
+    }
   }
   Get-ChildItem -LiteralPath $codexHomePre -Recurse -Force -ErrorAction SilentlyContinue -ErrorVariable aclErrors | Out-Null
   if ($aclErrors) { Fail "$codexHomePre 里还有打不开的文件：$($aclErrors[0].TargetObject)。先停掉 codex 进程再重试；还不行就把 auth.json 以外的都删掉（登录窗口里重新登录也可以）" }

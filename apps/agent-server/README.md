@@ -257,7 +257,7 @@ pnpm install --frozen-lockfile
 
 重装替换程序时是两次改名（`node\app` → `app.old`，`app.new` → `app`）。如果正好在两次改名之间断电，`node\app` 会不见、所有秘书的节点都起不来；这时把 `node\app.old` 改名回 `app`，再重跑安装脚本（脚本发现这种情况也会拒绝继续并提示这一步）。
 
-**不要用别的账号以 `node\codex\codex-home` 当 `CODEX_HOME` 跑 codex**（包括在江浩自己的窗口里试命令）：codex 会把它建的文件设成只有创建者能访问，林离的账号之后就启动不了（报 `failed to initialize in-process app-server client: access denied`）。要试就用安装脚本打开的那个以 `agentroom-codex` 运行的窗口。真出了这种情况，重跑安装脚本：它会先把 `codex-home` 的所有者和权限修回来，并删掉 codex 自己会重建的 `codex-home\tmp`、`cache`、`plugins\cache`。
+**不要用别的账号以 `node\codex\codex-home` 当 `CODEX_HOME` 跑 codex**（包括在江浩自己的窗口里试命令）：codex 会把它建的文件设成只有创建者能访问，林离的账号之后就启动不了（报 `failed to initialize in-process app-server client: access denied`）。要试就用安装脚本打开的那个以 `agentroom-codex` 运行的窗口。真出了这种情况，重跑安装脚本：它会先把 `codex-home` 的所有者和权限修回来，并删掉 codex 自己会重建的 `codex-home\tmp`、`cache`、`plugins\cache`；里面有管理员也打不开的文件、删不掉时，整个文件夹挪到 `<AgentRoom>-trash\`（比如 `E:\AgentRoom-trash\`），codex 会重建，那个文件夹以后可以手动删。
 
 `-CliVersion 0.163.0` 这类参数可以指定命令行的版本（不填 = npm 上最新的）。新版本在秘书的低权限账号下跑不起来时，用它退回实测过的版本。
 
