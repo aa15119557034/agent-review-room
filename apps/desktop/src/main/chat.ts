@@ -39,6 +39,7 @@ import {
   createChatSend,
   createChatToTopic,
   createConversation,
+  excludedMessageIdsForRetract,
   finishChatRun,
   getChatMessage,
   getChatRun,
@@ -494,8 +495,9 @@ export class ChatService {
     const result = await writeTransaction(db, queue, () => {
       const updated = retractChatMessage(db, message.id, now);
       if (updated === null) throw new ChatError("invalid_state", "这条消息已经撤回了");
-      // X-30 / D-41：覆盖了这条消息的历史摘要，在同一个事务里变成 stale，之后不再进任何 Snapshot
-      const staleSummaries = markChatSummariesStale(db, [message.id]);
+      // X-30 / D-41 / D-41b：覆盖了这条消息（或回答它的那些发言）的历史摘要，在同一个事务里变成 stale，
+      // 之后不再进任何 Snapshot。只按用户消息 id 查会漏掉「切在一问一答之间」的摘要
+      const staleSummaries = markChatSummariesStale(db, excludedMessageIdsForRetract(db, message.id));
       const after: ChatReplySlot[] = [];
       for (const slot of slots) {
         if (slot.outcome === "retracted") {
@@ -915,7 +917,8 @@ export class ChatService {
   /**
    * ChatContentInput → ChatContent。
    * - 文件（D-36b）：校验引用后带进消息；能当文本读的正文会进 Prompt 的资料区
-   * - 图片：引用校验先做，但**节点还不能收图**（S-23 还没合），现在明确拒绝，不悄悄降级
+   * - 图片：引用校验先做，但**主控端到节点的带图链路还没接完**（remote-client 还没把 attachments / imageSlot 放进 StartRun），
+   *   现在明确拒绝，不悄悄降级成「只发占位文字」
    * - 语音：等 D-34b
    */
   #resolveContent(input: ChatContentInput): ChatContent {
@@ -939,8 +942,10 @@ export class ChatService {
       if (image === null || image.purpose !== "chat") {
         throw new ChatError("validation_failed", "图片引用不存在（或者不是聊天图片），请重新选一张");
       }
-      // 节点收图（S-23）还没合：现在带图发不出去，明确拒绝
-      throw new ChatError("validation_failed", "节点还不能收图（S-23 还没合），先把图片去掉");
+      // 节点这边 S-23 早就支持收图了，现在缺的是「主控端把图发给节点」这条链：
+      // remote-client 的 HTTP 适配器还不会把 AgentInput.attachments / imageSlot 放进 StartRun 请求（X-34b 那半是 C酱的）。
+      // 在那之前明确拒绝，不悄悄降级成「只发占位文字」——D-41b 之后这里要多拼清单、起跑时带附件，见 PR 说明
+      throw new ChatError("validation_failed", "聊天里的图现在还发不到节点（正在接），先把图片去掉");
     }
     const file = getFile(this.#deps.db, attachment.ref);
     if (file === null) throw new ChatError("validation_failed", "文件引用不存在，请重新选一个");
