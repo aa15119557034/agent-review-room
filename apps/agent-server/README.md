@@ -127,6 +127,43 @@ pnpm --filter @room/agent-server run try -- codex-discuss --model gpt-6.1-sol --
 
 **已经有配置文件的电脑**：`setup` 不会覆盖已有的配置。把 `agent-server.config.json` 改名备份，再运行一次 `setup`（Reviewer 电脑不带参数，主控机带 `-- --local`），Token 会沿用。自己改过配置的话，照示例把 `models`、`modelArgs`、`effortArgs` 三项抄过去，并去掉 `args` 里原来写死的 `--model …`。
 
+## 看图和画图（S-23）
+
+**收图**（契约 C-42a / C-42g）：主控端只给 health 里 `capabilities.attachments: true`、并且这次用的模型 `vision: "yes"` 的节点发图。节点再核一遍：
+
+- 这次用的模型实测能看（`models[].vision` 或模型写死时的 `fixedModelVision`）并且 profile 配了 `images`，否则整个拒绝 `vision_unsupported`
+- 每张图解码后的字节数、sha256 和请求里写的一样，并且和 content 开头的附件清单块对得上，否则 `hash_mismatch`
+- 同一个 runId 再提交时，图（sha256 列表）和 kind 也要一样，否则 `run_id_conflict`
+- 请求体上限默认约 28.4 MB（契约的 `NODE_MIN_BODY_BYTES_WITH_ATTACHMENTS`：8 张图 base64 + 最长的 content）。调到这个数以下时节点不报能收图
+
+**交给 CLI**：都写进 stdin，不落临时文件。content 里有一块格式固定、自带 nonce 边界的图片资料块（契约 C-42g 的 `attachmentImageBlock`），块里有图片位置标记 `[图片位置 <nonce>]`；节点按「标记前文字 → 图片（按编号）→ 标记后文字」交出去，不加、不删、不改任何文字。
+
+| `images.input` | 给谁 | `images.args`（只在带图时加） |
+|---|---|---|
+| `claude-stream-json` | `claude -p`（parser 要是 `claude-stream-json`） | `["--input-format", "stream-json"]` |
+| `openai-content-json` | `bin/deepseek-chat.mjs`（parser 要是 `room-jsonl`） | `["--input-format", "content-json"]` |
+
+Codex：`codex exec` 只能用 `-i` 把图放在全部文字前面，做不到上面的顺序，按 ADR-004 §2 报 `vision: "no"`（不配 `images`）。以后要让林离看图，得改走 `codex app-server`，另提。
+
+**实测谁能看**（ADR-004 §2：没测过就是 unknown，按看不了处理）：
+
+```powershell
+pnpm --filter @room/agent-server run vision-test -- claude-review --model claude-opus-5-5
+pnpm --filter @room/agent-server run vision-test -- deepseek-discuss --model deepseek-flash
+```
+
+每次随机画一张 6 位数字的测试图，按真 Run 的顺序交给 CLI，回答里的数字和图上完全一样才算通过（多一位少一位都不算）。每个模型连测 3 次，3 次都过才写 yes（云端用 Haiku 5.5 改版过程中跑过 9 次，有 2 次认错：一次把 0 认成 3，一次多读一位）。不用先启动节点。最后打印一行 JSON 验收记录，贴到 PR 或 issue 里；通过了再把那个模型的 `"vision": "yes"` 写进配置，重启节点。
+
+**画图 profile**（契约 C-42b，`kind: "image"`）：配了 `imageRun` 的 profile 只接画图 Run，别的 profile 不接画图 Run（`unsupported_kind`）。
+
+- `imageRun.outputDir`：节点专用的根目录。每个画图 Run 在下面新建一个 `<runId>` 子目录（已存在就不接管，报 `spawn_failed`），通过 args 里的 `{image-output-dir}` 或环境变量 `ROOM_IMAGE_OUTPUT_DIR` 告诉 CLI 把图写在那里
+- 只从这次 Run 自己的子目录里取图：进程正常结束后取最新的一张（按文件头认 png / jpeg / webp，最多 10 MB），在终止事件里报 sha256、类型、字节数；没有图就是 `error(incomplete_output)`
+- 结束时（不管成败）只删这次 Run 的子目录。根目录里别的文件、别的 Run 的子目录一概不碰，所以**不要把 outputDir 指向 CLI 自己的共享目录**（例如 Codex 的 `$CODEX_HOME\generated_images`：那里的文件证明不了是这次 Run 画的）
+- 图读进节点内存，主控端用 `GET /v1/runs/<runId>/artifacts/<sha256>`（要 Token）取。取过之后再留 `leaseMs`，断线可以重取；结束后超过 `leaseMs` 没人取、或最后一次取过之后超过 `leaseMs`，就丢掉
+- 节点启动时清掉根目录下上次没来得及删的 `run_<ULID>` 文件夹（只删这种名字的文件夹）
+- 同一个画图 profile 同时只画一张（第二张 `node_busy`，ADR-004 §3 Codex 一次一张）；不同 profile 可以共用根目录，各取各的
+- Codex 默认把图存在 `$CODEX_HOME\generated_images`，节点不去那里拿。要让 Codex 把图放进这次 Run 的目录，候选做法是 `codex exec -C {image-output-dir} --sandbox workspace-write …` 并在画图指令里让它把图复制到工作目录，**待主控机实测**
+
 ## 安全
 
 - **监听 0.0.0.0**：局域网里的其他电脑能访问。所有请求都必须带 Token，否则 401
@@ -162,7 +199,7 @@ pnpm --filter @room/agent-server run try -- codex-discuss --model gpt-6.1-sol --
 ## 测试
 
 ```bash
-pnpm --filter @room/agent-server test     # 59 个
+pnpm --filter @room/agent-server test     # 126 个
 ```
 
 Windows 相关逻辑（`.cmd` 包装、taskkill 参数）用注入的模拟环境测试；`claude` 用 `test/fixtures/fake-claude.mjs`、`codex` 用 `test/fixtures/fake-codex.mjs` 模拟；`deepseek-chat.mjs` 对着测试里起的假 DeepSeek 服务跑（不联网、不用真 Key）。

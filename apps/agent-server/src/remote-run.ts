@@ -1,11 +1,21 @@
 import { spawn, type ChildProcess } from "node:child_process";
 import { StringDecoder } from "node:string_decoder";
-import type { RemoteEvent, RemoteTerminal, StartRunRequest } from "@room/schemas";
+import type { RemoteArtifact, RemoteEvent, RemoteTerminal, RunKind, StartRunRequest } from "@room/schemas";
 import type { Profile, ServerConfig } from "./config";
 import { killTree, spawnDetached } from "./process-tree";
 import { createParser, type OutputParser, type ParserOutput } from "./parsers";
 import { planSpawn } from "./win-command";
 import { buildArgs } from "./model-args";
+import { imageStdin } from "./images";
+import {
+  IMAGE_OUTPUT_DIR_ENV,
+  IMAGE_OUTPUT_DIR_PLACEHOLDER,
+  collectArtifact,
+  createRunOutputDir,
+  removeRunOutputDir,
+  runOutputDir,
+  type HeldArtifact,
+} from "./image-artifact";
 
 type SeqEvent = Exclude<RemoteEvent, { type: "heartbeat" }>;
 type Subscriber = (event: RemoteEvent) => void;
@@ -22,6 +32,10 @@ export class RemoteRun {
   readonly contentHash: string;
   /** 请求里的模型和强度；undefined = 用 profile 自带的 */
   readonly model: StartRunRequest["model"];
+  /** 省略 = text（幂等比较前先归一化） */
+  readonly kind: RunKind;
+  /** 随附图片的 sha256（按编号），幂等比较用；没带图为空 */
+  readonly attachmentShas: readonly string[];
 
   private readonly events: SeqEvent[] = [];
   private readonly subscribers = new Set<Subscriber>();
@@ -49,16 +63,31 @@ export class RemoteRun {
     this.profileId = req.profileId;
     this.contentHash = req.snapshot.contentHash;
     this.model = req.model;
+    this.kind = req.kind ?? "text";
+    this.attachmentShas = (req.attachments ?? []).map((a) => a.sha256);
     this.limits = {
       idleTimeoutMs: Math.min(req.limits.idleTimeoutMs, profile.maxIdleTimeoutMs),
       totalTimeoutMs: Math.min(req.limits.totalTimeoutMs, profile.maxTotalTimeoutMs),
     };
-    this.input = req.snapshot.content;
+    // 带图：按 profile.images 把文字和图片块写进 stdin（server.ts 已核对过字节、看图能力和 images 配置）
+    if (req.attachments && req.imageSlot && profile.images) {
+      this.input = imageStdin(profile.images.input, req.snapshot.content, req.imageSlot, req.attachments);
+      this.extraArgs = profile.images.args;
+    } else {
+      this.input = req.snapshot.content;
+      this.extraArgs = [];
+    }
     this.parser = createParser(profile.parser);
   }
 
   private readonly limits: { idleTimeoutMs: number; totalTimeoutMs: number };
   private readonly input: string;
+  private readonly extraArgs: readonly string[];
+  /** image Run：只属于这次 Run 的输出目录（建好之后才有） */
+  private outputDir: string | undefined;
+  /** image Run 画好、还没被取走的图 */
+  private held: HeldArtifact | undefined;
+  private heldTimer: NodeJS.Timeout | undefined;
 
   get isFinished(): boolean {
     return this.terminal !== undefined;
@@ -72,6 +101,25 @@ export class RemoteRun {
   get finishedAtMs(): number | undefined {
     return this.finishedAt;
   }
+  /** 还在节点上的生成图（取走或过期后为 undefined） */
+  get artifact(): HeldArtifact | undefined {
+    return this.held;
+  }
+
+  /** 主控端取过一次：从现在起再留 leaseMs（断线可以重取），然后丢掉 */
+  artifactFetched(): void {
+    if (!this.held) return;
+    if (this.heldTimer) clearTimeout(this.heldTimer);
+    this.heldTimer = setTimeout(() => this.dropArtifact(), this.cfg.leaseMs);
+    this.heldTimer.unref();
+  }
+
+  /** 生成图过期：丢掉字节 */
+  dropArtifact(): void {
+    this.held = undefined;
+    if (this.heldTimer) clearTimeout(this.heldTimer);
+    this.heldTimer = undefined;
+  }
 
   start(): void {
     // 订阅者必须在 leaseMs 内连上事件流，否则视为 Orchestrator 已经不在了
@@ -84,11 +132,21 @@ export class RemoteRun {
 
     let child: ChildProcess;
     try {
+      let args = [...buildArgs(this.profile, this.model), ...this.extraArgs];
+      const env = buildEnv(this.profile);
+      if (this.kind === "image" && this.profile.imageRun) {
+        // 每个 image Run 一个新目录，归属可证明；只从这里取图、只删这里（image-artifact.ts）
+        const dir = runOutputDir(this.profile.imageRun.outputDir, this.runId);
+        createRunOutputDir(dir);
+        this.outputDir = dir;
+        args = args.map((a) => a.replaceAll(IMAGE_OUTPUT_DIR_PLACEHOLDER, dir));
+        env[IMAGE_OUTPUT_DIR_ENV] = dir;
+      }
       // Windows 上 .cmd / .bat 会被包装成 cmd.exe /d /s /c "…"，见 win-command.ts
-      const plan = planSpawn(this.profile.command, buildArgs(this.profile, this.model));
+      const plan = planSpawn(this.profile.command, args);
       child = spawn(plan.file, plan.args, {
         cwd: this.profile.cwd,
-        env: buildEnv(this.profile),
+        env,
         stdio: ["pipe", "pipe", "pipe"],
         detached: spawnDetached,
         windowsHide: true,
@@ -124,7 +182,7 @@ export class RemoteRun {
       }
       if (!this.parser) {
         if (code !== 0) this.finish({ outcome: "error", reason: "process_exit_nonzero", exitCode: code });
-        else this.finish({ outcome: "completed", exitCode: 0 });
+        else this.complete();
         return;
       }
       // 有解析器：退出码 0 还不够，必须看到完整的结束标记。
@@ -142,7 +200,7 @@ export class RemoteRun {
         });
       } else if (verdict.ok) {
         this.push({ type: "message_complete", seq: 0, ts: "", text: verdict.finalText });
-        this.finish({ outcome: "completed", exitCode: 0 });
+        this.complete();
       } else {
         this.finish({ outcome: "error", reason: verdict.reason, exitCode: 0, message: verdict.message });
       }
@@ -228,9 +286,42 @@ export class RemoteRun {
     }
   }
 
+  /** 进程正常结束。image Run 还要找到画好的图，找不到改报 error(incomplete_output)（契约 C-42b） */
+  private complete(): void {
+    if (this.kind !== "image") {
+      this.finish({ outcome: "completed", exitCode: 0 });
+      return;
+    }
+    const dir = this.outputDir;
+    let got: HeldArtifact | { problem: string };
+    try {
+      got = dir ? collectArtifact(dir) : { problem: "image output directory was not created" };
+    } catch (err) {
+      got = { problem: `could not read generated image: ${(err as Error).message}` };
+    }
+    if ("problem" in got) {
+      this.finish({ outcome: "error", reason: "incomplete_output", exitCode: 0, message: got.problem });
+      return;
+    }
+    this.held = got;
+    // 结束后超过 leaseMs 没人取就丢掉
+    this.heldTimer = setTimeout(() => this.dropArtifact(), this.cfg.leaseMs);
+    this.heldTimer.unref();
+    const artifact: RemoteArtifact = got.meta;
+    this.finish({ outcome: "completed", exitCode: 0, artifact });
+  }
+
   private finish(result: RemoteTerminal): void {
     if (this.isFinished) return; // 单次守卫：保证恰好一个 terminal
     this.terminal = result;
+    // image Run 不管成败都删掉自己的目录（成功时图已经读进内存）；只删这次 Run 建的那个目录
+    if (this.outputDir) {
+      try {
+        removeRunOutputDir(this.outputDir);
+      } catch (err) {
+        console.error(`[agent-server] run ${this.runId}: could not remove its image output directory`, err);
+      }
+    }
     this.clearTimers();
     this.push({ type: "terminal", seq: 0, ts: "", result });
     this.finishedAt = Date.now();

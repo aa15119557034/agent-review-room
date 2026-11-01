@@ -268,6 +268,33 @@ describe("bin/deepseek-chat.mjs", () => {
     assert.ok(!r.lines.some((l) => l["type"] === "done"));
   });
 
+  it("S-23: --input-format content-json sends the node's text / image blocks as the message content, in order", async () => {
+    const blocks = [
+      { type: "text", text: "资料：[图片位置 0123456789abcdef]" },
+      { type: "image_url", image_url: { url: "data:image/png;base64,AAAA" } },
+      { type: "text", text: "\n当前消息：图里写了什么？" },
+    ];
+    const r = await run(JSON.stringify({ content: blocks }), undefined, ["--model", "m-test", "--input-format", "content-json"]);
+    assert.equal(r.code, 0);
+    assert.deepEqual(seen.at(-1)?.body?.["messages"], [{ role: "user", content: blocks }]);
+  });
+
+  it("S-23: content-json refuses anything but text blocks and data: URL images, without calling the API", async () => {
+    const before = seen.length;
+    for (const bad of [
+      "not json",
+      JSON.stringify({ content: [] }),
+      JSON.stringify({ content: [{ type: "image_url", image_url: { url: "https://example.com/a.png" } }] }),
+      JSON.stringify({ content: [{ type: "text", text: "x", cache_control: {} }] }),
+      JSON.stringify({ content: [{ type: "input_audio", input_audio: {} }] }),
+    ]) {
+      const r = await run(bad, undefined, ["--input-format", "content-json"]);
+      assert.equal(r.code, 1, bad);
+      assert.equal(r.lines.at(-1)?.["type"], "error");
+    }
+    assert.equal(seen.length, before);
+  });
+
   it("missing key → clear error without calling the API", async () => {
     const before = seen.length;
     const r = await run("hi", {});
