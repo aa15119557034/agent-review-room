@@ -1445,6 +1445,42 @@ describe("chat images (C-42a / X-34b)", () => {
       h.db.close();
     }
   });
+  it("keeps the original file name when the renderer sends one (D-43 / C-42i)", async () => {
+    const { h, ref } = await imageEnv({ capabilities: { attachments: true } });
+    try {
+      const sent = await h.chat.send({
+        ...imageMessage(ref, 65),
+        conversationId: h.conversationId,
+        content: {
+          kind: "text",
+          text: "看看这张",
+          attachments: [{ kind: "image", ref, name: "海边落日.png" }],
+        },
+      });
+      await settle(h.chat);
+      const snapshot = getChatSnapshot(h.db, sent.runs[0]!.snapshotId)!;
+      assert.equal(
+        sent.message.content.kind === "text" ? (sent.message.content.attachments[0] as { name: string }).name : null,
+        "海边落日.png",
+        "消息里存的是原名",
+      );
+      assert.equal(snapshot.attachments?.[0]?.name, "海边落日.png", "清单里也是原名");
+      assert.ok(snapshot.content.includes("[图 1：海边落日.png]"), "Prompt 资料区显示原名");
+      assert.ok(!snapshot.content.includes("图片.png"), "不再出现占位名");
+
+      const blind = await h.chat.send({
+        ...imageMessage(ref, 66),
+        conversationId: h.conversationId,
+        content: { kind: "text", text: "再看看", attachments: [{ kind: "image", ref }] },
+      });
+      await settle(h.chat);
+      const blindSnapshot = getChatSnapshot(h.db, blind.runs[0]!.snapshotId)!;
+      assert.equal(blindSnapshot.attachments?.[0]?.name, "图片.png", "不带名字的老界面还是按 mime 起名");
+      assert.ok(blindSnapshot.content.includes("[图 1：图片.png]"), "Prompt 里显示占位名");
+    } finally {
+      h.db.close();
+    }
+  });
 });
 
 describe("replyAsVoice (D-37b)", () => {
@@ -1469,3 +1505,4 @@ describe("replyAsVoice (D-37b)", () => {
     }
   });
 });
+
