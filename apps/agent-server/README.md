@@ -159,6 +159,7 @@ pnpm --filter @room/agent-server run vision-test -- deepseek-discuss --model dee
 - `imageRun.outputDir`：节点专用的根目录。每个画图 Run 在下面新建一个 `<runId>` 子目录（已存在就不接管，报 `spawn_failed`），通过 args 里的 `{image-output-dir}` 或环境变量 `ROOM_IMAGE_OUTPUT_DIR` 告诉 CLI 把图写在那里
 - 只从这次 Run 自己的子目录里取图：进程正常结束后取最新的一张（按文件头认 png / jpeg / webp，最多 10 MB），在终止事件里报 sha256、类型、字节数；没有图就是 `error(incomplete_output)`
 - 结束时（不管成败）只删这次 Run 的子目录。根目录里别的文件、别的 Run 的子目录一概不碰，所以**不要把 outputDir 指向 CLI 自己的共享目录**（例如 Codex 的 `$CODEX_HOME\generated_images`：那里的文件证明不了是这次 Run 画的）
+- 图读进节点内存，主控端用 `GET /v1/runs/<runId>/artifacts/<sha256>`（要 Token）取。取过之后再留 `leaseMs`，断线可以重取；结束后超过 `leaseMs` 没人取、或最后一次取过之后超过 `leaseMs`，就丢掉
 - 同一个画图 profile 同时只画一张（第二张 `node_busy`，ADR-004 §3 Codex 一次一张）；不同 profile 可以共用根目录，各取各的
 - Codex 默认把图存在 `$CODEX_HOME\generated_images`，节点不去那里拿。要让 Codex 把图放进这次 Run 的目录，候选做法是 `codex exec -C {image-output-dir} --sandbox workspace-write …` 并在画图指令里让它把图复制到工作目录，**待主控机实测**
 

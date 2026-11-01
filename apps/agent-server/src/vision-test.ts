@@ -12,7 +12,7 @@
  */
 import { randomInt, createHash } from "node:crypto";
 import { deflateSync } from "node:zlib";
-import { attachmentImageBlock, attachmentImageSlotMarker, attachmentManifestBlock, type RemoteEvent, type StartRunRequest } from "@room/schemas";
+import { StartRunRequest, attachmentImageBlock, attachmentImageSlotMarker, attachmentManifestBlock, type RemoteEvent } from "@room/schemas";
 import { loadConfig } from "./config";
 import { RemoteRun } from "./remote-run";
 import { checkModel } from "./model-args";
@@ -178,7 +178,8 @@ async function main(): Promise<void> {
   }
 
   const code = randomCode();
-  const req = visionTestRequest(profileId, renderCodePng(code), model);
+  // 先按契约解析一次：实测工具发出去的就是合契约的请求（汐 #131）
+  const req = StartRunRequest.parse(visionTestRequest(profileId, renderCodePng(code), model));
   const run = new RemoteRun(req, profile, config, () => {});
   const answer = await new Promise<{ text: string; terminal: string }>((resolve) => {
     let text = "";

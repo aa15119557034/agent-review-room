@@ -285,7 +285,7 @@ describe("S-23 image runs (kind: image)", () => {
     assert.deepEqual(await errorOf(await start(textRun("draw", { kind: "text" }))), { status: 400, error: "unsupported_kind" });
   });
 
-  it("completes with the artifact, serves it once by sha256, and removes the run's own directory", async () => {
+  it("completes with the artifact, serves it by sha256 for leaseMs after fetching, and removes the run's own directory", async () => {
     const b = textRun("draw", { kind: "image" });
     assert.equal((await start(b)).status, 202);
     const result = terminalOf(await readAll(b.runId));
@@ -297,8 +297,13 @@ describe("S-23 image runs (kind: image)", () => {
     assert.equal(res.status, 200);
     assert.equal(res.headers.get("content-type"), "image/png");
     assert.deepEqual(Buffer.from(await res.arrayBuffer()), PNG);
-    assert.equal((await fetch(`${base}/v1/runs/${b.runId}/artifacts/${sha(PNG)}`, { headers: auth })).status, 404, "dropped after fetch");
     assert.equal((await fetch(`${base}/v1/runs/${b.runId}/artifacts/${sha(PNG)}`)).status, 401, "needs the token");
+    // 汐 #131：取过之后再留 leaseMs，断线可以重取；之后丢掉
+    const again = await fetch(`${base}/v1/runs/${b.runId}/artifacts/${sha(PNG)}`, { headers: auth });
+    assert.equal(again.status, 200, "a retry right after is still served");
+    await again.arrayBuffer();
+    await new Promise((r) => setTimeout(r, cfg.leaseMs + 200));
+    assert.equal((await fetch(`${base}/v1/runs/${b.runId}/artifacts/${sha(PNG)}`, { headers: auth })).status, 404, "dropped leaseMs after the last fetch");
   });
 
   it("drops an artifact nobody fetched after leaseMs", async () => {

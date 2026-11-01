@@ -106,7 +106,15 @@ export class RemoteRun {
     return this.held;
   }
 
-  /** 生成图已经取走（或过期）：丢掉字节 */
+  /** 主控端取过一次：从现在起再留 leaseMs（断线可以重取），然后丢掉 */
+  artifactFetched(): void {
+    if (!this.held) return;
+    if (this.heldTimer) clearTimeout(this.heldTimer);
+    this.heldTimer = setTimeout(() => this.dropArtifact(), this.cfg.leaseMs);
+    this.heldTimer.unref();
+  }
+
+  /** 生成图过期：丢掉字节 */
   dropArtifact(): void {
     this.held = undefined;
     if (this.heldTimer) clearTimeout(this.heldTimer);

@@ -6,6 +6,9 @@ import {
   CancelRunRequest,
   NODE_MIN_BODY_BYTES_WITH_ATTACHMENTS,
   REMOTE_PROTOCOL_VERSION,
+  StartRunAttachments,
+  attachmentManifestBlock,
+  imageBlockPlaced,
   StartRunRequest,
   type NodeHealth,
   type RemoteErrorCode,
@@ -19,8 +22,6 @@ import { checkModel } from "./model-args";
 import { attachmentProblem, profileMaySeeImages, visionOf } from "./images";
 
 const execFileP = promisify(execFile);
-/** StartRunRequest 里「content 以清单块开头」那条 refine 的消息（schemas/remote-protocol.ts） */
-const MANIFEST_MISMATCH = "带图时 snapshot.content 要以这组附件的清单块开头";
 
 class HttpError extends Error {
   constructor(
@@ -145,7 +146,8 @@ export function createAgentServer(cfg: ServerConfig, token: string): AgentServer
         "content-length": String(held.bytes.length),
         "cache-control": "no-store",
       });
-      res.on("finish", () => run.dropArtifact());
+      // 「写完」不等于主控端收到了：取过之后再留 leaseMs，给断线重取一次机会（汐 #131），之后丢掉
+      res.on("finish", () => run.artifactFetched());
       res.end(held.bytes);
       return;
     }
@@ -162,7 +164,7 @@ export function createAgentServer(cfg: ServerConfig, token: string): AgentServer
     const parsed = StartRunRequest.safeParse(raw);
     if (!parsed.success) {
       // C-42a：清单块对不上这组附件按 hash_mismatch 报（契约），其余字段问题是 bad_request
-      if (parsed.error.issues.some((i) => i.message === MANIFEST_MISMATCH)) {
+      if (manifestMismatch(raw)) {
         throw new HttpError(422, "hash_mismatch", "attachments do not match the manifest block at the start of content");
       }
       // 只返回字段路径，不回显内容
@@ -170,6 +172,10 @@ export function createAgentServer(cfg: ServerConfig, token: string): AgentServer
       throw new HttpError(400, "bad_request", `invalid fields: ${[...new Set(paths)].join(", ")}`);
     }
     const reqBody = parsed.data;
+    // schema 已经核过图片资料块；这里再核一次，让交图前的构造不会因为它抛异常（汐 #131）
+    if (reqBody.attachments && (!reqBody.imageSlot || !imageBlockPlaced(reqBody.snapshot.content, reqBody.attachments, reqBody.imageSlot))) {
+      throw new HttpError(400, "bad_request", "invalid fields: imageSlot");
+    }
 
     // 幂等：同一个 runId 重复提交
     const existing = runs.get(reqBody.runId);
@@ -323,6 +329,18 @@ async function verifyCommit(profile: Profile, expected: string): Promise<void> {
 
 function sameModel(a: StartRunRequest["model"], b: StartRunRequest["model"]): boolean {
   return a?.model === b?.model && a?.effort === b?.effort;
+}
+
+/**
+ * 契约 C-42a：附件本身合法、content 却不以这组附件的清单块开头 → hash_mismatch（不是 bad_request）。
+ * 直接按原始请求重算，不依赖 schema 里 refine 的提示文字（汐 #131）
+ */
+function manifestMismatch(raw: unknown): boolean {
+  if (typeof raw !== "object" || raw === null) return false;
+  const r = raw as { attachments?: unknown; snapshot?: { content?: unknown } };
+  const atts = StartRunAttachments.safeParse(r.attachments);
+  const content = r.snapshot?.content;
+  return atts.success && typeof content === "string" && !content.startsWith(attachmentManifestBlock(atts.data));
 }
 
 function sameList(a: readonly string[], b: readonly string[]): boolean {
