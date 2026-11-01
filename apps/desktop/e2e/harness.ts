@@ -79,6 +79,10 @@ export async function makeE2E(options: {
   controllerModels?: NodeHealth["profileModels"];
   /** X-31：聊天服务的时钟（撤回 / 重新编辑窗口、限流）；不传用真时间 */
   now?: () => string;
+  /** X-34b：主控机节点上报的可选能力（带图要 attachments: true） */
+  controllerCapabilities?: NodeHealth["capabilities"];
+  /** X-34b：图片库（ref → 字节），聊天起跑时按 ref 读本体 */
+  imageBytes?: Map<string, Buffer>;
 } = {}): Promise<E2E> {
   const dir = mkdtempSync(join(tmpdir(), "room-e2e-"));
   dirs.push(dir);
@@ -101,6 +105,7 @@ export async function makeE2E(options: {
     token: "c".repeat(40),
     behavior: options.controller,
     profileModels: options.controllerModels,
+    capabilities: options.controllerCapabilities,
     heartbeatMs: 80,
     leaseMs: 1_000,
   });
@@ -167,6 +172,7 @@ export async function makeE2E(options: {
     settings,
     emit,
     ...(options.now === undefined ? {} : { now: options.now }),
+    readImage: (ref) => options.imageBytes?.get(ref) ?? null,
     idleTimeoutMs: 5_000,
     totalTimeoutMs: 15_000,
     adapterFactory: async (target) => {

@@ -24,6 +24,8 @@ export interface FakeNodeOptions {
   token: string;
   /** 不传时模拟 1A 老节点；传入时 health 原样上报模型能力 */
   profileModels?: NodeHealth["profileModels"];
+  /** X-34b：上报的可选能力（不传 = 老节点，什么都不报） */
+  capabilities?: NodeHealth["capabilities"];
   /** 每个 profile 默认的行为；测试可以随时 setBehavior 覆盖 */
   behavior?: Record<string, NodeBehavior | readonly NodeBehavior[]>;
   heartbeatMs?: number;
@@ -64,6 +66,7 @@ export class FakeNode {
   readonly profiles: readonly string[];
   readonly token: string;
   readonly profileModels: NodeHealth["profileModels"];
+  readonly capabilities: NodeHealth["capabilities"];
   readonly heartbeatMs: number;
   readonly leaseMs: number;
   readonly starts: RecordedStart[] = [];
@@ -82,6 +85,7 @@ export class FakeNode {
     this.profiles = options.profiles;
     this.token = options.token;
     this.profileModels = options.profileModels;
+    this.capabilities = options.capabilities;
     this.heartbeatMs = options.heartbeatMs ?? 100;
     this.leaseMs = options.leaseMs ?? 1_000;
     for (const [profile, behavior] of Object.entries(options.behavior ?? {})) {
@@ -213,6 +217,7 @@ export class FakeNode {
         leaseMs: this.leaseMs,
         heartbeatMs: this.heartbeatMs,
         ...(this.profileModels === undefined ? {} : { profileModels: this.profileModels }),
+        ...(this.capabilities === undefined ? {} : { capabilities: this.capabilities }),
       });
       return;
     }
