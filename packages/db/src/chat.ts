@@ -4,6 +4,7 @@ import type {
   ChatContent,
   Project,
   ChatCursor,
+  ChatHistorySummary,
   ChatMentions,
   ChatMessage,
   ChatReplySlot,
@@ -25,6 +26,7 @@ import {
   CHAT_SLOT_TRANSITIONS,
   RUN_TRANSITIONS,
   isExcludedFromContext,
+  ChatHistorySummary as ChatHistorySummarySchema,
   ChatMessage as ChatMessageSchema,
   ChatReplySlot as ChatReplySlotSchema,
   ChatRun as ChatRunSchema,
@@ -498,6 +500,86 @@ export function retractChatMessage(db: SqliteDatabase, messageId: string, retrac
   if (row === undefined || row.sender !== "user" || row.state === "retracted") return null;
   db.prepare("UPDATE chat_messages SET state = 'retracted', retracted_at = ? WHERE id = ?").run(retractedAt, messageId);
   return toChatMessage({ ...row, state: "retracted", retracted_at: retractedAt }) as UserChatMessage;
+}
+
+// ================================================================ 历史摘要
+// 契约（C-34）的 ChatHistorySummary。X-30 定了形状、D-41 落地存哪儿：
+// 「记下来源消息：其中任何一条被撤回，摘要在同一事务里变成 stale，stale 的摘要不再进任何 Snapshot」。
+
+interface ChatSummaryRow {
+  id: string;
+  conversation_id: string;
+  source_message_ids: string;
+  content: string;
+  content_hash: string;
+  state: ChatHistorySummary["state"];
+  run_id: string;
+  agent: string;
+  created_at: string;
+}
+
+function toChatSummary(row: ChatSummaryRow): ChatHistorySummary {
+  return ChatHistorySummarySchema.parse({
+    id: row.id,
+    conversationId: row.conversation_id,
+    sourceMessageIds: JSON.parse(row.source_message_ids) as string[],
+    content: row.content,
+    contentHash: row.content_hash,
+    state: row.state,
+    runId: row.run_id,
+    agent: row.agent,
+    createdAt: row.created_at,
+  });
+}
+
+/** 写一条摘要。**必须在调用方的事务里跑**（和写摘要的那个 Run 一起落库） */
+export function insertChatSummary(db: SqliteDatabase, summary: ChatHistorySummary): void {
+  const parsed = ChatHistorySummarySchema.parse(summary);
+  db.prepare(
+    "INSERT INTO chat_summaries (id, conversation_id, source_message_ids, content, content_hash, state, run_id, agent, " +
+      "created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+  ).run(
+    parsed.id,
+    parsed.conversationId,
+    JSON.stringify(parsed.sourceMessageIds),
+    parsed.content,
+    parsed.contentHash,
+    parsed.state,
+    parsed.runId,
+    parsed.agent,
+    parsed.createdAt,
+  );
+}
+
+/** 本会话的摘要，按时间正序（拼 Prompt 时的顺序） */
+export function listChatSummaries(db: SqliteDatabase, conversationId: string): ChatHistorySummary[] {
+  const rows = db
+    .prepare("SELECT * FROM chat_summaries WHERE conversation_id = ? ORDER BY created_at, id")
+    .all(conversationId) as ChatSummaryRow[];
+  return rows.map(toChatSummary);
+}
+
+/**
+ * 这些消息被撤回：覆盖到它们的摘要**在同一事务里**变成 stale，返回这次改掉的（调用方拿去推 `chat.summary.updated`）。
+ * 已经是 stale 的不重复改，也不重复推。
+ */
+export function markChatSummariesStale(
+  db: SqliteDatabase,
+  messageIds: readonly string[],
+): ChatHistorySummary[] {
+  if (messageIds.length === 0) return [];
+  const hits = db
+    .prepare(
+      "SELECT * FROM chat_summaries WHERE state = 'current' " +
+        "AND EXISTS (SELECT 1 FROM json_each(source_message_ids) AS j WHERE j.value IN (" +
+        messageIds.map(() => "?").join(", ") +
+        ")) ORDER BY created_at, id",
+    )
+    .all(...messageIds) as ChatSummaryRow[];
+  if (hits.length === 0) return [];
+  const update = db.prepare("UPDATE chat_summaries SET state = 'stale' WHERE id = ? AND state = 'current'");
+  for (const row of hits) update.run(row.id);
+  return hits.map((row) => toChatSummary({ ...row, state: "stale" }));
 }
 
 // ================================================================ 回答位
