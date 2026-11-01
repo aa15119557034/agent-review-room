@@ -340,6 +340,15 @@ describe("S-21: Claude quota from rate_limit_event", () => {
     assert.equal(q.readAt, READ_AT.toISOString());
   });
 
+  it("percent keeps one decimal, no float tails (汐 #156)", () => {
+    const q = mapClaudeRateLimit(info({
+      unifiedWindows: { five_hour: { utilization: 0.29 }, seven_day: { utilization: 0.07 } },
+    }), READ_AT);
+    assert.deepEqual([q.fiveHour?.usedPercent, q.weekly?.usedPercent], [29, 7]);
+    const r = mapClaudeRateLimit(info({ unifiedWindows: { five_hour: { utilization: 0.12345 } } }), READ_AT);
+    assert.equal(r.fiveHour?.usedPercent, 12.3);
+  });
+
   it("a rejected window counts as 100; over 1 caps at 100; bad numbers are null", () => {
     const q = mapClaudeRateLimit(info({
       unifiedWindows: { five_hour: { utilization: 0.4, status: "rejected" }, seven_day: { utilization: 1.7 } },
@@ -385,6 +394,15 @@ describe("S-21: DeepSeek balance", () => {
     assert.deepEqual([q.fiveHour, q.weekly, q.creditsInUse], [null, null, null]);
     assert.ok(RemoteProfileQuota.safeParse(q).success);
     assert.deepEqual(mapDeepSeekBalance({ balance_infos: [{ currency: "USD", total_balance: 3 }] }, READ_AT).balance, { amount: "3", currency: "USD" });
+  });
+
+  it("is_available=false keeps the balance but logs a warning (汐 #156)", () => {
+    const logs: string[] = [];
+    const q = mapDeepSeekBalance({ ...body, is_available: false }, READ_AT, (m) => logs.push(m));
+    assert.equal(q.balance?.amount, "110.50");
+    assert.equal(logs.length, 1);
+    mapDeepSeekBalance(body, READ_AT, (m) => logs.push(m));
+    assert.equal(logs.length, 1, "no warning when available");
   });
 
   it("anything unexpected is unknown (null), never 0", () => {

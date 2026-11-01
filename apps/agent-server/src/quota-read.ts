@@ -33,7 +33,8 @@ async function main(): Promise<void> {
   console.log(JSON.stringify({ test: "S-21/S-24 quota", profileId, tookMs: Date.now() - t0, ...q }));
   const complete = profile.quota.source === "deepseek-balance" ? !!q.balance : q.fiveHour && q.weekly && q.creditsInUse !== null;
   if (!complete) console.error("本次有读不到的项（原因见上面的日志）；不是工具坏了，可以再读一次。主控端遇到读不到会改用本机画");
-  process.exit(complete ? 0 : 1);
+  // 不用 process.exit：fetch 的 abort 计时器还没收干净时直接退出，Windows 上 Node 24 会断言崩溃（汐 #156）
+  process.exitCode = complete ? 0 : 1;
 }
 
 main().catch((err: unknown) => {

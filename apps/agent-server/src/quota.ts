@@ -222,7 +222,8 @@ export function mapClaudeRateLimit(info: unknown, readAt: Date): RemoteProfileQu
     if (w.status === "rejected") return { usedPercent: 100, windowMinutes: minutes, resetsAt: resets(w.resetsAt) };
     const u = w.utilization;
     if (typeof u !== "number" || !Number.isFinite(u) || u < 0) return null;
-    return { usedPercent: Math.min(u * 100, 100), windowMinutes: minutes, resetsAt: resets(w.resetsAt) };
+    // 保留 1 位小数：0.29 × 100 不带出 28.999999999999996（汐 #156）
+    return { usedPercent: Math.min(Math.round(u * 1000) / 10, 100), windowMinutes: minutes, resetsAt: resets(w.resetsAt) };
   };
   const windows = isObj(info.unifiedWindows) ? info.unifiedWindows : null;
   if (windows) {
@@ -266,9 +267,12 @@ export const claudeAccountOf = (profile: Profile): string | null =>
  *   { is_available: true, balance_infos: [{ currency: "CNY", total_balance: "110.00", granted_balance, topped_up_balance }] }
  * 有 CNY 用 CNY，否则第一项；total_balance 原样当金额（格式对不上就 null）。订阅窗口一律 null
  */
-export function mapDeepSeekBalance(body: unknown, readAt: Date): RemoteProfileQuota {
+export function mapDeepSeekBalance(body: unknown, readAt: Date, log: (m: string) => void = () => {}): RemoteProfileQuota {
   const out: RemoteProfileQuota = { ...unknownQuota(readAt), balance: null };
   if (!isObj(body) || !Array.isArray(body.balance_infos)) return out;
+  // is_available = false：账号现在不能调 API（停用 / 冻结），但契约里没有「不可用」这一态，硬说成余额 0 不对；
+  // 余额照报，记一行日志，真跑时由 Run 的 quota_exhausted 兜（汐 #156）
+  if (body.is_available === false) log("[agent-server] deepseek balance: is_available=false (account cannot call the API right now)");
   const infos = body.balance_infos.filter(isObj);
   const pick = infos.find((i) => i.currency === "CNY") ?? infos[0];
   if (!pick) return out;
@@ -298,7 +302,7 @@ export async function readDeepSeekBalance(profile: Profile, opts: QuotaReadOptio
       log(`[agent-server] quota read failed: balance HTTP ${res.status}`);
       return unknownQuota(now());
     }
-    return mapDeepSeekBalance(await res.json(), now());
+    return mapDeepSeekBalance(await res.json(), now(), log);
   } catch (err) {
     log(`[agent-server] quota read failed: balance ${errorText(err)}`);
     return unknownQuota(now());
