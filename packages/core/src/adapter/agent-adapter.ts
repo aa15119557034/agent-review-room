@@ -42,7 +42,9 @@ export interface AgentInput {
   /**
    * C-42a / C-42g：这次带给节点的图片（本体 base64 + sha256），和 imageSlot 成对出现：都传或都不传。
    * 调用方（main）按 Snapshot.attachments 从图片库读本体，imageSlot 原样取 Snapshot.imageSlot；
-   * Adapter 只负责原样放进 StartRun，不改 content、不重算清单。远端以外的 Adapter 不支持带图时应拒绝（error 终止事件），不能丢图继续跑。
+   * Adapter 只负责原样放进 StartRun，不改 content、不重算清单。
+   * - 带不带图由 main 判断（节点上报的能力 + 本次模型 vision 为 yes 才带），Adapter 不自行判断、不丢图
+   * - 只有一半（有 attachments 没 imageSlot，或反过来）时 Adapter 按 error 终止事件处理，不要猜
    */
   attachments?: StartRunAttachments;
   imageSlot?: AttachmentImageSlot;
