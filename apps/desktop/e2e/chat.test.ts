@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import { CHAT_PROMPT_VERSION } from "@room/core";
 import { insertChatRun, insertChatSnapshot, insertChatSummary, ulid } from "@room/db";
 import { CHAT_LIMITS, ChatHistorySummary, ChatRun, ChatSnapshot, type CommandRequest } from "@room/schemas";
 import { ANSWER_JSON, approveOf, draft, failure, makeE2E, sha, sleep, waitFor, waitRoundDone, type BatchLike, type E2E } from "./harness";
@@ -96,7 +97,7 @@ function summarize(h: E2E, conversationId: string, at: string, covered: string[]
     memorySlot: null,
     includedMessageIds: covered,
     includedSummaryIds: [],
-    adapterVersion: "chat-v4",
+    adapterVersion: CHAT_PROMPT_VERSION,
     tokenEstimate: 10,
     createdAt: at,
   });
@@ -352,6 +353,9 @@ describe("X-31 撤回", () => {
       await ok(h, { type: "chat.retract", messageId: secret.messageId });
       const listed = (await h.dispatcher.handleQuery({ type: "chat.summaries.list", conversationId: conv })) as Ok<{ id: string; state: string }[]>;
       assert.equal(listed.data.find((s) => s.id === coversSecret.id)?.state, "stale", "覆盖撤回消息的摘要变 stale");
+      // 现状：只覆盖秘书复述的摘要还是 current（markChatSummariesStale 只按用户消息 id 查），靠 core 排除兜住。
+      // 汐的后续补丁会把「回答这条消息的发言」一起标 stale，到时这里改成 "stale"
+      assert.equal(listed.data.find((s) => s.id === coversEcho.id)?.state, "current");
       assert.ok(
         h.events.some((e) => e.type === "chat.summary.updated" && e.summary.id === coversSecret.id && e.summary.state === "stale"),
         "推了 chat.summary.updated",
