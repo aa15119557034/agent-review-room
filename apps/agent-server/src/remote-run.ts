@@ -7,7 +7,15 @@ import { createParser, type OutputParser, type ParserOutput } from "./parsers";
 import { planSpawn } from "./win-command";
 import { buildArgs } from "./model-args";
 import { imageStdin } from "./images";
-import { collectArtifact, discardFresh, listFiles, type HeldArtifact } from "./image-artifact";
+import {
+  IMAGE_OUTPUT_DIR_ENV,
+  IMAGE_OUTPUT_DIR_PLACEHOLDER,
+  collectArtifact,
+  createRunOutputDir,
+  removeRunOutputDir,
+  runOutputDir,
+  type HeldArtifact,
+} from "./image-artifact";
 
 type SeqEvent = Exclude<RemoteEvent, { type: "heartbeat" }>;
 type Subscriber = (event: RemoteEvent) => void;
@@ -75,8 +83,8 @@ export class RemoteRun {
   private readonly limits: { idleTimeoutMs: number; totalTimeoutMs: number };
   private readonly input: string;
   private readonly extraArgs: readonly string[];
-  /** image Run：起跑前 outputDir 里已有的文件 */
-  private outputBefore: ReturnType<typeof listFiles> | undefined;
+  /** image Run：只属于这次 Run 的输出目录（建好之后才有） */
+  private outputDir: string | undefined;
   /** image Run 画好、还没被取走的图 */
   private held: HeldArtifact | undefined;
   private heldTimer: NodeJS.Timeout | undefined;
@@ -114,15 +122,23 @@ export class RemoteRun {
     );
     this.resetIdle();
 
-    if (this.kind === "image" && this.profile.imageRun) this.outputBefore = listFiles(this.profile.imageRun.outputDir);
-
     let child: ChildProcess;
     try {
+      let args = [...buildArgs(this.profile, this.model), ...this.extraArgs];
+      const env = buildEnv(this.profile);
+      if (this.kind === "image" && this.profile.imageRun) {
+        // 每个 image Run 一个新目录，归属可证明；只从这里取图、只删这里（image-artifact.ts）
+        const dir = runOutputDir(this.profile.imageRun.outputDir, this.runId);
+        createRunOutputDir(dir);
+        this.outputDir = dir;
+        args = args.map((a) => a.replaceAll(IMAGE_OUTPUT_DIR_PLACEHOLDER, dir));
+        env[IMAGE_OUTPUT_DIR_ENV] = dir;
+      }
       // Windows 上 .cmd / .bat 会被包装成 cmd.exe /d /s /c "…"，见 win-command.ts
-      const plan = planSpawn(this.profile.command, [...buildArgs(this.profile, this.model), ...this.extraArgs]);
+      const plan = planSpawn(this.profile.command, args);
       child = spawn(plan.file, plan.args, {
         cwd: this.profile.cwd,
-        env: buildEnv(this.profile),
+        env,
         stdio: ["pipe", "pipe", "pipe"],
         detached: spawnDetached,
         windowsHide: true,
@@ -268,10 +284,10 @@ export class RemoteRun {
       this.finish({ outcome: "completed", exitCode: 0 });
       return;
     }
-    const dir = this.profile.imageRun?.outputDir;
+    const dir = this.outputDir;
     let got: HeldArtifact | { problem: string };
     try {
-      got = dir ? collectArtifact(dir, this.outputBefore ?? new Map()) : { problem: "profile has no imageRun.outputDir" };
+      got = dir ? collectArtifact(dir) : { problem: "image output directory was not created" };
     } catch (err) {
       got = { problem: `could not read generated image: ${(err as Error).message}` };
     }
@@ -290,11 +306,12 @@ export class RemoteRun {
   private finish(result: RemoteTerminal): void {
     if (this.isFinished) return; // 单次守卫：保证恰好一个 terminal
     this.terminal = result;
-    if (this.kind === "image" && result.outcome !== "completed" && this.profile.imageRun && this.outputBefore) {
+    // image Run 不管成败都删掉自己的目录（成功时图已经读进内存）；只删这次 Run 建的那个目录
+    if (this.outputDir) {
       try {
-        discardFresh(this.profile.imageRun.outputDir, this.outputBefore);
+        removeRunOutputDir(this.outputDir);
       } catch (err) {
-        console.error(`[agent-server] run ${this.runId}: could not clean image output`, err);
+        console.error(`[agent-server] run ${this.runId}: could not remove its image output directory`, err);
       }
     }
     this.clearTimers();

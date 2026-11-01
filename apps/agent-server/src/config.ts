@@ -67,7 +67,9 @@ const Profile = z
     fixedModelVision: VisionSupport.optional(),
     /**
      * S-23：画图 profile（契约 C-42b 的 kind = "image"）。只接受 image Run，不接受文字 Run。
-     * outputDir：CLI 把画好的图写到哪（Codex 是 <CODEX_HOME>/generated_images），相对路径相对配置文件
+     * outputDir：节点专用的根目录（相对路径相对配置文件）。每个 Run 在下面新建 `<runId>` 子目录，
+     * 用 args 里的 `{image-output-dir}` 或环境变量 ROOM_IMAGE_OUTPUT_DIR 告诉 CLI 把图写在那里；
+     * 节点只从这个子目录取图、只删这个子目录。不要指向 CLI 自己的共享目录（例如 $CODEX_HOME/generated_images）
      */
     imageRun: z.object({ outputDir: z.string().min(1) }).strict().optional(),
   })
@@ -199,5 +201,8 @@ export function imageConfigProblems(p: Profile): string[] {
   }
   if (p.imageRun && p.images) problems.push("画图 profile 不收图（image Run 不能带附件），不要同时配 images");
   if (p.imageRun && p.memory) problems.push("画图 profile 不读记忆");
+  if (!p.imageRun && p.args.some((a) => a.includes("{image-output-dir}"))) {
+    problems.push("args 里的 {image-output-dir} 只给画图 profile（配了 imageRun）用");
+  }
   return problems;
 }

@@ -1,48 +1,43 @@
 import { createHash } from "node:crypto";
-import { readdirSync, readFileSync, rmSync, statSync } from "node:fs";
+import { mkdirSync, readdirSync, readFileSync, rmSync, statSync } from "node:fs";
 import { join } from "node:path";
 import type { RemoteArtifact } from "@room/schemas";
 
 /**
  * S-23：image Run（契约 C-42b）画出来的图。
  *
- * CLI 把图写进 profile.imageRun.outputDir（Codex 是 $CODEX_HOME/generated_images，路径不由请求决定）。
- * 起跑前记下目录里已有的文件，进程正常结束后找新出现的图片文件，取最新的一张：
- * - 按文件头判断类型（只认 png / jpeg / webp），不看扩展名
- * - 最多 10 MB（RemoteArtifact 上限）
- * - 读进内存后把这次新出现的文件全部删掉（不在 CLI 的目录里越积越多）
+ * 归属必须能证明（林离 #131）：节点给每个 image Run 新建一个**只属于这次 Run** 的目录
+ * `<imageRun.outputDir>/<runId>`，通过 args 里的 `{image-output-dir}` 和环境变量 ROOM_IMAGE_OUTPUT_DIR 交给 CLI，
+ * 只从这个目录里取图，结束后只删这个目录。共享目录（例如 Codex 默认的 $CODEX_HOME/generated_images）
+ * 里的文件节点一概不碰：那里的文件归属证明不了。
+ * - 按文件头判断类型（只认 png / jpeg / webp），不看扩展名；最多 10 MB（RemoteArtifact 上限）
+ * - 目录里有多张时取最新的一张
  * 字节留在节点内存里，主控端用 artifacts 端点取回；取回后或结束超过 leaseMs 没人取就丢掉。
- * 同一个 profile 同时只跑一个 image Run（server.ts 里限制），所以「新出现的文件」不会混进别的 Run 的图。
  */
 
 export const ARTIFACT_MAX_BYTES = 10 * 1024 * 1024;
+export const IMAGE_OUTPUT_DIR_PLACEHOLDER = "{image-output-dir}";
+export const IMAGE_OUTPUT_DIR_ENV = "ROOM_IMAGE_OUTPUT_DIR";
 
 export interface HeldArtifact {
   meta: RemoteArtifact;
   bytes: Buffer;
 }
 
-type Listing = Map<string, number>; // 路径 → mtimeMs
+/** 这次 Run 的输出目录。runId 已按契约校验（run_ + ULID），不会带路径分隔符 */
+export function runOutputDir(root: string, runId: string): string {
+  if (!/^run_[0-9A-HJKMNP-TV-Z]{26}$/.test(runId)) throw new Error("unexpected runId");
+  return join(root, runId);
+}
 
-/** 递归列出目录里的文件。目录不存在 = 空 */
-export function listFiles(dir: string): Listing {
-  const out: Listing = new Map();
-  let names: string[];
-  try {
-    names = readdirSync(dir, { recursive: true }) as string[];
-  } catch {
-    return out;
-  }
-  for (const name of names) {
-    const p = join(dir, name);
-    try {
-      const s = statSync(p);
-      if (s.isFile()) out.set(p, s.mtimeMs);
-    } catch {
-      // 列目录和 stat 之间被删了，跳过
-    }
-  }
-  return out;
+/** 新建这次 Run 的目录；已经存在就失败（不接管别人的目录） */
+export function createRunOutputDir(dir: string): void {
+  mkdirSync(join(dir, ".."), { recursive: true });
+  mkdirSync(dir); // 不加 recursive：目录已存在会抛 EEXIST
+}
+
+export function removeRunOutputDir(dir: string): void {
+  rmSync(dir, { recursive: true, force: true });
 }
 
 export function sniffImageMime(b: Buffer): RemoteArtifact["mime"] | null {
@@ -52,42 +47,36 @@ export function sniffImageMime(b: Buffer): RemoteArtifact["mime"] | null {
   return null;
 }
 
-/**
- * 找这次新出现的图并取走。返回图，或者说明为什么没有（调用方报 error(incomplete_output)）。
- * 无论成败，这次新出现的文件都删掉
- */
-export function collectArtifact(dir: string, before: Listing): HeldArtifact | { problem: string } {
-  const now = listFiles(dir);
-  const fresh = [...now].filter(([p, m]) => before.get(p) !== m).sort((a, b) => b[1] - a[1]);
+/** 从这次 Run 自己的目录里取最新的一张图。只读这个目录；删除由调用方删整个目录 */
+export function collectArtifact(dir: string): HeldArtifact | { problem: string } {
+  let names: string[];
   try {
-    let tooLarge = false;
-    for (const [p] of fresh) {
-      let size: number;
-      try {
-        size = statSync(p).size;
-      } catch {
-        continue;
-      }
-      if (size > ARTIFACT_MAX_BYTES) {
-        tooLarge = true;
-        continue;
-      }
-      if (size === 0) continue;
-      const bytes = readFileSync(p);
-      const mime = sniffImageMime(bytes);
-      if (!mime) continue;
-      return {
-        meta: { sha256: createHash("sha256").update(bytes).digest("hex"), mime, bytes: bytes.length },
-        bytes,
-      };
-    }
-    return { problem: tooLarge ? "generated image is larger than 10 MB" : "no generated image found" };
-  } finally {
-    for (const [p] of fresh) rmSync(p, { force: true });
+    names = readdirSync(dir, { recursive: true }) as string[];
+  } catch {
+    return { problem: "image output directory is missing" };
   }
-}
-
-/** image Run 没正常完成（取消、超时、出错）：把这次新出现的文件删掉，不留在 CLI 的目录里 */
-export function discardFresh(dir: string, before: Listing): void {
-  for (const [p, m] of listFiles(dir)) if (before.get(p) !== m) rmSync(p, { force: true });
+  const files: Array<{ path: string; mtime: number; size: number }> = [];
+  for (const name of names) {
+    const path = join(dir, name);
+    try {
+      const s = statSync(path);
+      if (s.isFile()) files.push({ path, mtime: s.mtimeMs, size: s.size });
+    } catch {
+      // 列目录和 stat 之间被删了，跳过
+    }
+  }
+  files.sort((a, b) => b.mtime - a.mtime);
+  let tooLarge = false;
+  for (const f of files) {
+    if (f.size > ARTIFACT_MAX_BYTES) {
+      tooLarge = true;
+      continue;
+    }
+    if (f.size === 0) continue;
+    const bytes = readFileSync(f.path);
+    const mime = sniffImageMime(bytes);
+    if (!mime) continue;
+    return { meta: { sha256: createHash("sha256").update(bytes).digest("hex"), mime, bytes: bytes.length }, bytes };
+  }
+  return { problem: tooLarge ? "generated image is larger than 10 MB" : "no generated image found" };
 }

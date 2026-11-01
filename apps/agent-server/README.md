@@ -152,15 +152,15 @@ pnpm --filter @room/agent-server run vision-test -- claude-review --model claude
 pnpm --filter @room/agent-server run vision-test -- deepseek-discuss --model deepseek-flash
 ```
 
-每次随机画一张 6 位数字的测试图，按真 Run 的顺序交给 CLI，回答里的数字和图上完全一样才算通过（多一位少一位都不算）。每个模型连测 3 次，3 次都过才写 yes（云端用 Haiku 5.5 试过 6 次，有 1 次把一位数字认错）。不用先启动节点。最后打印一行 JSON 验收记录，贴到 PR 或 issue 里；通过了再把那个模型的 `"vision": "yes"` 写进配置，重启节点。
+每次随机画一张 6 位数字的测试图，按真 Run 的顺序交给 CLI，回答里的数字和图上完全一样才算通过（多一位少一位都不算）。每个模型连测 3 次，3 次都过才写 yes（云端用 Haiku 5.5 改版过程中跑过 9 次，有 2 次认错：一次把 0 认成 3，一次多读一位）。不用先启动节点。最后打印一行 JSON 验收记录，贴到 PR 或 issue 里；通过了再把那个模型的 `"vision": "yes"` 写进配置，重启节点。
 
 **画图 profile**（契约 C-42b，`kind: "image"`）：配了 `imageRun` 的 profile 只接画图 Run，别的 profile 不接画图 Run（`unsupported_kind`）。
 
-- `imageRun.outputDir`：CLI 把画好的图写在哪。Codex 是 `<CODEX_HOME>\generated_images`
-- 起跑前记下目录里已有的文件；进程正常结束后取新出现的最新一张（按文件头认 png / jpeg / webp，最多 10 MB），在终止事件里报 sha256、类型、字节数；没有图就是 `error(incomplete_output)`
-- 这次新出现的文件读完就删；取消、超时、出错时也删
-- 图留在节点内存里，主控端用 `GET /v1/runs/<runId>/artifacts/<sha256>`（要 Token）取一次，取完或结束后超过 `leaseMs` 没人取就丢掉
-- 同一个画图 profile 同时只画一张（第二张 `node_busy`），这样「新出现的文件」不会认错
+- `imageRun.outputDir`：节点专用的根目录。每个画图 Run 在下面新建一个 `<runId>` 子目录（已存在就不接管，报 `spawn_failed`），通过 args 里的 `{image-output-dir}` 或环境变量 `ROOM_IMAGE_OUTPUT_DIR` 告诉 CLI 把图写在那里
+- 只从这次 Run 自己的子目录里取图：进程正常结束后取最新的一张（按文件头认 png / jpeg / webp，最多 10 MB），在终止事件里报 sha256、类型、字节数；没有图就是 `error(incomplete_output)`
+- 结束时（不管成败）只删这次 Run 的子目录。根目录里别的文件、别的 Run 的子目录一概不碰，所以**不要把 outputDir 指向 CLI 自己的共享目录**（例如 Codex 的 `$CODEX_HOME\generated_images`：那里的文件证明不了是这次 Run 画的）
+- 同一个画图 profile 同时只画一张（第二张 `node_busy`，ADR-004 §3 Codex 一次一张）；不同 profile 可以共用根目录，各取各的
+- Codex 默认把图存在 `$CODEX_HOME\generated_images`，节点不去那里拿。要让 Codex 把图放进这次 Run 的目录，候选做法是 `codex exec -C {image-output-dir} --sandbox workspace-write …` 并在画图指令里让它把图复制到工作目录，**待主控机实测**
 
 ## 安全
 
@@ -197,7 +197,7 @@ pnpm --filter @room/agent-server run vision-test -- deepseek-discuss --model dee
 ## 测试
 
 ```bash
-pnpm --filter @room/agent-server test     # 122 个
+pnpm --filter @room/agent-server test     # 125 个
 ```
 
 Windows 相关逻辑（`.cmd` 包装、taskkill 参数）用注入的模拟环境测试；`claude` 用 `test/fixtures/fake-claude.mjs`、`codex` 用 `test/fixtures/fake-codex.mjs` 模拟；`deepseek-chat.mjs` 对着测试里起的假 DeepSeek 服务跑（不联网、不用真 Key）。

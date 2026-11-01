@@ -224,7 +224,7 @@ export function createAgentServer(cfg: ServerConfig, token: string): AgentServer
     if (activeCount() >= cfg.maxConcurrentRuns) {
       throw new HttpError(429, "node_busy", "node is at maxConcurrentRuns");
     }
-    // 画图一个 profile 同时只跑一张：图是按「输出目录里新出现的文件」认的，两张同时画分不清是谁的
+    // 画图一个 profile 同时只跑一张（ADR-004 §3：Codex 一次一张）。图的归属靠每个 Run 自己的目录，不靠这条限制
     if (kind === "image" && [...runs.values()].some((r) => !r.isFinished && r.profileId === reqBody.profileId)) {
       throw new HttpError(429, "node_busy", "this image profile is already drawing");
     }

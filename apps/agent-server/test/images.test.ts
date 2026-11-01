@@ -1,7 +1,7 @@
 import { after, before, describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { createHash, randomInt } from "node:crypto";
-import { existsSync, mkdtempSync, readdirSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { AddressInfo } from "node:net";
@@ -28,11 +28,15 @@ const PNG = Buffer.concat([Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a
 
 /** 回显：第一行是参数，后面是 stdin 原样 */
 const ECHO = `process.stdout.write(JSON.stringify(process.argv.slice(1))+"\\n");process.stdin.pipe(process.stdout)`;
-/** 画图：读完 stdin 后往 argv[1] 写一张 png（带进程号，避免重名） */
-const DRAW = (delayMs: number) =>
-  `process.stdin.resume();process.stdin.on("end",()=>setTimeout(()=>{require("fs").writeFileSync(require("path").join(process.argv[1],"img-"+process.pid+".png"),Buffer.from("${PNG.toString("base64")}","base64"));console.log("drew")},${delayMs}))`;
+/** 一张假 PNG，正文带标签，好区分是谁画的 */
+const pngOf = (label: string) => Buffer.concat([PNG.subarray(0, 8), Buffer.from(`fake png body ${label}`)]);
+/** 画图：读完 stdin 后往 argv[1]（节点给的这次 Run 的目录）写一张 png */
+const DRAW = (delayMs: number, label = "") =>
+  `process.stdin.resume();process.stdin.on("end",()=>setTimeout(()=>{require("fs").writeFileSync(require("path").join(process.argv[1],"img.png"),Buffer.from("${(label ? pngOf(label) : PNG).toString("base64")}","base64"));console.log("drew")},${delayMs}))`;
 /** 画到一半：先写图再一直等（用来测取消后清理） */
-const DRAW_AND_HANG = `require("fs").writeFileSync(require("path").join(process.argv[1],"half-"+process.pid+".png"),"x");setTimeout(()=>{},60000)`;
+const DRAW_AND_HANG = `require("fs").writeFileSync(require("path").join(process.argv[1],"half.png"),"x");setTimeout(()=>{},60000)`;
+/** 节点替换成这次 Run 的目录 */
+const OUT = "{image-output-dir}";
 
 const model = (id: string, vision?: "yes" | "no" | "unknown") => ({
   id,
@@ -67,10 +71,19 @@ const cfg = ServerConfig.parse({
     },
     "fixed-untested": { command: NODE, args: ["-e", ECHO, "--"], cwd: process.cwd(), images: { input: "claude-stream-json" } },
     "no-delivery": { command: NODE, args: ["-e", ECHO, "--"], cwd: process.cwd(), fixedModelVision: "yes" },
-    draw: { command: NODE, args: ["-e", DRAW(0), outDir], cwd: process.cwd(), imageRun: { outputDir: outDir } },
-    "draw-slow": { command: NODE, args: ["-e", DRAW(300), outDir], cwd: process.cwd(), imageRun: { outputDir: outDir } },
+    draw: { command: NODE, args: ["-e", DRAW(0), OUT], cwd: process.cwd(), imageRun: { outputDir: outDir } },
+    "draw-slow": { command: NODE, args: ["-e", DRAW(300), OUT], cwd: process.cwd(), imageRun: { outputDir: outDir } },
     "draw-none": { command: NODE, args: ["-e", "process.stdin.resume()"], cwd: process.cwd(), imageRun: { outputDir: outDir } },
-    "draw-hang": { command: NODE, args: ["-e", DRAW_AND_HANG, outDir], cwd: process.cwd(), imageRun: { outputDir: outDir } },
+    "draw-hang": { command: NODE, args: ["-e", DRAW_AND_HANG, OUT], cwd: process.cwd(), imageRun: { outputDir: outDir } },
+    // 两个画图 profile 共用同一个根目录（林离 #131）
+    "draw-a": { command: NODE, args: ["-e", DRAW(300, "A"), OUT], cwd: process.cwd(), imageRun: { outputDir: outDir } },
+    "draw-b": {
+      command: NODE,
+      // 走环境变量拿目录
+      args: ["-e", DRAW(150, "B").replace("process.argv[1]", "process.env.ROOM_IMAGE_OUTPUT_DIR")],
+      cwd: process.cwd(),
+      imageRun: { outputDir: outDir },
+    },
   },
 });
 
@@ -157,7 +170,7 @@ describe("S-23 health", () => {
   it("reports attachments / image runs and the fixed model's vision", async () => {
     const res = await fetch(`${base}/v1/health`, { headers: auth });
     const h = NodeHealth.parse(await res.json());
-    assert.deepEqual(h.capabilities, { attachments: true, imageRuns: true, imageProfiles: ["draw", "draw-slow", "draw-none", "draw-hang"] });
+    assert.deepEqual(h.capabilities, { attachments: true, imageRuns: true, imageProfiles: ["draw", "draw-slow", "draw-none", "draw-hang", "draw-a", "draw-b"] });
     assert.equal(h.profileModels?.find((p) => p.profileId === "fixed-see")?.fixedModelVision, "yes");
     assert.equal(h.profileModels?.find((p) => p.profileId === "fixed-untested")?.fixedModelVision, undefined, "not tested = not reported");
     assert.equal(h.profileModels?.find((p) => p.profileId === "see")?.models.find((m) => m.id === "m-see")?.vision, "yes");
@@ -272,12 +285,12 @@ describe("S-23 image runs (kind: image)", () => {
     assert.deepEqual(await errorOf(await start(textRun("draw", { kind: "text" }))), { status: 400, error: "unsupported_kind" });
   });
 
-  it("completes with the artifact, serves it once by sha256, and removes the CLI's file", async () => {
+  it("completes with the artifact, serves it once by sha256, and removes the run's own directory", async () => {
     const b = textRun("draw", { kind: "image" });
     assert.equal((await start(b)).status, 202);
     const result = terminalOf(await readAll(b.runId));
     assert.deepEqual(result, { outcome: "completed", exitCode: 0, artifact: { sha256: sha(PNG), mime: "image/png", bytes: PNG.length } });
-    assert.deepEqual(readdirSync(outDir), [], "the CLI's output file is gone");
+    assert.deepEqual(readdirSync(outDir), [], "the run's directory is gone");
 
     assert.equal((await fetch(`${base}/v1/runs/${b.runId}/artifacts/${"0".repeat(64)}`, { headers: auth })).status, 404);
     const res = await fetch(`${base}/v1/runs/${b.runId}/artifacts/${sha(PNG)}`, { headers: auth });
@@ -317,12 +330,65 @@ describe("S-23 image runs (kind: image)", () => {
     const b = textRun("draw-hang", { kind: "image" });
     assert.equal((await start(b)).status, 202);
     const events = readAll(b.runId);
-    for (let i = 0; i < 50 && readdirSync(outDir).length === 0; i++) await new Promise((r) => setTimeout(r, 20));
-    assert.equal(readdirSync(outDir).length, 1, "the fake CLI wrote its half image");
+    const half = join(outDir, b.runId, "half.png");
+    for (let i = 0; i < 50 && !existsSync(half); i++) await new Promise((r) => setTimeout(r, 20));
+    assert.ok(existsSync(half), "the fake CLI wrote its half image into the run's own directory");
     await fetch(`${base}/v1/runs/${b.runId}/cancel`, { method: "POST", headers: auth, body: "{}" });
     assert.equal(terminalOf(await events).outcome, "cancelled");
     assert.deepEqual(readdirSync(outDir), []);
-    assert.ok(!existsSync(join(outDir, "half.png")));
+  });
+
+  it("林离 #131: files other processes write or change next to the run are never taken or deleted", async () => {
+    const manual = join(outDir, "manual.png");
+    const old = join(outDir, "old.png");
+    writeFileSync(old, pngOf("old"));
+    try {
+      const b = textRun("draw-slow", { kind: "image" });
+      assert.equal((await start(b)).status, 202);
+      // Run 期间：别人新画一张、改写一张原有的
+      writeFileSync(manual, pngOf("manual, newer than the run's image"));
+      const later = new Date(Date.now() + 60_000);
+      utimesSync(manual, later, later); // 比这次 Run 画的图还新
+
+      writeFileSync(old, pngOf("old, rewritten"));
+      const result = terminalOf(await readAll(b.runId));
+      assert.equal(result.outcome === "completed" && result.artifact?.sha256, sha(PNG), "only the run's own image");
+      assert.deepEqual(readFileSync(manual), pngOf("manual, newer than the run's image"));
+      assert.deepEqual(readFileSync(old), pngOf("old, rewritten"));
+      assert.deepEqual(readdirSync(outDir).sort(), ["manual.png", "old.png"]);
+    } finally {
+      rmSync(manual, { force: true });
+      rmSync(old, { force: true });
+    }
+  });
+
+  it("林离 #131: two image profiles sharing a root draw at once and each gets its own image", async () => {
+    const a = textRun("draw-a", { kind: "image" });
+    const b = textRun("draw-b", { kind: "image" });
+    assert.equal((await start(a)).status, 202);
+    assert.equal((await start(b)).status, 202);
+    const [ra, rb] = await Promise.all([readAll(a.runId), readAll(b.runId)]);
+    const shaOf = (es: RemoteEvent[]) => {
+      const t = terminalOf(es);
+      return t.outcome === "completed" ? t.artifact?.sha256 : t;
+    };
+    assert.equal(shaOf(ra), sha(pngOf("A")));
+    assert.equal(shaOf(rb), sha(pngOf("B")));
+    assert.deepEqual(readdirSync(outDir), []);
+  });
+
+  it("a run directory that already exists is not taken over", async () => {
+    const b = textRun("draw", { kind: "image" });
+    mkdirSync(join(outDir, b.runId));
+    writeFileSync(join(outDir, b.runId, "someone-else.png"), PNG);
+    try {
+      assert.equal((await start(b)).status, 202);
+      const result = terminalOf(await readAll(b.runId));
+      assert.equal(result.outcome === "error" && result.reason, "spawn_failed");
+      assert.ok(existsSync(join(outDir, b.runId, "someone-else.png")), "left alone");
+    } finally {
+      rmSync(join(outDir, b.runId), { recursive: true, force: true });
+    }
   });
 });
 
@@ -341,6 +407,8 @@ describe("S-23 config and stdin helpers", () => {
     assert.match(imageConfigProblems(p({ images: { input: "claude-stream-json" } })).join(), /parser/);
     assert.match(imageConfigProblems(p({ images: { input: "openai-content-json" } })).join(), /room-jsonl/);
     assert.match(imageConfigProblems(p({ imageRun: { outputDir: "o" }, images: { input: "claude-stream-json" }, parser: "claude-stream-json" })).join(), /不收图/);
+    assert.match(imageConfigProblems(p({ args: ["{image-output-dir}"] })).join(), /只给画图 profile/);
+    assert.deepEqual(imageConfigProblems(p({ args: ["{image-output-dir}"], imageRun: { outputDir: "o" } })), []);
   });
 
   it("default body limit fits the contract minimum", () => {
