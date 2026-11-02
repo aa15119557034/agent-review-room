@@ -2705,3 +2705,464 @@ select {
   color: var(--ink-soft);
   font-size: 13px;
 }
+
+/* ================================================================ 模型和思考强度（C-33b 第 3 次，草案「模型和思考强度」） */
+
+.effort {
+  gap: 8px;
+  padding: 14px;
+  border-radius: 20px;
+  background: var(--sheet);
+}
+
+.effort-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.effort .effort-label {
+  flex: 1 1 auto;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.effort-reset {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--fill);
+  color: var(--ink-soft);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.effort-level {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  min-height: 42px;
+}
+
+.effort .effort-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2f6feb;
+}
+
+.effort-level small {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+/* 轨道：44px 胶囊；填充到滑块中心，滑块是 40px 白圆 */
+.effort-track {
+  position: relative;
+  height: 44px;
+  border-radius: 22px;
+  background: #e5e5ea;
+  overflow: hidden;
+}
+
+@media (prefers-color-scheme: dark) {
+  .effort-track {
+    background: var(--fill);
+  }
+}
+
+.effort-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(44px + (100% - 44px) * var(--pos));
+  border-radius: 22px;
+  background: #2f6feb;
+  transition: width 0.35s var(--spring);
+}
+
+.effort-dots {
+  position: absolute;
+  inset: 0 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+}
+
+.effort-dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #aeaeb2;
+}
+
+.effort-dots i[data-on] {
+  background: rgb(255 255 255 / 0.75);
+}
+
+.effort .effort-track input[type="range"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 44px;
+  margin: 0;
+  background: none;
+}
+
+.effort .effort-track input[type="range"]::-webkit-slider-runnable-track,
+.effort[data-top="true"] .effort-track input[type="range"]::-webkit-slider-runnable-track {
+  height: 44px;
+  border-radius: 22px;
+  background: none;
+  box-shadow: none;
+  animation: none;
+}
+
+.effort .effort-track input[type="range"]::-webkit-slider-thumb {
+  width: 40px;
+  height: 40px;
+  margin-top: 2px;
+  box-shadow: 0 2px 8px rgb(20 20 30 / 0.22), 0 0 0 0.5px rgb(0 0 0 / 0.06);
+}
+
+.effort .effort-track input[type="range"]::-moz-range-track {
+  background: none;
+}
+
+.effort .effort-track input[type="range"]::-moz-range-thumb {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 8px rgb(20 20 30 / 0.22);
+}
+
+.effort .effort-track input[type="range"]:focus-visible {
+  outline-offset: -2px;
+}
+
+/*
+ * 最高一档：炫彩。整条填充是一条流动的彩虹渐变（两倍宽、首尾同色，平移一整段接得上），上面撒两层慢慢飘的星光；
+ * 档位字也用同一条彩虹流动。「减少动态效果」时只留静止的渐变。
+ */
+.effort[data-top="true"] .effort-fill {
+  background:
+    radial-gradient(circle, rgb(255 255 255 / 0.95) 0 1px, transparent 1.6px) 0 0 / 29px 44px,
+    radial-gradient(circle, rgb(255 255 255 / 0.6) 0 1.2px, transparent 1.8px) 11px 13px / 47px 44px,
+    linear-gradient(90deg, #ff5f6d, #ffb347, #f9f871, #4ade80, #38bdf8, #818cf8, #e879f9, #ff5f6d) 0 0 / 200% 100%;
+  box-shadow: 0 0 14px rgb(232 121 249 / 0.45), 0 0 24px rgb(56 189 248 / 0.3);
+  animation: effort-rainbow 3.2s linear infinite;
+}
+
+.effort[data-top="true"] .effort-dots i[data-on] {
+  background: rgb(255 255 255 / 0.9);
+}
+
+.effort[data-top="true"] .effort-track {
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.6) inset;
+}
+
+.effort[data-top="true"] .effort-value {
+  background: linear-gradient(90deg, #ff5f6d, #ffb347, #4ade80, #38bdf8, #818cf8, #e879f9, #ff5f6d) 0 0 / 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: effort-rainbow-text 3.2s linear infinite, effort-pop 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes effort-rainbow {
+  to {
+    background-position: 29px 0, -36px 13px, 200% 0;
+  }
+}
+
+@keyframes effort-rainbow-text {
+  to {
+    background-position: 200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .effort[data-top="true"] .effort-fill,
+  .effort[data-top="true"] .effort-value {
+    animation: none;
+  }
+}
+
+.effort-ticks {
+  display: none;
+}
+
+/* ================================================================ 秘书资料（C-33b 第 3 次，草案「秘书资料」） */
+
+.console-agent.profile {
+  display: grid;
+  gap: 12px;
+  max-width: 640px;
+  width: 100%;
+  margin: 0 auto;
+  padding-bottom: 24px;
+}
+
+.profile-head {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 12px 0 4px;
+  text-align: center;
+}
+
+.profile-avatar {
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 88px;
+  margin-bottom: 6px;
+  border-radius: 24px;
+  background: var(--agent);
+  color: #fff;
+  font-size: 40px;
+  font-weight: 600;
+}
+
+.profile-head h2 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.profile-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.profile-button {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  min-width: 88px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--sheet);
+  color: var(--agent);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.profile-button span {
+  font-size: 16px;
+}
+
+.profile-rows {
+  gap: 0;
+  padding: 0 16px;
+}
+
+.profile-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 50px;
+  padding: 0;
+  font-size: 15px;
+}
+
+.profile-rows > .profile-row + .profile-row,
+.profile-rows > .profile-row + details,
+.profile-rows > details + .profile-row {
+  border-top: 1px solid var(--rule);
+}
+
+.profile-row > span:first-child {
+  flex: 1 1 auto;
+}
+
+.profile-value {
+  color: var(--ink-soft);
+  text-align: right;
+}
+
+.profile-row-button {
+  width: 100%;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.profile-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-soft);
+}
+
+.profile-state::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ink-soft);
+}
+
+.profile-state[data-state="available"] {
+  color: var(--good, #2f7a4a);
+}
+
+.profile-state[data-state="available"]::before {
+  background: var(--good, #2f7a4a);
+}
+
+.profile-state[data-state="absent_quota"] {
+  color: var(--seal);
+}
+
+.profile-quota {
+  display: block;
+  min-height: 0;
+}
+
+.profile-quota summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 50px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.profile-quota summary::-webkit-details-marker {
+  display: none;
+}
+
+.profile-quota summary > span:first-child {
+  flex: 1 1 auto;
+}
+
+.profile-quota-body {
+  display: grid;
+  gap: 8px;
+  padding: 0 0 14px;
+}
+
+.profile-sub select {
+  max-width: 55%;
+  border: 0;
+  background: none;
+  color: var(--ink-soft);
+  font: inherit;
+  text-align: right;
+}
+
+.profile-swatches {
+  display: flex;
+  gap: 10px;
+}
+
+.profile-swatches button {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.profile-swatches button[aria-checked="true"] {
+  box-shadow: 0 0 0 2px var(--sheet), 0 0 0 4px currentColor;
+  color: var(--ink);
+}
+
+.console-group summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 2px;
+  cursor: pointer;
+}
+
+.console-group + .console-group {
+  border-top: 1px solid var(--rule);
+}
+
+/* 点一行弹出来的单（草案「模型和思考强度」：从下面推上来，圆角 28px） */
+.profile-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  align-items: end;
+  justify-items: center;
+  background: rgb(30 30 36 / 0.25);
+}
+
+.profile-sheet {
+  display: grid;
+  gap: 12px;
+  width: min(560px, 100%);
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 8px 16px calc(24px + env(safe-area-inset-bottom));
+  border-radius: 28px 28px 0 0;
+  background: var(--paper);
+  box-shadow: var(--shadow-pop);
+  animation: c33-pop 0.42s var(--spring) both;
+}
+
+@media (min-width: 721px) {
+  .profile-sheet-backdrop {
+    align-items: center;
+  }
+
+  .profile-sheet {
+    border-radius: 28px;
+  }
+}
+
+.profile-sheet-grip {
+  justify-self: center;
+  width: 40px;
+  height: 5px;
+  border-radius: 3px;
+  background: #c7c7cc;
+}
+
+.profile-sheet header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-sheet h2 {
+  flex: 1 1 auto;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.profile-done {
+  border-radius: 999px;
+}
+
+.profile-sheet .model-settings {
+  display: grid;
+  gap: 12px;
+}
+
+.profile-sheet .agent-editor {
+  border: 0;
+  background: var(--sheet);
+}
+
+.chat-memory-ctx {
+  margin-left: auto;
+  color: var(--ink-soft);
+}

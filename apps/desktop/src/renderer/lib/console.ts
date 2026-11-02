@@ -216,3 +216,32 @@ export function activityPreview(x: AgentActivityItem): { text: string; muted: bo
 export function substituteOptions(agents: readonly AgentProfile[], self: string): AgentProfile[] {
   return agents.filter((a) => a.id !== self && a.canDiscuss);
 }
+
+/** 历史按「项目」分组（C-33b，江浩：历史按项目分）：讨论按议题、聊天按会话；组按最近一条的先后，组内保持原顺序 */
+export interface ActivityGroup {
+  key: string;
+  title: string;
+  kind: "discussion" | "group" | "direct";
+  items: AgentActivityItem[];
+}
+
+export function groupActivity(items: readonly AgentActivityItem[], name: (agent: string) => string): ActivityGroup[] {
+  const out: ActivityGroup[] = [];
+  const byKey = new Map<string, ActivityGroup>();
+  for (const x of items) {
+    const key = x.kind === "discussion" ? `p:${x.projectId}` : `c:${x.conversation.id}`;
+    let g = byKey.get(key);
+    if (!g) {
+      g = {
+        key,
+        title: x.kind === "discussion" ? x.projectName : conversationTitle(x.conversation, name),
+        kind: x.kind === "discussion" ? "discussion" : x.conversation.kind === "group" ? "group" : "direct",
+        items: [],
+      };
+      byKey.set(key, g);
+      out.push(g);
+    }
+    g.items.push(x);
+  }
+  return out;
+}

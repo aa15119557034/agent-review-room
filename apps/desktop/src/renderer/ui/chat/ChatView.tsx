@@ -241,6 +241,7 @@ function ConversationPane() {
   const selecting = useAppState((s) => s.chat.selecting);
   const answering = useAppState((s) => runningSlots(s.chat).map((sl) => sl.agent));
   const agents = useAppState((s) => s.disc.agents);
+  const status = useAppState((s) => s.disc.status);
   const actions = useActions();
   const { name } = useNames();
   if (!conv) return <p className="chat-pane-empty">正在读取…</p>;
@@ -280,6 +281,13 @@ function ConversationPane() {
           <Icon name="memory" size={15} />
           <span>记忆：{direct.memorySource.nodeFolder ? `节点记忆文件夹（${nodeLabel(direct.nodeId)}）+ ` : ""}聊天记录</span>
           <span className="chat-memory-ro">只读</span>
+          {/* 上下文 % / 压缩次数从秘书页挪到会话里（C-33b）；后端报的是这位秘书的，不是单算这个会话的 */}
+          {status[direct.id]?.contextUsedPercent != null && (
+            <span className="chat-memory-ctx" title="这位秘书现在的上下文用量（节点报的）">
+              上下文 {Math.round(status[direct.id]!.contextUsedPercent!)}%
+              {status[direct.id]!.compactions ? ` · 压缩 ${status[direct.id]!.compactions} 次` : ""}
+            </span>
+          )}
         </p>
       )}
       <Timeline conv={conv} />
