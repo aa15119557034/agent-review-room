@@ -11,7 +11,8 @@ import {
   type WriteQueue,
 } from "@room/db";
 import { parseSummaryOutput, type AgentAdapter } from "@room/core";
-import type { AgentEvent, ControlEvent } from "@room/schemas";
+import type { AgentEvent, ControlEvent, RoomNoteRejectReason } from "@room/schemas";
+import type { NotesProvider } from "./notes";
 
 /**
  * Run 执行器（D-07）。
@@ -60,6 +61,8 @@ export interface OrchestratorDeps {
   /** 讨论室的 Run 收尾后回调（main 用它推 message.created / turn.updated …） */
   readonly onDiscussionSettled?: (settlement: DiscussionSettlement) => void;
   readonly emit: (event: ControlEvent) => void;
+  /** C-46：项目笔记（讨论室的答案里切 room-note） */
+  readonly notes?: NotesProvider;
   readonly getRun: (runId: string) => RunRow | undefined;
   readonly idleTimeoutMs?: number;
   readonly totalTimeoutMs?: number;
@@ -291,9 +294,10 @@ export class RunOrchestrator {
           planVersionId: finished.planVersionId,
         };
       } else {
+        const extracted = event.type === "completed" && completedText !== null ? this.#extractNote(completedText) : null;
         const terminal =
           event.type === "completed" && !emptyAnswer
-            ? ({ kind: "answered", text: completedText ?? "" } as const)
+            ? ({ kind: "answered", text: extracted === null ? (completedText ?? "") : extracted.text } as const)
             : emptyAnswer
               ? ({ kind: "failed", failureReason: "incomplete_output" } as const)
             : event.type === "timed_out"
@@ -302,6 +306,8 @@ export class RunOrchestrator {
                 ? ({ kind: "interrupted" } as const)
                 : failure ?? ({ kind: "failed", failureReason: "internal" } as const);
         const finished = await finishTurnFromRun(this.#deps.db, this.#deps.queue, { runId, terminal });
+        // D-46a：回答落库成功之后才记笔记（迟到 / 被取代的结果不会留下孤立笔记）
+        if (extracted !== null) this.#recordNote(discussion.turnId, extracted);
         settlement = {
           turnId: finished.turnId,
           roundId: finished.roundId,
@@ -337,6 +343,29 @@ export class RunOrchestrator {
   }
 
   /** 汇总产生的方案草稿的变化说明（1A 不做 diff，只写它来自哪一轮） */
+  /** C-46：从讨论室的回答里切 room-note；没接笔记服务就原样返回 */
+  #extractNote(text: string): { text: string; content: string | null; rejected: RoomNoteRejectReason | null } {
+    const notes = this.#deps.notes;
+    if (notes === undefined) return { text, content: null, rejected: null };
+    return notes.extract(text);
+  }
+
+  /** C-46：回答已经落库，现在记一版笔记（失败只记日志，不影响回答） */
+  #recordNote(turnId: string, extracted: { content: string | null; rejected: RoomNoteRejectReason | null }): void {
+    const notes = this.#deps.notes;
+    if (notes === undefined) return;
+    const row = this.#deps.db
+      .prepare("SELECT t.agent AS agent, r.project_id AS projectId FROM turns t JOIN rounds r ON r.id = t.round_id WHERE t.id = ?")
+      .get(turnId) as { agent: string; projectId: string } | undefined;
+    if (row === undefined) return;
+    const scope = { kind: "topic" as const, projectId: row.projectId };
+    if (extracted.content !== null) {
+      void notes.recordReply({ scope, agent: row.agent, content: extracted.content, source: { kind: "turn", id: turnId } });
+    } else if (extracted.rejected !== null) {
+      notes.reject({ scope, agent: row.agent, reason: extracted.rejected, source: { kind: "turn", id: turnId } });
+    }
+  }
+
   #roundChangeNote(turnId: string): string {
     const row = this.#deps.db
       .prepare("SELECT r.round_index AS round_index FROM turns t JOIN rounds r ON r.id = t.round_id WHERE t.id = ?")

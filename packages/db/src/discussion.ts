@@ -259,6 +259,8 @@ export interface RoundDraftPrompt {
   tokenEstimate: number;
   /** 这份内容和同批其他人不一样（只给他一个人的补充、额外信息） */
   differsFromOthers: boolean;
+  /** C-46：这份 Prompt 带上的项目笔记版本；null / 省略 = 没带 */
+  projectNoteId?: string | null;
 }
 
 export interface RoundDraftRecipient {
@@ -393,7 +395,7 @@ function insertBatchTx(
     const approvalId = newApprovalId();
     db.prepare(
       "INSERT INTO prompt_snapshots (id, project_id, content, content_hash, nonce, contribution_ids, task_instruction, " +
-        "reviewer_agent, adapter_version, token_estimate, created_at) VALUES (?, ?, ?, ?, ?, '[]', ?, ?, ?, ?, ?)",
+        "reviewer_agent, adapter_version, token_estimate, project_note_id, created_at) VALUES (?, ?, ?, ?, ?, '[]', ?, ?, ?, ?, ?, ?)",
     ).run(
       snapshotId,
       input.projectId,
@@ -404,6 +406,7 @@ function insertBatchTx(
       recipient.agent,
       prompt.adapterVersion,
       prompt.tokenEstimate,
+      prompt.projectNoteId ?? null,
       input.createdAt,
     );
 

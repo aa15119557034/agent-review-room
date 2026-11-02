@@ -692,6 +692,8 @@ export interface ChatSnapshotRow {
   attachments: string | null;
   /** C-42g / X-34b：带图时的图片位置标记（v15 才有的列；老行是 NULL） */
   image_slot: string | null;
+  /** C-46：这次带上的项目笔记版本（v20 才有的列；老行 / 没带笔记是 NULL） */
+  project_note_id: string | null;
   included_message_ids: string;
   included_summary_ids: string;
   adapter_version: string;
@@ -719,6 +721,7 @@ const toChatSnapshot = (row: ChatSnapshotRow): ChatSnapshot => {
   // 可选字段：不传和传 undefined 是两回事，数据库里 NULL 就是没有
   if (row.attachments !== null) snapshot.attachments = JSON.parse(row.attachments) as NonNullable<ChatSnapshot["attachments"]>;
   if (row.image_slot !== null) snapshot.imageSlot = row.image_slot as NonNullable<ChatSnapshot["imageSlot"]>;
+  if ((row.project_note_id ?? null) !== null) snapshot.projectNoteId = row.project_note_id;
   return snapshot;
 };
 
@@ -728,7 +731,7 @@ export function insertChatSnapshot(db: SqliteDatabase, snapshot: ChatSnapshot): 
   db.prepare(
     "INSERT INTO chat_snapshots (id, purpose, conversation_id, user_message_id, agent, content, content_hash, nonce, " +
       "memory_slot, attachments, image_slot, included_message_ids, included_summary_ids, adapter_version, token_estimate, " +
-      "created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "project_note_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
   ).run(
     parsed.id,
     parsed.purpose,
@@ -745,6 +748,7 @@ export function insertChatSnapshot(db: SqliteDatabase, snapshot: ChatSnapshot): 
     JSON.stringify(parsed.includedSummaryIds),
     parsed.adapterVersion,
     parsed.tokenEstimate,
+    parsed.projectNoteId ?? null,
     parsed.createdAt,
   );
 }

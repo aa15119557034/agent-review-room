@@ -35,6 +35,11 @@ export interface DiscussionRecipient {
   readonly onBehalfOf: AgentProfile["id"] | null;
   /** Material sent only to this recipient, such as an "only" supplement. */
   readonly extraMaterials: readonly DiscussionMaterial[];
+  /**
+   * C-46（ADR-005）：这位秘书在这个议题里的最新项目笔记；只给他自己那份，放进不可信边界。
+   * null / 不传 = 没有笔记；写摘要的 Prompt 不带笔记
+   */
+  readonly note?: { id: string; version: number; content: string } | null;
 }
 
 export interface DiscussionPromptInput {
@@ -55,6 +60,8 @@ export interface DiscussionPrompt extends Pick<
   "content" | "nonce" | "contentHash" | "tokenEstimate" | "adapterVersion"
 > {
   readonly compressedRounds: readonly CompressedRound[];
+  /** C-46：这份 Prompt 带上的项目笔记版本（写摘要 / 没有笔记时为 null） */
+  readonly projectNoteId: string | null;
   readonly differsFromOthers: boolean;
 }
 
@@ -153,6 +160,10 @@ function assemble(
   for (const material of recipient.extraMaterials) {
     blocks.push(block(input.nonce, `额外信息：${material.name}`, material.content));
   }
+  const note = purpose === "discussion" && recipient.note != null ? recipient.note : null;
+  if (note !== null) {
+    blocks.push(block(input.nonce, `项目笔记（第 ${note.version} 版）`, note.content));
+  }
   const humanTask = input.round.taskSource === "human";
   if (!humanTask) {
     blocks.push(block(input.nonce, "本轮任务", input.round.task));
@@ -203,6 +214,7 @@ function assemble(
     tokenEstimate: estimateTokens(content),
     adapterVersion: DISCUSSION_PROMPT_VERSION,
     compressedRounds: Object.freeze(compressedRounds),
+    projectNoteId: note === null ? null : note.id,
     differsFromOthers,
   });
 }
