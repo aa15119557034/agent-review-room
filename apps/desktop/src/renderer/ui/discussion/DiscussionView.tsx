@@ -46,7 +46,7 @@ export function DiscussionView({ notice }: { notice: ReactNode }) {
       <main className="disc-unavailable">
         {notice}
         <h1>讨论室还没有接上后端</h1>
-        <p>后端的讨论室功能（D-21）完成之前，可以先用顶栏的「单次评审」。开发界面时在地址后加 <code>?mock</code> 可以看演示数据。</p>
+        <p>后端的讨论室功能（D-21）还没接上。开发界面时在地址后加 <code>?mock</code> 可以看演示数据。</p>
       </main>
     );
   }

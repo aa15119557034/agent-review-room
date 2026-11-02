@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
 import { CHAT_LIMITS, type AgentChatMessage, type ChatMessage, type ChatReplySlot, type ChatRun, type Conversation, type UserChatMessage } from "@room/schemas";
 import {
   MEMORY_STATUS_LABEL,
@@ -10,7 +10,9 @@ import {
   currentConversation,
   draftOf,
   memoryBadge,
-  mentionHint,
+  mentionsFromText,
+  agentTitle,
+  timeBreaks,
   messageText,
   partialReplyText,
   previewText,
@@ -27,6 +29,8 @@ import { stripCharts } from "../../lib/media";
 import { draftContent } from "../../lib/chat-actions";
 import { ReplyBody } from "../Chart";
 import { useActions, useAppState } from "../hooks";
+import { Icon, type IconName } from "../Icon";
+import { RECOMMENDED_NODES } from "../../lib/presets";
 import {
   AgentMedia,
   AttachmentTray,
@@ -55,7 +59,7 @@ export function ChatView({ notice }: { notice: ReactNode }) {
       <main className="chat-unavailable">
         {notice}
         <h1>聊天还没上线</h1>
-        <p>后端还不认识聊天的命令。讨论室和单次评审照常可用。</p>
+        <p>后端还不认识聊天的命令。讨论室照常可用。</p>
       </main>
     );
   }
@@ -89,7 +93,13 @@ function useNow(intervalMs = 15_000): number {
 
 function useNames() {
   const disc = useAppState((s) => s.disc);
-  return { name: (id: string) => agentName(disc, id), color: (id: string) => agentColor(disc, id) };
+  const name = (id: string) => agentName(disc, id);
+  /** 草案：「C酱 · 首席秘书」 */
+  const nameWithTitle = (id: string) => {
+    const title = agentTitle(disc.agents.find((a) => a.id === id)?.roleNote ?? "");
+    return title ? `${name(id)} · ${title}` : name(id);
+  };
+  return { name, nameWithTitle, color: (id: string) => agentColor(disc, id) };
 }
 
 const agentStyle = (color: string) => ({ "--agent": color }) as CSSProperties;
@@ -98,6 +108,24 @@ function Avatar({ label, color }: { label: string; color: string }) {
   return (
     <span className="avatar" aria-hidden="true" style={agentStyle(color)}>
       {label.slice(0, 1)}
+    </span>
+  );
+}
+
+/** 群头像（画布草案）：成员的头像拼成 2×2 小方格，最多 4 格，不够的空着 */
+function GroupAvatar({ members, name, color }: { members: readonly string[]; name: (id: string) => string; color: (id: string) => string }) {
+  const cells = members.slice(0, 4);
+  return (
+    <span className="avatar avatar-group" aria-hidden="true">
+      {[0, 1, 2, 3].map((i) =>
+        cells[i] === undefined ? (
+          <span key={i} className="avatar-cell avatar-cell-empty" />
+        ) : (
+          <span key={i} className="avatar-cell" style={agentStyle(color(cells[i]!))}>
+            {name(cells[i]!).slice(0, 1)}
+          </span>
+        ),
+      )}
     </span>
   );
 }
@@ -131,6 +159,13 @@ function ConversationList() {
   const actions = useActions();
   const { name, color } = useNames();
   const now = useNow(60_000);
+  const [query, setQuery] = useState("");
+  const q = query.trim().toLowerCase();
+  // 草案：列表上面一个搜索框。只在已经读到的会话里找名字和最后一条，不另外查后端
+  const shown =
+    list && q
+      ? list.filter(({ conversation: conv, lastMessage }) => `${conversationTitle(conv, name)} ${previewText(lastMessage, name)}`.toLowerCase().includes(q))
+      : list;
   return (
     <nav className="chat-list" aria-label="会话">
       <header className="chat-list-head">
@@ -139,13 +174,19 @@ function ConversationList() {
           +
         </button>
       </header>
+      <label className="chat-search">
+        <Icon name="search" size={16} />
+        <input type="search" value={query} placeholder="搜索" aria-label="搜索聊天" onChange={(e) => setQuery(e.target.value)} />
+      </label>
       {list === null ? (
         <p className="chat-list-empty">正在读取…</p>
       ) : list.length === 0 ? (
         <p className="chat-list-empty">还没有会话。点右上角的 + 和一位秘书单聊，或者拉几位建群。</p>
+      ) : shown!.length === 0 ? (
+        <p className="chat-list-empty">没有找到「{query.trim()}」</p>
       ) : (
         <ul>
-          {list.map(({ conversation: conv, lastMessage, unreadCount, runningSlots }) => {
+          {shown!.map(({ conversation: conv, lastMessage, unreadCount, runningSlots }) => {
             const title = conversationTitle(conv, name);
             return (
               <li key={conv.id}>
@@ -156,7 +197,11 @@ function ConversationList() {
                   data-pinned={conv.pinned || undefined}
                   onClick={() => void actions.chat.openConversation(conv.id)}
                 >
-                  <Avatar label={conv.kind === "group" ? "群" : name(conv.members[0]!)} color={conv.kind === "group" ? "#566870" : color(conv.members[0]!)} />
+                  {conv.kind === "group" ? (
+                    <GroupAvatar members={conv.members} name={name} color={color} />
+                  ) : (
+                    <Avatar label={name(conv.members[0]!)} color={color(conv.members[0]!)} />
+                  )}
                   <span className="chat-list-main">
                     <span className="chat-list-title">
                       <b>{title}</b>
@@ -184,6 +229,7 @@ function ConversationList() {
           })}
         </ul>
       )}
+      <p className="chat-list-tip">聊天里只说话，不改文件。聊出想做的事，长按消息「转成议题」。</p>
     </nav>
   );
 }
@@ -193,29 +239,59 @@ function ConversationList() {
 function ConversationPane() {
   const conv = useAppState((s) => currentConversation(s.chat));
   const selecting = useAppState((s) => s.chat.selecting);
+  const answering = useAppState((s) => runningSlots(s.chat).map((sl) => sl.agent));
+  const agents = useAppState((s) => s.disc.agents);
   const actions = useActions();
   const { name } = useNames();
   if (!conv) return <p className="chat-pane-empty">正在读取…</p>;
+  const direct = conv.kind === "direct" ? agents.find((a) => a.id === conv.members[0]) : undefined;
+  const who = [...new Set(answering)];
+  // 草案：标题下一行小字。有人在答就写谁在答；单聊平时写「身份 · 在哪台电脑」
+  const sub = who.length
+    ? `${who.map(name).join("、")} 正在回答`
+    : direct
+      ? [agentTitle(direct.roleNote), nodeLabel(direct.nodeId)].filter(Boolean).join(" · ")
+      : "";
   return (
     <>
       <header className="chat-head">
         <button type="button" className="icon-button chat-back" aria-label="返回会话列表" onClick={actions.chat.closeConversation}>
           ‹
         </button>
-        <h2>
-          {conversationTitle(conv, name)}
-          {conv.kind === "group" && <span className="chat-list-count">（{conv.members.length + 1}）</span>}
-        </h2>
-        <span className="spacer" />
+        <div className="chat-head-title">
+          <h2>
+            {conversationTitle(conv, name)}
+            {conv.kind === "group" && <span className="chat-list-count">（{conv.members.length + 1}）</span>}
+          </h2>
+          {sub && <p className="chat-head-sub">{sub}</p>}
+        </div>
         <MediaHead />
+        {!selecting && (
+          <button type="button" className="button-pill chat-head-select" onClick={() => actions.chat.startSelect()}>
+            多选转议题
+          </button>
+        )}
         <button type="button" className="icon-button" aria-label="会话设置" onClick={() => actions.chat.openSheet({ kind: "settings" })}>
           ⋯
         </button>
       </header>
+      {direct && (
+        <p className="chat-memory-bar">
+          <Icon name="memory" size={15} />
+          <span>记忆：{direct.memorySource.nodeFolder ? `节点记忆文件夹（${nodeLabel(direct.nodeId)}）+ ` : ""}聊天记录</span>
+          <span className="chat-memory-ro">只读</span>
+        </p>
+      )}
       <Timeline conv={conv} />
       {selecting ? <SelectBar count={selecting.length} /> : <Composer conv={conv} />}
     </>
   );
+}
+
+/** 节点 id → 给人看的名字（「主控机」「你的电脑」）；没配就写「未配置节点」 */
+function nodeLabel(nodeId: string | null): string {
+  if (nodeId === null) return "未配置节点";
+  return RECOMMENDED_NODES.find((n) => n.id === nodeId)?.label ?? nodeId;
 }
 
 function Timeline({ conv }: { conv: Conversation }) {
@@ -224,10 +300,11 @@ function Timeline({ conv }: { conv: Conversation }) {
   const hasOlder = useAppState((s) => s.chat.nextCursor !== null);
   const runEvents = useAppState((s) => s.runEvents);
   const actions = useActions();
-  const { name, color } = useNames();
+  const { name, nameWithTitle, color } = useNames();
   const now = useNow();
   const ref = useRef<HTMLDivElement>(null);
   const stick = useRef(true);
+  const breaks = timeBreaks(entries.map((e) => e.message.createdAt));
   const liveText = live.map((sl) => (sl.runId ? (runEvents[sl.runId] ?? []).map((e) => (e.type === "message_delta" ? e.text : "")).join("") : ""));
 
   // 停在底部时，新消息和流式文字自动跟上；往上翻着看的时候不打扰
@@ -257,8 +334,15 @@ function Timeline({ conv }: { conv: Conversation }) {
         </p>
       )}
       <ol>
-        {entries.map((e) => (
-          <Entry key={e.message.id} entry={e} now={now} conv={conv} />
+        {entries.map((e, i) => (
+          <Fragment key={e.message.id}>
+            {breaks.has(i) && (
+              <li className="chat-time">
+                <time dateTime={e.message.createdAt}>{shortTime(e.message.createdAt, now)}</time>
+              </li>
+            )}
+            <Entry entry={e} now={now} conv={conv} />
+          </Fragment>
         ))}
         {live.map((sl, i) => {
           const text = partialReplyText(liveText[i] ?? "");
@@ -267,7 +351,7 @@ function Timeline({ conv }: { conv: Conversation }) {
               <Avatar label={name(sl.agent)} color={color(sl.agent)} />
               <div className="chat-bubble-wrap" style={agentStyle(color(sl.agent))}>
                 <div className="chat-meta">
-                  <b>{name(sl.agent)}</b> · 回答中
+                  <b>{nameWithTitle(sl.agent)}</b> · 回答中
                   <button type="button" className="button-link" onClick={() => void actions.chat.cancelReply(sl.id)}>
                     停
                   </button>
@@ -288,7 +372,7 @@ function Entry({ entry, now, conv }: { entry: TimelineEntry; now: number; conv: 
   const selecting = useAppState((s) => s.chat.selecting);
   const messages = useAppState((s) => s.chat.messages);
   const actions = useActions();
-  const { name, color } = useNames();
+  const { name, nameWithTitle, color } = useNames();
   const m = entry.message;
 
   if (entry.kind === "retracted") {
@@ -328,24 +412,15 @@ function Entry({ entry, now, conv }: { entry: TimelineEntry; now: number; conv: 
 
   if (entry.kind === "agent") {
     const am = entry.message;
-    const badge = memoryBadge(am);
+    // C-33b 收一收：「没用到记忆」不挂在每条上了，详情里照样能看
+    const badge = am.memoryEntriesUsed ? memoryBadge(am) : null;
     return (
       <li className="chat-row" data-side="agent" data-excluded={entry.excluded || undefined}>
         {check}
         <Avatar label={name(am.agent)} color={color(am.agent)} />
         <div className="chat-bubble-wrap" style={agentStyle(color(am.agent))}>
           <div className="chat-meta">
-            <b>{name(am.agent)}</b> · {shortTime(am.createdAt, now)}
-            {badge && (
-              <button
-                type="button"
-                className="chat-memory"
-                title="这次回答用到的记忆来源"
-                onClick={() => actions.chat.openSheet({ kind: "message", messageId: am.id })}
-              >
-                {badge}
-              </button>
-            )}
+            <b>{nameWithTitle(am.agent)}</b>
           </div>
           {entry.replyTo && <QuoteLine message={entry.replyTo} prefix="回复" />}
           <MessageMenu message={am} now={now}>
@@ -353,6 +428,16 @@ function Entry({ entry, now, conv }: { entry: TimelineEntry; now: number; conv: 
               <ReplyBody text={am.text} />
             </div>
           </MessageMenu>
+          {badge && (
+            <button
+              type="button"
+              className="chat-memory"
+              title="这次回答用到的记忆来源"
+              onClick={() => actions.chat.openSheet({ kind: "message", messageId: am.id })}
+            >
+              用到 {am.memoryEntriesUsed} 条记忆 · 查看
+            </button>
+          )}
           {!entry.excluded && <AgentMedia message={am} conv={conv} />}
           {entry.excluded && <p className="chat-note">你撤回了提问，这条回答之后不再发给秘书</p>}
         </div>
@@ -366,28 +451,32 @@ function Entry({ entry, now, conv }: { entry: TimelineEntry; now: number; conv: 
     <li className="chat-row" data-side="user">
       {check}
       <div className="chat-bubble-wrap">
-        <div className="chat-meta">
-          {shortTime(um.createdAt, now)}
-          {entry.reedited && <span className="tag">已重新编辑</span>}
-          {um.replyAsVoice && <span className="tag" title="这条的回答会合成语音">要语音回</span>}
-          <Mentions message={um} />
-        </div>
         {quoted && <QuoteLine message={quoted} prefix="引用" />}
         <MessageMenu message={um} now={now}>
           <UserContent message={um} />
         </MessageMenu>
+        {(entry.reedited || um.replyAsVoice) && (
+          <p className="chat-note chat-user-note">
+            {[entry.reedited && "已重新编辑", um.replyAsVoice && "回答会用语音发"].filter(Boolean).join(" · ")}
+          </p>
+        )}
         <ImagesSeenLine message={um} slots={entry.slots} />
         {um.state !== "retracted" && <UserDraws message={um} conv={conv} />}
         <SlotLine slots={entry.slots} />
       </div>
+      <UserAvatar />
     </li>
   );
 }
 
-function Mentions({ message }: { message: UserChatMessage }) {
-  const { name } = useNames();
-  if (message.mentions.kind === "none") return null;
-  return <span className="chat-mentions">@{message.mentions.kind === "all" ? "所有人" : message.mentions.agents.map(name).join(" @")}</span>;
+/** 你的头像：草案里在你的气泡右边，名字的第一个字（appearance.userDisplayName；读不到写「我」） */
+function UserAvatar() {
+  const label = useAppState((s) => s.appearance?.userDisplayName ?? "我");
+  return (
+    <span className="avatar avatar-me" aria-hidden="true">
+      {[...label][0]}
+    </span>
+  );
 }
 
 function QuoteLine({ message, prefix }: { message: ChatMessage; prefix: string }) {
@@ -444,7 +533,8 @@ function MessageMenu({ message, now, children }: { message: ChatMessage; now: nu
 
   if (selecting) return <>{children}</>;
   const usable = selectableForTopic(message, messages);
-  const item = (label: string, run: () => void, disabled = false) => (
+  // 草案「长按消息」：一排图标 + 字。转发先不做（江浩 2026-11-02）
+  const item = (icon: IconName, label: string, run: () => void, disabled = false) => (
     <button
       type="button"
       role="menuitem"
@@ -455,6 +545,7 @@ function MessageMenu({ message, now, children }: { message: ChatMessage; now: nu
         run();
       }}
     >
+      <Icon name={icon} size={20} />
       {label}
     </button>
   );
@@ -490,12 +581,13 @@ function MessageMenu({ message, now, children }: { message: ChatMessage; now: nu
       </button>
       {open && (
         <div className="chat-menu" role="menu" onClick={(e) => e.stopPropagation()}>
-          {item("复制", () => void navigator.clipboard?.writeText(messageText(message)))}
-          {item("引用", () => actions.chat.quote(message.id), !usable)}
-          {item("多选", () => actions.chat.startSelect(message.id), !usable)}
-          {item("照这条画一张", () => actions.chat.media.openDrawCard(message.id, stripCharts(messageText(message)).slice(0, 1000)), !usable)}
-          {canRetract(message, now) && item("撤回", () => void actions.chat.retract(message.id))}
-          {item("详情", () => actions.chat.openSheet({ kind: "message", messageId: message.id }))}
+          {item("copy", "复制", () => void navigator.clipboard?.writeText(messageText(message)))}
+          {item("quote", "引用", () => actions.chat.quote(message.id), !usable)}
+          {item("select", "多选", () => actions.chat.startSelect(message.id), !usable)}
+          {item("topic", "转议题", () => actions.chat.startSelect(message.id), !usable)}
+          {item("draw", "画一张", () => actions.chat.media.openDrawCard(message.id, stripCharts(messageText(message)).slice(0, 1000)), !usable)}
+          {canRetract(message, now) && item("undo", "撤回", () => void actions.chat.retract(message.id))}
+          {item("info", "详情", () => actions.chat.openSheet({ kind: "message", messageId: message.id }))}
         </div>
       )}
     </div>
@@ -509,9 +601,11 @@ function Composer({ conv }: { conv: Conversation }) {
   const messages = useAppState((s) => s.chat.messages);
   const importing = useAppState((s) => s.chat.media.voiceImporting[conv.id] === true);
   const actions = useActions();
-  const { name } = useNames();
+  const { name, color } = useNames();
   const [picker, setPicker] = useState(false);
   const [stickers, setStickers] = useState(false);
+  const [more, setMore] = useState(false);
+  const [voiceMode, setVoiceMode] = useState(false);
   const input = useRef<HTMLTextAreaElement>(null);
   const quoted = draft.quoteMessageId ? messages.find((m) => m.id === draft.quoteMessageId) : undefined;
   const isGroup = conv.kind === "group";
@@ -525,19 +619,19 @@ function Composer({ conv }: { conv: Conversation }) {
     if (!canSend) return;
     setPicker(false);
     setStickers(false);
+    setMore(false);
     void actions.chat.send();
   };
 
-  /** 在 @ 选择框里选了一项：把刚打的「@」补成「@名字 」（只是给人看的），结构化的点名才算数 */
+  /** 在 @ 名单里点了一项：把刚打的「@」补成「@名字 」。点名就从正文认，所以补上字就算点了 */
   const pick = (who: "all" | string) => {
     const el = input.current;
     const label = who === "all" ? "所有人" : name(who);
     const pos = el?.selectionStart ?? draft.text.length;
     const before = draft.text.slice(0, pos);
-    const text = before.endsWith("@") ? `${before}${label} ${draft.text.slice(pos)}` : draft.text;
+    const text = before.endsWith("@") ? `${before}${label} ${draft.text.slice(pos)}` : `${before}@${label} ${draft.text.slice(pos)}`;
     actions.chat.setDraftText(text);
-    const already = who === "all" ? draft.mentions.kind === "all" : draft.mentions.kind === "agents" && draft.mentions.agents.includes(who);
-    if (!already) actions.chat.toggleMention(who);
+    actions.chat.setMentions(mentionsFromText(text, conv.members, name));
     setPicker(false);
     requestAnimationFrame(() => el?.focus());
   };
@@ -556,8 +650,18 @@ function Composer({ conv }: { conv: Conversation }) {
     }
   };
 
+  const fileDisabled = !!draft.voice || importing || tooManyFiles;
+  const recordDisabled = !!draft.voice || importing || draft.attachments.length > 0;
+  const hasText = draft.text.trim().length > 0 || draft.attachments.length > 0 || !!draft.voice;
+
+  /*
+   * 草案的输入区：
+   * - 桌面：一条圆角输入条 ——「＋」「表情」｜输入框｜黑色圆形发送
+   * - 手机：「语音 / 键盘」切换｜输入框（或「按住 说话」）｜表情｜「＋」（有字时变成「发送」）
+   * 「＋」里放图片、文件、录音和「回答用语音发」。
+   */
   return (
-    <form className="chat-composer" onSubmit={send}>
+    <form className="chat-composer" onSubmit={send} data-has-content={hasText || undefined} data-voice-mode={voiceMode || undefined}>
       {draft.replacesMessageId && (
         <p className="chat-composer-bar">
           重新编辑：发出去是一条新消息，显示在原来的位置
@@ -576,92 +680,101 @@ function Composer({ conv }: { conv: Conversation }) {
           </button>
         </p>
       )}
-      {isGroup && draft.mentions.kind !== "none" && (
-        <ul className="chat-chips" aria-label="点名">
-          {(draft.mentions.kind === "all" ? ["all"] : draft.mentions.agents).map((who) => (
-            <li key={who}>
-              @{who === "all" ? "所有人" : name(who)}
-              <button type="button" aria-label={`取消点名 ${who === "all" ? "所有人" : name(who)}`} onClick={() => actions.chat.toggleMention(who)}>
-                ×
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
       <AttachmentTray conv={conv} />
       <VoiceDraft />
       {stickers && <StickerPanel onClose={() => setStickers(false)} />}
-      <div className="chat-tools" role="toolbar" aria-label="附件和语音">
-        <button type="button" className="tool-button" disabled={!!draft.voice || importing || tooManyFiles} onClick={() => void actions.chat.media.pickAttachment("image")}>
-          🖼 图片
-        </button>
-        <button type="button" className="tool-button" disabled={!!draft.voice || importing || tooManyFiles} onClick={() => void actions.chat.media.pickAttachment("file")}>
-          📎 文件
-        </button>
-        <RecordButton key={conv.id} disabled={!!draft.voice || importing || draft.attachments.length > 0} />
-        <button type="button" className="tool-button" aria-expanded={stickers} onClick={() => setStickers((v) => !v)}>
-          ☺ 表情
-        </button>
-        <span className="spacer" />
-        <label className="voice-toggle" title="打开后，这条消息的回答都会用语音发（在主控机本地合成）。你在话里说「用语音回我」也会自动打开">
-          <input type="checkbox" checked={draft.replyAsVoice} onChange={(e) => actions.chat.media.setReplyAsVoice(e.target.checked)} />
-          用语音回
-        </label>
-      </div>
-      <div className="chat-input-row" hidden={!!draft.voice}>
-        <textarea
-          ref={input}
-          rows={1}
-          value={draft.text}
-          placeholder={isGroup ? "说点什么，打 @ 点名" : "说点什么"}
-          aria-label="消息"
-          onChange={(e) => {
-            const text = e.target.value;
-            const pos = e.target.selectionStart ?? text.length;
-            actions.chat.setDraftText(text);
-            // 刚打了一个 @ 就弹出成员选择
-            if (isGroup && text.length > draft.text.length && text[pos - 1] === "@") setPicker(true);
-          }}
-          onKeyDown={onKey}
-        />
-        <button type="submit" className="button-primary" disabled={!canSend}>
-          发送
-        </button>
-        {picker && isGroup && (
-          <div className="chat-picker" role="listbox" aria-label="点名谁必须回答">
-            <button type="button" role="option" aria-selected={draft.mentions.kind === "all"} onClick={() => pick("all")}>
-              所有人
-            </button>
-            {conv.members.map((a) => (
-              <button
-                key={a}
-                type="button"
-                role="option"
-                aria-selected={draft.mentions.kind === "agents" && draft.mentions.agents.includes(a)}
-                onClick={() => pick(a)}
-              >
-                {name(a)}
-              </button>
-            ))}
-            <button type="button" className="chat-picker-close" onClick={() => setPicker(false)}>
-              不点名
-            </button>
-          </div>
-        )}
-      </div>
-      {draft.voice && (
-        <div className="chat-input-row chat-voice-send">
-          <span className="spacer" />
-          <button type="button" className="button-primary" disabled={!canSend} onClick={() => send()}>
-            发送语音
+      {more && (
+        <div className="chat-more" role="menu" aria-label="更多">
+          <button type="button" role="menuitem" disabled={fileDisabled} onClick={() => (setMore(false), void actions.chat.media.pickAttachment("image"))}>
+            <Icon name="image" size={26} />
+            图片
+          </button>
+          <button type="button" role="menuitem" disabled={fileDisabled} onClick={() => (setMore(false), void actions.chat.media.pickAttachment("file"))}>
+            <Icon name="folder" size={26} />
+            文件
+          </button>
+          <RecordButton key={conv.id} disabled={recordDisabled} variant="tile" />
+          <button
+            type="button"
+            role="menuitemcheckbox"
+            aria-checked={draft.replyAsVoice}
+            title="打开后，这条消息的回答都会用语音发（在主控机本地合成）。你在话里说「用语音回我」也会自动打开"
+            onClick={() => actions.chat.media.setReplyAsVoice(!draft.replyAsVoice)}
+          >
+            <Icon name="voice" size={26} />
+            {draft.replyAsVoice ? "语音回 · 开" : "用语音回"}
           </button>
         </div>
       )}
-      <p className="chat-hint">
-        {draft.replyAsVoice && "这条的回答会用语音发 · "}
-        {tooLong ? <span className="field-error">太长了：最多 {CHAT_LIMITS.textMaxChars} 字</span> : mentionHint(conv, isGroup ? draft.mentions : { kind: "none" }, name)}
-        {isGroup && draft.mentions.kind === "none" && /@\S/.test(draft.text) && " · 正文里打的 @ 不算点名，要从弹出的列表里选"}
-      </p>
+      <div className="chat-compose-main">
+        <button
+          type="button"
+          className="icon-tool tool-voice-mode"
+          aria-label={voiceMode ? "切换到键盘" : "切换到语音"}
+          onClick={() => setVoiceMode((v) => !v)}
+        >
+          <Icon name={voiceMode ? "keyboard" : "voice"} />
+        </button>
+        <button type="button" className="icon-tool tool-more" aria-expanded={more} aria-label="发送图片、文件" title="图片、文件、录音" onClick={() => setMore((v) => !v)}>
+          <Icon name="plus" />
+        </button>
+        <button type="button" className="icon-tool tool-emoji" aria-expanded={stickers} aria-label="表情" title="表情" onClick={() => setStickers((v) => !v)}>
+          <Icon name="emoji" />
+        </button>
+        {voiceMode && !draft.voice && (
+          <RecordButton key={`hold-${conv.id}`} disabled={recordDisabled} variant="hold" />
+        )}
+        <div className="chat-input-row" hidden={!!draft.voice || voiceMode}>
+          <textarea
+            ref={input}
+            rows={1}
+            value={draft.text}
+            placeholder={isGroup ? "说点什么…输入 @ 可以点名" : "说点什么…"}
+            aria-label="消息"
+            onChange={(e) => {
+              const text = e.target.value;
+              const pos = e.target.selectionStart ?? text.length;
+              actions.chat.setDraftText(text);
+              // 点名直接从正文认（打字 @ 就行，不用另外选）
+              if (isGroup) actions.chat.setMentions(mentionsFromText(text, conv.members, name));
+              // 刚打了一个 @ 就弹出成员名单，点一下帮你补上名字
+              if (isGroup && text.length > draft.text.length && text[pos - 1] === "@") setPicker(true);
+            }}
+            onKeyDown={onKey}
+          />
+          {picker && isGroup && (
+            <div className="chat-picker" role="listbox" aria-label="点名谁必须回答">
+              <button type="button" role="option" aria-selected={draft.mentions.kind === "all"} onClick={() => pick("all")}>
+                <span className="avatar avatar-sm avatar-all" aria-hidden="true">全</span>
+                所有人
+              </button>
+              {conv.members.map((a) => (
+                <button
+                  key={a}
+                  type="button"
+                  role="option"
+                  aria-selected={draft.mentions.kind === "agents" && draft.mentions.agents.includes(a)}
+                  onClick={() => pick(a)}
+                >
+                  <span className="avatar avatar-sm" style={{ background: color(a) }} aria-hidden="true">
+                    {[...name(a)][0]}
+                  </span>
+                  {name(a)}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        <button type="submit" className="chat-send" aria-label="发送" disabled={!canSend}>
+          <Icon name="send" size={20} />
+          <span className="chat-send-label">发送</span>
+        </button>
+      </div>
+      {tooLong && (
+        <p className="chat-hint">
+          <span className="field-error">太长了：最多 {CHAT_LIMITS.textMaxChars} 字</span>
+        </p>
+      )}
     </form>
   );
 }
@@ -674,6 +787,7 @@ function SelectBar({ count }: { count: number }) {
     const first = s.chat.messages.find((m) => s.chat.selecting?.includes(m.id));
     return first ? messageText(first).replace(/\s+/g, " ").slice(0, 30) : "";
   });
+  const [naming, setNaming] = useState(false);
   const [name, setName] = useState("");
   const [touched, setTouched] = useState(false);
   const value = touched ? name : firstText;
@@ -683,30 +797,44 @@ function SelectBar({ count }: { count: number }) {
     if (!count || !value.trim() || tooMany) return;
     void actions.chat.toTopic(value.trim());
   };
+  // 草案：底部一条「取消 · 已选 N 条 · → 转成议题」；起名放到点了「转成议题」之后
   return (
-    <form className="chat-selectbar" onSubmit={submit}>
-      <p>
-        已选 {count} 条{tooMany && <span className="field-error">（最多 {CHAT_LIMITS.toTopicMaxMessages} 条）</span>}。转成议题后，这些消息作为初始材料，之后照讨论室流程盖章才会发出去。
-      </p>
-      <div className="chat-input-row">
-        <input
-          value={value}
-          maxLength={200}
-          placeholder="议题名称"
-          aria-label="议题名称"
-          onChange={(e) => {
-            setTouched(true);
-            setName(e.target.value);
-          }}
-        />
-        <button type="submit" className="button-primary" disabled={!count || !value.trim() || tooMany}>
-          转成议题
-        </button>
-        <button type="button" className="button-quiet" onClick={actions.chat.cancelSelect}>
+    <>
+      <div className="chat-selectbar">
+        <button type="button" className="button-pill" onClick={actions.chat.cancelSelect}>
           取消
         </button>
+        <span className="chat-selectbar-count">
+          已选 {count} 条{tooMany && <span className="field-error">（最多 {CHAT_LIMITS.toTopicMaxMessages} 条）</span>}
+        </span>
+        <button type="button" className="button-primary chat-selectbar-go" disabled={!count || tooMany} onClick={() => setNaming(true)}>
+          <Icon name="arrow" size={16} />
+          转成议题
+        </button>
       </div>
-    </form>
+      {naming && (
+        <Sheet title="转成议题" onClose={() => setNaming(false)}>
+          <form className="chat-sheet-body" onSubmit={submit}>
+            <label className="chat-field">
+              议题名称
+              <input
+                value={value}
+                maxLength={200}
+                autoFocus
+                onChange={(e) => {
+                  setTouched(true);
+                  setName(e.target.value);
+                }}
+              />
+            </label>
+            <p className="chat-note">这 {count} 条消息会作为议题的材料。创建议题不会发给任何人，之后照讨论室流程先看内容、再盖章。</p>
+            <button type="submit" className="button-primary" disabled={!value.trim() || tooMany}>
+              创建议题
+            </button>
+          </form>
+        </Sheet>
+      )}
+    </>
   );
 }
 

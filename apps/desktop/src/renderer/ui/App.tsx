@@ -97,11 +97,109 @@ function ReviewerSetupHint() {
 }
 
 function TopBar() {
+  return (
+    <>
+      <TopHeader />
+      <MainNav />
+    </>
+  );
+}
+
+/**
+ * C-33b 主导航（画布《1B 外观草案》）：桌面是左边一条竖着的玻璃栏，图标在上、字在下；
+ * 手机宽度变成底部悬浮的玻璃标签栏（样式在 theme-apple.css）。
+ */
+const NAV_ICONS = {
+  chat: <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4h0A1.5 1.5 0 0 1 4 14.5z" />,
+  room: (
+    <>
+      <path d="M5 19V9l7-5 7 5v10z" />
+      <path d="M10 19v-5h4v5" />
+    </>
+  ),
+  agents: (
+    <>
+      <circle cx="9" cy="9" r="3.2" />
+      <circle cx="16.5" cy="10" r="2.5" />
+      <path d="M3.5 19c.9-3 3-4.5 5.5-4.5s4.6 1.5 5.5 4.5" />
+      <path d="M15 15.2c2.3-.4 4.5.8 5.5 3.8" />
+    </>
+  ),
+  run: <path d="M8 5.5v13l10-6.5z" />,
+  world: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M3.5 12h17M12 3.5c2.4 2.4 3.5 5.2 3.5 8.5s-1.1 6.1-3.5 8.5c-2.4-2.4-3.5-5.2-3.5-8.5s1.1-6.1 3.5-8.5z" />
+    </>
+  ),
+  settings: (
+    <>
+      <circle cx="12" cy="12" r="3" />
+      <path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8" />
+    </>
+  ),
+} as const;
+
+function NavIcon({ name }: { name: keyof typeof NAV_ICONS }) {
+  return (
+    <svg className="topnav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {NAV_ICONS[name]}
+    </svg>
+  );
+}
+
+function MainNav() {
+  const view = useAppState((s) => s.view);
+  const actions = useActions();
+  return (
+    <nav className="topnav" aria-label="主导航">
+      <button type="button" aria-current={view === "chat" ? "page" : undefined} onClick={actions.goChat}>
+        <NavIcon name="chat" />
+        <span className="topnav-label">聊天</span>
+        <ChatUnread />
+      </button>
+      <button type="button" aria-current={view === "discussion" ? "page" : undefined} onClick={actions.goDiscussion}>
+        <NavIcon name="room" />
+        <span className="topnav-label">讨论室</span>
+        <DiscussionBadge />
+      </button>
+      <button type="button" aria-current={view === "console" ? "page" : undefined} onClick={() => void actions.agentConsole.open()}>
+        <NavIcon name="agents" />
+        <span className="topnav-label">秘书</span>
+      </button>
+      <button type="button" className="topnav-run" disabled title="阶段 1C">
+        <NavIcon name="run" />
+        <span className="topnav-label">执行</span>
+      </button>
+      {/* 江浩 2026-11-02：单次评审不再放导航，这个位置留给「世界」（以后做 AI 与现实交互），现在只占位 */}
+      <button type="button" className="topnav-world" disabled title="世界：以后做，AI 与现实世界交互">
+        <NavIcon name="world" />
+        <span className="topnav-label">世界</span>
+      </button>
+      <button
+        type="button"
+        className="topnav-settings"
+        aria-current={view === "settings" ? "page" : undefined}
+        onClick={() => (view === "settings" ? actions.closeSettings() : void actions.openSettings())}
+      >
+        <NavIcon name="settings" />
+        {/* 草案：手机上这一格叫「我」 */}
+        <span className="topnav-label">
+          <span className="label-desk">设置</span>
+          <span className="label-phone">我</span>
+        </span>
+      </button>
+    </nav>
+  );
+}
+
+function TopHeader() {
   const project = useAppState(currentProject);
   const status = useAppState((s) => s.status);
   const view = useAppState((s) => s.view);
-  const actions = useActions();
   const isMock = useIsMock();
+  // C-33b 收一收（江浩「界面还是太杂了」）：聊天、秘书页不要顶上那一行，标题在各自面板里
+  if (view === "chat" || view === "console") return null;
   return (
     <header className="topbar">
       <span className="wordmark">Agent 评审室</span>
@@ -117,32 +215,6 @@ function TopBar() {
           Reviewer：{status.reviewerConfigured ? status.reviewerAgent : "未设置节点"}
         </span>
       )}
-      <nav className="topnav" aria-label="主导航">
-        <button type="button" aria-current={view === "chat" ? "page" : undefined} onClick={actions.goChat}>
-          聊天
-          <ChatUnread />
-        </button>
-        <button type="button" aria-current={view === "discussion" ? "page" : undefined} onClick={actions.goDiscussion}>
-          讨论
-          <DiscussionBadge />
-        </button>
-        <button type="button" disabled title="阶段 1C">
-          执行
-        </button>
-        <button type="button" aria-current={view === "console" ? "page" : undefined} onClick={() => void actions.agentConsole.open()}>
-          秘书
-        </button>
-        <button type="button" aria-current={view === "desk" ? "page" : undefined} onClick={actions.goDesk}>
-          单次评审
-        </button>
-        <button
-          type="button"
-          aria-current={view === "settings" ? "page" : undefined}
-          onClick={() => (view === "settings" ? actions.closeSettings() : void actions.openSettings())}
-        >
-          设置
-        </button>
-      </nav>
     </header>
   );
 }

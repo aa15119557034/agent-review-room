@@ -425,6 +425,48 @@ export function mentionHint(conv: Conversation, mentions: ChatMentions, name: (a
   return "没点名：每位自己决定回不回";
 }
 
+/**
+ * C-33b（江浩 2026-11-02「@ 用打字 @ 就行了，不用单开」）：点名直接从正文里认。
+ * 正文里出现「@所有人」就是全员必答；出现「@名字」（成员的显示名）就是点了这位。
+ * 名字长的先匹配，免得「@汐汐」被当成「@汐」。认不出的 @ 不算点名。
+ */
+export function mentionsFromText(text: string, members: readonly string[], name: (agent: string) => string): ChatMentions {
+  if (text.includes("@所有人")) return { kind: "all" };
+  const byLength = [...members].sort((a, b) => name(b).length - name(a).length);
+  let rest = text;
+  const hits = new Set<string>();
+  for (const agent of byLength) {
+    const token = "@" + name(agent);
+    if (name(agent) && rest.includes(token)) {
+      hits.add(agent);
+      rest = rest.split(token).join(" ");
+    }
+  }
+  const agents = members.filter((a) => hits.has(a));
+  return agents.length ? { kind: "agents", agents } : { kind: "none" };
+}
+
+/**
+ * C-33b 草案里名字后面的身份（「C酱 · 首席秘书」）。契约里没有单独的字段，从讨论室人设里认「江浩的××秘书」
+ * 这类说法；认不出就不显示，不猜。
+ */
+export function agentTitle(roleNote: string): string | null {
+  const m = /的([\u4e00-\u9fa5]{1,4}秘书)/.exec(roleNote);
+  return m ? m[1]! : null;
+}
+
+/** 草案里时间不挂在每条消息上，而是隔一段（默认 5 分钟）在中间放一个时间。返回要在前面放时间的下标 */
+export function timeBreaks(createdAts: readonly string[], gapMs = 5 * 60_000): Set<number> {
+  const out = new Set<number>();
+  let prev = Number.NEGATIVE_INFINITY;
+  createdAts.forEach((at, i) => {
+    const t = Date.parse(at);
+    if (t - prev >= gapMs) out.add(i);
+    prev = t;
+  });
+  return out;
+}
+
 /** 改了群成员之后，草稿里点到的人可能已经不在群里了 */
 export function pruneMentions(m: ChatMentions, members: readonly string[]): ChatMentions {
   if (m.kind !== "agents") return m;

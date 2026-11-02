@@ -10,6 +10,7 @@ import { createMockBridge } from "./mock/mock-backend";
 import { App } from "./ui/App";
 import { AppProvider } from "./ui/hooks";
 import "./styles.css";
+import "./theme-apple.css";
 
 /**
  * 选择后端：
