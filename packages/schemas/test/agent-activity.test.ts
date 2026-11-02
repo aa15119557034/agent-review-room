@@ -25,11 +25,18 @@ describe("C-37a agents.activity", () => {
     assert.ok(AgentActivityItem.safeParse(disc).success);
     assert.ok(AgentActivityItem.safeParse({ ...disc, preview: null }).success);
     assert.equal(AgentActivityItem.safeParse({ ...disc, preview: "字".repeat(AGENT_ACTIVITY_PREVIEW_MAX + 1) }).success, false);
+    // 按码点数，不按 UTF-16 单元（林离 #163）：101～200 个 emoji 都合法，201 个不合法
+    for (const n of [101, AGENT_ACTIVITY_PREVIEW_MAX]) {
+      assert.ok(AgentActivityItem.safeParse({ ...disc, preview: "😀".repeat(n) }).success, `${n} emoji`);
+    }
+    assert.equal(AgentActivityItem.safeParse({ ...disc, preview: "😀".repeat(AGENT_ACTIVITY_PREVIEW_MAX + 1) }).success, false);
     assert.equal(AgentActivityItem.safeParse({ ...disc, extra: 1 }).success, false, "strict");
     // 汐 #157：列表里不带 partialText（最长 200 万字）
     assert.equal(AgentActivityItem.safeParse({ ...disc, turn: { ...turn, partialText: "半截" } }).success, false, "no partialText");
     const chat = { kind: "chat", conversation, slot, preview: null };
     assert.ok(AgentActivityItem.safeParse(chat).success);
+    assert.ok(AgentActivityItem.safeParse({ ...chat, preview: "😀".repeat(101) }).success, "chat preview counts code points too");
+    assert.equal(AgentActivityItem.safeParse({ ...chat, preview: "😀".repeat(AGENT_ACTIVITY_PREVIEW_MAX + 1) }).success, false);
     assert.equal(AgentActivityItem.safeParse({ ...chat, kind: "discussion" }).success, false);
   });
 

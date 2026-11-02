@@ -80,6 +80,16 @@ import { SpeechClip, VoiceOption, VoiceProfile } from "./speech";
 export const AGENT_ACTIVITY_PREVIEW_MAX = 200;
 
 /**
+ * 预览文字：按**码点**数（Array.from）限长，和 main 的截断口径一致。
+ * 不能用 z.string().max()——那是按 UTF-16 单元数，101 个 emoji 就是 202 个单元，会把 main 合法截出的预览拒掉（林离 #163）
+ */
+export const AgentActivityPreview = z
+  .string()
+  .refine((s) => Array.from(s).length <= AGENT_ACTIVITY_PREVIEW_MAX, {
+    message: `preview 最多 ${AGENT_ACTIVITY_PREVIEW_MAX} 个字符（按码点）`,
+  });
+
+/**
  * 一位秘书的一次「被问到」：讨论里的一个 Turn，或者聊天里的一个回答位（只有 purpose = reply 的；历史摘要 Run 不算）。
  * 只是把已有的记录换个角度列出来，不新增状态；结局以 turn.outcome / slot.outcome 为准，界面不自己推导。
  * - 替补代答：Turn.agent 是实际答的人，列在**他**的控制台里（onBehalfOf 写着代谁）；被替补的人那边不列
@@ -111,7 +121,7 @@ export const AgentActivityItem = z.discriminatedUnion("kind", [
       roundId: RoundId,
       roundIndex: Round.shape.index,
       turn: AgentActivityTurn,
-      preview: z.string().max(AGENT_ACTIVITY_PREVIEW_MAX).nullable(),
+      preview: AgentActivityPreview.nullable(),
     })
     .strict(),
   z
@@ -120,7 +130,7 @@ export const AgentActivityItem = z.discriminatedUnion("kind", [
       /** 整个会话（界面用它算显示名：title，或者成员名拼起来） */
       conversation: Conversation,
       slot: ChatReplySlot,
-      preview: z.string().max(AGENT_ACTIVITY_PREVIEW_MAX).nullable(),
+      preview: AgentActivityPreview.nullable(),
     })
     .strict(),
 ]);
