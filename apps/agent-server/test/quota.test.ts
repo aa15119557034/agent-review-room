@@ -202,6 +202,15 @@ describe("readCodexQuota against a fake app-server", () => {
     assert.ok(took >= CODEX_QUOTA_READ_TIMEOUT_MS - 50 && took < CODEX_QUOTA_READ_TIMEOUT_MS + 1000, `took ${took} ms`);
   });
 
+  it("envFiles unreadable → unknown, logged as env failed (not spawn failed), path only (汐 #164)", async () => {
+    const logs: string[] = [];
+    const q = await readCodexQuota(profile("ok", NORMAL, { envFiles: { SOME_KEY: join(dir, "no-such-env.txt") } }), { ...quiet, log: (m) => logs.push(m) });
+    assert.equal(q.fiveHour, null);
+    assert.equal(logs.length, 1);
+    assert.match(logs[0]!, /env failed: .*envFiles\.SOME_KEY/);
+    assert.doesNotMatch(logs[0]!, /spawn failed/);
+  });
+
   it("app-server exits early or the command is missing → unknown", async () => {
     assert.equal((await readCodexQuota(profile("exit"), quiet)).fiveHour, null);
     const missing = profile("ok", NORMAL, { command: join(dir, "no-such-codex") });
@@ -493,6 +502,11 @@ describe("S-21: DeepSeek balance", () => {
     // 安装脚本的形状：Key 不在 allowlist，改从 envFiles 读（envFiles 的文件存在性另有检查）
     assert.doesNotMatch(
       problems({ ds: { command: NODE, cwd: ".", envFiles: { DEEPSEEK_API_KEY: FAKE }, quota: { source: "deepseek-balance" } } }),
+      /envAllowlist 或 envFiles 要包含/,
+    );
+    // 写进 env 不算（env 不放密钥，汐 #164）
+    assert.match(
+      problems({ ds: { command: NODE, cwd: ".", env: { DEEPSEEK_API_KEY: "x" }, quota: { source: "deepseek-balance" } } }),
       /envAllowlist 或 envFiles 要包含/,
     );
     assert.match(problems({ c: { command: NODE, cwd: ".", quota: { source: "claude-stream" } } }), /parser 要是 claude-stream-json/);

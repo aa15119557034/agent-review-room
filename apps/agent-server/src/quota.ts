@@ -131,8 +131,14 @@ export function readCodexQuota(profile: Profile, opts: QuotaReadOptions = {}): P
     };
     const timer = setTimeout(() => finish(unknownQuota(now()), `timed out after ${timeoutMs} ms`), timeoutMs);
 
+    let env: NodeJS.ProcessEnv;
     try {
-      const env = buildProfileEnv(profile);
+      env = buildProfileEnv(profile);
+    } catch (err) {
+      finish(unknownQuota(now()), `env failed: ${errorText(err)}`);
+      return;
+    }
+    try {
       const plan = planSpawn(profile.command, quota.args);
       child = spawn(plan.file, plan.args, {
         cwd: profile.cwd,
