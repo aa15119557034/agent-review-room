@@ -2697,3 +2697,11 @@ select {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* @ 名单最后一项「不点名」：只关名单 */
+.chat-picker .chat-picker-close {
+  justify-content: center;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-soft);
+  font-size: 13px;
+}

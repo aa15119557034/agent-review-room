@@ -605,6 +605,8 @@ function Composer({ conv }: { conv: Conversation }) {
   const [picker, setPicker] = useState(false);
   const [stickers, setStickers] = useState(false);
   const [more, setMore] = useState(false);
+  /** ＋ 面板里正在录音：这时不收起面板（收起会把这段录音静默丢掉，汐 #174） */
+  const [recording, setRecording] = useState(false);
   const [voiceMode, setVoiceMode] = useState(false);
   const input = useRef<HTMLTextAreaElement>(null);
   const quoted = draft.quoteMessageId ? messages.find((m) => m.id === draft.quoteMessageId) : undefined;
@@ -619,7 +621,7 @@ function Composer({ conv }: { conv: Conversation }) {
     if (!canSend) return;
     setPicker(false);
     setStickers(false);
-    setMore(false);
+    if (!recording) setMore(false);
     void actions.chat.send();
   };
 
@@ -693,7 +695,7 @@ function Composer({ conv }: { conv: Conversation }) {
             <Icon name="folder" size={26} />
             文件
           </button>
-          <RecordButton key={conv.id} disabled={recordDisabled} variant="tile" />
+          <RecordButton key={conv.id} disabled={recordDisabled} variant="tile" onRecordingChange={setRecording} />
           <button
             type="button"
             role="menuitemcheckbox"
@@ -715,7 +717,15 @@ function Composer({ conv }: { conv: Conversation }) {
         >
           <Icon name={voiceMode ? "keyboard" : "voice"} />
         </button>
-        <button type="button" className="icon-tool tool-more" aria-expanded={more} aria-label="发送图片、文件" title="图片、文件、录音" onClick={() => setMore((v) => !v)}>
+        <button
+          type="button"
+          className="icon-tool tool-more"
+          aria-expanded={more}
+          aria-label="发送图片、文件"
+          title={recording ? "正在录音：先在面板里点「停」" : "图片、文件、录音"}
+          disabled={more && recording}
+          onClick={() => setMore((v) => !v)}
+        >
           <Icon name="plus" />
         </button>
         <button type="button" className="icon-tool tool-emoji" aria-expanded={stickers} aria-label="表情" title="表情" onClick={() => setStickers((v) => !v)}>
@@ -762,6 +772,10 @@ function Composer({ conv }: { conv: Conversation }) {
                   {name(a)}
                 </button>
               ))}
+              {/* 鼠标用户点开名单又不想点名：关掉就行，打的 @ 留在正文里（汐 #174） */}
+              <button type="button" className="chat-picker-close" onClick={() => (setPicker(false), input.current?.focus())}>
+                不点名
+              </button>
             </div>
           )}
         </div>

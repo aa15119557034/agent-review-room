@@ -682,9 +682,26 @@ export function VoiceDraft() {
  * - tile：「＋」面板里的一格，点一下开始、再点一下停
  * - hold：手机切到语音后的「按住 说话」，按下开始、松手停（授权弹窗没回来前就松手了，录上后马上停）
  */
-export function RecordButton({ disabled, variant = "tile" }: { disabled?: boolean; variant?: "tile" | "hold" }) {
+/** 按住说话短于这个时长当成误触，不导入（webm 只录 0.1 秒也有几百字节的头，汐 #174） */
+const MIN_HOLD_MS = 300;
+
+export function RecordButton({
+  disabled,
+  variant = "tile",
+  onRecordingChange,
+}: {
+  disabled?: boolean;
+  variant?: "tile" | "hold";
+  /** 告诉外面正在录：＋ 面板录音时不让收起 */
+  onRecordingChange?: (recording: boolean) => void;
+}) {
   const actions = useActions();
   const [state, setState] = useState<"idle" | "recording" | "sending">("idle");
+  const onRecordingRef = useRef(onRecordingChange);
+  onRecordingRef.current = onRecordingChange;
+  useEffect(() => {
+    onRecordingRef.current?.(state === "recording");
+  }, [state]);
   const [elapsed, setElapsed] = useState(0);
   const [error, setError] = useState<string | null>(null);
   // 录音开始时就定下是哪个会话的（林离 #115）：之后切会话也只进这个会话的草稿
@@ -747,7 +764,8 @@ export function RecordButton({ disabled, variant = "tile" }: { disabled?: boolea
     recorder.ondataavailable = (e) => e.data.size && chunks.push(e.data);
     recorder.onstop = async () => {
       stream.getTracks().forEach((t) => t.stop());
-      if (entry.cancelled || !alive.current) return;
+      if (!alive.current) return;
+      if (entry.cancelled) return setState("idle");
       const blob = new Blob(chunks, { type: recorder.mimeType });
       if (blob.size === 0) return setState("idle");
       if (blob.size > CHAT_LIMITS.voiceImportMaxBytes) {
@@ -771,14 +789,18 @@ export function RecordButton({ disabled, variant = "tile" }: { disabled?: boolea
     setElapsed(0);
     setState("recording");
     if (releasedEarly.current) {
+      // 授权弹窗没回来就松手了：这一段算误触，不导入
       releasedEarly.current = false;
-      stop();
+      stop(true);
+      setError("按住说话，说完再松开");
     }
   }
 
-  function stop() {
+  /** discard：停下但不导入（误触、太短） */
+  function stop(discard = false) {
     const r = rec.current;
     if (!r) return;
+    if (discard) r.cancelled = true;
     clearInterval(r.timer);
     if (r.recorder.state !== "inactive") r.recorder.stop();
     rec.current = null;
@@ -800,6 +822,18 @@ export function RecordButton({ disabled, variant = "tile" }: { disabled?: boolea
         录音
       </>
     );
+  /** 按住说话松手：太短当误触丢掉；还在等授权就记下来，一录上就停 */
+  function release() {
+    const r = rec.current;
+    if (!r) {
+      if (starting.current) releasedEarly.current = true;
+      return;
+    }
+    const short = Date.now() - r.started < MIN_HOLD_MS;
+    stop(short);
+    if (short) setError("太短了，按住说话");
+  }
+
   if (variant === "hold") {
     return (
       <>
@@ -812,10 +846,16 @@ export function RecordButton({ disabled, variant = "tile" }: { disabled?: boolea
             if (e.button !== 0) return;
             e.currentTarget.setPointerCapture?.(e.pointerId);
             releasedEarly.current = false;
+            setError(null);
             void start();
           }}
-          onPointerUp={() => (rec.current ? stop() : (releasedEarly.current = true))}
-          onPointerCancel={() => (rec.current ? stop() : (releasedEarly.current = true))}
+          onPointerUp={release}
+          onPointerCancel={release}
+          onLostPointerCapture={release}
+          onPointerLeave={(e) => {
+            // 拿不到指针捕获时，手指拖出按钮再松手收不到 pointerup：移出就当松手（汐 #174）
+            if (!e.currentTarget.hasPointerCapture?.(e.pointerId)) release();
+          }}
           onContextMenu={(e) => e.preventDefault()}
         >
           {label}
