@@ -47,7 +47,7 @@ const note = (version = 1): ProjectNote => ({
   createdAt: NOW,
 });
 
-function harness(options: { private?: boolean } = {}) {
+function harness(options: { private?: boolean; hangPut?: boolean; requestTimeoutMs?: number } = {}) {
   const dir = mkdtempSync(join(tmpdir(), "room-github-"));
   dirs.push(dir);
   const db = openDatabase(join(dir, "test.db"));
@@ -77,6 +77,7 @@ function harness(options: { private?: boolean } = {}) {
       return sha === undefined ? { status: 404, json: {} } : { status: 200, json: { sha } };
     }
     if (input.method === "PUT") {
+      if (options.hangPut === true) return await new Promise<never>(() => undefined);
       if (putGate !== null) {
         const gate = putGate;
         putGate = null;
@@ -92,7 +93,14 @@ function harness(options: { private?: boolean } = {}) {
     }
     return { status: 500, json: {} };
   };
-  const github = new GithubSyncService({ db, settings, emit: (event) => events.push(event), transport, now: () => NOW });
+  const github = new GithubSyncService({
+    db,
+    settings,
+    emit: (event) => events.push(event),
+    transport,
+    now: () => NOW,
+    ...(options.requestTimeoutMs === undefined ? {} : { requestTimeoutMs: options.requestTimeoutMs }),
+  });
   const enqueue = (content = "# 笔记\n- 约定\n", message = "笔记：deepseek 第 1 版", at = NOW) =>
     enqueueGithubPush(db, { path: NOTE_PATH, content, message, now: at });
   return {
@@ -207,6 +215,7 @@ describe("github sync (D-46c)", () => {
     const h = harness();
     try {
       await h.github.update({ repo: "me/notes", token: TOKEN });
+      await h.github.pushNow(); // 先让 update 起的后台检查跑完，避免它抢走这次 409
       h.enqueue();
       h.setPutStatus(409);
       await h.github.pushNow();
@@ -256,6 +265,7 @@ describe("github sync (D-46c)", () => {
     const h = harness();
     try {
       await h.github.update({ repo: "me/notes", token: TOKEN });
+      await h.github.pushNow();
       h.enqueue();
       h.setPutStatus(422);
       await h.github.pushNow();
@@ -310,6 +320,22 @@ describe("github sync (D-46c)", () => {
       assert.equal(status.repo, "me/public");
       assert.equal(status.private, false, "旧响应没有把新仓库标成 private");
       assert.equal(status.lastError, "public_repo");
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("#187 请求超时：不挂住 running / inflight，队列保留，恢复后能推", async () => {
+    const h = harness({ hangPut: true, requestTimeoutMs: 20 });
+    try {
+      await h.github.update({ repo: "me/notes", token: TOKEN });
+      await h.github.pushNow();
+      h.enqueue();
+      const started = Date.now();
+      const status = await h.github.pushNow();
+      assert.ok(Date.now() - started < 2_000, "超时后立刻返回");
+      assert.equal(status.pending, 1, "队列保留");
+      assert.equal(status.lastError, "network");
     } finally {
       h.db.close();
     }

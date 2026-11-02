@@ -31,6 +31,8 @@ export type GithubTransport = (input: {
   url: string;
   token: string;
   body?: unknown;
+  /** #187 必须改 3：整次请求（含读响应体）的超时信号 */
+  signal?: AbortSignal;
 }) => Promise<{ status: number; json: unknown }>;
 
 class GithubPushError extends Error {
@@ -57,6 +59,7 @@ const RETRY_MS = 30_000;
 const defaultTransport: GithubTransport = async (input) => {
   const response = await fetch(input.url, {
     method: input.method,
+    ...(input.signal === undefined ? {} : { signal: input.signal }),
     headers: {
       Authorization: "Bearer " + input.token,
       Accept: "application/vnd.github+json",
@@ -85,6 +88,8 @@ export class GithubSyncService {
   readonly #emit: (event: ControlEvent) => void;
   readonly #transport: GithubTransport;
   readonly #now: () => string;
+  /** #187 必须改 3：整次请求超时（默认 30s；测试可以调小） */
+  readonly #requestTimeoutMs: number;
   #timer: ReturnType<typeof setInterval> | null = null;
   #running = false;
   #inflight: Promise<void> | null = null;
@@ -97,12 +102,33 @@ export class GithubSyncService {
     emit: (event: ControlEvent) => void;
     transport?: GithubTransport;
     now?: () => string;
+    /** #187：整次请求超时（默认 30s；测试可以调小） */
+    requestTimeoutMs?: number;
   }) {
     this.#db = deps.db;
     this.#settings = deps.settings;
     this.#emit = deps.emit;
     this.#transport = deps.transport ?? defaultTransport;
     this.#now = deps.now ?? (() => new Date().toISOString());
+    this.#requestTimeoutMs = deps.requestTimeoutMs ?? 30_000;
+  }
+
+  /** #187 必须改 3：整次请求（含读响应体）有截止时间；超时就 abort，调用方按网络失败处理，队列保留 */
+  async #request(input: { method: "GET" | "PUT"; url: string; token: string; body?: unknown }): Promise<{ status: number; json: unknown }> {
+    const controller = new AbortController();
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const timeout = new Promise<never>((_, reject) => {
+      timer = setTimeout(() => {
+        controller.abort();
+        reject(new Error("github request timed out"));
+      }, this.#requestTimeoutMs);
+      if (typeof timer.unref === "function") timer.unref();
+    });
+    try {
+      return await Promise.race([this.#transport({ ...input, signal: controller.signal }), timeout]);
+    } finally {
+      if (timer !== null) clearTimeout(timer);
+    }
   }
 
   status(): GithubSyncStatus {
@@ -142,9 +168,19 @@ export class GithubSyncService {
   async pushNow(): Promise<GithubSyncStatus> {
     const { repo } = this.#settings.getGithub();
     if (repo === null) throw new GithubError("invalid_state", "还没有设置仓库");
-    // #181 评审第 2 条：后台那一轮在跑就等它跑完，别同一个文件推两遍
+    // #181 评审第 2 条 + #187：和后台 kick 共用同一个单飞位，别同一个文件推两遍
     if (this.#inflight !== null) await this.#inflight.catch(() => undefined);
-    await this.#check(this.#generation);
+    const generation = this.#generation;
+    this.#running = true;
+    this.#inflight = (async () => {
+      try {
+        await this.#check(generation);
+      } finally {
+        this.#running = false;
+        this.#inflight = null;
+      }
+    })();
+    await this.#inflight;
     return this.status();
   }
 
@@ -217,7 +253,7 @@ export class GithubSyncService {
     }
     let result: { status: number; json: unknown };
     try {
-      result = await this.#transport({ method: "GET", url: API + "/repos/" + repo, token });
+      result = await this.#request({ method: "GET", url: API + "/repos/" + repo, token });
     } catch {
       if (generation === this.#generation) {
         updateGithubSyncState(this.#db, { lastError: "network", lastErrorMessage: "连不上 api.github.com" });
@@ -266,11 +302,11 @@ export class GithubSyncService {
         if (generation !== this.#generation) return;
         try {
           const url = contentsUrl(repo, item.path);
-          const head = await this.#transport({ method: "GET", url, token });
+          const head = await this.#request({ method: "GET", url, token });
           if (generation !== this.#generation) return;
           const sha = head.status === 200 ? (head.json as { sha?: unknown }).sha : null;
           if (head.status !== 200 && head.status !== 404) throw new GithubPushError(head.status, "head");
-          const put = await this.#transport({
+          const put = await this.#request({
             method: "PUT",
             url,
             token,
