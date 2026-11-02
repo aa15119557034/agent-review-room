@@ -1,6 +1,7 @@
 import {
   countGithubQueue,
   enqueueGithubPush,
+  listAllLatestProjectNotes,
   getGithubSyncState,
   listGithubQueue,
   markGithubPushFailed,
@@ -31,6 +32,15 @@ export type GithubTransport = (input: {
   token: string;
   body?: unknown;
 }) => Promise<{ status: number; json: unknown }>;
+
+class GithubPushError extends Error {
+  readonly status: number;
+  constructor(status: number, what: string) {
+    super(what + " " + status);
+    this.name = "GithubPushError";
+    this.status = status;
+  }
+}
 
 export class GithubError extends Error {
   readonly code: ControlErrorCode;
@@ -66,6 +76,9 @@ const defaultTransport: GithubTransport = async (input) => {
 
 const encodePath = (path: string): string => path.split("/").map(encodeURIComponent).join("/");
 
+/** contents API：必须带 /repos/{owner}/{repo}（#181 评审第 1 条） */
+const contentsUrl = (repo: string, path: string): string => API + "/repos/" + repo + "/contents/" + encodePath(path);
+
 export class GithubSyncService {
   readonly #db: SqliteDatabase;
   readonly #settings: SettingsStore;
@@ -74,6 +87,7 @@ export class GithubSyncService {
   readonly #now: () => string;
   #timer: ReturnType<typeof setInterval> | null = null;
   #running = false;
+  #inflight: Promise<void> | null = null;
 
   constructor(deps: {
     db: SqliteDatabase;
@@ -105,6 +119,7 @@ export class GithubSyncService {
 
   /** 保存仓库 / Token：离线也能存（private 置 null，后台再查） */
   async update(command: { repo: string | null; token?: string }): Promise<GithubSyncStatus> {
+    const previousRepo = this.#settings.getGithub().repo;
     try {
       this.#settings.setGithub({ repo: command.repo, ...(command.token === undefined ? {} : { token: command.token }) });
     } catch (error) {
@@ -112,6 +127,10 @@ export class GithubSyncService {
       throw error;
     }
     updateGithubSyncState(this.#db, { private: null, lastError: null, lastErrorMessage: null });
+    // #181 评审第 3 条：第一次设好仓库（或换了仓库）时，把已有的笔记最新版各排一条
+    if (command.repo !== null && command.repo !== previousRepo) {
+      for (const note of listAllLatestProjectNotes(this.#db)) this.#queueNote(note);
+    }
     this.#publish();
     if (command.repo !== null) void this.#check().catch(() => undefined);
     return this.status();
@@ -121,14 +140,22 @@ export class GithubSyncService {
   async pushNow(): Promise<GithubSyncStatus> {
     const { repo } = this.#settings.getGithub();
     if (repo === null) throw new GithubError("invalid_state", "还没有设置仓库");
+    // #181 评审第 2 条：后台那一轮在跑就等它跑完，别同一个文件推两遍
+    if (this.#inflight !== null) await this.#inflight.catch(() => undefined);
     await this.#check();
     return this.status();
   }
 
   /** 笔记存了一版就排一条（同一个文件只留最新内容） */
   enqueueNote(note: ProjectNote): void {
+    if (!this.#queueNote(note)) return;
+    void this.#kick();
+  }
+
+  /** 排一条，返回有没有排（没配仓库就不排）。不自己 kick */
+  #queueNote(note: ProjectNote): boolean {
     const { repo } = this.#settings.getGithub();
-    if (repo === null) return;
+    if (repo === null) return false;
     enqueueGithubPush(this.#db, {
       path: githubNotePath(note.scope, note.agent),
       content: note.content.endsWith("\n") ? note.content : note.content + "\n",
@@ -136,7 +163,7 @@ export class GithubSyncService {
       now: this.#now(),
     });
     this.#publish();
-    void this.#kick();
+    return true;
   }
 
   start(): void {
@@ -161,13 +188,17 @@ export class GithubSyncService {
     if (repo === null || token === null) return;
     if (countGithubQueue(this.#db) === 0) return;
     this.#running = true;
+    this.#inflight = (async () => {
     try {
       await this.#check();
     } catch {
       // 后台同步失败不影响聊天 / 笔记；状态由 #check 自己写
     } finally {
       this.#running = false;
+      this.#inflight = null;
     }
+    })();
+    await this.#inflight;
   }
 
   /** 查仓库是不是私有、Token 能不能写；私有才继续推队列 */
@@ -220,10 +251,10 @@ export class GithubSyncService {
     if (getGithubSyncState(this.#db).private !== true) return;
     for (const item of listGithubQueue(this.#db, 20)) {
       try {
-        const url = API + "/contents/" + encodePath(item.path);
+        const url = contentsUrl(repo, item.path);
         const head = await this.#transport({ method: "GET", url, token });
         const sha = head.status === 200 ? (head.json as { sha?: unknown }).sha : null;
-        if (head.status !== 200 && head.status !== 404) throw new Error("head " + head.status);
+        if (head.status !== 200 && head.status !== 404) throw new GithubPushError(head.status, "head");
         const put = await this.#transport({
           method: "PUT",
           url,
@@ -238,12 +269,20 @@ export class GithubSyncService {
           markGithubPushFailed(this.#db, item.path, "conflict");
           continue;
         }
-        if (put.status < 200 || put.status >= 300) throw new Error("put " + put.status);
+        if (put.status < 200 || put.status >= 300) throw new GithubPushError(put.status, "put");
         removeGithubPush(this.#db, item.path);
         updateGithubSyncState(this.#db, { lastPushedAt: this.#now(), lastError: null, lastErrorMessage: null });
       } catch (error) {
         markGithubPushFailed(this.#db, item.path, error instanceof Error ? error.message : String(error));
-        updateGithubSyncState(this.#db, { lastError: "network", lastErrorMessage: "推不上去，排队等下次" });
+        if (error instanceof GithubPushError && (error.status === 401 || error.status === 403)) {
+          updateGithubSyncState(this.#db, { lastError: "unauthorized", lastErrorMessage: "Token 没有权限（或已失效）" });
+        } else if (error instanceof GithubPushError && error.status === 404) {
+          updateGithubSyncState(this.#db, { lastError: "not_found", lastErrorMessage: "仓库或路径找不到（" + error.status + "）" });
+        } else if (error instanceof GithubPushError) {
+          updateGithubSyncState(this.#db, { lastError: "other", lastErrorMessage: "GitHub 返回 " + error.status + "，推不上去" });
+        } else {
+          updateGithubSyncState(this.#db, { lastError: "network", lastErrorMessage: "推不上去，排队等下次" });
+        }
         break;
       }
     }

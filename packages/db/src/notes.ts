@@ -144,3 +144,16 @@ export function insertProjectNote(db: SqliteDatabase, note: ProjectNote): void {
     parsed.createdAt,
   );
 }
+
+/** 所有子项目里每位秘书的最新一版（D-46c：第一次设好仓库时把已有的笔记排上去） */
+export function listAllLatestProjectNotes(db: SqliteDatabase): ProjectNote[] {
+  const rows = db
+    .prepare(
+      "SELECT p.* FROM project_notes p WHERE p.version = (" +
+        "  SELECT MAX(q.version) FROM project_notes q " +
+        "  WHERE q.scope_kind = p.scope_kind AND q.scope_id = p.scope_id AND q.agent = p.agent" +
+        ") ORDER BY p.scope_kind, p.scope_id, p.agent",
+    )
+    .all() as ProjectNoteRow[];
+  return rows.map(toProjectNote);
+}

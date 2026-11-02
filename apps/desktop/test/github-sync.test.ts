@@ -3,7 +3,7 @@ import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
-import { countGithubQueue, enqueueGithubPush, getGithubSyncState, openDatabase } from "@room/db";
+import { countGithubQueue, enqueueGithubPush, getGithubSyncState, insertProjectNote, openDatabase } from "@room/db";
 import type { ControlEvent, ProjectNote } from "@room/schemas";
 import { GithubError, GithubSyncService, type GithubTransport } from "../src/main/github";
 import { SettingsStore, type SafeStorageLike } from "../src/main/settings";
@@ -23,7 +23,7 @@ const TOKEN = "ghp_" + "x".repeat(36);
 const NOW = "2026-11-02T00:00:00.000Z";
 const CONVERSATION = "conv_" + "0".repeat(26);
 const NOTE_PATH = "notes/" + CONVERSATION + "/deepseek.md";
-const NOTE_URL = "https://api.github.com/contents/" + NOTE_PATH;
+const NOTE_URL = "https://api.github.com/repos/me/notes/contents/" + NOTE_PATH;
 
 const safeStorage: SafeStorageLike = {
   isEncryptionAvailable: () => true,
@@ -198,6 +198,33 @@ describe("github sync (D-46c)", () => {
       };
       assert.equal(row.path, NOTE_PATH);
       assert.ok(row.message.includes("第 2 版"));
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("第一次设好仓库时，已有笔记的最新版各排一条", async () => {
+    const h = harness();
+    try {
+      insertProjectNote(h.db, note(1));
+      assert.equal(countGithubQueue(h.db), 0);
+      await h.github.update({ repo: "me/notes", token: TOKEN });
+      assert.equal(countGithubQueue(h.db), 1);
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("PUT 返回 422：记 other、带状态码", async () => {
+    const h = harness();
+    try {
+      await h.github.update({ repo: "me/notes", token: TOKEN });
+      h.enqueue();
+      h.setPutStatus(422);
+      await h.github.pushNow();
+      assert.equal(h.github.status().lastError, "other");
+      assert.ok((h.github.status().lastErrorMessage ?? "").includes("422"));
+      assert.equal(h.github.status().pending, 1);
     } finally {
       h.db.close();
     }
