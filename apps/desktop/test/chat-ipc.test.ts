@@ -1939,4 +1939,23 @@ describe("chat history summary wiring (D-45)", () => {
       h.db.close();
     }
   });
+
+  it("注入时钟时回答和 Run 的结束时间用同一个时钟（#173 补充评审）", async () => {
+    const fixed = "2026-11-02T12:00:00.000Z";
+    const h = await makeHarness({ now: () => fixed });
+    try {
+      await h.chat.send(send(h.conversationId, userMessageId(951), "现在几点"));
+      await settle(h.chat);
+      const reply = h.db.prepare("SELECT created_at FROM chat_messages WHERE sender <> 'user'").get() as {
+        created_at: string;
+      };
+      assert.equal(reply.created_at, fixed, "回答消息用注入时钟");
+      const run = h.db
+        .prepare("SELECT finished_at FROM chat_runs WHERE purpose = 'reply' ORDER BY created_at DESC LIMIT 1")
+        .get() as { finished_at: string };
+      assert.equal(run.finished_at, fixed, "Run 的结束时间也用同一个时钟");
+    } finally {
+      h.db.close();
+    }
+  });
 });

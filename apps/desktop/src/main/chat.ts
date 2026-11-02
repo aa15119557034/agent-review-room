@@ -923,7 +923,8 @@ export class ChatService {
     let current: ChatRun["state"] = run.state;
 
     const finish = async (terminal: ChatRunTerminal): Promise<Awaited<ReturnType<typeof finishChatRun>>> => {
-      const result = await finishChatRun(db, queue, { runId: run.id, from: current, terminal });
+      // 注入时钟（e2e）时，回答消息 / Run 的结束时间要和用户消息用同一个时钟
+      const result = await finishChatRun(db, queue, { runId: run.id, from: current, terminal, finishedAt: this.#now() });
       if (result.message !== null) this.#emit({ type: "chat.message.created", message: result.message });
       if (result.slot !== null) this.#emit({ type: "chat.slot.updated", slot: result.slot });
       this.#emit({ type: "chat.run.updated", run: result.run });
@@ -1261,7 +1262,7 @@ export class ChatService {
       content: parsed.content,
       createdAt: this.#now(),
     });
-    const result = await finishChatSummaryRun(this.#deps.db, this.#deps.queue, { runId: run.id, from, summary });
+    const result = await finishChatSummaryRun(this.#deps.db, this.#deps.queue, { runId: run.id, from, summary, finishedAt: this.#now() });
     this.#emit({ type: "chat.run.updated", run: result.run });
     if (result.summary === null) return; // 跑的时候来源被撤回了：这份丢掉，等下一次回答再试
     this.#emit({ type: "chat.summary.updated", summary: result.summary });
@@ -1281,6 +1282,7 @@ export class ChatService {
       runId: run.id,
       from,
       failure: { message, failureReason },
+      finishedAt: this.#now(),
     });
     this.#emit({ type: "chat.run.updated", run: result.run });
   }
