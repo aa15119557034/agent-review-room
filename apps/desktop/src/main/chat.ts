@@ -987,6 +987,10 @@ export class ChatService {
 
       const snapshot = getChatSnapshot(db, run.snapshotId);
       if (snapshot === null) throw new Error("chat snapshot missing: " + run.snapshotId);
+      // 建快照之后仍有 adapter 初始化等异步间隔；内部 Run 没有回答位，撤回不会直接取消它。
+      if (run.purpose !== "reply" && !this.#snapshotSourcesCurrent(snapshot)) {
+        throw new ChatError("invalid_state", "来源消息已经撤回，不发送这份快照");
+      }
       // C-42a / C-42g / X-34b：带图的 Snapshot 起跑时要把字节和图片位置标记一起交给 Adapter
       const attachments = snapshot.attachments === undefined ? undefined : this.#startRunAttachments(snapshot.attachments);
       if (attachments !== undefined && snapshot.imageSlot === undefined) {
@@ -1304,13 +1308,21 @@ export class ChatService {
       const writer = await this.#summaryWriter(conversationId);
       if (writer === null) return;
 
+      // 探测写手期间可能有人撤回；重新读历史并规划，不能拿探测前的对象发给节点。
+      const latestPlan = planChatHistorySummary({
+        history: listChatMessagesAscending(db, conversationId),
+        summaries: listChatSummaries(db, conversationId),
+        inReplyToOf: this.#inReplyToOf,
+      });
+      if (latestPlan.kind !== "summarize") return;
+
       const createdAt = this.#now();
       const snapshot = buildChatSummarySnapshot({
         snapshotId: "snap_" + ulid(),
         conversationId,
         agent: { id: writer.agent.id, displayName: writer.agent.displayName },
-        messages: plan.messages,
-        inReplyToOf,
+        messages: latestPlan.messages,
+        inReplyToOf: this.#inReplyToOf,
         displayNameOf: writer.displayNameOf,
         createdAt,
       });
@@ -1337,6 +1349,10 @@ export class ChatService {
       // 建 Snapshot 和 Run 在同一个事务里；事务里再查一次「没有别的摘要 Run 在跑」，跨重启也成立
       const created = await writeTransaction(db, queue, () => {
         if (hasActiveChatSummaryRun(db, conversationId)) return null;
+        if (snapshot.includedMessageIds.some((id) => {
+          const message = getChatMessage(db, id);
+          return message === null || isExcludedFromContext(message, this.#inReplyToOf);
+        })) return null;
         insertChatSnapshot(db, snapshot);
         insertChatRun(db, run);
         return run;
@@ -1510,6 +1526,16 @@ export class ChatService {
   }
 
   // ================================================================ 换窗口（D-46b / ADR-005 §4）
+
+  /** 异步探测 / 起跑 / 生成期间来源可能撤回，快照里的原文和摘要都要复核。 */
+  #snapshotSourcesCurrent(snapshot: ChatSnapshot): boolean {
+    if (snapshot.includedMessageIds.some((id) => {
+      const message = getChatMessage(this.#deps.db, id);
+      return message === null || isExcludedFromContext(message, this.#inReplyToOf);
+    })) return false;
+    const current = new Set(this.#summariesFor(snapshot.conversationId).map((summary) => summary.id));
+    return snapshot.includedSummaryIds.every((id) => current.has(id));
+  }
 
   /** 这位秘书当前的窗口边界：第 1 个窗口 = null（全部消息） */
   #boundary(conversationId: string, agent: string): { createdAt: string; id: string } | null {
@@ -1690,6 +1716,10 @@ export class ChatService {
     const next = await writeTransaction(db, queue, () => {
       const current = pendingChatWindowDraft(db, run.conversationId, run.agent);
       if (current === null || current.runId !== run.id || current.content !== null) return null;
+      const snapshot = getChatSnapshot(db, run.snapshotId);
+      if (snapshot === null || !this.#snapshotSourcesCurrent(snapshot)) {
+        throw new ChatError("invalid_state", "来源消息已经撤回，不保存这份交接笔记");
+      }
       const updated: ChatWindowDraft = {
         ...current,
         content: text,
