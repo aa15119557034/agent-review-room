@@ -10,7 +10,7 @@ import {
   currentConversation,
   draftOf,
   memoryBadge,
-  mentionHint,
+  mentionsFromText,
   messageText,
   partialReplyText,
   previewText,
@@ -27,6 +27,7 @@ import { stripCharts } from "../../lib/media";
 import { draftContent } from "../../lib/chat-actions";
 import { ReplyBody } from "../Chart";
 import { useActions, useAppState } from "../hooks";
+import { Icon } from "../Icon";
 import {
   AgentMedia,
   AttachmentTray,
@@ -350,7 +351,8 @@ function Entry({ entry, now, conv }: { entry: TimelineEntry; now: number; conv: 
 
   if (entry.kind === "agent") {
     const am = entry.message;
-    const badge = memoryBadge(am);
+    // C-33b 收一收：「没用到记忆」不挂在每条上了，详情里照样能看
+    const badge = am.memoryEntriesUsed ? memoryBadge(am) : null;
     return (
       <li className="chat-row" data-side="agent" data-excluded={entry.excluded || undefined}>
         {check}
@@ -534,6 +536,7 @@ function Composer({ conv }: { conv: Conversation }) {
   const { name } = useNames();
   const [picker, setPicker] = useState(false);
   const [stickers, setStickers] = useState(false);
+  const [more, setMore] = useState(false);
   const input = useRef<HTMLTextAreaElement>(null);
   const quoted = draft.quoteMessageId ? messages.find((m) => m.id === draft.quoteMessageId) : undefined;
   const isGroup = conv.kind === "group";
@@ -547,19 +550,19 @@ function Composer({ conv }: { conv: Conversation }) {
     if (!canSend) return;
     setPicker(false);
     setStickers(false);
+    setMore(false);
     void actions.chat.send();
   };
 
-  /** 在 @ 选择框里选了一项：把刚打的「@」补成「@名字 」（只是给人看的），结构化的点名才算数 */
+  /** 在 @ 名单里点了一项：把刚打的「@」补成「@名字 」。点名就从正文认，所以补上字就算点了 */
   const pick = (who: "all" | string) => {
     const el = input.current;
     const label = who === "all" ? "所有人" : name(who);
     const pos = el?.selectionStart ?? draft.text.length;
     const before = draft.text.slice(0, pos);
-    const text = before.endsWith("@") ? `${before}${label} ${draft.text.slice(pos)}` : draft.text;
+    const text = before.endsWith("@") ? `${before}${label} ${draft.text.slice(pos)}` : `${before}@${label} ${draft.text.slice(pos)}`;
     actions.chat.setDraftText(text);
-    const already = who === "all" ? draft.mentions.kind === "all" : draft.mentions.kind === "agents" && draft.mentions.agents.includes(who);
-    if (!already) actions.chat.toggleMention(who);
+    actions.chat.setMentions(mentionsFromText(text, conv.members, name));
     setPicker(false);
     requestAnimationFrame(() => el?.focus());
   };
@@ -578,8 +581,11 @@ function Composer({ conv }: { conv: Conversation }) {
     }
   };
 
+  const fileDisabled = !!draft.voice || importing || tooManyFiles;
+  const hasText = draft.text.trim().length > 0 || draft.attachments.length > 0;
+
   return (
-    <form className="chat-composer" onSubmit={send}>
+    <form className="chat-composer" onSubmit={send} data-has-content={hasText || undefined}>
       {draft.replacesMessageId && (
         <p className="chat-composer-bar">
           重新编辑：发出去是一条新消息，显示在原来的位置
@@ -598,92 +604,102 @@ function Composer({ conv }: { conv: Conversation }) {
           </button>
         </p>
       )}
-      {isGroup && draft.mentions.kind !== "none" && (
-        <ul className="chat-chips" aria-label="点名">
-          {(draft.mentions.kind === "all" ? ["all"] : draft.mentions.agents).map((who) => (
-            <li key={who}>
-              @{who === "all" ? "所有人" : name(who)}
-              <button type="button" aria-label={`取消点名 ${who === "all" ? "所有人" : name(who)}`} onClick={() => actions.chat.toggleMention(who)}>
-                ×
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
       <AttachmentTray conv={conv} />
       <VoiceDraft />
       {stickers && <StickerPanel onClose={() => setStickers(false)} />}
-      <div className="chat-tools" role="toolbar" aria-label="附件和语音">
-        <button type="button" className="tool-button" disabled={!!draft.voice || importing || tooManyFiles} onClick={() => void actions.chat.media.pickAttachment("image")}>
-          🖼 图片
-        </button>
-        <button type="button" className="tool-button" disabled={!!draft.voice || importing || tooManyFiles} onClick={() => void actions.chat.media.pickAttachment("file")}>
-          📎 文件
-        </button>
-        <RecordButton key={conv.id} disabled={!!draft.voice || importing || draft.attachments.length > 0} />
-        <button type="button" className="tool-button" aria-expanded={stickers} onClick={() => setStickers((v) => !v)}>
-          ☺ 表情
-        </button>
-        <span className="spacer" />
-        <label className="voice-toggle" title="打开后，这条消息的回答都会用语音发（在主控机本地合成）。你在话里说「用语音回我」也会自动打开">
-          <input type="checkbox" checked={draft.replyAsVoice} onChange={(e) => actions.chat.media.setReplyAsVoice(e.target.checked)} />
-          用语音回
-        </label>
-      </div>
-      <div className="chat-input-row" hidden={!!draft.voice}>
-        <textarea
-          ref={input}
-          rows={1}
-          value={draft.text}
-          placeholder={isGroup ? "说点什么，打 @ 点名" : "说点什么"}
-          aria-label="消息"
-          onChange={(e) => {
-            const text = e.target.value;
-            const pos = e.target.selectionStart ?? text.length;
-            actions.chat.setDraftText(text);
-            // 刚打了一个 @ 就弹出成员选择
-            if (isGroup && text.length > draft.text.length && text[pos - 1] === "@") setPicker(true);
-          }}
-          onKeyDown={onKey}
-        />
-        <button type="submit" className="button-primary" disabled={!canSend}>
-          发送
-        </button>
-        {picker && isGroup && (
-          <div className="chat-picker" role="listbox" aria-label="点名谁必须回答">
-            <button type="button" role="option" aria-selected={draft.mentions.kind === "all"} onClick={() => pick("all")}>
-              所有人
-            </button>
-            {conv.members.map((a) => (
-              <button
-                key={a}
-                type="button"
-                role="option"
-                aria-selected={draft.mentions.kind === "agents" && draft.mentions.agents.includes(a)}
-                onClick={() => pick(a)}
-              >
-                {name(a)}
+      {more && (
+        <div className="chat-more" role="menu" aria-label="更多">
+          <button type="button" role="menuitem" disabled={fileDisabled} onClick={() => (setMore(false), void actions.chat.media.pickAttachment("image"))}>
+            <Icon name="image" size={26} />
+            图片
+          </button>
+          <button type="button" role="menuitem" disabled={fileDisabled} onClick={() => (setMore(false), void actions.chat.media.pickAttachment("file"))}>
+            <Icon name="folder" size={26} />
+            文件
+          </button>
+        </div>
+      )}
+      <div className="chat-compose-main">
+        {/* 桌面：图标工具条在上、输入框在下、发送在右下（江浩给的微信截图）；手机：一行，样式在 theme-apple.css */}
+        <div className="chat-tools" role="toolbar" aria-label="表情、附件和语音">
+          <button
+            type="button"
+            className="icon-tool tool-voice-reply"
+            aria-pressed={draft.replyAsVoice}
+            aria-label="回答用语音发"
+            title={draft.replyAsVoice ? "这条的回答会用语音发（再点关掉）" : "让这条的回答用语音发（在主控机本地合成）"}
+            onClick={() => actions.chat.media.setReplyAsVoice(!draft.replyAsVoice)}
+          >
+            <Icon name="voice" />
+          </button>
+          <button type="button" className="icon-tool tool-emoji" aria-expanded={stickers} aria-label="表情" title="表情" onClick={() => setStickers((v) => !v)}>
+            <Icon name="emoji" />
+          </button>
+          <button type="button" className="icon-tool tool-image" aria-label="图片" title="图片" disabled={fileDisabled} onClick={() => void actions.chat.media.pickAttachment("image")}>
+            <Icon name="image" />
+          </button>
+          <button type="button" className="icon-tool tool-file" aria-label="文件" title="文件" disabled={fileDisabled} onClick={() => void actions.chat.media.pickAttachment("file")}>
+            <Icon name="folder" />
+          </button>
+          <RecordButton key={conv.id} disabled={!!draft.voice || importing || draft.attachments.length > 0} />
+          <button type="button" className="icon-tool tool-more" aria-expanded={more} aria-label="更多" title="图片、文件" onClick={() => setMore((v) => !v)}>
+            <Icon name="plus" />
+          </button>
+        </div>
+        <div className="chat-input-row" hidden={!!draft.voice}>
+          <textarea
+            ref={input}
+            rows={1}
+            value={draft.text}
+            placeholder={isGroup ? "打 @ 可以点名" : ""}
+            aria-label="消息"
+            onChange={(e) => {
+              const text = e.target.value;
+              const pos = e.target.selectionStart ?? text.length;
+              actions.chat.setDraftText(text);
+              // 点名直接从正文认（打字 @ 就行，不用另外选）
+              if (isGroup) actions.chat.setMentions(mentionsFromText(text, conv.members, name));
+              // 刚打了一个 @ 就弹出成员名单，点一下帮你补上名字
+              if (isGroup && text.length > draft.text.length && text[pos - 1] === "@") setPicker(true);
+            }}
+            onKeyDown={onKey}
+          />
+          <button type="submit" className="button-primary chat-send" disabled={!canSend}>
+            发送
+          </button>
+          {picker && isGroup && (
+            <div className="chat-picker" role="listbox" aria-label="点名谁必须回答">
+              <button type="button" role="option" aria-selected={draft.mentions.kind === "all"} onClick={() => pick("all")}>
+                所有人
               </button>
-            ))}
-            <button type="button" className="chat-picker-close" onClick={() => setPicker(false)}>
-              不点名
+              {conv.members.map((a) => (
+                <button
+                  key={a}
+                  type="button"
+                  role="option"
+                  aria-selected={draft.mentions.kind === "agents" && draft.mentions.agents.includes(a)}
+                  onClick={() => pick(a)}
+                >
+                  {name(a)}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        {draft.voice && (
+          <div className="chat-input-row chat-voice-send">
+            <span className="spacer" />
+            <button type="button" className="button-primary" disabled={!canSend} onClick={() => send()}>
+              发送语音
             </button>
           </div>
         )}
       </div>
-      {draft.voice && (
-        <div className="chat-input-row chat-voice-send">
-          <span className="spacer" />
-          <button type="button" className="button-primary" disabled={!canSend} onClick={() => send()}>
-            发送语音
-          </button>
-        </div>
+      {tooLong && (
+        <p className="chat-hint">
+          <span className="field-error">太长了：最多 {CHAT_LIMITS.textMaxChars} 字</span>
+        </p>
       )}
-      <p className="chat-hint">
-        {draft.replyAsVoice && "这条的回答会用语音发 · "}
-        {tooLong ? <span className="field-error">太长了：最多 {CHAT_LIMITS.textMaxChars} 字</span> : mentionHint(conv, isGroup ? draft.mentions : { kind: "none" }, name)}
-        {isGroup && draft.mentions.kind === "none" && /@\S/.test(draft.text) && " · 正文里打的 @ 不算点名，要从弹出的列表里选"}
-      </p>
     </form>
   );
 }

@@ -7,6 +7,7 @@ import {
   canRetract,
   initialChat,
   mentionHint,
+  mentionsFromText,
   mergeMessages,
   mergeSlots,
   partialReplyText,
@@ -147,6 +148,16 @@ describe("@ mentions", () => {
     assert.equal(mentionHint(group, { kind: "all" }, name), "@所有人：每位都必须回答");
     assert.equal(mentionHint(group, { kind: "agents", agents: ["deepseek"] }, name), "汐 必须回答；其他人这条不回");
     assert.equal(mentionHint({ ...group, kind: "direct", members: ["claude"] }, { kind: "none" }, name), "C酱 会回答");
+  });
+
+  it("typed @ in the text is the mention (C-33b): names, 所有人, unknown @ ignored", () => {
+    const members = ["claude", "deepseek", "codex"];
+    assert.deepEqual(mentionsFromText("你好", members, name), { kind: "none" });
+    assert.deepEqual(mentionsFromText("@汐 看一下", members, name), { kind: "agents", agents: ["deepseek"] });
+    assert.deepEqual(mentionsFromText("@林离 和 @C酱 说说", members, name), { kind: "agents", agents: ["claude", "codex"] });
+    assert.deepEqual(mentionsFromText("@所有人 @汐", members, name), { kind: "all" });
+    assert.deepEqual(mentionsFromText("邮件 a@b.com @谁", members, name), { kind: "none" });
+    assert.deepEqual(mentionsFromText("@汐汐 你好", ["deepseek", "x"], (a) => (a === "x" ? "汐汐" : "汐")), { kind: "agents", agents: ["x"] });
   });
 
   it("pruning drops people who left the group", () => {

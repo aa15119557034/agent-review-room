@@ -194,6 +194,8 @@ function TopHeader() {
   const status = useAppState((s) => s.status);
   const view = useAppState((s) => s.view);
   const isMock = useIsMock();
+  // C-33b 收一收（江浩「界面还是太杂了」）：聊天、秘书页不要顶上那一行，标题在各自面板里
+  if (view === "chat" || view === "console") return null;
   return (
     <header className="topbar">
       <span className="wordmark">Agent 评审室</span>

@@ -35,6 +35,7 @@ import {
 } from "../../lib/media";
 import { draftOf } from "../../lib/chat";
 import { useActions, useAppState } from "../hooks";
+import { Icon } from "../Icon";
 
 /**
  * 2026-11-01 用户决定画图先只走本机，林离画图（D-38b）暂缓（ADR-004 §3）。
@@ -249,6 +250,10 @@ function SpeechLine({ message }: { message: AgentChatMessage }) {
   }
   if (!speakable) return null;
   const wants = message.mediaIntent?.speak === true;
+  const deferred = message.immersiveDeferred?.speak === "hourly_limit";
+  const lastFailed = !!last && !jobActive(last) && last.state !== "succeeded";
+  // C-33b 收一收：没选声音就不在每条下面挂一个点不了的「播放 · 还没选声音」（设置里选了声音才出现）
+  if (!voice && !deferred && !lastFailed) return null;
   return (
     <p className="speech-line">
       <button
@@ -261,8 +266,8 @@ function SpeechLine({ message }: { message: AgentChatMessage }) {
         ▶ {wants ? "想用语音说，点这里听" : "播放"}
       </button>
       {!voice && <span className="chat-note">还没选声音</span>}
-      {message.immersiveDeferred?.speak === "hourly_limit" && <span className="chat-note">这个小时自动语音的名额用完了</span>}
-      {last && !jobActive(last) && last.state !== "succeeded" && <span className="chat-note">上次：{jobEndText(last)}</span>}
+      {deferred && <span className="chat-note">这个小时自动语音的名额用完了</span>}
+      {lastFailed && <span className="chat-note">上次：{jobEndText(last!)}</span>}
     </p>
   );
 }
@@ -772,8 +777,9 @@ export function RecordButton({ disabled }: { disabled?: boolean }) {
     <>
       <button
         type="button"
-        className="tool-button"
+        className="icon-tool tool-mic"
         data-recording={state === "recording" || undefined}
+        aria-label={state === "recording" ? "停止录音" : "语音"}
         disabled={disabled || state === "sending"}
         aria-pressed={state === "recording"}
         title={state === "recording" ? "再按一下停止" : "录一段语音（在主控机本地转写成文字再发）"}
@@ -787,7 +793,7 @@ export function RecordButton({ disabled }: { disabled?: boolean }) {
         ) : state === "sending" ? (
           "上传中…"
         ) : (
-          "🎤 语音"
+          <Icon name="mic" />
         )}
       </button>
       {error && <span className="field-error">{error}</span>}
