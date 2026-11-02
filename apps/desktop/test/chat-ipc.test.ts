@@ -134,7 +134,7 @@ interface Harness {
   /** C-42a：每次 adapter.run 收到的输入（看带没带图、带的是什么） */
   runInputs: { agent: string; input: { attachments?: unknown; imageSlot?: unknown; content: string } }[];
   /** D-39：沉浸模式自动排的任务（测试记下来看） */
-  mediaCalls: { kind: "draw" | "speak" | "stop"; source?: unknown; intentHash?: string; scope?: unknown }[];
+  mediaCalls: { kind: "draw" | "speak" | "stop" | "fail-speak"; source?: unknown; intentHash?: string; scope?: unknown }[];
 }
 
 async function makeHarness(
@@ -158,6 +158,8 @@ async function makeHarness(
     summaryScript?: Script;
     /** D-45：摘要 Run 先等这个 promise 再回（测「跑的时候来源被撤回」） */
     summaryGate?: Promise<void>;
+    /** D-39：自动语音排任务时故意失败（测「前置条件不满足要补一条失败任务」） */
+    speakMediaFails?: boolean;
   } = {},
 ): Promise<Harness> {
   const dir = mkdtempSync(join(tmpdir(), "room-chat-ipc-"));
@@ -209,7 +211,12 @@ async function makeHarness(
       void draw;
     },
     speakMedia: async (source, intentHash) => {
+      if (options.speakMediaFails === true) throw new Error("没有能用的声音");
       mediaCalls.push({ kind: "speak", source, intentHash });
+    },
+    failSpeech: async (source, intentHash, message) => {
+      mediaCalls.push({ kind: "fail-speak", source, intentHash });
+      void message;
     },
     stopMedia: async (scope) => {
       mediaCalls.push({ kind: "stop", scope });
@@ -2051,6 +2058,27 @@ describe("immersive (D-39)", () => {
       assert.equal(h.mediaCalls.length, 1);
       assert.equal(h.mediaCalls[0]!.kind, "stop");
       assert.deepEqual(h.mediaCalls[0]!.scope, { kind: "chat", conversationId: h.conversationId });
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("自动语音的前置条件不满足：补一条立刻失败的 immersive 任务（failSpeech）", async () => {
+    const h = await makeHarness({ scripts: { deepseek: mediaScript("好呀") }, speakMediaFails: true });
+    try {
+      upsertImmersiveSettings(h.db, h.conversationId, {
+        enabled: true,
+        autoDrawUsesSubscription: true,
+        drawsPerHour: 6,
+        voiceClipsPerHour: 30,
+      }, NOW);
+      await h.chat.send(send(h.conversationId, userMessageId(963), "说句话"));
+      await settle(h.chat);
+      await waitFor(() => h.mediaCalls.some((call) => call.kind === "fail-speak"));
+      const kinds = h.mediaCalls.map((call) => call.kind);
+      assert.ok(kinds.includes("draw"));
+      assert.ok(kinds.includes("fail-speak"));
+      assert.equal(kinds.includes("speak"), false);
     } finally {
       h.db.close();
     }

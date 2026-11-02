@@ -253,7 +253,10 @@ async function bootstrap(): Promise<void> {
       await jobs.play(source, { authorization: "immersive", intentHash });
     },
     stopMedia: async (scope) => {
-      await jobs.stop(scope);
+      await jobs.stop(scope, "immersive_off");
+    },
+    failSpeech: async (source, intentHash, message) => {
+      await jobs.failImmersiveSpeech(source, intentHash, message);
     },
     // D-37b：「用语音回」的回答落库后自动排语音合成（命中缓存时任务立刻成功）
     speakAnswer: async (source) => {

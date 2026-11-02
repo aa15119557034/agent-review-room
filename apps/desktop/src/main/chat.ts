@@ -204,6 +204,8 @@ export interface ChatServiceDeps {
   /** D-39：沉浸模式自动画的图 / 自动语音（authorization = immersive）；没传 = 不自动执行 */
   readonly drawMedia?: (source: MediaSource, draw: DrawIntent, intentHash: string) => Promise<unknown>;
   readonly speakMedia?: (source: MediaSource, intentHash: string) => Promise<unknown>;
+  /** D-39：自动语音的前置条件不满足时，建一条立刻失败的任务（契约不变量的兜底） */
+  readonly failSpeech?: (source: MediaSource, intentHash: string, message: string) => Promise<unknown>;
   /** D-39：关掉沉浸模式时取消这个会话所有媒体任务（cancelReason = immersive_off） */
   readonly stopMedia?: (scope: MediaScope) => Promise<unknown>;
   readonly now?: () => string;
@@ -1199,7 +1201,10 @@ export class ChatService {
     if (plan.speak && intent.speak === true) {
       const hash = sha256Hex("speak");
       void Promise.resolve(this.#deps.speakMedia?.(source, hash)).catch((error: unknown) => {
-        console.warn("[chat] 沉浸模式自动语音没排上：", error instanceof Error ? error.message : String(error));
+        const why = error instanceof Error ? error.message : String(error);
+        console.warn("[chat] 沉浸模式自动语音没排上：", why);
+        // 契约不变量：没任务就要有原因；这里补一条立刻失败的 immersive 任务
+        void Promise.resolve(this.#deps.failSpeech?.(source, hash, why)).catch(() => undefined);
       });
     }
   }

@@ -273,8 +273,9 @@ export class MediaJobsService {
   }
 
   /** 会话 / 议题的「停」：取消这个范围里所有排队和正在跑的任务（cancelReason = user_stop） */
-  async stop(scope: MediaScope): Promise<MediaJob[]> {
-    return this.#cancelAll(listActiveMediaJobs(this.deps.db).filter((job) => inScope(job, scope)), "user_stop");
+  /** 会话「停」用 user_stop；关沉浸模式用 immersive_off（ADR-004 §3a） */
+  async stop(scope: MediaScope, reason: "user_stop" | "immersive_off" = "user_stop"): Promise<MediaJob[]> {
+    return this.#cancelAll(listActiveMediaJobs(this.deps.db).filter((job) => inScope(job, scope)), reason);
   }
 
   /**
@@ -706,6 +707,40 @@ export class MediaJobsService {
   }
 
   /** source 以库里的消息为准；不一致就 validation_failed（渲染层只能拿到 id） */
+  /**
+   * D-39：沉浸模式要自动发语音，但前置条件不满足（没配 TTS / 秘书没选声音 / 文字不合适）。
+   * 契约不变量要求「要么有任务、要么有退回原因」，所以建一条立刻 failed(backend_unavailable) 的任务。
+   */
+  async failImmersiveSpeech(source: MediaSource, intentHash: string, message: string): Promise<MediaJob> {
+    this.#assertSource(source);
+    const sourceMessage = source.kind === "chat" ? getChatMessage(this.deps.db, source.messageId) : null;
+    if (sourceMessage === null || sourceMessage.sender !== "agent") {
+      throw new ChatError("validation_failed", "只能对秘书的回答自动发语音");
+    }
+    const now = this.deps.now();
+    const job: MediaJob = MediaJobSchema.parse({
+      id: `mjob_${ulid()}`,
+      kind: "speech",
+      state: "failed",
+      authorization: "immersive",
+      source,
+      intentHash,
+      draw: null,
+      route: null,
+      remoteRunId: null,
+      result: null,
+      speech: null,
+      failure: { kind: "backend_unavailable", message },
+      cancelReason: null,
+      createdAt: now,
+      startedAt: null,
+      finishedAt: now,
+    });
+    await writeTransaction(this.deps.db, this.deps.queue, () => insertMediaJob(this.deps.db, job));
+    this.#emit(job);
+    return job;
+  }
+
   #assertSource(source: MediaSource): void {
     if (source.kind !== "chat") throw new ChatError("validation_failed", "现在只支持从聊天里发起画图");
     const message = getChatMessage(this.deps.db, source.messageId);
