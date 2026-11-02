@@ -836,8 +836,8 @@ select {
     margin-top: 0;
   }
 
-  /* 还没开放的「执行」在手机上不占位置 */
-  .topnav button:disabled {
+  /* 还没开放的「执行」在手机上不占位置；「世界」虽然也没开放，但留着让人知道有这块 */
+  .topnav .topnav-run {
     display: none;
   }
 

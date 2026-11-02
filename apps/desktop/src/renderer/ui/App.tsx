@@ -126,10 +126,10 @@ const NAV_ICONS = {
     </>
   ),
   run: <path d="M8 5.5v13l10-6.5z" />,
-  review: (
+  world: (
     <>
-      <path d="M7 3.5h7l4 4v13H7z" />
-      <path d="M14 3.5v4h4M9.5 14l2 2 3.5-4" />
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M3.5 12h17M12 3.5c2.4 2.4 3.5 5.2 3.5 8.5s-1.1 6.1-3.5 8.5c-2.4-2.4-3.5-5.2-3.5-8.5s1.1-6.1 3.5-8.5z" />
     </>
   ),
   settings: (
@@ -167,13 +167,14 @@ function MainNav() {
         <NavIcon name="agents" />
         <span className="topnav-label">秘书</span>
       </button>
-      <button type="button" disabled title="阶段 1C">
+      <button type="button" className="topnav-run" disabled title="阶段 1C">
         <NavIcon name="run" />
         <span className="topnav-label">执行</span>
       </button>
-      <button type="button" aria-current={view === "desk" ? "page" : undefined} onClick={actions.goDesk}>
-        <NavIcon name="review" />
-        <span className="topnav-label">单次评审</span>
+      {/* 江浩 2026-11-02：单次评审不再放导航，这个位置留给「世界」（以后做 AI 与现实交互），现在只占位 */}
+      <button type="button" className="topnav-world" disabled title="世界：以后做，AI 与现实世界交互">
+        <NavIcon name="world" />
+        <span className="topnav-label">世界</span>
       </button>
       <button
         type="button"

@@ -55,7 +55,7 @@ export function ChatView({ notice }: { notice: ReactNode }) {
       <main className="chat-unavailable">
         {notice}
         <h1>聊天还没上线</h1>
-        <p>后端还不认识聊天的命令。讨论室和单次评审照常可用。</p>
+        <p>后端还不认识聊天的命令。讨论室照常可用。</p>
       </main>
     );
   }
