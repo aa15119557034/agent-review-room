@@ -98,7 +98,7 @@
 | **D-32** | DeepSeek | 额度汇总（不猜，只聚合 C-36 上报的）、自动缺席、替补派发；替补链防环、替补也不可用时记缺席；同一人同一轮不重复记缺席 | C-36 | 额度用尽 → 自动缺席，汇总表正确显示 |
 | **C-37** | Claude | Agent 控制台（每位一页：状态、额度、正在答什么、历史、暂停 / 恢复、替补设置） | C-36 | mock 下所有状态都能显示 |
 | **C-37a** | Claude | 契约：`agents.activity` 查询（一位秘书正在答什么 + 历史分页，讨论的 Turn 和聊天的回答位放在一起，带问题预览；撤回的消息不给预览）。暂停 / 恢复、替补设置沿用 `agent.update`，不新增命令 | C-36 | 用户批准 |
-| **D-44** | DeepSeek | 实现 C-37a：main 里按 agent 查 Turn + 聊天回答位，current / recent 分开，(createdAt, id) 倒序分页；preview 截 200 字、用户消息已撤回给 null；补测试（替补的 Turn 只列在替补那边、撤回不漏原文、翻页不重不漏） | C-37a | 测试通过 |
+| **D-44** | DeepSeek | 实现 C-37a：main 里按 agent 查 Turn + 聊天回答位，current / recent 分开，(createdAt, id) 倒序分页；current 设硬上限；preview 按码点截 200 字、用户消息已撤回给 null；列表里的 Turn 只给摘要（不带 partialText）；补测试（替补的 Turn 只列在替补那边、撤回不漏原文、翻页不重不漏） | C-37a | 测试通过 |
 | **X-32** | Codex | 把 0-B #10 从「写库模拟」改成走替补命令 | D-32 | #10 完整覆盖 |
 
 ## 1B-4 讨论室待办

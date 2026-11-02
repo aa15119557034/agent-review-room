@@ -6,9 +6,8 @@ const ID = "01JAAAAAAAAAAAAAAAAAAAAAAA";
 const TS = "2026-11-01T00:00:00.000Z";
 
 const turn = {
-  id: `turn_${ID}`, roundId: `rnd_${ID}`, batchId: `bat_${ID}`, agent: "deepseek", onBehalfOf: "claude", isSummary: false,
-  approvalId: `apr_${ID}`, runId: `run_${ID}`, outcome: "running", partialText: null, replyMessageId: null,
-  supersededBy: null, createdAt: TS, finishedAt: null,
+  id: `turn_${ID}`, agent: "deepseek", onBehalfOf: "claude", isSummary: false,
+  outcome: "running", replyMessageId: null, supersededBy: null, createdAt: TS, finishedAt: null,
 };
 const conversation = {
   id: `conv_${ID}`, kind: "direct", members: ["deepseek"], title: null, pinned: false, muted: false,
@@ -27,6 +26,8 @@ describe("C-37a agents.activity", () => {
     assert.ok(AgentActivityItem.safeParse({ ...disc, preview: null }).success);
     assert.equal(AgentActivityItem.safeParse({ ...disc, preview: "字".repeat(AGENT_ACTIVITY_PREVIEW_MAX + 1) }).success, false);
     assert.equal(AgentActivityItem.safeParse({ ...disc, extra: 1 }).success, false, "strict");
+    // 汐 #157：列表里不带 partialText（最长 200 万字）
+    assert.equal(AgentActivityItem.safeParse({ ...disc, turn: { ...turn, partialText: "半截" } }).success, false, "no partialText");
     const chat = { kind: "chat", conversation, slot, preview: null };
     assert.ok(AgentActivityItem.safeParse(chat).success);
     assert.equal(AgentActivityItem.safeParse({ ...chat, kind: "discussion" }).success, false);
