@@ -66,17 +66,31 @@ export interface TopicStatus {
 
 export interface TopicPerson {
   agent: string;
-  state: "answered" | "running" | "waiting" | "missed";
+  state: "answered" | "running" | "waiting" | "stopped" | "missed";
+  /** 替补代答时，实际在答的人 */
+  by?: string;
 }
 
 /** 每位收件人最近一次（非汇总、没被取代的）回答的结局 */
 export function roundPeople(r: Round, turns: readonly Turn[]): TopicPerson[] {
   const mine = turns.filter((t) => t.roundId === r.id && !t.isSummary);
-  const agents = r.recipients?.length ? r.recipients : [...new Set(mine.map((t) => t.agent))];
+  // 替补代答的 Turn 归到被替补的人名下（onBehalfOf）
+  const owner = (t: Turn) => t.onBehalfOf ?? t.agent;
+  const agents = r.recipients?.length ? r.recipients : [...new Set(mine.map(owner))];
   return agents.map((agent) => {
-    const t = mine.filter((x) => x.agent === agent && !x.supersededBy).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))[0];
-    const state: TopicPerson["state"] = !t ? "waiting" : t.outcome === "answered" ? "answered" : t.outcome === "running" ? "running" : "missed";
-    return { agent, state };
+    const t = mine
+      .filter((x) => owner(x) === agent && !x.supersededBy)
+      .sort((a, b) => (a.createdAt === b.createdAt ? (a.id < b.id ? 1 : -1) : a.createdAt < b.createdAt ? 1 : -1))[0];
+    const state: TopicPerson["state"] = !t || t.outcome === "pending"
+      ? "waiting"
+      : t.outcome === "answered"
+        ? "answered"
+        : t.outcome === "running"
+          ? "running"
+          : t.outcome === "paused" || t.outcome === "interrupted"
+            ? "stopped"
+            : "missed";
+    return { agent, state, ...(t && t.agent !== agent ? { by: t.agent } : {}) };
   });
 }
 

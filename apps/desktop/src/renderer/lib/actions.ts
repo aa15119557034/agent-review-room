@@ -148,6 +148,9 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
       }
     },
 
+    /** 现在打开的还是不是这个议题（连着几步写同一个议题时，每步前核一次） */
+    isCurrentProject: (projectId: string) => store.get().currentProjectId === projectId,
+
     async selectProject(projectId: string) {
       try {
         await loadProject(projectId);

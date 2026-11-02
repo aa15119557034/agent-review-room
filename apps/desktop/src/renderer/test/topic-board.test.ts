@@ -253,6 +253,17 @@ describe("topic card: who has answered in the running round (C-33b)", () => {
     assert.deepEqual(p.live?.people.map((x) => x.state), ["waiting", "waiting", "waiting"]);
   });
 
+  it("a substitute's answer counts for the absent person; paused turns read as stopped, pending as waiting", () => {
+    const r = { ...round("PAUSED"), recipients: ["claude", "deepseek", "codex"] } as Round;
+    const sub = { ...turn("deepseek", "answered"), id: "turn_sub", onBehalfOf: "codex" } as Turn;
+    const s = status({ rounds: [r], turns: [turn("claude", "paused"), turn("deepseek", "pending"), sub] });
+    assert.deepEqual(s.live?.people, [
+      { agent: "claude", state: "stopped" },
+      { agent: "deepseek", state: "waiting" },
+      { agent: "codex", state: "answered", by: "deepseek" },
+    ]);
+  });
+
   it("no live list once the round waits for a summary", () => {
     const s = status({ rounds: [round("SUMMARIZING")], turns: [turn("claude", "running", true)] });
     assert.equal(s.live, undefined);

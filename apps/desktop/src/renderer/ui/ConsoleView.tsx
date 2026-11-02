@@ -65,7 +65,7 @@ export function ConsoleView({ notice }: { notice: ReactNode }) {
       </nav>
       <main className="console-page">
         {notice}
-        {agent ? <AgentPage agent={agent} st={status[agent.id]} /> : <p className="side-note">从左边选一位。</p>}
+        {agent ? <AgentPage key={agent.id} agent={agent} st={status[agent.id]} /> : <p className="side-note">从左边选一位。</p>}
       </main>
     </div>
   );

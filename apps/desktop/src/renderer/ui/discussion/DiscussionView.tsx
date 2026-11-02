@@ -124,7 +124,7 @@ function TopicRail() {
   );
 }
 
-const PERSON_LABEL: Record<TopicPerson["state"], string> = { answered: "已答", running: "回答中", waiting: "等着", missed: "没答上" };
+const PERSON_LABEL: Record<TopicPerson["state"], string> = { answered: "已答", running: "回答中", waiting: "等着", stopped: "停下了", missed: "没答上" };
 
 function TopicRow(props: { project: Project; status: TopicStatus; current: boolean; onOpen: (id: string) => void }) {
   const { project, status } = props;
@@ -157,7 +157,7 @@ function TopicRow(props: { project: Project; status: TopicStatus; current: boole
           <ul className="disc-people" aria-label="每人状态">
             {live.people.map((p) => (
               <li key={p.agent} data-state={p.state} style={{ "--agent": agentColor(d, p.agent) } as CSSProperties}>
-                {agentName(d, p.agent)} {PERSON_LABEL[p.state]}
+                {agentName(d, p.agent)} {PERSON_LABEL[p.state]}{p.by ? `（${agentName(d, p.by)}代）` : ""}
               </li>
             ))}
           </ul>

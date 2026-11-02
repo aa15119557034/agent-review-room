@@ -25,13 +25,16 @@ export function NewTopic() {
     setBusy(true);
     try {
       // 建失败（或没切过去）时，下面这些不能写到别的议题里去
-      if (!(await actions.createProject(name.trim()))) return;
-      if (first.trim()) {
+      const created = await actions.createProject(name.trim());
+      if (!created) return;
+      // 每一步前都核一次：中途切到别的议题就停，不写进别人那里
+      const still = () => actions.isCurrentProject(created.id);
+      if (first.trim() && still()) {
         actions.setComposerText(first.trim());
         await actions.addNote();
       }
-      if (withPlan) await actions.createPlan(plan.trim(), "你写的第一版");
-      actions.closeReview();
+      if (withPlan && still()) await actions.createPlan(plan.trim(), "你写的第一版");
+      if (still()) actions.closeReview();
     } finally {
       setBusy(false);
     }
