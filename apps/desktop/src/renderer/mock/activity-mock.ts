@@ -12,10 +12,11 @@ import {
   type Turn,
 } from "@room/schemas";
 import { MockError } from "./util";
+import { activityTurn } from "../lib/console";
 
 /**
  * C-37a agents.activity 的 mock：把讨论的 Turn 和聊天的回答位按秘书列出来。
- * 规则照契约注释：current 正序全给；recent 按 (createdAt, id) 倒序分页；带 before 时 current 为空；
+ * 规则照契约注释：current 按 (createdAt, id) 正序全给；recent 按 (createdAt, id) 倒序分页；带 before 时 current 为空；
  * 替补的 Turn 只算实际答的人；用户消息已撤回 → preview = null。
  */
 export interface ActivitySources {
@@ -29,7 +30,11 @@ const LIVE_TURN: readonly Turn["outcome"][] = ["pending", "running"];
 
 const cut = (text: string | null | undefined): string | null => {
   const t = text?.trim();
-  return t ? t.slice(0, AGENT_ACTIVITY_PREVIEW_MAX) : null;
+  // 按码点截，不切半个 emoji；码点数 ≤ 200 时 UTF-16 长度可能超过 200，再按长度收一次（不留半个代理对）
+  if (!t) return null;
+  let out = Array.from(t).slice(0, AGENT_ACTIVITY_PREVIEW_MAX).join("");
+  while (out.length > AGENT_ACTIVITY_PREVIEW_MAX) out = Array.from(out).slice(0, -1).join("");
+  return out;
 };
 
 const itemKey = (x: AgentActivityItem) => (x.kind === "discussion" ? x.turn : x.slot);
@@ -58,7 +63,7 @@ export function createActivityQuery(src: ActivitySources) {
         projectName: project.name,
         roundId: round.id,
         roundIndex: round.index,
-        turn,
+        turn: activityTurn(turn),
         preview: cut(round.task),
       });
     }
@@ -83,7 +88,8 @@ export function createActivityQuery(src: ActivitySources) {
     return {
       current,
       recent,
-      nextCursor: done.length > limit && last ? { createdAt: itemKey(last).createdAt, id: itemKey(last).id } : null,
+      // C-37a：满 limit 条就给（下一页可能是空的），不足给 null
+      nextCursor: recent.length === limit && last ? { createdAt: itemKey(last).createdAt, id: itemKey(last).id } : null,
     };
   };
 }

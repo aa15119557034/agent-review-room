@@ -2,10 +2,12 @@ import {
   quotaState,
   type AgentActivityCursor,
   type AgentActivityItem,
+  type AgentActivityTurn,
   type AgentProfile,
   type AgentStatus,
   type ControlEvent,
   type QuotaState,
+  type Turn,
 } from "@room/schemas";
 import { OUTCOME_LABEL } from "./discussion";
 import { conversationTitle, slotLabel } from "./chat";
@@ -34,6 +36,19 @@ export interface ActivityPage {
 export const initialConsole: ConsoleState = { agentId: null, activity: null, activityAvailable: true };
 
 // ---------------------------------------------------------------- 活动列表
+
+/** turn.updated 带的是整份 Turn；活动列表只要摘要（C-37a：不带 partialText 等） */
+export const activityTurn = (t: Turn): AgentActivityTurn => ({
+  id: t.id,
+  agent: t.agent,
+  onBehalfOf: t.onBehalfOf,
+  isSummary: t.isSummary,
+  outcome: t.outcome,
+  replyMessageId: t.replyMessageId,
+  supersededBy: t.supersededBy,
+  createdAt: t.createdAt,
+  finishedAt: t.finishedAt,
+});
 
 const keyOf = (x: AgentActivityItem) => (x.kind === "discussion" ? x.turn : x.slot);
 export const activityId = (x: AgentActivityItem) => keyOf(x).id;
@@ -66,7 +81,7 @@ export function applyActivityEvent(page: ActivityPage, event: ControlEvent): { p
   if (event.type === "turn.updated") {
     if (event.turn.agent !== page.agent) return { page, reload: false };
     id = event.turn.id;
-    replace = (x) => (x.kind === "discussion" ? { ...x, turn: event.turn } : x);
+    replace = (x) => (x.kind === "discussion" ? { ...x, turn: activityTurn(event.turn) } : x);
   } else if (event.type === "chat.slot.updated") {
     if (event.slot.agent !== page.agent) return { page, reload: false };
     id = event.slot.id;

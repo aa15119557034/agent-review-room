@@ -88,6 +88,23 @@ describe("agents.activity mock (C-37a)", () => {
     assert.deepEqual(r.current.map((x) => (x.kind === "discussion" ? x.turn.id : x.slot.id)), [`turn_${ID(4)}`, `slot_${ID(7)}`]);
     assert.deepEqual(r.recent.map((x) => (x.kind === "discussion" ? x.turn.id : x.slot.id)), [`slot_${ID(5)}`, `slot_${ID(3)}`, `turn_${ID(2)}`]);
     assert.equal(r.nextCursor, null);
+    // C-37a（汐 #157）：讨论项只带 Turn 摘要
+    const d = r.recent.find((x) => x.kind === "discussion")!;
+    assert.ok(d.kind === "discussion" && !("partialText" in d.turn) && !("approvalId" in d.turn));
+  });
+
+  it("preview is cut by code point and never leaves half an emoji", async () => {
+    const long = "😀".repeat(150);
+    const q = createActivityQuery({
+      agentExists: () => true,
+      projects: () => [project],
+      discussion: () => ({ rounds: [{ ...round, task: long }], turns: [turn(2, "claude", "answered")] }),
+      chat: async () => ({ conversations: [], messages: [], slots: [] }),
+    });
+    const p = (await q({ type: "agents.activity", agent: "claude" })).recent[0]!.preview!;
+    assert.ok(p.length <= 200);
+    assert.ok(!/[\uD800-\uDBFF]$/.test(p), "no dangling high surrogate");
+    assert.equal(p, "😀".repeat(100));
   });
 
   it("a substitute's turn is listed under the one who answered, not the absent one", async () => {
@@ -119,6 +136,11 @@ describe("agents.activity mock (C-37a)", () => {
       seen.push(...page.recent.map((x) => (x.kind === "discussion" ? x.turn.id : x.slot.id)));
     }
     assert.deepEqual(seen, [`slot_${ID(5)}`, `slot_${ID(3)}`, `turn_${ID(2)}`]);
+    // 满页就给 cursor（C-37a），所以最后一页可能是空的
+    const full = await q({ type: "agents.activity", agent: "claude", limit: 3 });
+    assert.ok(full.nextCursor);
+    const empty = await q({ type: "agents.activity", agent: "claude", limit: 3, before: full.nextCursor! });
+    assert.deepEqual([empty.recent.length, empty.nextCursor], [0, null]);
   });
 
   it("unknown agent → not_found (through the bridge, so the response is schema-checked)", async () => {
