@@ -1999,3 +1999,31 @@ describe("D-32：round.retry 带替补（C酱 #158 必须改 1）", () => {
     await close(h);
   });
 });
+
+describe("agents.activity（D-44）", () => {
+  it("不认识的 agent → not_found", async () => {
+    const h = await makeHarness();
+    const result = await h.dispatcher.handleQuery({ type: "agents.activity", agent: "ghost" });
+    assert.equal(failure(result).error, "not_found", JSON.stringify(result));
+    await close(h);
+  });
+
+  it("起草后这位的活动在 current 里；出参按契约校验", async () => {
+    const h = await makeHarness();
+    const created = (await draft(h, ["deepseek"])) as unknown as { data: { round: { id: string; index: number } } };
+    const result = (await h.dispatcher.handleQuery({ type: "agents.activity", agent: "deepseek", limit: 20 })) as unknown as {
+      ok: boolean;
+      data: { current: { kind: string; preview: string | null; turn?: { outcome: string } }[]; recent: unknown[]; nextCursor: unknown };
+    };
+    assert.equal(result.ok, true, JSON.stringify(result));
+    assert.equal(result.data.current.length, 1, "盖章前是 pending，算「正在答」");
+    const item = result.data.current[0]!;
+    assert.equal(item.kind, "discussion");
+    assert.equal(item.turn?.outcome, "pending");
+    assert.equal(item.preview, "各自说说怎么做");
+    assert.deepEqual(result.data.recent, []);
+    assert.equal(result.data.nextCursor, null);
+    assert.ok(created.data.round.id.length > 0);
+    await close(h);
+  });
+});
