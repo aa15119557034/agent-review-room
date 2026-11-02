@@ -102,6 +102,24 @@ function Avatar({ label, color }: { label: string; color: string }) {
   );
 }
 
+/** 群头像（画布草案）：成员的头像拼成 2×2 小方格，最多 4 格，不够的空着 */
+function GroupAvatar({ members, name, color }: { members: readonly string[]; name: (id: string) => string; color: (id: string) => string }) {
+  const cells = members.slice(0, 4);
+  return (
+    <span className="avatar avatar-group" aria-hidden="true">
+      {[0, 1, 2, 3].map((i) =>
+        cells[i] === undefined ? (
+          <span key={i} className="avatar-cell avatar-cell-empty" />
+        ) : (
+          <span key={i} className="avatar-cell" style={agentStyle(color(cells[i]!))}>
+            {name(cells[i]!).slice(0, 1)}
+          </span>
+        ),
+      )}
+    </span>
+  );
+}
+
 function Sheet({ title, onClose, children }: { title: string; onClose: () => void; children: ReactNode }) {
   useEffect(() => {
     const esc = (e: globalThis.KeyboardEvent) => e.key === "Escape" && onClose();
@@ -156,7 +174,11 @@ function ConversationList() {
                   data-pinned={conv.pinned || undefined}
                   onClick={() => void actions.chat.openConversation(conv.id)}
                 >
-                  <Avatar label={conv.kind === "group" ? "群" : name(conv.members[0]!)} color={conv.kind === "group" ? "#566870" : color(conv.members[0]!)} />
+                  {conv.kind === "group" ? (
+                    <GroupAvatar members={conv.members} name={name} color={color} />
+                  ) : (
+                    <Avatar label={name(conv.members[0]!)} color={color(conv.members[0]!)} />
+                  )}
                   <span className="chat-list-main">
                     <span className="chat-list-title">
                       <b>{title}</b>

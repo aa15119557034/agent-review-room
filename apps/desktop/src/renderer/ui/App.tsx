@@ -97,10 +97,101 @@ function ReviewerSetupHint() {
 }
 
 function TopBar() {
+  return (
+    <>
+      <TopHeader />
+      <MainNav />
+    </>
+  );
+}
+
+/**
+ * C-33b 主导航（画布《1B 外观草案》）：桌面是左边一条竖着的玻璃栏，图标在上、字在下；
+ * 手机宽度变成底部悬浮的玻璃标签栏（样式在 theme-apple.css）。
+ */
+const NAV_ICONS = {
+  chat: <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4h0A1.5 1.5 0 0 1 4 14.5z" />,
+  room: (
+    <>
+      <path d="M5 19V9l7-5 7 5v10z" />
+      <path d="M10 19v-5h4v5" />
+    </>
+  ),
+  agents: (
+    <>
+      <circle cx="9" cy="9" r="3.2" />
+      <circle cx="16.5" cy="10" r="2.5" />
+      <path d="M3.5 19c.9-3 3-4.5 5.5-4.5s4.6 1.5 5.5 4.5" />
+      <path d="M15 15.2c2.3-.4 4.5.8 5.5 3.8" />
+    </>
+  ),
+  run: <path d="M8 5.5v13l10-6.5z" />,
+  review: (
+    <>
+      <path d="M7 3.5h7l4 4v13H7z" />
+      <path d="M14 3.5v4h4M9.5 14l2 2 3.5-4" />
+    </>
+  ),
+  settings: (
+    <>
+      <circle cx="12" cy="12" r="3" />
+      <path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8" />
+    </>
+  ),
+} as const;
+
+function NavIcon({ name }: { name: keyof typeof NAV_ICONS }) {
+  return (
+    <svg className="topnav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {NAV_ICONS[name]}
+    </svg>
+  );
+}
+
+function MainNav() {
+  const view = useAppState((s) => s.view);
+  const actions = useActions();
+  return (
+    <nav className="topnav" aria-label="主导航">
+      <button type="button" aria-current={view === "chat" ? "page" : undefined} onClick={actions.goChat}>
+        <NavIcon name="chat" />
+        <span className="topnav-label">聊天</span>
+        <ChatUnread />
+      </button>
+      <button type="button" aria-current={view === "discussion" ? "page" : undefined} onClick={actions.goDiscussion}>
+        <NavIcon name="room" />
+        <span className="topnav-label">讨论室</span>
+        <DiscussionBadge />
+      </button>
+      <button type="button" aria-current={view === "console" ? "page" : undefined} onClick={() => void actions.agentConsole.open()}>
+        <NavIcon name="agents" />
+        <span className="topnav-label">秘书</span>
+      </button>
+      <button type="button" disabled title="阶段 1C">
+        <NavIcon name="run" />
+        <span className="topnav-label">执行</span>
+      </button>
+      <button type="button" aria-current={view === "desk" ? "page" : undefined} onClick={actions.goDesk}>
+        <NavIcon name="review" />
+        <span className="topnav-label">单次评审</span>
+      </button>
+      <button
+        type="button"
+        className="topnav-settings"
+        aria-current={view === "settings" ? "page" : undefined}
+        onClick={() => (view === "settings" ? actions.closeSettings() : void actions.openSettings())}
+      >
+        <NavIcon name="settings" />
+        <span className="topnav-label">设置</span>
+      </button>
+    </nav>
+  );
+}
+
+function TopHeader() {
   const project = useAppState(currentProject);
   const status = useAppState((s) => s.status);
   const view = useAppState((s) => s.view);
-  const actions = useActions();
   const isMock = useIsMock();
   return (
     <header className="topbar">
@@ -117,32 +208,6 @@ function TopBar() {
           Reviewer：{status.reviewerConfigured ? status.reviewerAgent : "未设置节点"}
         </span>
       )}
-      <nav className="topnav" aria-label="主导航">
-        <button type="button" aria-current={view === "chat" ? "page" : undefined} onClick={actions.goChat}>
-          聊天
-          <ChatUnread />
-        </button>
-        <button type="button" aria-current={view === "discussion" ? "page" : undefined} onClick={actions.goDiscussion}>
-          讨论
-          <DiscussionBadge />
-        </button>
-        <button type="button" disabled title="阶段 1C">
-          执行
-        </button>
-        <button type="button" aria-current={view === "console" ? "page" : undefined} onClick={() => void actions.agentConsole.open()}>
-          秘书
-        </button>
-        <button type="button" aria-current={view === "desk" ? "page" : undefined} onClick={actions.goDesk}>
-          单次评审
-        </button>
-        <button
-          type="button"
-          aria-current={view === "settings" ? "page" : undefined}
-          onClick={() => (view === "settings" ? actions.closeSettings() : void actions.openSettings())}
-        >
-          设置
-        </button>
-      </nav>
     </header>
   );
 }
