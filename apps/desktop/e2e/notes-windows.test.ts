@@ -155,6 +155,14 @@ describe("X-36 换窗口", () => {
       };
       assert.equal(handoffSnap.user_message_id, null);
       const handoffPrompt = splitBoundary(sentToNode(h, handoffSnap.id).content, handoffSnap.nonce);
+      const handoffIncluded = JSON.parse(
+        (h.db.prepare("SELECT included_message_ids FROM chat_snapshots WHERE id = ?").get(handoffSnap.id) as { included_message_ids: string })
+          .included_message_ids,
+      ) as string[];
+      const windowIds = (h.db.prepare("SELECT id FROM chat_messages WHERE conversation_id = ? ORDER BY created_at, id").all(conv) as { id: string }[]).map(
+        (r) => r.id,
+      );
+      assert.deepEqual(handoffIncluded, windowIds, "交接 Snapshot 带的就是窗口里那几条");
       for (const needle of ["旧消息甲", "回答甲", "旧消息乙", "回答乙"]) {
         assert.ok(handoffPrompt.inside.some((s) => s.includes(needle)), needle + " 应该在资料边界里");
         assert.equal(handoffPrompt.outside.includes(needle), false, needle + " 不能出现在边界外");
@@ -186,8 +194,14 @@ describe("X-36 换窗口", () => {
       for (const old of ["旧消息甲", "回答甲", "旧消息乙", "回答乙"]) assert.equal(after.content.includes(old), false, old + " 不该再发给他");
       assert.match(after.content, /新消息丙/);
       assert.match(after.content, /引用的是换窗口前的一条消息/);
-      const oldIds = h.db.prepare("SELECT id FROM chat_messages WHERE conversation_id = ? AND created_at <= (SELECT created_at FROM chat_messages WHERE id = ?)").all(conv, draft.startsAfterMessageId) as { id: string }[];
-      assert.ok(oldIds.length >= 4);
+      // 边界前 = (created_at, id) 不大于边界那条，和 D-46b 的窗口规则一致
+      const oldIds = h.db
+        .prepare(
+          "SELECT m.id FROM chat_messages m, chat_messages b WHERE m.conversation_id = ? AND b.id = ? " +
+            "AND (m.created_at < b.created_at OR (m.created_at = b.created_at AND m.id <= b.id)) ORDER BY m.created_at, m.id",
+        )
+        .all(conv, draft.startsAfterMessageId) as { id: string }[];
+      assert.equal(oldIds.length, 4, "这个用例里边界前正好是 甲、回答甲、乙、回答乙");
       for (const { id } of oldIds) assert.equal(after.included.includes(id), false, "Snapshot 的 includedMessageIds 不含边界前的 " + id);
       const parts = splitBoundary(after.content, after.nonce);
       const noteBlock = parts.inside.find((s) => s.includes("项目笔记（第 1 版）"));
@@ -239,6 +253,11 @@ describe("X-36 换窗口", () => {
       assert.equal(h.events.some((e) => e.type === "chat.window.created" || e.type === "projectNote.created"), false);
       const runState = (h.db.prepare("SELECT state FROM chat_runs WHERE id = ?").get(draft.runId) as { state: string }).state;
       assert.notEqual(runState, "RUNNING", "Run 和它的终止事件照常保留");
+      // 终态不锁 COMPLETED / CANCELLED（取决于 abort 和节点交卷谁先到），只锁「终止事件恰好一条、最后一次是终态」
+      const runUpdates = h.events.flatMap((e) => (e.type === "chat.run.updated" && e.run.id === draft.runId ? [e.run.state] : []));
+      const TERMINAL = ["COMPLETED", "FAILED", "CANCELLED", "TIMED_OUT"];
+      assert.equal(runUpdates.filter((st) => TERMINAL.includes(st)).length, 1, "终止事件唯一：" + runUpdates.join(","));
+      assert.ok(TERMINAL.includes(runUpdates.at(-1)!), "最后一次是终态");
 
       const statuses = await query<WindowStatusLike[]>(h, { type: "chat.windows.get", conversationId: conv });
       const mine = statuses.find((s) => s.agent === "deepseek");
@@ -320,6 +339,7 @@ describe("X-36 room-note", () => {
       assert.equal(slot.outcome, "answered", "笔记没存上不影响回答");
       const shown = (h.db.prepare("SELECT text FROM chat_messages WHERE in_reply_to = ?").get(a) as { text: string }).text;
       assert.equal(shown.includes("room-note"), false, "笔记块不显示在回答里");
+      assert.match(shown, /^答完了。/, "正文没被吞掉");
       assert.equal(count(h, "SELECT COUNT(*) AS n FROM project_notes"), 0);
       const rejected = h.events.find((e) => e.type === "projectNote.rejected") as
         | { type: "projectNote.rejected"; agent: string; reason: string; source: { kind: string; runId?: string } }
