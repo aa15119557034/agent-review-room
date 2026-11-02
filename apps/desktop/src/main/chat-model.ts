@@ -25,6 +25,8 @@ export function selectChatModel(
   agent: AgentProfile,
   profileId: string,
   profileModels: readonly ProfileModels[] | undefined,
+  /** 用哪一档强度：回答用 chat，写历史摘要用 summary（D-45） */
+  occasion: "chat" | "summary" = "chat",
 ): BatchModel | null {
   const models = modelsOf(profileModels, profileId);
   if (models === undefined || models.length === 0 || agent.modelSettings.primaryModel === null) return null;
@@ -50,7 +52,7 @@ export function selectChatModel(
     effort = null;
     effortSource = "none";
   } else {
-    const configured = agent.modelSettings.effort.chat;
+    const configured = agent.modelSettings.effort[occasion];
     if (configured !== null && chosen.efforts.some((level) => level.id === configured)) {
       effort = configured;
       effortSource = "configured";

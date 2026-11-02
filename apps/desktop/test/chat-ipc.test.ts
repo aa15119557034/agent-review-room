@@ -29,6 +29,7 @@ import {
 import {
   CHAT_LIMITS,
   ChatHistorySummary,
+  ChatMessage,
   ChatRun,
   ChatSnapshot,
   ControlEvent,
@@ -94,6 +95,14 @@ function reply(text: string): Script {
   ];
 }
 
+/** D-45：历史摘要 Run 的输出是纯文本 */
+function summaryReply(text: string): Script {
+  return [
+    { type: "message_complete", text },
+    { type: "completed" },
+  ];
+}
+
 function skip(): Script {
   return [
     { type: "message_complete", text: JSON.stringify({ kind: "skip" }) },
@@ -142,6 +151,10 @@ async function makeHarness(
     now?: () => string;
     /** 取消画图任务先失败几次（测撤回不被拖垮、会重试） */
     cancelMediaFails?: number;
+    /** D-45：写历史摘要的 Run 回什么（默认一串要点） */
+    summaryScript?: Script;
+    /** D-45：摘要 Run 先等这个 promise 再回（测「跑的时候来源被撤回」） */
+    summaryGate?: Promise<void>;
   } = {},
 ): Promise<Harness> {
   const dir = mkdtempSync(join(tmpdir(), "room-chat-ipc-"));
@@ -220,7 +233,13 @@ async function makeHarness(
         ...inner,
         run: (sessionId, runId, input, opts) => {
           runInputs.push({ agent: target.agent as string, input: input as never });
-          return inner.run(sessionId, runId, input, opts);
+          const isSummaryRun = (input as { content?: string }).content?.includes("写摘要") === true;
+          if (!isSummaryRun) return inner.run(sessionId, runId, input, opts);
+          const summary = fakeAdapter(options.summaryScript ?? summaryReply("- 要点：用户下周三去上海"));
+          return (async function* () {
+            if (options.summaryGate !== undefined) await options.summaryGate;
+            yield* summary.run(sessionId, runId, input, opts);
+          })();
         },
       };
     },
@@ -1762,6 +1781,115 @@ describe("chat windows (D-46b)", () => {
       assert.ok(!snapshot.content.includes("窗口外的一句话"));
       assert.ok(!snapshot.content.includes("窗口外的摘要"));
       assert.ok(snapshot.includedMessageIds.includes(userMessageId(421)));
+    } finally {
+      h.db.close();
+    }
+  });
+});
+
+﻿
+// ================================================================ D-45 历史摘要接线
+
+/** 旧消息：放在撤回窗口内（最近 5 分钟），新建的那条在最后 */
+async function seedOldMessages(h: Harness, count: number): Promise<void> {
+  const base = Date.parse(NOW) - 240_000;
+  for (let i = 1; i <= count; i += 1) {
+    const message = ChatMessage.parse({
+      id: "cmsg_" + ulid(),
+      conversationId: h.conversationId,
+      createdAt: new Date(base + i * 1_000).toISOString(),
+      sender: "user",
+      content: { kind: "text", text: "旧消息第" + i + "条", attachments: [] },
+      mentions: { kind: "none" },
+      quoteMessageId: null,
+      replacesMessageId: null,
+      state: "sent",
+      retractedAt: null,
+    });
+    insertChatMessage(h.db, { message });
+  }
+}
+
+const summaryRuns = (h: Harness) =>
+  h.db.prepare("SELECT id, state FROM chat_runs WHERE purpose = 'history_summary'").all() as {
+    id: string;
+    state: string;
+  }[];
+
+async function waitFor(check: () => boolean, ms = 4_000): Promise<void> {
+  const end = Date.now() + ms;
+  while (Date.now() < end) {
+    if (check()) return;
+    await new Promise((resolve) => setTimeout(resolve, 5));
+  }
+  throw new Error("timed out waiting");
+}
+
+describe("chat history summary wiring (D-45)", () => {
+  it("攒够旧消息后写一份摘要，下一次回答的 Prompt 带上它、不再带被摘要的原文", async () => {
+    const h = await makeHarness({ summaryScript: summaryReply("- 用户下周三去上海出差") });
+    try {
+      await seedOldMessages(h, 40);
+      await h.chat.send(send(h.conversationId, userMessageId(901), "现在几点"));
+      await settle(h.chat);
+
+      await waitFor(() => listChatSummaries(h.db, h.conversationId).length === 1);
+      const summary = listChatSummaries(h.db, h.conversationId)[0]!;
+      assert.equal(summary.state, "current");
+      assert.equal(summary.content, "- 用户下周三去上海出差");
+      // 40 条旧消息 + 这一问 + 秘书的回答 = 42；保留最近 20 条，最老的 22 条进摘要
+      assert.equal(summary.sourceMessageIds.length, 22, "最老的 22 条（保留最近 20 条原文）");
+      assert.ok(h.events.some((event) => event.type === "chat.summary.updated"));
+      assert.equal(summaryRuns(h)[0]!.state, "COMPLETED");
+
+      const before = h.runInputs.length;
+      await h.chat.send(send(h.conversationId, userMessageId(902), "接着聊"));
+      await settle(h.chat);
+      const replyInput = h.runInputs.slice(before).find((entry) => entry.agent === "deepseek");
+      assert.ok(replyInput !== undefined);
+      assert.ok(replyInput.input.content.includes("历史摘要"), "Prompt 里有摘要");
+      assert.ok(!replyInput.input.content.includes("旧消息第1条"), "被摘要的原文不再进 Prompt");
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("摘要输出为空：Run 记失败、不写摘要、不当场重试", async () => {
+    const h = await makeHarness({ summaryScript: summaryReply("   ") });
+    try {
+      await seedOldMessages(h, 40);
+      await h.chat.send(send(h.conversationId, userMessageId(911), "现在几点"));
+      await settle(h.chat);
+
+      await waitFor(() => summaryRuns(h).length === 1 && summaryRuns(h)[0]!.state === "FAILED");
+      assert.equal(listChatSummaries(h.db, h.conversationId).length, 0);
+      await new Promise((resolve) => setTimeout(resolve, 60));
+      assert.equal(summaryRuns(h).length, 1, "失败之后不当场重来");
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("摘要跑的时候来源被撤回：这份丢掉、不存 current", async () => {
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const h = await makeHarness({ summaryScript: summaryReply("- 要点的内容"), summaryGate: gate });
+    try {
+      await seedOldMessages(h, 40);
+      await h.chat.send(send(h.conversationId, userMessageId(921), "现在几点"));
+      // 摘要 Run 会在回答结束后起来并卡在 gate 上，不能用 settle（它等的是「没有活跃 Run」）
+      await waitFor(() => summaryRuns(h).length === 1);
+
+      const oldest = h.db
+        .prepare("SELECT id FROM chat_messages WHERE conversation_id = ? AND sender = 'user' ORDER BY created_at ASC, id ASC LIMIT 1")
+        .get(h.conversationId) as { id: string };
+      await h.chat.retract({ type: "chat.retract", messageId: oldest.id } as never);
+
+      release();
+      await waitFor(() => summaryRuns(h)[0]!.state === "COMPLETED");
+      assert.equal(listChatSummaries(h.db, h.conversationId).length, 0, "来源被撤回，这份摘要丢掉");
     } finally {
       h.db.close();
     }

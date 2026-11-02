@@ -388,6 +388,18 @@ export function listChatMessages(
   };
 }
 
+/**
+ * 一整段会话的消息，旧的在前（D-45 摘要规划用）。
+ * 分页接口（listChatMessages）是给界面倒着翻的，摘要要按时间顺序看全量。
+ */
+export function listChatMessagesAscending(db: SqliteDatabase, conversationId: string, limit = 10_000): ChatMessage[] {
+  return (
+    db
+      .prepare("SELECT * FROM chat_messages WHERE conversation_id = ? ORDER BY created_at ASC, id ASC LIMIT ?")
+      .all(conversationId, limit) as ChatMessageRow[]
+  ).map(toChatMessage);
+}
+
 /** 本页里这些消息的全部回答位（chat.messages.list 的 slots 字段） */
 export function listChatSlotsForMessages(db: SqliteDatabase, messageIds: readonly string[]): ChatReplySlot[] {
   if (messageIds.length === 0) return [];
@@ -564,6 +576,18 @@ export function insertChatSummary(db: SqliteDatabase, summary: ChatHistorySummar
     parsed.runId,
     parsed.agent,
     parsed.createdAt,
+  );
+}
+
+/** 这个会话有没有还没跑完的历史摘要 Run（D-45：同一会话同时只允许一个） */
+export function hasActiveChatSummaryRun(db: SqliteDatabase, conversationId: string): boolean {
+  return (
+    db
+      .prepare(
+        "SELECT 1 FROM chat_runs WHERE conversation_id = ? AND purpose = 'history_summary' " +
+          "AND state IN ('QUEUED', 'STARTING', 'RUNNING') LIMIT 1",
+      )
+      .get(conversationId) !== undefined
   );
 }
 
@@ -1094,6 +1118,79 @@ export function finishChatRun(
     }
 
     return { run: getChatRun(db, input.runId) as ChatRun, slot, message };
+  });
+}
+
+export interface FinishChatSummaryRunInput {
+  runId: string;
+  /** 调用方看到的当前状态；和数据库不一致就是迟到 / 重复的结果 */
+  from: RunState;
+  /** 成功时给这份摘要（来源被撤回时不会落库）；和 failure 二选一 */
+  summary?: ChatHistorySummary;
+  /** 失败（空输出 / 节点报错 / 超时 / 取消）；和 summary 二选一 */
+  failure?: { message: string; failureReason: FailureReason };
+  finishedAt?: string;
+}
+
+export interface FinishChatSummaryRunResult {
+  run: ChatRun;
+  /** 真的落库的摘要；null = 没写（失败，或者来源在跑的时候被撤回了） */
+  summary: ChatHistorySummary | null;
+}
+
+/** 这些来源里已经被排除的（消息没了 / 撤回 / 回答的是已撤回的消息） */
+function excludedSourceIds(db: SqliteDatabase, ids: readonly string[]): string[] {
+  const excluded: string[] = [];
+  const inReplyToOf = (messageId: string) => {
+    const parent = getChatMessage(db, messageId);
+    return parent !== null && parent.sender === "user" ? parent : undefined;
+  };
+  for (const id of ids) {
+    const message = getChatMessage(db, id);
+    if (message === null || isExcludedFromContext(message, inReplyToOf)) excluded.push(id);
+  }
+  return excluded;
+}
+
+/**
+ * 结掉一个 history_summary Run（D-45）：Run 终态和摘要落库在**同一个事务**里。
+ *
+ * - 落库前再核一次来源消息：Run 跑的时候有人撤回 / 回答的消息被撤回 → 这份摘要丢掉（不存 current），
+ *   Run 仍按 COMPLETED 收尾（输出本身是好的，只是过期了）
+ * - 失败（空输出 / 节点报错 / 超时 / 取消）→ Run 记 FAILED；不写摘要
+ */
+export function finishChatSummaryRun(
+  db: SqliteDatabase,
+  queue: WriteQueue,
+  input: FinishChatSummaryRunInput,
+): Promise<FinishChatSummaryRunResult> {
+  if ((input.summary === undefined) === (input.failure === undefined)) {
+    throw new Error("finishChatSummaryRun needs exactly one of summary / failure");
+  }
+  return writeTransaction(db, queue, () => {
+    const run = getChatRun(db, input.runId);
+    if (run === null) throw new ChatRunStateConflictError(input.runId, input.from, null);
+    if (run.state !== input.from) throw new ChatRunStateConflictError(input.runId, input.from, run.state);
+    if (run.purpose !== "history_summary") throw new Error("not a history_summary run: " + input.runId);
+
+    const finishedAt = input.finishedAt ?? new Date().toISOString();
+    const state: RunState = input.failure === undefined ? "COMPLETED" : "FAILED";
+    assertTransition(RUN_TRANSITIONS, "run", input.from, state);
+
+    let stored: ChatHistorySummary | null = null;
+    if (input.summary !== undefined) {
+      if (input.summary.conversationId !== run.conversationId) throw new Error("summary is for another conversation");
+      if (input.summary.runId !== run.id) throw new Error("summary was written by another run");
+      if (excludedSourceIds(db, input.summary.sourceMessageIds).length === 0) {
+        insertChatSummary(db, input.summary);
+        stored = input.summary;
+      }
+    }
+
+    db.prepare(
+      "UPDATE chat_runs SET state = ?, substate = NULL, failure_reason = ?, finished_at = ? WHERE id = ? AND state = ?",
+    ).run(state, input.failure?.failureReason ?? null, finishedAt, input.runId, input.from);
+    return { run: getChatRun(db, input.runId) as ChatRun, summary: stored };
   });
 }
 
