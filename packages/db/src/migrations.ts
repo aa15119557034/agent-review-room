@@ -21,6 +21,7 @@ import { SCHEMA_V20 } from "./schema-v20";
 import { SCHEMA_V21 } from "./schema-v21";
 import { SCHEMA_V22 } from "./schema-v22";
 import { SCHEMA_V23 } from "./schema-v23";
+import { SCHEMA_V24 } from "./schema-v24";
 
 /**
  * 迁移（D-02）：用 PRAGMA user_version 记版本，每个迁移在自己的事务里跑。
@@ -214,6 +215,11 @@ export const MIGRATIONS: readonly Migration[] = [
     up: (db) => {
       db.exec(SCHEMA_V23);
     },
+  },
+  {
+    version: 24,
+    name: "chat-immersive-pending",
+    up: (db) => { db.exec(SCHEMA_V24); },
   },
 ];
 
