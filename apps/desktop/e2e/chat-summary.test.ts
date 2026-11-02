@@ -191,12 +191,18 @@ describe("X-35b 聊天历史摘要（真流程）", () => {
       assert.equal(rewritten.state, "current");
       assert.ok(!rewritten.sourceMessageIds.includes(ids[1]!), "来源不含撤回的那条");
       assert.ok(rewritten.sourceMessageIds.includes(ids[2]!), "从没被撤回的最早一条开始");
+      const echoOfFirst = (h.db.prepare("SELECT id FROM chat_messages WHERE in_reply_to = ?").get(ids[1]!) as { id: string }).id;
+      assert.ok(!rewritten.sourceMessageIds.includes(echoOfFirst), "来源也不含回答撤回那条的发言");
+      // 撤回后能用的 42 条里，保留最近 20 条，剩下 22 条（第 2～12 问和它们的回答）进这一份
+      assert.equal(rewritten.sourceMessageIds.length, 22);
 
       // ⑥ 第 23 问：带新摘要，不带旧的
       await say(23, [reply("好")], 2);
       const latest = replyContent(h, ids[23]!);
       assert.ok(latest.includes("用户在随便聊（重写）"));
       assert.ok(!latest.includes("第一条提到了一个暗号"));
+      assert.ok(!latest.includes(first!.id), "stale 摘要的 id 也不在");
+      assert.ok(latest.includes(rewritten.id));
       assert.ok(!latest.includes(SENTINEL));
     } finally {
       await h.close();
@@ -235,7 +241,9 @@ describe("X-35b 聊天历史摘要（真流程）", () => {
       // 给「当场重来」留时间：如果会重试风暴，这段时间里会冒出更多摘要 Run
       await new Promise((resolve) => setTimeout(resolve, 300));
       assert.equal(summaryRuns(h).length, 1, "失败后不当场重来");
-      assert.notEqual(summaryRuns(h)[0]!.state, "COMPLETED");
+      assert.equal(summaryRuns(h)[0]!.state, "FAILED");
+      const failed = h.db.prepare("SELECT failure_reason FROM chat_runs WHERE id = ?").get(summaryRuns(h)[0]!.id) as { failure_reason: string };
+      assert.equal(failed.failure_reason, "internal");
       assert.equal((await summaries(h, conv)).length, 0, "失败不写摘要");
       assert.equal(h.chat.activeCount(), 0);
 
