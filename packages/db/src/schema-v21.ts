@@ -160,7 +160,9 @@ CREATE TABLE chat_window_drafts (
   CHECK (content_hash IS NULL OR (length(content_hash) = 64 AND content_hash NOT GLOB '*[^0-9a-f]*'))
 ) STRICT;
 
-CREATE INDEX idx_chat_window_drafts_pending ON chat_window_drafts(conversation_id, agent, state);
+-- 同一 (会话, 秘书) 最多一份 pending：双击 / 并发也只留一份
+CREATE UNIQUE INDEX ux_chat_window_drafts_pending ON chat_window_drafts(conversation_id, agent) WHERE state = 'pending';
+CREATE INDEX idx_chat_window_drafts_lookup ON chat_window_drafts(conversation_id, agent, state);
 
 CREATE TABLE chat_windows (
   id                      TEXT NOT NULL PRIMARY KEY,

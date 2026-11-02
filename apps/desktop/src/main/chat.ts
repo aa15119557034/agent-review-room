@@ -21,6 +21,7 @@ import {
   type ChatContent,
   type ChatContentInput,
   CHAT_WINDOW_SUGGEST_COMPACTIONS,
+  PROJECT_NOTE_LIMITS,
   noteShrankALot,
   type ChatHistorySummary,
   type ChatMessage,
@@ -477,7 +478,6 @@ export class ChatService {
     }
 
     // ⑤ 拼 Snapshot（只能答的人）
-    const history = listChatMessages(db, conversation.id, null, 100).messages.slice().reverse();
     const promptFiles =
       content.kind === "text"
         ? capChatFileTexts(
@@ -1344,18 +1344,30 @@ export class ChatService {
       });
       return;
     }
-    const draft = pendingChatWindowDraft(db, run.conversationId, run.agent);
-    if (draft !== null && draft.runId === run.id && draft.content === null) {
-      const next: ChatWindowDraft = {
-        ...draft,
+    // #180 评审第 3 条：太长就别落库，按输出超限收尾，别变成笼统的 internal
+    if (text.length > PROJECT_NOTE_LIMITS.maxChars) {
+      await finish({
+        kind: "failed",
+        failure: { kind: "run_failed", message: "交接笔记太长（" + text.length + " 字，上限 " + PROJECT_NOTE_LIMITS.maxChars + "）" },
+        failureReason: "output_limit_exceeded",
+      });
+      return;
+    }
+    // #180 评审第 2 条：判断和写入放进同一个事务，免得盖掉用户刚手改的内容
+    const next = await writeTransaction(db, queue, () => {
+      const current = pendingChatWindowDraft(db, run.conversationId, run.agent);
+      if (current === null || current.runId !== run.id || current.content !== null) return null;
+      const updated: ChatWindowDraft = {
+        ...current,
         content: text,
         contentHash: sha256Hex(text),
         contentBy: "agent",
         updatedAt: this.#now(),
       };
-      await writeTransaction(db, queue, () => updateChatWindowDraft(db, next));
-      this.#emit({ type: "chat.window.draftUpdated", draft: next });
-    }
+      updateChatWindowDraft(db, updated);
+      return updated;
+    });
+    if (next !== null) this.#emit({ type: "chat.window.draftUpdated", draft: next });
     await finish({ kind: "answered", text });
   }
 
@@ -1396,14 +1408,19 @@ export class ChatService {
     };
     const started = writeYourself ? null : await this.#handoffRun(draft, now);
     if (started !== null) draft.runId = started.run.id;
-    await writeTransaction(db, queue, () => {
+    // #180 评审第 4 条：查重和插入放进同一个事务（v21 的 partial unique index 兜底）
+    const created = await writeTransaction(db, queue, () => {
+      const existingNow = pendingChatWindowDraft(db, conversation.id, command.agent);
+      if (existingNow !== null) return { draft: existingNow, started: false };
       if (started !== null) insertChatSnapshot(db, started.snapshot);
       insertChatWindowDraft(db, draft);
       if (started !== null) insertChatRun(db, started.run);
+      return { draft, started: started !== null };
     });
-    this.#emit({ type: "chat.window.draftUpdated", draft });
+    if (!created.started) return created.draft;
+    this.#emit({ type: "chat.window.draftUpdated", draft: created.draft });
     if (started !== null) this.#execute(started.run);
-    return draft;
+    return created.draft;
   }
 
   async editWindowDraft(command: CommandRequest<"chat.window.editDraft">): Promise<ChatWindowDraft> {
@@ -1483,7 +1500,7 @@ export class ChatService {
       contentHash: draft.contentHash,
       updatedBy: draft.contentBy ?? "human",
       reason: "window_handoff",
-      source: draft.runId === null ? null : { kind: "chat_run", runId: draft.runId },
+      source: draft.contentBy === "human" || draft.runId === null ? null : { kind: "chat_run", runId: draft.runId },
       revertedFromId: null,
       shrankALot: noteShrankALot(prev?.content ?? "", draft.content),
       createdAt: now,

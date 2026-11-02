@@ -191,8 +191,12 @@ export const MIGRATIONS: readonly Migration[] = [
   {
     version: 21,
     name: "chat-windows",
+    // 重建 chat_snapshots / chat_runs（purpose 要收下 window_handoff）：关外键，迁完再核
+    disableForeignKeys: true,
     up: (db) => {
       db.exec(SCHEMA_V21);
+      const broken = db.prepare("PRAGMA foreign_key_check").all();
+      if (broken.length > 0) throw new Error("v21 重建聊天快照 / Run 之后有外键不一致：" + JSON.stringify(broken).slice(0, 500));
     },
   },
 ];
