@@ -139,10 +139,8 @@ export class NotesService implements NotesProvider {
     expectedParentId: string | null;
   }): Promise<ProjectNote> {
     this.#assertMember(input.scope, input.agent);
-    const latest = latestProjectNote(this.#db, input.scope, input.agent);
-    if ((latest?.id ?? null) !== input.expectedParentId) {
-      throw new NoteError("invalid_state", "这份笔记已经变了，重新打开再改");
-    }
+    // #187（林离）：expectedParentId 要在写事务里核对——这里先读一次只是因为 #append 需要 latest 做比较？
+    // 真正的核对在 #append 的事务里做，避免「读完 latest 到写入之间」秘书又写了新版。
     const note = await this.#append({
       scope: input.scope,
       agent: input.agent,
@@ -152,6 +150,7 @@ export class NotesService implements NotesProvider {
       source: null,
       revertedFromId: null,
       skipIfUnchanged: true,
+      expectedParentId: input.expectedParentId,
     });
     if (note === null) throw new NoteError("internal", "笔记没有变化，但也没找到上一版");
     return note;
@@ -193,12 +192,11 @@ export class NotesService implements NotesProvider {
   /** 秘书得在这个子项目里（议题的收件人 / 会话成员），否则 not_found */
   #assertMember(scope: NoteScope, agent: string): void {
     if (scope.kind === "conversation") {
-      const row = this.#db.prepare("SELECT members FROM conversations WHERE id = ?").get(scope.conversationId) as
-        | { members: string }
-        | undefined;
-      if (row === undefined || !(JSON.parse(row.members) as string[]).includes(agent)) {
-        throw new NoteError("not_found", "这位秘书不在这个会话里");
-      }
+      // 会话成员在 conversation_members 表里（conversations 没有 members 列）
+      const row = this.#db
+        .prepare("SELECT 1 FROM conversation_members WHERE conversation_id = ? AND agent = ?")
+        .get(scope.conversationId, agent);
+      if (row === undefined) throw new NoteError("not_found", "这位秘书不在这个会话里");
       return;
     }
     const project = this.#db.prepare("SELECT 1 FROM projects WHERE id = ?").get(scope.projectId);
@@ -222,11 +220,16 @@ export class NotesService implements NotesProvider {
     source: NoteReplySource | null;
     revertedFromId: string | null;
     skipIfUnchanged: boolean;
+    /** #187：人工保存时在事务里核对「你看到的那一版」 */
+    expectedParentId?: string | null;
   }): Promise<ProjectNote | null> {
     const createdAt = new Date().toISOString();
     const { scope, agent } = input;
     const result = await writeTransaction(this.#db, this.#queue, () => {
       const latest = latestProjectNote(this.#db, scope, agent);
+      if (input.expectedParentId !== undefined && (latest?.id ?? null) !== input.expectedParentId) {
+        throw new NoteError("invalid_state", "这份笔记已经变了，重新打开再改");
+      }
       if (input.skipIfUnchanged && latest !== null && latest.content === input.content) return { note: latest, isNew: false };
       const contentHash = sha256Hex(input.content);
       const created: ProjectNote = {

@@ -1258,11 +1258,12 @@ export class ChatService {
       const { db, queue } = this.#deps;
       if (hasActiveChatSummaryRun(db, conversationId)) return;
 
-      // 便宜的先挡一下：消息总数不够（保留最近 20 + 至少攒 20）就根本不可能要摘要，不必读全量历史
+      // 便宜的先挡一下：连「旧区」都还没有（总数 ≤ 保留条数）就不必读全量历史。
+      // #187：core 的触发条件还有「旧区 ≥ 2 万字」，不能只按消息条数挡（1 条长回答 + 最近 20 条）
       const total = (db.prepare("SELECT count(*) AS n FROM chat_messages WHERE conversation_id = ?").get(conversationId) as
         | { n: number }
         | undefined)?.n ?? 0;
-      if (total < CHAT_SUMMARY_KEEP_RECENT + CHAT_SUMMARY_MIN_MESSAGES) return;
+      if (total <= CHAT_SUMMARY_KEEP_RECENT) return;
 
       const history = listChatMessagesAscending(db, conversationId);
       const byId = new Map(history.map((message) => [message.id, message] as const));
@@ -1497,8 +1498,10 @@ export class ChatService {
   #windowMessages(conversationId: string, agent: string): ChatMessage[] {
     const boundary = this.#boundary(conversationId, agent);
     const all = listChatMessages(this.#deps.db, conversationId, null, 100).messages.slice().reverse();
-    if (boundary === null) return all;
-    return all.filter(
+    // #187（林离）：撤回的消息、以及回答已撤回消息的发言，不能进交接 Prompt / 交接笔记
+    const visible = all.filter((message) => !isExcludedFromContext(message, this.#inReplyToOf));
+    if (boundary === null) return visible;
+    return visible.filter(
       (message) =>
         message.createdAt > boundary.createdAt ||
         (message.createdAt === boundary.createdAt && message.id > boundary.id),

@@ -197,13 +197,14 @@ async function makeHarness(
   const events: ControlEvent[] = [];
   const targets: ChatRunTarget[] = [];
   const held = new Set(options.hold ?? []);
+  const notesService = new NotesService({ db, queue, emit: (event) => events.push(ControlEvent.parse(event)) });
   const chat = new ChatService({
     db,
     queue,
     repo,
     settings,
     emit: (event) => events.push(ControlEvent.parse(event)),
-    notes: new NotesService({ db, queue, emit: (event) => events.push(ControlEvent.parse(event)) }),
+    notes: notesService,
     readFileText: (ref) => fileTexts.get(ref) ?? null,
     readImage: (ref) => imageBytes.get(ref) ?? null,
     drawMedia: async (source, draw, intentHash) => {
@@ -289,7 +290,7 @@ async function makeHarness(
     members: { kind: "direct", agent: "deepseek" },
     title: null,
   } as never);
-  return { chat, repo, db, events, conversationId: conversation.id, targets, fileTexts, cancelledMedia, runInputs, speakRequests, mediaCalls };
+  return { chat, repo, db, events, conversationId: conversation.id, targets, fileTexts, cancelledMedia, runInputs, speakRequests, mediaCalls, notes: notesService };
 }
 
 const userMessageId = (n: number): string => "cmsg_" + String(n).padStart(26, "0");
@@ -2079,6 +2080,93 @@ describe("immersive (D-39)", () => {
       assert.ok(kinds.includes("draw"));
       assert.ok(kinds.includes("fail-speak"));
       assert.equal(kinds.includes("speak"), false);
+    } finally {
+      h.db.close();
+    }
+  });
+});
+
+// ================================================================ #187 复审发现
+
+describe("review fixes (#187)", () => {
+  it("#180 撤回的原文不进交接 Prompt（换窗口不会把撒回内容带到新窗口）", async () => {
+    const h = await makeHarness({
+      scripts: {
+        deepseek: [
+          { type: "message_complete", text: JSON.stringify({ kind: "reply", text: "记住了" }) },
+          { type: "completed" },
+          { type: "message_complete", text: JSON.stringify({ kind: "reply", text: "好的" }) },
+          { type: "completed" },
+          { type: "message_complete", text: "## 交接\n- 没什么" },
+          { type: "completed" },
+        ],
+      },
+    });
+    try {
+      await h.chat.send(send(h.conversationId, userMessageId(981), "暗号 SENTINEL-XYZ"));
+      await settle(h.chat);
+      await h.chat.send(send(h.conversationId, userMessageId(982), "普通一句"));
+      await settle(h.chat);
+      await h.chat.retract({ type: "chat.retract", messageId: userMessageId(981) } as never);
+      const draft = await h.chat.prepareWindow({
+        type: "chat.window.prepare",
+        conversationId: h.conversationId,
+        agent: "deepseek",
+      } as never);
+      await waitFor(() => h.db.prepare("SELECT content FROM chat_window_drafts WHERE id = ?").get(draft.id) !== undefined);
+      await settle(h.chat);
+      const handoffInput = [...h.runInputs].reverse().find((entry) => entry.input.content.includes("交接"));
+      assert.ok(handoffInput !== undefined, "写交接的 Run 到了节点");
+      assert.equal(handoffInput.input.content.includes("SENTINEL-XYZ"), false, "撤回的原文不进交接 Prompt");
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("#173 少于 40 条但旧区超 2 万字也会写摘要", async () => {
+    const h = await makeHarness({ summaryScript: summaryReply("- 长回答摘要") });
+    try {
+      for (const [i, offset] of [600_000, 599_000].entries()) {
+        insertChatMessage(h.db, {
+          message: {
+            id: "cmsg_" + ulid(),
+            conversationId: h.conversationId,
+            createdAt: new Date(Date.parse(NOW) - offset).toISOString(),
+            sender: "user",
+            content: { kind: "text", text: String(i) + "长".repeat(12_000), attachments: [] },
+            mentions: { kind: "none" },
+            quoteMessageId: null,
+            replacesMessageId: null,
+            state: "sent",
+            retractedAt: null,
+          },
+        });
+      }
+      await seedOldMessages(h, 20);
+      await h.chat.send(send(h.conversationId, userMessageId(983), "现在几点"));
+      await settle(h.chat);
+      await waitFor(() => listChatSummaries(h.db, h.conversationId).length === 1);
+      assert.equal(listChatSummaries(h.db, h.conversationId)[0]!.state, "current");
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("#178 并发人工保存：expectedParentId 在事务里核对，旧内容不会盖掉新版", async () => {
+    const h = await makeHarness();
+    try {
+      const scope = { kind: "conversation" as const, conversationId: h.conversationId };
+      const results = await Promise.allSettled([
+        h.notes.edit({ scope, agent: "deepseek", content: "A", expectedParentId: null }),
+        h.notes.edit({ scope, agent: "deepseek", content: "B", expectedParentId: null }),
+      ]);
+      assert.equal(results.filter((result) => result.status === "fulfilled").length, 1, "只成功一个");
+      const rejected = results.find((result) => result.status === "rejected");
+      assert.ok(rejected !== undefined);
+      assert.equal(rejected.reason instanceof Error && rejected.reason.message.includes("变了"), true);
+      const latest = listLatestProjectNotes(h.db, scope);
+      assert.equal(latest.length, 1);
+      assert.ok(["A", "B"].includes(latest[0]!.content));
     } finally {
       h.db.close();
     }
