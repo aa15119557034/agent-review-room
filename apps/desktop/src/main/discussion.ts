@@ -20,6 +20,7 @@ import {
   endRound,
   finalizePlan as finalizePlanTx,
   interruptTurns,
+  listBatchItems,
   newRoundId,
   pauseRound,
   PlanError,
@@ -50,6 +51,7 @@ import type {
 import { isExcludedFromContext } from "@room/schemas";
 import { renderChatMaterial } from "./chat-material";
 import type { DiscussionSettlement, RunOrchestrator } from "./orchestrator";
+import { QuotaService, quotaKeyOf, type ProfileQuotaRead } from "./quota";
 import type { Repository } from "./repository";
 import type { SettingsStore } from "./settings";
 
@@ -109,6 +111,8 @@ export interface DiscussionDeps {
   readonly emit: (event: ControlEvent) => void;
   /** 测试注入；默认打节点的 /v1/health */
   readonly probeNode?: (params: { baseUrl: string; token: string; profileId: string }) => Promise<NodeProbeResult>;
+  /** D-32：读节点额度（GET /v1/profiles/:id/quota）；测试注入假的，默认真打节点 */
+  readonly quota?: QuotaService;
 }
 
 type AvailabilityNeed = "discuss" | "summarize";
@@ -117,7 +121,8 @@ type AvailabilityNeed = "discuss" | "summarize";
  * 额度缺席只在 5 小时内算数：过了这段时间可能是额度重置了，不能一直挡着。
  * 1A 还没有真正的额度接口，这是按「上一次发言的结局」做的近似。
  */
-const QUOTA_ABSENT_WINDOW_MS = 5 * 60 * 60 * 1000;
+/** D-32：没有注入时的默认额度读取器（30 秒缓存、2 秒超时） */
+const defaultQuota = new QuotaService();
 
 interface PendingRecipient {
   displayName: string;
@@ -158,8 +163,14 @@ export class DiscussionService {
       throw new DiscussionError("invalid_state", "这个议题的第 " + active.index + " 轮还没结束");
     }
 
-    const probes = await this.#checkRecipients(command.recipients, "discuss");
-    const agents: AgentProfile[] = command.recipients.map((agentId) => repo.getAgent(agentId));
+    // D-32：先把收件人过一遍（谁能答、谁缺席、谁替谁）；后面拼 Prompt 用的就是「实际收件的人」
+    const resolved = await this.#resolveSubstitutions({
+      recipients: command.recipients,
+      explicit: command.substitutes,
+      auto: command.substitutes === undefined,
+    });
+    const probes = resolved.probes;
+    const agents: AgentProfile[] = resolved.agents;
     const models = this.#selectModels(agents, "discussion", probes);
 
     const plan = command.planVersionId === null ? null : this.#loadPlan(project.id, command.planVersionId);
@@ -191,7 +202,7 @@ export class DiscussionService {
         plan,
         nonce: createNonce(),
       },
-      agents.map((profile) => ({ profile, onBehalfOf: null, extraMaterials: [] })),
+      resolved.batch.map((item) => ({ profile: item.profile, onBehalfOf: item.onBehalfOf, extraMaterials: [] })),
     );
     assertPromptFits(prompts);
 
@@ -200,11 +211,14 @@ export class DiscussionService {
       created = await createRoundDraft(db, queue, {
         projectId: project.id,
         roundId,
-        recipients: agents.map((profile, index) => ({
-          agent: profile.id,
+        recipients: resolved.batch.map((item, index) => ({
+          agent: item.agent,
+          onBehalfOf: item.onBehalfOf,
           prompt: prompts[index]!,
-          model: models.get(profile.id) ?? null,
+          model: models.get(item.agent) ?? null,
         })),
+        // 这一轮「本来发给谁」仍是用户挑的收件人（缺席的那位也在里面）
+        roundRecipients: command.recipients,
         task: command.task,
         taskSource: command.taskSource,
         planVersionId: command.planVersionId,
@@ -543,18 +557,35 @@ export class DiscussionService {
     if (previous === undefined || !["timed_out", "failed", "absent_quota"].includes(previous.outcome)) {
       throw new DiscussionError("invalid_state", "这个人不需要重试");
     }
+    // 已经开始重试了：再点一次会派第二个替补替他答，直接拒（C酱 #158 必须改 1）
+    if (previous.supersededBy !== null) {
+      throw new DiscussionError("invalid_state", "这一位已经在重试了");
+    }
 
-    // 重试就是用来处理失败 / 超时 / 额度缺席的，所以不按「额度缺席」挡
-    const probes = await this.#checkRecipients([command.agent], "discuss", { allowAbsentQuota: true });
+    // C-36 / D-32：带 substitute = 改由这位代他答（典型：答到一半额度用完）。
+    // 重试自己就是用来处理失败 / 超时 / 额度缺席的，所以被重试的人不按「额度缺席」挡；但替补必须现在真的能答
+    if (command.substitute !== undefined) {
+      if (command.substitute === command.agent) {
+        throw new DiscussionError("validation_failed", "不能让自己替自己");
+      }
+      if (previous.onBehalfOf !== null) {
+        throw new DiscussionError("validation_failed", "他本来就是替补，不能再找替补（不做替补链）");
+      }
+    }
+    const runner = repo.getAgent(command.substitute ?? command.agent);
+    const probes =
+      command.substitute === undefined
+        ? await this.#checkRecipients([command.agent], "discuss", { allowAbsentQuota: true })
+        : await this.#checkSubstituteForRound(round, runner);
     const agent = repo.getAgent(command.agent);
     const previousItem = repo.getBatchItemByApproval(previous.approvalId);
-    const reuse = new Map<string, BatchModel | null>([[agent.id, previousItem?.model ?? null]]);
-    const models = this.#selectModels([agent], "discussion", probes, reuse);
+    const reuse = new Map<string, BatchModel | null>([[runner.id, previousItem?.model ?? null]]);
+    const models = this.#selectModels([runner], "discussion", probes, reuse);
     const plan = round.planVersionId === null ? null : this.#loadPlan(round.projectId, round.planVersionId);
     const materials = this.#materialsFor(round.projectId);
     const prompts = assembleDiscussionBatch(
       { round, history: this.#historyWithCurrent(round), materials: materials.materials, plan, nonce: createNonce() },
-      [{ profile: agent, onBehalfOf: null, extraMaterials: [] }],
+      [{ profile: runner, onBehalfOf: command.substitute === undefined ? null : agent.id, extraMaterials: [] }],
     );
     assertPromptFits(prompts);
 
@@ -563,9 +594,17 @@ export class DiscussionService {
       created = await createBatchDraft(db, queue, {
         roundId: round.id,
         kind: "retry",
-        recipients: [{ agent: agent.id, prompt: prompts[0]!, model: models.get(agent.id) ?? null }],
+        recipients: [
+          {
+            agent: runner.id,
+            onBehalfOf: command.substitute === undefined ? null : agent.id,
+            prompt: prompts[0]!,
+            model: models.get(runner.id) ?? null,
+          },
+        ],
         compressedRounds: prompts[0]?.compressedRounds ?? [],
-        supersede: [{ oldTurnId: previous.id, agent: agent.id }],
+        // 新 Turn 的 agent 是替补（runner），supersede 必须按他找，否则旧 Turn 接不上（C酱 #158 必须改 1）
+        supersede: [{ oldTurnId: previous.id, agent: runner.id }],
         chatMaterialSourceIds: materials.sourceMessageIds,
       });
     } catch (error) {
@@ -622,8 +661,12 @@ export class DiscussionService {
     const task = command.task ?? round.task;
     const historyMode = command.historyMode ?? round.historyMode;
 
-    const probes = await this.#checkRecipients(recipients, "discuss");
-    const agents = recipients.map((agentId) => repo.getAgent(agentId));
+    // D-32：substitutes 省略 = 沿用旧批次的替补（按 onBehalfOf 读回；被改掉的人那一对丢掉）
+    const explicit =
+      command.substitutes ?? (await this.#carriedOverSubstitutions(round.id, recipients));
+    const resolved = await this.#resolveSubstitutions({ recipients, explicit, auto: false });
+    const probes = resolved.probes;
+    const agents: AgentProfile[] = resolved.agents;
     const models = this.#selectModels(agents, "discussion", probes);
     const plan = round.planVersionId === null ? null : this.#loadPlan(round.projectId, round.planVersionId);
     const forPrompt: Round = {
@@ -642,7 +685,7 @@ export class DiscussionService {
         plan,
         nonce: createNonce(),
       },
-      agents.map((profile) => ({ profile, onBehalfOf: null, extraMaterials: [] })),
+      resolved.batch.map((item) => ({ profile: item.profile, onBehalfOf: item.onBehalfOf, extraMaterials: [] })),
     );
     assertPromptFits(prompts);
 
@@ -653,10 +696,11 @@ export class DiscussionService {
         task,
         recipientAgents: recipients,
         historyMode,
-        prompts: agents.map((profile, index) => ({
-          agent: profile.id,
+        prompts: resolved.batch.map((item, index) => ({
+          agent: item.agent,
+          onBehalfOf: item.onBehalfOf,
           prompt: prompts[index]!,
-          model: models.get(profile.id) ?? null,
+          model: models.get(item.agent) ?? null,
         })),
         compressedRounds: prompts[0]?.compressedRounds ?? [],
         chatMaterialSourceIds: materials.sourceMessageIds,
@@ -926,40 +970,134 @@ export class DiscussionService {
     );
 
     const updatedAt = new Date().toISOString();
-    return agents.map((agent) => ({
-      agent: agent.id,
-      availability: this.#availabilityOf(agent, probes),
-      // 1A 不知道计费方式 / 额度 / 模型 / 上下文，全部 null，界面显示「未知」
-      billing: "unknown",
-      fiveHour: null,
-      weekly: null,
-      balance: null,
-      contextUsedPercent: null,
-      compactions: null,
-      model: null,
-      effort: null,
-      updatedAt,
-    }));
+    // D-32：额度从节点读（C-36 的端点）；读不到的项是 null，不猜、不写 0
+    const quotas = await this.#quotaReadsFor(agents);
+    return agents.map((agent) => {
+      const state = this.#availabilityOf(agent, probes, quotas);
+      const quota = state.quota?.quota ?? null;
+      const billing: AgentStatus["billing"] =
+        quota === null
+          ? "unknown"
+          : quota.balance !== null && quota.balance !== undefined
+            ? "api"
+            : quota.fiveHour !== null || quota.weekly !== null
+              ? "subscription"
+              : "unknown";
+      return {
+        agent: agent.id,
+        availability: state.availability,
+        billing,
+        fiveHour: quota?.fiveHour ?? null,
+        weekly: quota?.weekly ?? null,
+        // C-36：节点不报「本月消耗」，先一律 null（界面显示「暂不可用」）
+        balance:
+          quota?.balance === undefined || quota?.balance === null
+            ? null
+            : { amount: quota.balance.amount, currency: quota.balance.currency, spentThisMonth: null },
+        contextUsedPercent: null,
+        compactions: null,
+        model: null,
+        effort: null,
+        updatedAt,
+      };
+    });
   }
 
-  #availabilityOf(agent: AgentProfile, probes: Map<string, NodeProbeResult>): AgentStatus["availability"] {
-    if (agent.nodeId === null || agent.profileId === null) return "unconfigured";
-    if (agent.pausedByUser) return "paused_by_user";
+  /**
+   * D-32：一位参与者「本来要答的人」的状态（availability + 给用户看的理由 + 读到的额度）。
+   * 额度口径按 C-36：
+   * - 读到 exhausted（任一窗口 ≥100% 或余额 ≤0）→ absent_quota
+   * - 最近一次 Run 以 quota_exhausted 结束、之后还没读到 **ok** 的额度 → absent_quota（粘滞；读 unknown 不清）
+   * - 读不到（unknown）、也没有那样的 Run → 不算缺席
+   */
+  #availabilityOf(
+    agent: AgentProfile,
+    probes: Map<string, NodeProbeResult>,
+    quotas: Map<string, ProfileQuotaRead | null>,
+  ): { availability: AgentStatus["availability"]; reason: string; quota: ProfileQuotaRead | null } {
+    const quota = quotas.get(agent.id) ?? null;
+    const name = agent.displayName;
+    if (agent.nodeId === null || agent.profileId === null) {
+      return { availability: "unconfigured", reason: name + " 还没有配置节点或 profile", quota };
+    }
+    if (agent.pausedByUser) return { availability: "paused_by_user", reason: name + " 被手动暂停了", quota };
+    if (quota?.state === "exhausted") return { availability: "absent_quota", reason: name + " 额度用尽", quota };
 
     const latest = this.#deps.repo.latestTurnOutcomeGlobal(agent.id);
-    if (latest !== null && latest.outcome === "absent_quota" && this.#isRecentQuotaAbsence(latest.finishedAt)) {
-      return "absent_quota";
+    if (latest !== null && latest.outcome === "absent_quota" && this.#stickyQuotaAbsence(agent, latest.finishedAt)) {
+      // C酱 #158 建议 2：节点上那个 profile 没配额度来源（404）时，读不到额度就会一直算缺席，提示一下
+      const hint = quota?.notConfigured === true ? "（这个节点没配额度来源，读不到额度就会一直算缺席）" : "";
+      return { availability: "absent_quota", reason: name + " 额度用尽（缺席）" + hint, quota };
     }
 
     const node = this.#deps.repo.getNodeRow(agent.nodeId);
+    if (node === undefined || node.base_url === null) {
+      return { availability: "unconfigured", reason: name + " 所在的节点 " + agent.nodeId + " 还没有配置地址", quota };
+    }
     const credential = this.#deps.settings.getNode(agent.nodeId);
-    if (node === undefined || node.base_url === null || credential === null || credential.baseUrl !== node.base_url) {
-      return "unconfigured";
+    if (credential === null || credential.baseUrl !== node.base_url) {
+      return { availability: "unconfigured", reason: name + " 所在的节点 " + agent.nodeId + " 的 Token 还没有配置", quota };
     }
 
     const probe = probes.get(agent.nodeId);
-    if (probe === undefined || !probe.reachable || !probe.profiles.includes(agent.profileId)) return "offline";
-    return "available";
+    if (probe === undefined || !probe.reachable) {
+      return {
+        availability: "offline",
+        reason: name + " 所在的节点离线" + (probe?.message === undefined ? "" : "：" + probe.message),
+        quota,
+      };
+    }
+    if (!probe.profiles.includes(agent.profileId)) {
+      return { availability: "offline", reason: name + " 的 profile " + agent.profileId + " 不在节点上", quota };
+    }
+    return { availability: "available", reason: "", quota };
+  }
+
+  /** C-36 的粘滞缺席：上次 Run 之后没有读到 ok 就还缺席。时间戳缺失时放行（不挡人） */
+  #stickyQuotaAbsence(agent: AgentProfile, finishedAt: string | null): boolean {
+    if (finishedAt === null) return false;
+    const at = Date.parse(finishedAt);
+    if (!Number.isFinite(at)) return false;
+    const target = this.#quotaTargetOf(agent);
+    if (target === null) return true;
+    return this.#quotaService().lastOkAt(quotaKeyOf(target)) <= at;
+  }
+
+  #quotaService(): QuotaService {
+    return this.#deps.quota ?? defaultQuota;
+  }
+
+  /** 讨论用 profile 的额度读取目标（节点地址 + Token + profileId）；没配置返回 null */
+  #quotaTargetOf(agent: AgentProfile): { baseUrl: string; token: string; profileId: string } | null {
+    if (agent.nodeId === null || agent.profileId === null) return null;
+    const node = this.#deps.repo.getNodeRow(agent.nodeId);
+    const credential = this.#deps.settings.getNode(agent.nodeId);
+    if (node === undefined || node.base_url === null || credential === null || credential.baseUrl !== node.base_url) {
+      return null;
+    }
+    return { baseUrl: node.base_url, token: credential.token, profileId: agent.profileId };
+  }
+
+  /** 每人一份额度（同一个 profile 只读一次）；读不到记 null，不当成用完 */
+  async #quotaReadsFor(agents: readonly AgentProfile[]): Promise<Map<string, ProfileQuotaRead | null>> {
+    const service = this.#quotaService();
+    const byKey = new Map<string, Promise<ProfileQuotaRead | null>>();
+    const reads = new Map<string, ProfileQuotaRead | null>();
+    const pending: { agentId: string; promise: Promise<ProfileQuotaRead | null> }[] = [];
+    for (const agent of agents) {
+      const target = this.#quotaTargetOf(agent);
+      if (target === null) {
+        reads.set(agent.id, null);
+        continue;
+      }
+      const key = quotaKeyOf(target);
+      if (!byKey.has(key)) byKey.set(key, service.read(target).catch(() => null));
+      pending.push({ agentId: agent.id, promise: byKey.get(key)! });
+    }
+    // 不同 profile 的额度一起等（每个最多 2 秒，串行会累加；都是缓存过的读）
+    await Promise.all([...byKey.values()]);
+    for (const item of pending) reads.set(item.agentId, await item.promise);
+    return reads;
   }
 
   /**
@@ -1140,102 +1278,221 @@ export class DiscussionService {
    * - 节点离线 / 没有这个 profile：不发
    * - 节点的 Token 没有配置：不发（多节点各自的 Token 存在设置文件里，D-22c）
    */
+  /**
+   * D-32 / C-36：把「用户挑的收件人」变成「实际收件的人」。
+   *
+   * - 每位收件人必须能答：`available` 留着；`absent_quota` 按替补处理；其它不可用直接 agent_unavailable
+   * - 替补必须：不是收件人、开了「参与讨论」、现在能答、不成链（一个人一轮只代一个人、不做替补链）
+   * - `explicit` 传了（可以是空数组）就按它来；`auto` 为 true 时对缺席的人按 `AgentProfile.substitute` 自动找
+   * - 返回的 `batch` 是真正要建 Snapshot / Turn 的人：`onBehalfOf` 记被替的人
+   */
+  async #resolveSubstitutions(input: {
+    recipients: readonly string[];
+    explicit: readonly { absent: string; substitute: string }[] | undefined;
+    auto: boolean;
+  }): Promise<{
+    batch: { agent: string; onBehalfOf: string | null; profile: AgentProfile }[];
+    pairs: { absent: string; substitute: string }[];
+    probes: Map<string, NodeProbeResult>;
+    agents: AgentProfile[];
+  }> {
+    const { repo } = this.#deps;
+    const recipientSet = new Set(input.recipients);
+    // 不存在的参与者：和 #checkRecipients 一样报 agent_unavailable（不是 not_found）
+    const agents = input.recipients.map((agentId) => {
+      if (repo.getAgentRow(agentId) === undefined) {
+        throw new DiscussionError("agent_unavailable", "参与者 " + agentId + " 还没有配置");
+      }
+      return repo.getAgent(agentId);
+    });
+    const { probes, quotas } = await this.#probeAndQuota(agents);
+
+    const absentList: AgentProfile[] = [];
+    /** 缺席的理由（带「节点没配额度来源」这类提示），后面报错直接用 */
+    const absentReasons = new Map<string, string>();
+    for (const agent of agents) {
+      const state = this.#availabilityOf(agent, probes, quotas);
+      if (state.availability === "available") continue;
+      if (state.availability !== "absent_quota") {
+        throw new DiscussionError("agent_unavailable", state.reason);
+      }
+      absentList.push(agent);
+      absentReasons.set(agent.id, state.reason);
+    }
+
+    // 先定「谁替谁」
+    let pairs: { absent: string; substitute: string }[];
+    if (input.explicit !== undefined) {
+      pairs = [...input.explicit];
+    } else if (input.auto && absentList.length > 0) {
+      pairs = [];
+      for (const absent of absentList) {
+        const substitute = absent.substitute;
+        if (substitute === null) {
+          throw new DiscussionError(
+            "agent_unavailable",
+            (absentReasons.get(absent.id) ?? absent.displayName + " 额度用尽（缺席）") + "，也没有设替补",
+          );
+        }
+        pairs.push({ absent: absent.id, substitute });
+      }
+    } else {
+      pairs = [];
+    }
+
+    // 缺席的人必须都有替补，否则这一轮发不出去（契约：那个人照旧 agent_unavailable）
+    for (const absent of absentList) {
+      if (!pairs.some((pair) => pair.absent === absent.id)) {
+        const reason = absentReasons.get(absent.id) ?? absent.displayName + " 额度用尽（缺席）";
+        throw new DiscussionError("agent_unavailable", input.auto ? reason + "，也没有设替补" : reason);
+      }
+    }
+
+    // 校验每一对
+    const usedSubstitutes = new Set<string>();
+    const absentIds = new Set(pairs.map((pair) => pair.absent));
+    for (const pair of pairs) {
+      if (!recipientSet.has(pair.absent)) {
+        throw new DiscussionError("validation_failed", "替补的「被代答者」" + pair.absent + " 不在收件人里");
+      }
+      if (recipientSet.has(pair.substitute)) {
+        throw new DiscussionError("validation_failed", "替补 " + pair.substitute + " 已经在收件人里（一个人一轮只有一个 Turn）");
+      }
+      if (absentIds.has(pair.substitute)) {
+        throw new DiscussionError("validation_failed", "替补 " + pair.substitute + " 自己也是缺席的人（不做替补链）");
+      }
+      if (usedSubstitutes.has(pair.substitute)) {
+        throw new DiscussionError("validation_failed", "替补 " + pair.substitute + " 一轮只代一个人");
+      }
+      usedSubstitutes.add(pair.substitute);
+    }
+
+    // 替补本人也要能答
+    const substitutes = pairs.map((pair) => repo.getAgent(pair.substitute));
+    for (const substitute of substitutes) {
+      if (!substitute.canDiscuss) {
+        throw new DiscussionError("agent_unavailable", substitute.displayName + " 没有开启「参与讨论」，不能当替补");
+      }
+    }
+    const substituteStates = await this.#probeAndQuota(substitutes);
+    for (const [index, substitute] of substitutes.entries()) {
+      const state = this.#availabilityOf(substitute, substituteStates.probes, substituteStates.quotas);
+      if (state.availability !== "available") {
+        throw new DiscussionError(
+          "agent_unavailable",
+          substitute.displayName + " 现在不能当替补（" + state.reason + "）",
+        );
+      }
+    }
+    for (const [nodeId, probe] of substituteStates.probes) probes.set(nodeId, probe);
+
+    const batch = [
+      ...agents
+        .filter((agent) => !absentIds.has(agent.id))
+        .map((agent) => ({ agent: agent.id, onBehalfOf: null, profile: agent })),
+      ...pairs.map((pair) => ({
+        agent: pair.substitute,
+        onBehalfOf: pair.absent,
+        profile: repo.getAgent(pair.substitute),
+      })),
+    ];
+    return { batch, pairs, probes, agents: batch.map((item) => item.profile) };
+  }
+
+  /**
+   * D-32：redraft 省略 substitutes 时沿用旧批次里的替补（按 onBehalfOf 读回）。
+   * 被改掉的人（absent 已不在新收件人里）和「替补后来自己进了收件人」的那一对都丢掉。
+   */
+  async #carriedOverSubstitutions(
+    roundId: string,
+    recipients: readonly string[],
+  ): Promise<{ absent: string; substitute: string }[]> {
+    const row = this.#deps.db
+      .prepare("SELECT id FROM batches WHERE round_id = ? AND state IN ('DRAFT', 'READY_FOR_REVIEW') ORDER BY created_at DESC LIMIT 1")
+      .get(roundId) as { id: string } | undefined;
+    if (row === undefined) return [];
+    const wanted = new Set(recipients);
+    return listBatchItems(this.#deps.db, row.id)
+      .filter((item) => item.onBehalfOf !== null)
+      .map((item) => ({ absent: item.onBehalfOf as string, substitute: item.recipient }))
+      .filter((pair) => wanted.has(pair.absent) && !wanted.has(pair.substitute));
+  }
+
+  /** D-32：round.retry 的替补要能答、而且这一轮还没轮到过他（一个人一轮只有一个 Turn） */
+  async #checkSubstituteForRound(round: Round, substitute: AgentProfile): Promise<Map<string, NodeProbeResult>> {
+    if (!substitute.canDiscuss) {
+      throw new DiscussionError("agent_unavailable", substitute.displayName + " 没有开启「参与讨论」，不能当替补");
+    }
+    if (this.#latestTurns(round.id).has(substitute.id)) {
+      throw new DiscussionError("validation_failed", substitute.displayName + " 这一轮已经答过了，不能当替补");
+    }
+    const { probes, quotas } = await this.#probeAndQuota([substitute]);
+    const state = this.#availabilityOf(substitute, probes, quotas);
+    if (state.availability !== "available") {
+      throw new DiscussionError("agent_unavailable", substitute.displayName + " 现在不能当替补（" + state.reason + "）");
+    }
+    return probes;
+  }
+
   async #checkRecipients(
     agentIds: readonly string[],
     need: AvailabilityNeed,
     options: { allowAbsentQuota?: boolean } = {},
   ): Promise<Map<string, NodeProbeResult>> {
-    const { repo, settings } = this.#deps;
-    const pending: PendingRecipient[] = [];
-    /** 每个节点自己的凭据（地址 + 解密后的 Token），同一个节点只取一次 */
-    const credentials = new Map<string, { baseUrl: string; token: string }>();
-
+    const { repo } = this.#deps;
+    const agents: AgentProfile[] = [];
     for (const agentId of agentIds) {
       const row = repo.getAgentRow(agentId);
-      if (row === undefined) {
-        throw new DiscussionError("agent_unavailable", "参与者 " + agentId + " 还没有配置");
-      }
+      if (row === undefined) throw new DiscussionError("agent_unavailable", "参与者 " + agentId + " 还没有配置");
       const displayName = row["display_name"] as string;
-      if (row["paused_by_user"] === 1) {
-        throw new DiscussionError("agent_unavailable", displayName + " 被手动暂停了");
-      }
       if (need === "discuss" && row["can_discuss"] !== 1) {
         throw new DiscussionError("agent_unavailable", displayName + " 没有开启「参与讨论」");
       }
       if (need === "summarize" && row["can_summarize"] !== 1) {
         throw new DiscussionError("agent_unavailable", displayName + " 没有开启「可以做汇总」");
       }
-
-      // 额度按账号算：所有议题里最新一次发言（含汇总）都算数。
-      // 重试自己就是用来处理失败 / 缺席的，所以 round.retry 传 allowAbsentQuota 跳过这一条。
-      const latest = repo.latestTurnOutcomeGlobal(agentId);
-      if (
-        options.allowAbsentQuota !== true &&
-        latest !== null &&
-        latest.outcome === "absent_quota" &&
-        this.#isRecentQuotaAbsence(latest.finishedAt)
-      ) {
-        throw new DiscussionError("agent_unavailable", displayName + " 额度用尽（缺席）");
-      }
-
-      const nodeId = row["node_id"] as string | null;
-      const profileId = row["profile_id"] as string | null;
-      if (nodeId === null || profileId === null) {
-        throw new DiscussionError("agent_unavailable", displayName + " 还没有配置节点或 profile");
-      }
-      const node = repo.getNodeRow(nodeId);
-      if (node === undefined || node.base_url === null) {
-        throw new DiscussionError("agent_unavailable", displayName + " 所在的节点 " + nodeId + " 还没有配置地址");
-      }
-      const credential = settings.getNode(nodeId);
-      if (credential === null || credential.baseUrl !== node.base_url) {
-        throw new DiscussionError("agent_unavailable", displayName + " 所在的节点 " + nodeId + " 的 Token 还没有配置");
-      }
-      credentials.set(nodeId, credential);
-
-      pending.push({ displayName, nodeId, baseUrl: node.base_url, profileId });
+      agents.push(repo.getAgent(agentId));
     }
 
-    if (pending.length === 0) return new Map();
-
-    // 同一个节点只探一次；不同节点之间并发
-    const byNode = new Map<string, PendingRecipient[]>();
-    for (const item of pending) byNode.set(item.nodeId, [...(byNode.get(item.nodeId) ?? []), item]);
-
-    const probes = new Map<string, NodeProbeResult>();
-    await Promise.all(
-      [...byNode.values()].map(async (items) => {
-        const first = items[0]!;
-        const credential = credentials.get(first.nodeId)!;
-        probes.set(
-          first.nodeId,
-          await this.#probe({ baseUrl: first.baseUrl, token: credential.token, profileId: first.profileId }),
-        );
-      }),
-    );
-
-    for (const item of pending) {
-      const probe = probes.get(item.nodeId)!;
-      if (!probe.reachable) {
-        throw new DiscussionError(
-          "agent_unavailable",
-          item.displayName + " 所在的节点离线" + (probe.message === undefined ? "" : "：" + probe.message),
-        );
-      }
-      if (!probe.profiles.includes(item.profileId)) {
-        throw new DiscussionError("agent_unavailable", item.displayName + " 的 profile " + item.profileId + " 不在节点上");
-      }
+    const { probes, quotas } = await this.#probeAndQuota(agents);
+    for (const agent of agents) {
+      const state = this.#availabilityOf(agent, probes, quotas);
+      if (state.availability === "available") continue;
+      // 重试自己就是用来处理失败 / 额度缺席的：round.retry 传 allowAbsentQuota 跳过这一条
+      if (state.availability === "absent_quota" && options.allowAbsentQuota === true) continue;
+      throw new DiscussionError("agent_unavailable", agent.displayName + " " + state.reason);
     }
-
     return probes;
   }
 
-  /** 5 小时内算「还缺席」；时间戳缺失或解析不了就当过期（放行） */
-  #isRecentQuotaAbsence(finishedAt: string | null): boolean {
-    if (finishedAt === null) return false;
-    const at = Date.parse(finishedAt);
-    return Number.isFinite(at) && Date.now() - at <= QUOTA_ABSENT_WINDOW_MS;
+  /** D-32：一批人的探测（每节点一次）和额度（每个 profile 一次） */
+  async #probeAndQuota(agents: readonly AgentProfile[]): Promise<{
+    probes: Map<string, NodeProbeResult>;
+    quotas: Map<string, ProfileQuotaRead | null>;
+  }> {
+    const byNode = new Map<string, { baseUrl: string; token: string; profileId: string }>();
+    for (const agent of agents) {
+      const target = this.#quotaTargetOf(agent);
+      if (target !== null && agent.nodeId !== null && !byNode.has(agent.nodeId)) byNode.set(agent.nodeId, target);
+    }
+    const probes = new Map<string, NodeProbeResult>();
+    await Promise.all(
+      [...byNode.entries()].map(async ([nodeId, target]) => {
+        probes.set(
+          nodeId,
+          await this.#probe({ baseUrl: target.baseUrl, token: target.token, profileId: target.profileId }),
+        );
+      }),
+    );
+    // 节点都够不着就别再打额度端点（读不到就是未知，不是缺席）
+    const reachable = agents.filter((agent) => {
+      const probe = agent.nodeId === null ? undefined : probes.get(agent.nodeId);
+      return probe !== undefined && probe.reachable && agent.profileId !== null && probe.profiles.includes(agent.profileId);
+    });
+    const quotas = await this.#quotaReadsFor(reachable);
+    return { probes, quotas };
   }
+
 
   async #probe(params: { baseUrl: string; token: string; profileId: string }): Promise<NodeProbeResult> {
     if (this.#deps.probeNode !== undefined) return this.#deps.probeNode(params);

@@ -1,6 +1,12 @@
 import { createHash, timingSafeEqual } from "node:crypto";
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from "node:http";
-import { REMOTE_PROTOCOL_VERSION, StartRunRequest, type NodeHealth, type RemoteEvent } from "@room/schemas";
+import {
+  REMOTE_PROTOCOL_VERSION,
+  StartRunRequest,
+  type NodeHealth,
+  type RemoteEvent,
+  type RemoteProfileQuota,
+} from "@room/schemas";
 
 /**
  * X-21 的「假节点」：一个按 AgentServer 协议说话的本地 HTTP 服务。
@@ -30,6 +36,8 @@ export interface FakeNodeOptions {
   behavior?: Record<string, NodeBehavior | readonly NodeBehavior[]>;
   heartbeatMs?: number;
   leaseMs?: number;
+  /** X-32：`GET /v1/profiles/:id/quota` 的回答；没给的 profile 回 404（= 节点没配额度来源） */
+  quota?: Record<string, RemoteProfileQuota>;
 }
 
 type SequencedEvent = Exclude<RemoteEvent, { type: "heartbeat" }>;
@@ -78,6 +86,7 @@ export class FakeNode {
   #port = 0;
   #runs = new Map<string, RunState>();
   #behaviors = new Map<string, NodeBehavior[]>();
+  #quota = new Map<string, RemoteProfileQuota>();
   #heartbeat: NodeJS.Timeout | null = null;
 
   constructor(options: FakeNodeOptions) {
@@ -91,6 +100,7 @@ export class FakeNode {
     for (const [profile, behavior] of Object.entries(options.behavior ?? {})) {
       this.#behaviors.set(profile, Array.isArray(behavior) ? [...behavior] : [behavior as NodeBehavior]);
     }
+    for (const [profile, quota] of Object.entries(options.quota ?? {})) this.#quota.set(profile, quota);
   }
 
   get url(): string {
@@ -105,6 +115,12 @@ export class FakeNode {
   /** 下一次（或接下来几次）这个 profile 的行为 */
   setBehavior(profile: string, behavior: NodeBehavior | readonly NodeBehavior[]): void {
     this.#behaviors.set(profile, Array.isArray(behavior) ? [...behavior] : [behavior as NodeBehavior]);
+  }
+
+  /** X-32：改这个 profile 上报的额度；null = 不再提供（回 404） */
+  setQuota(profile: string, quota: RemoteProfileQuota | null): void {
+    if (quota === null) this.#quota.delete(profile);
+    else this.#quota.set(profile, quota);
   }
 
   async start(): Promise<void> {
@@ -219,6 +235,12 @@ export class FakeNode {
         ...(this.profileModels === undefined ? {} : { profileModels: this.profileModels }),
         ...(this.capabilities === undefined ? {} : { capabilities: this.capabilities }),
       });
+      return;
+    }
+    if (req.method === "GET" && parts[1] === "profiles" && parts[3] === "quota" && parts.length === 4) {
+      const quota = this.#quota.get(decodeURIComponent(parts[2]!));
+      if (quota === undefined) { this.#json(res, 404, { error: "not_found", message: "no quota source" }); return; }
+      this.#json(res, 200, quota);
       return;
     }
     if (req.method === "GET" && parts[1] === "runs" && parts.length === 2) {
