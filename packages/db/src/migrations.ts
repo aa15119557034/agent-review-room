@@ -18,6 +18,7 @@ import { SCHEMA_V17 } from "./schema-v17";
 import { SCHEMA_V18 } from "./schema-v18";
 import { SCHEMA_V19 } from "./schema-v19";
 import { SCHEMA_V20 } from "./schema-v20";
+import { SCHEMA_V21 } from "./schema-v21";
 
 /**
  * 迁移（D-02）：用 PRAGMA user_version 记版本，每个迁移在自己的事务里跑。
@@ -185,6 +186,13 @@ export const MIGRATIONS: readonly Migration[] = [
     name: "project-notes",
     up: (db) => {
       db.exec(SCHEMA_V20);
+    },
+  },
+  {
+    version: 21,
+    name: "chat-windows",
+    up: (db) => {
+      db.exec(SCHEMA_V21);
     },
   },
 ];

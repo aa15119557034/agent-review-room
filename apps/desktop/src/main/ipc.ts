@@ -169,6 +169,21 @@ export function createDispatcher(deps: IpcDeps) {
       case "projectNote.revert":
         return notesService().revert(command.noteId);
 
+      case "chat.window.prepare":
+        return chatService().prepareWindow(command);
+
+      case "chat.window.editDraft":
+        return chatService().editWindowDraft(command);
+
+      case "chat.window.redo":
+        return chatService().redoWindowDraft(command);
+
+      case "chat.window.confirm":
+        return chatService().confirmWindow(command);
+
+      case "chat.window.cancel":
+        return chatService().cancelWindow(command);
+
       case "project.create":
         return repo.createProject(command.name);
 
@@ -515,6 +530,10 @@ export function createDispatcher(deps: IpcDeps) {
         return chatService().listMessages(query);
       case "chat.slots.runs":
         return chatService().listSlotRuns(query.slotId);
+      case "chat.windows.get":
+        return chatService().windowStatuses(query.conversationId);
+      case "chat.windows.list":
+        return chatService().windowList(query.conversationId);
       case "chat.runs.get":
         return chatService().getRun(query.runId);
       case "chat.snapshots.get":
