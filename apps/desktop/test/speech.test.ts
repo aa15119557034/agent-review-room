@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, readdirSync, rmSync } from "node:fs";
+import { existsSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
@@ -23,7 +23,15 @@ import type { ChatMessage, ChatRun, ChatReplySlot, ChatSnapshot, ControlEvent, M
 import { MediaJobsService } from "../src/main/media-jobs";
 import { createAudioProtocolHandler, MediaStore } from "../src/main/media-store";
 import type { TtsRunner } from "../src/main/tts";
-import { TtsFailedError, TtsRunner, TtsUnavailableError, voiceOptionsOf, type TtsConfig } from "../src/main/tts";
+import {
+  TtsFailedError,
+  TtsRunner,
+  TtsUnavailableError,
+  voiceOptionsOf,
+  waitChildExit,
+  type ChildExitLike,
+  type TtsConfig,
+} from "../src/main/tts";
 
 /**
  * D-37b：播放（speech.play）这一条路。
@@ -397,6 +405,23 @@ describe("TtsRunner 进程生命周期（C酱 #152）", () => {
   // 林离 #163 必须改 2：等回应这段在 try/finally 外，失败 / 超时 / 取消时临时 wav 不删
   const tempWavs = () => readdirSync(tmpdir()).filter((name) => name.startsWith(`room-tts-${process.pid}-`));
 
+  it("waitChildExit 能分出「真的退出了」和「等到上限还没退」（林离 #165 复审必须改 2）", async () => {
+    const fake = (mode: "exited" | "close-soon" | "never"): ChildExitLike => ({
+      exitCode: mode === "exited" ? 0 : null,
+      signalCode: null,
+      once: (_event: "close", fn: () => void) => {
+        if (mode === "close-soon") setTimeout(() => fn(), 5);
+        return undefined;
+      },
+      removeListener: () => undefined,
+    });
+    assert.equal(await waitChildExit(fake("exited"), 1_000), true, "已经退出：立刻 true");
+    assert.equal(await waitChildExit(fake("close-soon"), 1_000), true, "等到 close：true");
+    const started = Date.now();
+    assert.equal(await waitChildExit(fake("never"), 60), false, "等到上限：false，不能当成退出");
+    assert.ok(Date.now() - started >= 40, "确实等满了上限");
+  });
+
   it("引擎写了一半报失败：临时 wav 不能留在系统临时目录（林离 #163）", async () => {
     const runner = new TtsRunner(base("tts-fail-after-write.mjs"));
     const before = tempWavs();
@@ -406,6 +431,34 @@ describe("TtsRunner 进程生命周期（C酱 #152）", () => {
         (error: unknown) => error instanceof TtsFailedError && /simulated failure/.test((error as Error).message),
       );
       assert.deepEqual(tempWavs().filter((name) => !before.includes(name)), [], "失败的临时 wav 要删掉");
+    } finally {
+      runner.dispose();
+    }
+  });
+
+  it("卸载回 failed（CUDA 释放出错）时杀进程兜底，下一次合成重新起进程（林离 #165 复审必须改 1）", async () => {
+    const runner = new TtsRunner(base("tts-unload-fail.mjs"));
+    try {
+      const first = await runner.synthesize({ text: "第一句", voice: voice as never, speed: 1, signal: new AbortController().signal });
+      assert.ok(first.bytes.length > 0);
+      const started = Date.now();
+      await runner.unload(); // 引擎回 failed → 杀进程 → 等退出 → 返回
+      assert.ok(Date.now() - started < 5_000, "不能一直等下去");
+      const second = await runner.synthesize({ text: "第二句", voice: voice as never, speed: 1, signal: new AbortController().signal });
+      assert.ok(second.bytes.length > 0, "进程被杀之后重新起还能合成");
+    } finally {
+      runner.dispose();
+    }
+  });
+
+  it("上一次没收尾的临时 wav，在起新进程前清掉（林离 #165 复审必须改 2）", async () => {
+    const stale = join(tmpdir(), `room-tts-${process.pid}-r99.wav`);
+    writeFileSync(stale, Buffer.from("RIFF"));
+    const runner = new TtsRunner(base("tts-ok.mjs"));
+    try {
+      const first = await runner.synthesize({ text: "你好", voice: voice as never, speed: 1, signal: new AbortController().signal });
+      assert.ok(first.bytes.length > 0);
+      assert.equal(existsSync(stale), false, "起进程前要把旧的清掉");
     } finally {
       runner.dispose();
     }

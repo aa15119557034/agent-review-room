@@ -78,17 +78,18 @@ def apply_speed(path, speed):
 
 
 def release_memory():
-    """把模型占的显存还给驱动。调用前先把模型引用丢干净（林离 #163）。"""
-    gc.collect()
-    try:
-        import torch
+    """把模型占的显存还给驱动。调用前先把模型引用丢干净（林离 #163）。
 
-        if torch.cuda.is_available():
-            torch.cuda.synchronize()
-            torch.cuda.empty_cache()
-            torch.cuda.ipc_collect()
-    except Exception:  # 没有 CUDA / 驱动报错都不该把进程带挂
-        log(traceback.format_exc())
+    出错就往上报：调用方要回 failed，只有真的释放成功才发 unloaded——
+    错了还回 unloaded 会让主控端以为显存已经放出来，直接去画图（林离 #165 复审必须改 1）。
+    """
+    gc.collect()
+    import torch
+
+    if torch.cuda.is_available():
+        torch.cuda.synchronize()
+        torch.cuda.empty_cache()
+        torch.cuda.ipc_collect()
 
 
 def main():
@@ -123,7 +124,13 @@ def main():
         if request.get("type") == "unload":
             # 画图要来了：把模型丢掉、显存还回去，确认释放完再回 unloaded（主控端等到这条才放行 draw）
             tts = None
-            release_memory()
+            try:
+                release_memory()
+            except Exception as error:
+                # 释放失败不能假装成功：回 failed，主控端会杀掉这个进程（进程退出才一定放出显存）
+                log(traceback.format_exc())
+                emit({"type": "failed", "id": request_id, "error": f"model_release_failed: {error}"})
+                continue
             log(">> model released")
             emit({"type": "unloaded", "id": request_id})
             continue

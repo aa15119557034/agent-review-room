@@ -381,9 +381,15 @@ export class MediaJobsService {
         await this.#fail(job, "internal", "画图任务没有请求");
         return;
       }
-      // D-37b（林离 #163）：语音引擎会一直占着约 9GB 显存，切到画图前先让它卸载并等确认释放完，
+      // D-37b（林离 #163 / #165）：语音引擎会一直占着约 9GB 显存，切到画图前先让它卸载并等确认释放完，
       // 否则紧接着的 draw 会显存不足。没配语音 / 进程没起时 unload 是空操作。
-      await this.deps.tts?.()?.unload();
+      // 卸载失败（引擎不回应、释放出错、进程没按时退出）不能硬画：显存还在外面，draw 只会 OOM。
+      try {
+        await this.deps.tts?.()?.unload();
+      } catch (error) {
+        await this.#fail(job, "backend_unavailable", error instanceof Error ? error.message : String(error));
+        return;
+      }
       const seed = this.deps.seed?.() ?? Math.trunc(Math.random() * 0xffff_ffff);
       let result;
       try {
