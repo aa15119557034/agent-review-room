@@ -54,9 +54,11 @@ export interface DiscussionState {
     /** 一轮进行中时，输入框发出去的是"补充"：怎么处理正在答的人、发给谁 */
     interject: { mode: "restart_now" | "next_round" | "only"; targets: string[] };
     /** 中间区域：时间线，或者某一轮的汇总与方案页 */
-    page: { kind: "timeline" } | { kind: "review"; roundId: string };
+    page: { kind: "timeline" } | { kind: "review"; roundId: string } | { kind: "new" };
     /** 手机宽度下一次只显示一栏：议题列表，或者打开的议题（C-38） */
     pane: "list" | "topic";
+    /** 手机宽度：议题里点右上角，方案和参与者从下面弹出来（宽屏用 sideCollapsed） */
+    sheet: boolean;
   };
 }
 
@@ -81,6 +83,7 @@ export const initialDiscussion: DiscussionState = {
     interject: { mode: "restart_now", targets: [] },
     page: { kind: "timeline" },
     pane: "list",
+    sheet: false,
   },
 };
 
