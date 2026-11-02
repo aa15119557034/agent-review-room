@@ -1523,6 +1523,11 @@ export class ChatService {
       updateChatWindowDraft(db, done);
     });
     this.#emit({ type: "projectNote.created", note });
+    try {
+      this.#deps.notes?.enqueueNote?.(note);
+    } catch {
+      // 同步失败不影响换窗口
+    }
     this.#emit({ type: "chat.window.created", window });
     this.#emit({ type: "chat.window.draftUpdated", draft: done });
     return { window, note, draft: done };

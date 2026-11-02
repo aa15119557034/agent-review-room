@@ -50,6 +50,8 @@ export interface NotesProvider {
   recordReply(input: { scope: NoteScope; agent: string; content: string; source: NoteReplySource }): Promise<ProjectNote | null>;
   /** 切出来了但没存（多段 / 超长 / 没结尾）：发事件，回答照常 */
   reject(input: { scope: NoteScope; agent: string; reason: RoomNoteRejectReason; source: NoteReplySource }): void;
+  /** D-46c：交接笔记存好之后也要同步到 GitHub */
+  enqueueNote?(note: ProjectNote): void;
 }
 
 export class NoteError extends Error {
@@ -67,6 +69,7 @@ export class NotesService implements NotesProvider {
   readonly #emit: (event: ControlEvent) => void;
 
   readonly #knownAgents?: () => string[];
+  readonly #github?: { enqueueNote(note: ProjectNote): void };
 
   constructor(deps: {
     db: SqliteDatabase;
@@ -74,11 +77,14 @@ export class NotesService implements NotesProvider {
     emit: (event: ControlEvent) => void;
     /** 能讨论的秘书（议题还没发过第一轮时，笔记也允许写）；不传 = 只按收件人算 */
     knownAgents?: () => string[];
+    /** D-46c：存了一版就排一条 GitHub 同步 */
+    github?: { enqueueNote(note: ProjectNote): void };
   }) {
     this.#db = deps.db;
     this.#queue = deps.queue;
     this.#emit = deps.emit;
     this.#knownAgents = deps.knownAgents;
+    this.#github = deps.github;
   }
 
   latest(scope: NoteScope, agent: string): NoteSnapshot | null {
@@ -172,6 +178,10 @@ export class NotesService implements NotesProvider {
     return note;
   }
 
+  enqueueNote(note: ProjectNote): void {
+    this.#github?.enqueueNote(note);
+  }
+
   list(scope: NoteScope): ProjectNote[] {
     return listLatestProjectNotes(this.#db, scope);
   }
@@ -238,7 +248,14 @@ export class NotesService implements NotesProvider {
       return { note: created, isNew: true };
     });
     // #178 评审第 3 条：事务提交成功之后才发事件
-    if (result.isNew) this.#emit({ type: "projectNote.created", note: result.note } as ControlEvent);
+    if (result.isNew) {
+      this.#emit({ type: "projectNote.created", note: result.note } as ControlEvent);
+      try {
+        this.#github?.enqueueNote(result.note);
+      } catch {
+        // 同步到 GitHub 失败不影响笔记本身
+      }
+    }
     return result.note;
   }
 }
