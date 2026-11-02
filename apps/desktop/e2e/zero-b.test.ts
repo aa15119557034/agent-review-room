@@ -335,6 +335,11 @@ describe("0-B 一轮的状态与记录（X-21）", () => {
         { recipient: "deepseek", onBehalfOf: null },
       ],
     );
+    // 用户看得见的是 Prompt：替补的那份写着「代 codex 回答」，不带被替者 codex 的角色设定
+    const substituteItem = batch.items.find((item) => item.recipient === "claude")!;
+    const snapshot = h.db.prepare("SELECT content FROM prompt_snapshots WHERE id = ?").get(substituteItem.snapshotId) as { content: string };
+    assert.match(snapshot.content, /你是 C酱，本次代 codex 回答。不要采用被代答者的角色设定/);
+    assert.ok(!snapshot.content.includes("务实"), "不用被替者 codex 的角色设定");
     const round = h.db.prepare("SELECT recipients FROM rounds WHERE id = ?").get(roundId) as { recipients: string };
     assert.deepEqual(JSON.parse(round.recipients), ["codex", "deepseek"], "轮里还是原来的收件人");
 
@@ -409,7 +414,10 @@ describe("0-B 一轮的状态与记录（X-21）", () => {
     assert.equal(retried.data.items[0]!.recipient, "claude");
     assert.equal(retried.data.items[0]!.onBehalfOf, "codex");
     const superseded = h.db.prepare("SELECT superseded_by FROM turns WHERE id = ?").get(absent.id) as { superseded_by: string | null };
-    assert.ok(superseded.superseded_by, "旧的缺席 Turn 被替补的新 Turn 接上");
+    const next = h.db.prepare("SELECT agent, on_behalf_of FROM turns WHERE id = ?").get(superseded.superseded_by) as
+      | { agent: string; on_behalf_of: string | null }
+      | undefined;
+    assert.deepEqual(next, { agent: "claude", on_behalf_of: "codex" }, "旧的缺席 Turn 被替补的新 Turn 接上");
 
     const again = await h.dispatcher.handleCommand({ type: "round.retry", roundId, agent: "codex", substitute: "deepseek" });
     assert.equal(failure(again).error, "invalid_state", "已经在重试了，不能再派第二个替补");
@@ -440,6 +448,7 @@ describe("0-B 一轮的状态与记录（X-21）", () => {
     h.nodes.controller.setQuota("codex-discuss", null);
     const blocked = await draft(h, ["codex", "claude"], { task: "第二轮" });
     assert.equal(failure(blocked).error, "agent_unavailable");
+    assert.match(failure(blocked).message, /Codex 额度用尽（缺席）/);
     assert.match(failure(blocked).message, /没配额度来源/, "404 时理由里提示节点没配额度来源");
 
     // 读到 ok 才恢复
