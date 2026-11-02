@@ -425,7 +425,7 @@ export function buildChatSnapshot(input: BuildChatSnapshotInput): ChatSnapshot {
     tokenEstimate: estimateTokens(content),
     createdAt: input.createdAt,
     ...(manifest === undefined ? {} : { attachments: manifest }),
-    ...(input.note ? { projectNoteId: input.note.id } : {}),
+    projectNoteId: input.note ? input.note.id : null,
   });
 }
 

@@ -178,7 +178,7 @@ async function bootstrap(): Promise<void> {
   let discussion: DiscussionService | null = null;
 
   // C-46 / D-46a：项目笔记（存版本 + 从回答里切 room-note + 拼 Prompt 用）
-  const notes = new NotesService({ db, queue, emit: broadcast });
+  const notes = new NotesService({ db, queue, emit: broadcast, knownAgents: () => repo.listAgents().map((agent) => agent.id) });
 
   const orchestrator = new RunOrchestrator({
     db,

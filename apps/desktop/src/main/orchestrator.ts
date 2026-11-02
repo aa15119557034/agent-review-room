@@ -259,8 +259,13 @@ export class RunOrchestrator {
   ): Promise<void> {
     // 失败原因原样透传（quota_exhausted 由 db 层映射成 absent_quota），不要压成 internal
     const failure = event.type === "error" ? ({ kind: "failed", failureReason: event.reason } as const) : undefined;
-    // 完成了却没有正文：算不完整输出，不能记成"答了但内容为空"
-    const emptyAnswer = event.type === "completed" && (completedText === null || completedText === "");
+    // C-46：讨论室的回答先切 room-note，正文才是真正要落库的内容（写摘要的 Turn 不切）
+    const noteExtract = !discussion.isSummary && event.type === "completed" && completedText !== null
+      ? this.#extractNote(completedText)
+      : null;
+    const answerText = noteExtract === null ? completedText : noteExtract.text;
+    // 完成了却没有正文（或正文只有一段 room-note）：算不完整输出，不能记成"答了但内容为空"
+    const emptyAnswer = event.type === "completed" && (answerText === null || answerText === "");
 
     let settlement: DiscussionSettlement;
     try {
@@ -294,10 +299,9 @@ export class RunOrchestrator {
           planVersionId: finished.planVersionId,
         };
       } else {
-        const extracted = event.type === "completed" && completedText !== null ? this.#extractNote(completedText) : null;
         const terminal =
           event.type === "completed" && !emptyAnswer
-            ? ({ kind: "answered", text: extracted === null ? (completedText ?? "") : extracted.text } as const)
+            ? ({ kind: "answered", text: noteExtract === null ? (completedText ?? "") : noteExtract.text } as const)
             : emptyAnswer
               ? ({ kind: "failed", failureReason: "incomplete_output" } as const)
             : event.type === "timed_out"
@@ -306,8 +310,8 @@ export class RunOrchestrator {
                 ? ({ kind: "interrupted" } as const)
                 : failure ?? ({ kind: "failed", failureReason: "internal" } as const);
         const finished = await finishTurnFromRun(this.#deps.db, this.#deps.queue, { runId, terminal });
-        // D-46a：回答落库成功之后才记笔记（迟到 / 被取代的结果不会留下孤立笔记）
-        if (extracted !== null) this.#recordNote(discussion.turnId, extracted);
+        // D-46a：回答落库成功之后才记笔记（迟到 / 被取代 / 空回答的结果都不记）
+        if (noteExtract !== null && !emptyAnswer) this.#recordNote(discussion.turnId, noteExtract);
         settlement = {
           turnId: finished.turnId,
           roundId: finished.roundId,

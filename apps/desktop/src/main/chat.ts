@@ -879,7 +879,7 @@ export class ChatService {
     this.#active.set(run.id, controller);
     let current: ChatRun["state"] = run.state;
 
-    const finish = async (terminal: ChatRunTerminal): Promise<void> => {
+    const finish = async (terminal: ChatRunTerminal): Promise<boolean> => {
       const result = await finishChatRun(db, queue, { runId: run.id, from: current, terminal });
       if (result.message !== null) this.#emit({ type: "chat.message.created", message: result.message });
       if (result.slot !== null) this.#emit({ type: "chat.slot.updated", slot: result.slot });
@@ -900,6 +900,8 @@ export class ChatService {
           });
         }
       }
+      // #178 评审第 1 条：迟到的结果（回答位已经不是 running）不落消息，调用方据此不记笔记
+      return result.message !== null;
     };
 
     try {
@@ -993,13 +995,13 @@ export class ChatService {
                 );
               }
               const extracted = this.#deps.notes?.extract(parsed.data.text) ?? { text: parsed.data.text, content: null, rejected: null };
-              await finish({
+              const saved = await finish({
                 kind: "answered",
                 text: extracted.text,
                 ...(media.intent === null ? {} : { mediaIntent: media.intent }),
               });
-              // D-46a：回答落库成功之后才记笔记；失败只记日志，不影响回答
-              if (this.#deps.notes !== undefined) {
+              // D-46a：回答**真的落库了**（不是迟到 / 被重试作废的结果）才记笔记；失败只记日志，不影响回答
+              if (saved && this.#deps.notes !== undefined) {
                 const scope = { kind: "conversation" as const, conversationId: run.conversationId };
                 if (extracted.content !== null) {
                   void this.#deps.notes.recordReply({

@@ -66,10 +66,19 @@ export class NotesService implements NotesProvider {
   readonly #queue: WriteQueue;
   readonly #emit: (event: ControlEvent) => void;
 
-  constructor(deps: { db: SqliteDatabase; queue: WriteQueue; emit: (event: ControlEvent) => void }) {
+  readonly #knownAgents?: () => string[];
+
+  constructor(deps: {
+    db: SqliteDatabase;
+    queue: WriteQueue;
+    emit: (event: ControlEvent) => void;
+    /** 能讨论的秘书（议题还没发过第一轮时，笔记也允许写）；不传 = 只按收件人算 */
+    knownAgents?: () => string[];
+  }) {
     this.#db = deps.db;
     this.#queue = deps.queue;
     this.#emit = deps.emit;
+    this.#knownAgents = deps.knownAgents;
   }
 
   latest(scope: NoteScope, agent: string): NoteSnapshot | null {
@@ -182,14 +191,16 @@ export class NotesService implements NotesProvider {
       }
       return;
     }
+    const project = this.#db.prepare("SELECT 1 FROM projects WHERE id = ?").get(scope.projectId);
+    if (project === undefined) throw new NoteError("not_found", "这个议题不存在");
     const rows = this.#db
       .prepare("SELECT recipients FROM rounds WHERE project_id = ?")
       .all(scope.projectId) as { recipients: string }[];
-    const found = rows.some((row) => (JSON.parse(row.recipients) as string[]).includes(agent));
-    if (!found) {
-      const project = this.#db.prepare("SELECT 1 FROM projects WHERE id = ?").get(scope.projectId);
-      throw new NoteError(project === undefined ? "not_found" : "invalid_state", "这位秘书不在这个议题里");
-    }
+    if (rows.some((row) => (JSON.parse(row.recipients) as string[]).includes(agent))) return;
+    // #178 评审第 2 条：议题还没发过第一轮时，按「能讨论的秘书」放行（界面只列这些人）
+    const known = this.#knownAgents?.();
+    if (known === undefined || known.includes(agent)) return;
+    throw new NoteError("not_found", "这位秘书不在这个议题里");
   }
 
   async #append(input: {
@@ -204,9 +215,9 @@ export class NotesService implements NotesProvider {
   }): Promise<ProjectNote | null> {
     const createdAt = new Date().toISOString();
     const { scope, agent } = input;
-    return await writeTransaction(this.#db, this.#queue, () => {
+    const result = await writeTransaction(this.#db, this.#queue, () => {
       const latest = latestProjectNote(this.#db, scope, agent);
-      if (input.skipIfUnchanged && latest !== null && latest.content === input.content) return latest;
+      if (input.skipIfUnchanged && latest !== null && latest.content === input.content) return { note: latest, isNew: false };
       const contentHash = sha256Hex(input.content);
       const created: ProjectNote = {
         id: newProjectNoteId(),
@@ -224,9 +235,11 @@ export class NotesService implements NotesProvider {
         createdAt,
       };
       insertProjectNote(this.#db, created);
-      this.#emit({ type: "projectNote.created", note: created } as ControlEvent);
-      return created;
+      return { note: created, isNew: true };
     });
+    // #178 评审第 3 条：事务提交成功之后才发事件
+    if (result.isNew) this.#emit({ type: "projectNote.created", note: result.note } as ControlEvent);
+    return result.note;
   }
 }
 
