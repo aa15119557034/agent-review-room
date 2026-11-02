@@ -6,12 +6,20 @@ import { join } from "node:path";
 import { after } from "node:test";
 import { openDatabase, type RunRow, WriteQueue } from "@room/db";
 import { HttpRemoteAgentAdapter } from "@room/remote-client";
-import { ControlEvent, toRunModel, type ApprovalBatch, type CommandRequest, type NodeHealth } from "@room/schemas";
+import {
+  ControlEvent,
+  toRunModel,
+  type ApprovalBatch,
+  type CommandRequest,
+  type NodeHealth,
+  type RemoteProfileQuota,
+} from "@room/schemas";
 import { ChatService } from "../src/main/chat";
 import { DiscussionService } from "../src/main/discussion";
 import { createDispatcher } from "../src/main/ipc";
 import { NodeService, resolveRunTarget } from "../src/main/nodes";
 import { RunOrchestrator } from "../src/main/orchestrator";
+import { QuotaService } from "../src/main/quota";
 import { Repository } from "../src/main/repository";
 import { SettingsStore, type SafeStorageLike } from "../src/main/settings";
 import { FakeNode, type NodeBehavior } from "./fake-node";
@@ -83,6 +91,9 @@ export async function makeE2E(options: {
   controllerCapabilities?: NodeHealth["capabilities"];
   /** X-34b：图片库（ref → 字节），聊天起跑时按 ref 读本体 */
   imageBytes?: Map<string, Buffer>;
+  /** X-32：两台节点按 profile 上报的额度（没给的 profile 回 404 = 没配额度来源） */
+  userPcQuota?: Record<string, RemoteProfileQuota>;
+  controllerQuota?: Record<string, RemoteProfileQuota>;
 } = {}): Promise<E2E> {
   const dir = mkdtempSync(join(tmpdir(), "room-e2e-"));
   dirs.push(dir);
@@ -96,6 +107,7 @@ export async function makeE2E(options: {
     token: "u".repeat(40),
     behavior: options.userPc,
     profileModels: options.userPcModels,
+    ...(options.userPcQuota === undefined ? {} : { quota: options.userPcQuota }),
     heartbeatMs: 80,
     leaseMs: 1_000,
   });
@@ -106,6 +118,7 @@ export async function makeE2E(options: {
     behavior: options.controller,
     profileModels: options.controllerModels,
     capabilities: options.controllerCapabilities,
+    ...(options.controllerQuota === undefined ? {} : { quota: options.controllerQuota }),
     heartbeatMs: 80,
     leaseMs: 1_000,
   });
@@ -164,7 +177,8 @@ export async function makeE2E(options: {
     },
   });
 
-  discussion = new DiscussionService({ db, queue, repo, settings, orchestrator, emit });
+  // X-32：每个用例自己一份额度服务、不缓存，测试里 setQuota 之后下一次读就能看到
+  discussion = new DiscussionService({ db, queue, repo, settings, orchestrator, emit, quota: new QuotaService({ ttlMs: 0 }) });
   const chat = new ChatService({
     db,
     queue,
@@ -240,9 +254,17 @@ export async function waitFor(check: () => boolean, what: string, timeoutMs = 8_
 export async function draft(
   h: E2E,
   recipients: string[],
-  extra: Partial<{ projectId: string; task: string; planVersionId: string | null; historyMode: "recent_with_summaries" | "full" }> = {},
+  extra: Partial<{
+    projectId: string;
+    task: string;
+    planVersionId: string | null;
+    historyMode: "recent_with_summaries" | "full";
+    /** X-32：省略 = 按 AgentProfile.substitute 自动替补；[] = 谁都不替 */
+    substitutes: { absent: string; substitute: string }[];
+  }> = {},
 ) {
   return h.dispatcher.handleCommand({
+    ...(extra.substitutes === undefined ? {} : { substitutes: extra.substitutes }),
     type: "round.draft",
     projectId: extra.projectId ?? h.projectId,
     recipients,

@@ -20,9 +20,23 @@ import {
 } from "./harness";
 
 /**
- * X-21：0-B 的 13 种情况（ADR-002 附录 A），一条测试对应一行。
+ * X-21：0-B 的 13 种情况（ADR-002 附录 A），一条测试对应一行（#10 由 X-32 拆成 a～d）。
  * 节点是本地假 AgentServer，主控端是真的 dispatcher / DiscussionService / Orchestrator / DB。
  */
+
+const OK_QUOTA = {
+  fiveHour: { usedPercent: 20, windowMinutes: 300, resetsAt: null },
+  weekly: { usedPercent: 30, windowMinutes: 10_080, resetsAt: null },
+  creditsInUse: false,
+  readAt: "2026-11-02T00:00:00.000Z",
+};
+const EXHAUSTED = { ...OK_QUOTA, fiveHour: { usedPercent: 100, windowMinutes: 300, resetsAt: null } };
+
+/** 这一轮就此作废（记录保留），好开下一轮 */
+async function closeRound(h: E2E, roundId: string): Promise<void> {
+  const voided = await h.dispatcher.handleCommand({ type: "round.void", roundId, reason: "开下一轮" });
+  assert.equal(voided.ok, true, JSON.stringify(voided));
+}
 
 async function openRound(
   h: E2E,
@@ -301,23 +315,146 @@ describe("0-B 一轮的状态与记录（X-21）", () => {
     await h.close();
   });
 
-  it("0-B #10 替补代答：onBehalfOf 记录，替补不能当汇总者", async () => {
+  // X-32：#10 不再写库模拟，走 D-32 的真命令：节点上报额度 → 自动缺席 → 替补派发 / 重试替补
+  it("0-B #10a 自动替补：额度用尽的人按 AgentProfile.substitute 派给替补，onBehalfOf 记录，替补不能当汇总者", async () => {
     const h = await makeE2E({
-      userPc: { "claude-review": { kind: "answer", text: "C 答" } },
-      controller: { "codex-discuss": { kind: "answer", text: "替补答" } },
+      userPc: { "claude-review": { kind: "answer", text: "替补答" } },
+      controller: { "deepseek-discuss": { kind: "answer", text: "D 答" } },
+      controllerQuota: { "codex-discuss": EXHAUSTED, "deepseek-discuss": OK_QUOTA },
+      userPcQuota: { "claude-review": OK_QUOTA },
     });
-    const { roundId, batch } = await openRound(h, ["claude", "codex"]);
-    // 1A 的 round.draft 还没有选择替补的命令参数：在盖章前把 Claude 这一项标成「C酱 代 Codex」
-    h.db.prepare("UPDATE batch_items SET on_behalf_of = 'codex' WHERE batch_id = ? AND recipient = 'claude'").run(batch.id);
-    h.db.prepare("UPDATE turns SET on_behalf_of = 'codex' WHERE round_id = ? AND agent = 'claude'").run(roundId);
+    const set = await h.dispatcher.handleCommand({ type: "agent.update", id: "codex", substitute: "claude" });
+    assert.equal(set.ok, true, JSON.stringify(set));
+
+    const { roundId, batch } = await openRound(h, ["codex", "deepseek"]);
+    const items = batch.items.map((item) => ({ recipient: item.recipient, onBehalfOf: item.onBehalfOf }));
+    assert.deepEqual(
+      items.sort((a, b) => a.recipient.localeCompare(b.recipient)),
+      [
+        { recipient: "claude", onBehalfOf: "codex" },
+        { recipient: "deepseek", onBehalfOf: null },
+      ],
+    );
+    // 用户看得见的是 Prompt：替补的那份写着「代 codex 回答」，不带被替者 codex 的角色设定
+    const substituteItem = batch.items.find((item) => item.recipient === "claude")!;
+    const snapshot = h.db.prepare("SELECT content FROM prompt_snapshots WHERE id = ?").get(substituteItem.snapshotId) as { content: string };
+    assert.match(snapshot.content, /你是 C酱，本次代 codex 回答。不要采用被代答者的角色设定/);
+    assert.ok(!snapshot.content.includes("务实"), "不用被替者 codex 的角色设定");
+    const round = h.db.prepare("SELECT recipients FROM rounds WHERE id = ?").get(roundId) as { recipients: string };
+    assert.deepEqual(JSON.parse(round.recipients), ["codex", "deepseek"], "轮里还是原来的收件人");
+
     await approveOf(h, { data: { batch } });
     await waitRoundDone(h, roundId, "AWAITING_SUMMARY");
-    const claude = turnRows(h, roundId).find((t) => t.agent === "claude")!;
+    const turns = turnRows(h, roundId);
+    assert.equal(turns.find((t) => t.agent === "codex"), undefined, "缺席的人不起 Run");
+    const claude = turns.find((t) => t.agent === "claude")!;
     assert.equal(claude.outcome, "answered");
     assert.equal(claude.on_behalf_of, "codex");
+    assert.equal(h.nodes.controller.starts.filter((s) => s.profileId === "codex-discuss").length, 0);
 
     const rejected = await h.dispatcher.handleCommand({ type: "round.summarize", roundId, summarizer: "claude" });
     assert.equal(failure(rejected).error, "invalid_state", "替补不能当汇总者");
+    await h.close();
+  });
+
+  it("0-B #10b 显式替补：substitutes 指定谁替谁；[] = 不替 → 缺席的人 agent_unavailable；替补自己也用完 → agent_unavailable", async () => {
+    const h = await makeE2E({
+      userPc: { "claude-review": { kind: "answer", text: "C 答" } },
+      controller: { "deepseek-discuss": { kind: "answer", text: "替补答" } },
+      controllerQuota: { "codex-discuss": EXHAUSTED, "deepseek-discuss": OK_QUOTA },
+      userPcQuota: { "claude-review": OK_QUOTA },
+    });
+    await h.dispatcher.handleCommand({ type: "agent.update", id: "codex", substitute: "claude" });
+
+    const none = await draft(h, ["codex", "claude"], { substitutes: [] });
+    assert.equal(failure(none).error, "agent_unavailable", "[] 表示谁都不替");
+
+    const { roundId, batch } = await openRound(h, ["codex", "claude"], {
+      substitutes: [{ absent: "codex", substitute: "deepseek" }],
+    });
+    const deepseek = batch.items.find((item) => item.recipient === "deepseek")!;
+    assert.equal(deepseek.onBehalfOf, "codex", "显式指定的替补优先于 AgentProfile.substitute");
+    await approveOf(h, { data: { batch } });
+    await waitRoundDone(h, roundId, "AWAITING_SUMMARY");
+    assert.equal(turnRows(h, roundId).find((t) => t.agent === "deepseek")!.on_behalf_of, "codex");
+
+    // 替补自己也额度用完：下一轮发不出去（不做替补链）
+    await closeRound(h, roundId);
+    h.nodes.controller.setQuota("deepseek-discuss", EXHAUSTED);
+    const chained = await draft(h, ["codex", "claude"], { substitutes: [{ absent: "codex", substitute: "deepseek" }] });
+    assert.equal(failure(chained).error, "agent_unavailable");
+    await h.close();
+  });
+
+  it("0-B #10c 答到一半额度用完：round.retry 带 substitute 让替补代答，旧 Turn 被接上，不能再派第二个替补", async () => {
+    const h = await makeE2E({
+      userPc: { "claude-review": { kind: "answer", text: "替补接着答" } },
+      controller: {
+        "codex-discuss": { kind: "error", reason: "quota_exhausted" },
+        "deepseek-discuss": { kind: "answer", text: "D 答" },
+      },
+      userPcQuota: { "claude-review": OK_QUOTA },
+      controllerQuota: { "codex-discuss": OK_QUOTA, "deepseek-discuss": OK_QUOTA },
+    });
+    const { roundId, batch } = await openRound(h, ["codex", "deepseek"]);
+    await approveOf(h, { data: { batch } });
+    await waitRoundDone(h, roundId, "AWAITING_SUMMARY");
+    const absent = turnRows(h, roundId).find((t) => t.agent === "codex")!;
+    assert.equal(absent.outcome, "absent_quota");
+
+    const self = await h.dispatcher.handleCommand({ type: "round.retry", roundId, agent: "codex", substitute: "codex" });
+    assert.equal(failure(self).error, "validation_failed", "不能自己替自己");
+
+    const retried = (await h.dispatcher.handleCommand({ type: "round.retry", roundId, agent: "codex", substitute: "claude" })) as {
+      ok: boolean;
+      data: BatchLike;
+    };
+    assert.equal(retried.ok, true, JSON.stringify(retried));
+    assert.equal(retried.data.kind, "retry");
+    assert.equal(retried.data.items[0]!.recipient, "claude");
+    assert.equal(retried.data.items[0]!.onBehalfOf, "codex");
+    const superseded = h.db.prepare("SELECT superseded_by FROM turns WHERE id = ?").get(absent.id) as { superseded_by: string | null };
+    const next = h.db.prepare("SELECT agent, on_behalf_of FROM turns WHERE id = ?").get(superseded.superseded_by) as
+      | { agent: string; on_behalf_of: string | null }
+      | undefined;
+    assert.deepEqual(next, { agent: "claude", on_behalf_of: "codex" }, "旧的缺席 Turn 被替补的新 Turn 接上");
+
+    const again = await h.dispatcher.handleCommand({ type: "round.retry", roundId, agent: "codex", substitute: "deepseek" });
+    assert.equal(failure(again).error, "invalid_state", "已经在重试了，不能再派第二个替补");
+
+    const approved = await approve(h, retried.data);
+    assert.equal(approved.ok, true, JSON.stringify(approved));
+    await waitTurn(h, roundId, "claude", "answered");
+    assert.equal(turnRows(h, roundId).find((t) => t.agent === "claude")!.on_behalf_of, "codex");
+    const rejected = await h.dispatcher.handleCommand({ type: "round.summarize", roundId, summarizer: "claude" });
+    assert.equal(failure(rejected).error, "invalid_state", "替补不能当汇总者");
+    await h.close();
+  });
+
+  it("0-B #10d 粘滞缺席：quota_exhausted 之后读不到额度仍算缺席，读到 ok 才恢复", async () => {
+    const h = await makeE2E({
+      userPc: { "claude-review": { kind: "answer", text: "C 答" } },
+      controller: { "codex-discuss": [{ kind: "error", reason: "quota_exhausted" }, { kind: "answer", text: "恢复后答" }] },
+      userPcQuota: { "claude-review": OK_QUOTA },
+      controllerQuota: { "codex-discuss": OK_QUOTA },
+    });
+    const first = await openRound(h, ["codex", "claude"]);
+    await approveOf(h, { data: { batch: first.batch } });
+    await waitRoundDone(h, first.roundId, "AWAITING_SUMMARY");
+    assert.equal(turnRows(h, first.roundId).find((t) => t.agent === "codex")!.outcome, "absent_quota");
+
+    await closeRound(h, first.roundId);
+    // 节点读不到额度（404 = 未知）：未知不清粘滞缺席，Codex 没设替补 → 发不出去
+    h.nodes.controller.setQuota("codex-discuss", null);
+    const blocked = await draft(h, ["codex", "claude"], { task: "第二轮" });
+    assert.equal(failure(blocked).error, "agent_unavailable");
+    assert.match(failure(blocked).message, /Codex 额度用尽（缺席）/);
+    assert.match(failure(blocked).message, /没配额度来源/, "404 时理由里提示节点没配额度来源");
+
+    // 读到 ok 才恢复
+    h.nodes.controller.setQuota("codex-discuss", { ...OK_QUOTA, readAt: new Date().toISOString() });
+    const reopened = await draft(h, ["codex", "claude"], { task: "第二轮" });
+    assert.equal((reopened as { ok: boolean }).ok, true, JSON.stringify(reopened));
     await h.close();
   });
 
