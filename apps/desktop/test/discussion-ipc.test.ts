@@ -9,6 +9,7 @@ import { createRoundDraft, insertChatMessage, openDatabase, retractChatMessage, 
 import { ControlEvent, DEFAULT_AGENT_MODEL_SETTINGS, type AgentEvent, type BatchModel, type ModelOption, type ProfileModels } from "@room/schemas";
 import { DiscussionService, type NodeProbeResult } from "../src/main/discussion";
 import { createDispatcher } from "../src/main/ipc";
+import { QuotaService } from "../src/main/quota";
 import { RunOrchestrator } from "../src/main/orchestrator";
 import { Repository } from "../src/main/repository";
 import { SettingsStore, type SafeStorageLike } from "../src/main/settings";
@@ -95,6 +96,10 @@ async function makeHarness(options: {
   holdProfiles?: string[];
   /** C-40：节点 health 上报的 profileModels；不传 = 老节点 */
   profileModels?: ProfileModels[];
+  /** D-32：节点额度端点返回什么；不传 = 读不到（未知） */
+  quota?: "ok" | "exhausted" | "unknown" | "missing";
+  /** D-32：按 profile 覆盖（没列到的用 quota 或「未知」） */
+  quotaByProfile?: Record<string, "ok" | "exhausted" | "unknown" | "missing">;
 } = {}): Promise<Harness> {
   const dir = mkdtempSync(join(tmpdir(), "room-discussion-ipc-"));
   dirs.push(dir);
@@ -171,7 +176,26 @@ async function makeHarness(options: {
     onDiscussionSettled: (settlement) => service?.settled(settlement),
   });
 
-  service = new DiscussionService({ db, queue, repo, settings, orchestrator, emit: record, probeNode: probe });
+  const quotaReadAt = new Date().toISOString();
+  const quotaBody =
+    options.quota === "exhausted"
+      ? { fiveHour: { usedPercent: 100, windowMinutes: 300, resetsAt: null }, weekly: null, creditsInUse: null, readAt: quotaReadAt }
+      : { fiveHour: { usedPercent: 12, windowMinutes: 300, resetsAt: null }, weekly: null, creditsInUse: null, readAt: quotaReadAt };
+  const quotaService = new QuotaService({
+    fetch: async (input: string | URL | Request) => {
+      const url = String(input);
+      const profileId = /\/v1\/profiles\/([^/]+)\/quota$/.exec(url)?.[1] ?? "";
+      const mode = options.quotaByProfile?.[profileId] ?? options.quota;
+      if (mode === "missing") return new Response("not configured", { status: 404 });
+      if (mode === undefined || mode === "unknown") return new Response("nope", { status: 500 });
+      const body =
+        mode === "exhausted"
+          ? { ...quotaBody, fiveHour: { usedPercent: 100, windowMinutes: 300, resetsAt: null } }
+          : quotaBody;
+      return new Response(JSON.stringify(body), { status: 200, headers: { "content-type": "application/json" } });
+    },
+  });
+  service = new DiscussionService({ db, queue, repo, settings, orchestrator, emit: record, probeNode: probe, quota: quotaService });
 
   const dispatcher = createDispatcher({
     repo,
@@ -191,7 +215,13 @@ async function makeHarness(options: {
 function draft(
   h: Harness,
   recipients: string[],
-  extra: Partial<{ projectId: string; task: string; planVersionId: string | null; historyMode: "recent_with_summaries" | "full" }> = {},
+  extra: Partial<{
+    projectId: string;
+    task: string;
+    planVersionId: string | null;
+    historyMode: "recent_with_summaries" | "full";
+    substitutes: { absent: string; substitute: string }[];
+  }> = {},
 ) {
   return h.dispatcher.handleCommand({
     type: "round.draft",
@@ -201,6 +231,7 @@ function draft(
     taskSource: "human",
     planVersionId: extra.planVersionId ?? null,
     historyMode: extra.historyMode ?? "recent_with_summaries",
+    ...(extra.substitutes === undefined ? {} : { substitutes: extra.substitutes }),
   });
 }
 
@@ -428,43 +459,22 @@ describe("round.draft：收件人不可用", () => {
     await close(h);
   });
 
-  it("6 小时前额度缺席的，现在可以起草（超过 5 小时就不算缺席）", async () => {
-    const h = await makeHarness();
-    const roundId = "rnd_" + ulid();
-    const snapshotId = "snap_" + ulid();
-    const approvalId = "apr_" + ulid();
-    const batchId = "bat_" + ulid();
+  it("额度缺席是粘滞的：读过 ok 才恢复，不按时间（C-36 / D-32）", async () => {
+    // ① 6 小时前缺席、之后没读到额度 → 仍然缺席
+    const stuck = await makeHarness({ quota: "unknown" });
     const old = new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString();
+    seedAbsentTurn(stuck, "deepseek", old);
+    const refused = await draft(stuck, ["deepseek"]);
+    assert.equal(failure(refused).error, "agent_unavailable", JSON.stringify(refused));
+    assert.match(failure(refused).message, /额度用尽/);
+    await close(stuck);
 
-    h.db
-      .prepare(
-        "INSERT INTO prompt_snapshots (id, project_id, content, content_hash, nonce, contribution_ids, task_instruction, " +
-          "reviewer_agent, adapter_version, token_estimate, created_at) " +
-          "VALUES (?, ?, '旧 Prompt', ?, '0123456789abcdef', '[]', '旧任务', 'deepseek', 'discussion-v2', 1, ?)",
-      )
-      .run(snapshotId, h.projectId, sha("旧 Prompt"), old);
-    h.db
-      .prepare("INSERT INTO approvals (id, project_id, snapshot_id, state, created_at) VALUES (?, ?, ?, 'APPROVED', ?)")
-      .run(approvalId, h.projectId, snapshotId, old);
-    h.db
-      .prepare(
-        "INSERT INTO rounds (id, project_id, round_index, state, task, task_source, recipients, history_mode, created_at) " +
-          "VALUES (?, ?, 1, 'SUMMARIZED', '上一轮', 'human', '[\"deepseek\"]', 'recent_with_summaries', ?)",
-      )
-      .run(roundId, h.projectId, old);
-    h.db
-      .prepare("INSERT INTO batches (id, project_id, round_id, kind, state, created_at) VALUES (?, ?, ?, 'initial', 'APPROVED', ?)")
-      .run(batchId, h.projectId, roundId, old);
-    h.db
-      .prepare(
-        "INSERT INTO turns (id, round_id, batch_id, agent, is_summary, approval_id, run_id, outcome, created_at, finished_at) " +
-          "VALUES (?, ?, ?, 'deepseek', 0, ?, NULL, 'absent_quota', ?, ?)",
-      )
-      .run("turn_" + ulid(), roundId, batchId, approvalId, old, old);
-
-    const result = await draft(h, ["deepseek"]);
-    assert.equal(result.ok, true, JSON.stringify(result));
-    await close(h);
+    // ② 节点读到 ok 的额度 → 恢复，可以起草
+    const recovered = await makeHarness({ quota: "ok" });
+    seedAbsentTurn(recovered, "deepseek", old);
+    const allowed = await draft(recovered, ["deepseek"]);
+    assert.equal(allowed.ok, true, JSON.stringify(allowed));
+    await close(recovered);
   });
 });
 
@@ -1799,5 +1809,193 @@ describe("C-34 材料来源在写事务里复核（D-31c）", () => {
     } finally {
       await close(h);
     }
+  });
+});
+
+
+/** 种一条「这个 agent 在某一轮里额度缺席」的历史（availability 的粘滞判定要用） */
+function seedAbsentTurn(h: Harness, agent: string, at: string): void {
+  const roundId = "rnd_" + ulid();
+  const snapshotId = "snap_" + ulid();
+  const approvalId = "apr_" + ulid();
+  const batchId = "bat_" + ulid();
+  h.db
+    .prepare(
+      "INSERT INTO prompt_snapshots (id, project_id, content, content_hash, nonce, contribution_ids, task_instruction, " +
+        "reviewer_agent, adapter_version, token_estimate, created_at) " +
+        "VALUES (?, ?, '旧 Prompt', ?, '0123456789abcdef', '[]', '旧任务', ?, 'discussion-v2', 1, ?)",
+    )
+    .run(snapshotId, h.projectId, sha("旧 Prompt"), agent, at);
+  h.db
+    .prepare("INSERT INTO approvals (id, project_id, snapshot_id, state, created_at) VALUES (?, ?, ?, 'APPROVED', ?)")
+    .run(approvalId, h.projectId, snapshotId, at);
+  h.db
+    .prepare(
+      "INSERT INTO rounds (id, project_id, round_index, state, task, task_source, recipients, history_mode, created_at) " +
+        "VALUES (?, ?, 1, 'SUMMARIZED', '上一轮', 'human', ?, 'recent_with_summaries', ?)",
+    )
+    .run(roundId, h.projectId, JSON.stringify([agent]), at);
+  h.db
+    .prepare("INSERT INTO batches (id, project_id, round_id, kind, state, created_at) VALUES (?, ?, ?, 'initial', 'APPROVED', ?)")
+    .run(batchId, h.projectId, roundId, at);
+  h.db
+    .prepare(
+      "INSERT INTO turns (id, round_id, batch_id, agent, is_summary, approval_id, run_id, outcome, created_at, finished_at) " +
+        "VALUES (?, ?, ?, ?, 0, ?, NULL, 'absent_quota', ?, ?)",
+    )
+    .run("turn_" + ulid(), roundId, batchId, agent, approvalId, at, at);
+}
+
+describe("D-32：额度缺席 + 替补派发", () => {
+  it("自动替补：缺席的人按 AgentProfile.substitute 派给替补，批次里记 onBehalfOf，轮里还是原来的收件人", async () => {
+    const h = await makeHarness({ quotaByProfile: { "deepseek-discuss": "exhausted" } });
+    // deepseek 额度用尽，替补是 claude
+    h.db.prepare("UPDATE agents SET substitute = 'claude' WHERE id = 'deepseek'").run();
+    const result = await draft(h, ["deepseek", "codex"]);
+    assert.equal(result.ok, true, JSON.stringify(result));
+    const data = (result as unknown as { data: { round: { recipients: string[]; id: string }; batch: { id: string; items: { recipient: string; onBehalfOf: string | null; snapshotId: string }[] } } }).data;
+
+    // 轮里「本来发给谁」不变
+    assert.deepEqual(data.round.recipients.sort(), ["codex", "deepseek"]);
+    const items = data.batch.items;
+    assert.deepEqual(items.map((item) => [item.recipient, item.onBehalfOf]).sort(), [
+      ["claude", "deepseek"],
+      ["codex", null],
+    ]);
+    // 替补自己的 Snapshot 里写着「代 deepseek 回答」
+    const prompt = h.db.prepare("SELECT content FROM prompt_snapshots WHERE id = ?").get(items.find((item) => item.recipient === "claude")!.snapshotId) as { content: string };
+    assert.match(prompt.content, /代 deepseek 回答/);
+    // 缺席的人这一轮没有 Turn
+    const turns = h.db.prepare("SELECT agent, on_behalf_of FROM turns WHERE round_id = ? ORDER BY agent").all(data.round.id) as { agent: string; on_behalf_of: string | null }[];
+    assert.deepEqual(turns.map((turn) => [turn.agent, turn.on_behalf_of]).sort(), [
+      ["claude", "deepseek"],
+      ["codex", null],
+    ]);
+    await close(h);
+  });
+
+  it("substitutes: [] 表示这一轮谁都不替，缺席的人照旧 agent_unavailable", async () => {
+    const h = await makeHarness({ quotaByProfile: { "deepseek-discuss": "exhausted" } });
+    h.db.prepare("UPDATE agents SET substitute = 'claude' WHERE id = 'deepseek'").run();
+    const result = await draft(h, ["deepseek", "codex"], { substitutes: [] });
+    assert.equal(failure(result).error, "agent_unavailable", JSON.stringify(result));
+    assert.match(failure(result).message, /额度用尽/);
+    await close(h);
+  });
+
+  it("替补自己也占着收件人的位置：validation_failed（一个人一轮只有一个 Turn）", async () => {
+    const h = await makeHarness({ quotaByProfile: { "deepseek-discuss": "exhausted" } });
+    const result = await draft(h, ["deepseek", "claude"], { substitutes: [{ absent: "deepseek", substitute: "claude" }] });
+    assert.equal(failure(result).error, "validation_failed", JSON.stringify(result));
+    await close(h);
+  });
+
+  it("显式替补：缺席的人不能同时是别人的替补（不做替补链）", async () => {
+    const h = await makeHarness({ quotaByProfile: { "deepseek-discuss": "exhausted" } });
+    const result = await draft(h, ["deepseek", "codex"], {
+      substitutes: [
+        { absent: "deepseek", substitute: "claude" },
+        { absent: "codex", substitute: "deepseek" },
+      ],
+    });
+    // schema 在解析阶段就挡掉；到不了 main
+    assert.equal(result.ok, false, JSON.stringify(result));
+    assert.equal(failure(result).error, "validation_failed", JSON.stringify(result));
+    await close(h);
+  });
+
+  it("redraft 省略 substitutes：沿用旧批次的替补", async () => {
+    const h = await makeHarness({ quotaByProfile: { "deepseek-discuss": "exhausted" } });
+    h.db.prepare("UPDATE agents SET substitute = 'claude' WHERE id = 'deepseek'").run();
+    const first = await draft(h, ["deepseek", "codex"]);
+    assert.equal(first.ok, true, JSON.stringify(first));
+    const roundId = (first as unknown as { data: { round: { id: string } } }).data.round.id;
+
+    const again = await h.dispatcher.handleCommand({ type: "round.redraft", roundId, task: "换个任务" });
+    assert.equal(again.ok, true, JSON.stringify(again));
+    const batch = (again as unknown as { data: { batch: { items: { recipient: string; onBehalfOf: string | null }[] } } }).data.batch;
+    assert.deepEqual(batch.items.map((item) => [item.recipient, item.onBehalfOf]).sort(), [
+      ["claude", "deepseek"],
+      ["codex", null],
+    ]);
+    await close(h);
+  });
+});
+
+
+/** 种一轮「进行中」，其中某个 agent 的 Turn 是 absent_quota（retry 用） */
+function seedRunningRoundWithAbsentTurn(h: Harness, agent: string): { roundId: string; turnId: string } {
+  const now = new Date().toISOString();
+  const roundId = "rnd_" + ulid();
+  const snapshotId = "snap_" + ulid();
+  const approvalId = "apr_" + ulid();
+  const batchId = "bat_" + ulid();
+  const turnId = "turn_" + ulid();
+  h.db
+    .prepare(
+      "INSERT INTO prompt_snapshots (id, project_id, content, content_hash, nonce, contribution_ids, task_instruction, " +
+        "reviewer_agent, adapter_version, token_estimate, created_at) " +
+        "VALUES (?, ?, '进行中的 Prompt', ?, '0123456789abcdef', '[]', '任务', ?, 'discussion-v2', 1, ?)",
+    )
+    .run(snapshotId, h.projectId, sha("进行中的 Prompt"), agent, now);
+  h.db
+    .prepare("INSERT INTO approvals (id, project_id, snapshot_id, state, created_at) VALUES (?, ?, ?, 'APPROVED', ?)")
+    .run(approvalId, h.projectId, snapshotId, now);
+  h.db
+    .prepare(
+      "INSERT INTO rounds (id, project_id, round_index, state, task, task_source, recipients, history_mode, created_at) " +
+        "VALUES (?, ?, 2, 'RUNNING', '任务', 'human', ?, 'recent_with_summaries', ?)",
+    )
+    .run(roundId, h.projectId, JSON.stringify([agent]), now);
+  h.db
+    .prepare("INSERT INTO batches (id, project_id, round_id, kind, state, created_at) VALUES (?, ?, ?, 'initial', 'APPROVED', ?)")
+    .run(batchId, h.projectId, roundId, now);
+  h.db
+    .prepare(
+      "INSERT INTO turns (id, round_id, batch_id, agent, is_summary, approval_id, run_id, outcome, created_at, finished_at) " +
+        "VALUES (?, ?, ?, ?, 0, ?, NULL, 'absent_quota', ?, ?)",
+    )
+    .run(turnId, roundId, batchId, agent, approvalId, now, now);
+  return { roundId, turnId };
+}
+
+describe("D-32：round.retry 带替补（C酱 #158 必须改 1）", () => {
+  it("旧 Turn 被接上（superseded_by），而且不能反复派第二个替补", async () => {
+    const h = await makeHarness({ quota: "ok" });
+    const { roundId, turnId } = seedRunningRoundWithAbsentTurn(h, "deepseek");
+
+    const first = await h.dispatcher.handleCommand({
+      type: "round.retry",
+      roundId,
+      agent: "deepseek",
+      substitute: "claude",
+    });
+    assert.equal(first.ok, true, JSON.stringify(first));
+    const oldTurn = h.db.prepare("SELECT superseded_by FROM turns WHERE id = ?").get(turnId) as { superseded_by: string | null };
+    assert.ok(oldTurn.superseded_by !== null, "旧 Turn 的 superseded_by 要指向新 Turn（替补的那个）");
+    const newTurn = h.db
+      .prepare("SELECT agent, on_behalf_of FROM turns WHERE id = ?")
+      .get(oldTurn.superseded_by) as { agent: string; on_behalf_of: string | null };
+    assert.deepEqual([newTurn.agent, newTurn.on_behalf_of], ["claude", "deepseek"]);
+
+    // 再点一次（换一个人替）必须被拒：已经在重试了
+    const again = await h.dispatcher.handleCommand({
+      type: "round.retry",
+      roundId,
+      agent: "deepseek",
+      substitute: "codex",
+    });
+    assert.equal(again.ok, false, JSON.stringify(again));
+    assert.equal(failure(again).error, "invalid_state", JSON.stringify(again));
+    await close(h);
+  });
+
+  it("节点没配额度来源时，缺席的理由里提示出来", async () => {
+    const h = await makeHarness({ quotaByProfile: { "deepseek-discuss": "missing" } });
+    seedAbsentTurn(h, "deepseek", new Date().toISOString());
+    const result = await draft(h, ["deepseek"]);
+    assert.equal(failure(result).error, "agent_unavailable", JSON.stringify(result));
+    assert.match(failure(result).message, /没配额度来源/);
+    await close(h);
   });
 });

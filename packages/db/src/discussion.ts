@@ -264,6 +264,11 @@ export interface RoundDraftRecipient {
   prompt: RoundDraftPrompt;
   /** C-40：起草时定下的模型和强度；省略 / null = 用 profile 自带模型 */
   model?: BatchModel | null;
+  /**
+   * D-32 / C-36：替补代答时为被替补的人（absent）。`agent` 是真正收件的那位（替补），
+   * 这个字段记「他替谁答」，写进 batch_items / turns 的 on_behalf_of。
+   */
+  onBehalfOf?: string | null;
 }
 
 export interface CreateRoundDraftInput {
@@ -274,6 +279,11 @@ export interface CreateRoundDraftInput {
    */
   roundId?: string;
   recipients: readonly RoundDraftRecipient[];
+  /**
+   * D-32：这一轮「本来要发给谁」（用户挑的收件人），和 recipients 不同的地方是替补代答：
+   * recipients 里是真正收件的替补，这里仍然是缺席的那位。不传 = 和 recipients 的 agent 一样。
+   */
+  roundRecipients?: readonly string[];
   task: string;
   taskSource: TaskSource;
   planVersionId?: string | null;
@@ -401,10 +411,11 @@ function insertBatchTx(
 
     db.prepare(
       "INSERT INTO batch_items (batch_id, recipient, on_behalf_of, approval_id, snapshot_id, content_hash, differs_from_others, token_estimate, model) " +
-        "VALUES (?, ?, NULL, ?, ?, ?, ?, ?, ?)",
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
     ).run(
       batchId,
       recipient.agent,
+      recipient.onBehalfOf ?? null,
       approvalId,
       snapshotId,
       contentHash,
@@ -416,12 +427,13 @@ function insertBatchTx(
     const turnId = newTurnId();
     db.prepare(
       "INSERT INTO turns (id, round_id, batch_id, agent, on_behalf_of, is_summary, approval_id, run_id, outcome, created_at) " +
-        "VALUES (?, ?, ?, ?, NULL, ?, ?, NULL, 'pending', ?)",
+        "VALUES (?, ?, ?, ?, ?, ?, ?, NULL, 'pending', ?)",
     ).run(
       turnId,
       input.roundId,
       batchId,
       recipient.agent,
+      recipient.onBehalfOf ?? null,
       input.kind === "summary" ? 1 : 0,
       approvalId,
       input.createdAt,
@@ -484,7 +496,7 @@ export function createRoundDraft(
       roundIndex,
       input.task,
       input.taskSource,
-      JSON.stringify(input.recipients.map((recipient) => recipient.agent)),
+      JSON.stringify(input.roundRecipients ?? input.recipients.map((recipient) => recipient.agent)),
       input.planVersionId ?? null,
       input.historyMode,
       createdAt,
@@ -1020,4 +1032,17 @@ export function approveBatch(
 
     return { batchId: batch.id, roundId: batch.round_id, runIds, turnIds };
   });
+}
+
+/**
+ * D-32：某张批次的每一项（谁在收件、替谁答）。redraft「沿用旧替补」要按 onBehalfOf 读回。
+ */
+export function listBatchItems(
+  db: SqliteDatabase,
+  batchId: string,
+): { recipient: string; onBehalfOf: string | null }[] {
+  const rows = db
+    .prepare("SELECT recipient, on_behalf_of FROM batch_items WHERE batch_id = ? ORDER BY recipient")
+    .all(batchId) as { recipient: string; on_behalf_of: string | null }[];
+  return rows.map((row) => ({ recipient: row.recipient, onBehalfOf: row.on_behalf_of }));
 }
