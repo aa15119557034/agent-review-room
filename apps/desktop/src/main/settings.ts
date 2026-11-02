@@ -40,6 +40,12 @@ interface StoredNode {
   tokenCipher: string | null;
 }
 
+interface StoredGithub {
+  repo: string | null;
+  /** base64(safeStorage 加密后的 token)；null = 没有 Token */
+  tokenCipher: string | null;
+}
+
 interface StoredSettings {
   reviewerNode: StoredReviewerNode | null;
   /** 多节点（ADR-002 / D-22c）：按节点 id 存地址与 Token，Token 只写不读 */
@@ -59,6 +65,8 @@ interface StoredSettings {
    * `localAgentServerTokenFiles`，不能拿来给 controller-local-codex。
    */
   localAgentServerTokenFile: string | null;
+  /** ADR-005 §5 / D-46c：笔记和议题同步到 GitHub 的仓库与 Token（Token 只写不读） */
+  github: StoredGithub | null;
 }
 
 /** 旧设置里的 Reviewer 节点自动迁移成这个节点 */
@@ -84,7 +92,7 @@ export class SettingsStore {
   }
 
   #load(): StoredSettings {
-    if (!existsSync(this.#file)) return { reviewerNode: null, nodes: {}, agentRoom: null, localAgentServerTokenFiles: {}, localAgentServerTokenFile: null };
+    if (!existsSync(this.#file)) return { reviewerNode: null, nodes: {}, agentRoom: null, localAgentServerTokenFiles: {}, localAgentServerTokenFile: null, github: null };
     try {
       const parsed = JSON.parse(readFileSync(this.#file, "utf8")) as {
         reviewerNode?: unknown;
@@ -92,6 +100,7 @@ export class SettingsStore {
         agentRoom?: unknown;
         localAgentServerTokenFiles?: unknown;
         localAgentServerTokenFile?: unknown;
+        github?: unknown;
       };
       const reviewerNode = parseReviewerNode(parsed.reviewerNode);
       const nodes = parseNodes(parsed.nodes);
@@ -101,6 +110,7 @@ export class SettingsStore {
         agentRoom: parseAgentRoom(parsed.agentRoom),
         localAgentServerTokenFiles: parseLocalTokenFiles(parsed.localAgentServerTokenFiles),
         localAgentServerTokenFile: parseAgentRoom(parsed.localAgentServerTokenFile),
+        github: parseGithub(parsed.github),
       };
 
       // 旧设置文件（没有 nodes 字段）：把原来的 Reviewer 节点迁移成 user-pc。
@@ -122,7 +132,7 @@ export class SettingsStore {
       return base;
     } catch {
       // 设置文件损坏：当作未配置，不阻止应用启动
-      return { reviewerNode: null, nodes: {}, agentRoom: null, localAgentServerTokenFiles: {}, localAgentServerTokenFile: null };
+      return { reviewerNode: null, nodes: {}, agentRoom: null, localAgentServerTokenFiles: {}, localAgentServerTokenFile: null, github: null };
     }
   }
 
@@ -157,6 +167,43 @@ export class SettingsStore {
       }
       return null;
     }
+  }
+
+  /** D-46c：GitHub 同步的仓库和 Token（Token 只在 main 解密，不进日志）。 */
+  getGithub(): { repo: string | null; token: string | null } {
+    const stored = this.#data.github;
+    if (stored === null) return { repo: null, token: null };
+    let token: string | null = null;
+    if (stored.tokenCipher !== null) {
+      try {
+        token = this.#safeStorage.decryptString(Buffer.from(stored.tokenCipher, "base64"));
+      } catch {
+        // 换机器 / 密文坏了：清掉，让「有没有 Token」和实际一致
+        token = null;
+        this.#data = { ...this.#data, github: { ...stored, tokenCipher: null } };
+        try {
+          this.#save();
+        } catch {
+          // 只读目录等情况下保存失败，不影响本次返回 null
+        }
+      }
+    }
+    return { repo: stored.repo, token };
+  }
+
+  /** 保存仓库 / Token（token 不传 = 保留原来的）。只写不读：返回值不含 Token */
+  setGithub(input: { repo: string | null; token?: string }): { repo: string | null; token: string | null } {
+    const previous = this.#data.github;
+    let tokenCipher = previous?.tokenCipher ?? null;
+    if (input.token !== undefined) {
+      if (!this.#safeStorage.isEncryptionAvailable()) {
+        throw new SettingsError("token_storage_unavailable", "系统没有可用的加密存储，不能保存 GitHub Token");
+      }
+      tokenCipher = this.#safeStorage.encryptString(input.token).toString("base64");
+    }
+    this.#data = { ...this.#data, github: { repo: input.repo, tokenCipher } };
+    this.#save();
+    return this.getGithub();
   }
 
   updateReviewerNode(input: UpdateReviewerNodeInput): ReviewerNodeSettings {
@@ -357,6 +404,15 @@ function parseNodes(value: unknown): Record<string, StoredNode> {
 }
 
 /** `agentRoom` / 旧键 `localAgentServerTokenFile`：去掉空白，空串等于没配 */
+function parseGithub(value: unknown): StoredGithub | null {
+  if (value === null || typeof value !== "object") return null;
+  const record = value as Record<string, unknown>;
+  return {
+    repo: typeof record.repo === "string" ? record.repo : null,
+    tokenCipher: typeof record.tokenCipher === "string" ? record.tokenCipher : null,
+  };
+}
+
 function parseAgentRoom(value: unknown): string | null {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();

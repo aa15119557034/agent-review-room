@@ -17,6 +17,7 @@ import {
   type VoiceOption,
 } from "@room/schemas";
 import { ChatError, type ChatService } from "./chat";
+import { GithubError, type GithubSyncService } from "./github";
 import { NoteError, type NotesService } from "./notes";
 import { DiscussionError, type DiscussionService } from "./discussion";
 import type { MediaJobsService } from "./media-jobs";
@@ -43,6 +44,8 @@ export interface IpcDeps {
   readonly chat?: ChatService;
   /** C-46：项目笔记（改 / 回退 / 列表 / 历史） */
   readonly notes?: NotesService;
+  /** D-46c：项目笔记同步到 GitHub */
+  readonly github?: GithubSyncService;
   /** D-34a：聊天文件和表情库（选文件对话框、按内容去重） */
   readonly media?: MediaService;
   /** D-38a：画图任务（本机 ComfyUI + 全局队列） */
@@ -126,6 +129,11 @@ export function createDispatcher(deps: IpcDeps) {
     return deps.media;
   };
 
+  const githubService = (): GithubSyncService => {
+    if (deps.github === undefined) throw new ControlFailure("internal", "GitHub 同步没有启动");
+    return deps.github;
+  };
+
   const notesService = (): NotesService => {
     if (deps.notes === undefined) throw new ControlFailure("internal", "笔记服务没有启动");
     return deps.notes;
@@ -183,6 +191,12 @@ export function createDispatcher(deps: IpcDeps) {
 
       case "chat.window.cancel":
         return chatService().cancelWindow(command);
+
+      case "github.update":
+        return githubService().update(command);
+
+      case "github.pushNow":
+        return githubService().pushNow();
 
       case "project.create":
         return repo.createProject(command.name);
@@ -530,6 +544,8 @@ export function createDispatcher(deps: IpcDeps) {
         return chatService().listMessages(query);
       case "chat.slots.runs":
         return chatService().listSlotRuns(query.slotId);
+      case "github.get":
+        return githubService().status();
       case "chat.windows.get":
         return chatService().windowStatuses(query.conversationId);
       case "chat.windows.list":

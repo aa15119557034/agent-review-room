@@ -19,6 +19,7 @@ import { SCHEMA_V18 } from "./schema-v18";
 import { SCHEMA_V19 } from "./schema-v19";
 import { SCHEMA_V20 } from "./schema-v20";
 import { SCHEMA_V21 } from "./schema-v21";
+import { SCHEMA_V22 } from "./schema-v22";
 
 /**
  * 迁移（D-02）：用 PRAGMA user_version 记版本，每个迁移在自己的事务里跑。
@@ -197,6 +198,13 @@ export const MIGRATIONS: readonly Migration[] = [
       db.exec(SCHEMA_V21);
       const broken = db.prepare("PRAGMA foreign_key_check").all();
       if (broken.length > 0) throw new Error("v21 重建聊天快照 / Run 之后有外键不一致：" + JSON.stringify(broken).slice(0, 500));
+    },
+  },
+  {
+    version: 22,
+    name: "github-sync",
+    up: (db) => {
+      db.exec(SCHEMA_V22);
     },
   },
 ];

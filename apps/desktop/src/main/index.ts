@@ -4,6 +4,7 @@ import { openDatabase, repairInterruptedRuns, WriteQueue } from "@room/db";
 import { HttpRemoteAgentAdapter } from "@room/remote-client";
 import { IMAGE_URL_SCHEME, AUDIO_URL_SCHEME, IPC_CHANNELS, type ControlEvent } from "@room/schemas";
 import { ChatService } from "./chat";
+import { GithubSyncService } from "./github";
 import { NotesService } from "./notes";
 import { DiscussionService } from "./discussion";
 import { createDispatcher } from "./ipc";
@@ -178,7 +179,15 @@ async function bootstrap(): Promise<void> {
   let discussion: DiscussionService | null = null;
 
   // C-46 / D-46a：项目笔记（存版本 + 从回答里切 room-note + 拼 Prompt 用）
-  const notes = new NotesService({ db, queue, emit: broadcast, knownAgents: () => repo.listAgents().map((agent) => agent.id) });
+  const github = new GithubSyncService({ db, settings, emit: broadcast });
+  github.start();
+  const notes = new NotesService({
+    db,
+    queue,
+    emit: broadcast,
+    knownAgents: () => repo.listAgents().map((agent) => agent.id),
+    github,
+  });
 
   const orchestrator = new RunOrchestrator({
     db,
@@ -278,6 +287,7 @@ async function bootstrap(): Promise<void> {
     // 让节点立刻停下，而不是等租约过期（abort 由 orchestrator / chat 统一发出）
     orchestrator.cancelAll();
     chat.cancelAll();
+    github.stop();
     // 语音合成的子进程也一起收掉，别留后台进程
     ttsRunner?.dispose();
     // D-34b：转写 sidecar 是独立进程，退出时一起收掉
