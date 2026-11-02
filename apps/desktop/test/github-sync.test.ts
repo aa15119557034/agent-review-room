@@ -58,6 +58,7 @@ function harness(options: { private?: boolean; hangPut?: boolean; requestTimeout
   let online = true;
   let repoPrivate = options.private ?? true;
   let putStatus: number | null = null;
+  let putError = false;
   /** #187：让某一次请求停在闸门上（再造一次「等待期间设置 / 队列变了」） */
   let repoGate: Promise<void> | null = null;
   let putGate: Promise<void> | null = null;
@@ -90,6 +91,7 @@ function harness(options: { private?: boolean; hangPut?: boolean; requestTimeout
         putStatus = null;
         return { status, json: {} };
       }
+      if (putError) throw new Error("旧请求断网");
       files.set(input.url, "sha-" + (files.size + 1));
       return { status: 201, json: {} };
     }
@@ -116,6 +118,7 @@ function harness(options: { private?: boolean; hangPut?: boolean; requestTimeout
     setOnline: (value: boolean) => { online = value; },
     setPrivate: (value: boolean) => { repoPrivate = value; },
     setPutStatus: (value: number) => { putStatus = value; },
+    setPutError: (value: boolean) => { putError = value; },
     /** 返回 release：调用后放行（一次性的闸门） */
     gateRepo: () => {
       let release!: () => void;
@@ -145,6 +148,55 @@ async function until(check: () => boolean, ms = 4_000): Promise<void> {
 }
 
 describe("github sync (D-46c)", () => {
+  it("推送中关闭同步后旧请求失败：不污染新状态，队列保留", async () => {
+    const h = harness();
+    try {
+      await h.github.update({ repo: "me/notes", token: TOKEN });
+      await h.github.pushNow();
+      h.enqueue();
+      const release = h.gatePut();
+      const pushing = h.github.pushNow();
+      await until(() => h.calls.some((call) => call.method === "PUT"));
+      await h.github.update({ repo: null });
+      h.setPutError(true);
+      release();
+      await pushing;
+      assert.equal(h.github.status().lastError, null);
+      assert.equal(h.github.status().private, null);
+      assert.equal(h.github.status().pending, 1);
+    } finally { h.db.close(); }
+  });
+  it("设置触发的检查与手动推送共用一个请求，不能并发 PUT 同一版", async () => {
+    const h = harness();
+    try {
+      h.enqueue();
+      const release = h.gateRepo();
+      await h.github.update({ repo: "me/notes", token: TOKEN });
+      const pushing = h.github.pushNow();
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      assert.equal(h.calls.length, 1, "旧检查未完成时不能起第二个检查");
+      release();
+      await pushing;
+      assert.equal(h.calls.filter((call) => call.method === "PUT").length, 1);
+    } finally { h.db.close(); }
+  });
+
+  it("多个手动推送等待已有请求时，结束后不各自起一轮", async () => {
+    const h = harness();
+    try {
+      await h.github.update({ repo: "me/notes", token: TOKEN });
+      await h.github.pushNow();
+      h.enqueue();
+      const release = h.gatePut();
+      const first = h.github.pushNow();
+      await until(() => h.calls.some((call) => call.method === "PUT"));
+      const before = h.calls.length;
+      const others = [h.github.pushNow(), h.github.pushNow()];
+      release();
+      await Promise.all([first, ...others]);
+      assert.equal(h.calls.length, before, "等待者共享这一轮结果");
+    } finally { h.db.close(); }
+  });
   it("公开仓库：保存设置但什么都不推，lastError = public_repo", async () => {
     const h = harness({ private: false });
     try {
@@ -246,6 +298,7 @@ describe("github sync (D-46c)", () => {
       };
       assert.equal(row.path, NOTE_PATH);
       assert.ok(row.message.includes("第 2 版"));
+      await h.github.pushNow();
     } finally {
       h.db.close();
     }
