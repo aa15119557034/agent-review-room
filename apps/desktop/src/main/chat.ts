@@ -86,6 +86,7 @@ import {
   selectChatModel,
 } from "./chat-model";
 import { CHAT_MATERIAL_MAX_CHARS, CHAT_MATERIAL_PROMPT_HEADROOM, renderChatMaterial } from "./chat-material";
+import type { NotesProvider } from "./notes";
 import type { Repository } from "./repository";
 import type { SettingsStore } from "./settings";
 
@@ -135,6 +136,8 @@ export interface ChatServiceDeps {
   readonly repo: Repository;
   readonly settings: SettingsStore;
   readonly emit: (event: ControlEvent) => void;
+  /** C-46：项目笔记；不传 = 这个进程里没有笔记（测试 / 老装配） */
+  readonly notes?: NotesProvider;
   /** 每次 Run 一个 adapter；测试注入假的 */
   readonly adapterFactory: (target: ChatRunTarget) => Promise<AgentAdapter>;
   /** 节点探测；默认真的打节点 */
@@ -493,6 +496,9 @@ export class ChatService {
           inReplyToOf: this.#inReplyToOf,
           displayNameOf: (id) => agents.get(id)?.displayName ?? id,
           replyRequired: chatRequired(conversation, message.mentions, agent.id),
+          ...(this.#deps.notes === undefined
+            ? {}
+            : { note: this.#deps.notes.latest({ kind: "conversation", conversationId: conversation.id }, agent.id) }),
           ...(promptFiles.length === 0 ? {} : { files: promptFiles }),
           ...(withImages ? { attachments: this.#imageManifest(images) } : {}),
           createdAt: now,
@@ -721,6 +727,9 @@ export class ChatService {
       inReplyToOf: this.#inReplyToOf,
       displayNameOf: (id) => agents.get(id)?.displayName ?? id,
       replyRequired: slot.required,
+      ...(this.#deps.notes === undefined
+        ? {}
+        : { note: this.#deps.notes.latest({ kind: "conversation", conversationId: conversation.id }, agent.id) }),
       ...(withImages ? { attachments: this.#imageManifest(images) } : {}),
       createdAt: now,
     });
@@ -870,7 +879,7 @@ export class ChatService {
     this.#active.set(run.id, controller);
     let current: ChatRun["state"] = run.state;
 
-    const finish = async (terminal: ChatRunTerminal): Promise<void> => {
+    const finish = async (terminal: ChatRunTerminal): Promise<boolean> => {
       const result = await finishChatRun(db, queue, { runId: run.id, from: current, terminal });
       if (result.message !== null) this.#emit({ type: "chat.message.created", message: result.message });
       if (result.slot !== null) this.#emit({ type: "chat.slot.updated", slot: result.slot });
@@ -891,6 +900,8 @@ export class ChatService {
           });
         }
       }
+      // #178 评审第 1 条：迟到的结果（回答位已经不是 running）不落消息，调用方据此不记笔记
+      return result.message !== null;
     };
 
     try {
@@ -983,11 +994,26 @@ export class ChatService {
                   JSON.stringify({ runId: run.id, agent: run.agent, speak: parsed.data.speak, draw: parsed.data.draw }).slice(0, 2000),
                 );
               }
-              await finish({
+              const extracted = this.#deps.notes?.extract(parsed.data.text) ?? { text: parsed.data.text, content: null, rejected: null };
+              const saved = await finish({
                 kind: "answered",
-                text: parsed.data.text,
+                text: extracted.text,
                 ...(media.intent === null ? {} : { mediaIntent: media.intent }),
               });
+              // D-46a：回答**真的落库了**（不是迟到 / 被重试作废的结果）才记笔记；失败只记日志，不影响回答
+              if (saved && this.#deps.notes !== undefined) {
+                const scope = { kind: "conversation" as const, conversationId: run.conversationId };
+                if (extracted.content !== null) {
+                  void this.#deps.notes.recordReply({
+                    scope,
+                    agent: run.agent,
+                    content: extracted.content,
+                    source: { kind: "chat_run", id: run.id },
+                  });
+                } else if (extracted.rejected !== null) {
+                  this.#deps.notes.reject({ scope, agent: run.agent, reason: extracted.rejected, source: { kind: "chat_run", id: run.id } });
+                }
+              }
             }
           } else if (event.type === "error") {
             if (event.reason === "quota_exhausted") await finish({ kind: "absent_quota" });

@@ -6,11 +6,14 @@ import { join } from "node:path";
 import { after, describe, it } from "node:test";
 import {
   insertChatMessage,
+  listLatestProjectNotes,
   insertChatRun,
   insertChatSlot,
   insertChatSnapshot,
   insertChatSummary,
   getChatSnapshot,
+  getChatMessage,
+  listChatSlotsForMessage,
   listChatSummaries,
   insertFile,
   insertImageRef,
@@ -37,6 +40,7 @@ import {
 } from "@room/schemas";
 import { sha256Hex, type AgentAdapter } from "@room/core";
 import { ChatService, type ChatRunTarget } from "../src/main/chat";
+import { NotesService } from "../src/main/notes";
 import { CHAT_MATERIAL_MAX_CHARS, CHAT_MATERIAL_PROMPT_HEADROOM } from "../src/main/chat-material";
 import { Repository } from "../src/main/repository";
 import { SettingsStore, type SafeStorageLike } from "../src/main/settings";
@@ -178,6 +182,7 @@ async function makeHarness(
     repo,
     settings,
     emit: (event) => events.push(ControlEvent.parse(event)),
+    notes: new NotesService({ db, queue, emit: (event) => events.push(ControlEvent.parse(event)) }),
     readFileText: (ref) => fileTexts.get(ref) ?? null,
     readImage: (ref) => imageBytes.get(ref) ?? null,
     speakAnswer: async (source) => {
@@ -1575,3 +1580,63 @@ describe("replyAsVoice (D-37b)", () => {
   });
 });
 
+
+// ================================================================ D-46a 项目笔记
+
+describe("project notes wiring (D-46a)", () => {
+  const textScript = (text: string): Script => [
+    { type: "message_complete", text: JSON.stringify({ kind: "reply", text }) },
+    { type: "completed" },
+  ];
+  const scopeOf = (h: Harness) => ({ kind: "conversation" as const, conversationId: h.conversationId });
+
+  it("stores one version from a reply, strips the block, and the next Snapshot carries it", async () => {
+    const h = await makeHarness({ scripts: { deepseek: textScript("好的\n\n\u0060\u0060\u0060room-note\n# 笔记\n- 约定\n\u0060\u0060\u0060") } });
+    try {
+      await h.chat.send(send(h.conversationId, userMessageId(300), "记住这个约定"));
+      await settle(h.chat);
+
+      const notes = listLatestProjectNotes(h.db, scopeOf(h));
+      assert.equal(notes.length, 1);
+      assert.equal(notes[0]!.content, "# 笔记\n- 约定");
+      assert.equal(notes[0]!.reason, "reply");
+      assert.equal(notes[0]!.agent, "deepseek");
+      assert.equal(notes[0]!.source?.kind, "chat_run");
+      assert.ok(h.events.some((event) => event.type === "projectNote.created"), "发事件");
+
+      // 回答正文里不再显示 room-note 段
+      // 正文去掉 room-note 段由契约的 extractRoomNote 覆盖（schemas 测试）
+
+      // 第一条回答是在笔记之前拼的：Snapshot 里没有笔记版本
+      const firstRun = h.db.prepare("SELECT snapshot_id FROM chat_runs ORDER BY created_at, rowid LIMIT 1").get() as { snapshot_id: string };
+      assert.equal(getChatSnapshot(h.db, firstRun.snapshot_id)!.projectNoteId ?? null, null);
+
+      // 第二条回答的 Snapshot 带上了这份笔记（版本 1），正文在不可信边界里
+      await h.chat.send(send(h.conversationId, userMessageId(301), "接着聊"));
+      await settle(h.chat);
+      const secondRun = h.db.prepare("SELECT snapshot_id FROM chat_runs ORDER BY created_at, rowid LIMIT 1 OFFSET 1").get() as { snapshot_id: string };
+      const snapshot = getChatSnapshot(h.db, secondRun.snapshot_id)!;
+      assert.equal(snapshot.projectNoteId, notes[0]!.id);
+      assert.ok(snapshot.content.includes("项目笔记（第 1 版）"));
+      assert.ok(snapshot.content.includes("- 约定"));
+      assert.ok(snapshot.content.includes("<UNTRUSTED_CHAT_DATA_" + snapshot.nonce + ">"));
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("two room-note blocks: no note, the reply still goes through, rejected event", async () => {
+    const two = "好的\n\u0060\u0060\u0060room-note\nA\n\u0060\u0060\u0060\n中间\n\u0060\u0060\u0060room-note\nB\n\u0060\u0060\u0060";
+    const h = await makeHarness({ scripts: { deepseek: textScript(two) } });
+    try {
+      await h.chat.send(send(h.conversationId, userMessageId(310), "记两段"));
+      await settle(h.chat);
+      assert.equal(listLatestProjectNotes(h.db, scopeOf(h)).length, 0);
+      const rejected = h.events.find((event) => event.type === "projectNote.rejected");
+      assert.ok(rejected && rejected.type === "projectNote.rejected" && rejected.reason === "multiple");
+      // 正文去掉 room-note 段由契约的 extractRoomNote 覆盖（schemas 测试）
+    } finally {
+      h.db.close();
+    }
+  });
+});

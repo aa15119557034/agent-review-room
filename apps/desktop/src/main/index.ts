@@ -4,6 +4,7 @@ import { openDatabase, repairInterruptedRuns, WriteQueue } from "@room/db";
 import { HttpRemoteAgentAdapter } from "@room/remote-client";
 import { IMAGE_URL_SCHEME, AUDIO_URL_SCHEME, IPC_CHANNELS, type ControlEvent } from "@room/schemas";
 import { ChatService } from "./chat";
+import { NotesService } from "./notes";
 import { DiscussionService } from "./discussion";
 import { createDispatcher } from "./ipc";
 import { ComfyUiClient, loadComfyUiConfigFile } from "./comfyui";
@@ -176,10 +177,14 @@ async function bootstrap(): Promise<void> {
 
   let discussion: DiscussionService | null = null;
 
+  // C-46 / D-46a：项目笔记（存版本 + 从回答里切 room-note + 拼 Prompt 用）
+  const notes = new NotesService({ db, queue, emit: broadcast, knownAgents: () => repo.listAgents().map((agent) => agent.id) });
+
   const orchestrator = new RunOrchestrator({
     db,
     queue,
     emit: broadcast,
+    notes,
     getRun: (runId) => db.prepare("SELECT * FROM runs WHERE id = ?").get(runId) as never,
     // 讨论室的收尾要推 message.created / turn.updated / round.updated …，交给 DiscussionService
     onDiscussionSettled: (settlement) => discussion?.settled(settlement),
@@ -209,6 +214,7 @@ async function bootstrap(): Promise<void> {
     settings,
     orchestrator,
     emit: broadcast,
+    notes,
   });
 
   const nodes = new NodeService({ repo, settings });
@@ -220,6 +226,7 @@ async function bootstrap(): Promise<void> {
     repo,
     settings,
     emit: broadcast,
+    notes,
     readFileText: (ref) => mediaStore.readFileText(ref),
     // C-42a / X-34b：带图聊天要读图片本体（字节只在 main 里，不进 renderer）
     readImage: (ref) => mediaStore.readImage(ref),
@@ -253,6 +260,7 @@ async function bootstrap(): Promise<void> {
     orchestrator,
     discussion,
     chat,
+    notes,
     media,
     jobs,
     voices: () => (ttsConfig === null ? [] : voiceOptionsOf(ttsConfig)),
