@@ -684,6 +684,38 @@ describe("chat runs and snapshots (v6)", () => {
     transitionChatRun(db, runId, "STARTING", "RUNNING", { substate: "active" });
   };
 
+  it("回答与媒体计划同事务：写计划失败回滚回答，成功后重开数据库仍有计划", async () => {
+    const file = tempFile("room-chat-outbox-");
+    const db = openDatabase(file);
+    const queue = new WriteQueue();
+    let replyId: string;
+    try {
+      const { run, slot } = await seed(db, queue);
+      startRun(db, run.id);
+      db.exec("CREATE TRIGGER reject_pending BEFORE INSERT ON chat_immersive_pending BEGIN SELECT RAISE(ABORT, 'test crash'); END");
+      const input = {
+        runId: run.id, from: "RUNNING" as const,
+        terminal: { kind: "answered" as const, text: "好", mediaIntent: { speak: true as const } },
+        immersivePlan: { draw: false, speak: true }, finishedAt: at(5),
+      };
+      await assert.rejects(finishChatRun(db, queue, input), /test crash/);
+      assert.equal(getChatRun(db, run.id)?.state, "RUNNING");
+      assert.equal(getChatSlot(db, slot.id)?.outcome, "running");
+      assert.equal(count(db, "chat_messages"), 1);
+      db.exec("DROP TRIGGER reject_pending");
+      const result = await finishChatRun(db, queue, input);
+      replyId = result.message!.id;
+    } finally { db.close(); }
+    const reopened = openDatabase(file);
+    try {
+      assert.equal(getChatMessage(reopened, replyId!)?.sender, "agent");
+      assert.deepEqual(reopened.prepare("SELECT * FROM chat_immersive_pending").all(), [
+        { message_id: replyId!, draw: 0, speak: 1 },
+      ]);
+      assert.deepEqual(reopened.pragma("foreign_key_check"), []);
+    } finally { reopened.close(); }
+  });
+
   it("finishes answered: run COMPLETED + slot answered + exactly one reply message", async () => {
     const { db, queue } = fresh();
     try {

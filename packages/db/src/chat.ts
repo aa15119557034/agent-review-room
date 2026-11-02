@@ -1017,6 +1017,8 @@ export type ChatRunTerminal =
   | { kind: "timed_out" };
 
 export interface FinishChatRunInput {
+  /** main 已授权的自动媒体计划，只在实际落回答的同一事务里持久化。 */
+  immersivePlan?: { draw: boolean; speak: boolean };
   runId: string;
   /** 调用方看到的当前状态；和数据库不一致就说明是迟到 / 重复的结果 */
   from: RunState;
@@ -1104,6 +1106,10 @@ export function finishChatRun(
           ...(terminal.immersiveDeferred === undefined ? {} : { immersiveDeferred: terminal.immersiveDeferred }),
         };
         insertChatMessage(db, { message });
+        if (input.immersivePlan?.draw || input.immersivePlan?.speak) {
+          db.prepare("INSERT INTO chat_immersive_pending (message_id, draw, speak) VALUES (?, ?, ?)")
+            .run(message.id, input.immersivePlan.draw ? 1 : 0, input.immersivePlan.speak ? 1 : 0);
+        }
         slot = { ...slot, outcome: "answered", replyMessageId: message.id, finishedAt };
       } else if (terminal.kind === "skipped") {
         slot = { ...slot, outcome: "skipped", finishedAt };

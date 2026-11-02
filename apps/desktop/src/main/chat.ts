@@ -941,9 +941,9 @@ export class ChatService {
     this.#active.set(run.id, controller);
     let current: ChatRun["state"] = run.state;
 
-    const finish = async (terminal: ChatRunTerminal): Promise<Awaited<ReturnType<typeof finishChatRun>>> => {
+    const finish = async (terminal: ChatRunTerminal, immersivePlan?: { draw: boolean; speak: boolean }): Promise<Awaited<ReturnType<typeof finishChatRun>>> => {
       // 注入时钟（e2e）时，回答消息 / Run 的结束时间要和用户消息用同一个时钟
-      const result = await finishChatRun(db, queue, { runId: run.id, from: current, terminal, finishedAt: this.#now() });
+      const result = await finishChatRun(db, queue, { runId: run.id, from: current, terminal, immersivePlan, finishedAt: this.#now() });
       if (result.message !== null) this.#emit({ type: "chat.message.created", message: result.message });
       if (result.slot !== null) this.#emit({ type: "chat.slot.updated", slot: result.slot });
       this.#emit({ type: "chat.run.updated", run: result.run });
@@ -1088,10 +1088,14 @@ export class ChatService {
                   text: extracted.text,
                   ...(media.intent === null ? {} : { mediaIntent: media.intent }),
                   ...(immersive?.deferred === undefined ? {} : { immersiveDeferred: immersive.deferred }),
-                });
+                }, immersive ?? undefined);
                 // 回答真的落库之后才开始自动任务（source 用落库的消息 id）
                 if (result.message !== null && immersive !== null) {
-                  await this.#startImmersive(result.message, media.intent, immersive);
+                  try {
+                    await this.#startImmersive(result.message, media.intent, immersive);
+                  } catch (error) {
+                    console.warn("[chat] 自动媒体待下次启动恢复：", error instanceof Error ? error.message : String(error));
+                  }
                 }
                 return result;
               });
@@ -1206,29 +1210,65 @@ export class ChatService {
     intent: MediaIntent | null,
     plan: { draw: boolean; speak: boolean },
   ): Promise<void> {
-    if (intent === null) return;
+    if (intent === null) throw new Error("自动媒体计划缺少媒体意图");
     const source: MediaSource = {
       kind: "chat",
       conversationId: message.conversationId,
       messageId: message.id,
       agent: message.agent,
     };
-    if (plan.draw && intent.draw !== undefined) {
+    // 崩溃可能发生在任务提交之后、计划消费之前：任何终态也算已经派发过。
+    const dispatched = (kind: "draw" | "speech") => this.#deps.db.prepare(
+      "SELECT 1 FROM media_jobs WHERE authorization = 'immersive' AND kind = ? " +
+      "AND json_extract(source, '$.messageId') = ? LIMIT 1",
+    ).get(kind, message.id) !== undefined;
+    if (plan.draw && intent.draw !== undefined && !dispatched("draw")) {
       const hash = sha256Hex(JSON.stringify(intent.draw));
       // 在会话锁里等任务真的建出来：下一条回答数用量时才能看到它（#187 第 4 条）
-      await Promise.resolve(this.#deps.drawMedia?.(source, intent.draw, hash)).catch((error: unknown) => {
-        console.warn("[chat] 沉浸模式自动画图没排上：", error instanceof Error ? error.message : String(error));
-      });
+      if (this.#deps.drawMedia === undefined) throw new Error("自动画图服务未配置");
+      await this.#deps.drawMedia(source, intent.draw, hash);
     }
-    if (plan.speak && intent.speak === true) {
+    if (plan.speak && intent.speak === true && !dispatched("speech")) {
       const hash = sha256Hex("speak");
+      if (this.#deps.speakMedia === undefined) throw new Error("自动语音服务未配置");
       await Promise.resolve(this.#deps.speakMedia?.(source, hash)).catch(async (error: unknown) => {
         const why = error instanceof Error ? error.message : String(error);
         console.warn("[chat] 沉浸模式自动语音没排上：", why);
         // 契约不变量：没任务就要有原因；失败任务也算这个小时的用量，所以在锁里等它落库
-        await Promise.resolve(this.#deps.failSpeech?.(source, hash, why)).catch(() => undefined);
+        if (this.#deps.failSpeech === undefined) throw error;
+        await this.#deps.failSpeech(source, hash, why);
       });
     }
+    await writeTransaction(this.#deps.db, this.#deps.queue, () => {
+      this.#deps.db.prepare("DELETE FROM chat_immersive_pending WHERE message_id = ?").run(message.id);
+    });
+  }
+
+  /** 启动时在接受新请求前调用；保留未成功派发的计划，下一次启动仍可重试。 */
+  async repairPendingImmersive(): Promise<number> {
+    const { db, queue } = this.#deps;
+    const rows = db.prepare("SELECT message_id, draw, speak FROM chat_immersive_pending ORDER BY rowid").all() as
+      { message_id: string; draw: number; speak: number }[];
+    let repaired = 0;
+    for (const row of rows) {
+      const message = getChatMessage(db, row.message_id);
+      if (message === null || message.sender !== "agent") throw new Error("自动媒体计划缺少回答");
+      await this.#withImmersionLock(message.conversationId, async () => {
+        if (!getImmersiveSettings(db, message.conversationId).enabled || isExcludedFromContext(message, this.#inReplyToOf)) {
+          await writeTransaction(db, queue, () => {
+            db.prepare("DELETE FROM chat_immersive_pending WHERE message_id = ?").run(message.id);
+          });
+          return;
+        }
+        try {
+          await this.#startImmersive(message, message.mediaIntent ?? null, { draw: row.draw === 1, speak: row.speak === 1 });
+          repaired += 1;
+        } catch (error) {
+          console.warn("[chat] 自动媒体恢复未完成：", error instanceof Error ? error.message : String(error));
+        }
+      });
+    }
+    return repaired;
   }
 
   /** immersive.get：设置 + 最近 60 分钟的用量 */
@@ -1250,9 +1290,15 @@ export class ChatService {
     // 不会出现「关完又被一条旧计划建出新任务」。
     return this.#withImmersionLock(conversationId, async () => {
       const before = getImmersiveSettings(this.#deps.db, conversationId);
-      await writeTransaction(this.#deps.db, this.#deps.queue, () =>
-        upsertImmersiveSettings(this.#deps.db, conversationId, settings, this.#now()),
-      );
+      await writeTransaction(this.#deps.db, this.#deps.queue, () => {
+        upsertImmersiveSettings(this.#deps.db, conversationId, settings, this.#now());
+        if (!settings.enabled) {
+          this.#deps.db.prepare(
+            "DELETE FROM chat_immersive_pending WHERE message_id IN " +
+            "(SELECT id FROM chat_messages WHERE conversation_id = ?)",
+          ).run(conversationId);
+        }
+      });
       if (before.enabled && !settings.enabled) {
         try {
           await this.#deps.stopMedia?.({ kind: "chat", conversationId });

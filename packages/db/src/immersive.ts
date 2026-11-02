@@ -61,8 +61,8 @@ export function upsertImmersiveSettings(
 /** 最近 60 分钟占掉的自动名额（和契约一样按 (now-60min, now] 算） */
 export function immersiveUsage(db: SqliteDatabase, conversationId: string, now: string): ImmersiveUsage {
   const since = new Date(Date.parse(now) - 60 * 60 * 1000).toISOString();
-  const count = (kind: "draw" | "speech") =>
-    (
+  const count = (kind: "draw" | "speech") => {
+    const jobs = (
       db
         .prepare(
           "SELECT COUNT(*) AS n FROM media_jobs WHERE authorization = 'immersive' AND kind = ? " +
@@ -73,6 +73,16 @@ export function immersiveUsage(db: SqliteDatabase, conversationId: string, now: 
         )
         .get(kind, since, now, conversationId) as { n: number }
     ).n;
+    // 回答已提交、任务尚未派发的计划也占名额；已有任务的计划不重复计算。
+    const pending = db.prepare(
+      "SELECT COUNT(*) AS n FROM chat_immersive_pending p JOIN chat_messages m ON m.id = p.message_id " +
+      "WHERE m.conversation_id = ? AND m.created_at > ? AND m.created_at <= ? " +
+      (kind === "draw" ? "AND p.draw = 1 " : "AND p.speak = 1 ") +
+      "AND NOT EXISTS (SELECT 1 FROM media_jobs j WHERE j.authorization = 'immersive' AND j.kind = ? " +
+      "AND json_extract(j.source, '$.messageId') = m.id)",
+    ).get(conversationId, since, now, kind) as { n: number };
+    return jobs + pending.n;
+  };
   return { asOf: now, drawsLastHour: count("draw"), voiceClipsLastHour: count("speech") };
 }
 
