@@ -248,7 +248,6 @@ async function makeHarness(
       }
       cancelledMedia.push([...messageIds]);
     },
-    ...(options.probe === undefined ? {} : { probe: options.probe }),
     adapterFactory: async (target: ChatRunTarget) => {
       targets.push(target);
       if (held.has(target.agent)) {
@@ -282,7 +281,7 @@ async function makeHarness(
         },
       };
     },
-    probe: async (params) => ({
+    probe: options.probe ?? (async (params) => ({
       reachable: true,
       health: {
         protocol: 1,
@@ -298,7 +297,7 @@ async function makeHarness(
       // profileAvailable 是 per-profile 的：同节点上不同秘书不能共用一次探测结果
       profileAvailable: !(options.unavailableProfiles ?? []).includes(params.profileId),
       latencyMs: 1,
-    }),
+    })),
     now: options.now ?? (() => NOW),
   });
 
@@ -2256,3 +2255,140 @@ describe("review fixes (#187)", () => {
   });
 });
 
+
+// ================================================================ #187 草稿状态转换（探测闸门）
+
+describe("window draft state transitions (#187)", () => {
+  it("redo 探测期间取消：不会把 cancelled 改回 pending、也不起新的交接 Run", async () => {
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    let gated = false;
+    const h = await makeHarness({
+      probe: async () => {
+        if (gated) await gate;
+        return { reachable: true, profileAvailable: true, latencyMs: 1 } as never;
+      },
+      scripts: {
+        deepseek: [
+          { type: "message_complete", text: JSON.stringify({ kind: "reply", text: "好" }) },
+          { type: "completed" },
+          { type: "message_complete", text: "## 交接\n- 一" },
+          { type: "completed" },
+        ],
+      },
+    });
+    try {
+      insertChatMessage(h.db, {
+        message: {
+          id: userMessageId(995),
+          conversationId: h.conversationId,
+          createdAt: NOW,
+          sender: "user",
+          content: { kind: "text", text: "聊聊", attachments: [] },
+          mentions: { kind: "none" },
+          quoteMessageId: null,
+          replacesMessageId: null,
+          state: "sent",
+          retractedAt: null,
+        },
+      });
+      const draft = await h.chat.prepareWindow({
+        type: "chat.window.prepare",
+        conversationId: h.conversationId,
+        agent: "deepseek",
+      } as never);
+      await waitFor(() => {
+        const row = h.db.prepare("SELECT content FROM chat_window_drafts WHERE id = ?").get(draft.id) as { content: string | null };
+        return row.content !== null && h.chat.activeCount() === 0;
+      });
+      gated = true;
+      const redoing = h.chat.redoWindowDraft({ type: "chat.window.redo", draftId: draft.id } as never);
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      await h.chat.cancelWindow({ type: "chat.window.cancel", draftId: draft.id } as never);
+      release();
+      await assert.rejects(
+        () => redoing,
+        (error: unknown) => error instanceof ChatError && error.code === "invalid_state",
+      );
+      const row = h.db.prepare("SELECT state FROM chat_window_drafts WHERE id = ?").get(draft.id) as { state: string };
+      assert.equal(row.state, "cancelled");
+      const runs = h.db.prepare("SELECT COUNT(*) AS n FROM chat_runs WHERE purpose = 'window_handoff'").get() as { n: number };
+      assert.equal(runs.n, 1, "没有新起交接 Run");
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("redo 探测期间手写内容：redo 拒绝，草稿保留人工内容、不起新 Run", async () => {
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    let gated = false;
+    const h = await makeHarness({
+      probe: async () => {
+        if (gated) await gate;
+        return { reachable: true, profileAvailable: true, latencyMs: 1 } as never;
+      },
+      scripts: {
+        deepseek: [
+          { type: "message_complete", text: JSON.stringify({ kind: "reply", text: "好" }) },
+          { type: "completed" },
+          { type: "message_complete", text: "## 交接\n- 一" },
+          { type: "completed" },
+        ],
+      },
+    });
+    try {
+      insertChatMessage(h.db, {
+        message: {
+          id: userMessageId(996),
+          conversationId: h.conversationId,
+          createdAt: NOW,
+          sender: "user",
+          content: { kind: "text", text: "聊聊", attachments: [] },
+          mentions: { kind: "none" },
+          quoteMessageId: null,
+          replacesMessageId: null,
+          state: "sent",
+          retractedAt: null,
+        },
+      });
+      const draft = await h.chat.prepareWindow({
+        type: "chat.window.prepare",
+        conversationId: h.conversationId,
+        agent: "deepseek",
+      } as never);
+      await waitFor(() => {
+        const row = h.db.prepare("SELECT content FROM chat_window_drafts WHERE id = ?").get(draft.id) as { content: string | null };
+        return row.content !== null && h.chat.activeCount() === 0;
+      });
+      gated = true;
+      const redoing = h.chat.redoWindowDraft({ type: "chat.window.redo", draftId: draft.id } as never);
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      const edited = await h.chat.editWindowDraft({
+        type: "chat.window.editDraft",
+        draftId: draft.id,
+        content: "我自己写",
+      } as never);
+      assert.equal(edited.content, "我自己写");
+      release();
+      await assert.rejects(
+        () => redoing,
+        (error: unknown) => error instanceof ChatError && error.code === "invalid_state",
+      );
+      const row = h.db.prepare("SELECT state, content FROM chat_window_drafts WHERE id = ?").get(draft.id) as {
+        state: string;
+        content: string | null;
+      };
+      assert.equal(row.state, "pending");
+      assert.equal(row.content, "我自己写");
+      const runs = h.db.prepare("SELECT COUNT(*) AS n FROM chat_runs WHERE purpose = 'window_handoff'").get() as { n: number };
+      assert.equal(runs.n, 1, "没有新起交接 Run");
+    } finally {
+      h.db.close();
+    }
+  });
+});
