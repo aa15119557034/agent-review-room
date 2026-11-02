@@ -142,6 +142,18 @@ async function until(check: () => boolean, ms = 3000): Promise<void> {
 }
 
 describe("media jobs service (D-38a)", () => {
+  it("相同来源和画图请求并发入队只创建一个任务", async () => {
+    const h = await makeHarness();
+    try {
+      const [a, b] = await Promise.all([
+        h.service.start(request(), source(h), false),
+        h.service.start(request(), source(h), false),
+      ]);
+      await until(() => !h.service.busy());
+      assert.equal(a.id, b.id);
+      assert.equal(h.comfy.calls, 1);
+    } finally { h.db.close(); }
+  });
   it("draws a picture through ComfyUI, stores it as generated, and ends exactly once", async () => {
     const h = await makeHarness();
     try {

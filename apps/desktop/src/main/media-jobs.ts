@@ -118,13 +118,14 @@ export class MediaJobsService {
       throw new ChatError("validation_failed", "林离画图还没上线（D-38b），现在只能用本机");
     }
     const now = this.deps.now();
-    const message = this.#assertSource(source);
-    const active = listActiveMediaJobs(this.deps.db).find(
+    this.#assertSource(source);
+    const findActive = () => listActiveMediaJobs(this.deps.db).find(
       (job) =>
         job.kind === "draw" &&
         sameSource(job.source, source) &&
         JSON.stringify(job.draw) === JSON.stringify(request),
     );
+    const active = findActive();
     if (active !== undefined) return active;
 
     const job: MediaJob = MediaJobSchema.parse({
@@ -145,9 +146,15 @@ export class MediaJobsService {
       startedAt: null,
       finishedAt: null,
     });
-    void message;
     void confirmedOverThreshold; // D-38b 才需要（手动选林离的二次确认）
-    await writeTransaction(this.deps.db, this.deps.queue, () => insertMediaJob(this.deps.db, job));
+    const inserted = await writeTransaction(this.deps.db, this.deps.queue, () => {
+      this.#assertSource(source);
+      const existing = findActive();
+      if (existing !== undefined) return existing;
+      insertMediaJob(this.deps.db, job);
+      return job;
+    });
+    if (inserted.id !== job.id) return inserted;
     this.#emit(job);
     this.#pump();
     return job;
@@ -206,12 +213,13 @@ export class MediaJobsService {
     if (cached !== null && authorization === "user_play") return { cached: true, clip: cached };
 
     const pending = this.#speech;
-    const active = listActiveMediaJobs(this.deps.db).find((job) => {
+    const findActive = () => listActiveMediaJobs(this.deps.db).find((job) => {
       // 同一来源 + 同一段文本 / 声音 / 语速：不管是哪个授权建的，都算同一个（C酱 #152 必须改 1）
       if (job.kind !== "speech" || !sameSource(job.source, source)) return false;
       const request = pending.get(job.id);
       return request?.textHash === textHash && request.voice.id === voice.voiceId && request.speed === voice.speed;
     });
+    const active = findActive();
     if (active !== undefined) return { cached: false, job: active };
 
     const now = this.deps.now();
@@ -234,7 +242,23 @@ export class MediaJobsService {
       finishedAt: null,
     });
     this.#speech.set(job.id, { text, textHash, voice: profile, speed: voice.speed });
-    await writeTransaction(this.deps.db, this.deps.queue, () => insertMediaJob(this.deps.db, job));
+    let inserted: MediaJob;
+    try {
+      inserted = await writeTransaction(this.deps.db, this.deps.queue, () => {
+        if (this.#sourceWithdrawn({ source })) throw new ChatError("validation_failed", "这条消息已经撤回了，不能再播放");
+        const existing = findActive();
+        if (existing !== undefined) return existing;
+        insertMediaJob(this.deps.db, job);
+        return job;
+      });
+    } catch (error) {
+      this.#speech.delete(job.id);
+      throw error;
+    }
+    if (inserted.id !== job.id) {
+      this.#speech.delete(job.id);
+      return { cached: false, job: inserted };
+    }
     this.#emit(job);
     // 命中缓存（只有「用语音回」会走到这里）：任务立刻成功，不调引擎
     if (cached !== null) {
@@ -754,7 +778,7 @@ export class MediaJobsService {
       throw new ChatError("validation_failed", "你自己发的消息，agent 应该是 null");
     }
     // 撤回的消息不画（和 cancelReason = message_withdrawn 的语义对上，C酱 #123）
-    if ("state" in message && message.state !== "sent") {
+    if (this.#sourceWithdrawn({ source })) {
       throw new ChatError("validation_failed", "这条消息已经撤回了，不能再画");
     }
   }
