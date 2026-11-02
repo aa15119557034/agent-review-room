@@ -1,10 +1,16 @@
 import { createHash } from "node:crypto";
 import {
+  buildChatHistorySummary,
   buildChatSnapshot,
+  buildChatSummarySnapshot,
+  CHAT_SUMMARY_KEEP_RECENT,
+  CHAT_SUMMARY_MIN_MESSAGES,
   capChatFileTexts,
   createNonce,
   escapeAttachmentName,
   estimateTokens,
+  parseChatSummaryOutput,
+  planChatHistorySummary,
   renderChatHistoryMessage,
   sha256Hex,
   wrapChatUntrusted,
@@ -26,6 +32,7 @@ import {
   type ChatHistorySummary,
   type ChatMessage,
   type ChatWindow,
+  type FailureReason,
   type ChatWindowDraft,
   type ChatWindowStatus,
   type ProjectNote,
@@ -48,6 +55,7 @@ import {
   type NodeTestResult,
   type QueryRequest,
   type RunModel,
+  type RunState,
   StartRunAttachments,
   type UserChatMessage,
 } from "@room/schemas";
@@ -63,18 +71,21 @@ import {
   createConversation,
   excludedMessageIdsForRetract,
   finishChatRun,
+  finishChatSummaryRun,
   getChatMessage,
   getChatRun,
   getChatSlot,
   getChatSnapshot,
   getConversation,
   getFile,
+  hasActiveChatSummaryRun,
   getImageRef,
   getSticker,
   getVoiceRecording,
   insertChatRun,
   insertChatSnapshot,
   listChatMessages,
+  listChatMessagesAscending,
   listChatRunsForSlot,
   listChatSlotsForMessage,
   listChatSlotsForMessages,
@@ -190,6 +201,8 @@ const TERMINAL = new Set(["completed", "error", "cancelled", "timed_out"]);
 export class ChatService {
   readonly #deps: ChatServiceDeps;
   readonly #active = new Map<string, AbortController>();
+  /** D-45：正在规划 / 起摘要 Run 的会话（同会话同时最多一个；跨进程靠数据库里的 active 检查） */
+  readonly #summarizing = new Set<string>();
 
   constructor(deps: ChatServiceDeps) {
     this.#deps = deps;
@@ -910,7 +923,8 @@ export class ChatService {
     let current: ChatRun["state"] = run.state;
 
     const finish = async (terminal: ChatRunTerminal): Promise<Awaited<ReturnType<typeof finishChatRun>>> => {
-      const result = await finishChatRun(db, queue, { runId: run.id, from: current, terminal });
+      // 注入时钟（e2e）时，回答消息 / Run 的结束时间要和用户消息用同一个时钟
+      const result = await finishChatRun(db, queue, { runId: run.id, from: current, terminal, finishedAt: this.#now() });
       if (result.message !== null) this.#emit({ type: "chat.message.created", message: result.message });
       if (result.slot !== null) this.#emit({ type: "chat.slot.updated", slot: result.slot });
       this.#emit({ type: "chat.run.updated", run: result.run });
@@ -931,6 +945,8 @@ export class ChatService {
         }
       }
       // #178 评审第 1 条：迟到的结果（回答位已经不是 running）不落消息，调用方据此不记笔记
+      // D-45：回答收尾后看看要不要写历史摘要（换窗口 / 摘要 Run 自己不触发；失败只记日志）
+      if (run.purpose === "reply") this.#summarizeAfterReply(run.conversationId);
       return result;
     };
 
@@ -988,6 +1004,21 @@ export class ChatService {
           continue;
         }
         if (TERMINAL.has(event.type)) {
+          // D-45：历史摘要 Run 的输出是纯文本（不是聊天 JSON），另外收尾（摘要和 Run 在同一个事务里）
+          if (run.purpose === "history_summary") {
+            if (event.type === "completed") {
+              await this.#finishSummary(run, current, completedText ?? "");
+            } else if (event.type === "error" && event.reason === "quota_exhausted") {
+              await this.#finishSummaryFailed(run, current, "摘要 Run 额度用完了", "quota_exhausted");
+            } else if (event.type === "timed_out") {
+              await this.#finishSummaryFailed(run, current, "摘要 Run 超时了", "incomplete_output");
+            } else if (event.type === "cancelled") {
+              await this.#finishSummaryFailed(run, current, "摘要 Run 被取消了", "interrupted");
+            } else {
+              await this.#finishSummaryFailed(run, current, "摘要 Run 没跑完：" + event.type);
+            }
+            return;
+          }
           if (event.type === "completed") {
             // D-46b：换窗口的 Run 输出是交接笔记正文（纯 Markdown），不是聊天 JSON
             if (run.purpose === "window_handoff") {
@@ -1069,19 +1100,27 @@ export class ChatService {
         this.#emit({ type: "run.event", event });
       }
 
-      await finish({
-        kind: "failed",
-        failure: { kind: "run_failed", message: "adapter ended without a terminal event" },
-        failureReason: "internal",
-      });
+      if (run.purpose === "history_summary") {
+        await this.#finishSummaryFailed(run, current, "摘要 Run 没有终止事件");
+      } else {
+        await finish({
+          kind: "failed",
+          failure: { kind: "run_failed", message: "adapter ended without a terminal event" },
+          failureReason: "internal",
+        });
+      }
     } catch (error) {
       if (current === "QUEUED" || current === "STARTING" || current === "RUNNING") {
         try {
-          await finish({
-            kind: "failed",
-            failure: { kind: "run_failed", message: error instanceof Error ? error.message : String(error) },
-            failureReason: "internal",
-          });
+          if (run.purpose === "history_summary") {
+            await this.#finishSummaryFailed(run, current, error instanceof Error ? error.message : String(error));
+          } else {
+            await finish({
+              kind: "failed",
+              failure: { kind: "run_failed", message: error instanceof Error ? error.message : String(error) },
+              failureReason: "internal",
+            });
+          }
         } catch {
           // 别的路径已经收尾了（撤回 / 取消 / 中断修复）：丢弃
         }
@@ -1089,6 +1128,163 @@ export class ChatService {
     } finally {
       this.#active.delete(run.id);
     }
+  }
+
+  // ---------------------------------------------------------------- 历史摘要（D-45）
+
+  /** 回答收尾后：攒够了就写一份历史摘要。整个过程失败只记日志，不影响聊天 */
+  #summarizeAfterReply(conversationId: string): void {
+    void this.#maybeStartSummary(conversationId).catch((error: unknown) => {
+      console.warn("[chat] 历史摘要没排上：", error instanceof Error ? error.message : String(error));
+    });
+  }
+
+  /**
+   * 规划一次：够了就挑一位可用的人写，拼 Snapshot、建 purpose = history_summary 的 Run 并起跑。
+   * 同一会话同时最多一个（进程内 #summarizing + 数据库里的 active 检查，两处都查）。
+   * 读不到历史 / 没人可用 / 规划结果是 none 都直接返回——摘要不是聊天的前提。
+   */
+  async #maybeStartSummary(conversationId: string): Promise<void> {
+    if (this.#summarizing.has(conversationId)) return;
+    this.#summarizing.add(conversationId);
+    try {
+      const { db, queue } = this.#deps;
+      if (hasActiveChatSummaryRun(db, conversationId)) return;
+
+      // 便宜的先挡一下：消息总数不够（保留最近 20 + 至少攒 20）就根本不可能要摘要，不必读全量历史
+      const total = (db.prepare("SELECT count(*) AS n FROM chat_messages WHERE conversation_id = ?").get(conversationId) as
+        | { n: number }
+        | undefined)?.n ?? 0;
+      if (total < CHAT_SUMMARY_KEEP_RECENT + CHAT_SUMMARY_MIN_MESSAGES) return;
+
+      const history = listChatMessagesAscending(db, conversationId);
+      const byId = new Map(history.map((message) => [message.id, message] as const));
+      const inReplyToOf = (messageId: string) => {
+        const message = byId.get(messageId);
+        return message !== undefined && message.sender === "user" ? message : undefined;
+      };
+      const plan = planChatHistorySummary({ history, summaries: listChatSummaries(db, conversationId), inReplyToOf });
+      if (plan.kind !== "summarize") return;
+
+      const writer = await this.#summaryWriter(conversationId);
+      if (writer === null) return;
+
+      const createdAt = this.#now();
+      const snapshot = buildChatSummarySnapshot({
+        snapshotId: "snap_" + ulid(),
+        conversationId,
+        agent: { id: writer.agent.id, displayName: writer.agent.displayName },
+        messages: plan.messages,
+        inReplyToOf,
+        displayNameOf: writer.displayNameOf,
+        createdAt,
+      });
+      const run: ChatRun = {
+        id: "run_" + ulid(),
+        kind: "chat",
+        purpose: "history_summary",
+        conversationId,
+        slotId: null,
+        agent: writer.agent.id,
+        snapshotId: snapshot.id,
+        snapshotHash: snapshot.contentHash,
+        finalPromptHash: null,
+        memoryManifest: null,
+        model: writer.model,
+        adapterId: "remote:" + writer.agent.chatProfileId,
+        state: "QUEUED",
+        substate: null,
+        failureReason: null,
+        createdAt,
+        startedAt: null,
+        finishedAt: null,
+      };
+      // 建 Snapshot 和 Run 在同一个事务里；事务里再查一次「没有别的摘要 Run 在跑」，跨重启也成立
+      const created = await writeTransaction(db, queue, () => {
+        if (hasActiveChatSummaryRun(db, conversationId)) return null;
+        insertChatSnapshot(db, snapshot);
+        insertChatRun(db, run);
+        return run;
+      });
+      if (created === null) return;
+      this.#emit({ type: "chat.run.updated", run: created });
+      this.#execute(created);
+    } finally {
+      this.#summarizing.delete(conversationId);
+    }
+  }
+
+  /** 谁来写：会话成员里此刻可用的，优先汐；模型按「汇总」场合选。一个都不行就这次不写 */
+  async #summaryWriter(
+    conversationId: string,
+  ): Promise<{ agent: AgentProfile; model: BatchModel | null; displayNameOf: (agentId: string) => string } | null> {
+    const conversation = getConversation(this.#deps.db, conversationId);
+    if (conversation === null) return null;
+    const agents = new Map<string, AgentProfile>();
+    for (const member of conversation.members) agents.set(member, this.#deps.repo.getAgent(member));
+    const displayNameOf = (agentId: string) => agents.get(agentId)?.displayName ?? agentId;
+    const order = [...conversation.members].sort((a, b) => (a === "deepseek" ? -1 : b === "deepseek" ? 1 : 0));
+    const probes = new Map<string, Promise<NodeTestResult>>();
+    const results = new Map<string, NodeTestResult>();
+    for (const id of order) {
+      const agent = agents.get(id);
+      if (agent === undefined || agent.chatProfileId === null) continue;
+      const availability = await this.#availabilityOf(id, agents, probes, results);
+      if (availability.kind !== "available") continue;
+      const profileModels = profileModelsOf(results.get(probeKeyOf(agent.nodeId, agent.chatProfileId)));
+      let model: BatchModel | null;
+      try {
+        model = selectChatModel(agent, agent.chatProfileId, profileModels, "summary");
+      } catch {
+        continue; // 这个人的模型在节点上不可用：换下一位
+      }
+      return { agent, model, displayNameOf };
+    }
+    return null;
+  }
+
+  /** 摘要 Run 正常结束：检查输出、落库（来源复核在 db 的事务里）、发事件；还有下一段就继续规划 */
+  async #finishSummary(run: ChatRun, from: RunState, text: string): Promise<void> {
+    const parsed = parseChatSummaryOutput(text);
+    if (!parsed.ok) {
+      await this.#finishSummaryFailed(run, from, "摘要输出是空的");
+      return;
+    }
+    const snapshot = getChatSnapshot(this.#deps.db, run.snapshotId);
+    if (snapshot === null) {
+      await this.#finishSummaryFailed(run, from, "摘要用的 Snapshot 不见了");
+      return;
+    }
+    const summary = buildChatHistorySummary({
+      id: "csum_" + ulid(),
+      snapshot,
+      runId: run.id,
+      content: parsed.content,
+      createdAt: this.#now(),
+    });
+    const result = await finishChatSummaryRun(this.#deps.db, this.#deps.queue, { runId: run.id, from, summary, finishedAt: this.#now() });
+    this.#emit({ type: "chat.run.updated", run: result.run });
+    if (result.summary === null) return; // 跑的时候来源被撤回了：这份丢掉，等下一次回答再试
+    this.#emit({ type: "chat.summary.updated", summary: result.summary });
+    void this.#maybeStartSummary(run.conversationId).catch((error: unknown) => {
+      console.warn("[chat] 历史摘要没续上：", error instanceof Error ? error.message : String(error));
+    });
+  }
+
+  /** 摘要 Run 失败：Run 记 FAILED，不写摘要、不当场重试（下次回答结束再试） */
+  async #finishSummaryFailed(
+    run: ChatRun,
+    from: RunState,
+    message: string,
+    failureReason: FailureReason = "internal",
+  ): Promise<void> {
+    const result = await finishChatSummaryRun(this.#deps.db, this.#deps.queue, {
+      runId: run.id,
+      from,
+      failure: { message, failureReason },
+      finishedAt: this.#now(),
+    });
+    this.#emit({ type: "chat.run.updated", run: result.run });
   }
 
   // ================================================================ 内部
