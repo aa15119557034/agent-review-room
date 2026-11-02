@@ -1894,4 +1894,35 @@ describe("chat history summary wiring (D-45)", () => {
       h.db.close();
     }
   });
+
+  it("同一会话同时只写一份摘要：摘要 Run 还在跑时，别的回答结束不再起一个", async () => {
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const h = await makeHarness({ summaryScript: summaryReply("- 要点"), summaryGate: gate });
+    try {
+      await seedOldMessages(h, 40);
+      await h.chat.send(send(h.conversationId, userMessageId(931), "现在几点"));
+      await waitFor(() => summaryRuns(h).length === 1);
+      assert.notEqual(summaryRuns(h)[0]!.state, "COMPLETED", "摘要 Run 卡在 gate 上");
+
+      // 再发一条：它的回答结束也会调一次规划，但同一会话已经有摘要 Run
+      await h.chat.send(send(h.conversationId, userMessageId(932), "再问一句"));
+      await waitFor(() => {
+        const slots = h.db.prepare("SELECT outcome FROM chat_reply_slots WHERE user_message_id = ?").all(userMessageId(932)) as {
+          outcome: string;
+        }[];
+        return slots.length > 0 && slots.every((slot) => slot.outcome !== "running");
+      });
+      assert.equal(summaryRuns(h).length, 1, "没有起第二个摘要 Run");
+
+      release();
+      await waitFor(() => summaryRuns(h)[0]!.state === "COMPLETED");
+      await waitFor(() => h.chat.activeCount() === 0);
+      assert.equal(listChatSummaries(h.db, h.conversationId).length, 1);
+    } finally {
+      h.db.close();
+    }
+  });
 });
