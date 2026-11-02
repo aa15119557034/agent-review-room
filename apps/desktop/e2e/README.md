@@ -102,3 +102,14 @@ harness：`makeE2E({ controllerCapabilities, imageBytes })`；FakeNode 可选上
 | #5 迟到结果 | 撤回后节点才交卷，回答里的 room-note 不存（#178 评审第 1 条） |
 
 还没测：讨论室议题笔记（`topic` 范围）的 e2e；GitHub 同步只有 main 的单测（假 transport），没连真 GitHub。
+
+## X-35b 聊天历史摘要
+
+`chat-summary.test.ts` 走真的 D-45 流程（回答收尾 → 规划 → history_summary Run → 落库），不再直接写库：
+
+| 用例 | 验证 |
+|---|---|
+| #1 | 19 问不写；第 20 问后节点收到 history_summary 的 StartRun（汐写，最老 20 条）；之后的回答带摘要、不带被摘要的原文；撤回第 1 条 → stale、下一次回答不含哨兵、回答后重写一份（来源不含撤回的那条） |
+| #2 | 摘要 Run 报错：只有 1 个摘要 Run、不写摘要、不当场重来；下一次回答结束再写成功 |
+
+时钟是注入的；回答消息和 Run 结束时间也要用同一个时钟（#173 第三轮修的），否则回答会排到全部提问后面。
