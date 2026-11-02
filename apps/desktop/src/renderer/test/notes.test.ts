@@ -3,8 +3,9 @@ import assert from "node:assert/strict";
 import type { ChatRun, ChatWindowDraft, ChatWindowStatus, ControlEvent, Conversation, ConversationListItem, ProjectNote } from "@room/schemas";
 import { createMockBridge, type MockOptions } from "../mock/mock-backend";
 import { createActions } from "../lib/actions";
+import { createNotesActions } from "../lib/notes-actions";
 import { createClient } from "../lib/client";
-import { initialState } from "../lib/state";
+import { initialState, type AppState } from "../lib/state";
 import { createStore } from "../lib/store";
 import { newId } from "../lib/ids";
 import {
@@ -62,6 +63,35 @@ const note = (p: Partial<ProjectNote>): ProjectNote => ({
 });
 
 describe("notes logic (C-47)", () => {
+  it("收到历史摘要更新后刷新已打开会话的窗口压缩次数", async () => {
+    const status: ChatWindowStatus = { agent: "claude", index: 1, window: null, compactionsInWindow: 0, suggestSwitch: false, pendingDraft: null };
+    const store = createStore<AppState>({ ...initialState, notes: { ...initialNotes, windows: { conv_1: [status] } } });
+    const actions = createNotesActions(store, { query: async (req: { type: string }) =>
+      req.type === "chat.windows.get" ? [{ ...status, compactionsInWindow: 3, suggestSwitch: true }] : [],
+    } as never, (error) => { throw error; });
+    actions.onEvent({ type: "chat.summary.updated", summary: { conversationId: "conv_1" } as never });
+    await sleep(0);
+    assert.equal(store.get().notes.windows.conv_1?.[0]?.compactionsInWindow, 3);
+    assert.equal(store.get().notes.windows.conv_1?.[0]?.suggestSwitch, true);
+  });
+  it("笔记查询晚到不能覆盖期间收到的新版，首次加载也保留事件", async () => {
+    for (const initialized of [false, true]) {
+      const v1 = note({ version: 1 });
+      const v2 = note({ version: 2, parentId: v1.id });
+      const store = createStore<AppState>({ ...initialState, notes: { ...initialNotes, latest: initialized ? { "c:conv_1": [v1] } : {} } });
+      let release!: () => void;
+      const gate = new Promise<void>((resolve) => { release = resolve; });
+      const actions = createNotesActions(store, { query: async (req: { type: string }) => {
+        if (req.type === "projectNotes.list") { await gate; return [v1]; }
+        return [];
+      } } as never, (error) => { throw error; });
+      const loading = actions.loadScope(v1.scope);
+      store.set((s) => ({ ...s, notes: applyNotesEvent(s.notes, { type: "projectNote.created", note: v2 }) }));
+      release();
+      await loading;
+      assert.equal(store.get().notes.latest["c:conv_1"]?.[0]?.version, 2, `初始化=${initialized}`);
+    }
+  });
   it("diff by lines: keeps order, marks adds and deletes", () => {
     const d = noteDiff("a\nb\nc", "a\nc\nd");
     assert.deepEqual(d, [
