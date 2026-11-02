@@ -560,6 +560,8 @@ export class DiscussionService {
       throw new DiscussionError("invalid_state", "这个人不需要重试");
     }
     // 已经开始重试了：再点一次会派第二个替补替他答，直接拒（C酱 #158 必须改 1）
+    // 这里只是快路径；两个并发 retry 都会在 await 之前读到 null，真正的保证在
+    // createBatchDraft 的写事务里（旧 Turn 仍未 supersede 的条件 + 整批回滚，C酱 #163 复审必须改 1）
     if (previous.supersededBy !== null) {
       throw new DiscussionError("invalid_state", "这一位已经在重试了");
     }
@@ -605,8 +607,9 @@ export class DiscussionService {
           },
         ],
         compressedRounds: prompts[0]?.compressedRounds ?? [],
-        // 新 Turn 的 agent 是替补（runner），supersede 必须按他找，否则旧 Turn 接不上（C酱 #158 必须改 1）
-        supersede: [{ oldTurnId: previous.id, agent: runner.id }],
+        // 新 Turn 的 agent 是替补（runner），supersede 必须按他找，否则旧 Turn 接不上（C酱 #158 必须改 1）。
+        // requireNotSuperseded：真的已经在事务里被接上就抛 supersede_conflict，整个批次回滚（C酱 #163 复审必须改 1）
+        supersede: [{ oldTurnId: previous.id, agent: runner.id, requireNotSuperseded: true }],
         chatMaterialSourceIds: materials.sourceMessageIds,
       });
     } catch (error) {
@@ -1568,6 +1571,9 @@ function mapDraftError(error: unknown): unknown {
     case "round_not_active":
     case "turn_not_retryable":
       return new DiscussionError("invalid_state", error.message);
+    case "supersede_conflict":
+      // 和 retry 开头那条快路径同一句话：并发的那一次走到这里就当作「已经有人在重试」
+      return new DiscussionError("invalid_state", "这一位已经在重试了");
     default:
       return new DiscussionError("internal", error.message);
   }
