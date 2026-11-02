@@ -88,6 +88,8 @@ export class GithubSyncService {
   #timer: ReturnType<typeof setInterval> | null = null;
   #running = false;
   #inflight: Promise<void> | null = null;
+  /** #187：配置版本。update 一次 +1；旧版本的在跑检查 / 推送不能写状态、不能推新目标 */
+  #generation = 0;
 
   constructor(deps: {
     db: SqliteDatabase;
@@ -132,7 +134,7 @@ export class GithubSyncService {
       for (const note of listAllLatestProjectNotes(this.#db)) this.#queueNote(note);
     }
     this.#publish();
-    if (command.repo !== null) void this.#check().catch(() => undefined);
+    if (command.repo !== null) void this.#check(this.#generation).catch(() => undefined);
     return this.status();
   }
 
@@ -142,7 +144,7 @@ export class GithubSyncService {
     if (repo === null) throw new GithubError("invalid_state", "还没有设置仓库");
     // #181 评审第 2 条：后台那一轮在跑就等它跑完，别同一个文件推两遍
     if (this.#inflight !== null) await this.#inflight.catch(() => undefined);
-    await this.#check();
+    await this.#check(this.#generation);
     return this.status();
   }
 
@@ -187,10 +189,11 @@ export class GithubSyncService {
     const { repo, token } = this.#settings.getGithub();
     if (repo === null || token === null) return;
     if (countGithubQueue(this.#db) === 0) return;
+    const generation = this.#generation;
     this.#running = true;
     this.#inflight = (async () => {
     try {
-      await this.#check();
+      await this.#check(generation);
     } catch {
       // 后台同步失败不影响聊天 / 笔记；状态由 #check 自己写
     } finally {
@@ -201,23 +204,29 @@ export class GithubSyncService {
     await this.#inflight;
   }
 
-  /** 查仓库是不是私有、Token 能不能写；私有才继续推队列 */
-  async #check(): Promise<void> {
+  /** 查仓库是不是私有、Token 能不能写；私有才继续推队列（只对 generation 这一版配置生效） */
+  async #check(generation: number): Promise<void> {
     const { repo, token } = this.#settings.getGithub();
     if (repo === null) return;
     if (token === null) {
-      updateGithubSyncState(this.#db, { private: null, lastError: "no_token", lastErrorMessage: "还没有填 Token" });
-      this.#publish();
+      if (generation === this.#generation) {
+        updateGithubSyncState(this.#db, { private: null, lastError: "no_token", lastErrorMessage: "还没有填 Token" });
+        this.#publish();
+      }
       return;
     }
     let result: { status: number; json: unknown };
     try {
       result = await this.#transport({ method: "GET", url: API + "/repos/" + repo, token });
     } catch {
-      updateGithubSyncState(this.#db, { lastError: "network", lastErrorMessage: "连不上 api.github.com" });
-      this.#publish();
+      if (generation === this.#generation) {
+        updateGithubSyncState(this.#db, { lastError: "network", lastErrorMessage: "连不上 api.github.com" });
+        this.#publish();
+      }
       return;
     }
+    // #187 必须改 1：等待期间设置换了，这次响应作废——不写状态、更不推新目标
+    if (generation !== this.#generation) return;
     if (result.status === 401 || result.status === 403) {
       updateGithubSyncState(this.#db, { lastError: "unauthorized", lastErrorMessage: "Token 没有权限（或已失效）" });
       this.#publish();
@@ -240,53 +249,68 @@ export class GithubSyncService {
       return;
     }
     updateGithubSyncState(this.#db, { private: true, lastError: null, lastErrorMessage: null });
-    await this.#flush();
-    this.#publish();
+    // 整轮推送都用这次检查过的那份 repo / token，不再读设置
+    await this.#flush(repo, token, generation);
+    if (generation === this.#generation) this.#publish();
   }
 
-  /** 一条一条推：先取远端 sha（404 = 新建），再 PUT 覆盖 */
-  async #flush(): Promise<void> {
-    const { repo, token } = this.#settings.getGithub();
-    if (repo === null || token === null) return;
-    if (getGithubSyncState(this.#db).private !== true) return;
-    for (const item of listGithubQueue(this.#db, 20)) {
-      try {
-        const url = contentsUrl(repo, item.path);
-        const head = await this.#transport({ method: "GET", url, token });
-        const sha = head.status === 200 ? (head.json as { sha?: unknown }).sha : null;
-        if (head.status !== 200 && head.status !== 404) throw new GithubPushError(head.status, "head");
-        const put = await this.#transport({
-          method: "PUT",
-          url,
-          token,
-          body: {
-            message: item.message,
-            content: Buffer.from(item.content, "utf8").toString("base64"),
-            ...(typeof sha === "string" ? { sha } : {}),
-          },
-        });
-        if (put.status === 409) {
-          markGithubPushFailed(this.#db, item.path, "conflict");
-          continue;
+  /** 一条一条推：先取远端 sha（404 = 新建），再 PUT 覆盖。只对 generation 这一版配置生效 */
+  async #flush(repo: string, token: string, generation: number): Promise<void> {
+    for (;;) {
+      if (generation !== this.#generation) return;
+      const items = listGithubQueue(this.#db, 20);
+      if (items.length === 0) return;
+      let pushed = 0;
+      let failed = false;
+      for (const item of items) {
+        if (generation !== this.#generation) return;
+        try {
+          const url = contentsUrl(repo, item.path);
+          const head = await this.#transport({ method: "GET", url, token });
+          if (generation !== this.#generation) return;
+          const sha = head.status === 200 ? (head.json as { sha?: unknown }).sha : null;
+          if (head.status !== 200 && head.status !== 404) throw new GithubPushError(head.status, "head");
+          const put = await this.#transport({
+            method: "PUT",
+            url,
+            token,
+            body: {
+              message: item.message,
+              content: Buffer.from(item.content, "utf8").toString("base64"),
+              ...(typeof sha === "string" ? { sha } : {}),
+            },
+          });
+          if (generation !== this.#generation) return;
+          if (put.status === 409) {
+            markGithubPushFailed(this.#db, item.path, item.updated_at, "conflict");
+            failed = true;
+            continue;
+          }
+          if (put.status < 200 || put.status >= 300) throw new GithubPushError(put.status, "put");
+          // #187 必须改 2：只删「这次推出去的那一版」；等待期间存的新版留着，下一轮推
+          removeGithubPush(this.#db, item.path, item.updated_at);
+          updateGithubSyncState(this.#db, { lastPushedAt: this.#now(), lastError: null, lastErrorMessage: null });
+          pushed += 1;
+        } catch (error) {
+          markGithubPushFailed(this.#db, item.path, item.updated_at, error instanceof Error ? error.message : String(error));
+          if (error instanceof GithubPushError && (error.status === 401 || error.status === 403)) {
+            updateGithubSyncState(this.#db, { lastError: "unauthorized", lastErrorMessage: "Token 没有权限（或已失效）" });
+          } else if (error instanceof GithubPushError && error.status === 404) {
+            updateGithubSyncState(this.#db, { lastError: "not_found", lastErrorMessage: "仓库或路径找不到（" + error.status + "）" });
+          } else if (error instanceof GithubPushError) {
+            updateGithubSyncState(this.#db, { lastError: "other", lastErrorMessage: "GitHub 返回 " + error.status + "，推不上去" });
+          } else {
+            updateGithubSyncState(this.#db, { lastError: "network", lastErrorMessage: "推不上去，排队等下次" });
+          }
+          failed = true;
+          break;
         }
-        if (put.status < 200 || put.status >= 300) throw new GithubPushError(put.status, "put");
-        removeGithubPush(this.#db, item.path);
-        updateGithubSyncState(this.#db, { lastPushedAt: this.#now(), lastError: null, lastErrorMessage: null });
-      } catch (error) {
-        markGithubPushFailed(this.#db, item.path, error instanceof Error ? error.message : String(error));
-        if (error instanceof GithubPushError && (error.status === 401 || error.status === 403)) {
-          updateGithubSyncState(this.#db, { lastError: "unauthorized", lastErrorMessage: "Token 没有权限（或已失效）" });
-        } else if (error instanceof GithubPushError && error.status === 404) {
-          updateGithubSyncState(this.#db, { lastError: "not_found", lastErrorMessage: "仓库或路径找不到（" + error.status + "）" });
-        } else if (error instanceof GithubPushError) {
-          updateGithubSyncState(this.#db, { lastError: "other", lastErrorMessage: "GitHub 返回 " + error.status + "，推不上去" });
-        } else {
-          updateGithubSyncState(this.#db, { lastError: "network", lastErrorMessage: "推不上去，排队等下次" });
-        }
-        break;
       }
+      if (failed) break;
+      if (pushed === 0) break;
+      if (countGithubQueue(this.#db) === 0) break;
+      // 等待期间又排了新版本：再跑一轮（不重查仓库，仍用这次检查过的配置）
     }
-    this.#publish();
   }
 
   #publish(): void {

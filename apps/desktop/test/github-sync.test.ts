@@ -58,10 +58,18 @@ function harness(options: { private?: boolean } = {}) {
   let online = true;
   let repoPrivate = options.private ?? true;
   let putStatus: number | null = null;
+  /** #187：让某一次请求停在闸门上（再造一次「等待期间设置 / 队列变了」） */
+  let repoGate: Promise<void> | null = null;
+  let putGate: Promise<void> | null = null;
   const transport: GithubTransport = async (input) => {
     calls.push({ method: input.method, url: input.url, body: input.body });
     if (!online) throw new Error("ECONNRESET");
-    if (input.method === "GET" && input.url === "https://api.github.com/repos/me/notes") {
+    if (input.method === "GET" && /^https:\/\/api\.github\.com\/repos\/[^/]+\/[^/]+$/.test(input.url)) {
+      if (repoGate !== null) {
+        const gate = repoGate;
+        repoGate = null;
+        await gate;
+      }
       return { status: 200, json: { private: repoPrivate } };
     }
     if (input.method === "GET" && input.url.includes("/contents/")) {
@@ -69,6 +77,11 @@ function harness(options: { private?: boolean } = {}) {
       return sha === undefined ? { status: 404, json: {} } : { status: 200, json: { sha } };
     }
     if (input.method === "PUT") {
+      if (putGate !== null) {
+        const gate = putGate;
+        putGate = null;
+        await gate;
+      }
       if (putStatus !== null) {
         const status = putStatus;
         putStatus = null;
@@ -80,8 +93,8 @@ function harness(options: { private?: boolean } = {}) {
     return { status: 500, json: {} };
   };
   const github = new GithubSyncService({ db, settings, emit: (event) => events.push(event), transport, now: () => NOW });
-  const enqueue = (content = "# 笔记\n- 约定\n", message = "笔记：deepseek 第 1 版") =>
-    enqueueGithubPush(db, { path: NOTE_PATH, content, message, now: NOW });
+  const enqueue = (content = "# 笔记\n- 约定\n", message = "笔记：deepseek 第 1 版", at = NOW) =>
+    enqueueGithubPush(db, { path: NOTE_PATH, content, message, now: at });
   return {
     dir,
     db,
@@ -93,8 +106,32 @@ function harness(options: { private?: boolean } = {}) {
     setOnline: (value: boolean) => { online = value; },
     setPrivate: (value: boolean) => { repoPrivate = value; },
     setPutStatus: (value: number) => { putStatus = value; },
+    /** 返回 release：调用后放行（一次性的闸门） */
+    gateRepo: () => {
+      let release!: () => void;
+      repoGate = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      return release;
+    },
+    gatePut: () => {
+      let release!: () => void;
+      putGate = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      return release;
+    },
     files,
   };
+}
+
+async function until(check: () => boolean, ms = 4_000): Promise<void> {
+  const end = Date.now() + ms;
+  while (Date.now() < end) {
+    if (check()) return;
+    await new Promise((resolve) => setTimeout(resolve, 5));
+  }
+  throw new Error("timed out waiting");
 }
 
 describe("github sync (D-46c)", () => {
@@ -254,6 +291,46 @@ describe("github sync (D-46c)", () => {
         () => h.github.pushNow(),
         (error: unknown) => error instanceof GithubError && error.code === "invalid_state",
       );
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("#187 私库检查期间切换仓库：旧响应不写状态、不推没检查过的目标", async () => {
+    const h = harness({ private: false });
+    try {
+      h.enqueue();
+      const release = h.gateRepo();
+      await h.github.update({ repo: "me/notes", token: TOKEN });
+      await h.github.update({ repo: "me/public", token: TOKEN });
+      release();
+      await until(() => h.calls.some((call) => call.url === "https://api.github.com/repos/me/public"));
+      const status = await h.github.pushNow();
+      assert.equal(h.calls.filter((call) => call.method === "PUT").length, 0, "不推到没检查过的目标");
+      assert.equal(status.repo, "me/public");
+      assert.equal(status.private, false, "旧响应没有把新仓库标成 private");
+      assert.equal(status.lastError, "public_repo");
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("#187 推送期间同路径又存了一版：旧版成功不删新版，下一轮推新版", async () => {
+    const h = harness();
+    try {
+      await h.github.update({ repo: "me/notes", token: TOKEN });
+      await h.github.pushNow();
+      h.enqueue("v1", "笔记 v1");
+      const release = h.gatePut();
+      const pushing = h.github.pushNow();
+      await until(() => h.calls.filter((call) => call.method === "PUT").length === 1);
+      h.enqueue("v2", "笔记 v2", "2026-11-02T00:00:01.000Z");
+      release();
+      await pushing;
+      const puts = h.calls.filter((call) => call.method === "PUT");
+      assert.equal(puts.length, 2, "第二版也推了");
+      assert.equal(Buffer.from((puts[1]!.body as { content: string }).content, "base64").toString("utf8"), "v2");
+      assert.equal(countGithubQueue(h.db), 0);
     } finally {
       h.db.close();
     }
