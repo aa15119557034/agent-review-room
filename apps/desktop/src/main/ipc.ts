@@ -21,6 +21,7 @@ import { DiscussionError, type DiscussionService } from "./discussion";
 import type { MediaJobsService } from "./media-jobs";
 import type { MediaService } from "./media";
 import { NodeServiceError, type NodeService } from "./nodes";
+import type { VoiceService } from "./voice";
 import type { RunOrchestrator } from "./orchestrator";
 import { Repository, RepositoryError } from "./repository";
 import { SettingsError, type SettingsStore } from "./settings";
@@ -45,6 +46,8 @@ export interface IpcDeps {
   readonly jobs?: MediaJobsService;
   /** D-37b：可选的声音（userData/tts.json）；没配置 = 空列表 */
   readonly voices?: () => VoiceOption[];
+  /** D-34b：录音导入与本地转写 */
+  readonly voice?: VoiceService;
   readonly nodes: NodeService;
   readonly appVersion: string;
   readonly recoveredRuns: number;
@@ -115,6 +118,11 @@ export function createDispatcher(deps: IpcDeps) {
   const mediaService = (): MediaService => {
     if (deps.media === undefined) throw new ControlFailure("internal", "媒体服务没有启动");
     return deps.media;
+  };
+
+  const voiceService = (): VoiceService => {
+    if (deps.voice === undefined) throw new ControlFailure("internal", "语音服务没有启动");
+    return deps.voice;
   };
 
   async function handleCommand(raw: unknown): Promise<ControlResult<unknown>> {
@@ -370,7 +378,7 @@ export function createDispatcher(deps: IpcDeps) {
       case "node.importLocalToken":
         return deps.nodes.importLocalToken(command);
       case "chat.voice.import":
-        throw new ChatError("validation_failed", "语音还没上线（D-34b）");
+        return voiceService().import(command);
     }
   }
 
@@ -494,7 +502,7 @@ export function createDispatcher(deps: IpcDeps) {
       case "chat.stickers.list":
         return mediaService().listStickers();
       case "chat.voice.get":
-        throw new ChatError("not_found", "录音还没上线（D-34）");
+        return voiceService().get(query);
 
       // 还没接但界面会查：返回契约里的默认值，别让界面看到英文的 internal 错误
       case "appearance.get":
@@ -521,3 +529,5 @@ export function createDispatcher(deps: IpcDeps) {
 }
 
 export { APPROVAL_TRANSITIONS };
+
+

@@ -15,6 +15,8 @@ import {
   insertFile,
   insertImageRef,
   insertSticker,
+  insertVoiceRecording,
+  markVoiceReady,
   openDatabase,
   ulid,
   WriteQueue,
@@ -264,6 +266,73 @@ function send(conversationId: string, messageId: string, text: string): CommandR
     replacesMessageId: null,
   };
 }
+
+describe("chat send voice (D-34b)", () => {
+  it("sends a voice message from a ready recording and marks edited text", async () => {
+    const h = await makeHarness();
+    try {
+      const audio = `aud_${ulid()}`;
+      insertVoiceRecording(h.db, {
+        recording: { audio, durationMs: 1200, status: "transcribing", transcript: null, error: null, createdAt: "2026-10-26T00:00:00.000Z" } as never,
+        sha256: "d".repeat(64),
+        mime: "audio/wav",
+        bytes: 100,
+      });
+      markVoiceReady(h.db, audio, {
+        text: "你好，在吗",
+        language: "zh",
+        source: "transcribed",
+        engine: { engine: "faster-whisper", model: "small" },
+      });
+
+      const sent = await h.chat.send({
+        ...send(h.conversationId, userMessageId(140), ""),
+        content: { kind: "voice", audio, transcriptText: "你好，在吗" },
+      });
+      assert.equal(sent.message.content.kind, "voice");
+      if (sent.message.content.kind === "voice") {
+        assert.equal(sent.message.content.audio, audio);
+        assert.equal(sent.message.content.durationMs, 1200);
+        assert.equal(sent.message.content.transcript.source, "transcribed");
+      }
+
+      const edited = await h.chat.send({
+        ...send(h.conversationId, userMessageId(141), ""),
+        content: { kind: "voice", audio, transcriptText: "你好，在吗？" },
+      });
+      if (edited.message.content.kind === "voice") {
+        assert.equal(edited.message.content.transcript.text, "你好，在吗？");
+        assert.equal(edited.message.content.transcript.source, "edited");
+      }
+      await settle(h.chat);
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("refuses to send a recording that is still transcribing", async () => {
+    const h = await makeHarness();
+    try {
+      const audio = `aud_${ulid()}`;
+      insertVoiceRecording(h.db, {
+        recording: { audio, durationMs: 1200, status: "transcribing", transcript: null, error: null, createdAt: "2026-10-26T00:00:00.000Z" } as never,
+        sha256: "e".repeat(64),
+        mime: "audio/wav",
+        bytes: 100,
+      });
+      await assert.rejects(
+        () =>
+          h.chat.send({
+            ...send(h.conversationId, userMessageId(142), ""),
+            content: { kind: "voice", audio, transcriptText: "还没好" },
+          }),
+        (error: unknown) => (error as { code?: string }).code === "invalid_state",
+      );
+    } finally {
+      h.db.close();
+    }
+  });
+});
 
 describe("chat send attachments (D-34a / D-36b)", () => {
   it("refuses to send when a text file's bytes are gone, but binary files still go (林离 #124)", async () => {

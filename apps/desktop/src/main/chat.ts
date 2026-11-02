@@ -54,6 +54,7 @@ import {
   getFile,
   getImageRef,
   getSticker,
+  getVoiceRecording,
   insertChatRun,
   insertChatSnapshot,
   listChatMessages,
@@ -1074,7 +1075,20 @@ export class ChatService {
       if (sticker === null) throw new ChatError("validation_failed", "这个表情已经不在表情库里了");
       return { kind: "sticker", stickerId: sticker.id, image: sticker.image, label: sticker.label };
     }
-    throw new ChatError("validation_failed", "语音还没上线（D-34b），先发文字或语音转写成文字");
+    // D-34b：语音消息发的是转写文字；录音和时长从库里抄（renderer 只拿 ref）
+    const recording = getVoiceRecording(this.#deps.db, input.audio);
+    if (recording === null) throw new ChatError("validation_failed", "这段录音不存在，请重新录");
+    if (recording.status !== "ready" || recording.transcript === null) {
+      throw new ChatError("invalid_state", "录音还在转写，等转好再发");
+    }
+    // 发之前改过文字 → 记成 edited（契约允许），否则沿用引擎的转写
+    const edited = input.transcriptText.trim() !== recording.transcript.text;
+    return {
+      kind: "voice",
+      audio: recording.audio,
+      durationMs: recording.durationMs,
+      transcript: edited ? { ...recording.transcript, text: input.transcriptText.trim(), source: "edited" } : recording.transcript,
+    };
   }
 
   /** 校验一个附件引用，返回记进消息的那份（文件字段从库里抄，renderer 只拿 ref） */
@@ -1166,3 +1180,4 @@ function profileModelsOf(result: NodeTestResult | undefined): NodeHealth["profil
 function probeKeyOf(nodeId: string | null, profileId: string | null): string {
   return (nodeId ?? "") + "\u0000" + (profileId ?? "");
 }
+

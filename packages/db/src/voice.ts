@@ -73,6 +73,27 @@ export function findVoiceRecordingBySha(db: SqliteDatabase, sha256: string): Voi
   return row === undefined ? null : toRecording(row);
 }
 
+/** 还在用（transcribing / ready）的同内容录音；failed 的可以重新导入（v12 的部分唯一索引就是这么约束的） */
+export function findLiveVoiceRecordingBySha(db: SqliteDatabase, sha256: string): VoiceRecording | null {
+  const row = db
+    .prepare("SELECT * FROM voice_recordings WHERE sha256 = ? AND status <> 'failed' ORDER BY created_at DESC LIMIT 1")
+    .get(sha256) as VoiceRecordingRow | undefined;
+  return row === undefined ? null : toRecording(row);
+}
+
+/**
+ * 启动时收尾：上一次没转完的录音记成 failed（「应用重启，转写中断」），不然界面一直转圈。
+ * 返回收尾了几条。
+ */
+export function failStaleTranscribing(db: SqliteDatabase, error: string): number {
+  const message = error.trim();
+  if (message.length < 1 || message.length > 2000) throw new Error("转写中断说明要 1～2000 字");
+  const result = db
+    .prepare("UPDATE voice_recordings SET status = 'failed', error = ?, transcript = NULL WHERE status = 'transcribing'")
+    .run(message);
+  return Number(result.changes);
+}
+
 export function listVoiceRecordings(db: SqliteDatabase, limit = 50): VoiceRecording[] {
   const rows = db
     .prepare("SELECT * FROM voice_recordings ORDER BY created_at DESC, audio_ref DESC LIMIT ?")
@@ -119,5 +140,7 @@ export function markVoiceFailed(db: SqliteDatabase, audioRef: string, error: str
   ).run(message, audioRef);
   return getVoiceRecording(db, audioRef) as VoiceRecording;
 }
+
+
 
 

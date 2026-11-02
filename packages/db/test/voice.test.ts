@@ -6,6 +6,8 @@ import { after, describe, it } from "node:test";
 import Database from "better-sqlite3";
 import {
   currentVersion,
+  failStaleTranscribing,
+  findLiveVoiceRecordingBySha,
   findVoiceRecordingBySha,
   getVoiceRecording,
   insertVoiceRecording,
@@ -176,6 +178,26 @@ describe("voice recordings (D-34b 第一段)", () => {
     }
   });
 
+  it("repairs stale transcribing rows on start and finds live recordings by sha", () => {
+    const db = fresh();
+    try {
+      insertVoiceRecording(db, { recording: recording(), sha256: SHA, mime: "audio/wav", bytes: 1024 });
+      const live = findLiveVoiceRecordingBySha(db, SHA);
+      assert.equal(live?.status, "transcribing");
+      markVoiceFailed(db, AUDIO, "转写引擎临时出错");
+      assert.equal(findLiveVoiceRecordingBySha(db, SHA), null, "failed 的不算在用");
+
+      const other = "aud_01JCCCCCCCCCCCCCCCCCCCCCCC";
+      insertVoiceRecording(db, { recording: recording({ audio: other as never }), sha256: "c".repeat(64), mime: "audio/wav", bytes: 100 });
+      assert.equal(failStaleTranscribing(db, "应用重启，转写中断"), 1);
+      assert.equal(getVoiceRecording(db, other)?.status, "failed");
+      assert.equal(getVoiceRecording(db, other)?.error, "应用重启，转写中断");
+      assert.equal(getVoiceRecording(db, AUDIO)?.status, "failed", "已结束的不受影响");
+      assert.equal(failStaleTranscribing(db, "再来一次"), 0);
+    } finally {
+      db.close();
+    }
+  });
   it("lets the same audio be imported again after a failed transcription (林离 #126)", () => {
     const db = fresh();
     try {
@@ -238,4 +260,5 @@ describe("voice recordings (D-34b 第一段)", () => {
     }
   });
 });
+
 
