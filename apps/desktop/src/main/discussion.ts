@@ -557,6 +557,10 @@ export class DiscussionService {
     if (previous === undefined || !["timed_out", "failed", "absent_quota"].includes(previous.outcome)) {
       throw new DiscussionError("invalid_state", "这个人不需要重试");
     }
+    // 已经开始重试了：再点一次会派第二个替补替他答，直接拒（C酱 #158 必须改 1）
+    if (previous.supersededBy !== null) {
+      throw new DiscussionError("invalid_state", "这一位已经在重试了");
+    }
 
     // C-36 / D-32：带 substitute = 改由这位代他答（典型：答到一半额度用完）。
     // 重试自己就是用来处理失败 / 超时 / 额度缺席的，所以被重试的人不按「额度缺席」挡；但替补必须现在真的能答
@@ -599,7 +603,8 @@ export class DiscussionService {
           },
         ],
         compressedRounds: prompts[0]?.compressedRounds ?? [],
-        supersede: [{ oldTurnId: previous.id, agent: agent.id }],
+        // 新 Turn 的 agent 是替补（runner），supersede 必须按他找，否则旧 Turn 接不上（C酱 #158 必须改 1）
+        supersede: [{ oldTurnId: previous.id, agent: runner.id }],
         chatMaterialSourceIds: materials.sourceMessageIds,
       });
     } catch (error) {
@@ -1020,7 +1025,9 @@ export class DiscussionService {
 
     const latest = this.#deps.repo.latestTurnOutcomeGlobal(agent.id);
     if (latest !== null && latest.outcome === "absent_quota" && this.#stickyQuotaAbsence(agent, latest.finishedAt)) {
-      return { availability: "absent_quota", reason: name + " 额度用尽（缺席）", quota };
+      // C酱 #158 建议 2：节点上那个 profile 没配额度来源（404）时，读不到额度就会一直算缺席，提示一下
+      const hint = quota?.notConfigured === true ? "（这个节点没配额度来源，读不到额度就会一直算缺席）" : "";
+      return { availability: "absent_quota", reason: name + " 额度用尽（缺席）" + hint, quota };
     }
 
     const node = this.#deps.repo.getNodeRow(agent.nodeId);
@@ -1076,6 +1083,7 @@ export class DiscussionService {
     const service = this.#quotaService();
     const byKey = new Map<string, Promise<ProfileQuotaRead | null>>();
     const reads = new Map<string, ProfileQuotaRead | null>();
+    const pending: { agentId: string; promise: Promise<ProfileQuotaRead | null> }[] = [];
     for (const agent of agents) {
       const target = this.#quotaTargetOf(agent);
       if (target === null) {
@@ -1084,8 +1092,11 @@ export class DiscussionService {
       }
       const key = quotaKeyOf(target);
       if (!byKey.has(key)) byKey.set(key, service.read(target).catch(() => null));
-      reads.set(agent.id, await byKey.get(key)!);
+      pending.push({ agentId: agent.id, promise: byKey.get(key)! });
     }
+    // 不同 profile 的额度一起等（每个最多 2 秒，串行会累加；都是缓存过的读）
+    await Promise.all([...byKey.values()]);
+    for (const item of pending) reads.set(item.agentId, await item.promise);
     return reads;
   }
 
@@ -1297,6 +1308,8 @@ export class DiscussionService {
     const { probes, quotas } = await this.#probeAndQuota(agents);
 
     const absentList: AgentProfile[] = [];
+    /** 缺席的理由（带「节点没配额度来源」这类提示），后面报错直接用 */
+    const absentReasons = new Map<string, string>();
     for (const agent of agents) {
       const state = this.#availabilityOf(agent, probes, quotas);
       if (state.availability === "available") continue;
@@ -1304,6 +1317,7 @@ export class DiscussionService {
         throw new DiscussionError("agent_unavailable", state.reason);
       }
       absentList.push(agent);
+      absentReasons.set(agent.id, state.reason);
     }
 
     // 先定「谁替谁」
@@ -1315,7 +1329,10 @@ export class DiscussionService {
       for (const absent of absentList) {
         const substitute = absent.substitute;
         if (substitute === null) {
-          throw new DiscussionError("agent_unavailable", absent.displayName + " 额度用尽，也没有设替补");
+          throw new DiscussionError(
+            "agent_unavailable",
+            (absentReasons.get(absent.id) ?? absent.displayName + " 额度用尽（缺席）") + "，也没有设替补",
+          );
         }
         pairs.push({ absent: absent.id, substitute });
       }
@@ -1326,7 +1343,8 @@ export class DiscussionService {
     // 缺席的人必须都有替补，否则这一轮发不出去（契约：那个人照旧 agent_unavailable）
     for (const absent of absentList) {
       if (!pairs.some((pair) => pair.absent === absent.id)) {
-        throw new DiscussionError("agent_unavailable", absent.displayName + " 额度用尽（缺席）");
+        const reason = absentReasons.get(absent.id) ?? absent.displayName + " 额度用尽（缺席）";
+        throw new DiscussionError("agent_unavailable", input.auto ? reason + "，也没有设替补" : reason);
       }
     }
 

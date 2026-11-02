@@ -20,6 +20,8 @@ export interface ProfileQuotaRead {
   key: string;
   quota: RemoteProfileQuota | null;
   state: QuotaState;
+  /** 节点明说没有额度来源（404）：不是网络问题，是那个 profile 没配 quota（D-32 的提示用） */
+  notConfigured: boolean;
 }
 
 export interface QuotaServiceOptions {
@@ -61,14 +63,19 @@ export class QuotaService {
     if (options.force !== true && cached !== undefined && this.#now() - cached.at < this.#ttlMs) {
       return cached.read;
     }
-    const quota = await this.#fetchQuota(target);
-    const read: ProfileQuotaRead = { key, quota, state: quota === null ? "unknown" : quotaState(quota) };
+    const fetched = await this.#fetchQuota(target);
+    const read: ProfileQuotaRead = {
+      key,
+      quota: fetched.quota,
+      state: fetched.quota === null ? "unknown" : quotaState(fetched.quota),
+      notConfigured: fetched.notConfigured,
+    };
     if (read.state === "ok") this.#lastOkAt.set(key, this.#now());
     this.#cache.set(key, { at: this.#now(), read });
     return read;
   }
 
-  async #fetchQuota(target: QuotaTarget): Promise<RemoteProfileQuota | null> {
+  async #fetchQuota(target: QuotaTarget): Promise<{ quota: RemoteProfileQuota | null; notConfigured: boolean }> {
     const url = target.baseUrl.replace(/\/+$/, "") + "/v1/profiles/" + encodeURIComponent(target.profileId) + "/quota";
     try {
       const res = await this.#fetch(url, {
@@ -77,18 +84,18 @@ export class QuotaService {
       });
       if (!res.ok) {
         console.warn("[quota] read failed: HTTP " + String(res.status) + " (" + target.profileId + ")");
-        return null;
+        return { quota: null, notConfigured: res.status === 404 };
       }
       const parsed = RemoteProfileQuota.safeParse(await res.json());
       if (!parsed.success) {
         console.warn("[quota] read failed: 返回的形状对不上 (" + target.profileId + ")");
-        return null;
+        return { quota: null, notConfigured: false };
       }
-      return parsed.data;
+      return { quota: parsed.data, notConfigured: false };
     } catch (error) {
       // 超时 / 断网都是「未知」，不是「用完」；Key 和 Token 不进日志
       console.warn("[quota] read failed: " + (error instanceof Error ? error.message : String(error)));
-      return null;
+      return { quota: null, notConfigured: false };
     }
   }
 
