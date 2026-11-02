@@ -23,3 +23,8 @@ apps/agent-server/agent-server.token
 apps/agent-server/reviewer-sandbox/
 apps/agent-server/discuss-sandbox/
 apps/agent-server/chat-sandbox/
+
+# Python sidecar
+__pycache__/
+*.pyc
+

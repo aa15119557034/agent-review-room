@@ -23,7 +23,7 @@ import { AudioRef, IsoTimestamp, Sha256Hex, prefixedId } from "./common";
 export const SpeechClipId = prefixedId("spch");
 export type SpeechClipId = z.infer<typeof SpeechClipId>;
 
-export const AudioMime = z.enum(["audio/ogg", "audio/wav", "audio/mpeg"]);
+export const AudioMime = z.enum(["audio/ogg", "audio/wav", "audio/mpeg", "audio/webm"]);
 export type AudioMime = z.infer<typeof AudioMime>;
 
 /** 超过这个字数（朗读过滤之后）的回答不合成语音，只显示文字 */

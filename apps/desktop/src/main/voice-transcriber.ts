@@ -26,6 +26,10 @@ export interface AsrConfig {
   transcribeTimeoutMs?: number;
   /** 空闲多久退出 sidecar，默认 5 分钟 */
   idleMs?: number;
+  /** 推理设备：auto（默认，有 CUDA 就用 GPU，没有就报错）/ cuda / cpu */
+  device?: "auto" | "cuda" | "cpu";
+  /** 精度：auto（cuda → float16、cpu → int8）/ float16 / int8_float16 / int8 / float32 */
+  computeType?: string;
 }
 
 export interface AsrConfigFile {
@@ -35,6 +39,8 @@ export interface AsrConfigFile {
   modelName?: unknown;
   transcribeTimeoutMs?: unknown;
   idleMs?: unknown;
+  device?: unknown;
+  computeType?: unknown;
 }
 
 const str = (v: unknown): string | null => (typeof v === "string" && v.trim().length > 0 ? v : null);
@@ -88,6 +94,8 @@ interface Pending {
   resolve: (value: Record<string, unknown>) => void;
   reject: (error: Error) => void;
   timer: NodeJS.Timeout;
+  /** 这一条挂在哪个 sidecar 实例上：旧进程退出时不能把新进程的请求也拒掉 */
+  child: ChildProcess;
 }
 
 export class SidecarTranscriber implements Transcriber {
@@ -135,9 +143,12 @@ export class SidecarTranscriber implements Transcriber {
     return new Promise<Record<string, unknown>>((resolve, reject) => {
       const timer = setTimeout(() => {
         this.#pending.delete(id);
+        // #137 评审第 3 条：超时就把 sidecar 杀掉，别让它继续跑那一段（后面每一条都会排在它后面超时）；
+        // 下一次请求会重新拉起进程（#ensureChild 里有重启逻辑）
+        this.#killChild();
         reject(new Error(`转写超时（${Math.round(timeoutMs / 1000)} 秒）`));
       }, timeoutMs);
-      this.#pending.set(id, { resolve, reject, timer });
+      this.#pending.set(id, { resolve, reject, timer, child });
       const line = JSON.stringify({ id, cmd, path }) + "\n";
       try {
         child.stdin?.write(line, "utf8");
@@ -157,7 +168,11 @@ export class SidecarTranscriber implements Transcriber {
       const value = process.env[key];
       if (value !== undefined) env[key] = value;
     }
-    const child = spawn(this.config.python, [this.config.script, "--model", this.config.modelDir], {
+    // 江浩：默认走 GPU（sidecar 那边 auto = 有 CUDA 就用，没有直接报错，不悄悄用 CPU）
+    const device = this.config.device ?? "auto";
+    const args = [this.config.script, "--model", this.config.modelDir, "--device", device];
+    if (this.config.computeType !== undefined) args.push("--compute-type", this.config.computeType);
+    const child = spawn(this.config.python, args, {
       stdio: ["pipe", "pipe", "pipe"],
       env,
       windowsHide: true,
@@ -181,7 +196,8 @@ export class SidecarTranscriber implements Transcriber {
     child.once("exit", (code) => {
       if (this.#child === child) this.#child = null;
       const tail = this.#stderr.trim().split("\n").slice(-2).join(" ");
-      this.#failAll(`转写进程退出了（${code ?? "?"}）${tail ? "：" + tail : ""}`);
+      // 只拒掉挂在这个进程上的请求：超时杀掉旧进程之后，新进程的请求不能被误伤
+      this.#failAll(`转写进程退出了（${code ?? "?"}）${tail ? "：" + tail : ""}`, child);
     });
     return child;
   }
@@ -210,8 +226,10 @@ export class SidecarTranscriber implements Transcriber {
     }
   }
 
-  #failAll(message: string): void {
+  /** 失败挂在某个 sidecar 上的请求（only 不给 = 全部）；旧进程退出不能误伤新进程的请求 */
+  #failAll(message: string, only?: ChildProcess): void {
     for (const [id, pending] of this.#pending) {
+      if (only !== undefined && pending.child !== only) continue;
       clearTimeout(pending.timer);
       pending.reject(new Error(message));
       this.#pending.delete(id);
@@ -233,6 +251,11 @@ export class SidecarTranscriber implements Transcriber {
   #stop(reason: string): void {
     this.#clearIdle();
     this.#failAll(reason);
+    this.#killChild();
+  }
+
+  /** 杀掉当前 sidecar（超时 / 退出时用）；下一次请求会重新拉起 */
+  #killChild(): void {
     const child = this.#child;
     this.#child = null;
     try {

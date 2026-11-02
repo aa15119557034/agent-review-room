@@ -6,7 +6,8 @@ import { after, describe, it } from "node:test";
 import { getVoiceRecording, insertVoiceRecording, markVoiceReady, openDatabase, ulid, WriteQueue } from "@room/db";
 import type { ControlEvent, VoiceRecording } from "@room/schemas";
 import { VoiceService } from "../src/main/voice";
-import { createAudioProtocolHandler, sniffVoiceFormat, VoiceRejectedError, VoiceStore } from "../src/main/voice-store";
+import { createAudioProtocolHandler, MediaStore } from "../src/main/media-store";
+import { MediaVoiceStore, sniffVoiceFormat, VoiceRejectedError } from "../src/main/voice-store";
 import { SidecarTranscriber, type Transcriber } from "../src/main/voice-transcriber";
 
 const dirs: string[] = [];
@@ -63,7 +64,8 @@ function makeHarness(transcriber: Transcriber | null = fakeTranscriber()) {
   const db = openDatabase(join(root, "room.db"));
   const queue = new WriteQueue();
   const events: ControlEvent[] = [];
-  const store = new VoiceStore(db, join(root, "audio"), async (path) => {
+  const media = new MediaStore(join(root, "images"), join(root, "files"), join(root, "audio"), db);
+  const store = new MediaVoiceStore(media, db, async (path) => {
     if (transcriber === null) throw new Error("no transcriber");
     return transcriber.probe(path);
   }, () => T);
@@ -74,7 +76,7 @@ function makeHarness(transcriber: Transcriber | null = fakeTranscriber()) {
     emit: (event) => events.push(event),
     now: () => T,
   });
-  return { db, queue, store, service, events, transcriber };
+  return { db, queue, media, store, service, events, transcriber };
 }
 
 const until = async (check: () => boolean, ms = 3000): Promise<void> => {
@@ -135,7 +137,7 @@ describe("voice store (D-34b)", () => {
     const h = makeHarness();
     try {
       const added = await h.store.add({ format: "ogg", bytes: ogg() });
-      const handler = createAudioProtocolHandler(h.store);
+      const handler = createAudioProtocolHandler(h.media);
       const lower = added.recording.audio.toLowerCase();
       const ok = await handler(new Request(`room-audio://${lower}`));
       assert.equal(ok.status, 200);
@@ -279,6 +281,53 @@ process.stdin.on("data", (d) => {
       assert.equal(result.text, "我听到了");
       assert.equal(result.language, "zh");
       await assert.rejects(() => transcriber.transcribe("boom"), /读不了这个文件/);
+    } finally {
+      transcriber.dispose();
+    }
+  });
+
+  it("超时把 sidecar 杀掉，下一次请求重新拉起（#137 评审第 3 条）", async () => {
+    const root = mkdtempSync(join(tmpdir(), "room-voice-timeout-"));
+    dirs.push(root);
+    const script = join(root, "hang-sidecar.mjs");
+    const countFile = join(root, "starts.txt");
+    writeFileSync(
+      script,
+      `
+import { appendFileSync } from "node:fs";
+const COUNT_FILE = ${JSON.stringify("__PATH__")};
+let buf = "";
+process.stdin.on("data", (d) => {
+  buf += d;
+  let i;
+  while ((i = buf.indexOf("\\n")) >= 0) {
+    const line = buf.slice(0, i).trim();
+    buf = buf.slice(i + 1);
+    if (!line) continue;
+    const req = JSON.parse(line);
+    appendFileSync(COUNT_FILE, "x");
+    if (req.path === "hang") continue;
+    console.log(JSON.stringify({ id: req.id, ok: true, durationMs: 1000 }));
+  }
+});
+`.replace("__PATH__", countFile.replace(/\\/g, "\\\\")),
+      "utf8",
+    );
+    const transcriber = new SidecarTranscriber({
+      python: process.execPath,
+      script,
+      modelDir: root,
+      modelName: "fake-model",
+      transcribeTimeoutMs: 300,
+      idleMs: 60_000,
+    });
+    try {
+      assert.equal(await transcriber.probe("ok.wav"), 1000);
+      await assert.rejects(() => transcriber.transcribe("hang"), /转写超时/);
+      // 进程被杀了：下一次请求要能重新拉起并正常回答
+      assert.equal(await transcriber.probe("ok.wav"), 1000, "超时之后还能继续用");
+      // 两次 probe + 一次 hang 都到过 sidecar（hang 那次之后进程被杀，下一次又重新拉起）
+      assert.ok(readdirSync(root).includes("starts.txt"));
     } finally {
       transcriber.dispose();
     }

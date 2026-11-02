@@ -43,7 +43,7 @@ const toRecording = (row: VoiceRecordingRow): VoiceRecording =>
 export interface NewVoiceRecording {
   recording: VoiceRecording;
   sha256: string;
-  mime: "audio/wav" | "audio/ogg" | "audio/webm";
+  mime: "audio/wav" | "audio/ogg" | "audio/webm" | "audio/mpeg";
   bytes: number;
 }
 

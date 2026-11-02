@@ -11,6 +11,7 @@ import { MediaService } from "./media";
 import { MediaJobsService } from "./media-jobs";
 import { createAudioProtocolHandler, createImageProtocolHandler, MediaStore } from "./media-store";
 import { loadAsrConfigFile, SidecarTranscriber } from "./voice-transcriber";
+import { MediaVoiceStore } from "./voice-store";
 import { VoiceService } from "./voice";
 import { migrateLegacyReviewerNode, NodeService, resolveRunTarget } from "./nodes";
 import { RunOrchestrator } from "./orchestrator";
@@ -107,16 +108,16 @@ async function bootstrap(): Promise<void> {
   const asr = loadAsrConfigFile(join(userData, "asr.json"), join(app.getAppPath(), "python", "transcribe.py"));
   if (asr.config === null) console.warn(`[voice] ${asr.problem}； chat.voice.import 会明确拒绝`);
   const transcriber = asr.config === null ? null : new SidecarTranscriber(asr.config);
-  const voiceStore = new VoiceStore(
+  // #137 评审第 1 条：录音字节并入 MediaStore（D-37b），room-audio:// 只有底部那一个处理器
+  const voiceStore = new MediaVoiceStore(
+    mediaStore,
     db,
-    join(userData, "audio"),
     async (path) => {
       if (transcriber === null) throw new Error("本地转写还没配好");
       return transcriber.probe(path);
     },
     () => new Date().toISOString(),
   );
-  protocol.handle(AUDIO_URL_SCHEME, createAudioProtocolHandler(voiceStore));
   const voice = new VoiceService({
     db,
     store: voiceStore,

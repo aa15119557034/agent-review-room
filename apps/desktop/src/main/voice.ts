@@ -4,7 +4,7 @@ import { CHAT_LIMITS, type AudioRef, type ControlEvent, type VoiceRecording } fr
 import type { CommandRequest, QueryRequest } from "@room/schemas";
 import { ChatError } from "./chat";
 import type { Transcriber } from "./voice-transcriber";
-import type { VoiceRejectedError, VoiceStore } from "./voice-store";
+import type { VoiceAudioStore, VoiceRejectedError } from "./voice-store";
 
 /**
  * 录音导入与本地转写（D-34b 第二段，ADR-004 转写一节）。
@@ -16,7 +16,7 @@ import type { VoiceRejectedError, VoiceStore } from "./voice-store";
 
 export interface VoiceServiceDeps {
   db: SqliteDatabase;
-  store: VoiceStore;
+  store: VoiceAudioStore;
   /** 没配置（userData/asr.json 缺失）时是 null：import 明确拒绝，不假装成功 */
   transcriber: Transcriber | null;
   emit: (event: ControlEvent) => void;
