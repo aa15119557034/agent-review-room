@@ -129,6 +129,8 @@ export interface DiscussionContext {
   isTerminal(r: Run): boolean;
   timers: Map<string, ReturnType<typeof setTimeout>[]>;
   tickMs: number;
+  /** C-47：这位秘书在这个议题的最新笔记（拼进发给他的那份，Snapshot 记版本）；写汇总不带 */
+  topicNote?(projectId: string, agent: string): { id: string; version: number; content: string } | null;
 }
 
 const SEED_AGENTS: AgentProfile[] = [
@@ -328,8 +330,14 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
   async function makeItem(
     round: Round, recipient: AgentProfile, extra: string | null, kind: BatchKind, differs: boolean, model: BatchModel | null,
   ) {
-    const { content, nonce, compressedRounds } = assemble(round, recipient, extra, kind);
+    const assembled = assemble(round, recipient, extra, kind);
+    const { nonce, compressedRounds } = assembled;
+    const note = kind === "summary" || !ctx.topicNote ? undefined : ctx.topicNote(round.projectId, recipient.id);
+    const content = note
+      ? `${assembled.content}\n<UNTRUSTED_NOTE_${nonce} version="${note.version}">\n${note.content}\n</UNTRUSTED_NOTE_${nonce}>`
+      : assembled.content;
     const snapshot: PromptSnapshot = {
+      ...(note === undefined ? {} : { projectNoteId: note?.id ?? null }),
       id: id("snap"), projectId: round.projectId, content, contentHash: await sha256Hex(content), nonce,
       contributionIds: [], taskInstruction: round.task, reviewerAgent: recipient.id, adapterVersion: "mock-discussion-1",
       tokenEstimate: Math.ceil(content.length / 2), synthesisVersion: null, branch: null, commitSha: null, createdAt: now(),

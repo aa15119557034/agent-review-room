@@ -347,8 +347,11 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
 
   // ------------------------------------------------------------ 讨论室（C-21）
 
+  // 笔记（C-47）要查聊天的会话和议题，讨论和聊天拼 Prompt / 收回答要用笔记：晚绑定
+  // eslint-disable-next-line prefer-const
+  let notes: ReturnType<typeof createNotesMock>;
   const discussion = createDiscussionMock(
-    { db, emit, find, setApproval, setRun, pushEvent, isTerminal, timers, tickMs },
+    { db, emit, find, setApproval, setRun, pushEvent, isTerminal, timers, tickMs, topicNote: (p, a) => notes.latestTopic(p, a) },
     options.discussion,
   );
   Object.assign(commands, discussion.commands);
@@ -363,8 +366,6 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
   if (options.seed) void media.seed();
 
   // 笔记要查聊天的会话和消息，聊天回答要切笔记：互相晚绑定
-  // eslint-disable-next-line prefer-const
-  let notes: ReturnType<typeof createNotesMock>;
   const chat = createChatMock(
     {
       db, emit, pushEvent, agents: discussion.agents, timers, tickMs, media: media.hooks,

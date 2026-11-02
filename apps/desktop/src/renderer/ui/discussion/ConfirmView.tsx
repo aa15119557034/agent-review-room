@@ -1,6 +1,7 @@
 import { useState, type CSSProperties } from "react";
 import type { BatchKind } from "@room/schemas";
 import { agentColor, agentName } from "../../lib/discussion";
+import { noteKey, scopeKey } from "../../lib/notes";
 import { effortLabel, modelLabel } from "../../lib/models";
 import { useActions, useAppState } from "../hooks";
 import { imageSrc } from "../../lib/media";
@@ -39,6 +40,18 @@ export function ConfirmView() {
   const plan = round?.planVersionId ? d.plans.find((p) => p.id === round.planVersionId) : undefined;
   const n = c.batch.items.length;
   const chars = (snapshotId: string) => c.snapshots.find((s) => s.id === snapshotId)?.content.length;
+  // C-47：这次带的是他笔记的第几版（PromptSnapshot.projectNoteId；省略 = 老 Snapshot / 后端还没带）
+  const notes = useAppState((s) => s.notes);
+  const noteLine = (snapshotId: string, recipient: string): string | null => {
+    const id = c.snapshots.find((s) => s.id === snapshotId)?.projectNoteId;
+    if (id === undefined) return null;
+    if (id === null) return "还没有笔记";
+    const scope = { kind: "topic" as const, projectId: c.batch.projectId };
+    const v =
+      notes.history[noteKey(scope, recipient)]?.find((n) => n.id === id)?.version ??
+      notes.latest[scopeKey(scope)]?.find((n) => n.id === id)?.version;
+    return v ? `带他的笔记第 ${v} 版` : "带他的笔记";
+  };
 
   return (
     <section className="confirm" aria-labelledby="confirm-title">
@@ -94,6 +107,7 @@ export function ConfirmView() {
                       ) : (
                         c.batch.items.some((x) => x.attachments) && <span className="extra-info">这次看不到图</span>
                       )}
+                      {noteLine(i.snapshotId, i.recipient) && <span className="side-note">{noteLine(i.snapshotId, i.recipient)}</span>}
                       <code className="confirm-print">
                         指纹 {i.contentHash.slice(0, 4)} · {i.contentHash.slice(-4)} · {len != null ? `${len.toLocaleString()} 字` : `约 ${i.tokenEstimate.toLocaleString()} tokens`}
                       </code>

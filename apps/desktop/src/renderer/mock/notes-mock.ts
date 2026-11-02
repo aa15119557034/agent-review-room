@@ -483,6 +483,11 @@ export function createNotesMock(ctx: NotesMockContext, options: NotesMockOptions
     queries,
     fromReply,
     seedTopic,
+    /** 讨论室拼 Prompt 用：他在这个议题的最新一版 */
+    latestTopic: (projectId: string, agent: string) => {
+      const n = latest({ kind: "topic", projectId }, agent);
+      return n ? { id: n.id, version: n.version, content: n.content } : null;
+    },
     /** 回答时用：他现在的笔记（mock 的秘书在笔记后面接着记） */
     current: (conversationId: string, agent: string) => latest({ kind: "conversation", conversationId }, agent)?.content ?? "",
     ready,
