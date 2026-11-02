@@ -82,7 +82,7 @@ export function reuseOrSelectChatModel(
     models.some(
       (option) =>
         option.id === previous.model &&
-        (previous.effort === null || option.efforts.some((level) => level.id === previous.effort)),
+        (previous.effort === null ? option.efforts.length === 0 : option.efforts.some((level) => level.id === previous.effort)),
     )
   ) {
     return previous;

@@ -877,6 +877,26 @@ describe("chat service (D-31b)", () => {
     }
   });
 
+  it("重试时节点给原模型增加了强度档位：不能沿用已不合法的 null", async () => {
+    const profileModels: ProfileModels[] = [{ profileId: "deepseek-chat", models: [
+      { id: "deepseek-flash", displayName: "Flash", efforts: [], defaultEffort: null },
+    ] }];
+    const h = await makeHarness({
+      scripts: { deepseek: [{ type: "error", reason: "internal" }] }, profileModels,
+      modelSettings: { deepseek: { primaryModel: "deepseek-flash", fallbackModel: null, effort: { chat: "high", discussion: null, summary: null } } },
+    });
+    try {
+      const sent = await h.chat.send(send(h.conversationId, userMessageId(103), "重试模型"));
+      await settle(h.chat);
+      assert.equal(sent.runs[0]?.model?.effort, null);
+      profileModels[0]!.models = [{ id: "deepseek-flash", displayName: "Flash", efforts: [{ id: "high", displayName: "高", note: null }], defaultEffort: "high" }];
+      const retried = await h.chat.retry({ type: "chat.retry", slotId: sent.slots[0]!.id } as never);
+      await settle(h.chat);
+      assert.equal(retried.run.model?.effort, "high");
+      assert.equal(h.targets.at(-1)?.model?.effort, "high");
+    } finally { h.db.close(); }
+  });
+
   it("falls back to the fallback model and marks usedFallback", async () => {
     const h = await makeHarness({
       modelSettings: {

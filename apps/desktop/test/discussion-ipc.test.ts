@@ -1585,6 +1585,25 @@ describe("C-40 模型选择", () => {
     await close(h);
   });
 
+  it("原模型从无档位改成有档位后，重试重新定强度", async () => {
+    let models: ModelOption[] = [{ ...deepseekFlash, efforts: [], defaultEffort: null }];
+    const h = await makeHarness({
+      scripts: new Map([["remote:deepseek-discuss", [{ type: "error", reason: "internal" }]]]),
+      probe: async () => ({ reachable: true, profiles: ["deepseek-discuss"], profileModels: [{ profileId: "deepseek-discuss", models }] }),
+    });
+    try {
+      await setModelSettings(h, "deepseek-flash", null, "high");
+      const created = (await draft(h, ["deepseek"])) as unknown as { data: { round: { id: string }; batch: BatchLike } };
+      assert.equal(modelOf(h, created.data.batch.id, "deepseek")?.effort, null);
+      await approveBatchOf(h, created.data.batch);
+      await waitFor(() => (h.db.prepare("SELECT outcome FROM turns WHERE round_id = ? AND is_summary = 0 ORDER BY rowid DESC LIMIT 1").get(created.data.round.id) as { outcome: string }).outcome === "failed", "failed");
+      models = [deepseekFlash];
+      const retried = await h.dispatcher.handleCommand({ type: "round.retry", roundId: created.data.round.id, agent: "deepseek" }) as { ok: boolean; data: BatchLike };
+      assert.equal(retried.ok, true);
+      assert.equal(modelOf(h, retried.data.id, "deepseek")?.effort, "high");
+    } finally { await close(h); }
+  });
+
   it("恢复沿用原模型；原模型不可用时重选", async () => {
     let models: ModelOption[] = [deepseekFlash];
     const h = await makeHarness({
