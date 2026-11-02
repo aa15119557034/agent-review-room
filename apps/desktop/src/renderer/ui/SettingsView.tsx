@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { NodeBaseUrl, NodeToken, ProfileId, type NodeTestResult } from "@room/schemas";
 import { useActions, useAppState } from "./hooks";
 import { NodesAndAgents } from "./NodesAndAgents";
+import { GithubSettings } from "./notes/GithubSettings";
 
 const DEFAULT_PROFILE = "claude-review";
 
@@ -163,6 +164,8 @@ export function SettingsView() {
 
         {result && <TestResult result={result} profileId={profileId.trim()} />}
       </form>
+
+      <GithubSettings />
 
       <NodesAndAgents />
     </section>

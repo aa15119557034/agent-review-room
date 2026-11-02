@@ -8,6 +8,7 @@ import { SettingsView } from "./SettingsView";
 import { DiscussionBadge, DiscussionView } from "./discussion/DiscussionView";
 import { ChatView } from "./chat/ChatView";
 import { ConsoleView } from "./ConsoleView";
+import { NotesSheetHost } from "./notes/NoteSheets";
 
 /**
  * 整体布局：项目 / 四个工作步骤 / 运行记录。
@@ -35,6 +36,7 @@ function Shell() {
       <div className="shell shell-chat">
         <TopBar />
         <ChatView notice={<Notice />} />
+        <NotesSheetHost />
       </div>
     );
   }
@@ -43,6 +45,7 @@ function Shell() {
       <div className="shell shell-console">
         <TopBar />
         <ConsoleView notice={<Notice />} />
+        <NotesSheetHost />
       </div>
     );
   }
@@ -51,6 +54,7 @@ function Shell() {
       <div className="shell shell-discussion">
         <TopBar />
         <DiscussionView notice={<Notice />} />
+        <NotesSheetHost />
       </div>
     );
   }

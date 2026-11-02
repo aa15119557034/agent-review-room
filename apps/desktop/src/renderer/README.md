@@ -16,6 +16,7 @@ renderer/
 │  ├─ chat-actions.ts       聊天的操作（发送防重复、撤回、重试、转议题）
 │  ├─ console.ts            秘书控制台（C-37）的状态、活动列表就地更新、额度显示（纯函数）
 │  ├─ console-actions.ts    秘书控制台的操作（查活动、翻页、跳到议题 / 会话）
+│  ├─ notes.ts / notes-actions.ts  项目笔记、换窗口、GitHub 同步（C-47）的状态和操作
 │  └─ topic-board.ts        讨论室标签（C-38）：议题一句话状态、等你处理、分组（纯函数）
 ├─ mock/mock-backend.ts     内存版后端，实现同一个 RoomBridge，遵守状态机，出参按契约校验
 │                           （讨论室在 discussion-mock.ts，聊天在 chat-mock.ts，控制台的 agents.activity 在 activity-mock.ts）
@@ -45,6 +46,9 @@ pnpm exec tsx --test apps/desktop/src/renderer/test/*.test.ts
 #     &unknownQuota=claude 额度读不到（都可以逗号分隔多位）；在讨论室起一轮能看到「正在答」
 #   讨论室标签（C-38）：?mock&topics 再建三个议题（等盖章 / 汐和林离回答中 / 已定稿），
 #     看「等你处理」、顶栏「讨论」角标和一句话状态；窗口窄于 720px 时一次只显示一栏
+#   项目笔记和换窗口（C-47）：?mock 的群聊里 C酱 已压缩 3 次（顶上「建议换窗口」）；会话设置 ⋯ 里每人「换窗口」；
+#     发一句带「记一下」的话，C酱 的回答会带 room-note 存成新版、林离写两段演示「笔记没存上」；
+#     设置页 GitHub：仓库名带 public = 公开仓库（不推），带 offline = 连不上（排队）
 ```
 
 ## 需要 D-01 提供的依赖

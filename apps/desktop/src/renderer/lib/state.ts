@@ -14,6 +14,7 @@ import type {
 import { applyDiscussionEvent, initialDiscussion, type DiscussionState } from "./discussion";
 import { applyChatEvent, initialChat, isChatRun, type ChatState } from "./chat";
 import { initialConsole, type ConsoleState } from "./console";
+import { applyNotesEvent, initialNotes, type NotesState } from "./notes";
 
 /**
  * renderer 的全部状态。只存从后端拿到的数据和少量 UI 状态，不在前端推导业务状态
@@ -44,6 +45,8 @@ export interface AppState {
   chat: ChatState;
   /** 秘书控制台（C-37） */
   console: ConsoleState;
+  /** 项目笔记、换窗口、GitHub 同步（C-47） */
+  notes: NotesState;
   /** Reviewer 节点设置；undefined = 还没读过，null = 从未设置 */
   reviewerNode: ReviewerNodeSettings | null | undefined;
   /** 你在聊天里的名字和头像（appearance.get）；读不到时为 null，界面显示「我」 */
@@ -79,6 +82,7 @@ export const initialState: AppState = {
   disc: initialDiscussion,
   chat: initialChat,
   console: initialConsole,
+  notes: initialNotes,
   reviewerNode: undefined,
   appearance: null,
   notice: null,
@@ -139,23 +143,30 @@ export function applyEvent(state: AppState, event: ControlEvent): AppState {
     case "chat.message.created":
     case "chat.message.updated":
     case "chat.slot.updated":
-    case "chat.run.updated":
     // 多模态（C-43）：录音转写、画图 / 语音任务
     case "chat.voice.updated":
     case "media.updated": {
       const chat = applyChatEvent(state.chat, event);
       return chat === state.chat ? state : { ...state, chat };
     }
+    // 写交接的 Run（window_handoff）也走 chat.run.updated：聊天和笔记各取所需
+    case "chat.run.updated": {
+      const chat = applyChatEvent(state.chat, event);
+      const notes = applyNotesEvent(state.notes, event);
+      return chat === state.chat && notes === state.notes ? state : { ...state, chat, notes };
+    }
     // 摘要在界面上不显示
     case "chat.summary.updated":
       return state;
-    // 项目笔记、换窗口、GitHub（C-46 契约）：界面在 C-47 接，先忽略
+    // 项目笔记、换窗口、GitHub（C-46 契约 / C-47）
     case "projectNote.created":
     case "projectNote.rejected":
     case "chat.window.draftUpdated":
     case "chat.window.created":
-    case "github.updated":
-      return state;
+    case "github.updated": {
+      const notes = applyNotesEvent(state.notes, event);
+      return notes === state.notes ? state : { ...state, notes };
+    }
   }
 }
 
