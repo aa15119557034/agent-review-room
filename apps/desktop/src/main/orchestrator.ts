@@ -11,7 +11,8 @@ import {
   type WriteQueue,
 } from "@room/db";
 import { parseSummaryOutput, type AgentAdapter } from "@room/core";
-import type { AgentEvent, ControlEvent } from "@room/schemas";
+import type { AgentEvent, ControlEvent, RoomNoteRejectReason } from "@room/schemas";
+import type { NotesProvider } from "./notes";
 
 /**
  * Run 执行器（D-07）。
@@ -60,6 +61,8 @@ export interface OrchestratorDeps {
   /** 讨论室的 Run 收尾后回调（main 用它推 message.created / turn.updated …） */
   readonly onDiscussionSettled?: (settlement: DiscussionSettlement) => void;
   readonly emit: (event: ControlEvent) => void;
+  /** C-46：项目笔记（讨论室的答案里切 room-note） */
+  readonly notes?: NotesProvider;
   readonly getRun: (runId: string) => RunRow | undefined;
   readonly idleTimeoutMs?: number;
   readonly totalTimeoutMs?: number;
@@ -256,8 +259,13 @@ export class RunOrchestrator {
   ): Promise<void> {
     // 失败原因原样透传（quota_exhausted 由 db 层映射成 absent_quota），不要压成 internal
     const failure = event.type === "error" ? ({ kind: "failed", failureReason: event.reason } as const) : undefined;
-    // 完成了却没有正文：算不完整输出，不能记成"答了但内容为空"
-    const emptyAnswer = event.type === "completed" && (completedText === null || completedText === "");
+    // C-46：讨论室的回答先切 room-note，正文才是真正要落库的内容（写摘要的 Turn 不切）
+    const noteExtract = !discussion.isSummary && event.type === "completed" && completedText !== null
+      ? this.#extractNote(completedText)
+      : null;
+    const answerText = noteExtract === null ? completedText : noteExtract.text;
+    // 完成了却没有正文（或正文只有一段 room-note）：算不完整输出，不能记成"答了但内容为空"
+    const emptyAnswer = event.type === "completed" && (answerText === null || answerText === "");
 
     let settlement: DiscussionSettlement;
     try {
@@ -293,7 +301,7 @@ export class RunOrchestrator {
       } else {
         const terminal =
           event.type === "completed" && !emptyAnswer
-            ? ({ kind: "answered", text: completedText ?? "" } as const)
+            ? ({ kind: "answered", text: noteExtract === null ? (completedText ?? "") : noteExtract.text } as const)
             : emptyAnswer
               ? ({ kind: "failed", failureReason: "incomplete_output" } as const)
             : event.type === "timed_out"
@@ -302,6 +310,8 @@ export class RunOrchestrator {
                 ? ({ kind: "interrupted" } as const)
                 : failure ?? ({ kind: "failed", failureReason: "internal" } as const);
         const finished = await finishTurnFromRun(this.#deps.db, this.#deps.queue, { runId, terminal });
+        // D-46a：回答落库成功之后才记笔记（迟到 / 被取代 / 空回答的结果都不记）
+        if (noteExtract !== null && !emptyAnswer) this.#recordNote(discussion.turnId, noteExtract);
         settlement = {
           turnId: finished.turnId,
           roundId: finished.roundId,
@@ -337,6 +347,29 @@ export class RunOrchestrator {
   }
 
   /** 汇总产生的方案草稿的变化说明（1A 不做 diff，只写它来自哪一轮） */
+  /** C-46：从讨论室的回答里切 room-note；没接笔记服务就原样返回 */
+  #extractNote(text: string): { text: string; content: string | null; rejected: RoomNoteRejectReason | null } {
+    const notes = this.#deps.notes;
+    if (notes === undefined) return { text, content: null, rejected: null };
+    return notes.extract(text);
+  }
+
+  /** C-46：回答已经落库，现在记一版笔记（失败只记日志，不影响回答） */
+  #recordNote(turnId: string, extracted: { content: string | null; rejected: RoomNoteRejectReason | null }): void {
+    const notes = this.#deps.notes;
+    if (notes === undefined) return;
+    const row = this.#deps.db
+      .prepare("SELECT t.agent AS agent, r.project_id AS projectId FROM turns t JOIN rounds r ON r.id = t.round_id WHERE t.id = ?")
+      .get(turnId) as { agent: string; projectId: string } | undefined;
+    if (row === undefined) return;
+    const scope = { kind: "topic" as const, projectId: row.projectId };
+    if (extracted.content !== null) {
+      void notes.recordReply({ scope, agent: row.agent, content: extracted.content, source: { kind: "turn", id: turnId } });
+    } else if (extracted.rejected !== null) {
+      notes.reject({ scope, agent: row.agent, reason: extracted.rejected, source: { kind: "turn", id: turnId } });
+    }
+  }
+
   #roundChangeNote(turnId: string): string {
     const row = this.#deps.db
       .prepare("SELECT r.round_index AS round_index FROM turns t JOIN rounds r ON r.id = t.round_id WHERE t.id = ?")

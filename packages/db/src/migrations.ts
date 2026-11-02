@@ -17,6 +17,7 @@ import { SCHEMA_V16 } from "./schema-v16";
 import { SCHEMA_V17 } from "./schema-v17";
 import { SCHEMA_V18 } from "./schema-v18";
 import { SCHEMA_V19 } from "./schema-v19";
+import { SCHEMA_V20 } from "./schema-v20";
 
 /**
  * 迁移（D-02）：用 PRAGMA user_version 记版本，每个迁移在自己的事务里跑。
@@ -177,6 +178,13 @@ export const MIGRATIONS: readonly Migration[] = [
       // 关外键期间重建，迁完自己验一遍：有坏数据就别放行
       const broken = db.prepare("PRAGMA foreign_key_check").all();
       if (broken.length > 0) throw new Error("v19 重建 audio_refs 之后有外键不一致：" + JSON.stringify(broken).slice(0, 500));
+    },
+  },
+  {
+    version: 20,
+    name: "project-notes",
+    up: (db) => {
+      db.exec(SCHEMA_V20);
     },
   },
 ];

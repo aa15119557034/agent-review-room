@@ -17,6 +17,7 @@ import {
   type VoiceOption,
 } from "@room/schemas";
 import { ChatError, type ChatService } from "./chat";
+import { NoteError, type NotesService } from "./notes";
 import { DiscussionError, type DiscussionService } from "./discussion";
 import type { MediaJobsService } from "./media-jobs";
 import type { MediaService } from "./media";
@@ -40,6 +41,8 @@ export interface IpcDeps {
   readonly discussion: DiscussionService;
   /** D-31b：聊天服务；测试里可以不传（那时 chat.* 返回 internal） */
   readonly chat?: ChatService;
+  /** C-46：项目笔记（改 / 回退 / 列表 / 历史） */
+  readonly notes?: NotesService;
   /** D-34a：聊天文件和表情库（选文件对话框、按内容去重） */
   readonly media?: MediaService;
   /** D-38a：画图任务（本机 ComfyUI + 全局队列） */
@@ -78,6 +81,9 @@ function mapError(error: unknown): ControlResult<unknown> {
     return errorResult(error.code, error.message);
   }
   if (error instanceof ChatError) {
+    return errorResult(error.code, error.message);
+  }
+  if (error instanceof NoteError) {
     return errorResult(error.code, error.message);
   }
   if (error instanceof StaleSnapshotError) {
@@ -120,6 +126,11 @@ export function createDispatcher(deps: IpcDeps) {
     return deps.media;
   };
 
+  const notesService = (): NotesService => {
+    if (deps.notes === undefined) throw new ControlFailure("internal", "笔记服务没有启动");
+    return deps.notes;
+  };
+
   const voiceService = (): VoiceService => {
     if (deps.voice === undefined) throw new ControlFailure("internal", "语音服务没有启动");
     return deps.voice;
@@ -147,6 +158,17 @@ export function createDispatcher(deps: IpcDeps) {
 
   async function runCommand(command: CommandRequest): Promise<unknown> {
     switch (command.type) {
+      case "projectNote.edit":
+        return notesService().edit({
+          scope: command.scope,
+          agent: command.agent,
+          content: command.content,
+          expectedParentId: command.expectedParentId,
+        });
+
+      case "projectNote.revert":
+        return notesService().revert(command.noteId);
+
       case "project.create":
         return repo.createProject(command.name);
 
@@ -497,6 +519,14 @@ export function createDispatcher(deps: IpcDeps) {
         return chatService().getRun(query.runId);
       case "chat.snapshots.get":
         return chatService().getSnapshot(query.snapshotId);
+      case "projectNotes.list":
+
+        return notesService().list(query.scope);
+
+      case "projectNotes.history":
+
+        return notesService().history(query.scope, query.agent);
+
       case "chat.summaries.list":
         return chatService().listSummaries(query.conversationId);
       case "chat.stickers.list":

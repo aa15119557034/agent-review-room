@@ -5,7 +5,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
 import type { AgentAdapter } from "@room/core";
-import { createRoundDraft, insertChatMessage, openDatabase, retractChatMessage, RoundDraftError, type RunRow, ulid, WriteQueue } from "@room/db";
+import { createRoundDraft, insertChatMessage, insertProjectNote, openDatabase, retractChatMessage, RoundDraftError, type RunRow, ulid, WriteQueue } from "@room/db";
+import { sha256Hex } from "@room/core";
+import { NotesService } from "../src/main/notes";
 import { ControlEvent, DEFAULT_AGENT_MODEL_SETTINGS, type AgentEvent, type BatchModel, type ModelOption, type ProfileModels } from "@room/schemas";
 import { DiscussionService, type NodeProbeResult } from "../src/main/discussion";
 import { createDispatcher } from "../src/main/ipc";
@@ -195,7 +197,7 @@ async function makeHarness(options: {
       return new Response(JSON.stringify(body), { status: 200, headers: { "content-type": "application/json" } });
     },
   });
-  service = new DiscussionService({ db, queue, repo, settings, orchestrator, emit: record, probeNode: probe, quota: quotaService });
+  service = new DiscussionService({ db, queue, repo, settings, orchestrator, emit: record, probeNode: probe, quota: quotaService, notes: new NotesService({ db, queue, emit: record }) });
 
   const dispatcher = createDispatcher({
     repo,
@@ -2134,5 +2136,48 @@ describe("agents.activity（D-44）", () => {
     assert.equal(result.data.nextCursor, null);
     assert.ok(created.data.round.id.length > 0);
     await close(h);
+  });
+});
+
+describe("project notes in discussion prompts (D-46a)", () => {
+  it("只把收件人自己那份笔记拼进 Prompt，并记进 Snapshot", async () => {
+    const h = await makeHarness();
+    try {
+      const content = "约定：先跑测试再提交";
+      const noteId = "note_" + ulid();
+      insertProjectNote(h.db, {
+        id: noteId,
+        scope: { kind: "topic", projectId: h.projectId },
+        agent: "deepseek",
+        version: 1,
+        parentId: null,
+        content,
+        contentHash: sha256Hex(content),
+        updatedBy: "agent",
+        reason: "reply",
+        source: { kind: "turn", turnId: "turn_" + ulid() },
+        revertedFromId: null,
+        shrankALot: false,
+        createdAt: new Date().toISOString(),
+      } as never);
+
+      const created = (await draft(h, ["deepseek", "codex"])) as unknown as {
+        ok: boolean;
+        data: { batch: { id: string } };
+      };
+      assert.equal(created.ok, true);
+      const rows = h.db
+        .prepare("SELECT recipient, snapshot_id FROM batch_items WHERE batch_id = ?")
+        .all(created.data.batch.id) as { recipient: string; snapshot_id: string }[];
+      const deep = h.repo.getSnapshot(rows.find((row) => row.recipient === "deepseek")!.snapshot_id);
+      const codex = h.repo.getSnapshot(rows.find((row) => row.recipient === "codex")!.snapshot_id);
+      assert.equal(deep.projectNoteId, noteId);
+      assert.ok(deep.content.includes("项目笔记（第 1 版）"));
+      assert.ok(deep.content.includes("约定：先跑测试再提交"));
+      assert.equal(codex.projectNoteId ?? null, null);
+      assert.ok(!codex.content.includes("约定：先跑测试再提交"));
+    } finally {
+      await close(h);
+    }
   });
 });

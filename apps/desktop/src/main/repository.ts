@@ -122,6 +122,7 @@ const toSnapshot = (row: Record<string, unknown>): PromptSnapshot => ({
   synthesisVersion: (row["synthesis_version"] as number | null) ?? null,
   branch: (row["branch"] as string | null) ?? null,
   commitSha: (row["commit_sha"] as string | null) ?? null,
+  projectNoteId: (row["project_note_id"] as string | null) ?? null,
   createdAt: row["created_at"] as string,
 });
 

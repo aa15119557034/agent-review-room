@@ -54,6 +54,7 @@ import { renderChatMaterial } from "./chat-material";
 import type { DiscussionSettlement, RunOrchestrator } from "./orchestrator";
 import { agentActivity, type AgentActivityPage } from "./activity";
 import { QuotaService, quotaKeyOf, type ProfileQuotaRead } from "./quota";
+import type { NotesProvider } from "./notes";
 import type { Repository } from "./repository";
 import type { SettingsStore } from "./settings";
 
@@ -111,6 +112,8 @@ export interface DiscussionDeps {
   readonly settings: SettingsStore;
   readonly orchestrator: RunOrchestrator;
   readonly emit: (event: ControlEvent) => void;
+  /** C-46：项目笔记（每位收件人只带自己那份）；不传 = 没有笔记 */
+  readonly notes?: NotesProvider;
   /** 测试注入；默认打节点的 /v1/health */
   readonly probeNode?: (params: { baseUrl: string; token: string; profileId: string }) => Promise<NodeProbeResult>;
   /** D-32：读节点额度（GET /v1/profiles/:id/quota）；测试注入假的，默认真打节点 */
@@ -204,7 +207,7 @@ export class DiscussionService {
         plan,
         nonce: createNonce(),
       },
-      resolved.batch.map((item) => ({ profile: item.profile, onBehalfOf: item.onBehalfOf, extraMaterials: [] })),
+      resolved.batch.map((item) => ({ profile: item.profile, onBehalfOf: item.onBehalfOf, extraMaterials: [], note: this.#noteFor(project.id, item.agent) })),
     );
     assertPromptFits(prompts);
 
@@ -494,7 +497,7 @@ export class DiscussionService {
         supplementOnly: command.mode === "only",
         nonce: createNonce(),
       },
-      agents.map((profile) => ({ profile, onBehalfOf: null, extraMaterials: [] })),
+      agents.map((profile) => ({ profile, onBehalfOf: null, extraMaterials: [], note: this.#noteFor(round.projectId, profile.id) })),
     );
     // 注意：补充 note 已经先落库了（和 agent_unavailable 一样：批次没建成、补充留在时间线）。
     // 所以这里超限也遵循同一个语义，不回滚 note——改这一点属于产品语义，不在这个修复里动。
@@ -589,7 +592,7 @@ export class DiscussionService {
     const materials = this.#materialsFor(round.projectId);
     const prompts = assembleDiscussionBatch(
       { round, history: this.#historyWithCurrent(round), materials: materials.materials, plan, nonce: createNonce() },
-      [{ profile: runner, onBehalfOf: command.substitute === undefined ? null : agent.id, extraMaterials: [] }],
+      [{ profile: runner, onBehalfOf: command.substitute === undefined ? null : agent.id, extraMaterials: [], note: this.#noteFor(round.projectId, runner.id) }],
     );
     assertPromptFits(prompts);
 
@@ -699,7 +702,7 @@ export class DiscussionService {
         plan,
         nonce: createNonce(),
       },
-      resolved.batch.map((item) => ({ profile: item.profile, onBehalfOf: item.onBehalfOf, extraMaterials: [] })),
+      resolved.batch.map((item) => ({ profile: item.profile, onBehalfOf: item.onBehalfOf, extraMaterials: [], note: this.#noteFor(round.projectId, item.agent) })),
     );
     assertPromptFits(prompts);
 
@@ -1144,6 +1147,11 @@ export class DiscussionService {
    * 不再带它）。所以每次拼 Prompt 都按 chat_message_ids 重读来源消息，把已排除的挑掉再重新整理；
    * 全被撤回了就不带这份材料。旧 Snapshot 不变（它存的是当时的文本）。
    */
+  /** C-46：这位秘书在这个议题里的最新笔记（只给他自己）；没有笔记 / 没接笔记服务时 null */
+  #noteFor(projectId: string, agent: string): { id: string; version: number; content: string } | null {
+    return this.#deps.notes?.latest({ kind: "topic", projectId }, agent) ?? null;
+  }
+
   #materialsFor(projectId: string): { materials: DiscussionMaterial[]; sourceMessageIds: string[] } {
     const { db } = this.#deps;
     const rows = db
