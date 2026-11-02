@@ -19,6 +19,8 @@ export function HoldButton(props: {
   const completeRef = useRef(props.onComplete);
   completeRef.current = props.onComplete;
   const controllerRef = useRef<HoldController | null>(null);
+  /** 按下的那根手指 / 那个指针；别的触点的事件不管（汐 #172 建议 1） */
+  const pointerRef = useRef<number | null>(null);
 
   useEffect(() => {
     const controller = createHoldController({
@@ -55,7 +57,14 @@ export function HoldButton(props: {
   }, [props.resetKey]);
 
   const press = () => controllerRef.current?.press();
-  const cancel = () => controllerRef.current?.cancel();
+  const cancel = () => {
+    pointerRef.current = null;
+    controllerRef.current?.cancel();
+  };
+  const ours = (pointerId: number) => pointerRef.current === pointerId;
+  const cancelIfOurs = (e: { pointerId: number }) => {
+    if (ours(e.pointerId)) cancel();
+  };
   const isKey = (key: string) => key === " " || key === "Enter";
   const hint = props.hint ?? `按住 ${HOLD_TO_CONFIRM_MS / 1000} 秒`;
 
@@ -68,18 +77,20 @@ export function HoldButton(props: {
       title={hint}
       style={{ "--hold-ms": `${HOLD_TO_CONFIRM_MS}ms` } as CSSProperties}
       onPointerDown={(e) => {
-        if (e.button !== 0) return;
+        if (e.button !== 0 || pointerRef.current !== null) return;
+        pointerRef.current = e.pointerId;
         // 按住期间指针移出按钮也要能收到 pointerleave / pointerup
         e.currentTarget.setPointerCapture?.(e.pointerId);
         press();
       }}
-      onPointerUp={cancel}
-      onPointerCancel={cancel}
-      onLostPointerCapture={cancel}
-      onPointerLeave={cancel}
+      onPointerUp={cancelIfOurs}
+      onPointerCancel={cancelIfOurs}
+      onLostPointerCapture={cancelIfOurs}
+      onPointerLeave={cancelIfOurs}
       onPointerMove={(e) => {
-        // 有指针捕获时 pointerleave 不触发：自己判断是不是移出了按钮
-        if (phase !== "holding") return;
+        // 有指针捕获时 pointerleave 不触发：自己判断是不是移出了按钮。
+        // 看控制器的实时阶段，不看渲染闭包里的 phase（汐 #172 建议 2）
+        if (!ours(e.pointerId) || controllerRef.current?.phase !== "holding") return;
         const r = e.currentTarget.getBoundingClientRect();
         if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) cancel();
       }}
@@ -97,7 +108,7 @@ export function HoldButton(props: {
     >
       <span className="hold-fill" aria-hidden="true" />
       <span className="hold-label">{props.children}</span>
-      <span className="hold-hint">{phase === "holding" ? "继续按住…" : phase === "done" ? "已盖章" : hint}</span>
+      <span className="hold-hint" aria-live="polite">{phase === "holding" ? "继续按住…" : phase === "done" ? "已盖章" : hint}</span>
     </button>
   );
 }
