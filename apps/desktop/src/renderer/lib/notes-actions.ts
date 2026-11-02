@@ -20,9 +20,14 @@ export function createNotesActions(store: Store<AppState>, client: RoomClient, f
     if (!notes().available) return;
     try {
       const list = await client.query({ type: "projectNotes.list", scope });
-      setNotes((n) => ({ ...n, latest: { ...n.latest, [scopeKey(scope)]: list } }));
+      setNotes((n) => {
+        let next = { ...n, latest: { ...n.latest, [scopeKey(scope)]: n.latest[scopeKey(scope)] ?? [] } };
+        // 查询与事件按同一版本规则合并，旧查询不能把已经显示的新版改回去。
+        for (const note of list) next = applyNotesEvent(next, { type: "projectNote.created", note });
+        return next;
+      });
       // 时间线上「更新了笔记」那一行要知道每一版是哪次回答写的：有笔记的人把历史也读下来
-      await Promise.all(list.map((x) => loadHistory(scope, x.agent)));
+      await Promise.all((notes().latest[scopeKey(scope)] ?? []).map((x) => loadHistory(scope, x.agent)));
     } catch (err) {
       if (notSupported(err)) setNotes((n) => ({ ...n, available: false }));
       else fail(err);
@@ -96,6 +101,9 @@ export function createNotesActions(store: Store<AppState>, client: RoomClient, f
 
     onEvent(e: ControlEvent) {
       if (e.type === "chat.window.created") void loadWindows(e.window.conversationId);
+      if (e.type === "chat.summary.updated" && notes().windows[e.summary.conversationId] !== undefined) {
+        void loadWindows(e.summary.conversationId);
+      }
       if (e.type === "chat.window.draftUpdated" && e.draft.runId) void loadRun(e.draft.runId);
     },
 

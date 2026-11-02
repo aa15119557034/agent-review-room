@@ -100,18 +100,14 @@ export function applyNotesEvent(n: NotesState, event: ControlEvent): NotesState 
       const sk = scopeKey(note.scope);
       const hk = noteKey(note.scope, note.agent);
       let next = n;
-      const latest = n.latest[sk];
-      if (latest) {
-        const cur = latest.find((x) => x.agent === note.agent);
-        if (!cur || note.version > cur.version) {
-          next = { ...next, latest: { ...next.latest, [sk]: cur ? latest.map((x) => (x.agent === note.agent ? note : x)) : [...latest, note] } };
-        }
+      const latest = n.latest[sk] ?? [];
+      const cur = latest.find((x) => x.agent === note.agent);
+      if (!cur || note.version > cur.version) {
+        next = { ...next, latest: { ...next.latest, [sk]: cur ? latest.map((x) => (x.agent === note.agent ? note : x)) : [...latest, note] } };
       }
-      const hist = n.history[hk];
-      if (hist) {
-        const merged = insertVersion(hist, note);
-        if (merged !== hist) next = { ...next, history: { ...next.history, [hk]: merged } };
-      }
+      const hist = n.history[hk] ?? [];
+      const merged = insertVersion(hist, note);
+      if (merged !== hist) next = { ...next, history: { ...next.history, [hk]: merged } };
       return next;
     }
     case "projectNote.rejected": {
