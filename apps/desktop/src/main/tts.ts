@@ -1,7 +1,7 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import { existsSync, readdirSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { delimiter, join } from "node:path";
 import type { TtsEngine, VoiceId, VoiceOption } from "@room/schemas";
 
 /**
@@ -31,6 +31,10 @@ export interface TtsConfig {
   python: string;
   script: string;
   modelDir: string;
+  /** IndexTTS 的代码目录（安装包自带时指向 resources/tts/index-tts）；不填就按 runner.py 的默认 */
+  root?: string;
+  /** 安装包自带的 site-packages（设了就用 PYTHONPATH 指过去，不用 venv 的绝对路径） */
+  sitePackages?: string;
   /** 一次合成最多等多久 */
   timeoutMs?: number;
   /** 起进程 + 加载模型最多等多久（默认 120 秒） */
@@ -240,7 +244,16 @@ export class TtsRunner {
     const loadTimeoutMs = this.config.loadTimeoutMs ?? DEFAULT_LOAD_TIMEOUT_MS;
     const child = spawn(this.config.python, [this.config.script], {
       cwd: this.config.modelDir,
-      env: { ...process.env, PYTHONIOENCODING: "utf-8", PYTHONUTF8: "1", INDEXTTS_MODEL_DIR: this.config.modelDir },
+      env: {
+        ...process.env,
+        PYTHONIOENCODING: "utf-8",
+        PYTHONUTF8: "1",
+        INDEXTTS_MODEL_DIR: this.config.modelDir,
+        ...(this.config.root === undefined ? {} : { INDEXTTS_ROOT: this.config.root }),
+        ...(this.config.sitePackages === undefined
+          ? {}
+          : { PYTHONPATH: [this.config.sitePackages, process.env.PYTHONPATH].filter(Boolean).join(delimiter) }),
+      },
       stdio: ["pipe", "pipe", "pipe"],
       windowsHide: true,
     });

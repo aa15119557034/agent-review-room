@@ -1,0 +1,44 @@
+appId: com.agent-review-room.desktop
+productName: 评审室
+copyright: Copyright © 2026
+
+directories:
+  output: ../../release
+  buildResources: build
+
+files:
+  - out/**
+  - package.json
+  - "!**/*.map"
+
+asar: true
+# better-sqlite3 v13 走 Node-API 的 prebuilds（Electron 也能直接加载），不需要按 Electron 重编
+npmRebuild: false
+asarUnpack:
+  - "**/*.node"
+
+# 语音合成：Python + IndexTTS2 代码 + 模型。源目录用 TTS_BUNDLE_DIR（默认 E:\AI\TTS，pack.mjs 会设置）。
+# 产物布局：<resources>/tts/{python, site-packages, index-tts, models/IndexTTS-2, runner.py}
+extraResources:
+  - from: "${env.TTS_BUNDLE_DIR}/pythons/cpython-3.11.13-windows-x86_64-none"
+    to: tts/python
+  - from: "${env.TTS_BUNDLE_DIR}/index-tts/.venv/Lib/site-packages"
+    to: tts/site-packages
+  - from: "${env.TTS_BUNDLE_DIR}/index-tts"
+    to: tts/index-tts
+    filter:
+      - "**/*"
+      - "!.venv/**"
+  - from: "${env.TTS_BUNDLE_DIR}/models/IndexTTS-2"
+    to: tts/models/IndexTTS-2
+  - from: tts/runner.py
+    to: tts/runner.py
+
+win:
+  target:
+    - nsis
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  perMachine: false
