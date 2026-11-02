@@ -1697,8 +1697,8 @@ export class ChatService {
         contentBy: "agent",
         updatedAt: this.#now(),
       };
-      updateChatWindowDraft(db, updated);
-      return updated;
+      const changes = updateChatWindowDraft(db, updated, { state: "pending", runId: run.id, contentHash: null });
+      return changes === 1 ? updated : null;
     });
     if (next !== null) this.#emit({ type: "chat.window.draftUpdated", draft: next });
     await finish({ kind: "answered", text });
@@ -1761,8 +1761,6 @@ export class ChatService {
     const draft = getChatWindowDraft(db, command.draftId);
     if (draft === null) throw new ChatError("not_found", "草稿不存在");
     if (draft.state !== "pending") throw new ChatError("invalid_state", "这份草稿已经换了或取消了");
-    // 契约：还在跑就停掉它，它之后的结果不再写进草稿
-    this.#cancelHandoffRun(draft.runId);
     const next: ChatWindowDraft = {
       ...draft,
       content: command.content,
@@ -1770,7 +1768,13 @@ export class ChatService {
       contentBy: "human",
       updatedAt: this.#now(),
     };
-    await writeTransaction(db, queue, () => updateChatWindowDraft(db, next));
+    // #187（林离）：状态 / 内容 hash 的检查放进事务，条件 UPDATE；变了就整次拒绝
+    await writeTransaction(db, queue, () => {
+      const changes = updateChatWindowDraft(db, next, { state: "pending", contentHash: draft.contentHash });
+      if (changes === 0) throw new ChatError("invalid_state", "这份草稿刚刚变了，重新打开再改");
+    });
+    // 契约：还在跑就停掉它，它之后的结果不再写进草稿
+    this.#cancelHandoffRun(draft.runId);
     this.#emit({ type: "chat.window.draftUpdated", draft: next });
     return next;
   }
@@ -1797,8 +1801,15 @@ export class ChatService {
       updatedAt: now,
     };
     await writeTransaction(db, queue, () => {
+      // #187（林离）：探测期间草稿可能被取消 / 确认 / 改过；条件 UPDATE 不成立就整次拒绝，
+      // 不插 Snapshot / Run，也不把 cancelled / confirmed 写回 pending
+      const changes = updateChatWindowDraft(db, next, {
+        state: "pending",
+        runId: draft.runId,
+        contentHash: draft.contentHash,
+      });
+      if (changes === 0) throw new ChatError("invalid_state", "这份草稿刚刚变了，重新打开再看");
       insertChatSnapshot(db, started.snapshot);
-      updateChatWindowDraft(db, next);
       insertChatRun(db, started.run);
     });
     this.#emit({ type: "chat.window.draftUpdated", draft: next });
@@ -1810,62 +1821,65 @@ export class ChatService {
     command: CommandRequest<"chat.window.confirm">,
   ): Promise<{ window: ChatWindow; note: ProjectNote; draft: ChatWindowDraft }> {
     const { db, queue } = this.#deps;
-    const draft = getChatWindowDraft(db, command.draftId);
-    if (draft === null) throw new ChatError("not_found", "草稿不存在");
-    if (draft.state !== "pending") throw new ChatError("invalid_state", "这份草稿已经换了或取消了");
-    if (draft.content === null || draft.contentHash === null) throw new ChatError("invalid_state", "交接笔记还没写好");
-    if (draft.contentHash !== command.expectedContentHash) {
-      throw new ChatError("stale_snapshot", "交接笔记在你看过之后又变了");
-    }
-    const conversation = getConversation(db, draft.conversationId);
-    if (conversation === null) throw new ChatError("not_found", "会话不存在");
-
     const now = this.#now();
-    const scope = { kind: "conversation" as const, conversationId: draft.conversationId };
-    const prev = latestProjectNote(db, scope, draft.agent);
-    const note: ProjectNote = {
-      id: newProjectNoteId(),
-      scope,
-      agent: draft.agent,
-      version: (prev?.version ?? 0) + 1,
-      parentId: prev?.id ?? null,
-      content: draft.content,
-      contentHash: draft.contentHash,
-      updatedBy: draft.contentBy ?? "human",
-      reason: "window_handoff",
-      source: draft.contentBy === "human" || draft.runId === null ? null : { kind: "chat_run", runId: draft.runId },
-      revertedFromId: null,
-      shrankALot: noteShrankALot(prev?.content ?? "", draft.content),
-      createdAt: now,
-    };
-    const current = currentChatWindow(db, draft.conversationId, draft.agent);
-    const window: ChatWindow = {
-      id: newChatWindowId(),
-      conversationId: draft.conversationId,
-      agent: draft.agent,
-      index: (current?.index ?? 1) + 1,
-      startsAfterMessageId: draft.startsAfterMessageId,
-      handoffNoteId: note.id,
-      draftId: draft.id,
-      createdAt: now,
-    };
-    const done: ChatWindowDraft = { ...draft, state: "confirmed", windowId: window.id, updatedAt: now };
-    await writeTransaction(db, queue, () => {
+    // #187（林离）：pending / 内容 / expectedContentHash 的检查和所有写入在同一个事务里；
+    // 条件 UPDATE 不成立（状态或 hash 变了）就整次回滚，不会接受旧 hash、也不会把终态改回去
+    const result = await writeTransaction(db, queue, () => {
+      const draft = getChatWindowDraft(db, command.draftId);
+      if (draft === null) throw new ChatError("not_found", "草稿不存在");
+      if (draft.state !== "pending") throw new ChatError("invalid_state", "这份草稿已经换了或取消了");
+      if (draft.content === null || draft.contentHash === null) throw new ChatError("invalid_state", "交接笔记还没写好");
+      if (draft.contentHash !== command.expectedContentHash) {
+        throw new ChatError("stale_snapshot", "交接笔记在你看过之后又变了");
+      }
+      const conversation = getConversation(db, draft.conversationId);
+      if (conversation === null) throw new ChatError("not_found", "会话不存在");
+
+      const scope = { kind: "conversation" as const, conversationId: draft.conversationId };
+      const prev = latestProjectNote(db, scope, draft.agent);
+      const note: ProjectNote = {
+        id: newProjectNoteId(),
+        scope,
+        agent: draft.agent,
+        version: (prev?.version ?? 0) + 1,
+        parentId: prev?.id ?? null,
+        content: draft.content,
+        contentHash: draft.contentHash,
+        updatedBy: draft.contentBy ?? "human",
+        reason: "window_handoff",
+        source: draft.contentBy === "human" || draft.runId === null ? null : { kind: "chat_run", runId: draft.runId },
+        revertedFromId: null,
+        shrankALot: noteShrankALot(prev?.content ?? "", draft.content),
+        createdAt: now,
+      };
+      const current = currentChatWindow(db, draft.conversationId, draft.agent);
+      const window: ChatWindow = {
+        id: newChatWindowId(),
+        conversationId: draft.conversationId,
+        agent: draft.agent,
+        index: (current?.index ?? 1) + 1,
+        startsAfterMessageId: draft.startsAfterMessageId,
+        handoffNoteId: note.id,
+        draftId: draft.id,
+        createdAt: now,
+      };
+      const done: ChatWindowDraft = { ...draft, state: "confirmed", windowId: window.id, updatedAt: now };
+      const changes = updateChatWindowDraft(db, done, { state: "pending", contentHash: draft.contentHash });
+      if (changes === 0) throw new ChatError("stale_snapshot", "交接笔记在你看过之后又变了");
       insertProjectNote(db, note);
       insertChatWindow(db, window);
-      updateChatWindowDraft(db, done);
+      return { window, note, draft: done };
     });
-    this.#emit({ type: "projectNote.created", note });
+    this.#emit({ type: "projectNote.created", note: result.note });
     try {
-      this.#deps.notes?.enqueueNote?.(note);
+      this.#deps.notes?.enqueueNote?.(result.note);
     } catch {
       // 同步失败不影响换窗口
     }
-    this.#emit({ type: "chat.window.created", window });
-    this.#emit({ type: "chat.window.draftUpdated", draft: done });
-    return { window, note, draft: done };
+    this.#emit({ type: "chat.window.created", window: result.window });
+    this.#emit({ type: "chat.window.draftUpdated", draft: result.draft });
+    return result;
   }
-
   async cancelWindow(command: CommandRequest<"chat.window.cancel">): Promise<ChatWindowDraft> {
     const { db, queue } = this.#deps;
     const draft = getChatWindowDraft(db, command.draftId);
@@ -1873,7 +1887,11 @@ export class ChatService {
     if (draft.state !== "pending") throw new ChatError("invalid_state", "这份草稿已经换了或取消了");
     this.#cancelHandoffRun(draft.runId);
     const next: ChatWindowDraft = { ...draft, state: "cancelled", updatedAt: this.#now() };
-    await writeTransaction(db, queue, () => updateChatWindowDraft(db, next));
+    await writeTransaction(db, queue, () => {
+      const changes = updateChatWindowDraft(db, next, { state: "pending" });
+      if (changes === 0) throw new ChatError("invalid_state", "这份草稿已经换了或取消了");
+    });
+    this.#cancelHandoffRun(draft.runId);
     this.#emit({ type: "chat.window.draftUpdated", draft: next });
     return next;
   }

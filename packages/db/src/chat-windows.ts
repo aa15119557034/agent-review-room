@@ -78,12 +78,39 @@ export function insertChatWindowDraft(db: SqliteDatabase, draft: ChatWindowDraft
   );
 }
 
-/** 改草稿（内容 / 作者 / Run / 状态 / 指向的窗口 / 更新时间）。**在调用方的事务里跑** */
-export function updateChatWindowDraft(db: SqliteDatabase, draft: ChatWindowDraft): void {
+export interface ChatWindowDraftGuard {
+  /** 必须是这个状态（一般是 pending；终态不能回退） */
+  state: ChatWindowDraft["state"];
+  /** 必须还是这个 hash（null = 必须还没内容）。用 IS 比较，NULL 也安全 */
+  contentHash?: string | null;
+  /** 必须还是这个 Run */
+  runId?: string | null;
+}
+
+/**
+ * 改草稿（内容 / 作者 / Run / 状态 / 指向的窗口 / 更新时间）。**在调用方的事务里跑**。
+ * 带 guard 时是条件 UPDATE：状态 / hash / Run 对不上就一行都不改，返回 changes。
+ * #187（林离）：redo / edit / cancel / confirm 都靠它把「检查 + 写入」放进同一个事务。
+ */
+export function updateChatWindowDraft(
+  db: SqliteDatabase,
+  draft: ChatWindowDraft,
+  guard?: ChatWindowDraftGuard,
+): number {
   const parsed = ChatWindowDraftSchema.parse(draft);
-  db.prepare(
+  const where = ["id = ?", "state = ?"];
+  const args: unknown[] = [parsed.id, guard?.state ?? parsed.state];
+  if (guard?.contentHash !== undefined) {
+    where.push("content_hash IS ?");
+    args.push(guard.contentHash);
+  }
+  if (guard?.runId !== undefined) {
+    where.push("run_id IS ?");
+    args.push(guard.runId);
+  }
+  const result = db.prepare(
     "UPDATE chat_window_drafts SET run_id = ?, content = ?, content_hash = ?, content_by = ?, state = ?, window_id = ?, " +
-      "updated_at = ? WHERE id = ?",
+      "updated_at = ? WHERE " + where.join(" AND "),
   ).run(
     parsed.runId,
     parsed.content,
@@ -92,8 +119,9 @@ export function updateChatWindowDraft(db: SqliteDatabase, draft: ChatWindowDraft
     parsed.state,
     parsed.windowId,
     parsed.updatedAt,
-    parsed.id,
+    ...args,
   );
+  return result.changes;
 }
 
 interface WindowRow {

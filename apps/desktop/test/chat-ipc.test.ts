@@ -45,7 +45,7 @@ import {
   type ProfileModels,
 } from "@room/schemas";
 import { sha256Hex, type AgentAdapter } from "@room/core";
-import { ChatService, type ChatRunTarget } from "../src/main/chat";
+import { ChatError, ChatService, type ChatRunTarget } from "../src/main/chat";
 import { NotesService } from "../src/main/notes";
 import { CHAT_MATERIAL_MAX_CHARS, CHAT_MATERIAL_PROMPT_HEADROOM } from "../src/main/chat-material";
 import { Repository } from "../src/main/repository";
@@ -160,6 +160,8 @@ async function makeHarness(
     summaryScript?: Script;
     /** D-45：摘要 Run 先等这个 promise 再回（测「跑的时候来源被撤回」） */
     summaryGate?: Promise<void>;
+    /** #187：节点探测（换窗口 redo 的闸门） */
+    probe?: (params: { baseUrl: string; token: string; profileId: string }) => Promise<NodeTestResult>;
     /** D-39：自动画图先等这个 promise 再建任务 */
     drawGate?: Promise<void>;
     /** D-39：自动语音排任务时故意失败（测「前置条件不满足要补一条失败任务」） */
@@ -246,6 +248,7 @@ async function makeHarness(
       }
       cancelledMedia.push([...messageIds]);
     },
+    ...(options.probe === undefined ? {} : { probe: options.probe }),
     adapterFactory: async (target: ChatRunTarget) => {
       targets.push(target);
       if (held.has(target.agent)) {
@@ -2252,3 +2255,4 @@ describe("review fixes (#187)", () => {
     }
   });
 });
+
