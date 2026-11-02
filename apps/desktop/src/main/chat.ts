@@ -32,6 +32,7 @@ import {
   type ChatHistorySummary,
   type ChatMessage,
   type ChatWindow,
+  type FailureReason,
   type ChatWindowDraft,
   type ChatWindowStatus,
   type ProjectNote,
@@ -1004,8 +1005,17 @@ export class ChatService {
         if (TERMINAL.has(event.type)) {
           // D-45：历史摘要 Run 的输出是纯文本（不是聊天 JSON），另外收尾（摘要和 Run 在同一个事务里）
           if (run.purpose === "history_summary") {
-            if (event.type === "completed") await this.#finishSummary(run, current, completedText ?? "");
-            else await this.#finishSummaryFailed(run, current, "摘要 Run 没跑完：" + event.type);
+            if (event.type === "completed") {
+              await this.#finishSummary(run, current, completedText ?? "");
+            } else if (event.type === "error" && event.reason === "quota_exhausted") {
+              await this.#finishSummaryFailed(run, current, "摘要 Run 额度用完了", "quota_exhausted");
+            } else if (event.type === "timed_out") {
+              await this.#finishSummaryFailed(run, current, "摘要 Run 超时了", "incomplete_output");
+            } else if (event.type === "cancelled") {
+              await this.#finishSummaryFailed(run, current, "摘要 Run 被取消了", "interrupted");
+            } else {
+              await this.#finishSummaryFailed(run, current, "摘要 Run 没跑完：" + event.type);
+            }
             return;
           }
           if (event.type === "completed") {
@@ -1089,19 +1099,27 @@ export class ChatService {
         this.#emit({ type: "run.event", event });
       }
 
-      await finish({
-        kind: "failed",
-        failure: { kind: "run_failed", message: "adapter ended without a terminal event" },
-        failureReason: "internal",
-      });
+      if (run.purpose === "history_summary") {
+        await this.#finishSummaryFailed(run, current, "摘要 Run 没有终止事件");
+      } else {
+        await finish({
+          kind: "failed",
+          failure: { kind: "run_failed", message: "adapter ended without a terminal event" },
+          failureReason: "internal",
+        });
+      }
     } catch (error) {
       if (current === "QUEUED" || current === "STARTING" || current === "RUNNING") {
         try {
-          await finish({
-            kind: "failed",
-            failure: { kind: "run_failed", message: error instanceof Error ? error.message : String(error) },
-            failureReason: "internal",
-          });
+          if (run.purpose === "history_summary") {
+            await this.#finishSummaryFailed(run, current, error instanceof Error ? error.message : String(error));
+          } else {
+            await finish({
+              kind: "failed",
+              failure: { kind: "run_failed", message: error instanceof Error ? error.message : String(error) },
+              failureReason: "internal",
+            });
+          }
         } catch {
           // 别的路径已经收尾了（撤回 / 取消 / 中断修复）：丢弃
         }
@@ -1253,11 +1271,16 @@ export class ChatService {
   }
 
   /** 摘要 Run 失败：Run 记 FAILED，不写摘要、不当场重试（下次回答结束再试） */
-  async #finishSummaryFailed(run: ChatRun, from: RunState, message: string): Promise<void> {
+  async #finishSummaryFailed(
+    run: ChatRun,
+    from: RunState,
+    message: string,
+    failureReason: FailureReason = "internal",
+  ): Promise<void> {
     const result = await finishChatSummaryRun(this.#deps.db, this.#deps.queue, {
       runId: run.id,
       from,
-      failure: { message, failureReason: "internal" },
+      failure: { message, failureReason },
     });
     this.#emit({ type: "chat.run.updated", run: result.run });
   }

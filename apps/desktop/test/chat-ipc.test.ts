@@ -1925,4 +1925,18 @@ describe("chat history summary wiring (D-45)", () => {
       h.db.close();
     }
   });
+
+  it("摘要 Run 没有终止事件：记失败、不无限起新的（#173 评审必须改 1）", async () => {
+    const h = await makeHarness({ summaryScript: [] });
+    try {
+      await seedOldMessages(h, 40);
+      await h.chat.send(send(h.conversationId, userMessageId(941), "现在几点"));
+      await waitFor(() => summaryRuns(h).length === 1 && summaryRuns(h)[0]!.state === "FAILED");
+      await new Promise((resolve) => setTimeout(resolve, 120));
+      assert.equal(summaryRuns(h).length, 1, "不会当场再起一个新的摘要 Run");
+      assert.equal(listChatSummaries(h.db, h.conversationId).length, 0);
+    } finally {
+      h.db.close();
+    }
+  });
 });
