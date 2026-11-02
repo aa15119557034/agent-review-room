@@ -20,6 +20,7 @@ import {
   type SqliteDatabase,
 } from "@room/db";
 import type { ChatMessage, ChatRun, ChatReplySlot, ChatSnapshot, ControlEvent, MediaJob } from "@room/schemas";
+import { MediaJob as MediaJobSchema } from "@room/schemas";
 import { MediaJobsService } from "../src/main/media-jobs";
 import { createAudioProtocolHandler, MediaStore } from "../src/main/media-store";
 import type { TtsRunner } from "../src/main/tts";
@@ -222,6 +223,20 @@ const sourceOf = (h: Harness, messageId = h.answer.id) =>
   ({ kind: "chat", conversationId: h.conversationId, messageId, agent: "deepseek" }) as const;
 
 describe("speech.play (D-37b)", () => {
+  it("沉浸语音前置条件不满足时，真实服务能存下契约合格的失败任务", async () => {
+    const h = await makeHarness();
+    try {
+      h.voice = null;
+      const source = { kind: "chat" as const, conversationId: h.conversationId, messageId: h.answer.id, agent: "deepseek" };
+      await assert.rejects(h.service.play(source, { authorization: "immersive", intentHash: "a".repeat(64) }));
+      const failed = await h.service.failImmersiveSpeech(source, "a".repeat(64), "这位秘书还没选声音");
+      MediaJobSchema.parse(failed);
+      assert.equal(failed.state, "failed");
+      assert.equal(failed.failure?.reason, "backend_unavailable");
+      assert.equal(getMediaJob(h.db, failed.id)?.failure?.message, "这位秘书还没选声音");
+      assert.ok(h.events.some((event) => event.type === "media.updated" && event.job.id === failed.id));
+    } finally { h.db.close(); }
+  });
   it("synthesizes an answer, stores the audio and the clip, then serves the clip from cache", async () => {
     const h = await makeHarness();
     try {
