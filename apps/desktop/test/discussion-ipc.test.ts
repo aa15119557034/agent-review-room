@@ -1998,6 +1998,115 @@ describe("D-32：round.retry 带替补（C酱 #158 必须改 1）", () => {
     assert.match(failure(result).message, /没配额度来源/);
     await close(h);
   });
+
+  it("并发两个 retry 只有一个能建批次 / Turn，另一个整批回滚（#163 复审必须改 1）", async () => {
+    // 两个 retry 都卡在异步节点探测上：等两个都探测到了再一起放行。
+    // 这样两边都已经读过了 supersededBy = null，执行顺序不再影响结论。
+    let probed = 0;
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const guard = setTimeout(() => release(), 3_000);
+    const h = await makeHarness({
+      quota: "ok",
+      probe: async () => {
+        probed += 1;
+        if (probed >= 2) release();
+        await gate;
+        return { reachable: true, profiles: ["claude-review", "deepseek-discuss", "codex-discuss"] };
+      },
+    });
+    const { roundId, turnId } = seedRunningRoundWithAbsentTurn(h, "deepseek");
+
+    const retry = () =>
+      h.dispatcher.handleCommand({ type: "round.retry", roundId, agent: "deepseek", substitute: "claude" });
+    const results = await Promise.all([retry(), retry()]);
+    clearTimeout(guard);
+
+    assert.equal(probed, 2, "两个 retry 都先通过了异步探测，这正是并发窗口");
+    const ok = results.filter((result) => result.ok);
+    const failed = results.filter((result) => !result.ok);
+    assert.equal(ok.length, 1, JSON.stringify(results));
+    assert.equal(failed.length, 1, JSON.stringify(results));
+    assert.equal(failure(failed[0]!).error, "invalid_state", JSON.stringify(failed[0]));
+    assert.equal(failure(failed[0]!).message, "这一位已经在重试了");
+
+    const retryBatches = h.db.prepare("SELECT id FROM batches WHERE round_id = ? AND kind = 'retry'").all(roundId);
+    assert.equal(retryBatches.length, 1, "失败的那一次不能留下可盖章的重复批次");
+    assert.equal(
+      (h.db.prepare("SELECT count(*) AS n FROM turns WHERE round_id = ? AND agent = 'claude'").get(roundId) as { n: number }).n,
+      1,
+      "只允许一个替补 Turn",
+    );
+    // 失败的那一次整批回滚：Snapshot / Approval 也不留（1 份种子 + 1 份成功的）
+    assert.equal((h.db.prepare("SELECT count(*) AS n FROM prompt_snapshots").get() as { n: number }).n, 2);
+    assert.equal((h.db.prepare("SELECT count(*) AS n FROM approvals").get() as { n: number }).n, 2);
+    const oldTurn = h.db.prepare("SELECT superseded_by FROM turns WHERE id = ?").get(turnId) as { superseded_by: string | null };
+    assert.ok(oldTurn.superseded_by !== null, "旧 Turn 要被唯一的新 Turn 接上");
+    await close(h);
+  });
+
+  it("替补 → 暂停 → 恢复：新 Turn / batch_item 的 onBehalfOf 仍是原来那个人（#163 复审必须改 2）", async () => {
+    const h = await makeHarness({ quota: "ok", holdProfiles: ["remote:claude-review"] });
+    const { roundId } = seedRunningRoundWithAbsentTurn(h, "deepseek");
+
+    const retried = (await h.dispatcher.handleCommand({
+      type: "round.retry",
+      roundId,
+      agent: "deepseek",
+      substitute: "claude",
+    })) as any;
+    assert.equal(retried.ok, true, JSON.stringify(retried));
+    const approved = await approveBatchOf(h, retried.data);
+    assert.equal(approved.ok, true, JSON.stringify(approved));
+    await waitFor(
+      () =>
+        (h.db.prepare("SELECT outcome FROM turns WHERE round_id = ? AND agent = 'claude'").get(roundId) as { outcome: string })
+          .outcome === "running",
+      "claude running",
+    );
+
+    const paused = (await h.dispatcher.handleCommand({ type: "round.pause", roundId })) as any;
+    assert.equal(paused.ok, true, JSON.stringify(paused));
+    const pausedTurn = h.db
+      .prepare(
+        "SELECT t.id AS id, t.on_behalf_of AS on_behalf_of, t.outcome AS outcome, a.snapshot_id AS snapshot_id " +
+          "FROM turns t JOIN approvals a ON a.id = t.approval_id WHERE t.round_id = ? AND t.agent = 'claude'",
+      )
+      .get(roundId) as { id: string; on_behalf_of: string | null; outcome: string; snapshot_id: string };
+    assert.deepEqual([pausedTurn.outcome, pausedTurn.on_behalf_of], ["paused", "deepseek"]);
+
+    const resumed = (await h.dispatcher.handleCommand({ type: "round.resume", roundId })) as any;
+    assert.equal(resumed.ok, true, JSON.stringify(resumed));
+    assert.equal(resumed.data.batch.kind, "resume");
+    assert.equal(resumed.data.batch.items.length, 1);
+    const item = resumed.data.batch.items[0] as { recipient: string; onBehalfOf: string | null; snapshotId: string };
+    assert.deepEqual([item.recipient, item.onBehalfOf], ["claude", "deepseek"], "batch_item 不能把代答记成自己的发言");
+    assert.equal(item.snapshotId, pausedTurn.snapshot_id, "复用暂停前那条 Snapshot");
+
+    const newTurn = h.db
+      .prepare("SELECT id, agent, on_behalf_of, outcome, batch_id FROM turns WHERE batch_id = ?")
+      .get(resumed.data.batch.id) as {
+      id: string;
+      agent: string;
+      on_behalf_of: string | null;
+      outcome: string;
+      batch_id: string;
+    };
+    assert.deepEqual([newTurn.agent, newTurn.on_behalf_of, newTurn.outcome], ["claude", "deepseek", "pending"]);
+    const oldTurn = h.db
+      .prepare("SELECT superseded_by FROM turns WHERE id = ?")
+      .get(pausedTurn.id) as { superseded_by: string | null };
+    assert.equal(oldTurn.superseded_by, newTurn.id);
+
+    // 持久化的 onBehalfOf 和 Snapshot 里写的「代 X 回答」一致
+    const snap = h.db.prepare("SELECT content FROM prompt_snapshots WHERE id = ?").get(pausedTurn.snapshot_id) as {
+      content: string;
+    };
+    assert.match(snap.content, /本次代 deepseek 回答/);
+    await close(h);
+  });
 });
 
 describe("agents.activity（D-44）", () => {

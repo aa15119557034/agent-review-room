@@ -7,7 +7,9 @@ import { after, describe, it } from "node:test";
 import {
   approveBatch,
   BatchApproveError,
+  createBatchDraft,
   createDraftTurns,
+  createResumeBatch,
   createRoundDraft,
   createSummaryDraft,
   openDatabase,
@@ -702,6 +704,157 @@ describe("createSummaryDraft：给已有的轮加汇总批次", () => {
         }),
       (error: unknown) => error instanceof RoundDraftError && error.code === "invalid_input",
     );
+    f.db.close();
+  });
+});
+
+interface TurnFixture {
+  db: SqliteDatabase;
+  queue: WriteQueue;
+  projectId: string;
+  roundId: string;
+  batchId: string;
+  turnId: string;
+  snapshotId: string;
+}
+
+/**
+ * 种一轮 + 一个 Turn（#163 复审的回归用）：
+ * - outcome = failed → createBatchDraft 的 retry 写事务守卫
+ * - outcome = paused → createResumeBatch 沿用 onBehalfOf
+ */
+function turnProject(options: { agent: string; outcome: "failed" | "paused"; onBehalfOf?: string | null }): TurnFixture {
+  const f = draftProject("room-db-d163-");
+  const roundId = "rnd_" + ulid();
+  const batchId = "bat_" + ulid();
+  const snapshotId = "snap_" + ulid();
+  const approvalId = "apr_" + ulid();
+  const turnId = "turn_" + ulid();
+  const onBehalfOf = options.onBehalfOf ?? null;
+  // 替补的 Prompt 里写着「代 X 回答」；恢复时持久化的 onBehalfOf 必须和它对得上
+  const content =
+    onBehalfOf === null
+      ? "发给 " + options.agent + " 的 Prompt"
+      : "你是 C酱，本次代 " + onBehalfOf + " 回答。不要采用被代答者的角色设定。";
+  const contentHash = sha(content);
+  const roundState = options.outcome === "paused" ? "PAUSED" : "RUNNING";
+
+  f.db
+    .prepare(
+      "INSERT INTO rounds (id, project_id, round_index, state, task, task_source, recipients, history_mode, created_at) " +
+        "VALUES (?, ?, 2, ?, '任务', 'human', ?, 'recent_with_summaries', ?)",
+    )
+    .run(roundId, f.projectId, roundState, JSON.stringify([onBehalfOf ?? options.agent]), NOW);
+  f.db
+    .prepare(
+      "INSERT INTO prompt_snapshots (id, project_id, content, content_hash, nonce, contribution_ids, task_instruction, " +
+        "reviewer_agent, adapter_version, token_estimate, created_at) " +
+        "VALUES (?, ?, ?, ?, '0123456789abcdef', '[]', '任务', ?, 'discussion-v2', 10, ?)",
+    )
+    .run(snapshotId, f.projectId, content, contentHash, options.agent, NOW);
+  f.db
+    .prepare("INSERT INTO approvals (id, project_id, snapshot_id, state, created_at) VALUES (?, ?, ?, 'APPROVED', ?)")
+    .run(approvalId, f.projectId, snapshotId, NOW);
+  f.db
+    .prepare("INSERT INTO batches (id, project_id, round_id, kind, state, created_at) VALUES (?, ?, ?, 'retry', 'APPROVED', ?)")
+    .run(batchId, f.projectId, roundId, NOW);
+  f.db
+    .prepare(
+      "INSERT INTO batch_items (batch_id, recipient, on_behalf_of, approval_id, snapshot_id, content_hash, differs_from_others, token_estimate) " +
+        "VALUES (?, ?, ?, ?, ?, ?, 0, 10)",
+    )
+    .run(batchId, options.agent, onBehalfOf, approvalId, snapshotId, contentHash);
+  f.db
+    .prepare(
+      "INSERT INTO turns (id, round_id, batch_id, agent, on_behalf_of, is_summary, approval_id, run_id, outcome, created_at, finished_at) " +
+        "VALUES (?, ?, ?, ?, ?, 0, ?, NULL, ?, ?, ?)",
+    )
+    .run(turnId, roundId, batchId, options.agent, onBehalfOf, approvalId, options.outcome, NOW, NOW);
+  return { ...f, roundId, batchId, turnId, snapshotId };
+}
+
+describe("createBatchDraft：并发 retry 的写事务守卫（C酱 #163 复审必须改 1）", () => {
+  it("旧 Turn 已经被接上时 required 的 supersede 让整批回滚，不留可盖章的重复批次", async () => {
+    const f = turnProject({ agent: "deepseek", outcome: "failed" });
+    const input = {
+      roundId: f.roundId,
+      kind: "retry" as const,
+      recipients: [draftRecipient("deepseek")],
+      supersede: [{ oldTurnId: f.turnId, agent: "deepseek", requireNotSuperseded: true }],
+    };
+    const first = await createBatchDraft(f.db, f.queue, input);
+
+    const counts = () => ({
+      batches: count(f.db, "SELECT count(*) AS n FROM batches"),
+      snapshots: count(f.db, "SELECT count(*) AS n FROM prompt_snapshots"),
+      approvals: count(f.db, "SELECT count(*) AS n FROM approvals"),
+      items: count(f.db, "SELECT count(*) AS n FROM batch_items"),
+      turns: count(f.db, "SELECT count(*) AS n FROM turns"),
+    });
+    const before = counts();
+    assert.deepEqual(before, { batches: 2, snapshots: 2, approvals: 2, items: 2, turns: 2 });
+
+    // 第二个 retry 读到的是「旧 Turn 还没被接上」的快照，写事务里才发现已经在重试了
+    await assert.rejects(
+      () => createBatchDraft(f.db, f.queue, input),
+      (error: unknown) => error instanceof RoundDraftError && error.code === "supersede_conflict",
+    );
+    assert.deepEqual(counts(), before, "失败的那一次整批回滚：批次 / Snapshot / Approval / batch_item / Turn 都不留");
+
+    const old = f.db.prepare("SELECT superseded_by FROM turns WHERE id = ?").get(f.turnId) as { superseded_by: string };
+    const newTurn = f.db.prepare("SELECT id FROM turns WHERE batch_id = ?").get(first.batch.id) as { id: string };
+    assert.equal(old.superseded_by, newTurn.id, "旧 Turn 仍然只接着第一个新 Turn");
+    f.db.close();
+  });
+});
+
+describe("createResumeBatch：恢复沿用旧 Turn 的 onBehalfOf（C酱 #163 复审必须改 2）", () => {
+  it("替补 → 暂停 → 恢复：新 batch_item / Turn 仍记「替 deepseek」，Snapshot 原样复用", async () => {
+    const f = turnProject({ agent: "claude", outcome: "paused", onBehalfOf: "deepseek" });
+
+    const { batch } = await createResumeBatch(f.db, f.queue, { roundId: f.roundId, agents: ["claude"] });
+    assert.equal(batch.kind, "resume");
+    assert.equal(batch.state, "READY_FOR_REVIEW");
+    assert.equal(batch.round_id, f.roundId);
+
+    const item = f.db
+      .prepare("SELECT recipient, on_behalf_of, snapshot_id, approval_id FROM batch_items WHERE batch_id = ?")
+      .get(batch.id) as { recipient: string; on_behalf_of: string | null; snapshot_id: string; approval_id: string };
+    assert.deepEqual([item.recipient, item.on_behalf_of], ["claude", "deepseek"], "batch_item 不能把代答记成自己的发言");
+    assert.equal(item.snapshot_id, f.snapshotId, "Snapshot 原样复用");
+
+    const turn = f.db
+      .prepare("SELECT id, agent, on_behalf_of, outcome, approval_id, batch_id FROM turns WHERE batch_id = ?")
+      .get(batch.id) as {
+      id: string;
+      agent: string;
+      on_behalf_of: string | null;
+      outcome: string;
+      approval_id: string;
+      batch_id: string;
+    };
+    assert.deepEqual([turn.agent, turn.on_behalf_of, turn.outcome], ["claude", "deepseek", "pending"]);
+    assert.equal(turn.approval_id, item.approval_id);
+
+    const oldTurn = f.db.prepare("SELECT superseded_by FROM turns WHERE id = ?").get(f.turnId) as { superseded_by: string | null };
+    assert.equal(oldTurn.superseded_by, turn.id);
+
+    // 和 Snapshot 的内容对得上：Prompt 说「代 deepseek 回答」，持久化也这么记
+    const snap = f.db.prepare("SELECT content FROM prompt_snapshots WHERE id = ?").get(f.snapshotId) as { content: string };
+    assert.match(snap.content, /本次代 deepseek 回答/);
+    f.db.close();
+  });
+
+  it("不是替补的暂停 Turn 恢复后 onBehalfOf 仍然是 null", async () => {
+    const f = turnProject({ agent: "deepseek", outcome: "paused" });
+
+    const { batch } = await createResumeBatch(f.db, f.queue, { roundId: f.roundId, agents: ["deepseek"] });
+    const row = f.db
+      .prepare(
+        "SELECT bi.on_behalf_of AS item_ob, t.on_behalf_of AS turn_ob FROM batch_items bi JOIN turns t ON t.approval_id = bi.approval_id WHERE bi.batch_id = ?",
+      )
+      .get(batch.id) as { item_ob: string | null; turn_ob: string | null };
+    assert.deepEqual([row.item_ob, row.turn_ob], [null, null]);
     f.db.close();
   });
 });

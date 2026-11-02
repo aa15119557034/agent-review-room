@@ -230,8 +230,10 @@ export type RoundDraftErrorCode =
   | "round_not_paused"
   | "round_not_active"
   | "turn_not_retryable"
-  // 拼 Prompt 之后、写 Snapshot 的事务之前，材料里的聊天消息被撤回了
-  | "chat_material_changed";
+  // 拼 Prompt 之后、写 Snapshot 的事务之前，材料里的消息被撤回了
+  | "chat_material_changed"
+  // 旧 Turn 在写事务里已经不是「没被接上」了（两个并发 retry 只有一个能落库）
+  | "supersede_conflict";
 
 export class RoundDraftError extends Error {
   readonly code: RoundDraftErrorCode;
@@ -578,6 +580,17 @@ function cancelOpenBatchesByKindTx(db: SqliteDatabase, roundId: string, kind: Ba
   ).run(ts, roundId, kind);
 }
 
+export interface SupersedeLink {
+  oldTurnId: string;
+  /** 新 Turn 的 agent（替补代答时是替补本人） */
+  agent: string;
+  /**
+   * 旧 Turn 必须仍然没有被接上，否则整批回滚（C酱 #163 复审必须改 1）。
+   * 并发 retry 都会在 await 之前读到 supersededBy = null，只有写事务里的这个条件能挡住第二个。
+   */
+  requireNotSuperseded?: boolean;
+}
+
 export interface CreateBatchDraftInput {
   roundId: string;
   kind: BatchKind;
@@ -586,7 +599,7 @@ export interface CreateBatchDraftInput {
   /** 建之前把这一轮里这种 kind 的待盖章批次作废（重新补充 / 重试同一批时用） */
   cancelOpenKind?: BatchKind;
   /** 旧的 Turn 接到新 Turn 上（打断 / 补充 / 重试） */
-  supersede?: readonly { oldTurnId: string; agent: string }[];
+  supersede?: readonly SupersedeLink[];
   chatMaterialSourceIds?: readonly string[];
 }
 
@@ -610,6 +623,21 @@ export function createBatchDraft(
       throw new RoundDraftError("round_not_active", "round is " + round.state);
     }
 
+    // 并发 retry：旧 Turn 必须仍然没有被接上。检查、建批次、UPDATE 都在同一个写事务里，
+    // 第二个 retry 走到这里时要么在 SELECT 撞上、要么在 UPDATE 的 changes 上撞上，两处都抛出去回滚整批。
+    for (const link of input.supersede ?? []) {
+      if (link.requireNotSuperseded !== true) continue;
+      const old = db.prepare("SELECT superseded_by FROM turns WHERE id = ?").get(link.oldTurnId) as
+        | { superseded_by: string | null }
+        | undefined;
+      if (old === undefined || old.superseded_by !== null) {
+        throw new RoundDraftError(
+          "supersede_conflict",
+          old === undefined ? "turn " + link.oldTurnId + " not found" : "turn " + link.oldTurnId + " is already superseded",
+        );
+      }
+    }
+
     const createdAt = now();
     if (input.cancelOpenKind !== undefined) {
       cancelOpenBatchesByKindTx(db, round.id, input.cancelOpenKind, createdAt);
@@ -627,8 +655,19 @@ export function createBatchDraft(
 
     for (const link of input.supersede ?? []) {
       const next = turnIds.get(link.agent);
-      if (next !== undefined) {
-        db.prepare("UPDATE turns SET superseded_by = ? WHERE id = ? AND superseded_by IS NULL").run(next, link.oldTurnId);
+      if (next === undefined) {
+        // required 却找不到要接的新 Turn：调用方把 agent 传错了，不能悄悄当成没这回事
+        if (link.requireNotSuperseded === true) {
+          throw new RoundDraftError("supersede_conflict", "no new turn for " + link.agent + " to link " + link.oldTurnId + " to");
+        }
+        continue;
+      }
+      const changed = db
+        .prepare("UPDATE turns SET superseded_by = ? WHERE id = ? AND superseded_by IS NULL")
+        .run(next, link.oldTurnId);
+      // 只有 required 的链接要求「必须接上」；普通的打断 / 补充沿用原来的尽力而为语义
+      if (link.requireNotSuperseded === true && changed.changes !== 1) {
+        throw new RoundDraftError("supersede_conflict", "turn " + link.oldTurnId + " is already superseded");
       }
     }
 
@@ -653,6 +692,9 @@ export interface CreateResumeBatchInput {
  * 直接复用原来那次的 Snapshot（不再拼一次 Prompt）：这样「恢复」发出去的内容和指纹
  * 与暂停前完全一致；每个收件人新建一个 Approval + batch_item + pending Turn，
  * 旧的 paused Turn 用 superseded_by 接上。
+ *
+ * D-32 / C酱 #163 复审必须改 2：替补代答的人暂停后恢复，新的 batch_item / Turn 也必须
+ * 沿用旧 Turn 的 on_behalf_of。Prompt 里写着「替 A 回答」，持久化不能把它当成 B 自己的发言。
  */
 export function createResumeBatch(
   db: SqliteDatabase,
@@ -672,14 +714,22 @@ export function createResumeBatch(
     const previous = input.agents.map((agent) => {
       const row = db
         .prepare(
-          "SELECT t.id AS turn_id, a.snapshot_id AS snapshot_id, s.content_hash AS content_hash, b.compressed_rounds AS compressed_rounds, bi.model AS model " +
+          "SELECT t.id AS turn_id, t.on_behalf_of AS on_behalf_of, a.snapshot_id AS snapshot_id, s.content_hash AS content_hash, " +
+            "b.compressed_rounds AS compressed_rounds, bi.model AS model " +
             "FROM turns t JOIN approvals a ON a.id = t.approval_id JOIN prompt_snapshots s ON s.id = a.snapshot_id " +
             "JOIN batches b ON b.id = t.batch_id JOIN batch_items bi ON bi.approval_id = t.approval_id " +
             "WHERE t.round_id = ? AND t.agent = ? AND t.is_summary = 0 AND t.outcome = 'paused' " +
             "ORDER BY t.created_at DESC, t.rowid DESC LIMIT 1",
         )
         .get(round.id, agent) as
-        | { turn_id: string; snapshot_id: string; content_hash: string; compressed_rounds: string; model: string | null }
+        | {
+            turn_id: string;
+            on_behalf_of: string | null;
+            snapshot_id: string;
+            content_hash: string;
+            compressed_rounds: string;
+            model: string | null;
+          }
         | undefined;
       if (row === undefined) throw new RoundDraftError("turn_not_retryable", agent + " has no paused turn");
       const override =
@@ -687,7 +737,16 @@ export function createResumeBatch(
           ? input.models[agent] ?? null
           : undefined;
       const model = override !== undefined ? override : row.model === null ? null : (JSON.parse(row.model) as BatchModel);
-      return { agent, turn_id: row.turn_id, snapshot_id: row.snapshot_id, content_hash: row.content_hash, compressed_rounds: row.compressed_rounds, model };
+      // batch_items.on_behalf_of 与 turns.on_behalf_of 是同一处写入的，以旧 Turn 为准原样带过去
+      return {
+        agent,
+        turn_id: row.turn_id,
+        on_behalf_of: row.on_behalf_of,
+        snapshot_id: row.snapshot_id,
+        content_hash: row.content_hash,
+        compressed_rounds: row.compressed_rounds,
+        model,
+      };
     });
 
     const createdAt = now();
@@ -704,13 +763,21 @@ export function createResumeBatch(
       ).run(approvalId, round.project_id, item.snapshot_id, createdAt);
       db.prepare(
         "INSERT INTO batch_items (batch_id, recipient, on_behalf_of, approval_id, snapshot_id, content_hash, differs_from_others, token_estimate, model) " +
-          "VALUES (?, ?, NULL, ?, ?, ?, 0, 0, ?)",
-      ).run(batchId, item.agent, approvalId, item.snapshot_id, item.content_hash, item.model === null ? null : JSON.stringify(item.model));
+          "VALUES (?, ?, ?, ?, ?, ?, 0, 0, ?)",
+      ).run(
+        batchId,
+        item.agent,
+        item.on_behalf_of,
+        approvalId,
+        item.snapshot_id,
+        item.content_hash,
+        item.model === null ? null : JSON.stringify(item.model),
+      );
       const turnId = newTurnId();
       db.prepare(
         "INSERT INTO turns (id, round_id, batch_id, agent, on_behalf_of, is_summary, approval_id, run_id, outcome, created_at) " +
-          "VALUES (?, ?, ?, ?, NULL, 0, ?, NULL, 'pending', ?)",
-      ).run(turnId, round.id, batchId, item.agent, approvalId, createdAt);
+          "VALUES (?, ?, ?, ?, ?, 0, ?, NULL, 'pending', ?)",
+      ).run(turnId, round.id, batchId, item.agent, item.on_behalf_of, approvalId, createdAt);
       db.prepare("UPDATE turns SET superseded_by = ? WHERE id = ? AND superseded_by IS NULL").run(turnId, item.turn_id);
     }
 
