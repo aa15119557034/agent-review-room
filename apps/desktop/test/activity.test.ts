@@ -229,6 +229,27 @@ describe("D-44 agents.activity", () => {
     }
   });
 
+  it("恰好满一页（不多不少）时也给 cursor，下一页为空（林离 #163 第二档）", async () => {
+    const { db, projectId } = await env();
+    try {
+      const roundId = addRound(db, projectId, { index: 1, task: "任务" });
+      addTurn(db, roundId, { agent: "deepseek", outcome: "answered", at: TS(1) });
+      addTurn(db, roundId, { agent: "deepseek", outcome: "answered", at: TS(2) });
+
+      const full = agentActivity(db, "deepseek", { limit: 2 });
+      assert.equal(full.recent.length, 2);
+      assert.ok(full.nextCursor !== null, "满页就给 cursor，即使这是最后一页");
+      const lastItem = full.recent[1]!;
+      const lastKey = lastItem.kind === "discussion" ? lastItem.turn : lastItem.slot;
+      assert.deepEqual(full.nextCursor, { createdAt: lastKey.createdAt, id: lastKey.id }, "cursor = 本页最后一条");
+
+      const empty = agentActivity(db, "deepseek", { limit: 2, before: full.nextCursor! });
+      assert.deepEqual([empty.recent.length, empty.nextCursor], [0, null], "下一页为空，这才到头");
+    } finally {
+      db.close();
+    }
+  });
+
   it("preview：讨论 = 轮任务、聊天 = 用户消息正文；200 码点截断；撤回 / 没有文字 → null", async () => {
     const { db, projectId } = await env();
     try {
