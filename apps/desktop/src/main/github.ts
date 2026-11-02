@@ -91,7 +91,6 @@ export class GithubSyncService {
   /** #187 必须改 3：整次请求超时（默认 30s；测试可以调小） */
   readonly #requestTimeoutMs: number;
   #timer: ReturnType<typeof setInterval> | null = null;
-  #running = false;
   #inflight: Promise<void> | null = null;
   /** #187：配置版本。update 一次 +1；旧版本的在跑检查 / 推送不能写状态、不能推新目标 */
   #generation = 0;
@@ -163,7 +162,7 @@ export class GithubSyncService {
       for (const note of listAllLatestProjectNotes(this.#db)) this.#queueNote(note);
     }
     this.#publish();
-    if (command.repo !== null) void this.#check(this.#generation).catch(() => undefined);
+    if (command.repo !== null) void this.#sync().catch(() => undefined);
     return this.status();
   }
 
@@ -172,18 +171,7 @@ export class GithubSyncService {
     const { repo } = this.#settings.getGithub();
     if (repo === null) throw new GithubError("invalid_state", "还没有设置仓库");
     // #181 评审第 2 条 + #187：和后台 kick 共用同一个单飞位，别同一个文件推两遍
-    if (this.#inflight !== null) await this.#inflight.catch(() => undefined);
-    const generation = this.#generation;
-    this.#running = true;
-    this.#inflight = (async () => {
-      try {
-        await this.#check(generation);
-      } finally {
-        this.#running = false;
-        this.#inflight = null;
-      }
-    })();
-    await this.#inflight;
+    await this.#sync();
     return this.status();
   }
 
@@ -224,23 +212,24 @@ export class GithubSyncService {
 
   /** 有仓库、有 Token、队列里有东西才动 */
   async #kick(): Promise<void> {
-    if (this.#running) return;
     const { repo, token } = this.#settings.getGithub();
     if (repo === null || token === null) return;
     if (countGithubQueue(this.#db) === 0) return;
-    const generation = this.#generation;
-    this.#running = true;
-    this.#inflight = (async () => {
-    try {
-      await this.#check(generation);
-    } catch {
-      // 后台同步失败不影响聊天 / 笔记；状态由 #check 自己写
-    } finally {
-      this.#running = false;
-      this.#inflight = null;
-    }
+    await this.#sync().catch(() => undefined);
+  }
+
+  /** 设置检查、手动推送和后台重试共用一次同步；途中换配置后接着检查最新版。 */
+  #sync(): Promise<void> {
+    if (this.#inflight !== null) return this.#inflight;
+    const work = (async () => {
+      for (;;) {
+        const generation = this.#generation;
+        await this.#check(generation);
+        if (generation === this.#generation) return;
+      }
     })();
-    await this.#inflight;
+    this.#inflight = work.finally(() => { this.#inflight = null; });
+    return this.#inflight;
   }
 
   /** 查仓库是不是私有、Token 能不能写；私有才继续推队列（只对 generation 这一版配置生效） */
@@ -331,6 +320,7 @@ export class GithubSyncService {
           updateGithubSyncState(this.#db, { lastPushedAt: this.#now(), lastError: null, lastErrorMessage: null });
           pushed += 1;
         } catch (error) {
+          if (generation !== this.#generation) return;
           markGithubPushFailed(this.#db, item.path, item.updated_at, item.content, error instanceof Error ? error.message : String(error));
           if (error instanceof GithubPushError && (error.status === 401 || error.status === 403)) {
             updateGithubSyncState(this.#db, { lastError: "unauthorized", lastErrorMessage: "Token 没有权限（或已失效）" });

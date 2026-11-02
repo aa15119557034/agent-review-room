@@ -1229,7 +1229,7 @@ export class DiscussionService {
         models.some(
           (option) =>
             option.id === original.model &&
-            (original.effort === null || option.efforts.some((level) => level.id === original.effort)),
+            (original.effort === null ? option.efforts.length === 0 : option.efforts.some((level) => level.id === original.effort)),
         )
       ) {
         selected.set(agent.id, original);

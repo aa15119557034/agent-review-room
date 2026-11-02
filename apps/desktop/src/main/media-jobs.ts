@@ -753,7 +753,7 @@ export class MediaJobsService {
       remoteRunId: null,
       result: null,
       speech: null,
-      failure: { kind: "backend_unavailable", message },
+      failure: { reason: "backend_unavailable", message },
       cancelReason: null,
       createdAt: now,
       startedAt: null,

@@ -278,6 +278,7 @@ async function bootstrap(): Promise<void> {
     },
   });
   const repairedChat = await chat.repairInterrupted();
+  await chat.repairPendingImmersive();
 
   const dispatcher = createDispatcher({
     repo,

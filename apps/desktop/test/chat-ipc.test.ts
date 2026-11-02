@@ -45,7 +45,7 @@ import {
   type ProfileModels,
 } from "@room/schemas";
 import { sha256Hex, type AgentAdapter } from "@room/core";
-import { ChatError, ChatService, type ChatRunTarget } from "../src/main/chat";
+import { ChatError, ChatService, type ChatRunTarget, type ChatServiceDeps } from "../src/main/chat";
 import { NotesService } from "../src/main/notes";
 import { CHAT_MATERIAL_MAX_CHARS, CHAT_MATERIAL_PROMPT_HEADROOM } from "../src/main/chat-material";
 import { Repository } from "../src/main/repository";
@@ -123,6 +123,7 @@ function replyWithMedia(text: string, media: Record<string, unknown>): Script {
 
 interface Harness {
   chat: ChatService;
+  restart: () => ChatService;
   repo: Repository;
   db: ReturnType<typeof openDatabase>;
   events: ControlEvent[];
@@ -160,12 +161,16 @@ async function makeHarness(
     summaryScript?: Script;
     /** D-45：摘要 Run 先等这个 promise 再回（测「跑的时候来源被撤回」） */
     summaryGate?: Promise<void>;
+    beforeAdapter?: () => Promise<void>;
+    handoffGate?: Promise<void>;
     /** #187：节点探测（换窗口 redo 的闸门） */
     probe?: (params: { baseUrl: string; token: string; profileId: string }) => Promise<NodeTestResult>;
     /** D-39：自动画图先等这个 promise 再建任务 */
     drawGate?: Promise<void>;
+    drawFails?: boolean;
     /** D-39：自动语音排任务时故意失败（测「前置条件不满足要补一条失败任务」） */
     speakMediaFails?: boolean;
+    failSpeechFails?: boolean;
   } = {},
 ): Promise<Harness> {
   const dir = mkdtempSync(join(tmpdir(), "room-chat-ipc-"));
@@ -204,7 +209,7 @@ async function makeHarness(
   const targets: ChatRunTarget[] = [];
   const held = new Set(options.hold ?? []);
   const notesService = new NotesService({ db, queue, emit: (event) => events.push(ControlEvent.parse(event)) });
-  const chat = new ChatService({
+  const deps: ChatServiceDeps = {
     db,
     queue,
     repo,
@@ -214,6 +219,7 @@ async function makeHarness(
     readFileText: (ref) => fileTexts.get(ref) ?? null,
     readImage: (ref) => imageBytes.get(ref) ?? null,
     drawMedia: async (source, draw, intentHash) => {
+      if (options.drawFails) throw new Error("模拟回答提交后、画图入队前退出");
       mediaCalls.push({ kind: "draw", source, intentHash });
       if (options.drawGate !== undefined) await options.drawGate;
       insertMediaJob(db, MediaJobSchema.parse({
@@ -232,6 +238,7 @@ async function makeHarness(
       }));
     },
     failSpeech: async (source, intentHash, message) => {
+      if (options.failSpeechFails) throw new Error("模拟语音入队前退出");
       mediaCalls.push({ kind: "fail-speak", source, intentHash });
       void message;
     },
@@ -249,6 +256,7 @@ async function makeHarness(
       cancelledMedia.push([...messageIds]);
     },
     adapterFactory: async (target: ChatRunTarget) => {
+      await options.beforeAdapter?.();
       targets.push(target);
       if (held.has(target.agent)) {
         return {
@@ -271,6 +279,12 @@ async function makeHarness(
         ...inner,
         run: (sessionId, runId, input, opts) => {
           runInputs.push({ agent: target.agent as string, input: input as never });
+          if ((input as { content: string }).content.includes("现在要换聊天窗口") && options.handoffGate) {
+            return (async function* () {
+              await options.handoffGate;
+              yield* inner.run(sessionId, runId, input, opts);
+            })();
+          }
           const isSummaryRun = (input as { content?: string }).content?.includes("写摘要") === true;
           if (!isSummaryRun) return inner.run(sessionId, runId, input, opts);
           const summary = fakeAdapter(options.summaryScript ?? summaryReply("- 要点：用户下周三去上海"));
@@ -299,14 +313,15 @@ async function makeHarness(
       latencyMs: 1,
     })),
     now: options.now ?? (() => NOW),
-  });
+  };
+  const chat = new ChatService(deps);
 
   const conversation = await chat.createConversation({
     type: "chat.conversation.create",
     members: { kind: "direct", agent: "deepseek" },
     title: null,
   } as never);
-  return { chat, repo, db, events, conversationId: conversation.id, targets, fileTexts, cancelledMedia, runInputs, speakRequests, mediaCalls, notes: notesService };
+  return { chat, restart: () => new ChatService(deps), repo, db, events, conversationId: conversation.id, targets, fileTexts, cancelledMedia, runInputs, speakRequests, mediaCalls, notes: notesService };
 }
 
 const userMessageId = (n: number): string => "cmsg_" + String(n).padStart(26, "0");
@@ -860,6 +875,26 @@ describe("chat service (D-31b)", () => {
     } finally {
       h.db.close();
     }
+  });
+
+  it("重试时节点给原模型增加了强度档位：不能沿用已不合法的 null", async () => {
+    const profileModels: ProfileModels[] = [{ profileId: "deepseek-chat", models: [
+      { id: "deepseek-flash", displayName: "Flash", efforts: [], defaultEffort: null },
+    ] }];
+    const h = await makeHarness({
+      scripts: { deepseek: [{ type: "error", reason: "internal" }] }, profileModels,
+      modelSettings: { deepseek: { primaryModel: "deepseek-flash", fallbackModel: null, effort: { chat: "high", discussion: null, summary: null } } },
+    });
+    try {
+      const sent = await h.chat.send(send(h.conversationId, userMessageId(103), "重试模型"));
+      await settle(h.chat);
+      assert.equal(sent.runs[0]?.model?.effort, null);
+      profileModels[0]!.models = [{ id: "deepseek-flash", displayName: "Flash", efforts: [{ id: "high", displayName: "高", note: null }], defaultEffort: "high" }];
+      const retried = await h.chat.retry({ type: "chat.retry", slotId: sent.slots[0]!.id } as never);
+      await settle(h.chat);
+      assert.equal(retried.run.model?.effort, "high");
+      assert.equal(h.targets.at(-1)?.model?.effort, "high");
+    } finally { h.db.close(); }
   });
 
   it("falls back to the fallback model and marks usedFallback", async () => {
@@ -1864,6 +1899,82 @@ async function waitFor(check: () => boolean, ms = 4_000): Promise<void> {
 }
 
 describe("chat history summary wiring (D-45)", () => {
+  it("交接已发出后来源撤回：迟到交接不写进草稿，不能带到新窗口", async () => {
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    const h = await makeHarness({ handoffGate: gate, scripts: { deepseek: summaryReply("旧消息第1条的交接") } });
+    try {
+      await seedOldMessages(h, 1);
+      const old = h.db.prepare("SELECT id FROM chat_messages LIMIT 1").get() as { id: string };
+      const draft = await h.chat.prepareWindow({ type: "chat.window.prepare", conversationId: h.conversationId, agent: "deepseek" } as never);
+      await waitFor(() => h.runInputs.length === 1);
+      await h.chat.retract({ type: "chat.retract", messageId: old.id } as never);
+      release();
+      await settle(h.chat);
+      assert.equal(getChatWindowDraft(h.db, draft.id)?.content, null);
+      assert.equal((h.db.prepare("SELECT state FROM chat_runs WHERE id = ?").get(draft.runId) as { state: string }).state, "FAILED");
+    } finally { release(); h.db.close(); }
+  });
+  it("摘要快照已存、adapter 初始化期间撤回：不把旧快照发到节点", async () => {
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    let adapters = 0;
+    const h = await makeHarness({ beforeAdapter: async () => {
+      adapters += 1;
+      if (adapters === 2) await gate;
+    } });
+    try {
+      await seedOldMessages(h, 41);
+      const old = h.db.prepare("SELECT id FROM chat_messages ORDER BY created_at LIMIT 1").get() as { id: string };
+      await h.chat.send(send(h.conversationId, userMessageId(899), "现在几点"));
+      await waitFor(() => adapters === 2);
+      await h.chat.retract({ type: "chat.retract", messageId: old.id } as never);
+      release();
+      await waitFor(() => summaryRuns(h)[0]?.state === "FAILED" && h.chat.activeCount() === 0);
+      assert.equal(h.runInputs.some((entry) => entry.input.content.includes("写摘要")), false);
+    } finally { release(); h.db.close(); }
+  });
+
+  it("交接快照已存、adapter 初始化期间撤回：不发旧原文、不写草稿内容", async () => {
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    let entered = false;
+    const h = await makeHarness({ beforeAdapter: async () => { entered = true; await gate; } });
+    try {
+      await seedOldMessages(h, 1);
+      const old = h.db.prepare("SELECT id FROM chat_messages LIMIT 1").get() as { id: string };
+      const draft = await h.chat.prepareWindow({ type: "chat.window.prepare", conversationId: h.conversationId, agent: "deepseek" } as never);
+      await waitFor(() => entered);
+      await h.chat.retract({ type: "chat.retract", messageId: old.id } as never);
+      release();
+      await settle(h.chat);
+      assert.equal(h.runInputs.length, 0);
+      assert.equal(getChatWindowDraft(h.db, draft.id)?.content, null);
+      assert.equal((h.db.prepare("SELECT state FROM chat_runs WHERE id = ?").get(draft.runId) as { state: string }).state, "FAILED");
+    } finally { release(); h.db.close(); }
+  });
+  it("摘要写手探测期间撤回来源：节点收到的摘要 Prompt 不能含撤回原文", async () => {
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    let probes = 0;
+    const h = await makeHarness({ probe: async () => {
+      probes += 1;
+      if (probes === 2) await gate;
+      return { reachable: true, profileAvailable: true, latencyMs: 1, health: {} } as never;
+    } });
+    try {
+      await seedOldMessages(h, 41);
+      const old = h.db.prepare("SELECT id FROM chat_messages ORDER BY created_at LIMIT 1").get() as { id: string };
+      await h.chat.send(send(h.conversationId, userMessageId(900), "现在几点"));
+      await waitFor(() => probes === 2);
+      await h.chat.retract({ type: "chat.retract", messageId: old.id } as never);
+      release();
+      await waitFor(() => summaryRuns(h).length > 0 && h.chat.activeCount() === 0);
+      const inputs = h.runInputs.filter((entry) => entry.input.content.includes("写摘要"));
+      assert.ok(inputs.length > 0);
+      assert.equal(inputs.some((entry) => entry.input.content.includes("旧消息第1条")), false);
+    } finally { release(); h.db.close(); }
+  });
   it("攒够旧消息后写一份摘要，下一次回答的 Prompt 带上它、不再带被摘要的原文", async () => {
     const h = await makeHarness({ summaryScript: summaryReply("- 用户下周三去上海出差") });
     try {
@@ -2011,6 +2122,67 @@ describe("immersive (D-39)", () => {
     const replyId = listChatSlotsForMessage(h.db, id)[0]!.replyMessageId!;
     return getChatMessage(h.db, replyId)!;
   };
+
+  it("回答提交后尚未入队：新服务恢复两步，重复恢复不重复建任务", async () => {
+    const options = { scripts: { deepseek: mediaScript("好呀") }, drawFails: true };
+    const h = await makeHarness(options);
+    try {
+      await h.chat.updateImmersive(h.conversationId, {
+        enabled: true, autoDrawUsesSubscription: true, drawsPerHour: 1, voiceClipsPerHour: 1,
+      });
+      await h.chat.send(send(h.conversationId, userMessageId(950), "画一张"));
+      await settle(h.chat);
+      assert.equal(replyOf(h, userMessageId(950)).sender, "agent");
+      assert.equal((h.db.prepare("SELECT count(*) AS n FROM chat_immersive_pending").get() as { n: number }).n, 1);
+      assert.deepEqual(h.chat.immersive(h.conversationId).usage, { asOf: NOW, drawsLastHour: 1, voiceClipsLastHour: 1 });
+      options.drawFails = false;
+      const restarted = h.restart();
+      assert.equal(await restarted.repairPendingImmersive(), 1);
+      assert.equal(await restarted.repairPendingImmersive(), 0);
+      assert.deepEqual(h.mediaCalls.map((call) => call.kind), ["draw", "speak"]);
+      assert.equal((h.db.prepare("SELECT count(*) AS n FROM chat_immersive_pending").get() as { n: number }).n, 0);
+    } finally { h.db.close(); }
+  });
+
+  it("画图已入队、语音未入队：恢复只补语音，终态画图也不重建", async () => {
+    const options = { scripts: { deepseek: mediaScript("好呀") }, speakMediaFails: true, failSpeechFails: true };
+    const h = await makeHarness(options);
+    try {
+      await h.chat.updateImmersive(h.conversationId, {
+        enabled: true, autoDrawUsesSubscription: true, drawsPerHour: 6, voiceClipsPerHour: 30,
+      });
+      await h.chat.send(send(h.conversationId, userMessageId(951), "画一张"));
+      await settle(h.chat);
+      h.db.prepare("UPDATE media_jobs SET state = 'cancelled', cancel_reason = 'app_restart', finished_at = ?").run(NOW);
+      options.speakMediaFails = false;
+      options.failSpeechFails = false;
+      assert.equal(await h.restart().repairPendingImmersive(), 1);
+      assert.deepEqual(h.mediaCalls.map((call) => call.kind), ["draw", "speak"]);
+    } finally { h.db.close(); }
+  });
+
+  it("关闭再开启不复活旧计划；撤回的回答不恢复；旧无计划回答不补跑", async () => {
+    const options = { scripts: { deepseek: mediaScript("好呀") }, drawFails: true };
+    const h = await makeHarness(options);
+    const on = { enabled: true, autoDrawUsesSubscription: true, drawsPerHour: 6, voiceClipsPerHour: 30 };
+    try {
+      await h.chat.updateImmersive(h.conversationId, on);
+      await h.chat.send(send(h.conversationId, userMessageId(952), "画一张"));
+      await settle(h.chat);
+      await h.chat.updateImmersive(h.conversationId, { ...on, enabled: false });
+      await h.chat.updateImmersive(h.conversationId, on);
+      options.drawFails = false;
+      assert.equal(await h.restart().repairPendingImmersive(), 0);
+      assert.equal(h.mediaCalls.filter((call) => call.kind === "draw").length, 0);
+      options.drawFails = true;
+      await h.chat.send(send(h.conversationId, userMessageId(953), "再画一张"));
+      await settle(h.chat);
+      await h.chat.retract({ type: "chat.retract", messageId: userMessageId(953) } as never);
+      options.drawFails = false;
+      assert.equal(await h.restart().repairPendingImmersive(), 0);
+      assert.equal((h.db.prepare("SELECT count(*) AS n FROM chat_immersive_pending").get() as { n: number }).n, 0);
+    } finally { h.db.close(); }
+  });
 
   it("关着：媒体意图照样存下来，但不自动执行、没有退回原因", async () => {
     const h = await makeHarness({ scripts: { deepseek: mediaScript("好呀") } });
