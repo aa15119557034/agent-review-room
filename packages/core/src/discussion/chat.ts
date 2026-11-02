@@ -217,9 +217,15 @@ function attachmentPlaceholders(content: UserChatMessage["content"]): string {
   );
 }
 
-function renderMessage(
+/**
+ * 历史消息的一行文字（回答和写摘要共用）。self = 正在回答的那位，它自己的旧发言标「（你自己）」；
+ * 写摘要时传 null，谁说的就写谁。
+ * 用户消息的引用（quoteMessageId）**不展开**：被引用的原文不会混进别的消息、也不会进摘要，
+ * 所以原文被撤回时只需要看它自己的 id（摘要的 sourceMessageIds 足够判 stale）。
+ */
+export function renderChatHistoryMessage(
   message: ChatMessage,
-  agent: ChatPromptAgent,
+  self: ChatPromptAgent | null,
   displayNameOf: (agentId: string) => string,
 ): string {
   if (message.sender === "user") {
@@ -232,7 +238,7 @@ function renderMessage(
           : "[表情：" + content.label + "]";
     return "用户：" + text + attachmentPlaceholders(content);
   }
-  const name = message.agent === agent.id ? agent.displayName + "（你自己）" : displayNameOf(message.agent);
+  const name = self !== null && message.agent === self.id ? self.displayName + "（你自己）" : displayNameOf(message.agent);
   // ADR-004 §3：生成的图不回传给秘书，只给「[我画的图：提示词]」。提示词是秘书写的，按不可信文本转义
   const drew = message.mediaIntent?.draw;
   const drawNote = drew === undefined ? "" : "\n[我画的图：" + escapePlaceholderText(drew.prompt, DRAW_PROMPT_MAX_CHARS) + "]";
@@ -264,10 +270,33 @@ function windowHistory(
   return picked;
 }
 
+/**
+ * X-35：回答时历史摘要最多占这么多字符（整个历史预算是 CHAT_HISTORY_MAX_CHARS）。
+ * 单份摘要最多 CHAT_SUMMARY_OUTPUT_MAX_CHARS（见 chat-summary.ts），所以至少放得下 5 份。
+ */
+export const CHAT_SUMMARY_BUDGET_CHARS = 20_000;
+
+/**
+ * 摘要按它覆盖的消息在历史里的位置排（最早一条来源的位置），不按写成的时间：
+ * 撤回后重写的摘要覆盖的是较早的消息，但写成时间更晚。位置查不到的排最前（最先被预算挤掉）。
+ */
+function orderSummariesByHistory(
+  summaries: readonly ChatHistorySummary[],
+  history: readonly ChatMessage[],
+): ChatHistorySummary[] {
+  const position = new Map(history.map((message, index) => [message.id, index] as const));
+  const keyOf = (summary: ChatHistorySummary): number =>
+    Math.min(...summary.sourceMessageIds.map((id) => position.get(id) ?? -1));
+  return summaries
+    .map((summary, index) => ({ summary, index, key: keyOf(summary) }))
+    .sort((a, b) => a.key - b.key || a.index - b.index)
+    .map((entry) => entry.summary);
+}
+
 export function buildChatSnapshot(input: BuildChatSnapshotInput): ChatSnapshot {
   const currentText = currentTextOf(input.userMessage.content);
   const displayNameOf = input.displayNameOf ?? ((agentId: string) => agentId);
-  const render = (message: ChatMessage): string => renderMessage(message, input.agent, displayNameOf);
+  const render = (message: ChatMessage): string => renderChatHistoryMessage(message, input.agent, displayNameOf);
   const excluded = (message: ChatMessage): boolean => isExcludedFromContext(message, input.inReplyToOf);
 
   // 引用也占预算：超过整个预算的引用直接丢掉（不进 Prompt，也不进 includedMessageIds）
@@ -276,16 +305,21 @@ export function buildChatSnapshot(input: BuildChatSnapshotInput): ChatSnapshot {
   const quote = quoteFragment !== null && quoteFragment.length <= CHAT_HISTORY_MAX_CHARS ? quoteCandidate : null;
   const budget = CHAT_HISTORY_MAX_CHARS - (quote === null ? 0 : (quoteFragment as string).length);
   const excludedIds = new Set(input.history.filter(excluded).map((message) => message.id));
-  const candidates = (input.summaries ?? []).filter((summary) =>
-    summary.state === "current" && !summary.sourceMessageIds.some((id) => excludedIds.has(id)));
-  let summaryBudget = budget;
+  const candidates = orderSummariesByHistory(
+    (input.summaries ?? []).filter((summary) =>
+      summary.state === "current" && !summary.sourceMessageIds.some((id) => excludedIds.has(id))),
+    input.history,
+  );
+  // X-35：摘要最多占 CHAT_SUMMARY_BUDGET_CHARS，剩下的留给最近的原文——摘要多了也不能把最近几条挤出去
+  let summaryRoom = Math.min(budget, CHAT_SUMMARY_BUDGET_CHARS);
   const summaries: ChatHistorySummary[] = [];
   for (let i = candidates.length - 1; i >= 0; i--) {
     const summary = candidates[i]!;
-    if (summary.content.length > summaryBudget) break;
+    if (summary.content.length > summaryRoom) break;
     summaries.unshift(summary);
-    summaryBudget -= summary.content.length;
+    summaryRoom -= summary.content.length;
   }
+  const summaryBudget = budget - summaries.reduce((sum, summary) => sum + summary.content.length, 0);
   if (summaries.some((summary) => summary.conversationId !== input.conversationId)) throw new Error("foreign chat summary");
   const summarized = new Set(summaries.flatMap((summary) => summary.sourceMessageIds));
   const history = windowHistory(input.history.filter((message) => !excluded(message) && !summarized.has(message.id)), render, summaryBudget);
