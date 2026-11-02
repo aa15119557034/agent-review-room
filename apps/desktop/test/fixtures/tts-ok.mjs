@@ -17,6 +17,13 @@ process.stdin.on("data", (chunk) => {
     if (request.type === "shutdown") {
       process.exit(0);
     }
+    if (request.type === "unload") {
+      // 故意慢一点：主控端必须等这条 unloaded 回来才放行画图（林离 #163）
+      setTimeout(() => {
+        process.stdout.write(JSON.stringify({ type: "unloaded", id: request.id }) + "\n");
+      }, 120);
+      continue;
+    }
     const wav = Buffer.concat([Buffer.from("RIFF"), Buffer.alloc(2044, 7)]);
     writeFileSync(request.out, wav);
     process.stdout.write(

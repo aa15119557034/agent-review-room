@@ -20,6 +20,7 @@ import sharp from "sharp";
 import { ComfyUiError, type ComfyUiClient } from "../src/main/comfyui";
 import { MediaJobsService } from "../src/main/media-jobs";
 import { MediaStore } from "../src/main/media-store";
+import type { TtsRunner } from "../src/main/tts";
 
 const dirs: string[] = [];
 after(() => {
@@ -45,10 +46,12 @@ interface FakeComfy {
   failure: Error | null;
   /** 测试用：draw 等这个 promise 放行（模拟「回图比撤回晚」的时序） */
   gate: Promise<void> | null;
+  /** 测试用：记录「卸载语音 → 开始画图」的先后顺序（林离 #163） */
+  order: string[];
 }
 
 function fakeComfy(): FakeComfy {
-  const state: FakeComfy = { client: null as never, calls: 0, interrupted: 0, available: true, failure: null, gate: null };
+  const state: FakeComfy = { client: null as never, calls: 0, interrupted: 0, available: true, failure: null, gate: null, order: [] };
   state.client = {
     isUp: async () => state.available,
     modelName: () => "qwen-image",
@@ -61,6 +64,7 @@ function fakeComfy(): FakeComfy {
     },
     draw: async (input: { prompt: string; size: string; seed: number }) => {
       state.calls += 1;
+      state.order.push("draw");
       if (state.failure !== null) throw state.failure;
       if (state.gate !== null) await state.gate;
       return { image: await png(), seed: input.seed, model: "qwen-image", workflowHash: "b".repeat(64) };
@@ -80,7 +84,7 @@ interface Harness {
   message: UserChatMessage;
 }
 
-async function makeHarness(opts: { comfy?: FakeComfy | null } = {}): Promise<Harness> {
+async function makeHarness(opts: { comfy?: FakeComfy | null; tts?: TtsRunner | null } = {}): Promise<Harness> {
   const root = mkdtempSync(join(tmpdir(), "room-media-jobs-"));
   dirs.push(root);
   const db = openDatabase(join(root, "room.db"));
@@ -94,6 +98,7 @@ async function makeHarness(opts: { comfy?: FakeComfy | null } = {}): Promise<Har
     store,
     emit: (event) => events.push(event),
     comfy: () => (comfy === null ? null : comfy.client),
+    ...(opts.tts === undefined ? {} : { tts: () => opts.tts ?? null }),
     now: () => T,
     seed: () => 42,
   });
@@ -158,6 +163,35 @@ describe("media jobs service (D-38a)", () => {
         .filter((e): e is Extract<ControlEvent, { type: "media.updated" }> => e.type === "media.updated")
         .map((e) => e.job.state);
       assert.deepEqual(states, ["queued", "running", "succeeded"]);
+    } finally {
+      h.db.close();
+    }
+  });
+
+  // 林离 #163 必须改 1：语音引擎的模型一直占着约 9GB 显存，画图前必须先卸载并等它释放完
+  it("画图前先让语音引擎卸载、等到释放完再画（林离 #163）", async () => {
+    const order: string[] = [];
+    const comfy = fakeComfy();
+    comfy.order = order;
+    const tts = {
+      engine: "indextts2",
+      engineVersion: "fake-1",
+      available: () => true,
+      voice: () => null,
+      unload: async () => {
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        order.push("unload");
+      },
+      synthesize: async () => {
+        throw new Error("这次不该合成");
+      },
+      dispose: () => undefined,
+    } as unknown as TtsRunner;
+    const h = await makeHarness({ comfy, tts });
+    try {
+      const job = await h.service.start(request(), source(h), false);
+      await until(() => getMediaJob(h.db, job.id)?.state === "succeeded");
+      assert.deepEqual(order, ["unload", "draw"], "先卸载（假引擎 10ms 后才回）再画，顺序不能反");
     } finally {
       h.db.close();
     }
