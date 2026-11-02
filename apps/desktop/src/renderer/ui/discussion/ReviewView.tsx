@@ -2,6 +2,7 @@ import { useState, type CSSProperties } from "react";
 import type { PlanVersion } from "@room/schemas";
 import { STANCE_LABEL, agentColor, agentName, canDerive, diffLines } from "../../lib/discussion";
 import { useActions, useAppState } from "../hooks";
+import { HoldButton } from "../HoldButton";
 import { formatClock } from "../labels";
 import { FirstPlan } from "./FirstPlan";
 
@@ -206,10 +207,10 @@ function PlanActions({ plan, roundIndex }: { plan: PlanVersion | undefined; roun
             </form>
           )}
           {live.state === "CURRENT" && (
-            <button type="button" className="button-seal action-seal" onClick={() => void actions.finalizePlan(live.id, live.contentHash)}>
+            <HoldButton className="button-seal action-seal" resetKey={live.id + live.contentHash} onComplete={() => actions.finalizePlan(live.id, live.contentHash)}>
               盖章定稿
               <span>v{live.version} 成为最终方案，之后可以拆成任务</span>
-            </button>
+            </HoldButton>
           )}
           {live.state === "DRAFT" && <p className="side-note">先确认这一版，才能盖章定稿。</p>}
           {canDerive(d, live) && (
