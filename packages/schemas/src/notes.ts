@@ -88,6 +88,7 @@ export const ProjectNote = z
     "reply 一定是秘书写的；human_edit / revert 一定是用户；交接笔记看最后是谁写的",
   )
   .refine((n) => n.reason !== "reply" || n.source !== null, "reply 要记是哪一次回答")
+  .refine((n) => !(n.reason === "window_handoff" && n.updatedBy === "agent") || n.source !== null, "秘书写的交接笔记要记是哪个 Run")
   .refine((n) => n.reason === "reply" || n.reason === "window_handoff" || n.source === null, "只有 reply / window_handoff 有来源")
   .refine((n) => (n.reason === "revert") === (n.revertedFromId !== null), "只有 revert 有 revertedFromId")
   .refine((n) => n.reason !== "window_handoff" || n.scope.kind === "conversation", "换窗口只在聊天里")
@@ -114,26 +115,52 @@ export type RoomNoteExtract =
    * 不合格：这次不存笔记，回答照常（text 同样去掉了所有 room-note 段，不把半截笔记显示成正文），
    * 时间线提示「笔记没存上」
    */
-  | { kind: "invalid"; reason: "multiple" | "too_long" | "unclosed"; text: string };
+  | { kind: "invalid"; reason: RoomNoteRejectReason; text: string };
 
 /**
- * 从秘书的回答里切出 room-note。规则：
- * - 开头一行是 3 个以上反引号紧跟 `room-note`（行首，后面只能有空白）；结尾是**同样个数**的反引号单独一行。
- *   笔记里要写代码块就用更长的围栏（例如 4 个反引号），和 CommonMark 一样
+ * - multiple     ：两段以上
+ * - too_long     ：超过 maxChars
+ * - unclosed     ：没有结尾围栏
+ * - nested_fence ：笔记里有代码块却用了同样长的围栏，笔记被提前截断（切出来的内容里有没配对的围栏行）
+ */
+export const RoomNoteRejectReason = z.enum(["multiple", "too_long", "unclosed", "nested_fence"]);
+export type RoomNoteRejectReason = z.infer<typeof RoomNoteRejectReason>;
+
+const fenceOf = (line: string): { ticks: number; info: string } | null => {
+  const m = /^(`{3,})([^`]*)$/.exec(line.replace(/[ \t\r]+$/, ""));
+  return m ? { ticks: m[1]!.length, info: m[2]!.trim() } : null;
+};
+
+/**
+ * 从秘书的回答里切出 room-note。规则（围栏照 CommonMark）：
+ * - 开头一行是 3 个以上反引号紧跟 `room-note`（行首，后面只能有空白）；结尾是**不少于开头个数**的反引号单独一行。
+ *   笔记里要写代码块就用更长的围栏（例如 4 个反引号）
+ * - 在别的代码块里面出现的 ```room-note 不算（秘书在示范格式时不会被当成笔记）
  * - 只认一段；两段以上 → multiple。没有结尾 → unclosed（从开头到正文结束都当作这段，丢掉）
+ * - 切出来的内容里围栏行没配对（笔记里的代码块用了同样长的围栏，被提前截断）→ nested_fence，不存半份
  * - 内容去掉首尾的空行后 > maxChars → too_long；空内容合法（= 清空笔记）
  * - 讨论室和聊天都用这一个函数，main 和测试不另写一份
  */
 export function extractRoomNote(reply: string): RoomNoteExtract {
   const lines = reply.split("\n");
   const blocks: { start: number; end: number | null }[] = [];
+  /** 正在别的代码块里：那个代码块开头的反引号个数 */
+  let outer: number | null = null;
   for (let i = 0; i < lines.length; i++) {
-    const open = /^(`{3,})room-note[ \t]*\r?$/.exec(lines[i] ?? "");
-    if (!open) continue;
-    const fence = open[1] ?? "```";
+    const f = fenceOf(lines[i] ?? "");
+    if (outer !== null) {
+      if (f && f.info === "" && f.ticks >= outer) outer = null;
+      continue;
+    }
+    if (!f) continue;
+    if (f.info !== NOTE_FENCE) {
+      outer = f.ticks;
+      continue;
+    }
     let end: number | null = null;
     for (let j = i + 1; j < lines.length; j++) {
-      if ((lines[j] ?? "").replace(/[ \t\r]+$/, "") === fence) {
+      const g = fenceOf(lines[j] ?? "");
+      if (g && g.info === "" && g.ticks >= f.ticks) {
         end = j;
         break;
       }
@@ -149,8 +176,9 @@ export function extractRoomNote(reply: string): RoomNoteExtract {
   if (blocks.some((b) => b.end === null)) return { kind: "invalid", reason: "unclosed", text };
   if (blocks.length > 1) return { kind: "invalid", reason: "multiple", text };
   const b = blocks[0]!;
-  const content = lines
-    .slice(b.start + 1, b.end!)
+  const inner = lines.slice(b.start + 1, b.end!);
+  if (inner.filter((l) => fenceOf(l) !== null).length % 2 === 1) return { kind: "invalid", reason: "nested_fence", text };
+  const content = inner
     .join("\n")
     .replace(/\r/g, "")
     .replace(/^\n+|\n+$/g, "");
@@ -199,6 +227,8 @@ export const ChatWindowDraft = z
     /** 当前写交接的 Run（purpose = window_handoff）；用户选「我自己写」并且从没起过 Run 时为 null */
     runId: RunId.nullable(),
     content: z.string().max(PROJECT_NOTE_LIMITS.maxChars).nullable(),
+    /** sha256(UTF-8(content))，main 算好；界面确认时原样回传 chat.window.confirm 的 expectedContentHash */
+    contentHash: Sha256Hex.nullable(),
     /** content 最后是谁写的；content 为 null 时为 null */
     contentBy: z.enum(["agent", "human"]).nullable(),
     state: z.enum(["pending", "confirmed", "cancelled"]),
@@ -209,6 +239,7 @@ export const ChatWindowDraft = z
   })
   .strict()
   .refine((d) => (d.content === null) === (d.contentBy === null), "有内容才有作者")
+  .refine((d) => (d.content === null) === (d.contentHash === null), "有内容才有 hash")
   .refine((d) => (d.state === "confirmed") === (d.windowId !== null), "只有 confirmed 有窗口")
   .refine((d) => d.state !== "confirmed" || d.content !== null, "没有内容不能确认");
 export type ChatWindowDraft = z.infer<typeof ChatWindowDraft>;

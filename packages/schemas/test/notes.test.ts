@@ -57,9 +57,24 @@ describe("room-note block (C-46)", () => {
     assert.equal(r.kind === "ok" && r.content, "约定：\n```\nnpm test\n```");
   });
 
-  it("an inner ``` closes a 3-backtick block (CommonMark), and the rest stays in the reply", () => {
-    const r = extractRoomNote("```room-note\na\n```\nb\n```");
-    assert.equal(r.kind === "ok" && r.content, "a");
+  it("a 3-backtick note with a ``` code block inside is cut short → nested_fence, never saved as half a note (汐 #177)", () => {
+    const r = extractRoomNote("```room-note\n约定：\n```js\ncode\n```\n后半\n```");
+    assert.equal(r.kind, "invalid");
+    assert.equal(r.kind === "invalid" && r.reason, "nested_fence");
+  });
+
+  it("a longer closing fence closes the block (CommonMark)", () => {
+    assert.deepEqual(extractRoomNote("```room-note\na\n````\n好"), { kind: "ok", content: "a", text: "好" });
+  });
+
+  it("```room-note inside another code block is just an example, not a note (汐 #177)", () => {
+    const reply = "格式是这样：\n````md\n```room-note\n- 笔记\n```\n````\n就这样";
+    assert.deepEqual(extractRoomNote(reply), { kind: "none" });
+  });
+
+  it("a plain code block after the note stays in the reply", () => {
+    const r = extractRoomNote("```room-note\na\n```\n看这段：\n```\nnpm test\n```");
+    assert.deepEqual(r, { kind: "ok", content: "a", text: "看这段：\n```\nnpm test\n```" });
   });
 
   it("two blocks, too long, or unclosed → not saved, and the block text never shows as the reply", () => {
@@ -100,6 +115,7 @@ describe("ProjectNote (C-46)", () => {
       note({ reason: "revert", updatedBy: "human", source: null }), // revert 没写回退自哪一版
       note({ scope: conv }), // 聊天的笔记来源是 Turn
       note({ reason: "window_handoff" }), // 换窗口只在聊天里
+      note({ scope: conv, reason: "window_handoff", source: null }), // 秘书写的交接没记 Run
       note({ content: "x".repeat(PROJECT_NOTE_LIMITS.maxChars + 1) }),
     ];
     for (const b of bad) assert.equal(ProjectNote.safeParse(b).success, false, JSON.stringify(b).slice(0, 120));
@@ -120,6 +136,7 @@ describe("chat window (C-46)", () => {
     startsAfterMessageId: `cmsg_${ID}`,
     runId: `run_${ID}`,
     content: null,
+    contentHash: null,
     contentBy: null,
     state: "pending",
     windowId: null,
@@ -140,11 +157,12 @@ describe("chat window (C-46)", () => {
 
   it("draft: content and author go together; confirmed needs content and a window", () => {
     assert.ok(ChatWindowDraft.safeParse(draft()).success);
-    assert.ok(ChatWindowDraft.safeParse(draft({ content: "交接", contentBy: "agent" })).success);
+    assert.ok(ChatWindowDraft.safeParse(draft({ content: "交接", contentHash: H, contentBy: "agent" })).success);
     assert.equal(ChatWindowDraft.safeParse(draft({ content: "交接" })).success, false);
+    assert.equal(ChatWindowDraft.safeParse(draft({ content: "交接", contentBy: "agent" })).success, false); // 缺 hash
     assert.equal(ChatWindowDraft.safeParse(draft({ state: "confirmed" })).success, false);
-    assert.equal(ChatWindowDraft.safeParse(draft({ state: "confirmed", content: "交接", contentBy: "agent" })).success, false);
-    assert.ok(ChatWindowDraft.safeParse(draft({ state: "confirmed", content: "交接", contentBy: "agent", windowId: `cwin_${ID}` })).success);
+    assert.equal(ChatWindowDraft.safeParse(draft({ state: "confirmed", content: "交接", contentHash: H, contentBy: "agent" })).success, false);
+    assert.ok(ChatWindowDraft.safeParse(draft({ state: "confirmed", content: "交接", contentHash: H, contentBy: "agent", windowId: `cwin_${ID}` })).success);
   });
 
   it("status: window 1 has no record; the reminder follows the compaction count", () => {
@@ -198,7 +216,7 @@ describe("GitHub sync (C-46)", () => {
   it("events parse", () => {
     assert.ok(ControlEvent.safeParse({ type: "projectNote.created", note: note() }).success);
     assert.ok(
-      ControlEvent.safeParse({ type: "projectNote.rejected", scope: topic, agent: "claude", reason: "multiple", turnId: `turn_${ID}`, runId: null }).success,
+      ControlEvent.safeParse({ type: "projectNote.rejected", scope: topic, agent: "claude", reason: "nested_fence", source: { kind: "turn", turnId: `turn_${ID}` } }).success,
     );
   });
 });
