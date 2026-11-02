@@ -149,6 +149,13 @@ export function applyEvent(state: AppState, event: ControlEvent): AppState {
     // 摘要在界面上不显示
     case "chat.summary.updated":
       return state;
+    // 项目笔记、换窗口、GitHub（C-46 契约）：界面在 C-47 接，先忽略
+    case "projectNote.created":
+    case "projectNote.rejected":
+    case "chat.window.draftUpdated":
+    case "chat.window.created":
+    case "github.updated":
+      return state;
   }
 }
 

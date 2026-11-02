@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AudioRef, ChatMessageId, ConversationId, IsoTimestamp, prefixedId, RunId, Sha256Hex, SnapshotId } from "./common";
+import { AudioRef, ChatMessageId, ConversationId, IsoTimestamp, prefixedId, ProjectNoteId, RunId, Sha256Hex, SnapshotId } from "./common";
 import { FailureReason } from "./agent-event";
 import { RunState, RunSubstate } from "./state-machines";
 import { AgentName } from "./entities";
@@ -524,11 +524,16 @@ export type ChatAgentOutput = z.infer<typeof ChatAgentOutput>;
  * - reply          ：回答 userMessageId 那条消息（非 null）
  * - history_summary：给较早的历史写摘要，userMessageId 为 null；includedMessageIds 至少一条，
  *                    并且等于这次生成的 ChatHistorySummary.sourceMessageIds（同一次拼装）
+ * - window_handoff ：换窗口时写交接笔记（ADR-005 §4），userMessageId 为 null。内容 = 他当前窗口里会收到的历史 + 他现在的笔记
+ *
+ * C-46（ADR-005）：reply / window_handoff 的 Snapshot 要带上这位秘书在这个会话的最新项目笔记（放在 nonce 资料边界里），
+ * 用的哪一版记在 projectNoteId，算进指纹；换过窗口的，includedMessageIds / includedSummaryIds 只有窗口里的
+ * （被引用的窗口前消息只写占位，不算进 includedMessageIds）
  */
 export const ChatSnapshot = z
   .object({
     id: SnapshotId,
-    purpose: z.enum(["reply", "history_summary"]),
+    purpose: z.enum(["reply", "history_summary", "window_handoff"]),
     conversationId: ConversationId,
     userMessageId: ChatMessageId.nullable(),
     agent: AgentName,
@@ -557,11 +562,17 @@ export const ChatSnapshot = z
     /** 拼进来的消息（历史、引用、当前这条）和摘要。撤回审计用：撤回后拼的 Snapshot 不能含被排除的消息 id（见 isExcludedFromContext） */
     includedMessageIds: z.array(ChatMessageId).min(1).max(10_000),
     includedSummaryIds: z.array(ChatSummaryId).max(100),
+    /**
+     * C-46：这次带上的项目笔记版本。null = 他在这个会话还没有笔记；省略 = C-46 之前的 Snapshot，或 history_summary
+     * （写摘要不带笔记）
+     */
+    projectNoteId: ProjectNoteId.nullable().optional(),
     adapterVersion: z.string().min(1),
     tokenEstimate: z.number().int().nonnegative(),
     createdAt: IsoTimestamp,
   })
   .refine((s) => (s.purpose === "reply") === (s.userMessageId !== null), "只有 reply 有 userMessageId")
+  .refine((s) => s.purpose !== "history_summary" || s.projectNoteId === undefined, "写摘要不带笔记")
   .refine((s) => s.memorySlot === null || s.memorySlot.nonce === s.nonce, "记忆槽位和 Snapshot 用同一个 nonce")
   .refine((s) => s.memorySlot === null || occursExactlyOnce(s.content, s.memorySlot.marker), "记忆槽位 marker 必须在 content 里恰好出现一次")
   .refine(
@@ -585,12 +596,14 @@ export type ChatSnapshot = z.infer<typeof ChatSnapshot>;
  * purpose：
  * - reply          ：回答某个回答位
  * - history_summary：给本会话较早的历史写摘要（没有回答位；谁来写、什么时候写由 D-31b 定）
+ * - window_handoff ：换窗口时写交接笔记（C-46，没有回答位，收尾和 history_summary 一样走 slotId = null 的路径）。
+ *                    结果写进 ChatWindowDraft.content，不直接存成笔记；草稿取消时 Run 照常保留
  */
 export const ChatRun = z
   .object({
     id: RunId,
     kind: z.literal("chat"),
-    purpose: z.enum(["reply", "history_summary"]),
+    purpose: z.enum(["reply", "history_summary", "window_handoff"]),
     conversationId: ConversationId,
     /** purpose = reply 时非 null */
     slotId: ChatSlotId.nullable(),

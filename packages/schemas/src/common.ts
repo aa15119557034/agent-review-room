@@ -23,6 +23,14 @@ export const ConversationId = prefixedId("conv");
 /** 你发的消息的 id 由发送方生成（防重复，见 chat.send）；秘书的消息由 main 生成 */
 export const ChatMessageId = prefixedId("cmsg");
 
+// ---- 项目笔记和换窗口（ADR-005 / C-46）。放在这里是因为 entities.ts / chat.ts 的 Snapshot 要记笔记版本
+export const ProjectNoteId = prefixedId("note");
+export const ChatWindowId = prefixedId("cwin");
+export const ChatWindowDraftId = prefixedId("cwd");
+export type ProjectNoteId = z.infer<typeof ProjectNoteId>;
+export type ChatWindowId = z.infer<typeof ChatWindowId>;
+export type ChatWindowDraftId = z.infer<typeof ChatWindowDraftId>;
+
 // ---- 音频（C-34 的录音和 C-42c 的合成语音共用）。放在这里避免 chat.ts 和 speech.ts 互相引用
 /** 音频引用：录音（16k 单声道，main 转好后存的那一份）或合成的语音 */
 export const AudioRef = prefixedId("aud");

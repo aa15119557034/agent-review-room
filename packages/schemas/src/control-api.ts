@@ -5,8 +5,10 @@ import {
   AudioRef,
   BatchId,
   ChatMessageId,
+  ChatWindowDraftId,
   ConversationId,
   PermissionRequestId,
+  ProjectNoteId,
   PlanVersionId,
   RoundId,
   RunId,
@@ -72,6 +74,19 @@ import {
 } from "./chat";
 import { DrawRequest, DrawRoutePreview, MediaJob, MediaJobId, MEDIA_LIST_MESSAGE_IDS_MAX, MediaScope, MediaSource } from "./media";
 import { ImmersiveSettings, ImmersiveUsage } from "./immersive";
+import {
+  ChatWindow,
+  ChatWindowDraft,
+  ChatWindowStatus,
+  GithubRepoName,
+  GithubSyncStatus,
+  GithubToken,
+  NoteScope,
+  PROJECT_NOTE_LIMITS,
+  ProjectNote,
+  ProjectNoteSource,
+  RoomNoteRejectReason,
+} from "./notes";
 import { SpeechClip, VoiceOption, VoiceProfile } from "./speech";
 
 // ---------------------------------------------------------------- C-37a：秘书控制台「正在答什么 / 历史」
@@ -929,6 +944,98 @@ export const COMMANDS = {
     ImmersiveSettings,
     "author",
   ),
+
+  // ---------------------------------------------------------------- 项目笔记、换窗口、GitHub（ADR-005 / C-46）
+
+  /**
+   * 你改一位秘书在一个子项目里的笔记，存成新版（updatedBy = human，reason = human_edit）。
+   * expectedParentId = 你在界面上看到的那一版（还没有笔记时为 null）；不是当前最新 → invalid_state，界面重新读再改。
+   * 秘书不在这个子项目里（不是议题的参与者 / 不是会话成员）→ not_found。内容和最新版完全一样 → 不新建，原样返回最新版
+   */
+  "projectNote.edit": def(
+    z.object({
+      type: z.literal("projectNote.edit"),
+      scope: NoteScope,
+      agent: AgentName,
+      content: z.string().max(PROJECT_NOTE_LIMITS.maxChars),
+      expectedParentId: ProjectNoteId.nullable(),
+    }),
+    ProjectNote,
+    "author",
+  ),
+
+  /** 回退：把 noteId 那一版的内容存成新的最新版（reason = revert）。noteId 已经是最新版 → invalid_state */
+  "projectNote.revert": def(
+    z.object({ type: z.literal("projectNote.revert"), noteId: ProjectNoteId }),
+    ProjectNote,
+    "author",
+  ),
+
+  /**
+   * 点「换窗口」：建草稿、定下边界（当时会话里最后一条消息），起一个 window_handoff Run 写交接笔记。
+   * - 这位已经有 pending 的草稿 → 直接返回它，不起新 Run
+   * - 会话里还没有消息、他不是成员、单聊对方被暂停 / 节点不通 → invalid_state / not_found / agent_unavailable
+   *   （agent_unavailable 时不建草稿）
+   * - writeYourself = true：不起 Run，草稿 content 为空字符串、contentBy = human，等你自己写
+   */
+  "chat.window.prepare": def(
+    z.object({
+      type: z.literal("chat.window.prepare"),
+      conversationId: ConversationId,
+      agent: AgentName,
+      writeYourself: z.boolean().optional(),
+    }),
+    ChatWindowDraft,
+    "author",
+  ),
+
+  /**
+   * 改草稿里的交接笔记（contentBy 变成 human）。写交接的 Run 还在跑时，这一下就是「不等了，我自己写」：
+   * 先取消那个 Run（它的终止事件照常），它之后的结果不再写进草稿
+   */
+  "chat.window.editDraft": def(
+    z.object({
+      type: z.literal("chat.window.editDraft"),
+      draftId: ChatWindowDraftId,
+      content: z.string().max(PROJECT_NOTE_LIMITS.maxChars),
+    }),
+    ChatWindowDraft,
+    "author",
+  ),
+
+  /**
+   * 重写：取消还在跑的那个 Run（如果有），起一个新的 window_handoff Run，草稿 content 清空、runId 换成新的。
+   * 边界不变（还是 prepare 时定的那条）
+   */
+  "chat.window.redo": def(z.object({ type: z.literal("chat.window.redo"), draftId: ChatWindowDraftId }), ChatWindowDraft, "author"),
+
+  /**
+   * 点「换」：同一个事务里存笔记新版（reason = window_handoff）、写 ChatWindow、草稿改成 confirmed。
+   * expectedContentHash = 你在弹出单里看到的那份交接笔记的 sha256（防止 Run 刚好又写了一版被你确认掉）；
+   * 不一致 → stale_snapshot。content 为 null（Run 还在跑或失败了）→ invalid_state
+   */
+  "chat.window.confirm": def(
+    z.object({ type: z.literal("chat.window.confirm"), draftId: ChatWindowDraftId, expectedContentHash: Sha256Hex }),
+    z.object({ window: ChatWindow, note: ProjectNote, draft: ChatWindowDraft }),
+    "author",
+  ),
+
+  /** 取消：草稿改成 cancelled，取消还在跑的 Run。不存笔记、不写窗口；Run 和它的终止事件照常保留 */
+  "chat.window.cancel": def(z.object({ type: z.literal("chat.window.cancel"), draftId: ChatWindowDraftId }), ChatWindowDraft, "author"),
+
+  /**
+   * GitHub 同步设置。repo 为 null = 关掉同步（已排队的不再推）。token 不传表示保留原来的。
+   * 离线也能保存：先存、返回 private = null，main 在后台查（仓库是不是私有、Token 能不能写），查完发 github.updated。
+   * 查出来是公开仓库：设置保留，但什么都不推，lastError = public_repo
+   */
+  "github.update": def(
+    z.object({ type: z.literal("github.update"), repo: GithubRepoName.nullable(), token: GithubToken.optional() }),
+    GithubSyncStatus,
+    "admin",
+  ),
+
+  /** 立刻把排队的推一次（平时 main 自己隔一会儿重试）。没配仓库 → invalid_state */
+  "github.pushNow": def(z.object({ type: z.literal("github.pushNow") }), GithubSyncStatus, "admin"),
 } as const;
 
 /** 按键排序的 JSON（数组保持顺序），用来给发送意图判等 */
@@ -1187,6 +1294,39 @@ export const QUERIES = {
     z.array(MediaJob).max(200),
     "read",
   ),
+
+  // ---- 项目笔记、换窗口、GitHub（ADR-005 / C-46）
+
+  /** 一个子项目里每位秘书的最新笔记（只列有笔记的人）。界面上你能看所有人的；发给秘书时只带他自己的 */
+  "projectNotes.list": def(
+    z.object({ type: z.literal("projectNotes.list"), scope: NoteScope }),
+    z.array(ProjectNote).max(64),
+    "read",
+  ),
+
+  /** 一位秘书在一个子项目里的笔记历史，新的在前，最多 200 版（更早的在导出 / GitHub 历史里） */
+  "projectNotes.history": def(
+    z.object({ type: z.literal("projectNotes.history"), scope: NoteScope, agent: AgentName }),
+    z.array(ProjectNote).max(200),
+    "read",
+  ),
+
+  /** 会话里每位成员的窗口状态（当前第几个窗口、窗口里压缩次数、要不要提醒、pending 的草稿），顺序同 Conversation.members */
+  "chat.windows.get": def(
+    z.object({ type: z.literal("chat.windows.get"), conversationId: ConversationId }),
+    z.array(ChatWindowStatus).max(8),
+    "read",
+  ),
+
+  /** 一位成员换过的所有窗口，旧的在前（时间线上画「换了新窗口」那一行用） */
+  "chat.windows.list": def(
+    z.object({ type: z.literal("chat.windows.list"), conversationId: ConversationId }),
+    z.array(ChatWindow).max(1000),
+    "read",
+  ),
+
+  /** GitHub 同步状态。不返回 Token */
+  "github.get": def(z.object({ type: z.literal("github.get") }), GithubSyncStatus, "admin"),
 } as const;
 
 // ================================================================ Unions & helpers
@@ -1273,5 +1413,22 @@ export const ControlEvent = z.discriminatedUnion("type", [
   z.object({ type: z.literal("chat.voice.updated"), recording: VoiceRecording }),
   // ---- 媒体任务（C-42b）
   z.object({ type: z.literal("media.updated"), job: MediaJob }),
+  // ---- 项目笔记、换窗口、GitHub（C-46）
+  /** 新存了一版笔记（秘书回答里带的、你改的、回退、换窗口确认） */
+  z.object({ type: z.literal("projectNote.created"), note: ProjectNote }),
+  /**
+   * 秘书回答里的 room-note 没存上（见 RoomNoteRejectReason）。回答照常；界面在那条回答下面提示「笔记没存上」。
+   * source：讨论室是那个 Turn，聊天是那个 ChatRun
+   */
+  z.object({
+    type: z.literal("projectNote.rejected"),
+    scope: NoteScope,
+    agent: AgentName,
+    reason: RoomNoteRejectReason,
+    source: ProjectNoteSource,
+  }),
+  z.object({ type: z.literal("chat.window.draftUpdated"), draft: ChatWindowDraft }),
+  z.object({ type: z.literal("chat.window.created"), window: ChatWindow }),
+  z.object({ type: z.literal("github.updated"), status: GithubSyncStatus }),
 ]);
 export type ControlEvent = z.infer<typeof ControlEvent>;
