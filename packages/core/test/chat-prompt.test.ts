@@ -64,6 +64,43 @@ describe("chat prompt (X-30)", () => {
       ...extra,
     });
 
+  it("renders a voice message as its transcript (D-34b)", () => {
+    const voice = ChatMessage.parse({
+      id: "cmsg_" + "4".padStart(26, "0"),
+      conversationId: CONV,
+      createdAt: TS,
+      sender: "user",
+      content: {
+        kind: "voice",
+        audio: "aud_" + ID,
+        durationMs: 1200,
+        transcript: {
+          text: "你好，今天辛苦了",
+          language: "zh",
+          source: "transcribed",
+          engine: { engine: "faster-whisper", model: "small" },
+        },
+      },
+      mentions: { kind: "none" },
+      quoteMessageId: null,
+      replacesMessageId: null,
+      state: "sent",
+      retractedAt: null,
+    }) as UserChatMessage;
+    const snapshot = buildChatSnapshot({
+      snapshotId: "snap_" + ID,
+      conversationId: CONV,
+      userMessage: voice,
+      agent: { id: "deepseek", displayName: "汐", persona },
+      history: [],
+      quote: null,
+      inReplyToOf: () => undefined,
+      displayNameOf: names,
+      createdAt: TS,
+      nonce: NONCE,
+    });
+    assert.match(snapshot.content, /\[语音\] 你好，今天辛苦了/);
+  });
   it("caps file text so a big file cannot blow the prompt (per file and total)", () => {
     const short = capChatFileTexts([{ name: "短.md", text: "短正文" }]);
     assert.deepEqual(short, [{ name: "短.md", text: "短正文" }]);
@@ -313,6 +350,7 @@ describe("chat prompt (X-30)", () => {
     assert.ok(snapshot.content.length < 100_000);
   });
 });
+
 
 
 

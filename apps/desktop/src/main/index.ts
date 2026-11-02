@@ -10,6 +10,9 @@ import { ComfyUiClient, loadComfyUiConfigFile } from "./comfyui";
 import { MediaService } from "./media";
 import { MediaJobsService } from "./media-jobs";
 import { createAudioProtocolHandler, createImageProtocolHandler, MediaStore } from "./media-store";
+import { loadAsrConfigFile, SidecarTranscriber } from "./voice-transcriber";
+import { MediaVoiceStore } from "./voice-store";
+import { VoiceService } from "./voice";
 import { migrateLegacyReviewerNode, NodeService, resolveRunTarget } from "./nodes";
 import { RunOrchestrator } from "./orchestrator";
 import { Repository } from "./repository";
@@ -23,10 +26,14 @@ import { loadTtsConfigFile, TtsRunner, voiceOptionsOf } from "./tts";
  * Token 只在主进程解密使用，绝不进 renderer / SQLite / 日志。
  */
 
-// D-36b：room-image:// 必须在 app ready 之前登记；只读、不导航、不当页面打开
+// D-36b：room-image:// / D-34b：room-audio:// 必须在 app ready 之前登记；只读、不导航、不当页面打开
 protocol.registerSchemesAsPrivileged([
   {
     scheme: IMAGE_URL_SCHEME,
+    privileges: { standard: true, secure: true, supportFetchAPI: true, corsEnabled: false },
+  },
+  {
+    scheme: AUDIO_URL_SCHEME,
     privileges: { standard: true, secure: true, supportFetchAPI: true, corsEnabled: false },
   },
 ]);
@@ -96,6 +103,31 @@ async function bootstrap(): Promise<void> {
   // D-36b：图片本体和引用表；renderer 用 room-image://<ref> 显示，main 只按记录映射到文件
   const mediaStore = new MediaStore(join(userData, "images"), join(userData, "files"), join(userData, "audio"), db);
   protocol.handle(IMAGE_URL_SCHEME, createImageProtocolHandler(mediaStore));
+
+  // D-34b：录音本体 + 本地转写（Python sidecar）。没配 asr.json 时明确说「转写不可用」，不假装成功
+  const asr = loadAsrConfigFile(join(userData, "asr.json"), join(app.getAppPath(), "python", "transcribe.py"));
+  if (asr.config === null) console.warn(`[voice] ${asr.problem}； chat.voice.import 会明确拒绝`);
+  const transcriber = asr.config === null ? null : new SidecarTranscriber(asr.config);
+  // #137 评审第 1 条：录音字节并入 MediaStore（D-37b），room-audio:// 只有底部那一个处理器
+  const voiceStore = new MediaVoiceStore(
+    mediaStore,
+    db,
+    async (path) => {
+      if (transcriber === null) throw new Error("本地转写还没配好");
+      return transcriber.probe(path);
+    },
+    () => new Date().toISOString(),
+  );
+  const voice = new VoiceService({
+    db,
+    store: voiceStore,
+    transcriber,
+    emit: broadcast,
+    now: () => new Date().toISOString(),
+  });
+  const repairedVoice = voice.repairInterrupted();
+  if (repairedVoice > 0) console.warn(`[voice] 收尾了 ${repairedVoice} 条上次没转完的录音（应用重启，转写中断）`);
+
   // D-34a：选文件 / 表情用的对话框。renderer 只拿 ref，拿不到路径
   const comfyConfig = loadComfyUiConfigFile(join(userData, "comfyui.json"));
   if (comfyConfig === null) console.warn("[comfyui] 没有配置 userData/comfyui.json，本机画图不可用");
@@ -224,6 +256,7 @@ async function bootstrap(): Promise<void> {
     media,
     jobs,
     voices: () => (ttsConfig === null ? [] : voiceOptionsOf(ttsConfig)),
+    voice,
     nodes,
     appVersion: app.getVersion(),
     recoveredRuns: repaired.repaired.length + repairedChat,
@@ -239,6 +272,8 @@ async function bootstrap(): Promise<void> {
     chat.cancelAll();
     // 语音合成的子进程也一起收掉，别留后台进程
     ttsRunner?.dispose();
+    // D-34b：转写 sidecar 是独立进程，退出时一起收掉
+    voice.dispose();
     try {
       db.close();
     } catch {
@@ -268,3 +303,5 @@ void app.whenReady().then(async () => {
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
+
+

@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
 import Database from "better-sqlite3";
-import { currentVersion, LATEST_SCHEMA_VERSION, openDatabase } from "../src/index";
+import { currentVersion, LATEST_SCHEMA_VERSION, MIGRATIONS, openDatabase } from "../src/index";
 import { SCHEMA_V1 } from "../src/schema";
 
 const dirs: string[] = [];
@@ -94,4 +94,69 @@ describe("migration chain (v1 → latest)", () => {
     }
   });
 });
+
+/** 只迁到某个版本（模拟「用户库里已经是 v18」） */
+function applyUpTo(db: Database.Database, upTo: number): void {
+  for (const migration of MIGRATIONS) {
+    if (migration.version > upTo) break;
+    if (migration.disableForeignKeys === true) db.pragma("foreign_keys = OFF");
+    db.exec("BEGIN");
+    migration.up(db);
+    db.pragma(`user_version = ${migration.version}`);
+    db.exec("COMMIT");
+    db.pragma("foreign_keys = ON");
+  }
+}
+
+describe("v19：audio_refs 重建（#137 C酱）", () => {
+  it("已经有合成语音的库能从 v18 升上来：数据不变、外键干净、webm 能进、触发器还在", () => {
+    const dir = mkdtempSync(join(tmpdir(), "room-db-v19-"));
+    dirs.push(dir);
+    const file = join(dir, "v18.db");
+
+    const v18 = new Database(file);
+    try {
+      v18.pragma("foreign_keys = ON");
+      applyUpTo(v18, 18);
+      assert.equal(currentVersion(v18), 18);
+      v18
+        .prepare("INSERT INTO audio_refs (ref, sha256, mime, bytes, created_at) VALUES (?, ?, 'audio/wav', 10, ?)")
+        .run("aud_OLD", "b".repeat(64), NOW);
+      v18
+        .prepare(
+          "INSERT INTO speech_clips (id, text_hash, voice_id, speed, engine, engine_version, audio_ref, mime, duration_ms, created_at) " +
+            "VALUES (?, ?, 'xiaoyu', 1, 'indextts2', 'v1', ?, 'audio/wav', 1200, ?)",
+        )
+        .run("clip_OLD", "c".repeat(64), "aud_OLD", NOW);
+    } finally {
+      v18.close();
+    }
+
+    // 升级：这一步在旧代码里会因为 speech_clips 的外键直接失败
+    const db = openDatabase(file);
+    try {
+      assert.equal(currentVersion(db), LATEST_SCHEMA_VERSION);
+      assert.ok(LATEST_SCHEMA_VERSION >= 19);
+      assert.equal((db.prepare("SELECT count(*) AS n FROM audio_refs").get() as { n: number }).n, 1, "音频引用不丢");
+      assert.equal((db.prepare("SELECT count(*) AS n FROM speech_clips").get() as { n: number }).n, 1, "合成片段不丢");
+      assert.deepEqual(db.pragma("foreign_key_check"), [], "重建之后外键一致");
+      // speech_clips 的外键现在指向重建后的 audio_refs
+      const fks = db.pragma("foreign_key_list('speech_clips')") as { table: string; from: string; to: string }[];
+      assert.ok(fks.some((fk) => fk.table === "audio_refs" && fk.from === "audio_ref" && fk.to === "ref"));
+      // 新的 CHECK 收 webm
+      db.prepare("INSERT INTO audio_refs (ref, sha256, mime, bytes, created_at) VALUES (?, ?, 'audio/webm', 20, ?)").run(
+        "aud_WEBM",
+        "d".repeat(64),
+        NOW,
+      );
+      // 触发器重建了：引用记录不能改
+      assert.throws(() => db.prepare("UPDATE audio_refs SET bytes = 1 WHERE ref = 'aud_OLD'").run(), /immutable/);
+      // 老 CHECK 里的格式仍然可用
+      assert.equal((db.prepare("SELECT mime FROM audio_refs WHERE ref = 'aud_OLD'").get() as { mime: string }).mime, 'audio/wav');
+    } finally {
+      db.close();
+    }
+  });
+});
+
 

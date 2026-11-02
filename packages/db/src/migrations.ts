@@ -16,6 +16,7 @@ import { SCHEMA_V15 } from "./schema-v15";
 import { SCHEMA_V16 } from "./schema-v16";
 import { SCHEMA_V17 } from "./schema-v17";
 import { SCHEMA_V18 } from "./schema-v18";
+import { SCHEMA_V19 } from "./schema-v19";
 
 /**
  * 迁移（D-02）：用 PRAGMA user_version 记版本，每个迁移在自己的事务里跑。
@@ -164,6 +165,18 @@ export const MIGRATIONS: readonly Migration[] = [
     name: "agent-activity-indexes",
     up: (db) => {
       db.exec(SCHEMA_V18);
+    },
+  },
+  {
+    version: 19,
+    name: "audio-refs-webm",
+    // 重建表要先 DROP 旧的 audio_refs；speech_clips.audio_ref 指着它，外键开着就会「立即约束」失败（C酱 #137）
+    disableForeignKeys: true,
+    up: (db) => {
+      db.exec(SCHEMA_V19);
+      // 关外键期间重建，迁完自己验一遍：有坏数据就别放行
+      const broken = db.prepare("PRAGMA foreign_key_check").all();
+      if (broken.length > 0) throw new Error("v19 重建 audio_refs 之后有外键不一致：" + JSON.stringify(broken).slice(0, 500));
     },
   },
 ];
