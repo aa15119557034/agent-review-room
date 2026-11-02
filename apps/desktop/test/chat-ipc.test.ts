@@ -13,6 +13,8 @@ import {
   insertChatSummary,
   getChatSnapshot,
   getChatMessage,
+  getChatWindowDraft,
+  currentChatWindow,
   listChatSlotsForMessage,
   listChatSummaries,
   insertFile,
@@ -1635,6 +1637,131 @@ describe("project notes wiring (D-46a)", () => {
       const rejected = h.events.find((event) => event.type === "projectNote.rejected");
       assert.ok(rejected && rejected.type === "projectNote.rejected" && rejected.reason === "multiple");
       // 正文去掉 room-note 段由契约的 extractRoomNote 覆盖（schemas 测试）
+    } finally {
+      h.db.close();
+    }
+  });
+});
+
+// ================================================================ D-46b 换窗口
+
+describe("chat windows (D-46b)", () => {
+  const seedUserMessage = (h: Harness, id: string, text: string) => {
+    insertChatMessage(h.db, {
+      message: {
+        id,
+        conversationId: h.conversationId,
+        createdAt: NOW,
+        sender: "user",
+        content: { kind: "text", text, attachments: [] },
+        mentions: { kind: "none" },
+        quoteMessageId: null,
+        replacesMessageId: null,
+        state: "sent",
+        retractedAt: null,
+      },
+    });
+  };
+
+  it("写交接的 Run 把正文写进草稿；confirm 建窗口和交接笔记", async () => {
+    const h = await makeHarness({
+      scripts: { deepseek: [{ type: "message_complete", text: "## 做到哪了\n- 聊了天气" }, { type: "completed" }] },
+    });
+    try {
+      seedUserMessage(h, userMessageId(400), "旧窗口的最后一句话");
+      const draft = await h.chat.prepareWindow({
+        type: "chat.window.prepare",
+        conversationId: h.conversationId,
+        agent: "deepseek",
+      } as never);
+      assert.equal(draft.state, "pending");
+      assert.ok(draft.runId !== null, "起了写交接的 Run");
+      assert.equal(draft.startsAfterMessageId, userMessageId(400));
+      await settle(h.chat);
+
+      const stored = getChatWindowDraft(h.db, draft.id)!;
+      assert.equal(stored.content, "## 做到哪了\n- 聊了天气");
+      assert.equal(stored.contentBy, "agent");
+      assert.equal(stored.contentHash, sha256Hex("## 做到哪了\n- 聊了天气"));
+
+      const done = await h.chat.confirmWindow({
+        type: "chat.window.confirm",
+        draftId: draft.id,
+        expectedContentHash: stored.contentHash,
+      } as never);
+      assert.equal(done.window.index, 2);
+      assert.equal(done.window.startsAfterMessageId, userMessageId(400));
+      assert.equal(done.note.reason, "window_handoff");
+      assert.equal(done.note.content, stored.content);
+      assert.equal(done.note.source?.kind, "chat_run");
+      assert.equal(currentChatWindow(h.db, h.conversationId, "deepseek")?.id, done.window.id);
+
+      const status = h.chat.windowStatuses(h.conversationId).find((item) => item.agent === "deepseek")!;
+      assert.equal(status.index, 2);
+      assert.equal(status.window?.id, done.window.id);
+      assert.equal(status.pendingDraft, null);
+      assert.equal(h.chat.windowList(h.conversationId).length, 1);
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("取消：不留窗口、不留笔记，Run 只有一个终止事件", async () => {
+    const h = await makeHarness();
+    try {
+      seedUserMessage(h, userMessageId(410), "先聊这句");
+      const draft = await h.chat.prepareWindow({
+        type: "chat.window.prepare",
+        conversationId: h.conversationId,
+        agent: "deepseek",
+        writeYourself: true,
+      } as never);
+      assert.equal(draft.content, "");
+      const cancelled = await h.chat.cancelWindow({ type: "chat.window.cancel", draftId: draft.id } as never);
+      assert.equal(cancelled.state, "cancelled");
+      assert.equal(h.chat.windowList(h.conversationId).length, 0);
+      assert.equal(listLatestProjectNotes(h.db, { kind: "conversation", conversationId: h.conversationId }).length, 0);
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("换了窗口以后，回答的 Snapshot 只带窗口里的消息和摘要", async () => {
+    const h = await makeHarness();
+    try {
+      seedUserMessage(h, userMessageId(420), "窗口外的一句话");
+      const oldSummary = summary(h, historySummaryRun(h, [userMessageId(420)]), [userMessageId(420)], "窗口外的摘要");
+      insertChatSummary(h.db, oldSummary);
+      assert.equal(
+        h.chat.windowStatuses(h.conversationId).find((item) => item.agent === "deepseek")!.compactionsInWindow,
+        1,
+        "第 1 个窗口里有一份摘要",
+      );
+
+      const draft = await h.chat.prepareWindow({
+        type: "chat.window.prepare",
+        conversationId: h.conversationId,
+        agent: "deepseek",
+        writeYourself: true,
+      } as never);
+      await h.chat.confirmWindow({
+        type: "chat.window.confirm",
+        draftId: draft.id,
+        expectedContentHash: sha256Hex(""),
+      } as never);
+      assert.equal(
+        h.chat.windowStatuses(h.conversationId).find((item) => item.agent === "deepseek")!.compactionsInWindow,
+        0,
+        "跨窗口边界的摘要不算这个窗口里的",
+      );
+
+      const sent = await h.chat.send(send(h.conversationId, userMessageId(421), "换了窗口以后的新问题"));
+      await settle(h.chat);
+      const snapshot = getChatSnapshot(h.db, sent.runs[0]!.snapshotId)!;
+      assert.ok(!snapshot.includedMessageIds.includes(userMessageId(420)));
+      assert.ok(!snapshot.content.includes("窗口外的一句话"));
+      assert.ok(!snapshot.content.includes("窗口外的摘要"));
+      assert.ok(snapshot.includedMessageIds.includes(userMessageId(421)));
     } finally {
       h.db.close();
     }

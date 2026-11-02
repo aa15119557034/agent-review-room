@@ -160,3 +160,64 @@ describe("v19：audio_refs 重建（#137 C酱）", () => {
 });
 
 
+
+describe("migration v20 → v21 (chat tables rebuilt for window_handoff)", () => {
+  it("keeps chat rows and foreign keys when upgrading a v20 database that already has chat data", () => {
+    const dir = mkdtempSync(join(tmpdir(), "room-db-v20-"));
+    dirs.push(dir);
+    const file = join(dir, "v20.db");
+
+    const legacy = new Database(file);
+    try {
+      legacy.pragma("foreign_keys = ON");
+      for (const migration of MIGRATIONS) {
+        if (migration.version > 20) break;
+        if (migration.disableForeignKeys === true) legacy.pragma("foreign_keys = OFF");
+        legacy.exec("BEGIN IMMEDIATE");
+        migration.up(legacy);
+        legacy.pragma("user_version = " + migration.version);
+        legacy.exec("COMMIT");
+        if (migration.disableForeignKeys === true) legacy.pragma("foreign_keys = ON");
+      }
+      assert.equal((legacy.pragma("user_version", { simple: true }) as number), 20);
+
+      legacy
+        .prepare(
+          "INSERT INTO conversations (id, kind, direct_agent, last_activity_at, created_at) " +
+            "VALUES ('conv_old', 'direct', 'deepseek', ?, ?)",
+        )
+        .run(NOW, NOW);
+      // history_summary 的快照没有当前消息；Run 指着它 —— 重建 chat_snapshots 时外键必须关掉
+      legacy
+        .prepare(
+          "INSERT INTO chat_snapshots (id, purpose, conversation_id, user_message_id, agent, content, content_hash, nonce, " +
+            "memory_slot, attachments, included_message_ids, included_summary_ids, adapter_version, token_estimate, created_at) " +
+            "VALUES ('snap_old', 'history_summary', 'conv_old', NULL, 'deepseek', '旧摘要', ?, '0123456789abcdef', " +
+            "NULL, NULL, '[\"msg_old\"]', '[]', 'v1', 1, ?)",
+        )
+        .run("a".repeat(64), NOW);
+      legacy
+        .prepare(
+          "INSERT INTO chat_runs (id, kind, purpose, conversation_id, slot_id, agent, snapshot_id, snapshot_hash, " +
+            "final_prompt_hash, memory_manifest, model, adapter_id, state, substate, failure_reason, attempt, created_at, " +
+            "started_at, finished_at) VALUES ('run_old', 'chat', 'history_summary', 'conv_old', NULL, 'deepseek', " +
+            "'snap_old', ?, NULL, NULL, NULL, 'remote:deepseek', 'COMPLETED', NULL, NULL, 1, ?, NULL, ?)",
+        )
+        .run("b".repeat(64), NOW, NOW);
+    } finally {
+      legacy.close();
+    }
+
+    const db = openDatabase(file);
+    try {
+      assert.equal(currentVersion(db), LATEST_SCHEMA_VERSION);
+      assert.equal((db.prepare("SELECT count(*) AS n FROM chat_snapshots").get() as { n: number }).n, 1);
+      assert.equal((db.prepare("SELECT count(*) AS n FROM chat_runs").get() as { n: number }).n, 1);
+      assert.deepEqual(db.pragma("foreign_key_check"), []);
+      const sql = (db.prepare("SELECT sql FROM sqlite_master WHERE name = 'chat_runs'").get() as { sql: string }).sql;
+      assert.ok(sql.includes("window_handoff"), "重建后的 chat_runs 要收下 window_handoff");
+    } finally {
+      db.close();
+    }
+  });
+});

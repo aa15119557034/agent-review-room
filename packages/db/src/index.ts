@@ -11,6 +11,7 @@ export * from "./plan";
 export * from "./discussion-turn";
 export * from "./chat";
 export * from "./notes";
+export * from "./chat-windows";
 export * from "./audio";
 export * from "./media";
 export * from "./speech";
