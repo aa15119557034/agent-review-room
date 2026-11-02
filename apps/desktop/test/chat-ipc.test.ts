@@ -12,6 +12,7 @@ import {
   insertChatSlot,
   insertChatSnapshot,
   insertChatSummary,
+  insertMediaJob,
   getChatSnapshot,
   getChatMessage,
   getChatWindowDraft,
@@ -31,6 +32,7 @@ import {
   CHAT_LIMITS,
   ChatHistorySummary,
   ChatMessage,
+  MediaJob as MediaJobSchema,
   ChatRun,
   ChatSnapshot,
   ControlEvent,
@@ -209,11 +211,20 @@ async function makeHarness(
     readImage: (ref) => imageBytes.get(ref) ?? null,
     drawMedia: async (source, draw, intentHash) => {
       mediaCalls.push({ kind: "draw", source, intentHash });
-      void draw;
+      insertMediaJob(db, MediaJobSchema.parse({
+        id: "mjob_" + ulid(), kind: "draw", state: "queued", authorization: "immersive", source, intentHash,
+        draw: { ...draw, backend: "auto" }, route: null, remoteRunId: null, result: null, speech: null,
+        failure: null, cancelReason: null, createdAt: NOW, startedAt: null, finishedAt: null,
+      }));
     },
     speakMedia: async (source, intentHash) => {
       if (options.speakMediaFails === true) throw new Error("没有能用的声音");
       mediaCalls.push({ kind: "speak", source, intentHash });
+      insertMediaJob(db, MediaJobSchema.parse({
+        id: "mjob_" + ulid(), kind: "speech", state: "queued", authorization: "immersive", source, intentHash,
+        draw: null, route: null, remoteRunId: null, result: null, speech: null,
+        failure: null, cancelReason: null, createdAt: NOW, startedAt: null, finishedAt: null,
+      }));
     },
     failSpeech: async (source, intentHash, message) => {
       mediaCalls.push({ kind: "fail-speak", source, intentHash });
@@ -2080,6 +2091,37 @@ describe("immersive (D-39)", () => {
       assert.ok(kinds.includes("draw"));
       assert.ok(kinds.includes("fail-speak"));
       assert.equal(kinds.includes("speak"), false);
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("两位秘书同时要画：上限 1 时只建一个任务，另一条记 hourly_limit（D-39b 原子占名额）", async () => {
+    const h = await makeHarness({
+      scripts: { deepseek: mediaScript("我也画"), codex: mediaScript("我也画") },
+    });
+    try {
+      const group = await h.chat.createConversation({
+        type: "chat.conversation.create",
+        members: { kind: "group", agents: ["deepseek", "codex"] },
+        title: null,
+      } as never);
+      upsertImmersiveSettings(h.db, group.id, {
+        enabled: true,
+        autoDrawUsesSubscription: true,
+        drawsPerHour: 1,
+        voiceClipsPerHour: 30,
+      }, NOW);
+      await h.chat.send(send(group.id, userMessageId(970), "都画一张"));
+      await settle(h.chat);
+      const replies = h.db
+        .prepare("SELECT immersive_deferred FROM chat_messages WHERE conversation_id = ? AND sender = 'agent'")
+        .all(group.id) as { immersive_deferred: string | null }[];
+      assert.equal(replies.length, 2);
+      const deferred = replies.filter((row) => row.immersive_deferred !== null);
+      assert.equal(deferred.length, 1, "只有一条退回");
+      assert.deepEqual(JSON.parse(deferred[0]!.immersive_deferred as string), { draw: "hourly_limit" });
+      assert.equal(h.mediaCalls.filter((call) => call.kind === "draw").length, 1, "只建了一个画图任务");
     } finally {
       h.db.close();
     }

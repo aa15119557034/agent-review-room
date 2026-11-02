@@ -218,6 +218,8 @@ const TERMINAL = new Set(["completed", "error", "cancelled", "timed_out"]);
 export class ChatService {
   readonly #deps: ChatServiceDeps;
   readonly #active = new Map<string, AbortController>();
+  /** D-39b：同一会话的「数用量 → 定退回 → 建自动任务」串行（进程内原子占名额） */
+  readonly #immersionLocks = new Map<string, Promise<void>>();
   /** D-45：正在规划 / 起摘要 Run 的会话（同会话同时最多一个；跨进程靠数据库里的 active 检查） */
   readonly #summarizing = new Set<string>();
 
@@ -1078,18 +1080,21 @@ export class ChatService {
                 );
               }
               const extracted = this.#deps.notes?.extract(parsed.data.text) ?? { text: parsed.data.text, content: null, rejected: null };
-              // D-39：沉浸模式开着时，在写回答的这一刻定下「自动执行哪几项、哪几项退回」
-              const immersive = this.#immersivePlan(run.conversationId, media.intent);
-              const finished = await finish({
-                kind: "answered",
-                text: extracted.text,
-                ...(media.intent === null ? {} : { mediaIntent: media.intent }),
-                ...(immersive?.deferred === undefined ? {} : { immersiveDeferred: immersive.deferred }),
+              // D-39b：数用量、定退回、建自动任务在同一个会话锁里，后一条回答不会漏算前一条刚建的任务
+              const finished = await this.#withImmersionLock(run.conversationId, async () => {
+                const immersive = this.#immersivePlan(run.conversationId, media.intent);
+                const result = await finish({
+                  kind: "answered",
+                  text: extracted.text,
+                  ...(media.intent === null ? {} : { mediaIntent: media.intent }),
+                  ...(immersive?.deferred === undefined ? {} : { immersiveDeferred: immersive.deferred }),
+                });
+                // 回答真的落库之后才开始自动任务（source 用落库的消息 id）
+                if (result.message !== null && immersive !== null) {
+                  this.#startImmersive(result.message, media.intent, immersive);
+                }
+                return result;
               });
-              // 回答真的落库之后才开始自动任务（source 用落库的消息 id）
-              if (finished.message !== null && immersive !== null) {
-                this.#startImmersive(finished.message, media.intent, immersive);
-              }
               // D-46a：回答**真的落库了**（不是迟到 / 被重试作废的结果）才记笔记；失败只记日志，不影响回答
               if (finished.message !== null && this.#deps.notes !== undefined) {
                 const scope = { kind: "conversation" as const, conversationId: run.conversationId };
@@ -1155,6 +1160,22 @@ export class ChatService {
   }
 
   // ---------------------------------------------------------------- 沉浸模式（D-39）
+
+  /** 同一会话的自动媒体决策串行执行：后一条回答数用量时一定能看到前一条建出来的任务 */
+  async #withImmersionLock<T>(conversationId: string, fn: () => Promise<T>): Promise<T> {
+    const previous = this.#immersionLocks.get(conversationId) ?? Promise.resolve();
+    const run = previous.then(fn, fn);
+    const tail = run.then(
+      () => undefined,
+      () => undefined,
+    );
+    this.#immersionLocks.set(conversationId, tail);
+    try {
+      return await run;
+    } finally {
+      if (this.#immersionLocks.get(conversationId) === tail) this.#immersionLocks.delete(conversationId);
+    }
+  }
 
   /** 沉浸模式开着才返回计划；退回原因在写回答的同一个事务里落库 */
   #immersivePlan(
