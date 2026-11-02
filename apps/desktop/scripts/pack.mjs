@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
 
@@ -32,6 +32,20 @@ if (missing.length > 0) {
 }
 console.log("[pack] 资源源目录：" + source);
 
+// 先暂存到 vendor/tts（electron-builder 的 from 用相对路径更稳，Windows 盘符 + 环境变量宏会被当成相对路径）
+const stage = join(desktop, "vendor", "tts");
+rmSync(stage, { recursive: true, force: true });
+mkdirSync(join(stage, "models"), { recursive: true });
+console.log("[pack] 暂存 Python / 依赖 / 代码 / 模型到 " + stage + "（约 18GB，第一次会慢）");
+cpSync(join(source, "pythons", "cpython-3.11.13-windows-x86_64-none"), join(stage, "python"), { recursive: true });
+cpSync(join(source, "index-tts", ".venv", "Lib", "site-packages"), join(stage, "site-packages"), { recursive: true });
+cpSync(join(source, "index-tts"), join(stage, "index-tts"), {
+  recursive: true,
+  filter: (path) => !path.includes(join("index-tts", ".venv")),
+});
+cpSync(join(source, "models", "IndexTTS-2"), join(stage, "models", "IndexTTS-2"), { recursive: true });
+console.log("[pack] 暂存完成，开始打包");
+
 function run(args, extraEnv = {}) {
   const result = spawnSync(args[0] === "pnpm" ? "pnpm.cmd" : args[0], args.slice(1), {
     cwd: desktop,
@@ -45,6 +59,4 @@ function run(args, extraEnv = {}) {
 // better-sqlite3 v13 自带 Node-API prebuilds（win32-x64 在 prebuilds/ 里），Electron 直接能加载，
 // 所以不跑 electron-rebuild（本机也没装 VS Build Tools）。electron-builder.yml 里 npmRebuild: false。
 run(["pnpm", "exec", "electron-vite", "build"]);
-run(["pnpm", "exec", "electron-builder", ...(process.argv.includes("--dir") ? ["--dir"] : [])], {
-  TTS_BUNDLE_DIR: source,
-});
+run(["pnpm", "exec", "electron-builder", ...(process.argv.includes("--dir") ? ["--dir"] : [])]);

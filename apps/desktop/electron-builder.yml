@@ -17,19 +17,16 @@ npmRebuild: false
 asarUnpack:
   - "**/*.node"
 
-# 语音合成：Python + IndexTTS2 代码 + 模型。源目录用 TTS_BUNDLE_DIR（默认 E:\AI\TTS，pack.mjs 会设置）。
+# 语音合成：Python + IndexTTS2 代码 + 模型。pack.mjs 会先把它们暂存到 apps/desktop/vendor/tts（已 gitignore）。
 # 产物布局：<resources>/tts/{python, site-packages, index-tts, models/IndexTTS-2, runner.py}
 extraResources:
-  - from: "${env.TTS_BUNDLE_DIR}/pythons/cpython-3.11.13-windows-x86_64-none"
+  - from: vendor/tts/python
     to: tts/python
-  - from: "${env.TTS_BUNDLE_DIR}/index-tts/.venv/Lib/site-packages"
+  - from: vendor/tts/site-packages
     to: tts/site-packages
-  - from: "${env.TTS_BUNDLE_DIR}/index-tts"
+  - from: vendor/tts/index-tts
     to: tts/index-tts
-    filter:
-      - "**/*"
-      - "!.venv/**"
-  - from: "${env.TTS_BUNDLE_DIR}/models/IndexTTS-2"
+  - from: vendor/tts/models/IndexTTS-2
     to: tts/models/IndexTTS-2
   - from: tts/runner.py
     to: tts/runner.py
