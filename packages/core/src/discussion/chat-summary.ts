@@ -26,15 +26,15 @@ export const CHAT_SUMMARY_PROMPT_VERSION = "chat-summary-v1";
 
 /** 最近这么多条（不算已撤回的）不摘要 */
 export const CHAT_SUMMARY_KEEP_RECENT = 20;
-/** 没覆盖的旧消息攒到这么多条，或者合计这么多字，才写一次摘要 */
+/** 没覆盖的旧消息攒到这么多条，或者合计这么多字，才写一次摘要（字数按 UTF-16 单元估算，只用来分批） */
 export const CHAT_SUMMARY_MIN_MESSAGES = 20;
 export const CHAT_SUMMARY_MIN_CHARS = 20_000;
-/** 一份摘要最多覆盖这么多条 / 这么多字（按渲染后的长度） */
+/** 一份摘要最多覆盖这么多条 / 这么多字（按渲染后的 UTF-16 单元，emoji 多时会早一点分段） */
 export const CHAT_SUMMARY_CHUNK_MAX_MESSAGES = 60;
 export const CHAT_SUMMARY_CHUNK_MAX_CHARS = 40_000;
-/** 单条消息进摘要 Prompt 最多这么多字，超出截断并写明（一条 20 万字的回答也要能被摘要） */
+/** 单条消息进摘要 Prompt 最多这么多码点，超出截断并写明（一条 20 万字的回答也要能被摘要） */
 export const CHAT_SUMMARY_MESSAGE_MAX_CHARS = 20_000;
-/** 摘要正文上限；请秘书写到 CHAT_SUMMARY_TARGET_CHARS 以内，超过上限的截断 */
+/** 摘要正文上限（码点）；请秘书写到 CHAT_SUMMARY_TARGET_CHARS 以内，超过上限的截断 */
 export const CHAT_SUMMARY_TARGET_CHARS = 1_500;
 export const CHAT_SUMMARY_OUTPUT_MAX_CHARS = 4_000;
 
@@ -133,6 +133,12 @@ export function buildChatSummarySnapshot(input: BuildChatSummarySnapshotInput): 
   if (new Set(input.messages.map((message) => message.id)).size !== input.messages.length) {
     throw new ChatSummaryInputError("duplicate message in summary input");
   }
+  // 汐 #171 建议 3：要旧的在前，传反了会静默写出倒序的摘要
+  for (let i = 1; i < input.messages.length; i += 1) {
+    if (input.messages[i]!.createdAt < input.messages[i - 1]!.createdAt) {
+      throw new ChatSummaryInputError("summary input is not in chronological order");
+    }
+  }
 
   const displayNameOf = input.displayNameOf ?? ((agentId: string) => agentId);
   const nonce = input.nonce ?? createNonce();
@@ -183,13 +189,14 @@ export type ChatSummaryOutput =
   | { ok: false; reason: "empty_output" };
 
 /**
- * 检查秘书写回来的摘要。宽松：去掉首尾空白和包住全文的代码块；秘书按聊天习惯回了
+ * 检查秘书写回来的摘要。宽松：去掉首尾空白，以代码块开头就只取第一块；秘书按聊天习惯回了
  * {"kind":"reply","text":…} 或 {"summary":…} 也接受。超过上限截断并写明，不整份作废（一次 Run 不便宜）。
  * 空的 → empty_output，main 把这次 Run 记失败、不落摘要。
  */
 export function parseChatSummaryOutput(raw: string): ChatSummaryOutput {
   let text = raw.trim();
-  const fenced = /^```[^\n]*\n([\s\S]*?)\n?```$/.exec(text);
+  // 以代码块开头就取第一块（后面可能还跟着「以上是摘要。」，汐 #171 建议 2）
+  const fenced = /^```[^\n]*\n([\s\S]*?)\n?```/.exec(text);
   if (fenced) text = fenced[1]!.trim();
   if (text.startsWith("{")) {
     try {

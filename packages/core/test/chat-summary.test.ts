@@ -225,6 +225,8 @@ describe("chat history summary prompt (X-35)", () => {
     assert.throws(() => build({ messages: [] }), ChatSummaryInputError);
     assert.throws(() => build({ messages: [history[0]!, history[0]!] }), ChatSummaryInputError);
     assert.throws(() => build({ conversationId: "conv_" + "1".repeat(26) }), ChatSummaryInputError);
+    const later = (m: ChatMessage) => ChatMessage.parse({ ...m, createdAt: "2026-11-02T00:00:01.000Z" });
+    assert.throws(() => build({ messages: [later(history[0]!), history[1]!] }), ChatSummaryInputError, "out of order (汐 #171)");
   });
 
   it("rejects a forged boundary inside a message", () => {
@@ -240,6 +242,7 @@ describe("chat history summary output (X-35)", () => {
     assert.deepEqual(parseChatSummaryOutput('{"kind":"reply","text":"要点"}'), { ok: true, content: "要点", truncated: false });
     assert.deepEqual(parseChatSummaryOutput('{"summary":" 要点 "}'), { ok: true, content: "要点", truncated: false });
     assert.deepEqual(parseChatSummaryOutput("{不是 JSON"), { ok: true, content: "{不是 JSON", truncated: false });
+    assert.deepEqual(parseChatSummaryOutput("```markdown\n- 要点\n```\n以上是摘要。"), { ok: true, content: "- 要点", truncated: false }, "fence then a trailing line (汐 #171)");
   });
 
   it("treats empty output and skip as failure", () => {
@@ -306,5 +309,29 @@ describe("summaries in the reply prompt (X-35)", () => {
     assert.equal(snapshot.includedSummaryIds.length, Math.floor(CHAT_SUMMARY_BUDGET_CHARS / 3_900));
     assert.deepEqual(snapshot.includedSummaryIds, summaries.slice(-snapshot.includedSummaryIds.length).map((s) => s.id), "newest-covering summaries win");
     for (const message of recent) assert.ok(snapshot.includedMessageIds.includes(message.id), "recent message kept");
+  });
+
+  it("recent full text comes first: a long recent reply is not pushed out by summaries (林离 #171)", () => {
+    const old = users(20);
+    const summaries = Array.from({ length: 5 }, (_, i) =>
+      ChatHistorySummary.parse({ ...summaryOf(old.slice(i * 4, i * 4 + 4), i + 1), content: "摘".repeat(3_900), contentHash: sha("摘".repeat(3_900)) }));
+    const question = user(300, "写个长方案");
+    const longReply = reply(301, "codex", "长".repeat(45_000), 300);
+    const snapshot = build([...old, question, longReply], summaries);
+    assert.ok(snapshot.includedMessageIds.includes(longReply.id), "the long recent reply stays");
+    assert.ok(snapshot.includedMessageIds.includes(question.id));
+    // 6 万 - 约 4.5 万 = 约 1.5 万给摘要：放得下 3 份，从覆盖最新的那份往前
+    assert.deepEqual(snapshot.includedSummaryIds, summaries.slice(-3).map((s) => s.id));
+  });
+
+  it("messages of summaries that did not make it in can still come in as full text", () => {
+    const old = users(8);
+    const a = summaryOf(old.slice(0, 4), 1);
+    const b = ChatHistorySummary.parse({ ...summaryOf(old.slice(4, 8), 2), content: "摘".repeat(19_000), contentHash: sha("摘".repeat(19_000)) });
+    const big = reply(301, "codex", "长".repeat(41_000), 8);
+    const snapshot = build([...old, big], [a, b]);
+    // 最近一条占 4.1 万，剩约 1.9 万：b（1.9 万）放不下就停，a 也不选；旧消息以原文补上
+    assert.deepEqual(snapshot.includedSummaryIds, []);
+    for (const message of old) assert.ok(snapshot.includedMessageIds.includes(message.id));
   });
 });
