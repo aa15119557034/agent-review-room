@@ -1,5 +1,5 @@
 import type { ApprovalBatch, BatchKind, PlanVersion, Project, Round, Turn } from "@room/schemas";
-import { displayedPlan, type DiscussionState } from "./discussion";
+import { latestValidPlan, type DiscussionState } from "./discussion";
 
 /**
  * 讨论室标签（C-38，ADR-003 §3 / §4）：议题列表的一句话状态 + 「等你处理」。
@@ -18,15 +18,30 @@ export interface TopicDigest {
   plans: PlanVersion[];
 }
 
-export type TopicGroup = "todo" | "active" | "new" | "final";
+export type TopicGroup = "todo" | "active" | "loading" | "new" | "final";
 
 export const GROUP_LABEL: Record<TopicGroup, string> = {
   todo: "等你处理",
   active: "进行中",
+  loading: "读取中",
   new: "还没开始",
   final: "已定稿",
 };
-export const GROUP_ORDER: readonly TopicGroup[] = ["todo", "active", "new", "final"];
+export const GROUP_ORDER: readonly TopicGroup[] = ["todo", "active", "loading", "new", "final"];
+
+/**
+ * 议题缓存的版本号：每次「开始取」或「离开时留实时数据」都发一个新号，
+ * 只有号更大的才能覆盖缓存（汐 #162 评审 2：晚回来的旧查询不能盖掉新数据）
+ */
+let seqCounter = 0;
+export const boardSeq = () => ++seqCounter;
+
+/** 写缓存：号比现有的小就丢掉 */
+export function withDigest(board: DiscussionState["board"], projectId: string, g: TopicDigest, seq: number): DiscussionState["board"] {
+  if ((board.seq[projectId] ?? 0) > seq) return board;
+  const { [projectId]: _, ...failed } = board.failed;
+  return { ...board, topics: { ...board.topics, [projectId]: g }, seq: { ...board.seq, [projectId]: seq }, failed };
+}
 
 /** 一件等你处理的事。点它：先打开议题；stamp 直接打开原来的确认页 */
 export type TodoItem =
@@ -60,7 +75,7 @@ export function digestFromDisc(d: DiscussionState): TopicDigest {
   const open = d.rounds.filter(isOpenRound).map((r) => r.id);
   return {
     rounds: d.rounds,
-    batches: d.batches.filter((b) => b.roundId !== null && open.includes(b.roundId)),
+    batches: d.batches.filter((b) => open.includes(b.roundId)),
     turns: d.turns.filter((t) => open.includes(t.roundId)),
     plans: d.plans,
   };
@@ -70,14 +85,20 @@ const latest = (...xs: (string | null | undefined)[]) => xs.filter((x): x is str
 
 /**
  * 一个议题的状态。优先级：等你盖章 > 方案草稿等你确认 > 本轮答完等你请人汇总 > 进行中 > 已定稿 > 还没开始。
+ * 还没有数据的议题单独算「读取中」（failed = 读过但失败）
  * names：参与者 id → 名字
  */
-export function topicStatus(project: Project, g: TopicDigest | undefined, name: (agent: string) => string): TopicStatus {
-  if (!g) return { group: "new", line: "读取中…", todos: [], lastActivity: project.createdAt };
+export function topicStatus(
+  project: Project,
+  g: TopicDigest | undefined,
+  name: (agent: string) => string,
+  failed = false,
+): TopicStatus {
+  if (!g) return { group: "loading", line: failed ? "读不出来，点开看看" : "读取中…", todos: [], lastActivity: project.createdAt };
   const rounds = [...g.rounds].sort((a, b) => b.index - a.index);
   const open = rounds.find(isOpenRound) ?? null;
   const last = rounds[0] ?? null;
-  const plan = displayedPlan({ plans: g.plans } as DiscussionState);
+  const plan = latestValidPlan(g.plans);
   const todos: TodoItem[] = [];
   const pid = project.id;
 
@@ -171,7 +192,7 @@ export function statusFor(
 ): TopicStatus {
   const name = (id: string) => d.agents.find((a) => a.id === id)?.displayName ?? id;
   const g = project.id === currentProjectId && d.board.live === project.id ? digestFromDisc(d) : d.board.topics[project.id];
-  return topicStatus(project, g, name);
+  return topicStatus(project, g, name, !!d.board.failed[project.id]);
 }
 
 /** 顶栏「讨论」上的角标：所有议题等你处理的事加起来 */

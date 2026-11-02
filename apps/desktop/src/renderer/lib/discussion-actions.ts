@@ -12,7 +12,7 @@ import { ControlFailure, type RoomClient } from "./client";
 import { appendEvents, applyEvent, type AppState } from "./state";
 import { initialDiscussion, planForNextRound, type DiscussionState } from "./discussion";
 import { modelsFor } from "./models";
-import { isOpenRound, type TopicDigest } from "./topic-board";
+import { boardSeq, isOpenRound, withDigest, type TopicDigest } from "./topic-board";
 import type { Store } from "./store";
 
 /**
@@ -107,24 +107,44 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
     return { rounds, plans, batches: details.flatMap((x) => x.batches), turns: details.flatMap((x) => x.turns) };
   }
 
-  const setDigest = (projectId: string, g: TopicDigest) =>
-    setDisc((d) => ({ ...d, board: { ...d.board, topics: { ...d.board.topics, [projectId]: g } } }));
+  /** 取一次并写缓存：号在开始取的时候发，晚回来的旧结果盖不掉更新的缓存 */
+  async function refreshDigest(projectId: string): Promise<boolean> {
+    const seq = boardSeq();
+    try {
+      const g = await fetchDigest(projectId);
+      setDisc((d) => ({ ...d, board: withDigest(d.board, projectId, g, seq) }));
+      return true;
+    } catch {
+      return false;
+    }
+  }
 
-  /** 启动时读一遍所有议题。读不到的议题保持「读取中」，不弹提示（列表只是概览） */
-  async function loadBoard() {
+  const markFailed = (projectId: string) =>
+    setDisc((d) => (d.board.topics[projectId] ? d : { ...d, board: { ...d.board, failed: { ...d.board.failed, [projectId]: true } } }));
+
+  /**
+   * 启动时读一遍所有议题。读不到的 1 秒后再试一次，还不行就标「读不出来」（不弹提示，列表只是概览；
+   * 点开议题时 loadTopic 会照常报错）
+   */
+  async function loadBoard(retryMs = 1000) {
     if (!store.get().disc.available) return;
+    const failed: string[] = [];
     await Promise.all(
       store.get().projects.map(async (p) => {
-        try {
-          setDigest(p.id, await fetchDigest(p.id));
-        } catch {
-          /* 概览读不到不打扰；打开议题时 loadTopic 会报错 */
-        }
+        if (!(await refreshDigest(p.id))) failed.push(p.id);
+      }),
+    );
+    if (failed.length === 0) return;
+    await new Promise((r) => setTimeout(r, retryMs));
+    await Promise.all(
+      failed.map(async (pid) => {
+        if (store.get().disc.board.live === pid) return;
+        if (!(await refreshDigest(pid))) markFailed(pid);
       }),
     );
   }
 
-  /** 别的议题有动静：同一个议题 200ms 内的事件合并成一次重读 */
+  /** 别的议题有动静：同一个议题 200ms 内的事件合并成一次重读；那时已经打开了它就不用读 */
   const refreshTimers = new Map<string, ReturnType<typeof setTimeout>>();
   function refreshSoon(projectId: string) {
     if (refreshTimers.has(projectId)) return;
@@ -132,7 +152,8 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
       projectId,
       setTimeout(() => {
         refreshTimers.delete(projectId);
-        fetchDigest(projectId).then((g) => setDigest(projectId, g), () => {});
+        if (store.get().disc.board.live === projectId) return;
+        void refreshDigest(projectId);
       }, 200),
     );
   }

@@ -66,7 +66,10 @@ if (!picked) {
   const store = createStore(initialState);
   const actions = createActions(store, createClient(picked.bridge));
   // mock 的 ?topics 演示议题建好之后再读列表
-  void Promise.resolve((picked.bridge as { topicsSeeded?: Promise<void> }).topicsSeeded).then(() => actions.start());
+  // 演示数据建失败也照常启动，不能停在「正在连接后端…」
+  void Promise.resolve((picked.bridge as { topicsSeeded?: Promise<void> }).topicsSeeded)
+    .catch(() => {})
+    .then(() => actions.start());
   root.render(
     <StrictMode>
       <AppProvider store={store} actions={actions} isMock={picked.isMock}>

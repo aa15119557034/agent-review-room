@@ -39,8 +39,10 @@ export interface DiscussionState {
   /**
    * 讨论室标签的议题列表（C-38）：每个议题读一句话状态用的数据。
    * live = disc 里的 rounds / batches / turns / plans 已经是哪个议题的（这个议题的状态按实时数据算）
+   * seq = 每个议题缓存是第几次取的（boardSeq() 发号）：晚回来的旧查询不能盖掉新缓存
+   * failed = 读过但没读到的议题（显示「读不出来」，不归进「还没开始」）
    */
-  board: { topics: Record<string, TopicDigest>; live: string | null };
+  board: { topics: Record<string, TopicDigest>; seq: Record<string, number>; failed: Record<string, boolean>; live: string | null };
   ui: {
     railCollapsed: boolean;
     sideCollapsed: boolean;
@@ -69,7 +71,7 @@ export const initialDiscussion: DiscussionState = {
   plans: [],
   models: {},
   confirm: null,
-  board: { topics: {}, live: null },
+  board: { topics: {}, seq: {}, failed: {}, live: null },
   ui: {
     railCollapsed: false,
     sideCollapsed: false,
@@ -137,7 +139,12 @@ const newest = (plans: readonly PlanVersion[]) => [...plans].sort((a, b) => b.ve
 
 /** 右栏显示哪一版：最新的有效版本（草稿比当前 / 定稿新时显示草稿） */
 export function displayedPlan(d: DiscussionState): PlanVersion | null {
-  return newest(d.plans.filter((p) => p.state === "CURRENT" || p.state === "FINAL" || p.state === "DRAFT"));
+  return latestValidPlan(d.plans);
+}
+
+/** 同上，只看方案列表（讨论室标签给不在看的议题算状态时用，C-38） */
+export function latestValidPlan(plans: readonly PlanVersion[]): PlanVersion | null {
+  return newest(plans.filter((p) => p.state === "CURRENT" || p.state === "FINAL" || p.state === "DRAFT"));
 }
 
 /**

@@ -6,7 +6,8 @@ import { createActions } from "../lib/actions";
 import { createClient } from "../lib/client";
 import { initialState, type AppState } from "../lib/state";
 import { createStore, type Store } from "../lib/store";
-import { groupTopics, statusFor, todoCount, topicStatus, type TopicDigest } from "../lib/topic-board";
+import { boardSeq, groupTopics, statusFor, todoCount, topicStatus, withDigest, type TopicDigest } from "../lib/topic-board";
+import { initialDiscussion } from "../lib/discussion";
 
 /** C-38 讨论室标签：议题一句话状态、等你处理、只用讨论室标签走完一轮 */
 
@@ -26,9 +27,22 @@ const digest = (g: Partial<TopicDigest>): TopicDigest => ({ rounds: [], batches:
 const status = (g: Partial<TopicDigest>) => topicStatus(project, digest(g), name);
 
 describe("topic one-line status (C-38)", () => {
-  it("no rounds and no plan = not started; no data yet = loading", () => {
+  it("no rounds and no plan = not started; no data yet = its own 'loading' group, not 'not started'", () => {
     assert.deepEqual([status({}).group, status({}).line], ["new", "还没开始"]);
-    assert.equal(topicStatus(project, undefined, name).line, "读取中…");
+    const loading = topicStatus(project, undefined, name);
+    assert.deepEqual([loading.group, loading.line], ["loading", "读取中…"]);
+    assert.equal(topicStatus(project, undefined, name, true).line, "读不出来，点开看看");
+  });
+
+  it("a slower, older fetch cannot overwrite a newer cache entry (汐 #162 评审 2)", () => {
+    const older = boardSeq(); // 先开始取（t≈200）
+    const newer = boardSeq(); // 后来离开议题时按实时数据留缓存（t≈220）
+    let board = withDigest(initialDiscussion.board, "p", digest({ rounds: [round("RUNNING")] }), newer);
+    board = withDigest(board, "p", digest({ rounds: [round("DRAFT")], batches: [batch("initial")] }), older); // t≈230 才回来
+    assert.equal(board.topics["p"]!.rounds[0]!.state, "RUNNING");
+    // 读到数据就清掉「读不出来」
+    const failed = { ...initialDiscussion.board, failed: { p: true } };
+    assert.equal(withDigest(failed, "p", digest({}), boardSeq()).failed["p"], undefined);
   });
 
   it("a batch waiting for the stamp is a to-do whatever the round is doing", () => {
@@ -171,6 +185,35 @@ describe("discussion tab against the mock (C-38 acceptance)", () => {
     });
     assert.ok(r.ok);
     await until(() => st(store.get(), back).todos[0]?.kind === "stamp");
+    assert.equal(todoCount(store.get().disc, store.get().currentProjectId, store.get().projects), 1);
+  });
+
+  it("a topic that fails to load at start is retried once, then shown as unreadable (not 'not started')", async () => {
+    const bridge = createMockBridge({ tickMs: 1, reviewerConfigured: true });
+    const a = await bridge.command({ type: "project.create", name: "一" });
+    const b = await bridge.command({ type: "project.create", name: "二" });
+    const c = await bridge.command({ type: "project.create", name: "三" });
+    assert.ok(a.ok && b.ok && c.ok);
+    await bridge.command({
+      type: "round.draft", projectId: c.data.id, recipients: ["codex"], task: "看一下", taskSource: "human",
+      planVersionId: null, historyMode: "recent_with_summaries",
+    });
+    // 二：一直读不到；三：第一次读不到，重试成功
+    let cFails = 1;
+    const flaky = {
+      ...bridge,
+      query: async (req: { type: string; projectId?: string }) => {
+        if (req.type === "rounds.list" && req.projectId === b.data.id) return { ok: false, error: "internal", message: "忙" };
+        if (req.type === "rounds.list" && req.projectId === c.data.id && cFails-- > 0) return { ok: false, error: "internal", message: "忙" };
+        return bridge.query(req as never);
+      },
+    } as typeof bridge;
+    const store = createStore(initialState);
+    const actions = createActions(store, createClient(flaky));
+    await actions.start();
+    await until(() => st(store.get(), c.data.id).group === "todo" && !!store.get().disc.board.failed[b.data.id], 4000);
+    const bs = st(store.get(), b.data.id);
+    assert.deepEqual([bs.group, bs.line], ["loading", "读不出来，点开看看"]);
     assert.equal(todoCount(store.get().disc, store.get().currentProjectId, store.get().projects), 1);
   });
 

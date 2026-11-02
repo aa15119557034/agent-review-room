@@ -5,7 +5,7 @@ import type { Store } from "./store";
 import { createDiscussionActions } from "./discussion-actions";
 import { createChatActions } from "./chat-actions";
 import { createConsoleActions } from "./console-actions";
-import { digestFromDisc, type TodoItem } from "./topic-board";
+import { boardSeq, digestFromDisc, withDigest, type TodoItem } from "./topic-board";
 
 /**
  * 所有会访问后端的操作都在这里。UI 组件只调用这些函数，不直接碰 client。
@@ -75,10 +75,9 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
               confirm: null,
               // 离开的议题：把实时数据留给议题列表（C-38），新议题读完前列表用它的缓存
               board: {
-                topics:
-                  s.disc.board.live && s.disc.board.live === s.currentProjectId
-                    ? { ...s.disc.board.topics, [s.disc.board.live]: digestFromDisc(s.disc) }
-                    : s.disc.board.topics,
+                ...(s.disc.board.live && s.disc.board.live === s.currentProjectId
+                  ? withDigest(s.disc.board, s.disc.board.live, digestFromDisc(s.disc), boardSeq())
+                  : s.disc.board),
                 live: null,
               },
             },
