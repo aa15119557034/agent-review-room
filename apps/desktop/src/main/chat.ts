@@ -1222,11 +1222,11 @@ export class ChatService {
     }
     if (plan.speak && intent.speak === true) {
       const hash = sha256Hex("speak");
-      await Promise.resolve(this.#deps.speakMedia?.(source, hash)).catch((error: unknown) => {
+      await Promise.resolve(this.#deps.speakMedia?.(source, hash)).catch(async (error: unknown) => {
         const why = error instanceof Error ? error.message : String(error);
         console.warn("[chat] 沉浸模式自动语音没排上：", why);
-        // 契约不变量：没任务就要有原因；这里补一条立刻失败的 immersive 任务
-        void Promise.resolve(this.#deps.failSpeech?.(source, hash, why)).catch(() => undefined);
+        // 契约不变量：没任务就要有原因；失败任务也算这个小时的用量，所以在锁里等它落库
+        await Promise.resolve(this.#deps.failSpeech?.(source, hash, why)).catch(() => undefined);
       });
     }
   }

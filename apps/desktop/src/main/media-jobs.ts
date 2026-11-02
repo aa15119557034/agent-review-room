@@ -706,7 +706,6 @@ export class MediaJobsService {
     this.deps.emit({ type: "media.updated", job });
   }
 
-  /** source 以库里的消息为准；不一致就 validation_failed（渲染层只能拿到 id） */
   /**
    * D-39：沉浸模式要自动发语音，但前置条件不满足（没配 TTS / 秘书没选声音 / 文字不合适）。
    * 契约不变量要求「要么有任务、要么有退回原因」，所以建一条立刻 failed(backend_unavailable) 的任务。
@@ -741,6 +740,7 @@ export class MediaJobsService {
     return job;
   }
 
+  /** source 以库里的消息为准；不一致就 validation_failed（渲染层只能拿到 id） */
   #assertSource(source: MediaSource): void {
     if (source.kind !== "chat") throw new ChatError("validation_failed", "现在只支持从聊天里发起画图");
     const message = getChatMessage(this.deps.db, source.messageId);
