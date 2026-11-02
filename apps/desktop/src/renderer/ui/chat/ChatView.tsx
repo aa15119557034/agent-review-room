@@ -32,6 +32,16 @@ import { useActions, useAppState } from "../hooks";
 import { Icon, type IconName } from "../Icon";
 import { RECOMMENDED_NODES } from "../../lib/presets";
 import {
+  REJECT_LABEL,
+  compactionText,
+  handoffPhase,
+  noteTimelineText,
+  notesBySource,
+  rejectedBySource,
+  suggestedSwitches,
+  windowLinesAfter,
+} from "../../lib/notes";
+import {
   AgentMedia,
   AttachmentTray,
   DrawSheetBody,
@@ -241,9 +251,13 @@ function ConversationPane() {
   const selecting = useAppState((s) => s.chat.selecting);
   const answering = useAppState((s) => runningSlots(s.chat).map((sl) => sl.agent));
   const agents = useAppState((s) => s.disc.agents);
-  const status = useAppState((s) => s.disc.status);
   const actions = useActions();
   const { name } = useNames();
+  // 笔记和每位的窗口状态（C-47）：打开会话时读一次，之后靠事件
+  const convId = conv?.id;
+  useEffect(() => {
+    if (convId) void actions.notes.loadConversation(convId);
+  }, [convId, actions]);
   if (!conv) return <p className="chat-pane-empty">正在读取…</p>;
   const direct = conv.kind === "direct" ? agents.find((a) => a.id === conv.members[0]) : undefined;
   const who = [...new Set(answering)];
@@ -276,23 +290,90 @@ function ConversationPane() {
           ⋯
         </button>
       </header>
-      {direct && (
-        <p className="chat-memory-bar">
-          <Icon name="memory" size={15} />
-          <span>记忆：{direct.memorySource.nodeFolder ? `节点记忆文件夹（${nodeLabel(direct.nodeId)}）+ ` : ""}聊天记录</span>
-          <span className="chat-memory-ro">只读</span>
-          {/* 上下文 % / 压缩次数从秘书页挪到会话里（C-33b）；后端报的是这位秘书的，不是单算这个会话的 */}
-          {status[direct.id]?.contextUsedPercent != null && (
-            <span className="chat-memory-ctx" title="这位秘书现在的上下文用量（节点报的）">
-              上下文 {Math.round(status[direct.id]!.contextUsedPercent!)}%
-              {status[direct.id]!.compactions ? ` · 压缩 ${status[direct.id]!.compactions} 次` : ""}
-            </span>
-          )}
-        </p>
-      )}
+      <MemoryBar conv={conv} />
       <Timeline conv={conv} />
       {selecting ? <SelectBar count={selecting.length} /> : <Composer conv={conv} />}
     </>
+  );
+}
+
+/**
+ * 聊天顶上的记忆条（C-47 / ADR-005 §4）：记忆来源、笔记、这个窗口压缩了几次、上下文 %（节点报的）。
+ * 窗口里压缩满 3 次显示「建议换窗口」，只提醒不自动换；有没确认的交接笔记就给个入口接着看
+ */
+function MemoryBar({ conv }: { conv: Conversation }) {
+  const agents = useAppState((s) => s.disc.agents);
+  const status = useAppState((s) => s.disc.status);
+  const notesOn = useAppState((s) => s.notes.available);
+  const windows = useAppState((s) => (s.notes.windowsAvailable ? s.notes.windows[conv.id] : undefined));
+  const latest = useAppState((s) => s.notes.latest[`c:${conv.id}`]);
+  const runs = useAppState((s) => s.notes.handoffRuns);
+  const actions = useActions();
+  const { name } = useNames();
+  const scope = { kind: "conversation" as const, conversationId: conv.id };
+  const direct = conv.kind === "direct" ? agents.find((a) => a.id === conv.members[0]) : undefined;
+  const openNotes = (agent: string) => actions.notes.openNote(scope, agent, conv.members);
+  const pending = (windows ?? []).filter((w) => w.pendingDraft);
+  const suggest = suggestedSwitches(windows).filter((w) => !w.pendingDraft);
+  const draftChips = pending.map((w) => {
+    const d = w.pendingDraft!;
+    const phase = handoffPhase(d, d.runId ? runs[d.runId] : undefined);
+    return (
+      <button key={`d-${w.agent}`} type="button" className="chat-bar-chip" data-tone="active" onClick={() => void actions.notes.prepareWindow(conv.id, w.agent)}>
+        {conv.kind === "group" ? `${name(w.agent)} ` : ""}
+        {phase === "writing" ? "正在写交接笔记…" : phase === "failed" ? "交接没写成 · 看看" : "交接笔记写好了 · 看一下"}
+      </button>
+    );
+  });
+  const suggestChips = suggest.map((w) => (
+    <button key={`s-${w.agent}`} type="button" className="chat-bar-chip" data-tone="warn" title={compactionText(w)} onClick={() => void actions.notes.prepareWindow(conv.id, w.agent)}>
+      {conv.kind === "group" ? `${name(w.agent)} 压缩 ${w.compactionsInWindow} 次 · ` : ""}建议换窗口
+    </button>
+  ));
+
+  if (direct) {
+    const st = status[direct.id];
+    const win = windows?.find((w) => w.agent === direct.id);
+    const note = latest?.find((n) => n.agent === direct.id);
+    return (
+      <div className="chat-memory-bar">
+        <Icon name="memory" size={15} />
+        <span className="chat-memory-src">记忆：{direct.memorySource.nodeFolder ? `节点记忆文件夹（${nodeLabel(direct.nodeId)}）+ ` : ""}聊天记录</span>
+        <span className="chat-memory-ro">只读</span>
+        {notesOn && (
+          <button type="button" className="chat-bar-chip" onClick={() => openNotes(direct.id)}>
+            笔记{note ? ` v${note.version}` : ""} ›
+          </button>
+        )}
+        {win && (
+          <span className="chat-memory-ctx" title="主控机按这个会话、这个窗口里的历史摘要数的">
+            {win.index > 1 ? `第 ${win.index} 个窗口 · ` : ""}{compactionText(win).replace("，建议换", "")}
+          </span>
+        )}
+        {/* 上下文 % 还是节点按秘书报的那个数，不是单算这个会话的 */}
+        {st?.contextUsedPercent != null && (
+          <span className="chat-memory-ctx" title="这位秘书现在的上下文用量（节点报的，不是只算这个会话）">
+            上下文 {Math.round(st.contextUsedPercent)}%（节点报的）
+          </span>
+        )}
+        {suggestChips}
+        {draftChips}
+      </div>
+    );
+  }
+  if (!notesOn && !suggestChips.length && !draftChips.length) return null;
+  return (
+    <div className="chat-memory-bar">
+      <Icon name="memory" size={15} />
+      {notesOn && (
+        <button type="button" className="chat-bar-chip" onClick={() => openNotes(latest?.[0]?.agent ?? conv.members[0]!)}>
+          笔记{latest?.length ? ` · ${latest.length} 位记了` : ""} ›
+        </button>
+      )}
+      {suggestChips}
+      {draftChips}
+      {!suggestChips.length && !draftChips.length && <span className="chat-memory-ctx">每位的窗口在 ⋯ 设置里换</span>}
+    </div>
   );
 }
 
@@ -313,6 +394,7 @@ function Timeline({ conv }: { conv: Conversation }) {
   const ref = useRef<HTMLDivElement>(null);
   const stick = useRef(true);
   const breaks = timeBreaks(entries.map((e) => e.message.createdAt));
+  const windowLines = useAppState((s) => windowLinesAfter(s.notes.windowList[conv.id]));
   const liveText = live.map((sl) => (sl.runId ? (runEvents[sl.runId] ?? []).map((e) => (e.type === "message_delta" ? e.text : "")).join("") : ""));
 
   // 停在底部时，新消息和流式文字自动跟上；往上翻着看的时候不打扰
@@ -350,6 +432,19 @@ function Timeline({ conv }: { conv: Conversation }) {
               </li>
             )}
             <Entry entry={e} now={now} conv={conv} />
+            {windowLines.get(e.message.id)?.map((w) => (
+              <li key={w.id} className="chat-system chat-window-line">
+                {name(w.agent)} 换了新窗口（第 {w.index} 个），之前的消息不再发给 {name(w.agent)}
+                {" · "}
+                <button
+                  type="button"
+                  className="button-link"
+                  onClick={() => actions.notes.openNote({ kind: "conversation", conversationId: conv.id }, w.agent, conv.members, { noteId: w.handoffNoteId })}
+                >
+                  看交接笔记
+                </button>
+              </li>
+            ))}
           </Fragment>
         ))}
         {live.map((sl, i) => {
@@ -447,6 +542,7 @@ function Entry({ entry, now, conv }: { entry: TimelineEntry; now: number; conv: 
             </button>
           )}
           {!entry.excluded && <AgentMedia message={am} conv={conv} />}
+          <NoteLine conv={conv} agent={am.agent} runId={am.runId} />
           {entry.excluded && <p className="chat-note">你撤回了提问，这条回答之后不再发给秘书</p>}
         </div>
       </li>
@@ -475,6 +571,32 @@ function Entry({ entry, now, conv }: { entry: TimelineEntry; now: number; conv: 
       <UserAvatar />
     </li>
   );
+}
+
+/**
+ * 回答下面那一行（ADR-005 §3）：这次回答里带了 room-note → 「C酱 更新了笔记 · 看改了什么」；
+ * 删了一半以上 → 「这次删了不少笔记，看看对不对」；格式不对没存上 → 「笔记没存上」
+ */
+function NoteLine({ conv, agent, runId }: { conv: Conversation; agent: string; runId: string }) {
+  const scope = { kind: "conversation" as const, conversationId: conv.id };
+  const note = useAppState((s) => notesBySource(s.notes.history, scope).get(runId));
+  const rejected = useAppState((s) => rejectedBySource(s.notes.rejected, scope).get(runId));
+  const actions = useActions();
+  const { name } = useNames();
+  if (note) {
+    return (
+      <button
+        type="button"
+        className="chat-note-line"
+        data-warn={note.shrankALot || undefined}
+        onClick={() => actions.notes.openNote(scope, agent, conv.members, { noteId: note.id, tab: "diff" })}
+      >
+        {noteTimelineText(note, name(agent))} · 看改了什么
+      </button>
+    );
+  }
+  if (rejected) return <p className="chat-note">笔记没存上：{REJECT_LABEL[rejected.reason]}（回答照常）</p>;
+  return null;
 }
 
 /** 你的头像：草案里在你的气泡右边，名字的第一个字（appearance.userDisplayName；读不到写「我」） */
@@ -965,12 +1087,61 @@ function SettingsSheet() {
             </button>
           </fieldset>
         )}
+        <WindowsSection conv={conv} />
         <ImmersiveSection />
         <button type="button" className="button-outline" onClick={() => actions.chat.startSelect()}>
           多选消息，转成议题
         </button>
       </div>
     </Sheet>
+  );
+}
+
+/**
+ * 会话设置里的「换窗口」（ADR-005 §4）：每位一行「第 N 个窗口 · 这个窗口压缩 M 次」+「换窗口」。
+ * 换的是秘书那边的对话（以后只从交接笔记接着聊），不是界面上的窗口；群聊每人分开换
+ */
+function WindowsSection({ conv }: { conv: Conversation }) {
+  const windows = useAppState((s) => (s.notes.windowsAvailable ? s.notes.windows[conv.id] : undefined));
+  const available = useAppState((s) => s.notes.windowsAvailable);
+  const latest = useAppState((s) => s.notes.latest[`c:${conv.id}`]);
+  const actions = useActions();
+  const { name, color } = useNames();
+  if (!available) return null;
+  const scope = { kind: "conversation" as const, conversationId: conv.id };
+  return (
+    <fieldset className="chat-windows">
+      <legend>换窗口（聊久了、压缩几次以后，让秘书从一份交接笔记重新开始）</legend>
+      {!windows && <p className="chat-note">正在读取…</p>}
+      {windows?.map((w) => {
+        const note = latest?.find((n) => n.agent === w.agent);
+        return (
+          <div key={w.agent} className="chat-window-row" style={agentStyle(color(w.agent))}>
+            <Avatar label={name(w.agent)} color={color(w.agent)} />
+            <div className="chat-window-info">
+              <b>{name(w.agent)}</b>
+              <span className="chat-note" data-warn={w.suggestSwitch || undefined}>
+                第 {w.index} 个窗口 · {compactionText(w)}
+              </span>
+              <button type="button" className="button-link" onClick={() => actions.notes.openNote(scope, w.agent, conv.members)}>
+                笔记{note ? ` v${note.version}` : "（还没有）"}
+              </button>
+            </div>
+            <div className="chat-window-actions">
+              <button type="button" className="button-outline" onClick={() => void actions.notes.prepareWindow(conv.id, w.agent)}>
+                {w.pendingDraft ? "看交接笔记" : "换窗口"}
+              </button>
+              {!w.pendingDraft && (
+                <button type="button" className="button-link" onClick={() => void actions.notes.prepareWindow(conv.id, w.agent, true)}>
+                  我自己写交接
+                </button>
+              )}
+            </div>
+          </div>
+        );
+      })}
+      <p className="chat-note">先由秘书写一份交接笔记，你看过、可以改，点「换」才生效。换了以后，之前的消息不再发给他。不会自动换。</p>
+    </fieldset>
   );
 }
 

@@ -3167,3 +3167,328 @@ select {
   margin-left: auto;
   color: var(--ink-soft);
 }
+
+/* ================================================================ C-47 项目笔记、换窗口、GitHub
+ * 弹出单沿用秘书资料页的 profile-sheet（从下面推上来、圆角 28px）；胶囊沿用汇总卡的 summary-tabs。
+ * 「建议换窗口」用橙色提醒，不用朱红（朱红只给盖章）。
+ */
+
+.note-sheet {
+  gap: 10px;
+}
+
+.note-people {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.note-people button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px 4px 4px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--fill);
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.note-people button[aria-selected="true"] {
+  background: var(--ink);
+  color: var(--sheet);
+  font-weight: 600;
+}
+
+.note-people .avatar {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: var(--agent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.note-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.note-meta b {
+  color: var(--ink);
+}
+
+.note-warn {
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: #fff3e0;
+  color: #9a5b00;
+  font-size: 13px;
+}
+
+.note-text,
+.note-diff {
+  margin: 0;
+  max-height: 46vh;
+  overflow: auto;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--sheet);
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.note-diff {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+}
+
+.note-diff span {
+  display: block;
+}
+
+.note-diff span[data-kind="add"] {
+  background: #e3f4e8;
+  color: #1d6a37;
+}
+
+.note-diff span[data-kind="del"] {
+  background: #fde7e5;
+  color: #9b2c22;
+  text-decoration: line-through;
+  text-decoration-color: rgb(155 44 34 / 0.4);
+}
+
+.note-diff span[data-kind="same"] {
+  color: var(--ink-soft);
+}
+
+.note-versions {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.note-versions button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--sheet);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.note-versions button[aria-current] {
+  outline: 2px solid var(--ink);
+}
+
+.note-versions .side-note {
+  margin-left: auto;
+}
+
+.note-editor {
+  min-height: 220px;
+  font-size: 14px;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.note-empty,
+.note-boundary {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.note-boundary {
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: var(--sheet);
+  color: var(--ink-soft);
+}
+
+.note-writing {
+  padding: 18px 12px;
+  border-radius: 14px;
+  background: var(--sheet);
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+/* 聊天顶上的记忆条：一行放不下就折行 */
+.chat-memory-bar {
+  flex-wrap: wrap;
+  row-gap: 6px;
+}
+
+.chat-memory-src {
+  flex: 1 1 auto;
+}
+
+.chat-bar-chip {
+  padding: 2px 10px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--fill);
+  color: var(--ink);
+  font: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+
+.chat-bar-chip[data-tone="warn"] {
+  background: #fff1db;
+  color: #9a5b00;
+  font-weight: 600;
+}
+
+.chat-bar-chip[data-tone="active"] {
+  background: #e7eefa;
+  color: #2f5aa0;
+  font-weight: 600;
+}
+
+/* 回答下面「C酱 更新了笔记 · 看改了什么」 */
+.chat-note-line {
+  justify-self: start;
+  margin-top: 4px;
+  padding: 1px 10px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--pill);
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.chat-note-line[data-warn] {
+  background: #fff1db;
+  color: #9a5b00;
+}
+
+.chat-window-line {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--pill);
+}
+
+/* 会话设置里的「换窗口」 */
+.chat-windows {
+  gap: 10px;
+}
+
+.chat-window-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: var(--paper);
+}
+
+.chat-window-info {
+  display: grid;
+  flex: 1 1 auto;
+  justify-items: start;
+  gap: 2px;
+  min-width: 0;
+}
+
+.chat-window-info .chat-note[data-warn] {
+  color: #9a5b00;
+  font-weight: 600;
+}
+
+.chat-window-actions {
+  display: grid;
+  justify-items: end;
+  gap: 2px;
+}
+
+/* 讨论室右栏：参与者后面的「笔记」 */
+.side-person-note,
+.console-note {
+  padding: 2px 8px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--fill);
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.side-person-state {
+  margin-left: auto;
+}
+
+.side-person-note {
+  margin-left: 4px;
+}
+
+.console-note {
+  margin-left: auto;
+}
+
+@media (prefers-color-scheme: dark) {
+  .note-warn,
+  .chat-bar-chip[data-tone="warn"],
+  .chat-note-line[data-warn] {
+    background: #3a2a12;
+    color: #f2b765;
+  }
+
+  .chat-bar-chip[data-tone="active"] {
+    background: #1d2a40;
+    color: #9dbdf0;
+  }
+
+  .note-diff span[data-kind="add"] {
+    background: #183222;
+    color: #8fd6a6;
+  }
+
+  .note-diff span[data-kind="del"] {
+    background: #3a1a17;
+    color: #f0a39a;
+  }
+}
+
+.chat-window-actions button {
+  white-space: nowrap;
+}
+
+/* 参与者后面多了「笔记」，名字和在线状态别折成两行 */
+.side-person-name {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.side-person-state {
+  white-space: nowrap;
+}

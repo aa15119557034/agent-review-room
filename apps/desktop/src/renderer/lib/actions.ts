@@ -5,6 +5,7 @@ import type { Store } from "./store";
 import { createDiscussionActions } from "./discussion-actions";
 import { createChatActions } from "./chat-actions";
 import { createConsoleActions } from "./console-actions";
+import { createNotesActions } from "./notes-actions";
 import { boardSeq, digestFromDisc, withDigest, type TodoItem } from "./topic-board";
 
 /**
@@ -23,6 +24,8 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
       await loadProject(project.id).catch(fail);
     },
   });
+
+  const notes = createNotesActions(store, client, fail);
 
   const agentConsole = createConsoleActions(store, client, fail, {
     async openTopic(projectId) {
@@ -89,6 +92,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
     ...disc,
     chat,
     agentConsole,
+    notes,
 
     goChat() {
       store.set((s) => ({ ...s, view: "chat" }));
@@ -103,6 +107,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
         chat.onChatEvent(e);
         agentConsole.onEvent(e);
         disc.onBoardEvent(e);
+        notes.onEvent(e);
       });
       try {
         const [status, projects] = await Promise.all([
@@ -298,6 +303,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
       try {
         const { reviewerNode } = await client.query({ type: "settings.get" });
         store.set((s) => ({ ...s, reviewerNode }));
+        void notes.loadGithub();
       } catch (err) {
         fail(err);
       }

@@ -1,4 +1,4 @@
-import { useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
+import { useEffect, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
 import type { AgentStatus, Message, Project, Turn } from "@room/schemas";
 import { GROUP_LABEL, groupTopics, statusFor, todoCount, type TodoItem, type TopicPerson, type TopicStatus } from "../../lib/topic-board";
 import {
@@ -26,6 +26,7 @@ import { hasChart } from "../../lib/media";
 import { formatClock } from "../labels";
 import { HoldButton } from "../HoldButton";
 import { ConfirmView } from "./ConfirmView";
+import { REJECT_LABEL, noteTimelineText, notesBySource, rejectedBySource } from "../../lib/notes";
 import { ReviewView } from "./ReviewView";
 import { FirstPlan } from "./FirstPlan";
 import { NewTopic } from "./NewTopic";
@@ -365,8 +366,29 @@ function TurnCard({ turn, reply }: { turn: Turn; reply: Message | null }) {
           单独重试 {agentName(d, turn.agent)}
         </button>
       )}
+      <TurnNoteLine turn={turn} />
     </Bubble>
   );
+}
+
+/** 这次回答里秘书更新了笔记（room-note）→「C酱 更新了笔记 · 看改了什么」；没存上也说一声（ADR-005 §3） */
+function TurnNoteLine({ turn }: { turn: Turn }) {
+  const d = useAppState((s) => s.disc);
+  const projectId = useAppState((s) => s.currentProjectId);
+  const scope = { kind: "topic" as const, projectId: projectId ?? "" };
+  const note = useAppState((s) => (projectId ? notesBySource(s.notes.history, scope).get(turn.id) : undefined));
+  const rejected = useAppState((s) => (projectId ? rejectedBySource(s.notes.rejected, scope).get(turn.id) : undefined));
+  const actions = useActions();
+  if (note) {
+    const people = d.agents.filter((a) => a.canDiscuss || a.canSummarize).map((a) => a.id);
+    return (
+      <button type="button" className="chat-note-line" data-warn={note.shrankALot || undefined} onClick={() => actions.notes.openNote(scope, turn.agent, people, { noteId: note.id, tab: "diff" })}>
+        {noteTimelineText(note, agentName(d, turn.agent))} · 看改了什么
+      </button>
+    );
+  }
+  if (rejected) return <p className="side-note">笔记没存上：{REJECT_LABEL[rejected.reason]}（回答照常）</p>;
+  return null;
 }
 
 type SummaryTab = "points" | "risks" | "gaps";
@@ -641,7 +663,12 @@ function VoidRound({ roundId }: { roundId: string }) {
  */
 function SidePanel() {
   const d = useAppState((s) => s.disc);
+  const projectId = useAppState((s) => s.currentProjectId);
   const actions = useActions();
+  // 每位秘书在这个议题的笔记（C-47）：打开议题时读一次，之后靠事件
+  useEffect(() => {
+    if (projectId) void actions.notes.loadScope({ kind: "topic", projectId });
+  }, [projectId, actions]);
   if (d.ui.sideCollapsed) return <aside className="disc-side" data-collapsed aria-label="方案与参与者" />;
   const plan = displayedPlan(d);
   const reviewRound = plan?.basedOnRoundId ?? [...d.summaries].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))[0]?.roundId ?? null;
@@ -684,19 +711,23 @@ function SidePanel() {
       <section className="side-card" aria-label="参与者">
         <header><h2>参与者</h2></header>
         <ul className="side-people">
-          {d.agents.filter((a) => a.canDiscuss || a.canSummarize).map((a) => (
-            <Participant key={a.id} d={d} id={a.id} />
+          {d.agents.filter((a) => a.canDiscuss || a.canSummarize).map((a, _i, all) => (
+            <Participant key={a.id} d={d} id={a.id} people={all.map((x) => x.id)} />
           ))}
         </ul>
-        <p className="side-note">讨论不会自己停，什么时候定稿由你决定。额度在「秘书」页看。</p>
+        <p className="side-note">点一个人看他在这个议题的笔记。讨论不会自己停，什么时候定稿由你决定。额度在「秘书」页看。</p>
       </section>
     </aside>
   );
 }
 
-function Participant({ d, id }: { d: DiscussionState; id: string }) {
+function Participant({ d, id, people }: { d: DiscussionState; id: string; people: string[] }) {
   const a = d.agents.find((x) => x.id === id)!;
   const st = d.status[id];
+  const projectId = useAppState((s) => s.currentProjectId);
+  const notesOn = useAppState((s) => s.notes.available);
+  const note = useAppState((s) => (projectId ? s.notes.latest[`p:${projectId}`]?.find((n) => n.agent === id) : undefined));
+  const actions = useActions();
   // 推荐节点用推荐配置里的名字（主控机拆成汐 / 林离两个节点，D-40），其它节点显示 id
   const node = a.nodeId === null ? "未配置节点" : (RECOMMENDED_NODES.find((n) => n.id === a.nodeId)?.label ?? a.nodeId);
   const ctx = st?.contextUsedPercent != null ? `上下文 ${Math.round(st.contextUsedPercent)}%${st.compactions ? ` · 压缩 ${st.compactions} 次` : ""}` : null;
@@ -708,6 +739,16 @@ function Participant({ d, id }: { d: DiscussionState; id: string }) {
         {a.canSummarize && <span className="side-person-role"> · 汇总</span>}
       </span>
       <span className="side-person-state">{availabilityLabel(st)}</span>
+      {notesOn && projectId && (
+        <button
+          type="button"
+          className="side-person-note"
+          aria-label={`看 ${a.displayName} 的笔记`}
+          onClick={() => actions.notes.openNote({ kind: "topic", projectId }, id, people)}
+        >
+          {note ? `笔记 v${note.version}` : "笔记"} ›
+        </button>
+      )}
     </li>
   );
 }

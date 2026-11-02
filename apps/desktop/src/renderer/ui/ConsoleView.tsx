@@ -1,5 +1,5 @@
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
-import { AgentModelSettings, type AgentActivityItem, type AgentProfile, type AgentStatus, type NodeInfo } from "@room/schemas";
+import { AgentModelSettings, type AgentActivityItem, type AgentProfile, type AgentStatus, type NodeInfo, type NoteScope } from "@room/schemas";
 import { agentTitle } from "../lib/chat";
 import { ModelSettings } from "./ModelSettings";
 import { VoiceSettings } from "./VoiceSettings";
@@ -378,6 +378,7 @@ function Activity({ agent }: { agent: AgentProfile }) {
   const agents = useAppState((s) => s.disc.agents);
   const actions = useActions();
   const [more, setMore] = useState(false);
+  const notesOn = useAppState((s) => s.notes.available);
   const name = (id: string) => agents.find((a) => a.id === id)?.displayName ?? id;
 
   if (!available) {
@@ -422,6 +423,19 @@ function Activity({ agent }: { agent: AgentProfile }) {
                 <b>{g.title}</b>
                 <span className="console-tag">{KIND[g.kind]}</span>
                 <span className="side-note">{g.items.length} 条</span>
+                {notesOn && (
+                  <button
+                    type="button"
+                    className="link-button console-note"
+                    onClick={(e) => {
+                      // 别让点「笔记」顺手把这一组收起来
+                      e.preventDefault();
+                      actions.notes.openNote(groupScope(g.key), agent.id, [agent.id]);
+                    }}
+                  >
+                    笔记 ›
+                  </button>
+                )}
               </summary>
               <ul className="console-items">{g.items.map((x) => <ActivityRow key={activityId(x)} x={x} grouped />)}</ul>
             </details>
@@ -435,6 +449,11 @@ function Activity({ agent }: { agent: AgentProfile }) {
       </section>
     </>
   );
+}
+
+/** 历史分组的 key（p:议题 / c:会话，见 groupActivity）→ 笔记的子项目 */
+function groupScope(key: string): NoteScope {
+  return key.startsWith("p:") ? { kind: "topic", projectId: key.slice(2) } : { kind: "conversation", conversationId: key.slice(2) };
 }
 
 function ActivityRow({ x, grouped = false }: { x: AgentActivityItem; grouped?: boolean }) {

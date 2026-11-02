@@ -53,6 +53,8 @@ export interface MockOptions {
   chat?: ChatMockOptions;
   /** 多模态（C-43）：林离额度、本机 ComfyUI */
   media?: MediaMockOptions;
+  /** 项目笔记、换窗口（C-47） */
+  notes?: NotesMockOptions;
 }
 
 export { MockError, id, now, sha256Hex, randomHex } from "./util";
@@ -61,6 +63,7 @@ import { createDiscussionMock, type DiscussionMockOptions } from "./discussion-m
 import { createChatMock, type ChatMockOptions } from "./chat-mock";
 import { createMediaMock, type MediaMockOptions } from "./media-mock";
 import { createActivityQuery } from "./activity-mock";
+import { createNotesMock, type NotesMockOptions } from "./notes-mock";
 
 export function createMockBridge(options: MockOptions = {}): RoomBridge & { reset(): void; mediaUrl(ref: string): string | undefined } {
   const tickMs = options.tickMs ?? 120;
@@ -359,11 +362,28 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
   );
   if (options.seed) void media.seed();
 
+  // 笔记要查聊天的会话和消息，聊天回答要切笔记：互相晚绑定
+  // eslint-disable-next-line prefer-const
+  let notes: ReturnType<typeof createNotesMock>;
   const chat = createChatMock(
-    { db, emit, pushEvent, agents: discussion.agents, timers, tickMs, media: media.hooks },
+    {
+      db, emit, pushEvent, agents: discussion.agents, timers, tickMs, media: media.hooks,
+      notes: { fromReply: (...a) => notes.fromReply(...a), current: (...a) => notes.current(...a) },
+    },
     { seed: options.seed, ...options.chat },
   );
   Object.assign(commands, chat.commands, media.commands);
+
+  // ------------------------------------------------------------ 项目笔记、换窗口、GitHub（C-47）
+
+  notes = createNotesMock(
+    {
+      emit, pushEvent, agents: discussion.agents, projects: () => db.projects, timers, tickMs,
+      chat: { ready: chat.ready, conversations: chat.conversations, messagesOf: chat.messagesOf, addRun: chat.addRun },
+    },
+    options.notes,
+  );
+  Object.assign(commands, notes.commands);
 
   // ------------------------------------------------------------ queries
 
@@ -416,7 +436,7 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
   };
 
   Object.assign(queries, discussion.queries);
-  Object.assign(queries, chat.queries, media.queries);
+  Object.assign(queries, chat.queries, media.queries, notes.queries);
   // 控制台（C-37a）：讨论的 Turn + 聊天的回答位
   queries["agents.activity"] = createActivityQuery({
     agentExists: (a) => discussion.agents().some((x) => x.id === a),
@@ -458,6 +478,7 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
       discussion.reset();
       chat.reset();
       media.reset();
+      notes.reset();
       timers.forEach((hs) => hs.forEach(clearTimeout));
       timers.clear();
       for (const k of Object.keys(db) as (keyof typeof db)[]) {
@@ -472,7 +493,7 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
     // 演示数据：假装已经设置好了一个节点
     node = { baseUrl: "http://192.168.1.20:7420", profileId: "claude-review", tokenConfigured: true };
     nodeToken = "demo".repeat(10);
-    void seed(bridge);
+    void seed(bridge).then((projectId) => (projectId ? notes.seedTopic(projectId) : undefined));
   }
   // 议题要在界面读 projects.list 之前建好（没有「新议题」事件），所以先建议题、再慢慢走流程
   if (options.demoTopics) bridge.topicsSeeded = seedTopics(bridge);
@@ -568,7 +589,7 @@ async function seedTopics(bridge: RoomBridge): Promise<void> {
   })().catch(() => {});
 }
 
-async function seed(bridge: RoomBridge) {
+async function seed(bridge: RoomBridge): Promise<string | undefined> {
   const p = await bridge.command({ type: "project.create", name: "数据库写入路径" });
   if (!p.ok) return;
   const src = await bridge.command({
@@ -593,4 +614,5 @@ async function seed(bridge: RoomBridge) {
     title: "多连接写库导致 SQLITE_BUSY",
     selection: { start, end: text.indexOf("\n", start) },
   });
+  return p.data.id;
 }

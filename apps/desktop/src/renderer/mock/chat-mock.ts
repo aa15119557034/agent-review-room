@@ -71,6 +71,8 @@ export interface ChatMockContext {
   tickMs: number;
   /** 多模态（C-43）：附件 / 录音 / 表情的记录、沉浸模式和自动任务 */
   media: ReturnType<typeof createMediaMock>["hooks"];
+  /** 项目笔记（C-47）：回答里的 room-note 切出来存（D-46a 在 main 做，这里演示）；秘书的假回答接着现在的笔记记 */
+  notes?: { fromReply(conversationId: string, agent: string, runId: string, text: string): string; current(conversationId: string, agent: string): string };
 }
 
 const DEFAULT_MEMORY: Record<string, MemoryManifest["status"]> = { claude: "filled", deepseek: "unavailable" };
@@ -208,7 +210,7 @@ export function createChatMock(ctx: ChatMockContext, options: ChatMockOptions = 
     const fail = failOnce.delete(aid) ? "failed" : quotaOnce.delete(aid) ? "quota" : null;
     // 没点名时 Codex 这条不回（演示「这条没有回」）
     const skip = !s.required && aid === "codex";
-    const output = skip ? JSON.stringify({ kind: "skip" }) : JSON.stringify(replyOutput(aid, um, conv.kind));
+    const output = skip ? JSON.stringify({ kind: "skip" }) : JSON.stringify(replyOutput(aid, um, conv.kind, ctx.notes?.current(conv.id, aid) ?? ""));
     const chunks = output.match(/[\s\S]{1,12}/g) ?? [output];
     const manifest = manifestFor(aid);
 
@@ -255,7 +257,7 @@ export function createChatMock(ctx: ChatMockContext, options: ChatMockOptions = 
         const plan = ctx.media.planReply(conv.id, intent ?? undefined, um.replyAsVoice === true);
         const reply: AgentChatMessage = {
           id: id("cmsg"), conversationId: conv.id, createdAt: now(), sender: "agent", agent: aid,
-          text: env.text, inReplyTo: um.id, slotId: s.id, runId: run.id,
+          text: ctx.notes ? ctx.notes.fromReply(conv.id, aid, run.id, env.text) : env.text, inReplyTo: um.id, slotId: s.id, runId: run.id,
           memoryEntriesUsed: manifest === null ? null : manifest.entries.length,
           ...(intent ? { mediaIntent: intent } : {}),
           ...(plan.deferred ? { immersiveDeferred: plan.deferred } : {}),
@@ -655,6 +657,11 @@ export function createChatMock(ctx: ChatMockContext, options: ChatMockOptions = 
     },
     /** 给多模态 mock 核对 source 用 */
     lookup: (messageId: string) => c.messages.find((x) => x.id === messageId),
+    /** 给笔记 / 换窗口 mock（C-47）用 */
+    ready,
+    conversations: () => c.conversations,
+    messagesOf: (conversationId: string) => c.messages.filter((m) => m.conversationId === conversationId).sort(order),
+    addRun: (run: ChatRun) => void c.runs.push(run),
     reset() {
       c.conversations.length = 0;
       c.messages.length = 0;
@@ -684,9 +691,18 @@ const textOf = (m: UserChatMessage) =>
  * - 说到「画」：汐 提议画一张（draw 意图）
  * - 开了「用语音回」或说到「语音」：带 speak 意图
  */
-function replyOutput(aid: string, um: UserChatMessage, kind: Conversation["kind"]) {
+function replyOutput(aid: string, um: UserChatMessage, kind: Conversation["kind"], note = "") {
   const question = textOf(um);
   let text = replyText(aid, question, kind);
+  // 说到「记一下 / 记住 / 笔记」：C酱 在回答里带一段 room-note（整份新笔记）；林离写两段，演示「笔记没存上」
+  if (/记一下|记住|笔记/.test(question)) {
+    if (aid === "claude") {
+      const next = `${note ? `${note}\n` : ""}- 记一下：${question.slice(0, 30)}`;
+      text = `好，记下了。\n\n\`\`\`room-note\n${next}\n\`\`\``;
+    } else if (aid === "codex") {
+      text = `我记两处：\n\n\`\`\`room-note\n- 第一处\n\`\`\`\n\n\`\`\`room-note\n- 第二处\n\`\`\``;
+    }
+  }
   if (/图表|对比/.test(question)) {
     if (aid === "claude") {
       const chart = { type: "bar", title: "这周的工作量（PR 数）", yLabel: "个", categories: ["C酱", "汐", "林离"], series: [{ name: "开的", values: [6, 9, 2] }, { name: "审的", values: [7, 4, 5] }] };
