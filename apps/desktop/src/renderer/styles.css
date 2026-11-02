@@ -3693,3 +3693,320 @@ button.stage:hover {
     padding: 0.25rem 0.55rem;
   }
 }
+
+/* ============================================================ 秘书控制台（C-37） */
+/*
+ * 左边选人、右边一页。手机宽度下左栏变成顶上一排按钮。
+ * 状态色只用 --wait / --bad / --good，不用朱红（朱红只留给盖章）。
+ */
+
+.shell.shell-console {
+  height: 100%;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-areas: "top" "desk";
+}
+
+.console {
+  grid-area: desk;
+  display: grid;
+  grid-template-columns: 14rem minmax(0, 1fr);
+  min-height: 0;
+}
+
+.console-list {
+  min-height: 0;
+  overflow-y: auto;
+  border-right: 1px solid var(--rule);
+  padding: 0.75rem 0;
+}
+
+.console-list-head {
+  font-size: var(--size-l);
+  padding: 0 1rem 0.5rem;
+}
+
+.console-list-item {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  width: 100%;
+  padding: 0.55rem 1rem;
+  border: 0;
+  border-left: 3px solid transparent;
+  background: none;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.console-list-item[aria-current="page"] {
+  border-left-color: var(--agent);
+  background: var(--sheet);
+}
+
+.console-list-item .avatar {
+  flex-basis: 1.9rem;
+  height: 1.9rem;
+}
+
+.console-list-name {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.console-list-state {
+  font-size: var(--size-s);
+  color: var(--ink-soft);
+}
+
+.console-list-item[data-state="absent_quota"] .console-list-state,
+.console-list-item[data-state="offline"] .console-list-state,
+.console-list-item[data-state="paused_by_user"] .console-list-state {
+  color: var(--wait);
+}
+
+.console-page {
+  min-height: 0;
+  overflow-y: auto;
+  padding: 1rem 1.25rem 2rem;
+}
+
+.console-agent {
+  display: grid;
+  gap: 1rem;
+  max-width: 60rem;
+}
+
+.console-agent-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  align-items: center;
+}
+
+.console-agent-head h2 {
+  font-size: var(--size-xl);
+  color: color-mix(in srgb, var(--agent) 65%, var(--ink));
+}
+
+.console-badge {
+  padding: 0 0.6rem;
+  border: 1px solid var(--good);
+  border-radius: 999px;
+  font-size: var(--size-s);
+  color: var(--good);
+}
+
+.console-badge[data-state="absent_quota"],
+.console-badge[data-state="offline"],
+.console-badge[data-state="paused_by_user"],
+.console-badge[data-state="unconfigured"],
+.console-badge[data-state="unknown"] {
+  border-style: dashed;
+  border-color: var(--wait);
+  color: var(--wait);
+}
+
+.console-pause {
+  margin-left: auto;
+}
+
+.console-hint {
+  padding: 0.5rem 0.75rem;
+  border-left: 3px solid var(--wait);
+  background: var(--sheet);
+  font-size: var(--size-s);
+}
+
+.console-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1rem;
+}
+
+.console-panel {
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--rule);
+  background: var(--sheet);
+}
+
+.console-panel h3,
+.console-panel p {
+  margin: 0;
+}
+
+.console-panel h3 {
+  font-size: var(--size-m);
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+.console-panel > .button-outline {
+  justify-self: start;
+}
+
+.console-quota-state {
+  font-size: var(--size-s);
+  font-weight: normal;
+  color: var(--good);
+}
+
+.console-quota-state[data-state="exhausted"] {
+  color: var(--bad);
+}
+
+.console-quota-state[data-state="unknown"] {
+  color: var(--ink-soft);
+}
+
+.console-panel .meter[data-empty] .meter-fill {
+  background: var(--bad);
+}
+
+.console-balance {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.2rem 0.75rem;
+  font-size: var(--size-s);
+}
+
+.console-balance dt {
+  color: var(--ink-soft);
+}
+
+.console-field {
+  display: grid;
+  gap: 0.3rem;
+  font-size: var(--size-s);
+}
+
+.console-field select {
+  font: inherit;
+  max-width: 100%;
+}
+
+.console-items {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.console-item {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--rule);
+  background: var(--paper);
+}
+
+.console-item[data-tone="active"] {
+  border-left-color: var(--active);
+}
+
+.console-item[data-tone="good"] {
+  border-left-color: var(--good);
+}
+
+.console-item[data-tone="bad"] {
+  border-left-color: var(--bad);
+}
+
+.console-item-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.5rem;
+  align-items: baseline;
+}
+
+.console-item-head b {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.console-tag {
+  padding: 0 0.4rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  font-size: var(--size-s);
+  color: var(--ink-soft);
+}
+
+.console-item-outcome {
+  margin-left: auto;
+  font-size: var(--size-s);
+}
+
+.console-item[data-tone="bad"] .console-item-outcome {
+  color: var(--bad);
+}
+
+.console-item[data-tone="active"] .console-item-outcome {
+  color: var(--active);
+}
+
+.console-item-preview {
+  font-size: var(--size-s);
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.console-item-preview[data-muted] {
+  color: var(--ink-soft);
+}
+
+.console-item-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: var(--size-s);
+}
+
+@media (max-width: 720px) {
+  .console {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .console-list {
+    border-right: 0;
+    border-bottom: 1px solid var(--rule);
+    padding: 0.5rem 0;
+    overflow-x: auto;
+  }
+
+  .console-list-head {
+    display: none;
+  }
+
+  .console-list ul {
+    display: flex;
+  }
+
+  .console-list-item {
+    width: auto;
+    border-left: 0;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+  }
+
+  .console-list-item[aria-current="page"] {
+    border-bottom-color: var(--agent);
+  }
+
+  .console-list-state {
+    display: none;
+  }
+
+  .console-page {
+    padding: 0.75rem 1rem 2rem;
+  }
+}

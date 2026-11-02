@@ -56,6 +56,10 @@ export interface DiscussionMockOptions {
   missingModels?: string[];
   /** 节点不报 profileModels（老节点） */
   noProfileModels?: boolean;
+  /** 控制台演示（C-37）：节点连不上的人 */
+  offlineAgents?: string[];
+  /** 控制台演示（C-37）：额度一项都读不到的人（quotaState = unknown） */
+  unknownQuota?: string[];
 }
 
 const level = (id: string, displayName: string, note: string | null = null) => ({ id, displayName, note });
@@ -175,6 +179,8 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
     plans: [] as PlanVersion[],
   };
   const absent = new Set(options.absentAgents ?? []);
+  const offline = new Set(options.offlineAgents ?? []);
+  const unknownQuota = new Set(options.unknownQuota ?? []);
   const quotaMidway = new Set(options.quotaMidway ?? []);
   const failOnce = new Set(options.failOnce ?? []);
   const missingModels = new Set(options.missingModels ?? []);
@@ -199,22 +205,31 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
   const availability = (a: AgentProfile): AgentStatus["availability"] =>
     a.nodeId === null || a.profileId === null ? "unconfigured"
       : a.pausedByUser ? "paused_by_user"
+      : offline.has(a.id) ? "offline"
       : absent.has(a.id) ? "absent_quota"
       : "available";
 
-  const status = (a: AgentProfile): AgentStatus => ({
-    agent: a.id,
-    availability: availability(a),
-    billing: a.id === "deepseek" ? "api" : "subscription",
-    fiveHour: a.id === "claude" ? { usedPercent: 60, resetsAt: new Date(Date.now() + 2 * 3600e3).toISOString() } : null,
-    weekly: a.id === "claude" ? { usedPercent: 38, resetsAt: null } : a.id === "codex" ? { usedPercent: absent.has("codex") ? 100 : 72, resetsAt: null } : null,
-    balance: a.id === "deepseek" ? { amount: "38.20", currency: "CNY", spentThisMonth: "11.80" } : null,
-    contextUsedPercent: null,
-    compactions: null,
-    model: null,
-    effort: null,
-    updatedAt: now(),
-  });
+  const status = (a: AgentProfile): AgentStatus => {
+    const unknown = unknownQuota.has(a.id);
+    return {
+      agent: a.id,
+      availability: availability(a),
+      billing: unknown ? "unknown" : a.id === "deepseek" ? "api" : "subscription",
+      fiveHour: !unknown && a.id === "claude" ? { usedPercent: 60, resetsAt: new Date(Date.now() + 2 * 3600e3).toISOString() } : null,
+      weekly:
+        unknown ? null
+          : a.id === "claude" ? { usedPercent: 38, resetsAt: new Date(Date.now() + 4 * 86400e3).toISOString() }
+          : a.id === "codex" ? { usedPercent: absent.has("codex") ? 100 : 72, resetsAt: null }
+          : null,
+      // C-36：节点不报本月消耗，spentThisMonth 一律 null
+      balance: !unknown && a.id === "deepseek" ? { amount: absent.has("deepseek") ? "0.00" : "24.07", currency: "CNY", spentThisMonth: null } : null,
+      contextUsedPercent: a.id === "claude" ? 42 : null,
+      compactions: a.id === "claude" ? 1 : null,
+      model: a.id === "claude" ? "claude-opus-5-5" : null,
+      effort: a.id === "claude" ? "medium" : null,
+      updatedAt: now(),
+    };
+  };
 
   const setRound = (r: Round, to: RoundState, patch: Partial<Round> = {}) => {
     if (!canTransition(ROUND_TRANSITIONS, r.state, to)) {
@@ -864,6 +879,8 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
     queries,
     /** 聊天 mock 用同一份参与者 */
     agents: () => d.agents,
+    /** 控制台（C-37a agents.activity）读 Turn 用 */
+    activityData: () => ({ rounds: d.rounds, turns: d.turns }),
     reset() {
       d.rounds.length = 0;
       d.batches.length = 0;

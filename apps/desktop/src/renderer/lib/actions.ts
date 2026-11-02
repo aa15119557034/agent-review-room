@@ -4,6 +4,7 @@ import { describeFailure, type RoomClient } from "./client";
 import type { Store } from "./store";
 import { createDiscussionActions } from "./discussion-actions";
 import { createChatActions } from "./chat-actions";
+import { createConsoleActions } from "./console-actions";
 
 /**
  * 所有会访问后端的操作都在这里。UI 组件只调用这些函数，不直接碰 client。
@@ -18,6 +19,18 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
     async openTopic(project) {
       store.set((s) => ({ ...s, projects: s.projects.some((p) => p.id === project.id) ? s.projects : [...s.projects, project], view: "discussion" }));
       await loadProject(project.id).catch(fail);
+    },
+  });
+
+  const agentConsole = createConsoleActions(store, client, fail, {
+    async openTopic(projectId) {
+      store.set((s) => ({ ...s, view: "discussion" }));
+      await loadProject(projectId).catch(fail);
+    },
+    async openConversation(conversationId) {
+      store.set((s) => ({ ...s, view: "chat" }));
+      void chat.loadConversations();
+      await chat.openConversation(conversationId);
     },
   });
 
@@ -57,6 +70,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
   return {
     ...disc,
     chat,
+    agentConsole,
 
     goChat() {
       store.set((s) => ({ ...s, view: "chat" }));
@@ -69,6 +83,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
       const unsubscribe = client.onEvent((e) => {
         store.set((s) => applyEvent(s, e));
         chat.onChatEvent(e);
+        agentConsole.onEvent(e);
       });
       try {
         const [status, projects] = await Promise.all([

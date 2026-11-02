@@ -648,6 +648,11 @@ export function createChatMock(ctx: ChatMockContext, options: ChatMockOptions = 
   return {
     commands,
     queries,
+    /** 控制台（C-37a agents.activity）读回答位用 */
+    activityData: async () => {
+      await ready;
+      return { conversations: c.conversations, messages: c.messages, slots: c.slots };
+    },
     /** 给多模态 mock 核对 source 用 */
     lookup: (messageId: string) => c.messages.find((x) => x.id === messageId),
     reset() {

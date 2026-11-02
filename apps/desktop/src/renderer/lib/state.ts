@@ -12,6 +12,7 @@ import type {
 } from "@room/schemas";
 import { applyDiscussionEvent, initialDiscussion, type DiscussionState } from "./discussion";
 import { applyChatEvent, initialChat, isChatRun, type ChatState } from "./chat";
+import { initialConsole, type ConsoleState } from "./console";
 
 /**
  * renderer 的全部状态。只存从后端拿到的数据和少量 UI 状态，不在前端推导业务状态
@@ -34,12 +35,14 @@ export interface AppState {
   draft: PromptDraft;
   /** 用户在运行记录里点选的 run；null 表示默认显示最新的一个 */
   selectedRunId: string | null;
-  /** 顶栏切换：聊天（C-35）、讨论室（主页）、单次评审（Phase 0 工作台）、设置 */
-  view: "chat" | "discussion" | "desk" | "settings";
+  /** 顶栏切换：聊天（C-35）、讨论室（主页）、秘书控制台（C-37）、单次评审（Phase 0 工作台）、设置 */
+  view: "chat" | "discussion" | "console" | "desk" | "settings";
   /** 讨论室（C-21） */
   disc: DiscussionState;
   /** 聊天空间（C-35） */
   chat: ChatState;
+  /** 秘书控制台（C-37） */
+  console: ConsoleState;
   /** Reviewer 节点设置；undefined = 还没读过，null = 从未设置 */
   reviewerNode: ReviewerNodeSettings | null | undefined;
   /** 最近一次操作失败的说明，显示在界面上，由用户关闭 */
@@ -72,6 +75,7 @@ export const initialState: AppState = {
   view: "discussion",
   disc: initialDiscussion,
   chat: initialChat,
+  console: initialConsole,
   reviewerNode: undefined,
   notice: null,
 };
