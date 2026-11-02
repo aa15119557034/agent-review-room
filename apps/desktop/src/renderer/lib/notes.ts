@@ -201,7 +201,8 @@ export const noteTimelineText = (note: ProjectNote, name: string) =>
 /**
  * 换窗口弹出单现在是哪一步：
  * - writing：写交接的 Run 还在跑（或还没读到它的状态）
- * - failed ：Run 结束了却没写出内容（额度、超时、被取消）
+ * - failed ：Run 失败、超时或被取消，没写出内容
+ *   （COMPLETED 但草稿内容还没到时仍算 writing：后端先推 Run 结束、再推草稿，后端保证要么写进草稿要么失败）
  * - ready  ：有内容了（Run 写的，或你自己写 / 改的），可以确认
  * - closed ：已经换了或取消了
  */
@@ -211,7 +212,7 @@ export function handoffPhase(draft: ChatWindowDraft, run: ChatRun | undefined): 
   if (draft.state !== "pending") return "closed";
   if (draft.content !== null) return "ready";
   if (draft.runId === null) return "ready";
-  if (run && run.id === draft.runId && RUN_TRANSITIONS[run.state].length === 0) return "failed";
+  if (run && run.id === draft.runId && run.state !== "COMPLETED" && RUN_TRANSITIONS[run.state].length === 0) return "failed";
   return "writing";
 }
 

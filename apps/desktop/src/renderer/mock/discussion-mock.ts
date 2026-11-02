@@ -334,7 +334,8 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
     const { nonce, compressedRounds } = assembled;
     const note = kind === "summary" || !ctx.topicNote ? undefined : ctx.topicNote(round.projectId, recipient.id);
     const content = note
-      ? `${assembled.content}\n<UNTRUSTED_NOTE_${nonce} version="${note.version}">\n${note.content}\n</UNTRUSTED_NOTE_${nonce}>`
+      // 和 core/discussion/prompt.ts 的 block() 同一个样子，确认页预览和真后端对得上
+      ? `${assembled.content}\n<UNTRUSTED_DISCUSSION_DATA_${nonce}>\n项目笔记（第 ${note.version} 版）\n${note.content}\n</UNTRUSTED_DISCUSSION_DATA_${nonce}>`
       : assembled.content;
     const snapshot: PromptSnapshot = {
       ...(note === undefined ? {} : { projectNoteId: note?.id ?? null }),

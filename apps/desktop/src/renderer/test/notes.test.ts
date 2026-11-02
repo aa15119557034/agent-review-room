@@ -114,6 +114,9 @@ describe("notes logic (C-47)", () => {
     assert.equal(handoffPhase(d, undefined), "writing");
     assert.equal(handoffPhase(d, { id: "run_1", state: "RUNNING" } as ChatRun), "writing");
     assert.equal(handoffPhase(d, { id: "run_1", state: "FAILED" } as ChatRun), "failed");
+    assert.equal(handoffPhase(d, { id: "run_1", state: "TIMED_OUT" } as ChatRun), "failed");
+    // Run 先推 COMPLETED、草稿内容随后才到：这一瞬间仍算 writing，不闪「没写成」
+    assert.equal(handoffPhase(d, { id: "run_1", state: "COMPLETED" } as ChatRun), "writing");
     // 别的 Run（重写之前那个）结束了不算
     assert.equal(handoffPhase(d, { id: "run_0", state: "FAILED" } as ChatRun), "writing");
     assert.equal(handoffPhase({ ...d, content: "x" }, { id: "run_1", state: "COMPLETED" } as ChatRun), "ready");

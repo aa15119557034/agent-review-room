@@ -6,13 +6,14 @@ import { applyNotesEvent, noteKey, scopeKey, type NoteTab, type NotesState } fro
 
 /**
  * 项目笔记、换窗口、GitHub 的操作（C-47）。规则同别的 actions：失败写进 notice，不向上抛。
- * 后端还不认识这些命令（D-46 没合）时不弹错，把对应的 available 置为 false，界面藏掉入口。
+ * 后端还不认识这些命令（D-46 没合，返回 validation_failed）时不弹错，把对应的 available 置为 false，界面藏掉入口。
+ * internal 是真出错（锁库、事务冲突），照常报错，入口留着可以再试。
  */
 export function createNotesActions(store: Store<AppState>, client: RoomClient, fail: (err: unknown) => void) {
   const setNotes = (f: (n: NotesState) => NotesState) => store.set((s) => ({ ...s, notes: f(s.notes) }));
   const notes = () => store.get().notes;
   const notSupported = (err: unknown) =>
-    err instanceof ControlFailure && (err.code === "validation_failed" || err.code === "internal");
+    err instanceof ControlFailure && err.code === "validation_failed";
   const apply = (e: ControlEvent) => setNotes((n) => applyNotesEvent(n, e));
 
   async function loadScope(scope: NoteScope) {
