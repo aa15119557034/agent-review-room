@@ -1347,9 +1347,6 @@ input {
 .disc-topics {
   display: grid;
   gap: 0.15rem;
-  /* 大约 4 个议题的高度，其余滚动 */
-  max-height: 14rem;
-  overflow-y: auto;
 }
 
 .disc-topics button {
@@ -4008,5 +4005,124 @@ button.stage:hover {
 
   .console-page {
     padding: 0.75rem 1rem 2rem;
+  }
+}
+
+/* ============================================================ 讨论室标签：等你处理 + 议题一句话状态（C-38） */
+
+.disc-todo,
+.disc-topic-group {
+  margin-bottom: 0.75rem;
+}
+
+.disc-todo h3,
+.disc-topic-group h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0 0 0.3rem;
+  padding: 0 0.25rem;
+  font-size: var(--size-s);
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.disc-todo ul {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.disc-todo button {
+  display: grid;
+  gap: 0.1rem;
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--bad) 35%, var(--rule));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--bad) 7%, var(--paper));
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.disc-todo button[aria-current="page"] {
+  border-color: var(--bad);
+  box-shadow: inset 3px 0 0 var(--bad);
+}
+
+.disc-todo button b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.disc-todo button span {
+  font-size: var(--size-s);
+  color: var(--bad);
+}
+
+.disc-topics .disc-topic {
+  display: grid;
+  gap: 0.1rem;
+  border-radius: 6px;
+}
+
+.disc-topic-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.disc-topic-line {
+  font-size: var(--size-s);
+  font-weight: 400;
+  color: var(--ink-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.disc-rail .chat-badge {
+  margin-left: 0.25rem;
+}
+
+/* 返回议题列表：只在手机宽度出现 */
+.disc-back {
+  display: none;
+  align-self: flex-start;
+  margin: 0.5rem 0.75rem 0;
+}
+
+@media (max-width: 720px) {
+  /* 一次一栏：议题列表 ↔ 打开的议题（时间线 + 方案在下面） */
+  .disc[data-pane="list"] .disc-main,
+  .disc[data-pane="list"] .disc-side,
+  .disc[data-pane="topic"] .disc-rail {
+    display: none;
+  }
+
+  .disc[data-pane="topic"] {
+    overflow-y: auto;
+  }
+
+  .disc-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  /* 列表就是这一页，不给收起 */
+  .disc-rail-collapse {
+    display: none;
+  }
+
+  .disc-rail {
+    padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+  }
+
+  .disc-topics button,
+  .disc-todo button {
+    padding: 0.7rem 0.75rem;
   }
 }

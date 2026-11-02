@@ -27,6 +27,8 @@ function pickBridge(): { bridge: RoomBridge; isMock: boolean } | null {
     const quota = params.get("quota");
     const bridge = createMockBridge({
       seed: params.get("mock") !== "empty",
+      // 讨论室标签（C-38）演示：?topics 再建几个处在不同阶段的议题
+      demoTopics: params.has("topics"),
       reviewerOutcome: params.get("outcome") === "error" ? "error" : "complete",
       // ?reviewer=off 强制"未配置"；否则看演示数据里有没有设置节点（?mock 有，?mock=empty 没有）
       ...(params.get("reviewer") === "off" ? { reviewerConfigured: false } : {}),
@@ -63,7 +65,11 @@ if (!picked) {
 } else {
   const store = createStore(initialState);
   const actions = createActions(store, createClient(picked.bridge));
-  void actions.start();
+  // mock 的 ?topics 演示议题建好之后再读列表
+  // 演示数据建失败也照常启动，不能停在「正在连接后端…」
+  void Promise.resolve((picked.bridge as { topicsSeeded?: Promise<void> }).topicsSeeded)
+    .catch(() => {})
+    .then(() => actions.start());
   root.render(
     <StrictMode>
       <AppProvider store={store} actions={actions} isMock={picked.isMock}>

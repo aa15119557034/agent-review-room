@@ -1,8 +1,18 @@
-import { toRunModel, type ApprovalBatch, type CommandRequest, type LocalNodeId, type NodeInfo, type NodeTestResult, type Round } from "@room/schemas";
+import {
+  toRunModel,
+  type ApprovalBatch,
+  type CommandRequest,
+  type ControlEvent,
+  type LocalNodeId,
+  type NodeInfo,
+  type NodeTestResult,
+  type Round,
+} from "@room/schemas";
 import { ControlFailure, type RoomClient } from "./client";
 import { appendEvents, applyEvent, type AppState } from "./state";
 import { initialDiscussion, planForNextRound, type DiscussionState } from "./discussion";
 import { modelsFor } from "./models";
+import { boardSeq, isOpenRound, withDigest, type TopicDigest } from "./topic-board";
 import type { Store } from "./store";
 
 /**
@@ -72,6 +82,7 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
             turns,
             summaries: details.flatMap((x) => (x.summary ? [x.summary] : [])),
             confirm: null,
+            board: { ...s.disc.board, live: projectId },
             ui: { ...s.disc.ui, page: { kind: "timeline" } },
           },
         };
@@ -83,6 +94,97 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
   }
 
   const pid = () => store.get().currentProjectId;
+
+  // ------------------------------------------------------------ 讨论室标签的议题列表（C-38）
+
+  /** 一个议题读一句话状态要的数据：只对还没结束的那一轮多查一次 rounds.get */
+  async function fetchDigest(projectId: string): Promise<TopicDigest> {
+    const [rounds, plans] = await Promise.all([
+      client.query({ type: "rounds.list", projectId }),
+      client.query({ type: "plans.list", projectId }),
+    ]);
+    const details = await Promise.all(rounds.filter(isOpenRound).map((r) => client.query({ type: "rounds.get", roundId: r.id })));
+    return { rounds, plans, batches: details.flatMap((x) => x.batches), turns: details.flatMap((x) => x.turns) };
+  }
+
+  /** 取一次并写缓存：号在开始取的时候发，晚回来的旧结果盖不掉更新的缓存 */
+  async function refreshDigest(projectId: string): Promise<boolean> {
+    const seq = boardSeq();
+    try {
+      const g = await fetchDigest(projectId);
+      setDisc((d) => ({ ...d, board: withDigest(d.board, projectId, g, seq) }));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  const markFailed = (projectId: string) =>
+    setDisc((d) => (d.board.topics[projectId] ? d : { ...d, board: { ...d.board, failed: { ...d.board.failed, [projectId]: true } } }));
+
+  /**
+   * 启动时读一遍所有议题。读不到的 1 秒后再试一次，还不行就标「读不出来」（不弹提示，列表只是概览；
+   * 点开议题时 loadTopic 会照常报错）
+   */
+  async function loadBoard(retryMs = 1000) {
+    if (!store.get().disc.available) return;
+    const failed: string[] = [];
+    await Promise.all(
+      store.get().projects.map(async (p) => {
+        if (!(await refreshDigest(p.id))) failed.push(p.id);
+      }),
+    );
+    if (failed.length === 0) return;
+    await new Promise((r) => setTimeout(r, retryMs));
+    await Promise.all(
+      failed.map(async (pid) => {
+        if (store.get().disc.board.live === pid) return;
+        if (!(await refreshDigest(pid))) markFailed(pid);
+      }),
+    );
+  }
+
+  /** 别的议题有动静：同一个议题 200ms 内的事件合并成一次重读；那时已经打开了它就不用读 */
+  const refreshTimers = new Map<string, ReturnType<typeof setTimeout>>();
+  function refreshSoon(projectId: string) {
+    if (refreshTimers.has(projectId)) return;
+    refreshTimers.set(
+      projectId,
+      setTimeout(() => {
+        refreshTimers.delete(projectId);
+        if (store.get().disc.board.live === projectId) return;
+        void refreshDigest(projectId);
+      }, 200),
+    );
+  }
+
+  /** 事件 → 议题列表。当前议题按实时数据算，不用重读；别的议题重读一次 */
+  function onBoardEvent(e: ControlEvent) {
+    const d = store.get().disc;
+    let projectId: string | null = null;
+    switch (e.type) {
+      case "round.updated":
+        projectId = e.round.projectId;
+        break;
+      case "batch.updated":
+        projectId = e.batch.projectId;
+        break;
+      case "plan.updated":
+        projectId = e.plan.projectId;
+        break;
+      case "turn.updated":
+      case "summary.created": {
+        const roundId = e.type === "turn.updated" ? e.turn.roundId : e.summary.roundId;
+        projectId = Object.entries(d.board.topics).find(([, g]) => g.rounds.some((r) => r.id === roundId))?.[0] ?? null;
+        break;
+      }
+      default:
+        return;
+    }
+    if (!projectId || projectId === d.board.live) return;
+    if (!store.get().projects.some((p) => p.id === projectId)) return;
+    refreshSoon(projectId);
+  }
   const take = (round: Round | null, batch: ApprovalBatch | null) =>
     store.set((s) => {
       let next = s;
@@ -192,6 +294,8 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
   return {
     loadAgents,
     loadTopic,
+    loadBoard,
+    onBoardEvent,
     loadNodes,
     upsertNode,
     testNode,
@@ -201,6 +305,9 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
 
     // ---------------------------------------------------------- 界面开关
     toggleRail: () => setUi((u) => ({ ...u, railCollapsed: !u.railCollapsed })),
+    /** 手机宽度：回到议题列表 / 打开议题那一栏 */
+    showTopicList: () => setUi((u) => ({ ...u, pane: "list" })),
+    showTopicPane: () => setUi((u) => ({ ...u, pane: "topic" })),
     toggleSide: () => setUi((u) => ({ ...u, sideCollapsed: !u.sideCollapsed })),
     toggleRound: (roundId: string) =>
       setUi((u) => ({ ...u, collapsedRounds: { ...u.collapsedRounds, [roundId]: !u.collapsedRounds[roundId] } })),

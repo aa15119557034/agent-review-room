@@ -6,7 +6,9 @@ import {
   QUERIES,
   RUN_TRANSITIONS,
   canTransition,
+  toRunModel,
   type AgentEvent,
+  type ApprovalBatch,
   type Approval,
   type ApprovalState,
   type CommandType,
@@ -43,6 +45,8 @@ export interface MockOptions {
   reviewerOutcome?: "complete" | "error";
   /** 预置演示数据 */
   seed?: boolean;
+  /** 讨论室标签（C-38）演示：再建几个处在不同阶段的议题（等盖章 / 进行中 / 已定稿） */
+  demoTopics?: boolean;
   /** 讨论室：模拟额度缺席、中途额度用尽、失败 */
   discussion?: DiscussionMockOptions;
   /** 聊天（C-35）：模拟连不上、失败、额度用尽、记忆来源 */
@@ -459,7 +463,7 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
         else v.clear();
       }
     },
-  } as unknown as RoomBridge & { reset(): void; mediaUrl(ref: string): string | undefined };
+  } as unknown as RoomBridge & { reset(): void; mediaUrl(ref: string): string | undefined; topicsSeeded?: Promise<void> };
 
   if (options.seed) {
     // 演示数据：假装已经设置好了一个节点
@@ -467,6 +471,8 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
     nodeToken = "demo".repeat(10);
     void seed(bridge);
   }
+  // 议题要在界面读 projects.list 之前建好（没有「新议题」事件），所以先建议题、再慢慢走流程
+  if (options.demoTopics) bridge.topicsSeeded = seedTopics(bridge);
   return bridge;
 }
 
@@ -498,6 +504,65 @@ function mockReviewText(snapshot: PromptSnapshot): string {
     "",
     "（这是 mock Reviewer 的固定回复）",
   ].join("\n");
+}
+
+/**
+ * 讨论室标签演示（?mock&topics）：一个等盖章、一个正在答、一个走完一轮并定稿。
+ * 全部走真命令（和用户点按钮一样），不直接写数据
+ */
+async function seedTopics(bridge: RoomBridge): Promise<void> {
+  const run = async <T>(req: Record<string, unknown>): Promise<T> => {
+    const r = (await bridge.command(req as never)) as { ok: boolean; data?: T; message?: string };
+    if (!r.ok) throw new Error(r.message);
+    return r.data as T;
+  };
+  const get = async <T>(req: Record<string, unknown>): Promise<T> => {
+    const r = (await bridge.query(req as never)) as { ok: boolean; data?: T; message?: string };
+    if (!r.ok) throw new Error(r.message);
+    return r.data as T;
+  };
+  const stamp = (b: ApprovalBatch) =>
+    run({
+      type: "batch.approve",
+      batchId: b.id,
+      expected: b.items.map((i) => ({ approvalId: i.approvalId, contentHash: i.contentHash, model: i.model === null ? null : toRunModel(i.model) })),
+    });
+  const waitRound = async (roundId: string, state: string) => {
+    for (let i = 0; i < 2000; i++) {
+      const { round } = await get<{ round: { state: string } }>({ type: "rounds.get", roundId });
+      if (round.state === state) return;
+      await new Promise((r) => setTimeout(r, 20));
+    }
+  };
+  const topic = (name: string) => run<{ id: string }>({ type: "project.create", name });
+  const draft = (projectId: string, task: string) =>
+    run<{ round: { id: string }; batch: ApprovalBatch }>({
+      type: "round.draft", projectId, recipients: ["deepseek", "codex"], task, taskSource: "human",
+      planVersionId: null, historyMode: "recent_with_summaries",
+    });
+  let done: { id: string }, waiting: { id: string }, running: { id: string };
+  try {
+    [done, waiting, running] = await Promise.all([topic("汇总卡怎么排版"), topic("聊天记录要不要能导出"), topic("记忆文件夹放哪台电脑")]);
+  } catch {
+    return;
+  }
+  void (async () => {
+    const r1 = await draft(done.id, "汇总卡要不要按要点 / 风险 / 遗漏分栏？");
+    await stamp(r1.batch);
+    await waitRound(r1.round.id, "AWAITING_SUMMARY");
+    await stamp(await run<ApprovalBatch>({ type: "round.summarize", roundId: r1.round.id, summarizer: "claude" }));
+    await waitRound(r1.round.id, "SUMMARIZED");
+    const [plan] = await get<{ id: string }[]>({ type: "plans.list", projectId: done.id });
+    if (plan) {
+      const current = await run<{ id: string; contentHash: string }>({ type: "plan.confirm", planVersionId: plan.id });
+      await run({ type: "plan.finalize", planVersionId: current.id, expectedContentHash: current.contentHash });
+    }
+  })().catch(() => {});
+  void (async () => {
+    await draft(waiting.id, "聊天记录导出要注意什么？");
+    const r3 = await draft(running.id, "记忆文件夹放主控机还是各自的电脑？");
+    await stamp(r3.batch);
+  })().catch(() => {});
 }
 
 async function seed(bridge: RoomBridge) {

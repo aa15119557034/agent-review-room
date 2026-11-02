@@ -5,6 +5,7 @@ import type { Store } from "./store";
 import { createDiscussionActions } from "./discussion-actions";
 import { createChatActions } from "./chat-actions";
 import { createConsoleActions } from "./console-actions";
+import { boardSeq, digestFromDisc, withDigest, type TodoItem } from "./topic-board";
 
 /**
  * 所有会访问后端的操作都在这里。UI 组件只调用这些函数，不直接碰 client。
@@ -18,6 +19,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
     // 转议题成功：把新议题加进列表，切到讨论室打开它
     async openTopic(project) {
       store.set((s) => ({ ...s, projects: s.projects.some((p) => p.id === project.id) ? s.projects : [...s.projects, project], view: "discussion" }));
+      disc.showTopicPane();
       await loadProject(project.id).catch(fail);
     },
   });
@@ -25,6 +27,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
   const agentConsole = createConsoleActions(store, client, fail, {
     async openTopic(projectId) {
       store.set((s) => ({ ...s, view: "discussion" }));
+      disc.showTopicPane();
       await loadProject(projectId).catch(fail);
     },
     async openConversation(conversationId) {
@@ -62,7 +65,22 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
       disc:
         s.currentProjectId === projectId
           ? s.disc
-          : { ...s.disc, rounds: [], batches: [], turns: [], summaries: [], plans: [], confirm: null },
+          : {
+              ...s.disc,
+              rounds: [],
+              batches: [],
+              turns: [],
+              summaries: [],
+              plans: [],
+              confirm: null,
+              // 离开的议题：把实时数据留给议题列表（C-38），新议题读完前列表用它的缓存
+              board: {
+                ...(s.disc.board.live && s.disc.board.live === s.currentProjectId
+                  ? withDigest(s.disc.board, s.disc.board.live, digestFromDisc(s.disc), boardSeq())
+                  : s.disc.board),
+                live: null,
+              },
+            },
     }));
     await disc.loadTopic(projectId);
   }
@@ -84,6 +102,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
         store.set((s) => applyEvent(s, e));
         chat.onChatEvent(e);
         agentConsole.onEvent(e);
+        disc.onBoardEvent(e);
       });
       try {
         const [status, projects] = await Promise.all([
@@ -92,6 +111,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
         ]);
         store.set((s) => ({ ...s, status, projects, connection: { phase: "ready" } }));
         await disc.loadAgents();
+        void disc.loadBoard();
         await chat.loadConversations();
         // 聊天输入框的「谁看不了图」提示（C-43）：探测，失败不弹提示
         void chat.media.loadVision();
@@ -101,6 +121,21 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
         store.set((s) => ({ ...s, connection: { phase: "failed", message: describeFailure(err) } }));
       }
       return unsubscribe;
+    },
+
+    /**
+     * 讨论室标签「等你处理」里的一件事（C-38）：打开议题；要盖章的直接打开原来的确认页，
+     * 其它的（确认方案、请人汇总、改方向）停在时间线，按钮就在原来的位置
+     */
+    async openTodo(item: TodoItem) {
+      try {
+        await loadProject(item.projectId);
+      } catch (err) {
+        fail(err);
+        return;
+      }
+      disc.showTopicPane();
+      if (item.kind === "stamp") await disc.openConfirm(item.batchId);
     },
 
     async selectProject(projectId: string) {
