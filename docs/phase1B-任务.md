@@ -97,6 +97,8 @@
 | **S-21** | Claude | 节点实测并上报额度：Claude `rate_limits`、DeepSeek 余额（Codex 部分已提前到 1B-M 的 S-24）。做法：Claude 从每次 Run 的 stream-json 里的 `rate_limit_event` 记最近一次（`quota.source = claude-stream`，不额外花额度，节点刚启动时未知）；DeepSeek 读 `/user/balance`（`deepseek-balance`，Key 只从 envAllowlist 里的环境变量读） | C-36 | 读得到的显示数字，读不到的显示「未知」，不猜 |
 | **D-32** | DeepSeek | 额度汇总（不猜，只聚合 C-36 上报的）、自动缺席、替补派发；替补链防环、替补也不可用时记缺席；同一人同一轮不重复记缺席 | C-36 | 额度用尽 → 自动缺席，汇总表正确显示 |
 | **C-37** | Claude | Agent 控制台（每位一页：状态、额度、正在答什么、历史、暂停 / 恢复、替补设置） | C-36 | mock 下所有状态都能显示 |
+| **C-37a** | Claude | 契约：`agents.activity` 查询（一位秘书正在答什么 + 历史分页，讨论的 Turn 和聊天的回答位放在一起，带问题预览；撤回的消息不给预览）。暂停 / 恢复、替补设置沿用 `agent.update`，不新增命令 | C-36 | 用户批准 |
+| **D-44** | DeepSeek | 实现 C-37a：main 里按 agent 查 Turn + 聊天回答位，current / recent 分开，(createdAt, id) 倒序分页；current 设硬上限；preview 按码点截 200 字、用户消息已撤回给 null；列表里的 Turn 只给摘要（不带 partialText）；补测试（替补的 Turn 只列在替补那边、撤回不漏原文、翻页不重不漏） | C-37a | 测试通过 |
 | **X-32** | Claude（原 Codex，2026-11-01 改派） | 把 0-B #10 从「写库模拟」改成走替补命令。**做法**：假节点加 `GET /v1/profiles/:id/quota`（没给 = 404），#10 拆成 a 自动替补 / b 显式替补与 `[]`、替补也用完 / c 答到一半用完 → `round.retry` 带替补、旧 Turn 接上、不能派第二个 / d 粘滞缺席（读不到不清、读到 ok 才清） | D-32 | #10 完整覆盖 |
 
 ## 1B-4 讨论室待办
