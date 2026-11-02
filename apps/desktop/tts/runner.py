@@ -6,14 +6,18 @@
   请求     → stdin : {"type":"synth","id":"r1","text":"...","out":"C:/tmp/a.wav","speed":1.0,"voice":{"source":"reference","refAudio":"..."}}
   成功     → stdout: {"type":"done","id":"r1","ms":4321,"durationMs":7640,"sampleRate":22050}
   失败     → stdout: {"type":"failed","id":"r1","error":"..."}
+  卸载     → stdin : {"type":"unload","id":"u1"}；释放模型和显存 → stdout: {"type":"unloaded","id":"u1"}
 
 约定：
 - 不说话的时候什么都不输出（主控端按行读，不做超时判断以外的假设）
 - 一次只处理一个请求（显卡一次只跑一个，主控端那边也是串行的）
 - 合成结果是 16-bit PCM wav；语速不是 1.0 时用 librosa 做变调不变的时长伸缩
 - 引擎不认识的东西一律报 failed，不要 print 到 stdout（日志走 stderr）
+- 画图和语音共用一张显卡：主控端在切到画图前会发 unload，释放完才回 unloaded；
+  之后再来 synth 就重新加载模型（重新加载的耗时算在这次合成里）
 """
 
+import gc
 import json
 import os
 import sys
@@ -73,6 +77,20 @@ def apply_speed(path, speed):
     sf.write(path, stretched, rate, subtype="PCM_16")
 
 
+def release_memory():
+    """把模型占的显存还给驱动。调用前先把模型引用丢干净（林离 #163）。"""
+    gc.collect()
+    try:
+        import torch
+
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+            torch.cuda.ipc_collect()
+    except Exception:  # 没有 CUDA / 驱动报错都不该把进程带挂
+        log(traceback.format_exc())
+
+
 def main():
     started = time.time()
     try:
@@ -102,9 +120,27 @@ def main():
         request_id = request.get("id")
         if request.get("type") == "shutdown":
             return 0
+        if request.get("type") == "unload":
+            # 画图要来了：把模型丢掉、显存还回去，确认释放完再回 unloaded（主控端等到这条才放行 draw）
+            tts = None
+            release_memory()
+            log(">> model released")
+            emit({"type": "unloaded", "id": request_id})
+            continue
         if request.get("type") != "synth":
             emit({"type": "failed", "id": request_id, "error": "unknown_request"})
             continue
+
+        # 卸载过就重新加载（重新加载的耗时算在这次合成里）
+        if tts is None:
+            try:
+                reload_started = time.time()
+                tts = load_model()
+                log(f">> model reloaded in {int((time.time() - reload_started) * 1000)} ms")
+            except Exception as error:
+                log(traceback.format_exc())
+                emit({"type": "failed", "id": request_id, "error": f"model_load_failed: {error}"})
+                continue
 
         try:
             text = request["text"]

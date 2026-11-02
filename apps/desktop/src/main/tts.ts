@@ -41,6 +41,10 @@ export interface TtsConfig {
 const DEFAULT_TIMEOUT_MS = 180_000;
 /** 起进程 + 加载模型最多等多久（C酱 #152 必须改 2）：卡住就把整条显卡队列拖死，所以必须有上限 */
 const DEFAULT_LOAD_TIMEOUT_MS = 120_000;
+/** 让引擎卸载模型最多等多久（D-37b，林离 #163）：卸 9GB 是秒级的事，这么久没回就杀进程 */
+const UNLOAD_TIMEOUT_MS = 30_000;
+/** 取消 / 超时杀掉进程后，等它真的退出再删临时文件，最多等多久 */
+const KILL_WAIT_MS = 5_000;
 
 /** 配置缺失 / python 或脚本不存在 / 进程起不来 */
 export class TtsUnavailableError extends Error {
@@ -68,7 +72,7 @@ export interface TtsSynthesis {
 }
 
 interface RunnerReply {
-  type: "ready" | "done" | "failed";
+  type: "ready" | "done" | "failed" | "unloaded";
   id?: string | null;
   error?: string;
   ms?: number;
@@ -299,6 +303,59 @@ export class TtsRunner {
     else pending.resolve(reply);
   }
 
+  /**
+   * 等子进程真的退出（最多 ms 毫秒）。取消 / 超时是「边写边杀」，不等它停下来就删文件，
+   * 旧进程可能又写回去（林离 #163 必须改 2）。
+   */
+  #waitExit(child: ChildProcessWithoutNullStreams, ms: number): Promise<void> {
+    if (child.exitCode !== null || child.signalCode !== null) return Promise.resolve();
+    return new Promise<void>((resolve) => {
+      const done = () => {
+        clearTimeout(timer);
+        child.removeListener("close", done);
+        resolve();
+      };
+      const timer = setTimeout(done, ms);
+      child.once("close", done);
+    });
+  }
+
+  /**
+   * 让引擎把模型卸掉、把显存还给驱动（D-37b，林离 #163 必须改 1）。
+   * 语音和画图共用一张显卡，而语音的进程会一直等 stdin、模型一直占着显存；切到画图之前必须先卸掉并等它确认。
+   * 没有进程 / 还没 ready = 没占显存，直接返回；引擎不回应或报错就杀进程兜底（进程退出一定释放显存）。
+   */
+  async unload(): Promise<void> {
+    const child = this.#child;
+    if (child === null || !this.#ready || this.#pending !== null) return;
+    const id = "u" + String((this.#seq += 1));
+    try {
+      await new Promise<RunnerReply>((resolve, reject) => {
+        const timer = setTimeout(() => {
+          if (this.#pending?.id === id) this.#pending = null;
+          this.#kill();
+          reject(new TtsFailedError("语音引擎卸载超时"));
+        }, UNLOAD_TIMEOUT_MS);
+        this.#pending = {
+          id,
+          resolve: (value) => {
+            clearTimeout(timer);
+            resolve(value);
+          },
+          reject: (error) => {
+            clearTimeout(timer);
+            reject(error);
+          },
+        };
+        child.stdin.write(JSON.stringify({ type: "unload", id }) + "\n");
+      });
+    } catch {
+      // 卸载失败 / 超时 / 进程先退出：杀掉进程，等它退出（退出同样会释放显存），不让画图接着撞显存
+      this.#kill();
+      await this.#waitExit(child, KILL_WAIT_MS);
+    }
+  }
+
   /** 合成一段话。串行：上一段没结束，这一段排队等着（上层本来也只有一个队列） */
   async synthesize(input: {
     text: string;
@@ -318,50 +375,55 @@ export class TtsRunner {
     const id = "r" + String((this.#seq += 1));
     const outPath = join(tmpdir(), `room-tts-${process.pid}-${id}.wav`);
     const timeoutMs = this.config.timeoutMs ?? DEFAULT_TIMEOUT_MS;
+    /** 取消 / 超时把进程杀了：它可能还在往 outPath 里写，要等它停下来再删（林离 #163 必须改 2） */
+    let killed = false;
 
-    const reply = await new Promise<RunnerReply>((resolve, reject) => {
-      const timer = setTimeout(() => {
-        if (this.#pending?.id === id) this.#pending = null;
-        // 超时就把进程杀掉，下次重新起（别留着卡住的进程）
-        this.#kill();
-        reject(new TtsFailedError("语音合成超时"));
-      }, timeoutMs);
-      const onAbort = () => {
-        clearTimeout(timer);
-        if (this.#pending?.id === id) this.#pending = null;
-        this.#kill();
-        reject(new TtsFailedError("语音合成被取消"));
-      };
-      input.signal.addEventListener("abort", onAbort, { once: true });
-      this.#pending = {
-        id,
-        resolve: (value) => {
-          clearTimeout(timer);
-          input.signal.removeEventListener("abort", onAbort);
-          resolve(value);
-        },
-        reject: (error) => {
-          clearTimeout(timer);
-          input.signal.removeEventListener("abort", onAbort);
-          reject(error);
-        },
-      };
-      child.stdin.write(
-        JSON.stringify({
-          type: "synth",
-          id,
-          text: input.text,
-          out: outPath,
-          speed: input.speed,
-          voice:
-            input.voice.source === "reference"
-              ? { source: "reference", refAudio: input.voice.refAudio }
-              : { source: "preset", preset: input.voice.preset ?? null },
-        }) + "\n",
-      );
-    });
-
+    // 清理覆盖「等回应」的全过程：引擎写了一半报 failed、或者超时 / 取消，都不留临时 wav
     try {
+      const reply = await new Promise<RunnerReply>((resolve, reject) => {
+        const timer = setTimeout(() => {
+          if (this.#pending?.id === id) this.#pending = null;
+          killed = true;
+          // 超时就把进程杀掉，下次重新起（别留着卡住的进程）
+          this.#kill();
+          reject(new TtsFailedError("语音合成超时"));
+        }, timeoutMs);
+        const onAbort = () => {
+          clearTimeout(timer);
+          if (this.#pending?.id === id) this.#pending = null;
+          killed = true;
+          this.#kill();
+          reject(new TtsFailedError("语音合成被取消"));
+        };
+        input.signal.addEventListener("abort", onAbort, { once: true });
+        this.#pending = {
+          id,
+          resolve: (value) => {
+            clearTimeout(timer);
+            input.signal.removeEventListener("abort", onAbort);
+            resolve(value);
+          },
+          reject: (error) => {
+            clearTimeout(timer);
+            input.signal.removeEventListener("abort", onAbort);
+            reject(error);
+          },
+        };
+        child.stdin.write(
+          JSON.stringify({
+            type: "synth",
+            id,
+            text: input.text,
+            out: outPath,
+            speed: input.speed,
+            voice:
+              input.voice.source === "reference"
+                ? { source: "reference", refAudio: input.voice.refAudio }
+                : { source: "preset", preset: input.voice.preset ?? null },
+          }) + "\n",
+        );
+      });
+
       if (!existsSync(outPath)) throw new TtsFailedError("语音引擎说合成好了，但文件不在");
       const bytes = readFileSync(outPath);
       if (bytes.length === 0) throw new TtsFailedError("合成出来的音频是空的");
@@ -373,6 +435,7 @@ export class TtsRunner {
         ms: reply.ms ?? 0,
       };
     } finally {
+      if (killed) await this.#waitExit(child, KILL_WAIT_MS);
       try {
         rmSync(outPath, { force: true });
       } catch {

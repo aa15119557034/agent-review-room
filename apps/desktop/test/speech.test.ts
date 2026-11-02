@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, readdirSync, rmSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
@@ -389,6 +389,55 @@ describe("TtsRunner 进程生命周期（C酱 #152）", () => {
       runner.dispose(); // 相当于超时 / 取消把进程杀了
       const second = await runner.synthesize({ text: "第二句", voice: voice as never, speed: 1, signal: new AbortController().signal });
       assert.ok(second.bytes.length > 0, "重启之后还能合成");
+    } finally {
+      runner.dispose();
+    }
+  });
+
+  // 林离 #163 必须改 2：等回应这段在 try/finally 外，失败 / 超时 / 取消时临时 wav 不删
+  const tempWavs = () => readdirSync(tmpdir()).filter((name) => name.startsWith(`room-tts-${process.pid}-`));
+
+  it("引擎写了一半报失败：临时 wav 不能留在系统临时目录（林离 #163）", async () => {
+    const runner = new TtsRunner(base("tts-fail-after-write.mjs"));
+    const before = tempWavs();
+    try {
+      await assert.rejects(
+        () => runner.synthesize({ text: "你好", voice: voice as never, speed: 1, signal: new AbortController().signal }),
+        (error: unknown) => error instanceof TtsFailedError && /simulated failure/.test((error as Error).message),
+      );
+      assert.deepEqual(tempWavs().filter((name) => !before.includes(name)), [], "失败的临时 wav 要删掉");
+    } finally {
+      runner.dispose();
+    }
+  });
+
+  it("超时杀掉进程后，等它停下来再删掉写了一半的 wav（林离 #163）", async () => {
+    const runner = new TtsRunner(base("tts-hang-after-write.mjs", { timeoutMs: 300 }));
+    const before = tempWavs();
+    try {
+      await assert.rejects(
+        () => runner.synthesize({ text: "你好", voice: voice as never, speed: 1, signal: new AbortController().signal }),
+        (error: unknown) => error instanceof TtsFailedError && /超时/.test((error as Error).message),
+      );
+      assert.deepEqual(tempWavs().filter((name) => !before.includes(name)), [], "超时留下的临时 wav 也要删掉");
+    } finally {
+      runner.dispose();
+    }
+  });
+
+  // 林离 #163 必须改 1：切到画图前要真的释放显存，而且等到释放完才放行
+  it("unload 等到引擎确认释放才返回；之后还能继续合成", async () => {
+    const runner = new TtsRunner(base("tts-ok.mjs"));
+    try {
+      assert.equal(tempWavs().length, 0, "前置：没有遗留临时文件");
+      await runner.unload(); // 没有进程：空操作，不能抛
+      const first = await runner.synthesize({ text: "第一句", voice: voice as never, speed: 1, signal: new AbortController().signal });
+      assert.ok(first.bytes.length > 0);
+      const started = Date.now();
+      await runner.unload();
+      assert.ok(Date.now() - started >= 80, "假引擎故意 120ms 才回 unloaded：主控端必须等到回应");
+      const second = await runner.synthesize({ text: "第二句", voice: voice as never, speed: 1, signal: new AbortController().signal });
+      assert.ok(second.bytes.length > 0, "卸载之后再来合成要能重新加载");
     } finally {
       runner.dispose();
     }
