@@ -160,6 +160,8 @@ async function makeHarness(
     summaryScript?: Script;
     /** D-45：摘要 Run 先等这个 promise 再回（测「跑的时候来源被撤回」） */
     summaryGate?: Promise<void>;
+    /** D-39：自动画图先等这个 promise 再建任务 */
+    drawGate?: Promise<void>;
     /** D-39：自动语音排任务时故意失败（测「前置条件不满足要补一条失败任务」） */
     speakMediaFails?: boolean;
   } = {},
@@ -211,6 +213,7 @@ async function makeHarness(
     readImage: (ref) => imageBytes.get(ref) ?? null,
     drawMedia: async (source, draw, intentHash) => {
       mediaCalls.push({ kind: "draw", source, intentHash });
+      if (options.drawGate !== undefined) await options.drawGate;
       insertMediaJob(db, MediaJobSchema.parse({
         id: "mjob_" + ulid(), kind: "draw", state: "queued", authorization: "immersive", source, intentHash,
         draw: { ...draw, backend: "auto" }, route: null, remoteRunId: null, result: null, speech: null,
@@ -2122,6 +2125,41 @@ describe("immersive (D-39)", () => {
       assert.equal(deferred.length, 1, "只有一条退回");
       assert.deepEqual(JSON.parse(deferred[0]!.immersive_deferred as string), { draw: "hourly_limit" });
       assert.equal(h.mediaCalls.filter((call) => call.kind === "draw").length, 1, "只建了一个画图任务");
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("#187 第 5 条：关模式排在旧计划后面时，旧计划建出来的任务会被收掉", async () => {
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const drawOnly = (text: string): Script => [
+      { type: "message_complete", text: JSON.stringify({ kind: "reply", text, draw: { prompt: "小鲸鱼", size: "1024x1024" } }) },
+      { type: "completed" },
+    ];
+    const h = await makeHarness({ scripts: { deepseek: drawOnly("好") }, drawGate: gate });
+    try {
+      upsertImmersiveSettings(h.db, h.conversationId, {
+        enabled: true,
+        autoDrawUsesSubscription: true,
+        drawsPerHour: 6,
+        voiceClipsPerHour: 30,
+      }, NOW);
+      await h.chat.send(send(h.conversationId, userMessageId(990), "画一张"));
+      await waitFor(() => h.mediaCalls.some((call) => call.kind === "draw"));
+      const disabling = h.chat.updateImmersive(h.conversationId, {
+        enabled: false,
+        autoDrawUsesSubscription: true,
+        drawsPerHour: 6,
+        voiceClipsPerHour: 30,
+      });
+      await new Promise((resolve) => setTimeout(resolve, 30));
+      assert.equal(h.mediaCalls.some((call) => call.kind === "stop"), false, "关模式在等会话锁");
+      release();
+      await disabling;
+      assert.deepEqual(h.mediaCalls.map((call) => call.kind), ["draw", "stop"]);
     } finally {
       h.db.close();
     }

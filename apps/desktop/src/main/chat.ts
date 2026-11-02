@@ -1091,7 +1091,7 @@ export class ChatService {
                 });
                 // 回答真的落库之后才开始自动任务（source 用落库的消息 id）
                 if (result.message !== null && immersive !== null) {
-                  this.#startImmersive(result.message, media.intent, immersive);
+                  await this.#startImmersive(result.message, media.intent, immersive);
                 }
                 return result;
               });
@@ -1201,11 +1201,11 @@ export class ChatService {
   }
 
   /** 回答落库之后才建自动任务；失败只记日志，不影响回答 */
-  #startImmersive(
+  async #startImmersive(
     message: AgentChatMessage,
     intent: MediaIntent | null,
     plan: { draw: boolean; speak: boolean },
-  ): void {
+  ): Promise<void> {
     if (intent === null) return;
     const source: MediaSource = {
       kind: "chat",
@@ -1215,13 +1215,14 @@ export class ChatService {
     };
     if (plan.draw && intent.draw !== undefined) {
       const hash = sha256Hex(JSON.stringify(intent.draw));
-      void Promise.resolve(this.#deps.drawMedia?.(source, intent.draw, hash)).catch((error: unknown) => {
+      // 在会话锁里等任务真的建出来：下一条回答数用量时才能看到它（#187 第 4 条）
+      await Promise.resolve(this.#deps.drawMedia?.(source, intent.draw, hash)).catch((error: unknown) => {
         console.warn("[chat] 沉浸模式自动画图没排上：", error instanceof Error ? error.message : String(error));
       });
     }
     if (plan.speak && intent.speak === true) {
       const hash = sha256Hex("speak");
-      void Promise.resolve(this.#deps.speakMedia?.(source, hash)).catch((error: unknown) => {
+      await Promise.resolve(this.#deps.speakMedia?.(source, hash)).catch((error: unknown) => {
         const why = error instanceof Error ? error.message : String(error);
         console.warn("[chat] 沉浸模式自动语音没排上：", why);
         // 契约不变量：没任务就要有原因；这里补一条立刻失败的 immersive 任务
@@ -1244,18 +1245,23 @@ export class ChatService {
   async updateImmersive(conversationId: string, settings: ImmersiveSettings): Promise<ImmersiveSettings> {
     const conversation = getConversation(this.#deps.db, conversationId);
     if (conversation === null) throw new ChatError("not_found", "会话不存在");
-    const before = getImmersiveSettings(this.#deps.db, conversationId);
-    await writeTransaction(this.#deps.db, this.#deps.queue, () =>
-      upsertImmersiveSettings(this.#deps.db, conversationId, settings, this.#now()),
-    );
-    if (before.enabled && !settings.enabled) {
-      try {
-        await this.#deps.stopMedia?.({ kind: "chat", conversationId });
-      } catch (error) {
-        console.warn("[chat] 关沉浸模式时取消媒体任务失败：", error instanceof Error ? error.message : String(error));
+    // #187 第 5 条：和「数用量 → 定退回 → 建任务」用同一把会话锁。
+    // 关模式要么排在旧计划前面（读到的 enabled 已经是 false）、要么排在后面（建出来的任务会被 stop 收掉），
+    // 不会出现「关完又被一条旧计划建出新任务」。
+    return this.#withImmersionLock(conversationId, async () => {
+      const before = getImmersiveSettings(this.#deps.db, conversationId);
+      await writeTransaction(this.#deps.db, this.#deps.queue, () =>
+        upsertImmersiveSettings(this.#deps.db, conversationId, settings, this.#now()),
+      );
+      if (before.enabled && !settings.enabled) {
+        try {
+          await this.#deps.stopMedia?.({ kind: "chat", conversationId });
+        } catch (error) {
+          console.warn("[chat] 关沉浸模式时取消媒体任务失败：", error instanceof Error ? error.message : String(error));
+        }
       }
-    }
-    return settings;
+      return settings;
+    });
   }
 
   // ---------------------------------------------------------------- 历史摘要（D-45）
