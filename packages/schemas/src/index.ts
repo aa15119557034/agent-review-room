@@ -11,6 +11,7 @@ export * from "./chart";
 export * from "./immersive";
 export * from "./discussion";
 export * from "./chat";
+export * from "./notes";
 export * from "./remote-protocol";
 export * from "./control-api";
 export * from "./ipc";

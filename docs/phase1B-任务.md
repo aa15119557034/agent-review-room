@@ -110,6 +110,17 @@
 |---|---|---|---|---|
 | **C-38** | Claude | 讨论室标签：议题列表 + 一句话状态、待办角标、只读时间线 + 原有动作按钮（不新增命令） | 1B-2 | 只用讨论室标签完成一轮：发送 → 汇总 → 定稿 |
 
+## 1B-5 项目笔记和换窗口（ADR-005）
+
+| ID | 负责 | 内容 | 依赖 | 验收 |
+|---|---|---|---|---|
+| **C-46** | Claude | 契约：`notes.ts`（`ProjectNote`、`ChatWindow`、`ChatWindowDraft`、`ChatWindowStatus`、`extractRoomNote`、GitHub 同步状态）、`projectNote.*` / `projectNotes.*` / `chat.window.*` / `chat.windows.*` / `github.*`、Snapshot 记笔记版本、`ChatRun.purpose` 加 `window_handoff` | ADR-005 | 用户批准 |
+| **D-46a** | DeepSeek | main：笔记存储和版本、回答里切 `room-note`（用 `extractRoomNote`，含「删了不少」）、拼进讨论室和聊天的 Prompt（nonce 资料边界）、`projectNote.edit` / `revert` | C-46 | 秘书回答带 room-note → 新版；多段 / 超长 → `projectNote.rejected`、回答照常；Snapshot 记了笔记版本 |
+| **D-46b** | DeepSeek | main：换窗口（草稿、prepare / editDraft / redo / confirm / cancel；handoff Run 走 slot = null）、拼回答 Prompt 时按窗口过滤（摘要规划和写手不变）、`chat.windows.get` 的窗口里压缩次数 | C-46、D-46a | 换窗口后旧消息、跨边界的摘要不进 Snapshot；取消后 Run 还在、没有笔记和窗口；重启后草稿还在 |
+| **D-46c** | DeepSeek | main：笔记和议题推到 GitHub（私有检查、先取 sha 再覆盖、排队重试）、`github.*` | C-46、D-46a | 公开仓库不推；断网排队、恢复后推上；Token 不出 main |
+| **C-47** | Claude | 界面：讨论室右栏点人看笔记；聊天记忆条「笔记」「这个窗口压缩 N 次」「建议换窗口」；聊天设置里的换窗口；秘书资料页历史里的笔记入口；看版本、回退；设置页 GitHub。先对 mock 做 | C-46 | 截图给江浩看 |
+| **X-36** | Claude | e2e：换窗口后旧消息不发、交接笔记在边界里、取消不留痕、`room-note` 里伪造结束标签被转义 | D-46b、C-47 | 确定性断言 |
+
 ## 顺手一起做（小）
 
 | ID | 负责 | 内容 |

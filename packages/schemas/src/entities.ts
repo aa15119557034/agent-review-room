@@ -13,6 +13,7 @@ import {
   ConversationId,
   IsoTimestamp,
   prefixedId,
+  ProjectNoteId,
   RoundId,
   RunId,
   Sha256Hex,
@@ -193,6 +194,11 @@ export const PromptSnapshot = z.object({
    * content 里有恰好一块 attachmentImageBlock(nonce, 张数)、在清单块后面、在当前用户消息之前（最后一条由拼装器验收保证，见 attachments.ts）。起跑时原样放进 StartRun.imageSlot
    */
   imageSlot: AttachmentImageSlot.optional(),
+  /**
+   * C-46（ADR-005）：讨论室发给这位秘书时带上的项目笔记版本（他在这个议题的最新一版，放在 nonce 资料边界里），
+   * 算进指纹、确认页显示第几版。null = 还没有笔记；省略 = C-46 之前的 Snapshot、单次评审、汇总
+   */
+  projectNoteId: ProjectNoteId.nullable().optional(),
   createdAt: IsoTimestamp,
 })
   .refine(
