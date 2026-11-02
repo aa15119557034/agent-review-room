@@ -1085,10 +1085,10 @@ export class ChatService {
         throw new ChatError("validation_failed", "图片引用不存在（或者不是聊天图片），请重新选一张");
       }
       // C-42a / X-34b：引用有效就放行；能不能真的带图给这位，到拼 Snapshot 时按节点能力和模型 vision 决定。
-      // renderer 发过来的命令里图片只有 ref（ChatAttachmentInput），原文件名不随命令传——
-      // 这里按 mime 给一个占位名，进 Prompt 时显示成「[图 N：图片.png]」
+      // C-42i / D-43：renderer 选图时就知道原文件名，会带过来（`name`）；老界面不带，按 mime 起「图片.<扩展名>」占位。
+      // 这个名字会进消息、附件清单和 Prompt 的资料区（「[图 N：名字]」），所以直接用它（契约已经校验过格式）
       const ext = image.mime === "image/png" ? "png" : image.mime === "image/jpeg" ? "jpg" : "webp";
-      return { kind: "image", ref: image.ref, name: "图片." + ext };
+      return { kind: "image", ref: image.ref, name: attachment.name ?? "图片." + ext };
     }
     const file = getFile(this.#deps.db, attachment.ref);
     if (file === null) throw new ChatError("validation_failed", "文件引用不存在，请重新选一个");
