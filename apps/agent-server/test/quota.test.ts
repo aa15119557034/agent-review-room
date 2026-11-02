@@ -433,6 +433,29 @@ describe("S-21: DeepSeek balance", () => {
     }
   });
 
+  it("reads the key from envFiles (how install-secretary sets it up), no allowlist needed (林离 #163)", async () => {
+    const keyFile = join(dir, "ds-key.txt");
+    writeFileSync(keyFile, "sk-file-s21\n");
+    const seen: (string | null)[] = [];
+    const fake = (async (_url: string, init: RequestInit) => {
+      seen.push(new Headers(init.headers).get("authorization"));
+      return new Response(JSON.stringify(body), { status: 200 });
+    }) as unknown as typeof fetch;
+    const q = await readDeepSeekBalance(dsProfile({ envAllowlist: [], envFiles: { S21_KEY: keyFile } }), { fetch: fake, now: () => READ_AT, log: () => {} });
+    assert.equal(q.balance?.amount, "110.50");
+    assert.deepEqual(seen, ["Bearer sk-file-s21"]);
+
+    // 文件读不了：unknown，不发请求，日志只有路径不含内容
+    const logs: string[] = [];
+    const missing = join(dir, "no-such-key.txt");
+    const q2 = await readDeepSeekBalance(dsProfile({ envAllowlist: [], envFiles: { S21_KEY: missing } }), { fetch: fake, log: (m) => logs.push(m) });
+    assert.equal(q2.balance ?? null, null);
+    assert.equal(seen.length, 1);
+    assert.equal(logs.length, 1);
+    assert.match(logs[0]!, /envFiles\.S21_KEY/);
+    assert.ok(!logs[0]!.includes("sk-file-s21"));
+  });
+
   it("no key / HTTP error / network error / timeout → unknown, and the log never contains the key", async () => {
     const logs: string[] = [];
     const log = (m: string) => logs.push(m);
@@ -463,10 +486,15 @@ describe("S-21: DeepSeek balance", () => {
     }
   });
 
-  it("config checks: the key env must be allowlisted; claude-stream needs the claude parser", () => {
+  it("config checks: the key env must be allowlisted or in envFiles; claude-stream needs the claude parser", () => {
     const cfg = (profiles: Record<string, unknown>) => ServerConfig.parse({ nodeId: "n", port: 1, profiles });
     const problems = (profiles: Record<string, unknown>) => validateProfiles(cfg(profiles)).join("\n");
-    assert.match(problems({ ds: { command: NODE, cwd: ".", quota: { source: "deepseek-balance" } } }), /envAllowlist 要包含 DEEPSEEK_API_KEY/);
+    assert.match(problems({ ds: { command: NODE, cwd: ".", quota: { source: "deepseek-balance" } } }), /envAllowlist 或 envFiles 要包含 DEEPSEEK_API_KEY/);
+    // 安装脚本的形状：Key 不在 allowlist，改从 envFiles 读（envFiles 的文件存在性另有检查）
+    assert.doesNotMatch(
+      problems({ ds: { command: NODE, cwd: ".", envFiles: { DEEPSEEK_API_KEY: FAKE }, quota: { source: "deepseek-balance" } } }),
+      /envAllowlist 或 envFiles 要包含/,
+    );
     assert.match(problems({ c: { command: NODE, cwd: ".", quota: { source: "claude-stream" } } }), /parser 要是 claude-stream-json/);
     assert.equal(problems({ c: { command: NODE, cwd: ".", parser: "claude-stream-json", quota: { source: "claude-stream" } } }), "");
   });

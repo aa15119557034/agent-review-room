@@ -1,11 +1,11 @@
 import { spawn, type ChildProcess } from "node:child_process";
-import { readFileSync } from "node:fs";
 import { StringDecoder } from "node:string_decoder";
 import type { RemoteArtifact, RemoteEvent, RemoteTerminal, RunKind, StartRunRequest } from "@room/schemas";
 import type { Profile, ServerConfig } from "./config";
 import { killTree, spawnDetached } from "./process-tree";
 import { createParser, type OutputParser, type ParserOutput } from "./parsers";
 import { planSpawn } from "./win-command";
+import { buildProfileEnv } from "./profile-env";
 import { buildArgs } from "./model-args";
 import { imageStdin } from "./images";
 import type { PreparedPrompt } from "./chat-memory";
@@ -147,7 +147,7 @@ export class RemoteRun {
     let child: ChildProcess;
     try {
       let args = [...buildArgs(this.profile, this.model), ...this.extraArgs];
-      const env = buildEnv(this.profile);
+      const env = buildProfileEnv(this.profile);
       if (this.kind === "image" && this.profile.imageRun) {
         // 每个 image Run 一个新目录，归属可证明；只从这里取图、只删这里（image-artifact.ts）
         const dir = runOutputDir(this.profile.imageRun.outputDir, this.runId);
@@ -382,23 +382,3 @@ export class RemoteRun {
 export const chatKeyOf = (chat: StartRunRequest["chat"]): string =>
   chat === undefined ? "none" : chat.memory === null ? "no-memory" : JSON.stringify([chat.memory.nonce, chat.memory.marker]);
 
-function buildEnv(profile: Profile): NodeJS.ProcessEnv {
-  const env: NodeJS.ProcessEnv = {};
-  for (const key of profile.envAllowlist) {
-    const v = process.env[key];
-    if (v !== undefined) env[key] = v;
-  }
-  // S-20：密钥从文件现读（只有这位秘书的账号能读那个文件）；读不到就抛错，调用方按 spawn_failed 结束，消息里只有路径
-  const fromFiles: NodeJS.ProcessEnv = {};
-  for (const [key, file] of Object.entries(profile.envFiles)) {
-    let value: string;
-    try {
-      value = readFileSync(file, "utf8").trim();
-    } catch (err) {
-      throw new Error(`读不了 envFiles.${key}（${file}）：${(err as NodeJS.ErrnoException).code ?? "error"}`);
-    }
-    if (value === "") throw new Error(`envFiles.${key}（${file}）是空的`);
-    fromFiles[key] = value;
-  }
-  return { ...env, ...profile.env, ...fromFiles };
-}

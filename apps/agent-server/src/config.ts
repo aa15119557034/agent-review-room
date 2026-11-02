@@ -304,8 +304,8 @@ export function imageConfigProblems(p: Profile): string[] {
   if (p.quota?.source === "claude-stream" && p.parser !== "claude-stream-json") {
     problems.push("quota.source 为 claude-stream 时 parser 要是 claude-stream-json（额度从它的输出里读）");
   }
-  if (p.quota?.source === "deepseek-balance" && !p.envAllowlist.includes(p.quota.apiKeyEnv)) {
-    problems.push(`quota.source 为 deepseek-balance 时 envAllowlist 要包含 ${p.quota.apiKeyEnv}`);
+  if (p.quota?.source === "deepseek-balance" && !p.envAllowlist.includes(p.quota.apiKeyEnv) && !(p.quota.apiKeyEnv in p.envFiles) && !(p.quota.apiKeyEnv in p.env)) {
+    problems.push(`quota.source 为 deepseek-balance 时 envAllowlist 或 envFiles 要包含 ${p.quota.apiKeyEnv}`);
   }
   if (p.imageRun && p.images) problems.push("画图 profile 不收图（image Run 不能带附件），不要同时配 images");
   if (p.imageRun && p.memory) problems.push("画图 profile 不读记忆");
