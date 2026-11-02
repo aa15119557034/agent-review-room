@@ -15,6 +15,7 @@ import {
   insertChatSnapshot,
   listMediaJobs,
   openDatabase,
+  retractChatMessage,
   ulid,
   WriteQueue,
   type SqliteDatabase,
@@ -223,6 +224,27 @@ const sourceOf = (h: Harness, messageId = h.answer.id) =>
   ({ kind: "chat", conversationId: h.conversationId, messageId, agent: "deepseek" }) as const;
 
 describe("speech.play (D-37b)", () => {
+  it("回答的用户来源已撤回：不能再从这条回答创建画图任务", async () => {
+    const h = await makeHarness();
+    try {
+      retractChatMessage(h.db, h.userMessage.id, T);
+      await assert.rejects(
+        h.service.start({ prompt: "鲸鱼", size: "1024x1024", backend: "auto" }, sourceOf(h), false),
+        (error: unknown) => (error as { code?: string }).code === "validation_failed",
+      );
+    } finally { await settle(h.service); h.db.close(); }
+  });
+  it("相同来源的语音并发入队只创建一个任务", async () => {
+    const h = await makeHarness();
+    try {
+      const source = { kind: "chat" as const, conversationId: h.conversationId, messageId: h.answer.id, agent: "deepseek" };
+      const [a, b] = await Promise.all([h.service.play(source), h.service.play(source)]);
+      await settle(h.service);
+      assert.ok(!a.cached && !b.cached);
+      assert.equal(a.job.id, b.job.id);
+      assert.equal(h.runner.calls.length, 1);
+    } finally { h.db.close(); }
+  });
   it("沉浸语音前置条件不满足时，真实服务能存下契约合格的失败任务", async () => {
     const h = await makeHarness();
     try {
