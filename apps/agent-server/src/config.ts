@@ -270,7 +270,14 @@ export function chatProfileProblems(id: string, p: Profile): string[] {
   const problems: string[] = [];
   // 只按整个参数比：等于、`flag=值`，或者是 --permission-mode / --sandbox 这类开关后面的值（汐 #138：子串匹配会误伤路径和提示词）
   // `-c sandbox_mode=workspace-write` 这种：值等于禁用的那个也算
-  const bad = p.args.filter((a) => CHAT_FORBIDDEN_ARGS.some((f) => a === f || a.startsWith(f + "=") || a.endsWith("=" + f)));
+  const effectiveArgs = [
+    ...buildArgs(p),
+    ...p.models.flatMap((m) => m.efforts.length === 0
+      ? buildArgs(p, { model: m.id, effort: null })
+      : m.efforts.flatMap((e) => buildArgs(p, { model: m.id, effort: e.id }))),
+    ...(p.images?.args ?? []),
+  ];
+  const bad = [...new Set(effectiveArgs.filter((a) => CHAT_FORBIDDEN_ARGS.some((f) => a === f || a.startsWith(f + "=") || a.endsWith("=" + f))))];
   if (bad.length) problems.push(`聊天 profile 不能带这些参数：${bad.join(" ")}`);
   if (p.imageRun) problems.push("聊天 profile 不能是画图 profile");
   if (p.verifyCommit) problems.push("聊天 profile 不读仓库，不要开 verifyCommit");
