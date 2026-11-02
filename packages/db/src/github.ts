@@ -45,15 +45,19 @@ export function countGithubQueue(db: SqliteDatabase): number {
   return (db.prepare("SELECT COUNT(*) AS n FROM github_push_queue").get() as { n: number }).n;
 }
 
-export function removeGithubPush(db: SqliteDatabase, path: string, sentUpdatedAt: string): void {
-  // 按「这次推出去的那一版」删：等待 GET/PUT 期间同路径又存了新版，不能把它一起删掉（#187 必须改 2）
-  db.prepare("DELETE FROM github_push_queue WHERE path = ? AND updated_at = ?").run(path, sentUpdatedAt);
+export function removeGithubPush(db: SqliteDatabase, path: string, sentUpdatedAt: string, sentContent: string): void {
+  // 按「这次推出去的那一版」删：等待 GET/PUT 期间同路径又存了新版（即使同一毫秒）也不能一起删掉（#187）
+  db.prepare("DELETE FROM github_push_queue WHERE path = ? AND updated_at = ? AND content = ?").run(
+    path,
+    sentUpdatedAt,
+    sentContent,
+  );
 }
 
-export function markGithubPushFailed(db: SqliteDatabase, path: string, sentUpdatedAt: string, error: string): void {
-  // 同理：新版没推失败，不要把失败记到它头上
-  db.prepare("UPDATE github_push_queue SET attempts = attempts + 1, last_error = ? WHERE path = ? AND updated_at = ?")
-    .run(error.slice(0, 500), path, sentUpdatedAt);
+export function markGithubPushFailed(db: SqliteDatabase, path: string, sentUpdatedAt: string, sentContent: string, error: string): void {
+  // 同理：新版没推失败，不要把失败记到它头上（同时比内容和时间，同一毫秒的新版也不会被误伤）
+  db.prepare("UPDATE github_push_queue SET attempts = attempts + 1, last_error = ? WHERE path = ? AND updated_at = ? AND content = ?")
+    .run(error.slice(0, 500), path, sentUpdatedAt, sentContent);
 }
 
 export function getGithubSyncState(db: SqliteDatabase): GithubSyncState {

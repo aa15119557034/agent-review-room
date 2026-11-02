@@ -62,12 +62,24 @@ describe("chat window drafts (#187 状态条件更新)", () => {
       assert.equal(updateChatWindowDraft(db, back, { state: "pending" }), 0);
 
       // 内容 hash 变了（秘书刚写完）时，基于旧 hash 的编辑不能覆盖
-      const another = draft();
+      const another = draft({ conversationId: "conv_02JAAAAAAAAAAAAAAAAAAAAAAA" });
       insertChatWindowDraft(db, another);
       const agentVersion = { ...another, content: "秘书写的", contentHash: "a".repeat(64), contentBy: "agent" as const, updatedAt: "2026-11-03T00:00:02.000Z" };
       assert.equal(updateChatWindowDraft(db, agentVersion, { state: "pending", contentHash: null }), 1);
       const humanEdit = { ...another, content: "我改的", contentHash: "b".repeat(64), contentBy: "human" as const, updatedAt: "2026-11-03T00:00:03.000Z" };
       assert.equal(updateChatWindowDraft(db, humanEdit, { state: "pending", contentHash: null }), 0);
+
+      // #187（林离）：redo 换 Run 之后，基于旧 Run 的编辑不能把 runId 写回去
+      const withRun = draft({ conversationId: "conv_03JAAAAAAAAAAAAAAAAAAAAAAA", runId: "run_01JAAAAAAAAAAAAAAAAAAAAAAA" });
+      insertChatWindowDraft(db, withRun);
+      const swapped = { ...withRun, runId: "run_01JBBBBBBBBBBBBBBBBBBBBBBB", updatedAt: "2026-11-03T00:00:04.000Z" };
+      assert.equal(updateChatWindowDraft(db, swapped, { state: "pending", runId: withRun.runId }), 1);
+      const staleEdit = { ...withRun, content: "基于旧 Run", contentHash: "c".repeat(64), contentBy: "human" as const, updatedAt: "2026-11-03T00:00:05.000Z" };
+      assert.equal(
+        updateChatWindowDraft(db, staleEdit, { state: "pending", runId: withRun.runId, contentHash: null }),
+        0,
+        "旧 Run 的编辑一行都不改",
+      );
     } finally {
       db.close();
     }

@@ -1770,7 +1770,12 @@ export class ChatService {
     };
     // #187（林离）：状态 / 内容 hash 的检查放进事务，条件 UPDATE；变了就整次拒绝
     await writeTransaction(db, queue, () => {
-      const changes = updateChatWindowDraft(db, next, { state: "pending", contentHash: draft.contentHash });
+      // #187（林离）：runId 也要比——redo 换了 Run 之后，基于旧 Run 的编辑不能把 runId 写回去
+      const changes = updateChatWindowDraft(db, next, {
+        state: "pending",
+        contentHash: draft.contentHash,
+        runId: draft.runId,
+      });
       if (changes === 0) throw new ChatError("invalid_state", "这份草稿刚刚变了，重新打开再改");
     });
     // 契约：还在跑就停掉它，它之后的结果不再写进草稿
@@ -1882,20 +1887,21 @@ export class ChatService {
   }
   async cancelWindow(command: CommandRequest<"chat.window.cancel">): Promise<ChatWindowDraft> {
     const { db, queue } = this.#deps;
-    const draft = getChatWindowDraft(db, command.draftId);
-    if (draft === null) throw new ChatError("not_found", "草稿不存在");
-    if (draft.state !== "pending") throw new ChatError("invalid_state", "这份草稿已经换了或取消了");
-    this.#cancelHandoffRun(draft.runId);
-    const next: ChatWindowDraft = { ...draft, state: "cancelled", updatedAt: this.#now() };
-    await writeTransaction(db, queue, () => {
+    // #187（林离）：事务里重读当前草稿，取消它**当前**的 Run（redo 可能刚换过）；
+    // 状态检查 + 条件 UPDATE 在同一个事务里，失败就整次回滚
+    const cancelled = await writeTransaction(db, queue, () => {
+      const current = getChatWindowDraft(db, command.draftId);
+      if (current === null) throw new ChatError("not_found", "草稿不存在");
+      if (current.state !== "pending") throw new ChatError("invalid_state", "这份草稿已经换了或取消了");
+      const next: ChatWindowDraft = { ...current, state: "cancelled", updatedAt: this.#now() };
       const changes = updateChatWindowDraft(db, next, { state: "pending" });
       if (changes === 0) throw new ChatError("invalid_state", "这份草稿已经换了或取消了");
+      return { draft: next, runId: current.runId };
     });
-    this.#cancelHandoffRun(draft.runId);
-    this.#emit({ type: "chat.window.draftUpdated", draft: next });
-    return next;
+    this.#cancelHandoffRun(cancelled.runId);
+    this.#emit({ type: "chat.window.draftUpdated", draft: cancelled.draft });
+    return cancelled.draft;
   }
-
   /** 每位成员当前的窗口状态（窗口里压缩次数 = 完全落在窗口里的 current 摘要份数） */
   windowStatuses(conversationId: string): ChatWindowStatus[] {
     const { db } = this.#deps;
