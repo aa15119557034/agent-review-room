@@ -15,7 +15,8 @@ renderer/
 │  ├─ chat.ts               聊天（C-35）的状态、事件合并、时间线和 @ 规则（纯函数）
 │  ├─ chat-actions.ts       聊天的操作（发送防重复、撤回、重试、转议题）
 │  ├─ console.ts            秘书控制台（C-37）的状态、活动列表就地更新、额度显示（纯函数）
-│  └─ console-actions.ts    秘书控制台的操作（查活动、翻页、跳到议题 / 会话）
+│  ├─ console-actions.ts    秘书控制台的操作（查活动、翻页、跳到议题 / 会话）
+│  └─ topic-board.ts        讨论室标签（C-38）：议题一句话状态、等你处理、分组（纯函数）
 ├─ mock/mock-backend.ts     内存版后端，实现同一个 RoomBridge，遵守状态机，出参按契约校验
 │                           （讨论室在 discussion-mock.ts，聊天在 chat-mock.ts，控制台的 agents.activity 在 activity-mock.ts）
 ├─ ui/                      React 组件（只读状态 + 调用 actions）
@@ -42,6 +43,8 @@ pnpm exec tsx --test apps/desktop/src/renderer/test/*.test.ts
 #   聊天（顶栏「聊天」）：?mock 预置一个群聊和一个单聊；没点名时 Codex 会「这条没有回」
 #   秘书控制台（顶栏「秘书」，C-37）：?mock&absent=codex 额度用完、&offline=deepseek 离线、
 #     &unknownQuota=claude 额度读不到（都可以逗号分隔多位）；在讨论室起一轮能看到「正在答」
+#   讨论室标签（C-38）：?mock&topics 再建三个议题（等盖章 / 汐和林离回答中 / 已定稿），
+#     看「等你处理」、顶栏「讨论」角标和一句话状态；窗口窄于 720px 时一次只显示一栏
 ```
 
 ## 需要 D-01 提供的依赖

@@ -5,7 +5,7 @@ import { SourceStep } from "./SourceStep";
 import { FragmentPicker, PromptStep } from "./PromptStep";
 import { ResultStep, RunList } from "./ResultStep";
 import { SettingsView } from "./SettingsView";
-import { DiscussionView, QuotaChips } from "./discussion/DiscussionView";
+import { DiscussionBadge, DiscussionView, QuotaChips } from "./discussion/DiscussionView";
 import { ChatView } from "./chat/ChatView";
 import { ConsoleView } from "./ConsoleView";
 
@@ -124,6 +124,7 @@ function TopBar() {
         </button>
         <button type="button" aria-current={view === "discussion" ? "page" : undefined} onClick={actions.goDiscussion}>
           讨论
+          <DiscussionBadge />
         </button>
         <button type="button" disabled title="阶段 1C">
           执行

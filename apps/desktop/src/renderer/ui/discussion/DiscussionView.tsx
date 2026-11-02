@@ -1,5 +1,6 @@
 import { useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
-import type { AgentStatus, Message, Turn } from "@room/schemas";
+import type { AgentStatus, Message, Project, Turn } from "@room/schemas";
+import { GROUP_LABEL, groupTopics, statusFor, todoCount, type TodoItem } from "../../lib/topic-board";
 import {
   OUTCOME_LABEL,
   ROUND_STATE_LABEL,
@@ -37,6 +38,7 @@ export function DiscussionView({ notice }: { notice: ReactNode }) {
   const page = useAppState((s) => s.disc.ui.page);
   const railCollapsed = useAppState((s) => s.disc.ui.railCollapsed);
   const sideCollapsed = useAppState((s) => s.disc.ui.sideCollapsed);
+  const pane = useAppState((s) => s.disc.ui.pane);
 
   if (!available) {
     return (
@@ -49,9 +51,10 @@ export function DiscussionView({ notice }: { notice: ReactNode }) {
   }
 
   return (
-    <div className="disc" data-rail={railCollapsed ? "collapsed" : "open"} data-side={sideCollapsed ? "collapsed" : "open"}>
+    <div className="disc" data-rail={railCollapsed ? "collapsed" : "open"} data-side={sideCollapsed ? "collapsed" : "open"} data-pane={pane}>
       <TopicRail />
       <main className="disc-main">
+        <BackToList />
         {notice}
         {confirm ? <ConfirmView /> : page.kind === "review" ? <ReviewView roundId={page.roundId} /> : <Conversation />}
       </main>
@@ -99,14 +102,21 @@ function TopicRail() {
   const projects = useAppState((s) => s.projects);
   const currentId = useAppState((s) => s.currentProjectId);
   const collapsed = useAppState((s) => s.disc.ui.railCollapsed);
+  const d = useAppState((s) => s.disc);
   const actions = useActions();
   const [creating, setCreating] = useState(false);
   const [name, setName] = useState("");
+
+  const groups = groupTopics(projects, (p) => statusFor(d, currentId, p));
+  const todos = groups.find((g) => g.group === "todo")?.items.flatMap((x) => x.status.todos.map((t) => ({ project: x.project, todo: t }))) ?? [];
+  // 下面的列表只放「进行中 / 还没开始 / 已定稿」；等你处理的议题只在上面出现一次
+  const rows = groups.filter((g) => g.group !== "todo");
 
   if (collapsed) {
     return (
       <nav className="disc-rail" aria-label="议题">
         <button type="button" className="icon-button" aria-label="展开议题栏" onClick={actions.toggleRail}>»</button>
+        {todos.length > 0 && <span className="chat-badge" aria-label={`${todos.length} 件等你处理`}>{todos.length}</span>}
       </nav>
     );
   }
@@ -115,9 +125,14 @@ function TopicRail() {
     e.preventDefault();
     const n = name.trim();
     if (!n) return;
-    void actions.createProject(n);
+    void actions.createProject(n).then(actions.showTopicPane);
     setName("");
     setCreating(false);
+  };
+
+  const open = (projectId: string) => {
+    actions.showTopicPane();
+    if (projectId !== currentId) void actions.selectProject(projectId);
   };
 
   return (
@@ -125,7 +140,7 @@ function TopicRail() {
       <div className="disc-rail-head">
         <h2>议题 · {projects.length}</h2>
         <button type="button" className="icon-button" aria-label="新议题" onClick={() => setCreating((v) => !v)}>+</button>
-        <button type="button" className="icon-button" aria-label="收起议题栏" onClick={actions.toggleRail}>«</button>
+        <button type="button" className="icon-button disc-rail-collapse" aria-label="收起议题栏" onClick={actions.toggleRail}>«</button>
       </div>
       {creating && (
         <form className="disc-new-topic" onSubmit={submit}>
@@ -134,17 +149,72 @@ function TopicRail() {
           <button type="submit" className="button-primary" disabled={!name.trim()}>创建</button>
         </form>
       )}
-      <ul className="disc-topics">
-        {projects.map((p) => (
-          <li key={p.id}>
-            <button type="button" aria-current={p.id === currentId ? "page" : undefined} onClick={() => void actions.selectProject(p.id)}>
-              {p.name}
-            </button>
-          </li>
+      {todos.length > 0 && (
+        <section className="disc-todo" aria-label="等你处理">
+          <h3>
+            等你处理 <span className="chat-badge" aria-label={`${todos.length} 件`}>{todos.length}</span>
+          </h3>
+          <ul>
+            {todos.map(({ project, todo }) => (
+              <li key={todoKey(todo)}>
+                <button
+                  type="button"
+                  data-kind={todo.kind}
+                  aria-current={project.id === currentId ? "page" : undefined}
+                  onClick={() => void actions.openTodo(todo)}
+                >
+                  <b>{project.name}</b>
+                  <span>{todo.label}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+      {rows.map((g) => (
+          <section key={g.group} className="disc-topic-group" aria-label={GROUP_LABEL[g.group]}>
+            <h3>{GROUP_LABEL[g.group]} · {g.items.length}</h3>
+            <ul className="disc-topics">
+              {g.items.map(({ project, status }) => (
+                <li key={project.id}>
+                  <TopicRow project={project} line={status.line} current={project.id === currentId} onOpen={open} />
+                </li>
+              ))}
+            </ul>
+          </section>
         ))}
-      </ul>
-      {projects.length > 4 && <p className="disc-rail-more">往下滑看更多</p>}
+      {projects.length === 0 && <p className="disc-rail-more">还没有议题，点 + 新建一个。</p>}
     </nav>
+  );
+}
+
+function TopicRow(props: { project: Project; line: string; current: boolean; onOpen: (id: string) => void }) {
+  return (
+    <button type="button" className="disc-topic" aria-current={props.current ? "page" : undefined} onClick={() => props.onOpen(props.project.id)}>
+      <span className="disc-topic-name">{props.project.name}</span>
+      <span className="disc-topic-line">{props.line}</span>
+    </button>
+  );
+}
+
+const todoKey = (t: TodoItem) =>
+  t.kind === "stamp" ? t.batchId : t.kind === "confirm_plan" ? t.planId : `${t.kind}-${t.roundId}`;
+
+/** 顶栏「讨论」上的角标：所有议题等你盖章 / 确认的事（C-38） */
+export function DiscussionBadge() {
+  const n = useAppState((s) => (s.disc.available ? todoCount(s.disc, s.currentProjectId, s.projects) : 0));
+  if (!n) return null;
+  return <span className="chat-badge" aria-label={`${n} 件等你处理`}>{n > 99 ? "99+" : n}</span>;
+}
+
+/** 手机宽度下，打开的议题顶上有「返回议题列表」（宽屏隐藏） */
+function BackToList() {
+  const actions = useActions();
+  const n = useAppState((s) => todoCount(s.disc, s.currentProjectId, s.projects));
+  return (
+    <button type="button" className="button-link disc-back" onClick={actions.showTopicList}>
+      ‹ 议题列表{n > 0 && <span className="chat-badge" aria-label={`${n} 件等你处理`}>{n}</span>}
+    </button>
   );
 }
 

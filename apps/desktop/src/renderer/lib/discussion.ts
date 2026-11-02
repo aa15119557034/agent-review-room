@@ -13,6 +13,7 @@ import type {
   Stance,
   Turn,
 } from "@room/schemas";
+import type { TopicDigest } from "./topic-board";
 
 /**
  * 讨论室的状态（C-21）。和 Phase 0 的状态放在同一个 store 里（AppState.disc），
@@ -35,6 +36,11 @@ export interface DiscussionState {
   models: Record<string, ModelOption[] | null>;
   /** 确认页正在看的批次（含每个收件人的完整 Snapshot） */
   confirm: { batch: ApprovalBatch; snapshots: PromptSnapshot[] } | null;
+  /**
+   * 讨论室标签的议题列表（C-38）：每个议题读一句话状态用的数据。
+   * live = disc 里的 rounds / batches / turns / plans 已经是哪个议题的（这个议题的状态按实时数据算）
+   */
+  board: { topics: Record<string, TopicDigest>; live: string | null };
   ui: {
     railCollapsed: boolean;
     sideCollapsed: boolean;
@@ -47,6 +53,8 @@ export interface DiscussionState {
     interject: { mode: "restart_now" | "next_round" | "only"; targets: string[] };
     /** 中间区域：时间线，或者某一轮的汇总与方案页 */
     page: { kind: "timeline" } | { kind: "review"; roundId: string };
+    /** 手机宽度下一次只显示一栏：议题列表，或者打开的议题（C-38） */
+    pane: "list" | "topic";
   };
 }
 
@@ -61,6 +69,7 @@ export const initialDiscussion: DiscussionState = {
   plans: [],
   models: {},
   confirm: null,
+  board: { topics: {}, live: null },
   ui: {
     railCollapsed: false,
     sideCollapsed: false,
@@ -69,6 +78,7 @@ export const initialDiscussion: DiscussionState = {
     composer: { text: "", recipients: [] },
     interject: { mode: "restart_now", targets: [] },
     page: { kind: "timeline" },
+    pane: "list",
   },
 };
 
