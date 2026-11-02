@@ -15,6 +15,7 @@ import { SCHEMA_V14 } from "./schema-v14";
 import { SCHEMA_V15 } from "./schema-v15";
 import { SCHEMA_V16 } from "./schema-v16";
 import { SCHEMA_V17 } from "./schema-v17";
+import { SCHEMA_V18 } from "./schema-v18";
 
 /**
  * 迁移（D-02）：用 PRAGMA user_version 记版本，每个迁移在自己的事务里跑。
@@ -156,6 +157,13 @@ export const MIGRATIONS: readonly Migration[] = [
     name: "chat-reply-as-voice",
     up: (db) => {
       db.exec(SCHEMA_V17);
+    },
+  },
+  {
+    version: 18,
+    name: "agent-activity-indexes",
+    up: (db) => {
+      db.exec(SCHEMA_V18);
     },
   },
 ];

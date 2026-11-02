@@ -459,6 +459,9 @@ export function createDispatcher(deps: IpcDeps) {
       case "agents.status":
         return deps.discussion.agentStatuses();
 
+      case "agents.activity":
+        return deps.discussion.activity(query);
+
       case "runs.events": {
         const rows = repo.listEvents(query.runId, query.afterSeq ?? -1);
         // eventId / runId 必须用数据库里的值：payload 里存的是 adapter 自己编的 eventId，

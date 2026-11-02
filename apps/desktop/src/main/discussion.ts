@@ -43,6 +43,7 @@ import type {
   ControlEvent,
   Message,
   PlanVersion,
+  QueryRequest,
   Round,
   RunOccasion,
   Turn,
@@ -51,6 +52,7 @@ import type {
 import { isExcludedFromContext } from "@room/schemas";
 import { renderChatMaterial } from "./chat-material";
 import type { DiscussionSettlement, RunOrchestrator } from "./orchestrator";
+import { agentActivity, type AgentActivityPage } from "./activity";
 import { QuotaService, quotaKeyOf, type ProfileQuotaRead } from "./quota";
 import type { Repository } from "./repository";
 import type { SettingsStore } from "./settings";
@@ -618,6 +620,15 @@ export class DiscussionService {
       if (turn.batchId === batch.id || turn.supersededBy !== null) emit({ type: "turn.updated", turn });
     }
     return batch;
+  }
+
+  /** D-44 / C-37a：秘书控制台的「正在答什么 / 历史」（讨论 Turn + 聊天回答位） */
+  async activity(command: QueryRequest<"agents.activity">): Promise<AgentActivityPage> {
+    const { repo, db } = this.#deps;
+    if (repo.getAgentRow(command.agent) === undefined) {
+      throw new DiscussionError("not_found", "参与者 " + command.agent + " 不存在");
+    }
+    return agentActivity(db, command.agent, { before: command.before, limit: command.limit });
   }
 
   /** round.void：回到某一阶段改方向，记录全部保留 */
