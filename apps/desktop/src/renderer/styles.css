@@ -4126,3 +4126,59 @@ button.stage:hover {
     padding: 0.7rem 0.75rem;
   }
 }
+
+/* ------------------------------------------------------------ C-33 按住盖章 */
+
+.hold-button {
+  position: relative;
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.hold-button .hold-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: color-mix(in srgb, black 22%, transparent);
+  pointer-events: none;
+}
+
+.hold-button[data-phase="holding"] .hold-fill {
+  width: 100%;
+  transition: width var(--hold-ms, 1000ms) linear;
+}
+
+.hold-button[data-phase="done"] .hold-fill {
+  width: 100%;
+}
+
+.hold-button .hold-label,
+.hold-button .hold-hint {
+  position: relative;
+}
+
+.hold-button .hold-hint {
+  display: block;
+  font-size: var(--size-s);
+  font-weight: 400;
+  letter-spacing: 0;
+  opacity: 0.85;
+}
+
+/* 减少动态效果：不画进度条（全局规则会让它一下子填满，看起来像已经好了），只靠文字「继续按住…」 */
+@media (prefers-reduced-motion: reduce) {
+  .hold-button .hold-fill {
+    display: none;
+  }
+}
+
+/* 方案页的大号定稿按钮：标签里那行说明照旧换行、字小一号 */
+.action-seal .hold-label {
+  display: grid;
+  gap: 0.1rem;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+}

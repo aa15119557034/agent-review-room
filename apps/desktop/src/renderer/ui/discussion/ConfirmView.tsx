@@ -4,6 +4,7 @@ import { agentColor, agentName } from "../../lib/discussion";
 import { effortLabel, modelLabel } from "../../lib/models";
 import { useActions, useAppState } from "../hooks";
 import { imageSrc } from "../../lib/media";
+import { HoldButton } from "../HoldButton";
 
 /**
  * 发送前确认（C-22，画布「①-1 发送前确认」）。
@@ -151,9 +152,9 @@ export function ConfirmView() {
             </form>
           ) : (
             <>
-              <button type="button" className="button-seal button-seal-large" onClick={() => void actions.approveBatch()}>
+              <HoldButton className="button-seal button-seal-large" resetKey={c.batch.id} onComplete={() => actions.approveBatch()}>
                 盖章发送
-              </button>
+              </HoldButton>
               <button type="button" className="button-link" onClick={() => setRejecting(true)}>不发了</button>
             </>
           )}

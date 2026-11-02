@@ -24,6 +24,7 @@ import { useActions, useAppState } from "../hooks";
 import { ReplyBody } from "../Chart";
 import { hasChart } from "../../lib/media";
 import { formatClock } from "../labels";
+import { HoldButton } from "../HoldButton";
 import { ConfirmView } from "./ConfirmView";
 import { ReviewView } from "./ReviewView";
 import { FirstPlan } from "./FirstPlan";
@@ -616,9 +617,9 @@ function SidePanel() {
               <button type="button" className="button-outline" onClick={() => void actions.confirmPlan(plan.id)}>确认这一版</button>
             )}
             {plan.state === "CURRENT" && (
-              <button type="button" className="button-seal" onClick={() => void actions.finalizePlan(plan.id, plan.contentHash)}>
+              <HoldButton className="button-seal" resetKey={plan.id + plan.contentHash} onComplete={() => actions.finalizePlan(plan.id, plan.contentHash)}>
                 盖章定稿 v{plan.version}
-              </button>
+              </HoldButton>
             )}
             {canDerive(d, plan) && (
               <button type="button" className="button-outline" onClick={() => void actions.derivePlan(plan.id)}>从 v{plan.version} 派生下一版</button>
