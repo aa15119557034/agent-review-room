@@ -197,6 +197,35 @@ describe("media jobs service (D-38a)", () => {
     }
   });
 
+  // 林离 #165 复审必须改 2：卸载没能确认退出 = 显存可能还占着，这次画图不能硬来
+  it("语音卸载失败时这次画图直接失败，不调用 ComfyUI（林离 #165）", async () => {
+    const comfy = fakeComfy();
+    const tts = {
+      engine: "indextts2",
+      engineVersion: "fake-1",
+      available: () => true,
+      voice: () => null,
+      unload: async () => {
+        throw new Error("语音引擎没能在限定时间内退出，显存可能还占着");
+      },
+      synthesize: async () => {
+        throw new Error("这次不该合成");
+      },
+      dispose: () => undefined,
+    } as unknown as TtsRunner;
+    const h = await makeHarness({ comfy, tts });
+    try {
+      const job = await h.service.start(request(), source(h), false);
+      await until(() => getMediaJob(h.db, job.id)?.state === "failed");
+      const failed = h.service.get(job.id);
+      assert.equal(failed.failure?.reason, "backend_unavailable");
+      assert.match(failed.failure?.message ?? "", /显存/);
+      assert.equal(h.comfy.calls, 0, "不能硬画");
+    } finally {
+      h.db.close();
+    }
+  });
+
   it("dedupes the same source + draw while it is still running; rejects codex and bad sources", async () => {
     const h = await makeHarness();
     try {

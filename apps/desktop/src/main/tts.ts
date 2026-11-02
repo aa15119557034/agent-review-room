@@ -1,5 +1,5 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
-import { existsSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { TtsEngine, VoiceId, VoiceOption } from "@room/schemas";
@@ -130,6 +130,37 @@ export function voiceOptionsOf(config: TtsConfig): VoiceOption[] {
   }));
 }
 
+/** 等退出用的最小接口（测试可以传假对象） */
+export interface ChildExitLike {
+  exitCode: number | null;
+  signalCode: NodeJS.Signals | null;
+  once(event: "close", listener: () => void): unknown;
+  removeListener(event: "close", listener: () => void): unknown;
+}
+
+/**
+ * 等子进程真的退出（最多 ms 毫秒）。
+ * 返回 true = 确认已经退出；false = 等到上限还没退。
+ * 「等够了」不等于「退出了」：取消 / 超时清理和画图前的显存交接都靠这个返回值，
+ * 不能把等待上限当成退出确认（林离 #165 复审必须改 2）。
+ */
+export function waitChildExit(child: ChildExitLike, ms: number): Promise<boolean> {
+  if (child.exitCode !== null || child.signalCode !== null) return Promise.resolve(true);
+  return new Promise<boolean>((resolve) => {
+    let settled = false;
+    const done = (exited: boolean) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      child.removeListener("close", onClose);
+      resolve(exited);
+    };
+    const onClose = () => done(true);
+    const timer = setTimeout(() => done(false), ms);
+    child.once("close", onClose);
+  });
+}
+
 /**
  * 独立进程的客户端。一个实例一个进程；`synthesize` 串行（一次只跑一个，显卡一次只跑一个）。
  */
@@ -183,6 +214,20 @@ export class TtsRunner {
   }
 
   /**
+   * 上一次没收尾的临时 wav（旧进程没按时退出时留下的）：起新进程前清掉，别越积越多。
+   * 只在没有进程的时候调，所以不会删到正在写的那份。
+   */
+  #cleanStaleTempFiles(): void {
+    try {
+      for (const name of readdirSync(tmpdir())) {
+        if (name.startsWith(`room-tts-${process.pid}-`)) rmSync(join(tmpdir(), name), { force: true });
+      }
+    } catch {
+      // 清不掉不影响合成
+    }
+  }
+
+  /**
    * 起进程并等 `ready`。C酱 #152 必须改 2：加载阶段也要有超时、也要听取消，
    * 否则卡在加载时整条显卡队列（画图 + 语音共用）都不动。
    */
@@ -191,6 +236,7 @@ export class TtsRunner {
     if (this.#child !== null && this.#ready) return;
     if (this.#child !== null && this.#loading !== null) return this.#loading;
 
+    this.#cleanStaleTempFiles();
     const loadTimeoutMs = this.config.loadTimeoutMs ?? DEFAULT_LOAD_TIMEOUT_MS;
     const child = spawn(this.config.python, [this.config.script], {
       cwd: this.config.modelDir,
@@ -304,26 +350,11 @@ export class TtsRunner {
   }
 
   /**
-   * 等子进程真的退出（最多 ms 毫秒）。取消 / 超时是「边写边杀」，不等它停下来就删文件，
-   * 旧进程可能又写回去（林离 #163 必须改 2）。
-   */
-  #waitExit(child: ChildProcessWithoutNullStreams, ms: number): Promise<void> {
-    if (child.exitCode !== null || child.signalCode !== null) return Promise.resolve();
-    return new Promise<void>((resolve) => {
-      const done = () => {
-        clearTimeout(timer);
-        child.removeListener("close", done);
-        resolve();
-      };
-      const timer = setTimeout(done, ms);
-      child.once("close", done);
-    });
-  }
-
-  /**
    * 让引擎把模型卸掉、把显存还给驱动（D-37b，林离 #163 必须改 1）。
    * 语音和画图共用一张显卡，而语音的进程会一直等 stdin、模型一直占着显存；切到画图之前必须先卸掉并等它确认。
-   * 没有进程 / 还没 ready = 没占显存，直接返回；引擎不回应或报错就杀进程兜底（进程退出一定释放显存）。
+   * 没有进程 / 还没 ready = 没占显存，直接返回（画图前调用依赖显卡队列串行：这时不会有合成在进行中）；
+   * 引擎不回应或报错就杀进程兜底，但**必须确认它真的退出了**才返回——没确认退出就抛错，
+   * 由调用方让这次画图失败，不能把「等够了」当成「显存放掉了」（林离 #165 复审必须改 2）。
    */
   async unload(): Promise<void> {
     const child = this.#child;
@@ -352,7 +383,8 @@ export class TtsRunner {
     } catch {
       // 卸载失败 / 超时 / 进程先退出：杀掉进程，等它退出（退出同样会释放显存），不让画图接着撞显存
       this.#kill();
-      await this.#waitExit(child, KILL_WAIT_MS);
+      const exited = await waitChildExit(child, KILL_WAIT_MS);
+      if (!exited) throw new TtsFailedError("语音引擎没能在限定时间内退出，显存可能还占着");
     }
   }
 
@@ -435,11 +467,17 @@ export class TtsRunner {
         ms: reply.ms ?? 0,
       };
     } finally {
-      if (killed) await this.#waitExit(child, KILL_WAIT_MS);
-      try {
-        rmSync(outPath, { force: true });
-      } catch {
-        // 临时文件删不掉不影响结果
+      // 只有确认进程停下来了才删文件：它还在写的时候删掉，会被旧进程又写回来（林离 #163）
+      const exited = killed ? await waitChildExit(child, KILL_WAIT_MS) : true;
+      if (exited) {
+        try {
+          rmSync(outPath, { force: true });
+        } catch {
+          // 临时文件删不掉不影响结果
+        }
+      } else {
+        // 进程没停下来：先留着（也留个线索），下次起进程前统一清（林离 #165 复审必须改 2）
+        console.warn("[tts] 语音进程没有在限定时间内退出，临时文件先留着：", outPath);
       }
     }
   }
