@@ -35,6 +35,8 @@ describe("C-37a agents.activity", () => {
     assert.equal(AgentActivityItem.safeParse({ ...disc, turn: { ...turn, partialText: "半截" } }).success, false, "no partialText");
     const chat = { kind: "chat", conversation, slot, preview: null };
     assert.ok(AgentActivityItem.safeParse(chat).success);
+    assert.ok(AgentActivityItem.safeParse({ ...chat, preview: "😀".repeat(101) }).success, "chat preview counts code points too");
+    assert.equal(AgentActivityItem.safeParse({ ...chat, preview: "😀".repeat(AGENT_ACTIVITY_PREVIEW_MAX + 1) }).success, false);
     assert.equal(AgentActivityItem.safeParse({ ...chat, kind: "discussion" }).success, false);
   });
 
