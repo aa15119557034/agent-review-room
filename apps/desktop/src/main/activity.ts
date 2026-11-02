@@ -244,7 +244,10 @@ export function agentActivity(
     compareActivity(a, b, "desc"),
   );
   const recent = merged.slice(0, limit);
-  const nextCursor = merged.length > limit ? cursorOf(recent[recent.length - 1]!) : null;
+  // 契约（C-37a / control-api.ts）：这一页**满 limit 条**就给本页最后一条的游标（下一页可能是空的），
+  // 不足才 null。原来写成 merged.length > limit，恰好满一页时会误报「到头了」（林离 #163 第二档）。
+  const last = recent[recent.length - 1];
+  const nextCursor = recent.length === limit && last !== undefined ? cursorOf(last) : null;
 
   return { current, recent, nextCursor };
 }
