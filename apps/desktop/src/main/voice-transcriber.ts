@@ -26,9 +26,9 @@ export interface AsrConfig {
   transcribeTimeoutMs?: number;
   /** 空闲多久退出 sidecar，默认 5 分钟 */
   idleMs?: number;
-  /** 推理设备：auto（默认，有 CUDA 就用 GPU，没有就报错）/ cuda / cpu */
-  device?: "auto" | "cuda" | "cpu";
-  /** 精度：auto（cuda → float16、cpu → int8）/ float16 / int8_float16 / int8 / float32 */
+  /** 推理设备：auto（默认）/ cuda —— 只走 GPU，sidecar 已经删掉 CPU 版本 */
+  device?: "auto" | "cuda";
+  /** 精度：auto（= float16）/ float16 / int8_float16 / float32（都只在 GPU 上） */
   computeType?: string;
 }
 
@@ -79,6 +79,9 @@ export function loadAsrConfigFile(path: string, defaultScript?: string): { confi
       modelName: str(raw.modelName) ?? modelDir.replace(/[\\/]+$/, "").split(/[\\/]/).pop() ?? "faster-whisper",
       transcribeTimeoutMs: num(raw.transcribeTimeoutMs) ?? undefined,
       idleMs: num(raw.idleMs) ?? undefined,
+      // CPU 版本已删：旧配置里写了 "cpu" 的按 auto（= CUDA）处理，并提醒一句
+      device: raw.device === "cpu" ? (console.warn("[voice] asr.json 里配的 device=cpu 已不支持（CPU 转写已删），改用 CUDA"), "auto") : raw.device === "cuda" ? "cuda" : "auto",
+      computeType: str(raw.computeType) ?? undefined,
     },
     problem: null,
   };
@@ -168,7 +171,7 @@ export class SidecarTranscriber implements Transcriber {
       const value = process.env[key];
       if (value !== undefined) env[key] = value;
     }
-    // 江浩：默认走 GPU（sidecar 那边 auto = 有 CUDA 就用，没有直接报错，不悄悄用 CPU）
+    // 江浩：只要 GPU（sidecar 已经删掉 CPU 版本）；没 CUDA 时 sidecar 会直接报错
     const device = this.config.device ?? "auto";
     const args = [this.config.script, "--model", this.config.modelDir, "--device", device];
     if (this.config.computeType !== undefined) args.push("--compute-type", this.config.computeType);

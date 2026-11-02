@@ -3,9 +3,10 @@
 `transcribe.py` 是主控机上的本地语音转写进程（faster-whisper）。主进程用「一行一条 JSON」和它通信，
 协议见脚本开头的注释。
 
-**默认走 GPU（CUDA / float16）**：江浩 2026-11-02 明确「不要 CPU 版本」。`--device auto`（默认）在有 CUDA
-时用 GPU；**没有可用 CUDA 会直接报错**，不会悄悄退回 CPU。真要临时用 CPU，在 `asr.json` 里写
-`"device": "cpu"`（那时 `computeType` 默认 `int8`）。
+**只走 GPU（CUDA / float16）**：江浩 2026-11-02 明确「不要 CPU 版本」，**CPU 转写已经删掉**。
+`--device auto`（默认）/ `cuda` 一律用 CUDA；没有可用 CUDA 会直接报错（错误会带进主进程日志），
+不会退回 CPU。传 `--device cpu` 会被参数校验拒掉；旧 `asr.json` 里写了 `"device": "cpu"` 的按 `auto`
+处理并打一条警告。
 
 ## 准备（开发机）
 
@@ -34,8 +35,8 @@ E:\AI\TTS\faster-whisper\Scripts\pip install nvidia-cublas-cu12 nvidia-cudnn-cu1
   "modelDir": "E:\\AI\\TTS\\models\\faster-whisper-small",
   "modelName": "faster-whisper-small",
   "script": "可选：显式指定 transcribe.py 的路径；默认用应用自带的",
-  "device": "可选：auto（默认）/ cuda / cpu",
-  "computeType": "可选：auto（cuda → float16、cpu → int8）/ float16 / int8 / float32"
+  "device": "可选：auto（默认）/ cuda（只支持 GPU）",
+  "computeType": "可选：auto（= float16）/ float16 / int8_float16 / float32"
 }
 ```
 
@@ -59,7 +60,7 @@ E:\AI\TTS\faster-whisper\Scripts\pip install nvidia-cublas-cu12 nvidia-cudnn-cu1
 | 设备 | 模型加载 | 第一次转写 | 第二次（热） |
 |---|---|---|---|
 | **cuda / float16** | 0.67 s | 0.83 s | **0.45 s** |
-| cpu / int8（旧默认） | 1.06 s | 3.45 s | 3.43 s |
+| cpu / int8（旧默认，**已删除**） | 1.06 s | 3.45 s | 3.43 s |
 
 热转写 **0.45 s 对 3.43 s，约 7.6 倍**；第一次（含加载）1.5 s 对 4.5 s。
 （2026-11-01 那次「6.4 秒」是 CPU 冷启动的旧数字，已作废。）

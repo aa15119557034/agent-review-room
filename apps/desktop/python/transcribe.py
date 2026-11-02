@@ -11,11 +11,11 @@
 出错时回 {"id":n,"ok":false,"error":"..."}。日志一律写 stderr，stdout 只放 JSON。
 
 用法：
-    python transcribe.py --model E:/AI/TTS/models/faster-whisper-small [--device auto|cuda|cpu] [--compute-type auto|float16|int8]
+    python transcribe.py --model E:/AI/TTS/models/faster-whisper-small [--device auto|cuda] [--compute-type auto|float16|int8_float16|float32]
 
-设备（江浩：不要 CPU 版本）：
-    - 默认 --device auto：有 CUDA 就用 GPU（float16）；**没有可用 CUDA 直接报错**，不悄悄退回 CPU
-    - 确实想用 CPU 时才显式写 --device cpu（compute-type 默认 int8）
+设备（江浩：只要 GPU，CPU 版本已经删掉）：
+    - --device auto（默认）/ cuda：一律走 CUDA + float16；没有可用 CUDA 直接报错
+    - 不接受 cpu：传了按参数错误拒掉，避免不声不响跑回 CPU
     - Windows 上 CTranslate2 需要 cuBLAS / cuDNN 的 DLL；这里在导入前把 nvidia-*-cu12 的 bin 目录加进
       DLL 搜索路径（pip install nvidia-cublas-cu12 nvidia-cudnn-cu12 nvidia-cuda-runtime-cu12）
 
@@ -73,14 +73,14 @@ def cuda_available():
 
 
 def resolve_device(device, compute_type):
-    """auto = 有 CUDA 就 cuda，没有就直接报错（不悄悄用 CPU）。"""
-    if device == "auto":
-        if not cuda_available():
-            raise RuntimeError('没有可用的 CUDA（要求走 GPU）；确实要用 CPU 请在 asr.json 里显式写 "device": "cpu"')
-        device = "cuda"
+    """一律 CUDA：auto 等于 cuda，没有可用 CUDA 就报错（CPU 版本已删除）。"""
+    if device == "cpu":
+        raise RuntimeError("CPU 转写已经删掉了（只支持 CUDA）；请装好 GPU 依赖再试")
+    if not cuda_available():
+        raise RuntimeError("没有可用的 CUDA：本地转写只支持 GPU（CPU 版本已删除）")
     if compute_type == "auto":
-        compute_type = "float16" if device == "cuda" else "int8"
-    return device, compute_type
+        compute_type = "float16"
+    return "cuda", compute_type
 
 
 def probe_duration_ms(path):
@@ -134,7 +134,7 @@ def main():
             pass
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", required=True)
-    parser.add_argument("--device", default="auto")
+    parser.add_argument("--device", default="auto", choices=["auto", "cuda"])
     parser.add_argument("--compute-type", default="auto")
     args = parser.parse_args()
 
