@@ -122,7 +122,8 @@ export class GithubSyncService {
         controller.abort();
         reject(new Error("github request timed out"));
       }, this.#requestTimeoutMs);
-      if (typeof timer.unref === "function") timer.unref();
+      // 不 unref：#187 的超时测试里，这个 timer 是唯一让 event loop 活着的东西；
+      // 它会在 finally 里 clearTimeout，不会拖住进程正常退出
     });
     try {
       return await Promise.race([this.#transport({ ...input, signal: controller.signal }), timeout]);
