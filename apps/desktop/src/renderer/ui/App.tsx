@@ -183,7 +183,11 @@ function MainNav() {
         onClick={() => (view === "settings" ? actions.closeSettings() : void actions.openSettings())}
       >
         <NavIcon name="settings" />
-        <span className="topnav-label">设置</span>
+        {/* 草案：手机上这一格叫「我」 */}
+        <span className="topnav-label">
+          <span className="label-desk">设置</span>
+          <span className="label-phone">我</span>
+        </span>
       </button>
     </nav>
   );

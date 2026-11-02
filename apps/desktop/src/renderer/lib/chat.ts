@@ -446,6 +446,27 @@ export function mentionsFromText(text: string, members: readonly string[], name:
   return agents.length ? { kind: "agents", agents } : { kind: "none" };
 }
 
+/**
+ * C-33b 草案里名字后面的身份（「C酱 · 首席秘书」）。契约里没有单独的字段，从讨论室人设里认「江浩的××秘书」
+ * 这类说法；认不出就不显示，不猜。
+ */
+export function agentTitle(roleNote: string): string | null {
+  const m = /的([\u4e00-\u9fa5]{1,4}秘书)/.exec(roleNote);
+  return m ? m[1]! : null;
+}
+
+/** 草案里时间不挂在每条消息上，而是隔一段（默认 5 分钟）在中间放一个时间。返回要在前面放时间的下标 */
+export function timeBreaks(createdAts: readonly string[], gapMs = 5 * 60_000): Set<number> {
+  const out = new Set<number>();
+  let prev = Number.NEGATIVE_INFINITY;
+  createdAts.forEach((at, i) => {
+    const t = Date.parse(at);
+    if (t - prev >= gapMs) out.add(i);
+    prev = t;
+  });
+  return out;
+}
+
 /** 改了群成员之后，草稿里点到的人可能已经不在群里了 */
 export function pruneMentions(m: ChatMentions, members: readonly string[]): ChatMentions {
   if (m.kind !== "agents") return m;

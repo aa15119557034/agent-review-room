@@ -115,6 +115,11 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
         await chat.loadConversations();
         // 聊天输入框的「谁看不了图」提示（C-43）：探测，失败不弹提示
         void chat.media.loadVision();
+        // 你在聊天里的名字（头像上的字）；读不到就显示「我」，不弹错
+        void client
+          .query({ type: "appearance.get" })
+          .then((appearance) => store.set((s) => ({ ...s, appearance })))
+          .catch(() => undefined);
         const first = projects[0];
         if (first) await loadProject(first.id);
       } catch (err) {

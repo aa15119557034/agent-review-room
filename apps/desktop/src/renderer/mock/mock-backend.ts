@@ -404,6 +404,9 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
     async "runs.get"(req) {
       return find(db.runs, req.runId, "Run");
     },
+    async "appearance.get"() {
+      return { userDisplayName: "江浩", userAvatarRef: null, chatBackground: { kind: "preset" as const, id: "plain" as const } };
+    },
     async "settings.get"() {
       return { reviewerNode: node };
     },

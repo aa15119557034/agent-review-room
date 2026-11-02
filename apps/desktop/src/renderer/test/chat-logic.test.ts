@@ -8,6 +8,8 @@ import {
   initialChat,
   mentionHint,
   mentionsFromText,
+  agentTitle,
+  timeBreaks,
   mergeMessages,
   mergeSlots,
   partialReplyText,
@@ -158,6 +160,17 @@ describe("@ mentions", () => {
     assert.deepEqual(mentionsFromText("@所有人 @汐", members, name), { kind: "all" });
     assert.deepEqual(mentionsFromText("邮件 a@b.com @谁", members, name), { kind: "none" });
     assert.deepEqual(mentionsFromText("@汐汐 你好", ["deepseek", "x"], (a) => (a === "x" ? "汐汐" : "汐")), { kind: "agents", agents: ["x"] });
+  });
+
+  it("agent title comes from the role note, or nothing (C-33b)", () => {
+    assert.equal(agentTitle("你是「C酱」，江浩的首席秘书，负责统筹"), "首席秘书");
+    assert.equal(agentTitle("你负责后端"), null);
+  });
+
+  it("time breaks: first message and every gap of 5 minutes or more", () => {
+    const at = (min: number) => new Date(Date.UTC(2026, 10, 2, 9, min)).toISOString();
+    assert.deepEqual([...timeBreaks([at(0), at(1), at(4), at(9), at(10)])], [0, 3]);
+    assert.deepEqual([...timeBreaks([])], []);
   });
 
   it("pruning drops people who left the group", () => {

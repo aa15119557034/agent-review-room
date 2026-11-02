@@ -677,7 +677,12 @@ export function VoiceDraft() {
 }
 
 /** 按一下开始录，再按一下停；最长 5 分钟自动停。录好的整段交给 main（不传路径） */
-export function RecordButton({ disabled }: { disabled?: boolean }) {
+/**
+ * 录一段语音。两种样子（C-33b 按草案）：
+ * - tile：「＋」面板里的一格，点一下开始、再点一下停
+ * - hold：手机切到语音后的「按住 说话」，按下开始、松手停（授权弹窗没回来前就松手了，录上后马上停）
+ */
+export function RecordButton({ disabled, variant = "tile" }: { disabled?: boolean; variant?: "tile" | "hold" }) {
   const actions = useActions();
   const [state, setState] = useState<"idle" | "recording" | "sending">("idle");
   const [elapsed, setElapsed] = useState(0);
@@ -695,6 +700,8 @@ export function RecordButton({ disabled }: { disabled?: boolean }) {
   const alive = useRef(true);
   /** 麦克风授权弹窗还没回来：这期间再点不重复启动（不然会开出两个 MediaRecorder，前一个没人停） */
   const starting = useRef(false);
+  /** 按住说话：还在等授权时就松手了 → 一录上就停 */
+  const releasedEarly = useRef(false);
 
   // 组件卸载（离开聊天页；ChatView 按会话 key，切会话也会卸载）= 取消这段录音
   useEffect(() => {
@@ -763,6 +770,10 @@ export function RecordButton({ disabled }: { disabled?: boolean }) {
     recorder.start();
     setElapsed(0);
     setState("recording");
+    if (releasedEarly.current) {
+      releasedEarly.current = false;
+      stop();
+    }
   }
 
   function stop() {
@@ -773,28 +784,58 @@ export function RecordButton({ disabled }: { disabled?: boolean }) {
     rec.current = null;
   }
 
+  const label =
+    state === "recording" ? (
+      <>
+        <span className="rec-dot" aria-hidden="true" />
+        {durationText(elapsed)} {variant === "hold" ? "松开 发送" : "停"}
+      </>
+    ) : state === "sending" ? (
+      "上传中…"
+    ) : variant === "hold" ? (
+      "按住 说话"
+    ) : (
+      <>
+        <Icon name="mic" size={26} />
+        录音
+      </>
+    );
+  if (variant === "hold") {
+    return (
+      <>
+        <button
+          type="button"
+          className="chat-hold-talk"
+          data-recording={state === "recording" || undefined}
+          disabled={disabled || state === "sending"}
+          onPointerDown={(e) => {
+            if (e.button !== 0) return;
+            e.currentTarget.setPointerCapture?.(e.pointerId);
+            releasedEarly.current = false;
+            void start();
+          }}
+          onPointerUp={() => (rec.current ? stop() : (releasedEarly.current = true))}
+          onPointerCancel={() => (rec.current ? stop() : (releasedEarly.current = true))}
+          onContextMenu={(e) => e.preventDefault()}
+        >
+          {label}
+        </button>
+        {error && <span className="field-error">{error}</span>}
+      </>
+    );
+  }
   return (
     <>
       <button
         type="button"
-        className="icon-tool tool-mic"
+        role="menuitem"
         data-recording={state === "recording" || undefined}
-        aria-label={state === "recording" ? "停止录音" : "语音"}
         disabled={disabled || state === "sending"}
         aria-pressed={state === "recording"}
         title={state === "recording" ? "再按一下停止" : "录一段语音（在主控机本地转写成文字再发）"}
         onClick={() => (state === "recording" ? stop() : void start())}
       >
-        {state === "recording" ? (
-          <>
-            <span className="rec-dot" aria-hidden="true" />
-            {durationText(elapsed)} 停
-          </>
-        ) : state === "sending" ? (
-          "上传中…"
-        ) : (
-          <Icon name="mic" />
-        )}
+        {label}
       </button>
       {error && <span className="field-error">{error}</span>}
     </>

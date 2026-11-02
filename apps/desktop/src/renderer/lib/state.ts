@@ -1,4 +1,5 @@
 import type {
+  AppearanceSettings,
   AgentEvent,
   Approval,
   Contribution,
@@ -45,6 +46,8 @@ export interface AppState {
   console: ConsoleState;
   /** Reviewer 节点设置；undefined = 还没读过，null = 从未设置 */
   reviewerNode: ReviewerNodeSettings | null | undefined;
+  /** 你在聊天里的名字和头像（appearance.get）；读不到时为 null，界面显示「我」 */
+  appearance: AppearanceSettings | null;
   /** 最近一次操作失败的说明，显示在界面上，由用户关闭 */
   notice: { kind: "error"; message: string } | null;
 }
@@ -77,6 +80,7 @@ export const initialState: AppState = {
   chat: initialChat,
   console: initialConsole,
   reviewerNode: undefined,
+  appearance: null,
   notice: null,
 };
 
