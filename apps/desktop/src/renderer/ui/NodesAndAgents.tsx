@@ -293,7 +293,7 @@ function AgentsSection({ nodes }: { nodes: NodeInfo[] }) {
   );
 }
 
-function AgentEditor({ agent, nodes }: { agent: AgentProfile; nodes: NodeInfo[] }) {
+export function AgentEditor({ agent, nodes }: { agent: AgentProfile; nodes: NodeInfo[] }) {
   const actions = useActions();
   const models = useAppState((s) => s.disc.models[agent.id]);
   const [draft, setDraft] = useState(agent);

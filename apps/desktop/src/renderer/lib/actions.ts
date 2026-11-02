@@ -141,7 +141,15 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
       }
       disc.showTopicPane();
       if (item.kind === "stamp") await disc.openConfirm(item.batchId);
+      // 「看一下」方案草稿：直接打开生成它的那一轮的汇总与方案
+      if (item.kind === "confirm_plan") {
+        const plan = store.get().disc.plans.find((p) => p.id === item.planId);
+        if (plan?.basedOnRoundId) disc.openReview(plan.basedOnRoundId);
+      }
     },
+
+    /** 现在打开的还是不是这个议题（连着几步写同一个议题时，每步前核一次） */
+    isCurrentProject: (projectId: string) => store.get().currentProjectId === projectId,
 
     async selectProject(projectId: string) {
       try {
@@ -151,13 +159,16 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
       }
     },
 
+    /** 建好并打开；返回新议题（失败时 undefined，调用方别再往当前议题写东西） */
     async createProject(name: string) {
       try {
         const project = await client.command({ type: "project.create", name });
         store.set((s) => ({ ...s, projects: [...s.projects, project] }));
         await loadProject(project.id);
+        return store.get().currentProjectId === project.id ? project : undefined;
       } catch (err) {
         fail(err);
+        return undefined;
       }
     },
 

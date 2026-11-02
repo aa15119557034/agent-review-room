@@ -241,6 +241,7 @@ function ConversationPane() {
   const selecting = useAppState((s) => s.chat.selecting);
   const answering = useAppState((s) => runningSlots(s.chat).map((sl) => sl.agent));
   const agents = useAppState((s) => s.disc.agents);
+  const status = useAppState((s) => s.disc.status);
   const actions = useActions();
   const { name } = useNames();
   if (!conv) return <p className="chat-pane-empty">正在读取…</p>;
@@ -280,6 +281,13 @@ function ConversationPane() {
           <Icon name="memory" size={15} />
           <span>记忆：{direct.memorySource.nodeFolder ? `节点记忆文件夹（${nodeLabel(direct.nodeId)}）+ ` : ""}聊天记录</span>
           <span className="chat-memory-ro">只读</span>
+          {/* 上下文 % / 压缩次数从秘书页挪到会话里（C-33b）；后端报的是这位秘书的，不是单算这个会话的 */}
+          {status[direct.id]?.contextUsedPercent != null && (
+            <span className="chat-memory-ctx" title="这位秘书现在的上下文用量（节点报的）">
+              上下文 {Math.round(status[direct.id]!.contextUsedPercent!)}%
+              {status[direct.id]!.compactions ? ` · 压缩 ${status[direct.id]!.compactions} 次` : ""}
+            </span>
+          )}
         </p>
       )}
       <Timeline conv={conv} />
@@ -605,6 +613,8 @@ function Composer({ conv }: { conv: Conversation }) {
   const [picker, setPicker] = useState(false);
   const [stickers, setStickers] = useState(false);
   const [more, setMore] = useState(false);
+  /** ＋ 面板里正在录音：这时不收起面板（收起会把这段录音静默丢掉，汐 #174） */
+  const [recording, setRecording] = useState(false);
   const [voiceMode, setVoiceMode] = useState(false);
   const input = useRef<HTMLTextAreaElement>(null);
   const quoted = draft.quoteMessageId ? messages.find((m) => m.id === draft.quoteMessageId) : undefined;
@@ -619,7 +629,7 @@ function Composer({ conv }: { conv: Conversation }) {
     if (!canSend) return;
     setPicker(false);
     setStickers(false);
-    setMore(false);
+    if (!recording) setMore(false);
     void actions.chat.send();
   };
 
@@ -693,7 +703,7 @@ function Composer({ conv }: { conv: Conversation }) {
             <Icon name="folder" size={26} />
             文件
           </button>
-          <RecordButton key={conv.id} disabled={recordDisabled} variant="tile" />
+          <RecordButton key={conv.id} disabled={recordDisabled} variant="tile" onRecordingChange={setRecording} />
           <button
             type="button"
             role="menuitemcheckbox"
@@ -715,7 +725,15 @@ function Composer({ conv }: { conv: Conversation }) {
         >
           <Icon name={voiceMode ? "keyboard" : "voice"} />
         </button>
-        <button type="button" className="icon-tool tool-more" aria-expanded={more} aria-label="发送图片、文件" title="图片、文件、录音" onClick={() => setMore((v) => !v)}>
+        <button
+          type="button"
+          className="icon-tool tool-more"
+          aria-expanded={more}
+          aria-label="发送图片、文件"
+          title={recording ? "正在录音：先在面板里点「停」" : "图片、文件、录音"}
+          disabled={more && recording}
+          onClick={() => setMore((v) => !v)}
+        >
           <Icon name="plus" />
         </button>
         <button type="button" className="icon-tool tool-emoji" aria-expanded={stickers} aria-label="表情" title="表情" onClick={() => setStickers((v) => !v)}>
@@ -762,6 +780,10 @@ function Composer({ conv }: { conv: Conversation }) {
                   {name(a)}
                 </button>
               ))}
+              {/* 鼠标用户点开名单又不想点名：关掉就行，打的 @ 留在正文里（汐 #174） */}
+              <button type="button" className="chat-picker-close" onClick={() => (setPicker(false), input.current?.focus())}>
+                不点名
+              </button>
             </div>
           )}
         </div>

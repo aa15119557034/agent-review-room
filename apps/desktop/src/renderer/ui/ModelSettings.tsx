@@ -101,7 +101,11 @@ export function ModelSettings({
   );
 }
 
-/** 一个场合的强度拉条。档位顺序由节点给（从弱到强）；null = 跟随节点默认 */
+/**
+ * 一个场合的强度拉条（C-33b 照草案「模型和思考强度」）：上面一行场合名和「↺ 改回默认」，中间大字档位 + 说明，
+ * 下面一条 44px 高的胶囊轨道，每档一个小圆点。最高一档整条变成流动的炫彩（江浩 2026-11-02 定），不放图标。
+ * 档位顺序由节点给（从弱到强）；null = 跟随节点默认。
+ */
 function EffortSlider({
   label,
   model,
@@ -118,40 +122,40 @@ function EffortSlider({
   const index = Math.max(0, model.efforts.findIndex((e) => e.id === shown));
   const level = model.efforts[index]!;
   const last = model.efforts.length - 1;
+  const top = last > 0 && index === last;
   const id = useId();
+  const note = !known ? (value === null ? "跟随节点默认" : `设的「${value}」这个模型没有，用节点默认`) : level.note;
 
   return (
-    <div
-      className="effort"
-      data-top={last > 0 && index === last}
-      style={{ "--pos": last === 0 ? 0 : index / last } as CSSProperties}
-    >
-      <label htmlFor={id} className="effort-label">
-        {label}
-        <span className="effort-value" key={level.id}>
-          {level.displayName}
-          {level.note && <small>（{level.note}）</small>}
-          {!known && <small>（{value === null ? "跟随节点默认" : `设的「${value}」这个模型没有，用节点默认`}）</small>}
-        </span>
-      </label>
-      <input
-        id={id}
-        type="range"
-        min={0}
-        max={last}
-        step={1}
-        value={index}
-        aria-valuetext={level.displayName}
-        onChange={(e) => onChange(model.efforts[Number(e.target.value)]!.id)}
-      />
-      <div className="effort-ticks" aria-hidden="true">
-        {model.efforts.map((e) => (
-          <span key={e.id} data-on={e.id === level.id}>{e.displayName}</span>
-        ))}
+    <div className="effort" data-top={top} style={{ "--pos": last === 0 ? 0 : index / last } as CSSProperties}>
+      <div className="effort-head">
+        <label htmlFor={id} className="effort-label">{label}</label>
+        {known && value !== model.defaultEffort && (
+          <button type="button" className="effort-reset" aria-label="改回节点默认" title="改回节点默认" onClick={() => onChange(null)}>
+            ↺
+          </button>
+        )}
       </div>
-      {known && value !== model.defaultEffort && (
-        <button type="button" className="button-link" onClick={() => onChange(null)}>改回节点默认</button>
-      )}
+      <div className="effort-level">
+        <span className="effort-value" key={level.id}>{level.displayName}</span>
+        {note && <small>{note}</small>}
+      </div>
+      <div className="effort-track">
+        <span className="effort-fill" aria-hidden="true" />
+        <span className="effort-dots" aria-hidden="true">
+          {model.efforts.map((e, i) => <i key={e.id} data-on={i <= index || undefined} />)}
+        </span>
+        <input
+          id={id}
+          type="range"
+          min={0}
+          max={last}
+          step={1}
+          value={index}
+          aria-valuetext={level.displayName}
+          onChange={(e) => onChange(model.efforts[Number(e.target.value)]!.id)}
+        />
+      </div>
     </div>
   );
 }

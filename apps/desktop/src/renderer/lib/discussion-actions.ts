@@ -306,9 +306,10 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
     // ---------------------------------------------------------- 界面开关
     toggleRail: () => setUi((u) => ({ ...u, railCollapsed: !u.railCollapsed })),
     /** 手机宽度：回到议题列表 / 打开议题那一栏 */
-    showTopicList: () => setUi((u) => ({ ...u, pane: "list" })),
+    showTopicList: () => setUi((u) => ({ ...u, pane: "list", sheet: false })),
     showTopicPane: () => setUi((u) => ({ ...u, pane: "topic" })),
     toggleSide: () => setUi((u) => ({ ...u, sideCollapsed: !u.sideCollapsed })),
+    toggleSheet: () => setUi((u) => ({ ...u, sheet: !u.sheet })),
     toggleRound: (roundId: string) =>
       setUi((u) => ({ ...u, collapsedRounds: { ...u.collapsedRounds, [roundId]: !u.collapsedRounds[roundId] } })),
     setAllRounds: (collapsed: boolean) =>
@@ -490,6 +491,8 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
 
     openReview: (roundId: string) => setUi((u) => ({ ...u, page: { kind: "review", roundId } })),
     closeReview: () => setUi((u) => ({ ...u, page: { kind: "timeline" } })),
+    /** 草案「新议题」：中间一栏换成新建表单（C-33b） */
+    openNewTopic: () => setDisc((d) => ({ ...d, confirm: null, ui: { ...d.ui, page: { kind: "new" } } })),
 
     /** 议题还没有任何方案时，自己写第一版（C-28） */
     async createPlan(content: string, changeNote: string) {

@@ -1,6 +1,6 @@
 import { useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
 import type { AgentStatus, Message, Project, Turn } from "@room/schemas";
-import { GROUP_LABEL, groupTopics, statusFor, todoCount, type TodoItem } from "../../lib/topic-board";
+import { GROUP_LABEL, groupTopics, statusFor, todoCount, type TodoItem, type TopicPerson, type TopicStatus } from "../../lib/topic-board";
 import {
   OUTCOME_LABEL,
   ROUND_STATE_LABEL,
@@ -28,6 +28,7 @@ import { HoldButton } from "../HoldButton";
 import { ConfirmView } from "./ConfirmView";
 import { ReviewView } from "./ReviewView";
 import { FirstPlan } from "./FirstPlan";
+import { NewTopic } from "./NewTopic";
 
 /**
  * 讨论室主页（C-21，画布「① 主页 · 讨论」）。
@@ -40,6 +41,7 @@ export function DiscussionView({ notice }: { notice: ReactNode }) {
   const railCollapsed = useAppState((s) => s.disc.ui.railCollapsed);
   const sideCollapsed = useAppState((s) => s.disc.ui.sideCollapsed);
   const pane = useAppState((s) => s.disc.ui.pane);
+  const sheet = useAppState((s) => s.disc.ui.sheet);
 
   if (!available) {
     return (
@@ -52,149 +54,124 @@ export function DiscussionView({ notice }: { notice: ReactNode }) {
   }
 
   return (
-    <div className="disc" data-rail={railCollapsed ? "collapsed" : "open"} data-side={sideCollapsed ? "collapsed" : "open"} data-pane={pane}>
+    <div className="disc" data-rail={railCollapsed ? "collapsed" : "open"} data-side={sideCollapsed ? "collapsed" : "open"} data-pane={pane} data-sheet={sheet || undefined} data-page={confirm ? "confirm" : page.kind}>
       <TopicRail />
       <main className="disc-main">
-        <BackToList />
         {notice}
-        {confirm ? <ConfirmView /> : page.kind === "review" ? <ReviewView roundId={page.roundId} /> : <Conversation />}
+        {confirm ? <ConfirmView /> : page.kind === "review" ? <ReviewView roundId={page.roundId} /> : page.kind === "new" ? <NewTopic /> : <Conversation />}
       </main>
       <SidePanel />
     </div>
   );
 }
 
-// ---------------------------------------------------------------- 顶栏的额度状态条
-
-export function QuotaChips() {
-  const agents = useAppState((s) => s.disc.agents);
-  const status = useAppState((s) => s.disc.status);
-  if (agents.length === 0) return null;
-  return (
-    <ul className="quota-chips" aria-label="参与者额度">
-      {agents.map((a) => {
-        const st = status[a.id];
-        return (
-          <li key={a.id} className="quota-chip" data-state={st?.availability ?? "unknown"} style={{ "--agent": a.color } as CSSProperties}>
-            {a.displayName} {quotaShort(st)}
-          </li>
-        );
-      })}
-    </ul>
-  );
-}
-
-function quotaShort(st: AgentStatus | undefined): string {
-  if (!st) return "未知";
-  if (st.availability === "absent_quota") return "缺席";
-  if (st.availability === "offline") return "离线";
-  if (st.availability === "unconfigured") return "未配置";
-  if (st.availability === "paused_by_user") return "已暂停";
-  if (st.balance) return `余额 ${st.balance.currency === "CNY" ? "¥" : ""}${st.balance.amount}`;
-  const parts = [];
-  if (st.fiveHour) parts.push(`5h ${Math.round(100 - st.fiveHour.usedPercent)}%`);
-  if (st.weekly) parts.push(`周 ${Math.round(100 - st.weekly.usedPercent)}%`);
-  return parts.length ? parts.join(" · ") : "额度未知";
-}
-
 // ---------------------------------------------------------------- 左：议题栏
 
+/**
+ * 草案「讨论室」：标题「讨论室」+「＋ 新议题」；分组「等你处理 / 进行中 / 还没开始 / 已定稿」。
+ * 宽屏是一行名字 + 一句状态（等你处理的带红点）；手机是白色圆角卡片，右边带「去盖章 / 看一下」，
+ * 正在答的议题下面列每人状态和「暂停 / 补充一句」（这些按钮宽屏收起来，点开议题再操作）。
+ */
 function TopicRail() {
   const projects = useAppState((s) => s.projects);
   const currentId = useAppState((s) => s.currentProjectId);
   const collapsed = useAppState((s) => s.disc.ui.railCollapsed);
+  const creating = useAppState((s) => s.disc.ui.page.kind === "new");
   const d = useAppState((s) => s.disc);
   const actions = useActions();
-  const [creating, setCreating] = useState(false);
-  const [name, setName] = useState("");
 
   const groups = groupTopics(projects, (p) => statusFor(d, currentId, p));
-  const todos = groups.find((g) => g.group === "todo")?.items.flatMap((x) => x.status.todos.map((t) => ({ project: x.project, todo: t }))) ?? [];
-  // 下面的列表只放「进行中 / 还没开始 / 已定稿」；等你处理的议题只在上面出现一次
-  const rows = groups.filter((g) => g.group !== "todo");
+  const todoN = groups.find((g) => g.group === "todo")?.items.reduce((n, x) => n + x.status.todos.length, 0) ?? 0;
 
   if (collapsed) {
     return (
       <nav className="disc-rail" aria-label="议题">
         <button type="button" className="icon-button" aria-label="展开议题栏" onClick={actions.toggleRail}>»</button>
-        {todos.length > 0 && <span className="chat-badge" aria-label={`${todos.length} 件等你处理`}>{todos.length}</span>}
+        {todoN > 0 && <span className="chat-badge" aria-label={`${todoN} 件等你处理`}>{todoN}</span>}
       </nav>
     );
   }
 
-  const submit = (e: FormEvent) => {
-    e.preventDefault();
-    const n = name.trim();
-    if (!n) return;
-    void actions.createProject(n).then(actions.showTopicPane);
-    setName("");
-    setCreating(false);
-  };
-
   const open = (projectId: string) => {
     actions.showTopicPane();
     if (projectId !== currentId) void actions.selectProject(projectId);
+    else if (creating) actions.closeReview();
   };
 
   return (
     <nav className="disc-rail" aria-label="议题">
       <div className="disc-rail-head">
-        <h2>议题 · {projects.length}</h2>
-        <button type="button" className="icon-button" aria-label="新议题" onClick={() => setCreating((v) => !v)}>+</button>
+        <h2>讨论室</h2>
+        <button type="button" className="disc-new-button" aria-pressed={creating} onClick={() => (actions.openNewTopic(), actions.showTopicPane())}>
+          ＋ 新议题
+        </button>
         <button type="button" className="icon-button disc-rail-collapse" aria-label="收起议题栏" onClick={actions.toggleRail}>«</button>
       </div>
-      {creating && (
-        <form className="disc-new-topic" onSubmit={submit}>
-          <label htmlFor="new-topic">议题名称</label>
-          <input id="new-topic" autoFocus value={name} maxLength={200} onChange={(e) => setName(e.target.value)} />
-          <button type="submit" className="button-primary" disabled={!name.trim()}>创建</button>
-        </form>
-      )}
-      {todos.length > 0 && (
-        <section className="disc-todo" aria-label="等你处理">
-          <h3>
-            等你处理 <span className="chat-badge" aria-label={`${todos.length} 件`}>{todos.length}</span>
-          </h3>
-          <ul>
-            {todos.map(({ project, todo }) => (
-              <li key={todoKey(todo)}>
-                <button
-                  type="button"
-                  data-kind={todo.kind}
-                  aria-current={project.id === currentId ? "page" : undefined}
-                  onClick={() => void actions.openTodo(todo)}
-                >
-                  <b>{project.name}</b>
-                  <span>{todo.label}</span>
-                </button>
+      {groups.map((g) => (
+        <section key={g.group} className="disc-topic-group" data-group={g.group} aria-label={GROUP_LABEL[g.group]}>
+          <h3>{GROUP_LABEL[g.group]}{g.group === "todo" ? ` · ${todoN}` : ""}</h3>
+          <ul className="disc-topics">
+            {g.items.map(({ project, status }) => (
+              <li key={project.id}>
+                <TopicRow project={project} status={status} current={project.id === currentId && !creating} onOpen={open} />
               </li>
             ))}
           </ul>
         </section>
-      )}
-      {rows.map((g) => (
-          <section key={g.group} className="disc-topic-group" aria-label={GROUP_LABEL[g.group]}>
-            <h3>{GROUP_LABEL[g.group]} · {g.items.length}</h3>
-            <ul className="disc-topics">
-              {g.items.map(({ project, status }) => (
-                <li key={project.id}>
-                  <TopicRow project={project} line={status.line} current={project.id === currentId} onOpen={open} />
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))}
-      {projects.length === 0 && <p className="disc-rail-more">还没有议题，点 + 新建一个。</p>}
+      ))}
+      {projects.length === 0 && <p className="disc-rail-more">还没有议题，点「＋ 新议题」建一个。</p>}
     </nav>
   );
 }
 
-function TopicRow(props: { project: Project; line: string; current: boolean; onOpen: (id: string) => void }) {
+const PERSON_LABEL: Record<TopicPerson["state"], string> = { answered: "已答", running: "回答中", waiting: "等着", stopped: "停下了", missed: "没答上" };
+
+function TopicRow(props: { project: Project; status: TopicStatus; current: boolean; onOpen: (id: string) => void }) {
+  const { project, status } = props;
+  const d = useAppState((s) => s.disc);
+  const actions = useActions();
+  const todo = status.todos[0];
+  const final = status.group === "final";
+  const live = status.live;
+  const doTodo = () => {
+    actions.showTopicPane();
+    void actions.openTodo(todo!);
+  };
   return (
-    <button type="button" className="disc-topic" aria-current={props.current ? "page" : undefined} onClick={() => props.onOpen(props.project.id)}>
-      <span className="disc-topic-name">{props.project.name}</span>
-      <span className="disc-topic-line">{props.line}</span>
-    </button>
+    <div className="disc-topic-card" data-group={status.group} aria-current={props.current ? "page" : undefined}>
+      <button type="button" className="disc-topic" aria-current={props.current ? "page" : undefined} onClick={() => props.onOpen(project.id)}>
+        <span className="disc-topic-name">
+          {project.name}
+          {todo && <span className="disc-dot" aria-label="等你处理" />}
+        </span>
+        <span className="disc-topic-line">{status.line}</span>
+      </button>
+      {todo && (
+        <button type="button" className={todo.kind === "stamp" ? "disc-topic-act button-seal-small" : "disc-topic-act button-outline"} onClick={doTodo}>
+          {todo.kind === "stamp" ? "去盖章" : todo.kind === "summarize" ? "请人汇总" : "看一下"}
+        </button>
+      )}
+      {final && <span className="disc-final-stamp" aria-hidden="true">定稿</span>}
+      {live && (
+        <div className="disc-topic-live">
+          <ul className="disc-people" aria-label="每人状态">
+            {live.people.map((p) => (
+              <li key={p.agent} data-state={p.state} style={{ "--agent": agentColor(d, p.agent) } as CSSProperties}>
+                {agentName(d, p.agent)} {PERSON_LABEL[p.state]}{p.by ? `（${agentName(d, p.by)}代）` : ""}
+              </li>
+            ))}
+          </ul>
+          <div className="disc-topic-buttons">
+            {live.paused ? (
+              <button type="button" className="button-quiet" onClick={() => (props.onOpen(project.id))}>恢复</button>
+            ) : (
+              <button type="button" className="button-quiet" onClick={() => void actions.pauseRound(live.roundId)}>暂停</button>
+            )}
+            <button type="button" className="button-quiet" onClick={() => (props.onOpen(project.id), focusComposerSoon())}>补充一句</button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -208,13 +185,13 @@ export function DiscussionBadge() {
   return <span className="chat-badge" aria-label={`${n} 件等你处理`}>{n > 99 ? "99+" : n}</span>;
 }
 
-/** 手机宽度下，打开的议题顶上有「返回议题列表」（宽屏隐藏） */
+/** 手机宽度下，议题标题左边的「‹」回到议题列表（宽屏隐藏），带等你处理的数 */
 function BackToList() {
   const actions = useActions();
   const n = useAppState((s) => todoCount(s.disc, s.currentProjectId, s.projects));
   return (
-    <button type="button" className="button-link disc-back" onClick={actions.showTopicList}>
-      ‹ 议题列表{n > 0 && <span className="chat-badge" aria-label={`${n} 件等你处理`}>{n}</span>}
+    <button type="button" className="icon-button disc-back" aria-label={`返回议题列表${n ? `（${n} 件等你处理）` : ""}`} onClick={actions.showTopicList}>
+      ‹{n > 0 && <span className="chat-badge" aria-hidden="true">{n}</span>}
     </button>
   );
 }
@@ -223,48 +200,80 @@ function BackToList() {
 
 function Conversation() {
   const project = useAppState((s) => s.projects.find((p) => p.id === s.currentProjectId) ?? null);
-  const agents = useAppState((s) => s.disc.agents);
+  const d = useAppState((s) => s.disc);
+  const fromChat = useAppState((s) => s.messages.some((m) => m.kind === "chat_material"));
   const actions = useActions();
   if (!project) {
     return (
       <section className="disc-empty">
-        <h1>从左边新建一个议题开始</h1>
-        <p>发议题和文件，勾选这一轮让谁发言；每次发出去之前都要你盖章。</p>
+        <h1>从左边选一个议题，或者新建一个</h1>
+        <p>每一轮发给谁、带上什么，都先给你看全文；你盖章了才发出去。</p>
       </section>
     );
   }
+  const people = d.agents.filter((a) => a.canDiscuss).map((a) => a.displayName).join(" · ");
+  const sub = [fromChat ? "从聊天转来" : people, d.rounds.length ? `${d.rounds.length} 轮` : "还没开始"].join(" · ");
   return (
     <>
       <header className="disc-head">
-        <h1>{project.name}</h1>
-        <span className="disc-head-meta">参与：你 · {agents.filter((a) => a.canDiscuss).map((a) => a.displayName).join(" · ")}</span>
-        <span className="spacer" />
-        <button type="button" className="button-link" onClick={() => actions.setAllRounds(true)}>全部收起</button>
-        <button type="button" className="button-link" onClick={() => actions.setAllRounds(false)}>全部展开</button>
+        <BackToList />
+        <div className="disc-head-title">
+          <h1>{project.name}</h1>
+          <span className="disc-head-meta">{sub}</span>
+        </div>
+        <StagePills />
+        <button
+          type="button"
+          className="icon-button disc-side-toggle"
+          aria-label="方案和参与者"
+          aria-pressed={narrow() ? d.ui.sheet : !d.ui.sideCollapsed}
+          onClick={() => (narrow() ? actions.toggleSheet() : actions.toggleSide())}
+        >
+          <SideIcon />
+        </button>
       </header>
-      <StageBar />
       <Timeline />
       <Composer />
     </>
   );
 }
 
-function StageBar() {
-  const list = useAppState((s) => stages(s.disc));
-  const actions = useActions();
-  if (list.length <= 3) return null;
+function SideIcon() {
   return (
-    <nav className="stage-bar" aria-label="阶段">
-      {list.map((st, i) => (
-        <span key={st.key} className="stage-item">
-          {i > 0 && <span aria-hidden="true" className="stage-sep">—</span>}
-          {st.roundId && st.label.startsWith("汇总") && st.state === "done" ? (
-            <button type="button" className="stage" data-state={st.state} onClick={() => actions.openReview(st.roundId!)}>{st.label}</button>
-          ) : (
-            <span className="stage" data-state={st.state} aria-current={st.state === "current" ? "step" : undefined}>{st.label}</span>
-          )}
-        </span>
-      ))}
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+      <rect x="3.5" y="4.5" width="17" height="15" rx="3" />
+      <path d="M15 4.5v15" />
+    </svg>
+  );
+}
+
+/**
+ * 草案顶上的进度胶囊：「第 1 轮 ✓」「汇总 · 方案 v1 ✓」「第 2 轮 · 等你盖章」。
+ * 只放轮次和汇总（议题 / 执行这种固定的不放）；做完的灰色带 ✓，当前的黑色。点做完的汇总打开汇总与方案。
+ */
+function StagePills() {
+  const d = useAppState((s) => s.disc);
+  const actions = useActions();
+  const list = stages(d).filter((st) => st.roundId !== null || (st.key === "final" && st.state === "done"));
+  if (list.length === 0) return null;
+  const waiting = pendingBatches(d);
+  return (
+    <nav className="stage-bar" aria-label="进度">
+      {list.map((st) => {
+        const isSum = st.key.endsWith("-sum");
+        const round = st.roundId ? d.rounds.find((r) => r.id === st.roundId) : undefined;
+        let label = st.label.replace(/^汇总 v(\d+)$/, "汇总 · 方案 v$1");
+        if (st.state === "current" && round && !isSum) {
+          label += waiting.some((b) => b.roundId === round.id) ? " · 等你盖章" : ` · ${ROUND_STATE_LABEL[round.state]}`;
+        }
+        const done = st.state === "done";
+        const content = <>{label}{done && <span aria-label="已完成"> ✓</span>}</>;
+        return isSum && done ? (
+          <button key={st.key} type="button" className="stage" data-state={st.state} onClick={() => actions.openReview(st.roundId!)}>{content}</button>
+        ) : (
+          <span key={st.key} className="stage" data-state={st.state} aria-current={st.state === "current" ? "step" : undefined}>{content}</span>
+        );
+      })}
     </nav>
   );
 }
@@ -320,21 +329,22 @@ function RoundBar({ entry }: { entry: Extract<TimelineEntry, { kind: "round" }> 
   const actions = useActions();
   const stamped = batches.find((b) => b.kind === "initial" && b.state === "APPROVED");
   const waiting = batches.find((b) => b.state === "READY_FOR_REVIEW");
+  // 草案：「第 1 轮 · 发给 C酱、汐、林离 · 你已盖章 21:30 · 用时 4 分钟」；还在进行的轮才写状态
+  const ongoing = round.state !== "SUMMARIZED";
   return (
     <div className="round-bar" data-state={round.state}>
-      <button type="button" className="round-bar-toggle" aria-expanded={!collapsed} onClick={() => actions.toggleRound(round.id)}>
-        第 {round.index} 轮 · 发给 {round.recipients.map((r) => agentName(d, r)).join("、")} · 任务：{TASK_SOURCE_LABEL[round.taskSource]}
+      <button type="button" className="round-bar-toggle" aria-expanded={!collapsed} title={collapsed ? "展开这一轮" : "收起这一轮"} onClick={() => actions.toggleRound(round.id)}>
+        第 {round.index} 轮 · 发给 {round.recipients.map((r) => agentName(d, r)).join("、")}
         {stamped && <> · <b className="stamped">你已盖章</b> {formatClock(stamped.decidedAt ?? stamped.createdAt)}</>}
-        {" · "}
-        {ROUND_STATE_LABEL[round.state]}
+        {ongoing && !waiting && ` · ${ROUND_STATE_LABEL[round.state]}`}
         {round.activeMs > 0 && ` · 用时 ${formatActive(round.activeMs)}`}
       </button>
+      {round.state === "VOIDED" && round.voidReason && <span className="round-bar-note">作废原因：{round.voidReason}</span>}
       {waiting && (
-        <button type="button" className="button-seal-small" onClick={() => void actions.openConfirm(waiting.id)}>
-          去盖章
+        <button type="button" className="round-bar-wait" onClick={() => void actions.openConfirm(waiting.id)}>
+          第 {round.index} 轮 · 内容已拼好，等你盖章
         </button>
       )}
-      {round.state === "VOIDED" && round.voidReason && <span className="round-bar-note">作废原因：{round.voidReason}</span>}
     </div>
   );
 }
@@ -346,13 +356,9 @@ function TurnCard({ turn, reply }: { turn: Turn; reply: Message | null }) {
   const { text, live } = turnText(turn, reply, events);
   const label = OUTCOME_LABEL[turn.outcome];
   const canRetry = ["timed_out", "failed", "absent_quota"].includes(turn.outcome) && !turn.supersededBy;
-  const meta = [
-    turn.onBehalfOf ? `代 ${agentName(d, turn.onBehalfOf)}` : null,
-    label || null,
-    formatClock(turn.createdAt),
-  ].filter(Boolean).join(" · ");
+  const meta = [turn.onBehalfOf ? `代 ${agentName(d, turn.onBehalfOf)}` : null, label || (turn.outcome === "answered" ? "已答" : formatClock(turn.createdAt))].filter(Boolean).join(" · ");
   return (
-    <Bubble who={agentName(d, turn.agent)} color={agentColor(d, turn.agent)} meta={meta} state={turn.outcome}>
+    <Bubble who={agentName(d, turn.agent)} color={agentColor(d, turn.agent)} meta={meta} state={turn.outcome} title={formatClock(turn.createdAt)}>
       {text ? <LongText id={turn.id} text={text} live={live} /> : <p className="turn-empty">{live ? "正在思考…" : "（没有输出）"}</p>}
       {canRetry && (
         <button type="button" className="button-link" onClick={() => void actions.retryAgent(turn.roundId, turn.agent)}>
@@ -363,44 +369,66 @@ function TurnCard({ turn, reply }: { turn: Turn; reply: Message | null }) {
   );
 }
 
+type SummaryTab = "points" | "risks" | "gaps";
+
+/** 草案：汇总卡「C 第 1 轮汇总 → 方案 v1 · 3/3 参与」，下面分页签「要点 / 风险 / 遗漏 / 谁同意什么」 */
 function SummaryCard({ entry }: { entry: Extract<TimelineEntry, { kind: "summary" }> }) {
   const d = useAppState((s) => s.disc);
   const actions = useActions();
   const events = useAppState((s) => (entry.turn.runId ? s.runEvents[entry.turn.runId] : undefined));
+  const [tab, setTab] = useState<SummaryTab>("points");
   const { text, live } = turnText(entry.turn, entry.reply, events);
   const sum = entry.summary;
   const plan = sum?.planVersionId ? d.plans.find((p) => p.id === sum.planVersionId) : undefined;
+  const report = sum?.report;
+  const lists: Record<SummaryTab, string[]> = report
+    ? { points: report.points.map((p) => p.text), risks: report.risks, gaps: report.gaps }
+    : { points: [], risks: [], gaps: [] };
+  const TAB_LABEL: Record<SummaryTab, string> = { points: "要点", risks: "风险", gaps: "遗漏" };
+  const who = agentName(d, entry.turn.agent);
   return (
-    <Bubble who={agentName(d, entry.turn.agent)} color={agentColor(d, entry.turn.agent)} meta={`汇总 · ${OUTCOME_LABEL[entry.turn.outcome] || formatClock(entry.turn.createdAt)}`} variant="summary">
+    <article className="summary-card" style={{ "--agent": agentColor(d, entry.turn.agent) } as CSSProperties}>
       <div className="summary-head">
-        <b>第 {entry.round.index} 轮汇总{plan ? ` → 方案 v${plan.version} 草稿` : ""}</b>
-        {sum && <span className="tag">{sum.answered}/{sum.expected} 参与</span>}
+        <span className="avatar" aria-hidden="true">{who.slice(0, 1)}</span>
+        <b>第 {entry.round.index} 轮汇总{plan ? ` → 方案 v${plan.version}` : ""}</b>
+        <span className="summary-by">{who}{live ? " · 汇总中" : ""}</span>
+        {sum && <span className="summary-count">{sum.answered}/{sum.expected} 参与</span>}
       </div>
-      {sum?.report ? (
-        <div className="summary-grid">
-          <div><span className="summary-label">要点</span>{sum.report.points.map((p) => <p key={p.text}>{p.text}</p>)}</div>
-          <div><span className="summary-label">风险</span>{sum.report.risks.map((x) => <p key={x}>{x}</p>)}</div>
-          <div><span className="summary-label">遗漏</span>{sum.report.gaps.map((x) => <p key={x}>{x}</p>)}</div>
-        </div>
+      {report ? (
+        <>
+          <div className="summary-tabs" role="tablist" aria-label="汇总内容">
+            {(Object.keys(TAB_LABEL) as SummaryTab[]).map((k) => (
+              <button key={k} type="button" role="tab" aria-selected={tab === k} onClick={() => setTab(k)}>
+                {TAB_LABEL[k]} {lists[k].length}
+              </button>
+            ))}
+            <button type="button" role="tab" aria-selected={false} onClick={() => actions.openReview(entry.round.id)}>谁同意什么</button>
+          </div>
+          {lists[tab].length ? (
+            <ul className="summary-list">{lists[tab].map((x) => <li key={x}>{x}</li>)}</ul>
+          ) : (
+            <p className="side-note">没有{TAB_LABEL[tab]}。</p>
+          )}
+          {report.extraInfoNotes.map((n) => <p key={n} className="extra-info">{n}</p>)}
+        </>
       ) : (
         <LongText id={entry.turn.id} text={text} live={live} />
       )}
-      {sum?.report?.extraInfoNotes.map((n) => <p key={n} className="extra-info">{n}</p>)}
       {sum && (
         <button type="button" className="button-outline summary-open" onClick={() => actions.openReview(entry.round.id)}>
-          打开汇总与方案{plan ? ` v${plan.version}` : ""}
+          {plan ? `打开方案 v${plan.version}` : "打开汇总"}
         </button>
       )}
-    </Bubble>
+    </article>
   );
 }
 
-function Bubble(props: { who: string; color: string; meta: string; state?: string; variant?: "summary"; children: ReactNode }) {
+function Bubble(props: { who: string; color: string; meta: string; state?: string; title?: string; children: ReactNode }) {
   return (
-    <article className="bubble" data-state={props.state} data-variant={props.variant} style={{ "--agent": props.color } as CSSProperties}>
+    <article className="bubble" data-state={props.state} style={{ "--agent": props.color } as CSSProperties}>
       <div className="avatar" aria-hidden="true">{props.who.slice(0, 1)}</div>
       <div className="bubble-body">
-        <div className="bubble-meta"><b>{props.who}</b> · {props.meta}</div>
+        <div className="bubble-meta" title={props.title}><b>{props.who}</b> · {props.meta}</div>
         <div className="bubble-content">{props.children}</div>
       </div>
     </article>
@@ -428,6 +456,10 @@ function LongText({ id, text, live = false }: { id: string; text: string; live?:
   );
 }
 
+/**
+ * 草案的输入卡片：第一行「发给 C酱✓ 汐✓ 林离✓ ……… 带上方案 v1」，第二行输入框 + 红色「去盖章」。
+ * 一轮还没结束时上面多一行这一轮的状态和操作；插话时「发给」换成三种插话方式。
+ */
 function Composer() {
   const d = useAppState((s) => s.disc);
   const actions = useActions();
@@ -441,86 +473,99 @@ function Composer() {
   // 暂停中只能「放进下一轮」：要立刻发出去的补充得先恢复
   const mode = paused ? "next_round" : d.ui.interject.mode;
   const { targets } = d.ui.interject;
+  const MODES = [
+    { key: "restart_now", label: "立刻打断重答", hint: "旧回答标「被打断」并保留" },
+    { key: "next_round", label: "放进下一轮", hint: "不打断，下一轮一起带上" },
+    { key: "only", label: "只发给某人", hint: "会标「他收到了额外信息」" },
+  ] as const;
 
   return (
     <div className="composer">
       <RoundControls />
-      {interjecting ? (
-        <fieldset className="interject">
-          <legend>插话：补充或改方向（第 {round!.index} 轮）</legend>
-          <div className="interject-modes">
-            <label><input type="radio" name="interject-mode" checked={mode === "restart_now"} disabled={paused} onChange={() => actions.setInterjectMode("restart_now")} /> 立刻打断，带上补充重答（旧的标「被打断」并保留）</label>
-            <label><input type="radio" name="interject-mode" checked={mode === "next_round"} onChange={() => actions.setInterjectMode("next_round")} /> 不打断，放进下一轮</label>
-            <label><input type="radio" name="interject-mode" checked={mode === "only"} disabled={paused} onChange={() => actions.setInterjectMode("only")} /> 只发给某个人（会标「他收到了额外信息」）</label>
-          </div>
-          {paused && <p className="step-hint">暂停中只能记下来放进下一轮；要立刻带上补充重答，先点「恢复」。</p>}
-          {mode !== "next_round" && (
-            <div className="composer-recipients">
-              <span>发给：</span>
-              {round!.recipients.map((aid) => (
+      <div className="composer-card">
+        {interjecting ? (
+          <div className="composer-recipients">
+            <span className="composer-label">补充</span>
+            <div className="interject-modes" role="radiogroup" aria-label={`插话方式（第 ${round!.index} 轮）`}>
+              {MODES.map((m) => (
+                <button
+                  key={m.key}
+                  type="button"
+                  role="radio"
+                  aria-checked={mode === m.key}
+                  title={m.hint}
+                  disabled={paused && m.key !== "next_round"}
+                  onClick={() => actions.setInterjectMode(m.key)}
+                >
+                  {m.label}
+                </button>
+              ))}
+            </div>
+            {mode !== "next_round" &&
+              round!.recipients.map((aid) => (
                 <label key={aid} className="recipient-chip" style={{ "--agent": agentColor(d, aid) } as CSSProperties}>
                   <input type="checkbox" checked={targets.includes(aid)} onChange={() => actions.toggleInterjectTarget(aid)} />
                   {agentName(d, aid)}
                 </label>
               ))}
-            </div>
-          )}
-        </fieldset>
-      ) : (
-        <div className="composer-recipients">
-          <span>下一轮发给：</span>
-          {discussants.map((a) => {
-            const st = d.status[a.id]?.availability ?? "available";
-            const unavailable = st !== "available";
-            return (
-              <label key={a.id} className="recipient-chip" data-unavailable={unavailable || undefined} style={{ "--agent": a.color } as CSSProperties}>
-                <input type="checkbox" checked={recipients.includes(a.id)} disabled={unavailable} onChange={() => actions.toggleRecipient(a.id)} />
-                {a.displayName}
-                {unavailable && <span>（{st === "absent_quota" ? "缺席" : st === "offline" ? "离线" : st === "paused_by_user" ? "已暂停" : "未配置"}）</span>}
-              </label>
-            );
-          })}
-          {attached && <span className="composer-attach">附带：方案 v{attached.version}{attached.state === "FINAL" ? "（定稿）" : ""}</span>}
-        </div>
-      )}
-      <div className="composer-row">
-        <label htmlFor="composer" className="visually-hidden">发言</label>
-        <textarea
-          id="composer"
-          rows={2}
-          value={text}
-          placeholder={interjecting ? "补充什么，或者想改什么方向……" : round ? "这一轮还在等盖章，可以先说点什么（只发言）" : "写下议题，或者下一轮的任务……"}
-          onChange={(e) => actions.setComposerText(e.target.value)}
-        />
-        <button type="button" className="button-outline" disabled={!text.trim()} onClick={() => void actions.addNote()}>
-          只发言
-        </button>
-        {interjecting ? (
-          <button
-            type="button"
-            className="button-primary"
-            disabled={!text.trim() || (mode !== "next_round" && targets.length === 0)}
-            onClick={() => void actions.supplement()}
-          >
-            {mode === "next_round" ? "记下来，放进下一轮" : "预览并发送补充"}
-          </button>
+          </div>
         ) : (
-          <button
-            type="button"
-            className="button-primary"
-            disabled={round !== null || !text.trim() || recipients.length === 0}
-            title={round ? `第 ${round.index} 轮还没结束` : undefined}
-            onClick={() => void actions.draftRound()}
-          >
-            预览并发起第 {nextIndex} 轮
-          </button>
+          <div className="composer-recipients">
+            <span className="composer-label">发给</span>
+            {discussants.map((a) => {
+              const st = d.status[a.id]?.availability ?? "available";
+              const unavailable = st !== "available";
+              return (
+                <label key={a.id} className="recipient-chip" data-unavailable={unavailable || undefined} style={{ "--agent": a.color } as CSSProperties}>
+                  <input type="checkbox" checked={recipients.includes(a.id)} disabled={unavailable} onChange={() => actions.toggleRecipient(a.id)} />
+                  {a.displayName}
+                  {unavailable && <span>（{st === "absent_quota" ? "缺席" : st === "offline" ? "离线" : st === "paused_by_user" ? "已暂停" : "未配置"}）</span>}
+                </label>
+              );
+            })}
+            {attached && <span className="composer-attach">带上方案 v{attached.version}{attached.state === "FINAL" ? "（定稿）" : ""}</span>}
+          </div>
         )}
+        {paused && interjecting && <p className="step-hint">暂停中只能记下来放进下一轮；要立刻带上补充重答，先点「恢复」。</p>}
+        <div className="composer-row">
+          <label htmlFor="composer" className="visually-hidden">发言</label>
+          <textarea
+            id="composer"
+            rows={1}
+            value={text}
+            placeholder={interjecting ? "补充什么，或者想改什么方向……" : round ? "这一轮还在等盖章，可以先说点什么（只发言）" : `写下第 ${nextIndex} 轮的任务……`}
+            onChange={(e) => actions.setComposerText(e.target.value)}
+          />
+          <button type="button" className="button-quiet" disabled={!text.trim()} title="写进时间线，不发给任何人" onClick={() => void actions.addNote()}>
+            只发言
+          </button>
+          {interjecting ? (
+            <button
+              type="button"
+              className={mode === "next_round" ? "button-primary" : "button-seal-small composer-seal"}
+              disabled={!text.trim() || (mode !== "next_round" && targets.length === 0)}
+              onClick={() => void actions.supplement()}
+            >
+              {mode === "next_round" ? "记下来" : "去盖章"}
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="button-seal-small composer-seal"
+              disabled={round !== null || !text.trim() || recipients.length === 0}
+              title={round ? `第 ${round.index} 轮还没结束` : `先看每人收到的全文，再盖章发出第 ${nextIndex} 轮`}
+              onClick={() => void actions.draftRound()}
+            >
+              去盖章
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
 }
 
-/** 一轮还没结束时，输入框上方显示这一轮的操作（完整的进行中页面在 C-23） */
+/** 一轮还没结束时，输入卡片上方一行：这一轮的状态和操作 */
 function RoundControls() {
   const d = useAppState((s) => s.disc);
   const actions = useActions();
@@ -531,19 +576,19 @@ function RoundControls() {
   const anyAnswer = d.turns.some((t) => t.roundId === round.id && !t.isSummary && t.outcome === "answered");
   return (
     <div className="round-controls" data-state={round.state}>
-      <b>第 {round.index} 轮 · {ROUND_STATE_LABEL[round.state]}</b>
+      <b>第 {round.index} 轮 · {waiting ? "等你盖章" : ROUND_STATE_LABEL[round.state]}</b>
       {round.activeMs > 0 && <span className="round-time">用时 {formatActive(round.activeMs)}{round.state === "PAUSED" ? "（暂停中不计时）" : ""}</span>}
       {waiting && <button type="button" className="button-seal-small" onClick={() => void actions.openConfirm(waiting.id)}>去盖章</button>}
       {round.state === "RUNNING" && (
         <>
-          <button type="button" className="button-outline" onClick={() => void actions.pauseRound(round.id)}>全部暂停</button>
-          <button type="button" className="button-outline" onClick={() => void actions.endRound(round.id)}>结束本轮 → 汇总</button>
+          <button type="button" className="button-quiet" onClick={() => void actions.pauseRound(round.id)}>全部暂停</button>
+          <button type="button" className="button-quiet" onClick={() => void actions.endRound(round.id)}>结束本轮 → 汇总</button>
         </>
       )}
       {round.state === "PAUSED" && !waiting && (
         <>
-          <button type="button" className="button-outline" onClick={() => void actions.resumeRound(round.id)}>恢复（重新盖章）</button>
-          <button type="button" className="button-outline" onClick={() => void actions.endRound(round.id)}>结束本轮 → 汇总</button>
+          <button type="button" className="button-quiet" onClick={() => void actions.resumeRound(round.id)}>恢复（重新盖章）</button>
+          <button type="button" className="button-quiet" onClick={() => void actions.endRound(round.id)}>结束本轮 → 汇总</button>
         </>
       )}
       {round.state === "AWAITING_SUMMARY" && !waiting && !anyAnswer && (
@@ -590,40 +635,43 @@ function VoidRound({ roundId }: { roundId: string }) {
 
 // ---------------------------------------------------------------- 右：方案与参与者
 
+/**
+ * 草案右栏两张卡：「方案」（版本标签、前几行、看全文和历史版本）和「参与者」（谁在线、谁汇总）。
+ * 额度不放这里了（草案：讨论室只说在不在线；额度在「秘书」页看）。
+ */
 function SidePanel() {
   const d = useAppState((s) => s.disc);
   const actions = useActions();
-  if (d.ui.sideCollapsed) {
-    return (
-      <aside className="disc-side" aria-label="方案与状态">
-        <button type="button" className="icon-button" aria-label="展开右栏" onClick={actions.toggleSide}>«</button>
-      </aside>
-    );
-  }
+  if (d.ui.sideCollapsed) return <aside className="disc-side" data-collapsed aria-label="方案与参与者" />;
   const plan = displayedPlan(d);
+  const reviewRound = plan?.basedOnRoundId ?? [...d.summaries].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))[0]?.roundId ?? null;
   return (
-    <aside className="disc-side" aria-label="方案与状态">
-      <details open className="side-section">
-        <summary>
-          <b>方案</b>
-          <span>{plan ? `v${plan.version} · ${planStateLabel(plan.state)}` : "还没有"}</span>
-          <button type="button" className="icon-button" aria-label="收起右栏" onClick={(e) => (e.preventDefault(), actions.toggleSide())}>»</button>
-        </summary>
+    <aside className="disc-side" aria-label="方案与参与者">
+      <section className="side-card" aria-label="方案">
+        <header>
+          <h2>方案</h2>
+          {plan && <span className="side-tag" data-state={plan.state}>v{plan.version} · {planStateShort(plan.state)}</span>}
+          <button type="button" className="icon-button side-close" aria-label="收起" onClick={() => (narrow() ? actions.toggleSheet() : actions.toggleSide())}>×</button>
+        </header>
         {plan ? (
           <>
-            <pre className="plan-content">{plan.content}</pre>
-            <p className="side-note">{plan.changeNote}{plan.draftedBy.kind === "agent" ? ` · ${agentName(d, plan.draftedBy.agent)} 起草` : " · 你改的"}</p>
-            {plan.state === "DRAFT" && (
-              <button type="button" className="button-outline" onClick={() => void actions.confirmPlan(plan.id)}>确认这一版</button>
+            <p className="plan-preview">{plan.content}</p>
+            {reviewRound && (
+              <button type="button" className="button-link side-more" onClick={() => actions.openReview(reviewRound)}>看全文和历史版本 ›</button>
             )}
-            {plan.state === "CURRENT" && (
-              <HoldButton className="button-seal" resetKey={plan.id + plan.contentHash} onComplete={() => actions.finalizePlan(plan.id, plan.contentHash)}>
-                盖章定稿 v{plan.version}
-              </HoldButton>
-            )}
-            {canDerive(d, plan) && (
-              <button type="button" className="button-outline" onClick={() => void actions.derivePlan(plan.id)}>从 v{plan.version} 派生下一版</button>
-            )}
+            <div className="side-actions">
+              {plan.state === "DRAFT" && (
+                <button type="button" className="button-outline" onClick={() => void actions.confirmPlan(plan.id)}>确认这一版</button>
+              )}
+              {plan.state === "CURRENT" && (
+                <HoldButton className="button-seal" resetKey={plan.id + plan.contentHash} onComplete={() => actions.finalizePlan(plan.id, plan.contentHash)}>
+                  盖章定稿 v{plan.version}
+                </HoldButton>
+              )}
+              {canDerive(d, plan) && (
+                <button type="button" className="button-outline" onClick={() => void actions.derivePlan(plan.id)}>从 v{plan.version} 派生下一版</button>
+              )}
+            </div>
           </>
         ) : (
           <>
@@ -631,60 +679,36 @@ function SidePanel() {
             {d.plans.length === 0 && <FirstPlan compact />}
           </>
         )}
-        <p className="side-note">讨论不会自己停，什么时候定稿由你决定。</p>
-      </details>
+      </section>
 
-      <details open className="side-section">
-        <summary><b>参与者状态</b></summary>
-        <ul className="agent-cards">
-          {d.agents.map((a) => (
-            <AgentCard key={a.id} d={d} id={a.id} />
+      <section className="side-card" aria-label="参与者">
+        <header><h2>参与者</h2></header>
+        <ul className="side-people">
+          {d.agents.filter((a) => a.canDiscuss || a.canSummarize).map((a) => (
+            <Participant key={a.id} d={d} id={a.id} />
           ))}
         </ul>
-      </details>
+        <p className="side-note">讨论不会自己停，什么时候定稿由你决定。额度在「秘书」页看。</p>
+      </section>
     </aside>
   );
 }
 
-function AgentCard({ d, id }: { d: DiscussionState; id: string }) {
+function Participant({ d, id }: { d: DiscussionState; id: string }) {
   const a = d.agents.find((x) => x.id === id)!;
   const st = d.status[id];
   // 推荐节点用推荐配置里的名字（主控机拆成汐 / 林离两个节点，D-40），其它节点显示 id
   const node = a.nodeId === null ? "未配置节点" : (RECOMMENDED_NODES.find((n) => n.id === a.nodeId)?.label ?? a.nodeId);
+  const ctx = st?.contextUsedPercent != null ? `上下文 ${Math.round(st.contextUsedPercent)}%${st.compactions ? ` · 压缩 ${st.compactions} 次` : ""}` : null;
   return (
-    <li className="agent-card" data-state={st?.availability ?? "unknown"} style={{ "--agent": a.color } as CSSProperties}>
-      <div className="agent-card-head">
-        <b>{a.displayName}</b>
-        <span>{node}</span>
-        <span className="agent-card-state">{availabilityLabel(st)}</span>
-      </div>
-      {st?.billing === "api" && st.balance && (
-        <p>API · 余额 <b>{st.balance.currency === "CNY" ? "¥" : ""}{st.balance.amount}</b>{st.balance.spentThisMonth ? ` · 本月已用 ${st.balance.spentThisMonth}` : ""}</p>
-      )}
-      {st?.billing === "subscription" && (
-        <>
-          <Meter label="5 小时额度剩余" w={st.fiveHour} />
-          <Meter label="周额度剩余" w={st.weekly} />
-        </>
-      )}
-      <p className="side-note">
-        上下文 {st?.contextUsedPercent != null ? `${Math.round(st.contextUsedPercent)}%` : "未知"}
-        {st?.compactions != null ? ` · 已压缩 ${st.compactions} 次` : ""}
-        {st?.model ? ` · ${st.model}` : ""}
-        {st?.effort ? ` · 强度 ${st.effort}` : ""}
-      </p>
+    <li className="side-person" data-state={st?.availability ?? "unknown"} style={{ "--agent": a.color } as CSSProperties} title={[node, ctx].filter(Boolean).join(" · ")}>
+      <span className="avatar" aria-hidden="true">{a.displayName.slice(0, 1)}</span>
+      <span className="side-person-name">
+        {a.displayName}
+        {a.canSummarize && <span className="side-person-role"> · 汇总</span>}
+      </span>
+      <span className="side-person-state">{availabilityLabel(st)}</span>
     </li>
-  );
-}
-
-function Meter({ label, w }: { label: string; w: AgentStatus["fiveHour"] }) {
-  if (!w) return <p className="side-note">{label} 未知</p>;
-  const left = Math.max(0, Math.round(100 - w.usedPercent));
-  return (
-    <div className="meter">
-      <p>{label} <b>{left}%</b>{w.resetsAt ? ` · ${formatClock(w.resetsAt)} 重置` : ""}</p>
-      <div className="meter-track" aria-hidden="true"><div className="meter-fill" style={{ width: `${left}%` }} /></div>
-    </div>
   );
 }
 
@@ -699,6 +723,14 @@ function availabilityLabel(st: AgentStatus | undefined): string {
   }
 }
 
-function planStateLabel(s: string): string {
-  return s === "DRAFT" ? "草稿，等你确认" : s === "CURRENT" ? "当前版本" : s === "FINAL" ? "已定稿" : "已取代";
+function planStateShort(s: string): string {
+  return s === "DRAFT" ? "草稿" : s === "CURRENT" ? "当前" : s === "FINAL" ? "定稿" : "已取代";
 }
+
+/** 「补充一句」：打开议题后把光标放进输入框 */
+function focusComposerSoon() {
+  setTimeout(() => document.getElementById("composer")?.focus(), 60);
+}
+
+/** 手机宽度（和 CSS 的 720px 断点一致） */
+const narrow = () => typeof window !== "undefined" && window.matchMedia?.("(max-width: 720px)").matches === true;

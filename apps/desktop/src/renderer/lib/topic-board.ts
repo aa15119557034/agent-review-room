@@ -57,6 +57,41 @@ export interface TopicStatus {
   todos: TodoItem[];
   /** 排序用：最近一次动静 */
   lastActivity: string;
+  /**
+   * 正在答的这一轮（RUNNING / PAUSED）：每位收件人答到哪了，以及这一轮的 id。
+   * 手机议题卡片上显示「C酱 已答 · 汐 回答中」和「暂停 / 补充一句」（C-33b 第 2 次，草案「讨论室」）
+   */
+  live?: { roundId: string; paused: boolean; people: TopicPerson[] };
+}
+
+export interface TopicPerson {
+  agent: string;
+  state: "answered" | "running" | "waiting" | "stopped" | "missed";
+  /** 替补代答时，实际在答的人 */
+  by?: string;
+}
+
+/** 每位收件人最近一次（非汇总、没被取代的）回答的结局 */
+export function roundPeople(r: Round, turns: readonly Turn[]): TopicPerson[] {
+  const mine = turns.filter((t) => t.roundId === r.id && !t.isSummary);
+  // 替补代答的 Turn 归到被替补的人名下（onBehalfOf）
+  const owner = (t: Turn) => t.onBehalfOf ?? t.agent;
+  const agents = r.recipients?.length ? r.recipients : [...new Set(mine.map(owner))];
+  return agents.map((agent) => {
+    const t = mine
+      .filter((x) => owner(x) === agent && !x.supersededBy)
+      .sort((a, b) => (a.createdAt === b.createdAt ? (a.id < b.id ? 1 : -1) : a.createdAt < b.createdAt ? 1 : -1))[0];
+    const state: TopicPerson["state"] = !t || t.outcome === "pending"
+      ? "waiting"
+      : t.outcome === "answered"
+        ? "answered"
+        : t.outcome === "running"
+          ? "running"
+          : t.outcome === "paused" || t.outcome === "interrupted"
+            ? "stopped"
+            : "missed";
+    return { agent, state, ...(t && t.agent !== agent ? { by: t.agent } : {}) };
+  });
 }
 
 const OPEN: readonly Round["state"][] = ["DRAFT", "RUNNING", "PAUSED", "AWAITING_SUMMARY", "SUMMARIZING"];
@@ -133,7 +168,12 @@ export function topicStatus(
 
   if (todos.length > 0) return { group: "todo", line: todos[0]!.label, todos, lastActivity };
 
-  if (open) return { group: "active", line: openLine(open, openTurns, name), todos, lastActivity };
+  if (open) {
+    const live = open.state === "RUNNING" || open.state === "PAUSED"
+      ? { roundId: open.id, paused: open.state === "PAUSED", people: roundPeople(open, openTurns) }
+      : undefined;
+    return { group: "active", line: openLine(open, openTurns, name), todos, lastActivity, ...(live ? { live } : {}) };
+  }
 
   if (plan?.state === "FINAL") return { group: "final", line: `v${plan.version} 已定稿`, todos, lastActivity };
   if (plan?.state === "CURRENT") {

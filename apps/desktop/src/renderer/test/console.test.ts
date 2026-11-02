@@ -22,6 +22,7 @@ import {
   activityTags,
   activityTitle,
   appendRecent,
+  groupActivity,
   applyActivityEvent,
   mergeFirstPage,
   quotaView,
@@ -215,6 +216,15 @@ describe("console state", () => {
       const x: AgentActivityItem = { kind: "chat", conversation: conv, slot: slot(3, o, extra), preview: null };
       assert.ok(activityOutcome(x).label, o);
     }
+  });
+
+  it("history groups by topic / conversation, newest group first, order kept (C-33b)", () => {
+    const d = (n: number): AgentActivityItem => ({ kind: "discussion", projectId: project.id, projectName: project.name, roundId: round.id, roundIndex: n, turn: turn(n, "claude", "answered"), preview: null });
+    const c = (n: number): AgentActivityItem => ({ kind: "chat", conversation: conv, slot: slot(n, "answered"), preview: null });
+    const g = groupActivity([c(9), d(8), c(7), d(6)], (a) => a);
+    assert.deepEqual(g.map((x) => [x.kind, x.items.length]), [[conv.kind, 2], ["discussion", 2]]);
+    assert.equal(g[1]!.title, "数据库写入路径");
+    assert.deepEqual(g[0]!.items, [c(9), c(7)]);
   });
 
   it("quota panel follows quotaState; unknown shows no numbers", () => {

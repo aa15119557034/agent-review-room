@@ -233,3 +233,39 @@ describe("discussion tab against the mock (C-38 acceptance)", () => {
     await until(() => st(store.get(), b.data.id).group === "todo");
   });
 });
+
+describe("topic card: who has answered in the running round (C-33b)", () => {
+  it("lists each recipient's latest non-summary answer; paused rounds keep the list", () => {
+    const r = { ...round("RUNNING"), recipients: ["claude", "deepseek", "codex"] } as Round;
+    const s = status({
+      rounds: [r],
+      turns: [turn("claude", "answered"), turn("deepseek", "running"), turn("codex", "failed")],
+    });
+    assert.equal(s.group, "active");
+    assert.deepEqual(s.live?.people, [
+      { agent: "claude", state: "answered" },
+      { agent: "deepseek", state: "running" },
+      { agent: "codex", state: "missed" },
+    ]);
+    assert.equal(s.live?.paused, false);
+    const p = status({ rounds: [{ ...r, state: "PAUSED" } as Round], turns: [] });
+    assert.equal(p.live?.paused, true);
+    assert.deepEqual(p.live?.people.map((x) => x.state), ["waiting", "waiting", "waiting"]);
+  });
+
+  it("a substitute's answer counts for the absent person; paused turns read as stopped, pending as waiting", () => {
+    const r = { ...round("PAUSED"), recipients: ["claude", "deepseek", "codex"] } as Round;
+    const sub = { ...turn("deepseek", "answered"), id: "turn_sub", onBehalfOf: "codex" } as Turn;
+    const s = status({ rounds: [r], turns: [turn("claude", "paused"), turn("deepseek", "pending"), sub] });
+    assert.deepEqual(s.live?.people, [
+      { agent: "claude", state: "stopped" },
+      { agent: "deepseek", state: "waiting" },
+      { agent: "codex", state: "answered", by: "deepseek" },
+    ]);
+  });
+
+  it("no live list once the round waits for a summary", () => {
+    const s = status({ rounds: [round("SUMMARIZING")], turns: [turn("claude", "running", true)] });
+    assert.equal(s.live, undefined);
+  });
+});

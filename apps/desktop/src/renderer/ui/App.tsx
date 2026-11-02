@@ -5,7 +5,7 @@ import { SourceStep } from "./SourceStep";
 import { FragmentPicker, PromptStep } from "./PromptStep";
 import { ResultStep, RunList } from "./ResultStep";
 import { SettingsView } from "./SettingsView";
-import { DiscussionBadge, DiscussionView, QuotaChips } from "./discussion/DiscussionView";
+import { DiscussionBadge, DiscussionView } from "./discussion/DiscussionView";
 import { ChatView } from "./chat/ChatView";
 import { ConsoleView } from "./ConsoleView";
 
@@ -198,8 +198,8 @@ function TopHeader() {
   const status = useAppState((s) => s.status);
   const view = useAppState((s) => s.view);
   const isMock = useIsMock();
-  // C-33b 收一收（江浩「界面还是太杂了」）：聊天、秘书页不要顶上那一行，标题在各自面板里
-  if (view === "chat" || view === "console") return null;
+  // C-33b 收一收（江浩「界面还是太杂了」）：聊天、讨论室、秘书页不要顶上那一行，标题在各自面板里
+  if (view === "chat" || view === "console" || view === "discussion") return null;
   return (
     <header className="topbar">
       <span className="wordmark">Agent 评审室</span>
@@ -209,7 +209,6 @@ function TopHeader() {
           演示数据
         </span>
       )}
-      {view === "discussion" && <QuotaChips />}
       {(view === "desk" || view === "settings") && status && (
         <span className="reviewer-status" data-ok={status.reviewerConfigured}>
           Reviewer：{status.reviewerConfigured ? status.reviewerAgent : "未设置节点"}

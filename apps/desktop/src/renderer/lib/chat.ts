@@ -449,6 +449,7 @@ export function mentionsFromText(text: string, members: readonly string[], name:
 /**
  * C-33b 草案里名字后面的身份（「C酱 · 首席秘书」）。契约里没有单独的字段，从讨论室人设里认「江浩的××秘书」
  * 这类说法；认不出就不显示，不猜。
+ * 这是启发式，只用于显示（名字后缀、单聊副标题）；别的逻辑不要依赖它（汐 #174）。
  */
 export function agentTitle(roleNote: string): string | null {
   const m = /的([\u4e00-\u9fa5]{1,4}秘书)/.exec(roleNote);
