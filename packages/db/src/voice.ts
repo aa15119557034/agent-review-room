@@ -140,7 +140,3 @@ export function markVoiceFailed(db: SqliteDatabase, audioRef: string, error: str
   ).run(message, audioRef);
   return getVoiceRecording(db, audioRef) as VoiceRecording;
 }
-
-
-
-

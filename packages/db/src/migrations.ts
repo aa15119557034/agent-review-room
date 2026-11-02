@@ -170,8 +170,13 @@ export const MIGRATIONS: readonly Migration[] = [
   {
     version: 19,
     name: "audio-refs-webm",
+    // 重建表要先 DROP 旧的 audio_refs；speech_clips.audio_ref 指着它，外键开着就会「立即约束」失败（C酱 #137）
+    disableForeignKeys: true,
     up: (db) => {
       db.exec(SCHEMA_V19);
+      // 关外键期间重建，迁完自己验一遍：有坏数据就别放行
+      const broken = db.prepare("PRAGMA foreign_key_check").all();
+      if (broken.length > 0) throw new Error("v19 重建 audio_refs 之后有外键不一致：" + JSON.stringify(broken).slice(0, 500));
     },
   },
 ];
