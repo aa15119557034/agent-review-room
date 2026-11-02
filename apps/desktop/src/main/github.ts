@@ -122,7 +122,8 @@ export class GithubSyncService {
         controller.abort();
         reject(new Error("github request timed out"));
       }, this.#requestTimeoutMs);
-      if (typeof timer.unref === "function") timer.unref();
+      // 不 unref：#187 的超时测试里，这个 timer 是唯一让 event loop 活着的东西；
+      // 它会在 finally 里 clearTimeout，不会拖住进程正常退出
     });
     try {
       return await Promise.race([this.#transport({ ...input, signal: controller.signal }), timeout]);
@@ -154,6 +155,8 @@ export class GithubSyncService {
       if (error instanceof SettingsError) throw new GithubError("internal", error.message);
       throw error;
     }
+    // #187（C酱 更正）：配置成功切换时版本 +1；旧版本的检查 / 推送看到版本变了就作废
+    this.#generation += 1;
     updateGithubSyncState(this.#db, { private: null, lastError: null, lastErrorMessage: null });
     // #181 评审第 3 条：第一次设好仓库（或换了仓库）时，把已有的笔记最新版各排一条
     if (command.repo !== null && command.repo !== previousRepo) {
@@ -318,17 +321,17 @@ export class GithubSyncService {
           });
           if (generation !== this.#generation) return;
           if (put.status === 409) {
-            markGithubPushFailed(this.#db, item.path, item.updated_at, "conflict");
+            markGithubPushFailed(this.#db, item.path, item.updated_at, item.content, "conflict");
             failed = true;
             continue;
           }
           if (put.status < 200 || put.status >= 300) throw new GithubPushError(put.status, "put");
           // #187 必须改 2：只删「这次推出去的那一版」；等待期间存的新版留着，下一轮推
-          removeGithubPush(this.#db, item.path, item.updated_at);
+          removeGithubPush(this.#db, item.path, item.updated_at, item.content);
           updateGithubSyncState(this.#db, { lastPushedAt: this.#now(), lastError: null, lastErrorMessage: null });
           pushed += 1;
         } catch (error) {
-          markGithubPushFailed(this.#db, item.path, item.updated_at, error instanceof Error ? error.message : String(error));
+          markGithubPushFailed(this.#db, item.path, item.updated_at, item.content, error instanceof Error ? error.message : String(error));
           if (error instanceof GithubPushError && (error.status === 401 || error.status === 403)) {
             updateGithubSyncState(this.#db, { lastError: "unauthorized", lastErrorMessage: "Token 没有权限（或已失效）" });
           } else if (error instanceof GithubPushError && error.status === 404) {

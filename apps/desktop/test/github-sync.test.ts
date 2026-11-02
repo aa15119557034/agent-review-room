@@ -65,12 +65,14 @@ function harness(options: { private?: boolean; hangPut?: boolean; requestTimeout
     calls.push({ method: input.method, url: input.url, body: input.body });
     if (!online) throw new Error("ECONNRESET");
     if (input.method === "GET" && /^https:\/\/api\.github\.com\/repos\/[^/]+\/[^/]+$/.test(input.url)) {
+      // 放行前就把「这个仓库是不是私有」记下来：闸门期间切配置，旧响应回来仍是旧值
+      const isPrivate = repoPrivate;
       if (repoGate !== null) {
         const gate = repoGate;
         repoGate = null;
         await gate;
       }
-      return { status: 200, json: { private: repoPrivate } };
+      return { status: 200, json: { private: isPrivate } };
     }
     if (input.method === "GET" && input.url.includes("/contents/")) {
       const sha = files.get(input.url);
@@ -341,6 +343,25 @@ describe("github sync (D-46c)", () => {
     }
   });
 
+  it("#187 检查期间关掉同步：旧响应不写状态、不推（generation 必须递增）", async () => {
+    const h = harness();
+    try {
+      h.enqueue();
+      const release = h.gateRepo();
+      await h.github.update({ repo: "me/notes", token: TOKEN });
+      await h.github.update({ repo: null });
+      release();
+      await new Promise((resolve) => setTimeout(resolve, 30));
+      const status = h.github.status();
+      assert.equal(status.repo, null);
+      assert.equal(status.private, null, "旧响应没有把状态写成 true");
+      assert.equal(h.calls.filter((call) => call.method === "PUT").length, 0, "没有推任何东西");
+      assert.equal(countGithubQueue(h.db), 1, "队列保留");
+    } finally {
+      h.db.close();
+    }
+  });
+
   it("#187 推送期间同路径又存了一版：旧版成功不删新版，下一轮推新版", async () => {
     const h = harness();
     try {
@@ -350,7 +371,7 @@ describe("github sync (D-46c)", () => {
       const release = h.gatePut();
       const pushing = h.github.pushNow();
       await until(() => h.calls.filter((call) => call.method === "PUT").length === 1);
-      h.enqueue("v2", "笔记 v2", "2026-11-02T00:00:01.000Z");
+      h.enqueue("v2", "笔记 v2");
       release();
       await pushing;
       const puts = h.calls.filter((call) => call.method === "PUT");
