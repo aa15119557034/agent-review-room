@@ -22,6 +22,7 @@ import {
   chatSendIntentJson,
   extractMediaIntent,
   isExcludedFromContext,
+  type AgentChatMessage,
   type AgentProfile,
   type AttachmentManifestEntry,
   type ChatContent,
@@ -32,7 +33,13 @@ import {
   type ChatHistorySummary,
   type ChatMessage,
   type ChatWindow,
+  type DrawIntent,
   type FailureReason,
+  type ImmersiveDeferral,
+  type ImmersiveSettings,
+  type ImmersiveUsage,
+  type MediaIntent,
+  type MediaScope,
   type ChatWindowDraft,
   type ChatWindowStatus,
   type ProjectNote,
@@ -98,6 +105,9 @@ import {
   retractChatMessage,
   countSummariesInWindow,
   currentChatWindow,
+  getImmersiveSettings,
+  immersiveUsage,
+  upsertImmersiveSettings,
   getChatWindowDraft,
   insertChatWindow,
   insertChatWindowDraft,
@@ -191,6 +201,11 @@ export interface ChatServiceDeps {
   readonly cancelMediaJobs?: (messageIds: readonly string[]) => Promise<void>;
   /** D-37b：那条消息开了「用语音回」时，回答落库后给它排语音合成；没传 = 不自动合成 */
   readonly speakAnswer?: (source: MediaSource) => Promise<unknown>;
+  /** D-39：沉浸模式自动画的图 / 自动语音（authorization = immersive）；没传 = 不自动执行 */
+  readonly drawMedia?: (source: MediaSource, draw: DrawIntent, intentHash: string) => Promise<unknown>;
+  readonly speakMedia?: (source: MediaSource, intentHash: string) => Promise<unknown>;
+  /** D-39：关掉沉浸模式时取消这个会话所有媒体任务（cancelReason = immersive_off） */
+  readonly stopMedia?: (scope: MediaScope) => Promise<unknown>;
   readonly now?: () => string;
   readonly idleTimeoutMs?: number;
   readonly totalTimeoutMs?: number;
@@ -1061,11 +1076,18 @@ export class ChatService {
                 );
               }
               const extracted = this.#deps.notes?.extract(parsed.data.text) ?? { text: parsed.data.text, content: null, rejected: null };
+              // D-39：沉浸模式开着时，在写回答的这一刻定下「自动执行哪几项、哪几项退回」
+              const immersive = this.#immersivePlan(run.conversationId, media.intent);
               const finished = await finish({
                 kind: "answered",
                 text: extracted.text,
                 ...(media.intent === null ? {} : { mediaIntent: media.intent }),
+                ...(immersive?.deferred === undefined ? {} : { immersiveDeferred: immersive.deferred }),
               });
+              // 回答真的落库之后才开始自动任务（source 用落库的消息 id）
+              if (finished.message !== null && immersive !== null) {
+                this.#startImmersive(finished.message, media.intent, immersive);
+              }
               // D-46a：回答**真的落库了**（不是迟到 / 被重试作废的结果）才记笔记；失败只记日志，不影响回答
               if (finished.message !== null && this.#deps.notes !== undefined) {
                 const scope = { kind: "conversation" as const, conversationId: run.conversationId };
@@ -1128,6 +1150,86 @@ export class ChatService {
     } finally {
       this.#active.delete(run.id);
     }
+  }
+
+  // ---------------------------------------------------------------- 沉浸模式（D-39）
+
+  /** 沉浸模式开着才返回计划；退回原因在写回答的同一个事务里落库 */
+  #immersivePlan(
+    conversationId: string,
+    intent: MediaIntent | null,
+  ): { draw: boolean; speak: boolean; deferred?: ImmersiveDeferral } | null {
+    if (intent === null) return null;
+    const settings = getImmersiveSettings(this.#deps.db, conversationId);
+    if (!settings.enabled) return null;
+    const usage = immersiveUsage(this.#deps.db, conversationId, this.#now());
+    let draw = false;
+    let speak = false;
+    const deferred: ImmersiveDeferral = {};
+    if (intent.draw !== undefined) {
+      if (usage.drawsLastHour >= settings.drawsPerHour) deferred.draw = "hourly_limit";
+      else draw = true;
+    }
+    if (intent.speak === true) {
+      if (usage.voiceClipsLastHour >= settings.voiceClipsPerHour) deferred.speak = "hourly_limit";
+      else speak = true;
+    }
+    return { draw, speak, ...(Object.keys(deferred).length === 0 ? {} : { deferred }) };
+  }
+
+  /** 回答落库之后才建自动任务；失败只记日志，不影响回答 */
+  #startImmersive(
+    message: AgentChatMessage,
+    intent: MediaIntent | null,
+    plan: { draw: boolean; speak: boolean },
+  ): void {
+    if (intent === null) return;
+    const source: MediaSource = {
+      kind: "chat",
+      conversationId: message.conversationId,
+      messageId: message.id,
+      agent: message.agent,
+    };
+    if (plan.draw && intent.draw !== undefined) {
+      const hash = sha256Hex(JSON.stringify(intent.draw));
+      void Promise.resolve(this.#deps.drawMedia?.(source, intent.draw, hash)).catch((error: unknown) => {
+        console.warn("[chat] 沉浸模式自动画图没排上：", error instanceof Error ? error.message : String(error));
+      });
+    }
+    if (plan.speak && intent.speak === true) {
+      const hash = sha256Hex("speak");
+      void Promise.resolve(this.#deps.speakMedia?.(source, hash)).catch((error: unknown) => {
+        console.warn("[chat] 沉浸模式自动语音没排上：", error instanceof Error ? error.message : String(error));
+      });
+    }
+  }
+
+  /** immersive.get：设置 + 最近 60 分钟的用量 */
+  immersive(conversationId: string): { settings: ImmersiveSettings; usage: ImmersiveUsage } {
+    const conversation = getConversation(this.#deps.db, conversationId);
+    if (conversation === null) throw new ChatError("not_found", "会话不存在");
+    return {
+      settings: getImmersiveSettings(this.#deps.db, conversationId),
+      usage: immersiveUsage(this.#deps.db, conversationId, this.#now()),
+    };
+  }
+
+  /** immersive.update：从开到关时取消这个会话所有媒体任务（cancelReason = immersive_off） */
+  async updateImmersive(conversationId: string, settings: ImmersiveSettings): Promise<ImmersiveSettings> {
+    const conversation = getConversation(this.#deps.db, conversationId);
+    if (conversation === null) throw new ChatError("not_found", "会话不存在");
+    const before = getImmersiveSettings(this.#deps.db, conversationId);
+    await writeTransaction(this.#deps.db, this.#deps.queue, () =>
+      upsertImmersiveSettings(this.#deps.db, conversationId, settings, this.#now()),
+    );
+    if (before.enabled && !settings.enabled) {
+      try {
+        await this.#deps.stopMedia?.({ kind: "chat", conversationId });
+      } catch (error) {
+        console.warn("[chat] 关沉浸模式时取消媒体任务失败：", error instanceof Error ? error.message : String(error));
+      }
+    }
+    return settings;
   }
 
   // ---------------------------------------------------------------- 历史摘要（D-45）

@@ -7,6 +7,7 @@ import { after, describe, it } from "node:test";
 import {
   insertChatMessage,
   listLatestProjectNotes,
+  upsertImmersiveSettings,
   insertChatRun,
   insertChatSlot,
   insertChatSnapshot,
@@ -132,6 +133,8 @@ interface Harness {
   cancelledMedia: string[][];
   /** C-42a：每次 adapter.run 收到的输入（看带没带图、带的是什么） */
   runInputs: { agent: string; input: { attachments?: unknown; imageSlot?: unknown; content: string } }[];
+  /** D-39：沉浸模式自动排的任务（测试记下来看） */
+  mediaCalls: { kind: "draw" | "speak" | "stop"; source?: unknown; intentHash?: string; scope?: unknown }[];
 }
 
 async function makeHarness(
@@ -167,6 +170,7 @@ async function makeHarness(
   const cancelledMedia: string[][] = [];
   const imageBytes = options.imageBytes ?? new Map<string, Buffer>();
   const runInputs: Harness["runInputs"] = [];
+  const mediaCalls: Harness["mediaCalls"] = [];
   const speakRequests: Harness["speakRequests"] = [];
   settings.upsertNode("controller-local", { baseUrl: NODE_URL, token: "t".repeat(40) });
   await repo.upsertNodeRow({ id: "controller-local", label: "主控机", baseUrl: NODE_URL });
@@ -200,6 +204,16 @@ async function makeHarness(
     notes: new NotesService({ db, queue, emit: (event) => events.push(ControlEvent.parse(event)) }),
     readFileText: (ref) => fileTexts.get(ref) ?? null,
     readImage: (ref) => imageBytes.get(ref) ?? null,
+    drawMedia: async (source, draw, intentHash) => {
+      mediaCalls.push({ kind: "draw", source, intentHash });
+      void draw;
+    },
+    speakMedia: async (source, intentHash) => {
+      mediaCalls.push({ kind: "speak", source, intentHash });
+    },
+    stopMedia: async (scope) => {
+      mediaCalls.push({ kind: "stop", scope });
+    },
     speakAnswer: async (source) => {
       speakRequests.push({ messageId: source.messageId, agent: source.agent });
     },
@@ -268,7 +282,7 @@ async function makeHarness(
     members: { kind: "direct", agent: "deepseek" },
     title: null,
   } as never);
-  return { chat, repo, db, events, conversationId: conversation.id, targets, fileTexts, cancelledMedia, runInputs, speakRequests };
+  return { chat, repo, db, events, conversationId: conversation.id, targets, fileTexts, cancelledMedia, runInputs, speakRequests, mediaCalls };
 }
 
 const userMessageId = (n: number): string => "cmsg_" + String(n).padStart(26, "0");
@@ -1954,6 +1968,89 @@ describe("chat history summary wiring (D-45)", () => {
         .prepare("SELECT finished_at FROM chat_runs WHERE purpose = 'reply' ORDER BY created_at DESC LIMIT 1")
         .get() as { finished_at: string };
       assert.equal(run.finished_at, fixed, "Run 的结束时间也用同一个时钟");
+    } finally {
+      h.db.close();
+    }
+  });
+});
+// ================================================================ D-39 沉浸模式
+
+describe("immersive (D-39)", () => {
+  const mediaScript = (text: string): Script => [
+    {
+      type: "message_complete",
+      text: JSON.stringify({ kind: "reply", text, draw: { prompt: "小鲸鱼", size: "1024x1024" }, speak: true }),
+    },
+    { type: "completed" },
+  ];
+  const replyOf = (h: Harness, id: string) => {
+    const replyId = listChatSlotsForMessage(h.db, id)[0]!.replyMessageId!;
+    return getChatMessage(h.db, replyId)!;
+  };
+
+  it("关着：媒体意图照样存下来，但不自动执行、没有退回原因", async () => {
+    const h = await makeHarness({ scripts: { deepseek: mediaScript("好呀") } });
+    try {
+      await h.chat.send(send(h.conversationId, userMessageId(960), "画一张吗"));
+      await settle(h.chat);
+      const reply = replyOf(h, userMessageId(960));
+      assert.ok(reply.sender === "agent");
+      assert.deepEqual(reply.mediaIntent, { draw: { prompt: "小鲸鱼", size: "1024x1024" }, speak: true });
+      assert.equal(reply.immersiveDeferred, undefined);
+      assert.deepEqual(h.mediaCalls, []);
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("开着：在名额内自动排画图和语音，没有退回原因", async () => {
+    const h = await makeHarness({ scripts: { deepseek: mediaScript("好呀") } });
+    try {
+      upsertImmersiveSettings(h.db, h.conversationId, {
+        enabled: true,
+        autoDrawUsesSubscription: true,
+        drawsPerHour: 6,
+        voiceClipsPerHour: 30,
+      }, NOW);
+      await h.chat.send(send(h.conversationId, userMessageId(961), "画一张吗"));
+      await settle(h.chat);
+      const reply = replyOf(h, userMessageId(961));
+      assert.equal(reply.immersiveDeferred, undefined);
+      assert.deepEqual(h.mediaCalls.map((call) => call.kind).sort(), ["draw", "speak"]);
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("名额用完：退回 hourly_limit，不自动排；说话和画图各自算", async () => {
+    const h = await makeHarness({ scripts: { deepseek: mediaScript("好呀") } });
+    try {
+      upsertImmersiveSettings(h.db, h.conversationId, {
+        enabled: true,
+        autoDrawUsesSubscription: true,
+        drawsPerHour: 0,
+        voiceClipsPerHour: 0,
+      }, NOW);
+      await h.chat.send(send(h.conversationId, userMessageId(962), "画一张吗"));
+      await settle(h.chat);
+      const reply = replyOf(h, userMessageId(962));
+      assert.deepEqual(reply.immersiveDeferred, { draw: "hourly_limit", speak: "hourly_limit" });
+      assert.deepEqual(h.mediaCalls, []);
+    } finally {
+      h.db.close();
+    }
+  });
+
+  it("从开到关：取消这个会话的媒体任务（cancelReason = immersive_off）", async () => {
+    const h = await makeHarness();
+    try {
+      const on = { enabled: true, autoDrawUsesSubscription: true, drawsPerHour: 6, voiceClipsPerHour: 30 };
+      await h.chat.updateImmersive(h.conversationId, on);
+      assert.deepEqual(h.mediaCalls, []);
+      await h.chat.updateImmersive(h.conversationId, { ...on, enabled: false });
+      assert.equal(h.mediaCalls.length, 1);
+      assert.equal(h.mediaCalls[0]!.kind, "stop");
+      assert.deepEqual(h.mediaCalls[0]!.scope, { kind: "chat", conversationId: h.conversationId });
     } finally {
       h.db.close();
     }

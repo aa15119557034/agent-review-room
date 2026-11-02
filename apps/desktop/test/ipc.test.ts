@@ -93,7 +93,6 @@ describe("not-yet-launched commands and queries", () => {
   it("rejects commands that are not wired yet with a clear message", async () => {
     const { dispatcher } = makeDispatcher();
     const commands = [
-      { type: "immersive.update", conversationId: CONV, settings: { enabled: false, autoDrawUsesSubscription: true, drawsPerHour: 3, voiceClipsPerHour: 2 } },
       { type: "image.pick", purpose: "avatar" },
       { type: "appearance.update", userDisplayName: "江浩" },
     ];
@@ -116,11 +115,10 @@ describe("not-yet-launched commands and queries", () => {
     assert.equal(voices.ok, true);
     assert.deepEqual(voices.ok === true ? voices.data : null, []);
 
+    // D-39：沉浸模式接到 ChatService；这个 dispatcher 没装聊天服务时明确报错
     const immersive = await dispatcher.handleQuery({ type: "immersive.get", conversationId: CONV });
-    assert.equal(immersive.ok, true);
-    const data = (immersive as { data: { settings: { enabled: boolean }; usage: { drawsLastHour: number } } }).data;
-    assert.equal(data.settings.enabled, false);
-    assert.equal(data.usage.drawsLastHour, 0);
+    assert.equal(immersive.ok, false);
+    assert.equal(immersive.ok === false ? immersive.error : null, "internal");
   });
 });
 describe("phase 0 flow through the dispatcher", () => {

@@ -421,7 +421,7 @@ export function createDispatcher(deps: IpcDeps) {
       case "speech.play":
         return jobsService().play(command.source);
       case "immersive.update":
-        throw new ChatError("validation_failed", "沉浸模式还没上线（D-39）");
+        return chatService().updateImmersive(command.conversationId, command.settings);
       case "image.pick":
         throw new ChatError("validation_failed", "头像 / 背景选图还没上线（D-39）");
       case "appearance.update":
@@ -575,10 +575,7 @@ export function createDispatcher(deps: IpcDeps) {
       case "voices.list":
         return deps.voices?.() ?? [];
       case "immersive.get":
-        return {
-          settings: DEFAULT_IMMERSIVE_SETTINGS,
-          usage: { asOf: new Date().toISOString(), drawsLastHour: 0, voiceClipsLastHour: 0 },
-        };
+        return chatService().immersive(query.conversationId);
 
       // D-38a：画图任务
       case "draw.preview":

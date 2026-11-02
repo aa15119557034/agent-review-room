@@ -1529,28 +1529,27 @@ describe("chat media intent (C-42e / D-31d)", () => {
         null,
       );
 
-      // immersiveDeferred 的列留给 D-39：现在传会明确报错，不会悄悄丢掉
+      // D-39：immersiveDeferred 和媒体意图一起落库，读回来是同一份
       const third = prepare();
-      assert.throws(
-        () =>
-          insertChatMessage(db, {
-            message: {
-              id: newChatMessageId(),
-              conversationId: conversation.id,
-              createdAt: at(3),
-              sender: "agent",
-              agent: "deepseek",
-              text: "好",
-              inReplyTo: third.question.id,
-              slotId: third.slot.id,
-              runId: third.runId,
-              memoryEntriesUsed: null,
-              mediaIntent: { draw: { prompt: "小鲸鱼", size: "1024x1024" } },
-              immersiveDeferred: { draw: "hourly_limit" },
-            },
-          }),
-        /D-39/,
-      );
+      const deferred = {
+        id: newChatMessageId(),
+        conversationId: conversation.id,
+        createdAt: at(3),
+        sender: "agent" as const,
+        agent: "deepseek",
+        text: "好",
+        inReplyTo: third.question.id,
+        slotId: third.slot.id,
+        runId: third.runId,
+        memoryEntriesUsed: null,
+        mediaIntent: { draw: { prompt: "小鲸鱼", size: "1024x1024" as const } },
+        immersiveDeferred: { draw: "hourly_limit" as const },
+      };
+      insertChatMessage(db, { message: deferred });
+      const stored = getChatMessage(db, deferred.id);
+      assert.ok(stored !== null && stored.sender === "agent");
+      assert.deepEqual(stored.immersiveDeferred, { draw: "hourly_limit" });
+      assert.deepEqual(stored.mediaIntent, { draw: { prompt: "小鲸鱼", size: "1024x1024" } });
     } finally {
       db.close();
     }

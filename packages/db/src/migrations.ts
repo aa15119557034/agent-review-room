@@ -20,6 +20,7 @@ import { SCHEMA_V19 } from "./schema-v19";
 import { SCHEMA_V20 } from "./schema-v20";
 import { SCHEMA_V21 } from "./schema-v21";
 import { SCHEMA_V22 } from "./schema-v22";
+import { SCHEMA_V23 } from "./schema-v23";
 
 /**
  * 迁移（D-02）：用 PRAGMA user_version 记版本，每个迁移在自己的事务里跑。
@@ -205,6 +206,13 @@ export const MIGRATIONS: readonly Migration[] = [
     name: "github-sync",
     up: (db) => {
       db.exec(SCHEMA_V22);
+    },
+  },
+  {
+    version: 23,
+    name: "immersive",
+    up: (db) => {
+      db.exec(SCHEMA_V23);
     },
   },
 ];

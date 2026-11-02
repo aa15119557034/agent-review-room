@@ -242,6 +242,19 @@ async function bootstrap(): Promise<void> {
     cancelMediaJobs: async (messageIds) => {
       await jobs.cancelBySourceMessageIds(messageIds);
     },
+    // D-39：沉浸模式的自动画图 / 自动语音（authorization = immersive）
+    drawMedia: async (source, draw, intentHash) => {
+      await jobs.start({ prompt: draw.prompt, size: draw.size, backend: "auto" }, source, false, {
+        authorization: "immersive",
+        intentHash,
+      });
+    },
+    speakMedia: async (source, intentHash) => {
+      await jobs.play(source, { authorization: "immersive", intentHash });
+    },
+    stopMedia: async (scope) => {
+      await jobs.stop(scope);
+    },
     // D-37b：「用语音回」的回答落库后自动排语音合成（命中缓存时任务立刻成功）
     speakAnswer: async (source) => {
       await jobs.play(source, { authorization: "reply_as_voice" });

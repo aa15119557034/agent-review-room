@@ -107,7 +107,13 @@ export class MediaJobsService {
    * - 同一个 source + 同样的 draw 已经有没结束的任务：返回那个，不重复建
    * - source 以存下来的消息为准：消息不存在 / 不在这个会话 / agent 对不上 → validation_failed
    */
-  async start(request: DrawRequest, source: MediaSource, confirmedOverThreshold: boolean): Promise<MediaJob> {
+  async start(
+    request: DrawRequest,
+    source: MediaSource,
+    confirmedOverThreshold: boolean,
+    options: { authorization?: "user_tap" | "immersive"; intentHash?: string } = {},
+  ): Promise<MediaJob> {
+    const authorization = options.authorization ?? "user_tap";
     if (request.backend === "codex") {
       throw new ChatError("validation_failed", "林离画图还没上线（D-38b），现在只能用本机");
     }
@@ -125,9 +131,9 @@ export class MediaJobsService {
       id: `mjob_${ulid()}`,
       kind: "draw",
       state: "queued",
-      authorization: "user_tap",
+      authorization,
       source,
-      intentHash: null,
+      intentHash: options.intentHash ?? null,
       draw: { ...request, backend: request.backend === "auto" ? "auto" : "comfyui" },
       route: null,
       remoteRunId: null,
@@ -157,7 +163,7 @@ export class MediaJobsService {
    */
   async play(
     source: MediaSource,
-    options: { authorization?: "user_play" | "reply_as_voice" } = {},
+    options: { authorization?: "user_play" | "reply_as_voice" | "immersive"; intentHash?: string } = {},
   ): Promise<{ cached: true; clip: SpeechClip } | { cached: false; job: MediaJob }> {
     const authorization = options.authorization ?? "user_play";
     if (source.kind !== "chat") throw new ChatError("validation_failed", "现在只支持播放聊天里的回答");
@@ -196,6 +202,7 @@ export class MediaJobsService {
     const cached = findSpeechClip(this.deps.db, key);
     // 手动播放：命中缓存直接给片段；「用语音回」自动合成时仍要建任务（界面按任务显示这条回答有没有语音），
     // 只是命中缓存的任务会立刻成功，不再调引擎
+    // 沉浸模式的自动语音：即使命中缓存也建任务（界面按任务显示这条回答有没有语音；任务会立刻成功）
     if (cached !== null && authorization === "user_play") return { cached: true, clip: cached };
 
     const pending = this.#speech;
@@ -214,7 +221,7 @@ export class MediaJobsService {
       state: "queued",
       authorization,
       source,
-      intentHash: null,
+      intentHash: options.intentHash ?? null,
       draw: null,
       route: null,
       remoteRunId: null,

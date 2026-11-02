@@ -13,6 +13,7 @@ export * from "./chat";
 export * from "./notes";
 export * from "./chat-windows";
 export * from "./github";
+export * from "./immersive";
 export * from "./audio";
 export * from "./media";
 export * from "./speech";
