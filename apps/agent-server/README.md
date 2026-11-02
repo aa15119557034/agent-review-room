@@ -196,7 +196,7 @@ pnpm --filter @room/agent-server run quota -- codex-discuss
   - 一个节点一个 Claude 账号时不用改；同一节点上有两个账号时给各自的 profile 配不同的 `"account"`
   - 这个 source 要求 profile 的 `parser` 是 `claude-stream-json`（启动时检查）
 - **DeepSeek**：`"quota": {"source": "deepseek-balance"}`（示例配置的 `deepseek-discuss` 已加）。读 `GET https://api.deepseek.com/user/balance`，有人民币用人民币，`total_balance` 原样当余额（字符串），订阅窗口为 `null`
-  - API Key 从环境变量 `DEEPSEEK_API_KEY` 读（可用 `apiKeyEnv` 改名），**必须在 `envAllowlist` 里**（启动时检查）；只放进请求头，不打印、不回传
+  - API Key 和跑 Run 用同一套环境：`DEEPSEEK_API_KEY`（可用 `apiKeyEnv` 改名）要么在 `envFiles` 里（安装脚本就是这么配的，每次现读文件），要么在 `envAllowlist` 里（启动时检查二者至少有一个）；只放进请求头，不打印、不回传
   - 2 秒读不到、HTTP 出错、没设 Key → 各项 `null`，原因记日志（日志里没有 Key）
   - 实测：`pnpm --filter @room/agent-server run quota -- deepseek-discuss`
 

@@ -4,6 +4,7 @@ import { CODEX_QUOTA_READ_TIMEOUT_MS, RemoteBalance, RemoteProfileQuota, type Re
 import type { Profile } from "./config";
 import { killTree, spawnDetached } from "./process-tree";
 import { planSpawn } from "./win-command";
+import { buildProfileEnv } from "./profile-env";
 
 /**
  * S-24：读 Codex 订阅额度（契约 C-42b 的 GET /v1/profiles/:profileId/quota，ADR-004 §3）。
@@ -13,7 +14,7 @@ import { planSpawn } from "./win-command";
  * - 整个过程（含启动）不超过 2 秒（CODEX_QUOTA_READ_TIMEOUT_MS）；超时、出错、没登录、
  *   字段缺失或对不上，相应各项报 null（「读不到」），不猜、不报 0
  * - 同一个 profile 同时只起一个进程：读到一半又来请求，就共用这一次的结果
- * - 环境变量只给 profile 的 envAllowlist（和跑 Run 一样），密钥不经过节点
+ * - 环境变量和跑 Run 一样（envAllowlist + env + envFiles，见 profile-env.ts）
  */
 
 /** 5 小时窗口和每周窗口的长度（分钟）。Codex 用 primary / secondary 两个槽，按长度认，不按位置猜 */
@@ -110,15 +111,6 @@ function errorText(e: unknown): string {
   return (isObj(e) && typeof e.message === "string" ? e.message : "error").slice(0, 200);
 }
 
-function buildEnv(profile: Profile): NodeJS.ProcessEnv {
-  const env: NodeJS.ProcessEnv = {};
-  for (const key of profile.envAllowlist) {
-    const v = process.env[key];
-    if (v !== undefined) env[key] = v;
-  }
-  return { ...env, ...profile.env };
-}
-
 export function readCodexQuota(profile: Profile, opts: QuotaReadOptions = {}): Promise<RemoteProfileQuota> {
   const timeoutMs = Math.min(opts.timeoutMs ?? CODEX_QUOTA_READ_TIMEOUT_MS, CODEX_QUOTA_READ_TIMEOUT_MS);
   const now = opts.now ?? (() => new Date());
@@ -139,11 +131,18 @@ export function readCodexQuota(profile: Profile, opts: QuotaReadOptions = {}): P
     };
     const timer = setTimeout(() => finish(unknownQuota(now()), `timed out after ${timeoutMs} ms`), timeoutMs);
 
+    let env: NodeJS.ProcessEnv;
+    try {
+      env = buildProfileEnv(profile);
+    } catch (err) {
+      finish(unknownQuota(now()), `env failed: ${errorText(err)}`);
+      return;
+    }
     try {
       const plan = planSpawn(profile.command, quota.args);
       child = spawn(plan.file, plan.args, {
         cwd: profile.cwd,
-        env: buildEnv(profile),
+        env,
         stdio: ["pipe", "pipe", "ignore"],
         detached: spawnDetached,
         windowsHide: true,
@@ -287,7 +286,14 @@ export async function readDeepSeekBalance(profile: Profile, opts: QuotaReadOptio
   const log = opts.log ?? ((m: string) => console.warn(m));
   const quota = profile.quota;
   if (quota?.source !== "deepseek-balance") return unknownQuota(now());
-  const key = profile.envAllowlist.includes(quota.apiKeyEnv) ? process.env[quota.apiKeyEnv] : undefined;
+  // 和跑 Run 同一个环境边界：安装脚本把 Key 放在 envFiles（林离 #163），也可能在 envAllowlist / env 里
+  let key: string | undefined;
+  try {
+    key = buildProfileEnv(profile)[quota.apiKeyEnv];
+  } catch (err) {
+    log(`[agent-server] quota read failed: ${errorText(err)}`);
+    return unknownQuota(now());
+  }
   if (!key) {
     log(`[agent-server] quota read failed: ${quota.apiKeyEnv} is not set`);
     return unknownQuota(now());

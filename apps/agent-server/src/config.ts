@@ -81,7 +81,7 @@ const Profile = z
     /**
      * S-24：这个 profile 的订阅额度怎么读（契约 C-42b 的 GET /v1/profiles/:profileId/quota）。
      * codex-app-server：用同一个 command 起 `codex app-server`（args 默认 ["app-server"]），读 account/rateLimits/read，
-     * 2 秒读不到报「未知」。环境变量和跑 Run 一样只给 envAllowlist，Codex 的登录在 CODEX_HOME 里，所以要放行它
+     * 2 秒读不到报「未知」。环境变量和跑 Run 一样（envAllowlist / env / envFiles），Codex 的登录在 CODEX_HOME 里，所以要放行它
      */
     quota: z
       .discriminatedUnion("source", [
@@ -104,7 +104,7 @@ const Profile = z
           .strict(),
         /**
          * S-21：DeepSeek 按量计费，读余额 GET <baseUrl>/user/balance。API Key 从环境变量 apiKeyEnv 读
-         * （必须在 envAllowlist 里，和跑 Run 一样），不打印、不回传；2 秒读不到报「未知」
+         * （和跑 Run 一样：envFiles 里配文件，或放行进 envAllowlist；不要写进 env），不打印、不回传；2 秒读不到报「未知」
          */
         z
           .object({
@@ -304,8 +304,8 @@ export function imageConfigProblems(p: Profile): string[] {
   if (p.quota?.source === "claude-stream" && p.parser !== "claude-stream-json") {
     problems.push("quota.source 为 claude-stream 时 parser 要是 claude-stream-json（额度从它的输出里读）");
   }
-  if (p.quota?.source === "deepseek-balance" && !p.envAllowlist.includes(p.quota.apiKeyEnv)) {
-    problems.push(`quota.source 为 deepseek-balance 时 envAllowlist 要包含 ${p.quota.apiKeyEnv}`);
+  if (p.quota?.source === "deepseek-balance" && !p.envAllowlist.includes(p.quota.apiKeyEnv) && !(p.quota.apiKeyEnv in p.envFiles)) {
+    problems.push(`quota.source 为 deepseek-balance 时 envAllowlist 或 envFiles 要包含 ${p.quota.apiKeyEnv}`);
   }
   if (p.imageRun && p.images) problems.push("画图 profile 不收图（image Run 不能带附件），不要同时配 images");
   if (p.imageRun && p.memory) problems.push("画图 profile 不读记忆");
