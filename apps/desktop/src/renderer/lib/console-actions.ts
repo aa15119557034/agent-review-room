@@ -2,7 +2,7 @@ import type { ControlEvent } from "@room/schemas";
 import { ControlFailure, type RoomClient } from "./client";
 import type { AppState } from "./state";
 import type { Store } from "./store";
-import { appendRecent, applyActivityEvent, type ConsoleState } from "./console";
+import { appendRecent, applyActivityEvent, mergeFirstPage, type ConsoleState } from "./console";
 
 /** 历史一页几条 */
 export const ACTIVITY_PAGE = 20;
@@ -26,6 +26,11 @@ export function createConsoleActions(
   let dirty = false;
   let loading = false;
   let reloadTimer: ReturnType<typeof setTimeout> | null = null;
+  /**
+   * 后端认不认识 agents.activity：null = 还没问过。只有**从没成功过**时的 validation_failed 才当成「还没接上」（D-44 之前）；
+   * 成功过一次以后的 validation_failed 是真的入参错误，照常提示（汐 #160）
+   */
+  let supported: boolean | null = null;
 
   async function loadActivity(agent: string) {
     const token = ++loadToken;
@@ -34,12 +39,17 @@ export function createConsoleActions(
     try {
       const page = await client.query({ type: "agents.activity", agent, limit: ACTIVITY_PAGE });
       if (token !== loadToken) return;
-      setConsole((c) => (c.agentId !== agent ? c : { ...c, activityAvailable: true, activity: { agent, ...page } }));
+      supported = true;
+      setConsole((c) =>
+        c.agentId !== agent ? c : { ...c, activityAvailable: true, activity: mergeFirstPage(c.activity, { agent, ...page }, ACTIVITY_PAGE) },
+      );
     } catch (err) {
       if (token !== loadToken) return;
       // D-44 之前的真实后端不认识这个查询：活动两栏显示「还没接上」，不弹错误
-      if (err instanceof ControlFailure && err.code === "validation_failed") setConsole((c) => ({ ...c, activityAvailable: false }));
-      else fail(err);
+      if (supported !== true && err instanceof ControlFailure && err.code === "validation_failed") {
+        supported = false;
+        setConsole((c) => ({ ...c, activityAvailable: false }));
+      } else fail(err);
     } finally {
       if (token === loadToken) {
         loading = false;

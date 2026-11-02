@@ -162,6 +162,7 @@ function QuotaMeter({ row }: { row: QuotaRow }) {
 
 function SubstitutePanel({ agent }: { agent: AgentProfile }) {
   const agents = useAppState((s) => s.disc.agents);
+  const status = useAppState((s) => s.disc.status);
   const actions = useActions();
   const [busy, setBusy] = useState(false);
   const options = substituteOptions(agents, agent.id);
@@ -182,12 +183,15 @@ function SubstitutePanel({ agent }: { agent: AgentProfile }) {
           <option value="">不找替补（记缺席）</option>
           {list.map((a) => (
             <option key={a.id} value={a.id}>
-              {a.displayName}{a.canDiscuss ? "" : "（现在不能参加讨论）"}
+              {a.displayName}
+              {!a.canDiscuss ? "（现在不能参加讨论）" : status[a.id] && status[a.id]!.availability !== "available" ? `（现在${AVAILABILITY_LABEL[status[a.id]!.availability]}）` : ""}
             </option>
           ))}
         </select>
       </label>
-      <p className="side-note">只在讨论里生效，聊天不找替补。替补不能是这个议题的汇总者，起草时会再检查。</p>
+      <p className="side-note">
+        只在讨论里生效，聊天不找替补。替补不能是这个议题的汇总者；两人互为替补可以，但同一轮两人都缺席时这一轮发不出去，要换人。起草时会再检查。
+      </p>
     </section>
   );
 }

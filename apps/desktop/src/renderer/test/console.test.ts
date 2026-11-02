@@ -23,6 +23,7 @@ import {
   activityTitle,
   appendRecent,
   applyActivityEvent,
+  mergeFirstPage,
   quotaView,
   substituteOptions,
   type ActivityPage,
@@ -183,6 +184,22 @@ describe("console state", () => {
     assert.equal(more.recent.length, 3);
   });
 
+  it("reloading the first page keeps the older pages already loaded (汐 #160)", async () => {
+    const q = fixture();
+    // 一页 1 条：翻到第 3 页
+    let old: ActivityPage = { agent: "claude", ...(await q({ type: "agents.activity", agent: "claude", limit: 1 })) };
+    for (let i = 0; i < 2; i++) old = appendRecent(old, await q({ type: "agents.activity", agent: "claude", limit: 1, before: old.nextCursor! }));
+    assert.equal(old.recent.length, 3);
+    const fresh: ActivityPage = { agent: "claude", ...(await q({ type: "agents.activity", agent: "claude", limit: 1 })) };
+    const merged = mergeFirstPage(old, fresh, 1);
+    assert.deepEqual(merged.recent.map((x) => (x.kind === "discussion" ? x.turn.id : x.slot.id)), [`slot_${ID(5)}`, `slot_${ID(3)}`, `turn_${ID(2)}`]);
+    assert.deepEqual(merged.nextCursor, old.nextCursor);
+    // 不满一页 = 全在里面了；换了人 = 不合并
+    const all: ActivityPage = { agent: "claude", ...(await q({ type: "agents.activity", agent: "claude" })) };
+    assert.equal(mergeFirstPage(old, all, 20), all);
+    assert.equal(mergeFirstPage({ ...old, agent: "codex" }, fresh, 1), fresh);
+  });
+
   it("every turn outcome and slot outcome has a label (mock 下所有状态都能显示)", () => {
     for (const o of TurnOutcome.options) {
       const x: AgentActivityItem = { kind: "discussion", projectId: project.id, projectName: project.name, roundId: round.id, roundIndex: 3, turn: turn(2, "claude", o), preview: null };
@@ -300,5 +317,17 @@ describe("console through the mock (actions layer)", () => {
     await actions.agentConsole.open();
     assert.equal(store.get().console.activityAvailable, false);
     assert.equal(store.get().notice, null);
+  });
+
+  it("once agents.activity has worked, a later validation_failed is a real error, not 'not connected' (汐 #160)", async () => {
+    const { store, actions, bridge } = await setup();
+    await actions.agentConsole.open();
+    assert.equal(store.get().console.activityAvailable, true);
+    const real = bridge.query;
+    (bridge as { query: typeof real }).query = (async (req: { type: string }) =>
+      req.type === "agents.activity" ? { ok: false, error: "validation_failed", message: "游标不对" } : real(req as never)) as never;
+    await actions.agentConsole.selectAgent("deepseek");
+    assert.equal(store.get().console.activityAvailable, true);
+    assert.match(store.get().notice?.message ?? "", /游标不对/);
   });
 });

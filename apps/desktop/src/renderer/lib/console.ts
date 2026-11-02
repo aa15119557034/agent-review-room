@@ -63,6 +63,19 @@ const newerFirst = (a: AgentActivityItem, b: AgentActivityItem) => {
   return x.id === y.id ? 0 : x.id < y.id ? 1 : -1;
 };
 
+/**
+ * 重查第一页（来了没见过的活动）：换上新的第一页，**保留已经翻出来的更早部分**（汐 #160），不让用户再点一遍「更早的」。
+ * 新的第一页不满一页 = 已经全在里面了，直接用它
+ */
+export function mergeFirstPage(old: ActivityPage | null, fresh: ActivityPage, limit: number): ActivityPage {
+  if (!old || old.agent !== fresh.agent || fresh.recent.length < limit) return fresh;
+  const last = fresh.recent[fresh.recent.length - 1]!;
+  const seen = new Set([...fresh.current, ...fresh.recent].map(activityId));
+  const older = old.recent.filter((x) => !seen.has(activityId(x)) && newerFirst(last, x) < 0);
+  if (older.length === 0) return fresh;
+  return { ...fresh, recent: [...fresh.recent, ...older], nextCursor: old.nextCursor };
+}
+
 /** 翻页：接在后面，按 id 去重（翻页期间有新的结束了，可能和第一页重复） */
 export function appendRecent(page: ActivityPage, more: { recent: AgentActivityItem[]; nextCursor: AgentActivityCursor | null }): ActivityPage {
   const seen = new Set(page.recent.map(activityId));
@@ -197,8 +210,8 @@ export function activityPreview(x: AgentActivityItem): { text: string; muted: bo
 }
 
 /**
- * 替补能选谁：能参加讨论的其他人。两人互为替补可以（只是同一轮两人都缺席时没人代，D-32 记缺席）；
- * 汇总者限制在议题层面，由 round.draft 校验，这里不管
+ * 替补能选谁：能参加讨论的其他人。两人互为替补在设置层面允许；同一轮两人都缺席时 round.draft 会拒绝（不做替补链，D-32），
+ * 到时要换一个替补。汇总者限制在议题层面，由 round.draft 校验，这里不管。现在不能答的人照样列出，界面标出来（汐 #160）
  */
 export function substituteOptions(agents: readonly AgentProfile[], self: string): AgentProfile[] {
   return agents.filter((a) => a.id !== self && a.canDiscuss);
