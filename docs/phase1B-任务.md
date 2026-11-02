@@ -119,7 +119,7 @@
 | **D-46b** | DeepSeek | main：换窗口（草稿、prepare / editDraft / redo / confirm / cancel；handoff Run 走 slot = null）、拼回答 Prompt 时按窗口过滤（摘要规划和写手不变）、`chat.windows.get` 的窗口里压缩次数 | C-46、D-46a | 换窗口后旧消息、跨边界的摘要不进 Snapshot；取消后 Run 还在、没有笔记和窗口；重启后草稿还在 |
 | **D-46c** | DeepSeek | main：笔记和议题推到 GitHub（私有检查、先取 sha 再覆盖、排队重试）、`github.*` | C-46、D-46a | 公开仓库不推；断网排队、恢复后推上；Token 不出 main |
 | **C-47** | Claude | 界面：讨论室右栏点人看笔记；聊天记忆条「笔记」「这个窗口压缩 N 次」「建议换窗口」；聊天设置里的换窗口；秘书资料页历史里的笔记入口；看版本、回退；设置页 GitHub。先对 mock 做 | C-46 | 截图给江浩看 |
-| **X-36** | Claude | e2e：换窗口后旧消息不发、交接笔记在边界里、取消不留痕、`room-note` 里伪造结束标签被转义 | D-46b、C-47 | 确定性断言 |
+| **X-36** | Claude | e2e：换窗口后旧消息不发、交接笔记在边界里、取消不留痕、`room-note` 里伪造结束标签被转义。**2026-11-02 进度**：已做（`apps/desktop/e2e/notes-windows.test.ts` #1～#5，另加 nested_fence 不存、迟到结果不记笔记）；伪造标签的做法是「每次新 nonce + 标签独占一行」，原文不改写 | D-46b、C-47 | 确定性断言 |
 
 ## 顺手一起做（小）
 

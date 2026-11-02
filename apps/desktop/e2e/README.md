@@ -88,3 +88,17 @@ pnpm --filter @room/desktop exec tsx --test e2e/model-selection.test.ts
 harness：`makeE2E({ controllerCapabilities, imageBytes })`；FakeNode 可选上报 `capabilities`。
 
 还没测：同一输入 hash 相同（Snapshot 每次有新 nonce，聊天里不成立，按讨论室的口径以后再看）。
+
+## X-36 项目笔记和换窗口（ADR-005 §3、§4）
+
+`notes-windows.test.ts`：harness 现在和 `main/index.ts` 一样把 `NotesService` 接进聊天、讨论、Orchestrator 和 dispatcher（不接 GitHub 同步）。断言看节点实际收到的 StartRun，资料边界按「开、关标签各占一行、一一配对」切开检查。
+
+| 用例 | 验证 |
+|---|---|
+| #1 换窗口 | 写交接的 Run 是 `window_handoff`、没有回答位、不落聊天消息；它的 Prompt 里窗口内消息都在资料边界里；确认后第 2 个窗口、交接笔记第 1 版；之后回答的 Prompt 和 `includedMessageIds` 都不含边界前的消息，引用旧消息只留一句话，交接笔记在资料边界里；`chat.windows.get` 压缩次数归 0 |
+| #2 取消不留痕 | 写交接的 Run 不理 cancel、取消后才交卷：草稿仍是 cancelled、content 为空；没有窗口、没有笔记、没有对应事件；之后回答照旧带全部历史；已取消的草稿确认 → invalid_state |
+| #3 伪造结束标签 | 秘书在 `room-note` 里写别的 nonce 的结束 / 开始标签和「指令」：笔记原样存第 1 版，回答里不显示笔记块；下一次 Prompt 用新 nonce，伪造的标签和后面的「指令」都留在资料边界里面，边界外没有 |
+| #4 围栏提前截断 | `nested_fence`：笔记不存，回答照常，`projectNote.rejected` 带原因和 runId |
+| #5 迟到结果 | 撤回后节点才交卷，回答里的 room-note 不存（#178 评审第 1 条） |
+
+还没测：讨论室议题笔记（`topic` 范围）的 e2e；GitHub 同步只有 main 的单测（假 transport），没连真 GitHub。
