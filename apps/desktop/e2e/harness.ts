@@ -18,6 +18,7 @@ import { ChatService } from "../src/main/chat";
 import { DiscussionService } from "../src/main/discussion";
 import { createDispatcher } from "../src/main/ipc";
 import { NodeService, resolveRunTarget } from "../src/main/nodes";
+import { NotesService } from "../src/main/notes";
 import { RunOrchestrator } from "../src/main/orchestrator";
 import { QuotaService } from "../src/main/quota";
 import { Repository } from "../src/main/repository";
@@ -60,6 +61,8 @@ export interface E2E {
   projectId: string;
   nodes: { userPc: FakeNode; controller: FakeNode };
   chat: ChatService;
+  /** X-36：项目笔记（D-46a），聊天 / 讨论 / dispatcher 用同一个 */
+  notes: NotesService;
   close: () => Promise<void>;
 }
 
@@ -150,10 +153,13 @@ export async function makeE2E(options: {
   };
 
   let discussion: DiscussionService | null = null;
+  // X-36：和 main/index.ts 一样把笔记服务接进聊天、讨论和 dispatcher（不接 GitHub 同步）
+  const notes = new NotesService({ db, queue, emit, knownAgents: () => repo.listAgents().map((agent) => agent.id) });
   const orchestrator = new RunOrchestrator({
     db,
     queue,
     emit,
+    notes,
     getRun: (runId) => db.prepare("SELECT * FROM runs WHERE id = ?").get(runId) as never,
     idleTimeoutMs: 5_000,
     totalTimeoutMs: 15_000,
@@ -178,13 +184,14 @@ export async function makeE2E(options: {
   });
 
   // X-32：每个用例自己一份额度服务、不缓存，测试里 setQuota 之后下一次读就能看到
-  discussion = new DiscussionService({ db, queue, repo, settings, orchestrator, emit, quota: new QuotaService({ ttlMs: 0 }) });
+  discussion = new DiscussionService({ db, queue, repo, settings, orchestrator, emit, quota: new QuotaService({ ttlMs: 0 }), notes });
   const chat = new ChatService({
     db,
     queue,
     repo,
     settings,
     emit,
+    notes,
     ...(options.now === undefined ? {} : { now: options.now }),
     readImage: (ref) => options.imageBytes?.get(ref) ?? null,
     idleTimeoutMs: 5_000,
@@ -212,6 +219,7 @@ export async function makeE2E(options: {
     orchestrator,
     discussion,
     chat,
+    notes,
     nodes: new NodeService({ repo, settings }),
     appVersion: "0.0.0-e2e",
     recoveredRuns: 0,
@@ -235,7 +243,7 @@ export async function makeE2E(options: {
     db.close();
   };
 
-  return { db, dispatcher, repo, orchestrator, settings, events, projectId: created.data.id, nodes: { userPc, controller }, chat, close };
+  return { db, dispatcher, repo, orchestrator, settings, events, projectId: created.data.id, nodes: { userPc, controller }, chat, notes, close };
 }
 
 export function failure(result: { ok: boolean }): { error: string; message: string } {
