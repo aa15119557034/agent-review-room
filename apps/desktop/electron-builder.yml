@@ -30,7 +30,8 @@ win:
     - nsis
 
 nsis:
-  # 卸载时不动用户的语音包 / 数据目录
+  # 卸载时不动 %APPDATA% / %LOCALAPPDATA% 里的东西。
+  # 注意：NSIS 卸载 / 升级会 RMDir /r $INSTDIR，所以语音包推荐放在 %LOCALAPPDATA%\评审室\tts（安装目录外面）。
   deleteAppDataOnUninstall: false
   oneClick: false
   allowToChangeInstallationDirectory: true

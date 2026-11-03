@@ -139,7 +139,13 @@ async function bootstrap(): Promise<void> {
   // D-37b：语音合成的独立进程（配置在 userData/tts.json；没配置就是 null，「播放」会明确报没配好）
   const configuredTts = loadTtsConfigFile(join(userData, "tts.json"));
   // 语音包（单独 zip 解压到安装目录）：运行时装在 exe 旁边的 tts/，或旧的 resources/tts
-  const bundleLookup = app.isPackaged ? findTtsBundle(process.execPath, process.resourcesPath) : null;
+  const bundleLookup = app.isPackaged
+    ? findTtsBundle({
+        execPath: process.execPath,
+        resourcesPath: process.resourcesPath,
+        localAppData: process.env.LOCALAPPDATA,
+      })
+    : null;
   if (bundleLookup !== null) {
     if (bundleLookup.bundle === null) {
       console.warn("[tts] " + (bundleLookup.reason ?? "语音包不可用"));

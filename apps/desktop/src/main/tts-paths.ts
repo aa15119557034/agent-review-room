@@ -5,17 +5,14 @@ import type { TtsConfig } from "./tts";
 /**
  * 语音包（安装包之外单独分发的 zip）的定位与版本（#195 评审 B 方案）。
  *
- * 布局：把 `tts-runtime-<版本>.zip` 和 `tts-model-IndexTTS-2.zip` 解压到安装目录，得到
+ * 语音包 zip 解压后是 `tts/{python,site-packages,index-tts,models/IndexTTS-2,runtime.json}`，
+ * **不含 runner.py**——runner.py 跟程序本体走，在 `<resources>/tts/runner.py`，
+ * 这样打程序补丁时能更新它。
  *
- *   <安装目录>/tts/python/python.exe
- *   <安装目录>/tts/site-packages/
- *   <安装目录>/tts/index-tts/
- *   <安装目录>/tts/models/IndexTTS-2/
- *   <安装目录>/tts/runtime.json              {"version":"1"}
- *   <安装目录>/tts/models/IndexTTS-2/model.json {"version":"indextts2-2.0.0"}
- *   <安装目录>/tts/runner.py                 （安装包自带）
- *
- * 兼容旧的 <resources>/tts（安装包内置）布局。
+ * 查找顺序（第一个「完整」的生效）：
+ *   1. <安装目录>/tts                          （兼容：解压到安装目录）
+ *   2. <LOCALAPPDATA>/评审室/tts               （推荐：装在安装目录外面，升级/卸载不会删）
+ *   3. <resources>/tts                         （旧的内置布局）
  */
 export const TTS_RUNTIME_VERSION = "1";
 export const TTS_MODEL_VERSION = "indextts2-2.0.0";
@@ -37,6 +34,13 @@ export interface TtsBundleLookup {
   reason: string | null;
 }
 
+export interface TtsLookupInput {
+  execPath: string;
+  resourcesPath: string;
+  /** 默认拿 process.env.LOCALAPPDATA；测试可以注入 */
+  localAppData?: string;
+}
+
 function readVersion(path: string): string | null {
   try {
     if (!existsSync(path)) return null;
@@ -47,72 +51,83 @@ function readVersion(path: string): string | null {
   }
 }
 
-function required(base: string): { python: string; script: string; modelDir: string; root: string; sitePackages: string } {
+function voiceDirs(base: string): { python: string; modelDir: string; root: string; sitePackages: string } {
   return {
     python: join(base, "python", "python.exe"),
-    script: join(base, "runner.py"),
     modelDir: join(base, "models", "IndexTTS-2"),
     root: join(base, "index-tts"),
     sitePackages: join(base, "site-packages"),
   };
 }
 
-/**
- * 找语音包目录：优先 <安装目录>/tts（exe 旁边），再退到 <resources>/tts（安装包内置的旧布局）。
- * 返回第一个「目录存在」的候选；内容是否齐全由调用方检查。
- */
-export function findTtsBase(execPath: string, resourcesPath: string): { baseDir: string; missing: string[] } | null {
-  const candidates = [join(dirname(execPath), "tts"), join(resourcesPath, "tts")];
-  for (const baseDir of candidates) {
-    if (!existsSync(baseDir)) continue;
-    const paths = required(baseDir);
-    const missing = [paths.python, paths.script, paths.modelDir, paths.root, paths.sitePackages].filter(
-      (path) => !existsSync(path),
-    );
-    return { baseDir, missing };
-  }
-  return null;
+/** 语音包可能的存放位置（按优先级） */
+export function ttsCandidates(input: TtsLookupInput): string[] {
+  const localAppData = input.localAppData ?? process.env.LOCALAPPDATA ?? "";
+  const candidates = [join(dirname(input.execPath), "tts")];
+  if (localAppData !== "") candidates.push(join(localAppData, "评审室", "tts"));
+  candidates.push(join(input.resourcesPath, "tts"));
+  return candidates;
 }
 
-export function findTtsBundle(execPath: string, resourcesPath: string): TtsBundleLookup {
-  const found = findTtsBase(execPath, resourcesPath);
-  if (found === null) {
+export function findTtsBundle(input: TtsLookupInput): TtsBundleLookup {
+  // runner.py 只跟程序本体走
+  const script = join(input.resourcesPath, "tts", "runner.py");
+  if (!existsSync(script)) {
+    return { bundle: null, reason: "安装包缺少 runner.py（程序文件不完整），重新安装程序本体" };
+  }
+
+  let firstIncomplete: string[] | null = null;
+  for (const baseDir of ttsCandidates(input)) {
+    if (!existsSync(baseDir)) continue;
+    const dirs = voiceDirs(baseDir);
+    const missing = [dirs.python, dirs.sitePackages, dirs.root, dirs.modelDir]
+      .filter((path) => !existsSync(path))
+      .map((path) => path.slice(baseDir.length + 1));
+    // 只有 runner.py 的目录（安装包自带的 resources/tts）不算语音包，直接跳过
+    if (missing.length === 4) continue;
+    if (missing.length > 0) {
+      firstIncomplete ??= missing;
+      continue;
+    }
+    const runtimeVersion = readVersion(join(baseDir, "runtime.json"));
+    const modelVersion = readVersion(join(dirs.modelDir, "model.json"));
+    if (runtimeVersion === null || modelVersion === null) {
+      firstIncomplete ??= [runtimeVersion === null ? "runtime.json" : "models/IndexTTS-2/model.json"];
+      continue;
+    }
+    if (runtimeVersion !== TTS_RUNTIME_VERSION || modelVersion !== TTS_MODEL_VERSION) {
+      return {
+        bundle: null,
+        reason:
+          "语音包版本不对（runtime=" +
+          runtimeVersion +
+          "，model=" +
+          modelVersion +
+          "；需要 runtime=" +
+          TTS_RUNTIME_VERSION +
+          "，model=" +
+          TTS_MODEL_VERSION +
+          "），重新解压对应的 zip",
+      };
+    }
     return {
-      bundle: null,
-      reason: "语音包没装：把 tts-runtime-*.zip 和 tts-model-IndexTTS-2.zip 解压到安装目录（会出现 tts 文件夹）",
+      bundle: { baseDir, script, ...dirs, runtimeVersion, modelVersion },
+      reason: null,
     };
   }
-  if (found.missing.length > 0) {
-    const names = found.missing.map((path) => path.slice(found.baseDir.length + 1)).join("、");
-    return { bundle: null, reason: "语音包不完整（缺 " + names + "），重新解压对应的 zip" };
-  }
-  const paths = required(found.baseDir);
-  const runtimeVersion = readVersion(join(found.baseDir, "runtime.json"));
-  const modelVersion = readVersion(join(paths.modelDir, "model.json"));
-  if (runtimeVersion === null) {
-    return { bundle: null, reason: "语音包缺少 runtime.json（版本文件），重新解压 tts-runtime-*.zip" };
-  }
-  if (modelVersion === null) {
-    return { bundle: null, reason: "语音包缺少 models/IndexTTS-2/model.json（版本文件），重新解压 tts-model-IndexTTS-2.zip" };
-  }
-  if (runtimeVersion !== TTS_RUNTIME_VERSION || modelVersion !== TTS_MODEL_VERSION) {
+
+  if (firstIncomplete !== null) {
     return {
       bundle: null,
-      reason:
-        "语音包版本不对（runtime=" +
-        runtimeVersion +
-        "，model=" +
-        modelVersion +
-        "；需要 runtime=" +
-        TTS_RUNTIME_VERSION +
-        "，model=" +
-        TTS_MODEL_VERSION +
-        "），重新解压对应的 zip",
+      reason: "语音包不完整（缺 " + firstIncomplete.join("、") + "），重新解压对应的 zip",
     };
   }
   return {
-    bundle: { baseDir: found.baseDir, ...paths, runtimeVersion, modelVersion },
-    reason: null,
+    bundle: null,
+    reason:
+      "语音包没装：把 tts-runtime-*.zip 和 tts-model-IndexTTS-2.zip 解压到 " +
+      (input.localAppData ?? process.env.LOCALAPPDATA ?? "<LOCALAPPDATA>") +
+      "\\评审室\\（会出现 tts 文件夹）",
   };
 }
 
