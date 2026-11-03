@@ -18,6 +18,7 @@
 """
 
 import gc
+import site
 import json
 import os
 import sys
@@ -27,6 +28,11 @@ import traceback
 MODEL_DIR = os.environ.get("INDEXTTS_MODEL_DIR", r"E:\AI\TTS\models\IndexTTS-2")
 INDEXTTS_ROOT = os.environ.get("INDEXTTS_ROOT", r"E:\AI\TTS\index-tts")
 ENGINE_VERSION = os.environ.get("INDEXTTS_ENGINE_VERSION", "indextts2-2.0.0")
+
+# 安装包自带的 site-packages：用 addsitedir 而不是只靠 PYTHONPATH，.pth 文件也会生效
+_BUNDLED_SITE = os.environ.get("ROOM_SITE_PACKAGES")
+if _BUNDLED_SITE:
+    site.addsitedir(_BUNDLED_SITE)
 
 
 def log(*args):

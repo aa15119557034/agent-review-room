@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { app, BrowserWindow, dialog, ipcMain, nativeTheme, protocol, safeStorage, shell } from "electron";
 import { join } from "node:path";
 import { openDatabase, repairInterruptedRuns, WriteQueue } from "@room/db";
@@ -20,6 +21,7 @@ import { RunOrchestrator } from "./orchestrator";
 import { Repository } from "./repository";
 import { SettingsStore } from "./settings";
 import { loadTtsConfigFile, TtsRunner, voiceOptionsOf } from "./tts";
+import { bundledTtsConfig, findTtsBundle } from "./tts-paths";
 
 /**
  * Electron 主进程入口（D-07）。
@@ -135,7 +137,38 @@ async function bootstrap(): Promise<void> {
   if (comfyConfig === null) console.warn("[comfyui] 没有配置 userData/comfyui.json，本机画图不可用");
   const comfyClient = comfyConfig === null ? null : new ComfyUiClient(comfyConfig);
   // D-37b：语音合成的独立进程（配置在 userData/tts.json；没配置就是 null，「播放」会明确报没配好）
-  const ttsConfig = loadTtsConfigFile(join(userData, "tts.json"));
+  const configuredTts = loadTtsConfigFile(join(userData, "tts.json"));
+  // 语音包（单独 zip 解压到安装目录）：运行时装在 exe 旁边的 tts/，或旧的 resources/tts
+  const bundleLookup = app.isPackaged
+    ? findTtsBundle({
+        execPath: process.execPath,
+        resourcesPath: process.resourcesPath,
+        localAppData: process.env.LOCALAPPDATA,
+      })
+    : null;
+  if (bundleLookup !== null) {
+    if (bundleLookup.bundle === null) {
+      console.warn("[tts] " + (bundleLookup.reason ?? "语音包不可用"));
+    } else {
+      console.info(
+        "[tts] 语音包：" +
+          bundleLookup.bundle.baseDir +
+          "（runtime=" +
+          bundleLookup.bundle.runtimeVersion +
+          "，model=" +
+          bundleLookup.bundle.modelVersion +
+          "）",
+      );
+    }
+  }
+  const bundled =
+    bundleLookup?.bundle === null || bundleLookup === null
+      ? null
+      : bundledTtsConfig(bundleLookup.bundle, configuredTts?.voices);
+  const ttsConfig =
+    configuredTts !== null && existsSync(configuredTts.python) && existsSync(configuredTts.script)
+      ? configuredTts
+      : (bundled ?? configuredTts);
   if (ttsConfig === null) console.warn("[tts] 没有配置 userData/tts.json，语音合成不可用");
   const ttsRunner = ttsConfig === null ? null : new TtsRunner(ttsConfig);
   protocol.handle(AUDIO_URL_SCHEME, createAudioProtocolHandler(mediaStore));

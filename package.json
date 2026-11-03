@@ -7,8 +7,9 @@
     "test": "pnpm -r test"
   },
   "devDependencies": {
-    "typescript": "^5.9.0",
     "@types/node": "^22.0.0",
-    "tsx": "^4.20.0"
+    "tslib": "^2.9.1",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
   }
 }

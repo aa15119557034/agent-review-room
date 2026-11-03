@@ -12,7 +12,9 @@
     "rebuild:native": "electron-rebuild -f -w better-sqlite3",
     "verify:sqlite": "node scripts/verify-sqlite.mjs",
     "test": "tsx --test test/*.test.ts",
-    "test:e2e": "tsx --test e2e/*.test.ts"
+    "test:e2e": "tsx --test e2e/*.test.ts",
+    "pack": "node scripts/pack.mjs",
+    "pack:dir": "node scripts/pack.mjs --dir"
   },
   "dependencies": {
     "@room/core": "workspace:*",
@@ -31,6 +33,7 @@
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
     "electron": "^44.9.0",
+    "electron-builder": "^26.18.0",
     "electron-vite": "^6.0.0",
     "tsx": "^4.20.0",
     "typescript": "^5.9.3",

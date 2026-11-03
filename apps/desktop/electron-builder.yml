@@ -1,0 +1,38 @@
+appId: com.agent-review-room.desktop
+productName: 评审室
+copyright: Copyright © 2026
+
+directories:
+  output: ../../release
+  buildResources: build
+
+files:
+  - out/**
+  - package.json
+  - "!**/*.map"
+
+asar: true
+# better-sqlite3 v13 走 Node-API 的 prebuilds（Electron 也能直接加载），不需要按 Electron 重编
+npmRebuild: false
+asarUnpack:
+  - "**/*.node"
+
+# 语音合成：Python + IndexTTS2 代码 + 模型。pack.mjs 会先把它们暂存到 apps/desktop/vendor/tts（已 gitignore）。
+# 产物布局：<resources>/tts/{python, site-packages, index-tts, models/IndexTTS-2, runner.py}
+# 安装包只带程序本体（200~400MB）。语音包（Python + 依赖 + 模型）单独出 zip，解压到安装目录。
+# runner.py 很小，留在包里；语音资源由 pack.mjs 打成 tts-runtime-*.zip / tts-model-IndexTTS-2.zip。
+extraResources:
+  - from: tts/runner.py
+    to: tts/runner.py
+
+win:
+  target:
+    - nsis
+
+nsis:
+  # 卸载时不动 %APPDATA% / %LOCALAPPDATA% 里的东西。
+  # 注意：NSIS 卸载 / 升级会 RMDir /r $INSTDIR，所以语音包推荐放在 %LOCALAPPDATA%\评审室\tts（安装目录外面）。
+  deleteAppDataOnUninstall: false
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  perMachine: false
