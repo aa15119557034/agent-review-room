@@ -12,6 +12,7 @@ import {
 } from "@room/schemas";
 import {
   buildChatSnapshot,
+  chatImmersiveInstructions,
   chatOutputInstructions,
   CHAT_OUTPUT_EXAMPLES,
   CHAT_OUTPUT_REMINDER,
@@ -186,5 +187,44 @@ describe("chat prompt image / draw placeholders (X-34)", () => {
   it("escapePlaceholderText strips brackets, angle brackets, backslashes and control characters, and caps length", () => {
     assert.equal(escapePlaceholderText("a]b[c<d>e\\f\ng", 100), "a_b_c_d_e_f g");
     assert.equal(escapePlaceholderText("一".repeat(2000), 1000).length, 1000);
+  });
+});
+
+describe("chat prompt immersive remaining counts (D-39b ④)", () => {
+  const settings = { enabled: true, autoDrawUsesSubscription: false, drawsPerHour: 6, voiceClipsPerHour: 30 };
+  const usage = (draws: number, voice: number, asOf = TS) => ({ asOf, drawsLastHour: draws, voiceClipsLastHour: voice });
+
+  it("immersive off or not given → prompt unchanged byte for byte", () => {
+    const base = build().content;
+    assert.equal(build({ immersive: null }).content, base);
+    assert.equal(build({ immersive: { settings: { ...settings, enabled: false }, usage: usage(0, 0) } }).content, base);
+    assert.doesNotMatch(base, /沉浸模式/);
+  });
+
+  it("immersive on → remaining counts in the trusted part, before any untrusted data and the current message", () => {
+    const content = build({ history: [first], immersive: { settings, usage: usage(2, 5) } }).content;
+    const text = chatImmersiveInstructions(settings, usage(2, 5));
+    assert.ok(text !== null);
+    const at = content.indexOf(text);
+    assert.ok(at > content.indexOf(chatOutputInstructions(undefined)), "跟在回答格式后面");
+    assert.ok(at < content.indexOf(OPEN), "在第一个资料区之前");
+    assert.ok(at < currentStart(content));
+    assert.match(text, /语音还能自动发 25 段/);
+    assert.match(text, /画图还能自动画 4 张/);
+  });
+
+  it("uses the session's lowered limits, and says when a quota is used up (never negative)", () => {
+    const text = chatImmersiveInstructions({ ...settings, drawsPerHour: 2, voiceClipsPerHour: 0 }, usage(3, 0)) as string;
+    assert.match(text, /自动画图已经用完/);
+    assert.match(text, /自动语音已经用完/);
+    assert.doesNotMatch(text, /-\d/);
+  });
+
+  it("hash depends on the counts, not on usage.asOf", () => {
+    const a = build({ immersive: { settings, usage: usage(1, 1, "2026-11-01T00:00:00.000Z") } });
+    const b = build({ immersive: { settings, usage: usage(1, 1, "2026-11-01T00:30:00.000Z") } });
+    const c = build({ immersive: { settings, usage: usage(2, 1) } });
+    assert.equal(a.contentHash, b.contentHash);
+    assert.notEqual(a.contentHash, c.contentHash);
   });
 });
