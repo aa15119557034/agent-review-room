@@ -554,6 +554,7 @@ export class ChatService {
           memorySource: this.#memorySourceOf(agent),
           ...this.#quoteFor(agentId, command.quoteMessageId === null ? null : getChatMessage(db, command.quoteMessageId)),
           inReplyToOf: this.#inReplyToOf,
+          immersive: this.immersive(conversation.id),
           displayNameOf: (id) => agents.get(id)?.displayName ?? id,
           replyRequired: chatRequired(conversation, message.mentions, agent.id),
           ...(this.#deps.notes === undefined
@@ -781,6 +782,7 @@ export class ChatService {
       userMessage: withImages ? message : this.#withImagePlaceholders(message, images),
       agent: { id: agent.id, displayName: agent.displayName, persona: this.#personaOf(agent) },
       history: history.filter(this.#inWindowOf(conversation.id, agent.id)),
+      immersive: this.immersive(conversation.id),
       ...(this.#windowSummaries(conversation.id, agent.id).length === 0
         ? {}
         : { summaries: this.#windowSummaries(conversation.id, agent.id) }),

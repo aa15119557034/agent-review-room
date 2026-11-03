@@ -2304,6 +2304,26 @@ describe("immersive (D-39)", () => {
     }
   });
 
+  it("沉浸模式开着时，StartRun 的 Prompt 里有剩余次数（D-39b ④）", async () => {
+    const h = await makeHarness({ scripts: { deepseek: mediaScript("好呀") } });
+    try {
+      upsertImmersiveSettings(h.db, h.conversationId, {
+        enabled: true,
+        autoDrawUsesSubscription: false,
+        drawsPerHour: 6,
+        voiceClipsPerHour: 30,
+      }, NOW);
+      await h.chat.send(send(h.conversationId, userMessageId(998), "说点什么"));
+      await settle(h.chat);
+      const input = h.runInputs.find((entry) => entry.agent === "deepseek");
+      assert.ok(input !== undefined);
+      assert.ok(input.input.content.includes("画图还能自动画 6 张"), "Prompt 里有画图剩余次数");
+      assert.ok(input.input.content.includes("语音还能自动发 30 段"), "Prompt 里有语音剩余次数");
+    } finally {
+      h.db.close();
+    }
+  });
+
   it("#187 第 5 条：关模式排在旧计划后面时，旧计划建出来的任务会被收掉", async () => {
     let release!: () => void;
     const gate = new Promise<void>((resolve) => {
