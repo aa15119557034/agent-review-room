@@ -311,6 +311,24 @@ describe("speech.play (D-37b)", () => {
     }
   });
 
+  it("同一回答同时「用语音回」和沉浸自动语音：只建一个任务，授权保持 reply_as_voice", async () => {
+    const h = await makeHarness();
+    try {
+      const source = { kind: "chat" as const, conversationId: h.conversationId, messageId: h.answer.id, agent: "deepseek" };
+      const first = await h.service.play(source, { authorization: "reply_as_voice" });
+      assert.equal(first.cached, false);
+      // 同一条回答、同一段文本 / 声音 / 语速：沉浸自动语音合并到已有任务，不新建第二个
+      const second = await h.service.play(source, { authorization: "immersive", intentHash: "b".repeat(64) });
+      assert.equal(second.cached, false);
+      assert.equal(second.job.id, first.job.id);
+      assert.equal(getMediaJob(h.db, first.job.id)?.authorization, "reply_as_voice", "授权保持最先建的那个");
+      assert.equal(listMediaJobs(h.db, { kind: "chat", conversationId: h.conversationId }).length, 1);
+    } finally {
+      await settle(h.service);
+      h.db.close();
+    }
+  });
+
   it("queues a reply_as_voice job even on a cache hit, and finishes it without calling the engine again", async () => {
     const h = await makeHarness();
     try {
