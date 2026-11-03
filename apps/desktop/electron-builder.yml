@@ -19,15 +19,9 @@ asarUnpack:
 
 # 语音合成：Python + IndexTTS2 代码 + 模型。pack.mjs 会先把它们暂存到 apps/desktop/vendor/tts（已 gitignore）。
 # 产物布局：<resources>/tts/{python, site-packages, index-tts, models/IndexTTS-2, runner.py}
+# 安装包只带程序本体（200~400MB）。语音包（Python + 依赖 + 模型）单独出 zip，解压到安装目录。
+# runner.py 很小，留在包里；语音资源由 pack.mjs 打成 tts-runtime-*.zip / tts-model-IndexTTS-2.zip。
 extraResources:
-  - from: vendor/tts/python
-    to: tts/python
-  - from: vendor/tts/site-packages
-    to: tts/site-packages
-  - from: vendor/tts/index-tts
-    to: tts/index-tts
-  - from: vendor/tts/models/IndexTTS-2
-    to: tts/models/IndexTTS-2
   - from: tts/runner.py
     to: tts/runner.py
 
@@ -36,6 +30,8 @@ win:
     - nsis
 
 nsis:
+  # 卸载时不动用户的语音包 / 数据目录
+  deleteAppDataOnUninstall: false
   oneClick: false
   allowToChangeInstallationDirectory: true
   perMachine: false

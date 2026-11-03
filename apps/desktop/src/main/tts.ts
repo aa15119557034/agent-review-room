@@ -252,7 +252,10 @@ export class TtsRunner {
         ...(this.config.root === undefined ? {} : { INDEXTTS_ROOT: this.config.root }),
         ...(this.config.sitePackages === undefined
           ? {}
-          : { PYTHONPATH: [this.config.sitePackages, process.env.PYTHONPATH].filter(Boolean).join(delimiter) }),
+          : {
+              PYTHONPATH: [this.config.sitePackages, process.env.PYTHONPATH].filter(Boolean).join(delimiter),
+              ROOM_SITE_PACKAGES: this.config.sitePackages,
+            }),
       },
       stdio: ["pipe", "pipe", "pipe"],
       windowsHide: true,

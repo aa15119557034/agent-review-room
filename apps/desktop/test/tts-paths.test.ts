@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
-import { bundledTtsConfig, bundledTtsPaths } from "../src/main/tts-paths";
+import { findTtsBundle, TTS_MODEL_VERSION, TTS_RUNTIME_VERSION } from "../src/main/tts-paths";
 
 const dirs: string[] = [];
 after(() => {
@@ -16,43 +16,91 @@ after(() => {
   }
 });
 
-function resources(marker: boolean): string {
-  const dir = mkdtempSync(join(tmpdir(), "room-tts-"));
-  dirs.push(dir);
-  if (!marker) return dir;
-  const base = join(dir, "tts");
+function fakeInstall(options: { runtime?: string; model?: string; skip?: string } = {}): string {
+  const install = mkdtempSync(join(tmpdir(), "room-tts-"));
+  dirs.push(install);
+  const base = join(install, "tts");
   mkdirSync(join(base, "python"), { recursive: true });
   mkdirSync(join(base, "site-packages"), { recursive: true });
   mkdirSync(join(base, "index-tts"), { recursive: true });
   mkdirSync(join(base, "models", "IndexTTS-2"), { recursive: true });
   writeFileSync(join(base, "python", "python.exe"), "");
   writeFileSync(join(base, "runner.py"), "");
-  return dir;
+  if (options.skip !== "runtime") {
+    writeFileSync(join(base, "runtime.json"), JSON.stringify({ version: options.runtime ?? TTS_RUNTIME_VERSION }));
+  }
+  if (options.skip !== "model") {
+    writeFileSync(
+      join(base, "models", "IndexTTS-2", "model.json"),
+      JSON.stringify({ version: options.model ?? TTS_MODEL_VERSION }),
+    );
+  }
+  return install;
 }
 
-describe("bundled tts paths", () => {
-  it("安装包里缺任何一项都返回 null", () => {
-    assert.equal(bundledTtsPaths(resources(false)), null);
+const execPathOf = (install: string): string => join(install, "评审室.exe");
+
+describe("tts bundle lookup (#195 B 方案)", () => {
+  it("安装目录里没有 tts：说明没装、给出该解压哪个包", () => {
+    const install = mkdtempSync(join(tmpdir(), "room-tts-"));
+    dirs.push(install);
+    const lookup = findTtsBundle(execPathOf(install), join(install, "resources"));
+    assert.equal(lookup.bundle, null);
+    assert.ok(lookup.reason?.includes("没装"));
+    assert.ok(lookup.reason?.includes("tts-runtime"));
   });
 
-  it("四项都在时给出 python / 脚本 / 模型 / 代码 / site-packages", () => {
-    const paths = bundledTtsPaths(resources(true));
-    assert.ok(paths !== null);
-    assert.ok(paths.python.endsWith(join("python", "python.exe")));
-    assert.ok(paths.script.endsWith("runner.py"));
-    assert.ok(paths.modelDir.endsWith(join("models", "IndexTTS-2")));
-    assert.ok(paths.root.endsWith("index-tts"));
-    assert.ok(paths.sitePackages.endsWith("site-packages"));
+  it("缺一项：说清楚缺什么", () => {
+    const install = fakeInstall();
+    rmSync(join(install, "tts", "site-packages"), { recursive: true, force: true });
+    const lookup = findTtsBundle(execPathOf(install), join(install, "resources"));
+    assert.equal(lookup.bundle, null);
+    assert.ok(lookup.reason?.includes("不完整"));
+    assert.ok(lookup.reason?.includes("site-packages"));
   });
 
-  it("bundledTtsConfig 保留用户配置里的 voices", () => {
-    const dir = resources(true);
-    const config = bundledTtsConfig(dir, [
-      { id: "voice_01" as never, displayName: "默认", source: "reference", refAudio: "a.wav" },
-    ]);
-    assert.ok(config !== null);
-    assert.equal(config.engine, "indextts2");
-    assert.equal(config.voices.length, 1);
-    assert.equal(config.sitePackages, join(dir, "tts", "site-packages"));
+  it("版本文件缺失 / 版本不对：明确提示重新解压", () => {
+    const noRuntime = fakeInstall({ skip: "runtime" });
+    assert.ok(findTtsBundle(execPathOf(noRuntime), join(noRuntime, "resources")).reason?.includes("runtime.json"));
+
+    const wrong = fakeInstall({ model: "indextts2-0.9.0" });
+    const lookup = findTtsBundle(execPathOf(wrong), join(wrong, "resources"));
+    assert.equal(lookup.bundle, null);
+    assert.ok(lookup.reason?.includes("版本不对"));
+  });
+
+  it("齐全时给出五个路径和版本；exe 旁边优先于 resources", () => {
+    const install = fakeInstall();
+    // resources/tts 也放一份旧的，确认优先用 exe 旁边
+    const resources = join(install, "resources");
+    mkdirSync(join(resources, "tts"), { recursive: true });
+    const lookup = findTtsBundle(execPathOf(install), resources);
+    assert.ok(lookup.bundle !== null);
+    assert.equal(lookup.bundle.baseDir, join(install, "tts"));
+    assert.equal(lookup.bundle.python, join(install, "tts", "python", "python.exe"));
+    assert.equal(lookup.bundle.sitePackages, join(install, "tts", "site-packages"));
+    assert.equal(lookup.bundle.runtimeVersion, TTS_RUNTIME_VERSION);
+    assert.equal(lookup.bundle.modelVersion, TTS_MODEL_VERSION);
+  });
+
+  it("旧的 resources/tts 布局仍然兼容", () => {
+    const install = mkdtempSync(join(tmpdir(), "room-tts-"));
+    dirs.push(install);
+    const resources = join(install, "resources");
+    mkdirSync(join(resources, "tts"), { recursive: true });
+    writeFileSync(join(resources, "tts", "runtime.json"), JSON.stringify({ version: TTS_RUNTIME_VERSION }));
+    mkdirSync(join(resources, "tts", "python"), { recursive: true });
+    mkdirSync(join(resources, "tts", "site-packages"), { recursive: true });
+    mkdirSync(join(resources, "tts", "index-tts"), { recursive: true });
+    mkdirSync(join(resources, "tts", "models", "IndexTTS-2"), { recursive: true });
+    writeFileSync(join(resources, "tts", "python", "python.exe"), "");
+    writeFileSync(join(resources, "tts", "runner.py"), "");
+    writeFileSync(
+      join(resources, "tts", "models", "IndexTTS-2", "model.json"),
+      JSON.stringify({ version: TTS_MODEL_VERSION }),
+    );
+    const lookup = findTtsBundle(execPathOf(install), resources);
+    assert.ok(lookup.bundle !== null);
+    assert.equal(lookup.bundle.baseDir, join(resources, "tts"));
   });
 });

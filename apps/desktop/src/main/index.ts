@@ -21,7 +21,7 @@ import { RunOrchestrator } from "./orchestrator";
 import { Repository } from "./repository";
 import { SettingsStore } from "./settings";
 import { loadTtsConfigFile, TtsRunner, voiceOptionsOf } from "./tts";
-import { bundledTtsConfig } from "./tts-paths";
+import { bundledTtsConfig, findTtsBundle } from "./tts-paths";
 
 /**
  * Electron 主进程入口（D-07）。
@@ -138,8 +138,27 @@ async function bootstrap(): Promise<void> {
   const comfyClient = comfyConfig === null ? null : new ComfyUiClient(comfyConfig);
   // D-37b：语音合成的独立进程（配置在 userData/tts.json；没配置就是 null，「播放」会明确报没配好）
   const configuredTts = loadTtsConfigFile(join(userData, "tts.json"));
-  // 安装包自带 Python + 模型时：配置缺失、或配置里的 python/脚本已经不存在，就用包里的那一份
-  const bundled = app.isPackaged ? bundledTtsConfig(process.resourcesPath, configuredTts?.voices) : null;
+  // 语音包（单独 zip 解压到安装目录）：运行时装在 exe 旁边的 tts/，或旧的 resources/tts
+  const bundleLookup = app.isPackaged ? findTtsBundle(process.execPath, process.resourcesPath) : null;
+  if (bundleLookup !== null) {
+    if (bundleLookup.bundle === null) {
+      console.warn("[tts] " + (bundleLookup.reason ?? "语音包不可用"));
+    } else {
+      console.info(
+        "[tts] 语音包：" +
+          bundleLookup.bundle.baseDir +
+          "（runtime=" +
+          bundleLookup.bundle.runtimeVersion +
+          "，model=" +
+          bundleLookup.bundle.modelVersion +
+          "）",
+      );
+    }
+  }
+  const bundled =
+    bundleLookup?.bundle === null || bundleLookup === null
+      ? null
+      : bundledTtsConfig(bundleLookup.bundle, configuredTts?.voices);
   const ttsConfig =
     configuredTts !== null && existsSync(configuredTts.python) && existsSync(configuredTts.script)
       ? configuredTts
