@@ -18,7 +18,8 @@ const WORKSPACE_PACKAGES = ["@room/core", "@room/db", "@room/schemas", "@room/re
 
 const root=resolve(__dirname,"../..");
 const revision=process.env["ROOM_BUILD_SHA"]??execFileSync("git",["-c","safe.directory="+root,"rev-parse","HEAD"],{cwd:root,encoding:"utf8"}).trim();
-const dirty=execFileSync("git",["-c","safe.directory="+root,"status","--porcelain"],{cwd:root,encoding:"utf8"}).trim().length>0;
+// electron-vite creates a temporary bundled config before evaluating this file.
+const dirty=execFileSync("git",["-c","safe.directory="+root,"status","--porcelain"],{cwd:root,encoding:"utf8"}).trim().split("\n").some(line=>line.length>0&&!/^\?\? apps\/desktop\/electron\.vite\.config\.ts\.\d+-[a-f0-9]+\.mjs$/.test(line));
 const version=(JSON.parse(readFileSync(resolve(__dirname,"package.json"),"utf8")) as {version:string}).version;
 export default defineConfig({
   main: {
