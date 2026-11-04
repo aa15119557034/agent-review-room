@@ -464,9 +464,16 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
         else maybeAwaitSummary(round);
       });
     }
-    const handles = steps.map((step, i) => setTimeout(() => {
-      if (!ctx.isTerminal(run)) step();
-    }, ctx.tickMs * (i + 1)));
+    const handles: ReturnType<typeof setTimeout>[] = [];
+    let index=0;
+    const advance=()=>{
+      handles[0]=setTimeout(()=>{
+        if(ctx.isTerminal(run))return;
+        steps[index++]!();
+        if(index<steps.length&&!ctx.isTerminal(run))advance();
+      },ctx.tickMs);
+    };
+    advance();
     ctx.timers.set(run.id, handles);
   }
 
