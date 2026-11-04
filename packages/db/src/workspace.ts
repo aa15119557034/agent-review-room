@@ -26,10 +26,15 @@ UNION ALL
 SELECT 'topic',id,'topic',id,name,name,created_at,NULL FROM projects`;
 type Row = { kind: WorkspaceItemKey["kind"]; id: string; scope_kind: "topic" | "conversation"; scope_id: string; title: string; content: string; created_at: string; run_id: string | null };
 const scopeOf = (r: Row): NoteScope => r.scope_kind === "topic" ? { kind: "topic", projectId: r.scope_id } : { kind: "conversation", conversationId: r.scope_id };
+function truncateUtf16(text:string,limit:number):string {
+ let result="";for(const point of text){if(result.length+point.length>limit)break;result+=point;}return result;
+}
 const hit = (r: Row, term = "") => {
   const index = r.content.toLowerCase().indexOf(term.toLowerCase());
-  return WorkspaceSearchHit.parse({ kind: r.kind, id: r.id, scope: scopeOf(r), title: r.title.slice(0,300),
-    preview: Array.from(r.content.slice(Math.max(0,index-60))).slice(0,500).join(""), createdAt: r.created_at });
+  let start=Math.max(0,index-60);
+  if(start>0&&/[\uDC00-\uDFFF]/.test(r.content[start]??""))start--;
+  return WorkspaceSearchHit.parse({ kind: r.kind, id: r.id, scope: scopeOf(r), title: truncateUtf16(r.title,300),
+    preview: truncateUtf16(r.content.slice(start),600), createdAt: r.created_at });
 };
 export function searchWorkspace(db: SqliteDatabase, q: QueryRequest<"workspace.search">): WorkspaceSearchPage {
   const rows = db.prepare(`WITH corpus AS (${corpus}) SELECT * FROM corpus WHERE

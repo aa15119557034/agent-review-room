@@ -140,3 +140,15 @@ test("sharing attachments keeps readable extensions and checks their bytes",asyn
   assert.equal(readFileSync(join(exported.path,"附件",ref+".txt"),"utf8"),"shared text");
  }finally{f.close();}
 });
+
+test("emoji-heavy results fit UTF-16 contracts for search, detail and export",()=>{
+ const f=fixture();try{
+  const text="needle"+"😀".repeat(400),id=f.user(text);
+  f.db.prepare("UPDATE projects SET name=? WHERE id=?").run("😀".repeat(149)+"x😀",f.project);
+  f.db.prepare("INSERT INTO messages(id,project_id,kind,source_agent,content,created_at) VALUES(?,?,'source_input','human',?,?)").run("msg_"+ulid(),f.project,text,f.now);
+  const page=searchWorkspace(f.db,{type:"workspace.search",term:"needle",limit:30});
+  const item=workspaceItem(f.db,{kind:"chat",id});
+  for(const hit of [...page.items,item]){assert.ok(hit.preview.length<=600);assert.ok(hit.title.length<=300);assert.doesNotMatch(hit.preview,/\uD83D$/);assert.doesNotMatch(hit.title,/\uD83D$/);}
+  assert.equal(item.content,text);assert.match(f.service.preview({kind:"conversation",conversationId:f.conversation}).markdown,/needle/);
+ }finally{f.close();}
+});
