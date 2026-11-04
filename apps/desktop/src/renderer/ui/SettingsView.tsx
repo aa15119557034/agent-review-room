@@ -77,6 +77,7 @@ export function SettingsView() {
     <section className="settings" aria-labelledby="settings-title">
       <header className="settings-head">
         <h1 id="settings-title">设置</h1>
+        <button type="button" onClick={actions.openWorkspace}>资料与维护</button>
         <button type="button" className="button-quiet" onClick={actions.closeSettings}>
           返回工作台
         </button>

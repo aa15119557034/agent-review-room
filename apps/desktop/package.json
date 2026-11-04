@@ -1,6 +1,6 @@
 {
   "name": "@room/desktop",
-  "version": "0.0.0",
+  "version": "0.1.0-dev.0",
   "private": true,
   "description": "Agent 评审室 桌面端（Electron 主进程 / preload / renderer 宿主）",
   "main": "./out/main/index.js",
@@ -14,7 +14,9 @@
     "test": "tsx --test test/*.test.ts",
     "test:e2e": "tsx --test e2e/*.test.ts",
     "pack": "node scripts/pack.mjs",
-    "pack:dir": "node scripts/pack.mjs --dir"
+    "pack:dir": "node scripts/pack.mjs --dir",
+    "verify:artifact": "node scripts/verify-artifact.mjs",
+    "pack:app": "node scripts/pack.mjs --app-only"
   },
   "dependencies": {
     "@room/core": "workspace:*",

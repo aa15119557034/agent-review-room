@@ -22,6 +22,8 @@ asarUnpack:
 # 安装包只带程序本体（200~400MB）。语音包（Python + 依赖 + 模型）单独出 zip，解压到安装目录。
 # runner.py 很小，留在包里；语音资源由 pack.mjs 打成 tts-runtime-*.zip / tts-model-IndexTTS-2.zip。
 extraResources:
+  - from: python/transcribe.py
+    to: python/transcribe.py
   - from: tts/runner.py
     to: tts/runner.py
 

@@ -1,3 +1,5 @@
+import { WorkspaceError } from "@room/db";
+import type { WorkspaceService } from "./workspace";
 import { ApprovalDecisionConflictError, ApprovalNotConsumableError, StaleSnapshotError } from "@room/db";
 import { testReviewerNode } from "@room/remote-client";
 import {
@@ -36,6 +38,7 @@ import { SettingsError, type SettingsStore } from "./settings";
  */
 
 export interface IpcDeps {
+  readonly workspace?: WorkspaceService;
   readonly repo: Repository;
   readonly settings: SettingsStore;
   readonly orchestrator: RunOrchestrator;
@@ -77,6 +80,7 @@ const errorResult = (error: ControlErrorCode, message: string): ControlResult<un
 });
 
 function mapError(error: unknown): ControlResult<unknown> {
+  if (error instanceof WorkspaceError) return errorResult(error.code, error.message);
   if (error instanceof ControlFailure) {
     return errorResult(error.code, error.message);
   }
@@ -113,6 +117,7 @@ function mapError(error: unknown): ControlResult<unknown> {
 
 export function createDispatcher(deps: IpcDeps) {
   const { repo, settings, orchestrator } = deps;
+  const workspace = () => { if (!deps.workspace) throw new ControlFailure("internal", "资料与维护服务没有启动"); return deps.workspace; };
 
   const chatService = (): ChatService => {
     if (deps.chat === undefined) throw new ControlFailure("internal", "聊天服务没有启动");
@@ -166,6 +171,13 @@ export function createDispatcher(deps: IpcDeps) {
 
   async function runCommand(command: CommandRequest): Promise<unknown> {
     switch (command.type) {
+      case "workspace.openRestored": return workspace().openRestored();
+      case "workspace.useDefaultData": return workspace().openRestored(true);
+      case "workspace.backup": return workspace().backup();
+      case "workspace.restore": return workspace().restore();
+      case "workspace.diagnostics.export": return workspace().exportDiagnostics();
+      case "workspace.export": return workspace().exportScope(command);
+      case "workspace.decision.save": return workspace().saveDecision(command);
       case "projectNote.edit":
         return notesService().edit({
           scope: command.scope,
@@ -455,6 +467,14 @@ export function createDispatcher(deps: IpcDeps) {
 
   async function runQuery(query: QueryRequest): Promise<unknown> {
     switch (query.type) {
+      case "workspace.sources": return workspace().sources(query.projectId);
+      case "workspace.search": return workspace().search(query);
+      case "workspace.item": return workspace().item(query);
+      case "workspace.health": return workspace().health();
+      case "workspace.diagnostics": return workspace().diagnostics();
+      case "workspace.tasks": return workspace().tasks(query);
+      case "workspace.decisions": return workspace().decisions(query);
+      case "workspace.export.preview": return workspace().preview(query.scope);
       case "system.status": {
         const node = settings.get();
         return {

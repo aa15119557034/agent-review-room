@@ -1,3 +1,4 @@
+import { createWorkspaceActions } from "./workspace-actions";
 import type { ContributionType, NodeTestResult, TextSelection } from "@room/schemas";
 import { appendEvents, applyEvent, emptyDraft, type AppState } from "./state";
 import { describeFailure, type RoomClient } from "./client";
@@ -91,6 +92,8 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
   return {
     ...disc,
     chat,
+    openWorkspace() { store.set(s=>({...s,view:"workspace"})); },
+    workspace: createWorkspaceActions(client, fail),
     agentConsole,
     notes,
 

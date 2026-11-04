@@ -1,0 +1,21 @@
+import { createRequire } from "node:module";
+import { existsSync, readFileSync, readdirSync, lstatSync, writeFileSync } from "node:fs";
+import { join, resolve } from "node:path";
+import { createHash } from "node:crypto";
+const target=resolve(process.argv[2]??"../../release/win-unpacked");
+const require=createRequire(import.meta.url);
+const builderRequire=createRequire(require.resolve("electron-builder/package.json"));
+const libraryRequire=createRequire(builderRequire.resolve("app-builder-lib/package.json"));
+const asar=libraryRequire("@electron/asar");
+const archive=join(target,"resources","app.asar");
+if(!existsSync(archive))throw new Error("Missing packaged app.asar: "+archive);
+const info=JSON.parse(asar.extractFile(archive,"out/main/build-info.json").toString("utf8"));
+const pkg=JSON.parse(asar.extractFile(archive,"package.json").toString("utf8"));
+if(info.dirty!==false||info.version!==pkg.version||!/^[a-f0-9]{40}$/.test(info.revision))throw new Error("Invalid release provenance");
+for(const name of ["python/transcribe.py","tts/runner.py"])if(!existsSync(join(target,"resources",name)))throw new Error("Missing sidecar: "+name);
+for(const name of ["out/main/index.js","out/preload/index.js","out/renderer/index.html"])if(!asar.extractFile(archive,name).length)throw new Error("Empty bundle: "+name);
+function nativeFiles(dir){return existsSync(dir)?readdirSync(dir).flatMap(name=>{const p=join(dir,name);return lstatSync(p).isDirectory()?nativeFiles(p):p.endsWith(".node")?[p]:[];}):[];}
+if(!nativeFiles(join(target,"resources","app.asar.unpacked")).some(f=>f.includes("better-sqlite3")))throw new Error("Missing unpacked SQLite native module");
+const result={...info,checkedAt:new Date().toISOString(),archiveSha256:createHash("sha256").update(readFileSync(archive)).digest("hex"),sidecars:["python/transcribe.py","tts/runner.py"],status:"PASS",runtime:"NOT_RUN"};
+writeFileSync(join(target,"artifact-check.json"),JSON.stringify(result,null,2));
+console.log(JSON.stringify(result,null,2));

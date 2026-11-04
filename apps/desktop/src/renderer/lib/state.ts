@@ -38,7 +38,7 @@ export interface AppState {
   /** 用户在运行记录里点选的 run；null 表示默认显示最新的一个 */
   selectedRunId: string | null;
   /** 顶栏切换：聊天（C-35）、讨论室（主页）、秘书控制台（C-37）、单次评审（Phase 0 工作台）、设置 */
-  view: "chat" | "discussion" | "console" | "desk" | "settings";
+  view: "chat" | "discussion" | "console" | "desk" | "settings" | "workspace";
   /** 讨论室（C-21） */
   disc: DiscussionState;
   /** 聊天空间（C-35） */

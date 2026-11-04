@@ -1,6 +1,7 @@
-import { existsSync } from "node:fs";
+import { WorkspaceService } from "./workspace";
+import { existsSync, readFileSync, writeFileSync, renameSync, rmSync, mkdirSync } from "node:fs";
 import { app, BrowserWindow, dialog, ipcMain, nativeTheme, protocol, safeStorage, shell } from "electron";
-import { join } from "node:path";
+import { join, isAbsolute } from "node:path";
 import { openDatabase, repairInterruptedRuns, WriteQueue } from "@room/db";
 import { HttpRemoteAgentAdapter } from "@room/remote-client";
 import { IMAGE_URL_SCHEME, AUDIO_URL_SCHEME, IPC_CHANNELS, type ControlEvent } from "@room/schemas";
@@ -49,6 +50,8 @@ function windowBackground(): string {
 }
 
 let mainWindow: BrowserWindow | null = null;
+const defaultDataDirectory = app.getPath("userData");
+const dataLocationFile = join(defaultDataDirectory, "active-data.json");
 
 function broadcast(event: ControlEvent): void {
   for (const window of BrowserWindow.getAllWindows()) {
@@ -109,7 +112,7 @@ async function bootstrap(): Promise<void> {
   protocol.handle(IMAGE_URL_SCHEME, createImageProtocolHandler(mediaStore));
 
   // D-34b：录音本体 + 本地转写（Python sidecar）。没配 asr.json 时明确说「转写不可用」，不假装成功
-  const asr = loadAsrConfigFile(join(userData, "asr.json"), join(app.getAppPath(), "python", "transcribe.py"));
+  const asr = loadAsrConfigFile(join(userData, "asr.json"), app.isPackaged ? join(process.resourcesPath, "python", "transcribe.py") : join(app.getAppPath(), "python", "transcribe.py"));
   if (asr.config === null) console.warn(`[voice] ${asr.problem}； chat.voice.import 会明确拒绝`);
   const transcriber = asr.config === null ? null : new SidecarTranscriber(asr.config);
   // #137 评审第 1 条：录音字节并入 MediaStore（D-37b），room-audio:// 只有底部那一个处理器
@@ -313,7 +316,34 @@ async function bootstrap(): Promise<void> {
   const repairedChat = await chat.repairInterrupted();
   await chat.repairPendingImmersive();
 
+  const workspace = new WorkspaceService({
+    db, queue, userData, version: app.getVersion(), revision: process.env["ROOM_BUILD_SHA"] ?? "development",
+    confirmSwitch: async (target) => (await dialog.showMessageBox({type:"question",buttons:["取消","切换并重启"],defaultId:0,cancelId:0,title:"切换资料",message:target?"将打开恢复副本，原资料继续保留。节点凭据和本机媒体配置需要重新配置。":"将切回原资料目录，恢复副本继续保留。"})).response===1,
+    activateDirectory: (target) => {
+      if(target===null){rmSync(dataLocationFile,{force:true});}
+      else {mkdirSync(defaultDataDirectory,{recursive:true});writeFileSync(dataLocationFile+".tmp",JSON.stringify({directory:target}),"utf8");renameSync(dataLocationFile+".tmp",dataLocationFile);}
+      setTimeout(()=>{app.relaunch();app.quit();},250);
+    },
+    chooseDirectory: async (title) => { const result = await dialog.showOpenDialog({title, properties:["openDirectory", "createDirectory"]}); return result.canceled ? null : result.filePaths[0] ?? null; },
+    chooseSaveFile: async (title, defaultPath) => { const result = await dialog.showSaveDialog({title, defaultPath, filters:[{name:"JSON",extensions:["json"]}]}); return result.canceled ? null : result.filePath ?? null; },
+    checks: async () => {
+      const checkedAt = new Date().toISOString();
+      const nodeChecks = await Promise.all(nodes.list().slice(0,64).map(async (node,index) => {
+        const agent = repo.listAgents().find(a => a.nodeId === node.id);
+        const result = await nodes.test({type:"node.test",id:node.id,baseUrl:node.baseUrl,profileId:agent?.chatProfileId ?? agent?.profileId ?? "health"});
+        return {id:"node-"+(index+1),label:node.label.slice(0,100),state:result.reachable ? "available" as const : "unavailable" as const,detail:result.reachable ? "节点健康接口可达；真实模型任务需另行试跑" : ("节点连接检查失败："+result.error).slice(0,500),checkedAt};
+      }));
+      const githubState = github.status();
+      return [...nodeChecks,
+        {id:"comfyui",label:"本机画图",state:comfyConfig ? "configured" as const : "unconfigured" as const,detail:comfyConfig ? "工作流已配置，未启动绘图任务" : "请配置 comfyui.json",checkedAt},
+        {id:"asr",label:"录音转写",state:asr.config ? "configured" as const : "unconfigured" as const,detail:asr.config ? "Python、脚本和模型路径存在；CUDA 与实际转写尚待试跑" : "请检查 asr.json 的 Python、脚本与模型路径",checkedAt},
+        {id:"tts",label:"语音合成",state:ttsConfig && existsSync(ttsConfig.python) && existsSync(ttsConfig.script) ? "configured" as const : "unconfigured" as const,detail:"检查语音包和声音配置；此检查不会加载模型或合成语音",checkedAt},
+        {id:"github",label:"GitHub 同步",state:githubState.lastError ? "unavailable" as const : "unknown" as const,detail:githubState.lastError ? ("同步错误："+githubState.lastError).slice(0,500) : "最近状态未报告错误；这不是本次推送成功的证明",checkedAt}];
+    },
+  });
   const dispatcher = createDispatcher({
+    workspace,
+    github,
     repo,
     settings,
     orchestrator,
@@ -354,6 +384,11 @@ async function bootstrap(): Promise<void> {
 
 void app.whenReady().then(async () => {
   try {
+    if(existsSync(dataLocationFile)){
+      const location:unknown=JSON.parse(readFileSync(dataLocationFile,"utf8"));
+      if(typeof location!=="object"||location===null||!("directory" in location)||typeof location.directory!=="string"||!isAbsolute(location.directory)||!existsSync(join(location.directory,"room.db")))throw new Error("恢复副本目录不存在，请恢复 active-data.json 指向的目录或移除该选择文件后打开原资料");
+      app.setPath("userData",location.directory);
+    }
     await bootstrap();
   } catch (error) {
     // 迁移失败 / DB 被锁：以前这里会把 promise 丢掉，窗口不开、进程还挂着

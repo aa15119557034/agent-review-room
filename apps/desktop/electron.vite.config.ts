@@ -1,3 +1,6 @@
+import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { defineConfig, externalizeDepsPlugin } from "electron-vite";
 import react from "@vitejs/plugin-react";
 
@@ -13,9 +16,14 @@ import react from "@vitejs/plugin-react";
  */
 const WORKSPACE_PACKAGES = ["@room/core", "@room/db", "@room/schemas", "@room/remote-client", "@room/reviewer-client"];
 
+const root=resolve(__dirname,"../..");
+const revision=process.env["ROOM_BUILD_SHA"]??execFileSync("git",["-c","safe.directory="+root,"rev-parse","HEAD"],{cwd:root,encoding:"utf8"}).trim();
+const dirty=execFileSync("git",["-c","safe.directory="+root,"status","--porcelain"],{cwd:root,encoding:"utf8"}).trim().length>0;
+const version=(JSON.parse(readFileSync(resolve(__dirname,"package.json"),"utf8")) as {version:string}).version;
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin({ exclude: WORKSPACE_PACKAGES })],
+    define: { "process.env.ROOM_BUILD_SHA": JSON.stringify(revision) },
+    plugins: [externalizeDepsPlugin({ exclude: WORKSPACE_PACKAGES }), { name:"room-build-info", generateBundle(){this.emitFile({type:"asset",fileName:"build-info.json",source:JSON.stringify({version,revision,dirty},null,2)});}}],
   },
   preload: {
     plugins: [externalizeDepsPlugin({ exclude: WORKSPACE_PACKAGES })],
