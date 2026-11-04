@@ -15,3 +15,5 @@ export * from "./notes";
 export * from "./remote-protocol";
 export * from "./control-api";
 export * from "./ipc";
+
+export * from "./workspace";

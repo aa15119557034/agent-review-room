@@ -1,3 +1,4 @@
+import { WorkspaceItemKey, WorkspaceItem, WorkspaceSearchRequest, WorkspaceSearchPage, WorkspaceHealth, WorkspaceDiagnostics, WorkspaceFileResult, WorkspaceTaskPage, WorkspaceCursor, WorkspaceDecision, WorkspaceDecisionSave, WorkspaceExportPreview } from "./workspace";
 import { z } from "zod";
 import { AppearanceSettings, ChatBackground, ImageRef, PickableImagePurpose } from "./appearance";
 import {
@@ -261,6 +262,13 @@ const def = <Req extends z.ZodTypeAny, Res extends z.ZodTypeAny>(
 ) => ({ request, response, scope });
 
 export const COMMANDS = {
+  "workspace.openRestored": def(z.object({type:z.literal("workspace.openRestored")}).strict(), WorkspaceFileResult, "admin"),
+  "workspace.useDefaultData": def(z.object({type:z.literal("workspace.useDefaultData")}).strict(), WorkspaceFileResult, "admin"),
+  "workspace.backup": def(z.object({ type: z.literal("workspace.backup") }).strict(), WorkspaceFileResult, "admin"),
+  "workspace.restore": def(z.object({ type: z.literal("workspace.restore") }).strict(), WorkspaceFileResult, "admin"),
+  "workspace.diagnostics.export": def(z.object({ type: z.literal("workspace.diagnostics.export") }).strict(), WorkspaceFileResult, "admin"),
+  "workspace.export": def(z.object({ type: z.literal("workspace.export"), scope: NoteScope, expectedDigest: Sha256Hex, includeAttachments: z.boolean() }).strict(), WorkspaceFileResult, "admin"),
+  "workspace.decision.save": def(WorkspaceDecisionSave, WorkspaceDecision, "author"),
   "project.create": def(
     z.object({ type: z.literal("project.create"), name: z.string().min(1).max(200) }),
     Project,
@@ -1061,6 +1069,14 @@ export const chatSendIntentJson = (req: CommandRequest<"chat.send">): string =>
 // ================================================================ Queries
 
 export const QUERIES = {
+  "workspace.sources": def(z.object({type:z.literal("workspace.sources"),projectId:ProjectId}).strict(), z.array(WorkspaceItem).max(200), "read"),
+  "workspace.search": def(WorkspaceSearchRequest, WorkspaceSearchPage, "read"),
+  "workspace.item": def(WorkspaceItemKey.extend({ type: z.literal("workspace.item") }).strict(), WorkspaceItem, "read"),
+  "workspace.health": def(z.object({ type: z.literal("workspace.health") }).strict(), WorkspaceHealth, "admin"),
+  "workspace.diagnostics": def(z.object({ type: z.literal("workspace.diagnostics") }).strict(), WorkspaceDiagnostics, "admin"),
+  "workspace.tasks": def(z.object({ type: z.literal("workspace.tasks"), before: WorkspaceCursor.optional(), activeOnly: z.boolean().default(false) }).strict(), WorkspaceTaskPage, "read"),
+  "workspace.decisions": def(z.object({ type: z.literal("workspace.decisions"), projectId: ProjectId, history: z.boolean().default(false) }).strict(), z.array(WorkspaceDecision).max(1000), "read"),
+  "workspace.export.preview": def(z.object({ type: z.literal("workspace.export.preview"), scope: NoteScope }).strict(), WorkspaceExportPreview, "read"),
   "system.status": def(z.object({ type: z.literal("system.status") }), SystemStatus, "read"),
 
   /** 还没配置过节点时 reviewerNode 为 null */
