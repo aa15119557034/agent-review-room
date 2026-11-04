@@ -1,3 +1,4 @@
+import { ContextDetails } from "../WorkspaceView";
 import { Fragment, useEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
 import { CHAT_LIMITS, type AgentChatMessage, type ChatMessage, type ChatReplySlot, type ChatRun, type Conversation, type UserChatMessage } from "@room/schemas";
 import {
@@ -1194,6 +1195,7 @@ function MemoryDetail({ message, run }: { message: AgentChatMessage; run: ChatRu
   return (
     <section className="chat-memory-detail">
       <h3>记忆来源</h3>
+      <ContextDetails runId={message.runId} />
       <ul>
         <li>本会话的聊天记录（较早的用摘要）</li>
         {message.memoryEntriesUsed === null ? (

@@ -1,3 +1,4 @@
+import { WorkspaceView } from "./WorkspaceView";
 import { useState, type FormEvent } from "react";
 import { currentProject } from "../lib/state";
 import { useActions, useAppState, useIsMock } from "./hooks";
@@ -31,6 +32,7 @@ export function App() {
 
 function Shell() {
   const view = useAppState((s) => s.view);
+  if (view === "workspace") return <div className="shell shell-workspace"><TopBar /><WorkspaceView /></div>;
   if (view === "chat") {
     return (
       <div className="shell shell-chat">

@@ -35,6 +35,7 @@ function find7za() {
   process.exit(1);
 }
 
+if (!process.argv.includes("--app-only")) {
 const source = process.env.TTS_BUNDLE_DIR ?? "E:\\AI\\TTS";
 const required = [
   join(source, "pythons", "cpython-3.11.13-windows-x86_64-none", "python.exe"),
@@ -96,6 +97,7 @@ function zip(stageDir, fileName) {
 zip(runtimeStage, "tts-runtime-" + RUNTIME_VERSION + ".zip");
 zip(modelStage, "tts-model-IndexTTS-2.zip");
 console.log("[pack] 语音包已输出到 " + release);
+}
 
 
 function run(args, extraEnv = {}) {

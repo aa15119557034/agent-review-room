@@ -2,14 +2,15 @@
 
 由人类掌控、可审计的多 Agent 协同评审工作台。Electron + React + Node.js + SQLite。
 
-当前阶段：**Phase 0（最小闭环）**。设计冻结于 V0.4，之后的变更以 ADR 形式记录。
+当前阶段：**Phase 1B（功能集成与验收）**。基础设计冻结于 V0.4，后续变更见 ADR；自动验证与尚未完成的真机验收统一见 `docs/Phase1B-验收记录.md`。
 
 | 文档 | 内容 |
 |---|---|
 | `docs/分工.md` | 谁负责什么、目录所有权、GitHub 协作流程 |
-| `docs/phase0-任务.md` | 任务板和依赖关系 |
+| `docs/phase1B-任务.md` | 当前任务板和依赖关系 |
+| `docs/资料与维护.md` | 搜索、成果导出、备份恢复、诊断及统一验证 |
 | `docs/design/V0.4-frozen.txt` | 冻结的设计文档 |
-| `docs/design/ADR-001-远端执行节点.md` | 控制面与执行面分离（提议中） |
+| `docs/design/ADR-001-远端执行节点.md` | 控制面与执行面分离（已采纳） |
 | `AGENTS.md` / `CLAUDE.md` | 给 Agent 的工作规则 |
 
 ## 目录
@@ -41,8 +42,7 @@ agent-review-room/
 git clone https://github.com/aa15119557034/agent-review-room.git
 cd agent-review-room
 pnpm install
-pnpm typecheck
-pnpm test
+node scripts/verify.mjs
 ```
 
 ## ⚠️ 不要把仓库放在 VMware 共享文件夹里

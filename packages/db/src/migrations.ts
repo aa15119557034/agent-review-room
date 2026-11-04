@@ -1,3 +1,4 @@
+import { SCHEMA_V25 } from "./schema-v25";
 import type { Database } from "better-sqlite3";
 import { SCHEMA_V1, SCHEMA_V2 } from "./schema";
 import { SCHEMA_V3, SCHEMA_V3_REBUILD } from "./schema-v3";
@@ -221,6 +222,7 @@ export const MIGRATIONS: readonly Migration[] = [
     name: "chat-immersive-pending",
     up: (db) => { db.exec(SCHEMA_V24); },
   },
+  { version: 25, name: "workspace-decisions", up: (db) => { db.exec(SCHEMA_V25); } },
 ];
 
 /** 当前代码支持的最新 schema 版本 */

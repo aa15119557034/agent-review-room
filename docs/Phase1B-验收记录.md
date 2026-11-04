@@ -87,3 +87,34 @@ e2e 覆盖（都是真的 dispatcher / DB / HTTP adapter，节点是本地假 Ag
 - 语音转文字：Python 和模型打进安装包（汐）
 - D-38b 林离画图：暂缓，恢复前江浩先决定（ADR-004 §3）
 - 1B 全部验收后：迁入主项目
+
+
+## X-37 资料与维护（林离，2026-11-04，本机 Windows / Node v24.19.0）
+
+基线 main ab586045cb5c84bd02053e591f9c296ab34d45cc；本次 X-37 功能分支，契约与实现分开提交。没有覆盖上面的历史验收记录。
+
+实际命令：
+
+~~~text
+node scripts/verify.mjs
+tests-packages/schemas  tests 176 / pass 176 / fail 0
+tests-packages/core  tests 110 / pass 110 / fail 0
+tests-packages/db  tests 200 / pass 200 / fail 0
+tests-packages/reviewer-client  tests 15 / pass 15 / fail 0
+tests-packages/remote-client  tests 15 / pass 15 / fail 0
+tests-apps/agent-server  tests 179 / pass 179 / fail 0
+tests-apps/desktop  tests 307 / pass 307 / fail 0
+tests-renderer  tests 189 / pass 189 / fail 0
+tests-e2e  tests 48 / pass 48 / fail 0
+合计 1239 tests / 1239 pass / 0 fail / 0 skipped / 0 cancelled
+9 组 tsc：全部 code 0
+build-desktop / build-agent-server：全部 code 0
+~~~
+
+新增测试覆盖：万条消息查询、稳定游标、撤回过滤、决定 CAS 和同议题来源、备份附件 hash / 损坏与缺失拒绝 / 清单路径、恢复不改活动库、恢复副本修改后再次打开、分享预览变化拒绝、附件字节导出、诊断白名单、严格请求边界及前次回答来源比较。万条消息为合成测试数据，不代表所有真实大库性能。
+
+桌面实测尝试：使用现有 Electron 44.9.0 的 dist/electron.exe 和隔离数据目录启动，窗口出现前退出，退出码 2147483651（0x80000003）。因此新增界面的点击流程、实际应用重启切换、NSIS 安装/升级、真实 ASR/TTS/GPU 出图仍未验证；不能用单测通过替代这些结果。未修改系统安全设置。
+
+评审 #193 中本轮连带修复：GitHub 服务注入 dispatcher，ASR 脚本放入 extraResources 并按 resourcesPath 加载。其余原有评审缺陷继续按原评论追踪，不宣称全项目已无缺陷。
+
+本体打包前置检查：本机复用的依赖未安装 electron-builder / app-builder-lib，入口解析报 MODULE_NOT_FOUND；遵循本机不自动安装软件的要求，没有补装。verify:artifact 未实际通过，真实安装包内容与 NSIS 验收均保留未验证。构建产物的 build-info.json 已加入版本、commit SHA 和工作区 dirty 标识；electron-vite 自身生成的临时配置不计为源码改动。

@@ -21,3 +21,5 @@ export * from "./media-jobs";
 export * from "./voice";
 
 
+
+export * from "./workspace";
