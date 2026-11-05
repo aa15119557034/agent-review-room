@@ -2198,7 +2198,10 @@ button.stage:hover {
   min-height: 2rem;
   width: 3.5rem;
 }
-.settings > * + * {
+.settings > section + section,
+.settings > form + form,
+.settings > form + section,
+.settings > section + form {
   margin-top: 1.75rem;
   padding-top: 1.25rem;
   border-top: 1px solid var(--rule);

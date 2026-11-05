@@ -204,7 +204,7 @@ function NodeEditor({ id, saved, onSaved }: { id: string; saved: NodeInfo | null
         </span>
       </legend>
       <details open={saved === null || !saved.tokenConfigured}>
-      <summary className="node-editor-toggle">{saved?.baseUrl ?? "还没保存"}（点开可展开 / 收起）</summary>
+      <summary className="node-editor-toggle">展开 / 收起编辑</summary>
       {preset && <p className="step-hint">{preset.hint}</p>}
       <div className="node-fields">
         <label>
