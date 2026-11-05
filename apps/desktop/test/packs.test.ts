@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync, existsSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
@@ -93,6 +93,8 @@ describe("packs service (#209)", () => {
     assert.equal(service.list().find((p) => p.id === "tts-model")!.state, "installed");
     assert.ok(existsSync(join(local, "评审室", "tts", "models", "IndexTTS-2", "config.yaml")));
     assert.ok(events.some((e) => e.type === "packs.updated"));
+    const last = events.filter((e) => e.type === "packs.updated").at(-1)!;
+    assert.equal(last.type === "packs.updated" ? last.packs.find((p) => p.id === "tts-model")!.progress : "x", null, "完成事件不会被节流吞掉");
     assert.ok(!existsSync(join(local, "评审室", "tts", ".staging-"), "staging 清掉"));
   });
 
@@ -133,6 +135,41 @@ describe("packs service (#209)", () => {
     const result = await service.import({ type: "packs.import", id: "tts-model", mode: "folder" });
     assert.equal(result.error, null);
     assert.equal(service.list().find((p) => p.id === "tts-model")!.state, "installed");
+  });
+
+  it("校验失败后也不留 .staging-*（否则几个 GB 会越积越多）", async () => {
+    const local = temp();
+    const zip = await makeZip({
+      "pack.json": JSON.stringify({ id: "tts-model", version: "old" }),
+      "models/IndexTTS-2/model.json": JSON.stringify({ version: "old" }),
+    });
+    const { service } = makeService({ local, pick: zip });
+    assert.equal((await service.import({ type: "packs.import", id: null, mode: "zip" })).error, "PACK_VERSION_MISMATCH");
+    const staging = readdirSync(join(local, "评审室", "tts")).filter((name) => name.startsWith(".staging-"));
+    assert.deepEqual(staging, [], "没有残留 staging");
+  });
+
+  it("前一个还在导入时再导入 → PACK_BUSY", async () => {
+    const local = temp();
+    const zip = await makeZip({
+      "pack.json": JSON.stringify({ id: "tts-model", version: "indextts2-2.0.0" }),
+      "models/IndexTTS-2/model.json": JSON.stringify({ version: "indextts2-2.0.0" }),
+    });
+    let open: ((path: string) => void) | null = null;
+    const service = new PacksService({
+      dialog: { showOpenDialog: () => new Promise((resolve) => { open = (path: string) => resolve({ canceled: path === "", filePaths: path === "" ? [] : [path] }); }) },
+      installDir: temp(),
+      resourcesPath: temp(),
+      localAppData: local,
+      emit: () => undefined,
+    });
+    const first = service.import({ type: "packs.import", id: null, mode: "zip" });
+    // 让第一个 import 进到 await 选择框
+    await new Promise((r) => setTimeout(r, 20));
+    const second = await service.import({ type: "packs.import", id: "tts-model", mode: "zip" });
+    assert.equal(second.error, "PACK_BUSY");
+    open!(zip);
+    assert.equal((await first).error, null);
   });
 
   it("用户取消选择框 → cancelled，什么也不改", async () => {

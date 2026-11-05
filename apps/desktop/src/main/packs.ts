@@ -1,4 +1,5 @@
 import {
+  copyFileSync,
   createWriteStream,
   existsSync,
   mkdirSync,
@@ -7,9 +8,8 @@ import {
   renameSync,
   rmSync,
   statSync,
-  writeFileSync,
 } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve, sep } from "node:path";
 import yauzl from "yauzl";
 import type { CommandRequest, ControlEvent, PackErrorCode, PackId, PackProgress, PackStatus, Packs } from "@room/schemas";
 import { TTS_MODEL_VERSION, TTS_RUNTIME_VERSION } from "./tts-paths";
@@ -108,9 +108,9 @@ function copyTree(source: string, destination: string, onBytes: (bytes: number) 
     return;
   }
   mkdirSync(dirname(destination), { recursive: true });
-  const data = readFileSync(source);
-  writeFileSync(destination, data);
-  onBytes(data.byteLength);
+  // 不能用 readFileSync：模型权重很容易 >2 GiB（Node 会抛 ERR_FS_FILE_TOO_LARGE）
+  copyFileSync(source, destination);
+  onBytes(info.size);
 }
 
 function openZip(file: string): Promise<yauzl.ZipFile> {
@@ -143,18 +143,42 @@ export class PacksService {
     return [join(this.deps.installDir, "tts"), this.#targetBase(), join(this.deps.resourcesPath, "tts")];
   }
 
-  #findBase(definition: PackDefinition): string | null {
+  /**
+   * 所有包按同一个 base 判断：和 findTtsBundle 的搜索顺序一致。
+   * 运行环境和模型分在两个目录时，只认第一个有内容的 base，另一个包显示「没装」——和真正朗读时的结果一致。
+   */
+  #sharedBase(): string | null {
     for (const base of this.#bases()) {
-      if (definition.required.some((item) => existsSync(join(base, item)))) return base;
-      if (existsSync(join(base, definition.versionFile))) return base;
+      const any = PACK_REGISTRY.some(
+        (definition) =>
+          definition.required.some((item) => existsSync(join(base, item))) ||
+          existsSync(join(base, definition.versionFile)),
+      );
+      if (any) return base;
     }
     return null;
   }
 
   #status(definition: PackDefinition): PackStatus {
-    const base = this.#findBase(definition);
+    const base = this.#sharedBase();
     const progress = this.#progress.get(definition.id) ?? null;
     if (base === null) {
+      return {
+        id: definition.id,
+        label: definition.label,
+        description: definition.description,
+        state: "missing",
+        version: null,
+        expectedVersion: definition.expectedVersion,
+        path: null,
+        missing: [],
+        totalBytes: null,
+        progress,
+      };
+    }
+    const anyPresent =
+      definition.required.some((item) => existsSync(join(base, item))) || existsSync(join(base, definition.versionFile));
+    if (!anyPresent) {
       return {
         id: definition.id,
         label: definition.label,
@@ -202,6 +226,7 @@ export class PacksService {
       return { cancelled: false, packId: command.id, error: "PACK_BUSY", packs: this.list() };
     }
     this.#busy = true;
+    let stagingRoot: string | null = null;
     try {
       const picked = await this.deps.dialog.showOpenDialog({
         title: command.mode === "zip" ? "选择包（zip）" : "选择包（文件夹）",
@@ -213,6 +238,7 @@ export class PacksService {
         return { cancelled: true, packId: null, error: null, packs: this.list() };
       }
       const staged = command.mode === "zip" ? await this.#stageZip(source, command.id) : this.#stageFolder(source, command.id);
+      stagingRoot = staged.root;
       const definition = staged.definition;
       this.#progress.set(definition.id, { phase: "checking", doneBytes: staged.bytes, totalBytes: staged.bytes, error: null });
       this.#publish();
@@ -229,6 +255,7 @@ export class PacksService {
       this.#publish();
       return { cancelled: false, packId, error: code, packs: this.list() };
     } finally {
+      if (stagingRoot !== null) rmSync(stagingRoot, { recursive: true, force: true });
       this.#busy = false;
     }
   }
@@ -262,18 +289,18 @@ export class PacksService {
     let bytes = 0;
     try {
       const zip = await openZip(source);
-      await new Promise<void>((resolve, reject) => {
+      await new Promise<void>((done, reject) => {
         zip.on("entry", (entry: yauzl.Entry) => {
           if (entry.fileName.endsWith("/")) {
             zip.readEntry();
             return;
           }
           const name = entry.fileName.startsWith(ZIP_PREFIX) ? entry.fileName.slice(ZIP_PREFIX.length) : entry.fileName;
-          if (name === "" || name.includes("..")) {
+          const destination = name === "" ? staging : resolve(staging, name);
+          if (name === "" || (destination !== staging && !destination.startsWith(staging + sep))) {
             reject(new PackImportError("PACK_ARCHIVE_INVALID", requested, "压缩包里有不安全的路径"));
             return;
           }
-          const destination = join(staging, name);
           mkdirSync(dirname(destination), { recursive: true });
           zip.openReadStream(entry, (error, stream) => {
             if (error !== null || stream === undefined) {
@@ -291,7 +318,7 @@ export class PacksService {
             stream.pipe(out);
           });
         });
-        zip.on("end", resolve);
+        zip.on("end", done);
         zip.on("error", reject);
         zip.readEntry();
       });
@@ -349,16 +376,27 @@ export class PacksService {
     }
   }
 
+  /** 逐项「旧 → .bak → 新 → 删 .bak」；失败把 .bak 改回去，不把用户原来能用的包弄丢 */
   #install(root: string, base: string): void {
     mkdirSync(base, { recursive: true });
     for (const name of readdirSync(root)) {
       if (name === "pack.json") continue;
       const destination = join(base, name);
-      rmSync(destination, { recursive: true, force: true });
+      const backup = destination + ".bak-" + Date.now();
+      const hadOld = existsSync(destination);
+      if (hadOld) renameSync(destination, backup);
       try {
-        renameSync(join(root, name), destination);
-      } catch {
-        copyTree(join(root, name), destination, () => undefined);
+        try {
+          renameSync(join(root, name), destination);
+        } catch {
+          copyTree(join(root, name), destination, () => undefined);
+          rmSync(join(root, name), { recursive: true, force: true });
+        }
+        if (hadOld) rmSync(backup, { recursive: true, force: true });
+      } catch (error) {
+        rmSync(destination, { recursive: true, force: true });
+        if (hadOld) renameSync(backup, destination);
+        throw error;
       }
     }
     rmSync(root, { recursive: true, force: true });
