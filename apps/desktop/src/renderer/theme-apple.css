@@ -216,6 +216,11 @@ body {
   overflow: hidden;
 }
 
+/* 单次评审 / 设置的桌面区内容会超出窗口，必须能滚（#210） */
+.desk {
+  overflow-y: auto;
+}
+
 .disc-side {
   border: 1px solid rgb(255 255 255 / 0.9);
   border-radius: 24px;

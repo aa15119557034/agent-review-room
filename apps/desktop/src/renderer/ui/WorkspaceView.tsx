@@ -7,6 +7,7 @@ import "./workspace.css";
 const healthLabel={configured:"已配置，未试跑",available:"连接可用",unavailable:"不可用",unconfigured:"未配置",unknown:"未知"};
 const decisionLabel={pending:"待决定",accepted:"采纳",rejected:"拒绝",deferred:"延后"};
 const formatTime=(value:string|null)=>value?new Date(value).toLocaleString():"尚未发生";
+const TAB_HINT={search:"解决「那段话在哪」：按关键词找回聊天、方案、笔记，或把一个范围导出成文件。",plans:"解决「方案改了什么、决定了没有」：对照方案版本，记录采纳 / 拒绝 / 延后。",tasks:"解决「任务卡在哪」：看排队、运行和失败的任务，以及每次回答的来源。",maintenance:"解决「资料安不安全」：检查健康状况，备份和恢复。"} as const;
 export function WorkspaceView(){
   const actions=useActions(),api=actions.workspace,projects=useAppState(s=>s.projects),conversations=useAppState(s=>s.chat.list);
   const notice=useAppState(s=>s.notice),isMock=useIsMock();
@@ -28,12 +29,13 @@ export function WorkspaceView(){
   async function inspect(hit:WorkspaceItem){setItem(hit);}
   async function fileAction(action:()=>Promise<WorkspaceFileResult|null>){setFileBusy(true);setResult(null);try{setResult(await action());}finally{setFileBusy(false);}}
   return <main className="workspace-page">
-    <header className="workspace-heading"><div><h1>资料与维护</h1><p>找回资料，核对回答来源，整理决定与备份。</p></div><button onClick={()=>void actions.openSettings()}>返回设置</button></header>
+    <header className="workspace-heading"><div><h1>资料与维护</h1><p>找回资料，核对回答来源，整理决定与备份。</p></div><button onClick={()=>void actions.openSettings()}>← 返回设置</button></header>
     {notice&&<p role="alert">{notice.message}</p>}
     {isMock?<p role="status">演示模式不提供本地资料维护，请连接桌面后端使用。</p>:<>
     <nav className="workspace-tabs" aria-label="资料与维护">
       {([["search","搜索与成果"],["plans","方案与决定"],["tasks","任务与来源"],["maintenance","健康与备份"]] as const).map(([key,label])=><button key={key} aria-pressed={tab===key} onClick={()=>setTab(key)}>{label}</button>)}
     </nav>
+    <p className="workspace-tab-hint">{TAB_HINT[tab]}</p>
     {tab==="search"&&<section>
       <form className="workspace-toolbar" onSubmit={e=>{e.preventDefault();void find();}}>
         <label>范围<select value={scopeValue} onChange={e=>{setScopeValue(e.target.value);invalidate();setSearchBusy(false);}}>

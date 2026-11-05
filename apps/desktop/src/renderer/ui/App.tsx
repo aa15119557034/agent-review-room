@@ -241,6 +241,7 @@ function ProjectRail() {
   return (
     <nav className="rail" aria-label="项目">
       <h2 className="rail-heading">项目</h2>
+      <p className="rail-hint">项目 = 一组议题的视图，用来把相关的评审和讨论放在一起。</p>
       <ul className="rail-list">
         {projects.map((p) => (
           <li key={p.id}>

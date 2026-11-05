@@ -203,6 +203,8 @@ function NodeEditor({ id, saved, onSaved }: { id: string; saved: NodeInfo | null
           {saved === null ? "还没保存" : saved.tokenConfigured ? "Token 已保存" : "Token 未配置"}
         </span>
       </legend>
+      <details open={saved === null || !saved.tokenConfigured}>
+      <summary className="node-editor-toggle">{saved?.baseUrl ?? "还没保存"}（点开可展开 / 收起）</summary>
       {preset && <p className="step-hint">{preset.hint}</p>}
       <div className="node-fields">
         <label>
@@ -256,6 +258,7 @@ function NodeEditor({ id, saved, onSaved }: { id: string; saved: NodeInfo | null
             : `连不上：${result.message}`}
         </p>
       )}
+      </details>
     </fieldset>
   );
 }

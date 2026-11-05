@@ -2198,8 +2198,24 @@ button.stage:hover {
   min-height: 2rem;
   width: 3.5rem;
 }
-.settings .settings-form + .settings-form {
+.settings > * + * {
   margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+}
+.settings-actions {
+  flex-wrap: wrap;
+}
+.node-editor-toggle {
+  cursor: pointer;
+  margin: 0.25rem 0;
+  font-size: var(--size-s);
+  color: var(--ink-soft);
+}
+.rail-hint {
+  margin: 0 0 0.5rem;
+  font-size: var(--size-s);
+  color: var(--ink-soft);
 }
 .agent-flags {
   display: flex;
