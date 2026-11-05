@@ -1,5 +1,6 @@
 import { WorkspaceError } from "@room/db";
 import type { WorkspaceService } from "./workspace";
+import type { PacksService } from "./packs";
 import { ApprovalDecisionConflictError, ApprovalNotConsumableError, StaleSnapshotError } from "@room/db";
 import { testReviewerNode } from "@room/remote-client";
 import {
@@ -57,6 +58,8 @@ export interface IpcDeps {
   readonly voices?: () => VoiceOption[];
   /** D-34b：录音导入与本地转写 */
   readonly voice?: VoiceService;
+  /** #209：包导入（packs.list / packs.import） */
+  readonly packs?: PacksService;
   readonly nodes: NodeService;
   readonly appVersion: string;
   readonly recoveredRuns: number;
@@ -142,6 +145,11 @@ export function createDispatcher(deps: IpcDeps) {
   const notesService = (): NotesService => {
     if (deps.notes === undefined) throw new ControlFailure("internal", "笔记服务没有启动");
     return deps.notes;
+  };
+
+  const packsService = (): PacksService => {
+    if (deps.packs === undefined) throw new ControlFailure("internal", "包导入服务没有启动");
+    return deps.packs;
   };
 
   const voiceService = (): VoiceService => {
@@ -442,6 +450,8 @@ export function createDispatcher(deps: IpcDeps) {
         return deps.nodes.importLocalToken(command);
       case "chat.voice.import":
         return voiceService().import(command);
+      case "packs.import":
+        return packsService().import(command);
     }
   }
 
@@ -467,6 +477,7 @@ export function createDispatcher(deps: IpcDeps) {
 
   async function runQuery(query: QueryRequest): Promise<unknown> {
     switch (query.type) {
+      case "packs.list": return packsService().list();
       case "workspace.sources": return workspace().sources(query.projectId);
       case "workspace.search": return workspace().search(query);
       case "workspace.item": return workspace().item(query);
