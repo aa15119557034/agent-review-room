@@ -167,6 +167,9 @@ export function applyEvent(state: AppState, event: ControlEvent): AppState {
       const notes = applyNotesEvent(state.notes, event);
       return notes === state.notes ? state : { ...state, notes };
     }
+    // 语音包状态由设置页自己查 tts.packs，这里先不存（界面接线在后续 PR）
+    case "tts.packs.updated":
+      return state;
   }
 }
 
