@@ -55,7 +55,7 @@ export interface MockOptions {
   media?: MediaMockOptions;
   /** 项目笔记、换窗口（C-47） */
   notes?: NotesMockOptions;
-  ttsPacks?: TtsPacksMockOptions;
+  packs?: PacksMockOptions;
 }
 
 export { MockError, id, now, sha256Hex, randomHex } from "./util";
@@ -65,7 +65,7 @@ import { createChatMock, type ChatMockOptions } from "./chat-mock";
 import { createMediaMock, type MediaMockOptions } from "./media-mock";
 import { createActivityQuery } from "./activity-mock";
 import { createNotesMock, type NotesMockOptions } from "./notes-mock";
-import { createTtsPacksMock, type TtsPacksMockOptions } from "./tts-packs-mock";
+import { createPacksMock, type PacksMockOptions } from "./packs-mock";
 
 export function createMockBridge(options: MockOptions = {}): RoomBridge & { reset(): void; mediaUrl(ref: string): string | undefined } {
   const tickMs = options.tickMs ?? 120;
@@ -387,8 +387,8 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
     options.notes,
   );
   Object.assign(commands, notes.commands);
-  const ttsPacks = createTtsPacksMock({ emit, tickMs }, options.ttsPacks);
-  Object.assign(commands, ttsPacks.commands);
+  const packsMock = createPacksMock({ emit, tickMs }, options.packs);
+  Object.assign(commands, packsMock.commands);
 
   // ------------------------------------------------------------ queries
 
@@ -441,7 +441,7 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
   };
 
   Object.assign(queries, discussion.queries);
-  Object.assign(queries, chat.queries, media.queries, notes.queries, ttsPacks.queries);
+  Object.assign(queries, chat.queries, media.queries, notes.queries, packsMock.queries);
   // 控制台（C-37a）：讨论的 Turn + 聊天的回答位
   queries["agents.activity"] = createActivityQuery({
     agentExists: (a) => discussion.agents().some((x) => x.id === a),
@@ -480,7 +480,7 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
     /** 浏览器里没有 room-image:// / room-audio://：把 mock 的引用换成 data: 地址（只在 ?mock 时用） */
     mediaUrl: (ref: string) => media.hooks.url(ref),
     reset() {
-      ttsPacks.reset();
+      packsMock.reset();
       discussion.reset();
       chat.reset();
       media.reset();

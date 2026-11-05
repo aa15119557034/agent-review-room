@@ -4183,34 +4183,34 @@ button.stage:hover {
   letter-spacing: inherit;
 }
 
-.tts-pack-list {
+.pack-list {
   display: grid;
   gap: 0.75rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.tts-pack {
+.pack {
   display: grid;
   gap: 0.25rem;
   padding: 0.75rem 1rem;
   border: 1px solid var(--rule);
   border-radius: 0.75rem;
 }
-.tts-pack-head {
+.pack-head {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 0.75rem;
 }
-.tts-pack[data-state="installed"] .tts-pack-state {
+.pack[data-state="installed"] .pack-state {
   color: var(--good);
 }
-.tts-pack[data-state="missing"] .tts-pack-state,
-.tts-pack[data-state="version_mismatch"] .tts-pack-state,
-.tts-pack[data-state="incomplete"] .tts-pack-state {
+.pack[data-state="missing"] .pack-state,
+.pack[data-state="version_mismatch"] .pack-state,
+.pack[data-state="incomplete"] .pack-state {
   color: var(--bad);
 }
-.tts-pack progress {
+.pack progress {
   width: 100%;
 }

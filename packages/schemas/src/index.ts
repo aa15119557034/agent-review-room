@@ -17,4 +17,4 @@ export * from "./control-api";
 export * from "./ipc";
 
 export * from "./workspace";
-export * from "./tts-packs";
+export * from "./packs";

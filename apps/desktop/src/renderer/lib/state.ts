@@ -10,7 +10,7 @@ import type {
   ReviewerNodeSettings,
   Run,
   SystemStatus,
-  TtsPacks,
+  Packs,
 } from "@room/schemas";
 import { applyDiscussionEvent, initialDiscussion, type DiscussionState } from "./discussion";
 import { applyChatEvent, initialChat, isChatRun, type ChatState } from "./chat";
@@ -48,8 +48,8 @@ export interface AppState {
   console: ConsoleState;
   /** 项目笔记、换窗口、GitHub 同步（C-47） */
   notes: NotesState;
-  /** 语音包状态（#209）；null = 还没读过。读不到（后端没这个查询）也是 null */
-  ttsPacks: TtsPacks | null;
+  /** 包的状态（#209，packs.list）；null = 还没读过。读不到（后端没这个查询）也是 null */
+  packs: Packs | null;
   /** Reviewer 节点设置；undefined = 还没读过，null = 从未设置 */
   reviewerNode: ReviewerNodeSettings | null | undefined;
   /** 你在聊天里的名字和头像（appearance.get）；读不到时为 null，界面显示「我」 */
@@ -86,7 +86,7 @@ export const initialState: AppState = {
   chat: initialChat,
   console: initialConsole,
   notes: initialNotes,
-  ttsPacks: null,
+  packs: null,
   reviewerNode: undefined,
   appearance: null,
   notice: null,
@@ -171,8 +171,8 @@ export function applyEvent(state: AppState, event: ControlEvent): AppState {
       const notes = applyNotesEvent(state.notes, event);
       return notes === state.notes ? state : { ...state, notes };
     }
-    case "tts.packs.updated":
-      return { ...state, ttsPacks: event.packs };
+    case "packs.updated":
+      return { ...state, packs: event.packs };
   }
 }
 
