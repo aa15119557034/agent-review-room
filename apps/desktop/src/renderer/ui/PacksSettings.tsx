@@ -12,6 +12,7 @@ const STATE_TEXT: Record<PackStatus["state"], string> = {
 const PHASE_TEXT = { extracting: "正在解压", checking: "正在检查", ready: "完成", failed: "失败" } as const;
 
 function size(bytes: number): string {
+  if (bytes === 0) return "0 B";
   return bytes >= 1e9 ? `${(bytes / 1e9).toFixed(1)} GB` : `${Math.max(1, Math.round(bytes / 1e6))} MB`;
 }
 
@@ -24,8 +25,11 @@ export function PacksSettings() {
   const actions = useActions();
   const packs = useAppState((s) => s.packs);
   const [lastError, setLastError] = useState<PackErrorCode | null>(null);
+  const [unsupported, setUnsupported] = useState(false);
+  const load = async () => setUnsupported(!(await actions.packs.load()));
   useEffect(() => {
-    void actions.packs.load();
+    void load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actions]);
   const running = packs?.some((p) => p.progress?.phase === "extracting" || p.progress?.phase === "checking") ?? false;
   const importAny = async (mode: "zip" | "folder") => setLastError(await actions.packs.import(null, mode));
@@ -52,11 +56,20 @@ export function PacksSettings() {
         </p>
       )}
       {packs === null ? (
-        <p className="step-hint">读取中…（后端还没有包导入功能时这里会一直空着）</p>
+        unsupported ? (
+          <div className="settings-actions">
+            <p className="step-hint">这个版本还不支持包导入（主控机还没接上），或者读取失败了。</p>
+            <button type="button" className="button-outline" onClick={() => void load()}>
+              重试
+            </button>
+          </div>
+        ) : (
+          <p className="step-hint">读取中…</p>
+        )
       ) : (
         <ul className="pack-list">
           {packs.map((p) => (
-            <PackRow key={p.id} pack={p} onError={setLastError} />
+            <PackRow key={p.id} pack={p} anyRunning={running} onError={setLastError} />
           ))}
         </ul>
       )}
@@ -64,10 +77,11 @@ export function PacksSettings() {
   );
 }
 
-function PackRow({ pack, onError }: { pack: PackStatus; onError: (e: PackErrorCode | null) => void }) {
+function PackRow({ pack, anyRunning, onError }: { pack: PackStatus; anyRunning: boolean; onError: (e: PackErrorCode | null) => void }) {
   const actions = useActions();
   const prog = pack.progress;
-  const running = prog?.phase === "extracting" || prog?.phase === "checking";
+  // 任何一个包在导入时，所有行的导入按钮都停用（同时只能导入一个）
+  const running = anyRunning;
   const pct = prog && prog.totalBytes ? Math.min(100, Math.round((prog.doneBytes / prog.totalBytes) * 100)) : null;
   const go = async (mode: "zip" | "folder") => onError(await actions.packs.import(pack.id, mode));
   const needs = pack.state !== "installed" || prog?.phase === "failed";
@@ -101,11 +115,9 @@ function PackRow({ pack, onError }: { pack: PackStatus; onError: (e: PackErrorCo
         <button type="button" className={needs ? "button-outline" : "button-quiet"} disabled={running} onClick={() => void go("zip")}>
           {needs ? "导入 zip" : "换一个包（zip）"}
         </button>
-        {needs && (
-          <button type="button" className="button-outline" disabled={running} onClick={() => void go("folder")}>
-            导入文件夹
-          </button>
-        )}
+        <button type="button" className={needs ? "button-outline" : "button-quiet"} disabled={running} onClick={() => void go("folder")}>
+          {needs ? "导入文件夹" : "换一个包（文件夹）"}
+        </button>
       </div>
     </li>
   );

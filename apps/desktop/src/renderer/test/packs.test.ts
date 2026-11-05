@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import type { ControlEvent } from "@room/schemas";
 import { createMockBridge, type MockOptions } from "../mock/mock-backend";
 import { createActions } from "../lib/actions";
-import { createClient } from "../lib/client";
+import { ControlFailure, createClient } from "../lib/client";
 import { applyEvent, initialState, type AppState } from "../lib/state";
 import { createStore } from "../lib/store";
 
@@ -32,6 +32,15 @@ function setup(opts: MockOptions = {}) {
 }
 
 describe("包导入", () => {
+  it("后端不认识 packs.list：load 返回 false，不弹错误提示", async () => {
+    const { store, actions } = setup();
+    const bad = createActions(store, { ...createClient(createMockBridge({ tickMs: 2 })), query: (async () => { throw new ControlFailure("validation_failed", "x"); }) as never });
+    assert.equal(await bad.packs.load(), false);
+    assert.equal(store.get().packs, null);
+    assert.equal(store.get().notice, null);
+    assert.equal(await actions.packs.load(), true);
+  });
+
   it("读列表：运行环境已装，模型和补丁没装；列表不是写死两项", async () => {
     const { store, actions } = setup();
     await actions.packs.load();

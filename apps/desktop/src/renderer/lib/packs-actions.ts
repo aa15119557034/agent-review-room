@@ -1,5 +1,5 @@
 import type { PackErrorCode, PackId } from "@room/schemas";
-import type { RoomClient } from "./client";
+import { ControlFailure, type RoomClient } from "./client";
 import type { AppState } from "./state";
 import type { Store } from "./store";
 
@@ -17,12 +17,15 @@ export const PACK_ERROR_TEXT: Record<PackErrorCode, string> = {
 /** 包导入（#209，契约 #214）。失败写进 notice，不向上抛；导入失败的原因码返回给界面显示 */
 export function createPacksActions(store: Store<AppState>, client: RoomClient, fail: (err: unknown) => void) {
   return {
-    async load() {
+    /** 读成功返回 true。后端还不认识 packs.list（validation_failed）返回 false 且不弹错，界面显示「不支持」；别的错照常报 */
+    async load(): Promise<boolean> {
       try {
         const packs = await client.query({ type: "packs.list" });
         store.set((s) => ({ ...s, packs }));
+        return true;
       } catch (err) {
-        fail(err);
+        if (!(err instanceof ControlFailure && err.code === "validation_failed")) fail(err);
+        return false;
       }
     },
     /**
