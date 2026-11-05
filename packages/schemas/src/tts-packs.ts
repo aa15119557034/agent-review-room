@@ -11,17 +11,21 @@ import { z } from "zod";
 export const TtsPackKind = z.enum(["runtime", "model"]);
 export type TtsPackKind = z.infer<typeof TtsPackKind>;
 
-/** installed：版本对得上；missing：没找到；version_mismatch：找到了但版本和程序要的不一致 */
-export const TtsPackState = z.enum(["installed", "missing", "version_mismatch"]);
+/**
+ * installed：版本对得上且文件齐；missing：没找到；version_mismatch：找到了但版本和程序要的不一致；
+ * incomplete：找到了、版本对，但缺文件（缺的列在 missing[]）
+ */
+export const TtsPackState = z.enum(["installed", "missing", "version_mismatch", "incomplete"]);
 export type TtsPackState = z.infer<typeof TtsPackState>;
 
-/** 失败给原因码，不抛原始异常。PACK_BUSY：已有一个导入在跑 */
+/** 失败给原因码，不抛原始异常。PACK_BUSY：已有一个导入在跑；PACK_NO_SPACE：磁盘空间不够 */
 export const TtsPackErrorCode = z.enum([
   "PACK_NOT_FOUND",
   "PACK_INCOMPLETE",
   "PACK_VERSION_MISMATCH",
   "PACK_ARCHIVE_INVALID",
   "PACK_BUSY",
+  "PACK_NO_SPACE",
 ]);
 export type TtsPackErrorCode = z.infer<typeof TtsPackErrorCode>;
 
@@ -60,12 +64,15 @@ export const TtsPackStatus = z
 export type TtsPackStatus = z.infer<typeof TtsPackStatus>;
 
 /** 固定两项：runtime 在前，model 在后 */
-export const TtsPacks = z.array(TtsPackStatus).max(2);
+export const TtsPacks = z.array(TtsPackStatus).length(2);
 export type TtsPacks = z.infer<typeof TtsPacks>;
 
 export const TtsPacksRequest = z.object({ type: z.literal("tts.packs") }).strict();
 
-/** 没有 path：选择框由 main 弹 */
+/**
+ * 没有 path：选择框由 main 弹。
+ * folder 模式：用户选「包含 tts/ 的父目录」或「tts 目录本身」都认；zip 模式：压缩包里顶层是 tts/ 或直接是包内容都认。
+ */
 export const TtsImportRequest = z
   .object({ type: z.literal("tts.import"), kind: TtsPackKind, mode: z.enum(["zip", "folder"]) })
   .strict();

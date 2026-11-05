@@ -23,13 +23,16 @@ test("pack progress: error appears only with failed", () => {
 });
 
 test("import result: cancelled cannot carry an error; at most two packs", () => {
-  assert.equal(TtsImportResult.safeParse({ cancelled: true, error: null, packs: [status] }).success, true);
-  assert.equal(TtsImportResult.safeParse({ cancelled: true, error: "PACK_BUSY", packs: [] }).success, false);
+  const two = [status, { ...status, kind: "model", state: "incomplete", missing: ["model.json"] }];
+  assert.equal(TtsImportResult.safeParse({ cancelled: true, error: null, packs: two }).success, true);
+  assert.equal(TtsImportResult.safeParse({ cancelled: false, error: "PACK_NO_SPACE", packs: two }).success, true);
+  assert.equal(TtsImportResult.safeParse({ cancelled: true, error: null, packs: [] }).success, false);
+  assert.equal(TtsImportResult.safeParse({ cancelled: true, error: "PACK_BUSY", packs: [status, status] }).success, false);
   assert.equal(TtsImportResult.safeParse({ cancelled: false, error: null, packs: [status, status, status] }).success, false);
 });
 
 test("tts query, command and event are registered", () => {
   assert.ok("tts.packs" in QUERIES);
   assert.ok("tts.import" in COMMANDS);
-  assert.equal(ControlEvent.safeParse({ type: "tts.packs.updated", packs: [status] }).success, true);
+  assert.equal(ControlEvent.safeParse({ type: "tts.packs.updated", packs: [status, { ...status, kind: "model" }] }).success, true);
 });
