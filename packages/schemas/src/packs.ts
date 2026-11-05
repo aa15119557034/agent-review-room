@@ -11,7 +11,7 @@ import { z } from "zod";
  * （和 workspace.* 一致）：选择框由 main 弹，解压到临时目录、校验、原子替换都在 main 里做。
  * 响应里的 path 只用来展示「装在哪」，不能再拿回去当入参。
  *
- * 自动识别：压缩包 / 文件夹根部有 pack.json（{ id, version }）。id 是 null 时 main 按它认；认不出、或和指定的 id 不一致，
+ * 自动识别：压缩包 / 文件夹根部有 pack.json（{ id, version }，两项都必填，补丁包也要写 version）。id 是 null 时 main 按它认；认不出、或和指定的 id 不一致，
  * 都返回 PACK_UNKNOWN，什么也不改。
  */
 export const PackId = z.string().regex(/^[a-z][a-z0-9-]{1,40}$/);
@@ -70,7 +70,10 @@ export const PackStatus = z
     /** 版本对不上 / 不完整时缺的相对路径，最多列 20 个 */
     missing: z.array(z.string().max(300)).max(20),
     totalBytes: z.number().int().nonnegative().nullable(),
-    /** 正在导入或刚失败时才有；空闲是 null */
+    /**
+     * 只有正在导入的那一个包有（extracting / checking）；失败后保留 phase = failed 和原因码，直到下一次导入开始；
+     * 导入成功后清为 null。其它包、空闲时都是 null。查询（packs.list）不受导入进行中的影响，随时可查
+     */
     progress: PackProgress.nullable(),
   })
   .strict();
@@ -86,7 +89,7 @@ export type Packs = z.infer<typeof Packs>;
 export const PacksRequest = z.object({ type: z.literal("packs.list") }).strict();
 
 /**
- * 没有 path：选择框由 main 弹。id 为 null = 让程序按 pack.json 自己认。
+ * 没有 path：选择框由 main 弹。（暂无「取消导入」，要的话以后加 packs.cancel，记在 Phase 2 清单。）id 为 null = 让程序按 pack.json 自己认。
  * folder 模式：用户选「包含 pack.json 的目录」，或它的上一层（含 tts/ 这类单个子目录）都认；
  * zip 模式：压缩包顶层是包目录或直接是包内容都认。
  */
