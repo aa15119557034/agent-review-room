@@ -1,7 +1,7 @@
 import { WorkspaceService } from "./workspace";
 import { existsSync, readFileSync, writeFileSync, renameSync, rmSync, mkdirSync } from "node:fs";
 import { app, BrowserWindow, dialog, ipcMain, nativeTheme, protocol, safeStorage, shell } from "electron";
-import { join, isAbsolute } from "node:path";
+import { dirname, join, isAbsolute } from "node:path";
 import { openDatabase, repairInterruptedRuns, WriteQueue } from "@room/db";
 import { HttpRemoteAgentAdapter } from "@room/remote-client";
 import { IMAGE_URL_SCHEME, AUDIO_URL_SCHEME, IPC_CHANNELS, type ControlEvent } from "@room/schemas";
@@ -22,6 +22,7 @@ import { RunOrchestrator } from "./orchestrator";
 import { Repository } from "./repository";
 import { SettingsStore } from "./settings";
 import { loadTtsConfigFile, TtsRunner, voiceOptionsOf } from "./tts";
+import { PacksService } from "./packs";
 import { bundledTtsConfig, findTtsBundle } from "./tts-paths";
 
 /**
@@ -341,6 +342,14 @@ async function bootstrap(): Promise<void> {
         {id:"github",label:"GitHub 同步",state:githubState.lastError ? "unavailable" as const : "unknown" as const,detail:githubState.lastError ? ("同步错误："+githubState.lastError).slice(0,500) : "最近状态未报告错误；这不是本次推送成功的证明",checkedAt}];
     },
   });
+  const packs = new PacksService({
+    dialog: { showOpenDialog: (options) => dialog.showOpenDialog(options as never) },
+    installDir: dirname(process.execPath),
+    resourcesPath: process.resourcesPath,
+    localAppData: process.env.LOCALAPPDATA,
+    emit: broadcast,
+  });
+
   const dispatcher = createDispatcher({
     workspace,
     github,
@@ -354,6 +363,7 @@ async function bootstrap(): Promise<void> {
     jobs,
     voices: () => (ttsConfig === null ? [] : voiceOptionsOf(ttsConfig)),
     voice,
+    packs,
     nodes,
     appVersion: app.getVersion(),
     recoveredRuns: repaired.repaired.length + repairedChat,

@@ -74,7 +74,9 @@ cpSync(join(source, "index-tts"), join(runtimeStage, "tts", "index-tts"), {
   filter: (path) => !path.includes(join("index-tts", ".venv")),
 });
 writeFileSync(join(runtimeStage, "tts", "runtime.json"), JSON.stringify({ version: RUNTIME_VERSION }) + "\n");
+writeFileSync(join(runtimeStage, "tts", "pack.json"), JSON.stringify({ id: "tts-runtime", version: RUNTIME_VERSION }) + "\n");
 cpSync(join(source, "models", "IndexTTS-2"), join(modelStage, "tts", "models", "IndexTTS-2"), { recursive: true });
+writeFileSync(join(modelStage, "tts", "pack.json"), JSON.stringify({ id: "tts-model", version: MODEL_VERSION }) + "\n");
 writeFileSync(
   join(modelStage, "tts", "models", "IndexTTS-2", "model.json"),
   JSON.stringify({ version: MODEL_VERSION }) + "\n",
