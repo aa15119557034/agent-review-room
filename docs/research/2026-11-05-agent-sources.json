@@ -1,0 +1,621 @@
+{
+  "researchedAt": "2026-11-05",
+  "baseline": "dd3f7d3",
+  "method": "GitHub REST metadata and SHA-pinned README; selected source files read statically. No installation or runtime benchmark.",
+  "repositories": [
+    {
+      "requested": "openai/codex",
+      "repo": "openai/codex",
+      "sha": "e7f32cf1928a35a9232a633a51c2a03b5a7e2c72",
+      "date": "2026-11-05T08:10:44Z",
+      "archived": false,
+      "license": "Apache-2.0",
+      "path": "README.md",
+      "url": "https://github.com/openai/codex",
+      "readmeUrl": "https://github.com/openai/codex/blob/e7f32cf1928a35a9232a633a51c2a03b5a7e2c72/README.md",
+      "decision": "运行时首选试点",
+      "rationale": "用 app-server 的线程、turn、审批事件替换纯文本接入；先只读，验证 Windows 与断线恢复",
+      "additionalFiles": [
+        {
+          "path": "codex-rs/app-server/README.md",
+          "verified": true,
+          "url": "https://github.com/openai/codex/blob/e7f32cf1928a35a9232a633a51c2a03b5a7e2c72/codex-rs/app-server/README.md"
+        }
+      ]
+    },
+    {
+      "requested": "openai/openai-agents-js",
+      "repo": "openai/openai-agents-js",
+      "sha": "35b24d72e525f08a0862ccb05de909d619198aae",
+      "date": "2026-11-05T07:48:54Z",
+      "archived": false,
+      "license": "MIT",
+      "path": "README.md",
+      "url": "https://github.com/openai/openai-agents-js",
+      "readmeUrl": "https://github.com/openai/openai-agents-js/blob/35b24d72e525f08a0862ccb05de909d619198aae/README.md",
+      "decision": "编排参考",
+      "rationale": "manager-as-tool 和可序列化 RunState；不再引入第二套全局任务账本",
+      "additionalFiles": [
+        {
+          "path": "packages/agents-core/src/runState.ts",
+          "verified": true,
+          "url": "https://github.com/openai/openai-agents-js/blob/35b24d72e525f08a0862ccb05de909d619198aae/packages/agents-core/src/runState.ts"
+        }
+      ]
+    },
+    {
+      "requested": "anthropics/claude-agent-sdk-python",
+      "repo": "anthropics/claude-agent-sdk-python",
+      "sha": "3be907edb9c86269d30d1427a77937dd788d6419",
+      "date": "2026-11-04T00:54:24Z",
+      "archived": false,
+      "license": "MIT",
+      "path": "README.md",
+      "url": "https://github.com/anthropics/claude-agent-sdk-python",
+      "readmeUrl": "https://github.com/anthropics/claude-agent-sdk-python/blob/3be907edb9c86269d30d1427a77937dd788d6419/README.md",
+      "decision": "第二运行时参考",
+      "rationale": "权限回调、hooks、session；项目优先考察 TypeScript 接口，Python 源码用于理解边界",
+      "additionalFiles": [
+        {
+          "path": "src/claude_agent_sdk/client.py",
+          "verified": true,
+          "url": "https://github.com/anthropics/claude-agent-sdk-python/blob/3be907edb9c86269d30d1427a77937dd788d6419/src/claude_agent_sdk/client.py"
+        }
+      ]
+    },
+    {
+      "requested": "anthropics/claude-quickstarts",
+      "repo": "anthropics/claude-quickstarts",
+      "sha": "8ef47d719eba5379ff8f38133f5defcc499e856f",
+      "date": "2026-11-02T14:11:21Z",
+      "archived": false,
+      "license": "MIT",
+      "path": "README.md",
+      "url": "https://github.com/anthropics/claude-quickstarts",
+      "readmeUrl": "https://github.com/anthropics/claude-quickstarts/blob/8ef47d719eba5379ff8f38133f5defcc499e856f/README.md",
+      "decision": "长任务方法",
+      "rationale": "initializer + 增量执行 + 可检查进度；旧示例 API 不能直接复制",
+      "additionalFiles": [
+        {
+          "path": "autonomous-coding/agent.py",
+          "verified": true,
+          "url": "https://github.com/anthropics/claude-quickstarts/blob/8ef47d719eba5379ff8f38133f5defcc499e856f/autonomous-coding/agent.py"
+        }
+      ]
+    },
+    {
+      "requested": "anthropics/skills",
+      "repo": "anthropics/skills",
+      "sha": "ca45fc496a3436251f191354091d557da31c15b5",
+      "date": "2026-10-28T19:20:38Z",
+      "archived": false,
+      "license": null,
+      "path": "README.md",
+      "url": "https://github.com/anthropics/skills",
+      "readmeUrl": "https://github.com/anthropics/skills/blob/ca45fc496a3436251f191354091d557da31c15b5/README.md",
+      "decision": "技能格式参考",
+      "rationale": "按需加载、固定版本；文档类 skills 并非统一开源许可",
+      "additionalFiles": []
+    },
+    {
+      "requested": "modelcontextprotocol/typescript-sdk",
+      "repo": "modelcontextprotocol/typescript-sdk",
+      "sha": "1e608caeb5130b2ad0fa067c84b26a038c1c6e36",
+      "date": "2026-10-31T10:53:48Z",
+      "archived": false,
+      "license": "NOASSERTION",
+      "path": "README.md",
+      "url": "https://github.com/modelcontextprotocol/typescript-sdk",
+      "readmeUrl": "https://github.com/modelcontextprotocol/typescript-sdk/blob/1e608caeb5130b2ad0fa067c84b26a038c1c6e36/README.md",
+      "decision": "工具协议候选",
+      "rationale": "工具发现与调用；当前 v2 已稳定，升级必须单独兼容性测试",
+      "additionalFiles": [
+        {
+          "path": "LICENSE",
+          "verified": true,
+          "url": "https://github.com/modelcontextprotocol/typescript-sdk/blob/1e608caeb5130b2ad0fa067c84b26a038c1c6e36/LICENSE"
+        }
+      ]
+    },
+    {
+      "requested": "agentclientprotocol/agent-client-protocol",
+      "repo": "agentclientprotocol/agent-client-protocol",
+      "sha": "734309dc6ff8f5a3b93adca62826dd63cff85a26",
+      "date": "2026-11-04T09:36:44Z",
+      "archived": false,
+      "license": "Apache-2.0",
+      "path": "README.md",
+      "url": "https://github.com/agentclientprotocol/agent-client-protocol",
+      "readmeUrl": "https://github.com/agentclientprotocol/agent-client-protocol/blob/734309dc6ff8f5a3b93adca62826dd63cff85a26/README.md",
+      "decision": "宿主协议候选",
+      "rationale": "统一宿主与编码 Agent 会话；不能替代业务任务状态",
+      "additionalFiles": []
+    },
+    {
+      "requested": "a2aproject/A2A",
+      "repo": "a2aproject/A2A",
+      "sha": "4735f4876449c6f381825d8a841b31b16c6ad0c4",
+      "date": "2026-10-30T16:08:37Z",
+      "archived": false,
+      "license": "Apache-2.0",
+      "path": "README.md",
+      "url": "https://github.com/a2aproject/A2A",
+      "readmeUrl": "https://github.com/a2aproject/A2A/blob/4735f4876449c6f381825d8a841b31b16c6ad0c4/README.md",
+      "decision": "跨系统后置",
+      "rationale": "异构 Agent 互操作；单机首版不需要同时实现 ACP 与 A2A",
+      "additionalFiles": []
+    },
+    {
+      "requested": "microsoft/agent-framework",
+      "repo": "microsoft/agent-framework",
+      "sha": "230a3aa0bba19b6bf5a7b4f427bcb25cb16c7105",
+      "date": "2026-11-04T17:30:37Z",
+      "archived": false,
+      "license": "MIT",
+      "path": "README.md",
+      "url": "https://github.com/microsoft/agent-framework",
+      "readmeUrl": "https://github.com/microsoft/agent-framework/blob/230a3aa0bba19b6bf5a7b4f427bcb25cb16c7105/README.md",
+      "decision": "设计参考",
+      "rationale": "工作流检查点与可观测性；不为框架重写现有 TypeScript 控制面",
+      "additionalFiles": []
+    },
+    {
+      "requested": "google/adk-python",
+      "repo": "google/adk-python",
+      "sha": "0192edd395986c6cc1a92ea9321be21ed32f0cfa",
+      "date": "2026-11-05T08:15:09Z",
+      "archived": false,
+      "license": "Apache-2.0",
+      "path": "README.md",
+      "url": "https://github.com/google/adk-python",
+      "readmeUrl": "https://github.com/google/adk-python/blob/0192edd395986c6cc1a92ea9321be21ed32f0cfa/README.md",
+      "decision": "设计参考",
+      "rationale": "工作流与任务建模；Python 示例不是本项目的默认依赖",
+      "additionalFiles": []
+    },
+    {
+      "requested": "langchain-ai/deepagents",
+      "repo": "langchain-ai/deepagents",
+      "sha": "5ed6d1c32f060143070b32826f87d2f83e569088",
+      "date": "2026-11-05T08:19:04Z",
+      "archived": false,
+      "license": "MIT",
+      "path": "README.md",
+      "url": "https://github.com/langchain-ai/deepagents",
+      "readmeUrl": "https://github.com/langchain-ai/deepagents/blob/5ed6d1c32f060143070b32826f87d2f83e569088/README.md",
+      "decision": "候选轻量 harness",
+      "rationale": "上下文隔离、文件与子任务；与其他 harness 择一验证",
+      "additionalFiles": [
+        {
+          "path": "libs/deepagents/deepagents/middleware/subagents.py",
+          "verified": true,
+          "url": "https://github.com/langchain-ai/deepagents/blob/5ed6d1c32f060143070b32826f87d2f83e569088/libs/deepagents/deepagents/middleware/subagents.py"
+        }
+      ]
+    },
+    {
+      "requested": "langchain-ai/langgraphjs",
+      "repo": "langchain-ai/langgraphjs",
+      "sha": "6c7eefbc3d985664370cfbcd9786888a642fa23a",
+      "date": "2026-11-05T02:19:06Z",
+      "archived": false,
+      "license": "MIT",
+      "path": "README.md",
+      "url": "https://github.com/langchain-ai/langgraphjs",
+      "readmeUrl": "https://github.com/langchain-ai/langgraphjs/blob/6c7eefbc3d985664370cfbcd9786888a642fa23a/README.md",
+      "decision": "节点内可选",
+      "rationale": "需要复杂图执行时才用；不与 SQLite 同时掌管全局终态",
+      "additionalFiles": []
+    },
+    {
+      "requested": "earendil-works/pi",
+      "repo": "earendil-works/pi",
+      "sha": "5f6198c397936e90b0847dd620a62741ac984d34",
+      "date": "2026-11-05T08:32:50Z",
+      "archived": false,
+      "license": "MIT",
+      "path": "README.md",
+      "url": "https://github.com/earendil-works/pi",
+      "readmeUrl": "https://github.com/earendil-works/pi/blob/5f6198c397936e90b0847dd620a62741ac984d34/README.md",
+      "decision": "轻量运行时备选",
+      "rationale": "RPC、树形会话与追加式压缩；可借机制，不强推替换 Codex",
+      "additionalFiles": [
+        {
+          "path": "packages/coding-agent/src/core/session-manager.ts",
+          "verified": true,
+          "url": "https://github.com/earendil-works/pi/blob/5f6198c397936e90b0847dd620a62741ac984d34/packages/coding-agent/src/core/session-manager.ts"
+        }
+      ]
+    },
+    {
+      "requested": "anomalyco/opencode",
+      "repo": "anomalyco/opencode",
+      "sha": "42be645ad71cd072398ef5f8053986c438512779",
+      "date": "2026-11-05T08:17:47Z",
+      "archived": false,
+      "license": "MIT",
+      "path": "README.md",
+      "url": "https://github.com/anomalyco/opencode",
+      "readmeUrl": "https://github.com/anomalyco/opencode/blob/42be645ad71cd072398ef5f8053986c438512779/README.md",
+      "decision": "交互参考",
+      "rationale": "计划与执行角色、可配置权限；权限仍由本项目控制面约束",
+      "additionalFiles": []
+    },
+    {
+      "requested": "aaif-goose/goose",
+      "repo": "aaif-goose/goose",
+      "sha": "bfe8ccd23de1d2c47a4cb2970d522f093ae7f2ba",
+      "date": "2026-11-04T07:57:41Z",
+      "archived": false,
+      "license": "Apache-2.0",
+      "path": "README.md",
+      "url": "https://github.com/aaif-goose/goose",
+      "readmeUrl": "https://github.com/aaif-goose/goose/blob/bfe8ccd23de1d2c47a4cb2970d522f093ae7f2ba/README.md",
+      "decision": "桌面工具参考",
+      "rationale": "多提供方、MCP/ACP；核对认证与平台能力后再接入",
+      "additionalFiles": []
+    },
+    {
+      "requested": "OpenHands/software-agent-sdk",
+      "repo": "OpenHands/software-agent-sdk",
+      "sha": "28f4dfeeec4473060873185d301495d1c3743947",
+      "date": "2026-11-05T05:46:25Z",
+      "archived": false,
+      "license": "MIT",
+      "path": "README.md",
+      "url": "https://github.com/OpenHands/software-agent-sdk",
+      "readmeUrl": "https://github.com/OpenHands/software-agent-sdk/blob/28f4dfeeec4473060873185d301495d1c3743947/README.md",
+      "decision": "独立重型节点候选",
+      "rationale": "工作区、事件、编码执行环境；不把整个 Python 服务嵌入桌面",
+      "additionalFiles": []
+    },
+    {
+      "requested": "cline/cline",
+      "repo": "cline/cline",
+      "sha": "d3ecc4890e8f9bcb77182b96c77fa90575e8e145",
+      "date": "2026-11-04T21:08:20Z",
+      "archived": false,
+      "license": "Apache-2.0",
+      "path": "README.md",
+      "url": "https://github.com/cline/cline",
+      "readmeUrl": "https://github.com/cline/cline/blob/d3ecc4890e8f9bcb77182b96c77fa90575e8e145/README.md",
+      "decision": "产品与执行参考",
+      "rationale": "CLI/IDE/桌面共享核心、工具审阅；不复制整个客户端",
+      "additionalFiles": []
+    },
+    {
+      "requested": "Aider-AI/aider",
+      "repo": "Aider-AI/aider",
+      "sha": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+      "date": "2026-05-22T14:02:20Z",
+      "archived": false,
+      "license": "Apache-2.0",
+      "path": "README.md",
+      "url": "https://github.com/Aider-AI/aider",
+      "readmeUrl": "https://github.com/Aider-AI/aider/blob/5dc9490bb35f9729ef2c95d00a19ccd30c26339c/README.md",
+      "decision": "代码上下文参考",
+      "rationale": "有 token 预算的 repo map；只能定位证据，不能代替原文核验",
+      "additionalFiles": [
+        {
+          "path": "aider/repomap.py",
+          "verified": true,
+          "url": "https://github.com/Aider-AI/aider/blob/5dc9490bb35f9729ef2c95d00a19ccd30c26339c/aider/repomap.py"
+        }
+      ]
+    },
+    {
+      "requested": "obra/superpowers",
+      "repo": "obra/superpowers",
+      "sha": "22f0b463e7a5e579904dd6211a520321035526f7",
+      "date": "2026-11-03T22:17:07Z",
+      "archived": false,
+      "license": "MIT",
+      "path": "README.md",
+      "url": "https://github.com/obra/superpowers",
+      "readmeUrl": "https://github.com/obra/superpowers/blob/22f0b463e7a5e579904dd6211a520321035526f7/README.md",
+      "decision": "开发流程吸收",
+      "rationale": "根因分析、分步实现、验证与复核；按任务风险使用，不安装整套强制流程",
+      "additionalFiles": []
+    },
+    {
+      "requested": "open-gsd/gsd-core",
+      "repo": "open-gsd/gsd-core",
+      "sha": "d47f196d1c65998f258f3409d57ed82f1a779184",
+      "date": "2026-11-05T05:57:33Z",
+      "archived": false,
+      "license": "MIT",
+      "path": "README.md",
+      "url": "https://github.com/open-gsd/gsd-core",
+      "readmeUrl": "https://github.com/open-gsd/gsd-core/blob/d47f196d1c65998f258f3409d57ed82f1a779184/README.md",
+      "decision": "交接流程吸收",
+      "rationale": "阶段记录、新上下文交接、结果验收；不把所有默认开关当授权",
+      "additionalFiles": [
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "verified": true,
+          "url": "https://github.com/open-gsd/gsd-core/blob/d47f196d1c65998f258f3409d57ed82f1a779184/docs/ARCHITECTURE.md"
+        }
+      ]
+    },
+    {
+      "requested": "steveyegge/beads",
+      "repo": "gastownhall/beads",
+      "sha": "6d713a74849f6168f5bbe973e0bfde64cfae8393",
+      "date": "2026-11-04T19:33:28Z",
+      "archived": false,
+      "license": "MIT",
+      "path": "README.md",
+      "url": "https://github.com/gastownhall/beads",
+      "readmeUrl": "https://github.com/gastownhall/beads/blob/6d713a74849f6168f5bbe973e0bfde64cfae8393/README.md",
+      "decision": "任务图吸收",
+      "rationale": "依赖、原子认领与持久任务；当前基于 Dolt，不引入第二数据库",
+      "additionalFiles": [
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "verified": false,
+          "url": "https://github.com/gastownhall/beads/blob/6d713a74849f6168f5bbe973e0bfde64cfae8393/docs/ARCHITECTURE.md"
+        }
+      ]
+    },
+    {
+      "requested": "steveyegge/gastown",
+      "repo": "gastownhall/gastown",
+      "sha": "466aa41c83ee73b1fa0eb79eb9d172fb1eca9476",
+      "date": "2026-10-28T05:20:19Z",
+      "archived": false,
+      "license": "MIT",
+      "path": "README.md",
+      "url": "https://github.com/gastownhall/gastown",
+      "readmeUrl": "https://github.com/gastownhall/gastown/blob/466aa41c83ee73b1fa0eb79eb9d172fb1eca9476/README.md",
+      "decision": "组织模式后置",
+      "rationale": "分派、回执、监督；不默认运行多层角色与大量 worker",
+      "additionalFiles": []
+    },
+    {
+      "requested": "BloopAI/vibe-kanban",
+      "repo": "BloopAI/vibe-kanban",
+      "sha": "08064e043c2d78ad123b473257ed867e7ce74768",
+      "date": "2026-11-03T08:46:44Z",
+      "archived": false,
+      "license": "Apache-2.0",
+      "path": "README.md",
+      "url": "https://github.com/BloopAI/vibe-kanban",
+      "readmeUrl": "https://github.com/BloopAI/vibe-kanban/blob/08064e043c2d78ad123b473257ed867e7ce74768/README.md",
+      "decision": "仅 UX 参考",
+      "rationale": "看板、并行工作区与审阅；README 宣布停止发展，不作为新核心依赖",
+      "additionalFiles": []
+    },
+    {
+      "requested": "bytedance/deer-flow",
+      "repo": "bytedance/deer-flow",
+      "sha": "4a53a36e32a7245e4ac2d5e80115ce7e31f8bd6c",
+      "date": "2026-11-05T08:06:20Z",
+      "archived": false,
+      "license": "MIT",
+      "path": "README.md",
+      "url": "https://github.com/bytedance/deer-flow",
+      "readmeUrl": "https://github.com/bytedance/deer-flow/blob/4a53a36e32a7245e4ac2d5e80115ce7e31f8bd6c/README.md",
+      "decision": "最接近目标的参考",
+      "rationale": "Super Agent、子任务租约与报告契约；借控制机制，重型部署仅作为可选节点",
+      "additionalFiles": [
+        {
+          "path": "backend/docs/ARCHITECTURE.md",
+          "verified": true,
+          "url": "https://github.com/bytedance/deer-flow/blob/4a53a36e32a7245e4ac2d5e80115ce7e31f8bd6c/backend/docs/ARCHITECTURE.md"
+        },
+        {
+          "path": "backend/packages/harness/deerflow/agents/lead_agent/agent.py",
+          "verified": true,
+          "url": "https://github.com/bytedance/deer-flow/blob/4a53a36e32a7245e4ac2d5e80115ce7e31f8bd6c/backend/packages/harness/deerflow/agents/lead_agent/agent.py"
+        },
+        {
+          "path": "backend/packages/harness/deerflow/subagents/batch_lease.py",
+          "verified": true,
+          "url": "https://github.com/bytedance/deer-flow/blob/4a53a36e32a7245e4ac2d5e80115ce7e31f8bd6c/backend/packages/harness/deerflow/subagents/batch_lease.py"
+        },
+        {
+          "path": "backend/packages/harness/deerflow/subagents/report_contract.py",
+          "verified": true,
+          "url": "https://github.com/bytedance/deer-flow/blob/4a53a36e32a7245e4ac2d5e80115ce7e31f8bd6c/backend/packages/harness/deerflow/subagents/report_contract.py"
+        }
+      ]
+    },
+    {
+      "requested": "langfuse/langfuse",
+      "repo": "langfuse/langfuse",
+      "sha": "e5d4e9e5c83a0c01574cc84a31814be5abc9b196",
+      "date": "2026-11-05T08:38:48Z",
+      "archived": false,
+      "license": "NOASSERTION",
+      "path": "README.md",
+      "url": "https://github.com/langfuse/langfuse",
+      "readmeUrl": "https://github.com/langfuse/langfuse/blob/e5d4e9e5c83a0c01574cc84a31814be5abc9b196/README.md",
+      "decision": "观测可选导出",
+      "rationale": "本地 trace 为准；外部平台失效不能阻塞任务，ee 目录另有许可",
+      "additionalFiles": [
+        {
+          "path": "LICENSE",
+          "verified": true,
+          "url": "https://github.com/langfuse/langfuse/blob/e5d4e9e5c83a0c01574cc84a31814be5abc9b196/LICENSE"
+        }
+      ]
+    },
+    {
+      "requested": "promptfoo/promptfoo",
+      "repo": "promptfoo/promptfoo",
+      "sha": "e3e2bb871540ae153a630878ecb17e56cfb487e3",
+      "date": "2026-11-04T22:20:50Z",
+      "archived": false,
+      "license": "MIT",
+      "path": "README.md",
+      "url": "https://github.com/promptfoo/promptfoo",
+      "readmeUrl": "https://github.com/promptfoo/promptfoo/blob/e3e2bb871540ae153a630878ecb17e56cfb487e3/README.md",
+      "decision": "评测候选",
+      "rationale": "固定数据集、断言、回归；调用真实模型的费用与数据出口仍需配置",
+      "additionalFiles": []
+    },
+    {
+      "requested": "mem0ai/mem0",
+      "repo": "mem0ai/mem0",
+      "sha": "ed1f10fc87080f0b67f99be370817504888462ab",
+      "date": "2026-11-04T10:55:26Z",
+      "archived": false,
+      "license": "Apache-2.0",
+      "path": "README.md",
+      "url": "https://github.com/mem0ai/mem0",
+      "readmeUrl": "https://github.com/mem0ai/mem0/blob/ed1f10fc87080f0b67f99be370817504888462ab/README.md",
+      "decision": "记忆研究参考",
+      "rationale": "检索与整合思想；不把托管产品基准当开源实现表现，不默认信任生成记忆",
+      "additionalFiles": []
+    },
+    {
+      "requested": "letta-ai/letta",
+      "repo": "letta-ai/letta",
+      "sha": "8816d3a8516893bfdc0fa14bfb1235226012e295",
+      "date": "2026-10-18T22:28:01Z",
+      "archived": false,
+      "license": "Apache-2.0",
+      "path": "README.md",
+      "url": "https://github.com/letta-ai/letta",
+      "readmeUrl": "https://github.com/letta-ai/letta/blob/8816d3a8516893bfdc0fa14bfb1235226012e295/README.md",
+      "decision": "迁移线索",
+      "rationale": "当前 README 指向 letta-code；旧 server 不能当最新默认方案",
+      "additionalFiles": []
+    },
+    {
+      "requested": "CherryHQ/cherry-studio",
+      "repo": "CherryHQ/cherry-studio",
+      "sha": "abafc6f1212b0c0ff431c6cab21833d92f84ad56",
+      "date": "2026-11-05T07:42:24Z",
+      "archived": false,
+      "license": "AGPL-3.0",
+      "path": "README.md",
+      "url": "https://github.com/CherryHQ/cherry-studio",
+      "readmeUrl": "https://github.com/CherryHQ/cherry-studio/blob/abafc6f1212b0c0ff431c6cab21833d92f84ad56/README.md",
+      "decision": "产品 UX 参考",
+      "rationale": "多模型、资料与 Agent 管理；AGPL 代码不直接并入当前闭源边界",
+      "additionalFiles": [
+        {
+          "path": "LICENSE",
+          "verified": true,
+          "url": "https://github.com/CherryHQ/cherry-studio/blob/abafc6f1212b0c0ff431c6cab21833d92f84ad56/LICENSE"
+        }
+      ]
+    },
+    {
+      "requested": "langgenius/dify",
+      "repo": "langgenius/dify",
+      "sha": "e1bca6369bddf6f69a720548bf1aea871ae26911",
+      "date": "2026-11-05T08:23:05Z",
+      "archived": false,
+      "license": "NOASSERTION",
+      "path": "README.md",
+      "url": "https://github.com/langgenius/dify",
+      "readmeUrl": "https://github.com/langgenius/dify/blob/e1bca6369bddf6f69a720548bf1aea871ae26911/README.md",
+      "decision": "工作流 UX 参考",
+      "rationale": "可视化节点、知识库与发布；附加许可与服务栈成本不适合作默认内核",
+      "additionalFiles": [
+        {
+          "path": "LICENSE",
+          "verified": true,
+          "url": "https://github.com/langgenius/dify/blob/e1bca6369bddf6f69a720548bf1aea871ae26911/LICENSE"
+        }
+      ]
+    },
+    {
+      "requested": "openclaw/openclaw",
+      "repo": "openclaw/openclaw",
+      "sha": "af7ea2ba51a906fe2e6e2dd6b7ad0ba101ba1a83",
+      "date": "2026-11-05T08:31:29Z",
+      "archived": false,
+      "license": "MIT",
+      "path": "README.md",
+      "url": "https://github.com/openclaw/openclaw",
+      "readmeUrl": "https://github.com/openclaw/openclaw/blob/af7ea2ba51a906fe2e6e2dd6b7ad0ba101ba1a83/README.md",
+      "decision": "长期助手参考",
+      "rationale": "本地 gateway、渠道、心跳与身份；事件缺口需刷新，不等同本项目序号回放",
+      "additionalFiles": []
+    },
+    {
+      "requested": "letta-ai/letta-code",
+      "repo": "letta-ai/letta-code",
+      "sha": "ee6e2c588082cbd98d8db1e20b18096585afa5bf",
+      "date": "2026-11-05T06:52:59Z",
+      "archived": false,
+      "license": "Apache-2.0",
+      "path": "README.md",
+      "url": "https://github.com/letta-ai/letta-code",
+      "readmeUrl": "https://github.com/letta-ai/letta-code/blob/ee6e2c588082cbd98d8db1e20b18096585afa5bf/README.md",
+      "decision": "记忆连续性参考",
+      "rationale": "MemFS、分层 skills、持续身份；Cloud 默认与原生 Windows 自动反思限制需显式核对",
+      "additionalFiles": []
+    },
+    {
+      "requested": "deepseek-ai/dsh-superagent-prototype",
+      "repo": "deepseek-ai/dsh-superagent-prototype",
+      "sha": "8c32a9dc5d72c033816c6a8110b37f40cf94fba4",
+      "date": "2026-10-31T12:06:31Z",
+      "archived": false,
+      "license": "MIT",
+      "path": "README.md",
+      "url": "https://github.com/deepseek-ai/dsh-superagent-prototype",
+      "readmeUrl": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/README.md",
+      "decision": "事件驱动架构重点参考；不直接部署",
+      "rationale": "Router/Worker、准入与订阅分离、持久意图、少打扰；原型的全权限执行和可复活Ticket不照搬",
+      "additionalFiles": [
+        {
+          "path": "docs/000-philosophy.md",
+          "verified": true,
+          "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/docs/000-philosophy.md"
+        },
+        {
+          "path": "docs/002-authorization.md",
+          "verified": true,
+          "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/docs/002-authorization.md"
+        },
+        {
+          "path": "docs/003-execution.md",
+          "verified": true,
+          "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/docs/003-execution.md"
+        },
+        {
+          "path": "docs/007-architecture.md",
+          "verified": true,
+          "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/docs/007-architecture.md"
+        },
+        {
+          "path": "docs/006-deployment.md",
+          "verified": true,
+          "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/docs/006-deployment.md"
+        },
+        {
+          "path": "docs/001-domain.md",
+          "verified": true,
+          "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/docs/001-domain.md"
+        },
+        {
+          "path": "src/core/engine.ts",
+          "verified": true,
+          "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/src/core/engine.ts"
+        },
+        {
+          "path": "src/app/outbox.ts",
+          "verified": true,
+          "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/src/app/outbox.ts"
+        },
+        {
+          "path": "src/app/sessions.ts",
+          "verified": true,
+          "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/src/app/sessions.ts"
+        }
+      ],
+      "failedLookups": [
+        {
+          "path": "docs/001-domain-model.md",
+          "resolution": "Correct path docs/001-domain.md was subsequently read."
+        }
+      ]
+    }
+  ],
+  "supplement": "2026-11-05-web-supplement.md"
+}

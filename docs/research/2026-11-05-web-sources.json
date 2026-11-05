@@ -1,0 +1,181 @@
+{
+  "checkedAt": "2026-11-05",
+  "scope": "Supplement to the initial 32-repository review. Not an exhaustive crawl of all social accounts.",
+  "sources": [
+    {
+      "id": "W01",
+      "title": "DeepSeek 官方中文设计文章",
+      "date": "2026-10-31",
+      "url": "https://zhuanlan.zhihu.com/p/2099987320443237060",
+      "access": "Browser Use 读取认证机构账号正文；普通抓取曾403",
+      "decision": "事件驱动和 Router/Worker 为架构主线；文章不等于公开实现"
+    },
+    {
+      "id": "W02",
+      "title": "DeepSeek Harness 官方 X 译文",
+      "date": "2026-11-01",
+      "url": "https://x.com/DeepSeekHarness/status/2116857257245987236",
+      "access": "Browser Use 读取；英文为机器翻译",
+      "decision": "与中文原文对照；不是新模型或正式 Super-agent 产品"
+    },
+    {
+      "id": "W03",
+      "title": "DeepSeek Harness 产品与文档入口",
+      "date": "访问于2026-11-05",
+      "url": "https://www.deepseek.com/harness/",
+      "access": "官方网页正文",
+      "decision": "公开预览和 Windows 下载存在，不证明 Super-agent 插件的本机适配"
+    },
+    {
+      "id": "W04",
+      "title": "OpenAI Harness engineering",
+      "date": "2026-02-11",
+      "url": "https://openai.com/index/harness-engineering/",
+      "access": "官方工程文章",
+      "decision": "知识目录、可执行架构约束、可被 Agent 观察的 UI/日志/测试环境"
+    },
+    {
+      "id": "W05",
+      "title": "OpenAI Agents SDK 新能力",
+      "date": "2026-04-15",
+      "url": "https://openai.com/index/the-next-evolution-of-the-agents-sdk/",
+      "access": "官方发布说明",
+      "decision": "harness 与受控执行环境的组合；不能推断 TS 与 Python 同步或复用订阅认证"
+    },
+    {
+      "id": "W06",
+      "title": "Anthropic Claude Duet",
+      "date": "访问于2026-11-05",
+      "url": "https://claude.com/resources/articles/claude-duet",
+      "access": "官方产品正文",
+      "decision": "研究预览；持续入口、离线后台工作、关注事项通知"
+    },
+    {
+      "id": "W07",
+      "title": "Anthropic 上下文工程",
+      "date": "2025-09-29",
+      "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+      "access": "官方文章搜索正文",
+      "decision": "按任务选择压缩、结构化笔记、子任务隔离"
+    },
+    {
+      "id": "W08",
+      "title": "Anthropic 高级工具使用",
+      "date": "2025-11-24",
+      "url": "https://www.anthropic.com/research/advanced-tool-use",
+      "access": "官方文章搜索正文",
+      "decision": "按需工具发现与程序化调用；不全量塞入工具描述"
+    },
+    {
+      "id": "W09",
+      "title": "Manus 上下文工程经验",
+      "date": "2025-07-18",
+      "url": "https://manus.im/blog/Context-Engineering-for-AI-Agents-Lessons-from-Building-Manus",
+      "access": "官方工程正文",
+      "decision": "稳定前缀、确定性序列化、文件化上下文与失败信息；不照抄旧价格"
+    },
+    {
+      "id": "W10",
+      "title": "LangChain 新上下文挑战",
+      "date": "2026-11-02",
+      "url": "https://www.langchain.com/blog/context-engineering-challenges-late-2026",
+      "access": "创始人在官方站的正文",
+      "decision": "主动但不扰人、异步回流、记忆选择和目标偏离仍需评测"
+    },
+    {
+      "id": "W11",
+      "title": "Pi 作者的最小 Agent 设计",
+      "date": "2025-11-30",
+      "url": "https://mariozechner.at/posts/2025-11-30-pi-coding-agent/",
+      "access": "作者博客搜索正文",
+      "decision": "极简核心可借；跨厂商历史转换是尽力而为，YOLO 与 tmux 假设不采用"
+    },
+    {
+      "id": "W12",
+      "title": "Pi 作者的项目归属更新",
+      "date": "2026-04-08",
+      "url": "https://mariozechner.at/posts/2026-04-08-ive-sold-out/",
+      "access": "作者博客搜索正文",
+      "decision": "核心 MIT、仓库迁移；未来附加产品不能一概按核心许可判断"
+    },
+    {
+      "id": "W13",
+      "title": "Superpowers 作者的7.0回顾",
+      "date": "2026-10-09",
+      "url": "https://blog.fsck.com/2026/10/09/what-a-year/",
+      "access": "作者博客正文",
+      "decision": "明确目标时减少流程阻力；按模型变化调整方法，而非固化仪式"
+    },
+    {
+      "id": "W14",
+      "title": "Letta Agents SDK",
+      "date": "2026-08-17",
+      "url": "https://www.letta.com/blog/introducing-the-letta-agent-sdk/",
+      "access": "官方正文",
+      "decision": "本地/自托管/云端状态后端；把 Letta 从纯记忆参考提升为后续有状态执行器备选"
+    },
+    {
+      "id": "W15",
+      "title": "Letta 生产记忆评测",
+      "date": "2026-07-28",
+      "url": "https://www.letta.com/blog/evaluating-memory-in-production-agents/",
+      "access": "官方研究搜索正文",
+      "decision": "分别测记忆使用与生成；私有任务和 LLM 判分不能当本项目模型排名"
+    },
+    {
+      "id": "W16",
+      "title": "Letta Mods",
+      "date": "2026-06-24",
+      "url": "https://www.letta.com/blog/introducing-mods/",
+      "access": "官方发布搜索正文",
+      "decision": "自适应 harness 有价值；这里只允许形成版本化建议，不默认热改控制面"
+    },
+    {
+      "id": "W17",
+      "title": "Cline SDK 重构经验",
+      "date": "2026-05-13",
+      "url": "https://cline.bot/blog/introducing-cline-sdk-the-upgraded-agent-runtime",
+      "access": "官方正文（页面提示JS但提取到文章）",
+      "decision": "运行时从 UI 解耦；TypeScript SDK 升为自定义执行器候选，需独立验证"
+    },
+    {
+      "id": "W18",
+      "title": "OpenHands SDK 设计",
+      "date": "2025-11-05",
+      "url": "https://www.openhands.dev/blog/introducing-the-openhands-software-agent-sdk",
+      "access": "官方发布搜索正文",
+      "decision": "嵌入式工作流、会话持久化、本地/远端工作空间"
+    },
+    {
+      "id": "W19",
+      "title": "OpenHands Verification Stack",
+      "date": "2026-06-22",
+      "url": "https://www.openhands.dev/blog/20260506-the-verification-stack",
+      "access": "官方正文",
+      "decision": "轨迹级复核与仓库审查/QA分层；critic不能代替实际验证"
+    },
+    {
+      "id": "W20",
+      "title": "Cursor 多 Agent 长期实验",
+      "date": "2026-01-14",
+      "url": "https://cursor.com/blog/scaling-agents",
+      "access": "官方研究正文",
+      "decision": "角色分离和过度协调的代价；大规模实验不等于个人项目应启数百worker"
+    }
+  ],
+  "accessLimits": [
+    {
+      "url": "https://x.com/i/article/2116829218935857152",
+      "result": "Login redirect in browser; readable public status/focus route used instead."
+    },
+    {
+      "url": "https://x.com/DeepSeekHarness/article/2116857257245987236",
+      "result": "Public focus view identified by Browser Use from status."
+    }
+  ],
+  "secondaryLeads": [
+    "https://www.ithome.com/1/020/615.htm",
+    "https://blog2.eimoon.com/p/deepseek-super-agent-design/"
+  ],
+  "note": "Secondary leads were used to locate primary sources, not as authority for implementation or benchmark claims. No videos claimed watched; no third-party packages installed."
+}
