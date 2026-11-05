@@ -3,6 +3,7 @@ import { NodeBaseUrl, NodeToken, ProfileId, type NodeTestResult } from "@room/sc
 import { useActions, useAppState } from "./hooks";
 import { NodesAndAgents } from "./NodesAndAgents";
 import { GithubSettings } from "./notes/GithubSettings";
+import { PacksSettings } from "./PacksSettings";
 
 const DEFAULT_PROFILE = "claude-review";
 
@@ -167,6 +168,8 @@ export function SettingsView() {
       </form>
 
       <GithubSettings />
+
+      <PacksSettings />
 
       <NodesAndAgents />
     </section>

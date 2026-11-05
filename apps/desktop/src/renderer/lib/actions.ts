@@ -7,6 +7,7 @@ import { createDiscussionActions } from "./discussion-actions";
 import { createChatActions } from "./chat-actions";
 import { createConsoleActions } from "./console-actions";
 import { createNotesActions } from "./notes-actions";
+import { createPacksActions } from "./packs-actions";
 import { boardSeq, digestFromDisc, withDigest, type TodoItem } from "./topic-board";
 
 /**
@@ -27,6 +28,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
   });
 
   const notes = createNotesActions(store, client, fail);
+  const packs = createPacksActions(store, client, fail);
 
   const agentConsole = createConsoleActions(store, client, fail, {
     async openTopic(projectId) {
@@ -96,6 +98,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
     workspace: createWorkspaceActions(client, fail),
     agentConsole,
     notes,
+    packs,
 
     goChat() {
       store.set((s) => ({ ...s, view: "chat" }));

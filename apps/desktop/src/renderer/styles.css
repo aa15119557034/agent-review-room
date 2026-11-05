@@ -4201,3 +4201,35 @@ button.stage:hover {
   font-weight: inherit;
   letter-spacing: inherit;
 }
+
+.pack-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pack {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.75rem;
+}
+.pack-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.pack[data-state="installed"] .pack-state {
+  color: var(--good);
+}
+.pack[data-state="missing"] .pack-state,
+.pack[data-state="version_mismatch"] .pack-state,
+.pack[data-state="incomplete"] .pack-state {
+  color: var(--bad);
+}
+.pack progress {
+  width: 100%;
+}
