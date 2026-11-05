@@ -20,6 +20,7 @@ import {
 } from "./common";
 import { NodeHealth, ProfileId, RunModel } from "./remote-protocol";
 import { AgentEvent } from "./agent-event";
+import { TtsImportRequest, TtsImportResult, TtsPacks, TtsPacksRequest } from "./tts-packs";
 import { PermissionDecision, PermissionRequest } from "./permission";
 import {
   AgentName,
@@ -269,6 +270,8 @@ export const COMMANDS = {
   "workspace.diagnostics.export": def(z.object({ type: z.literal("workspace.diagnostics.export") }).strict(), WorkspaceFileResult, "admin"),
   "workspace.export": def(z.object({ type: z.literal("workspace.export"), scope: NoteScope, expectedDigest: Sha256Hex, includeAttachments: z.boolean() }).strict(), WorkspaceFileResult, "admin"),
   "workspace.decision.save": def(WorkspaceDecisionSave, WorkspaceDecision, "author"),
+  /** 语音包应用内导入（#209）：选择框由 main 弹，renderer 不传路径 */
+  "tts.import": def(TtsImportRequest, TtsImportResult, "admin"),
   "project.create": def(
     z.object({ type: z.literal("project.create"), name: z.string().min(1).max(200) }),
     Project,
@@ -1072,6 +1075,7 @@ export const QUERIES = {
   "workspace.sources": def(z.object({type:z.literal("workspace.sources"),projectId:ProjectId}).strict(), z.array(WorkspaceItem).max(200), "read"),
   "workspace.search": def(WorkspaceSearchRequest, WorkspaceSearchPage, "read"),
   "workspace.item": def(WorkspaceItemKey.extend({ type: z.literal("workspace.item") }).strict(), WorkspaceItem, "read"),
+  "tts.packs": def(TtsPacksRequest, TtsPacks, "read"),
   "workspace.health": def(z.object({ type: z.literal("workspace.health") }).strict(), WorkspaceHealth, "admin"),
   "workspace.diagnostics": def(z.object({ type: z.literal("workspace.diagnostics") }).strict(), WorkspaceDiagnostics, "admin"),
   "workspace.tasks": def(z.object({ type: z.literal("workspace.tasks"), before: WorkspaceCursor.optional(), activeOnly: z.boolean().default(false) }).strict(), WorkspaceTaskPage, "read"),
@@ -1446,5 +1450,7 @@ export const ControlEvent = z.discriminatedUnion("type", [
   z.object({ type: z.literal("chat.window.draftUpdated"), draft: ChatWindowDraft }),
   z.object({ type: z.literal("chat.window.created"), window: ChatWindow }),
   z.object({ type: z.literal("github.updated"), status: GithubSyncStatus }),
+  // ---- 语音包导入（#209）：状态或进度变了，带最新两项
+  z.object({ type: z.literal("tts.packs.updated"), packs: TtsPacks }),
 ]);
 export type ControlEvent = z.infer<typeof ControlEvent>;
