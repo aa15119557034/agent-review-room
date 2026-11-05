@@ -11,7 +11,8 @@
 | `docs/资料与维护.md` | 搜索、成果导出、备份恢复、诊断及统一验证 |
 | `docs/design/V0.4-frozen.txt` | 冻结的设计文档 |
 | `docs/design/ADR-001-远端执行节点.md` | 控制面与执行面分离（已采纳） |
-| [Agent 生态调研](docs/research/2026-11-05-agent-ecosystem.md) | 32 个仓库与官方产品的来源、机制和取舍 |
+| [Agent 生态调研](docs/research/2026-11-05-agent-ecosystem.md) | 首轮32个仓库及官方产品的来源、机制和取舍 |
+| [站外补充研究](docs/research/2026-11-05-web-supplement.md) | DeepSeek官方原文、20项站外来源与架构修正 |
 | [ADR-007：Super Agent 工作台](docs/design/ADR-007-Super-Agent-工作台.md) | 架构提案，尚未替代冻结设计 |
 | [Phase 2 候选任务](docs/phase2-候选任务.md) | 分阶段依赖与验收，不改变当前阶段 |
 | `AGENTS.md` / `CLAUDE.md` | 给 Agent 的工作规则 |

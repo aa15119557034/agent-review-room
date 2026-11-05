@@ -549,6 +549,73 @@
       "decision": "记忆连续性参考",
       "rationale": "MemFS、分层 skills、持续身份；Cloud 默认与原生 Windows 自动反思限制需显式核对",
       "additionalFiles": []
+    },
+    {
+      "requested": "deepseek-ai/dsh-superagent-prototype",
+      "repo": "deepseek-ai/dsh-superagent-prototype",
+      "sha": "8c32a9dc5d72c033816c6a8110b37f40cf94fba4",
+      "date": "2026-10-31T12:06:31Z",
+      "archived": false,
+      "license": "MIT",
+      "path": "README.md",
+      "url": "https://github.com/deepseek-ai/dsh-superagent-prototype",
+      "readmeUrl": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/README.md",
+      "decision": "事件驱动架构重点参考；不直接部署",
+      "rationale": "Router/Worker、准入与订阅分离、持久意图、少打扰；原型的全权限执行和可复活Ticket不照搬",
+      "additionalFiles": [
+        {
+          "path": "docs/000-philosophy.md",
+          "verified": true,
+          "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/docs/000-philosophy.md"
+        },
+        {
+          "path": "docs/002-authorization.md",
+          "verified": true,
+          "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/docs/002-authorization.md"
+        },
+        {
+          "path": "docs/003-execution.md",
+          "verified": true,
+          "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/docs/003-execution.md"
+        },
+        {
+          "path": "docs/007-architecture.md",
+          "verified": true,
+          "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/docs/007-architecture.md"
+        },
+        {
+          "path": "docs/006-deployment.md",
+          "verified": true,
+          "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/docs/006-deployment.md"
+        },
+        {
+          "path": "docs/001-domain.md",
+          "verified": true,
+          "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/docs/001-domain.md"
+        },
+        {
+          "path": "src/core/engine.ts",
+          "verified": true,
+          "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/src/core/engine.ts"
+        },
+        {
+          "path": "src/app/outbox.ts",
+          "verified": true,
+          "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/src/app/outbox.ts"
+        },
+        {
+          "path": "src/app/sessions.ts",
+          "verified": true,
+          "url": "https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/src/app/sessions.ts"
+        }
+      ],
+      "failedLookups": [
+        {
+          "path": "docs/001-domain-model.md",
+          "resolution": "Correct path docs/001-domain.md was subsequently read."
+        }
+      ]
     }
-  ]
+  ],
+  "supplement": "2026-11-05-web-supplement.md"
 }
