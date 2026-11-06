@@ -115,6 +115,10 @@ function mapError(error: unknown): ControlResult<unknown> {
   if (error instanceof NodeServiceError) {
     return errorResult(error.code as never, error.message);
   }
+  if (error instanceof GithubError) {
+    // 没设仓库等：保留 GithubError 自带的码（invalid_state 等），别落成 internal（#208 林离打包验收发现）
+    return errorResult(error.code, error.message);
+  }
   return errorResult("internal" as never, error instanceof Error ? error.message : String(error));
 }
 
