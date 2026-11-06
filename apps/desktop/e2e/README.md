@@ -1,5 +1,15 @@
 # 讨论室端到端测试（X-21 / X-33）
 
+## Windows 打包版自检（#208）
+
+对提供 `--self-test` 的验收包，用已经配置好节点的**专用测试资料目录**执行下面的命令。应用启动会写库，测试目录须预先存在。脚本打印实际 app.asar 的 SHA-256，同时检查进程退出码、报告中的资料路径和业务结果。失败时命令返回非零。
+
+```powershell
+node apps/desktop/e2e/check-packaged-self-test.mjs "E:/path/to/win-unpacked/agent-review-room.exe" "E:/path/to/test-profile"
+```
+
+复测已经使用 `--no-sandbox` 的便携启动器时，给脚本显式传同名选项。自检覆盖包识别和已配置节点的健康接口，真实聊天和 TTS 合成需要分别验收。
+
 ADR-002 附录 A 的 13 种情况，一条测试对应一行，名字按行号：
 
 ```
