@@ -33,14 +33,22 @@ const QUOTA_PATTERNS = [
   /rate[ _-]?limit/i,
   /\bquota\b/i,
   /insufficient[ _]balance/i,
-  /limit reached/i,
   /too many requests/i,
+  // Claude Code 2.x 的说法：「You've hit your limit · resets 3pm」「You've hit your session limit」
+  /\bhit (your|the)( [a-z0-9-]+){0,3} limit\b/i,
   /\b429\b/,
   /\b402\b/,
 ];
 
+/**
+ * 「… limit reached」里不是额度的那几种（C-49 / A-03）：上下文满了、--max-budget-usd 花完了、轮数到了。
+ * 这些重试也没用，但不是「额度用尽」：报成缺席会让讨论去找替补、聊天显示「额度缺席」，方向就错了。
+ */
+const NOT_QUOTA_LIMITS = /\b(context|budget|turns?|tokens?|output|length|size)( window| length)? limit reached/i;
+
 export function looksLikeQuota(message: string): boolean {
-  return QUOTA_PATTERNS.some((p) => p.test(message));
+  if (QUOTA_PATTERNS.some((p) => p.test(message))) return true;
+  return /limit reached/i.test(message) && !NOT_QUOTA_LIMITS.test(message);
 }
 
 export function errorVerdict(message: string): ParserVerdict {
