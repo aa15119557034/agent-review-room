@@ -3,7 +3,7 @@ import { StringDecoder } from "node:string_decoder";
 import type { RemoteArtifact, RemoteEvent, RemoteTerminal, RunKind, StartRunRequest } from "@room/schemas";
 import type { Profile, ServerConfig } from "./config";
 import { killTree, spawnDetached } from "./process-tree";
-import { createParser, type OutputParser, type ParserOutput } from "./parsers";
+import { createParser, type OutputParser, type ParserOutput, type ParserVerdict } from "./parsers";
 import { planSpawn } from "./win-command";
 import { buildProfileEnv } from "./profile-env";
 import { buildArgs } from "./model-args";
@@ -20,6 +20,8 @@ import {
 } from "./image-artifact";
 
 type SeqEvent = Exclude<RemoteEvent, { type: "heartbeat" }>;
+/** 非零退出时带上 stderr 的最后这么多字 */
+const STDERR_TAIL_CHARS = 400;
 type Subscriber = (event: RemoteEvent) => void;
 
 /**
@@ -48,6 +50,8 @@ export class RemoteRun {
   /** 已决定要杀进程时记下原因；进程真正退出后再产出对应的 terminal */
   private pendingOutcome: RemoteTerminal | undefined;
   private outputBytes = 0;
+  /** stderr 的最后一小段：非零退出时放进 terminal.message，让人看得出为什么（C-49 / A-07） */
+  private stderrTail = "";
   /** profile.parser 不是 raw 时使用 */
   private readonly parser: OutputParser | null;
   private seq = 0;
@@ -206,12 +210,7 @@ export class RemoteRun {
       if (!verdict.ok && verdict.reason === "quota_exhausted") {
         this.finish({ outcome: "error", reason: "quota_exhausted", exitCode: code, message: verdict.message });
       } else if (code !== 0) {
-        this.finish({
-          outcome: "error",
-          reason: "process_exit_nonzero",
-          exitCode: code,
-          ...(verdict.ok ? {} : { message: verdict.message }),
-        });
+        this.finish({ outcome: "error", reason: "process_exit_nonzero", exitCode: code, message: this.exitMessage(code, verdict) });
       } else if (verdict.ok) {
         this.push({ type: "message_complete", seq: 0, ts: "", text: verdict.finalText });
         this.complete();
@@ -273,8 +272,20 @@ export class RemoteRun {
     });
   }
 
+  /**
+   * 非零退出时给人看的一句话：退出码 + 解析器认出来的错误（有的话）+ stderr 最后几行。
+   * 以前只有「输出在结束标记之前中断」，看不出是命令行自己退出了（C-49 / A-07）
+   */
+  private exitMessage(code: number | null, verdict: ParserVerdict): string {
+    const head = code === null ? "命令行被信号终止" : `命令行以退出码 ${code} 结束`;
+    const detail = verdict.ok ? "" : verdict.reason === "incomplete_output" ? "，没有给出完整的回答" : `：${verdict.message}`;
+    const tail = this.stderrTail.trim().replace(/\s+/g, " ");
+    return `${head}${detail}${tail ? `。最后的错误输出：${tail}` : ""}`.slice(0, 1500);
+  }
+
   /** stdout 交给解析器（如果有），stderr 和无解析器的 stdout 原样转发 */
   private route(stream: "stdout" | "stderr", data: string): void {
+    if (stream === "stderr") this.stderrTail = (this.stderrTail + data).slice(-STDERR_TAIL_CHARS);
     if (stream === "stdout" && this.parser) this.emitParsed(this.parser.push(data));
     else this.push({ type: "output", seq: 0, ts: "", stream, data });
   }

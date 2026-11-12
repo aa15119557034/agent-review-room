@@ -50,7 +50,7 @@ export class ClaudeStreamJsonParser extends JsonLinesParser {
 
   protected verdict(): ParserVerdict {
     const r = this.result;
-    if (!r) return { ok: false, reason: "incomplete_output", message: "Reviewer 的输出在结束标记之前中断" };
+    if (!r) return { ok: false, reason: "incomplete_output", message: "Claude 的输出不完整：没有等到结束标记（result 行）就结束了" };
     if (r.is_error || (r.subtype && r.subtype !== "success")) {
       const detail = typeof r.result === "string" && r.result ? r.result.slice(0, 500) : r.subtype ?? "error";
       const v = errorVerdict(r.api_error_status === 429 ? `429 ${detail}` : detail);

@@ -201,6 +201,9 @@ describe("agent-server with the claude-stream-json profile", () => {
         // S-21：两个 profile 同一个账号：一个跑，另一个（配了 quota）读得到
         "claude-rate": { ...profile("success"), env: { FAKE_MODE: "success", FAKE_RATE: "0.42" } },
         "claude-quota": { ...profile("success"), quota: { source: "claude-stream" } },
+        // C-49：另一个账号，5 小时窗口已经用完、而且重置时间早就过了
+        "claude-stale": { ...profile("success"), env: { FAKE_MODE: "success", FAKE_RATE: "1", FAKE_RESET_5H: "1700000000" }, quota: { source: "claude-stream", account: "stale" } },
+        "claude-crash": profile("crash"),
       },
     });
     agent = createAgentServer(cfg, TOKEN);
@@ -261,8 +264,27 @@ describe("agent-server with the claude-stream-json profile", () => {
     assert.equal(q.fiveHour?.usedPercent, 42);
     assert.equal(q.fiveHour?.windowMinutes, 300);
     assert.equal(q.weekly?.usedPercent, 31);
-    assert.equal(q.weekly?.resetsAt, new Date(1793962800 * 1000).toISOString());
+    assert.equal(q.weekly?.resetsAt, new Date(4102876800 * 1000).toISOString());
     assert.equal(q.creditsInUse, false);
+  });
+
+  it("C-49 / A-04: a used-up window whose reset time has passed is not reported as exhausted over HTTP", async () => {
+    await runProfile("claude-stale");
+    const q = RemoteProfileQuota.parse(await (await fetch(`${base}/v1/profiles/claude-stale/quota`, { headers: auth })).json());
+    assert.equal(q.fiveHour, null, "expired window → unknown, so the controller does not keep the agent absent");
+    assert.equal(q.weekly?.usedPercent, 31, "the weekly window is still inside its period");
+  });
+
+  it("C-49 / A-07: a non-zero exit says so, with the exit code and the tail of stderr", async () => {
+    const es = await runProfile("claude-crash");
+    const t = terminal(es);
+    assert.equal(t.length, 1);
+    const r = t[0]?.type === "terminal" ? t[0].result : null;
+    assert.ok(r && r.outcome === "error" && r.reason === "process_exit_nonzero" && r.exitCode === 3);
+    const message = r.outcome === "error" ? (r.message ?? "") : "";
+    assert.match(message, /退出码 3/);
+    assert.match(message, /Invalid model name/);
+    assert.doesNotMatch(message, /Reviewer/);
   });
 
   it("a stream without a result line ends as error(incomplete_output) — never as completed", async () => {
