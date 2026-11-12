@@ -236,7 +236,8 @@ export function createAgentServer(
       throw new HttpError(409, "run_id_conflict", "runId already used with a different payload");
     }
 
-    const profile = cfg.profiles[reqBody.profileId];
+    // 只认配置里自己写的 profile：不让 "constructor" / "__proto__" 这类名字取到对象原型上的东西
+    const profile = Object.hasOwn(cfg.profiles, reqBody.profileId) ? cfg.profiles[reqBody.profileId] : undefined;
     if (!profile) throw new HttpError(400, "unknown_profile", "unknown profileId");
 
     if (reqBody.model) {
@@ -373,6 +374,12 @@ export function createAgentServer(
     async close() {
       clearInterval(gc);
       for (const r of runs.values()) if (!r.isFinished) r.shutdown();
+      // terminal(node_shutdown) 要等子进程真的退出才产出（最晚 killGraceMs + 5 秒的兜底）。
+      // 先等它写给订阅方、事件流自己结束，再断连接；不然主控端只看到断线，要等租约才知道节点关了（C-49 / A-01）
+      const deadline = Date.now() + cfg.killGraceMs + 6_000;
+      while (activeCount() > 0 && Date.now() < deadline) await new Promise((r) => setTimeout(r, 20));
+      // 给刚写出去的 terminal 一点时间落到 socket 上
+      await new Promise((r) => setTimeout(r, 50));
       server.closeAllConnections();
       await new Promise<void>((resolve) => server.close(() => resolve()));
     },

@@ -95,6 +95,13 @@ describe("auth & validation", () => {
     assert.equal((await res.json()).error, "unknown_profile");
   });
 
+  it("C-49: a profile id that only exists on Object.prototype is an unknown profile", async () => {
+    // "constructor" 过得了 ProfileId 的格式检查；以前会取到 Object.prototype.constructor，当成一个「profile」去跑
+    const res = await start(body("constructor"));
+    assert.equal(res.status, 400);
+    assert.equal((await res.json()).error, "unknown_profile");
+  });
+
   it("rejects hash mismatch before spawning", async () => {
     const b = body("echo", "real content");
     b.snapshot.contentHash = sha("something else");
@@ -214,5 +221,36 @@ describe("network failure semantics", () => {
       await fetch(`${base}/v1/runs/${r.runId}/cancel`, { method: "POST", headers: auth, body: "{}" });
       await readAll(r.runId);
     }
+  });
+});
+
+describe("C-49 / A-01: shutdown lets subscribers see the terminal event", () => {
+  it("a subscriber of a running run receives terminal(node_shutdown) before the connection ends", async () => {
+    const own = createAgentServer(cfg, TOKEN);
+    await new Promise<void>((r) => own.server.listen(0, "127.0.0.1", () => r()));
+    const ownBase = `http://127.0.0.1:${(own.server.address() as AddressInfo).port}`;
+    const b = body("sleep");
+    assert.equal((await fetch(`${ownBase}/v1/runs`, { method: "POST", headers: auth, body: JSON.stringify(b) })).status, 202);
+    const res = await fetch(`${ownBase}/v1/runs/${b.runId}/events?after=-1`, { headers: auth });
+    assert.equal(res.status, 200);
+    const reading = res.text();
+    await sleep(150); // 子进程起来、订阅方连上
+    await own.close();
+    const events = (await reading)
+      .split("\n")
+      .filter(Boolean)
+      .map((l) => RemoteEvent.parse(JSON.parse(l)))
+      .filter((e) => e.type !== "heartbeat");
+    const t = terminals(events);
+    assert.equal(t.length, 1, "exactly one terminal reached the subscriber");
+    assert.deepEqual(t[0]?.type === "terminal" && t[0].result, { outcome: "error", reason: "node_shutdown", exitCode: null });
+  });
+
+  it("close() with nothing running returns promptly", async () => {
+    const own = createAgentServer(cfg, TOKEN);
+    await new Promise<void>((r) => own.server.listen(0, "127.0.0.1", () => r()));
+    const t0 = Date.now();
+    await own.close();
+    assert.ok(Date.now() - t0 < 1000);
   });
 });
