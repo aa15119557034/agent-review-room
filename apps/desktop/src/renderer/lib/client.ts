@@ -53,9 +53,29 @@ export function createClient(bridge: RoomBridge): RoomClient {
   };
 }
 
-/** 错误码 → 给用户看的说明。后端的 message 作为补充 */
-export function describeFailure(err: unknown): string {
+/**
+ * 后端 message 里的参与者内部 id（claude / deepseek / codex）换成显示名（C-49 / B-08）。
+ * 只换独立出现的 id：「profile codex-discuss」里的 codex 不动。
+ */
+export function withAgentNames(message: string, agents: readonly { id: string; displayName: string }[]): string {
+  let out = message;
+  for (const a of agents) {
+    if (!/^[\w-]+$/.test(a.id) || a.id === a.displayName) continue;
+    out = out.replace(new RegExp(`(?<![\\w-])${a.id}(?![\\w-])`, "g"), a.displayName);
+  }
+  return out;
+}
+
+/** 后端的 message 只是把提示又说了一遍的：不再拼在括号里（C-49 / B-08） */
+const REDUNDANT_MESSAGE: Partial<Record<ControlErrorCode, RegExp>> = {
+  rate_limited: /每分钟最多/,
+  agent_unavailable: /现在还是不能答$/,
+};
+
+/** 错误码 → 给用户看的说明。后端的 message 作为补充；agents 给了就把内部 id 换成显示名 */
+export function describeFailure(err: unknown, agents: readonly { id: string; displayName: string }[] = []): string {
   if (!(err instanceof ControlFailure)) return err instanceof Error ? err.message : String(err);
+  const message = withAgentNames(err.message, agents);
   const hint: Partial<Record<ControlErrorCode, string>> = {
     stale_snapshot: "这份 prompt 在你查看之后已经变了，请重新打开预览再批准。",
     already_decided: "这一项已经处理过了。",
@@ -66,5 +86,9 @@ export function describeFailure(err: unknown): string {
     idempotency_conflict: "这条消息和之前没发成功的那次内容不一样，请重新发送。",
     agent_unavailable: "这位现在还是不能回答。",
   };
-  return hint[err.code] ? `${hint[err.code]}（${err.message}）` : err.message;
+  const h = hint[err.code];
+  if (!h) return message;
+  // agent_unavailable：后端说了具体原因（谁、为什么）就只显示原因，不再套一句「这位…」
+  if (err.code === "agent_unavailable" && !REDUNDANT_MESSAGE.agent_unavailable!.test(err.message)) return message;
+  return REDUNDANT_MESSAGE[err.code]?.test(err.message) ? h : `${h}（${message}）`;
 }

@@ -6,6 +6,9 @@ import type { AgentPatch } from "./discussion-actions";
  * ADR-003 §2a 之后主控机一位秘书一个节点：汐 controller-local（7420），林离 controller-local-codex（7421）。
  * 角色设定：三位都是江浩的秘书，各三句（性格 + 底线 + 分工），2026-10-23 和用户商定。
  * C酱 是首席秘书＝负责统筹和汇总，不是上级；人设里不写偏爱，汇总才公正。
+ * chatProfileId（C-49 / B-01）：聊天用的 profile 和讨论的分开（契约 C-34）。名字和节点示例配置里的一样：
+ * agent-server.config.example.json 的 claude-chat，agent-server.config.local.example.json 的 deepseek-chat / codex-chat。
+ * 以前推荐配置不带它，干净机器上聊天一律「没配聊天」，界面上又没有地方填。
  */
 
 export const USER_PC_NODE = "user-pc";
@@ -15,7 +18,7 @@ export const CONTROLLER_NODE = LOCAL_NODE_ID;
 export const CONTROLLER_CODEX_NODE = LOCAL_CODEX_NODE_ID;
 
 export const RECOMMENDED_NODES: readonly { id: string; label: string; baseUrl: string | null; hint: string }[] = [
-  { id: USER_PC_NODE, label: "你的电脑", baseUrl: null, hint: "Claude 所在的电脑。地址和 Token 来自上面的「Reviewer 节点」，已自动迁移" },
+  { id: USER_PC_NODE, label: "你的电脑", baseUrl: null, hint: "Claude 所在的电脑。地址和 Token 来自那台电脑上 setup 的输出；以前在「Reviewer 节点」里填过的已经自动搬过来了" },
   {
     id: CONTROLLER_NODE,
     label: "主控机（汐）",
@@ -73,6 +76,7 @@ export const RECOMMENDED_AGENTS: readonly (AgentPatch & { displayName: string; c
     canSummarize: true,
     nodeId: USER_PC_NODE,
     profileId: "claude-review",
+    chatProfileId: "claude-chat",
     modelSettings: RECOMMENDED_MODELS.claude,
   },
   {
@@ -88,6 +92,7 @@ export const RECOMMENDED_AGENTS: readonly (AgentPatch & { displayName: string; c
     canSummarize: false,
     nodeId: CONTROLLER_NODE,
     profileId: "deepseek-discuss",
+    chatProfileId: "deepseek-chat",
     modelSettings: RECOMMENDED_MODELS.deepseek,
   },
   {
@@ -103,6 +108,33 @@ export const RECOMMENDED_AGENTS: readonly (AgentPatch & { displayName: string; c
     canSummarize: false,
     nodeId: CONTROLLER_CODEX_NODE,
     profileId: "codex-discuss",
+    chatProfileId: "codex-chat",
     modelSettings: RECOMMENDED_MODELS.codex,
   },
 ];
+
+/**
+ * 「填入推荐的三位参与者」要做哪几步（C-49）。main 不接受指向还没保存的节点的参与者，
+ * 以前第一位这样的人一失败就整个停下：只保存了「你的电脑」的干净机器上，汐和林离根本建不出来。
+ * - 推荐地址是固定的节点（主控机两个）：还没保存就先按推荐地址建好（不带 Token，和「一键导入」一样）
+ * - 地址要用户自己填的节点（你的电脑）：还没保存时，这位先不连节点（nodeId 为 null），其余照填，并告诉用户
+ */
+export function presetSteps(savedNodeIds: readonly string[]): {
+  nodes: { id: string; label: string; baseUrl: string }[];
+  agents: (AgentPatch & { displayName: string; color: string })[];
+  unplaced: string[];
+} {
+  const nodes: { id: string; label: string; baseUrl: string }[] = [];
+  const unplaced: string[] = [];
+  const agents = RECOMMENDED_AGENTS.map((a) => {
+    if (!a.nodeId || savedNodeIds.includes(a.nodeId)) return a;
+    const preset = RECOMMENDED_NODES.find((n) => n.id === a.nodeId);
+    if (preset?.baseUrl) {
+      if (!nodes.some((n) => n.id === preset.id)) nodes.push({ id: preset.id, label: preset.label, baseUrl: preset.baseUrl });
+      return a;
+    }
+    unplaced.push(a.displayName);
+    return { ...a, nodeId: null };
+  });
+  return { nodes, agents, unplaced };
+}
