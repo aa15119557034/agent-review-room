@@ -8,6 +8,7 @@ import {
   renameSync,
   rmSync,
   statSync,
+  writeFileSync,
 } from "node:fs";
 import { dirname, join, resolve, sep } from "node:path";
 import yauzl from "yauzl";
@@ -133,10 +134,32 @@ export class PacksService {
     return PACK_REGISTRY.map((definition) => this.#status(definition));
   }
 
+  #target: string | null = null;
+
+  /**
+   * 安装目录：优先 %LOCALAPPDATA%\评审室\tts；这个位置写不了（受限令牌 / 安全软件）就退到 exe 旁边的 tts。
+   * findTtsBundle 本来就会先找 exe 旁边的 tts，所以退回去也能被朗读用上。
+   */
   #targetBase(): string {
-    return this.deps.localAppData !== undefined && this.deps.localAppData !== ""
-      ? join(this.deps.localAppData, "评审室", "tts")
-      : join(this.deps.installDir, "tts");
+    if (this.#target !== null) return this.#target;
+    const preferred =
+      this.deps.localAppData !== undefined && this.deps.localAppData !== ""
+        ? join(this.deps.localAppData, "评审室", "tts")
+        : join(this.deps.installDir, "tts");
+    for (const candidate of [preferred, join(this.deps.installDir, "tts")]) {
+      try {
+        mkdirSync(candidate, { recursive: true });
+        const probe = join(candidate, ".write-test");
+        writeFileSync(probe, "1");
+        rmSync(probe, { force: true });
+        this.#target = candidate;
+        return candidate;
+      } catch {
+        // 换下一个
+      }
+    }
+    this.#target = preferred;
+    return preferred;
   }
 
   #bases(): string[] {

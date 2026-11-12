@@ -28,6 +28,7 @@ extraResources:
     to: tts/runner.py
 
 win:
+  artifactName: agent-review-room-${version}-setup.${ext}
   target:
     - nsis
 
@@ -37,4 +38,5 @@ nsis:
   deleteAppDataOnUninstall: false
   oneClick: false
   allowToChangeInstallationDirectory: true
+  allowElevation: false
   perMachine: false

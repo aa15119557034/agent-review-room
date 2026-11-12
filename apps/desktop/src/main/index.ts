@@ -23,6 +23,7 @@ import { Repository } from "./repository";
 import { SettingsStore } from "./settings";
 import { loadTtsConfigFile, TtsRunner, voiceOptionsOf } from "./tts";
 import { PacksService } from "./packs";
+import { runCliIfRequested } from "./cli";
 import { bundledTtsConfig, findTtsBundle } from "./tts-paths";
 
 /**
@@ -31,6 +32,17 @@ import { bundledTtsConfig, findTtsBundle } from "./tts-paths";
  * 启动顺序对齐 V0.4 §32：初始化 DB → 修复中断的 run → 起 IPC → 开窗口。
  * Token 只在主进程解密使用，绝不进 renderer / SQLite / 日志。
  */
+
+// 验收/受限机器：用环境变量把数据目录指到可写位置（这台机器写 %APPDATA% 会被拦）
+const dataOverride = process.env.AGENT_REVIEW_ROOM_DATA;
+if (dataOverride !== undefined && dataOverride.trim() !== "") {
+  try {
+    mkdirSync(dataOverride, { recursive: true });
+    app.setPath("userData", dataOverride);
+  } catch (error) {
+    console.warn("[startup] 数据目录覆盖失败：", error instanceof Error ? error.message : String(error));
+  }
+}
 
 // D-36b：room-image:// / D-34b：room-audio:// 必须在 app ready 之前登记；只读、不导航、不当页面打开
 protocol.registerSchemesAsPrivileged([
@@ -169,12 +181,14 @@ async function bootstrap(): Promise<void> {
     bundleLookup?.bundle === null || bundleLookup === null
       ? null
       : bundledTtsConfig(bundleLookup.bundle, configuredTts?.voices);
+  // 语音包优先：tts.json 只提供音色；没有语音包时才用用户自己配的引擎
   const ttsConfig =
-    configuredTts !== null && existsSync(configuredTts.python) && existsSync(configuredTts.script)
-      ? configuredTts
-      : (bundled ?? configuredTts);
+    bundled ??
+    (configuredTts !== null && existsSync(configuredTts.python) && existsSync(configuredTts.script) ? configuredTts : null);
   if (ttsConfig === null) console.warn("[tts] 没有配置 userData/tts.json，语音合成不可用");
-  const ttsRunner = ttsConfig === null ? null : new TtsRunner(ttsConfig);
+  const ttsTempDir = join(userData, "tmp");
+  const ttsRunner =
+    ttsConfig === null ? null : new TtsRunner({ ...ttsConfig, tempDir: ttsTempDir });
   protocol.handle(AUDIO_URL_SCHEME, createAudioProtocolHandler(mediaStore));
   const jobs = new MediaJobsService({
     db,
@@ -388,6 +402,22 @@ async function bootstrap(): Promise<void> {
       // 已经关闭
     }
   });
+
+  const cliExit = await runCliIfRequested({
+    db,
+    settings,
+    packs,
+    userData,
+    localAppData: process.env.LOCALAPPDATA,
+    installDir: dirname(process.execPath),
+    resourcesPath: process.resourcesPath,
+    execPath: process.execPath,
+  });
+  if (cliExit !== null) {
+    process.exitCode = cliExit;
+    app.quit();
+    return;
+  }
 
   createWindow();
 }

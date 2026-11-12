@@ -6,6 +6,7 @@ import {
   DEFAULT_AGENT_MODEL_SETTINGS,
   DEFAULT_MEMORY_SOURCE,
   MemorySource,
+  VoiceProfile,
   type AgentProfile,
   type Approval,
   type ApprovalBatch,
@@ -260,6 +261,16 @@ const toMemorySource = (raw: unknown): MemorySource => {
   }
 };
 
+const parseAgentVoice = (raw: unknown): VoiceProfile | null => {
+  if (typeof raw !== "string" || raw === "") return null;
+  try {
+    const parsed = VoiceProfile.safeParse(JSON.parse(raw));
+    return parsed.success ? parsed.data : null;
+  } catch {
+    return null;
+  }
+};
+
 const toAgent = (row: Record<string, unknown>): AgentProfile => ({
   id: row["id"] as string,
   displayName: row["display_name"] as string,
@@ -278,6 +289,7 @@ const toAgent = (row: Record<string, unknown>): AgentProfile => ({
   chatPersona: (row["chat_persona"] as string | null) ?? "",
   chatProfileId: (row["chat_profile_id"] as string | null) ?? null,
   memorySource: toMemorySource(row["memory_source"]),
+  voice: parseAgentVoice(row["voice"]),
 });
 
 export interface UpsertAgentInput {
@@ -298,6 +310,8 @@ export interface UpsertAgentInput {
   chatPersona?: string;
   chatProfileId?: string | null;
   memorySource?: MemorySource;
+  /** C-42c：声音；null = 去掉，省略 = 不改 */
+  voice?: VoiceProfile | null;
 }
 
 export interface CreateSnapshotInput {
@@ -641,7 +655,7 @@ export class Repository {
           .prepare(
             "INSERT INTO agents (id, display_name, color, role_note, can_discuss, can_summarize, can_execute, " +
               "node_id, profile_id, paused_by_user, substitute, model_settings, chat_persona, chat_profile_id, memory_source, " +
-              "created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+              "voice, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
           )
           .run(
             input.id,
@@ -659,6 +673,7 @@ export class Repository {
             input.chatPersona ?? null,
             input.chatProfileId ?? null,
             input.memorySource === undefined ? null : JSON.stringify(input.memorySource),
+            input.voice === undefined || input.voice === null ? null : JSON.stringify(input.voice),
             updatedAt,
             updatedAt,
           );
@@ -680,6 +695,7 @@ export class Repository {
         ["chatPersona", "chat_persona"],
         ["chatProfileId", "chat_profile_id"],
         ["memorySource", "memory_source"],
+        ["voice", "voice"],
       ];
       const sets: string[] = [];
       const params: unknown[] = [];
