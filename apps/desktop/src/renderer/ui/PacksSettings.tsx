@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { PackErrorCode, PackStatus } from "@room/schemas";
-import { PACK_ERROR_TEXT } from "../lib/packs-actions";
+import { PACK_ERROR_TEXT, showTopPackError } from "../lib/packs-actions";
 import { useActions, useAppState } from "./hooks";
 
 const STATE_TEXT: Record<PackStatus["state"], string> = {
@@ -50,7 +50,7 @@ export function PacksSettings() {
           </button>
         </div>
       )}
-      {lastError && (
+      {lastError && showTopPackError(lastError, packs) && (
         <p className="test-result" data-ok="false" role="alert">
           {PACK_ERROR_TEXT[lastError]}
         </p>

@@ -338,6 +338,17 @@ export const GITHUB_ERROR_LABEL: Record<NonNullable<GithubSyncStatus["lastError"
   other: "推送出错了。",
 };
 
+/**
+ * 「保存」为什么按不了（C-49 / B-15）。能保存返回 null。
+ * 以前仓库填对了、Token 空着时按钮灰着，不说为什么。
+ */
+export function githubSaveBlocker(i: { repo: string; repoOk: boolean; token: string; tokenSet: boolean }): string | null {
+  if (i.repo.trim() === "") return i.token.trim() === "" ? null : "还要填仓库（用户名/仓库名）。";
+  // 仓库或 Token 格式不对：输入框下面已经有提示，这里不重复
+  if (!i.repoOk || i.token.trim() !== "") return null;
+  return i.tokenSet ? null : "还要填 Token 才能保存。";
+}
+
 /** 设置页那一行状态 */
 export function githubStatusText(s: GithubSyncStatus): string {
   if (s.repo === null) return "没有设置仓库，笔记只存在主控机上。";
