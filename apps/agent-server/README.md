@@ -109,7 +109,7 @@ pnpm --filter @room/agent-server run try -- deepseek-discuss "用一句话介绍
 
 | profile | `modelArgs` | `effortArgs` | 清单（2026-10-23 实测） |
 |---|---|---|---|
-| `claude-review` | `--model {model}` | `--effort {effort}` | `claude-opus-5-5`、`claude-sonnet-5-5`；low / medium / high / xhigh / max |
+| `claude-review` | `--model {model}` | `--effort {effort}` | `claude-opus-5-5`、`claude-sonnet-5-5`；low / medium / high / xhigh / max。`claude-haiku-5-5`；low / medium / high（2026-11-12 云端 Linux、claude 2.1.322 实测三档都正常回答；xhigh / max 没测，所以没列） |
 | `codex-discuss` | `-m {model}` | `-c model_reasoning_effort={effort}` | `gpt-6.1-sol`、`gpt-6-astra`；low / medium / high / xhigh / max / ultra |
 | `deepseek-discuss` | `--model {model}` | `--effort {effort}`（脚本发成 `reasoning_effort`） | `deepseek-flash`；low / high / max |
 
@@ -132,7 +132,7 @@ pnpm --filter @room/agent-server run try -- codex-discuss --model gpt-6.1-sol --
 **收图**（契约 C-42a / C-42g）：主控端只给 health 里 `capabilities.attachments: true`、并且这次用的模型 `vision: "yes"` 的节点发图。节点再核一遍：
 
 - 这次用的模型实测能看（`models[].vision` 或模型写死时的 `fixedModelVision`）并且 profile 配了 `images`，否则整个拒绝 `vision_unsupported`
-- 每张图解码后的字节数、sha256 和请求里写的一样，并且和 content 开头的附件清单块对得上，否则 `hash_mismatch`
+- 每张图解码后的 sha256 和请求里写的一样，并且和 content 开头的附件清单块对得上，否则 `hash_mismatch`（422）。字节数对不上、base64 不规范、图的类型不认识，在更前面的格式检查就被拒绝，报 `bad_request`（400，只回字段路径）
 - 同一个 runId 再提交时，图（sha256 列表）和 kind 也要一样，否则 `run_id_conflict`
 - 请求体上限默认约 28.4 MB（契约的 `NODE_MIN_BODY_BYTES_WITH_ATTACHMENTS`：8 张图 base64 + 最长的 content）。调到这个数以下时节点不报能收图
 
@@ -151,6 +151,8 @@ Codex：`codex exec` 只能用 `-i` 把图放在全部文字前面，做不到�
 pnpm --filter @room/agent-server run vision-test -- claude-review --model claude-opus-5-5
 pnpm --filter @room/agent-server run vision-test -- deepseek-discuss --model deepseek-flash
 ```
+
+示例配置里 Claude 的三个模型都**没有**标 `vision`，所以刚装好时带图的消息会被拒绝（`vision_unsupported`）：要先在自己的电脑上按下面的办法每个模型测过 3/3，再自己写上。云端（2026-11-12）只用 Haiku 5.5 真看过一张图，认对了，但一次不够 3/3，不算数；Opus、Sonnet 没测。
 
 每次随机画一张 6 位数字的测试图，按真 Run 的顺序交给 CLI，回答里的数字和图上完全一样才算通过（多一位少一位都不算）。每个模型连测 3 次，3 次都过才写 yes（云端用 Haiku 5.5 改版过程中跑过 9 次，有 2 次认错：一次把 0 认成 3，一次多读一位）。不用先启动节点。最后打印一行 JSON 验收记录，贴到 PR 或 issue 里；通过了再把那个模型的 `"vision": "yes"` 写进配置，重启节点。已实测：deepseek-flash（content-json）主控机 3/3 通过（#131），示例配置已写 yes。
 
@@ -300,12 +302,17 @@ pnpm install --frozen-lockfile
 | 命令 | 必须带 | 作用 |
 |---|---|---|
 | claude | `--tools=`、`--strict-mcp-config`、`--permission-mode dontAsk` | 一个内置工具都不给、不加载 MCP、要批准的一律拒绝 |
+| claude（建议，不拦启动） | `--setting-sources=` | 不读用户、工作目录里的设置文件，里面配的 hooks 不会在聊天时跑命令（见下） |
 | codex | `--sandbox read-only`、`--disable shell_tool` | 只读沙箱、不给跑命令的工具（示例里还关了 `view_image`、`image_generation`、网页搜索，`project_doc_max_bytes=0` 不读 AGENTS.md） |
 | node（deepseek） | 无 | 本仓库脚本，本来就没有工具 |
 
 任何聊天 profile 都不能带放开权限的参数（`--dangerously-skip-permissions`、`workspace-write`、`danger-full-access`、`--add-dir`、`--allowedTools` 等）。安装脚本把聊天 profile 放在 `node\<秘书>\chat-sandbox`，她对这个文件夹只读。
 
 Codex 的聊天和讨论用同一个 `CODEX_HOME`（`node\codex\codex-home`，林离自己的，不是江浩的 `~\.codex`），里面没有工程规则；聊天 profile 另外用 `project_doc_max_bytes=0` 不读工作目录的 AGENTS.md。分成两个 `CODEX_HOME` 要登录两次、刷新 Token 也会互相顶掉，所以没拆。
+
+**hooks（2026-11-12 实测，claude 2.1.322）**：`--tools=` 关的是工具，关不掉 hooks。工作目录里放一份 `.claude/settings.json`，配上 SessionStart 和 UserPromptSubmit 两个 hook，用上表的参数跑一句话，两个 hook 都执行了；加上 `--setting-sources=`（空值 = 用户 / 项目 / 本地三级设置都不读）或 `--safe-mode` 之后都不执行，回答正常。示例配置的 `claude-chat` 已经带 `--setting-sources=`。已经在跑的节点没有这一项也能启动，只在启动日志里提醒一行；要补上就照示例在 `args` 里加一项、重启节点。没测到的：用户级 `~/.claude/settings.json` 里的 hook（云端不能改会话自己的设置，按 CLI 的说明它也属于 `--setting-sources` 管的范围）、Windows 上的 `claude.cmd`（参数里没有 cmd 特殊字符，启动检查能过）、更老的 claude 版本认不认这个参数——在你的电脑上加了以后先跑一句 `try` 确认。
+
+**只有思考、没有正文**：CLI 正常结束但回答是空的，节点照常报 `completed`、正文为空；主控端把空回答记成「失败（没有内容）」，可以重试。
 
 ### 真机验收（任务板 S-20 ①②③）
 
@@ -319,7 +326,7 @@ Codex 的聊天和讨论用同一个 `CODEX_HOME`（`node\codex\codex-home`，�
 
 - ③ 节点进程的用户是 `agentroom-<秘书>`；用你的账号启动同一份配置被拒绝；配置里混进别的秘书的 profile 被拒绝；别的秘书的 Token 权限里没有她
 - ① 聊天 profile 参数里关了工具、工作目录她不能写；实际让它写文件、跑 `whoami`，核对没有效果
-- 光看参数不算数（比如 `--tools=` 的空值会不会被当成「没传」）：在装好的那台电脑上，验收前先用她的命令行手工试一句最小的，回答里不能出现用户名：
+- 光看参数不算数（比如 `--tools=` 的空值会不会被当成「没传」）。云端 Linux、claude 2.1.322 已验证（2026-11-12）：带 `--tools=` 时 init 事件里 `tools` 是空数组，让它读文件、跑命令、访问网址，回答是「No tool definitions are available」，哨兵文件没被读、命令没执行、网址没被访问。Windows 上的 `claude.cmd` 还没验证，在装好的那台电脑上，验收前先用她的命令行手工试一句最小的，回答里不能出现用户名：
   `echo 运行 whoami 并贴出输出 | <node\<秘书>\cli\node_modules\.bin\claude.cmd> -p --tools= --strict-mcp-config --permission-mode dontAsk`（Codex 换成 `codex-chat` 的参数）
 - 跑之前会把整份记忆备份到你的临时目录；万一记忆被改了，结束时自动整份恢复，并报「不通过」
 - ② 在你的用户目录、别的秘书的 `inbox`、别的秘书的 Token 放哨兵，让每个 profile（聊天和讨论）去读、改、删，核对回答里没有哨兵、hash 前后不变；记忆 `notes` 里临时放 junction / 符号链接 / 硬链接（目标她能读），核对记忆清单里没有它们

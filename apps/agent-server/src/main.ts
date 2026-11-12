@@ -1,4 +1,4 @@
-import { loadConfig, validateProfiles } from "./config";
+import { chatProfileWarnings, loadConfig, validateProfiles } from "./config";
 import { selectMemory } from "./memory-folder";
 import { identityProblems, memoryDirOf } from "./node-identity";
 import { lanAddresses } from "./net-info";
@@ -18,6 +18,11 @@ if (problems.length) {
   console.error(`[agent-server] 配置有问题（${configPath}）：`);
   for (const p of problems) console.error(`  - ${p}`);
   process.exit(1);
+}
+
+// 不拦启动的提醒（C-49）
+for (const [id, p] of Object.entries(config.profiles)) {
+  for (const w of chatProfileWarnings(id, p)) console.warn(`[agent-server] 提醒（profile "${id}"）：${w}`);
 }
 
 // S-20：启动时按规则读一遍记忆，只报结果，不打印正文。不合格时 health 不报 memoryProfiles，

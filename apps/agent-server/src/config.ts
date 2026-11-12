@@ -294,6 +294,21 @@ export function chatProfileProblems(id: string, p: Profile): string[] {
   return problems;
 }
 
+/**
+ * 聊天 profile 里「建议有、但不拦启动」的参数（C-49 / A-02）。
+ * claude：`--tools=` 关的是工具，关不掉 hooks —— 工作目录里的 `.claude/settings.json`、用户自己的 `~/.claude/settings.json`
+ * 里配的 SessionStart / UserPromptSubmit hook 照样会在每次聊天时跑命令（2.1.322 实测）。
+ * `--setting-sources=`（空 = 用户 / 项目 / 本地三级设置都不读）或 `--safe-mode` 能挡住（同一版本实测）。
+ * 只提醒不拒绝：已经在跑的节点配置里没有这一项，升级后不能因此起不来。
+ */
+export function chatProfileWarnings(id: string, p: Profile): string[] {
+  if (!id.endsWith("-chat") || commandName(p.command) !== "claude") return [];
+  const blocksHooks = p.args.some((a) => a === "--safe-mode" || a === "--bare" || a === "--setting-sources" || a.startsWith("--setting-sources="));
+  return blocksHooks
+    ? []
+    : ["claude 的聊天 profile 建议加 --setting-sources=（不读用户和工作目录里的设置，里面配的 hooks 就不会在聊天时跑命令）"];
+}
+
 /** S-23：看图 / 画图配置要配得上 */
 export function imageConfigProblems(p: Profile): string[] {
   const problems: string[] = [];
