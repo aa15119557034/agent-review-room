@@ -564,6 +564,33 @@ export function nodeDiagnosis(r: NodeTestResult, nodeLabel: string, profileId: s
   }
 }
 
+/**
+ * 「查原因」按钮点下去的整个过程（NodeWhy 用）。命令本身没跑成（IPC 出错，actions 返回 undefined）时也要说一句：
+ * 不然按钮悄悄变回「查原因」，像没点过一样（汐 #219）。全局的错误提示由 actions 自己弹，这里只管这一行字。
+ */
+export const NODE_CHECK_FAILED = "检查失败，稍后再试。";
+
+export async function nodeWhyCheck(
+  actions: {
+    loadNodes(): Promise<readonly { id: string; label: string; baseUrl: string }[] | undefined>;
+    testNode(input: { id: string; baseUrl: string; profileId: string }): Promise<NodeTestResult | undefined>;
+  },
+  nodeId: string,
+  profileId: string,
+  fallbackLabel: string,
+): Promise<{ ok: boolean; text: string }> {
+  try {
+    const nodes = await actions.loadNodes();
+    if (!nodes) return { ok: false, text: NODE_CHECK_FAILED };
+    const node = nodes.find((n) => n.id === nodeId);
+    if (!node) return { ok: false, text: `节点「${fallbackLabel}」还没保存。去「设置 › 节点」填地址和 Token。` };
+    const r = await actions.testNode({ id: node.id, baseUrl: node.baseUrl, profileId });
+    return r ? nodeDiagnosis(r, node.label, profileId) : { ok: false, text: NODE_CHECK_FAILED };
+  } catch {
+    return { ok: false, text: NODE_CHECK_FAILED };
+  }
+}
+
 // ---------------------------------------------------------------- @ 名单的键盘操作（C-49 / B-07）
 
 /** 名单里的选项，顺序和画出来的一样：所有人，然后是成员 */

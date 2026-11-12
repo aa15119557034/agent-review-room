@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { AgentProfile } from "@room/schemas";
-import { nodeDiagnosis } from "../lib/chat";
+import { nodeWhyCheck } from "../lib/chat";
 import { RECOMMENDED_NODES } from "../lib/presets";
 import { useActions } from "./hooks";
 
@@ -20,14 +20,8 @@ export function NodeWhy({ agent, profileId }: { agent: AgentProfile; profileId: 
   const check = async () => {
     setBusy(true);
     setResult(null);
-    const nodes = await actions.loadNodes();
-    const node = nodes?.find((n) => n.id === nodeId);
-    if (!node) {
-      setResult({ ok: false, text: `节点「${label}」还没保存。去「设置 › 节点」填地址和 Token。` });
-    } else {
-      const r = await actions.testNode({ id: node.id, baseUrl: node.baseUrl, profileId });
-      if (r) setResult(nodeDiagnosis(r, node.label, profileId));
-    }
+    // 每一步没跑成都有一句话（nodeWhyCheck）：不会出现点了没反应、按钮变回「查原因」的情况
+    setResult(await nodeWhyCheck(actions, nodeId, profileId, label));
     setBusy(false);
   };
 

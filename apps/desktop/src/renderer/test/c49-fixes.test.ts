@@ -7,7 +7,7 @@ import { COMMANDS, type AgentProfile, type AgentStatus, type Conversation, type 
 import { createMockBridge } from "../mock/mock-backend";
 import { createActions } from "../lib/actions";
 import { ControlFailure, createClient, describeFailure, withAgentNames } from "../lib/client";
-import { existingDirectWith, nodeDiagnosis, pickerKey, pickerOptions, slotLabel, UNAVAILABLE_LABEL } from "../lib/chat";
+import { existingDirectWith, NODE_CHECK_FAILED, nodeDiagnosis, nodeWhyCheck, pickerKey, pickerOptions, slotLabel, UNAVAILABLE_LABEL } from "../lib/chat";
 import { availabilityText, chatNotConfigured } from "../lib/console";
 import { initialDiscussion, recipientBlock, sendableRecipients, setupHint, type DiscussionState } from "../lib/discussion";
 import { hasMarkup, inlineMarkup, parseMarkup } from "../lib/markup";
@@ -168,6 +168,25 @@ describe("B-09: 'node offline' can be told apart from a wrong token", () => {
     assert.match(missing.text, /没有 claude-chat.*claude-review/);
     assert.equal(d({ reachable: true, health, profileAvailable: true, latencyMs: 3 }).ok, true);
     assert.notEqual(d({ reachable: false, error: "unauthorized", message: "" }).text, d({ reachable: false, error: "unreachable", message: "" }).text);
+  });
+  it("汐 #219: the check always ends with a sentence, even when a command did not run", async () => {
+    const node = { id: "local", label: "你的电脑", baseUrl: "http://127.0.0.1:8765" };
+    const ok: NodeTestResult = { reachable: false, error: "unauthorized", message: "401" };
+    const run = (loadNodes: () => Promise<typeof node[] | undefined>, testNode: () => Promise<NodeTestResult | undefined>) =>
+      nodeWhyCheck({ loadNodes, testNode }, "local", "claude-chat", "本机");
+    // node.test 没跑成（IPC 失败，actions 返回 undefined）
+    assert.deepEqual(await run(async () => [node], async () => undefined), { ok: false, text: NODE_CHECK_FAILED });
+    assert.match(NODE_CHECK_FAILED, /检查失败，稍后再试/);
+    // 读节点列表也没跑成：不能说成「还没保存」
+    assert.deepEqual(await run(async () => undefined, async () => ok), { ok: false, text: NODE_CHECK_FAILED });
+    // 抛出来的也一样
+    assert.deepEqual(await run(async () => { throw new Error("ipc"); }, async () => ok), { ok: false, text: NODE_CHECK_FAILED });
+    assert.deepEqual(await run(async () => [node], async () => { throw new Error("ipc"); }), { ok: false, text: NODE_CHECK_FAILED });
+    // 正常路径不变：节点没保存、保存了但 Token 不对
+    assert.match((await run(async () => [], async () => ok)).text, /节点「本机」还没保存/);
+    const wrong = await run(async () => [node], async () => ok);
+    assert.equal(wrong.ok, false);
+    assert.match(wrong.text, /Token 不对/);
   });
   it("the slot label still follows the contract's three reasons", () => {
     assert.equal(slotLabel({ outcome: "unavailable", unavailableReason: "offline" } as never), "不能回答（节点连不上）");
