@@ -118,3 +118,61 @@ build-desktop / build-agent-server：全部 code 0
 评审 #193 中本轮连带修复：GitHub 服务注入 dispatcher，ASR 脚本放入 extraResources 并按 resourcesPath 加载。其余原有评审缺陷继续按原评论追踪，不宣称全项目已无缺陷。
 
 本体打包前置检查：本机复用的依赖未安装 electron-builder / app-builder-lib，入口解析报 MODULE_NOT_FOUND；遵循本机不自动安装软件的要求，没有补装。verify:artifact 未实际通过，真实安装包内容与 NSIS 验收均保留未验证。构建产物的 build-info.json 已加入版本、commit SHA 和工作区 dirty 标识；electron-vite 自身生成的临时配置不计为源码改动。
+
+## 2026-11-12 C酱 整体测试（云端 Linux + 真 Electron/Xvfb + 真 Claude haiku）
+
+范围：C酱 这条线（Claude 节点 `apps/agent-server`、桌面端 renderer），在 main（6282d18，不含 #218）上做。两位测试者先各测一轮，再由 C酱 逐条核实、修、补回归测试。环境是云端 Linux、Node 22、Electron 跑在 Xvfb 里用 Playwright 点界面；Claude 用真的命令行（2.1.322）、haiku、短提示，这一轮共 6 次真调用。任务号 C-49。
+
+### 修了什么
+
+节点（agent-server）：
+
+- Claude 额度窗口过了重置时间还一直报「用完」，要重启节点才恢复 → 过期的窗口按「未知」处理
+- 「Context limit reached」「Budget limit reached」被当成额度用尽；「You've hit your limit」不带 429 时漏判 → 两头都改
+- 节点关闭时订阅方收不到最后那条 terminal → 先等 Run 收尾再断连接
+- 命令行非零退出时的提示看不懂 → 带上退出码和 stderr 结尾
+- 聊天 profile 挡不住 `.claude/settings.json` 里的 hooks（实测 SessionStart hook 照跑）→ 示例配置加 `--setting-sources=`，启动时缺这一项会打一行提醒（只提醒，不拦）。实测加上后 hook 不再跑
+- 示例配置补 Haiku 5.5；README 三处和实际不一致的地方改掉（字节数不符是 400 `bad_request`；`--tools=` 空值已在 Linux 上验证）
+
+桌面端（renderer）：
+
+- 一键预设不填聊天 profile，三位在聊天里全是「未配置」，界面上也没地方填 → 预设带上，秘书表单加「讨论 profile」「聊天 profile」两栏
+- 预设遇到第一位节点没保存的秘书就停，后面的也不配 → 能配的照配，配不了的说明原因
+- 讨论页把发不出去的秘书（未配置 / 离线 / 已暂停）默认勾着 → 不勾、不可点，写明原因
+- Token 填错时只说「节点连不上」，秘书页还显示「在线」 → 加「查原因」（跑一次和设置页一样的连接测试），打开秘书页时重新查状态
+- 回答里的 `**粗体**`、行内代码、代码块原样显示符号 → 做了最小版（不解析 HTML、不加依赖）；完整 Markdown 没有 ADR，不做
+- 其余：失败提示里的秘书 id 换成名字、@ 选人框支持键盘、键盘焦点环、次要文字对比度、设置页把节点和秘书放最前、额度写「已用」、已有单聊时的说明、GitHub 设置缺什么直接写出来
+
+### 实际命令和结果
+
+~~~text
+pnpm typecheck                         7 个包全部 Done
+pnpm test                              exit 0
+  packages/schemas 181/181  packages/core 110/110  packages/db 200/200
+  packages/reviewer-client 15/15  packages/remote-client 15/15
+  apps/agent-server 191/191  apps/desktop 317/317
+pnpm -C apps/desktop exec tsx --test src/renderer/test/*.test.ts*   226/226
+pnpm -C apps/desktop test:e2e          48/48
+pnpm exec tsc -p apps/desktop/e2e/tsconfig.json                     exit 0
+~~~
+
+真 Electron 走查（`pnpm -C apps/desktop build` 之后，隔离数据目录）：全新数据 → 一键预设 → 存节点 → 聊天问「1+1」→ haiku 1.9 秒答「**2**」，粗体正常显示；讨论页三位里只有 C酱 可勾；Token 改错后聊天和秘书页「查原因」都答「Token 不对」；节点关掉后答「节点没开，或者地址不对」。全程 renderer 没有报错。
+
+hooks 实测（真 Claude，3 次）：不加参数时项目里的 SessionStart hook 运行并留下标记文件；加 `--setting-sources=` 或 `--safe-mode` 后不再运行。
+
+### 没改的（和原因）
+
+- 聊天回答整段包在 ```json 围栏里会被判 `parse_error`：契约要求整段输出是一个 JSON 对象，要改得走契约 PR，归汐的 main
+- 孙进程自己另起会话后取消杀不到：命令行本身不这么做，先不动
+- Claude 两个额度窗口都读不到、且上一次 Run 是额度用尽时，「缺席」会一直留到手动重试那一轮（C-36 的既定行为）；要改需要契约和 main 一起动
+- 示例配置没有给任何模型标「能看图」：README 规定要 `vision-test` 3/3 才标，这一轮只见过 Haiku 认对一次
+
+### 没测到的
+
+- Windows 专有行为（路径、进程树、安装包）；safeStorage 真加密（走查时用了替身）
+- 语音（朗读、转写、语音包）：按要求不装不测
+- 真的额度耗尽（只用假命令行模拟）
+- 用户级（`~/.claude`）hooks：只实测了项目级；`--setting-sources=` 按文档两者都不读
+- Codex / DeepSeek 真节点；多实例；长时间运行
+- `packages/remote-client` 只读了一遍，没有新增测试
+- #218（验收工具 / voice 迁移）不在这次修的范围，问题写成评审意见发到那个 PR
