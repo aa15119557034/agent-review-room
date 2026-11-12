@@ -49,6 +49,8 @@ export function createAgentServer(
   token: string,
   /** 测试可替换读额度的方式；默认起 codex app-server */
   quotaRead?: (profileId: string, profile: Profile) => Promise<RemoteProfileQuota>,
+  /** 测试用：替换关闭时的日志输出、关闭时等 Run 收尾的时长（默认 killGraceMs + 6 秒） */
+  hooks: { warn?: (line: string) => void; closeWaitMs?: number } = {},
 ): AgentServer {
   const runs = new Map<string, RemoteRun>();
   const tokenDigest = sha256Buf(token);
@@ -376,8 +378,15 @@ export function createAgentServer(
       for (const r of runs.values()) if (!r.isFinished) r.shutdown();
       // terminal(node_shutdown) 要等子进程真的退出才产出（最晚 killGraceMs + 5 秒的兜底）。
       // 先等它写给订阅方、事件流自己结束，再断连接；不然主控端只看到断线，要等租约才知道节点关了（C-49 / A-01）
-      const deadline = Date.now() + cfg.killGraceMs + 6_000;
+      const waitStart = Date.now();
+      const deadline = waitStart + (hooks.closeWaitMs ?? cfg.killGraceMs + 6_000);
       while (activeCount() > 0 && Date.now() < deadline) await new Promise((r) => setTimeout(r, 20));
+      // 超时了还有 Run 没收尾：下面断连接时订阅方只会看到断线、看不到 terminal，要等租约才知道节点关了。
+      // 留一行日志说清是哪个 Run、等了多久；只写 runId，不写 Token、提示词和用户内容
+      const waitedMs = Date.now() - waitStart;
+      for (const r of runs.values()) {
+        if (!r.isFinished) (hooks.warn ?? console.warn)(`[agent-server] 关闭时 run ${r.runId} 还没收尾（等了 ${waitedMs} ms），事件流直接断开，没有 terminal 事件`);
+      }
       // 给刚写出去的 terminal 一点时间落到 socket 上
       await new Promise((r) => setTimeout(r, 50));
       server.closeAllConnections();
