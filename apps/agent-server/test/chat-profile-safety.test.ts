@@ -56,6 +56,16 @@ describe("C-49 / A-02: claude chat profiles should not load hooks from settings 
     assert.deepEqual(chatProfileWarnings("codex-chat", { ...claudeChat([]), command: "codex" }), []);
   });
 
+  it("a --setting-sources with a value still reads some settings, so it does not silence the warning (汐 #219)", () => {
+    for (const extra of [["--setting-sources", "user"], ["--setting-sources", "project,user"], ["--setting-sources=user"], ["--setting-sources=project,local"], ["--setting-sources"]]) {
+      assert.equal(chatProfileWarnings("claude-chat", claudeChat(extra)).length, 1, extra.join(" "));
+    }
+    // 空值后面再跟别的参数、前面有别的参数都照样认
+    assert.deepEqual(chatProfileWarnings("claude-chat", claudeChat(["--model", "x", "--setting-sources", "", "--verbose"])), []);
+    // 「user」是别的参数的值、不是 --setting-sources 的：空值在前面一个位置才算
+    assert.equal(chatProfileWarnings("claude-chat", claudeChat(["--setting-sources", "user", ""])).length, 1);
+  });
+
   it("the shipped example config has the flag and passes the Windows .cmd argument check", () => {
     const example = ServerConfig.parse(JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), "..", "agent-server.config.example.json"), "utf8")));
     const chat = example.profiles["claude-chat"]!;

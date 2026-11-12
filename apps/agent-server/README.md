@@ -310,7 +310,7 @@ pnpm install --frozen-lockfile
 
 Codex 的聊天和讨论用同一个 `CODEX_HOME`（`node\codex\codex-home`，林离自己的，不是江浩的 `~\.codex`），里面没有工程规则；聊天 profile 另外用 `project_doc_max_bytes=0` 不读工作目录的 AGENTS.md。分成两个 `CODEX_HOME` 要登录两次、刷新 Token 也会互相顶掉，所以没拆。
 
-**hooks（2026-11-12 实测，claude 2.1.322）**：`--tools=` 关的是工具，关不掉 hooks。工作目录里放一份 `.claude/settings.json`，配上 SessionStart 和 UserPromptSubmit 两个 hook，用上表的参数跑一句话，两个 hook 都执行了；加上 `--setting-sources=`（空值 = 用户 / 项目 / 本地三级设置都不读）或 `--safe-mode` 之后都不执行，回答正常。示例配置的 `claude-chat` 已经带 `--setting-sources=`。已经在跑的节点没有这一项也能启动，只在启动日志里提醒一行；要补上就照示例在 `args` 里加一项、重启节点。没测到的：用户级 `~/.claude/settings.json` 里的 hook（云端不能改会话自己的设置，按 CLI 的说明它也属于 `--setting-sources` 管的范围）、Windows 上的 `claude.cmd`（参数里没有 cmd 特殊字符，启动检查能过）、更老的 claude 版本认不认这个参数——在你的电脑上加了以后先跑一句 `try` 确认。
+**hooks（2026-11-12 实测，claude 2.1.322）**：`--tools=` 关的是工具，关不掉 hooks。工作目录里放一份 `.claude/settings.json`，配上 SessionStart 和 UserPromptSubmit 两个 hook，用上表的参数跑一句话，两个 hook 都执行了；加上 `--setting-sources=`（空值 = 用户 / 项目 / 本地三级设置都不读）或 `--safe-mode` 之后都不执行，回答正常。示例配置的 `claude-chat` 已经带 `--setting-sources=`。写成 `--setting-sources user` 这种带值的只是少读几级设置，那几级里的 hooks 照跑，启动日志照样提醒；空值写成 `--setting-sources=`，或者 `--setting-sources` 后面紧跟一个空字符串都算。已经在跑的节点没有这一项也能启动，只在启动日志里提醒一行；要补上就照示例在 `args` 里加一项、重启节点。没测到的：用户级 `~/.claude/settings.json` 里的 hook（云端不能改会话自己的设置，按 CLI 的说明它也属于 `--setting-sources` 管的范围）、Windows 上的 `claude.cmd`（参数里没有 cmd 特殊字符，启动检查能过）、更老的 claude 版本认不认这个参数——在你的电脑上加了以后先跑一句 `try` 确认。
 
 **只有思考、没有正文**：CLI 正常结束但回答是空的，节点照常报 `completed`、正文为空；主控端把空回答记成「失败（没有内容）」，可以重试。
 
