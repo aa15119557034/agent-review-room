@@ -17,7 +17,7 @@ const TEST_ERROR: Record<Extract<NodeTestResult, { reachable: false }>["error"],
 };
 
 /**
- * 设置页：Reviewer 节点（ADR-001 物理分离），以及讨论室的节点与参与者（C-27）。
+ * 设置页：节点与参与者（C-27，聊天和讨论室都用）、笔记同步、导入包；最下面收着旧版的 Reviewer 节点（ADR-001，单次评审用）。
  * Token 只写不读：保存后输入框清空，界面只显示"已保存"，永远拿不到已保存的值。
  */
 export function SettingsView() {
@@ -78,17 +78,26 @@ export function SettingsView() {
     <section className="settings" aria-labelledby="settings-title">
       <header className="settings-head">
         <h1 id="settings-title">设置</h1>
-        <button type="button" onClick={actions.openWorkspace}>资料与维护</button>
+        <button type="button" className="button-outline" onClick={actions.openWorkspace}>资料与维护</button>
         <button type="button" className="button-quiet" onClick={actions.closeSettings}>
           返回工作台
         </button>
       </header>
 
+      {/* 新版在前：节点和参与者（聊天、讨论室都用它）。旧版「Reviewer 节点」只给单次评审用，收在最下面（B-05） */}
+      <NodesAndAgents />
+
+      <GithubSettings />
+
+      <PacksSettings />
+
+      <details className="settings-legacy">
+        <summary>单次评审用的 Reviewer 节点（旧版）</summary>
       <form className="settings-form" onSubmit={save} noValidate>
-        <h2 className="settings-section">Reviewer 节点</h2>
         <p className="step-hint">
-          Reviewer 运行在另一台电脑上。在那台电脑上运行 <code>pnpm --filter @room/agent-server setup</code>，
-          把显示的地址、评审方式和 Token 填到这里。地址变了随时回来改。
+          只有旧的「单次评审」用这一项；聊天和讨论室看上面的「节点」。填过的地址和 Token 已经自动搬到上面的「你的电脑」，
+          平时不用再动这里。Reviewer 运行在另一台电脑上：在那台电脑上运行 <code>pnpm --filter @room/agent-server setup</code>，
+          把显示的地址、评审方式和 Token 填到这里。
         </p>
 
         <label className="field-label" htmlFor="node-url">
@@ -166,12 +175,7 @@ export function SettingsView() {
 
         {result && <TestResult result={result} profileId={profileId.trim()} />}
       </form>
-
-      <GithubSettings />
-
-      <PacksSettings />
-
-      <NodesAndAgents />
+      </details>
     </section>
   );
 }
