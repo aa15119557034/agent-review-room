@@ -34,13 +34,20 @@ import { bundledTtsConfig, findTtsBundle } from "./tts-paths";
  */
 
 // 验收/受限机器：用环境变量把数据目录指到可写位置（这台机器写 %APPDATA% 会被拦）
+const CLI_FLAGS = ["--self-test", "--import-local-token", "--set-voice", "--tts-test"];
+const cliRequested = process.argv.some((arg) => CLI_FLAGS.includes(arg));
 const dataOverride = process.env.AGENT_REVIEW_ROOM_DATA;
 if (dataOverride !== undefined && dataOverride.trim() !== "") {
   try {
     mkdirSync(dataOverride, { recursive: true });
     app.setPath("userData", dataOverride);
   } catch (error) {
-    console.warn("[startup] 数据目录覆盖失败：", error instanceof Error ? error.message : String(error));
+    const message = error instanceof Error ? error.message : String(error);
+    if (cliRequested) {
+      console.error("[startup] 数据目录覆盖失败：" + message);
+      process.exit(1);
+    }
+    console.warn("[startup] 数据目录覆盖失败：", message);
   }
 }
 
@@ -405,6 +412,7 @@ async function bootstrap(): Promise<void> {
 
   const cliExit = await runCliIfRequested({
     db,
+    nodes,
     settings,
     packs,
     userData,
@@ -414,8 +422,7 @@ async function bootstrap(): Promise<void> {
     execPath: process.execPath,
   });
   if (cliExit !== null) {
-    process.exitCode = cliExit;
-    app.quit();
+    app.exit(cliExit);
     return;
   }
 
@@ -433,6 +440,11 @@ void app.whenReady().then(async () => {
   } catch (error) {
     // 迁移失败 / DB 被锁：以前这里会把 promise 丢掉，窗口不开、进程还挂着
     const message = error instanceof Error ? error.message : String(error);
+    if (cliRequested) {
+      console.error("[startup] 启动失败：" + message);
+      app.exit(1);
+      return;
+    }
     dialog.showErrorBox("启动失败", "无法初始化本地数据库或设置：\n" + message);
     app.quit();
     return;

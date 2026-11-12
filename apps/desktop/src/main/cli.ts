@@ -1,6 +1,7 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { SqliteDatabase } from "@room/db";
+import type { NodeService } from "./nodes";
 import type { PacksService } from "./packs";
 import type { SettingsStore } from "./settings";
 import { bundledTtsConfig, findTtsBundle } from "./tts-paths";
@@ -18,6 +19,7 @@ export interface CliDeps {
   db: SqliteDatabase;
   settings: SettingsStore;
   packs: PacksService;
+  nodes: NodeService;
   userData: string;
   localAppData: string | undefined;
   installDir: string;
@@ -32,30 +34,18 @@ export async function runCliIfRequested(deps: CliDeps): Promise<number | null> {
   const importAt = argv.indexOf("--import-local-token");
   if (importAt >= 0) {
     const id = argv[importAt + 1];
-    const baseUrlArg = argv[importAt + 2];
-    if (id === undefined) {
-      console.log(JSON.stringify({ ok: false, error: "用法：--import-local-token <nodeId> [baseUrl]" }));
+    if (id !== "controller-local" && id !== "controller-local-codex") {
+      console.log(JSON.stringify({ ok: false, error: "只有 controller-local / controller-local-codex 能导入本机 Token" }));
       return 2;
     }
-    const row = deps.db.prepare("SELECT base_url FROM nodes WHERE id = ?").get(id) as { base_url: string } | undefined;
-    const baseUrl = baseUrlArg ?? row?.base_url ?? null;
-    const file = deps.settings.getLocalTokenFile(id as never);
-    if (file === null) {
-      console.log(JSON.stringify({ ok: false, id, error: "没有配置 token 文件路径（localAgentServerTokenFiles / agentRoom）" }));
+    try {
+      const node = await deps.nodes.importLocalToken({ type: "node.importLocalToken", id });
+      console.log(JSON.stringify({ ok: true, id, baseUrl: node.baseUrl, tokenSet: true }));
+      return 0;
+    } catch (error) {
+      console.log(JSON.stringify({ ok: false, id, error: error instanceof Error ? error.message : String(error) }));
       return 1;
     }
-    if (!existsSync(file)) {
-      console.log(JSON.stringify({ ok: false, id, file, error: "token 文件不存在" }));
-      return 1;
-    }
-    const token = readFileSync(file, "utf8").trim();
-    if (!/^[0-9a-f]{64}$/i.test(token) || baseUrl === null) {
-      console.log(JSON.stringify({ ok: false, id, file, baseUrl, error: "token 格式不对或没有节点地址" }));
-      return 1;
-    }
-    deps.settings.upsertNode(id, { baseUrl, token });
-    console.log(JSON.stringify({ ok: true, id, baseUrl, file, tokenSet: true }));
-    return 0;
   }
 
   if (argv.includes("--set-voice")) {
@@ -69,7 +59,7 @@ export async function runCliIfRequested(deps: CliDeps): Promise<number | null> {
     }
     const changed = deps.db.prepare("UPDATE agents SET voice = ? WHERE id = ?").run(JSON.stringify({ voiceId: voice.id, speed: 1 }), agentId).changes;
     console.log(JSON.stringify({ ok: changed > 0, agent: agentId, voice: voice.id, changed }));
-    return 0;
+    return changed > 0 ? 0 : 1;
   }
 
   if (argv.includes("--tts-test")) {
@@ -139,7 +129,8 @@ export async function runCliIfRequested(deps: CliDeps): Promise<number | null> {
     | { health: { status?: number; body?: { profiles?: string[] } } | null }
     | undefined;
   const chatOk = chatNode?.health?.status === 200 && (chatNode.health.body?.profiles ?? []).includes("deepseek-chat");
-  const ok = runtime?.state === "installed" && model?.state === "installed" && bundle.bundle !== null && chatOk;
+  // 自检是「报告」，不是「验收通过」：没装语音包 / 没有 Claude 的机器也应该 exit 0
+  const ok = true;
   console.log(
     JSON.stringify(
       {

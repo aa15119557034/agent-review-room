@@ -706,7 +706,9 @@ export class Repository {
         params.push(
           key === "modelSettings" || key === "memorySource"
             ? JSON.stringify(value)
-            : typeof value === "boolean"
+            : key === "voice"
+              ? value === null ? null : JSON.stringify(value)
+              : typeof value === "boolean"
               ? value ? 1 : 0
               : value,
         );

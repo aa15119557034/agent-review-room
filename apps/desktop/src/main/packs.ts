@@ -142,11 +142,8 @@ export class PacksService {
    */
   #targetBase(): string {
     if (this.#target !== null) return this.#target;
-    const preferred =
-      this.deps.localAppData !== undefined && this.deps.localAppData !== ""
-        ? join(this.deps.localAppData, "评审室", "tts")
-        : join(this.deps.installDir, "tts");
-    for (const candidate of [preferred, join(this.deps.installDir, "tts")]) {
+    const preferred = this.#preferredBase();
+    for (const candidate of [preferred, this.#installDirBase()]) {
       try {
         mkdirSync(candidate, { recursive: true });
         const probe = join(candidate, ".write-test");
@@ -162,8 +159,20 @@ export class PacksService {
     return preferred;
   }
 
+  #installDirBase(): string {
+    return join(this.deps.installDir, "tts");
+  }
+
+  /** 首选位置：只读查询用这个，不建目录、不探测 */
+  #preferredBase(): string {
+    return this.deps.localAppData !== undefined && this.deps.localAppData !== ""
+      ? join(this.deps.localAppData, "评审室", "tts")
+      : this.#installDirBase();
+  }
+
   #bases(): string[] {
-    return [join(this.deps.installDir, "tts"), this.#targetBase(), join(this.deps.resourcesPath, "tts")];
+    const bases = [this.#installDirBase(), this.#preferredBase(), join(this.deps.resourcesPath, "tts")];
+    return bases.filter((base, index) => bases.indexOf(base) === index);
   }
 
   /**

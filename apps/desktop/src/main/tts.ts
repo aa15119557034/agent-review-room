@@ -225,8 +225,9 @@ export class TtsRunner {
    */
   #cleanStaleTempFiles(): void {
     try {
-      for (const name of readdirSync(tmpdir())) {
-        if (name.startsWith(`room-tts-${process.pid}-`)) rmSync(join(this.config.tempDir ?? tmpdir(), name), { force: true });
+      const dir = this.config.tempDir ?? tmpdir();
+      for (const name of readdirSync(dir)) {
+        if (name.startsWith(`room-tts-${process.pid}-`)) rmSync(join(dir, name), { force: true });
       }
     } catch {
       // 清不掉不影响合成
