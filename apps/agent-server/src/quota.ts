@@ -238,7 +238,24 @@ export function mapClaudeRateLimit(info: unknown, readAt: Date): RemoteProfileQu
   return checked.success ? checked.data : unknownQuota(readAt);
 }
 
-/** 每个 Claude 账号最近一次从 Run 输出里看到的额度。只在内存里：节点重启后到下一次 Run 之前报「未知」 */
+/**
+ * 窗口的重置时间已经过了：那份百分比说的是上一个窗口，不能再报（C-49 / A-04）。
+ * 过期的窗口报 null（读不到，不猜、不报 0）；creditsInUse 是跟着那次读数的，也一起作废。
+ * 没有 resetsAt 的窗口没法判断，原样留着。
+ */
+export function dropExpiredWindows(q: RemoteProfileQuota, now: Date): RemoteProfileQuota {
+  const expired = (w: RemoteQuotaWindow | null) => w !== null && w.resetsAt !== null && Date.parse(w.resetsAt) <= now.getTime();
+  const five = expired(q.fiveHour);
+  const week = expired(q.weekly);
+  if (!five && !week) return q;
+  return { ...q, fiveHour: five ? null : q.fiveHour, weekly: week ? null : q.weekly, creditsInUse: null };
+}
+
+/**
+ * 每个 Claude 账号最近一次从 Run 输出里看到的额度。只在内存里：节点重启后到下一次 Run 之前报「未知」。
+ * Claude 的额度只能从 Run 的输出里读到，所以「用完了」那一份不能一直留着：主控端看到用完就不再派 Run，
+ * 也就永远读不到新的。读的时候按 resetsAt 判过期（dropExpiredWindows），窗口重置后自己恢复成「未知」。
+ */
 export function createClaudeQuotaStore(now: () => Date = () => new Date()) {
   const latest = new Map<string, RemoteProfileQuota>();
   return {
@@ -249,7 +266,17 @@ export function createClaudeQuotaStore(now: () => Date = () => new Date()) {
       latest.set(account, q);
     },
     read(account: string): RemoteProfileQuota {
-      return latest.get(account) ?? unknownQuota(now());
+      const stored = latest.get(account);
+      if (!stored) return unknownQuota(now());
+      const fresh = dropExpiredWindows(stored, now());
+      if (fresh === stored) return stored;
+      if (fresh.fiveHour === null && fresh.weekly === null) {
+        // 全过期了：和没读过一样
+        latest.delete(account);
+        return unknownQuota(now());
+      }
+      latest.set(account, fresh);
+      return fresh;
     },
   };
 }
