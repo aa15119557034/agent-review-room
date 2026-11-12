@@ -10,12 +10,15 @@ import {
   conversationTitle,
   currentConversation,
   draftOf,
+  existingDirectWith,
   memoryBadge,
   mentionsFromText,
   agentTitle,
   timeBreaks,
   messageText,
   partialReplyText,
+  pickerKey,
+  pickerOptions,
   previewText,
   runningSlots,
   selectableForTopic,
@@ -32,6 +35,7 @@ import { ReplyBody } from "../Chart";
 import { useActions, useAppState } from "../hooks";
 import { Icon, type IconName } from "../Icon";
 import { RECOMMENDED_NODES } from "../../lib/presets";
+import { NodeWhy } from "../NodeWhy";
 import {
   REJECT_LABEL,
   compactionText,
@@ -624,21 +628,27 @@ function QuoteLine({ message, prefix }: { message: ChatMessage; prefix: string }
 /** 你的消息下面：没答上的回答位（这条没有回 / 失败 / 额度缺席 / 不能回答 / 已停止），失败的可以单独重试 */
 function SlotLine({ slots }: { slots: ChatReplySlot[] }) {
   const actions = useActions();
+  const agents = useAppState((s) => s.disc.agents);
   const { name } = useNames();
   const shown = visibleSlots(slots).filter((s) => s.outcome !== "retracted");
   if (!shown.length) return null;
   return (
     <ul className="chat-slots">
-      {shown.map((s) => (
-        <li key={s.id} data-outcome={s.outcome} title={s.failure?.message}>
-          {name(s.agent)} · {slotLabel(s)}
-          {canRetrySlot(s) && (
-            <button type="button" className="button-link" onClick={() => void actions.chat.retry(s.id)}>
-              重试
-            </button>
-          )}
-        </li>
-      ))}
+      {shown.map((s) => {
+        const agent = agents.find((a) => a.id === s.agent);
+        return (
+          <li key={s.id} data-outcome={s.outcome} title={s.failure?.message}>
+            {name(s.agent)} · {slotLabel(s)}
+            {canRetrySlot(s) && (
+              <button type="button" className="button-link" onClick={() => void actions.chat.retry(s.id)}>
+                重试
+              </button>
+            )}
+            {/* 「节点连不上」分不出是没开还是 Token 不对：点一下查清楚（B-09） */}
+            {s.outcome === "unavailable" && s.unavailableReason === "offline" && agent && <NodeWhy agent={agent} profileId={agent.chatProfileId} />}
+          </li>
+        );
+      })}
     </ul>
   );
 }
@@ -734,6 +744,8 @@ function Composer({ conv }: { conv: Conversation }) {
   const actions = useActions();
   const { name, color } = useNames();
   const [picker, setPicker] = useState(false);
+  /** @ 名单里键盘选中的是第几项（0 = 所有人，之后是成员）；B-07 */
+  const [pickIndex, setPickIndex] = useState(0);
   const [stickers, setStickers] = useState(false);
   const [more, setMore] = useState(false);
   /** ＋ 面板里正在录音：这时不收起面板（收起会把这段录音静默丢掉，汐 #174） */
@@ -776,6 +788,17 @@ function Composer({ conv }: { conv: Conversation }) {
       e.preventDefault();
       setPicker(false);
       return;
+    }
+    // @ 名单开着的时候：↑↓ 换人，Enter / Tab 选中（不发送），Esc 关掉（B-07）
+    if (picker && isGroup) {
+      const options = pickerOptions(conv.members);
+      const next = pickerKey(e.key, pickIndex, options.length);
+      if (next !== null) {
+        e.preventDefault();
+        if (next === "pick") pick(options[pickIndex] ?? "all");
+        else setPickIndex(next);
+        return;
+      }
     }
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -878,22 +901,31 @@ function Composer({ conv }: { conv: Conversation }) {
               actions.chat.setDraftText(text);
               // 点名直接从正文认（打字 @ 就行，不用另外选）
               if (isGroup) actions.chat.setMentions(mentionsFromText(text, conv.members, name));
-              // 刚打了一个 @ 就弹出成员名单，点一下帮你补上名字
-              if (isGroup && text.length > draft.text.length && text[pos - 1] === "@") setPicker(true);
+              // 刚打了一个 @ 就弹出成员名单，点一下（或 ↑↓ + Enter）帮你补上名字；接着打别的字就收起来，Enter 照常发送
+              if (isGroup && text.length > draft.text.length && text[pos - 1] === "@") {
+                setPicker(true);
+                setPickIndex(0);
+              } else if (picker && text[pos - 1] !== "@") {
+                setPicker(false);
+              }
             }}
             onKeyDown={onKey}
+            aria-controls={picker && isGroup ? "chat-picker" : undefined}
+            aria-activedescendant={picker && isGroup ? `chat-picker-${pickIndex}` : undefined}
           />
           {picker && isGroup && (
-            <div className="chat-picker" role="listbox" aria-label="点名谁必须回答">
-              <button type="button" role="option" aria-selected={draft.mentions.kind === "all"} onClick={() => pick("all")}>
+            <div className="chat-picker" id="chat-picker" role="listbox" aria-label="点名谁必须回答（↑↓ 选，Enter 确定，Esc 关掉）">
+              <button type="button" role="option" id="chat-picker-0" data-active={pickIndex === 0 || undefined} aria-selected={draft.mentions.kind === "all"} onClick={() => pick("all")}>
                 <span className="avatar avatar-sm avatar-all" aria-hidden="true">全</span>
                 所有人
               </button>
-              {conv.members.map((a) => (
+              {conv.members.map((a, i) => (
                 <button
                   key={a}
                   type="button"
                   role="option"
+                  id={`chat-picker-${i + 1}`}
+                  data-active={pickIndex === i + 1 || undefined}
                   aria-selected={draft.mentions.kind === "agents" && draft.mentions.agents.includes(a)}
                   onClick={() => pick(a)}
                 >
@@ -991,6 +1023,7 @@ function NewConversationSheet() {
   const [picked, setPicked] = useState<string[]>([]);
   const [title, setTitle] = useState("");
   const tooMany = picked.length > CHAT_LIMITS.maxRecipients;
+  const existingDirect = useAppState((s) => (picked.length === 1 ? existingDirectWith(s.chat.list, picked[0]!) : null));
   const submit = (e: FormEvent) => {
     e.preventDefault();
     if (!picked.length || tooMany) return;
@@ -1018,9 +1051,14 @@ function NewConversationSheet() {
           名字（可以不填）
           <input value={title} maxLength={60} onChange={(e) => setTitle(e.target.value)} placeholder={picked.length > 1 ? "比如：三位秘书" : "备注名"} />
         </label>
+        {existingDirect && (
+          <p className="chat-note">
+            和 {agents.find((a) => a.id === picked[0])?.displayName} 已经有一个单聊，会直接打开它{title.trim() ? "，并把备注名改成你填的这个" : ""}。
+          </p>
+        )}
         {tooMany && <p className="field-error">群聊最多 {CHAT_LIMITS.maxRecipients} 位</p>}
         <button type="submit" className="button-primary" disabled={!picked.length || tooMany}>
-          {picked.length > 1 ? "建群聊" : "开始单聊"}
+          {picked.length > 1 ? "建群聊" : existingDirect ? "打开单聊" : "开始单聊"}
         </button>
       </form>
     </Sheet>

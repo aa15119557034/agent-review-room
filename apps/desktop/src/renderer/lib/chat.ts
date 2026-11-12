@@ -15,6 +15,7 @@ import {
   type ImmersiveSettings,
   type ImmersiveUsage,
   type MediaJob,
+  type NodeTestResult,
   type SpeechClip,
   type Sticker,
   type UserChatMessage,
@@ -364,7 +365,7 @@ export const SLOT_LABEL: Record<ChatSlotOutcome, string> = {
 
 export const UNAVAILABLE_LABEL: Record<NonNullable<ChatReplySlot["unavailableReason"]>, string> = {
   offline: "节点连不上",
-  unconfigured: "没配聊天",
+  unconfigured: "还没配聊天 profile，在「秘书 › 节点和权限」里填",
   paused_by_user: "你暂停了",
 };
 
@@ -532,4 +533,57 @@ export function shortTime(iso: string, nowMs: number): string {
   const sameDay = d.toDateString() === today.toDateString();
   const pad = (n: number) => String(n).padStart(2, "0");
   return sameDay ? `${pad(d.getHours())}:${pad(d.getMinutes())}` : `${d.getMonth() + 1}-${d.getDate()}`;
+}
+
+// ---------------------------------------------------------------- 「节点连不上」到底是哪种（C-49 / B-09）
+
+/**
+ * 回答位只有 offline 一种说法（契约 ChatSendAvailability），分不出是节点没开、Token 不对还是 profile 不在。
+ * 界面拿 node.test 的结果翻成一句人话；不改契约。
+ */
+export function nodeDiagnosis(r: NodeTestResult, nodeLabel: string, profileId: string): { ok: boolean; text: string } {
+  if (r.reachable) {
+    return r.profileAvailable
+      ? { ok: true, text: `「${nodeLabel}」现在连得上，${profileId} 也在。点「重试」再发一次。` }
+      : {
+          ok: false,
+          text: `「${nodeLabel}」连得上，但上面没有 ${profileId}${r.health.profiles.length ? `（有的是：${r.health.profiles.join("、")}）` : ""}。去「秘书 › 节点和权限」改聊天 profile。`,
+        };
+  }
+  switch (r.error) {
+    case "unauthorized":
+      return { ok: false, text: `Token 不对：「${nodeLabel}」开着，但不认保存的 Token。去「设置 › 节点」重新填 Token。` };
+    case "no_token":
+      return { ok: false, text: `「${nodeLabel}」还没填 Token。去「设置 › 节点」填。` };
+    case "protocol_mismatch":
+      return { ok: false, text: `「${nodeLabel}」的版本和这边对不上（${r.message}）。两边更新到同一个版本。` };
+    case "timeout":
+      return { ok: false, text: `「${nodeLabel}」没有回应（超时）。看看那台电脑是不是开着、节点是不是在跑、防火墙有没有放行。` };
+    case "unreachable":
+      return { ok: false, text: `连不上「${nodeLabel}」：节点没开，或者地址不对（${r.message}）。` };
+  }
+}
+
+// ---------------------------------------------------------------- @ 名单的键盘操作（C-49 / B-07）
+
+/** 名单里的选项，顺序和画出来的一样：所有人，然后是成员 */
+export const pickerOptions = (members: readonly string[]): ("all" | string)[] => ["all", ...members];
+
+/**
+ * 名单开着时按了一个键：返回新的选中位置、"pick"（选中当前这项）或 null（这个键不归名单管，照常处理）。
+ * ↑↓ 到头绕回去；Enter 和 Tab 都是「选这个」，不是发送。
+ */
+export function pickerKey(key: string, index: number, count: number): number | "pick" | null {
+  if (count <= 0) return null;
+  if (key === "ArrowDown") return (index + 1) % count;
+  if (key === "ArrowUp") return (index - 1 + count) % count;
+  if (key === "Enter" || key === "Tab") return "pick";
+  return null;
+}
+
+// ---------------------------------------------------------------- 新建会话（C-49 / B-11）
+
+/** 和这位已经有的单聊（main 对同一位只留一个单聊：再建一次是打开原来的） */
+export function existingDirectWith(list: readonly ConversationListItem[] | null, agent: string): Conversation | null {
+  return list?.find((x) => x.conversation.kind === "direct" && x.conversation.members[0] === agent)?.conversation ?? null;
 }
