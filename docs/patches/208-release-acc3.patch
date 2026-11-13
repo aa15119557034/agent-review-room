@@ -1,0 +1,64 @@
+diff --git a/apps/desktop/src/main/repository.ts b/apps/desktop/src/main/repository.ts
+--- a/apps/desktop/src/main/repository.ts
++++ b/apps/desktop/src/main/repository.ts
+@@ -673,6 +673,7 @@ export class Repository {
+             input.chatPersona ?? null,
+             input.chatProfileId ?? null,
+             input.memorySource === undefined ? null : JSON.stringify(input.memorySource),
++            input.voice == null ? null : JSON.stringify(input.voice),
+             updatedAt,
+             updatedAt,
+           );
+@@ -703,7 +704,8 @@ export class Repository {
+         if (value === undefined) continue;
+         sets.push(column + " = ?");
+         params.push(
+-          key === "modelSettings" || key === "memorySource"
++          key === "voice" ? (value === null ? null : JSON.stringify(value))
++            : key === "modelSettings" || key === "memorySource"
+             ? JSON.stringify(value)
+             : typeof value === "boolean"
+               ? value ? 1 : 0
+diff --git a/apps/desktop/test/workspace.test.ts b/apps/desktop/test/workspace.test.ts
+--- a/apps/desktop/test/workspace.test.ts
++++ b/apps/desktop/test/workspace.test.ts
+@@ -4,7 +4,7 @@ import { mkdtempSync,mkdirSync,readFileSync,writeFileSync,existsSync,rmSync,read
+ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+ import { createHash } from "node:crypto";
+-import { openDatabase, WriteQueue, ulid, searchWorkspace, workspaceItem, saveWorkspaceDecision, workspaceDecisions, workspaceTasks, workspaceSources } from "@room/db";
++import { LATEST_SCHEMA_VERSION, openDatabase, WriteQueue, ulid, searchWorkspace, workspaceItem, saveWorkspaceDecision, workspaceDecisions, workspaceTasks, workspaceSources } from "@room/db";
+ import { WorkspaceBackupManifest } from "@room/schemas";
+ import { WorkspaceService, verifyWorkspaceBackup, verifyRestoredDirectory } from "../src/main/workspace";
+ 
+@@ -115,7 +115,7 @@ test("restored copies can be reopened after edits while immutable backups cannot
+   assert.throws(()=>verifyRestoredDirectory(backup.path!));
+   f.dirs.push(backup.path,f.out);const copy=await f.service.restore();assert.ok(copy.path);
+   const restored=openDatabase(join(copy.path,"room.db"));restored.prepare("UPDATE projects SET name='edited' WHERE id=?").run(f.project);restored.close();
+-  assert.equal(verifyRestoredDirectory(copy.path),25);
++  assert.equal(verifyRestoredDirectory(copy.path),LATEST_SCHEMA_VERSION);
+   let activated:string|null|undefined;let consent=false;
+   const service=new WorkspaceService({db:f.db,queue:f.queue,userData:f.data,version:"test",revision:"test",checks:async()=>[],chooseDirectory:async()=>copy.path,chooseSaveFile:async()=>null,confirmSwitch:async()=>consent,activateDirectory:value=>{activated=value;}});
+   assert.equal((await service.openRestored()).cancelled,true);assert.equal(activated,undefined);
+diff --git a/apps/desktop/test/discussion-ipc.test.ts b/apps/desktop/test/discussion-ipc.test.ts
+--- a/apps/desktop/test/discussion-ipc.test.ts
++++ b/apps/desktop/test/discussion-ipc.test.ts
+@@ -2200,3 +2200,18 @@ describe("project notes in discussion prompts (D-46a)", () => {
+     }
+   });
+ });
++
++it("创建参与者后，音色可读回、更新、保留和清除", async () => {
++  const h = await makeHarness();
++  try {
++    const id = "voice-regression";
++    const initial = { voiceId: "xiaoyu", speed: 1 };
++    assert.deepEqual((await h.repo.upsertAgent({ id, voice: initial })).voice, initial);
++    const changed = { ...initial, speed: 1.1 };
++    assert.deepEqual((await h.repo.upsertAgent({ id, voice: changed })).voice, changed);
++    assert.deepEqual((await h.repo.upsertAgent({ id, displayName: "changed" })).voice, changed);
++    assert.equal((await h.repo.upsertAgent({ id, voice: null })).voice, null);
++  } finally {
++    await close(h);
++  }
++});
