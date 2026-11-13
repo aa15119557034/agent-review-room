@@ -44,7 +44,8 @@ export function DiscussionView({ notice }: { notice: ReactNode }) {
   const confirm = useAppState((s) => s.disc.confirm);
   const page = useAppState((s) => s.disc.ui.page);
   const railCollapsed = useAppState((s) => s.disc.ui.railCollapsed);
-  const sideCollapsed = useAppState((s) => s.disc.ui.sideCollapsed);
+  // 还没有秘书时右栏不显示（中间是「开始使用」引导），列也一起收掉
+  const sideCollapsed = useAppState((s) => s.disc.ui.sideCollapsed || s.disc.agents.length === 0);
   const pane = useAppState((s) => s.disc.ui.pane);
   const sheet = useAppState((s) => s.disc.ui.sheet);
 
