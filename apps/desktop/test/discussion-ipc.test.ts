@@ -102,6 +102,8 @@ async function makeHarness(options: {
   quota?: "ok" | "exhausted" | "unknown" | "missing";
   /** D-32：按 profile 覆盖（没列到的用 quota 或「未知」） */
   quotaByProfile?: Record<string, "ok" | "exhausted" | "unknown" | "missing">;
+  /** C-42c：voices.list 返回的声音；不传 = 不校验 */
+  voices?: VoiceOption[];
 } = {}): Promise<Harness> {
   const dir = mkdtempSync(join(tmpdir(), "room-discussion-ipc-"));
   dirs.push(dir);
@@ -197,7 +199,7 @@ async function makeHarness(options: {
       return new Response(JSON.stringify(body), { status: 200, headers: { "content-type": "application/json" } });
     },
   });
-  service = new DiscussionService({ db, queue, repo, settings, orchestrator, emit: record, probeNode: probe, quota: quotaService, notes: new NotesService({ db, queue, emit: record }) });
+  service = new DiscussionService({ db, queue, repo, settings, orchestrator, emit: record, probeNode: probe, quota: quotaService, notes: new NotesService({ db, queue, emit: record }), voices: options.voices === undefined ? undefined : () => options.voices! });
 
   const dispatcher = createDispatcher({
     repo,
@@ -846,6 +848,20 @@ describe("agent.update：把参与者配到各自节点", () => {
       "agent.update 之后要推 agent.status",
     );
     await close(h);
+  });
+
+  it("voiceId 不在 voices.list 里、或列表为空 → validation_failed", async () => {
+    const voice: VoiceOption = { id: "xiaoyu" as never, displayName: "小雨", engine: "indextts2", source: "reference", sampleRef: null };
+    const h = await makeHarness({ voices: [voice] });
+    const bad = await h.dispatcher.handleCommand({ type: "agent.update", id: "claude", voice: { voiceId: "nope" as never, speed: 1 } });
+    assert.equal(bad.ok, false, JSON.stringify(bad));
+    assert.equal((bad as unknown as { error: string }).error, "validation_failed");
+    const empty = await makeHarness({ voices: [] });
+    const none = await empty.dispatcher.handleCommand({ type: "agent.update", id: "claude", voice: { voiceId: "xiaoyu" as never, speed: 1 } });
+    assert.equal(none.ok, false, JSON.stringify(none));
+    assert.equal((none as unknown as { error: string }).error, "validation_failed");
+    await close(h);
+    await close(empty);
   });
 
   it("新建 Agent（契约没有 create，第一条靠它建）", async () => {

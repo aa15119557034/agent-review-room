@@ -48,6 +48,7 @@ import type {
   RunOccasion,
   Turn,
   ChatMessage,
+  VoiceOption,
 } from "@room/schemas";
 import { isExcludedFromContext } from "@room/schemas";
 import { renderChatMaterial } from "./chat-material";
@@ -118,6 +119,8 @@ export interface DiscussionDeps {
   readonly probeNode?: (params: { baseUrl: string; token: string; profileId: string }) => Promise<NodeProbeResult>;
   /** D-32：读节点额度（GET /v1/profiles/:id/quota）；测试注入假的，默认真打节点 */
   readonly quota?: QuotaService;
+  /** C-42c：可用的声音（voices.list）；不传 = 不校验（测试 / 还没有语音配置） */
+  readonly voices?: () => VoiceOption[];
 }
 
 type AvailabilityNeed = "discuss" | "summarize";
@@ -874,6 +877,12 @@ export class DiscussionService {
     }
     if (command.nodeId !== undefined && command.nodeId !== null && repo.getNodeRow(command.nodeId) === undefined) {
       throw new DiscussionError("validation_failed", "节点 " + command.nodeId + " 还没有配置");
+    }
+
+    if (command.voice !== undefined && command.voice !== null && this.#deps.voices !== undefined) {
+      if (!this.#deps.voices().some((voice) => voice.id === command.voice!.voiceId)) {
+        throw new DiscussionError("validation_failed", "声音 " + command.voice.voiceId + " 不在可用声音列表里（voices.list）");
+      }
     }
 
     const { type: _type, ...patch } = command;

@@ -34,3 +34,7 @@ release/
 apps/desktop/vendor/
 
 .verification/
+
+# 验收构建产物（本机）
+release-acc*/
+
