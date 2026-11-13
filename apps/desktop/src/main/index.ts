@@ -424,7 +424,7 @@ async function bootstrap(): Promise<void> {
         installDir: dirname(process.execPath),
         resourcesPath: process.resourcesPath,
         execPath: process.execPath,
-      })) ?? 0;
+      })) ?? 1;
     } finally {
       // 命令抛错也关库：app.exit 不触发 before-quit，别把写入留在 -wal 里
       try {

@@ -32,17 +32,32 @@ const LOCAL_NODE_IDS = ["controller-local", "controller-local-codex"] as const;
 /**
  * 自检的结论：只把「已经配置了但坏了」算失败。
  * - 包：incomplete / version_mismatch 算坏；missing 不算
- * - 两个包都 installed 但 TTS bundle 找不到 → 算坏（配置说装好了，实际用不了）
+ * - 所有已知包都 installed 但 TTS bundle 找不到 → 算坏（配置说装好了，实际用不了）
  * - 节点：有密文但解不开算坏；配了 Token 但 health 不是 200 算坏；controller-local 还要有 deepseek-chat
  */
+/** peekNode 的结果 → 自检报告里的节点条目（单独抽出来测空配置） */
+export function nodeEntry(
+  id: string,
+  baseUrl: string | null,
+  peek: { token: string | null; undecryptable: boolean } | null,
+): { id: string; baseUrl: string | null; tokenSet: boolean; undecryptable: boolean; health: null } {
+  return {
+    id,
+    baseUrl,
+    tokenSet: peek !== null && (peek.token !== null || peek.undecryptable),
+    undecryptable: peek?.undecryptable === true,
+    health: null,
+  };
+}
+
 export function selfTestOk(
   packs: { id: string; state: string }[],
   nodes: { id: string; tokenSet: boolean; undecryptable: boolean; health: { status?: number; body?: { profiles?: string[] } } | null }[],
   bundleAvailable: boolean,
 ): boolean {
   const packsBroken = packs.some((pack) => pack.state === "incomplete" || pack.state === "version_mismatch");
-  const installed = packs.filter((pack) => pack.state === "installed").length;
-  const bundleBroken = installed >= 2 && !bundleAvailable;
+  const allInstalled = packs.length > 0 && packs.every((pack) => pack.state === "installed");
+  const bundleBroken = allInstalled && !bundleAvailable;
   const nodesBroken = nodes.some((node) => {
     if (node.undecryptable) return true;
     if (!node.tokenSet) return false;
@@ -145,7 +160,7 @@ export async function runCliIfRequested(deps: CliDeps): Promise<number | null> {
         health = { error: error instanceof Error ? error.message : String(error) };
       }
     }
-    nodes.push({ id, baseUrl, tokenSet: node?.token !== null, undecryptable: node?.undecryptable === true, health });
+    nodes.push({ ...nodeEntry(id, baseUrl, node), health });
   }
   const ok = selfTestOk(
     packs.map((pack) => ({ id: pack.id, state: pack.state })),

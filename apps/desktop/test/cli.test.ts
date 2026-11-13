@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { selfTestOk } from "../src/main/cli";
+import { nodeEntry, selfTestOk } from "../src/main/cli";
 
 const missing = [{ id: "tts-runtime", state: "missing" }, { id: "tts-model", state: "missing" }];
 const installed = [{ id: "tts-runtime", state: "installed" }, { id: "tts-model", state: "installed" }];
@@ -10,6 +10,16 @@ const noToken = { id: "controller-local", tokenSet: false, undecryptable: false,
 describe("--self-test 的结论（#218 第三轮建议 1/3）", () => {
   it("空配置：包 missing、节点没 Token → true", () => {
     assert.equal(selfTestOk(missing, [noToken], false), true);
+  });
+  it("节点不在 settings 里：tokenSet 是 false，空配置不算坏", () => {
+    const entry = nodeEntry("controller-local", null, null);
+    assert.deepEqual(entry, { id: "controller-local", baseUrl: null, tokenSet: false, undecryptable: false, health: null });
+    assert.equal(selfTestOk(missing, [entry], false), true);
+  });
+  it("有密文但解不开：tokenSet true、undecryptable true → false", () => {
+    const entry = nodeEntry("controller-local", "http://127.0.0.1:7420", { token: null, undecryptable: true });
+    assert.equal(entry.tokenSet, true);
+    assert.equal(selfTestOk(missing, [entry], false), false);
   });
   it("配了 Token 但节点连不上 → false", () => {
     assert.equal(selfTestOk(missing, [{ ...healthy, health: { error: "fetch failed" } as never }], false), false);
