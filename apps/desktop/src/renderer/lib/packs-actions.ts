@@ -6,7 +6,7 @@ import type { Store } from "./store";
 /** 包导入的原因码，给人看的话（#209）。不给原始异常 */
 export const PACK_ERROR_TEXT: Record<PackErrorCode, string> = {
   PACK_NOT_FOUND: "选的位置里没有找到这个包。",
-  PACK_INCOMPLETE: "包不完整，缺了一些文件。",
+  PACK_INCOMPLETE: "包不完整，或者选的不是这个包。",
   PACK_VERSION_MISMATCH: "包的版本和程序要的不一致，请换对应版本的包。",
   PACK_ARCHIVE_INVALID: "压缩包打不开或内容不对，请重新下载后再试。",
   PACK_BUSY: "已经有一个包在导入，请等它完成。",

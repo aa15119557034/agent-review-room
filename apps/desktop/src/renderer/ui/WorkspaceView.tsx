@@ -6,11 +6,21 @@ import "./workspace.css";
 
 const healthLabel={configured:"已配置，未试跑",available:"连接可用",unavailable:"不可用",unconfigured:"未配置",unknown:"未知"};
 const decisionLabel={pending:"待决定",accepted:"采纳",rejected:"拒绝",deferred:"延后"};
-const formatTime=(value:string|null)=>value?new Date(value).toLocaleString():"尚未发生";
+const kindLabel:Record<string,string>={chat:"聊天消息",message:"讨论消息",plan:"方案",note:"笔记",topic:"议题",summary:"汇总"};
+const taskStateLabel:Record<string,string>={queued:"排队中",starting:"正在开始",running:"进行中",completed:"已完成",succeeded:"已完成",failed:"失败",cancelled:"已取消",canceled:"已取消",interrupted:"被中断",timed_out:"超时",error:"失败"};
+/** 文件操作的系统报错换成人话；原文留在括号里方便反馈 */
+function friendlyError(message:string):string{
+  if(/ENOENT/.test(message))return /manifest\.json/.test(message)?"这个文件夹不是评审室的备份（里面没有备份清单）。请选备份时生成的那个文件夹。":"找不到这个位置，文件夹可能已被移动或删除。请换一个位置再试。";
+  if(/EACCES|EPERM|EROFS/.test(message))return "这个位置写不进去（没有权限或是只读的）。请换一个文件夹再试。";
+  if(/ENOSPC/.test(message))return "磁盘空间不够了，请清理后再试。";
+  if(/校验失败/.test(message))return "备份文件不完整或被改动过，没有恢复。请换一份备份再试。";
+  return message;
+}
+const formatTime=(value:string|null)=>value?new Date(value).toLocaleString("zh-CN",{hour12:false}):"尚未发生";
 const TAB_HINT={search:"解决「那段话在哪」：按关键词找回聊天、方案、笔记，或把一个范围导出成文件。",plans:"解决「方案改了什么、决定了没有」：对照方案版本，记录采纳 / 拒绝 / 延后。",tasks:"解决「任务卡在哪」：看排队、运行和失败的任务，以及每次回答的来源。",maintenance:"解决「资料安不安全」：检查健康状况，备份和恢复。"} as const;
 export function WorkspaceView(){
   const actions=useActions(),api=actions.workspace,projects=useAppState(s=>s.projects),conversations=useAppState(s=>s.chat.list);
-  const notice=useAppState(s=>s.notice),isMock=useIsMock();
+  const notice=useAppState(s=>s.notice),isMock=useIsMock(),agents=useAppState(s=>s.disc.agents);
   const [tab,setTab]=useState<"search"|"plans"|"tasks"|"maintenance">("search");
   const [scopeValue,setScopeValue]=useState(""),[term,setTerm]=useState(""),[search,setSearch]=useState<WorkspaceSearchPage|null>(null);
   const [item,setItem]=useState<WorkspaceItem|null>(null),[preview,setPreview]=useState<WorkspaceExportPreview|null>(null),[attachments,setAttachments]=useState(true);
@@ -27,13 +37,13 @@ export function WorkspaceView(){
     setSearchBusy(false);if(page)setSearch(older?{...page,items:[...(search?.items??[]),...page.items]}:page);
   }
   async function inspect(hit:WorkspaceItem){setItem(hit);}
-  async function fileAction(action:()=>Promise<WorkspaceFileResult|null>){setFileBusy(true);setResult(null);try{setResult(await action());}finally{setFileBusy(false);}}
+  async function fileAction(action:()=>Promise<WorkspaceFileResult|null>){setFileBusy(true);setResult(null);actions.dismissNotice();try{setResult(await action());}finally{setFileBusy(false);}}
   return <main className="workspace-page">
     <header className="workspace-heading"><div><h1>资料与维护</h1><p>找回资料，核对回答来源，整理决定与备份。</p></div><button onClick={()=>void actions.openSettings()}>← 返回设置</button></header>
-    {notice&&<p role="alert">{notice.message}</p>}
+    {notice&&<div className="workspace-error" role="alert"><p>{friendlyError(notice.message)}</p><button onClick={actions.dismissNotice}>知道了</button></div>}
     {isMock?<p role="status">演示数据下没有资料可以维护，请在桌面应用里使用。</p>:<>
     <nav className="workspace-tabs" aria-label="资料与维护">
-      {([["search","搜索与成果"],["plans","方案与决定"],["tasks","任务与来源"],["maintenance","健康与备份"]] as const).map(([key,label])=><button key={key} aria-pressed={tab===key} onClick={()=>setTab(key)}>{label}</button>)}
+      {([["search","搜索与成果"],["plans","方案与决定"],["tasks","任务与来源"],["maintenance","健康与备份"]] as const).map(([key,label])=><button key={key} aria-pressed={tab===key} onClick={()=>{setTab(key);setResult(null);actions.dismissNotice();}}>{label}</button>)}
     </nav>
     <p className="workspace-tab-hint">{TAB_HINT[tab]}</p>
     {tab==="search"&&<section>
@@ -41,7 +51,7 @@ export function WorkspaceView(){
         <label>范围<select value={scopeValue} onChange={e=>{setScopeValue(e.target.value);invalidate();setSearchBusy(false);}}>
           <option value="">全部资料</option>
           {projects.map(p=><option key={p.id} value={"topic:"+p.id}>议题 · {p.name}</option>)}
-          {conversations?.map(c=><option key={c.conversation.id} value={"conversation:"+c.conversation.id}>聊天 · {c.conversation.title??c.conversation.members.join("、")}</option>)}
+          {conversations?.map(c=><option key={c.conversation.id} value={"conversation:"+c.conversation.id}>聊天 · {c.conversation.title??c.conversation.members.map(id=>agents.find(a=>a.id===id)?.displayName??id).join("、")}</option>)}
         </select></label>
         <label>关键词<input value={term} maxLength={200} onChange={e=>{setTerm(e.target.value);invalidate();setSearchBusy(false);}} placeholder="消息、方案、笔记或议题标题"/></label>
         <button disabled={busy||!term.trim()}>搜索</button>
@@ -53,7 +63,7 @@ export function WorkspaceView(){
         <button onClick={()=>{const token=++selection.current;setItem(null);void api.item(hit).then(value=>{if(value&&token===selection.current)void inspect(value);});}}><strong>{hit.title}</strong><span>{formatTime(hit.createdAt)}</span><p>{hit.preview||"这条资料只有附件"}</p></button>
       </li>)}</ul>
       {search?.nextCursor&&<button disabled={busy} onClick={()=>void find(true)}>更多结果</button>}
-      {item&&<article className="workspace-card"><h2>{item.title}</h2><p>{formatTime(item.createdAt)} · {item.kind}</p><pre>{item.content}</pre>
+      {item&&<article className="workspace-card"><h2>{item.title}</h2><p>{formatTime(item.createdAt)} · {kindLabel[item.kind]??item.kind}</p><pre>{item.content}</pre>
         {item.runId&&item.kind==="chat"&&<ContextDetails runId={item.runId}/>}
         <button onClick={()=>setItem(null)}>收起</button>
       </article>}
@@ -66,7 +76,7 @@ export function WorkspaceView(){
     {tab==="plans"&&<PlanWorkspace/>}
     {tab==="tasks"&&<TaskWorkspace/>}
     {tab==="maintenance"&&<Maintenance fileAction={fileAction} busy={busy}/>}
-    {result&&!result.cancelled&&<p role="status">已保存 {result.files} 个文件：<code>{result.path}</code></p>}
+    {result&&!result.cancelled&&<p role="status">已保存到：<code>{result.path}</code>（{result.files} 个文件）</p>}
     </>}
   </main>;
 }
@@ -131,7 +141,7 @@ function TaskWorkspace(){
   async function load(older=false){const token=++request.current;setBusy(true);const p=await api.tasks({activeOnly,...(older&&page?.nextCursor?{before:page.nextCursor}:{})});if(token!==request.current)return;setBusy(false);if(p)setPage(older?{...p,items:[...(page?.items??[]),...p.items]}:p);}
   return <section><div className="workspace-toolbar"><label><input type="checkbox" checked={activeOnly} onChange={e=>setActiveOnly(e.target.checked)}/>只看排队与运行中</label><button disabled={busy} onClick={()=>void load()}>刷新</button></div>
     <p>时间来自任务记录。排队中尚无开始时间，不估算完成倒计时。</p>
-    <ul className="workspace-results">{page?.items.map(t=><li key={t.kind+t.id}><strong>{t.kind==="media"?"媒体":t.kind==="chat"?"聊天":"讨论"} · {t.state}</strong><p>创建 {formatTime(t.createdAt)} · 开始 {formatTime(t.startedAt)} · 结束 {formatTime(t.finishedAt)}</p>
+    <ul className="workspace-results">{page?.items.map(t=><li key={t.kind+t.id}><strong>{t.kind==="media"?"媒体":t.kind==="chat"?"聊天":"讨论"} · {taskStateLabel[t.state.toLowerCase()]??t.state}</strong><p>创建 {formatTime(t.createdAt)} · 开始 {formatTime(t.startedAt)} · 结束 {formatTime(t.finishedAt)}</p>
       {t.startedAt&&t.finishedAt&&<p>运行 {Math.max(0,Date.parse(t.finishedAt)-Date.parse(t.startedAt))/1000} 秒</p>}{t.failure&&<p>失败原因：{t.failure}</p>}
       {t.kind==="chat"&&<button onClick={()=>setContext(t.id)}>回答来源</button>}
       {t.kind==="media"&&["queued","running"].includes(t.state)&&<button disabled={busy} onClick={()=>{setBusy(true);void api.cancelMedia(t.id).then(()=>load());}}>取消这个任务</button>}

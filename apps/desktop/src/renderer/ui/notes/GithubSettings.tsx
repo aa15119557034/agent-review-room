@@ -100,7 +100,7 @@ export function GithubSettings() {
       {error && <p className="field-error" role="alert">{error}</p>}
 
       {status && (
-        <div className="test-result github-status" data-ok={status.repo !== null && status.lastError === null && status.private === true} role="status">
+        <div className="test-result github-status" data-ok={status.repo !== null && status.lastError === null && status.private === true} data-neutral={status.repo === null || undefined} role="status">
           <p>{githubStatusText(status)}</p>
           {status.lastErrorMessage && <span className="test-detail">{status.lastErrorMessage}</span>}
           {status.lastPushedAt && <p className="side-note">上次推送：{new Date(status.lastPushedAt).toLocaleString()}</p>}

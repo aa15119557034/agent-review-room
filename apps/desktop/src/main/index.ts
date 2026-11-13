@@ -389,13 +389,13 @@ async function bootstrap(): Promise<void> {
       const nodeChecks = await Promise.all(nodes.list().slice(0,64).map(async (node,index) => {
         const agent = repo.listAgents().find(a => a.nodeId === node.id);
         const result = await nodes.test({type:"node.test",id:node.id,baseUrl:node.baseUrl,profileId:agent?.chatProfileId ?? agent?.profileId ?? "health"});
-        return {id:"node-"+(index+1),label:node.label.slice(0,100),state:result.reachable ? "available" as const : "unavailable" as const,detail:result.reachable ? "节点健康接口可达；真实模型任务需另行试跑" : ("节点连接检查失败："+result.error).slice(0,500),checkedAt};
+        return {id:"node-"+(index+1),label:node.label.slice(0,100),state:result.reachable ? "available" as const : "unavailable" as const,detail:result.reachable ? "节点健康接口可达；真实模型任务需另行试跑" : ({unreachable:"连不上这个节点：地址不对，或者那台电脑上的节点没有启动",timeout:"连接节点超时：两台电脑可能不在同一个网络，或被防火墙拦住了",unauthorized:"连上了，但 Token 不对",protocol_mismatch:"连上了，但节点的版本和应用不一致，请更新",no_token:"这个节点还没有填 Token"} as Record<string,string>)[result.error] ?? ("节点连接检查失败："+result.error).slice(0,500),checkedAt};
       }));
       const githubState = github.status();
       return [...nodeChecks,
-        {id:"comfyui",label:"本机画图",state:comfyConfig ? "configured" as const : "unconfigured" as const,detail:comfyConfig ? "工作流已配置，未启动绘图任务" : "请配置 comfyui.json",checkedAt},
-        {id:"asr",label:"录音转写",state:asr.config ? "configured" as const : "unconfigured" as const,detail:asr.config ? "Python、脚本和模型路径存在；CUDA 与实际转写尚待试跑" : "请检查 asr.json 的 Python、脚本与模型路径",checkedAt},
-        {id:"tts",label:"语音合成",state:ttsConfig && existsSync(ttsConfig.python) && existsSync(ttsConfig.script) ? "configured" as const : "unconfigured" as const,detail:"检查语音包和声音配置；此检查不会加载模型或合成语音",checkedAt},
+        {id:"comfyui",label:"本机画图",state:comfyConfig ? "configured" as const : "unconfigured" as const,detail:comfyConfig ? "已配置；这次检查没有真的画图" : "还没有配置本机画图（需要本机装有 ComfyUI）",checkedAt},
+        {id:"asr",label:"录音转写",state:asr.config ? "configured" as const : "unconfigured" as const,detail:asr.config ? "已配置；这次检查没有真的转写" : "还没有配置录音转写",checkedAt},
+        {id:"tts",label:"语音合成",state:ttsConfig && existsSync(ttsConfig.python) && existsSync(ttsConfig.script) ? "configured" as const : "unconfigured" as const,detail:ttsConfig ? "语音包已就绪；这次检查没有真的合成语音" : "还没有安装语音包，可以在「设置 › 扩展包」里导入",checkedAt},
         {id:"github",label:"GitHub 同步",state:githubState.lastError ? "unavailable" as const : "unknown" as const,detail:githubState.lastError ? ("同步错误："+githubState.lastError).slice(0,500) : "最近状态未报告错误；这不是本次推送成功的证明",checkedAt}];
     },
   });

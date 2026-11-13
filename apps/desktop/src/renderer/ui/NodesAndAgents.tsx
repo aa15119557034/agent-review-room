@@ -70,6 +70,7 @@ function LocalTokenImport({ nodes, onDone }: { nodes: NodeInfo[]; onDone: () => 
     setBusy(true);
     setLines(null);
     const out: ImportLine[] = [];
+    let anyOk = false;
     for (const preset of LOCAL_RECOMMENDED_NODES) {
       const existing = nodes.find((n) => n.id === preset.id);
       const label = existing?.label ?? preset.label;
@@ -82,6 +83,7 @@ function LocalTokenImport({ nodes, onDone }: { nodes: NodeInfo[]; onDone: () => 
         out.push({ id: preset.id, label, ok: false, text: importFailureText(imported.code, imported.message) });
         continue;
       }
+      anyOk = true;
       const profileId = profileFor(preset.id, agents);
       const r = await actions.testNode({ id: preset.id, baseUrl: imported.node.baseUrl, profileId });
       out.push({
@@ -99,7 +101,8 @@ function LocalTokenImport({ nodes, onDone }: { nodes: NodeInfo[]; onDone: () => 
       });
     }
     await onDone();
-    setLines(out);
+    // 一个都没读到：这台电脑上没装本机节点，不用逐个列原因
+    setLines(anyOk ? out : [{ id: "none", label: "", ok: false, text: "这台电脑上没有找到已安装的节点。请在上面直接填写节点的地址和 Token。" }]);
     setBusy(false);
   };
 
@@ -115,7 +118,7 @@ function LocalTokenImport({ nodes, onDone }: { nodes: NodeInfo[]; onDone: () => 
       </div>
       {lines?.map((l) => (
         <p key={l.id} className="test-result" data-ok={l.ok} role="status">
-          {l.label}：{l.text}
+          {l.label ? `${l.label}：` : ""}{l.text}
         </p>
       ))}
     </div>
@@ -127,8 +130,8 @@ function importFailureText(code: string, message: string): string {
     case "not_found":
       // main 的 not_found 有两种：没配 agentRoom（新机器，D-40 只在 main 的 settings.json 里读）；或 Token 文件不存在
       return message.includes("agentRoom")
-        ? `这台电脑上没有找到节点的安装目录，请直接在上面填写地址和 Token。（${message}）`
-        : `没找到 Token 文件（${message}）。这台电脑上装过这位秘书的节点吗？`;
+        ? "这台电脑上没有找到节点的安装目录，请直接在上面填写地址和 Token。"
+        : "这台电脑上没有找到这个节点的 Token 文件，可能没装过这个节点。";
     case "invalid_state":
       return `不能从本机导入（${message}）`;
     case "validation_failed":
@@ -237,6 +240,9 @@ function NodeEditor({ id, saved, onSaved }: { id: string; saved: NodeInfo | null
         </label>
       </div>
       {baseUrl !== "" && !urlCheck.success && <p className="field-error">需要形如 http://192.168.1.20:7420 的地址。</p>}
+      {tokenCheck !== null && !tokenCheck.success && <p className="field-error">Token 至少 32 个字符，中间不能有空格。请完整复制 setup 显示的那一串。</p>}
+      {label.trim().length === 0 && <p className="field-error">请给这个节点起个名字。</p>}
+      {valid && !hasToken && tokenCheck === null && (saved === null || sameAddress) && <p className="field-why">填上 Token 才能测试和保存。</p>}
       {saved !== null && !sameAddress && saved.tokenConfigured && tokenCheck === null && (
         <p className="field-error">地址改了，原来的 Token 不会发到新地址，请重新填写 Token。</p>
       )}
@@ -244,7 +250,7 @@ function NodeEditor({ id, saved, onSaved }: { id: string; saved: NodeInfo | null
         <button type="button" className="button-outline" disabled={!valid || !hasToken || busy !== null} onClick={test}>
           {busy === "test" ? "测试中…" : "测试连接"}
         </button>
-        <button type="button" className="button-primary" disabled={!valid || busy !== null} onClick={save}>
+        <button type="button" className="button-primary" disabled={!valid || !hasToken || busy !== null} onClick={save}>
           {busy === "save" ? "保存中…" : "保存节点"}
         </button>
         {savedAt && busy === null && <span className="settings-saved" role="status">已保存</span>}
@@ -287,7 +293,7 @@ export function AgentsSection({ nodes, onNodesChanged, onGoConnect }: { nodes: N
     <section className="settings-form" aria-labelledby="agents-title">
       <h2 className="settings-section" id="agents-title">秘书接入</h2>
       <p className="step-hint">
-        每位秘书接在哪个节点上。第一次用，点下面的按钮填入推荐的三位：C酱（首席秘书，负责汇总）、汐、林离。
+        每位秘书接在哪个节点上。第一次用，点下面的按钮填入推荐的三位：C酱（首席秘书，负责汇总）、林离、汐。
         名字、人设、模型和声音平时在「秘书」页里改更方便；这里主要管接在哪台电脑上。
       </p>
       <div className="settings-actions">
@@ -424,6 +430,17 @@ export function AgentEditor({ agent, nodes }: { agent: AgentProfile; nodes: Node
           {busy ? "保存中…" : "保存"}
         </button>
       </div>
+      {!valid && (
+        <p className="field-error">
+          {draft.displayName.trim().length === 0
+            ? "显示名不能为空。"
+            : !profileOk || !chatProfileOk
+              ? "节点配置名只能用小写字母、数字和连字符（比如 claude-chat），不能有空格。"
+              : !colorOk
+                ? "颜色格式不对。"
+                : "模型设置不完整，请重新选一下模型和强度。"}
+        </p>
+      )}
     </fieldset>
   );
 }
