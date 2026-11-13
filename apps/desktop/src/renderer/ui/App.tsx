@@ -215,7 +215,8 @@ function TopHeader() {
           演示数据
         </span>
       )}
-      {(view === "desk" || view === "settings") && status && (
+      {/* 只在旧的单次评审工作台上显示：设置页现在以「节点」为主，这一行红字「未设置节点」会让人以为刚保存的节点没生效（C-49 / B-05） */}
+      {view === "desk" && status && (
         <span className="reviewer-status" data-ok={status.reviewerConfigured}>
           Reviewer：{status.reviewerConfigured ? status.reviewerAgent : "未设置节点"}
         </span>

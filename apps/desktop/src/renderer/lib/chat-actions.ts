@@ -140,7 +140,11 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
 
     async createConversation(members: ConversationMembers, title: string | null) {
       try {
-        const conv = await client.command({ type: "chat.conversation.create", members, title });
+        let conv = await client.command({ type: "chat.conversation.create", members, title });
+        // 和这位已经有单聊时 main 返回原来那个，填的名字不会用上：填了就改成它，不能无声丢掉（B-11）
+        if (title !== null && conv.title !== title) {
+          conv = await client.command({ type: "chat.conversation.update", conversationId: conv.id, title });
+        }
         await loadConversations();
         await openConversation(conv.id);
       } catch (err) {

@@ -23,6 +23,8 @@ export interface DiscussionState {
   /** 后端还没有实现讨论室（真实后端在 D-21 之前）时为 false */
   available: boolean;
   agents: AgentProfile[];
+  /** 参与者读过一次了（没读之前 agents 是空的，不能当成「一个都没配」；C-49 / B-16） */
+  agentsLoaded?: boolean;
   status: Record<string, AgentStatus>;
   rounds: Round[];
   batches: ApprovalBatch[];
@@ -313,3 +315,46 @@ export const STANCE_LABEL: Record<Stance, string> = {
   absent_quota: "缺席（额度）",
   interrupted: "被中断",
 };
+
+// ---------------------------------------------------------------- 第一次打开（C-49 / B-16）
+
+/**
+ * 还缺哪一步才能用：一位参与者都没有（干净机器），或者有参与者但没有一位配了节点。
+ * 没读完、后端不支持讨论室时不提示。
+ */
+export function setupHint(d: Pick<DiscussionState, "available" | "agents" | "agentsLoaded">): "no_agents" | "no_node" | null {
+  if (!d.available || !d.agentsLoaded) return null;
+  if (d.agents.length === 0) return "no_agents";
+  return d.agents.every((a) => a.nodeId === null) ? "no_node" : null;
+}
+
+// ---------------------------------------------------------------- 发给谁（C-49 / B-02）
+
+/**
+ * 这一轮能不能发给他：
+ * - available：能
+ * - absent_quota 而且设了替补：能（main 会按替补代答起草，ADR-002 §3）
+ * - 其余（未配置、离线、已暂停、缺席又没替补）：不能，round.draft 会整轮拒绝
+ * 状态还没读到的当作能发：让 main 来判断，不在界面上先挡。
+ */
+export function recipientBlock(d: Pick<DiscussionState, "agents" | "status">, agentId: string): "unconfigured" | "offline" | "paused_by_user" | "absent_quota" | null {
+  const st = d.status[agentId]?.availability;
+  if (st === undefined || st === "available") return null;
+  if (st === "absent_quota") return d.agents.find((a) => a.id === agentId)?.substitute ? null : "absent_quota";
+  return st;
+}
+
+export const RECIPIENT_BLOCK_LABEL: Record<NonNullable<ReturnType<typeof recipientBlock>>, string> = {
+  unconfigured: "未配置",
+  offline: "离线",
+  paused_by_user: "已暂停",
+  absent_quota: "缺席，没设替补",
+};
+
+/**
+ * 真正会发出去的收件人：勾选的人里去掉现在发不了的。
+ * 以前发不了的人是「勾着、灰掉、取消不了」，一起交给 round.draft 就整轮被拒（只配了 C酱 时讨论室用不了）。
+ */
+export function sendableRecipients(d: Pick<DiscussionState, "agents" | "status" | "ui">): string[] {
+  return d.ui.composer.recipients.filter((id) => d.agents.some((a) => a.id === id && a.canDiscuss) && recipientBlock(d, id) === null);
+}

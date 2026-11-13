@@ -124,6 +124,20 @@ export const AVAILABILITY_LABEL: Record<AgentStatus["availability"], string> = {
   absent_quota: "缺席（额度）",
 };
 
+/** 配了节点、能讨论，但聊天 profile 没填：聊天里这位一律「不能回答」（C-49 / B-01） */
+export const chatNotConfigured = (agent: Pick<AgentProfile, "nodeId" | "chatProfileId">): boolean =>
+  agent.nodeId !== null && agent.chatProfileId === null;
+
+/**
+ * 状态那一行的字。availability 说的是讨论用的 profile；聊天没配时不能只写「在线」，
+ * 不然秘书页写在线、聊天里却答不了（B-01）。
+ */
+export function availabilityText(agent: Pick<AgentProfile, "nodeId" | "chatProfileId">, st: Pick<AgentStatus, "availability"> | undefined): string {
+  if (!st) return "未知";
+  const label = AVAILABILITY_LABEL[st.availability];
+  return st.availability === "available" && chatNotConfigured(agent) ? `${label}（讨论室）· 聊天没配` : label;
+}
+
 export const QUOTA_STATE_LABEL: Record<QuotaState, string> = {
   ok: "额度正常",
   exhausted: "额度用完",

@@ -7,9 +7,12 @@ import { AgentEditor } from "./NodesAndAgents";
 import { useActions, useAppState } from "./hooks";
 import { formatTime } from "./labels";
 import { RECOMMENDED_NODES } from "../lib/presets";
+import { NodeWhy } from "./NodeWhy";
 import {
   AVAILABILITY_LABEL,
   BILLING_LABEL,
+  availabilityText,
+  chatNotConfigured,
   QUOTA_STATE_LABEL,
   activityId,
   activityOutcome,
@@ -115,6 +118,11 @@ function AgentPage({ agent, st }: { agent: AgentProfile; st: AgentStatus | undef
           <PauseButton agent={agent} />
         </div>
       </header>
+      {chatNotConfigured(agent) && (
+        <p className="console-hint">
+          聊天还没配：{agent.displayName} 在聊天里不能回答。点下面的「节点和权限」，填上聊天 profile（一般是「{agent.id}-chat」）。
+        </p>
+      )}
       {agent.pausedByUser && <p className="console-hint">已暂停：讨论和聊天都不发给 {agent.displayName}，点「恢复」才会再发。</p>}
       {st?.availability === "absent_quota" && (
         <p className="console-hint">额度用完了：讨论里{agent.substitute ? "由替补代答" : "记为缺席"}，读到额度恢复后自动回来。</p>
@@ -124,9 +132,14 @@ function AgentPage({ agent, st }: { agent: AgentProfile; st: AgentStatus | undef
         <div className="profile-row">
           <span>状态</span>
           <span className="profile-state" data-state={st?.availability ?? "unknown"}>
-            {st ? AVAILABILITY_LABEL[st.availability] : "未知"} · {node}
+            {availabilityText(agent, st)} · {node}
           </span>
         </div>
+        {st?.availability === "offline" && (
+          <div className="profile-row profile-why">
+            <NodeWhy agent={agent} profileId={agent.profileId} />
+          </div>
+        )}
         <details className="profile-row profile-quota">
           <summary>
             <span>额度</span>
@@ -164,7 +177,8 @@ function AgentPage({ agent, st }: { agent: AgentProfile; st: AgentStatus | undef
 function quotaSummary(q: ReturnType<typeof quotaView>): string {
   if (q.state === "unknown") return "未知（读不到不猜）";
   if (q.balance) return `余额 ${money(q.balance)}`;
-  const rows = q.rows.map((r) => `${r.label} ${pct(Math.max(0, 100 - r.usedPercent))}`);
+  // 和展开后的条一样说「剩余」；画图那边说的是「已用」，两处都写明是哪个（B-10）
+  const rows = q.rows.map((r) => `${r.label}剩 ${pct(Math.max(0, 100 - r.usedPercent))}`);
   return rows.length ? rows.join(" · ") : QUOTA_STATE_LABEL[q.state];
 }
 

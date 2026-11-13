@@ -33,14 +33,31 @@ const QUOTA_PATTERNS = [
   /rate[ _-]?limit/i,
   /\bquota\b/i,
   /insufficient[ _]balance/i,
-  /limit reached/i,
   /too many requests/i,
   /\b429\b/,
   /\b402\b/,
 ];
 
+/**
+ * 「… limit」里不是额度的那几种（C-49 / A-03）：上下文满了、--max-budget-usd 花完了、轮数到了。
+ * 这些重试也没用，但不是「额度用尽」：报成缺席会让讨论去找替补、聊天显示「额度缺席」，方向就错了。
+ * 「Context limit reached」「You've hit your context limit」两种说法都要排除（汐 #219），所以这里不带 reached。
+ */
+const NOT_QUOTA_LIMITS = /\b(context|budget|turns?|tokens?|output|length|size)( window| length)? limit\b/i;
+
+/**
+ * 只靠「limit」字样判断的两种说法（上面那些明确的词没命中时才看）：
+ * - Claude Code 2.x：「You've hit your limit · resets 3pm」「You've hit your session limit」
+ * - 「5-hour limit reached」「Weekly limit reached」
+ * 都要先排除 NOT_QUOTA_LIMITS。
+ */
+const HIT_LIMIT = /\bhit (your|the)( [a-z0-9-]+){0,3} limit\b/i;
+const LIMIT_REACHED = /limit reached/i;
+
 export function looksLikeQuota(message: string): boolean {
-  return QUOTA_PATTERNS.some((p) => p.test(message));
+  if (QUOTA_PATTERNS.some((p) => p.test(message))) return true;
+  if (NOT_QUOTA_LIMITS.test(message)) return false;
+  return HIT_LIMIT.test(message) || LIMIT_REACHED.test(message);
 }
 
 export function errorVerdict(message: string): ParserVerdict {

@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import type { ChartSpec } from "@room/schemas";
 import { BAD_CHART_LABEL, splitReply } from "../lib/media";
+import { hasMarkup, parseMarkup } from "../lib/markup";
 
 /**
  * 秘书写的 ```room-chart 图表（ADR-004 §5，契约 C-42d）。聊天和讨论室共用。
@@ -17,14 +18,12 @@ const color = (i: number): CSSProperties => ({ fill: `var(--chart-${(i % 8) + 1}
 /** 回答正文：文字段照旧显示，图表块画出来 */
 export function ReplyBody({ text, className = "chat-text" }: { text: string; className?: string }) {
   const segments = splitReply(text);
-  if (segments.length === 1 && segments[0]!.kind === "text") return <p className={className}>{text}</p>;
+  if (segments.length === 1 && segments[0]!.kind === "text" && !hasMarkup(text)) return <p className={className}>{text}</p>;
   return (
     <div className="reply-body">
       {segments.map((s, i) =>
         s.kind === "text" ? (
-          <p key={i} className={className}>
-            {s.text}
-          </p>
+          <MarkedText key={i} text={s.text} className={className} />
         ) : s.kind === "chart" ? (
           <ChartView key={i} chart={s.chart} />
         ) : (
@@ -35,6 +34,28 @@ export function ReplyBody({ text, className = "chat-text" }: { text: string; cla
         ),
       )}
     </div>
+  );
+}
+
+/**
+ * 一段文字：**加粗**、`行内代码`、``` 代码块按样子显示，其余原样（lib/markup.ts，B-03）。
+ * 全部是 React 文本节点：不做链接、不放 HTML。
+ */
+export function MarkedText({ text, className = "chat-text" }: { text: string; className?: string }) {
+  return (
+    <>
+      {parseMarkup(text).map((b, i) =>
+        b.kind === "code" ? (
+          <pre key={i} className="reply-code">
+            {b.text}
+          </pre>
+        ) : (
+          <p key={i} className={className}>
+            {b.spans.map((sp, j) => (sp.kind === "bold" ? <strong key={j}>{sp.text}</strong> : sp.kind === "code" ? <code key={j}>{sp.text}</code> : sp.text))}
+          </p>
+        ),
+      )}
+    </>
   );
 }
 

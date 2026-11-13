@@ -10,7 +10,7 @@ import {
 } from "@room/schemas";
 import { ControlFailure, type RoomClient } from "./client";
 import { appendEvents, applyEvent, type AppState } from "./state";
-import { initialDiscussion, planForNextRound, type DiscussionState } from "./discussion";
+import { initialDiscussion, planForNextRound, sendableRecipients, type DiscussionState } from "./discussion";
 import { modelsFor } from "./models";
 import { boardSeq, isOpenRound, withDigest, type TopicDigest } from "./topic-board";
 import type { Store } from "./store";
@@ -42,6 +42,7 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
         ...d,
         available: true,
         agents,
+        agentsLoaded: true,
         status: Object.fromEntries(status.map((x) => [x.agent, x])),
         ui: d.ui.composer.recipients.length
           ? d.ui
@@ -50,6 +51,20 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
     } catch (err) {
       if (notSupported(err)) setDisc((d) => ({ ...d, available: false }));
       else fail(err);
+    }
+  }
+
+  /**
+   * 只重读状态（在不在线、额度）。节点的地址 / Token 改了、或者打开秘书页时调用：
+   * 状态平时靠 agent.status 事件，改了节点设置没有事件，以前会一直显示旧的「在线」（C-49 / B-09）。
+   * 读不到不弹错，留着旧的。
+   */
+  async function refreshStatus() {
+    try {
+      const status = await client.query({ type: "agents.status" });
+      setDisc((d) => ({ ...d, status: Object.fromEntries(status.map((x) => [x.agent, x])) }));
+    } catch {
+      // 只是刷新
     }
   }
 
@@ -293,6 +308,7 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
 
   return {
     loadAgents,
+    refreshStatus,
     loadTopic,
     loadBoard,
     onBoardEvent,
@@ -343,7 +359,9 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
     /** 起草新的一轮并打开确认页。输入框里的文字就是本轮任务 */
     async draftRound() {
       const projectId = pid();
-      const { text, recipients } = store.get().disc.ui.composer;
+      const { text } = store.get().disc.ui.composer;
+      // 只交现在发得了的人：未配置 / 离线 / 暂停的不带上（界面上他们也不显示成勾选）
+      const recipients = sendableRecipients(store.get().disc);
       if (!projectId || !text.trim() || recipients.length === 0) return;
       const current = planForNextRound(store.get().disc);
       try {

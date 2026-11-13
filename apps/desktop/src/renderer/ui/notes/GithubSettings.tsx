@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { GithubRepoName, GithubToken } from "@room/schemas";
-import { githubStatusText } from "../../lib/notes";
+import { githubSaveBlocker, githubStatusText } from "../../lib/notes";
 import { useActions, useAppState } from "../hooks";
 
 /**
@@ -33,6 +33,8 @@ export function GithubSettings() {
   const tokenCheck = token.trim() ? GithubToken.safeParse(token.trim()) : null;
   const tokenSet = status?.tokenSet ?? false;
   const canSave = !busy && repoCheck.success && (tokenCheck ? tokenCheck.success : tokenSet) && (repo.trim() !== status?.repo || tokenCheck !== null);
+
+  const blocker = githubSaveBlocker({ repo, repoOk: repoCheck.success, token, tokenSet });
 
   const save = async (e: FormEvent) => {
     e.preventDefault();
@@ -94,6 +96,7 @@ export function GithubSettings() {
           <button type="button" className="button-outline" disabled={busy} onClick={() => void turnOff()}>不同步了</button>
         )}
       </div>
+      {!canSave && !busy && blocker && <p className="step-hint" role="status">{blocker}</p>}
       {error && <p className="field-error" role="alert">{error}</p>}
 
       {status && (

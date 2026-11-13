@@ -7,7 +7,7 @@ import type { AddressInfo } from "node:net";
 import { CODEX_QUOTA_READ_TIMEOUT_MS, NodeHealth, RemoteProfileQuota } from "@room/schemas";
 import { ServerConfig, type Profile } from "../src/config";
 import { createAgentServer, type AgentServer } from "../src/server";
-import { claudeAccountOf, createClaudeQuotaStore, createQuotaReader, mapClaudeRateLimit, mapCodexRateLimits, mapDeepSeekBalance, readCodexQuota, readDeepSeekBalance } from "../src/quota";
+import { claudeAccountOf, createClaudeQuotaStore, createQuotaReader, dropExpiredWindows, mapClaudeRateLimit, mapCodexRateLimits, mapDeepSeekBalance, readCodexQuota, readDeepSeekBalance } from "../src/quota";
 import { validateProfiles } from "../src/config";
 
 /**
@@ -17,7 +17,7 @@ import { validateProfiles } from "../src/config";
 
 const NODE = process.execPath;
 const READ_AT = new Date("2026-11-01T05:00:00.000Z");
-const RESET_5H = 1793509200; // 2026-11-01T06:20:00Z
+const RESET_5H = 1793509200; // 2026-11-01T05:00:00Z（和 READ_AT 同一刻）
 const RESET_WEEK = 1794009600;
 
 const dir = mkdtempSync(join(tmpdir(), "s24-"));
@@ -331,6 +331,7 @@ describe("GET /v1/profiles/:id/quota", () => {
 // ---------------------------------------------------------------- S-21
 
 describe("S-21: Claude quota from rate_limit_event", () => {
+  const BEFORE_RESET = new Date(RESET_5H * 1000 - 3_600_000);
   const info = (patch: Record<string, unknown> = {}) => ({
     status: "allowed", resetsAt: RESET_5H, rateLimitType: "five_hour", isUsingOverage: false,
     unifiedWindows: {
@@ -378,12 +379,88 @@ describe("S-21: Claude quota from rate_limit_event", () => {
   });
 
   it("the store keeps the latest per account, and garbage never overwrites good data", () => {
-    const store = createClaudeQuotaStore(() => READ_AT);
+    // 窗口还没重置的时候读（RESET_5H 和 READ_AT 是同一刻，过期的窗口不再报，见下面 A-04）
+    const store = createClaudeQuotaStore(() => BEFORE_RESET);
     assert.equal(store.read("claude").fiveHour, null, "nothing seen yet");
     store.record("claude", info());
     store.record("claude", { nonsense: true });
     assert.equal(store.read("claude").fiveHour?.usedPercent, 11);
     assert.equal(store.read("other").fiveHour, null, "accounts are separate");
+  });
+
+  it("C-49 / A-04: a window whose reset time has passed is no longer reported (recovers without a node restart)", () => {
+    let clock = BEFORE_RESET;
+    const store = createClaudeQuotaStore(() => clock);
+    // 5 小时窗口用完了，每周还有
+    store.record("claude", info({
+      unifiedWindows: {
+        five_hour: { status: "rejected", resetsAt: RESET_5H },
+        seven_day: { utilization: 0.5, resetsAt: RESET_WEEK, status: "allowed" },
+      },
+      isUsingOverage: false,
+    }));
+    assert.equal(store.read("claude").fiveHour?.usedPercent, 100, "still inside the window: exhausted");
+
+    clock = new Date(RESET_5H * 1000); // 到重置时间的那一刻就算过期
+    const afterFive = store.read("claude");
+    assert.equal(afterFive.fiveHour, null, "the expired window is unknown again, not 100 and not 0");
+    assert.equal(afterFive.weekly?.usedPercent, 50, "the other window is still valid");
+    assert.equal(afterFive.creditsInUse, false, "credits flag is account-level: the weekly window is still valid, so the reading stands");
+    assert.equal(RemoteProfileQuota.safeParse(afterFive).success, true);
+
+    clock = new Date(RESET_WEEK * 1000 + 1000);
+    const afterAll = store.read("claude");
+    assert.deepEqual([afterAll.fiveHour, afterAll.weekly, afterAll.creditsInUse], [null, null, null]);
+    assert.equal(afterAll.readAt, clock.toISOString(), "all expired = same as never read");
+  });
+
+  it("汐 #219: creditsInUse survives while any window is still valid, and goes with the last one", () => {
+    let clock = BEFORE_RESET;
+    const store = createClaudeQuotaStore(() => clock);
+    store.record("claude", info({
+      unifiedWindows: {
+        five_hour: { utilization: 0.4, resetsAt: RESET_5H, status: "allowed" },
+        seven_day: { status: "rejected", resetsAt: RESET_WEEK },
+      },
+      isUsingOverage: true,
+    }));
+    assert.equal(store.read("claude").creditsInUse, true);
+
+    clock = new Date(RESET_5H * 1000); // 5 小时窗口过期，每周窗口还用完着、还在扣 credits
+    const afterFive = store.read("claude");
+    assert.deepEqual([afterFive.fiveHour, afterFive.weekly?.usedPercent, afterFive.creditsInUse], [null, 100, true]);
+
+    clock = new Date(RESET_WEEK * 1000); // 最后一个窗口也过期：一起作废，和没读过一样
+    const afterAll = store.read("claude");
+    assert.deepEqual([afterAll.fiveHour, afterAll.weekly, afterAll.creditsInUse], [null, null, null]);
+    // 条目已经从 store 里删掉：时钟拨回去也不会把旧读数带回来
+    clock = BEFORE_RESET;
+    assert.deepEqual([store.read("claude").fiveHour, store.read("claude").creditsInUse], [null, null], "expired entry was removed, not just hidden");
+  });
+
+  it("汐 #219: dropExpiredWindows, window by window", () => {
+    const win = (resetsAt: number | null) => ({ usedPercent: 50, windowMinutes: 300, resetsAt: resetsAt === null ? null : new Date(resetsAt * 1000).toISOString() });
+    const q = (fiveHour: ReturnType<typeof win> | null, weekly: ReturnType<typeof win> | null, creditsInUse: boolean | null): RemoteProfileQuota => ({ fiveHour, weekly, creditsInUse, readAt: READ_AT.toISOString() });
+    const at = new Date(RESET_5H * 1000);
+    // 一个过期、另一个有效 → credits 留着
+    assert.equal(dropExpiredWindows(q(win(RESET_5H), win(RESET_WEEK), true), at).creditsInUse, true);
+    // 另一个没有 resetsAt（没法判断，当作有效）→ credits 留着
+    assert.equal(dropExpiredWindows(q(win(RESET_5H), win(null), true), at).creditsInUse, true);
+    // 都过期 → 作废
+    assert.equal(dropExpiredWindows(q(win(RESET_5H), win(RESET_5H), true), at).creditsInUse, null);
+    // 只知道一个窗口、它过期了 → 已知的都过期了，作废
+    assert.equal(dropExpiredWindows(q(win(RESET_5H), null, true), at).creditsInUse, null);
+    // 都没过期 → 原样返回
+    const fresh = q(win(RESET_WEEK), win(RESET_WEEK), false);
+    assert.equal(dropExpiredWindows(fresh, at), fresh);
+  });
+
+  it("C-49 / A-04: a window without resetsAt cannot be judged and is kept", () => {
+    let clock = BEFORE_RESET;
+    const store = createClaudeQuotaStore(() => clock);
+    store.record("claude", info({ unifiedWindows: { five_hour: { utilization: 0.4 }, seven_day: { utilization: 0.1 } } }));
+    clock = new Date(RESET_WEEK * 1000 + 86_400_000);
+    assert.equal(store.read("claude").fiveHour?.usedPercent, 40);
   });
 
   it("which account a profile's runs belong to", () => {
