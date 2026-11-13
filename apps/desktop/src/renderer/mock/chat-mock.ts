@@ -270,11 +270,18 @@ export function createChatMock(ctx: ChatMockContext, options: ChatMockOptions = 
         void ctx.media.afterReply(reply, plan.auto);
       });
     }
-    const handles = steps.map((step, i) =>
-      setTimeout(() => {
-        if (!runDone(run)) step();
-      }, ctx.tickMs * (i + 1)),
-    );
+    // 一步一步排：上一步跑完才排下一步（和 discussion-mock 一样）。以前一次排好所有步骤，
+    // 机器忙的时候 STARTING 还没跑 RUNNING 就到点，Run 抛「QUEUED 变 RUNNING」，被算到后面的测试头上
+    const handles: ReturnType<typeof setTimeout>[] = [];
+    let index = 0;
+    const advance = () => {
+      handles[0] = setTimeout(() => {
+        if (runDone(run)) return;
+        steps[index++]!();
+        if (index < steps.length) advance();
+      }, ctx.tickMs);
+    };
+    advance();
     ctx.timers.set(run.id, handles);
   }
 
