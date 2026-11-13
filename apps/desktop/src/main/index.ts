@@ -1,6 +1,20 @@
 import { WorkspaceService } from "./workspace";
 import { existsSync, readFileSync, writeFileSync, renameSync, rmSync, mkdirSync } from "node:fs";
-import { app, BrowserWindow, dialog, ipcMain, nativeTheme, protocol, safeStorage, shell } from "electron";
+import { app, BrowserWindow, dialog, ipcMain, nativeTheme, protocol, safeStorage } from "electron";
+import {
+  acquireSingleInstance,
+  createWindowStateStore,
+  installAppShell,
+  installCrashRecovery,
+  restoredPlacement,
+  revealWindow,
+  showStartupFailure,
+  startLogging,
+  trackWindowState,
+  windowIconPath,
+} from "./app-shell";
+import { APP_DISPLAY_NAME, type AppEntry } from "./shell-policy";
+import { DEFAULT_WINDOW_SIZE, MIN_WINDOW_SIZE } from "./window-state";
 import { dirname, join, isAbsolute } from "node:path";
 import { openDatabase, repairInterruptedRuns, WriteQueue } from "@room/db";
 import { HttpRemoteAgentAdapter } from "@room/remote-client";
@@ -73,6 +87,26 @@ let mainWindow: BrowserWindow | null = null;
 const defaultDataDirectory = app.getPath("userData");
 const dataLocationFile = join(defaultDataDirectory, "active-data.json");
 
+// C-51 应用外壳。日志、窗口状态、单实例锁都跟着「默认数据目录」走（已含 AGENT_REVIEW_ROOM_DATA 覆盖，
+// 不跟 active-data.json 的恢复副本走）：它们是这台机器 / 这个实例的东西，不属于某一份资料。
+// CLI 模式（--self-test 等）一项都不启用：不抢锁、不被锁挡、不写日志文件，输出照旧。
+const logger = cliRequested ? null : startLogging(defaultDataDirectory);
+const windowState = cliRequested ? null : createWindowStateStore(defaultDataDirectory);
+// 锁必须在上面的 setPath("userData") 之后取：Electron 按 userData 区分实例，不同数据目录互不影响
+const isPrimaryInstance =
+  cliRequested ||
+  acquireSingleInstance(() => {
+    if (mainWindow !== null) revealWindow(mainWindow);
+    else if (app.isReady() && shellReady) createWindow();
+  });
+/** bootstrap 成功、窗口可以开了 */
+let shellReady = false;
+
+const devServerUrl = isDev ? process.env["ELECTRON_RENDERER_URL"] : undefined;
+const rendererIndex = join(__dirname, "../renderer/index.html");
+const appEntry: AppEntry =
+  devServerUrl !== undefined ? { kind: "dev", origin: new URL(devServerUrl).origin } : { kind: "file", path: rendererIndex };
+
 function broadcast(event: ControlEvent): void {
   for (const window of BrowserWindow.getAllWindows()) {
     window.webContents.send(IPC_CHANNELS.event, event);
@@ -80,15 +114,19 @@ function broadcast(event: ControlEvent): void {
 }
 
 function createWindow(): void {
-  const devServerUrl = process.env["ELECTRON_RENDERER_URL"];
+  // 上次的位置 / 大小；显示器变了就回默认 1280×800
+  const placement = windowState === null ? { ...DEFAULT_WINDOW_SIZE, maximized: false } : restoredPlacement(windowState);
+  const icon = windowIconPath();
 
   const window = new BrowserWindow({
-    width: 1280,
-    height: 800,
-    minWidth: 960,
-    minHeight: 600,
+    width: placement.width,
+    height: placement.height,
+    ...(placement.x === undefined || placement.y === undefined ? {} : { x: placement.x, y: placement.y }),
+    minWidth: MIN_WINDOW_SIZE.width,
+    minHeight: MIN_WINDOW_SIZE.height,
     show: false,
-    title: "Agent 评审室",
+    title: APP_DISPLAY_NAME,
+    ...(icon === undefined ? {} : { icon }),
     backgroundColor: windowBackground(),
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
@@ -99,25 +137,22 @@ function createWindow(): void {
   });
 
   mainWindow = window;
-  window.once("ready-to-show", () => window.show());
+  window.once("ready-to-show", () => {
+    if (placement.maximized) window.maximize();
+    window.show();
+  });
   window.on("closed", () => {
     if (mainWindow === window) mainWindow = null;
   });
+  if (windowState !== null) trackWindowState(window, windowState);
+  installCrashRecovery(window);
+  // 外链白名单、will-navigate 限制、拒绝 webview：installAppShell 里对所有 webContents 统一装
 
-  window.webContents.setWindowOpenHandler(({ url }) => {
-    void shell.openExternal(url);
-    return { action: "deny" };
-  });
-
-  window.webContents.on("will-navigate", (event, url) => {
-    const allowed = devServerUrl !== undefined ? url.startsWith(devServerUrl) : url.startsWith("file://");
-    if (!allowed) event.preventDefault();
-  });
-
-  if (isDev && devServerUrl !== undefined) {
-    void window.loadURL(devServerUrl);
+  // 加载失败（did-fail-load）由 installCrashRecovery 弹框，这里只接住 promise
+  if (devServerUrl !== undefined) {
+    void window.loadURL(devServerUrl).catch(() => undefined);
   } else {
-    void window.loadFile(join(__dirname, "../renderer/index.html"));
+    void window.loadFile(rendererIndex).catch(() => undefined);
   }
 }
 
@@ -437,10 +472,19 @@ async function bootstrap(): Promise<void> {
     return;
   }
 
+  installAppShell({ entry: appEntry, logger, getMainWindow: () => mainWindow });
+  shellReady = true;
   createWindow();
 }
 
+if (!isPrimaryInstance) {
+  // 已经开着一个了（同一个数据目录）：那边会把窗口拿到前台，这边直接退出
+  console.info("[startup] 已经有一个实例在运行，本次启动退出");
+  app.quit();
+}
+
 void app.whenReady().then(async () => {
+  if (!isPrimaryInstance) return;
   try {
     if(existsSync(dataLocationFile)){
       const location:unknown=JSON.parse(readFileSync(dataLocationFile,"utf8"));
@@ -456,13 +500,14 @@ void app.whenReady().then(async () => {
       app.exit(1);
       return;
     }
-    dialog.showErrorBox("启动失败", "无法初始化本地数据库或设置：\n" + message);
+    // C-51：说清可能的原因、数据目录和日志在哪（#208 这类 EPERM 也走这里，不改目录位置）
+    showStartupFailure(error, app.getPath("userData"), logger);
     app.quit();
     return;
   }
 
   app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    if (BrowserWindow.getAllWindows().length === 0 && shellReady) createWindow();
   });
 });
 
