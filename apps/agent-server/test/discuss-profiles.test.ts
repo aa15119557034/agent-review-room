@@ -112,6 +112,39 @@ describe("claude parser recognises quota errors", () => {
   });
 });
 
+describe("C-49 / A-03: limits that are not the subscription quota", () => {
+  it("context / budget / turn limits are ordinary errors, not quota_exhausted", () => {
+    for (const m of ["Context limit reached", "Budget limit reached", "Context window limit reached · /compact or /clear to continue", "Max turns limit reached"]) {
+      assert.equal(looksLikeQuota(m), false, m);
+    }
+    const ctx = new ClaudeStreamJsonParser();
+    ctx.push(line({ type: "result", subtype: "success", is_error: true, result: "Context limit reached" }));
+    const v = ctx.finish().verdict;
+    assert.equal(!v.ok && v.reason, "internal");
+  });
+
+  it("the 'You've hit …' wording gets the same exclusions (汐 #219)", () => {
+    for (const m of ["You've hit your context limit", "You've hit the budget limit", "You've hit your max turns limit", "You've hit your output token limit"]) {
+      assert.equal(looksLikeQuota(m), false, m);
+    }
+    const hit = new ClaudeStreamJsonParser();
+    hit.push(line({ type: "result", subtype: "success", is_error: true, result: "You've hit your context limit" }));
+    const v = hit.finish().verdict;
+    assert.equal(!v.ok && v.reason, "internal");
+  });
+
+  it("real quota wording still counts, with or without a 429", () => {
+    for (const m of ["You've hit your limit · resets 3pm", "You've hit your limit", "You've hit your session limit", "You've hit your weekly limit · resets Mon", "You've hit your 5-hour limit", "5-hour limit reached ∙ resets 7pm", "Weekly limit reached", "Claude AI usage limit reached|1760000000"]) {
+      assert.equal(looksLikeQuota(m), true, m);
+    }
+    // 即使文字像「上下文」，服务商明说 429 就是限流
+    const both = new ClaudeStreamJsonParser();
+    both.push(line({ type: "result", subtype: "error_during_execution", is_error: true, result: "Context limit reached", api_error_status: 429 }));
+    const v = both.finish().verdict;
+    assert.equal(!v.ok && v.reason, "quota_exhausted");
+  });
+});
+
 describe("room-jsonl parser", () => {
   it("done is required; error carries the quota flag", () => {
     const ok = new RoomJsonlParser();

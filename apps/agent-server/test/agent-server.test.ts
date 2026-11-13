@@ -95,6 +95,13 @@ describe("auth & validation", () => {
     assert.equal((await res.json()).error, "unknown_profile");
   });
 
+  it("C-49: a profile id that only exists on Object.prototype is an unknown profile", async () => {
+    // "constructor" 过得了 ProfileId 的格式检查；以前会取到 Object.prototype.constructor，当成一个「profile」去跑
+    const res = await start(body("constructor"));
+    assert.equal(res.status, 400);
+    assert.equal((await res.json()).error, "unknown_profile");
+  });
+
   it("rejects hash mismatch before spawning", async () => {
     const b = body("echo", "real content");
     b.snapshot.contentHash = sha("something else");
@@ -214,5 +221,66 @@ describe("network failure semantics", () => {
       await fetch(`${base}/v1/runs/${r.runId}/cancel`, { method: "POST", headers: auth, body: "{}" });
       await readAll(r.runId);
     }
+  });
+});
+
+describe("C-49 / A-01: shutdown lets subscribers see the terminal event", () => {
+  it("a subscriber of a running run receives terminal(node_shutdown) before the connection ends", async () => {
+    const own = createAgentServer(cfg, TOKEN);
+    await new Promise<void>((r) => own.server.listen(0, "127.0.0.1", () => r()));
+    const ownBase = `http://127.0.0.1:${(own.server.address() as AddressInfo).port}`;
+    const b = body("sleep");
+    assert.equal((await fetch(`${ownBase}/v1/runs`, { method: "POST", headers: auth, body: JSON.stringify(b) })).status, 202);
+    const res = await fetch(`${ownBase}/v1/runs/${b.runId}/events?after=-1`, { headers: auth });
+    assert.equal(res.status, 200);
+    const reading = res.text();
+    await sleep(150); // 子进程起来、订阅方连上
+    await own.close();
+    const events = (await reading)
+      .split("\n")
+      .filter(Boolean)
+      .map((l) => RemoteEvent.parse(JSON.parse(l)))
+      .filter((e) => e.type !== "heartbeat");
+    const t = terminals(events);
+    assert.equal(t.length, 1, "exactly one terminal reached the subscriber");
+    assert.deepEqual(t[0]?.type === "terminal" && t[0].result, { outcome: "error", reason: "node_shutdown", exitCode: null });
+  });
+
+  it("汐 #219: a run that is still going when the wait runs out is named in the log (runId and wait time only)", async () => {
+    const lines: string[] = [];
+    // 等待时长设成 0：关闭时子进程还没来得及退出，一定走到「超时」这条路
+    const own = createAgentServer(cfg, TOKEN, undefined, { warn: (l) => lines.push(l), closeWaitMs: 0 });
+    await new Promise<void>((r) => own.server.listen(0, "127.0.0.1", () => r()));
+    const ownBase = `http://127.0.0.1:${(own.server.address() as AddressInfo).port}`;
+    const b = body("sleep", "a secret prompt body");
+    assert.equal((await fetch(`${ownBase}/v1/runs`, { method: "POST", headers: auth, body: JSON.stringify(b) })).status, 202);
+    await sleep(150); // 子进程起来
+    await own.close();
+    assert.equal(lines.length, 1, lines.join("\n"));
+    assert.ok(lines[0]!.includes(b.runId), "names the run");
+    assert.match(lines[0]!, /等了 \d+ ms/);
+    assert.ok(!lines[0]!.includes("secret prompt"), "no prompt content");
+    assert.ok(!lines[0]!.includes(TOKEN), "no token");
+    await sleep(cfg.killGraceMs + 300); // shutdown() 已经发过终止信号：等子进程收掉，不留到别的测试里
+  });
+
+  it("no log line when every run finished within the wait", async () => {
+    const lines: string[] = [];
+    const own = createAgentServer(cfg, TOKEN, undefined, { warn: (l) => lines.push(l) });
+    await new Promise<void>((r) => own.server.listen(0, "127.0.0.1", () => r()));
+    const ownBase = `http://127.0.0.1:${(own.server.address() as AddressInfo).port}`;
+    const b = body("sleep");
+    assert.equal((await fetch(`${ownBase}/v1/runs`, { method: "POST", headers: auth, body: JSON.stringify(b) })).status, 202);
+    await sleep(150);
+    await own.close();
+    assert.deepEqual(lines, []);
+  });
+
+  it("close() with nothing running returns promptly", async () => {
+    const own = createAgentServer(cfg, TOKEN);
+    await new Promise<void>((r) => own.server.listen(0, "127.0.0.1", () => r()));
+    const t0 = Date.now();
+    await own.close();
+    assert.ok(Date.now() - t0 < 1000);
   });
 });

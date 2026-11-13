@@ -280,6 +280,7 @@ async function bootstrap(): Promise<void> {
     repo,
     settings,
     orchestrator,
+    voices: () => (ttsConfig === null ? [] : voiceOptionsOf(ttsConfig)),
     emit: broadcast,
     notes,
   });

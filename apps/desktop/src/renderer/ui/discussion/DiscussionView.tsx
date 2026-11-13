@@ -13,6 +13,10 @@ import {
   formatActive,
   openRound,
   pendingBatches,
+  recipientBlock,
+  RECIPIENT_BLOCK_LABEL,
+  setupHint,
+  sendableRecipients,
   stages,
   timeline,
   turnText,
@@ -205,10 +209,21 @@ function Conversation() {
   const fromChat = useAppState((s) => s.messages.some((m) => m.kind === "chat_material"));
   const actions = useActions();
   if (!project) {
+    const setup = setupHint(d);
     return (
       <section className="disc-empty">
         <h1>从左边选一个议题，或者新建一个</h1>
         <p>每一轮发给谁、带上什么，都先给你看全文；你盖章了才发出去。</p>
+        {setup && (
+          <div className="disc-setup" role="note">
+            <p>
+              {setup === "no_agents"
+                ? "第一次用：还没有秘书。先去「设置」填好节点的地址和 Token，再点「填入推荐的三位参与者」。"
+                : "秘书还没连上节点：去「设置」填节点的地址和 Token，并在参与者里选好节点。"}
+            </p>
+            <button type="button" className="button-outline" onClick={() => void actions.openSettings()}>去设置</button>
+          </div>
+        )}
       </section>
     );
   }
@@ -285,7 +300,7 @@ function Timeline() {
   if (entries.length === 0) {
     return (
       <div className="disc-timeline disc-timeline-empty">
-        <p>还没有发言。在下面写下议题，选好这一轮发给谁，点「预览并发起」。</p>
+        <p>还没有发言。在下面写下议题，选好这一轮发给谁，点「去盖章」：先看每人收到的全文，按住盖章才会发出去。</p>
       </div>
     );
   }
@@ -486,7 +501,9 @@ function Composer() {
   const d = useAppState((s) => s.disc);
   const actions = useActions();
   const round = openRound(d);
-  const { text, recipients } = d.ui.composer;
+  const { text } = d.ui.composer;
+  // 真正会发出去的人（发不了的不算，见 sendableRecipients）
+  const recipients = sendableRecipients(d);
   const discussants = d.agents.filter((a) => a.canDiscuss);
   const interjecting = round !== null && ["RUNNING", "PAUSED", "AWAITING_SUMMARY"].includes(round.state);
   const nextIndex = d.rounds.length + 1;
@@ -535,13 +552,21 @@ function Composer() {
           <div className="composer-recipients">
             <span className="composer-label">发给</span>
             {discussants.map((a) => {
-              const st = d.status[a.id]?.availability ?? "available";
-              const unavailable = st !== "available";
+              const block = recipientBlock(d, a.id);
+              const substitute = block === null && d.status[a.id]?.availability === "absent_quota" ? a.substitute : null;
               return (
-                <label key={a.id} className="recipient-chip" data-unavailable={unavailable || undefined} style={{ "--agent": a.color } as CSSProperties}>
-                  <input type="checkbox" checked={recipients.includes(a.id)} disabled={unavailable} onChange={() => actions.toggleRecipient(a.id)} />
+                <label
+                  key={a.id}
+                  className="recipient-chip"
+                  data-unavailable={block !== null || undefined}
+                  title={block !== null ? `${a.displayName} 现在发不了（${RECIPIENT_BLOCK_LABEL[block]}），这一轮不会发给他` : undefined}
+                  style={{ "--agent": a.color } as CSSProperties}
+                >
+                  {/* 发不了的人不显示成勾选，也不算进这一轮（以前是勾着、灰掉、取消不了，整轮被拒） */}
+                  <input type="checkbox" checked={recipients.includes(a.id)} disabled={block !== null} onChange={() => actions.toggleRecipient(a.id)} />
                   {a.displayName}
-                  {unavailable && <span>（{st === "absent_quota" ? "缺席" : st === "offline" ? "离线" : st === "paused_by_user" ? "已暂停" : "未配置"}）</span>}
+                  {block !== null && <span>（{RECIPIENT_BLOCK_LABEL[block]}）</span>}
+                  {substitute && <span>（缺席，{agentName(d, substitute)} 代答）</span>}
                 </label>
               );
             })}

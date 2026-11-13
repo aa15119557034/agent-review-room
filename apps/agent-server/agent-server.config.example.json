@@ -43,6 +43,16 @@
             {"id": "max", "displayName": "最高", "note": null}
           ],
           "defaultEffort": "medium"
+        },
+        {
+          "id": "claude-haiku-5-5",
+          "displayName": "Haiku 5.5",
+          "efforts": [
+            {"id": "low", "displayName": "低", "note": null},
+            {"id": "medium", "displayName": "中等", "note": "推荐"},
+            {"id": "high", "displayName": "高", "note": null}
+          ],
+          "defaultEffort": "medium"
         }
       ],
       "modelArgs": ["--model", "{model}"],
@@ -62,6 +72,7 @@
         "--include-partial-messages",
         "--tools=",
         "--strict-mcp-config",
+        "--setting-sources=",
         "--permission-mode", "dontAsk",
         "--permission-prompts", "none"
       ],
@@ -87,6 +98,16 @@
             {"id": "high", "displayName": "高", "note": null},
             {"id": "xhigh", "displayName": "超高", "note": null},
             {"id": "max", "displayName": "最高", "note": null}
+          ],
+          "defaultEffort": "medium"
+        },
+        {
+          "id": "claude-haiku-5-5",
+          "displayName": "Haiku 5.5",
+          "efforts": [
+            {"id": "low", "displayName": "低", "note": null},
+            {"id": "medium", "displayName": "中等", "note": "推荐"},
+            {"id": "high", "displayName": "高", "note": null}
           ],
           "defaultEffort": "medium"
         }

@@ -15,7 +15,7 @@ import { boardSeq, digestFromDisc, withDigest, type TodoItem } from "./topic-boa
  * 每个操作失败时写入 state.notice，不向上抛——组件不需要 try/catch。
  */
 export function createActions(store: Store<AppState>, client: RoomClient) {
-  const fail = (err: unknown) => store.set((s) => ({ ...s, notice: { kind: "error", message: describeFailure(err) } }));
+  const fail = (err: unknown) => store.set((s) => ({ ...s, notice: { kind: "error", message: describeFailure(err, s.disc.agents) } }));
 
   const disc = createDiscussionActions(store, client, fail);
   const chat = createChatActions(store, client, fail, {

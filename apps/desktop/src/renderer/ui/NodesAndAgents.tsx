@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { AgentModelSettings, HexColor, NodeBaseUrl, NodeToken, ProfileId, type AgentProfile, type NodeInfo, type NodeTestResult } from "@room/schemas";
-import { LOCAL_RECOMMENDED_NODES, RECOMMENDED_AGENTS, RECOMMENDED_NODES } from "../lib/presets";
+import { LOCAL_RECOMMENDED_NODES, RECOMMENDED_AGENTS, RECOMMENDED_NODES, presetSteps } from "../lib/presets";
 import { useActions, useAppState } from "./hooks";
 import { ModelSettings } from "./ModelSettings";
 import { VoiceSettings } from "./VoiceSettings";
@@ -41,7 +41,7 @@ export function NodesAndAgents() {
         )}
       </section>
 
-      <AgentsSection nodes={nodes ?? []} />
+      <AgentsSection nodes={nodes ?? []} onNodesChanged={reload} />
     </>
   );
 }
@@ -192,6 +192,8 @@ function NodeEditor({ id, saved, onSaved }: { id: string; saved: NodeInfo | null
       setToken("");
       setSavedAt(Date.now());
       await onSaved();
+      // 地址 / Token 变了：这个节点上的人在不在线要重新看
+      void actions.refreshStatus();
     }
   };
 
@@ -263,17 +265,23 @@ function NodeEditor({ id, saved, onSaved }: { id: string; saved: NodeInfo | null
   );
 }
 
-function AgentsSection({ nodes }: { nodes: NodeInfo[] }) {
+function AgentsSection({ nodes, onNodesChanged }: { nodes: NodeInfo[]; onNodesChanged: () => Promise<void> }) {
   const actions = useActions();
   const agents = useAppState((s) => s.disc.agents);
   const [applying, setApplying] = useState(false);
+  const [unplaced, setUnplaced] = useState<string[]>([]);
 
   const applyPreset = async () => {
     setApplying(true);
-    for (const a of RECOMMENDED_AGENTS) {
-      if (!(await actions.updateAgent(a))) break;
-    }
+    // 以实际保存的节点为准（props 里的可能还没刷新）
+    const saved = (await actions.loadNodes()) ?? nodes;
+    const plan = presetSteps(saved.map((n) => n.id));
+    for (const n of plan.nodes) await actions.upsertNode(n);
+    // 一位没填成不耽误后面的（错误照常显示在提示条里）
+    for (const a of plan.agents) await actions.updateAgent(a);
+    if (plan.nodes.length > 0) await onNodesChanged();
     await actions.loadModels();
+    setUnplaced(plan.unplaced);
     setApplying(false);
   };
 
@@ -282,13 +290,19 @@ function AgentsSection({ nodes }: { nodes: NodeInfo[] }) {
       <h2 className="settings-section" id="agents-title">参与者</h2>
       <p className="step-hint">
         每个参与者在哪个节点、用哪个 profile。推荐配置：三位都是你的秘书。C酱（首席秘书，负责汇总）在「你的电脑」（claude-review），
-        汐（DeepSeek）在「主控机（汐）」（deepseek-discuss），林离（Codex）在「主控机（林离）」（codex-discuss）。角色设定可以随时改。
+        汐（DeepSeek）在「主控机（汐）」（deepseek-discuss），林离（Codex）在「主控机（林离）」（codex-discuss）。
+        聊天用各自的 claude-chat / deepseek-chat / codex-chat。角色设定可以随时改。
       </p>
       <div className="settings-actions">
         <button type="button" className="button-outline" disabled={applying} onClick={applyPreset}>
           {applying ? "填入中…" : agents.length ? "按推荐配置重新填入（会覆盖下面三位的设置）" : "填入推荐的三位参与者"}
         </button>
       </div>
+      {unplaced.length > 0 && (
+        <p className="test-result" data-ok="false" role="status">
+          {unplaced.join("、")} 还没连上节点：先在上面把「你的电脑」的地址和 Token 保存好，再点一次这个按钮（或者在下面自己选节点）。
+        </p>
+      )}
       {agents.map((a) => (
         <AgentEditor key={a.id} agent={a} nodes={nodes} />
       ))}
@@ -305,9 +319,10 @@ export function AgentEditor({ agent, nodes }: { agent: AgentProfile; nodes: Node
 
   const set = <K extends keyof AgentProfile>(k: K, v: AgentProfile[K]) => setDraft((d) => ({ ...d, [k]: v }));
   const profileOk = draft.profileId === null || ProfileId.safeParse(draft.profileId).success;
+  const chatProfileOk = draft.chatProfileId === null || ProfileId.safeParse(draft.chatProfileId).success;
   const colorOk = HexColor.safeParse(draft.color).success;
   const modelsOk = AgentModelSettings.safeParse(draft.modelSettings).success;
-  const valid = draft.displayName.trim().length > 0 && profileOk && colorOk && modelsOk;
+  const valid = draft.displayName.trim().length > 0 && profileOk && chatProfileOk && colorOk && modelsOk;
   const dirty = JSON.stringify(draft) !== JSON.stringify(agent);
 
   const save = async () => {
@@ -322,6 +337,7 @@ export function AgentEditor({ agent, nodes }: { agent: AgentProfile; nodes: Node
       pausedByUser: draft.pausedByUser,
       nodeId: draft.nodeId,
       profileId: draft.profileId,
+      chatProfileId: draft.chatProfileId,
       modelSettings: draft.modelSettings,
       ...(draft.voice !== agent.voice ? { voice: draft.voice ?? null } : {}),
     });
@@ -354,7 +370,7 @@ export function AgentEditor({ agent, nodes }: { agent: AgentProfile; nodes: Node
           </select>
         </label>
         <label>
-          profile
+          讨论 profile
           <input
             className="settings-input"
             value={draft.profileId ?? ""}
@@ -363,7 +379,21 @@ export function AgentEditor({ agent, nodes }: { agent: AgentProfile; nodes: Node
             onChange={(e) => set("profileId", e.target.value.trim() || null)}
           />
         </label>
+        <label>
+          聊天 profile
+          <input
+            className="settings-input"
+            value={draft.chatProfileId ?? ""}
+            spellCheck={false}
+            placeholder={`比如 ${agent.id}-chat`}
+            aria-invalid={!chatProfileOk}
+            onChange={(e) => set("chatProfileId", e.target.value.trim() || null)}
+          />
+        </label>
       </div>
+      {draft.chatProfileId === null && (
+        <p className="step-hint">聊天 profile 没填：{draft.displayName} 在聊天里不能回答（讨论室不受影响）。填节点上只能说话的那个 profile，名字一般是「{agent.id}-chat」。</p>
+      )}
       <div className="agent-flags">
         <label><input type="checkbox" checked={draft.canDiscuss} onChange={(e) => set("canDiscuss", e.target.checked)} /> 参与讨论</label>
         <label><input type="checkbox" checked={draft.canSummarize} onChange={(e) => set("canSummarize", e.target.checked)} /> 可以做汇总</label>

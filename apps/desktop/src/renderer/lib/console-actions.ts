@@ -76,6 +76,11 @@ export function createConsoleActions(
     /** 顶栏「秘书」：打开控制台，默认看上次看的那位，否则第一位 */
     async open() {
       store.set((s) => ({ ...s, view: "console" }));
+      // 这一页的「在线 / 离线」要是现在的：节点设置改过之后没有事件会来（C-49 / B-09）
+      void client
+        .query({ type: "agents.status" })
+        .then((status) => store.set((s) => ({ ...s, disc: { ...s.disc, status: Object.fromEntries(status.map((x) => [x.agent, x])) } })))
+        .catch(() => undefined);
       const { agentId } = con();
       const first = agentId ?? store.get().disc.agents[0]?.id ?? null;
       if (first) await selectAgent(first);

@@ -14,6 +14,18 @@ export const PACK_ERROR_TEXT: Record<PackErrorCode, string> = {
   PACK_UNKNOWN: "认不出这是哪个包（里面没有 pack.json，或不是这里登记过的包）。什么都没有改。",
 };
 
+/**
+ * 页面顶上那一行错误要不要显示（C-49 / B-14）：下面某个包那一行已经在显示同一句失败原因时不再重复。
+ * 认不出是哪个包（PACK_UNKNOWN）之类落不到某一行的，才在顶上说。
+ */
+export function showTopPackError(
+  lastError: PackErrorCode | null,
+  packs: readonly { progress?: { phase: string; error?: PackErrorCode | null } | null }[] | null,
+): boolean {
+  if (lastError === null) return false;
+  return !(packs ?? []).some((p) => p.progress?.phase === "failed" && p.progress.error === lastError);
+}
+
 /** 包导入（#209，契约 #214）。失败写进 notice，不向上抛；导入失败的原因码返回给界面显示 */
 export function createPacksActions(store: Store<AppState>, client: RoomClient, fail: (err: unknown) => void) {
   return {

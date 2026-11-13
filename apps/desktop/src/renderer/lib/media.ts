@@ -230,7 +230,7 @@ export const FALLBACK_LABEL: Record<DrawFallbackReason, string> = {
 /** 额度的一句话：「5 小时 42%、每周 18%」；读不到的窗口写「读不到」 */
 export function quotaText(q: SubscriptionQuota | null): string {
   if (!q) return "额度读不到";
-  const w = (label: string, x: SubscriptionQuota["fiveHour"]) => `${label} ${x ? `${Math.round(x.usedPercent)}%` : "读不到"}`;
+  const w = (label: string, x: SubscriptionQuota["fiveHour"]) => `${label}${x ? `已用 ${Math.round(x.usedPercent)}%` : " 读不到"}`;
   return [w("5 小时", q.fiveHour), w("每周", q.weekly), ...(q.creditsInUse ? ["在用 credits"] : [])].join("、");
 }
 

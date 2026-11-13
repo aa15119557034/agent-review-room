@@ -17,7 +17,7 @@
   --glass: rgb(255 255 255 / 0.62);
   --glass-edge: rgb(255 255 255 / 0.85);
   --ink: #1c1c1e;
-  --ink-soft: #6b6b70;
+  --ink-soft: #636368; /* C-49 / B-13：原来 #6b6b70 在灰底（--desk、--pill）上只有 4.26:1，这个值在各种底上都 ≥ 4.8:1 */
   --rule: #e3e3e7;
   --fill: #ededf0; /* 灰色圆按钮、搜索框 */
   --selected: rgb(28 28 30 / 0.07);
@@ -966,8 +966,7 @@ body {
 .confirm-content,
 .plan-content,
 .node-editor,
-.agent-editor,
-.settings-section {
+.agent-editor {
   border: 1px solid var(--rule);
   border-radius: 14px;
   background: var(--sheet);
@@ -3496,4 +3495,115 @@ select {
 
 .side-person-state {
   white-space: nowrap;
+}
+
+/* ================================================================ C-49：整体测试后的修补 */
+
+/*
+ * B-06 看得见焦点：消息框、搜索框、弹出单里的输入框把 outline 去掉了又没给替代。
+ * 输入框本身没有边，所以把焦点环画在它外面那一圈上（:has / :focus-within）。
+ */
+.chat-search:focus-within,
+.chat-compose-main:has(.chat-input-row textarea:focus-visible, .chat-input-row input:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+.sheet-field input:focus-visible,
+.sheet-field textarea:focus-visible {
+  outline: none;
+  box-shadow: 0 2px 0 var(--focus);
+}
+
+/* B-07 @ 名单里键盘选中的那一项 */
+.chat-picker button[data-active] {
+  background: var(--selected);
+  box-shadow: inset 0 0 0 2px var(--focus);
+}
+
+/* B-13 深色下未读角标：白字在浅红底上只有 2.94:1，换成深色字 */
+@media (prefers-color-scheme: dark) {
+  .chat-badge,
+  .disc-badge {
+    color: #1c1c1e;
+  }
+}
+
+/* B-04 设置页的小标题是标题，不是一条输入框 */
+.settings-section {
+  margin-top: 0.5rem;
+  border: 0;
+  background: none;
+}
+
+.settings-legacy {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  background: var(--sheet);
+}
+
+.settings-legacy > summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* B-09「查原因」和它的结果 */
+.node-why {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem;
+  margin-left: 0.35rem;
+}
+
+.node-why-text {
+  flex-basis: 100%;
+  color: var(--ink);
+  white-space: normal;
+}
+
+.profile-why .node-why {
+  margin-left: 0;
+}
+
+.chat-slots li:has(.node-why-text) {
+  flex-wrap: wrap;
+  border-radius: 12px;
+  padding: 0.25rem 0.6rem;
+}
+
+/* B-16 第一次打开的引导 */
+.disc-setup {
+  display: grid;
+  justify-items: start;
+  gap: 0.5rem;
+  max-width: 34rem;
+  margin-top: 1.25rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  background: var(--sheet);
+}
+
+/* B-03 回答里的 **加粗**、`行内代码`、代码块 */
+.chat-text code,
+.long-text code {
+  padding: 0 0.25em;
+  border-radius: 4px;
+  background: var(--fill);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+
+.reply-code {
+  margin: 0.35rem 0;
+  padding: 0.5rem 0.65rem;
+  border-radius: 10px;
+  background: var(--fill);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.86em;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
