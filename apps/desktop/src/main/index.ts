@@ -152,7 +152,7 @@ async function bootstrap(): Promise<void> {
     emit: broadcast,
     now: () => new Date().toISOString(),
   });
-  const repairedVoice = voice.repairInterrupted();
+  const repairedVoice = cliRequested ? 0 : voice.repairInterrupted();
   if (repairedVoice > 0) console.warn(`[voice] 收尾了 ${repairedVoice} 条上次没转完的录音（应用重启，转写中断）`);
 
   // D-34a：选文件 / 表情用的对话框。renderer 只拿 ref，拿不到路径
@@ -209,7 +209,7 @@ async function bootstrap(): Promise<void> {
   });
 
   // 上次崩掉 / 被强杀留下的画图任务统一收尾（契约 media.ts：不留「生成中」）
-  const repairedMedia = await jobs.repairInterrupted();
+  const repairedMedia = cliRequested ? 0 : await jobs.repairInterrupted();
   if (repairedMedia > 0) console.warn(`[media] 收尾了 ${repairedMedia} 个上次没跑完的画图任务`);
 
   const media = new MediaService({
@@ -228,7 +228,7 @@ async function bootstrap(): Promise<void> {
   });
 
   // §32 第 3 步：上次崩溃留下的 QUEUED / STARTING / RUNNING 统一标成 interrupted
-  const repaired = await repairInterruptedRuns(db, queue);
+  const repaired = cliRequested ? { repaired: [] as unknown[] } : await repairInterruptedRuns(db, queue);
 
   const settings = new SettingsStore(join(userData, "settings.json"), safeStorage);
   // 旧设置里的 Reviewer 节点 -> user-pc（幂等）：多节点有了 Token 存储，单次评审照旧
@@ -238,7 +238,7 @@ async function bootstrap(): Promise<void> {
 
   // C-46 / D-46a：项目笔记（存版本 + 从回答里切 room-note + 拼 Prompt 用）
   const github = new GithubSyncService({ db, settings, emit: broadcast });
-  github.start();
+  if (!cliRequested) github.start();
   const notes = new NotesService({
     db,
     queue,
@@ -335,8 +335,8 @@ async function bootstrap(): Promise<void> {
       return adapter;
     },
   });
-  const repairedChat = await chat.repairInterrupted();
-  await chat.repairPendingImmersive();
+  const repairedChat = cliRequested ? 0 : await chat.repairInterrupted();
+  if (!cliRequested) await chat.repairPendingImmersive();
 
   const workspace = new WorkspaceService({
     db, queue, userData, version: app.getVersion(), revision: process.env["ROOM_BUILD_SHA"] ?? "development",
@@ -422,6 +422,12 @@ async function bootstrap(): Promise<void> {
     execPath: process.execPath,
   });
   if (cliExit !== null) {
+    // app.exit 不触发 before-quit：先关库，别把这次的写入留在 -wal 里
+    try {
+      db.close();
+    } catch {
+      // 关不掉也让进程退出
+    }
     app.exit(cliExit);
     return;
   }

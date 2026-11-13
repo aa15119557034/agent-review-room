@@ -123,14 +123,15 @@ export async function runCliIfRequested(deps: CliDeps): Promise<number | null> {
     }
     nodes.push({ id, baseUrl, tokenSet: node !== null, health });
   }
-  const runtime = packs.find((pack) => pack.id === "tts-runtime");
-  const model = packs.find((pack) => pack.id === "tts-model");
+  // 只在「已经配置的东西坏了」时失败：没装语音包 / 没配节点不算失败（#218 评审第二轮）
+  const packsBroken = packs.some((pack) => pack.state === "incomplete" || pack.state === "version_mismatch");
   const chatNode = nodes.find((node) => (node as { id: string }).id === "controller-local") as
-    | { health: { status?: number; body?: { profiles?: string[] } } | null }
+    | { tokenSet?: boolean; health?: { status?: number; body?: { profiles?: string[] } } | null }
     | undefined;
-  const chatOk = chatNode?.health?.status === 200 && (chatNode.health.body?.profiles ?? []).includes("deepseek-chat");
-  // 自检是「报告」，不是「验收通过」：没装语音包 / 没有 Claude 的机器也应该 exit 0
-  const ok = true;
+  const chatOk =
+    chatNode?.tokenSet !== true ||
+    (chatNode.health?.status === 200 && (chatNode.health.body?.profiles ?? []).includes("deepseek-chat"));
+  const ok = !packsBroken && chatOk;
   console.log(
     JSON.stringify(
       {

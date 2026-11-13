@@ -224,7 +224,15 @@ export const MIGRATIONS: readonly Migration[] = [
     up: (db) => { db.exec(SCHEMA_V24); },
   },
   { version: 25, name: "workspace-decisions", up: (db) => { db.exec(SCHEMA_V25); } },
-  { version: 26, name: "agent-voice", up: (db) => { db.exec(SCHEMA_V26); } },
+  {
+    version: 26,
+    name: "agent-voice",
+    up: (db) => {
+      // 已有 voice 列的库（验收包里手工跑过）重跑 this 不能报 duplicate column
+      const columns = db.prepare("PRAGMA table_info(agents)").all() as { name: string }[];
+      if (!columns.some((column) => column.name === "voice")) db.exec(SCHEMA_V26);
+    },
+  },
 ];
 
 /** 当前代码支持的最新 schema 版本 */
