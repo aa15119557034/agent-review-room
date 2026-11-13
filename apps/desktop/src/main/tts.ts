@@ -45,7 +45,7 @@ export interface TtsConfig {
 }
 
 const DEFAULT_TIMEOUT_MS = 180_000;
-/** 起进程 + 加载模型最多等多久（C酱 #152 必须改 2）：卡住就把整条显卡队列拖死，所以必须有上限 */
+/** 起进程 + 加载模型最多等多久（C酱 #152 必须改 2）：卡住就把整条显卡队列拖死，所以必须有上限；本机实测加载约 120 秒，留到 300 秒 */
 const DEFAULT_LOAD_TIMEOUT_MS = 300_000;
 /** 让引擎卸载模型最多等多久（D-37b，林离 #163）：卸 9GB 是秒级的事，这么久没回就杀进程 */
 const UNLOAD_TIMEOUT_MS = 30_000;

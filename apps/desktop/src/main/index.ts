@@ -411,25 +411,29 @@ async function bootstrap(): Promise<void> {
     }
   });
 
-  const cliExit = await runCliIfRequested({
-    db,
-    nodes,
-    settings,
-    packs,
-    userData,
-    localAppData: process.env.LOCALAPPDATA,
-    installDir: dirname(process.execPath),
-    resourcesPath: process.resourcesPath,
-    execPath: process.execPath,
-  });
-  if (cliExit !== null) {
-    // app.exit 不触发 before-quit：先关库，别把这次的写入留在 -wal 里
+  if (cliRequested) {
+    let code = 1;
     try {
-      db.close();
-    } catch {
-      // 关不掉也让进程退出
+      code = (await runCliIfRequested({
+        db,
+        nodes,
+        settings,
+        packs,
+        userData,
+        localAppData: process.env.LOCALAPPDATA,
+        installDir: dirname(process.execPath),
+        resourcesPath: process.resourcesPath,
+        execPath: process.execPath,
+      })) ?? 0;
+    } finally {
+      // 命令抛错也关库：app.exit 不触发 before-quit，别把写入留在 -wal 里
+      try {
+        db.close();
+      } catch {
+        // 关不掉也让进程退出
+      }
     }
-    app.exit(cliExit);
+    app.exit(code);
     return;
   }
 
