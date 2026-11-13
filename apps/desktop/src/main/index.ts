@@ -23,6 +23,7 @@ import { Repository } from "./repository";
 import { SettingsStore } from "./settings";
 import { loadTtsConfigFile, TtsRunner, voiceOptionsOf } from "./tts";
 import { PacksService } from "./packs";
+import { runCliIfRequested } from "./cli";
 import { bundledTtsConfig, findTtsBundle } from "./tts-paths";
 
 /**
@@ -31,6 +32,24 @@ import { bundledTtsConfig, findTtsBundle } from "./tts-paths";
  * 启动顺序对齐 V0.4 §32：初始化 DB → 修复中断的 run → 起 IPC → 开窗口。
  * Token 只在主进程解密使用，绝不进 renderer / SQLite / 日志。
  */
+
+// 验收/受限机器：用环境变量把数据目录指到可写位置（这台机器写 %APPDATA% 会被拦）
+const CLI_FLAGS = ["--self-test", "--import-local-token", "--set-voice", "--tts-test"];
+const cliRequested = process.argv.some((arg) => CLI_FLAGS.includes(arg));
+const dataOverride = process.env.AGENT_REVIEW_ROOM_DATA;
+if (dataOverride !== undefined && dataOverride.trim() !== "") {
+  try {
+    mkdirSync(dataOverride, { recursive: true });
+    app.setPath("userData", dataOverride);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (cliRequested) {
+      console.error("[startup] 数据目录覆盖失败：" + message);
+      process.exit(1);
+    }
+    console.warn("[startup] 数据目录覆盖失败：", message);
+  }
+}
 
 // D-36b：room-image:// / D-34b：room-audio:// 必须在 app ready 之前登记；只读、不导航、不当页面打开
 protocol.registerSchemesAsPrivileged([
@@ -133,7 +152,7 @@ async function bootstrap(): Promise<void> {
     emit: broadcast,
     now: () => new Date().toISOString(),
   });
-  const repairedVoice = voice.repairInterrupted();
+  const repairedVoice = cliRequested ? 0 : voice.repairInterrupted();
   if (repairedVoice > 0) console.warn(`[voice] 收尾了 ${repairedVoice} 条上次没转完的录音（应用重启，转写中断）`);
 
   // D-34a：选文件 / 表情用的对话框。renderer 只拿 ref，拿不到路径
@@ -169,12 +188,14 @@ async function bootstrap(): Promise<void> {
     bundleLookup?.bundle === null || bundleLookup === null
       ? null
       : bundledTtsConfig(bundleLookup.bundle, configuredTts?.voices);
+  // 语音包优先：tts.json 只提供音色；没有语音包时才用用户自己配的引擎
   const ttsConfig =
-    configuredTts !== null && existsSync(configuredTts.python) && existsSync(configuredTts.script)
-      ? configuredTts
-      : (bundled ?? configuredTts);
+    bundled ??
+    (configuredTts !== null && existsSync(configuredTts.python) && existsSync(configuredTts.script) ? configuredTts : null);
   if (ttsConfig === null) console.warn("[tts] 没有配置 userData/tts.json，语音合成不可用");
-  const ttsRunner = ttsConfig === null ? null : new TtsRunner(ttsConfig);
+  const ttsTempDir = join(userData, "tmp");
+  const ttsRunner =
+    ttsConfig === null ? null : new TtsRunner({ ...ttsConfig, tempDir: ttsTempDir });
   protocol.handle(AUDIO_URL_SCHEME, createAudioProtocolHandler(mediaStore));
   const jobs = new MediaJobsService({
     db,
@@ -188,7 +209,7 @@ async function bootstrap(): Promise<void> {
   });
 
   // 上次崩掉 / 被强杀留下的画图任务统一收尾（契约 media.ts：不留「生成中」）
-  const repairedMedia = await jobs.repairInterrupted();
+  const repairedMedia = cliRequested ? 0 : await jobs.repairInterrupted();
   if (repairedMedia > 0) console.warn(`[media] 收尾了 ${repairedMedia} 个上次没跑完的画图任务`);
 
   const media = new MediaService({
@@ -207,7 +228,7 @@ async function bootstrap(): Promise<void> {
   });
 
   // §32 第 3 步：上次崩溃留下的 QUEUED / STARTING / RUNNING 统一标成 interrupted
-  const repaired = await repairInterruptedRuns(db, queue);
+  const repaired = cliRequested ? { repaired: [] as unknown[] } : await repairInterruptedRuns(db, queue);
 
   const settings = new SettingsStore(join(userData, "settings.json"), safeStorage);
   // 旧设置里的 Reviewer 节点 -> user-pc（幂等）：多节点有了 Token 存储，单次评审照旧
@@ -217,7 +238,7 @@ async function bootstrap(): Promise<void> {
 
   // C-46 / D-46a：项目笔记（存版本 + 从回答里切 room-note + 拼 Prompt 用）
   const github = new GithubSyncService({ db, settings, emit: broadcast });
-  github.start();
+  if (!cliRequested) github.start();
   const notes = new NotesService({
     db,
     queue,
@@ -315,8 +336,8 @@ async function bootstrap(): Promise<void> {
       return adapter;
     },
   });
-  const repairedChat = await chat.repairInterrupted();
-  await chat.repairPendingImmersive();
+  const repairedChat = cliRequested ? 0 : await chat.repairInterrupted();
+  if (!cliRequested) await chat.repairPendingImmersive();
 
   const workspace = new WorkspaceService({
     db, queue, userData, version: app.getVersion(), revision: process.env["ROOM_BUILD_SHA"] ?? "development",
@@ -390,6 +411,28 @@ async function bootstrap(): Promise<void> {
     }
   });
 
+  const cliExit = await runCliIfRequested({
+    db,
+    nodes,
+    settings,
+    packs,
+    userData,
+    localAppData: process.env.LOCALAPPDATA,
+    installDir: dirname(process.execPath),
+    resourcesPath: process.resourcesPath,
+    execPath: process.execPath,
+  });
+  if (cliExit !== null) {
+    // app.exit 不触发 before-quit：先关库，别把这次的写入留在 -wal 里
+    try {
+      db.close();
+    } catch {
+      // 关不掉也让进程退出
+    }
+    app.exit(cliExit);
+    return;
+  }
+
   createWindow();
 }
 
@@ -404,6 +447,11 @@ void app.whenReady().then(async () => {
   } catch (error) {
     // 迁移失败 / DB 被锁：以前这里会把 promise 丢掉，窗口不开、进程还挂着
     const message = error instanceof Error ? error.message : String(error);
+    if (cliRequested) {
+      console.error("[startup] 启动失败：" + message);
+      app.exit(1);
+      return;
+    }
     dialog.showErrorBox("启动失败", "无法初始化本地数据库或设置：\n" + message);
     app.quit();
     return;

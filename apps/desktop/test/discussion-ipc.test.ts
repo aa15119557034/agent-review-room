@@ -850,6 +850,20 @@ describe("agent.update：把参与者配到各自节点", () => {
     await close(h);
   });
 
+  it("改已有 Agent 的声音：对象要 JSON.stringify，不能直接绑 SQL（#218 评审 1）", async () => {
+    const h = await makeHarness();
+    const updated = await h.dispatcher.handleCommand({
+      type: "agent.update",
+      id: "claude",
+      voice: { voiceId: "xiaoyu", speed: 1 },
+    });
+    assert.equal(updated.ok, true, JSON.stringify(updated));
+    const profile = (updated as unknown as { data: { voice: { voiceId: string; speed: number } } }).data;
+    assert.deepEqual(profile.voice, { voiceId: "xiaoyu", speed: 1 });
+    await close(h);
+
+  });
+
   it("voiceId 不在 voices.list 里、或列表为空 → validation_failed", async () => {
     const voice: VoiceOption = { id: "xiaoyu" as never, displayName: "小雨", engine: "indextts2", source: "reference", sampleRef: null };
     const h = await makeHarness({ voices: [voice] });
@@ -862,6 +876,7 @@ describe("agent.update：把参与者配到各自节点", () => {
     assert.equal((none as unknown as { error: string }).error, "validation_failed");
     await close(h);
     await close(empty);
+
   });
 
   it("新建 Agent（契约没有 create，第一条靠它建）", async () => {

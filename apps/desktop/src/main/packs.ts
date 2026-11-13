@@ -8,6 +8,7 @@ import {
   renameSync,
   rmSync,
   statSync,
+  writeFileSync,
 } from "node:fs";
 import { dirname, join, resolve, sep } from "node:path";
 import yauzl from "yauzl";
@@ -133,14 +134,45 @@ export class PacksService {
     return PACK_REGISTRY.map((definition) => this.#status(definition));
   }
 
+  #target: string | null = null;
+
+  /**
+   * 安装目录：优先 %LOCALAPPDATA%\评审室\tts；这个位置写不了（受限令牌 / 安全软件）就退到 exe 旁边的 tts。
+   * findTtsBundle 本来就会先找 exe 旁边的 tts，所以退回去也能被朗读用上。
+   */
   #targetBase(): string {
+    if (this.#target !== null) return this.#target;
+    const preferred = this.#preferredBase();
+    for (const candidate of [preferred, this.#installDirBase()]) {
+      try {
+        mkdirSync(candidate, { recursive: true });
+        const probe = join(candidate, ".write-test");
+        writeFileSync(probe, "1");
+        rmSync(probe, { force: true });
+        this.#target = candidate;
+        return candidate;
+      } catch {
+        // 换下一个
+      }
+    }
+    this.#target = preferred;
+    return preferred;
+  }
+
+  #installDirBase(): string {
+    return join(this.deps.installDir, "tts");
+  }
+
+  /** 首选位置：只读查询用这个，不建目录、不探测 */
+  #preferredBase(): string {
     return this.deps.localAppData !== undefined && this.deps.localAppData !== ""
       ? join(this.deps.localAppData, "评审室", "tts")
-      : join(this.deps.installDir, "tts");
+      : this.#installDirBase();
   }
 
   #bases(): string[] {
-    return [join(this.deps.installDir, "tts"), this.#targetBase(), join(this.deps.resourcesPath, "tts")];
+    const bases = [this.#installDirBase(), this.#preferredBase(), join(this.deps.resourcesPath, "tts")];
+    return bases.filter((base, index) => bases.indexOf(base) === index);
   }
 
   /**

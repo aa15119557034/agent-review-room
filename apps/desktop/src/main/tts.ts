@@ -1,5 +1,5 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
-import { existsSync, readdirSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { delimiter, join } from "node:path";
 import type { TtsEngine, VoiceId, VoiceOption } from "@room/schemas";
@@ -39,12 +39,14 @@ export interface TtsConfig {
   timeoutMs?: number;
   /** 起进程 + 加载模型最多等多久（默认 120 秒） */
   loadTimeoutMs?: number;
+  /** 合成中间 wav 放哪（默认系统临时目录；受限机器上 %TEMP% 不可写时由 main 指到 userData） */
+  tempDir?: string;
   voices: TtsVoiceConfig[];
 }
 
 const DEFAULT_TIMEOUT_MS = 180_000;
 /** 起进程 + 加载模型最多等多久（C酱 #152 必须改 2）：卡住就把整条显卡队列拖死，所以必须有上限 */
-const DEFAULT_LOAD_TIMEOUT_MS = 120_000;
+const DEFAULT_LOAD_TIMEOUT_MS = 300_000;
 /** 让引擎卸载模型最多等多久（D-37b，林离 #163）：卸 9GB 是秒级的事，这么久没回就杀进程 */
 const UNLOAD_TIMEOUT_MS = 30_000;
 /** 取消 / 超时杀掉进程后，等它真的退出再删临时文件，最多等多久 */
@@ -223,8 +225,9 @@ export class TtsRunner {
    */
   #cleanStaleTempFiles(): void {
     try {
-      for (const name of readdirSync(tmpdir())) {
-        if (name.startsWith(`room-tts-${process.pid}-`)) rmSync(join(tmpdir(), name), { force: true });
+      const dir = this.config.tempDir ?? tmpdir();
+      for (const name of readdirSync(dir)) {
+        if (name.startsWith(`room-tts-${process.pid}-`)) rmSync(join(dir, name), { force: true });
       }
     } catch {
       // 清不掉不影响合成
@@ -421,7 +424,9 @@ export class TtsRunner {
     const child = this.#child;
     if (child === null) throw new TtsUnavailableError("语音合成进程不在了");
     const id = "r" + String((this.#seq += 1));
-    const outPath = join(tmpdir(), `room-tts-${process.pid}-${id}.wav`);
+    const tempDir = this.config.tempDir ?? tmpdir();
+    mkdirSync(tempDir, { recursive: true });
+    const outPath = join(tempDir, `room-tts-${process.pid}-${id}.wav`);
     const timeoutMs = this.config.timeoutMs ?? DEFAULT_TIMEOUT_MS;
     /** 取消 / 超时把进程杀了：它可能还在往 outPath 里写，要等它停下来再删（林离 #163 必须改 2） */
     let killed = false;

@@ -4,7 +4,7 @@ import { mkdtempSync,mkdirSync,readFileSync,writeFileSync,existsSync,rmSync,read
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createHash } from "node:crypto";
-import { openDatabase, WriteQueue, ulid, searchWorkspace, workspaceItem, saveWorkspaceDecision, workspaceDecisions, workspaceTasks, workspaceSources } from "@room/db";
+import { LATEST_SCHEMA_VERSION, openDatabase, WriteQueue, ulid, searchWorkspace, workspaceItem, saveWorkspaceDecision, workspaceDecisions, workspaceTasks, workspaceSources } from "@room/db";
 import { WorkspaceBackupManifest } from "@room/schemas";
 import { WorkspaceService, verifyWorkspaceBackup, verifyRestoredDirectory } from "../src/main/workspace";
 
@@ -115,7 +115,7 @@ test("restored copies can be reopened after edits while immutable backups cannot
   assert.throws(()=>verifyRestoredDirectory(backup.path!));
   f.dirs.push(backup.path,f.out);const copy=await f.service.restore();assert.ok(copy.path);
   const restored=openDatabase(join(copy.path,"room.db"));restored.prepare("UPDATE projects SET name='edited' WHERE id=?").run(f.project);restored.close();
-  assert.equal(verifyRestoredDirectory(copy.path),25);
+  assert.equal(verifyRestoredDirectory(copy.path),LATEST_SCHEMA_VERSION);
   let activated:string|null|undefined;let consent=false;
   const service=new WorkspaceService({db:f.db,queue:f.queue,userData:f.data,version:"test",revision:"test",checks:async()=>[],chooseDirectory:async()=>copy.path,chooseSaveFile:async()=>null,confirmSwitch:async()=>consent,activateDirectory:value=>{activated=value;}});
   assert.equal((await service.openRestored()).cancelled,true);assert.equal(activated,undefined);
