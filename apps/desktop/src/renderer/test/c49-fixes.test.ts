@@ -69,7 +69,7 @@ describe("B-01: a clean machine can chat after applying the recommended configur
     assert.equal(availabilityText(noChat, status("claude", "offline")), "离线");
     assert.equal(availabilityText(noChat, undefined), "未知");
     assert.equal(chatNotConfigured(agent({ id: "claude", nodeId: null, chatProfileId: null })), false, "no node at all is 未配置, not this hint");
-    assert.match(UNAVAILABLE_LABEL.unconfigured, /聊天 profile/, "the slot label says what to fill in");
+    assert.match(UNAVAILABLE_LABEL.unconfigured, /聊天用的节点配置/, "the slot label says what to fill in");
   });
 });
 
@@ -165,7 +165,7 @@ describe("B-09: 'node offline' can be told apart from a wrong token", () => {
     assert.match(d({ reachable: false, error: "no_token", message: "t" }).text, /还没填 Token/);
     const missing = d({ reachable: true, health, profileAvailable: false, latencyMs: 3 });
     assert.equal(missing.ok, false);
-    assert.match(missing.text, /没有 claude-chat.*claude-review/);
+    assert.match(missing.text, /没有节点配置「claude-chat」.*claude-review/);
     assert.equal(d({ reachable: true, health, profileAvailable: true, latencyMs: 3 }).ok, true);
     assert.notEqual(d({ reachable: false, error: "unauthorized", message: "" }).text, d({ reachable: false, error: "unreachable", message: "" }).text);
   });

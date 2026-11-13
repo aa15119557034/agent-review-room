@@ -19,7 +19,7 @@ export function VoiceSettings({ value, onChange }: { value: VoiceProfile | null 
   }, [actions]);
 
   if (voices === undefined) return <p className="step-hint">正在读取能用的声音…</p>;
-  if (voices === null) return <p className="step-hint">读不到声音列表（本机语音合成还没上线，D-37）。</p>;
+  if (voices === null) return <p className="step-hint">暂时读不到声音列表：这个版本可能还不支持语音，或者语音组件没装好。稍后再试。</p>;
   const current = value ?? null;
   const known = current ? voices.find((v) => v.id === current.voiceId) : undefined;
   return (
@@ -56,7 +56,7 @@ export function VoiceSettings({ value, onChange }: { value: VoiceProfile | null 
       )}
       {known?.sampleRef && <audio controls preload="none" src={audioSrc(known.sampleRef)} aria-label={`试听 ${known.displayName}`} />}
       {voices.length === 0 && <p className="step-hint">本机语音合成还没装好，暂时没有可选的声音。</p>}
-      <p className="step-hint">语音只在主控机本地合成，不上传。改了声音或语速，之前合成过的不再复用。</p>
+      <p className="step-hint">语音只在这台电脑上合成，不上传。改了声音或语速，之前合成过的不再复用。</p>
     </div>
   );
 }

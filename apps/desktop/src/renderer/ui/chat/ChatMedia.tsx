@@ -36,6 +36,7 @@ import {
 import { draftOf } from "../../lib/chat";
 import { useActions, useAppState } from "../hooks";
 import { Icon } from "../Icon";
+import { useDialog } from "../dialog";
 
 /**
  * 2026-11-01 用户决定画图先只走本机，林离画图（D-38b）暂缓（ADR-004 §3）。
@@ -102,15 +103,11 @@ function ImageGrid({ images }: { images: { ref: string; name: string }[] }) {
 }
 
 export function Lightbox({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
-  useEffect(() => {
-    const esc = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", esc);
-    return () => window.removeEventListener("keydown", esc);
-  }, [onClose]);
+  const ref = useDialog<HTMLDivElement>(onClose);
   return (
-    <div className="lightbox" role="dialog" aria-modal="true" aria-label={alt} onClick={onClose}>
+    <div ref={ref} tabIndex={-1} className="lightbox" role="dialog" aria-modal="true" aria-label={alt} onClick={onClose}>
       <img src={src} alt={alt} />
-      <p>{alt} · 点任意处关闭</p>
+      <p>{alt} · 点任意处或按 Esc 关闭</p>
     </div>
   );
 }
@@ -119,7 +116,7 @@ const sizeText = (bytes: number) => (bytes < 1024 ? `${bytes} B` : bytes < 1024 
 
 function FileCard({ file }: { file: Extract<ChatAttachment, { kind: "file" }> }) {
   return (
-    <p className="chat-file" title={file.isText ? "文字文件：正文会作为资料发给秘书" : "这类文件 1B 不解析，秘书只看到文件名"}>
+    <p className="chat-file" title={file.isText ? "文字文件：正文会作为资料发给秘书" : "这类文件暂时读不了内容，秘书只看到文件名"}>
       <span className="chat-file-icon" aria-hidden="true">
         {file.isText ? "文" : "档"}
       </span>
@@ -260,7 +257,7 @@ function SpeechLine({ message }: { message: AgentChatMessage }) {
         type="button"
         className="button-link"
         disabled={!voice}
-        title={voice ? "用这位的声音读出来（在主控机本地合成）" : "还没给这位选声音：设置 → 参与者 → 声音"}
+        title={voice ? "用这位的声音读出来（在这台电脑上合成，不上传）" : "还没给这位选声音：到「秘书」页点「声音」选一个"}
         onClick={() => void actions.chat.media.play(message.id, message.agent)}
       >
         ▶ {wants ? "想用语音说，点这里听" : "播放"}
@@ -457,7 +454,7 @@ export function DrawSheetBody({ messageId, prompt: initial, conv }: { messageId:
         </div>
       </fieldset>
       <p className="chat-note" role="status">
-        {preview === null ? "正在看这次走哪条路…" : preview === undefined ? "现在看不到走哪条路（后端还不能画图）" : routePreviewText(preview)}
+        {preview === null ? "正在看这次走哪条路…" : preview === undefined ? "这个版本暂不支持画图，或者暂时读不到画图设置，稍后再试" : routePreviewText(preview)}
       </p>
       {preview?.backend === "codex" && <p className="chat-note">走林离时提示词会发给 Codex 订阅服务。</p>}
       {backend === "codex" && CODEX_MANUAL_LABEL[manualCodex] && <p className="field-error">{CODEX_MANUAL_LABEL[manualCodex]}</p>}
@@ -500,7 +497,7 @@ export function MediaHead() {
 export function ImmersiveSection() {
   const state = useAppState((s) => s.chat.media.immersive);
   const actions = useActions();
-  if (!state) return <p className="chat-note">沉浸模式：暂时读不到设置（D-39 上线之前是正常的）。</p>;
+  if (!state) return <p className="chat-note">沉浸模式：暂时读不到设置，稍后再试。</p>;
   const { settings, usage } = state;
   const save = (patch: Partial<ImmersiveSettings>) => void actions.chat.media.updateImmersive({ ...settings, ...patch });
   return (
@@ -533,11 +530,11 @@ export function ImmersiveSection() {
             />
           </label>
           {CODEX_DRAWING_PAUSED ? (
-            <p className="chat-note">自动画图目前只用本机，提示词不离开主控机。</p>
+            <p className="chat-note">自动画图目前只在这台电脑上画，提示词不会发到别处。</p>
           ) : (
             <label className="chat-toggle">
               <input type="checkbox" checked={settings.autoDrawUsesSubscription} onChange={(e) => save({ autoDrawUsesSubscription: e.target.checked })} />
-              自动画图可以用林离的订阅（到 85% 换本机）；关掉就只用本机，提示词不离开主控机
+              自动画图可以用林离的订阅（到 85% 换本机）；关掉就只在这台电脑上画，提示词不会发到别处
             </label>
           )}
           <p className="chat-note">
@@ -872,7 +869,7 @@ export function RecordButton({
         data-recording={state === "recording" || undefined}
         disabled={disabled || state === "sending"}
         aria-pressed={state === "recording"}
-        title={state === "recording" ? "再按一下停止" : "录一段语音（在主控机本地转写成文字再发）"}
+        title={state === "recording" ? "再按一下停止" : "录一段语音（在这台电脑上转成文字再发，不上传）"}
         onClick={() => (state === "recording" ? stop() : void start())}
       >
         {label}

@@ -15,6 +15,7 @@ import {
 import { conversationTitle, previewText, shortTime } from "../../lib/chat";
 import { agentColor, agentName } from "../../lib/discussion";
 import { useActions, useAppState } from "../hooks";
+import { useDialog } from "../dialog";
 
 /**
  * 项目笔记和换窗口的弹出单（C-47）。从下面推上来（同秘书资料页的「模型和思考强度」），聊天、讨论室、秘书页共用。
@@ -28,14 +29,11 @@ export function NotesSheetHost() {
 }
 
 function BottomSheet({ label, onClose, head, children }: { label: string; onClose: () => void; head: ReactNode; children: ReactNode }) {
-  useEffect(() => {
-    const esc = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", esc);
-    return () => window.removeEventListener("keydown", esc);
-  }, [onClose]);
+  // Esc 关闭、打开时焦点进来、关闭后焦点回到打开它的按钮
+  const ref = useDialog<HTMLElement>(onClose);
   return (
     <div className="profile-sheet-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <section className="profile-sheet note-sheet" role="dialog" aria-modal="true" aria-label={label}>
+      <section ref={ref} tabIndex={-1} className="profile-sheet note-sheet" role="dialog" aria-modal="true" aria-label={label}>
         <span className="profile-sheet-grip" aria-hidden="true" />
         <header>{head}</header>
         {children}

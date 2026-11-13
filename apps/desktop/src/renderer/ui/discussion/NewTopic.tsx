@@ -51,7 +51,7 @@ export function NewTopic() {
       <div className="sheet-group">
         <label className="sheet-field">
           <span>议题名称</span>
-          <input autoFocus value={name} maxLength={200} placeholder="比如：聊天空间 1B" onChange={(e) => setName(e.target.value)} />
+          <input autoFocus value={name} maxLength={200} placeholder="比如：下个月的发布计划" onChange={(e) => setName(e.target.value)} />
         </label>
         <label className="sheet-field">
           <span>想讨论什么（会作为第一条发言）</span>

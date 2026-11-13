@@ -56,15 +56,15 @@ export const FAILURE_REASON_LABEL: Record<FailureReason, string> = {
   lease_expired: "执行节点长时间没有收到应用的连接，自行停止了评审。",
   remote_lost: "执行节点已经不认识这次评审（可能重启过）。",
   remote_rejected: "执行节点拒绝了这次请求。",
-  hash_mismatch: "发送前校验发现 prompt 与批准时的不一致，已拒绝发送。",
+  hash_mismatch: "发送前校验发现内容与批准时的不一致，已拒绝发送。请重新预览并批准。",
   commit_mismatch: "代码版本与批准时的不一致，已拒绝执行。",
-  spawn_failed: "无法启动评审程序。",
+  spawn_failed: "无法启动评审程序，请检查节点是否正常运行。",
   process_exit_nonzero: "评审程序异常退出。",
   output_limit_exceeded: "Reviewer 的输出超过上限，已停止。",
   incomplete_output: "Reviewer 的回复没有正常结束（可能被截断），不能当作完整结果。",
   postprocess: "评审完成了，但保存结果时出错。",
   quota_exhausted: "额度用尽或被限流，这次缺席。",
-  internal: "Reviewer 调用出错。",
+  internal: "评审时出了点问题，可以再试一次。",
 };
 
 export function formatDuration(fromIso: string, toIso: string): string {

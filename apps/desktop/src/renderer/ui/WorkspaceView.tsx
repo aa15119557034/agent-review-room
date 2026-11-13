@@ -31,7 +31,7 @@ export function WorkspaceView(){
   return <main className="workspace-page">
     <header className="workspace-heading"><div><h1>资料与维护</h1><p>找回资料，核对回答来源，整理决定与备份。</p></div><button onClick={()=>void actions.openSettings()}>← 返回设置</button></header>
     {notice&&<p role="alert">{notice.message}</p>}
-    {isMock?<p role="status">演示模式不提供本地资料维护，请连接桌面后端使用。</p>:<>
+    {isMock?<p role="status">演示数据下没有资料可以维护，请在桌面应用里使用。</p>:<>
     <nav className="workspace-tabs" aria-label="资料与维护">
       {([["search","搜索与成果"],["plans","方案与决定"],["tasks","任务与来源"],["maintenance","健康与备份"]] as const).map(([key,label])=><button key={key} aria-pressed={tab===key} onClick={()=>setTab(key)}>{label}</button>)}
     </nav>

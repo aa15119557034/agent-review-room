@@ -91,7 +91,7 @@ export function ConfirmView() {
                       <span className="confirm-person-line">
                         <b>{agentName(d, i.recipient)}{i.onBehalfOf ? `（代 ${agentName(d, i.onBehalfOf)}）` : ""}</b>
                         {i.model === null ? (
-                          <span> · 模型用 profile 自带的</span>
+                          <span> · 模型用节点配置自带的</span>
                         ) : (
                           <span>
                             {" · "}{modelLabel(d.models[i.recipient] ?? undefined, i.model.model)}

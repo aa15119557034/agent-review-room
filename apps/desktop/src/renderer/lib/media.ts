@@ -207,7 +207,7 @@ export const FAILURE_LABEL: Record<MediaFailureReason, string> = {
   generation_failed: "生成出错",
   artifact_invalid: "取回的图不对（校验没过）",
   gpu_queue_timeout: "显卡排队超过 2 分钟",
-  internal: "内部错误",
+  internal: "应用内部出了点问题，可以再试一次",
 };
 
 export const CANCEL_LABEL: Record<MediaCancelReason, string> = {

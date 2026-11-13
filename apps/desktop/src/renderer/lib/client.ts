@@ -36,7 +36,7 @@ export function createClient(bridge: RoomBridge): RoomClient {
     try {
       result = await fn();
     } catch (err) {
-      throw new ControlFailure("internal", `无法连接后端：${err instanceof Error ? err.message : String(err)}`);
+      throw new ControlFailure("internal", `应用内部没有响应，请重新打开应用再试（${err instanceof Error ? err.message : String(err)}）`);
     }
     if (!result.ok) throw new ControlFailure(result.error, result.message);
     return result.data;
@@ -77,9 +77,9 @@ export function describeFailure(err: unknown, agents: readonly { id: string; dis
   if (!(err instanceof ControlFailure)) return err instanceof Error ? err.message : String(err);
   const message = withAgentNames(err.message, agents);
   const hint: Partial<Record<ControlErrorCode, string>> = {
-    stale_snapshot: "这份 prompt 在你查看之后已经变了，请重新打开预览再批准。",
+    stale_snapshot: "这份内容在你查看之后已经变了，请重新打开预览再批准。",
     already_decided: "这一项已经处理过了。",
-    invalid_state: "当前状态下不能执行这个操作。",
+    invalid_state: "现在不能这样操作：状态可能已经变了，刷新后再试。",
     reviewer_not_configured: "还没有设置 Reviewer 节点，请先在“设置”里填写节点地址和 Token。",
     not_found: "要找的记录不存在，可能已被删除。",
     rate_limited: "发得太快了：每个会话每分钟最多 6 条，稍等一下再发。",

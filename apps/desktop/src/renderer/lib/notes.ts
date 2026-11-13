@@ -351,7 +351,7 @@ export function githubSaveBlocker(i: { repo: string; repoOk: boolean; token: str
 
 /** 设置页那一行状态 */
 export function githubStatusText(s: GithubSyncStatus): string {
-  if (s.repo === null) return "没有设置仓库，笔记只存在主控机上。";
+  if (s.repo === null) return "没有设置仓库，笔记只存在这台电脑上。";
   if (s.lastError) return GITHUB_ERROR_LABEL[s.lastError];
   if (s.private === null) return "正在检查仓库是不是私有的…";
   if (s.pending > 0) return `${s.pending} 版笔记还没推上去。`;

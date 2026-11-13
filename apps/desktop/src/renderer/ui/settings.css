@@ -1,0 +1,264 @@
+/*
+ * 设置页（C-50）：左边分区、右边一页。外框沿用「秘书」页的 .console / .console-list / .console-page，
+ * 这里只写设置页自己的东西。颜色、圆角都用 theme-apple.css 的变量。
+ */
+
+.settings-nav-item {
+  align-items: center;
+}
+
+.settings-nav-icon {
+  flex: none;
+  color: var(--ink-soft);
+}
+
+.settings-nav-item[aria-current="page"] .settings-nav-icon {
+  color: var(--ink);
+}
+
+.settings-nav-item .console-list-name {
+  display: grid;
+  gap: 1px;
+}
+
+.settings-nav-hint {
+  font-size: var(--size-s);
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+
+.settings-page .settings {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 0.75rem 0.5rem 3rem;
+}
+
+.settings-page .settings > .notice {
+  margin-bottom: 1rem;
+}
+
+.settings-page .settings-section {
+  margin: 0 0 0.35rem;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* 开始使用的三步 */
+.settings-steps {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0.75rem 0 0.25rem;
+  padding: 0.85rem 1rem 0.85rem 2.4rem;
+  border-radius: 14px;
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  line-height: 1.6;
+  list-style: decimal;
+}
+
+.settings-next {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+}
+
+.settings-next p {
+  margin: 0;
+}
+
+.settings-page .node-editor,
+.settings-page .agent-fold,
+.settings-page .pack {
+  margin-top: 0.75rem;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  background: var(--sheet);
+}
+
+.settings-page .node-editor {
+  padding: 0.25rem 1rem 0.85rem;
+}
+
+.settings-page .node-editor > legend {
+  padding: 0 0.4rem;
+  font-weight: 600;
+}
+
+.settings-page .node-editor-toggle {
+  color: var(--ink-soft);
+}
+
+.settings-page .local-token-import {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+}
+
+.settings-page .local-token-import .settings-actions {
+  margin-top: 0.5rem;
+}
+
+/* 秘书接入：每位一行，点开才是完整表单 */
+.agent-fold > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  list-style: none;
+  border-radius: 14px;
+}
+
+.agent-fold > summary::-webkit-details-marker {
+  display: none;
+}
+
+.agent-fold > summary::after {
+  content: "›";
+  margin-left: 0.25rem;
+  color: var(--ink-soft);
+  transition: transform 0.15s;
+}
+
+.agent-fold[open] > summary::after {
+  transform: rotate(90deg);
+}
+
+.agent-fold-dot {
+  flex: none;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+}
+
+.agent-fold-name {
+  flex: 1 1 auto;
+  font-weight: 600;
+}
+
+.agent-fold-where {
+  font-size: var(--size-s);
+  color: var(--ink-soft);
+}
+
+.agent-fold > .agent-editor {
+  margin: 0;
+  padding: 0.25rem 1rem 1rem;
+  border: 0;
+  border-top: 1px solid var(--rule);
+  border-radius: 0;
+  background: none;
+}
+
+.agent-fold > .agent-editor > legend {
+  display: none;
+}
+
+.settings-page .settings-legacy {
+  margin-top: 2rem;
+}
+
+.settings-page .settings-legacy > summary {
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
+/* 关于 */
+.about-card {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin: 0.75rem 0 0.5rem;
+}
+
+.about-mark {
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  background: #2f6f62;
+  color: #fff;
+}
+
+.about-name {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.about-card .side-note {
+  margin: 0.15rem 0 0;
+}
+
+.about-heading {
+  margin: 1.25rem 0 0.25rem;
+  font-size: var(--size-m);
+  font-weight: 600;
+}
+
+.about-list {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0.85rem 1rem 0.85rem 2.2rem;
+  border-radius: 14px;
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  line-height: 1.6;
+  list-style: disc;
+}
+
+/* 资料与维护放进设置页右边：不要它自己的外框和「返回设置」 */
+.settings-page[data-section="data"] .workspace-page {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 0.75rem 0.5rem 3rem;
+}
+
+.settings-page[data-section="data"] .workspace-heading > button {
+  display: none;
+}
+
+.settings-page[data-section="data"] .workspace-heading h1 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .settings-nav-hint {
+    display: none;
+  }
+
+  .settings-nav-item {
+    white-space: nowrap;
+  }
+}
+
+/* 出错页里折叠的错误详情（ErrorBoundary） */
+.splash-detail {
+  max-width: 40rem;
+  margin-top: 1rem;
+  text-align: left;
+  font-size: var(--size-s);
+  color: var(--ink-soft);
+}
+
+.splash-detail pre {
+  max-height: 14rem;
+  overflow: auto;
+  margin-top: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  background: var(--fill);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  user-select: text;
+}

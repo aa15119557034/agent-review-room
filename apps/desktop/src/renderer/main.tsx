@@ -3,14 +3,17 @@ import { createRoot } from "react-dom/client";
 import type { RoomBridge } from "@room/schemas";
 import { createActions } from "./lib/actions";
 import { createClient } from "./lib/client";
+import { installGlobalGuards } from "./lib/guards";
 import { setMediaResolver } from "./lib/media";
 import { initialState } from "./lib/state";
 import { createStore } from "./lib/store";
 import { createMockBridge } from "./mock/mock-backend";
 import { App } from "./ui/App";
+import { ErrorBoundary } from "./ui/ErrorBoundary";
 import { AppProvider } from "./ui/hooks";
 import "./styles.css";
 import "./theme-apple.css";
+import "./polish.css";
 
 /**
  * 选择后端：
@@ -52,15 +55,17 @@ function pickBridge(): { bridge: RoomBridge; isMock: boolean } | null {
   return null;
 }
 
+// 把文件拖到窗口里不让页面跳走（Electron 默认会打开那个文件）
+installGlobalGuards();
+
 const root = createRoot(document.getElementById("root")!);
 const picked = pickBridge();
 
 if (!picked) {
   root.render(
     <div className="splash splash-failed" role="alert">
-      <h1>没有找到后端</h1>
-      <p>preload 脚本没有加载，应用无法工作。请重新安装或联系开发者。</p>
-      <p>开发 UI 时可以在浏览器地址后加 <code>?mock</code> 使用演示数据。</p>
+      <h1>应用没有正常启动</h1>
+      <p>界面连不上应用的本地服务。请完全退出后重新打开；如果还是这样，请重新安装。</p>
     </div>,
   );
 } else {
@@ -73,9 +78,11 @@ if (!picked) {
     .then(() => actions.start());
   root.render(
     <StrictMode>
-      <AppProvider store={store} actions={actions} isMock={picked.isMock}>
-        <App />
-      </AppProvider>
+      <ErrorBoundary>
+        <AppProvider store={store} actions={actions} isMock={picked.isMock}>
+          <App />
+        </AppProvider>
+      </ErrorBoundary>
     </StrictMode>,
   );
 }

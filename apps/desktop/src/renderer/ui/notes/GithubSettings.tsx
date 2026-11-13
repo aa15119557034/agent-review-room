@@ -24,7 +24,7 @@ export function GithubSettings() {
     return (
       <section className="settings-form" aria-labelledby="github-title">
         <h2 className="settings-section" id="github-title">笔记同步到 GitHub</h2>
-        <p className="step-hint">后端还没接上这一项（等 D-46c），笔记照常存在主控机上。</p>
+        <p className="step-hint">这个版本暂时不能同步笔记，笔记照常保存在这台电脑上。</p>
       </section>
     );
   }
@@ -58,8 +58,8 @@ export function GithubSettings() {
     <form className="settings-form" onSubmit={save} noValidate aria-labelledby="github-title">
       <h2 className="settings-section" id="github-title">笔记同步到 GitHub</h2>
       <p className="step-hint">
-        填一个你自己的<b>私有</b>仓库，秘书的项目笔记每存一版就推一份到 <code>notes/</code> 下（以后议题导出、开发也推到这里）。
-        主控机上的是准的，GitHub 是副本：在网页上改了会被下一次推送盖掉，要改就在应用里改。不填就不推，其他功能照常。
+        填一个你自己的<b>私有</b>仓库，秘书的项目笔记每存一版就推一份到 <code>notes/</code> 下。
+        这台电脑上的是准的，GitHub 是副本：在网页上改了会被下一次推送盖掉，要改就在应用里改。不填就不推，其他功能照常。
       </p>
 
       <label className="field-label" htmlFor="github-repo">仓库</label>
@@ -88,7 +88,7 @@ export function GithubSettings() {
         onChange={(e) => setToken(e.target.value)}
       />
       {tokenCheck && !tokenCheck.success && <p className="field-error">Token 看起来不对（20 个字符以上，不能有空格）。</p>}
-      <p className="side-note">Token 只存在主控机上，不会发给秘书，也不会写进日志。</p>
+      <p className="side-note">Token 只存在这台电脑上，不会发给秘书，也不会写进日志。</p>
 
       <div className="settings-actions">
         <button type="submit" className="button-primary" disabled={!canSave}>{busy ? "保存中…" : "保存"}</button>

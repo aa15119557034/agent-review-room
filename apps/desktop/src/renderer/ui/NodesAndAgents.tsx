@@ -6,43 +6,41 @@ import { ModelSettings } from "./ModelSettings";
 import { VoiceSettings } from "./VoiceSettings";
 
 /**
- * 设置页：节点与参与者（C-27）。讨论室要知道「谁在哪台电脑的哪个 profile 上」。
+ * 设置页「连接」：秘书所在的电脑（节点）。讨论室和聊天要知道「谁在哪台电脑上」（C-27）。
  * Token 只写不读：保存后输入框清空，只显示「已保存」。
  */
-export function NodesAndAgents() {
-  const actions = useActions();
-  const [nodes, setNodes] = useState<NodeInfo[] | null>(null);
-
-  const reload = useCallback(async () => {
-    const list = await actions.loadNodes();
-    if (list) setNodes(list);
-  }, [actions]);
-
-  useEffect(() => {
-    void reload();
-    // 先拿到参与者，再按他们所在的节点问能用哪些模型（C-41）
-    void actions.loadAgents().then(() => actions.loadModels());
-  }, [reload, actions]);
-
+export function NodesSection({ nodes, reload, onNext }: { nodes: NodeInfo[] | null; reload: () => Promise<void>; onNext: () => void }) {
+  const agents = useAppState((s) => s.disc.agents);
+  const ready = nodes?.some((n) => n.tokenConfigured) ?? false;
   return (
-    <>
-      <section className="settings-form" aria-labelledby="nodes-title">
-        <h2 className="settings-section" id="nodes-title">节点</h2>
-        <p className="step-hint">
-          每台运行 AgentServer 的电脑是一个节点。地址和 Token 来自那台电脑上 <code>run setup</code> 的输出。
-        </p>
-        {nodes !== null && <LocalTokenImport nodes={nodes} onDone={reload} />}
-        {nodes === null ? (
-          <p className="step-hint">读取中…</p>
-        ) : (
-          nodeIds(nodes).map((id) => (
-            <NodeEditor key={id} id={id} saved={nodes.find((n) => n.id === id) ?? null} onSaved={reload} />
-          ))
-        )}
-      </section>
-
-      <AgentsSection nodes={nodes ?? []} onNodesChanged={reload} />
-    </>
+    <section className="settings-form" aria-labelledby="nodes-title">
+      <h2 className="settings-section" id="nodes-title">连接</h2>
+      <p className="step-hint">
+        秘书运行在装了 AgentServer 的电脑上，每台这样的电脑叫一个「节点」，可以是这台电脑，也可以是局域网里的另一台。
+        在那台电脑上运行 setup 后，把它显示的地址和 Token 填到下面，再点「测试连接」。
+      </p>
+      {nodes !== null && !ready && (
+        <ol className="settings-steps" aria-label="开始使用">
+          <li>在要运行秘书的电脑上装好并启动 AgentServer</li>
+          <li>把它显示的地址和 Token 填到下面，保存</li>
+          <li>到「秘书接入」填入推荐的三位秘书</li>
+        </ol>
+      )}
+      {nodes === null ? (
+        <p className="step-hint">读取中…</p>
+      ) : (
+        nodeIds(nodes).map((id) => <NodeEditor key={id} id={id} saved={nodes.find((n) => n.id === id) ?? null} onSaved={reload} />)
+      )}
+      {nodes !== null && <LocalTokenImport nodes={nodes} onDone={reload} />}
+      {ready && agents.length === 0 && (
+        <div className="settings-next" role="note">
+          <p>节点已经保存好了。下一步：把秘书接到节点上。</p>
+          <button type="button" className="button-primary" onClick={onNext}>
+            去「秘书接入」
+          </button>
+        </div>
+      )}
+    </section>
   );
 }
 
@@ -95,8 +93,8 @@ function LocalTokenImport({ nodes, onDone }: { nodes: NodeInfo[]; onDone: () => 
             ? "Token 已导入，测试连接没有结果"
             : r.reachable
               ? r.profileAvailable
-                ? `Token 已导入，已连接（${r.latencyMs} 毫秒），${profileId} 可用`
-                : `Token 已导入，已连接，但节点上没有 ${profileId}`
+                ? `Token 已导入，连接正常（${r.latencyMs} 毫秒）`
+                : `Token 已导入，连上了，但节点上没有「${profileId}」这个配置`
               : `Token 已导入，但连不上：${r.message}`,
       });
     }
@@ -108,11 +106,11 @@ function LocalTokenImport({ nodes, onDone }: { nodes: NodeInfo[]; onDone: () => 
   return (
     <div className="local-token-import">
       <p className="step-hint">
-        在主控机上用：从本机读出汐和林离两个节点的 Token（安装时写在 AgentRoom 目录里），读完自动测试连接。
+        节点就装在这台电脑上？不用手抄 Token：点下面的按钮从本机读取，读完会自动测试连接。
       </p>
       <div className="settings-actions">
         <button type="button" className="button-outline" disabled={busy} onClick={run}>
-          {busy ? "导入中…" : "一键导入本机 Token"}
+          {busy ? "导入中…" : "从本机导入 Token"}
         </button>
       </div>
       {lines?.map((l) => (
@@ -129,7 +127,7 @@ function importFailureText(code: string, message: string): string {
     case "not_found":
       // main 的 not_found 有两种：没配 agentRoom（新机器，D-40 只在 main 的 settings.json 里读）；或 Token 文件不存在
       return message.includes("agentRoom")
-        ? `这台电脑还没设置 AgentRoom 目录（${message}）。装节点时选的那个目录要写进桌面端 settings.json 的 agentRoom`
+        ? `这台电脑上没有找到节点的安装目录，请直接在上面填写地址和 Token。（${message}）`
         : `没找到 Token 文件（${message}）。这台电脑上装过这位秘书的节点吗？`;
     case "invalid_state":
       return `不能从本机导入（${message}）`;
@@ -199,14 +197,14 @@ function NodeEditor({ id, saved, onSaved }: { id: string; saved: NodeInfo | null
 
   return (
     <fieldset className="node-editor" aria-label={`节点 ${id}`}>
-      <legend>
-        {label || id} <code className="node-id">{id}</code>
+      <legend title={`节点编号：${id}`}>
+        {label || id}
         <span className="node-token" data-ok={saved?.tokenConfigured ?? false}>
-          {saved === null ? "还没保存" : saved.tokenConfigured ? "Token 已保存" : "Token 未配置"}
+          {saved === null ? "还没填" : saved.tokenConfigured ? "已保存" : "还缺 Token"}
         </span>
       </legend>
-      <details open={saved === null || !saved.tokenConfigured}>
-      <summary className="node-editor-toggle">展开 / 收起编辑</summary>
+      <details open={saved !== null && !saved.tokenConfigured}>
+      <summary className="node-editor-toggle">{saved === null ? "填写地址和 Token" : "修改"}</summary>
       {preset && <p className="step-hint">{preset.hint}</p>}
       <div className="node-fields">
         <label>
@@ -244,7 +242,7 @@ function NodeEditor({ id, saved, onSaved }: { id: string; saved: NodeInfo | null
       )}
       <div className="settings-actions">
         <button type="button" className="button-outline" disabled={!valid || !hasToken || busy !== null} onClick={test}>
-          {busy === "test" ? "测试中…" : `测试连接（${profileId}）`}
+          {busy === "test" ? "测试中…" : "测试连接"}
         </button>
         <button type="button" className="button-primary" disabled={!valid || busy !== null} onClick={save}>
           {busy === "save" ? "保存中…" : "保存节点"}
@@ -255,8 +253,8 @@ function NodeEditor({ id, saved, onSaved }: { id: string; saved: NodeInfo | null
         <p className="test-result" data-ok={result.reachable && result.profileAvailable} role="status">
           {result.reachable
             ? result.profileAvailable
-              ? `已连接（${result.latencyMs} 毫秒），${profileId} 可用。`
-              : `已连接，但节点上没有 ${profileId}。可用的有：${result.health.profiles.join("、")}`
+              ? `连接正常（${result.latencyMs} 毫秒）。`
+              : `连上了，但节点上没有「${profileId}」这个配置。节点上有的是：${result.health.profiles.join("、")}`
             : `连不上：${result.message}`}
         </p>
       )}
@@ -265,7 +263,7 @@ function NodeEditor({ id, saved, onSaved }: { id: string; saved: NodeInfo | null
   );
 }
 
-function AgentsSection({ nodes, onNodesChanged }: { nodes: NodeInfo[]; onNodesChanged: () => Promise<void> }) {
+export function AgentsSection({ nodes, onNodesChanged, onGoConnect }: { nodes: NodeInfo[]; onNodesChanged: () => Promise<void>; onGoConnect: () => void }) {
   const actions = useActions();
   const agents = useAppState((s) => s.disc.agents);
   const [applying, setApplying] = useState(false);
@@ -287,24 +285,36 @@ function AgentsSection({ nodes, onNodesChanged }: { nodes: NodeInfo[]; onNodesCh
 
   return (
     <section className="settings-form" aria-labelledby="agents-title">
-      <h2 className="settings-section" id="agents-title">参与者</h2>
+      <h2 className="settings-section" id="agents-title">秘书接入</h2>
       <p className="step-hint">
-        每个参与者在哪个节点、用哪个 profile。推荐配置：三位都是你的秘书。C酱（首席秘书，负责汇总）在「你的电脑」（claude-review），
-        汐（DeepSeek）在「主控机（汐）」（deepseek-discuss），林离（Codex）在「主控机（林离）」（codex-discuss）。
-        聊天用各自的 claude-chat / deepseek-chat / codex-chat。角色设定可以随时改。
+        每位秘书接在哪个节点上。第一次用，点下面的按钮填入推荐的三位：C酱（首席秘书，负责汇总）、汐、林离。
+        名字、人设、模型和声音平时在「秘书」页里改更方便；这里主要管接在哪台电脑上。
       </p>
       <div className="settings-actions">
-        <button type="button" className="button-outline" disabled={applying} onClick={applyPreset}>
-          {applying ? "填入中…" : agents.length ? "按推荐配置重新填入（会覆盖下面三位的设置）" : "填入推荐的三位参与者"}
+        <button type="button" className={agents.length ? "button-outline" : "button-primary"} disabled={applying} onClick={applyPreset}>
+          {applying ? "填入中…" : agents.length ? "按推荐配置重新填入（会覆盖下面三位的设置）" : "填入推荐的三位秘书"}
         </button>
       </div>
       {unplaced.length > 0 && (
-        <p className="test-result" data-ok="false" role="status">
-          {unplaced.join("、")} 还没连上节点：先在上面把「你的电脑」的地址和 Token 保存好，再点一次这个按钮（或者在下面自己选节点）。
-        </p>
+        <div className="test-result" data-ok="false" role="status">
+          <p>{unplaced.join("、")} 还没接上节点：先到「连接」把节点的地址和 Token 保存好，再回来点一次这个按钮（或者在下面自己选节点）。</p>
+          <button type="button" className="button-outline" onClick={onGoConnect}>
+            去「连接」
+          </button>
+        </div>
       )}
       {agents.map((a) => (
-        <AgentEditor key={a.id} agent={a} nodes={nodes} />
+        <details key={a.id} className="agent-fold">
+          <summary>
+            <span className="agent-fold-dot" style={{ background: a.color }} aria-hidden="true" />
+            <span className="agent-fold-name">{a.displayName}</span>
+            <span className="agent-fold-where">
+              {a.nodeId === null ? "还没接节点" : (nodes.find((n) => n.id === a.nodeId)?.label ?? a.nodeId)}
+              {a.pausedByUser ? " · 已暂停" : ""}
+            </span>
+          </summary>
+          <AgentEditor agent={a} nodes={nodes} />
+        </details>
       ))}
     </section>
   );
@@ -346,9 +356,7 @@ export function AgentEditor({ agent, nodes }: { agent: AgentProfile; nodes: Node
 
   return (
     <fieldset className="agent-editor" aria-label={`参与者 ${agent.displayName}`} style={{ borderLeftColor: agent.color }}>
-      <legend>
-        {agent.displayName} <code className="node-id">{agent.id}</code>
-      </legend>
+      <legend title={`秘书编号：${agent.id}`}>{agent.displayName}</legend>
       <div className="node-fields">
         <label>
           显示名
@@ -364,13 +372,13 @@ export function AgentEditor({ agent, nodes }: { agent: AgentProfile; nodes: Node
             <option value="">（未配置）</option>
             {nodes.map((n) => (
               <option key={n.id} value={n.id}>
-                {n.label}（{n.id}）
+                {n.label}
               </option>
             ))}
           </select>
         </label>
         <label>
-          讨论 profile
+          讨论用的节点配置
           <input
             className="settings-input"
             value={draft.profileId ?? ""}
@@ -380,7 +388,7 @@ export function AgentEditor({ agent, nodes }: { agent: AgentProfile; nodes: Node
           />
         </label>
         <label>
-          聊天 profile
+          聊天用的节点配置
           <input
             className="settings-input"
             value={draft.chatProfileId ?? ""}
@@ -392,7 +400,7 @@ export function AgentEditor({ agent, nodes }: { agent: AgentProfile; nodes: Node
         </label>
       </div>
       {draft.chatProfileId === null && (
-        <p className="step-hint">聊天 profile 没填：{draft.displayName} 在聊天里不能回答（讨论室不受影响）。填节点上只能说话的那个 profile，名字一般是「{agent.id}-chat」。</p>
+        <p className="step-hint">聊天用的节点配置没填：{draft.displayName} 在聊天里不能回答（讨论室不受影响）。填节点上只能说话的那个配置，名字一般是「{agent.id}-chat」。</p>
       )}
       <div className="agent-flags">
         <label><input type="checkbox" checked={draft.canDiscuss} onChange={(e) => set("canDiscuss", e.target.checked)} /> 参与讨论</label>

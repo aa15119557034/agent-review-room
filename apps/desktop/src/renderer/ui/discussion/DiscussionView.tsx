@@ -15,7 +15,6 @@ import {
   pendingBatches,
   recipientBlock,
   RECIPIENT_BLOCK_LABEL,
-  setupHint,
   sendableRecipients,
   stages,
   timeline,
@@ -34,6 +33,7 @@ import { REJECT_LABEL, noteTimelineText, notesBySource, rejectedBySource } from 
 import { ReviewView } from "./ReviewView";
 import { FirstPlan } from "./FirstPlan";
 import { NewTopic } from "./NewTopic";
+import { EmptyState, GettingStarted, LoadingState, useSetup } from "../EmptyState";
 
 /**
  * 讨论室主页（C-21，画布「① 主页 · 讨论」）。
@@ -52,8 +52,8 @@ export function DiscussionView({ notice }: { notice: ReactNode }) {
     return (
       <main className="disc-unavailable">
         {notice}
-        <h1>讨论室还没有接上后端</h1>
-        <p>后端的讨论室功能（D-21）还没接上。开发界面时在地址后加 <code>?mock</code> 可以看演示数据。</p>
+        <h1>这个版本暂不支持讨论室</h1>
+        <p>暂时读不到讨论室的数据。重新打开应用试试；还是不行的话，请更新到新版本。</p>
       </main>
     );
   }
@@ -124,7 +124,7 @@ function TopicRail() {
           </ul>
         </section>
       ))}
-      {projects.length === 0 && <p className="disc-rail-more">还没有议题，点「＋ 新议题」建一个。</p>}
+      {projects.length === 0 && <p className="disc-rail-more">还没有议题</p>}
     </nav>
   );
 }
@@ -208,23 +208,25 @@ function Conversation() {
   const d = useAppState((s) => s.disc);
   const fromChat = useAppState((s) => s.messages.some((m) => m.kind === "chat_material"));
   const actions = useActions();
+  const setup = useSetup();
+  const topicCount = useAppState((s) => s.projects.length);
   if (!project) {
-    const setup = setupHint(d);
-    return (
-      <section className="disc-empty">
-        <h1>从左边选一个议题，或者新建一个</h1>
+    if (setup === "loading") return <LoadingState />;
+    if (setup) return <GettingStarted reason={setup} />;
+    const create = (
+      <button type="button" className="button-primary" onClick={() => (actions.openNewTopic(), actions.showTopicPane())}>
+        新议题
+      </button>
+    );
+    return topicCount === 0 ? (
+      <EmptyState icon="discuss" title="还没有议题" action={create}>
+        <p>把一件要商量的事写成议题，请几位秘书多轮讨论、出方案。</p>
         <p>每一轮发给谁、带上什么，都先给你看全文；你盖章了才发出去。</p>
-        {setup && (
-          <div className="disc-setup" role="note">
-            <p>
-              {setup === "no_agents"
-                ? "第一次用：还没有秘书。先去「设置」填好节点的地址和 Token，再点「填入推荐的三位参与者」。"
-                : "秘书还没连上节点：去「设置」填节点的地址和 Token，并在参与者里选好节点。"}
-            </p>
-            <button type="button" className="button-outline" onClick={() => void actions.openSettings()}>去设置</button>
-          </div>
-        )}
-      </section>
+      </EmptyState>
+    ) : (
+      <EmptyState icon="discuss" title="选一个议题" action={create}>
+        <p>从左边选一个议题接着讨论，或者新建一个。</p>
+      </EmptyState>
     );
   }
   const people = d.agents.filter((a) => a.canDiscuss).map((a) => a.displayName).join(" · ");
@@ -694,7 +696,8 @@ function SidePanel() {
   useEffect(() => {
     if (projectId) void actions.notes.loadScope({ kind: "topic", projectId });
   }, [projectId, actions]);
-  if (d.ui.sideCollapsed) return <aside className="disc-side" data-collapsed aria-label="方案与参与者" />;
+  // 还没有秘书时中间是「开始使用」引导，右边空的方案 / 参与者卡先不显示
+  if (d.ui.sideCollapsed || d.agents.length === 0) return <aside className="disc-side" data-collapsed aria-label="方案与参与者" />;
   const plan = displayedPlan(d);
   const reviewRound = plan?.basedOnRoundId ?? [...d.summaries].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))[0]?.roundId ?? null;
   return (

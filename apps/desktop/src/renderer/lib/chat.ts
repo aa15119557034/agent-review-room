@@ -365,7 +365,7 @@ export const SLOT_LABEL: Record<ChatSlotOutcome, string> = {
 
 export const UNAVAILABLE_LABEL: Record<NonNullable<ChatReplySlot["unavailableReason"]>, string> = {
   offline: "节点连不上",
-  unconfigured: "还没配聊天 profile，在「秘书 › 节点和权限」里填",
+  unconfigured: "还没配好聊天用的节点配置，在「秘书 › 节点和权限」里填",
   paused_by_user: "你暂停了",
 };
 
@@ -544,10 +544,10 @@ export function shortTime(iso: string, nowMs: number): string {
 export function nodeDiagnosis(r: NodeTestResult, nodeLabel: string, profileId: string): { ok: boolean; text: string } {
   if (r.reachable) {
     return r.profileAvailable
-      ? { ok: true, text: `「${nodeLabel}」现在连得上，${profileId} 也在。点「重试」再发一次。` }
+      ? { ok: true, text: `「${nodeLabel}」现在连得上，节点配置「${profileId}」也在。点「重试」再发一次。` }
       : {
           ok: false,
-          text: `「${nodeLabel}」连得上，但上面没有 ${profileId}${r.health.profiles.length ? `（有的是：${r.health.profiles.join("、")}）` : ""}。去「秘书 › 节点和权限」改聊天 profile。`,
+          text: `「${nodeLabel}」连得上，但上面没有节点配置「${profileId}」${r.health.profiles.length ? `（有的是：${r.health.profiles.join("、")}）` : ""}。去「秘书 › 节点和权限」改聊天用的节点配置。`,
         };
   }
   switch (r.error) {
