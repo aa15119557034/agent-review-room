@@ -263,6 +263,26 @@ export class SettingsStore {
     }
   }
 
+  /**
+   * 只读地看一个节点的地址 / Token：解密失败不清密文、不写设置（--self-test 用）。
+   * 正常运行时用 getNode()：它会在换机器 / 凭据损坏时清掉密文，让状态和实际一致。
+   */
+  peekNode(nodeId: string): { baseUrl: string; token: string | null; stored: boolean; undecryptable: boolean } | null {
+    const node = this.#data.nodes[nodeId];
+    if (node === undefined) return null;
+    if (node.tokenCipher === null) return { baseUrl: node.baseUrl, token: null, stored: false, undecryptable: false };
+    try {
+      return {
+        baseUrl: node.baseUrl,
+        token: this.#safeStorage.decryptString(Buffer.from(node.tokenCipher, "base64")),
+        stored: true,
+        undecryptable: false,
+      };
+    } catch {
+      return { baseUrl: node.baseUrl, token: null, stored: true, undecryptable: true };
+    }
+  }
+
   /** 这个节点存了 Token 吗，且地址还是同一个（地址变了就要求重新填） */
   hasNodeToken(nodeId: string, baseUrl: string): boolean {
     const node = this.#data.nodes[nodeId];

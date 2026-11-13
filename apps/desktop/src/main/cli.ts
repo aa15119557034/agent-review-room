@@ -29,6 +29,45 @@ export interface CliDeps {
 
 const LOCAL_NODE_IDS = ["controller-local", "controller-local-codex"] as const;
 
+/**
+ * 自检的结论：只把「已经配置了但坏了」算失败。
+ * - 包：incomplete / version_mismatch 算坏；missing 不算
+ * - 所有已知包都 installed 但 TTS bundle 找不到 → 算坏（配置说装好了，实际用不了）
+ * - 节点：有密文但解不开算坏；配了 Token 但 health 不是 200 算坏；controller-local 还要有 deepseek-chat
+ */
+/** peekNode 的结果 → 自检报告里的节点条目（单独抽出来测空配置） */
+export function nodeEntry(
+  id: string,
+  baseUrl: string | null,
+  peek: { token: string | null; undecryptable: boolean } | null,
+): { id: string; baseUrl: string | null; tokenSet: boolean; undecryptable: boolean; health: null } {
+  return {
+    id,
+    baseUrl,
+    tokenSet: peek !== null && (peek.token !== null || peek.undecryptable),
+    undecryptable: peek?.undecryptable === true,
+    health: null,
+  };
+}
+
+export function selfTestOk(
+  packs: { id: string; state: string }[],
+  nodes: { id: string; tokenSet: boolean; undecryptable: boolean; health: { status?: number; body?: { profiles?: string[] } } | null }[],
+  bundleAvailable: boolean,
+): boolean {
+  const packsBroken = packs.some((pack) => pack.state === "incomplete" || pack.state === "version_mismatch");
+  const allInstalled = packs.length > 0 && packs.every((pack) => pack.state === "installed");
+  const bundleBroken = allInstalled && !bundleAvailable;
+  const nodesBroken = nodes.some((node) => {
+    if (node.undecryptable) return true;
+    if (!node.tokenSet) return false;
+    if (node.health?.status !== 200) return true;
+    if (node.id === "controller-local" && !(node.health.body?.profiles ?? []).includes("deepseek-chat")) return true;
+    return false;
+  });
+  return !packsBroken && !bundleBroken && !nodesBroken;
+}
+
 export async function runCliIfRequested(deps: CliDeps): Promise<number | null> {
   const argv = process.argv;
   const importAt = argv.indexOf("--import-local-token");
@@ -104,13 +143,13 @@ export async function runCliIfRequested(deps: CliDeps): Promise<number | null> {
     missing: pack.missing,
   }));
   const bundle = findTtsBundle({ execPath: deps.execPath, resourcesPath: deps.resourcesPath, localAppData: deps.localAppData });
-  const nodes: unknown[] = [];
+  const nodes: { id: string; baseUrl: string | null; tokenSet: boolean; undecryptable: boolean; health: unknown }[] = [];
   for (const id of LOCAL_NODE_IDS) {
     const row = deps.db.prepare("SELECT base_url FROM nodes WHERE id = ?").get(id) as { base_url: string } | undefined;
-    const node = deps.settings.getNode(id);
+    const node = deps.settings.peekNode(id);
     const baseUrl = row?.base_url ?? node?.baseUrl ?? null;
     let health: unknown = null;
-    if (node !== null && baseUrl !== null) {
+    if (node !== null && node.token !== null && baseUrl !== null) {
       try {
         const response = await fetch(baseUrl + "/v1/health", {
           headers: { Authorization: "Bearer " + node.token },
@@ -121,17 +160,13 @@ export async function runCliIfRequested(deps: CliDeps): Promise<number | null> {
         health = { error: error instanceof Error ? error.message : String(error) };
       }
     }
-    nodes.push({ id, baseUrl, tokenSet: node !== null, health });
+    nodes.push({ ...nodeEntry(id, baseUrl, node), health });
   }
-  // 只在「已经配置的东西坏了」时失败：没装语音包 / 没配节点不算失败（#218 评审第二轮）
-  const packsBroken = packs.some((pack) => pack.state === "incomplete" || pack.state === "version_mismatch");
-  const chatNode = nodes.find((node) => (node as { id: string }).id === "controller-local") as
-    | { tokenSet?: boolean; health?: { status?: number; body?: { profiles?: string[] } } | null }
-    | undefined;
-  const chatOk =
-    chatNode?.tokenSet !== true ||
-    (chatNode.health?.status === 200 && (chatNode.health.body?.profiles ?? []).includes("deepseek-chat"));
-  const ok = !packsBroken && chatOk;
+  const ok = selfTestOk(
+    packs.map((pack) => ({ id: pack.id, state: pack.state })),
+    nodes as Parameters<typeof selfTestOk>[1],
+    bundle.bundle !== null,
+  );
   console.log(
     JSON.stringify(
       {
