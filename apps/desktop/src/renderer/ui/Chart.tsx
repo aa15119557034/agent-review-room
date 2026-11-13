@@ -28,7 +28,7 @@ export function ReplyBody({ text, className = "chat-text" }: { text: string; cla
           <ChartView key={i} chart={s.chart} />
         ) : (
           <figure key={i} className="chart chart-bad">
-            <figcaption>图表格式不对（{BAD_CHART_LABEL[s.reason] ?? s.reason}），原样显示：</figcaption>
+            <figcaption>这个图表画不出来（{BAD_CHART_LABEL[s.reason] ?? "格式不对"}），下面是原始内容：</figcaption>
             <pre>{s.raw}</pre>
           </figure>
         ),

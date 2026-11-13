@@ -1,5 +1,5 @@
 import { ContextDetails } from "../WorkspaceView";
-import { Fragment, useEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent, type ReactNode, useLayoutEffect } from "react";
 import { CHAT_LIMITS, type AgentChatMessage, type ChatMessage, type ChatReplySlot, type ChatRun, type Conversation, type UserChatMessage } from "@room/schemas";
 import {
   MEMORY_STATUS_LABEL,
@@ -22,6 +22,7 @@ import {
   previewText,
   runningSlots,
   selectableForTopic,
+  breakTime,
   shortTime,
   slotLabel,
   timeline,
@@ -431,6 +432,33 @@ function Timeline({ conv }: { conv: Conversation }) {
     if (el && stick.current) el.scrollTop = el.scrollHeight;
   }, [lastKey, conv.id]);
 
+  // 图片加载完、状态行展开、窗口变高变矮都会改变内容高度：停在底部时继续贴底（测试 B-04）
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const follow = () => {
+      if (stick.current) el.scrollTop = el.scrollHeight;
+    };
+    const ro = new ResizeObserver(follow);
+    ro.observe(el);
+    for (const child of Array.from(el.children)) ro.observe(child);
+    el.addEventListener("load", follow, true);
+    return () => {
+      ro.disconnect();
+      el.removeEventListener("load", follow, true);
+    };
+  }, [conv.id, entries.length]);
+
+  // 「加载更早的消息」：新内容加在上面，保持正在看的那条不动（测试 B-08）
+  const beforeOlder = useRef<number | null>(null);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (el && beforeOlder.current !== null) {
+      el.scrollTop += el.scrollHeight - beforeOlder.current;
+      beforeOlder.current = null;
+    }
+  }, [entries.length]);
+
   return (
     <div
       className="chat-timeline"
@@ -441,7 +469,10 @@ function Timeline({ conv }: { conv: Conversation }) {
       }}
     >
       {hasOlder && (
-        <button type="button" className="button-link chat-older" onClick={() => void actions.chat.loadOlder()}>
+        <button type="button" className="button-link chat-older" onClick={() => {
+            beforeOlder.current = ref.current?.scrollHeight ?? null;
+            void actions.chat.loadOlder();
+          }}>
           加载更早的消息
         </button>
       )}
@@ -455,7 +486,7 @@ function Timeline({ conv }: { conv: Conversation }) {
           <Fragment key={e.message.id}>
             {breaks.has(i) && (
               <li className="chat-time">
-                <time dateTime={e.message.createdAt}>{shortTime(e.message.createdAt, now)}</time>
+                <time dateTime={e.message.createdAt}>{breakTime(e.message.createdAt, now)}</time>
               </li>
             )}
             <Entry entry={e} now={now} conv={conv} />
@@ -766,11 +797,24 @@ function MessageMenu({ message, now, children }: { message: ChatMessage; now: nu
         ⋯
       </button>
       {open && (
-        <div ref={menu} className="chat-menu" role="menu" onClick={(e) => e.stopPropagation()}>
+        <div
+          ref={menu}
+          className="chat-menu"
+          role="menu"
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => {
+            // ↑↓ 在菜单项之间移动（测试 B-12）
+            if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+            e.preventDefault();
+            const items = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>("button:not(:disabled)"));
+            const at = items.indexOf(document.activeElement as HTMLButtonElement);
+            const next = e.key === "ArrowDown" ? (at + 1) % items.length : (at - 1 + items.length) % items.length;
+            items[next]?.focus();
+          }}
+        >
           {item("copy", "复制", () => void navigator.clipboard?.writeText(messageText(message)))}
           {item("quote", "引用", () => actions.chat.quote(message.id), !usable)}
-          {item("select", "多选", () => actions.chat.startSelect(message.id), !usable)}
-          {item("topic", "转议题", () => actions.chat.startSelect(message.id), !usable)}
+          {item("select", "多选转议题", () => actions.chat.startSelect(message.id), !usable)}
           {item("draw", "画一张", () => actions.chat.media.openDrawCard(message.id, stripCharts(messageText(message)).slice(0, 1000)), !usable)}
           {canRetract(message, now) &&
             (confirmRetract ? (
@@ -809,6 +853,8 @@ function Composer({ conv }: { conv: Conversation }) {
   const [pickIndex, setPickIndex] = useState(0);
   const [stickers, setStickers] = useState(false);
   const [more, setMore] = useState(false);
+  const [pasteHint, setPasteHint] = useState(false);
+  const [noVoice, setNoVoice] = useState(false);
   /** ＋ 面板里正在录音：这时不收起面板（收起会把这段录音静默丢掉，汐 #174） */
   const [recording, setRecording] = useState(false);
   const [voiceMode, setVoiceMode] = useState(false);
@@ -934,7 +980,13 @@ function Composer({ conv }: { conv: Conversation }) {
             role="menuitemcheckbox"
             aria-checked={draft.replyAsVoice}
             title="打开后，这条消息的回答都会用语音发（在这台电脑上合成，不上传）。你在话里说「用语音回我」也会自动打开"
-            onClick={() => actions.chat.media.setReplyAsVoice(!draft.replyAsVoice)}
+            onClick={() => {
+              const on = !draft.replyAsVoice;
+              actions.chat.media.setReplyAsVoice(on);
+              setNoVoice(false);
+              // 没装语音时回答只会是文字：打开开关时就说清楚，别等发出去才发现（测试 B-01）
+              if (on) void actions.chat.media.loadVoices().then((v) => setNoVoice(!v || v.length === 0));
+            }}
           >
             <Icon name="voice" size={26} />
             {draft.replyAsVoice ? "语音回 · 开" : "用语音回"}
@@ -968,6 +1020,16 @@ function Composer({ conv }: { conv: Conversation }) {
         {voiceMode && !draft.voice && (
           <RecordButton key={`hold-${conv.id}`} disabled={recordDisabled} variant="hold" />
         )}
+        {noVoice && draft.replyAsVoice && (
+          <p className="chat-note" role="status">
+            这台电脑还没有装语音，回答只会是文字。可以在「设置 › 扩展包」里导入语音包。
+          </p>
+        )}
+        {pasteHint && (
+          <p className="chat-note" role="status">
+            暂时不能直接粘贴图片或文件：点左边的「＋」选「图片」或「文件」。
+          </p>
+        )}
         <div className="chat-input-row" hidden={!!draft.voice || voiceMode}>
           <textarea
             ref={input}
@@ -975,6 +1037,14 @@ function Composer({ conv }: { conv: Conversation }) {
             value={draft.text}
             placeholder={isGroup ? "说点什么…输入 @ 可以点名" : "说点什么…"}
             aria-label="消息"
+            onPaste={(e) => {
+              // 现在图片只能从「＋」里选；粘贴截图时说一声，别让人以为坏了（测试 B-06）
+              if (Array.from(e.clipboardData.items).some((it) => it.kind === "file")) {
+                e.preventDefault();
+                setPasteHint(true);
+                setTimeout(() => setPasteHint(false), 4000);
+              }
+            }}
             onChange={(e) => {
               const text = e.target.value;
               const pos = e.target.selectionStart ?? text.length;
@@ -1288,7 +1358,7 @@ function MessageSheet({ messageId }: { messageId: string }) {
     <Sheet title="消息详情" onClose={actions.chat.closeSheet}>
       <div className="chat-sheet-body">
         <p className="chat-note">
-          {m.sender === "user" ? "你" : name(m.agent)} · {new Date(m.createdAt).toLocaleString()}
+          {m.sender === "user" ? "你" : name(m.agent)} · {new Date(m.createdAt).toLocaleString("zh-CN", { hour12: false })}
         </p>
         {m.sender === "user" && m.state === "retracted" && (
           <p className="chat-note">

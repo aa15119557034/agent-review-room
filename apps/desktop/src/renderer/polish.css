@@ -227,3 +227,49 @@
 .console-list > .side-note {
   padding: 0 1rem;
 }
+
+/* —— 测试 B 的小问题 —— */
+
+/* 会话列表预览：一行，放不下用省略号，不切半个字（B-07） */
+.chat-list-preview,
+.chat-item-preview {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* 消息菜单不透明，底下的字不透上来（B-12） */
+.chat-menu {
+  background: var(--sheet);
+  backdrop-filter: none;
+}
+
+/* 底部面板的滚动条收在圆角里（B-11） */
+.chat-sheet,
+.profile-sheet,
+.note-sheet {
+  overflow: hidden auto;
+  scrollbar-gutter: stable;
+}
+
+.chat-sheet::-webkit-scrollbar,
+.profile-sheet::-webkit-scrollbar,
+.note-sheet::-webkit-scrollbar {
+  width: 10px;
+}
+
+.chat-sheet::-webkit-scrollbar-track,
+.profile-sheet::-webkit-scrollbar-track,
+.note-sheet::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 18px 0;
+}
+
+.chat-sheet::-webkit-scrollbar-thumb,
+.profile-sheet::-webkit-scrollbar-thumb,
+.note-sheet::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 8px;
+  background: var(--rule);
+  background-clip: content-box;
+}

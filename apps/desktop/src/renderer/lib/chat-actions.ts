@@ -34,8 +34,9 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
   const setChat = (f: (c: ChatState) => ChatState) => store.set((s) => ({ ...s, chat: f(s.chat) }));
   const chat = () => store.get().chat;
 
-  const notSupported = (err: unknown) =>
-    err instanceof ControlFailure && (err.code === "validation_failed" || err.code === "internal");
+  // 只有后端不认识这个查询（validation_failed）才算「这个版本不支持聊天」；
+  // internal 是读数据出了错，要把原因报出来，不能说成「不支持」（测试 B-13）
+  const notSupported = (err: unknown) => err instanceof ControlFailure && err.code === "validation_failed";
 
   async function loadConversations() {
     try {

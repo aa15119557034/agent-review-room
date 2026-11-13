@@ -288,7 +288,15 @@ export function previewText(m: ChatMessage | null, name: (agent: string) => stri
   return `你：${oneLine(contentText(m))}`;
 }
 
-const oneLine = (s: string) => s.replace(/\s+/g, " ").trim();
+/** 预览只要一行字：去掉 Markdown 的围栏、加粗、行内代码、标题和列表符号（测试 B-07） */
+const oneLine = (s: string) =>
+  s
+    .replace(/```[a-zA-Z0-9_-]*/g, " ")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/^\s{0,3}(#{1,6}|[-*+]|\d+\.)\s+/gm, "")
+    .replace(/\s+/g, " ")
+    .trim();
 
 /** 你发的消息显示成文字（语音用转写，表情用说明，附件用占位） */
 export function contentText(m: UserChatMessage): string {
@@ -525,6 +533,14 @@ export const MEMORY_STATUS_LABEL: Record<NonNullable<ChatRun["memoryManifest"]>[
 
 /** 转议题能不能选这条：被排除的不能选（契约 isExcludedFromContext；没加载到问题的回答交给后端判断） */
 export const selectableForTopic = (m: ChatMessage, messages: readonly ChatMessage[]) => !excludedForDisplay(m, messages);
+
+/** 时间线上的分隔条：今天只写时分，别的日子写「月-日 时:分」（测试 B-09） */
+export function breakTime(iso: string, nowMs: number): string {
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  const clock = `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  return d.toDateString() === new Date(nowMs).toDateString() ? clock : `${d.getMonth() + 1}-${d.getDate()} ${clock}`;
+}
 
 /** 会话列表时间：今天显示时分，否则月-日 */
 export function shortTime(iso: string, nowMs: number): string {

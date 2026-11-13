@@ -357,6 +357,8 @@ export function AgentEditor({ agent, nodes }: { agent: AgentProfile; nodes: Node
       modelSettings: draft.modelSettings,
       ...(draft.voice !== agent.voice ? { voice: draft.voice ?? null } : {}),
     });
+    // 换了节点或配置后，能选的模型也跟着变：马上重读，不用收起再展开（测试 B-15）
+    if (draft.nodeId !== agent.nodeId || draft.profileId !== agent.profileId || draft.chatProfileId !== agent.chatProfileId) await actions.loadModels();
     setBusy(false);
   };
 
