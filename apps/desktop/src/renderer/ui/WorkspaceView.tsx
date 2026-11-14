@@ -6,6 +6,7 @@ import "./workspace.css";
 
 const healthLabel={configured:"已配置，未试跑",available:"连接可用",unavailable:"不可用",unconfigured:"未配置",unknown:"未知"};
 const decisionLabel={pending:"待决定",accepted:"采纳",rejected:"拒绝",deferred:"延后"};
+const planStateLabel:Record<string,string>={DRAFT:"草稿",FINAL:"定稿",SUPERSEDED:"已被取代",REJECTED:"已退回"};
 const kindLabel:Record<string,string>={chat:"聊天消息",message:"讨论消息",plan:"方案",note:"笔记",topic:"议题",summary:"汇总"};
 const taskStateLabel:Record<string,string>={queued:"排队中",starting:"正在开始",running:"进行中",completed:"已完成",succeeded:"已完成",failed:"失败",cancelled:"已取消",canceled:"已取消",interrupted:"被中断",timed_out:"超时",error:"失败"};
 /** 文件操作的系统报错换成人话；原文留在括号里方便反馈 */
@@ -22,6 +23,8 @@ export function WorkspaceView(){
   const actions=useActions(),api=actions.workspace,projects=useAppState(s=>s.projects),conversations=useAppState(s=>s.chat.list);
   const notice=useAppState(s=>s.notice),isMock=useIsMock(),agents=useAppState(s=>s.disc.agents);
   const [tab,setTab]=useState<"search"|"plans"|"tasks"|"maintenance">("search");
+  // 标题里的内部名（claude / deepseek / codex）换成秘书的名字（C-11）
+  const named=(text:string)=>agents.reduce((out,agent)=>out.replace(new RegExp("\\b"+agent.id+"\\b","g"),agent.displayName),text);
   const [scopeValue,setScopeValue]=useState(""),[term,setTerm]=useState(""),[search,setSearch]=useState<WorkspaceSearchPage|null>(null);
   const [item,setItem]=useState<WorkspaceItem|null>(null),[preview,setPreview]=useState<WorkspaceExportPreview|null>(null),[attachments,setAttachments]=useState(true);
   const [searchBusy,setSearchBusy]=useState(false),[fileBusy,setFileBusy]=useState(false),[result,setResult]=useState<WorkspaceFileResult|null>(null);
@@ -60,10 +63,10 @@ export function WorkspaceView(){
       {busy&&<p role="status">正在处理…</p>}
       {search&&<p role="status">已找到 {search.items.length} 条{search.nextCursor?"，还有更多":""}</p>}
       <ul className="workspace-results">{search?.items.map(hit=><li key={hit.kind+hit.id}>
-        <button onClick={()=>{const token=++selection.current;setItem(null);void api.item(hit).then(value=>{if(value&&token===selection.current)void inspect(value);});}}><strong>{hit.title}</strong><span>{formatTime(hit.createdAt)}</span><p>{hit.preview||"这条资料只有附件"}</p></button>
+        <button onClick={()=>{const token=++selection.current;setItem(null);void api.item(hit).then(value=>{if(value&&token===selection.current)void inspect(value);});}}><strong>{named(hit.title)}</strong><span>{formatTime(hit.createdAt)}</span><p>{hit.preview||"这条资料只有附件"}</p></button>
       </li>)}</ul>
       {search?.nextCursor&&<button disabled={busy} onClick={()=>void find(true)}>更多结果</button>}
-      {item&&<article className="workspace-card"><h2>{item.title}</h2><p>{formatTime(item.createdAt)} · {kindLabel[item.kind]??item.kind}</p><pre>{item.content}</pre>
+      {item&&<article className="workspace-card"><h2>{named(item.title)}</h2><p>{formatTime(item.createdAt)} · {kindLabel[item.kind]??item.kind}</p><pre>{item.content}</pre>
         {item.runId&&item.kind==="chat"&&<ContextDetails runId={item.runId}/>}
         <button onClick={()=>setItem(null)}>收起</button>
       </article>}
@@ -114,7 +117,7 @@ function PlanWorkspace(){
   async function save(){setSaving(true);const result=await api.saveDecision({projectId,...(selected?{id:selected.id}:{}),expectedVersion:selected?.version??null,title,state,reason,sourceMessageId:source||null});setSaving(false);if(result)setRefresh(x=>x+1);}
   return <section>
     <label>议题<select value={projectId} onChange={e=>setProjectId(e.target.value)}>{projects.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></label>
-    <h2>方案版本对照</h2><div className="workspace-toolbar">{([["之前",left,setLeft],["之后",right,setRight]] as const).map(([label,value,set])=><label key={label}>{label}<select value={value} onChange={e=>set(e.target.value)}>{plans.map(p=><option key={p.id} value={p.id}>v{p.version} · {p.state}</option>)}</select></label>)}</div>
+    <h2>方案版本对照</h2><div className="workspace-toolbar">{([["之前",left,setLeft],["之后",right,setRight]] as const).map(([label,value,set])=><label key={label}>{label}<select value={value} onChange={e=>set(e.target.value)}>{plans.map(p=><option key={p.id} value={p.id}>v{p.version} · {planStateLabel[p.state]??p.state}</option>)}</select></label>)}</div>
     {!plans.length&&<p>这个议题还没有方案。</p>}
     {diff.length>0&&<><p>红色为移除，绿色为新增；中间变化按整段对照。</p><pre className="workspace-diff">{diff.slice(0,2000).map((l,i)=><span key={i} data-kind={l.kind}>{l.kind==="removed"?"− ":l.kind==="added"?"+ ":"  "}{l.text}{"\n"}</span>)}</pre>{diff.length>2000&&<p>对照展示前 2000 行，请导出议题查看全文。</p>}</>}
     <h2>待决定事项</h2><p>人工记录的采纳、拒绝或延后，不会自动定稿、批准或执行。</p>

@@ -362,3 +362,10 @@ export const RECIPIENT_BLOCK_LABEL: Record<NonNullable<ReturnType<typeof recipie
 export function sendableRecipients(d: Pick<DiscussionState, "agents" | "status" | "ui">): string[] {
   return d.ui.composer.recipients.filter((id) => d.agents.some((a) => a.id === id && a.canDiscuss) && recipientBlock(d, id) === null);
 }
+
+/** 退回去改之后留下的那一轮：还是草稿、手上没有等盖章的批次。改好任务后用 round.redraft 重新起草（C-03） */
+export function rejectedDraftRound(d: DiscussionState): Round | null {
+  const round = openRound(d);
+  if (!round || round.state !== "DRAFT") return null;
+  return pendingBatches(d).some((b) => b.roundId === round.id) ? null : round;
+}

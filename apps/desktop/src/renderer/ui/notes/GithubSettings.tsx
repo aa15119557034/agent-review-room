@@ -103,7 +103,7 @@ export function GithubSettings() {
         <div className="test-result github-status" data-ok={status.repo !== null && status.lastError === null && status.private === true} data-neutral={status.repo === null || undefined} role="status">
           <p>{githubStatusText(status)}</p>
           {status.lastErrorMessage && <span className="test-detail">{status.lastErrorMessage}</span>}
-          {status.lastPushedAt && <p className="side-note">上次推送：{new Date(status.lastPushedAt).toLocaleString()}</p>}
+          {status.lastPushedAt && <p className="side-note">上次推送：{new Date(status.lastPushedAt).toLocaleString("zh-CN", { hour12: false })}</p>}
           {status.repo && status.lastError !== "public_repo" && (status.pending > 0 || status.lastError) && (
             <button type="button" className="button-outline" onClick={() => void actions.notes.pushGithubNow()}>现在推一次</button>
           )}

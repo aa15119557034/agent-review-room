@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { currentProject } from "../lib/state";
 import { useActions, useAppState, useIsMock } from "./hooks";
 import { SourceStep } from "./SourceStep";
@@ -36,6 +36,23 @@ export function App() {
 
 function Shell() {
   const view = useAppState((s) => s.view);
+  const actions = useActions();
+  // 秘书在不在线：节点开关机没有事件通知，换页时和每隔一会儿（窗口看得见时）重读一次（C-04）
+  useEffect(() => {
+    if (view === "settings" || view === "workspace" || view === "desk") return;
+    void actions.refreshStatus();
+    const timer = setInterval(() => {
+      if (document.visibilityState === "visible") void actions.refreshStatus();
+    }, 45_000);
+    const onVisible = () => {
+      if (document.visibilityState === "visible") void actions.refreshStatus();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, [view, actions]);
   // 设置和「资料与维护」是同一页的不同分区（C-50），用同一个组件，切换时分区选择不丢
   if (view === "settings" || view === "workspace") {
     return (

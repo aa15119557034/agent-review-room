@@ -68,7 +68,7 @@ export function ConfirmView() {
               <span className="sheet-label-inline">本轮任务</span>
               <p className="confirm-task-text">{round.task}</p>
               <span className="side-note">
-                {[plan ? `带上方案 v${plan.version}` : null, `发给 ${n} 位`, `约 ${total.toLocaleString()} tokens`].filter(Boolean).join(" · ")}
+                {[plan ? `带上方案 v${plan.version}` : null, `发给 ${n} 位`, total > 0 ? `约 ${total.toLocaleString()} tokens` : null].filter(Boolean).join(" · ")}
               </span>
             </div>
           )}

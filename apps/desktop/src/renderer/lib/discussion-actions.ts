@@ -10,7 +10,7 @@ import {
 } from "@room/schemas";
 import { ControlFailure, type RoomClient } from "./client";
 import { appendEvents, applyEvent, type AppState } from "./state";
-import { initialDiscussion, planForNextRound, sendableRecipients, type DiscussionState } from "./discussion";
+import { initialDiscussion, planForNextRound, rejectedDraftRound, sendableRecipients, type DiscussionState } from "./discussion";
 import { modelsFor } from "./models";
 import { boardSeq, isOpenRound, withDigest, type TopicDigest } from "./topic-board";
 import type { Store } from "./store";
@@ -109,6 +109,7 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
   }
 
   const pid = () => store.get().currentProjectId;
+  let addingNote = false;
 
   // ------------------------------------------------------------ 讨论室标签的议题列表（C-38）
 
@@ -346,13 +347,16 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
     async addNote() {
       const projectId = pid();
       const text = store.get().disc.ui.composer.text.trim();
-      if (!projectId || !text) return;
+      if (!projectId || !text || addingNote) return;
+      addingNote = true;
       try {
         const message = await client.command({ type: "note.add", projectId, content: text });
         store.set((s) => applyEvent({ ...s, disc: { ...s.disc, ui: { ...s.disc.ui, composer: { ...s.disc.ui.composer, text: "" } } } },
           { type: "message.created", message }));
       } catch (err) {
         fail(err);
+      } finally {
+        addingNote = false;
       }
     },
 
@@ -363,6 +367,19 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
       // 只交现在发得了的人：未配置 / 离线 / 暂停的不带上（界面上他们也不显示成勾选）
       const recipients = sendableRecipients(store.get().disc);
       if (!projectId || !text.trim() || recipients.length === 0) return;
+      // 退回去改之后：这一轮还是草稿，改好的任务走 round.redraft，不新开一轮（C-03）
+      const rejected = rejectedDraftRound(store.get().disc);
+      if (rejected) {
+        try {
+          const { round, batch } = await client.command({ type: "round.redraft", roundId: rejected.id, recipients, task: text.trim() });
+          take(round, batch);
+          setUi((u) => ({ ...u, composer: { ...u.composer, text: "" } }));
+          await openConfirm(batch.id);
+        } catch (err) {
+          fail(err);
+        }
+        return;
+      }
       const current = planForNextRound(store.get().disc);
       try {
         const { round, batch } = await client.command({
@@ -414,6 +431,11 @@ export function createDiscussionActions(store: Store<AppState>, client: RoomClie
         const batch = await client.command({ type: "batch.reject", batchId: c.batch.id, ...(reason ? { reason } : {}) });
         take(null, batch);
         setDisc((d) => ({ ...d, confirm: null }));
+        // 退回的是还没发出的新一轮：把任务放回输入框，改完再「去盖章」（C-03）
+        const back = rejectedDraftRound(store.get().disc);
+        if (back && back.id === batch.roundId && !store.get().disc.ui.composer.text.trim()) {
+          setUi((u) => ({ ...u, composer: { ...u.composer, text: back.task } }));
+        }
       } catch (err) {
         fail(err);
       }

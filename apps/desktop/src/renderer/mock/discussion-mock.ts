@@ -171,8 +171,8 @@ export function createDiscussionMock(ctx: DiscussionContext, options: Discussion
     agents: structuredClone(SEED_AGENTS),
     nodes: [
       { id: "user-pc", label: "你的电脑", baseUrl: "http://192.168.190.10:7420", tokenConfigured: true },
-      { id: "controller-local", label: "主控机（汐）", baseUrl: "http://127.0.0.1:7420", tokenConfigured: true },
-      { id: "controller-local-codex", label: "主控机（林离）", baseUrl: "http://127.0.0.1:7421", tokenConfigured: true },
+      { id: "controller-local", label: "这台电脑（汐）", baseUrl: "http://127.0.0.1:7420", tokenConfigured: true },
+      { id: "controller-local-codex", label: "这台电脑（林离）", baseUrl: "http://127.0.0.1:7421", tokenConfigured: true },
     ] as NodeInfo[],
     rounds: [] as Round[],
     batches: [] as ApprovalBatch[],

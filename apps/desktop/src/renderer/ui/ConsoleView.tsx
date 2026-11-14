@@ -41,6 +41,11 @@ export function ConsoleView({ notice }: { notice: ReactNode }) {
   const actions = useActions();
   const agent = agents.find((a) => a.id === agentId) ?? null;
   const setup = useSetup();
+  // 模型名字要问过节点才有；直接进秘书页时这里问一次，不然只能显示内部型号（C-12）
+  const modelsLoaded = useAppState((s) => Object.keys(s.disc.models).length > 0);
+  useEffect(() => {
+    if (agents.length > 0 && !modelsLoaded) void actions.loadModels();
+  }, [agents.length, modelsLoaded, actions]);
 
   return (
     <div className="console">
@@ -146,7 +151,12 @@ function AgentPage({ agent, st }: { agent: AgentProfile; st: AgentStatus | undef
           <button
             type="button"
             className="profile-button"
-            onClick={() => (direct ? void actions.agentConsole.openItem({ kind: "chat", conversationId: direct }) : actions.goChat())}
+            onClick={() => {
+              if (direct) return void actions.agentConsole.openItem({ kind: "chat", conversationId: direct });
+              // 还没和这位聊过：直接开一个单聊，不要把人扔到空的聊天页（C-13）
+              actions.goChat();
+              if (!chatNotConfigured(agent)) void actions.chat.createConversation({ kind: "direct", agent: agent.id }, null);
+            }}
           >
             <span aria-hidden="true">💬</span>发消息
           </button>

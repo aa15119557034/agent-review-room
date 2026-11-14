@@ -273,3 +273,160 @@
   background: var(--rule);
   background-clip: content-box;
 }
+
+/* 聊天列表顶上的标题栏：盖住滚上来的条目，不再叠字（D-18） */
+.chat-list-head {
+  background: var(--panel);
+  border-radius: 24px 24px 0 0;
+}
+
+/* 确认页底部的盖章区：铺满整行并垫上底色，不压住正文（D-19） */
+.confirm-bottom {
+  max-width: none;
+  margin: 8px -4px 0;
+  padding: 18px 0 6px;
+  background: linear-gradient(to bottom, transparent, var(--paper) 16px);
+  z-index: 2;
+}
+
+.confirm-bottom > * {
+  max-width: 420px;
+}
+
+/* 讨论室：窗口矮或放大显示时，输入区自己滚，时间线至少留三成高度（D-21） */
+.disc-main > .composer {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.disc-main > .disc-timeline {
+  min-height: 34%;
+}
+
+@media (max-height: 700px) {
+  .disc-main > .composer {
+    padding-top: 6px;
+    padding-bottom: 10px;
+  }
+
+  .composer-card {
+    gap: 6px;
+    padding: 8px 10px;
+  }
+
+  .disc-main > .disc-timeline {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
+
+/* 方案页：各个版本的切换标签（C-05） */
+.plan-versions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+}
+
+.plan-versions .button-pill[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--sheet);
+  border-color: var(--ink);
+}
+
+/* 右栏方案预览就地展开 */
+.plan-preview[data-open] {
+  display: block;
+  max-height: 50vh;
+  overflow-y: auto;
+  -webkit-line-clamp: unset;
+  white-space: pre-wrap;
+}
+
+/* 讨论室顶栏：进度标签排成一行横向滚动，标题至少留出一段（C-07） */
+.disc-head .stage-bar {
+  flex: 0 1 auto;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  min-width: 0;
+  max-width: 62%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.disc-head .stage-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.disc-head .stage {
+  flex: none;
+}
+
+.disc-head-title {
+  min-width: 7em;
+}
+
+/* 中等宽度（最小窗口 960 起）：两边的栏收窄，中间留给讨论 */
+@media (min-width: 721px) and (max-width: 1100px) {
+  .disc,
+  .disc[data-rail="collapsed"],
+  .disc[data-side="collapsed"],
+  .disc[data-rail="collapsed"][data-side="collapsed"] {
+    grid-template-columns: 212px minmax(0, 1fr) 232px;
+  }
+
+  .disc[data-rail="collapsed"] {
+    grid-template-columns: 56px minmax(0, 1fr) 232px;
+  }
+
+  .disc[data-side="collapsed"] {
+    grid-template-columns: 212px minmax(0, 1fr);
+  }
+
+  .disc[data-rail="collapsed"][data-side="collapsed"] {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+
+  .disc-main > .composer {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .disc-main > .disc-timeline {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+@media (min-width: 721px) and (max-width: 1100px) {
+  .disc-rail-head h2 {
+    font-size: 20px;
+    white-space: nowrap;
+  }
+
+  .disc-rail-head button {
+    white-space: nowrap;
+  }
+
+  .disc-rail-head {
+    gap: 6px;
+  }
+
+  .disc-side .side-card {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
+
+/* 右栏参与者一行放不下时换行，不把「笔记」按钮顶出卡片（C-14） */
+.side-person {
+  flex-wrap: wrap;
+  row-gap: 4px;
+  min-width: 0;
+}
+
+.side-card {
+  min-width: 0;
+  overflow: hidden;
+}

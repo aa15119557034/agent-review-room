@@ -18,18 +18,18 @@ export const CONTROLLER_NODE = LOCAL_NODE_ID;
 export const CONTROLLER_CODEX_NODE = LOCAL_CODEX_NODE_ID;
 
 export const RECOMMENDED_NODES: readonly { id: string; label: string; baseUrl: string | null; hint: string }[] = [
-  { id: USER_PC_NODE, label: "你的电脑", baseUrl: null, hint: "Claude 所在的电脑。地址和 Token 来自那台电脑上 setup 的输出；以前在「Reviewer 节点」里填过的已经自动搬过来了" },
+  { id: USER_PC_NODE, label: "你的电脑", baseUrl: null, hint: "C酱（Claude）所在的电脑。地址和 Token 是那台电脑上运行 setup 后显示的" },
   {
     id: CONTROLLER_NODE,
-    label: "主控机（汐）",
+    label: "这台电脑（汐）",
     baseUrl: "http://127.0.0.1:7420",
-    hint: "主控机上汐（DeepSeek）的节点。Token 可以用下面的「一键导入本机 Token」读进来",
+    hint: "这台电脑上汐（DeepSeek）用的节点。Token 可以用下面的「从本机导入 Token」读进来",
   },
   {
     id: CONTROLLER_CODEX_NODE,
-    label: "主控机（林离）",
+    label: "这台电脑（林离）",
     baseUrl: "http://127.0.0.1:7421",
-    hint: "主控机上林离（Codex）的节点。Token 可以用下面的「一键导入本机 Token」读进来",
+    hint: "这台电脑上林离（Codex）用的节点。Token 可以用下面的「从本机导入 Token」读进来",
   },
 ];
 
