@@ -188,6 +188,18 @@ describe("启动失败提示", () => {
     assert.match(describeStartupFailure(error, context).body, /正被另一个程序占用/);
   });
 
+  it("数据库文件坏了：说清楚是文件损坏，并告诉怎么恢复", () => {
+    for (const error of [
+      Object.assign(new Error("file is not a database"), { code: "SQLITE_NOTADB" }),
+      Object.assign(new Error("database disk image is malformed"), { code: "SQLITE_CORRUPT" }),
+    ]) {
+      const { body } = describeStartupFailure(error, context);
+      assert.match(body, /已经损坏/);
+      assert.match(body, /改个名字留着/);
+      assert.doesNotMatch(body, /安全软件/);
+    }
+  });
+
   it("认不出来的错：两种可能都列出来；没有日志时也说清楚", () => {
     const { body } = describeStartupFailure("迁移 v27 失败", { dataDir: "/data", logFile: null });
     assert.match(body, /写不进去/);

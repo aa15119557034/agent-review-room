@@ -238,8 +238,18 @@ export function describeStartupFailure(error: unknown, context: StartupFailureCo
   const notWritable = /\b(EPERM|EACCES|EROFS|ENOSPC|SQLITE_READONLY|SQLITE_CANTOPEN)\b|operation not permitted|permission denied|readonly database|unable to open database/i.test(text);
   const locked = /\b(EBUSY|SQLITE_BUSY|SQLITE_LOCKED)\b|database is locked/i.test(text);
 
+  // 数据库文件本身坏了（断电、磁盘故障、被别的程序改写）。先于「写不进去」判断：坏库有时也带 CANTOPEN 字样
+  const corrupt = /\b(SQLITE_NOTADB|SQLITE_CORRUPT\w*)\b|file is not a database|database disk image is malformed|malformed database schema/i.test(text);
+
   const reasons: string[] = [];
-  if (notWritable) {
+  if (corrupt) {
+    reasons.push(
+      "数据库文件（room.db）已经损坏，应用读不了它。常见原因是写入时断电、磁盘故障，或文件被别的程序改过。",
+      "可以试试：",
+      "· 如果你用「资料与维护」做过备份，把备份里的 room.db 放回数据文件夹再打开。",
+      "· 没有备份的话，把数据文件夹里的 room.db（连同 room.db-wal、room.db-shm）改个名字留着，再打开应用会从空白开始；改名的旧文件不要删，以后也许还能找人修复。",
+    );
+  } else if (notWritable) {
     reasons.push("很可能是数据文件夹写不进去：被安全软件拦住了、没有写入权限，或者磁盘满了。", "可以试试：把这个文件夹加到安全软件的信任名单，或者检查磁盘空间后再打开。");
   } else if (locked) {
     reasons.push("很可能是数据库正被另一个程序占用：比如评审室已经开着一个，或者同步盘 / 备份软件正在读它。", "可以试试：关掉其他评审室窗口和正在同步这个文件夹的软件，再重新打开。");

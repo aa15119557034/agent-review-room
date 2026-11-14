@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { LOCAL_NODE_ID, LocalNodeId, type ReviewerNodeSettings } from "@room/schemas";
 
@@ -131,7 +131,15 @@ export class SettingsStore {
 
       return base;
     } catch {
-      // 设置文件损坏：当作未配置，不阻止应用启动
+      // 设置文件损坏：当作未配置，不阻止应用启动。坏文件先留一份副本：下一次保存会把它盖掉，
+      // 留着才有机会找回里面的节点地址（Token 是密文，副本里也不是明文）（D-08）
+      try {
+        const backup = this.#file + ".corrupt-" + new Date().toISOString().replace(/[:.]/g, "-") + ".bak";
+        copyFileSync(this.#file, backup);
+        console.warn("[settings] 设置文件读不出来，已当作未配置；原文件另存为 " + backup + "，节点地址和 Token 需要重新填");
+      } catch {
+        // 连副本都写不了（只读目录）：不影响启动
+      }
       return { reviewerNode: null, nodes: {}, agentRoom: null, localAgentServerTokenFiles: {}, localAgentServerTokenFile: null, github: null };
     }
   }

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { after, describe, it } from "node:test";
 import { SettingsError, SettingsStore, type SafeStorageLike } from "../src/main/settings";
 
@@ -101,5 +101,9 @@ describe("SettingsStore", () => {
     // 文件存在但内容被写坏：当作未配置，不阻止应用启动
     writeFileSync(file, "{not json");
     assert.equal(new SettingsStore(file, fakeSafeStorage).get(), null);
+    // 坏文件留了一份副本，之后保存不会把它盖掉（D-08）
+    const backups = readdirSync(dirname(file)).filter((name) => name.startsWith("settings.json.corrupt-"));
+    assert.equal(backups.length, 1);
+    assert.equal(readFileSync(join(dirname(file), backups[0]!), "utf8"), "{not json");
   });
 });
