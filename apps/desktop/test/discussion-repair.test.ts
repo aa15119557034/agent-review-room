@@ -127,6 +127,16 @@ describe("启动修复：讨论室没答完的发言（D-05 / C-01）", () => {
     assert.equal(one<{ state: string }>(fx.db, "SELECT state FROM rounds WHERE id = ?", fx.roundId).state, "AWAITING_SUMMARY");
   });
 
+  it("暂停中的轮不会被推进汇总：Turn 记失败，轮仍是 PAUSED（守住修复里的 state 条件）", async () => {
+    const fx = await seedApproved(["claude"]);
+    // 正常流程不会出现「PAUSED + running Turn」，这里人为造一份脏数据
+    fx.db.prepare("UPDATE rounds SET state = 'PAUSED' WHERE id = ?").run(fx.roundId);
+
+    assert.equal(await repairInterruptedTurns(fx.db, fx.queue), 1);
+    assert.equal(one<{ outcome: string }>(fx.db, "SELECT outcome FROM turns WHERE id = ?", fx.turnIds.claude).outcome, "failed");
+    assert.equal(one<{ state: string }>(fx.db, "SELECT state FROM rounds WHERE id = ?", fx.roundId).state, "PAUSED");
+  });
+
   it("汇总途中被关：轮退回待汇总，可以重新请人汇总", async () => {
     const fx = await seedApproved(["claude"], "summary");
     assert.equal(one<{ state: string }>(fx.db, "SELECT state FROM rounds WHERE id = ?", fx.roundId).state, "SUMMARIZING");

@@ -222,7 +222,12 @@ export interface StartupFailureContext {
 }
 
 function errorCode(error: unknown): string {
-  if (typeof error === "object" && error !== null && "code" in error && typeof error.code === "string") return error.code;
+  // 顺着 cause 多看两层：错误被包装过（new Error(msg, { cause })）也能认出原来的 SQLITE_* / E* 代码
+  let current: unknown = error;
+  for (let depth = 0; depth < 3 && typeof current === "object" && current !== null; depth += 1) {
+    if ("code" in current && typeof current.code === "string") return current.code;
+    current = "cause" in current ? current.cause : null;
+  }
   return "";
 }
 

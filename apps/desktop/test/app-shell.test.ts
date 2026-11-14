@@ -200,6 +200,11 @@ describe("启动失败提示", () => {
     }
   });
 
+  it("错误被包装过：顺着 cause 也能认出坏库", () => {
+    const wrapped = new Error("打开数据库失败", { cause: Object.assign(new Error("x"), { code: "SQLITE_NOTADB" }) });
+    assert.match(describeStartupFailure(wrapped, context).body, /已经损坏/);
+  });
+
   it("认不出来的错：两种可能都列出来；没有日志时也说清楚", () => {
     const { body } = describeStartupFailure("迁移 v27 失败", { dataDir: "/data", logFile: null });
     assert.match(body, /写不进去/);

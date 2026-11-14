@@ -265,7 +265,15 @@ async function bootstrap(): Promise<void> {
 
   // §32 第 3 步：上次崩溃留下的 QUEUED / STARTING / RUNNING 统一标成 interrupted
   // 讨论室的 Turn / 轮先收尾（它连 Run 一起结），剩下的 Run 再交给通用修复
-  const repairedTurns = cliRequested ? 0 : await repairInterruptedTurns(db, queue);
+  // 修不动（脏数据、库正忙）只记日志：不能因为一行坏数据让应用起不来
+  let repairedTurns = 0;
+  if (!cliRequested) {
+    try {
+      repairedTurns = await repairInterruptedTurns(db, queue);
+    } catch (error) {
+      console.warn("[discussion] 启动时收尾没答完的发言失败，先继续启动：", error instanceof Error ? error.message : String(error));
+    }
+  }
   if (repairedTurns > 0) console.warn(`[discussion] 收尾了 ${repairedTurns} 次上次没答完的发言（应用重启，回答中断）`);
   const repaired = cliRequested ? { repaired: [] as unknown[] } : await repairInterruptedRuns(db, queue);
 
