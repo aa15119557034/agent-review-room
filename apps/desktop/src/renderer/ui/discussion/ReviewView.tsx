@@ -171,7 +171,11 @@ function PlanTab({ plan, roundIndex, agents }: { plan: PlanVersion | undefined; 
   const [draft, setDraft] = useState(plan?.content ?? "");
   const [note, setNote] = useState("");
   // 用户确认过之后，方案的最新状态以 plans 里为准
-  const live = plan ? d.plans.find((p) => p.id === plan.id) ?? plan : undefined;
+  // 这一页默认看这次汇总出的那一版；别的版本（你改的、定稿的）点上面的版本标签切过去（C-05）
+  const [pickedId, setPickedId] = useState<string | null>(null);
+  const picked = pickedId ? d.plans.find((p) => p.id === pickedId) : undefined;
+  const live = picked ?? (plan ? d.plans.find((p) => p.id === plan.id) ?? plan : undefined);
+  const versions = [...d.plans].sort((x, y) => x.version - y.version);
   const newer = live ? d.plans.filter((p) => p.version > live.version && p.state !== "SUPERSEDED") : [];
   const sum = d.summaries.find((s) => s.planVersionId === live?.id);
 
@@ -205,7 +209,21 @@ function PlanTab({ plan, roundIndex, agents }: { plan: PlanVersion | undefined; 
           {live.basedOnRoundId ? ` · 由第 ${roundIndex} 轮汇总生成` : ""} · {formatClock(live.createdAt)}
         </span>
       </p>
-      {newer.length > 0 && <p className="confirm-warn">已经有更新的版本 v{newer.map((p) => p.version).join("、v")}。</p>}
+      {versions.length > 1 && (
+        <p className="plan-versions" role="group" aria-label="方案的各个版本">
+          {versions.map((p) => (
+            <button key={p.id} type="button" className="button-pill" aria-pressed={p.id === live.id} onClick={() => (setEditing(false), setOpen(false), setPickedId(p.id))}>
+              v{p.version} · {p.state === "DRAFT" ? "草稿" : p.state === "CURRENT" ? "当前" : p.state === "FINAL" ? "已定稿" : "已被取代"}
+            </button>
+          ))}
+        </p>
+      )}
+      {newer.length > 0 && (
+        <p className="confirm-warn">
+          已经有更新的版本。
+          <button type="button" className="button-link" onClick={() => (setEditing(false), setPickedId(newer[newer.length - 1]!.id))}>看 v{newer[newer.length - 1]!.version}</button>
+        </p>
+      )}
 
       {editing ? (
         <form
@@ -213,7 +231,10 @@ function PlanTab({ plan, roundIndex, agents }: { plan: PlanVersion | undefined; 
           onSubmit={async (e) => {
             e.preventDefault();
             const p = await actions.editPlan(live.id, draft, note.trim() || "你改的");
-            if (p) setEditing(false);
+            if (p) {
+              setEditing(false);
+              setPickedId(p.id);
+            }
           }}
         >
           <label htmlFor="plan-edit">方案内容</label>

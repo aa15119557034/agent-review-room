@@ -18,7 +18,7 @@
   --focus: #2c6a6e;
 
   --font-ui: "Hiragino Sans", "Yu Gothic UI", "Microsoft YaHei UI", "PingFang SC", "Noto Sans CJK SC", system-ui, sans-serif;
-  --font-text: "Cascadia Mono", "SF Mono", "Consolas", "Noto Sans Mono CJK SC", monospace;
+  --font-text: "Cascadia Mono", "SF Mono", "Consolas", "Noto Sans Mono CJK SC", "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", monospace;
 
   --size-s: 0.8125rem;
   --size-m: 0.9375rem;

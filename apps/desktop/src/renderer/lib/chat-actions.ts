@@ -34,8 +34,9 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
   const setChat = (f: (c: ChatState) => ChatState) => store.set((s) => ({ ...s, chat: f(s.chat) }));
   const chat = () => store.get().chat;
 
-  const notSupported = (err: unknown) =>
-    err instanceof ControlFailure && (err.code === "validation_failed" || err.code === "internal");
+  // 只有后端不认识这个查询（validation_failed）才算「这个版本不支持聊天」；
+  // internal 是读数据出了错，要把原因报出来，不能说成「不支持」（测试 B-13）
+  const notSupported = (err: unknown) => err instanceof ControlFailure && err.code === "validation_failed";
 
   async function loadConversations() {
     try {
@@ -71,6 +72,8 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
   const media = createMediaActions(store, client, fail);
 
   let openToken = 0;
+  // 连点两下不重复提交（D-01、D-02）：同一个操作还没回来就不再发
+  const inflight = new Set<string>();
 
   async function openConversation(conversationId: string) {
     const token = ++openToken;
@@ -139,6 +142,8 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
     closeSheet: () => setChat((c) => ({ ...c, sheet: null })),
 
     async createConversation(members: ConversationMembers, title: string | null) {
+      if (inflight.has("create")) return;
+      inflight.add("create");
       try {
         let conv = await client.command({ type: "chat.conversation.create", members, title });
         // 和这位已经有单聊时 main 返回原来那个，填的名字不会用上：填了就改成它，不能无声丢掉（B-11）
@@ -149,6 +154,8 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
         await openConversation(conv.id);
       } catch (err) {
         fail(err);
+      } finally {
+        inflight.delete("create");
       }
     },
 
@@ -307,7 +314,8 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
 
     async toTopic(name: string) {
       const { currentId, selecting, messages } = chat();
-      if (!currentId || !selecting?.length) return;
+      if (!currentId || !selecting?.length || inflight.has("toTopic")) return;
+      inflight.add("toTopic");
       // 按时间顺序交（main 也会按时间整理，这里只是让请求好读）
       const messageIds = messages.filter((m) => selecting.includes(m.id)).map((m) => m.id);
       try {
@@ -316,6 +324,8 @@ export function createChatActions(store: Store<AppState>, client: RoomClient, fa
         await hooks.openTopic(project);
       } catch (err) {
         fail(err);
+      } finally {
+        inflight.delete("toTopic");
       }
     },
 

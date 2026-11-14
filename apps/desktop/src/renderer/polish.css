@@ -1,0 +1,451 @@
+/*
+ * 上架前打磨：空状态、「开始使用」引导、键盘焦点、减少动态效果。
+ * 在 styles.css 和 theme-apple.css 之后加载；只补不改，不动整体外观和布局。
+ */
+
+/* ================================================================ 空状态（ui/EmptyState.tsx） */
+
+.empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 0;
+  margin: 0;
+  padding: 2rem 1.5rem;
+  overflow-y: auto;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+.empty-state-loading {
+  font-size: 0.95rem;
+}
+
+.empty-state-icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 0.4rem;
+  border-radius: 20px;
+  background: var(--fill);
+  color: var(--ink-soft);
+}
+
+.empty-state-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 650;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+.empty-state-text {
+  max-width: 26rem;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.empty-state-text p {
+  margin: 0;
+}
+
+.empty-state-text p + p {
+  margin-top: 0.25rem;
+}
+
+.empty-state-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+}
+
+.empty-state-actions .button-primary {
+  min-width: 7.5rem;
+  padding: 0.55rem 1.5rem;
+}
+
+/* 「开始使用」三步 */
+.getting-started-steps {
+  display: grid;
+  gap: 0.5rem;
+  width: min(100%, 25rem);
+  margin: 0.7rem 0 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+.getting-started-steps li {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  background: var(--sheet);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+.getting-started-steps li > span:last-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.getting-started-steps b {
+  display: block;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.getting-started-num {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--fill);
+  font-size: 0.85rem;
+  font-weight: 650;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 空状态所在的面板要能把它撑到正中间 */
+.console-page:has(> .empty-state),
+.disc-main:has(> .empty-state) {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 矮窗口（最小 600 高）：引导收紧一点，不出滚动条 */
+@media (max-height: 680px) {
+  .empty-state {
+    justify-content: safe center;
+    gap: 0.4rem;
+    padding-block: 1rem;
+  }
+  .empty-state-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+    margin-bottom: 0.1rem;
+  }
+  .getting-started-steps {
+    gap: 0.35rem;
+    margin-top: 0.4rem;
+  }
+  .getting-started-steps li {
+    padding: 0.45rem 0.8rem;
+  }
+  .empty-state-actions {
+    margin-top: 0.5rem;
+  }
+}
+
+/* 左栏里那句「还没有…」只是提示，放轻一点，主要说明在右边 */
+.chat-list-empty,
+.disc-rail-more {
+  text-align: center;
+}
+
+/* ================================================================ 键盘焦点 */
+
+/* 弹层容器自己拿焦点只是为了让 Tab 从里面开始，不画框 */
+[role="dialog"][tabindex="-1"]:focus {
+  outline: none;
+}
+
+/* 这几处输入框把自己的 outline 去掉了（外面有一圈胶囊）：焦点画在胶囊上 */
+.chat-search:has(input:focus-visible),
+.sheet-field:has(input:focus-visible, textarea:focus-visible) {
+  outline: 2px solid var(--focus, #2f6fdb);
+  outline-offset: 2px;
+}
+
+.chat-search:has(input:focus-visible) {
+  border-radius: 999px;
+}
+
+/* 圆形 / 胶囊按钮：焦点环跟着圆角走，深浅色下都看得清 */
+.icon-button:focus-visible,
+.icon-tool:focus-visible,
+.chat-send:focus-visible,
+.chat-menu-button:focus-visible,
+.profile-swatches button:focus-visible,
+.chat-menu [role="menuitem"]:focus-visible,
+.chat-more [role^="menuitem"]:focus-visible {
+  outline: 2px solid var(--focus, #2f6fdb);
+  outline-offset: 2px;
+}
+
+/* 消息菜单用键盘走到「⋯」时要看得见（平时只在悬停时出现） */
+.chat-menu-anchor:focus-within .chat-menu-button {
+  opacity: 1;
+}
+
+/* ================================================================ 长文字不撑破版面 */
+
+.chat-head-title h2,
+.disc-head-title h1,
+.console-list-name,
+.disc-topic-name {
+  overflow-wrap: anywhere;
+}
+
+.console-item-preview,
+.chat-detail-text,
+.note-text {
+  overflow-wrap: anywhere;
+}
+
+/* ================================================================ 减少动态效果 */
+
+/* styles.css 已经全局关掉 transition / animation；这里补上平滑滚动和打字光标 */
+@media (prefers-reduced-motion: reduce) {
+  html,
+  .chat-timeline,
+  .disc-timeline {
+    scroll-behavior: auto !important;
+  }
+  .cursor {
+    opacity: 1 !important;
+  }
+}
+
+/* 秘书栏空着时那句提示：和标题左对齐 */
+.console-list > .side-note {
+  padding: 0 1rem;
+}
+
+/* —— 测试 B 的小问题 —— */
+
+/* 会话列表预览：一行，放不下用省略号，不切半个字（B-07） */
+.chat-list-preview,
+.chat-item-preview {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* 消息菜单不透明，底下的字不透上来（B-12） */
+.chat-menu {
+  background: var(--sheet);
+  backdrop-filter: none;
+}
+
+/* 底部面板的滚动条收在圆角里（B-11） */
+.chat-sheet,
+.profile-sheet,
+.note-sheet {
+  overflow: hidden auto;
+  scrollbar-gutter: stable;
+}
+
+.chat-sheet::-webkit-scrollbar,
+.profile-sheet::-webkit-scrollbar,
+.note-sheet::-webkit-scrollbar {
+  width: 10px;
+}
+
+.chat-sheet::-webkit-scrollbar-track,
+.profile-sheet::-webkit-scrollbar-track,
+.note-sheet::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 18px 0;
+}
+
+.chat-sheet::-webkit-scrollbar-thumb,
+.profile-sheet::-webkit-scrollbar-thumb,
+.note-sheet::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 8px;
+  background: var(--rule);
+  background-clip: content-box;
+}
+
+/* 聊天列表顶上的标题栏：盖住滚上来的条目，不再叠字（D-18） */
+.chat-list-head {
+  background: var(--panel);
+  border-radius: 24px 24px 0 0;
+}
+
+/* 确认页底部的盖章区：铺满整行并垫上底色，不压住正文（D-19） */
+.confirm-bottom {
+  max-width: none;
+  margin: 8px -4px 0;
+  padding: 18px 0 6px;
+  background: linear-gradient(to bottom, transparent, var(--paper) 16px);
+  z-index: 2;
+}
+
+.confirm-bottom > * {
+  max-width: 420px;
+}
+
+/* 讨论室：窗口矮或放大显示时，输入区自己滚，时间线至少留三成高度（D-21） */
+.disc-main > .composer {
+  flex: none;
+  max-height: 55%;
+  overflow-y: auto;
+}
+
+.disc-main > .disc-timeline {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+@media (max-height: 700px) {
+  .disc-main > .composer {
+    padding-top: 6px;
+    padding-bottom: 10px;
+  }
+
+  .composer-card {
+    gap: 6px;
+    padding: 8px 10px;
+  }
+
+  .disc-main > .disc-timeline {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
+
+/* 方案页：各个版本的切换标签（C-05） */
+.plan-versions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+}
+
+.plan-versions .button-pill[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--sheet);
+  border-color: var(--ink);
+}
+
+/* 右栏方案预览就地展开 */
+.plan-preview[data-open] {
+  display: block;
+  max-height: 50vh;
+  overflow-y: auto;
+  -webkit-line-clamp: unset;
+  white-space: pre-wrap;
+}
+
+/* 讨论室顶栏：进度标签排成一行横向滚动，标题至少留出一段（C-07） */
+.disc-head .stage-bar {
+  flex: 0 1 auto;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  min-width: 0;
+  max-width: 62%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.disc-head .stage-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.disc-head .stage {
+  flex: none;
+}
+
+.disc-head-title {
+  min-width: 7em;
+}
+
+/* 中等宽度（最小窗口 960 起）：两边的栏收窄，中间留给讨论 */
+@media (min-width: 721px) and (max-width: 1100px) {
+  .disc,
+  .disc[data-rail="collapsed"],
+  .disc[data-side="collapsed"],
+  .disc[data-rail="collapsed"][data-side="collapsed"] {
+    grid-template-columns: 212px minmax(0, 1fr) 232px;
+  }
+
+  .disc[data-rail="collapsed"] {
+    grid-template-columns: 56px minmax(0, 1fr) 232px;
+  }
+
+  .disc[data-side="collapsed"] {
+    grid-template-columns: 212px minmax(0, 1fr);
+  }
+
+  .disc[data-rail="collapsed"][data-side="collapsed"] {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+
+  .disc-main > .composer {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .disc-main > .disc-timeline {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+@media (min-width: 721px) and (max-width: 1100px) {
+  .disc-rail-head h2 {
+    font-size: 20px;
+    white-space: nowrap;
+  }
+
+  .disc-rail-head button {
+    white-space: nowrap;
+  }
+
+  .disc-rail-head {
+    gap: 6px;
+  }
+
+  .disc-side .side-card {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
+
+/* 右栏参与者一行放不下时换行，不把「笔记」按钮顶出卡片（C-14） */
+.side-person {
+  flex-wrap: wrap;
+  row-gap: 4px;
+  min-width: 0;
+}
+
+.side-card {
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* 窗口矮时：输入框和两个按钮排在同一行，时间线最少留 120px，不用在输入区里再滚（真机验收 3i） */
+@media (max-height: 700px), (min-width: 721px) and (max-width: 1100px) {
+  .disc-main > .composer .composer-row {
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+
+  .disc-main > .composer .composer-row textarea {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .disc-main > .composer .composer-row button {
+    flex: none;
+  }
+
+}

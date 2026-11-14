@@ -1,6 +1,20 @@
 import { WorkspaceService } from "./workspace";
 import { existsSync, readFileSync, writeFileSync, renameSync, rmSync, mkdirSync } from "node:fs";
-import { app, BrowserWindow, dialog, ipcMain, nativeTheme, protocol, safeStorage, shell } from "electron";
+import { app, BrowserWindow, dialog, ipcMain, nativeTheme, protocol, safeStorage } from "electron";
+import {
+  acquireSingleInstance,
+  createWindowStateStore,
+  installAppShell,
+  installCrashRecovery,
+  restoredPlacement,
+  revealWindow,
+  showStartupFailure,
+  startLogging,
+  trackWindowState,
+  windowIconPath,
+} from "./app-shell";
+import { APP_DISPLAY_NAME, type AppEntry } from "./shell-policy";
+import { DEFAULT_WINDOW_SIZE, MIN_WINDOW_SIZE } from "./window-state";
 import { dirname, join, isAbsolute } from "node:path";
 import { openDatabase, repairInterruptedRuns, WriteQueue } from "@room/db";
 import { HttpRemoteAgentAdapter } from "@room/remote-client";
@@ -9,6 +23,7 @@ import { ChatService } from "./chat";
 import { GithubSyncService } from "./github";
 import { NotesService } from "./notes";
 import { DiscussionService } from "./discussion";
+import { repairInterruptedTurns } from "./discussion-repair";
 import { createDispatcher } from "./ipc";
 import { ComfyUiClient, loadComfyUiConfigFile } from "./comfyui";
 import { MediaService } from "./media";
@@ -73,6 +88,26 @@ let mainWindow: BrowserWindow | null = null;
 const defaultDataDirectory = app.getPath("userData");
 const dataLocationFile = join(defaultDataDirectory, "active-data.json");
 
+// C-51 应用外壳。日志、窗口状态、单实例锁都跟着「默认数据目录」走（已含 AGENT_REVIEW_ROOM_DATA 覆盖，
+// 不跟 active-data.json 的恢复副本走）：它们是这台机器 / 这个实例的东西，不属于某一份资料。
+// CLI 模式（--self-test 等）一项都不启用：不抢锁、不被锁挡、不写日志文件，输出照旧。
+const logger = cliRequested ? null : startLogging(defaultDataDirectory);
+const windowState = cliRequested ? null : createWindowStateStore(defaultDataDirectory);
+// 锁必须在上面的 setPath("userData") 之后取：Electron 按 userData 区分实例，不同数据目录互不影响
+const isPrimaryInstance =
+  cliRequested ||
+  acquireSingleInstance(() => {
+    if (mainWindow !== null) revealWindow(mainWindow);
+    else if (app.isReady() && shellReady) createWindow();
+  });
+/** bootstrap 成功、窗口可以开了 */
+let shellReady = false;
+
+const devServerUrl = isDev ? process.env["ELECTRON_RENDERER_URL"] : undefined;
+const rendererIndex = join(__dirname, "../renderer/index.html");
+const appEntry: AppEntry =
+  devServerUrl !== undefined ? { kind: "dev", origin: new URL(devServerUrl).origin } : { kind: "file", path: rendererIndex };
+
 function broadcast(event: ControlEvent): void {
   for (const window of BrowserWindow.getAllWindows()) {
     window.webContents.send(IPC_CHANNELS.event, event);
@@ -80,15 +115,19 @@ function broadcast(event: ControlEvent): void {
 }
 
 function createWindow(): void {
-  const devServerUrl = process.env["ELECTRON_RENDERER_URL"];
+  // 上次的位置 / 大小；显示器变了就回默认 1280×800
+  const placement = windowState === null ? { ...DEFAULT_WINDOW_SIZE, maximized: false } : restoredPlacement(windowState);
+  const icon = windowIconPath();
 
   const window = new BrowserWindow({
-    width: 1280,
-    height: 800,
-    minWidth: 960,
-    minHeight: 600,
+    width: placement.width,
+    height: placement.height,
+    ...(placement.x === undefined || placement.y === undefined ? {} : { x: placement.x, y: placement.y }),
+    minWidth: MIN_WINDOW_SIZE.width,
+    minHeight: MIN_WINDOW_SIZE.height,
     show: false,
-    title: "Agent 评审室",
+    title: APP_DISPLAY_NAME,
+    ...(icon === undefined ? {} : { icon }),
     backgroundColor: windowBackground(),
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
@@ -99,25 +138,22 @@ function createWindow(): void {
   });
 
   mainWindow = window;
-  window.once("ready-to-show", () => window.show());
+  window.once("ready-to-show", () => {
+    if (placement.maximized) window.maximize();
+    window.show();
+  });
   window.on("closed", () => {
     if (mainWindow === window) mainWindow = null;
   });
+  if (windowState !== null) trackWindowState(window, windowState);
+  installCrashRecovery(window);
+  // 外链白名单、will-navigate 限制、拒绝 webview：installAppShell 里对所有 webContents 统一装
 
-  window.webContents.setWindowOpenHandler(({ url }) => {
-    void shell.openExternal(url);
-    return { action: "deny" };
-  });
-
-  window.webContents.on("will-navigate", (event, url) => {
-    const allowed = devServerUrl !== undefined ? url.startsWith(devServerUrl) : url.startsWith("file://");
-    if (!allowed) event.preventDefault();
-  });
-
-  if (isDev && devServerUrl !== undefined) {
-    void window.loadURL(devServerUrl);
+  // 加载失败（did-fail-load）由 installCrashRecovery 弹框，这里只接住 promise
+  if (devServerUrl !== undefined) {
+    void window.loadURL(devServerUrl).catch(() => undefined);
   } else {
-    void window.loadFile(join(__dirname, "../renderer/index.html"));
+    void window.loadFile(rendererIndex).catch(() => undefined);
   }
 }
 
@@ -228,6 +264,17 @@ async function bootstrap(): Promise<void> {
   });
 
   // §32 第 3 步：上次崩溃留下的 QUEUED / STARTING / RUNNING 统一标成 interrupted
+  // 讨论室的 Turn / 轮先收尾（它连 Run 一起结），剩下的 Run 再交给通用修复
+  // 修不动（脏数据、库正忙）只记日志：不能因为一行坏数据让应用起不来
+  let repairedTurns = 0;
+  if (!cliRequested) {
+    try {
+      repairedTurns = await repairInterruptedTurns(db, queue);
+    } catch (error) {
+      console.warn("[discussion] 启动时收尾没答完的发言失败，先继续启动：", error instanceof Error ? error.message : String(error));
+    }
+  }
+  if (repairedTurns > 0) console.warn(`[discussion] 收尾了 ${repairedTurns} 次上次没答完的发言（应用重启，回答中断）`);
   const repaired = cliRequested ? { repaired: [] as unknown[] } : await repairInterruptedRuns(db, queue);
 
   const settings = new SettingsStore(join(userData, "settings.json"), safeStorage);
@@ -354,13 +401,13 @@ async function bootstrap(): Promise<void> {
       const nodeChecks = await Promise.all(nodes.list().slice(0,64).map(async (node,index) => {
         const agent = repo.listAgents().find(a => a.nodeId === node.id);
         const result = await nodes.test({type:"node.test",id:node.id,baseUrl:node.baseUrl,profileId:agent?.chatProfileId ?? agent?.profileId ?? "health"});
-        return {id:"node-"+(index+1),label:node.label.slice(0,100),state:result.reachable ? "available" as const : "unavailable" as const,detail:result.reachable ? "节点健康接口可达；真实模型任务需另行试跑" : ("节点连接检查失败："+result.error).slice(0,500),checkedAt};
+        return {id:"node-"+(index+1),label:node.label.slice(0,100),state:result.reachable ? "available" as const : "unavailable" as const,detail:result.reachable ? "节点健康接口可达；真实模型任务需另行试跑" : ({unreachable:"连不上这个节点：地址不对，或者那台电脑上的节点没有启动",timeout:"连接节点超时：两台电脑可能不在同一个网络，或被防火墙拦住了",unauthorized:"连上了，但 Token 不对",protocol_mismatch:"连上了，但节点的版本和应用不一致，请更新",no_token:"这个节点还没有填 Token"} as Record<string,string>)[result.error] ?? ("节点连接检查失败："+result.error).slice(0,500),checkedAt};
       }));
       const githubState = github.status();
       return [...nodeChecks,
-        {id:"comfyui",label:"本机画图",state:comfyConfig ? "configured" as const : "unconfigured" as const,detail:comfyConfig ? "工作流已配置，未启动绘图任务" : "请配置 comfyui.json",checkedAt},
-        {id:"asr",label:"录音转写",state:asr.config ? "configured" as const : "unconfigured" as const,detail:asr.config ? "Python、脚本和模型路径存在；CUDA 与实际转写尚待试跑" : "请检查 asr.json 的 Python、脚本与模型路径",checkedAt},
-        {id:"tts",label:"语音合成",state:ttsConfig && existsSync(ttsConfig.python) && existsSync(ttsConfig.script) ? "configured" as const : "unconfigured" as const,detail:"检查语音包和声音配置；此检查不会加载模型或合成语音",checkedAt},
+        {id:"comfyui",label:"本机画图",state:comfyConfig ? "configured" as const : "unconfigured" as const,detail:comfyConfig ? "已配置；这次检查没有真的画图" : "还没有配置本机画图（需要本机装有 ComfyUI）",checkedAt},
+        {id:"asr",label:"录音转写",state:asr.config ? "configured" as const : "unconfigured" as const,detail:asr.config ? "已配置；这次检查没有真的转写" : "还没有配置录音转写",checkedAt},
+        {id:"tts",label:"语音合成",state:ttsConfig && existsSync(ttsConfig.python) && existsSync(ttsConfig.script) ? "configured" as const : "unconfigured" as const,detail:ttsConfig ? "语音包已就绪；这次检查没有真的合成语音" : "还没有安装语音包，可以在「设置 › 扩展包」里导入",checkedAt},
         {id:"github",label:"GitHub 同步",state:githubState.lastError ? "unavailable" as const : "unknown" as const,detail:githubState.lastError ? ("同步错误："+githubState.lastError).slice(0,500) : "最近状态未报告错误；这不是本次推送成功的证明",checkedAt}];
     },
   });
@@ -437,10 +484,19 @@ async function bootstrap(): Promise<void> {
     return;
   }
 
+  installAppShell({ entry: appEntry, logger, getMainWindow: () => mainWindow });
+  shellReady = true;
   createWindow();
 }
 
+if (!isPrimaryInstance) {
+  // 已经开着一个了（同一个数据目录）：那边会把窗口拿到前台，这边直接退出
+  console.info("[startup] 已经有一个实例在运行，本次启动退出");
+  app.quit();
+}
+
 void app.whenReady().then(async () => {
+  if (!isPrimaryInstance) return;
   try {
     if(existsSync(dataLocationFile)){
       const location:unknown=JSON.parse(readFileSync(dataLocationFile,"utf8"));
@@ -456,13 +512,14 @@ void app.whenReady().then(async () => {
       app.exit(1);
       return;
     }
-    dialog.showErrorBox("启动失败", "无法初始化本地数据库或设置：\n" + message);
+    // C-51：说清可能的原因、数据目录和日志在哪（#208 这类 EPERM 也走这里，不改目录位置）
+    showStartupFailure(error, app.getPath("userData"), logger);
     app.quit();
     return;
   }
 
   app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    if (BrowserWindow.getAllWindows().length === 0 && shellReady) createWindow();
   });
 });
 

@@ -2,9 +2,9 @@ packages:
   - "apps/*"
   - "packages/*"
 
-# pnpm 10 默认拦截依赖的构建脚本；这三个必须允许，
-# 否则 electron 拿不到二进制、better-sqlite3 没有原生模块。
+# pnpm 10 默认拦截依赖的构建脚本；这两个必须允许，否则 electron 拿不到二进制。
+# better-sqlite3 不在这里：v13 自带各平台的 Node-API 预编译文件（prebuilds/），不需要构建；
+# 放进来 pnpm 会因为包里有 binding.gyp 去跑 node-gyp，没装 Python / VS 编译工具的 Windows 电脑上 pnpm install 直接失败。
 onlyBuiltDependencies:
-  - better-sqlite3
   - electron
   - esbuild

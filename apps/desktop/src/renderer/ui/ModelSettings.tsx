@@ -22,8 +22,8 @@ export function ModelSettings({
       <div className="model-settings">
         <p className="step-hint">
           {models === null
-            ? "节点没有上报可选的模型（节点是老版本、连不上，或者没有这个 profile），会用 profile 自带的模型和强度。"
-            : "这个 profile 的模型写死在节点配置里，不能在这里选。"}
+            ? "暂时读不到可选的模型（节点版本较旧、连不上，或者节点上没有这份节点配置），会用节点配置自带的模型和强度。"
+            : "这位的模型在节点配置里固定了，不能在这里选。"}
         </p>
         {value.primaryModel !== null && (
           <p className="step-hint">
@@ -52,7 +52,7 @@ export function ModelSettings({
               set({ primaryModel: id, fallbackModel: id === null || value.fallbackModel === id ? null : value.fallbackModel });
             }}
           >
-            <option value="">（跟随 profile 自带的）</option>
+            <option value="">（跟随节点配置自带的）</option>
             {value.primaryModel !== null && !primary && <option value={value.primaryModel}>{value.primaryModel}（节点上没有）</option>}
             {models.map((m) => (
               <option key={m.id} value={m.id}>{m.displayName}</option>

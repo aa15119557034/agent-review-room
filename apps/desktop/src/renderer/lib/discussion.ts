@@ -322,10 +322,14 @@ export const STANCE_LABEL: Record<Stance, string> = {
  * 还缺哪一步才能用：一位参与者都没有（干净机器），或者有参与者但没有一位配了节点。
  * 没读完、后端不支持讨论室时不提示。
  */
-export function setupHint(d: Pick<DiscussionState, "available" | "agents" | "agentsLoaded">): "no_agents" | "no_node" | null {
+export function setupHint(
+  d: Pick<DiscussionState, "available" | "agents" | "agentsLoaded"> & { status?: DiscussionState["status"] },
+): "no_agents" | "no_node" | null {
   if (!d.available || !d.agentsLoaded) return null;
   if (d.agents.length === 0) return "no_agents";
-  return d.agents.every((a) => a.nodeId === null) ? "no_node" : null;
+  // 选了节点但节点没有地址 / Token 时，后端报的是「未配置」：一位能用的都没有，同样要引导（C-50）
+  const unusable = (a: DiscussionState["agents"][number]) => a.nodeId === null || d.status?.[a.id]?.availability === "unconfigured";
+  return d.agents.every(unusable) ? "no_node" : null;
 }
 
 // ---------------------------------------------------------------- 发给谁（C-49 / B-02）
@@ -357,4 +361,11 @@ export const RECIPIENT_BLOCK_LABEL: Record<NonNullable<ReturnType<typeof recipie
  */
 export function sendableRecipients(d: Pick<DiscussionState, "agents" | "status" | "ui">): string[] {
   return d.ui.composer.recipients.filter((id) => d.agents.some((a) => a.id === id && a.canDiscuss) && recipientBlock(d, id) === null);
+}
+
+/** 退回去改之后留下的那一轮：还是草稿、手上没有等盖章的批次。改好任务后用 round.redraft 重新起草（C-03） */
+export function rejectedDraftRound(d: DiscussionState): Round | null {
+  const round = openRound(d);
+  if (!round || round.state !== "DRAFT") return null;
+  return pendingBatches(d).some((b) => b.roundId === round.id) ? null : round;
 }

@@ -81,7 +81,7 @@ export const BAD_CHART_LABEL: Record<string, string> = {
   too_large: "数据太大",
   not_json: "不是合法的 JSON",
   too_deep: "嵌套太深",
-  invalid: "字段不合格式",
+  invalid: "内容不完整",
 };
 
 // ---------------------------------------------------------------- 看图提示（ADR-004 §2「聊天里也提醒」）
@@ -207,7 +207,7 @@ export const FAILURE_LABEL: Record<MediaFailureReason, string> = {
   generation_failed: "生成出错",
   artifact_invalid: "取回的图不对（校验没过）",
   gpu_queue_timeout: "显卡排队超过 2 分钟",
-  internal: "内部错误",
+  internal: "应用内部出了点问题，可以再试一次",
 };
 
 export const CANCEL_LABEL: Record<MediaCancelReason, string> = {
@@ -238,7 +238,8 @@ export function quotaText(q: SubscriptionQuota | null): string {
 export function routePreviewText(p: DrawRoutePreview): string {
   if (p.backend === "codex") return `会用林离的订阅（${quotaText(p.quota)}）`;
   if (p.backend === "comfyui") return `会用本机画${p.fallbackReason ? `，因为${FALLBACK_LABEL[p.fallbackReason]}` : ""}`;
-  return `现在画不了：${p.fallbackReason ? FALLBACK_LABEL[p.fallbackReason] : "林离用不了"}，本机也没开`;
+  // 两条路都不通：最常见的是这台电脑没装 / 没开本机画图（ComfyUI），直接说这个（测试 B-02）
+  return "现在画不了：这台电脑还没有装好本机画图（ComfyUI），或者它没有启动。";
 }
 
 /** 画好的图下面的来历：「林离画的（画前 5 小时 42%…）」或「本机画的，因为……」 */

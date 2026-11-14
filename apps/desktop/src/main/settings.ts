@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { LOCAL_NODE_ID, LocalNodeId, type ReviewerNodeSettings } from "@room/schemas";
 
@@ -131,13 +131,25 @@ export class SettingsStore {
 
       return base;
     } catch {
-      // 设置文件损坏：当作未配置，不阻止应用启动
+      // 设置文件损坏：当作未配置，不阻止应用启动。坏文件改名留着：下一次保存会把它盖掉，
+      // 留着才有机会找回里面的节点地址（Token 是密文，副本里也不是明文）（D-08）
+      try {
+        const backup = this.#file + ".corrupt-" + new Date().toISOString().replace(/[:.]/g, "-") + ".bak";
+        // 改名而不是复制：原位置空出来，下次启动就是「没有设置文件」，不会每开一次多一份副本
+        renameSync(this.#file, backup);
+        console.warn("[settings] 设置文件读不出来，已当作未配置；原文件另存为 " + backup + "，节点地址和 Token 需要重新填");
+      } catch {
+        // 连副本都写不了（只读目录）：不影响启动
+      }
       return { reviewerNode: null, nodes: {}, agentRoom: null, localAgentServerTokenFiles: {}, localAgentServerTokenFile: null, github: null };
     }
   }
 
   #save(): void {
-    writeFileSync(this.#file, JSON.stringify(this.#data, null, 2), { mode: 0o600 });
+    // 原子写（tmp + rename）：写到一半被杀也不会留下半截 JSON（那样所有节点 Token 都得重填）
+    const temp = this.#file + ".tmp";
+    writeFileSync(temp, JSON.stringify(this.#data, null, 2), { mode: 0o600 });
+    renameSync(temp, this.#file);
   }
 
   /** 对外形状：不含 token，只告诉调用方「配没配」。 */

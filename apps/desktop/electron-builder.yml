@@ -9,6 +9,8 @@ directories:
 files:
   - out/**
   - package.json
+  # 窗口图标（Linux / 开发态用；Windows 安装版用 exe 里的 icon.ico）
+  - build/icon.png
   - "!**/*.map"
 
 asar: true
@@ -28,6 +30,8 @@ extraResources:
     to: tts/runner.py
 
 win:
+  # 图标由 scripts/make-icon.mjs 生成（16～256 七个尺寸）
+  icon: build/icon.ico
   artifactName: agent-review-room-${version}-setup.${ext}
   target:
     - nsis
@@ -36,6 +40,11 @@ nsis:
   # 卸载时不动 %APPDATA% / %LOCALAPPDATA% 里的东西。
   # 注意：NSIS 卸载 / 升级会 RMDir /r $INSTDIR，所以语音包推荐放在 %LOCALAPPDATA%\评审室\tts（安装目录外面）。
   deleteAppDataOnUninstall: false
+  # 只改显示名，不动 productName / appId（那两个决定安装目录和数据目录）
+  shortcutName: Agent 评审室
+  uninstallDisplayName: Agent 评审室 ${version}
+  installerIcon: build/icon.ico
+  uninstallerIcon: build/icon.ico
   oneClick: false
   allowToChangeInstallationDirectory: true
   allowElevation: false

@@ -68,7 +68,7 @@ export function ConfirmView() {
               <span className="sheet-label-inline">本轮任务</span>
               <p className="confirm-task-text">{round.task}</p>
               <span className="side-note">
-                {[plan ? `带上方案 v${plan.version}` : null, `发给 ${n} 位`, `约 ${total.toLocaleString()} tokens`].filter(Boolean).join(" · ")}
+                {[plan ? `带上方案 v${plan.version}` : null, `发给 ${n} 位`, total > 0 ? `约 ${total.toLocaleString()} tokens` : null].filter(Boolean).join(" · ")}
               </span>
             </div>
           )}
@@ -91,7 +91,7 @@ export function ConfirmView() {
                       <span className="confirm-person-line">
                         <b>{agentName(d, i.recipient)}{i.onBehalfOf ? `（代 ${agentName(d, i.onBehalfOf)}）` : ""}</b>
                         {i.model === null ? (
-                          <span> · 模型用 profile 自带的</span>
+                          <span> · 模型用节点配置自带的</span>
                         ) : (
                           <span>
                             {" · "}{modelLabel(d.models[i.recipient] ?? undefined, i.model.model)}

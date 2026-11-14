@@ -36,9 +36,9 @@ export function PacksSettings() {
 
   return (
     <section className="settings-form" aria-labelledby="packs-title">
-      <h2 className="settings-section" id="packs-title">导入包（语音、补丁等）</h2>
+      <h2 className="settings-section" id="packs-title">扩展包</h2>
       <p className="step-hint">
-        大文件包和补丁都从这里导入：选下载好的 zip 或解压后的文件夹，程序自己认是哪个包、解压、检查，不用手动放到哪个目录。
+        语音等体积大的功能和补丁单独下载，从这里导入：选下载好的 zip 或解压后的文件夹，应用会自己认出是哪个包并解压、检查，不用手动放到哪个目录。
       </p>
       {packs !== null && (
         <div className="settings-actions">
@@ -58,7 +58,7 @@ export function PacksSettings() {
       {packs === null ? (
         unsupported ? (
           <div className="settings-actions">
-            <p className="step-hint">这个版本还不支持包导入（主控机还没接上），或者读取失败了。</p>
+            <p className="step-hint">暂时读不到扩展包的状态。</p>
             <button type="button" className="button-outline" onClick={() => void load()}>
               重试
             </button>

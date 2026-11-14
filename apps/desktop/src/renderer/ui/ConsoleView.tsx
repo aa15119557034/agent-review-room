@@ -8,6 +8,8 @@ import { useActions, useAppState } from "./hooks";
 import { formatTime } from "./labels";
 import { RECOMMENDED_NODES } from "../lib/presets";
 import { NodeWhy } from "./NodeWhy";
+import { EmptyState, GettingStarted, LoadingState, useSetup } from "./EmptyState";
+import { useDialog } from "./dialog";
 import {
   AVAILABILITY_LABEL,
   BILLING_LABEL,
@@ -38,12 +40,18 @@ export function ConsoleView({ notice }: { notice: ReactNode }) {
   const agentId = useAppState((s) => s.console.agentId);
   const actions = useActions();
   const agent = agents.find((a) => a.id === agentId) ?? null;
+  const setup = useSetup();
+  // 模型名字要问过节点才有；直接进秘书页时这里问一次，不然只能显示内部型号（C-12）
+  const modelsLoaded = useAppState((s) => Object.keys(s.disc.models).length > 0);
+  useEffect(() => {
+    if (agents.length > 0 && !modelsLoaded) void actions.loadModels();
+  }, [agents.length, modelsLoaded, actions]);
 
   return (
     <div className="console">
       <nav className="console-list" aria-label="秘书">
         <h1 className="console-list-head">秘书</h1>
-        {agents.length === 0 && <p className="side-note">还没有秘书。去「设置」里添加。</p>}
+        {agents.length === 0 && setup !== "loading" && <p className="side-note">还没有秘书</p>}
         <ul>
           {agents.map((a) => {
             const st = status[a.id];
@@ -68,7 +76,29 @@ export function ConsoleView({ notice }: { notice: ReactNode }) {
       </nav>
       <main className="console-page">
         {notice}
-        {agent ? <AgentPage key={agent.id} agent={agent} st={status[agent.id]} /> : <p className="side-note">从左边选一位。</p>}
+        {agent ? (
+          <AgentPage key={agent.id} agent={agent} st={status[agent.id]} />
+        ) : setup === "loading" ? (
+          <LoadingState />
+        ) : setup ? (
+          <GettingStarted reason={setup} />
+        ) : agents.length === 0 ? (
+          <EmptyState
+            icon="people"
+            title="还没有秘书"
+            action={
+              <button type="button" className="button-primary" onClick={() => void actions.openSettings()}>
+                去设置
+              </button>
+            }
+          >
+            <p>在「设置 › 秘书接入」里把秘书请进来，这里就能看到每一位的状态和额度。</p>
+          </EmptyState>
+        ) : (
+          <EmptyState icon="people" title="选一位秘书">
+            <p>从左边选一位，看他的状态、额度和最近答过什么，也可以改人设、模型和声音。</p>
+          </EmptyState>
+        )}
       </main>
     </div>
   );
@@ -78,6 +108,16 @@ const agentStyle = (color: string) => ({ "--agent": color }) as CSSProperties;
 
 /** 代表色：草案给三个备选，外加现在用的（不在里面时） */
 const SWATCHES = ["#a0522d", "#2f5aa0", "#1f6b55", "#3d6f8a", "#5b4a9e", "#b4435a"];
+
+/** 色块给读屏和悬停提示用的名字（色值本身念出来没意义） */
+const SWATCH_NAME: Record<string, string> = {
+  "#a0522d": "赭石",
+  "#2f5aa0": "靛蓝",
+  "#1f6b55": "墨绿",
+  "#3d6f8a": "灰蓝",
+  "#5b4a9e": "紫",
+  "#b4435a": "玫红",
+};
 
 type SheetKind = "persona" | "model" | "voice" | "advanced";
 
@@ -97,7 +137,7 @@ function AgentPage({ agent, st }: { agent: AgentProfile; st: AgentStatus | undef
   const q = quotaView(st);
   const sentences = agent.roleNote.split(/[。！？!?\n]+/).filter((x) => x.trim()).length;
   const primary = models?.find((m) => m.id === agent.modelSettings.primaryModel);
-  const modelLine = agent.modelSettings.primaryModel === null ? "跟随 profile" : (primary?.displayName ?? agent.modelSettings.primaryModel);
+  const modelLine = agent.modelSettings.primaryModel === null ? "跟随节点配置" : (primary?.displayName ?? agent.modelSettings.primaryModel);
   const effortId = agent.modelSettings.effort.chat;
   const effortLine = primary && effortId ? primary.efforts.find((e) => e.id === effortId)?.displayName : undefined;
 
@@ -111,7 +151,12 @@ function AgentPage({ agent, st }: { agent: AgentProfile; st: AgentStatus | undef
           <button
             type="button"
             className="profile-button"
-            onClick={() => (direct ? void actions.agentConsole.openItem({ kind: "chat", conversationId: direct }) : actions.goChat())}
+            onClick={() => {
+              if (direct) return void actions.agentConsole.openItem({ kind: "chat", conversationId: direct });
+              // 还没和这位聊过：直接开一个单聊，不要把人扔到空的聊天页（C-13）
+              actions.goChat();
+              if (!chatNotConfigured(agent)) void actions.chat.createConversation({ kind: "direct", agent: agent.id }, null);
+            }}
           >
             <span aria-hidden="true">💬</span>发消息
           </button>
@@ -120,7 +165,7 @@ function AgentPage({ agent, st }: { agent: AgentProfile; st: AgentStatus | undef
       </header>
       {chatNotConfigured(agent) && (
         <p className="console-hint">
-          聊天还没配：{agent.displayName} 在聊天里不能回答。点下面的「节点和权限」，填上聊天 profile（一般是「{agent.id}-chat」）。
+          聊天还没配好：{agent.displayName} 在聊天里不能回答。点下面的「节点和权限」，填上聊天用的节点配置（一般是「{agent.id}-chat」）。
         </p>
       )}
       {agent.pausedByUser && <p className="console-hint">已暂停：讨论和聊天都不发给 {agent.displayName}，点「恢复」才会再发。</p>}
@@ -175,7 +220,7 @@ function AgentPage({ agent, st }: { agent: AgentProfile; st: AgentStatus | undef
 }
 
 function quotaSummary(q: ReturnType<typeof quotaView>): string {
-  if (q.state === "unknown") return "未知（读不到不猜）";
+  if (q.state === "unknown") return "暂时读不到";
   if (q.balance) return `余额 ${money(q.balance)}`;
   // 和展开后的条一样说「剩余」；画图那边说的是「已用」，两处都写明是哪个（B-10）
   const rows = q.rows.map((r) => `${r.label}剩 ${pct(Math.max(0, 100 - r.usedPercent))}`);
@@ -204,7 +249,8 @@ function ColorRow({ agent }: { agent: AgentProfile }) {
             type="button"
             role="radio"
             aria-checked={c === agent.color}
-            aria-label={c}
+            aria-label={SWATCH_NAME[c] ?? `自定义颜色 ${c}`}
+            title={SWATCH_NAME[c] ?? c}
             style={{ background: c }}
             onClick={() => c !== agent.color && void actions.updateAgent({ id: agent.id, color: c })}
           />
@@ -225,11 +271,8 @@ function ProfileSheet({ agent, kind, onClose }: { agent: AgentProfile; kind: She
   useEffect(() => {
     if (kind === "model" && models === undefined) void actions.loadModels();
   }, [kind, models, actions]);
-  useEffect(() => {
-    const esc = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", esc);
-    return () => window.removeEventListener("keydown", esc);
-  }, [onClose]);
+  // Esc 关闭、打开时焦点进来、关闭后焦点回到点开它的那一行
+  const dialogRef = useDialog<HTMLElement>(onClose);
 
   const TITLE: Record<SheetKind, string> = { persona: "讨论室人设", model: "模型和思考强度", voice: "声音", advanced: "节点和权限" };
   const done = async () => {
@@ -245,7 +288,7 @@ function ProfileSheet({ agent, kind, onClose }: { agent: AgentProfile; kind: She
 
   return (
     <div className="profile-sheet-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <section className="profile-sheet" role="dialog" aria-modal="true" aria-label={TITLE[kind]}>
+      <section ref={dialogRef} tabIndex={-1} className="profile-sheet" role="dialog" aria-modal="true" aria-label={TITLE[kind]}>
         <span className="profile-sheet-grip" aria-hidden="true" />
         <header>
           <h2>{TITLE[kind]}</h2>
@@ -399,7 +442,7 @@ function Activity({ agent }: { agent: AgentProfile }) {
     return (
       <section className="console-panel" aria-label="正在答和历史">
         <h3>正在答 · 历史</h3>
-        <p className="side-note">后端还没接上这一项（等 D-44），其余设置照常可用。</p>
+        <p className="side-note">这个版本暂时看不到答题记录，其余设置照常可用。</p>
       </section>
     );
   }

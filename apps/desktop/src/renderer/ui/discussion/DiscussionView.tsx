@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
 import type { AgentStatus, Message, Project, Turn } from "@room/schemas";
 import { GROUP_LABEL, groupTopics, statusFor, todoCount, type TodoItem, type TopicPerson, type TopicStatus } from "../../lib/topic-board";
 import {
@@ -15,17 +15,18 @@ import {
   pendingBatches,
   recipientBlock,
   RECIPIENT_BLOCK_LABEL,
-  setupHint,
   sendableRecipients,
   stages,
   timeline,
   turnText,
   type DiscussionState,
   type TimelineEntry,
+  rejectedDraftRound,
 } from "../../lib/discussion";
 import { RECOMMENDED_NODES } from "../../lib/presets";
 import { useActions, useAppState } from "../hooks";
-import { ReplyBody } from "../Chart";
+import { MarkedText, ReplyBody } from "../Chart";
+import { hasMarkup } from "../../lib/markup";
 import { hasChart } from "../../lib/media";
 import { formatClock } from "../labels";
 import { HoldButton } from "../HoldButton";
@@ -34,6 +35,7 @@ import { REJECT_LABEL, noteTimelineText, notesBySource, rejectedBySource } from 
 import { ReviewView } from "./ReviewView";
 import { FirstPlan } from "./FirstPlan";
 import { NewTopic } from "./NewTopic";
+import { EmptyState, GettingStarted, LoadingState, useSetup } from "../EmptyState";
 
 /**
  * 讨论室主页（C-21，画布「① 主页 · 讨论」）。
@@ -44,7 +46,8 @@ export function DiscussionView({ notice }: { notice: ReactNode }) {
   const confirm = useAppState((s) => s.disc.confirm);
   const page = useAppState((s) => s.disc.ui.page);
   const railCollapsed = useAppState((s) => s.disc.ui.railCollapsed);
-  const sideCollapsed = useAppState((s) => s.disc.ui.sideCollapsed);
+  // 还没有秘书时右栏不显示（中间是「开始使用」引导），列也一起收掉
+  const sideCollapsed = useAppState((s) => s.disc.ui.sideCollapsed || s.disc.agents.length === 0);
   const pane = useAppState((s) => s.disc.ui.pane);
   const sheet = useAppState((s) => s.disc.ui.sheet);
 
@@ -52,8 +55,8 @@ export function DiscussionView({ notice }: { notice: ReactNode }) {
     return (
       <main className="disc-unavailable">
         {notice}
-        <h1>讨论室还没有接上后端</h1>
-        <p>后端的讨论室功能（D-21）还没接上。开发界面时在地址后加 <code>?mock</code> 可以看演示数据。</p>
+        <h1>这个版本暂不支持讨论室</h1>
+        <p>暂时读不到讨论室的数据。重新打开应用试试；还是不行的话，请更新到新版本。</p>
       </main>
     );
   }
@@ -124,7 +127,7 @@ function TopicRail() {
           </ul>
         </section>
       ))}
-      {projects.length === 0 && <p className="disc-rail-more">还没有议题，点「＋ 新议题」建一个。</p>}
+      {projects.length === 0 && <p className="disc-rail-more">还没有议题</p>}
     </nav>
   );
 }
@@ -208,23 +211,25 @@ function Conversation() {
   const d = useAppState((s) => s.disc);
   const fromChat = useAppState((s) => s.messages.some((m) => m.kind === "chat_material"));
   const actions = useActions();
+  const setup = useSetup();
+  const topicCount = useAppState((s) => s.projects.length);
   if (!project) {
-    const setup = setupHint(d);
-    return (
-      <section className="disc-empty">
-        <h1>从左边选一个议题，或者新建一个</h1>
+    if (setup === "loading") return <LoadingState />;
+    if (setup) return <GettingStarted reason={setup} />;
+    const create = (
+      <button type="button" className="button-primary" onClick={() => (actions.openNewTopic(), actions.showTopicPane())}>
+        新议题
+      </button>
+    );
+    return topicCount === 0 ? (
+      <EmptyState icon="discuss" title="还没有议题" action={create}>
+        <p>把一件要商量的事写成议题，请几位秘书多轮讨论、出方案。</p>
         <p>每一轮发给谁、带上什么，都先给你看全文；你盖章了才发出去。</p>
-        {setup && (
-          <div className="disc-setup" role="note">
-            <p>
-              {setup === "no_agents"
-                ? "第一次用：还没有秘书。先去「设置」填好节点的地址和 Token，再点「填入推荐的三位参与者」。"
-                : "秘书还没连上节点：去「设置」填节点的地址和 Token，并在参与者里选好节点。"}
-            </p>
-            <button type="button" className="button-outline" onClick={() => void actions.openSettings()}>去设置</button>
-          </div>
-        )}
-      </section>
+      </EmptyState>
+    ) : (
+      <EmptyState icon="discuss" title="选一个议题" action={create}>
+        <p>从左边选一个议题接着讨论，或者新建一个。</p>
+      </EmptyState>
     );
   }
   const people = d.agents.filter((a) => a.canDiscuss).map((a) => a.displayName).join(" · ");
@@ -271,10 +276,16 @@ function StagePills() {
   const d = useAppState((s) => s.disc);
   const actions = useActions();
   const list = stages(d).filter((st) => st.roundId !== null || (st.key === "final" && st.state === "done"));
+  // 轮数多了排成一行横着滚，最新的在右边露出来，不再换成好几行挤掉标题和时间线（C-07）
+  const barRef = useRef<HTMLElement | null>(null);
+  useLayoutEffect(() => {
+    const el = barRef.current;
+    if (el) el.scrollLeft = el.scrollWidth;
+  }, [list.length]);
   if (list.length === 0) return null;
   const waiting = pendingBatches(d);
   return (
-    <nav className="stage-bar" aria-label="进度">
+    <nav className="stage-bar" aria-label="进度" ref={barRef}>
       {list.map((st) => {
         const isSum = st.key.endsWith("-sum");
         const round = st.roundId ? d.rounds.find((r) => r.id === st.roundId) : undefined;
@@ -297,6 +308,31 @@ function StagePills() {
 function Timeline() {
   const entries = useAppState((s) => timeline(s.disc, s.messages));
   const collapsed = useAppState((s) => s.disc.ui.collapsedRounds);
+  const topicId = useAppState((s) => s.currentProjectId);
+  // 打开议题先到最新；之后只要原来就在底部附近，新发言 / 回答变长都跟着滚（C-09）
+  const listRef = useRef<HTMLOListElement | null>(null);
+  const stick = useRef(true);
+  useLayoutEffect(() => {
+    stick.current = true;
+  }, [topicId]);
+  useLayoutEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+    const toBottom = () => {
+      if (stick.current) el.scrollTop = el.scrollHeight;
+    };
+    toBottom();
+    const onScroll = () => {
+      stick.current = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(toBottom);
+    if (observer) for (const child of Array.from(el.children)) observer.observe(child);
+    return () => {
+      el.removeEventListener("scroll", onScroll);
+      observer?.disconnect();
+    };
+  }, [topicId, entries.length]);
   if (entries.length === 0) {
     return (
       <div className="disc-timeline disc-timeline-empty">
@@ -305,7 +341,7 @@ function Timeline() {
     );
   }
   return (
-    <ol className="disc-timeline">
+    <ol className="disc-timeline" ref={listRef}>
       {entries.map((e) => {
         const hidden = (e.kind === "turn" || e.kind === "summary") && collapsed[e.round.id];
         if (hidden) return null;
@@ -371,7 +407,9 @@ function TurnCard({ turn, reply }: { turn: Turn; reply: Message | null }) {
   const actions = useActions();
   const { text, live } = turnText(turn, reply, events);
   const label = OUTCOME_LABEL[turn.outcome];
-  const canRetry = ["timed_out", "failed", "absent_quota"].includes(turn.outcome) && !turn.supersededBy;
+  // 作废 / 已经汇总完的轮次不能再重试（后端会拒绝「这一轮已经结束」），按钮也不该出现
+  const roundOpen = ["RUNNING", "PAUSED", "AWAITING_SUMMARY"].includes(d.rounds.find((r) => r.id === turn.roundId)?.state ?? "");
+  const canRetry = roundOpen && ["timed_out", "failed", "absent_quota"].includes(turn.outcome) && !turn.supersededBy;
   const meta = [turn.onBehalfOf ? `代 ${agentName(d, turn.onBehalfOf)}` : null, label || (turn.outcome === "answered" ? "已答" : formatClock(turn.createdAt))].filter(Boolean).join(" · ");
   return (
     <Bubble who={agentName(d, turn.agent)} color={agentColor(d, turn.agent)} meta={meta} state={turn.outcome} title={formatClock(turn.createdAt)}>
@@ -483,7 +521,12 @@ function LongText({ id, text, live = false }: { id: string; text: string; live?:
   const shown = long && !expanded ? text.slice(0, FOLD_AT) + "……" : text;
   return (
     <>
-      <p className="long-text">{shown}{live && <span className="cursor" aria-hidden="true">▍</span>}</p>
+      {/* 看全文时加粗和代码块按样子显示，和聊天里一致（D-15）；还在写、或折着的时候保持纯文字 */}
+      {!live && (!long || expanded) && hasMarkup(text) ? (
+        <MarkedText text={text} className="long-text" />
+      ) : (
+        <p className="long-text">{shown}{live && <span className="cursor" aria-hidden="true">▍</span>}</p>
+      )}
       {long && (
         <button type="button" className="button-link" onClick={() => actions.toggleExpanded(id)}>
           {expanded ? "收起" : `展开全文（${text.length.toLocaleString()} 字）`}
@@ -506,6 +549,8 @@ function Composer() {
   const recipients = sendableRecipients(d);
   const discussants = d.agents.filter((a) => a.canDiscuss);
   const interjecting = round !== null && ["RUNNING", "PAUSED", "AWAITING_SUMMARY"].includes(round.state);
+  // 退回去改之后：这一轮还是草稿，改完任务可以直接重新去盖章（C-03）
+  const redo = rejectedDraftRound(d);
   const nextIndex = d.rounds.length + 1;
   const attached = planForNextRound(d);
   const paused = round?.state === "PAUSED";
@@ -580,7 +625,7 @@ function Composer() {
             id="composer"
             rows={1}
             value={text}
-            placeholder={interjecting ? "补充什么，或者想改什么方向……" : round ? "这一轮还在等盖章，可以先说点什么（只发言）" : `写下第 ${nextIndex} 轮的任务……`}
+            placeholder={interjecting ? "补充什么，或者想改什么方向……" : redo ? `改好第 ${redo.index} 轮的任务，再去盖章……` : round ? "这一轮还在等盖章，可以先说点什么（只发言）" : `写下第 ${nextIndex} 轮的任务……`}
             onChange={(e) => actions.setComposerText(e.target.value)}
           />
           <button type="button" className="button-quiet" disabled={!text.trim()} title="写进时间线，不发给任何人" onClick={() => void actions.addNote()}>
@@ -599,8 +644,8 @@ function Composer() {
             <button
               type="button"
               className="button-seal-small composer-seal"
-              disabled={round !== null || !text.trim() || recipients.length === 0}
-              title={round ? `第 ${round.index} 轮还没结束` : `先看每人收到的全文，再盖章发出第 ${nextIndex} 轮`}
+              disabled={(round !== null && !redo) || !text.trim() || recipients.length === 0}
+              title={redo ? `改好了就重新看一遍全文，再盖章发出第 ${redo.index} 轮` : round ? `第 ${round.index} 轮还没结束` : `先看每人收到的全文，再盖章发出第 ${nextIndex} 轮`}
               onClick={() => void actions.draftRound()}
             >
               去盖章
@@ -623,9 +668,10 @@ function RoundControls() {
   const anyAnswer = d.turns.some((t) => t.roundId === round.id && !t.isSummary && t.outcome === "answered");
   return (
     <div className="round-controls" data-state={round.state}>
-      <b>第 {round.index} 轮 · {waiting ? "等你盖章" : ROUND_STATE_LABEL[round.state]}</b>
+      <b>第 {round.index} 轮 · {waiting ? "等你盖章" : round.state === "DRAFT" ? "退回修改中" : ROUND_STATE_LABEL[round.state]}</b>
       {round.activeMs > 0 && <span className="round-time">用时 {formatActive(round.activeMs)}{round.state === "PAUSED" ? "（暂停中不计时）" : ""}</span>}
       {waiting && <button type="button" className="button-seal-small" onClick={() => void actions.openConfirm(waiting.id)}>去盖章</button>}
+      {round.state === "DRAFT" && !waiting && <span className="round-time">已退回，没有发出去。改好下面的任务，再点「去盖章」。</span>}
       {round.state === "RUNNING" && (
         <>
           <button type="button" className="button-quiet" onClick={() => void actions.pauseRound(round.id)}>全部暂停</button>
@@ -694,7 +740,10 @@ function SidePanel() {
   useEffect(() => {
     if (projectId) void actions.notes.loadScope({ kind: "topic", projectId });
   }, [projectId, actions]);
-  if (d.ui.sideCollapsed) return <aside className="disc-side" data-collapsed aria-label="方案与参与者" />;
+  // 没有汇总页可去的方案（自己写的第一版）：就地展开看全文（C-05）
+  const [planOpen, setPlanOpen] = useState(false);
+  // 还没有秘书时中间是「开始使用」引导，右边空的方案 / 参与者卡先不显示
+  if (d.ui.sideCollapsed || d.agents.length === 0) return <aside className="disc-side" data-collapsed aria-label="方案与参与者" />;
   const plan = displayedPlan(d);
   const reviewRound = plan?.basedOnRoundId ?? [...d.summaries].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))[0]?.roundId ?? null;
   return (
@@ -707,7 +756,10 @@ function SidePanel() {
         </header>
         {plan ? (
           <>
-            <p className="plan-preview">{plan.content}</p>
+            <p className="plan-preview" data-open={planOpen ? "" : undefined}>{plan.content}</p>
+            {!reviewRound && plan.content.length > 120 && (
+              <button type="button" className="button-link side-more" onClick={() => setPlanOpen((v) => !v)}>{planOpen ? "收起" : "看全文 ›"}</button>
+            )}
             {reviewRound && (
               <button type="button" className="button-link side-more" onClick={() => actions.openReview(reviewRound)}>看全文和历史版本 ›</button>
             )}

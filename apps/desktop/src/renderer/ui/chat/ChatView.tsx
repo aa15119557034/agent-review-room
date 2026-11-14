@@ -1,5 +1,5 @@
 import { ContextDetails } from "../WorkspaceView";
-import { Fragment, useEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent, type ReactNode, useLayoutEffect } from "react";
 import { CHAT_LIMITS, type AgentChatMessage, type ChatMessage, type ChatReplySlot, type ChatRun, type Conversation, type UserChatMessage } from "@room/schemas";
 import {
   MEMORY_STATUS_LABEL,
@@ -22,6 +22,7 @@ import {
   previewText,
   runningSlots,
   selectableForTopic,
+  breakTime,
   shortTime,
   slotLabel,
   timeline,
@@ -34,6 +35,8 @@ import { draftContent } from "../../lib/chat-actions";
 import { ReplyBody } from "../Chart";
 import { useActions, useAppState } from "../hooks";
 import { Icon, type IconName } from "../Icon";
+import { EmptyState, GettingStarted, LoadingState, useSetup } from "../EmptyState";
+import { useDialog } from "../dialog";
 import { RECOMMENDED_NODES } from "../../lib/presets";
 import { NodeWhy } from "../NodeWhy";
 import {
@@ -73,8 +76,8 @@ export function ChatView({ notice }: { notice: ReactNode }) {
     return (
       <main className="chat-unavailable">
         {notice}
-        <h1>聊天还没上线</h1>
-        <p>后端还不认识聊天的命令。讨论室照常可用。</p>
+        <h1>这个版本暂不支持聊天</h1>
+        <p>讨论室照常可用。更新到新版本后，这里就能和秘书聊天了。</p>
       </main>
     );
   }
@@ -83,7 +86,7 @@ export function ChatView({ notice }: { notice: ReactNode }) {
       <ConversationList />
       <main className="chat-pane">
         {notice}
-        {open ? <ConversationPane /> : <p className="chat-pane-empty">从左边选一个会话，或者新建一个。</p>}
+        {open ? <ConversationPane /> : <ChatEmpty />}
       </main>
       {sheet?.kind === "new" && <NewConversationSheet />}
       {sheet?.kind === "settings" && <SettingsSheet />}
@@ -91,6 +94,29 @@ export function ChatView({ notice }: { notice: ReactNode }) {
       {sheet?.kind === "draw" && <DrawSheet messageId={sheet.messageId} prompt={sheet.prompt} />}
       <SpeechPlayer />
     </div>
+  );
+}
+
+/** 没打开会话时右边显示什么：读取中 / 开始使用 / 还没有会话 / 选一个会话 */
+function ChatEmpty() {
+  const setup = useSetup();
+  const list = useAppState((s) => s.chat.list);
+  const actions = useActions();
+  if (setup === "loading" || list === null) return <LoadingState />;
+  if (setup) return <GettingStarted reason={setup} />;
+  const create = (
+    <button type="button" className="button-primary" onClick={() => actions.chat.openSheet({ kind: "new" })}>
+      新建会话
+    </button>
+  );
+  return list.length === 0 ? (
+    <EmptyState icon="chat" title="还没有会话" action={create}>
+      <p>和一位秘书单聊，或者拉几位建个群。聊天里只说话，不会改动任何文件。</p>
+    </EmptyState>
+  ) : (
+    <EmptyState icon="chat" title="选一个会话" action={create}>
+      <p>从左边选一个会话接着聊，或者新建一个。</p>
+    </EmptyState>
   );
 }
 
@@ -146,14 +172,11 @@ function GroupAvatar({ members, name, color }: { members: readonly string[]; nam
 }
 
 function Sheet({ title, onClose, children }: { title: string; onClose: () => void; children: ReactNode }) {
-  useEffect(() => {
-    const esc = (e: globalThis.KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", esc);
-    return () => window.removeEventListener("keydown", esc);
-  }, [onClose]);
+  // Esc 关闭、打开时焦点进来、关闭后焦点回到打开它的按钮
+  const ref = useDialog<HTMLElement>(onClose);
   return (
     <div className="chat-sheet-backdrop" onClick={onClose}>
-      <section className="chat-sheet" role="dialog" aria-modal="true" aria-label={title} onClick={(e) => e.stopPropagation()}>
+      <section ref={ref} tabIndex={-1} className="chat-sheet" role="dialog" aria-modal="true" aria-label={title} onClick={(e) => e.stopPropagation()}>
         <header className="chat-sheet-head">
           <h2>{title}</h2>
           <button type="button" className="icon-button" aria-label="关闭" onClick={onClose}>
@@ -196,7 +219,7 @@ function ConversationList() {
       {list === null ? (
         <p className="chat-list-empty">正在读取…</p>
       ) : list.length === 0 ? (
-        <p className="chat-list-empty">还没有会话。点右上角的 + 和一位秘书单聊，或者拉几位建群。</p>
+        <p className="chat-list-empty">还没有会话</p>
       ) : shown!.length === 0 ? (
         <p className="chat-list-empty">没有找到「{query.trim()}」</p>
       ) : (
@@ -227,7 +250,7 @@ function ConversationList() {
                     <span className="chat-list-preview">
                       {runningSlots > 0 ? <em>{runningSlots} 位回答中…</em> : previewText(lastMessage, name)}
                       <span className="spacer" />
-                      {conv.muted && <span className="chat-muted" title="免打扰">🔕</span>}
+                      {conv.muted && <span className="chat-muted" role="img" aria-label="免打扰" title="免打扰">🔕</span>}
                       {unreadCount > 0 &&
                         (conv.muted ? (
                           <span className="chat-dot" aria-label="有未读" />
@@ -244,7 +267,7 @@ function ConversationList() {
           })}
         </ul>
       )}
-      <p className="chat-list-tip">聊天里只说话，不改文件。聊出想做的事，长按消息「转成议题」。</p>
+      <p className="chat-list-tip">聊天里只说话，不改文件。聊出想做的事，点消息旁的「⋯」选「转议题」。</p>
     </nav>
   );
 }
@@ -351,7 +374,7 @@ function MemoryBar({ conv }: { conv: Conversation }) {
           </button>
         )}
         {win && (
-          <span className="chat-memory-ctx" title="主控机按这个会话、这个窗口里的历史摘要数的">
+          <span className="chat-memory-ctx" title="按这个会话、这个窗口里的历史摘要统计">
             {win.index > 1 ? `第 ${win.index} 个窗口 · ` : ""}{compactionText(win).replace("，建议换", "")}
           </span>
         )}
@@ -404,10 +427,45 @@ function Timeline({ conv }: { conv: Conversation }) {
 
   // 停在底部时，新消息和流式文字自动跟上；往上翻着看的时候不打扰
   const lastKey = `${entries.length}:${liveText.join("").length}:${live.length}`;
+  // 自己刚发出一条：不管之前翻到哪，都回到底部（往上翻去引用旧消息后发送，消息和回答都看不见，真机验收 B3）
+  const lastEntry = entries[entries.length - 1];
+  const lastOwnId = lastEntry && lastEntry.message.sender === "user" ? lastEntry.message.id : null;
+  const seenOwn = useRef<string | null>(lastOwnId);
+  if (lastOwnId !== seenOwn.current) {
+    if (lastOwnId !== null) stick.current = true;
+    seenOwn.current = lastOwnId;
+  }
   useEffect(() => {
     const el = ref.current;
     if (el && stick.current) el.scrollTop = el.scrollHeight;
   }, [lastKey, conv.id]);
+
+  // 图片加载完、状态行展开、窗口变高变矮都会改变内容高度：停在底部时继续贴底（测试 B-04）
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const follow = () => {
+      if (stick.current) el.scrollTop = el.scrollHeight;
+    };
+    const ro = new ResizeObserver(follow);
+    ro.observe(el);
+    for (const child of Array.from(el.children)) ro.observe(child);
+    el.addEventListener("load", follow, true);
+    return () => {
+      ro.disconnect();
+      el.removeEventListener("load", follow, true);
+    };
+  }, [conv.id, entries.length]);
+
+  // 「加载更早的消息」：新内容加在上面，保持正在看的那条不动（测试 B-08）
+  const beforeOlder = useRef<number | null>(null);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (el && beforeOlder.current !== null) {
+      el.scrollTop += el.scrollHeight - beforeOlder.current;
+      beforeOlder.current = null;
+    }
+  }, [entries.length]);
 
   return (
     <div
@@ -419,7 +477,10 @@ function Timeline({ conv }: { conv: Conversation }) {
       }}
     >
       {hasOlder && (
-        <button type="button" className="button-link chat-older" onClick={() => void actions.chat.loadOlder()}>
+        <button type="button" className="button-link chat-older" onClick={() => {
+            beforeOlder.current = ref.current?.scrollHeight ?? null;
+            void actions.chat.loadOlder();
+          }}>
           加载更早的消息
         </button>
       )}
@@ -433,7 +494,7 @@ function Timeline({ conv }: { conv: Conversation }) {
           <Fragment key={e.message.id}>
             {breaks.has(i) && (
               <li className="chat-time">
-                <time dateTime={e.message.createdAt}>{shortTime(e.message.createdAt, now)}</time>
+                <time dateTime={e.message.createdAt}>{breakTime(e.message.createdAt, now)}</time>
               </li>
             )}
             <Entry entry={e} now={now} conv={conv} />
@@ -659,6 +720,10 @@ function MessageMenu({ message, now, children }: { message: ChatMessage; now: nu
   const selecting = useAppState((s) => s.chat.selecting);
   const actions = useActions();
   const [open, setOpen] = useState(false);
+  /** 撤回要再点一次确认：秘书已经看到的收不回来，对应的回答之后也不再带上 */
+  const [confirmRetract, setConfirmRetract] = useState(false);
+  const trigger = useRef<HTMLButtonElement>(null);
+  const menu = useRef<HTMLDivElement>(null);
   const press = useRef<ReturnType<typeof setTimeout> | null>(null);
   const clearPress = () => {
     if (press.current) clearTimeout(press.current);
@@ -666,10 +731,26 @@ function MessageMenu({ message, now, children }: { message: ChatMessage; now: nu
   };
   useEffect(() => clearPress, []);
   useEffect(() => {
-    if (!open) return;
+    if (!open) {
+      setConfirmRetract(false);
+      return;
+    }
     const close = () => setOpen(false);
+    // Esc 关菜单，焦点回到「⋯」
+    const esc = (e: globalThis.KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      e.stopPropagation();
+      setOpen(false);
+      trigger.current?.focus();
+    };
     window.addEventListener("click", close);
-    return () => window.removeEventListener("click", close);
+    window.addEventListener("keydown", esc, true);
+    // 打开后焦点进到第一项，键盘可以直接往下走
+    menu.current?.querySelector<HTMLButtonElement>("button:not([disabled])")?.focus();
+    return () => {
+      window.removeEventListener("click", close);
+      window.removeEventListener("keydown", esc, true);
+    };
   }, [open]);
 
   if (selecting) return <>{children}</>;
@@ -683,6 +764,8 @@ function MessageMenu({ message, now, children }: { message: ChatMessage; now: nu
       onClick={(e) => {
         e.stopPropagation();
         setOpen(false);
+        // 先把焦点还给「⋯」：这一项马上会消失，接着打开的面板关掉后才回得来
+        trigger.current?.focus();
         run();
       }}
     >
@@ -708,6 +791,7 @@ function MessageMenu({ message, now, children }: { message: ChatMessage; now: nu
     >
       {children}
       <button
+        ref={trigger}
         type="button"
         className="chat-menu-button"
         aria-label="消息操作"
@@ -721,13 +805,42 @@ function MessageMenu({ message, now, children }: { message: ChatMessage; now: nu
         ⋯
       </button>
       {open && (
-        <div className="chat-menu" role="menu" onClick={(e) => e.stopPropagation()}>
+        <div
+          ref={menu}
+          className="chat-menu"
+          role="menu"
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => {
+            // ↑↓ 在菜单项之间移动（测试 B-12）
+            if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+            e.preventDefault();
+            const items = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>("button:not(:disabled)"));
+            const at = items.indexOf(document.activeElement as HTMLButtonElement);
+            const next = e.key === "ArrowDown" ? (at + 1) % items.length : (at - 1 + items.length) % items.length;
+            items[next]?.focus();
+          }}
+        >
           {item("copy", "复制", () => void navigator.clipboard?.writeText(messageText(message)))}
           {item("quote", "引用", () => actions.chat.quote(message.id), !usable)}
-          {item("select", "多选", () => actions.chat.startSelect(message.id), !usable)}
-          {item("topic", "转议题", () => actions.chat.startSelect(message.id), !usable)}
+          {item("select", "多选转议题", () => actions.chat.startSelect(message.id), !usable)}
           {item("draw", "画一张", () => actions.chat.media.openDrawCard(message.id, stripCharts(messageText(message)).slice(0, 1000)), !usable)}
-          {canRetract(message, now) && item("undo", "撤回", () => void actions.chat.retract(message.id))}
+          {canRetract(message, now) &&
+            (confirmRetract ? (
+              item("undo", "确认撤回", () => void actions.chat.retract(message.id))
+            ) : (
+              <button
+                type="button"
+                role="menuitem"
+                title="撤回后，这条消息和它的回答不再发给秘书；秘书已经看到的收不回来"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setConfirmRetract(true);
+                }}
+              >
+                <Icon name="undo" size={20} />
+                撤回
+              </button>
+            ))}
           {item("info", "详情", () => actions.chat.openSheet({ kind: "message", messageId: message.id }))}
         </div>
       )}
@@ -748,10 +861,30 @@ function Composer({ conv }: { conv: Conversation }) {
   const [pickIndex, setPickIndex] = useState(0);
   const [stickers, setStickers] = useState(false);
   const [more, setMore] = useState(false);
+  const [pasteHint, setPasteHint] = useState(false);
+  const [noVoice, setNoVoice] = useState(false);
   /** ＋ 面板里正在录音：这时不收起面板（收起会把这段录音静默丢掉，汐 #174） */
   const [recording, setRecording] = useState(false);
   const [voiceMode, setVoiceMode] = useState(false);
   const input = useRef<HTMLTextAreaElement>(null);
+  const moreButton = useRef<HTMLButtonElement>(null);
+  const emojiButton = useRef<HTMLButtonElement>(null);
+  // 「＋」面板和表情面板：Esc 收起，焦点回到打开它的按钮（正在录音时不收，免得把录音丢掉）
+  useEffect(() => {
+    if (!more && !stickers) return;
+    const esc = (e: globalThis.KeyboardEvent) => {
+      if (e.key !== "Escape" || e.isComposing) return;
+      if (stickers) {
+        setStickers(false);
+        emojiButton.current?.focus();
+      } else if (!recording) {
+        setMore(false);
+        moreButton.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", esc);
+    return () => window.removeEventListener("keydown", esc);
+  }, [more, stickers, recording]);
   const quoted = draft.quoteMessageId ? messages.find((m) => m.id === draft.quoteMessageId) : undefined;
   const isGroup = conv.kind === "group";
   const tooLong = draft.text.length > CHAT_LIMITS.textMaxChars;
@@ -854,8 +987,14 @@ function Composer({ conv }: { conv: Conversation }) {
             type="button"
             role="menuitemcheckbox"
             aria-checked={draft.replyAsVoice}
-            title="打开后，这条消息的回答都会用语音发（在主控机本地合成）。你在话里说「用语音回我」也会自动打开"
-            onClick={() => actions.chat.media.setReplyAsVoice(!draft.replyAsVoice)}
+            title="打开后，这条消息的回答都会用语音发（在这台电脑上合成，不上传）。你在话里说「用语音回我」也会自动打开"
+            onClick={() => {
+              const on = !draft.replyAsVoice;
+              actions.chat.media.setReplyAsVoice(on);
+              setNoVoice(false);
+              // 没装语音时回答只会是文字：打开开关时就说清楚，别等发出去才发现（测试 B-01）
+              if (on) void actions.chat.media.loadVoices().then((v) => setNoVoice(!v || v.length === 0));
+            }}
           >
             <Icon name="voice" size={26} />
             {draft.replyAsVoice ? "语音回 · 开" : "用语音回"}
@@ -872,6 +1011,7 @@ function Composer({ conv }: { conv: Conversation }) {
           <Icon name={voiceMode ? "keyboard" : "voice"} />
         </button>
         <button
+          ref={moreButton}
           type="button"
           className="icon-tool tool-more"
           aria-expanded={more}
@@ -882,11 +1022,21 @@ function Composer({ conv }: { conv: Conversation }) {
         >
           <Icon name="plus" />
         </button>
-        <button type="button" className="icon-tool tool-emoji" aria-expanded={stickers} aria-label="表情" title="表情" onClick={() => setStickers((v) => !v)}>
+        <button ref={emojiButton} type="button" className="icon-tool tool-emoji" aria-expanded={stickers} aria-label="表情" title="表情" onClick={() => setStickers((v) => !v)}>
           <Icon name="emoji" />
         </button>
         {voiceMode && !draft.voice && (
           <RecordButton key={`hold-${conv.id}`} disabled={recordDisabled} variant="hold" />
+        )}
+        {noVoice && draft.replyAsVoice && (
+          <p className="chat-note" role="status">
+            这台电脑还没有装语音，回答只会是文字。可以在「设置 › 扩展包」里导入语音包。
+          </p>
+        )}
+        {pasteHint && (
+          <p className="chat-note" role="status">
+            暂时不能直接粘贴图片或文件：点左边的「＋」选「图片」或「文件」。
+          </p>
         )}
         <div className="chat-input-row" hidden={!!draft.voice || voiceMode}>
           <textarea
@@ -895,6 +1045,14 @@ function Composer({ conv }: { conv: Conversation }) {
             value={draft.text}
             placeholder={isGroup ? "说点什么…输入 @ 可以点名" : "说点什么…"}
             aria-label="消息"
+            onPaste={(e) => {
+              // 现在图片只能从「＋」里选；粘贴截图时说一声，别让人以为坏了（测试 B-06）
+              if (Array.from(e.clipboardData.items).some((it) => it.kind === "file")) {
+                e.preventDefault();
+                setPasteHint(true);
+                setTimeout(() => setPasteHint(false), 4000);
+              }
+            }}
             onChange={(e) => {
               const text = e.target.value;
               const pos = e.target.selectionStart ?? text.length;
@@ -1208,7 +1366,7 @@ function MessageSheet({ messageId }: { messageId: string }) {
     <Sheet title="消息详情" onClose={actions.chat.closeSheet}>
       <div className="chat-sheet-body">
         <p className="chat-note">
-          {m.sender === "user" ? "你" : name(m.agent)} · {new Date(m.createdAt).toLocaleString()}
+          {m.sender === "user" ? "你" : name(m.agent)} · {new Date(m.createdAt).toLocaleString("zh-CN", { hour12: false })}
         </p>
         {m.sender === "user" && m.state === "retracted" && (
           <p className="chat-note">
@@ -1257,7 +1415,7 @@ function MemoryDetail({ message, run }: { message: AgentChatMessage; run: ChatRu
           <li>节点记忆文件夹：节点没有回报</li>
         )}
       </ul>
-      <p className="chat-note">主控端只记用了哪几条，不存记忆正文。</p>
+      <p className="chat-note">这里只记录用了哪几条记忆，不保存记忆的正文。</p>
     </section>
   );
 }

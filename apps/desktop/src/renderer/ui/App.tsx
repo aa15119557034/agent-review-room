@@ -1,5 +1,4 @@
-import { WorkspaceView } from "./WorkspaceView";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { currentProject } from "../lib/state";
 import { useActions, useAppState, useIsMock } from "./hooks";
 import { SourceStep } from "./SourceStep";
@@ -17,13 +16,18 @@ import { NotesSheetHost } from "./notes/NoteSheets";
  */
 export function App() {
   const connection = useAppState((s) => s.connection);
-  if (connection.phase === "connecting") return <div className="splash">正在连接后端…</div>;
+  if (connection.phase === "connecting") return <div className="splash" role="status">正在打开…</div>;
   if (connection.phase === "failed") {
     return (
       <div className="splash splash-failed" role="alert">
-        <h1>无法连接后端</h1>
+        <h1>应用没有正常启动</h1>
         <p>{connection.message}</p>
-        <p>请重启应用。如果一直出现，把这段文字发给开发者。</p>
+        <p>
+          <button type="button" className="button-primary" onClick={() => location.reload()}>
+            再试一次
+          </button>
+        </p>
+        <p>如果一直这样，请完全退出后重新打开；反馈问题时把上面这段文字一起发给开发者。</p>
       </div>
     );
   }
@@ -32,7 +36,32 @@ export function App() {
 
 function Shell() {
   const view = useAppState((s) => s.view);
-  if (view === "workspace") return <div className="shell shell-workspace"><TopBar /><WorkspaceView /></div>;
+  const actions = useActions();
+  // 秘书在不在线：节点开关机没有事件通知，换页时和每隔一会儿（窗口看得见时）重读一次（C-04）
+  useEffect(() => {
+    if (view === "settings" || view === "workspace" || view === "desk") return;
+    void actions.refreshStatus();
+    const timer = setInterval(() => {
+      if (document.visibilityState === "visible") void actions.refreshStatus();
+    }, 45_000);
+    const onVisible = () => {
+      if (document.visibilityState === "visible") void actions.refreshStatus();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, [view, actions]);
+  // 设置和「资料与维护」是同一页的不同分区（C-50），用同一个组件，切换时分区选择不丢
+  if (view === "settings" || view === "workspace") {
+    return (
+      <div className="shell shell-console shell-settings">
+        <TopBar />
+        <SettingsView notice={<Notice />} />
+      </div>
+    );
+  }
   if (view === "chat") {
     return (
       <div className="shell shell-chat">
@@ -71,18 +100,11 @@ function Shell() {
 }
 
 function Desk() {
-  const view = useAppState((s) => s.view);
   return (
     <main className="desk">
       <Notice />
-      {view === "settings" ? (
-        <SettingsView />
-      ) : (
-        <>
-          <ReviewerSetupHint />
-          <Workflow />
-        </>
-      )}
+      <ReviewerSetupHint />
+      <Workflow />
     </main>
   );
 }
@@ -173,20 +195,20 @@ function MainNav() {
         <NavIcon name="agents" />
         <span className="topnav-label">秘书</span>
       </button>
-      <button type="button" className="topnav-run" disabled title="阶段 1C">
+      <button type="button" className="topnav-run" disabled title="执行：即将推出">
         <NavIcon name="run" />
         <span className="topnav-label">执行</span>
       </button>
       {/* 江浩 2026-11-02：单次评审不再放导航，这个位置留给「世界」（以后做 AI 与现实交互），现在只占位 */}
-      <button type="button" className="topnav-world" disabled title="世界：以后做，AI 与现实世界交互">
+      <button type="button" className="topnav-world" disabled title="世界：即将推出">
         <NavIcon name="world" />
         <span className="topnav-label">世界</span>
       </button>
       <button
         type="button"
         className="topnav-settings"
-        aria-current={view === "settings" ? "page" : undefined}
-        onClick={() => (view === "settings" ? actions.closeSettings() : void actions.openSettings())}
+        aria-current={view === "settings" || view === "workspace" ? "page" : undefined}
+        onClick={() => void actions.openSettings()}
       >
         <NavIcon name="settings" />
         {/* 草案：手机上这一格叫「我」 */}
@@ -205,18 +227,18 @@ function TopHeader() {
   const view = useAppState((s) => s.view);
   const isMock = useIsMock();
   // C-33b 收一收（江浩「界面还是太杂了」）：聊天、讨论室、秘书页不要顶上那一行，标题在各自面板里
-  if (view === "chat" || view === "console" || view === "discussion") return null;
+  if (view !== "desk") return null;
   return (
     <header className="topbar">
       <span className="wordmark">Agent 评审室</span>
-      {(view === "desk" || view === "settings") && <span className="topbar-project">{project?.name ?? "未选择项目"}</span>}
+      <span className="topbar-project">{project?.name ?? "未选择项目"}</span>
       {isMock && (
-        <span className="mock-flag" title="数据只存在内存里，不会调用真实的 Reviewer">
+        <span className="mock-flag" title="演示数据只存在内存里，不会真的发给秘书">
           演示数据
         </span>
       )}
       {/* 只在旧的单次评审工作台上显示：设置页现在以「节点」为主，这一行红字「未设置节点」会让人以为刚保存的节点没生效（C-49 / B-05） */}
-      {view === "desk" && status && (
+      {status && (
         <span className="reviewer-status" data-ok={status.reviewerConfigured}>
           Reviewer：{status.reviewerConfigured ? status.reviewerAgent : "未设置节点"}
         </span>
