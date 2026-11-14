@@ -221,8 +221,19 @@ export function restoredPlacement(store: WindowStateStore): WindowPlacement {
 }
 
 export function trackWindowState(window: BrowserWindow, store: WindowStateStore): void {
+  // 只在用户真的拖过 / 缩放过 / 最大化过之后才记。小数缩放（比如 Windows 175%）下，
+  // 开窗时设的大小读回来会差几个像素，不动窗口也照记的话，每重开一次窗口就大一圈（真机实测每次 +4px）。
+  // will-resize / will-move 只在用户操作时触发；Linux 上没有这两个事件，那里照旧一直记。
+  let touched = process.platform === "linux";
+  const touch = (): void => {
+    touched = true;
+  };
+  window.on("will-resize", touch);
+  window.on("will-move", touch);
+  window.on("maximize", touch);
+  window.on("unmaximize", touch);
   const capture = (): void => {
-    if (window.isDestroyed()) return;
+    if (window.isDestroyed() || !touched) return;
     // 最大化 / 全屏 / 最小化时 getNormalBounds 仍是「还原后」的大小，正好是要记的
     const bounds = window.getNormalBounds();
     if (bounds.width < MIN_WINDOW_SIZE.width / 2 || bounds.height < MIN_WINDOW_SIZE.height / 2) return;

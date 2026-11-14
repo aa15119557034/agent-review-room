@@ -427,6 +427,14 @@ function Timeline({ conv }: { conv: Conversation }) {
 
   // 停在底部时，新消息和流式文字自动跟上；往上翻着看的时候不打扰
   const lastKey = `${entries.length}:${liveText.join("").length}:${live.length}`;
+  // 自己刚发出一条：不管之前翻到哪，都回到底部（往上翻去引用旧消息后发送，消息和回答都看不见，真机验收 B3）
+  const lastEntry = entries[entries.length - 1];
+  const lastOwnId = lastEntry && lastEntry.message.sender === "user" ? lastEntry.message.id : null;
+  const seenOwn = useRef<string | null>(lastOwnId);
+  if (lastOwnId !== seenOwn.current) {
+    if (lastOwnId !== null) stick.current = true;
+    seenOwn.current = lastOwnId;
+  }
   useEffect(() => {
     const el = ref.current;
     if (el && stick.current) el.scrollTop = el.scrollHeight;

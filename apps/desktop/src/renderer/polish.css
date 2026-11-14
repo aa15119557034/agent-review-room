@@ -295,13 +295,14 @@
 
 /* 讨论室：窗口矮或放大显示时，输入区自己滚，时间线至少留三成高度（D-21） */
 .disc-main > .composer {
-  flex: 0 1 auto;
-  min-height: 0;
+  flex: none;
+  max-height: 55%;
   overflow-y: auto;
 }
 
 .disc-main > .disc-timeline {
-  min-height: 34%;
+  flex: 1 1 0;
+  min-height: 0;
 }
 
 @media (max-height: 700px) {
@@ -429,4 +430,22 @@
 .side-card {
   min-width: 0;
   overflow: hidden;
+}
+
+/* 窗口矮时：输入框和两个按钮排在同一行，时间线最少留 120px，不用在输入区里再滚（真机验收 3i） */
+@media (max-height: 700px), (min-width: 721px) and (max-width: 1100px) {
+  .disc-main > .composer .composer-row {
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+
+  .disc-main > .composer .composer-row textarea {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .disc-main > .composer .composer-row button {
+    flex: none;
+  }
+
 }

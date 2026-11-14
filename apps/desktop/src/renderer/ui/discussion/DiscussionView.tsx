@@ -407,7 +407,9 @@ function TurnCard({ turn, reply }: { turn: Turn; reply: Message | null }) {
   const actions = useActions();
   const { text, live } = turnText(turn, reply, events);
   const label = OUTCOME_LABEL[turn.outcome];
-  const canRetry = ["timed_out", "failed", "absent_quota"].includes(turn.outcome) && !turn.supersededBy;
+  // 作废 / 已经汇总完的轮次不能再重试（后端会拒绝「这一轮已经结束」），按钮也不该出现
+  const roundOpen = ["RUNNING", "PAUSED", "AWAITING_SUMMARY"].includes(d.rounds.find((r) => r.id === turn.roundId)?.state ?? "");
+  const canRetry = roundOpen && ["timed_out", "failed", "absent_quota"].includes(turn.outcome) && !turn.supersededBy;
   const meta = [turn.onBehalfOf ? `代 ${agentName(d, turn.onBehalfOf)}` : null, label || (turn.outcome === "answered" ? "已答" : formatClock(turn.createdAt))].filter(Boolean).join(" · ");
   return (
     <Bubble who={agentName(d, turn.agent)} color={agentColor(d, turn.agent)} meta={meta} state={turn.outcome} title={formatClock(turn.createdAt)}>
