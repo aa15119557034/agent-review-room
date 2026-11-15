@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   COMMANDS, ControlEvent, QUERIES, WorldAction, WorldActivity, WorldActRequest, WorldCognitionReply, WorldEvent, WorldItem,
-  WorldBudget, WorldCommitment, WorldObservation, WorldResetRequest, WorldResidentView, WorldScene, WorldSceneSayRequest, WorldSettingsSaveRequest, WorldSnapshot,
+  WorldBudget, WorldCommitment, WorldObservation, WorldResetRequest, WorldResidentView, WorldScene, WorldSceneSayRequest, WorldSettingsSaveRequest, WorldSnapshot, WorldState,
 } from "../src/index";
 
 const U = "01JABCDEFGHJKMNPQRSTVWXYZ0";
@@ -194,4 +194,13 @@ test("world commands, queries and events are registered", () => {
   assert.equal(ControlEvent.safeParse({ type: "world.updated", world: snapshot }).success, true);
   assert.equal(QUERIES["world.get"].response.safeParse({ world: null, scene: null, settings: { dayRealMinutes: 24, dailyCognitionLimit: 60, residents: ["claude"] }, budgets: [] }).success, true);
   assert.equal(QUERIES["world.review"].response.safeParse(null).success, true);
+});
+
+test("world.get before anything is set up: settings may be null only while there is no world", () => {
+  const settings = { dayRealMinutes: 48, dailyCognitionLimit: 60, residents: ["claude"] };
+  assert.equal(WorldState.safeParse({ world: null, scene: null, settings: null, budgets: [] }).success, true);
+  assert.equal(WorldState.safeParse({ world: null, scene: null, settings, budgets: [] }).success, true);
+  assert.equal(WorldState.safeParse({ world: snapshot, scene: null, settings, budgets: [] }).success, true);
+  assert.equal(WorldState.safeParse({ world: snapshot, scene: null, settings: null, budgets: [] }).success, false);
+  assert.equal(WorldState.safeParse({ world: null, scene: null, settings: { ...settings, residents: [] }, budgets: [] }).success, false, "不造空的入住名单");
 });
