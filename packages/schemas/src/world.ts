@@ -241,7 +241,8 @@ export type WorldActionResult = z.infer<typeof WorldActionResult>;
  * - activity_ended：活动结算，每个活动只有一条。produced：产出了什么（几份饭）；consumed：**整段活动一共用掉了多少**，
  *   只在这里记一次。开始活动时材料只是「占用」（快照里的数量先减掉，别人用不了），不另记扣减事件；
  *   结束时按 consumed 结算，占用多于实际用掉的（比如中途取消）退回去。
- *   所以任何时刻：数量 = 开局数量 + 所有 produced − 所有 consumed − 进行中活动的占用（占用多少由活动种类和 rulesVersion 决定）。
+ *   所以任何时刻：数量 = 开局数量 + 所有 produced − 所有 consumed − 进行中活动的占用（占用多少由活动种类和 rulesVersion 决定）
+ *   + 规则在每条 day_started 时的固定补货（补哪样、补到多少由 rulesVersion 决定，不另记事件；没有这条规则就是 0）。
  *   一局的 rulesVersion 不变，开局内容可恢复，这样才能从事件重算。
  * - said：有人在某个地点说了一句话。text 是台词原文，**不是事实**：别人听到只算「听说」
  * - clock：到了作息点 / 新的一天，供回顾和界面用
