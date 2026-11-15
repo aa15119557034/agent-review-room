@@ -18,6 +18,7 @@ interface WorldDeps {
   queue: WriteQueue;
   emit: (event: ControlEvent) => void;
   knownAgents: () => string[];
+  agentName?: (agent: string) => string;
   dbPath?: string;
   now?: () => string;
 }
@@ -169,9 +170,10 @@ export class WorldService {
       return result;
     });
   }
-  #check(world: WorldSnapshot | undefined, id: string, gen: WorldGeneration, admitted: boolean): WorldActionResult | null {
+  #check(world: WorldSnapshot | undefined, id: string, gen: WorldGeneration, admitted: boolean, allowUserPause = false): WorldActionResult | null {
     if (!world || world.id !== id || !equalGeneration(world.generation, gen)) return denied("stale_generation");
-    if (!admitted || this.#stopped || world.run.state !== "running") return denied("world_paused");
+    const userPaused = allowUserPause && world.run.state === "paused" && world.run.by === "user";
+    if (!admitted || this.#stopped || (world.run.state !== "running" && !userPaused)) return denied("world_paused");
     return null;
   }
   #action(world: WorldSnapshot, actor: WorldActor, action: WorldAction, out: ControlEvent[], sceneId: string | null = null, optionId: string | null = null): WorldActionResult {
@@ -185,10 +187,13 @@ export class WorldService {
   }
   #commit(before: WorldSnapshot, after: WorldSnapshot, events: WorldEvent[], out: ControlEvent[]): WorldSnapshot {
     const world = this.#stamp(after);
-    const previous = before.residents.map((r) => this.#store.view(before.id, r.agent)).filter((v) => v !== null);
-    const observed = updateWorldViews(previous, before, world, events);
+    // Views contain observations, not the live clock or gauges. An empty event
+    // batch cannot change them and must not rewrite every resident's history.
+    const previous = events.length ? before.residents.map((r) => this.#store.view(before.id, r.agent)).filter((v) => v !== null) : [];
+    const observed = events.length ? updateWorldViews(previous, before, world, events) : { observations: [], views: [] };
+    const observers = new Set(observed.observations.map((observation) => observation.observer));
     this.#store.save(world);
-    this.#store.append(world.id, events, observed.observations, observed.views);
+    if (events.length) this.#store.append(world.id, events, observed.observations, observed.views.filter((view) => observers.has(view.agent)));
     for (const observation of observed.observations) {
       const cache = this.#observedHistory.get(`${world.id}:${observation.observer}`);
       if (cache) cache.push(events.find((event) => event.seq === observation.seq)!);
@@ -234,11 +239,10 @@ export class WorldService {
   async #setUserRun(worldId: string, running: boolean): Promise<WorldSnapshot> {
     if (this.#stopped) throw new WorldError("invalid_state", "世界已经停止");
     const result = await this.#transaction((out) => {
-      const next = { ...this.#generation, runSeq: this.#generation.runSeq + 1 };
-      let world = this.#world(worldId);
-      world = this.#closeScene(world, out);
-      const changed = this.#commit(world, { ...world, generation: next, run: running && this.#barriers === 0 && !this.#suspended ? { state: "running" } : { state: "paused", by: running ? "maintenance" : "user" } }, [], out);
-      this.#generation = next;
+      const world = this.#world(worldId);
+      const willRun = running && this.#barriers === 0 && !this.#suspended;
+      const changed = willRun && world.run.state === "paused" ? this.#resumeWorld(world, out) :
+        this.#commit(world, { ...world, run: willRun ? { state: "running" } : { state: "paused", by: running ? "maintenance" : "user" } }, [], out);
       this.#fraction = 0;
       return changed;
     });
@@ -271,24 +275,37 @@ export class WorldService {
   }
   async #autoPause(): Promise<void> {
     await this.#transaction((out) => {
-      const next = { ...this.#generation, runSeq: this.#generation.runSeq + 1 };
       const saved = this.#load();
       if (!saved) return;
-      const world = this.#closeScene(saved.world, out);
-      this.#commit(world, { ...world, generation: next, run: world.run.state === "running" ? { state: "paused", by: "maintenance" } : world.run }, [], out);
-      this.#generation = next;
+      const world = saved.world;
+      this.#commit(world, { ...world, run: world.run.state === "running" ? { state: "paused", by: "maintenance" } : world.run }, [], out);
       this.#fraction = 0;
     });
   }
   async #autoResume(): Promise<void> {
     await this.#transaction((out) => {
-      const next = { ...this.#generation, runSeq: this.#generation.runSeq + 1 };
       const world = this.#load()?.world;
       if (!world || world.run.state !== "paused" || world.run.by !== "maintenance") return;
-      this.#commit(world, { ...world, generation: next, run: { state: "running" } }, [], out);
-      this.#generation = next;
+      this.#resumeWorld(world, out);
       this.#fraction = 0;
     });
+  }
+  #resumeWorld(world: WorldSnapshot, out: ControlEvent[]): WorldSnapshot {
+    const next = { ...this.#generation, runSeq: this.#generation.runSeq + 1 };
+    let scene: WorldScene | null = null;
+    if (world.sceneId) {
+      const previous = this.#store.getScene(world.id, world.sceneId);
+      if (!previous || previous.state === "closed") throw new WorldError("internal", "当前场景记录缺失或已结束");
+      scene = { ...previous, generation: next, state: "open", lines: previous.state === "waiting" ? [
+        ...previous.lines, { speaker: null, source: "rule", expression: "neutral", seq: null, text: "刚才的回应没有接上，可以重新说一句。" },
+      ] : previous.lines };
+      this.#store.saveScene(world.id, scene);
+    }
+    const changed = this.#commit(world, { ...world, generation: next, run: { state: "running" } }, [], out);
+    this.#generation = next;
+    // The renderer must see the new snapshot generation before the scene.
+    if (scene) out.push({ type: "world.scene.updated", scene });
+    return changed;
   }
   async suspend(): Promise<void> {
     this.#suspended = true;
@@ -365,14 +382,15 @@ export class WorldService {
       const receipt = this.#store.getReceipt(request.actionId);
       if (receipt) return receipt.request === JSON.stringify(request) ? receipt.result as WorldSceneResult : { result: denied("duplicate_action"), scene: null };
       const world = this.#load()?.world;
-      const rejection = this.#check(world, request.worldId, request.generation, admitted);
+      const rejection = this.#check(world, request.worldId, request.generation, admitted, request.type === "world.scene.close");
       const result = rejection ? { result: rejection, scene: null } : work(world!, out);
       this.#store.putReceipt(request.actionId, JSON.stringify(request), result);
       return result;
     });
   }
   #openScene(world: WorldSnapshot, origin: WorldScene["origin"], placeId: string, text: string, out: ControlEvent[]): WorldSceneResult {
-    const residents = world.residents.filter((r) => r.placeId === placeId).slice(0, 4).map((r) => r.agent);
+    const samePlace = world.residents.filter((r) => r.placeId === placeId).map((r) => r.agent);
+    const residents = (origin.kind === "player" ? [origin.agent, ...samePlace.filter((agent) => agent !== origin.agent)] : samePlace).slice(0, 4);
     if (!residents.length) return { result: denied("unknown_target"), scene: null };
     const options: WorldScene["options"] = [];
     if (origin.kind === "player") {
@@ -409,7 +427,14 @@ export class WorldService {
     const joined = events.find((e): e is Extract<WorldEvent, { type: "action" }> => e.type === "action" && e.action.type === "join");
     if (joined) {
       const current = world.activities.find((a) => a.id === joined.activityId);
-      if (current && ![...this.#history(worldId, joined.seq)].some((e) => e.type === "activity_ended" && e.activity.state === "completed" && current.participants.every((p) => e.activity.participants.some((other) => JSON.stringify(p) === JSON.stringify(other))))) {
+      let previouslyTogether = false;
+      if (current) for (const event of this.#history(worldId, joined.seq)) {
+        if (event.type === "activity_ended" && event.activity.state === "completed" && current.participants.every((p) => event.activity.participants.some((other) => JSON.stringify(p) === JSON.stringify(other)))) {
+          previouslyTogether = true;
+          break;
+        }
+      }
+      if (current && !previouslyTogether) {
         this.#openScene(world, { kind: "event", cause: "first_together", seq: joined.seq }, current.placeId, `这次有人一起${activityNames[current.kind]}了。等事情做完，小屋会留下这段共同经历。`, out);
         return;
       }
@@ -433,8 +458,11 @@ export class WorldService {
     const activity = world.activities.find((a) => a.id === item.usedBy);
     const resident = world.residents.find((r) => r.agent === agent);
     if (!activity || activity.placeId !== resident?.placeId) return;
-    const origin = [...this.#history(world.id)].find((e) => e.type === "action" && e.activityId === activity.id && e.action.type === "start");
-    if (origin) this.#openScene(world, { kind: "event", cause: "item_contention", seq: origin.seq }, activity.placeId, `${item.label}正有人在用，后来的人需要等一等，或先做别的事。`, out);
+    for (const event of this.#history(world.id)) {
+      if (event.type !== "action" || event.activityId !== activity.id || event.action.type !== "start") continue;
+      this.#openScene(world, { kind: "event", cause: "item_contention", seq: event.seq }, activity.placeId, `${item.label}正有人在用，后来的人需要等一等，或先做别的事。`, out);
+      break;
+    }
   }
   #sceneToday(world: WorldSnapshot, cause: Extract<WorldScene["origin"], { kind: "event" }>["cause"], agent: string): boolean {
     for (const event of this.#history(world.id)) {
@@ -459,7 +487,9 @@ export class WorldService {
     for (const event of this.#history(world.id, endSeq)) {
       if ((event.type === "clock" && event.mark === "day_started" && event.day === day) || items.length >= 40) break;
       if (event.type !== "activity_ended") continue;
-      items.push({ seqs: [event.seq], source: "rule", text: `${event.activity.participants.map((p) => p.kind === "player" ? "你" : p.agent).join("、")}的${activityNames[event.activity.kind]}${event.activity.state === "completed" ? "完成了" : "结束了"}。` });
+      const names = event.activity.participants.map((p) => p.kind === "player" ? "你" : this.#deps.agentName?.(p.agent) ?? p.agent);
+      const participants = names.length > 3 ? `${names.slice(0, 3).join("、")}等 ${names.length} 人` : names.join("、");
+      items.push({ seqs: [event.seq], source: "rule", text: `${participants}的${activityNames[event.activity.kind]}${event.activity.state === "completed" ? "完成了" : "结束了"}。` });
     }
     const review: WorldDayReview = { day, items: items.reverse() };
     this.#store.saveReview(world.id, review);

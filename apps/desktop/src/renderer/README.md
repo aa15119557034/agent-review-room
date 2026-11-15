@@ -17,9 +17,11 @@ renderer/
 │  ├─ console.ts            秘书控制台（C-37）的状态、活动列表就地更新、额度显示（纯函数）
 │  ├─ console-actions.ts    秘书控制台的操作（查活动、翻页、跳到议题 / 会话）
 │  ├─ notes.ts / notes-actions.ts  项目笔记、换窗口、GitHub 同步（C-47）的状态和操作
-│  └─ topic-board.ts        讨论室标签（C-38）：议题一句话状态、等你处理、分组（纯函数）
+│  ├─ topic-board.ts        讨论室标签（C-38）：议题一句话状态、等你处理、分组（纯函数）
+│  └─ world.ts / world-actions.ts  世界（C-54 / C-56）：快照和事件按「局 + 序号」合并、时钟插值、给人看的话；你的操作
 ├─ mock/mock-backend.ts     内存版后端，实现同一个 RoomBridge，遵守状态机，出参按契约校验
-│                           （讨论室在 discussion-mock.ts，聊天在 chat-mock.ts，控制台的 agents.activity 在 activity-mock.ts）
+│                           （讨论室在 discussion-mock.ts，聊天在 chat-mock.ts，控制台的 agents.activity 在 activity-mock.ts，
+│                           世界在 world-mock.ts：演示用的作息和台词，不是规则内核的参考）
 ├─ ui/                      React 组件（只读状态 + 调用 actions）
 └─ test/                    逻辑层测试（node:test）
 ```
@@ -49,6 +51,9 @@ pnpm exec tsx --test apps/desktop/src/renderer/test/*.test.ts
 #   项目笔记和换窗口（C-47）：?mock 的群聊里 C酱 已压缩 3 次（顶上「建议换窗口」）；会话设置 ⋯ 里每人「换窗口」；
 #     发一句带「记一下」的话，C酱 的回答会带 room-note 存成新版、林离写两段演示「笔记没存上」；
 #     设置页 GitHub：仓库名带 public = 公开仓库（不推），带 offline = 连不上（排队）
+#   世界（顶栏「世界」，C-54 / C-56）：?mock 预置一局，两位居民按作息自己过（现实 1 秒 = 世界 1 分钟）；
+#     ?mock&world=new 还没开始（选谁住进来）；&worldOffline=claude 这位不在线（按作息生活、找她说话没法回应）；
+#     &worldBudget=0 今天的思考次数用完
 ```
 
 ## 需要 D-01 提供的依赖
