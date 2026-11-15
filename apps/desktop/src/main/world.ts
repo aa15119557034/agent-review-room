@@ -170,9 +170,10 @@ export class WorldService {
       return result;
     });
   }
-  #check(world: WorldSnapshot | undefined, id: string, gen: WorldGeneration, admitted: boolean): WorldActionResult | null {
+  #check(world: WorldSnapshot | undefined, id: string, gen: WorldGeneration, admitted: boolean, allowUserPause = false): WorldActionResult | null {
     if (!world || world.id !== id || !equalGeneration(world.generation, gen)) return denied("stale_generation");
-    if (!admitted || this.#stopped || world.run.state !== "running") return denied("world_paused");
+    const userPaused = allowUserPause && world.run.state === "paused" && world.run.by === "user";
+    if (!admitted || this.#stopped || (world.run.state !== "running" && !userPaused)) return denied("world_paused");
     return null;
   }
   #action(world: WorldSnapshot, actor: WorldActor, action: WorldAction, out: ControlEvent[], sceneId: string | null = null, optionId: string | null = null): WorldActionResult {
@@ -238,11 +239,10 @@ export class WorldService {
   async #setUserRun(worldId: string, running: boolean): Promise<WorldSnapshot> {
     if (this.#stopped) throw new WorldError("invalid_state", "世界已经停止");
     const result = await this.#transaction((out) => {
-      const next = { ...this.#generation, runSeq: this.#generation.runSeq + 1 };
-      let world = this.#world(worldId);
-      world = this.#closeScene(world, out);
-      const changed = this.#commit(world, { ...world, generation: next, run: running && this.#barriers === 0 && !this.#suspended ? { state: "running" } : { state: "paused", by: running ? "maintenance" : "user" } }, [], out);
-      this.#generation = next;
+      const world = this.#world(worldId);
+      const willRun = running && this.#barriers === 0 && !this.#suspended;
+      const changed = willRun && world.run.state === "paused" ? this.#resumeWorld(world, out) :
+        this.#commit(world, { ...world, run: willRun ? { state: "running" } : { state: "paused", by: running ? "maintenance" : "user" } }, [], out);
       this.#fraction = 0;
       return changed;
     });
@@ -275,24 +275,37 @@ export class WorldService {
   }
   async #autoPause(): Promise<void> {
     await this.#transaction((out) => {
-      const next = { ...this.#generation, runSeq: this.#generation.runSeq + 1 };
       const saved = this.#load();
       if (!saved) return;
-      const world = this.#closeScene(saved.world, out);
-      this.#commit(world, { ...world, generation: next, run: world.run.state === "running" ? { state: "paused", by: "maintenance" } : world.run }, [], out);
-      this.#generation = next;
+      const world = saved.world;
+      this.#commit(world, { ...world, run: world.run.state === "running" ? { state: "paused", by: "maintenance" } : world.run }, [], out);
       this.#fraction = 0;
     });
   }
   async #autoResume(): Promise<void> {
     await this.#transaction((out) => {
-      const next = { ...this.#generation, runSeq: this.#generation.runSeq + 1 };
       const world = this.#load()?.world;
       if (!world || world.run.state !== "paused" || world.run.by !== "maintenance") return;
-      this.#commit(world, { ...world, generation: next, run: { state: "running" } }, [], out);
-      this.#generation = next;
+      this.#resumeWorld(world, out);
       this.#fraction = 0;
     });
+  }
+  #resumeWorld(world: WorldSnapshot, out: ControlEvent[]): WorldSnapshot {
+    const next = { ...this.#generation, runSeq: this.#generation.runSeq + 1 };
+    let scene: WorldScene | null = null;
+    if (world.sceneId) {
+      const previous = this.#store.getScene(world.id, world.sceneId);
+      if (!previous || previous.state === "closed") throw new WorldError("internal", "当前场景记录缺失或已结束");
+      scene = { ...previous, generation: next, state: "open", lines: previous.state === "waiting" ? [
+        ...previous.lines, { speaker: null, source: "rule", expression: "neutral", seq: null, text: "刚才的回应没有接上，可以重新说一句。" },
+      ] : previous.lines };
+      this.#store.saveScene(world.id, scene);
+    }
+    const changed = this.#commit(world, { ...world, generation: next, run: { state: "running" } }, [], out);
+    this.#generation = next;
+    // The renderer must see the new snapshot generation before the scene.
+    if (scene) out.push({ type: "world.scene.updated", scene });
+    return changed;
   }
   async suspend(): Promise<void> {
     this.#suspended = true;
@@ -369,7 +382,7 @@ export class WorldService {
       const receipt = this.#store.getReceipt(request.actionId);
       if (receipt) return receipt.request === JSON.stringify(request) ? receipt.result as WorldSceneResult : { result: denied("duplicate_action"), scene: null };
       const world = this.#load()?.world;
-      const rejection = this.#check(world, request.worldId, request.generation, admitted);
+      const rejection = this.#check(world, request.worldId, request.generation, admitted, request.type === "world.scene.close");
       const result = rejection ? { result: rejection, scene: null } : work(world!, out);
       this.#store.putReceipt(request.actionId, JSON.stringify(request), result);
       return result;
