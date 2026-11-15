@@ -330,10 +330,24 @@ function walkToward(world: WorldSnapshot, from: string, target: string): WorldAc
   return null;
 }
 
-function routineActivity(world: WorldSnapshot, actor: WorldActor, kind: WorldActivityKind): WorldAction | null {
+function knownReadingPlace(actor: WorldActor, currentPlace: string, view: WorldResidentView | undefined, ownEvents: readonly WorldEvent[]): string {
+  const known = view?.knownItems.find((item) => item.itemId === "book");
+  if (known?.at?.kind === "place") return known.at.placeId;
+  if (known?.at?.kind === "held") {
+    if (sameActor(known.at.by, actor)) return currentPlace;
+    // A holder's current position is world truth, not this resident's knowledge.
+    // Recover only the room where the observation supporting this belief occurred.
+    const observed = ownEvents.find((event) => event.seq === known.seq) ?? view?.seen.find((event) => event.seq === known.seq);
+    if (observed?.type === "action" && observed.action.type === "move") return observed.action.to;
+    if (observed && observed.type !== "clock" && observed.type !== "said") return observed.placeId;
+  }
+  return "living_room";
+}
+
+function routineActivity(world: WorldSnapshot, actor: WorldActor, kind: WorldActivityKind, readingPlace: string): WorldAction | null {
   const place = actorState(world, actor)!.placeId;
   const target = kind === "cook" || kind === "eat" ? "kitchen" : kind === "sleep" && actor.kind === "resident" ? world.places.find((room) => room.owner === actor.agent)?.id :
-    kind === "read" || kind === "set_table" ? "living_room" : place;
+    kind === "read" ? readingPlace : kind === "set_table" ? "living_room" : place;
   if (target === undefined) throw new Error("Resident has no bedroom");
   if (place !== target) return walkToward(world, place, target);
   const action: WorldAction = { type: "start", activity: kind, itemId: null };
@@ -348,12 +362,16 @@ function routineActivity(world: WorldSnapshot, actor: WorldActor, kind: WorldAct
 }
 
 /** Chooses one proposal, never mutates or commits. It does not chase items in unseen rooms. */
-export function chooseWorldRoutine(world: WorldSnapshot, agent: ResidentName, ownEvents: readonly WorldEvent[] = []): WorldAction | null {
+export function chooseWorldRoutine(
+  world: WorldSnapshot, agent: ResidentName, ownEvents: readonly WorldEvent[] = [], view?: WorldResidentView,
+): WorldAction | null {
   assertRules(world);
   if (world.run.state !== "running") return null;
   const r = world.residents.find((resident) => resident.agent === agent);
   if (!r) return null;
   const actor = residentActor(agent);
+  const readingPlace = knownReadingPlace(actor, r.placeId, view?.worldId === world.id && view.agent === agent ? view : undefined, ownEvents);
+  const propose = (kind: WorldActivityKind) => routineActivity(world, actor, kind, readingPlace);
   const asked = world.commitments.find((c) => c.state === "asked" && sameActor(c.by, actor) && actorState(world, c.to)?.placeId === r.placeId);
   if (asked) {
     const discretionary = !["eat", "rest", "sleep"].includes(asked.activity);
@@ -374,7 +392,7 @@ export function chooseWorldRoutine(world: WorldSnapshot, agent: ResidentName, ow
   for (const agreement of world.commitments) {
     if (agreement.state !== "pending") continue;
     if (sameActor(agreement.by, actor) && agreement.activityId === null) {
-      const proposed = routineActivity(world, actor, agreement.activity);
+      const proposed = propose(agreement.activity);
       if (proposed) return proposed;
       return null; // A due promise waits for its resource, rather than starting unrelated work.
     }
@@ -389,14 +407,14 @@ export function chooseWorldRoutine(world: WorldSnapshot, agent: ResidentName, ow
   }
   if (r.satiety < 50) {
     if (r.placeId !== "kitchen") return walkToward(world, r.placeId, "kitchen");
-    const eating = routineActivity(world, actor, "eat");
+    const eating = propose("eat");
     if (eating) return eating;
-    const cooking = routineActivity(world, actor, "cook");
+    const cooking = propose("cook");
     if (cooking) return cooking;
-    return routineActivity(world, actor, "rest");
+    return propose("rest");
   }
   const hour = Math.floor((world.now % WORLD_MINUTES_PER_DAY) / 60);
-  if (r.energy < 30 || hour >= 22 || hour < 7) return routineActivity(world, actor, "sleep");
+  if (r.energy < 30 || hour >= 22 || hour < 7) return propose("sleep");
   const offset = world.residents.findIndex((resident) => resident.agent === agent);
   const dayStart = world.now - world.now % WORLD_MINUTES_PER_DAY;
   // The caller supplies this resident's observed history (at least this day's
@@ -416,7 +434,7 @@ export function chooseWorldRoutine(world: WorldSnapshot, agent: ResidentName, ow
     }
   }
   const kind = (["read", "tidy", "rest"] as const)[(Math.floor(world.now / 30) + offset) % 3]!;
-  return routineActivity(world, actor, kind) ?? routineActivity(world, actor, "tidy");
+  return propose(kind) ?? propose("tidy");
 }
 
 function refreshVisibleItems(view: WorldResidentView, world: WorldSnapshot, room: string, at: number, seq: number): void {

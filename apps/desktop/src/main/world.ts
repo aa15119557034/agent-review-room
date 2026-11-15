@@ -217,7 +217,7 @@ export class WorldService {
           const key = `${world.id}:${resident.agent}`;
           let ownEvents = this.#observedHistory.get(key);
           if (!ownEvents) { ownEvents = this.#store.observedEvents(world.id, resident.agent); this.#observedHistory.set(key, ownEvents); }
-          const action = chooseWorldRoutine(world, resident.agent, ownEvents);
+          const action = chooseWorldRoutine(world, resident.agent, ownEvents, this.#store.view(world.id, resident.agent) ?? undefined);
           if (action) {
             const result = this.#action(world, { kind: "resident", agent: resident.agent }, action, out);
             if (!result.accepted && result.reason === "item_busy" && action.type === "start") this.#contention(world, resident.agent, action.itemId ?? (action.activity === "read" ? "book" : "pot"), out);

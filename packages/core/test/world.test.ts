@@ -286,7 +286,8 @@ describe("world time and invitations", () => {
     for (let minute = 481; minute <= 1600; minute += 1) {
       h.advance(minute);
       for (const agent of ["claude", "codex"] as const) {
-        const choice = chooseWorldRoutine(h.world, agent, h.views.find((v) => v.agent === agent)!.seen);
+        const view = h.views.find((v) => v.agent === agent)!;
+        const choice = chooseWorldRoutine(h.world, agent, view.seen, view);
         if (choice) {
           const result = h.apply({ kind: "resident", agent }, choice);
           if (!result.result.accepted) assert.equal(result.result.reason, "item_busy");
@@ -419,6 +420,77 @@ describe("world time and invitations", () => {
 });
 
 describe("per-resident observation and old beliefs", () => {
+  it("reads where the resident last saw the book while an uninformed housemate searches the old room", () => {
+    const h = fixture();
+    h.act(B, { type: "move", to: "room_2" });
+    h.act(A, { type: "take", itemId: "book" });
+    h.act(A, { type: "move", to: "room_1" });
+    h.act(A, { type: "put", itemId: "book" });
+    h.act(A, { type: "move", to: "living_room" });
+    h.act(U, { type: "invite", to: A, activity: "read" });
+    h.act(A, { type: "answer", commitmentId: h.world.commitments[0]!.id, answer: "accept", dueAt: null });
+    h.act(U, { type: "move", to: "room_2" });
+    h.act(U, { type: "invite", to: B, activity: "read" });
+    h.act(B, { type: "answer", commitmentId: h.world.commitments.find((c) => c.by.kind === "resident" && c.by.agent === "codex")!.id, answer: "accept", dueAt: null });
+    const choose = (agent: string) => {
+      const view = h.views.find((v) => v.agent === agent)!;
+      return chooseWorldRoutine(h.world, agent, view.seen, view);
+    };
+    assert.deepEqual(choose("claude"), { type: "move", to: "room_1" });
+    assert.deepEqual(choose("codex"), { type: "move", to: "living_room" });
+    h.act(A, choose("claude")!);
+    assert.deepEqual(choose("claude"), { type: "start", activity: "read", itemId: null });
+    h.act(A, choose("claude")!);
+    assert.equal(h.world.activities[0]!.placeId, "room_1", "the accepted invitation starts at the known book location");
+    h.act(B, choose("codex")!);
+    const viewB = h.views.find((v) => v.agent === "codex")!;
+    assert.equal(viewB.knownItems.find((item) => item.itemId === "book")!.at, null);
+    assert.equal(choose("codex"), null, "not finding the book does not reveal its actual room");
+    h.act(U, { type: "move", to: "living_room" });
+    const told: WorldEvent = { type: "said", seq: h.world.lastSeq + 1, at: h.world.now, placeId: "living_room", speaker: U, text: "书在一号房间。", sceneId: null };
+    const heard = updateWorldViews(h.views, h.world, { ...h.world, lastSeq: told.seq }, [told]).views.find((v) => v.agent === "codex")!;
+    assert.equal(heard.knownItems.find((item) => item.itemId === "book")!.at, null);
+    assert.equal(chooseWorldRoutine(h.world, "codex", [...heard.seen, told], heard), null);
+    h.act(A, { type: "stop" });
+    h.act(B, { type: "move", to: "room_1" });
+    h.act(B, { type: "move", to: "living_room" });
+    assert.deepEqual(choose("codex"), { type: "move", to: "room_1" }, "firsthand discovery updates subsequent navigation");
+  });
+
+  it("uses the last observed room of a holder and never follows their hidden current position", () => {
+    const h = fixture();
+    h.act(B, { type: "take", itemId: "book" });
+    h.act(B, { type: "move", to: "room_1" });
+    const visit = h.act(A, { type: "move", to: "room_1" });
+    h.act(A, { type: "move", to: "living_room" });
+    h.act(A, { type: "move", to: "kitchen" });
+    h.act(B, { type: "move", to: "living_room" });
+    h.act(B, { type: "move", to: "room_2" });
+    h.act(U, { type: "move", to: "kitchen" });
+    h.act(U, { type: "invite", to: A, activity: "read" });
+    h.act(A, { type: "answer", commitmentId: h.world.commitments[0]!.id, answer: "accept", dueAt: null });
+    const firstView = h.views.find((v) => v.agent === "claude")!;
+    assert.equal(firstView.knownItems.find((item) => item.itemId === "book")!.seq, visit.events[0]!.seq);
+    const choose = (world = h.world) => {
+      const view = h.views.find((v) => v.agent === "claude")!;
+      return chooseWorldRoutine(world, "claude", view.seen, view);
+    };
+    assert.deepEqual(choose(), { type: "move", to: "living_room" });
+    h.act(A, choose()!);
+    assert.deepEqual(choose(), { type: "move", to: "room_1" });
+    const unseenChange = structuredClone(h.world);
+    unseenChange.residents.find((r) => r.agent === "codex")!.placeId = "kitchen";
+    assert.deepEqual(choose(unseenChange), choose(), "changing only hidden truth cannot change the navigation proposal");
+  });
+
+  it("can read a self-held book in the current room", () => {
+    const h = fixture({ ...initial(), now: 540 });
+    h.act(A, { type: "take", itemId: "book" });
+    h.act(A, { type: "move", to: "room_1" });
+    const view = h.views.find((v) => v.agent === "claude")!;
+    assert.deepEqual(chooseWorldRoutine(h.world, "claude", view.seen, view), { type: "start", activity: "read", itemId: null });
+  });
+
   it("keeps a hidden move out of B's view and routine, then stores only the words B actually hears", () => {
     const h = fixture();
     h.act(B, { type: "move", to: "room_2" });
