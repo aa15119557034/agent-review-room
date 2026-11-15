@@ -478,3 +478,143 @@ describe("C-40 StartRun.model", () => {
     assert.equal(bodies.length, 2, "坏输入一个请求都没发");
   });
 });
+
+describe("等事件流响应头时也能取消、也有期限（X-42 依赖）", () => {
+  /** 一个假节点：StartRun 照常接；events 请求交给 onEvents 决定怎么回 */
+  async function fakeNode(onEvents: (res: import("node:http").ServerResponse, n: number) => void) {
+    const seen = { cancels: 0, events: 0 };
+    const held = new Set<import("node:http").ServerResponse>();
+    const server = createServer((req, res) => {
+      let raw = "";
+      req.on("data", (chunk) => (raw += chunk));
+      req.on("end", () => {
+        if (req.method === "POST" && req.url === "/v1/runs") {
+          const body = JSON.parse(raw) as { runId: string };
+          res.writeHead(202, { "content-type": "application/json" });
+          res.end(JSON.stringify({ runId: body.runId, status: "accepted", eventsPath: `/v1/runs/${body.runId}/events` }));
+        } else if (req.method === "POST" && req.url?.endsWith("/cancel")) {
+          seen.cancels++;
+          res.writeHead(202, { "content-type": "application/json" });
+          res.end("{}");
+        } else if (req.method === "GET" && req.url?.includes("/events")) {
+          held.add(res);
+          onEvents(res, seen.events++);
+        } else {
+          res.writeHead(404);
+          res.end();
+        }
+      });
+    });
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", () => resolve()));
+    cleanups.push(() => {
+      for (const r of held) r.destroy();
+      server.closeAllConnections();
+      return new Promise<void>((resolve) => server.close(() => resolve()));
+    });
+    const adapter = new HttpRemoteAgentAdapter({
+      nodeId: "node-test",
+      baseUrl: "http://127.0.0.1:" + (server.address() as AddressInfo).port,
+      profileId: "claude-ok",
+      token: TOKEN,
+      heartbeatTimeoutMs: 300,
+      reconnectGraceMs: 400,
+      requestTimeoutMs: 100,
+      cancelConfirmMs: 80,
+      reconnectDelayMs: 20,
+    });
+    return { adapter, seen };
+  }
+  const line = (o: Record<string, unknown>) => JSON.stringify({ ts: new Date().toISOString(), ...o }) + "\n";
+
+  it("节点接了连接却不回响应头：取消在确认期限内结束，只有一个终止事件", async () => {
+    const { adapter, seen } = await fakeNode(() => undefined); // 永远不回响应头
+    const ac = new AbortController();
+    setTimeout(() => ac.abort(), 30);
+    const t0 = Date.now();
+    const { events } = await collect(adapter, { signal: ac.signal });
+    const took = Date.now() - t0;
+    assert.deepEqual(terminals(events).map((e) => e.type), ["cancelled"]);
+    assert.ok(took < 1_000, `应该很快结束，实际 ${took}ms`);
+    await sleep(50);
+    assert.equal(seen.cancels, 1, "取消只发一次");
+  });
+
+  it("没人取消、响应头一直不来：按断线处理，超过宽限期报 connection_lost，不会一直等", async () => {
+    const { adapter, seen } = await fakeNode(() => undefined);
+    const t0 = Date.now();
+    const { events } = await collect(adapter);
+    const took = Date.now() - t0;
+    const end = terminals(events);
+    assert.equal(end.length, 1);
+    assert.equal(end[0]!.type === "error" && end[0]!.reason, "connection_lost");
+    assert.ok(events.some((e) => e.type === "status" && e.substate === "disconnected"));
+    assert.ok(seen.events >= 2, "期间重连过");
+    assert.ok(took < 3_000, `实际 ${took}ms`);
+  });
+
+  it("正控：响应头及时回来以后，比 requestTimeoutMs 长得多的事件流不会被截断", async () => {
+    const { adapter, seen } = await fakeNode((res) => {
+      res.writeHead(200, { "content-type": "application/x-ndjson" });
+      res.flushHeaders();
+      let seq = 0;
+      const tick = setInterval(() => {
+        if (seq < 6) res.write(line({ type: "heartbeat", seq: -1 }));
+        else {
+          clearInterval(tick);
+          res.write(line({ type: "terminal", seq: 0, result: { outcome: "completed", exitCode: 0 } }));
+          res.end();
+        }
+        seq++;
+      }, 80); // 总共约 560ms，requestTimeoutMs 是 100
+    });
+    const t0 = Date.now();
+    const { events } = await collect(adapter);
+    assert.deepEqual(terminals(events).map((e) => e.type), ["completed"]);
+    assert.ok(Date.now() - t0 >= 450, "确实读了一条长流");
+    assert.equal(seen.events, 1, "没有中途断开重连");
+    assert.equal(seen.cancels, 0);
+  });
+  it("响应头晚到（已经放弃这次连接之后才交付）：清理不留 unhandled rejection，也不改变结果", async () => {
+    const server = createServer((req, res) => {
+      let raw = "";
+      req.on("data", (chunk) => (raw += chunk));
+      req.on("end", () => {
+        if (req.method === "POST" && req.url === "/v1/runs") {
+          const body = JSON.parse(raw) as { runId: string };
+          res.writeHead(202, { "content-type": "application/json" });
+          res.end(JSON.stringify({ runId: body.runId, status: "accepted", eventsPath: `/v1/runs/${body.runId}/events` }));
+        } else if (req.method === "GET" && req.url?.includes("/events")) {
+          res.writeHead(200, { "content-type": "application/x-ndjson" });
+          res.flushHeaders(); // 响应头马上回，但下面的 fetchImpl 会晚交付
+        } else {
+          res.writeHead(202, { "content-type": "application/json" });
+          res.end("{}");
+        }
+      });
+    });
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", () => resolve()));
+    cleanups.push(() => { server.closeAllConnections(); return new Promise<void>((resolve) => server.close(() => resolve())); });
+    const lateFetch: typeof fetch = async (url, init) => {
+      const res = await fetch(url, init);
+      if (String(url).includes("/events")) await sleep(160);
+      return res;
+    };
+    const adapter = new HttpRemoteAgentAdapter({
+      nodeId: "node-test", baseUrl: "http://127.0.0.1:" + (server.address() as AddressInfo).port, profileId: "claude-ok", token: TOKEN,
+      heartbeatTimeoutMs: 300, reconnectGraceMs: 120, requestTimeoutMs: 40, cancelConfirmMs: 80, reconnectDelayMs: 20, fetchImpl: lateFetch,
+    });
+    const unhandled: unknown[] = [];
+    const onUnhandled = (reason: unknown) => unhandled.push(reason);
+    process.on("unhandledRejection", onUnhandled);
+    try {
+      const { events } = await collect(adapter);
+      await sleep(400); // 等所有晚到的响应都交付、清理都跑完
+      const end = terminals(events);
+      assert.equal(end.length, 1);
+      assert.equal(end[0]!.type === "error" && end[0]!.reason, "connection_lost");
+      assert.deepEqual(unhandled.map(String), []);
+    } finally {
+      process.off("unhandledRejection", onUnhandled);
+    }
+  });
+});

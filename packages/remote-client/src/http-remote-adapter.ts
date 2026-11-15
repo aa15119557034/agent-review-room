@@ -279,11 +279,15 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
         let outcome: "terminal" | "dropped" | "gone" | "unauthorized" | "cancel_timeout" | "deadline" = "dropped";
         conn = new AbortController();
         try {
-          const res = await this.#fetch(`${this.node.baseUrl}/v1/runs/${runId}/events?after=${lastSeq}`, {
-            headers: this.#headers(),
-            signal: conn.signal,
-          });
-          if (res.status === 404) outcome = "gone";
+          // 等响应头这一段单独限时：节点接了连接却不回响应头时，不能一直等住（取消、让位、退出都卡在这）。
+          // 这个期限只管到响应头回来为止；之后的长事件流由 readLines 的心跳超时管，不会被它截断。
+          const res = await this.#openEvents(`/v1/runs/${runId}/events?after=${lastSeq}`, conn, wake, () =>
+            Math.min(hardDeadline, cancelRequested ? cancelAt + this.#cancelConfirmMs : Infinity));
+          if (res === null) {
+            if (cancelRequested && Date.now() - cancelAt >= this.#cancelConfirmMs) outcome = "cancel_timeout";
+            else if (Date.now() >= hardDeadline) outcome = "deadline";
+            else outcome = "dropped";
+          } else if (res.status === 404) outcome = "gone";
           else if (res.status === 401) outcome = "unauthorized";
           else if (res.ok && res.body) {
             if (substate !== "active") {
@@ -368,6 +372,40 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
       conn?.abort();
       // 消费方提前停止（break / 应用退出）：让节点也停下，不在后台继续消耗额度
       if (!terminated && started && !cancelRequested) void this.#sendCancel(runId, "主控端停止读取");
+    }
+  }
+
+  /**
+   * 打开事件流，只等到响应头。超过 requestTimeoutMs、或 limit() 给的时刻（取消确认期限、总期限）还没有响应头：
+   * 断开这次连接，返回 null。limit 在 wake（取消）时重新算一次，所以等响应头期间点的取消也受确认期限约束。
+   */
+  async #openEvents(path: string, conn: AbortController, wake: EventTarget, limit: () => number): Promise<Response | null> {
+    const startedAt = Date.now();
+    const pending = this.#fetch(`${this.node.baseUrl}${path}`, { headers: this.#headers(), signal: conn.signal });
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let recheck: (() => void) | undefined;
+    const expired = new Promise<null>((resolve) => {
+      recheck = () => {
+        clearTimeout(timer);
+        const left = Math.min(startedAt + this.node.requestTimeoutMs, limit()) - Date.now();
+        if (left <= 0) resolve(null);
+        else timer = setTimeout(recheck!, Math.min(left, 2_000_000_000));
+      };
+      wake.addEventListener("wake", recheck);
+      recheck();
+    });
+    try {
+      const res = await Promise.race([pending, expired]);
+      if (res === null) {
+        conn.abort();
+        // 响应头恰好在断开前后到了：把流关掉，不留悬着的连接和未处理的 rejection
+        // 连接已经被 abort，body.cancel() 自己也可能 reject：这里已经决定放弃这次连接，清理失败一律吞掉
+        void pending.then((late) => late.body?.cancel()).catch(() => undefined);
+      }
+      return res;
+    } finally {
+      clearTimeout(timer);
+      if (recheck) wake.removeEventListener("wake", recheck);
     }
   }
 
