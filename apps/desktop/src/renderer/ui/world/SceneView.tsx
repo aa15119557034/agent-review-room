@@ -16,6 +16,12 @@ export function SceneView({ scene, world, names }: { scene: WorldScene; world: W
   const [backlog, setBacklog] = useState(false);
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
+  // 对话是你主动打开的：把它带到眼前并把焦点放进来。窄窗口里小屋在上、居民面板在下，不滚上来就像点了没反应
+  const root = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    root.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    root.current?.focus({ preventScroll: true });
+  }, [scene.id]);
   const line = currentLine(scene);
   const place = world.places.find((p) => p.id === scene.placeId);
   // 立绘的表情：每位用她自己最后一句台词的表情
@@ -45,7 +51,7 @@ export function SceneView({ scene, world, names }: { scene: WorldScene; world: W
   };
 
   return (
-    <section className="scene" data-kind={place ? placeKind(place) : "living"} aria-label={`和${scene.residents.map(names.agent).join("、")}的对话`}>
+    <section ref={root} tabIndex={-1} className="scene" data-kind={place ? placeKind(place) : "living"} aria-label={`和${scene.residents.map(names.agent).join("、")}的对话`}>
       <div className="scene-top">
         <span className="scene-place">{names.place(scene.placeId)}</span>
         <button type="button" className="scene-btn" aria-pressed={backlog} onClick={() => setBacklog((b) => !b)}>{backlog ? "回到对话" : "前面说了什么"}</button>

@@ -787,6 +787,10 @@
   animation: scene-in 0.35s ease both;
 }
 
+.scene:focus {
+  outline: none;
+}
+
 .scene[data-kind="kitchen"] {
   background:
     linear-gradient(180deg, transparent 0 58%, rgb(0 0 0 / 0.06) 58% 59%, transparent 59%),

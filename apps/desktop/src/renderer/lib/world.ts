@@ -28,7 +28,7 @@ import {
  * 唯一自己算的是时钟：按快照的 now / asOf / 流速插值，不用后端每一刻都推。
  */
 
-/** 时间线在界面里最多留多少条；更早的翻页再读 */
+/** 时间线在界面里平时最多留多少条；往前翻页时会跟着变大 */
 export const WORLD_EVENTS_KEEP = 300;
 
 export interface WorldUiState {
@@ -43,6 +43,10 @@ export interface WorldUiState {
   events: WorldEvent[];
   /** 还有没有更早的可以翻；null = 到头了 */
   eventsBefore: number | null;
+  /** 时间线最多留多少条。平时是 WORLD_EVENTS_KEEP；往前翻页时跟着变大，重读第一页时复位 */
+  eventsLimit: number;
+  /** 已经关掉的场景（最近 30 个）。迟到的回执或推送不能让它们再开起来 */
+  closedScenes: string[];
   /** 推来的事件和手里的对不上（中间缺了），要重新读一次时间线 */
   eventsStale: boolean;
   /** 已读到的每天回顾，按第几天存 */
@@ -69,6 +73,8 @@ export const initialWorld: WorldUiState = {
   budgets: [],
   events: [],
   eventsBefore: null,
+  eventsLimit: WORLD_EVENTS_KEEP,
+  closedScenes: [],
   eventsStale: false,
   reviews: {},
   selected: null,
@@ -79,9 +85,6 @@ export const initialWorld: WorldUiState = {
   starting: false,
 };
 
-const sameGeneration = (a: WorldSnapshot, b: WorldSnapshot) =>
-  a.generation.session === b.generation.session && a.generation.runSeq === b.generation.runSeq;
-
 /** 换了一局（重置、第一次开始）：上一局的时间线、回顾、视角都不带过来 */
 function enterWorld(state: WorldUiState, world: WorldSnapshot): WorldUiState {
   return {
@@ -90,6 +93,8 @@ function enterWorld(state: WorldUiState, world: WorldSnapshot): WorldUiState {
     scene: null,
     events: [],
     eventsBefore: null,
+    eventsLimit: WORLD_EVENTS_KEEP,
+    closedScenes: [],
     eventsStale: true,
     reviews: {},
     knowledge: null,
@@ -101,30 +106,79 @@ function enterWorld(state: WorldUiState, world: WorldSnapshot): WorldUiState {
 }
 
 /**
- * 用一份快照更新状态。同一局、同一代里，比手里旧的快照（lastSeq 更小，或 lastSeq 相同但 asOf 更早）丢掉：
- * 命令的返回和事件推送谁先到不一定。代次变了（暂停继续、恢复、切换）一律用新的。
+ * 一个请求发出时世界是哪一局、哪一代。回应回来时如果已经不是这一局这一代了，**整份回应都作废**：
+ * 不拿它盖快照，也不拿它盖设置、用量、场景。不同会话之间不比大小（会话 id 是随机的，也不看墙上的钟），只看「还是不是发出时那一个」。
+ */
+export type WorldContext = { worldId: string; session: string; runSeq: number } | null;
+
+export const worldContext = (state: Pick<WorldUiState, "world">): WorldContext =>
+  state.world ? { worldId: state.world.id, session: state.world.generation.session, runSeq: state.world.generation.runSeq } : null;
+
+export const sameContext = (a: WorldContext, b: WorldContext) =>
+  a === null || b === null ? a === b : a.worldId === b.worldId && a.session === b.session && a.runSeq === b.runSeq;
+
+/**
+ * 用一份快照更新状态。返回原来的 state 对象 = 这份快照被丢掉了。
+ * - 同一局同一个会话里，runSeq 不能倒退；runSeq 相同时，lastSeq 更小、或 lastSeq 相同但 asOf 更早的丢掉
+ *   （命令的返回和事件推送谁先到不一定）
+ * - 换了会话（重启、恢复、切换）：推送是按顺序来的，照收。迟到的查询 / 命令回应由发起方按 WorldContext 挡掉，不靠这里猜
  */
 export function applySnapshot(state: WorldUiState, world: WorldSnapshot): WorldUiState {
   const cur = state.world;
   if (!cur || cur.id !== world.id) return enterWorld(state, world);
-  if (sameGeneration(cur, world)) {
-    if (world.lastSeq < cur.lastSeq) return state;
-    if (world.lastSeq === cur.lastSeq && world.asOf < cur.asOf) return state;
+  if (cur.generation.session === world.generation.session) {
+    if (world.generation.runSeq < cur.generation.runSeq) return state;
+    if (world.generation.runSeq === cur.generation.runSeq) {
+      if (world.lastSeq < cur.lastSeq) return state;
+      if (world.lastSeq === cur.lastSeq && world.asOf < cur.asOf) return state;
+    }
   }
   // 场景关了（sceneId 变成 null 或换了）而手里还拿着旧的：放下
   const scene = state.scene && state.scene.id === world.sceneId ? state.scene : null;
   return { ...state, world, scene };
 }
 
-/** world.get / world.reset 的整份结果 */
+/**
+ * world.get / world.reset 的整份结果。调用方先按 WorldContext 确认这份回应没过期。
+ * 里面的快照如果比手里的旧（被 applySnapshot 丢掉），设置、用量、场景也一起不用：它们是和那份旧快照同一时刻的。
+ */
 export function applyWorldState(state: WorldUiState, data: WorldState): WorldUiState {
-  const base: WorldUiState = { ...state, loaded: true, settings: data.settings, budgets: data.budgets, starting: false };
-  if (!data.world) return { ...base, world: null, scene: null, events: [], eventsBefore: null, reviews: {}, knowledge: null, reviewDay: null, pastScenes: null };
-  const next = applySnapshot(base, data.world);
-  return { ...next, scene: data.scene && data.scene.state !== "closed" && data.scene.id === next.world?.sceneId ? data.scene : null };
+  const done: WorldUiState = { ...state, loaded: true, starting: false };
+  if (!data.world) {
+    return {
+      ...done, settings: data.settings, budgets: data.budgets,
+      world: null, scene: null, events: [], eventsBefore: null, eventsLimit: WORLD_EVENTS_KEEP, reviews: {}, knowledge: null, reviewDay: null, pastScenes: null,
+    };
+  }
+  const next = applySnapshot(done, data.world);
+  if (next === done) return done;
+  const withRest: WorldUiState = { ...next, settings: data.settings, budgets: data.budgets };
+  return data.scene ? applyScene(withRest, data.scene) : withRest;
 }
 
-/** 一页时间线（新的在前）并进来。first = 从最新开始读的那一页：以它为准重建 */
+/**
+ * 一份场景（推送来的，或者命令回执里带的）能不能用。两条路走同一套检查，回执不能绕过去：
+ * - 关闭的：记下这个 id，手里拿着的是它就放下。之后同一个 id 的「开着」再来也不认
+ * - 开着的：代次要和现在的世界一样；快照说现在开着别的场景时不认；已经关过的不认
+ */
+export function applyScene(state: WorldUiState, sc: WorldScene): WorldUiState {
+  const world = state.world;
+  if (!world) return state;
+  if (sc.state === "closed") {
+    const closedScenes = state.closedScenes.includes(sc.id) ? state.closedScenes : [sc.id, ...state.closedScenes].slice(0, 30);
+    if (state.scene?.id !== sc.id && closedScenes === state.closedScenes) return state;
+    return { ...state, closedScenes, scene: state.scene?.id === sc.id ? null : state.scene };
+  }
+  if (state.closedScenes.includes(sc.id)) return state;
+  if (sc.generation.session !== world.generation.session || sc.generation.runSeq !== world.generation.runSeq) return state;
+  if (world.sceneId !== null && world.sceneId !== sc.id) return state;
+  return { ...state, scene: sc };
+}
+
+/**
+ * 一页时间线（新的在前）并进来。first = 从最新开始读的那一页：以它为准重建。
+ * 翻更早的一页时窗口跟着变大（eventsLimit 加上这一页），不然刚读回来的旧页会被立刻裁掉、游标却往前走了。
+ */
 export function mergeEventsPage(
   state: WorldUiState,
   worldId: string,
@@ -137,8 +191,9 @@ export function mergeEventsPage(
   for (const e of page.items) bySeq.set(e.seq, e);
   // 读第一页期间推来的更新的事件留着
   if (first) for (const e of state.events) if (!bySeq.has(e.seq) && e.seq > (page.items[0]?.seq ?? 0)) bySeq.set(e.seq, e);
-  const events = [...bySeq.values()].sort((a, b) => b.seq - a.seq).slice(0, WORLD_EVENTS_KEEP);
-  return { ...state, events, eventsBefore: page.nextBefore, eventsStale: false };
+  const events = [...bySeq.values()].sort((a, b) => b.seq - a.seq);
+  const eventsLimit = first ? Math.max(WORLD_EVENTS_KEEP, events.length) : Math.max(state.eventsLimit, events.length);
+  return { ...state, events, eventsLimit, eventsBefore: page.nextBefore, eventsStale: false };
 }
 
 /** 把后端推来的世界事件合并进状态。纯函数 */
@@ -152,20 +207,18 @@ export function applyWorldEvent(state: WorldUiState, event: ControlEvent): World
       if (event.event.seq <= top) return state;
       // 时间线还没读过第一页（eventsStale）时也先收着，读回来再对齐
       const gap = state.events.length > 0 && event.event.seq !== top + 1;
+      const all = [event.event, ...state.events];
+      const events = all.length > state.eventsLimit ? all.slice(0, state.eventsLimit) : all;
       return {
         ...state,
-        events: [event.event, ...state.events].slice(0, WORLD_EVENTS_KEEP),
+        events,
+        // 裁掉了最旧的：游标退回到留下的最旧一条，再翻页从那里接着读，中间不留洞
+        eventsBefore: events.length < all.length ? events[events.length - 1]!.seq : state.eventsBefore,
         eventsStale: state.eventsStale || gap,
       };
     }
-    case "world.scene.updated": {
-      const sc = event.scene;
-      if (!state.world) return state;
-      if (sc.state === "closed") return state.scene?.id === sc.id ? { ...state, scene: null } : state;
-      // 只认快照说「现在开着」的那个，或者快照还没跟上时比手里新的
-      if (state.world.sceneId !== null && state.world.sceneId !== sc.id) return state;
-      return { ...state, scene: sc };
-    }
+    case "world.scene.updated":
+      return applyScene(state, event.scene);
     case "world.review.created":
       if (state.world?.id !== event.worldId) return state;
       return { ...state, reviews: { ...state.reviews, [event.review.day]: event.review } };

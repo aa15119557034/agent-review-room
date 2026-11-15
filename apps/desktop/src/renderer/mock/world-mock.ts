@@ -26,7 +26,7 @@ import {
   type WorldSnapshot,
   type WorldState,
 } from "@room/schemas";
-import { ACTIVITY_DOING, ACTIVITY_LABEL, REJECT_TEXT, clockText } from "../lib/world";
+import { ACTIVITY_DOING, ACTIVITY_LABEL, REJECT_TEXT, clockText, pathTo } from "../lib/world";
 import { MockError, id, now as isoNow } from "./util";
 
 /**
@@ -176,10 +176,14 @@ export function createWorldMock(ctx: Ctx, options: WorldMockOptions = {}) {
 
   function build(): World {
     const agents = settings.residents;
+    // 一间屋最多连 8 间（契约 WorldPlace.neighbors）。客厅连厨房和前 7 间房；住满 8 位时第 8 间开在厨房旁边
+    const offLiving = agents.slice(0, 7);
+    const offKitchen = agents.slice(7);
     const places: WorldPlace[] = [
-      { id: "living_room", label: "客厅", neighbors: ["kitchen", ...agents.map(roomOf)], owner: null },
-      { id: "kitchen", label: "厨房", neighbors: ["living_room"], owner: null },
-      ...agents.map((a) => ({ id: roomOf(a), label: `${name(a)}的房间`, neighbors: ["living_room"], owner: a })),
+      { id: "living_room", label: "客厅", neighbors: ["kitchen", ...offLiving.map(roomOf)], owner: null },
+      { id: "kitchen", label: "厨房", neighbors: ["living_room", ...offKitchen.map(roomOf)], owner: null },
+      ...offLiving.map((a) => ({ id: roomOf(a), label: `${name(a).slice(0, 36)}的房间`, neighbors: ["living_room"], owner: a })),
+      ...offKitchen.map((a) => ({ id: roomOf(a), label: `${name(a).slice(0, 36)}的房间`, neighbors: ["kitchen"], owner: a })),
     ];
     const at = (placeId: string): WorldItemLocation => ({ kind: "place", placeId });
     const items: WorldItem[] = [
@@ -578,10 +582,8 @@ export function createWorldMock(ctx: Ctx, options: WorldMockOptions = {}) {
 
   function stepToward(r: Resident, place: string): boolean {
     if (r.placeId === place) return true;
-    // 这间小屋里任何两间屋最多隔着客厅
-    const here = w!.places.find((p) => p.id === r.placeId)!;
-    const next = here.neighbors.includes(place) ? place : "living_room";
-    apply(res(r.agent), { type: "move", to: next });
+    const next = pathTo(w!.places, r.placeId, place)?.[0];
+    if (!next || !apply(res(r.agent), { type: "move", to: next }).accepted) return false;
     return r.placeId === place;
   }
 

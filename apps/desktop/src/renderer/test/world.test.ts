@@ -1,13 +1,14 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import type { ControlEvent, WorldEvent, WorldSnapshot } from "@room/schemas";
+import { WorldState, type ControlEvent, type WorldEvent, type WorldScene, type WorldSnapshot } from "@room/schemas";
+import { createWorldMock } from "../mock/world-mock";
 import { createMockBridge } from "../mock/mock-backend";
 import { createActions } from "../lib/actions";
 import { createClient } from "../lib/client";
 import { applyEvent, initialState, type AppState } from "../lib/state";
 import { createStore } from "../lib/store";
 import {
-  applySnapshot, applyWorldEvent, clockText, commitmentViews, dayClockText, dayOf, dayPhase, eventText, initialWorld,
+  applyScene, applySnapshot, applyWorldEvent, applyWorldState, clockText, commitmentViews, dayClockText, dayOf, dayPhase, eventText, initialWorld,
   mergeEventsPage, pathTo, residentLine, worldNames, worldNow, type WorldUiState,
 } from "../lib/world";
 
@@ -26,7 +27,31 @@ function setup(world: { seed?: boolean; offline?: string[]; dailyLimit?: number 
     events.push(e);
     store.set((s) => applyEvent(s, e));
   });
-  const client = createClient(bridge);
+  const real = createClient(bridge);
+  // 可以把某一种请求的回应扣住，等测试放行：用来造「旧请求的回应晚到」
+  const held = new Map<string, (() => void)[]>();
+  const gate = async <T>(type: string, result: Promise<T>): Promise<T> => {
+    const out = await result.then((v) => ({ ok: true as const, v }), (e: unknown) => ({ ok: false as const, e }));
+    const queue = held.get(type);
+    if (queue) await new Promise<void>((r) => queue.push(r));
+    if (!out.ok) throw out.e;
+    return out.v;
+  };
+  const client = {
+    ...real,
+    command: ((req: { type: string }) => gate(req.type, real.command(req as never))) as typeof real.command,
+    query: ((req: { type: string }) => gate(req.type, real.query(req as never))) as typeof real.query,
+  };
+  /** 从现在起扣住这种请求的回应（请求本身照常到后台执行） */
+  const hold = (type: string) => void held.set(type, []);
+  /** 放行，之后不再扣 */
+  const release = async (type: string) => {
+    const queue = held.get(type) ?? [];
+    held.delete(type);
+    queue.forEach((r) => r());
+    await tick();
+    await tick();
+  };
   const actions = createActions(store, client);
   const w = () => store.get().world;
   const snap = () => w().world!;
@@ -42,7 +67,7 @@ function setup(world: { seed?: boolean; offline?: string[]; dailyLimit?: number 
   };
   const book = () => snap().items.find((i) => i.id === "book") as Extract<WorldSnapshot["items"][number], { kind: "unique" }>;
   const base = () => ({ worldId: snap().id, generation: snap().generation });
-  return { bridge, store, events, client, actions, w, snap, advance, resident, stock, book, base };
+  return { bridge, store, events, client, actions, w, snap, advance, resident, stock, book, base, hold, release };
 }
 
 async function opened(world: Parameters<typeof setup>[0] = {}) {
@@ -372,5 +397,145 @@ describe("世界：演示后台按契约走", () => {
     assert.ok(lines.some((l) => /^(C酱|林离)去了/.test(l)));
     assert.ok(lines.every((l) => !/room_|wavt_|undefined/.test(l)), "不漏内部 id");
     assert.match(residentLine(t.resident("claude"), t.snap(), names), /^在/);
+  });
+});
+
+describe("世界：旧请求的回应晚到（林离 #230 第一轮）", () => {
+  it("同一个会话里 runSeq 不能倒退：迟到的旧代快照丢掉，哪怕它的 lastSeq 更大", async () => {
+    const t = await opened();
+    await t.actions.world.pause();
+    await t.actions.world.resume();
+    const cur = t.snap();
+    assert.equal(cur.generation.runSeq, 1);
+    const old: WorldSnapshot = { ...cur, generation: { ...cur.generation, runSeq: 0 }, lastSeq: cur.lastSeq + 9, asOf: new Date(Date.now() + 60_000).toISOString() };
+    assert.equal(applySnapshot(t.w(), old), t.w());
+  });
+
+  it("旧的 world.get 回来得晚：不能把刚开始的新一局清空", async () => {
+    const t = setup({ seed: false });
+    t.hold("world.get");
+    const loading = t.actions.world.load(); // 发出时还没有世界，回应是 world: null
+    await tick();
+    // 用另一条路开局（比如另一个窗口）：新的一局靠推送到了
+    const fresh = await createClient(t.bridge).command({ type: "world.reset", requestId: "wact_01HZZZZZZZZZZZZZZZZZZZZZZ6", worldId: null, confirm: true });
+    await tick();
+    assert.equal(t.w().world?.id, fresh.world!.id);
+    await t.release("world.get");
+    await loading;
+    assert.equal(t.w().world?.id, fresh.world!.id, "旧回应作废，新局还在");
+    assert.equal(t.w().loaded, true);
+    assert.ok(t.w().settings, "按现在的状态重读了一次，设置读到了");
+  });
+
+  it("旧的 world.get 回来得晚：不能把之后打开的对话清掉，也不拿旧的设置和用量盖新的", async () => {
+    const t = await opened();
+    await t.actions.world.goTo("room_1");
+    const stale = await t.client.query({ type: "world.get" }); // lastSeq 较小、scene: null
+    assert.equal(await t.actions.world.talk("claude"), true);
+    await tick();
+    const scene = t.w().scene!;
+    const budgets = t.w().budgets;
+    assert.ok(scene && t.snap().lastSeq > stale.world!.lastSeq);
+    const after = applyWorldState(t.w(), { ...stale, budgets: [] });
+    assert.equal(after.scene?.id, scene.id);
+    assert.equal(after.world, t.snap());
+    assert.equal(after.budgets, budgets);
+  });
+
+  it("旧场景不能复活：代次对不上的、已经关掉的、不是现在开着的，推送和回执都不认", async () => {
+    const t = await opened();
+    await t.actions.world.goTo("room_1");
+    assert.equal(await t.actions.world.talk("claude"), true);
+    await tick();
+    const open: WorldScene = t.w().scene!;
+    assert.equal(await t.actions.world.sceneClose(open.id), true);
+    await tick();
+    assert.equal(t.w().scene, null);
+    // 关掉以后，迟到的「开着」再来（推送也好回执也好）
+    assert.equal(applyScene(t.w(), open), t.w());
+    assert.equal(applyWorldEvent(t.w(), { type: "world.scene.updated", scene: open }), t.w());
+    // 暂停继续以后代次是 runSeq 1，另一个 runSeq 0 的开放场景来了
+    await t.actions.world.pause();
+    await t.actions.world.resume();
+    const other: WorldScene = { ...open, id: "wscn_01HZZZZZZZZZZZZZZZZZZZZZZ7" };
+    assert.equal(t.snap().sceneId, null);
+    assert.equal(applyScene(t.w(), other), t.w());
+    // 同一代、但快照说现在开着的是别的
+    const cur = { ...other, generation: t.snap().generation };
+    const busy = { ...t.w(), world: { ...t.snap(), sceneId: "wscn_01HZZZZZZZZZZZZZZZZZZZZZZ8" } };
+    assert.equal(applyScene(busy, cur), busy);
+    assert.equal(applyScene(t.w(), cur).scene?.id, cur.id, "同一代、没关过、没有别的开着：认");
+  });
+
+  it("找她说话的回执晚到、中间已经暂停继续过：回执里的旧场景不挂上来", async () => {
+    const t = await opened();
+    await t.actions.world.goTo("room_1");
+    t.hold("world.talk");
+    const talking = t.actions.world.talk("claude");
+    await tick();
+    const sceneId = t.snap().sceneId;
+    assert.ok(sceneId, "后台已经开了场景（推送先到）");
+    await t.actions.world.sceneClose(sceneId);
+    await t.actions.world.pause();
+    await t.actions.world.resume();
+    await tick();
+    assert.equal(t.w().scene, null);
+    await t.release("world.talk");
+    assert.equal(await talking, false);
+    assert.equal(t.w().scene, null);
+  });
+
+  it("连续走路不穿过重置：第一步的回应还没到就重置了，剩下的路不在新的一局里走", async () => {
+    const t = await opened();
+    await t.actions.world.goTo("kitchen");
+    const old = t.snap().id;
+    t.hold("world.act");
+    const walking = t.actions.world.goTo("room_1"); // 厨房 → 客厅 → 房间，两步
+    await tick();
+    await t.actions.world.reset();
+    await tick();
+    assert.notEqual(t.snap().id, old);
+    await t.release("world.act");
+    await walking;
+    await tick();
+    assert.equal(t.snap().player.placeId, "living_room", "新的一局里你还在开局的位置");
+    assert.equal(t.w().events.some((e) => e.type === "action" && e.actor.kind === "player"), false);
+    assert.equal(t.w().rejected, null, "旧动作的结果不显示在新的一局里");
+  });
+
+  it("时间线超过 300 条以后还能往前翻：翻到的那一页留得住，游标和内容对得上", async () => {
+    const world = { id: "world_01HZZZZZZZZZZZZZZZZZZZZZZZ" } as WorldSnapshot;
+    const ev = (seq: number): WorldEvent => ({ type: "clock", seq, at: 0, mark: "day_started", day: 1 });
+    const range = (from: number, to: number) => Array.from({ length: from - to + 1 }, (_, i) => ev(from - i));
+    let s: WorldUiState = { ...initialWorld, world };
+    s = mergeEventsPage(s, world.id, { items: range(400, 351), nextBefore: 351 }, true);
+    for (let top = 350; top > 100; top -= 50) s = mergeEventsPage(s, world.id, { items: range(top, top - 49), nextBefore: top - 49 }, false);
+    assert.equal(s.events.length, 300);
+    assert.equal(s.eventsBefore, 101);
+    s = mergeEventsPage(s, world.id, { items: range(100, 51), nextBefore: 51 }, false);
+    assert.equal(s.events.length, 350, "新读回来的旧页没有被裁掉");
+    assert.equal(s.events.at(-1)!.seq, 51);
+    assert.equal(s.eventsBefore, 51);
+    // 这时来了新事件：不把刚翻出来的旧页挤掉
+    s = applyWorldEvent(s, { type: "world.event", worldId: world.id, event: ev(401) });
+    assert.equal(s.events.at(-1)!.seq, 52);
+    assert.equal(s.eventsBefore, 52, "裁掉了最旧的一条，游标跟着退到留下的最旧一条，中间不留洞");
+    // 重读第一页以后窗口复位
+    s = mergeEventsPage(s, world.id, { items: range(401, 352), nextBefore: 352 }, true);
+    assert.equal(s.eventsLimit, 300);
+    assert.equal(s.events.length, 50);
+  });
+
+  it("演示后台接受契约允许的设置：住满 8 位、名字很长带连字符，地点和邻居都不超限", async () => {
+    const agents = Array.from({ length: 8 }, (_, i) => ({ id: `${"long-name-".repeat(5)}agent-${i}`.slice(0, 64), displayName: `很长名字的秘书${i}`.padEnd(40, "字") }));
+    const mock = createWorldMock({ emit() {}, agents: () => agents }, { seed: false, autoTick: false });
+    const state = WorldState.parse(await mock.commands["world.reset"]({ requestId: "wact_01HZZZZZZZZZZZZZZZZZZZZZZ9", worldId: null, settings: { dayRealMinutes: 24, dailyCognitionLimit: 60, residents: agents.map((a) => a.id) } }));
+    assert.equal(state.world!.residents.length, 8);
+    assert.ok(state.world!.places.every((p) => p.neighbors.length <= 8));
+    mock.advance(1440);
+    const later = WorldState.parse(await mock.queries["world.get"]());
+    assert.ok(later.world!.lastSeq > 50, "8 位都在各自过日子，每个人都走得到要去的地方");
+    const seventh = later.world!.places.find((p) => p.owner === agents[7]!.id)!;
+    assert.deepEqual(seventh.neighbors, ["kitchen"]);
   });
 });

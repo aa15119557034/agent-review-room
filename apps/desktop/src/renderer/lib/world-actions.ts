@@ -3,11 +3,17 @@ import type { RoomClient } from "./client";
 import { newId } from "./ids";
 import type { AppState } from "./state";
 import type { Store } from "./store";
-import { applySnapshot, applyWorldState, dayOf, mergeEventsPage, pathTo, worldNow, type WorldUiState } from "./world";
+import {
+  applyScene, applySnapshot, applyWorldState, dayOf, mergeEventsPage, pathTo, sameContext, worldContext, worldNow,
+  type WorldContext, type WorldUiState,
+} from "./world";
 
 /**
  * 世界（C-54）的操作。和别处一样：组件只调这里，失败写进全局提示，不向上抛。
  * 被规则拒绝（accepted=false）不是失败，是正常结果：原因放在 world.rejected，由世界页自己显示。
+ *
+ * 每个请求发出时记下当时是哪一局哪一代（WorldContext）。回应回来时已经不是了，整份回应作废：
+ * 推送和回应谁先到不一定，旧请求的回应不能盖掉新状态，旧意图也不能带进新的一局。
  */
 export function createWorldActions(store: Store<AppState>, client: RoomClient, fail: (err: unknown) => void) {
   const set = (f: (w: WorldUiState) => WorldUiState) =>
@@ -44,9 +50,23 @@ export function createWorldActions(store: Store<AppState>, client: RoomClient, f
     }
   }
 
-  async function load() {
+  const context = () => worldContext(get());
+  const stillIn = (ctx: WorldContext) => sameContext(ctx, context());
+  /** 还是同一局、同一个会话（暂停继续不算换）。暂停 / 继续的回应用这个：它自己就会改 runSeq */
+  const sameSession = (ctx: WorldContext) => {
+    const now = context();
+    return ctx !== null && now !== null && ctx.worldId === now.worldId && ctx.session === now.session;
+  };
+
+  async function load(retries = 2): Promise<void> {
+    const ctx = context();
     try {
       const data = await client.query({ type: "world.get" });
+      if (!stillIn(ctx)) {
+        // 读的时候世界已经变了（重置、暂停继续…）：这份是旧的，不用它；按现在的重读
+        if (retries > 0) return load(retries - 1);
+        return void set((w) => (w.loaded ? w : { ...w, loaded: true }));
+      }
       set((w) => applyWorldState(w, data));
       await loadEvents(true);
     } catch (err) {
@@ -55,12 +75,18 @@ export function createWorldActions(store: Store<AppState>, client: RoomClient, f
     }
   }
 
-  /** 你的一个动作。返回规则接没接受；世界没开、暂停着等情况由后端按原因拒绝 */
-  async function act(action: WorldPlayerAction): Promise<boolean> {
-    const world = get().world;
-    if (!world) return false;
+  /**
+   * 你的一个动作。bound = 这个动作是在哪一局哪一代下决定的；不给就用现在的。
+   * 返回规则接没接受；世界没开、暂停着等情况由后端按原因拒绝。
+   */
+  async function act(action: WorldPlayerAction, bound: WorldContext = context()): Promise<boolean> {
+    if (!bound || !stillIn(bound)) return false;
     try {
-      const result = await client.command({ type: "world.act", worldId: world.id, generation: world.generation, actionId: newId("wact"), action });
+      const result = await client.command({
+        type: "world.act", worldId: bound.worldId, generation: { session: bound.session, runSeq: bound.runSeq }, actionId: newId("wact"), action,
+      });
+      // 回应回来时已经换了局或代次：这次的结果和现在无关，不显示
+      if (!stillIn(bound)) return false;
       return noteResult(result);
     } catch (err) {
       fail(err);
@@ -69,12 +95,14 @@ export function createWorldActions(store: Store<AppState>, client: RoomClient, f
   }
 
   async function sceneCommand(run: (base: { worldId: string; generation: { session: string; runSeq: number }; actionId: string }) => Promise<WorldSceneResult>) {
-    const world = get().world;
-    if (!world) return false;
+    const ctx = context();
+    if (!ctx) return false;
     try {
-      const out = await run({ worldId: world.id, generation: world.generation, actionId: newId("wact") });
+      const out = await run({ worldId: ctx.worldId, generation: { session: ctx.session, runSeq: ctx.runSeq }, actionId: newId("wact") });
+      if (!stillIn(ctx)) return false;
+      // 回执里的场景和推送来的走同一套检查（代次、是不是现在开着的那个、有没有关过）
       const scene = out.scene;
-      if (scene) set((w) => (w.world?.id !== world.id ? w : { ...w, scene: scene.state === "closed" ? (w.scene?.id === scene.id ? null : w.scene) : scene }));
+      if (scene) set((w) => applyScene(w, scene));
       return noteResult(out.result);
     } catch (err) {
       fail(err);
@@ -87,6 +115,7 @@ export function createWorldActions(store: Store<AppState>, client: RoomClient, f
     const w = get();
     if (!w.settings) return;
     resetting = true;
+    const ctx = context();
     set((x) => ({ ...x, starting: true }));
     try {
       const data = await client.command({
@@ -96,8 +125,16 @@ export function createWorldActions(store: Store<AppState>, client: RoomClient, f
         confirm: true,
         ...(residents ? { settings: { ...w.settings, residents } } : {}),
       });
-      set((x) => applyWorldState(x, data));
-      await loadEvents(true);
+      // 回应到之前推送已经把新的一局送来了：是同一局就照用；不是（中间又变了）就按现在的重读
+      const now = context();
+      if (stillIn(ctx) || (now !== null && data.world !== null && now.worldId === data.world.id)) {
+        set((x) => applyWorldState(x, data));
+        set((x) => (x.starting ? { ...x, starting: false } : x));
+        await loadEvents(true);
+      } else {
+        set((x) => ({ ...x, starting: false }));
+        await load();
+      }
     } catch (err) {
       set((x) => ({ ...x, starting: false }));
       fail(err);
@@ -120,33 +157,37 @@ export function createWorldActions(store: Store<AppState>, client: RoomClient, f
     reset: () => reset(),
 
     async pause() {
-      const world = get().world;
-      if (!world) return;
+      const ctx = context();
+      if (!ctx) return;
       try {
-        const next = await client.command({ type: "world.pause", worldId: world.id });
-        set((w) => applySnapshot(w, next));
+        const next = await client.command({ type: "world.pause", worldId: ctx.worldId });
+        if (sameSession(ctx)) set((w) => applySnapshot(w, next));
       } catch (err) {
         fail(err);
       }
     },
     async resume() {
-      const world = get().world;
-      if (!world) return;
+      const ctx = context();
+      if (!ctx) return;
       try {
-        const next = await client.command({ type: "world.resume", worldId: world.id });
-        set((w) => applySnapshot(w, next));
+        const next = await client.command({ type: "world.resume", worldId: ctx.worldId });
+        if (sameSession(ctx)) set((w) => applySnapshot(w, next));
       } catch (err) {
         fail(err);
       }
     },
 
-    /** 走到某间屋：隔着别的屋就一间一间走，中途被拒绝就停下 */
+    /**
+     * 走到某间屋：隔着别的屋就一间一间走，中途被拒绝就停下。
+     * 整条路线绑在出发时的那一局那一代上：中途重置、暂停、恢复了，剩下的几步不走（旧的意图不带进新的世界）。
+     */
     async goTo(placeId: string) {
       const world = get().world;
-      if (!world) return;
+      const ctx = context();
+      if (!world || !ctx) return;
       const path = pathTo(world.places, world.player.placeId, placeId);
       if (!path) return void set((w) => ({ ...w, rejected: { reason: "not_adjacent", nonce: ++nonce } }));
-      for (const to of path) if (!(await act({ type: "move", to }))) return;
+      for (const to of path) if (!(await act({ type: "move", to }, ctx))) return;
     },
     invite: (agent: string, activity: WorldActivityKind) => act({ type: "invite", to: { kind: "resident", agent }, activity }),
     /** 答复她对你的邀请。晚点 = 一小时后 */
