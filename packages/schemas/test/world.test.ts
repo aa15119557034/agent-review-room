@@ -2,11 +2,11 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   COMMANDS, ControlEvent, QUERIES, WorldAction, WorldActivity, WorldActRequest, WorldCognitionReply, WorldEvent, WorldItem,
-  WorldObservation, WorldResetRequest, WorldResidentView, WorldScene, WorldSceneSayRequest, WorldSettingsSaveRequest, WorldSnapshot,
+  WorldBudget, WorldCommitment, WorldObservation, WorldResetRequest, WorldResidentView, WorldScene, WorldSceneSayRequest, WorldSettingsSaveRequest, WorldSnapshot,
 } from "../src/index";
 
 const U = "01JABCDEFGHJKMNPQRSTVWXYZ0";
-const gen = { epoch: 1, runSeq: 0 };
+const gen = { session: `wses_${U}`, runSeq: 0 };
 const a = { kind: "resident", agent: "claude" } as const;
 const b = { kind: "resident", agent: "codex" } as const;
 const you = { kind: "player" } as const;
@@ -71,6 +71,9 @@ test("the player can move, invite, join and stop, but cannot act for a resident 
   assert.equal(WorldActRequest.safeParse({ ...base, action: { type: "move", to: "kitchen" } }).success, true);
   assert.equal(WorldActRequest.safeParse({ ...base, action: { type: "invite", to: b, activity: "set_table" } }).success, true);
   assert.equal(WorldActRequest.safeParse({ ...base, action: { type: "take", itemId: "book" } }).success, false);
+  assert.equal(WorldActRequest.safeParse({ ...base, action: { type: "cancel", commitmentId: `wcom_${U}` } }).success, true);
+  assert.equal(WorldActRequest.safeParse({ ...base, action: { type: "answer", commitmentId: `wcom_${U}`, answer: "later", dueAt: null } }).success, false);
+  assert.equal(WorldActRequest.safeParse({ ...base, generation: { epoch: 1, runSeq: 0 } }).success, false, "generation is a session id, not a counter");
   assert.equal(WorldActRequest.safeParse({ ...base, action: { type: "move", to: "kitchen" }, actor: b }).success, false);
   const { generation: _g, ...noGen } = base;
   assert.equal(WorldActRequest.safeParse({ ...noGen, action: { type: "stop" } }).success, false);
@@ -78,6 +81,12 @@ test("the player can move, invite, join and stop, but cannot act for a resident 
 
 test("events: a rejected action has no event shape; speech is text, not a state change", () => {
   const said = { type: "said", seq: 4, at: 611, placeId: "kitchen", speaker: b, text: "饭做好了", sceneId: null };
+  const act = { type: "action", seq: 6, at: 612, placeId: "kitchen", actor: b, action: { type: "stop" }, activityId: null, commitmentId: null, sceneId: null, optionId: null };
+  assert.equal(WorldEvent.safeParse(act).success, true);
+  const chose = { type: "scene", seq: 7, at: 612, placeId: "kitchen", sceneId: `wscn_${U}`, step: "chose", optionId: "opt_leave", result: null };
+  assert.equal(WorldEvent.safeParse(chose).success, true);
+  assert.equal(WorldEvent.safeParse({ ...chose, optionId: null }).success, false);
+  assert.equal(WorldEvent.safeParse({ ...chose, step: "opened" }).success, false);
   assert.equal(WorldEvent.safeParse(said).success, true);
   assert.equal(WorldEvent.safeParse({ ...said, produced: [{ itemId: "meal", count: 2 }] }).success, false);
   assert.equal(WorldEvent.safeParse({ type: "rejected", seq: 5, at: 611, reason: "item_busy" }).success, false);
@@ -89,22 +98,23 @@ test("events: a rejected action has no event shape; speech is text, not a state 
   assert.equal(WorldEvent.safeParse({ ...ended, produced: [{ itemId: "meal", count: 0 }] }).success, false);
 });
 
-test("observation: 'told' must point at the sentence that told her", () => {
+test("observation: she either saw an event or heard a sentence; hearsay carries no link to the hidden event", () => {
   const o = { observer: "claude", seq: 3, at: 611 };
-  assert.equal(WorldObservation.safeParse({ ...o, mode: "saw", via: null }).success, true);
-  assert.equal(WorldObservation.safeParse({ ...o, mode: "told", via: 4 }).success, true);
-  assert.equal(WorldObservation.safeParse({ ...o, mode: "told", via: null }).success, false);
-  assert.equal(WorldObservation.safeParse({ ...o, mode: "saw", via: 4 }).success, false);
+  assert.equal(WorldObservation.safeParse({ ...o, mode: "saw" }).success, true);
+  assert.equal(WorldObservation.safeParse({ ...o, mode: "heard" }).success, true);
+  assert.equal(WorldObservation.safeParse({ ...o, mode: "told" }).success, false);
+  assert.equal(WorldObservation.safeParse({ ...o, mode: "heard", via: 2 }).success, false);
 });
 
-test("resident view may be stale or unknown, and carries how she knows", () => {
+test("resident view: item beliefs come from what she saw; what she heard stays a sentence", () => {
   const view = {
-    agent: "codex", generation: gen,
-    knownItems: [{ itemId: "book", at: { kind: "place", placeId: "living_room" }, count: null, asOf: 300, mode: "saw" }, { itemId: "pot", at: null, count: null, asOf: 0, mode: "told" }],
-    recent: [],
+    agent: "codex", worldId: `world_${U}`,
+    knownItems: [{ itemId: "book", at: { kind: "place", placeId: "living_room" }, count: null, asOf: 300, seq: 2 }],
+    seen: [], heard: [{ seq: 4, at: 611, speaker: a, text: "我把书收起来了" }],
   };
   assert.equal(WorldResidentView.safeParse(view).success, true);
   assert.equal(WorldResidentView.safeParse({ ...view, knownItems: [{ itemId: "book", at: null, count: null, asOf: 300 }] }).success, false);
+  assert.equal(WorldResidentView.safeParse({ ...view, heard: [{ seq: 4, at: 611, speaker: a, text: "x", event: { type: "action" } }] }).success, false);
 });
 
 test("model reply is display data only: closed actions, bounded text, no extra fields", () => {
@@ -123,7 +133,8 @@ test("scene: options come with a rule-approved action or none; typed text is bou
   const scene = {
     id: `wscn_${U}`, generation: gen, origin: { kind: "event", cause: "item_contention", seq: 3 }, placeId: "living_room",
     residents: ["claude", "codex"],
-    lines: [{ speaker: null, text: "两个人都想看那本书。", expression: "neutral", source: "rule" }],
+    lines: [{ speaker: null, text: "两个人都想看那本书。", expression: "neutral", source: "rule", seq: null }],
+    past: [],
     options: [
       { id: "opt_a_first", label: "让 C酱 先看", act: { actor: you, action: { type: "invite", to: b, activity: "rest" } } },
       { id: "opt_leave", label: "不管，看她们自己商量", act: null },
@@ -132,10 +143,25 @@ test("scene: options come with a rule-approved action or none; typed text is bou
   };
   assert.equal(WorldScene.safeParse(scene).success, true);
   assert.equal(WorldScene.safeParse({ ...scene, options: [{ id: "opt_x", label: "x", act: { actor: you, action: { type: "win" } } }] }).success, false);
-  assert.equal(WorldScene.safeParse({ ...scene, lines: [{ speaker: a, text: "ok", expression: "neutral", source: "user" }] }).success, false);
+  assert.equal(WorldScene.safeParse({ ...scene, lines: [{ speaker: a, text: "ok", expression: "neutral", source: "user", seq: 5 }] }).success, false);
+  assert.equal(WorldScene.safeParse({ ...scene, lines: [{ speaker: you, text: "ok", expression: "neutral", source: "user", seq: 5 }] }).success, true);
+  const used = { option: scene.options[1], outcome: "chosen", seq: 7 };
+  assert.equal(WorldScene.safeParse({ ...scene, options: [scene.options[0]], past: [used] }).success, true);
+  assert.equal(WorldScene.safeParse({ ...scene, past: [used] }).success, false, "an option id cannot be offered again after it was used");
+  assert.equal(WorldScene.safeParse({ ...scene, options: [], past: [{ ...used, seq: null }] }).success, false);
   const say = { type: "world.scene.say", worldId: `world_${U}`, generation: gen, actionId: `wact_${U}`, sceneId: scene.id };
   assert.equal(WorldSceneSayRequest.parse({ ...say, text: "  你好  " }).text, "你好");
   assert.equal(WorldSceneSayRequest.safeParse({ ...say, text: "   " }).success, false);
+});
+
+test("commitment: an invite waits as 'asked' before it is a promise; budget is keyed by a local date", () => {
+  const c = { id: `wcom_${U}`, by: b, to: you, activity: "set_table", dueAt: null, state: "asked", activityId: null, createdAt: 600 };
+  assert.equal(WorldCommitment.safeParse(c).success, true);
+  for (const state of ["pending", "deferred", "declined", "done", "cancelled", "expired"]) assert.equal(WorldCommitment.safeParse({ ...c, state }).success, true);
+  assert.equal(WorldCommitment.safeParse({ ...c, state: "accepted" }).success, false);
+  const budget = { agent: "claude", day: "2026-11-15", used: 3, limit: 60, resetsAt: "2026-11-16T00:00:00+08:00" };
+  assert.equal(WorldBudget.safeParse(budget).success, true);
+  assert.equal(WorldBudget.safeParse({ ...budget, day: "day 12" }).success, false);
 });
 
 test("reset needs explicit confirm; residents can change only through reset", () => {

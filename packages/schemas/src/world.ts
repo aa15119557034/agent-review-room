@@ -8,7 +8,9 @@ import { AgentName } from "./entities";
  * 几条贯穿全文件的规矩（都来自 ADR-008）：
  * - 世界的事实只由规则层（main）写。模型只「提议」和写台词；renderer 只发命令。
  * - 居民的动作、你的操作、作息规则产生的动作，走同一套检查（WorldRejectReason）。
- * - 每个请求带「代次」。重置、从备份恢复、切换资料都换一代（epoch）；暂停再继续记一次（runSeq）。
+ * - 「一局」= 一个 WorldId = 一条连续的事件历史。重置是开新的一局（新 WorldId）；恢复备份、切换资料、重启程序都还是同一局。
+ * - 每个请求带「代次」（WorldGeneration）：session 是这次把世界跑起来的会话，每次启动 / 恢复 / 切换 / 重置都新生成，
+ *   不从存档里读、不靠计数加一，所以恢复旧备份也不会撞上以前用过的；runSeq 在一个会话里每次暂停再继续加一。
  *   回来时代次对不上的结果直接作废，不看它现在是否碰巧还合条件。
  * - 给居民的东西只来自她自己的观察。本文件里带「全貌」的类型（WorldSnapshot、WorldEvent 列表）
  *   只给界面用，main 不得把它们放进任何居民的认知上下文。
@@ -19,8 +21,12 @@ import { AgentName } from "./entities";
 
 // ================================================================ id 和小类型
 
+/** 一局的 id。重置 = 新的一局 = 新 id；旧一局的事件、观察、约定都留在旧 id 下，不进新一局 */
 export const WorldId = prefixedId("world");
 export type WorldId = z.infer<typeof WorldId>;
+/** 运行会话：main 每次把一局跑起来（启动、从备份恢复、切换资料、重置）时新生成的 ULID。只在内存和请求里，不随存档回退 */
+export const WorldSessionId = prefixedId("wses");
+export type WorldSessionId = z.infer<typeof WorldSessionId>;
 /** 动作 id：谁发起谁生成（你的操作由 renderer 生成）。同一个 id 再来一次不重复生效，返回第一次的结果 */
 export const WorldActionId = prefixedId("wact");
 export type WorldActionId = z.infer<typeof WorldActionId>;
@@ -41,13 +47,20 @@ export type WorldItemId = z.infer<typeof WorldItemId>;
 /** 世界里的时间：从第 1 天 00:00 起的分钟数。第几天、几点几分都由它算，不另存 */
 export const WorldMinutes = z.number().int().nonnegative();
 export const WORLD_MINUTES_PER_DAY = 1440;
-/** 事件序号：每个世界每一代从 1 递增，只追加 */
+/**
+ * 事件序号：**每一局（WorldId）从 1 连续递增**，只追加，和代次无关：暂停、重启、恢复备份都接着往下数。
+ * 恢复旧备份时，备份之后的事件随库一起回到备份时的样子，序号从备份里的最大值接着走。
+ * 所有引用事件的地方（观察、回顾、分页、场景）都是「WorldId + seq」，同一局内唯一。
+ */
 export const WorldSeq = z.number().int().positive();
 /** 0–100 的状态数（体力、饱腹、心情） */
 const Gauge = z.number().int().min(0).max(100);
 
-/** 代次。epoch：重置 / 恢复 / 切换资料时加一；runSeq：每次暂停再继续加一 */
-export const WorldGeneration = z.object({ epoch: z.number().int().positive(), runSeq: z.number().int().nonnegative() }).strict();
+/**
+ * 代次。session 见 WorldSessionId；runSeq：这个会话里每次暂停再继续加一（备份的自动暂停也算）。
+ * 两个都相等才算同一代。main 换会话时必须先让旧会话失效（旧回调写不进任何新实例）。
+ */
+export const WorldGeneration = z.object({ session: WorldSessionId, runSeq: z.number().int().nonnegative() }).strict();
 export type WorldGeneration = z.infer<typeof WorldGeneration>;
 
 /** 世界里的「谁」：一位居民，或者你 */
@@ -135,15 +148,20 @@ export const WorldItem = z.discriminatedUnion("kind", [
 export type WorldItem = z.infer<typeof WorldItem>;
 
 /**
- * 约定：谁答应了谁什么。只是一个小记录，不是通用任务调度。
- * pending：答应了还没做；deferred：说了「晚点」，dueAt 是说好的时间；done / cancelled / expired 是终态
+ * 邀请和约定：谁邀了谁做什么，对方怎么答，后来怎样。只是一个小记录，不是通用任务调度。
+ *
+ * asked：邀请发出，还没答复
+ *   → pending（答应了，还没开始做）｜ deferred（说了「晚点」，dueAt 是说好的时间）｜ declined（来不了，终态）｜ expired（一直没答，终态）
+ * pending / deferred → done ｜ cancelled（任一方取消）｜ expired（过了说好的时间没做）
+ * deferred 到点后由规则转成 pending 并给下文。
+ * declined / done / cancelled / expired 是终态，迟到的答复或取消不能让它复活（按 not_allowed 拒绝）。
  */
-export const WorldCommitmentState = z.enum(["pending", "deferred", "done", "cancelled", "expired"]);
+export const WorldCommitmentState = z.enum(["asked", "pending", "deferred", "declined", "done", "cancelled", "expired"]);
 export const WorldCommitment = z.object({
   id: WorldCommitmentId,
-  /** 答应的人 */
+  /** 被邀请、要答复和履行的人 */
   by: WorldActor,
-  /** 答应了谁 */
+  /** 发出邀请的人 */
   to: WorldActor,
   activity: WorldActivityKind,
   dueAt: WorldMinutes.nullable(),
@@ -185,19 +203,23 @@ const PutAction = z.object({ type: z.literal("put"), itemId: WorldItemId }).stri
 const StartAction = z.object({ type: z.literal("start"), activity: WorldActivityKind, itemId: WorldItemId.nullable() }).strict();
 /** 停下自己正在做的 */
 const StopAction = z.object({ type: z.literal("stop") }).strict();
-/** 邀请同屋的某个人做某件事（或一起做） */
+/** 邀请同屋的某个人做某件事（或一起做）。接受后生成一条 asked 的约定，等对方 answer */
 const InviteAction = z.object({ type: z.literal("invite"), to: WorldActor, activity: WorldActivityKind }).strict();
-/** 回应一个邀请。later：晚点，dueAt 是说好的时间；只有 later 带 dueAt */
+/** 回应一个 asked 状态的邀请，只有被邀请的人（by）能答。later：晚点，dueAt 是说好的时间；只有 later 带 dueAt */
 const AnswerAction = z.object({
   type: z.literal("answer"), commitmentId: WorldCommitmentId,
   answer: z.enum(["accept", "later", "decline"]), dueAt: WorldMinutes.nullable(),
 }).strict();
 /** 加入别人已经开始的活动 */
 const JoinAction = z.object({ type: z.literal("join"), activityId: WorldActivityId }).strict();
+/** 取消一个还没到终态的邀请或约定。只有它的双方（by / to）能取消，别人取消按 not_allowed 拒绝 */
+const CancelAction = z.object({ type: z.literal("cancel"), commitmentId: WorldCommitmentId }).strict();
+const onlyLaterHasDue = (a: { type: string; answer?: string; dueAt?: number | null }) =>
+  a.type !== "answer" || (a.answer === "later") === (a.dueAt !== null);
 
 export const WorldAction = z
-  .discriminatedUnion("type", [MoveAction, TakeAction, PutAction, StartAction, StopAction, InviteAction, AnswerAction, JoinAction])
-  .refine((a) => a.type !== "answer" || (a.answer === "later") === (a.dueAt !== null), { message: "只有 later 带 dueAt" });
+  .discriminatedUnion("type", [MoveAction, TakeAction, PutAction, StartAction, StopAction, InviteAction, AnswerAction, JoinAction, CancelAction])
+  .refine(onlyLaterHasDue, { message: "只有 later 带 dueAt" });
 export type WorldAction = z.infer<typeof WorldAction>;
 
 /** 动作提交后的结果。accepted=false 时什么都没改 */
@@ -217,11 +239,21 @@ export type WorldActionResult = z.infer<typeof WorldActionResult>;
  * - activity_ended：活动结算（produced：产出了什么，比如几份饭）
  * - said：有人在某个地点说了一句话。text 是台词原文，**不是事实**：别人听到只算「听说」
  * - clock：到了作息点 / 新的一天，供回顾和界面用
+ * - scene：场景的开场、选择（包括「不管」这种不带动作的）、结束。回看靠它，不靠界面自己记
+ *
+ * 场景里发生的动作和说的话，事件上带 sceneId（和 optionId），所以每次选择、每句话都追得到。
+ * 你打的那句话也是一条 said（speaker 是 player）。
  */
+/** 选项 id。同一个场景里每个 id 只对应一个选项、只能用一次；失效后再给的是新 id，不会让旧的点击去执行新的动作 */
+export const WorldSceneOptionId = z.string().regex(/^opt_[a-z0-9_]{1,30}$/);
+export type WorldSceneOptionId = z.infer<typeof WorldSceneOptionId>;
+
 export const WorldEvent = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("action"), seq: WorldSeq, at: WorldMinutes, placeId: WorldPlaceId,
     actor: WorldActor, action: WorldAction, activityId: WorldActivityId.nullable(), commitmentId: WorldCommitmentId.nullable(),
+    /** 这个动作是在哪个场景里、由哪个选项带出来的；不是场景里的动作都是 null */
+    sceneId: WorldSceneId.nullable(), optionId: WorldSceneOptionId.nullable(),
   }).strict(),
   z.object({
     type: z.literal("activity_ended"), seq: WorldSeq, at: WorldMinutes, placeId: WorldPlaceId,
@@ -237,21 +269,30 @@ export const WorldEvent = z.discriminatedUnion("type", [
     type: z.literal("clock"), seq: WorldSeq, at: WorldMinutes,
     mark: z.enum(["day_started", "day_ended"]), day: z.number().int().positive(),
   }).strict(),
-]);
+  z.object({
+    type: z.literal("scene"), seq: WorldSeq, at: WorldMinutes, placeId: WorldPlaceId, sceneId: WorldSceneId,
+    step: z.enum(["opened", "chose", "closed"]),
+    /** step = chose 时是选的那个选项；否则 null */
+    optionId: WorldSceneOptionId.nullable(),
+    /** step = chose 且选项带动作时，那个动作的结果；选项不带动作、或不是 chose，是 null */
+    result: WorldActionResult.nullable(),
+  }).strict(),
+]).refine((e) => e.type !== "scene" || (e.step === "chose") === (e.optionId !== null), { message: "optionId 只在 chose 时有" });
 export type WorldEvent = z.infer<typeof WorldEvent>;
 
 /**
- * 一位居民对一条事件的观察。saw：在场看到；heard：在场听到别人说的话；told：别人后来告诉她的（via 是那句话的事件）。
- * 她的认知上下文、回忆、回顾里属于她的部分，只从这里取。
+ * 一位居民对一条事件的观察。saw：在场看到了这条事件；heard：在场听到了这句话（那条事件一定是 said）。
+ *
+ * **别人告诉她的事，她得到的只有那句话本身**（一条 heard 观察，指向那条 said）。那句话说的是哪件事、是真是假，
+ * 不在她这一侧：main 不得因为有人转述，就把她没亲眼看到的原事件投给她。原事件和转述之间的对应如果要留作审计，
+ * 留在后台，不进本类型，也不进她的上下文。
  */
 export const WorldObservation = z.object({
   observer: AgentName,
   seq: WorldSeq,
   at: WorldMinutes,
-  mode: z.enum(["saw", "heard", "told"]),
-  /** mode = told 时是告诉她的那句话的事件序号；否则 null */
-  via: WorldSeq.nullable(),
-}).strict().refine((o) => (o.mode === "told") === (o.via !== null), { message: "via 只在 told 时有" });
+  mode: z.enum(["saw", "heard"]),
+}).strict();
 export type WorldObservation = z.infer<typeof WorldObservation>;
 
 // ================================================================ 剧情和对话场景
@@ -270,20 +311,22 @@ export const WorldSceneCause = z.enum([
 export type WorldSceneCause = z.infer<typeof WorldSceneCause>;
 
 /**
- * 一句显示出来的台词。source = model：模型写的、已按 ADR-008 §2 核对过；rule：规则旁白（模型不在、或台词对不上被换掉）。
- * speaker 是 null 表示旁白。
+ * 一句显示出来的台词。source = model：模型写的、已按 ADR-008 §2 核对过；rule：规则旁白（模型不在、或台词对不上被换掉）；
+ * user：你打的那句话（speaker 一定是 player）。speaker 是 null 表示旁白。
+ * seq：这句话对应的 said 事件；纯旁白没有事件，是 null。回看按 lines 的顺序重放。
  */
 export const WorldSceneLine = z.object({
   speaker: WorldActor.nullable(),
   text: z.string().min(1).max(500),
   expression: WorldExpression,
-  source: z.enum(["model", "rule"]),
-}).strict();
+  source: z.enum(["model", "rule", "user"]),
+  seq: WorldSeq.nullable(),
+}).strict().refine((l) => (l.source === "user") === (l.speaker?.kind === "player"), { message: "user 的台词只能是你说的，你说的只能是 user" });
 export type WorldSceneLine = z.infer<typeof WorldSceneLine>;
 
 /** 选项由规则给出，每个对应一个规则认可的动作。模型不能加选项，也看不到 action 以外的东西 */
 export const WorldSceneOption = z.object({
-  id: z.string().regex(/^opt_[a-z0-9_]{1,30}$/),
+  id: WorldSceneOptionId,
   label: z.string().min(1).max(60),
   /** 选了以后以谁的名义做。不管（让她们自己商量）是 null */
   act: z.object({ actor: WorldActor, action: WorldAction }).strict().nullable(),
@@ -305,13 +348,23 @@ export const WorldScene = z.object({
   lines: z.array(WorldSceneLine).max(200),
   /** 现在能选的。空数组 = 没有选项 */
   options: z.array(WorldSceneOption).max(4),
+  /**
+   * 给过、但已经不能选的选项，按时间顺序：chosen（你选了，seq 是那条 scene 事件）或 expired（情况变了，失效）。
+   * 回看只读这里和 lines，不重新计算选项。同一个 id 不会同时出现在 options 和 past 里。
+   */
+  past: z.array(z.object({
+    option: WorldSceneOption, outcome: z.enum(["chosen", "expired"]), seq: WorldSeq.nullable(),
+  }).strict().refine((p) => (p.outcome === "chosen") === (p.seq !== null), { message: "seq 只在 chosen 时有" })).max(40),
   /** 能不能打一句话。她的节点不在时是 false，界面明说她现在没法回应 */
   canType: z.boolean(),
   /** waiting：在等她回话；open：等你；closed：结束，只能回看 */
   state: z.enum(["open", "waiting", "closed"]),
   openedAt: WorldMinutes,
   createdAt: IsoTimestamp,
-}).strict();
+}).strict().refine((sc) => {
+  const ids = [...sc.options.map((o) => o.id), ...sc.past.map((x) => x.option.id)];
+  return new Set(ids).size === ids.length;
+}, { message: "同一个场景里选项 id 不能重复" });
 export type WorldScene = z.infer<typeof WorldScene>;
 
 /** 一天的回顾。每一条都指回事件；text 的措辞可以由模型润色，内容不能超出那些事件 */
@@ -372,20 +425,25 @@ export type WorldSnapshot = z.infer<typeof WorldSnapshot>;
 
 /**
  * 「她知道什么」：切到某位居民的视角时界面看到的。只含她自己的观察能支持的东西。
- * knownItems：她印象里每样东西在哪、是什么时候、怎么知道的。可能是旧的，和真实状态不一致是正常的。
+ * knownItems：她**亲眼看到**的每样东西最后在哪、是什么时候。可能是旧的，和真实状态不一致是正常的；没见过就不在列表里。
+ * 听来的不折算成物品位置（一句话是真是假规则判断不了），原样列在 heard 里。
+ * seen 里的事件是她在场看到的，可以给完整事件；heard 里只给那句话，不给它说的那件事。
  */
 export const WorldResidentView = z.object({
   agent: AgentName,
-  generation: WorldGeneration,
+  worldId: WorldId,
   knownItems: z.array(z.object({
     itemId: WorldItemId,
     at: WorldItemLocation.nullable(),
     count: z.number().int().nonnegative().max(999).nullable(),
     asOf: WorldMinutes,
-    mode: WorldObservation.innerType().shape.mode,
+    /** 她是从哪条亲眼看到的事件知道的 */
+    seq: WorldSeq,
   }).strict()).max(60),
-  /** 她最近的观察，新的在前 */
-  recent: z.array(z.object({ observation: WorldObservation, event: WorldEvent }).strict()).max(100),
+  /** 她最近亲眼看到的事件，新的在前 */
+  seen: z.array(WorldEvent).max(100),
+  /** 她最近听到的话，新的在前 */
+  heard: z.array(z.object({ seq: WorldSeq, at: WorldMinutes, speaker: WorldActor, text: z.string().min(1).max(500) }).strict()).max(100),
 }).strict();
 export type WorldResidentView = z.infer<typeof WorldResidentView>;
 
@@ -410,13 +468,21 @@ export type WorldSettings = z.infer<typeof WorldSettings>;
 
 /**
  * 认知次数的用量。按现实日算，**记在世界存档之外**：快进、重置、恢复旧备份都不会把 used 减回去。
- * 发请求前先占名额（used 加一），不够就不发。
+ *
+ * 怎么数（X-42 照这个做）：
+ * - 「一天」是运行程序这台电脑**本地时区**的自然日。day 是那天的日期，resetsAt 是下一个本地零点。
+ * - 发之前先把名额写进账本（used 加一）并落盘，写成功了才发；账本写不进去就不发。
+ * - 一次逻辑上的请求（一个 Run）算一次。同一个 Run 因为网络断了重传，不重复算；换一个新的 Run 重试，算新的一次。
+ * - 发出去以后不退：失败、取消、回的格式不对、代次过期作废、不知道节点到底执行了没有，都不把名额还回去。
+ * - 场景里的轮数上限（WORLD_SCENE_MAX_MODEL_TURNS）同样按「发起了几次」数，不按「成功显示了几句」。
  */
 export const WorldBudget = z.object({
   agent: AgentName,
+  /** 本地日期 YYYY-MM-DD */
+  day: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   used: z.number().int().nonnegative(),
   limit: z.number().int().nonnegative(),
-  /** 现实时间，这一天什么时候结束 */
+  /** 下一个本地零点 */
   resetsAt: IsoTimestamp,
 }).strict();
 export type WorldBudget = z.infer<typeof WorldBudget>;
@@ -449,15 +515,17 @@ export type WorldReplyRejectReason = z.infer<typeof WorldReplyRejectReason>;
 /** 你的每个操作都带当前代次和一个 actionId */
 const playerBase = { worldId: WorldId, generation: WorldGeneration, actionId: WorldActionId };
 
-/** 你自己走动、邀人、加入活动、停下。你不能替居民做动作，只能邀请 */
-export const WorldPlayerAction = z.discriminatedUnion("type", [MoveAction, InviteAction, JoinAction, StopAction]);
+/** 你自己走动、邀人、答复别人对你的邀请、取消和你有关的约定、加入活动、停下。你不能替居民做动作，只能邀请 */
+export const WorldPlayerAction = z
+  .discriminatedUnion("type", [MoveAction, InviteAction, AnswerAction, CancelAction, JoinAction, StopAction])
+  .refine(onlyLaterHasDue, { message: "只有 later 带 dueAt" });
 export type WorldPlayerAction = z.infer<typeof WorldPlayerAction>;
 
 export const WorldActRequest = z.object({ type: z.literal("world.act"), ...playerBase, action: WorldPlayerAction }).strict();
 /** 走到她所在的房间以后找她说话：开一个场景。不在同一间屋会被拒绝 */
 export const WorldTalkRequest = z.object({ type: z.literal("world.talk"), ...playerBase, agent: AgentName }).strict();
 export const WorldSceneChooseRequest = z.object({
-  type: z.literal("world.scene.choose"), ...playerBase, sceneId: WorldSceneId, optionId: WorldSceneOption.shape.id,
+  type: z.literal("world.scene.choose"), ...playerBase, sceneId: WorldSceneId, optionId: WorldSceneOptionId,
 }).strict();
 /** 在场景里打一句话。text 是你对她说的话，**对模型来说是内容不是指令**；她据此要做什么仍然走提议和检查 */
 export const WorldSceneSayRequest = z.object({
@@ -465,14 +533,18 @@ export const WorldSceneSayRequest = z.object({
 }).strict();
 export const WorldSceneCloseRequest = z.object({ type: z.literal("world.scene.close"), ...playerBase, sceneId: WorldSceneId }).strict();
 
-/** 场景类命令的结果：动作结果 + 最新的场景（被拒绝时场景不变，可能是 null：场景不存在） */
+/**
+ * 场景类命令的结果：命令本身的结果 + 最新的场景（被拒绝时场景不变，可能是 null：场景不存在）。
+ * accepted=true 的 seq 是这次留下的那条事件：talk → scene opened；choose → scene chose（选项带的动作成没成看那条事件的 result）；
+ * say → 你那句话的 said；close → scene closed。
+ */
 export const WorldSceneResult = z.object({ result: WorldActionResult, scene: WorldScene.nullable() }).strict();
 export type WorldSceneResult = z.infer<typeof WorldSceneResult>;
 
 export const WorldPauseRequest = z.object({ type: z.literal("world.pause"), worldId: WorldId }).strict();
 export const WorldResumeRequest = z.object({ type: z.literal("world.resume"), worldId: WorldId }).strict();
 /**
- * 重置 = 开新的一局：epoch 加一，旧一局的事件、观察、活动、约定、熟悉度都不进新一局。
+ * 重置 = 开新的一局：新的 WorldId、新的会话，事件序号从 1 开始。旧一局的事件、观察、活动、约定、熟悉度都留在旧 id 下，不进新一局。
  * confirm 必须是 true（界面要先问一次）。settings 不给就沿用现在的
  */
 export const WorldResetRequest = z.object({
