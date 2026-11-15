@@ -1,6 +1,6 @@
 import { WorkspaceService } from "./workspace";
 import { existsSync, readFileSync, writeFileSync, renameSync, rmSync, mkdirSync } from "node:fs";
-import { app, BrowserWindow, dialog, ipcMain, nativeTheme, protocol, safeStorage } from "electron";
+import { app, BrowserWindow, dialog, ipcMain, nativeTheme, powerMonitor, protocol, safeStorage } from "electron";
 import {
   acquireSingleInstance,
   createWindowStateStore,
@@ -40,6 +40,8 @@ import { loadTtsConfigFile, TtsRunner, voiceOptionsOf } from "./tts";
 import { PacksService } from "./packs";
 import { runCliIfRequested } from "./cli";
 import { bundledTtsConfig, findTtsBundle } from "./tts-paths";
+import { WorldService } from "./world";
+import { WorldClock } from "./world-clock";
 
 /**
  * Electron 主进程入口（D-07）。
@@ -386,8 +388,77 @@ async function bootstrap(): Promise<void> {
   const repairedChat = cliRequested ? 0 : await chat.repairInterrupted();
   if (!cliRequested) await chat.repairPendingImmersive();
 
+  const world = new WorldService({ db, queue, emit: broadcast, knownAgents: () => repo.listAgents().map((agent) => agent.id), dbPath: join(userData, "room.db") });
+  let shuttingDown = false, shutdownComplete = false, suspended = false, switching = false, clockFailed = false, maintenanceCount = 0;
+  let suspendWork: Promise<void> = Promise.resolve();
+  const canRunClock = () => !cliRequested && !shuttingDown && !suspended && !switching && !clockFailed && maintenanceCount === 0;
+  const worldClock = new WorldClock({
+    advance: (elapsedMs) => world.advance(elapsedMs),
+    onDiscontinuity: async () => {
+      // A long event-loop gap invalidates in-flight work without creating a
+      // second physical-suspend flag that could outlive a concurrent backup.
+      if (!shuttingDown && !switching) await world.maintenance(async () => undefined);
+    },
+    onError: (error) => {
+      clockFailed = true;
+      console.error("[world] 时间推进失败，正在尝试暂停：", error);
+      void (async () => {
+        if (shuttingDown || switching) return;
+        const current = world.get().world;
+        if (current === null) throw new Error("没有可暂停的世界");
+        // A recoverable tick failure is a visible pause, not a physical sleep:
+        // after this one write succeeds, the user's Resume can advance again.
+        await world.pause(current.id);
+        clockFailed = false;
+        if (canRunClock()) worldClock.start();
+      })().catch((cause: unknown) => {
+        // Keep all restart paths closed if even persisting the pause failed.
+        console.error("[world] 暂停失败，计时保持停止；请重启应用后再试：", cause);
+      });
+    },
+  });
+  if (!cliRequested) await world.start();
+  const withWorldMaintenance = async <T>(work: () => Promise<T>): Promise<T> => {
+    maintenanceCount++;
+    const stopped = worldClock.stop();
+    try {
+      return await world.maintenance(async () => { await stopped; return work(); });
+    } finally {
+      maintenanceCount--;
+      if (canRunClock()) worldClock.start();
+    }
+  };
+  const withWorldSwitch = async <T>(work: () => Promise<T>): Promise<T> => {
+    maintenanceCount++;
+    const stopped = worldClock.stop();
+    try {
+      const result = await world.beginSwitch(async () => { await stopped; return work(); });
+      switching = true;
+      return result;
+    } finally {
+      maintenanceCount--;
+      if (canRunClock()) worldClock.start();
+    }
+  };
+  const onSuspend = () => {
+    suspended = true;
+    const stopped = worldClock.stop();
+    suspendWork = world.suspend().then(() => stopped);
+    void suspendWork.catch((error: unknown) => console.error("[world] 休眠暂停失败：", error));
+  };
+  const onResume = () => {
+    suspended = false;
+    void suspendWork.then(async () => {
+      if (shuttingDown || switching || suspended) return;
+      await world.resumeFromSuspend();
+      if (canRunClock()) worldClock.start();
+    }).catch((error: unknown) => console.error("[world] 休眠恢复失败：", error));
+  };
+
   const workspace = new WorkspaceService({
     db, queue, userData, version: app.getVersion(), revision: process.env["ROOM_BUILD_SHA"] ?? "development",
+    withWorldMaintenance,
+    withWorldSwitch,
     confirmSwitch: async (target) => (await dialog.showMessageBox({type:"question",buttons:["取消","切换并重启"],defaultId:0,cancelId:0,title:"切换资料",message:target?"将打开恢复副本，原资料继续保留。节点凭据和本机媒体配置需要重新配置。":"将切回原资料目录，恢复副本继续保留。"})).response===1,
     activateDirectory: (target) => {
       if(target===null){rmSync(dataLocationFile,{force:true});}
@@ -420,6 +491,7 @@ async function bootstrap(): Promise<void> {
   });
 
   const dispatcher = createDispatcher({
+    world,
     workspace,
     github,
     repo,
@@ -442,7 +514,17 @@ async function bootstrap(): Promise<void> {
   ipcMain.handle(IPC_CHANNELS.command, async (_event, request: unknown) => dispatcher.handleCommand(request));
   ipcMain.handle(IPC_CHANNELS.query, async (_event, request: unknown) => dispatcher.handleQuery(request));
 
-  app.on("before-quit", () => {
+  app.on("before-quit", (event) => {
+    if (shutdownComplete) return;
+    event.preventDefault();
+    if (shuttingDown) return;
+    shuttingDown = true;
+    ipcMain.removeHandler(IPC_CHANNELS.command);
+    ipcMain.removeHandler(IPC_CHANNELS.query);
+    powerMonitor.removeListener("suspend", onSuspend);
+    powerMonitor.removeListener("resume", onResume);
+    const clockStopped = worldClock.stop();
+    const worldStopped = world.stop();
     // 让节点立刻停下，而不是等租约过期（abort 由 orchestrator / chat 统一发出）
     orchestrator.cancelAll();
     chat.cancelAll();
@@ -451,11 +533,14 @@ async function bootstrap(): Promise<void> {
     ttsRunner?.dispose();
     // D-34b：转写 sidecar 是独立进程，退出时一起收掉
     voice.dispose();
-    try {
+    void Promise.allSettled([clockStopped, worldStopped, suspendWork]).then(async (results) => {
+      for (const result of results) if (result.status === "rejected") console.error("[world] 退出收尾失败：", result.reason);
+      await queue.drain();
       db.close();
-    } catch {
-      // 已经关闭
-    }
+    }).catch((error: unknown) => console.error("[shutdown] 关闭数据库失败：", error)).finally(() => {
+      shutdownComplete = true;
+      app.quit();
+    });
   });
 
   if (cliRequested) {
@@ -487,6 +572,9 @@ async function bootstrap(): Promise<void> {
   installAppShell({ entry: appEntry, logger, getMainWindow: () => mainWindow });
   shellReady = true;
   createWindow();
+  powerMonitor.on("suspend", onSuspend);
+  powerMonitor.on("resume", onResume);
+  worldClock.start();
 }
 
 if (!isPrimaryInstance) {

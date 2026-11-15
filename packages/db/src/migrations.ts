@@ -1,5 +1,6 @@
 import { SCHEMA_V25 } from "./schema-v25";
 import { SCHEMA_V26 } from "./schema-v26";
+import { SCHEMA_V27 } from "./schema-v27";
 import type { Database } from "better-sqlite3";
 import { SCHEMA_V1, SCHEMA_V2 } from "./schema";
 import { SCHEMA_V3, SCHEMA_V3_REBUILD } from "./schema-v3";
@@ -233,6 +234,7 @@ export const MIGRATIONS: readonly Migration[] = [
       if (!columns.some((column) => column.name === "voice")) db.exec(SCHEMA_V26);
     },
   },
+  { version: 27, name: "shared-world", up: (db) => { db.exec(SCHEMA_V27); } },
 ];
 
 /** 当前代码支持的最新 schema 版本 */
