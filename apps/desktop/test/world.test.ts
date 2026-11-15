@@ -7,7 +7,7 @@ import { openDatabase, WriteQueue, ulid } from "@room/db";
 import { ControlEvent, WorldState, type CommandRequest, type WorldPlayerAction } from "@room/schemas";
 import { WorldService } from "../src/main/world";
 
-async function setup(residents = ["claude", "codex"]) {
+async function setup(residents = ["claude", "codex"], resetWorld = true) {
   const dir = mkdtempSync(join(tmpdir(), "room-world-main-"));
   const path = join(dir, "room.db");
   const db = openDatabase(path);
@@ -17,7 +17,7 @@ async function setup(residents = ["claude", "codex"]) {
   let service = make();
   await service.start();
   const reset: CommandRequest<"world.reset"> = { type: "world.reset", requestId: `wact_${ulid()}`, worldId: null, confirm: true, settings: { residents, dayRealMinutes: 4, dailyCognitionLimit: 0 } };
-  await service.reset(reset);
+  if (resetWorld) await service.reset(reset);
   return {
     db, queue, events, reset, get service() { return service; },
     restart: async () => { await service.stop(); service = make(); await service.start(); },
@@ -33,6 +33,61 @@ function move(service: WorldService) {
   const room = world.places.find((p) => p.id === world.player.placeId)!;
   return action(service, { type: "move", to: room.neighbors[0]! });
 }
+
+test("world.get returns null settings only before a world, saved settings or configured residents exist", async () => {
+  const agents: string[] = [];
+  const h = await setup(agents, false);
+  try {
+    assert.deepEqual(WorldState.parse(h.service.get()), { world: null, scene: null, settings: null, budgets: [] });
+    assert.equal((h.db.prepare("SELECT COUNT(*) AS n FROM world_settings").get() as { n: number }).n, 0, "reading the empty state does not manufacture saved settings");
+    await assert.rejects(h.service.reset({ type: "world.reset", requestId: `wact_${ulid()}`, worldId: null, confirm: true }), /请先配置至少一位秘书/);
+    await assert.rejects(h.service.reset(h.reset), /请选择已配置的秘书入住/, "explicit empty residents still cannot create a world");
+    assert.equal(h.service.get().world, null);
+    agents.push("claude", "codex", "third");
+    const state = WorldState.parse(h.service.get());
+    assert.equal(state.world, null);
+    assert.deepEqual(state.settings, { residents: ["claude", "codex"], dayRealMinutes: 24, dailyCognitionLimit: 60 });
+  } finally { await h.close(); }
+});
+
+test("world.get prefers saved settings over configured defaults even before a world starts", async () => {
+  const agents = ["new-resident"];
+  const h = await setup(agents, false);
+  const saved = { residents: ["saved-resident"], dayRealMinutes: 90, dailyCognitionLimit: 7 };
+  try {
+    h.db.prepare("INSERT INTO world_settings(singleton, settings_json) VALUES (1, ?)").run(JSON.stringify(saved));
+    assert.deepEqual(WorldState.parse(h.service.get()).settings, saved);
+    agents.length = 0;
+    assert.deepEqual(WorldState.parse(h.service.get()), { world: null, scene: null, settings: saved, budgets: [] });
+  } finally { await h.close(); }
+});
+
+test("an existing world retains non-null saved settings after all configured residents are removed", async () => {
+  const agents = ["claude", "codex"];
+  const h = await setup(agents);
+  try {
+    const before = WorldState.parse(h.service.get());
+    agents.length = 0;
+    const after = WorldState.parse(h.service.get());
+    assert.ok(after.world);
+    assert.deepEqual(after.settings, before.settings);
+    assert.notEqual(after.settings, null);
+    h.db.exec("DELETE FROM world_settings");
+    assert.throws(() => h.service.get(), /active world has no settings/, "a broken active world cannot become an empty start page");
+  } finally { await h.close(); }
+});
+
+test("invalid saved settings still fail instead of becoming null or configured defaults", async () => {
+  for (const agents of [[], ["claude"]]) {
+    const h = await setup(agents, false);
+    try {
+      h.db.prepare("INSERT INTO world_settings(singleton, settings_json) VALUES (1, ?)").run(JSON.stringify({ residents: [], dayRealMinutes: 24, dailyCognitionLimit: 60 }));
+      assert.throws(() => h.service.get(), { name: "ZodError" });
+      h.db.prepare("UPDATE world_settings SET settings_json = ? WHERE singleton = 1").run("null");
+      assert.throws(() => h.service.get(), { name: "ZodError" });
+    } finally { await h.close(); }
+  }
+});
 
 test("world reset and actions use persisted receipts, including response loss and different content", async () => {
   const h = await setup();

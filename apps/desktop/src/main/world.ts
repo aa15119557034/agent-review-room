@@ -48,16 +48,21 @@ export class WorldService {
 
   #now(): string { return this.#deps.now?.() ?? new Date().toISOString(); }
   #load() { return this.#store.load(this.#generation); }
-  #settings(): WorldSettings {
+  #settings(): WorldSettings | null {
     const saved = this.#store.settings();
     if (saved) return saved;
     const residents = this.#deps.knownAgents().slice(0, 2);
-    if (!residents.length) throw new WorldError("invalid_state", "请先配置至少一位秘书，再开始小屋生活");
+    if (!residents.length) return null;
     return {
       residents,
       dayRealMinutes: WORLD_DAY_REAL_MINUTES_DEFAULT,
       dailyCognitionLimit: WORLD_DAILY_COGNITION_DEFAULT,
     };
+  }
+  #requireSettings(): WorldSettings {
+    const settings = this.#settings();
+    if (settings === null) throw new WorldError("invalid_state", "请先配置至少一位秘书，再开始小屋生活");
+    return settings;
   }
   #world(id?: string): WorldSnapshot {
     const world = this.#load()?.world;
@@ -65,7 +70,7 @@ export class WorldService {
     return world;
   }
   #stamp(world: WorldSnapshot): WorldSnapshot {
-    return { ...world, asOf: this.#now(), minutesPerRealSecond: world.run.state === "running" ? 24 / this.#settings().dayRealMinutes : 0 };
+    return { ...world, asOf: this.#now(), minutesPerRealSecond: world.run.state === "running" ? 24 / this.#requireSettings().dayRealMinutes : 0 };
   }
   #requireStarted(): void {
     if (this.#startError) throw this.#startError;
@@ -148,7 +153,7 @@ export class WorldService {
       }
       const old = this.#load()?.world;
       if ((old?.id ?? null) !== request.worldId) throw new WorldError("invalid_state", "当前这一局已经变化，请重新打开世界");
-      const settings = request.settings ?? this.#settings();
+      const settings = request.settings ?? this.#requireSettings();
       if (settings.residents.length === 0 || new Set(settings.residents).size !== settings.residents.length || settings.residents.some((a) => !this.#deps.knownAgents().includes(a))) {
         throw new WorldError("validation_failed", "请选择已配置的秘书入住");
       }
@@ -267,7 +272,7 @@ export class WorldService {
   async saveSettings(request: CommandRequest<"world.settings.save">): Promise<WorldSettings> {
     if (!this.#available()) throw new WorldError("invalid_state", "世界正在维护");
     return this.#transaction((out) => {
-      const settings = { ...this.#settings(), ...request.settings };
+      const settings = { ...this.#requireSettings(), ...request.settings };
       this.#store.saveSettings(settings);
       const world = this.#load()?.world;
       if (world) this.#commit(world, world, [], out);

@@ -153,6 +153,6 @@ test("an empty database starts without consulting residents; skipping startup re
     await unstarted.stop();
     const empty = h.make(() => []);
     await empty.start();
-    assert.throws(() => empty.get(), /请先配置至少一位秘书/, "preserve the existing zero-resident behavior, not a startup-failed state");
+    assert.deepEqual(empty.get(), { world: null, scene: null, settings: null, budgets: [] }, "C-59: no configured residents is a normal empty start page, not startup failure");
   } finally { await h.close(); }
 });
