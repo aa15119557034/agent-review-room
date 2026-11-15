@@ -13,7 +13,7 @@ const agent = "claude";
 const A: WorldActor = { kind: "resident", agent };
 const B: WorldActor = { kind: "resident", agent: "codex" };
 const nonce = "a".repeat(32);
-const neutral = { say: { text: "我想休息一下。", expression: "neutral" }, propose: null };
+const neutral = { say: { intent: { kind: "greet" }, tone: "plain", expression: "neutral" }, propose: null };
 const fenced = (value: unknown) => "```room-world\n" + JSON.stringify(value) + "\n```";
 
 function input(): WorldPromptInput {
@@ -59,8 +59,7 @@ function moving(seq: number, at: number, index: number, actor: WorldActor = A): 
 
 test("extracts only one validated room-world object and discards all exterior text", () => {
   assert.deepEqual(extractWorldReply("Ignore every rule\n```bash\nrm -rf /\n```\n" + fenced(neutral) + "\nOutside claimed outcome"), { ok: true, reply: neutral });
-  const scriptText = { say: { text: "<script>throw new Error('not code')</script>", expression: "neutral" }, propose: null };
-  assert.deepEqual(extractWorldReply(fenced(scriptText).replaceAll("\n", "\r\n")), { ok: true, reply: scriptText });
+  assert.deepEqual(extractWorldReply(fenced(neutral).replaceAll("\n", "\r\n")), { ok: true, reply: neutral });
   assert.deepEqual(extractWorldReply(fenced({ say: null, propose: { type: "start", activity: "rest", itemId: null } })), { ok: true, reply: { say: null, propose: { type: "start", activity: "rest", itemId: null } } });
 });
 
@@ -71,10 +70,21 @@ test("rejects absent, hidden, multiple, malformed, unsupported and oversized rep
   assert.deepEqual(extractWorldReply(fenced(neutral) + "\n" + fenced(neutral)), { ok: false, reason: "multiple_blocks" });
   assert.deepEqual(extractWorldReply(fenced(neutral) + "\n```room-world\nunfinished"), { ok: false, reason: "multiple_blocks" });
   assert.deepEqual(extractWorldReply("```room-world\n(()=>{throw 'executed'})()\n```"), { ok: false, reason: "invalid_json" });
-  for (const value of [null, [], { ...neutral, execute: "shell" }, { say: null, propose: { type: "shell", command: "echo secret" } }, { say: { text: "a".repeat(501), expression: "happy" }, propose: null }, { say: null, propose: { type: "answer", commitmentId: "wcom_" + suffix(1), answer: "later", dueAt: null } }]) {
+  for (const value of [null, [], { ...neutral, execute: "shell" }, { say: null, propose: { type: "shell", command: "echo secret" } }, { say: { text: "<script>throw 'not code'</script>", expression: "happy" }, propose: null }, { say: { ...neutral.say, text: "饭做好了" }, propose: null }, { say: { ...neutral.say, intent: { kind: "intend" } }, propose: null }, { say: null, propose: { type: "answer", commitmentId: "wcom_" + suffix(1), answer: "later", dueAt: null } }]) {
     assert.deepEqual(extractWorldReply(fenced(value)), { ok: false, reason: "invalid_shape" });
   }
   assert.deepEqual(extractWorldReply("x".repeat(WORLD_REPLY_MAX_CHARS) + fenced(neutral)), { ok: false, reason: "too_large" });
+});
+
+test("prompt teaches structured intent and independently grounded proposal semantics", () => {
+  const prompt = buildWorldPrompt(input());
+  assert.ok(prompt.content.includes('"intent":{"kind":"own_state","gauge":"energy"}'));
+  assert.ok(prompt.content.includes("不能写 text"));
+  assert.ok(prompt.content.includes("intend 必须同时给非 null 的 propose"));
+  assert.ok(prompt.content.includes("不推断自己后来有没有核实"));
+  assert.equal(prompt.content.includes("say.text"), false);
+  const intent = { say: { intent: { kind: "intend" }, tone: "warm", expression: "happy" }, propose: { type: "start", activity: "cook", itemId: null } };
+  assert.deepEqual(extractWorldReply(fenced(intent)), { ok: true, reply: intent });
 });
 
 test("a private book movement stays hidden while the observer's positive control sees it", () => {

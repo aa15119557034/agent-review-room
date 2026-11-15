@@ -5,3 +5,4 @@ export * from "./prompt";
 export * from "./discussion";
 export * from "./world";
 export * from "./world-cognition";
+export * from "./world-expression";

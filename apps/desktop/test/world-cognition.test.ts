@@ -14,7 +14,7 @@ import type { AgentEvent, WorldBudget, WorldCognitionMode, WorldCognitionReply }
 import { WorldCognitionRunner, WorldRunNotStoppedError, type WorldCognitionOutcome, type WorldCognitionRequest } from "../src/main/world-cognition";
 
 const now = new Date(2026, 10, 16, 12);
-const reply: WorldCognitionReply = { say: { text: "想和你一起看看书。", expression: "neutral" }, propose: null };
+const reply: WorldCognitionReply = { say: { intent: { kind: "respond", feeling: "glad" }, tone: "warm", expression: "neutral" }, propose: null };
 const output = "```room-world\n" + JSON.stringify(reply) + "\n```";
 function deferred() {
   let resolve!: () => void;
@@ -117,6 +117,11 @@ test("malformed, contradictory and throwing streams never apply even a preceding
     "message_complete without terminal": async function* (id) { yield event(id, 0, { type: "message_complete", text: output }); },
     "deltas do not count as complete": async function* (id) { yield event(id, 0, { type: "message_delta", text: output }); yield event(id, 1, { type: "completed" }); },
     "invalid structured reply": async function* (id) { yield event(id, 0, { type: "message_complete", text: "hello" }); yield event(id, 1, { type: "completed" }); },
+    "legacy free-text reply": async function* (id) {
+      const old = { say: { text: "饭做好了。", expression: "happy" }, propose: null };
+      yield event(id, 0, { type: "message_complete", text: "```room-world\n" + JSON.stringify(old) + "\n```" });
+      yield event(id, 1, { type: "completed" });
+    },
     "wrong Run": async function* (_id) { yield* valid(`run_${ulid()}`); },
     "sequence gap": async function* (id) { yield event(id, 0, { type: "message_complete", text: output }); yield event(id, 2, { type: "completed" }); },
     "two complete messages": async function* (id) { yield event(id, 0, { type: "message_complete", text: output }); yield event(id, 1, { type: "message_complete", text: output }); yield event(id, 2, { type: "completed" }); },
