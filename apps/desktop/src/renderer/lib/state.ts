@@ -173,6 +173,13 @@ export function applyEvent(state: AppState, event: ControlEvent): AppState {
     }
     case "packs.updated":
       return { ...state, packs: event.packs };
+    // 世界（ADR-008 / C-53）：契约先合，界面在 C-54 接。这里先原样返回，保证事件分支穷尽
+    case "world.updated":
+    case "world.event":
+    case "world.scene.updated":
+    case "world.review.created":
+    case "world.budget.updated":
+      return state;
   }
 }
 
