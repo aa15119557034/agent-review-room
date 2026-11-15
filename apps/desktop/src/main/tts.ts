@@ -168,6 +168,33 @@ export function waitChildExit(child: ChildExitLike, ms: number): Promise<boolean
 }
 
 /**
+ * 引擎自己的 stderr 要不要原样转发到 main 的日志（默认不转发）。
+ *
+ * 为什么不转发（#223 评审第 5 条）：C-51 之后 console 的 warn/error 会抄一份进
+ * `<数据目录>/logs/main.log`，而启动失败 / 崩溃对话框正好请用户「把这个日志文件发给开发者」。
+ * 引擎的 stderr 来自第三方（IndexTTS / torch / CUDA），我们没法保证里面没有正在合成的那段文字，
+ * 换个说法：日志里只要出现过一次回答正文，这条「把日志发给我们」的建议就不安全了。
+ *
+ * 所以默认只记「几行 / 多少字节」，需要看引擎原话时在环境里加 ROOM_TTS_DEBUG=1（和 ROOM_DEVTOOLS 一个路子）。
+ */
+export function forwardEngineOutput(flag: string | undefined): boolean {
+  return flag === "1";
+}
+
+/** 摘要（行数 / 字节数），不含内容 */
+export function summarizeEngineChunk(chunk: string): { lines: number; bytes: number } {
+  let lines = 0;
+  for (const line of chunk.split(/\r?\n/)) if (line.trim() !== "") lines += 1;
+  return { lines, bytes: Buffer.byteLength(chunk, "utf8") };
+}
+
+/** 协议解析失败的那一行怎么记：默认只说多长，调试时才给前 200 字 */
+export function describeUnparsableLine(flag: string | undefined, line: string): string {
+  if (forwardEngineOutput(flag)) return `${line.length} 字：${line.slice(0, 200)}`;
+  return `${line.length} 字（内容不进日志；要原话时设 ROOM_TTS_DEBUG=1）`;
+}
+
+/**
  * 独立进程的客户端。一个实例一个进程；`synthesize` 串行（一次只跑一个，显卡一次只跑一个）。
  */
 export class TtsRunner {
@@ -314,8 +341,15 @@ export class TtsRunner {
       });
       child.stderr.setEncoding("utf8");
       child.stderr.on("data", (chunk: string) => {
-        // 引擎的日志进 main 的控制台，不进 renderer、不进 git
-        for (const line of chunk.split(/\r?\n/)) if (line.trim() !== "") console.warn("[tts]", line.trim());
+        // 引擎的日志进 main 的控制台，不进 renderer、不进 git。
+        // 默认只记行数 / 字节数：引擎的 stderr 来自第三方，可能带正在合成的那段文字，
+        // 而 C-51 的日志文件是要请用户发给开发者看的。要原话时设 ROOM_TTS_DEBUG=1。
+        if (forwardEngineOutput(process.env["ROOM_TTS_DEBUG"])) {
+          for (const line of chunk.split(/\r?\n/)) if (line.trim() !== "") console.warn("[tts]", line.trim());
+          return;
+        }
+        const { lines, bytes } = summarizeEngineChunk(chunk);
+        if (lines > 0) console.warn(`[tts] 引擎日志 ${lines} 行 / ${bytes} 字节（内容不进日志；要原话时设 ROOM_TTS_DEBUG=1）`);
       });
       child.on("error", (error) => fail(new TtsUnavailableError("语音合成进程起不来：" + error.message)));
       child.on("exit", (code) => {
@@ -347,7 +381,7 @@ export class TtsRunner {
     try {
       reply = JSON.parse(line) as RunnerReply;
     } catch {
-      console.warn("[tts] 看不懂的一行输出：", line.slice(0, 200));
+      console.warn("[tts] 看不懂的一行输出：" + describeUnparsableLine(process.env["ROOM_TTS_DEBUG"], line));
       return;
     }
     if (reply.type === "ready") {
@@ -359,7 +393,7 @@ export class TtsRunner {
       return;
     }
     if (this.#pending === null || this.#pending.id !== reply.id) {
-      console.warn("[tts] 收到不认识的回应：", line.slice(0, 200));
+      console.warn("[tts] 收到不认识的回应：" + describeUnparsableLine(process.env["ROOM_TTS_DEBUG"], line));
       return;
     }
     const pending = this.#pending;
