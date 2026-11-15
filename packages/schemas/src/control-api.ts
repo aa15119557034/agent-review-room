@@ -21,6 +21,12 @@ import {
 import { NodeHealth, ProfileId, RunModel } from "./remote-protocol";
 import { AgentEvent } from "./agent-event";
 import { PackImportRequest, PackImportResult, Packs, PacksRequest } from "./packs";
+import {
+  WorldActRequest, WorldActionResult, WorldBudget, WorldId, WorldDayReview, WorldEvent, WorldEventsPage, WorldEventsRequest, WorldGetRequest,
+  WorldPauseRequest, WorldResetRequest, WorldResidentView, WorldResidentViewRequest, WorldResumeRequest, WorldReviewRequest, WorldScene,
+  WorldSceneChooseRequest, WorldSceneCloseRequest, WorldSceneResult, WorldSceneSayRequest, WorldScenesPage, WorldScenesRequest,
+  WorldSettings, WorldSettingsSaveRequest, WorldSnapshot, WorldState, WorldTalkRequest,
+} from "./world";
 import { PermissionDecision, PermissionRequest } from "./permission";
 import {
   AgentName,
@@ -272,6 +278,17 @@ export const COMMANDS = {
   "workspace.decision.save": def(WorkspaceDecisionSave, WorkspaceDecision, "author"),
   /** 包的应用内导入（#209）：以后所有导入 zip / 文件夹都走这里；选择框由 main 弹，renderer 不传路径 */
   "packs.import": def(PackImportRequest, PackImportResult, "admin"),
+  // ---- 世界（ADR-008 / C-53）。你的操作都带代次和 actionId；被规则拒绝不是错误，是 accepted=false
+  "world.act": def(WorldActRequest, WorldActionResult, "author"),
+  "world.talk": def(WorldTalkRequest, WorldSceneResult, "author"),
+  "world.scene.choose": def(WorldSceneChooseRequest, WorldSceneResult, "author"),
+  "world.scene.say": def(WorldSceneSayRequest, WorldSceneResult, "author"),
+  "world.scene.close": def(WorldSceneCloseRequest, WorldSceneResult, "author"),
+  "world.pause": def(WorldPauseRequest, WorldSnapshot, "author"),
+  "world.resume": def(WorldResumeRequest, WorldSnapshot, "author"),
+  /** 开始第一局或重置。会丢掉当前这一局，所以是 admin */
+  "world.reset": def(WorldResetRequest, WorldState, "admin"),
+  "world.settings.save": def(WorldSettingsSaveRequest, WorldSettings, "admin"),
   "project.create": def(
     z.object({ type: z.literal("project.create"), name: z.string().min(1).max(200) }),
     Project,
@@ -1076,6 +1093,13 @@ export const QUERIES = {
   "workspace.search": def(WorkspaceSearchRequest, WorkspaceSearchPage, "read"),
   "workspace.item": def(WorkspaceItemKey.extend({ type: z.literal("workspace.item") }).strict(), WorkspaceItem, "read"),
   "packs.list": def(PacksRequest, Packs, "read"),
+  // ---- 世界（ADR-008 / C-53）。world.get / world.events / world.scenes 是全貌，只给界面
+  "world.get": def(WorldGetRequest, WorldState, "read"),
+  "world.residentView": def(WorldResidentViewRequest, WorldResidentView, "read"),
+  "world.events": def(WorldEventsRequest, WorldEventsPage, "read"),
+  "world.scenes": def(WorldScenesRequest, WorldScenesPage, "read"),
+  /** 那一天还没结束或没有回顾时是 null */
+  "world.review": def(WorldReviewRequest, WorldDayReview.nullable(), "read"),
   "workspace.health": def(z.object({ type: z.literal("workspace.health") }).strict(), WorkspaceHealth, "admin"),
   "workspace.diagnostics": def(z.object({ type: z.literal("workspace.diagnostics") }).strict(), WorkspaceDiagnostics, "admin"),
   "workspace.tasks": def(z.object({ type: z.literal("workspace.tasks"), before: WorkspaceCursor.optional(), activeOnly: z.boolean().default(false) }).strict(), WorkspaceTaskPage, "read"),
@@ -1452,5 +1476,12 @@ export const ControlEvent = z.discriminatedUnion("type", [
   z.object({ type: z.literal("github.updated"), status: GithubSyncStatus }),
   // ---- 包导入（#209）：状态或进度变了，带最新整份列表
   z.object({ type: z.literal("packs.updated"), packs: Packs }),
+  // ---- 世界（ADR-008 / C-53）
+  /** 世界状态变了（有事件提交、暂停继续、代次变了）。不是每个 tick 都发，时钟由界面按 asOf 和流速插值 */
+  z.object({ type: z.literal("world.updated"), world: WorldSnapshot }),
+  z.object({ type: z.literal("world.event"), worldId: WorldId, event: WorldEvent }),
+  z.object({ type: z.literal("world.scene.updated"), scene: WorldScene }),
+  z.object({ type: z.literal("world.review.created"), worldId: WorldId, review: WorldDayReview }),
+  z.object({ type: z.literal("world.budget.updated"), budgets: z.array(WorldBudget).max(8) }),
 ]);
 export type ControlEvent = z.infer<typeof ControlEvent>;

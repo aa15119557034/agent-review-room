@@ -18,3 +18,4 @@ export * from "./ipc";
 
 export * from "./workspace";
 export * from "./packs";
+export * from "./world";
