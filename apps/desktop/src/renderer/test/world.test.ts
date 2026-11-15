@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { WorldState, type ControlEvent, type WorldEvent, type WorldScene, type WorldSnapshot } from "@room/schemas";
+import { WORLD_DAILY_COGNITION_DEFAULT, WORLD_DAY_REAL_MINUTES_DEFAULT, WorldState, type ControlEvent, type WorldEvent, type WorldScene, type WorldSnapshot } from "@room/schemas";
 import { createWorldMock } from "../mock/world-mock";
 import { createMockBridge } from "../mock/mock-backend";
 import { createActions } from "../lib/actions";
@@ -405,6 +405,20 @@ describe("世界：演示后台按契约走", () => {
     assert.ok(lines.some((l) => /^(C酱|林离)去了/.test(l)));
     assert.ok(lines.every((l) => !/room_|wavt_|undefined/.test(l)), "不漏内部 id");
     assert.match(residentLine(t.resident("claude"), t.snap(), names), /^在/);
+  });
+});
+
+describe("世界：还没配置秘书时后台不给设置（C-59）", () => {
+  it("settings 是 null：不带入住人选开始不了；带上人选就用契约默认值开局", async () => {
+    const t = setup({ seed: false });
+    await t.actions.world.load();
+    t.store.set((s) => ({ ...s, world: { ...s.world, settings: null } }));
+    await t.actions.world.reset();
+    assert.equal(t.w().world, null, "没有人选、也没有设置：什么都不发");
+    await t.actions.world.start(["claude"]);
+    assert.deepEqual(t.snap().residents.map((r) => r.agent), ["claude"]);
+    assert.equal(t.w().settings?.dayRealMinutes, WORLD_DAY_REAL_MINUTES_DEFAULT);
+    assert.equal(t.w().settings?.dailyCognitionLimit, WORLD_DAILY_COGNITION_DEFAULT);
   });
 });
 

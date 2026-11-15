@@ -53,6 +53,7 @@ function useWorldMinutes(world: WorldSnapshot): number {
 function StartScreen({ notice }: { notice: ReactNode }) {
   const agents = useAppState((s) => s.disc.agents);
   const settings = useAppState((s) => s.world.settings);
+  const loaded = useAppState((s) => s.world.loaded);
   const starting = useAppState((s) => s.world.starting);
   const actions = useActions();
   const [picked, setPicked] = useState<string[] | null>(null);
@@ -64,7 +65,8 @@ function StartScreen({ notice }: { notice: ReactNode }) {
       <div className="world-start">
         <h1>小屋</h1>
         <p>秘书们住在这里过日子：自己做饭、看书、休息、互相说话。你也在这个家里，可以走到哪间屋、找谁说话、邀她一起做事。</p>
-        <fieldset className="world-start-people">
+        {loaded && agents.length === 0 && <p className="world-start-hint" role="status">还没有配置秘书。先到「秘书」页配置至少一位，再回来开始。</p>}
+        <fieldset className="world-start-people" style={agents.length === 0 ? { display: "none" } : undefined}>
           <legend>谁住进来</legend>
           {agents.map((a) => (
             <label key={a.id} style={{ "--agent": a.color } as CSSProperties}>
@@ -74,7 +76,7 @@ function StartScreen({ notice }: { notice: ReactNode }) {
             </label>
           ))}
         </fieldset>
-        <button type="button" className="button-primary" disabled={chosen.length === 0 || starting || !settings} onClick={() => void actions.world.start(chosen)}>
+        <button type="button" className="button-primary" disabled={chosen.length === 0 || starting || !loaded} onClick={() => void actions.world.start(chosen)}>
           {starting ? "正在布置…" : "开始"}
         </button>
       </div>

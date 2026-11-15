@@ -74,6 +74,14 @@
   line-height: 1.6;
 }
 
+.world-start-hint {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgb(229 138 78 / 0.14);
+  font-size: 14px;
+}
+
 .world-start-people {
   display: flex;
   flex-wrap: wrap;
