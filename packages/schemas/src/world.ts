@@ -634,13 +634,18 @@ export const WorldSettingsSaveRequest = z.object({
 }).strict();
 
 export const WorldGetRequest = z.object({ type: z.literal("world.get") }).strict();
-/** 还没开过世界时 world 是 null，界面显示「开始」；开始 = world.reset（worldId: null） */
+/**
+ * 还没开过世界时 world 是 null，界面显示「开始」；开始 = world.reset（worldId: null）。
+ * settings：存过就给存的；没存过、但已经配置了秘书，给默认值（main 挑的入住人选 + 默认流速和次数）；
+ * **没存过、也一位秘书都没配置时是 null**——main 不造默认秘书，world.get 也不因此报错，界面在开始页提示先去配置秘书。
+ * 有世界时 settings 一定不是 null。
+ */
 export const WorldState = z.object({
   world: WorldSnapshot.nullable(),
   scene: WorldScene.nullable(),
-  settings: WorldSettings,
+  settings: WorldSettings.nullable(),
   budgets: z.array(WorldBudget).max(8),
-}).strict();
+}).strict().refine((s) => s.world === null || s.settings !== null, { message: "有世界时 settings 不能是 null" });
 export type WorldState = z.infer<typeof WorldState>;
 
 export const WorldResidentViewRequest = z.object({ type: z.literal("world.residentView"), worldId: WorldId, agent: AgentName }).strict();

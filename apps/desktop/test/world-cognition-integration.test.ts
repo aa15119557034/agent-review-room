@@ -105,6 +105,28 @@ async function fixture(residents = ["claude", "codex"], limit = 60) {
   };
 }
 
+test("zero residents with cognition injected return the empty start page without reading budgets, while damaged settings still fail", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "room-world-empty-cognition-"));
+  const dbPath = join(dir, "room.db"), db = openDatabase(dbPath), queue = new WriteQueue();
+  const world = new WorldService({
+    db, queue, dbPath, knownAgents: () => [], emit: () => assert.fail("empty world must not publish events"),
+    cognition: {
+      runner: { request: async () => assert.fail("empty world must not dispatch"), cancel: () => {}, drain: async () => {} },
+      budget: { get: () => assert.fail("empty world has no per-resident budgets") },
+      persona: () => assert.fail("empty world has no persona"), isConfigured: () => assert.fail("empty world has no agent to resolve"),
+    },
+  });
+  try {
+    await world.start();
+    assert.deepEqual(world.get(), { world: null, scene: null, settings: null, budgets: [] });
+    await world.advance(167);
+    await assert.rejects(world.reset({ type: "world.reset", requestId: `wact_${ulid()}`, worldId: null, confirm: true }), /请先配置至少一位秘书/);
+    await assert.rejects(world.saveSettings({ type: "world.settings.save", settings: { dayRealMinutes: 4, dailyCognitionLimit: 10 } }), /请先配置至少一位秘书/);
+    db.prepare("INSERT INTO world_settings(singleton, settings_json) VALUES (1, ?)").run(JSON.stringify({ residents: [] }));
+    assert.throws(() => world.get(), { name: "ZodError" }, "invalid persisted settings are not an empty configuration");
+  } finally { await world.stop(); db.close(); rmSync(dir, { recursive: true, force: true }); }
+});
+
 test("talk and player speech dispatch only after commit, and replies persist said, observations, scene and Run receipt together", async () => {
   const h = await fixture();
   try {
