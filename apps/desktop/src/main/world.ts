@@ -24,7 +24,7 @@ interface WorldDeps {
 }
 
 export class WorldError extends Error {
-  constructor(readonly code: ControlErrorCode, message: string) { super(message); this.name = "WorldError"; }
+  constructor(readonly code: ControlErrorCode, message: string, options?: ErrorOptions) { super(message, options); this.name = "WorldError"; }
 }
 
 /** 世界唯一写入口。事务里重新读取、裁决、保存；COMMIT 后才发布，网络和计时器不进入事务。 */
@@ -34,6 +34,7 @@ export class WorldService {
   #generation = generation();
   #release: (() => void) | null = null;
   #started = false;
+  #startError: WorldError | null = null;
   #stopped = false;
   #barriers = 0;
   #suspended = false;
@@ -66,9 +67,14 @@ export class WorldService {
   #stamp(world: WorldSnapshot): WorldSnapshot {
     return { ...world, asOf: this.#now(), minutesPerRealSecond: world.run.state === "running" ? 24 / this.#settings().dayRealMinutes : 0 };
   }
-  #available(): boolean { return this.#started && !this.#stopped && this.#barriers === 0 && !this.#suspended; }
+  #requireStarted(): void {
+    if (this.#startError) throw this.#startError;
+    if (!this.#started) throw new WorldError("invalid_state", "世界服务尚未启动");
+  }
+  #available(): boolean { this.#requireStarted(); return !this.#stopped && this.#barriers === 0 && !this.#suspended; }
   async #transaction<T>(work: (out: ControlEvent[]) => T): Promise<T> {
     return this.#deps.queue.run(() => {
+      if (this.#startError) throw this.#startError;
       if (this.#stopped) throw new WorldError("invalid_state", "世界已经停止");
       const out: ControlEvent[] = [];
       const savedGeneration = this.#generation;
@@ -95,9 +101,10 @@ export class WorldService {
   }
 
   async start(): Promise<void> {
+    if (this.#startError) throw this.#startError;
     if (this.#started || this.#stopped) throw new WorldError("invalid_state", "世界服务不能重复启动");
-    if (this.#deps.dbPath) this.#release = acquireWorldLock(this.#deps.dbPath);
     try {
+      if (this.#deps.dbPath) this.#release = acquireWorldLock(this.#deps.dbPath);
       await this.#transaction((out) => {
         const saved = this.#load();
         if (!saved) return;
@@ -107,21 +114,28 @@ export class WorldService {
         this.#commit(world, this.#stamp(world), [], out);
       });
       this.#started = true;
-    } catch (error) { this.#release?.(); this.#release = null; throw error; }
+    } catch (error) {
+      this.#startError = new WorldError("invalid_state", "世界启动失败，暂时不可用；请检查启动日志后重启应用", { cause: error });
+      this.#release?.();
+      this.#release = null;
+      throw this.#startError;
+    }
   }
 
   get(): WorldState {
+    this.#requireStarted();
     const world = this.#load()?.world ?? null;
     return { world, scene: world?.sceneId ? this.#store.getScene(world.id, world.sceneId) : null, settings: this.#settings(), budgets: [] };
   }
   residentView(worldId: string, agent: string) {
+    this.#requireStarted();
     const view = this.#store.view(worldId, agent);
     if (!view) throw new WorldError("not_found", "没有这位居民在这一局里的观察");
     return view;
   }
-  events(worldId: string, before: number | undefined, limit: number) { return this.#store.events(worldId, before, limit); }
-  scenes(worldId: string, before: string | undefined, limit: number) { return this.#store.scenes(worldId, before, limit); }
-  review(worldId: string, day: number) { return this.#store.review(worldId, day); }
+  events(worldId: string, before: number | undefined, limit: number) { this.#requireStarted(); return this.#store.events(worldId, before, limit); }
+  scenes(worldId: string, before: string | undefined, limit: number) { this.#requireStarted(); return this.#store.scenes(worldId, before, limit); }
+  review(worldId: string, day: number) { this.#requireStarted(); return this.#store.review(worldId, day); }
 
   async reset(request: CommandRequest<"world.reset">): Promise<WorldState> {
     if (!this.#available()) throw new WorldError("invalid_state", "世界正在维护，请稍后再开始");
@@ -158,6 +172,7 @@ export class WorldService {
 
   /** 每个用户动作先读回执，再检查代次；排队期间发生的状态变化在事务内重新裁决。 */
   async act(request: CommandRequest<"world.act">): Promise<WorldActionResult> {
+    this.#requireStarted();
     if (this.#stopped) return denied("world_paused");
     const admitted = this.#available();
     return this.#transaction((out) => {
@@ -237,6 +252,7 @@ export class WorldService {
   async pause(worldId: string): Promise<WorldSnapshot> { return this.#setUserRun(worldId, false); }
   async resume(worldId: string): Promise<WorldSnapshot> { return this.#setUserRun(worldId, true); }
   async #setUserRun(worldId: string, running: boolean): Promise<WorldSnapshot> {
+    this.#requireStarted();
     if (this.#stopped) throw new WorldError("invalid_state", "世界已经停止");
     const result = await this.#transaction((out) => {
       const world = this.#world(worldId);
@@ -260,6 +276,7 @@ export class WorldService {
   }
 
   async maintenance<T>(work: () => Promise<T>): Promise<T> {
+    this.#requireStarted();
     if (this.#stopped) throw new WorldError("invalid_state", "世界已经停止");
     this.#barriers++;
     try {
@@ -308,11 +325,13 @@ export class WorldService {
     return changed;
   }
   async suspend(): Promise<void> {
+    this.#requireStarted();
     this.#suspended = true;
     await this.#deps.queue.drain();
     if (!this.#stopped) await this.#autoPause();
   }
   async resumeFromSuspend(): Promise<void> {
+    this.#requireStarted();
     this.#suspended = false;
     if (!this.#stopped && this.#barriers === 0) await this.#autoResume();
   }
@@ -376,6 +395,7 @@ export class WorldService {
     request: CommandRequest<"world.talk" | "world.scene.choose" | "world.scene.say" | "world.scene.close">,
     work: (world: WorldSnapshot, out: ControlEvent[]) => WorldSceneResult,
   ): Promise<WorldSceneResult> {
+    this.#requireStarted();
     if (this.#stopped) return { result: denied("world_paused"), scene: null };
     const admitted = this.#available();
     return this.#transaction((out) => {

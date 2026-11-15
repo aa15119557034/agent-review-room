@@ -6,7 +6,8 @@ import type {
 import { WORLD_MINUTES_PER_DAY } from "@room/schemas";
 
 /** Rules are fixed for a saved world. IDs, wall time, persistence and delivery belong to the caller. */
-export const WORLD_RULES_VERSION = "1";
+export const WORLD_RULES_VERSION = "2";
+const DAILY_INGREDIENTS = 16;
 const DURATION: Record<WorldActivityKind, number> = {
   cook: 30, eat: 15, read: 30, rest: 30, sleep: 120, tidy: 20, set_table: 10,
 };
@@ -45,7 +46,7 @@ export function createWorld(input: {
       { kind: "unique", id: "pot", label: "锅", at: { kind: "place", placeId: "kitchen" }, usedBy: null },
       { kind: "unique", id: "book", label: "书", at: { kind: "place", placeId: "living_room" }, usedBy: null },
       { kind: "unique", id: "seat", label: "座位", at: { kind: "place", placeId: "living_room" }, usedBy: null },
-      { kind: "stock", id: "ingredients", label: "食材", placeId: "kitchen", count: 16 },
+      { kind: "stock", id: "ingredients", label: "食材", placeId: "kitchen", count: DAILY_INGREDIENTS },
       { kind: "stock", id: "meals", label: "饭", placeId: "kitchen", count: 0 },
     ],
     activities: [], commitments: [], sceneId: null,
@@ -53,7 +54,7 @@ export function createWorld(input: {
 }
 
 function assertRules(world: WorldSnapshot): void {
-  if (world.rulesVersion !== WORLD_RULES_VERSION) throw new Error(`Unsupported world rules: ${world.rulesVersion}`);
+  if (world.rulesVersion !== "1" && world.rulesVersion !== WORLD_RULES_VERSION) throw new Error(`Unsupported world rules: ${world.rulesVersion}`);
 }
 
 function actorState(world: WorldSnapshot, actor: WorldActor) {
@@ -74,6 +75,15 @@ function reservation(activity: WorldActivity): { itemId: string; count: number }
   if (activity.kind === "cook") return [{ itemId: "ingredients", count: 1 }];
   if (activity.kind === "eat") return [{ itemId: "meals", count: activity.participants.length }];
   return [];
+}
+
+/** Version one histories had no replenishment. Reservations are still unconsumed stock. */
+function restockIngredients(world: WorldSnapshot): void {
+  if (world.rulesVersion !== "2") return;
+  const ingredients = stock(world, "ingredients");
+  const reserved = world.activities.flatMap(reservation)
+    .filter((item) => item.itemId === "ingredients").reduce((total, item) => total + item.count, 0);
+  ingredients.count = Math.max(ingredients.count, DAILY_INGREDIENTS - reserved);
 }
 
 function pruneCommitments(world: WorldSnapshot): void {
@@ -308,6 +318,7 @@ export function advanceWorld(world: WorldSnapshot, to: number): { world: WorldSn
     if (w.now % WORLD_MINUTES_PER_DAY === 0) {
       const day = w.now / WORLD_MINUTES_PER_DAY;
       events.push({ type: "clock", seq: ++w.lastSeq, at: w.now, mark: "day_ended", day });
+      restockIngredients(w);
       events.push({ type: "clock", seq: ++w.lastSeq, at: w.now, mark: "day_started", day: day + 1 });
     }
   }
@@ -373,6 +384,9 @@ export function chooseWorldRoutine(
   const readingPlace = knownReadingPlace(actor, r.placeId, view?.worldId === world.id && view.agent === agent ? view : undefined, ownEvents);
   const propose = (kind: WorldActivityKind) => routineActivity(world, actor, kind, readingPlace);
   const chooseNeed = (): WorldAction | null => {
+    const hour = Math.floor((world.now % WORLD_MINUTES_PER_DAY) / 60);
+    // Keep this priority while walking to bed too; an empty kitchen cannot pull her back.
+    if (r.energy < 30 || hour >= 22 || hour < 7) return propose("sleep");
     if (r.satiety < 50) {
       if (r.placeId !== "kitchen") return walkToward(world, r.placeId, "kitchen");
       const eating = propose("eat");
@@ -381,8 +395,6 @@ export function chooseWorldRoutine(
       if (cooking) return cooking;
       return propose("rest");
     }
-    const hour = Math.floor((world.now % WORLD_MINUTES_PER_DAY) / 60);
-    if (r.energy < 30 || hour >= 22 || hour < 7) return propose("sleep");
     return null;
   };
   const asked = world.commitments.find((c) => c.state === "asked" && sameActor(c.by, actor) && actorState(world, c.to)?.placeId === r.placeId);
@@ -465,6 +477,7 @@ function refreshVisibleItems(view: WorldResidentView, world: WorldSnapshot, room
 /** Reconstructs the visible physical changes of each event, without reading future state into earlier observations. */
 function applyVisibleEvent(state: WorldSnapshot, event: WorldEvent, definitions: Map<string, WorldActivity>): void {
   state.now = event.at;
+  if (event.type === "clock" && event.mark === "day_started" && event.seq !== 1) restockIngredients(state);
   if (event.type === "action") {
     const actor = actorState(state, event.actor);
     if (!actor) throw new Error("Event references an unknown actor");
@@ -545,7 +558,9 @@ export function updateWorldViews(
       if (view.seen.some((seen) => seen.seq === event.seq)) continue;
       view.seen.unshift(structuredClone(event)); view.seen = view.seen.slice(0, 100);
       observations.push({ observer: view.agent, seq: event.seq, at: event.at, mode: "saw" });
-      if (initial || event.type !== "clock") refreshVisibleItems(view, state, room, event.at, event.seq);
+      const seesRestock = state.rulesVersion === "2" && event.type === "clock" && event.mark === "day_started" &&
+        room === stock(state, "ingredients").placeId;
+      if (initial || event.type !== "clock" || seesRestock) refreshVisibleItems(view, state, room, event.at, event.seq);
     }
   }
   return { views: next, observations };

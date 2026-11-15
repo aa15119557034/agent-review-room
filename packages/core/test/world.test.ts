@@ -71,6 +71,7 @@ describe("world authority and resource settlement", () => {
   it("creates an explicit world with an initial sequence and only observes the starting room", () => {
     const h = fixture();
     assert.equal(h.world.now, 480);
+    assert.equal(h.world.rulesVersion, "2");
     assert.equal(h.world.lastSeq, 1);
     assert.equal(h.world.player.placeId, "living_room");
     assert.deepEqual(h.views[0]!.knownItems.map((i) => i.itemId), ["book", "seat"]);
@@ -216,6 +217,84 @@ describe("world authority and resource settlement", () => {
 });
 
 describe("world time and invitations", () => {
+  it("restocks at midnight with reservations included, preserving chunking and either terminal outcome", () => {
+    const start = { ...initial(), now: 1430 };
+    for (const item of start.items) if (item.kind === "stock" && item.id === "ingredients") item.count = 2;
+    const h = fixture(start);
+    h.act(A, { type: "move", to: "kitchen" });
+    h.act(A, { type: "start", activity: "cook", itemId: null });
+    const saved = structuredClone(h.world);
+    const midnight = advanceWorld(saved, 1440);
+    assert.equal(count(midnight.world, "ingredients"), 15, "one of the sixteen ingredients remains reserved");
+    assert.equal(midnight.world.activities.length, 1);
+    const direct = advanceWorld(saved, 1460);
+    const split = advanceWorld(midnight.world, 1460);
+    assert.deepEqual(split.world, direct.world);
+    assert.deepEqual([...midnight.events, ...split.events], direct.events);
+    assert.equal(count(direct.world, "ingredients"), 15);
+    assert.equal(count(direct.world, "meals"), 4);
+    assert.equal(direct.events.filter((event) => event.type === "activity_ended").length, 1);
+    assert.deepEqual(advanceWorld(direct.world, 1460).events, []);
+    const cancelled = applyWorldAction(midnight.world, A, { type: "stop" }, ids(99));
+    assert.equal(cancelled.result.accepted, true);
+    assert.equal(count(cancelled.world, "ingredients"), 16, "a midnight reservation refund cannot create a seventeenth ingredient");
+    assert.equal(count(cancelled.world, "meals"), 0);
+    assert.equal(applyWorldAction(cancelled.world, A, { type: "stop" }, ids(100)).result.accepted, false);
+    assert.equal(count(advanceWorld(cancelled.world, 1460).world, "ingredients"), 16);
+    const paused: WorldSnapshot = { ...saved, run: { state: "paused", by: "user" }, minutesPerRealSecond: 0 };
+    assert.equal(advanceWorld(paused, 1500).world, paused, "paused time cannot replenish supplies");
+  });
+
+  it("settles cooking exactly at midnight before replenishing the new day's ingredients", () => {
+    const h = fixture({ ...initial(), now: 1410 });
+    h.act(A, { type: "move", to: "kitchen" });
+    h.act(A, { type: "start", activity: "cook", itemId: null });
+    const result = h.advance(1440);
+    assert.deepEqual(result.events.map((event) => event.type === "clock" ? event.mark : event.type),
+      ["activity_ended", "day_ended", "day_started"]);
+    assert.equal(count(h.world, "ingredients"), 16);
+    assert.equal(count(h.world, "meals"), 4);
+    assert.equal(h.world.activities.length, 0);
+  });
+
+  it("keeps version one saves readable and advancing without retroactive restocking", () => {
+    const start = { ...initial(), rulesVersion: "1", now: 1430 };
+    for (const item of start.items) if (item.kind === "stock" && item.id === "ingredients") item.count = 2;
+    const h = fixture(WorldSnapshot.parse(JSON.parse(JSON.stringify(start))));
+    h.act(A, { type: "move", to: "kitchen" });
+    h.act(A, { type: "start", activity: "cook", itemId: null });
+    h.advance(1440);
+    assert.equal(h.world.rulesVersion, "1");
+    assert.equal(count(h.world, "ingredients"), 1);
+    h.act(A, { type: "stop" });
+    assert.equal(count(h.world, "ingredients"), 2);
+    assert.equal(count(advanceWorld(h.world, 2880).world, "ingredients"), 2);
+    assert.throws(() => advanceWorld({ ...h.world, rulesVersion: "999" }, 2880), /Unsupported world rules/);
+  });
+
+  it("lets a hungry resident finish the route to bed without bouncing back to an empty kitchen", () => {
+    for (const now of [1320, 600]) {
+      const start = { ...initial(), now };
+      start.residents[0]!.placeId = "kitchen";
+      start.residents[0]!.satiety = 10;
+      start.residents[0]!.energy = now === 600 ? 20 : 85;
+      for (const item of start.items) if (item.kind === "stock") item.count = 0;
+      const h = fixture(start);
+      for (const to of ["living_room", "room_1"]) {
+        const choice = chooseWorldRoutine(h.world, "claude");
+        assert.deepEqual(choice, { type: "move", to });
+        h.act(A, choice!);
+        h.advance(h.world.now + 1);
+      }
+      const choice = chooseWorldRoutine(h.world, "claude");
+      assert.deepEqual(choice, { type: "start", activity: "sleep", itemId: null });
+      h.act(A, choice!);
+      h.advance(h.world.activities[0]!.endsAt);
+      assert.equal(h.world.residents[0]!.placeId, "room_1");
+      assert.equal(count(h.world, "ingredients"), now === 1320 ? 16 : 0);
+    }
+  });
+
   it("advance is deterministic across chunk boundaries and paused time does not move", () => {
     const h = fixture();
     h.act(A, { type: "move", to: "kitchen" });
@@ -281,8 +360,8 @@ describe("world time and invitations", () => {
     assert.equal(h.events.filter((event) => event.type === "action").length, 1);
   });
 
-  it("runs a complete model-free day through the same action entry point", () => {
-    const h = fixture();
+  it("runs a complete model-free day with legacy resource accounting", () => {
+    const h = fixture({ ...initial(), rulesVersion: "1" });
     for (let minute = 481; minute <= 1600; minute += 1) {
       h.advance(minute);
       for (const agent of ["claude", "codex"] as const) {
@@ -302,8 +381,8 @@ describe("world time and invitations", () => {
     assert.equal(h.events.at(-1)!.seq, h.world.lastSeq);
   });
 
-  it("replays recorded action IDs and elapsed time without applying terminal settlements twice", () => {
-    const savedInitial = initial();
+  for (const rulesVersion of ["1", "2"]) it(`replays version ${rulesVersion} action IDs and time without double settlement or restocking`, () => {
+    const savedInitial = { ...initial(), rulesVersion };
     const h = fixture(structuredClone(savedInitial));
     h.act(U, { type: "invite", to: A, activity: "set_table" });
     const appointment = h.world.commitments[0]!.id;
@@ -345,10 +424,50 @@ describe("world time and invitations", () => {
     // Applying them again would double the meals or refund cancelled ingredients.
     assert.deepEqual(replayed, h.events);
     assert.deepEqual(replay, h.world, "gauges, reservations, possessions and the remaining appointment all match");
-    assert.equal(count(replay, "ingredients"), 15);
+    assert.equal(count(replay, "ingredients"), rulesVersion === "1" ? 15 : 16);
     assert.equal(count(replay, "meals"), 2);
     assert.equal(replay.commitments[0]!.state, "deferred");
     assert.equal(replayed.filter((e) => e.type === "activity_ended").length, 4);
+  });
+
+  it("keeps eight residents eating and sleeping for three days and eating again after the last night", () => {
+    const agents = ["claude", "codex", "three", "four", "five", "six", "seven", "eight"];
+    const base = initial();
+    let world = createWorld({ id: base.id, generation: base.generation, asOf: base.asOf,
+      settings: { residents: agents, dayRealMinutes: 4, dailyCognitionLimit: 0 } });
+    const began = world.now;
+    const events: WorldEvent[] = [{ type: "clock", seq: 1, at: began, mark: "day_started", day: 1 }];
+    let views = updateWorldViews([], world, world, events).views;
+    let serial = 1;
+    // Allow existing two-hour sleep activities to finish, then verify breakfast recovery too.
+    for (let minute = began + 1; minute <= began + 3 * 1440 + 180; minute++) {
+      const elapsed = advanceWorld(world, minute);
+      if (elapsed.events.length) views = updateWorldViews(views, world, elapsed.world, elapsed.events).views;
+      world = elapsed.world; events.push(...elapsed.events);
+      for (const agent of agents) {
+        const view = views.find((entry) => entry.agent === agent)!;
+        const choice = chooseWorldRoutine(world, agent, view.seen, view);
+        if (!choice) continue;
+        const result = applyWorldAction(world, { kind: "resident", agent }, choice, ids(serial++));
+        if (!result.result.accepted) { assert.equal(result.result.reason, "item_busy"); continue; }
+        views = updateWorldViews(views, world, result.world, result.events).views;
+        world = result.world; events.push(...result.events);
+      }
+      if (minute % 1440 === 0) WorldSnapshot.parse(world);
+    }
+    WorldSnapshot.parse(world);
+    views.forEach((view) => WorldResidentView.parse(view));
+    events.forEach((event) => WorldEvent.parse(event));
+    const completed = events.filter((event) => event.type === "activity_ended" && event.activity.state === "completed");
+    for (let day = 0; day < 3; day++) for (const agent of agents) for (const kind of ["eat", "sleep"]) {
+      assert.ok(completed.some((event) => event.type === "activity_ended" && event.activity.kind === kind &&
+        event.at > began + day * 1440 && event.at <= began + (day + 1) * 1440 &&
+        event.activity.participants.some((actor) => actor.kind === "resident" && actor.agent === agent)), `${agent} completes ${kind} on interval ${day + 1}`);
+    }
+    for (const agent of agents) assert.ok(completed.some((event) => event.type === "activity_ended" && event.activity.kind === "eat" &&
+      event.at > began + 3 * 1440 && event.activity.participants.some((actor) => actor.kind === "resident" && actor.agent === agent)), `${agent} eats after the final night`);
+    assert.ok(world.residents.every((resident) => resident.energy > 0 && resident.satiety > 0));
+    assert.ok(count(world, "ingredients") >= 0 && count(world, "ingredients") <= 16);
   });
 
   it("invites a housemate in the evening, shares the activity, and does not repeat or reciprocate that day", () => {
@@ -459,6 +578,29 @@ describe("world time and invitations", () => {
 });
 
 describe("per-resident observation and old beliefs", () => {
+  it("reveals midnight replenishment only in the kitchen and keeps later cooking changes in event order", () => {
+    const start = { ...initial(), now: 1430 };
+    for (const item of start.items) if (item.kind === "stock" && item.id === "ingredients") item.count = 2;
+    const h = fixture(start);
+    h.act(A, { type: "move", to: "kitchen" });
+    h.act(B, { type: "move", to: "kitchen" });
+    h.act(B, { type: "move", to: "living_room" });
+    const oldKnowledge = structuredClone(h.views[1]!.knownItems.find((item) => item.itemId === "ingredients"));
+    h.act(A, { type: "start", activity: "cook", itemId: null });
+    const before = structuredClone(h.world), beforeViews = structuredClone(h.views);
+    const midnight = h.advance(1440);
+    const dayStarted = midnight.events.find((event) => event.type === "clock" && event.mark === "day_started")!;
+    const known = h.views[0]!.knownItems.find((item) => item.itemId === "ingredients")!;
+    assert.equal(known.count, 15);
+    assert.equal(known.seq, dayStarted.seq);
+    assert.deepEqual(h.views[1]!.knownItems.find((item) => item.itemId === "ingredients"), oldKnowledge);
+    const cook = h.act(A, { type: "stop" });
+    assert.equal(h.views[0]!.knownItems.find((item) => item.itemId === "ingredients")!.count, 16);
+    const combined = updateWorldViews(beforeViews, before, h.world, [...midnight.events, ...cook.events]);
+    assert.deepEqual(combined.views, h.views, "a batched midnight and refund reveal the same ordered evidence");
+    assert.deepEqual(h.views[1]!.knownItems.find((item) => item.itemId === "ingredients"), oldKnowledge);
+  });
+
   it("observes a scene's physical action but not its opened, chose, or closed UI history", () => {
     const h = fixture();
     const opened: WorldEvent = { type: "scene", seq: 2, at: h.world.now, placeId: "living_room", sceneId: `wscn_${suffix(1)}`,
