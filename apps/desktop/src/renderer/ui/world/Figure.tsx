@@ -114,13 +114,19 @@ const ITEM_ICON: Record<string, ReactNode> = {
       <path d="M8 9V7h8v2" />
     </>
   ),
+  seat: (
+    <>
+      <path d="M7 4v9h10V4" />
+      <path d="M5 13h14v3H5zM7 16v4M17 16v4" />
+    </>
+  ),
   ingredients: (
     <>
       <path d="M12 8c-4 0-6 3-6 6s2 6 6 6 6-3 6-6-2-6-6-6z" />
       <path d="M12 8c0-2 1-3.5 3-4" />
     </>
   ),
-  meal: (
+  meals: (
     <>
       <path d="M4 12h16a8 8 0 0 1-16 0z" />
       <path d="M9 8c0-1.5 1.5-1.5 1.5-3M13.5 8c0-1.5 1.5-1.5 1.5-3" />

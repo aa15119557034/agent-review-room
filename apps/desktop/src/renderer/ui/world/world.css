@@ -777,8 +777,11 @@
   inset: 0;
   z-index: 5;
   display: grid;
+  /* 列宽钉在舞台宽度上：内容再长也只能换行，不能把这一列撑到舞台外面被裁掉 */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr) auto auto;
   gap: 10px;
+  min-width: 0;
   padding: 14px 18px 16px;
   color: #2e2621;
   background:
@@ -805,8 +808,10 @@
 
 .scene-top {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
+  min-width: 0;
 }
 
 .scene-place {
@@ -816,9 +821,15 @@
   background: rgb(255 255 255 / 0.75);
   font-size: 13px;
   font-weight: 600;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .scene-btn {
+  flex: none;
+  white-space: nowrap;
   padding: 5px 12px;
   border: 0;
   border-radius: 999px;
@@ -1029,7 +1040,8 @@
 
 /* ---------------------------------------------------------------- 窄窗口：上下排，整页一起滚 */
 
-@media (max-width: 900px) {
+/* 1080 以下并排时舞台只剩五百来像素，对话场景放不开（林离在 960×760 实测右边被裁），所以提前改成上下排 */
+@media (max-width: 1080px) {
   .world {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto auto;

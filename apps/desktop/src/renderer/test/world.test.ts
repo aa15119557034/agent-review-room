@@ -147,18 +147,18 @@ describe("世界：演示后台按契约走", () => {
 
   it("做饭：开始时占用食材，做好了才多出饭；吃完饭少一份", async () => {
     const t = await opened();
-    assert.equal(t.stock("meal"), 0);
+    assert.equal(t.stock("meals"), 0);
     assert.equal(t.stock("ingredients"), 16);
     // 早饭点：第一位去厨房做饭
     for (let i = 0; i < 40 && !t.snap().activities.some((a) => a.kind === "cook"); i++) await t.advance(1);
     const cook = t.snap().activities.find((a) => a.kind === "cook")!;
     assert.ok(cook, "有人开始做饭");
     assert.equal(t.stock("ingredients"), 15, "食材先占用");
-    assert.equal(t.stock("meal"), 0, "没做好之前没有饭");
+    assert.equal(t.stock("meals"), 0, "没做好之前没有饭");
     await t.advance(cook.endsAt - cook.startedAt);
     const ended = t.w().events.find((e) => e.type === "activity_ended" && e.activity.id === cook.id);
     assert.ok(ended && ended.type === "activity_ended");
-    assert.deepEqual(ended.produced, [{ itemId: "meal", count: 4 }]);
+    assert.deepEqual(ended.produced, [{ itemId: "meals", count: 4 }]);
     assert.deepEqual(ended.consumed, [{ itemId: "ingredients", count: 1 }]);
     assert.equal(t.w().events.filter((e) => e.type === "activity_ended" && e.activity.id === cook.id).length, 1);
     await t.advance(90);
@@ -166,7 +166,7 @@ describe("世界：演示后台按契约走", () => {
     assert.ok(ate.length >= 1, "做好以后有人吃了");
     const eaten = ate.reduce((n, e) => n + (e.type === "activity_ended" ? e.consumed.reduce((m, c) => m + c.count, 0) : 0), 0);
     const eating = t.snap().activities.filter((a) => a.kind === "eat").reduce((n, a) => n + a.participants.length, 0);
-    assert.equal(t.stock("meal"), 4 - eaten - eating, "饭 = 做出来的 − 吃掉的 − 正在吃占着的");
+    assert.equal(t.stock("meals"), 4 - eaten - eating, "饭 = 做出来的 − 吃掉的 − 正在吃占着的");
   });
 
   it("你走动：不相连的屋走不过去；goTo 一间一间走", async () => {
@@ -201,6 +201,14 @@ describe("世界：演示后台按契约走", () => {
     const views = commitmentViews(t.snap(), worldNames(t.snap(), (a) => a));
     assert.equal(views.length, 1);
     assert.equal(views[0]!.cancellable, true);
+    // 约定上挂着正在进行的活动：显示「正在做」，不是「还没开始」（林离真机联调发现）
+    const linked = t.snap().commitments[0]!;
+    assert.equal(linked.state, "pending");
+    assert.equal(linked.activityId, read.id);
+    assert.match(views[0]!.text, /正在做$/);
+    const notYet = commitmentViews({ commitments: [{ ...linked, activityId: null }], activities: [] }, worldNames(t.snap(), (a) => a));
+    assert.match(notYet[0]!.text, /还没开始$/);
+    assert.equal(worldNames(t.snap(), (a) => (a === "claude" ? "C酱" : a)).place(t.snap().places.find((x) => x.owner === "claude")!.id), "C酱的房间");
     // 你也过去，加入
     await t.actions.world.goTo("living_room");
     assert.equal(await t.actions.world.join(read.id), true);

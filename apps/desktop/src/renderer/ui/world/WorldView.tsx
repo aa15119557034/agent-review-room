@@ -185,14 +185,14 @@ function Room({ place, world, now, names }: { place: WorldPlace; world: WorldSna
       onClick={go}
     >
       <div className="room-head">
-        <h2>{place.label}</h2>
+        <h2>{names.place(place.id)}</h2>
         {here ? (
           <span className="room-here">你在这里</span>
         ) : (
           <button type="button" className="room-go" onClick={(e) => { e.stopPropagation(); go(); }}>走过去</button>
         )}
       </div>
-      <ul className="room-items" aria-label={`${place.label}里的东西`}>
+      <ul className="room-items" aria-label={`${names.place(place.id)}里的东西`}>
         {things.map((it) => (
           <li key={it.id} data-busy={(it.kind === "unique" && it.usedBy !== null) || undefined} data-empty={(it.kind === "stock" && it.count === 0) || undefined}>
             <ItemIcon id={it.id} />
