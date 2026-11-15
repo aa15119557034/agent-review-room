@@ -399,7 +399,8 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
       if (res === null) {
         conn.abort();
         // 响应头恰好在断开前后到了：把流关掉，不留悬着的连接和未处理的 rejection
-        void pending.then((late) => late.body?.cancel(), () => undefined);
+        // 连接已经被 abort，body.cancel() 自己也可能 reject：这里已经决定放弃这次连接，清理失败一律吞掉
+        void pending.then((late) => late.body?.cancel()).catch(() => undefined);
       }
       return res;
     } finally {

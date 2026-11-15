@@ -574,4 +574,47 @@ describe("等事件流响应头时也能取消、也有期限（X-42 依赖）",
     assert.equal(seen.events, 1, "没有中途断开重连");
     assert.equal(seen.cancels, 0);
   });
+  it("响应头晚到（已经放弃这次连接之后才交付）：清理不留 unhandled rejection，也不改变结果", async () => {
+    const server = createServer((req, res) => {
+      let raw = "";
+      req.on("data", (chunk) => (raw += chunk));
+      req.on("end", () => {
+        if (req.method === "POST" && req.url === "/v1/runs") {
+          const body = JSON.parse(raw) as { runId: string };
+          res.writeHead(202, { "content-type": "application/json" });
+          res.end(JSON.stringify({ runId: body.runId, status: "accepted", eventsPath: `/v1/runs/${body.runId}/events` }));
+        } else if (req.method === "GET" && req.url?.includes("/events")) {
+          res.writeHead(200, { "content-type": "application/x-ndjson" });
+          res.flushHeaders(); // 响应头马上回，但下面的 fetchImpl 会晚交付
+        } else {
+          res.writeHead(202, { "content-type": "application/json" });
+          res.end("{}");
+        }
+      });
+    });
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", () => resolve()));
+    cleanups.push(() => { server.closeAllConnections(); return new Promise<void>((resolve) => server.close(() => resolve())); });
+    const lateFetch: typeof fetch = async (url, init) => {
+      const res = await fetch(url, init);
+      if (String(url).includes("/events")) await sleep(160);
+      return res;
+    };
+    const adapter = new HttpRemoteAgentAdapter({
+      nodeId: "node-test", baseUrl: "http://127.0.0.1:" + (server.address() as AddressInfo).port, profileId: "claude-ok", token: TOKEN,
+      heartbeatTimeoutMs: 300, reconnectGraceMs: 120, requestTimeoutMs: 40, cancelConfirmMs: 80, reconnectDelayMs: 20, fetchImpl: lateFetch,
+    });
+    const unhandled: unknown[] = [];
+    const onUnhandled = (reason: unknown) => unhandled.push(reason);
+    process.on("unhandledRejection", onUnhandled);
+    try {
+      const { events } = await collect(adapter);
+      await sleep(400); // 等所有晚到的响应都交付、清理都跑完
+      const end = terminals(events);
+      assert.equal(end.length, 1);
+      assert.equal(end[0]!.type === "error" && end[0]!.reason, "connection_lost");
+      assert.deepEqual(unhandled.map(String), []);
+    } finally {
+      process.off("unhandledRejection", onUnhandled);
+    }
+  });
 });
