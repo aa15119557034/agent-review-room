@@ -56,6 +56,8 @@ export interface MockOptions {
   /** 项目笔记、换窗口（C-47） */
   notes?: NotesMockOptions;
   packs?: PacksMockOptions;
+  /** 世界（C-54）。不给 seed 时跟着整体的 seed 走 */
+  world?: WorldMockOptions;
 }
 
 export { MockError, id, now, sha256Hex, randomHex } from "./util";
@@ -66,8 +68,14 @@ import { createMediaMock, type MediaMockOptions } from "./media-mock";
 import { createActivityQuery } from "./activity-mock";
 import { createNotesMock, type NotesMockOptions } from "./notes-mock";
 import { createPacksMock, type PacksMockOptions } from "./packs-mock";
+import { createWorldMock, type WorldMockOptions } from "./world-mock";
 
-export function createMockBridge(options: MockOptions = {}): RoomBridge & { reset(): void; mediaUrl(ref: string): string | undefined } {
+export function createMockBridge(options: MockOptions = {}): RoomBridge & {
+  reset(): void;
+  mediaUrl(ref: string): string | undefined;
+  /** 世界的测试入口：推进时间、让某位掉线 */
+  world: { advance(minutes: number): void; setOffline(agent: string, off: boolean): void };
+} {
   const tickMs = options.tickMs ?? 120;
   let reviewerOutcome = options.reviewerOutcome ?? "complete";
 
@@ -389,6 +397,8 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
   Object.assign(commands, notes.commands);
   const packsMock = createPacksMock({ emit, tickMs }, options.packs);
   Object.assign(commands, packsMock.commands);
+  const worldMock = createWorldMock({ emit, agents: () => discussion.agents() }, { seed: options.seed ?? false, ...options.world });
+  Object.assign(commands, worldMock.commands);
 
   // ------------------------------------------------------------ queries
 
@@ -441,7 +451,7 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
   };
 
   Object.assign(queries, discussion.queries);
-  Object.assign(queries, chat.queries, media.queries, notes.queries, packsMock.queries);
+  Object.assign(queries, chat.queries, media.queries, notes.queries, packsMock.queries, worldMock.queries);
   // 控制台（C-37a）：讨论的 Turn + 聊天的回答位
   queries["agents.activity"] = createActivityQuery({
     agentExists: (a) => discussion.agents().some((x) => x.id === a),
@@ -479,8 +489,10 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
     },
     /** 浏览器里没有 room-image:// / room-audio://：把 mock 的引用换成 data: 地址（只在 ?mock 时用） */
     mediaUrl: (ref: string) => media.hooks.url(ref),
+    world: { advance: worldMock.advance, setOffline: worldMock.setOffline },
     reset() {
       packsMock.reset();
+      worldMock.reset();
       discussion.reset();
       chat.reset();
       media.reset();
@@ -493,7 +505,12 @@ export function createMockBridge(options: MockOptions = {}): RoomBridge & { rese
         else v.clear();
       }
     },
-  } as unknown as RoomBridge & { reset(): void; mediaUrl(ref: string): string | undefined; topicsSeeded?: Promise<void> };
+  } as unknown as RoomBridge & {
+    reset(): void;
+    mediaUrl(ref: string): string | undefined;
+    world: { advance(minutes: number): void; setOffline(agent: string, off: boolean): void };
+    topicsSeeded?: Promise<void>;
+  };
 
   if (options.seed) {
     // 演示数据：假装已经设置好了一个节点
