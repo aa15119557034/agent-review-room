@@ -125,9 +125,11 @@ export function createWorldActions(store: Store<AppState>, client: RoomClient, f
         confirm: true,
         ...(residents ? { settings: { ...w.settings, residents } } : {}),
       });
-      // 回应到之前推送已经把新的一局送来了：是同一局就照用；不是（中间又变了）就按现在的重读
+      // 回应到之前推送已经把新的一局送来了：同一局、同一个会话才照用（runSeq 交给 applySnapshot 判断）；
+      // 局或会话对不上（中间又恢复 / 重开过）就不接这份旧回应，按现在的重读
       const now = context();
-      if (stillIn(ctx) || (now !== null && data.world !== null && now.worldId === data.world.id)) {
+      const sameAsNow = now !== null && data.world !== null && now.worldId === data.world.id && now.session === data.world.generation.session;
+      if (stillIn(ctx) || sameAsNow) {
         set((x) => applyWorldState(x, data));
         set((x) => (x.starting ? { ...x, starting: false } : x));
         await loadEvents(true);

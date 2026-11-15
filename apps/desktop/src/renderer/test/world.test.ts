@@ -503,6 +503,29 @@ describe("世界：旧请求的回应晚到（林离 #230 第一轮）", () => {
     assert.equal(t.w().rejected, null, "旧动作的结果不显示在新的一局里");
   });
 
+  it("重置的回应晚到、同一局已经换了会话（恢复 / 重开）：不把会话退回去", async () => {
+    const t = await opened();
+    t.hold("world.reset");
+    const resetting = t.actions.world.reset();
+    await tick();
+    const b = t.snap(); // 新的一局 B 靠推送到了，会话是重置时那个
+    // 同一局 B 换了会话的快照来了（恢复备份、重开）
+    const session3 = "wses_01HZZZZZZZZZZZZZZZZZZZZZZA";
+    const restored: WorldSnapshot = { ...b, generation: { session: session3, runSeq: 0 }, asOf: new Date(Date.now() + 1000).toISOString() };
+    t.store.set((s) => applyEvent(s, { type: "world.updated", world: restored }));
+    assert.equal(t.snap().generation.session, session3);
+    // 放行重置的旧回应；它之后的重读先扣住，好看清旧回应本身有没有被接受
+    t.hold("world.get");
+    await t.release("world.reset");
+    assert.equal(t.snap().id, b.id);
+    assert.equal(t.snap().generation.session, session3, "旧回应没有把会话退回去");
+    assert.equal(t.w().starting, false);
+    // 改成按现在的状态重读：后台说是什么就是什么
+    await t.release("world.get");
+    await resetting;
+    assert.equal(t.w().loaded, true);
+  });
+
   it("时间线超过 300 条以后还能往前翻：翻到的那一页留得住，游标和内容对得上", async () => {
     const world = { id: "world_01HZZZZZZZZZZZZZZZZZZZZZZZ" } as WorldSnapshot;
     const ev = (seq: number): WorldEvent => ({ type: "clock", seq, at: 0, mark: "day_started", day: 1 });
