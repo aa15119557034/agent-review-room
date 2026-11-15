@@ -1,11 +1,12 @@
-import { applyWorldAction, advanceWorld, chooseWorldRoutine, createWorld, updateWorldViews } from "@room/core";
-import { WorldStore, acquireWorldLock, ulid, type SqliteDatabase, type WriteQueue } from "@room/db";
+import { applyWorldAction, advanceWorld, buildWorldPrompt, chooseWorldRoutine, createWorld, renderWorldSay, updateWorldViews } from "@room/core";
+import { WorldStore, acquireWorldLock, ulid, type SqliteDatabase, type WorldBudgetStore, type WriteQueue } from "@room/db";
 import {
   WORLD_DAILY_COGNITION_DEFAULT, WORLD_DAY_REAL_MINUTES_DEFAULT,
   type CommandRequest, type ControlErrorCode, type ControlEvent,
   type WorldAction, type WorldActionResult, type WorldActor, type WorldDayReview, type WorldEvent,
-  type WorldGeneration, type WorldScene, type WorldSceneResult, type WorldSettings, type WorldSnapshot, type WorldState,
+  type WorldCognitionMode, type WorldCognitionReply, type WorldGeneration, type WorldScene, type WorldSceneLine, type WorldSceneResult, type WorldSettings, type WorldSnapshot, type WorldState,
 } from "@room/schemas";
+import type { WorldCognitionOutcome, WorldCognitionRunner } from "./world-cognition";
 
 const player: WorldActor = { kind: "player" };
 const generation = (): WorldGeneration => ({ session: `wses_${ulid()}`, runSeq: 0 });
@@ -21,6 +22,30 @@ interface WorldDeps {
   agentName?: (agent: string) => string;
   dbPath?: string;
   now?: () => string;
+  cognition?: {
+    runner: Pick<WorldCognitionRunner, "request" | "cancel" | "drain">;
+    budget: Pick<WorldBudgetStore, "get">;
+    persona: (agent: string) => string;
+    isConfigured: (agent: string) => boolean;
+    dateNow?: () => Date;
+    monotonicNow?: () => number;
+    /** Returns a cancellation function; only the owning ticket may cancel its timer. */
+    schedule?: (callback: () => void, ms: number) => () => void;
+  };
+}
+
+interface CognitionTicket {
+  worldId: string;
+  generation: WorldGeneration;
+  agent: string;
+  sceneId: string | null;
+  requestKey: string;
+  priority: "player" | "routine";
+  limit: number;
+  deadline: number;
+  valid: boolean;
+  settled: WorldCognitionOutcome;
+  cancelTimer: () => void;
 }
 
 export class WorldError extends Error {
@@ -40,6 +65,11 @@ export class WorldService {
   #suspended = false;
   #fraction = 0;
   readonly #observedHistory = new Map<string, WorldEvent[]>();
+  #thinking: CognitionTicket | null = null;
+  readonly #cognitionWork = new Set<Promise<void>>();
+  readonly #nextRoutine = new Map<string, number>();
+  #routineCursor = 0;
+  #cognitionError: WorldError | null = null;
 
   constructor(deps: WorldDeps) {
     this.#deps = deps;
@@ -72,17 +102,18 @@ export class WorldService {
     if (!this.#started) throw new WorldError("invalid_state", "世界服务尚未启动");
   }
   #available(): boolean { this.#requireStarted(); return !this.#stopped && this.#barriers === 0 && !this.#suspended; }
-  async #transaction<T>(work: (out: ControlEvent[]) => T): Promise<T> {
+  async #transaction<T>(work: (out: ControlEvent[], afterCommit: (() => void)[]) => T): Promise<T> {
     return this.#deps.queue.run(() => {
       if (this.#startError) throw this.#startError;
       if (this.#stopped) throw new WorldError("invalid_state", "世界已经停止");
       const out: ControlEvent[] = [];
+      const afterCommit: (() => void)[] = [];
       const savedGeneration = this.#generation;
       const savedFraction = this.#fraction;
       this.#deps.db.exec("BEGIN IMMEDIATE");
       let result: T;
       try {
-        result = work(out);
+        result = work(out, afterCommit);
         this.#deps.db.exec("COMMIT");
       } catch (error) {
         if (this.#deps.db.inTransaction) this.#deps.db.exec("ROLLBACK");
@@ -96,6 +127,9 @@ export class WorldService {
       if (!this.#stopped) out.forEach((event, index) => {
         if (event.type !== "world.updated" || finalSnapshots.get(event.world.id) === index) this.#deps.emit(event);
       });
+      // Never await a Run here: its callbacks need this same database queue.
+      for (const callback of afterCommit) callback();
+      if (!this.#stopped) this.#requestWaitingScene(out);
       return result;
     });
   }
@@ -125,7 +159,8 @@ export class WorldService {
   get(): WorldState {
     this.#requireStarted();
     const world = this.#load()?.world ?? null;
-    return { world, scene: world?.sceneId ? this.#store.getScene(world.id, world.sceneId) : null, settings: this.#settings(), budgets: [] };
+    const settings = this.#settings();
+    return { world, scene: world?.sceneId ? this.#store.getScene(world.id, world.sceneId) : null, settings, budgets: this.#budgets(settings) };
   }
   residentView(worldId: string, agent: string) {
     this.#requireStarted();
@@ -137,10 +172,207 @@ export class WorldService {
   scenes(worldId: string, before: string | undefined, limit: number) { this.#requireStarted(); return this.#store.scenes(worldId, before, limit); }
   review(worldId: string, day: number) { this.#requireStarted(); return this.#store.review(worldId, day); }
 
+  #monotonic(): number { return this.#deps.cognition?.monotonicNow?.() ?? performance.now(); }
+  #budgets(settings = this.#settings()) {
+    const cognition = this.#deps.cognition;
+    return cognition ? settings.residents.map((agent) => cognition.budget.get(agent, settings.dailyCognitionLimit, cognition.dateNow?.() ?? new Date())) : [];
+  }
+  #ownEvents(worldId: string, agent: string): WorldEvent[] {
+    const key = `${worldId}:${agent}`;
+    let events = this.#observedHistory.get(key);
+    if (!events) { events = this.#store.observedEvents(worldId, agent); this.#observedHistory.set(key, events); }
+    return events;
+  }
+  #evidence(world: WorldSnapshot, agent: string) {
+    const resident = world.residents.find((value) => value.agent === agent);
+    const view = this.#store.view(world.id, agent);
+    if (!resident || !view) throw new WorldError("internal", "居民的世界观察缺失");
+    return {
+      worldId: world.id, agent, now: world.now, resident, view,
+      activity: world.activities.find((activity) => activity.id === resident.activityId) ?? null,
+      observedEvents: { worldId: world.id, agent, events: this.#ownEvents(world.id, agent) },
+      places: world.places,
+    };
+  }
+  #modelReady(agent: string): boolean {
+    const cognition = this.#deps.cognition;
+    if (!cognition || this.#cognitionError || !cognition.isConfigured(agent)) return false;
+    const limit = this.#settings().dailyCognitionLimit;
+    return limit > 0 && cognition.budget.get(agent, limit, cognition.dateNow?.() ?? new Date()).used < limit;
+  }
+  #sceneAgent(scene: WorldScene): string | undefined {
+    return scene.origin.kind === "player" ? scene.origin.agent : scene.residents.find((agent) => this.#modelReady(agent));
+  }
+  #matches(ticket: CognitionTicket, world: WorldSnapshot): boolean {
+    if (world.id !== ticket.worldId || !equalGeneration(world.generation, ticket.generation)) return false;
+    const resident = world.residents.find((value) => value.agent === ticket.agent);
+    if (!resident) return false;
+    if (ticket.sceneId === null) return true;
+    const scene = this.#store.getScene(world.id, ticket.sceneId);
+    return world.sceneId === ticket.sceneId && scene?.state === "waiting" &&
+      equalGeneration(scene.generation, ticket.generation) && scene.residents.includes(ticket.agent);
+  }
+  #current(ticket: CognitionTicket): boolean {
+    if (this.#thinking !== ticket || !ticket.valid || this.#monotonic() >= ticket.deadline || !this.#available() || this.#cognitionError) return false;
+    const saved = this.#load();
+    if (saved === null || saved.world.run.state !== "running" || saved.settings.dailyCognitionLimit < ticket.limit || !this.#matches(ticket, saved.world)) return false;
+    // Presence gates applying a response. Cleanup still owns the waiting scene
+    // after urgent food/sleep moves the resident away and cancels this request.
+    return ticket.sceneId === null || saved.world.residents.find((resident) => resident.agent === ticket.agent)!.placeId === this.#store.getScene(saved.world.id, ticket.sceneId)!.placeId;
+  }
+  #invalidateCognition(ticket = this.#thinking): void {
+    if (!ticket) return;
+    ticket.valid = false;
+    ticket.cancelTimer();
+    if (this.#thinking === ticket) this.#deps.cognition?.runner.cancel();
+  }
+  async #drainCognition(): Promise<void> {
+    while (this.#cognitionWork.size) await Promise.all([...this.#cognitionWork]);
+    await this.#deps.cognition?.runner.drain();
+  }
+  #requestWaitingScene(events: readonly ControlEvent[]): void {
+    if (!this.#deps.cognition || !this.#started || !this.#available()) return;
+    const scene = [...events].reverse().find((event) => event.type === "world.scene.updated" && event.scene.state === "waiting");
+    if (scene?.type !== "world.scene.updated") return;
+    const world = this.#load()?.world;
+    if (!world || world.run.state !== "running" || world.sceneId !== scene.scene.id) return;
+    // Settings refreshes may publish the same waiting scene. They are not a
+    // new utterance and must not replace its already admitted Run.
+    if (this.#thinking?.sceneId === scene.scene.id && this.#thinking.worldId === world.id && equalGeneration(this.#thinking.generation, world.generation)) return;
+    const agent = this.#sceneAgent(scene.scene);
+    if (agent) this.#requestCognition(world, agent, scene.scene.id, scene.scene.origin.kind === "player" || scene.scene.lines.at(-1)?.source === "user" ? "player" : "routine", `${scene.scene.id}:${world.lastSeq}`);
+  }
+  #requestCognition(world: WorldSnapshot, agent: string, sceneId: string | null, priority: "player" | "routine", requestKey: string): void {
+    const cognition = this.#deps.cognition;
+    if (!cognition || !this.#modelReady(agent) || !this.#available() || world.run.state !== "running") return;
+    const previous = this.#thinking;
+    if (previous && !(priority === "player" && previous.priority === "routine")) return;
+    this.#invalidateCognition(previous);
+    const ticket: CognitionTicket = {
+      worldId: world.id, generation: { ...world.generation }, agent, sceneId, requestKey, priority,
+      limit: this.#settings().dailyCognitionLimit, deadline: this.#monotonic() + (priority === "routine" ? 15_000 : 120_000),
+      valid: true, settled: "discarded", cancelTimer: () => {},
+    };
+    this.#thinking = ticket;
+    if (priority === "routine") {
+      this.#nextRoutine.set(agent, this.#monotonic() + 120_000);
+      this.#routineCursor = (world.residents.findIndex((resident) => resident.agent === agent) + 1) % world.residents.length;
+    }
+    const expire = () => { if (this.#thinking === ticket) this.#invalidateCognition(ticket); };
+    ticket.cancelTimer = cognition.schedule ? cognition.schedule(expire, ticket.deadline - this.#monotonic()) : (() => {
+      const timer = setTimeout(expire, ticket.deadline - this.#monotonic()); timer.unref(); return () => clearTimeout(timer);
+    })();
+    const task = (async () => {
+      try {
+        const prompt = buildWorldPrompt({ ...this.#evidence(world, agent), persona: cognition.persona(agent) }).content;
+        await cognition.runner.request({
+          worldId: ticket.worldId, generation: ticket.generation, agent, sceneId, priority, limit: ticket.limit, prompt,
+          isCurrent: () => this.#current(ticket),
+          onMode: (mode) => this.#cognitionMode(ticket, mode),
+          onReply: (reply, runId) => this.#cognitionReply(ticket, reply, runId),
+          onSettled: async (outcome) => { if (this.#thinking === ticket) ticket.settled = outcome; },
+        });
+      } catch (error) { await this.#cognitionFailed(error, ticket); }
+      finally {
+        ticket.cancelTimer();
+        try { await this.#finishCognition(ticket); }
+        catch (error) { await this.#cognitionFailed(error, ticket); }
+        if (this.#thinking === ticket) this.#thinking = null;
+      }
+    })();
+    this.#cognitionWork.add(task);
+    void task.then(() => this.#cognitionWork.delete(task), (cause: unknown) => {
+      this.#cognitionWork.delete(task);
+      this.#cognitionError = new WorldError("invalid_state", "世界思考收尾失败，请检查节点后再继续", { cause });
+    });
+  }
+  async #cognitionMode(ticket: CognitionTicket, mode: WorldCognitionMode): Promise<void> {
+    if (!this.#current(ticket)) return;
+    await this.#transaction((out) => {
+      if (!this.#current(ticket)) return;
+      const world = this.#world(ticket.worldId);
+      this.#commit(world, { ...world, residents: world.residents.map((resident) => resident.agent === ticket.agent ? { ...resident, cognition: mode } : resident) }, [], out);
+    });
+  }
+  async #cognitionReply(ticket: CognitionTicket, reply: WorldCognitionReply, runId: string): Promise<void> {
+    if (!this.#current(ticket)) return;
+    await this.#transaction((out) => {
+      if (!this.#current(ticket)) return;
+      const receiptId = `wact_${runId.slice(4)}`;
+      const request = JSON.stringify({ worldId: ticket.worldId, generation: ticket.generation, agent: ticket.agent, requestKey: ticket.requestKey, runId, reply });
+      const receipt = this.#store.getReceipt(receiptId);
+      if (receipt) { if (receipt.request !== request) throw new WorldError("invalid_state", "这次世界回应的编号已被使用"); return; }
+      let world = this.#world(ticket.worldId);
+      const actor: WorldActor = { kind: "resident", agent: ticket.agent };
+      const line = reply.say === null ? null : renderWorldSay(reply.say, {
+        ...this.#evidence(world, ticket.agent), propose: reply.propose,
+        agentNames: Object.fromEntries(world.residents.map((resident) => [resident.agent, this.#deps.agentName?.(resident.agent) ?? resident.agent])),
+      });
+      const lines: WorldSceneLine[] = [];
+      if (line) {
+        const event: WorldEvent = { type: "said", seq: world.lastSeq + 1, at: world.now, placeId: world.residents.find((resident) => resident.agent === ticket.agent)!.placeId, speaker: actor, text: line.text, sceneId: ticket.sceneId };
+        world = this.#commit(world, { ...world, lastSeq: event.seq }, [event], out);
+        lines.push({ ...line, speaker: actor, source: "model", seq: event.seq });
+      }
+      let result: WorldActionResult | null = null;
+      if (reply.propose) {
+        result = this.#action(world, actor, reply.propose, out, ticket.sceneId);
+        world = this.#world(ticket.worldId);
+        if (!result.accepted) {
+          lines.push({ speaker: null, source: "rule", expression: "neutral", seq: null, text: `这次提议未执行：${reasonText(result.reason)}。` });
+          if (result.reason === "item_busy" && reply.propose.type === "start") this.#contention(world, ticket.agent, reply.propose.itemId ?? (reply.propose.activity === "read" ? "book" : "pot"), out);
+        }
+      }
+      world = this.#world(ticket.worldId);
+      const scene = ticket.sceneId ? this.#store.getScene(world.id, ticket.sceneId) : world.sceneId ? this.#store.getScene(world.id, world.sceneId) : null;
+      const stillHere = scene?.placeId === world.residents.find((resident) => resident.agent === ticket.agent)!.placeId;
+      if (scene && scene.state !== "closed" && scene.residents.includes(ticket.agent) && (ticket.sceneId !== null || stillHere)) {
+        const additions = ticket.sceneId ? lines : lines.filter((value) => value.source === "rule");
+        const updated: WorldScene = { ...scene, state: "open", canType: stillHere && this.#modelReady(ticket.agent), lines: [...scene.lines, ...additions] };
+        this.#store.saveScene(world.id, updated);
+        out.push({ type: "world.scene.updated", scene: updated });
+      }
+      this.#store.putReceipt(receiptId, request, { saySeq: lines.find((value) => value.seq !== null)?.seq ?? null, result });
+      out.push({ type: "world.budget.updated", budgets: this.#budgets() });
+    });
+  }
+  async #finishCognition(ticket: CognitionTicket): Promise<void> {
+    if (this.#thinking !== ticket || this.#stopped || this.#cognitionError) return;
+    await this.#transaction((out) => {
+      const world = this.#load()?.world;
+      if (this.#thinking !== ticket || !world || !this.#matches(ticket, world) || world.run.state !== "running" || this.#barriers || this.#suspended) return;
+      if (ticket.sceneId) {
+        const scene = this.#store.getScene(world.id, ticket.sceneId)!;
+        const stillHere = world.residents.find((resident) => resident.agent === ticket.agent)!.placeId === scene.placeId;
+        const text = !stillHere ? "她已离开这间屋，刚才的回应没有接上。" : ticket.settled === "budget" ? "今天的思考次数用完了，她先按作息生活。" : ticket.settled === "scene_limit" ? "这段对话的回应次数已用完，可以先一起做点事。" : ticket.settled === "busy_elsewhere" ? "她正在聊天或讨论室里忙，这句话暂时没接上。" : "她这次没接上话，可以稍后再试。";
+        const updated: WorldScene = { ...scene, state: "open", canType: stillHere && !["offline", "budget", "scene_limit"].includes(ticket.settled) && this.#modelReady(ticket.agent), lines: [...scene.lines, { speaker: null, source: "rule", expression: "neutral", seq: null, text }] };
+        this.#store.saveScene(world.id, updated);
+        out.push({ type: "world.scene.updated", scene: updated });
+      }
+      out.push({ type: "world.budget.updated", budgets: this.#budgets() });
+    });
+  }
+  async #cognitionFailed(cause: unknown, ticket: CognitionTicket): Promise<void> {
+    this.#cognitionError = new WorldError("invalid_state", "世界思考未能安全结束，请暂停并检查节点后再继续", { cause });
+    this.#invalidateCognition();
+    if (this.#stopped) return;
+    try {
+      await this.#transaction((out) => {
+        const world = this.#load()?.world;
+        if (!world) return;
+        this.#commit(world, { ...world, run: { state: "paused", by: "user" }, residents: world.residents.map((resident) => resident.agent === ticket.agent ? { ...resident, cognition: { mode: "routine", reason: "offline" } } : resident) }, [], out);
+      });
+    } catch (error) {
+      // The next advance or model command reports this failure; do not silently
+      // resume after an unsuccessful attempt to persist the pause.
+      this.#cognitionError = new WorldError("invalid_state", "世界思考失败且未能保存暂停状态，请重启后检查", { cause: error });
+    }
+  }
+
   async reset(request: CommandRequest<"world.reset">): Promise<WorldState> {
     if (!this.#available()) throw new WorldError("invalid_state", "世界正在维护，请稍后再开始");
     const next = generation();
-    const result = await this.#transaction((out) => {
+    const result = await this.#transaction((out, afterCommit) => {
       const previous = this.#store.getReceipt(request.requestId);
       if (previous) {
         if (previous.request !== JSON.stringify(request)) throw new WorldError("invalid_state", "同一个重置编号不能用于不同请求");
@@ -159,14 +391,18 @@ export class WorldService {
       const observations = updateWorldViews([], world, world, [opened]);
       this.#store.append(world.id, [opened], observations.observations, observations.views);
       this.#store.save(world);
-      const value: WorldState = { world, scene: null, settings, budgets: [] };
+      const value: WorldState = { world, scene: null, settings, budgets: this.#budgets(settings) };
       this.#store.putReceipt(request.requestId, JSON.stringify(request), value);
       this.#generation = next;
       this.#fraction = 0;
       this.#observedHistory.clear();
+      const obsolete = this.#thinking;
+      afterCommit.push(() => this.#invalidateCognition(obsolete));
       out.push({ type: "world.event", worldId: world.id, event: opened }, { type: "world.updated", world });
+      if (this.#deps.cognition) out.push({ type: "world.budget.updated", budgets: value.budgets });
       return { value, fresh: true };
     });
+    if (result.fresh) await this.#drainCognition();
     return result.value;
   }
 
@@ -221,32 +457,52 @@ export class WorldService {
 
   async advance(elapsedMs: number): Promise<void> {
     if (!this.#available() || !Number.isFinite(elapsedMs) || elapsedMs <= 0 || elapsedMs > 5000) return;
+    if (this.#cognitionError) throw this.#cognitionError;
     const ticket = this.#generation;
-    await this.#transaction((out) => {
+    await this.#transaction((out, afterCommit) => {
       const saved = this.#load();
       if (!saved || !this.#available() || !equalGeneration(ticket, this.#generation) || saved.world.run.state !== "running") return;
       const total = this.#fraction + elapsedMs * (24 / saved.settings.dayRealMinutes) / 1000;
       const minutes = Math.floor(total);
       let world = saved.world;
+      let candidate = minutes > 0 ? this.#routineCandidate(world) : null;
+      const interrupted = new Set<CognitionTicket>();
       for (let step = 0; step < minutes; step++) {
         const transition = advanceWorld(world, world.now + 1);
         world = this.#commit(world, transition.world, transition.events, out);
         this.#triggerScene(world.id, transition.events, out);
         for (const resident of world.residents) {
           world = this.#world();
-          const key = `${world.id}:${resident.agent}`;
-          let ownEvents = this.#observedHistory.get(key);
-          if (!ownEvents) { ownEvents = this.#store.observedEvents(world.id, resident.agent); this.#observedHistory.set(key, ownEvents); }
-          const action = chooseWorldRoutine(world, resident.agent, ownEvents, this.#store.view(world.id, resident.agent) ?? undefined);
+          const ownEvents = this.#ownEvents(world.id, resident.agent);
+          const thinking = this.#thinking?.agent === resident.agent && this.#current(this.#thinking) && !interrupted.has(this.#thinking) ? this.#thinking : null;
+          const action = chooseWorldRoutine(world, resident.agent, ownEvents, this.#store.view(world.id, resident.agent) ?? undefined, { skipLeisure: candidate === resident.agent || thinking !== null });
           if (action) {
             const result = this.#action(world, { kind: "resident", agent: resident.agent }, action, out);
+            if (candidate === resident.agent) candidate = null;
+            if (thinking && result.accepted) interrupted.add(thinking);
             if (!result.accepted && result.reason === "item_busy" && action.type === "start") this.#contention(world, resident.agent, action.itemId ?? (action.activity === "read" ? "book" : "pot"), out);
           }
         }
         world = this.#world();
       }
       this.#fraction = total - minutes;
+      for (const obsolete of interrupted) afterCommit.push(() => this.#invalidateCognition(obsolete));
+      if (candidate && !world.sceneId && world.residents.find((resident) => resident.agent === candidate)?.activityId === null) {
+        const agent = candidate, current = world;
+        afterCommit.push(() => this.#requestCognition(current, agent, null, "routine", `routine:${ulid()}`));
+      }
     });
+  }
+
+  #routineCandidate(world: WorldSnapshot): string | null {
+    if (!this.#deps.cognition || this.#thinking || world.sceneId || this.#cognitionError) return null;
+    const now = this.#monotonic();
+    for (let offset = 0; offset < world.residents.length; offset++) {
+      const resident = world.residents[(this.#routineCursor + offset) % world.residents.length]!;
+      if (resident.activityId !== null || now < (this.#nextRoutine.get(resident.agent) ?? 0) || !this.#modelReady(resident.agent)) continue;
+      if (chooseWorldRoutine(world, resident.agent, this.#ownEvents(world.id, resident.agent), this.#store.view(world.id, resident.agent) ?? undefined, { skipLeisure: true }) === null) return resident.agent;
+    }
+    return null;
   }
 
   async pause(worldId: string): Promise<WorldSnapshot> { return this.#setUserRun(worldId, false); }
@@ -254,32 +510,52 @@ export class WorldService {
   async #setUserRun(worldId: string, running: boolean): Promise<WorldSnapshot> {
     this.#requireStarted();
     if (this.#stopped) throw new WorldError("invalid_state", "世界已经停止");
-    const result = await this.#transaction((out) => {
+    if (!running) { this.#barriers++; this.#invalidateCognition(); }
+    try {
+      if (!running || this.#cognitionError) await this.#drainCognition();
+      const result = await this.#transaction((out) => {
       const world = this.#world(worldId);
       const willRun = running && this.#barriers === 0 && !this.#suspended;
       const changed = willRun && world.run.state === "paused" ? this.#resumeWorld(world, out) :
         this.#commit(world, { ...world, run: willRun ? { state: "running" } : { state: "paused", by: running ? "maintenance" : "user" } }, [], out);
       this.#fraction = 0;
       return changed;
-    });
-    return result;
+      });
+      if (running) this.#cognitionError = null;
+      return result;
+    } finally { if (!running) this.#barriers--; }
   }
   async saveSettings(request: CommandRequest<"world.settings.save">): Promise<WorldSettings> {
     if (!this.#available()) throw new WorldError("invalid_state", "世界正在维护");
-    return this.#transaction((out) => {
+    const lowering = request.settings.dailyCognitionLimit < this.#settings().dailyCognitionLimit;
+    if (lowering) { this.#barriers++; this.#invalidateCognition(); }
+    try {
+      if (lowering) await this.#drainCognition();
+      return await this.#transaction((out) => {
       const settings = { ...this.#settings(), ...request.settings };
       this.#store.saveSettings(settings);
       const world = this.#load()?.world;
       if (world) this.#commit(world, world, [], out);
+      if (world?.sceneId && this.#deps.cognition) {
+        const scene = this.#store.getScene(world.id, world.sceneId)!;
+        const agent = this.#sceneAgent(scene);
+        const updated: WorldScene = { ...scene, canType: agent !== undefined && this.#modelReady(agent), ...(lowering && scene.state === "waiting" ? { state: "open", lines: [...scene.lines, { speaker: null, source: "rule", expression: "neutral", seq: null, text: "思考次数设置已更新，刚才的回应已取消。" }] } : {}) };
+        this.#store.saveScene(world.id, updated);
+        out.push({ type: "world.scene.updated", scene: updated });
+      }
+      if (this.#deps.cognition) out.push({ type: "world.budget.updated", budgets: this.#budgets(settings) });
       return settings;
-    });
+      });
+    } finally { if (lowering) this.#barriers--; }
   }
 
   async maintenance<T>(work: () => Promise<T>): Promise<T> {
     this.#requireStarted();
     if (this.#stopped) throw new WorldError("invalid_state", "世界已经停止");
     this.#barriers++;
+    this.#invalidateCognition();
     try {
+      await this.#drainCognition();
       await this.#deps.queue.drain();
       if (this.#stopped) throw new WorldError("invalid_state", "世界已经停止");
       await this.#autoPause();
@@ -287,7 +563,7 @@ export class WorldService {
       return await work();
     } finally {
       this.#barriers--;
-      if (!this.#stopped && this.#barriers === 0 && !this.#suspended) await this.#autoResume();
+      if (!this.#stopped && this.#barriers === 0 && !this.#suspended && !this.#cognitionError) await this.#autoResume();
     }
   }
   async #autoPause(): Promise<void> {
@@ -327,6 +603,8 @@ export class WorldService {
   async suspend(): Promise<void> {
     this.#requireStarted();
     this.#suspended = true;
+    this.#invalidateCognition();
+    await this.#drainCognition();
     await this.#deps.queue.drain();
     if (!this.#stopped) await this.#autoPause();
   }
@@ -344,6 +622,8 @@ export class WorldService {
   }
   async stop(): Promise<void> {
     this.#stopped = true;
+    this.#invalidateCognition();
+    await this.#drainCognition();
     await this.#deps.queue.drain();
     this.#release?.();
     this.#release = null;
@@ -357,13 +637,14 @@ export class WorldService {
       if (world.sceneId) return { result: denied("not_allowed"), scene: this.#store.getScene(world.id, world.sceneId) };
       const activity = world.activities.find((a) => a.id === resident.activityId);
       const text = activity ? `她正在${activityNames[activity.kind]}，还需要 ${Math.max(0, activity.endsAt - world.now)} 分钟。` : "她暂时没有正在做的事。";
-      return this.#openScene(world, { kind: "player", agent: resident.agent }, resident.placeId, text + " 她现在按作息生活，暂时不能回应文字。", out);
+      return this.#openScene(world, { kind: "player", agent: resident.agent }, resident.placeId, text + (this.#modelReady(resident.agent) ? " 你走过来找她聊聊。" : " 她现在按作息生活，暂时不能回应文字。"), out);
     });
   }
   async choose(request: CommandRequest<"world.scene.choose">): Promise<WorldSceneResult> {
     return this.#sceneCommand(request, (world, out) => {
       const scene = this.#store.getScene(world.id, request.sceneId);
       if (!scene || scene.state === "closed" || world.sceneId !== scene.id) return { result: denied("scene_closed"), scene };
+      if (scene.state === "waiting") return { result: denied("not_allowed"), scene };
       const option = scene.options.find((o) => o.id === request.optionId);
       if (!option) return { result: denied("option_expired"), scene };
       const result = option.act ? this.#action(world, option.act.actor, option.act.action, out, scene.id, option.id) : null;
@@ -381,7 +662,19 @@ export class WorldService {
     });
   }
   async say(request: CommandRequest<"world.scene.say">): Promise<WorldSceneResult> {
-    return this.#sceneCommand(request, (world) => ({ result: denied("not_allowed"), scene: this.#store.getScene(world.id, request.sceneId) }));
+    return this.#sceneCommand(request, (world, out) => {
+      const scene = this.#store.getScene(world.id, request.sceneId);
+      if (!scene || scene.state === "closed" || world.sceneId !== scene.id) return { result: denied("scene_closed"), scene };
+      const agent = this.#sceneAgent(scene);
+      if (scene.state !== "open" || !scene.canType || !agent || !this.#modelReady(agent) || (this.#thinking && this.#thinking.priority !== "routine")) return { result: denied("not_allowed"), scene };
+      if (world.player.placeId !== scene.placeId || world.residents.find((resident) => resident.agent === agent)?.placeId !== scene.placeId) return { result: denied("not_same_place"), scene };
+      const event: WorldEvent = { type: "said", seq: world.lastSeq + 1, at: world.now, placeId: scene.placeId, speaker: player, text: request.text, sceneId: scene.id };
+      this.#commit(world, { ...world, lastSeq: event.seq }, [event], out);
+      const updated: WorldScene = { ...scene, state: "waiting", lines: [...scene.lines, { speaker: player, source: "user", text: request.text, seq: event.seq, expression: "neutral" }] };
+      this.#store.saveScene(world.id, updated);
+      out.push({ type: "world.scene.updated", scene: updated });
+      return { result: { accepted: true, seq: event.seq }, scene: updated };
+    });
   }
   async close(request: CommandRequest<"world.scene.close">): Promise<WorldSceneResult> {
     return this.#sceneCommand(request, (world, out) => {
@@ -398,12 +691,16 @@ export class WorldService {
     this.#requireStarted();
     if (this.#stopped) return { result: denied("world_paused"), scene: null };
     const admitted = this.#available();
-    return this.#transaction((out) => {
+    return this.#transaction((out, afterCommit) => {
       const receipt = this.#store.getReceipt(request.actionId);
       if (receipt) return receipt.request === JSON.stringify(request) ? receipt.result as WorldSceneResult : { result: denied("duplicate_action"), scene: null };
       const world = this.#load()?.world;
       const rejection = this.#check(world, request.worldId, request.generation, admitted, request.type === "world.scene.close");
       const result = rejection ? { result: rejection, scene: null } : work(world!, out);
+      if (result.result.accepted && request.type === "world.scene.close" && this.#thinking?.sceneId === request.sceneId) {
+        const obsolete = this.#thinking;
+        afterCommit.push(() => this.#invalidateCognition(obsolete));
+      }
       this.#store.putReceipt(request.actionId, JSON.stringify(request), result);
       return result;
     });
@@ -420,7 +717,10 @@ export class WorldService {
       if (active) options.push({ id: "opt_join", label: "和她一起做", act: { actor: player, action: { type: "join", activityId: active.id } } });
     }
     options.push({ id: "opt_watch", label: "先看看", act: null });
-    const scene: WorldScene = { id: `wscn_${ulid()}`, generation: world.generation, origin, placeId, residents, lines: [{ speaker: null, text, source: "rule", expression: "neutral", seq: null }], options, past: [], canType: false, state: "open", openedAt: world.now, createdAt: this.#now() };
+    const agent = origin.kind === "player" ? origin.agent : residents.find((value) => this.#modelReady(value));
+    const canType = agent !== undefined && this.#modelReady(agent);
+    const waiting = canType && (!this.#thinking || (origin.kind === "player" && this.#thinking.priority === "routine"));
+    const scene: WorldScene = { id: `wscn_${ulid()}`, generation: world.generation, origin, placeId, residents, lines: [{ speaker: null, text, source: "rule", expression: "neutral", seq: null }], options, past: [], canType, state: waiting ? "waiting" : "open", openedAt: world.now, createdAt: this.#now() };
     const event: WorldEvent = { type: "scene", seq: world.lastSeq + 1, at: world.now, placeId, sceneId: scene.id, step: "opened", optionId: null, result: null };
     this.#store.saveScene(world.id, scene);
     this.#commit(world, { ...world, sceneId: scene.id, lastSeq: event.seq }, [event], out);
