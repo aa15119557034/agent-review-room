@@ -123,25 +123,25 @@ describe("世界：演示后台按契约走", () => {
   it("做饭：开始时占用食材，做好了才多出饭；吃完饭少一份", async () => {
     const t = await opened();
     assert.equal(t.stock("meal"), 0);
-    assert.equal(t.stock("ingredients"), 6);
+    assert.equal(t.stock("ingredients"), 16);
     // 早饭点：第一位去厨房做饭
     for (let i = 0; i < 40 && !t.snap().activities.some((a) => a.kind === "cook"); i++) await t.advance(1);
     const cook = t.snap().activities.find((a) => a.kind === "cook")!;
     assert.ok(cook, "有人开始做饭");
-    assert.equal(t.stock("ingredients"), 4, "食材先占用");
+    assert.equal(t.stock("ingredients"), 15, "食材先占用");
     assert.equal(t.stock("meal"), 0, "没做好之前没有饭");
     await t.advance(cook.endsAt - cook.startedAt);
     const ended = t.w().events.find((e) => e.type === "activity_ended" && e.activity.id === cook.id);
     assert.ok(ended && ended.type === "activity_ended");
-    assert.deepEqual(ended.produced, [{ itemId: "meal", count: 2 }]);
-    assert.deepEqual(ended.consumed, [{ itemId: "ingredients", count: 2 }]);
+    assert.deepEqual(ended.produced, [{ itemId: "meal", count: 4 }]);
+    assert.deepEqual(ended.consumed, [{ itemId: "ingredients", count: 1 }]);
     assert.equal(t.w().events.filter((e) => e.type === "activity_ended" && e.activity.id === cook.id).length, 1);
     await t.advance(90);
     const ate = t.w().events.filter((e) => e.type === "activity_ended" && e.activity.kind === "eat" && e.activity.endReason === "done");
     assert.ok(ate.length >= 1, "做好以后有人吃了");
     const eaten = ate.reduce((n, e) => n + (e.type === "activity_ended" ? e.consumed.reduce((m, c) => m + c.count, 0) : 0), 0);
     const eating = t.snap().activities.filter((a) => a.kind === "eat").reduce((n, a) => n + a.participants.length, 0);
-    assert.equal(t.stock("meal"), 2 - eaten - eating, "饭 = 做出来的 − 吃掉的 − 正在吃占着的");
+    assert.equal(t.stock("meal"), 4 - eaten - eating, "饭 = 做出来的 − 吃掉的 − 正在吃占着的");
   });
 
   it("你走动：不相连的屋走不过去；goTo 一间一间走", async () => {
@@ -150,18 +150,18 @@ describe("世界：演示后台按契约走", () => {
     await t.actions.world.goTo("kitchen");
     await tick();
     assert.equal(t.snap().player.placeId, "kitchen");
-    const direct = await t.client.command({ type: "world.act", ...t.base(), actionId: "wact_01HZZZZZZZZZZZZZZZZZZZZZZ1", action: { type: "move", to: "room_claude" } });
+    const direct = await t.client.command({ type: "world.act", ...t.base(), actionId: "wact_01HZZZZZZZZZZZZZZZZZZZZZZ1", action: { type: "move", to: "room_1" } });
     assert.deepEqual(direct, { accepted: false, reason: "not_adjacent" });
-    await t.actions.world.goTo("room_claude");
+    await t.actions.world.goTo("room_1");
     await tick();
-    assert.equal(t.snap().player.placeId, "room_claude");
+    assert.equal(t.snap().player.placeId, "room_1");
     assert.equal(t.w().rejected, null);
   });
 
   it("邀她一起看书：空着就答应，真的去看；你过去加入就是一起看；书只在一处", async () => {
     const t = await opened();
-    await t.actions.world.goTo("room_claude");
-    assert.equal(t.resident("claude").placeId, "room_claude");
+    await t.actions.world.goTo("room_1");
+    assert.equal(t.resident("claude").placeId, "room_1");
     assert.equal(await t.actions.world.invite("claude", "read"), true);
     await tick();
     assert.equal(t.snap().commitments[0]?.state, "asked");

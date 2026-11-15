@@ -60,11 +60,12 @@ interface Ctx {
 const PLAYER: WorldActor = { kind: "player" };
 const res = (agent: string): WorldActor => ({ kind: "resident", agent });
 const same = (a: WorldActor, b: WorldActor) => a.kind === b.kind && (a.kind === "player" || (b.kind === "resident" && a.agent === b.agent));
-const roomOf = (agent: string) => `room_${agent.replace(/-/g, "_")}`;
 
 const DURATION: Record<WorldActivityKind, number> = { cook: 45, eat: 30, read: 60, rest: 30, sleep: 480, tidy: 30, set_table: 15 };
-const COOK_USES = 2;
-const COOK_MAKES = 2;
+/** 和 X-40 当前的数一致：16 份食材，一份做 4 份饭，没有每日补给，用完就是用完了 */
+const COOK_USES = 1;
+const COOK_MAKES = 4;
+const INGREDIENTS_AT_START = 16;
 const START_MINUTE = 7 * 60;
 const SNAPSHOT_EVERY = 15;
 
@@ -117,6 +118,8 @@ interface World {
 export function createWorldMock(ctx: Ctx, options: WorldMockOptions = {}) {
   const offline = new Set(options.offline ?? []);
   let settings: WorldSettings;
+  /** 个人房间的 id 是 room_1..room_8（和 X-40 一致），不从名字拼：名字可以有连字符、可以很长，地点 id 不行。归谁看 owner */
+  const roomOf = (agent: string) => `room_${settings.residents.indexOf(agent) + 1}`;
   let w: World | null = null;
   let timer: ReturnType<typeof setInterval> | null = null;
   let dirty = false;
@@ -183,7 +186,7 @@ export function createWorldMock(ctx: Ctx, options: WorldMockOptions = {}) {
       { kind: "unique", id: "book", label: "小说", at: at("living_room"), usedBy: null },
       { kind: "unique", id: "pot", label: "锅", at: at("kitchen"), usedBy: null },
       { kind: "unique", id: "table", label: "餐桌", at: at("kitchen"), usedBy: null },
-      { kind: "stock", id: "ingredients", label: "食材", placeId: "kitchen", count: 6 },
+      { kind: "stock", id: "ingredients", label: "食材", placeId: "kitchen", count: INGREDIENTS_AT_START },
       { kind: "stock", id: "meal", label: "饭", placeId: "kitchen", count: 0 },
     ];
     return {
@@ -600,11 +603,8 @@ export function createWorldMock(ctx: Ctx, options: WorldMockOptions = {}) {
       if (!stepToward(r, where)) return;
       const result = apply(me, { type: "start", activity: due.activity, itemId: due.activity === "read" ? "book" : null });
       if (result.accepted) {
+        // 不替你行动：她开始以后，你要一起做就自己点「加入」
         due.activityId = r.activityId;
-        // 是你邀的、你也在这间屋而且手上没事：算一起做
-        if (due.to.kind === "player" && x.player.placeId === r.placeId && !x.player.activityId && r.activityId) {
-          apply(PLAYER, { type: "join", activityId: r.activityId });
-        }
       } else {
         say(me, `${ACTIVITY_LABEL[due.activity]}做不了：${REJECT_TEXT[result.reason]}`);
         due.state = "cancelled";
@@ -755,9 +755,6 @@ export function createWorldMock(ctx: Ctx, options: WorldMockOptions = {}) {
       commit({ type: "clock", mark: "day_ended", day });
       review(day);
       commit({ type: "clock", mark: "day_started", day: day + 1 });
-      // 演示里食材每天早上补到 6 份，不然第三天起就没得做了。食材从哪来 ADR-008 没定，真后台不照这个做
-      const food = stock("ingredients");
-      if (food && food.count < 6) food.count = 6;
     }
     for (const r of x.residents) {
       const kind = r.activityId ? x.running.get(r.activityId)?.activity.kind : undefined;

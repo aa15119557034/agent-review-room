@@ -23,6 +23,8 @@ export function SceneView({ scene, world, names }: { scene: WorldScene; world: W
     [...scene.lines].reverse().find((l) => l.speaker?.kind === "resident" && l.speaker.agent === agent)?.expression ?? "neutral";
   const speaking = line?.speaker?.kind === "resident" ? line.speaker.agent : null;
   const waiting = scene.state === "waiting";
+  // 暂停着：台词照样能看、能回看，选项和输入先不能用（按了也会被规则拒绝）
+  const paused = world.run.state === "paused";
 
   const run = async (f: () => Promise<unknown>) => {
     if (busy) return;
@@ -72,7 +74,8 @@ export function SceneView({ scene, world, names }: { scene: WorldScene; world: W
           ) : (
             <p className="scene-text">…</p>
           )}
-          {waiting && <p className="scene-waiting" role="status">她在想怎么回…</p>}
+          {waiting && !paused && <p className="scene-waiting" role="status">她在想怎么回…</p>}
+          {paused && <p className="scene-waiting" role="status">世界暂停着，按「继续」以后才能接着说。</p>}
         </div>
       )}
 
@@ -81,7 +84,7 @@ export function SceneView({ scene, world, names }: { scene: WorldScene; world: W
           {scene.options.length > 0 && (
             <div className="scene-options">
               {scene.options.map((o) => (
-                <button key={o.id} type="button" className="scene-option" disabled={busy || waiting} onClick={() => void run(() => actions.world.sceneChoose(scene.id, o.id))}>
+                <button key={o.id} type="button" className="scene-option" disabled={busy || waiting || paused} onClick={() => void run(() => actions.world.sceneChoose(scene.id, o.id))}>
                   {o.label}
                 </button>
               ))}
@@ -89,8 +92,8 @@ export function SceneView({ scene, world, names }: { scene: WorldScene; world: W
           )}
           {scene.canType ? (
             <form className="scene-say" onSubmit={submit}>
-              <input value={text} maxLength={500} placeholder="对她说一句…" aria-label="对她说一句" disabled={waiting} onChange={(e) => setText(e.target.value)} />
-              <button type="submit" className="button-primary" disabled={!text.trim() || waiting || busy}>说</button>
+              <input value={text} maxLength={500} placeholder="对她说一句…" aria-label="对她说一句" disabled={waiting || paused} onChange={(e) => setText(e.target.value)} />
+              <button type="submit" className="button-primary" disabled={!text.trim() || waiting || busy || paused}>说</button>
             </form>
           ) : (
             <p className="scene-note">她现在没法回应你打的话，可以用上面的选项。</p>
