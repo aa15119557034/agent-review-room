@@ -9,6 +9,7 @@ import { DiscussionBadge, DiscussionView } from "./discussion/DiscussionView";
 import { ChatView } from "./chat/ChatView";
 import { ConsoleView } from "./ConsoleView";
 import { NotesSheetHost } from "./notes/NoteSheets";
+import { WorldView } from "./world/WorldView";
 
 /**
  * 整体布局：项目 / 四个工作步骤 / 运行记录。
@@ -39,7 +40,7 @@ function Shell() {
   const actions = useActions();
   // 秘书在不在线：节点开关机没有事件通知，换页时和每隔一会儿（窗口看得见时）重读一次（C-04）
   useEffect(() => {
-    if (view === "settings" || view === "workspace" || view === "desk") return;
+    if (view === "settings" || view === "workspace" || view === "desk" || view === "world") return;
     void actions.refreshStatus();
     const timer = setInterval(() => {
       if (document.visibilityState === "visible") void actions.refreshStatus();
@@ -77,6 +78,14 @@ function Shell() {
         <TopBar />
         <ConsoleView notice={<Notice />} />
         <NotesSheetHost />
+      </div>
+    );
+  }
+  if (view === "world") {
+    return (
+      <div className="shell shell-console shell-world">
+        <TopBar />
+        <WorldView notice={<Notice />} />
       </div>
     );
   }
@@ -199,8 +208,8 @@ function MainNav() {
         <NavIcon name="run" />
         <span className="topnav-label">执行</span>
       </button>
-      {/* 江浩 2026-11-02：单次评审不再放导航，这个位置留给「世界」（以后做 AI 与现实交互），现在只占位 */}
-      <button type="button" className="topnav-world" disabled title="世界：即将推出">
+      {/* 世界（ADR-008 / C-54）：秘书们的共享小屋 */}
+      <button type="button" className="topnav-world" aria-current={view === "world" ? "page" : undefined} onClick={actions.world.open}>
         <NavIcon name="world" />
         <span className="topnav-label">世界</span>
       </button>

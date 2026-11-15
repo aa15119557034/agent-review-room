@@ -16,6 +16,7 @@ import { applyDiscussionEvent, initialDiscussion, type DiscussionState } from ".
 import { applyChatEvent, initialChat, isChatRun, type ChatState } from "./chat";
 import { initialConsole, type ConsoleState } from "./console";
 import { applyNotesEvent, initialNotes, type NotesState } from "./notes";
+import { applyWorldEvent, initialWorld, type WorldUiState } from "./world";
 
 /**
  * renderer 的全部状态。只存从后端拿到的数据和少量 UI 状态，不在前端推导业务状态
@@ -39,7 +40,7 @@ export interface AppState {
   /** 用户在运行记录里点选的 run；null 表示默认显示最新的一个 */
   selectedRunId: string | null;
   /** 顶栏切换：聊天（C-35）、讨论室（主页）、秘书控制台（C-37）、单次评审（Phase 0 工作台）、设置 */
-  view: "chat" | "discussion" | "console" | "desk" | "settings" | "workspace";
+  view: "chat" | "discussion" | "console" | "world" | "desk" | "settings" | "workspace";
   /** 讨论室（C-21） */
   disc: DiscussionState;
   /** 聊天空间（C-35） */
@@ -48,6 +49,8 @@ export interface AppState {
   console: ConsoleState;
   /** 项目笔记、换窗口、GitHub 同步（C-47） */
   notes: NotesState;
+  /** 世界（ADR-008 / C-54） */
+  world: WorldUiState;
   /** 包的状态（#209，packs.list）；null = 还没读过。读不到（后端没这个查询）也是 null */
   packs: Packs | null;
   /** Reviewer 节点设置；undefined = 还没读过，null = 从未设置 */
@@ -86,6 +89,7 @@ export const initialState: AppState = {
   chat: initialChat,
   console: initialConsole,
   notes: initialNotes,
+  world: initialWorld,
   packs: null,
   reviewerNode: undefined,
   appearance: null,
@@ -173,13 +177,15 @@ export function applyEvent(state: AppState, event: ControlEvent): AppState {
     }
     case "packs.updated":
       return { ...state, packs: event.packs };
-    // 世界（ADR-008 / C-53）：契约先合，界面在 C-54 接。这里先原样返回，保证事件分支穷尽
+    // 世界（ADR-008 / C-54）
     case "world.updated":
     case "world.event":
     case "world.scene.updated":
     case "world.review.created":
-    case "world.budget.updated":
-      return state;
+    case "world.budget.updated": {
+      const world = applyWorldEvent(state.world, event);
+      return world === state.world ? state : { ...state, world };
+    }
   }
 }
 

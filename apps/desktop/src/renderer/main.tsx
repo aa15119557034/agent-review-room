@@ -47,6 +47,12 @@ function pickBridge(): { bridge: RoomBridge; isMock: boolean } | null {
         ...(quota !== null ? { codexQuotaPercent: quota === "unknown" ? null : Number(quota) } : {}),
         ...(params.get("comfyui") === "off" ? { comfyui: false } : {}),
       },
+      // 世界（C-54）：?worldOffline=claude 这位的节点不在线、?worldBudget=0 今天的思考次数用完、?world=new 还没开始
+      world: {
+        offline: list(params.get("worldOffline")),
+        ...(params.get("worldBudget") !== null ? { dailyLimit: Number(params.get("worldBudget")) } : {}),
+        ...(params.get("world") === "new" ? { seed: false } : {}),
+      },
     });
     // 浏览器里没有 room-image:// 和 room-audio://，mock 的图片和声音换成 data: 地址
     setMediaResolver(bridge.mediaUrl);

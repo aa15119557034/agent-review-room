@@ -8,6 +8,7 @@ import { createChatActions } from "./chat-actions";
 import { createConsoleActions } from "./console-actions";
 import { createNotesActions } from "./notes-actions";
 import { createPacksActions } from "./packs-actions";
+import { createWorldActions } from "./world-actions";
 import { boardSeq, digestFromDisc, withDigest, type TodoItem } from "./topic-board";
 
 /**
@@ -29,6 +30,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
 
   const notes = createNotesActions(store, client, fail);
   const packs = createPacksActions(store, client, fail);
+  const world = createWorldActions(store, client, fail);
 
   const agentConsole = createConsoleActions(store, client, fail, {
     async openTopic(projectId) {
@@ -99,6 +101,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
     agentConsole,
     notes,
     packs,
+    world,
 
     goChat() {
       store.set((s) => ({ ...s, view: "chat" }));
@@ -114,6 +117,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
         agentConsole.onEvent(e);
         disc.onBoardEvent(e);
         notes.onEvent(e);
+        world.onEvent(e);
       });
       try {
         const [status, projects] = await Promise.all([
