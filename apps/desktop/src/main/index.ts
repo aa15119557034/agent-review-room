@@ -388,7 +388,7 @@ async function bootstrap(): Promise<void> {
   const repairedChat = cliRequested ? 0 : await chat.repairInterrupted();
   if (!cliRequested) await chat.repairPendingImmersive();
 
-  const world = new WorldService({ db, queue, emit: broadcast, knownAgents: () => repo.listAgents().map((agent) => agent.id), dbPath: join(userData, "room.db") });
+  const world = new WorldService({ db, queue, emit: broadcast, knownAgents: () => repo.listAgents().map((agent) => agent.id), agentName: (id) => repo.listAgents().find((agent) => agent.id === id)?.displayName ?? id, dbPath: join(userData, "room.db") });
   let shuttingDown = false, shutdownComplete = false, suspended = false, switching = false, clockFailed = false, maintenanceCount = 0;
   let suspendWork: Promise<void> = Promise.resolve();
   const canRunClock = () => !cliRequested && !shuttingDown && !suspended && !switching && !clockFailed && maintenanceCount === 0;

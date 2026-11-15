@@ -13,7 +13,7 @@ async function setup(residents = ["claude", "codex"]) {
   const db = openDatabase(path);
   const queue = new WriteQueue();
   const events: ControlEvent[] = [];
-  const make = () => new WorldService({ db, queue, dbPath: path, emit: (e) => { events.push(ControlEvent.parse(e)); }, knownAgents: () => residents, now: () => "2026-11-16T00:00:00.000Z" });
+  const make = () => new WorldService({ db, queue, dbPath: path, emit: (e) => { events.push(ControlEvent.parse(e)); }, knownAgents: () => residents, agentName: (id) => id === "claude" ? "C酱" : id === "codex" ? "林离" : id, now: () => "2026-11-16T00:00:00.000Z" });
   let service = make();
   await service.start();
   const reset: CommandRequest<"world.reset"> = { type: "world.reset", requestId: `wact_${ulid()}`, worldId: null, confirm: true, settings: { residents, dayRealMinutes: 4, dailyCognitionLimit: 0 } };
@@ -213,6 +213,8 @@ test("two days of autonomous life produce disjoint evidence-backed reviews and k
     const first = h.service.review(world.id, 1)!;
     const second = h.service.review(world.id, 2)!;
     assert.ok(first.items.length > 0 && second.items.length > 0);
+    assert.ok(first.items.some((item) => item.text.includes("C酱") || item.text.includes("林离")));
+    assert.ok([...first.items, ...second.items].every((item) => !/claude|codex/.test(item.text)));
     const firstSeqs = new Set(first.items.flatMap((item) => item.seqs));
     for (const item of second.items) for (const seq of item.seqs) assert.equal(firstSeqs.has(seq), false);
     for (const item of [...first.items, ...second.items]) for (const seq of item.seqs) {

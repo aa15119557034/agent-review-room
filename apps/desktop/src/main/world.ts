@@ -18,6 +18,7 @@ interface WorldDeps {
   queue: WriteQueue;
   emit: (event: ControlEvent) => void;
   knownAgents: () => string[];
+  agentName?: (agent: string) => string;
   dbPath?: string;
   now?: () => string;
 }
@@ -473,7 +474,9 @@ export class WorldService {
     for (const event of this.#history(world.id, endSeq)) {
       if ((event.type === "clock" && event.mark === "day_started" && event.day === day) || items.length >= 40) break;
       if (event.type !== "activity_ended") continue;
-      items.push({ seqs: [event.seq], source: "rule", text: `${event.activity.participants.map((p) => p.kind === "player" ? "你" : p.agent).join("、")}的${activityNames[event.activity.kind]}${event.activity.state === "completed" ? "完成了" : "结束了"}。` });
+      const names = event.activity.participants.map((p) => p.kind === "player" ? "你" : this.#deps.agentName?.(p.agent) ?? p.agent);
+      const participants = names.length > 3 ? `${names.slice(0, 3).join("、")}等 ${names.length} 人` : names.join("、");
+      items.push({ seqs: [event.seq], source: "rule", text: `${participants}的${activityNames[event.activity.kind]}${event.activity.state === "completed" ? "完成了" : "结束了"}。` });
     }
     const review: WorldDayReview = { day, items: items.reverse() };
     this.#store.saveReview(world.id, review);
