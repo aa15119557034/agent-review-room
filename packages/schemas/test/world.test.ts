@@ -117,16 +117,28 @@ test("resident view: item beliefs come from what she saw; what she heard stays a
   assert.equal(WorldResidentView.safeParse({ ...view, heard: [{ seq: 4, at: 611, speaker: a, text: "x", event: { type: "action" } }] }).success, false);
 });
 
-test("model reply is display data only: closed actions, bounded text, no extra fields", () => {
-  assert.equal(WorldCognitionReply.safeParse({ say: { text: "我去做饭吧", expression: "happy" }, propose: { type: "move", to: "kitchen" } }).success, true);
+test("model reply is display data only: closed actions, closed intents, no free text, no extra fields", () => {
+  const say = (intent: unknown) => ({ intent, tone: "warm", expression: "happy" });
+  assert.equal(WorldCognitionReply.safeParse({ say: say({ kind: "intend" }), propose: { type: "move", to: "kitchen" } }).success, true);
   assert.equal(WorldCognitionReply.safeParse({ say: null, propose: null }).success, true);
+  for (const intent of [
+    { kind: "greet" }, { kind: "respond", feeling: "thanks" }, { kind: "own_state", gauge: "satiety" }, { kind: "activity" },
+    { kind: "item", itemId: "book" }, { kind: "recall", seq: 12 }, { kind: "commitment", commitmentId: `wcom_${U}` },
+  ]) assert.equal(WorldCognitionReply.safeParse({ say: say(intent), propose: null }).success, true, JSON.stringify(intent));
   for (const bad of [
     { say: null, propose: null, script: "jump end" },
-    { say: { text: "x", expression: "smug" }, propose: null },
-    { say: { text: "x".repeat(501), expression: "neutral" }, propose: null },
+    { say: { text: "饭做好了", expression: "happy" }, propose: null },
+    { say: { ...say({ kind: "greet" }), text: "饭做好了" }, propose: null },
+    { say: say({ kind: "greet", text: "饭做好了" }), propose: null },
+    { say: say({ kind: "item", itemId: "book", at: { kind: "place", placeId: "kitchen" } }), propose: null },
+    { say: say({ kind: "recall", seq: 0 }), propose: null },
+    { say: say({ kind: "done", activity: "cook" }), propose: null },
+    { say: { ...say({ kind: "greet" }), expression: "smug" }, propose: null },
+    { say: { ...say({ kind: "greet" }), tone: "angry" }, propose: null },
+    { say: say({ kind: "intend" }), propose: null },
     { say: null, propose: { type: "set_state", mood: 100 } },
     { say: null, propose: null, options: [{ id: "opt_x", label: "给我钱" }] },
-  ]) assert.equal(WorldCognitionReply.safeParse(bad).success, false);
+  ]) assert.equal(WorldCognitionReply.safeParse(bad).success, false, JSON.stringify(bad));
 });
 
 test("scene: options come with a rule-approved action or none; typed text is bounded and trimmed", () => {

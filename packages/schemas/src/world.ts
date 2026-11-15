@@ -14,7 +14,9 @@ import { AgentName } from "./entities";
  *   回来时代次对不上的结果直接作废，不看它现在是否碰巧还合条件。
  * - 给居民的东西只来自她自己的观察。本文件里带「全貌」的类型（WorldSnapshot、WorldEvent 列表）
  *   只给界面用，main 不得把它们放进任何居民的认知上下文。
+ *   暂停只让旧代次的**请求**失效，不关对话场景（见 WorldScene.generation）。
  * - 模型回的内容是受限的显示数据（WorldCognitionReply），不是脚本，程序不执行其中任何东西。
+ *   模型只选「想表达什么、什么语气」，显示出来的句子由 main 按这位居民自己的证据写成，模型不写事实正文。
  *
  * 本文件只定格式和语义，不含规则数值（体力怎么掉、做饭多久），那些在规则层，随 rulesVersion 走。
  */
@@ -176,7 +178,7 @@ export type WorldCommitment = z.infer<typeof WorldCommitment>;
 
 /** 规则层拒绝一个动作的原因。界面和台词里的「为什么做不了」都从这里来，不让模型自己编 */
 export const WorldRejectReason = z.enum([
-  "stale_generation",   // 代次对不上（重置、恢复、暂停过）
+  "stale_generation",   // 代次对不上（重置、恢复、暂停再继续过）
   "world_paused",
   "unknown_target",     // 没有这个地点 / 物品 / 人 / 场景
   "not_adjacent",       // 要去的地点不相连
@@ -239,7 +241,8 @@ export type WorldActionResult = z.infer<typeof WorldActionResult>;
  * - activity_ended：活动结算，每个活动只有一条。produced：产出了什么（几份饭）；consumed：**整段活动一共用掉了多少**，
  *   只在这里记一次。开始活动时材料只是「占用」（快照里的数量先减掉，别人用不了），不另记扣减事件；
  *   结束时按 consumed 结算，占用多于实际用掉的（比如中途取消）退回去。
- *   所以任何时刻：数量 = 开局数量 + 所有 produced − 所有 consumed − 进行中活动的占用（占用多少由活动种类和 rulesVersion 决定）。
+ *   所以任何时刻：数量 = 开局数量 + 所有 produced − 所有 consumed − 进行中活动的占用（占用多少由活动种类和 rulesVersion 决定）
+ *   + 规则在每条 day_started 时的固定补货（补哪样、补到多少由 rulesVersion 决定，不另记事件；没有这条规则就是 0）。
  *   一局的 rulesVersion 不变，开局内容可恢复，这样才能从事件重算。
  * - said：有人在某个地点说了一句话。text 是台词原文，**不是事实**：别人听到只算「听说」
  * - clock：到了作息点 / 新的一天，供回顾和界面用
@@ -315,7 +318,8 @@ export const WorldSceneCause = z.enum([
 export type WorldSceneCause = z.infer<typeof WorldSceneCause>;
 
 /**
- * 一句显示出来的台词。source = model：模型写的、已按 ADR-008 §2 核对过；rule：规则旁白（模型不在、或台词对不上被换掉）；
+ * 一句显示出来的台词。source = model：她的模型选了要表达什么（WorldSay），句子由 main 按她自己的证据写成（ADR-008 §2）；
+ * rule：规则旁白（模型不在、或她选的内容没有依据被换掉）；
  * user：你打的那句话（speaker 一定是 player）。speaker 是 null 表示旁白。
  * seq：这句话对应的 said 事件；纯旁白没有事件，是 null。回看按 lines 的顺序重放。
  */
@@ -339,7 +343,20 @@ export type WorldSceneOption = z.infer<typeof WorldSceneOption>;
 
 export const WorldScene = z.object({
   id: WorldSceneId,
-  /** 开场时的代次。代次变了场景就关 */
+  /**
+   * 这场对话现在挂在哪个代次上（不是「开场时的代次」）。
+   * - 暂停（你按的、备份的自动暂停）**不关**场景：已经显示的台词、选项、past 原样留着，state 不因暂停而变成 closed。
+   *   暂停期间 generation 不变；选选项、打字按 world_paused 拒绝，界面把它们置灰。
+   *   关闭（world.scene.close）：**你按的暂停**期间照常可以，会追加一条 scene closed 事件；
+   *   **维护屏障**期间（备份、切换资料文件夹、退出收尾）世界的写入口是关着的，close 也按 world_paused 拒绝，不为它绕开屏障。
+   *   暂停期间关掉的场景不会因为继续而重新打开。
+   * - 电脑休眠算同一个 session 里的一次自动暂停：醒来场景还在，不补时间；休眠前是你按的暂停，醒来仍然暂停。
+   * - 继续时 runSeq 加一，main 把还开着的场景的 generation 改成新代次，并推一条 world.scene.updated。
+   *   暂停前为这场对话发出去的模型请求属于旧代次：作废，继续后**不补发**；当时是 waiting 的回到 open，
+   *   并补一句规则旁白说明她没接上话（旁白不漏她不该知道的事）。
+   * - 只有 session 变了（程序重启、从备份恢复、切换资料文件夹、重置）场景才关：main 把它记成 closed，只能回看。
+   * 所以：还开着的场景，generation 一定等于 WorldSnapshot.generation。
+   */
   generation: WorldGeneration,
   origin: z.discriminatedUnion("kind", [
     z.object({ kind: z.literal("event"), cause: WorldSceneCause, seq: WorldSeq }).strict(),
@@ -498,16 +515,62 @@ export type WorldBudget = z.infer<typeof WorldBudget>;
  * 走现有的文本 Run，只读，不给任何工具权限。
  *
  * - 没有这个代码块、JSON 解析不了、不符合本格式：当作这次没有提议也没有台词，不重试到超出预算
- * - say：她这一刻说的话。提议阶段只能表达想法和请求，不能说成已经做了（ADR-008 §2）
+ * - say：她这一刻想表达什么（WorldSay）。**模型不写句子**，只选意图、语气、表情和引用哪条自己的经历；
+ *   显示出来的那句话由 main 按她自己的证据写成。这样「没做成不能说做成了」「旧印象不被全貌纠正」
+ *   是靠格式保证的，不是靠事后在自由文字里找关键词
  * - propose：她想做的一个动作。main 按当时最新的状态检查，通过才生效
+ * - say 和 propose 分开处理：say 引用的东西没有依据时只丢掉 say（或换成规则旁白），propose 照常检查；反过来也一样
  * - 代码块之外的文字一律丢弃，不显示、不记录成观察
  */
 export const WORLD_FENCE = "room-world";
 
+/** 语气。只影响 main 从哪一组措辞里挑，不影响说的内容 */
+export const WorldTone = z.enum(["plain", "warm", "playful", "soft", "curt"]);
+export type WorldTone = z.infer<typeof WorldTone>;
+
+/**
+ * 她想表达的内容，固定几类。每一类的事实部分都由 main 从**她自己的证据**里取，模型给的只是「指哪一条」：
+ *
+ * - greet：打招呼、寒暄。不带任何事实
+ * - respond：回应对方刚说的话，只表达态度（feeling），不带事实。要答应 / 推迟 / 拒绝一个邀约，用 propose 的 answer，再配 intend
+ * - intend：说出这次 propose 里想做的事。措辞只能是想法和请求（「我去做饭吧」），不能是已经做了；
+ *   propose 是 null 时不能用。做没做成由规则层的结果事件显示，这句话不因为后来做成了而改写
+ * - own_state：说自己的体力 / 饱腹 / 心情。数值取规则层她本人当前的状态，措辞按档位，不报数字
+ * - activity：说自己正在做的活动和做到哪了。取规则层她本人当前的活动；她现在没有活动就丢掉这句
+ * - item：说某样东西在哪。**只取她的 knownItems**（WorldResidentView），按「上次看到在…」来说；
+ *   她没见过就说不知道。不读全貌，不拿真实位置替她纠正；听来的话不算位置
+ * - recall：提起她自己的一条观察。seq 必须是同一局里她有观察的事件，main 按**观察的方式**落句：
+ *   saw → 当成亲历来讲，措辞按那条事件本身；
+ *   heard → 只能转述「谁说过什么」（带说话人、引那句原话），不当成事实确认：不去找那句话说的原事件，
+ *   不更新 knownItems，也不能说成她亲眼见过（「你跟我说书搬到厨房了，我还没去看过」）。
+ *   她对这条 seq 没有观察就丢掉这句
+ * - commitment：说起一个和她有关的约定（她是 by 或 to）。内容取**她自己看到的**这条约定的最后一次变化
+ *   （她有 saw 观察的、带这个 commitmentId 的动作事件，或挂在这条约定上的活动的结束事件），包括她看到的终态；
+ *   她没看到的后续变化（对方在别的屋取消了）不拿全貌里的当前状态来补，她说的仍是她知道的那一步。
+ *   不是她的约定、或她对它没有任何观察，就丢掉这句
+ *
+ * 引用对不上（不存在、不是这一局的、她没有依据）一律按「这次没有台词」处理，不猜、不改指别的东西。
+ * 第一版不做通用知识图谱；要加新的类别，改本文件、走契约 PR。
+ */
+export const WorldSayIntent = z.discriminatedUnion("kind", [
+  z.object({ kind: z.literal("greet") }).strict(),
+  z.object({ kind: z.literal("respond"), feeling: z.enum(["agree", "decline", "thanks", "sorry", "comfort", "glad", "unsure"]) }).strict(),
+  z.object({ kind: z.literal("intend") }).strict(),
+  z.object({ kind: z.literal("own_state"), gauge: z.enum(["energy", "satiety", "mood"]) }).strict(),
+  z.object({ kind: z.literal("activity") }).strict(),
+  z.object({ kind: z.literal("item"), itemId: WorldItemId }).strict(),
+  z.object({ kind: z.literal("recall"), seq: WorldSeq }).strict(),
+  z.object({ kind: z.literal("commitment"), commitmentId: WorldCommitmentId }).strict(),
+]);
+export type WorldSayIntent = z.infer<typeof WorldSayIntent>;
+
+export const WorldSay = z.object({ intent: WorldSayIntent, tone: WorldTone, expression: WorldExpression }).strict();
+export type WorldSay = z.infer<typeof WorldSay>;
+
 export const WorldCognitionReply = z.object({
-  say: z.object({ text: z.string().min(1).max(500), expression: WorldExpression }).strict().nullable(),
+  say: WorldSay.nullable(),
   propose: WorldAction.nullable(),
-}).strict();
+}).strict().refine((r) => r.say?.intent.kind !== "intend" || r.propose !== null, { message: "intend 要配一个 propose" });
 export type WorldCognitionReply = z.infer<typeof WorldCognitionReply>;
 
 /** 解析失败的原因，供日志和测试用；不显示给用户 */
