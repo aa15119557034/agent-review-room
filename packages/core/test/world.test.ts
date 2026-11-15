@@ -374,6 +374,45 @@ describe("world time and invitations", () => {
     assert.notEqual(chooseWorldRoutine({ ...initial(), now: 1110 }, "claude")?.type, "invite");
   });
 
+  it("lets a hungry inviter prepare food while the accepted activity has not started", () => {
+    const start = initial();
+    start.residents[0]!.satiety = 20;
+    const h = fixture(start);
+    h.act(A, { type: "invite", to: B, activity: "read" });
+    const agreement = h.world.commitments[0]!;
+    h.act(B, { type: "answer", commitmentId: agreement.id, answer: "accept", dueAt: null });
+    const waiting = structuredClone(h.world);
+    const move = chooseWorldRoutine(h.world, "claude");
+    assert.deepEqual(move, { type: "move", to: "kitchen" });
+    assert.deepEqual(h.world, waiting, "choosing a need does not change the promise");
+    assert.deepEqual(chooseWorldRoutine(h.world, "codex"), { type: "start", activity: "read", itemId: null }, "the invitee's fulfillment rule is unchanged");
+    h.act(A, move!);
+    const cook = chooseWorldRoutine(h.world, "claude");
+    assert.deepEqual(cook, { type: "start", activity: "cook", itemId: null });
+    h.act(A, cook!);
+    assert.equal(h.world.commitments[0]!.activityId, null, "preparing food does not fulfill the reading invitation");
+    assert.equal(holder(h.world, "book").usedBy, null, "the inviter does not take the promised book");
+    assert.equal(count(h.world, "ingredients"), 15);
+  });
+
+  it("lets a tired inviter go to bed while the accepted activity has not started", () => {
+    const start = initial();
+    start.residents[0]!.energy = 20;
+    const h = fixture(start);
+    h.act(A, { type: "invite", to: B, activity: "read" });
+    const agreement = h.world.commitments[0]!;
+    h.act(B, { type: "answer", commitmentId: agreement.id, answer: "accept", dueAt: null });
+    const move = chooseWorldRoutine(h.world, "claude");
+    assert.deepEqual(move, { type: "move", to: "room_1" });
+    h.act(A, move!);
+    const sleep = chooseWorldRoutine(h.world, "claude");
+    assert.deepEqual(sleep, { type: "start", activity: "sleep", itemId: null });
+    h.act(A, sleep!);
+    assert.equal(h.world.commitments[0]!.activityId, null);
+    assert.equal(h.world.activities[0]!.kind, "sleep");
+    assert.equal(holder(h.world, "book").usedBy, null);
+  });
+
   it("uses only the resident's shared experiences to defer a discretionary invitation when tired", () => {
     const h = fixture();
     for (let i = 0; i < 2; i += 1) {
@@ -420,6 +459,26 @@ describe("world time and invitations", () => {
 });
 
 describe("per-resident observation and old beliefs", () => {
+  it("observes a scene's physical action but not its opened, chose, or closed UI history", () => {
+    const h = fixture();
+    const opened: WorldEvent = { type: "scene", seq: 2, at: h.world.now, placeId: "living_room", sceneId: `wscn_${suffix(1)}`,
+      step: "opened", optionId: null, result: null };
+    const action = applyWorldAction({ ...h.world, lastSeq: opened.seq }, A, { type: "start", activity: "read", itemId: null }, ids(1));
+    assert.equal(action.result.accepted, true);
+    const chose: WorldEvent = { ...opened, seq: 4, step: "chose", optionId: "opt_read", result: action.result };
+    const closed: WorldEvent = { ...opened, seq: 5, step: "closed" };
+    const events = [opened, ...action.events, chose, closed];
+    events.forEach((event) => WorldEvent.parse(event));
+    const observed = updateWorldViews(h.views, h.world, { ...action.world, lastSeq: closed.seq }, events);
+    assert.deepEqual(observed.observations.map((observation) => [observation.observer, observation.seq, observation.mode]),
+      [["claude", 3, "saw"], ["codex", 3, "saw"]]);
+    for (const view of observed.views) {
+      assert.deepEqual(view.seen.map((event) => event.seq), [3, 1]);
+      assert.equal(view.knownItems.find((item) => item.itemId === "book")!.seq, 3, "UI history cannot become item evidence");
+      assert.deepEqual(view.heard, []);
+    }
+  });
+
   it("reads where the resident last saw the book while an uninformed housemate searches the old room", () => {
     const h = fixture();
     h.act(B, { type: "move", to: "room_2" });

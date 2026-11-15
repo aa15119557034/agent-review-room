@@ -185,10 +185,13 @@ export class WorldService {
   }
   #commit(before: WorldSnapshot, after: WorldSnapshot, events: WorldEvent[], out: ControlEvent[]): WorldSnapshot {
     const world = this.#stamp(after);
-    const previous = before.residents.map((r) => this.#store.view(before.id, r.agent)).filter((v) => v !== null);
-    const observed = updateWorldViews(previous, before, world, events);
+    // Views contain observations, not the live clock or gauges. An empty event
+    // batch cannot change them and must not rewrite every resident's history.
+    const previous = events.length ? before.residents.map((r) => this.#store.view(before.id, r.agent)).filter((v) => v !== null) : [];
+    const observed = events.length ? updateWorldViews(previous, before, world, events) : { observations: [], views: [] };
+    const observers = new Set(observed.observations.map((observation) => observation.observer));
     this.#store.save(world);
-    this.#store.append(world.id, events, observed.observations, observed.views);
+    if (events.length) this.#store.append(world.id, events, observed.observations, observed.views.filter((view) => observers.has(view.agent)));
     for (const observation of observed.observations) {
       const cache = this.#observedHistory.get(`${world.id}:${observation.observer}`);
       if (cache) cache.push(events.find((event) => event.seq === observation.seq)!);
@@ -372,7 +375,8 @@ export class WorldService {
     });
   }
   #openScene(world: WorldSnapshot, origin: WorldScene["origin"], placeId: string, text: string, out: ControlEvent[]): WorldSceneResult {
-    const residents = world.residents.filter((r) => r.placeId === placeId).slice(0, 4).map((r) => r.agent);
+    const samePlace = world.residents.filter((r) => r.placeId === placeId).map((r) => r.agent);
+    const residents = (origin.kind === "player" ? [origin.agent, ...samePlace.filter((agent) => agent !== origin.agent)] : samePlace).slice(0, 4);
     if (!residents.length) return { result: denied("unknown_target"), scene: null };
     const options: WorldScene["options"] = [];
     if (origin.kind === "player") {
@@ -409,7 +413,14 @@ export class WorldService {
     const joined = events.find((e): e is Extract<WorldEvent, { type: "action" }> => e.type === "action" && e.action.type === "join");
     if (joined) {
       const current = world.activities.find((a) => a.id === joined.activityId);
-      if (current && ![...this.#history(worldId, joined.seq)].some((e) => e.type === "activity_ended" && e.activity.state === "completed" && current.participants.every((p) => e.activity.participants.some((other) => JSON.stringify(p) === JSON.stringify(other))))) {
+      let previouslyTogether = false;
+      if (current) for (const event of this.#history(worldId, joined.seq)) {
+        if (event.type === "activity_ended" && event.activity.state === "completed" && current.participants.every((p) => event.activity.participants.some((other) => JSON.stringify(p) === JSON.stringify(other)))) {
+          previouslyTogether = true;
+          break;
+        }
+      }
+      if (current && !previouslyTogether) {
         this.#openScene(world, { kind: "event", cause: "first_together", seq: joined.seq }, current.placeId, `这次有人一起${activityNames[current.kind]}了。等事情做完，小屋会留下这段共同经历。`, out);
         return;
       }
@@ -433,8 +444,11 @@ export class WorldService {
     const activity = world.activities.find((a) => a.id === item.usedBy);
     const resident = world.residents.find((r) => r.agent === agent);
     if (!activity || activity.placeId !== resident?.placeId) return;
-    const origin = [...this.#history(world.id)].find((e) => e.type === "action" && e.activityId === activity.id && e.action.type === "start");
-    if (origin) this.#openScene(world, { kind: "event", cause: "item_contention", seq: origin.seq }, activity.placeId, `${item.label}正有人在用，后来的人需要等一等，或先做别的事。`, out);
+    for (const event of this.#history(world.id)) {
+      if (event.type !== "action" || event.activityId !== activity.id || event.action.type !== "start") continue;
+      this.#openScene(world, { kind: "event", cause: "item_contention", seq: event.seq }, activity.placeId, `${item.label}正有人在用，后来的人需要等一等，或先做别的事。`, out);
+      break;
+    }
   }
   #sceneToday(world: WorldSnapshot, cause: Extract<WorldScene["origin"], { kind: "event" }>["cause"], agent: string): boolean {
     for (const event of this.#history(world.id)) {

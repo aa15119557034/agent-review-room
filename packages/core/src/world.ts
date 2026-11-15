@@ -372,6 +372,19 @@ export function chooseWorldRoutine(
   const actor = residentActor(agent);
   const readingPlace = knownReadingPlace(actor, r.placeId, view?.worldId === world.id && view.agent === agent ? view : undefined, ownEvents);
   const propose = (kind: WorldActivityKind) => routineActivity(world, actor, kind, readingPlace);
+  const chooseNeed = (): WorldAction | null => {
+    if (r.satiety < 50) {
+      if (r.placeId !== "kitchen") return walkToward(world, r.placeId, "kitchen");
+      const eating = propose("eat");
+      if (eating) return eating;
+      const cooking = propose("cook");
+      if (cooking) return cooking;
+      return propose("rest");
+    }
+    const hour = Math.floor((world.now % WORLD_MINUTES_PER_DAY) / 60);
+    if (r.energy < 30 || hour >= 22 || hour < 7) return propose("sleep");
+    return null;
+  };
   const asked = world.commitments.find((c) => c.state === "asked" && sameActor(c.by, actor) && actorState(world, c.to)?.placeId === r.placeId);
   if (asked) {
     const discretionary = !["eat", "rest", "sleep"].includes(asked.activity);
@@ -396,7 +409,8 @@ export function chooseWorldRoutine(
       if (proposed) return proposed;
       return null; // A due promise waits for its resource, rather than starting unrelated work.
     }
-    if (sameActor(agreement.to, actor) && agreement.activityId === null) return null;
+    // Waiting yields to food or sleep, not unrelated leisure activities.
+    if (sameActor(agreement.to, actor) && agreement.activityId === null) return chooseNeed();
     if (sameActor(agreement.to, actor) && agreement.activityId !== null) {
       const activity = world.activities.find((a) => a.id === agreement.activityId);
       if (activity && !activity.participants.some((p) => sameActor(p, actor))) {
@@ -405,16 +419,8 @@ export function chooseWorldRoutine(
       }
     }
   }
-  if (r.satiety < 50) {
-    if (r.placeId !== "kitchen") return walkToward(world, r.placeId, "kitchen");
-    const eating = propose("eat");
-    if (eating) return eating;
-    const cooking = propose("cook");
-    if (cooking) return cooking;
-    return propose("rest");
-  }
-  const hour = Math.floor((world.now % WORLD_MINUTES_PER_DAY) / 60);
-  if (r.energy < 30 || hour >= 22 || hour < 7) return propose("sleep");
+  const need = chooseNeed();
+  if (need) return need;
   const offset = world.residents.findIndex((resident) => resident.agent === agent);
   const dayStart = world.now - world.now % WORLD_MINUTES_PER_DAY;
   // The caller supplies this resident's observed history (at least this day's
@@ -519,6 +525,8 @@ export function updateWorldViews(
   const definitions = new Map([...before.activities, ...after.activities].map((activity) => [activity.id, activity]));
   for (const event of events) if (event.type === "activity_ended") definitions.set(event.activity.id, event.activity);
   for (const event of events) {
+    // Scene history is for replay; physical actions and speech have their own events.
+    if (event.type === "scene") continue;
     const oldPositions = new Map(state.residents.map((r) => [r.agent, r.placeId]));
     applyVisibleEvent(state, event, definitions);
     for (const view of next) {

@@ -7,16 +7,16 @@ import { openDatabase, WriteQueue, ulid } from "@room/db";
 import { ControlEvent, WorldState, type CommandRequest, type WorldPlayerAction } from "@room/schemas";
 import { WorldService } from "../src/main/world";
 
-async function setup() {
+async function setup(residents = ["claude", "codex"]) {
   const dir = mkdtempSync(join(tmpdir(), "room-world-main-"));
   const path = join(dir, "room.db");
   const db = openDatabase(path);
   const queue = new WriteQueue();
   const events: ControlEvent[] = [];
-  const make = () => new WorldService({ db, queue, dbPath: path, emit: (e) => { events.push(ControlEvent.parse(e)); }, knownAgents: () => ["claude", "codex"], now: () => "2026-11-16T00:00:00.000Z" });
+  const make = () => new WorldService({ db, queue, dbPath: path, emit: (e) => { events.push(ControlEvent.parse(e)); }, knownAgents: () => residents, now: () => "2026-11-16T00:00:00.000Z" });
   let service = make();
   await service.start();
-  const reset: CommandRequest<"world.reset"> = { type: "world.reset", requestId: `wact_${ulid()}`, worldId: null, confirm: true, settings: { residents: ["claude", "codex"], dayRealMinutes: 4, dailyCognitionLimit: 0 } };
+  const reset: CommandRequest<"world.reset"> = { type: "world.reset", requestId: `wact_${ulid()}`, worldId: null, confirm: true, settings: { residents, dayRealMinutes: 4, dailyCognitionLimit: 0 } };
   await service.reset(reset);
   return {
     db, queue, events, reset, get service() { return service; },
@@ -143,6 +143,38 @@ test("sleep, large gaps and reopen do not invent elapsed world time; pause persi
     await h.restart();
     assert.deepEqual(h.service.get().world!.run, { state: "paused", by: "user" });
     assert.equal(h.service.get().world!.now, now + 6);
+  } finally { await h.close(); }
+});
+
+test("player scenes include the chosen resident first even with eight residents in the same room", async () => {
+  const agents = Array.from({ length: 8 }, (_, i) => `resident-${i + 1}`);
+  const h = await setup(agents);
+  try {
+    for (const agent of [...agents.slice(4), ...agents.slice(0, 4)]) {
+      const world = h.service.get().world!;
+      assert.ok(world.residents.every((r) => r.placeId === world.player.placeId));
+      const request: CommandRequest<"world.talk"> = { type: "world.talk", actionId: `wact_${ulid()}`, worldId: world.id, generation: world.generation, agent };
+      const opened = await h.service.talk(request);
+      assert.equal(opened.result.accepted, true);
+      assert.deepEqual(opened.scene!.origin, { kind: "player", agent });
+      assert.deepEqual(opened.scene!.residents, [agent, ...agents.filter((other) => other !== agent).slice(0, 3)]);
+      assert.deepEqual(await h.service.talk(request), opened, "the receipt preserves the chosen scene participants");
+      assert.equal((await h.service.close({ type: "world.scene.close", actionId: `wact_${ulid()}`, worldId: world.id, generation: world.generation, sceneId: opened.scene!.id })).result.accepted, true);
+      assert.deepEqual(h.service.scenes(world.id, undefined, 1).items[0]!.residents, opened.scene!.residents);
+    }
+  } finally { await h.close(); }
+});
+
+test("event scenes keep the first four same-room residents in their original order", async () => {
+  const agents = Array.from({ length: 8 }, (_, i) => `resident-${i + 1}`);
+  const h = await setup(agents);
+  try {
+    await h.service.advance(200);
+    const { world, scene } = h.service.get();
+    assert.ok(scene);
+    assert.equal(scene.origin.kind, "event");
+    assert.ok(world!.residents.every((resident) => resident.placeId === scene.placeId));
+    assert.deepEqual(scene.residents, agents.slice(0, 4));
   } finally { await h.close(); }
 });
 
