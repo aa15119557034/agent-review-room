@@ -166,9 +166,10 @@ test("commitment: an invite waits as 'asked' before it is a promise; budget is k
 
 test("reset needs explicit confirm; residents can change only through reset", () => {
   const settings = { dayRealMinutes: 24, dailyCognitionLimit: 60, residents: ["claude", "codex"] };
-  assert.equal(WorldResetRequest.safeParse({ type: "world.reset", worldId: null, confirm: true, settings }).success, true);
-  assert.equal(WorldResetRequest.safeParse({ type: "world.reset", worldId: null, confirm: false }).success, false);
-  assert.equal(WorldResetRequest.safeParse({ type: "world.reset", worldId: null }).success, false);
+  assert.equal(WorldResetRequest.safeParse({ type: "world.reset", requestId: `wact_${U}`, worldId: null, confirm: true, settings }).success, true);
+  assert.equal(WorldResetRequest.safeParse({ type: "world.reset", requestId: `wact_${U}`, worldId: null, confirm: false }).success, false);
+  assert.equal(WorldResetRequest.safeParse({ type: "world.reset", requestId: `wact_${U}`, worldId: null }).success, false);
+  assert.equal(WorldResetRequest.safeParse({ type: "world.reset", worldId: null, confirm: true }).success, false, "a reset must be retry-safe");
   assert.equal(WorldSettingsSaveRequest.safeParse({ type: "world.settings.save", settings }).success, false);
   assert.equal(WorldSettingsSaveRequest.safeParse({ type: "world.settings.save", settings: { dayRealMinutes: 24, dailyCognitionLimit: 0 } }).success, true);
 });

@@ -236,7 +236,11 @@ export type WorldActionResult = z.infer<typeof WorldActionResult>;
  * 状态数、熟悉度、约定、物品数量都必须能从事件重新算出来。
  *
  * - action：一个动作被接受并生效（拒绝的动作不进事件，只回给发起者）
- * - activity_ended：活动结算（produced：产出了什么，比如几份饭）
+ * - activity_ended：活动结算，每个活动只有一条。produced：产出了什么（几份饭）；consumed：**整段活动一共用掉了多少**，
+ *   只在这里记一次。开始活动时材料只是「占用」（快照里的数量先减掉，别人用不了），不另记扣减事件；
+ *   结束时按 consumed 结算，占用多于实际用掉的（比如中途取消）退回去。
+ *   所以任何时刻：数量 = 开局数量 + 所有 produced − 所有 consumed − 进行中活动的占用（占用多少由活动种类和 rulesVersion 决定）。
+ *   一局的 rulesVersion 不变，开局内容可恢复，这样才能从事件重算。
  * - said：有人在某个地点说了一句话。text 是台词原文，**不是事实**：别人听到只算「听说」
  * - clock：到了作息点 / 新的一天，供回顾和界面用
  * - scene：场景的开场、选择（包括「不管」这种不带动作的）、结束。回看靠它，不靠界面自己记
@@ -545,10 +549,21 @@ export const WorldPauseRequest = z.object({ type: z.literal("world.pause"), worl
 export const WorldResumeRequest = z.object({ type: z.literal("world.resume"), worldId: WorldId }).strict();
 /**
  * 重置 = 开新的一局：新的 WorldId、新的会话，事件序号从 1 开始。旧一局的事件、观察、活动、约定、熟悉度都留在旧 id 下，不进新一局。
- * confirm 必须是 true（界面要先问一次）。settings 不给就沿用现在的
+ * confirm 必须是 true（界面要先问一次）。settings 不给就沿用现在的。
+ *
+ * 重试语义，main 按这个顺序判断：
+ * 1. requestId 有回执 → 原样返回那次的结果（哪怕现在的局已经不是它建的那一局）
+ * 2. 没有回执，worldId 和当前这一局对不上（包括：以为没有世界但其实有）→ invalid_state，什么都不改
+ * 3. 否则开新的一局，并把回执和新世界在同一个事务里存下
  */
 export const WorldResetRequest = z.object({
-  type: z.literal("world.reset"), worldId: WorldId.nullable(), confirm: z.literal(true), settings: WorldSettings.optional(),
+  type: z.literal("world.reset"),
+  /** 这次重置的请求 id，renderer 生成。同一个 id 重发（响应丢了重试）返回第一次的结果，不会再重置一次；回执要落盘 */
+  requestId: WorldActionId,
+  /** 你以为现在是哪一局：要替换的那一局的 id；还没开过世界（第一次开始）是 null */
+  worldId: WorldId.nullable(),
+  confirm: z.literal(true),
+  settings: WorldSettings.optional(),
 }).strict();
 export const WorldSettingsSaveRequest = z.object({
   type: z.literal("world.settings.save"),
