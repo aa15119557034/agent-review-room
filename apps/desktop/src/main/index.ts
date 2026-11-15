@@ -389,21 +389,22 @@ async function bootstrap(): Promise<void> {
   if (!cliRequested) await chat.repairPendingImmersive();
 
   const world = new WorldService({ db, queue, emit: broadcast, knownAgents: () => repo.listAgents().map((agent) => agent.id), agentName: (id) => repo.listAgents().find((agent) => agent.id === id)?.displayName ?? id, dbPath: join(userData, "room.db") });
+  let worldReady = false;
   let shuttingDown = false, shutdownComplete = false, suspended = false, switching = false, clockFailed = false, maintenanceCount = 0;
   let suspendWork: Promise<void> = Promise.resolve();
-  const canRunClock = () => !cliRequested && !shuttingDown && !suspended && !switching && !clockFailed && maintenanceCount === 0;
+  const canRunClock = () => worldReady && !cliRequested && !shuttingDown && !suspended && !switching && !clockFailed && maintenanceCount === 0;
   const worldClock = new WorldClock({
     advance: (elapsedMs) => world.advance(elapsedMs),
     onDiscontinuity: async () => {
       // A long event-loop gap invalidates in-flight work without creating a
       // second physical-suspend flag that could outlive a concurrent backup.
-      if (!shuttingDown && !switching) await world.maintenance(async () => undefined);
+      if (worldReady && !shuttingDown && !switching) await world.maintenance(async () => undefined);
     },
     onError: (error) => {
       clockFailed = true;
       console.error("[world] 时间推进失败，正在尝试暂停：", error);
       void (async () => {
-        if (shuttingDown || switching) return;
+        if (!worldReady || shuttingDown || switching) return;
         const current = world.get().world;
         if (current === null) throw new Error("没有可暂停的世界");
         // A recoverable tick failure is a visible pause, not a physical sleep:
@@ -417,7 +418,10 @@ async function bootstrap(): Promise<void> {
       });
     },
   });
-  if (!cliRequested) await world.start();
+  if (!cliRequested) {
+    try { await world.start(); worldReady = true; }
+    catch (error) { console.error("[world] 启动失败，世界暂不可用；聊天与资料功能继续启动：", error); }
+  }
   const withWorldMaintenance = async <T>(work: () => Promise<T>): Promise<T> => {
     maintenanceCount++;
     const stopped = worldClock.stop();
@@ -441,12 +445,14 @@ async function bootstrap(): Promise<void> {
     }
   };
   const onSuspend = () => {
+    if (!worldReady) return;
     suspended = true;
     const stopped = worldClock.stop();
     suspendWork = world.suspend().then(() => stopped);
     void suspendWork.catch((error: unknown) => console.error("[world] 休眠暂停失败：", error));
   };
   const onResume = () => {
+    if (!worldReady) return;
     suspended = false;
     void suspendWork.then(async () => {
       if (shuttingDown || switching || suspended) return;
@@ -457,8 +463,9 @@ async function bootstrap(): Promise<void> {
 
   const workspace = new WorkspaceService({
     db, queue, userData, version: app.getVersion(), revision: process.env["ROOM_BUILD_SHA"] ?? "development",
-    withWorldMaintenance,
-    withWorldSwitch,
+    // A failed world startup owns no scheduler or lock. Keep the workspace's
+    // normal queue/idle checks; do not pretend to pause another instance.
+    ...(worldReady ? { withWorldMaintenance, withWorldSwitch } : {}),
     confirmSwitch: async (target) => (await dialog.showMessageBox({type:"question",buttons:["取消","切换并重启"],defaultId:0,cancelId:0,title:"切换资料",message:target?"将打开恢复副本，原资料继续保留。节点凭据和本机媒体配置需要重新配置。":"将切回原资料目录，恢复副本继续保留。"})).response===1,
     activateDirectory: (target) => {
       if(target===null){rmSync(dataLocationFile,{force:true});}
@@ -574,7 +581,7 @@ async function bootstrap(): Promise<void> {
   createWindow();
   powerMonitor.on("suspend", onSuspend);
   powerMonitor.on("resume", onResume);
-  worldClock.start();
+  if (canRunClock()) worldClock.start();
 }
 
 if (!isPrimaryInstance) {
