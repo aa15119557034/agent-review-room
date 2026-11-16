@@ -16,7 +16,7 @@ import {
 import { APP_DISPLAY_NAME, type AppEntry } from "./shell-policy";
 import { DEFAULT_WINDOW_SIZE, MIN_WINDOW_SIZE } from "./window-state";
 import { dirname, join, isAbsolute } from "node:path";
-import { openDatabase, repairInterruptedRuns, WriteQueue } from "@room/db";
+import { openDatabase, repairInterruptedRuns, WorldBudgetStore, WriteQueue } from "@room/db";
 import { HttpRemoteAgentAdapter } from "@room/remote-client";
 import { IMAGE_URL_SCHEME, AUDIO_URL_SCHEME, IPC_CHANNELS, type ControlEvent } from "@room/schemas";
 import { ChatService } from "./chat";
@@ -42,6 +42,9 @@ import { runCliIfRequested } from "./cli";
 import { bundledTtsConfig, findTtsBundle } from "./tts-paths";
 import { WorldService } from "./world";
 import { WorldClock } from "./world-clock";
+import { WorldCognitionRunner } from "./world-cognition";
+import { resolveWorldFence, resolveWorldNode, worldNodeConfigured } from "./world-node";
+import { WorldRunFenceBarrier, WorldRunNotStoppedError } from "./world-run-fence";
 
 /**
  * Electron 主进程入口（D-07）。
@@ -283,6 +286,22 @@ async function bootstrap(): Promise<void> {
   // 旧设置里的 Reviewer 节点 -> user-pc（幂等）：多节点有了 Token 存储，单次评审照旧
   migrateLegacyReviewerNode(db, settings);
 
+  // Keep model usage and unresolved dispatches outside active-data / room.db
+  // restores. An unreadable sidecar closes model admission, not the rule world.
+  let shuttingDown = false;
+  let worldBudget: WorldBudgetStore | null = null, worldBudgetError: unknown;
+  if (!cliRequested) {
+    try { worldBudget = new WorldBudgetStore(join(defaultDataDirectory, "world-usage.sqlite")); }
+    catch (error) { worldBudgetError = error; console.error("[world] 模型账本不可用，模型入口保持关闭：", error); }
+  }
+  const worldFence = worldBudget ? new WorldRunFenceBarrier({ budget: worldBudget, resolve: binding => resolveWorldFence({ settings }, binding) }) : null;
+  let worldRunner: WorldCognitionRunner | null = null;
+  const beforeForegroundModel = async () => {
+    if (shuttingDown || !worldRunner) throw new WorldRunNotStoppedError(worldBudgetError);
+    await worldRunner.yieldToForeground();
+    if (shuttingDown) throw new WorldRunNotStoppedError();
+  };
+
   let discussion: DiscussionService | null = null;
 
   // C-46 / D-46a：项目笔记（存版本 + 从回答里切 room-note + 拼 Prompt 用）
@@ -305,6 +324,7 @@ async function bootstrap(): Promise<void> {
     // 讨论室的收尾要推 message.created / turn.updated / round.updated …，交给 DiscussionService
     onDiscussionSettled: (settlement) => discussion?.settled(settlement),
     adapterFactory: async (run) => {
+      await beforeForegroundModel();
       // 讨论室：agent -> node -> 地址与 Token；Phase 0 的评审 Run 沿用原来的 Reviewer 设置
       // C-40 的 model 也在 target 里：和 e2e harness 共用 nodes.ts 的同一份查询
       const target = resolveRunTarget(db, settings, run);
@@ -371,6 +391,7 @@ async function bootstrap(): Promise<void> {
       await jobs.play(source, { authorization: "reply_as_voice" });
     },
     adapterFactory: async (target) => {
+      await beforeForegroundModel();
       const adapter = new HttpRemoteAgentAdapter({
         nodeId: target.nodeId,
         baseUrl: target.baseUrl,
@@ -385,12 +406,23 @@ async function bootstrap(): Promise<void> {
       return adapter;
     },
   });
+  if (worldBudget && worldFence) worldRunner = new WorldCognitionRunner({
+    budget: worldBudget, fence: worldFence,
+    resolve: (agent, signal) => resolveWorldNode({ repo, settings }, agent, signal),
+    foregroundBusy: () => shuttingDown || orchestrator.activeCount() > 0 || chat.activeCount() > 0,
+    emitBudget: () => { if (worldReady) broadcast({ type: "world.budget.updated", budgets: world.get().budgets }); },
+  });
   const repairedChat = cliRequested ? 0 : await chat.repairInterrupted();
   if (!cliRequested) await chat.repairPendingImmersive();
 
-  const world = new WorldService({ db, queue, emit: broadcast, knownAgents: () => repo.listAgents().map((agent) => agent.id), agentName: (id) => repo.listAgents().find((agent) => agent.id === id)?.displayName ?? id, dbPath: join(userData, "room.db") });
+  const world = new WorldService({ db, queue, emit: broadcast, knownAgents: () => repo.listAgents().map((agent) => agent.id), agentName: (id) => repo.listAgents().find((agent) => agent.id === id)?.displayName ?? id, dbPath: join(userData, "room.db"),
+    ...(worldRunner && worldBudget ? { cognition: { runner: worldRunner, budget: worldBudget,
+      persona: (agent: string) => repo.listAgents().find(value => value.id === agent)?.chatPersona ?? "",
+      isConfigured: (agent: string) => worldNodeConfigured({repo,settings}, agent),
+    } } : {}),
+  });
   let worldReady = false;
-  let shuttingDown = false, shutdownComplete = false, suspended = false, switching = false, clockFailed = false, maintenanceCount = 0;
+  let shutdownComplete = false, suspended = false, switching = false, clockFailed = false, maintenanceCount = 0;
   let suspendWork: Promise<void> = Promise.resolve();
   const canRunClock = () => worldReady && !cliRequested && !shuttingDown && !suspended && !switching && !clockFailed && maintenanceCount === 0;
   const worldClock = new WorldClock({
@@ -540,9 +572,10 @@ async function bootstrap(): Promise<void> {
     ttsRunner?.dispose();
     // D-34b：转写 sidecar 是独立进程，退出时一起收掉
     voice.dispose();
-    void Promise.allSettled([clockStopped, worldStopped, suspendWork]).then(async (results) => {
+    void Promise.allSettled([clockStopped, worldStopped, suspendWork, worldFence?.settle()]).then(async (results) => {
       for (const result of results) if (result.status === "rejected") console.error("[world] 退出收尾失败：", result.reason);
       await queue.drain();
+      worldBudget?.close();
       db.close();
     }).catch((error: unknown) => console.error("[shutdown] 关闭数据库失败：", error)).finally(() => {
       shutdownComplete = true;

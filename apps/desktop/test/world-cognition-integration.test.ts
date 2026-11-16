@@ -9,6 +9,7 @@ import { acquireWorldLock, openDatabase, ulid, WorldBudgetStore, WorldStore, Wri
 import { ControlEvent, REMOTE_PROTOCOL_VERSION, type AgentEvent, type WorldCognitionReply, type WorldSnapshot } from "@room/schemas";
 import { WorldCognitionRunner, type WorldCognitionRequest } from "../src/main/world-cognition";
 import { WorldService } from "../src/main/world";
+import { WorldRunFenceBarrier } from "../src/main/world-run-fence";
 
 const date = new Date(2026, 10, 16, 12);
 const greet: WorldCognitionReply = { say: { intent: { kind: "greet" }, tone: "warm", expression: "happy", chat: null }, propose: null };
@@ -28,7 +29,12 @@ async function until(check: () => boolean) {
 class ControlledAdapter implements RemoteAgentAdapter {
   readonly id = "world-integration";
   readonly kind = "remote" as const;
-  readonly node = { nodeId: "fake", baseUrl: "http://127.0.0.1", profileId: "test-chat", heartbeatTimeoutMs: 500, reconnectGraceMs: 1000, requestTimeoutMs: 1000 };
+  readonly node = { nodeId: "fake", baseUrl: "http://127.0.0.1", profileId: "test-world", expectedLedgerId: "rled_" + "0".repeat(26), expectedWorldProfile: {sourceChatProfileId:"test-chat",recipeVersion:"deepseek-http-v1"}, heartbeatTimeoutMs: 500, reconnectGraceMs: 1000, requestTimeoutMs: 1000 };
+  readonly fenced = new Set<string>();
+  readonly runFence = { ledgerId: this.node.expectedLedgerId,
+    cancel: async (id:string) => { if (!this.runs.some(run=>run.runId===id)) this.fenced.add(id); },
+    proof: async (id:string) => ({runId:id,ledgerId:this.node.expectedLedgerId,status:this.fenced.has(id)?"fenced_never_started" as const:id===this.active?"unconfirmed" as const:this.runs.some(run=>run.runId===id)?"closed_process" as const:"missing" as const}),
+  };
   readonly runs: { runId: string; input: AgentInput; options: RunOptions; answer: (reply: WorldCognitionReply | null) => void }[] = [];
   active: string | null = null;
   remoteStillActive = false;
@@ -75,7 +81,8 @@ async function fixture(residents = ["claude", "codex"], limit = 60) {
   const state = { mono: 0, configured: true, foreground: false, date, resolveGate: undefined as Promise<void> | undefined };
   const runner = new WorldCognitionRunner({
     budget, now: () => state.date, foregroundBusy: () => state.foreground,
-    resolve: async () => { await state.resolveGate; return adapter; }, emitBudget: () => {},
+    fence: new WorldRunFenceBarrier({budget,timeoutMs:80,resolve:()=>adapter.runFence}),
+    resolve: async () => { await state.resolveGate; return {adapter,isCurrent:()=>true,binding:{nodeId:adapter.node.nodeId,baseUrl:adapter.node.baseUrl,profileId:adapter.node.profileId,ledgerId:adapter.node.expectedLedgerId,worldProfile:adapter.node.expectedWorldProfile,model:{model:"fixture",effort:null}}}; }, emitBudget: () => {},
   });
   const world = new WorldService({
     db, queue, dbPath, knownAgents: () => residents, now: () => state.date.toISOString(), emit: (event) => events.push(ControlEvent.parse(event)),
@@ -599,19 +606,26 @@ test("ledger write failure blocks dispatch and pauses; an explicit recovery does
   } finally { ledger.close(); await h.close(); }
 });
 
-test("an unconfirmed remote Run prevents maintenance and releasing the world lock", async () => {
+test("an unresolved remote Run blocks models while rule-world maintenance and restart preserve the sidecar", async () => {
   const h = await fixture();
   try {
     await h.talk(); await until(() => h.adapter.runs.length === 1);
     h.adapter.remoteStillActive = true;
     h.runner.cancel();
-    await until(() => h.world.get().world!.run.state === "paused");
+    await h.settle();
+    assert.equal(h.world.get().world!.run.state, "running");
+    const before = h.world.get().world!.now;
+    await h.world.advance(1000);
+    assert.ok(h.world.get().world!.now > before, "rules continue without model admission");
+    await assert.rejects(h.runner.yieldToForeground(), /尚未确认停止/);
+    assert.equal(h.budget.pending().length, 1);
     let entered = false;
-    await assert.rejects(h.world.maintenance(async () => { entered = true; }), /尚未确认停止/);
-    assert.equal(entered, false);
-    assert.equal(h.world.get().world!.run.state, "paused");
-    await assert.rejects(h.world.stop(), /尚未确认停止/);
-    assert.throws(() => acquireWorldLock(h.dbPath));
+    await h.world.maintenance(async () => { entered = true; });
+    assert.equal(entered, true);
+    await h.world.stop();
+    const release = acquireWorldLock(h.dbPath); release();
+    const reopened = new WorldBudgetStore(h.budgetPath);
+    try { assert.equal(reopened.pending().length, 1); } finally { reopened.close(); }
     assert.equal(h.adapter.runs.length, 1);
   } finally { await h.close(); }
 });
