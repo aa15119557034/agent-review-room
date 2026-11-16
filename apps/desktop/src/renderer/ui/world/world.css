@@ -915,6 +915,16 @@
   padding: 18px 20px 14px;
 }
 
+/* 两三句长台词也不能把立绘那一行挤没：台词有高度上限，超出在框里滚动（名字牌在框外沿，所以滚动的是里面这层） */
+.scene-lines {
+  display: grid;
+  gap: 4px;
+  max-height: clamp(4rem, 26vh, 11rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
 .scene-speaker {
   position: absolute;
   top: -12px;
@@ -939,6 +949,15 @@
 
 .scene-text + .scene-text {
   margin-top: 0.35em;
+}
+
+.scene-text[data-narration] {
+  color: var(--ink-soft);
+  font-size: 0.92em;
+}
+
+.scene-text-who {
+  font-weight: 600;
 }
 
 .scene-waiting {

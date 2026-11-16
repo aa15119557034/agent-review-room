@@ -284,7 +284,7 @@ describe("世界：演示后台按契约走", () => {
     const t = await opened();
     await t.advance(120);
     const old = t.snap().id;
-    await t.actions.world.reset();
+    await t.actions.world.reset(t.w().settings!.residents);
     await tick();
     assert.notEqual(t.snap().id, old);
     assert.equal(t.snap().lastSeq, 1);
@@ -410,12 +410,12 @@ describe("世界：演示后台按契约走", () => {
 });
 
 describe("世界：还没配置秘书时后台不给设置（C-59）", () => {
-  it("settings 是 null：不带入住人选开始不了；带上人选就用契约默认值开局", async () => {
+  it("settings 是 null：没有入住人选开始不了；带上人选就用契约默认值开局", async () => {
     const t = setup({ seed: false });
     await t.actions.world.load();
     t.store.set((s) => ({ ...s, world: { ...s.world, settings: null } }));
-    await t.actions.world.reset();
-    assert.equal(t.w().world, null, "没有人选、也没有设置：什么都不发");
+    await t.actions.world.reset([]);
+    assert.equal(t.w().world, null, "没有人选：什么都不发");
     await t.actions.world.start(["claude"]);
     assert.deepEqual(t.snap().residents.map((r) => r.agent), ["claude"]);
     assert.equal(t.w().settings?.dayRealMinutes, WORLD_DAY_REAL_MINUTES_DEFAULT);
@@ -515,7 +515,7 @@ describe("世界：旧请求的回应晚到（林离 #230 第一轮）", () => {
     t.hold("world.act");
     const walking = t.actions.world.goTo("room_1"); // 厨房 → 客厅 → 房间，两步
     await tick();
-    await t.actions.world.reset();
+    await t.actions.world.reset(t.w().settings!.residents);
     await tick();
     assert.notEqual(t.snap().id, old);
     await t.release("world.act");
@@ -529,7 +529,7 @@ describe("世界：旧请求的回应晚到（林离 #230 第一轮）", () => {
   it("重置的回应晚到、同一局已经换了会话（恢复 / 重开）：不把会话退回去", async () => {
     const t = await opened();
     t.hold("world.reset");
-    const resetting = t.actions.world.reset();
+    const resetting = t.actions.world.reset(t.w().settings!.residents);
     await tick();
     const b = t.snap(); // 新的一局 B 靠推送到了，会话是重置时那个
     // 同一局 B 换了会话的快照来了（恢复备份、重开）
@@ -586,15 +586,50 @@ describe("世界：旧请求的回应晚到（林离 #230 第一轮）", () => {
     assert.ok(later.world!.places.filter((p) => p.owner !== null).every((p) => p.neighbors.join() === "living_room"));
   });
 
-  it("对话框：闲聊句和紧跟的事实句一起显示，其余只显示最后一句", () => {
-    const she = { kind: "resident" as const, agent: "claude" }, other = { kind: "resident" as const, agent: "codex" };
+  it("对话框：一次更新带来的几句一起显示（闲聊、事实句、没做成的说明），不和之前的拼在一起", () => {
+    const she = { kind: "resident" as const, agent: "claude" };
     const l = (speaker: WorldScene["lines"][number]["speaker"], source: WorldScene["lines"][number]["source"], text: string) => ({ speaker, source, text, expression: "neutral" as const, seq: null });
-    const chat = l(she, "chat", "你来啦"), fact = l(she, "model", "我在做饭"), narration = l(null, "rule", "厨房里很香");
-    assert.deepEqual(currentLines({ lines: [] }), []);
-    assert.deepEqual(currentLines({ lines: [narration, chat, fact] }), [chat, fact]);
-    assert.deepEqual(currentLines({ lines: [fact, chat] }), [chat], "只闲聊");
-    assert.deepEqual(currentLines({ lines: [chat, l(other, "model", "我在看书")] }), [l(other, "model", "我在看书")], "不是同一个人不并");
-    assert.deepEqual(currentLines({ lines: [fact, fact] }), [fact]);
-    assert.deepEqual(currentLines({ lines: [chat, narration] }), [narration]);
+    const chat = l(she, "chat", "你来啦"), fact = l(she, "model", "我精神还不错"), denied = l(null, "rule", "这次提议未执行"), you = l({ kind: "player" }, "user", "在吗");
+    assert.deepEqual(currentLines({ lines: [] }, 0), []);
+    assert.deepEqual(currentLines({ lines: [you, chat, fact, denied] }, 1), [chat, fact, denied]);
+    assert.deepEqual(currentLines({ lines: [chat, fact, denied] }, 2), [denied], "后来单独来的旁白不和旧回话拼");
+    assert.deepEqual(currentLines({ lines: [you, chat, fact, denied, denied] }, 0), [fact, denied, denied], "最多三句");
+    assert.deepEqual(currentLines({ lines: [chat, fact] }, 9), [fact], "起点越界时至少显示最后一句");
+
+    // 走真的状态：开场、她一次回三句、之后单独来一句旁白
+    return (async () => {
+      const t = await opened();
+      for (let i = 0; i < 40 && !t.snap().activities.some((a) => a.kind === "cook"); i++) await t.advance(1);
+      const chef = t.snap().activities.find((a) => a.kind === "cook")!.participants[0]!;
+      assert.ok(chef.kind === "resident");
+      await t.actions.world.goTo("kitchen");
+      assert.equal(await t.actions.world.talk(chef.agent), true);
+      const first = t.w().scene!;
+      assert.equal(t.w().sceneFrom, 0);
+      assert.deepEqual(currentLines(first, t.w().sceneFrom).map((x) => x.source), ["chat", "model"]);
+      const reply = { ...first, lines: [...first.lines, chat, fact, denied] };
+      const after = applyScene(t.w(), reply);
+      assert.equal(after.sceneFrom, first.lines.length);
+      assert.deepEqual(currentLines(after.scene!, after.sceneFrom), [chat, fact, denied]);
+      const same = applyScene(after, { ...reply, state: "open" });
+      assert.equal(same.sceneFrom, after.sceneFrom, "句数没变不挪起点");
+      const next = applyScene(after, { ...reply, lines: [...reply.lines, denied] });
+      assert.deepEqual(currentLines(next.scene!, next.sceneFrom), [denied]);
+      // 整份重读回来、之前手里没有的场景：只显示最后一句
+      const reread = applyWorldState({ ...t.w(), scene: null }, { world: { ...t.snap(), asOf: new Date(Date.parse(t.snap().asOf) + 1000).toISOString() }, scene: reply, settings: t.w().settings, budgets: [] });
+      assert.equal(reread.scene?.id, reply.id);
+      assert.deepEqual(currentLines(reread.scene!, reread.sceneFrom), [denied]);
+    })();
+  });
+
+  it("重新开始总是带上选好的名单（旧的 8 位名单不能靠省略沿用）", async () => {
+    const t = await opened();
+    const sent: unknown[] = [];
+    const inner = t.client.command.bind(t.client);
+    t.client.command = ((req: { type: string }) => { if (req.type === "world.reset") sent.push(req); return inner(req as never); }) as typeof t.client.command;
+    const who = t.w().settings!.residents.slice(0, 1);
+    await t.actions.world.reset(who);
+    assert.deepEqual((sent[0] as { settings: { residents: string[] } }).settings.residents, who);
+    assert.deepEqual(t.snap().residents.map((r) => r.agent), who);
   });
 });
