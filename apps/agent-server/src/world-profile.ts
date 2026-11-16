@@ -47,7 +47,8 @@ function construct(source: Profile, fenceDir: string): { profile: Profile; sourc
     const args = buildArgs(source), first = args.shift();
     if (!first || first.startsWith("-")) return null;
     const script = realpathSync.native(isAbsolute(first) ? first : resolve(source.cwd, first));
-    if (createHash("sha256").update(readFileSync(script, "utf8").replace(/\r\n/g, "\n")).digest("hex") !== SCRIPT_SHA256) return null;
+    const auditedSource = readFileSync(script, "utf8").replace(/\r\n/g, "\n");
+    if (createHash("sha256").update(auditedSource).digest("hex") !== SCRIPT_SHA256) return null;
     const options = new Map<string, string>();
     if (args.length % 2) return null;
     for (let i = 0; i < args.length; i += 2) {
@@ -79,7 +80,10 @@ function construct(source: Profile, fenceDir: string): { profile: Profile; sourc
     try { mkdirSync(cwd); } catch (error) { if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error; }
     if (lstatSync(cwd).isSymbolicLink() || realpathSync.native(cwd) !== cwd || readdirSync(cwd).length !== 0) return null;
     const profile: Profile = {
-      command: realpathSync.native(process.execPath), args: [script, "--base-url", endpoint, "--max-tokens", maxTokens], cwd,
+      // Execute the bytes that passed review, not a mutable path re-opened by
+      // Node after ledger admission. The fixed argv[1] preserves slice(2), while
+      // stdin still carries only the current Prompt. No shell is involved.
+      command: realpathSync.native(process.execPath), args: ["--input-type=module", "--eval", auditedSource, "--", "world-fixed-recipe", "--base-url", endpoint, "--max-tokens", maxTokens], cwd,
       envAllowlist: [...SYSTEM_ENV, ...(source.envAllowlist.includes(key) ? [key] : [])],
       env: source.env[key] === undefined ? {} : { [key]: source.env[key] },
       envFiles: source.envFiles[key] === undefined ? {} : { [key]: source.envFiles[key] },

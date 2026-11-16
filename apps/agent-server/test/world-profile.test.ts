@@ -43,7 +43,7 @@ test("fixed recipe preserves source defaults and isolates process environment/cw
   const result = worldProfiles(cfg).get(mapping.profileId)!;
   assert.deepEqual(result.capability, { ...mapping, sourceDefaultModel: model });
   assert.equal(result.profile.command, fs.realpathSync.native(process.execPath));
-  assert.deepEqual(result.profile.args, [fs.realpathSync.native(script), "--base-url", "http://127.0.0.1:1", "--max-tokens", "2048"]);
+  assert.deepEqual(result.profile.args, ["--input-type=module", "--eval", fs.readFileSync(script, "utf8").replace(/\r\n/g, "\n"), "--", "world-fixed-recipe", "--base-url", "http://127.0.0.1:1", "--max-tokens", "2048"]);
   assert.equal(result.profile.memory, undefined); assert.equal(result.profile.images, undefined);
   assert.deepEqual(result.profile.env, {}); assert.deepEqual(result.profile.envFiles, { DEEPSEEK_API_KEY: join(root, "key-fixture") });
   assert.deepEqual(fs.readdirSync(result.profile.cwd), []);
@@ -113,7 +113,7 @@ async function fixture(t: TestContext) {
     expectedLedgerId: ledger.ledgerId, expectedWorldProfile: { sourceChatProfileId: mapping.sourceChatProfileId, recipeVersion: mapping.recipeVersion },
     snapshot: { id: "snap_" + String(n).padStart(26, "0"), content, contentHash: digest(content) }, limits: { idleTimeoutMs: 2000, totalTimeoutMs: 5000 } });
   async function completed(n: number) { const until = Date.now() + 5000; while (Date.now() < until) { const p = RemoteRunProof.parse((await request(`/v1/runs/${id(n)}/proof`)).body); if (p.status === "closed_process") return; await delay(10); } throw new Error("child did not close"); }
-  return { root, cfg, request, body, completed, requests, get ledgerId() { return ledger.ledgerId; }, reopen: async () => { await app.close(); ledger = await RunLedger.open(ledgerDir); app = createAgentServer(cfg, token, undefined, { ledger }); await listen(); } };
+  return { root, cfg, request, body, completed, requests, get ledger() { return ledger; }, get ledgerId() { return ledger.ledgerId; }, reopen: async () => { await app.close(); ledger = await RunLedger.open(ledgerDir); app = createAgentServer(cfg, token, undefined, { ledger }); await listen(); } };
 }
 
 test("real fixed child sends only current persona and the selected same model to fake provider", windows, async t => {
@@ -147,6 +147,25 @@ test("world target requires every binding and rejects extra context without spaw
   assert.equal((await h.request("/v1/runs", { ...h.body(1), profileId: "ordinary" })).body.error, "world_profile_mismatch");
   assert.equal(h.requests.length, 0);
   assert.equal((await h.request(`/v1/runs/${id(1)}/proof`)).body.status, "missing");
+});
+
+test("filesystem replacement after admission cannot change the verified child code", windows, async t => {
+  const h = await fixture(t), copy = join(h.root, "audited-copy.mjs"), marker = join(h.root, "unreviewed-code-ran");
+  fs.copyFileSync(script, copy);
+  h.cfg.profiles["deepseek-chat"]!.args[0] = copy;
+  const admit = h.ledger.admit.bind(h.ledger);
+  h.ledger.admit = (runId, hash) => {
+    admit(runId, hash);
+    // Model an independent deployment rewriting the source between the final
+    // check and Node opening its entry point. Never modify the repository file.
+    fs.writeFileSync(copy, "import { writeFileSync } from 'node:fs'; writeFileSync(" + JSON.stringify(marker) + ", 'unreviewed'); process.stdin.resume();");
+  };
+  assert.equal((await h.request("/v1/runs", h.body(1, "verified-byte-positive-control"))).status, 202);
+  await h.completed(1);
+  assert.equal(fs.existsSync(marker), false);
+  assert.equal(h.requests.length, 1, "the audited code must still execute, not merely suppress every run");
+  assert.deepEqual(h.requests[0]!.body, { model: model.model, reasoning_effort: model.effort, messages: [{ role: "user", content: "verified-byte-positive-control" }], stream: true, max_tokens: 2048 });
+  assert.equal(NodeHealth.parse((await h.request("/v1/health")).body).capabilities?.worldProfiles?.length ?? 0, 0, "later admission rejects the now changed source file");
 });
 
 test("same-ledger restart with ordinary replacement rejects the old world expectation", windows, async t => {

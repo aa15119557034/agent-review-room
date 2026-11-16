@@ -21,6 +21,7 @@
 ## 固定边界
 
 - 只接受与当前节点自身相同的直接 Node 可执行文件，及 LF 规范化 SHA-256 为 `6902836a665c878cc6adbab8f3937c78c04f71953838ab5f852ca58d9b581814` 的已审 bundled deepseek-chat.mjs。CRLF 与 LF 等价，其他脚本修改必须另行验证；不接受 cmd/npm 包装或 Node 启动参数。
+- target 将这次读取并校验过的脚本字节直接作为 Node `--input-type=module --eval` 参数执行；`--` 后固定 argv 占位保持原脚本 slice(2) 语义，stdin 仍只有当前 Prompt。子进程不会再次打开可能已被更新的脚本路径。执行经 argv 传递，无 shell 拼接。
 - source 有明确非空模型目录，modelArgs/effortArgs 只有固定替换；逐一核对实际参数顺序确实执行每个声明选择。比如 model-args 标记之后仍有固定模型覆盖时，不能冒充所选模型。隐式默认 effort 未明确核实就报告 null。
 - target 从固定字段构造，不复制 source 的通用命令参数、个人目录、记忆、图片、quota、resume 或任意环境。只保留必要系统环境及 source 的 DEEPSEEK_API_KEY 读取方式/优先级。声明 Node preload 等变量的 source 不生成能力。
 - endpoint 沿用 source，禁止 URL 内嵌凭据、查询串及片段；HTTPS 或本机 loopback HTTP。max-tokens 保留 source 的 1–8192 有界值，未设时为 2048；超出范围不生成能力。目标执行超时上限不超过 120 秒。
@@ -44,3 +45,5 @@ dist/agent-server.mjs 432.1kb / exit 0
 新增 24 项覆盖 wrapper/preload/改变脚本、参数顺序、目录诱饵、错误映射/recipe、缺绑定和额外上下文。两个真实 Node 子进程向本机假供应商分别发送 persona-1/persona-2，每个请求只有当前一条 user 消息和相同选定模型/effort；source 的工程/记忆/环境诱饵及父进程 NODE_OPTIONS 未混入执行。返回 tool_calls 不触发本地执行。相同 ledger 重启、把旧 target 换成普通 profile 后，旧请求返回 409 且供应商调用 0。
 
 另用实际 dist/agent-server.mjs 从临时配置启动独立节点：health 映射正确，1 次真实子进程调用本机假供应商成功，proof 为 closed_process。未调用真实 DeepSeek、Claude 或 Codex 供应商；桌面持久绑定、全局屏障与真实模型质量仍是后续验收。
+
+独立审查在 `ef942e9` 复现准入后文件更新竞态：先校验脚本 SHA，后按同一路径启动仍可能执行新文件。改为执行已经校验的字节后，原反例原样运行 1/1 通过，marker 不再生成；新回归同时确认旧审计代码确实向本机 provider 发出当前 Prompt/原模型/effort，防止仅因全部执行失败而误报。修后完整节点套件 244/244、节点类型检查 exit 0、打包 exit 0；实际 dist 节点再次取得 1 次受控 provider 请求和 `closed_process`。等待独立固定提交复审。
