@@ -3,7 +3,8 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
-import { currentVersion, LATEST_SCHEMA_VERSION, openDatabase } from "../src/index";
+import Database from "better-sqlite3";
+import { currentVersion, LATEST_SCHEMA_VERSION, MIGRATIONS, openDatabase } from "../src/index";
 
 const dirs: string[] = [];
 after(() => {
@@ -21,8 +22,18 @@ describe("agents.voice（迁移 26）", () => {
     const dir = mkdtempSync(join(tmpdir(), "room-v26-"));
     dirs.push(dir);
     const file = join(dir, "room.db");
-    const db = openDatabase(file);
-    assert.equal(currentVersion(db), LATEST_SCHEMA_VERSION);
+    // The fixture is v26, not the latest schema with only its version marker rolled back.
+    const db = new Database(file);
+    db.pragma("foreign_keys = ON");
+    for (const migration of MIGRATIONS.filter((entry) => entry.version <= 26)) {
+      if (migration.disableForeignKeys) db.pragma("foreign_keys = OFF");
+      db.transaction(() => {
+        migration.up(db);
+        db.pragma("user_version = " + migration.version);
+      })();
+      db.pragma("foreign_keys = ON");
+    }
+    assert.equal(currentVersion(db), 26);
     const columns = db.prepare("PRAGMA table_info(agents)").all() as { name: string }[];
     assert.ok(columns.some((column) => column.name === "voice"));
     db.pragma("user_version = 25");

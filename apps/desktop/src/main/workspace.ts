@@ -9,6 +9,10 @@ export interface WorkspaceServiceDeps {
   checks: () => Promise<WorkspaceHealthCheck[]>;
   confirmSwitch?: (target:string|null)=>Promise<boolean>;
   activateDirectory?: (target:string|null)=>void;
+  /** Called outside the DB queue: close world admission and drain before taking the snapshot. */
+  withWorldMaintenance?: <T>(work: () => Promise<T>) => Promise<T>;
+  /** A failed switch resumes the old world; success permanently stops its runtime. */
+  withWorldSwitch?: <T>(work: () => Promise<T>) => Promise<T>;
   chooseDirectory: (title: string) => Promise<string|null>;
   chooseSaveFile: (title: string, name: string) => Promise<string|null>;
 }
@@ -89,7 +93,7 @@ export class WorkspaceService {
   }
   async backup():Promise<WorkspaceFileResult>{
     const parent=await this.deps.chooseDirectory("选择备份保存位置");if(parent===null)return cancelled;
-    return this.deps.queue.run(()=>{
+    const work = () => this.deps.queue.run(()=>{
       this.requireIdle();
       const name="评审室备份-"+new Date().toISOString().replace(/[:.]/g,"-")+"-"+randomUUID().slice(0,8);
       const target=join(parent,name),staging=target+".partial";
@@ -110,6 +114,7 @@ export class WorkspaceService {
         return {cancelled:false,path:target,files:manifest.files.length};
       }catch(error){rmSync(staging,{recursive:true,force:true});throw error;}
     });
+    return this.deps.withWorldMaintenance ? this.deps.withWorldMaintenance(work) : work();
   }
   async openRestored(useDefault=false):Promise<WorkspaceFileResult>{
     const target=useDefault?null:await this.deps.chooseDirectory("选择已恢复的资料副本");
@@ -117,7 +122,8 @@ export class WorkspaceService {
     if(target!==null){const version=verifyRestoredDirectory(target);if(version>currentVersion(this.deps.db))throw new WorkspaceError("invalid_state","副本来自更新版本，请先升级应用");}
     if(!this.deps.confirmSwitch||!this.deps.activateDirectory)throw new WorkspaceError("invalid_state","当前环境不能切换资料目录");
     if(!await this.deps.confirmSwitch(target))return cancelled;
-    return this.deps.queue.run(()=>{this.requireIdle();this.deps.activateDirectory!(target);return {cancelled:false,path:target??this.deps.userData,files:0};});
+    const work = () => this.deps.queue.run(()=>{this.requireIdle();this.deps.activateDirectory!(target);return {cancelled:false,path:target??this.deps.userData,files:0};});
+    return this.deps.withWorldSwitch ? this.deps.withWorldSwitch(work) : work();
   }
   async restore():Promise<WorkspaceFileResult>{
     const source=await this.deps.chooseDirectory("选择备份文件夹（含 manifest.json）");if(source===null)return cancelled;

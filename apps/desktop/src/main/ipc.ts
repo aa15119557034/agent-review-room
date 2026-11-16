@@ -1,5 +1,6 @@
 import { WorkspaceError } from "@room/db";
 import type { WorkspaceService } from "./workspace";
+import { WorldError, type WorldService } from "./world";
 import type { PacksService } from "./packs";
 import { ApprovalDecisionConflictError, ApprovalNotConsumableError, StaleSnapshotError } from "@room/db";
 import { testReviewerNode } from "@room/remote-client";
@@ -39,6 +40,7 @@ import { SettingsError, type SettingsStore } from "./settings";
  */
 
 export interface IpcDeps {
+  readonly world?: WorldService;
   readonly workspace?: WorkspaceService;
   readonly repo: Repository;
   readonly settings: SettingsStore;
@@ -83,6 +85,7 @@ const errorResult = (error: ControlErrorCode, message: string): ControlResult<un
 });
 
 function mapError(error: unknown): ControlResult<unknown> {
+  if (error instanceof WorldError) return errorResult(error.code, error.message);
   if (error instanceof WorkspaceError) return errorResult(error.code, error.message);
   if (error instanceof ControlFailure) {
     return errorResult(error.code, error.message);
@@ -124,6 +127,7 @@ function mapError(error: unknown): ControlResult<unknown> {
 
 export function createDispatcher(deps: IpcDeps) {
   const { repo, settings, orchestrator } = deps;
+  const world = () => { if (!deps.world) throw new ControlFailure("internal", "世界服务没有启动"); return deps.world; };
   const workspace = () => { if (!deps.workspace) throw new ControlFailure("internal", "资料与维护服务没有启动"); return deps.workspace; };
 
   const chatService = (): ChatService => {
@@ -183,6 +187,15 @@ export function createDispatcher(deps: IpcDeps) {
 
   async function runCommand(command: CommandRequest): Promise<unknown> {
     switch (command.type) {
+      case "world.act": return world().act(command);
+      case "world.talk": return world().talk(command);
+      case "world.scene.choose": return world().choose(command);
+      case "world.scene.say": return world().say(command);
+      case "world.scene.close": return world().close(command);
+      case "world.pause": return world().pause(command.worldId);
+      case "world.resume": return world().resume(command.worldId);
+      case "world.reset": return world().reset(command);
+      case "world.settings.save": return world().saveSettings(command);
       case "workspace.openRestored": return workspace().openRestored();
       case "workspace.useDefaultData": return workspace().openRestored(true);
       case "workspace.backup": return workspace().backup();
@@ -481,6 +494,11 @@ export function createDispatcher(deps: IpcDeps) {
 
   async function runQuery(query: QueryRequest): Promise<unknown> {
     switch (query.type) {
+      case "world.get": return world().get();
+      case "world.residentView": return world().residentView(query.worldId, query.agent);
+      case "world.events": return world().events(query.worldId, query.before, query.limit);
+      case "world.scenes": return world().scenes(query.worldId, query.before, query.limit);
+      case "world.review": return world().review(query.worldId, query.day);
       case "packs.list": return packsService().list();
       case "workspace.sources": return workspace().sources(query.projectId);
       case "workspace.search": return workspace().search(query);
