@@ -296,10 +296,17 @@ async function bootstrap(): Promise<void> {
   }
   const worldFence = worldBudget ? new WorldRunFenceBarrier({ budget: worldBudget, resolve: binding => resolveWorldFence({ settings }, binding) }) : null;
   let worldRunner: WorldCognitionRunner | null = null;
+  const foregroundHandoffs = new Set<Promise<void>>();
   const beforeForegroundModel = async () => {
     if (shuttingDown || !worldRunner) throw new WorldRunNotStoppedError(worldBudgetError);
-    await worldRunner.yieldToForeground();
-    if (shuttingDown) throw new WorldRunNotStoppedError();
+    // A handoff may start a new proof lookup only after the world Run drains.
+    // Keep the whole handoff alive through shutdown, not just today's fence work.
+    const handoff = worldRunner.yieldToForeground();
+    foregroundHandoffs.add(handoff);
+    try {
+      await handoff;
+      if (shuttingDown) throw new WorldRunNotStoppedError();
+    } finally { foregroundHandoffs.delete(handoff); }
   };
 
   let discussion: DiscussionService | null = null;
@@ -572,8 +579,9 @@ async function bootstrap(): Promise<void> {
     ttsRunner?.dispose();
     // D-34b：转写 sidecar 是独立进程，退出时一起收掉
     voice.dispose();
-    void Promise.allSettled([clockStopped, worldStopped, suspendWork, worldFence?.settle()]).then(async (results) => {
+    void Promise.allSettled([clockStopped, worldStopped, suspendWork, ...foregroundHandoffs]).then(async (results) => {
       for (const result of results) if (result.status === "rejected") console.error("[world] 退出收尾失败：", result.reason);
+      await worldFence?.settle().catch((error: unknown) => console.error("[world] 退出对账未确认：", error));
       await queue.drain();
       worldBudget?.close();
       db.close();

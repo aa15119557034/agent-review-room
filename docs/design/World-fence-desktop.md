@@ -12,6 +12,8 @@
 
 解析模型目标时沿用角色原本聊天模型和 effort，只验证目标隔离 profile 是否支持，不替换为别的模型。每次异步初始化后检查原本角色、节点、凭据及模型配置是否仍相同；正式 HTTP 派发还由 #249 再检查节点账本和 recipe。
 
+独立审查发现两处等待间隙，已在实现层修正：客户端最终健康检查或重试等待后，在每次实际 POST 之前同步复核原本本地配置；退出记录并等待完整的前台 handoff，包括其等待世界 drain 后才开始的对账，不只快照退出瞬间的 proof Promise。未发出的预占也仍需原账本未知 Run fence，不退还预算。
+
 ## 实际验证
 
 在 `9df005209865c12430854f744013c39eddfce87f` 加本次工作树修改上执行：
@@ -25,6 +27,8 @@ build-agent-server: exit 0
 ```
 
 原始汇总与分项日志保存在本机 `.verification/summary-all.json` 和同目录日志。覆盖：SQLite 重启/双连接、预占绑定原子性、写失败不放行、未知旧记录、错误账本/Run/recipe、取消未确认、已完成但无证明、前台抢占、迟到创建、规则推进/维护/重启保留未确认记录，以及来源模型配置变化。
+
+独立审查修复后实际运行 `world-dispatch-config.test.ts`、`world-run-fence.test.ts`、`world-cognition.test.ts`、`world-cognition-integration.test.ts`、`world-node.test.ts` 和 `world-run-bindings.test.ts`，117/117 通过；desktop 和 desktop/e2e 类型检查均 exit 0。新增真实 HTTP 扣住最终 health 后暂停居民、修改模型、profile、URL 四条回归，均未发送旧 POST。退出竞态复审和完整主入口 smoke 另记，不以这些服务测试替代。
 
 ## 尚未验收
 

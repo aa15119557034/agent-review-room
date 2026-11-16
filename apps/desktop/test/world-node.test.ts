@@ -68,7 +68,8 @@ function fixture() {
     },
     settings: { getNode: (id) => { credentialReads.push(id); return structuredClone(credentials.get(id) ?? null); } },
     makeAdapter: (options) => {
-      const adapter = new ProbeAdapter(structuredClone(options), async (signal) => { probes.push(signal); return state.probe(signal); });
+      const { isDispatchCurrent, ...data } = options;
+      const adapter = new ProbeAdapter({ ...structuredClone(data), ...(isDispatchCurrent ? { isDispatchCurrent } : {}) }, async (signal) => { probes.push(signal); return state.probe(signal); });
       made.push(adapter);
       return adapter;
     },
@@ -102,8 +103,10 @@ test("world resolution probes only this resident's chat profile and credentials,
   assert.equal(h.made[1]!.options.expectedLedgerId, "rled_" + "0".repeat(26));
   assert.deepEqual(h.made[1]!.options.expectedWorldProfile, { sourceChatProfileId: "claude-chat", recipeVersion: "deepseek-http-v1" });
   assert.equal(resolved?.isCurrent(), true);
+  assert.equal(h.made[1]!.options.isDispatchCurrent?.(), true);
   h.agents[0]!.modelSettings.primaryModel = "new-selection";
   assert.equal(resolved?.isCurrent(), false, "configuration changes after resolution still invalidate dispatch");
+  assert.equal(h.made[1]!.options.isDispatchCurrent?.(), false);
 });
 
 test("paused, missing and mismatched configuration never probes or borrows another resident's profile", async (t) => {

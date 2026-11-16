@@ -66,9 +66,10 @@ export async function resolveWorldNode(deps: WorldNodeDeps, id: string, signal: 
     const choice = health.profileModels?.find(p => p.profileId === mapping.profileId)?.models.find(m => m.id === model.model);
     if (!choice || (model.effort === null ? choice.efforts.length !== 0 : !choice.efforts.some(e => e.id === model.effort))) return null;
     const worldProfile = { sourceChatProfileId: target.profileId, recipeVersion: mapping.recipeVersion };
-    const adapter = make({ ...options, profileId: mapping.profileId, model, expectedLedgerId: ledger.ledgerId, expectedWorldProfile: worldProfile });
+    const isCurrent = () => !signal.aborted && JSON.stringify(targetOf(deps, id)) === JSON.stringify(target);
+    const adapter = make({ ...options, profileId: mapping.profileId, model, expectedLedgerId: ledger.ledgerId, expectedWorldProfile: worldProfile, isDispatchCurrent: isCurrent });
     return { adapter, binding: { nodeId: target.nodeId, baseUrl: target.baseUrl, profileId: mapping.profileId, ledgerId: ledger.ledgerId, worldProfile, model },
-      isCurrent: () => !signal.aborted && JSON.stringify(targetOf(deps, id)) === JSON.stringify(target) };
+      isCurrent };
   } catch (error) {
     if (error instanceof ChatModelUnavailableError) return null;
     throw error;
