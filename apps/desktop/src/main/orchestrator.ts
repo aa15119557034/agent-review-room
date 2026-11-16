@@ -1,5 +1,6 @@
 import {
   appendRunEvent,
+  assertPromptSourcesCurrent,
   finishRun,
   finishSummaryFromRun,
   finishTurnFromRun,
@@ -123,6 +124,7 @@ export class RunOrchestrator {
       currentState = running.state;
       this.#deps.emit({ type: "run.updated", run: toContractRun(running) });
 
+      assertPromptSourcesCurrent(this.#deps.db, run.snapshot_id, run.project_id);
       const events = adapter.run(session.sessionId, run.id, input, {
         signal: controller.signal,
         onPermissionRequest: async () => ({ decision: "deny", decidedBy: "system" }),

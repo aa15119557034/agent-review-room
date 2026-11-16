@@ -9,6 +9,12 @@ import {
   approveBatch,
   BatchApproveError,
   getChatMessage,
+  chatSourceReference,
+  isChatMessageCurrent,
+  mergeSourceRefs,
+  planSourceRefs,
+  resolveSourceReference,
+  sourceRefsCurrent,
   confirmPlan as confirmPlanTx,
   createBatchDraft,
   createPlan as createPlanTx,
@@ -50,7 +56,6 @@ import type {
   ChatMessage,
   VoiceOption,
 } from "@room/schemas";
-import { isExcludedFromContext } from "@room/schemas";
 import { renderChatMaterial } from "./chat-material";
 import type { DiscussionSettlement, RunOrchestrator } from "./orchestrator";
 import { agentActivity, type AgentActivityPage } from "./activity";
@@ -852,8 +857,7 @@ export class DiscussionService {
     const history: DiscussionHistoryRound[] = this.#deps.repo.discussionHistory(round.projectId, round.index + 1);
     history.push({
       round,
-      messages: this.#deps.repo.listMessagesByRound(round.id),
-      turns: this.#deps.repo.listTurns(round.id),
+      ...this.#deps.repo.discussionContext(round),
       summary: null,
     });
     return history;
@@ -1165,19 +1169,14 @@ export class DiscussionService {
     const { db } = this.#deps;
     const rows = db
       .prepare(
-        "SELECT m.chat_message_ids AS messageIds, m.content AS content, m.conversation_id AS conversationId, c.title AS title " +
+        "SELECT m.chat_message_ids AS messageIds, m.created_at AS createdAt, m.conversation_id AS conversationId, c.title AS title " +
           "FROM messages m LEFT JOIN conversations c ON c.id = m.conversation_id " +
           "WHERE m.project_id = ? AND m.kind = 'chat_material' ORDER BY m.created_at, m.id",
       )
-      .all(projectId) as { messageIds: string; content: string; conversationId: string; title: string | null }[];
+      .all(projectId) as { messageIds: string; createdAt: string; conversationId: string; title: string | null }[];
 
     const agents = new Map(this.#deps.repo.listAgents().map((agent) => [agent.id, agent]));
     const displayNameOf = (agentId: string) => agents.get(agentId)?.displayName ?? agentId;
-    const parentOf = (messageId: string) => {
-      const message = getChatMessage(db, messageId);
-      return message !== null && message.sender === "user" ? message : undefined;
-    };
-
     const materials: DiscussionMaterial[] = [];
     const sourceMessageIds: string[] = [];
     for (const row of rows) {
@@ -1185,12 +1184,9 @@ export class DiscussionService {
       const found = ids
         .map((id) => getChatMessage(db, id))
         .filter((message): message is ChatMessage => message !== null);
-      // 来源消息一条都读不到（理论上不会发生；聊天消息不删）就退回转议题时存的文本，别把材料整个丢掉
-      if (found.length === 0) {
-        materials.push({ name: "聊天记录（" + (row.title ?? row.conversationId) + "）", content: row.content });
-        continue;
-      }
-      const kept = found.filter((message) => !isExcludedFromContext(message, parentOf));
+      // 原文不可读时不回退到旧副本，避免重新注入已撤回的材料。
+      if (found.length === 0) continue;
+      const kept = found.filter((message) => isChatMessageCurrent(db, message.id, row.conversationId));
       if (kept.length === 0) continue;
       for (const message of kept) sourceMessageIds.push(message.id);
       const ordered = kept.sort((left, right) =>
@@ -1199,18 +1195,31 @@ export class DiscussionService {
       materials.push({
         name: "聊天记录（" + (row.title ?? row.conversationId) + "）",
         content: renderChatMaterial(ordered, displayNameOf),
+        ...(() => {
+          const refs = mergeSourceRefs([ordered.filter((message) => message.sourceRefs !== undefined).map((message) => chatSourceReference(db, message.id, row.conversationId, row.createdAt))]);
+          return refs === undefined ? {} : { sourceRefs: refs };
+        })(),
       });
+    }
+    for (const message of this.#deps.repo.listMessages(projectId)) {
+      if (message.kind !== "source_input" || message.sourceRefs === undefined || !sourceRefsCurrent(db, { projectId }, message.sourceRefs)) continue;
+      const references = message.sourceRefs.map((ref) => resolveSourceReference(db, { projectId }, ref));
+      materials.push({ name: "资料 " + message.id, content: message.content, sourceRefs: references.map((item) => item.reference) });
     }
     // 这些消息在写入 Snapshot 的事务里还要再核一次：拼 Prompt 到拿到写锁之间可能被撤回
     return { materials, sourceMessageIds: [...new Set(sourceMessageIds)] };
   }
 
-  #loadPlan(projectId: string, planVersionId: string): PlanVersion {
+  #loadPlan(projectId: string, planVersionId: string): PlanVersion & { sourceRefs?: import("@room/schemas").Message["sourceRefs"] } {
     const plan = this.#deps.repo.getPlan(planVersionId);
     if (plan.projectId !== projectId) {
       throw new DiscussionError("invalid_state", "这个方案不属于当前议题");
     }
-    return plan;
+    const sourceRefs = planSourceRefs(this.#deps.db, plan.id);
+    if (!sourceRefsCurrent(this.#deps.db, { projectId }, sourceRefs)) {
+      throw new DiscussionError("invalid_state", "这个方案引用的资料已撤回或不可读，请选择其他方案");
+    }
+    return sourceRefs === undefined ? plan : { ...plan, sourceRefs };
   }
 
   /**

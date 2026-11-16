@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import type { FailureReason, TurnOutcome } from "@room/schemas";
 import type { SqliteDatabase } from "./database";
 import { appendRunEventTx } from "./run-lifecycle";
+import { runSourceRefs, validateSourceRefs } from "./sources";
 import { writeTransaction, type WriteQueue } from "./write-queue";
 
 /**
@@ -145,13 +146,15 @@ export function finishTurnFromRun(
     let messageId: string | null = null;
 
     if (terminal.kind === "answered") {
+      const { project_id: projectId } = db.prepare("SELECT project_id FROM rounds WHERE id = ?").get(turn.round_id) as { project_id: string };
+      const sourceRefs = validateSourceRefs(db, { projectId }, runSourceRefs(db, run.id));
       outcome = "answered";
       finishRunTx(db, run, { state: "COMPLETED", failureReason: null }, { type: "completed", payload: { outcome: "completed" } }, ts);
 
       messageId = "msg_" + turn.id.slice(5);
       db.prepare(
-        "INSERT INTO messages (id, project_id, kind, source_agent, run_id, round_id, turn_id, on_behalf_of, content, created_at) " +
-          "SELECT ?, project_id, 'agent_reply', ?, ?, ?, ?, ?, ?, ? FROM rounds WHERE id = ?",
+        "INSERT INTO messages (id, project_id, kind, source_agent, run_id, round_id, turn_id, on_behalf_of, content, created_at, source_refs) " +
+          "SELECT ?, project_id, 'agent_reply', ?, ?, ?, ?, ?, ?, ?, ? FROM rounds WHERE id = ?",
       ).run(
         messageId,
         turn.agent,
@@ -161,6 +164,7 @@ export function finishTurnFromRun(
         turn.on_behalf_of,
         terminal.text,
         ts,
+        sourceRefs === undefined ? null : JSON.stringify(sourceRefs),
         turn.round_id,
       );
 
@@ -458,13 +462,15 @@ export function finishSummaryFromRun(
       };
     }
 
+    const { project_id: projectId } = db.prepare("SELECT project_id FROM rounds WHERE id = ?").get(turn.round_id) as { project_id: string };
+    const sourceRefs = validateSourceRefs(db, { projectId }, runSourceRefs(db, run.id));
     finishRunTx(db, run, { state: "COMPLETED", failureReason: null }, { type: "completed", payload: { outcome: "completed" } }, ts);
 
     const messageId = "msg_" + turn.id.slice(5);
     db.prepare(
-      "INSERT INTO messages (id, project_id, kind, source_agent, run_id, round_id, turn_id, on_behalf_of, content, created_at) " +
-        "SELECT ?, project_id, 'summary', ?, ?, ?, ?, NULL, ?, ? FROM rounds WHERE id = ?",
-    ).run(messageId, turn.agent, input.runId, turn.round_id, turn.id, result.text, ts, turn.round_id);
+      "INSERT INTO messages (id, project_id, kind, source_agent, run_id, round_id, turn_id, on_behalf_of, content, created_at, source_refs) " +
+        "SELECT ?, project_id, 'summary', ?, ?, ?, ?, NULL, ?, ?, ? FROM rounds WHERE id = ?",
+    ).run(messageId, turn.agent, input.runId, turn.round_id, turn.id, result.text, ts, sourceRefs === undefined ? null : JSON.stringify(sourceRefs), turn.round_id);
 
     // 按"人"算，不按 Turn 算：
     // - 同一个人被打断后重答，只取最新一次

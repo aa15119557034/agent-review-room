@@ -10,6 +10,8 @@ export * from "./discussion";
 export * from "./plan";
 export * from "./discussion-turn";
 export * from "./chat";
+export * from "./sources";
+export * from "./structured-results";
 export * from "./notes";
 export * from "./chat-windows";
 export * from "./github";
