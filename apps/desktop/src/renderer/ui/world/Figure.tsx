@@ -77,6 +77,7 @@ export function Figure({ color, expression = "neutral", player = false, asleep =
     <svg
       className={`fig${className ? ` ${className}` : ""}`}
       viewBox="0 0 48 64"
+      preserveAspectRatio="xMidYMax meet"
       aria-hidden="true"
       data-asleep={asleep || undefined}
       style={{ "--fig": color } as CSSProperties}
