@@ -1,17 +1,19 @@
 import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
-import type { WorldActivity, WorldPlace, WorldResident, WorldSnapshot } from "@room/schemas";
+import { WORLD_MAX_RESIDENTS, type WorldSnapshot } from "@room/schemas";
 import { agentColor, agentName } from "../../lib/discussion";
 import {
   ACTIVITY_DOING, ACTIVITY_LABEL, INVITABLE, REJECT_TEXT, activityProgress, budgetText, clockText, cognitionNote, commitmentViews,
-  dayClockText, dayOf, dayPhase, eventText, gaugeLevel, isTimelineNoise, itemsHeldBy, itemsIn, knownItemText, placeKind, recentSaying,
+  dayClockText, dayOf, dayPhase, eventText, gaugeLevel, isTimelineNoise, itemsIn, knownItemText,
   residentLine, worldNames, worldNow, type WorldNames,
 } from "../../lib/world";
 import { HoldButton } from "../HoldButton";
 import { useActions, useAppState, useIsMock } from "../hooks";
-import { Figure, ItemIcon } from "./Figure";
+import { Figure } from "./Figure";
 import { PastScenes, SceneView } from "./SceneView";
 import { WorldSheet } from "./WorldSheet";
+import { House3D } from "./House3D";
 import "./world.css";
+import "./world-3d.css";
 
 /**
  * 世界（ADR-008 / C-54）：秘书们的共享小屋。
@@ -57,8 +59,8 @@ function StartScreen({ notice }: { notice: ReactNode }) {
   const starting = useAppState((s) => s.world.starting);
   const actions = useActions();
   const [picked, setPicked] = useState<string[] | null>(null);
-  const chosen = picked ?? (settings?.residents ?? []).filter((a) => agents.some((x) => x.id === a));
-  const toggle = (id: string) => setPicked(chosen.includes(id) ? chosen.filter((a) => a !== id) : [...chosen, id]);
+  const chosen = picked ?? (settings?.residents ?? []).filter((a) => agents.some((x) => x.id === a)).slice(0,WORLD_MAX_RESIDENTS);
+  const toggle = (id: string) => setPicked(chosen.includes(id) ? chosen.filter((a) => a !== id) : chosen.length<WORLD_MAX_RESIDENTS?[...chosen, id]:chosen);
   return (
     <main className="world world-empty">
       {notice}
@@ -67,10 +69,10 @@ function StartScreen({ notice }: { notice: ReactNode }) {
         <p>秘书们住在这里过日子：自己做饭、看书、休息、互相说话。你也在这个家里，可以走到哪间屋、找谁说话、邀她一起做事。</p>
         {loaded && agents.length === 0 && <p className="world-start-hint" role="status">还没有配置秘书。先到「秘书」页配置至少一位，再回来开始。</p>}
         <fieldset className="world-start-people" style={agents.length === 0 ? { display: "none" } : undefined}>
-          <legend>谁住进来</legend>
+          <legend>谁住进来（{chosen.length} / {WORLD_MAX_RESIDENTS}）</legend>
           {agents.map((a) => (
             <label key={a.id} style={{ "--agent": a.color } as CSSProperties}>
-              <input type="checkbox" checked={chosen.includes(a.id)} onChange={() => toggle(a.id)} />
+              <input type="checkbox" checked={chosen.includes(a.id)} disabled={!chosen.includes(a.id)&&chosen.length>=WORLD_MAX_RESIDENTS} onChange={() => toggle(a.id)} />
               <Figure color={a.color} />
               <span>{a.displayName}</span>
             </label>
@@ -97,7 +99,7 @@ function Home({ world, notice }: { world: WorldSnapshot; notice: ReactNode }) {
     <main className="world" data-phase={dayPhase(now)} data-paused={world.run.state === "paused" || undefined}>
       <WorldBar world={world} now={now} />
       <div className="world-stage">
-        <House world={world} now={now} names={names} />
+        <House3D world={world} names={names} />
         {scene && <SceneView scene={scene} world={world} names={names} />}
       </div>
       <aside className="world-side" aria-label="居民和最近的事">
@@ -139,124 +141,21 @@ function WorldBar({ world, now }: { world: WorldSnapshot; now: number }) {
         )}
         <button type="button" className="button-outline" onClick={() => void actions.world.showReview()}>回顾</button>
         <button type="button" className="button-outline" onClick={() => void actions.world.showScenes()}>以前的对话</button>
-        {asking ? (
-          <span className="world-reset-ask">
-            重新开始会丢掉这一局，
-            <HoldButton className="button-outline world-reset" hint="按住 1 秒重新开始" onComplete={() => actions.world.reset().finally(() => setAsking(false))}>按住确认</HoldButton>
-            <button type="button" className="button-link" onClick={() => setAsking(false)}>算了</button>
-          </span>
-        ) : (
-          <button type="button" className="button-link" onClick={() => setAsking(true)}>重新开始</button>
-        )}
+        <button type="button" className="button-link" onClick={() => setAsking(true)}>重新开始</button>
       </div>
+      {asking&&<ResetResidents world={world} onClose={()=>setAsking(false)}/>}
     </header>
   );
 }
 
-function House({ world, now, names }: { world: WorldSnapshot; now: number; names: WorldNames }) {
-  // 上面一排是各人的房间，下面一排是公共的屋子
-  const rooms = world.places.filter((p) => p.owner !== null);
-  const shared = world.places.filter((p) => p.owner === null);
-  return (
-    <section className="house" aria-label="小屋">
-      <div className="house-row house-row-rooms">
-        {rooms.map((p) => <Room key={p.id} place={p} world={world} now={now} names={names} />)}
-      </div>
-      <div className="house-row house-row-shared">
-        {shared.map((p) => <Room key={p.id} place={p} world={world} now={now} names={names} />)}
-      </div>
-    </section>
-  );
-}
-
-function Room({ place, world, now, names }: { place: WorldPlace; world: WorldSnapshot; now: number; names: WorldNames }) {
-  const disc = useAppState((s) => s.disc);
-  const actions = useActions();
-  const here = world.player.placeId === place.id;
-  const people = world.residents.filter((r) => r.placeId === place.id);
-  const things = itemsIn(world, place.id);
-  const go = () => {
-    if (!here) void actions.world.goTo(place.id);
-  };
-  return (
-    <div
-      className="room"
-      data-kind={placeKind(place)}
-      data-here={here || undefined}
-      style={place.owner ? ({ "--agent": agentColor(disc, place.owner) } as CSSProperties) : undefined}
-      onClick={go}
-    >
-      <div className="room-head">
-        <h2 title={names.place(place.id)}>{names.place(place.id)}</h2>
-        {here ? (
-          <span className="room-here">你在这里</span>
-        ) : (
-          <button type="button" className="room-go" onClick={(e) => { e.stopPropagation(); go(); }}>走过去</button>
-        )}
-      </div>
-      <ul className="room-items" aria-label={`${names.place(place.id)}里的东西`}>
-        {things.map((it) => (
-          <li key={it.id} data-busy={(it.kind === "unique" && it.usedBy !== null) || undefined} data-empty={(it.kind === "stock" && it.count === 0) || undefined}>
-            <ItemIcon id={it.id} />
-            <span>{it.label}{it.kind === "stock" ? ` × ${it.count}` : it.usedBy ? "（在用）" : ""}</span>
-          </li>
-        ))}
-      </ul>
-      <div className="room-floor">
-        {people.map((r) => <ResidentFigure key={r.agent} resident={r} world={world} now={now} names={names} />)}
-        {here && <PlayerFigure world={world} now={now} />}
-      </div>
-    </div>
-  );
-}
-
-function ActivityTag({ activity, now }: { activity: WorldActivity; now: number }) {
-  return (
-    <span className="fig-activity" data-kind={activity.kind}>
-      {ACTIVITY_LABEL[activity.kind]}
-      {activity.kind !== "sleep" && <progress value={activityProgress(activity, now)} max={1} aria-label="做到哪了" />}
-    </span>
-  );
-}
-
-function ResidentFigure({ resident, world, now, names }: { resident: WorldResident; world: WorldSnapshot; now: number; names: WorldNames }) {
-  const disc = useAppState((s) => s.disc);
-  const selected = useAppState((s) => s.world.selected === resident.agent);
-  const saying = useAppState((s) => recentSaying(s.world.events, { kind: "resident", agent: resident.agent }, now));
-  const actions = useActions();
-  const activity = resident.activityId ? world.activities.find((a) => a.id === resident.activityId) : undefined;
-  const asleep = activity?.kind === "sleep";
-  const held = itemsHeldBy(world, { kind: "resident", agent: resident.agent });
-  const name = names.agent(resident.agent);
-  const expression = resident.energy < 25 ? "tired" : resident.satiety < 20 ? "sad" : resident.mood >= 70 ? "happy" : "neutral";
-  return (
-    <button
-      type="button"
-      className="person"
-      data-selected={selected || undefined}
-      data-doing={activity?.kind}
-      aria-pressed={selected}
-      aria-label={`${name}，${residentLine(resident, world, names)}`}
-      onClick={(e) => { e.stopPropagation(); actions.world.select(resident.agent); }}
-    >
-      {saying && <span className="person-say">{saying}</span>}
-      {activity && <ActivityTag activity={activity} now={now} />}
-      <Figure color={agentColor(disc, resident.agent)} expression={expression} asleep={asleep} />
-      {held.map((it) => <span key={it.id} className="person-held" title={`拿着${it.label}`}><ItemIcon id={it.id} /></span>)}
-      <span className="person-name">{name}{resident.cognition.mode === "routine" && resident.cognition.reason === "offline" ? " · 不在线" : ""}</span>
-    </button>
-  );
-}
-
-function PlayerFigure({ world, now }: { world: WorldSnapshot; now: number }) {
-  const activity = world.player.activityId ? world.activities.find((a) => a.id === world.player.activityId) : undefined;
-  return (
-    <span className="person person-you" data-doing={activity?.kind}>
-      {activity && <ActivityTag activity={activity} now={now} />}
-      <Figure color="#7b8794" player />
-      <span className="person-name">你</span>
-    </span>
-  );
+function ResetResidents({world,onClose}:{world:WorldSnapshot;onClose:()=>void}){
+  const agents=useAppState(s=>s.disc.agents);const starting=useAppState(s=>s.world.starting);const actions=useActions();
+  const [chosen,setChosen]=useState(world.residents.length<=WORLD_MAX_RESIDENTS?world.residents.map(r=>r.agent):[]);
+  return <WorldSheet label="重新开始小屋" onClose={onClose}>
+    <p>重新开始会清空这一局的生活记录与约定。重新选 1～{WORLD_MAX_RESIDENTS} 位入住；旧局可以直接继续住。</p>
+    <fieldset className="world-reset-people"><legend>入住名单（{chosen.length} / {WORLD_MAX_RESIDENTS}）</legend>{agents.map(a=><label key={a.id}><input type="checkbox" checked={chosen.includes(a.id)} disabled={!chosen.includes(a.id)&&chosen.length>=WORLD_MAX_RESIDENTS} onChange={()=>setChosen(list=>list.includes(a.id)?list.filter(id=>id!==a.id):[...list,a.id])}/>{a.displayName}</label>)}</fieldset>
+    <HoldButton className="button-primary" disabled={chosen.length===0||starting} hint="按住 1 秒重新开始" onComplete={()=>actions.world.start(chosen).finally(onClose)}>按住重新开始</HoldButton>
+  </WorldSheet>;
 }
 
 // ---------------------------------------------------------------- 右边
@@ -283,6 +182,7 @@ function You({ world, names }: { world: WorldSnapshot; names: WorldNames }) {
         你在{names.place(world.player.placeId)}
         {activity ? `，${others.length ? `和${others.join("、")}一起` : ""}${ACTIVITY_LABEL[activity.kind]}` : "。点一间屋走过去，点一位秘书看她的情况。"}
       </p>
+      <ul className="world-local-items" aria-label="这里的东西">{itemsIn(world,world.player.placeId).map(item=><li key={item.id}>{item.label}{item.kind==="stock"?` × ${item.count}`:item.usedBy?" · 正在用":""}</li>)}</ul>
       {activity && <button type="button" className="button-outline" onClick={() => void actions.world.stop()}>停下</button>}
     </section>
   );

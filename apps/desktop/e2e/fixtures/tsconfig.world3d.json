@@ -1,0 +1,1 @@
+{"extends":"../../src/renderer/tsconfig.json","include":["world-3d.tsx","../../src/renderer/assets/world/assets.d.ts"]}

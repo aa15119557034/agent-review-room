@@ -1,9 +1,7 @@
-import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { WorldScene, WorldSceneLine, WorldSnapshot } from "@room/schemas";
-import { agentColor } from "../../lib/discussion";
-import { actorName, currentLine, dayClockText, placeKind, type WorldNames } from "../../lib/world";
+import { actorName, dayClockText, placeKind, type WorldNames } from "../../lib/world";
 import { useActions, useAppState } from "../hooks";
-import { Figure } from "./Figure";
 import { WorldSheet } from "./WorldSheet";
 
 /**
@@ -11,7 +9,6 @@ import { WorldSheet } from "./WorldSheet";
  * 盖在小屋上面，不暂停世界。台词、选项、能不能打字都是后端给的；这里不执行台词里的任何东西，只当纯文本显示。
  */
 export function SceneView({ scene, world, names }: { scene: WorldScene; world: WorldSnapshot; names: WorldNames }) {
-  const disc = useAppState((s) => s.disc);
   const actions = useActions();
   const [backlog, setBacklog] = useState(false);
   const [text, setText] = useState("");
@@ -22,12 +19,7 @@ export function SceneView({ scene, world, names }: { scene: WorldScene; world: W
     root.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
     root.current?.focus({ preventScroll: true });
   }, [scene.id]);
-  const line = currentLine(scene);
   const place = world.places.find((p) => p.id === scene.placeId);
-  // 立绘的表情：每位用她自己最后一句台词的表情
-  const expressionOf = (agent: string) =>
-    [...scene.lines].reverse().find((l) => l.speaker?.kind === "resident" && l.speaker.agent === agent)?.expression ?? "neutral";
-  const speaking = line?.speaker?.kind === "resident" ? line.speaker.agent : null;
   const waiting = scene.state === "waiting";
   // 暂停着：台词照样能看、能回看，选项和输入先不能用（按了也会被规则拒绝）
   const paused = world.run.state === "paused";
@@ -58,25 +50,12 @@ export function SceneView({ scene, world, names }: { scene: WorldScene; world: W
         <button type="button" className="scene-btn" disabled={busy} onClick={() => void run(() => actions.world.sceneClose(scene.id))}>结束对话</button>
       </div>
 
-      <div className="scene-sprites" aria-hidden="true">
-        {scene.residents.map((a) => (
-          <span key={a} className="sprite" data-speaking={speaking === a || undefined} style={{ "--agent": agentColor(disc, a) } as CSSProperties}>
-            <Figure color={agentColor(disc, a)} expression={expressionOf(a)} />
-          </span>
-        ))}
-      </div>
-
       {backlog ? (
         <div className="scene-backlog"><Transcript lines={scene.lines} names={names} /></div>
       ) : (
         <div className="scene-box" aria-live="polite">
-          {line ? (
-            <>
-              <span className="scene-speaker" data-narration={line.speaker === null || undefined}>
-                {line.speaker ? actorName(line.speaker, names) : "旁白"}
-              </span>
-              <p key={scene.lines.length} className="scene-text">{line.text}</p>
-            </>
+          {scene.lines.length ? (
+            <Transcript lines={scene.lines} names={names} />
           ) : (
             <p className="scene-text">…</p>
           )}
@@ -112,15 +91,17 @@ export function SceneView({ scene, world, names }: { scene: WorldScene; world: W
 
 function Transcript({ lines, names }: { lines: readonly WorldSceneLine[]; names: WorldNames }) {
   const end = useRef<HTMLLIElement | null>(null);
+  const list = useRef<HTMLOListElement | null>(null);
   useEffect(() => {
-    // 新版浏览器的 scrollIntoView 会返回 Promise，不能直接当 effect 的返回值
-    end.current?.scrollIntoView({ block: "end" });
+    const scroll=()=>{const viewport=end.current?.closest(".scene-box,.scene-backlog");if(viewport)viewport.scrollTop=viewport.scrollHeight;else end.current?.scrollIntoView({block:"end"});};
+    const frame=requestAnimationFrame(scroll);const resize=new ResizeObserver(scroll);if(list.current)resize.observe(list.current);
+    return ()=>{cancelAnimationFrame(frame);resize.disconnect();};
   }, [lines.length]);
   return (
-    <ol className="transcript">
+    <ol className="transcript" ref={list}>
       {lines.map((l, i) => (
         <li key={i} data-who={l.speaker === null ? "narration" : l.speaker.kind} ref={i === lines.length - 1 ? end : undefined}>
-          {l.speaker && <strong>{actorName(l.speaker, names)}</strong>}
+          <strong>{l.speaker ? actorName(l.speaker, names) : "旁白"}{l.source === "chat" ? <small className="scene-source">闲聊</small> : null}</strong>
           <span>{l.text}</span>
         </li>
       ))}
