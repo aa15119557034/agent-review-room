@@ -38,6 +38,8 @@ const Profile = z
      * - room-jsonl：本仓库自带脚本的输出，目前是 bin/deepseek-chat.mjs（S-10）
      */
     parser: z.enum(PARSERS).default("raw"),
+    /** P2-S07: dedicated project-only query profile; uses the existing room-jsonl process lifecycle. */
+    searchFetch: z.literal("deepseek-v1").optional(),
     verifyCommit: z.boolean().default(false),
     /**
      * S-22：这个 profile 能选的模型和强度，原样在 health 里上报。空 = 模型写死在 args 里，不接受选择。
@@ -116,7 +118,8 @@ const Profile = z
       ])
       .optional(),
   })
-  .strict();
+  .strict()
+  .refine((p) => p.searchFetch === undefined || (p.parser === "room-jsonl" && p.memory === undefined && p.images === undefined && p.imageRun === undefined && p.models.length === 0), "Search/Fetch profile must use room-jsonl without chat memory, images or selectable models");
 
 export const ServerConfig = z
   .object({
