@@ -63,6 +63,7 @@ export function paintedLightPools(scene, time) {
   pool('streetlamp-warm-pool',5.03,3.55,3.35,4.2,'#f3c17c',.52,1);
   pool('vending-cyan-reflection',2.10,-6.27,2.65,1.1,'#6acbd5',.54,2,Math.PI);
   pool('pylon-soft-reflection',-6.03,4.65,1.45,2.7,'#ced7b5',.22,1);
+  pool('service-door-warm-pool',-.15,-5.62,2.45,2.25,'#f5cf91',.60,1);
   const signal=pool('signal-changing-streak',-5.45,6.0,.82,1.65,'#69c5a4',.32,2,.20);
   return {group,pools,signal,time};
 }

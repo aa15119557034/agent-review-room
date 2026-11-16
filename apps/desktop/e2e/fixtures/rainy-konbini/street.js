@@ -1,5 +1,6 @@
 import * as T from 'three';
 import { neighborhood } from './neighborhood.js';
+import { serviceAlley } from './alley.js';
 
 export function buildStreet(c) {
   const {root,box,cylinder,sphere,tube,rod,group,toon,glow,label,poster,mesh,canvasTexture}=c;
@@ -120,14 +121,9 @@ export function buildStreet(c) {
     for(const x of [-.30,.30])box(.1,.07,.48,x,.035,0,iron,g,.01);
     tube([[.40,.43,-.05],[.60,.44,-.05],[.60,.89,-.20],[.60,1.25,-.20]],.025,cream,g);
   }
-  for(let n=0;n<3;n++){
-    const g=group('delivery-crate',.95,.31+n*.28,-5.39);box(.73,.07,.52,0,.03,0,mint,g,.008);
-    for(const z of [-.24,.24])for(let k=0;k<3;k++)box(.75,.05,.035,0,.08+k*.075,z,mint,g,.005);
-    for(const x of [-.35,.35])for(let k=0;k<3;k++)box(.035,.05,.51,x,.08+k*.075,0,mint,g,.005);
-  }
   function plant(x,z,s){const g=group('potted-rain-garden',x,.29,z);g.scale.setScalar(s);cylinder(.22,.16,.37,0,.18,0,toon('#946357'),g,24);cylinder(.20,.20,.035,0,.38,0,toon('#394337'),g,24);
     for(let i=0;i<9;i++){const a=i*2.4,r=.17+.025*(i%3),h=.50+(i%4)*.12;rod([0,.36,0],[Math.cos(a)*r,h,Math.sin(a)*r],.009,toon('#57847c'),g);const leaf=mesh(new T.SphereGeometry(1,14,8),toon(i%2?'#729d90':'#4d817b'),[Math.cos(a)*r,h,Math.sin(a)*r],g);leaf.scale.set(.10,.045,.24);leaf.rotation.set(.55,a,.3);}}
-  plant(-5.9,2.18,1.2);plant(2.45,2.38,.9);plant(-5.95,-4.8,.8);plant(-.15,-5.45,1.0);
+  plant(-5.9,2.18,1.2);plant(2.45,2.38,.9);plant(-5.95,-4.8,.8);plant(-.95,-5.54,.72);
   // An ornate, small street lamp forms the warm foreground counterpoint.
   const lamp=group('street-lamp',5.9,.07,3.20);cylinder(.16,.25,.29,0,.145,0,iron,lamp,24);cylinder(.065,.09,4.15,0,2.27,0,iron,lamp,24);
   tube([[0,4.18,0],[0,4.55,0],[-.25,4.78,0],[-.65,4.75,0],[-.85,4.52,0]],.055,iron,lamp);
@@ -152,5 +148,6 @@ export function buildStreet(c) {
   const signalMats=['#629e93','#ba9751','#c85d5b'].map(x=>glow(x,.55));
   for(let i=0;i<3;i++){const o=cylinder(.105,.105,.035,-.52+i*.27,3.25,.17,signalMats[i],traffic,24);o.rotation.x=Math.PI/2;box(.19,.04,.16,-.52+i*.27,3.39,.17,iron,traffic,.01);}
   neighborhood(c);
-  return {signalMats,lampLight,vendingLight};
+  const alley=serviceAlley(c);
+  return {signalMats,lampLight,vendingLight,alley};
 }

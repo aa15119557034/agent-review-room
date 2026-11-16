@@ -1,10 +1,10 @@
 {
   "ready": true,
   "errors": [],
-  "elapsed": 35.5125,
+  "elapsed": 35.8615,
   "statistics": {
-    "authoredMeshes": 2177,
-    "batches": 138
+    "authoredMeshes": 3772,
+    "batches": 209
   },
   "features": {
     "square-collectible-base": 1,
@@ -12,46 +12,66 @@
     "parking-bay": 1,
     "cast-iron-manhole": 1,
     "street-guardrail": 3,
-    "illuminated-vending-machine": 1,
+    "illuminated-vending-machine": 2,
     "recycling-bins": 1,
     "umbrella-stand": 1,
     "bicycle": 2,
     "bicycle-basket": 2,
     "neighborhood-noticeboard": 1,
     "air-conditioner": 2,
-    "delivery-crate": 3,
     "potted-rain-garden": 4,
     "street-lamp": 1,
     "utility-pole": 2,
     "street-name-sign": 1,
     "stop-sign": 1,
     "traffic-signal": 1,
+    "neighbor-house-corner": 1,
+    "neighbor-garden": 1,
+    "rainy-neighborhood-tree": 1,
+    "convenience-store-pylon": 1,
+    "folded-delivery-crates": 1,
+    "alley-cardboard-stack": 1,
+    "delivery-cardboard-box": 3,
+    "flattened-cardboard": 1,
+    "delivery-handcart": 1,
+    "bird-net-refuse-area": 1,
+    "rear-gas-meter": 1,
+    "rear-rain-downpipe": 1,
     "convenience-store": 1,
     "automatic-door": 1,
     "door-left": 1,
     "door-right": 1,
+    "flat-roof-services": 1,
+    "roof-condenser": 2,
+    "roof-water-tank": 1,
+    "roof-access-hatch": 1,
     "rear-service-entrance": 1,
     "electrical-meter-cabinets": 1,
     "stocked-grocery-shelf": 2,
+    "product-carton": 92,
+    "product-bottle": 85,
+    "product-snack-bag": 26,
+    "product-cup-noodles": 26,
     "refrigerated-drinks": 1,
     "cashier-coffee-and-oden": 1,
     "oden-display": 1,
     "ice-cream-freezer": 1,
     "magazine-rack": 1,
-    "staff-door": 1
+    "staff-door": 1,
+    "white-fluorescent-pair": 6
   },
   "frameCount": 900,
-  "fps": 64.99978333405556,
+  "fps": 65.00025277876081,
   "p95Ms": 15.5,
-  "drawCalls": 650,
-  "triangles": 1259572,
+  "drawCalls": 830,
+  "triangles": 2525474,
   "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
   "width": 1416,
   "height": 936,
   "pixelRatio": 1,
   "doorOpening": 0,
-  "rainTime": 35.5125,
-  "paintedReflectionTime": 35.5125,
+  "rainTime": 35.8615,
+  "paintedReflectionTime": 35.8615,
   "lightPools": [
     {
       "name": "shop-amber-fan",
@@ -69,17 +89,31 @@
     },
     {
       "name": "vending-cyan-reflection",
-      "x": 2.54,
-      "z": 2.2,
-      "width": 1.65,
-      "length": 3.3
+      "x": 2.1,
+      "z": -6.27,
+      "width": 2.65,
+      "length": 1.1
+    },
+    {
+      "name": "pylon-soft-reflection",
+      "x": -6.03,
+      "z": 4.65,
+      "width": 1.45,
+      "length": 2.7
+    },
+    {
+      "name": "service-door-warm-pool",
+      "x": -0.15,
+      "z": -5.62,
+      "width": 2.45,
+      "length": 2.25
     },
     {
       "name": "signal-changing-streak",
-      "x": 5.75,
-      "z": 5.4,
+      "x": -5.45,
+      "z": 6,
       "width": 0.82,
-      "length": 2.65
+      "length": 1.65
     }
   ],
   "outline": {
@@ -87,8 +121,8 @@
     "widthAt1080p": 1.8
   },
   "memory": {
-    "geometries": 173,
-    "textures": 59
+    "geometries": 247,
+    "textures": 68
   },
   "puddles": {
     "count": 30,
@@ -102,7 +136,7 @@
         "rz": 0.69,
         "y": 0.078,
         "color": "#dbad78",
-        "count": 10
+        "count": 8
       },
       {
         "name": "warm-lamp-puddle",
@@ -112,7 +146,7 @@
         "rz": 0.87,
         "y": 0.078,
         "color": "#d9b47f",
-        "count": 7
+        "count": 6
       },
       {
         "name": "cool-side-puddle",
@@ -122,14 +156,14 @@
         "rz": 1.68,
         "y": 0.078,
         "color": "#739db8",
-        "count": 6
+        "count": 5
       },
       {
         "name": "cyan-vending-puddle",
-        "x": 2.83,
-        "z": 2.16,
-        "rx": 0.4,
-        "rz": 0.43,
+        "x": 2.1,
+        "z": -6.29,
+        "rx": 0.88,
+        "rz": 0.19,
         "y": 0.28,
         "color": "#78bdc6",
         "count": 3
@@ -142,6 +176,16 @@
         "rz": 0.38,
         "y": 0.078,
         "color": "#739db8",
+        "count": 4
+      },
+      {
+        "name": "service-door-puddle",
+        "x": -0.15,
+        "z": -5.85,
+        "rx": 0.83,
+        "rz": 0.4,
+        "y": 0.28,
+        "color": "#e0bd89",
         "count": 4
       }
     ]
@@ -163,22 +207,33 @@
       "name": "shop",
       "x": 512,
       "y": 591,
-      "unlit": 111.08230452674897,
-      "lit": 165.0411522633745
+      "view": "01-overview",
+      "unlit": 119.87654320987654,
+      "lit": 158.31687242798353
     },
     {
       "name": "lamp",
       "x": 776,
       "y": 712,
-      "unlit": 52.62139917695473,
-      "lit": 124.37860082304526
+      "view": "01-overview",
+      "unlit": 50.44444444444444,
+      "lit": 120.86831275720165
     },
     {
       "name": "vending",
-      "x": 740,
-      "y": 662,
-      "unlit": 116.24279835390946,
-      "lit": 135.0082304526749
+      "x": 373,
+      "y": 645,
+      "view": "04-back",
+      "unlit": 113.61728395061728,
+      "lit": 148.81893004115227
+    },
+    {
+      "name": "service-door",
+      "x": 479,
+      "y": 675,
+      "view": "04-back",
+      "unlit": 94.07818930041152,
+      "lit": 152.9506172839506
     }
   ],
   "resize": {

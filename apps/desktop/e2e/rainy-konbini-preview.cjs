@@ -29,15 +29,21 @@ app.whenReady().then(async()=>{
  await pause(15000);
   const report=await js(`(()=>{const f=window.rainyKonbini,times=f.frameTimes.slice(),sorted=times.slice().sort((a,b)=>a-b),gl=f.renderer.getContext(),d=gl.getExtension('WEBGL_debug_renderer_info');return{ready:f.ready,errors:f.errors,elapsed:f.elapsed,statistics:f.statistics,features:f.features,frameCount:times.length,fps:times.length/times.reduce((a,b)=>a+b,0)*1000,p95Ms:sorted[Math.floor(sorted.length*.95)],drawCalls:f.renderer.info.render.calls,triangles:f.renderer.info.render.triangles,gpu:d?gl.getParameter(d.UNMASKED_RENDERER_WEBGL):null,width:innerWidth,height:innerHeight,pixelRatio:f.renderer.getPixelRatio(),doorOpening:f.doorOpening,rainTime:f.effects.rain.material.uniforms.time.value,paintedReflectionTime:f.effects.ground.time.value,lightPools:f.effects.ground.pools,outline:{kind:'depth-normal-sobel',widthAt1080p:1.8},memory:f.renderer.info.memory}})()`);
   report.puddles=await js('({count:window.rainyKonbini.effects.ripples.count,opacity:window.rainyKonbini.effects.puddles.opacity,patches:window.rainyKonbini.effects.puddles.patches})');
-  report.bounds=await js('window.rainyKonbini.bounds');
- for(const axis of [0,2]){assert.ok(report.bounds.min[axis]>=-7.001,'base contains minimum');assert.ok(report.bounds.max[axis]<=7.001,'base contains maximum');}
+   report.bounds=bounds;
   // Check the actual pixels: a running shader alone does not prove that its
   // ground light is visible (the first-round failure this review identified).
-  const probes=await js(`[['shop',-2.2,.277,2.72],['lamp',4.6,.075,3.75],['vending',2.97,.277,2.75]].map(([name,x,y,z])=>{const p=window.rainyKonbini.camera.position.clone().set(x,y,z).project(window.rainyKonbini.camera);return{name,x:Math.round((p.x*.5+.5)*innerWidth),y:Math.round((.5-p.y*.5)*innerHeight)}})`);
-  await js('window.rainyKonbini.effects.ground.group.visible=false');await pause(250);const unlit=await win.webContents.capturePage();
-  await js('window.rainyKonbini.effects.ground.group.visible=true');await pause(250);const lit=await win.webContents.capturePage();
   const mean=(image,probe)=>{const {width,height}=image.getSize(),bytes=image.toBitmap();let sum=0,n=0;for(let y=probe.y-4;y<=probe.y+4;y++)for(let x=probe.x-4;x<=probe.x+4;x++){assert.ok(x>=0&&x<width&&y>=0&&y<height);const i=(y*width+x)*4;sum+=bytes[i]+bytes[i+1]+bytes[i+2];n+=3;}return sum/n;};
-  report.lightPixelGain=probes.map(probe=>({...probe,unlit:mean(unlit,probe),lit:mean(lit,probe)}));
+   report.lightPixelGain=[];
+   for(const view of [
+     {name:'01-overview',points:[['shop',-2.2,.277,2.72],['lamp',4.6,.075,3.75]]},
+     {name:'04-back',points:[['vending',2.10,.277,-6.29],['service-door',-.15,.277,-5.95]]}
+   ]){
+     if(view.name==='04-back'){await js(`(()=>{const f=window.rainyKonbini;f.controls.target.set(0,2.30,0);f.camera.position.set(-20,15,-21);f.camera.zoom=1.1;f.camera.updateProjectionMatrix();f.controls.update()})()`);await pause(1000);}
+     const probes=await js(`${JSON.stringify(view.points)}.map(([name,x,y,z])=>{const p=window.rainyKonbini.camera.position.clone().set(x,y,z).project(window.rainyKonbini.camera);return{name,x:Math.round((p.x*.5+.5)*innerWidth),y:Math.round((.5-p.y*.5)*innerHeight)}})`);
+     await js('window.rainyKonbini.effects.ground.group.visible=false');await pause(250);const unlit=await win.webContents.capturePage();
+     await js('window.rainyKonbini.effects.ground.group.visible=true');await pause(250);const lit=await win.webContents.capturePage();
+     report.lightPixelGain.push(...probes.map(probe=>({...probe,view:view.name,unlit:mean(unlit,probe),lit:mean(lit,probe)})));
+   }
   for(const probe of report.lightPixelGain)assert.ok(probe.lit>probe.unlit+3,probe.name+' ground light must be visible');
   win.setContentSize(960,640);await pause(1000);
   report.resize=await js(`(()=>{const f=window.rainyKonbini,c=document.querySelector('canvas');return{canvas:[c.width,c.height],outline:[f.outline.target.width,f.outline.target.height],radius:f.outline.material.uniforms.radius.value,errors:f.errors}})()`);

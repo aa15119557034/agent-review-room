@@ -15,6 +15,11 @@ export function neighborhood(c){
   for(const y of [1.40,1.82,2.26])box(1.21,.035,.035,-.12,y,.90,dark,home,.003);
   for(let i=0;i<10;i++)box(1.12,.016,.018,-.12,1.45+i*.077,.915,toon('#c3ab91',.10),home,0);
   box(1.43,.09,.23,-.12,1.26,.91,wood,home,.012);
+  for(let i=0;i<12;i++)box(.17,.75,.055,-1.05+i*.19,.56,-.80,wood,home,.008);
+  box(.95,.73,.055,.18,1.87,-.81,dark,home,.02);
+  box(.83,.61,.018,.18,1.87,-.848,toon('#8a9ba8',.08),home,.008);
+  for(const x of [-.21,.18,.57])box(.024,.64,.020,x,1.87,-.865,dark,home,.003);
+  box(1.10,.08,.20,.18,2.30,-.84,steel,home,.012);
   box(2.55,.11,1.78,0,2.78,0,dark,home,.02);
   for(const side of [-1,1]){
     const roof=box(2.64,.08,1.02,0,2.99,side*.43,toon('#52647a'),home,.025);roof.rotation.x=side*.36;
