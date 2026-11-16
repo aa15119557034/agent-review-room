@@ -54,7 +54,7 @@ export function createLook(renderer, camera) {
     // island behind the station reads as backdrop. Sky (far plane) and high
     // aerial cameras are left alone.
     float wbD = wbDepth(uv);
-    float wbHaze = (1.0-exp(-max(wbD-110.0,0.0)/700.0)) * (1.0-step(uFar*0.9,wbD)) * uHaze * uToon;
+    float wbHaze = (1.0-exp(-max(wbD-60.0,0.0)/750.0)) * (1.0-step(uFar*0.9,wbD)) * uHaze * uToon;
     col = mix(col, vec3(0.80,0.83,0.88)*max(dot(col,vec3(0.2126,0.7152,0.0722))*1.15,0.55), wbHaze*0.72);
     col *= uExposure;`, 'outline stage');
   // Station soft clip below the knee keeps anime mid-tones bright and saturated;

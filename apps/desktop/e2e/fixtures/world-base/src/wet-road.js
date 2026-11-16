@@ -4,11 +4,13 @@ const SIZE = 512;
 const BOUNDS = { x0: -4, z0: 4, x1: 4, z1: 34 };
 const DECALS = new Set(['street-lines', 'street-paint', 'street-glyphs', 'street-util-decals', 'street-util-top']);
 const GROUPS = [
-  { z: 8.5, offset: 1.9, rx: 0.53, rz: 1.8, water: 0.85 },
-  { z: 13.8, offset: -1.9, rx: 0.55, rz: 1.7, water: 0.55 },
-  { z: 21.7, offset: 1.9, rx: 0.52, rz: 1.8, water: 0.7 },
-  { z: 28.0, offset: -1.85, rx: 0.60, rz: 2.0, water: 1.0 },
-  { z: 31.5, offset: 1.9, rx: 0.51, rz: 1.4, water: 0.0 },
+  // Lane-wide damp bands (refs 10/11 in #252): at street-level grazing angles a
+  // 1 m patch collapses to a few pixel rows, so patches span most of a lane.
+  { z: 8.5, offset: 1.6, rx: 1.35, rz: 3.2, water: 0.85 },
+  { z: 13.8, offset: -1.6, rx: 1.30, rz: 2.8, water: 0.55 },
+  { z: 21.7, offset: 1.6, rx: 1.30, rz: 3.4, water: 0.7 },
+  { z: 28.0, offset: -1.5, rx: 1.45, rz: 3.6, water: 1.0 },
+  { z: 31.5, offset: 1.6, rx: 1.20, rz: 2.4, water: 0.0 },
 ];
 
 function smooth(a, b, x) {
@@ -69,7 +71,7 @@ function makeMask(root, layout) {
       const edge = 1 + 0.11 * Math.sin(z * 5.7 + x * 4.1) + 0.08 * Math.sin(z * 2.9 - x * 11.3);
       const q = (a * a + b * b) / edge;
       wet = Math.max(wet, 1 - smooth(0.12, 1, q));
-      puddle = Math.max(puddle, (1 - smooth(0.025, 0.23, q)) * group.water);
+      puddle = Math.max(puddle, (1 - smooth(0.05, 0.42, q)) * group.water);
     }
     data[i * 2] = Math.round(wet * 255);
     data[i * 2 + 1] = Math.round(puddle * 255);
@@ -112,8 +114,8 @@ export function applyWetRoad({ root, ctx }) {
     uWetMask: { value: texture }, uWetEnabled: { value: 1 },
     uWetWorldToLocal: { value: root.matrixWorld.clone().invert() },
     uWetBounds: { value: new THREE.Vector4(BOUNDS.x0, BOUNDS.z0, BOUNDS.x1 - BOUNDS.x0, BOUNDS.z1 - BOUNDS.z0) },
-    uWetSkyLow: { value: new THREE.Color('#bbc6c7') },
-    uWetSkyHigh: { value: new THREE.Color('#7e9cad') },
+    uWetSkyLow: { value: new THREE.Color('#c9d6df') },
+    uWetSkyHigh: { value: new THREE.Color('#8fb0c6') },
   };
   const upstreamCompile = original.onBeforeCompile;
   const upstreamKey = original.customProgramCacheKey();
@@ -139,14 +141,18 @@ export function applyWetRoad({ root, ctx }) {
       vec2 wetUV = (vWetLocal - uWetBounds.xy) / uWetBounds.zw;
       float wetInside = step(0.0, wetUV.x) * step(wetUV.x, 1.0) * step(0.0, wetUV.y) * step(wetUV.y, 1.0);
       vec2 wetMask = texture2D(uWetMask, wetUV).rg * wetInside * uWetEnabled;
-      diffuseColor.rgb *= 1.0 - 0.22 * wetMask.r;`);
+      // Wet asphalt reads darker and slightly cooler/more saturated.
+      diffuseColor.rgb *= mix(vec3(1.0), vec3(0.50, 0.53, 0.60), wetMask.r);`);
     shader.fragmentShader = insert(shader.fragmentShader, '#include <opaque_fragment>', `
       vec3 wetN = inverseTransformDirection(normal, viewMatrix);
       vec3 wetV = normalize(cameraPosition - vWetWorld);
       float wetFresnel = pow(1.0 - clamp(dot(wetN, wetV), 0.0, 1.0), 5.0);
       vec3 wetReflection = reflect(-wetV, wetN);
       vec3 wetSky = mix(uWetSkyLow, uWetSkyHigh, smoothstep(0.0, 0.7, wetReflection.y));
-      outgoingLight = mix(outgoingLight, wetSky, wetMask.g * (0.025 + 0.16 * wetFresnel));
+      // Standing water is close to a mirror at street-level grazing angles
+      // (F0 for water ~0.02, but the cel look needs a readable sheet).
+      outgoingLight = mix(outgoingLight, wetSky, wetMask.g * (0.06 + 0.45 * wetFresnel));
+      outgoingLight = mix(outgoingLight, wetSky * 0.85, wetMask.r * 0.12 * wetFresnel);
       #include <opaque_fragment>`);
   };
   // The different callback deliberately opts out of batch2's material rewriting.
