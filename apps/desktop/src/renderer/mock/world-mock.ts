@@ -865,7 +865,13 @@ export function createWorldMock(ctx: Ctx, options: WorldMockOptions = {}) {
           ? `我在做饭，大概还要 ${Math.max(1, run.activity.endsAt - x.now)} 分钟才好。`
           : `我${ACTIVITY_DOING[run.activity.kind]}呢。怎么了？`
         : "嗯？怎么了？";
-      sc.lines.push({ speaker: me, text, expression: r.energy < 25 ? "tired" : r.mood > 70 ? "happy" : "neutral", source: "model", seq: say(me, text, sc.id) });
+      const expression = r.energy < 25 ? "tired" : r.mood > 70 ? "happy" : "neutral";
+      // 手上有事时先来一句她自己的闲聊（source = chat），再接程序按证据写的那句，演示两句一起显示
+      if (run) {
+        const chat = r.mood > 70 ? "你来啦，正好想找人说说话。" : "啊，是你呀。";
+        sc.lines.push({ speaker: me, text: chat, expression, source: "chat", seq: say(me, chat, sc.id) });
+      }
+      sc.lines.push({ speaker: me, text, expression, source: "model", seq: say(me, text, sc.id) });
     }
     const opts: WorldSceneOption[] = [];
     if (run?.activity.kind !== "sleep") opts.push({ id: "opt_read", label: "邀她一起看书", act: { actor: PLAYER, action: { type: "invite", to: me, activity: "read" } } });

@@ -506,6 +506,18 @@ export function budgetText(budgets: readonly WorldBudget[], agent: string): stri
 /** 场景里现在该显示的那一句：最后一句。没有台词时是 null */
 export const currentLine = (scene: Pick<WorldScene, "lines">) => scene.lines[scene.lines.length - 1] ?? null;
 
+/**
+ * 对话框里现在该显示的台词。她一次回话可能是两句：先一句自己写的闲聊（source = chat），再一句程序按证据写的话
+ * （source = model）。两句是同一个人接连说的，要一起显示，不能让后一句把闲聊盖掉。其余情况只显示最后一句。
+ */
+export function currentLines(scene: Pick<WorldScene, "lines">): WorldScene["lines"] {
+  const last = scene.lines[scene.lines.length - 1];
+  if (!last) return [];
+  const before = scene.lines[scene.lines.length - 2];
+  const sameSpeaker = before?.speaker?.kind === "resident" && last.speaker?.kind === "resident" && before.speaker.agent === last.speaker.agent;
+  return before && sameSpeaker && before.source === "chat" && last.source === "model" ? [before, last] : [last];
+}
+
 /** 一间屋是哪一类，画面按它铺地板和摆设 */
 export function placeKind(p: Pick<WorldPlace, "id" | "owner">): "bedroom" | "kitchen" | "living" {
   if (p.owner !== null) return "bedroom";

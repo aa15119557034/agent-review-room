@@ -112,6 +112,11 @@
   border-color: var(--agent);
 }
 
+.world-start-people label:has(input:disabled) {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .world-start-people label:has(input:focus-visible) {
   outline: 2px solid var(--ink);
   outline-offset: 2px;
@@ -930,6 +935,10 @@
   font-size: 16px;
   line-height: 1.7;
   animation: scene-line 0.3s ease both;
+}
+
+.scene-text + .scene-text {
+  margin-top: 0.35em;
 }
 
 .scene-waiting {

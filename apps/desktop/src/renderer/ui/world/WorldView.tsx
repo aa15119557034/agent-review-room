@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import type { WorldActivity, WorldPlace, WorldResident, WorldSnapshot } from "@room/schemas";
+import { WORLD_MAX_RESIDENTS } from "@room/schemas";
 import { agentColor, agentName } from "../../lib/discussion";
 import {
   ACTIVITY_DOING, ACTIVITY_LABEL, INVITABLE, REJECT_TEXT, activityProgress, budgetText, clockText, cognitionNote, commitmentViews,
@@ -57,8 +58,13 @@ function StartScreen({ notice }: { notice: ReactNode }) {
   const starting = useAppState((s) => s.world.starting);
   const actions = useActions();
   const [picked, setPicked] = useState<string[] | null>(null);
-  const chosen = picked ?? (settings?.residents ?? []).filter((a) => agents.some((x) => x.id === a));
-  const toggle = (id: string) => setPicked(chosen.includes(id) ? chosen.filter((a) => a !== id) : [...chosen, id]);
+  // 新开的一局最多 4 位（契约 WORLD_MAX_RESIDENTS）。以前存下的名单可能更长，只带出前 4 位让你重选
+  const chosen = picked ?? (settings?.residents ?? []).filter((a) => agents.some((x) => x.id === a)).slice(0, WORLD_MAX_RESIDENTS);
+  const full = chosen.length >= WORLD_MAX_RESIDENTS;
+  const toggle = (id: string) => {
+    if (chosen.includes(id)) setPicked(chosen.filter((a) => a !== id));
+    else if (!full) setPicked([...chosen, id]);
+  };
   return (
     <main className="world world-empty">
       {notice}
@@ -67,10 +73,10 @@ function StartScreen({ notice }: { notice: ReactNode }) {
         <p>秘书们住在这里过日子：自己做饭、看书、休息、互相说话。你也在这个家里，可以走到哪间屋、找谁说话、邀她一起做事。</p>
         {loaded && agents.length === 0 && <p className="world-start-hint" role="status">还没有配置秘书。先到「秘书」页配置至少一位，再回来开始。</p>}
         <fieldset className="world-start-people" style={agents.length === 0 ? { display: "none" } : undefined}>
-          <legend>谁住进来</legend>
+          <legend>谁住进来（最多 {WORLD_MAX_RESIDENTS} 位）</legend>
           {agents.map((a) => (
             <label key={a.id} style={{ "--agent": a.color } as CSSProperties}>
-              <input type="checkbox" checked={chosen.includes(a.id)} onChange={() => toggle(a.id)} />
+              <input type="checkbox" checked={chosen.includes(a.id)} disabled={full && !chosen.includes(a.id)} onChange={() => toggle(a.id)} />
               <Figure color={a.color} />
               <span>{a.displayName}</span>
             </label>

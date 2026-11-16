@@ -8,7 +8,7 @@ import { createClient } from "../lib/client";
 import { applyEvent, initialState, type AppState } from "../lib/state";
 import { createStore } from "../lib/store";
 import {
-  applyScene, applySnapshot, applyWorldEvent, applyWorldState, clockText, commitmentViews, dayClockText, dayOf, dayPhase, eventText, initialWorld,
+  applyScene, applySnapshot, applyWorldEvent, applyWorldState, clockText, commitmentViews, currentLines, dayClockText, dayOf, dayPhase, eventText, initialWorld,
   mergeEventsPage, pathTo, residentLine, worldNames, worldNow, type WorldUiState,
 } from "../lib/world";
 
@@ -362,7 +362,8 @@ describe("世界：演示后台按契约走", () => {
     assert.equal(await t.actions.world.talk(chef.agent), true);
     const sc = t.w().scene!;
     const left = cook.endsAt - t.snap().now;
-    assert.match(sc.lines[0]!.text, new RegExp(`还要 ${left} 分钟`));
+    assert.match(sc.lines.at(-1)!.text, new RegExp(`还要 ${left} 分钟`));
+    assert.deepEqual(sc.lines.map((l) => l.source), ["chat", "model"], "先一句闲聊，再一句程序按证据写的");
     assert.equal(await t.actions.world.sceneSay(sc.id, "饭好了吗"), true);
     assert.equal(t.w().scene!.state, "waiting");
     await t.advance(2);
@@ -371,7 +372,7 @@ describe("世界：演示后台按契约走", () => {
     assert.match(reply.text, /饭还没好/);
     assert.equal(t.w().scene!.state, "open");
     const said = t.w().events.filter((e) => e.type === "said" && e.sceneId === sc.id);
-    assert.equal(said.length, 3, "开场一句、你一句、她回一句，都留了事件");
+    assert.equal(said.length, 4, "开场两句（闲聊 + 事实）、你一句、她回一句，都留了事件");
     // 选「邀她一起看书」：走同一套规则，留下约定
     assert.equal(await t.actions.world.sceneChoose(sc.id, "opt_read"), true);
     await tick();
@@ -583,5 +584,17 @@ describe("世界：旧请求的回应晚到（林离 #230 第一轮）", () => {
     const later = WorldState.parse(await mock.queries["world.get"]());
     assert.ok(later.world!.lastSeq > 25, "4 位都在各自过日子，每个人都走得到要去的地方");
     assert.ok(later.world!.places.filter((p) => p.owner !== null).every((p) => p.neighbors.join() === "living_room"));
+  });
+
+  it("对话框：闲聊句和紧跟的事实句一起显示，其余只显示最后一句", () => {
+    const she = { kind: "resident" as const, agent: "claude" }, other = { kind: "resident" as const, agent: "codex" };
+    const l = (speaker: WorldScene["lines"][number]["speaker"], source: WorldScene["lines"][number]["source"], text: string) => ({ speaker, source, text, expression: "neutral" as const, seq: null });
+    const chat = l(she, "chat", "你来啦"), fact = l(she, "model", "我在做饭"), narration = l(null, "rule", "厨房里很香");
+    assert.deepEqual(currentLines({ lines: [] }), []);
+    assert.deepEqual(currentLines({ lines: [narration, chat, fact] }), [chat, fact]);
+    assert.deepEqual(currentLines({ lines: [fact, chat] }), [chat], "只闲聊");
+    assert.deepEqual(currentLines({ lines: [chat, l(other, "model", "我在看书")] }), [l(other, "model", "我在看书")], "不是同一个人不并");
+    assert.deepEqual(currentLines({ lines: [fact, fact] }), [fact]);
+    assert.deepEqual(currentLines({ lines: [chat, narration] }), [narration]);
   });
 });
