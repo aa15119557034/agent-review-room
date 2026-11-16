@@ -125,6 +125,36 @@ test("initialization and dispatch reject wrong node, ledger, mapping, recipe or 
   });
 });
 
+test("local admission is rechecked after held health and before every retry POST", async t => {
+  await t.test("health wait", async t => {
+    let entered!: () => void, release!: () => void;
+    const held = new Promise<void>(resolve => { entered = resolve; });
+    const released = new Promise<void>(resolve => { release = resolve; });
+    let current = true, calls = 0, posts = 0;
+    const f = await fixture(t, async (req, res) => {
+      if (req.url === "/v1/health" && ++calls === 2) { entered(); await released; }
+      if (req.url === "/v1/runs") { posts++; reply(res, 202, { ok: true }); return true; }
+      return false;
+    });
+    const adapter = new HttpRemoteAgentAdapter({ ...f.options, isDispatchCurrent: () => current });
+    assert.equal("isDispatchCurrent" in adapter.node, false);
+    await adapter.initialize();
+    const running = collect(adapter);
+    try { await held; current = false; release(); assert.equal((await running).at(-1)?.type, "cancelled"); assert.equal(posts, 0); }
+    finally { release(); await running; }
+  });
+  await t.test("retry wait", async t => {
+    let current = true, posts = 0;
+    const f = await fixture(t, (req, res) => {
+      if (req.url !== "/v1/runs") return false;
+      posts++; current = false; reply(res, 503, { error: "fixture_retry" }); return true;
+    });
+    const adapter = new HttpRemoteAgentAdapter({ ...f.options, isDispatchCurrent: () => current });
+    assert.equal((await collect(adapter)).at(-1)?.type, "cancelled");
+    assert.equal(posts, 1, "the uncertain first attempt still needs proof, but must not be retried with invalid local settings");
+  });
+});
+
 test("world input with chat or commit context is refused locally; unknown recipe never dispatches", async t => {
   let calls = 0;
   const f = await fixture(t, () => { calls++; return false; });
