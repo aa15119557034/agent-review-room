@@ -1,0 +1,18 @@
+{
+  "head": "50acf68385da38ed9570fce0ff4ce0e65e9207dc",
+  "files": {
+    "alley.js": "d60f544b33b376659d56e119ccf52590dc87144fe803ad37226274f80923f30e",
+    "craft.js": "fb1b742db1401338464053336a484765ef7766e8b7f5338fa48e11ed03f458b3",
+    "index.html": "8c4c696e0cd9c3c125be3817939098095f63461172decc9fa32ba93f04c1a1e9",
+    "light-pools.js": "5633c491971c6256aa08d50a4209192b4db59fa8aaa2bb4e0e8537c713c92696",
+    "main.js": "38d8134ba3c7a9e428254153bba4ee27046c2ed463a9cbda8712926e2698abac",
+    "neighborhood.js": "f976f023c1e9b44c0bbd06f3a5e54a42e07ca16e9b0b92ae92144cf19b626330",
+    "outline.js": "3847510447a4df6e3edb9f4c2c5691caf15bb668b708b4190f0d5bec8f0e2bc1",
+    "puddles.js": "b55f4d3501b0fd8f373ce0a24592fa10d8a3b36201c3f20857c13f8ebce5f4dc",
+    "roof.js": "d12b26c9a97eaec1d38a20f942c01a19b4ad4251999538abca5452d7abdf3da0",
+    "store.js": "52dfb9f85342a91d209faa3306517fe757debea4eeb560b084726bf744a71258",
+    "street.js": "34a2cfb467baa69a906c7567c1faf9ca6a0a5feb6f655ad954078fe0c066d53b",
+    "weather.js": "6adda26b6b00ffef1e7d8e33a6ce8ec2dea71f0f25022ad283d2ee1687fdee47"
+  },
+  "capturedAt": "2026-11-16T11:40:25.789Z"
+}

@@ -38,3 +38,6 @@ apps/desktop/vendor/
 # 验收构建产物（本机）
 release-acc*/
 
+# Rainy convenience-store preview, captures and isolated Electron profiles
+/artifacts/rainy-konbini/
+
