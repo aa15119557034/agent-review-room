@@ -1,12 +1,15 @@
 {
-  "head": "b5f61f04a470015f0e40cc69d81d6c7d6b4dc5ff",
+  "head": "22b0499e0bb935d5b682bb16635b9ee9443143c1",
   "files": {
-    "craft.js": "81ff582115ccb6dfae32e35009d090f2dd69ffb54783ec483b585700b0aef46c",
+    "craft.js": "0c6c8700de6d1b5083d87bf4faf9e7d41cb7547f43dff3086653ba0226be4144",
     "index.html": "8c4c696e0cd9c3c125be3817939098095f63461172decc9fa32ba93f04c1a1e9",
-    "main.js": "0577bd557f1da6548a310113faba4cef79b1a24e49fc38c8f79e9507e09d0b97",
+    "light-pools.js": "4d66a622369dbfb86e902cd2fd9379dd06283272af326bc09ea00017b524930d",
+    "main.js": "2c4ed868ca9cda9ab997c7d4abb77f2acb1db3833e1e50534b9c08a184927e52",
+    "outline.js": "9359fdda5b34fe2bee0aa833e9427c2580a50797ee96a3b0f2b179df5412ff9f",
+    "puddles.js": "a46f1854db65da6b11b853703dabdfc236e0e7074aa86f4cfaf1b9aae7c45eac",
     "store.js": "924756f5aab6ca2db42e77fffc659fa76bf56b69c4b551fb37327232ccaf59f8",
     "street.js": "3f8dbf83d0826c533f9d83274572eeb4d886ab61b95191a77c3ef8f1f6fd4b3e",
-    "weather.js": "f2cbb4676d437901b9a4b5eadd0bd631dc7b2080daf3b563fdc931ce4eeb91e2"
+    "weather.js": "6adda26b6b00ffef1e7d8e33a6ce8ec2dea71f0f25022ad283d2ee1687fdee47"
   },
-  "capturedAt": "2026-11-16T10:21:27.038Z"
+  "capturedAt": "2026-11-16T10:59:29.666Z"
 }

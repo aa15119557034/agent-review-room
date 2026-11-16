@@ -1,5 +1,6 @@
 import * as T from 'three';
 import { paintedLightPools } from './light-pools.js';
+import { clusteredPuddles } from './puddles.js';
 
 export function weather(scene,c,shop) {
   let seed=281;const random=()=>((seed=(seed*1664525+1013904223)>>>0)/4294967296);
@@ -16,14 +17,7 @@ export function weather(scene,c,shop) {
     fragmentShader:`varying float vHeight;void main(){float a=.17*smoothstep(.07,.4,vHeight)*(1.-smoothstep(5.,8.,vHeight));gl_FragColor=vec4(.50,.64,.77,a);}`
   }));rain.name='continuous-rain';rain.frustumCulled=false;scene.add(rain);
   const ground=paintedLightPools(scene,time);
-  // Expanding circles are surface ripples, not a screen overlay.
-  const rippleMaterial=new T.ShaderMaterial({uniforms:{time},transparent:true,depthWrite:false,side:T.DoubleSide,
-    vertexShader:`attribute float phase;varying vec2 vUv;varying float vPhase;void main(){vUv=uv;vPhase=phase;gl_Position=projectionMatrix*modelViewMatrix*instanceMatrix*vec4(position,1.);}`,
-    fragmentShader:`uniform float time;varying vec2 vUv;varying float vPhase;void main(){float t=fract(time*.68+vPhase);float r=length((vUv-.5)*2.);float ring=1.-smoothstep(.012,.035,abs(r-t*.95));float echo=(1.-smoothstep(.01,.025,abs(r-t*.6)))*.3;gl_FragColor=vec4(.56,.74,.83,(ring+echo)*(1.-t)*.40);}`});
-  const rippleGeo=new T.PlaneGeometry(.76,.76);rippleGeo.rotateX(-Math.PI/2);
-  const count=90;const ripples=new T.InstancedMesh(rippleGeo,rippleMaterial,count),phaseArray=new Float32Array(count),dummy=new T.Object3D();
-  for(let i=0;i<count;i++){let x,z;do{x=random()*13-6.5;z=random()*13-6.5;}while(x<3.65&&z<3.45);dummy.position.set(x,.086,z);dummy.scale.setScalar(.4+random()*.9);dummy.updateMatrix();ripples.setMatrixAt(i,dummy.matrix);phaseArray[i]=random();}
-  rippleGeo.setAttribute('phase',new T.InstancedBufferAttribute(phaseArray,1));ripples.name='puddle-ripples';scene.add(ripples);
+  const puddles=clusteredPuddles(scene,time,random),ripples=puddles.ripples;
   const dripGeo=new T.BufferGeometry(),dp=[],dph=[];
   for(let i=0;i<40;i++){const x=-5.7+random()*7.8;for(const y of [0,.095]){dp.push(x,y,2.04);dph.push(random()+i*.025);}}
   // Both vertices of each drip share a phase so segments keep a short length.
@@ -38,5 +32,5 @@ export function weather(scene,c,shop) {
   const streaks=new T.Group();streaks.name='glass-rain-trails';scene.add(streaks);
   for(const [x,w]of[[-4.34,2.47],[-2.38,1.20],[.95,1.52]]){const pane=new T.Mesh(new T.PlaneGeometry(w,2.25),streakMaterial);pane.position.set(x,1.83,1.28);pane.renderOrder=3;streaks.add(pane);}
   for(const leaf of [shop.doorLeft,shop.doorRight]){const pane=new T.Mesh(new T.PlaneGeometry(.82,2.25),streakMaterial);pane.position.set(0,1.47,.045);pane.renderOrder=3;leaf.add(pane);}
-  return {rain,ground,ripples,drips,streaks,update(t,signalColor){time.value=t;ground.signal.value.copy(signalColor);}};
+  return {rain,ground,puddles,ripples,drips,streaks,update(t,signalColor){time.value=t;ground.signal.value.copy(signalColor);}};
 }

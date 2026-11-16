@@ -1,7 +1,7 @@
 {
   "ready": true,
   "errors": [],
-  "elapsed": 35.49919999985695,
+  "elapsed": 35.5125,
   "statistics": {
     "authoredMeshes": 2177,
     "batches": 138
@@ -41,20 +41,110 @@
     "staff-door": 1
   },
   "frameCount": 900,
-  "fps": 65.00072223024698,
+  "fps": 64.99978333405556,
   "p95Ms": 15.5,
-  "drawCalls": 757,
-  "triangles": 1283547,
+  "drawCalls": 650,
+  "triangles": 1259572,
   "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
   "width": 1416,
   "height": 936,
   "pixelRatio": 1,
   "doorOpening": 0,
-  "rainTime": 35.49919999985695,
-  "reflectionTime": 35.49919999985695,
+  "rainTime": 35.5125,
+  "paintedReflectionTime": 35.5125,
+  "lightPools": [
+    {
+      "name": "shop-amber-fan",
+      "x": -1.9,
+      "z": 3.86,
+      "width": 7.8,
+      "length": 5.3
+    },
+    {
+      "name": "streetlamp-warm-pool",
+      "x": 5.03,
+      "z": 3.55,
+      "width": 3.35,
+      "length": 4.2
+    },
+    {
+      "name": "vending-cyan-reflection",
+      "x": 2.54,
+      "z": 2.2,
+      "width": 1.65,
+      "length": 3.3
+    },
+    {
+      "name": "signal-changing-streak",
+      "x": 5.75,
+      "z": 5.4,
+      "width": 0.82,
+      "length": 2.65
+    }
+  ],
+  "outline": {
+    "kind": "depth-normal-sobel",
+    "widthAt1080p": 1.8
+  },
   "memory": {
-    "geometries": 166,
-    "textures": 58
+    "geometries": 173,
+    "textures": 59
+  },
+  "puddles": {
+    "count": 30,
+    "opacity": 0.18,
+    "patches": [
+      {
+        "name": "warm-shop-puddle",
+        "x": -1.3,
+        "z": 4.6,
+        "rx": 2.15,
+        "rz": 0.69,
+        "y": 0.078,
+        "color": "#dbad78",
+        "count": 10
+      },
+      {
+        "name": "warm-lamp-puddle",
+        "x": 4.94,
+        "z": 3.82,
+        "rx": 1.15,
+        "rz": 0.87,
+        "y": 0.078,
+        "color": "#d9b47f",
+        "count": 7
+      },
+      {
+        "name": "cool-side-puddle",
+        "x": 4.53,
+        "z": -1.7,
+        "rx": 0.72,
+        "rz": 1.68,
+        "y": 0.078,
+        "color": "#739db8",
+        "count": 6
+      },
+      {
+        "name": "cyan-vending-puddle",
+        "x": 2.83,
+        "z": 2.16,
+        "rx": 0.4,
+        "rz": 0.43,
+        "y": 0.28,
+        "color": "#78bdc6",
+        "count": 3
+      },
+      {
+        "name": "cool-front-puddle",
+        "x": 1.92,
+        "z": 6.06,
+        "rx": 1.28,
+        "rz": 0.38,
+        "y": 0.078,
+        "color": "#739db8",
+        "count": 4
+      }
+    ]
   },
   "bounds": {
     "min": [
@@ -67,5 +157,40 @@
       6.880000114440918,
       7
     ]
+  },
+  "lightPixelGain": [
+    {
+      "name": "shop",
+      "x": 512,
+      "y": 591,
+      "unlit": 111.08230452674897,
+      "lit": 165.0411522633745
+    },
+    {
+      "name": "lamp",
+      "x": 776,
+      "y": 712,
+      "unlit": 52.62139917695473,
+      "lit": 124.37860082304526
+    },
+    {
+      "name": "vending",
+      "x": 740,
+      "y": 662,
+      "unlit": 116.24279835390946,
+      "lit": 135.0082304526749
+    }
+  ],
+  "resize": {
+    "canvas": [
+      960,
+      640
+    ],
+    "outline": [
+      960,
+      640
+    ],
+    "radius": 0.5333333333333333,
+    "errors": []
   }
 }

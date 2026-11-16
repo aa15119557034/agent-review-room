@@ -8,7 +8,7 @@
 
 协作只在 GitHub 进行。C酱已在 [#253 第一轮评审](https://github.com/aa15119557034/agent-review-room/pull/253#issuecomment-6914180828) 提出建模指导；江浩指定先做 1～3，四机位逐步对比后交 C酱复审，4～7 暂不实施。
 
-第二轮进度：第 1 项已将旧 `EdgesGeometry` 改为深度＋法线屏幕空间描边，1080p 标称约 1.8px，统一深靛色，透明玻璃和雨水不参与描线。第 2 项改为五级明暗、`NoToneMapping` 和四处手绘地面光斑／倒影，并移除整场 `Reflector` 渲染。下方四张静帧已更新到该阶段；性能报告及录像暂仍对应第一轮，完成 1～3 后统一重跑更新。
+第二轮已按 1～3 实施并完成本机检查，等待 C酱美术复审。第 1 项将旧 `EdgesGeometry` 改为深度＋法线屏幕空间描边，1080p 标称约 1.8px，统一深靛色，透明玻璃和雨水不参与描线。第 2 项改为五级明暗、`NoToneMapping` 和四处手绘地面光斑／倒影，并移除整场 `Reflector` 渲染。第 3 项把涟漪从 90 降到 30，分布在五片不规则水洼内，峰值透明度 .18，颜色随暖光／青光／蓝色路面区分。四张静帧、录像和渲染报告均已更新到本轮 1～3 的最终状态；每一步的原机位前后对比见 #253 评论。
 
 样板是 `apps/desktop/e2e/fixtures/rainy-konbini/` 中的独立 Three.js 场景，复用 #246 的既有 Three.js 0.187.0、Vite 和 Electron 依赖。因此 PR 叠在 `codex/X-45-world-3d` 上；现有共享小屋的未提交美术改动原样保留。本次没有改世界规则、存档、IPC、模型节点或生产页面入口。
 
@@ -18,7 +18,7 @@
 - 便利店的大玻璃后有实际货架、饮料冷柜、便当／饭团／零食、收银台、咖啡机、关东煮柜、杂志架、冰柜、后场门、地面导视与灯箱。
 - 街道包含自动贩卖机、两辆自行车、伞架、分类桶、路灯、电杆与下垂电线、路牌、护栏、停车位、排水沟、井盖、斑马线、公告栏、空调外机、配送筐和花盆。旋转到背面可见装卸门、磨砂窗、电表箱与线管。
 - 五级明暗的 toon 材质加深度／法线轮廓线；干净的贴图和原创招牌。室内琥珀灯光、室外蓝紫夜色、玻璃，以及店面琥珀扇形、路灯暖色、贩卖机青色和交通灯变色的地面光斑。手绘光带有轻微噪声／水纹扰动；分开覆盖路面与人行道，仍受实体物体遮挡，泛光克制。
-- 持续雨、檐口滴水、积水涟漪、玻璃雨痕、招牌照明轻微变化、交通灯变化；自动门每 26 秒完成一次维护开合。门上的雨痕随门片移动。
+- 持续雨、檐口滴水、五片水洼中的 30 个低亮度涟漪、玻璃雨痕、招牌照明轻微变化、交通灯变化；自动门每 26 秒完成一次维护开合。门上的雨痕随门片移动。
 - 左键拖拽旋转；右键拖拽平移；滚轮缩放。场景内没有按钮、说明文字或调试面板；招牌、海报和交通标识是场景物体。
 
 当前是样板，未与生活规则接线。没有角色，也没有真实模型调用。程序生成的环境几何与招牌图案由本轮原创，未使用下载的第三方人物或环境模型。第三方依赖许可证沿用仓库已有声明。
@@ -43,6 +43,8 @@ node scripts/preview-rainy-konbini.cjs --build-only
 node scripts/preview-rainy-konbini.cjs --capture
 ```
 
+每一步只拍相同的四个机位、不生成新录像时使用 `--stills`。中间迭代覆盖同名 PNG；本轮只在 1～3 全部完成后覆盖一次录像。
+
 支持 `--output=<目录>` 与 `--electron=<已有electron.exe路径>`。本机实际使用：
 
 ```text
@@ -53,9 +55,11 @@ node scripts/preview-rainy-konbini.cjs --capture --electron=D:\codex\2026-11-16\
 
 ## 验证与评审证据
 
-实际执行的 Vite 构建、WebGL 渲染、空 UI 检查、底座 X/Z 边界检查、自动门开合和雨水时间推进检查见 [render-report.json](world-rainy-konbini/render-report.json) 与 [animation-report.json](world-rainy-konbini/animation-report.json)。[source-manifest.json](world-rainy-konbini/source-manifest.json) 记录被检查源文件的 SHA-256；本报告不把后续未检查的改动计入结果。
+实际执行的 Vite 构建、WebGL 渲染、空 UI 检查、底座 X/Z 边界检查、自动门开合和雨水时间推进检查见 [render-report.json](world-rainy-konbini/render-report.json) 与 [animation-report.json](world-rainy-konbini/animation-report.json)。[source-manifest.json](world-rainy-konbini/source-manifest.json) 记录被检查场景源文件的 SHA-256；本报告不把后续未检查的改动计入结果。
 
-本机 GPU 是 RTX 3060 Laptop，截图视口 1416 × 936，渲染比例 1。性能数字以报告为准，包含反射和阴影绘制，不能当作其他机器或完整世界的性能保证。尚未做移动端或长期 GPU 稳定性检查。
+本机 GPU 是 RTX 3060 Laptop，截图视口 1416 × 936，渲染比例 1。第二轮采样 900 帧约 65.00 FPS、p95 15.5ms；绘制调用 650（第一轮 757），三角形 1,259,572，包含法线／深度、颜色和阴影绘制，不能当作其他机器或完整世界的性能保证。尚未做移动端或长期 GPU 稳定性检查。
+
+为防止再次出现“shader 在运行但地面看不见光”的情况，本轮在固定全景机位对同三个地面小区域做光斑开／关像素比较。店前平均 RGB 从 111.08 到 165.04、路灯下从 52.62 到 124.38、贩卖机前从 116.24 到 135.01（0～255）；三处均通过可见增亮断言。另将窗口内容缩到 960 × 640，确认描边目标尺寸与画布一致且无渲染错误。这些数值证明效果可见，不代替美术评审。
 
 Windows Computer Use 实际操作已观察到左键拖拽改变观察方向、右键拖拽平移场景、滚轮改变模型显示大小，随后重载恢复初始取景。桌面截图受到当前高 DPI 截取范围影响，仓库中的四张画面直接来自同一 Electron 场景的 `webContents.capturePage()`，没有裁剪、修图或另行生成。检查记录见 [interaction-report.json](world-rainy-konbini/interaction-report.json)。
 
