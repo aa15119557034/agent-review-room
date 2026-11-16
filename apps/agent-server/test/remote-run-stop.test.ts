@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import cp, { type ChildProcess } from "node:child_process";
 import { createHash } from "node:crypto";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { RunLedger } from "../src/run-ledger";
 import { EventEmitter } from "node:events";
 import { syncBuiltinESMExports } from "node:module";
 import { PassThrough } from "node:stream";
@@ -29,7 +33,9 @@ class FakeChild extends EventEmitter {
   }
 }
 
-async function fixture(t: TestContext, closeWaitMs?: number) {
+async function fixture(t: TestContext, closeWaitMs?: number, fenced = false) {
+  const fenceDir = fenced ? mkdtempSync(join(tmpdir(), "room-stop-fence-")) : undefined;
+  const ledger = fenceDir ? await RunLedger.initialize(fenceDir) : undefined;
   const children: FakeChild[] = [], runs: RemoteRun[] = [], warnings: string[] = [];
   let killCalls = 0;
   // Exercise the production HTTP/RemoteRun path, but never launch a CLI or
@@ -55,17 +61,18 @@ async function fixture(t: TestContext, closeWaitMs?: number) {
   t.mock.method(RemoteRun.prototype, "start", function (this: RemoteRun) { runs.push(this); originalStart.call(this); });
   const cfg = ServerConfig.parse({
     nodeId: "stop-proof-test", port: 1, maxConcurrentRuns: 1,
+    ...(fenceDir ? { runFenceDir: fenceDir } : {}),
     leaseMs: 30_000, heartbeatMs: 1000, killGraceMs: 200,
     profiles: { fake: { command: process.execPath, args: [], cwd: process.cwd() } },
   });
   const token = "fake-stop-proof-token".repeat(2);
-  const app = createAgentServer(cfg, token, undefined, { warn: (line) => warnings.push(line), ...(closeWaitMs === undefined ? {} : { closeWaitMs }) });
+  const app = createAgentServer(cfg, token, undefined, { ledger, warn: (line) => warnings.push(line), ...(closeWaitMs === undefined ? {} : { closeWaitMs }) });
   let closed = false;
   t.after(async () => {
     try {
       for (const child of children) child.close();
       if (!closed) await app.close();
-    } finally { t.mock.restoreAll(); syncBuiltinESMExports(); }
+    } finally { t.mock.restoreAll(); syncBuiltinESMExports(); if (fenceDir) rmSync(fenceDir, { recursive: true, force: true }); }
   });
   await new Promise<void>((resolve) => app.server.listen(0, "127.0.0.1", resolve));
   const address = app.server.address(); assert.ok(address && typeof address !== "string");
@@ -77,7 +84,7 @@ async function fixture(t: TestContext, closeWaitMs?: number) {
     return { status: response.status, body: await response.json() };
   };
   return {
-    children, runs, warnings, cfg, id, get killCalls() { return killCalls; },
+    children, runs, warnings, cfg, id, fenceDir, proof: (n: number) => request(`/v1/runs/${id(n)}/proof`), get killCalls() { return killCalls; },
     start: (n: number) => request("/v1/runs", {
       protocol: 1, runId: id(n), profileId: "fake",
       snapshot: { id: "snap_" + String(n).padStart(26, "0"), content: "fixture", contentHash: createHash("sha256").update("fixture").digest("hex") },
@@ -135,4 +142,24 @@ test("bounded server shutdown reports an unconfirmed stop without inventing a te
   assert.ok(h.warnings.some((line) => line.includes(h.id(1)) && line.includes("没有 terminal")));
   h.children[0]!.close();
   assert.equal(h.runs[0]!.isFinished, true);
+});
+
+
+test("persistent proof waits for close and a sealed old writer cannot change the next owner's ledger", { skip: process.platform !== "win32" }, async t => {
+  const h = await fixture(t, 0, true);
+  assert.equal((await h.start(1)).status, 202);
+  await h.cancel(1);
+  assert.equal((await h.proof(1)).body.status, "unconfirmed");
+  assert.equal((await h.health()).activeRuns, 1);
+  h.children[0]!.close();
+  assert.equal((await h.proof(1)).body.status, "closed_process");
+  assert.equal((await h.start(2)).status, 202);
+  await h.close();
+  const next = await RunLedger.open(h.fenceDir!);
+  try {
+    assert.equal(next.proof(h.id(2)).status, "unconfirmed");
+    h.children[1]!.close();
+    assert.equal(next.proof(h.id(2)).status, "unconfirmed", "old owner cannot append after releasing its pipe locks");
+    assert.equal(next.unconfirmedCount, 1);
+  } finally { await next.close(); }
 });
