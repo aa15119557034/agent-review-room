@@ -124,6 +124,11 @@
       "use": "Standalone OCR capability"
     },
     {
+      "id": "files-api",
+      "url": "https://api-docs.deepseek.com/guides/files_api/",
+      "use": "Upload and delete receipts; parsed documents cannot be downloaded; rechecked for PR 255 review"
+    },
+    {
       "id": "asr",
       "url": "https://api-docs.deepseek.com/guides/asr/",
       "use": "Whole-file upload, duration/format limits, no streaming recognition"

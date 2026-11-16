@@ -33,17 +33,37 @@ const allText = [...documents.values()].join('\n');
 for (const id of allText.match(/P2-[A-Z]\d+/g) ?? []) {
   assert(taskIds.includes(id), `Undefined candidate: ${id}`);
 }
-// Conservatively include every named dependency, including alternative-runtime paths.
-// Stage prose is manually reviewed; this check covers explicit task-to-task edges.
-const edges = new Map(rows.map(m => [m[1], m[2].split('|')[2].match(/P2-[A-Z]\d+/g) ?? []]));
-const done = new Set();
-function visit(id, chain = []) {
-  assert(!chain.includes(id), `Dependency cycle: ${[...chain, id].join(' -> ')}`);
-  if (done.has(id)) return;
-  for (const dep of edges.get(id)) visit(dep, [...chain, id]);
-  done.add(id);
+// Explicit dependency cells are prerequisites to starting a task, including alternatives.
+// Merge-time fixture checks and partial-feature gates remain explicit in the prose.
+export function checkDependencies(planBoard) {
+  const planRows = [...planBoard.matchAll(/^\| (P2-[A-Z]\d+) \|([^\n]+)$/gm)];
+  const edges = new Map(planRows.map(m => [m[1], m[2].split('|')[2].match(/P2-[A-Z]\d+/g) ?? []]));
+  const done = new Set();
+  function visit(id, chain = []) {
+    assert(edges.has(id), `Undefined dependency: ${id}`);
+    assert(!chain.includes(id), `Dependency cycle: ${[...chain, id].join(' -> ')}`);
+    if (done.has(id)) return;
+    for (const dep of edges.get(id)) visit(dep, [...chain, id]);
+    done.add(id);
+  }
+  for (const id of edges.keys()) visit(id);
+  function dependsOn(id, target) {
+    return edges.get(id).some(dep => dep === target || dependsOn(dep, target));
+  }
+  // A valid DAG may still serialize unrelated deliverables (#255 review).
+  for (const entry of ['P2-X03', 'P2-C02']) {
+    assert(edges.has(entry), `Missing stage entry: ${entry}`);
+    for (const blockedBy of ['P2-X12', 'P2-S07', 'P2-D09']) {
+      assert(!dependsOn(entry, blockedBy), `${entry} must not wait for ${blockedBy}`);
+    }
+  }
+  assert(edges.has('P2-X12') && edges.has('P2-C11'), 'Missing stage 1A tasks');
+  assert(!dependsOn('P2-X12', 'P2-D09'), 'Stage 1A must not wait for history import');
+  assert(!dependsOn('P2-C11', 'P2-X11'), 'C11 drafting must not wait for fixtures');
+  const acceptance = planRows.find(m => m[1] === 'P2-X12')[2].split('|')[3];
+  assert(!/\bF39\b/.test(acceptance), 'F39 belongs to stage 2, not the stage 1A exit gate');
 }
-for (const id of taskIds) visit(id);
+checkDependencies(board);
 const faults = [...board.matchAll(/^\| (F\d+) \|/gm)].map(m => m[1]);
 assert.deepEqual(faults, Array.from({ length: 39 }, (_, n) => `F${String(n + 1).padStart(2, '0')}`));
 const index = JSON.parse(readFileSync(resolve(root, 'docs/research/2026-11-16-deepseek-sources.json'), 'utf8'));
@@ -60,5 +80,5 @@ assert.equal(new Set(index.serviceDocs.map(d => d.id)).size, index.serviceDocs.l
 for (const doc of index.serviceDocs) assert.equal(new URL(doc.url).hostname, 'api-docs.deepseek.com');
 assert(documents.get(files[0]).includes(index.project.baseCommit));
 assert(documents.get(files[2]).includes(index.project.baseCommit));
-console.log(`PASS: ${files.length} Markdown files; ${localLinks} local links; 42 unique candidates; explicit dependency graph acyclic; F01-F39 continuous; 3 pinned upstreams; ${index.serviceDocs.length} official API references.`);
+console.log(`PASS: ${files.length} Markdown files; ${localLinks} local links; 42 unique candidates; explicit dependency graph acyclic; stage independence checked; F01-F39 continuous; 3 pinned upstreams; ${index.serviceDocs.length} official API references.`);
 console.log('NOT RUN: upstream runtimes, paid APIs, application tests, Windows integration, data migration.');
