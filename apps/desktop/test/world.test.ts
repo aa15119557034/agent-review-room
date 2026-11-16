@@ -1,16 +1,17 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { openDatabase, WriteQueue, ulid } from "@room/db";
-import { ControlEvent, WorldState, type CommandRequest, type WorldPlayerAction } from "@room/schemas";
+import { updateWorldViews } from "@room/core";
+import { openDatabase, WorldStore, WriteQueue, ulid } from "@room/db";
+import { ControlEvent, WorldResetRequest, WorldSettings, WorldSnapshot, WorldState, type CommandRequest, type WorldEvent, type WorldPlayerAction } from "@room/schemas";
 import { WorldService } from "../src/main/world";
 
 async function setup(residents = ["claude", "codex"], resetWorld = true) {
   const dir = mkdtempSync(join(tmpdir(), "room-world-main-"));
   const path = join(dir, "room.db");
-  const db = openDatabase(path);
+  let db = openDatabase(path);
   const queue = new WriteQueue();
   const events: ControlEvent[] = [];
   const make = () => new WorldService({ db, queue, dbPath: path, emit: (e) => { events.push(ControlEvent.parse(e)); }, knownAgents: () => residents, agentName: (id) => id === "claude" ? "C酱" : id === "codex" ? "林离" : id, now: () => "2026-11-16T00:00:00.000Z" });
@@ -19,10 +20,35 @@ async function setup(residents = ["claude", "codex"], resetWorld = true) {
   const reset: CommandRequest<"world.reset"> = { type: "world.reset", requestId: `wact_${ulid()}`, worldId: null, confirm: true, settings: { residents, dayRealMinutes: 4, dailyCognitionLimit: 0 } };
   if (resetWorld) await service.reset(reset);
   return {
-    db, queue, events, reset, get service() { return service; },
-    restart: async () => { await service.stop(); service = make(); await service.start(); },
+    get db() { return db; }, queue, events, reset, get service() { return service; },
+    restart: async () => { await service.stop(); db.close(); db = openDatabase(path); service = make(); await service.start(); },
     close: async () => { await service.stop(); db.close(); rmSync(dir, { recursive: true, force: true }); },
   };
+}
+async function setupLegacy() {
+  // A real pre-C-60 initial snapshot: never create an eight-resident fixture through today's reset.
+  const legacy = JSON.parse(readFileSync(new URL("./fixtures/world-legacy-eight.json", import.meta.url), "utf8"));
+  const settings = WorldSettings.parse(legacy.settings);
+  const h = await setup(settings.residents, false);
+  try {
+    const initial = WorldSnapshot.parse({ ...legacy.initial, generation: { session: `wses_${ulid()}`, runSeq: 0 } });
+    assert.equal(initial.lastSeq, 0);
+    const current = { ...initial, lastSeq: 1 };
+    const opened: WorldEvent = { type: "clock", seq: 1, at: current.now, mark: "day_started", day: Math.floor(current.now / 1440) + 1 };
+    const observed = updateWorldViews([], current, current, [opened]);
+    h.db.transaction(() => {
+      const store = new WorldStore(h.db);
+      store.create(initial, settings);
+      store.append(current.id, [opened], observed.observations, observed.views);
+      store.save(current);
+    })();
+    await h.restart();
+    return h;
+  } catch (error) { await h.close(); throw error; }
+}
+function worldRows(db: ReturnType<typeof openDatabase>) {
+  const tables = db.prepare("SELECT name FROM sqlite_schema WHERE type = 'table' AND name GLOB 'world*' ORDER BY name").all() as { name: string }[];
+  return Object.fromEntries(tables.map(({ name }) => [name, db.prepare(`SELECT * FROM "${name}"`).all().map((row) => JSON.stringify(row)).sort()]));
 }
 function action(service: WorldService, act: WorldPlayerAction): CommandRequest<"world.act"> {
   const world = service.get().world!;
@@ -201,9 +227,88 @@ test("sleep, large gaps and reopen do not invent elapsed world time; pause persi
   } finally { await h.close(); }
 });
 
-test("player scenes include the chosen resident first even with eight residents in the same room", async () => {
+test("legacy eight-resident saves remain readable through advance, settings edits and database reopen", async () => {
+  const h = await setupLegacy();
+  try {
+    const first = WorldState.parse(h.service.get());
+    const agents = first.settings!.residents;
+    assert.equal(agents.length, 8);
+    await h.service.advance(200);
+    assert.ok(h.service.get().world!.now > first.world!.now);
+    const saved = await h.service.saveSettings({ type: "world.settings.save", settings: { dayRealMinutes: 24, dailyCognitionLimit: 17 } });
+    assert.deepEqual(saved.residents, agents);
+    const before = WorldState.parse(h.service.get());
+    assert.equal(before.world!.minutesPerRealSecond, 1);
+    for (const agent of agents) assert.equal(h.service.residentView(before.world!.id, agent).agent, agent);
+    await h.restart();
+    const reopened = WorldState.parse(h.service.get());
+    assert.equal(reopened.world!.id, before.world!.id);
+    assert.equal(reopened.world!.now, before.world!.now);
+    assert.notEqual(reopened.world!.generation.session, before.world!.generation.session);
+    assert.deepEqual(reopened.settings, before.settings);
+    assert.deepEqual(reopened.world!.residents.map((resident) => resident.agent), agents);
+    await h.service.advance(2000);
+    assert.ok(h.service.get().world!.now > reopened.world!.now);
+  } finally { await h.close(); }
+});
+
+test("omitting reset settings cannot reuse a legacy eight-person list, with or without an active world", async () => {
+  for (const activeWorld of [false, true]) {
+    const h = activeWorld ? await setupLegacy() : await setup(Array.from({ length: 8 }, (_, index) => `resident-${index + 1}`), false);
+    try {
+      if (!activeWorld) h.db.transaction(() => new WorldStore(h.db).saveSettings(h.reset.settings!))();
+      const state = WorldState.parse(h.service.get());
+      const world = state.world;
+      if (world) await h.service.talk({ type: "world.talk", actionId: `wact_${ulid()}`, worldId: world.id, generation: world.generation, agent: world.residents.at(-1)!.agent });
+      const request = WorldResetRequest.parse({ type: "world.reset", requestId: `wact_${ulid()}`, worldId: world?.id ?? null, confirm: true });
+      const before = worldRows(h.db), published = h.events.length;
+      await assert.rejects(h.service.reset(request), { code: "validation_failed" });
+      assert.deepEqual(worldRows(h.db), before, "no world, settings, scene, event, view, observation or receipt changes");
+      assert.equal(h.events.length, published);
+      assert.deepEqual(WorldState.parse(h.service.get()).settings, state.settings);
+    } finally { await h.close(); }
+  }
+});
+
+test("explicitly selecting four residents resets a legacy save while preserving its eight-person history", async () => {
+  const h = await setupLegacy();
+  try {
+    const before = WorldState.parse(h.service.get()), old = before.world!;
+    const opened = await h.service.talk({ type: "world.talk", actionId: `wact_${ulid()}`, worldId: old.id, generation: old.generation, agent: old.residents.at(-1)!.agent });
+    const settings = { ...before.settings!, residents: before.settings!.residents.slice(0, 4) };
+    const request = WorldResetRequest.parse({ type: "world.reset", requestId: `wact_${ulid()}`, worldId: old.id, confirm: true, settings });
+    const created = WorldState.parse(await h.service.reset(request));
+    assert.notEqual(created.world!.id, old.id);
+    assert.deepEqual(created.world!.residents.map((resident) => resident.agent), settings.residents);
+    assert.deepEqual(created.settings, settings);
+    assert.deepEqual(await h.service.reset(request), created, "successful reset receipts still replay before current-world checks");
+    const row = h.db.prepare("SELECT current_json FROM worlds WHERE id = ?").get(old.id) as { current_json: string };
+    assert.equal(WorldSnapshot.parse({ ...JSON.parse(row.current_json), generation: old.generation }).residents.length, 8);
+    const store = new WorldStore(h.db);
+    assert.equal(store.getScene(old.id, opened.scene!.id)!.state, "closed");
+    for (const resident of old.residents) assert.equal(store.view(old.id, resident.agent)!.agent, resident.agent);
+  } finally { await h.close(); }
+});
+
+test("five-person new worlds and resets fail both request validation and service admission without writes", async () => {
+  for (const activeWorld of [false, true]) {
+    const h = activeWorld ? await setupLegacy() : await setup(Array.from({ length: 8 }, (_, index) => `resident-${index + 1}`), false);
+    try {
+      const world = h.service.get().world;
+      if (world) await h.service.talk({ type: "world.talk", actionId: `wact_${ulid()}`, worldId: world.id, generation: world.generation, agent: world.residents.at(-1)!.agent });
+      const request: CommandRequest<"world.reset"> = { ...h.reset, worldId: world?.id ?? null, settings: { ...h.reset.settings!, residents: h.reset.settings!.residents.slice(0, 5) } };
+      assert.equal(WorldResetRequest.safeParse(request).success, false);
+      const before = worldRows(h.db), published = h.events.length;
+      await assert.rejects(h.service.reset(request), { code: "validation_failed" });
+      assert.deepEqual(worldRows(h.db), before);
+      assert.equal(h.events.length, published);
+    } finally { await h.close(); }
+  }
+});
+
+test("legacy player scenes include the chosen resident first even with eight residents in the same room", async () => {
   const agents = Array.from({ length: 8 }, (_, i) => `resident-${i + 1}`);
-  const h = await setup(agents);
+  const h = await setupLegacy();
   try {
     for (const agent of [...agents.slice(4), ...agents.slice(0, 4)]) {
       const world = h.service.get().world!;
@@ -213,6 +318,8 @@ test("player scenes include the chosen resident first even with eight residents 
       assert.equal(opened.result.accepted, true);
       assert.deepEqual(opened.scene!.origin, { kind: "player", agent });
       assert.deepEqual(opened.scene!.residents, [agent, ...agents.filter((other) => other !== agent).slice(0, 3)]);
+      assert.equal(h.service.get().world!.residents.length, 8);
+      assert.deepEqual(h.service.get().settings!.residents, agents);
       assert.deepEqual(await h.service.talk(request), opened, "the receipt preserves the chosen scene participants");
       assert.equal((await h.service.close({ type: "world.scene.close", actionId: `wact_${ulid()}`, worldId: world.id, generation: world.generation, sceneId: opened.scene!.id })).result.accepted, true);
       assert.deepEqual(h.service.scenes(world.id, undefined, 1).items[0]!.residents, opened.scene!.residents);
@@ -220,9 +327,9 @@ test("player scenes include the chosen resident first even with eight residents 
   } finally { await h.close(); }
 });
 
-test("event scenes keep the first four same-room residents in their original order", async () => {
+test("legacy event scenes keep the first four same-room residents without dropping world residents", async () => {
   const agents = Array.from({ length: 8 }, (_, i) => `resident-${i + 1}`);
-  const h = await setup(agents);
+  const h = await setupLegacy();
   try {
     await h.service.advance(200);
     const { world, scene } = h.service.get();
@@ -230,6 +337,9 @@ test("event scenes keep the first four same-room residents in their original ord
     assert.equal(scene.origin.kind, "event");
     assert.ok(world!.residents.every((resident) => resident.placeId === scene.placeId));
     assert.deepEqual(scene.residents, agents.slice(0, 4));
+    assert.equal(world!.residents.length, 8);
+    assert.deepEqual(h.service.get().settings!.residents, agents);
+    for (const agent of agents) assert.equal(h.service.residentView(world!.id, agent).agent, agent);
   } finally { await h.close(); }
 });
 

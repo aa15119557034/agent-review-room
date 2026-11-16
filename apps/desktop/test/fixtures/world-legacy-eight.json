@@ -1,0 +1,268 @@
+{
+  "initial": {
+    "id": "world_01M7H9AEMW1AGQ75NANFBSTMH0",
+    "rulesVersion": "2",
+    "run": {
+      "state": "running"
+    },
+    "now": 480,
+    "asOf": "2026-11-16T04:19:53.116Z",
+    "minutesPerRealSecond": 6,
+    "lastSeq": 0,
+    "places": [
+      {
+        "id": "living_room",
+        "label": "客厅",
+        "neighbors": [
+          "kitchen",
+          "room_1",
+          "room_2",
+          "room_3",
+          "room_4"
+        ],
+        "owner": null
+      },
+      {
+        "id": "kitchen",
+        "label": "厨房",
+        "neighbors": [
+          "living_room",
+          "room_5",
+          "room_6",
+          "room_7",
+          "room_8"
+        ],
+        "owner": null
+      },
+      {
+        "id": "room_1",
+        "label": "resident-1的房间",
+        "neighbors": [
+          "living_room"
+        ],
+        "owner": "resident-1"
+      },
+      {
+        "id": "room_2",
+        "label": "resident-2的房间",
+        "neighbors": [
+          "living_room"
+        ],
+        "owner": "resident-2"
+      },
+      {
+        "id": "room_3",
+        "label": "resident-3的房间",
+        "neighbors": [
+          "living_room"
+        ],
+        "owner": "resident-3"
+      },
+      {
+        "id": "room_4",
+        "label": "resident-4的房间",
+        "neighbors": [
+          "living_room"
+        ],
+        "owner": "resident-4"
+      },
+      {
+        "id": "room_5",
+        "label": "resident-5的房间",
+        "neighbors": [
+          "kitchen"
+        ],
+        "owner": "resident-5"
+      },
+      {
+        "id": "room_6",
+        "label": "resident-6的房间",
+        "neighbors": [
+          "kitchen"
+        ],
+        "owner": "resident-6"
+      },
+      {
+        "id": "room_7",
+        "label": "resident-7的房间",
+        "neighbors": [
+          "kitchen"
+        ],
+        "owner": "resident-7"
+      },
+      {
+        "id": "room_8",
+        "label": "resident-8的房间",
+        "neighbors": [
+          "kitchen"
+        ],
+        "owner": "resident-8"
+      }
+    ],
+    "residents": [
+      {
+        "agent": "resident-1",
+        "placeId": "living_room",
+        "energy": 85,
+        "satiety": 65,
+        "mood": 65,
+        "activityId": null,
+        "cognition": {
+          "mode": "routine",
+          "reason": "offline"
+        }
+      },
+      {
+        "agent": "resident-2",
+        "placeId": "living_room",
+        "energy": 85,
+        "satiety": 65,
+        "mood": 65,
+        "activityId": null,
+        "cognition": {
+          "mode": "routine",
+          "reason": "offline"
+        }
+      },
+      {
+        "agent": "resident-3",
+        "placeId": "living_room",
+        "energy": 85,
+        "satiety": 65,
+        "mood": 65,
+        "activityId": null,
+        "cognition": {
+          "mode": "routine",
+          "reason": "offline"
+        }
+      },
+      {
+        "agent": "resident-4",
+        "placeId": "living_room",
+        "energy": 85,
+        "satiety": 65,
+        "mood": 65,
+        "activityId": null,
+        "cognition": {
+          "mode": "routine",
+          "reason": "offline"
+        }
+      },
+      {
+        "agent": "resident-5",
+        "placeId": "living_room",
+        "energy": 85,
+        "satiety": 65,
+        "mood": 65,
+        "activityId": null,
+        "cognition": {
+          "mode": "routine",
+          "reason": "offline"
+        }
+      },
+      {
+        "agent": "resident-6",
+        "placeId": "living_room",
+        "energy": 85,
+        "satiety": 65,
+        "mood": 65,
+        "activityId": null,
+        "cognition": {
+          "mode": "routine",
+          "reason": "offline"
+        }
+      },
+      {
+        "agent": "resident-7",
+        "placeId": "living_room",
+        "energy": 85,
+        "satiety": 65,
+        "mood": 65,
+        "activityId": null,
+        "cognition": {
+          "mode": "routine",
+          "reason": "offline"
+        }
+      },
+      {
+        "agent": "resident-8",
+        "placeId": "living_room",
+        "energy": 85,
+        "satiety": 65,
+        "mood": 65,
+        "activityId": null,
+        "cognition": {
+          "mode": "routine",
+          "reason": "offline"
+        }
+      }
+    ],
+    "player": {
+      "placeId": "living_room",
+      "activityId": null
+    },
+    "items": [
+      {
+        "kind": "unique",
+        "id": "pot",
+        "label": "锅",
+        "at": {
+          "kind": "place",
+          "placeId": "kitchen"
+        },
+        "usedBy": null
+      },
+      {
+        "kind": "unique",
+        "id": "book",
+        "label": "书",
+        "at": {
+          "kind": "place",
+          "placeId": "living_room"
+        },
+        "usedBy": null
+      },
+      {
+        "kind": "unique",
+        "id": "seat",
+        "label": "座位",
+        "at": {
+          "kind": "place",
+          "placeId": "living_room"
+        },
+        "usedBy": null
+      },
+      {
+        "kind": "stock",
+        "id": "ingredients",
+        "label": "食材",
+        "placeId": "kitchen",
+        "count": 16
+      },
+      {
+        "kind": "stock",
+        "id": "meals",
+        "label": "饭",
+        "placeId": "kitchen",
+        "count": 0
+      }
+    ],
+    "activities": [],
+    "commitments": [],
+    "sceneId": null
+  },
+  "settings": {
+    "dayRealMinutes": 4,
+    "dailyCognitionLimit": 0,
+    "residents": [
+      "resident-1",
+      "resident-2",
+      "resident-3",
+      "resident-4",
+      "resident-5",
+      "resident-6",
+      "resident-7",
+      "resident-8"
+    ]
+  }
+}
