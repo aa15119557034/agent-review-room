@@ -346,7 +346,7 @@ async function host() {
   }
 }
 
-module.exports = { pixelStats, diagnosticRegions };
+module.exports = { pixelStats, diagnosticRegions, installGate };
 // Electron's default-app loader does not assign this CJS file to require.main.
 // Compare its explicit entry path while keeping nativeImage-only imports inert.
 const directEntry = require.main === module || (process.versions.electron && process.argv[1] && path.resolve(process.argv[1]) === __filename);

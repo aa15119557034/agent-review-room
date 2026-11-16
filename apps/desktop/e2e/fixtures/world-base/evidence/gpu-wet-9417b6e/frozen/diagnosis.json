@@ -1,0 +1,6389 @@
+{
+  "sourceCommit": "9417b6e0e205a594b31332b1622a8e549bad2f76",
+  "sourceFiles": 196,
+  "scripts": {
+    "diagnose-wet-road.cjs": "14213798cc7f486681b4615dabe524d7b493864dadb85632d8078f3c55613f79",
+    "diagnose-surface.cjs": "f3f2d18f7f68423a54c7659acd77be3e7b33df6feef0292199779a3fa340544c",
+    "baseline.cjs": "b077e97388dbd69a4bff1eadb0bed70ca2d21a0a48675b6e32fdf7afe2c895b6"
+  },
+  "startedAt": "2026-11-16T23:38:24.381Z",
+  "localDate": "2026-11-17",
+  "timezone": "Asia/Shanghai",
+  "width": 1440,
+  "height": 900,
+  "time": 14,
+  "method": "Per camera exactly two recorded warmups, then wet on A1 / off B / on A2. Full-frame RGB A1/A2 equality is strict (zero tolerance). No retries, frame selection, shader edits or strength tuning. ROI metrics are supplementary and not a complete effect mask. No performance claim.",
+  "ok": true,
+  "renderOk": true,
+  "visualStrict": true,
+  "transportClean": true,
+  "sourceUnchanged": true,
+  "scriptsUnchanged": true,
+  "initial": {
+    "clock": {
+      "timeOrigin": 1794872304783.6,
+      "now": 33255.5
+    },
+    "props": {
+      "lighthouse": 1,
+      "menhir": 21,
+      "boulders": 87,
+      "tree": 53
+    },
+    "saved": {
+      "view": "station-street",
+      "wet": true,
+      "time": 33.231,
+      "stationTime": 33.231
+    },
+    "method": "Freeze all page RAF; stop walker; time 14; disable temporal blur/rays consistently, preserve bloom. One dt=0 station/island update per camera; no updates between captures."
+  },
+  "cases": [
+    {
+      "view": "detail",
+      "warmups": [
+        {
+          "state": {
+            "view": "wet-road-detail",
+            "camera": {
+              "position": [
+                282,
+                9.35,
+                931
+              ],
+              "quaternion": [
+                -0.06394106287433389,
+                0.4378349740946528,
+                0.031236950528131083,
+                0.8962345278216736
+              ],
+              "projection": [
+                1.1275298470446398,
+                0,
+                0,
+                0,
+                0,
+                1.8040477552714236,
+                0,
+                0,
+                0,
+                0,
+                -1.000025000312504,
+                -1,
+                0,
+                0,
+                -0.4000050000625008,
+                0
+              ],
+              "fov": 58,
+              "aspect": 1.6,
+              "near": 0.2,
+              "far": 16000
+            },
+            "time": 14,
+            "stationTime": 14,
+            "rafFrozen": true,
+            "walkerEnabled": false,
+            "viewport": {
+              "width": 1440,
+              "height": 900,
+              "ratio": 1,
+              "devicePixelRatio": 1
+            },
+            "pipeline": {
+              "exposure": 1.02,
+              "blur": 0,
+              "bloom": 0.12,
+              "distortion": 0,
+              "fringe": 0,
+              "vignette": 0.12,
+              "rays": 0,
+              "saturation": 1,
+              "contrast": 1.05,
+              "speed": 0
+            },
+            "finalUniforms": {
+              "tColor": {
+                "texture": "395f6447-1315-4263-9bcb-1fbdb9da6ae4",
+                "version": 0
+              },
+              "tBloom": {
+                "texture": "a883591d-c9e1-4e42-a5e3-6051f15d960d",
+                "version": 1
+              },
+              "tRays": {
+                "texture": "9b469006-2b07-48ce-a023-84152b2b2fbd",
+                "version": 0
+              },
+              "uExposure": 1.02,
+              "uBloom": 0.12,
+              "uDistort": 0,
+              "uFringe": 0,
+              "uVignette": 0.12,
+              "uRays": 0,
+              "uSunColor": [
+                3.3,
+                3,
+                2.55
+              ],
+              "uSat": 1,
+              "uContrast": 1.05,
+              "uRes": [
+                1440,
+                900
+              ],
+              "uTime": 14,
+              "uSpeed": 0,
+              "uFade": 1,
+              "tWorldDepth": {
+                "texture": "da140534-50f7-41c9-8882-3e0477385b91",
+                "version": 1
+              },
+              "uNear": 0.2,
+              "uFar": 16000,
+              "uReversed": 0,
+              "uToon": 1,
+              "uHaze": 1
+            },
+            "islandUniforms": {
+              "uTime": 14,
+              "uCamPos": [
+                282,
+                9.35,
+                931
+              ],
+              "uSunDir": [
+                -0.5104064950196394,
+                0.5591929034707469,
+                -0.6532905223173859
+              ],
+              "uSunColor": [
+                3.3,
+                3,
+                2.55
+              ],
+              "uSkyZenith": [
+                0.05,
+                0.17,
+                0.56
+              ],
+              "uSkyMid": [
+                0.135,
+                0.38,
+                0.86
+              ],
+              "uSkyHorizon": [
+                0.56,
+                0.76,
+                0.93
+              ],
+              "uSunHalo": [
+                1,
+                0.8,
+                0.52
+              ],
+              "uAmbSky": [
+                0.36,
+                0.52,
+                0.8
+              ],
+              "uAmbGround": [
+                0.2,
+                0.23,
+                0.14
+              ],
+              "uFog": [
+                0.000135,
+                0.002380952380952381,
+                0,
+                0
+              ],
+              "uHeightTex": {
+                "texture": "3d3e061a-c3d7-4870-b00a-f636adb9dde8",
+                "version": 2
+              },
+              "uSplatTex": {
+                "texture": "240f9e44-c985-4b28-94a4-9603a478dcf6",
+                "version": 2
+              },
+              "uLightTex": {
+                "texture": "59f10394-b6f8-4883-b27c-241964bc7ef1",
+                "version": 1
+              },
+              "uTintTex": {
+                "texture": "12cfede2-ca46-4cb8-b58e-bcbd3808e686",
+                "version": 1
+              },
+              "uWorld": [
+                6144,
+                0.00016276041666666666,
+                0.000244140625,
+                0
+              ],
+              "uWind": [
+                0.361,
+                0.933,
+                1,
+                0
+              ],
+              "uWakeTex": {
+                "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+                "version": 1
+              },
+              "uWake": [
+                0,
+                0,
+                0.00625,
+                0
+              ],
+              "uStripTex": {
+                "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+                "version": 1
+              },
+              "uRider": [
+                1000000,
+                1000000,
+                1000000,
+                0
+              ],
+              "uRiderVel": [
+                0,
+                0,
+                0
+              ],
+              "uShadowTex": {
+                "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+                "version": 1
+              },
+              "uShadowMat": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+              ],
+              "uShadowOn": 0,
+              "uTownSh0": {
+                "texture": "a7106143-5ca1-4a11-aa9e-b8a10c400b1e",
+                "version": 1
+              },
+              "uTownSh1": {
+                "texture": "cbb19faa-bcbf-419d-bad6-25199a0f23a1",
+                "version": 1
+              },
+              "uTownShM0": [
+                -0.0015640350150390163,
+                0.0009707623774831163,
+                0.0010728488160372896,
+                0,
+                5.508895903604887e-20,
+                0.0023376717047234735,
+                -0.0011753953961772395,
+                0,
+                0.0012219580766032003,
+                0.0012425191819073742,
+                0.0013731838646951812,
+                0,
+                -0.8288562893150736,
+                -0.7772729453792973,
+                -0.8809385489374643,
+                0.9999999999999998
+              ],
+              "uTownShM1": [
+                -0.0029188060569810756,
+                0.0016002547900483026,
+                0.0018358161168375892,
+                0,
+                5.140357656992438e-19,
+                0.003853538651490622,
+                -0.0020112897359844594,
+                0,
+                0.00228042121888006,
+                0.0020482327278992176,
+                0.0023497374769914656,
+                0,
+                3.6936878781498024,
+                2.1127482477992157,
+                3.186383164579521,
+                1
+              ],
+              "uTownShP": [
+                1,
+                1,
+                475.74876104621495,
+                278.02702587603096
+              ],
+              "uTownMask0": {
+                "texture": "a85f1c3f-c864-487c-956f-ff708e0f5ed0",
+                "version": 1
+              },
+              "uTownMask1": {
+                "texture": "2ca8d408-3bf3-4fbb-ab63-499b04f7d081",
+                "version": 1
+              },
+              "uTownRect0": [
+                -201,
+                810,
+                0.003004807692307692,
+                0.002446183953033268
+              ],
+              "uTownRect1": [
+                90,
+                -1280,
+                0.0055309734513274336,
+                0.0045871559633027525
+              ],
+              "uNoiseTex": {
+                "texture": "dbab875d-be54-4a62-bcc9-10d351f69fcb",
+                "version": 1
+              }
+            },
+            "stationUniforms": {
+              "uTime": 14,
+              "uWind": [
+                0.9,
+                0.35
+              ],
+              "uSunDir": [
+                -0.5104064950196394,
+                0.5591929034707469,
+                -0.6532905223173859
+              ],
+              "uGust": 0.10142290304344133
+            },
+            "wet": {
+              "enabled": true,
+              "material": "be934b48-bad7-4dae-a085-6a4991b5fa2d",
+              "version": 1,
+              "uniforms": {
+                "uWetMask": {
+                  "texture": "ee27e9e4-659b-465d-82e9-1f810d9a2e68",
+                  "version": 1
+                },
+                "uWetWorldToLocal": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  1,
+                  0,
+                  -280,
+                  -8,
+                  -900,
+                  1
+                ],
+                "uWetBounds": [
+                  -4,
+                  4,
+                  8,
+                  30
+                ],
+                "uWetSkyLow": [
+                  0.5840784178830671,
+                  0.6724431569510133,
+                  0.7379104087672317
+                ],
+                "uWetSkyHigh": [
+                  0.2746773120495699,
+                  0.43415363616478553,
+                  0.5647115056965487
+                ]
+              }
+            }
+          },
+          "switchEvidence": {
+            "api": true,
+            "cpuUniform": 1,
+            "gpuUniform": 1,
+            "programId": 53,
+            "requested": true
+          },
+          "render": {
+            "frame": 204,
+            "calls": 1110,
+            "triangles": 7728136,
+            "points": 0,
+            "lines": 0
+          },
+          "programs": 101,
+          "memory": {
+            "geometries": 1046,
+            "textures": 212
+          },
+          "errors": [],
+          "clock": {
+            "timeOrigin": 1794872304783.6,
+            "now": 33404.299999952316
+          },
+          "props": {
+            "lighthouse": 1,
+            "menhir": 21,
+            "boulders": 87,
+            "tree": 53
+          },
+          "png": "detail-warmup-1.png",
+          "jpeg": "detail-warmup-1.jpg",
+          "pngSha256": "7a69219ff712ab6e92d999330931b5947c88266ac754e925714d79b92d80d075",
+          "regions": [
+            {
+              "name": "full",
+              "normalized": {
+                "x0": 0,
+                "y0": 0,
+                "x1": 1,
+                "y1": 1
+              },
+              "bounds": {
+                "minX": 0,
+                "minY": 0,
+                "maxX": 1440,
+                "maxY": 900
+              },
+              "pixels": 1296000,
+              "meanRGB": [
+                72.82152854938272,
+                78.09116743827161,
+                92.54120601851852
+              ],
+              "meanLuma": 78.01413499635429,
+              "darkFraction": 0.03244135802469136
+            },
+            {
+              "name": "road-lower",
+              "normalized": {
+                "x0": 0,
+                "y0": 0.5,
+                "x1": 1,
+                "y1": 1
+              },
+              "bounds": {
+                "minX": 0,
+                "minY": 450,
+                "maxX": 1440,
+                "maxY": 900
+              },
+              "pixels": 648000,
+              "meanRGB": [
+                52.2943487654321,
+                61.48041512345679,
+                79.87780401234568
+              ],
+              "meanLuma": 60.85574889298878,
+              "darkFraction": 0
+            },
+            {
+              "name": "road-left",
+              "normalized": {
+                "x0": 0,
+                "y0": 0.55,
+                "x1": 0.5,
+                "y1": 1
+              },
+              "bounds": {
+                "minX": 0,
+                "minY": 495,
+                "maxX": 720,
+                "maxY": 900
+              },
+              "pixels": 291600,
+              "meanRGB": [
+                49.32134773662551,
+                57.904098079561045,
+                75.54897462277091
+              ],
+              "meanLuma": 57.353365443131615,
+              "darkFraction": 0
+            },
+            {
+              "name": "road-middle",
+              "normalized": {
+                "x0": 0.3,
+                "y0": 0.55,
+                "x1": 0.7,
+                "y1": 0.9
+              },
+              "bounds": {
+                "minX": 432,
+                "minY": 495,
+                "maxX": 1007,
+                "maxY": 810
+              },
+              "pixels": 181125,
+              "meanRGB": [
+                52.72760800552105,
+                61.857468599033815,
+                80.76020427881298
+              ],
+              "meanLuma": 61.281237752972736,
+              "darkFraction": 0
+            },
+            {
+              "name": "road-right",
+              "normalized": {
+                "x0": 0.5,
+                "y0": 0.55,
+                "x1": 1,
+                "y1": 1
+              },
+              "bounds": {
+                "minX": 720,
+                "minY": 495,
+                "maxX": 1440,
+                "maxY": 900
+              },
+              "pixels": 291600,
+              "meanRGB": [
+                46.79629972565158,
+                57.26969821673526,
+                77.6933024691358
+              ],
+              "meanLuma": 56.51763792461698,
+              "darkFraction": 0
+            }
+          ]
+        },
+        {
+          "state": {
+            "view": "wet-road-detail",
+            "camera": {
+              "position": [
+                282,
+                9.35,
+                931
+              ],
+              "quaternion": [
+                -0.06394106287433389,
+                0.4378349740946528,
+                0.031236950528131083,
+                0.8962345278216736
+              ],
+              "projection": [
+                1.1275298470446398,
+                0,
+                0,
+                0,
+                0,
+                1.8040477552714236,
+                0,
+                0,
+                0,
+                0,
+                -1.000025000312504,
+                -1,
+                0,
+                0,
+                -0.4000050000625008,
+                0
+              ],
+              "fov": 58,
+              "aspect": 1.6,
+              "near": 0.2,
+              "far": 16000
+            },
+            "time": 14,
+            "stationTime": 14,
+            "rafFrozen": true,
+            "walkerEnabled": false,
+            "viewport": {
+              "width": 1440,
+              "height": 900,
+              "ratio": 1,
+              "devicePixelRatio": 1
+            },
+            "pipeline": {
+              "exposure": 1.02,
+              "blur": 0,
+              "bloom": 0.12,
+              "distortion": 0,
+              "fringe": 0,
+              "vignette": 0.12,
+              "rays": 0,
+              "saturation": 1,
+              "contrast": 1.05,
+              "speed": 0
+            },
+            "finalUniforms": {
+              "tColor": {
+                "texture": "395f6447-1315-4263-9bcb-1fbdb9da6ae4",
+                "version": 0
+              },
+              "tBloom": {
+                "texture": "a883591d-c9e1-4e42-a5e3-6051f15d960d",
+                "version": 1
+              },
+              "tRays": {
+                "texture": "9b469006-2b07-48ce-a023-84152b2b2fbd",
+                "version": 0
+              },
+              "uExposure": 1.02,
+              "uBloom": 0.12,
+              "uDistort": 0,
+              "uFringe": 0,
+              "uVignette": 0.12,
+              "uRays": 0,
+              "uSunColor": [
+                3.3,
+                3,
+                2.55
+              ],
+              "uSat": 1,
+              "uContrast": 1.05,
+              "uRes": [
+                1440,
+                900
+              ],
+              "uTime": 14,
+              "uSpeed": 0,
+              "uFade": 1,
+              "tWorldDepth": {
+                "texture": "da140534-50f7-41c9-8882-3e0477385b91",
+                "version": 1
+              },
+              "uNear": 0.2,
+              "uFar": 16000,
+              "uReversed": 0,
+              "uToon": 1,
+              "uHaze": 1
+            },
+            "islandUniforms": {
+              "uTime": 14,
+              "uCamPos": [
+                282,
+                9.35,
+                931
+              ],
+              "uSunDir": [
+                -0.5104064950196394,
+                0.5591929034707469,
+                -0.6532905223173859
+              ],
+              "uSunColor": [
+                3.3,
+                3,
+                2.55
+              ],
+              "uSkyZenith": [
+                0.05,
+                0.17,
+                0.56
+              ],
+              "uSkyMid": [
+                0.135,
+                0.38,
+                0.86
+              ],
+              "uSkyHorizon": [
+                0.56,
+                0.76,
+                0.93
+              ],
+              "uSunHalo": [
+                1,
+                0.8,
+                0.52
+              ],
+              "uAmbSky": [
+                0.36,
+                0.52,
+                0.8
+              ],
+              "uAmbGround": [
+                0.2,
+                0.23,
+                0.14
+              ],
+              "uFog": [
+                0.000135,
+                0.002380952380952381,
+                0,
+                0
+              ],
+              "uHeightTex": {
+                "texture": "3d3e061a-c3d7-4870-b00a-f636adb9dde8",
+                "version": 2
+              },
+              "uSplatTex": {
+                "texture": "240f9e44-c985-4b28-94a4-9603a478dcf6",
+                "version": 2
+              },
+              "uLightTex": {
+                "texture": "59f10394-b6f8-4883-b27c-241964bc7ef1",
+                "version": 1
+              },
+              "uTintTex": {
+                "texture": "12cfede2-ca46-4cb8-b58e-bcbd3808e686",
+                "version": 1
+              },
+              "uWorld": [
+                6144,
+                0.00016276041666666666,
+                0.000244140625,
+                0
+              ],
+              "uWind": [
+                0.361,
+                0.933,
+                1,
+                0
+              ],
+              "uWakeTex": {
+                "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+                "version": 1
+              },
+              "uWake": [
+                0,
+                0,
+                0.00625,
+                0
+              ],
+              "uStripTex": {
+                "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+                "version": 1
+              },
+              "uRider": [
+                1000000,
+                1000000,
+                1000000,
+                0
+              ],
+              "uRiderVel": [
+                0,
+                0,
+                0
+              ],
+              "uShadowTex": {
+                "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+                "version": 1
+              },
+              "uShadowMat": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+              ],
+              "uShadowOn": 0,
+              "uTownSh0": {
+                "texture": "a7106143-5ca1-4a11-aa9e-b8a10c400b1e",
+                "version": 1
+              },
+              "uTownSh1": {
+                "texture": "cbb19faa-bcbf-419d-bad6-25199a0f23a1",
+                "version": 1
+              },
+              "uTownShM0": [
+                -0.0015640350150390163,
+                0.0009707623774831163,
+                0.0010728488160372896,
+                0,
+                5.508895903604887e-20,
+                0.0023376717047234735,
+                -0.0011753953961772395,
+                0,
+                0.0012219580766032003,
+                0.0012425191819073742,
+                0.0013731838646951812,
+                0,
+                -0.8288562893150736,
+                -0.7772729453792973,
+                -0.8809385489374643,
+                0.9999999999999998
+              ],
+              "uTownShM1": [
+                -0.0029188060569810756,
+                0.0016002547900483026,
+                0.0018358161168375892,
+                0,
+                5.140357656992438e-19,
+                0.003853538651490622,
+                -0.0020112897359844594,
+                0,
+                0.00228042121888006,
+                0.0020482327278992176,
+                0.0023497374769914656,
+                0,
+                3.6936878781498024,
+                2.1127482477992157,
+                3.186383164579521,
+                1
+              ],
+              "uTownShP": [
+                1,
+                1,
+                475.74876104621495,
+                278.02702587603096
+              ],
+              "uTownMask0": {
+                "texture": "a85f1c3f-c864-487c-956f-ff708e0f5ed0",
+                "version": 1
+              },
+              "uTownMask1": {
+                "texture": "2ca8d408-3bf3-4fbb-ab63-499b04f7d081",
+                "version": 1
+              },
+              "uTownRect0": [
+                -201,
+                810,
+                0.003004807692307692,
+                0.002446183953033268
+              ],
+              "uTownRect1": [
+                90,
+                -1280,
+                0.0055309734513274336,
+                0.0045871559633027525
+              ],
+              "uNoiseTex": {
+                "texture": "dbab875d-be54-4a62-bcc9-10d351f69fcb",
+                "version": 1
+              }
+            },
+            "stationUniforms": {
+              "uTime": 14,
+              "uWind": [
+                0.9,
+                0.35
+              ],
+              "uSunDir": [
+                -0.5104064950196394,
+                0.5591929034707469,
+                -0.6532905223173859
+              ],
+              "uGust": 0.10142290304344133
+            },
+            "wet": {
+              "enabled": true,
+              "material": "be934b48-bad7-4dae-a085-6a4991b5fa2d",
+              "version": 1,
+              "uniforms": {
+                "uWetMask": {
+                  "texture": "ee27e9e4-659b-465d-82e9-1f810d9a2e68",
+                  "version": 1
+                },
+                "uWetWorldToLocal": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  1,
+                  0,
+                  -280,
+                  -8,
+                  -900,
+                  1
+                ],
+                "uWetBounds": [
+                  -4,
+                  4,
+                  8,
+                  30
+                ],
+                "uWetSkyLow": [
+                  0.5840784178830671,
+                  0.6724431569510133,
+                  0.7379104087672317
+                ],
+                "uWetSkyHigh": [
+                  0.2746773120495699,
+                  0.43415363616478553,
+                  0.5647115056965487
+                ]
+              }
+            }
+          },
+          "switchEvidence": {
+            "api": true,
+            "cpuUniform": 1,
+            "gpuUniform": 1,
+            "programId": 53,
+            "requested": true
+          },
+          "render": {
+            "frame": 221,
+            "calls": 1110,
+            "triangles": 7728136,
+            "points": 0,
+            "lines": 0
+          },
+          "programs": 101,
+          "memory": {
+            "geometries": 1046,
+            "textures": 212
+          },
+          "errors": [],
+          "clock": {
+            "timeOrigin": 1794872304783.6,
+            "now": 33581
+          },
+          "props": {
+            "lighthouse": 1,
+            "menhir": 21,
+            "boulders": 87,
+            "tree": 53
+          },
+          "png": "detail-warmup-2.png",
+          "jpeg": "detail-warmup-2.jpg",
+          "pngSha256": "7a69219ff712ab6e92d999330931b5947c88266ac754e925714d79b92d80d075",
+          "regions": [
+            {
+              "name": "full",
+              "normalized": {
+                "x0": 0,
+                "y0": 0,
+                "x1": 1,
+                "y1": 1
+              },
+              "bounds": {
+                "minX": 0,
+                "minY": 0,
+                "maxX": 1440,
+                "maxY": 900
+              },
+              "pixels": 1296000,
+              "meanRGB": [
+                72.82152854938272,
+                78.09116743827161,
+                92.54120601851852
+              ],
+              "meanLuma": 78.01413499635429,
+              "darkFraction": 0.03244135802469136,
+              "changedPixels": 0,
+              "meanChannelDifference": 0,
+              "maxChannelDifference": 0,
+              "thresholdBounds": [
+                {
+                  "threshold": 1,
+                  "changedPixels": 0,
+                  "bounds": null
+                },
+                {
+                  "threshold": 4,
+                  "changedPixels": 0,
+                  "bounds": null
+                }
+              ]
+            },
+            {
+              "name": "road-lower",
+              "normalized": {
+                "x0": 0,
+                "y0": 0.5,
+                "x1": 1,
+                "y1": 1
+              },
+              "bounds": {
+                "minX": 0,
+                "minY": 450,
+                "maxX": 1440,
+                "maxY": 900
+              },
+              "pixels": 648000,
+              "meanRGB": [
+                52.2943487654321,
+                61.48041512345679,
+                79.87780401234568
+              ],
+              "meanLuma": 60.85574889298878,
+              "darkFraction": 0,
+              "changedPixels": 0,
+              "meanChannelDifference": 0,
+              "maxChannelDifference": 0,
+              "thresholdBounds": [
+                {
+                  "threshold": 1,
+                  "changedPixels": 0,
+                  "bounds": null
+                },
+                {
+                  "threshold": 4,
+                  "changedPixels": 0,
+                  "bounds": null
+                }
+              ]
+            },
+            {
+              "name": "road-left",
+              "normalized": {
+                "x0": 0,
+                "y0": 0.55,
+                "x1": 0.5,
+                "y1": 1
+              },
+              "bounds": {
+                "minX": 0,
+                "minY": 495,
+                "maxX": 720,
+                "maxY": 900
+              },
+              "pixels": 291600,
+              "meanRGB": [
+                49.32134773662551,
+                57.904098079561045,
+                75.54897462277091
+              ],
+              "meanLuma": 57.353365443131615,
+              "darkFraction": 0,
+              "changedPixels": 0,
+              "meanChannelDifference": 0,
+              "maxChannelDifference": 0,
+              "thresholdBounds": [
+                {
+                  "threshold": 1,
+                  "changedPixels": 0,
+                  "bounds": null
+                },
+                {
+                  "threshold": 4,
+                  "changedPixels": 0,
+                  "bounds": null
+                }
+              ]
+            },
+            {
+              "name": "road-middle",
+              "normalized": {
+                "x0": 0.3,
+                "y0": 0.55,
+                "x1": 0.7,
+                "y1": 0.9
+              },
+              "bounds": {
+                "minX": 432,
+                "minY": 495,
+                "maxX": 1007,
+                "maxY": 810
+              },
+              "pixels": 181125,
+              "meanRGB": [
+                52.72760800552105,
+                61.857468599033815,
+                80.76020427881298
+              ],
+              "meanLuma": 61.281237752972736,
+              "darkFraction": 0,
+              "changedPixels": 0,
+              "meanChannelDifference": 0,
+              "maxChannelDifference": 0,
+              "thresholdBounds": [
+                {
+                  "threshold": 1,
+                  "changedPixels": 0,
+                  "bounds": null
+                },
+                {
+                  "threshold": 4,
+                  "changedPixels": 0,
+                  "bounds": null
+                }
+              ]
+            },
+            {
+              "name": "road-right",
+              "normalized": {
+                "x0": 0.5,
+                "y0": 0.55,
+                "x1": 1,
+                "y1": 1
+              },
+              "bounds": {
+                "minX": 720,
+                "minY": 495,
+                "maxX": 1440,
+                "maxY": 900
+              },
+              "pixels": 291600,
+              "meanRGB": [
+                46.79629972565158,
+                57.26969821673526,
+                77.6933024691358
+              ],
+              "meanLuma": 56.51763792461698,
+              "darkFraction": 0,
+              "changedPixels": 0,
+              "meanChannelDifference": 0,
+              "maxChannelDifference": 0,
+              "thresholdBounds": [
+                {
+                  "threshold": 1,
+                  "changedPixels": 0,
+                  "bounds": null
+                },
+                {
+                  "threshold": 4,
+                  "changedPixels": 0,
+                  "bounds": null
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "a1": {
+        "state": {
+          "view": "wet-road-detail",
+          "camera": {
+            "position": [
+              282,
+              9.35,
+              931
+            ],
+            "quaternion": [
+              -0.06394106287433389,
+              0.4378349740946528,
+              0.031236950528131083,
+              0.8962345278216736
+            ],
+            "projection": [
+              1.1275298470446398,
+              0,
+              0,
+              0,
+              0,
+              1.8040477552714236,
+              0,
+              0,
+              0,
+              0,
+              -1.000025000312504,
+              -1,
+              0,
+              0,
+              -0.4000050000625008,
+              0
+            ],
+            "fov": 58,
+            "aspect": 1.6,
+            "near": 0.2,
+            "far": 16000
+          },
+          "time": 14,
+          "stationTime": 14,
+          "rafFrozen": true,
+          "walkerEnabled": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "ratio": 1,
+            "devicePixelRatio": 1
+          },
+          "pipeline": {
+            "exposure": 1.02,
+            "blur": 0,
+            "bloom": 0.12,
+            "distortion": 0,
+            "fringe": 0,
+            "vignette": 0.12,
+            "rays": 0,
+            "saturation": 1,
+            "contrast": 1.05,
+            "speed": 0
+          },
+          "finalUniforms": {
+            "tColor": {
+              "texture": "395f6447-1315-4263-9bcb-1fbdb9da6ae4",
+              "version": 0
+            },
+            "tBloom": {
+              "texture": "a883591d-c9e1-4e42-a5e3-6051f15d960d",
+              "version": 1
+            },
+            "tRays": {
+              "texture": "9b469006-2b07-48ce-a023-84152b2b2fbd",
+              "version": 0
+            },
+            "uExposure": 1.02,
+            "uBloom": 0.12,
+            "uDistort": 0,
+            "uFringe": 0,
+            "uVignette": 0.12,
+            "uRays": 0,
+            "uSunColor": [
+              3.3,
+              3,
+              2.55
+            ],
+            "uSat": 1,
+            "uContrast": 1.05,
+            "uRes": [
+              1440,
+              900
+            ],
+            "uTime": 14,
+            "uSpeed": 0,
+            "uFade": 1,
+            "tWorldDepth": {
+              "texture": "da140534-50f7-41c9-8882-3e0477385b91",
+              "version": 1
+            },
+            "uNear": 0.2,
+            "uFar": 16000,
+            "uReversed": 0,
+            "uToon": 1,
+            "uHaze": 1
+          },
+          "islandUniforms": {
+            "uTime": 14,
+            "uCamPos": [
+              282,
+              9.35,
+              931
+            ],
+            "uSunDir": [
+              -0.5104064950196394,
+              0.5591929034707469,
+              -0.6532905223173859
+            ],
+            "uSunColor": [
+              3.3,
+              3,
+              2.55
+            ],
+            "uSkyZenith": [
+              0.05,
+              0.17,
+              0.56
+            ],
+            "uSkyMid": [
+              0.135,
+              0.38,
+              0.86
+            ],
+            "uSkyHorizon": [
+              0.56,
+              0.76,
+              0.93
+            ],
+            "uSunHalo": [
+              1,
+              0.8,
+              0.52
+            ],
+            "uAmbSky": [
+              0.36,
+              0.52,
+              0.8
+            ],
+            "uAmbGround": [
+              0.2,
+              0.23,
+              0.14
+            ],
+            "uFog": [
+              0.000135,
+              0.002380952380952381,
+              0,
+              0
+            ],
+            "uHeightTex": {
+              "texture": "3d3e061a-c3d7-4870-b00a-f636adb9dde8",
+              "version": 2
+            },
+            "uSplatTex": {
+              "texture": "240f9e44-c985-4b28-94a4-9603a478dcf6",
+              "version": 2
+            },
+            "uLightTex": {
+              "texture": "59f10394-b6f8-4883-b27c-241964bc7ef1",
+              "version": 1
+            },
+            "uTintTex": {
+              "texture": "12cfede2-ca46-4cb8-b58e-bcbd3808e686",
+              "version": 1
+            },
+            "uWorld": [
+              6144,
+              0.00016276041666666666,
+              0.000244140625,
+              0
+            ],
+            "uWind": [
+              0.361,
+              0.933,
+              1,
+              0
+            ],
+            "uWakeTex": {
+              "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+              "version": 1
+            },
+            "uWake": [
+              0,
+              0,
+              0.00625,
+              0
+            ],
+            "uStripTex": {
+              "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+              "version": 1
+            },
+            "uRider": [
+              1000000,
+              1000000,
+              1000000,
+              0
+            ],
+            "uRiderVel": [
+              0,
+              0,
+              0
+            ],
+            "uShadowTex": {
+              "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+              "version": 1
+            },
+            "uShadowMat": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "uShadowOn": 0,
+            "uTownSh0": {
+              "texture": "a7106143-5ca1-4a11-aa9e-b8a10c400b1e",
+              "version": 1
+            },
+            "uTownSh1": {
+              "texture": "cbb19faa-bcbf-419d-bad6-25199a0f23a1",
+              "version": 1
+            },
+            "uTownShM0": [
+              -0.0015640350150390163,
+              0.0009707623774831163,
+              0.0010728488160372896,
+              0,
+              5.508895903604887e-20,
+              0.0023376717047234735,
+              -0.0011753953961772395,
+              0,
+              0.0012219580766032003,
+              0.0012425191819073742,
+              0.0013731838646951812,
+              0,
+              -0.8288562893150736,
+              -0.7772729453792973,
+              -0.8809385489374643,
+              0.9999999999999998
+            ],
+            "uTownShM1": [
+              -0.0029188060569810756,
+              0.0016002547900483026,
+              0.0018358161168375892,
+              0,
+              5.140357656992438e-19,
+              0.003853538651490622,
+              -0.0020112897359844594,
+              0,
+              0.00228042121888006,
+              0.0020482327278992176,
+              0.0023497374769914656,
+              0,
+              3.6936878781498024,
+              2.1127482477992157,
+              3.186383164579521,
+              1
+            ],
+            "uTownShP": [
+              1,
+              1,
+              475.74876104621495,
+              278.02702587603096
+            ],
+            "uTownMask0": {
+              "texture": "a85f1c3f-c864-487c-956f-ff708e0f5ed0",
+              "version": 1
+            },
+            "uTownMask1": {
+              "texture": "2ca8d408-3bf3-4fbb-ab63-499b04f7d081",
+              "version": 1
+            },
+            "uTownRect0": [
+              -201,
+              810,
+              0.003004807692307692,
+              0.002446183953033268
+            ],
+            "uTownRect1": [
+              90,
+              -1280,
+              0.0055309734513274336,
+              0.0045871559633027525
+            ],
+            "uNoiseTex": {
+              "texture": "dbab875d-be54-4a62-bcc9-10d351f69fcb",
+              "version": 1
+            }
+          },
+          "stationUniforms": {
+            "uTime": 14,
+            "uWind": [
+              0.9,
+              0.35
+            ],
+            "uSunDir": [
+              -0.5104064950196394,
+              0.5591929034707469,
+              -0.6532905223173859
+            ],
+            "uGust": 0.10142290304344133
+          },
+          "wet": {
+            "enabled": true,
+            "material": "be934b48-bad7-4dae-a085-6a4991b5fa2d",
+            "version": 1,
+            "uniforms": {
+              "uWetMask": {
+                "texture": "ee27e9e4-659b-465d-82e9-1f810d9a2e68",
+                "version": 1
+              },
+              "uWetWorldToLocal": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                -280,
+                -8,
+                -900,
+                1
+              ],
+              "uWetBounds": [
+                -4,
+                4,
+                8,
+                30
+              ],
+              "uWetSkyLow": [
+                0.5840784178830671,
+                0.6724431569510133,
+                0.7379104087672317
+              ],
+              "uWetSkyHigh": [
+                0.2746773120495699,
+                0.43415363616478553,
+                0.5647115056965487
+              ]
+            }
+          }
+        },
+        "switchEvidence": {
+          "api": true,
+          "cpuUniform": 1,
+          "gpuUniform": 1,
+          "programId": 53,
+          "requested": true
+        },
+        "render": {
+          "frame": 238,
+          "calls": 1110,
+          "triangles": 7728136,
+          "points": 0,
+          "lines": 0
+        },
+        "programs": 101,
+        "memory": {
+          "geometries": 1046,
+          "textures": 212
+        },
+        "errors": [],
+        "clock": {
+          "timeOrigin": 1794872304783.6,
+          "now": 33770.09999990463
+        },
+        "props": {
+          "lighthouse": 1,
+          "menhir": 21,
+          "boulders": 87,
+          "tree": 53
+        },
+        "png": "detail-on-A1.png",
+        "jpeg": "detail-on-A1.jpg",
+        "pngSha256": "7a69219ff712ab6e92d999330931b5947c88266ac754e925714d79b92d80d075",
+        "regions": [
+          {
+            "name": "full",
+            "normalized": {
+              "x0": 0,
+              "y0": 0,
+              "x1": 1,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 0,
+              "minY": 0,
+              "maxX": 1440,
+              "maxY": 900
+            },
+            "pixels": 1296000,
+            "meanRGB": [
+              72.82152854938272,
+              78.09116743827161,
+              92.54120601851852
+            ],
+            "meanLuma": 78.01413499635429,
+            "darkFraction": 0.03244135802469136,
+            "changedPixels": 0,
+            "meanChannelDifference": 0,
+            "maxChannelDifference": 0,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 0,
+                "bounds": null
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 0,
+                "bounds": null
+              }
+            ]
+          },
+          {
+            "name": "road-lower",
+            "normalized": {
+              "x0": 0,
+              "y0": 0.5,
+              "x1": 1,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 0,
+              "minY": 450,
+              "maxX": 1440,
+              "maxY": 900
+            },
+            "pixels": 648000,
+            "meanRGB": [
+              52.2943487654321,
+              61.48041512345679,
+              79.87780401234568
+            ],
+            "meanLuma": 60.85574889298878,
+            "darkFraction": 0,
+            "changedPixels": 0,
+            "meanChannelDifference": 0,
+            "maxChannelDifference": 0,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 0,
+                "bounds": null
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 0,
+                "bounds": null
+              }
+            ]
+          },
+          {
+            "name": "road-left",
+            "normalized": {
+              "x0": 0,
+              "y0": 0.55,
+              "x1": 0.5,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 0,
+              "minY": 495,
+              "maxX": 720,
+              "maxY": 900
+            },
+            "pixels": 291600,
+            "meanRGB": [
+              49.32134773662551,
+              57.904098079561045,
+              75.54897462277091
+            ],
+            "meanLuma": 57.353365443131615,
+            "darkFraction": 0,
+            "changedPixels": 0,
+            "meanChannelDifference": 0,
+            "maxChannelDifference": 0,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 0,
+                "bounds": null
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 0,
+                "bounds": null
+              }
+            ]
+          },
+          {
+            "name": "road-middle",
+            "normalized": {
+              "x0": 0.3,
+              "y0": 0.55,
+              "x1": 0.7,
+              "y1": 0.9
+            },
+            "bounds": {
+              "minX": 432,
+              "minY": 495,
+              "maxX": 1007,
+              "maxY": 810
+            },
+            "pixels": 181125,
+            "meanRGB": [
+              52.72760800552105,
+              61.857468599033815,
+              80.76020427881298
+            ],
+            "meanLuma": 61.281237752972736,
+            "darkFraction": 0,
+            "changedPixels": 0,
+            "meanChannelDifference": 0,
+            "maxChannelDifference": 0,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 0,
+                "bounds": null
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 0,
+                "bounds": null
+              }
+            ]
+          },
+          {
+            "name": "road-right",
+            "normalized": {
+              "x0": 0.5,
+              "y0": 0.55,
+              "x1": 1,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 720,
+              "minY": 495,
+              "maxX": 1440,
+              "maxY": 900
+            },
+            "pixels": 291600,
+            "meanRGB": [
+              46.79629972565158,
+              57.26969821673526,
+              77.6933024691358
+            ],
+            "meanLuma": 56.51763792461698,
+            "darkFraction": 0,
+            "changedPixels": 0,
+            "meanChannelDifference": 0,
+            "maxChannelDifference": 0,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 0,
+                "bounds": null
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 0,
+                "bounds": null
+              }
+            ]
+          }
+        ]
+      },
+      "b": {
+        "state": {
+          "view": "wet-road-detail",
+          "camera": {
+            "position": [
+              282,
+              9.35,
+              931
+            ],
+            "quaternion": [
+              -0.06394106287433389,
+              0.4378349740946528,
+              0.031236950528131083,
+              0.8962345278216736
+            ],
+            "projection": [
+              1.1275298470446398,
+              0,
+              0,
+              0,
+              0,
+              1.8040477552714236,
+              0,
+              0,
+              0,
+              0,
+              -1.000025000312504,
+              -1,
+              0,
+              0,
+              -0.4000050000625008,
+              0
+            ],
+            "fov": 58,
+            "aspect": 1.6,
+            "near": 0.2,
+            "far": 16000
+          },
+          "time": 14,
+          "stationTime": 14,
+          "rafFrozen": true,
+          "walkerEnabled": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "ratio": 1,
+            "devicePixelRatio": 1
+          },
+          "pipeline": {
+            "exposure": 1.02,
+            "blur": 0,
+            "bloom": 0.12,
+            "distortion": 0,
+            "fringe": 0,
+            "vignette": 0.12,
+            "rays": 0,
+            "saturation": 1,
+            "contrast": 1.05,
+            "speed": 0
+          },
+          "finalUniforms": {
+            "tColor": {
+              "texture": "395f6447-1315-4263-9bcb-1fbdb9da6ae4",
+              "version": 0
+            },
+            "tBloom": {
+              "texture": "a883591d-c9e1-4e42-a5e3-6051f15d960d",
+              "version": 1
+            },
+            "tRays": {
+              "texture": "9b469006-2b07-48ce-a023-84152b2b2fbd",
+              "version": 0
+            },
+            "uExposure": 1.02,
+            "uBloom": 0.12,
+            "uDistort": 0,
+            "uFringe": 0,
+            "uVignette": 0.12,
+            "uRays": 0,
+            "uSunColor": [
+              3.3,
+              3,
+              2.55
+            ],
+            "uSat": 1,
+            "uContrast": 1.05,
+            "uRes": [
+              1440,
+              900
+            ],
+            "uTime": 14,
+            "uSpeed": 0,
+            "uFade": 1,
+            "tWorldDepth": {
+              "texture": "da140534-50f7-41c9-8882-3e0477385b91",
+              "version": 1
+            },
+            "uNear": 0.2,
+            "uFar": 16000,
+            "uReversed": 0,
+            "uToon": 1,
+            "uHaze": 1
+          },
+          "islandUniforms": {
+            "uTime": 14,
+            "uCamPos": [
+              282,
+              9.35,
+              931
+            ],
+            "uSunDir": [
+              -0.5104064950196394,
+              0.5591929034707469,
+              -0.6532905223173859
+            ],
+            "uSunColor": [
+              3.3,
+              3,
+              2.55
+            ],
+            "uSkyZenith": [
+              0.05,
+              0.17,
+              0.56
+            ],
+            "uSkyMid": [
+              0.135,
+              0.38,
+              0.86
+            ],
+            "uSkyHorizon": [
+              0.56,
+              0.76,
+              0.93
+            ],
+            "uSunHalo": [
+              1,
+              0.8,
+              0.52
+            ],
+            "uAmbSky": [
+              0.36,
+              0.52,
+              0.8
+            ],
+            "uAmbGround": [
+              0.2,
+              0.23,
+              0.14
+            ],
+            "uFog": [
+              0.000135,
+              0.002380952380952381,
+              0,
+              0
+            ],
+            "uHeightTex": {
+              "texture": "3d3e061a-c3d7-4870-b00a-f636adb9dde8",
+              "version": 2
+            },
+            "uSplatTex": {
+              "texture": "240f9e44-c985-4b28-94a4-9603a478dcf6",
+              "version": 2
+            },
+            "uLightTex": {
+              "texture": "59f10394-b6f8-4883-b27c-241964bc7ef1",
+              "version": 1
+            },
+            "uTintTex": {
+              "texture": "12cfede2-ca46-4cb8-b58e-bcbd3808e686",
+              "version": 1
+            },
+            "uWorld": [
+              6144,
+              0.00016276041666666666,
+              0.000244140625,
+              0
+            ],
+            "uWind": [
+              0.361,
+              0.933,
+              1,
+              0
+            ],
+            "uWakeTex": {
+              "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+              "version": 1
+            },
+            "uWake": [
+              0,
+              0,
+              0.00625,
+              0
+            ],
+            "uStripTex": {
+              "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+              "version": 1
+            },
+            "uRider": [
+              1000000,
+              1000000,
+              1000000,
+              0
+            ],
+            "uRiderVel": [
+              0,
+              0,
+              0
+            ],
+            "uShadowTex": {
+              "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+              "version": 1
+            },
+            "uShadowMat": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "uShadowOn": 0,
+            "uTownSh0": {
+              "texture": "a7106143-5ca1-4a11-aa9e-b8a10c400b1e",
+              "version": 1
+            },
+            "uTownSh1": {
+              "texture": "cbb19faa-bcbf-419d-bad6-25199a0f23a1",
+              "version": 1
+            },
+            "uTownShM0": [
+              -0.0015640350150390163,
+              0.0009707623774831163,
+              0.0010728488160372896,
+              0,
+              5.508895903604887e-20,
+              0.0023376717047234735,
+              -0.0011753953961772395,
+              0,
+              0.0012219580766032003,
+              0.0012425191819073742,
+              0.0013731838646951812,
+              0,
+              -0.8288562893150736,
+              -0.7772729453792973,
+              -0.8809385489374643,
+              0.9999999999999998
+            ],
+            "uTownShM1": [
+              -0.0029188060569810756,
+              0.0016002547900483026,
+              0.0018358161168375892,
+              0,
+              5.140357656992438e-19,
+              0.003853538651490622,
+              -0.0020112897359844594,
+              0,
+              0.00228042121888006,
+              0.0020482327278992176,
+              0.0023497374769914656,
+              0,
+              3.6936878781498024,
+              2.1127482477992157,
+              3.186383164579521,
+              1
+            ],
+            "uTownShP": [
+              1,
+              1,
+              475.74876104621495,
+              278.02702587603096
+            ],
+            "uTownMask0": {
+              "texture": "a85f1c3f-c864-487c-956f-ff708e0f5ed0",
+              "version": 1
+            },
+            "uTownMask1": {
+              "texture": "2ca8d408-3bf3-4fbb-ab63-499b04f7d081",
+              "version": 1
+            },
+            "uTownRect0": [
+              -201,
+              810,
+              0.003004807692307692,
+              0.002446183953033268
+            ],
+            "uTownRect1": [
+              90,
+              -1280,
+              0.0055309734513274336,
+              0.0045871559633027525
+            ],
+            "uNoiseTex": {
+              "texture": "dbab875d-be54-4a62-bcc9-10d351f69fcb",
+              "version": 1
+            }
+          },
+          "stationUniforms": {
+            "uTime": 14,
+            "uWind": [
+              0.9,
+              0.35
+            ],
+            "uSunDir": [
+              -0.5104064950196394,
+              0.5591929034707469,
+              -0.6532905223173859
+            ],
+            "uGust": 0.10142290304344133
+          },
+          "wet": {
+            "enabled": false,
+            "material": "be934b48-bad7-4dae-a085-6a4991b5fa2d",
+            "version": 1,
+            "uniforms": {
+              "uWetMask": {
+                "texture": "ee27e9e4-659b-465d-82e9-1f810d9a2e68",
+                "version": 1
+              },
+              "uWetWorldToLocal": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                -280,
+                -8,
+                -900,
+                1
+              ],
+              "uWetBounds": [
+                -4,
+                4,
+                8,
+                30
+              ],
+              "uWetSkyLow": [
+                0.5840784178830671,
+                0.6724431569510133,
+                0.7379104087672317
+              ],
+              "uWetSkyHigh": [
+                0.2746773120495699,
+                0.43415363616478553,
+                0.5647115056965487
+              ]
+            }
+          }
+        },
+        "switchEvidence": {
+          "api": false,
+          "cpuUniform": 0,
+          "gpuUniform": 0,
+          "programId": 53,
+          "requested": false
+        },
+        "render": {
+          "frame": 255,
+          "calls": 1110,
+          "triangles": 7728136,
+          "points": 0,
+          "lines": 0
+        },
+        "programs": 101,
+        "memory": {
+          "geometries": 1046,
+          "textures": 212
+        },
+        "errors": [],
+        "clock": {
+          "timeOrigin": 1794872304783.6,
+          "now": 33943.39999985695
+        },
+        "props": {
+          "lighthouse": 1,
+          "menhir": 21,
+          "boulders": 87,
+          "tree": 53
+        },
+        "png": "detail-off-B.png",
+        "jpeg": "detail-off-B.jpg",
+        "pngSha256": "7bd1e7c2707f524db047ed1b2ea93914d4f4cf4e4f66e60bec7d0fafc58d1f94",
+        "regions": [
+          {
+            "name": "full",
+            "normalized": {
+              "x0": 0,
+              "y0": 0,
+              "x1": 1,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 0,
+              "minY": 0,
+              "maxX": 1440,
+              "maxY": 900
+            },
+            "pixels": 1296000,
+            "meanRGB": [
+              75.67108333333333,
+              80.42687037037037,
+              94.47986419753086
+            ],
+            "meanLuma": 80.43041620121569,
+            "darkFraction": 0.03247299382716049,
+            "changedPixels": 445804,
+            "meanChannelDifference": 4.008482767489712,
+            "maxChannelDifference": 78,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 366204,
+                "bounds": {
+                  "minX": 0,
+                  "minY": 395,
+                  "maxX": 1439,
+                  "maxY": 899,
+                  "width": 1440,
+                  "height": 505
+                }
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 303934,
+                "bounds": {
+                  "minX": 0,
+                  "minY": 395,
+                  "maxX": 1439,
+                  "maxY": 899,
+                  "width": 1440,
+                  "height": 505
+                }
+              }
+            ]
+          },
+          {
+            "name": "road-lower",
+            "normalized": {
+              "x0": 0,
+              "y0": 0.5,
+              "x1": 1,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 0,
+              "minY": 450,
+              "maxX": 1440,
+              "maxY": 900
+            },
+            "pixels": 648000,
+            "meanRGB": [
+              58.499668209876546,
+              66.67419290123456,
+              84.21092592592592
+            ],
+            "meanLuma": 66.20244107679929,
+            "darkFraction": 0,
+            "changedPixels": 418079,
+            "meanChannelDifference": 7.5151820987654325,
+            "maxChannelDifference": 77,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 355839,
+                "bounds": {
+                  "minX": 0,
+                  "minY": 450,
+                  "maxX": 1439,
+                  "maxY": 899,
+                  "width": 1440,
+                  "height": 450
+                }
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 295635,
+                "bounds": {
+                  "minX": 0,
+                  "minY": 450,
+                  "maxX": 1439,
+                  "maxY": 899,
+                  "width": 1440,
+                  "height": 450
+                }
+              }
+            ]
+          },
+          {
+            "name": "road-left",
+            "normalized": {
+              "x0": 0,
+              "y0": 0.55,
+              "x1": 0.5,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 0,
+              "minY": 495,
+              "maxX": 720,
+              "maxY": 900
+            },
+            "pixels": 291600,
+            "meanRGB": [
+              57.27408436213992,
+              64.84722222222223,
+              81.40820301783265
+            ],
+            "meanLuma": 64.43287592657187,
+            "darkFraction": 0,
+            "changedPixels": 193998,
+            "meanChannelDifference": 6.9848513946044815,
+            "maxChannelDifference": 29,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 167019,
+                "bounds": {
+                  "minX": 0,
+                  "minY": 495,
+                  "maxX": 719,
+                  "maxY": 899,
+                  "width": 720,
+                  "height": 405
+                }
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 138564,
+                "bounds": {
+                  "minX": 0,
+                  "minY": 495,
+                  "maxX": 719,
+                  "maxY": 899,
+                  "width": 720,
+                  "height": 405
+                }
+              }
+            ]
+          },
+          {
+            "name": "road-middle",
+            "normalized": {
+              "x0": 0.3,
+              "y0": 0.55,
+              "x1": 0.7,
+              "y1": 0.9
+            },
+            "bounds": {
+              "minX": 432,
+              "minY": 495,
+              "maxX": 1007,
+              "maxY": 810
+            },
+            "pixels": 181125,
+            "meanRGB": [
+              59.36670807453416,
+              67.70737336093858,
+              85.72509592822637
+            ],
+            "meanLuma": 67.23502749038458,
+            "darkFraction": 0,
+            "changedPixels": 111391,
+            "meanChannelDifference": 5.917701403266621,
+            "maxChannelDifference": 24,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 91875,
+                "bounds": {
+                  "minX": 432,
+                  "minY": 495,
+                  "maxX": 1006,
+                  "maxY": 809,
+                  "width": 575,
+                  "height": 315
+                }
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 75380,
+                "bounds": {
+                  "minX": 432,
+                  "minY": 495,
+                  "maxX": 1006,
+                  "maxY": 809,
+                  "width": 575,
+                  "height": 315
+                }
+              }
+            ]
+          },
+          {
+            "name": "road-right",
+            "normalized": {
+              "x0": 0.5,
+              "y0": 0.55,
+              "x1": 1,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 720,
+              "minY": 495,
+              "maxX": 1440,
+              "maxY": 900
+            },
+            "pixels": 291600,
+            "meanRGB": [
+              55.09040809327846,
+              64.4487962962963,
+              83.691731824417
+            ],
+            "meanLuma": 63.84854290941686,
+            "darkFraction": 0,
+            "changedPixels": 188499,
+            "meanChannelDifference": 7.163773433927755,
+            "maxChannelDifference": 29,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 162380,
+                "bounds": {
+                  "minX": 720,
+                  "minY": 495,
+                  "maxX": 1439,
+                  "maxY": 899,
+                  "width": 720,
+                  "height": 405
+                }
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 136208,
+                "bounds": {
+                  "minX": 720,
+                  "minY": 669,
+                  "maxX": 1439,
+                  "maxY": 899,
+                  "width": 720,
+                  "height": 231
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "a2": {
+        "state": {
+          "view": "wet-road-detail",
+          "camera": {
+            "position": [
+              282,
+              9.35,
+              931
+            ],
+            "quaternion": [
+              -0.06394106287433389,
+              0.4378349740946528,
+              0.031236950528131083,
+              0.8962345278216736
+            ],
+            "projection": [
+              1.1275298470446398,
+              0,
+              0,
+              0,
+              0,
+              1.8040477552714236,
+              0,
+              0,
+              0,
+              0,
+              -1.000025000312504,
+              -1,
+              0,
+              0,
+              -0.4000050000625008,
+              0
+            ],
+            "fov": 58,
+            "aspect": 1.6,
+            "near": 0.2,
+            "far": 16000
+          },
+          "time": 14,
+          "stationTime": 14,
+          "rafFrozen": true,
+          "walkerEnabled": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "ratio": 1,
+            "devicePixelRatio": 1
+          },
+          "pipeline": {
+            "exposure": 1.02,
+            "blur": 0,
+            "bloom": 0.12,
+            "distortion": 0,
+            "fringe": 0,
+            "vignette": 0.12,
+            "rays": 0,
+            "saturation": 1,
+            "contrast": 1.05,
+            "speed": 0
+          },
+          "finalUniforms": {
+            "tColor": {
+              "texture": "395f6447-1315-4263-9bcb-1fbdb9da6ae4",
+              "version": 0
+            },
+            "tBloom": {
+              "texture": "a883591d-c9e1-4e42-a5e3-6051f15d960d",
+              "version": 1
+            },
+            "tRays": {
+              "texture": "9b469006-2b07-48ce-a023-84152b2b2fbd",
+              "version": 0
+            },
+            "uExposure": 1.02,
+            "uBloom": 0.12,
+            "uDistort": 0,
+            "uFringe": 0,
+            "uVignette": 0.12,
+            "uRays": 0,
+            "uSunColor": [
+              3.3,
+              3,
+              2.55
+            ],
+            "uSat": 1,
+            "uContrast": 1.05,
+            "uRes": [
+              1440,
+              900
+            ],
+            "uTime": 14,
+            "uSpeed": 0,
+            "uFade": 1,
+            "tWorldDepth": {
+              "texture": "da140534-50f7-41c9-8882-3e0477385b91",
+              "version": 1
+            },
+            "uNear": 0.2,
+            "uFar": 16000,
+            "uReversed": 0,
+            "uToon": 1,
+            "uHaze": 1
+          },
+          "islandUniforms": {
+            "uTime": 14,
+            "uCamPos": [
+              282,
+              9.35,
+              931
+            ],
+            "uSunDir": [
+              -0.5104064950196394,
+              0.5591929034707469,
+              -0.6532905223173859
+            ],
+            "uSunColor": [
+              3.3,
+              3,
+              2.55
+            ],
+            "uSkyZenith": [
+              0.05,
+              0.17,
+              0.56
+            ],
+            "uSkyMid": [
+              0.135,
+              0.38,
+              0.86
+            ],
+            "uSkyHorizon": [
+              0.56,
+              0.76,
+              0.93
+            ],
+            "uSunHalo": [
+              1,
+              0.8,
+              0.52
+            ],
+            "uAmbSky": [
+              0.36,
+              0.52,
+              0.8
+            ],
+            "uAmbGround": [
+              0.2,
+              0.23,
+              0.14
+            ],
+            "uFog": [
+              0.000135,
+              0.002380952380952381,
+              0,
+              0
+            ],
+            "uHeightTex": {
+              "texture": "3d3e061a-c3d7-4870-b00a-f636adb9dde8",
+              "version": 2
+            },
+            "uSplatTex": {
+              "texture": "240f9e44-c985-4b28-94a4-9603a478dcf6",
+              "version": 2
+            },
+            "uLightTex": {
+              "texture": "59f10394-b6f8-4883-b27c-241964bc7ef1",
+              "version": 1
+            },
+            "uTintTex": {
+              "texture": "12cfede2-ca46-4cb8-b58e-bcbd3808e686",
+              "version": 1
+            },
+            "uWorld": [
+              6144,
+              0.00016276041666666666,
+              0.000244140625,
+              0
+            ],
+            "uWind": [
+              0.361,
+              0.933,
+              1,
+              0
+            ],
+            "uWakeTex": {
+              "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+              "version": 1
+            },
+            "uWake": [
+              0,
+              0,
+              0.00625,
+              0
+            ],
+            "uStripTex": {
+              "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+              "version": 1
+            },
+            "uRider": [
+              1000000,
+              1000000,
+              1000000,
+              0
+            ],
+            "uRiderVel": [
+              0,
+              0,
+              0
+            ],
+            "uShadowTex": {
+              "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+              "version": 1
+            },
+            "uShadowMat": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "uShadowOn": 0,
+            "uTownSh0": {
+              "texture": "a7106143-5ca1-4a11-aa9e-b8a10c400b1e",
+              "version": 1
+            },
+            "uTownSh1": {
+              "texture": "cbb19faa-bcbf-419d-bad6-25199a0f23a1",
+              "version": 1
+            },
+            "uTownShM0": [
+              -0.0015640350150390163,
+              0.0009707623774831163,
+              0.0010728488160372896,
+              0,
+              5.508895903604887e-20,
+              0.0023376717047234735,
+              -0.0011753953961772395,
+              0,
+              0.0012219580766032003,
+              0.0012425191819073742,
+              0.0013731838646951812,
+              0,
+              -0.8288562893150736,
+              -0.7772729453792973,
+              -0.8809385489374643,
+              0.9999999999999998
+            ],
+            "uTownShM1": [
+              -0.0029188060569810756,
+              0.0016002547900483026,
+              0.0018358161168375892,
+              0,
+              5.140357656992438e-19,
+              0.003853538651490622,
+              -0.0020112897359844594,
+              0,
+              0.00228042121888006,
+              0.0020482327278992176,
+              0.0023497374769914656,
+              0,
+              3.6936878781498024,
+              2.1127482477992157,
+              3.186383164579521,
+              1
+            ],
+            "uTownShP": [
+              1,
+              1,
+              475.74876104621495,
+              278.02702587603096
+            ],
+            "uTownMask0": {
+              "texture": "a85f1c3f-c864-487c-956f-ff708e0f5ed0",
+              "version": 1
+            },
+            "uTownMask1": {
+              "texture": "2ca8d408-3bf3-4fbb-ab63-499b04f7d081",
+              "version": 1
+            },
+            "uTownRect0": [
+              -201,
+              810,
+              0.003004807692307692,
+              0.002446183953033268
+            ],
+            "uTownRect1": [
+              90,
+              -1280,
+              0.0055309734513274336,
+              0.0045871559633027525
+            ],
+            "uNoiseTex": {
+              "texture": "dbab875d-be54-4a62-bcc9-10d351f69fcb",
+              "version": 1
+            }
+          },
+          "stationUniforms": {
+            "uTime": 14,
+            "uWind": [
+              0.9,
+              0.35
+            ],
+            "uSunDir": [
+              -0.5104064950196394,
+              0.5591929034707469,
+              -0.6532905223173859
+            ],
+            "uGust": 0.10142290304344133
+          },
+          "wet": {
+            "enabled": true,
+            "material": "be934b48-bad7-4dae-a085-6a4991b5fa2d",
+            "version": 1,
+            "uniforms": {
+              "uWetMask": {
+                "texture": "ee27e9e4-659b-465d-82e9-1f810d9a2e68",
+                "version": 1
+              },
+              "uWetWorldToLocal": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                -280,
+                -8,
+                -900,
+                1
+              ],
+              "uWetBounds": [
+                -4,
+                4,
+                8,
+                30
+              ],
+              "uWetSkyLow": [
+                0.5840784178830671,
+                0.6724431569510133,
+                0.7379104087672317
+              ],
+              "uWetSkyHigh": [
+                0.2746773120495699,
+                0.43415363616478553,
+                0.5647115056965487
+              ]
+            }
+          }
+        },
+        "switchEvidence": {
+          "api": true,
+          "cpuUniform": 1,
+          "gpuUniform": 1,
+          "programId": 53,
+          "requested": true
+        },
+        "render": {
+          "frame": 272,
+          "calls": 1110,
+          "triangles": 7728136,
+          "points": 0,
+          "lines": 0
+        },
+        "programs": 101,
+        "memory": {
+          "geometries": 1046,
+          "textures": 212
+        },
+        "errors": [],
+        "clock": {
+          "timeOrigin": 1794872304783.6,
+          "now": 34148.89999985695
+        },
+        "props": {
+          "lighthouse": 1,
+          "menhir": 21,
+          "boulders": 87,
+          "tree": 53
+        },
+        "png": "detail-on-A2.png",
+        "jpeg": "detail-on-A2.jpg",
+        "pngSha256": "7a69219ff712ab6e92d999330931b5947c88266ac754e925714d79b92d80d075",
+        "regions": [
+          {
+            "name": "full",
+            "normalized": {
+              "x0": 0,
+              "y0": 0,
+              "x1": 1,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 0,
+              "minY": 0,
+              "maxX": 1440,
+              "maxY": 900
+            },
+            "pixels": 1296000,
+            "meanRGB": [
+              72.82152854938272,
+              78.09116743827161,
+              92.54120601851852
+            ],
+            "meanLuma": 78.01413499635429,
+            "darkFraction": 0.03244135802469136,
+            "changedPixels": 0,
+            "meanChannelDifference": 0,
+            "maxChannelDifference": 0,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 0,
+                "bounds": null
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 0,
+                "bounds": null
+              }
+            ]
+          },
+          {
+            "name": "road-lower",
+            "normalized": {
+              "x0": 0,
+              "y0": 0.5,
+              "x1": 1,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 0,
+              "minY": 450,
+              "maxX": 1440,
+              "maxY": 900
+            },
+            "pixels": 648000,
+            "meanRGB": [
+              52.2943487654321,
+              61.48041512345679,
+              79.87780401234568
+            ],
+            "meanLuma": 60.85574889298878,
+            "darkFraction": 0,
+            "changedPixels": 0,
+            "meanChannelDifference": 0,
+            "maxChannelDifference": 0,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 0,
+                "bounds": null
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 0,
+                "bounds": null
+              }
+            ]
+          },
+          {
+            "name": "road-left",
+            "normalized": {
+              "x0": 0,
+              "y0": 0.55,
+              "x1": 0.5,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 0,
+              "minY": 495,
+              "maxX": 720,
+              "maxY": 900
+            },
+            "pixels": 291600,
+            "meanRGB": [
+              49.32134773662551,
+              57.904098079561045,
+              75.54897462277091
+            ],
+            "meanLuma": 57.353365443131615,
+            "darkFraction": 0,
+            "changedPixels": 0,
+            "meanChannelDifference": 0,
+            "maxChannelDifference": 0,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 0,
+                "bounds": null
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 0,
+                "bounds": null
+              }
+            ]
+          },
+          {
+            "name": "road-middle",
+            "normalized": {
+              "x0": 0.3,
+              "y0": 0.55,
+              "x1": 0.7,
+              "y1": 0.9
+            },
+            "bounds": {
+              "minX": 432,
+              "minY": 495,
+              "maxX": 1007,
+              "maxY": 810
+            },
+            "pixels": 181125,
+            "meanRGB": [
+              52.72760800552105,
+              61.857468599033815,
+              80.76020427881298
+            ],
+            "meanLuma": 61.281237752972736,
+            "darkFraction": 0,
+            "changedPixels": 0,
+            "meanChannelDifference": 0,
+            "maxChannelDifference": 0,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 0,
+                "bounds": null
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 0,
+                "bounds": null
+              }
+            ]
+          },
+          {
+            "name": "road-right",
+            "normalized": {
+              "x0": 0.5,
+              "y0": 0.55,
+              "x1": 1,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 720,
+              "minY": 495,
+              "maxX": 1440,
+              "maxY": 900
+            },
+            "pixels": 291600,
+            "meanRGB": [
+              46.79629972565158,
+              57.26969821673526,
+              77.6933024691358
+            ],
+            "meanLuma": 56.51763792461698,
+            "darkFraction": 0,
+            "changedPixels": 0,
+            "meanChannelDifference": 0,
+            "maxChannelDifference": 0,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 0,
+                "bounds": null
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 0,
+                "bounds": null
+              }
+            ]
+          }
+        ]
+      },
+      "controlledState": true,
+      "restoredState": true,
+      "pixelIdentity": true,
+      "effectDetected": true,
+      "switchVerified": true,
+      "visualStrict": true
+    },
+    {
+      "view": "station-street",
+      "warmups": [
+        {
+          "state": {
+            "view": "station-street",
+            "camera": {
+              "position": [
+                278.8,
+                10.4,
+                936
+              ],
+              "quaternion": [
+                -0.003277842930440423,
+                -0.009834585659995631,
+                -0.000032237959341941705,
+                0.9999462663720154
+              ],
+              "projection": [
+                1.1275298470446398,
+                0,
+                0,
+                0,
+                0,
+                1.8040477552714236,
+                0,
+                0,
+                0,
+                0,
+                -1.000025000312504,
+                -1,
+                0,
+                0,
+                -0.4000050000625008,
+                0
+              ],
+              "fov": 58,
+              "aspect": 1.6,
+              "near": 0.2,
+              "far": 16000
+            },
+            "time": 14,
+            "stationTime": 14,
+            "rafFrozen": true,
+            "walkerEnabled": false,
+            "viewport": {
+              "width": 1440,
+              "height": 900,
+              "ratio": 1,
+              "devicePixelRatio": 1
+            },
+            "pipeline": {
+              "exposure": 1.02,
+              "blur": 0,
+              "bloom": 0.12,
+              "distortion": 0,
+              "fringe": 0,
+              "vignette": 0.12,
+              "rays": 0,
+              "saturation": 1,
+              "contrast": 1.05,
+              "speed": 0
+            },
+            "finalUniforms": {
+              "tColor": {
+                "texture": "395f6447-1315-4263-9bcb-1fbdb9da6ae4",
+                "version": 0
+              },
+              "tBloom": {
+                "texture": "a883591d-c9e1-4e42-a5e3-6051f15d960d",
+                "version": 1
+              },
+              "tRays": {
+                "texture": "9b469006-2b07-48ce-a023-84152b2b2fbd",
+                "version": 0
+              },
+              "uExposure": 1.02,
+              "uBloom": 0.12,
+              "uDistort": 0,
+              "uFringe": 0,
+              "uVignette": 0.12,
+              "uRays": 0,
+              "uSunColor": [
+                3.3,
+                3,
+                2.55
+              ],
+              "uSat": 1,
+              "uContrast": 1.05,
+              "uRes": [
+                1440,
+                900
+              ],
+              "uTime": 14,
+              "uSpeed": 0,
+              "uFade": 1,
+              "tWorldDepth": {
+                "texture": "da140534-50f7-41c9-8882-3e0477385b91",
+                "version": 1
+              },
+              "uNear": 0.2,
+              "uFar": 16000,
+              "uReversed": 0,
+              "uToon": 1,
+              "uHaze": 1
+            },
+            "islandUniforms": {
+              "uTime": 14,
+              "uCamPos": [
+                278.8,
+                10.4,
+                936
+              ],
+              "uSunDir": [
+                -0.5104064950196394,
+                0.5591929034707469,
+                -0.6532905223173859
+              ],
+              "uSunColor": [
+                3.3,
+                3,
+                2.55
+              ],
+              "uSkyZenith": [
+                0.05,
+                0.17,
+                0.56
+              ],
+              "uSkyMid": [
+                0.135,
+                0.38,
+                0.86
+              ],
+              "uSkyHorizon": [
+                0.56,
+                0.76,
+                0.93
+              ],
+              "uSunHalo": [
+                1,
+                0.8,
+                0.52
+              ],
+              "uAmbSky": [
+                0.36,
+                0.52,
+                0.8
+              ],
+              "uAmbGround": [
+                0.2,
+                0.23,
+                0.14
+              ],
+              "uFog": [
+                0.000135,
+                0.002380952380952381,
+                0,
+                0
+              ],
+              "uHeightTex": {
+                "texture": "3d3e061a-c3d7-4870-b00a-f636adb9dde8",
+                "version": 2
+              },
+              "uSplatTex": {
+                "texture": "240f9e44-c985-4b28-94a4-9603a478dcf6",
+                "version": 2
+              },
+              "uLightTex": {
+                "texture": "59f10394-b6f8-4883-b27c-241964bc7ef1",
+                "version": 1
+              },
+              "uTintTex": {
+                "texture": "12cfede2-ca46-4cb8-b58e-bcbd3808e686",
+                "version": 1
+              },
+              "uWorld": [
+                6144,
+                0.00016276041666666666,
+                0.000244140625,
+                0
+              ],
+              "uWind": [
+                0.361,
+                0.933,
+                1,
+                0
+              ],
+              "uWakeTex": {
+                "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+                "version": 1
+              },
+              "uWake": [
+                0,
+                0,
+                0.00625,
+                0
+              ],
+              "uStripTex": {
+                "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+                "version": 1
+              },
+              "uRider": [
+                1000000,
+                1000000,
+                1000000,
+                0
+              ],
+              "uRiderVel": [
+                0,
+                0,
+                0
+              ],
+              "uShadowTex": {
+                "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+                "version": 1
+              },
+              "uShadowMat": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+              ],
+              "uShadowOn": 0,
+              "uTownSh0": {
+                "texture": "a7106143-5ca1-4a11-aa9e-b8a10c400b1e",
+                "version": 1
+              },
+              "uTownSh1": {
+                "texture": "cbb19faa-bcbf-419d-bad6-25199a0f23a1",
+                "version": 1
+              },
+              "uTownShM0": [
+                -0.0015640350150390163,
+                0.0009707623774831163,
+                0.0010728488160372896,
+                0,
+                5.508895903604887e-20,
+                0.0023376717047234735,
+                -0.0011753953961772395,
+                0,
+                0.0012219580766032003,
+                0.0012425191819073742,
+                0.0013731838646951812,
+                0,
+                -0.8288562893150736,
+                -0.7772729453792973,
+                -0.8809385489374643,
+                0.9999999999999998
+              ],
+              "uTownShM1": [
+                -0.0029188060569810756,
+                0.0016002547900483026,
+                0.0018358161168375892,
+                0,
+                5.140357656992438e-19,
+                0.003853538651490622,
+                -0.0020112897359844594,
+                0,
+                0.00228042121888006,
+                0.0020482327278992176,
+                0.0023497374769914656,
+                0,
+                3.6936878781498024,
+                2.1127482477992157,
+                3.186383164579521,
+                1
+              ],
+              "uTownShP": [
+                1,
+                1,
+                475.74876104621495,
+                278.02702587603096
+              ],
+              "uTownMask0": {
+                "texture": "a85f1c3f-c864-487c-956f-ff708e0f5ed0",
+                "version": 1
+              },
+              "uTownMask1": {
+                "texture": "2ca8d408-3bf3-4fbb-ab63-499b04f7d081",
+                "version": 1
+              },
+              "uTownRect0": [
+                -201,
+                810,
+                0.003004807692307692,
+                0.002446183953033268
+              ],
+              "uTownRect1": [
+                90,
+                -1280,
+                0.0055309734513274336,
+                0.0045871559633027525
+              ],
+              "uNoiseTex": {
+                "texture": "dbab875d-be54-4a62-bcc9-10d351f69fcb",
+                "version": 1
+              }
+            },
+            "stationUniforms": {
+              "uTime": 14,
+              "uWind": [
+                0.9,
+                0.35
+              ],
+              "uSunDir": [
+                -0.5104064950196394,
+                0.5591929034707469,
+                -0.6532905223173859
+              ],
+              "uGust": 0.10142290304344133
+            },
+            "wet": {
+              "enabled": true,
+              "material": "be934b48-bad7-4dae-a085-6a4991b5fa2d",
+              "version": 1,
+              "uniforms": {
+                "uWetMask": {
+                  "texture": "ee27e9e4-659b-465d-82e9-1f810d9a2e68",
+                  "version": 1
+                },
+                "uWetWorldToLocal": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  1,
+                  0,
+                  -280,
+                  -8,
+                  -900,
+                  1
+                ],
+                "uWetBounds": [
+                  -4,
+                  4,
+                  8,
+                  30
+                ],
+                "uWetSkyLow": [
+                  0.5840784178830671,
+                  0.6724431569510133,
+                  0.7379104087672317
+                ],
+                "uWetSkyHigh": [
+                  0.2746773120495699,
+                  0.43415363616478553,
+                  0.5647115056965487
+                ]
+              }
+            }
+          },
+          "switchEvidence": {
+            "api": true,
+            "cpuUniform": 1,
+            "gpuUniform": 1,
+            "programId": 53,
+            "requested": true
+          },
+          "render": {
+            "frame": 289,
+            "calls": 1476,
+            "triangles": 8242428,
+            "points": 0,
+            "lines": 0
+          },
+          "programs": 101,
+          "memory": {
+            "geometries": 1046,
+            "textures": 212
+          },
+          "errors": [],
+          "clock": {
+            "timeOrigin": 1794872304783.6,
+            "now": 34367.39999985695
+          },
+          "props": {
+            "lighthouse": 1,
+            "menhir": 21,
+            "boulders": 87,
+            "tree": 53
+          },
+          "png": "station-street-warmup-1.png",
+          "jpeg": "station-street-warmup-1.jpg",
+          "pngSha256": "8e103aed0690c2c57a9abf2348e9aca4e2d9c427701c8492395b594e13b70ac2",
+          "regions": [
+            {
+              "name": "full",
+              "normalized": {
+                "x0": 0,
+                "y0": 0,
+                "x1": 1,
+                "y1": 1
+              },
+              "bounds": {
+                "minX": 0,
+                "minY": 0,
+                "maxX": 1440,
+                "maxY": 900
+              },
+              "pixels": 1296000,
+              "meanRGB": [
+                102.68394907407408,
+                94.58077237654321,
+                106.35565354938272
+              ],
+              "meanLuma": 97.15365416292076,
+              "darkFraction": 0.03722530864197531
+            },
+            {
+              "name": "road-lower",
+              "normalized": {
+                "x0": 0,
+                "y0": 0.5,
+                "x1": 1,
+                "y1": 1
+              },
+              "bounds": {
+                "minX": 0,
+                "minY": 450,
+                "maxX": 1440,
+                "maxY": 900
+              },
+              "pixels": 648000,
+              "meanRGB": [
+                78.88627469135803,
+                81.77058487654321,
+                90.1528225308642
+              ],
+              "meanLuma": 81.76257808998096,
+              "darkFraction": 0.010336419753086419
+            },
+            {
+              "name": "road-left",
+              "normalized": {
+                "x0": 0,
+                "y0": 0.55,
+                "x1": 0.5,
+                "y1": 1
+              },
+              "bounds": {
+                "minX": 0,
+                "minY": 495,
+                "maxX": 720,
+                "maxY": 900
+              },
+              "pixels": 291600,
+              "meanRGB": [
+                78.79292866941014,
+                83.43170096021947,
+                92.07408093278464
+              ],
+              "meanLuma": 83.06947780523149,
+              "darkFraction": 0.005857338820301783
+            },
+            {
+              "name": "road-middle",
+              "normalized": {
+                "x0": 0.3,
+                "y0": 0.55,
+                "x1": 0.7,
+                "y1": 0.9
+              },
+              "bounds": {
+                "minX": 432,
+                "minY": 495,
+                "maxX": 1007,
+                "maxY": 810
+              },
+              "pixels": 181125,
+              "meanRGB": [
+                80.72607867494824,
+                85.15088474810214,
+                96.10602622498274
+              ],
+              "meanLuma": 85.0011321915793,
+              "darkFraction": 0.004996549344375431
+            },
+            {
+              "name": "road-right",
+              "normalized": {
+                "x0": 0.5,
+                "y0": 0.55,
+                "x1": 1,
+                "y1": 1
+              },
+              "bounds": {
+                "minX": 720,
+                "minY": 495,
+                "maxX": 1440,
+                "maxY": 900
+              },
+              "pixels": 291600,
+              "meanRGB": [
+                76.65446844993141,
+                78.97781207133059,
+                88.45055555555555
+              ],
+              "meanLuma": 79.16780129696396,
+              "darkFraction": 0.003631687242798354
+            }
+          ]
+        },
+        {
+          "state": {
+            "view": "station-street",
+            "camera": {
+              "position": [
+                278.8,
+                10.4,
+                936
+              ],
+              "quaternion": [
+                -0.003277842930440423,
+                -0.009834585659995631,
+                -0.000032237959341941705,
+                0.9999462663720154
+              ],
+              "projection": [
+                1.1275298470446398,
+                0,
+                0,
+                0,
+                0,
+                1.8040477552714236,
+                0,
+                0,
+                0,
+                0,
+                -1.000025000312504,
+                -1,
+                0,
+                0,
+                -0.4000050000625008,
+                0
+              ],
+              "fov": 58,
+              "aspect": 1.6,
+              "near": 0.2,
+              "far": 16000
+            },
+            "time": 14,
+            "stationTime": 14,
+            "rafFrozen": true,
+            "walkerEnabled": false,
+            "viewport": {
+              "width": 1440,
+              "height": 900,
+              "ratio": 1,
+              "devicePixelRatio": 1
+            },
+            "pipeline": {
+              "exposure": 1.02,
+              "blur": 0,
+              "bloom": 0.12,
+              "distortion": 0,
+              "fringe": 0,
+              "vignette": 0.12,
+              "rays": 0,
+              "saturation": 1,
+              "contrast": 1.05,
+              "speed": 0
+            },
+            "finalUniforms": {
+              "tColor": {
+                "texture": "395f6447-1315-4263-9bcb-1fbdb9da6ae4",
+                "version": 0
+              },
+              "tBloom": {
+                "texture": "a883591d-c9e1-4e42-a5e3-6051f15d960d",
+                "version": 1
+              },
+              "tRays": {
+                "texture": "9b469006-2b07-48ce-a023-84152b2b2fbd",
+                "version": 0
+              },
+              "uExposure": 1.02,
+              "uBloom": 0.12,
+              "uDistort": 0,
+              "uFringe": 0,
+              "uVignette": 0.12,
+              "uRays": 0,
+              "uSunColor": [
+                3.3,
+                3,
+                2.55
+              ],
+              "uSat": 1,
+              "uContrast": 1.05,
+              "uRes": [
+                1440,
+                900
+              ],
+              "uTime": 14,
+              "uSpeed": 0,
+              "uFade": 1,
+              "tWorldDepth": {
+                "texture": "da140534-50f7-41c9-8882-3e0477385b91",
+                "version": 1
+              },
+              "uNear": 0.2,
+              "uFar": 16000,
+              "uReversed": 0,
+              "uToon": 1,
+              "uHaze": 1
+            },
+            "islandUniforms": {
+              "uTime": 14,
+              "uCamPos": [
+                278.8,
+                10.4,
+                936
+              ],
+              "uSunDir": [
+                -0.5104064950196394,
+                0.5591929034707469,
+                -0.6532905223173859
+              ],
+              "uSunColor": [
+                3.3,
+                3,
+                2.55
+              ],
+              "uSkyZenith": [
+                0.05,
+                0.17,
+                0.56
+              ],
+              "uSkyMid": [
+                0.135,
+                0.38,
+                0.86
+              ],
+              "uSkyHorizon": [
+                0.56,
+                0.76,
+                0.93
+              ],
+              "uSunHalo": [
+                1,
+                0.8,
+                0.52
+              ],
+              "uAmbSky": [
+                0.36,
+                0.52,
+                0.8
+              ],
+              "uAmbGround": [
+                0.2,
+                0.23,
+                0.14
+              ],
+              "uFog": [
+                0.000135,
+                0.002380952380952381,
+                0,
+                0
+              ],
+              "uHeightTex": {
+                "texture": "3d3e061a-c3d7-4870-b00a-f636adb9dde8",
+                "version": 2
+              },
+              "uSplatTex": {
+                "texture": "240f9e44-c985-4b28-94a4-9603a478dcf6",
+                "version": 2
+              },
+              "uLightTex": {
+                "texture": "59f10394-b6f8-4883-b27c-241964bc7ef1",
+                "version": 1
+              },
+              "uTintTex": {
+                "texture": "12cfede2-ca46-4cb8-b58e-bcbd3808e686",
+                "version": 1
+              },
+              "uWorld": [
+                6144,
+                0.00016276041666666666,
+                0.000244140625,
+                0
+              ],
+              "uWind": [
+                0.361,
+                0.933,
+                1,
+                0
+              ],
+              "uWakeTex": {
+                "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+                "version": 1
+              },
+              "uWake": [
+                0,
+                0,
+                0.00625,
+                0
+              ],
+              "uStripTex": {
+                "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+                "version": 1
+              },
+              "uRider": [
+                1000000,
+                1000000,
+                1000000,
+                0
+              ],
+              "uRiderVel": [
+                0,
+                0,
+                0
+              ],
+              "uShadowTex": {
+                "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+                "version": 1
+              },
+              "uShadowMat": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+              ],
+              "uShadowOn": 0,
+              "uTownSh0": {
+                "texture": "a7106143-5ca1-4a11-aa9e-b8a10c400b1e",
+                "version": 1
+              },
+              "uTownSh1": {
+                "texture": "cbb19faa-bcbf-419d-bad6-25199a0f23a1",
+                "version": 1
+              },
+              "uTownShM0": [
+                -0.0015640350150390163,
+                0.0009707623774831163,
+                0.0010728488160372896,
+                0,
+                5.508895903604887e-20,
+                0.0023376717047234735,
+                -0.0011753953961772395,
+                0,
+                0.0012219580766032003,
+                0.0012425191819073742,
+                0.0013731838646951812,
+                0,
+                -0.8288562893150736,
+                -0.7772729453792973,
+                -0.8809385489374643,
+                0.9999999999999998
+              ],
+              "uTownShM1": [
+                -0.0029188060569810756,
+                0.0016002547900483026,
+                0.0018358161168375892,
+                0,
+                5.140357656992438e-19,
+                0.003853538651490622,
+                -0.0020112897359844594,
+                0,
+                0.00228042121888006,
+                0.0020482327278992176,
+                0.0023497374769914656,
+                0,
+                3.6936878781498024,
+                2.1127482477992157,
+                3.186383164579521,
+                1
+              ],
+              "uTownShP": [
+                1,
+                1,
+                475.74876104621495,
+                278.02702587603096
+              ],
+              "uTownMask0": {
+                "texture": "a85f1c3f-c864-487c-956f-ff708e0f5ed0",
+                "version": 1
+              },
+              "uTownMask1": {
+                "texture": "2ca8d408-3bf3-4fbb-ab63-499b04f7d081",
+                "version": 1
+              },
+              "uTownRect0": [
+                -201,
+                810,
+                0.003004807692307692,
+                0.002446183953033268
+              ],
+              "uTownRect1": [
+                90,
+                -1280,
+                0.0055309734513274336,
+                0.0045871559633027525
+              ],
+              "uNoiseTex": {
+                "texture": "dbab875d-be54-4a62-bcc9-10d351f69fcb",
+                "version": 1
+              }
+            },
+            "stationUniforms": {
+              "uTime": 14,
+              "uWind": [
+                0.9,
+                0.35
+              ],
+              "uSunDir": [
+                -0.5104064950196394,
+                0.5591929034707469,
+                -0.6532905223173859
+              ],
+              "uGust": 0.10142290304344133
+            },
+            "wet": {
+              "enabled": true,
+              "material": "be934b48-bad7-4dae-a085-6a4991b5fa2d",
+              "version": 1,
+              "uniforms": {
+                "uWetMask": {
+                  "texture": "ee27e9e4-659b-465d-82e9-1f810d9a2e68",
+                  "version": 1
+                },
+                "uWetWorldToLocal": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  1,
+                  0,
+                  -280,
+                  -8,
+                  -900,
+                  1
+                ],
+                "uWetBounds": [
+                  -4,
+                  4,
+                  8,
+                  30
+                ],
+                "uWetSkyLow": [
+                  0.5840784178830671,
+                  0.6724431569510133,
+                  0.7379104087672317
+                ],
+                "uWetSkyHigh": [
+                  0.2746773120495699,
+                  0.43415363616478553,
+                  0.5647115056965487
+                ]
+              }
+            }
+          },
+          "switchEvidence": {
+            "api": true,
+            "cpuUniform": 1,
+            "gpuUniform": 1,
+            "programId": 53,
+            "requested": true
+          },
+          "render": {
+            "frame": 306,
+            "calls": 1476,
+            "triangles": 8242428,
+            "points": 0,
+            "lines": 0
+          },
+          "programs": 101,
+          "memory": {
+            "geometries": 1046,
+            "textures": 212
+          },
+          "errors": [],
+          "clock": {
+            "timeOrigin": 1794872304783.6,
+            "now": 34523.39999985695
+          },
+          "props": {
+            "lighthouse": 1,
+            "menhir": 21,
+            "boulders": 87,
+            "tree": 53
+          },
+          "png": "station-street-warmup-2.png",
+          "jpeg": "station-street-warmup-2.jpg",
+          "pngSha256": "8e103aed0690c2c57a9abf2348e9aca4e2d9c427701c8492395b594e13b70ac2",
+          "regions": [
+            {
+              "name": "full",
+              "normalized": {
+                "x0": 0,
+                "y0": 0,
+                "x1": 1,
+                "y1": 1
+              },
+              "bounds": {
+                "minX": 0,
+                "minY": 0,
+                "maxX": 1440,
+                "maxY": 900
+              },
+              "pixels": 1296000,
+              "meanRGB": [
+                102.68394907407408,
+                94.58077237654321,
+                106.35565354938272
+              ],
+              "meanLuma": 97.15365416292076,
+              "darkFraction": 0.03722530864197531,
+              "changedPixels": 0,
+              "meanChannelDifference": 0,
+              "maxChannelDifference": 0,
+              "thresholdBounds": [
+                {
+                  "threshold": 1,
+                  "changedPixels": 0,
+                  "bounds": null
+                },
+                {
+                  "threshold": 4,
+                  "changedPixels": 0,
+                  "bounds": null
+                }
+              ]
+            },
+            {
+              "name": "road-lower",
+              "normalized": {
+                "x0": 0,
+                "y0": 0.5,
+                "x1": 1,
+                "y1": 1
+              },
+              "bounds": {
+                "minX": 0,
+                "minY": 450,
+                "maxX": 1440,
+                "maxY": 900
+              },
+              "pixels": 648000,
+              "meanRGB": [
+                78.88627469135803,
+                81.77058487654321,
+                90.1528225308642
+              ],
+              "meanLuma": 81.76257808998096,
+              "darkFraction": 0.010336419753086419,
+              "changedPixels": 0,
+              "meanChannelDifference": 0,
+              "maxChannelDifference": 0,
+              "thresholdBounds": [
+                {
+                  "threshold": 1,
+                  "changedPixels": 0,
+                  "bounds": null
+                },
+                {
+                  "threshold": 4,
+                  "changedPixels": 0,
+                  "bounds": null
+                }
+              ]
+            },
+            {
+              "name": "road-left",
+              "normalized": {
+                "x0": 0,
+                "y0": 0.55,
+                "x1": 0.5,
+                "y1": 1
+              },
+              "bounds": {
+                "minX": 0,
+                "minY": 495,
+                "maxX": 720,
+                "maxY": 900
+              },
+              "pixels": 291600,
+              "meanRGB": [
+                78.79292866941014,
+                83.43170096021947,
+                92.07408093278464
+              ],
+              "meanLuma": 83.06947780523149,
+              "darkFraction": 0.005857338820301783,
+              "changedPixels": 0,
+              "meanChannelDifference": 0,
+              "maxChannelDifference": 0,
+              "thresholdBounds": [
+                {
+                  "threshold": 1,
+                  "changedPixels": 0,
+                  "bounds": null
+                },
+                {
+                  "threshold": 4,
+                  "changedPixels": 0,
+                  "bounds": null
+                }
+              ]
+            },
+            {
+              "name": "road-middle",
+              "normalized": {
+                "x0": 0.3,
+                "y0": 0.55,
+                "x1": 0.7,
+                "y1": 0.9
+              },
+              "bounds": {
+                "minX": 432,
+                "minY": 495,
+                "maxX": 1007,
+                "maxY": 810
+              },
+              "pixels": 181125,
+              "meanRGB": [
+                80.72607867494824,
+                85.15088474810214,
+                96.10602622498274
+              ],
+              "meanLuma": 85.0011321915793,
+              "darkFraction": 0.004996549344375431,
+              "changedPixels": 0,
+              "meanChannelDifference": 0,
+              "maxChannelDifference": 0,
+              "thresholdBounds": [
+                {
+                  "threshold": 1,
+                  "changedPixels": 0,
+                  "bounds": null
+                },
+                {
+                  "threshold": 4,
+                  "changedPixels": 0,
+                  "bounds": null
+                }
+              ]
+            },
+            {
+              "name": "road-right",
+              "normalized": {
+                "x0": 0.5,
+                "y0": 0.55,
+                "x1": 1,
+                "y1": 1
+              },
+              "bounds": {
+                "minX": 720,
+                "minY": 495,
+                "maxX": 1440,
+                "maxY": 900
+              },
+              "pixels": 291600,
+              "meanRGB": [
+                76.65446844993141,
+                78.97781207133059,
+                88.45055555555555
+              ],
+              "meanLuma": 79.16780129696396,
+              "darkFraction": 0.003631687242798354,
+              "changedPixels": 0,
+              "meanChannelDifference": 0,
+              "maxChannelDifference": 0,
+              "thresholdBounds": [
+                {
+                  "threshold": 1,
+                  "changedPixels": 0,
+                  "bounds": null
+                },
+                {
+                  "threshold": 4,
+                  "changedPixels": 0,
+                  "bounds": null
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "a1": {
+        "state": {
+          "view": "station-street",
+          "camera": {
+            "position": [
+              278.8,
+              10.4,
+              936
+            ],
+            "quaternion": [
+              -0.003277842930440423,
+              -0.009834585659995631,
+              -0.000032237959341941705,
+              0.9999462663720154
+            ],
+            "projection": [
+              1.1275298470446398,
+              0,
+              0,
+              0,
+              0,
+              1.8040477552714236,
+              0,
+              0,
+              0,
+              0,
+              -1.000025000312504,
+              -1,
+              0,
+              0,
+              -0.4000050000625008,
+              0
+            ],
+            "fov": 58,
+            "aspect": 1.6,
+            "near": 0.2,
+            "far": 16000
+          },
+          "time": 14,
+          "stationTime": 14,
+          "rafFrozen": true,
+          "walkerEnabled": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "ratio": 1,
+            "devicePixelRatio": 1
+          },
+          "pipeline": {
+            "exposure": 1.02,
+            "blur": 0,
+            "bloom": 0.12,
+            "distortion": 0,
+            "fringe": 0,
+            "vignette": 0.12,
+            "rays": 0,
+            "saturation": 1,
+            "contrast": 1.05,
+            "speed": 0
+          },
+          "finalUniforms": {
+            "tColor": {
+              "texture": "395f6447-1315-4263-9bcb-1fbdb9da6ae4",
+              "version": 0
+            },
+            "tBloom": {
+              "texture": "a883591d-c9e1-4e42-a5e3-6051f15d960d",
+              "version": 1
+            },
+            "tRays": {
+              "texture": "9b469006-2b07-48ce-a023-84152b2b2fbd",
+              "version": 0
+            },
+            "uExposure": 1.02,
+            "uBloom": 0.12,
+            "uDistort": 0,
+            "uFringe": 0,
+            "uVignette": 0.12,
+            "uRays": 0,
+            "uSunColor": [
+              3.3,
+              3,
+              2.55
+            ],
+            "uSat": 1,
+            "uContrast": 1.05,
+            "uRes": [
+              1440,
+              900
+            ],
+            "uTime": 14,
+            "uSpeed": 0,
+            "uFade": 1,
+            "tWorldDepth": {
+              "texture": "da140534-50f7-41c9-8882-3e0477385b91",
+              "version": 1
+            },
+            "uNear": 0.2,
+            "uFar": 16000,
+            "uReversed": 0,
+            "uToon": 1,
+            "uHaze": 1
+          },
+          "islandUniforms": {
+            "uTime": 14,
+            "uCamPos": [
+              278.8,
+              10.4,
+              936
+            ],
+            "uSunDir": [
+              -0.5104064950196394,
+              0.5591929034707469,
+              -0.6532905223173859
+            ],
+            "uSunColor": [
+              3.3,
+              3,
+              2.55
+            ],
+            "uSkyZenith": [
+              0.05,
+              0.17,
+              0.56
+            ],
+            "uSkyMid": [
+              0.135,
+              0.38,
+              0.86
+            ],
+            "uSkyHorizon": [
+              0.56,
+              0.76,
+              0.93
+            ],
+            "uSunHalo": [
+              1,
+              0.8,
+              0.52
+            ],
+            "uAmbSky": [
+              0.36,
+              0.52,
+              0.8
+            ],
+            "uAmbGround": [
+              0.2,
+              0.23,
+              0.14
+            ],
+            "uFog": [
+              0.000135,
+              0.002380952380952381,
+              0,
+              0
+            ],
+            "uHeightTex": {
+              "texture": "3d3e061a-c3d7-4870-b00a-f636adb9dde8",
+              "version": 2
+            },
+            "uSplatTex": {
+              "texture": "240f9e44-c985-4b28-94a4-9603a478dcf6",
+              "version": 2
+            },
+            "uLightTex": {
+              "texture": "59f10394-b6f8-4883-b27c-241964bc7ef1",
+              "version": 1
+            },
+            "uTintTex": {
+              "texture": "12cfede2-ca46-4cb8-b58e-bcbd3808e686",
+              "version": 1
+            },
+            "uWorld": [
+              6144,
+              0.00016276041666666666,
+              0.000244140625,
+              0
+            ],
+            "uWind": [
+              0.361,
+              0.933,
+              1,
+              0
+            ],
+            "uWakeTex": {
+              "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+              "version": 1
+            },
+            "uWake": [
+              0,
+              0,
+              0.00625,
+              0
+            ],
+            "uStripTex": {
+              "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+              "version": 1
+            },
+            "uRider": [
+              1000000,
+              1000000,
+              1000000,
+              0
+            ],
+            "uRiderVel": [
+              0,
+              0,
+              0
+            ],
+            "uShadowTex": {
+              "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+              "version": 1
+            },
+            "uShadowMat": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "uShadowOn": 0,
+            "uTownSh0": {
+              "texture": "a7106143-5ca1-4a11-aa9e-b8a10c400b1e",
+              "version": 1
+            },
+            "uTownSh1": {
+              "texture": "cbb19faa-bcbf-419d-bad6-25199a0f23a1",
+              "version": 1
+            },
+            "uTownShM0": [
+              -0.0015640350150390163,
+              0.0009707623774831163,
+              0.0010728488160372896,
+              0,
+              5.508895903604887e-20,
+              0.0023376717047234735,
+              -0.0011753953961772395,
+              0,
+              0.0012219580766032003,
+              0.0012425191819073742,
+              0.0013731838646951812,
+              0,
+              -0.8288562893150736,
+              -0.7772729453792973,
+              -0.8809385489374643,
+              0.9999999999999998
+            ],
+            "uTownShM1": [
+              -0.0029188060569810756,
+              0.0016002547900483026,
+              0.0018358161168375892,
+              0,
+              5.140357656992438e-19,
+              0.003853538651490622,
+              -0.0020112897359844594,
+              0,
+              0.00228042121888006,
+              0.0020482327278992176,
+              0.0023497374769914656,
+              0,
+              3.6936878781498024,
+              2.1127482477992157,
+              3.186383164579521,
+              1
+            ],
+            "uTownShP": [
+              1,
+              1,
+              475.74876104621495,
+              278.02702587603096
+            ],
+            "uTownMask0": {
+              "texture": "a85f1c3f-c864-487c-956f-ff708e0f5ed0",
+              "version": 1
+            },
+            "uTownMask1": {
+              "texture": "2ca8d408-3bf3-4fbb-ab63-499b04f7d081",
+              "version": 1
+            },
+            "uTownRect0": [
+              -201,
+              810,
+              0.003004807692307692,
+              0.002446183953033268
+            ],
+            "uTownRect1": [
+              90,
+              -1280,
+              0.0055309734513274336,
+              0.0045871559633027525
+            ],
+            "uNoiseTex": {
+              "texture": "dbab875d-be54-4a62-bcc9-10d351f69fcb",
+              "version": 1
+            }
+          },
+          "stationUniforms": {
+            "uTime": 14,
+            "uWind": [
+              0.9,
+              0.35
+            ],
+            "uSunDir": [
+              -0.5104064950196394,
+              0.5591929034707469,
+              -0.6532905223173859
+            ],
+            "uGust": 0.10142290304344133
+          },
+          "wet": {
+            "enabled": true,
+            "material": "be934b48-bad7-4dae-a085-6a4991b5fa2d",
+            "version": 1,
+            "uniforms": {
+              "uWetMask": {
+                "texture": "ee27e9e4-659b-465d-82e9-1f810d9a2e68",
+                "version": 1
+              },
+              "uWetWorldToLocal": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                -280,
+                -8,
+                -900,
+                1
+              ],
+              "uWetBounds": [
+                -4,
+                4,
+                8,
+                30
+              ],
+              "uWetSkyLow": [
+                0.5840784178830671,
+                0.6724431569510133,
+                0.7379104087672317
+              ],
+              "uWetSkyHigh": [
+                0.2746773120495699,
+                0.43415363616478553,
+                0.5647115056965487
+              ]
+            }
+          }
+        },
+        "switchEvidence": {
+          "api": true,
+          "cpuUniform": 1,
+          "gpuUniform": 1,
+          "programId": 53,
+          "requested": true
+        },
+        "render": {
+          "frame": 323,
+          "calls": 1476,
+          "triangles": 8242428,
+          "points": 0,
+          "lines": 0
+        },
+        "programs": 101,
+        "memory": {
+          "geometries": 1046,
+          "textures": 212
+        },
+        "errors": [],
+        "clock": {
+          "timeOrigin": 1794872304783.6,
+          "now": 34712.59999990463
+        },
+        "props": {
+          "lighthouse": 1,
+          "menhir": 21,
+          "boulders": 87,
+          "tree": 53
+        },
+        "png": "station-street-on-A1.png",
+        "jpeg": "station-street-on-A1.jpg",
+        "pngSha256": "8e103aed0690c2c57a9abf2348e9aca4e2d9c427701c8492395b594e13b70ac2",
+        "regions": [
+          {
+            "name": "full",
+            "normalized": {
+              "x0": 0,
+              "y0": 0,
+              "x1": 1,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 0,
+              "minY": 0,
+              "maxX": 1440,
+              "maxY": 900
+            },
+            "pixels": 1296000,
+            "meanRGB": [
+              102.68394907407408,
+              94.58077237654321,
+              106.35565354938272
+            ],
+            "meanLuma": 97.15365416292076,
+            "darkFraction": 0.03722530864197531,
+            "changedPixels": 0,
+            "meanChannelDifference": 0,
+            "maxChannelDifference": 0,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 0,
+                "bounds": null
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 0,
+                "bounds": null
+              }
+            ]
+          },
+          {
+            "name": "road-lower",
+            "normalized": {
+              "x0": 0,
+              "y0": 0.5,
+              "x1": 1,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 0,
+              "minY": 450,
+              "maxX": 1440,
+              "maxY": 900
+            },
+            "pixels": 648000,
+            "meanRGB": [
+              78.88627469135803,
+              81.77058487654321,
+              90.1528225308642
+            ],
+            "meanLuma": 81.76257808998096,
+            "darkFraction": 0.010336419753086419,
+            "changedPixels": 0,
+            "meanChannelDifference": 0,
+            "maxChannelDifference": 0,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 0,
+                "bounds": null
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 0,
+                "bounds": null
+              }
+            ]
+          },
+          {
+            "name": "road-left",
+            "normalized": {
+              "x0": 0,
+              "y0": 0.55,
+              "x1": 0.5,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 0,
+              "minY": 495,
+              "maxX": 720,
+              "maxY": 900
+            },
+            "pixels": 291600,
+            "meanRGB": [
+              78.79292866941014,
+              83.43170096021947,
+              92.07408093278464
+            ],
+            "meanLuma": 83.06947780523149,
+            "darkFraction": 0.005857338820301783,
+            "changedPixels": 0,
+            "meanChannelDifference": 0,
+            "maxChannelDifference": 0,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 0,
+                "bounds": null
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 0,
+                "bounds": null
+              }
+            ]
+          },
+          {
+            "name": "road-middle",
+            "normalized": {
+              "x0": 0.3,
+              "y0": 0.55,
+              "x1": 0.7,
+              "y1": 0.9
+            },
+            "bounds": {
+              "minX": 432,
+              "minY": 495,
+              "maxX": 1007,
+              "maxY": 810
+            },
+            "pixels": 181125,
+            "meanRGB": [
+              80.72607867494824,
+              85.15088474810214,
+              96.10602622498274
+            ],
+            "meanLuma": 85.0011321915793,
+            "darkFraction": 0.004996549344375431,
+            "changedPixels": 0,
+            "meanChannelDifference": 0,
+            "maxChannelDifference": 0,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 0,
+                "bounds": null
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 0,
+                "bounds": null
+              }
+            ]
+          },
+          {
+            "name": "road-right",
+            "normalized": {
+              "x0": 0.5,
+              "y0": 0.55,
+              "x1": 1,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 720,
+              "minY": 495,
+              "maxX": 1440,
+              "maxY": 900
+            },
+            "pixels": 291600,
+            "meanRGB": [
+              76.65446844993141,
+              78.97781207133059,
+              88.45055555555555
+            ],
+            "meanLuma": 79.16780129696396,
+            "darkFraction": 0.003631687242798354,
+            "changedPixels": 0,
+            "meanChannelDifference": 0,
+            "maxChannelDifference": 0,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 0,
+                "bounds": null
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 0,
+                "bounds": null
+              }
+            ]
+          }
+        ]
+      },
+      "b": {
+        "state": {
+          "view": "station-street",
+          "camera": {
+            "position": [
+              278.8,
+              10.4,
+              936
+            ],
+            "quaternion": [
+              -0.003277842930440423,
+              -0.009834585659995631,
+              -0.000032237959341941705,
+              0.9999462663720154
+            ],
+            "projection": [
+              1.1275298470446398,
+              0,
+              0,
+              0,
+              0,
+              1.8040477552714236,
+              0,
+              0,
+              0,
+              0,
+              -1.000025000312504,
+              -1,
+              0,
+              0,
+              -0.4000050000625008,
+              0
+            ],
+            "fov": 58,
+            "aspect": 1.6,
+            "near": 0.2,
+            "far": 16000
+          },
+          "time": 14,
+          "stationTime": 14,
+          "rafFrozen": true,
+          "walkerEnabled": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "ratio": 1,
+            "devicePixelRatio": 1
+          },
+          "pipeline": {
+            "exposure": 1.02,
+            "blur": 0,
+            "bloom": 0.12,
+            "distortion": 0,
+            "fringe": 0,
+            "vignette": 0.12,
+            "rays": 0,
+            "saturation": 1,
+            "contrast": 1.05,
+            "speed": 0
+          },
+          "finalUniforms": {
+            "tColor": {
+              "texture": "395f6447-1315-4263-9bcb-1fbdb9da6ae4",
+              "version": 0
+            },
+            "tBloom": {
+              "texture": "a883591d-c9e1-4e42-a5e3-6051f15d960d",
+              "version": 1
+            },
+            "tRays": {
+              "texture": "9b469006-2b07-48ce-a023-84152b2b2fbd",
+              "version": 0
+            },
+            "uExposure": 1.02,
+            "uBloom": 0.12,
+            "uDistort": 0,
+            "uFringe": 0,
+            "uVignette": 0.12,
+            "uRays": 0,
+            "uSunColor": [
+              3.3,
+              3,
+              2.55
+            ],
+            "uSat": 1,
+            "uContrast": 1.05,
+            "uRes": [
+              1440,
+              900
+            ],
+            "uTime": 14,
+            "uSpeed": 0,
+            "uFade": 1,
+            "tWorldDepth": {
+              "texture": "da140534-50f7-41c9-8882-3e0477385b91",
+              "version": 1
+            },
+            "uNear": 0.2,
+            "uFar": 16000,
+            "uReversed": 0,
+            "uToon": 1,
+            "uHaze": 1
+          },
+          "islandUniforms": {
+            "uTime": 14,
+            "uCamPos": [
+              278.8,
+              10.4,
+              936
+            ],
+            "uSunDir": [
+              -0.5104064950196394,
+              0.5591929034707469,
+              -0.6532905223173859
+            ],
+            "uSunColor": [
+              3.3,
+              3,
+              2.55
+            ],
+            "uSkyZenith": [
+              0.05,
+              0.17,
+              0.56
+            ],
+            "uSkyMid": [
+              0.135,
+              0.38,
+              0.86
+            ],
+            "uSkyHorizon": [
+              0.56,
+              0.76,
+              0.93
+            ],
+            "uSunHalo": [
+              1,
+              0.8,
+              0.52
+            ],
+            "uAmbSky": [
+              0.36,
+              0.52,
+              0.8
+            ],
+            "uAmbGround": [
+              0.2,
+              0.23,
+              0.14
+            ],
+            "uFog": [
+              0.000135,
+              0.002380952380952381,
+              0,
+              0
+            ],
+            "uHeightTex": {
+              "texture": "3d3e061a-c3d7-4870-b00a-f636adb9dde8",
+              "version": 2
+            },
+            "uSplatTex": {
+              "texture": "240f9e44-c985-4b28-94a4-9603a478dcf6",
+              "version": 2
+            },
+            "uLightTex": {
+              "texture": "59f10394-b6f8-4883-b27c-241964bc7ef1",
+              "version": 1
+            },
+            "uTintTex": {
+              "texture": "12cfede2-ca46-4cb8-b58e-bcbd3808e686",
+              "version": 1
+            },
+            "uWorld": [
+              6144,
+              0.00016276041666666666,
+              0.000244140625,
+              0
+            ],
+            "uWind": [
+              0.361,
+              0.933,
+              1,
+              0
+            ],
+            "uWakeTex": {
+              "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+              "version": 1
+            },
+            "uWake": [
+              0,
+              0,
+              0.00625,
+              0
+            ],
+            "uStripTex": {
+              "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+              "version": 1
+            },
+            "uRider": [
+              1000000,
+              1000000,
+              1000000,
+              0
+            ],
+            "uRiderVel": [
+              0,
+              0,
+              0
+            ],
+            "uShadowTex": {
+              "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+              "version": 1
+            },
+            "uShadowMat": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "uShadowOn": 0,
+            "uTownSh0": {
+              "texture": "a7106143-5ca1-4a11-aa9e-b8a10c400b1e",
+              "version": 1
+            },
+            "uTownSh1": {
+              "texture": "cbb19faa-bcbf-419d-bad6-25199a0f23a1",
+              "version": 1
+            },
+            "uTownShM0": [
+              -0.0015640350150390163,
+              0.0009707623774831163,
+              0.0010728488160372896,
+              0,
+              5.508895903604887e-20,
+              0.0023376717047234735,
+              -0.0011753953961772395,
+              0,
+              0.0012219580766032003,
+              0.0012425191819073742,
+              0.0013731838646951812,
+              0,
+              -0.8288562893150736,
+              -0.7772729453792973,
+              -0.8809385489374643,
+              0.9999999999999998
+            ],
+            "uTownShM1": [
+              -0.0029188060569810756,
+              0.0016002547900483026,
+              0.0018358161168375892,
+              0,
+              5.140357656992438e-19,
+              0.003853538651490622,
+              -0.0020112897359844594,
+              0,
+              0.00228042121888006,
+              0.0020482327278992176,
+              0.0023497374769914656,
+              0,
+              3.6936878781498024,
+              2.1127482477992157,
+              3.186383164579521,
+              1
+            ],
+            "uTownShP": [
+              1,
+              1,
+              475.74876104621495,
+              278.02702587603096
+            ],
+            "uTownMask0": {
+              "texture": "a85f1c3f-c864-487c-956f-ff708e0f5ed0",
+              "version": 1
+            },
+            "uTownMask1": {
+              "texture": "2ca8d408-3bf3-4fbb-ab63-499b04f7d081",
+              "version": 1
+            },
+            "uTownRect0": [
+              -201,
+              810,
+              0.003004807692307692,
+              0.002446183953033268
+            ],
+            "uTownRect1": [
+              90,
+              -1280,
+              0.0055309734513274336,
+              0.0045871559633027525
+            ],
+            "uNoiseTex": {
+              "texture": "dbab875d-be54-4a62-bcc9-10d351f69fcb",
+              "version": 1
+            }
+          },
+          "stationUniforms": {
+            "uTime": 14,
+            "uWind": [
+              0.9,
+              0.35
+            ],
+            "uSunDir": [
+              -0.5104064950196394,
+              0.5591929034707469,
+              -0.6532905223173859
+            ],
+            "uGust": 0.10142290304344133
+          },
+          "wet": {
+            "enabled": false,
+            "material": "be934b48-bad7-4dae-a085-6a4991b5fa2d",
+            "version": 1,
+            "uniforms": {
+              "uWetMask": {
+                "texture": "ee27e9e4-659b-465d-82e9-1f810d9a2e68",
+                "version": 1
+              },
+              "uWetWorldToLocal": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                -280,
+                -8,
+                -900,
+                1
+              ],
+              "uWetBounds": [
+                -4,
+                4,
+                8,
+                30
+              ],
+              "uWetSkyLow": [
+                0.5840784178830671,
+                0.6724431569510133,
+                0.7379104087672317
+              ],
+              "uWetSkyHigh": [
+                0.2746773120495699,
+                0.43415363616478553,
+                0.5647115056965487
+              ]
+            }
+          }
+        },
+        "switchEvidence": {
+          "api": false,
+          "cpuUniform": 0,
+          "gpuUniform": 0,
+          "programId": 53,
+          "requested": false
+        },
+        "render": {
+          "frame": 340,
+          "calls": 1476,
+          "triangles": 8242428,
+          "points": 0,
+          "lines": 0
+        },
+        "programs": 101,
+        "memory": {
+          "geometries": 1046,
+          "textures": 212
+        },
+        "errors": [],
+        "clock": {
+          "timeOrigin": 1794872304783.6,
+          "now": 34901.39999985695
+        },
+        "props": {
+          "lighthouse": 1,
+          "menhir": 21,
+          "boulders": 87,
+          "tree": 53
+        },
+        "png": "station-street-off-B.png",
+        "jpeg": "station-street-off-B.jpg",
+        "pngSha256": "6f9b1636e6d3e3ceef9b05e916a1f690070e28e89370735708a4174c78858536",
+        "regions": [
+          {
+            "name": "full",
+            "normalized": {
+              "x0": 0,
+              "y0": 0,
+              "x1": 1,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 0,
+              "minY": 0,
+              "maxX": 1440,
+              "maxY": 900
+            },
+            "pixels": 1296000,
+            "meanRGB": [
+              102.95494212962963,
+              94.7552662037037,
+              106.52124768518519
+            ],
+            "meanLuma": 97.34802116841327,
+            "darkFraction": 0.03722685185185185,
+            "changedPixels": 107903,
+            "meanChannelDifference": 0.7922960390946502,
+            "maxChannelDifference": 64,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 85479,
+                "bounds": {
+                  "minX": 526,
+                  "minY": 506,
+                  "maxX": 1439,
+                  "maxY": 894,
+                  "width": 914,
+                  "height": 389
+                }
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 69151,
+                "bounds": {
+                  "minX": 534,
+                  "minY": 507,
+                  "maxX": 1439,
+                  "maxY": 877,
+                  "width": 906,
+                  "height": 371
+                }
+              }
+            ]
+          },
+          {
+            "name": "road-lower",
+            "normalized": {
+              "x0": 0,
+              "y0": 0.5,
+              "x1": 1,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 0,
+              "minY": 450,
+              "maxX": 1440,
+              "maxY": 900
+            },
+            "pixels": 648000,
+            "meanRGB": [
+              79.42832407407407,
+              82.11981790123457,
+              90.48421759259259
+            ],
+            "meanLuma": 82.15151597152472,
+            "darkFraction": 0.010336419753086419,
+            "changedPixels": 107375,
+            "meanChannelDifference": 1.5843194444444444,
+            "maxChannelDifference": 64,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 85479,
+                "bounds": {
+                  "minX": 526,
+                  "minY": 506,
+                  "maxX": 1439,
+                  "maxY": 894,
+                  "width": 914,
+                  "height": 389
+                }
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 69151,
+                "bounds": {
+                  "minX": 534,
+                  "minY": 507,
+                  "maxX": 1439,
+                  "maxY": 877,
+                  "width": 906,
+                  "height": 371
+                }
+              }
+            ]
+          },
+          {
+            "name": "road-left",
+            "normalized": {
+              "x0": 0,
+              "y0": 0.55,
+              "x1": 0.5,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 0,
+              "minY": 495,
+              "maxX": 720,
+              "maxY": 900
+            },
+            "pixels": 291600,
+            "meanRGB": [
+              77.79531550068587,
+              82.34712620027435,
+              91.14900891632374
+            ],
+            "meanLuma": 82.01490717766264,
+            "darkFraction": 0.005857338820301783,
+            "changedPixels": 27509,
+            "meanChannelDifference": 1.3129046639231825,
+            "maxChannelDifference": 64,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 21108,
+                "bounds": {
+                  "minX": 526,
+                  "minY": 517,
+                  "maxX": 719,
+                  "maxY": 735,
+                  "width": 194,
+                  "height": 219
+                }
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 15994,
+                "bounds": {
+                  "minX": 534,
+                  "minY": 517,
+                  "maxX": 719,
+                  "maxY": 723,
+                  "width": 186,
+                  "height": 207
+                }
+              }
+            ]
+          },
+          {
+            "name": "road-middle",
+            "normalized": {
+              "x0": 0.3,
+              "y0": 0.55,
+              "x1": 0.7,
+              "y1": 0.9
+            },
+            "bounds": {
+              "minX": 432,
+              "minY": 495,
+              "maxX": 1007,
+              "maxY": 810
+            },
+            "pixels": 181125,
+            "meanRGB": [
+              79.26148792270531,
+              83.40706694271911,
+              94.56309730848861
+            ],
+            "meanLuma": 83.33118223547893,
+            "darkFraction": 0.004996549344375431,
+            "changedPixels": 45412,
+            "meanChannelDifference": 2.623009891879457,
+            "maxChannelDifference": 64,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 34034,
+                "bounds": {
+                  "minX": 526,
+                  "minY": 506,
+                  "maxX": 1006,
+                  "maxY": 735,
+                  "width": 481,
+                  "height": 230
+                }
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 22837,
+                "bounds": {
+                  "minX": 534,
+                  "minY": 507,
+                  "maxX": 1006,
+                  "maxY": 723,
+                  "width": 473,
+                  "height": 217
+                }
+              }
+            ]
+          },
+          {
+            "name": "road-right",
+            "normalized": {
+              "x0": 0.5,
+              "y0": 0.55,
+              "x1": 1,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 720,
+              "minY": 495,
+              "maxX": 1440,
+              "maxY": 900
+            },
+            "pixels": 291600,
+            "meanRGB": [
+              78.85673182441701,
+              80.83887517146776,
+              90.11248628257887
+            ],
+            "meanLuma": 81.08702621809644,
+            "darkFraction": 0.0036282578875171468,
+            "changedPixels": 79356,
+            "meanChannelDifference": 2.207218792866941,
+            "maxChannelDifference": 53,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 64371,
+                "bounds": {
+                  "minX": 720,
+                  "minY": 506,
+                  "maxX": 1439,
+                  "maxY": 894,
+                  "width": 720,
+                  "height": 389
+                }
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 53157,
+                "bounds": {
+                  "minX": 720,
+                  "minY": 507,
+                  "maxX": 1439,
+                  "maxY": 877,
+                  "width": 720,
+                  "height": 371
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "a2": {
+        "state": {
+          "view": "station-street",
+          "camera": {
+            "position": [
+              278.8,
+              10.4,
+              936
+            ],
+            "quaternion": [
+              -0.003277842930440423,
+              -0.009834585659995631,
+              -0.000032237959341941705,
+              0.9999462663720154
+            ],
+            "projection": [
+              1.1275298470446398,
+              0,
+              0,
+              0,
+              0,
+              1.8040477552714236,
+              0,
+              0,
+              0,
+              0,
+              -1.000025000312504,
+              -1,
+              0,
+              0,
+              -0.4000050000625008,
+              0
+            ],
+            "fov": 58,
+            "aspect": 1.6,
+            "near": 0.2,
+            "far": 16000
+          },
+          "time": 14,
+          "stationTime": 14,
+          "rafFrozen": true,
+          "walkerEnabled": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "ratio": 1,
+            "devicePixelRatio": 1
+          },
+          "pipeline": {
+            "exposure": 1.02,
+            "blur": 0,
+            "bloom": 0.12,
+            "distortion": 0,
+            "fringe": 0,
+            "vignette": 0.12,
+            "rays": 0,
+            "saturation": 1,
+            "contrast": 1.05,
+            "speed": 0
+          },
+          "finalUniforms": {
+            "tColor": {
+              "texture": "395f6447-1315-4263-9bcb-1fbdb9da6ae4",
+              "version": 0
+            },
+            "tBloom": {
+              "texture": "a883591d-c9e1-4e42-a5e3-6051f15d960d",
+              "version": 1
+            },
+            "tRays": {
+              "texture": "9b469006-2b07-48ce-a023-84152b2b2fbd",
+              "version": 0
+            },
+            "uExposure": 1.02,
+            "uBloom": 0.12,
+            "uDistort": 0,
+            "uFringe": 0,
+            "uVignette": 0.12,
+            "uRays": 0,
+            "uSunColor": [
+              3.3,
+              3,
+              2.55
+            ],
+            "uSat": 1,
+            "uContrast": 1.05,
+            "uRes": [
+              1440,
+              900
+            ],
+            "uTime": 14,
+            "uSpeed": 0,
+            "uFade": 1,
+            "tWorldDepth": {
+              "texture": "da140534-50f7-41c9-8882-3e0477385b91",
+              "version": 1
+            },
+            "uNear": 0.2,
+            "uFar": 16000,
+            "uReversed": 0,
+            "uToon": 1,
+            "uHaze": 1
+          },
+          "islandUniforms": {
+            "uTime": 14,
+            "uCamPos": [
+              278.8,
+              10.4,
+              936
+            ],
+            "uSunDir": [
+              -0.5104064950196394,
+              0.5591929034707469,
+              -0.6532905223173859
+            ],
+            "uSunColor": [
+              3.3,
+              3,
+              2.55
+            ],
+            "uSkyZenith": [
+              0.05,
+              0.17,
+              0.56
+            ],
+            "uSkyMid": [
+              0.135,
+              0.38,
+              0.86
+            ],
+            "uSkyHorizon": [
+              0.56,
+              0.76,
+              0.93
+            ],
+            "uSunHalo": [
+              1,
+              0.8,
+              0.52
+            ],
+            "uAmbSky": [
+              0.36,
+              0.52,
+              0.8
+            ],
+            "uAmbGround": [
+              0.2,
+              0.23,
+              0.14
+            ],
+            "uFog": [
+              0.000135,
+              0.002380952380952381,
+              0,
+              0
+            ],
+            "uHeightTex": {
+              "texture": "3d3e061a-c3d7-4870-b00a-f636adb9dde8",
+              "version": 2
+            },
+            "uSplatTex": {
+              "texture": "240f9e44-c985-4b28-94a4-9603a478dcf6",
+              "version": 2
+            },
+            "uLightTex": {
+              "texture": "59f10394-b6f8-4883-b27c-241964bc7ef1",
+              "version": 1
+            },
+            "uTintTex": {
+              "texture": "12cfede2-ca46-4cb8-b58e-bcbd3808e686",
+              "version": 1
+            },
+            "uWorld": [
+              6144,
+              0.00016276041666666666,
+              0.000244140625,
+              0
+            ],
+            "uWind": [
+              0.361,
+              0.933,
+              1,
+              0
+            ],
+            "uWakeTex": {
+              "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+              "version": 1
+            },
+            "uWake": [
+              0,
+              0,
+              0.00625,
+              0
+            ],
+            "uStripTex": {
+              "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+              "version": 1
+            },
+            "uRider": [
+              1000000,
+              1000000,
+              1000000,
+              0
+            ],
+            "uRiderVel": [
+              0,
+              0,
+              0
+            ],
+            "uShadowTex": {
+              "texture": "defe5b42-b033-4b98-a2b0-1ae91f879827",
+              "version": 1
+            },
+            "uShadowMat": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "uShadowOn": 0,
+            "uTownSh0": {
+              "texture": "a7106143-5ca1-4a11-aa9e-b8a10c400b1e",
+              "version": 1
+            },
+            "uTownSh1": {
+              "texture": "cbb19faa-bcbf-419d-bad6-25199a0f23a1",
+              "version": 1
+            },
+            "uTownShM0": [
+              -0.0015640350150390163,
+              0.0009707623774831163,
+              0.0010728488160372896,
+              0,
+              5.508895903604887e-20,
+              0.0023376717047234735,
+              -0.0011753953961772395,
+              0,
+              0.0012219580766032003,
+              0.0012425191819073742,
+              0.0013731838646951812,
+              0,
+              -0.8288562893150736,
+              -0.7772729453792973,
+              -0.8809385489374643,
+              0.9999999999999998
+            ],
+            "uTownShM1": [
+              -0.0029188060569810756,
+              0.0016002547900483026,
+              0.0018358161168375892,
+              0,
+              5.140357656992438e-19,
+              0.003853538651490622,
+              -0.0020112897359844594,
+              0,
+              0.00228042121888006,
+              0.0020482327278992176,
+              0.0023497374769914656,
+              0,
+              3.6936878781498024,
+              2.1127482477992157,
+              3.186383164579521,
+              1
+            ],
+            "uTownShP": [
+              1,
+              1,
+              475.74876104621495,
+              278.02702587603096
+            ],
+            "uTownMask0": {
+              "texture": "a85f1c3f-c864-487c-956f-ff708e0f5ed0",
+              "version": 1
+            },
+            "uTownMask1": {
+              "texture": "2ca8d408-3bf3-4fbb-ab63-499b04f7d081",
+              "version": 1
+            },
+            "uTownRect0": [
+              -201,
+              810,
+              0.003004807692307692,
+              0.002446183953033268
+            ],
+            "uTownRect1": [
+              90,
+              -1280,
+              0.0055309734513274336,
+              0.0045871559633027525
+            ],
+            "uNoiseTex": {
+              "texture": "dbab875d-be54-4a62-bcc9-10d351f69fcb",
+              "version": 1
+            }
+          },
+          "stationUniforms": {
+            "uTime": 14,
+            "uWind": [
+              0.9,
+              0.35
+            ],
+            "uSunDir": [
+              -0.5104064950196394,
+              0.5591929034707469,
+              -0.6532905223173859
+            ],
+            "uGust": 0.10142290304344133
+          },
+          "wet": {
+            "enabled": true,
+            "material": "be934b48-bad7-4dae-a085-6a4991b5fa2d",
+            "version": 1,
+            "uniforms": {
+              "uWetMask": {
+                "texture": "ee27e9e4-659b-465d-82e9-1f810d9a2e68",
+                "version": 1
+              },
+              "uWetWorldToLocal": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                -280,
+                -8,
+                -900,
+                1
+              ],
+              "uWetBounds": [
+                -4,
+                4,
+                8,
+                30
+              ],
+              "uWetSkyLow": [
+                0.5840784178830671,
+                0.6724431569510133,
+                0.7379104087672317
+              ],
+              "uWetSkyHigh": [
+                0.2746773120495699,
+                0.43415363616478553,
+                0.5647115056965487
+              ]
+            }
+          }
+        },
+        "switchEvidence": {
+          "api": true,
+          "cpuUniform": 1,
+          "gpuUniform": 1,
+          "programId": 53,
+          "requested": true
+        },
+        "render": {
+          "frame": 357,
+          "calls": 1476,
+          "triangles": 8242428,
+          "points": 0,
+          "lines": 0
+        },
+        "programs": 101,
+        "memory": {
+          "geometries": 1046,
+          "textures": 212
+        },
+        "errors": [],
+        "clock": {
+          "timeOrigin": 1794872304783.6,
+          "now": 35094.09999990463
+        },
+        "props": {
+          "lighthouse": 1,
+          "menhir": 21,
+          "boulders": 87,
+          "tree": 53
+        },
+        "png": "station-street-on-A2.png",
+        "jpeg": "station-street-on-A2.jpg",
+        "pngSha256": "8e103aed0690c2c57a9abf2348e9aca4e2d9c427701c8492395b594e13b70ac2",
+        "regions": [
+          {
+            "name": "full",
+            "normalized": {
+              "x0": 0,
+              "y0": 0,
+              "x1": 1,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 0,
+              "minY": 0,
+              "maxX": 1440,
+              "maxY": 900
+            },
+            "pixels": 1296000,
+            "meanRGB": [
+              102.68394907407408,
+              94.58077237654321,
+              106.35565354938272
+            ],
+            "meanLuma": 97.15365416292076,
+            "darkFraction": 0.03722530864197531,
+            "changedPixels": 0,
+            "meanChannelDifference": 0,
+            "maxChannelDifference": 0,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 0,
+                "bounds": null
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 0,
+                "bounds": null
+              }
+            ]
+          },
+          {
+            "name": "road-lower",
+            "normalized": {
+              "x0": 0,
+              "y0": 0.5,
+              "x1": 1,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 0,
+              "minY": 450,
+              "maxX": 1440,
+              "maxY": 900
+            },
+            "pixels": 648000,
+            "meanRGB": [
+              78.88627469135803,
+              81.77058487654321,
+              90.1528225308642
+            ],
+            "meanLuma": 81.76257808998096,
+            "darkFraction": 0.010336419753086419,
+            "changedPixels": 0,
+            "meanChannelDifference": 0,
+            "maxChannelDifference": 0,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 0,
+                "bounds": null
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 0,
+                "bounds": null
+              }
+            ]
+          },
+          {
+            "name": "road-left",
+            "normalized": {
+              "x0": 0,
+              "y0": 0.55,
+              "x1": 0.5,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 0,
+              "minY": 495,
+              "maxX": 720,
+              "maxY": 900
+            },
+            "pixels": 291600,
+            "meanRGB": [
+              78.79292866941014,
+              83.43170096021947,
+              92.07408093278464
+            ],
+            "meanLuma": 83.06947780523149,
+            "darkFraction": 0.005857338820301783,
+            "changedPixels": 0,
+            "meanChannelDifference": 0,
+            "maxChannelDifference": 0,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 0,
+                "bounds": null
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 0,
+                "bounds": null
+              }
+            ]
+          },
+          {
+            "name": "road-middle",
+            "normalized": {
+              "x0": 0.3,
+              "y0": 0.55,
+              "x1": 0.7,
+              "y1": 0.9
+            },
+            "bounds": {
+              "minX": 432,
+              "minY": 495,
+              "maxX": 1007,
+              "maxY": 810
+            },
+            "pixels": 181125,
+            "meanRGB": [
+              80.72607867494824,
+              85.15088474810214,
+              96.10602622498274
+            ],
+            "meanLuma": 85.0011321915793,
+            "darkFraction": 0.004996549344375431,
+            "changedPixels": 0,
+            "meanChannelDifference": 0,
+            "maxChannelDifference": 0,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 0,
+                "bounds": null
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 0,
+                "bounds": null
+              }
+            ]
+          },
+          {
+            "name": "road-right",
+            "normalized": {
+              "x0": 0.5,
+              "y0": 0.55,
+              "x1": 1,
+              "y1": 1
+            },
+            "bounds": {
+              "minX": 720,
+              "minY": 495,
+              "maxX": 1440,
+              "maxY": 900
+            },
+            "pixels": 291600,
+            "meanRGB": [
+              76.65446844993141,
+              78.97781207133059,
+              88.45055555555555
+            ],
+            "meanLuma": 79.16780129696396,
+            "darkFraction": 0.003631687242798354,
+            "changedPixels": 0,
+            "meanChannelDifference": 0,
+            "maxChannelDifference": 0,
+            "thresholdBounds": [
+              {
+                "threshold": 1,
+                "changedPixels": 0,
+                "bounds": null
+              },
+              {
+                "threshold": 4,
+                "changedPixels": 0,
+                "bounds": null
+              }
+            ]
+          }
+        ]
+      },
+      "controlledState": true,
+      "restoredState": true,
+      "pixelIdentity": true,
+      "effectDetected": true,
+      "switchVerified": true,
+      "visualStrict": true
+    }
+  ],
+  "restore": {
+    "wet": true,
+    "view": "station-street",
+    "rafFrozen": false,
+    "walkerEnabled": false
+  },
+  "exceptions": [],
+  "consoleErrors": [],
+  "networkFailures": [],
+  "httpErrors": [],
+  "documentAnchors": [
+    {
+      "requestId": "85DEBD4153EA25E538637E8B35DE5E8E",
+      "url": "http://127.0.0.1:53572/",
+      "timestamp": 1882483.837428,
+      "wallTime": 1794872304.783765,
+      "loaderId": "85DEBD4153EA25E538637E8B35DE5E8E",
+      "stage": "loading-scene"
+    }
+  ],
+  "modelRequests": [
+    {
+      "requestId": "66116.111",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "loading-scene",
+          "receivedWallTime": 1794872307.111,
+          "documentURL": "http://127.0.0.1:53572/",
+          "frameId": "B35C6FD4E831796BDA73B68E3E2CE361",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 2,
+                  "functionName": "load",
+                  "lineNumber": 45624,
+                  "scriptId": "42",
+                  "url": "http://127.0.0.1:53572/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "load",
+                  "lineNumber": 328,
+                  "scriptId": "21",
+                  "url": "http://127.0.0.1:53572/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "",
+                  "lineNumber": 45331,
+                  "scriptId": "42",
+                  "url": "http://127.0.0.1:53572/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "loadAsync",
+                  "lineNumber": 45329,
+                  "scriptId": "42",
+                  "url": "http://127.0.0.1:53572/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 13,
+                  "functionName": "",
+                  "lineNumber": 98,
+                  "scriptId": "11",
+                  "url": "http://127.0.0.1:53572/src/island.js"
+                },
+                {
+                  "columnNumber": 62,
+                  "functionName": "loadProps",
+                  "lineNumber": 96,
+                  "scriptId": "11",
+                  "url": "http://127.0.0.1:53572/src/island.js"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "85DEBD4153EA25E538637E8B35DE5E8E",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:53572/",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:53572/assets/models/menhir.glb"
+          },
+          "requestId": "66116.111",
+          "timestamp": 1882486.165275,
+          "type": "Fetch",
+          "wallTime": 1794872307.111614
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "loading-scene",
+          "receivedWallTime": 1794872307.124,
+          "frameId": "B35C6FD4E831796BDA73B68E3E2CE361",
+          "hasExtraInfo": true,
+          "loaderId": "85DEBD4153EA25E538637E8B35DE5E8E",
+          "requestId": "66116.111",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 97,
+            "connectionReused": true,
+            "encodedDataLength": 185,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "620588",
+              "Content-Type": "model/gltf-binary",
+              "Date": "Mon, 16 Nov 2026 23:38:27 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "model/gltf-binary",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 53572,
+            "responseTime": 1794872307123.531,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 11.724,
+              "receiveHeadersStart": 11.709,
+              "requestTime": 1882486.165496,
+              "sendEnd": 0.584,
+              "sendStart": 0.557,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:53572/assets/models/menhir.glb"
+          },
+          "timestamp": 1882486.177824,
+          "type": "Fetch"
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "loading-scene",
+          "receivedWallTime": 1794872307.136,
+          "encodedDataLength": 620773,
+          "requestId": "66116.111",
+          "timestamp": 1882486.187221
+        }
+      ]
+    },
+    {
+      "requestId": "66116.113",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "loading-scene",
+          "receivedWallTime": 1794872307.111,
+          "documentURL": "http://127.0.0.1:53572/",
+          "frameId": "B35C6FD4E831796BDA73B68E3E2CE361",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 2,
+                  "functionName": "load",
+                  "lineNumber": 45624,
+                  "scriptId": "42",
+                  "url": "http://127.0.0.1:53572/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "load",
+                  "lineNumber": 328,
+                  "scriptId": "21",
+                  "url": "http://127.0.0.1:53572/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "",
+                  "lineNumber": 45331,
+                  "scriptId": "42",
+                  "url": "http://127.0.0.1:53572/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "loadAsync",
+                  "lineNumber": 45329,
+                  "scriptId": "42",
+                  "url": "http://127.0.0.1:53572/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 13,
+                  "functionName": "",
+                  "lineNumber": 98,
+                  "scriptId": "11",
+                  "url": "http://127.0.0.1:53572/src/island.js"
+                },
+                {
+                  "columnNumber": 62,
+                  "functionName": "loadProps",
+                  "lineNumber": 96,
+                  "scriptId": "11",
+                  "url": "http://127.0.0.1:53572/src/island.js"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "85DEBD4153EA25E538637E8B35DE5E8E",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:53572/",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:53572/assets/models/boulders.glb"
+          },
+          "requestId": "66116.113",
+          "timestamp": 1882486.165403,
+          "type": "Fetch",
+          "wallTime": 1794872307.11174
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "loading-scene",
+          "receivedWallTime": 1794872307.124,
+          "frameId": "B35C6FD4E831796BDA73B68E3E2CE361",
+          "hasExtraInfo": true,
+          "loaderId": "85DEBD4153EA25E538637E8B35DE5E8E",
+          "requestId": "66116.113",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 55,
+            "connectionReused": true,
+            "encodedDataLength": 185,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "669820",
+              "Content-Type": "model/gltf-binary",
+              "Date": "Mon, 16 Nov 2026 23:38:27 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "model/gltf-binary",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 53572,
+            "responseTime": 1794872307123.772,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 11.54,
+              "receiveHeadersStart": 11.52,
+              "requestTime": 1882486.165926,
+              "sendEnd": 0.609,
+              "sendStart": 0.58,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:53572/assets/models/boulders.glb"
+          },
+          "timestamp": 1882486.17866,
+          "type": "Fetch"
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "loading-scene",
+          "receivedWallTime": 1794872307.145,
+          "encodedDataLength": 670005,
+          "requestId": "66116.113",
+          "timestamp": 1882486.18757
+        }
+      ]
+    }
+  ],
+  "modelServerRequests": [
+    {
+      "url": "/assets/models/menhir.glb",
+      "method": "GET",
+      "stage": "loading-scene",
+      "wallTime": 1794872307.115,
+      "status": 200,
+      "finished": true,
+      "finishedWallTime": 1794872307.132,
+      "closedWallTime": 1794872307.132,
+      "responseComplete": true
+    },
+    {
+      "url": "/assets/models/boulders.glb",
+      "method": "GET",
+      "stage": "loading-scene",
+      "wallTime": 1794872307.118,
+      "status": 200,
+      "finished": true,
+      "finishedWallTime": 1794872307.133,
+      "closedWallTime": 1794872307.133,
+      "responseComplete": true
+    }
+  ],
+  "interpretation": "Two predetermined warmups and on/off/on per camera; warmup pixels are recorded in data and raw local files, while the six A/B/A PNGs are archived here. Whole-image RGB equality, not JPEG or hash equality, determines strict isolation. Changed-region bounds include all postprocessing effects and are not a segmentation of the wet mask. This run did not reproduce resource cancellation and does not clear failures from the independent live baseline.",
+  "files": [
+    {
+      "file": "source-manifest.json",
+      "bytes": 23594,
+      "sha256": "924dc803fd64374f7ac5fc16c9b7e4197c1360d4450f92ec0e2ca8345b84bd1e"
+    },
+    {
+      "file": "detail-on-A1.png",
+      "bytes": 2187503,
+      "sha256": "7a69219ff712ab6e92d999330931b5947c88266ac754e925714d79b92d80d075"
+    },
+    {
+      "file": "detail-on-A1.jpg",
+      "bytes": 213406,
+      "sha256": "d86cebfbd1f503ba9b2c0608ba84d135eb10cb9cb6b943de852cbe6764fb801a"
+    },
+    {
+      "file": "detail-off-B.png",
+      "bytes": 2192652,
+      "sha256": "7bd1e7c2707f524db047ed1b2ea93914d4f4cf4e4f66e60bec7d0fafc58d1f94"
+    },
+    {
+      "file": "detail-off-B.jpg",
+      "bytes": 213615,
+      "sha256": "e10f185fc61816db8a8813430548b94ceb95f63b6fe7ad27087c4a208b0ea3c6"
+    },
+    {
+      "file": "detail-on-A2.png",
+      "bytes": 2187503,
+      "sha256": "7a69219ff712ab6e92d999330931b5947c88266ac754e925714d79b92d80d075"
+    },
+    {
+      "file": "detail-on-A2.jpg",
+      "bytes": 213406,
+      "sha256": "d86cebfbd1f503ba9b2c0608ba84d135eb10cb9cb6b943de852cbe6764fb801a"
+    },
+    {
+      "file": "station-street-on-A1.png",
+      "bytes": 2670598,
+      "sha256": "8e103aed0690c2c57a9abf2348e9aca4e2d9c427701c8492395b594e13b70ac2"
+    },
+    {
+      "file": "station-street-on-A1.jpg",
+      "bytes": 350753,
+      "sha256": "2f89cd3b5dc8554d659b5758b39a1f3077a8364b628423bf1327944367cadd1c"
+    },
+    {
+      "file": "station-street-off-B.png",
+      "bytes": 2675568,
+      "sha256": "6f9b1636e6d3e3ceef9b05e916a1f690070e28e89370735708a4174c78858536"
+    },
+    {
+      "file": "station-street-off-B.jpg",
+      "bytes": 351354,
+      "sha256": "658a15eae7a3cc513ba79517c11e3807347624b9c2289bcf0514a53c4ff0dbe7"
+    },
+    {
+      "file": "station-street-on-A2.png",
+      "bytes": 2670598,
+      "sha256": "8e103aed0690c2c57a9abf2348e9aca4e2d9c427701c8492395b594e13b70ac2"
+    },
+    {
+      "file": "station-street-on-A2.jpg",
+      "bytes": 350753,
+      "sha256": "2f89cd3b5dc8554d659b5758b39a1f3077a8364b628423bf1327944367cadd1c"
+    }
+  ]
+}
