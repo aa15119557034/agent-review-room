@@ -433,6 +433,14 @@ export function chooseWorldRoutine(
   }
   const need = chooseNeed();
   if (need) return need;
+  // An accepted later appointment reserves both parties' time. Only new leisure
+  // is constrained here: needs still win and an existing activity is never cut short.
+  const nextDue = world.commitments.reduce((due, agreement) =>
+    agreement.state === "deferred" && agreement.dueAt !== null &&
+      (sameActor(agreement.by, actor) || sameActor(agreement.to, actor)) ? Math.min(due, agreement.dueAt) : due,
+  Infinity);
+  const fitsBeforePromise = (kind: WorldActivityKind) => world.now + DURATION[kind] <= nextDue;
+  const leisure = (kind: WorldActivityKind) => fitsBeforePromise(kind) ? propose(kind) : null;
   const offset = world.residents.findIndex((resident) => resident.agent === agent);
   const dayStart = world.now - world.now % WORLD_MINUTES_PER_DAY;
   // The caller supplies this resident's observed history (at least this day's
@@ -448,11 +456,11 @@ export function chooseWorldRoutine(
     });
     if (together) {
       const activity = r.placeId === "living_room" ? "read" : r.placeId === "kitchen" && stock(world, "meals").count >= 2 ? "eat" : null;
-      if (activity !== null) return { type: "invite", to: residentActor(together.agent), activity };
+      if (activity !== null && fitsBeforePromise(activity)) return { type: "invite", to: residentActor(together.agent), activity };
     }
   }
   const kind = (["read", "tidy", "rest"] as const)[(Math.floor(world.now / 30) + offset) % 3]!;
-  return propose(kind) ?? propose("tidy");
+  return leisure(kind) ?? leisure("tidy");
 }
 
 function refreshVisibleItems(view: WorldResidentView, world: WorldSnapshot, room: string, at: number, seq: number): void {

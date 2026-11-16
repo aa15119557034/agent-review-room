@@ -338,6 +338,57 @@ describe("world time and invitations", () => {
     assert.deepEqual(h.apply(A, { type: "answer", commitmentId: agreement.id, answer: "accept", dueAt: null }).result, { accepted: false, reason: "not_allowed" });
   });
 
+  it("keeps accepted appointments free of new overlapping leisure for either party without blocking needs", () => {
+    for (const party of ["by", "to"] as const) {
+      const h = fixture();
+      h.advance(481);
+      h.act(A, { type: "start", activity: "tidy", itemId: null });
+      const busy = h.world.activities[0]!;
+      h.act(party === "by" ? U : A, { type: "invite", to: party === "by" ? A : B, activity: "set_table" });
+      const agreement = h.world.commitments[0]!;
+      h.advance(482);
+      h.act(party === "by" ? A : B, { type: "answer", commitmentId: agreement.id, answer: "later", dueAt: 502 });
+      h.advance(500);
+      assert.equal(chooseWorldRoutine(h.world, "claude"), null, "a promise does not interrupt an existing activity");
+      assert.equal(h.world.activities[0]!.id, busy.id);
+      h.advance(501);
+      assert.equal(h.world.residents[0]!.activityId, null);
+      assert.equal(chooseWorldRoutine(h.world, "claude"), null, party + " waits instead of starting a twenty-minute tidy");
+
+      const enoughTime = structuredClone(h.world);
+      enoughTime.commitments[0]!.dueAt = 521;
+      assert.deepEqual(chooseWorldRoutine(enoughTime, "claude"), { type: "start", activity: "tidy", itemId: null }, "leisure may finish exactly when the appointment is due");
+      const cancelled: WorldSnapshot = applyWorldAction(h.world, A, { type: "cancel", commitmentId: agreement.id }, {}).world;
+      assert.deepEqual(chooseWorldRoutine(cancelled, "claude"), { type: "start", activity: "tidy", itemId: null }, "cancelled promises do not reserve time");
+      for (const need of ["food", "sleep", "empty_kitchen"] as const) {
+        const needy = structuredClone(h.world);
+        const resident = needy.residents[0]!;
+        resident.satiety = need === "sleep" ? 80 : 20;
+        resident.energy = need === "sleep" ? 20 : 80;
+        resident.placeId = need === "sleep" ? "room_1" : "kitchen";
+        if (need === "empty_kitchen") for (const item of needy.items) if (item.kind === "stock") item.count = 0;
+        assert.deepEqual(chooseWorldRoutine(needy, "claude"), {
+          type: "start", activity: need === "sleep" ? "sleep" : need === "food" ? "cook" : "rest", itemId: null,
+        }, "necessary " + need + " remains available while waiting");
+      }
+      h.advance(502);
+      const promisedBy = party === "by" ? A : B;
+      h.act(promisedBy, chooseWorldRoutine(h.world, party === "by" ? "claude" : "codex")!);
+      const table = h.world.activities[0]!;
+      assert.equal(table.kind, "set_table");
+      assert.equal(table.startedAt, 502);
+      if (party === "to") h.act(A, chooseWorldRoutine(h.world, "claude")!);
+      else h.act(U, { type: "join", activityId: table.id });
+      h.advance(table.endsAt);
+      assert.deepEqual(h.world.commitments, []);
+      assert.equal(h.events.filter((event) => event.type === "activity_ended" && event.activity.id === table.id).length, 1);
+    }
+    const evening = fixture({ ...initial(), now: 1080 });
+    evening.act(U, { type: "invite", to: A, activity: "set_table" });
+    evening.act(A, { type: "answer", commitmentId: evening.world.commitments[0]!.id, answer: "later", dueAt: 1081 });
+    assert.equal(chooseWorldRoutine(evening.world, "claude"), null, "a new evening invitation cannot crowd out the accepted appointment");
+  });
+
   it("only invitation parties can cancel, and cancellation cannot revive on a later minute", () => {
     const h = fixture();
     h.act(U, { type: "invite", to: A, activity: "read" });

@@ -10,8 +10,8 @@ import { WorldService } from "../src/main/world";
 async function setup(residents = ["claude", "codex"], resetWorld = true) {
   const dir = mkdtempSync(join(tmpdir(), "room-world-main-"));
   const path = join(dir, "room.db");
-  const db = openDatabase(path);
-  const queue = new WriteQueue();
+  let db = openDatabase(path);
+  let queue = new WriteQueue();
   const events: ControlEvent[] = [];
   const make = () => new WorldService({ db, queue, dbPath: path, emit: (e) => { events.push(ControlEvent.parse(e)); }, knownAgents: () => residents, agentName: (id) => id === "claude" ? "C酱" : id === "codex" ? "林离" : id, now: () => "2026-11-16T00:00:00.000Z" });
   let service = make();
@@ -19,8 +19,12 @@ async function setup(residents = ["claude", "codex"], resetWorld = true) {
   const reset: CommandRequest<"world.reset"> = { type: "world.reset", requestId: `wact_${ulid()}`, worldId: null, confirm: true, settings: { residents, dayRealMinutes: 4, dailyCognitionLimit: 0 } };
   if (resetWorld) await service.reset(reset);
   return {
-    db, queue, events, reset, get service() { return service; },
+    get db() { return db; }, get queue() { return queue; }, events, reset, get service() { return service; },
     restart: async () => { await service.stop(); service = make(); await service.start(); },
+    reopen: async () => {
+      await service.stop(); db.close(); assert.equal(db.open, false);
+      db = openDatabase(path); queue = new WriteQueue(); service = make(); await service.start();
+    },
     close: async () => { await service.stop(); db.close(); rmSync(dir, { recursive: true, force: true }); },
   };
 }
@@ -106,6 +110,79 @@ test("world reset and actions use persisted receipts, including response loss an
     assert.deepEqual(await h.service.reset(h.reset), first, "reset receipt survives a new runtime session");
     assert.notEqual(h.service.get().world!.generation.session, first.world!.generation.session);
   } finally { await h.close(); }
+});
+
+test("a deferred appointment survives a real database reopen and starts on time or stays cancelled", async () => {
+  for (const outcome of ["complete", "cancel"] as const) {
+    const h = await setup(["claude"], false);
+    try {
+      await h.service.reset({ ...h.reset, settings: { ...h.reset.settings!, dayRealMinutes: 24 } });
+      const world = () => WorldState.parse(h.service.get()).world!;
+      const to = async (minute: number) => {
+        while (world().now < minute) await h.service.advance(Math.min(5, minute - world().now) * 1000);
+        assert.equal(world().now, minute);
+      };
+      await to(481);
+      assert.equal(world().activities[0]!.kind, "tidy");
+      assert.equal(world().activities[0]!.endsAt, 501);
+      assert.equal((await h.service.act(action(h.service, { type: "invite", to: { kind: "resident", agent: "claude" }, activity: "set_table" }))).accepted, true);
+      await to(482);
+      const agreement = world().commitments[0]!;
+      assert.equal(agreement.state, "deferred");
+      assert.equal(agreement.dueAt, 502);
+      await to(500);
+      const cancel = action(h.service, { type: "cancel", commitmentId: agreement.id });
+      const cancelled = outcome === "cancel" ? await h.service.act(cancel) : null;
+      if (cancelled) assert.equal(cancelled.accepted, true);
+      const before = world();
+      const oldDb = h.db;
+      await h.reopen();
+      assert.notEqual(h.db, oldDb, "this is a new SQLite connection, not just a new service");
+      assert.equal(world().now, 500);
+      assert.notEqual(world().generation.session, before.generation.session);
+      assert.deepEqual(world().commitments, before.commitments);
+      assert.deepEqual(world().activities, before.activities);
+      if (cancelled) assert.deepEqual(await h.service.act(cancel), cancelled, "the cancellation receipt persists across sessions");
+      await to(501);
+      if (outcome === "complete") assert.equal(world().residents[0]!.activityId, null, "the gap before the appointment cannot start another tidy");
+      await to(502);
+      const history = () => {
+        const page = h.service.events(world().id, undefined, 100);
+        assert.equal(page.nextBefore, null, "the assertions cover the entire short scenario history");
+        return page.items;
+      };
+      const linkedStarts = () => history().filter((event) =>
+        event.type === "action" && event.action.type === "start" && event.commitmentId === agreement.id);
+      let activityId: string | null = null;
+      if (outcome === "complete") {
+        const start = linkedStarts()[0];
+        assert.equal(linkedStarts().length, 1);
+        assert.ok(start?.type === "action");
+        assert.equal(start.at, 502);
+        activityId = start.activityId;
+        assert.ok(activityId);
+        const activity = world().activities.find((entry) => entry.id === activityId)!;
+        assert.equal(activity.kind, "set_table");
+        assert.equal((await h.service.act(action(h.service, { type: "join", activityId }))).accepted, true);
+        await to(activity.endsAt);
+        assert.equal(world().player.activityId, null);
+      } else {
+        assert.equal(linkedStarts().length, 0);
+        await to(512);
+      }
+      assert.equal(world().commitments.some((entry) => entry.id === agreement.id), false);
+      await h.reopen();
+      await to(612);
+      assert.equal(linkedStarts().length, outcome === "complete" ? 1 : 0, "a second reopen never executes the promise again");
+      if (activityId) {
+        const endings = history().filter((event) => event.type === "activity_ended" && event.activity.id === activityId);
+        assert.equal(endings.length, 1);
+        assert.ok(endings[0]?.type === "activity_ended");
+        assert.equal(endings[0].activity.state, "completed");
+        assert.ok(endings[0].activity.participants.some((actor) => actor.kind === "player"));
+      }
+    } finally { await h.close(); }
+  }
 });
 
 test("world commit failure publishes nothing and retry does not leave a partial receipt or view", async () => {
