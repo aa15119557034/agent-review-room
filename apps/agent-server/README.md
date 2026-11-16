@@ -204,6 +204,10 @@ pnpm --filter @room/agent-server run quota -- codex-discuss
 
 主控端怎么用：`quotaState()`（契约）——任一窗口 ≥ 100% 或余额 ≤ 0 是用完，全部读不到是**未知（不算缺席）**。
 
+## 独立网页检索（P2-S07 首片）
+
+新增独立项目 profile，可在一次既有 Run 内执行一次 DeepSeek Search、最多一次 Fetch，返回完整正文、来源 hash、工具步骤和用量。需 health 能力声明及本次结构化结果 opt-in；不接聊天或模型内置搜索。配置、费用口径、真实测试和待接线范围见 [P2-S07 首片说明](../../docs/design/P2-S07-独立检索首片.md)。桌面检索入口尚未接通，不能把普通评审 Prompt 直接发给此 profile。
+
 ## 安全
 
 - **监听 0.0.0.0**：局域网里的其他电脑能访问。所有请求都必须带 Token，否则 401

@@ -1,6 +1,6 @@
 import { spawn, type ChildProcess } from "node:child_process";
 import { StringDecoder } from "node:string_decoder";
-import type { RemoteArtifact, RemoteEvent, RemoteTerminal, RunKind, StartRunRequest } from "@room/schemas";
+import type { RemoteArtifact, StructuredRemoteEvent as RemoteEvent, RemoteTerminal, RunKind, StartRunRequest } from "@room/schemas";
 import type { Profile, ServerConfig } from "./config";
 import { killTree, spawnDetached } from "./process-tree";
 import { createParser, type OutputParser, type ParserOutput, type ParserVerdict } from "./parsers";
@@ -42,6 +42,7 @@ export class RemoteRun {
   readonly attachmentShas: readonly string[];
   /** StartRun.chat 原样序列化（没带 = "none"），幂等比较用 */
   readonly chatKey: string;
+  readonly structuredResults: StartRunRequest["structuredResults"];
 
   private readonly events: SeqEvent[] = [];
   private readonly subscribers = new Set<Subscriber>();
@@ -78,6 +79,7 @@ export class RemoteRun {
     this.kind = req.kind ?? "text";
     this.attachmentShas = (req.attachments ?? []).map((a) => a.sha256);
     this.chatKey = chatKeyOf(req.chat);
+    this.structuredResults = req.structuredResults;
     this.promptFinal = prepared.promptFinal;
     this.limits = {
       idleTimeoutMs: Math.min(req.limits.idleTimeoutMs, profile.maxIdleTimeoutMs),
@@ -152,6 +154,9 @@ export class RemoteRun {
     try {
       let args = [...buildArgs(this.profile, this.model), ...this.extraArgs];
       const env = buildProfileEnv(this.profile);
+      // Local configuration cannot impersonate per-run negotiation through an inherited variable.
+      delete env["ROOM_STRUCTURED_RESULTS_VERSION"];
+      if (this.structuredResults !== undefined) env["ROOM_STRUCTURED_RESULTS_VERSION"] = String(this.structuredResults.version);
       if (this.kind === "image" && this.profile.imageRun) {
         // 每个 image Run 一个新目录，归属可证明；只从这里取图、只删这里（image-artifact.ts）
         const dir = runOutputDir(this.profile.imageRun.outputDir, this.runId);
@@ -207,6 +212,7 @@ export class RemoteRun {
       // 退出码非 0 时也先问解析器：CLI 因为额度用尽退出时，原因只写在结构化输出里（C-25）
       const { trailing, verdict } = this.parser.finish();
       this.emitParsed(trailing);
+      if (this.pendingOutcome) { this.finish(this.pendingOutcome); return; }
       if (!verdict.ok && verdict.reason === "quota_exhausted") {
         this.finish({ outcome: "error", reason: "quota_exhausted", exitCode: code, message: verdict.message });
       } else if (code !== 0) {
@@ -292,7 +298,11 @@ export class RemoteRun {
 
   private emitParsed(items: ParserOutput[]): void {
     for (const item of items) {
-      if (item.kind === "text_delta") this.push({ type: "text_delta", seq: 0, ts: "", text: item.text });
+      if (this.isFinished || this.pendingOutcome) return;
+      if (item.kind === "result_display") {
+        if (this.structuredResults === undefined) this.stop({ outcome: "error", reason: "internal", exitCode: null, message: "unnegotiated structured result" });
+        else this.push({ type: "result_display", seq: 0, ts: "", result: item.result });
+      } else if (item.kind === "text_delta") this.push({ type: "text_delta", seq: 0, ts: "", text: item.text });
       else if (item.kind === "rate_limit") this.onRateLimit?.(item.info);
       else this.push({ type: "output", seq: 0, ts: "", stream: "stdout", data: item.line + "\n" });
     }

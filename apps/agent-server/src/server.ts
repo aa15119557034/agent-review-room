@@ -14,7 +14,7 @@ import {
   type NodeHealth,
   type RemoteErrorCode,
   type RemoteProfileQuota,
-  type RemoteEvent,
+  type StructuredRemoteEvent as RemoteEvent,
   type RemoteRunSummary,
   type StartRunResponse,
 } from "@room/schemas";
@@ -70,6 +70,7 @@ export function createAgentServer(
   const imageProfiles = Object.entries(cfg.profiles)
     .filter(([, p]) => p.imageRun)
     .map(([id]) => id);
+  const searchProfiles = Object.entries(cfg.profiles).filter(([, p]) => p.searchFetch !== undefined).map(([id]) => id);
   // 上次节点崩在清理之前留下的画图 Run 目录：启动时清掉
   for (const root of new Set(Object.values(cfg.profiles).flatMap((p) => (p.imageRun ? [p.imageRun.outputDir] : [])))) {
     const removed = sweepStaleRunDirs(root);
@@ -127,6 +128,7 @@ export function createAgentServer(
           imageRuns: imageProfiles.length > 0,
           ...(imageProfiles.length > 0 ? { imageProfiles } : {}),
           quota: Object.values(cfg.profiles).some((p) => p.quota),
+          ...(searchProfiles.length === 0 ? {} : { structuredResults: { version: 1, profiles: searchProfiles } }),
         },
       };
       return sendJson(res, 200, body);
@@ -226,12 +228,7 @@ export function createAgentServer(
     const existing = runs.get(reqBody.runId);
     if (existing) {
       if (
-        existing.profileId === reqBody.profileId &&
-        existing.contentHash === reqBody.snapshot.contentHash &&
-        sameModel(existing.model, reqBody.model) &&
-        existing.kind === (reqBody.kind ?? "text") &&
-        existing.chatKey === chatKeyOf(reqBody.chat) &&
-        sameList(existing.attachmentShas, (reqBody.attachments ?? []).map((a) => a.sha256))
+        sameRequest(existing, reqBody)
       ) {
         return sendJson(res, 200, startResponse(reqBody.runId, "already_exists"));
       }
@@ -241,6 +238,15 @@ export function createAgentServer(
     // 只认配置里自己写的 profile：不让 "constructor" / "__proto__" 这类名字取到对象原型上的东西
     const profile = Object.hasOwn(cfg.profiles, reqBody.profileId) ? cfg.profiles[reqBody.profileId] : undefined;
     if (!profile) throw new HttpError(400, "unknown_profile", "unknown profileId");
+    if (reqBody.structuredResults !== undefined && profile.searchFetch === undefined) {
+      throw new HttpError(400, "bad_request", "profile does not support structured results");
+    }
+    if (profile.searchFetch !== undefined && (reqBody.structuredResults === undefined || reqBody.chat !== undefined || reqBody.attachments !== undefined || reqBody.expectedWorldProfile !== undefined || (reqBody.kind ?? "text") !== "text")) {
+      throw new HttpError(400, "bad_request", "Search/Fetch requires structured results and a project text query");
+    }
+    if (profile.searchFetch !== undefined && (!reqBody.snapshot.content.trim() || Array.from(reqBody.snapshot.content).length > 128)) {
+      throw new HttpError(400, "bad_request", "Search/Fetch query must contain 1-128 Unicode characters");
+    }
 
     if (reqBody.model) {
       const problem = checkModel(profile, reqBody.model);
@@ -272,6 +278,13 @@ export function createAgentServer(
 
     if (profile.verifyCommit && reqBody.snapshot.commitSha) {
       await verifyCommit(profile, reqBody.snapshot.commitSha);
+    }
+
+    // Validation may await git. Recheck identity before consuming a slot/spawning a paid request.
+    const admitted = runs.get(reqBody.runId);
+    if (admitted) {
+      if (sameRequest(admitted, reqBody)) return sendJson(res, 200, startResponse(reqBody.runId, "already_exists"));
+      throw new HttpError(409, "run_id_conflict", "runId already used with a different payload");
     }
 
     if (activeCount() >= cfg.maxConcurrentRuns) {
@@ -344,6 +357,13 @@ export function createAgentServer(
       cleanup();
       res.end();
     }
+  }
+
+  function sameRequest(existing: RemoteRun, request: StartRunRequest): boolean {
+    return existing.profileId === request.profileId && existing.contentHash === request.snapshot.contentHash &&
+      sameModel(existing.model, request.model) && existing.kind === (request.kind ?? "text") &&
+      existing.chatKey === chatKeyOf(request.chat) && existing.structuredResults?.version === request.structuredResults?.version &&
+      sameList(existing.attachmentShas, (request.attachments ?? []).map((a) => a.sha256));
   }
 
   function authenticate(req: IncomingMessage): void {

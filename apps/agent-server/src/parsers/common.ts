@@ -5,7 +5,10 @@
  * 进程退出码是 0 也一样（流可能被截断）。
  */
 
+import type { ResultDisplay } from "@room/schemas";
+
 export type ParserOutput =
+  | { kind: "result_display"; result: ResultDisplay }
   | { kind: "text_delta"; text: string }
   | { kind: "unparsed"; line: string }
   /** S-21：CLI 顺带报的额度（Claude 的 rate_limit_event.rate_limit_info）。不转发给主控端，只交给节点记下 */
