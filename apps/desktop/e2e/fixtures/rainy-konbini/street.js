@@ -75,7 +75,8 @@ export function buildStreet(c) {
   label(index?'HOT & COLD':'つめたい',.74,.17,-.03,1.99,.414,{parent:vending,bg:'#295f70',fg:'#e6f2da',font:105,lit:true});
   }
   vendingMachine(1.54,0);vendingMachine(2.66,1);
-  const vendingLight=new T.PointLight('#8cdbdf',3,5,1.9);vendingLight.position.set(2.1,1.4,-6.2);root.add(vendingLight);
+  const vendingLight=new T.SpotLight('#8cdbdf',4,4,Math.PI*.28,.65,1.9);vendingLight.position.set(2.1,2.20,-6.45);
+  vendingLight.target.position.set(2.1,.65,-6.0);root.add(vendingLight,vendingLight.target);
   // Bins, umbrellas and a detailed bicycle.
   const bins=group('recycling-bins',-5.95,.28,.20);
   for(let i=0;i<2;i++){cylinder(.23,.22,.7,0,.35,-i*.57,toon(i?'#66877e':'#aab5ac'),bins,24);cylinder(.25,.25,.09,0,.73,-i*.57,cream,bins,24);box(.25,.085,.02,0,.63,.235-i*.57,dark,bins,.02);label(i?'缶':'PET',.16,.12,0,.44,.229-i*.57,{parent:bins,font:130});}

@@ -10,7 +10,9 @@
 
 第二轮 1～3 实现深度＋法线屏幕空间描边、五级明暗、手绘地面光斑／倒影，以及低亮度涟漪。第三轮完成 4～7：平顶女儿墙、两台屋顶外机、水箱／管线／检修盖；分层底座、邻宅与绿化、立柱灯箱、停车挡；两台贩卖机移到后巷，路牌／交通灯移离侧窗；浅灰金属货架、六组双管白色荧光灯、瓶／零食袋／杯面／纸盒和透明盖便当；后门暖灯、纸箱、折叠筐、手推车、燃气表、落水管、防鸟网垃圾区与积水。同期柔化门前暖光并加入四条窗格倒影，以顶点权重降低地砖法线描线而保留深度轮廓，背景与环境光改为蓝紫夜色。
 
-先在 [4、5 检查点](https://github.com/aa15119557034/agent-review-room/pull/253#issuecomment-6915241957) 发布原四机位前后对比，再实施 6、7。本页四张 PNG、一次最终录像、性能／动效／操作记录已更新到 4～7 完整状态；艺术质量仍待 C酱复审。
+先在 [4、5 检查点](https://github.com/aa15119557034/agent-review-room/pull/253#issuecomment-6915241957) 发布原四机位前后对比，再实施 6、7。[C酱第三轮复审](https://github.com/aa15119557034/agent-review-room/pull/253#issuecomment-6915587875) 已确认 4～7 通过、没有新的必须改。本页 PNG 随后补了两处小打磨：立柱灯箱冷白发光及地面反光，贩卖机光源改为朝机前陈列与地面的聚光灯，消除侧窗孤立高光。
+
+四张 PNG 对应最新小打磨；录像、性能／动效／操作记录保留在第三轮完整版本 `bfd32ec`，没有重录。当前仍是待江浩确认方向的环境样板，PR 未合并。
 
 样板是 `apps/desktop/e2e/fixtures/rainy-konbini/` 中的独立 Three.js 场景，复用 #246 的既有 Three.js 0.187.0、Vite 和 Electron 依赖。因此 PR 叠在 `codex/X-45-world-3d` 上；现有共享小屋的未提交美术改动原样保留。本次没有改世界规则、存档、IPC、模型节点或生产页面入口。
 
@@ -59,7 +61,9 @@ node scripts/preview-rainy-konbini.cjs --capture --electron=D:\codex\2026-11-16\
 
 第三轮 4、5 曾以 `--stills --output=artifacts/rainy-konbini/r3-step45` 实拍并通过 WebGL、零 UI、边界检查；[stills-source-manifest.json](world-rainy-konbini/stills-source-manifest.json) 只对应这一中间检查点。随后 6、7 实拍检查并调整灯管可见性和后门过亮问题。
 
-4～7 完成后实际执行 `node scripts/preview-rainy-konbini.cjs --capture --output=artifacts/rainy-konbini/r3-step67 --electron=D:\codex\2026-11-16\world-implementation\runtime-path-probe\electron.exe`：Vite 构建 30 个模块、674.74 kB（gzip 175.18 kB）。自动门开合、雨水时间推进、四个固定机位、单一画布、零 UI、底座 X/Z 边界及渲染无错误检查通过。记录见 [render-report.json](world-rainy-konbini/render-report.json)、[animation-report.json](world-rainy-konbini/animation-report.json)；[source-manifest.json](world-rainy-konbini/source-manifest.json) 绑定本次完整实测源文件的 SHA-256。
+第三轮后的两处小打磨以 `--stills --output=artifacts/rainy-konbini/r3-polish` 补拍，30 个模块、676.25 kB / gzip 175.47 kB，四机位／零 UI／边界／渲染无错误检查通过。[polish-source-manifest.json](world-rainy-konbini/polish-source-manifest.json) 绑定最新 PNG 的源文件。侧窗白点曾逐个关闭七个光源定位：只有关闭贩卖机点光源时，目标区域平均 RGB 从约 155.64 降至 88.77，峰值从 255 降至约 104.67；改为向机前投光后，03 中白点消失，04 中陈列和青色地面光保留。没有关闭整场泛光或玻璃高光来遮掩问题。
+
+4～7 完成时（`bfd32ec`）实际执行 `node scripts/preview-rainy-konbini.cjs --capture --output=artifacts/rainy-konbini/r3-step67 --electron=D:\codex\2026-11-16\world-implementation\runtime-path-probe\electron.exe`：Vite 构建 30 个模块、674.74 kB（gzip 175.18 kB）。自动门开合、雨水时间推进、四个固定机位、单一画布、零 UI、底座 X/Z 边界及渲染无错误检查通过。记录见 [render-report.json](world-rainy-konbini/render-report.json)、[animation-report.json](world-rainy-konbini/animation-report.json)；[source-manifest.json](world-rainy-konbini/source-manifest.json) 绑定该次完整实测源文件的 SHA-256。下面性能、光斑数值与操作记录均属于这次完整验证，不包含之后的两处光照小打磨。
 
 本机 GPU 是 RTX 3060 Laptop，截图视口 1416 × 936，渲染比例 1。第三轮采样 900 帧约 65.00 FPS、p95 15.5ms；绘制调用 830（第二轮 650），三角形 2,525,474（第二轮 1,259,572）。新增屋顶、商品和街角细节带来实际成本；这些数字包含法线／深度、颜色和阴影绘制，不能当作其他机器或完整世界的性能保证。尚未做移动端或长期 GPU 稳定性检查。
 
@@ -70,6 +74,8 @@ Windows Computer Use 实际操作已观察到左键拖拽改变观察方向、�
 本机依赖目录内的默认 Electron 曾在启动前以 `-2147483645` 退出，原因尚未确认；上述 `--electron` 命令复用本机已有的可运行 Electron，并已实际完成渲染检查。没有为此安装或升级软件。
 
 请 C酱重点审查：三渲二是否足够明确；全景中主体／前景／后景的层次；室内货架与柜内商品是否能看清；灯光有没有过曝与塑料感；侧背面是否完成；实际操作是否能围绕模型自由观察。艺术质量等待独立意见及江浩确认。
+
+接回世界之前的待办：按 C酱建议以主画面低于 100 万三角形、400 draw calls 为优化目标，评估重复商品／栏杆实例化、小件圆角分段、投影物体范围及描边小件筛选，并实测集显。该性能工作本轮没有实施。当前也不改 #253 的 base；美术方向确认后再评估拆出最小 Three.js 依赖、直接基于 main，并重新评审差异。
 
 ![全景](world-rainy-konbini/01-overview.png)
 

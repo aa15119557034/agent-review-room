@@ -54,12 +54,13 @@ export function neighborhood(c){
   for(const x of [-.19,.19]){box(.085,3.82,.085,x,1.99,0,steel,pylon,.018);cylinder(.05,.05,.035,x,.17,.12,dark,pylon,16);}
   box(1.12,1.80,.28,0,4.38,0,toon('#386a78'),pylon,.07);
   const face=canvasTexture(512,896,(g,w,h)=>{
-    g.fillStyle='#f3e7c9';g.fillRect(0,0,w,h);g.fillStyle='#32696d';g.fillRect(0,0,w,78);g.fillRect(0,h-170,w,170);
+    g.fillStyle='#e4eef0';g.fillRect(0,0,w,h);g.fillStyle='#32696d';g.fillRect(0,0,w,78);g.fillRect(0,h-170,w,170);
     g.fillStyle='#315567';g.textAlign='center';g.textBaseline='middle';g.font='700 126px "Yu Gothic",Meiryo,sans-serif';
     [...'雨あかり'].forEach((ch,i)=>g.fillText(ch,w/2,157+i*155));
-    g.fillStyle='#f3e7c9';g.font='700 76px sans-serif';g.fillText('24 H',w/2,h-82);
+    g.fillStyle='#e4eef0';g.font='700 76px sans-serif';g.fillText('24 H',w/2,h-82);
   });
-  for(const side of [-1,1]){const panel=mesh(new T.PlaneGeometry(.98,1.64),new T.MeshBasicMaterial({map:face,toneMapped:false}),[0,4.38,side*.148],pylon);if(side<0)panel.rotation.y=Math.PI;}
-  box(.93,.04,.16,0,5.30,0,glow('#d9e7cf',1.05),pylon,.01);
+  const lightboxFace=new T.MeshBasicMaterial({map:face,color:new T.Color().setScalar(1.45),toneMapped:false});
+  for(const side of [-1,1]){const panel=mesh(new T.PlaneGeometry(.98,1.64),lightboxFace,[0,4.38,side*.148],pylon);if(side<0)panel.rotation.y=Math.PI;}
+  box(.93,.04,.16,0,5.30,0,glow('#d4e9ff',2.05),pylon,.01);
   tube([[.22,.15,-.05],[.22,3.55,-.05],[0,3.63,-.12]],.014,dark,pylon);
 }
