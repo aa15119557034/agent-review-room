@@ -305,8 +305,9 @@ export class RemoteRun {
     this.clearTimers();
     if (this.child && this.child.exitCode === null && this.child.signalCode === null) {
       killTree(this.child, this.cfg.killGraceMs);
-      // 兜底：即使 close 永远不来（管道被某个漏杀的孙进程占着），也保证产出 terminal
-      setTimeout(() => this.finish(outcome), this.cfg.killGraceMs + 5_000).unref();
+      // A kill request or elapsed time does not prove the process stopped.
+      // Until close arrives, retain the Run and its concurrency slot; callers
+      // may time out waiting, but must not receive a fabricated terminal.
     } else if (!this.child) {
       this.finish(outcome);
     }
