@@ -13,7 +13,7 @@ const agent = "claude";
 const A: WorldActor = { kind: "resident", agent };
 const B: WorldActor = { kind: "resident", agent: "codex" };
 const nonce = "a".repeat(32);
-const neutral = { say: { intent: { kind: "greet" }, tone: "plain", expression: "neutral" }, propose: null };
+const neutral = { say: { intent: { kind: "greet" }, tone: "plain", expression: "neutral", chat: null }, propose: null };
 const fenced = (value: unknown) => "```room-world\n" + JSON.stringify(value) + "\n```";
 
 function input(): WorldPromptInput {
@@ -63,6 +63,20 @@ test("extracts only one validated room-world object and discards all exterior te
   assert.deepEqual(extractWorldReply(fenced({ say: null, propose: { type: "start", activity: "rest", itemId: null } })), { ok: true, reply: { say: null, propose: { type: "start", activity: "rest", itemId: null } } });
 });
 
+test("old wire replies normalize missing chat to null, while valid chat stays literal", () => {
+  const { chat: _chat, ...oldSay } = neutral.say;
+  assert.deepEqual(extractWorldReply(fenced({ say: oldSay, propose: null })), { ok: true, reply: neutral });
+  const chat = "```js\nthrow 'not executed'\n```\nhttps://example.com";
+  for (const intent of [{ kind: "chat" }, { kind: "recall", seq: 999 }]) {
+    const value = { say: { ...neutral.say, intent, chat }, propose: null };
+    assert.deepEqual(extractWorldReply(fenced(value)), { ok: true, reply: value });
+  }
+  for (const chat of [null, "", " ", "字".repeat(121), 42]) {
+    assert.deepEqual(extractWorldReply(fenced({ say: { ...neutral.say, intent: { kind: "chat" }, chat }, propose: null })), { ok: false, reason: "invalid_shape" });
+  }
+  assert.deepEqual(extractWorldReply(fenced({ say: { ...neutral.say, chat: "你好", intent: { kind: "made_up" } }, propose: null })), { ok: false, reason: "invalid_shape" });
+});
+
 test("rejects absent, hidden, multiple, malformed, unsupported and oversized replies", () => {
   for (const raw of [JSON.stringify(neutral), "```json\n" + JSON.stringify(neutral) + "\n```", "````text\n" + fenced(neutral) + "\n````", "```room-world\n" + JSON.stringify(neutral)]) {
     assert.deepEqual(extractWorldReply(raw), { ok: false, reason: "no_block" });
@@ -80,10 +94,13 @@ test("prompt teaches structured intent and independently grounded proposal seman
   const prompt = buildWorldPrompt(input());
   assert.ok(prompt.content.includes('"intent":{"kind":"own_state","gauge":"energy"}'));
   assert.ok(prompt.content.includes("不能写 text"));
+  assert.ok(prompt.content.includes("最多 120 字"));
+  assert.ok(prompt.content.includes("引用没有依据只丢掉事实句，合法 chat 仍保留"));
+  assert.ok(prompt.content.includes("只有闲聊时用 intent:{kind:'chat'}"));
   assert.ok(prompt.content.includes("intend 必须同时给非 null 的 propose"));
   assert.ok(prompt.content.includes("不推断自己后来有没有核实"));
   assert.equal(prompt.content.includes("say.text"), false);
-  const intent = { say: { intent: { kind: "intend" }, tone: "warm", expression: "happy" }, propose: { type: "start", activity: "cook", itemId: null } };
+  const intent = { say: { intent: { kind: "intend" }, tone: "warm", expression: "happy", chat: null }, propose: { type: "start", activity: "cook", itemId: null } };
   assert.deepEqual(extractWorldReply(fenced(intent)), { ok: true, reply: intent });
 });
 

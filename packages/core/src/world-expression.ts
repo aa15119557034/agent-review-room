@@ -143,6 +143,8 @@ export function renderWorldSay(say: WorldSay, input: WorldSayInput): Pick<WorldS
   const chosen = parsed.data, intent = chosen.intent;
   let text: string | null = null;
   switch (intent.kind) {
+    // Unverified chat is persisted separately by main, never rendered as fact.
+    case "chat": return null;
     case "greet": text = { plain: "你好。", warm: "你好呀。", playful: "嘿，你好呀。", soft: "你好，慢慢聊。", curt: "你好。" }[chosen.tone]; break;
     case "respond": text = { agree: "这个想法我挺认同的。", decline: "这个想法我暂时不太赞同。", thanks: "谢谢你。", sorry: "抱歉。", comfort: "慢慢来，先缓一缓。", glad: "听你这么说，我很高兴。", unsure: "这个我还拿不准。" }[intent.feeling]; break;
     case "intend": { const proposed = WorldAction.safeParse(input.propose); text = proposed.success ? intend(proposed.data) : null; break; }

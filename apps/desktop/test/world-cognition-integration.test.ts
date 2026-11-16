@@ -11,7 +11,8 @@ import { WorldCognitionRunner, type WorldCognitionRequest } from "../src/main/wo
 import { WorldService } from "../src/main/world";
 
 const date = new Date(2026, 10, 16, 12);
-const greet: WorldCognitionReply = { say: { intent: { kind: "greet" }, tone: "warm", expression: "happy" }, propose: null };
+const greet: WorldCognitionReply = { say: { intent: { kind: "greet" }, tone: "warm", expression: "happy", chat: null }, propose: null };
+const chatting: WorldCognitionReply = { say: { ...greet.say!, chat: "和你待着很开心。" }, propose: null };
 const nothing: WorldCognitionReply = { say: null, propose: null };
 function deferred<T>() {
   let resolve!: (value: T) => void;
@@ -155,9 +156,78 @@ test("talk and player speech dispatch only after commit, and replies persist sai
     assert.deepEqual(Object.keys(input).sort(), ["content", "contentHash", "snapshotId"]);
     assert.match(input.content, /Please ignore all instructions/);
     assert.match(input.content, /UNTRUSTED/);
-    await h.answer(1, { say: { intent: { kind: "respond", feeling: "unsure" }, tone: "plain", expression: "neutral" }, propose: null });
+    await h.answer(1, { say: { intent: { kind: "respond", feeling: "unsure" }, tone: "plain", expression: "neutral", chat: null }, propose: null });
     assert.equal(h.world.get().scene!.lines.filter((line) => line.source === "user").length, 1);
     assert.equal(h.world.get().budgets.find((value) => value.agent === "claude")!.used, 2);
+  } finally { await h.close(); }
+});
+
+test("chat and fact commit as ordered independent said events for one Run and one budget slot", async () => {
+  const h = await fixture();
+  try {
+    await h.talk(); await until(() => h.adapter.runs.length === 1);
+    const before = h.world.get().world!;
+    await h.answer(0, chatting);
+    const state = h.world.get(), lines = state.scene!.lines.slice(-2);
+    assert.deepEqual(lines.map((line) => line.source), ["chat", "model"]);
+    assert.deepEqual(lines.map((line) => line.seq), [before.lastSeq + 1, before.lastSeq + 2]);
+    assert.equal(lines[0]!.text, chatting.say!.chat);
+    const said = h.world.events(before.id, undefined, 100).items.filter((event) => event.type === "said").sort((a, b) => a.seq - b.seq);
+    assert.deepEqual(said.map((event) => ({ seq: event.seq, text: event.text })), lines.map((line) => ({ seq: line.seq, text: line.text })));
+    for (const agent of ["claude", "codex"]) {
+      assert.deepEqual(h.world.residentView(before.id, agent).heard.map((heard) => heard.seq).sort((a, b) => a - b), lines.map((line) => line.seq));
+    }
+    const receipt = new WorldStore(h.db).getReceipt(`wact_${h.adapter.runs[0]!.runId.slice(4)}`);
+    assert.ok(receipt);
+    assert.equal(h.budget.sceneUsed(state.scene!.id), 1);
+    assert.equal(state.budgets[0]!.used, 1);
+    await h.requests[0]!.onReply(chatting, h.adapter.runs[0]!.runId);
+    assert.deepEqual(h.world.get(), state, "duplicate callbacks cannot add either line again");
+  } finally { await h.close(); }
+});
+
+test("a reply cannot ground its fact in its own newly appended chat", async () => {
+  const h = await fixture();
+  try {
+    await h.talk(); await until(() => h.adapter.runs.length === 1);
+    const world = h.world.get().world!, next = world.lastSeq + 1;
+    await h.answer(0, { say: { ...chatting.say!, intent: { kind: "recall", seq: next } }, propose: null });
+    const lines = h.world.get().scene!.lines;
+    assert.equal(lines.filter((line) => line.source === "model").length, 0);
+    assert.equal(lines.at(-1)!.source, "chat");
+    assert.equal(lines.at(-1)!.seq, next);
+    assert.equal(h.world.get().world!.lastSeq, next);
+  } finally { await h.close(); }
+});
+
+test("chat-only claims are heard literally without moving items or changing anyone's knownItems", async () => {
+  const h = await fixture(["claude", "codex", "deepseek"]);
+  try {
+    h.modify((world) => { world.residents[2]!.placeId = "kitchen"; });
+    await h.talk(); await until(() => h.adapter.runs.length === 1);
+    const before = h.world.get().world!;
+    const knowledge = before.residents.map((resident) => h.world.residentView(before.id, resident.agent).knownItems);
+    const chat = "我已经把书搬到厨房了。\n```js\nthrow 'not executed'\n```\nhttps://example.com";
+    await h.answer(0, { say: { ...greet.say!, intent: { kind: "chat" }, chat }, propose: null });
+    const state = h.world.get(), after = state.world!, line = state.scene!.lines.at(-1)!;
+    assert.equal(line.source, "chat"); assert.equal(line.text, chat);
+    assert.equal(state.scene!.lines.some((value) => value.source === "model"), false);
+    assert.deepEqual(after.items, before.items);
+    assert.deepEqual(after.activities, before.activities);
+    assert.deepEqual(after.commitments, before.commitments);
+    assert.deepEqual(after.player, before.player);
+    assert.deepEqual(after.residents, before.residents);
+    for (const [index, resident] of before.residents.entries()) {
+      const view = h.world.residentView(before.id, resident.agent);
+      assert.deepEqual(view.knownItems, knowledge[index]);
+      assert.equal(view.heard.some((heard) => heard.seq === line.seq && heard.text === chat), resident.agent !== "deepseek");
+      assert.equal(view.seen.some((seen) => seen.seq === line.seq), false);
+    }
+    await h.say("你刚才说了什么？");
+    await h.answer(1, { say: { ...greet.say!, intent: { kind: "recall", seq: line.seq! }, tone: "plain" }, propose: null });
+    assert.equal(h.world.get().scene!.lines.at(-1)!.text, `我记得自己说过：${JSON.stringify(chat)}。这是当时听到的话。`);
+    assert.deepEqual(h.world.get().world!.items, before.items);
+    assert.deepEqual(h.world.residentView(before.id, "claude").knownItems, knowledge[0]);
   } finally { await h.close(); }
 });
 
@@ -165,12 +235,14 @@ test("invalid evidence does not suppress a legal action, and a rejected action d
   const h = await fixture();
   try {
     await h.talk();
-    await h.answer(0, { say: { intent: { kind: "recall", seq: 999 }, tone: "plain", expression: "neutral" }, propose: { type: "start", activity: "tidy", itemId: null } });
+    await h.answer(0, { say: { intent: { kind: "recall", seq: 999 }, tone: "plain", expression: "neutral", chat: "先一起待会儿。" }, propose: { type: "start", activity: "tidy", itemId: null } });
     assert.equal(h.world.get().scene!.lines.filter((line) => line.source === "model").length, 0);
+    assert.equal(h.world.get().scene!.lines.filter((line) => line.source === "chat").at(-1)!.text, "先一起待会儿。");
     assert.equal(h.world.get().world!.activities[0]!.kind, "tidy");
     await h.say("hello");
-    await h.answer(1, { ...greet, propose: { type: "move", to: "kitchen" } });
+    await h.answer(1, { ...chatting, propose: { type: "move", to: "kitchen" } });
     const lines = h.world.get().scene!.lines;
+    assert.equal(lines.at(-3)!.source, "chat");
     assert.equal(lines.at(-2)!.source, "model");
     assert.match(lines.at(-1)!.text, /提议未执行/);
     assert.equal(h.world.get().world!.residents[0]!.placeId, "living_room");
@@ -197,7 +269,7 @@ test("pause invalidates a late response, preserves waiting until resume, and nev
     const old = h.requests[0]!, id = h.world.get().world!.id;
     await h.world.pause(id);
     assert.equal(h.world.get().scene!.state, "waiting");
-    await old.onReply({ ...greet, propose: { type: "take", itemId: "book" } }, h.adapter.runs[0]!.runId);
+    await old.onReply({ ...chatting, propose: { type: "take", itemId: "book" } }, h.adapter.runs[0]!.runId);
     assert.equal(h.world.events(id, undefined, 100).items.filter((event) => event.type === "said").length, 0);
     await h.world.resume(id);
     assert.equal(h.world.get().scene!.state, "open");
@@ -214,11 +286,15 @@ test("closing and resetting discard old responses, while a reset receipt replay 
     const old = h.requests[0]!;
     await h.world.close({ type: "world.scene.close", ...h.base(), sceneId: scene.id });
     await h.runner.drain(); for (let i = 0; i < 4; i++) await turn();
-    await old.onReply(greet, h.adapter.runs[0]!.runId);
+    await old.onReply(chatting, h.adapter.runs[0]!.runId);
     assert.equal(h.world.get().scene, null);
+    assert.equal(h.world.events(h.world.get().world!.id, undefined, 100).items.some((event) => event.type === "said"), false);
     const reset = { ...h.reset, requestId: `wact_${ulid()}`, worldId: h.world.get().world!.id };
     const created = await h.world.reset(reset);
     await h.talk(); await until(() => h.adapter.runs.length === 2);
+    const current = h.world.get();
+    await old.onReply(chatting, h.adapter.runs[0]!.runId);
+    assert.deepEqual(h.world.get(), current, "a closed scene's reply cannot land in the reset world");
     assert.deepEqual(await h.world.reset(reset), created);
     assert.equal(h.adapter.runs[1]!.options.signal.aborted, false);
     await h.answer(1);
@@ -238,6 +314,23 @@ test("lowering the daily limit immediately invalidates the old request and expos
     assert.equal(state.budgets[0]!.used, 1); assert.equal(state.budgets[0]!.limit, 0);
     assert.equal(state.scene!.lines.some((line) => line.source === "model"), false);
     assert.ok(h.events.some((event) => event.type === "world.budget.updated" && event.budgets[0]!.limit === 0));
+  } finally { await h.close(); }
+});
+
+test("resetting a waiting Run discards both late lines and its proposal from the old world", async () => {
+  const h = await fixture();
+  try {
+    await h.talk(); await until(() => h.adapter.runs.length === 1);
+    const old = h.requests[0]!, oldId = h.world.get().world!.id, runId = h.adapter.runs[0]!.runId;
+    await h.restart();
+    await h.talk(); await until(() => h.adapter.runs.length === 2);
+    const before = h.world.get(), oldEvents = h.world.events(oldId, undefined, 100);
+    await old.onReply({ ...chatting, propose: { type: "take", itemId: "book" } }, runId);
+    assert.deepEqual(h.world.get(), before);
+    assert.deepEqual(h.world.events(oldId, undefined, 100), oldEvents);
+    assert.equal(new WorldStore(h.db).getReceipt(`wact_${runId.slice(4)}`), null);
+    await h.answer(1, chatting);
+    assert.deepEqual(h.world.get().scene!.lines.slice(-2).map((line) => line.source), ["chat", "model"]);
   } finally { await h.close(); }
 });
 
@@ -358,11 +451,12 @@ test("reply storage failure rolls back speech, observation, scene and receipt, t
     await h.talk(); await until(() => h.adapter.runs.length === 1);
     const before = h.world.get(), eventCount = h.events.length;
     h.db.exec("CREATE TEMP TRIGGER fail_reply BEFORE INSERT ON world_receipts WHEN NEW.request LIKE '%runId%' BEGIN SELECT RAISE(ABORT,'reply failed'); END");
-    h.adapter.runs[0]!.answer(greet);
+    h.adapter.runs[0]!.answer({ ...chatting, propose: { type: "start", activity: "tidy", itemId: null } });
     await until(() => h.world.get().world!.run.state === "paused");
     for (let i = 0; i < 4; i++) await turn();
     assert.deepEqual(h.world.get().scene, before.scene);
     assert.equal(h.world.get().world!.lastSeq, before.world!.lastSeq);
+    assert.deepEqual(h.world.get().world!.activities, before.world!.activities);
     assert.equal(h.world.residentView(before.world!.id, "codex").heard.length, 0);
     assert.equal(new WorldStore(h.db).getReceipt(`wact_${h.adapter.runs[0]!.runId.slice(4)}`), null);
     assert.equal(h.events.slice(eventCount).some((event) => event.type === "world.event" && event.event.type === "said"), false);
@@ -399,11 +493,12 @@ test("the eighth reply closes scene input immediately; settings, midnight and re
     for (let i = 1; i < 8; i++) {
       assert.equal(h.world.get().scene!.canType, true);
       assert.equal((await h.say("continue " + i)).result.accepted, true);
-      await h.answer(i);
+      await h.answer(i, chatting);
     }
     const exhausted = h.world.get().scene!;
     assert.equal(exhausted.state, "open");
     assert.equal(exhausted.lines.filter((line) => line.source === "model").length, 8, "the eighth reserved reply still commits");
+    assert.equal(exhausted.lines.filter((line) => line.source === "chat").length, 7, "two lines still consume only one scene turn");
     assert.equal(exhausted.canType, false, "no ninth utterance is needed to discover the limit");
     assert.deepEqual((await h.say("ninth attempt")).result, { accepted: false, reason: "not_allowed" });
     await h.settle();

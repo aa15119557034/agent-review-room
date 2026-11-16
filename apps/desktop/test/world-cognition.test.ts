@@ -14,7 +14,7 @@ import type { AgentEvent, WorldBudget, WorldCognitionMode, WorldCognitionReply }
 import { WorldCognitionRunner, WorldRunNotStoppedError, type WorldCognitionOutcome, type WorldCognitionRequest } from "../src/main/world-cognition";
 
 const now = new Date(2026, 10, 16, 12);
-const reply: WorldCognitionReply = { say: { intent: { kind: "respond", feeling: "glad" }, tone: "warm", expression: "neutral" }, propose: null };
+const reply: WorldCognitionReply = { say: { intent: { kind: "respond", feeling: "glad" }, tone: "warm", expression: "neutral", chat: null }, propose: null };
 const output = "```room-world\n" + JSON.stringify(reply) + "\n```";
 function deferred() {
   let resolve!: () => void;

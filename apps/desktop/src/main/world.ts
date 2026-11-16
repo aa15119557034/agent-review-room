@@ -314,15 +314,19 @@ export class WorldService {
       if (receipt) { if (receipt.request !== request) throw new WorldError("invalid_state", "这次世界回应的编号已被使用"); return; }
       let world = this.#world(ticket.worldId);
       const actor: WorldActor = { kind: "resident", agent: ticket.agent };
-      const line = reply.say === null ? null : renderWorldSay(reply.say, {
+      // Ground the fact before recording this reply's chat: it cannot cite its
+      // own soon-to-be-created said event as pre-existing evidence.
+      const fact = reply.say === null ? null : renderWorldSay(reply.say, {
         ...this.#evidence(world, ticket.agent), propose: reply.propose,
         agentNames: Object.fromEntries(world.residents.map((resident) => [resident.agent, this.#deps.agentName?.(resident.agent) ?? resident.agent])),
       });
       const lines: WorldSceneLine[] = [];
-      if (line) {
+      if (reply.say?.chat) lines.push({ text: reply.say.chat, expression: reply.say.expression, speaker: actor, source: "chat", seq: null });
+      if (fact) lines.push({ ...fact, speaker: actor, source: "model", seq: null });
+      for (const line of lines) {
         const event: WorldEvent = { type: "said", seq: world.lastSeq + 1, at: world.now, placeId: world.residents.find((resident) => resident.agent === ticket.agent)!.placeId, speaker: actor, text: line.text, sceneId: ticket.sceneId };
         world = this.#commit(world, { ...world, lastSeq: event.seq }, [event], out);
-        lines.push({ ...line, speaker: actor, source: "model", seq: event.seq });
+        line.seq = event.seq;
       }
       let result: WorldActionResult | null = null;
       if (reply.propose) {

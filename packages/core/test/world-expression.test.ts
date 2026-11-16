@@ -7,7 +7,7 @@ const id = (n: number) => String(n).padStart(26, "0");
 const worldId = "world_" + id(1);
 const A: WorldActor = { kind: "resident", agent: "claude" }, B: WorldActor = { kind: "resident", agent: "codex" };
 const U: WorldActor = { kind: "player" };
-const say = (intent: WorldSay["intent"], tone: WorldSay["tone"] = "plain"): WorldSay => ({ intent, tone, expression: "neutral" });
+const say = (intent: WorldSay["intent"], tone: WorldSay["tone"] = "plain"): WorldSay => ({ intent, tone, expression: "neutral", chat: null });
 
 function fixture() {
   let world = createWorld({ id: worldId, generation: { session: "wses_" + id(1), runSeq: 0 }, settings: { residents: ["claude", "codex", "deepseek"], dailyCognitionLimit: 60, dayRealMinutes: 24 }, asOf: "2026-11-16T00:00:00.000Z" });
@@ -62,6 +62,15 @@ test("eight intents use bounded deterministic evidence, while a rejected proposa
   const current = renderWorldSay(say({ kind: "activity" }), h.input())!;
   assert.match(current.text, /^我正在看书，预计还要\d+分钟。$/);
   assert.deepEqual(current, renderWorldSay(say({ kind: "activity" }), h.input()));
+});
+
+test("chat never becomes a rendered fact or changes the selected fact", () => {
+  const h = fixture(), input = h.input();
+  const chat = "我已经把书搬到厨房了。";
+  assert.equal(renderWorldSay({ ...say({ kind: "chat" }), chat }, input), null);
+  const fact = say({ kind: "item", itemId: "book" });
+  assert.deepEqual(renderWorldSay({ ...fact, chat }, input), renderWorldSay(fact, input));
+  assert.equal(renderWorldSay({ ...say({ kind: "recall", seq: 999 }), chat }, input), null);
 });
 
 test("hidden book movement cannot correct old knowledge, and hearsay is only an attributed quotation", () => {
