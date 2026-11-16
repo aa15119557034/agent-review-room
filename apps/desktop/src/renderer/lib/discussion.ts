@@ -38,6 +38,8 @@ export interface DiscussionState {
   models: Record<string, ModelOption[] | null>;
   /** 确认页正在看的批次（含每个收件人的完整 Snapshot） */
   confirm: { batch: ApprovalBatch; snapshots: PromptSnapshot[] } | null;
+  /** 收到 stale_snapshot 后保留重建提示，重新打开同一批也不重发。 */
+  staleBatchIds: string[];
   /**
    * 讨论室标签的议题列表（C-38）：每个议题读一句话状态用的数据。
    * live = disc 里的 rounds / batches / turns / plans 已经是哪个议题的（这个议题的状态按实时数据算）
@@ -75,6 +77,7 @@ export const initialDiscussion: DiscussionState = {
   plans: [],
   models: {},
   confirm: null,
+  staleBatchIds: [],
   board: { topics: {}, seq: {}, failed: {}, live: null },
   ui: {
     railCollapsed: false,

@@ -1,0 +1,26 @@
+.source-references, .result-display { margin: 16px 0; min-width: 0; }
+.source-references h3 { font-size: 14px; margin: 0 0 10px; }
+.source-references h3 span, .source-reference-status { font-weight: 400; font-size: 12px; }
+.source-reference { border: 1px solid var(--line, #d8d8dc); border-radius: 10px; padding: 12px; margin: 8px 0; min-width: 0; }
+.source-reference summary { cursor: pointer; overflow-wrap: anywhere; }
+.source-reference summary > span:first-child { font-weight: 600; }
+.source-reference-status { display: inline-block; margin-left: 10px; }
+.source-reference dl { margin-bottom: 0; }
+.source-reference dl > div { margin: 10px 0; }
+.source-reference dt, .source-usage dt { font-size: 12px; opacity: .7; }
+.source-reference dd, .source-usage dd { margin: 4px 0 0; overflow-wrap: anywhere; font-size: 13px; white-space: pre-wrap; }
+.source-tool-step { padding: 12px 0; border-bottom: 1px solid var(--line, #d8d8dc); overflow-wrap: anywhere; }
+.source-tool-step > span { margin-left: 12px; font-size: 12px; }
+.source-tool-step p { white-space: pre-wrap; margin: 8px 0; }
+.source-tool-step small { opacity: .7; }
+.source-usage { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.source-unsupported { overflow-wrap: anywhere; font-size: 13px; }
+.source-preview-demo { grid-area: desk; width: 100%; max-width: 1120px; min-width: 0; min-height: 0; padding: 28px; margin: 0 auto; overflow: auto; }
+.source-preview-columns { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; }
+.source-preview-columns h2 { font-size: 18px; }
+.source-demo-controls { border: 0; padding: 0; display: flex; gap: 14px; flex-wrap: wrap; }
+.source-demo-controls legend { margin-bottom: 10px; font-size: 13px; }
+.source-demo-controls label { display: flex; gap: 5px; align-items: center; font-size: 13px; }
+.source-original pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 13px; line-height: 1.8; }
+.source-current-state { font-size: 13px; }
+@media (max-width: 720px) { .source-preview-columns { grid-template-columns: minmax(0, 1fr); gap: 16px; } .source-preview-demo { padding: 18px; } }

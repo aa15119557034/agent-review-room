@@ -4,6 +4,7 @@ import { segmentText, suggestTitle, trimSelection } from "../lib/selection";
 import { selectionWithin } from "./dom-selection";
 import { useActions, useAppState } from "./hooks";
 import { CONTRIBUTION_TYPE_LABEL, formatTime } from "./labels";
+import { SourceReferences } from "./SourceReferences";
 
 const KNOWN_AGENTS = ["deepseek", "codex", "claude", "human"];
 const AGENT_PATTERN = /^[a-z0-9][a-z0-9-]{0,63}$/;
@@ -136,6 +137,7 @@ function SourceItem({ message, contributions }: { message: Message; contribution
         <time dateTime={message.createdAt}>{formatTime(message.createdAt)}</time>
         <span className="source-hint">选中一段文字，标记成片段</span>
       </div>
+      <SourceReferences references={message.sourceRefs} />
       <pre ref={textRef} className="source-text" onMouseUp={capture} onKeyUp={capture} tabIndex={0}>
         {segments.map((s) =>
           s.covers.length ? (
