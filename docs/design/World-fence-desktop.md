@@ -30,8 +30,9 @@ build-agent-server: exit 0
 
 独立审查修复后实际运行 `world-dispatch-config.test.ts`、`world-run-fence.test.ts`、`world-cognition.test.ts`、`world-cognition-integration.test.ts`、`world-node.test.ts` 和 `world-run-bindings.test.ts`，117/117 通过；desktop 和 desktop/e2e 类型检查均 exit 0。新增真实 HTTP 扣住最终 health 后暂停居民、修改模型、profile、URL 四条回归，均未发送旧 POST。退出竞态复审和完整主入口 smoke 另记，不以这些服务测试替代。
 
-## 尚未验收
+## 复审、集成验证与剩余范围
 
-- 本片桌面入口已装配并构建，但完整 Electron 主入口配合真实节点进程的交互 smoke 尚待集成；现有测试使用真实 SQLite/HTTP 与受控 provider 或 adapter。
+- 独立复审固定代码 `c7f7ab32bc1930cd5952b252f82bb6718f4da049` 未发现剩余必须修项：原样重跑最终 health 反例 1/1；按新退出顺序复跑真实 SQLite/WorldService 反例 1/1（第二次 proof 等待期间数据库保持打开，`writesAfterClose=0`、`handoffsRemaining=0`）；客户端与 resolver 相关 73/73。
+- 在包含本片与 #248/#249/#250 的隔离集成 `9b8662390a2f760087641abb827337e5e8d3fc87` 上，实际编译 Electron 主入口、真实节点进程和受控 HTTP provider 完成两组 smoke。正向：世界台词落库、预算扣 1、聊天与讨论均 COMPLETED，3 次受控 provider 请求；反向：预置原账本中没有停止证明的旧 Run，世界/聊天/讨论均无 provider 请求，规则时间继续，暂停退出与再次启动后旧记录仍在、聊天/讨论继续被挡，两个进程均正常退出。测试通过主入口实际注册的 IPC handler 驱动服务，未替换主控组装；不是 GUI 验收。
 - 未调用真实模型，未修改真实节点配置，未证明实际模型输出质量。
-- 独立审查待完成；本片与 3D 分支尚未形成最终可玩交付。各分支测试通过不等于用户验收。
+- 本片与最终 3D 分支尚未形成完整可玩交付。各分支测试通过不等于用户验收。
