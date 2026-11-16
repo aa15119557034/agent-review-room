@@ -376,7 +376,7 @@ export function createAgentServer(
     async close() {
       clearInterval(gc);
       for (const r of runs.values()) if (!r.isFinished) r.shutdown();
-      // terminal(node_shutdown) 要等子进程真的退出才产出（最晚 killGraceMs + 5 秒的兜底）。
+      // terminal(node_shutdown) 要等子进程 close 才产出；杀进程失败或没有 close 时不伪造终态。
       // 先等它写给订阅方、事件流自己结束，再断连接；不然主控端只看到断线，要等租约才知道节点关了（C-49 / A-01）
       const waitStart = Date.now();
       const deadline = waitStart + (hooks.closeWaitMs ?? cfg.killGraceMs + 6_000);
