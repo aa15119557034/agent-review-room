@@ -632,4 +632,18 @@ describe("世界：旧请求的回应晚到（林离 #230 第一轮）", () => {
     assert.deepEqual((sent[0] as { settings: { residents: string[] } }).settings.residents, who);
     assert.deepEqual(t.snap().residents.map((r) => r.agent), who);
   });
+
+  it("开局的回应比推送晚到、世界已经往前走了：设置还是要收下", async () => {
+    const t = await opened();
+    const base: WorldUiState = { ...initialWorld, loaded: true };
+    const first = t.snap();
+    const settings = { dayRealMinutes: 24, dailyCognitionLimit: 60, residents: first.residents.map((r) => r.agent) };
+    const ahead = applySnapshot(base, { ...first, lastSeq: first.lastSeq + 3 });
+    assert.equal(ahead.settings, null);
+    const late = applyWorldState(ahead, { world: first, scene: null, settings, budgets: [] });
+    assert.equal(late.world!.lastSeq, first.lastSeq + 3, "旧快照不用");
+    assert.deepEqual(late.settings, settings);
+    const other = applyWorldState({ ...ahead, settings }, { world: first, scene: null, settings: { ...settings, dayRealMinutes: 48 }, budgets: [] });
+    assert.equal(other.settings!.dayRealMinutes, 24, "手里已经有设置时，旧回应里的不覆盖");
+  });
 });

@@ -158,7 +158,11 @@ export function applyWorldState(state: WorldUiState, data: WorldState): WorldUiS
     };
   }
   const next = applySnapshot(done, data.world);
-  if (next === done) return done;
+  if (next === done) {
+    // 快照比手里的旧（推送先到、世界又往前走了一步）：设置、用量、场景都不用。
+    // 只有一种情况要留：手里还没有设置（刚开局，开局的回应比推送晚到），这一局的设置只能从这份回应里来
+    return done.settings === null && done.world?.id === data.world.id ? { ...done, settings: data.settings } : done;
+  }
   const withRest: WorldUiState = { ...next, settings: data.settings, budgets: data.budgets };
   if (!data.scene) return withRest;
   const withScene = applyScene(withRest, data.scene);
