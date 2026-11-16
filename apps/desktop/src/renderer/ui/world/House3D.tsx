@@ -8,6 +8,7 @@ import { agentColor } from "../../lib/discussion";
 import { ACTIVITY_LABEL, residentLine, type WorldNames } from "../../lib/world";
 import { useActions, useAppState } from "../hooks";
 import { activityAnchor, actorRenderOrder, buildHouse, separateAnchor } from "./house-model";
+import { arrangeHouseLabels, type HouseLabel } from "./house-labels";
 import characterUrl from "../../assets/world/character.glb?url";
 import playerUrl from "../../assets/world/player.glb?url";
 
@@ -16,7 +17,6 @@ interface Avatar {
   kind:string|undefined; bones:Map<string,{bone:T.Bone;original:T.Quaternion;modelRotation:T.Quaternion;direction:T.Vector3}>;
   marker:T.Mesh; agent:string|null; index:number; slot:number;
 }
-interface Label { key:string; x:number; y:number; name:string; activity:string; selected:boolean }
 const v=new T.Vector3();
 
 /** One WebGL scene, reading committed snapshots. Animation has no IPC side effects. */
@@ -26,7 +26,7 @@ export function House3D({world,names,inspectRenderer}:{world:WorldSnapshot;names
   const dialogue=useAppState(s=>s.world.scene);const actions=useActions();
   const current=useRef({world,names,disc,selected,dialogue,actions});
   current.current={world,names,disc,selected,dialogue,actions};
-  const [labels,setLabels]=useState<Label[]>([]);const [error,setError]=useState<string|null>(null);const [loading,setLoading]=useState(true);
+  const [labels,setLabels]=useState<HouseLabel[]>([]);const [error,setError]=useState<string|null>(null);const [loading,setLoading]=useState(true);
   const [focus,setFocus]=useState(0);
   const controlsRef=useRef<{reset:()=>void;zoom:(n:number)=>void}|null>(null);
   useEffect(()=>{
@@ -124,7 +124,7 @@ export function House3D({world,names,inspectRenderer}:{world:WorldSnapshot;names
         if(!moving&&speaking)a.root.rotation.y=Math.atan2(camera.position.x-a.root.position.x,camera.position.z-a.root.position.z);
         else if(!moving)a.root.rotation.y=a.kind==="cook"?Math.PI/2: a.placeId==="kitchen"&&a.kind==="eat"?Math.PI/2:0;
         pose(a,elapsed,moving&&running,speaking);
-        a.marker.visible=a.agent===state.selected||a.agent===null;
+        a.marker.visible=a.agent===(state.selected??state.world.residents[0]?.agent)||a.agent===null;
       }
       // Exactly one visible prop per unique item. A shared reading activity
       // shows one book; occupancy never creates extra inventory instances.
@@ -139,9 +139,9 @@ export function House3D({world,names,inspectRenderer}:{world:WorldSnapshot;names
       }
       if(cameraGoal){camera.position.lerp(cameraGoal.position,1-Math.exp(-dt*4));controls.target.lerp(cameraGoal.target,1-Math.exp(-dt*4));if(camera.position.distanceTo(cameraGoal.position)<.015)cameraGoal=null;}
       controls.update();renderer.render(scene,camera);
-      if(stamp-lastLabels>80){lastLabels=stamp;const rect=element.getBoundingClientRect();const projected:Label[]=[];
-        for(const [key,a]of avatars){v.copy(a.root.position).add(new T.Vector3(0,1.95,0)).project(camera);if(v.z>1||v.x< -1||v.x>1||v.y< -1||v.y>1)continue;projected.push({key,x:(v.x+1)/2*rect.width,y:(1-v.y)/2*rect.height,name:a.agent?state.names.agent(a.agent):"江浩",activity:a.kind?ACTIVITY_LABEL[a.kind as keyof typeof ACTIVITY_LABEL]:"",selected:a.agent===state.selected});}
-        setLabels(projected);
+      if(stamp-lastLabels>80){lastLabels=stamp;const rect=element.getBoundingClientRect();const projected:HouseLabel[]=[];
+        for(const [key,a]of avatars){v.copy(a.root.position).add(new T.Vector3(0,1.95,0)).project(camera);if(v.z>1||v.x< -1||v.x>1||v.y< -1||v.y>1)continue;projected.push({key,x:(v.x+1)/2*rect.width,y:(1-v.y)/2*rect.height,name:a.agent?state.names.agent(a.agent):"江浩",activity:a.kind?ACTIVITY_LABEL[a.kind as keyof typeof ACTIVITY_LABEL]:"",selected:a.agent===(state.selected??state.world.residents[0]?.agent)});}
+        setLabels(arrangeHouseLabels(projected,rect.width,rect.height));
       }
     };animate();
     return()=>{cancelled=true;cancelAnimationFrame(frame);resize.disconnect();controls.dispose();controlsRef.current=null;renderer.domElement.removeEventListener("pointerdown",onDown);renderer.domElement.removeEventListener("click",onClick);dispose([scene,...templates]);renderer.dispose();renderer.domElement.remove();};
