@@ -1,5 +1,6 @@
 import {
   appendRunEvent,
+  assertPromptSourcesCurrent,
   finishRun,
   finishSummaryFromRun,
   finishTurnFromRun,
@@ -123,6 +124,7 @@ export class RunOrchestrator {
       currentState = running.state;
       this.#deps.emit({ type: "run.updated", run: toContractRun(running) });
 
+      assertPromptSourcesCurrent(this.#deps.db, run.snapshot_id, run.project_id);
       const events = adapter.run(session.sessionId, run.id, input, {
         signal: controller.signal,
         onPermissionRequest: async () => ({ decision: "deny", decidedBy: "system" }),
@@ -311,7 +313,7 @@ export class RunOrchestrator {
                 : failure ?? ({ kind: "failed", failureReason: "internal" } as const);
         const finished = await finishTurnFromRun(this.#deps.db, this.#deps.queue, { runId, terminal });
         // D-46a：回答落库成功之后才记笔记（迟到 / 被取代 / 空回答的结果都不记）
-        if (noteExtract !== null && !emptyAnswer) this.#recordNote(discussion.turnId, noteExtract);
+        if (noteExtract !== null && finished.messageId !== null) this.#recordNote(discussion.turnId, noteExtract);
         settlement = {
           turnId: finished.turnId,
           roundId: finished.roundId,

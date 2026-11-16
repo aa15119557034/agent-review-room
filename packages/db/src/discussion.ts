@@ -13,6 +13,7 @@ import type { SqliteDatabase } from "./database";
 import { appendRunEventTx } from "./run-lifecycle";
 import { cancelOpenBatchesTx, cancelRunningTurns } from "./discussion-turn";
 import { writeTransaction, type WriteQueue } from "./write-queue";
+import { assertPromptSourcesCurrent, isChatMessageCurrent, validateSourceRefs } from "./sources";
 
 /**
  * 讨论室的写入路径（ADR-002 / D-21）。
@@ -249,6 +250,7 @@ export class RoundDraftError extends Error {
  * db 不做拼装；这里只核对 contentHash，免得存进去的指纹和内容对不上、盖章时才炸。
  */
 export interface RoundDraftPrompt {
+  sourceRefs?: import("@room/schemas").PromptSnapshot["sourceRefs"];
   content: string;
   /** sha256(UTF-8(content))，由调用方算出；db 会再算一次核对 */
   contentHash: string;
@@ -315,14 +317,15 @@ function assertChatMaterialSourcesCurrentTx(db: SqliteDatabase, ids: readonly st
   if (ids.length === 0) return;
   const rows = db
     .prepare(
-      "SELECT m.id AS id, m.sender AS sender, m.state AS state, p.state AS parentState " +
+      "SELECT m.id AS id, m.conversation_id AS conversationId, m.sender AS sender, m.state AS state, p.state AS parentState " +
         "FROM chat_messages m LEFT JOIN chat_messages p ON p.id = m.in_reply_to " +
         "WHERE m.id IN (" + ids.map(() => "?").join(", ") + ")",
     )
-    .all(...ids) as { id: string; sender: "user" | "agent"; state: string | null; parentState: string | null }[];
+    .all(...ids) as { id: string; conversationId: string; sender: "user" | "agent"; state: string | null; parentState: string | null }[];
+  if (rows.length !== new Set(ids).size) throw new RoundDraftError("chat_material_changed", "chat material source is missing");
   for (const row of rows) {
     const inContext = row.sender === "user" ? row.state === "sent" : row.parentState === "sent";
-    if (!inContext) {
+    if (!inContext || !isChatMessageCurrent(db, row.id, row.conversationId)) {
       throw new RoundDraftError(
         "chat_material_changed",
         "chat material source " + row.id + " was retracted while the prompt was being built",
@@ -393,9 +396,10 @@ function insertBatchTx(
 
     const snapshotId = newSnapshotId();
     const approvalId = newApprovalId();
+    const sourceRefs = validateSourceRefs(db, { projectId: input.projectId }, prompt.sourceRefs);
     db.prepare(
       "INSERT INTO prompt_snapshots (id, project_id, content, content_hash, nonce, contribution_ids, task_instruction, " +
-        "reviewer_agent, adapter_version, token_estimate, project_note_id, created_at) VALUES (?, ?, ?, ?, ?, '[]', ?, ?, ?, ?, ?, ?)",
+        "reviewer_agent, adapter_version, token_estimate, project_note_id, created_at, source_refs) VALUES (?, ?, ?, ?, ?, '[]', ?, ?, ?, ?, ?, ?, ?)",
     ).run(
       snapshotId,
       input.projectId,
@@ -408,6 +412,7 @@ function insertBatchTx(
       prompt.tokenEstimate,
       prompt.projectNoteId ?? null,
       input.createdAt,
+      sourceRefs === undefined ? null : JSON.stringify(sourceRefs),
     );
 
     db.prepare(
@@ -735,6 +740,7 @@ export function createResumeBatch(
           }
         | undefined;
       if (row === undefined) throw new RoundDraftError("turn_not_retryable", agent + " has no paused turn");
+      assertPromptSourcesCurrent(db, row.snapshot_id, round.project_id);
       const override =
         input.models !== undefined && Object.prototype.hasOwnProperty.call(input.models, agent)
           ? input.models[agent] ?? null
@@ -1036,6 +1042,7 @@ export function approveBatch(
       if (actual !== snapshot.content_hash || actual !== item.content_hash || actual !== submitted.expectedContentHash) {
         throw new BatchApproveError("hash_mismatch", `snapshot content of ${item.recipient} does not match its hash`);
       }
+      assertPromptSourcesCurrent(db, item.snapshot_id, batch.project_id);
 
       // C-40：模型/强度也是盖章指纹的一部分。只比较 model + effort；
       // BatchItem 里的 usedFallback / effortSource 是给人看的，不参与。

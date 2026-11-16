@@ -1792,8 +1792,10 @@ describe("C-34 聊天材料进讨论室（D-31c）", () => {
     const h = await makeHarness();
     try {
       const now = seedConversation(h);
-      // 来源消息读不到 → 用材料里存的文本（这里的意图是让最终 Prompt 贴近 2,000,000 上限）
-      addMaterial(h, ["cmsg_" + "9".repeat(26)], "长".repeat(2_000_000), now);
+      // 用真实可读的原文逼近 2,000,000 上限，不借用“原文丢失时回退旧副本”的路径。
+      const ids = Array.from({ length: 100 }, (_, index) => "cmsg_" + String(index).padStart(26, "0"));
+      for (const id of ids) addMessage(h, id, "长".repeat(20_000), now);
+      addMaterial(h, ids, "转入时的副本", now);
 
       const result = await draft(h, ["deepseek"]);
       assert.equal(result.ok, false);
@@ -1807,6 +1809,19 @@ describe("C-34 聊天材料进讨论室（D-31c）", () => {
 });
 
 describe("C-34 材料来源在写事务里复核（D-31c）", () => {
+  it("原文丢失时不把旧材料副本重新放进 Prompt", async () => {
+    const h = await makeHarness();
+    try {
+      const now = new Date().toISOString(), conversationId = "conv_" + "7".repeat(26);
+      h.db.prepare("INSERT INTO conversations (id, kind, direct_agent, title, last_activity_at, created_at) VALUES (?, 'direct', 'deepseek', 'missing', ?, ?)").run(conversationId, now, now);
+      h.db.prepare("INSERT INTO messages (id, project_id, kind, conversation_id, chat_message_ids, content, created_at) VALUES (?, ?, 'chat_material', ?, ?, '不可读来源的旧副本', ?)").run("msg_" + "7".repeat(26), h.projectId, conversationId, JSON.stringify(["cmsg_" + "7".repeat(26)]), now);
+      const result = await draft(h, ["deepseek"]);
+      assert.equal(result.ok, true, JSON.stringify(result));
+      const snapshot = h.db.prepare("SELECT content FROM prompt_snapshots").get() as { content: string };
+      assert.ok(!snapshot.content.includes("不可读来源的旧副本"));
+    } finally { await close(h); }
+  });
+
   it("Prompt 拼好之后来源被撤回：createRoundDraft 拒绝写入", async () => {
     const h = await makeHarness();
     try {

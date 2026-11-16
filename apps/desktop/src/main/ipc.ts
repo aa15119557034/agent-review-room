@@ -2,7 +2,7 @@ import { WorkspaceError } from "@room/db";
 import type { WorkspaceService } from "./workspace";
 import { WorldError, type WorldService } from "./world";
 import type { PacksService } from "./packs";
-import { ApprovalDecisionConflictError, ApprovalNotConsumableError, StaleSnapshotError } from "@room/db";
+import { ApprovalDecisionConflictError, ApprovalNotConsumableError, SourceUnavailableError, StaleSnapshotError } from "@room/db";
 import { testReviewerNode } from "@room/remote-client";
 import {
   APPROVAL_TRANSITIONS,
@@ -85,6 +85,7 @@ const errorResult = (error: ControlErrorCode, message: string): ControlResult<un
 });
 
 function mapError(error: unknown): ControlResult<unknown> {
+  if (error instanceof SourceUnavailableError) return errorResult(error.code, "引用的资料已撤回或不可用，请重新生成 Prompt 后再批准或恢复");
   if (error instanceof WorldError) return errorResult(error.code, error.message);
   if (error instanceof WorkspaceError) return errorResult(error.code, error.message);
   if (error instanceof ControlFailure) {

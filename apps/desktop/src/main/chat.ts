@@ -14,6 +14,7 @@ import {
   renderChatHistoryMessage,
   sha256Hex,
   wrapChatUntrusted,
+  withSourceContext,
   type AgentAdapter,
 } from "@room/core";
 import {
@@ -91,6 +92,11 @@ import {
   getVoiceRecording,
   insertChatRun,
   insertChatSnapshot,
+  isChatMessageCurrent,
+  mergeSourceRefs,
+  resolveSourceReference,
+  sourceRefsCurrent,
+  runSourceRefs,
   listChatMessages,
   listChatMessagesAscending,
   listChatRunsForSlot,
@@ -236,7 +242,7 @@ export class ChatService {
    * 顺序按时间正序，和 core 拼 Prompt 的顺序一致。
    */
   #summariesFor(conversationId: string): ChatHistorySummary[] {
-    return listChatSummaries(this.#deps.db, conversationId).filter((summary) => summary.state === "current");
+    return listChatSummaries(this.#deps.db, conversationId).filter((summary) => summary.state === "current" && sourceRefsCurrent(this.#deps.db, { conversationId }, runSourceRefs(this.#deps.db, summary.runId)));
   }
 
   /**
@@ -545,7 +551,7 @@ export class ChatService {
         );
       snapshots.set(
         agentId,
-        buildChatSnapshot({
+        this.#withSourceContext(buildChatSnapshot({
           snapshotId: "snap_" + ulid(),
           conversationId: conversation.id,
           userMessage: withImages ? message : this.#withImagePlaceholders(message, images),
@@ -563,7 +569,7 @@ export class ChatService {
           ...(promptFiles.length === 0 ? {} : { files: promptFiles }),
           ...(withImages ? { attachments: this.#imageManifest(images) } : {}),
           createdAt: now,
-        }),
+        })),
       );
       adapterIds.set(agentId, "remote:" + agent.chatProfileId);
     }
@@ -776,12 +782,12 @@ export class ChatService {
         agent.chatProfileId,
         model,
       );
-    const snapshot = buildChatSnapshot({
+    const snapshot = this.#withSourceContext(buildChatSnapshot({
       snapshotId: "snap_" + ulid(),
       conversationId: conversation.id,
       userMessage: withImages ? message : this.#withImagePlaceholders(message, images),
       agent: { id: agent.id, displayName: agent.displayName, persona: this.#personaOf(agent) },
-      history: history.filter(this.#inWindowOf(conversation.id, agent.id)),
+      history: history.filter(this.#inWindowOf(conversation.id, agent.id)).filter((item) => isChatMessageCurrent(db, item.id, conversation.id)),
       immersive: this.immersive(conversation.id),
       ...(this.#windowSummaries(conversation.id, agent.id).length === 0
         ? {}
@@ -796,7 +802,7 @@ export class ChatService {
         : { note: this.#deps.notes.latest({ kind: "conversation", conversationId: conversation.id }, agent.id) }),
       ...(withImages ? { attachments: this.#imageManifest(images) } : {}),
       createdAt: now,
-    });
+    }));
 
     const next = await writeTransaction(db, this.#deps.queue, () => {
       const running: ChatReplySlot = {
@@ -945,7 +951,7 @@ export class ChatService {
 
     const finish = async (terminal: ChatRunTerminal, immersivePlan?: { draw: boolean; speak: boolean }): Promise<Awaited<ReturnType<typeof finishChatRun>>> => {
       // 注入时钟（e2e）时，回答消息 / Run 的结束时间要和用户消息用同一个时钟
-      const result = await finishChatRun(db, queue, { runId: run.id, from: current, terminal, immersivePlan, finishedAt: this.#now() });
+      const result = await finishChatRun(db, queue, { runId: run.id, from: current, terminal, immersivePlan, signal: controller.signal, finishedAt: this.#now() });
       if (result.message !== null) this.#emit({ type: "chat.message.created", message: result.message });
       if (result.slot !== null) this.#emit({ type: "chat.slot.updated", slot: result.slot });
       this.#emit({ type: "chat.run.updated", run: result.run });
@@ -990,7 +996,7 @@ export class ChatService {
       const snapshot = getChatSnapshot(db, run.snapshotId);
       if (snapshot === null) throw new Error("chat snapshot missing: " + run.snapshotId);
       // 建快照之后仍有 adapter 初始化等异步间隔；内部 Run 没有回答位，撤回不会直接取消它。
-      if (run.purpose !== "reply" && !this.#snapshotSourcesCurrent(snapshot)) {
+      if (!this.#snapshotSourcesCurrent(snapshot)) {
         throw new ChatError("invalid_state", "来源消息已经撤回，不发送这份快照");
       }
       // C-42a / C-42g / X-34b：带图的 Snapshot 起跑时要把字节和图片位置标记一起交给 Adapter
@@ -1344,7 +1350,7 @@ export class ChatService {
         | undefined)?.n ?? 0;
       if (total <= CHAT_SUMMARY_KEEP_RECENT) return;
 
-      const history = listChatMessagesAscending(db, conversationId);
+      const history = listChatMessagesAscending(db, conversationId).filter((message) => isChatMessageCurrent(db, message.id, conversationId));
       const byId = new Map(history.map((message) => [message.id, message] as const));
       const inReplyToOf = (messageId: string) => {
         const message = byId.get(messageId);
@@ -1358,14 +1364,14 @@ export class ChatService {
 
       // 探测写手期间可能有人撤回；重新读历史并规划，不能拿探测前的对象发给节点。
       const latestPlan = planChatHistorySummary({
-        history: listChatMessagesAscending(db, conversationId),
+        history: listChatMessagesAscending(db, conversationId).filter((message) => isChatMessageCurrent(db, message.id, conversationId)),
         summaries: listChatSummaries(db, conversationId),
         inReplyToOf: this.#inReplyToOf,
       });
       if (latestPlan.kind !== "summarize") return;
 
       const createdAt = this.#now();
-      const snapshot = buildChatSummarySnapshot({
+      const snapshot = this.#withSourceContext(buildChatSummarySnapshot({
         snapshotId: "snap_" + ulid(),
         conversationId,
         agent: { id: writer.agent.id, displayName: writer.agent.displayName },
@@ -1373,7 +1379,7 @@ export class ChatService {
         inReplyToOf: this.#inReplyToOf,
         displayNameOf: writer.displayNameOf,
         createdAt,
-      });
+      }));
       const run: ChatRun = {
         id: "run_" + ulid(),
         kind: "chat",
@@ -1579,10 +1585,30 @@ export class ChatService {
   #snapshotSourcesCurrent(snapshot: ChatSnapshot): boolean {
     if (snapshot.includedMessageIds.some((id) => {
       const message = getChatMessage(this.#deps.db, id);
-      return message === null || isExcludedFromContext(message, this.#inReplyToOf);
+      return message === null || !isChatMessageCurrent(this.#deps.db, id, snapshot.conversationId);
     })) return false;
     const current = new Set(this.#summariesFor(snapshot.conversationId).map((summary) => summary.id));
-    return snapshot.includedSummaryIds.every((id) => current.has(id));
+    return snapshot.includedSummaryIds.every((id) => current.has(id)) && sourceRefsCurrent(this.#deps.db, { conversationId: snapshot.conversationId }, snapshot.sourceRefs);
+  }
+
+  #withSourceContext(snapshot: ChatSnapshot): ChatSnapshot {
+    const { db } = this.#deps;
+    const messageRefs = snapshot.includedMessageIds.map((id) => getChatMessage(db, id)?.sourceRefs);
+    const summaryRefs = snapshot.includedSummaryIds.map((id) => {
+      const row = db.prepare("SELECT run_id FROM chat_summaries WHERE id = ? AND conversation_id = ? AND state = 'current'").get(id, snapshot.conversationId) as { run_id: string } | undefined;
+      return row === undefined ? undefined : runSourceRefs(db, row.run_id);
+    });
+    const refs = mergeSourceRefs([...messageRefs, ...summaryRefs]);
+    return withSourceContext(snapshot, (refs ?? []).map((ref) => {
+      const resolved = resolveSourceReference(db, { conversationId: snapshot.conversationId }, ref);
+      if (ref.source.kind === "chat_message") {
+        const original = getChatMessage(db, ref.source.id);
+        if (original !== null && !this.#inWindowOf(snapshot.conversationId, snapshot.agent)(original)) {
+          return { reference: { ...ref, status: "missing" as const }, content: null };
+        }
+      }
+      return resolved;
+    }));
   }
 
   /** 这位秘书当前的窗口边界：第 1 个窗口 = null（全部消息） */
@@ -1600,7 +1626,7 @@ export class ChatService {
     const boundary = this.#boundary(conversationId, agent);
     const all = listChatMessages(this.#deps.db, conversationId, null, 100).messages.slice().reverse();
     // #187（林离）：撤回的消息、以及回答已撤回消息的发言，不能进交接 Prompt / 交接笔记
-    const visible = all.filter((message) => !isExcludedFromContext(message, this.#inReplyToOf));
+    const visible = all.filter((message) => isChatMessageCurrent(this.#deps.db, message.id, conversationId));
     if (boundary === null) return visible;
     return visible.filter(
       (message) =>
@@ -1645,6 +1671,7 @@ export class ChatService {
   /** 引用的消息在窗口前 → 不展开，只写一句（ADR-005 §4） */
   #quoteFor(agent: string, quote: ChatMessage | null): { quote: ChatMessage | null } | { quote: null; quoteOutsideWindow: true } {
     if (quote === null) return { quote: null };
+    if (!isChatMessageCurrent(this.#deps.db, quote.id, quote.conversationId)) return { quote: null };
     const boundary = this.#boundary(quote.conversationId, agent);
     if (boundary === null) return { quote };
     const inside =
@@ -1688,7 +1715,7 @@ export class ChatService {
     for (const summary of summaries) blocks.push(wrapChatUntrusted(nonce, "历史摘要 " + summary.id, summary.content));
     if (note !== null) blocks.push(wrapChatUntrusted(nonce, "项目笔记（第 " + note.version + " 版）", note.content));
     const content = blocks.join("\n");
-    return {
+    return this.#withSourceContext({
       id: "snap_" + ulid(),
       purpose: "window_handoff",
       conversationId: draft.conversationId,
@@ -1703,7 +1730,7 @@ export class ChatService {
       adapterVersion: "chat-window-handoff-v1",
       tokenEstimate: estimateTokens(content),
       createdAt: now,
-    };
+    });
   }
 
   /** 起一个 purpose = window_handoff 的 Run（没有回答位）；快照和 Run 由调用方放进同一个事务 */
