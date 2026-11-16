@@ -70,6 +70,19 @@ function snapshot() {
   const renderer = f?.renderer;
   if (!renderer) throw new Error('Scene has no exposed renderer');
   const gl = renderer.getContext(), extension = gl.getExtension('WEBGL_debug_renderer_info');
+  let wetProgram = null;
+  if (f.station?.wetRoad) {
+    const material = f.station.wetRoad.material;
+    let renderMeshReferences = 0;
+    f.station.root.traverse(mesh => { if (mesh.isMesh && (Array.isArray(mesh.material) ? mesh.material.includes(material) : mesh.material === material)) renderMeshReferences++; });
+    const program = renderer.properties.get(material).currentProgram?.program;
+    wetProgram = { renderMeshReferences, compiled: Boolean(program), enabled: f.station.wetRoad.enabled };
+    if (program) for (const name of ['uWetEnabled', 'uWetBounds', 'uWetWorldToLocal']) {
+      const location = gl.getUniformLocation(program, name);
+      const value = location ? gl.getUniform(program, location) : null;
+      wetProgram[name] = ArrayBuffer.isView(value) ? Array.from(value) : value;
+    }
+  }
   return {
     ready: window.__worldCapture.sceneReadyMs !== null,
     errors: f.errors || window.__errors || [],
@@ -83,6 +96,16 @@ function snapshot() {
     quality: window.PW ? { autoScaleEnabled: window.PW.auto.on, pipelineScale: window.PW.pipeline.scale } : window.__ctx?.quality || null,
     timing: { firstWebGLDrawMs: window.__worldCapture.firstWebGLDrawMs, sceneReadyMs: window.__worldCapture.sceneReadyMs, firstReadyFrameMs: window.__worldCapture.firstReadyFrameMs, navigation: performance.getEntriesByType('navigation')[0]?.toJSON() },
     views: window.worldBase?.views?.map(v => typeof v === 'string' ? v : v.name) || [],
+    streetscape: f.station?.streetscape ? {
+      addedColliders: f.station.streetscape.addedColliders,
+      instances: f.station.streetscape.instances.map(item => ({ id: item.id, kind: item.kind,
+        lot: item.lot, lotPosition: item.lotPosition, size: item.size,
+        footprint: Object.fromEntries(Object.entries(item.footprint).filter(([key]) => key !== 'collider')) })),
+    } : null,
+    wetRoad: f.station?.wetRoad?.stats || null,
+    wetProgram,
+    skyline: f.skyline ? { ...f.skyline.stats, placements: f.skyline.placements,
+      approaches: f.skyline.approaches, vegetationClear: f.skyline.vegetationClear } : null,
   };
 }
 
@@ -301,6 +324,31 @@ app.whenReady().then(async () => {
       writeReport();
     }
     if (config.scene === 'combined') {
+      stage('capturing-streetscape');
+      report.streetscapeCaptures = [];
+      const detailViews = [
+        { name: '09-streetscape-planters', position: [-2.2, 1.8, 33.5], target: [-5.6, 0.8, 27.5], wet: true },
+        { name: '10-streetscape-sidewall', position: [-3.5, 3.6, 25.8], target: [-9.15, 3.9, 22.365], wet: true },
+        { name: '11-streetscape-skyline', position: [1, 19, -72], target: [-28, 5, -104], wet: true },
+        { name: '12-street-dry', position: [-1.2, 2.4, 36], target: [0, 2.0, -25], wet: false },
+        { name: '13-street-wet', position: [-1.2, 2.4, 36], target: [0, 2.0, -25], wet: true },
+        { name: '14-road-wet-detail', position: [2, 1.35, 31], target: [-1.85, 0.65, 28], wet: true },
+        { name: '15-road-dry-detail', position: [2, 1.35, 31], target: [-1.85, 0.65, 28], wet: false },
+      ];
+      const savedDetailView = await evaluate('window.worldBase.currentView');
+      const savedUi = await evaluate('document.body.classList.contains("hide-ui")');
+      try {
+        for (const view of detailViews) {
+          await evaluate(`(() => { const w=window.worldBase; w.walker.setEnabled(false); w.station.wetRoad.setEnabled(${view.wet}); w.station.toWorld(w.camera.position.fromArray(${JSON.stringify(view.position)}), w.camera.position); const target=w.camera.position.clone().fromArray(${JSON.stringify(view.target)}); w.camera.lookAt(w.station.toWorld(target)); w.camera.updateMatrixWorld(); w.look.pipeline.hasPrev=false; document.body.classList.add('hide-ui'); })()`);
+          await pause(750);
+          const shot = await capture(view.name);
+          report.streetscapeCaptures.push({ ...view, coordinateSpace: 'station local', capture: shot.detail,
+            interpretation: 'Qualitative scene capture; animation remains active, not an isolated pixel comparison.' });
+        }
+      } finally {
+        await evaluate(`window.worldBase.station.wetRoad.setEnabled(true); document.body.classList.toggle('hide-ui', ${savedUi}); window.worldBase.setView(${JSON.stringify(savedDetailView)})`);
+      }
+      writeReport();
       stage('validating-look-controls');
       const saved = await evaluate(`(${lookState.toString()})()`);
       try {

@@ -51,6 +51,51 @@ export function validateStation({ station, walker, camera }) {
     check('open entrance provides a continuous capsule-width passage', maxCorrection < 1e-5, { maxCorrection });
     check('interior floor uses its raised walkable surface', maxHeightError < 1e-6, { expectedFloor: floor, maxHeightError });
 
+    const garden = lotById('W3'), gardenFrame = lotFrame(garden);
+    const gardenPoint = (x, z) => {
+      const point = lotToWorld(garden, x, z);
+      return new THREE.Vector3(point.x,
+        station.physics.groundHeight(point.x, point.z, gardenFrame.y + 0.5), point.z);
+    };
+    const route = gardenPoint(-4, 1.15);
+    let routeFeet = route.y, minSidewalkZ = 1.15, maxSidewalkZ = 1.15, gateCorrection = 0;
+    const c = Math.cos(gardenFrame.rotY), s = Math.sin(gardenFrame.rotY);
+    // Advance from the previous resolved position, as real walking does, so
+    // the capsule can slide around the existing bicycle and sign post.
+    for (let step = 0; step < 80; step++) {
+      const candidate = { x: route.x + c * 0.1, z: route.z - s * 0.1 };
+      station.physics.resolve(candidate, 0.3, routeFeet, 1.7);
+      routeFeet = station.physics.groundHeight(candidate.x, candidate.z, routeFeet);
+      route.set(candidate.x, routeFeet, candidate.z);
+      const localZ = (route.x - gardenFrame.x) * s + (route.z - gardenFrame.z) * c;
+      minSidewalkZ = Math.min(minSidewalkZ, localZ); maxSidewalkZ = Math.max(maxSidewalkZ, localZ);
+    }
+    const endSidewalkX = (route.x - gardenFrame.x) * c - (route.z - gardenFrame.z) * s;
+    for (let step = 0; step <= 32; step++) {
+      gateCorrection = Math.max(gateCorrection, resolve(gardenPoint(-1.3, 1.15 - step * 0.05)).displacement);
+    }
+    check('W3 sidewalk walking clears existing furniture and new planters', endSidewalkX > 3.8 && minSidewalkZ >= 0.6 && maxSidewalkZ <= 1.3,
+      { endLotX: endSidewalkX, minLotZ: minSidewalkZ, maxLotZ: maxSidewalkZ, radius: 0.3, step: 0.1, inputDistance: 8 });
+    check('W3 planters leave the existing garden gate approach clear', gateCorrection < 1e-5, { maxCorrection: gateCorrection });
+    const planterProbes = station.streetscape.instances.filter(item => item.kind === 'planter').map(item => {
+      const bounds = item.footprint;
+      const start = gardenPoint(item.lotPosition[0], 1.15);
+      let feetY = start.y;
+      const advance = z => {
+        const point = lotToWorld(garden, item.lotPosition[0], z);
+        const candidate = { x: point.x, z: point.z };
+        station.physics.resolve(candidate, 0.3, feetY, 1.7);
+        feetY = station.physics.groundHeight(candidate.x, candidate.z, feetY);
+      };
+      for (let step = 1; step <= 17; step++) advance(1.15 - step * 0.05);
+      const onTop = feetY;
+      for (let step = 16; step >= 0; step--) advance(1.15 - step * 0.05);
+      return { id: item.id, expectedTop: bounds.y1, onTop, initialFeet: start.y, finalFeet: feetY,
+        supported: Math.abs(onTop - bounds.y1) < 1e-6, returnedToSidewalk: Math.abs(feetY - start.y) < 1e-6 };
+    });
+    check('low planter tops support approaching feet and release them on exit',
+      planterProbes.length === 2 && planterProbes.every(probe => probe.supported && probe.returnedToSidewalk), planterProbes);
+
     walker.setPose(station.spawn, 4, -8);
     walker.setEnabled(true);
     const before = walker.worldPosition.clone();

@@ -1,7 +1,8 @@
 import * as THREE from 'three';
-import { createIsland } from './island.js';
+import { createIsland, clearVegetationAreas } from './island.js';
 import { createStation } from './station.js';
 import { createLook } from './look.js';
+import { createSkyline } from './skyline.js';
 
 const canvas = document.querySelector('#world');
 const loadMessage = document.querySelector('#load-message');
@@ -104,10 +105,14 @@ async function init() {
     onProgress: stage,
   });
   worldBase.station = station;
-  // ZZZ environments shade with soft gradients; keep the three tones but blend between them.
+  // Interpolate the existing ramp values for softer boundaries between tones.
   const ramp = station.ctx.mat.gradientMap;
   ramp.magFilter = ramp.minFilter = THREE.LinearFilter;
   ramp.needsUpdate = true;
+  worldBase.skyline = createSkyline({ scene, station, island });
+  worldBase.skyline.vegetationClear = clearVegetationAreas(island.terrain,
+    worldBase.skyline.vegetationClearAreas, station.root.matrixWorld);
+  island.meadow._buildCoverGrid(); // Refresh the density cache before its first update.
   walker = station.createWalker(canvas);
   worldBase.walker = walker;
   worldBase.views = [

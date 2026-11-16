@@ -4,6 +4,8 @@ import { batchStatic } from '../upstream/sakuragaoka/src/core/batch2.js';
 import * as layout from '../upstream/sakuragaoka/src/world/layout.js';
 import { createStationWalker } from './station-view.js';
 import { blendStationGround } from './transition.js';
+import { addStreetscape } from './streetscape.js';
+import { applyWetRoad } from './wet-road.js';
 
 // Keep the upstream dependency order. Characters and camera-centred petal shaders
 // are deliberately omitted; the shared island supplies its own petal field.
@@ -76,6 +78,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
     moduleStats[name] = Math.round(performance.now() - start);
     await new Promise(resolve => setTimeout(resolve, 0));
   }
+  const streetscape = addStreetscape({ ctx, root });
   // Facade drops and batching bake matrixWorld. Finish while the detached root
   // is identity, then attach/translate exactly once.
   const wires = ctx.wires.build();
@@ -86,6 +89,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   const clipStart = performance.now();
   const removedMeshes = trimOutside(root, layout.WORLD.play);
   const groundBlend = blendStationGround({ root, terrainMaterial: groundMaterial, bounds: layout.WORLD.play });
+  const wetRoad = applyWetRoad({ root, ctx });
   // These textures belong to the island; the station owns only the blend mesh
   // and material. Disposing the district must not invalidate island rendering.
   const islandTextures = new Set(Object.values(groundMaterial.uniforms).map(uniform => uniform.value).filter(value => value?.isTexture));
@@ -97,6 +101,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   root.rotation.y = rotationY;
   scene.add(root);
   root.updateWorldMatrix(true, true);
+  wetRoad.setTransform(root.matrixWorld);
   clipMaterials(root, layout.WORLD.play);
   const inverse = root.matrixWorld.clone().invert();
   const rotation = root.getWorldQuaternion(new THREE.Quaternion());
@@ -107,7 +112,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   const walkers = new Set();
   const station = {
     root, ctx, physics: ctx.physics, camera, localCamera, bounds, moduleStats, batch,
-    timings: { trimMs, batchMs }, removedMeshes, groundBlend,
+    timings: { trimMs, batchMs }, removedMeshes, groundBlend, streetscape, wetRoad,
     toLocal(position, target = new THREE.Vector3()) { return target.copy(position).applyMatrix4(inverse); },
     toWorld(position, target = new THREE.Vector3()) { return target.copy(position).applyMatrix4(root.matrixWorld); },
     cameraToWorld(position, quaternion) {
@@ -147,6 +152,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
       if (disposed) return;
       disposed = true;
       for (const walker of walkers) walker.dispose();
+      wetRoad.dispose();
       root.removeFromParent();
       const geometries = new Set(), materials = new Set(), textures = new Set();
       root.traverse(object => {

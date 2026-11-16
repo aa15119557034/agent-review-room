@@ -329,6 +329,7 @@ export async function build(ctx) {
   const sortPick = (arr, n) => arr.sort((a, b) => b.pri - a.pri).slice(0, n).map(({ pri, ...s }) => s);
   // spread bike spots: keep high priority first, then every other
   const pub = {
+    buildContext: H, // Reuse the flushed geometry builder and existing prop materials.
     gardenSpots: sortPick(services.gardenSpots, 25),
     bikeSpots: sortPick(services.bikeSpots, 25),
     wallTops: sortPick(services.wallTops, 60),

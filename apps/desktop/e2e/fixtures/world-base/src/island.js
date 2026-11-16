@@ -63,6 +63,33 @@ function clearStationVegetation(terrain) {
   U.uSplatTex.value = texture;
 }
 
+/** Clear only background lots/approaches before Meadow creates its first cells. */
+export function clearVegetationAreas(terrain, areas, localToWorld) {
+  const S = terrain.splatN, cell = World.size / S, changed = new Set();
+  const point = new THREE.Vector3();
+  for (const area of areas) {
+    const bounds = new THREE.Box3();
+    for (const x of [area.minX, area.maxX]) for (const z of [area.minZ, area.maxZ]) {
+      bounds.expandByPoint(point.set(x, 0, z).applyMatrix4(localToWorld));
+    }
+    // Include both bilinear contributors at the edge; this is a texel-support
+    // guard, not an extra geometric margin around the supplied rectangles.
+    const ix0 = Math.max(0, Math.floor((bounds.min.x + World.half) / cell - 0.5));
+    const ix1 = Math.min(S - 1, Math.ceil((bounds.max.x + World.half) / cell - 0.5));
+    const iz0 = Math.max(0, Math.floor((bounds.min.z + World.half) / cell - 0.5));
+    const iz1 = Math.min(S - 1, Math.ceil((bounds.max.z + World.half) / cell - 0.5));
+    for (let iz = iz0; iz <= iz1; iz++) for (let ix = ix0; ix <= ix1; ix++) {
+      const index = (iz * S + ix) * 4;
+      if (terrain.splat[index] || terrain.splat[index + 3]) changed.add(index);
+      terrain.splat[index] = terrain.splat[index + 3] = 0;
+    }
+  }
+  // clearStationVegetation made this DataTexture share the CPU array. Updating
+  // it in place preserves all existing shader references and texture ownership.
+  terrain.splatTex.needsUpdate = true;
+  return { areas, changedTexels: changed.size, texelSizeM: cell, channels: 'R flowers / A grass; G species and B wetness retained' };
+}
+
 async function loadProps(assetBase, terrain) {
   const placements = await json(`${assetBase}/terrain/props.json`);
   const loader = new GLTFLoader();

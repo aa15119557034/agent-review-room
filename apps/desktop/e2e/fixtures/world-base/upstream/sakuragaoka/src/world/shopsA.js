@@ -29,6 +29,7 @@ export async function build(ctx) {
   const f = L.lotFrame(L.lotById('E1'));
   const cafe = out.cafe || {};
   ctx.services.shopsA = {
+    buildContext: C, // Reuse existing prop builders/materials before district batching.
     cafeWindow: cafe.cafeWindow || { x: f.x + 3.8, y: f.y + 1.8, z: f.z + 1.5, rotY: f.rotY, w: 6.8, h: 1.9 },
     cafeTables: cafe.cafeTables || [],
   };
