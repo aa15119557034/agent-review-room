@@ -6,7 +6,7 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 export function craft(scene) {
   const root = new T.Group(); root.name = 'ameakari-diorama'; scene.add(root);
   const features = {}, materials = new Map(), geometries = new Map();
-  const bands = new T.DataTexture(new Uint8Array([55, 105, 175, 255]), 4, 1, T.RedFormat);
+  const bands = new T.DataTexture(new Uint8Array([40, 90, 150, 230, 255]), 5, 1, T.RedFormat);
   bands.minFilter = bands.magFilter = T.NearestFilter; bands.needsUpdate = true;
   function toon(color, emission = 0) {
     const key = `${color}/${emission}`;

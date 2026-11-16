@@ -14,7 +14,7 @@ const scene=new T.Scene();scene.fog=new T.Fog('#263348',30,68);
 const renderer=new T.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
 renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(innerWidth,innerHeight);
 renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;
-renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.02;
+renderer.toneMapping=T.NoToneMapping;
 renderer.outputColorSpace=T.SRGBColorSpace;document.body.appendChild(renderer.domElement);
 const camera=new T.OrthographicCamera(-10,10,9,-9,.1,100);camera.position.set(18,14,22);camera.zoom=1.1;
 const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,2.30,0);controls.enableDamping=true;controls.dampingFactor=.075;
@@ -30,22 +30,23 @@ const statistics=c.batchStatic(),effects=weather(scene,c,shop);
 const bounds=new T.Box3().setFromObject(c.root);
 const target=new T.WebGLRenderTarget(innerWidth,innerHeight,{samples:4,type:T.HalfFloatType});
 const composer=new EffectComposer(renderer,target);composer.addPass(new RenderPass(scene,camera));
-const bloom=new UnrealBloomPass(new T.Vector2(innerWidth,innerHeight),.16,.32,1.25);composer.addPass(bloom);
+const bloom=new UnrealBloomPass(new T.Vector2(innerWidth,innerHeight),.09,.22,1.60);composer.addPass(bloom);
 const outline=new ToonOutlinePass(scene,camera);composer.addPass(outline);composer.addPass(new OutputPass());
 const resize=()=>{const aspect=innerWidth/innerHeight;camera.left=-9*aspect;camera.right=9*aspect;camera.top=9;camera.bottom=-9;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);composer.setSize(innerWidth,innerHeight);};resize();addEventListener('resize',resize);
-let start=performance.now(),previous=start,frame=0;const frameTimes=[];
+let start,previous,frame=0;const frameTimes=[];
 const audit={ready:false,scene,camera,controls,renderer,outline,statistics,features:c.features,bounds:{min:bounds.min.toArray(),max:bounds.max.toArray()},effects,shop,street,elapsed:0,frameTimes,errors:[]};
 window.rainyKonbini=audit;
 addEventListener('error',e=>audit.errors.push(e.message));addEventListener('unhandledrejection',e=>audit.errors.push(String(e.reason)));
 const colors=[new T.Color('#69c5a4'),new T.Color('#ebbe65'),new T.Color('#e88173')];
 function animate(now){
+  if(start===undefined){start=now;previous=now;}
   const t=(now-start)/1000,dt=now-previous;previous=now;if(frame++>15){frameTimes.push(dt);if(frameTimes.length>900)frameTimes.shift();}
-  effects.update(t);
   // Periodic maintenance opening: no invisible person is needed in this empty diorama.
   const phase=t%26;let open=0;if(phase>12&&phase<14)open=T.MathUtils.smoothstep(phase,12,14);else if(phase>=14&&phase<17)open=1;else if(phase>=17&&phase<19)open=1-T.MathUtils.smoothstep(phase,17,19);
   shop.doorLeft.position.x=-.43-open*.78;shop.doorRight.position.x=.43+open*.78;
   shop.signLight.intensity=2.6*(.97+.025*Math.sin(t*.71)+(t%19>18.85?-.06:0));
   const state=Math.floor(t/8)%3;street.signalMats.forEach((mat,i)=>mat.color.copy(colors[i]).multiplyScalar(i===state?1.8:.16));
+  effects.update(t,street.signalMats[state].color);
   controls.update();renderer.info.reset();composer.render();audit.ready=true;audit.elapsed=t;audit.doorOpening=open;requestAnimationFrame(animate);
 }
 renderer.info.autoReset=false;requestAnimationFrame(animate);
