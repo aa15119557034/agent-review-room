@@ -1,7 +1,7 @@
 import { applyWorldAction, advanceWorld, chooseWorldRoutine, createWorld, updateWorldViews } from "@room/core";
 import { WorldStore, acquireWorldLock, ulid, type SqliteDatabase, type WriteQueue } from "@room/db";
 import {
-  WORLD_DAILY_COGNITION_DEFAULT, WORLD_DAY_REAL_MINUTES_DEFAULT,
+  WORLD_DAILY_COGNITION_DEFAULT, WORLD_DAY_REAL_MINUTES_DEFAULT, WORLD_MAX_RESIDENTS,
   type CommandRequest, type ControlErrorCode, type ControlEvent,
   type WorldAction, type WorldActionResult, type WorldActor, type WorldDayReview, type WorldEvent,
   type WorldGeneration, type WorldScene, type WorldSceneResult, type WorldSettings, type WorldSnapshot, type WorldState,
@@ -154,6 +154,9 @@ export class WorldService {
       const old = this.#load()?.world;
       if ((old?.id ?? null) !== request.worldId) throw new WorldError("invalid_state", "当前这一局已经变化，请重新打开世界");
       const settings = request.settings ?? this.#requireSettings();
+      if (settings.residents.length > WORLD_MAX_RESIDENTS) {
+        throw new WorldError("validation_failed", `新的一局最多住 ${WORLD_MAX_RESIDENTS} 位，请重新选择入住名单`);
+      }
       if (settings.residents.length === 0 || new Set(settings.residents).size !== settings.residents.length || settings.residents.some((a) => !this.#deps.knownAgents().includes(a))) {
         throw new WorldError("validation_failed", "请选择已配置的秘书入住");
       }
