@@ -3,6 +3,7 @@ import { selectMemory } from "./memory-folder";
 import { identityProblems, memoryDirOf } from "./node-identity";
 import { lanAddresses } from "./net-info";
 import { createAgentServer } from "./server";
+import { RunLedger } from "./run-ledger";
 
 let loaded;
 try {
@@ -34,7 +35,21 @@ if (Object.values(config.profiles).some((p) => p.memory)) {
   for (const w of sel.warnings) console.warn(`[agent-server] 记忆：${w}`);
 }
 
-const agent = createAgentServer(config, token);
+let ledger: RunLedger | undefined;
+try {
+  if (process.argv.includes("--init-run-fence")) {
+    if (!config.runFenceDir) throw new Error("runFenceDir is required for initialization");
+    const created = await RunLedger.initialize(config.runFenceDir);
+    console.log("[agent-server] Initialized run fence " + created.ledgerId);
+    await created.close();
+    process.exit(0);
+  }
+  if (config.runFenceDir) ledger = await RunLedger.open(config.runFenceDir);
+} catch (error) {
+  console.error("[agent-server] Run fence startup failed: " + (error as Error).message);
+  process.exit(1);
+}
+const agent = createAgentServer(config, token, undefined, { ledger });
 
 agent.server.on("error", (err: NodeJS.ErrnoException) => {
   if (err.code === "EADDRINUSE") console.error(`[agent-server] 端口 ${config.port} 已被占用。改配置里的 port，或关掉占用它的程序。`);

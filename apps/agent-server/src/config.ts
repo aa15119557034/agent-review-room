@@ -141,6 +141,8 @@ export const ServerConfig = z
     maxBodyBytes: z.number().int().positive().default(NODE_MIN_BODY_BYTES_WITH_ATTACHMENTS),
     maxOutputBytes: z.number().int().positive().default(16 * 1024 * 1024),
     finishedRunTtlMs: z.number().int().positive().default(10 * 60_000),
+    /** Optional durable fence ledger. Initialize explicitly before normal startup. */
+    runFenceDir: z.string().min(1).optional(),
     profiles: z.record(ProfileId, Profile),
     /** S-20：这台电脑的 <AgentRoom>（绝对路径，本机 NTFS）。配了记忆的节点必填 */
     homeDir: z.string().min(1).optional(),
@@ -170,6 +172,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): LoadedConfig {
   const raw: unknown = JSON.parse(readFileSync(configPath, "utf8"));
   const config = ServerConfig.parse(raw);
   const baseDir = dirname(configPath);
+  if (config.runFenceDir && !isAbsolute(config.runFenceDir)) config.runFenceDir = resolve(baseDir, config.runFenceDir);
 
   // 相对路径一律相对于配置文件所在目录，避免"从哪个目录启动"影响行为
   for (const p of Object.values(config.profiles)) {

@@ -1,6 +1,6 @@
 # Run fence v1：持久准入记录与停止证据
 
-状态：契约提议，尚未获合并；本次只定义 schema、约束和验收，不提供运行时实现，不启用真实世界模型。
+状态：契约已通过 #244 合并。节点运行时见 [Run-fence-runtime.md](./Run-fence-runtime.md)；desktop 绑定与独立 world profile 仍待后续实现，不启用真实世界模型。
 
 本契约补充现有 AgentServer v1，处理两类已复现问题：创建 POST 迟到时，未知 ID 的取消不能阻止执行；取消已有进程时，计时器曾在没有 `close` 的情况下生成 `finished`。后者的独立修复仍不能替代持久化与重启对账。
 

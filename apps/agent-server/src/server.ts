@@ -4,6 +4,7 @@ import { createServer, type IncomingMessage, type Server, type ServerResponse } 
 import { promisify } from "node:util";
 import {
   CancelRunRequest,
+  RunId,
   NODE_MIN_BODY_BYTES_WITH_ATTACHMENTS,
   REMOTE_PROTOCOL_VERSION,
   StartRunAttachments,
@@ -19,7 +20,8 @@ import {
   type StartRunResponse,
 } from "@room/schemas";
 import type { Profile, ServerConfig } from "./config";
-import { RemoteRun, chatKeyOf } from "./remote-run";
+import { RemoteRun, requestHashOf } from "./remote-run";
+import type { RunLedger } from "./run-ledger";
 import { MemorySlotError, preparePrompt, selectForProfile } from "./chat-memory";
 import { checkModel } from "./model-args";
 import { attachmentProblem, profileMaySeeImages, visionOf } from "./images";
@@ -50,9 +52,34 @@ export function createAgentServer(
   /** 测试可替换读额度的方式；默认起 codex app-server */
   quotaRead?: (profileId: string, profile: Profile) => Promise<RemoteProfileQuota>,
   /** 测试用：替换关闭时的日志输出、关闭时等 Run 收尾的时长（默认 killGraceMs + 6 秒） */
-  hooks: { warn?: (line: string) => void; closeWaitMs?: number } = {},
+  hooks: { warn?: (line: string) => void; closeWaitMs?: number; ledger?: RunLedger; verifyCommit?: (profile: Profile, expected: string) => Promise<void> } = {},
 ): AgentServer {
   const runs = new Map<string, RemoteRun>();
+  const ledger = hooks.ledger;
+  if (Boolean(cfg.runFenceDir) !== Boolean(ledger)) throw new Error("Configured run fence must be opened before creating the server");
+  let closing = false;
+  let closePromise: Promise<void> | undefined;
+  function mutation(expectedLedgerId?: string): void {
+    if (closing) throw new HttpError(503, "internal", "node is closing");
+    const current = ledger?.capability().ledgerId;
+    if (expectedLedgerId !== undefined && expectedLedgerId !== current) throw new HttpError(409, "run_ledger_mismatch", "run ledger changed or is unavailable");
+  }
+  function duplicate(body: StartRunRequest, res: ServerResponse): boolean {
+    mutation(body.expectedLedgerId);
+    const identity = requestHashOf(body), existing = runs.get(body.runId);
+    const saved = ledger?.record(body.runId);
+    if (saved?.requestHash !== undefined && saved.requestHash !== null && saved.requestHash !== identity) {
+      throw new HttpError(409, "run_id_conflict", "runId already used with a different payload");
+    }
+    if (existing) {
+      if (existing.requestHash !== identity) throw new HttpError(409, "run_id_conflict", "runId already used with a different payload");
+      sendJson(res, 200, startResponse(body.runId, "already_exists"));
+      return true;
+    }
+    if (saved) throw new HttpError(409, "run_fenced", "runId is permanently consumed");
+    return false;
+  }
+
   const tokenDigest = sha256Buf(token);
 
   // S-21：Claude 的额度从 Run 的输出里记（rate_limit_event），读的时候直接给最近一次
@@ -66,7 +93,8 @@ export function createAgentServer(
             ? readDeepSeekBalance(p)
             : readCodexQuota(p)),
   );
-  const activeCount = () => [...runs.values()].filter((r) => !r.isFinished).length;
+  const liveCount = () => [...runs.values()].filter((r) => !r.isFinished).length;
+  const activeCount = () => ledger?.unconfirmedCount ?? liveCount();
   const imageProfiles = Object.entries(cfg.profiles)
     .filter(([, p]) => p.imageRun)
     .map(([id]) => id);
@@ -127,6 +155,7 @@ export function createAgentServer(
           imageRuns: imageProfiles.length > 0,
           ...(imageProfiles.length > 0 ? { imageProfiles } : {}),
           quota: Object.values(cfg.profiles).some((p) => p.quota),
+          ...(ledger ? { runFence: ledger.capability() } : {}),
         },
       };
       return sendJson(res, 200, body);
@@ -164,6 +193,24 @@ export function createAgentServer(
     }
 
     const runId = parts[2];
+    if (parts.length === 4 && (parts[3] === "proof" || parts[3] === "cancel")) {
+      if (!RunId.safeParse(runId).success) throw new HttpError(400, "bad_request", "invalid runId");
+      if (req.method === "GET" && parts[3] === "proof") {
+        if (!ledger) throw new HttpError(404, "not_found", "run fence is unavailable");
+        res.setHeader("cache-control", "no-store");
+        return sendJson(res, 200, ledger.proof(runId!));
+      }
+      if (req.method === "POST" && parts[3] === "cancel") {
+        const body = CancelRunRequest.safeParse(await readJson(req));
+        if (!body.success) throw new HttpError(400, "bad_request", "invalid cancel body");
+        mutation(body.data.expectedLedgerId);
+        const run = runs.get(runId!);
+        if (ledger) ledger.fence(runId!); // Unknown cancellation is durable before 202.
+        else if (!run) throw new HttpError(404, "not_found", "unknown run");
+        run?.cancel(body.data.reason);
+        return sendJson(res, 202, { ok: true });
+      }
+    }
     const run = runId ? runs.get(runId) : undefined;
     if (!run) throw new HttpError(404, "not_found", "unknown run");
 
@@ -172,14 +219,6 @@ export function createAgentServer(
       const after = Number(url.searchParams.get("after") ?? "-1");
       if (!Number.isInteger(after) || after < -1) throw new HttpError(400, "bad_request", "invalid after");
       return streamEvents(run, after, req, res);
-    }
-
-    // POST /v1/runs/:id/cancel
-    if (req.method === "POST" && parts.length === 4 && parts[3] === "cancel") {
-      const body = CancelRunRequest.safeParse(await readJson(req));
-      if (!body.success) throw new HttpError(400, "bad_request", "invalid cancel body");
-      run.cancel(body.data.reason);
-      return sendJson(res, 202, { ok: true });
     }
 
     // GET /v1/runs/:id/artifacts/:sha256（契约 C-42b）：取回 image Run 画好的图，取完就丢
@@ -222,21 +261,7 @@ export function createAgentServer(
       throw new HttpError(400, "bad_request", "invalid fields: imageSlot");
     }
 
-    // 幂等：同一个 runId 重复提交
-    const existing = runs.get(reqBody.runId);
-    if (existing) {
-      if (
-        existing.profileId === reqBody.profileId &&
-        existing.contentHash === reqBody.snapshot.contentHash &&
-        sameModel(existing.model, reqBody.model) &&
-        existing.kind === (reqBody.kind ?? "text") &&
-        existing.chatKey === chatKeyOf(reqBody.chat) &&
-        sameList(existing.attachmentShas, (reqBody.attachments ?? []).map((a) => a.sha256))
-      ) {
-        return sendJson(res, 200, startResponse(reqBody.runId, "already_exists"));
-      }
-      throw new HttpError(409, "run_id_conflict", "runId already used with a different payload");
-    }
+    if (duplicate(reqBody, res)) return;
 
     // 只认配置里自己写的 profile：不让 "constructor" / "__proto__" 这类名字取到对象原型上的东西
     const profile = Object.hasOwn(cfg.profiles, reqBody.profileId) ? cfg.profiles[reqBody.profileId] : undefined;
@@ -271,9 +296,11 @@ export function createAgentServer(
     }
 
     if (profile.verifyCommit && reqBody.snapshot.commitSha) {
-      await verifyCommit(profile, reqBody.snapshot.commitSha);
+      await (hooks.verifyCommit ?? verifyCommit)(profile, reqBody.snapshot.commitSha);
     }
 
+    // Recheck after every asynchronous validation; no await follows admission.
+    if (duplicate(reqBody, res)) return;
     if (activeCount() >= cfg.maxConcurrentRuns) {
       throw new HttpError(429, "node_busy", "node is at maxConcurrentRuns");
     }
@@ -304,7 +331,9 @@ export function createAgentServer(
       },
       prepared,
       account === null ? undefined : (info) => claudeQuota.record(account, info),
+      ledger ? (evidence) => ledger.evidence(reqBody.runId, evidence) : undefined,
     );
+    ledger?.admit(reqBody.runId, run.requestHash);
     runs.set(run.runId, run);
     run.start();
     console.log(`[agent-server] run ${run.runId} started (profile=${run.profileId})`);
@@ -373,24 +402,30 @@ export function createAgentServer(
 
   return {
     server,
-    async close() {
-      clearInterval(gc);
-      for (const r of runs.values()) if (!r.isFinished) r.shutdown();
-      // terminal(node_shutdown) 要等子进程真的退出才产出（最晚 killGraceMs + 5 秒的兜底）。
-      // 先等它写给订阅方、事件流自己结束，再断连接；不然主控端只看到断线，要等租约才知道节点关了（C-49 / A-01）
-      const waitStart = Date.now();
-      const deadline = waitStart + (hooks.closeWaitMs ?? cfg.killGraceMs + 6_000);
-      while (activeCount() > 0 && Date.now() < deadline) await new Promise((r) => setTimeout(r, 20));
-      // 超时了还有 Run 没收尾：下面断连接时订阅方只会看到断线、看不到 terminal，要等租约才知道节点关了。
-      // 留一行日志说清是哪个 Run、等了多久；只写 runId，不写 Token、提示词和用户内容
-      const waitedMs = Date.now() - waitStart;
-      for (const r of runs.values()) {
-        if (!r.isFinished) (hooks.warn ?? console.warn)(`[agent-server] 关闭时 run ${r.runId} 还没收尾（等了 ${waitedMs} ms），事件流直接断开，没有 terminal 事件`);
-      }
-      // 给刚写出去的 terminal 一点时间落到 socket 上
-      await new Promise((r) => setTimeout(r, 50));
-      server.closeAllConnections();
-      await new Promise<void>((resolve) => server.close(() => resolve()));
+    close() {
+      if (closePromise) return closePromise;
+      closing = true;
+      closePromise = (async () => {
+        clearInterval(gc);
+        for (const r of runs.values()) if (!r.isFinished) r.shutdown();
+        // terminal(node_shutdown) 要等子进程 close 才产出；杀进程失败或没有 close 时不伪造终态。
+        // 先等它写给订阅方、事件流自己结束，再断连接；不然主控端只看到断线，要等租约才知道节点关了（C-49 / A-01）
+        const waitStart = Date.now();
+        const deadline = waitStart + (hooks.closeWaitMs ?? cfg.killGraceMs + 6_000);
+        while (liveCount() > 0 && Date.now() < deadline) await new Promise((r) => setTimeout(r, 20));
+        // 超时了还有 Run 没收尾：下面断连接时订阅方只会看到断线、看不到 terminal，要等租约才知道节点关了。
+        // 留一行日志说清是哪个 Run、等了多久；只写 runId，不写 Token、提示词和用户内容
+        const waitedMs = Date.now() - waitStart;
+        for (const r of runs.values()) {
+          if (!r.isFinished) (hooks.warn ?? console.warn)(`[agent-server] 关闭时 run ${r.runId} 还没收尾（等了 ${waitedMs} ms），事件流直接断开，没有 terminal 事件`);
+        }
+        // 给刚写出去的 terminal 一点时间落到 socket 上
+        await new Promise((r) => setTimeout(r, 50));
+        server.closeAllConnections();
+        await new Promise<void>((resolve) => server.close(() => resolve()));
+        await ledger?.close();
+        })();
+      return closePromise;
     },
   };
 }
@@ -407,10 +442,6 @@ async function verifyCommit(profile: Profile, expected: string): Promise<void> {
   }
 }
 
-function sameModel(a: StartRunRequest["model"], b: StartRunRequest["model"]): boolean {
-  return a?.model === b?.model && a?.effort === b?.effort;
-}
-
 /**
  * 契约 C-42a：附件本身合法、content 却不以这组附件的清单块开头 → hash_mismatch（不是 bad_request）。
  * 直接按原始请求重算，不依赖 schema 里 refine 的提示文字（汐 #131）
@@ -421,10 +452,6 @@ function manifestMismatch(raw: unknown): boolean {
   const atts = StartRunAttachments.safeParse(r.attachments);
   const content = r.snapshot?.content;
   return atts.success && typeof content === "string" && !content.startsWith(attachmentManifestBlock(atts.data));
-}
-
-function sameList(a: readonly string[], b: readonly string[]): boolean {
-  return a.length === b.length && a.every((x, i) => x === b[i]);
 }
 
 function startResponse(runId: StartRunResponse["runId"], status: StartRunResponse["status"]): StartRunResponse {

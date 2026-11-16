@@ -1,5 +1,6 @@
 import { spawn, type ChildProcess } from "node:child_process";
 import { StringDecoder } from "node:string_decoder";
+import { createHash } from "node:crypto";
 import type { RemoteArtifact, RemoteEvent, RemoteTerminal, RunKind, StartRunRequest } from "@room/schemas";
 import type { Profile, ServerConfig } from "./config";
 import { killTree, spawnDetached } from "./process-tree";
@@ -34,6 +35,8 @@ export class RemoteRun {
   readonly runId: string;
   readonly profileId: string;
   readonly contentHash: string;
+  readonly requestHash: string;
+  private spawnInvoked = false;
   /** 请求里的模型和强度；undefined = 用 profile 自带的 */
   readonly model: StartRunRequest["model"];
   /** 省略 = text（幂等比较前先归一化） */
@@ -70,10 +73,12 @@ export class RemoteRun {
     prepared: PreparedPrompt = { content: req.snapshot.content, promptFinal: null },
     /** S-21：CLI 顺带报的额度交给节点记下（不进事件流） */
     private readonly onRateLimit?: (info: unknown) => void,
+    private readonly onEvidence?: (evidence: "never_spawned" | "closed_process") => void,
   ) {
     this.runId = req.runId;
     this.profileId = req.profileId;
     this.contentHash = req.snapshot.contentHash;
+    this.requestHash = requestHashOf(req);
     this.model = req.model;
     this.kind = req.kind ?? "text";
     this.attachmentShas = (req.attachments ?? []).map((a) => a.sha256);
@@ -162,6 +167,7 @@ export class RemoteRun {
       }
       // Windows 上 .cmd / .bat 会被包装成 cmd.exe /d /s /c "…"，见 win-command.ts
       const plan = planSpawn(this.profile.command, args);
+      this.spawnInvoked = true;
       child = spawn(plan.file, plan.args, {
         cwd: this.profile.cwd,
         env,
@@ -172,6 +178,7 @@ export class RemoteRun {
         shell: false,
       });
     } catch (err) {
+      if (!this.spawnInvoked) this.evidence("never_spawned");
       this.finish({ outcome: "error", reason: "spawn_failed", exitCode: null, message: String(err) });
       return;
     }
@@ -179,8 +186,9 @@ export class RemoteRun {
 
     child.once("spawn", () => this.push({ type: "started", seq: 0, ts: "" }));
     child.once("error", (err) => {
-      // spawn 失败（ENOENT 等）时不会有 close 事件
+      // A missing PID on the spawn error is explicit process-creation failure.
       if (child.pid === undefined) {
+        this.evidence("never_spawned");
         this.finish({ outcome: "error", reason: "spawn_failed", exitCode: null, message: err.message });
       }
     });
@@ -194,6 +202,7 @@ export class RemoteRun {
 
     // 用 close 而不是 exit：保证 stdout/stderr 全部读完后才产出 terminal
     child.once("close", (code) => {
+      if (child.pid !== undefined) this.evidence("closed_process");
       if (this.pendingOutcome) {
         this.finish(this.pendingOutcome);
         return;
@@ -305,9 +314,11 @@ export class RemoteRun {
     this.clearTimers();
     if (this.child && this.child.exitCode === null && this.child.signalCode === null) {
       killTree(this.child, this.cfg.killGraceMs);
-      // 兜底：即使 close 永远不来（管道被某个漏杀的孙进程占着），也保证产出 terminal
-      setTimeout(() => this.finish(outcome), this.cfg.killGraceMs + 5_000).unref();
+      // A kill request or elapsed time does not prove the process stopped.
+      // Until close arrives, retain the Run and its concurrency slot; callers
+      // may time out waiting, but must not receive a fabricated terminal.
     } else if (!this.child) {
+      if (!this.spawnInvoked) this.evidence("never_spawned");
       this.finish(outcome);
     }
   }
@@ -335,6 +346,11 @@ export class RemoteRun {
     this.heldTimer.unref();
     const artifact: RemoteArtifact = got.meta;
     this.finish({ outcome: "completed", exitCode: 0, artifact });
+  }
+
+  private evidence(evidence: "never_spawned" | "closed_process"): void {
+    try { this.onEvidence?.(evidence); }
+    catch { console.error("[agent-server] run " + this.runId + ": stop evidence was not committed"); }
   }
 
   private finish(result: RemoteTerminal): void {
@@ -393,3 +409,11 @@ export class RemoteRun {
 export const chatKeyOf = (chat: StartRunRequest["chat"]): string =>
   chat === undefined ? "none" : chat.memory === null ? "no-memory" : JSON.stringify([chat.memory.nonce, chat.memory.marker]);
 
+
+/** Existing idempotence fields, without persisting content or credentials. */
+export function requestHashOf(req: StartRunRequest): string {
+  return createHash("sha256").update(JSON.stringify([
+    req.profileId, req.snapshot.contentHash, req.model?.model ?? null, req.model?.effort ?? null,
+    req.kind ?? "text", chatKeyOf(req.chat), (req.attachments ?? []).map(a => a.sha256),
+  ])).digest("hex");
+}
