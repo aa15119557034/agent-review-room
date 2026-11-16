@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { CommitSha, IsoTimestamp, RunId, Sha256Hex, SnapshotId, prefixedId } from "./common";
 import { PermissionDecision, PermissionRequest } from "./permission";
+import { ResultDisplay, StructuredResultOptIn } from "./structured-results";
 import {
   AttachmentImageSlot,
   StartRunAttachments,
@@ -34,6 +35,13 @@ import {
 export const REMOTE_PROTOCOL_VERSION = 1 as const;
 
 export const ProfileId = z.string().regex(/^[a-z0-9][a-z0-9-]{0,63}$/);
+
+/** 只有列出的 profile 可接收本次 Run 的显式 opt-in。 */
+export const StructuredResultCapability = StructuredResultOptIn.extend({
+  profiles: z.array(ProfileId).min(1).max(64)
+    .refine((profiles) => new Set(profiles).size === profiles.length, "profile 不能重复"),
+}).strict();
+export type StructuredResultCapability = z.infer<typeof StructuredResultCapability>;
 
 /** 持久 Run 账本的身份；重建账本必须换身份，不能冒充旧账本证明旧 Run 已停。 */
 export const RemoteRunLedgerId = prefixedId("rled");
@@ -264,6 +272,8 @@ export const StartRunRequest = z
     protocol: z.literal(REMOTE_PROTOCOL_VERSION),
     runId: RunId,
     profileId: ProfileId,
+    /** 不支持的节点必须省略；仅能力声明且本次开启才可发 result_display，正文仍完整。 */
+    structuredResults: StructuredResultOptIn.optional(),
     /**
      * 先从 health.capabilities.runFence 协商取得。与当前账本不同则 409 run_ledger_mismatch，不能准入。
      * 最终准入处（所有 await 校验之后）再次按同 RunId 原子核对 fence；持久 admitted 后才可 spawn。
@@ -350,6 +360,9 @@ export const StartRunRequest = z
   )
   .refine((r) => r.kind !== "image" || r.attachments === undefined, "image Run 不能带附件")
   .superRefine((r, ctx) => {
+    if (r.structuredResults !== undefined && (r.kind === "image" || r.expectedWorldProfile !== undefined)) {
+      ctx.addIssue({ code: "custom", path: ["structuredResults"], message: "首片结构化结果仅用于普通文本 Run" });
+    }
     if (r.expectedWorldProfile === undefined) return;
     const reject = (path: string[], message: string) => ctx.addIssue({ code: "custom", path, message });
     if (r.expectedLedgerId === undefined) reject(["expectedLedgerId"], "世界请求必须绑定 ledger");
@@ -436,6 +449,17 @@ export const RemoteEvent = z.discriminatedUnion("type", [
 ]);
 
 /**
+ * 仅成功协商 C11 的消费者使用；RemoteEvent 保留旧格式，纯契约不提前改适配器。
+ * result_display 只能在 started 之后、terminal 之前；usage 可在 message_complete 之后。
+ * terminal 后的展示事件一律丢弃并记诊断；时序约束由消费端执行，单事件 schema 不证明生命周期合法。
+ */
+export const StructuredRemoteEvent = z.discriminatedUnion("type", [
+  ...RemoteEvent.options,
+  z.object({ type: z.literal("result_display"), ...seqd, result: ResultDisplay }).strict(),
+]);
+export type StructuredRemoteEvent = z.infer<typeof StructuredRemoteEvent>;
+
+/**
  * 支持 runFence 的节点对未知 ID 也须先持久禁止创建，才可响应 202 {ok:true}。
  * expectedLedgerId 不匹配则 409 且不修改新账本。202 只是取消已接收，停止证据另查 proof。
  * 已 admitted 的 Run 不能因重启后 PID/对象缺席变成 never_started；同 ID 永不再次启动。
@@ -487,6 +511,7 @@ export const NodeHealth = z.object({
       quota: z.boolean().optional(),
       /** 可协商的持久准入 fence 与按 RunId 查询证据；不改变已有 runs 列表。 */
       runFence: RemoteRunFenceCapability.optional(),
+      structuredResults: StructuredResultCapability.optional(),
       /** 经节点实际校验的隔离映射；缺席/未知 recipe 不可用于世界模型，不按名称推断。 */
       worldProfiles: z.array(WorldProfileCapability).max(64).optional(),
     })
@@ -495,6 +520,9 @@ export const NodeHealth = z.object({
   (h) => (h.memoryProfiles ?? []).every((p) => h.profiles.includes(p)),
   "memoryProfiles 里的 profile 必须都在 profiles 里",
 ).superRefine((h, ctx) => {
+  if (h.capabilities?.structuredResults?.profiles.some((profile) => !h.profiles.includes(profile))) {
+    ctx.addIssue({ code: "custom", path: ["capabilities", "structuredResults", "profiles"], message: "结构化结果 profile 必须在 profiles 中" });
+  }
   const mappings = h.capabilities?.worldProfiles;
   if (mappings === undefined || mappings.length === 0) return;
   const issue = (path: (string | number)[], message: string) => ctx.addIssue({ code: "custom", path, message });
@@ -588,5 +616,12 @@ export type StartRunResponse = z.infer<typeof StartRunResponse>;
 export type RemoteEvent = z.infer<typeof RemoteEvent>;
 export type RemoteTerminal = z.infer<typeof RemoteTerminal>;
 export type NodeHealth = z.infer<typeof NodeHealth>;
+
+/** 已 parse 的契约对象：节点能力与本次请求同时成立才可发新展示事件。不能据此授予工具权限。 */
+export const canEmitStructuredResults = (health: NodeHealth, request: StartRunRequest): boolean =>
+  request.structuredResults?.version === 1 &&
+  health.capabilities?.structuredResults?.version === 1 &&
+  health.capabilities.structuredResults.profiles.includes(request.profileId) &&
+  request.kind !== "image" && request.expectedWorldProfile === undefined;
 export type RemoteRunSummary = z.infer<typeof RemoteRunSummary>;
 export type RemoteErrorCode = z.infer<typeof RemoteErrorCode>;

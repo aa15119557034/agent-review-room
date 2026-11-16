@@ -11,6 +11,9 @@ export const RunId = prefixedId("run");
 export const SnapshotId = prefixedId("snap");
 export const ApprovalId = prefixedId("apr");
 export const PermissionRequestId = prefixedId("perm");
+/** 材料和结构化引用共用；entities.ts 保留原导出位置。 */
+export const MessageId = prefixedId("msg");
+export type MessageId = z.infer<typeof MessageId>;
 
 // ---- 讨论室（ADR-002 / C-20）
 export const RoundId = prefixedId("rnd");
