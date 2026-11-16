@@ -319,6 +319,7 @@ export type WorldSceneCause = z.infer<typeof WorldSceneCause>;
 
 /**
  * 一句显示出来的台词。source = model：她的模型选了要表达什么（WorldSay），句子由 main 按她自己的证据写成（ADR-008 §2）；
+ * chat：她的模型自己写的一句闲聊（WorldSay.chat），原样显示，**不保证事实**（江浩 2026-11-16 选「闲聊自由，事实由程序说」）；
  * rule：规则旁白（模型不在、或她选的内容没有依据被换掉）；
  * user：你打的那句话（speaker 一定是 player）。speaker 是 null 表示旁白。
  * seq：这句话对应的 said 事件；纯旁白没有事件，是 null。回看按 lines 的顺序重放。
@@ -327,7 +328,7 @@ export const WorldSceneLine = z.object({
   speaker: WorldActor.nullable(),
   text: z.string().min(1).max(500),
   expression: WorldExpression,
-  source: z.enum(["model", "rule", "user"]),
+  source: z.enum(["model", "chat", "rule", "user"]),
   seq: WorldSeq.nullable(),
 }).strict().refine((l) => (l.source === "user") === (l.speaker?.kind === "player"), { message: "user 的台词只能是你说的，你说的只能是 user" });
 export type WorldSceneLine = z.infer<typeof WorldSceneLine>;
@@ -519,9 +520,9 @@ export type WorldBudget = z.infer<typeof WorldBudget>;
  * 走现有的文本 Run，只读，不给任何工具权限。
  *
  * - 没有这个代码块、JSON 解析不了、不符合本格式：当作这次没有提议也没有台词，不重试到超出预算
- * - say：她这一刻想表达什么（WorldSay）。**模型不写句子**，只选意图、语气、表情和引用哪条自己的经历；
+ * - say：她这一刻想表达什么（WorldSay）。**带事实的话模型不写句子**，只选意图、语气、表情和引用哪条自己的经历；
  *   显示出来的那句话由 main 按她自己的证据写成。这样「没做成不能说做成了」「旧印象不被全貌纠正」
- *   是靠格式保证的，不是靠事后在自由文字里找关键词
+ *   是靠格式保证的，不是靠事后在自由文字里找关键词。另外可以带一句自己写的闲聊（say.chat），见 WorldSay
  * - propose：她想做的一个动作。main 按当时最新的状态检查，通过才生效
  * - say 和 propose 分开处理：say 引用的东西没有依据时只丢掉 say（或换成规则旁白），propose 照常检查；反过来也一样
  * - 代码块之外的文字一律丢弃，不显示、不记录成观察
@@ -553,7 +554,10 @@ export type WorldTone = z.infer<typeof WorldTone>;
  *   她没看到的后续变化（对方在别的屋取消了）不拿全貌里的当前状态来补，她说的仍是她知道的那一步。
  *   不是她的约定、或她对它没有任何观察，就丢掉这句
  *
- * 引用对不上（不存在、不是这一局的、她没有依据）一律按「这次没有台词」处理，不猜、不改指别的东西。
+ * - chat：这次只有一句闲聊（WorldSay.chat），没有要程序替她说的事实。chat 字段必须有
+ *
+ * 引用对不上（不存在、不是这一局的、她没有依据）一律按「这次没有事实句」处理，不猜、不改指别的东西；
+ * 同一个 say 里的 chat 照常显示。
  * 第一版不做通用知识图谱；要加新的类别，改本文件、走契约 PR。
  */
 export const WorldSayIntent = z.discriminatedUnion("kind", [
@@ -565,10 +569,31 @@ export const WorldSayIntent = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("item"), itemId: WorldItemId }).strict(),
   z.object({ kind: z.literal("recall"), seq: WorldSeq }).strict(),
   z.object({ kind: z.literal("commitment"), commitmentId: WorldCommitmentId }).strict(),
+  z.object({ kind: z.literal("chat") }).strict(),
 ]);
 export type WorldSayIntent = z.infer<typeof WorldSayIntent>;
 
-export const WorldSay = z.object({ intent: WorldSayIntent, tone: WorldTone, expression: WorldExpression }).strict();
+/** 一句闲聊最长多少字 */
+export const WORLD_CHAT_MAX_CHARS = 120;
+
+/**
+ * 她这一刻要说的话，分两部分（江浩 2026-11-16 选「闲聊自由，事实由程序说」）：
+ *
+ * - intent：带事实的那句，由 main 按她自己的证据写（见 WorldSayIntent）
+ * - chat：她的模型自己写的一句闲聊，可以没有（null 或不写）。寒暄、感受、玩笑、接对方的话都行。
+ *   main **原样显示**，不改写、不检查内容，所以不保证事实；它成为一句 source = "chat" 的台词，排在事实句前面
+ *
+ * chat 的边界：
+ * - 做了什么、东西在哪、约定怎么样，要走 intent；提示词里要这样要求模型，但程序不靠查关键词把关
+ * - chat 里说什么都**不改世界**：动作只认 propose，约定只认规则层的事件。她在闲聊里说「我去做饭了」而没有 propose，就是没做
+ * - chat 照常记成一条 said 事件。在场的人得到的是「她说过这句话」，以后只能按转述来用（recall 的 heard 规则），
+ *   不当成事实，也不更新任何人的 knownItems
+ * - 代码块、链接、换行等照纯文字显示，不解释、不执行
+ */
+export const WorldSay = z.object({
+  intent: WorldSayIntent, tone: WorldTone, expression: WorldExpression,
+  chat: z.string().trim().min(1).max(WORLD_CHAT_MAX_CHARS).nullable().default(null),
+}).strict().refine((s) => s.intent.kind !== "chat" || s.chat !== null, { message: "intent 是 chat 时要有 chat 文字" });
 export type WorldSay = z.infer<typeof WorldSay>;
 
 export const WorldCognitionReply = z.object({
