@@ -448,7 +448,11 @@ export const RemoteEvent = z.discriminatedUnion("type", [
   z.object({ type: z.literal("heartbeat"), ts: IsoTimestamp, lastSeq: z.number().int().min(-1) }),
 ]);
 
-/** 仅成功协商 C11 的消费者使用；RemoteEvent 保留旧格式，纯契约不提前改适配器。 */
+/**
+ * 仅成功协商 C11 的消费者使用；RemoteEvent 保留旧格式，纯契约不提前改适配器。
+ * result_display 只能在 started 之后、terminal 之前；usage 可在 message_complete 之后。
+ * terminal 后的展示事件一律丢弃并记诊断；时序约束由消费端执行，单事件 schema 不证明生命周期合法。
+ */
 export const StructuredRemoteEvent = z.discriminatedUnion("type", [
   ...RemoteEvent.options,
   z.object({ type: z.literal("result_display"), ...seqd, result: ResultDisplay }).strict(),

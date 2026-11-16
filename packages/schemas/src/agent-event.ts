@@ -74,7 +74,11 @@ export const AgentEvent = z.discriminatedUnion("type", [
 ]);
 
 export type AgentEvent = z.infer<typeof AgentEvent>;
-/** P2-C11 消费端接线后使用，复用已有事件流/存储，不是另开一条通道。 */
+/**
+ * P2-C11 消费端接线后使用，复用已有事件流/存储，不是另开一条通道。
+ * result_display 只在 Run 启动后、首个终态前消费；usage 可在 message_complete 之后。
+ * 终态后到达的展示事件丢弃并记诊断，不修改终态或旧记录。
+ */
 export const StructuredAgentEvent = z.discriminatedUnion("type", [
   ...AgentEvent.options,
   z.object({ ...base, type: z.literal("result_display"), result: ResultDisplay }).strict(),
