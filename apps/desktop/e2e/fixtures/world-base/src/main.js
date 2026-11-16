@@ -86,7 +86,7 @@ async function init() {
   island = await createIsland({ scene, renderer, camera });
   worldBase.island = island;
   look.applyIsland(island);
-  const sun = new THREE.DirectionalLight(0xffefd9, 2.1);
+  const sun = new THREE.DirectionalLight(0xffe4c4, 2.1);
   sun.position.copy(island.U.uSunDir.value).multiplyScalar(160).add(new THREE.Vector3(...island.stationPlacement.position));
   sun.target.position.set(...island.stationPlacement.position);
   sun.castShadow = true;
@@ -104,6 +104,10 @@ async function init() {
     onProgress: stage,
   });
   worldBase.station = station;
+  // ZZZ environments shade with soft gradients; keep the three tones but blend between them.
+  const ramp = station.ctx.mat.gradientMap;
+  ramp.magFilter = ramp.minFilter = THREE.LinearFilter;
+  ramp.needsUpdate = true;
   walker = station.createWalker(canvas);
   worldBase.walker = walker;
   worldBase.views = [

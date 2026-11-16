@@ -38,7 +38,7 @@ export function createLook(renderer, camera) {
   const toon = { value: 1 };
   Object.assign(pipeline.params, {
     blur: 0, rays: 0, distortion: 0, fringe: 0,
-    bloom: 0.07, exposure: 1.02, saturation: 1.08, contrast: 1.05, vignette: 0.12,
+    bloom: 0.12, exposure: 1.02, saturation: 1.0, contrast: 1.05, vignette: 0.12,
   });
   const mat = pipeline.finalMat;
   Object.assign(mat.uniforms, {
@@ -49,13 +49,13 @@ export function createLook(renderer, camera) {
   mat.fragmentShader = insert(mat.fragmentShader, 'col *= uExposure;', `
     float edge = wbEdge(uv)*uToon;
     vec3 line = mix(col*vec3(0.42,0.38,0.50),vec3(0.027,0.020,0.051),0.35);
-    col = mix(col,line,edge*0.88);
+    col = mix(col,line,edge*0.45); // ZZZ scenes keep only faint silhouettes; strong lines are for characters
     // Anime aerial perspective: distant land fades to a cool sky haze so the
     // island behind the station reads as backdrop. Sky (far plane) and high
     // aerial cameras are left alone.
     float wbD = wbDepth(uv);
     float wbHaze = (1.0-exp(-max(wbD-110.0,0.0)/700.0)) * (1.0-step(uFar*0.9,wbD)) * uHaze * uToon;
-    col = mix(col, vec3(0.62,0.74,0.92)*max(dot(col,vec3(0.2126,0.7152,0.0722))*1.15,0.55), wbHaze*0.62);
+    col = mix(col, vec3(0.80,0.83,0.88)*max(dot(col,vec3(0.2126,0.7152,0.0722))*1.15,0.55), wbHaze*0.72);
     col *= uExposure;`, 'outline stage');
   // Station soft clip below the knee keeps anime mid-tones bright and saturated;
   // ACES stays for the high aerial view (whole-island HDR) and the toon-off comparison.
@@ -65,8 +65,17 @@ export function createLook(renderer, camera) {
     float wbClip = min(wbPeak, 0.72) + 0.28 * (1.0 - exp(-max(wbPeak - 0.72, 0.0) / 0.28));
     col = mix(acesFilm(col * 0.92), col * (wbClip / wbPeak), uToon * uHaze);`, 'tone curve');
   mat.fragmentShader = insert(mat.fragmentShader, 'col = clamp(col, 0.0, 1.0);', `
-    col = mix(col, col*vec3(0.9,0.92,1.1), (1.0-smoothstep(0.08,0.55,l))*0.4*uToon);
-    col += vec3(0.022,0.012,-0.012)*smoothstep(0.55,1.0,l)*uToon;
+    // ZZZ grade (#252 breakdown): muted base, punchy accents; cool shadows that
+    // keep their detail, warm highlights.
+    float wbL = dot(col, vec3(0.2126,0.7152,0.0722));
+    float wbChroma = max(max(col.r,col.g),col.b) - min(min(col.r,col.g),col.b);
+    float wbSky = step(uFar*0.9, wbDepth(uv)) * uHaze;
+    col = mix(col, mix(vec3(wbL), col, 0.86 + 0.9*wbChroma), uToon*(1.0-wbSky));
+    // ZZZ skies are hazy and pale behind the city (refs 1, 5, 7).
+    col = mix(col, mix(vec3(wbL), col, 0.78) + 0.035, wbSky*uToon);
+    col = mix(col, col*vec3(0.92,0.98,1.07), (1.0-smoothstep(0.10,0.50,wbL))*0.6*uToon);
+    col += vec3(0.035,0.016,-0.022)*smoothstep(0.50,1.0,wbL)*uToon;
+    col = mix(col, col*1.04+0.012, (1.0-smoothstep(0.0,0.25,wbL))*uToon);
     col = clamp(col, 0.0, 1.0);`, 'purple shadows');
 
   function applyIsland(island) {
