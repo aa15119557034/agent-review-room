@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { SourceReferences } from "./structured-results";
 import { AudioRef, ChatMessageId, ConversationId, IsoTimestamp, prefixedId, ProjectNoteId, RunId, Sha256Hex, SnapshotId } from "./common";
 import { FailureReason } from "./agent-event";
 import { RunState, RunSubstate } from "./state-machines";
@@ -287,6 +288,7 @@ export type ChatMessageState = z.infer<typeof ChatMessageState>;
 const chatMessageBase = {
   id: ChatMessageId,
   conversationId: ConversationId,
+  sourceRefs: SourceReferences.optional(),
   /** 主控机时间（撤回窗口按它算） */
   createdAt: IsoTimestamp,
 };
@@ -533,6 +535,7 @@ export type ChatAgentOutput = z.infer<typeof ChatAgentOutput>;
 export const ChatSnapshot = z
   .object({
     id: SnapshotId,
+    sourceRefs: SourceReferences.optional(),
     purpose: z.enum(["reply", "history_summary", "window_handoff"]),
     conversationId: ConversationId,
     userMessageId: ChatMessageId.nullable(),

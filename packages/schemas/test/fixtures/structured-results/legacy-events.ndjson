@@ -1,0 +1,5 @@
+{"type":"started","seq":0,"ts":"2026-11-16T00:00:00.000Z"}
+{"type":"text_delta","seq":1,"ts":"2026-11-16T00:00:00.000Z","text":"匿名协议样本："}
+{"type":"message_complete","seq":2,"ts":"2026-11-16T00:00:00.000Z","text":"匿名协议样本：完整正文包含引用 [1]。\n第二行保留中文和 emoji 🌿。"}
+{"type":"terminal","seq":3,"ts":"2026-11-16T00:00:00.000Z","result":{"outcome":"completed","exitCode":0}}
+{"type":"heartbeat","ts":"2026-11-16T00:00:00.000Z","lastSeq":3}

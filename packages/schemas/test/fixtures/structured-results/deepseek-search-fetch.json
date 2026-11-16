@@ -1,0 +1,106 @@
+{
+  "kind": "synthetic_not_live",
+  "provider": "deepseek",
+  "apiPaths": [
+    "/v1/tools/search",
+    "/v1/tools/fetch"
+  ],
+  "docs": "https://api-docs.deepseek.com/guides/search/",
+  "checkedAt": "2026-11-16T00:00:00.000Z",
+  "upstream": {
+    "repository": "https://github.com/deepseek-ai/chat-demo",
+    "commit": "5d5dd754ebc1948e977ddb880a9eb5aa25f37b4c"
+  },
+  "cases": [
+    {
+      "name": "fetch-readable",
+      "request": {
+        "url": "https://example.com/material-a"
+      },
+      "httpStatus": 200,
+      "response": {
+        "title": "匿名资料 A",
+        "content": "# 匿名资料 A\n\n这是合成的可读材料，不含私人信息。"
+      },
+      "expectedReference": {
+        "source": {
+          "kind": "web",
+          "url": "https://example.com/material-a"
+        },
+        "version": "9bd7afe5d5065ee698b2e5cd9c2e3392c2a6e4d7839f11130ff7e79a5db548b2",
+        "contentHash": "9bd7afe5d5065ee698b2e5cd9c2e3392c2a6e4d7839f11130ff7e79a5db548b2",
+        "retrievedAt": "2026-11-16T00:00:00.000Z",
+        "status": "readable"
+      }
+    },
+    {
+      "name": "search-metadata-only",
+      "request": {
+        "query": "匿名资料",
+        "need_content": false
+      },
+      "httpStatus": 200,
+      "response": {
+        "results": [
+          {
+            "rerank_score": 1.6,
+            "title": "匿名摘要",
+            "url": "https://example.com/missing",
+            "snippet": "这里只是摘要",
+            "summary": "摘要不能被当成已经取回的完整正文。",
+            "content": "",
+            "site_name": null,
+            "site_icon": null,
+            "date": null,
+            "authority": -1
+          }
+        ]
+      },
+      "expectedReference": {
+        "source": {
+          "kind": "web",
+          "url": "https://example.com/missing"
+        },
+        "version": null,
+        "contentHash": null,
+        "retrievedAt": "2026-11-16T00:00:00.000Z",
+        "status": "missing"
+      }
+    },
+    {
+      "name": "search-empty",
+      "request": {
+        "query": "不存在的合成资料"
+      },
+      "httpStatus": 200,
+      "response": {
+        "results": []
+      }
+    },
+    {
+      "name": "fetch-unavailable",
+      "request": {
+        "url": "https://example.com/missing"
+      },
+      "httpStatus": 404,
+      "response": {
+        "error": {
+          "message": "synthetic missing content",
+          "type": "invalid_request_error",
+          "param": null,
+          "code": "invalid_request_error"
+        }
+      },
+      "expectedReference": {
+        "source": {
+          "kind": "web",
+          "url": "https://example.com/missing"
+        },
+        "version": null,
+        "contentHash": null,
+        "retrievedAt": "2026-11-16T00:00:00.000Z",
+        "status": "missing"
+      }
+    }
+  ]
+}

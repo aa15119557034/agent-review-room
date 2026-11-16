@@ -12,6 +12,7 @@ import {
   CommitSha,
   ConversationId,
   IsoTimestamp,
+  MessageId,
   prefixedId,
   ProjectNoteId,
   RoundId,
@@ -22,6 +23,7 @@ import {
 } from "./common";
 import { FailureReason } from "./agent-event";
 import { ApprovalState, RunState, RunSubstate } from "./state-machines";
+import { SourceReferences } from "./structured-results";
 
 /**
  * Phase 0 实体（C-01b）。
@@ -29,11 +31,10 @@ import { ApprovalState, RunState, RunSubstate } from "./state-machines";
  */
 
 export const ProjectId = prefixedId("proj");
-export const MessageId = prefixedId("msg");
+export { MessageId } from "./common";
 export const ContributionId = prefixedId("c");
 
 export type ProjectId = z.infer<typeof ProjectId>;
-export type MessageId = z.infer<typeof MessageId>;
 export type ContributionId = z.infer<typeof ContributionId>;
 
 /** 来源 Agent 的名字，例如 "deepseek"、"codex"、"human"。只是标签，不做枚举限制 */
@@ -57,6 +58,7 @@ const messageBase = {
   projectId: ProjectId,
   /** 原文。写入后永不修改（V0.3 §17） */
   content: z.string().min(1).max(2_000_000),
+  sourceRefs: SourceReferences.optional(),
   createdAt: IsoTimestamp,
 };
 
@@ -157,6 +159,7 @@ export type Contribution = z.infer<typeof Contribution>;
 export const PromptSnapshot = z.object({
   id: SnapshotId,
   projectId: ProjectId,
+  sourceRefs: SourceReferences.optional(),
   /** 实际发给 Reviewer 的完整原文。创建后不可修改（AC-4） */
   content: z.string().min(1),
   /** sha256(UTF-8(content))（AC-5） */
