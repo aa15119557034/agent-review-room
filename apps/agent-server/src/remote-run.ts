@@ -415,5 +415,6 @@ export function requestHashOf(req: StartRunRequest): string {
   return createHash("sha256").update(JSON.stringify([
     req.profileId, req.snapshot.contentHash, req.model?.model ?? null, req.model?.effort ?? null,
     req.kind ?? "text", chatKeyOf(req.chat), (req.attachments ?? []).map(a => a.sha256),
+    ...(req.expectedWorldProfile ? [[req.expectedWorldProfile.sourceChatProfileId, req.expectedWorldProfile.recipeVersion]] : []),
   ])).digest("hex");
 }
