@@ -6,9 +6,11 @@
 
 江浩提供日式微缩景观参考，指定 **三渲二**，要求能自由旋转、平移、缩放观看的雨夜便利店街角；画面没有 UI、没有人物。此次只交付独立环境样板。人物自建停止，人物导入和适配留到后续；已下载的公开模型仅本地留存备用。
 
-协作只在 GitHub 进行。C酱已在 [#253 第一轮评审](https://github.com/aa15119557034/agent-review-room/pull/253#issuecomment-6914180828) 提出建模指导；江浩指定先做 1～3，四机位逐步对比后交 C酱复审，4～7 暂不实施。
+协作只在 GitHub 进行。C酱在 [#253 第一轮评审](https://github.com/aa15119557034/agent-review-room/pull/253#issuecomment-6914180828) 提出建模指导，随后在 [第二轮复审](https://github.com/aa15119557034/agent-review-room/pull/253#issuecomment-6914670165) 确认 1～3 通过。江浩指定继续 4～7，先做 4、5 拍原四机位图，再做 6、7。
 
-第二轮已按 1～3 实施并完成本机检查，等待 C酱美术复审。第 1 项将旧 `EdgesGeometry` 改为深度＋法线屏幕空间描边，1080p 标称约 1.8px，统一深靛色，透明玻璃和雨水不参与描线。第 2 项改为五级明暗、`NoToneMapping` 和四处手绘地面光斑／倒影，并移除整场 `Reflector` 渲染。第 3 项把涟漪从 90 降到 30，分布在五片不规则水洼内，峰值透明度 .18，颜色随暖光／青光／蓝色路面区分。四张静帧、录像和渲染报告均已更新到本轮 1～3 的最终状态；每一步的原机位前后对比见 #253 评论。
+第二轮 1～3 实现深度＋法线屏幕空间描边、五级明暗、手绘地面光斑／倒影，以及五片水洼中的 30 个低亮度涟漪。第三轮当前完成 4、5：平顶女儿墙、两台屋顶外机、水箱／管线／检修盖；分层底座、邻宅与绿化、立柱灯箱、停车挡；两台贩卖机移到后巷，路牌／交通灯移离侧窗。同期柔化门前暖光并加入四条窗格倒影，以顶点权重降低地砖法线描线而保留深度轮廓，背景与环境光改为蓝紫夜色。
+
+本页四张 PNG 已更新到 4、5 检查点；录像、性能和动效报告仍是第二轮 1～3 的记录，不能代表当前源文件。6、7 尚未实施；全部完成后才更新一次录像与完整验证。
 
 样板是 `apps/desktop/e2e/fixtures/rainy-konbini/` 中的独立 Three.js 场景，复用 #246 的既有 Three.js 0.187.0、Vite 和 Electron 依赖。因此 PR 叠在 `codex/X-45-world-3d` 上；现有共享小屋的未提交美术改动原样保留。本次没有改世界规则、存档、IPC、模型节点或生产页面入口。
 
@@ -43,7 +45,7 @@ node scripts/preview-rainy-konbini.cjs --build-only
 node scripts/preview-rainy-konbini.cjs --capture
 ```
 
-每一步只拍相同的四个机位、不生成新录像时使用 `--stills`。中间迭代覆盖同名 PNG；本轮只在 1～3 全部完成后覆盖一次录像。
+每一步只拍相同的四个机位、不生成新录像时使用 `--stills`。中间迭代覆盖同名 PNG；第三轮只在 4～7 全部完成后覆盖一次录像。
 
 支持 `--output=<目录>` 与 `--electron=<已有electron.exe路径>`。本机实际使用：
 
@@ -55,7 +57,9 @@ node scripts/preview-rainy-konbini.cjs --capture --electron=D:\codex\2026-11-16\
 
 ## 验证与评审证据
 
-实际执行的 Vite 构建、WebGL 渲染、空 UI 检查、底座 X/Z 边界检查、自动门开合和雨水时间推进检查见 [render-report.json](world-rainy-konbini/render-report.json) 与 [animation-report.json](world-rainy-konbini/animation-report.json)。[source-manifest.json](world-rainy-konbini/source-manifest.json) 记录被检查场景源文件的 SHA-256；本报告不把后续未检查的改动计入结果。
+第三轮 4、5 已实际执行 `node scripts/preview-rainy-konbini.cjs --stills --output=artifacts/rainy-konbini/r3-step45 --electron=D:\codex\2026-11-16\world-implementation\runtime-path-probe\electron.exe`：Vite 构建 29 个模块；四个固定机位截图完成，WebGL 无错误、画布只有一个且场景没有 UI、模型 X/Z 边界均在 ±7 内。[stills-source-manifest.json](world-rainy-konbini/stills-source-manifest.json) 记录这次实拍源文件的 SHA-256。
+
+以下性能、动效和操作数据均为第二轮 1～3 的历史验证：[render-report.json](world-rainy-konbini/render-report.json)、[animation-report.json](world-rainy-konbini/animation-report.json)、[source-manifest.json](world-rainy-konbini/source-manifest.json)。第三轮完整复测待 6、7 完成。
 
 本机 GPU 是 RTX 3060 Laptop，截图视口 1416 × 936，渲染比例 1。第二轮采样 900 帧约 65.00 FPS、p95 15.5ms；绘制调用 650（第一轮 757），三角形 1,259,572，包含法线／深度、颜色和阴影绘制，不能当作其他机器或完整世界的性能保证。尚未做移动端或长期 GPU 稳定性检查。
 
@@ -75,7 +79,7 @@ Windows Computer Use 实际操作已观察到左键拖拽改变观察方向、�
 
 ![背侧窄巷](world-rainy-konbini/04-back.png)
 
-[8 秒实际渲染动效](world-rainy-konbini/rainy-konbini.webm)。
+[第二轮 1～3 的 8 秒实际渲染动效](world-rainy-konbini/rainy-konbini.webm)，不包含本次 4、5 修改。
 
 用户提供的参考图仅作美术方向交流，未作为场景贴图或模型资产使用：
 

@@ -1,9 +1,20 @@
 import * as T from 'three';
+import { neighborhood } from './neighborhood.js';
 
 export function buildStreet(c) {
   const {root,box,cylinder,sphere,tube,rod,group,toon,glow,label,poster,mesh,canvasTexture}=c;
   const iron=toon('#293e50'), steel=toon('#6b868d'), cream=toon('#c4c4ad'), yellow=toon('#c8a668'), red=toon('#b7594e'), mint=toon('#60958b'), dark=toon('#182632'), rubber=toon('#1a2533');
-  const base=group('square-collectible-base');box(14,.72,14,0,-.36,0,toon('#263448'),base,.18);
+  const base=group('square-collectible-base');
+  box(14,.20,14,0,-.62,0,toon('#62575e'),base,.12);
+  box(13.86,.38,13.86,0,-.33,0,toon('#7a686b'),base,.065);
+  box(13.98,.14,13.98,0,-.07,0,toon('#30374e'),base,.065);
+  for(const z of [-6.94,6.94])box(13.80,.025,.025,0,-.54,z,toon('#a18b85'),base,.006);
+  for(const x of [-6.94,6.94])box(.025,.025,13.80,x,-.54,0,toon('#a18b85'),base,.006);
+  for(let i=0;i<28;i++){
+    const x=-6.55+i*.48,y=-.23-(i%3)*.075;
+    box(.10+(i%4)*.025,.033,.025,x,y,6.938,toon(i%2?'#9b8a86':'#5d5864'),base,.012);
+    box(.025,.033,.10+(i%4)*.025,6.938,y,x,toon(i%2?'#8e7c79':'#5d5864'),base,.012);
+  }
   box(13.94,.045,13.94,0,.01,0,toon('#33495d'),base,.06);
   box(13.7,.035,.055,0,-.21,6.97,toon('#607a8b'),base,.01);
   const asphalt=canvasTexture(1024,1024,(g,w,h)=>{
@@ -14,7 +25,7 @@ export function buildStreet(c) {
   const roadmat=new T.MeshToonMaterial({map:asphalt,color:'#aebccb',gradientMap:toon('#ffffff').gradientMap});
   box(13.88,.025,13.88,0,.044,0,roadmat,root,0);
   box(9.7,.21,9.65,-1.55,.14,-1.7,toon('#819292'),root,.055);
-  const pave=[toon('#879b9b'),toon('#91a4a3'),toon('#7f9395')];
+  const pave=[toon('#879b9b'),toon('#91a4a3'),toon('#7f9395')];pave.forEach(mat=>mat.userData.inkWeight=.08);
   for(let ix=0;ix<22;ix++)for(let iz=0;iz<22;iz++){
     const x=-6.15+ix*.438,z=-6.26+iz*.438;
     if(x>-5.85&&x<1.96&&z>-4.96&&z<1.45)continue;
@@ -28,10 +39,11 @@ export function buildStreet(c) {
     for(let k=0;k<4;k++)box(.024,.012,.27,-.105+k*.07,.017,0,toon('#ddc482'),g,.004);
   }
   for(let i=0;i<6;i++)box(2.2,.009,.38,-3.6,.064,3.65+i*.52,toon('#b9ccc8'),root,.012);
-  for(let i=0;i<6;i++)box(.085,.009,.70,5.15,.065,-5.5+i*1.9,toon('#c4b68a'),root,.008);
+  for(let i=0;i<5;i++)box(.085,.009,.70,5.15,.065,-3.7+i*1.9,toon('#c4b68a'),root,.008);
   const park=group('parking-bay',4.05,.066,-1.1);
   for(const x of [-.6,.6])box(.035,.008,2.4,x,0,0,cream,park,0);box(1.25,.008,.035,0,0,-1.2,cream,park,0);
   const p=label('P',.45,.55,0,.008,0,{parent:park,font:110,bg:'#364554',fg:'#c4c4ad'});p.rotation.x=-Math.PI/2;
+  for(const x of [-.34,.34]){box(.43,.11,.15,x,.045,-.94,cream,park,.035);box(.15,.013,.13,x,.106,-.94,yellow,park,.006);}
   // Recessed drainage slots and concentric iron manhole rings.
   for(let i=0;i<8;i++){
     const x=-5.4+i*1.02;box(.76,.025,.16,x,.071,3.34,dark,root,.01);for(let k=0;k<12;k++)box(.017,.016,.15,x-.34+k*.061,.087,3.34,steel,root,0);
@@ -48,8 +60,9 @@ export function buildStreet(c) {
     tube([[-.62,.75,0],[-.58,.86,0],[.58,.86,0],[.62,.75,0]],.045,cream,g);
     rod([-.62,.32,0],[.62,.32,0],.035,cream,g);
   }
-  const vending=group('illuminated-vending-machine',2.48,.27,.11);vending.rotation.y=.10;
-  box(1.03,2.05,.78,0,1.03,0,red,vending,.065);box(.84,1.29,.022,-.035,1.29,.405,dark,vending,.02);
+  function vendingMachine(x,index){
+  const vending=group('illuminated-vending-machine',x,.27,-5.62);vending.rotation.y=Math.PI;
+  box(1.03,2.05,.78,0,1.03,0,index?mint:red,vending,.065);box(.84,1.29,.022,-.035,1.29,.405,dark,vending,.02);
   box(.71,1.15,.015,-.09,1.30,.425,glow('#badce0',.72),vending,.012);
   for(let row=0;row<4;row++)for(let col=0;col<4;col++){
     const x=-.35+col*.17,y=.88+row*.26;
@@ -58,8 +71,10 @@ export function buildStreet(c) {
   }
   box(.73,.17,.12,-.04,.40,.43,dark,vending,.025);box(.44,.05,.04,-.1,.47,.50,steel,vending,.007);
   box(.13,.31,.05,.40,.92,.45,iron,vending,.01);cylinder(.03,.03,.035,.4,1.02,.49,yellow,vending,16).rotation.x=Math.PI/2;
-  label('つめたい',.74,.17,-.03,1.99,.414,{parent:vending,bg:'#295f70',fg:'#e6f2da',font:105,lit:true});
-  const vendingLight=new T.PointLight('#8cdbdf',3,5,1.9);vendingLight.position.set(2.5,1.4,1.2);root.add(vendingLight);
+  label(index?'HOT & COLD':'つめたい',.74,.17,-.03,1.99,.414,{parent:vending,bg:'#295f70',fg:'#e6f2da',font:105,lit:true});
+  }
+  vendingMachine(1.54,0);vendingMachine(2.66,1);
+  const vendingLight=new T.PointLight('#8cdbdf',3,5,1.9);vendingLight.position.set(2.1,1.4,-6.2);root.add(vendingLight);
   // Bins, umbrellas and a detailed bicycle.
   const bins=group('recycling-bins',-5.95,.28,.20);
   for(let i=0;i<2;i++){cylinder(.23,.22,.7,0,.35,-i*.57,toon(i?'#66877e':'#aab5ac'),bins,24);cylinder(.25,.25,.09,0,.73,-i*.57,cream,bins,24);box(.25,.085,.02,0,.63,.235-i*.57,dark,bins,.02);label(i?'缶':'PET',.16,.12,0,.44,.229-i*.57,{parent:bins,font:130});}
@@ -119,22 +134,23 @@ export function buildStreet(c) {
   cylinder(.25,.38,.19,-.85,4.47,0,iron,lamp,32);cylinder(.29,.22,.10,-.85,4.34,0,glow('#ffcf84',2.3),lamp,32);
   const lampLight=new T.PointLight('#ffd38d',12,9,1.8);lampLight.position.set(5.05,4.1,3.2);root.add(lampLight);
   // Two poles and sagging wires stay within the square footprint.
-  for(const [x,z,h]of[[-5.9,-5.7,6.8],[5.8,-5.8,6.2]]){
+  for(const [x,z,h,span]of[[-5.9,-5.7,6.8,1.25],[6.4,-2.75,6.2,.84]]){
     const g=group('utility-pole',x,.08,z);cylinder(.09,.15,h,0,h/2,0,toon('#777e87'),g,24);
-    box(1.25,.09,.12,0,h-.50,0,iron,g,.009);
-    for(const sx of [-.52,0,.52]){cylinder(.045,.045,.20,sx,h-.38,0,cream,g,14);for(let k=0;k<3;k++)cylinder(.065,.065,.025,sx,h-.46+k*.065,0,steel,g,16);}
+    box(span,.09,.12,0,h-.50,0,iron,g,.009);
+    for(const sx of [-span*.416,0,span*.416]){cylinder(.045,.045,.20,sx,h-.38,0,cream,g,14);for(let k=0;k<3;k++)cylinder(.065,.065,.025,sx,h-.46+k*.065,0,steel,g,16);}
     box(.25,.65,.23,0,2.2,.11,iron,g,.025);
     for(let k=0;k<7;k++)box(.25,.055,.24,0,.3+k*.11,.01,toon(k%2?'#d3aa62':'#334052'),g,.005);
   }
-  for(let i=0;i<3;i++)tube([[-6.42+i*.52,6.50,-5.7],[-2.8,5.75,-5.75],[2.3,5.4,-5.77],[5.28+i*.52,5.90,-5.8]],.014,iron,root,48);
+  for(let i=0;i<3;i++)tube([[-6.42+i*.52,6.50,-5.7],[-2.8,5.75,-5.1],[2.3,5.4,-3.9],[6.05+i*.35,5.90,-2.75]],.014,iron,root,48);
   tube([[-5.9,5.1,-5.7],[-4.8,4.45,-5.25],[-4.1,4.03,-4.9]],.021,iron,root,24);
-  const sign=group('street-name-sign',5.8,3.82,-5.75);label('灯町三丁目',1.20,.34,-.2,0,.16,{parent:sign,font:110,bg:'#365d78',fg:'#dfebdf'});
-  const stop=group('stop-sign',3.10,.26,2.05);cylinder(.028,.035,1.9,0,.95,0,steel,stop,16);
+  const sign=group('street-name-sign',6.35,3.82,-2.70);label('灯町三丁目',1.20,.34,-.2,0,.16,{parent:sign,font:110,bg:'#365d78',fg:'#dfebdf'});
+  const stop=group('stop-sign',6.48,.07,.30);cylinder(.028,.035,1.9,0,.95,0,steel,stop,16);
   const triangle=new T.Shape();triangle.moveTo(0,-.32);triangle.lineTo(.36,.27);triangle.lineTo(-.36,.27);triangle.closePath();mesh(new T.ShapeGeometry(triangle),red,[0,1.95,.03],stop);
   label('止まれ',.39,.17,0,1.98,.038,{parent:stop,font:130,bg:'#b7594e',fg:'#fff0d1'});
-  const traffic=group('traffic-signal',6.08,.07,5.93);cylinder(.048,.06,3.32,0,1.66,0,iron,traffic,20);
+  const traffic=group('traffic-signal',-5.45,.07,6.22);cylinder(.048,.06,3.32,0,1.66,0,iron,traffic,20);
   box(.87,.35,.29,-.25,3.25,0,iron,traffic,.1);
   const signalMats=['#629e93','#ba9751','#c85d5b'].map(x=>glow(x,.55));
   for(let i=0;i<3;i++){const o=cylinder(.105,.105,.035,-.52+i*.27,3.25,.17,signalMats[i],traffic,24);o.rotation.x=Math.PI/2;box(.19,.04,.16,-.52+i*.27,3.39,.17,iron,traffic,.01);}
+  neighborhood(c);
   return {signalMats,lampLight,vendingLight};
 }

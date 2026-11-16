@@ -10,7 +10,7 @@ import { buildStreet } from './street.js';
 import { weather } from './weather.js';
 import { ToonOutlinePass } from './outline.js';
 
-const scene=new T.Scene();scene.fog=new T.Fog('#263348',30,68);
+const scene=new T.Scene();scene.fog=new T.Fog('#343052',30,68);
 const renderer=new T.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
 renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(innerWidth,innerHeight);
 renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;
@@ -20,9 +20,9 @@ const camera=new T.OrthographicCamera(-10,10,9,-9,.1,100);camera.position.set(18
 const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,2.30,0);controls.enableDamping=true;controls.dampingFactor=.075;
 controls.minZoom=.65;controls.maxZoom=4;controls.minPolarAngle=.22;controls.maxPolarAngle=1.47;controls.maxTargetRadius=7;controls.rotateSpeed=.65;controls.zoomSpeed=.8;controls.panSpeed=.7;controls.update();
 const c=craft(scene);
-scene.background=c.canvasTexture(2,512,(g,w,h)=>{const gradient=g.createLinearGradient(0,0,0,h);gradient.addColorStop(0,'#20253f');gradient.addColorStop(.65,'#35425a');gradient.addColorStop(1,'#242b43');g.fillStyle=gradient;g.fillRect(0,0,w,h);});
-const hemi=new T.HemisphereLight('#9facdf','#242c43',.60);scene.add(hemi);
-const moon=new T.DirectionalLight('#9db8eb',1.35);moon.position.set(-7,13,5);moon.castShadow=true;
+scene.background=c.canvasTexture(2,512,(g,w,h)=>{const gradient=g.createLinearGradient(0,0,0,h);gradient.addColorStop(0,'#2a2550');gradient.addColorStop(.65,'#3b3f6a');gradient.addColorStop(1,'#272543');g.fillStyle=gradient;g.fillRect(0,0,w,h);});
+const hemi=new T.HemisphereLight('#b2a5e5','#312641',.60);scene.add(hemi);
+const moon=new T.DirectionalLight('#aba9e5',1.35);moon.position.set(-7,13,5);moon.castShadow=true;
 moon.shadow.mapSize.set(2048,2048);moon.shadow.camera.left=-11;moon.shadow.camera.right=11;moon.shadow.camera.top=11;moon.shadow.camera.bottom=-11;moon.shadow.camera.far=35;moon.shadow.normalBias=.035;moon.shadow.bias=-.0003;scene.add(moon);
 const rim=new T.DirectionalLight('#9a8dc3',.45);rim.position.set(9,8,-8);scene.add(rim);
 const street=buildStreet(c),shop=buildStore(c);

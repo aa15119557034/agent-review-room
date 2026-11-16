@@ -15,6 +15,7 @@ export function craft(scene) {
   }
   function glow(color, power = 1) { return new T.MeshBasicMaterial({ color: new T.Color(color).multiplyScalar(power), toneMapped: false }); }
   function mesh(geometry, material, xyz, parent = root, name = '') {
+    if(!geometry.hasAttribute('inkWeight'))geometry.setAttribute('inkWeight',new T.BufferAttribute(new Float32Array(geometry.attributes.position.count).fill(1),1));
     const m = new T.Mesh(geometry, material); m.position.set(...xyz); m.castShadow = true; m.receiveShadow = true; m.name = name; parent.add(m); return m;
   }
   function box(w,h,d,x,y,z,mat,parent=root,r=.025) {
@@ -66,7 +67,9 @@ export function craft(scene) {
     root.traverse(o=>{
       if(!o.isMesh||o.material.transparent||o.userData.dynamic||o.isReflector)return;
       for(let p=o.parent;p&&p!==root;p=p.parent)if(p.userData.dynamic)return;
-      const g=(o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone()).applyMatrix4(o.matrixWorld);const list=batches.get(o.material)??[];list.push(g);batches.set(o.material,list);remove.push(o);
+      const g=(o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone()).applyMatrix4(o.matrixWorld);
+      if(o.material.userData.inkWeight!==undefined)g.setAttribute('inkWeight',new T.BufferAttribute(new Float32Array(g.attributes.position.count).fill(o.material.userData.inkWeight),1));
+      const list=batches.get(o.material)??[];list.push(g);batches.set(o.material,list);remove.push(o);
     });
     for(const o of remove)o.removeFromParent();
     for(const [mat,gs] of batches){const m=mesh(mergeGeometries(gs,false),mat,[0,0,0]);m.name='static-'+mat.uuid;gs.forEach(g=>g.dispose());}

@@ -17,14 +17,21 @@ export function paintedLightPools(scene, time) {
       return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}
     void main(){
       if(abs(vWorld.x)>6.91||abs(vWorld.z)>6.91)discard;
-      bool onPaving=vWorld.x>-6.4&&vWorld.x<3.3&&vWorld.z>-6.525&&vWorld.z<3.125;
+      bool onPaving=vWorld.x>-6.4&&vWorld.x<3.475&&vWorld.z>-6.525&&vWorld.z<3.235;
       if(onPaving!=(sidewalk>.5))discard;
       vec2 q=vec2(vUv.x*2.-1.,1.-vUv.y);
       q.x+=sin(q.y*63.+time*1.3)*.012+sin(q.y*29.-time*.7)*.009;
       float mask;
       if(shape<.5){
-        float width=.64+.32*q.y;
-        mask=(1.-smoothstep(width-.15,width,abs(q.x)))*smoothstep(0.,.09,q.y)*(1.-smoothstep(.20,1.,q.y));
+        float width=.64+.34*q.y;
+        float lengthFade=smoothstep(0.,.08,q.y)*(1.-smoothstep(.08,1.,q.y));
+        float spread=1.-smoothstep(.16,width,abs(q.x));
+        float streaks=0.;
+        for(int i=0;i<4;i++){
+          float center=-.53+float(i)*.34+q.y*.065;
+          streaks+=exp(-pow((q.x-center)/(.022+.022*q.y),2.));
+        }
+        mask=(spread*.68+streaks*.78)*lengthFade;
       }else if(shape<1.5){
         mask=1.-smoothstep(.12,1.,length(vec2(q.x,(q.y-.5)*2.)));
       }else{
@@ -52,9 +59,10 @@ export function paintedLightPools(scene, time) {
     pools.push({name,x,z,width,length});
     return tint;
   }
-  pool('shop-amber-fan',-1.90,3.86,7.8,5.3,'#f8bd75',.66,0);
+  pool('shop-amber-fan',-1.90,3.86,7.8,5.3,'#f6d5a8',.56,0);
   pool('streetlamp-warm-pool',5.03,3.55,3.35,4.2,'#f3c17c',.52,1);
-  pool('vending-cyan-reflection',2.54,2.20,1.65,3.3,'#6acbd5',.54,2);
-  const signal=pool('signal-changing-streak',5.75,5.40,.82,2.65,'#69c5a4',.32,2,.20);
+  pool('vending-cyan-reflection',2.10,-6.27,2.65,1.1,'#6acbd5',.54,2,Math.PI);
+  pool('pylon-soft-reflection',-6.03,4.65,1.45,2.7,'#ced7b5',.22,1);
+  const signal=pool('signal-changing-streak',-5.45,6.0,.82,1.65,'#69c5a4',.32,2,.20);
   return {group,pools,signal,time};
 }

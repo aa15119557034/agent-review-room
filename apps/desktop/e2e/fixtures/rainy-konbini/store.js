@@ -1,4 +1,5 @@
 import * as T from 'three';
+import { buildRoof } from './roof.js';
 
 export function buildStore(c) {
   const {root,box,cylinder,sphere,tube,rod,group,toon,glow,label,poster,mesh}=c;
@@ -8,7 +9,8 @@ export function buildStore(c) {
   const shop=group('convenience-store');
   box(7.7,.22,6.2,-1.95,.22,-1.8,toon('#7b8b8b'),shop,.06);
   box(7.3,.04,5.8,-1.95,.35,-1.8,warm,shop,0);
-  for(let x=-5.35;x<1.6;x+=.6)for(let z=-4.55;z<1.15;z+=.6)box(.58,.009,.58,x,.38,z,toon((Math.round(x*5+z*5)%3)?'#cfc5aa':'#bcbca6',.18),shop,0);
+  const floorMats=[toon('#cfc5aa',.18),toon('#bcbca6',.18)];floorMats.forEach(mat=>mat.userData.inkWeight=.08);
+  for(let x=-5.35;x<1.6;x+=.6)for(let z=-4.55;z<1.15;z+=.6)box(.58,.009,.58,x,.38,z,floorMats[(Math.round(x*5+z*5)%3)?0:1],shop,0);
   box(7.45,3.25,.17,-1.95,1.96,-4.74,cream,shop);
   box(.17,3.25,5.9,-5.65,1.96,-1.85,cream,shop);
   box(7.5,.32,.2,-1.95,.55,1.17,trim,shop);
@@ -38,14 +40,7 @@ export function buildStore(c) {
   label('24',.68,.47,1.05,3.88,1.63,{bg:'#e7bc75',fg:'#264f59',sub:'OPEN',font:130,lit:true,parent:shop});
   box(.15,.69,6.14,2.02,3.88,-1.7,trim,shop,.025);
   const side=label('雨あかり',3.9,.50,2.107,3.87,-1.7,{bg:'#2b6466',fg:'#fff2c2',sub:'OPEN 24 HOURS',font:105,lit:true,parent:shop});side.rotation.y=Math.PI/2;
-  box(7.8,.18,6.18,-1.95,4.0,-1.84,toon('#2f485f'),shop,.06);
-  for(let i=0;i<18;i++)box(.045,.065,6.15,-5.65+i*.44,4.12,-1.84,toon('#47657a'),shop,.012);
-  box(7.98,.06,.12,-1.95,4.15,1.27,metal,shop,.014);
-  box(.12,.08,6.2,1.94,4.13,-1.82,metal,shop,.015);
-  box(1.4,.52,.94,-3.4,4.35,-2.8,metal,shop,.06);
-  for(let n=0;n<10;n++)box(1.25,.025,.028,-3.4,4.18+n*.035,-2.31,dark,shop,0);
-  cylinder(.24,.25,.20,-3.4,4.70,-2.8,dark,shop,36);
-  for(let n=0;n<5;n++)box(.13,.02,.92,-4.8+n*.25,4.13,-4.0,toon('#667686'),shop,.005);
+  buildRoof(c,shop);
   tube([[1.9,3.6,-4.8],[2.06,3.45,-4.8],[2.06,.5,-4.8],[2.2,.22,-4.8]],.055,metal,shop);
   // The reverse side remains a finished service alley when the miniature is rotated.
   const service=group('rear-service-entrance',-.15,.38,-4.84,shop);service.rotation.y=Math.PI;

@@ -13,7 +13,7 @@ export function clusteredPuddles(scene,time,random) {
     {name:'warm-shop-puddle',x:-1.30,z:4.60,rx:2.15,rz:.69,y:.078,color:'#dbad78',count:10},
     {name:'warm-lamp-puddle',x:4.94,z:3.82,rx:1.15,rz:.87,y:.078,color:'#d9b47f',count:7},
     {name:'cool-side-puddle',x:4.53,z:-1.70,rx:.72,rz:1.68,y:.078,color:'#739db8',count:6},
-    {name:'cyan-vending-puddle',x:2.83,z:2.16,rx:.40,rz:.43,y:.280,color:'#78bdc6',count:3},
+    {name:'cyan-vending-puddle',x:2.10,z:-6.29,rx:.88,rz:.19,y:.280,color:'#78bdc6',count:3},
     {name:'cool-front-puddle',x:1.92,z:6.06,rx:1.28,rz:.38,y:.078,color:'#739db8',count:4}
   ];
   const group=new T.Group();group.name='clustered-puddles';scene.add(group);

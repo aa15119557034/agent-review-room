@@ -13,6 +13,13 @@ export class ToonOutlinePass extends Pass {
       depthTexture: new T.DepthTexture(1, 1, T.UnsignedIntType)
     });
     this.normalMaterial = new T.MeshNormalMaterial();
+    this.normalMaterial.onBeforeCompile=shader=>{
+      shader.vertexShader='attribute float inkWeight; varying float vInkWeight;\n'+shader.vertexShader;
+      shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvInkWeight=inkWeight;');
+      shader.fragmentShader='varying float vInkWeight;\n'+shader.fragmentShader;
+      shader.fragmentShader=shader.fragmentShader.replace('diffuseColor.a );','vInkWeight );').replace('gl_FragColor.a = 1.0;','gl_FragColor.a = vInkWeight;');
+    };
+    this.normalMaterial.customProgramCacheKey=()=> 'konbini-normal-ink-weight';
     this.excluded = [];
     scene.traverse(object => {
       if (object.isLine || object.isPoints || object.isReflector ||
@@ -46,7 +53,7 @@ export class ToonOutlinePass extends Pass {
           vec4 sx=-a-2.*d-g+c+2.*f+i,sy=a+2.*b+c-g-2.*h-i;
           float normalEdge=smoothstep(.55,1.30,sqrt(dot(sx.xyz,sx.xyz)+dot(sy.xyz,sy.xyz)));
           float depthEdge=smoothstep(.0035,.009,length(vec2(sx.w,sy.w)));
-          float edge=max(normalEdge*.70,depthEdge);
+          float edge=max(normalEdge*.70*texture2D(tNormal,vUv).a,depthEdge);
           vec4 color=texture2D(tDiffuse,vUv);
           // Never brighten dark roof/wire silhouettes with the ink colour.
           gl_FragColor=vec4(mix(color.rgb,min(color.rgb*.45,ink),edge*.82),color.a);

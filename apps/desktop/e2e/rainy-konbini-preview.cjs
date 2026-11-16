@@ -12,6 +12,8 @@ app.whenReady().then(async()=>{
  await pause(6500);
  const ready=await js(`({ready:window.rainyKonbini?.ready,errors:window.rainyKonbini?.errors,canvas:document.querySelectorAll('canvas').length,ui:[...document.body.children].filter(x=>!['SCRIPT','CANVAS'].includes(x.tagName)).length})`);
  assert.equal(ready.ready,true);assert.equal(ready.ui,0);assert.equal(ready.canvas,1);assert.deepEqual(ready.errors,[]);assert.deepEqual(errors,[]);
+  const bounds=await js('window.rainyKonbini.bounds');
+  for(const axis of [0,2]){assert.ok(bounds.min[axis]>=-7.001,'base contains minimum');assert.ok(bounds.max[axis]<=7.001,'base contains maximum');}
  await snap('01-overview');
  await js(`(()=>{const f=window.rainyKonbini;f.controls.target.set(-1.8,1.6,.2);f.camera.position.set(7,6,16);f.camera.zoom=2.3;f.camera.updateProjectionMatrix();f.controls.update()})()`);await pause(1500);await snap('02-storefront');
  await js(`(()=>{const f=window.rainyKonbini;f.controls.target.set(-1.4,1.35,-1.7);f.camera.position.set(-.3,3.0,9);f.camera.zoom=3.4;f.camera.updateProjectionMatrix();f.controls.update()})()`);await pause(1500);await snap('03-interior');
