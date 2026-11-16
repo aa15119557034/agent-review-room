@@ -1,0 +1,71 @@
+{
+  "ready": true,
+  "errors": [],
+  "elapsed": 35.49919999985695,
+  "statistics": {
+    "authoredMeshes": 2177,
+    "batches": 138
+  },
+  "features": {
+    "square-collectible-base": 1,
+    "tactile-paving": 12,
+    "parking-bay": 1,
+    "cast-iron-manhole": 1,
+    "street-guardrail": 3,
+    "illuminated-vending-machine": 1,
+    "recycling-bins": 1,
+    "umbrella-stand": 1,
+    "bicycle": 2,
+    "bicycle-basket": 2,
+    "neighborhood-noticeboard": 1,
+    "air-conditioner": 2,
+    "delivery-crate": 3,
+    "potted-rain-garden": 4,
+    "street-lamp": 1,
+    "utility-pole": 2,
+    "street-name-sign": 1,
+    "stop-sign": 1,
+    "traffic-signal": 1,
+    "convenience-store": 1,
+    "automatic-door": 1,
+    "door-left": 1,
+    "door-right": 1,
+    "rear-service-entrance": 1,
+    "electrical-meter-cabinets": 1,
+    "stocked-grocery-shelf": 2,
+    "refrigerated-drinks": 1,
+    "cashier-coffee-and-oden": 1,
+    "oden-display": 1,
+    "ice-cream-freezer": 1,
+    "magazine-rack": 1,
+    "staff-door": 1
+  },
+  "frameCount": 900,
+  "fps": 65.00072223024698,
+  "p95Ms": 15.5,
+  "drawCalls": 757,
+  "triangles": 1283547,
+  "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "width": 1416,
+  "height": 936,
+  "pixelRatio": 1,
+  "doorOpening": 0,
+  "rainTime": 35.49919999985695,
+  "reflectionTime": 35.49919999985695,
+  "memory": {
+    "geometries": 166,
+    "textures": 58
+  },
+  "bounds": {
+    "min": [
+      -7,
+      -0.7200000286102295,
+      -7
+    ],
+    "max": [
+      7,
+      6.880000114440918,
+      7
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "head": "b5f61f04a470015f0e40cc69d81d6c7d6b4dc5ff",
+  "files": {
+    "craft.js": "81ff582115ccb6dfae32e35009d090f2dd69ffb54783ec483b585700b0aef46c",
+    "index.html": "8c4c696e0cd9c3c125be3817939098095f63461172decc9fa32ba93f04c1a1e9",
+    "main.js": "0577bd557f1da6548a310113faba4cef79b1a24e49fc38c8f79e9507e09d0b97",
+    "store.js": "924756f5aab6ca2db42e77fffc659fa76bf56b69c4b551fb37327232ccaf59f8",
+    "street.js": "3f8dbf83d0826c533f9d83274572eeb4d886ab61b95191a77c3ef8f1f6fd4b3e",
+    "weather.js": "f2cbb4676d437901b9a4b5eadd0bd631dc7b2080daf3b563fdc931ce4eeb91e2"
+  },
+  "capturedAt": "2026-11-16T10:21:27.038Z"
+}

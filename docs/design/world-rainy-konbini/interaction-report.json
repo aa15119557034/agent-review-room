@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-11-16T10:27:47.224Z",
+  "observer": "林离",
+  "method": "Windows Computer Use native drag/scroll and before/after screenshots on the running Electron preview",
+  "observed": {
+    "leftDragRotates": true,
+    "rightDragPans": true,
+    "wheelZooms": true
+  },
+  "limitations": [
+    "Desktop screenshots cover only part of the window under the current high-DPI configuration; repository scene screenshots use Electron webContents.capturePage.",
+    "No touch/mobile interaction or long-duration GPU soak test performed."
+  ]
+}
