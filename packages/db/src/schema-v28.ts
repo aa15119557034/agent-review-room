@@ -1,7 +1,6 @@
-import { StructuredAgentEvent, TERMINAL_EVENT_TYPES } from "@room/schemas";
-
-const eventTypes = StructuredAgentEvent.options.map((option) => `'${option.shape.type.value}'`).join(", ");
-const terminalTypes = TERMINAL_EVENT_TYPES.map((type) => `'${type}'`).join(", ");
+// Migration history is frozen: future event types require a new migration.
+const eventTypes = "'message_delta', 'message_complete', 'output', 'permission_request', 'permission_resolved', 'status', 'prompt_final', 'completed', 'error', 'cancelled', 'timed_out', 'result_display'";
+const terminalTypes = "'completed', 'error', 'cancelled', 'timed_out'";
 const sourceRefs = `TEXT CHECK (source_refs IS NULL OR
   (json_valid(source_refs) AND json_type(source_refs) = 'array' AND json_array_length(source_refs) BETWEEN 1 AND 100))`;
 

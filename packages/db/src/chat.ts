@@ -37,7 +37,8 @@ import { assertTransition } from "@room/core";
 import type { SqliteDatabase } from "./database";
 import { ulid } from "./ulid";
 import { writeTransaction, type WriteQueue } from "./write-queue";
-import { chatSourceReference, isChatMessageCurrent, mergeSourceRefs, readSourceRefs, runSourceRefs, sourceRefsCurrent, validateSourceRefs } from "./sources";
+import { chatSourceReference, isChatMessageCurrent, mergeSourceRefs, readSourceRefs, runSourceRefs, sourceRefsCurrent, SourceUnavailableError, validateCurrentSourceRefs, validateSourceRefs } from "./sources";
+import { appendRunEventTx } from "./run-lifecycle";
 
 /**
  * 聊天空间的读写模型（D-31a）。
@@ -537,9 +538,23 @@ export function retractChatMessage(db: SqliteDatabase, messageId: string, retrac
  * 覆盖到其中任何一条的摘要都该一起标 stale——只按「用户消息 id」查会漏掉切在一问一答之间的摘要（D-41b）。
  */
 export function excludedMessageIdsForRetract(db: SqliteDatabase, messageId: string): string[] {
-  const replies = db.prepare("SELECT id FROM chat_messages WHERE in_reply_to = ?").all(messageId) as { id: string }[];
-  const referenced = db.prepare("SELECT id, conversation_id FROM chat_messages WHERE source_refs IS NOT NULL").all() as { id: string; conversation_id: string }[];
-  return [...new Set([messageId, ...replies.map((row) => row.id), ...referenced.filter((row) => !isChatMessageCurrent(db, row.id, row.conversation_id)).map((row) => row.id)])];
+  const source = db.prepare("SELECT conversation_id FROM chat_messages WHERE id = ?").get(messageId) as { conversation_id: string } | undefined;
+  if (source === undefined) return [messageId];
+  // Read this conversation's reverse edges once; do not recursively resolve every stored message.
+  const edges = db.prepare(
+    "SELECT id, in_reply_to AS source_id FROM chat_messages WHERE conversation_id = ? AND in_reply_to IS NOT NULL " +
+    "UNION ALL SELECT m.id, json_extract(j.value, '$.source.id') AS source_id FROM chat_messages m, json_each(m.source_refs) j " +
+    "WHERE m.conversation_id = ? AND json_extract(j.value, '$.source.kind') = 'chat_message'",
+  ).all(source.conversation_id, source.conversation_id) as { id: string; source_id: string }[];
+  const dependents = new Map<string, string[]>();
+  for (const edge of edges) {
+    const children = dependents.get(edge.source_id);
+    if (children === undefined) dependents.set(edge.source_id, [edge.id]);
+    else children.push(edge.id);
+  }
+  const excluded = new Set([messageId]);
+  for (const id of excluded) for (const dependent of dependents.get(id) ?? []) excluded.add(dependent);
+  return [...excluded];
 }
 
 interface ChatSummaryRow {
@@ -617,9 +632,12 @@ export function markChatSummariesStale(
 ): ChatHistorySummary[] {
   if (messageIds.length === 0) return [];
   const excluded = new Set(messageIds);
-  const rows = db.prepare("SELECT * FROM chat_summaries WHERE state = 'current' ORDER BY created_at, id").all() as ChatSummaryRow[];
+  const rows = db.prepare(
+    "SELECT * FROM chat_summaries WHERE state = 'current' AND conversation_id IN " +
+    "(SELECT conversation_id FROM chat_messages WHERE id IN (SELECT value FROM json_each(?))) ORDER BY created_at, id",
+  ).all(JSON.stringify(messageIds)) as ChatSummaryRow[];
   const hits = rows.filter((row) => (JSON.parse(row.source_message_ids) as string[]).some((id) => excluded.has(id)) ||
-    !sourceRefsCurrent(db, { conversationId: row.conversation_id }, runSourceRefs(db, row.run_id)));
+    (runSourceRefs(db, row.run_id) ?? []).some((ref) => ref.source.kind === "chat_message" && excluded.has(ref.source.id)));
   if (hits.length === 0) return [];
   const update = db.prepare("UPDATE chat_summaries SET state = 'stale' WHERE id = ? AND state = 'current'");
   for (const row of hits) update.run(row.id);
@@ -1070,6 +1088,16 @@ export function finishChatRun(
     if (currentAttempt && terminal.kind === "skipped" && slot !== null && slot.required) {
       terminal = { kind: "failed", failure: { kind: "skip_not_allowed", message: "单聊或被点名的人必须回答，不能 skip" } };
     }
+    let sourceRefs: ReturnType<typeof runSourceRefs>;
+    let sourceError: SourceUnavailableError | undefined;
+    if (currentAttempt && terminal.kind === "answered") {
+      try { sourceRefs = validateCurrentSourceRefs(db, { conversationId: run.conversationId }, mergeSourceRefs([terminal.sourceRefs, runSourceRefs(db, run.id)])); }
+      catch (error) {
+        if (!(error instanceof SourceUnavailableError)) throw error;
+        sourceError = error;
+        terminal = { kind: "failed", failureReason: "postprocess", failure: { kind: "run_failed", message: "引用的资料已撤回，请重新生成回答" } };
+      }
+    }
 
     const state: RunState =
       terminal.kind === "answered" || terminal.kind === "skipped"
@@ -1086,7 +1114,7 @@ export function finishChatRun(
 
     let failureReason: FailureReason | null = null;
     if (state === "FAILED") {
-      failureReason = terminal.kind === "absent_quota" ? "quota_exhausted" : input.terminal.kind === "failed" ? (input.terminal.failureReason ?? null) : null;
+      failureReason = terminal.kind === "absent_quota" ? "quota_exhausted" : terminal.kind === "failed" ? (terminal.failureReason ?? null) : null;
       if (failureReason === null) throw new Error("a FAILED chat run needs a failure reason");
     }
 
@@ -1094,13 +1122,15 @@ export function finishChatRun(
     db.prepare(
       "UPDATE chat_runs SET state = ?, substate = NULL, failure_reason = ?, finished_at = ? WHERE id = ? AND state = ?",
     ).run(state, failureReason, finishedAt, input.runId, input.from);
+    if (sourceError !== undefined) {
+      appendRunEventTx(db, run.id, { type: "error", ts: finishedAt, payload: { reason: "postprocess", message: sourceError.message } }, { allowTerminal: true, chat: true });
+    }
 
     let message: AgentChatMessage | null = null;
     if (currentAttempt && slot !== null) {
       if (terminal.kind === "answered") {
         const question = getChatMessage(db, slot.userMessageId);
         if (question === null || question.sender !== "user") throw new Error("chat reply slot has no user message");
-        const sourceRefs = mergeSourceRefs([terminal.sourceRefs, runSourceRefs(db, run.id)]);
         message = {
           id: newChatMessageId(),
           conversationId: slot.conversationId,

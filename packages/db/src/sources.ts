@@ -6,6 +6,15 @@ import type { SqliteDatabase } from "./database";
 type Scope = { projectId: string } | { conversationId: string };
 const hash = (text: string): string => createHash("sha256").update(text, "utf8").digest("hex");
 
+/** Expected source withdrawal, distinct from malformed references or ownership violations. */
+export class SourceUnavailableError extends Error {
+  readonly code = "stale_snapshot";
+  constructor() {
+    super("prompt source is no longer available; rebuild the prompt");
+    this.name = "SourceUnavailableError";
+  }
+}
+
 export function readSourceRefs(json: string | null | undefined): SourceReference[] | undefined {
   return json == null ? undefined : SourceReferences.parse(JSON.parse(json));
 }
@@ -101,8 +110,16 @@ export function validateSourceRefs(db: SqliteDatabase, scope: Scope, value: read
   for (const ref of refs) {
     if (ref.source.kind === "web" && ref.status === "readable" && originalText !== undefined && hash(originalText) === ref.contentHash) continue;
     const resolved = resolveSourceReference(db, scope, ref);
+    if (ref.status === "readable" && resolved.reference.status === "revoked") throw new SourceUnavailableError();
     if (ref.status === "readable" && resolved.reference.status !== "readable") throw new Error("source reference is unavailable or does not match the original version/hash");
   }
+  return refs;
+}
+
+/** Completion must also reject revoked dependencies carried as missing/revoked metadata. */
+export function validateCurrentSourceRefs(db: SqliteDatabase, scope: Scope, value: readonly SourceReference[] | undefined): SourceReference[] | undefined {
+  const refs = validateSourceRefs(db, scope, value);
+  if (!sourceRefsCurrent(db, scope, refs)) throw new SourceUnavailableError();
   return refs;
 }
 
@@ -128,7 +145,7 @@ export function runSourceRefs(db: SqliteDatabase, runId: string): SourceReferenc
 export function assertPromptSourcesCurrent(db: SqliteDatabase, snapshotId: string, projectId: string): void {
   const row = db.prepare("SELECT source_refs FROM prompt_snapshots WHERE id = ? AND project_id = ?").get(snapshotId, projectId) as { source_refs: string | null } | undefined;
   if (row === undefined || !sourceRefsCurrent(db, { projectId }, readSourceRefs(row.source_refs))) {
-    throw new Error("prompt source is no longer available; rebuild the prompt");
+    throw new SourceUnavailableError();
   }
 }
 

@@ -108,6 +108,29 @@ describe("P2-D08 immutable source storage", () => {
     db.close();
   });
 
+  it("walks only the retracted message's dependents and keeps unrelated conversations out of summary invalidation", async () => {
+    const { db, queue } = fresh();
+    try {
+      const source = await sourceChat(db, queue), first = await sourceChat(db, queue), second = await sourceChat(db, queue);
+      const unrelated = await sourceChat(db, queue, "claude");
+      const reply = await finishChatRun(db, queue, { runId: first.run.id, from: "RUNNING", terminal: { kind: "answered", text: "first", sourceRefs: [chatSourceReference(db, source.question.id, source.conversation.id, T)] } });
+      const derived = await finishChatRun(db, queue, { runId: second.run.id, from: "RUNNING", terminal: { kind: "answered", text: "second", sourceRefs: [chatSourceReference(db, reply.message!.id, source.conversation.id, T)] } });
+      appendStructuredEventTx(db, display(unrelated.run.id, 0, chatSourceReference(db, unrelated.question.id, unrelated.conversation.id, T)));
+      const insertSummary = (id: string, c: typeof source, messageId: string) => db.prepare("INSERT INTO chat_summaries (id, conversation_id, source_message_ids, content, content_hash, state, run_id, agent, created_at) VALUES (?, ?, ?, 'summary', ?, 'current', ?, ?, ?)").run(id, c.conversation.id, JSON.stringify([messageId]), sha256Hex("summary"), c.run.id, c.run.agent, T);
+      const affectedId = "csum_" + ulid(), unrelatedId = "csum_" + ulid();
+      insertSummary(affectedId, second, derived.message!.id);
+      insertSummary(unrelatedId, unrelated, unrelated.question.id);
+      // An unrelated existing stale dependency must not make this retraction scan/modify that conversation.
+      retractChatMessage(db, unrelated.question.id, T);
+      retractChatMessage(db, source.question.id, T);
+      const excluded = excludedMessageIdsForRetract(db, source.question.id);
+      assert.deepEqual(new Set(excluded), new Set([source.question.id, reply.message!.id, derived.message!.id]));
+      assert.deepEqual(markChatSummariesStale(db, excluded).map((summary) => summary.id), [affectedId]);
+      assert.equal((db.prepare("SELECT state FROM chat_summaries WHERE id = ?").get(unrelatedId) as { state: string }).state, "current");
+      assert.deepEqual(markChatSummariesStale(db, excluded), []);
+    } finally { db.close(); }
+  });
+
   it("projects cumulative usage once, persists citations with the reply and drops terminal/old-attempt events", async () => {
     const { db, queue } = fresh();
     const c = await sourceChat(db, queue), ref = chatSourceReference(db, c.question.id, c.conversation.id, T);

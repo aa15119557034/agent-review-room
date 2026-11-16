@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
 import { assembleSummaryPrompt, sha256Hex, withSourceContext, type AgentAdapter } from "@room/core";
 import { approveAndCreateRun, approveBatch, chatSourceReference, createChatToTopic, createResumeBatch, createRoundDraft, createSummaryDraft, finishChatRun, finishSummaryFromRun, finishTurnFromRun, openDatabase, pauseRound, planSourceRefs, readResultDisplay, resolveSourceReference, retractChatMessage, sourceRefsCurrent, ulid, WriteQueue, type RunRow } from "@room/db";
-import { NodeHealth, StartRunRequest, type SourceReference } from "@room/schemas";
+import { NodeHealth, StartRunRequest, type ControlEvent, type SourceReference } from "@room/schemas";
 import { Repository } from "../src/main/repository";
 import { structuredResultSink } from "../src/main/structured-results";
 import { RunOrchestrator } from "../src/main/orchestrator";
@@ -85,6 +85,24 @@ describe("P2-D08 main storage boundaries", () => {
     c.db.close();
   });
 
+  it("remembers rejected sequence numbers across replay without accepting them after the run changes state", async () => {
+    const c = setup();
+    try {
+      await c.sink({ type: "started", seq: 0, ts: T });
+      c.db.prepare("UPDATE runs SET state = 'STARTING', substate = NULL WHERE id = ?").run(c.run.runId);
+      await c.sink(result(1));
+      assert.equal(c.reasons.at(-1), "run_not_running");
+      c.db.prepare("UPDATE runs SET state = 'RUNNING' WHERE id = ?").run(c.run.runId);
+      await c.sink(result(1));
+      assert.equal(readResultDisplay(c.db, c.run.runId).length, 0);
+      await assert.rejects(c.sink({ ...result(1), ts: "2026-11-17T01:00:00.000Z" }), /changed payload/);
+      await c.sink(result(2));
+      await c.sink(result(2));
+      await assert.rejects(c.sink({ ...result(2), ts: "2026-11-17T01:00:00.000Z" }), /changed payload/);
+      assert.equal((c.db.prepare("SELECT count(*) AS n FROM run_events").get() as { n: number }).n, 1);
+    } finally { c.db.close(); }
+  });
+
   it("carries references through a real discussion, summary and plan, then removes revoked dependencies only from future context", async () => {
     const db = openDatabase(":memory:"), queue = new WriteQueue(), repo = new Repository(db, queue);
     const profile = await repo.upsertAgent({ id: "deepseek", canSummarize: true });
@@ -119,7 +137,7 @@ describe("P2-D08 main storage boundaries", () => {
     assert.equal(sourceRefsCurrent(db, { projectId: topic.project.id }, planSourceRefs(db, summary.planVersionId!)), false);
     assert.deepEqual(repo.getMessage(reply.messageId!).sourceRefs, sourceRefs, "timeline keeps immutable provenance");
     assert.deepEqual(repo.getSnapshot(snapshotId).sourceRefs, sourceRefs, "historical snapshot remains unchanged");
-    await assert.rejects(createRoundDraft(db, queue, { projectId: topic.project.id, task: "stale", taskSource: "human", historyMode: "recent_with_summaries", recipients: [{ agent: "deepseek", prompt }] }), /version\/hash/);
+    await assert.rejects(createRoundDraft(db, queue, { projectId: topic.project.id, task: "stale", taskSource: "human", historyMode: "recent_with_summaries", recipients: [{ agent: "deepseek", prompt }] }), /source is no longer available/);
     db.close();
   });
 
@@ -154,11 +172,11 @@ describe("P2-D08 main storage boundaries", () => {
           await approveBatch(db, queue, { batchId: draft.batch.id, items, via: "desktop" });
           await pauseRound(db, queue, { roundId: draft.round.id });
           retractChatMessage(db, c.question.id, T);
-          await assert.rejects(createResumeBatch(db, queue, { roundId: draft.round.id, agents: ["deepseek"] }), /source is no longer available/);
+          await assert.rejects(createResumeBatch(db, queue, { roundId: draft.round.id, agents: ["deepseek"] }), { name: "SourceUnavailableError", code: "stale_snapshot" });
           assert.equal((db.prepare("SELECT count(*) AS n FROM batches WHERE kind = 'resume'").get() as { n: number }).n, 0);
         } else {
           retractChatMessage(db, c.question.id, T);
-          await assert.rejects(approveBatch(db, queue, { batchId: draft.batch.id, items, via: "desktop" }), /source is no longer available/);
+          await assert.rejects(approveBatch(db, queue, { batchId: draft.batch.id, items, via: "desktop" }), { name: "SourceUnavailableError", code: "stale_snapshot" });
           assert.equal((db.prepare("SELECT count(*) AS n FROM runs WHERE project_id = ?").get(project.id) as { n: number }).n, 0);
           assert.equal(repo.getBatch(draft.batch.id).state, "READY_FOR_REVIEW");
         }
@@ -169,7 +187,7 @@ describe("P2-D08 main storage boundaries", () => {
         const input = { approvalId: approval.id, expectedSnapshotHash: snapshot.contentHash, adapterId: "test" };
         if (boundary === "approval") {
           retractChatMessage(db, c.question.id, T);
-          await assert.rejects(approveAndCreateRun(db, queue, input), /source is no longer available/);
+          await assert.rejects(approveAndCreateRun(db, queue, input), { name: "SourceUnavailableError", code: "stale_snapshot" });
           assert.equal((db.prepare("SELECT count(*) AS n FROM runs WHERE project_id = ?").get(project.id) as { n: number }).n, 0);
         } else {
           const { run } = await approveAndCreateRun(db, queue, input);
@@ -197,6 +215,42 @@ describe("P2-D08 main storage boundaries", () => {
     await assert.rejects(c.sink({ type: "execute", seq: 2, ts: T, command: "shell" }));
     assert.equal(readResultDisplay(c.db, c.run.runId).length, 0);
     c.db.close();
+  });
+
+  it("emits a failed discussion settlement and never saves notes from an answer whose source was revoked", async () => {
+    const db = openDatabase(":memory:"), queue = new WriteQueue(), repo = new Repository(db, queue);
+    try {
+      const c = await sourceChat(db, queue), ref = chatSourceReference(db, c.question.id, c.conversation.id, T);
+      const { project } = await createChatToTopic(db, queue, { projectId: "proj_" + ulid(), materialId: "msg_" + ulid(), conversationId: c.conversation.id, name: "late settlement", chatMessageIds: [c.question.id], content: "Use the source", createdAt: T });
+      const prompt = { content: "source", contentHash: sha256Hex("source"), nonce: "0123456789abcdef", adapterVersion: "test", tokenEstimate: 2, differsFromOthers: false, sourceRefs: [ref] };
+      const draft = await createRoundDraft(db, queue, { projectId: project.id, task: "discuss", taskSource: "human", historyMode: "recent_with_summaries", recipients: [{ agent: "deepseek", prompt }] });
+      const items = db.prepare("SELECT approval_id AS approvalId, content_hash AS expectedContentHash FROM batch_items WHERE batch_id = ?").all(draft.batch.id) as { approvalId: string; expectedContentHash: string }[];
+      const runId = (await approveBatch(db, queue, { batchId: draft.batch.id, items, via: "desktop" })).runIds[0]!;
+      const turnId = (db.prepare("SELECT id FROM turns WHERE run_id = ?").get(runId) as { id: string }).id;
+      const getRun = (id: string) => db.prepare("SELECT * FROM runs WHERE id = ?").get(id) as RunRow | undefined;
+      const run = getRun(runId)!, snapshot = repo.getSnapshot(run.snapshot_id), events: ControlEvent[] = [];
+      let noteWrites = 0, settlements = 0;
+      const adapter: AgentAdapter = {
+        id: "test", kind: "api", initialize: async () => ({ streaming: true, permissionRequests: false, readOnly: true }), closeSession: async () => {},
+        startSession: async () => ({ sessionId: "session", adapterId: "test" }),
+        run: async function* () {
+          yield { type: "message_complete", eventId: "answer", runId, seq: 0, ts: T, text: "late answer and note" };
+          retractChatMessage(db, c.question.id, T);
+          yield { type: "completed", eventId: "done", runId, seq: 1, ts: T };
+        },
+      };
+      const orchestrator = new RunOrchestrator({ db, queue, adapterFactory: async () => adapter, getRun, emit: (event) => events.push(event),
+        onDiscussionSettled: (settled) => { settlements++; assert.equal(settled.messageId, null); },
+        notes: { latest: () => null, extract: () => ({ text: "late answer", content: "late note", rejected: null }), recordReply: async () => { noteWrites++; return null; }, reject: () => { noteWrites++; } },
+      });
+      await orchestrator.start(run, { snapshotId: snapshot.id, content: snapshot.content, contentHash: snapshot.contentHash, reviewerAgent: "deepseek", discussion: { turnId, isSummary: false } });
+      assert.equal(noteWrites, 0);
+      assert.equal(settlements, 1);
+      assert.equal(orchestrator.activeCount(), 0);
+      assert.ok(events.some((e) => e.type === "run.updated" && e.run.state === "FAILED" && e.run.failureReason === "postprocess"));
+      assert.equal(events.filter((e) => e.type === "run.event" && e.event.type === "error" && e.event.reason === "postprocess").length, 1);
+      assert.equal(events.some((e) => e.type === "message.created" || (e.type === "run.event" && e.event.type === "completed")), false);
+    } finally { db.close(); }
   });
 
   it("keeps legacy Prompt bytes and rejects text that forges the untrusted boundary", () => {

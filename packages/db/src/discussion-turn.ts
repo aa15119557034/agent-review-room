@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import type { FailureReason, TurnOutcome } from "@room/schemas";
 import type { SqliteDatabase } from "./database";
 import { appendRunEventTx } from "./run-lifecycle";
-import { runSourceRefs, validateSourceRefs } from "./sources";
+import { runSourceRefs, SourceUnavailableError, validateCurrentSourceRefs } from "./sources";
 import { writeTransaction, type WriteQueue } from "./write-queue";
 
 /**
@@ -141,13 +141,22 @@ export function finishTurnFromRun(
     }
 
     const ts = now();
-    const terminal = input.terminal;
+    let terminal = input.terminal;
+    let sourceRefs: ReturnType<typeof runSourceRefs>;
+    let sourceError: SourceUnavailableError | undefined;
+    if (terminal.kind === "answered") {
+      const { project_id: projectId } = db.prepare("SELECT project_id FROM rounds WHERE id = ?").get(turn.round_id) as { project_id: string };
+      try { sourceRefs = validateCurrentSourceRefs(db, { projectId }, runSourceRefs(db, run.id)); }
+      catch (error) {
+        if (!(error instanceof SourceUnavailableError)) throw error;
+        sourceError = error;
+        terminal = { kind: "failed", failureReason: "postprocess" };
+      }
+    }
     let outcome: TurnOutcomeTerminal;
     let messageId: string | null = null;
 
     if (terminal.kind === "answered") {
-      const { project_id: projectId } = db.prepare("SELECT project_id FROM rounds WHERE id = ?").get(turn.round_id) as { project_id: string };
-      const sourceRefs = validateSourceRefs(db, { projectId }, runSourceRefs(db, run.id));
       outcome = "answered";
       finishRunTx(db, run, { state: "COMPLETED", failureReason: null }, { type: "completed", payload: { outcome: "completed" } }, ts);
 
@@ -178,7 +187,7 @@ export function finishTurnFromRun(
         db,
         run,
         { state: "FAILED", failureReason: terminal.failureReason },
-        { type: "error", payload: { reason: terminal.failureReason } },
+        { type: "error", payload: { reason: terminal.failureReason, ...(sourceError === undefined ? {} : { message: sourceError.message }) } },
         ts,
       );
       setTurnOutcome(db, turn.id, outcome, terminal.partialText ?? null, ts);
@@ -430,7 +439,18 @@ export function finishSummaryFromRun(
     }
 
     const ts = now();
-    const result = input.result;
+    let result = input.result;
+    let sourceRefs: ReturnType<typeof runSourceRefs>;
+    let sourceError: SourceUnavailableError | undefined;
+    if (result.kind === "answered") {
+      const { project_id: projectId } = db.prepare("SELECT project_id FROM rounds WHERE id = ?").get(turn.round_id) as { project_id: string };
+      try { sourceRefs = validateCurrentSourceRefs(db, { projectId }, runSourceRefs(db, run.id)); }
+      catch (error) {
+        if (!(error instanceof SourceUnavailableError)) throw error;
+        sourceError = error;
+        result = { kind: "failed", failureReason: "postprocess" };
+      }
+    }
 
     if (result.kind !== "answered") {
       const quota = result.kind === "failed" && result.failureReason === "quota_exhausted";
@@ -442,7 +462,7 @@ export function finishSummaryFromRun(
           db,
           run,
           { state: "FAILED", failureReason: result.failureReason },
-          { type: "error", payload: { reason: result.failureReason } },
+          { type: "error", payload: { reason: result.failureReason, ...(sourceError === undefined ? {} : { message: sourceError.message }) } },
           ts,
         );
       }
@@ -462,8 +482,6 @@ export function finishSummaryFromRun(
       };
     }
 
-    const { project_id: projectId } = db.prepare("SELECT project_id FROM rounds WHERE id = ?").get(turn.round_id) as { project_id: string };
-    const sourceRefs = validateSourceRefs(db, { projectId }, runSourceRefs(db, run.id));
     finishRunTx(db, run, { state: "COMPLETED", failureReason: null }, { type: "completed", payload: { outcome: "completed" } }, ts);
 
     const messageId = "msg_" + turn.id.slice(5);
