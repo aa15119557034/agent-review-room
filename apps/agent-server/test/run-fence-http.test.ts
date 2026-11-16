@@ -14,7 +14,7 @@ const windows = { skip: process.platform !== "win32" };
 const id = (n: number) => "run_" + String(n).padStart(26, "0");
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 async function fixture(t: TestContext, verifyCommit?: () => Promise<void>, exitCode = 0) {
-  const root = fs.mkdtempSync(join(tmpdir(), "room-fence-http-"));
+  const root = fs.realpathSync.native(fs.mkdtempSync(join(tmpdir(), "room-fence-http-")));
   const dir = join(root, "ledger"); fs.mkdirSync(dir);
   const marker = join(root, "executions.txt"), script = join(root, "child.cjs");
   fs.writeFileSync(script, "require('node:fs').appendFileSync(" + JSON.stringify(marker) + ", 'started\\n');setTimeout(()=>process.exit(" + exitCode + "),10);");

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import cp, { type ChildProcess } from "node:child_process";
 import { createHash } from "node:crypto";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, realpathSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { RunLedger } from "../src/run-ledger";
@@ -34,7 +34,7 @@ class FakeChild extends EventEmitter {
 }
 
 async function fixture(t: TestContext, closeWaitMs?: number, fenced = false) {
-  const fenceDir = fenced ? mkdtempSync(join(tmpdir(), "room-stop-fence-")) : undefined;
+  const fenceDir = fenced ? realpathSync.native(mkdtempSync(join(tmpdir(), "room-stop-fence-"))) : undefined;
   const ledger = fenceDir ? await RunLedger.initialize(fenceDir) : undefined;
   const children: FakeChild[] = [], runs: RemoteRun[] = [], warnings: string[] = [];
   let killCalls = 0;

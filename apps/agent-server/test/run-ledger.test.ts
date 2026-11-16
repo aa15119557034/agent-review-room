@@ -10,7 +10,9 @@ import { RunLedger } from "../src/run-ledger";
 const windows = { skip: process.platform !== "win32" };
 const id = (n: number) => "run_" + n.toString().padStart(26, "0");
 const hash = "a".repeat(64);
-const temp = () => fs.mkdtempSync(join(tmpdir(), "room-run-fence-"));
+// Hosted Windows runners may expose TEMP through an 8.3 alias. Production
+// intentionally refuses aliases, so pass the canonical fixture directory.
+const temp = () => fs.realpathSync.native(fs.mkdtempSync(join(tmpdir(), "room-run-fence-")));
 
 test("ledger commits identities and transitions, rejects damaged/missing evidence, and never repairs", windows, async () => {
   const dir = temp();
