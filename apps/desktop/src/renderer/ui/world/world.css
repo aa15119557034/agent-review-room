@@ -74,6 +74,14 @@
   line-height: 1.6;
 }
 
+.world-start-hint {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgb(229 138 78 / 0.14);
+  font-size: 14px;
+}
+
 .world-start-people {
   display: flex;
   flex-wrap: wrap;
@@ -229,7 +237,10 @@
 .room {
   position: relative;
   display: grid;
+  /* 列宽钉在卡片宽度上，长房间名只能省略，不能把标题行撑出卡片、把「走过去」挤没 */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto auto minmax(0, 1fr);
+  min-width: 0;
   gap: 6px;
   padding: 10px 12px 8px;
   border: 3px solid var(--wall-edge);
@@ -340,6 +351,7 @@
 }
 
 .room-head {
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -348,12 +360,18 @@
 }
 
 .room-head h2 {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 15px;
   font-weight: 700;
 }
 
 .room-go,
 .room-here {
+  flex: none;
+  white-space: nowrap;
   padding: 2px 10px;
   border-radius: 999px;
   font-size: 12px;
@@ -777,8 +795,11 @@
   inset: 0;
   z-index: 5;
   display: grid;
+  /* 列宽钉在舞台宽度上：内容再长也只能换行，不能把这一列撑到舞台外面被裁掉 */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr) auto auto;
   gap: 10px;
+  min-width: 0;
   padding: 14px 18px 16px;
   color: #2e2621;
   background:
@@ -805,8 +826,10 @@
 
 .scene-top {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
+  min-width: 0;
 }
 
 .scene-place {
@@ -816,9 +839,15 @@
   background: rgb(255 255 255 / 0.75);
   font-size: 13px;
   font-weight: 600;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .scene-btn {
+  flex: none;
+  white-space: nowrap;
   padding: 5px 12px;
   border: 0;
   border-radius: 999px;
@@ -837,15 +866,20 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  gap: 8%;
+  gap: clamp(4px, 3%, 3rem);
   min-height: 0;
+  min-width: 0;
 }
 
+/* 每人一个槽位：宽度平分这一行、可以一直收窄（min-width: 0），高度跟这一行走。
+   小人在槽位里按比例缩到放得下、贴底居中，所以人多或窗口窄时是整个人变小，不是两边的人被裁掉 */
 .sprite {
   display: block;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 16.5rem;
   height: 100%;
   max-height: 22rem;
-  aspect-ratio: 3 / 4;
   filter: saturate(0.85) brightness(0.96);
   transition: filter 0.25s, transform 0.25s;
 }
@@ -856,6 +890,7 @@
 }
 
 .sprite .fig {
+  display: block;
   width: 100%;
   height: 100%;
 }
@@ -1029,7 +1064,8 @@
 
 /* ---------------------------------------------------------------- 窄窗口：上下排，整页一起滚 */
 
-@media (max-width: 900px) {
+/* 1080 以下并排时舞台只剩五百来像素，对话场景放不开（林离在 960×760 实测右边被裁），所以提前改成上下排 */
+@media (max-width: 1080px) {
   .world {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto auto;

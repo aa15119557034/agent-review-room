@@ -102,7 +102,7 @@ export function SceneView({ scene, world, names }: { scene: WorldScene; world: W
               <button type="submit" className="button-primary" disabled={!text.trim() || waiting || busy || paused}>说</button>
             </form>
           ) : (
-            <p className="scene-note">她现在没法回应你打的话，可以用上面的选项。</p>
+            <p className="scene-note">{scene.options.length > 0 ? "她现在没法回应你打的话，可以用上面的选项。" : "她现在没法回应你打的话。"}</p>
           )}
         </div>
       )}

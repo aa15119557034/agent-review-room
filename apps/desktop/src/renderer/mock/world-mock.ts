@@ -191,7 +191,7 @@ export function createWorldMock(ctx: Ctx, options: WorldMockOptions = {}) {
       { kind: "unique", id: "pot", label: "锅", at: at("kitchen"), usedBy: null },
       { kind: "unique", id: "table", label: "餐桌", at: at("kitchen"), usedBy: null },
       { kind: "stock", id: "ingredients", label: "食材", placeId: "kitchen", count: INGREDIENTS_AT_START },
-      { kind: "stock", id: "meal", label: "饭", placeId: "kitchen", count: 0 },
+      { kind: "stock", id: "meals", label: "饭", placeId: "kitchen", count: 0 },
     ];
     return {
       id: id("world"),
@@ -437,8 +437,8 @@ export function createWorldMock(ctx: Ctx, options: WorldMockOptions = {}) {
           reserved.push({ itemId: "ingredients", count: COOK_USES });
         }
         if (kind === "eat") {
-          if ((stock("meal")?.count ?? 0) < 1) return reject("out_of_stock");
-          reserved.push({ itemId: "meal", count: 1 });
+          if ((stock("meals")?.count ?? 0) < 1) return reject("out_of_stock");
+          reserved.push({ itemId: "meals", count: 1 });
         }
         if (kind === "set_table") {
           const bad = free("table");
@@ -477,10 +477,10 @@ export function createWorldMock(ctx: Ctx, options: WorldMockOptions = {}) {
         if (run.activity.participants.length === 0) settle(run, actor.kind === "player" ? "cancelled_by_player" : "cancelled_by_actor");
         else if (run.activity.kind === "eat") {
           // 一起吃时中途走开的那位：她那一份退回去
-          const meal = run.reserved.find((r) => r.itemId === "meal");
+          const meal = run.reserved.find((r) => r.itemId === "meals");
           if (meal && meal.count > 0) {
             meal.count -= 1;
-            stock("meal")!.count += 1;
+            stock("meals")!.count += 1;
           }
         }
         return result;
@@ -508,9 +508,9 @@ export function createWorldMock(ctx: Ctx, options: WorldMockOptions = {}) {
         if (activityOf(actor)) return reject("actor_busy");
         if (run.activity.kind === "sleep") return reject("not_allowed");
         if (run.activity.kind === "eat") {
-          if ((stock("meal")?.count ?? 0) < 1) return reject("out_of_stock");
-          stock("meal")!.count -= 1;
-          run.reserved.find((r) => r.itemId === "meal")!.count += 1;
+          if ((stock("meals")?.count ?? 0) < 1) return reject("out_of_stock");
+          stock("meals")!.count -= 1;
+          run.reserved.find((r) => r.itemId === "meals")!.count += 1;
         }
         run.activity.participants = [...run.activity.participants, actor];
         setActivity(actor, run.activity.id);
@@ -544,8 +544,8 @@ export function createWorldMock(ctx: Ctx, options: WorldMockOptions = {}) {
     if (done) {
       for (const r of run.reserved) if (r.count > 0) consumed.push({ ...r });
       if (a.kind === "cook") {
-        stock("meal")!.count += COOK_MAKES;
-        produced.push({ itemId: "meal", count: COOK_MAKES });
+        stock("meals")!.count += COOK_MAKES;
+        produced.push({ itemId: "meals", count: COOK_MAKES });
       }
     } else {
       for (const r of run.reserved) stock(r.itemId)!.count += r.count;
@@ -663,7 +663,7 @@ export function createWorldMock(ctx: Ctx, options: WorldMockOptions = {}) {
     const key = mealKey(x.now);
     if (((key && r.meal !== key) || r.satiety < 30) && x.now >= r.foodRetryAt) {
       const cooking = [...x.running.values()].some((k) => k.activity.kind === "cook");
-      if ((stock("meal")?.count ?? 0) > 0) {
+      if ((stock("meals")?.count ?? 0) > 0) {
         if (key) r.meal = key;
         return go("kitchen", start("eat"));
       }
@@ -793,7 +793,7 @@ export function createWorldMock(ctx: Ctx, options: WorldMockOptions = {}) {
       if (a.kind !== "eat" || a.startedAt !== x.now || x.player.placeId !== a.placeId || x.player.activityId) continue;
       const host = a.participants[0]!;
       if (host.kind !== "resident" || x.commitments.some((c) => !terminal(c) && same(c.by, PLAYER))) continue;
-      if ((stock("meal")?.count ?? 0) < 1) continue;
+      if ((stock("meals")?.count ?? 0) < 1) continue;
       if (apply(host, { type: "invite", to: PLAYER, activity: "eat" }).accepted) say(host, "一起吃吗？");
     }
     for (const reply of x.replies.filter((p) => p.at <= x.now)) {
@@ -890,7 +890,7 @@ export function createWorldMock(ctx: Ctx, options: WorldMockOptions = {}) {
     const run = r.activityId ? w!.running.get(r.activityId) : undefined;
     if (/饭|吃|饿/.test(text)) {
       if (run?.activity.kind === "cook") return `饭还没好，大概还要 ${Math.max(1, run.activity.endsAt - w!.now)} 分钟。`;
-      const k = r.known.get("meal");
+      const k = r.known.get("meals");
       return k?.count ? `我上次看到厨房里还有 ${k.count} 份饭。` : "我上次看的时候厨房里没有做好的饭。";
     }
     if (/书|小说/.test(text)) {

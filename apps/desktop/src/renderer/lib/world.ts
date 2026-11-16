@@ -313,8 +313,12 @@ export interface WorldNames {
   item(id: string): string;
 }
 
+/** 屋子显示的名字。有主人的卧室按主人的显示名来叫（后台给的 label 里是内部名，比如 claude） */
+export const placeLabel = (place: Pick<WorldPlace, "label" | "owner">, agentName: (id: string) => string): string =>
+  place.owner === null ? place.label : `${agentName(place.owner)}的房间`;
+
 export function worldNames(world: Pick<WorldSnapshot, "places" | "items"> | null, agentName: (id: string) => string): WorldNames {
-  const places = new Map((world?.places ?? []).map((p) => [p.id, p.label]));
+  const places = new Map((world?.places ?? []).map((p) => [p.id, placeLabel(p, agentName)]));
   const items = new Map((world?.items ?? []).map((i) => [i.id, i.label]));
   return {
     agent: agentName,
@@ -435,14 +439,16 @@ const COMMITMENT_STATE: Record<WorldCommitment["state"], string> = {
 };
 
 /** 快照里还没到终态的约定，换成界面上的一行 */
-export function commitmentViews(world: Pick<WorldSnapshot, "commitments">, n: WorldNames): CommitmentView[] {
+export function commitmentViews(world: Pick<WorldSnapshot, "commitments" | "activities">, n: WorldNames): CommitmentView[] {
   const player: WorldActor = { kind: "player" };
   return world.commitments.map((c) => {
     const mine = sameActor(c.by, player) || sameActor(c.to, player);
     const due = c.state === "deferred" && c.dueAt !== null ? `，说好 ${clockText(c.dueAt)}` : "";
+    // 答应了以后：约定上挂着一个还在进行的活动，才算「正在做」。不看台词、不按时间猜
+    const doing = c.state === "pending" && c.activityId !== null && world.activities.some((a) => a.id === c.activityId && a.state === "running");
     return {
       id: c.id,
-      text: `${actorName(c.to, n)}邀${actorName(c.by, n)}${ACTIVITY_LABEL[c.activity]}：${COMMITMENT_STATE[c.state]}${due}`,
+      text: `${actorName(c.to, n)}邀${actorName(c.by, n)}${ACTIVITY_LABEL[c.activity]}：${doing ? "正在做" : COMMITMENT_STATE[c.state]}${due}`,
       awaitingYou: c.state === "asked" && sameActor(c.by, player),
       cancellable: mine && (c.state === "asked" || c.state === "pending" || c.state === "deferred"),
       state: c.state,
