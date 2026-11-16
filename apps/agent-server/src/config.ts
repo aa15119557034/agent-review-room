@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { dirname, isAbsolute, resolve } from "node:path";
 import { z } from "zod";
-import { ModelOption, NODE_MIN_BODY_BYTES_WITH_ATTACHMENTS, ProfileId, VisionSupport } from "@room/schemas";
+import { ModelOption, NODE_MIN_BODY_BYTES_WITH_ATTACHMENTS, ProfileId, VisionSupport, WorldProfileExpectation } from "@room/schemas";
 import { PARSERS } from "./parsers";
 import { planSpawn, type ResolveEnv } from "./win-command";
 import { buildArgs, modelConfigProblems } from "./model-args";
@@ -143,6 +143,8 @@ export const ServerConfig = z
     finishedRunTtlMs: z.number().int().positive().default(10 * 60_000),
     /** Optional durable fence ledger. Initialize explicitly before normal startup. */
     runFenceDir: z.string().min(1).optional(),
+    /** Opt-in fixed recipes; targets are constructed, never supplied as generic commands. */
+    worldProfiles: z.array(WorldProfileExpectation.extend({ profileId: ProfileId })).max(64).optional(),
     profiles: z.record(ProfileId, Profile),
     /** S-20：这台电脑的 <AgentRoom>（绝对路径，本机 NTFS）。配了记忆的节点必填 */
     homeDir: z.string().min(1).optional(),

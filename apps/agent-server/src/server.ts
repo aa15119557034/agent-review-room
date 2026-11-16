@@ -27,6 +27,7 @@ import { checkModel } from "./model-args";
 import { attachmentProblem, profileMaySeeImages, visionOf } from "./images";
 import { sweepStaleRunDirs } from "./image-artifact";
 import { claudeAccountOf, createClaudeQuotaStore, createQuotaReader, readCodexQuota, readDeepSeekBalance } from "./quota";
+import { worldProfiles } from "./world-profile";
 
 const execFileP = promisify(execFile);
 
@@ -133,16 +134,18 @@ export function createAgentServer(
 
     // GET /v1/health
     if (req.method === "GET" && parts.length === 2 && parts[1] === "health") {
+      const world = worldProfiles(cfg);
+      const profiles = { ...cfg.profiles, ...Object.fromEntries([...world].map(([id, value]) => [id, value.profile])) };
       const body: NodeHealth = {
         protocol: REMOTE_PROTOCOL_VERSION,
         nodeId: cfg.nodeId,
-        profiles: Object.keys(cfg.profiles),
+        profiles: Object.keys(profiles),
         activeRuns: activeCount(),
         maxConcurrentRuns: cfg.maxConcurrentRuns,
         leaseMs: cfg.leaseMs,
         heartbeatMs: cfg.heartbeatMs,
         // S-22：每个 profile 都报，models 为空 = 模型写死在节点配置里
-        profileModels: Object.entries(cfg.profiles).map(([profileId, p]) => ({
+        profileModels: Object.entries(profiles).map(([profileId, p]) => ({
           profileId,
           models: p.models,
           ...(p.models.length === 0 && p.fixedModelVision !== undefined ? { fixedModelVision: p.fixedModelVision } : {}),
@@ -156,6 +159,7 @@ export function createAgentServer(
           ...(imageProfiles.length > 0 ? { imageProfiles } : {}),
           quota: Object.values(cfg.profiles).some((p) => p.quota),
           ...(ledger ? { runFence: ledger.capability() } : {}),
+          ...(world.size ? { worldProfiles: [...world.values()].map(value => value.capability) } : {}),
         },
       };
       return sendJson(res, 200, body);
@@ -261,11 +265,8 @@ export function createAgentServer(
       throw new HttpError(400, "bad_request", "invalid fields: imageSlot");
     }
 
+    let profile = executionProfile(reqBody);
     if (duplicate(reqBody, res)) return;
-
-    // 只认配置里自己写的 profile：不让 "constructor" / "__proto__" 这类名字取到对象原型上的东西
-    const profile = Object.hasOwn(cfg.profiles, reqBody.profileId) ? cfg.profiles[reqBody.profileId] : undefined;
-    if (!profile) throw new HttpError(400, "unknown_profile", "unknown profileId");
 
     if (reqBody.model) {
       const problem = checkModel(profile, reqBody.model);
@@ -300,6 +301,7 @@ export function createAgentServer(
     }
 
     // Recheck after every asynchronous validation; no await follows admission.
+    profile = executionProfile(reqBody);
     if (duplicate(reqBody, res)) return;
     if (activeCount() >= cfg.maxConcurrentRuns) {
       throw new HttpError(429, "node_busy", "node is at maxConcurrentRuns");
@@ -338,6 +340,26 @@ export function createAgentServer(
     run.start();
     console.log(`[agent-server] run ${run.runId} started (profile=${run.profileId})`);
     return sendJson(res, 202, startResponse(reqBody.runId, "accepted"));
+  }
+
+  function executionProfile(body: StartRunRequest): Profile {
+    const declared = cfg.worldProfiles?.some(p => p.profileId === body.profileId);
+    if (declared && (!body.expectedWorldProfile || !body.expectedLedgerId || !body.model)) {
+      throw new HttpError(400, "bad_request", "world target requires ledger, profile expectation and explicit model");
+    }
+    if (body.expectedWorldProfile) {
+      const fixed = worldProfiles(cfg).get(body.profileId);
+      if (!fixed || fixed.capability.sourceChatProfileId !== body.expectedWorldProfile.sourceChatProfileId ||
+          fixed.capability.recipeVersion !== body.expectedWorldProfile.recipeVersion) {
+        throw new HttpError(409, "world_profile_mismatch", "world profile is unavailable or has changed");
+      }
+      const problem = checkModel(fixed.profile, body.model!);
+      if (problem) throw new HttpError(400, "unknown_model", problem);
+      return fixed.profile;
+    }
+    const profile = Object.hasOwn(cfg.profiles, body.profileId) ? cfg.profiles[body.profileId] : undefined;
+    if (!profile) throw new HttpError(400, "unknown_profile", "unknown profileId");
+    return profile;
   }
 
   function streamEvents(run: RemoteRun, after: number, req: IncomingMessage, res: ServerResponse): void {
