@@ -2,7 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {Vector3} from "three";
 import type {WorldPlace} from "@room/schemas";
-import {activityAnchor,roomLayout,separateAnchor} from "../ui/world/house-model";
+import {activityAnchor,actorRenderOrder,roomLayout,separateAnchor} from "../ui/world/house-model";
+import {createMockBridge} from "../mock/mock-backend";
+import {createClient} from "../lib/client";
+import {newId} from "../lib/ids";
 
 function places(count:number):WorldPlace[]{return [
  {id:"living_room",label:"客厅",owner:null,neighbors:["kitchen",...Array.from({length:Math.min(7,count)},(_,i)=>`room_${i+1}`)]},
@@ -26,4 +29,13 @@ test("mixed activities cannot reuse the same exact anchor",()=>{
  assert.ok(Math.hypot(taken.x-adjusted.x,taken.z-adjusted.z)>=.46);
  assert.ok(Math.abs(adjusted.x-room.x)<room.width/2);
  assert.ok(Math.abs(adjusted.z-room.z)<room.depth/2);
+});
+
+test("a cook listed after visitors still stands at the stove",async()=>{
+ const state=await createClient(createMockBridge({seed:true,world:{autoTick:false}})).query({type:"world.get"});const world=state.world!;const agent=world.residents[1]!.agent;const id=newId("wavt");
+ const activities=[{id,kind:"cook" as const,participants:[{kind:"resident" as const,agent}],placeId:"kitchen",itemIds:["pot"],startedAt:world.now,endsAt:world.now+30,state:"running" as const,endReason:null}];
+ const residents=world.residents.map(r=>({...r,placeId:"kitchen",activityId:r.agent===agent?id:null}));
+ const order=actorRenderOrder({...world,residents,activities,player:{placeId:"kitchen",activityId:null}});
+ assert.equal(order[0],agent);const kitchen=roomLayout(world).find(r=>r.id==="kitchen")!;const cook=activityAnchor(kitchen,"cook",order.indexOf(agent));
+ assert.ok(Math.abs(cook.z-(kitchen.z-1.55))<.001);assert.ok(Math.abs(cook.x-(kitchen.x+2.65))<1);
 });

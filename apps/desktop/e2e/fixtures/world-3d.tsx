@@ -1,7 +1,7 @@
 import {createRoot} from "react-dom/client";
 import {useEffect,useState} from "react";
 import {WorldScene,WorldSnapshot} from "@room/schemas";
-import type {WebGLRenderer} from "three";
+import type {Scene,WebGLRenderer} from "three";
 import {createActions} from "../../src/renderer/lib/actions";
 import {createClient} from "../../src/renderer/lib/client";
 import {initialState} from "../../src/renderer/lib/state";
@@ -21,14 +21,14 @@ import "../../src/renderer/ui/world/world-3d.css";
 const bridge=createMockBridge({seed:true,world:{autoTick:false}});
 const client=createClient(bridge);const store=createStore(initialState);const actions=createActions(store,client);
 const params=new URLSearchParams(location.search);const long=params.has("long");
-declare global {interface Window {world3dFixture:{renderer:WebGLRenderer|null;ready:boolean;world:WorldSnapshot|null;openLong:()=>void;close:()=>void}}}
-window.world3dFixture={renderer:null,ready:false,world:null,openLong:()=>{},close:()=>{}};
+declare global {interface Window {world3dFixture:{renderer:WebGLRenderer|null;scene:Scene|null;ready:boolean;world:WorldSnapshot|null;openLong:()=>void;close:()=>void}}}
+window.world3dFixture={renderer:null,scene:null,ready:false,world:null,openLong:()=>{},close:()=>{}};
 
 function Fixture(){
  const world=useAppState(s=>s.world.world);const scene=useAppState(s=>s.world.scene);const names=worldNames(world,id=>({claude:"C酱",codex:"林离",deepseek:"汐",fourth:"小夏"})[id]??id);
  if(!world)return <p>正在准备四人渲染 fixture…</p>;
  window.world3dFixture.world=world;
- return <main className="world" style={{position:"fixed",inset:0,display:"block"}}><div className="world-stage" style={{height:"100%"}}><House3D world={world} names={names} inspectRenderer={r=>{window.world3dFixture.renderer=r;}}/>{scene&&<SceneView scene={scene} world={world} names={names}/>}</div></main>;
+ return <main className="world" style={{position:"fixed",inset:0,display:"block"}}><div className="world-stage" style={{height:"100%"}}><House3D world={world} names={names} inspectRenderer={(r,scene)=>{window.world3dFixture.renderer=r;window.world3dFixture.scene=scene;}}/>{scene&&<SceneView scene={scene} world={world} names={names}/>}</div></main>;
 }
 (async()=>{
  await client.command({type:"agent.update",id:"fourth",displayName:"小夏",color:"#a38bae"});

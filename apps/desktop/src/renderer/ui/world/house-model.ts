@@ -166,3 +166,10 @@ export function separateAnchor(target:T.Vector3,occupied:readonly T.Vector3[],ro
   for(let ring=1;ring<=5;ring++)for(let i=0;i<12;i++){const p=target.clone().add(new T.Vector3(Math.cos(i*Math.PI/6)*ring*.55,0,Math.sin(i*Math.PI/6)*ring*.55));if(Math.abs(p.x-room.x)<room.width/2-.25&&Math.abs(p.z-room.z)<room.depth/2-.25&&clear(p))return p;}
   throw new Error("No visual slot remains in room "+room.id);
 }
+
+/** Place the primary cook at the unique stove before assigning visitors. */
+export function actorRenderOrder(world:Pick<WorldSnapshot,"residents"|"player"|"activities">):string[]{
+  const people=[...world.residents.map(r=>({id:r.agent,activityId:r.activityId})),{id:"__player",activityId:world.player.activityId}];
+  const rank=(person:typeof people[number])=>{const activity=world.activities.find(a=>a.id===person.activityId&&a.state==="running");if(activity?.kind!=="cook")return 0;const first=activity.participants[0];return first&&(first.kind==="player"?person.id==="__player":person.id===first.agent)?-2:-1;};
+  return people.sort((a,b)=>rank(a)-rank(b)).map(p=>p.id);
+}

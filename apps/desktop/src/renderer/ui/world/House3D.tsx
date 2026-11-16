@@ -7,7 +7,7 @@ import type { WorldSnapshot } from "@room/schemas";
 import { agentColor } from "../../lib/discussion";
 import { ACTIVITY_LABEL, residentLine, type WorldNames } from "../../lib/world";
 import { useActions, useAppState } from "../hooks";
-import { activityAnchor, buildHouse, separateAnchor } from "./house-model";
+import { activityAnchor, actorRenderOrder, buildHouse, separateAnchor } from "./house-model";
 import characterUrl from "../../assets/world/character.glb?url";
 import playerUrl from "../../assets/world/player.glb?url";
 
@@ -20,7 +20,7 @@ interface Label { key:string; x:number; y:number; name:string; activity:string; 
 const v=new T.Vector3();
 
 /** One WebGL scene, reading committed snapshots. Animation has no IPC side effects. */
-export function House3D({world,names,inspectRenderer}:{world:WorldSnapshot;names:WorldNames;inspectRenderer?:(renderer:T.WebGLRenderer)=>void}) {
+export function House3D({world,names,inspectRenderer}:{world:WorldSnapshot;names:WorldNames;inspectRenderer?:(renderer:T.WebGLRenderer,scene:T.Scene)=>void}) {
   const host=useRef<HTMLDivElement>(null);
   const disc=useAppState(s=>s.disc);const selected=useAppState(s=>s.world.selected);
   const dialogue=useAppState(s=>s.world.scene);const actions=useActions();
@@ -37,10 +37,10 @@ export function House3D({world,names,inspectRenderer}:{world:WorldSnapshot;names
     catch(e){setError(`3D 画面无法启动：${e instanceof Error?e.message:String(e)}`);setLoading(false);return;}
     renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFShadowMap;
     renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.22;
-    inspectRenderer?.(renderer);
     renderer.domElement.setAttribute("aria-label","可旋转缩放的小屋3D画面。拖动旋转，滚轮缩放，点房间走过去，点人物查看。");
     element.prepend(renderer.domElement);
     const scene=new T.Scene();scene.background=new T.Color("#e4e8df");scene.fog=new T.Fog("#e4e8df",45,80);
+    inspectRenderer?.(renderer,scene);
     scene.add(new T.HemisphereLight("#e7f4ff","#ada184",2.1));
     const sun=new T.DirectionalLight("#fff0cf",3.2);sun.position.set(-8,16,8);sun.castShadow=true;
     sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-18;sun.shadow.camera.right=18;sun.shadow.camera.top=18;sun.shadow.camera.bottom=-18;
@@ -55,7 +55,7 @@ export function House3D({world,names,inspectRenderer}:{world:WorldSnapshot;names
     const reset=()=>{camera.position.copy(homePosition);controls.target.copy(homeTarget);controls.update();};
     controlsRef.current={reset,zoom:n=>{camera.position.sub(controls.target).multiplyScalar(n).add(controls.target);controls.update();}};
     const roomMap=new Map(house.rooms.map(r=>[r.id,r]));
-    const novel=new T.Group();const cover=new T.Mesh(new T.BoxGeometry(.34,.055,.25),new T.MeshStandardMaterial({color:"#bf6548"}));novel.add(cover);const pages=new T.Mesh(new T.BoxGeometry(.3,.028,.22),new T.MeshStandardMaterial({color:"#fff1d3"}));pages.position.y=.04;novel.add(pages);const band=new T.Mesh(new T.BoxGeometry(.04,.06,.25),new T.MeshStandardMaterial({color:"#ddb971"}));band.position.x=-.1;novel.add(band);scene.add(novel);
+    const novel=new T.Group();novel.name="world-item-book";const cover=new T.Mesh(new T.BoxGeometry(.34,.055,.25),new T.MeshStandardMaterial({color:"#bf6548"}));novel.add(cover);const pages=new T.Mesh(new T.BoxGeometry(.3,.028,.22),new T.MeshStandardMaterial({color:"#fff1d3"}));pages.position.y=.04;novel.add(pages);const band=new T.Mesh(new T.BoxGeometry(.04,.06,.25),new T.MeshStandardMaterial({color:"#ddb971"}));band.position.x=-.1;novel.add(band);scene.add(novel);
     const pot=new T.Group();const pan=new T.Mesh(new T.CylinderGeometry(.23,.2,.28,20),new T.MeshStandardMaterial({color:"#b8765a"}));pot.add(pan);const lid=new T.Mesh(new T.CylinderGeometry(.26,.26,.035,20),new T.MeshStandardMaterial({color:"#3c4847"}));lid.position.y=.15;pot.add(lid);scene.add(pot);
     const avatars=new Map<string,Avatar>();const templates:T.Object3D[]=[];const avatarRoots:T.Group[]=[];let assetFailed=false;let cancelled=false;let frame=0;let last=performance.now();let elapsed=0;let lastLabels=0;
     let lastSnapshot:WorldSnapshot|null=null;let lastDialogue:string|null=null;let cameraGoal:{position:T.Vector3;target:T.Vector3}|null=null;
@@ -108,7 +108,7 @@ export function House3D({world,names,inspectRenderer}:{world:WorldSnapshot;names
       const stamp=performance.now();const dt=Math.min((stamp-last)/1000,.05);last=stamp;const state=current.current;const running=state.world.run.state==="running";
       if(running)elapsed+=dt;
       if(lastSnapshot!==state.world){
-        const slots=new Map<string,T.Vector3[]>();for(const [id,a]of avatars){const resident=id==="__player"?state.world.player:state.world.residents.find(r=>r.agent===id);if(!resident)continue;const act=state.world.activities.find(act=>act.id===resident.activityId&&act.state==="running");const occupied=slots.get(resident.placeId)??[];updateAvatar(a,resident.placeId,act?.kind,occupied.length,occupied);slots.set(resident.placeId,occupied);}
+        const slots=new Map<string,T.Vector3[]>();for(const id of actorRenderOrder(state.world)){const a=avatars.get(id);const resident=id==="__player"?state.world.player:state.world.residents.find(r=>r.agent===id);if(!a||!resident)continue;const act=state.world.activities.find(act=>act.id===resident.activityId&&act.state==="running");const occupied=slots.get(resident.placeId)??[];updateAvatar(a,resident.placeId,act?.kind,occupied.length,occupied);slots.set(resident.placeId,occupied);}
         lastSnapshot=state.world;
       }
       const activeDialogue=state.dialogue?.id??null;
