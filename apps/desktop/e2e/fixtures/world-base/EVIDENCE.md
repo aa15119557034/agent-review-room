@@ -1,5 +1,7 @@
 # X-51 第一段实测与精修入口
 
+这份记录对应林离首次交接 `bd36ce0`。C酱 `294e85d` 精修后的最新本机截图与性能数据见 [2026-11-17 复测](./evidence/gpu-polish-294e85d/README.md)；下面的旧录像与着色说明保留为该次交接历史。
+
 本机于 2026-11-16 完成组合场景验证。详细数字、检查结果及文件哈希见 [measurements.json](./evidence/measurements.json)，交付场景源码哈希见 [source-state.json](./evidence/source-state.json)，相对固定上游的改动集中在 [upstream-changes.patch](./evidence/upstream-changes.patch)。性能采集后未再编辑场景源码；完整源码哈希在采集后整理，不能作为当时已自动记录完整源码的证明。重录视频另外保存了启动时的 [源码清单](./evidence/video-source-manifest.json)，归档时逐项核对仍一致。原始全部日志、PNG、运行 profile 留在本机忽略的 `artifacts/`。
 
 ## 运行条件与基线
