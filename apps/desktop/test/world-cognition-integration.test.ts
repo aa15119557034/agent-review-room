@@ -567,11 +567,14 @@ test("a new scene uses only the remaining daily budget and reset does not refund
 });
 
 test("automatic event scenes dispatch one reply, and a settings refresh cannot restart the waiting request", async () => {
-  const h = await fixture(Array.from({ length: 8 }, (_, i) => `resident-${i + 1}`));
+  const h = await fixture(Array.from({ length: 4 }, (_, i) => `resident-${i + 1}`));
   try {
+    // Trigger the same automatic scene path in a supported new four-resident world.
+    h.modify((world) => { world.residents[0]!.placeId = "kitchen"; world.residents[0]!.satiety = 10; });
     await h.world.advance(200); await until(() => h.adapter.runs.length === 1);
     const scene = h.world.get().scene!;
     assert.equal(scene.origin.kind, "event"); assert.equal(scene.state, "waiting");
+    assert.equal(scene.origin.kind === "event" && scene.origin.cause, "low_state");
     assert.equal(h.requests[0]!.sceneId, scene.id);
     await h.world.saveSettings({ type: "world.settings.save", settings: { dayRealMinutes: 4, dailyCognitionLimit: 80 } });
     assert.equal(h.requests.length, 1);
