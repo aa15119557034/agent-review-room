@@ -237,7 +237,10 @@
 .room {
   position: relative;
   display: grid;
+  /* 列宽钉在卡片宽度上，长房间名只能省略，不能把标题行撑出卡片、把「走过去」挤没 */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto auto minmax(0, 1fr);
+  min-width: 0;
   gap: 6px;
   padding: 10px 12px 8px;
   border: 3px solid var(--wall-edge);
@@ -348,6 +351,7 @@
 }
 
 .room-head {
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;

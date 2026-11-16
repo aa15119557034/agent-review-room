@@ -187,7 +187,7 @@ function Room({ place, world, now, names }: { place: WorldPlace; world: WorldSna
       onClick={go}
     >
       <div className="room-head">
-        <h2>{names.place(place.id)}</h2>
+        <h2 title={names.place(place.id)}>{names.place(place.id)}</h2>
         {here ? (
           <span className="room-here">你在这里</span>
         ) : (
