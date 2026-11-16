@@ -1,12 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import {Vector3} from "three";
+import {BoxGeometry,Mesh,MeshBasicMaterial,Raycaster,Vector3} from "three";
 import type {WorldPlace} from "@room/schemas";
 import {activityAnchor,actorRenderOrder,roomLayout,separateAnchor} from "../ui/world/house-model";
 import {createMockBridge} from "../mock/mock-backend";
 import {createClient} from "../lib/client";
 import {newId} from "../lib/ids";
 import {arrangeHouseLabels,type HouseLabel} from "../ui/world/house-labels";
+import {dialogueCamera} from "../ui/world/house-camera";
 
 function places(count:number):WorldPlace[]{return [
  {id:"living_room",label:"客厅",owner:null,neighbors:["kitchen",...Array.from({length:Math.min(7,count)},(_,i)=>`room_${i+1}`)]},
@@ -53,4 +54,10 @@ test("clustered projected nameplates retain selected resident and player without
 test("separated projected nameplates remain available",()=>{
  const labels:HouseLabel[]=Array.from({length:5},(_,i)=>({key:`resident_${i}`,x:90+i*150,y:180,name:`居民${i}`,activity:"看书",selected:i===2}));
  assert.equal(arrangeHouseLabels(labels,850,620).length,5);
+});
+
+test("dialogue camera avoids a person standing in the default face sightline",()=>{
+ const face=new Vector3(0,1.52,0),preferred=new Vector3(1.5,0,3.1);const blocker=new Mesh(new BoxGeometry(.55,1.7,.55),new MeshBasicMaterial());blocker.position.set(.45,.85,.9);blocker.updateMatrixWorld(true);
+ const chosen=dialogueCamera(face,preferred,[blocker]);const ray=new Raycaster(chosen.position,face.clone().sub(chosen.position).normalize(),.05,chosen.position.distanceTo(face)-.1);
+ assert.equal(ray.intersectObject(blocker).length,0);blocker.geometry.dispose();(blocker.material as MeshBasicMaterial).dispose();
 });

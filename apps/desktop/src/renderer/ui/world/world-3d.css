@@ -25,6 +25,8 @@
 .world-you>p { min-width:0; }
 .world-you>.world-local-items { margin:0; }
 .world-you>button { justify-self:start; }
+.resident-tabs { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px; }
+.resident-tabs button { min-width:0;white-space:normal;overflow-wrap:anywhere; }
 .scene,.scene[data-kind="kitchen"],.scene[data-kind="bedroom"] { background:transparent;pointer-events:none;display:grid;grid-template-rows:auto minmax(180px,1fr) minmax(0,auto) auto;gap:8px;padding:12px; }
 .scene-top { grid-row:1;pointer-events:auto;background:#f9f6e9e8;border-radius:13px;padding:5px 10px; }
 .scene-box,.scene-backlog { grid-row:3;pointer-events:auto;min-height:70px;max-height:160px;overflow-y:auto;overscroll-behavior:contain;border-radius:15px;background:#fff9ebf2;padding:12px 17px;box-shadow:0 8px 30px #203e3520; }

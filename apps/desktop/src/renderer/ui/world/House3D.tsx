@@ -8,6 +8,8 @@ import { agentColor } from "../../lib/discussion";
 import { ACTIVITY_LABEL, residentLine, type WorldNames } from "../../lib/world";
 import { useActions, useAppState } from "../hooks";
 import { activityAnchor, actorRenderOrder, buildHouse, separateAnchor } from "./house-model";
+import { dressCharacter } from "./character-clothes";
+import { dialogueCamera } from "./house-camera";
 import { arrangeHouseLabels, type HouseLabel } from "./house-labels";
 import characterUrl from "../../assets/world/character.glb?url";
 import playerUrl from "../../assets/world/player.glb?url";
@@ -80,7 +82,7 @@ export function House3D({world,names,inspectRenderer}:{world:WorldSnapshot;names
       const people=[...current.current.world.residents.map((r,index)=>({id:r.agent,agent:r.agent,index})),{id:"__player",agent:null,index:current.current.world.residents.length}];
       for(const person of people){
         const root=new T.Group();root.userData.agent=person.agent;scene.add(root);avatarRoots.push(root);
-        const body=clone(person.agent?gltf.scene:playerGltf.scene);addClothing(body,person.agent?agentColor(current.current.disc,person.agent):"#879aa5");const bounds=new T.Box3().setFromObject(body);const height=bounds.max.y-bounds.min.y;body.scale.setScalar(1.62/height);body.position.y=-bounds.min.y*body.scale.y;root.add(body);
+        const body=clone(person.agent?gltf.scene:playerGltf.scene);dressCharacter(body,person.agent?agentColor(current.current.disc,person.agent):"#879aa5");const bounds=new T.Box3().setFromObject(body);const height=bounds.max.y-bounds.min.y;body.scale.setScalar(1.62/height);body.position.y=-bounds.min.y*body.scale.y;root.add(body);
         body.traverse(object=>{if(object instanceof T.Mesh){object.castShadow=true;object.receiveShadow=true;const mats=Array.isArray(object.material)?object.material:[object.material];const copies=mats.map(m=>{const copy=m.clone();if(copy instanceof T.MeshStandardMaterial&&copy.name.includes("Hair"))copy.color.set(["#3d2b23","#342c38","#9c6738","#542b2a"][person.index%4]!);return copy;});object.material=Array.isArray(object.material)?copies:copies[0]!;}});
         body.updateWorldMatrix(true,true);const bodyInverse=body.getWorldQuaternion(new T.Quaternion()).invert();
         const bones:Avatar["bones"]=new Map();body.traverse(object=>{if(object instanceof T.Bone){const child=object.children.find(c=>c instanceof T.Bone);const direction=child?child.getWorldPosition(new T.Vector3()).sub(object.getWorldPosition(new T.Vector3())).applyQuaternion(bodyInverse).normalize():new T.Vector3(0,1,0);bones.set(object.name,{bone:object,original:object.quaternion.clone(),modelRotation:bodyInverse.clone().multiply(object.getWorldQuaternion(new T.Quaternion())),direction});}});
@@ -113,7 +115,7 @@ export function House3D({world,names,inspectRenderer}:{world:WorldSnapshot;names
       }
       const activeDialogue=state.dialogue?.id??null;
       if(lastDialogue!==activeDialogue){
-        if(activeDialogue){const a=avatars.get(state.dialogue!.residents[0]??"");if(a){const target=a.target.clone().add(new T.Vector3(0,1.1,0));const offset=a.placeId==="kitchen"?new T.Vector3(-2.5,1.1,-1.7):new T.Vector3(1.5,1,3.1);cameraGoal={target,position:target.clone().add(offset)};}}
+        if(activeDialogue){const a=avatars.get(state.dialogue!.residents[0]??"");if(a){for(const person of avatars.values()){person.root.position.copy(person.target);person.route=[];}scene.updateMatrixWorld(true);const seated=a.slot<7&&(a.kind==="read"||a.kind==="rest"||a.kind==="eat");const face=a.target.clone().add(new T.Vector3(0,seated?1.15:1.52,0));const preferred=a.placeId==="kitchen"?new T.Vector3(-2.5,0,-1.7):new T.Vector3(1.5,0,3.1);cameraGoal=dialogueCamera(face,preferred,[house.group,...[...avatars.values()].filter(person=>person!==a).map(person=>person.root)]);}}
         else if(lastDialogue)cameraGoal={position:homePosition.clone(),target:homeTarget.clone()};lastDialogue=activeDialogue;
       }
       for(const a of avatars.values()){
@@ -133,7 +135,7 @@ export function House3D({world,names,inspectRenderer}:{world:WorldSnapshot;names
         let holder:Avatar|undefined;
         if(item.at.kind==="held")holder=avatars.get(item.at.by.kind==="player"?"__player":item.at.by.agent);
         else if(id==="book"&&item.usedBy){const reader=state.world.activities.find(a=>a.id===item.usedBy)?.participants[0];if(reader)holder=avatars.get(reader.kind==="player"?"__player":reader.agent);}
-        if(holder){if(prop.parent!==holder.root)holder.root.add(prop);prop.position.set(0,.95,.38);prop.rotation.set(0,0,0);}
+        if(holder){if(prop.parent!==holder.root)holder.root.add(prop);const left=holder.bones.get("hand_l")!.bone.getWorldPosition(new T.Vector3()),right=holder.bones.get("hand_r")!.bone.getWorldPosition(new T.Vector3());prop.position.copy(holder.root.worldToLocal(left.add(right).multiplyScalar(.5))).add(new T.Vector3(0,.025,.025));prop.rotation.set(0,0,0);}
         else if(item.at.kind==="place"){if(prop.parent!==scene)scene.add(prop);const room=roomMap.get(item.at.placeId);if(!room){prop.visible=false;continue;}prop.rotation.set(0,0,0);if(id==="pot"&&room.id==="kitchen")prop.position.set(room.x+2.65,1.2,room.z-1.55);else if(room.bedroom)prop.position.set(room.x+room.width/2-.8,.9,room.z+1.5);else if(room.id==="kitchen")prop.position.set(room.x,1.04,room.z);else prop.position.set(room.x-1.65,.48,room.z+.35);}
         else prop.visible=false;
       }
@@ -171,25 +173,6 @@ function pose(avatar:Avatar,time:number,moving:boolean,speaking:boolean){
     if(n.includes("thigh"))desired=new T.Vector3(0,seated?-.1:-1,seated?1:moving?-swing:0);
     if(n.includes("calf"))desired=new T.Vector3(0,-1,moving?Math.max(0,swing):0);
     if(desired){const delta=new T.Quaternion().setFromUnitVectors(direction,desired.normalize());const target=bodyRotation.clone().multiply(delta).multiply(modelRotation);bone.quaternion.copy(bone.parent!.getWorldQuaternion(new T.Quaternion()).invert().multiply(target));bone.updateWorldMatrix(false,true);}
-  }
-}
-/** Fitted skinned shirt and trousers derived from the CC0 body surface. */
-function addClothing(body:T.Object3D,color:string){
-  const meshes:T.SkinnedMesh[]=[];body.traverse(o=>{if(o instanceof T.SkinnedMesh&&(Array.isArray(o.material)?o.material:[o.material]).some(m=>m.name.includes("Superhero")))meshes.push(o);});
-  for(const mesh of meshes){
-    const source=mesh.geometry;source.computeBoundingBox();const unit=source.boundingBox!.max.y/1.76664;const positions=source.getAttribute("position");const normals=source.getAttribute("normal");const indices=source.index;
-    if(!indices)continue;
-    for(const part of ["shirt","trousers"]){
-      const selected:number[]=[];
-      for(let i=0;i<indices.count;i+=3){const triangle=[indices.getX(i),indices.getX(i+1),indices.getX(i+2)];const include=triangle.every(j=>{const y=positions.getY(j)/unit,x=Math.abs(positions.getX(j)/unit);return part==="shirt"?y>.88&&y<1.49&&x<.39:y<.96;});if(include)selected.push(...triangle);}
-      const geometry=source.clone();const p=geometry.getAttribute("position");for(let i=0;i<p.count;i++){let x=p.getX(i)/unit,y=p.getY(i)/unit,z=p.getZ(i)/unit;if(part==="shirt"&&y<1.48&&y>.86&&Math.abs(x)<.32){const angle=Math.atan2(z/.16,x/.25);const blend=T.MathUtils.clamp((1.48-y)/.18,0,1)*T.MathUtils.clamp((.32-Math.abs(x))/.07,0,1);x=T.MathUtils.lerp(x,Math.cos(angle)*.25,blend);z=T.MathUtils.lerp(z,Math.sin(angle)*.175,blend);}x+=normals.getX(i)*.016;z+=normals.getZ(i)*.016;p.setXYZ(i,x*unit,(y+normals.getY(i)*.01)*unit,z*unit);}geometry.setIndex(selected);geometry.clearGroups();geometry.computeVertexNormals();
-      const garment=new T.SkinnedMesh(geometry,new T.MeshStandardMaterial({color:part==="shirt"?color:"#37484c",roughness:.95,side:T.DoubleSide}));garment.name=part;garment.bind(mesh.skeleton,mesh.bindMatrix);garment.position.copy(mesh.position);garment.quaternion.copy(mesh.quaternion);garment.scale.copy(mesh.scale);mesh.parent!.add(garment);
-    }
-    const trim=new T.MeshStandardMaterial({color:new T.Color(color).multiplyScalar(.65),roughness:1});
-    const ring=(radius:number,tube:number,position:T.Vector3,boneName:string,rotation:T.Euler,scale:T.Vector3)=>{const geometry=new T.TorusGeometry(radius,tube,6,24);geometry.rotateX(rotation.x);geometry.rotateY(rotation.y);geometry.scale(scale.x,scale.y,scale.z);geometry.translate(position.x,position.y,position.z);const joint=mesh.skeleton.bones.findIndex(b=>b.name===boneName);if(joint<0){geometry.dispose();return;}const count=geometry.getAttribute("position").count;const skin=new Uint16Array(count*4),weights=new Float32Array(count*4);for(let i=0;i<count;i++){skin[i*4]=joint;weights[i*4]=1;}geometry.setAttribute("skinIndex",new T.Uint16BufferAttribute(skin,4));geometry.setAttribute("skinWeight",new T.Float32BufferAttribute(weights,4));const garment=new T.SkinnedMesh(geometry,trim);garment.bind(mesh.skeleton,mesh.bindMatrix);mesh.parent!.add(garment);};
-    ring(.105*unit,.017*unit,new T.Vector3(0,1.49*unit,0),"spine_03",new T.Euler(Math.PI/2,0,0),new T.Vector3(1,1,.8));
-    ring(.25*unit,.016*unit,new T.Vector3(0,.91*unit,0),"pelvis",new T.Euler(Math.PI/2,0,0),new T.Vector3(1,1,.7));
-    for(const side of [-1,1])ring(.075*unit,.014*unit,new T.Vector3(side*.37*unit,1.43*unit,0),side===1?"upperarm_l":"upperarm_r",new T.Euler(0,Math.PI/2,0),new T.Vector3(1,1,1));
   }
 }
 const closedBitmaps=new WeakSet<ImageBitmap>();
