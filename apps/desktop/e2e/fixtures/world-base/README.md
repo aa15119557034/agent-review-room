@@ -45,4 +45,4 @@ node scripts\baseline.cjs --scene=combined --electron=D:\codex\2026-11-16\world-
 
 ## 当前状态
 
-第一段、地表/浅水修正及C酱第二轮精修已落地。第二轮精修单独复测见 [a7fe1e7 GPU证据](./evidence/gpu-polish-a7fe1e7/README.md)。之前的地表对照、录像及未通过的诊断限制见 [地表与浅水修正](./evidence/terrain-water-2026-11-17/README.md)；首轮录像、原版基线和性能修复历史见 [EVIDENCE.md](./EVIDENCE.md)，旧录像不代表当前场景参数。第三方许可和修改范围见 [THIRD-PARTY.md](./THIRD-PARTY.md)。
+第一段、地表/浅水修正及C酱第二轮精修已落地。第二轮精修单独复测见 [a7fe1e7 GPU证据](./evidence/gpu-polish-a7fe1e7/README.md)；新一段的花箱、外机、背景公寓、14项行为检查，以及未解决的湿面/资源取消问题见 [街景补充与交接](./evidence/streetscape-2026-11-17/README.md)。之前的地表对照、录像及未通过的诊断限制见 [地表与浅水修正](./evidence/terrain-water-2026-11-17/README.md)；首轮录像、原版基线和性能修复历史见 [EVIDENCE.md](./EVIDENCE.md)，旧录像不代表当前场景参数。第三方许可和修改范围见 [THIRD-PARTY.md](./THIRD-PARTY.md)。

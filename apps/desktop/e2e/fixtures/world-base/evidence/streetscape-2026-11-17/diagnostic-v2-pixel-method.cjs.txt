@@ -1,0 +1,36 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const cp = require('node:child_process');
+const base = path.resolve(__dirname, '../world-base/apps/desktop/e2e/fixtures/world-base');
+if (process.versions.electron) {
+  const {app,nativeImage} = require('electron');
+  app.disableHardwareAcceleration();
+  const read = name => nativeImage.createFromPath(path.join(base, 'artifacts/streetscape-v2', name + '.png'));
+  const before = read('15-road-dry-detail'), after = read('14-road-wet-detail');
+  const {width,height} = before.getSize();
+  const a=before.getBitmap(), b=after.getBitmap();
+  const results=[];
+  for (const [name,x0,y0,x1,y1] of [['road-lower',0,.5,1,1],['road-left',0,.55,.5,1],['road-middle',.3,.55,.7,.9],['road-right',.5,.55,1,1]]) {
+    let pixels=0,changed=0,total=0,max=0;
+    for(let y=Math.floor(y0*height);y<Math.floor(y1*height);y++) for(let x=Math.floor(x0*width);x<Math.floor(x1*width);x++) {
+      let peak=0;
+      for(let c=0;c<3;c++){const d=Math.abs(a[(y*width+x)*4+c]-b[(y*width+x)*4+c]);total+=d;peak=Math.max(peak,d);}
+      pixels++; changed+=peak>0; max=Math.max(max,peak);
+    }
+    results.push({name,pixels,changed,maxChannelDifference:max,meanChannelDifference:total/pixels/3});
+  }
+  console.log(JSON.stringify({method:'Read-only CPU PNG channel comparison; animation not frozen.',width,height,results}));
+  app.exit(0);
+} else {
+  const {cleanEnvironment}=require(path.join(base,'scripts/baseline.cjs'));
+  const temporary=fs.mkdtempSync(path.join(__dirname,'wet-png-runtime-'));
+  try {
+    const r=cp.spawnSync(path.resolve(__dirname,'../runtime-path-probe/electron.exe'),[__filename],{encoding:'utf8',windowsHide:true,env:cleanEnvironment(temporary),timeout:30000});
+    if(r.status!==0)throw new Error(r.stderr || 'CPU decoder failed');
+    fs.writeFileSync(path.join(__dirname,'x51-wet-png-check.json'),r.stdout);
+    process.stdout.write(r.stdout);
+  } finally {
+    if(path.dirname(path.resolve(temporary))!==__dirname || !path.basename(temporary).startsWith('wet-png-runtime-'))throw new Error('Unexpected temporary path');
+    fs.rmSync(temporary,{recursive:true,force:true});
+  }
+}
