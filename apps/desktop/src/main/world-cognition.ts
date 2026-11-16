@@ -105,7 +105,9 @@ export class WorldCognitionRunner {
     if (pending === null) return;
     try {
       const runs = await pending.adapter.listRemoteRuns(AbortSignal.timeout(5000));
-      if (runs.some((run) => run.runId === pending.runId && run.state === "running")) throw new WorldRunNotStoppedError();
+      // An absent Run may still be created by a delayed POST. Only this Run's
+      // explicit terminal state confirms that dispatch can no longer be live.
+      if (!runs.some((run) => run.runId === pending.runId && run.state === "finished")) throw new WorldRunNotStoppedError();
     } catch {
       // Keep the barrier after the original request settles. A later foreground
       // handoff or explicit world request must check it again before dispatch.

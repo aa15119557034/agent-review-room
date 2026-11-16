@@ -35,7 +35,12 @@ class ControlledAdapter implements RemoteAgentAdapter {
   initializeGate?: Promise<void>;
   beforeRun?: () => void;
   async health() { return { protocol: REMOTE_PROTOCOL_VERSION, nodeId: "fake", profiles: ["test-chat"], activeRuns: this.active ? 1 : 0, maxConcurrentRuns: 1, leaseMs: 100, heartbeatMs: 20 }; }
-  async listRemoteRuns() { return this.active ? [{ runId: this.active, profileId: "test-chat", state: "running" as const, lastSeq: 0, subscribers: 1 }] : []; }
+  async listRemoteRuns() {
+    return this.runs.map(({ runId }) => ({
+      runId, profileId: "test-chat", state: runId === this.active ? "running" as const : "finished" as const,
+      lastSeq: 0, subscribers: runId === this.active ? 1 : 0,
+    }));
+  }
   async reconcile() { return { orphansOnNode: [], missingOnNode: [] }; }
   async initialize() { await this.initializeGate; return { streaming: true, permissionRequests: false, readOnly: true }; }
   async startSession() { return { sessionId: "fake-session", adapterId: this.id }; }
@@ -112,7 +117,7 @@ test("zero residents with cognition injected return the empty start page without
     db, queue, dbPath, knownAgents: () => [], emit: () => assert.fail("empty world must not publish events"),
     cognition: {
       runner: { request: async () => assert.fail("empty world must not dispatch"), cancel: () => {}, drain: async () => {} },
-      budget: { get: () => assert.fail("empty world has no per-resident budgets") },
+      budget: { get: () => assert.fail("empty world has no per-resident budgets"), sceneUsed: () => assert.fail("empty world has no scene budget") },
       persona: () => assert.fail("empty world has no persona"), isConfigured: () => assert.fail("empty world has no agent to resolve"),
     },
   });
@@ -386,19 +391,83 @@ test("maintenance and stop hold the database lock until cancelled work really se
   } finally { await h.close(); }
 });
 
-test("a scene admits at most eight model Runs and reset cannot replenish the daily ledger", async () => {
-  const h = await fixture(["claude"]);
+test("the eighth reply closes scene input immediately; settings, midnight and resume cannot reopen it", async () => {
+  const h = await fixture(["claude"], 9);
   try {
     await h.talk(); await h.answer(0);
-    for (let i = 1; i < 8; i++) { await h.say("continue " + i); await h.answer(i); }
-    await h.say("ninth attempt"); await h.settle();
+    const sceneId = h.world.get().scene!.id;
+    for (let i = 1; i < 8; i++) {
+      assert.equal(h.world.get().scene!.canType, true);
+      assert.equal((await h.say("continue " + i)).result.accepted, true);
+      await h.answer(i);
+    }
+    const exhausted = h.world.get().scene!;
+    assert.equal(exhausted.state, "open");
+    assert.equal(exhausted.lines.filter((line) => line.source === "model").length, 8, "the eighth reserved reply still commits");
+    assert.equal(exhausted.canType, false, "no ninth utterance is needed to discover the limit");
+    assert.deepEqual((await h.say("ninth attempt")).result, { accepted: false, reason: "not_allowed" });
+    await h.settle();
     assert.equal(h.adapter.runs.length, 8);
+    assert.equal(h.requests.length, 8, "main rejects before invoking the Runner");
+    assert.deepEqual(h.world.get().scene, exhausted, "rejected input is not stored as speech");
+    await h.world.saveSettings({ type: "world.settings.save", settings: { dayRealMinutes: 8, dailyCognitionLimit: 10 } });
     assert.equal(h.world.get().scene!.canType, false);
-    assert.match(h.world.get().scene!.lines.at(-1)!.text, /回应次数已用完/);
-    await h.restart();
     assert.equal(h.world.get().budgets[0]!.used, 8);
     h.state.date = new Date(2026, 10, 17, 0, 1);
     assert.equal(h.world.get().budgets[0]!.used, 0);
+    await h.world.saveSettings({ type: "world.settings.save", settings: { dayRealMinutes: 4, dailyCognitionLimit: 20 } });
+    await h.world.pause(h.world.get().world!.id);
+    await h.world.resume(h.world.get().world!.id);
+    assert.equal(h.world.get().scene!.id, sceneId);
+    assert.equal(h.world.get().scene!.canType, false);
+    assert.equal((await h.say("tomorrow in the same scene")).result.accepted, false);
+    assert.equal(h.requests.length, 8);
+    await h.world.close({ type: "world.scene.close", ...h.base(), sceneId });
+    const fresh = await h.talk();
+    assert.notEqual(fresh.scene!.id, sceneId);
+    assert.equal(fresh.scene!.canType, true);
+    await h.answer(8);
+    assert.equal(h.world.get().budgets[0]!.used, 1);
+    assert.equal(h.world.get().scene!.canType, true);
+  } finally { await h.close(); }
+});
+
+test("pausing the eighth reserved Run preserves its spent scene slot on resume", async () => {
+  const h = await fixture(["claude"]);
+  try {
+    await h.talk(); await h.answer(0);
+    for (let i = 1; i < 7; i++) { await h.say("continue " + i); await h.answer(i); }
+    await h.say("eighth waiting");
+    await until(() => h.adapter.runs.length === 8);
+    assert.equal(h.world.get().scene!.state, "waiting");
+    assert.equal(h.budget.sceneUsed(h.world.get().scene!.id), 8);
+    await h.world.pause(h.world.get().world!.id);
+    await h.world.resume(h.world.get().world!.id);
+    assert.equal(h.world.get().scene!.state, "open");
+    assert.equal(h.world.get().scene!.canType, false);
+    assert.equal((await h.say("after cancellation")).result.accepted, false);
+    assert.equal(h.requests.length, 8);
+  } finally { await h.close(); }
+});
+
+test("a new scene uses only the remaining daily budget and reset does not refund it", async () => {
+  const h = await fixture(["claude"], 9);
+  try {
+    await h.talk(); await h.answer(0);
+    for (let i = 1; i < 8; i++) { await h.say("continue " + i); await h.answer(i); }
+    const sceneId = h.world.get().scene!.id;
+    await h.world.close({ type: "world.scene.close", ...h.base(), sceneId });
+    const fresh = await h.talk();
+    assert.notEqual(fresh.scene!.id, sceneId);
+    assert.equal(fresh.scene!.canType, true);
+    await h.answer(8);
+    assert.equal(h.world.get().scene!.canType, false, "the final daily slot is consumed even in a new scene");
+    assert.equal((await h.say("daily limit")).result.accepted, false);
+    assert.equal(h.requests.length, 9);
+    await h.restart();
+    assert.equal(h.world.get().budgets[0]!.used, 9);
+    assert.equal((await h.talk()).scene!.canType, false);
+    assert.equal(h.requests.length, 9);
   } finally { await h.close(); }
 });
 

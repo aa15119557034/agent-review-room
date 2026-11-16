@@ -64,19 +64,37 @@ test("Run retransmission is idempotent across limits and days but cannot change 
 });
 
 test("one scene allows eight starts across residents and days, including failed and cancelled Runs", (t) => {
-  const { store } = fixture(t);
+  const { store, path } = fixture(t);
   const scene = sceneId();
+  assert.equal(store.sceneUsed(scene), 0);
   const requests = Array.from({ length: 8 }, (_, index) => ({
     runId: runId(), agent: index % 2 === 0 ? "claude" : "codex", sceneId: scene,
     limit: 20, now: new Date(2026, 10, 16 + Math.floor(index / 4), 12),
   }));
   // No completion callback/refund exists: cancellation or invalid replies leave reservations intact.
-  for (const request of requests) assert.equal(store.reserve(request).accepted, true);
+  for (const [index, request] of requests.entries()) {
+    assert.equal(store.reserve(request).accepted, true);
+    assert.equal(store.sceneUsed(scene), index + 1);
+  }
   const denied = store.reserve({ runId: runId(), agent: "claude", sceneId: scene, limit: 20, now });
   assert.equal(denied.reason, "scene");
   assert.equal(denied.budget.used, 2);
   assert.equal(store.reserve(requests[0]!).accepted, true);
-  assert.equal(store.reserve({ runId: runId(), agent: "claude", sceneId: sceneId(), limit: 20, now }).accepted, true);
+  assert.equal(store.sceneUsed(scene), 8, "denial and Run replay do not increase scene usage");
+  const otherScene = sceneId();
+  assert.equal(store.sceneUsed(otherScene), 0);
+  assert.equal(store.reserve({ runId: runId(), agent: "claude", sceneId: otherScene, limit: 20, now }).accepted, true);
+  assert.equal(store.sceneUsed(otherScene), 1);
+  assert.equal(store.sceneUsed(scene), 8);
+  assert.throws(() => store.sceneUsed("not-a-scene"), { name: "ZodError" });
+  store.close();
+  const reopened = new WorldBudgetStore(path);
+  try {
+    assert.equal(reopened.sceneUsed(scene), 8, "scene usage survives reopening the ledger");
+    assert.equal(reopened.sceneUsed(otherScene), 1);
+    assert.equal(reopened.reserve({ runId: runId(), agent: "claude", sceneId: scene, limit: 20, now: new Date(2026, 10, 18) }).reason, "scene");
+    assert.equal(reopened.sceneUsed(scene), 8, "a later calendar day does not reopen the scene");
+  } finally { reopened.close(); }
 });
 
 test("usage follows local calendar dates and next local midnight, not world time or rolling 24 hours", (t) => {

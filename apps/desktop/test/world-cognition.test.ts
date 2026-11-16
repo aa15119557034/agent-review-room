@@ -37,6 +37,7 @@ class FakeAdapter implements RemoteAgentAdapter {
   sessions: SessionConfig[] = [];
   closed: string[] = [];
   runs: { runId: string; input: AgentInput; options: RunOptions }[] = [];
+  readonly finishedRuns = new Set<string>();
   initializeGate?: Promise<void>;
   sessionGate?: Promise<void>;
   closeGate?: Promise<void>;
@@ -44,7 +45,9 @@ class FakeAdapter implements RemoteAgentAdapter {
   readonly enteredClose = deferred();
   behavior: (runId: string, input: AgentInput, opts: RunOptions) => AsyncIterable<AgentEvent> = valid;
   async health() { return { protocol: REMOTE_PROTOCOL_VERSION, nodeId: "fake", profiles: ["test-chat"], activeRuns: 0, maxConcurrentRuns: 1, leaseMs: 100, heartbeatMs: 20 }; }
-  async listRemoteRuns() { return []; }
+  async listRemoteRuns() {
+    return this.runs.map(({ runId }) => ({ runId, profileId: this.node.profileId, state: this.finishedRuns.has(runId) ? "finished" as const : "running" as const, lastSeq: 0, subscribers: 0 }));
+  }
   async reconcile() { return { orphansOnNode: [], missingOnNode: [] }; }
   async initialize() {
     this.initialized++;
@@ -56,10 +59,11 @@ class FakeAdapter implements RemoteAgentAdapter {
     await this.sessionGate;
     return { sessionId: "test-session", adapterId: this.id };
   }
-  run(_sessionId: string, runId: string, input: AgentInput, options: RunOptions) {
+  async *run(_sessionId: string, runId: string, input: AgentInput, options: RunOptions): AsyncIterable<AgentEvent> {
     this.runs.push({ runId, input, options });
     this.enteredRun.resolve();
-    return this.behavior(runId, input, options);
+    try { yield* this.behavior(runId, input, options); }
+    finally { this.finishedRuns.add(runId); }
   }
   async closeSession(id: string) {
     this.enteredClose.resolve();
@@ -328,9 +332,10 @@ test("unavailable nodes and explicit node failures fall back offline without pre
   } finally { await h.close(); }
 });
 
-async function remoteFixture(dropOnCancel = false) {
+async function remoteFixture(dropOnCancel = false, holdStart = false) {
   let running = false, listUnavailable = false, runId = "", stream: ServerResponse | null = null;
-  const connected = deferred(), cancelled = deferred();
+  let pendingStart: (() => void) | null = null;
+  const connected = deferred(), cancelled = deferred(), startReceived = deferred();
   const server = createServer((req, res) => {
     const json = (value: unknown, status = 200) => { res.writeHead(status, { "content-type": "application/json" }); res.end(JSON.stringify(value)); };
     if (req.url === "/v1/health") return json({ protocol: REMOTE_PROTOCOL_VERSION, nodeId: "test-world-node", profiles: ["test-chat"], activeRuns: running ? 1 : 0, maxConcurrentRuns: 1, leaseMs: 100, heartbeatMs: 20 });
@@ -339,9 +344,14 @@ async function remoteFixture(dropOnCancel = false) {
       let body = "";
       req.on("data", (chunk) => { body += String(chunk); });
       req.on("end", () => {
-        if (running) return json({ error: "node_busy", message: "busy" }, 429);
-        runId = (JSON.parse(body) as { runId: string }).runId; running = true;
-        json({ runId, status: "created", eventsPath: `/v1/runs/${runId}/events` }, 202);
+        const createRun = () => {
+          if (running) return json({ error: "node_busy", message: "busy" }, 429);
+          runId = (JSON.parse(body) as { runId: string }).runId; running = true;
+          json({ runId, status: "created", eventsPath: `/v1/runs/${runId}/events` }, 202);
+        };
+        if (holdStart) pendingStart = createRun;
+        else createRun();
+        startReceived.resolve();
       });
       return;
     }
@@ -366,7 +376,8 @@ async function remoteFixture(dropOnCancel = false) {
   if (address === null || typeof address === "string") throw new Error("missing mock node address");
   const adapter = new HttpRemoteAgentAdapter({ nodeId: "test-world-node", baseUrl: `http://127.0.0.1:${address.port}`, profileId: "test-chat", token: "t".repeat(48), heartbeatTimeoutMs: 500, reconnectGraceMs: 1000, requestTimeoutMs: 1000, cancelConfirmMs: 250 });
   return {
-    adapter, connected, cancelled,
+    adapter, connected, cancelled, startReceived,
+    releaseStart: () => { const createRun = pendingStart; pendingStart = null; createRun?.(); },
     setListUnavailable: (value: boolean) => { listUnavailable = value; },
     finish: () => { running = false; stream?.end(JSON.stringify({ type: "terminal", seq: 2, ts: now.toISOString(), result: { outcome: "cancelled" } }) + "\n"); },
     close: async () => { running = false; stream?.destroy(); server.closeAllConnections(); await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve())); },
@@ -423,4 +434,39 @@ test("unconfirmed HTTP cancellation blocks later handoffs and new reservations u
       await h.close(); await remote.close();
     }
   });
+});
+
+test("a cancelled HTTP start absent from the Run list keeps its barrier through late creation until matching finished state", { timeout: 10_000 }, async () => {
+  const remote = await remoteFixture(false, true);
+  const h = fixture(async () => remote.adapter);
+  let requested: Promise<void> | undefined, yielding: Promise<void> | undefined;
+  try {
+    requested = h.runner.request(h.input());
+    const rejectedRequest = assert.rejects(requested, WorldRunNotStoppedError);
+    await remote.startReceived.promise;
+    h.foreground.value = true;
+    yielding = h.runner.yieldToForeground();
+    const rejectedYield = assert.rejects(yielding, WorldRunNotStoppedError);
+    // The held POST times out locally after abort, before the server creates it.
+    await Promise.all([rejectedRequest, rejectedYield]);
+    assert.deepEqual(await remote.adapter.listRemoteRuns(), []);
+    await assert.rejects(h.runner.yieldToForeground(), WorldRunNotStoppedError);
+    h.foreground.value = false;
+    await assert.rejects(h.runner.request(h.input()), WorldRunNotStoppedError);
+    assert.equal(h.budget.get("claude", 60, now).used, 1, "uncertainty must not admit a replacement Run");
+    remote.releaseStart();
+    const late = await remote.adapter.listRemoteRuns();
+    assert.equal(late.length, 1);
+    assert.equal(late[0]!.state, "running");
+    await assert.rejects(h.runner.yieldToForeground(), WorldRunNotStoppedError);
+    remote.finish();
+    assert.equal((await remote.adapter.listRemoteRuns())[0]!.state, "finished");
+    await h.runner.yieldToForeground();
+    assert.equal(h.replies.length, 0);
+    assert.equal(h.budget.get("claude", 60, now).used, 1);
+  } finally {
+    remote.releaseStart(); remote.finish();
+    await Promise.allSettled([requested, yielding]);
+    await h.close(); await remote.close();
+  }
 });

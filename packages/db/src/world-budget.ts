@@ -44,6 +44,12 @@ export class WorldBudgetStore {
     return this.#budget(period(agent, limit, now));
   }
 
+  sceneUsed(sceneId: string): number {
+    const row = this.#db.prepare("SELECT COUNT(*) AS used FROM world_cognition_reservations WHERE scene_id = ?")
+      .get(WorldSceneId.parse(sceneId)) as { used: number };
+    return row.used;
+  }
+
   reserve(input: { runId: string; agent: string; sceneId?: string | null; limit: number; now?: Date }): { accepted: boolean; budget: WorldBudget; reason?: "budget" | "scene" } {
     const runId = RunId.parse(input.runId);
     const sceneId = input.sceneId == null ? null : WorldSceneId.parse(input.sceneId);
@@ -58,10 +64,7 @@ export class WorldBudgetStore {
         return { accepted: true, budget };
       }
       if (budget.used >= budget.limit) return { accepted: false, budget, reason: "budget" as const };
-      if (sceneId !== null) {
-        const scene = this.#db.prepare("SELECT COUNT(*) AS used FROM world_cognition_reservations WHERE scene_id = ?").get(sceneId) as { used: number };
-        if (scene.used >= WORLD_SCENE_MAX_MODEL_TURNS) return { accepted: false, budget, reason: "scene" as const };
-      }
+      if (sceneId !== null && this.sceneUsed(sceneId) >= WORLD_SCENE_MAX_MODEL_TURNS) return { accepted: false, budget, reason: "scene" as const };
       this.#db.prepare("INSERT INTO world_cognition_reservations(run_id, agent, day, scene_id, reserved_at) VALUES (?, ?, ?, ?, ?)")
         .run(runId, current.agent, current.day, sceneId, now.toISOString());
       return { accepted: true, budget: this.#budget(current) };

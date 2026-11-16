@@ -1,7 +1,7 @@
 import { applyWorldAction, advanceWorld, buildWorldPrompt, chooseWorldRoutine, createWorld, renderWorldSay, updateWorldViews } from "@room/core";
 import { WorldStore, acquireWorldLock, ulid, type SqliteDatabase, type WorldBudgetStore, type WriteQueue } from "@room/db";
 import {
-  WORLD_DAILY_COGNITION_DEFAULT, WORLD_DAY_REAL_MINUTES_DEFAULT,
+  WORLD_DAILY_COGNITION_DEFAULT, WORLD_DAY_REAL_MINUTES_DEFAULT, WORLD_SCENE_MAX_MODEL_TURNS,
   type CommandRequest, type ControlErrorCode, type ControlEvent,
   type WorldAction, type WorldActionResult, type WorldActor, type WorldDayReview, type WorldEvent,
   type WorldCognitionMode, type WorldCognitionReply, type WorldGeneration, type WorldScene, type WorldSceneLine, type WorldSceneResult, type WorldSettings, type WorldSnapshot, type WorldState,
@@ -24,7 +24,7 @@ interface WorldDeps {
   now?: () => string;
   cognition?: {
     runner: Pick<WorldCognitionRunner, "request" | "cancel" | "drain">;
-    budget: Pick<WorldBudgetStore, "get">;
+    budget: Pick<WorldBudgetStore, "get" | "sceneUsed">;
     persona: (agent: string) => string;
     isConfigured: (agent: string) => boolean;
     dateNow?: () => Date;
@@ -199,14 +199,19 @@ export class WorldService {
       places: world.places,
     };
   }
-  #modelReady(agent: string): boolean {
+  #modelReady(agent: string, sceneId: string | null = null): boolean {
     const cognition = this.#deps.cognition;
     if (!cognition || this.#cognitionError || !cognition.isConfigured(agent)) return false;
     const limit = this.#requireSettings().dailyCognitionLimit;
-    return limit > 0 && cognition.budget.get(agent, limit, cognition.dateNow?.() ?? new Date()).used < limit;
+    return limit > 0 && cognition.budget.get(agent, limit, cognition.dateNow?.() ?? new Date()).used < limit &&
+      (sceneId === null || this.#sceneHasCapacity(sceneId));
+  }
+  #sceneHasCapacity(sceneId: string): boolean {
+    const cognition = this.#deps.cognition;
+    return cognition !== undefined && cognition.budget.sceneUsed(sceneId) < WORLD_SCENE_MAX_MODEL_TURNS;
   }
   #sceneAgent(scene: WorldScene): string | undefined {
-    return scene.origin.kind === "player" ? scene.origin.agent : scene.residents.find((agent) => this.#modelReady(agent));
+    return scene.origin.kind === "player" ? scene.origin.agent : scene.residents.find((agent) => this.#modelReady(agent, scene.id));
   }
   #matches(ticket: CognitionTicket, world: WorldSnapshot): boolean {
     if (world.id !== ticket.worldId || !equalGeneration(world.generation, ticket.generation)) return false;
@@ -249,7 +254,7 @@ export class WorldService {
   }
   #requestCognition(world: WorldSnapshot, agent: string, sceneId: string | null, priority: "player" | "routine", requestKey: string): void {
     const cognition = this.#deps.cognition;
-    if (!cognition || !this.#modelReady(agent) || !this.#available() || world.run.state !== "running") return;
+    if (!cognition || !this.#modelReady(agent, sceneId) || !this.#available() || world.run.state !== "running") return;
     const previous = this.#thinking;
     if (previous && !(priority === "player" && previous.priority === "routine")) return;
     this.#invalidateCognition(previous);
@@ -333,7 +338,7 @@ export class WorldService {
       const stillHere = scene?.placeId === world.residents.find((resident) => resident.agent === ticket.agent)!.placeId;
       if (scene && scene.state !== "closed" && scene.residents.includes(ticket.agent) && (ticket.sceneId !== null || stillHere)) {
         const additions = ticket.sceneId ? lines : lines.filter((value) => value.source === "rule");
-        const updated: WorldScene = { ...scene, state: "open", canType: stillHere && this.#modelReady(ticket.agent), lines: [...scene.lines, ...additions] };
+        const updated: WorldScene = { ...scene, state: "open", canType: stillHere && this.#modelReady(ticket.agent, scene.id), lines: [...scene.lines, ...additions] };
         this.#store.saveScene(world.id, updated);
         out.push({ type: "world.scene.updated", scene: updated });
       }
@@ -350,7 +355,7 @@ export class WorldService {
         const scene = this.#store.getScene(world.id, ticket.sceneId)!;
         const stillHere = world.residents.find((resident) => resident.agent === ticket.agent)!.placeId === scene.placeId;
         const text = !stillHere ? "她已离开这间屋，刚才的回应没有接上。" : ticket.settled === "budget" ? "今天的思考次数用完了，她先按作息生活。" : ticket.settled === "scene_limit" ? "这段对话的回应次数已用完，可以先一起做点事。" : ticket.settled === "busy_elsewhere" ? "她正在聊天或讨论室里忙，这句话暂时没接上。" : "她这次没接上话，可以稍后再试。";
-        const updated: WorldScene = { ...scene, state: "open", canType: stillHere && !["offline", "budget", "scene_limit"].includes(ticket.settled) && this.#modelReady(ticket.agent), lines: [...scene.lines, { speaker: null, source: "rule", expression: "neutral", seq: null, text }] };
+        const updated: WorldScene = { ...scene, state: "open", canType: stillHere && !["offline", "budget", "scene_limit"].includes(ticket.settled) && this.#modelReady(ticket.agent, scene.id), lines: [...scene.lines, { speaker: null, source: "rule", expression: "neutral", seq: null, text }] };
         this.#store.saveScene(world.id, updated);
         out.push({ type: "world.scene.updated", scene: updated });
       }
@@ -544,7 +549,7 @@ export class WorldService {
       if (world?.sceneId && this.#deps.cognition) {
         const scene = this.#store.getScene(world.id, world.sceneId)!;
         const agent = this.#sceneAgent(scene);
-        const updated: WorldScene = { ...scene, canType: agent !== undefined && this.#modelReady(agent), ...(lowering && scene.state === "waiting" ? { state: "open", lines: [...scene.lines, { speaker: null, source: "rule", expression: "neutral", seq: null, text: "思考次数设置已更新，刚才的回应已取消。" }] } : {}) };
+        const updated: WorldScene = { ...scene, canType: agent !== undefined && this.#modelReady(agent, scene.id), ...(lowering && scene.state === "waiting" ? { state: "open", lines: [...scene.lines, { speaker: null, source: "rule", expression: "neutral", seq: null, text: "思考次数设置已更新，刚才的回应已取消。" }] } : {}) };
         this.#store.saveScene(world.id, updated);
         out.push({ type: "world.scene.updated", scene: updated });
       }
@@ -594,7 +599,7 @@ export class WorldService {
     if (world.sceneId) {
       const previous = this.#store.getScene(world.id, world.sceneId);
       if (!previous || previous.state === "closed") throw new WorldError("internal", "当前场景记录缺失或已结束");
-      scene = { ...previous, generation: next, state: "open", lines: previous.state === "waiting" ? [
+      scene = { ...previous, generation: next, state: "open", canType: previous.canType && this.#sceneHasCapacity(previous.id), lines: previous.state === "waiting" ? [
         ...previous.lines, { speaker: null, source: "rule", expression: "neutral", seq: null, text: "刚才的回应没有接上，可以重新说一句。" },
       ] : previous.lines };
       this.#store.saveScene(world.id, scene);
@@ -671,7 +676,7 @@ export class WorldService {
       const scene = this.#store.getScene(world.id, request.sceneId);
       if (!scene || scene.state === "closed" || world.sceneId !== scene.id) return { result: denied("scene_closed"), scene };
       const agent = this.#sceneAgent(scene);
-      if (scene.state !== "open" || !scene.canType || !agent || !this.#modelReady(agent) || (this.#thinking && this.#thinking.priority !== "routine")) return { result: denied("not_allowed"), scene };
+      if (scene.state !== "open" || !scene.canType || !agent || !this.#modelReady(agent, scene.id) || (this.#thinking && this.#thinking.priority !== "routine")) return { result: denied("not_allowed"), scene };
       if (world.player.placeId !== scene.placeId || world.residents.find((resident) => resident.agent === agent)?.placeId !== scene.placeId) return { result: denied("not_same_place"), scene };
       const event: WorldEvent = { type: "said", seq: world.lastSeq + 1, at: world.now, placeId: scene.placeId, speaker: player, text: request.text, sceneId: scene.id };
       this.#commit(world, { ...world, lastSeq: event.seq }, [event], out);
@@ -722,10 +727,11 @@ export class WorldService {
       if (active) options.push({ id: "opt_join", label: "和她一起做", act: { actor: player, action: { type: "join", activityId: active.id } } });
     }
     options.push({ id: "opt_watch", label: "先看看", act: null });
-    const agent = origin.kind === "player" ? origin.agent : residents.find((value) => this.#modelReady(value));
-    const canType = agent !== undefined && this.#modelReady(agent);
+    const sceneId = `wscn_${ulid()}`;
+    const agent = origin.kind === "player" ? origin.agent : residents.find((value) => this.#modelReady(value, sceneId));
+    const canType = agent !== undefined && this.#modelReady(agent, sceneId);
     const waiting = canType && (!this.#thinking || (origin.kind === "player" && this.#thinking.priority === "routine"));
-    const scene: WorldScene = { id: `wscn_${ulid()}`, generation: world.generation, origin, placeId, residents, lines: [{ speaker: null, text, source: "rule", expression: "neutral", seq: null }], options, past: [], canType, state: waiting ? "waiting" : "open", openedAt: world.now, createdAt: this.#now() };
+    const scene: WorldScene = { id: sceneId, generation: world.generation, origin, placeId, residents, lines: [{ speaker: null, text, source: "rule", expression: "neutral", seq: null }], options, past: [], canType, state: waiting ? "waiting" : "open", openedAt: world.now, createdAt: this.#now() };
     const event: WorldEvent = { type: "scene", seq: world.lastSeq + 1, at: world.now, placeId, sceneId: scene.id, step: "opened", optionId: null, result: null };
     this.#store.saveScene(world.id, scene);
     this.#commit(world, { ...world, sceneId: scene.id, lastSeq: event.seq }, [event], out);
