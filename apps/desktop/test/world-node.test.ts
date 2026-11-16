@@ -53,7 +53,10 @@ function fixture() {
     ["node-b", { baseUrl: "http://127.0.0.1:18002", token: "fake-b-credential" }],
   ]);
   const health = NodeHealth.parse({ protocol: REMOTE_PROTOCOL_VERSION, nodeId: "node-a",
-    profiles: ["claude-chat", "claude-discuss", "codex-chat"], activeRuns: 0, maxConcurrentRuns: 1, leaseMs: 100, heartbeatMs: 20 });
+    profiles: ["claude-chat", "claude-discuss", "codex-chat", "claude-world"], activeRuns: 0, maxConcurrentRuns: 1, leaseMs: 100, heartbeatMs: 20,
+    profileModels: [models("claude-chat", ["preferred", "fallback"]), models("claude-world", ["preferred", "fallback"])],
+    capabilities: { runFence: { version: 1, ledgerId: "rled_" + "0".repeat(26) }, worldProfiles: [{ profileId: "claude-world", sourceChatProfileId: "claude-chat", recipeVersion: "deepseek-http-v1", sourceDefaultModel: { model: "preferred", effort: "high" } }] },
+  });
   const state = { probe: async (_signal?: AbortSignal): Promise<NodeHealth> => structuredClone(health) };
   const made: ProbeAdapter[] = [], probes: (AbortSignal | undefined)[] = [], credentialReads: string[] = [];
   const deps: Parameters<typeof resolveWorldNode>[0] = {
@@ -65,7 +68,8 @@ function fixture() {
     },
     settings: { getNode: (id) => { credentialReads.push(id); return structuredClone(credentials.get(id) ?? null); } },
     makeAdapter: (options) => {
-      const adapter = new ProbeAdapter(structuredClone(options), async (signal) => { probes.push(signal); return state.probe(signal); });
+      const { isDispatchCurrent, ...data } = options;
+      const adapter = new ProbeAdapter({ ...structuredClone(data), ...(isDispatchCurrent ? { isDispatchCurrent } : {}) }, async (signal) => { probes.push(signal); return state.probe(signal); });
       made.push(adapter);
       return adapter;
     },
@@ -83,18 +87,26 @@ test("world resolution probes only this resident's chat profile and credentials,
   assert.equal(worldNodeConfigured(h.deps, "claude"), true);
   assert.equal(h.made.length, 0, "configured checks do not contact a node");
   const resolved = await resolveWorldNode(h.deps, "claude", controller.signal);
-  assert.equal(resolved, h.made[1]);
+  assert.equal(resolved?.adapter, h.made[1]);
   assert.equal(h.made.length, 2, "one probe adapter and one uninitialized Run adapter");
   assert.deepEqual(h.probes, [controller.signal]);
   for (const adapter of h.made) {
     assert.equal(adapter.options.nodeId, "node-a");
-    assert.equal(adapter.options.profileId, "claude-chat");
     assert.equal(adapter.options.baseUrl, "http://127.0.0.1:18001");
     assert.equal(adapter.options.token, "fake-a-credential");
     assert.equal(adapter.initialized, 0);
   }
   assert.ok(h.credentialReads.every((id) => id === "node-a"));
-  assert.equal(h.made[1]!.options.model, undefined);
+  assert.equal(h.made[0]!.options.profileId, "claude-chat");
+  assert.equal(h.made[1]!.options.profileId, "claude-world");
+  assert.deepEqual(h.made[1]!.options.model, { model: "preferred", effort: "high" });
+  assert.equal(h.made[1]!.options.expectedLedgerId, "rled_" + "0".repeat(26));
+  assert.deepEqual(h.made[1]!.options.expectedWorldProfile, { sourceChatProfileId: "claude-chat", recipeVersion: "deepseek-http-v1" });
+  assert.equal(resolved?.isCurrent(), true);
+  assert.equal(h.made[1]!.options.isDispatchCurrent?.(), true);
+  h.agents[0]!.modelSettings.primaryModel = "new-selection";
+  assert.equal(resolved?.isCurrent(), false, "configuration changes after resolution still invalidate dispatch");
+  assert.equal(h.made[1]!.options.isDispatchCurrent?.(), false);
 });
 
 test("paused, missing and mismatched configuration never probes or borrows another resident's profile", async (t) => {
@@ -103,7 +115,6 @@ test("paused, missing and mismatched configuration never probes or borrows anoth
     "paused resident": (h) => { h.agents[0]!.pausedByUser = true; },
     "missing node binding": (h) => { h.agents[0]!.nodeId = null; },
     "missing chat profile despite configured discussion": (h) => { h.agents[0]!.chatProfileId = null; },
-    "discussion profile put in chat slot": (h) => { h.agents[0]!.chatProfileId = "claude-discuss"; },
     "missing node record": (h) => { h.rows.delete("node-a"); },
     "missing node address": (h) => { h.rows.get("node-a")!.base_url = null; },
     "missing credential": (h) => { h.credentials.set("node-a", null); },
@@ -171,28 +182,26 @@ test("probe failure is propagated without a replacement, and a missing advertise
 test("model selection reads the chat profile and chat effort, never the discussion or summary setting", async () => {
   const h = fixture();
   h.agents[0]!.modelSettings = { primaryModel: "preferred", fallbackModel: "fallback", effort: { chat: "high", discussion: "low", summary: "low" } };
-  h.health.profileModels = [models("claude-discuss", ["preferred"]), models("codex-chat", ["preferred"]), models("claude-chat", ["fallback"])];
+  h.health.profileModels = [models("claude-discuss", ["preferred"]), models("codex-chat", ["preferred"]), models("claude-chat", ["fallback"]), models("claude-world", ["fallback"])];
+  h.health.capabilities!.worldProfiles![0]!.sourceDefaultModel = null;
   const resolved = await resolveWorldNode(h.deps, "claude", new AbortController().signal);
-  assert.equal(resolved, h.made[1]);
+  assert.equal(resolved?.adapter, h.made[1]);
   assert.deepEqual(h.made[1]!.options.model, { model: "fallback", effort: "high" });
   assert.equal(h.made[0]!.options.model, undefined, "health probe is independent of model selection");
 });
 
-test("chat model selection honors primary, node-default effort, no-effort models and legacy profile defaults", async (t) => {
+test("chat selection is preserved, including source default and no-effort models", async (t) => {
   const cases: { name: string; configure: (h: ReturnType<typeof fixture>) => void; expected: AdapterOptions["model"] }[] = [
     { name: "primary model wins", configure: () => {}, expected: { model: "preferred", effort: "high" } },
     { name: "unsupported chat effort uses node default", configure: (h) => { h.agents[0]!.modelSettings.effort.chat = "ultra"; }, expected: { model: "preferred", effort: "low" } },
-    { name: "model has no effort levels", configure: (h) => { h.health.profileModels = [models("claude-chat", ["preferred"], [])]; }, expected: { model: "preferred", effort: null } },
-    { name: "no configured selection follows profile", configure: (h) => { h.agents[0]!.modelSettings = structuredClone(DEFAULT_AGENT_MODEL_SETTINGS); }, expected: undefined },
-    { name: "legacy health has no model catalog", configure: (h) => { delete h.health.profileModels; }, expected: undefined },
-    { name: "fixed profile has empty catalog", configure: (h) => { h.health.profileModels = [models("claude-chat", [])]; }, expected: undefined },
+    { name: "model has no effort levels", configure: (h) => { h.health.profileModels = [models("claude-chat", ["preferred"], []), models("claude-world", ["preferred"], [])]; h.health.capabilities!.worldProfiles![0]!.sourceDefaultModel = null; }, expected: { model: "preferred", effort: null } },
+    { name: "no configured selection follows verified source default", configure: (h) => { h.agents[0]!.modelSettings = structuredClone(DEFAULT_AGENT_MODEL_SETTINGS); }, expected: { model: "preferred", effort: "high" } },
   ];
   for (const { name, configure, expected } of cases) await t.test(name, async () => {
     const h = fixture();
     h.agents[0]!.modelSettings = { primaryModel: "preferred", fallbackModel: "fallback", effort: { chat: "high", discussion: "low", summary: "low" } };
-    h.health.profileModels = [models("claude-chat", ["preferred", "fallback"])];
     configure(h); NodeHealth.parse(h.health);
-    assert.equal(await resolveWorldNode(h.deps, "claude", new AbortController().signal), h.made[1]);
+    assert.equal((await resolveWorldNode(h.deps, "claude", new AbortController().signal))?.adapter, h.made[1]);
     assert.equal(h.made.length, 2);
     assert.deepEqual(h.made[1]!.options.model, expected);
   });
@@ -201,7 +210,27 @@ test("chat model selection honors primary, node-default effort, no-effort models
 test("unavailable configured models do not fall back to another profile or its default model", async () => {
   const h = fixture();
   h.agents[0]!.modelSettings = { primaryModel: "preferred", fallbackModel: "fallback", effort: { chat: "high", discussion: "low", summary: "low" } };
-  h.health.profileModels = [models("claude-chat", ["unconfigured-model"]), models("claude-discuss", ["preferred", "fallback"])];
+  h.health.profileModels = [models("claude-chat", ["unconfigured-model"]), models("claude-discuss", ["preferred", "fallback"]), models("claude-world", ["preferred", "fallback"])];
+  h.health.capabilities!.worldProfiles![0]!.sourceDefaultModel = null;
   assert.equal(await resolveWorldNode(h.deps, "claude", new AbortController().signal), null);
   assert.equal(h.made.length, 1);
+});
+
+test("names and readOnly are not isolation; invalid or changed capabilities never produce a Run adapter", async t => {
+  const cases: Record<string, (h: ReturnType<typeof fixture>) => void> = {
+    "ordinary chat only": h => { delete h.health.capabilities; },
+    "no ledger": h => { delete h.health.capabilities!.runFence; },
+    "other node": h => { h.health.nodeId = "node-b"; },
+    "unknown recipe": h => { h.health.capabilities!.worldProfiles![0]!.recipeVersion = "future-recipe"; },
+    "another source": h => { h.health.capabilities!.worldProfiles![0]!.sourceChatProfileId = "codex-chat"; },
+    "target has no catalog": h => { h.health.profileModels = [models("claude-chat", ["preferred"])]; },
+    "unknown source default": h => { h.health.capabilities!.worldProfiles![0]!.sourceDefaultModel = null; },
+    "different target model": h => { h.agents[0]!.modelSettings.primaryModel = "preferred"; h.health.capabilities!.worldProfiles![0]!.sourceDefaultModel = null; h.health.profileModels = [models("claude-chat", ["preferred"]), models("claude-world", ["fallback"])]; },
+    "different target effort": h => { h.agents[0]!.modelSettings.primaryModel = "preferred"; h.agents[0]!.modelSettings.effort.chat = "high"; h.health.capabilities!.worldProfiles![0]!.sourceDefaultModel = null; h.health.profileModels = [models("claude-chat", ["preferred"]), models("claude-world", ["preferred"], ["low"])]; },
+  };
+  for(const [name, change] of Object.entries(cases)) await t.test(name, async () => {
+    const h = fixture(); change(h);
+    assert.equal(await resolveWorldNode(h.deps, "claude", new AbortController().signal), null);
+    assert.equal(h.made.length, 1);
+  });
 });

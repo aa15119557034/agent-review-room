@@ -1,7 +1,9 @@
 import { createHash } from "node:crypto";
 import { extractWorldReply, type RemoteAgentAdapter } from "@room/core";
 import { ulid, type WorldBudgetStore } from "@room/db";
-import { AgentEvent, isTerminalEvent, type WorldBudget, type WorldCognitionMode, type WorldCognitionReply, type WorldGeneration } from "@room/schemas";
+import { AgentEvent, isTerminalEvent, WORLD_PROFILE_RECIPE_DEEPSEEK_HTTP_V1, type WorldBudget, type WorldCognitionMode, type WorldCognitionReply, type WorldGeneration } from "@room/schemas";
+import { WorldRunNotStoppedError, type WorldRunFenceBarrier } from "./world-run-fence";
+export { WorldRunNotStoppedError } from "./world-run-fence";
 
 export type WorldCognitionOutcome = "completed" | "discarded" | "offline" | "budget" | "scene_limit" | "busy_elsewhere";
 
@@ -22,7 +24,12 @@ export interface WorldCognitionRequest {
 export interface WorldCognitionRunnerDeps {
   budget: WorldBudgetStore;
   /** Returns an uninitialized adapter for a separately isolated, tool-free profile. */
-  resolve: (agent: string, signal: AbortSignal) => Promise<RemoteAgentAdapter | null>;
+  resolve: (agent: string, signal: AbortSignal) => Promise<{
+    adapter: RemoteAgentAdapter;
+    binding: Omit<Parameters<WorldBudgetStore["reserveBound"]>[0]["binding"], "worldId" | "generation">;
+    isCurrent: () => boolean;
+  } | null>;
+  fence: Pick<WorldRunFenceBarrier, "reconcile">;
   foregroundBusy: () => boolean;
   emitBudget: (budget: WorldBudget) => void;
   now?: () => Date;
@@ -34,14 +41,9 @@ interface Slot {
   done: Promise<void>;
 }
 
-export class WorldRunNotStoppedError extends Error {
-  constructor() { super("世界后台请求尚未确认停止，请稍后重试"); this.name = "WorldRunNotStoppedError"; }
-}
-
 /** One world request at a time, including initialization and session cleanup. */
 export class WorldCognitionRunner {
   #slot: Slot | null = null;
-  #unconfirmed: { adapter: RemoteAgentAdapter; runId: string } | null = null;
   readonly #pending = new Set<Promise<void>>();
 
   constructor(private readonly deps: WorldCognitionRunnerDeps) {}
@@ -91,29 +93,13 @@ export class WorldCognitionRunner {
       const results = await Promise.allSettled([...this.#pending]);
       for (const result of results) if (result.status === "rejected") failure ??= { error: result.reason };
     }
-    await this.#confirmRemoteStopped();
     if (failure !== null) throw failure.error;
   }
 
   async yieldToForeground(): Promise<void> {
     this.cancel();
     await this.drain();
-  }
-
-  async #confirmRemoteStopped(): Promise<void> {
-    const pending = this.#unconfirmed;
-    if (pending === null) return;
-    try {
-      const runs = await pending.adapter.listRemoteRuns(AbortSignal.timeout(5000));
-      // An absent Run may still be created by a delayed POST. Only this Run's
-      // explicit terminal state confirms that dispatch can no longer be live.
-      if (!runs.some((run) => run.runId === pending.runId && run.state === "finished")) throw new WorldRunNotStoppedError();
-    } catch {
-      // Keep the barrier after the original request settles. A later foreground
-      // handoff or explicit world request must check it again before dispatch.
-      throw new WorldRunNotStoppedError();
-    }
-    if (this.#unconfirmed === pending) this.#unconfirmed = null;
+    await this.deps.fence.reconcile();
   }
 
   #allowed(input: WorldCognitionRequest, slot: Slot): boolean {
@@ -132,53 +118,64 @@ export class WorldCognitionRunner {
 
   async #execute(input: WorldCognitionRequest, slot: Slot): Promise<void> {
     let adapter: RemoteAgentAdapter | null = null;
+    let resolved: Awaited<ReturnType<WorldCognitionRunnerDeps["resolve"]>> = null;
     let sessionId: string | null = null;
+    let bound = false, checkedStop = false;
+    const allowed = () => this.#allowed(input, slot) && (resolved === null || resolved.isCurrent());
     let outcome: WorldCognitionOutcome = "discarded";
     try {
       if (!this.#allowed(input, slot)) { outcome = this.#interrupted(); return; }
-      await this.#confirmRemoteStopped();
+      await this.deps.fence.reconcile();
       if (!this.#allowed(input, slot)) { outcome = this.#interrupted(); return; }
       try {
-        adapter = await this.deps.resolve(input.agent, slot.controller.signal);
-        if (!this.#allowed(input, slot)) { outcome = this.#interrupted(); return; }
+        resolved = await this.deps.resolve(input.agent, slot.controller.signal);
+        adapter = resolved?.adapter ?? null;
+        if (!allowed()) { outcome = this.#interrupted(); return; }
+        if (resolved !== null && (adapter!.runFence?.ledgerId !== resolved.binding.ledgerId ||
+            adapter!.node.expectedLedgerId !== resolved.binding.ledgerId || adapter!.node.nodeId !== resolved.binding.nodeId ||
+            adapter!.node.profileId !== resolved.binding.profileId || adapter!.node.baseUrl !== resolved.binding.baseUrl.replace(/\/+$/, "") ||
+            JSON.stringify(adapter!.node.expectedWorldProfile) !== JSON.stringify(resolved.binding.worldProfile) ||
+            resolved.binding.worldProfile.recipeVersion !== WORLD_PROFILE_RECIPE_DEEPSEEK_HTTP_V1)) throw new Error("unbound world adapter");
         if (adapter !== null) {
           await adapter.initialize();
-          if (!this.#allowed(input, slot)) { outcome = this.#interrupted(); return; }
+          if (!allowed()) { outcome = this.#interrupted(); return; }
           const session = await adapter.startSession({ projectId: "world:" + input.worldId });
           sessionId = session.sessionId;
-          if (!this.#allowed(input, slot)) { outcome = this.#interrupted(); return; }
+          if (!allowed()) { outcome = this.#interrupted(); return; }
         }
       } catch {
-        if (!this.#allowed(input, slot)) { outcome = this.#interrupted(); return; }
+        if (!allowed()) { outcome = this.#interrupted(); return; }
         outcome = "offline";
         await this.#mode(input, { mode: "routine", reason: "offline" });
         return;
       }
-      if (adapter === null || sessionId === null) {
+      if (adapter === null || sessionId === null || resolved === null) {
         outcome = "offline";
         await this.#mode(input, { mode: "routine", reason: "offline" });
         return;
       }
 
       await this.#mode(input, { mode: "model" });
-      if (!this.#allowed(input, slot)) { outcome = this.#interrupted(); return; }
+      if (!allowed()) { outcome = this.#interrupted(); return; }
       const runId = `run_${ulid()}`;
       // This durable reservation is never refunded, even if cancellation lands
       // immediately afterward or the remote node never returns a valid reply.
-      const reserved = this.deps.budget.reserve({ runId, agent: input.agent, sceneId: input.sceneId, limit: input.limit, now: this.deps.now?.() ?? new Date() });
+      const reserved = this.deps.budget.reserveBound({ runId, agent: input.agent, sceneId: input.sceneId, limit: input.limit, now: this.deps.now?.() ?? new Date(),
+        binding: { ...resolved.binding, worldId: input.worldId, generation: input.generation } });
+      bound = reserved.accepted;
       this.deps.emitBudget(reserved.budget);
       if (!reserved.accepted) {
-        outcome = reserved.reason === "scene" ? "scene_limit" : "budget";
+        outcome = reserved.reason === "pending" ? "offline" : reserved.reason === "scene" ? "scene_limit" : "budget";
         if (outcome === "budget") await this.#mode(input, { mode: "routine", reason: "budget" });
+        if (outcome === "offline") await this.#mode(input, { mode: "routine", reason: "offline" });
         return;
       }
-      if (!this.#allowed(input, slot)) { outcome = this.#interrupted(); return; }
+      if (!allowed()) { outcome = this.#interrupted(); return; }
 
       let text: string | null = null;
       let terminal: "completed" | "error" | "cancelled" | "timed_out" | null = null;
       let lastSeq = -1;
       let malformed = false;
-      this.#unconfirmed = { adapter, runId };
       try {
         for await (const raw of adapter.run(sessionId, runId, {
           snapshotId: `snap_${ulid()}`, content: input.prompt,
@@ -190,7 +187,7 @@ export class WorldCognitionRunner {
         })) {
           // Abort invalid work, but keep consuming: returning here closes the
           // HTTP iterator before the node has confirmed cancellation.
-          if (!this.#allowed(input, slot)) { slot.controller.abort(); outcome = this.#interrupted(); }
+          if (!allowed()) { slot.controller.abort(); outcome = this.#interrupted(); }
           if (malformed) continue;
           const checked = AgentEvent.safeParse(raw);
           if (!checked.success || checked.data.runId !== runId || checked.data.seq !== lastSeq + 1 || terminal !== null) {
@@ -212,14 +209,10 @@ export class WorldCognitionRunner {
         malformed = true;
         slot.controller.abort();
       }
-      // HttpRemoteAgentAdapter can synthesize an unconfirmed cancelled event.
-      // The node's structured run state, not terminal text, decides release.
-      if (!malformed && terminal === "completed") {
-        // Unlike cancellation/timeouts, completed is only forwarded from the
-        // node after the process has closed; it needs no second health check.
-        if (this.#unconfirmed?.runId === runId) this.#unconfirmed = null;
-      } else await this.#confirmRemoteStopped();
-      if (!this.#allowed(input, slot)) { outcome = this.#interrupted(); return; }
+      // Even completed must have original durable proof before any result is applied.
+      checkedStop = true;
+      await this.deps.fence.reconcile();
+      if (!allowed()) { outcome = this.#interrupted(); return; }
       if (malformed) return;
       if (terminal === "error" || terminal === "timed_out") {
         outcome = "offline";
@@ -228,11 +221,21 @@ export class WorldCognitionRunner {
       }
       if (terminal !== "completed" || text === null) return;
       const parsed = extractWorldReply(text);
-      if (!parsed.ok || !this.#allowed(input, slot)) return;
+      if (!parsed.ok || !allowed()) return;
       await input.onReply(parsed.reply, runId);
       outcome = "completed";
+    } catch (error) {
+      if (!(error instanceof WorldRunNotStoppedError)) throw error;
+      outcome = "offline";
+      await this.#mode(input, { mode: "routine", reason: "offline" });
     } finally {
       try {
+        // A reserved request cancelled before POST also needs an unknown-Run fence.
+        // Failed proof stays in SQLite; it blocks models, not rule-world pause/save.
+        if (bound && !checkedStop) {
+          try { await this.deps.fence.reconcile(); }
+          catch (error) { if (!(error instanceof WorldRunNotStoppedError)) throw error; }
+        }
         if (adapter !== null && sessionId !== null) await adapter.closeSession(sessionId);
       } finally {
         if (outcome === "busy_elsewhere") await this.#mode(input, { mode: "routine", reason: "busy_elsewhere" });

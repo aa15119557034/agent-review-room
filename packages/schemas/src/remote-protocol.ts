@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { CommitSha, IsoTimestamp, RunId, Sha256Hex, SnapshotId } from "./common";
+import { CommitSha, IsoTimestamp, RunId, Sha256Hex, SnapshotId, prefixedId } from "./common";
 import { PermissionDecision, PermissionRequest } from "./permission";
 import {
   AttachmentImageSlot,
@@ -18,6 +18,7 @@ import {
  *   POST /v1/runs                                 StartRunRequest → StartRunResponse（幂等，按 runId）
  *   GET  /v1/runs/:runId/events?after=<seq>       NDJSON 流：先补发 seq > after 的事件，再推实时事件
  *   POST /v1/runs/:runId/cancel                   CancelRunRequest
+ *   GET  /v1/runs/:runId/proof                    RemoteRunProof（需 health.capabilities.runFence）
  *   POST /v1/runs/:runId/permissions/:requestId   PermissionDecision（Phase 1，骨架返回 501）
  *   GET  /v1/runs/:runId/artifacts/:sha256        C-42b：取回 image Run 画出来的图（原始字节）
  *   GET  /v1/profiles/:profileId/quota            C-42b：这个 profile 的订阅额度（RemoteProfileQuota）
@@ -26,12 +27,27 @@ import {
  * 1. Payload 里不允许出现命令。只能选节点本地配置好的 profileId。（.strict() 拒绝多余字段）
  * 2. 节点执行前必须重新计算 sha256(content)，与 contentHash 不一致就拒绝。
  * 3. 事件流就是租约：没有任何订阅者连着超过 leaseMs，节点自行终止该 run。
- *    必须满足 leaseMs < Orchestrator 的 reconnectGraceMs，保证"远端先停，本地后判失败"。
+ *    必须满足 leaseMs < Orchestrator 的 reconnectGraceMs，给节点先发起终止的时间；
+ *    租约到期、网络宽限期结束或 terminal 本身都不是进程已停止的证明。
  * 4. heartbeat 不带 seq、不进缓冲；只用来检测连接是否还活着。
  */
 export const REMOTE_PROTOCOL_VERSION = 1 as const;
 
 export const ProfileId = z.string().regex(/^[a-z0-9][a-z0-9-]{0,63}$/);
+
+/** 持久 Run 账本的身份；重建账本必须换身份，不能冒充旧账本证明旧 Run 已停。 */
+export const RemoteRunLedgerId = prefixedId("rled");
+export type RemoteRunLedgerId = z.infer<typeof RemoteRunLedgerId>;
+
+/**
+ * 只有满足 docs/design/Run-fence-v1.md 的持久化、单 owner 和完整性要求才可上报。
+ * 未上报 = 不支持；客户端不能为旧节点补默认能力或降级重发受保护的世界请求。
+ */
+export const RemoteRunFenceCapability = z.object({
+  version: z.literal(1),
+  ledgerId: RemoteRunLedgerId,
+}).strict();
+export type RemoteRunFenceCapability = z.infer<typeof RemoteRunFenceCapability>;
 
 // ---------------------------------------------------------------- 模型选择（C-40，阶段 1B）
 
@@ -99,6 +115,32 @@ export const RunModel = z
   })
   .strict();
 export type RunModel = z.infer<typeof RunModel>;
+
+/** 稳定的隔离执行语义版本；未知版本可解析，但调用方不能因此准入世界模型。 */
+export const WorldProfileRecipeId = z.string().regex(/^[a-z0-9][a-z0-9-]{0,63}$/);
+export type WorldProfileRecipeId = z.infer<typeof WorldProfileRecipeId>;
+
+/** v1 审定的 recipe 标识，不表示当前节点已经实现或验证了它。 */
+export const WORLD_PROFILE_RECIPE_DEEPSEEK_HTTP_V1 = "deepseek-http-v1";
+
+export const WorldProfileExpectation = z.object({
+  sourceChatProfileId: ProfileId,
+  recipeVersion: WorldProfileRecipeId,
+}).strict();
+export type WorldProfileExpectation = z.infer<typeof WorldProfileExpectation>;
+
+/**
+ * 节点经固定 recipe 校验后才能声明；schema 只核格式/目录一致性，不能验证实际命令或隔离。
+ * 不由 -chat 后缀、readOnly 或手填布尔值产生。完整约束见 World-profile-v1.md。
+ */
+export const WorldProfileCapability = z.object({
+  profileId: ProfileId,
+  sourceChatProfileId: ProfileId,
+  recipeVersion: WorldProfileRecipeId,
+  /** source 的可核实实际默认；null = 未知，不能以 world 自己的默认代替。 */
+  sourceDefaultModel: RunModel.nullable(),
+}).strict();
+export type WorldProfileCapability = z.infer<typeof WorldProfileCapability>;
 
 // ---------------------------------------------------------------- 聊天的记忆槽位（C-34，阶段 1B-2）
 
@@ -222,6 +264,17 @@ export const StartRunRequest = z
     protocol: z.literal(REMOTE_PROTOCOL_VERSION),
     runId: RunId,
     profileId: ProfileId,
+    /**
+     * 先从 health.capabilities.runFence 协商取得。与当前账本不同则 409 run_ledger_mismatch，不能准入。
+     * 最终准入处（所有 await 校验之后）再次按同 RunId 原子核对 fence；持久 admitted 后才可 spawn。
+     * 旧请求可省略；要求持久 fence 的调用方不得在失败后去掉此字段重试。
+     */
+    expectedLedgerId: RemoteRunLedgerId.optional(),
+    /**
+     * 世界请求绑定隔离映射。节点在最终准入（所有 await 之后）核对当前固定 recipe 注册表，
+     * 同 ledger 下 profile 被改名/替换/停用也不能退成普通执行；此字段参与 RunId 幂等比较。
+     */
+    expectedWorldProfile: WorldProfileExpectation.optional(),
     snapshot: z
       .object({
         id: SnapshotId,
@@ -295,7 +348,19 @@ export const StartRunRequest = z
       imageBlockPlaced(r.snapshot.content, r.attachments, r.imageSlot),
     "content 里要有恰好一块图片资料块（attachmentImageBlock），在附件清单块后面，标记只在块里出现一次",
   )
-  .refine((r) => r.kind !== "image" || r.attachments === undefined, "image Run 不能带附件");
+  .refine((r) => r.kind !== "image" || r.attachments === undefined, "image Run 不能带附件")
+  .superRefine((r, ctx) => {
+    if (r.expectedWorldProfile === undefined) return;
+    const reject = (path: string[], message: string) => ctx.addIssue({ code: "custom", path, message });
+    if (r.expectedLedgerId === undefined) reject(["expectedLedgerId"], "世界请求必须绑定 ledger");
+    if (r.model === undefined) reject(["model"], "世界请求必须显式指定实际模型和档位");
+    if (r.profileId === r.expectedWorldProfile.sourceChatProfileId) reject(["profileId"], "世界 target 不能与 source chat profile 相同");
+    if (r.chat !== undefined) reject(["chat"], "世界请求不能携带 chat，即使 memory 为 null");
+    if (r.snapshot.commitSha !== undefined) reject(["snapshot", "commitSha"], "世界请求不能携带工程 commit");
+    if (r.attachments !== undefined) reject(["attachments"], "世界请求不能携带图片");
+    if (r.imageSlot !== undefined) reject(["imageSlot"], "世界请求不能携带图片槽位");
+    if (r.kind === "image") reject(["kind"], "世界请求只接受 text Run");
+  });
 
 export const StartRunResponse = z.object({
   runId: RunId,
@@ -370,7 +435,19 @@ export const RemoteEvent = z.discriminatedUnion("type", [
   z.object({ type: z.literal("heartbeat"), ts: IsoTimestamp, lastSeq: z.number().int().min(-1) }),
 ]);
 
-export const CancelRunRequest = z.object({ reason: z.string().max(500).optional() }).strict();
+/**
+ * 支持 runFence 的节点对未知 ID 也须先持久禁止创建，才可响应 202 {ok:true}。
+ * expectedLedgerId 不匹配则 409 且不修改新账本。202 只是取消已接收，停止证据另查 proof。
+ * 已 admitted 的 Run 不能因重启后 PID/对象缺席变成 never_started；同 ID 永不再次启动。
+ */
+export const CancelRunRequest = z.object({
+  reason: z.string().max(500).optional(),
+  expectedLedgerId: RemoteRunLedgerId.optional(),
+}).strict();
+
+/** 取消已接收；不是 RemoteRunProof，不代表受管进程已经停止。wire 保持原有 {ok:true}。 */
+export const CancelRunResponse = z.object({ ok: z.literal(true) });
+export type CancelRunResponse = z.infer<typeof CancelRunResponse>;
 
 export const PermissionDecisionRequest = PermissionDecision;
 
@@ -408,12 +485,45 @@ export const NodeHealth = z.object({
       imageProfiles: z.array(ProfileId).max(16).optional(),
       /** C-42b：提供 GET /v1/profiles/:profileId/quota */
       quota: z.boolean().optional(),
+      /** 可协商的持久准入 fence 与按 RunId 查询证据；不改变已有 runs 列表。 */
+      runFence: RemoteRunFenceCapability.optional(),
+      /** 经节点实际校验的隔离映射；缺席/未知 recipe 不可用于世界模型，不按名称推断。 */
+      worldProfiles: z.array(WorldProfileCapability).max(64).optional(),
     })
     .optional(),
 }).refine(
   (h) => (h.memoryProfiles ?? []).every((p) => h.profiles.includes(p)),
   "memoryProfiles 里的 profile 必须都在 profiles 里",
-);
+).superRefine((h, ctx) => {
+  const mappings = h.capabilities?.worldProfiles;
+  if (mappings === undefined || mappings.length === 0) return;
+  const issue = (path: (string | number)[], message: string) => ctx.addIssue({ code: "custom", path, message });
+  if (h.capabilities?.runFence === undefined) issue(["capabilities", "runFence"], "世界映射需要持久 Run fence 能力");
+  const targets = new Set(mappings.map((m) => m.profileId));
+  const seenTargets = new Set<string>(), seenSources = new Set<string>();
+  const supports = (models: readonly ModelOption[], chosen: RunModel) => models.some((m) =>
+    m.id === chosen.model && (chosen.effort === null ? m.efforts.length === 0 : m.efforts.some((e) => e.id === chosen.effort)));
+  for (const [index, mapping] of mappings.entries()) {
+    const path = ["capabilities", "worldProfiles", index];
+    if (seenTargets.has(mapping.profileId)) issue([...path, "profileId"], "世界 target 不能重复");
+    if (seenSources.has(mapping.sourceChatProfileId)) issue([...path, "sourceChatProfileId"], "同一 source 只能有一个世界映射");
+    seenTargets.add(mapping.profileId); seenSources.add(mapping.sourceChatProfileId);
+    if (!h.profiles.includes(mapping.profileId)) issue([...path, "profileId"], "世界 target 必须在 profiles 中");
+    if (!h.profiles.includes(mapping.sourceChatProfileId)) issue([...path, "sourceChatProfileId"], "source chat profile 必须在 profiles 中");
+    if (targets.has(mapping.sourceChatProfileId)) issue([...path, "sourceChatProfileId"], "source 不能是世界 target（包括自身和映射链）");
+    if (h.memoryProfiles?.includes(mapping.profileId) || h.capabilities?.imageProfiles?.includes(mapping.profileId)) {
+      issue([...path, "profileId"], "世界 target 不能同时声明记忆或图片能力");
+    }
+    const targetModels = h.profileModels?.find((p) => p.profileId === mapping.profileId)?.models;
+    if (!targetModels?.length) issue([...path, "profileId"], "世界 target 必须有显式的非空模型目录");
+    const chosen = mapping.sourceDefaultModel;
+    if (chosen !== null) {
+      if (targetModels && !supports(targetModels, chosen)) issue([...path, "sourceDefaultModel"], "source 默认必须是 target 目录中合法的模型/档位");
+      const sourceModels = h.profileModels?.find((p) => p.profileId === mapping.sourceChatProfileId)?.models;
+      if (sourceModels?.length && !supports(sourceModels, chosen)) issue([...path, "sourceDefaultModel"], "source 默认与 source 已声明的模型目录不一致");
+    }
+  }
+});
 
 export const RemoteRunSummary = z.object({
   runId: RunId,
@@ -422,6 +532,31 @@ export const RemoteRunSummary = z.object({
   lastSeq: z.number().int().min(-1),
   subscribers: z.number().int().nonnegative(),
 });
+
+const runProofIdentity = { runId: RunId, ledgerId: RemoteRunLedgerId };
+
+/**
+ * GET /v1/runs/:runId/proof：合法 ID 返回 200，no-store。读失败/损坏不可伪装成 missing。
+ * 调用方须核对 runId 和派发前持久绑定的 ledgerId；新账本不能解除旧账本的屏障。
+ * 输出事件 TTL 不得清理准入/fence 记录；同一账本仅有一个合法执行 owner。
+ */
+export const RemoteRunProof = z.discriminatedUnion("status", [
+  /** 完整账本没有这个 ID；POST 仍可能在途中，不能据此放行。 */
+  z.object({ ...runProofIdentity, status: z.literal("missing") }).strict(),
+  /** 已 admitted，但没有肯定停止证据；含运行、取消未确认、节点崩溃和证据写入失败。 */
+  z.object({ ...runProofIdentity, status: z.literal("unconfirmed") }).strict(),
+  /**
+   * 已持久禁止同 ID 启动，并肯定从未启动目标执行：取消先于准入，或原 owner 确知没有调用
+   * spawn / 得到明确 spawn 失败。未知异常、非零 exit code 或重启后 PID 缺席均不算此证据。
+   */
+  z.object({ ...runProofIdentity, status: z.literal("fenced_never_started") }).strict(),
+  /**
+   * 已持久禁止重建，并记录直接受管 ChildProcess 的 close。
+   * 只证明该进程关闭，不保证所有后代/脱离管道的任务停止；不自动代表可放行前台。
+   */
+  z.object({ ...runProofIdentity, status: z.literal("closed_process") }).strict(),
+]);
+export type RemoteRunProof = z.infer<typeof RemoteRunProof>;
 
 export const RemoteErrorCode = z.enum([
   "unauthorized",
@@ -434,6 +569,9 @@ export const RemoteErrorCode = z.enum([
   "hash_mismatch",
   "commit_mismatch",
   "run_id_conflict",
+  "run_ledger_mismatch", // 409：expectedLedgerId 与节点当前持久账本不符，不采取替代操作
+  "run_fenced", // 409：该 RunId 已永久消耗，不能创建替代执行
+  "world_profile_mismatch", // 409：预期隔离映射与当前经过校验的注册表不符，不退成普通 profile
   "node_busy",
   "payload_too_large",
   "not_implemented",

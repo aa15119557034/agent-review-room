@@ -12,8 +12,12 @@ import type { RemoteAgentAdapter, AgentInput, RunOptions, SessionConfig } from "
 import { ulid, WorldBudgetStore } from "@room/db";
 import type { AgentEvent, WorldBudget, WorldCognitionMode, WorldCognitionReply } from "@room/schemas";
 import { WorldCognitionRunner, WorldRunNotStoppedError, type WorldCognitionOutcome, type WorldCognitionRequest } from "../src/main/world-cognition";
+import { WorldRunFenceBarrier } from "../src/main/world-run-fence";
 
 const now = new Date(2026, 10, 16, 12);
+const fixtureLedger = "rled_" + "0".repeat(26);
+const fixtureModel = { model: "fixture", effort: null };
+const fixtureProfile = { sourceChatProfileId: "test-chat", recipeVersion: "deepseek-http-v1" };
 const reply: WorldCognitionReply = { say: { intent: { kind: "respond", feeling: "glad" }, tone: "warm", expression: "neutral", chat: null }, propose: null };
 const output = "```room-world\n" + JSON.stringify(reply) + "\n```";
 function deferred() {
@@ -32,12 +36,17 @@ async function* valid(runId: string): AsyncIterable<AgentEvent> {
 class FakeAdapter implements RemoteAgentAdapter {
   readonly id = "isolated-world-test";
   readonly kind = "remote" as const;
-  readonly node = { nodeId: "fake", baseUrl: "http://127.0.0.1", profileId: "test-chat", heartbeatTimeoutMs: 500, reconnectGraceMs: 1000, requestTimeoutMs: 1000 };
+  readonly node = { nodeId: "fake", baseUrl: "http://127.0.0.1", profileId: "test-world", expectedLedgerId: fixtureLedger, expectedWorldProfile: fixtureProfile, heartbeatTimeoutMs: 500, reconnectGraceMs: 1000, requestTimeoutMs: 1000 };
   initialized = 0;
   sessions: SessionConfig[] = [];
   closed: string[] = [];
   runs: { runId: string; input: AgentInput; options: RunOptions }[] = [];
   readonly finishedRuns = new Set<string>();
+  readonly fencedRuns = new Set<string>();
+  readonly runFence = { ledgerId: fixtureLedger,
+    cancel: async (id: string) => { if (!this.runs.some(run => run.runId === id)) this.fencedRuns.add(id); },
+    proof: async (id: string) => ({ runId: id, ledgerId: fixtureLedger, status: this.fencedRuns.has(id) ? "fenced_never_started" as const : this.finishedRuns.has(id) ? "closed_process" as const : this.runs.some(run => run.runId === id) ? "unconfirmed" as const : "missing" as const }),
+  };
   initializeGate?: Promise<void>;
   sessionGate?: Promise<void>;
   closeGate?: Promise<void>;
@@ -79,7 +88,15 @@ function fixture(resolve?: (agent: string, signal: AbortSignal) => Promise<Remot
   const current = { value: true }, foreground = { value: false };
   const replies: { reply: WorldCognitionReply; runId: string }[] = [];
   const modes: WorldCognitionMode[] = [], settled: WorldCognitionOutcome[] = [], budgets: WorldBudget[] = [];
-  const runner = new WorldCognitionRunner({ budget, resolve: resolve ?? (async () => adapter), foregroundBusy: () => foreground.value, emitBudget: (value) => { budgets.push(value); }, now: () => now });
+  let activeAdapter: RemoteAgentAdapter = adapter;
+  const fence = new WorldRunFenceBarrier({ budget, timeoutMs: 80, resolve: () => activeAdapter.runFence ?? null });
+  const runner = new WorldCognitionRunner({ budget, fence, resolve: async (agent, signal) => {
+    const found = resolve ? await resolve(agent,signal) : adapter;
+    if (!found) return null;
+    activeAdapter = found;
+    return { adapter: found, isCurrent: () => true, binding: { nodeId: found.node.nodeId, baseUrl: found.node.baseUrl, profileId: found.node.profileId,
+      ledgerId: found.node.expectedLedgerId!, worldProfile: found.node.expectedWorldProfile!, model: fixtureModel } };
+  }, foregroundBusy: () => foreground.value, emitBudget: (value) => { budgets.push(value); }, now: () => now });
   const input = (changes: Partial<WorldCognitionRequest> = {}): WorldCognitionRequest => ({
     worldId: `world_${ulid()}`, generation: { session: `wses_${ulid()}`, runSeq: 0 },
     agent: "claude", sceneId: null, priority: "routine", limit: 60, prompt: "Only this resident's observations.",
@@ -87,7 +104,7 @@ function fixture(resolve?: (agent: string, signal: AbortSignal) => Promise<Remot
     onReply: async (value, runId) => { replies.push({ reply: value, runId }); },
     onMode: async (mode) => { modes.push(mode); }, onSettled: async (value) => { settled.push(value); }, ...changes,
   });
-  return { dir, file, budget, adapter, current, foreground, replies, modes, settled, budgets, runner, input,
+  return { dir, file, budget, adapter, current, foreground, replies, modes, settled, budgets, runner, fence, input,
     close: async () => { runner.cancel(); await runner.drain(); budget.close(); rmSync(dir, { recursive: true, force: true }); } };
 }
 
@@ -288,7 +305,14 @@ test("daily exhaustion and scene turn exhaustion settle differently and neither 
     assert.deepEqual(h.modes.at(-1), { mode: "routine", reason: "budget" });
     assert.equal(h.adapter.runs.length, 0);
     const sceneId = `wscn_${ulid()}`;
-    for (let i = 0; i < 8; i++) assert.equal(h.budget.reserve({ runId: `run_${ulid()}`, agent: "claude", sceneId, limit: 60, now }).accepted, true);
+    for (let i = 0; i < 8; i++) {
+      const runId = `run_${ulid()}`, input = h.input();
+      assert.equal(h.budget.reserveBound({ runId, agent: "claude", sceneId, limit: 60, now, binding: {
+        worldId: input.worldId, generation: input.generation, nodeId: h.adapter.node.nodeId, baseUrl: h.adapter.node.baseUrl,
+        profileId: h.adapter.node.profileId, ledgerId: fixtureLedger, worldProfile: fixtureProfile, model: fixtureModel,
+      } }).accepted, true);
+      h.budget.confirmStopped({runId,ledgerId:fixtureLedger,status:"fenced_never_started"});
+    }
     h.modes.length = 0; h.settled.length = 0;
     await h.runner.request(h.input({ sceneId }));
     assert.deepEqual(h.settled, ["scene_limit"]);
@@ -297,6 +321,18 @@ test("daily exhaustion and scene turn exhaustion settle differently and neither 
     assert.equal(h.budget.get("claude", 60, now).used, 8);
     assert.equal(h.adapter.closed.length, 2);
   } finally { await h.close(); }
+});
+
+test("completed without durable stop proof never applies a reply or releases admission", async () => {
+  const h = fixture();
+  const proof = h.adapter.runFence.proof;
+  h.adapter.runFence.proof = async id => ({runId:id,ledgerId:fixtureLedger,status:"unconfirmed"});
+  try {
+    await h.runner.request(h.input());
+    assert.equal(h.replies.length,0);assert.equal(h.budget.pending().length,1);
+    assert.deepEqual(h.settled,["offline"]);
+    await assert.rejects(h.runner.yieldToForeground(),WorldRunNotStoppedError);
+  } finally { h.adapter.runFence.proof=proof;await h.runner.yieldToForeground();await h.close(); }
 });
 
 test("a real SQLite reservation failure never dispatches or automatically retries", async () => {
@@ -334,17 +370,27 @@ test("unavailable nodes and explicit node failures fall back offline without pre
 
 async function remoteFixture(dropOnCancel = false, holdStart = false) {
   let running = false, listUnavailable = false, runId = "", stream: ServerResponse | null = null;
+  const fences = new Set<string>();
   let pendingStart: (() => void) | null = null;
   const connected = deferred(), cancelled = deferred(), startReceived = deferred();
   const server = createServer((req, res) => {
     const json = (value: unknown, status = 200) => { res.writeHead(status, { "content-type": "application/json" }); res.end(JSON.stringify(value)); };
-    if (req.url === "/v1/health") return json({ protocol: REMOTE_PROTOCOL_VERSION, nodeId: "test-world-node", profiles: ["test-chat"], activeRuns: running ? 1 : 0, maxConcurrentRuns: 1, leaseMs: 100, heartbeatMs: 20 });
+    if (req.url === "/v1/health") return json({ protocol: REMOTE_PROTOCOL_VERSION, nodeId: "test-world-node", profiles: ["test-chat", "test-world"], activeRuns: running ? 1 : 0, maxConcurrentRuns: 1, leaseMs: 100, heartbeatMs: 20,
+      profileModels: ["test-chat", "test-world"].map(profileId => ({ profileId, models: [{ id: "fixture", displayName: "Fixture", efforts: [], defaultEffort: null }] })),
+      capabilities: { runFence: {version: 1, ledgerId: fixtureLedger}, worldProfiles: [{profileId: "test-world", ...fixtureProfile, sourceDefaultModel: fixtureModel}] } });
+    if (req.url?.endsWith("/proof")) {
+      if (listUnavailable) return json({ error: "internal", message: "unavailable" }, 503);
+      const id = req.url.split("/")[3]!;
+      return json({runId:id,ledgerId:fixtureLedger,status:id===runId?(running?"unconfirmed":"closed_process"):fences.has(id)?"fenced_never_started":"missing"});
+    }
     if (req.method === "GET" && req.url === "/v1/runs") return listUnavailable ? json({ error: "internal", message: "unavailable" }, 503) : json(runId ? [{ runId, profileId: "test-chat", state: running ? "running" : "finished", lastSeq: 1, subscribers: stream === null ? 0 : 1 }] : []);
     if (req.method === "POST" && req.url === "/v1/runs") {
       let body = "";
       req.on("data", (chunk) => { body += String(chunk); });
       req.on("end", () => {
         const createRun = () => {
+          const id = (JSON.parse(body) as {runId:string}).runId;
+          if (fences.has(id)) return json({error:"run_fenced",message:"cancelled before creation"},409);
           if (running) return json({ error: "node_busy", message: "busy" }, 429);
           runId = (JSON.parse(body) as { runId: string }).runId; running = true;
           json({ runId, status: "created", eventsPath: `/v1/runs/${runId}/events` }, 202);
@@ -363,7 +409,9 @@ async function remoteFixture(dropOnCancel = false, holdStart = false) {
       return;
     }
     if (req.url?.endsWith("/cancel")) {
-      json({ accepted: true });
+      const id = req.url.split("/")[3]!;
+      if (id !== runId) fences.add(id);
+      json({ ok: true }, 202);
       if (dropOnCancel) stream?.destroy();
       else stream?.write(JSON.stringify({ type: "text_delta", seq: 1, ts: now.toISOString(), text: "late buffered output" }) + "\n");
       cancelled.resolve();
@@ -374,7 +422,7 @@ async function remoteFixture(dropOnCancel = false, holdStart = false) {
   await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
   const address = server.address();
   if (address === null || typeof address === "string") throw new Error("missing mock node address");
-  const adapter = new HttpRemoteAgentAdapter({ nodeId: "test-world-node", baseUrl: `http://127.0.0.1:${address.port}`, profileId: "test-chat", token: "t".repeat(48), heartbeatTimeoutMs: 500, reconnectGraceMs: 1000, requestTimeoutMs: 1000, cancelConfirmMs: 250 });
+  const adapter = new HttpRemoteAgentAdapter({ nodeId: "test-world-node", baseUrl: `http://127.0.0.1:${address.port}`, profileId: "test-world", expectedLedgerId: fixtureLedger, expectedWorldProfile: fixtureProfile, model: fixtureModel, token: "t".repeat(48), heartbeatTimeoutMs: 500, reconnectGraceMs: 1000, requestTimeoutMs: 1000, cancelConfirmMs: 250 });
   return {
     adapter, connected, cancelled, startReceived,
     releaseStart: () => { const createRun = pendingStart; pendingStart = null; createRun?.(); },
@@ -408,23 +456,23 @@ test("real HTTP cancellation waits beyond buffered output for the remote termina
   }
 });
 
-test("unconfirmed HTTP cancellation blocks later handoffs and new reservations until structured run state confirms release", { timeout: 10_000 }, async (t) => {
+test("unconfirmed HTTP cancellation blocks handoffs and reservations until durable positive proof", { timeout: 10_000 }, async (t) => {
   for (const unavailable of [false, true]) await t.test(unavailable ? "run state endpoint unavailable" : "remote Run still active", async () => {
     const remote = await remoteFixture(true);
     const h = fixture(async () => remote.adapter);
     try {
       const requested = h.runner.request(h.input());
-      const rejectedRequest = assert.rejects(requested, WorldRunNotStoppedError);
       await remote.connected.promise;
       remote.setListUnavailable(unavailable);
       h.foreground.value = true;
       const yielding = assert.rejects(h.runner.yieldToForeground(), WorldRunNotStoppedError);
       await remote.cancelled.promise;
-      await Promise.all([rejectedRequest, yielding]);
+      await Promise.all([requested, yielding]);
       // The first failed request has already left #pending. The remote barrier remains.
       await assert.rejects(h.runner.yieldToForeground(), WorldRunNotStoppedError);
       h.foreground.value = false;
-      await assert.rejects(h.runner.request(h.input()), WorldRunNotStoppedError);
+      await h.runner.request(h.input());
+      assert.equal(h.settled.at(-1), "offline");
       assert.equal(h.budget.get("claude", 60, now).used, 1);
       assert.equal(h.replies.length, 0);
       remote.finish(); remote.setListUnavailable(false);
@@ -436,31 +484,23 @@ test("unconfirmed HTTP cancellation blocks later handoffs and new reservations u
   });
 });
 
-test("a cancelled HTTP start absent from the Run list keeps its barrier through late creation until matching finished state", { timeout: 10_000 }, async () => {
+test("unknown-Run cancellation fences a held creation before releasing foreground admission", { timeout: 10_000 }, async () => {
   const remote = await remoteFixture(false, true);
   const h = fixture(async () => remote.adapter);
   let requested: Promise<void> | undefined, yielding: Promise<void> | undefined;
   try {
     requested = h.runner.request(h.input());
-    const rejectedRequest = assert.rejects(requested, WorldRunNotStoppedError);
     await remote.startReceived.promise;
     h.foreground.value = true;
     yielding = h.runner.yieldToForeground();
-    const rejectedYield = assert.rejects(yielding, WorldRunNotStoppedError);
     // The held POST times out locally after abort, before the server creates it.
-    await Promise.all([rejectedRequest, rejectedYield]);
+    await Promise.all([requested, yielding]);
     assert.deepEqual(await remote.adapter.listRemoteRuns(), []);
-    await assert.rejects(h.runner.yieldToForeground(), WorldRunNotStoppedError);
-    h.foreground.value = false;
-    await assert.rejects(h.runner.request(h.input()), WorldRunNotStoppedError);
-    assert.equal(h.budget.get("claude", 60, now).used, 1, "uncertainty must not admit a replacement Run");
+    assert.deepEqual(h.budget.pending(), [], "only matching never-started proof releases the binding");
+    assert.equal(h.budget.get("claude", 60, now).used, 1, "cancellation does not refund the reservation");
     remote.releaseStart();
     const late = await remote.adapter.listRemoteRuns();
-    assert.equal(late.length, 1);
-    assert.equal(late[0]!.state, "running");
-    await assert.rejects(h.runner.yieldToForeground(), WorldRunNotStoppedError);
-    remote.finish();
-    assert.equal((await remote.adapter.listRemoteRuns())[0]!.state, "finished");
+    assert.equal(late.length, 0, "the delayed POST cannot create a Run after its durable fence");
     await h.runner.yieldToForeground();
     assert.equal(h.replies.length, 0);
     assert.equal(h.budget.get("claude", 60, now).used, 1);

@@ -5,17 +5,26 @@ import type {
   ReconcileReport,
   RemoteAgentAdapter,
   RemoteNodeConfig,
+  RemoteRunFenceAccess,
   RunOptions,
   Session,
   SessionConfig,
 } from "@room/core";
 import {
+  CancelRunRequest,
+  CancelRunResponse,
   NodeHealth,
   REMOTE_PROTOCOL_VERSION,
   RemoteEvent,
   RemoteRunSummary,
+  RemoteRunLedgerId,
+  RemoteRunProof,
+  RunId,
   RunModel,
   StartRunAttachments,
+  StartRunRequest,
+  WorldProfileExpectation,
+  WORLD_PROFILE_RECIPE_DEEPSEEK_HTTP_V1,
   attachmentImageBlock,
   attachmentManifestBlock,
   imageBlockPlaced,
@@ -25,7 +34,6 @@ import {
   type FailureReason,
   type NodeTestResult,
   type RemoteTerminal,
-  type RunId,
 } from "@room/schemas";
 import { z } from "zod";
 
@@ -36,8 +44,7 @@ import { z } from "zod";
  * - 启动：POST /v1/runs，网络错误用同一个 runId 重试（节点按 runId 幂等）
  * - 事件流：GET /v1/runs/:id/events?after=<lastSeq>，断线后带 lastSeq 重连，节点补发，不丢不重
  * - 心跳：超过 heartbeatTimeoutMs 收不到任何字节 → 判定断线（等待人工时也有心跳，不会误判）
- * - 宽限期：断线超过 reconnectGraceMs → error(connection_lost)。因为 leaseMs < reconnectGraceMs，
- *   此时节点一定已经自己停止了评审
+ * - 宽限期：断线超过 reconnectGraceMs → error(connection_lost)；租约只是停止请求，世界屏障仍等持久 proof
  * - 取消：signal abort → POST cancel，继续读流等节点的 cancelled；连接断了或等太久 → cancelled(unconfirmed)
  * - 消费方中途 break / 应用退出：finally 里通知节点取消，不让它在后台继续消耗额度
  * - 恰好一个终止事件；任何异常都转成 error，迭代器不 throw
@@ -48,6 +55,9 @@ export interface HttpRemoteAgentAdapterOptions extends RemoteNodeConfig {
   token: string;
   /** C-40：这一批盖章时定下的模型/强度；不传 = profile 自带模型 */
   model?: RunModel;
+  /** Main-local admission, rechecked immediately before each POST after async
+   * negotiation/retry. Never serialized or sent to the node. */
+  isDispatchCurrent?: () => boolean;
   fetchImpl?: typeof fetch;
   adapterId?: string;
   /** 断线后每次重连前等待多久，默认 500ms */
@@ -108,9 +118,11 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
   readonly id: string;
   readonly kind = "remote" as const;
   readonly node: Readonly<RemoteNodeConfig>;
+  readonly runFence?: RemoteRunFenceAccess;
 
   readonly #token: string;
   readonly #model: RunModel | undefined;
+  readonly #isDispatchCurrent: (() => boolean) | undefined;
   readonly #fetch: typeof fetch;
   readonly #reconnectDelayMs: number;
   readonly #cancelConfirmMs: number;
@@ -118,17 +130,29 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
   readonly #log: (m: string) => void;
 
   constructor(options: HttpRemoteAgentAdapterOptions) {
-    const { token, model, fetchImpl, adapterId, reconnectDelayMs, cancelConfirmMs, startAttempts, log, ...node } = options;
+    const { token, model, isDispatchCurrent, fetchImpl, adapterId, reconnectDelayMs, cancelConfirmMs, startAttempts, log, ...node } = options;
     if (token.length < 32) throw new Error("remote node token must be at least 32 characters");
-    this.node = Object.freeze({ ...node, baseUrl: node.baseUrl.replace(/\/+$/, "") });
+    const expectedLedgerId = node.expectedLedgerId === undefined ? undefined : RemoteRunLedgerId.parse(node.expectedLedgerId);
+    const expectedWorldProfile = node.expectedWorldProfile === undefined ? undefined : Object.freeze(WorldProfileExpectation.parse(node.expectedWorldProfile));
+    if (expectedWorldProfile && (!expectedLedgerId || !model)) throw new Error("世界 profile 必须同时绑定账本和明确模型");
+    this.node = Object.freeze({ ...node, baseUrl: node.baseUrl.replace(/\/+$/, ""),
+      ...(expectedLedgerId === undefined ? {} : { expectedLedgerId }),
+      ...(expectedWorldProfile === undefined ? {} : { expectedWorldProfile }),
+    });
     this.#token = token;
-    this.#model = model;
+    this.#model = model === undefined ? undefined : Object.freeze(RunModel.parse(model));
+    this.#isDispatchCurrent = isDispatchCurrent;
     this.#fetch = fetchImpl ?? globalThis.fetch;
     this.id = adapterId ?? `remote:${node.nodeId}:${node.profileId}`;
     this.#reconnectDelayMs = reconnectDelayMs ?? 500;
     this.#cancelConfirmMs = cancelConfirmMs ?? 15_000;
     this.#startAttempts = startAttempts ?? 3;
     this.#log = log ?? (() => {});
+    if (expectedLedgerId) this.runFence = Object.freeze({
+      ledgerId: expectedLedgerId,
+      cancel: (runId: RunId, reason?: string, signal?: AbortSignal) => this.#cancelBound(runId, reason, signal),
+      proof: (runId: RunId, signal?: AbortSignal) => this.#proof(runId, signal),
+    });
   }
 
   // ------------------------------------------------------------ 基础请求
@@ -140,7 +164,9 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
     };
   }
 
-  async #request(path: string, init: RequestInit = {}, timeoutMs = this.node.requestTimeoutMs): Promise<Response> {
+  // The Node-only consumer's ambient RequestInit omits Fetch cache control;
+  // keep the supported no-store option local instead of requiring DOM globals.
+  async #request(path: string, init: RequestInit & { cache?: "no-store" } = {}, timeoutMs = this.node.requestTimeoutMs): Promise<Response> {
     const timeout = AbortSignal.timeout(timeoutMs);
     const signal = init.signal ? AbortSignal.any([init.signal, timeout]) : timeout;
     try {
@@ -187,6 +213,7 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
 
   async initialize(): Promise<AgentCapabilities> {
     const h = await this.health();
+    this.#verifyBindings(h);
     if (!h.profiles.includes(this.node.profileId)) {
       throw new Error(`执行节点上没有评审方式 "${this.node.profileId}"（可用：${h.profiles.join("、")}）`);
     }
@@ -201,15 +228,68 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
     return { streaming: true, permissionRequests: false, readOnly: true };
   }
 
+  /** A mapping is negotiated, never inferred from a profile name or readOnly. */
+  #verifyBindings(h: NodeHealth): void {
+    if (this.node.expectedLedgerId === undefined) return;
+    if (h.nodeId !== this.node.nodeId || h.capabilities?.runFence?.ledgerId !== this.node.expectedLedgerId) {
+      throw new NodeRequestError("protocol_mismatch", "执行节点身份或持久账本与派发绑定不一致");
+    }
+    const expected = this.node.expectedWorldProfile;
+    if (!expected) return;
+    const mapping = h.capabilities?.worldProfiles?.find(p => p.profileId === this.node.profileId);
+    if (expected.recipeVersion !== WORLD_PROFILE_RECIPE_DEEPSEEK_HTTP_V1 || !mapping ||
+        mapping.sourceChatProfileId !== expected.sourceChatProfileId || mapping.recipeVersion !== expected.recipeVersion) {
+      throw new NodeRequestError("protocol_mismatch", "世界 profile 的来源或隔离 recipe 与派发绑定不一致");
+    }
+    const model = this.#model!;
+    const choice = h.profileModels?.find(p => p.profileId === this.node.profileId)?.models.find(m => m.id === model.model);
+    if (!choice || (model.effort === null ? choice.efforts.length !== 0 : !choice.efforts.some(e => e.id === model.effort))) {
+      throw new NodeRequestError("protocol_mismatch", "世界 profile 不支持已选择的同一模型/档位");
+    }
+  }
+
+  async #cancelBound(runId: RunId, reason?: string, signal?: AbortSignal): Promise<void> {
+    RunId.parse(runId);
+    const body = CancelRunRequest.parse({ expectedLedgerId: this.node.expectedLedgerId, ...(reason === undefined ? {} : { reason }) });
+    const res = await this.#request(`/v1/runs/${runId}/cancel`, {
+      method: "POST", headers: this.#headers(true), body: JSON.stringify(body), ...(signal ? { signal } : {}),
+    });
+    if (res.status !== 202) {
+      await res.body?.cancel();
+      throw new NodeRequestError(res.status === 401 ? "unauthorized" : "http", `持久取消未获接受（HTTP ${res.status}）`, res.status);
+    }
+    await this.#json(res, CancelRunResponse);
+  }
+
+  async #proof(runId: RunId, signal?: AbortSignal): Promise<RemoteRunProof> {
+    RunId.parse(runId);
+    const res = await this.#request(`/v1/runs/${runId}/proof`, {
+      headers: { ...this.#headers(), "cache-control": "no-store" }, cache: "no-store", ...(signal ? { signal } : {}),
+    });
+    if (res.status !== 200) {
+      await res.body?.cancel();
+      throw new NodeRequestError(res.status === 401 ? "unauthorized" : "http", `无法读取持久停止证据（HTTP ${res.status}）`, res.status);
+    }
+    const proof = await this.#json(res, RemoteRunProof);
+    if (proof.runId !== runId || proof.ledgerId !== this.node.expectedLedgerId) {
+      throw new NodeRequestError("protocol_mismatch", "停止证据与原 Run/账本不匹配");
+    }
+    return proof;
+  }
+
   async startSession(_config: SessionConfig): Promise<Session> {
     return { sessionId: `sess_${randomBytes(8).toString("hex")}`, adapterId: this.id };
   }
 
   async closeSession(_sessionId: string): Promise<void> {}
 
-  /** 尽力通知节点取消；失败只记日志（节点的租约机制兜底） */
-  async #sendCancel(runId: string, reason: string): Promise<void> {
+  /** 流式迭代器尽力清理；公开的 runFence.cancel 仍严格传播失败，且接受不是停止证明。 */
+  async #sendCancel(runId: RunId, reason: string): Promise<void> {
     try {
+      if (this.runFence) {
+        await this.runFence.cancel(runId, reason);
+        return;
+      }
       const res = await this.#request(`/v1/runs/${runId}/cancel`, {
         method: "POST",
         headers: this.#headers(true),
@@ -254,7 +334,7 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
     const onAbort = () => {
       cancelRequested = true;
       cancelAt = Date.now();
-      if (started) void this.#sendCancel(runId, "用户取消");
+      if (started || this.runFence) void this.#sendCancel(runId, "用户取消");
       wake.dispatchEvent(new Event("wake"));
     };
     opts.signal.addEventListener("abort", onAbort, { once: true });
@@ -350,7 +430,7 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
 
         // dropped：断线
         if (cancelRequested) {
-          // 取消已经发出，连接又断了：不再等，节点的租约会让它停下
+          // 本地迭代结束不代表远端停止；持久绑定仍由调用方对账。
           yield emit({ type: "cancelled", reason: "已请求取消，连接中断无法确认（unconfirmed）" });
           return;
         }
@@ -414,15 +494,17 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
     input: AgentInput,
     opts: RunOptions,
   ): Promise<{ ok: true } | { ok: false; event: Emitted }> {
-    const body = JSON.stringify({
+    const request = {
       protocol: REMOTE_PROTOCOL_VERSION,
       runId,
       profileId: this.node.profileId,
+      ...(this.node.expectedLedgerId === undefined ? {} : { expectedLedgerId: this.node.expectedLedgerId }),
+      ...(this.node.expectedWorldProfile === undefined ? {} : { expectedWorldProfile: this.node.expectedWorldProfile }),
       snapshot: {
         id: input.snapshotId,
         content: input.content,
         contentHash: input.contentHash,
-        ...(input.commitSha ? { commitSha: input.commitSha } : {}),
+        ...(input.commitSha === undefined ? {} : { commitSha: input.commitSha }),
       },
       limits: { idleTimeoutMs: opts.idleTimeoutMs, totalTimeoutMs: opts.totalTimeoutMs },
       // C-40：null = profile 自带模型，字段整个省略（不是传 null）
@@ -431,13 +513,30 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
       ...(input.chat === undefined ? {} : { chat: input.chat }),
       // C-42a / C-42g / C-42h：图片本体和位置标记原样带上（发送前已核过），不改 content
       ...(input.attachments === undefined ? {} : { attachments: input.attachments, imageSlot: input.imageSlot }),
-    });
+    };
+    if (this.node.expectedWorldProfile && !StartRunRequest.safeParse(request).success) {
+      return { ok: false, event: { type: "error", reason: "remote_rejected", message: "世界请求包含不允许的聊天、工程或图片上下文" } };
+    }
+    if (this.node.expectedLedgerId) {
+      try { this.#verifyBindings(await this.health(opts.signal)); }
+      catch (error) {
+        if (opts.signal.aborted) return { ok: false, event: { type: "cancelled", reason: "派发协商期间已取消" } };
+        const reason = error instanceof NodeRequestError && (error.code === "timeout" || error.code === "unreachable") ? "connection_lost" : "remote_rejected";
+        return { ok: false, event: { type: "error", reason, message: describe(error) } };
+      }
+    }
+    // Serialize once: every network retry carries the exact same immutable binding.
+    const body = JSON.stringify(request);
 
     let lastError = "";
     for (let attempt = 1; attempt <= this.#startAttempts; attempt++) {
+      if (opts.signal.aborted) return { ok: false, event: { type: "cancelled", reason: "创建期间已取消，远端停止待确认（unconfirmed）" } };
+      if (this.#isDispatchCurrent && !this.#isDispatchCurrent()) return { ok: false, event: { type: "cancelled", reason: "派发配置已变化，远端停止待确认（unconfirmed）" } };
       let res: Response;
       try {
-        res = await this.#request("/v1/runs", { method: "POST", headers: this.#headers(true), body });
+        res = await this.#request("/v1/runs", { method: "POST", headers: this.#headers(true), body,
+          ...(this.runFence ? { signal: opts.signal } : {}),
+        });
       } catch (err) {
         lastError = describe(err);
         if (opts.signal.aborted) return { ok: false, event: { type: "cancelled", reason: "开始前已取消" } };

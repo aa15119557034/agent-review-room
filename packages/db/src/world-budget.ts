@@ -1,8 +1,15 @@
 import Database from "better-sqlite3";
-import { RunId, WorldBudget, WorldSceneId, WORLD_SCENE_MAX_MODEL_TURNS } from "@room/schemas";
+import { IsoTimestamp, NodeBaseUrl, NodeId, ProfileId, RemoteRunLedgerId, RemoteRunProof, RunId, RunModel, WorldBudget, WorldGeneration, WorldId, WorldProfileExpectation, WorldSceneId, WORLD_PROFILE_RECIPE_DEEPSEEK_HTTP_V1, WORLD_SCENE_MAX_MODEL_TURNS } from "@room/schemas";
 
 const APPLICATION_ID = 0x57554247;
-const SCHEMA_VERSION = 1;
+const SCHEMA_VERSION = 2;
+const BINDING_TABLE = `CREATE TABLE world_cognition_bindings (
+  run_id TEXT PRIMARY KEY NOT NULL REFERENCES world_cognition_reservations(run_id),
+  binding_json TEXT NOT NULL,
+  proof_status TEXT CHECK(proof_status IN ('fenced_never_started', 'closed_process')),
+  confirmed_at TEXT,
+  CHECK((proof_status IS NULL) = (confirmed_at IS NULL))
+);`;
 
 /** Machine-local usage ledger. Its file must stay outside world saves and backups. */
 export class WorldBudgetStore {
@@ -14,10 +21,18 @@ export class WorldBudgetStore {
     try {
       // Dispatch is only allowed after a durable commit, unlike ordinary room.db writes.
       this.#db.pragma("synchronous = FULL");
+      this.#db.pragma("foreign_keys = ON");
       this.#db.transaction(() => {
         const applicationId = this.#db.pragma("application_id", { simple: true });
         const version = this.#db.pragma("user_version", { simple: true });
         if (applicationId === APPLICATION_ID && version === SCHEMA_VERSION) return;
+        if (applicationId === APPLICATION_ID && version === 1) {
+          // Old reservations have unknown execution scope. Keep them unresolved;
+          // migration cannot invent a ledger, recipe or positive stop proof.
+          this.#db.exec(BINDING_TABLE);
+          this.#db.pragma("user_version = " + SCHEMA_VERSION);
+          return;
+        }
         const existing = this.#db.prepare("SELECT 1 FROM sqlite_schema WHERE name NOT LIKE 'sqlite_%' LIMIT 1").get();
         if (applicationId !== 0 || version !== 0 || existing !== undefined) throw new Error("not a supported world budget ledger");
         this.#db.exec(`
@@ -31,6 +46,7 @@ export class WorldBudgetStore {
           CREATE INDEX world_cognition_daily ON world_cognition_reservations(agent, day);
           CREATE INDEX world_cognition_scene ON world_cognition_reservations(scene_id) WHERE scene_id IS NOT NULL;
         `);
+        this.#db.exec(BINDING_TABLE);
         this.#db.pragma("application_id = " + APPLICATION_ID);
         this.#db.pragma("user_version = " + SCHEMA_VERSION);
       }).immediate();
@@ -71,12 +87,70 @@ export class WorldBudgetStore {
     }).immediate();
   }
 
+  /** Persist original dispatch identity in the same commit as its reservation.
+   * New dispatches cannot cross another unresolved reservation, across processes. */
+  reserveBound(input: Parameters<WorldBudgetStore["reserve"]>[0] & { binding: {
+    worldId: string; generation: WorldGeneration; nodeId: string; baseUrl: string; profileId: string;
+    ledgerId: RemoteRunLedgerId; worldProfile: WorldProfileExpectation; model: RunModel;
+  } }): ReturnType<WorldBudgetStore["reserve"]> | { accepted: false; budget: WorldBudget; reason: "pending" } {
+    const runId = RunId.parse(input.runId), parsed = parseBinding(input.binding);
+    if (parsed.worldProfile.recipeVersion !== WORLD_PROFILE_RECIPE_DEEPSEEK_HTTP_V1 || parsed.profileId === parsed.worldProfile.sourceChatProfileId) throw new Error("world Run requires a verified isolated profile binding");
+    const binding = JSON.stringify(parsed);
+    return this.#db.transaction(() => {
+      const previous = this.#db.prepare("SELECT r.run_id, b.binding_json FROM world_cognition_reservations r LEFT JOIN world_cognition_bindings b ON b.run_id=r.run_id WHERE r.run_id=?")
+        .get(runId) as { run_id: string; binding_json: string | null } | undefined;
+      if (previous) {
+        if (previous.binding_json !== binding) throw new Error("world Run dispatch binding cannot change or be guessed");
+        return this.reserve(input);
+      }
+      if (this.pending().length > 0) return { accepted: false as const, budget: this.get(input.agent, input.limit, input.now), reason: "pending" as const };
+      const reserved = this.reserve(input);
+      if (!reserved.accepted) return reserved;
+      this.#db.prepare("INSERT INTO world_cognition_bindings(run_id,binding_json) VALUES (?,?)").run(runId, binding);
+      return reserved;
+    }).immediate();
+  }
+
+  pending() {
+    const rows = this.#db.prepare(`SELECT r.run_id, r.agent, r.scene_id, r.reserved_at, b.binding_json
+      FROM world_cognition_reservations r LEFT JOIN world_cognition_bindings b ON b.run_id=r.run_id
+      WHERE b.proof_status IS NULL ORDER BY r.reserved_at, r.run_id`).all() as { run_id: unknown; agent: unknown; scene_id: unknown; reserved_at: unknown; binding_json: string | null }[];
+    return rows.map(row => ({ runId: RunId.parse(row.run_id), agent: WorldBudget.shape.agent.parse(row.agent),
+      sceneId: row.scene_id === null ? null : WorldSceneId.parse(row.scene_id), reservedAt: IsoTimestamp.parse(row.reserved_at),
+      binding: row.binding_json === null ? null : parseBinding(JSON.parse(row.binding_json)),
+    }));
+  }
+
+  confirmStopped(raw: RemoteRunProof, now: Date = new Date()): void {
+    const proof = RemoteRunProof.parse(raw), at = IsoTimestamp.parse(now.toISOString());
+    if (proof.status !== "fenced_never_started" && proof.status !== "closed_process") throw new Error("world Run has no positive stop proof");
+    this.#db.transaction(() => {
+      const row = this.#db.prepare("SELECT binding_json FROM world_cognition_bindings WHERE run_id=?").get(proof.runId) as { binding_json: string } | undefined;
+      if (!row) throw new Error("world Run has no recorded dispatch binding");
+      const binding = parseBinding(JSON.parse(row.binding_json));
+      if (binding.ledgerId !== proof.ledgerId || binding.worldProfile.recipeVersion !== WORLD_PROFILE_RECIPE_DEEPSEEK_HTTP_V1) throw new Error("world Run stop proof does not match its original scope");
+      this.#db.prepare("UPDATE world_cognition_bindings SET proof_status=?,confirmed_at=? WHERE run_id=? AND proof_status IS NULL").run(proof.status, at, proof.runId);
+    }).immediate();
+  }
+
   close(): void { if (this.#db.open) this.#db.close(); }
 
   #budget(current: WorldBudget): WorldBudget {
     const row = this.#db.prepare("SELECT COUNT(*) AS used FROM world_cognition_reservations WHERE agent = ? AND day = ?").get(current.agent, current.day) as { used: number };
     return WorldBudget.parse({ ...current, used: row.used });
   }
+}
+
+/** Persisted fields use the existing approved schemas; no token or prompt lives here. */
+function parseBinding(raw: unknown) {
+  if (raw === null || typeof raw !== "object" || Array.isArray(raw)) throw new Error("invalid world dispatch binding");
+  const value = raw as Record<string, unknown>;
+  const keys = ["worldId", "generation", "nodeId", "baseUrl", "profileId", "ledgerId", "worldProfile", "model"];
+  if (Object.keys(value).length !== keys.length || Object.keys(value).some(key => !keys.includes(key))) throw new Error("invalid world dispatch binding fields");
+  return { worldId: WorldId.parse(value.worldId), generation: WorldGeneration.parse(value.generation),
+    nodeId: NodeId.parse(value.nodeId), baseUrl: NodeBaseUrl.parse(value.baseUrl), profileId: ProfileId.parse(value.profileId),
+    ledgerId: RemoteRunLedgerId.parse(value.ledgerId), worldProfile: WorldProfileExpectation.parse(value.worldProfile), model: RunModel.parse(value.model),
+  };
 }
 
 function period(agent: string, limit: number, now: Date): WorldBudget {
