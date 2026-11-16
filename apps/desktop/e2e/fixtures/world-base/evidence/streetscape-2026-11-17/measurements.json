@@ -1646,8 +1646,8 @@
     },
     {
       "file": "diagnostic-v2-pixels.json",
-      "bytes": 609,
-      "sha256": "20323cdab1a8d12d8fc2da981a5e1007589d8bd20244aed4753a0fc930c0d804"
+      "bytes": 827,
+      "sha256": "9ff2b66fab03123d89ddcae376a0c2a44339932447920e61c2dbfc0c610ea9ea"
     },
     {
       "file": "diagnostic-v2-pixel-method.cjs.txt",
