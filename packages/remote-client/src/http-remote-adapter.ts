@@ -55,6 +55,9 @@ export interface HttpRemoteAgentAdapterOptions extends RemoteNodeConfig {
   token: string;
   /** C-40：这一批盖章时定下的模型/强度；不传 = profile 自带模型 */
   model?: RunModel;
+  /** Main-local admission, rechecked immediately before each POST after async
+   * negotiation/retry. Never serialized or sent to the node. */
+  isDispatchCurrent?: () => boolean;
   fetchImpl?: typeof fetch;
   adapterId?: string;
   /** 断线后每次重连前等待多久，默认 500ms */
@@ -119,6 +122,7 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
 
   readonly #token: string;
   readonly #model: RunModel | undefined;
+  readonly #isDispatchCurrent: (() => boolean) | undefined;
   readonly #fetch: typeof fetch;
   readonly #reconnectDelayMs: number;
   readonly #cancelConfirmMs: number;
@@ -126,7 +130,7 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
   readonly #log: (m: string) => void;
 
   constructor(options: HttpRemoteAgentAdapterOptions) {
-    const { token, model, fetchImpl, adapterId, reconnectDelayMs, cancelConfirmMs, startAttempts, log, ...node } = options;
+    const { token, model, isDispatchCurrent, fetchImpl, adapterId, reconnectDelayMs, cancelConfirmMs, startAttempts, log, ...node } = options;
     if (token.length < 32) throw new Error("remote node token must be at least 32 characters");
     const expectedLedgerId = node.expectedLedgerId === undefined ? undefined : RemoteRunLedgerId.parse(node.expectedLedgerId);
     const expectedWorldProfile = node.expectedWorldProfile === undefined ? undefined : Object.freeze(WorldProfileExpectation.parse(node.expectedWorldProfile));
@@ -137,6 +141,7 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
     });
     this.#token = token;
     this.#model = model === undefined ? undefined : Object.freeze(RunModel.parse(model));
+    this.#isDispatchCurrent = isDispatchCurrent;
     this.#fetch = fetchImpl ?? globalThis.fetch;
     this.id = adapterId ?? `remote:${node.nodeId}:${node.profileId}`;
     this.#reconnectDelayMs = reconnectDelayMs ?? 500;
@@ -526,6 +531,7 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
     let lastError = "";
     for (let attempt = 1; attempt <= this.#startAttempts; attempt++) {
       if (opts.signal.aborted) return { ok: false, event: { type: "cancelled", reason: "创建期间已取消，远端停止待确认（unconfirmed）" } };
+      if (this.#isDispatchCurrent && !this.#isDispatchCurrent()) return { ok: false, event: { type: "cancelled", reason: "派发配置已变化，远端停止待确认（unconfirmed）" } };
       let res: Response;
       try {
         res = await this.#request("/v1/runs", { method: "POST", headers: this.#headers(true), body,
