@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   COMMANDS, ControlEvent, QUERIES, WorldAction, WorldActivity, WorldActRequest, WorldCognitionReply, WorldEvent, WorldItem,
-  WorldBudget, WorldCommitment, WorldObservation, WorldResetRequest, WorldResidentView, WorldScene, WorldSceneSayRequest, WorldSettingsSaveRequest, WorldSnapshot, WorldState,
+  WorldBudget, WorldCommitment, WorldObservation, WorldResetRequest, WorldResidentView, WorldScene, WorldSceneLine, WorldSceneSayRequest, WorldSettings, WorldSettingsSaveRequest, WorldSnapshot, WorldState, WORLD_CHAT_MAX_CHARS, WORLD_MAX_RESIDENTS,
 } from "../src/index";
 
 const U = "01JABCDEFGHJKMNPQRSTVWXYZ0";
@@ -117,7 +117,7 @@ test("resident view: item beliefs come from what she saw; what she heard stays a
   assert.equal(WorldResidentView.safeParse({ ...view, heard: [{ seq: 4, at: 611, speaker: a, text: "x", event: { type: "action" } }] }).success, false);
 });
 
-test("model reply is display data only: closed actions, closed intents, no free text, no extra fields", () => {
+test("model reply is display data only: closed actions, closed intents, no free text in facts, no extra fields", () => {
   const say = (intent: unknown) => ({ intent, tone: "warm", expression: "happy" });
   assert.equal(WorldCognitionReply.safeParse({ say: say({ kind: "intend" }), propose: { type: "move", to: "kitchen" } }).success, true);
   assert.equal(WorldCognitionReply.safeParse({ say: null, propose: null }).success, true);
@@ -203,4 +203,32 @@ test("world.get before anything is set up: settings may be null only while there
   assert.equal(WorldState.safeParse({ world: snapshot, scene: null, settings, budgets: [] }).success, true);
   assert.equal(WorldState.safeParse({ world: snapshot, scene: null, settings: null, budgets: [] }).success, false);
   assert.equal(WorldState.safeParse({ world: null, scene: null, settings: { ...settings, residents: [] }, budgets: [] }).success, false, "不造空的入住名单");
+});
+
+test("a new home takes at most four residents; homes saved before the limit still read", () => {
+  const base = { dayRealMinutes: 24, dailyCognitionLimit: 60 };
+  const five = ["a", "b", "c", "d", "e"], eight = [...five, "f", "g", "h"];
+  const reset = (settings?: unknown) => WorldResetRequest.safeParse({ type: "world.reset", requestId: "wact_01HZZZZZZZZZZZZZZZZZZZZZZ9", worldId: null, confirm: true, ...(settings ? { settings } : {}) }).success;
+  assert.equal(WORLD_MAX_RESIDENTS, 4);
+  assert.equal(reset({ ...base, residents: five.slice(0, 4) }), true);
+  assert.equal(reset({ ...base, residents: five }), false, "新开的局不能超过 4 位");
+  assert.equal(reset(), true, "不给 settings 时由 main 检查实际用上的名单");
+  assert.equal(WorldSettings.safeParse({ ...base, residents: eight }).success, true, "旧存档的设置读得出");
+  assert.equal(WorldState.safeParse({ world: null, scene: null, settings: { ...base, residents: eight }, budgets: [] }).success, true);
+  assert.equal(WorldSettings.safeParse({ ...base, residents: [...eight, "i"] }).success, false);
+});
+
+test("small talk is free text beside the evidence-backed sentence, and never stands in for facts or actions", () => {
+  const base = { tone: "warm", expression: "happy" };
+  const parsed = WorldCognitionReply.parse({ say: { ...base, intent: { kind: "greet" } }, propose: null });
+  assert.equal(parsed.say!.chat, null, "不写 chat 就是没有闲聊");
+  assert.equal(WorldCognitionReply.parse({ say: { ...base, intent: { kind: "own_state", gauge: "satiety" }, chat: "  今天天气真好呀  " }, propose: null }).say!.chat, "今天天气真好呀");
+  assert.equal(WorldCognitionReply.safeParse({ say: { ...base, intent: { kind: "chat" }, chat: "哈哈，好呀" }, propose: null }).success, true);
+  assert.equal(WorldCognitionReply.safeParse({ say: { ...base, intent: { kind: "chat" } }, propose: null }).success, false, "只闲聊就得有闲聊");
+  assert.equal(WorldCognitionReply.safeParse({ say: { ...base, intent: { kind: "chat" }, chat: "   " }, propose: null }).success, false);
+  assert.equal(WorldCognitionReply.safeParse({ say: { ...base, intent: { kind: "greet" }, chat: "字".repeat(WORLD_CHAT_MAX_CHARS + 1) }, propose: null }).success, false);
+  assert.equal(WorldCognitionReply.safeParse({ say: { ...base, intent: { kind: "intend" }, chat: "我去做饭了" }, propose: null }).success, false, "闲聊不能代替 propose");
+  const line = { speaker: { kind: "resident", agent: "claude" }, text: "哈哈，好呀", expression: "happy", seq: 3 };
+  assert.equal(WorldSceneLine.safeParse({ ...line, source: "chat" }).success, true);
+  assert.equal(WorldSceneLine.safeParse({ ...line, source: "chat", speaker: { kind: "player" } }).success, false);
 });
