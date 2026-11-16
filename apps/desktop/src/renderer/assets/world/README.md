@@ -1,5 +1,19 @@
 # 共享小屋 3D 资产
 
+## 原创角色制作切片（2026-11-16）
+
+`claude.glb` 是本项目新制作的真实网格、骨骼和裙装形变资产，与下方 Quaternius 技术基线分开。根据用户给出的角色图提取铜橙长发、花饰、奶油白/深色/铜橙衣装特征；没有把参考图打包、贴在人形平面上或直接导出参考图。作者：林离（Astra 实现）；主线程独立验收仍在进行。
+
+- 运行 GLB：12,900,376 字节；286,684 三角形、13 材质/primitive、19 骨骼，1 个 scene。文件没有默认 Cube、灯、相机、测试椅或第二本书。
+- 形变：`Seated_Cloth`、`Walking_Cloth`、`Blink`。骨骼使用 `upperarm_l/r`、`lowerarm_l/r`、`hand_l/r`、`thigh_l/r`、`calf_l/r`、`foot_l/r`；模型 glTF 朝 +Z，脚底接近 Y=0。头饰不应用总包围盒重新改变人物身高。
+- 可复建源：`apps/desktop/scripts/world-assets/build-resident.py`，制作灯光 `studio.py`，同版姿态检查 `review-resident.py`，导出 `export-resident.py`。在现有 Blender 5.2.2 LTS 运行，未安装或升级软件。
+- 本机可编辑源工程：`D:\codex\2026-11-16\world-implementation\art-authoring\claude-resident-studio.blend`。Git 内保留上述可重建脚本；原始用户工程未修改。
+- 固定版本检查图和制作统计：[近景/全身/侧面/坐姿](../../../../../../docs/design/world-art-review/README.md)。站立与坐着读书已实际渲染；游戏镜头、走路/做饭/吃饭/睡眠、另外角色和整体性能仍待本轮集成验证。
+
+局部头发重拓扑会产生数值级的反向重复薄片；生成器在该输出边界移除面积小于 `1e-12 m²` 的退化面与重复面，再建权重/形变，并要求 Blender 的网格检查不再修改拓扑。皮肤和虹膜使用顶点色，其他材质用固定底色。导出器针对其他材质提示“活动顶点色未被材质使用”是预期的；不得忽略无效网格或无关 Scene 导出的警告。
+
+## 首片技术基线
+
 来源核对日期：2026-11-16。仅使用作者官方发布渠道。
 
 - 作者：Quaternius；[Universal Base Characters](https://quaternius.com/packs/universalbasecharacters.html)，[官方 itch.io 下载页](https://quaternius.itch.io/universal-base-characters)。免费 Standard ZIP，128,968,391 字节。

@@ -1,0 +1,16 @@
+{
+  "role": "claude",
+  "mesh_objects": 1,
+  "vertices": 146958,
+  "polygons": 182204,
+  "triangles": 286684,
+  "bones": 19,
+  "materials": 13,
+  "morphs": [
+    "Seated_Cloth",
+    "Walking_Cloth",
+    "Blink"
+  ],
+  "retopology_slivers_removed": 46,
+  "blender_version": "5.2.2 LTS"
+}
