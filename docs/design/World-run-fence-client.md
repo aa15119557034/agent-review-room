@@ -23,3 +23,5 @@ exit 0
 ```
 
 新增 28 项真实 loopback HTTP 测试覆盖不可变绑定和重试、节点/ledger/recipe/model 错配、禁止上下文、节点最终409、无需原 profile 的对账、取消200/401/409/500/假成功/断网/响应体卡住、错误 proof 身份与状态，以及创建响应头被扣住时的独立取消。原有 19 项与真实 AgentServer/受控 CLI 的测试同时通过。新 profile 相关 HTTP handler 是契约测试节点，不声称已经联通生产固定 recipe 或真实供应商。
+
+首轮 Windows CI 的全部测试及构建通过，desktop/e2e 的 Node-only 编译暴露 ambient RequestInit 缺少 cache 字段。已在本机复现；客户端请求参数局部声明已使用的 `no-store` 选项，不注入 DOM 全局、不删缓存控制。随后 remote-client、desktop、desktop/e2e 三个 tsconfig 的 `--noEmit` 均 exit 0。

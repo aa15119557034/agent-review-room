@@ -159,7 +159,9 @@ export class HttpRemoteAgentAdapter implements RemoteAgentAdapter {
     };
   }
 
-  async #request(path: string, init: RequestInit = {}, timeoutMs = this.node.requestTimeoutMs): Promise<Response> {
+  // The Node-only consumer's ambient RequestInit omits Fetch cache control;
+  // keep the supported no-store option local instead of requiring DOM globals.
+  async #request(path: string, init: RequestInit & { cache?: "no-store" } = {}, timeoutMs = this.node.requestTimeoutMs): Promise<Response> {
     const timeout = AbortSignal.timeout(timeoutMs);
     const signal = init.signal ? AbortSignal.any([init.signal, timeout]) : timeout;
     try {
