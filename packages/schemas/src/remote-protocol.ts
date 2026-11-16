@@ -116,6 +116,32 @@ export const RunModel = z
   .strict();
 export type RunModel = z.infer<typeof RunModel>;
 
+/** 稳定的隔离执行语义版本；未知版本可解析，但调用方不能因此准入世界模型。 */
+export const WorldProfileRecipeId = z.string().regex(/^[a-z0-9][a-z0-9-]{0,63}$/);
+export type WorldProfileRecipeId = z.infer<typeof WorldProfileRecipeId>;
+
+/** v1 审定的 recipe 标识，不表示当前节点已经实现或验证了它。 */
+export const WORLD_PROFILE_RECIPE_DEEPSEEK_HTTP_V1 = "deepseek-http-v1";
+
+export const WorldProfileExpectation = z.object({
+  sourceChatProfileId: ProfileId,
+  recipeVersion: WorldProfileRecipeId,
+}).strict();
+export type WorldProfileExpectation = z.infer<typeof WorldProfileExpectation>;
+
+/**
+ * 节点经固定 recipe 校验后才能声明；schema 只核格式/目录一致性，不能验证实际命令或隔离。
+ * 不由 -chat 后缀、readOnly 或手填布尔值产生。完整约束见 World-profile-v1.md。
+ */
+export const WorldProfileCapability = z.object({
+  profileId: ProfileId,
+  sourceChatProfileId: ProfileId,
+  recipeVersion: WorldProfileRecipeId,
+  /** source 的可核实实际默认；null = 未知，不能以 world 自己的默认代替。 */
+  sourceDefaultModel: RunModel.nullable(),
+}).strict();
+export type WorldProfileCapability = z.infer<typeof WorldProfileCapability>;
+
 // ---------------------------------------------------------------- 聊天的记忆槽位（C-34，阶段 1B-2）
 
 /**
@@ -244,6 +270,11 @@ export const StartRunRequest = z
      * 旧请求可省略；要求持久 fence 的调用方不得在失败后去掉此字段重试。
      */
     expectedLedgerId: RemoteRunLedgerId.optional(),
+    /**
+     * 世界请求绑定隔离映射。节点在最终准入（所有 await 之后）核对当前固定 recipe 注册表，
+     * 同 ledger 下 profile 被改名/替换/停用也不能退成普通执行；此字段参与 RunId 幂等比较。
+     */
+    expectedWorldProfile: WorldProfileExpectation.optional(),
     snapshot: z
       .object({
         id: SnapshotId,
@@ -317,7 +348,19 @@ export const StartRunRequest = z
       imageBlockPlaced(r.snapshot.content, r.attachments, r.imageSlot),
     "content 里要有恰好一块图片资料块（attachmentImageBlock），在附件清单块后面，标记只在块里出现一次",
   )
-  .refine((r) => r.kind !== "image" || r.attachments === undefined, "image Run 不能带附件");
+  .refine((r) => r.kind !== "image" || r.attachments === undefined, "image Run 不能带附件")
+  .superRefine((r, ctx) => {
+    if (r.expectedWorldProfile === undefined) return;
+    const reject = (path: string[], message: string) => ctx.addIssue({ code: "custom", path, message });
+    if (r.expectedLedgerId === undefined) reject(["expectedLedgerId"], "世界请求必须绑定 ledger");
+    if (r.model === undefined) reject(["model"], "世界请求必须显式指定实际模型和档位");
+    if (r.profileId === r.expectedWorldProfile.sourceChatProfileId) reject(["profileId"], "世界 target 不能与 source chat profile 相同");
+    if (r.chat !== undefined) reject(["chat"], "世界请求不能携带 chat，即使 memory 为 null");
+    if (r.snapshot.commitSha !== undefined) reject(["snapshot", "commitSha"], "世界请求不能携带工程 commit");
+    if (r.attachments !== undefined) reject(["attachments"], "世界请求不能携带图片");
+    if (r.imageSlot !== undefined) reject(["imageSlot"], "世界请求不能携带图片槽位");
+    if (r.kind === "image") reject(["kind"], "世界请求只接受 text Run");
+  });
 
 export const StartRunResponse = z.object({
   runId: RunId,
@@ -402,6 +445,10 @@ export const CancelRunRequest = z.object({
   expectedLedgerId: RemoteRunLedgerId.optional(),
 }).strict();
 
+/** 取消已接收；不是 RemoteRunProof，不代表受管进程已经停止。wire 保持原有 {ok:true}。 */
+export const CancelRunResponse = z.object({ ok: z.literal(true) });
+export type CancelRunResponse = z.infer<typeof CancelRunResponse>;
+
 export const PermissionDecisionRequest = PermissionDecision;
 
 export const NodeHealth = z.object({
@@ -440,12 +487,43 @@ export const NodeHealth = z.object({
       quota: z.boolean().optional(),
       /** 可协商的持久准入 fence 与按 RunId 查询证据；不改变已有 runs 列表。 */
       runFence: RemoteRunFenceCapability.optional(),
+      /** 经节点实际校验的隔离映射；缺席/未知 recipe 不可用于世界模型，不按名称推断。 */
+      worldProfiles: z.array(WorldProfileCapability).max(64).optional(),
     })
     .optional(),
 }).refine(
   (h) => (h.memoryProfiles ?? []).every((p) => h.profiles.includes(p)),
   "memoryProfiles 里的 profile 必须都在 profiles 里",
-);
+).superRefine((h, ctx) => {
+  const mappings = h.capabilities?.worldProfiles;
+  if (mappings === undefined || mappings.length === 0) return;
+  const issue = (path: (string | number)[], message: string) => ctx.addIssue({ code: "custom", path, message });
+  if (h.capabilities?.runFence === undefined) issue(["capabilities", "runFence"], "世界映射需要持久 Run fence 能力");
+  const targets = new Set(mappings.map((m) => m.profileId));
+  const seenTargets = new Set<string>(), seenSources = new Set<string>();
+  const supports = (models: readonly ModelOption[], chosen: RunModel) => models.some((m) =>
+    m.id === chosen.model && (chosen.effort === null ? m.efforts.length === 0 : m.efforts.some((e) => e.id === chosen.effort)));
+  for (const [index, mapping] of mappings.entries()) {
+    const path = ["capabilities", "worldProfiles", index];
+    if (seenTargets.has(mapping.profileId)) issue([...path, "profileId"], "世界 target 不能重复");
+    if (seenSources.has(mapping.sourceChatProfileId)) issue([...path, "sourceChatProfileId"], "同一 source 只能有一个世界映射");
+    seenTargets.add(mapping.profileId); seenSources.add(mapping.sourceChatProfileId);
+    if (!h.profiles.includes(mapping.profileId)) issue([...path, "profileId"], "世界 target 必须在 profiles 中");
+    if (!h.profiles.includes(mapping.sourceChatProfileId)) issue([...path, "sourceChatProfileId"], "source chat profile 必须在 profiles 中");
+    if (targets.has(mapping.sourceChatProfileId)) issue([...path, "sourceChatProfileId"], "source 不能是世界 target（包括自身和映射链）");
+    if (h.memoryProfiles?.includes(mapping.profileId) || h.capabilities?.imageProfiles?.includes(mapping.profileId)) {
+      issue([...path, "profileId"], "世界 target 不能同时声明记忆或图片能力");
+    }
+    const targetModels = h.profileModels?.find((p) => p.profileId === mapping.profileId)?.models;
+    if (!targetModels?.length) issue([...path, "profileId"], "世界 target 必须有显式的非空模型目录");
+    const chosen = mapping.sourceDefaultModel;
+    if (chosen !== null) {
+      if (targetModels && !supports(targetModels, chosen)) issue([...path, "sourceDefaultModel"], "source 默认必须是 target 目录中合法的模型/档位");
+      const sourceModels = h.profileModels?.find((p) => p.profileId === mapping.sourceChatProfileId)?.models;
+      if (sourceModels?.length && !supports(sourceModels, chosen)) issue([...path, "sourceDefaultModel"], "source 默认与 source 已声明的模型目录不一致");
+    }
+  }
+});
 
 export const RemoteRunSummary = z.object({
   runId: RunId,
@@ -493,6 +571,7 @@ export const RemoteErrorCode = z.enum([
   "run_id_conflict",
   "run_ledger_mismatch", // 409：expectedLedgerId 与节点当前持久账本不符，不采取替代操作
   "run_fenced", // 409：该 RunId 已永久消耗，不能创建替代执行
+  "world_profile_mismatch", // 409：预期隔离映射与当前经过校验的注册表不符，不退成普通 profile
   "node_busy",
   "payload_too_large",
   "not_implemented",
