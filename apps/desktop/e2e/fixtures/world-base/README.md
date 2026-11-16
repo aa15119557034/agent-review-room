@@ -35,4 +35,4 @@ node scripts\baseline.cjs --scene=combined --electron=D:\codex\2026-11-16\world-
 
 ## 当前状态
 
-第一段与 C酱的首轮精修均已交回。最新 RTX 3060 四机位重拍、步行复测及网络取消记录见 [精修后复测](./evidence/gpu-polish-294e85d/README.md)。首轮录像、原版基线和性能修复历史见 [EVIDENCE.md](./EVIDENCE.md)，其中旧录像不代表当前精修参数。第三方许可和修改范围见 [THIRD-PARTY.md](./THIRD-PARTY.md)。
+第一段、C酱首轮精修及本轮地表/浅水修正已落地。最新对照、RTX 3060 四机位、步行、当前录像及未通过的诊断限制见 [地表与浅水修正](./evidence/terrain-water-2026-11-17/README.md)。上一轮数据见 [精修后复测](./evidence/gpu-polish-294e85d/README.md)；首轮录像、原版基线和性能修复历史见 [EVIDENCE.md](./EVIDENCE.md)，旧录像不代表当前场景参数。第三方许可和修改范围见 [THIRD-PARTY.md](./THIRD-PARTY.md)。

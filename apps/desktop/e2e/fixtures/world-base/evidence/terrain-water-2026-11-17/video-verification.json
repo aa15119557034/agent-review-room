@@ -1,0 +1,1921 @@
+{
+  "ok": true,
+  "method": "Offscreen Electron at 60Hz presents the existing Blob WebM sequentially at 1x without seeking. requestVideoFrameCallback records the presentation timeline; sampled RGBA pixels are hashed and exported as JPEG for visual QA.",
+  "file": {
+    "bytes": 5080095,
+    "sha256": "3c72421926ddeab2debf7ef83e51e2d3c435d1f831dfd44bcb5eac1f7ceea21c",
+    "sha256After": "3c72421926ddeab2debf7ef83e51e2d3c435d1f831dfd44bcb5eac1f7ceea21c",
+    "unchanged": true
+  },
+  "container": {
+    "frames": 382,
+    "maximumGapSeconds": 0.053000000000000824,
+    "gapsOver120ms": [],
+    "ok": true,
+    "file": "video-container-timeline.json"
+  },
+  "sourceAlignment": {
+    "sourceFrames": 382,
+    "encodedFrames": 382,
+    "maxTimestampErrorMs": 0.6608200073242188,
+    "ok": true,
+    "method": "One encoded frame per captured JPEG; PTS compared with original CDP timestamps, allowing at most 2ms container/time-base quantization."
+  },
+  "decode": {
+    "metadata": {
+      "width": 1440,
+      "height": 900,
+      "initialDuration": 12.103
+    },
+    "duration": 12.103,
+    "durationSource": "metadata",
+    "playback": "sequential 1x; no seek",
+    "frames": [
+      {
+        "requestedTime": 1.512875,
+        "decodedTime": 1.53,
+        "timestampDelta": 0.017125000000000057,
+        "videoCurrentTime": 1.540705,
+        "presentedFrame": {
+          "mediaTime": 1.53,
+          "presentedFrames": 46,
+          "width": 1440,
+          "height": 900
+        },
+        "width": 1440,
+        "height": 900,
+        "meanRgb": 92.30060779586076,
+        "nonBlackFraction": 0.8916767128792445,
+        "notBlack": true,
+        "sha256": "e020cc1df764818a3ebbf31ba5af3826cafb85f74cb7df7cdf3bef5d4d34af0a",
+        "jpeg": "video-frame-01.jpg"
+      },
+      {
+        "requestedTime": 4.538625,
+        "decodedTime": 4.551,
+        "timestampDelta": 0.012375000000000469,
+        "videoCurrentTime": 4.539542,
+        "presentedFrame": {
+          "mediaTime": 4.551,
+          "presentedFrames": 144,
+          "width": 1440,
+          "height": 900
+        },
+        "width": 1440,
+        "height": 900,
+        "meanRgb": 183.71091186122823,
+        "nonBlackFraction": 0.9999748844685553,
+        "notBlack": true,
+        "sha256": "bd5b7557102cd624d33543451f725c0af34e17387c29d78351d470b5517883be",
+        "jpeg": "video-frame-02.jpg"
+      },
+      {
+        "requestedTime": 7.564375,
+        "decodedTime": 7.579,
+        "timestampDelta": 0.014624999999999666,
+        "videoCurrentTime": 7.573808,
+        "presentedFrame": {
+          "mediaTime": 7.579,
+          "presentedFrames": 242,
+          "width": 1440,
+          "height": 900
+        },
+        "width": 1440,
+        "height": 900,
+        "meanRgb": 103.75670584690002,
+        "nonBlackFraction": 0.9991209563994374,
+        "notBlack": true,
+        "sha256": "ffb2fbe4b1542a6bf45ea32f9137bb344cfa448688abbff976e2081e6f5f2b6e",
+        "jpeg": "video-frame-03.jpg"
+      },
+      {
+        "requestedTime": 10.590125,
+        "decodedTime": 10.594,
+        "timestampDelta": 0.0038749999999989626,
+        "videoCurrentTime": 10.605616,
+        "presentedFrame": {
+          "mediaTime": 10.594,
+          "presentedFrames": 333,
+          "width": 1440,
+          "height": 900
+        },
+        "width": 1440,
+        "height": 900,
+        "meanRgb": 160.27886611745978,
+        "nonBlackFraction": 0.981866586296966,
+        "notBlack": true,
+        "sha256": "f430af6c8b4ee47df1f3283ec65c089ef7f0857096b14f6503fc94607770c930",
+        "jpeg": "video-frame-04.jpg"
+      },
+      {
+        "requestedTime": 11.73991,
+        "decodedTime": 11.763,
+        "timestampDelta": 0.023089999999999833,
+        "videoCurrentTime": 11.758239,
+        "presentedFrame": {
+          "mediaTime": 11.763,
+          "presentedFrames": 371,
+          "width": 1440,
+          "height": 900
+        },
+        "width": 1440,
+        "height": 900,
+        "meanRgb": 160.21765956733162,
+        "nonBlackFraction": 0.9818917018284107,
+        "notBlack": true,
+        "sha256": "7493430e1dcd015791926ae9729736995c93ce4b5d46265548bb8129d93d0272",
+        "jpeg": "video-frame-05.jpg"
+      }
+    ],
+    "distinctFrames": 5,
+    "timeline": [
+      {
+        "mediaTime": 0,
+        "presentedFrames": 1,
+        "expectedDisplayTime": 525.7
+      },
+      {
+        "mediaTime": 0.037,
+        "presentedFrames": 2,
+        "expectedDisplayTime": 579.2
+      },
+      {
+        "mediaTime": 0.077,
+        "presentedFrames": 3,
+        "expectedDisplayTime": 612.5
+      },
+      {
+        "mediaTime": 0.119,
+        "presentedFrames": 4,
+        "expectedDisplayTime": 645.8
+      },
+      {
+        "mediaTime": 0.159,
+        "presentedFrames": 5,
+        "expectedDisplayTime": 695.8
+      },
+      {
+        "mediaTime": 0.196,
+        "presentedFrames": 6,
+        "expectedDisplayTime": 729.2
+      },
+      {
+        "mediaTime": 0.239,
+        "presentedFrames": 7,
+        "expectedDisplayTime": 779.1
+      },
+      {
+        "mediaTime": 0.282,
+        "presentedFrames": 8,
+        "expectedDisplayTime": 812.5
+      },
+      {
+        "mediaTime": 0.325,
+        "presentedFrames": 9,
+        "expectedDisplayTime": 862.5
+      },
+      {
+        "mediaTime": 0.361,
+        "presentedFrames": 10,
+        "expectedDisplayTime": 895.8
+      },
+      {
+        "mediaTime": 0.405,
+        "presentedFrames": 11,
+        "expectedDisplayTime": 945.8
+      },
+      {
+        "mediaTime": 0.442,
+        "presentedFrames": 12,
+        "expectedDisplayTime": 979.1
+      },
+      {
+        "mediaTime": 0.477,
+        "presentedFrames": 13,
+        "expectedDisplayTime": 1012.5
+      },
+      {
+        "mediaTime": 0.513,
+        "presentedFrames": 14,
+        "expectedDisplayTime": 1045.8
+      },
+      {
+        "mediaTime": 0.545,
+        "presentedFrames": 15,
+        "expectedDisplayTime": 1079.2
+      },
+      {
+        "mediaTime": 0.578,
+        "presentedFrames": 16,
+        "expectedDisplayTime": 1112.5
+      },
+      {
+        "mediaTime": 0.612,
+        "presentedFrames": 17,
+        "expectedDisplayTime": 1145.8
+      },
+      {
+        "mediaTime": 0.648,
+        "presentedFrames": 18,
+        "expectedDisplayTime": 1179.2
+      },
+      {
+        "mediaTime": 0.686,
+        "presentedFrames": 19,
+        "expectedDisplayTime": 1212.5
+      },
+      {
+        "mediaTime": 0.718,
+        "presentedFrames": 20,
+        "expectedDisplayTime": 1245.8
+      },
+      {
+        "mediaTime": 0.748,
+        "presentedFrames": 21,
+        "expectedDisplayTime": 1279.1
+      },
+      {
+        "mediaTime": 0.785,
+        "presentedFrames": 22,
+        "expectedDisplayTime": 1312.5
+      },
+      {
+        "mediaTime": 0.852,
+        "presentedFrames": 24,
+        "expectedDisplayTime": 1379.2
+      },
+      {
+        "mediaTime": 0.883,
+        "presentedFrames": 25,
+        "expectedDisplayTime": 1412.4
+      },
+      {
+        "mediaTime": 0.915,
+        "presentedFrames": 26,
+        "expectedDisplayTime": 1445.8
+      },
+      {
+        "mediaTime": 0.947,
+        "presentedFrames": 27,
+        "expectedDisplayTime": 1479.1
+      },
+      {
+        "mediaTime": 0.976,
+        "presentedFrames": 28,
+        "expectedDisplayTime": 1512.5
+      },
+      {
+        "mediaTime": 1.006,
+        "presentedFrames": 29,
+        "expectedDisplayTime": 1545.9
+      },
+      {
+        "mediaTime": 1.038,
+        "presentedFrames": 30,
+        "expectedDisplayTime": 1579.1
+      },
+      {
+        "mediaTime": 1.068,
+        "presentedFrames": 31,
+        "expectedDisplayTime": 1595.8
+      },
+      {
+        "mediaTime": 1.098,
+        "presentedFrames": 32,
+        "expectedDisplayTime": 1629.2
+      },
+      {
+        "mediaTime": 1.132,
+        "presentedFrames": 33,
+        "expectedDisplayTime": 1662.5
+      },
+      {
+        "mediaTime": 1.16,
+        "presentedFrames": 34,
+        "expectedDisplayTime": 1695.8
+      },
+      {
+        "mediaTime": 1.193,
+        "presentedFrames": 35,
+        "expectedDisplayTime": 1729.2
+      },
+      {
+        "mediaTime": 1.223,
+        "presentedFrames": 36,
+        "expectedDisplayTime": 1762.4
+      },
+      {
+        "mediaTime": 1.284,
+        "presentedFrames": 38,
+        "expectedDisplayTime": 1812.4
+      },
+      {
+        "mediaTime": 1.315,
+        "presentedFrames": 39,
+        "expectedDisplayTime": 1845.8
+      },
+      {
+        "mediaTime": 1.346,
+        "presentedFrames": 40,
+        "expectedDisplayTime": 1879.1
+      },
+      {
+        "mediaTime": 1.376,
+        "presentedFrames": 41,
+        "expectedDisplayTime": 1912.5
+      },
+      {
+        "mediaTime": 1.408,
+        "presentedFrames": 42,
+        "expectedDisplayTime": 1945.8
+      },
+      {
+        "mediaTime": 1.438,
+        "presentedFrames": 43,
+        "expectedDisplayTime": 1979.1
+      },
+      {
+        "mediaTime": 1.468,
+        "presentedFrames": 44,
+        "expectedDisplayTime": 1995.7
+      },
+      {
+        "mediaTime": 1.499,
+        "presentedFrames": 45,
+        "expectedDisplayTime": 2029.1
+      },
+      {
+        "mediaTime": 1.53,
+        "presentedFrames": 46,
+        "expectedDisplayTime": 2062.5
+      },
+      {
+        "mediaTime": 1.562,
+        "presentedFrames": 47,
+        "expectedDisplayTime": 2095.8
+      },
+      {
+        "mediaTime": 1.593,
+        "presentedFrames": 48,
+        "expectedDisplayTime": 2129.1
+      },
+      {
+        "mediaTime": 1.653,
+        "presentedFrames": 50,
+        "expectedDisplayTime": 2179.2
+      },
+      {
+        "mediaTime": 1.684,
+        "presentedFrames": 51,
+        "expectedDisplayTime": 2212.4
+      },
+      {
+        "mediaTime": 1.715,
+        "presentedFrames": 52,
+        "expectedDisplayTime": 2245.8
+      },
+      {
+        "mediaTime": 1.745,
+        "presentedFrames": 53,
+        "expectedDisplayTime": 2279.1
+      },
+      {
+        "mediaTime": 1.775,
+        "presentedFrames": 54,
+        "expectedDisplayTime": 2312.5
+      },
+      {
+        "mediaTime": 1.807,
+        "presentedFrames": 55,
+        "expectedDisplayTime": 2345.8
+      },
+      {
+        "mediaTime": 1.838,
+        "presentedFrames": 56,
+        "expectedDisplayTime": 2379.1
+      },
+      {
+        "mediaTime": 1.869,
+        "presentedFrames": 57,
+        "expectedDisplayTime": 2395.8
+      },
+      {
+        "mediaTime": 1.904,
+        "presentedFrames": 58,
+        "expectedDisplayTime": 2445.8
+      },
+      {
+        "mediaTime": 1.945,
+        "presentedFrames": 59,
+        "expectedDisplayTime": 2479.1
+      },
+      {
+        "mediaTime": 1.976,
+        "presentedFrames": 60,
+        "expectedDisplayTime": 2512.4
+      },
+      {
+        "mediaTime": 2.008,
+        "presentedFrames": 61,
+        "expectedDisplayTime": 2545.7
+      },
+      {
+        "mediaTime": 2.038,
+        "presentedFrames": 62,
+        "expectedDisplayTime": 2579.1
+      },
+      {
+        "mediaTime": 2.1,
+        "presentedFrames": 64,
+        "expectedDisplayTime": 2629.1
+      },
+      {
+        "mediaTime": 2.131,
+        "presentedFrames": 65,
+        "expectedDisplayTime": 2662.4
+      },
+      {
+        "mediaTime": 2.162,
+        "presentedFrames": 66,
+        "expectedDisplayTime": 2695.8
+      },
+      {
+        "mediaTime": 2.192,
+        "presentedFrames": 67,
+        "expectedDisplayTime": 2729.1
+      },
+      {
+        "mediaTime": 2.224,
+        "presentedFrames": 68,
+        "expectedDisplayTime": 2762.4
+      },
+      {
+        "mediaTime": 2.253,
+        "presentedFrames": 69,
+        "expectedDisplayTime": 2795.8
+      },
+      {
+        "mediaTime": 2.284,
+        "presentedFrames": 70,
+        "expectedDisplayTime": 2812.5
+      },
+      {
+        "mediaTime": 2.313,
+        "presentedFrames": 71,
+        "expectedDisplayTime": 2845.8
+      },
+      {
+        "mediaTime": 2.345,
+        "presentedFrames": 72,
+        "expectedDisplayTime": 2879.1
+      },
+      {
+        "mediaTime": 2.376,
+        "presentedFrames": 73,
+        "expectedDisplayTime": 2912.5
+      },
+      {
+        "mediaTime": 2.407,
+        "presentedFrames": 74,
+        "expectedDisplayTime": 2945.8
+      },
+      {
+        "mediaTime": 2.439,
+        "presentedFrames": 75,
+        "expectedDisplayTime": 2979.1
+      },
+      {
+        "mediaTime": 2.468,
+        "presentedFrames": 76,
+        "expectedDisplayTime": 2995.8
+      },
+      {
+        "mediaTime": 2.5,
+        "presentedFrames": 77,
+        "expectedDisplayTime": 3029.1
+      },
+      {
+        "mediaTime": 2.531,
+        "presentedFrames": 78,
+        "expectedDisplayTime": 3062.4
+      },
+      {
+        "mediaTime": 2.562,
+        "presentedFrames": 79,
+        "expectedDisplayTime": 3095.7
+      },
+      {
+        "mediaTime": 2.592,
+        "presentedFrames": 80,
+        "expectedDisplayTime": 3129.1
+      },
+      {
+        "mediaTime": 2.621,
+        "presentedFrames": 81,
+        "expectedDisplayTime": 3162.4
+      },
+      {
+        "mediaTime": 2.654,
+        "presentedFrames": 82,
+        "expectedDisplayTime": 3195.7
+      },
+      {
+        "mediaTime": 2.683,
+        "presentedFrames": 83,
+        "expectedDisplayTime": 3212.4
+      },
+      {
+        "mediaTime": 2.714,
+        "presentedFrames": 84,
+        "expectedDisplayTime": 3245.7
+      },
+      {
+        "mediaTime": 2.745,
+        "presentedFrames": 85,
+        "expectedDisplayTime": 3279.1
+      },
+      {
+        "mediaTime": 2.776,
+        "presentedFrames": 86,
+        "expectedDisplayTime": 3312.4
+      },
+      {
+        "mediaTime": 2.809,
+        "presentedFrames": 87,
+        "expectedDisplayTime": 3345.8
+      },
+      {
+        "mediaTime": 2.837,
+        "presentedFrames": 88,
+        "expectedDisplayTime": 3379.1
+      },
+      {
+        "mediaTime": 2.87,
+        "presentedFrames": 89,
+        "expectedDisplayTime": 3412.4
+      },
+      {
+        "mediaTime": 2.898,
+        "presentedFrames": 90,
+        "expectedDisplayTime": 3429.1
+      },
+      {
+        "mediaTime": 2.931,
+        "presentedFrames": 91,
+        "expectedDisplayTime": 3462.4
+      },
+      {
+        "mediaTime": 2.962,
+        "presentedFrames": 92,
+        "expectedDisplayTime": 3495.8
+      },
+      {
+        "mediaTime": 2.991,
+        "presentedFrames": 93,
+        "expectedDisplayTime": 3529.1
+      },
+      {
+        "mediaTime": 3.023,
+        "presentedFrames": 94,
+        "expectedDisplayTime": 3562.4
+      },
+      {
+        "mediaTime": 3.054,
+        "presentedFrames": 95,
+        "expectedDisplayTime": 3595.7
+      },
+      {
+        "mediaTime": 3.087,
+        "presentedFrames": 96,
+        "expectedDisplayTime": 3629
+      },
+      {
+        "mediaTime": 3.136,
+        "presentedFrames": 98,
+        "expectedDisplayTime": 3662.4
+      },
+      {
+        "mediaTime": 3.174,
+        "presentedFrames": 99,
+        "expectedDisplayTime": 3712.4
+      },
+      {
+        "mediaTime": 3.197,
+        "presentedFrames": 100,
+        "expectedDisplayTime": 3729
+      },
+      {
+        "mediaTime": 3.228,
+        "presentedFrames": 101,
+        "expectedDisplayTime": 3762.3
+      },
+      {
+        "mediaTime": 3.261,
+        "presentedFrames": 102,
+        "expectedDisplayTime": 3795.7
+      },
+      {
+        "mediaTime": 3.29,
+        "presentedFrames": 103,
+        "expectedDisplayTime": 3829.1
+      },
+      {
+        "mediaTime": 3.32,
+        "presentedFrames": 104,
+        "expectedDisplayTime": 3862.3
+      },
+      {
+        "mediaTime": 3.352,
+        "presentedFrames": 105,
+        "expectedDisplayTime": 3879.1
+      },
+      {
+        "mediaTime": 3.381,
+        "presentedFrames": 106,
+        "expectedDisplayTime": 3912.4
+      },
+      {
+        "mediaTime": 3.413,
+        "presentedFrames": 107,
+        "expectedDisplayTime": 3945.7
+      },
+      {
+        "mediaTime": 3.444,
+        "presentedFrames": 108,
+        "expectedDisplayTime": 3979
+      },
+      {
+        "mediaTime": 3.473,
+        "presentedFrames": 109,
+        "expectedDisplayTime": 4012.4
+      },
+      {
+        "mediaTime": 3.533,
+        "presentedFrames": 111,
+        "expectedDisplayTime": 4062.3
+      },
+      {
+        "mediaTime": 3.567,
+        "presentedFrames": 112,
+        "expectedDisplayTime": 4095.7
+      },
+      {
+        "mediaTime": 3.597,
+        "presentedFrames": 113,
+        "expectedDisplayTime": 4129
+      },
+      {
+        "mediaTime": 3.626,
+        "presentedFrames": 114,
+        "expectedDisplayTime": 4162.4
+      },
+      {
+        "mediaTime": 3.659,
+        "presentedFrames": 115,
+        "expectedDisplayTime": 4195.7
+      },
+      {
+        "mediaTime": 3.728,
+        "presentedFrames": 117,
+        "expectedDisplayTime": 4262.4
+      },
+      {
+        "mediaTime": 3.75,
+        "presentedFrames": 118,
+        "expectedDisplayTime": 4279.1
+      },
+      {
+        "mediaTime": 3.782,
+        "presentedFrames": 119,
+        "expectedDisplayTime": 4312.4
+      },
+      {
+        "mediaTime": 3.813,
+        "presentedFrames": 120,
+        "expectedDisplayTime": 4345.7
+      },
+      {
+        "mediaTime": 3.844,
+        "presentedFrames": 121,
+        "expectedDisplayTime": 4379
+      },
+      {
+        "mediaTime": 3.874,
+        "presentedFrames": 122,
+        "expectedDisplayTime": 4412.4
+      },
+      {
+        "mediaTime": 3.936,
+        "presentedFrames": 124,
+        "expectedDisplayTime": 4462.3
+      },
+      {
+        "mediaTime": 3.967,
+        "presentedFrames": 125,
+        "expectedDisplayTime": 4495.6
+      },
+      {
+        "mediaTime": 3.997,
+        "presentedFrames": 126,
+        "expectedDisplayTime": 4529
+      },
+      {
+        "mediaTime": 4.029,
+        "presentedFrames": 127,
+        "expectedDisplayTime": 4562.3
+      },
+      {
+        "mediaTime": 4.059,
+        "presentedFrames": 128,
+        "expectedDisplayTime": 4595.7
+      },
+      {
+        "mediaTime": 4.089,
+        "presentedFrames": 129,
+        "expectedDisplayTime": 4629
+      },
+      {
+        "mediaTime": 4.121,
+        "presentedFrames": 130,
+        "expectedDisplayTime": 4662.3
+      },
+      {
+        "mediaTime": 4.15,
+        "presentedFrames": 131,
+        "expectedDisplayTime": 4679
+      },
+      {
+        "mediaTime": 4.189,
+        "presentedFrames": 132,
+        "expectedDisplayTime": 4729
+      },
+      {
+        "mediaTime": 4.25,
+        "presentedFrames": 134,
+        "expectedDisplayTime": 4779
+      },
+      {
+        "mediaTime": 4.286,
+        "presentedFrames": 135,
+        "expectedDisplayTime": 4812.4
+      },
+      {
+        "mediaTime": 4.311,
+        "presentedFrames": 136,
+        "expectedDisplayTime": 4845.7
+      },
+      {
+        "mediaTime": 4.333,
+        "presentedFrames": 137,
+        "expectedDisplayTime": 4862.4
+      },
+      {
+        "mediaTime": 4.379,
+        "presentedFrames": 138,
+        "expectedDisplayTime": 4912.4
+      },
+      {
+        "mediaTime": 4.436,
+        "presentedFrames": 140,
+        "expectedDisplayTime": 4962.3
+      },
+      {
+        "mediaTime": 4.458,
+        "presentedFrames": 141,
+        "expectedDisplayTime": 4995.7
+      },
+      {
+        "mediaTime": 4.49,
+        "presentedFrames": 142,
+        "expectedDisplayTime": 5029
+      },
+      {
+        "mediaTime": 4.519,
+        "presentedFrames": 143,
+        "expectedDisplayTime": 5045.7
+      },
+      {
+        "mediaTime": 4.551,
+        "presentedFrames": 144,
+        "expectedDisplayTime": 5079
+      },
+      {
+        "mediaTime": 4.582,
+        "presentedFrames": 145,
+        "expectedDisplayTime": 5112.3
+      },
+      {
+        "mediaTime": 4.613,
+        "presentedFrames": 146,
+        "expectedDisplayTime": 5145.7
+      },
+      {
+        "mediaTime": 4.644,
+        "presentedFrames": 147,
+        "expectedDisplayTime": 5179
+      },
+      {
+        "mediaTime": 4.674,
+        "presentedFrames": 148,
+        "expectedDisplayTime": 5212.3
+      },
+      {
+        "mediaTime": 4.704,
+        "presentedFrames": 149,
+        "expectedDisplayTime": 5245.7
+      },
+      {
+        "mediaTime": 4.736,
+        "presentedFrames": 150,
+        "expectedDisplayTime": 5262.3
+      },
+      {
+        "mediaTime": 4.766,
+        "presentedFrames": 151,
+        "expectedDisplayTime": 5295.7
+      },
+      {
+        "mediaTime": 4.797,
+        "presentedFrames": 152,
+        "expectedDisplayTime": 5329
+      },
+      {
+        "mediaTime": 4.827,
+        "presentedFrames": 153,
+        "expectedDisplayTime": 5362.3
+      },
+      {
+        "mediaTime": 4.859,
+        "presentedFrames": 154,
+        "expectedDisplayTime": 5395.7
+      },
+      {
+        "mediaTime": 4.89,
+        "presentedFrames": 155,
+        "expectedDisplayTime": 5428.9
+      },
+      {
+        "mediaTime": 4.951,
+        "presentedFrames": 157,
+        "expectedDisplayTime": 5479
+      },
+      {
+        "mediaTime": 4.981,
+        "presentedFrames": 158,
+        "expectedDisplayTime": 5512.3
+      },
+      {
+        "mediaTime": 5.012,
+        "presentedFrames": 159,
+        "expectedDisplayTime": 5545.6
+      },
+      {
+        "mediaTime": 5.044,
+        "presentedFrames": 160,
+        "expectedDisplayTime": 5579
+      },
+      {
+        "mediaTime": 5.074,
+        "presentedFrames": 161,
+        "expectedDisplayTime": 5612.3
+      },
+      {
+        "mediaTime": 5.104,
+        "presentedFrames": 162,
+        "expectedDisplayTime": 5645.6
+      },
+      {
+        "mediaTime": 5.135,
+        "presentedFrames": 163,
+        "expectedDisplayTime": 5662.3
+      },
+      {
+        "mediaTime": 5.166,
+        "presentedFrames": 164,
+        "expectedDisplayTime": 5695.6
+      },
+      {
+        "mediaTime": 5.197,
+        "presentedFrames": 165,
+        "expectedDisplayTime": 5729
+      },
+      {
+        "mediaTime": 5.226,
+        "presentedFrames": 166,
+        "expectedDisplayTime": 5762.3
+      },
+      {
+        "mediaTime": 5.259,
+        "presentedFrames": 167,
+        "expectedDisplayTime": 5795.7
+      },
+      {
+        "mediaTime": 5.29,
+        "presentedFrames": 168,
+        "expectedDisplayTime": 5829
+      },
+      {
+        "mediaTime": 5.32,
+        "presentedFrames": 169,
+        "expectedDisplayTime": 5862.3
+      },
+      {
+        "mediaTime": 5.352,
+        "presentedFrames": 170,
+        "expectedDisplayTime": 5879
+      },
+      {
+        "mediaTime": 5.381,
+        "presentedFrames": 171,
+        "expectedDisplayTime": 5912.3
+      },
+      {
+        "mediaTime": 5.412,
+        "presentedFrames": 172,
+        "expectedDisplayTime": 5945.6
+      },
+      {
+        "mediaTime": 5.443,
+        "presentedFrames": 173,
+        "expectedDisplayTime": 5979
+      },
+      {
+        "mediaTime": 5.474,
+        "presentedFrames": 174,
+        "expectedDisplayTime": 6012.2
+      },
+      {
+        "mediaTime": 5.505,
+        "presentedFrames": 175,
+        "expectedDisplayTime": 6045.7
+      },
+      {
+        "mediaTime": 5.566,
+        "presentedFrames": 177,
+        "expectedDisplayTime": 6095.7
+      },
+      {
+        "mediaTime": 5.595,
+        "presentedFrames": 178,
+        "expectedDisplayTime": 6129
+      },
+      {
+        "mediaTime": 5.626,
+        "presentedFrames": 179,
+        "expectedDisplayTime": 6162.3
+      },
+      {
+        "mediaTime": 5.656,
+        "presentedFrames": 180,
+        "expectedDisplayTime": 6195.7
+      },
+      {
+        "mediaTime": 5.718,
+        "presentedFrames": 182,
+        "expectedDisplayTime": 6245.6
+      },
+      {
+        "mediaTime": 5.751,
+        "presentedFrames": 183,
+        "expectedDisplayTime": 6278.9
+      },
+      {
+        "mediaTime": 5.782,
+        "presentedFrames": 184,
+        "expectedDisplayTime": 6312.3
+      },
+      {
+        "mediaTime": 5.813,
+        "presentedFrames": 185,
+        "expectedDisplayTime": 6345.6
+      },
+      {
+        "mediaTime": 5.843,
+        "presentedFrames": 186,
+        "expectedDisplayTime": 6378.9
+      },
+      {
+        "mediaTime": 5.881,
+        "presentedFrames": 187,
+        "expectedDisplayTime": 6412.3
+      },
+      {
+        "mediaTime": 5.912,
+        "presentedFrames": 188,
+        "expectedDisplayTime": 6445.6
+      },
+      {
+        "mediaTime": 5.966,
+        "presentedFrames": 190,
+        "expectedDisplayTime": 6495.6
+      },
+      {
+        "mediaTime": 5.997,
+        "presentedFrames": 191,
+        "expectedDisplayTime": 6528.9
+      },
+      {
+        "mediaTime": 6.027,
+        "presentedFrames": 192,
+        "expectedDisplayTime": 6562.3
+      },
+      {
+        "mediaTime": 6.059,
+        "presentedFrames": 193,
+        "expectedDisplayTime": 6595.6
+      },
+      {
+        "mediaTime": 6.09,
+        "presentedFrames": 194,
+        "expectedDisplayTime": 6628.9
+      },
+      {
+        "mediaTime": 6.133,
+        "presentedFrames": 195,
+        "expectedDisplayTime": 6662.2
+      },
+      {
+        "mediaTime": 6.163,
+        "presentedFrames": 196,
+        "expectedDisplayTime": 6695.6
+      },
+      {
+        "mediaTime": 6.193,
+        "presentedFrames": 197,
+        "expectedDisplayTime": 6728.9
+      },
+      {
+        "mediaTime": 6.22,
+        "presentedFrames": 198,
+        "expectedDisplayTime": 6762.3
+      },
+      {
+        "mediaTime": 6.256,
+        "presentedFrames": 199,
+        "expectedDisplayTime": 6795.5
+      },
+      {
+        "mediaTime": 6.285,
+        "presentedFrames": 200,
+        "expectedDisplayTime": 6812.3
+      },
+      {
+        "mediaTime": 6.313,
+        "presentedFrames": 201,
+        "expectedDisplayTime": 6845.6
+      },
+      {
+        "mediaTime": 6.346,
+        "presentedFrames": 202,
+        "expectedDisplayTime": 6878.9
+      },
+      {
+        "mediaTime": 6.365,
+        "presentedFrames": 203,
+        "expectedDisplayTime": 6895.6
+      },
+      {
+        "mediaTime": 6.402,
+        "presentedFrames": 204,
+        "expectedDisplayTime": 6929
+      },
+      {
+        "mediaTime": 6.439,
+        "presentedFrames": 205,
+        "expectedDisplayTime": 6978.9
+      },
+      {
+        "mediaTime": 6.467,
+        "presentedFrames": 206,
+        "expectedDisplayTime": 6995.6
+      },
+      {
+        "mediaTime": 6.502,
+        "presentedFrames": 207,
+        "expectedDisplayTime": 7028.9
+      },
+      {
+        "mediaTime": 6.532,
+        "presentedFrames": 208,
+        "expectedDisplayTime": 7062.3
+      },
+      {
+        "mediaTime": 6.552,
+        "presentedFrames": 209,
+        "expectedDisplayTime": 7078.9
+      },
+      {
+        "mediaTime": 6.594,
+        "presentedFrames": 210,
+        "expectedDisplayTime": 7128.9
+      },
+      {
+        "mediaTime": 6.624,
+        "presentedFrames": 211,
+        "expectedDisplayTime": 7162.3
+      },
+      {
+        "mediaTime": 6.657,
+        "presentedFrames": 212,
+        "expectedDisplayTime": 7195.6
+      },
+      {
+        "mediaTime": 6.675,
+        "presentedFrames": 213,
+        "expectedDisplayTime": 7212.3
+      },
+      {
+        "mediaTime": 6.716,
+        "presentedFrames": 214,
+        "expectedDisplayTime": 7245.5
+      },
+      {
+        "mediaTime": 6.748,
+        "presentedFrames": 215,
+        "expectedDisplayTime": 7278.9
+      },
+      {
+        "mediaTime": 6.797,
+        "presentedFrames": 217,
+        "expectedDisplayTime": 7328.9
+      },
+      {
+        "mediaTime": 6.828,
+        "presentedFrames": 218,
+        "expectedDisplayTime": 7362.2
+      },
+      {
+        "mediaTime": 6.861,
+        "presentedFrames": 219,
+        "expectedDisplayTime": 7395.5
+      },
+      {
+        "mediaTime": 6.919,
+        "presentedFrames": 221,
+        "expectedDisplayTime": 7445.5
+      },
+      {
+        "mediaTime": 6.953,
+        "presentedFrames": 222,
+        "expectedDisplayTime": 7495.5
+      },
+      {
+        "mediaTime": 6.982,
+        "presentedFrames": 223,
+        "expectedDisplayTime": 7512.2
+      },
+      {
+        "mediaTime": 7.025,
+        "presentedFrames": 224,
+        "expectedDisplayTime": 7562.2
+      },
+      {
+        "mediaTime": 7.052,
+        "presentedFrames": 225,
+        "expectedDisplayTime": 7578.9
+      },
+      {
+        "mediaTime": 7.085,
+        "presentedFrames": 226,
+        "expectedDisplayTime": 7612.2
+      },
+      {
+        "mediaTime": 7.117,
+        "presentedFrames": 227,
+        "expectedDisplayTime": 7645.5
+      },
+      {
+        "mediaTime": 7.147,
+        "presentedFrames": 228,
+        "expectedDisplayTime": 7678.9
+      },
+      {
+        "mediaTime": 7.178,
+        "presentedFrames": 229,
+        "expectedDisplayTime": 7712.2
+      },
+      {
+        "mediaTime": 7.2,
+        "presentedFrames": 230,
+        "expectedDisplayTime": 7728.9
+      },
+      {
+        "mediaTime": 7.227,
+        "presentedFrames": 231,
+        "expectedDisplayTime": 7762.3
+      },
+      {
+        "mediaTime": 7.269,
+        "presentedFrames": 232,
+        "expectedDisplayTime": 7795.6
+      },
+      {
+        "mediaTime": 7.288,
+        "presentedFrames": 233,
+        "expectedDisplayTime": 7828.8
+      },
+      {
+        "mediaTime": 7.33,
+        "presentedFrames": 234,
+        "expectedDisplayTime": 7862.2
+      },
+      {
+        "mediaTime": 7.35,
+        "presentedFrames": 235,
+        "expectedDisplayTime": 7878.9
+      },
+      {
+        "mediaTime": 7.393,
+        "presentedFrames": 236,
+        "expectedDisplayTime": 7928.9
+      },
+      {
+        "mediaTime": 7.442,
+        "presentedFrames": 238,
+        "expectedDisplayTime": 7978.9
+      },
+      {
+        "mediaTime": 7.486,
+        "presentedFrames": 239,
+        "expectedDisplayTime": 8012.2
+      },
+      {
+        "mediaTime": 7.506,
+        "presentedFrames": 240,
+        "expectedDisplayTime": 8045.5
+      },
+      {
+        "mediaTime": 7.534,
+        "presentedFrames": 241,
+        "expectedDisplayTime": 8062.2
+      },
+      {
+        "mediaTime": 7.579,
+        "presentedFrames": 242,
+        "expectedDisplayTime": 8112.2
+      },
+      {
+        "mediaTime": 7.606,
+        "presentedFrames": 243,
+        "expectedDisplayTime": 8145.6
+      },
+      {
+        "mediaTime": 7.626,
+        "presentedFrames": 244,
+        "expectedDisplayTime": 8162.2
+      },
+      {
+        "mediaTime": 7.671,
+        "presentedFrames": 245,
+        "expectedDisplayTime": 8212.2
+      },
+      {
+        "mediaTime": 7.688,
+        "presentedFrames": 246,
+        "expectedDisplayTime": 8228.9
+      },
+      {
+        "mediaTime": 7.752,
+        "presentedFrames": 248,
+        "expectedDisplayTime": 8278.9
+      },
+      {
+        "mediaTime": 7.78,
+        "presentedFrames": 249,
+        "expectedDisplayTime": 8312.2
+      },
+      {
+        "mediaTime": 7.846,
+        "presentedFrames": 251,
+        "expectedDisplayTime": 8378.8
+      },
+      {
+        "mediaTime": 7.886,
+        "presentedFrames": 252,
+        "expectedDisplayTime": 8412.2
+      },
+      {
+        "mediaTime": 7.916,
+        "presentedFrames": 253,
+        "expectedDisplayTime": 8445.5
+      },
+      {
+        "mediaTime": 7.942,
+        "presentedFrames": 254,
+        "expectedDisplayTime": 8478.8
+      },
+      {
+        "mediaTime": 7.978,
+        "presentedFrames": 255,
+        "expectedDisplayTime": 8512.2
+      },
+      {
+        "mediaTime": 7.999,
+        "presentedFrames": 256,
+        "expectedDisplayTime": 8528.8
+      },
+      {
+        "mediaTime": 8.039,
+        "presentedFrames": 257,
+        "expectedDisplayTime": 8578.8
+      },
+      {
+        "mediaTime": 8.071,
+        "presentedFrames": 258,
+        "expectedDisplayTime": 8612.2
+      },
+      {
+        "mediaTime": 8.103,
+        "presentedFrames": 259,
+        "expectedDisplayTime": 8645.5
+      },
+      {
+        "mediaTime": 8.145,
+        "presentedFrames": 260,
+        "expectedDisplayTime": 8678.9
+      },
+      {
+        "mediaTime": 8.193,
+        "presentedFrames": 261,
+        "expectedDisplayTime": 8728.9
+      },
+      {
+        "mediaTime": 8.239,
+        "presentedFrames": 262,
+        "expectedDisplayTime": 8778.8
+      },
+      {
+        "mediaTime": 8.283,
+        "presentedFrames": 263,
+        "expectedDisplayTime": 8812.1
+      },
+      {
+        "mediaTime": 8.327,
+        "presentedFrames": 264,
+        "expectedDisplayTime": 8862.1
+      },
+      {
+        "mediaTime": 8.371,
+        "presentedFrames": 265,
+        "expectedDisplayTime": 8912.2
+      },
+      {
+        "mediaTime": 8.412,
+        "presentedFrames": 266,
+        "expectedDisplayTime": 8945.6
+      },
+      {
+        "mediaTime": 8.456,
+        "presentedFrames": 267,
+        "expectedDisplayTime": 8995.5
+      },
+      {
+        "mediaTime": 8.489,
+        "presentedFrames": 268,
+        "expectedDisplayTime": 9028.9
+      },
+      {
+        "mediaTime": 8.519,
+        "presentedFrames": 269,
+        "expectedDisplayTime": 9045.5
+      },
+      {
+        "mediaTime": 8.549,
+        "presentedFrames": 270,
+        "expectedDisplayTime": 9078.8
+      },
+      {
+        "mediaTime": 8.578,
+        "presentedFrames": 271,
+        "expectedDisplayTime": 9112.2
+      },
+      {
+        "mediaTime": 8.61,
+        "presentedFrames": 272,
+        "expectedDisplayTime": 9145.5
+      },
+      {
+        "mediaTime": 8.64,
+        "presentedFrames": 273,
+        "expectedDisplayTime": 9178.8
+      },
+      {
+        "mediaTime": 8.675,
+        "presentedFrames": 274,
+        "expectedDisplayTime": 9212.2
+      },
+      {
+        "mediaTime": 8.711,
+        "presentedFrames": 275,
+        "expectedDisplayTime": 9245.5
+      },
+      {
+        "mediaTime": 8.748,
+        "presentedFrames": 276,
+        "expectedDisplayTime": 9278.8
+      },
+      {
+        "mediaTime": 8.79,
+        "presentedFrames": 277,
+        "expectedDisplayTime": 9328.9
+      },
+      {
+        "mediaTime": 8.832,
+        "presentedFrames": 278,
+        "expectedDisplayTime": 9362.2
+      },
+      {
+        "mediaTime": 8.875,
+        "presentedFrames": 279,
+        "expectedDisplayTime": 9412.2
+      },
+      {
+        "mediaTime": 8.92,
+        "presentedFrames": 280,
+        "expectedDisplayTime": 9462.2
+      },
+      {
+        "mediaTime": 8.973,
+        "presentedFrames": 281,
+        "expectedDisplayTime": 9512.1
+      },
+      {
+        "mediaTime": 9.01,
+        "presentedFrames": 282,
+        "expectedDisplayTime": 9545.4
+      },
+      {
+        "mediaTime": 9.044,
+        "presentedFrames": 283,
+        "expectedDisplayTime": 9578.8
+      },
+      {
+        "mediaTime": 9.08,
+        "presentedFrames": 284,
+        "expectedDisplayTime": 9612.1
+      },
+      {
+        "mediaTime": 9.148,
+        "presentedFrames": 286,
+        "expectedDisplayTime": 9678.8
+      },
+      {
+        "mediaTime": 9.179,
+        "presentedFrames": 287,
+        "expectedDisplayTime": 9712.2
+      },
+      {
+        "mediaTime": 9.21,
+        "presentedFrames": 288,
+        "expectedDisplayTime": 9745.4
+      },
+      {
+        "mediaTime": 9.24,
+        "presentedFrames": 289,
+        "expectedDisplayTime": 9778.8
+      },
+      {
+        "mediaTime": 9.271,
+        "presentedFrames": 290,
+        "expectedDisplayTime": 9812.2
+      },
+      {
+        "mediaTime": 9.302,
+        "presentedFrames": 291,
+        "expectedDisplayTime": 9828.8
+      },
+      {
+        "mediaTime": 9.33,
+        "presentedFrames": 292,
+        "expectedDisplayTime": 9862.2
+      },
+      {
+        "mediaTime": 9.364,
+        "presentedFrames": 293,
+        "expectedDisplayTime": 9895.5
+      },
+      {
+        "mediaTime": 9.394,
+        "presentedFrames": 294,
+        "expectedDisplayTime": 9928.8
+      },
+      {
+        "mediaTime": 9.425,
+        "presentedFrames": 295,
+        "expectedDisplayTime": 9962.1
+      },
+      {
+        "mediaTime": 9.486,
+        "presentedFrames": 297,
+        "expectedDisplayTime": 10012.1
+      },
+      {
+        "mediaTime": 9.519,
+        "presentedFrames": 298,
+        "expectedDisplayTime": 10045.5
+      },
+      {
+        "mediaTime": 9.548,
+        "presentedFrames": 299,
+        "expectedDisplayTime": 10078.8
+      },
+      {
+        "mediaTime": 9.58,
+        "presentedFrames": 300,
+        "expectedDisplayTime": 10112.2
+      },
+      {
+        "mediaTime": 9.608,
+        "presentedFrames": 301,
+        "expectedDisplayTime": 10145.4
+      },
+      {
+        "mediaTime": 9.641,
+        "presentedFrames": 302,
+        "expectedDisplayTime": 10178.8
+      },
+      {
+        "mediaTime": 9.672,
+        "presentedFrames": 303,
+        "expectedDisplayTime": 10212.1
+      },
+      {
+        "mediaTime": 9.704,
+        "presentedFrames": 304,
+        "expectedDisplayTime": 10245.4
+      },
+      {
+        "mediaTime": 9.733,
+        "presentedFrames": 305,
+        "expectedDisplayTime": 10262.1
+      },
+      {
+        "mediaTime": 9.761,
+        "presentedFrames": 306,
+        "expectedDisplayTime": 10295.4
+      },
+      {
+        "mediaTime": 9.792,
+        "presentedFrames": 307,
+        "expectedDisplayTime": 10328.8
+      },
+      {
+        "mediaTime": 9.826,
+        "presentedFrames": 308,
+        "expectedDisplayTime": 10362.1
+      },
+      {
+        "mediaTime": 9.853,
+        "presentedFrames": 309,
+        "expectedDisplayTime": 10395.5
+      },
+      {
+        "mediaTime": 9.886,
+        "presentedFrames": 310,
+        "expectedDisplayTime": 10412.1
+      },
+      {
+        "mediaTime": 9.917,
+        "presentedFrames": 311,
+        "expectedDisplayTime": 10445.4
+      },
+      {
+        "mediaTime": 9.946,
+        "presentedFrames": 312,
+        "expectedDisplayTime": 10478.8
+      },
+      {
+        "mediaTime": 9.979,
+        "presentedFrames": 313,
+        "expectedDisplayTime": 10512.1
+      },
+      {
+        "mediaTime": 10.01,
+        "presentedFrames": 314,
+        "expectedDisplayTime": 10545.5
+      },
+      {
+        "mediaTime": 10.041,
+        "presentedFrames": 315,
+        "expectedDisplayTime": 10578.7
+      },
+      {
+        "mediaTime": 10.071,
+        "presentedFrames": 316,
+        "expectedDisplayTime": 10612.1
+      },
+      {
+        "mediaTime": 10.13,
+        "presentedFrames": 318,
+        "expectedDisplayTime": 10662.1
+      },
+      {
+        "mediaTime": 10.163,
+        "presentedFrames": 319,
+        "expectedDisplayTime": 10695.5
+      },
+      {
+        "mediaTime": 10.194,
+        "presentedFrames": 320,
+        "expectedDisplayTime": 10728.8
+      },
+      {
+        "mediaTime": 10.225,
+        "presentedFrames": 321,
+        "expectedDisplayTime": 10762.1
+      },
+      {
+        "mediaTime": 10.256,
+        "presentedFrames": 322,
+        "expectedDisplayTime": 10795.5
+      },
+      {
+        "mediaTime": 10.317,
+        "presentedFrames": 324,
+        "expectedDisplayTime": 10845.4
+      },
+      {
+        "mediaTime": 10.348,
+        "presentedFrames": 325,
+        "expectedDisplayTime": 10878.8
+      },
+      {
+        "mediaTime": 10.379,
+        "presentedFrames": 326,
+        "expectedDisplayTime": 10912.1
+      },
+      {
+        "mediaTime": 10.412,
+        "presentedFrames": 327,
+        "expectedDisplayTime": 10945.4
+      },
+      {
+        "mediaTime": 10.441,
+        "presentedFrames": 328,
+        "expectedDisplayTime": 10978.7
+      },
+      {
+        "mediaTime": 10.502,
+        "presentedFrames": 330,
+        "expectedDisplayTime": 11028.7
+      },
+      {
+        "mediaTime": 10.533,
+        "presentedFrames": 331,
+        "expectedDisplayTime": 11062
+      },
+      {
+        "mediaTime": 10.563,
+        "presentedFrames": 332,
+        "expectedDisplayTime": 11095.4
+      },
+      {
+        "mediaTime": 10.594,
+        "presentedFrames": 333,
+        "expectedDisplayTime": 11128.7
+      },
+      {
+        "mediaTime": 10.625,
+        "presentedFrames": 334,
+        "expectedDisplayTime": 11162.1
+      },
+      {
+        "mediaTime": 10.657,
+        "presentedFrames": 335,
+        "expectedDisplayTime": 11195.4
+      },
+      {
+        "mediaTime": 10.687,
+        "presentedFrames": 336,
+        "expectedDisplayTime": 11228.7
+      },
+      {
+        "mediaTime": 10.719,
+        "presentedFrames": 337,
+        "expectedDisplayTime": 11245.4
+      },
+      {
+        "mediaTime": 10.748,
+        "presentedFrames": 338,
+        "expectedDisplayTime": 11278.8
+      },
+      {
+        "mediaTime": 10.777,
+        "presentedFrames": 339,
+        "expectedDisplayTime": 11312
+      },
+      {
+        "mediaTime": 10.81,
+        "presentedFrames": 340,
+        "expectedDisplayTime": 11345.4
+      },
+      {
+        "mediaTime": 10.841,
+        "presentedFrames": 341,
+        "expectedDisplayTime": 11378.7
+      },
+      {
+        "mediaTime": 10.902,
+        "presentedFrames": 343,
+        "expectedDisplayTime": 11428.7
+      },
+      {
+        "mediaTime": 10.932,
+        "presentedFrames": 344,
+        "expectedDisplayTime": 11462.1
+      },
+      {
+        "mediaTime": 10.964,
+        "presentedFrames": 345,
+        "expectedDisplayTime": 11495.4
+      },
+      {
+        "mediaTime": 10.992,
+        "presentedFrames": 346,
+        "expectedDisplayTime": 11528.7
+      },
+      {
+        "mediaTime": 11.025,
+        "presentedFrames": 347,
+        "expectedDisplayTime": 11562.1
+      },
+      {
+        "mediaTime": 11.056,
+        "presentedFrames": 348,
+        "expectedDisplayTime": 11595.4
+      },
+      {
+        "mediaTime": 11.085,
+        "presentedFrames": 349,
+        "expectedDisplayTime": 11612.1
+      },
+      {
+        "mediaTime": 11.118,
+        "presentedFrames": 350,
+        "expectedDisplayTime": 11645.4
+      },
+      {
+        "mediaTime": 11.148,
+        "presentedFrames": 351,
+        "expectedDisplayTime": 11678.7
+      },
+      {
+        "mediaTime": 11.179,
+        "presentedFrames": 352,
+        "expectedDisplayTime": 11712.1
+      },
+      {
+        "mediaTime": 11.209,
+        "presentedFrames": 353,
+        "expectedDisplayTime": 11745.4
+      },
+      {
+        "mediaTime": 11.238,
+        "presentedFrames": 354,
+        "expectedDisplayTime": 11778.7
+      },
+      {
+        "mediaTime": 11.272,
+        "presentedFrames": 355,
+        "expectedDisplayTime": 11812
+      },
+      {
+        "mediaTime": 11.302,
+        "presentedFrames": 356,
+        "expectedDisplayTime": 11828.7
+      },
+      {
+        "mediaTime": 11.335,
+        "presentedFrames": 357,
+        "expectedDisplayTime": 11862.1
+      },
+      {
+        "mediaTime": 11.364,
+        "presentedFrames": 358,
+        "expectedDisplayTime": 11895.4
+      },
+      {
+        "mediaTime": 11.392,
+        "presentedFrames": 359,
+        "expectedDisplayTime": 11928.7
+      },
+      {
+        "mediaTime": 11.427,
+        "presentedFrames": 360,
+        "expectedDisplayTime": 11962.1
+      },
+      {
+        "mediaTime": 11.455,
+        "presentedFrames": 361,
+        "expectedDisplayTime": 11995.4
+      },
+      {
+        "mediaTime": 11.486,
+        "presentedFrames": 362,
+        "expectedDisplayTime": 12028.7
+      },
+      {
+        "mediaTime": 11.546,
+        "presentedFrames": 364,
+        "expectedDisplayTime": 12078.7
+      },
+      {
+        "mediaTime": 11.579,
+        "presentedFrames": 365,
+        "expectedDisplayTime": 12112.1
+      },
+      {
+        "mediaTime": 11.61,
+        "presentedFrames": 366,
+        "expectedDisplayTime": 12145.3
+      },
+      {
+        "mediaTime": 11.638,
+        "presentedFrames": 367,
+        "expectedDisplayTime": 12178.8
+      },
+      {
+        "mediaTime": 11.673,
+        "presentedFrames": 368,
+        "expectedDisplayTime": 12212
+      },
+      {
+        "mediaTime": 11.701,
+        "presentedFrames": 369,
+        "expectedDisplayTime": 12228.7
+      },
+      {
+        "mediaTime": 11.732,
+        "presentedFrames": 370,
+        "expectedDisplayTime": 12262.1
+      },
+      {
+        "mediaTime": 11.763,
+        "presentedFrames": 371,
+        "expectedDisplayTime": 12295.4
+      },
+      {
+        "mediaTime": 11.792,
+        "presentedFrames": 372,
+        "expectedDisplayTime": 12328.7
+      },
+      {
+        "mediaTime": 11.824,
+        "presentedFrames": 373,
+        "expectedDisplayTime": 12362
+      },
+      {
+        "mediaTime": 11.856,
+        "presentedFrames": 374,
+        "expectedDisplayTime": 12395.3
+      },
+      {
+        "mediaTime": 11.918,
+        "presentedFrames": 376,
+        "expectedDisplayTime": 12445.4
+      },
+      {
+        "mediaTime": 11.946,
+        "presentedFrames": 377,
+        "expectedDisplayTime": 12478.7
+      },
+      {
+        "mediaTime": 11.979,
+        "presentedFrames": 378,
+        "expectedDisplayTime": 12512
+      },
+      {
+        "mediaTime": 12.01,
+        "presentedFrames": 379,
+        "expectedDisplayTime": 12545.4
+      },
+      {
+        "mediaTime": 12.042,
+        "presentedFrames": 380,
+        "expectedDisplayTime": 12578.7
+      },
+      {
+        "mediaTime": 12.102,
+        "presentedFrames": 382,
+        "expectedDisplayTime": 12628.7
+      }
+    ],
+    "presentation": {
+      "callbacks": 354,
+      "maximumMediaTimeGap": 0.0690000000000004,
+      "missedPresentationCallbacks": 28
+    },
+    "playbackQuality": {
+      "totalVideoFrames": 382,
+      "droppedVideoFrames": 0,
+      "corruptedVideoFrames": 0
+    },
+    "ok": true,
+    "limitation": "Callback timeline describes actual presented frames, not a demuxed enumeration of every encoded packet. JPEG samples cover the four view midpoints and the tail."
+  },
+  "versions": {
+    "electron": "44.9.0",
+    "chrome": "152.0.7977.167"
+  },
+  "completedAt": "2026-11-16T17:15:32.157Z"
+}

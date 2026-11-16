@@ -169,7 +169,14 @@ function prepareFrozen(time) {
       // Read the freshly drawn default framebuffer in this same JS task,
       // before preserveDrawingBuffer=false permits browser clearing. This
       // avoids treating a stale compositor screenshot as a repeated baseline.
-      return { png: wb.renderer.domElement.toDataURL('image/png'), render: { ...wb.renderer.info.render } };
+      return {
+        png: wb.renderer.domElement.toDataURL('image/png'), render: { ...wb.renderer.info.render },
+        resources: {
+          programs: wb.renderer.info.programs.length, memory: { ...wb.renderer.info.memory },
+          shadows: { autoUpdate: wb.renderer.shadowMap.autoUpdate, needsUpdate: wb.renderer.shadowMap.needsUpdate },
+          groundBlend: (wb.station.groundBlend?.meshes || []).map(mesh => ({ name: mesh.name, materialVersion: mesh.material.version, uniformsNeedUpdate: mesh.material.uniformsNeedUpdate, indexVersion: mesh.geometry.index.version, positionVersion: mesh.geometry.attributes.position.version, worldMatrix: mesh.matrixWorld.toArray(), modelViewMatrix: mesh.modelViewMatrix.toArray() })),
+        },
+      };
     },
     change(kind) {
       if (kind === 'terrain-toon-off') terrain.uWorldToon = { value: 0 };
@@ -274,19 +281,24 @@ async function host() {
       if (image.isEmpty()) throw new Error(`Empty image ${name}`);
       fs.writeFileSync(path.join(config.output, `${name}.png`), buffer);
       fs.writeFileSync(path.join(config.output, `${name}.jpg`), image.toJPEG(90));
-      return { image, data: { png: `${name}.png`, jpeg: `${name}.jpg`, readback: 'renderer canvas immediately after fresh look.render; no compositor cache', render: rendered.render, shaderState: await evaluate('window.__surfaceDiagnosis.shaderState()'), size: image.getSize(), state: await evaluate('window.__surfaceDiagnosis.snapshot()'), regions: pixelStats(image, reference) } };
+      return { image, data: { png: `${name}.png`, jpeg: `${name}.jpg`, readback: 'renderer canvas immediately after fresh look.render; no compositor cache', render: rendered.render, resources: rendered.resources, shaderState: await evaluate('window.__surfaceDiagnosis.shaderState()'), size: image.getSize(), state: await evaluate('window.__surfaceDiagnosis.snapshot()'), regions: pixelStats(image, reference) } };
     };
     const views = ['station-street', 'island-aerial', 'station-port'];
-    report.injection = { views: [], method: 'Same camera and frozen object state before/after diagnostic preparation. Default=1 retains the original shader bytes; no station/island update between each pair. Active variants compile their target shader only, restored A uses original shader.' };
+    report.injection = { views: [], method: 'Same camera and frozen object state. Exactly three predetermined original-shader renders A0/A1/A2 are recorded, with no retry or best-frame selection; A1/A2 must match exactly. A2 is then compared to diagnostic preparation. Default=1 retains original shader bytes; no station/island update between these captures. Active variants compile their target shader only, restored A uses original shader.' };
     for (const view of views) {
       await evaluate(`window.__surfaceDiagnosis.select(${JSON.stringify(view)})`);
-      const original = await capture(`${view}-before-injection`);
+      const a0 = await capture(`${view}-warmup-A0`);
+      const a1 = await capture(`${view}-warmup-A1`, a0.image);
+      const original = await capture(`${view}-before-injection`, a1.image);
       report.injection.configuration = await evaluate('window.__surfaceDiagnosis.inject()');
       const identity = await capture(`${view}-after-injection`, original.image);
-      report.injection.views.push({ view, before: original.data, after: identity.data, pixelsIdentical: identity.data.regions[0].changedPixels === 0 });
+      const warmupStable = original.data.regions[0].changedPixels === 0;
+      report.injection.views.push({ view, warmup: { a0: a0.data, a1: a1.data, a2File: original.data.png, stable: warmupStable }, before: original.data, after: identity.data, pixelsIdentical: identity.data.regions[0].changedPixels === 0 });
       await evaluate('window.__surfaceDiagnosis.uninject()');
+      write();
     }
-    report.injection.identity = report.injection.views.every(view => view.pixelsIdentical);
+    report.injection.identity = report.injection.views.every(view => view.warmup.stable && view.pixelsIdentical);
+    report.strictStaticIsolation = report.injection.identity;
     write();
     if (!report.injection.identity) throw new Error('Diagnostic preparation changed baseline pixels; do not interpret subsequent A/B as isolated');
     await evaluate('window.__surfaceDiagnosis.inject()');
@@ -317,6 +329,7 @@ async function host() {
       write();
     }
     const manifest = JSON.parse(fs.readFileSync(path.join(config.output, 'source-manifest.json'), 'utf8'));
+    report.strictStaticIsolation = report.injection.identity && report.cases.every(item => item.staticIsolation);
     report.changedSourceFiles = Object.entries(manifest.files).filter(([name, hash]) => sha256(fs.readFileSync(path.join(config.fixture, name))) !== hash).map(([name]) => name);
     report.sourceUnchanged = report.changedSourceFiles.length === 0;
     report.renderOk = report.sourceUnchanged && report.cases.every(item => item.controlledState && item.controlledShader && item.restoredState && item.staticIsolation && item.baseline.state.errors.length === 0 && item.variant.state.errors.length === 0 && item.baseline.regions[0].darkFraction < .99) && report.exceptions.length === 0;
