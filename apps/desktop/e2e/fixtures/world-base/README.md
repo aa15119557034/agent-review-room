@@ -13,7 +13,7 @@
 
 ## 本机准备
 
-运行 `node scripts/prepare.cjs` 下载固定版本并核对 SHA-256。需要代理时设置 `WORLD_BASE_PROXY=http://127.0.0.1:7897`。只使用系统已有的 Node、curl、tar；不安装依赖。已提交的 `upstream/` 是 MIT 源码，准备脚本不会覆盖它；`--vendor-code` 仅供首次建立副本，目标存在时会报错。
+运行 `node scripts/prepare.cjs` 下载固定版本并核对归档及 760 个原始文件的 SHA-256。已有原始副本如被修改或不完整会报错，保留现场，不改写清单掩盖差异。需要代理时设置 `WORLD_BASE_PROXY=http://127.0.0.1:7897`。只使用系统已有的 Node、curl、tar；不安装依赖。已提交的 `upstream/` 是 MIT 源码，准备脚本不会覆盖它；`--vendor-code` 仅供首次建立副本，目标存在时会报错。
 
 `sources.json` 登记来源、作者、commit 和归档哈希，`source-files.json` 登记每个原始文件的 SHA-256。Petalwake 的全部二进制资产及原项目副本都只在 `.local/`，不进 Git。Three.js 使用 Petalwake 固定的 r187，额外的 RoundedBoxGeometry 来自 Three.js r187，许可和哈希一并保留。
 
@@ -23,16 +23,16 @@
 node scripts\baseline.cjs --scene=combined --electron=D:\codex\2026-11-16\world-implementation\runtime-path-probe\electron.exe --preview
 ```
 
-去掉 `--preview` 自动采集性能、四机位截图和视频，`--output=<绝对目录>` 指定保存处；`--stills` 跳过录像。原项目基线分别用 `--scene=petalwake` 和 `--scene=sakuragaoka`；两者保留原 HTML、源码、默认质量和版本。原项目的 Google Fonts/CDN 默认经本机代理 7897，`--proxy=<地址>` 可修改。原项目首次加载统计包含这些网络请求，不等于纯本地场景构建时间。
+去掉 `--preview` 自动采集性能、四机位截图和视频；录视频须同时指定 `--ffmpeg=<已有可执行文件>`，不会安装软件。`--output=<目录>` 指定保存处，`--stills` 跳过录像；`--video-only --video-ms=12000` 只重录四机位，不重做性能采样。录像仅采集 fixture 的 WebContents，将 CDP 画面按真实时间戳交给 FFmpeg 编码，不录桌面、不补帧或加速。原项目基线分别用 `--scene=petalwake` 和 `--scene=sakuragaoka`，默认不录视频；两者保留原 HTML、源码、默认质量和版本。原项目的 Google Fonts/CDN 默认经本机代理 7897，`--proxy=<地址>` 可修改。原项目首次加载统计包含这些网络请求，不等于纯本地场景构建时间。
 
 ## 组合场景
 
 同一 WebGL2 renderer 和 scene 中保留 Petalwake 地形、港镇、河流、海面、云、植被，将车站放到 `(280,8,900)`，港镇在西南侧。站区核心保留原商店内景和步行碰撞，外围远景裁出，避免覆盖原岛。第一/第三人称用 V 切换，固定机位用 1–4，H 隐藏面板。
 
-色阶沿用车站的明暗阈值，描边与偏紫阴影使用车站的规则；深度来自真实位移地形的颜色 pass，避免覆写材质后描出错误的地形网格。默认关闭运动模糊与 god rays，可单独开启对比；取消统一着色会恢复岛屿原明暗计算和 ACES 映射，仍保留基础后处理，不能称为完全无后处理模式。
+色阶沿用车站的明暗阈值，描边与偏紫阴影使用车站的规则；深度来自真实位移地形的颜色 pass，避免覆写材质后描出错误的地形网格。两种风格都保留岛屿的 ACES 映射，防止高亮花海被车站的软裁切压成白色。默认关闭运动模糊与 god rays，可单独开启对比；取消统一着色会恢复岛屿原明暗计算，仍保留基础后处理，不能称为完全无后处理模式。
 
 `src/main.js` 定义固定机位；`src/look.js` 是后续着色精修入口。`src/island.js`、`src/station.js` 和 `src/station-view.js` 分别负责岛屿、站区及步行镜头。未接入任何生产页面、规则、存档或契约。
 
 ## 当前状态
 
-原项目已开始实测。组合入口、地形及站区适配已实现，正在做 GPU 验证、接缝处理和固定机位构图；尚未交给 C酱 精修。最终性能、截图和限制将在交接时记录。
+第一段已完成本机验证；四机位截图、录像、原版基线、真实按键步行、已修复的第三人称性能问题及剩余限制见 [EVIDENCE.md](./EVIDENCE.md)。第三方许可和修改范围见 [THIRD-PARTY.md](./THIRD-PARTY.md)。精修的实际接手时间以 PR 中「可精修：着色和配色」评论为准。

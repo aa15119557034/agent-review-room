@@ -69,6 +69,28 @@ export function validateStation({ station, walker, camera }) {
     const local = station.toLocal(before);
     check('station local/world coordinates round-trip at its nonzero placement', station.toWorld(local).distanceTo(before) < 1e-10,
       { local: local.toArray(), world: before.toArray() });
+
+    // Stand outside the real W1 storefront, facing away. The chase boom points
+    // back through its glass wall; its near plane must stay on the street side.
+    // Replacing Mesh.raycast makes any accidental render-mesh traversal fail.
+    const originalRaycast = THREE.Mesh.prototype.raycast;
+    let raycastCalls = 0;
+    THREE.Mesh.prototype.raycast = function () { raycastCalls++; throw new Error('Camera queried render triangles'); };
+    try {
+      const wallFeet = station.toWorld(localPoint(-3, -1.5));
+      walker.setPose(wallFeet, -90, 0);
+      walker.setView('third');
+      const cameraLocal = station.toLocal(camera.position);
+      const cameraLotZ = (cameraLocal.x - frame.x) * Math.sin(frame.rotY) + (cameraLocal.z - frame.z) * Math.cos(frame.rotY);
+      const halfHeight = camera.near * Math.tan(THREE.MathUtils.degToRad(camera.getEffectiveFOV()) / 2);
+      const clearance = Math.hypot(camera.near, halfHeight, halfHeight * camera.aspect) + 0.02;
+      const wallEye = wallFeet.clone().add(new THREE.Vector3(0, 1.52, 0));
+      const shortened = camera.position.distanceTo(wallEye);
+      check('real shop wall shortens third-person boom with near-plane clearance', shortened < 1.2
+        && cameraLotZ >= -2.60 + clearance - 1e-6,
+      { shortened, cameraLotZ, streetSideWallZ: -2.60, clearance, raycastCalls });
+      check('camera collision never scans rendered triangles', raycastCalls === 0, { raycastCalls });
+    } finally { THREE.Mesh.prototype.raycast = originalRaycast; }
   } finally {
     walker.setEnabled(false);
     walker.setPose(saved.feet, saved.yaw, saved.pitch);

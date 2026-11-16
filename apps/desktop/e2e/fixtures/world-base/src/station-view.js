@@ -12,11 +12,7 @@ export function createStationWalker(station, dom) {
   const listeners = new AbortController();
   const signal = listeners.signal;
   const camera = new THREE.PerspectiveCamera();
-  const ray = new THREE.Raycaster();
-  ray.layers.enableAll();
-  const target = new THREE.Vector3(), desired = new THREE.Vector3(), direction = new THREE.Vector3();
-  const worldTarget = new THREE.Vector3(), worldDesired = new THREE.Vector3();
-  const hitLocal = new THREE.Vector3();
+  const target = new THREE.Vector3(), desired = new THREE.Vector3();
   let enabled = false, disposed = false, mode = 'third', yaw = 4 * Math.PI / 180, pitch = -0.14;
   let verticalSpeed = 0, grounded = true, dragging = false, lastX = 0, lastY = 0;
   const radius = 0.3, height = 1.7, eye = 1.52;
@@ -56,23 +52,13 @@ export function createStationWalker(station, dom) {
       // No avatar mesh is created. This camera follows the same invisible body
       // as first person; switching views never teleports the body through a wall.
       desired.set(0, 0.45, 4.2).applyQuaternion(camera.quaternion).add(target);
-      station.toWorld(target, worldTarget);
-      station.toWorld(desired, worldDesired);
-      direction.subVectors(worldDesired, worldTarget);
-      const distance = direction.length();
-      ray.set(worldTarget, direction.normalize()); ray.near = 0.08; ray.far = distance;
-      const obstruction = ray.intersectObject(station.root, true).find(hit => {
-        for (let parent = hit.object; parent; parent = parent.parent) if (!parent.visible) return false;
-        station.toLocal(hit.point, hitLocal);
-        const bounds = station.bounds;
-        if (hitLocal.x < bounds.x0 || hitLocal.x > bounds.x1 || hitLocal.z < bounds.z0 || hitLocal.z > bounds.z1) return false;
-        const material = Array.isArray(hit.object.material) ? hit.object.material[hit.face?.materialIndex || 0] : hit.object.material;
-        return hit.object.isMesh && hit.object.visible && material && (!material.transparent || material.opacity >= 0.45);
-      });
-      const followDistance = obstruction ? Math.max(0.12, obstruction.distance - 0.22) : distance;
-      worldDesired.copy(worldTarget).addScaledVector(direction, followDistance);
-      station.toLocal(worldDesired, camera.position);
-      camera.lookAt(target);
+      // Enclose every near-plane corner, including after viewport/FOV changes.
+      const view = station.camera;
+      const halfHeight = view.near * Math.tan(THREE.MathUtils.degToRad(view.getEffectiveFOV()) / 2);
+      const clearance = Math.hypot(view.near, halfHeight, halfHeight * view.aspect) + 0.02;
+      const fraction = physics.sweepSphere(target, desired, clearance);
+      camera.position.lerpVectors(target, desired, fraction);
+      if (fraction > 1e-6) camera.lookAt(target);
     }
     station.cameraToWorld(camera.position, camera.quaternion);
   }

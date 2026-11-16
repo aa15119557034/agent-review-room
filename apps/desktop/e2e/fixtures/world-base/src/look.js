@@ -19,10 +19,6 @@ float wbEdge(vec2 uv) {
   float edge = max(smoothstep(0.06,0.18,lap),smoothstep(0.10,0.25,(d0-dm)/max(dm,0.05)));
   return edge*(1.0-smoothstep(35.0,190.0,min(d0,dm)));
 }
-vec3 wbSoftClip(vec3 c) {
-  vec3 k = vec3(0.78), over = max(c-k,0.0);
-  return min(c,k)+(1.0-k)*(1.0-exp(-over/(1.0-k)));
-}
 `;
 const BANDS = /* glsl */`
 uniform float uWorldToon;
@@ -54,8 +50,6 @@ export function createLook(renderer, camera) {
     vec3 line = mix(col*vec3(0.42,0.38,0.50),vec3(0.027,0.020,0.051),0.35);
     col = mix(col,line,edge*0.82);
     col *= uExposure;`, 'outline stage');
-  mat.fragmentShader = insert(mat.fragmentShader, 'col = acesFilm(col * 0.92);',
-    'col = mix(acesFilm(col * 0.92), wbSoftClip(col), uToon);', 'tone stage');
   mat.fragmentShader = insert(mat.fragmentShader, 'col = clamp(col, 0.0, 1.0);', `
     col = mix(col, col*vec3(0.9,0.92,1.1), (1.0-smoothstep(0.08,0.55,l))*0.55*uToon);
     col += vec3(0.022,0.012,-0.012)*smoothstep(0.55,1.0,l)*uToon;

@@ -101,7 +101,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   let disposed = false;
   const walkers = new Set();
   const station = {
-    root, ctx, physics: ctx.physics, localCamera, bounds, moduleStats, batch,
+    root, ctx, physics: ctx.physics, camera, localCamera, bounds, moduleStats, batch,
     timings: { trimMs, batchMs }, removedMeshes,
     toLocal(position, target = new THREE.Vector3()) { return target.copy(position).applyMatrix4(inverse); },
     toWorld(position, target = new THREE.Vector3()) { return target.copy(position).applyMatrix4(root.matrixWorld); },

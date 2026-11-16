@@ -1,0 +1,7 @@
+* text=auto eol=lf
+*.png -text
+*.jpg -text
+*.webm -text
+upstream/** linguist-vendored
+# Unified diff context represents an empty source line with a single space.
+evidence/upstream-changes.patch -whitespace

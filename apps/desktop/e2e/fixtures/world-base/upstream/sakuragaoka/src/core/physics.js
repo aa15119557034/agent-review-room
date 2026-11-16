@@ -81,6 +81,79 @@ export class Physics {
     return g;
   }
 
+  /** Sweep the camera's bounding sphere through the existing collision world.
+   * Returns a segment fraction, including 0 if the start already overlaps.
+   * Expanded slabs are conservative at box/cylinder edges: they stop slightly
+   * early at corners, never let the near plane cross through them.
+   */
+  sweepSphere(from, to, radius) {
+    const dx = to.x - from.x, dy = to.y - from.y, dz = to.z - from.z;
+    let fraction = 1;
+    const candidates = this._query((from.x + to.x) / 2, (from.z + to.z) / 2,
+      Math.max(Math.abs(dx), Math.abs(dz)) / 2 + radius);
+    for (const it of candidates) {
+      let enter = 0, leave = fraction;
+      // Intersect the segment interval with a linear slab, including parallel
+      // segments and initial overlap. All coordinates remain district-local.
+      const slab = (start, delta, low, high) => {
+        if (Math.abs(delta) < 1e-12) return start >= low && start <= high;
+        let a = (low - start) / delta, b = (high - start) / delta;
+        if (a > b) [a, b] = [b, a];
+        enter = Math.max(enter, a); leave = Math.min(leave, b);
+        return enter <= leave;
+      };
+      if (it.type === 'cyl') {
+        if (!slab(from.y, dy, it.y0 - radius, it.y1 + radius)) continue;
+        const x = from.x - it.cx, z = from.z - it.cz, r = it.r + radius;
+        const a = dx * dx + dz * dz, b = 2 * (x * dx + z * dz), c = x * x + z * z - r * r;
+        if (a < 1e-12) { if (c > 0) continue; }
+        else {
+          const disc = b * b - 4 * a * c;
+          if (disc < 0) continue;
+          const root = Math.sqrt(disc);
+          enter = Math.max(enter, (-b - root) / (2 * a));
+          leave = Math.min(leave, (-b + root) / (2 * a));
+          if (enter > leave) continue;
+        }
+      } else {
+        const [x, z] = this._local(it, from.x, from.z);
+        const vx = dx * it.c - dz * it.s, vz = dx * it.s + dz * it.c;
+        if (!slab(x, vx, -it.hw - radius, it.hw + radius)
+          || !slab(z, vz, -it.hd - radius, it.hd + radius)) continue;
+        if (it.type === 'ramp') {
+          const slope = (it.yB - it.yA) / (2 * it.hd);
+          const mid = (it.yA + it.yB) / 2;
+          if (!slab(from.y, dy, it.y0 - radius, Infinity)
+            || !slab(from.y - slope * z, dy - slope * vz, -Infinity,
+              mid + radius * Math.hypot(1, slope))) continue;
+        } else {
+          const top = it.type === 'walk' ? it.top : it.y1;
+          if (!slab(from.y, dy, it.y0 - radius, top + radius)) continue;
+        }
+      }
+      fraction = Math.min(fraction, Math.max(0, enter));
+      if (fraction === 0) return 0;
+    }
+    // Analytic terrain has no triangles/colliders in the grid. Search only the
+    // short boom segment at 10cm spatial intervals, then refine first contact.
+    // This is per-query spatial subdivision, not skipped frames or a cache.
+    const length = Math.hypot(dx, dy, dz);
+    const steps = Math.max(1, Math.ceil(length * fraction / 0.1));
+    const clear = t => from.y + dy * t - radius > this.heightAt(from.x + dx * t, from.z + dz * t);
+    if (!clear(0)) return 0;
+    let previous = 0;
+    for (let index = 1; index <= steps; index++) {
+      const t = fraction * index / steps;
+      if (!clear(t)) {
+        let low = previous, high = t;
+        for (let n = 0; n < 12; n++) { const mid = (low + high) / 2; if (clear(mid)) low = mid; else high = mid; }
+        return low;
+      }
+      previous = t;
+    }
+    return fraction;
+  }
+
   /** Push circle (x,z,r) out of solids overlapping the vertical span [feetY, feetY+height]. Mutates p. */
   resolve(p, r, feetY, height) {
     for (let iter = 0; iter < 3; iter++) {

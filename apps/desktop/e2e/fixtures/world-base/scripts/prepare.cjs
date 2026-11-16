@@ -5,6 +5,8 @@ const crypto = require('node:crypto');
 const { spawnSync } = require('node:child_process');
 const root = path.resolve(__dirname, '..');
 const sources = JSON.parse(fs.readFileSync(path.join(root, 'sources.json'), 'utf8'));
+const manifest = path.join(root, 'source-files.json');
+const expected = fs.existsSync(manifest) ? JSON.parse(fs.readFileSync(manifest, 'utf8')) : null;
 const hash = (file) => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 function run(exe, args) {
   const result = spawnSync(exe, args, { stdio: 'inherit', windowsHide: true });
@@ -33,10 +35,19 @@ for (const name of ['petalwake', 'sakuragaoka']) {
   if (hash(zip) !== source.sha256) throw new Error(`${name}: archive SHA-256 mismatch; not extracted`);
   const original = path.join(root, '.local', `${name}-${source.commit}`);
   if (!fs.existsSync(path.join(original, 'LICENSE'))) run('tar.exe', ['-xf', zip, '-C', path.join(root, '.local')]);
+  const projectFiles = [];
   for (const file of files(original)) {
-    inventory.push({ project: name, path: path.relative(original, file).replaceAll('\\', '/'), sha256: hash(file) });
+    projectFiles.push({ project: name, path: path.relative(original, file).replaceAll('\\', '/'), sha256: hash(file) });
   }
-  console.log(`${name}: ${source.commit} archive verified, original available`);
+  if (expected) {
+    const reference = new Map(expected.filter(file => file.project === name).map(file => [file.path, file.sha256]));
+    if (projectFiles.length !== reference.size) throw new Error(`${name}: original copy is incomplete or contains extra files; restore the pinned archive before continuing`);
+    for (const file of projectFiles) {
+      if (reference.get(file.path) !== file.sha256) throw new Error(`${name}/${file.path}: local original differs from the pinned manifest; preserved without overwriting`);
+    }
+  }
+  inventory.push(...projectFiles);
+  console.log(`${name}: ${source.commit} archive and ${projectFiles.length} original files verified`);
   if (process.argv.includes('--vendor-code')) {
     const dest = path.join(root, 'upstream', name);
     if (fs.existsSync(dest)) throw new Error(`${dest} already exists; refusing to overwrite code which may have been refined`);
@@ -47,5 +58,5 @@ for (const name of ['petalwake', 'sakuragaoka']) {
   }
 }
 // Hashes identify individual files; all upstream originals and binary assets stay local.
-fs.writeFileSync(path.join(root, 'source-files.json'), `${JSON.stringify(inventory, null, 2)}\n`);
+if (!expected) fs.writeFileSync(manifest, `${JSON.stringify(inventory, null, 2)}\n`);
 console.log(`${inventory.length} upstream files inventoried; no assets copied into tracked source`);

@@ -6,7 +6,7 @@ const config = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
 fs.mkdirSync(path.join(config.runtime, 'user-data'), { recursive: true });
 app.setPath('userData', path.join(config.runtime, 'user-data'));
 app.commandLine.appendSwitch('force-device-scale-factor', '1');
-const report = { config, console: [], exceptions: [], networkFailures: [], captures: [] };
+const report = { config, ok: false, renderOk: false, console: [], exceptions: [], networkFailures: [], captures: [], captureDetails: [], views: [] };
 const writeReport = () => fs.writeFileSync(path.join(config.output, 'render-report.json'), JSON.stringify(report, null, 2));
 const stage = name => { report.stage = name; report.stageAt = new Date().toISOString(); writeReport(); console.log(`[${report.stageAt}] ${name}`); };
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -86,44 +86,130 @@ function snapshot() {
   };
 }
 
-async function recordVideo(durationMs, viewNames) {
-  const state = window.__worldCapture;
-  const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
-  // Settle the first preset before recording. Subsequent cuts remain in the
-  // clip and the report records their actual time, including async setView work.
-  if (viewNames.length) { await state.selectView(viewNames[0]); await wait(1000); }
-  const canvas = (window.worldBase || window.PW || window.__ctx).renderer.domElement;
-  const stream = canvas.captureStream(30);
-  const mime = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8'].find(type => MediaRecorder.isTypeSupported(type));
-  if (!mime) { stream.getTracks().forEach(track => track.stop()); throw new Error('WebM recorder unavailable'); }
-  return new Promise((resolve, reject) => {
-    const recorder = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 5000000 });
-    const chunks = [], views = [], start = performance.now();
-    let failure;
-    recorder.ondataavailable = event => chunks.push(event.data);
-    recorder.onerror = event => { failure = Error(event.error?.message || 'Recording failed'); stream.getTracks().forEach(track => track.stop()); reject(failure); };
-    recorder.onstop = async () => {
-      stream.getTracks().forEach(track => track.stop());
-      if (failure) { reject(failure); return; }
-      try {
-        const durationActualMs = performance.now() - start;
-        const bytes = new Uint8Array(await new Blob(chunks).arrayBuffer());
-        let binary = '';
-        for (let index = 0; index < bytes.length; index += 16384) binary += String.fromCharCode(...bytes.subarray(index, index + 16384));
-        resolve({ mime, bytes: bytes.length, data: btoa(binary), durationActualMs, views });
-      } catch (error) { reject(error); }
-    };
-    recorder.start();
-    (async () => {
-      if (viewNames.length) {
-        for (const [index, name] of viewNames.entries()) {
-          if (index > 0) await state.selectView(name);
-          views.push({ name, startMs: performance.now() - start });
-          await wait(durationMs / viewNames.length);
-        }
-      } else await wait(durationMs);
-    })().catch(error => { failure = error; }).finally(() => { if (recorder.state !== 'inactive') recorder.stop(); });
-  });
+function summarizeFrames(frames) {
+  if (!frames.length || !frames.some(frame => frame.calls > 0)) throw new Error('No rendered frames during the measurement interval');
+  const sorted = frames.map(frame => frame.ms).sort((a, b) => a - b);
+  const sampleMs = frames.reduce((sum, frame) => sum + frame.ms, 0);
+  const summarize = key => ({ mean: frames.reduce((sum, frame) => sum + frame[key], 0) / frames.length, min: Math.min(...frames.map(frame => frame[key])), max: Math.max(...frames.map(frame => frame[key])) });
+  return { method: 'RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included', unsupportedDrawPaths: ['ANGLE_instanced_arrays', 'WEBGL_multi_draw'], frameCount: frames.length, sampleMs, fps: 1000 * frames.length / sampleMs, p95FrameMs: sorted[Math.floor(sorted.length * .95)], drawCalls: summarize('calls'), triangles: summarize('triangles'), framesWithoutDraws: frames.filter(frame => frame.calls === 0).length };
+}
+
+function pixelSummary(image) {
+  const { width, height } = image.getSize(), bytes = image.toBitmap();
+  let total = 0, nonBlack = 0, samples = 0;
+  // Inspect the central scene, excluding the outer UI strips. This is a blank
+  // frame smoke check, not a claim about aesthetic or semantic image quality.
+  for (let y = Math.floor(height * .15); y < height * .85; y += 4) {
+    for (let x = Math.floor(width * .15); x < width * .85; x += 4) {
+      const offset = (y * width + x) * 4;
+      const brightness = (bytes[offset] + bytes[offset + 1] + bytes[offset + 2]) / 3;
+      total += brightness; nonBlack += Number(brightness > 8); samples++;
+    }
+  }
+  const meanRgb = total / samples, nonBlackFraction = nonBlack / samples;
+  return { width, height, samples, meanRgb, nonBlackFraction, notBlack: meanRgb > 2 && nonBlackFraction > .05 };
+}
+
+function pixelDifference(left, right) {
+  const a = left.toBitmap(), b = right.toBitmap();
+  if (a.length !== b.length) throw new Error('Comparison screenshots changed dimensions');
+  let delta = 0, samples = 0;
+  for (let index = 0; index < a.length; index += 16) {
+    for (let channel = 0; channel < 3; channel++) { delta += Math.abs(a[index + channel] - b[index + channel]); samples++; }
+  }
+  return { meanAbsoluteRgbDifference: delta / samples, isolatedFromAnimation: false };
+}
+
+function lookState() {
+  const scene = window.worldBase, pipeline = scene.look.pipeline;
+  return { toon: pipeline.finalMat.uniforms.uToon.value, blur: pipeline.params.blur, rays: pipeline.params.rays, toonCheckbox: document.querySelector('#toon').checked, effectsCheckbox: document.querySelector('#effects').checked, currentView: scene.currentView };
+}
+
+async function captureFixtureVideo(win, config) {
+  const evaluate = code => win.webContents.executeJavaScript(code, true);
+  const cdp = (method, params) => win.webContents.debugger.sendCommand(method, params);
+  const viewNames = await evaluate('window.worldBase?.views.map(view => view.name) || []');
+  const savedUi = await evaluate('document.body.classList.contains("hide-ui")');
+  const framesDirectory = path.join(config.output, 'video-frames');
+  fs.mkdirSync(framesDirectory, { recursive: true });
+  const frames = [], views = [];
+  let frameError, firstResolve, firstReject, firstTimer;
+  const firstFrame = new Promise((resolve, reject) => { firstResolve = resolve; firstReject = reject; });
+  const onMessage = (_event, method, params) => {
+    if (method !== 'Page.screencastFrame') return;
+    try {
+      const timestamp = params.metadata.timestamp;
+      if (!Number.isFinite(timestamp)) throw new Error('Screencast frame lacks a source timestamp');
+      if (frames.length && timestamp <= frames.at(-1).timestamp) throw new Error('Screencast timestamps are not strictly increasing');
+      const file = 'video-frames/frame-' + String(frames.length + 1).padStart(6, '0') + '.jpg';
+      const bytes = Buffer.from(params.data, 'base64');
+      if (!frames.length) {
+        const size = require('electron').nativeImage.createFromBuffer(bytes).getSize();
+        if (size.width !== config.width || size.height !== config.height) throw new Error('Screencast dimensions differ from the requested viewport');
+      }
+      fs.writeFileSync(path.join(config.output, file), bytes);
+      frames.push({ file, timestamp, bytes: bytes.length });
+      if (frames.length === 1) { clearTimeout(firstTimer); firstResolve(); }
+    } catch (error) { frameError = error; firstReject(error); }
+    cdp('Page.screencastFrameAck', { sessionId: params.sessionId }).catch(error => { frameError = error; });
+  };
+  let recording = false;
+  try {
+    for (const name of viewNames) { await evaluate('window.__worldCapture.selectView(' + JSON.stringify(name) + ')'); await pause(350); }
+    if (viewNames.length) await evaluate('window.__worldCapture.selectView(' + JSON.stringify(viewNames[0]) + ')');
+    await evaluate('document.body.classList.add("hide-ui")');
+    await pause(1000);
+    win.webContents.debugger.on('message', onMessage);
+    firstTimer = setTimeout(() => firstReject(Error('No fixture screencast frame arrived')), 15000);
+    await cdp('Page.startScreencast', { format: 'jpeg', quality: 90, maxWidth: config.width, maxHeight: config.height, everyNthFrame: 2 });
+    recording = true;
+    await firstFrame;
+    if (!viewNames.length) await pause(config.videoMs);
+    for (const [index, name] of viewNames.entries()) {
+      let timestamp = frames[0].timestamp;
+      if (index > 0) {
+        timestamp = await evaluate('(async () => { await window.__worldCapture.selectView(' + JSON.stringify(name) + '); return (performance.timeOrigin + performance.now()) / 1000; })()');
+      }
+      views.push({ name, startMs: (timestamp - frames[0].timestamp) * 1000 });
+      await pause(config.videoMs / viewNames.length);
+      if (frameError) throw frameError;
+    }
+    await cdp('Page.stopScreencast'); recording = false;
+  } finally {
+    clearTimeout(firstTimer);
+    if (recording) await cdp('Page.stopScreencast');
+    win.webContents.debugger.removeListener('message', onMessage);
+    await evaluate('document.body.classList.toggle("hide-ui", ' + savedUi + ')');
+  }
+  if (frameError) throw frameError;
+  if (frames.length < 2) throw new Error('Too few fixture frames to encode');
+  const firstTimestamp = frames[0].timestamp;
+  for (const frame of frames) frame.timeMs = (frame.timestamp - firstTimestamp) * 1000;
+  const source = { method: 'CDP Page.screencastFrame timestamps, fixture WebContents only. No desktop capture or invented frames.', width: config.width, height: config.height, views, frames };
+  fs.writeFileSync(path.join(config.output, 'video-source-timeline.json'), JSON.stringify(source, null, 2));
+  const concat = ['ffconcat version 1.0'];
+  for (const [index, frame] of frames.entries()) {
+    concat.push('file ' + frame.file, 'option framerate 1000');
+    if (index + 1 < frames.length) concat.push('duration ' + (frames[index + 1].timestamp - frame.timestamp).toFixed(9));
+  }
+  fs.writeFileSync(path.join(config.output, 'video.ffconcat'), concat.join('\n') + '\n');
+  const execFile = require('node:util').promisify(require('node:child_process').execFile);
+  const version = await execFile(config.ffmpeg, ['-version'], { windowsHide: true });
+  const args = ['-hide_banner', '-loglevel', 'warning', '-nostats', '-n', '-f', 'concat', '-safe', '0', '-i', 'video.ffconcat',
+    '-an', '-c:v', 'libvpx', '-deadline', 'good', '-cpu-used', '4', '-b:v', '5M', '-pix_fmt', 'yuv420p',
+    '-fps_mode', 'vfr', '-enc_time_base', '1:1000', 'world.webm'];
+  try {
+    const encoded = await execFile(config.ffmpeg, args, { cwd: config.output, windowsHide: true, timeout: 120000, maxBuffer: 4 * 1024 * 1024 });
+    fs.writeFileSync(path.join(config.output, 'ffmpeg.log'), encoded.stdout + encoded.stderr);
+  } catch (error) {
+    fs.writeFileSync(path.join(config.output, 'ffmpeg.log'), String(error.stdout || '') + String(error.stderr || ''));
+    throw error;
+  }
+  return { mime: 'video/webm;codecs=vp8', bytes: fs.statSync(path.join(config.output, 'world.webm')).size, file: 'world.webm',
+    durationRequestedMs: config.videoMs, durationActualMs: frames.at(-1).timeMs, views, frameCount: frames.length,
+    captureMethod: 'Fixture-only CDP JPEG screencast; original timestamps -> ffconcat with per-file framerate=1000 -> FFmpeg libvpx VFR. No frame duplication or speedup.',
+    recordingOverhead: 'Screencast JPEG capture and subsequent CPU encoding occur outside the existing scene FPS measurements.',
+    sourceFramesFile: 'video-source-timeline.json', ffmpeg: { executable: config.ffmpeg, version: version.stdout.split(/\r?\n/)[0], args } };
 }
 
 app.whenReady().then(async () => {
@@ -172,35 +258,120 @@ app.whenReady().then(async () => {
   // Exercise the original start controls. This changes UI state, not scene code.
   report.startControl = await evaluate(`(() => { const button = document.getElementById(${JSON.stringify(config.scene === 'petalwake' ? 'start' : 'go')}); if (!button) return null; button.click(); return { id: button.id, disabled: button.disabled }; })()`);
   if (config.preview) { clearTimeout(deadline); report.preview = true; writeReport(); return; }
-  await pause(config.warmupMs);
-  stage('measuring');
-  await evaluate('window.__worldCapture.frames.length = 0; window.__worldCapture.collecting = true');
-  await pause(config.sampleMs);
-  const frames = await evaluate('window.__worldCapture.collecting = false; window.__worldCapture.frames');
-  if (!frames.length || !frames.some(frame => frame.calls > 0)) throw new Error('No rendered frames during the measurement interval');
-  const sorted = frames.map(f => f.ms).sort((a, b) => a - b);
-  const summarize = key => ({ mean: frames.reduce((sum, frame) => sum + frame[key], 0) / frames.length, min: Math.min(...frames.map(f => f[key])), max: Math.max(...frames.map(f => f[key])) });
-  report.performance = { method: 'RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included', unsupportedDrawPaths: ['ANGLE_instanced_arrays', 'WEBGL_multi_draw'], frameCount: frames.length, sampleMs: frames.reduce((sum, f) => sum + f.ms, 0), fps: 1000 * frames.length / frames.reduce((sum, f) => sum + f.ms, 0), p95FrameMs: sorted[Math.floor(sorted.length * .95)], drawCalls: summarize('calls'), triangles: summarize('triangles'), framesWithoutDraws: frames.filter(f => f.calls === 0).length };
-  fs.writeFileSync(path.join(config.output, 'frame-samples.json'), JSON.stringify(frames));
-  report.scene = await evaluate(`(${snapshot.toString()})()`);
-  stage('capturing');
-  const capture = async name => {
-    if (!/^[a-zA-Z0-9_-]+$/.test(name)) throw new Error('Invalid capture name');
-    const file = name + '.png';
-    fs.writeFileSync(path.join(config.output, file), (await win.webContents.capturePage()).toPNG());
-    report.captures.push(file);
-  };
-  await capture('00-default');
-  for (const [index, name] of report.scene.views.entries()) {
-    await evaluate(`window.__worldCapture.selectView(${JSON.stringify(name)})`);
-    await pause(1500);
-    await capture(`${String(index + 1).padStart(2, '0')}-${name}`);
+  if (!config.videoOnly) {
+    if (config.scene === 'combined') {
+      stage('validating-station');
+      report.behaviorValidation = await evaluate(`(async () => { try { return (await import('/src/station-validation.js')).validateStation(window.worldBase); } catch (error) { return { ok: false, error: error.stack || String(error) }; } })()`);
+      writeReport();
+    }
+    await pause(config.warmupMs);
+    stage('measuring');
+    const measure = async (durationMs, filename) => {
+      if (!/^[a-zA-Z0-9_-]+\.json$/.test(filename)) throw new Error('Invalid sample filename');
+      await evaluate('window.__worldCapture.frames.length = 0; window.__worldCapture.collecting = true');
+      await pause(durationMs + 100);
+      while (await evaluate('window.__worldCapture.frames.reduce((sum, frame) => sum + frame.ms, 0)') < durationMs) await pause(100);
+      const frames = await evaluate('window.__worldCapture.collecting = false; window.__worldCapture.frames');
+      fs.writeFileSync(path.join(config.output, filename), JSON.stringify(frames));
+      return { ...summarizeFrames(frames), samplesFile: filename };
+    };
+    report.performance = await measure(config.sampleMs, 'frame-samples.json');
+    report.scene = await evaluate(`(${snapshot.toString()})()`);
+    stage('capturing');
+    const capture = async name => {
+      if (!/^[a-zA-Z0-9_-]+$/.test(name)) throw new Error('Invalid capture name');
+      const file = name + '.png', jpeg = name + '.jpg';
+      const image = await win.webContents.capturePage();
+      fs.writeFileSync(path.join(config.output, file), image.toPNG());
+      const preview = image.resize({ width: Math.min(960, image.getSize().width) });
+      fs.writeFileSync(path.join(config.output, jpeg), preview.toJPEG(82));
+      report.captures.push(file);
+      const detail = { file, jpeg, jpegWidth: preview.getSize().width, pixels: pixelSummary(image) };
+      report.captureDetails.push(detail);
+      return { detail, image };
+    };
+    await capture('00-default');
+    for (const [index, name] of report.scene.views.entries()) {
+      stage(`capturing-view:${name}`);
+      await evaluate(`window.__worldCapture.selectView(${JSON.stringify(name)})`);
+      await pause(1500);
+      const performance = await measure(3000, `frame-samples-${name}.json`);
+      const shot = await capture(`${String(index + 1).padStart(2, '0')}-${name}`);
+      report.views.push({ name, ...performance, capture: shot.detail, scene: await evaluate(`(${snapshot.toString()})()`) });
+      writeReport();
+    }
+    if (config.scene === 'combined') {
+      stage('validating-look-controls');
+      const saved = await evaluate(`(${lookState.toString()})()`);
+      try {
+        await evaluate(`window.__worldCapture.selectView('station-street'); window.worldBase.setFlightEffects(false); window.worldBase.setToon(true)`);
+        await pause(750);
+        const toonOnState = await evaluate(`(${lookState.toString()})()`), toonOn = await capture('05-street-toon-on');
+        await evaluate('window.worldBase.setToon(false)');
+        await pause(750);
+        const toonOffState = await evaluate(`(${lookState.toString()})()`), toonOff = await capture('06-street-toon-off');
+        await evaluate('window.worldBase.setToon(true); window.worldBase.setFlightEffects(true)');
+        await pause(750);
+        const effectsOnState = await evaluate(`(${lookState.toString()})()`), effectsOn = await capture('07-flight-effects-on');
+        await evaluate('window.worldBase.setFlightEffects(false)');
+        await pause(750);
+        const effectsOffState = await evaluate(`(${lookState.toString()})()`), effectsOff = await capture('08-flight-effects-off');
+        report.lookValidation = {
+          ok: toonOnState.toon === 1 && toonOffState.toon === 0 && toonOnState.toonCheckbox && !toonOffState.toonCheckbox
+            && effectsOnState.blur === 1 && effectsOnState.rays === .55 && effectsOnState.effectsCheckbox
+            && effectsOffState.blur === 0 && effectsOffState.rays === 0 && !effectsOffState.effectsCheckbox
+            && [toonOn, toonOff, effectsOn, effectsOff].every(shot => shot.detail.pixels.notBlack),
+          method: 'Actual pipeline uniforms/parameters and UI state; central-pixel nonblack smoke checks. Images retain animation.',
+          toon: { on: { state: toonOnState, capture: toonOn.detail }, off: { state: toonOffState, capture: toonOff.detail }, difference: pixelDifference(toonOn.image, toonOff.image) },
+          flightEffects: { on: { state: effectsOnState, capture: effectsOn.detail }, off: { state: effectsOffState, capture: effectsOff.detail }, difference: pixelDifference(effectsOn.image, effectsOff.image) },
+        };
+      } finally {
+        await evaluate(`window.worldBase.setToon(${saved.toon === 1}); window.worldBase.setFlightEffects(${saved.blur > 0 || saved.rays > 0}); window.__worldCapture.selectView(${JSON.stringify(saved.currentView)})`);
+      }
+      writeReport();
+    }
+    if (config.scene === 'combined') {
+      stage('validating-real-walking');
+      const savedView = await evaluate('({ name: window.worldBase.currentView, mode: window.worldBase.walker.view })');
+      const walking = { ok: false, method: 'Electron sendInputEvent holds W for each measured segment; positions come from the live walker, with no per-frame pose overrides.', segments: [] };
+      report.walkingValidation = walking;
+      await evaluate(`(() => { const state = window.__worldCapture; state.walkingKeys = []; state.walkingInputAbort = new AbortController(); for (const type of ['keydown', 'keyup']) addEventListener(type, event => state.walkingKeys.push({ type, code: event.code, key: event.key, trusted: event.isTrusted, timeMs: performance.now() }), { signal: state.walkingInputAbort.signal }); window.worldBase.startWalking(); window.worldBase.walker.setView('third'); })()`);
+      try {
+        win.focus(); win.webContents.focus();
+        for (const mode of ['third', 'first']) {
+          if (mode === 'first') {
+            walking.viewSwitch = await evaluate(`(() => { const w = window.worldBase.walker, before = w.worldPosition.toArray(); w.setView('first'); const after = w.worldPosition.toArray(); return { before, after, distance: Math.hypot(...before.map((value, index) => value - after[index])), mode: w.view }; })()`);
+          }
+          const before = await evaluate('({ feet: window.worldBase.walker.worldPosition.toArray(), mode: window.worldBase.walker.view, timeMs: performance.now() })');
+          win.webContents.sendInputEvent({ type: 'keyDown', keyCode: 'W' });
+          let performance;
+          try { performance = await measure(3000, `frame-samples-walking-${mode}.json`); }
+          finally { win.webContents.sendInputEvent({ type: 'keyUp', keyCode: 'W' }); }
+          const after = await evaluate('({ feet: window.worldBase.walker.worldPosition.toArray(), mode: window.worldBase.walker.view, timeMs: performance.now() })');
+          const distance = Math.hypot(...after.feet.map((value, index) => value - before.feet[index]));
+          const horizontalDistance = Math.hypot(after.feet[0] - before.feet[0], after.feet[2] - before.feet[2]);
+          const shot = await capture(`walking-${mode}`);
+          walking.segments.push({ mode, before, after, distance, horizontalDistance, ...performance, capture: shot.detail, ok: before.mode === mode && after.mode === mode && horizontalDistance > 1 && shot.detail.pixels.notBlack });
+          await pause(400);
+        }
+        walking.inputEvents = await evaluate('window.__worldCapture.walkingKeys');
+        walking.ok = walking.segments.every(segment => segment.ok) && walking.viewSwitch.mode === 'first' && walking.viewSwitch.distance < 1e-10
+          && walking.inputEvents.filter(event => event.type === 'keydown' && event.code === 'KeyW' && event.trusted).length === 2
+          && walking.inputEvents.filter(event => event.type === 'keyup' && event.code === 'KeyW' && event.trusted).length === 2;
+      } finally {
+        win.webContents.sendInputEvent({ type: 'keyUp', keyCode: 'W' });
+        await evaluate(`window.__worldCapture.walkingInputAbort.abort(); window.worldBase.walker.setView(${JSON.stringify(savedView.mode)}); window.__worldCapture.selectView(${JSON.stringify(savedView.name)})`);
+      }
+      writeReport();
+    }
+  } else {
+    report.scene = report.firstReady;
+    report.checkedScope = 'Video-only rerun: physical, walking, style and performance checks are not rerun in this report.';
   }
   if (config.videoMs > 0) {
-    const video = await evaluate(`(${recordVideo.toString()})(${config.videoMs}, ${JSON.stringify(report.scene.views)})`);
-    fs.writeFileSync(path.join(config.output, 'world.webm'), Buffer.from(video.data, 'base64'));
-    delete video.data;
-    report.video = { ...video, durationRequestedMs: config.videoMs, file: 'world.webm' };
+    stage('recording-video');
+    win.showInactive();
+    report.video = await captureFixtureVideo(win, config);
   }
   report.finalScene = await evaluate(`(${snapshot.toString()})()`);
   report.failedRequestTiming = await evaluate(`performance.getEntriesByType('resource').filter(entry => ${JSON.stringify(report.networkFailures.map(failure => failure.url).filter(Boolean))}.includes(entry.name)).map(entry => entry.toJSON())`);
@@ -208,7 +379,14 @@ app.whenReady().then(async () => {
   report.versions = process.versions;
   report.completedAt = new Date().toISOString();
   report.stage = 'complete';
-  report.ok = report.exceptions.length === 0 && report.networkFailures.length === 0 && report.finalScene.errors.length === 0 && !report.finalScene.renderer.contextLost && !report.console.some(item => item.level === 'error' || item.level === 3);
+  report.transportClean = report.networkFailures.length === 0;
+  report.renderOk = report.exceptions.length === 0 && report.finalScene.errors.length === 0 && !report.finalScene.renderer.contextLost
+    && !report.console.some(item => item.level === 'error' || item.level === 3)
+    && report.captureDetails.every(capture => capture.pixels.notBlack)
+    && (config.videoOnly
+      ? report.video.frameCount > 0 && report.video.views.length === 4
+      : config.scene !== 'combined' || (report.behaviorValidation.ok === true && report.lookValidation.ok === true && report.walkingValidation.ok === true && report.views.length === 4));
+  report.ok = report.renderOk && report.transportClean;
   writeReport();
   console.log(JSON.stringify({ ok: report.ok, performance: report.performance, output: config.output }));
   clearTimeout(deadline);

@@ -38,6 +38,8 @@ window.addEventListener('error', event => fail(event.error || event.message));
 window.addEventListener('unhandledrejection', event => fail(event.reason));
 
 const look = createLook(renderer, camera);
+worldBase.look = look;
+worldBase.styleState = { toon: true, flightEffects: false };
 let island, station, walker;
 const toWorld = (values) => station.toWorld(new THREE.Vector3(...values)).toArray();
 const labels = { 'station-street': '车站区街道', 'station-port': '车站望向港镇', 'island-aerial': '全岛俯视', 'shop-interior': '便利店室内' };
@@ -67,8 +69,8 @@ function startWalking() {
   canvas.focus();
 }
 worldBase.startWalking = startWalking;
-worldBase.setToon = value => { look.setToon(value); document.querySelector('#toon').checked = !!value; };
-worldBase.setFlightEffects = value => { look.setFlightEffects(value); document.querySelector('#effects').checked = !!value; };
+worldBase.setToon = value => { look.setToon(value); worldBase.styleState.toon = !!value; document.querySelector('#toon').checked = !!value; };
+worldBase.setFlightEffects = value => { look.setFlightEffects(value); worldBase.styleState.flightEffects = !!value; document.querySelector('#effects').checked = !!value; };
 
 function resize() {
   camera.aspect = innerWidth / innerHeight;
@@ -104,9 +106,9 @@ async function init() {
   walker = station.createWalker(canvas);
   worldBase.walker = walker;
   worldBase.views = [
-    { name: 'station-street', position: toWorld([4.8, 3.5, 34]), target: toWorld([-1.0, 2.6, -22]) },
+    { name: 'station-street', position: toWorld([-1.2, 2.4, 36]), target: toWorld([0, 2.0, -25]) },
     { name: 'station-port', position: toWorld([-65, 15, -28]), target: [-45, 21, 1036] },
-    { name: 'island-aerial', position: [4600, 4700, 5000], target: [-150, 70, -150] },
+    { name: 'island-aerial', position: [2100, 2350, 2450], target: [-150, 70, -150] },
     { name: 'shop-interior', position: toWorld([-8.3, 1.9134, 8]), target: toWorld([-12.8, 1.7134, 8]) },
   ];
   setView('station-street');
@@ -116,8 +118,8 @@ async function init() {
     worldBase.cameraMode = walker.view === 'third' ? 'first' : 'third';
     walker.setView(worldBase.cameraMode);
   });
-  document.querySelector('#toon').addEventListener('change', event => look.setToon(event.target.checked));
-  document.querySelector('#effects').addEventListener('change', event => look.setFlightEffects(event.target.checked));
+  document.querySelector('#toon').addEventListener('change', event => worldBase.setToon(event.target.checked));
+  document.querySelector('#effects').addEventListener('change', event => worldBase.setFlightEffects(event.target.checked));
   addEventListener('keydown', event => {
     if (event.code === 'KeyH') document.body.classList.toggle('hide-ui');
     const view = worldBase.views[Number(event.key) - 1];

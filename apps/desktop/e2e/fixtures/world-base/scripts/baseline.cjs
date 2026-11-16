@@ -84,22 +84,25 @@ function main() {
     return split < 0 ? [arg.slice(2), true] : [arg.slice(2, split), arg.slice(split + 1)];
   }));
   if (args.help) {
-    console.log('node scripts/baseline.cjs --scene=petalwake|sakuragaoka|combined --electron=<executable> [--output=<directory>] [--preview] [--stills] [--video-ms=8200] [--sample-ms=15000] [--warmup-ms=5000] [--timeout-ms=180000] [--query=q=high] [--proxy=http://127.0.0.1:7897]');
+    console.log('node scripts/baseline.cjs --scene=petalwake|sakuragaoka|combined --electron=<executable> [--output=<directory>] [--preview] [--stills] [--video-only] [--video-ms=8200 --ffmpeg=<existing-executable>] [--sample-ms=15000] [--warmup-ms=5000] [--timeout-ms=180000] [--query=q=high] [--proxy=http://127.0.0.1:7897]');
     return;
   }
-  const allowed = new Set(['scene', 'electron', 'output', 'preview', 'stills', 'video-ms', 'sample-ms', 'warmup-ms', 'timeout-ms', 'query', 'proxy', 'width', 'height']);
+  const allowed = new Set(['scene', 'electron', 'ffmpeg', 'output', 'preview', 'stills', 'video-only', 'video-ms', 'sample-ms', 'warmup-ms', 'timeout-ms', 'query', 'proxy', 'width', 'height']);
   for (const name of Object.keys(args)) if (!allowed.has(name)) throw new Error(`Unknown --${name}`);
   const scene = args.scene || 'combined';
   if (![...Object.keys(originals), 'combined'].includes(scene)) throw new Error('Unknown scene');
+  if (args['video-only'] && (scene !== 'combined' || args.preview || args.stills)) throw new Error('--video-only requires combined capture mode without --preview/--stills');
   if (!args.electron || !fs.existsSync(args.electron)) throw new Error('--electron must name an existing Electron executable');
   const source = scene === 'combined' ? fixture : path.join(fixture, '.local', originals[scene]);
   if (!fs.existsSync(path.join(source, 'index.html'))) throw new Error(`Missing ${source}/index.html`);
   const output = path.resolve(args.output || path.join(fixture, '.local', 'captures', `${scene}-${Date.now()}`));
+  if (args['video-only'] && fs.existsSync(path.join(output, 'render-report.json'))) throw new Error('--video-only needs a new output directory; preserve prior reports');
   fs.mkdirSync(output, { recursive: true });
   const runtime = fs.mkdtempSync(path.join(output, 'runtime-'));
   const config = {
     scene, fixture, output, runtime, source,
-    preview: args.preview === true,
+    preview: args.preview === true, videoOnly: args['video-only'] === true,
+    ffmpeg: typeof args.ffmpeg === 'string' ? path.resolve(args.ffmpeg) : null,
     width: numberArg(args, 'width', 1440, 1), height: numberArg(args, 'height', 900, 1),
     sampleMs: numberArg(args, 'sample-ms', 15000, 1000),
     warmupMs: numberArg(args, 'warmup-ms', 5000),
@@ -110,6 +113,20 @@ function main() {
     startedAt: new Date().toISOString(),
     entrySha256: crypto.createHash('sha256').update(fs.readFileSync(path.join(source, 'index.html'))).digest('hex'),
   };
+  if (config.videoOnly && config.videoMs <= 0) throw new Error('--video-only requires a positive --video-ms');
+  if (!config.preview && config.videoMs > 0 && (!config.ffmpeg || !fs.existsSync(config.ffmpeg))) throw new Error('Video capture requires --ffmpeg=<existing executable>; nothing is installed automatically');
+  if (scene === 'combined') {
+    const files = {};
+    const hashFile = file => { files[path.relative(fixture, file).replace(/\\/g, '/')] = crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex'); };
+    const walk = directory => { for (const entry of fs.readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) { const file = path.join(directory, entry.name); if (entry.isDirectory()) walk(file); else if (/\.(?:js|mjs|html|css|json)$/.test(entry.name)) hashFile(file); } };
+    hashFile(path.join(fixture, 'index.html'));
+    for (const directory of ['src', 'upstream', 'vendor']) if (fs.existsSync(path.join(fixture, directory))) walk(path.join(fixture, directory));
+    const head = cp.execFileSync('git', ['rev-parse', 'HEAD'], { cwd: fixture, encoding: 'utf8', windowsHide: true }).trim();
+    const manifest = { head, capturedAt: config.startedAt, scope: 'Scene HTML/JS/CSS/JSON in index.html, src, upstream and vendor; excludes capture scripts and external .local binary assets.', files };
+    const manifestText = JSON.stringify(manifest, null, 2);
+    fs.writeFileSync(path.join(output, 'source-manifest.json'), manifestText);
+    config.sourceManifest = { file: 'source-manifest.json', head, sha256: crypto.createHash('sha256').update(manifestText).digest('hex') };
+  }
   const configFile = path.join(runtime, 'config.json');
   fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
   fs.writeFileSync(path.join(output, 'run-config.json'), JSON.stringify(config, null, 2));
