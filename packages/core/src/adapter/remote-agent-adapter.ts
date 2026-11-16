@@ -1,4 +1,4 @@
-import type { NodeHealth, RemoteRunSummary, RunId } from "@room/schemas";
+import type { NodeHealth, RemoteRunLedgerId, RemoteRunProof, RemoteRunSummary, RunId, WorldProfileExpectation } from "@room/schemas";
 import type { AgentAdapter } from "./agent-adapter";
 
 /**
@@ -16,6 +16,28 @@ export interface RemoteNodeConfig {
   reconnectGraceMs: number;
   /** 单个 HTTP 请求（非事件流）的超时 */
   requestTimeoutMs: number;
+  /** 派发前协商并持久绑定；所有创建重试及取消原样携带，不因不匹配而删除后重发。 */
+  expectedLedgerId?: RemoteRunLedgerId;
+  /** 固定隔离映射；世界请求必须同时绑定 ledger，initialize 和节点最终准入都要核对。 */
+  expectedWorldProfile?: WorldProfileExpectation;
+}
+
+/**
+ * 可选的持久 Run 能力。存在不等于节点支持：新派发仍须核对 health/initialize。
+ * 只需原节点凭据与 ledger，不依赖原 profile 仍存在或创建会话，供崩溃恢复对账。
+ */
+export interface RemoteRunFenceAccess {
+  readonly ledgerId: RemoteRunLedgerId;
+  /**
+   * 原 ledger 下取消。202 + 合法 CancelRunResponse 才 resolve；HTTP/网络/格式错误 reject。
+   * 调用方使用独立、有界的清理 signal，不能复用已 abort 的生成 signal。成功仍非停止证明。
+   */
+  cancel(runId: RunId, reason?: string, signal?: AbortSignal): Promise<void>;
+  /**
+   * 校验 schema、精确 RunId 和绑定 ledgerId；错配、404、读取失败均 reject。
+   * missing/unconfirmed 原样返回，不伪装成已停止，不用 runs 列表或 terminal 代替。
+   */
+  proof(runId: RunId, signal?: AbortSignal): Promise<RemoteRunProof>;
 }
 
 export interface ReconcileReport {
@@ -42,11 +64,11 @@ export interface ReconcileReport {
  *     直到 reconnectGraceMs 用完。
  * - 重连成功 → status{substate:"active"}，继续。节点会补发断线期间的事件，不会丢。
  * - 宽限期用完 → 产出 error(connection_lost) 终止事件。
- *   因为 leaseMs < reconnectGraceMs，此时节点一定已经自行终止了进程，不会出现"本地判失败、远端还在写"。
+ *   租约到期只是节点尝试停止，不能保证受管进程已经 close；世界屏障仍须匹配的持久 proof。
  *
  * 取消
  * - signal abort → POST cancel，然后继续读事件流等节点的 cancelled 终止事件。
- * - cancel 请求本身失败（网络断）→ 不阻塞：按断线处理，最终靠租约过期保证远端停止，
+ * - cancel 请求本身失败（网络断）→ 不阻塞事件流收尾：按断线处理，节点仍会按租约尝试停止，
  *   本地产出 cancelled（reason 注明 "unconfirmed"）。
  *
  * 权限请求
@@ -60,6 +82,9 @@ export interface RemoteAgentAdapter extends AgentAdapter {
   readonly kind: "remote";
   readonly node: Readonly<RemoteNodeConfig>;
 
+  /** 旧实现可以缺席；世界派发必须同时有此接口和节点已协商的 runFence/worldProfiles 能力。 */
+  readonly runFence?: RemoteRunFenceAccess;
+
   /** GET /v1/health。用于设置页的"测试连接"和调度前检查。 */
   health(signal?: AbortSignal): Promise<NodeHealth>;
 
@@ -70,6 +95,7 @@ export interface RemoteAgentAdapter extends AgentAdapter {
    * Orchestrator 启动时调用（V0.4 §32 崩溃恢复的远端版本）。
    * localActiveRunIds：本地数据库中仍处于 STARTING / RUNNING 的、分配给这个节点的 run。
    * 调用方根据报告：取消 orphansOnNode，把 missingOnNode 标记为 FAILED(remote_lost)。
+   * 列表缺席/finished 都不是持久停止证明，不能解除世界的跨重启模型准入屏障。
    */
   reconcile(localActiveRunIds: readonly RunId[], signal?: AbortSignal): Promise<ReconcileReport>;
 }
