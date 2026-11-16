@@ -38,7 +38,7 @@ function rug(parent:T.Object3D,x:number,z:number,w:number,d:number,color:string)
 }
 function legs(parent:T.Object3D,w:number,d:number,h:number,mat=palette.wood){for(const x of [-1,1])for(const z of [-1,1])box(parent,[.08,h,.08],[x*(w/2-.13),h/2,z*(d/2-.13)],mat);}
 function table(parent:T.Object3D,x:number,z:number,w:number,d:number,h=.8){const g=new T.Group();g.position.set(x,0,z);parent.add(g);legs(g,w,d,h);box(g,[w,.1,d],[0,h,0],palette.wood,.04);return g;}
-function chair(parent:T.Object3D,x:number,z:number,rotation=0){const g=new T.Group();g.position.set(x,0,z);g.rotation.y=rotation;parent.add(g);legs(g,.55,.55,.46);box(g,[.57,.12,.57],[0,.5,0],palette.teal,.04);box(g,[.57,.65,.09],[0,.82,-.24],palette.teal,.04);return g;}
+function chair(parent:T.Object3D,x:number,z:number,rotation=0){const g=new T.Group();g.position.set(x,0,z);g.rotation.y=rotation;parent.add(g);legs(g,.55,.55,.37);box(g,[.57,.1,.57],[0,.4,0],palette.teal,.04);box(g,[.57,.65,.09],[0,.68,-.24],palette.teal,.04);return g;}
 function picture(parent:T.Object3D,x:number,y:number,z:number,color:string){box(parent,[.85,.65,.055],[x,y,z],palette.wood);box(parent,[.74,.54,.06],[x,y,z+.01],palette.cream);sphere(parent,.17,x+.12,y+.05,z+.055,material(color),[1,1,.1]);box(parent,[.6,.12,.01],[x-.03,y-.16,z+.06],palette.green);}
 function lamp(parent:T.Object3D,x:number,z:number){cylinder(parent,.3,.045,x,.03,z,palette.dark);cylinder(parent,.025,1.55,x,.8,z,palette.dark);const shade=new T.Mesh(new T.ConeGeometry(.36,.48,24,1,true),material("#f2dca8"));shade.position.set(x,1.6,z);parent.add(shade);sphere(parent,.085,x,1.44,z,new T.MeshBasicMaterial({color:"#ffe6b5"}));}
 
@@ -68,12 +68,12 @@ function living(parent:T.Object3D,room:RoomAnchor){
   // A fabric sofa with separate cushions, low feet and a throw.
   const sofa=new T.Group();sofa.position.set(-1.2,0,-1.5);g.add(sofa);
   for(const x of [-1.3,1.3])for(const z of [-.4,.4])cylinder(sofa,.065,.2,x,.1,z,palette.wood);
-  box(sofa,[3,.38,1.05],[0,.42,0],palette.teal,.1);
-  box(sofa,[3,1,.2],[0,.9,-.48],palette.teal,.08);
-  for(const x of [-1.46,1.46])box(sofa,[.22,.7,1.12],[x,.68,0],palette.teal,.08);
-  for(let i=-1;i<=1;i++)box(sofa,[.86,.2,.86],[i*.9,.69,.02],material("#85b0a5"),.07);
-  box(sofa,[.45,.5,.17],[-.98,.98,-.25],material("#e4bb75"),.06).rotation.z=.15;
-  box(sofa,[.6,.04,1.08],[.83,.83,.02],material("#eee3c7"),.025);
+  box(sofa,[3,.26,1.05],[0,.23,0],palette.teal,.1);
+  box(sofa,[3,.86,.2],[0,.65,-.48],palette.teal,.08);
+  for(const x of [-1.46,1.46])box(sofa,[.22,.56,1.12],[x,.47,0],palette.teal,.08);
+  for(let i=-1;i<=1;i++)box(sofa,[.86,.11,.86],[i*.9,.415,.02],material("#85b0a5"),.05);
+  box(sofa,[.45,.4,.17],[-.98,.66,-.25],material("#e4bb75"),.06).rotation.z=.15;
+  box(sofa,[.6,.04,1.08],[.83,.495,.02],material("#eee3c7"),.025);
   const coffee=table(g,-1.2,.35,2,1.1,.38);cylinder(coffee,.085,.13,.38,.5,.12,palette.cream);
   const shelfX=-room.width/2+.55;
   box(g,[.62,1.95,2],[shelfX,1,-1],palette.wood);
@@ -153,7 +153,7 @@ export function activityAnchor(room:RoomAnchor,kind:string|undefined,index:numbe
   if(room.bedroom){if(kind==="sleep")return new T.Vector3(room.x-.55,.76,room.z+.5);if((kind==="rest"||kind==="read")&&index===0)return new T.Vector3(room.x+room.width/2-.8,0,room.z+.7);return new T.Vector3(room.x-.6+(index%3)*.6,0,room.z+1+Math.floor(index/3)*.5);}
   if(room.id==="kitchen"){if(kind==="cook")return new T.Vector3(room.x+1.7,0,room.z-1.55+index*.6);if(kind==="eat"&&index<4)return new T.Vector3(room.x+(index<2?-1.25:1.25),0,room.z-.7+(index%2)*1.4);const column=Math.floor(index/4);return new T.Vector3(room.x+(column===0?1.7:column===1?-2.7:-3.5),0,room.z-1.4+(index%4)*.95);}
   if(!room.bedroom&&room.id!=="kitchen"){
-    if(kind==="rest"||kind==="read"){if(index<3)return new T.Vector3(room.x-2.05+index*.85,.2,room.z-1.3);if(index<7)return new T.Vector3(room.x+1.45+((index-3)%2)*1.15,0,room.z+(index<5?-.1:2.15));return new T.Vector3(room.x+.7,0,room.z+2.3+(index-7)*.6);}
+    if(kind==="rest"||kind==="read"){if(index<3)return new T.Vector3(room.x-2.05+index*.85,0,room.z-1.15);if(index<7)return new T.Vector3(room.x+1.45+((index-3)%2)*1.15,0,room.z+(index<5?-.1:2.15));return new T.Vector3(room.x+.7,0,room.z+2.3+(index-7)*.6);}
     if(kind==="eat"||kind==="set_table")return new T.Vector3(room.x+1.45+(index%2)*1.15,0,room.z+(Math.floor(index/2)===0?-.1:2.15+(Math.floor(index/2)-1)*.6));
   }
   return new T.Vector3(room.x-.6+(index%3)*.6,0,room.z+2+Math.floor(index/3)*.5);

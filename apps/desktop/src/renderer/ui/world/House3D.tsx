@@ -115,7 +115,7 @@ export function House3D({world,names,inspectRenderer}:{world:WorldSnapshot;names
       }
       const activeDialogue=state.dialogue?.id??null;
       if(lastDialogue!==activeDialogue){
-        if(activeDialogue){const a=avatars.get(state.dialogue!.residents[0]??"");if(a){for(const person of avatars.values()){person.root.position.copy(person.target);person.route=[];}scene.updateMatrixWorld(true);const seated=a.slot<7&&(a.kind==="read"||a.kind==="rest"||a.kind==="eat");const face=a.target.clone().add(new T.Vector3(0,seated?1.15:1.52,0));const preferred=a.placeId==="kitchen"?new T.Vector3(-2.5,0,-1.7):new T.Vector3(1.5,0,3.1);cameraGoal=dialogueCamera(face,preferred,[house.group,...[...avatars.values()].filter(person=>person!==a).map(person=>person.root)]);}}
+        if(activeDialogue){const a=avatars.get(state.dialogue!.residents[0]??"");if(a){for(const person of avatars.values()){person.root.position.copy(person.target);person.route=[];}scene.updateMatrixWorld(true);const seated=a.slot<7&&(a.kind==="read"||a.kind==="rest"||a.kind==="eat");const face=a.target.clone().add(new T.Vector3(0,seated?1.23:1.52,0));const preferred=a.placeId==="kitchen"?new T.Vector3(-2.5,0,-1.7):new T.Vector3(1.5,0,3.1);cameraGoal=dialogueCamera(face,preferred,[house.group,...[...avatars.values()].filter(person=>person!==a).map(person=>person.root)]);}}
         else if(lastDialogue)cameraGoal={position:homePosition.clone(),target:homeTarget.clone()};lastDialogue=activeDialogue;
       }
       for(const a of avatars.values()){
@@ -162,7 +162,7 @@ export function House3D({world,names,inspectRenderer}:{world:WorldSnapshot;names
 
 function pose(avatar:Avatar,time:number,moving:boolean,speaking:boolean){
   const kind=avatar.kind;const seated=!moving&&avatar.slot<7&&(kind==="read"||kind==="rest"||kind==="eat");const sleep=!moving&&kind==="sleep";
-  avatar.body.rotation.x=sleep?-Math.PI/2:0;avatar.body.position.y=sleep?.12:seated?-.4:0;
+  avatar.body.rotation.x=sleep?-Math.PI/2:0;avatar.body.position.y=sleep?.12:seated?-.29:0;
   for(const {bone,original}of avatar.bones.values())bone.quaternion.copy(original);
   avatar.body.updateWorldMatrix(true,true);const bodyRotation=avatar.body.getWorldQuaternion(new T.Quaternion());
   for(const [name,rig]of avatar.bones){

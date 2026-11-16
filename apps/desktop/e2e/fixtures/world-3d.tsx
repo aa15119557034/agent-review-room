@@ -38,7 +38,7 @@ function Fixture(){
  // Fixed display activities allow reproducible poses without altering the rule engine.
  const clustered=params.has("cluster");
  const residents=world.residents.map((r,i)=>({...r,placeId:clustered?"living_room":i===0?"kitchen":i===1?"living_room":world.places.find(p=>p.owner===r.agent)!.id,activityId:newId("wavt")}));
- const kinds=clustered?["tidy","read","set_table","tidy"] as const:["cook","read","sleep","rest"] as const;
+ const kinds=params.has("sitting")?["tidy","rest","read","tidy"] as const:clustered?["tidy","read","set_table","tidy"] as const:["cook","read","sleep","rest"] as const;
  const activities=residents.map((r,i)=>({id:r.activityId!,kind:kinds[i]!,participants:[{kind:"resident" as const,agent:r.agent}],placeId:r.placeId,startedAt:world.now,endsAt:world.now+120,state:"running" as const,endReason:null,itemIds:i===0?["pot"]:i===1?["book"]:[]}));
  const items=world.items.map(item=>item.kind==="unique"&&item.id==="book"?{...item,usedBy:activities[1]!.id}:item.kind==="unique"&&item.id==="pot"?{...item,usedBy:activities[0]!.id}:item);
  const snapshot=WorldSnapshot.parse({...world,residents,activities,items});
