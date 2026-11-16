@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { WORLD_DAILY_COGNITION_DEFAULT, WORLD_DAY_REAL_MINUTES_DEFAULT, WorldState, type ControlEvent, type WorldEvent, type WorldScene, type WorldSnapshot } from "@room/schemas";
+import { WORLD_DAILY_COGNITION_DEFAULT, WORLD_DAY_REAL_MINUTES_DEFAULT, WORLD_MAX_RESIDENTS, WorldSettings, WorldState, type ControlEvent, type WorldEvent, type WorldScene, type WorldSnapshot } from "@room/schemas";
 import { createWorldMock } from "../mock/world-mock";
 import { createMockBridge } from "../mock/mock-backend";
 import { createActions } from "../lib/actions";
@@ -571,16 +571,17 @@ describe("世界：旧请求的回应晚到（林离 #230 第一轮）", () => {
     assert.equal(s.events.length, 50);
   });
 
-  it("演示后台接受契约允许的设置：住满 8 位、名字很长带连字符，地点和邻居都不超限", async () => {
-    const agents = Array.from({ length: 8 }, (_, i) => ({ id: `${"long-name-".repeat(5)}agent-${i}`.slice(0, 64), displayName: `很长名字的秘书${i}`.padEnd(40, "字") }));
+  it("演示后台接受契约允许的设置：住满 4 位、名字很长带连字符；第 5 位住不进来", async () => {
+    const agents = Array.from({ length: 5 }, (_, i) => ({ id: `${"long-name-".repeat(5)}agent-${i}`.slice(0, 64), displayName: `很长名字的秘书${i}`.padEnd(40, "字") }));
     const mock = createWorldMock({ emit() {}, agents: () => agents }, { seed: false, autoTick: false });
-    const state = WorldState.parse(await mock.commands["world.reset"]({ requestId: "wact_01HZZZZZZZZZZZZZZZZZZZZZZ9", worldId: null, settings: { dayRealMinutes: 24, dailyCognitionLimit: 60, residents: agents.map((a) => a.id) } }));
-    assert.equal(state.world!.residents.length, 8);
-    assert.ok(state.world!.places.every((p) => p.neighbors.length <= 8));
+    const base = { dayRealMinutes: 24, dailyCognitionLimit: 60 };
+    assert.equal(WorldSettings.safeParse({ ...base, residents: agents.map((a) => a.id) }).success, false, "契约最多 4 位");
+    const residents = agents.slice(0, WORLD_MAX_RESIDENTS).map((a) => a.id);
+    const state = WorldState.parse(await mock.commands["world.reset"]({ requestId: "wact_01HZZZZZZZZZZZZZZZZZZZZZZ9", worldId: null, settings: WorldSettings.parse({ ...base, residents }) }));
+    assert.equal(state.world!.residents.length, 4);
     mock.advance(1440);
     const later = WorldState.parse(await mock.queries["world.get"]());
-    assert.ok(later.world!.lastSeq > 50, "8 位都在各自过日子，每个人都走得到要去的地方");
-    const seventh = later.world!.places.find((p) => p.owner === agents[7]!.id)!;
-    assert.deepEqual(seventh.neighbors, ["kitchen"]);
+    assert.ok(later.world!.lastSeq > 25, "4 位都在各自过日子，每个人都走得到要去的地方");
+    assert.ok(later.world!.places.filter((p) => p.owner !== null).every((p) => p.neighbors.join() === "living_room"));
   });
 });

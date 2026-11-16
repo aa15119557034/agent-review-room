@@ -424,6 +424,7 @@ export const WorldSnapshot = z.object({
   /** 最后一条事件的序号；还没有事件是 0 */
   lastSeq: z.number().int().nonnegative(),
   places: z.array(WorldPlace).min(1).max(12),
+  /** 新开的局最多 WORLD_MAX_RESIDENTS 位（由 WorldSettings 把关）；这里留到 8 只为读得出改上限之前存下的局 */
   residents: z.array(WorldResident).min(1).max(8),
   /** 你在哪间屋 */
   player: z.object({ placeId: WorldPlaceId, activityId: WorldActivityId.nullable() }).strict(),
@@ -477,13 +478,16 @@ export const WORLD_DAILY_COGNITION_DEFAULT = 60;
 /** 一段场景里模型台词的轮数上限 */
 export const WORLD_SCENE_MAX_MODEL_TURNS = 8;
 
+/** 一局最多住几位（江浩 2026-11-16 定：4 位就够，多了反而复杂） */
+export const WORLD_MAX_RESIDENTS = 4;
+
 export const WorldSettings = z.object({
   /** 世界里一天 = 现实里几分钟 */
   dayRealMinutes: z.number().int().min(4).max(1440),
   /** 每位居民每个**现实日**最多几次认知。0 = 不调模型，全按作息 */
   dailyCognitionLimit: z.number().int().min(0).max(1000),
-  /** 住进来的居民。改它等于重开一局，只能随 world.reset 改 */
-  residents: z.array(AgentName).min(1).max(8),
+  /** 住进来的居民，最多 WORLD_MAX_RESIDENTS 位。改它等于重开一局，只能随 world.reset 改 */
+  residents: z.array(AgentName).min(1).max(WORLD_MAX_RESIDENTS),
 }).strict();
 export type WorldSettings = z.infer<typeof WorldSettings>;
 

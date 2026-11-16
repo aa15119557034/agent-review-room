@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   COMMANDS, ControlEvent, QUERIES, WorldAction, WorldActivity, WorldActRequest, WorldCognitionReply, WorldEvent, WorldItem,
-  WorldBudget, WorldCommitment, WorldObservation, WorldResetRequest, WorldResidentView, WorldScene, WorldSceneSayRequest, WorldSettingsSaveRequest, WorldSnapshot, WorldState,
+  WorldBudget, WorldCommitment, WorldObservation, WorldResetRequest, WorldResidentView, WorldScene, WorldSceneSayRequest, WorldSettings, WorldSettingsSaveRequest, WorldSnapshot, WorldState, WORLD_MAX_RESIDENTS,
 } from "../src/index";
 
 const U = "01JABCDEFGHJKMNPQRSTVWXYZ0";
@@ -203,4 +203,11 @@ test("world.get before anything is set up: settings may be null only while there
   assert.equal(WorldState.safeParse({ world: snapshot, scene: null, settings, budgets: [] }).success, true);
   assert.equal(WorldState.safeParse({ world: snapshot, scene: null, settings: null, budgets: [] }).success, false);
   assert.equal(WorldState.safeParse({ world: null, scene: null, settings: { ...settings, residents: [] }, budgets: [] }).success, false, "不造空的入住名单");
+});
+
+test("a home takes at most four residents", () => {
+  const base = { dayRealMinutes: 24, dailyCognitionLimit: 60 };
+  assert.equal(WORLD_MAX_RESIDENTS, 4);
+  assert.equal(WorldSettings.safeParse({ ...base, residents: ["a", "b", "c", "d"] }).success, true);
+  assert.equal(WorldSettings.safeParse({ ...base, residents: ["a", "b", "c", "d", "e"] }).success, false);
 });
