@@ -95,7 +95,7 @@ async function init() {
   Object.assign(sun.shadow.camera, { left: -100, right: 100, top: 105, bottom: -105, near: 1, far: 400 });
   sun.shadow.bias = -0.0002;
   sun.shadow.normalBias = 0.035;
-  scene.add(sun, sun.target, new THREE.HemisphereLight(0xc6d8ff, 0x9c87a5, 1.2));
+  scene.add(sun, sun.target, new THREE.HemisphereLight(0xcfe0ff, 0xa89c94, 1.05));
   stage('正在安放车站、店铺与碰撞体…');
   station = await createStation({
     scene, renderer, camera, offset: island.stationPlacement.position,
