@@ -3,6 +3,7 @@ import { RUN_TRANSITIONS, canTransition, type Run } from "@room/schemas";
 import { runTranscript, selectedRun, terminalEvent } from "../lib/state";
 import { useActions, useAppState } from "./hooks";
 import { FAILURE_REASON_LABEL, RUN_STATE_LABEL, formatClock, formatDuration, formatTime, runTone } from "./labels";
+import { SourceReferences } from "./SourceReferences";
 
 /** 第 4 步：查看当前选中（默认最新）的评审结果 */
 export function ResultStep() {
@@ -17,6 +18,7 @@ function RunDetail({ run }: { run: Run }) {
   const actions = useActions();
   const transcript = useAppState((s) => runTranscript(s, run.id));
   const terminal = useAppState((s) => terminalEvent(s, run.id));
+  const references = useAppState((s) => s.messages.find((m) => "runId" in m && m.runId === run.id)?.sourceRefs);
   const [cancelling, setCancelling] = useState(false);
   const canCancel = canTransition(RUN_TRANSITIONS, run.state, "CANCELLED") && !cancelling;
   const tone = runTone(run.state);
@@ -81,6 +83,7 @@ function RunDetail({ run }: { run: Run }) {
       )}
 
       <SentPrompt snapshotId={run.snapshotId} />
+      <SourceReferences references={references} />
     </article>
   );
 }
@@ -107,6 +110,7 @@ function SentPrompt({ snapshotId }: { snapshotId: string }) {
               指纹 <span className="hash" title={snapshot.contentHash} data-hash={snapshot.contentHash}>{snapshot.contentHash.slice(0, 12)}</span>
             </p>
             <pre className="prompt-text">{snapshot.content}</pre>
+            <SourceReferences references={snapshot.sourceRefs} />
           </>
         ) : (
           <p className="step-empty">正在读取…</p>

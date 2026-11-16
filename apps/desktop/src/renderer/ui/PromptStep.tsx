@@ -3,6 +3,7 @@ import { APPROVAL_TRANSITIONS, canTransition, type Approval, type PromptSnapshot
 import { decidedApprovals, readyApproval } from "../lib/state";
 import { useActions, useAppState } from "./hooks";
 import { APPROVAL_STATE_LABEL, CONTRIBUTION_TYPE_LABEL, RUN_STATE_LABEL, formatTime } from "./labels";
+import { SourceReferences } from "./SourceReferences";
 
 // ------------------------------------------------------------ 第 2 步：勾选片段
 
@@ -110,6 +111,7 @@ function PendingApproval({ approval }: { approval: Approval }) {
   const actions = useActions();
   const snapshot = useAppState((s) => s.snapshots[approval.snapshotId]);
   const reviewerConfigured = useAppState((s) => s.status?.reviewerConfigured ?? false);
+  const stale = useAppState((s) => s.staleApprovalIds.includes(approval.id));
   const [busy, setBusy] = useState<"approve" | "reject" | null>(null);
   const [rejecting, setRejecting] = useState(false);
   const [reason, setReason] = useState("");
@@ -120,7 +122,7 @@ function PendingApproval({ approval }: { approval: Approval }) {
   }, [actions, approval.snapshotId]);
 
   const canDecide = snapshot !== undefined && busy === null;
-  const canApprove = canDecide && reviewerConfigured && canTransition(APPROVAL_TRANSITIONS, approval.state, "APPROVED");
+  const canApprove = canDecide && !stale && reviewerConfigured && canTransition(APPROVAL_TRANSITIONS, approval.state, "APPROVED");
 
   const approve = async () => {
     if (!canApprove || !snapshot) return;
@@ -155,6 +157,7 @@ function PendingApproval({ approval }: { approval: Approval }) {
       ) : (
         <>
           <SnapshotFacts snapshot={snapshot} />
+          <SourceReferences references={snapshot.sourceRefs} />
           <pre className="prompt-text" data-expanded={expanded}>
             {snapshot.content}
           </pre>
@@ -163,6 +166,8 @@ function PendingApproval({ approval }: { approval: Approval }) {
           </button>
         </>
       )}
+
+      {stale && <p className="field-error" role="alert">这份预览或引用资料已经失效。请更新资料，并在上方重新生成 prompt 后再批准；不会重发这份旧预览。</p>}
 
       {!reviewerConfigured && (
         <p className="field-error">

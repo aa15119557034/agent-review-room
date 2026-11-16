@@ -30,6 +30,8 @@ export interface AppState {
   messages: Message[];
   contributions: Contribution[];
   approvals: Approval[];
+  /** 收到 stale_snapshot 的旧审批；仅用于提示重建，不改后端审批状态。 */
+  staleApprovalIds: string[];
   runs: Run[];
   /** runId → 按 seq 递增的事件；只保存当前项目的 run */
   runEvents: Record<string, AgentEvent[]>;
@@ -79,6 +81,7 @@ export const initialState: AppState = {
   messages: [],
   contributions: [],
   approvals: [],
+  staleApprovalIds: [],
   runs: [],
   runEvents: {},
   snapshots: {},
