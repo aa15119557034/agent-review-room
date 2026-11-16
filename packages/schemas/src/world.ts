@@ -531,7 +531,8 @@ export type WorldBudget = z.infer<typeof WorldBudget>;
  *   显示出来的那句话由 main 按她自己的证据写成。这样「没做成不能说做成了」「旧印象不被全貌纠正」
  *   是靠格式保证的，不是靠事后在自由文字里找关键词。另外可以带一句自己写的闲聊（say.chat），见 WorldSay
  * - propose：她想做的一个动作。main 按当时最新的状态检查，通过才生效
- * - say 和 propose 分开处理：say 引用的东西没有依据时只丢掉 say（或换成规则旁白），propose 照常检查；反过来也一样
+ * - say 和 propose 分开处理：say 的 intent 引用的东西没有依据时，只丢掉 intent 对应的那句事实句（或换成规则旁白），
+ *   同一个 say 里合法的 chat 仍然单独保留、照常显示；propose 照常检查。反过来也一样
  * - 代码块之外的文字一律丢弃，不显示、不记录成观察
  */
 export const WORLD_FENCE = "room-world";
