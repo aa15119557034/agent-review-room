@@ -205,11 +205,17 @@ test("world.get before anything is set up: settings may be null only while there
   assert.equal(WorldState.safeParse({ world: null, scene: null, settings: { ...settings, residents: [] }, budgets: [] }).success, false, "不造空的入住名单");
 });
 
-test("a home takes at most four residents", () => {
+test("a new home takes at most four residents; homes saved before the limit still read", () => {
   const base = { dayRealMinutes: 24, dailyCognitionLimit: 60 };
+  const five = ["a", "b", "c", "d", "e"], eight = [...five, "f", "g", "h"];
+  const reset = (settings?: unknown) => WorldResetRequest.safeParse({ type: "world.reset", requestId: "wact_01HZZZZZZZZZZZZZZZZZZZZZZ9", worldId: null, confirm: true, ...(settings ? { settings } : {}) }).success;
   assert.equal(WORLD_MAX_RESIDENTS, 4);
-  assert.equal(WorldSettings.safeParse({ ...base, residents: ["a", "b", "c", "d"] }).success, true);
-  assert.equal(WorldSettings.safeParse({ ...base, residents: ["a", "b", "c", "d", "e"] }).success, false);
+  assert.equal(reset({ ...base, residents: five.slice(0, 4) }), true);
+  assert.equal(reset({ ...base, residents: five }), false, "新开的局不能超过 4 位");
+  assert.equal(reset(), true, "不给 settings 时由 main 检查实际用上的名单");
+  assert.equal(WorldSettings.safeParse({ ...base, residents: eight }).success, true, "旧存档的设置读得出");
+  assert.equal(WorldState.safeParse({ world: null, scene: null, settings: { ...base, residents: eight }, budgets: [] }).success, true);
+  assert.equal(WorldSettings.safeParse({ ...base, residents: [...eight, "i"] }).success, false);
 });
 
 test("small talk is free text beside the evidence-backed sentence, and never stands in for facts or actions", () => {

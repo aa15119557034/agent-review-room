@@ -425,7 +425,7 @@ export const WorldSnapshot = z.object({
   /** 最后一条事件的序号；还没有事件是 0 */
   lastSeq: z.number().int().nonnegative(),
   places: z.array(WorldPlace).min(1).max(12),
-  /** 新开的局最多 WORLD_MAX_RESIDENTS 位（由 WorldSettings 把关）；这里留到 8 只为读得出改上限之前存下的局 */
+  /** 新开的局最多 WORLD_MAX_RESIDENTS 位（由 WorldResetRequest 把关）；这里留到 8 只为读得出改上限之前存下的局 */
   residents: z.array(WorldResident).min(1).max(8),
   /** 你在哪间屋 */
   player: z.object({ placeId: WorldPlaceId, activityId: WorldActivityId.nullable() }).strict(),
@@ -479,7 +479,11 @@ export const WORLD_DAILY_COGNITION_DEFAULT = 60;
 /** 一段场景里模型台词的轮数上限 */
 export const WORLD_SCENE_MAX_MODEL_TURNS = 8;
 
-/** 一局最多住几位（江浩 2026-11-16 定：4 位就够，多了反而复杂） */
+/**
+ * **新开的一局**最多住几位（江浩 2026-11-16 定：4 位就够，多了反而复杂）。
+ * 只管新开 / 重置时的人选（WorldResetRequest）。改上限之前存下的 5～8 位的局照常能读、能继续、能改流速和预算，
+ * 名单不截断；它下次重置时必须重新选到 4 位以内。
+ */
 export const WORLD_MAX_RESIDENTS = 4;
 
 export const WorldSettings = z.object({
@@ -487,8 +491,11 @@ export const WorldSettings = z.object({
   dayRealMinutes: z.number().int().min(4).max(1440),
   /** 每位居民每个**现实日**最多几次认知。0 = 不调模型，全按作息 */
   dailyCognitionLimit: z.number().int().min(0).max(1000),
-  /** 住进来的居民，最多 WORLD_MAX_RESIDENTS 位。改它等于重开一局，只能随 world.reset 改 */
-  residents: z.array(AgentName).min(1).max(WORLD_MAX_RESIDENTS),
+  /**
+   * 住进来的居民。改它等于重开一局，只能随 world.reset 改。
+   * 这里的上限 8 是「读得出旧存档」的上限；新开的局最多 WORLD_MAX_RESIDENTS 位，由 WorldResetRequest 把关
+   */
+  residents: z.array(AgentName).min(1).max(8),
 }).strict();
 export type WorldSettings = z.infer<typeof WorldSettings>;
 
@@ -643,6 +650,10 @@ export const WorldResumeRequest = z.object({ type: z.literal("world.resume"), wo
  * 重置 = 开新的一局：新的 WorldId、新的会话，事件序号从 1 开始。旧一局的事件、观察、活动、约定、熟悉度都留在旧 id 下，不进新一局。
  * confirm 必须是 true（界面要先问一次）。settings 不给就沿用现在的。
  *
+ * **人数**：新的一局最多 WORLD_MAX_RESIDENTS 位。settings 给了，这里直接校验；settings 没给，main 要对
+ * 「实际用上的那份设置」（存下的，或默认的）同样检查，超过就拒绝（validation_failed），什么都不改——
+ * 也就是旧的 5～8 位的局重置时必须带上重新选好的名单，不能靠省略 settings 再开一局 8 位的。
+ *
  * 重试语义，main 按这个顺序判断：
  * 1. requestId 有回执 → 原样返回那次的结果（哪怕现在的局已经不是它建的那一局）
  * 2. 没有回执，worldId 和当前这一局对不上（包括：以为没有世界但其实有）→ invalid_state，什么都不改
@@ -655,7 +666,7 @@ export const WorldResetRequest = z.object({
   /** 你以为现在是哪一局：要替换的那一局的 id；还没开过世界（第一次开始）是 null */
   worldId: WorldId.nullable(),
   confirm: z.literal(true),
-  settings: WorldSettings.optional(),
+  settings: WorldSettings.refine((s) => s.residents.length <= WORLD_MAX_RESIDENTS, { message: "新的一局最多住 4 位", path: ["residents"] }).optional(),
 }).strict();
 export const WorldSettingsSaveRequest = z.object({
   type: z.literal("world.settings.save"),

@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { WORLD_DAILY_COGNITION_DEFAULT, WORLD_DAY_REAL_MINUTES_DEFAULT, WORLD_MAX_RESIDENTS, WorldSettings, WorldState, type ControlEvent, type WorldEvent, type WorldScene, type WorldSnapshot } from "@room/schemas";
+import { WORLD_DAILY_COGNITION_DEFAULT, WORLD_DAY_REAL_MINUTES_DEFAULT, WORLD_MAX_RESIDENTS, WorldResetRequest, WorldSettings, WorldState, type ControlEvent, type WorldEvent, type WorldScene, type WorldSnapshot } from "@room/schemas";
 import { createWorldMock } from "../mock/world-mock";
 import { createMockBridge } from "../mock/mock-backend";
 import { createActions } from "../lib/actions";
@@ -575,7 +575,7 @@ describe("世界：旧请求的回应晚到（林离 #230 第一轮）", () => {
     const agents = Array.from({ length: 5 }, (_, i) => ({ id: `${"long-name-".repeat(5)}agent-${i}`.slice(0, 64), displayName: `很长名字的秘书${i}`.padEnd(40, "字") }));
     const mock = createWorldMock({ emit() {}, agents: () => agents }, { seed: false, autoTick: false });
     const base = { dayRealMinutes: 24, dailyCognitionLimit: 60 };
-    assert.equal(WorldSettings.safeParse({ ...base, residents: agents.map((a) => a.id) }).success, false, "契约最多 4 位");
+    assert.equal(WorldResetRequest.safeParse({ type: "world.reset", requestId: "wact_01HZZZZZZZZZZZZZZZZZZZZZZ8", worldId: null, confirm: true, settings: { ...base, residents: agents.map((a) => a.id) } }).success, false, "新的一局最多 4 位");
     const residents = agents.slice(0, WORLD_MAX_RESIDENTS).map((a) => a.id);
     const state = WorldState.parse(await mock.commands["world.reset"]({ requestId: "wact_01HZZZZZZZZZZZZZZZZZZZZZZ9", worldId: null, settings: WorldSettings.parse({ ...base, residents }) }));
     assert.equal(state.world!.residents.length, 4);
