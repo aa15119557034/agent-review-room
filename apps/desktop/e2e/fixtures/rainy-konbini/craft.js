@@ -8,7 +8,6 @@ export function craft(scene) {
   const features = {}, materials = new Map(), geometries = new Map();
   const bands = new T.DataTexture(new Uint8Array([55, 105, 175, 255]), 4, 1, T.RedFormat);
   bands.minFilter = bands.magFilter = T.NearestFilter; bands.needsUpdate = true;
-  const ink = new T.LineBasicMaterial({ color: 0x172332, transparent: true, opacity: .58 });
   function toon(color, emission = 0) {
     const key = `${color}/${emission}`;
     if (!materials.has(key)) materials.set(key, new T.MeshToonMaterial({ color, gradientMap: bands, emissive: color, emissiveIntensity: emission }));
@@ -63,16 +62,14 @@ export function craft(scene) {
   }
   // Merge the static authored meshes by material. Dynamic doors and effects stay separate.
   function batchStatic() {
-    root.updateMatrixWorld(true);const batches=new Map(),edges=[],remove=[];
+    root.updateMatrixWorld(true);const batches=new Map(),remove=[];
     root.traverse(o=>{
       if(!o.isMesh||o.material.transparent||o.userData.dynamic||o.isReflector)return;
       for(let p=o.parent;p&&p!==root;p=p.parent)if(p.userData.dynamic)return;
       const g=(o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone()).applyMatrix4(o.matrixWorld);const list=batches.get(o.material)??[];list.push(g);batches.set(o.material,list);remove.push(o);
-      if(o.geometry.type!=='PlaneGeometry'&&o.geometry.parameters?.width>.38){const e=new T.EdgesGeometry(o.geometry,32);e.applyMatrix4(o.matrixWorld);edges.push(e);}
     });
     for(const o of remove)o.removeFromParent();
     for(const [mat,gs] of batches){const m=mesh(mergeGeometries(gs,false),mat,[0,0,0]);m.name='static-'+mat.uuid;gs.forEach(g=>g.dispose());}
-    if(edges.length){const lines=new T.LineSegments(mergeGeometries(edges,false),ink);lines.name='architectural-ink';root.add(lines);edges.forEach(g=>g.dispose());}
     return {authoredMeshes:remove.length,batches:batches.size};
   }
   return {root,features,toon,glow,mesh,box,cylinder,sphere,tube,rod,group,label,poster,canvasTexture,batchStatic};

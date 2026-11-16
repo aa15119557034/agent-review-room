@@ -11,8 +11,8 @@ const {pathToFileURL}=require('node:url');
  const electron=process.argv.find(a=>a.startsWith('--electron='))?.slice(11)||require('../apps/desktop/node_modules/electron'),env={};
  for(const name of ['SystemRoot','windir','SystemDrive','PATH','ComSpec','PATHEXT','NUMBER_OF_PROCESSORS','PROCESSOR_ARCHITECTURE']){const key=Object.keys(process.env).find(x=>x.toLowerCase()===name.toLowerCase());if(key)env[key]=process.env[key];}
  for(const [name,dir] of Object.entries({LOCALAPPDATA:'local',APPDATA:'roaming',USERPROFILE:'profile',TEMP:'temp',TMP:'temp'})){env[name]=path.join(output,'runtime',dir);fs.mkdirSync(env[name],{recursive:true});}
- const capture=process.argv.includes('--capture'),log=capture?null:fs.openSync(path.join(output,'preview.log'),'a');
- const child=cp.spawn(electron,[path.join(repo,'apps/desktop/e2e/rainy-konbini-preview.cjs'),output,capture?'--capture':'--preview'],{cwd:repo,env,stdio:capture?'inherit':['ignore',log,log],detached:!capture,windowsHide:false});
+ const stills=process.argv.includes('--stills'),capture=process.argv.includes('--capture')||stills,log=capture?null:fs.openSync(path.join(output,'preview.log'),'a');
+ const child=cp.spawn(electron,[path.join(repo,'apps/desktop/e2e/rainy-konbini-preview.cjs'),output,capture?'--capture':'--preview',...(stills?['--stills']:[])],{cwd:repo,env,stdio:capture?'inherit':['ignore',log,log],detached:!capture,windowsHide:false});
  child.on('error',e=>{console.error(e);process.exitCode=1;});
  if(!capture){fs.closeSync(log);fs.writeFileSync(path.join(output,'preview-process.json'),JSON.stringify({pid:child.pid,executable:electron,started:new Date().toISOString()},null,2));console.log('Preview PID '+child.pid);child.unref();return;}
  child.on('exit',code=>process.exitCode=code??1);
