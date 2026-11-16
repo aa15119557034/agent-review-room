@@ -31,15 +31,24 @@ async function json(url) {
 
 function clearStationVegetation(terrain) {
   const S = terrain.splatN, cell = World.size / S;
+  const fadeWidth = 12;
+  const reach = cell + fadeWidth;
   for (let iz = 0; iz < S; iz++) {
     const z = (iz + 0.5) * cell - World.half;
-    if (z < stationRect.minZ - cell || z > stationRect.maxZ + cell) continue;
+    if (z < stationRect.minZ - reach || z > stationRect.maxZ + reach) continue;
     for (let ix = 0; ix < S; ix++) {
       const x = (ix + 0.5) * cell - World.half;
-      if (!inRect(x, z, cell)) continue;
+      if (!inRect(x, z, reach)) continue;
+      const dx = Math.max(stationRect.minX - x, 0, x - stationRect.maxX);
+      const dz = Math.max(stationRect.minZ - z, 0, z - stationRect.maxZ);
+      // A zero texel guard keeps bilinear grass/flower samples zero throughout
+      // the core, including corners. Outside it, retain the original field's
+      // species and wetness while its cover returns gradually over 12 metres.
+      const t = THREE.MathUtils.clamp((Math.hypot(dx, dz) - cell) / fadeWidth, 0, 1);
+      const cover = t * t * (3 - 2 * t);
       const index = (iz * S + ix) * 4;
-      terrain.splat[index] = 0;
-      terrain.splat[index + 3] = 0;
+      terrain.splat[index] = Math.round(terrain.splat[index] * cover);
+      terrain.splat[index + 3] = Math.round(terrain.splat[index + 3] * cover);
     }
   }
   // The original bitmap and CPU pixels are separate; replace the GPU texture as well.
@@ -106,6 +115,7 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
   // cannot reproduce its narrow railway cut and levee without terrain poking through.
   terrain.material.uniforms.uStationCutout.value.set(stationRect.minX, stationRect.minZ, stationRect.maxX, stationRect.maxZ);
   const transition = createGroundTransition({ rect: stationRect,
+    terrainMaterial: terrain.material,
     stationHeight: (x, z) => stationPlacement.y + stationHeight(x - stationPlacement.x, z - stationPlacement.z),
     islandHeight: (x, z) => terrain.heightAt(x, z),
   });

@@ -100,6 +100,7 @@ async function init() {
   station = await createStation({
     scene, renderer, camera, offset: island.stationPlacement.position,
     rotationY: island.stationPlacement.rotationY, sunDir: island.U.uSunDir.value,
+    groundMaterial: island.transition.material,
     onProgress: stage,
   });
   worldBase.station = station;

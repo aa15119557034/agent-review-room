@@ -70,16 +70,43 @@ export function createLook(renderer, camera) {
     col = clamp(col, 0.0, 1.0);`, 'purple shadows');
 
   function applyIsland(island) {
-    for (const [material, needle, normal] of [
-      [island.terrain.material, 'float dif = saturate((ndlRaw + 0.32 * soft) / (1.0 + 0.32 * soft));', 'ndlRaw'],
-      [island.town.material, 'float dif = saturate(ndl);', 'ndl'],
+    // Quantize terrain's calibrated diffuse, including its grass wrap-lighting.
+    // The town's raw-normal bands otherwise lift sunlit terrain straight to 1.
+    for (const [material, needle, band] of [
+      [island.terrain.material, 'float dif = saturate((ndlRaw + 0.32 * soft) / (1.0 + 0.32 * soft));', 'floor(dif * 3.0 + 0.5) / 3.0'],
+      [island.transition.material, 'float dif = saturate((ndlRaw + 0.32 * soft) / (1.0 + 0.32 * soft));', 'floor(dif * 3.0 + 0.5) / 3.0'],
+      [island.town.material, 'float dif = saturate(ndl);', 'wbBand(ndl)'],
     ]) {
       material.uniforms.uWorldToon = toon;
       material.fragmentShader = insert(material.fragmentShader, 'void main(){', `${BANDS}\nvoid main(){`, 'island bands entry');
       material.fragmentShader = insert(material.fragmentShader, needle,
-        `${needle}\n  dif = mix(dif, wbBand(${normal}), uWorldToon);`, 'island diffuse band');
+        `${needle}\n  dif = mix(dif, ${band}, uWorldToon);`, 'island diffuse band');
       material.needsUpdate = true;
     }
+    const water = island.water.material;
+    // The shallow coefficient, rather than bloom, dominates the cyan halos.
+    // Keep deep-water colour and the transmitted seabed independently calibrated.
+    water.fragmentShader = insert(water.fragmentShader, 'vec3 shallow = vec3(0.030, 0.420, 0.380);',
+      `vec3 shallow = vec3(0.030, 0.420, 0.380);
+  shallow *= 0.4;`, 'shallow water scatter');
+    // Compute derivatives before the upstream shore discard. Both water LOD
+    // corrections use the actual world-space pixel footprint, not camera height.
+    water.fragmentShader = insert(water.fragmentShader, 'vec3 P = vWorld;',
+      `vec3 P = vWorld;
+  float wbWaterFootprint = max(length(dFdx(P.xz)), length(dFdy(P.xz)));`, 'water pixel footprint');
+    // Filtering the two height channels before their nonlinear caustic formula
+    // converges to 1.6, instead of its measured full-resolution mean of 0.398.
+    water.fragmentShader = insert(water.fragmentShader, 'float pathLen = depth *',
+      `float wbCausticLod = log2(max(1.0, wbWaterFootprint * 0.19 * 1.37 * float(textureSize(uRipple, 0).x)));
+  caust = mix(caust, 0.398, smoothstep(3.0, 5.0, wbCausticLod));
+  float pathLen = depth *`, 'caustic minification');
+    // Unresolved shore bubbles average into a solid collar. Resolved surf,
+    // whitecaps and the later wake/waterfall contributions retain their values.
+    water.fragmentShader = insert(water.fragmentShader, 'float foam = max(max(cap, surfBand * 0.9), max(lace, churn));',
+      `float wbShoreFoam = max(surfBand * 0.9, max(lace, churn));
+  wbShoreFoam *= mix(1.0, 0.35, smoothstep(0.75, 3.0, wbWaterFootprint));
+  float foam = max(cap, wbShoreFoam);`, 'shore foam coverage');
+    water.needsUpdate = true;
   }
   return {
     pipeline, applyIsland,

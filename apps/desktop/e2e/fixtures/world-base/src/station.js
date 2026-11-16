@@ -3,6 +3,7 @@ import { createContext } from '../upstream/sakuragaoka/src/core/ctx.js';
 import { batchStatic } from '../upstream/sakuragaoka/src/core/batch2.js';
 import * as layout from '../upstream/sakuragaoka/src/world/layout.js';
 import { createStationWalker } from './station-view.js';
+import { blendStationGround } from './transition.js';
 
 // Keep the upstream dependency order. Characters and camera-centred petal shaders
 // are deliberately omitted; the shared island supplies its own petal field.
@@ -59,7 +60,7 @@ function clipMaterials(root, bounds) {
 }
 
 export async function createStation({ scene, renderer, camera, offset = [280, 8, 900], rotationY = 0,
-  sunDir = new THREE.Vector3(...layout.SUN_DIR).normalize(), onProgress = () => {} }) {
+  sunDir = new THREE.Vector3(...layout.SUN_DIR).normalize(), groundMaterial, onProgress = () => {} }) {
   const root = new THREE.Group();
   root.name = 'Sakuragaoka';
   const localCamera = new THREE.PerspectiveCamera();
@@ -84,6 +85,10 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   }
   const clipStart = performance.now();
   const removedMeshes = trimOutside(root, layout.WORLD.play);
+  const groundBlend = blendStationGround({ root, terrainMaterial: groundMaterial, bounds: layout.WORLD.play });
+  // These textures belong to the island; the station owns only the blend mesh
+  // and material. Disposing the district must not invalidate island rendering.
+  const islandTextures = new Set(Object.values(groundMaterial.uniforms).map(uniform => uniform.value).filter(value => value?.isTexture));
   const trimMs = Math.round(performance.now() - clipStart);
   const batchStart = performance.now();
   const batch = batchStatic(ctx.staticRoot, { mat: ctx.mat });
@@ -102,7 +107,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   const walkers = new Set();
   const station = {
     root, ctx, physics: ctx.physics, camera, localCamera, bounds, moduleStats, batch,
-    timings: { trimMs, batchMs }, removedMeshes,
+    timings: { trimMs, batchMs }, removedMeshes, groundBlend,
     toLocal(position, target = new THREE.Vector3()) { return target.copy(position).applyMatrix4(inverse); },
     toWorld(position, target = new THREE.Vector3()) { return target.copy(position).applyMatrix4(root.matrixWorld); },
     cameraToWorld(position, quaternion) {
@@ -154,7 +159,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
         material.dispose();
       }
       for (const geometry of geometries) geometry.dispose();
-      for (const texture of textures) texture.dispose();
+      for (const texture of textures) if (!islandTextures.has(texture)) texture.dispose();
     },
   };
   station.spawn = station.toWorld(new THREE.Vector3(layout.HERO.x, ctx.physics.groundHeight(layout.HERO.x, layout.HERO.z), layout.HERO.z));
