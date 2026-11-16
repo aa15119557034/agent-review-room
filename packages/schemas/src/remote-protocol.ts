@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { CommitSha, IsoTimestamp, RunId, Sha256Hex, SnapshotId } from "./common";
+import { CommitSha, IsoTimestamp, RunId, Sha256Hex, SnapshotId, prefixedId } from "./common";
 import { PermissionDecision, PermissionRequest } from "./permission";
 import {
   AttachmentImageSlot,
@@ -18,6 +18,7 @@ import {
  *   POST /v1/runs                                 StartRunRequest → StartRunResponse（幂等，按 runId）
  *   GET  /v1/runs/:runId/events?after=<seq>       NDJSON 流：先补发 seq > after 的事件，再推实时事件
  *   POST /v1/runs/:runId/cancel                   CancelRunRequest
+ *   GET  /v1/runs/:runId/proof                    RemoteRunProof（需 health.capabilities.runFence）
  *   POST /v1/runs/:runId/permissions/:requestId   PermissionDecision（Phase 1，骨架返回 501）
  *   GET  /v1/runs/:runId/artifacts/:sha256        C-42b：取回 image Run 画出来的图（原始字节）
  *   GET  /v1/profiles/:profileId/quota            C-42b：这个 profile 的订阅额度（RemoteProfileQuota）
@@ -26,12 +27,27 @@ import {
  * 1. Payload 里不允许出现命令。只能选节点本地配置好的 profileId。（.strict() 拒绝多余字段）
  * 2. 节点执行前必须重新计算 sha256(content)，与 contentHash 不一致就拒绝。
  * 3. 事件流就是租约：没有任何订阅者连着超过 leaseMs，节点自行终止该 run。
- *    必须满足 leaseMs < Orchestrator 的 reconnectGraceMs，保证"远端先停，本地后判失败"。
+ *    必须满足 leaseMs < Orchestrator 的 reconnectGraceMs，给节点先发起终止的时间；
+ *    租约到期、网络宽限期结束或 terminal 本身都不是进程已停止的证明。
  * 4. heartbeat 不带 seq、不进缓冲；只用来检测连接是否还活着。
  */
 export const REMOTE_PROTOCOL_VERSION = 1 as const;
 
 export const ProfileId = z.string().regex(/^[a-z0-9][a-z0-9-]{0,63}$/);
+
+/** 持久 Run 账本的身份；重建账本必须换身份，不能冒充旧账本证明旧 Run 已停。 */
+export const RemoteRunLedgerId = prefixedId("rled");
+export type RemoteRunLedgerId = z.infer<typeof RemoteRunLedgerId>;
+
+/**
+ * 只有满足 docs/design/Run-fence-v1.md 的持久化、单 owner 和完整性要求才可上报。
+ * 未上报 = 不支持；客户端不能为旧节点补默认能力或降级重发受保护的世界请求。
+ */
+export const RemoteRunFenceCapability = z.object({
+  version: z.literal(1),
+  ledgerId: RemoteRunLedgerId,
+}).strict();
+export type RemoteRunFenceCapability = z.infer<typeof RemoteRunFenceCapability>;
 
 // ---------------------------------------------------------------- 模型选择（C-40，阶段 1B）
 
@@ -222,6 +238,12 @@ export const StartRunRequest = z
     protocol: z.literal(REMOTE_PROTOCOL_VERSION),
     runId: RunId,
     profileId: ProfileId,
+    /**
+     * 先从 health.capabilities.runFence 协商取得。与当前账本不同则 409 run_ledger_mismatch，不能准入。
+     * 最终准入处（所有 await 校验之后）再次按同 RunId 原子核对 fence；持久 admitted 后才可 spawn。
+     * 旧请求可省略；要求持久 fence 的调用方不得在失败后去掉此字段重试。
+     */
+    expectedLedgerId: RemoteRunLedgerId.optional(),
     snapshot: z
       .object({
         id: SnapshotId,
@@ -370,7 +392,15 @@ export const RemoteEvent = z.discriminatedUnion("type", [
   z.object({ type: z.literal("heartbeat"), ts: IsoTimestamp, lastSeq: z.number().int().min(-1) }),
 ]);
 
-export const CancelRunRequest = z.object({ reason: z.string().max(500).optional() }).strict();
+/**
+ * 支持 runFence 的节点对未知 ID 也须先持久禁止创建，才可响应 202 {ok:true}。
+ * expectedLedgerId 不匹配则 409 且不修改新账本。202 只是取消已接收，停止证据另查 proof。
+ * 已 admitted 的 Run 不能因重启后 PID/对象缺席变成 never_started；同 ID 永不再次启动。
+ */
+export const CancelRunRequest = z.object({
+  reason: z.string().max(500).optional(),
+  expectedLedgerId: RemoteRunLedgerId.optional(),
+}).strict();
 
 export const PermissionDecisionRequest = PermissionDecision;
 
@@ -408,6 +438,8 @@ export const NodeHealth = z.object({
       imageProfiles: z.array(ProfileId).max(16).optional(),
       /** C-42b：提供 GET /v1/profiles/:profileId/quota */
       quota: z.boolean().optional(),
+      /** 可协商的持久准入 fence 与按 RunId 查询证据；不改变已有 runs 列表。 */
+      runFence: RemoteRunFenceCapability.optional(),
     })
     .optional(),
 }).refine(
@@ -423,6 +455,31 @@ export const RemoteRunSummary = z.object({
   subscribers: z.number().int().nonnegative(),
 });
 
+const runProofIdentity = { runId: RunId, ledgerId: RemoteRunLedgerId };
+
+/**
+ * GET /v1/runs/:runId/proof：合法 ID 返回 200，no-store。读失败/损坏不可伪装成 missing。
+ * 调用方须核对 runId 和派发前持久绑定的 ledgerId；新账本不能解除旧账本的屏障。
+ * 输出事件 TTL 不得清理准入/fence 记录；同一账本仅有一个合法执行 owner。
+ */
+export const RemoteRunProof = z.discriminatedUnion("status", [
+  /** 完整账本没有这个 ID；POST 仍可能在途中，不能据此放行。 */
+  z.object({ ...runProofIdentity, status: z.literal("missing") }).strict(),
+  /** 已 admitted，但没有肯定停止证据；含运行、取消未确认、节点崩溃和证据写入失败。 */
+  z.object({ ...runProofIdentity, status: z.literal("unconfirmed") }).strict(),
+  /**
+   * 已持久禁止同 ID 启动，并肯定从未启动目标执行：取消先于准入，或原 owner 确知没有调用
+   * spawn / 得到明确 spawn 失败。未知异常、非零 exit code 或重启后 PID 缺席均不算此证据。
+   */
+  z.object({ ...runProofIdentity, status: z.literal("fenced_never_started") }).strict(),
+  /**
+   * 已持久禁止重建，并记录直接受管 ChildProcess 的 close。
+   * 只证明该进程关闭，不保证所有后代/脱离管道的任务停止；不自动代表可放行前台。
+   */
+  z.object({ ...runProofIdentity, status: z.literal("closed_process") }).strict(),
+]);
+export type RemoteRunProof = z.infer<typeof RemoteRunProof>;
+
 export const RemoteErrorCode = z.enum([
   "unauthorized",
   "bad_request",
@@ -434,6 +491,8 @@ export const RemoteErrorCode = z.enum([
   "hash_mismatch",
   "commit_mismatch",
   "run_id_conflict",
+  "run_ledger_mismatch", // 409：expectedLedgerId 与节点当前持久账本不符，不采取替代操作
+  "run_fenced", // 409：该 RunId 已永久消耗，不能创建替代执行
   "node_busy",
   "payload_too_large",
   "not_implemented",
