@@ -1,0 +1,410 @@
+{
+  "version": 1,
+  "preparedRoot": ".local/city",
+  "notes": "Pinned original bytes only. Binary assets remain local and are not committed. Prepare with scripts/prepare-city.cjs; no renderer or asset conversion is involved.",
+  "projects": {
+    "downtown": {
+      "title": "Downtown City MegaKit Standard",
+      "author": "Quaternius",
+      "source": "https://quaternius.itch.io/downtown-city-megakit",
+      "authorPage": "https://quaternius.com/packs/downtowncitymegakit.html",
+      "license": {
+        "id": "CC0-1.0",
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "evidence": "Original package License_Standard.txt, copied unchanged to downtown/License_Standard.txt"
+      },
+      "archive": {
+        "name": "Downtown City MegaKit[Standard].zip",
+        "bytes": 234753092,
+        "sha256": "5b1a945576d54cdbb4ccc9c3d52711e6d530da74c74c586407ecc28b165335da"
+      },
+      "acquisition": {
+        "mode": "Official free Standard download, then explicit local extracted-directory input; no automated download in prepare-city.cjs.",
+        "steps": [
+          "Open the author itch page, choose Download Now, then No thanks, just take me to the downloads; choose Standard, not the paid Source archive.",
+          "The normal anonymous flow observed on 2026-11-17 reads the purchase-page CSRF token/cookies, POSTs /downtown-city-megakit/download_url, then follows the returned download page.",
+          "The page identifies Standard upload 17615373. Its download button POSTs /downtown-city-megakit/file/17615373?source=game_download with that session CSRF token and returns an expiring CDN URL. No account, payment, or credentials were used.",
+          "Verify the fixed archive SHA-256, extract it, then pass --downtown=<extracted directory>. Keep the original bytes; do not rename image references or substitute the Source edition."
+        ],
+        "downloadUrlEndpoint": "https://quaternius.itch.io/downtown-city-megakit/download_url",
+        "standardFileEndpoint": "https://quaternius.itch.io/downtown-city-megakit/file/17615373?source=game_download"
+      },
+      "sourceType": "directory",
+      "entryPoints": [
+        {
+          "path": "downtown/Building_Large_2.gltf",
+          "sizeXYZ": [
+            20.64410972595215,
+            28.000038146972656,
+            16.644596099853516
+          ],
+          "boundsMin": [
+            -9.322053909301758,
+            0,
+            -16.322298049926758
+          ],
+          "boundsMax": [
+            11.32205581665039,
+            28.000038146972656,
+            0.3222980499267578
+          ],
+          "triangles": 45122,
+          "primitives": 12,
+          "materials": 12
+        },
+        {
+          "path": "downtown/Building_Medium_2_001.gltf",
+          "sizeXYZ": [
+            15.055683135986328,
+            25.00865962356329,
+            13.055681586265564
+          ],
+          "boundsMin": [
+            -7.52787971496582,
+            -0.01027514785528183,
+            -12.487659454345703
+          ],
+          "boundsMax": [
+            7.527803421020508,
+            24.998384475708008,
+            0.5680221319198608
+          ],
+          "triangles": 25612,
+          "primitives": 12,
+          "materials": 12
+        },
+        {
+          "path": "downtown/Building_Small_1.gltf",
+          "sizeXYZ": [
+            12.460000991821289,
+            17.025969891808927,
+            14.536008358001709
+          ],
+          "boundsMin": [
+            -7.2300004959106445,
+            -0.01194706466048956,
+            -12.230000495910645
+          ],
+          "boundsMax": [
+            5.2300004959106445,
+            17.014022827148438,
+            2.3060078620910645
+          ],
+          "triangles": 18344,
+          "primitives": 13,
+          "materials": 13
+        }
+      ],
+      "sharedTextureCost": {
+        "imageFiles": 19,
+        "compressedBytes": 42305471,
+        "rgba8WithMipsEstimateBytes": 328553813.3333334,
+        "note": "CPU estimate with cross-model image sharing, not measured VRAM. All textureInfo UV channels are 0; preserve sampler, colorSpace and transforms when sharing Texture objects."
+      },
+      "adaptationNotes": [
+        "Source glTF carries red COLOR_0 values on Large/Medium, likely original wear controls. Direct diffuse vertex-color multiplication changes facade colors; any adapter override must be explicit and visually checked.",
+        "All materials are double-sided, with BLEND glass. Standard has static interior textures but not the paid Source interior shader. No LOD or dedicated collision is supplied."
+      ],
+      "files": [
+        {
+          "sourcePath": "License_Standard.txt",
+          "destination": "downtown/License_Standard.txt",
+          "bytes": 847,
+          "sha256": "afac5819301671301c41e90402d26e4ade5e459ad58fdf77f142147410862f1f"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/Building_Large_2.gltf",
+          "destination": "downtown/Building_Large_2.gltf",
+          "bytes": 22880,
+          "sha256": "903209b63ad4e151190dce32ccab47a2c0dc256c09d999835984a0459ef2bd91"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/Building_Large_2.bin",
+          "destination": "downtown/Building_Large_2.bin",
+          "bytes": 3345228,
+          "sha256": "e25636464da7b96a346f89314e498099ce33d3b0e9b1f8d9cba3eee94b63fac3"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/Building_Medium_2_001.gltf",
+          "destination": "downtown/Building_Medium_2_001.gltf",
+          "bytes": 25244,
+          "sha256": "423f4b3e709ef5633eac4a94a8a1ce25750aa42fe34e3b983d7aac39846f9a1c"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/Building_Medium_2_001.bin",
+          "destination": "downtown/Building_Medium_2_001.bin",
+          "bytes": 2443288,
+          "sha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/Building_Small_1.gltf",
+          "destination": "downtown/Building_Small_1.gltf",
+          "bytes": 27435,
+          "sha256": "3c864724fffd016ca440191bca169d6ba486e14617bb3cafa09ddbac7532f3d7"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/Building_Small_1.bin",
+          "destination": "downtown/Building_Small_1.bin",
+          "bytes": 1556100,
+          "sha256": "a5fb691fe7ab0d93d5d47eef51af576f2d65bd78103c92c9e714215b26d679a2"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/T_MarbleFloor_Normal.png",
+          "destination": "downtown/T_MarbleFloor_Normal.png",
+          "bytes": 1382828,
+          "sha256": "52ba88ccfd35f072a51d11c31cdfb6e6ea8cde641ab4521115994d2c3216b451"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/T_MarbleFloor_BaseColor.png",
+          "destination": "downtown/T_MarbleFloor_BaseColor.png",
+          "bytes": 1095714,
+          "sha256": "a01f57e2976d3af21a59f1ae18e12be84d2acae7ba3e93d184d2874224f737c0"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/T_MarbleFloor_ORM.png",
+          "destination": "downtown/T_MarbleFloor_ORM.png",
+          "bytes": 567860,
+          "sha256": "95008e79cdba191b525afce2a95452fe28934efd5546d35919c24ea6cbcc0c22"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/T_Trim_Normal.png",
+          "destination": "downtown/T_Trim_Normal.png",
+          "bytes": 4104873,
+          "sha256": "95fa43093067956fa6e206408f3e2f2302c18c7453b75a02f6e29fe57e2cd041"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/T_Trim_BaseColor.png",
+          "destination": "downtown/T_Trim_BaseColor.png",
+          "bytes": 4421593,
+          "sha256": "c3334902f8315783477eec63e2d462f8cefedf9c55b41ef452d8374b5603f08e"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/T_Trim_ORM.png",
+          "destination": "downtown/T_Trim_ORM.png",
+          "bytes": 2538116,
+          "sha256": "52449f201ad3cf606a2eb2972702b10051c369cdc67b6fadd109502b4735d7fb"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/T_MetalConcrete_Normal.png",
+          "destination": "downtown/T_MetalConcrete_Normal.png",
+          "bytes": 4815924,
+          "sha256": "93f95a96c32b27820c590301f00f5ba1d23d4054046d92bf6d58adbf23007419"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/T_MetalConcrete_BaseColor.png",
+          "destination": "downtown/T_MetalConcrete_BaseColor.png",
+          "bytes": 1488628,
+          "sha256": "adae656323f15cd2c3f1a6453685cb1ca104b700dc114076137cb3a4c253d3d0"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/T_MetalConcrete_ORM.png",
+          "destination": "downtown/T_MetalConcrete_ORM.png",
+          "bytes": 1857257,
+          "sha256": "c4d35f684d20c47f199bea2fbe098d60a000fa7d1489df0f00a4c3c1ace4fcb7"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/T_RedBrick_Normal.png",
+          "destination": "downtown/T_RedBrick_Normal.png",
+          "bytes": 7273659,
+          "sha256": "147f14d7f665d2598d0d796bd02a227f6b8b0fbc790c3e0737b1b90128101c93"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/T_RedBrick_BaseColor.png",
+          "destination": "downtown/T_RedBrick_BaseColor.png",
+          "bytes": 1732063,
+          "sha256": "ea85bfc02c4c807265a85f7ab50656f7eaa19f6567301d362d78c1d06da161ab"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/T_RedBrick_ORM.png",
+          "destination": "downtown/T_RedBrick_ORM.png",
+          "bytes": 2346959,
+          "sha256": "dfba8a1da5ca7dcff1b707a051e82717e93013c2ad36c93b7a41b0f331414b70"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/T_lit_interior_2.png",
+          "destination": "downtown/T_lit_interior_2.png",
+          "bytes": 316427,
+          "sha256": "83c3f1b2ad84b65aab88d5744e6997730a04140e41d230e2cecfe9bfb2ae0559"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/T_lit_interior_1.png",
+          "destination": "downtown/T_lit_interior_1.png",
+          "bytes": 395226,
+          "sha256": "d20aa9f249a506eb145d76e264e59667cec4bef66c07e4baace6583a28cc3be4"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/T_dark_interior.png",
+          "destination": "downtown/T_dark_interior.png",
+          "bytes": 325090,
+          "sha256": "59e5c77292953d93c3cd239c2f06d4e80e393761195da66d886d3887ad59f1dc"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/T_Concrete_Normal.png",
+          "destination": "downtown/T_Concrete_Normal.png",
+          "bytes": 4416770,
+          "sha256": "e4de917d2506bff4b17d44380a136336cf16e5ea828edfdb8981f4f27e30a86a"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/T_Concrete_Asphalt_BaseColor.png",
+          "destination": "downtown/T_Concrete_Asphalt_BaseColor.png",
+          "bytes": 988093,
+          "sha256": "a37ca932c4287a67d9cf7f78997b5cc4b026ca7319a4c8454132d076307ca5cf"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/T_Concrete_ORM.png",
+          "destination": "downtown/T_Concrete_ORM.png",
+          "bytes": 896797,
+          "sha256": "be17636c061a7c6c4f4bf23c3887a3f894da0e88394e233926e816c735a49244"
+        },
+        {
+          "sourcePath": "Exports/glTF (Godot)/T_Concrete_BaseColor.png",
+          "destination": "downtown/T_Concrete_BaseColor.png",
+          "bytes": 1341594,
+          "sha256": "697276f680b34d6321e6b06da208a0fc3516db372d4a7de543fc2c33e895f482"
+        }
+      ]
+    },
+    "highrise": {
+      "title": "High-Rise Building #01 (official Fab-converted GLB)",
+      "author": "mirzaev3d",
+      "source": "https://www.fab.com/listings/ca10b839-7882-42f8-ab60-496610708a6c",
+      "license": {
+        "id": "CC-BY-4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/",
+        "evidence": "Official author listing licenses.name=CC-BY and slug=cc-by; Fab EULA CC-BY section links CC BY 4.0.",
+        "platformLicensePage": "https://www.fab.com/eula?lang=en",
+        "attribution": "High-Rise Building #01 by mirzaev3d, CC BY 4.0. Source: https://www.fab.com/listings/ca10b839-7882-42f8-ab60-496610708a6c . Original GLB bytes preserved; runtime placement/material changes must be identified in scene credits."
+      },
+      "acquisition": {
+        "mode": "Official free Fab Converted Files GLB, then explicit local file input; no automated download in prepare-city.cjs.",
+        "listingId": "ca10b839-7882-42f8-ab60-496610708a6c",
+        "fileId": "9d36501f-6860-42cf-bc23-e7961fd03a84",
+        "formatsEndpoint": "https://www.fab.com/i/listings/ca10b839-7882-42f8-ab60-496610708a6c/asset-formats/converted-files",
+        "steps": [
+          "Use the official author listing and its Converted Files entry high_rise_building.glb. This is not the original OBJ source ZIP.",
+          "The public converted-files metadata identifies the pinned file ID; the official download-info request returned HTTP 200 anonymously in the acquisition audit. Do not reuse or commit expiring signed URLs, and do not bypass a future login or payment requirement.",
+          "Pass the downloaded original file as --highrise=<GLB path>; the preparation script checks the fixed byte count and SHA-256 before copying."
+        ],
+        "downloadInfoEndpoint": "https://www.fab.com/i/listings/ca10b839-7882-42f8-ab60-496610708a6c/asset-formats/converted-files/files/9d36501f-6860-42cf-bc23-e7961fd03a84/download-info"
+      },
+      "sourceType": "file",
+      "entryPoints": [
+        {
+          "path": "highrise/high_rise_building.glb",
+          "sizeXYZ": [
+            116.48381042480469,
+            105.40562285482883,
+            65.92617797851562
+          ],
+          "triangles": 740180,
+          "primitives": 36,
+          "materials": 6
+        }
+      ],
+      "adaptationNotes": [
+        "Original converted GLB audit before adapter restoration: 36 primitive draws per instance before batching; all 6 materials doubleSided; no LOD extension. _GlassReal has no alpha/transmission and no baseColorFactor, so original converted glass appearance needs later visual verification. No GPU rendering performed.",
+        "No external image or buffer files: the official converted GLB embeds its resources."
+      ],
+      "files": [
+        {
+          "sourcePath": "high_rise_building.glb",
+          "destination": "highrise/high_rise_building.glb",
+          "bytes": 31791824,
+          "sha256": "9102f1255aa4303e3424b6985decca0d74fa31152186f08a9ffd4ee078225b40"
+        }
+      ],
+      "originalObj": {
+        "author": "mirzaev3d",
+        "license": "CC-BY-4.0",
+        "source": "https://www.fab.com/listings/ca10b839-7882-42f8-ab60-496610708a6c",
+        "downloadInfoEndpoint": "https://www.fab.com/i/listings/ca10b839-7882-42f8-ab60-496610708a6c/asset-formats/obj/files/5b0ec506-d3b6-4048-a689-ba5cf4cacf10/download-info",
+        "fileId": "5b0ec506-d3b6-4048-a689-ba5cf4cacf10",
+        "archive": {
+          "name": "source.zip",
+          "bytes": 45285929,
+          "sha256": "2980676b2e21e30d5a28e8e2585c788616a555af733ea22444daaa573cb6bf29",
+          "runtimeRequired": false
+        },
+        "entries": [
+          {
+            "name": "High-Rise Building.mtl",
+            "size": 1218,
+            "crc32": "949ffeed"
+          },
+          {
+            "name": "High-Rise Building.obj",
+            "size": 45284449,
+            "crc32": "c796a718"
+          }
+        ],
+        "materialEvidence": {
+          "originalName": "High-Rise Building.mtl",
+          "path": "upstream/mirzaev-highrise/High-Rise-Building.mtl",
+          "bytes": 1218,
+          "sha256": "2bbc3049156a79251f9ced4655e5fcb8f45096be565d9029a3c857e8bb3aa399",
+          "modified": false,
+          "runtimeRequired": false
+        },
+        "limitations": "OBJ package contains only OBJ and MTL. Ceramic material references absolute C:/ JPEG paths absent from ZIP. MTL glass is itself opaque d1, Ni1 and illum2; do not invent transmission/IOR1.5 as author values. Kd/Ks/Ns provide source evidence, not exact Blender node graph or guaranteed screenshot appearance."
+      },
+      "materialRestoration": {
+        "adapter": "src/city.js:restoreTowerMaterials",
+        "source": "upstream/mirzaev-highrise/High-Rise-Building.mtl",
+        "sourceSha256": "2bbc3049156a79251f9ced4655e5fcb8f45096be565d9029a3c857e8bb3aa399",
+        "method": "MeshPhongMaterial using the author MTL Kd/Ks/Ns values. Kd and Ks are converted from sRGB to Three working color space, following Three r187 MTLLoader; opacity remains 1. No inferred transparency or IOR is introduced.",
+        "loaderConvention": "https://raw.githubusercontent.com/mrdoob/three.js/r187/examples/jsm/loaders/MTLLoader.js",
+        "parameters": {
+          "AO": {
+            "Kd": [
+              0.8,
+              0.8,
+              0.8
+            ],
+            "Ks": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "Ns": 250,
+            "Ni": 1.45,
+            "d": 1,
+            "illum": 3
+          },
+          "_GlassReal": {
+            "Kd": [
+              0.8,
+              0.8,
+              0.8
+            ],
+            "Ks": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "Ns": 360,
+            "Ni": 1,
+            "d": 1,
+            "illum": 2
+          },
+          "_WhiteGrey": {
+            "Kd": [
+              0.196078,
+              0.196078,
+              0.196078
+            ],
+            "Ks": [
+              0.752941,
+              0.752941,
+              0.752941
+            ],
+            "Ns": 200,
+            "Ni": 1,
+            "d": 1,
+            "illum": 3
+          }
+        },
+        "limitations": "Ni and illum are recorded as source facts, not implemented as a physical transmission/IOR model. This restores documented MTL parameters, not the missing Blender node graph or a guaranteed match to the author preview. The 45 MB OBJ package is provenance only and is not required by prepare-city or runtime loading."
+      }
+    }
+  }
+}

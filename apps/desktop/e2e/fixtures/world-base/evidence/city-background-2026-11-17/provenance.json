@@ -1,0 +1,362 @@
+{
+  "sourceCommit": "76a000dbded2ed581f41eae5446b37137a1aafe4",
+  "verifiedSceneFiles": 198,
+  "assetManifest": "../../city-assets.json",
+  "method": "Preserve original capture and report bytes; summarize report fields without changing pass/fail, and retain rejected trial sources and measurements. No runtime profiles or model binaries copied.",
+  "artifacts": [
+    {
+      "file": "01-station-street.jpg",
+      "bytes": 118676,
+      "sha256": "12de9d5f87f8a99b24ae92805dec8deb2ca061d056d12f186960e4d5c62a51bf"
+    },
+    {
+      "file": "02-station-port.jpg",
+      "bytes": 115974,
+      "sha256": "f55e3cdecb499f15d7187a956ade2edf6b23ad34236be78902512f3df2043e77"
+    },
+    {
+      "file": "03-island-aerial.jpg",
+      "bytes": 55410,
+      "sha256": "a2a1af49ab3a2582a6150fb63f07d87f63a9404a393764abac4178ba7482e6cb"
+    },
+    {
+      "file": "04-shop-interior.jpg",
+      "bytes": 103307,
+      "sha256": "6403ecbbafe06f2ddd775043119d2af0e8353f8e84f08757a546b1d7a377548d"
+    },
+    {
+      "file": "16-city-context.jpg",
+      "bytes": 108360,
+      "sha256": "f38f15ba36b9a168b561a2cd7039751543a595e80111b25584ee99f9180798a1"
+    },
+    {
+      "file": "17-city-grounding.jpg",
+      "bytes": 160117,
+      "sha256": "e4bf968873a376e2a4c31fec996cb0a8524d507138c5a36d1807015ffc666748"
+    },
+    {
+      "file": "walking-third.jpg",
+      "bytes": 117243,
+      "sha256": "6ec18b52007f4fd5793e4051f14f67a8823cafb4878c964fbd7881dd2c0046e2"
+    },
+    {
+      "file": "walking-first.jpg",
+      "bytes": 110466,
+      "sha256": "51e5829613e6ebe2843da4e8938a442ddaa7f167d06c5328bfae2d0f70404fde"
+    },
+    {
+      "file": "source-manifest.json",
+      "bytes": 23973,
+      "sha256": "ddca5112d364c8b081aab8bc363ff7801171739ed5b2c82aba3423a09c09824b"
+    },
+    {
+      "file": "frame-samples-island-aerial.json",
+      "bytes": 11312,
+      "sha256": "61eee5419ecfcc3593b59ec231153b520ed0b57cdae2951a6bc068d3e5723633"
+    },
+    {
+      "file": "frame-samples-shop-interior.json",
+      "bytes": 11140,
+      "sha256": "8bf787ddc54f92c9476374673b845110b3b9ce04a35dda2c345f39c964b1598a"
+    },
+    {
+      "file": "frame-samples-station-port.json",
+      "bytes": 11115,
+      "sha256": "2d97d0e13232856ff8291ffb360c2222da970271f6a866036c81d965eb62b447"
+    },
+    {
+      "file": "frame-samples-station-street.json",
+      "bytes": 11448,
+      "sha256": "c9feed462313407fadbff1f7c46232f34646bfa712a615eab407e9bdfc2e3261"
+    },
+    {
+      "file": "frame-samples-walking-first.json",
+      "bytes": 10504,
+      "sha256": "0abe5254e642577f92d6ad5dc0c7abe9c116fb3b9a38b4c2d77de9ea4d984362"
+    },
+    {
+      "file": "frame-samples-walking-third.json",
+      "bytes": 10761,
+      "sha256": "2c061cec151af8508bdb83e9ff8eca442a1b6c0feb0c72d47fcbfe120a74d430"
+    },
+    {
+      "file": "frame-samples.json",
+      "bytes": 55417,
+      "sha256": "30791c16356c56969c78ee5ef97cb45ca29aa4122b6cef8d5b6d2ab4faffaa58"
+    },
+    {
+      "file": "current-measurements.json",
+      "bytes": 132910,
+      "sha256": "a88524a77cf958683cf22cd53a1af10b8c10607a5682d39fb3af608d34cba270"
+    },
+    {
+      "file": "history/v1-measurements.json",
+      "bytes": 48294,
+      "sha256": "d77caba8a4c37328055766c6e9701ccad8e22c2bc30a211524cc327caa4c357a"
+    },
+    {
+      "file": "history/v1-source-manifest.json",
+      "bytes": 23973,
+      "sha256": "8d32273ab94c8145f1f99663353fb72568490f891278766f2101e69bfc3a026f"
+    },
+    {
+      "file": "history/v1-source/city-assets.json",
+      "bytes": 14546,
+      "sha256": "f1ef13e7803f5afda2bd7a4c558c8bb447beedd8ab4831bc0f38326e24e6ffc0"
+    },
+    {
+      "file": "history/v1-source/index.html",
+      "bytes": 2042,
+      "sha256": "7a5a18b21074bbac0fca402ea417a7e2874492b0293b69e93159282505fb9ae8"
+    },
+    {
+      "file": "history/v1-source/scripts/baseline.cjs",
+      "bytes": 11018,
+      "sha256": "39bd75c2984b8fed1b655130789bcd4cb524aab257c2fbd5f55bc8916e0c5cdf"
+    },
+    {
+      "file": "history/v1-source/scripts/prepare-city.cjs",
+      "bytes": 5109,
+      "sha256": "172d880ad7b8c45d0b1897719d42801e29413aac19a95f7a3ef81c1910a296ab"
+    },
+    {
+      "file": "history/v1-source/scripts/preview-host.cjs",
+      "bytes": 35376,
+      "sha256": "b9f6381fbebd1629bc6461239e143f408d16c3016ed0076094721ee102c41bd2"
+    },
+    {
+      "file": "history/v1-source/snapshot.json",
+      "bytes": 1260,
+      "sha256": "e198ee9acf20a687b762d019b8276a9fb7661779fb64571413d5105c7b692340"
+    },
+    {
+      "file": "history/v1-source/src/city.js",
+      "bytes": 8790,
+      "sha256": "dd0a34d5df93b5c670c76686951b10700d0f3aa30970afa4d736c9e1795a79f9"
+    },
+    {
+      "file": "history/v1-source/src/main.js",
+      "bytes": 8452,
+      "sha256": "07e0c18df751a714c1adff07ebee94c3b387ee7a51ea42642c6517b18e9776c3"
+    },
+    {
+      "file": "history/v1-source/src/style.css",
+      "bytes": 2077,
+      "sha256": "0ca6b83aa2c0e9653e45e02280a9e73abce47277ea9b47e21a0aa1f7e580704d"
+    },
+    {
+      "file": "history/v2-measurements.json",
+      "bytes": 89191,
+      "sha256": "f67c64c3a6df80bd3ab647db840895c420860062f582a6db434c0f140a2fd610"
+    },
+    {
+      "file": "history/v2-source-manifest.json",
+      "bytes": 23973,
+      "sha256": "cca2b562f26b417f8485048aec8f6ace2450843bc5fa67d0437dc3904dba0947"
+    },
+    {
+      "file": "history/v2-source/city-assets.json",
+      "bytes": 18142,
+      "sha256": "70125bf6a2bacdccba14451638386a6504050b51fde663c929ffa658629cae82"
+    },
+    {
+      "file": "history/v2-source/index.html",
+      "bytes": 2042,
+      "sha256": "7a5a18b21074bbac0fca402ea417a7e2874492b0293b69e93159282505fb9ae8"
+    },
+    {
+      "file": "history/v2-source/scripts/baseline.cjs",
+      "bytes": 11018,
+      "sha256": "39bd75c2984b8fed1b655130789bcd4cb524aab257c2fbd5f55bc8916e0c5cdf"
+    },
+    {
+      "file": "history/v2-source/scripts/prepare-city.cjs",
+      "bytes": 5109,
+      "sha256": "172d880ad7b8c45d0b1897719d42801e29413aac19a95f7a3ef81c1910a296ab"
+    },
+    {
+      "file": "history/v2-source/scripts/preview-host.cjs",
+      "bytes": 35460,
+      "sha256": "1453f31a9b0c8e4867bfed17bc6288516464441d66dd38f0ed91198448eac08e"
+    },
+    {
+      "file": "history/v2-source/snapshot.json",
+      "bytes": 1388,
+      "sha256": "6441cfde6658148d9d658308756af140ce724565fe82a5a5d74e3cd0614e465d"
+    },
+    {
+      "file": "history/v2-source/src/city.js",
+      "bytes": 15150,
+      "sha256": "6d7696f9584515e3a00f6eb4ce1b9f45174d2c87657f2cbef361d7f4b683e22f"
+    },
+    {
+      "file": "history/v2-source/src/main.js",
+      "bytes": 8452,
+      "sha256": "07e0c18df751a714c1adff07ebee94c3b387ee7a51ea42642c6517b18e9776c3"
+    },
+    {
+      "file": "history/v2-source/src/skyline.js",
+      "bytes": 19181,
+      "sha256": "1dfaa932ec4985b87147b0dcd0fd8abb8cf86e91f2440c527c552b107040cbcd"
+    },
+    {
+      "file": "history/v2-source/src/style.css",
+      "bytes": 2077,
+      "sha256": "0ca6b83aa2c0e9653e45e02280a9e73abce47277ea9b47e21a0aa1f7e580704d"
+    },
+    {
+      "file": "history/v3-measurements.json",
+      "bytes": 131040,
+      "sha256": "a53f94e25efab4daa219a289bfcdb13765a4fc45ce6d00f810e01e2bb1a031e0"
+    },
+    {
+      "file": "history/v3-source-manifest.json",
+      "bytes": 23973,
+      "sha256": "8dbbc0836e098c9fff67a434565967048c91b0251527060743f52385f4e18445"
+    },
+    {
+      "file": "history/v3-source/city-assets.json",
+      "bytes": 18142,
+      "sha256": "70125bf6a2bacdccba14451638386a6504050b51fde663c929ffa658629cae82"
+    },
+    {
+      "file": "history/v3-source/index.html",
+      "bytes": 2042,
+      "sha256": "7a5a18b21074bbac0fca402ea417a7e2874492b0293b69e93159282505fb9ae8"
+    },
+    {
+      "file": "history/v3-source/scripts/baseline.cjs",
+      "bytes": 11018,
+      "sha256": "39bd75c2984b8fed1b655130789bcd4cb524aab257c2fbd5f55bc8916e0c5cdf"
+    },
+    {
+      "file": "history/v3-source/scripts/prepare-city.cjs",
+      "bytes": 5109,
+      "sha256": "172d880ad7b8c45d0b1897719d42801e29413aac19a95f7a3ef81c1910a296ab"
+    },
+    {
+      "file": "history/v3-source/scripts/preview-host.cjs",
+      "bytes": 35617,
+      "sha256": "5ef002665dc9f5d63b4dcac50291dcb9a7e63b11eb2222f3630b0b316011a084"
+    },
+    {
+      "file": "history/v3-source/snapshot.json",
+      "bytes": 1388,
+      "sha256": "aa14bbb10baf904a4eb1813bb7878b3d19750787e7582235add60e4977c970a1"
+    },
+    {
+      "file": "history/v3-source/src/city.js",
+      "bytes": 15156,
+      "sha256": "6dcded5dd25537af8001b0c5c28a7933fdbe63de466bb0250ee4e5dc04989f72"
+    },
+    {
+      "file": "history/v3-source/src/main.js",
+      "bytes": 8452,
+      "sha256": "07e0c18df751a714c1adff07ebee94c3b387ee7a51ea42642c6517b18e9776c3"
+    },
+    {
+      "file": "history/v3-source/src/skyline.js",
+      "bytes": 19181,
+      "sha256": "1dfaa932ec4985b87147b0dcd0fd8abb8cf86e91f2440c527c552b107040cbcd"
+    },
+    {
+      "file": "history/v3-source/src/style.css",
+      "bytes": 2077,
+      "sha256": "0ca6b83aa2c0e9653e45e02280a9e73abce47277ea9b47e21a0aa1f7e580704d"
+    },
+    {
+      "file": "history/v1-01-station-street.jpg",
+      "bytes": 118432,
+      "sha256": "16a5dccdc36253a29e586c9d15278e944c1d7208291006b45caec11d014be4c7"
+    },
+    {
+      "file": "history/v1-16-city-context.jpg",
+      "bytes": 111196,
+      "sha256": "f6bff04240ff2617435cbeda419ce9248b0c70354be3b419a960e8af930bba9d"
+    },
+    {
+      "file": "history/v1-17-city-grounding.jpg",
+      "bytes": 144770,
+      "sha256": "45069ce8907e54f208e7047ab166338d73ccc65396fd1a66f9a0a836a1bcb3de"
+    },
+    {
+      "file": "history/v3-frame-samples-island-aerial.json",
+      "bytes": 9959,
+      "sha256": "1740dde69df3d68a270e09acfc4472ca11eebc6d67e019a5acd907cb2a37aecd"
+    },
+    {
+      "file": "history/v3-frame-samples-shop-interior.json",
+      "bytes": 11170,
+      "sha256": "ac141dcff633eb6a0dea7ea3b65873be13e864a2db2221c76b1bf420261f7565"
+    },
+    {
+      "file": "history/v3-frame-samples-station-port.json",
+      "bytes": 11171,
+      "sha256": "b1afe8378df80cb29121e3f344b4d564a986261095d4d6e255bee40b220d8cfc"
+    },
+    {
+      "file": "history/v3-frame-samples-station-street.json",
+      "bytes": 9496,
+      "sha256": "1cb11b31ac7e4e4e98ee458c5da956b7fdf6b09163b3f81c6138c25b9ee5e8be"
+    },
+    {
+      "file": "history/v3-frame-samples-walking-first.json",
+      "bytes": 11330,
+      "sha256": "00f71f708a3dc214aeafba20115ac0388412dd5576006dd7bb8cca5b9c1d318a"
+    },
+    {
+      "file": "history/v3-frame-samples-walking-third.json",
+      "bytes": 10847,
+      "sha256": "b84f61940faa3f988c7104137131207901511a1bd48e16e2898e245683a5ca82"
+    },
+    {
+      "file": "history/v3-frame-samples.json",
+      "bytes": 53289,
+      "sha256": "bf1c64433b00a8246b662215d2bdb0401ce47d37158b3f7a7604af88cafa042c"
+    },
+    {
+      "file": "transport/report.json",
+      "bytes": 175807,
+      "sha256": "7b4227d450a935a55af891f66a0b200726a7a593b703b1516fc34c7c5ec37652"
+    },
+    {
+      "file": "transport/driver-v1-timeout.json",
+      "bytes": 3061,
+      "sha256": "5e6aa21541614be9e611a8e5e421568f4e3ecb0fc981503f1fedf3b898e8f462"
+    },
+    {
+      "file": "transport/driver-v1-source/scripts/baseline.cjs",
+      "bytes": 11018,
+      "sha256": "39bd75c2984b8fed1b655130789bcd4cb524aab257c2fbd5f55bc8916e0c5cdf"
+    },
+    {
+      "file": "transport/driver-v1-source/scripts/diagnose-asset-transport.cjs",
+      "bytes": 15735,
+      "sha256": "60d66b86a0bf4dc1fdad6cdd4b1a24acadb9e5de66182a866b8cfc9d8886dad4"
+    },
+    {
+      "file": "cpu/placement-audit.json",
+      "bytes": 75141,
+      "sha256": "7e5c413d796c613c8552e97ca8a1456ab1c2a48fc17a3792162a642b182b33a6"
+    },
+    {
+      "file": "cpu/stairs-audit.json",
+      "bytes": 15519,
+      "sha256": "43b7f62f99c352ec948e933ddb889fecbbaf6fb662d21f4ed3b198bc074b7fef"
+    },
+    {
+      "file": "cpu/current-placement-audit.json",
+      "bytes": 11085,
+      "sha256": "3710abb751c7ee15ed2f703fe17c3f9d5874c2469d5d280d1dbe28b9e2107fce"
+    }
+  ],
+  "referencedInputs": [
+    {
+      "reason": "Unmodified Three input of timed-out diagnostic v1; captured bytes verified against this commit.",
+      "commit": "76a000dbded2ed581f41eae5446b37137a1aafe4",
+      "path": "apps/desktop/e2e/fixtures/world-base/upstream/petalwake/vendor/three/build/three.core.js",
+      "bytes": 1474799,
+      "sha256": "613e370f76638fdef83926642bf256dc9615684922de1ce1f63a8583e5d78578"
+    }
+  ]
+}

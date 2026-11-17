@@ -1,0 +1,350 @@
+{
+  "createdAt": "2026-11-17T01:17:03.657Z",
+  "requestedRevision": "76a000d (provided by parent; no Git command run)",
+  "status": "pass",
+  "scope": "Current four building foundations, each already expanded0.25m. Medium center[-16,-135]. No historical sites substituted.",
+  "sourceHashes": {
+    "src/city.js": "9d0c281149fdab08291e596318558371b278bf94d2299af3510e231abcf99393",
+    "src/island.js": "9ba6b5228eb343e5d637d7a4520e0a08a17924ee551d02ffd78b3f0fbd3e744f",
+    "src/skyline.js": "1dfaa932ec4985b87147b0dcd0fd8abb8cf86e91f2440c527c552b107040cbcd",
+    "upstream/petalwake/src/world/terrain.js": "e3a4db83d503b2071a6ff03e10214cc0e12bf6fe17ab202f7643b6687a7ea367",
+    "upstream/petalwake/src/world/props.js": "d5827bbebbb4b63becdecdcef25f91c095d02c7e1b71186228447553a1987e8f",
+    "upstream/petalwake/src/world/river.js": "aec8e1de1b320ab5cb4fd71e6541712d78aac38fc5434e75131d4933ab84c43c",
+    "upstream/sakuragaoka/src/world/layout.js": "ca3acd3248e3fc48f8ce58f9bacabfe0fc893e633c58bb385822918deca97b7c",
+    "city-assets.json": "70125bf6a2bacdccba14451638386a6504050b51fde663c929ffa658629cae82"
+  },
+  "petalDataHashes": {
+    "terrain/props.json": "e7ede80757854c2952f47b584127bca156b2d606dca6f8f359d25b3070de4574",
+    "terrain/meta.json": "113110f6eac1693a0ef3e3791482881986bf3050d0b0c339e79fe5481c10e336",
+    "terrain/height.u16": "8506105e460640026e7aaa182d95d5b3ea2b46568dbbb38446ea1c87f7da2c48",
+    "models/lighthouse.json": "d96807fb22c2479e1aeec35d089d5939404edfbcf8cac647326b689b9085dbea",
+    "models/menhir.json": "a24314482960cf4c87310d7f77a14e79f1c9c83245ed1be7bf2b708795bf867f",
+    "models/boulders.json": "6529e64faf6b0350e6ba7ce96e6a1aae8d85cf649df8cbe9c287018ef07e2f8e",
+    "models/tree.json": "14298475b117199c88965294a7ee2d6ffe4d79a03431fea5b12dd0ae5a49ac9e"
+  },
+  "modelGeometryHashes": [
+    {
+      "file": "downtown/Building_Large_2.gltf",
+      "bytes": 22880,
+      "sha256": "903209b63ad4e151190dce32ccab47a2c0dc256c09d999835984a0459ef2bd91",
+      "matchesManifest": true
+    },
+    {
+      "file": "downtown/Building_Large_2.bin",
+      "bytes": 3345228,
+      "sha256": "e25636464da7b96a346f89314e498099ce33d3b0e9b1f8d9cba3eee94b63fac3",
+      "matchesManifest": true
+    },
+    {
+      "file": "downtown/Building_Medium_2_001.gltf",
+      "bytes": 25244,
+      "sha256": "423f4b3e709ef5633eac4a94a8a1ce25750aa42fe34e3b983d7aac39846f9a1c",
+      "matchesManifest": true
+    },
+    {
+      "file": "downtown/Building_Medium_2_001.bin",
+      "bytes": 2443288,
+      "sha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "matchesManifest": true
+    },
+    {
+      "file": "downtown/Building_Small_1.gltf",
+      "bytes": 27435,
+      "sha256": "3c864724fffd016ca440191bca169d6ba486e14617bb3cafa09ddbac7532f3d7",
+      "matchesManifest": true
+    },
+    {
+      "file": "downtown/Building_Small_1.bin",
+      "bytes": 1556100,
+      "sha256": "a5fb691fe7ab0d93d5d47eef51af576f2d65bd78103c92c9e714215b26d679a2",
+      "matchesManifest": true
+    },
+    {
+      "file": "highrise/high_rise_building.glb",
+      "bytes": 31791824,
+      "sha256": "9102f1255aa4303e3424b6985decca0d74fa31152186f08a9ffd4ee078225b40",
+      "matchesManifest": true
+    }
+  ],
+  "footprintEvidence": {
+    "report": "artifacts/gpu-city-v4/render-report.json",
+    "reportSha256": "b8cd9a2a4f6a24bffdcb1726d0993fe007acb90db83599f8afce79d6c815ee35",
+    "captureManifestHead": "7ef9545ee81ee072b811f007dfba6ab2898ca7a6",
+    "currentAuditedSourcesMatchCapture": true,
+    "note": "Current SITES and exact runtime bounds reused only after matching scene source hashes and pinned geometry bytes. Capture commit label predates requested revision; matching file contents establish relevance."
+  },
+  "method": {
+    "height": "Exact currentCPU heightAt/flattenRect on hashed originalheight.u16; all bilinear grid/boundary intersections.",
+    "props": "All original163 instances conservatively tested circle-vs-foundation rectangle using info.radius*scale; station removal flag reported but no overlap even before removal.",
+    "river": "Conservative north/south separation from complete originalPetal river path plus1.12 times globalmaximum halfwidth. Sakuragaoka source river outside retained stationcut is not live water.",
+    "apartments": "Exact two current skyline runtime footprint rectangles; current skyline.js hash matches capture."
+  },
+  "buildings": [
+    {
+      "name": "curved-tower",
+      "center": [
+        -40,
+        -235
+      ],
+      "worldCenter": [
+        240,
+        665
+      ],
+      "sourceSize": [
+        116.48381042480469,
+        105.40562285482883,
+        65.92617797851562
+      ],
+      "foundationBounds": {
+        "minX": -98.49190521240234,
+        "maxX": 18.491905212402344,
+        "minZ": -268.2130889892578,
+        "maxZ": -201.7869110107422
+      },
+      "foundationMarginPerSide": 0.25,
+      "ground": {
+        "min": 13.874982833862305,
+        "max": 16.706195794928764,
+        "relief": 2.831212961066459
+      },
+      "props": {
+        "originalInstances": 163,
+        "overlaps": [],
+        "nearest": {
+          "type": "tree",
+          "index": 40,
+          "local": [
+            -143.44,
+            -317.42999999999995
+          ],
+          "radius": 8.55117,
+          "clearance": 58.10192861119866,
+          "removedByStation": false
+        }
+      },
+      "apartmentClearances": [
+        {
+          "name": "apartment-corridor",
+          "gap": 91.6869110107422,
+          "overlap": false
+        },
+        {
+          "name": "apartment-balconies",
+          "gap": 86.6869110107422,
+          "overlap": false
+        }
+      ],
+      "stationCoreClearance": 104.78691101074219,
+      "petalRiverConservativeClearance": 655.3357110107422
+    },
+    {
+      "name": "brick-large",
+      "center": [
+        35,
+        -135
+      ],
+      "worldCenter": [
+        315,
+        765
+      ],
+      "sourceSize": [
+        20.64410972595215,
+        28.000038146972656,
+        16.644596099853516
+      ],
+      "foundationBounds": {
+        "minX": 24.427945137023926,
+        "maxX": 45.572054862976074,
+        "minZ": -143.57229804992676,
+        "maxZ": -126.42770195007324
+      },
+      "foundationMarginPerSide": 0.25,
+      "ground": {
+        "min": 11.960624694824219,
+        "max": 13.085419654846191,
+        "relief": 1.1247949600219727
+      },
+      "props": {
+        "originalInstances": 163,
+        "overlaps": [],
+        "nearest": {
+          "type": "boulders",
+          "index": 34,
+          "local": [
+            54.47000000000003,
+            -41.370000000000005
+          ],
+          "radius": 2.065441,
+          "clearance": 83.45640468102457,
+          "removedByStation": true
+        }
+      },
+      "apartmentClearances": [
+        {
+          "name": "apartment-corridor",
+          "gap": 37.02283334645658,
+          "overlap": false
+        },
+        {
+          "name": "apartment-balconies",
+          "gap": 54.419950155983436,
+          "overlap": false
+        }
+      ],
+      "stationCoreClearance": 29.427701950073242,
+      "petalRiverConservativeClearance": 779.9765019500733
+    },
+    {
+      "name": "brick-medium",
+      "center": [
+        -16,
+        -135
+      ],
+      "worldCenter": [
+        264,
+        765
+      ],
+      "sourceSize": [
+        15.055683135986328,
+        25.00865962356329,
+        13.055681586265564
+      ],
+      "foundationBounds": {
+        "minX": -23.777841567993164,
+        "maxX": -8.222158432006836,
+        "minZ": -141.77784079313278,
+        "maxZ": -128.22215920686722
+      },
+      "foundationMarginPerSide": 0.25,
+      "ground": {
+        "min": 12.497896540087368,
+        "max": 13.536599159240723,
+        "relief": 1.038702619153355
+      },
+      "props": {
+        "originalInstances": 163,
+        "overlaps": [],
+        "nearest": {
+          "type": "boulders",
+          "index": 34,
+          "local": [
+            54.47000000000003,
+            -41.370000000000005
+          ],
+          "radius": 2.065441,
+          "clearance": 105.04947060318838,
+          "removedByStation": true
+        }
+      },
+      "apartmentClearances": [
+        {
+          "name": "apartment-corridor",
+          "gap": 18.122159206867224,
+          "overlap": false
+        },
+        {
+          "name": "apartment-balconies",
+          "gap": 14.050378555987294,
+          "overlap": false
+        }
+      ],
+      "stationCoreClearance": 31.222159206867218,
+      "petalRiverConservativeClearance": 781.7709592068672
+    },
+    {
+      "name": "brick-small",
+      "center": [
+        9,
+        -135
+      ],
+      "worldCenter": [
+        289,
+        765
+      ],
+      "sourceSize": [
+        12.460000991821289,
+        17.025969891808927,
+        14.536008358001709
+      ],
+      "foundationBounds": {
+        "minX": 2.5199995040893555,
+        "maxX": 15.480000495910645,
+        "minZ": -142.51800417900085,
+        "maxZ": -127.48199582099915
+      },
+      "foundationMarginPerSide": 0.25,
+      "ground": {
+        "min": 11.932525909115602,
+        "max": 12.743684109454847,
+        "relief": 0.8111582003392446
+      },
+      "props": {
+        "originalInstances": 163,
+        "overlaps": [],
+        "nearest": {
+          "type": "boulders",
+          "index": 34,
+          "local": [
+            54.47000000000003,
+            -41.370000000000005
+          ],
+          "radius": 2.065441,
+          "clearance": 92.46231093351773,
+          "removedByStation": true
+        }
+      },
+      "apartmentClearances": [
+        {
+          "name": "apartment-corridor",
+          "gap": 20.743099274067394,
+          "overlap": false
+        },
+        {
+          "name": "apartment-balconies",
+          "gap": 33.67872012781065,
+          "overlap": false
+        }
+      ],
+      "stationCoreClearance": 30.481995820999146,
+      "petalRiverConservativeClearance": 781.0307958209992
+    }
+  ],
+  "buildingPairClearances": [
+    {
+      "a": "curved-tower",
+      "b": "brick-large",
+      "gap": 58.51647402368192
+    },
+    {
+      "a": "curved-tower",
+      "b": "brick-medium",
+      "gap": 60.009070217609406
+    },
+    {
+      "a": "curved-tower",
+      "b": "brick-small",
+      "gap": 59.26890683174133
+    },
+    {
+      "a": "brick-large",
+      "b": "brick-medium",
+      "gap": 32.65010356903076
+    },
+    {
+      "a": "brick-large",
+      "b": "brick-small",
+      "gap": 8.947944641113281
+    },
+    {
+      "a": "brick-medium",
+      "b": "brick-small",
+      "gap": 10.742157936096191
+    }
+  ],
+  "limitations": [
+    "No GPU/runtime started in this audit. Visible CDLOD height and visual foundation/road contact remain covered by separate render evidence, not this CPU overlap check.",
+    "Prop test uses published radialbounds, not triangle intersections; it does not inspect meadow grass/flowers (cleared separately by scene).",
+    "Roads/stairs were not re-audited; latest stairs-audit remains unchanged.",
+    "Physical walkability and camera behavior outside stationcore are not asserted."
+  ]
+}

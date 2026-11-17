@@ -1,0 +1,4987 @@
+{
+  "config": {
+    "output": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\asset-transport-v2",
+    "runtime": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\asset-transport-v2\\runtime-zvO4at",
+    "startedAt": "2026-11-17T01:03:07.290Z",
+    "timeoutMs": 60000,
+    "terminalWaitMs": 3000,
+    "head": "7ef9545ee81ee072b811f007dfba6ab2898ca7a6",
+    "targets": [
+      {
+        "name": "menhir",
+        "url": "/assets/models/menhir.glb",
+        "file": ".local/petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e/assets/models/menhir.glb",
+        "bytes": 620588,
+        "sha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c"
+      },
+      {
+        "name": "highrise",
+        "url": "/city-assets/highrise/high_rise_building.glb",
+        "file": ".local/city/highrise/high_rise_building.glb",
+        "bytes": 31791824,
+        "sha256": "9102f1255aa4303e3424b6985decca0d74fa31152186f08a9ffd4ee078225b40"
+      },
+      {
+        "name": "medium-bin",
+        "url": "/city-assets/downtown/Building_Medium_2_001.bin",
+        "file": ".local/city/downtown/Building_Medium_2_001.bin",
+        "bytes": 2443288,
+        "sha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d"
+      }
+    ],
+    "scripts": {
+      "diagnose-asset-transport.cjs": "c15dd0cf55f629fad6b55042c232b2d4f8b6de58c80833774f68a6b6d4e7d192",
+      "baseline.cjs": "39bd75c2984b8fed1b655130789bcd4cb524aab257c2fbd5f55bc8916e0c5cdf",
+      "../upstream/petalwake/vendor/three/build/three.core.js": "613e370f76638fdef83926642bf256dc9615684922de1ce1f63a8583e5d78578"
+    }
+  },
+  "ok": false,
+  "bytesIntegrity": true,
+  "transportClean": false,
+  "cases": [
+    {
+      "id": "menhir-native-1",
+      "method": "native",
+      "url": "/assets/models/menhir.glb?transportCase=menhir-native-1",
+      "hostStartedWallTime": 1794877387.733,
+      "expectedBytes": 620588,
+      "expectedSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "started": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 49.5
+      },
+      "status": 200,
+      "fulfilled": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 57.700000047683716
+      },
+      "actualBytes": 620588,
+      "actualSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "hashed": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 63.40000009536743
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "62072.3"
+      ],
+      "transportClean": true
+    },
+    {
+      "id": "menhir-native-2",
+      "method": "native",
+      "url": "/assets/models/menhir.glb?transportCase=menhir-native-2",
+      "hostStartedWallTime": 1794877387.749,
+      "expectedBytes": 620588,
+      "expectedSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "started": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 65.10000014305115
+      },
+      "status": 200,
+      "fulfilled": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 70.90000009536743
+      },
+      "actualBytes": 620588,
+      "actualSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "hashed": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 71.40000009536743
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "62072.4"
+      ],
+      "transportClean": true
+    },
+    {
+      "id": "menhir-native-3",
+      "method": "native",
+      "url": "/assets/models/menhir.glb?transportCase=menhir-native-3",
+      "hostStartedWallTime": 1794877387.757,
+      "expectedBytes": 620588,
+      "expectedSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "started": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 81.80000019073486
+      },
+      "status": 200,
+      "fulfilled": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 87.80000019073486
+      },
+      "actualBytes": 620588,
+      "actualSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "hashed": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 88.30000019073486
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "62072.5"
+      ],
+      "transportClean": true
+    },
+    {
+      "id": "menhir-fileloader-1",
+      "method": "fileloader",
+      "url": "/assets/models/menhir.glb?transportCase=menhir-fileloader-1",
+      "hostStartedWallTime": 1794877387.774,
+      "expectedBytes": 620588,
+      "expectedSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "started": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 98.90000009536743
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 107.90000009536743
+      },
+      "actualBytes": 620588,
+      "actualSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "hashed": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 108.30000019073486
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "62072.6"
+      ],
+      "transportClean": true
+    },
+    {
+      "id": "menhir-fileloader-2",
+      "method": "fileloader",
+      "url": "/assets/models/menhir.glb?transportCase=menhir-fileloader-2",
+      "hostStartedWallTime": 1794877387.798,
+      "expectedBytes": 620588,
+      "expectedSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "started": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 120.80000019073486
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 126.90000009536743
+      },
+      "actualBytes": 620588,
+      "actualSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "hashed": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 127.40000009536743
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "62072.7"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "menhir-fileloader-3",
+      "method": "fileloader",
+      "url": "/assets/models/menhir.glb?transportCase=menhir-fileloader-3",
+      "hostStartedWallTime": 1794877387.814,
+      "expectedBytes": 620588,
+      "expectedSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "started": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 130.5
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 136.5
+      },
+      "actualBytes": 620588,
+      "actualSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "hashed": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 136.90000009536743
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "62072.8"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "highrise-native-1",
+      "method": "native",
+      "url": "/city-assets/highrise/high_rise_building.glb?transportCase=highrise-native-1",
+      "hostStartedWallTime": 1794877387.823,
+      "expectedBytes": 31791824,
+      "expectedSha256": "9102f1255aa4303e3424b6985decca0d74fa31152186f08a9ffd4ee078225b40",
+      "started": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 147.5
+      },
+      "status": 200,
+      "fulfilled": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 226.10000014305115
+      },
+      "actualBytes": 31791824,
+      "actualSha256": "9102f1255aa4303e3424b6985decca0d74fa31152186f08a9ffd4ee078225b40",
+      "hashed": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 254.60000014305115
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "62072.9"
+      ],
+      "transportClean": true
+    },
+    {
+      "id": "highrise-native-2",
+      "method": "native",
+      "url": "/city-assets/highrise/high_rise_building.glb?transportCase=highrise-native-2",
+      "hostStartedWallTime": 1794877387.941,
+      "expectedBytes": 31791824,
+      "expectedSha256": "9102f1255aa4303e3424b6985decca0d74fa31152186f08a9ffd4ee078225b40",
+      "started": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 265.10000014305115
+      },
+      "status": 200,
+      "fulfilled": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 341.80000019073486
+      },
+      "actualBytes": 31791824,
+      "actualSha256": "9102f1255aa4303e3424b6985decca0d74fa31152186f08a9ffd4ee078225b40",
+      "hashed": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 370.40000009536743
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "62072.10"
+      ],
+      "transportClean": true
+    },
+    {
+      "id": "highrise-native-3",
+      "method": "native",
+      "url": "/city-assets/highrise/high_rise_building.glb?transportCase=highrise-native-3",
+      "hostStartedWallTime": 1794877388.056,
+      "expectedBytes": 31791824,
+      "expectedSha256": "9102f1255aa4303e3424b6985decca0d74fa31152186f08a9ffd4ee078225b40",
+      "started": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 380.40000009536743
+      },
+      "status": 200,
+      "fulfilled": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 457.5
+      },
+      "actualBytes": 31791824,
+      "actualSha256": "9102f1255aa4303e3424b6985decca0d74fa31152186f08a9ffd4ee078225b40",
+      "hashed": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 486.80000019073486
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "62072.11"
+      ],
+      "transportClean": true
+    },
+    {
+      "id": "highrise-fileloader-1",
+      "method": "fileloader",
+      "url": "/city-assets/highrise/high_rise_building.glb?transportCase=highrise-fileloader-1",
+      "hostStartedWallTime": 1794877388.174,
+      "expectedBytes": 31791824,
+      "expectedSha256": "9102f1255aa4303e3424b6985decca0d74fa31152186f08a9ffd4ee078225b40",
+      "started": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 498.40000009536743
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 573.7000000476837
+      },
+      "actualBytes": 31791824,
+      "actualSha256": "9102f1255aa4303e3424b6985decca0d74fa31152186f08a9ffd4ee078225b40",
+      "hashed": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 602.2000000476837
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "62072.12"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "highrise-fileloader-2",
+      "method": "fileloader",
+      "url": "/city-assets/highrise/high_rise_building.glb?transportCase=highrise-fileloader-2",
+      "hostStartedWallTime": 1794877388.288,
+      "expectedBytes": 31791824,
+      "expectedSha256": "9102f1255aa4303e3424b6985decca0d74fa31152186f08a9ffd4ee078225b40",
+      "started": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 611.3000001907349
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 687.5
+      },
+      "actualBytes": 31791824,
+      "actualSha256": "9102f1255aa4303e3424b6985decca0d74fa31152186f08a9ffd4ee078225b40",
+      "hashed": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 716.4000000953674
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "62072.13"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "highrise-fileloader-3",
+      "method": "fileloader",
+      "url": "/city-assets/highrise/high_rise_building.glb?transportCase=highrise-fileloader-3",
+      "hostStartedWallTime": 1794877388.403,
+      "expectedBytes": 31791824,
+      "expectedSha256": "9102f1255aa4303e3424b6985decca0d74fa31152186f08a9ffd4ee078225b40",
+      "started": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 726.8000001907349
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 807.2000000476837
+      },
+      "actualBytes": 31791824,
+      "actualSha256": "9102f1255aa4303e3424b6985decca0d74fa31152186f08a9ffd4ee078225b40",
+      "hashed": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 836.6000001430511
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "62072.14"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "medium-bin-native-1",
+      "method": "native",
+      "url": "/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-1",
+      "hostStartedWallTime": 1794877388.523,
+      "expectedBytes": 2443288,
+      "expectedSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "started": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 839.2000000476837
+      },
+      "status": 200,
+      "fulfilled": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 851.9000000953674
+      },
+      "actualBytes": 2443288,
+      "actualSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "hashed": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 854.3000001907349
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "62072.15"
+      ],
+      "transportClean": true
+    },
+    {
+      "id": "medium-bin-native-2",
+      "method": "native",
+      "url": "/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-2",
+      "hostStartedWallTime": 1794877388.54,
+      "expectedBytes": 2443288,
+      "expectedSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "started": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 864.6000001430511
+      },
+      "status": 200,
+      "fulfilled": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 879
+      },
+      "actualBytes": 2443288,
+      "actualSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "hashed": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 881.4000000953674
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "62072.16"
+      ],
+      "transportClean": true
+    },
+    {
+      "id": "medium-bin-native-3",
+      "method": "native",
+      "url": "/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-3",
+      "hostStartedWallTime": 1794877388.567,
+      "expectedBytes": 2443288,
+      "expectedSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "started": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 890.8000001907349
+      },
+      "status": 200,
+      "fulfilled": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 903.5
+      },
+      "actualBytes": 2443288,
+      "actualSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "hashed": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 905.9000000953674
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "62072.17"
+      ],
+      "transportClean": true
+    },
+    {
+      "id": "medium-bin-fileloader-1",
+      "method": "fileloader",
+      "url": "/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-1",
+      "hostStartedWallTime": 1794877388.592,
+      "expectedBytes": 2443288,
+      "expectedSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "started": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 909.1000001430511
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 918.7000000476837
+      },
+      "actualBytes": 2443288,
+      "actualSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "hashed": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 921
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "62072.18"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "medium-bin-fileloader-2",
+      "method": "fileloader",
+      "url": "/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-2",
+      "hostStartedWallTime": 1794877388.607,
+      "expectedBytes": 2443288,
+      "expectedSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "started": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 930.6000001430511
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 940.9000000953674
+      },
+      "actualBytes": 2443288,
+      "actualSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "hashed": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 943.1000001430511
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "62072.19"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "medium-bin-fileloader-3",
+      "method": "fileloader",
+      "url": "/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-3",
+      "hostStartedWallTime": 1794877388.631,
+      "expectedBytes": 2443288,
+      "expectedSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "started": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 947.8000001907349
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 957.1000001430511
+      },
+      "actualBytes": 2443288,
+      "actualSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "hashed": {
+        "timeOriginMs": 1794877387685,
+        "nowMs": 959.3000001907349
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "62072.20"
+      ],
+      "transportClean": false
+    }
+  ],
+  "networkRequests": [
+    {
+      "requestId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "loading-document",
+          "receivedWallTime": 1794877387.684,
+          "documentURL": "http://127.0.0.1:50673/__asset_transport.html",
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasUserGesture": false,
+          "initiator": {
+            "type": "other"
+          },
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Upgrade-Insecure-Requests": "1",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36"
+            },
+            "initialPriority": "VeryHigh",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:50673/__asset_transport.html"
+          },
+          "requestId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "timestamp": 1887566.738823,
+          "type": "Document",
+          "wallTime": 1794877387.685162,
+          "documentRelativeMs": 0.162109375
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "loading-document",
+          "receivedWallTime": 1794877387.695,
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasExtraInfo": true,
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "requestId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": false,
+            "encodedDataLength": 181,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Type": "text/html",
+              "Date": "Tue, 17 Nov 2026 01:03:07 GMT",
+              "Keep-Alive": "timeout=5",
+              "Transfer-Encoding": "chunked"
+            },
+            "mimeType": "text/html",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 50673,
+            "responseTime": 1794877387694.387,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": 4.448,
+              "connectStart": 4.106,
+              "dnsEnd": 4.106,
+              "dnsStart": 4.09,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 7.981,
+              "receiveHeadersStart": 7.746,
+              "requestTime": 1887566.740316,
+              "sendEnd": 4.698,
+              "sendStart": 4.577,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:50673/__asset_transport.html"
+          },
+          "timestamp": 1887566.74934,
+          "type": "Document",
+          "documentRelativeMs": 10.67919921875
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "loading-document",
+          "receivedWallTime": 1794877387.702,
+          "encodedDataLength": 295,
+          "requestId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "timestamp": 1887566.748696,
+          "documentRelativeMs": 10.03515625
+        }
+      ],
+      "url": "http://127.0.0.1:50673/__asset_transport.html",
+      "caseId": null,
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "loading-document",
+          "receivedWallTime": 1794877387.702,
+          "encodedDataLength": 295,
+          "requestId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "timestamp": 1887566.748696,
+          "documentRelativeMs": 10.03515625
+        }
+      ]
+    },
+    {
+      "requestId": "62072.2",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "loading-document",
+          "receivedWallTime": 1794877387.704,
+          "documentURL": "http://127.0.0.1:50673/__asset_transport.html",
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 0,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "7",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "redirectHasExtraInfo": false,
+          "renderBlockingBehavior": "NonBlocking",
+          "request": {
+            "headers": {
+              "Origin": "http://127.0.0.1:50673",
+              "Referer": "",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+          },
+          "requestId": "62072.2",
+          "timestamp": 1887566.758337,
+          "type": "Script",
+          "wallTime": 1794877387.7047,
+          "documentRelativeMs": 19.67626953125
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "loading-document",
+          "receivedWallTime": 1794877387.729,
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasExtraInfo": true,
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "requestId": "62072.2",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 184,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "1474799",
+              "Content-Type": "text/javascript",
+              "Date": "Tue, 17 Nov 2026 01:03:07 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "text/javascript",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 50673,
+            "responseTime": 1794877387712.785,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 4.941,
+              "receiveHeadersStart": 4.904,
+              "requestTime": 1887566.761556,
+              "sendEnd": 0.355,
+              "sendStart": 0.269,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+          },
+          "timestamp": 1887566.78287,
+          "type": "Script",
+          "documentRelativeMs": 44.209228515625
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "loading-document",
+          "receivedWallTime": 1794877387.729,
+          "encodedDataLength": 1474983,
+          "requestId": "62072.2",
+          "timestamp": 1887566.770203,
+          "documentRelativeMs": 31.542236328125
+        }
+      ],
+      "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js",
+      "caseId": null,
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "loading-document",
+          "receivedWallTime": 1794877387.729,
+          "encodedDataLength": 1474983,
+          "requestId": "62072.2",
+          "timestamp": 1887566.770203,
+          "documentRelativeMs": 31.542236328125
+        }
+      ]
+    },
+    {
+      "requestId": "62072.3",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "menhir-native-1",
+          "receivedWallTime": 1794877387.735,
+          "documentURL": "http://127.0.0.1:50673/__asset_transport.html",
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 31,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 45,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "10",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:50673/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-native-1"
+          },
+          "requestId": "62072.3",
+          "timestamp": 1887566.789495,
+          "type": "Fetch",
+          "wallTime": 1794877387.735875,
+          "documentRelativeMs": 50.834228515625
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "menhir-native-1",
+          "receivedWallTime": 1794877387.74,
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasExtraInfo": true,
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "requestId": "62072.3",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 185,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "620588",
+              "Content-Type": "model/gltf-binary",
+              "Date": "Tue, 17 Nov 2026 01:03:07 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "model/gltf-binary",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 50673,
+            "responseTime": 1794877387739.582,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 3.47,
+              "receiveHeadersStart": 3.427,
+              "requestTime": 1887566.789831,
+              "sendEnd": 0.351,
+              "sendStart": 0.255,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-native-1"
+          },
+          "timestamp": 1887566.793698,
+          "type": "Fetch",
+          "documentRelativeMs": 55.037109375
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "menhir-native-1",
+          "receivedWallTime": 1794877387.742,
+          "encodedDataLength": 620773,
+          "requestId": "62072.3",
+          "timestamp": 1887566.794944,
+          "documentRelativeMs": 56.283203125
+        }
+      ],
+      "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-native-1",
+      "caseId": "menhir-native-1",
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "menhir-native-1",
+          "receivedWallTime": 1794877387.742,
+          "encodedDataLength": 620773,
+          "requestId": "62072.3",
+          "timestamp": 1887566.794944,
+          "documentRelativeMs": 56.283203125
+        }
+      ]
+    },
+    {
+      "requestId": "62072.4",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "menhir-native-2",
+          "receivedWallTime": 1794877387.75,
+          "documentURL": "http://127.0.0.1:50673/__asset_transport.html",
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 31,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 45,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "12",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:50673/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-native-2"
+          },
+          "requestId": "62072.4",
+          "timestamp": 1887566.803889,
+          "type": "Fetch",
+          "wallTime": 1794877387.750257,
+          "documentRelativeMs": 65.228271484375
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "menhir-native-2",
+          "receivedWallTime": 1794877387.753,
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasExtraInfo": true,
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "requestId": "62072.4",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 185,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "620588",
+              "Content-Type": "model/gltf-binary",
+              "Date": "Tue, 17 Nov 2026 01:03:07 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "model/gltf-binary",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 50673,
+            "responseTime": 1794877387753.419,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 2.91,
+              "receiveHeadersStart": 2.874,
+              "requestTime": 1887566.80422,
+              "sendEnd": 0.285,
+              "sendStart": 0.214,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-native-2"
+          },
+          "timestamp": 1887566.807507,
+          "type": "Fetch",
+          "documentRelativeMs": 68.84619140625
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "menhir-native-2",
+          "receivedWallTime": 1794877387.755,
+          "encodedDataLength": 620773,
+          "requestId": "62072.4",
+          "timestamp": 1887566.808448,
+          "documentRelativeMs": 69.787109375
+        }
+      ],
+      "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-native-2",
+      "caseId": "menhir-native-2",
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "menhir-native-2",
+          "receivedWallTime": 1794877387.755,
+          "encodedDataLength": 620773,
+          "requestId": "62072.4",
+          "timestamp": 1887566.808448,
+          "documentRelativeMs": 69.787109375
+        }
+      ]
+    },
+    {
+      "requestId": "62072.5",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "menhir-native-3",
+          "receivedWallTime": 1794877387.766,
+          "documentURL": "http://127.0.0.1:50673/__asset_transport.html",
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 31,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 45,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "13",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:50673/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-native-3"
+          },
+          "requestId": "62072.5",
+          "timestamp": 1887566.820621,
+          "type": "Fetch",
+          "wallTime": 1794877387.766983,
+          "documentRelativeMs": 81.960205078125
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "menhir-native-3",
+          "receivedWallTime": 1794877387.77,
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasExtraInfo": true,
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "requestId": "62072.5",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 185,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "620588",
+              "Content-Type": "model/gltf-binary",
+              "Date": "Tue, 17 Nov 2026 01:03:07 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "model/gltf-binary",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 50673,
+            "responseTime": 1794877387770.193,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 2.968,
+              "receiveHeadersStart": 2.937,
+              "requestTime": 1887566.820931,
+              "sendEnd": 0.309,
+              "sendStart": 0.222,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-native-3"
+          },
+          "timestamp": 1887566.824246,
+          "type": "Fetch",
+          "documentRelativeMs": 85.5849609375
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "menhir-native-3",
+          "receivedWallTime": 1794877387.772,
+          "encodedDataLength": 620773,
+          "requestId": "62072.5",
+          "timestamp": 1887566.825264,
+          "documentRelativeMs": 86.60302734375
+        }
+      ],
+      "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-native-3",
+      "caseId": "menhir-native-3",
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "menhir-native-3",
+          "receivedWallTime": 1794877387.772,
+          "encodedDataLength": 620773,
+          "requestId": "62072.5",
+          "timestamp": 1887566.825264,
+          "documentRelativeMs": 86.60302734375
+        }
+      ]
+    },
+    {
+      "requestId": "62072.6",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "menhir-fileloader-1",
+          "receivedWallTime": 1794877387.786,
+          "documentURL": "http://127.0.0.1:50673/__asset_transport.html",
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 2,
+                  "functionName": "load",
+                  "lineNumber": 45624,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "",
+                  "lineNumber": 45331,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "loadAsync",
+                  "lineNumber": 45329,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 29,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 52,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "14",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:50673/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-fileloader-1"
+          },
+          "requestId": "62072.6",
+          "timestamp": 1887566.83835,
+          "type": "Fetch",
+          "wallTime": 1794877387.786301,
+          "documentRelativeMs": 99.689208984375
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "menhir-fileloader-1",
+          "receivedWallTime": 1794877387.79,
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasExtraInfo": true,
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "requestId": "62072.6",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 185,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "620588",
+              "Content-Type": "model/gltf-binary",
+              "Date": "Tue, 17 Nov 2026 01:03:07 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "model/gltf-binary",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 50673,
+            "responseTime": 1794877387789.663,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 3.123,
+              "receiveHeadersStart": 3.087,
+              "requestTime": 1887566.840251,
+              "sendEnd": 0.314,
+              "sendStart": 0.229,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-fileloader-1"
+          },
+          "timestamp": 1887566.843764,
+          "type": "Fetch",
+          "documentRelativeMs": 105.103271484375
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "menhir-fileloader-1",
+          "receivedWallTime": 1794877387.792,
+          "encodedDataLength": 620773,
+          "requestId": "62072.6",
+          "timestamp": 1887566.844649,
+          "documentRelativeMs": 105.98828125
+        }
+      ],
+      "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-fileloader-1",
+      "caseId": "menhir-fileloader-1",
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "menhir-fileloader-1",
+          "receivedWallTime": 1794877387.792,
+          "encodedDataLength": 620773,
+          "requestId": "62072.6",
+          "timestamp": 1887566.844649,
+          "documentRelativeMs": 105.98828125
+        }
+      ]
+    },
+    {
+      "requestId": "62072.7",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "menhir-fileloader-2",
+          "receivedWallTime": 1794877387.805,
+          "documentURL": "http://127.0.0.1:50673/__asset_transport.html",
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 2,
+                  "functionName": "load",
+                  "lineNumber": 45624,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "",
+                  "lineNumber": 45331,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "loadAsync",
+                  "lineNumber": 45329,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 29,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 52,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "15",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:50673/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-fileloader-2"
+          },
+          "requestId": "62072.7",
+          "timestamp": 1887566.859575,
+          "type": "Fetch",
+          "wallTime": 1794877387.805943,
+          "documentRelativeMs": 120.9140625
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "menhir-fileloader-2",
+          "receivedWallTime": 1794877387.81,
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasExtraInfo": true,
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "requestId": "62072.7",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 185,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "620588",
+              "Content-Type": "model/gltf-binary",
+              "Date": "Tue, 17 Nov 2026 01:03:07 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "model/gltf-binary",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 50673,
+            "responseTime": 1794877387809.683,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 3.454,
+              "receiveHeadersStart": 3.415,
+              "requestTime": 1887566.859944,
+              "sendEnd": 0.333,
+              "sendStart": 0.248,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-fileloader-2"
+          },
+          "timestamp": 1887566.863799,
+          "type": "Fetch",
+          "documentRelativeMs": 125.13818359375
+        },
+        {
+          "method": "Network.loadingFailed",
+          "stage": "menhir-fileloader-2",
+          "receivedWallTime": 1794877387.811,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "62072.7",
+          "timestamp": 1887566.865243,
+          "type": "Fetch",
+          "documentRelativeMs": 126.58203125
+        }
+      ],
+      "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-fileloader-2",
+      "caseId": "menhir-fileloader-2",
+      "terminals": [
+        {
+          "method": "Network.loadingFailed",
+          "stage": "menhir-fileloader-2",
+          "receivedWallTime": 1794877387.811,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "62072.7",
+          "timestamp": 1887566.865243,
+          "type": "Fetch",
+          "documentRelativeMs": 126.58203125
+        }
+      ]
+    },
+    {
+      "requestId": "62072.8",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "menhir-fileloader-3",
+          "receivedWallTime": 1794877387.815,
+          "documentURL": "http://127.0.0.1:50673/__asset_transport.html",
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 2,
+                  "functionName": "load",
+                  "lineNumber": 45624,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "",
+                  "lineNumber": 45331,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "loadAsync",
+                  "lineNumber": 45329,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 29,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 52,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "16",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:50673/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-fileloader-3"
+          },
+          "requestId": "62072.8",
+          "timestamp": 1887566.869373,
+          "type": "Fetch",
+          "wallTime": 1794877387.815746,
+          "documentRelativeMs": 130.712158203125
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "menhir-fileloader-3",
+          "receivedWallTime": 1794877387.819,
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasExtraInfo": true,
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "requestId": "62072.8",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 185,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "620588",
+              "Content-Type": "model/gltf-binary",
+              "Date": "Tue, 17 Nov 2026 01:03:07 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "model/gltf-binary",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 50673,
+            "responseTime": 1794877387818.948,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 2.971,
+              "receiveHeadersStart": 2.935,
+              "requestTime": 1887566.869689,
+              "sendEnd": 0.297,
+              "sendStart": 0.217,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-fileloader-3"
+          },
+          "timestamp": 1887566.873058,
+          "type": "Fetch",
+          "documentRelativeMs": 134.397216796875
+        },
+        {
+          "method": "Network.loadingFailed",
+          "stage": "menhir-fileloader-3",
+          "receivedWallTime": 1794877387.821,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "62072.8",
+          "timestamp": 1887566.874728,
+          "type": "Fetch",
+          "documentRelativeMs": 136.067138671875
+        }
+      ],
+      "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-fileloader-3",
+      "caseId": "menhir-fileloader-3",
+      "terminals": [
+        {
+          "method": "Network.loadingFailed",
+          "stage": "menhir-fileloader-3",
+          "receivedWallTime": 1794877387.821,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "62072.8",
+          "timestamp": 1887566.874728,
+          "type": "Fetch",
+          "documentRelativeMs": 136.067138671875
+        }
+      ]
+    },
+    {
+      "requestId": "62072.9",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "highrise-native-1",
+          "receivedWallTime": 1794877387.832,
+          "documentURL": "http://127.0.0.1:50673/__asset_transport.html",
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 31,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 45,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "17",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:50673/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-native-1"
+          },
+          "requestId": "62072.9",
+          "timestamp": 1887566.886283,
+          "type": "Fetch",
+          "wallTime": 1794877387.832649,
+          "documentRelativeMs": 147.6220703125
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "highrise-native-1",
+          "receivedWallTime": 1794877387.836,
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasExtraInfo": true,
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "requestId": "62072.9",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 187,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "31791824",
+              "Content-Type": "model/gltf-binary",
+              "Date": "Tue, 17 Nov 2026 01:03:07 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "model/gltf-binary",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 50673,
+            "responseTime": 1794877387835.727,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 2.846,
+              "receiveHeadersStart": 2.814,
+              "requestTime": 1887566.886588,
+              "sendEnd": 0.309,
+              "sendStart": 0.221,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-native-1"
+          },
+          "timestamp": 1887566.889793,
+          "type": "Fetch",
+          "documentRelativeMs": 151.132080078125
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "highrise-native-1",
+          "receivedWallTime": 1794877387.91,
+          "encodedDataLength": 31792011,
+          "requestId": "62072.9",
+          "timestamp": 1887566.951723,
+          "documentRelativeMs": 213.062255859375
+        }
+      ],
+      "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-native-1",
+      "caseId": "highrise-native-1",
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "highrise-native-1",
+          "receivedWallTime": 1794877387.91,
+          "encodedDataLength": 31792011,
+          "requestId": "62072.9",
+          "timestamp": 1887566.951723,
+          "documentRelativeMs": 213.062255859375
+        }
+      ]
+    },
+    {
+      "requestId": "62072.10",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "highrise-native-2",
+          "receivedWallTime": 1794877387.95,
+          "documentURL": "http://127.0.0.1:50673/__asset_transport.html",
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 31,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 45,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "18",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:50673/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-native-2"
+          },
+          "requestId": "62072.10",
+          "timestamp": 1887567.003915,
+          "type": "Fetch",
+          "wallTime": 1794877387.950279,
+          "documentRelativeMs": 265.254150390625
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "highrise-native-2",
+          "receivedWallTime": 1794877387.953,
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasExtraInfo": true,
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "requestId": "62072.10",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 187,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "31791824",
+              "Content-Type": "model/gltf-binary",
+              "Date": "Tue, 17 Nov 2026 01:03:07 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "model/gltf-binary",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 50673,
+            "responseTime": 1794877387953.526,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 2.962,
+              "receiveHeadersStart": 2.931,
+              "requestTime": 1887567.004271,
+              "sendEnd": 0.327,
+              "sendStart": 0.241,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-native-2"
+          },
+          "timestamp": 1887567.007592,
+          "type": "Fetch",
+          "documentRelativeMs": 268.93115234375
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "highrise-native-2",
+          "receivedWallTime": 1794877388.026,
+          "encodedDataLength": 31792011,
+          "requestId": "62072.10",
+          "timestamp": 1887567.067262,
+          "documentRelativeMs": 328.60107421875
+        }
+      ],
+      "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-native-2",
+      "caseId": "highrise-native-2",
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "highrise-native-2",
+          "receivedWallTime": 1794877388.026,
+          "encodedDataLength": 31792011,
+          "requestId": "62072.10",
+          "timestamp": 1887567.067262,
+          "documentRelativeMs": 328.60107421875
+        }
+      ]
+    },
+    {
+      "requestId": "62072.11",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "highrise-native-3",
+          "receivedWallTime": 1794877388.065,
+          "documentURL": "http://127.0.0.1:50673/__asset_transport.html",
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 31,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 45,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "19",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:50673/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-native-3"
+          },
+          "requestId": "62072.11",
+          "timestamp": 1887567.119229,
+          "type": "Fetch",
+          "wallTime": 1794877388.065599,
+          "documentRelativeMs": 380.568115234375
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "highrise-native-3",
+          "receivedWallTime": 1794877388.069,
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasExtraInfo": true,
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "requestId": "62072.11",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 187,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "31791824",
+              "Content-Type": "model/gltf-binary",
+              "Date": "Tue, 17 Nov 2026 01:03:08 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "model/gltf-binary",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 50673,
+            "responseTime": 1794877388068.556,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 2.721,
+              "receiveHeadersStart": 2.693,
+              "requestTime": 1887567.119538,
+              "sendEnd": 0.277,
+              "sendStart": 0.209,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-native-3"
+          },
+          "timestamp": 1887567.122621,
+          "type": "Fetch",
+          "documentRelativeMs": 383.960205078125
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "highrise-native-3",
+          "receivedWallTime": 1794877388.141,
+          "encodedDataLength": 31792011,
+          "requestId": "62072.11",
+          "timestamp": 1887567.182349,
+          "documentRelativeMs": 443.68798828125
+        }
+      ],
+      "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-native-3",
+      "caseId": "highrise-native-3",
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "highrise-native-3",
+          "receivedWallTime": 1794877388.141,
+          "encodedDataLength": 31792011,
+          "requestId": "62072.11",
+          "timestamp": 1887567.182349,
+          "documentRelativeMs": 443.68798828125
+        }
+      ]
+    },
+    {
+      "requestId": "62072.12",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "highrise-fileloader-1",
+          "receivedWallTime": 1794877388.183,
+          "documentURL": "http://127.0.0.1:50673/__asset_transport.html",
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 2,
+                  "functionName": "load",
+                  "lineNumber": 45624,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "",
+                  "lineNumber": 45331,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "loadAsync",
+                  "lineNumber": 45329,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 29,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 52,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "20",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:50673/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-fileloader-1"
+          },
+          "requestId": "62072.12",
+          "timestamp": 1887567.237185,
+          "type": "Fetch",
+          "wallTime": 1794877388.183557,
+          "documentRelativeMs": 498.524169921875
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "highrise-fileloader-1",
+          "receivedWallTime": 1794877388.187,
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasExtraInfo": true,
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "requestId": "62072.12",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 187,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "31791824",
+              "Content-Type": "model/gltf-binary",
+              "Date": "Tue, 17 Nov 2026 01:03:08 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "model/gltf-binary",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 50673,
+            "responseTime": 1794877388186.897,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 2.978,
+              "receiveHeadersStart": 2.946,
+              "requestTime": 1887567.237626,
+              "sendEnd": 0.376,
+              "sendStart": 0.298,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-fileloader-1"
+          },
+          "timestamp": 1887567.240956,
+          "type": "Fetch",
+          "documentRelativeMs": 502.295166015625
+        },
+        {
+          "method": "Network.loadingFailed",
+          "stage": "highrise-fileloader-1",
+          "receivedWallTime": 1794877388.258,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "62072.12",
+          "timestamp": 1887567.299672,
+          "type": "Fetch",
+          "documentRelativeMs": 561.010986328125
+        }
+      ],
+      "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-fileloader-1",
+      "caseId": "highrise-fileloader-1",
+      "terminals": [
+        {
+          "method": "Network.loadingFailed",
+          "stage": "highrise-fileloader-1",
+          "receivedWallTime": 1794877388.258,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "62072.12",
+          "timestamp": 1887567.299672,
+          "type": "Fetch",
+          "documentRelativeMs": 561.010986328125
+        }
+      ]
+    },
+    {
+      "requestId": "62072.13",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "highrise-fileloader-2",
+          "receivedWallTime": 1794877388.296,
+          "documentURL": "http://127.0.0.1:50673/__asset_transport.html",
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 2,
+                  "functionName": "load",
+                  "lineNumber": 45624,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "",
+                  "lineNumber": 45331,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "loadAsync",
+                  "lineNumber": 45329,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 29,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 52,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "21",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:50673/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-fileloader-2"
+          },
+          "requestId": "62072.13",
+          "timestamp": 1887567.35031,
+          "type": "Fetch",
+          "wallTime": 1794877388.296685,
+          "documentRelativeMs": 611.649169921875
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "highrise-fileloader-2",
+          "receivedWallTime": 1794877388.3,
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasExtraInfo": true,
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "requestId": "62072.13",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 187,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "31791824",
+              "Content-Type": "model/gltf-binary",
+              "Date": "Tue, 17 Nov 2026 01:03:08 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "model/gltf-binary",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 50673,
+            "responseTime": 1794877388300.117,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 3.149,
+              "receiveHeadersStart": 3.111,
+              "requestTime": 1887567.350681,
+              "sendEnd": 0.368,
+              "sendStart": 0.294,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-fileloader-2"
+          },
+          "timestamp": 1887567.354418,
+          "type": "Fetch",
+          "documentRelativeMs": 615.757080078125
+        },
+        {
+          "method": "Network.loadingFailed",
+          "stage": "highrise-fileloader-2",
+          "receivedWallTime": 1794877388.372,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "62072.13",
+          "timestamp": 1887567.413209,
+          "type": "Fetch",
+          "documentRelativeMs": 674.548095703125
+        }
+      ],
+      "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-fileloader-2",
+      "caseId": "highrise-fileloader-2",
+      "terminals": [
+        {
+          "method": "Network.loadingFailed",
+          "stage": "highrise-fileloader-2",
+          "receivedWallTime": 1794877388.372,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "62072.13",
+          "timestamp": 1887567.413209,
+          "type": "Fetch",
+          "documentRelativeMs": 674.548095703125
+        }
+      ]
+    },
+    {
+      "requestId": "62072.14",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "highrise-fileloader-3",
+          "receivedWallTime": 1794877388.412,
+          "documentURL": "http://127.0.0.1:50673/__asset_transport.html",
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 2,
+                  "functionName": "load",
+                  "lineNumber": 45624,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "",
+                  "lineNumber": 45331,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "loadAsync",
+                  "lineNumber": 45329,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 29,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 52,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "22",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:50673/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-fileloader-3"
+          },
+          "requestId": "62072.14",
+          "timestamp": 1887567.46566,
+          "type": "Fetch",
+          "wallTime": 1794877388.412033,
+          "documentRelativeMs": 726.999267578125
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "highrise-fileloader-3",
+          "receivedWallTime": 1794877388.415,
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasExtraInfo": true,
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "requestId": "62072.14",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 187,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "31791824",
+              "Content-Type": "model/gltf-binary",
+              "Date": "Tue, 17 Nov 2026 01:03:08 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "model/gltf-binary",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 50673,
+            "responseTime": 1794877388414.967,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 2.689,
+              "receiveHeadersStart": 2.659,
+              "requestTime": 1887567.465983,
+              "sendEnd": 0.296,
+              "sendStart": 0.225,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-fileloader-3"
+          },
+          "timestamp": 1887567.469033,
+          "type": "Fetch",
+          "documentRelativeMs": 730.3720703125
+        },
+        {
+          "method": "Network.loadingFailed",
+          "stage": "highrise-fileloader-3",
+          "receivedWallTime": 1794877388.491,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "62072.14",
+          "timestamp": 1887567.532085,
+          "type": "Fetch",
+          "documentRelativeMs": 793.424072265625
+        }
+      ],
+      "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-fileloader-3",
+      "caseId": "highrise-fileloader-3",
+      "terminals": [
+        {
+          "method": "Network.loadingFailed",
+          "stage": "highrise-fileloader-3",
+          "receivedWallTime": 1794877388.491,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "62072.14",
+          "timestamp": 1887567.532085,
+          "type": "Fetch",
+          "documentRelativeMs": 793.424072265625
+        }
+      ]
+    },
+    {
+      "requestId": "62072.15",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "medium-bin-native-1",
+          "receivedWallTime": 1794877388.524,
+          "documentURL": "http://127.0.0.1:50673/__asset_transport.html",
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 31,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 45,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "23",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:50673/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-1"
+          },
+          "requestId": "62072.15",
+          "timestamp": 1887567.578002,
+          "type": "Fetch",
+          "wallTime": 1794877388.524368,
+          "documentRelativeMs": 839.341064453125
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "medium-bin-native-1",
+          "receivedWallTime": 1794877388.527,
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasExtraInfo": true,
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "requestId": "62072.15",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 193,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "2443288",
+              "Content-Type": "application/octet-stream",
+              "Date": "Tue, 17 Nov 2026 01:03:08 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "application/octet-stream",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 50673,
+            "responseTime": 1794877388527.172,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 2.573,
+              "receiveHeadersStart": 2.539,
+              "requestTime": 1887567.578309,
+              "sendEnd": 0.299,
+              "sendStart": 0.208,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-1"
+          },
+          "timestamp": 1887567.581253,
+          "type": "Fetch",
+          "documentRelativeMs": 842.59228515625
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "medium-bin-native-1",
+          "receivedWallTime": 1794877388.536,
+          "encodedDataLength": 2443481,
+          "requestId": "62072.15",
+          "timestamp": 1887567.586112,
+          "documentRelativeMs": 847.451171875
+        }
+      ],
+      "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-1",
+      "caseId": "medium-bin-native-1",
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "medium-bin-native-1",
+          "receivedWallTime": 1794877388.536,
+          "encodedDataLength": 2443481,
+          "requestId": "62072.15",
+          "timestamp": 1887567.586112,
+          "documentRelativeMs": 847.451171875
+        }
+      ]
+    },
+    {
+      "requestId": "62072.16",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "medium-bin-native-2",
+          "receivedWallTime": 1794877388.549,
+          "documentURL": "http://127.0.0.1:50673/__asset_transport.html",
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 31,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 45,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "24",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:50673/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-2"
+          },
+          "requestId": "62072.16",
+          "timestamp": 1887567.603323,
+          "type": "Fetch",
+          "wallTime": 1794877388.549689,
+          "documentRelativeMs": 864.662109375
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "medium-bin-native-2",
+          "receivedWallTime": 1794877388.554,
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasExtraInfo": true,
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "requestId": "62072.16",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 193,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "2443288",
+              "Content-Type": "application/octet-stream",
+              "Date": "Tue, 17 Nov 2026 01:03:08 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "application/octet-stream",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 50673,
+            "responseTime": 1794877388554.043,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 4.011,
+              "receiveHeadersStart": 3.975,
+              "requestTime": 1887567.603744,
+              "sendEnd": 0.334,
+              "sendStart": 0.243,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-2"
+          },
+          "timestamp": 1887567.608147,
+          "type": "Fetch",
+          "documentRelativeMs": 869.486083984375
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "medium-bin-native-2",
+          "receivedWallTime": 1794877388.563,
+          "encodedDataLength": 2443481,
+          "requestId": "62072.16",
+          "timestamp": 1887567.613085,
+          "documentRelativeMs": 874.424072265625
+        }
+      ],
+      "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-2",
+      "caseId": "medium-bin-native-2",
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "medium-bin-native-2",
+          "receivedWallTime": 1794877388.563,
+          "encodedDataLength": 2443481,
+          "requestId": "62072.16",
+          "timestamp": 1887567.613085,
+          "documentRelativeMs": 874.424072265625
+        }
+      ]
+    },
+    {
+      "requestId": "62072.17",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "medium-bin-native-3",
+          "receivedWallTime": 1794877388.575,
+          "documentURL": "http://127.0.0.1:50673/__asset_transport.html",
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 31,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 45,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "25",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:50673/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-3"
+          },
+          "requestId": "62072.17",
+          "timestamp": 1887567.629546,
+          "type": "Fetch",
+          "wallTime": 1794877388.575912,
+          "documentRelativeMs": 890.885009765625
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "medium-bin-native-3",
+          "receivedWallTime": 1794877388.579,
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasExtraInfo": true,
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "requestId": "62072.17",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 193,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "2443288",
+              "Content-Type": "application/octet-stream",
+              "Date": "Tue, 17 Nov 2026 01:03:08 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "application/octet-stream",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 50673,
+            "responseTime": 1794877388579.076,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 2.93,
+              "receiveHeadersStart": 2.892,
+              "requestTime": 1887567.629859,
+              "sendEnd": 0.292,
+              "sendStart": 0.217,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-3"
+          },
+          "timestamp": 1887567.633201,
+          "type": "Fetch",
+          "documentRelativeMs": 894.5400390625
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "medium-bin-native-3",
+          "receivedWallTime": 1794877388.588,
+          "encodedDataLength": 2443481,
+          "requestId": "62072.17",
+          "timestamp": 1887567.637778,
+          "documentRelativeMs": 899.1171875
+        }
+      ],
+      "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-3",
+      "caseId": "medium-bin-native-3",
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "medium-bin-native-3",
+          "receivedWallTime": 1794877388.588,
+          "encodedDataLength": 2443481,
+          "requestId": "62072.17",
+          "timestamp": 1887567.637778,
+          "documentRelativeMs": 899.1171875
+        }
+      ]
+    },
+    {
+      "requestId": "62072.18",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "medium-bin-fileloader-1",
+          "receivedWallTime": 1794877388.594,
+          "documentURL": "http://127.0.0.1:50673/__asset_transport.html",
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 2,
+                  "functionName": "load",
+                  "lineNumber": 45624,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "",
+                  "lineNumber": 45331,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "loadAsync",
+                  "lineNumber": 45329,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 29,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 52,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "26",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:50673/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-1"
+          },
+          "requestId": "62072.18",
+          "timestamp": 1887567.648065,
+          "type": "Fetch",
+          "wallTime": 1794877388.594443,
+          "documentRelativeMs": 909.404296875
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "medium-bin-fileloader-1",
+          "receivedWallTime": 1794877388.597,
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasExtraInfo": true,
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "requestId": "62072.18",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 193,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "2443288",
+              "Content-Type": "application/octet-stream",
+              "Date": "Tue, 17 Nov 2026 01:03:08 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "application/octet-stream",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 50673,
+            "responseTime": 1794877388597.286,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 2.578,
+              "receiveHeadersStart": 2.546,
+              "requestTime": 1887567.648415,
+              "sendEnd": 0.313,
+              "sendStart": 0.221,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-1"
+          },
+          "timestamp": 1887567.651361,
+          "type": "Fetch",
+          "documentRelativeMs": 912.7001953125
+        },
+        {
+          "method": "Network.loadingFailed",
+          "stage": "medium-bin-fileloader-1",
+          "receivedWallTime": 1794877388.603,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "62072.18",
+          "timestamp": 1887567.656399,
+          "type": "Fetch",
+          "documentRelativeMs": 917.738037109375
+        }
+      ],
+      "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-1",
+      "caseId": "medium-bin-fileloader-1",
+      "terminals": [
+        {
+          "method": "Network.loadingFailed",
+          "stage": "medium-bin-fileloader-1",
+          "receivedWallTime": 1794877388.603,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "62072.18",
+          "timestamp": 1887567.656399,
+          "type": "Fetch",
+          "documentRelativeMs": 917.738037109375
+        }
+      ]
+    },
+    {
+      "requestId": "62072.19",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "medium-bin-fileloader-2",
+          "receivedWallTime": 1794877388.615,
+          "documentURL": "http://127.0.0.1:50673/__asset_transport.html",
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 2,
+                  "functionName": "load",
+                  "lineNumber": 45624,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "",
+                  "lineNumber": 45331,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "loadAsync",
+                  "lineNumber": 45329,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 29,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 52,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "27",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:50673/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-2"
+          },
+          "requestId": "62072.19",
+          "timestamp": 1887567.669434,
+          "type": "Fetch",
+          "wallTime": 1794877388.615807,
+          "documentRelativeMs": 930.773193359375
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "medium-bin-fileloader-2",
+          "receivedWallTime": 1794877388.619,
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasExtraInfo": true,
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "requestId": "62072.19",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 193,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "2443288",
+              "Content-Type": "application/octet-stream",
+              "Date": "Tue, 17 Nov 2026 01:03:08 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "application/octet-stream",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 50673,
+            "responseTime": 1794877388618.651,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 2.573,
+              "receiveHeadersStart": 2.542,
+              "requestTime": 1887567.669784,
+              "sendEnd": 0.306,
+              "sendStart": 0.216,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-2"
+          },
+          "timestamp": 1887567.672711,
+          "type": "Fetch",
+          "documentRelativeMs": 934.050048828125
+        },
+        {
+          "method": "Network.loadingFailed",
+          "stage": "medium-bin-fileloader-2",
+          "receivedWallTime": 1794877388.625,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "62072.19",
+          "timestamp": 1887567.678624,
+          "type": "Fetch",
+          "documentRelativeMs": 939.963134765625
+        }
+      ],
+      "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-2",
+      "caseId": "medium-bin-fileloader-2",
+      "terminals": [
+        {
+          "method": "Network.loadingFailed",
+          "stage": "medium-bin-fileloader-2",
+          "receivedWallTime": 1794877388.625,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "62072.19",
+          "timestamp": 1887567.678624,
+          "type": "Fetch",
+          "documentRelativeMs": 939.963134765625
+        }
+      ]
+    },
+    {
+      "requestId": "62072.20",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "medium-bin-fileloader-3",
+          "receivedWallTime": 1794877388.632,
+          "documentURL": "http://127.0.0.1:50673/__asset_transport.html",
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 2,
+                  "functionName": "load",
+                  "lineNumber": 45624,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "",
+                  "lineNumber": 45331,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "loadAsync",
+                  "lineNumber": 45329,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:50673/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 29,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 52,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "28",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:50673/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-3"
+          },
+          "requestId": "62072.20",
+          "timestamp": 1887567.686656,
+          "type": "Fetch",
+          "wallTime": 1794877388.633031,
+          "documentRelativeMs": 947.9951171875
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "medium-bin-fileloader-3",
+          "receivedWallTime": 1794877388.636,
+          "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+          "hasExtraInfo": true,
+          "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+          "requestId": "62072.20",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 193,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "2443288",
+              "Content-Type": "application/octet-stream",
+              "Date": "Tue, 17 Nov 2026 01:03:08 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "application/octet-stream",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 50673,
+            "responseTime": 1794877388635.721,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 2.465,
+              "receiveHeadersStart": 2.432,
+              "requestTime": 1887567.686964,
+              "sendEnd": 0.294,
+              "sendStart": 0.206,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-3"
+          },
+          "timestamp": 1887567.689783,
+          "type": "Fetch",
+          "documentRelativeMs": 951.122314453125
+        },
+        {
+          "method": "Network.loadingFailed",
+          "stage": "medium-bin-fileloader-3",
+          "receivedWallTime": 1794877388.641,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "62072.20",
+          "timestamp": 1887567.694955,
+          "type": "Fetch",
+          "documentRelativeMs": 956.294189453125
+        }
+      ],
+      "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-3",
+      "caseId": "medium-bin-fileloader-3",
+      "terminals": [
+        {
+          "method": "Network.loadingFailed",
+          "stage": "medium-bin-fileloader-3",
+          "receivedWallTime": 1794877388.641,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "62072.20",
+          "timestamp": 1887567.694955,
+          "type": "Fetch",
+          "documentRelativeMs": 956.294189453125
+        }
+      ]
+    }
+  ],
+  "networkFailures": [
+    {
+      "method": "Network.loadingFailed",
+      "stage": "menhir-fileloader-2",
+      "receivedWallTime": 1794877387.811,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "62072.7",
+      "timestamp": 1887566.865243,
+      "type": "Fetch",
+      "documentRelativeMs": 126.58203125
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "menhir-fileloader-3",
+      "receivedWallTime": 1794877387.821,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "62072.8",
+      "timestamp": 1887566.874728,
+      "type": "Fetch",
+      "documentRelativeMs": 136.067138671875
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "highrise-fileloader-1",
+      "receivedWallTime": 1794877388.258,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "62072.12",
+      "timestamp": 1887567.299672,
+      "type": "Fetch",
+      "documentRelativeMs": 561.010986328125
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "highrise-fileloader-2",
+      "receivedWallTime": 1794877388.372,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "62072.13",
+      "timestamp": 1887567.413209,
+      "type": "Fetch",
+      "documentRelativeMs": 674.548095703125
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "highrise-fileloader-3",
+      "receivedWallTime": 1794877388.491,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "62072.14",
+      "timestamp": 1887567.532085,
+      "type": "Fetch",
+      "documentRelativeMs": 793.424072265625
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "medium-bin-fileloader-1",
+      "receivedWallTime": 1794877388.603,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "62072.18",
+      "timestamp": 1887567.656399,
+      "type": "Fetch",
+      "documentRelativeMs": 917.738037109375
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "medium-bin-fileloader-2",
+      "receivedWallTime": 1794877388.625,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "62072.19",
+      "timestamp": 1887567.678624,
+      "type": "Fetch",
+      "documentRelativeMs": 939.963134765625
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "medium-bin-fileloader-3",
+      "receivedWallTime": 1794877388.641,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "62072.20",
+      "timestamp": 1887567.694955,
+      "type": "Fetch",
+      "documentRelativeMs": 956.294189453125
+    }
+  ],
+  "httpErrors": [],
+  "exceptions": [],
+  "consoleErrors": [],
+  "documentAnchors": [
+    {
+      "requestId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+      "loaderId": "A0F4D8AE322C8DA9281DF3C55FB15C9A",
+      "frameId": "5EB72A4EF62F5EFA92DFC5672291B3EE",
+      "url": "http://127.0.0.1:50673/__asset_transport.html",
+      "timestamp": 1887566.738823,
+      "wallTime": 1794877387.685162
+    }
+  ],
+  "stageHistory": [
+    {
+      "name": "bootstrap",
+      "wallTime": 1794877387.456
+    },
+    {
+      "name": "app-ready",
+      "wallTime": 1794877387.54
+    },
+    {
+      "name": "server-ready",
+      "wallTime": 1794877387.551
+    },
+    {
+      "name": "window-created",
+      "wallTime": 1794877387.577
+    },
+    {
+      "name": "renderer-initialized",
+      "wallTime": 1794877387.665
+    },
+    {
+      "name": "enabling-network",
+      "wallTime": 1794877387.666
+    },
+    {
+      "name": "enabling-runtime",
+      "wallTime": 1794877387.667
+    },
+    {
+      "name": "loading-document",
+      "wallTime": 1794877387.676
+    },
+    {
+      "name": "menhir-native-1",
+      "wallTime": 1794877387.732
+    },
+    {
+      "name": "menhir-native-2",
+      "wallTime": 1794877387.748
+    },
+    {
+      "name": "menhir-native-3",
+      "wallTime": 1794877387.756
+    },
+    {
+      "name": "menhir-fileloader-1",
+      "wallTime": 1794877387.774
+    },
+    {
+      "name": "menhir-fileloader-2",
+      "wallTime": 1794877387.798
+    },
+    {
+      "name": "menhir-fileloader-3",
+      "wallTime": 1794877387.813
+    },
+    {
+      "name": "highrise-native-1",
+      "wallTime": 1794877387.822
+    },
+    {
+      "name": "highrise-native-2",
+      "wallTime": 1794877387.94
+    },
+    {
+      "name": "highrise-native-3",
+      "wallTime": 1794877388.056
+    },
+    {
+      "name": "highrise-fileloader-1",
+      "wallTime": 1794877388.174
+    },
+    {
+      "name": "highrise-fileloader-2",
+      "wallTime": 1794877388.288
+    },
+    {
+      "name": "highrise-fileloader-3",
+      "wallTime": 1794877388.402
+    },
+    {
+      "name": "medium-bin-native-1",
+      "wallTime": 1794877388.522
+    },
+    {
+      "name": "medium-bin-native-2",
+      "wallTime": 1794877388.54
+    },
+    {
+      "name": "medium-bin-native-3",
+      "wallTime": 1794877388.567
+    },
+    {
+      "name": "medium-bin-fileloader-1",
+      "wallTime": 1794877388.591
+    },
+    {
+      "name": "medium-bin-fileloader-2",
+      "wallTime": 1794877388.607
+    },
+    {
+      "name": "medium-bin-fileloader-3",
+      "wallTime": 1794877388.63
+    },
+    {
+      "name": "waiting-for-terminal-events",
+      "wallTime": 1794877388.645
+    },
+    {
+      "name": "complete",
+      "wallTime": 1794877391.688
+    }
+  ],
+  "method": "No scene, canvas or WebGL. Per target: native fetch arrayBuffer x3 then unchanged Three FileLoader arraybuffer x3, sequential, unique query per case, no retries. SHA-256 compares transmitted bytes with local files at launch, not an author-provided asset audit. Original reader/fetch promises are observed without replacement. All CDP terminal evidence is collected for 3 seconds after the final case.",
+  "stage": "complete",
+  "runtime": {
+    "electron": "44.9.0",
+    "chrome": "152.0.7977.167"
+  },
+  "pageClock": {
+    "timeOriginMs": 1794877387685,
+    "nowMs": 47.700000047683716,
+    "threeRevision": "187"
+  },
+  "pageTrace": {
+    "events": [
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 49.5,
+        "caseId": "menhir-native-1"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 50.5,
+        "caseId": "menhir-native-1",
+        "url": "/assets/models/menhir.glb?transportCase=menhir-native-1",
+        "signalPresent": false,
+        "signalAborted": null
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 55.30000019073486,
+        "caseId": "menhir-native-1",
+        "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-native-1",
+        "status": 200
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 58.10000014305115,
+        "caseId": "menhir-native-1",
+        "bytes": 620588
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 65.10000014305115,
+        "caseId": "menhir-native-2"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 65.20000004768372,
+        "caseId": "menhir-native-2",
+        "url": "/assets/models/menhir.glb?transportCase=menhir-native-2",
+        "signalPresent": false,
+        "signalAborted": null
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 69,
+        "caseId": "menhir-native-2",
+        "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-native-2",
+        "status": 200
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 70.90000009536743,
+        "caseId": "menhir-native-2",
+        "bytes": 620588
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 81.80000019073486,
+        "caseId": "menhir-native-3"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 81.90000009536743,
+        "caseId": "menhir-native-3",
+        "url": "/assets/models/menhir.glb?transportCase=menhir-native-3",
+        "signalPresent": false,
+        "signalAborted": null
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 85.70000004768372,
+        "caseId": "menhir-native-3",
+        "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-native-3",
+        "status": 200
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 87.80000019073486,
+        "caseId": "menhir-native-3",
+        "bytes": 620588
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 98.90000009536743,
+        "caseId": "menhir-fileloader-1"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 99.40000009536743,
+        "caseId": "menhir-fileloader-1",
+        "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-fileloader-1",
+        "signalPresent": true,
+        "signalAborted": false
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 105.20000004768372,
+        "caseId": "menhir-fileloader-1",
+        "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-fileloader-1",
+        "status": 200
+      },
+      {
+        "type": "reader-eof",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 106.80000019073486,
+        "caseId": "menhir-fileloader-1"
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 107.90000009536743,
+        "caseId": "menhir-fileloader-1",
+        "bytes": 620588
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 120.80000019073486,
+        "caseId": "menhir-fileloader-2"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 120.80000019073486,
+        "caseId": "menhir-fileloader-2",
+        "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-fileloader-2",
+        "signalPresent": true,
+        "signalAborted": false
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 125.20000004768372,
+        "caseId": "menhir-fileloader-2",
+        "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-fileloader-2",
+        "status": 200
+      },
+      {
+        "type": "reader-eof",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 126.70000004768372,
+        "caseId": "menhir-fileloader-2"
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 126.90000009536743,
+        "caseId": "menhir-fileloader-2",
+        "bytes": 620588
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 130.5,
+        "caseId": "menhir-fileloader-3"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 130.70000004768372,
+        "caseId": "menhir-fileloader-3",
+        "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-fileloader-3",
+        "signalPresent": true,
+        "signalAborted": false
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 134.5,
+        "caseId": "menhir-fileloader-3",
+        "url": "http://127.0.0.1:50673/assets/models/menhir.glb?transportCase=menhir-fileloader-3",
+        "status": 200
+      },
+      {
+        "type": "reader-eof",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 136.10000014305115,
+        "caseId": "menhir-fileloader-3"
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 136.5,
+        "caseId": "menhir-fileloader-3",
+        "bytes": 620588
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 147.5,
+        "caseId": "highrise-native-1"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 147.5,
+        "caseId": "highrise-native-1",
+        "url": "/city-assets/highrise/high_rise_building.glb?transportCase=highrise-native-1",
+        "signalPresent": false,
+        "signalAborted": null
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 151.20000004768372,
+        "caseId": "highrise-native-1",
+        "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-native-1",
+        "status": 200
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 226.10000014305115,
+        "caseId": "highrise-native-1",
+        "bytes": 31791824
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 265.10000014305115,
+        "caseId": "highrise-native-2"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 265.2000000476837,
+        "caseId": "highrise-native-2",
+        "url": "/city-assets/highrise/high_rise_building.glb?transportCase=highrise-native-2",
+        "signalPresent": false,
+        "signalAborted": null
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 269.10000014305115,
+        "caseId": "highrise-native-2",
+        "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-native-2",
+        "status": 200
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 341.80000019073486,
+        "caseId": "highrise-native-2",
+        "bytes": 31791824
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 380.40000009536743,
+        "caseId": "highrise-native-3"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 380.5,
+        "caseId": "highrise-native-3",
+        "url": "/city-assets/highrise/high_rise_building.glb?transportCase=highrise-native-3",
+        "signalPresent": false,
+        "signalAborted": null
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 384.10000014305115,
+        "caseId": "highrise-native-3",
+        "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-native-3",
+        "status": 200
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 457.5,
+        "caseId": "highrise-native-3",
+        "bytes": 31791824
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 498.40000009536743,
+        "caseId": "highrise-fileloader-1"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 498.40000009536743,
+        "caseId": "highrise-fileloader-1",
+        "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-fileloader-1",
+        "signalPresent": true,
+        "signalAborted": false
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 502.5,
+        "caseId": "highrise-fileloader-1",
+        "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-fileloader-1",
+        "status": 200
+      },
+      {
+        "type": "reader-eof",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 561.1000001430511,
+        "caseId": "highrise-fileloader-1"
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 573.7000000476837,
+        "caseId": "highrise-fileloader-1",
+        "bytes": 31791824
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 611.3000001907349,
+        "caseId": "highrise-fileloader-2"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 611.5,
+        "caseId": "highrise-fileloader-2",
+        "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-fileloader-2",
+        "signalPresent": true,
+        "signalAborted": false
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 616,
+        "caseId": "highrise-fileloader-2",
+        "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-fileloader-2",
+        "status": 200
+      },
+      {
+        "type": "reader-eof",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 674.6000001430511,
+        "caseId": "highrise-fileloader-2"
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 687.5,
+        "caseId": "highrise-fileloader-2",
+        "bytes": 31791824
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 726.8000001907349,
+        "caseId": "highrise-fileloader-3"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 727,
+        "caseId": "highrise-fileloader-3",
+        "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-fileloader-3",
+        "signalPresent": true,
+        "signalAborted": false
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 730.5,
+        "caseId": "highrise-fileloader-3",
+        "url": "http://127.0.0.1:50673/city-assets/highrise/high_rise_building.glb?transportCase=highrise-fileloader-3",
+        "status": 200
+      },
+      {
+        "type": "reader-eof",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 793.5,
+        "caseId": "highrise-fileloader-3"
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 807.2000000476837,
+        "caseId": "highrise-fileloader-3",
+        "bytes": 31791824
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 839.2000000476837,
+        "caseId": "medium-bin-native-1"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 839.3000001907349,
+        "caseId": "medium-bin-native-1",
+        "url": "/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-1",
+        "signalPresent": false,
+        "signalAborted": null
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 842.8000001907349,
+        "caseId": "medium-bin-native-1",
+        "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-1",
+        "status": 200
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 851.9000000953674,
+        "caseId": "medium-bin-native-1",
+        "bytes": 2443288
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 864.6000001430511,
+        "caseId": "medium-bin-native-2"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 864.7000000476837,
+        "caseId": "medium-bin-native-2",
+        "url": "/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-2",
+        "signalPresent": false,
+        "signalAborted": null
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 869.7000000476837,
+        "caseId": "medium-bin-native-2",
+        "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-2",
+        "status": 200
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 879,
+        "caseId": "medium-bin-native-2",
+        "bytes": 2443288
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 890.8000001907349,
+        "caseId": "medium-bin-native-3"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 890.9000000953674,
+        "caseId": "medium-bin-native-3",
+        "url": "/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-3",
+        "signalPresent": false,
+        "signalAborted": null
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 894.7000000476837,
+        "caseId": "medium-bin-native-3",
+        "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-3",
+        "status": 200
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 903.5,
+        "caseId": "medium-bin-native-3",
+        "bytes": 2443288
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 909.1000001430511,
+        "caseId": "medium-bin-fileloader-1"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 909.4000000953674,
+        "caseId": "medium-bin-fileloader-1",
+        "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-1",
+        "signalPresent": true,
+        "signalAborted": false
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 912.9000000953674,
+        "caseId": "medium-bin-fileloader-1",
+        "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-1",
+        "status": 200
+      },
+      {
+        "type": "reader-eof",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 917.8000001907349,
+        "caseId": "medium-bin-fileloader-1"
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 918.7000000476837,
+        "caseId": "medium-bin-fileloader-1",
+        "bytes": 2443288
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 930.6000001430511,
+        "caseId": "medium-bin-fileloader-2"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 930.7000000476837,
+        "caseId": "medium-bin-fileloader-2",
+        "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-2",
+        "signalPresent": true,
+        "signalAborted": false
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 934.2000000476837,
+        "caseId": "medium-bin-fileloader-2",
+        "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-2",
+        "status": 200
+      },
+      {
+        "type": "reader-eof",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 940,
+        "caseId": "medium-bin-fileloader-2"
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 940.9000000953674,
+        "caseId": "medium-bin-fileloader-2",
+        "bytes": 2443288
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 947.8000001907349,
+        "caseId": "medium-bin-fileloader-3"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 948,
+        "caseId": "medium-bin-fileloader-3",
+        "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-3",
+        "signalPresent": true,
+        "signalAborted": false
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 951.3000001907349,
+        "caseId": "medium-bin-fileloader-3",
+        "url": "http://127.0.0.1:50673/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-3",
+        "status": 200
+      },
+      {
+        "type": "reader-eof",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 956.3000001907349,
+        "caseId": "medium-bin-fileloader-3"
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794877387685,
+        "nowMs": 957.1000001430511,
+        "caseId": "medium-bin-fileloader-3",
+        "bytes": 2443288
+      }
+    ],
+    "activeCase": null
+  },
+  "finalClock": {
+    "timeOriginMs": 1794877387685,
+    "nowMs": 3965.600000143051
+  },
+  "missingTerminal": [],
+  "inputsUnchanged": true,
+  "evidenceCutoffWallTime": 1794877391.688
+}

@@ -1,0 +1,42 @@
+{
+  "baseHead": "7ef9545ee81ee072b811f007dfba6ab2898ca7a6",
+  "scope": "Files different from baseHead; source-manifest covers unchanged scene files. Includes capture scripts as they stood during v1.",
+  "files": [
+    {
+      "file": "index.html",
+      "sha256": "7a5a18b21074bbac0fca402ea417a7e2874492b0293b69e93159282505fb9ae8"
+    },
+    {
+      "file": "city-assets.json",
+      "sha256": "70125bf6a2bacdccba14451638386a6504050b51fde663c929ffa658629cae82"
+    },
+    {
+      "file": "src/city.js",
+      "sha256": "6dcded5dd25537af8001b0c5c28a7933fdbe63de466bb0250ee4e5dc04989f72"
+    },
+    {
+      "file": "src/main.js",
+      "sha256": "07e0c18df751a714c1adff07ebee94c3b387ee7a51ea42642c6517b18e9776c3"
+    },
+    {
+      "file": "src/skyline.js",
+      "sha256": "1dfaa932ec4985b87147b0dcd0fd8abb8cf86e91f2440c527c552b107040cbcd"
+    },
+    {
+      "file": "src/style.css",
+      "sha256": "0ca6b83aa2c0e9653e45e02280a9e73abce47277ea9b47e21a0aa1f7e580704d"
+    },
+    {
+      "file": "scripts/baseline.cjs",
+      "sha256": "39bd75c2984b8fed1b655130789bcd4cb524aab257c2fbd5f55bc8916e0c5cdf"
+    },
+    {
+      "file": "scripts/preview-host.cjs",
+      "sha256": "5ef002665dc9f5d63b4dcac50291dcb9a7e63b11eb2222f3630b0b316011a084"
+    },
+    {
+      "file": "scripts/prepare-city.cjs",
+      "sha256": "172d880ad7b8c45d0b1897719d42801e29413aac19a95f7a3ef81c1910a296ab"
+    }
+  ]
+}
