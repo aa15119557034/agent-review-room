@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { it } from "node:test";
 import { sha256Hex } from "@room/core";
-import { openDatabase, readResearchPlan, transitionRun, WriteQueue, type RunRow } from "@room/db";
+import { openDatabase, readResearchPlan, repairInterruptedRuns, transitionRun, WriteQueue, type RunRow } from "@room/db";
 import { ProjectResearchStartRunRequest, type ControlEvent } from "@room/schemas";
 import { Repository } from "../src/main/repository";
 import { SettingsStore } from "../src/main/settings";
@@ -54,7 +54,10 @@ async function sinkFixture() {
   const request = ProjectResearchStartRunRequest.parse({ protocol: 1, runId: approved.run.id, profileId: "research", structuredResults: { version: 1 }, projectResearch: { version: 1 }, snapshot: { id: preview.snapshot.id, content: preview.snapshot.content, contentHash: preview.snapshot.contentHash }, limits: { idleTimeoutMs: 10000, totalTimeoutMs: 20000 } });
   const controller = new AbortController(), diagnostics: string[] = [], changed: (string | null)[] = [];
   let valid = true;
-  const sink = researchResultSink({ db: f.db, queue: f.queue, request, signal: controller.signal, assertContext: () => { if (!valid) throw new Error("context invalidated"); }, diagnostic: (reason) => diagnostics.push(reason), changed: (id) => changed.push(id) });
+  const sink = researchResultSink({ db: f.db, queue: f.queue, request, signal: controller.signal, assertContext: () => {
+    if (!valid) throw new Error("context invalidated");
+    f.service.preview({ type: "research.preview", projectId: f.project.id, snapshotId: preview.snapshot.id });
+  }, diagnostic: (reason) => diagnostics.push(reason), changed: (id) => changed.push(id) });
   await sink(started);
   return { ...f, preview, approved, request, controller, sink, diagnostics, changed, invalidate: () => { valid = false; } };
 }
@@ -194,4 +197,68 @@ it("a malformed or forged original fails the run without reconnect/retry or publ
     assert.equal(f.requests.filter((r) => r.path.endsWith("/events")).length, 1);
     assert.equal(f.requests.filter((r) => r.path === "/v1/runs").length, 1);
   } finally { f.db.close(); }
+});
+
+it("rejecting a prepared research approval sends no start and cannot later be approved", async () => {
+  const f = await fixture({ start: true });
+  try {
+    const preview = await f.prepare();
+    const rejected = await f.dispatcher.handleCommand({ type: "approval.reject", approvalId: preview.approval.id, reason: "do not search" });
+    assert.ok(rejected.ok);
+    assert.equal(f.repo.getApproval(preview.approval.id).state, "REJECTED");
+    const retried = await f.dispatcher.handleCommand({ type: "research.approve", approvalId: preview.approval.id, expectedSnapshotHash: preview.snapshot.contentHash, expectedResearchHash: preview.researchHash });
+    assert.equal(retried.ok, false);
+    assert.equal(f.repo.listRuns(f.project.id, 100).length, 0);
+    assert.ok(f.requests.every((request) => request.path === "/v1/health"));
+    assert.equal(f.events.some((event) => event.type === "message.created"), false);
+  } finally { f.service.invalidate(); await f.queue.drain(); f.db.close(); }
+});
+
+it("a remote failure after original commit preserves the original but never publishes a successful Run or reviewer reply", async () => {
+  const failure = { ...terminal, result: { outcome: "error", reason: "incomplete_output", exitCode: 1, message: "failed after original" } };
+  const f = await fixture({ start: true, stream: [started, original, citation, failure] });
+  try {
+    const approved = await f.approve(await f.prepare());
+    await f.finished.promise; await f.queue.drain();
+    const result = f.service.result({ type: "research.result", projectId: f.project.id, runId: approved.run.id });
+    assert.equal(result.run.state, "FAILED");
+    assert.ok(result.originalMessageId);
+    assert.equal(f.repo.getMessage(result.originalMessageId).kind, "source_input");
+    assert.equal(f.repo.listMessages(f.project.id).length, 1);
+    assert.equal(f.service.sourcePreview({ type: "sources.preview", projectId: f.project.id, owner: { kind: "message", id: result.originalMessageId }, index: 0 }).content, text);
+    assert.equal(f.events.some((event) => event.type === "run.updated" && event.run.state === "COMPLETED"), false);
+    assert.equal((f.db.prepare("SELECT count(*) AS n FROM turns").get() as { n: number }).n, 0);
+  } finally { f.service.invalidate(); await f.queue.drain(); f.db.close(); }
+});
+
+it("a restored database with identical project/snapshot/Run IDs does not revive an old queued original", async () => {
+  const f = await sinkFixture();
+  const file = join(mkdtempSync(join(tmpdir(), "room-research-same-id-")), "restored.db");
+  await f.db.backup(file);
+  const restored = openDatabase(file), queue = new WriteQueue(), repo = new Repository(restored, queue), events: ControlEvent[] = [];
+  const service = new ProjectResearchService({ db: restored, queue, repo, settings: f.settings, orchestrator: { start: async () => { throw new Error("restore must not dispatch"); } }, emit: (event) => events.push(event) });
+  const release = deferred<void>(), entered = deferred<void>();
+  try {
+    const blocking = f.queue.run(async () => { entered.resolve(); await release.promise; });
+    await entered.promise;
+    const pending = f.sink(original), rejected = assert.rejects(pending, /工作区已切换或关闭/);
+    assert.equal(f.queue.pending, 2);
+    f.service.invalidate();
+    assert.equal(service.preview({ type: "research.preview", projectId: f.project.id, snapshotId: f.preview.snapshot.id }).snapshot.id, f.preview.snapshot.id);
+    assert.equal(service.result({ type: "research.result", projectId: f.project.id, runId: f.approved.run.id }).run.state, "RUNNING");
+    release.resolve(); await blocking; await rejected; await f.queue.drain();
+    assert.deepEqual(f.repo.listMessages(f.project.id), []);
+    assert.deepEqual(repo.listMessages(f.project.id), []);
+    assert.deepEqual(f.changed, []);
+    assert.deepEqual(events, []);
+    f.db.close();
+    await repairInterruptedRuns(restored, queue);
+    const result = service.result({ type: "research.result", projectId: f.project.id, runId: f.approved.run.id });
+    assert.equal(result.run.state, "FAILED");
+    assert.equal(result.originalMessageId, null);
+    assert.deepEqual(repo.listMessages(f.project.id), []);
+    assert.deepEqual(f.changed, []);
+    assert.deepEqual(events, []);
+    assert.ok(f.requests.every((request) => request.path === "/v1/health"));
+  } finally { release.resolve(); service.invalidate(); await f.queue.drain(); await queue.drain(); if (f.db.open) f.db.close(); restored.close(); }
 });

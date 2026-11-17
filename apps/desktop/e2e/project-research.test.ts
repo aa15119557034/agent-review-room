@@ -19,7 +19,7 @@ import { RunOrchestrator } from "../src/main/orchestrator";
 const TOKEN = "e2e-controller-token-".repeat(3), KEY = "e2e-provider-secret-do-not-persist", TEXT = "# 原始资料\r\n  🧪 Unicode 和空白完整保留\n";
 function deferred() { let resolve!: () => void; const promise = new Promise<void>((r) => { resolve = r; }); return { promise, resolve }; }
 
-for (const mode of ["success", "empty", "fetch-failed", "cancel-fetch"] as const) {
+for (const mode of ["success", "reconnect", "empty", "fetch-failed", "cancel-fetch"] as const) {
   it(`P2-X12 HTTP node + Search/Fetch process + main + DB: ${mode}`, { timeout: 20000 }, async () => {
     const calls: { path: string; body: unknown }[] = [], reached = deferred(), completed = deferred();
     let held: ServerResponse | undefined;
@@ -52,8 +52,39 @@ for (const mode of ["success", "empty", "fetch-failed", "cancel-fetch"] as const
     const events: ControlEvent[] = [];
     const emit = (event: ControlEvent) => { events.push(event); if (event.type === "run.updated" && ["COMPLETED", "FAILED", "CANCELLED", "TIMED_OUT"].includes(event.run.state)) completed.resolve(); };
     let service!: ProjectResearchService;
+    const connections: string[] = [];
+    const fetchImpl: typeof fetch = async (input, init) => {
+      const url = String(input);
+      const response = await fetch(input, init);
+      if (!new URL(url).pathname.endsWith("/events")) return response;
+      connections.push(url);
+      if (mode !== "reconnect" || connections.length !== 1 || !response.body) return response;
+      const reader = response.body.getReader(), decoder = new TextDecoder(), encoder = new TextEncoder();
+      // Close the actual HTTP subscription after the complete original. The next
+      // GET must resume the same node Run; no new paid start is permitted.
+      return new Response(new ReadableStream<Uint8Array>({
+        async start(controller) {
+          let pending = "";
+          try {
+            for (;;) {
+              const chunk = await reader.read();
+              if (chunk.done) throw new Error("fixture stream ended before original");
+              pending += decoder.decode(chunk.value, { stream: true });
+              for (let end = pending.indexOf("\n"); end >= 0; end = pending.indexOf("\n")) {
+                const line = pending.slice(0, end); pending = pending.slice(end + 1);
+                controller.enqueue(encoder.encode(line + "\n"));
+                if (line && JSON.parse(line).type === "message_complete") {
+                  controller.close(); await reader.cancel(); return;
+                }
+              }
+            }
+          } catch (error) { controller.error(error); }
+          finally { reader.releaseLock(); }
+        },
+      }), { status: response.status, headers: response.headers });
+    };
     const orchestrator = new RunOrchestrator({ db, queue, emit, idleTimeoutMs: 5000, totalTimeoutMs: 12000, getRun: (id) => db.prepare("SELECT * FROM runs WHERE id = ?").get(id) as RunRow | undefined, adapterFactory: (run, signal) => service.createAdapter(run, signal) });
-    service = new ProjectResearchService({ db, queue, repo, settings, orchestrator, emit });
+    service = new ProjectResearchService({ db, queue, repo, settings, orchestrator, emit, fetchImpl });
     try {
       const preview = await service.prepare({ type: "research.prepare", projectId: project.id, nodeId: "research-node", profileId: "research", query: "公开的 Unicode 资料" });
       assert.equal(calls.length, 0, "prepare only probes health");
@@ -65,20 +96,31 @@ for (const mode of ["success", "empty", "fetch-failed", "cancel-fetch"] as const
       assert.equal(result.run.state, mode === "fetch-failed" ? "FAILED" : mode === "cancel-fetch" ? "CANCELLED" : "COMPLETED");
       assert.equal(calls.filter((call) => call.path === "/v1/tools/search").length, 1);
       assert.equal(calls.filter((call) => call.path === "/v1/tools/fetch").length, mode === "empty" ? 0 : 1);
-      assert.equal(repo.listMessages(project.id).length, mode === "success" ? 1 : 0);
-      assert.equal(events.filter((event) => event.type === "message.created").length, mode === "success" ? 1 : 0);
+      const hasOriginal = mode === "success" || mode === "reconnect";
+      assert.equal(repo.listMessages(project.id).length, hasOriginal ? 1 : 0);
+      assert.equal(events.filter((event) => event.type === "message.created").length, hasOriginal ? 1 : 0);
       assert.equal(JSON.stringify(events).includes(KEY), false);
       assert.equal(JSON.stringify(result).includes(TOKEN), false);
-      if (mode === "success") {
+      if (hasOriginal) {
         const original = repo.getMessage(result.originalMessageId!);
         assert.equal(original.kind, "source_input");
         assert.equal(original.content, TEXT);
         assert.equal(original.sourceRefs?.[0]?.contentHash, sha256Hex(TEXT));
-        const events = repo.listEvents(approved.run.id, -1);
-        assert.equal(events.filter((e) => e.type === "completed").length, 1);
+        const runEvents = repo.listEvents(approved.run.id, -1);
+        assert.equal(runEvents.filter((e) => e.type === "completed").length, 1);
         const stored = db.prepare("SELECT type, payload FROM run_events WHERE run_id = ? ORDER BY seq").all(approved.run.id) as { type: string; payload: string }[];
         const bodyIndex = stored.findIndex((e) => e.type === "message_complete"), citationIndex = stored.findIndex((e) => e.type === "result_display" && JSON.parse(e.payload).result.block.kind === "citation");
         assert.ok(bodyIndex >= 0 && citationIndex > bodyIndex);
+        assert.equal(stored.filter((e) => e.type === "message_complete").length, 1);
+        assert.equal(stored.filter((e) => e.type === "result_display" && JSON.parse(e.payload).result.block.kind === "citation").length, 1);
+        if (mode === "reconnect") {
+          assert.equal(connections.length, 2);
+          assert.equal(new URL(connections[0]!).searchParams.get("after"), "-1");
+          assert.ok(Number(new URL(connections[1]!).searchParams.get("after")) > 0);
+          assert.equal(new URL(connections[0]!).pathname, new URL(connections[1]!).pathname);
+          assert.ok(stored.some((e) => e.type === "status" && JSON.parse(e.payload).substate === "disconnected"));
+          assert.ok(events.some((e) => e.type === "run.event" && e.event.type === "status" && e.event.substate === "disconnected"));
+        }
         const backup = join(dir, "backup.db");
         await db.backup(backup);
         const restored = openDatabase(backup);
