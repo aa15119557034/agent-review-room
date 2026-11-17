@@ -422,6 +422,26 @@ describe("世界：还没配置秘书时后台不给设置（C-59）", () => {
   });
 });
 
+describe("世界：开局回应晚到、推送先到（C-59 偶发失败）", () => {
+  it("settings 是 null 时开局：回应比之后的推送晚，设置也要收下", async () => {
+    const t = setup({ seed: false });
+    await t.actions.world.load();
+    t.store.set((s) => ({ ...s, world: { ...s.world, settings: null } }));
+    t.hold("world.reset");
+    const starting = t.actions.world.start(["claude"]);
+    await tick();
+    await tick();
+    assert.ok(t.w().world, "新的一局靠推送先到了");
+    await t.advance(30);
+    const pushed = t.snap().lastSeq;
+    await t.release("world.reset");
+    await starting;
+    assert.equal(t.snap().lastSeq >= pushed, true, "回应里的旧快照没把推送来的新快照盖掉");
+    assert.equal(t.w().settings?.dayRealMinutes, WORLD_DAY_REAL_MINUTES_DEFAULT);
+    assert.deepEqual(t.w().settings?.residents, ["claude"]);
+  });
+});
+
 describe("世界：旧请求的回应晚到（林离 #230 第一轮）", () => {
   it("同一个会话里 runSeq 不能倒退：迟到的旧代快照丢掉，哪怕它的 lastSeq 更大", async () => {
     const t = await opened();
