@@ -18,10 +18,15 @@ export const STREET_REFLECTION_GLSL = /* glsl */`
     vec3 fromProbe = normalize(p + r * t - uStreetOrigin);
     // The sky is effectively at infinity above the eaves.
     vec3 dir = mix(fromProbe, r, smoothstep(0.40, 0.88, r.y)) * basis;
-    return textureLod(uStreetEnvironment, dir, lod).rgb;
+    // Each sRGB PNG stores half the measured linear radiance.
+    return 2.0 * textureLod(uStreetEnvironment, dir, lod).rgb;
   }`;
 
-const FRONT_DEPTH = { W1: -2.6, W2: -2.5, E1: -3.8, E2: -1.2, E3: -2.0 };
+const FRONTS = [
+  { id: 'W1', depth: -2.6, count: 8 }, { id: 'W2', depth: -2.5, count: 5 },
+  { id: 'E1', depth: -3.8, count: 4 }, { id: 'E2', depth: -1.2, count: 5 },
+  { id: 'E3', depth: -2.0, count: 5 },
+];
 
 function glassMaterial(original, uniforms) {
   const glass = original.clone();
@@ -47,7 +52,7 @@ function glassMaterial(original, uniforms) {
   return glass;
 }
 
-export function createStreetReflections(root, layout) {
+export async function createStreetReflections(root, layout) {
   const z = 18, x = layout.streetCenterX(z);
   const origin = new THREE.Vector3(x, layout.heightAt(x, z) + 1.9, z);
   const uniforms = {
@@ -57,11 +62,12 @@ export function createStreetReflections(root, layout) {
     uStreetMin: { value: new THREE.Vector3(x - 9.7, -1, -7) },
     uStreetMax: { value: new THREE.Vector3(x + 9.7, 11, 43) },
   };
-  const fronts = Object.entries(FRONT_DEPTH).map(([id, depth]) => {
+  const fronts = FRONTS.map(({ id, depth, count }) => {
     const f = layout.lotFrame(layout.lotById(id));
-    return { id, depth, width: f.w, toLot: new THREE.Matrix4().makeRotationY(f.rotY).setPosition(f.x, f.y, f.z).invert() };
+    return { id, depth, count, width: f.w, toLot: new THREE.Matrix4().makeRotationY(f.rotY).setPosition(f.x, f.y, f.z).invert() };
   });
-  const panes = {}, clones = new Map(), centre = new THREE.Vector3(), box = new THREE.Box3(), transform = new THREE.Matrix4();
+  const panes = {}, windows = [];
+  const centre = new THREE.Vector3(), box = new THREE.Box3(), transform = new THREE.Matrix4();
   root.updateWorldMatrix(true, true);
   root.traverse(mesh => {
     const m = mesh.material;
@@ -74,63 +80,46 @@ export function createStreetReflections(root, layout) {
       box.copy(geometry.boundingBox).applyMatrix4(transform.multiplyMatrices(f.toLot, mesh.matrixWorld));
       box.getCenter(centre);
       if (centre.y < 0.6 || centre.y > 3.4 || Math.abs(centre.x) > f.width * 0.5 ||
-          Math.abs(centre.z - f.depth) > 0.38 || box.max.z - box.min.z > 0.12 ||
+          Math.abs(centre.z - f.depth) > 0.20 || box.max.z - box.min.z > 0.12 ||
           box.max.x - box.min.x < 0.35 || box.max.y - box.min.y < 0.18) continue;
-      if (!clones.has(m)) clones.set(m, glassMaterial(m, uniforms));
-      mesh.material = clones.get(m);
+      windows.push(mesh);
       panes[f.id] = (panes[f.id] || 0) + 1;
       break;
     }
   });
-  for (const { id } of fronts) if (!panes[id]) throw new Error('Missing street-facing windows on lot ' + id);
+  for (const { id, count } of fronts) {
+    if (panes[id] !== count) throw new Error(`Street frontage ${id} expected ${count} panes, found ${panes[id] || 0}`);
+  }
   const resolution = 256;
-  const stats = { resolution, panes, captures: 0, facesAtLoad: 0, passesPerFrame: 0, captureSubmitMs: 0 };
-  let target;
+  const start = performance.now();
+  const faces = ['px', 'nx', 'py', 'ny', 'pz', 'nz'].map(face => new URL(`./street-env/${face}.png`, import.meta.url).href);
+  const cube = await new THREE.CubeTextureLoader().loadAsync(faces);
+  if (cube.image.length !== 6 || cube.image.some(face => face.width !== resolution || face.height !== resolution)) {
+    cube.dispose();
+    throw new Error('Invalid baked street reflection faces');
+  }
+  cube.name = 'station-street-reflection';
+  cube.colorSpace = THREE.SRGBColorSpace;
+  cube.minFilter = THREE.LinearMipmapLinearFilter;
+  cube.magFilter = THREE.LinearFilter;
+  cube.generateMipmaps = true;
+  uniforms.uStreetEnvironment.value = cube;
+  const clones = new Map();
+  for (const mesh of windows) {
+    const original = mesh.material;
+    if (!clones.has(original)) clones.set(original, glassMaterial(original, uniforms));
+    mesh.material = clones.get(original);
+  }
   return {
-    uniforms, stats,
-    capture(renderer, scene) {
-      if (target) return;
-      target = new THREE.WebGLCubeRenderTarget(resolution, {
-        type: THREE.HalfFloatType, generateMipmaps: true,
-        minFilter: THREE.LinearMipmapLinearFilter, magFilter: THREE.LinearFilter,
-      });
-      target.texture.name = 'station-street-reflection';
-      const camera = new THREE.CubeCamera(0.18, 84, target);
-      camera.layers.enableAll();
-      camera.position.copy(origin).applyMatrix4(root.matrixWorld);
-      uniforms.uStreetWorldToLocal.value.copy(root.matrixWorld).invert();
-      const shadows = renderer.shadowMap;
-      const auto = shadows.autoUpdate, needed = shadows.needsUpdate;
-      const previousTarget = renderer.getRenderTarget(), face = renderer.getActiveCubeFace(), mip = renderer.getActiveMipmapLevel();
-      const xr = renderer.xr.enabled;
-      const start = performance.now();
-      // Draw through the front glass into the shops; the new target is first
-      // bound as a sampler after all six faces and their mipmaps are finished.
-      for (const glass of clones.values()) glass.visible = false;
-      try {
-        shadows.autoUpdate = false;
-        shadows.needsUpdate = true;
-        camera.update(renderer, scene);
-        uniforms.uStreetEnvironment.value = target.texture;
-        stats.captures++;
-        stats.facesAtLoad += 6;
-        stats.captureSubmitMs = Math.round(performance.now() - start);
-      } catch (error) {
-        renderer.setRenderTarget(previousTarget, face, mip);
-        renderer.xr.enabled = xr;
-        target.dispose();
-        target = null;
-        throw error;
-      } finally {
-        shadows.autoUpdate = auto;
-        shadows.needsUpdate = needed;
-        for (const glass of clones.values()) glass.visible = true;
-      }
+    uniforms, stats: { resolution, panes, loadedFaces: faces.length, captures: 0, facesAtLoad: 0,
+      passesPerFrame: 0, loadMs: Math.round(performance.now() - start) },
+    setTransform(matrixWorld) {
+      uniforms.uStreetWorldToLocal.value.copy(matrixWorld).invert();
     },
     dispose() {
+      if (!uniforms.uStreetEnvironment.value) return;
       uniforms.uStreetEnvironment.value = null;
-      target?.dispose();
-      target = null;
+      cube.dispose();
     },
   };
 }

@@ -144,14 +144,6 @@ async function init() {
     { name: 'laundry-details', fov: 55, position: toWorld(worldBase.city.stats.texturedProps.view.position), target: toWorld(worldBase.city.stats.texturedProps.view.target) },
   ];
   setView('station-street');
-  // The probe sees the street under the same lights as the player. Capture
-  // the asphalt substrate once, before the puddles sample the finished cube.
-  station.wetRoad.setEnabled(false);
-  try {
-    station.streetReflections.capture(renderer, scene);
-  } finally {
-    station.wetRoad.setEnabled(true);
-  }
   document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
   document.querySelector('#walk').addEventListener('click', () => walker.enabled ? setView('station-street') : startWalking());
   document.querySelector('#camera').addEventListener('click', () => {

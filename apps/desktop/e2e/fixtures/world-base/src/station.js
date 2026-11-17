@@ -99,7 +99,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   const clipStart = performance.now();
   const removedMeshes = trimOutside(root, layout.WORLD.play);
   const groundBlend = blendStationGround({ root, terrainMaterial: groundMaterial, bounds: layout.WORLD.play });
-  const streetReflections = createStreetReflections(root, layout);
+  const streetReflections = await createStreetReflections(root, layout);
   const wetRoad = applyWetRoad({ root, ctx, reflections: streetReflections });
   // These textures belong to the island; the station owns only the blend mesh
   // and material. Disposing the district must not invalidate island rendering.
@@ -112,6 +112,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   root.rotation.y = rotationY;
   scene.add(root);
   root.updateWorldMatrix(true, true);
+  streetReflections.setTransform(root.matrixWorld);
   clipMaterials(root, layout.WORLD.play);
   const inverse = root.matrixWorld.clone().invert();
   const rotation = root.getWorldQuaternion(new THREE.Quaternion());
