@@ -422,8 +422,11 @@ describe("世界：还没配置秘书时后台不给设置（C-59）", () => {
   });
 });
 
-describe("世界：开局回应晚到、推送先到（C-59 偶发失败）", () => {
-  it("settings 是 null 时开局：回应比之后的推送晚，设置也要收下", async () => {
+describe("世界：开局 / 首次读取的回应晚于推送（C-59b，林离 #265）", () => {
+  const other = (t: ReturnType<typeof setup>) => createClient(t.bridge);
+  const saved = { dayRealMinutes: 12, dailyCognitionLimit: 7 };
+
+  it("settings 是 null 时开局：回应比之后的推送晚，按现在的状态重读，设置补上", async () => {
     const t = setup({ seed: false });
     await t.actions.world.load();
     t.store.set((s) => ({ ...s, world: { ...s.world, settings: null } }));
@@ -436,8 +439,57 @@ describe("世界：开局回应晚到、推送先到（C-59 偶发失败）", ()
     const pushed = t.snap().lastSeq;
     await t.release("world.reset");
     await starting;
-    assert.equal(t.snap().lastSeq >= pushed, true, "回应里的旧快照没把推送来的新快照盖掉");
+    assert.ok(t.snap().lastSeq >= pushed, "回应里的旧快照没把推送来的新快照盖掉");
     assert.equal(t.w().settings?.dayRealMinutes, WORLD_DAY_REAL_MINUTES_DEFAULT);
+    assert.deepEqual(t.w().settings?.residents, ["claude"]);
+  });
+
+  it("开局回应在路上时设置又保存过：不拿回应里的旧设置", async () => {
+    const t = setup({ seed: false });
+    await t.actions.world.load();
+    t.store.set((s) => ({ ...s, world: { ...s.world, settings: null } }));
+    t.hold("world.reset");
+    const starting = t.actions.world.start(["claude"]);
+    await tick();
+    await tick();
+    const fresh = t.snap();
+    await other(t).command({ type: "world.pause", worldId: fresh.id });
+    await other(t).command({ type: "world.resume", worldId: fresh.id });
+    await other(t).command({ type: "world.settings.save", settings: saved });
+    await t.advance(30);
+    await t.release("world.reset");
+    await starting;
+    assert.equal(t.w().settings?.dayRealMinutes, 12);
+    assert.equal(t.w().settings?.dailyCognitionLimit, 7);
+  });
+
+  it("新窗口首次读取晚于推送、期间设置又保存过：重读拿到现在的设置", async () => {
+    const t = await opened();
+    t.store.set((s) => ({ ...s, world: { ...s.world, settings: null } }));
+    t.hold("world.get");
+    const loading = t.actions.world.load();
+    await tick();
+    await other(t).command({ type: "world.settings.save", settings: saved });
+    await t.advance(30);
+    await t.release("world.get");
+    await loading;
+    assert.equal(t.w().settings?.dayRealMinutes, 12);
+    assert.equal(t.w().settings?.dailyCognitionLimit, 7);
+  });
+
+  it("只选一位开局、推送先到：设置里的居民是这一位，不是开局页默认的两位", async () => {
+    const t = setup({ seed: false });
+    await t.actions.world.load();
+    const before = t.w().settings;
+    t.store.set((s) => ({ ...s, world: { ...s.world, settings: before ? { ...before, residents: ["claude", "codex"] } : null } }));
+    t.hold("world.reset");
+    const starting = t.actions.world.start(["claude"]);
+    await tick();
+    await tick();
+    await t.advance(30);
+    await t.release("world.reset");
+    await starting;
+    assert.deepEqual(t.snap().residents.map((r) => r.agent), ["claude"]);
     assert.deepEqual(t.w().settings?.residents, ["claude"]);
   });
 });

@@ -142,6 +142,12 @@ export function applySnapshot(state: WorldUiState, world: WorldSnapshot): WorldU
  * world.get / world.reset 的整份结果。调用方先按 WorldContext 确认这份回应没过期。
  * 里面的快照如果比手里的旧（被 applySnapshot 丢掉），设置、用量、场景也一起不用：它们是和那份旧快照同一时刻的。
  */
+/**
+ * 这份 world.get / world.reset 结果里的快照比手里的旧（推送先到了）。applyWorldState 会整份不用，
+ * 设置也不收：回应在路上时设置可能又保存过（林离 #265）。调用方要按现在的状态重读一次，补上设置。
+ */
+export const isStaleState = (state: WorldUiState, data: WorldState) => data.world !== null && applySnapshot(state, data.world) === state;
+
 export function applyWorldState(state: WorldUiState, data: WorldState): WorldUiState {
   const done: WorldUiState = { ...state, loaded: true, starting: false };
   if (!data.world) {
