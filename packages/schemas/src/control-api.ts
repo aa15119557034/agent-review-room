@@ -18,7 +18,8 @@ import {
   SnapshotId,
   TurnId,
 } from "./common";
-import { NodeHealth, ProfileId, RunModel } from "./remote-protocol";
+import { NodeHealth, ProfileId, ProjectResearchQuery, RunModel } from "./remote-protocol";
+import { ResultDisplayBlock, SourceReference } from "./structured-results";
 import { AgentEvent } from "./agent-event";
 import { PackImportRequest, PackImportResult, Packs, PacksRequest } from "./packs";
 import {
@@ -267,6 +268,113 @@ const def = <Req extends z.ZodTypeAny, Res extends z.ZodTypeAny>(
   response: Res,
   scope: ControlScope,
 ) => ({ request, response, scope });
+
+// P2-C11b: reviewable contracts only. Do not register these in COMMANDS / QUERIES until wiring lands.
+export const ProjectResearchTarget = z.object({
+  nodeId: NodeId,
+  baseUrl: NodeBaseUrl.refine((url) => {
+    try { return url === new URL(url).origin; } catch { return false; }
+  }, "节点地址须为规范 origin"),
+  profileId: ProfileId,
+}).strict();
+export const ProjectResearchPlan = z.object({
+  version: z.literal(1), projectId: ProjectId, snapshotId: SnapshotId,
+  query: ProjectResearchQuery, target: ProjectResearchTarget,
+}).strict();
+export type ProjectResearchPlan = z.infer<typeof ProjectResearchPlan>;
+
+/** Hash UTF-8 of this exact string with SHA-256. This does not change Snapshot.contentHash. */
+export function projectResearchApprovalContent(value: ProjectResearchPlan): string {
+  const plan = ProjectResearchPlan.parse(value);
+  return JSON.stringify([
+    "room.project-research", plan.version, plan.projectId, plan.snapshotId, plan.query,
+    plan.target.nodeId, plan.target.baseUrl, plan.target.profileId,
+  ]);
+}
+
+export const ProjectResearchPreview = z.object({
+  plan: ProjectResearchPlan, researchHash: Sha256Hex, snapshot: PromptSnapshot, approval: Approval,
+}).strict().superRefine(({ plan, snapshot, approval }, ctx) => {
+  if (plan.projectId !== snapshot.projectId || plan.projectId !== approval.projectId ||
+      plan.snapshotId !== snapshot.id || plan.snapshotId !== approval.snapshotId) {
+    ctx.addIssue({ code: "custom", path: ["plan"], message: "检索计划、快照与批准必须属于同一项目/快照" });
+  }
+  if (snapshot.content !== plan.query || snapshot.reviewerAgent !== plan.target.profileId || snapshot.contributionIds.length !== 0 ||
+      snapshot.sourceRefs !== undefined || snapshot.attachments !== undefined || snapshot.imageSlot !== undefined ||
+      snapshot.projectNoteId !== undefined || snapshot.commitSha !== null || snapshot.branch !== null || snapshot.synthesisVersion !== null) {
+    ctx.addIssue({ code: "custom", path: ["snapshot"], message: "首片检索只批准查询，不隐式发送项目、聊天或工程资料" });
+  }
+});
+export type ProjectResearchPreview = z.infer<typeof ProjectResearchPreview>;
+
+/** Lookup an existing owner's immutable refs, never a renderer-supplied URL or private chat ID. */
+export const ProjectSourceOwner = z.discriminatedUnion("kind", [
+  z.object({ kind: z.literal("message"), id: MessageId }).strict(),
+  z.object({ kind: z.literal("snapshot"), id: SnapshotId }).strict(),
+]);
+export const CurrentProjectSource = z.object({
+  index: z.number().int().min(0).max(99),
+  reference: SourceReference,
+  currentStatus: z.enum(["readable", "missing", "revoked"]),
+}).strict().refine((item) => item.currentStatus !== "readable" || item.reference.status === "readable",
+  "未取回的历史引用不能自动升级为可读");
+export const ProjectSourcesCurrent = z.object({
+  projectId: ProjectId, owner: ProjectSourceOwner, checkedAt: IsoTimestamp,
+  sources: z.array(CurrentProjectSource).max(100),
+}).strict().refine((result) => result.sources.every((source, index) => source.index === index),
+  "返回所有已存引用，顺序不变，index 连续");
+export type ProjectSourcesCurrent = z.infer<typeof ProjectSourcesCurrent>;
+
+const sourcePreviewIdentity = {
+  projectId: ProjectId, owner: ProjectSourceOwner, index: z.number().int().min(0).max(99),
+  reference: SourceReference, checkedAt: IsoTimestamp,
+};
+export const ProjectSourcePreview = z.discriminatedUnion("status", [
+  z.object({ ...sourcePreviewIdentity, status: z.literal("readable"), content: z.string().min(1).max(2_000_000) }).strict(),
+  z.object({ ...sourcePreviewIdentity, status: z.literal("missing"), content: z.null() }).strict(),
+  z.object({ ...sourcePreviewIdentity, status: z.literal("revoked"), content: z.null() }).strict(),
+]).refine((result) => result.status !== "readable" || result.reference.status === "readable",
+  "可读预览必须对应已取回的历史引用");
+export type ProjectSourcePreview = z.infer<typeof ProjectSourcePreview>;
+
+export const PROJECT_RESEARCH_COMMANDS = {
+  "research.prepare": def(z.object({
+    type: z.literal("research.prepare"), projectId: ProjectId,
+    nodeId: NodeId, profileId: ProfileId, query: ProjectResearchQuery,
+  }).strict(), ProjectResearchPreview, "author"),
+  "research.approve": def(z.object({
+    type: z.literal("research.approve"), approvalId: ApprovalId,
+    expectedSnapshotHash: Sha256Hex, expectedResearchHash: Sha256Hex,
+  }).strict(), z.object({ approval: Approval, run: Run }).strict().refine(({ approval, run }) =>
+    approval.state === "APPROVED" && approval.id === run.approvalId &&
+    approval.projectId === run.projectId && approval.snapshotId === run.snapshotId,
+    "批准与 Run 必须对应同一已批准快照"), "approve"),
+} as const;
+
+export const PROJECT_RESEARCH_QUERIES = {
+  "research.preview": def(z.object({
+    type: z.literal("research.preview"), projectId: ProjectId, snapshotId: SnapshotId,
+  }).strict(), ProjectResearchPreview, "read"),
+  "research.result": def(z.object({
+    type: z.literal("research.result"), projectId: ProjectId, runId: RunId,
+  }).strict(), z.object({
+    run: Run, plan: ProjectResearchPlan,
+    /** Null until a verified original is committed. Not a completion receipt. */
+    originalMessageId: MessageId.nullable(),
+    /** Existing run_events projection, not another projection table. */
+    blocks: z.array(ResultDisplayBlock).max(200),
+  }).strict().refine(({ run, plan }) => run.projectId === plan.projectId && run.snapshotId === plan.snapshotId,
+    "结果必须属于同一项目/检索快照").refine(({ originalMessageId, blocks }) =>
+      originalMessageId !== null || !blocks.some((block) => block.kind === "citation" && block.source.status === "readable"),
+      "可读引用必须已有对应原件"), "read"),
+  "sources.current": def(z.object({
+    type: z.literal("sources.current"), projectId: ProjectId, owner: ProjectSourceOwner,
+  }).strict(), ProjectSourcesCurrent, "read"),
+  "sources.preview": def(z.object({
+    type: z.literal("sources.preview"), projectId: ProjectId, owner: ProjectSourceOwner,
+    index: z.number().int().min(0).max(99),
+  }).strict(), ProjectSourcePreview, "read"),
+} as const;
 
 export const COMMANDS = {
   "workspace.openRestored": def(z.object({type:z.literal("workspace.openRestored")}).strict(), WorkspaceFileResult, "admin"),
