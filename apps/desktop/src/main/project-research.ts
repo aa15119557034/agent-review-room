@@ -87,7 +87,8 @@ export class ProjectResearchService {
     const response = { approval: this.#deps.repo.getApproval(approval.id), run: this.#deps.repo.getRun(result.run.id) };
     this.#deps.emit({ type: "approval.updated", approval: response.approval });
     this.#deps.emit({ type: "run.updated", run: response.run });
-    void this.#deps.orchestrator.start(result.run, { snapshotId: preview.snapshot.id, content: preview.snapshot.content, contentHash: preview.snapshot.contentHash, reviewerAgent: target.profileId }).catch(() => console.error("[research] run settlement failed"));
+    void this.#deps.orchestrator.start(result.run, { snapshotId: preview.snapshot.id, content: preview.snapshot.content, contentHash: preview.snapshot.contentHash, reviewerAgent: target.profileId })
+      .catch((error: unknown) => console.error("[research] run settlement failed:", error instanceof Error ? error.name : "NonError"));
     return response;
   }
   result(value: QueryRequest<"research.result">) {
