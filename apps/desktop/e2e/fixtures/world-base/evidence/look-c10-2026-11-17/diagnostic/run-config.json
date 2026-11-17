@@ -1,0 +1,28 @@
+{
+  "fixture": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base",
+  "output": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-look-c10-v1",
+  "runtime": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-look-c10-v1\\runtime-bmlVuV",
+  "startedAt": "2026-11-17T09:24:24.168Z",
+  "timeoutMs": 180000,
+  "legacyCamera": {
+    "position": [
+      306.35,
+      9.612,
+      872.9
+    ],
+    "quaternion": [
+      -0.130373050046536,
+      0.4124000551376955,
+      0.05976354832314889,
+      0.89964291840475
+    ],
+    "fov": 55
+  },
+  "legacyReference": {
+    "file": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-shutter-c8-grade-v2/grade-report.json",
+    "sha256": "82826c4ac349f1d565a44f045c67fa22205e3833b45608e9fa225f9af2f474e1",
+    "capture": "00-contrast-original-capture-2",
+    "sourceHead": "5cf3ef7d784ff069b87fef9b8051de63b6695e48"
+  },
+  "driverSha256": "f80181c1c49350fad3657b9955577a5cc17c637d64133364f9bb68bf6b5dc73c"
+}

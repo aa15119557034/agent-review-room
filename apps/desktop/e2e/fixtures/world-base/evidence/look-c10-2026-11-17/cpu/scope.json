@@ -1,0 +1,44 @@
+{
+  "head": "53cb20a8c017eba04bc8dae1437a8179071a1b9d",
+  "originalDriver": "x51-c10-look-cpu-driver.cjs",
+  "originalDriverExit": 1,
+  "probe": "x51-c10-look-probe.cjs",
+  "probeExit": 0,
+  "resultProducer": "x51-c10-look-probe.cjs",
+  "failureReason": "Inherited non-occluding sloped plane assertion fails at screen boundary under new gate.",
+  "preservedFiles": [
+    {
+      "file": "x51-c10-look-cpu-driver.cjs",
+      "sha256": "9909e3f1a601a41c31efdf56e39ae384115592141de977050542de84bc6120d8"
+    },
+    {
+      "file": "x51-c10-look-probe.cjs",
+      "sha256": "faf58c72979b78124ba92a70f0ba1b7a7addde8eed94de48c7059450d0436722"
+    },
+    {
+      "file": "x51-c10-look-cpu-result.json",
+      "sha256": "4da1e76ceba5446d01f46162aafc6e34677e2f124d942a5d428e15b92a6f8b51"
+    },
+    {
+      "file": "x51-c10-readonly-audit.json",
+      "sha256": "3163534791de2c35417bd0a007722d097b3fc0a97a0cdd46274ebf16c5c6dea4"
+    },
+    {
+      "file": "x51-c10-readonly-audit.md",
+      "sha256": "2c87bd2c873fb62a78d8e005b83fb20663ec241e25619ae682ebbd7c33c406a6"
+    },
+    {
+      "file": "x51-c10-frame-shapes.cjs",
+      "sha256": "33f2a9a0d5e7cffd46dce3dd922005b9f1001a24090553de2c45e3b1ea41e214"
+    }
+  ],
+  "scope": "Historical CPU analytic screen-edge assertion failed (exit 1); the separate diagnostic probe completed (exit 0) and produced the JSON. Do not label the CPU suite as passing. These candidates are not GLSL/GPU execution or proof of a visible scene defect. The 38-box/456-triangle count is an independent topology derivation; baseline runtime stats are separate evidence.",
+  "frameScope": "Root runner summary: initial baseline 982 frames, zero above 20ms, max 15.7ms; aerial 202 frames, one above 20ms, max 30.8ms. Never generalize initial zero long frames to the entire run; raw per-segment frame files are archived.",
+  "limitations": [
+    "No GPU run or rendered comparison by this agent.",
+    "Derived triangle count is exact delta from unchanged GB box topology and recorded prior total, not a new runtime stats measurement.",
+    "CPU nearest Float32 depth with JS double arithmetic; not a GLSL compiler/Float32 execution proof.",
+    "Synthetic edge case does not fail this review or imply scene-wide artifacts. Root will decide from fixed-view actual GPU evidence.",
+    "No fixture writes, installs, Git mutation or commits."
+  ]
+}

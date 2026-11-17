@@ -1,0 +1,116 @@
+{
+  "head": "53cb20a8c017eba04bc8dae1437a8179071a1b9d",
+  "comparison": "Read-only git diff 1c56ab0..53cb20a city.js/city-apartments.js; current look.js vs preserved C9 source/math.",
+  "files": {
+    "src/look.js": "c2dfce58aaa9d4e9e734848404dbfd02edfc9cb1401fd8f0637face9abaed5cb",
+    "src/city.js": "4ffadf3750ab7b3468036a53e07010626aa08fc1b74b7657d0b4c466a5779cc3",
+    "src/city-apartments.js": "fbf11779e1d1eb7160f202ac821f917840566a2670eed5388cd8ef4d940f6fbc",
+    "upstream/sakuragaoka/src/world/shopsA/intKonbini.js": "3fb122d19f1c11889f9cbe62dc53b5a1388dbfc0f1e71c508a7c9054b6cb8244",
+    "upstream/sakuragaoka/src/world/shopsA/konbini.js": "fd575217e6a8e64f44ea5c5d718f94ab71134ae6e58cd856c08d6339954eade8",
+    "upstream/sakuragaoka/src/core/materials.js": "167c859795e828dd281f7628ffadfc5342bae4ef16c307d0eb7188816358733b",
+    "upstream/sakuragaoka/src/world/houses/gb.js": "1eff740f7c981529cfbdf4dd070309905d147cf4d9897a5bffcda5040ea2c1c5"
+  },
+  "geometry": {
+    "frame": {
+      "x": -4.8,
+      "y": 0.11339999999999999,
+      "z": 9,
+      "rotY": 1.5707963267948966,
+      "w": 13,
+      "depth": 14
+    },
+    "coordinateConvention": "All physical dimensions below W1 shop-local, in metres; rigid yaw/frame preserve distances. Pixel projection 960x600 FOV58, current fixed shop-interior camera.",
+    "rearWallZ": -11.795,
+    "ceilingY": 3.15,
+    "hangingLeftCategoryBoard": {
+      "center": [
+        -3.6,
+        2.62,
+        -10.505
+      ],
+      "size": [
+        1.12,
+        0.3,
+        0.02
+      ],
+      "nearestPrintedBackZ": -10.517,
+      "nearestWallGap": 1.278,
+      "boardWallGap": 1.28,
+      "topLeftPixel": [
+        78.17918646536583,
+        200.33538003124235,
+        0.9424705563330233
+      ],
+      "topRightPixel": [
+        165.39610723257326,
+        200.33538003124235,
+        0.9424705563330233
+      ]
+    },
+    "chilledCaseHeader": {
+      "bounds": {
+        "minX": -5.71,
+        "maxX": -1.59,
+        "minY": 2.31,
+        "maxY": 2.53,
+        "minZ": -11.8,
+        "maxZ": -11.12
+      },
+      "wallPenetration": 0.005,
+      "wallContactPixel": [
+        178.39312755681823,
+        228.03508113931454,
+        0.9515654324300458
+      ],
+      "frontTopPixel": [
+        151.56174063536315,
+        223.77285331156037,
+        0.947254398648328
+      ]
+    },
+    "ceilingWallPixel": [
+      177.38390534315158,
+      187.04711322186444,
+      0.951403279386332
+    ],
+    "interpretation": "Suspended category board is not wall-contacting and projects mainly left of the reviewed x180..286 ROI. Chilled-case top lightbox really meets wall; its top-wall contact projects near y228. Do not attribute y192..202 band to either solely from these bounds; runtime sample/raycast evidence required."
+  },
+  "lights": {
+    "rearDoorBoxes": 36,
+    "frontDoorBoxes": 2,
+    "newBoxes": 38,
+    "trianglesPerBox": 12,
+    "addedTriangles": 456,
+    "priorMeasuredCityTriangles": 28401,
+    "derivedCurrentCityTriangles": 28857,
+    "newThreeLights": 0,
+    "existingSignBoxGeometryUnchanged": true,
+    "material": "M.lamp = mat.emissive(#ffd9a0,1.25), factory returns MeshBasicMaterial with toneMapped=false. Self-lit surface, not an irradiating physical light.",
+    "ownership": "City proxy clones borrowed lamp prototype; dedicated signLight clone enters ownedMaterials. GB geometry is owned and collected at flush/root traversal. No new textures, no shared texture disposal, no new Light/shadow map. Existing dispose order city before station remains.",
+    "shadow": "New lamp boxes and changed sign have shadow:false; this suppresses castShadow, not screen-space AO."
+  },
+  "ao": {
+    "cause": "For a perpendicular corner and fixed sample on the other face, C9 cosine product s*t/(s*s+t*t) goes to zero at crease and peaks away; the .08 offsets reinforce the dead zone. This supports a mechanism for radius-separated bands, but is not proof every recorded band has that sole cause.",
+    "newFormula": "C10 uses receiver cosine minus .08 times smoothstep(-.3,-.05,sample facing), with distance falloff unchanged; removes the second-cosine zero at a true corner. Global normalization changes 6 to2. Screen-space discrete sampling/normal selection means monotonicity of a complete rendered edge is not guaranteed.",
+    "emissiveAO": "Final composite multiplies combined color, including Basic/self-lit surfaces, by depth AO. Changing to a material emissive property alone cannot exempt the emitted term from this postprocess. A future semantic emission/AO-receive mask or separated emission composite is principled; brightness cutoff is not, as it would exempt lit white walls. No such change implemented.",
+    "cpu": {
+      "driver": "x51-c10-look-cpu-driver.cjs",
+      "driverExit": 1,
+      "reason": "Inherited non-occluding sloped plane assertion fails at screen boundary under new gate.",
+      "probe": "x51-c10-look-probe.cjs",
+      "probeExit": 0,
+      "result": "x51-c10-look-cpu-result.json",
+      "slopedLastColumnMinAO": 0.8802489294928465,
+      "shallowStepMinAO": 0.9937773778397264,
+      "screenEdgeCause": "wbNormal permits out-of-screen clamped depth, whose zero depth difference wins the flatter-side selection. The C10 relaxed facing gate accepts some resulting false occlusion. Only analytic CPU case; not reproduced on actual scene/GPU.",
+      "possibleLocalDirection": "If actual screen-edge evidence warrants fixing, choose valid in-bounds one-sided depth differences in wbNormal; no brightness heuristic or global AO strength adjustment."
+    }
+  },
+  "limits": [
+    "No GPU run or rendered comparison by this agent.",
+    "Derived triangle count is exact delta from unchanged GB box topology and recorded prior total, not a new runtime stats measurement.",
+    "CPU nearest Float32 depth with JS double arithmetic; not a GLSL compiler/Float32 execution proof.",
+    "Synthetic edge case does not fail this review or imply scene-wide artifacts. Root will decide from fixed-view actual GPU evidence.",
+    "No fixture writes, installs, Git mutation or commits."
+  ]
+}
