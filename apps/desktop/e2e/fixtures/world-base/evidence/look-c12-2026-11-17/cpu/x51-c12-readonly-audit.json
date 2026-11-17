@@ -1,0 +1,493 @@
+{
+  "head": "e38dd51a294da3a498b9404c0f27b854d16a2fd5",
+  "command": "node D:/codex/2026-11-16/world-implementation/handoff/x51-c12-city-driver.mjs",
+  "exitCode": 0,
+  "sourceHashes": {
+    "src/city.js": "a7a71dbfd46f8592c1fe7562070ed2c93650df93cada1951bd641ff1cb53cbd3",
+    "src/city-apartments.js": "61767c5d8e8079f68f8c2a02252ac4f7b291e1ffb0813169c1a5d21c5e510705",
+    "src/look.js": "3bb978f9ef4222dea0ec102b2dc9d8667faa06f8a5c099dbcbc73e75342fcc6a",
+    "upstream/sakuragaoka/src/world/houses/gb.js": "1eff740f7c981529cfbdf4dd070309905d147cf4d9897a5bffcda5040ea2c1c5",
+    "upstream/sakuragaoka/src/world/houses/props.js": "9dec02c33081cfefa6d302dd5d91a3f1b05ff618c0dcf2c3000d198df127f4f2"
+  },
+  "files": {
+    "x51-c12-city-driver.mjs": {
+      "size": 13103,
+      "sha256": "cab22523ae4e41fe71dbc36016e7a54a94ac883999e3f036ca3dc4e03ad0bca2"
+    },
+    "x51-c12-city-result.json": {
+      "size": 122736,
+      "sha256": "0637f68ff3dec3ae3c5c673a99ce5327f52ee8405ed989811873e8dcfbb9cd4f"
+    },
+    "x51-c12-city-stderr.txt": {
+      "size": 302,
+      "sha256": "88e5e87bb1ee2effd49823df359dcb4015570ecbd885218a03921fcf3d020871"
+    }
+  },
+  "scope": {
+    "actual": "Current city, upstream GB/material factory/prop APIs and crate GLTF geometry; CPU terrain/transition methods; real foundation and stair guards.",
+    "mock": "Texture image pixels/canvas painting are placeholders. No GPU, no transparency/shader or screenshot acceptance.",
+    "stderr": "THREE.Material: parameter 'transparent' has value of undefined.\nTHREE.Material: parameter 'alphaTest' has value of undefined.\nTHREE.Texture: Unable to serialize Texture.\nTHREE.Texture: Unable to serialize Texture.\nTHREE.Texture: Unable to serialize Texture.\nTHREE.Texture: Unable to serialize Texture.\n",
+    "notRepeated": "No whole-scene props/river collision audit; C12 changes no building footprints/root placement or physics. No claim of CPU/GPU byte identity."
+  },
+  "triangles": {
+    "before": 28857,
+    "after": 29109,
+    "delta": 252,
+    "borderDelta": 240,
+    "floorDelta": 12,
+    "strictRemaining": 890
+  },
+  "support": {
+    "connectionsExactlyEqualC11": true,
+    "stairs": [
+      {
+        "name": "town-apartment-3f-entry",
+        "x": -17,
+        "width": 2.2,
+        "highZ": -123.5,
+        "lowZ": -118.51,
+        "steps": 12,
+        "rise": 0.16522699094701745,
+        "tread": 0.4158333333333329,
+        "top": 5.458040148417157,
+        "bottom": 3.4753162570529477,
+        "minClearance": 0.1520745146716722
+      },
+      {
+        "name": "town-apartment-4f-entry",
+        "x": 2,
+        "width": 2.2,
+        "highZ": -122,
+        "lowZ": -118.51,
+        "steps": 9,
+        "rise": 0.16519691556765836,
+        "tread": 0.3877777777777772,
+        "top": 4.904808464050293,
+        "bottom": 3.418036223941368,
+        "minClearance": 0.16489170203975156
+      },
+      {
+        "name": "town-apartment-5f-entry",
+        "x": 22,
+        "width": 2.2,
+        "highZ": -121,
+        "lowZ": -118.51,
+        "steps": 8,
+        "rise": 0.16888438367843667,
+        "tread": 0.31124999999999936,
+        "top": 4.783957901000977,
+        "bottom": 3.4328828315734836,
+        "minClearance": 0.19491120815277263
+      },
+      {
+        "name": "town-house-0-entry",
+        "x": -37,
+        "width": 2.2,
+        "highZ": -121.50032998154778,
+        "lowZ": -118.51,
+        "steps": 8,
+        "rise": 0.16701789847613763,
+        "tread": 0.3737912476934717,
+        "top": 4.265555652798646,
+        "bottom": 2.929412464989545,
+        "minClearance": 0.1903727568173812
+      },
+      {
+        "name": "town-house-1-entry",
+        "x": -50,
+        "width": 2.2,
+        "highZ": -122.16807376975453,
+        "lowZ": -118.51,
+        "steps": 9,
+        "rise": 0.1703773724573469,
+        "tread": 0.4064526410838359,
+        "top": 4.317841223382807,
+        "bottom": 2.7844448712666847,
+        "minClearance": 0.1884255007462241
+      },
+      {
+        "name": "town-levee-stairs",
+        "x": 34.5,
+        "width": 5,
+        "highZ": -94.53,
+        "lowZ": -101,
+        "steps": 10,
+        "rise": 0.17436214139726358,
+        "tread": 0.6469999999999999,
+        "top": 3.23,
+        "bottom": 1.4863785860273642,
+        "minClearance": 0.030398222222221882
+      }
+    ],
+    "foundationHeights": [
+      {
+        "name": "town-apartment-3f",
+        "top": 13.318040148417158,
+        "bottom": 11.861900393168085,
+        "height": 1.4561397552490725
+      },
+      {
+        "name": "town-apartment-4f",
+        "top": 12.764808464050294,
+        "bottom": 11.417428440517817,
+        "height": 1.3473800235324767
+      },
+      {
+        "name": "town-apartment-5f",
+        "top": 12.643957901000977,
+        "bottom": 11.234379045698368,
+        "height": 1.409578855302609
+      },
+      {
+        "name": "town-house-0",
+        "top": 12.265555652798646,
+        "bottom": 11.051207744342058,
+        "height": 1.2143479084565882
+      },
+      {
+        "name": "town-house-1",
+        "top": 12.317841223382807,
+        "bottom": 11.13803445486992,
+        "height": 1.1798067685128864
+      }
+    ],
+    "capTopOffset": 0.02,
+    "rimTopOffset": 0.025,
+    "capBoundsUnchanged": true,
+    "newFloorLocalBounds": {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#8d969a",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -0.8999999999999999,
+        4.8998084640502935,
+        -125.39999999999999
+      ],
+      "max": [
+        4.9,
+        4.909808464050293,
+        -123.3
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildLaundryShop (file:///<fixture>/src/city-apartments.js:169:5)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:149:13)\n    at createCity (file:///<fixture>/src/city.js:113:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c12-city-driver.mjs:21:64"
+    },
+    "floorNote": "New floor top is apartment base+.145, old structural floor top and machine bottom base+.14; 5mm embed, not floating. Apartment stairs remain base+.14. Low-house entry still has preexisting cap+.02 crossing, now rim+.025 on its first .04m; background is not walkable.",
+    "shopCrateRimFrontGap": 0.3672493022681,
+    "shopAFrameRimFrontGap": 0.061283975242
+  },
+  "coplanarRisk": {
+    "status": "Source geometry overlap proved; visible artifact NOT established.",
+    "surfaces": [
+      {
+        "name": "town-apartment-3f",
+        "localAABB": {
+          "min": [
+            -24.740000000000002,
+            5.248040148417157,
+            -134.99
+          ],
+          "max": [
+            -11.21,
+            5.338040148417157,
+            -123.30999999999999
+          ]
+        },
+        "worldAABB": {
+          "min": [
+            255.26,
+            13.248040148417157,
+            765.01
+          ],
+          "max": [
+            268.79,
+            13.338040148417157,
+            776.69
+          ]
+        },
+        "note": "Outer four vertical faces overlap corresponding rim sides in full .09m height. Top faces separated .005m."
+      },
+      {
+        "name": "town-apartment-4f",
+        "localAABB": {
+          "min": [
+            -6.240000000000001,
+            4.694808464050293,
+            -133.49
+          ],
+          "max": [
+            8.29,
+            4.784808464050293,
+            -121.80999999999999
+          ]
+        },
+        "worldAABB": {
+          "min": [
+            273.76,
+            12.694808464050293,
+            766.51
+          ],
+          "max": [
+            288.29,
+            12.784808464050293,
+            778.19
+          ]
+        },
+        "note": "Outer four vertical faces overlap corresponding rim sides in full .09m height. Top faces separated .005m."
+      },
+      {
+        "name": "town-apartment-5f",
+        "localAABB": {
+          "min": [
+            13.759999999999998,
+            4.573957901000977,
+            -133.49
+          ],
+          "max": [
+            28.29,
+            4.663957901000977,
+            -120.80999999999999
+          ]
+        },
+        "worldAABB": {
+          "min": [
+            293.76,
+            12.573957901000977,
+            766.51
+          ],
+          "max": [
+            308.29,
+            12.663957901000977,
+            779.19
+          ]
+        },
+        "note": "Outer four vertical faces overlap corresponding rim sides in full .09m height. Top faces separated .005m."
+      },
+      {
+        "name": "town-house-0",
+        "localAABB": {
+          "min": [
+            -42.09023296657734,
+            4.195555652798646,
+            -131.53967001845223
+          ],
+          "max": [
+            -31.90976703342266,
+            4.285555652798646,
+            -121.46032998154779
+          ]
+        },
+        "worldAABB": {
+          "min": [
+            237.90976703342267,
+            12.195555652798646,
+            768.4603299815478
+          ],
+          "max": [
+            248.09023296657733,
+            12.285555652798646,
+            778.5396700184522
+          ]
+        },
+        "note": "Outer four vertical faces overlap corresponding rim sides in full .09m height. Top faces separated .005m."
+      },
+      {
+        "name": "town-house-1",
+        "localAABB": {
+          "min": [
+            -54.20661962163774,
+            4.247841223382807,
+            -131.87192623024546
+          ],
+          "max": [
+            -45.79338037836226,
+            4.3378412233828065,
+            -122.12807376975452
+          ]
+        },
+        "worldAABB": {
+          "min": [
+            225.79338037836226,
+            12.247841223382807,
+            768.1280737697546
+          ],
+          "max": [
+            234.20661962163774,
+            12.337841223382807,
+            777.8719262302454
+          ]
+        },
+        "note": "Outer four vertical faces overlap corresponding rim sides in full .09m height. Top faces separated .005m."
+      }
+    ],
+    "next": "Observe root-authorized 21/24 captures. Do not declare failed based solely on this risk; if visible, nonoverlapping center+rim geometry is the local repair."
+  },
+  "glass": [
+    {
+      "name": "town-edge-kit",
+      "triangles": 110,
+      "opacity": 0.38,
+      "transparent": true,
+      "depthWrite": false,
+      "depthTest": true,
+      "side": 2,
+      "renderOrder": 0,
+      "castShadow": false,
+      "receiveShadow": true
+    },
+    {
+      "name": "town-edge-kit",
+      "triangles": 36,
+      "opacity": 0.08,
+      "transparent": true,
+      "depthWrite": false,
+      "depthTest": true,
+      "side": 2,
+      "renderOrder": 0,
+      "castShadow": false,
+      "receiveShadow": true
+    }
+  ],
+  "glassScope": "uOpacity=.08 is normal-incidence base, fresnel may add .35. Existing DoubleSide boxed glass/material grouping unchanged; depthWrite false, depthTest true; no new transparent mesh or ordering policy.",
+  "shadowFlags": "32meshes unchanged counts: CR Toon23/Standard1, cR Toon4/Shader2/Basic2. Four noncast Toon triangles now concrete856/plain756/asphalt708/plainNoOutline565.",
+  "ownership": {
+    "textureDisposals": 0,
+    "geometryDisposals": 23,
+    "materialDisposals": 20,
+    "scope": "Two dispose calls; root geometry/material dispose events once; shared texture events zero. customDepthMaterial is released by existing source path but not separately event-counted.",
+    "newTexturePixels": 0,
+    "textureCacheEntriesAdded": 0
+  },
+  "kitCosts": [
+    {
+      "source": "houses/props.js",
+      "name": "wateringCan",
+      "lod": 1,
+      "triangles": 68
+    },
+    {
+      "source": "houses/props.js",
+      "name": "bucket",
+      "lod": 1,
+      "triangles": 60
+    },
+    {
+      "source": "houses/props.js",
+      "name": "broom",
+      "lod": 1,
+      "triangles": 36
+    },
+    {
+      "source": "houses/props.js",
+      "name": "dustpan",
+      "lod": 1,
+      "triangles": 24
+    },
+    {
+      "source": "houses/props.js",
+      "name": "umbrellaFolded",
+      "lod": 1,
+      "triangles": 36
+    },
+    {
+      "source": "houses/props.js",
+      "name": "bins-one",
+      "lod": 1,
+      "triangles": 36
+    },
+    {
+      "source": "houses/props.js",
+      "name": "sillPot",
+      "lod": 1,
+      "triangles": 172
+    },
+    {
+      "source": "houses/props.js",
+      "name": "pot-seed-c12",
+      "lod": 1,
+      "triangles": 126
+    },
+    {
+      "source": "houses/props.js",
+      "name": "planter-.7m",
+      "lod": 1,
+      "triangles": 164
+    },
+    {
+      "source": "houses/props.js",
+      "name": "elecMeter",
+      "lod": 1,
+      "triangles": 36
+    },
+    {
+      "source": "houses/props.js",
+      "name": "ventHood",
+      "lod": 1,
+      "triangles": 24
+    },
+    {
+      "source": "houses/props.js",
+      "name": "acUnit",
+      "lod": 1,
+      "triangles": 36
+    },
+    {
+      "source": "shopsA/common.js",
+      "name": "carton",
+      "triangles": 12
+    },
+    {
+      "source": "shopsA/common.js",
+      "name": "crate",
+      "triangles": 12
+    },
+    {
+      "source": "shopsA/common.js",
+      "name": "aFrame",
+      "triangles": 136,
+      "atlasRegions": 0
+    },
+    {
+      "source": "shopsA/common.js",
+      "name": "umbrellaStand",
+      "triangles": 192
+    },
+    {
+      "source": "shopsA/common.js",
+      "name": "pipe",
+      "triangles": 32
+    }
+  ],
+  "budgetAdvice": {
+    "cityTotalLimit": "strict <30000, all town additions included",
+    "reserveSuggested": "Keep new city props around 350–450tris total, leaving >400tris; station additions do not count toward city but must retain own measured cost/ownership.",
+    "example": {
+      "twoCartons": 24,
+      "umbrellaStand": 192,
+      "oneLabelledBin": 36,
+      "broom": 36,
+      "dustpan": 24,
+      "wateringCan": 68,
+      "onePipe": 32,
+      "total": 412,
+      "postCityTotal": 29521
+    },
+    "limits": [
+      "Example is aggregate budget, not a request to stack all props into one zone.",
+      "A-frame blank136tris, two existing atlas faces add4=140.",
+      "Seeded pot126 is this exact CPU seed at LOD1; existing laundry pot141. Other seeds/LOD are not capped by126.",
+      "Official textured crate5840tris cannot be added again within current town headroom; existing crate stays.",
+      "Kit texture-backed crate12tris is a simple box and is not a quality-equivalent replacement for the official open crate.",
+      "Reuse existing station contexts/atlases. Geometry/material clones belong to city, textures remain station-owned; city disposed first."
+    ]
+  }
+}

@@ -13,6 +13,7 @@ export function addStreetscape({ ctx, root }) {
   group.name = 'station-streetscape';
   ctx.addStatic(group);
   const instances = [], collisions = [];
+  const texturePixelsBefore = ctx.tex.pixels;
   const addBox = (id, frame, x, z, width, depth, y0, y1, rotationY = 0) => {
     const position = frame.w(x, 0, z);
     const bounds = { x: position.x, z: position.z, width, depth,
@@ -87,5 +88,56 @@ export function addStreetscape({ ctx, root }) {
   }
   instances.push({ id: unit.name, kind: 'acUnit', lot: 'W2', lotPosition: [x, y, z],
     size: [0.8, 0.66, 0.316], meshes: unit.children, footprint: body, duct, connector, supports });
-  return { root: group, instances, collisions, addedColliders: collisions.length };
+  // The shed already has a broom, hose and the textured crate/carton. Keep its
+  // sliding panels and the route to the staff cycle shelter clear. The two
+  // house-kit bins reuse the existing burnable/recycling atlas labels.
+  const yardFrame = Frame.at(H.gb, 0, 0, 0);
+  const binX = 26.4, binZ = -29.18;
+  const yardY = ground(yardFrame, binX, binZ) + 0.012; // existing gravel patch lift
+  H.P.bins(yardFrame, binX, yardY, binZ, ctx.rng('service-sorting-bins'), 2);
+  const bins = H.gb.flush(group, 'service-sorting-bins');
+  const binCollisions = [-0.25, 0.25].map((dx, i) =>
+    addBox('service-sorting-bin-' + i, yardFrame, binX + dx, binZ, 0.46, 0.46, yardY, yardY + 0.68));
+  instances.push({ id: 'service-sorting-bins', kind: 'labelledBins', count: 2,
+    localPosition: [binX, yardY, binZ], size: [0.96, 0.68, 0.46], triangles: 72,
+    labels: ['bin_burn', 'bin_res'], meshes: bins, footprints: binCollisions });
+
+  const panX = 25.72, panZ = -29.22, panY = ground(yardFrame, panX, panZ) + 0.012;
+  H.P.dustpan(yardFrame, panX, panY, panZ);
+  const panMeshes = H.gb.flush(group, 'service-dustpan');
+  const panBase = { id: 'service-dustpan-base', type: 'walk', x: panX, z: panZ,
+    width: 0.26, depth: 0.22, rotationY: 0, y0: panY, y1: panY + 0.04 };
+  panBase.collider = ctx.physics.addWalkBox(panX, panZ, 0.26, 0.22, 0, panBase.y1, panBase.y0);
+  collisions.push(panBase);
+  // The handle leans in X rotation; its tight horizontal envelope is not a
+  // solid 55cm-tall box over the whole low pan. The pan itself is stepable.
+  const panHandle = addBox('service-dustpan-handle', yardFrame, panX, panZ - 0.08,
+    0.03, Math.sin(0.2) * 0.5 + Math.cos(0.2) * 0.03,
+    panY + 0.3 - Math.cos(0.2) * 0.25 - Math.sin(0.2) * 0.015,
+    panY + 0.3 + Math.cos(0.2) * 0.25 + Math.sin(0.2) * 0.015);
+  instances.push({ id: 'service-dustpan', kind: 'dustpan', localPosition: [panX, panY, panZ],
+    triangles: 24, meshes: panMeshes, footprint: panBase, handle: panHandle });
+
+  // E1 and W1 already have umbrella stands. Use the unwindowed south return
+  // of E2 instead of filling another doorway: the original meter is deeper
+  // along this wall at lot z=-3.2, while this front submeter reads from 01.
+  const ef = L.lotFrame(L.lotById('E2'));
+  const eastFrame = Frame.at(H.gb, ef.x, ef.y, ef.z, ef.rotY).sub(3.5, 0, -1.8, Math.PI / 2);
+  H.P.elecMeter(eastFrame, 0, 1.05);
+  const meterMeshes = H.gb.flush(group, 'e2-front-side-meter');
+  const meterBody = addBox('e2-front-side-meter', eastFrame, 0, 0.0625, 0.24, 0.125, 0.87, 1.23);
+  const meterPipe = addBox('e2-front-side-meter-pipe', eastFrame, 0.1, 0.03, 0.05, 0.05, 1.25, 2.55);
+  const meterPosition = eastFrame.w(0, 1.05, 0.07);
+  instances.push({ id: 'e2-front-side-meter', kind: 'elecMeter', lot: 'E2',
+    lotPosition: [3.5, 1.05, -1.8], localPosition: meterPosition.toArray(),
+    triangles: 36, atlasRegion: 'elec_meter', meshes: meterMeshes, footprint: meterBody, pipe: meterPipe });
+
+  let triangles = 0;
+  group.traverse(mesh => { if (mesh.isMesh) triangles +=
+    (mesh.geometry.index?.count ?? mesh.geometry.attributes.position.count) / 3 * (mesh.isInstancedMesh ? mesh.count : 1); });
+  return { root: group, instances, collisions, addedColliders: collisions.length,
+    stats: { triangles, densityTriangles: 132, densityObjects: 4, densityColliders: 6,
+      newTexturePixels: ctx.tex.pixels - texturePixelsBefore, coordinates: 'station-local; apply station.toWorld after placement' },
+    views: { streetDetail: { position: [4.4, ctx.physics.groundHeight(4.4, 24) + 1.6, 24], target: meterPosition.toArray() } } };
+
 }

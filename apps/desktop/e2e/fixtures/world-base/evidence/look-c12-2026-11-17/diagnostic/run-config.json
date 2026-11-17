@@ -1,0 +1,133 @@
+{
+  "fixture": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base",
+  "output": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-look-c12-v1",
+  "runtime": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-look-c12-v1\\runtime-1EeDaa",
+  "startedAt": "2026-11-17T11:23:44.398Z",
+  "timeoutMs": 180000,
+  "legacyCamera": {
+    "position": [
+      306.35,
+      9.612,
+      872.9
+    ],
+    "quaternion": [
+      -0.130373050046536,
+      0.4124000551376955,
+      0.05976354832314889,
+      0.89964291840475
+    ],
+    "fov": 55
+  },
+  "legacyReference": {
+    "file": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-shutter-c8-grade-v2/grade-report.json",
+    "sha256": "82826c4ac349f1d565a44f045c67fa22205e3833b45608e9fa225f9af2f474e1",
+    "capture": "00-contrast-original-capture-2",
+    "sourceHead": "5cf3ef7d784ff069b87fef9b8051de63b6695e48"
+  },
+  "c11Cameras": {
+    "service-corner": {
+      "position": [
+        308.4,
+        9.612,
+        872.9
+      ],
+      "quaternion": [
+        -0.08432325046436126,
+        0.5331397072650681,
+        0.05351200213385738,
+        0.8401119613456697
+      ],
+      "fov": 55
+    },
+    "laundry-details": {
+      "position": [
+        288,
+        14.384808464050293,
+        777.9
+      ],
+      "quaternion": [
+        -0.15522850149956677,
+        0.6173580660361093,
+        0.12595148976979553,
+        0.7608609287163607
+      ],
+      "fov": 55
+    },
+    "shop-interior": {
+      "position": [
+        271.7,
+        9.9134,
+        908
+      ],
+      "quaternion": [
+        -0.015701859235384273,
+        0.7069324236562871,
+        0.015701859235384273,
+        0.7069324236562871
+      ],
+      "fov": 58
+    },
+    "20-rear-eye": {
+      "position": [
+        273,
+        14.755245542526229,
+        758
+      ],
+      "quaternion": [
+        -0.00013011891877658623,
+        0.9145142483742376,
+        -0.00029414054360230415,
+        -0.40455356390830466
+      ],
+      "fov": 58
+    },
+    "21-front-eye": {
+      "position": [
+        274,
+        12.87812709172567,
+        783
+      ],
+      "quaternion": [
+        0.07422133960767584,
+        -0.5103582416049142,
+        0.044271975994965136,
+        0.8556083508909221
+      ],
+      "fov": 58
+    },
+    "station-street": {
+      "position": [
+        278.8,
+        10.4,
+        936
+      ],
+      "quaternion": [
+        -0.003277842930440423,
+        -0.009834585659995631,
+        -0.000032237959341941705,
+        0.9999462663720154
+      ],
+      "fov": 58
+    },
+    "service-corner-legacy-c8": {
+      "position": [
+        306.35,
+        9.612,
+        872.9
+      ],
+      "quaternion": [
+        -0.130373050046536,
+        0.4124000551376955,
+        0.05976354832314889,
+        0.89964291840475
+      ],
+      "fov": 55
+    }
+  },
+  "c11Reference": {
+    "path": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-look-c11-v1\\look-report.json",
+    "sha256": "35754d3b90385108a01b5a4fa23c395e8a82ffa8741f550defaa009120af1eb7",
+    "head": "e1f32af2cfcde2e1e958a0dffb87f8d219886d5c"
+  },
+  "driverSha256": "cf6ac42638b7b75bf740c5006f275da630b6a70f42784f0fc2610a9374137162"
+}

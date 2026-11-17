@@ -170,21 +170,52 @@ export async function createCity({ scene, station, island, skyline }) {
     crateGroup.add(crate); root.add(crateGroup);
     const signRoot = new THREE.Group(); signRoot.name = 'city-laundry-a-frame'; root.add(signRoot);
     const C = station.ctx.services.shopsA.buildContext;
-    const sign = C.P.aFrame({ k: station.ctx.kit(signRoot) }, 4.55, supportY, -122.35, .35, null, null, { w: .45, h: .68 });
+    C.P.aFrame({ k: station.ctx.kit(signRoot) }, 4.55, supportY, -122.35, .35, null, null, { w: .45, h: .68 });
+    // Keep the central entrance and the existing crate/pot clear. The rack sits
+    // against the right pane, while labelled sorting bins flank the left pane.
+    const umbrellas = C.P.umbrellaStand({ k: station.ctx.kit(signRoot) }, 3.65, supportY, -123.0, 0,
+      { color: '#87989b', umbrellas: ['#657f99', '#e5dfd2', '#ac7e76'] });
+    umbrellas.name = 'town-laundry-umbrella-stand';
     // Kit primitives are station cache entries. Never release their originals
     // from the city; preserve shared textures but own these geometry copies.
-    const signGeometry = new Map();
-    sign.traverse(mesh => {
+    const propGeometry = new Map();
+    signRoot.traverse(mesh => {
       if (!mesh.isMesh) return;
-      if (!signGeometry.has(mesh.geometry)) signGeometry.set(mesh.geometry, mesh.geometry.clone());
-      mesh.geometry = signGeometry.get(mesh.geometry); geometries.add(mesh.geometry);
+      if (!propGeometry.has(mesh.geometry)) propGeometry.set(mesh.geometry, mesh.geometry.clone());
+      mesh.geometry = propGeometry.get(mesh.geometry); geometries.add(mesh.geometry);
       mesh.material = Array.isArray(mesh.material) ? mesh.material.map(clone) : clone(mesh.material);
     });
     const potStart = gb.tris;
     H.P.pot(frame, 6.25, supportY, -122.7, ctx.rng('town-laundry-pot'), .8, 'terra');
+    const potTriangles = gb.tris - potStart;
+    const densityStart = gb.tris;
+    H.P.bins(frame, -.4, supportY, -122.93, ctx.rng('town-laundry-sorting'), 2);
+    // Rear ground-floor housekeeping stays beside the rightmost door; it does
+    // not occupy the central steel-stair landing or cross a door opening.
+    const rear = Frame.at(gb, shop.center[0], shop.baseY + .14, -131, Math.PI);
+    H.P.broom(rear, -5.2, 0, .14);
+    H.P.dustpan(rear, -4.85, 0, .26);
+    H.P.bucket(rear, -5.15, 0, .74, ctx.rng('town-rear-bucket'));
+    H.P.elecMeter(rear, -3.15, 1.3);
+    // Two labelled parcels on the first-floor corridor borrow the house atlas.
+    // The lower box supports the smaller one, with room beside the door.
+    const parcelUV = { uv: { rect: H.A.rects.cardboard, white: H.A.white } };
+    rear.boxB(M.atlas, '#ffffff', .46, .27, .36, -5.15, 2.85, .37, parcelUV);
+    rear.boxB(M.atlas, '#eee2cf', .34, .18, .30, -5.12, 3.12, .37, parcelUV);
+    const density = {
+      gbTriangles: gb.tris - densityStart, umbrellaTriangles: 0,
+      laundry: { umbrellaStand: [3.65, supportY, -123], sortingBins: [-.4, supportY, -122.93], binCount: 2 },
+      rear: { origin: rear.origin.toArray(), rotationY: Math.PI, broom: [-5.2, 0, .14],
+        dustpan: [-4.85, 0, .26], bucket: [-5.15, 0, .74], meter: [-3.15, 1.3],
+        parcels: [{ center: [-5.15, 2.85, .37], size: [.46, .27, .36] }, { center: [-5.12, 3.12, .37], size: [.34, .18, .30] }] },
+      source: 'Pinned Sakuragaoka MIT builders and existing house atlas; no new textures', walkable: false,
+    };
+    umbrellas.traverse(mesh => { if (mesh.isMesh) density.umbrellaTriangles += (mesh.geometry.index?.count ?? mesh.geometry.attributes.position.count) / 3; });
+    density.totalTriangles = density.gbTriangles + density.umbrellaTriangles;
+    stats.densityProps = density;
     stats.texturedProps = { crate: { position: crateGroup.position.toArray(), triangles: crateSource.stats.crateTriangles },
       sign: { position: [4.55, supportY, -122.35], rotationY: .35, size: [.45, .68], blank: true },
-      pot: { position: [6.25, supportY, -122.7], triangles: gb.tris - potStart },
+      pot: { position: [6.25, supportY, -122.7], triangles: potTriangles },
       view: { position: [8, supportY + 1.6, -122.1], target: [5.15, supportY + .36, -122.7] },
       walkable: false, borrowedAssetTextures: borrowedAssetTextures.size };
     gb.flush(root, 'town-edge-kit');
