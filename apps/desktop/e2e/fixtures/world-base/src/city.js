@@ -78,8 +78,13 @@ export async function createCity({ scene, station, island, skyline }) {
   };
   const foundation = (name, lot, ground) => {
     const top = ground.max + 0.05, bottom = ground.min - 0.05;
-    frame.boxB(M.concrete, '#b7b3a8', lot.maxX - lot.minX, top - bottom, lot.maxZ - lot.minZ,
-      (lot.minX + lot.maxX) / 2, bottom - root.position.y, (lot.minZ + lot.maxZ) / 2, { uv: { world: 2 }, shadow: false });
+    // Warm stone plinth (matches the stair concrete) with a pale coping band, so the
+    // exposed side reads as a finished retaining edge rather than a grey slab.
+    const cx = (lot.minX + lot.maxX) / 2, cz = (lot.minZ + lot.maxZ) / 2;
+    frame.boxB(M.concrete, '#cdc6b6', lot.maxX - lot.minX, top - bottom, lot.maxZ - lot.minZ,
+      cx, bottom - root.position.y, cz, { uv: { world: 2 }, shadow: false });
+    frame.boxB(M.plain, '#e6e1d4', lot.maxX - lot.minX + 0.08, 0.09, lot.maxZ - lot.minZ + 0.08,
+      cx, top - 0.07 - root.position.y, cz, { shadow: false });
     vegetationClearAreas.push({ name, ...lot });
     return { top, bottom, height: top - bottom };
   };

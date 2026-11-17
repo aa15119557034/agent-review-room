@@ -64,7 +64,7 @@ function clearStationVegetation(terrain) {
 }
 
 /** Clear only background lots/approaches before Meadow creates its first cells. */
-export function clearVegetationAreas(terrain, areas, localToWorld) {
+export function clearVegetationAreas(terrain, areas, localToWorld, feather = null) {
   const S = terrain.splatN, cell = World.size / S, changed = new Set();
   const point = new THREE.Vector3();
   for (const area of areas) {
@@ -84,10 +84,52 @@ export function clearVegetationAreas(terrain, areas, localToWorld) {
       terrain.splat[index] = terrain.splat[index + 3] = 0;
     }
   }
+  const featherStats = feather ? featherVegetation(terrain, areas, localToWorld, feather, changed) : null;
   // clearStationVegetation made this DataTexture share the CPU array. Updating
   // it in place preserves all existing shader references and texture ownership.
   terrain.splatTex.needsUpdate = true;
-  return { areas, changedTexels: changed.size, texelSizeM: cell, channels: 'R flowers / A grass; G species and B wetness retained' };
+  return { areas, changedTexels: changed.size, texelSizeM: cell, feather: featherStats, channels: 'R flowers / A grass; G species and B wetness retained' };
+}
+
+// Outside the hard-cleared texels only: cover returns over an irregular band so the
+// lawn edge is not a ruler-straight rectangle. Grass (A) returns almost at once, flowers (R)
+// over a wandering band, giving lawn -> grass -> meadow. Multiplicative, so earlier zeros stay zero
+// and protected texels (already 0) are untouched.
+function featherVegetation(terrain, areas, localToWorld, { grass = 0.75, flowers = 8, jitter = 2.5 }, cleared) {
+  const S = terrain.splatN, cell = World.size / S, inverse = localToWorld.clone().invert();
+  const reach = cell + Math.max(grass, flowers) + jitter;
+  const world = new THREE.Box3(), point = new THREE.Vector3();
+  for (const area of areas) for (const x of [area.minX - reach, area.maxX + reach]) for (const z of [area.minZ - reach, area.maxZ + reach])
+    world.expandByPoint(point.set(x, 0, z).applyMatrix4(localToWorld));
+  const ix0 = Math.max(0, Math.floor((world.min.x + World.half) / cell)), ix1 = Math.min(S - 1, Math.ceil((world.max.x + World.half) / cell));
+  const iz0 = Math.max(0, Math.floor((world.min.z + World.half) / cell)), iz1 = Math.min(S - 1, Math.ceil((world.max.z + World.half) / cell));
+  const hash = (x, z) => { const h = Math.sin(x * 127.1 + z * 311.7) * 43758.5453; return h - Math.floor(h); };
+  const smooth = t => { t = THREE.MathUtils.clamp(t, 0, 1); return t * t * (3 - 2 * t); };
+  // Value noise at ~6 m so the edge wanders in lobes instead of per-texel speckle.
+  const noise = (x, z) => {
+    const fx = x / 6, fz = z / 6, x0 = Math.floor(fx), z0 = Math.floor(fz), tx = smooth(fx - x0), tz = smooth(fz - z0);
+    const a = hash(x0, z0), b = hash(x0 + 1, z0), c = hash(x0, z0 + 1), d = hash(x0 + 1, z0 + 1);
+    return (a + (b - a) * tx) * (1 - tz) + (c + (d - c) * tx) * tz;
+  };
+  let touched = 0;
+  for (let iz = iz0; iz <= iz1; iz++) for (let ix = ix0; ix <= ix1; ix++) {
+    const index = (iz * S + ix) * 4;
+    if (cleared.has(index) || (!terrain.splat[index] && !terrain.splat[index + 3])) continue;
+    point.set((ix + 0.5) * cell - World.half, 0, (iz + 0.5) * cell - World.half);
+    const wx = point.x, wz = point.z; point.applyMatrix4(inverse);
+    let d = Infinity;
+    for (const a of areas) d = Math.min(d, Math.hypot(Math.max(a.minX - point.x, 0, point.x - a.maxX), Math.max(a.minZ - point.z, 0, point.z - a.maxZ)));
+    // Distance beyond the bilinear guard texel, shifted by the wandering noise.
+    const e = d - cell + (noise(wx, wz) - 0.5) * 2 * jitter;
+    // Grass only needs a short, straight ramp (bare lawn is what reads as a hard
+    // rectangle); the flower drift carries the irregular, noise-shifted edge.
+    const kA = smooth((d - cell) / grass), kR = smooth(e / flowers);
+    if (kA >= 1 && kR >= 1) continue;
+    terrain.splat[index] = Math.round(terrain.splat[index] * kR);
+    terrain.splat[index + 3] = Math.round(terrain.splat[index + 3] * kA);
+    touched++;
+  }
+  return { grassFadeM: grass, flowerFadeM: flowers, jitterM: jitter, texels: touched };
 }
 
 async function loadProps(assetBase, terrain) {

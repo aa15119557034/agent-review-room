@@ -116,7 +116,7 @@ async function init() {
   stage('正在安放站后建筑…');
   worldBase.city = await createCity({ scene, station, island, skyline: worldBase.skyline });
   worldBase.city.vegetationClear = clearVegetationAreas(island.terrain,
-    worldBase.city.vegetationClearAreas, station.root.matrixWorld);
+    worldBase.city.vegetationClearAreas, station.root.matrixWorld, { grass: 0.75, flowers: 8, jitter: 2.5 });
   island.meadow._buildCoverGrid(); // Refresh the density cache before its first update.
   walker = station.createWalker(canvas);
   worldBase.walker = walker;
