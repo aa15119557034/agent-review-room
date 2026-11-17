@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { U, World, applyEnv } from '../upstream/petalwake/src/core/ctx.js';
+import { U, World, ENV, applyEnv } from '../upstream/petalwake/src/core/ctx.js';
 import { Terrain, makeNoiseTexture } from '../upstream/petalwake/src/world/terrain.js';
 import { Sky } from '../upstream/petalwake/src/world/sky.js';
 import { CloudBaker } from '../upstream/petalwake/src/world/clouds.js';
@@ -154,8 +154,13 @@ async function loadProps(assetBase, terrain) {
 }
 
 /** Adopt the native island into the caller's renderer and scene, without starting the game. */
-export async function createIsland({ scene, renderer, camera, assetBase = '/assets' }) {
-  applyEnv('afternoon');
+export async function createIsland({ scene, renderer, camera, assetBase = '/assets', timeOfDay = 'evening' }) {
+  // Evening (#254 C19) moves the sun, sky palette and the terrain's baked sun
+  // shadow together; 'afternoon' keeps Petalwake's original bake for comparison.
+  if (timeOfDay !== 'evening' && timeOfDay !== 'afternoon') throw new Error('Unknown time of day: ' + timeOfDay);
+  const evening = timeOfDay === 'evening' ? await json(new URL('./evening.json', import.meta.url)) : null;
+  if (evening) ENV.evening = evening.env;
+  applyEnv(timeOfDay);
   U.uTime.value = 0;
   U.uShadowOn.value = 0;
   U.uRider.value.set(1e6, 1e6, 1e6, 0);
@@ -172,6 +177,21 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
   await json(`${assetBase}/town/masks.json`);
   const [terrain, town] = await Promise.all([Terrain.load(renderer, assetBase), Town.load(renderer, assetBase)]);
   if (!town.towns.some((entry) => entry.id === 'larkhaven')) throw new Error('Larkhaven geometry failed to load.');
+  if (evening) {
+    // Terrain's constructor installed meta.sun and the afternoon light map; swap both
+    // before anything else (clouds, water, props, station lights) reads them.
+    const url = `${assetBase}/${evening.lightMap}`;
+    const image = new Image();
+    image.src = url;
+    try { await image.decode(); } catch {
+      throw new Error(`${url} is missing: run scripts/bake-evening-light.py once (local Petalwake checkout).`);
+    }
+    if (image.naturalWidth !== terrain.lightTex.image.width) throw new Error('Evening light map size differs from light.png');
+    terrain.lightTex.image = image;
+    terrain.lightTex.needsUpdate = true;
+    const elev = THREE.MathUtils.degToRad(evening.sunElevDeg), az = THREE.MathUtils.degToRad(evening.sunAzDeg);
+    U.uSunDir.value.set(Math.sin(az) * Math.cos(elev), Math.sin(elev), Math.cos(az) * Math.cos(elev)).normalize();
+  }
   const surface = (x, z) => {
     const localX = THREE.MathUtils.clamp(x - stationPlacement.x, stationPlacement.bounds.minX, stationPlacement.bounds.maxX);
     const localZ = THREE.MathUtils.clamp(z - stationPlacement.z, stationPlacement.bounds.minZ, stationPlacement.bounds.maxZ);
@@ -225,7 +245,7 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
     stats.meadow = { ...meadow.stats };
   }
   return {
-    ready: true, root, terrain, town, props, meadow, water, sky, river, transition, U, stationPlacement, stats, update,
+    ready: true, root, terrain, town, props, meadow, water, sky, river, transition, U, stationPlacement, stats, update, timeOfDay,
     heightAt: (x, z) => terrain.heightAt(x, z),
     // Meadow allocates materials lazily as camera cells enter view.
     get materials() {

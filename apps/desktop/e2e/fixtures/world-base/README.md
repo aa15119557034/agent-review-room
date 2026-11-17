@@ -41,6 +41,8 @@ node scripts\prepare-props.cjs --download
 
 主街的橱窗与积水共用 `src/street-env/` 中的六面街景。更改建筑或日照后，运行 `node scripts/bake-street-reflections.cjs --electron=<已有Electron路径> --output=<新目录>` 可生成新的六面 PNG 和逐面报告。烘焙范围取站区和程序天空，排除道口的镜头光晕。
 
+默认是傍晚（太阳高 12°、方位 280°，参数在 `src/evening.json`）。地形的太阳阴影烘焙在 `light.png` 里，换太阳必须一起重烘：首次运行 `python3 scripts/bake-evening-light.py`（需要 numpy、numba、scipy、Pillow，约半分钟），在 `.local/petalwake-*/assets/terrain/` 生成 `light-evening.png`；只换 R 通道（太阳阴影），AO、岸距、陡度照抄原图。网址加 `?time=afternoon` 回到 Petalwake 原来的下午光照做对照。港镇自带的屋顶阴影不在这张图里，仍按原来的下午方向；`src/street-env/` 的倒影也还是下午天空烘的，需要按上面的方法重烘。
+
 在本目录使用已有 Electron 运行，无需构建桌面应用：
 
 ```bat

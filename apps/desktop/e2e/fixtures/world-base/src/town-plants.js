@@ -77,6 +77,20 @@ export function createTownPlants({ root, frame, materials, gradientMap }) {
   const material = new THREE.MeshToonMaterial({ color: '#ffffff', map: texture, gradientMap,
     alphaTest: .42, side: THREE.DoubleSide, transparent: false, depthWrite: true });
   material.name = 'town-evergreen-leaf-cards'; material.shadowSide = THREE.DoubleSide;
+  // Box-filtered mips thin the cutout's alpha below alphaTest, so far sprigs dissolved
+  // into bare twigs (#254 C19). Scale alpha back up by the sampled mip level (8 levels
+  // over the 1024 atlas) so coverage stays roughly constant with distance.
+  material.onBeforeCompile = (shader) => {
+    const needle = '#include <alphatest_fragment>';
+    if (!shader.fragmentShader.includes(needle)) throw new Error('Leaf-card shader lacks alphatest chunk');
+    shader.fragmentShader = shader.fragmentShader.replace(needle, `{
+      vec2 texel = vMapUv * 1024.0;
+      float lod = max(0.0, 0.5 * log2(max(dot(dFdx(texel), dFdx(texel)), dot(dFdy(texel), dFdy(texel)))));
+      diffuseColor.a *= 1.0 + lod * 0.3;
+    }
+    ${needle}`);
+  };
+  material.customProgramCacheKey = () => 'town-leaf-mip-alpha';
   const pools = Array.from({ length: 4 }, () => []), records = [];
   const temp = new THREE.Vector3(), up = new THREE.Vector3(0, 1, 0);
   let active = null, finished = false, branchTriangles = 0;
