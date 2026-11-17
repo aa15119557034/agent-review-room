@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "sourceHead": "7d362bc069b20c8e38fdf776c4eac5e87b0081ec",
+  "command": "node D:/codex/2026-11-16/world-implementation/handoff/x51-c14-city-cpu.mjs",
+  "exitCode": 0,
+  "sourceHashes": {
+    "src/city.js": "d775f90d80c3ee5ffc0eaf0ec7add66881e9cd01d43e90253f50b49a6142f937",
+    "src/city-apartments.js": "eb8cba0634bbd52235ea9ccbe6a3f1cace0b85f3109db2f0fb4e4ca6e4bc2584",
+    "src/streetscape.js": "c145191868bb32538dde34daee7229b8b04117b3713e7c2865506596d3d35998",
+    "src/look.js": "3bb978f9ef4222dea0ec102b2dc9d8667faa06f8a5c099dbcbc73e75342fcc6a",
+    "upstream/sakuragaoka/src/world/houses/gb.js": "1eff740f7c981529cfbdf4dd070309905d147cf4d9897a5bffcda5040ea2c1c5",
+    "upstream/sakuragaoka/src/world/houses/props.js": "9dec02c33081cfefa6d302dd5d91a3f1b05ff618c0dcf2c3000d198df127f4f2"
+  },
+  "runtimeSourceChanges": [
+    "src/city.js",
+    "src/city-apartments.js"
+  ],
+  "conclusion": "No blocking source/CPU issue found; GPU appearance and real shader compilation not tested here.",
+  "wall": {
+    "key": "paint|town-wall-wash",
+    "sourceKey": "paint",
+    "wallMeshes": 1,
+    "wallTriangles": 600,
+    "flags": [
+      {
+        "cast": true,
+        "receive": true
+      }
+    ],
+    "mapShared": true,
+    "gradientShared": true,
+    "colorEqual": true,
+    "alphaTestEqual": true,
+    "transparentEqual": true,
+    "clippingPlanes": null,
+    "paint": 0.06,
+    "paintKept": true,
+    "washOccurrences": 1,
+    "sourceUnchanged": true,
+    "missingChunkError": "Wall wash: map chunk missing",
+    "disposeCount": 1
+  },
+  "comparisonToC13": {
+    "placementsEqual": true,
+    "clearAreasEqual": true,
+    "connectionsEqual": true,
+    "trianglesBefore": 29553,
+    "trianglesAfter": 29553,
+    "ownedMaterialsBefore": 29,
+    "ownedMaterialsAfter": 30,
+    "geometryBefore": 26,
+    "geometryAfter": 26
+  },
+  "disposal": {
+    "twoDisposeCalls": true,
+    "observedRootResources": {
+      "textureDisposals": 0,
+      "geometryDisposals": 26,
+      "materialDisposals": 25
+    },
+    "wallDisposeEvents": 1,
+    "sharedUmbrellaProbe": {
+      "geometries": 0,
+      "materials": 0
+    },
+    "scope": "Root-attached material/geometry events plus explicit wall and shared probes. Not individual event verification of all 30 owned materials/custom-depth resources."
+  },
+  "sourceReasoning": {
+    "callback": "Captures concrete.onBeforeCompile before replacing wall hook; original patchPaint is an arrow closure and does not depend on this. Retained parent hook executes once before map replacement; no self-recursion.",
+    "cacheKey": "Calls captured original key on concrete, giving paint, then appends |town-wall-wash. Distinct from unchanged concrete program.",
+    "failFast": "Missing exact map chunk throws after parent hook. CPU exercised this branch. This is not compile/link validation or proof against every upstream shader change.",
+    "sampling": "Same map/vMapUv and map alpha; unchanged UV world scale 3m and map transform path. Real static canvas concrete is SRGBColorSpace from textures.finish; pinned r187 uploads as sRGB format. CPU mock image pixels do not verify GPU sampling.",
+    "video": "Replacement omits DECODE_VIDEO_TEXTURE branch of upstream map_fragment. Actual concrete is static CanvasTexture, not video, so no current asset failure.",
+    "wash": "Per linear-light texture RGB channel f(s)=0.651+0.3*s. 0.93 is a chosen anchor, not measured texture mean. Residual pairwise texture contrast is 30%; overall mean/base appearance can shift.",
+    "lighting": "Vertex/material base colors and paint remain; AO/shadow/light code and mesh flags unchanged. Changes diffuse albedo used by lighting, so absolute rendered shadow/AO appearance can change; no claim of unchanged pixels.",
+    "ownership": "wallWash is a city-owned clone, map/gradient borrowed from station. Explicit city dispose releases wall once and observed borrowed textures never dispose."
+  },
+  "limitations": [
+    "Actual geometry/material construction and callback string transformations ran on CPU. No WebGL shader compilation/linking, GPU, screenshot, or performance test here.",
+    "Canvas/image pixels and texture serialization use placeholders; material warnings are preserved in stderr. Real canvas colorSpace is established by source inspection, not mocked pixel results.",
+    "No new full-station physics/navigation or props-overlap rerun; placements/clear areas/connections exactly compared to the prior CPU result.",
+    "Node REPL launch preparation initially failed before process creation because process is unavailable; actual child invocation used node and exited 0."
+  ],
+  "artifacts": [
+    {
+      "name": "x51-c14-city-cpu.mjs",
+      "bytes": 17341,
+      "sha256": "69054783cc907f283b7c5abadd69ff3d66d3161e541746f600257424be311386"
+    },
+    {
+      "name": "x51-c14-city-result.json",
+      "bytes": 136401,
+      "sha256": "d7b1ea52fa29b35c17437840d25860d078adbcd462fdf6fd66c6a8a3d482a7e6"
+    },
+    {
+      "name": "x51-c14-city-stderr.txt",
+      "bytes": 302,
+      "sha256": "88e5e87bb1ee2effd49823df359dcb4015570ecbd885218a03921fcf3d020871"
+    }
+  ]
+}

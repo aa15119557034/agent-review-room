@@ -1,0 +1,25 @@
+{
+  "scene": "combined",
+  "fixture": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base",
+  "output": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-town-c14",
+  "runtime": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-town-c14\\runtime-HAijsP",
+  "source": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base",
+  "preview": false,
+  "videoOnly": false,
+  "ffmpeg": null,
+  "width": 1440,
+  "height": 900,
+  "sampleMs": 15000,
+  "warmupMs": 5000,
+  "timeoutMs": 180000,
+  "videoMs": 0,
+  "query": "",
+  "proxy": "",
+  "startedAt": "2026-11-17T12:43:06.243Z",
+  "entrySha256": "74d6b0e94e7235e32554b49da4e161c4afbfc9c0459ddf25c25dcbb8fe65e126",
+  "sourceManifest": {
+    "file": "source-manifest.json",
+    "head": "7d362bc069b20c8e38fdf776c4eac5e87b0081ec",
+    "sha256": "f3b8f3bba07b8b6f0832e08c8ee63824765f0294134d0f8a89335ac55abbdf89"
+  }
+}

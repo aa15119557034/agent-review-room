@@ -1,0 +1,12 @@
+{
+  "head": "7d362bc069b20c8e38fdf776c4eac5e87b0081ec",
+  "command": "node D:/codex/2026-11-16/world-implementation/handoff/x51-c14-city-cpu.mjs",
+  "actualExit": 0,
+  "limits": [
+    "Actual geometry/material construction and callback string transformations ran on CPU. No WebGL shader compilation/linking, GPU, screenshot, or performance test here.",
+    "Canvas/image pixels and texture serialization use placeholders; material warnings are preserved in stderr. Real canvas colorSpace is established by source inspection, not mocked pixel results.",
+    "No new full-station physics/navigation or props-overlap rerun; placements/clear areas/connections exactly compared to the prior CPU result.",
+    "Node REPL launch preparation initially failed before process creation because process is unavailable; actual child invocation used node and exited 0."
+  ],
+  "scope": "Actual C14 CPU geometry/material construction and shader callback string transformation. Mocked image/canvas pixels; no GPU compile/link/visual proof. The 0.93 shader target is chosen, not a measured mean. Disposal observations remain limited to recorded root objects plus explicit wall clone; no claim that every owned resource was individually observed."
+}

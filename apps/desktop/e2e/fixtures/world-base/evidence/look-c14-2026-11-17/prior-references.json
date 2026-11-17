@@ -1,0 +1,26 @@
+[
+  {
+    "file": "../look-c13-2026-11-17/README.md",
+    "presentInCommit": "7d362bc069b20c8e38fdf776c4eac5e87b0081ec",
+    "sha256": "542ed40e785ce7c108331d7b4867ad7235dcb1075444f4b0d5c98bc5673d9cfb",
+    "copied": false
+  },
+  {
+    "file": "../look-c13-2026-11-17/diagnostic/look-report.json.gz",
+    "presentInCommit": "7d362bc069b20c8e38fdf776c4eac5e87b0081ec",
+    "sha256": "8e2c86079e0c9d38e1ba9ea00851835545ee7fe4643c98fdfb87a12b4387ccc5",
+    "copied": false
+  },
+  {
+    "file": "../look-c12-2026-11-17/README.md",
+    "presentInCommit": "7d362bc069b20c8e38fdf776c4eac5e87b0081ec",
+    "sha256": "779e86d43f712106ed2df20bc95688a3becb208a9f15dac5725ca1419a7a4a2e",
+    "copied": false
+  },
+  {
+    "file": "../look-c12-2026-11-17/diagnostic/look-report.json.gz",
+    "presentInCommit": "7d362bc069b20c8e38fdf776c4eac5e87b0081ec",
+    "sha256": "731023453ee71365e9d9437976f4068bba035203cca4fdbc072f6a5effdac1c3",
+    "copied": false
+  }
+]
