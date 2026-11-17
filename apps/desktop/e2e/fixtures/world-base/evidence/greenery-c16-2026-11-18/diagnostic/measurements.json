@@ -1,0 +1,72 @@
+{
+  "artifact": "gpu-look-c16-v1",
+  "head": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+  "session": 67606,
+  "pid": 61484,
+  "actualExit": 1,
+  "stage": "complete",
+  "renderOk": true,
+  "transportClean": false,
+  "source": {
+    "head": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+    "sha256": "d522da42f5c7fa0b59197a3a605e0fb9828f2d2beca2cc408d2303c9eb3ec626",
+    "trackedFilesVerified": 204,
+    "pinnedIgnoredFilesVerified": 9,
+    "receipt": "separate"
+  },
+  "networkFailures": [
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:49974/assets/models/menhir.glb",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "66832.119",
+      "timestamp": 1945023.0089,
+      "type": "Fetch"
+    },
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:49974/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "66832.240",
+      "timestamp": 1945034.402109,
+      "type": "Fetch"
+    }
+  ],
+  "exceptions": [],
+  "httpErrors": [],
+  "restoreUnchanged": true,
+  "sourceUnchanged": true,
+  "assetsUnchanged": true,
+  "driverUnchanged": true,
+  "selectedImages": [
+    "service-corner-ao-on-capture-2.jpg",
+    "laundry-details-ao-on-capture-2.jpg",
+    "shop-interior-ao-on-capture-2.jpg",
+    "20-rear-eye-ao-on-capture-2.jpg",
+    "21-front-eye-ao-on-capture-2.jpg",
+    "station-street-ao-on-capture-2.jpg",
+    "street-detail-ao-on-capture-2.jpg",
+    "20-rear-eye-town-B-capture-2.jpg",
+    "20-rear-eye-town-A2-capture-2.jpg",
+    "21-front-eye-town-B-capture-2.jpg",
+    "21-front-eye-town-A2-capture-2.jpg",
+    "north-seam-central-town-A1-capture-2.jpg",
+    "north-seam-central-town-B-capture-2.jpg",
+    "north-seam-central-town-A2-capture-2.jpg",
+    "north-seam-oblique-town-A1-capture-2.jpg",
+    "north-seam-oblique-town-B-capture-2.jpg",
+    "north-seam-oblique-town-A2-capture-2.jpg",
+    "21-front-eye-ao-on-capture-2.png",
+    "laundry-details-ao-on-capture-2.png",
+    "shop-interior-ao-on-capture-2.png",
+    "north-seam-central-town-A1-capture-2.png",
+    "north-seam-central-town-B-capture-2.png",
+    "north-seam-central-town-A2-capture-2.png",
+    "north-seam-oblique-town-A1-capture-2.png",
+    "north-seam-oblique-town-B-capture-2.png",
+    "north-seam-oblique-town-A2-capture-2.png"
+  ],
+  "frameSamples": []
+}

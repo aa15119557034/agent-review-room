@@ -1,0 +1,73 @@
+{
+  "head": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+  "command": "node D:/codex/2026-11-16/world-implementation/handoff/x51-c16-north-seam-views.mjs",
+  "exit": 0,
+  "sourceHashes": [
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/src/transition.js",
+      "bytes": 9254,
+      "sha256": "e40398c9546a96a1639148fc12ad7397c0badb9bd50f04458de456401b71f6cd"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/src/island.js",
+      "bytes": 12736,
+      "sha256": "7d069b2261c81fb3defeb4618ddbc1fe32fc2a13705773510c4bfc9e2cde7df2"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/upstream/sakuragaoka/src/world/layout.js",
+      "bytes": 21571,
+      "sha256": "ca3acd3248e3fc48f8ce58f9bacabfe0fc893e633c58bb385822918deca97b7c"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/upstream/sakuragaoka/src/world/environment/levee.js",
+      "bytes": 14654,
+      "sha256": "081fe78e81d7aec92130a1859d2a8657e7d22b36db37694eaba54ca84e9f1329"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/upstream/petalwake/src/world/terrain.js",
+      "bytes": 33332,
+      "sha256": "e3a4db83d503b2071a6ff03e10214cc0e12bf6fe17ab202f7643b6687a7ea367"
+    }
+  ],
+  "files": [
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c16-north-seam-views.mjs",
+      "bytes": 3047,
+      "sha256": "df39326e3ff9e25d5a8ce98963c410ea8d1788e5dfb6a923564ff5a4e47f2c8d"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c16-north-seam-views.json",
+      "bytes": 4481,
+      "sha256": "58d4705a0fa3c0404a8d4d336f28c4ffd997f66afa027540ffe9e3c36ee8cccf"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c16-north-seam-views-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "reusedTerrainMethods": {
+    "path": "D:/codex/2026-11-16/world-implementation/asset-candidates/mirzaev-highrise/terrain-cpu-methods.mjs",
+    "bytes": 2177,
+    "sha256": "940189d67d7d3e9b7ac0952d189009de6ad2347abe276d88032698548a684388"
+  },
+  "selectedCorridorLocal": {
+    "minX": -2,
+    "maxX": 32,
+    "minZ": -107,
+    "maxZ": -96
+  },
+  "remainingPetalPropsConservativeRadiusOverlap": [],
+  "knownAvoidance": [
+    "Skyline apartment footprints x[-47.2,-8.8]; both selected view segments x[5,25].",
+    "City lots maxZ<=-120.85; view segments z[-105,-97.7].",
+    "City connecting road/stairs x[32,37]; view segments x[5,25].",
+    "R5 path z[-94.5,-91.5], bench x17.5 z-94.08 and lamp x1.5 z-94.3 are beyond target, not within camera-target segment."
+  ],
+  "limits": [
+    "Only center ray to98% checked at 1% intervals; not full continuous/frustum/all-mesh visibility.",
+    "Island terrain exact bilinear CPU height; transition actual emitted triangles raycast; station interior edge uses authoritative L.heightAt, not all render-mesh vertices.",
+    "Tree/stone filter uses official info.radius*scale and current loadProps exclusion. No GLB triangle occlusion or grass-shell visibility analysis.",
+    "Camera time14 and townMask on/off are for runtime; not executed here."
+  ]
+}

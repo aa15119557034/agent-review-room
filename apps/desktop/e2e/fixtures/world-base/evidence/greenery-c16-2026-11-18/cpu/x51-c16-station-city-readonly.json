@@ -1,0 +1,144 @@
+{
+  "head": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+  "kind": "Read-only static review; no GPU or full CPU rebuild",
+  "sourceHashes": [
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/src/city.js",
+      "bytes": 30476,
+      "sha256": "ff85ce65ddc244ca16db937562feb455a07d2eeef85ac54be823f4ec3d57cf5f"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/src/station.js",
+      "bytes": 9349,
+      "sha256": "35adf91d771c16410245830181f11cbc17b6b91eb869e7f1e8070a32b6e7d1dd"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/src/main.js",
+      "bytes": 9920,
+      "sha256": "22e3b75c5a0fe3c325653cbfb570ced80192f47ee75305b68f5eb4858f51a780"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/src/look.js",
+      "bytes": 14991,
+      "sha256": "bb31f6e10d74f7edafca182ce30c07747a0d4fc629a8550da4903cfe0af099f2"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/src/transition.js",
+      "bytes": 9254,
+      "sha256": "e40398c9546a96a1639148fc12ad7397c0badb9bd50f04458de456401b71f6cd"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/src/island.js",
+      "bytes": 12736,
+      "sha256": "7d069b2261c81fb3defeb4618ddbc1fe32fc2a13705773510c4bfc9e2cde7df2"
+    }
+  ],
+  "geometryBasis": {
+    "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c15-facade-city-result.json",
+    "sha256": "043062488cc0731e37dd9eced62e728a856fa69ddd9ef598e80ff491eda403f4",
+    "reason": "C16 city diff adds only foliage hook; no sites, geometry, planting, stairs or vegetationClearAreas changes. Bounds are recomputed from saved C15 actual clearAreas, not a new C16 runtime readback."
+  },
+  "townRect": {
+    "areas": 35,
+    "local": [
+      -58.4,
+      -136.85000000000002,
+      37,
+      -94.53
+    ],
+    "world": [
+      221.6,
+      763.15,
+      317,
+      805.47
+    ],
+    "fullStrengthOutsideMetres": 12,
+    "fadeEndOutsideMetres": 55,
+    "outerWorldAABB": [
+      166.6,
+      708.15,
+      372,
+      860.47
+    ],
+    "shape": "Rounded-rectangle Euclidean distance; AABB corners are not all affected.",
+    "flowerRule": "At k=1 the deterministic hash test keeps approximately 25% of otherwise retained meadow instances; not exact count, not density texture edits. Terrain flower tint multiplier is 0.25. Grass tint saturation0.62, RGB scale[.882,.855,.756]."
+  },
+  "cityFoliage": {
+    "isolation": "M Proxy clones source material once, registers ownedMaterials, clears clipping. Captured original paint+foliage hook and explicit original key closure retained; no recursion or mutation of station/skyline originals.",
+    "key": "paint-foliage-5.0000-1.000|town-foliage",
+    "scope": "City M.foliage props: hedges/shrubs and two procedural garden trees. Other far-house tree materials are not this hook.",
+    "resources": "No new geometry/textures, owned clone existing lifetime; dispose only materials/geometries/InstancedMesh instances, no borrowed texture dispose.",
+    "failureGuard": "Checks original clump expression exists. color_fragment replacement lacks its own guard, but pinned original foliage and paint hooks retain that exact chunk; no current failure found.",
+    "tint": "Before clump modulation, saturation0.62 and RGB[1.03,.98,.86]; hl .1→.16, sh .14→.26. Not global light/exposure or physical height/collision change."
+  },
+  "gravel": {
+    "texture": "st-gravel",
+    "originalPixelSize": [
+      256,
+      256
+    ],
+    "repeat": [
+      1.9,
+      1.9
+    ],
+    "periodMetres": 0.8421052631578948,
+    "localPatches": [
+      [
+        12.02,
+        -33,
+        27,
+        -25.04
+      ],
+      [
+        -9.23,
+        -34,
+        -4.02,
+        -25.04
+      ]
+    ],
+    "worldPatches": [
+      [
+        292.02,
+        867,
+        307,
+        874.96
+      ],
+      [
+        270.77,
+        866,
+        275.98,
+        874.96
+      ]
+    ],
+    "scope": "Both station side and west yards. Other houses/shrine M.gravel names use distinct textures; not shared st-gravel.",
+    "resources": "No image/texture clone, upload size, mesh, UV buffer, height or collider change."
+  },
+  "transitionFinding": {
+    "status": "Confirmed shader-formula mismatch; visible magnitude not GPU-proven",
+    "northBandWorld": {
+      "x": [
+        186,
+        374
+      ],
+      "z": [
+        801,
+        803
+      ]
+    },
+    "fullMaskNorthX": [
+      221.6,
+      317
+    ],
+    "chain": "createIsland copies terrain fragment string into transition before applyIsland. Existing BANDS updates both; new TOWN only updates terrain. station blend copies transition later, so transition and station edge retain original tint.",
+    "whyClearingDoesNotEliminate": "splat R/A density clear removes blades/flower wash, but meadow floor color at terrain.js535-565 is still constructed without multiplying by grass density.",
+    "limits": "Final RGB also depends on terrain rock/paving/shore masks, shading and occlusion; no claim of mandatory visible seam at every pixel.",
+    "minimalDirection": "Apply same TOWN uniforms and terrain injections to terrain and transition; later station blend naturally inherits, no independent patch required."
+  },
+  "ci": {
+    "provenance": "D:/codex/2026-11-16/world-implementation/handoff/x51-c16-source-ci-provenance.json"
+  },
+  "limitations": [
+    "No shader GPU compilation, image assessment, resource disposal execution or C16 geometry rebuild performed.",
+    "Meadow prototype lifetime reviewed by another agent, not covered here."
+  ]
+}

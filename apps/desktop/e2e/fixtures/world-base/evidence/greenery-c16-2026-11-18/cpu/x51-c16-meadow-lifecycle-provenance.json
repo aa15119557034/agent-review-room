@@ -1,0 +1,36 @@
+{
+  "schema": "x51-c16-meadow-lifecycle-provenance-v1",
+  "sourceHead": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+  "startedAt": "2026-11-17T16:59:42.803Z",
+  "finishedAt": "2026-11-17T16:59:42.932Z",
+  "command": [
+    "C:\\PROGRAM FILES\\NODEJS\\node.exe",
+    "D:/codex/2026-11-16/world-implementation/handoff/x51-c16-meadow-lifecycle.mjs"
+  ],
+  "actualExitCode": 0,
+  "signal": null,
+  "error": null,
+  "files": [
+    {
+      "name": "x51-c16-meadow-lifecycle.mjs",
+      "bytes": 4847,
+      "sha256": "f45cdfc1dfcb1cce50da87d3168e8905b33fd11b9f3fd6192c5592b43de695a6"
+    },
+    {
+      "name": "x51-c16-meadow-lifecycle.json",
+      "bytes": 1740,
+      "sha256": "7c6e2d9ac0b35e75ec72667fe1ff270909fb85b4bee7eb571dff1f4231742663"
+    },
+    {
+      "name": "x51-c16-meadow-lifecycle-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "x51-c16-meadow-review.md",
+      "bytes": 5367,
+      "sha256": "6cfb9dbc1c820a1157788c408523e0c9bd5ad5699d442543cb035c6de7344e95"
+    }
+  ],
+  "scope": "Recorded capture rerun of the same CPU-only script; actual Three/Pipeline/Meadow/Shell, non-meadow shaders insertion fixtures. No GPU, scene build, DOM, asset loading or compilation. First init and same-look setQuality pass; new look in same realm retains first look uniforms. No claim about initial GPU long-frame cause."
+}

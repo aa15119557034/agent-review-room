@@ -1,0 +1,284 @@
+{
+  "schema": "x51-c16-curation-config-v1",
+  "head": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+  "output": "evidence/greenery-c16-2026-11-18",
+  "pending": [],
+  "cpu": [
+    "x51-c16-meadow-lifecycle.mjs",
+    "x51-c16-meadow-lifecycle.json",
+    "x51-c16-meadow-lifecycle-stderr.txt",
+    "x51-c16-meadow-lifecycle-provenance.json",
+    "x51-c16-meadow-review.md",
+    "x51-c16-station-city-readonly.json",
+    "x51-c16-north-seam-views.mjs",
+    "x51-c16-north-seam-views.json",
+    "x51-c16-north-seam-views-stderr.txt",
+    "x51-c16-north-seam-views-audit.json"
+  ],
+  "ciPrefix": "x51-c16-source-ci-",
+  "frozenFiles": {
+    "x51-c16-meadow-lifecycle.mjs": {
+      "bytes": 4847,
+      "sha256": "f45cdfc1dfcb1cce50da87d3168e8905b33fd11b9f3fd6192c5592b43de695a6"
+    },
+    "x51-c16-meadow-lifecycle.json": {
+      "bytes": 1740,
+      "sha256": "7c6e2d9ac0b35e75ec72667fe1ff270909fb85b4bee7eb571dff1f4231742663"
+    },
+    "x51-c16-meadow-lifecycle-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "x51-c16-meadow-lifecycle-provenance.json": {
+      "bytes": 1415,
+      "sha256": "2699f3f27d27f7d242e15e2c3c47f6b092f8208a1740d8eed1e8003fced71023"
+    },
+    "x51-c16-meadow-review.md": {
+      "bytes": 5367,
+      "sha256": "6cfb9dbc1c820a1157788c408523e0c9bd5ad5699d442543cb035c6de7344e95"
+    },
+    "x51-c16-station-city-readonly.json": {
+      "bytes": 5827,
+      "sha256": "f68439ff35b85d6e7256f99bb08e87ea907f8fb1ecab89b34cc3af5316b9a420"
+    },
+    "x51-c16-north-seam-views.mjs": {
+      "bytes": 3047,
+      "sha256": "df39326e3ff9e25d5a8ce98963c410ea8d1788e5dfb6a923564ff5a4e47f2c8d"
+    },
+    "x51-c16-north-seam-views.json": {
+      "bytes": 4481,
+      "sha256": "58d4705a0fa3c0404a8d4d336f28c4ffd997f66afa027540ffe9e3c36ee8cccf"
+    },
+    "x51-c16-north-seam-views-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "x51-c16-north-seam-views-audit.json": {
+      "bytes": 3431,
+      "sha256": "be07c9af7eaeae3d505ab2d12dc72cecbb38aa344e97212abd2613df031d66b2"
+    },
+    "x51-c16-source-ci-checks.json": {
+      "bytes": 5322,
+      "sha256": "4fe7a1f7a32dd6f921b1db23fd45bb1d18d2c7b67ee315c3098c70b054dadbe4"
+    },
+    "x51-c16-source-ci-jobs.json": {
+      "bytes": 4139,
+      "sha256": "64d00c7d7909440a914b4fc30d69c54773b31b8d67957324f76f3d388be63200"
+    },
+    "x51-c16-source-ci-log.json": {
+      "bytes": 32117,
+      "sha256": "e69258dab309cb7186734828fd61236b1e25cd0919ed5fecb66f9fdb7f33e32c"
+    },
+    "x51-c16-source-ci-provenance.json": {
+      "bytes": 2869,
+      "sha256": "3955b4c2b17a2e0d5dbe5071c4e43a7668f014d7834c525d4c269020ae96c745"
+    },
+    "x51-c16-source-ci-run.json": {
+      "bytes": 16165,
+      "sha256": "537f553ab64fa548bdc83a55005eddbfe11555218da78e50c4d6fecd5caa81ef"
+    },
+    "x51-c16-source-ci-runs.json": {
+      "bytes": 17211,
+      "sha256": "991ea5ebd6860894dbc7bd41e2b735c74c9bbc72ad4a2cc5b2b35a454781ffe5"
+    },
+    "x51-c16-source-ci-summary.cjs": {
+      "bytes": 2521,
+      "sha256": "5d1a294e4235256f63c632647e739dbfacd3656616473e91f7bc9f669654ee65"
+    },
+    "x51-c16-source-ci-summary.json": {
+      "bytes": 6776,
+      "sha256": "90deab3e9874182e205a8a0666f641a96b5298cf0250835a28dc8b34854c44d2"
+    },
+    "x51-c16-normal-execution.json": {
+      "bytes": 4911,
+      "sha256": "1762e2eb309c3328e9a06d593fecee6c1d9fa164c983bbd6ba5160f694608ee4"
+    },
+    "x51-c16-normal-stdout.txt": {
+      "bytes": 295,
+      "sha256": "393bed4ba2a9b7ec3bc73a75aef62da13e9da130827b28b6869a32cb67a051d3"
+    },
+    "x51-c16-normal-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "x51-c16-diagnostic-gpu.cjs": {
+      "bytes": 50540,
+      "sha256": "cf038cce082be647fbb1a72b6b5c4f9177a0ad0fb4ba6850f149bdc79eae40f5"
+    },
+    "x51-c16-targeted-execution.json": {
+      "bytes": 17749,
+      "sha256": "9c26d91d9fe3431a3c1889919351485fe975bebc1738fd580458c42537774570"
+    },
+    "x51-c16-targeted-stdout.txt": {
+      "bytes": 158,
+      "sha256": "28feb98e06b528cdfe1089bb21a6688e705a7e9a7373a2d07c0ff7673a9bf85c"
+    },
+    "x51-c16-targeted-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "x51-c16-diagnostic-validator.cjs": {
+      "bytes": 3392,
+      "sha256": "16ddfd056d93c87152220807b2f50642bad0c966b92268341fddfe6f57f24e8e"
+    },
+    "x51-c16-analysis-validator.cjs": {
+      "bytes": 2633,
+      "sha256": "b346996726f55b40dfdac8959328a8e980c51ea09104e659c6f86dbe9279ea69"
+    },
+    "x51-c16-seam-readback.json": {
+      "bytes": 7570,
+      "sha256": "0c3f2dbdfcdfe9069d6994617b71f31fe24402e633786ecba44923878bacb5e8"
+    },
+    "x51-c16-seam-readback.md": {
+      "bytes": 1293,
+      "sha256": "e633dce7fe33b7f145eeff1a8381037b6f63154335dc4b76d73b547e8d910487"
+    },
+    "x51-c16-offline-analysis.cjs": {
+      "bytes": 5746,
+      "sha256": "57a7829e19e1b63c347cefdbe601716499c3d9f443e7be67a525975604c71222"
+    },
+    "x51-c16-offline-analysis.json": {
+      "bytes": 173624,
+      "sha256": "46f1981c9b5b6bfecb74165ae50e89beee2376b61debddec40627ed4a6aaa978"
+    }
+  },
+  "readme": {
+    "file": "x51-c16-evidence-readme.md",
+    "bytes": 6922,
+    "sha256": "609c846c5bbb56d11737a194f052e871c588cf226e26f7305833be6ae7c43c2e"
+  },
+  "analysis": {
+    "validationModule": "x51-c16-analysis-validator.cjs"
+  },
+  "runs": [
+    {
+      "label": "baseline",
+      "baseline": true,
+      "directory": "gpu-town-c16",
+      "report": "render-report.json",
+      "exit": 1,
+      "session": 5028,
+      "pid": 63284,
+      "execution": "x51-c16-normal-execution.json",
+      "images": [
+        "01-station-street.jpg",
+        "02-station-port.jpg",
+        "03-island-aerial.jpg",
+        "04-shop-interior.jpg",
+        "18-town-shop-balconies.jpg",
+        "19-town-rear-stairs.jpg",
+        "23-service-corner.jpg",
+        "24-laundry-details.jpg",
+        "walking-first.jpg",
+        "walking-third.jpg"
+      ]
+    },
+    {
+      "label": "diagnostic",
+      "baseline": false,
+      "directory": "gpu-look-c16-v1",
+      "report": "look-report.json",
+      "exit": 1,
+      "session": 67606,
+      "pid": 61484,
+      "driver": "x51-c16-diagnostic-gpu.cjs",
+      "validationModule": "x51-c16-diagnostic-validator.cjs",
+      "captureArrays": [
+        "captures",
+        "townCaptures"
+      ],
+      "expectedCaptureNames": [
+        "service-corner-ao-on-warmup",
+        "service-corner-ao-on-capture-1",
+        "service-corner-ao-on-capture-2",
+        "laundry-details-ao-on-warmup",
+        "laundry-details-ao-on-capture-1",
+        "laundry-details-ao-on-capture-2",
+        "shop-interior-ao-on-warmup",
+        "shop-interior-ao-on-capture-1",
+        "shop-interior-ao-on-capture-2",
+        "20-rear-eye-ao-on-warmup",
+        "20-rear-eye-ao-on-capture-1",
+        "20-rear-eye-ao-on-capture-2",
+        "21-front-eye-ao-on-warmup",
+        "21-front-eye-ao-on-capture-1",
+        "21-front-eye-ao-on-capture-2",
+        "station-street-ao-on-warmup",
+        "station-street-ao-on-capture-1",
+        "station-street-ao-on-capture-2",
+        "street-detail-ao-on-warmup",
+        "street-detail-ao-on-capture-1",
+        "street-detail-ao-on-capture-2",
+        "20-rear-eye-town-B-warmup",
+        "20-rear-eye-town-B-capture-1",
+        "20-rear-eye-town-B-capture-2",
+        "20-rear-eye-town-A2-warmup",
+        "20-rear-eye-town-A2-capture-1",
+        "20-rear-eye-town-A2-capture-2",
+        "21-front-eye-town-B-warmup",
+        "21-front-eye-town-B-capture-1",
+        "21-front-eye-town-B-capture-2",
+        "21-front-eye-town-A2-warmup",
+        "21-front-eye-town-A2-capture-1",
+        "21-front-eye-town-A2-capture-2",
+        "north-seam-central-town-A1-warmup",
+        "north-seam-central-town-A1-capture-1",
+        "north-seam-central-town-A1-capture-2",
+        "north-seam-central-town-B-warmup",
+        "north-seam-central-town-B-capture-1",
+        "north-seam-central-town-B-capture-2",
+        "north-seam-central-town-A2-warmup",
+        "north-seam-central-town-A2-capture-1",
+        "north-seam-central-town-A2-capture-2",
+        "north-seam-oblique-town-A1-warmup",
+        "north-seam-oblique-town-A1-capture-1",
+        "north-seam-oblique-town-A1-capture-2",
+        "north-seam-oblique-town-B-warmup",
+        "north-seam-oblique-town-B-capture-1",
+        "north-seam-oblique-town-B-capture-2",
+        "north-seam-oblique-town-A2-warmup",
+        "north-seam-oblique-town-A2-capture-1",
+        "north-seam-oblique-town-A2-capture-2"
+      ],
+      "images": [
+        "service-corner-ao-on-capture-2.jpg",
+        "laundry-details-ao-on-capture-2.jpg",
+        "shop-interior-ao-on-capture-2.jpg",
+        "20-rear-eye-ao-on-capture-2.jpg",
+        "21-front-eye-ao-on-capture-2.jpg",
+        "station-street-ao-on-capture-2.jpg",
+        "street-detail-ao-on-capture-2.jpg",
+        "20-rear-eye-town-B-capture-2.jpg",
+        "20-rear-eye-town-A2-capture-2.jpg",
+        "21-front-eye-town-B-capture-2.jpg",
+        "21-front-eye-town-A2-capture-2.jpg",
+        "north-seam-central-town-A1-capture-2.jpg",
+        "north-seam-central-town-B-capture-2.jpg",
+        "north-seam-central-town-A2-capture-2.jpg",
+        "north-seam-oblique-town-A1-capture-2.jpg",
+        "north-seam-oblique-town-B-capture-2.jpg",
+        "north-seam-oblique-town-A2-capture-2.jpg",
+        "21-front-eye-ao-on-capture-2.png",
+        "laundry-details-ao-on-capture-2.png",
+        "shop-interior-ao-on-capture-2.png",
+        "north-seam-central-town-A1-capture-2.png",
+        "north-seam-central-town-B-capture-2.png",
+        "north-seam-central-town-A2-capture-2.png",
+        "north-seam-oblique-town-A1-capture-2.png",
+        "north-seam-oblique-town-B-capture-2.png",
+        "north-seam-oblique-town-A2-capture-2.png"
+      ],
+      "readbacks": [
+        "north-seam-candidates.json",
+        "scene-assets-audit.json",
+        "wall-material-audit.json",
+        "city-shadow-audit.json",
+        "c15-reference.json",
+        "c12-reference.json"
+      ],
+      "fullShaderFiles": [
+        "town-material-audit.json"
+      ]
+    }
+  ]
+}

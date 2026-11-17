@@ -1,0 +1,78 @@
+{
+  "scope": "CPU only: real Three r187, Pipeline constructor, createLook, Meadow and Shell material factory. Non-meadow island shaders are minimal insertion fixtures, not compiled; no renderer or GPU called.",
+  "sourceHashes": {
+    "src/look.js": "bb31f6e10d74f7edafca182ce30c07747a0d4fc629a8550da4903cfe0af099f2",
+    "src/main.js": "22e3b75c5a0fe3c325653cbfb570ced80192f47ee75305b68f5eb4858f51a780",
+    "src/island.js": "7d069b2261c81fb3defeb4618ddbc1fe32fc2a13705773510c4bfc9e2cde7df2",
+    "upstream/petalwake/src/world/meadow.js": "4f9c6f0b6dedbd8209d8f2cfe8445407cb13fac883ddbfadf7e1d46f4409c52b",
+    "upstream/petalwake/src/core/pipeline.js": "0495e8d0ce275729e2a4d2fb4a15707635956ad308fcc591a6a2cf5260359085"
+  },
+  "firstPoolEmpty": true,
+  "first": {
+    "grassRect": [
+      10,
+      20,
+      30,
+      40
+    ],
+    "flowerRect": [
+      10,
+      20,
+      30,
+      40
+    ],
+    "sameUniform": true,
+    "townFunctionCounts": [
+      1,
+      1
+    ]
+  },
+  "firstDisable": [
+    0,
+    0
+  ],
+  "sameLookQualityRebuild": {
+    "oldGrassDisposed": 1,
+    "newMaterial": true,
+    "ownerCorrect": true
+  },
+  "second": {
+    "terrainRect": [
+      110,
+      120,
+      130,
+      140
+    ],
+    "meadowRect": [
+      10,
+      20,
+      30,
+      40
+    ],
+    "meadowStrength": 0,
+    "usesFirstLook": true,
+    "usesOwnLook": false,
+    "oldMaterialDisposed": 1,
+    "replacementUCell": [
+      0,
+      0,
+      0,
+      1
+    ]
+  },
+  "firstSetterChangesSecond": {
+    "rect": [
+      -1,
+      -2,
+      1,
+      2
+    ],
+    "strength": 0.9
+  },
+  "secondDisable": {
+    "terrainStrength": 0,
+    "meadowStrength": 0.9
+  },
+  "secondQualityRebuildStillUsesFirst": true,
+  "unadaptedThirdMeadowUsesFirst": true
+}

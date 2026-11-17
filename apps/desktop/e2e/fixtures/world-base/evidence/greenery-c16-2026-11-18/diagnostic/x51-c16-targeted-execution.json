@@ -1,0 +1,500 @@
+{
+  "schema": "x51-c16-targeted-execution-v1",
+  "recordedAt": "2026-11-17T17:03:36.786Z",
+  "provenance": "Post-execution record from actual exec/write_stdin tool return and original process/stdout/stderr files; not a contemporaneous process supervisor receipt.",
+  "sourceHead": "50e190b092fb2b30ab9ed19a28302d5638f947f4",
+  "driverSha256": "cf038cce082be647fbb1a72b6b5c4f9177a0ad0fb4ba6850f149bdc79eae40f5",
+  "command": "node x51-c16-diagnostic-gpu.cjs gpu-look-c16-v1 50e190b092fb2b30ab9ed19a28302d5638f947f4",
+  "cwd": "D:/codex/2026-11-16/world-implementation/handoff/",
+  "directory": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c16-v1/",
+  "session": 67606,
+  "pid": 61484,
+  "actualExit": 1,
+  "completionToolChunk": "1e5f78",
+  "gpuReleased": true,
+  "startedAt": "2026-11-17T17:00:41.111Z",
+  "completedAt": "2026-11-17T17:02:12.203Z",
+  "stage": "complete",
+  "renderOk": true,
+  "transportClean": false,
+  "ok": false,
+  "networkFailures": [
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:49974/assets/models/menhir.glb",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "66832.119",
+      "timestamp": 1945023.0089,
+      "type": "Fetch"
+    },
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:49974/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "66832.240",
+      "timestamp": 1945034.402109,
+      "type": "Fetch"
+    }
+  ],
+  "exceptions": [],
+  "originalCaptures": 21,
+  "townCaptures": 30,
+  "totalRenderedFrames": 51,
+  "sourceUnchanged": true,
+  "driverUnchanged": true,
+  "assetsUnchanged": true,
+  "assetFiles": 9,
+  "restoreUnchanged": true,
+  "restoreTargetSha256": "8dbbe952a615e9c5499d315c72c5629eeba8316935289801e90ef0c02e0325ff",
+  "restoreStateSha256": "8dbbe952a615e9c5499d315c72c5629eeba8316935289801e90ef0c02e0325ff",
+  "restoredTownRect": [
+    221.6,
+    763.15,
+    317,
+    805.47
+  ],
+  "restoredTownGreen": [
+    1,
+    12,
+    55
+  ],
+  "observer": {
+    "intact": true,
+    "restored": true
+  },
+  "stdout": "D:/codex/2026-11-16/world-implementation/handoff/x51-c16-targeted-stdout.txt",
+  "stderr": "D:/codex/2026-11-16/world-implementation/handoff/x51-c16-targeted-stderr.txt",
+  "rawFiles": [
+    "look-report.json",
+    "source-manifest.json",
+    "prop-assets-manifest.json",
+    "run-config.json",
+    "process.json",
+    "north-seam-candidates.json",
+    "town-material-audit.json",
+    "scene-assets-audit.json",
+    "wall-material-audit.json",
+    "city-shadow-audit.json"
+  ],
+  "imageNames": [
+    {
+      "name": "service-corner-ao-on-warmup",
+      "pngSha256": "7dfbc00f5e84bc94bcc0a7bbd0fab5cc07ece4d8a9ad95c1e6276408e52d377a",
+      "view": "service-corner",
+      "strength": 1,
+      "pass": "warmup"
+    },
+    {
+      "name": "service-corner-ao-on-capture-1",
+      "pngSha256": "7dfbc00f5e84bc94bcc0a7bbd0fab5cc07ece4d8a9ad95c1e6276408e52d377a",
+      "view": "service-corner",
+      "strength": 1,
+      "pass": "capture-1"
+    },
+    {
+      "name": "service-corner-ao-on-capture-2",
+      "pngSha256": "7dfbc00f5e84bc94bcc0a7bbd0fab5cc07ece4d8a9ad95c1e6276408e52d377a",
+      "view": "service-corner",
+      "strength": 1,
+      "pass": "capture-2"
+    },
+    {
+      "name": "laundry-details-ao-on-warmup",
+      "pngSha256": "a84ff90eff38b94e202484bad01c3265dd9570bb34cdc6991e0e872c7d98a37a",
+      "view": "laundry-details",
+      "strength": 1,
+      "pass": "warmup"
+    },
+    {
+      "name": "laundry-details-ao-on-capture-1",
+      "pngSha256": "a84ff90eff38b94e202484bad01c3265dd9570bb34cdc6991e0e872c7d98a37a",
+      "view": "laundry-details",
+      "strength": 1,
+      "pass": "capture-1"
+    },
+    {
+      "name": "laundry-details-ao-on-capture-2",
+      "pngSha256": "a84ff90eff38b94e202484bad01c3265dd9570bb34cdc6991e0e872c7d98a37a",
+      "view": "laundry-details",
+      "strength": 1,
+      "pass": "capture-2"
+    },
+    {
+      "name": "shop-interior-ao-on-warmup",
+      "pngSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+      "view": "shop-interior",
+      "strength": 1,
+      "pass": "warmup"
+    },
+    {
+      "name": "shop-interior-ao-on-capture-1",
+      "pngSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+      "view": "shop-interior",
+      "strength": 1,
+      "pass": "capture-1"
+    },
+    {
+      "name": "shop-interior-ao-on-capture-2",
+      "pngSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+      "view": "shop-interior",
+      "strength": 1,
+      "pass": "capture-2"
+    },
+    {
+      "name": "20-rear-eye-ao-on-warmup",
+      "pngSha256": "dd83b43cd2dd1316455a8e02d44423fba2ec7b9e55207721178e98274075faf7",
+      "view": "20-rear-eye",
+      "strength": 1,
+      "pass": "warmup"
+    },
+    {
+      "name": "20-rear-eye-ao-on-capture-1",
+      "pngSha256": "dd83b43cd2dd1316455a8e02d44423fba2ec7b9e55207721178e98274075faf7",
+      "view": "20-rear-eye",
+      "strength": 1,
+      "pass": "capture-1"
+    },
+    {
+      "name": "20-rear-eye-ao-on-capture-2",
+      "pngSha256": "dd83b43cd2dd1316455a8e02d44423fba2ec7b9e55207721178e98274075faf7",
+      "view": "20-rear-eye",
+      "strength": 1,
+      "pass": "capture-2"
+    },
+    {
+      "name": "21-front-eye-ao-on-warmup",
+      "pngSha256": "39353132bbc8dd2ec51aa346db07bc9eed27a8883e6f0776daaaf08f322a7720",
+      "view": "21-front-eye",
+      "strength": 1,
+      "pass": "warmup"
+    },
+    {
+      "name": "21-front-eye-ao-on-capture-1",
+      "pngSha256": "39353132bbc8dd2ec51aa346db07bc9eed27a8883e6f0776daaaf08f322a7720",
+      "view": "21-front-eye",
+      "strength": 1,
+      "pass": "capture-1"
+    },
+    {
+      "name": "21-front-eye-ao-on-capture-2",
+      "pngSha256": "39353132bbc8dd2ec51aa346db07bc9eed27a8883e6f0776daaaf08f322a7720",
+      "view": "21-front-eye",
+      "strength": 1,
+      "pass": "capture-2"
+    },
+    {
+      "name": "station-street-ao-on-warmup",
+      "pngSha256": "457cffe5becafc1bcd1326954746e30806922883f50d398321b06a8601ee3e59",
+      "view": "station-street",
+      "strength": 1,
+      "pass": "warmup"
+    },
+    {
+      "name": "station-street-ao-on-capture-1",
+      "pngSha256": "3eb35b68cd1ec022f188cddaea03282b2d6616aeb3d5721c6cf7a5534bc75b79",
+      "view": "station-street",
+      "strength": 1,
+      "pass": "capture-1"
+    },
+    {
+      "name": "station-street-ao-on-capture-2",
+      "pngSha256": "bfe3fa02f2043137a09ef5e7654700ec16e131ca4503011bbad4ebee7ae3fc4b",
+      "view": "station-street",
+      "strength": 1,
+      "pass": "capture-2"
+    },
+    {
+      "name": "street-detail-ao-on-warmup",
+      "pngSha256": "f1186197d76c69be77f50224aa92fae2f3eddf890fca839c1e51028e8e0389cd",
+      "view": "street-detail",
+      "strength": 1,
+      "pass": "warmup"
+    },
+    {
+      "name": "street-detail-ao-on-capture-1",
+      "pngSha256": "5e36f3acae849ebd13f76e74906a75f8a6d737e9308da00c7cb9db405828e338",
+      "view": "street-detail",
+      "strength": 1,
+      "pass": "capture-1"
+    },
+    {
+      "name": "street-detail-ao-on-capture-2",
+      "pngSha256": "5e36f3acae849ebd13f76e74906a75f8a6d737e9308da00c7cb9db405828e338",
+      "view": "street-detail",
+      "strength": 1,
+      "pass": "capture-2"
+    },
+    {
+      "name": "20-rear-eye-town-B-warmup",
+      "pngSha256": "12f895ad12e8957a8bc851036ec72f9cfeb9b37166320ea89bdcd214c4016294",
+      "view": "20-rear-eye",
+      "strength": 0,
+      "pass": "warmup"
+    },
+    {
+      "name": "20-rear-eye-town-B-capture-1",
+      "pngSha256": "6a1057e96128066c52d178a55a199ec5aa84f50dda9a9515686b3f79491d2529",
+      "view": "20-rear-eye",
+      "strength": 0,
+      "pass": "capture-1"
+    },
+    {
+      "name": "20-rear-eye-town-B-capture-2",
+      "pngSha256": "12f895ad12e8957a8bc851036ec72f9cfeb9b37166320ea89bdcd214c4016294",
+      "view": "20-rear-eye",
+      "strength": 0,
+      "pass": "capture-2"
+    },
+    {
+      "name": "20-rear-eye-town-A2-warmup",
+      "pngSha256": "dd83b43cd2dd1316455a8e02d44423fba2ec7b9e55207721178e98274075faf7",
+      "view": "20-rear-eye",
+      "strength": 1,
+      "pass": "warmup"
+    },
+    {
+      "name": "20-rear-eye-town-A2-capture-1",
+      "pngSha256": "dd83b43cd2dd1316455a8e02d44423fba2ec7b9e55207721178e98274075faf7",
+      "view": "20-rear-eye",
+      "strength": 1,
+      "pass": "capture-1"
+    },
+    {
+      "name": "20-rear-eye-town-A2-capture-2",
+      "pngSha256": "dd83b43cd2dd1316455a8e02d44423fba2ec7b9e55207721178e98274075faf7",
+      "view": "20-rear-eye",
+      "strength": 1,
+      "pass": "capture-2"
+    },
+    {
+      "name": "21-front-eye-town-B-warmup",
+      "pngSha256": "3336f5b1222cd7a2e312968a7098add237bd3c81c5f268c43cc5afd54a2ed69a",
+      "view": "21-front-eye",
+      "strength": 0,
+      "pass": "warmup"
+    },
+    {
+      "name": "21-front-eye-town-B-capture-1",
+      "pngSha256": "3336f5b1222cd7a2e312968a7098add237bd3c81c5f268c43cc5afd54a2ed69a",
+      "view": "21-front-eye",
+      "strength": 0,
+      "pass": "capture-1"
+    },
+    {
+      "name": "21-front-eye-town-B-capture-2",
+      "pngSha256": "3336f5b1222cd7a2e312968a7098add237bd3c81c5f268c43cc5afd54a2ed69a",
+      "view": "21-front-eye",
+      "strength": 0,
+      "pass": "capture-2"
+    },
+    {
+      "name": "21-front-eye-town-A2-warmup",
+      "pngSha256": "39353132bbc8dd2ec51aa346db07bc9eed27a8883e6f0776daaaf08f322a7720",
+      "view": "21-front-eye",
+      "strength": 1,
+      "pass": "warmup"
+    },
+    {
+      "name": "21-front-eye-town-A2-capture-1",
+      "pngSha256": "39353132bbc8dd2ec51aa346db07bc9eed27a8883e6f0776daaaf08f322a7720",
+      "view": "21-front-eye",
+      "strength": 1,
+      "pass": "capture-1"
+    },
+    {
+      "name": "21-front-eye-town-A2-capture-2",
+      "pngSha256": "39353132bbc8dd2ec51aa346db07bc9eed27a8883e6f0776daaaf08f322a7720",
+      "view": "21-front-eye",
+      "strength": 1,
+      "pass": "capture-2"
+    },
+    {
+      "name": "north-seam-central-town-A1-warmup",
+      "pngSha256": "081e069963c41c4d7024c775d6aeffbc9c63a5a4d8c5c5c41e0b40a5c969e012",
+      "view": "north-seam-central",
+      "strength": 1,
+      "pass": "warmup"
+    },
+    {
+      "name": "north-seam-central-town-A1-capture-1",
+      "pngSha256": "081e069963c41c4d7024c775d6aeffbc9c63a5a4d8c5c5c41e0b40a5c969e012",
+      "view": "north-seam-central",
+      "strength": 1,
+      "pass": "capture-1"
+    },
+    {
+      "name": "north-seam-central-town-A1-capture-2",
+      "pngSha256": "081e069963c41c4d7024c775d6aeffbc9c63a5a4d8c5c5c41e0b40a5c969e012",
+      "view": "north-seam-central",
+      "strength": 1,
+      "pass": "capture-2"
+    },
+    {
+      "name": "north-seam-central-town-B-warmup",
+      "pngSha256": "5c7cf667687848292ae3b264822f4b58aa1659c982c10a7991b3a5ca960b5057",
+      "view": "north-seam-central",
+      "strength": 0,
+      "pass": "warmup"
+    },
+    {
+      "name": "north-seam-central-town-B-capture-1",
+      "pngSha256": "5c7cf667687848292ae3b264822f4b58aa1659c982c10a7991b3a5ca960b5057",
+      "view": "north-seam-central",
+      "strength": 0,
+      "pass": "capture-1"
+    },
+    {
+      "name": "north-seam-central-town-B-capture-2",
+      "pngSha256": "5c7cf667687848292ae3b264822f4b58aa1659c982c10a7991b3a5ca960b5057",
+      "view": "north-seam-central",
+      "strength": 0,
+      "pass": "capture-2"
+    },
+    {
+      "name": "north-seam-central-town-A2-warmup",
+      "pngSha256": "081e069963c41c4d7024c775d6aeffbc9c63a5a4d8c5c5c41e0b40a5c969e012",
+      "view": "north-seam-central",
+      "strength": 1,
+      "pass": "warmup"
+    },
+    {
+      "name": "north-seam-central-town-A2-capture-1",
+      "pngSha256": "081e069963c41c4d7024c775d6aeffbc9c63a5a4d8c5c5c41e0b40a5c969e012",
+      "view": "north-seam-central",
+      "strength": 1,
+      "pass": "capture-1"
+    },
+    {
+      "name": "north-seam-central-town-A2-capture-2",
+      "pngSha256": "081e069963c41c4d7024c775d6aeffbc9c63a5a4d8c5c5c41e0b40a5c969e012",
+      "view": "north-seam-central",
+      "strength": 1,
+      "pass": "capture-2"
+    },
+    {
+      "name": "north-seam-oblique-town-A1-warmup",
+      "pngSha256": "9ecc3b45f98317e8c66d4d65dda703f091f81ddcc6edfabd20d303d3065bb889",
+      "view": "north-seam-oblique",
+      "strength": 1,
+      "pass": "warmup"
+    },
+    {
+      "name": "north-seam-oblique-town-A1-capture-1",
+      "pngSha256": "386a310e9c5df4b02314ea0775ba134c51112fba63e2e74355048e4dd40aee7c",
+      "view": "north-seam-oblique",
+      "strength": 1,
+      "pass": "capture-1"
+    },
+    {
+      "name": "north-seam-oblique-town-A1-capture-2",
+      "pngSha256": "2e33a57b403e76ffb15e1e3473db734a0a0ef1d20bc41e14ed6df4580c0e6259",
+      "view": "north-seam-oblique",
+      "strength": 1,
+      "pass": "capture-2"
+    },
+    {
+      "name": "north-seam-oblique-town-B-warmup",
+      "pngSha256": "ba129700dee5e8ad328d1ad31a20b982d731fe3133bcf0cf6a76be2ec4ab2ec2",
+      "view": "north-seam-oblique",
+      "strength": 0,
+      "pass": "warmup"
+    },
+    {
+      "name": "north-seam-oblique-town-B-capture-1",
+      "pngSha256": "ba129700dee5e8ad328d1ad31a20b982d731fe3133bcf0cf6a76be2ec4ab2ec2",
+      "view": "north-seam-oblique",
+      "strength": 0,
+      "pass": "capture-1"
+    },
+    {
+      "name": "north-seam-oblique-town-B-capture-2",
+      "pngSha256": "ba129700dee5e8ad328d1ad31a20b982d731fe3133bcf0cf6a76be2ec4ab2ec2",
+      "view": "north-seam-oblique",
+      "strength": 0,
+      "pass": "capture-2"
+    },
+    {
+      "name": "north-seam-oblique-town-A2-warmup",
+      "pngSha256": "386a310e9c5df4b02314ea0775ba134c51112fba63e2e74355048e4dd40aee7c",
+      "view": "north-seam-oblique",
+      "strength": 1,
+      "pass": "warmup"
+    },
+    {
+      "name": "north-seam-oblique-town-A2-capture-1",
+      "pngSha256": "386a310e9c5df4b02314ea0775ba134c51112fba63e2e74355048e4dd40aee7c",
+      "view": "north-seam-oblique",
+      "strength": 1,
+      "pass": "capture-1"
+    },
+    {
+      "name": "north-seam-oblique-town-A2-capture-2",
+      "pngSha256": "386a310e9c5df4b02314ea0775ba134c51112fba63e2e74355048e4dd40aee7c",
+      "view": "north-seam-oblique",
+      "strength": 1,
+      "pass": "capture-2"
+    }
+  ],
+  "limits": [
+    "Town0 switches island terrain/grass/flower only; C16 city foliage/gravel remain active.",
+    "Rendered captures and strict restoration pass does not mean visual acceptance; north seam discontinuity observed.",
+    "Single scene material/program counts are not create/dispose lifecycle leak verification.",
+    "Math mask samples are CPU calculations from actual uniforms, not GPU tap values."
+  ],
+  "evidenceHashes": [
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c16-targeted-stdout.txt",
+      "sha256": "28feb98e06b528cdfe1089bb21a6688e705a7e9a7373a2d07c0ff7673a9bf85c"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c16-targeted-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c16-diagnostic-gpu.cjs",
+      "sha256": "cf038cce082be647fbb1a72b6b5c4f9177a0ad0fb4ba6850f149bdc79eae40f5"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c16-v1/look-report.json",
+      "sha256": "8c6ef20d18e2d4e94b9e8c966e4accc64d3c74f0f5126d45f92357eb1f2ca335"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c16-v1/source-manifest.json",
+      "sha256": "d522da42f5c7fa0b59197a3a605e0fb9828f2d2beca2cc408d2303c9eb3ec626"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c16-v1/prop-assets-manifest.json",
+      "sha256": "dd8734fb67c85176d5061a76463eb61801dff175053a82b1c5bb0c22e2723ccc"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c16-v1/run-config.json",
+      "sha256": "fcec6273a9e853a3f602780a981114c5eee910938f75b716041b6b5b67b9a57c"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c16-v1/process.json",
+      "sha256": "4c9ca43619161676231470389cb6225e1bc98b7c5ab5c107609d7184fdbd7f7c"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c16-v1/north-seam-candidates.json",
+      "sha256": "58d4705a0fa3c0404a8d4d336f28c4ffd997f66afa027540ffe9e3c36ee8cccf"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c16-v1/town-material-audit.json",
+      "sha256": "afc4eeba2a9152e80821ea57a5895eb82c198019a2811ec2fe6dcdb840aac31a"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c16-v1/scene-assets-audit.json",
+      "sha256": "90a3aa552cf1c43ca5c9500168193279af29b39e2846ac545e135143dcef9233"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c16-v1/wall-material-audit.json",
+      "sha256": "3cadf3142f4a36b182554d9c78e1c058eb611130a385a8489366af220244d9a9"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c16-v1/city-shadow-audit.json",
+      "sha256": "763e62c38fda2017b3249a50ea46b08b55487670a8d1f8401b699a7def46ebc2"
+    }
+  ]
+}
