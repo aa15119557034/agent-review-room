@@ -7,7 +7,7 @@ const crypto = require('node:crypto');
 const root = path.resolve(__dirname, '..');
 const manifest = JSON.parse(fs.readFileSync(path.join(root, 'city-assets.json'), 'utf8'));
 const output = path.join(root, '.local', 'city');
-const usage = 'node scripts/prepare-city.cjs --downtown=<extracted Standard directory> --highrise=<original GLB path>\nWithout arguments, verify both prepared asset sets. One source argument prepares only that asset set.\nOfficial acquisition steps and pinned hashes are in city-assets.json; --download is not implemented.';
+const usage = 'node scripts/prepare-city.cjs --downtown=<extracted Standard directory>\nWithout arguments, verify the 26 prepared Downtown files.\nOfficial acquisition steps and pinned hashes are in city-assets.json; --download is not implemented.';
 const hash = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 
 function within(base, relative) {
@@ -31,18 +31,10 @@ function verifyReferences(plan) {
   const destinations = new Set(plan.map(file => file.destination));
   for (const file of plan) {
     const source = file.source || file.destination;
-    let json;
-    if (file.destination.endsWith('.gltf')) {
-      json = JSON.parse(fs.readFileSync(source, 'utf8'));
-    } else if (file.destination.endsWith('.glb')) {
-      const buffer = fs.readFileSync(source);
-      if (buffer.readUInt32LE(0) !== 0x46546c67 || buffer.readUInt32LE(4) !== 2 || buffer.readUInt32LE(8) !== buffer.length || buffer.readUInt32LE(16) !== 0x4e4f534a) {
-        throw new Error(`Invalid glTF 2.0 binary header: ${source}`);
-      }
-      json = JSON.parse(buffer.subarray(20, 20 + buffer.readUInt32LE(12)).toString('utf8'));
-    } else continue;
+    if (!file.destination.endsWith('.gltf')) continue;
+    const json = JSON.parse(fs.readFileSync(source, 'utf8'));
     for (const item of [...(json.buffers || []), ...(json.images || [])]) {
-      if (!item.uri) continue; // Embedded GLB resources.
+      if (!item.uri) continue;
       if (/^(?:[a-z]+:|\/|\\)/i.test(item.uri)) throw new Error(`Unexpected non-local dependency in ${source}: ${item.uri}`);
       const target = within(path.dirname(file.destination), decodeURIComponent(item.uri));
       if (!destinations.has(target)) throw new Error(`Dependency omitted from the pinned copy list: ${item.uri} (${source})`);
@@ -55,7 +47,7 @@ function main() {
   if (args.length === 1 && args[0] === '--help') { console.log(usage); return; }
   const sources = new Map();
   for (const arg of args) {
-    const match = /^--(downtown|highrise)=(.+)$/.exec(arg);
+    const match = /^--(downtown)=(.+)$/.exec(arg);
     if (!match || sources.has(match[1])) throw new Error(`Unknown, empty or duplicate argument: ${arg}\n${usage}`);
     sources.set(match[1], path.resolve(match[2]));
   }
@@ -64,12 +56,12 @@ function main() {
   for (const name of projects) {
     const project = manifest.projects[name];
     const input = sources.get(name);
-    if (input && (!fs.existsSync(input) || (project.sourceType === 'directory' ? !fs.statSync(input).isDirectory() : !fs.statSync(input).isFile()))) {
-      throw new Error(`Expected ${project.sourceType} for --${name}: ${input}`);
+    if (input && (!fs.existsSync(input) || !fs.statSync(input).isDirectory())) {
+      throw new Error(`Expected directory for --${name}: ${input}`);
     }
     for (const expected of project.files) {
       const destination = within(output, expected.destination);
-      const source = input ? (project.sourceType === 'file' ? input : within(input, expected.sourcePath)) : null;
+      const source = input ? within(input, expected.sourcePath) : null;
       // Preflight every source and existing destination before creating any output.
       if (source) verify(source, expected);
       if (!source || fs.existsSync(destination)) verify(destination, expected);

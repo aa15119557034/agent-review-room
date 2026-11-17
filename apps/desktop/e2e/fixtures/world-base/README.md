@@ -17,13 +17,13 @@
 
 `sources.json` 登记来源、作者、commit 和归档哈希，`source-files.json` 登记每个原始文件的 SHA-256。Petalwake 的全部二进制资产及原项目副本都只在 `.local/`，不进 Git。Three.js 使用 Petalwake 固定的 r187，额外的 RoundedBoxGeometry 来自 Three.js r187，许可和哈希一并保留。
 
-新增背景建筑单独登记在 [city-assets.json](./city-assets.json)：Quaternius Downtown City MegaKit **免费 Standard** 的三栋完整建筑（CC0 1.0），以及 mirzaev3d 的 High-Rise Building #01 官方 GLB（CC BY 4.0）。先从清单所列官方入口取得指定版本，再执行：
+当前背景建筑登记在 [city-assets.json](./city-assets.json) 的 `projects.downtown`：Quaternius Downtown City MegaKit **免费 Standard** 的三栋完整建筑（CC0 1.0）。先从清单所列官方入口取得指定版本，再执行：
 
 ```bat
-node scripts\prepare-city.cjs --downtown=<Standard解包目录> --highrise=<原始GLB文件>
+node scripts\prepare-city.cjs --downtown=<Standard解包目录>
 ```
 
-脚本只复制已核对哈希的27项依赖至 `.local/city/`，不改变原文件，也不安装软件。无参数运行会复核现有文件；组合基线启动前会自动做这次校验。作者 OBJ 包仅用于核对缺失材质参数，不是运行必需文件。
+脚本只复制已核对哈希的26项依赖至 `.local/city/downtown/`，不改变原文件，也不安装软件。无参数运行会复核这26项文件；组合基线启动前会自动做这次校验。已退休的 mirzaev3d 高层在 `retiredAssets.highrise` 保留官方来源、许可、原文件哈希和材质核对依据；当前准备和运行不需要其 GLB 或 OBJ 包。
 
 在本目录使用已有 Electron 运行，无需构建桌面应用：
 
@@ -51,7 +51,7 @@ node scripts\baseline.cjs --scene=combined --electron=D:\codex\2026-11-16\world-
 
 这组补充提供近景和近郊层次，尚不是参考图里的都市天际线、密集商业街或完整湿地反射效果。固定四机位之外，采集脚本另拍花箱、侧墙、背景及干湿路面细节，镜头坐标随报告保存。
 
-`src/city.js` 正在验证一组更大体量的站后背景：原比例高层和三栋中层，复用原贴图并按颜色空间、采样及UV语义共享相同纹理；免费版中的顶点控制色不作为门面染色。高层GLB遗漏的三种材质参数按作者MTL恢复为Phong，玻璃保持源文件的不透明设置。地基采全部双线性高度格点极值，道路贴实际地表，堤顶连接采过渡网格并使用台阶。背景仍不可步行，无LOD，也未实现作者收费版的假室内shader。场景释放时，先释放 city 和 skyline，再释放 station；它们借用站区渐变与道路贴图。
+`src/city.js` 当前保留三栋原比例中层作为站后候选背景，复用原贴图并按颜色空间、采样及UV语义共享相同纹理；免费版中的顶点控制色不作为门面染色，底色有局部风格适配。地基采全部双线性高度格点极值，街区铺地和道路贴实际地表，堤顶连接采过渡网格并使用台阶；只合批适配层新增的铺地、道路、地基与台阶，原建筑几何不变。背景仍不可步行，无LOD，也未实现作者收费版的假室内shader。场景释放时，先释放 city 和 skyline，再释放 station；它们借用站区渐变与道路贴图。
 
 ## 当前状态
 

@@ -6,9 +6,6 @@ import { visibleBankHeight } from './skyline.js';
 // Author dimensions, never stretched storeys. These lots stay outside the
 // station's walkable area and the two existing apartment yards.
 const SITES = [
-  // The curved glass tower (highrise/high_rise_building.glb) was dropped in
-  // X-51 polish: a lone corporate tower in a meadow contradicts the #252 ZZZ
-  // breakdown (dense mid-rise blocks), and its 740k triangles have no LOD.
   { name: 'brick-large', file: 'downtown/Building_Large_2.gltf', center: [35, -135], maximumRelief: 1.5 },
   { name: 'brick-medium', file: 'downtown/Building_Medium_2_001.gltf', center: [-16, -135], maximumRelief: 1.5 },
   { name: 'brick-small', file: 'downtown/Building_Small_1.gltf', center: [9, -135], maximumRelief: 1.5 },
@@ -42,7 +39,6 @@ export async function createCity({ scene, station, island, skyline }) {
       const url = new URL('/city-assets/' + site.file, location.href).href;
       const gltf = await loader.loadAsync(url);
       const model = gltf.scene;
-      if (site.name === 'curved-tower') restoreTowerMaterials(model, materials);
       model.traverse(object => {
         if (!object.isMesh) return;
         geometries.add(object.geometry);
@@ -237,32 +233,6 @@ function buildConnections({ root, station, island, placements, foundation, geome
   const r5 = station.ctx.services.houses.buildContext.L.ROADS.R5;
   stairs('station-levee-link', 51.5, 5, r5.z - r5.halfW - 0.03, -101, r5.y + 0.03);
   return { clearAreas, report };
-}
-
-// Fab's converted GLB omits Kd/Ks/Ns for these three named materials, causing
-// metallic-default black surfaces without an environment map. Restore the
-// author's OBJ/MTL values using Three's MTLLoader colour-space/Phong convention.
-// The source glass itself has d=1; this does not invent transparent glazing.
-function restoreTowerMaterials(model, owned) {
-  const source = { AO: [0.8, 0.5, 250], _GlassReal: [0.8, 0.5, 360], _WhiteGrey: [0.196078, 0.752941, 200] };
-  const replacements = new Map();
-  const restore = material => {
-    const values = source[material.name];
-    if (!values) return material;
-    if (!replacements.has(material)) {
-      const [kd, ks, shininess] = values;
-      const replacement = new THREE.MeshPhongMaterial({ name: material.name,
-        color: new THREE.Color().setRGB(kd, kd, kd, THREE.SRGBColorSpace),
-        specular: new THREE.Color().setRGB(ks, ks, ks, THREE.SRGBColorSpace),
-        shininess, side: material.side, opacity: 1 });
-      replacements.set(material, replacement);
-      owned.add(material); owned.add(replacement);
-    }
-    return replacements.get(material);
-  };
-  model.traverse(object => {
-    if (object.isMesh) object.material = Array.isArray(object.material) ? object.material.map(restore) : restore(object.material);
-  });
 }
 
 // Share only genuinely identical sampling, UV and colour-space semantics.

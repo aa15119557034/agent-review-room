@@ -27,37 +27,40 @@ function makeMask(root, layout) {
   const width = BOUNDS.x1 - BOUNDS.x0, depth = BOUNDS.z1 - BOUNDS.z0;
   const excluded = new Uint8Array(SIZE * SIZE);
   const inverse = root.matrixWorld.clone().invert();
-  const transform = new THREE.Matrix4(), p = new THREE.Vector3();
+  const transform = new THREE.Matrix4();
   // Keep markings and manhole covers dry using their real painted shape:
   // rasterise each decal triangle, sample the decal's own alpha at the
   // interpolated UV, then dilate ~12 cm so linear mask filtering never bleeds
-  // water onto paint. Triangles without readable alpha fall back to their
+  // water onto paint. Triangles without a map or UV use their
   // exact triangle (not its bounding box).
   const alphaCache = new Map();
-  const readAlpha = texture => {
-    if (!texture?.image) return null;
+  const readAlpha = (texture, meshName) => {
+    if (!texture) return null;
     if (alphaCache.has(texture)) return alphaCache.get(texture);
-    let entry = null;
+    let entry;
     try {
       const image = texture.image, w = image.width, h = image.height;
       const canvas = document.createElement('canvas');
       canvas.width = w; canvas.height = h;
       const g = canvas.getContext('2d', { willReadFrequently: true });
       g.drawImage(image, 0, 0);
-      entry = { w, h, data: g.getImageData(0, 0, w, h).data, flipY: texture.flipY };
-    } catch { entry = null; }
+      if (texture.matrixAutoUpdate) texture.updateMatrix();
+      entry = { w, h, data: g.getImageData(0, 0, w, h).data, texture };
+    } catch (cause) {
+      throw new Error(`Wet road cannot read decal alpha: ${meshName} map ${texture.name || texture.uuid} (${texture.image?.width ?? '?'}x${texture.image?.height ?? '?'})`, { cause });
+    }
     alphaCache.set(texture, entry);
     return entry;
   };
   const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
-  const ua = new THREE.Vector2(), ub = new THREE.Vector2(), uc = new THREE.Vector2();
+  const ua = new THREE.Vector2(), ub = new THREE.Vector2(), uc = new THREE.Vector2(), sampleUV = new THREE.Vector2();
   const cellX = width / SIZE, cellZ = depth / SIZE;
   let alphaTriangles = 0, solidTriangles = 0;
   root.traverse(mesh => {
     if (!mesh.isMesh || !DECALS.has(mesh.name)) return;
     const geometry = mesh.geometry, position = geometry.attributes.position, uvs = geometry.attributes.uv, index = geometry.index;
     const material = Array.isArray(mesh.material) ? mesh.material[0] : mesh.material;
-    const alpha = uvs ? readAlpha(material?.map) : null;
+    const alpha = uvs ? readAlpha(material?.map, mesh.name) : null;
     transform.multiplyMatrices(inverse, mesh.matrixWorld);
     const count = index ? index.count : position.count;
     for (let i = 0; i < count; i += 3) {
@@ -81,8 +84,10 @@ function makeMask(root, layout) {
         if (l1 < -1e-4 || l2 < -1e-4 || l3 < -1e-4) continue;
         if (alpha) {
           const u = ua.x * l1 + ub.x * l2 + uc.x * l3, v = ua.y * l1 + ub.y * l2 + uc.y * l3;
-          const px = Math.min(alpha.w - 1, Math.max(0, Math.floor(u * alpha.w)));
-          const py = Math.min(alpha.h - 1, Math.max(0, Math.floor((alpha.flipY ? 1 - v : v) * alpha.h)));
+          sampleUV.set(u, v);
+          alpha.texture.transformUv(sampleUV);
+          const px = Math.min(alpha.w - 1, Math.max(0, Math.floor(sampleUV.x * alpha.w)));
+          const py = Math.min(alpha.h - 1, Math.max(0, Math.floor(sampleUV.y * alpha.h)));
           if (alpha.data[(py * alpha.w + px) * 4 + 3] < 20) continue;
         }
         excluded[row * SIZE + col] = 1;

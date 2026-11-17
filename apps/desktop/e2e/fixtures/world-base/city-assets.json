@@ -1,7 +1,7 @@
 {
   "version": 1,
   "preparedRoot": ".local/city",
-  "notes": "Pinned original bytes only. Binary assets remain local and are not committed. Prepare with scripts/prepare-city.cjs; no renderer or asset conversion is involved.",
+  "notes": "projects contains current runtime dependencies only. retiredAssets preserves prior author, license, hash and material evidence without requiring downloads. Binary assets remain local and are not committed. Prepare with scripts/prepare-city.cjs; original bytes are preserved.",
   "projects": {
     "downtown": {
       "title": "Downtown City MegaKit Standard",
@@ -263,8 +263,14 @@
           "sha256": "697276f680b34d6321e6b06da208a0fc3516db372d4a7de543fc2c33e895f482"
         }
       ]
-    },
+    }
+  },
+  "retiredAssets": {
     "highrise": {
+      "retirement": {
+        "commit": "cc079586460ee5f6e9d623e956a58a56906f4e1d",
+        "reason": "Removed from the current scene in favor of the three mid-rise buildings; retained as provenance and historical trial evidence only. Not consumed by prepare-city or runtime loading."
+      },
       "title": "High-Rise Building #01 (official Fab-converted GLB)",
       "author": "mirzaev3d",
       "source": "https://www.fab.com/listings/ca10b839-7882-42f8-ab60-496610708a6c",
@@ -283,7 +289,7 @@
         "steps": [
           "Use the official author listing and its Converted Files entry high_rise_building.glb. This is not the original OBJ source ZIP.",
           "The public converted-files metadata identifies the pinned file ID; the official download-info request returned HTTP 200 anonymously in the acquisition audit. Do not reuse or commit expiring signed URLs, and do not bypass a future login or payment requirement.",
-          "Pass the downloaded original file as --highrise=<GLB path>; the preparation script checks the fixed byte count and SHA-256 before copying."
+          "The pinned original GLB remains identified below for historical evidence. Current prepare-city accepts only Downtown and does not require this retired asset."
         ],
         "downloadInfoEndpoint": "https://www.fab.com/i/listings/ca10b839-7882-42f8-ab60-496610708a6c/asset-formats/converted-files/files/9d36501f-6860-42cf-bc23-e7961fd03a84/download-info"
       },

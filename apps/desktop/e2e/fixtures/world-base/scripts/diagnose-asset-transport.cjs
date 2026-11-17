@@ -8,7 +8,7 @@ const fixture = path.resolve(__dirname, '..');
 const digest = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
 const targets = [
   ['menhir', '/assets/models/menhir.glb', '.local/petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e/assets/models/menhir.glb'],
-  ['highrise', '/city-assets/highrise/high_rise_building.glb', '.local/city/highrise/high_rise_building.glb'],
+  ['large-bin', '/city-assets/downtown/Building_Large_2.bin', '.local/city/downtown/Building_Large_2.bin'],
   ['medium-bin', '/city-assets/downtown/Building_Medium_2_001.bin', '.local/city/downtown/Building_Medium_2_001.bin'],
 ];
 
