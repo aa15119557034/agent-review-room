@@ -1,0 +1,520 @@
+{
+  "head": "56e4990b0218cfd6ce84d7bda9122a3802df5f92",
+  "actualExit": 1,
+  "originalReportSha256": "3555c594bc02b484af865345a7f7a14e752970dd9e289ce4befc83b239e1efdc",
+  "completedAt": "2026-11-17T18:21:55.020Z",
+  "stage": "complete",
+  "captures": [
+    {
+      "name": "service-corner-ao-on-warmup",
+      "pngSha256": "7dfbc00f5e84bc94bcc0a7bbd0fab5cc07ece4d8a9ad95c1e6276408e52d377a",
+      "camera": {
+        "position": [
+          308.4,
+          9.612,
+          872.9
+        ],
+        "quaternion": [
+          -0.08432325046436126,
+          0.5331397072650681,
+          0.05351200213385738,
+          0.8401119613456697
+        ],
+        "fov": 55
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "service-corner-ao-on-capture-1",
+      "pngSha256": "7dfbc00f5e84bc94bcc0a7bbd0fab5cc07ece4d8a9ad95c1e6276408e52d377a",
+      "camera": {
+        "position": [
+          308.4,
+          9.612,
+          872.9
+        ],
+        "quaternion": [
+          -0.08432325046436126,
+          0.5331397072650681,
+          0.05351200213385738,
+          0.8401119613456697
+        ],
+        "fov": 55
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "service-corner-ao-on-capture-2",
+      "pngSha256": "7dfbc00f5e84bc94bcc0a7bbd0fab5cc07ece4d8a9ad95c1e6276408e52d377a",
+      "camera": {
+        "position": [
+          308.4,
+          9.612,
+          872.9
+        ],
+        "quaternion": [
+          -0.08432325046436126,
+          0.5331397072650681,
+          0.05351200213385738,
+          0.8401119613456697
+        ],
+        "fov": 55
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "laundry-details-ao-on-warmup",
+      "pngSha256": "d6b67453f4c56573ab38e197ae851137c352ac76ccfc5ea0228557a2c39f61c2",
+      "camera": {
+        "position": [
+          288,
+          14.384808464050293,
+          777.9
+        ],
+        "quaternion": [
+          -0.15522850149956677,
+          0.6173580660361093,
+          0.12595148976979553,
+          0.7608609287163607
+        ],
+        "fov": 55
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "laundry-details-ao-on-capture-1",
+      "pngSha256": "d6b67453f4c56573ab38e197ae851137c352ac76ccfc5ea0228557a2c39f61c2",
+      "camera": {
+        "position": [
+          288,
+          14.384808464050293,
+          777.9
+        ],
+        "quaternion": [
+          -0.15522850149956677,
+          0.6173580660361093,
+          0.12595148976979553,
+          0.7608609287163607
+        ],
+        "fov": 55
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "laundry-details-ao-on-capture-2",
+      "pngSha256": "d6b67453f4c56573ab38e197ae851137c352ac76ccfc5ea0228557a2c39f61c2",
+      "camera": {
+        "position": [
+          288,
+          14.384808464050293,
+          777.9
+        ],
+        "quaternion": [
+          -0.15522850149956677,
+          0.6173580660361093,
+          0.12595148976979553,
+          0.7608609287163607
+        ],
+        "fov": 55
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "shop-interior-ao-on-warmup",
+      "pngSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+      "camera": {
+        "position": [
+          271.7,
+          9.9134,
+          908
+        ],
+        "quaternion": [
+          -0.015701859235384273,
+          0.7069324236562871,
+          0.015701859235384273,
+          0.7069324236562871
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "shop-interior-ao-on-capture-1",
+      "pngSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+      "camera": {
+        "position": [
+          271.7,
+          9.9134,
+          908
+        ],
+        "quaternion": [
+          -0.015701859235384273,
+          0.7069324236562871,
+          0.015701859235384273,
+          0.7069324236562871
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "shop-interior-ao-on-capture-2",
+      "pngSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+      "camera": {
+        "position": [
+          271.7,
+          9.9134,
+          908
+        ],
+        "quaternion": [
+          -0.015701859235384273,
+          0.7069324236562871,
+          0.015701859235384273,
+          0.7069324236562871
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "20-rear-eye-ao-on-warmup",
+      "pngSha256": "1510ea43b76895833dad0f2856e63c2426073157a1e3a9527f0bd29c67a48131",
+      "camera": {
+        "position": [
+          273,
+          14.755245542526229,
+          758
+        ],
+        "quaternion": [
+          -0.00013011891877658623,
+          0.9145142483742376,
+          -0.00029414054360230415,
+          -0.40455356390830466
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "20-rear-eye-ao-on-capture-1",
+      "pngSha256": "1510ea43b76895833dad0f2856e63c2426073157a1e3a9527f0bd29c67a48131",
+      "camera": {
+        "position": [
+          273,
+          14.755245542526229,
+          758
+        ],
+        "quaternion": [
+          -0.00013011891877658623,
+          0.9145142483742376,
+          -0.00029414054360230415,
+          -0.40455356390830466
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "20-rear-eye-ao-on-capture-2",
+      "pngSha256": "1510ea43b76895833dad0f2856e63c2426073157a1e3a9527f0bd29c67a48131",
+      "camera": {
+        "position": [
+          273,
+          14.755245542526229,
+          758
+        ],
+        "quaternion": [
+          -0.00013011891877658623,
+          0.9145142483742376,
+          -0.00029414054360230415,
+          -0.40455356390830466
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "21-front-eye-ao-on-warmup",
+      "pngSha256": "3d8e78036d7f133dec0d5cf46a0adff2c46ef86edcb78dcdd20a24a980c18038",
+      "camera": {
+        "position": [
+          274,
+          12.87812709172567,
+          783
+        ],
+        "quaternion": [
+          0.07422133960767584,
+          -0.5103582416049142,
+          0.044271975994965136,
+          0.8556083508909221
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "21-front-eye-ao-on-capture-1",
+      "pngSha256": "3d8e78036d7f133dec0d5cf46a0adff2c46ef86edcb78dcdd20a24a980c18038",
+      "camera": {
+        "position": [
+          274,
+          12.87812709172567,
+          783
+        ],
+        "quaternion": [
+          0.07422133960767584,
+          -0.5103582416049142,
+          0.044271975994965136,
+          0.8556083508909221
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "21-front-eye-ao-on-capture-2",
+      "pngSha256": "3d8e78036d7f133dec0d5cf46a0adff2c46ef86edcb78dcdd20a24a980c18038",
+      "camera": {
+        "position": [
+          274,
+          12.87812709172567,
+          783
+        ],
+        "quaternion": [
+          0.07422133960767584,
+          -0.5103582416049142,
+          0.044271975994965136,
+          0.8556083508909221
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "station-street-ao-on-warmup",
+      "pngSha256": "b6fdd996d4a2333037322f115c989e010748a8273e24bf88f52270692f8b72c0",
+      "camera": {
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "station-street-ao-on-capture-1",
+      "pngSha256": "b6fdd996d4a2333037322f115c989e010748a8273e24bf88f52270692f8b72c0",
+      "camera": {
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "station-street-ao-on-capture-2",
+      "pngSha256": "b6fdd996d4a2333037322f115c989e010748a8273e24bf88f52270692f8b72c0",
+      "camera": {
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "street-detail-ao-on-warmup",
+      "pngSha256": "5e36f3acae849ebd13f76e74906a75f8a6d737e9308da00c7cb9db405828e338",
+      "camera": {
+        "position": [
+          284.4,
+          10.281286274509803,
+          924
+        ],
+        "quaternion": [
+          -0.12465537443110519,
+          -0.38126635888515065,
+          -0.05196769176958736,
+          0.914547079280253
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "street-detail-ao-on-capture-1",
+      "pngSha256": "5e36f3acae849ebd13f76e74906a75f8a6d737e9308da00c7cb9db405828e338",
+      "camera": {
+        "position": [
+          284.4,
+          10.281286274509803,
+          924
+        ],
+        "quaternion": [
+          -0.12465537443110519,
+          -0.38126635888515065,
+          -0.05196769176958736,
+          0.914547079280253
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "street-detail-ao-on-capture-2",
+      "pngSha256": "5e36f3acae849ebd13f76e74906a75f8a6d737e9308da00c7cb9db405828e338",
+      "camera": {
+        "position": [
+          284.4,
+          10.281286274509803,
+          924
+        ],
+        "quaternion": [
+          -0.12465537443110519,
+          -0.38126635888515065,
+          -0.05196769176958736,
+          0.914547079280253
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    }
+  ],
+  "driverSha256": "480d243fc954e74b8c77b536162c72b564f68a13908bdc8a164b9799d792957a",
+  "renderOk": true,
+  "transportClean": false,
+  "sourceUnchanged": true,
+  "assetsUnchanged": true,
+  "restoreUnchanged": true,
+  "networkFailures": [
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:59346/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64984.235",
+      "timestamp": 1949867.090503,
+      "type": "Fetch"
+    },
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:59346/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64984.240",
+      "timestamp": 1949867.103617,
+      "type": "Fetch"
+    }
+  ],
+  "httpErrors": [],
+  "exceptions": []
+}

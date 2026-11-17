@@ -1,0 +1,400 @@
+{
+  "source": {
+    "head": "b0259599bd51178c2d4980243a9c87553eac1a66",
+    "files": 235,
+    "manifestSha256": "f8b3621642f1f08de8b009afcec7d90ff2df458806b94aded9532970ad66c017"
+  },
+  "driverSha256": "3d519cffcff439e98e3487a54c51926bc9956afe66d303166043f27144294747",
+  "durationMs": 10000,
+  "settleMs": 1500,
+  "warmupMs": 5000,
+  "startedAt": "2026-11-17T19:44:44.470Z",
+  "exceptions": [],
+  "networkFailures": [
+    {
+      "url": "http://127.0.0.1:53060/assets/models/menhir.glb",
+      "stage": "loading",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "17600.125",
+      "timestamp": 1954866.959167,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:53060/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "stage": "loading",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "17600.246",
+      "timestamp": 1954879.367249,
+      "type": "Fetch"
+    }
+  ],
+  "segments": [
+    {
+      "id": "20",
+      "name": "20-rear-eye",
+      "before": {
+        "camera": {
+          "position": [
+            273,
+            14.755245542526229,
+            758
+          ],
+          "quaternion": [
+            -0.00013011891877658623,
+            0.9145142483742376,
+            -0.00029414054360230415,
+            -0.40455356390830466
+          ],
+          "fov": 58
+        },
+        "stationTime": 44.744,
+        "islandTime": 44.744,
+        "width": 1440,
+        "height": 900,
+        "dpr": 1,
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "walking": false,
+        "ao": 0.55,
+        "params": {
+          "exposure": 1.02,
+          "blur": 0,
+          "bloom": 0.12,
+          "distortion": 0,
+          "fringe": 0,
+          "vignette": 0.12,
+          "rays": 0,
+          "saturation": 1,
+          "contrast": 1.05,
+          "speed": 0
+        },
+        "hidden": true,
+        "errors": []
+      },
+      "after": {
+        "camera": {
+          "position": [
+            273,
+            14.755245542526229,
+            758
+          ],
+          "quaternion": [
+            -0.00013011891877658623,
+            0.9145142483742376,
+            -0.00029414054360230415,
+            -0.40455356390830466
+          ],
+          "fov": 58
+        },
+        "stationTime": 54.851800000000004,
+        "islandTime": 54.851800000000004,
+        "width": 1440,
+        "height": 900,
+        "dpr": 1,
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "walking": false,
+        "ao": 0.55,
+        "params": {
+          "exposure": 1.02,
+          "blur": 0,
+          "bloom": 0.12,
+          "distortion": 0,
+          "fringe": 0,
+          "vignette": 0.12,
+          "rays": 0,
+          "saturation": 1,
+          "contrast": 1.05,
+          "speed": 0
+        },
+        "hidden": true,
+        "errors": []
+      },
+      "samplesFile": "frames-20.json",
+      "samplesSha256": "49eec9494225580b666c953f0aaa205b10beda85cc0a5609971a598b878d1a7a",
+      "frameCount": 655,
+      "sampleMs": 10107.800000000003,
+      "fps": 64.8014404717149,
+      "p95Ms": 15.5,
+      "maxMs": 30.80000000000291,
+      "over20ms": 2,
+      "valid": true,
+      "meetsBudget": true
+    },
+    {
+      "id": "21",
+      "name": "21-front-eye",
+      "before": {
+        "camera": {
+          "position": [
+            274,
+            12.87812709172567,
+            783
+          ],
+          "quaternion": [
+            0.07422133960767584,
+            -0.5103582416049142,
+            0.044271975994965136,
+            0.8556083508909221
+          ],
+          "fov": 58
+        },
+        "stationTime": 56.3748,
+        "islandTime": 56.3748,
+        "width": 1440,
+        "height": 900,
+        "dpr": 1,
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "walking": false,
+        "ao": 0.55,
+        "params": {
+          "exposure": 1.02,
+          "blur": 0,
+          "bloom": 0.12,
+          "distortion": 0,
+          "fringe": 0,
+          "vignette": 0.12,
+          "rays": 0,
+          "saturation": 1,
+          "contrast": 1.05,
+          "speed": 0
+        },
+        "hidden": true,
+        "errors": []
+      },
+      "after": {
+        "camera": {
+          "position": [
+            274,
+            12.87812709172567,
+            783
+          ],
+          "quaternion": [
+            0.07422133960767584,
+            -0.5103582416049142,
+            0.044271975994965136,
+            0.8556083508909221
+          ],
+          "fov": 58
+        },
+        "stationTime": 66.498,
+        "islandTime": 66.498,
+        "width": 1440,
+        "height": 900,
+        "dpr": 1,
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "walking": false,
+        "ao": 0.55,
+        "params": {
+          "exposure": 1.02,
+          "blur": 0,
+          "bloom": 0.12,
+          "distortion": 0,
+          "fringe": 0,
+          "vignette": 0.12,
+          "rays": 0,
+          "saturation": 1,
+          "contrast": 1.05,
+          "speed": 0
+        },
+        "hidden": true,
+        "errors": []
+      },
+      "samplesFile": "frames-21.json",
+      "samplesSha256": "d98cf9bbfc076443f7d47233b434d4ac47fb38fcc24dfb7f8b16fb7b6f9e4a9d",
+      "frameCount": 655,
+      "sampleMs": 10107.800000000003,
+      "fps": 64.8014404717149,
+      "p95Ms": 15.5,
+      "maxMs": 30.700000000004366,
+      "over20ms": 2,
+      "valid": true,
+      "meetsBudget": true
+    },
+    {
+      "id": "23",
+      "name": "service-corner",
+      "before": {
+        "camera": {
+          "position": [
+            308.4,
+            9.612,
+            872.9
+          ],
+          "quaternion": [
+            -0.08432325046436126,
+            0.5331397072650681,
+            0.05351200213385738,
+            0.8401119613456697
+          ],
+          "fov": 55
+        },
+        "stationTime": 68.0209,
+        "islandTime": 68.0209,
+        "width": 1440,
+        "height": 900,
+        "dpr": 1,
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "walking": false,
+        "ao": 0.55,
+        "params": {
+          "exposure": 1.02,
+          "blur": 0,
+          "bloom": 0.12,
+          "distortion": 0,
+          "fringe": 0,
+          "vignette": 0.12,
+          "rays": 0,
+          "saturation": 1,
+          "contrast": 1.05,
+          "speed": 0
+        },
+        "hidden": true,
+        "errors": []
+      },
+      "after": {
+        "camera": {
+          "position": [
+            308.4,
+            9.612,
+            872.9
+          ],
+          "quaternion": [
+            -0.08432325046436126,
+            0.5331397072650681,
+            0.05351200213385738,
+            0.8401119613456697
+          ],
+          "fov": 55
+        },
+        "stationTime": 78.15939999999999,
+        "islandTime": 78.15939999999999,
+        "width": 1440,
+        "height": 900,
+        "dpr": 1,
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "walking": false,
+        "ao": 0.55,
+        "params": {
+          "exposure": 1.02,
+          "blur": 0,
+          "bloom": 0.12,
+          "distortion": 0,
+          "fringe": 0,
+          "vignette": 0.12,
+          "rays": 0,
+          "saturation": 1,
+          "contrast": 1.05,
+          "speed": 0
+        },
+        "hidden": true,
+        "errors": []
+      },
+      "samplesFile": "frames-23.json",
+      "samplesSha256": "7d4c512ca9b045587f9561e1988dda171c4de9c0a570212b17147edec45cf44b",
+      "frameCount": 652,
+      "sampleMs": 10107.899999999994,
+      "fps": 64.50400182035837,
+      "p95Ms": 15.5,
+      "maxMs": 30.80000000000291,
+      "over20ms": 5,
+      "valid": true,
+      "meetsBudget": true
+    },
+    {
+      "id": "24",
+      "name": "laundry-details",
+      "before": {
+        "camera": {
+          "position": [
+            288,
+            14.384808464050293,
+            777.9
+          ],
+          "quaternion": [
+            -0.15522850149956677,
+            0.6173580660361093,
+            0.12595148976979553,
+            0.7608609287163607
+          ],
+          "fov": 55
+        },
+        "stationTime": 79.68260000000001,
+        "islandTime": 79.68260000000001,
+        "width": 1440,
+        "height": 900,
+        "dpr": 1,
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "walking": false,
+        "ao": 0.55,
+        "params": {
+          "exposure": 1.02,
+          "blur": 0,
+          "bloom": 0.12,
+          "distortion": 0,
+          "fringe": 0,
+          "vignette": 0.12,
+          "rays": 0,
+          "saturation": 1,
+          "contrast": 1.05,
+          "speed": 0
+        },
+        "hidden": true,
+        "errors": []
+      },
+      "after": {
+        "camera": {
+          "position": [
+            288,
+            14.384808464050293,
+            777.9
+          ],
+          "quaternion": [
+            -0.15522850149956677,
+            0.6173580660361093,
+            0.12595148976979553,
+            0.7608609287163607
+          ],
+          "fov": 55
+        },
+        "stationTime": 89.7903,
+        "islandTime": 89.7903,
+        "width": 1440,
+        "height": 900,
+        "dpr": 1,
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "walking": false,
+        "ao": 0.55,
+        "params": {
+          "exposure": 1.02,
+          "blur": 0,
+          "bloom": 0.12,
+          "distortion": 0,
+          "fringe": 0,
+          "vignette": 0.12,
+          "rays": 0,
+          "saturation": 1,
+          "contrast": 1.05,
+          "speed": 0
+        },
+        "hidden": true,
+        "errors": []
+      },
+      "samplesFile": "frames-24.json",
+      "samplesSha256": "5b3d9cdf39b9efe91403c7af824ee67e4d45ed513ce7507d7f59b6e0962798ce",
+      "frameCount": 657,
+      "sampleMs": 10107.699999999997,
+      "fps": 64.99995053276217,
+      "p95Ms": 15.5,
+      "maxMs": 15.700000000011642,
+      "over20ms": 0,
+      "valid": true,
+      "meetsBudget": true
+    }
+  ],
+  "stage": "complete",
+  "previewHostSha256": "b225b1006b69f1dea71ec5aa54629dae614e00c1a0ed60c9a617f8293fa0a7e0",
+  "transportClean": false,
+  "renderOk": true,
+  "completedAt": "2026-11-17T19:46:14.794Z"
+}

@@ -1,0 +1,580 @@
+{
+  "head": "b0259599bd51178c2d4980243a9c87553eac1a66",
+  "actualExit": 1,
+  "originalReportSha256": "6fd1557bddb02796299710a8b84df0dfb3f33cb3678aa86bc0af80c4f549b627",
+  "completedAt": "2026-11-17T19:43:43.523Z",
+  "stage": "complete",
+  "captures": [
+    {
+      "name": "service-corner-ao-on-warmup",
+      "pngSha256": "2da9a5656e3b284b400edaf5e85b6fa36c6f28968b15dcfd3f6428809fba4580",
+      "camera": {
+        "position": [
+          308.4,
+          9.612,
+          872.9
+        ],
+        "quaternion": [
+          -0.08432325046436126,
+          0.5331397072650681,
+          0.05351200213385738,
+          0.8401119613456697
+        ],
+        "fov": 55
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "service-corner-ao-on-capture-1",
+      "pngSha256": "2da9a5656e3b284b400edaf5e85b6fa36c6f28968b15dcfd3f6428809fba4580",
+      "camera": {
+        "position": [
+          308.4,
+          9.612,
+          872.9
+        ],
+        "quaternion": [
+          -0.08432325046436126,
+          0.5331397072650681,
+          0.05351200213385738,
+          0.8401119613456697
+        ],
+        "fov": 55
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "service-corner-ao-on-capture-2",
+      "pngSha256": "2da9a5656e3b284b400edaf5e85b6fa36c6f28968b15dcfd3f6428809fba4580",
+      "camera": {
+        "position": [
+          308.4,
+          9.612,
+          872.9
+        ],
+        "quaternion": [
+          -0.08432325046436126,
+          0.5331397072650681,
+          0.05351200213385738,
+          0.8401119613456697
+        ],
+        "fov": 55
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "laundry-details-ao-on-warmup",
+      "pngSha256": "156020f9e72b5aca88e1f8abb72476ba2ea8723cd29e08986c7e875c6b612684",
+      "camera": {
+        "position": [
+          288,
+          14.384808464050293,
+          777.9
+        ],
+        "quaternion": [
+          -0.15522850149956677,
+          0.6173580660361093,
+          0.12595148976979553,
+          0.7608609287163607
+        ],
+        "fov": 55
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "laundry-details-ao-on-capture-1",
+      "pngSha256": "156020f9e72b5aca88e1f8abb72476ba2ea8723cd29e08986c7e875c6b612684",
+      "camera": {
+        "position": [
+          288,
+          14.384808464050293,
+          777.9
+        ],
+        "quaternion": [
+          -0.15522850149956677,
+          0.6173580660361093,
+          0.12595148976979553,
+          0.7608609287163607
+        ],
+        "fov": 55
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "laundry-details-ao-on-capture-2",
+      "pngSha256": "156020f9e72b5aca88e1f8abb72476ba2ea8723cd29e08986c7e875c6b612684",
+      "camera": {
+        "position": [
+          288,
+          14.384808464050293,
+          777.9
+        ],
+        "quaternion": [
+          -0.15522850149956677,
+          0.6173580660361093,
+          0.12595148976979553,
+          0.7608609287163607
+        ],
+        "fov": 55
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "shop-interior-ao-on-warmup",
+      "pngSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+      "camera": {
+        "position": [
+          271.7,
+          9.9134,
+          908
+        ],
+        "quaternion": [
+          -0.015701859235384273,
+          0.7069324236562871,
+          0.015701859235384273,
+          0.7069324236562871
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "shop-interior-ao-on-capture-1",
+      "pngSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+      "camera": {
+        "position": [
+          271.7,
+          9.9134,
+          908
+        ],
+        "quaternion": [
+          -0.015701859235384273,
+          0.7069324236562871,
+          0.015701859235384273,
+          0.7069324236562871
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "shop-interior-ao-on-capture-2",
+      "pngSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+      "camera": {
+        "position": [
+          271.7,
+          9.9134,
+          908
+        ],
+        "quaternion": [
+          -0.015701859235384273,
+          0.7069324236562871,
+          0.015701859235384273,
+          0.7069324236562871
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "20-rear-eye-ao-on-warmup",
+      "pngSha256": "9d8b9d7816d2b8f4ae0a4d7d3ceb021e7ad1f7648d98d2874a82e2970d57e5da",
+      "camera": {
+        "position": [
+          273,
+          14.755245542526229,
+          758
+        ],
+        "quaternion": [
+          -0.00013011891877658623,
+          0.9145142483742376,
+          -0.00029414054360230415,
+          -0.40455356390830466
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "20-rear-eye-ao-on-capture-1",
+      "pngSha256": "9d8b9d7816d2b8f4ae0a4d7d3ceb021e7ad1f7648d98d2874a82e2970d57e5da",
+      "camera": {
+        "position": [
+          273,
+          14.755245542526229,
+          758
+        ],
+        "quaternion": [
+          -0.00013011891877658623,
+          0.9145142483742376,
+          -0.00029414054360230415,
+          -0.40455356390830466
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "20-rear-eye-ao-on-capture-2",
+      "pngSha256": "9d8b9d7816d2b8f4ae0a4d7d3ceb021e7ad1f7648d98d2874a82e2970d57e5da",
+      "camera": {
+        "position": [
+          273,
+          14.755245542526229,
+          758
+        ],
+        "quaternion": [
+          -0.00013011891877658623,
+          0.9145142483742376,
+          -0.00029414054360230415,
+          -0.40455356390830466
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "21-front-eye-ao-on-warmup",
+      "pngSha256": "03579cdaf5473d390678dfdca2ea2c9e4ec01ae22adf940b82f9adf176f86e69",
+      "camera": {
+        "position": [
+          274,
+          12.87812709172567,
+          783
+        ],
+        "quaternion": [
+          0.07422133960767584,
+          -0.5103582416049142,
+          0.044271975994965136,
+          0.8556083508909221
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "21-front-eye-ao-on-capture-1",
+      "pngSha256": "03579cdaf5473d390678dfdca2ea2c9e4ec01ae22adf940b82f9adf176f86e69",
+      "camera": {
+        "position": [
+          274,
+          12.87812709172567,
+          783
+        ],
+        "quaternion": [
+          0.07422133960767584,
+          -0.5103582416049142,
+          0.044271975994965136,
+          0.8556083508909221
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "21-front-eye-ao-on-capture-2",
+      "pngSha256": "03579cdaf5473d390678dfdca2ea2c9e4ec01ae22adf940b82f9adf176f86e69",
+      "camera": {
+        "position": [
+          274,
+          12.87812709172567,
+          783
+        ],
+        "quaternion": [
+          0.07422133960767584,
+          -0.5103582416049142,
+          0.044271975994965136,
+          0.8556083508909221
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "station-street-ao-on-warmup",
+      "pngSha256": "225b72fab1cd617af7022f6b70c80d64a4276aaef95d4c3cf4ad860de2cf4077",
+      "camera": {
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "station-street-ao-on-capture-1",
+      "pngSha256": "225b72fab1cd617af7022f6b70c80d64a4276aaef95d4c3cf4ad860de2cf4077",
+      "camera": {
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "station-street-ao-on-capture-2",
+      "pngSha256": "225b72fab1cd617af7022f6b70c80d64a4276aaef95d4c3cf4ad860de2cf4077",
+      "camera": {
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "street-detail-ao-on-warmup",
+      "pngSha256": "c2a4835a7f60e3597e823c9fa2aa2434a9eeab3ffa9b6cde94e031f92c603287",
+      "camera": {
+        "position": [
+          284.4,
+          10.281286274509803,
+          924
+        ],
+        "quaternion": [
+          -0.12465537443110519,
+          -0.38126635888515065,
+          -0.05196769176958736,
+          0.914547079280253
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "street-detail-ao-on-capture-1",
+      "pngSha256": "c2a4835a7f60e3597e823c9fa2aa2434a9eeab3ffa9b6cde94e031f92c603287",
+      "camera": {
+        "position": [
+          284.4,
+          10.281286274509803,
+          924
+        ],
+        "quaternion": [
+          -0.12465537443110519,
+          -0.38126635888515065,
+          -0.05196769176958736,
+          0.914547079280253
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "street-detail-ao-on-capture-2",
+      "pngSha256": "c2a4835a7f60e3597e823c9fa2aa2434a9eeab3ffa9b6cde94e031f92c603287",
+      "camera": {
+        "position": [
+          284.4,
+          10.281286274509803,
+          924
+        ],
+        "quaternion": [
+          -0.12465537443110519,
+          -0.38126635888515065,
+          -0.05196769176958736,
+          0.914547079280253
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "island-aerial-ao-on-warmup",
+      "pngSha256": "074a8e66e8e9e34dca0e62480c7bc95449dffc288fea9b2f141b6adfb11a17b8",
+      "camera": {
+        "position": [
+          2100,
+          2350,
+          2450
+        ],
+        "quaternion": [
+          -0.27043683246052963,
+          0.3343071089193487,
+          0.10076912073943207,
+          0.8971890886987558
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "island-aerial-ao-on-capture-1",
+      "pngSha256": "074a8e66e8e9e34dca0e62480c7bc95449dffc288fea9b2f141b6adfb11a17b8",
+      "camera": {
+        "position": [
+          2100,
+          2350,
+          2450
+        ],
+        "quaternion": [
+          -0.27043683246052963,
+          0.3343071089193487,
+          0.10076912073943207,
+          0.8971890886987558
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "island-aerial-ao-on-capture-2",
+      "pngSha256": "074a8e66e8e9e34dca0e62480c7bc95449dffc288fea9b2f141b6adfb11a17b8",
+      "camera": {
+        "position": [
+          2100,
+          2350,
+          2450
+        ],
+        "quaternion": [
+          -0.27043683246052963,
+          0.3343071089193487,
+          0.10076912073943207,
+          0.8971890886987558
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    }
+  ],
+  "driverSha256": "920077b7d8368e6557013a6eddd6d257d32fc46b3b1efb3efb6ae1d3675f3e4b",
+  "renderOk": true,
+  "transportClean": false,
+  "sourceUnchanged": true,
+  "assetsUnchanged": true,
+  "restoreUnchanged": true,
+  "networkFailures": [
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:52629/assets/models/menhir.glb",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "58844.125",
+      "timestamp": 1954759.490222,
+      "type": "Fetch"
+    }
+  ],
+  "httpErrors": [],
+  "exceptions": []
+}

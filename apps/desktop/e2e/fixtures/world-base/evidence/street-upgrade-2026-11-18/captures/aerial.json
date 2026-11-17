@@ -1,0 +1,106 @@
+{
+  "head": "56e4990b0218cfd6ce84d7bda9122a3802df5f92",
+  "actualExit": 1,
+  "originalReportSha256": "50d983b1cafff3acc5daea51af0b2b7e2cab150e3d81b046068a041e16244f13",
+  "completedAt": "2026-11-17T19:08:55.698Z",
+  "stage": "complete",
+  "captures": [
+    {
+      "name": "island-aerial-ao-on-warmup",
+      "pngSha256": "566239e9fa78bf9a8e0cf78ab57264d23afb5d0b613f3f6932bc01425ff0584e",
+      "camera": {
+        "position": [
+          2100,
+          2350,
+          2450
+        ],
+        "quaternion": [
+          -0.27043683246052963,
+          0.3343071089193487,
+          0.10076912073943207,
+          0.8971890886987558
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "island-aerial-ao-on-capture-1",
+      "pngSha256": "566239e9fa78bf9a8e0cf78ab57264d23afb5d0b613f3f6932bc01425ff0584e",
+      "camera": {
+        "position": [
+          2100,
+          2350,
+          2450
+        ],
+        "quaternion": [
+          -0.27043683246052963,
+          0.3343071089193487,
+          0.10076912073943207,
+          0.8971890886987558
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    },
+    {
+      "name": "island-aerial-ao-on-capture-2",
+      "pngSha256": "566239e9fa78bf9a8e0cf78ab57264d23afb5d0b613f3f6932bc01425ff0584e",
+      "camera": {
+        "position": [
+          2100,
+          2350,
+          2450
+        ],
+        "quaternion": [
+          -0.27043683246052963,
+          0.3343071089193487,
+          0.10076912073943207,
+          0.8971890886987558
+        ],
+        "fov": 58
+      },
+      "ao": 0.55,
+      "time": 14,
+      "stationTime": 14,
+      "hudHidden": true,
+      "errors": []
+    }
+  ],
+  "driverSha256": "920077b7d8368e6557013a6eddd6d257d32fc46b3b1efb3efb6ae1d3675f3e4b",
+  "renderOk": true,
+  "transportClean": false,
+  "sourceUnchanged": true,
+  "assetsUnchanged": true,
+  "restoreUnchanged": true,
+  "networkFailures": [
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:64158/assets/models/boulders.glb",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "58604.121",
+      "timestamp": 1952678.12104,
+      "type": "Fetch"
+    },
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:64158/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "58604.240",
+      "timestamp": 1952689.809094,
+      "type": "Fetch"
+    }
+  ],
+  "httpErrors": [],
+  "exceptions": []
+}
