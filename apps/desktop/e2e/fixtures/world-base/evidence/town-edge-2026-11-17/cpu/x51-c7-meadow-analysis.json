@@ -1,0 +1,43 @@
+{
+  "input": "x51-c7-meadow-result.json",
+  "inputSha256": "a946b91849704ffbf2c18c9d392546ff94a95b265efe47b37f8ccfa90531ea23",
+  "line": {
+    "localX": 2,
+    "backWallZ": -131,
+    "sampledLocalZ": [
+      -131,
+      -151
+    ],
+    "worldX": 282,
+    "worldZ": [
+      769,
+      749
+    ],
+    "stepM": 0.5
+  },
+  "attribution": [
+    {
+      "stage": "original / station / stationSkyline",
+      "result": "A=1 throughout all 41 samples; neither station fade nor skyline rectangles contribute to this line."
+    },
+    {
+      "stage": "cityHard",
+      "result": "The 4F support footprint reaches local z=-133.45 (2.45m behind outer rear wall) because it covers rear corridor/stairs and its margin. Its bilinear-support texel guard clears row1279 (z=-133.5) and row1280 (z=-130.5); contributors at x-local .5 and3.5 are owned by town-apartment-4f only. Alpha starts rising at sampled d3m and reaches original at5.5m."
+    },
+    {
+      "stage": "cityFeather",
+      "result": "At next uncleared row1278, z=-136.5, distance from the nearest 4F rectangle is3.05m. kA=smooth((3.05-3)/.75)=0.01274074, so byte255 becomes3. Row1277 atz=-139.5 stays255. Bilinear filtering spans another3m; full A therefore resumes8.5m behind wall. This is the actual multiplicative feather suppressing an entire additional 3m texel row, not a townMask/coverGrid hypothesis.",
+      "nearestRect": "town-apartment-4f",
+      "kA": 0.012740740740740742,
+      "quantizedA": 3
+    }
+  ],
+  "exclusions": {
+    "townMask": "All sampled points are outside both fixed town mask rects, so actual townMaskV source returns vec4(0). No texture-alpha guess needed.",
+    "coverGrid": "G384 gives16m bins; max-pool loops sample every second source texel. A point bin may be0, but actual _covered spans each shell cell and returns true for all41points/three shells, so no shell cell is rejected by this cache along this line.",
+    "lod": "At default19 camera [267,22.764808464050294,753], line root distances18.05666..24.17427m; medium grass15m shell fade=1 for all41points and every containing cell is selected by actual CPU Meadow.update. Other grass shell point-fades=0. This does not establish that actual blades survive occlusion or pixel coverage."
+  },
+  "shaderDensityNote": "GRASS_VERT keep = step(rnd.z,cover*1.25) * smoothstep(.02,.5,cover). C7 A remains <=3/255 through d5.5m, below.02: at those queried positions the continuous shader density factor is0 despite mathematically nonzero A. At d6m A=.17647, acceptance and amplitude remain fractional. CPU evaluation is not screenshot proof.",
+  "warnings": "Raw probe stderr includes existing scratch placeholder material warnings (undefined map/transparent/alphaTest); preserved in cpu-output.json. They do not alter decoded alpha or copied clear/Meadow methods. No GPU or second CPU construction was run.",
+  "next": "Root runtime read-only confirmation of shared texture data, camera/uCamPos, actual cover cache and active shell cells plus old19/eye-level screenshots; no quality/hide/splat changes required to isolate this finding."
+}

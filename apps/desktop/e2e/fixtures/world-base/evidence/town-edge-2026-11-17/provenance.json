@@ -1,0 +1,384 @@
+{
+  "createdAt": "2026-11-17T05:39:11.145Z",
+  "cases": [
+    {
+      "label": "c7-before",
+      "sourceCommit": "1a8209882012bc7d0e50a8017e33810a58435103",
+      "verifiedSourceFiles": 199,
+      "verifiedDiagnosticSourceFiles": 198
+    },
+    {
+      "label": "fixed",
+      "sourceCommit": "437c32fed68fddc87fa6aec2ccb75b71e642d133",
+      "verifiedSourceFiles": 199,
+      "verifiedDiagnosticSourceFiles": 198
+    }
+  ],
+  "method": "Two sequential normal baselines and separate fixed-time diagnoses. Original selected images/frame samples/configs preserved; full reports losslessly compressed. Each baseline and diagnosis manifest checked against its exact Git commit. Source not changed while running. Only the second of two predetermined diagnostic renders per view is presented; both records retained in full report. Runtime profiles/caches/binary assets excluded.",
+  "limits": "Not a performance-causality experiment, not whole-world or style acceptance. CPU geometry probe uses placeholder texture pixels; density replay separately reconstructs station/skyline/city clearing and samples original PNG. CPU event/field results are not proof of visibility; the paired GPU snapshots show actual views. CPU scratch driver paths require original workspace and ignored assets. No image filtering or compositing.",
+  "files": [
+    {
+      "file": "c7-before/01-station-street.jpg",
+      "bytes": 119033,
+      "sha256": "a6587c1361d5802ed31dc60bd2580be9f83095a1921116c388a66f9c735f8e05"
+    },
+    {
+      "file": "c7-before/02-station-port.jpg",
+      "bytes": 116165,
+      "sha256": "5648af9fc5e8b0d919eff285503baff11369a98897aad127a68b8bca631e4390"
+    },
+    {
+      "file": "c7-before/03-island-aerial.jpg",
+      "bytes": 55190,
+      "sha256": "e5889bb4684bb2b259953b644347de6039f3bcaf6eac71de289fde32a11ba15b"
+    },
+    {
+      "file": "c7-before/04-shop-interior.jpg",
+      "bytes": 103331,
+      "sha256": "0e2471d095001f622441f09b2159d006b34830b1cc8469c0587a7ecf915ab29a"
+    },
+    {
+      "file": "c7-before/16-city-context.jpg",
+      "bytes": 111554,
+      "sha256": "e8bc9f025f76d77abd40174c25223fff985a1c73d5ec952a16bd0a305f84fb25"
+    },
+    {
+      "file": "c7-before/18-town-shop-balconies.jpg",
+      "bytes": 95260,
+      "sha256": "8edb888133e5c061490c2cb10f610425b3c63e678dad4636fbaf2372c2e8c1e7"
+    },
+    {
+      "file": "c7-before/19-town-rear-stairs.jpg",
+      "bytes": 117660,
+      "sha256": "fa79391b02189368947e19f064212c5704e85bd8e54002e6c9b8616984f9c798"
+    },
+    {
+      "file": "c7-before/walking-third.jpg",
+      "bytes": 116955,
+      "sha256": "fcc41350238299388ec956a850ed5d374007e4b7f76cd57c13eb737b4079192d"
+    },
+    {
+      "file": "c7-before/walking-first.jpg",
+      "bytes": 110115,
+      "sha256": "bf200b6882f60611f0d81bda1c3d7988896e5919012dcd352c07f8aae2fa4398"
+    },
+    {
+      "file": "c7-before/source-manifest.json",
+      "bytes": 24528,
+      "sha256": "abc3ce7e8d4e5fc6a04f600a425f5ce648424c4f1362f9638228b10ee60b1438"
+    },
+    {
+      "file": "c7-before/run-config.json",
+      "bytes": 1075,
+      "sha256": "4defcf118d4ac8b3de2e229d208596378da0a529e0eee1253b3e071aabc58131"
+    },
+    {
+      "file": "c7-before/frame-samples-island-aerial.json",
+      "bytes": 11355,
+      "sha256": "f5c34ec550eaf0423ad9c40236fd7c21a063e660c4df573217ea5dd1ae6124c0"
+    },
+    {
+      "file": "c7-before/frame-samples-shop-interior.json",
+      "bytes": 11164,
+      "sha256": "62f75c42bb3357efec40bc3f1a642c7430f038ed1822a46c7a891c19cfcaa475"
+    },
+    {
+      "file": "c7-before/frame-samples-station-port.json",
+      "bytes": 11073,
+      "sha256": "11798014b076f70466306ab6991952c1752e9ae9e601597e943f88c4564ca3d6"
+    },
+    {
+      "file": "c7-before/frame-samples-station-street.json",
+      "bytes": 11363,
+      "sha256": "b412fcf34bd397f8ae5aa5a9a56836db3a496f6c4b90ff523bf1e6319e0fafd0"
+    },
+    {
+      "file": "c7-before/frame-samples-walking-first.json",
+      "bytes": 11305,
+      "sha256": "38e5a18305d9c4f7a40dd1795fb7d6fa12cfd6752903299e6b509e7cac86b56d"
+    },
+    {
+      "file": "c7-before/frame-samples-walking-third.json",
+      "bytes": 11444,
+      "sha256": "0413a323c37e4575473a1dc1f3d237cf9c7b1c84f8e48c4a76ef41ba9d55deaa"
+    },
+    {
+      "file": "c7-before/frame-samples.json",
+      "bytes": 55407,
+      "sha256": "2267e583795fbc2f7fb3d68b971977877883b1f3f23ce6d05ef8d2757e96242e"
+    },
+    {
+      "file": "c7-before/render-report.json.gz",
+      "bytes": 65823,
+      "sha256": "06ba37ac83252a8065bb5a8241c477bd8b8ab41ced68abd889e1c4a8ac059572",
+      "originalBytes": 440654,
+      "originalSha256": "4be88a14d3a137a8077e9aec0b6675317ac4a29d21ae7415e9d579eddca91074"
+    },
+    {
+      "file": "c7-before/measurements.json",
+      "bytes": 40604,
+      "sha256": "b3e01fbc1fde2f8cb2de3910716ffaeb32cf93bec2a733a25fe80fe05ad3a37f"
+    },
+    {
+      "file": "c7-before/diagnostic/19-rear-reference-capture.jpg",
+      "bytes": 150977,
+      "sha256": "9030074e1584edec3c6db9a15e5d0b44c48510c4cd6e759c2150c2e0f7e0e8b2"
+    },
+    {
+      "file": "c7-before/diagnostic/20-rear-eye-capture.jpg",
+      "bytes": 160373,
+      "sha256": "2c2b4852d3c5418b1091c027c260aacf610d2fdd20a0c1f694cb295ada7a0a07"
+    },
+    {
+      "file": "c7-before/diagnostic/21-front-eye-capture.jpg",
+      "bytes": 93626,
+      "sha256": "defa8cf2fa03739c5efab4cc7c53ebc1cc68f210895e1c67039f383df7dca2a8"
+    },
+    {
+      "file": "c7-before/diagnostic/22-low-house-entry-capture.jpg",
+      "bytes": 84981,
+      "sha256": "1e57fd83268ea8466705182d5d4ffb6ffa292c085ccd8b2099f2b22cbea86d64"
+    },
+    {
+      "file": "c7-before/diagnostic/20-rear-eye-capture.png",
+      "bytes": 2545705,
+      "sha256": "59ffb14cf6d861ddf0a699a06486f42698893ec652bfd663298c4ee465cff85b"
+    },
+    {
+      "file": "c7-before/diagnostic/source-manifest.json",
+      "bytes": 23639,
+      "sha256": "94f9e6426ec1807f6bb3033304c916f42fdfbe2674bd59e0b7c229fcb6d4cbf8"
+    },
+    {
+      "file": "c7-before/diagnostic/run-config.json",
+      "bytes": 554,
+      "sha256": "9f79e95443ba30be476a7cd1c368797f5faa57663472155f8b5603480cb46b50"
+    },
+    {
+      "file": "c7-before/diagnostic/meadow-report.json.gz",
+      "bytes": 44654,
+      "sha256": "7f1866e9dea2f88e22c8b4ced9beb03e6fb2690a0cda0fbe4038bf501b15d616",
+      "originalBytes": 596306,
+      "originalSha256": "c8793d5a40b03239b898603277d7afafcd68d8cf26aa5e0e40f6c4a35364ea70"
+    },
+    {
+      "file": "c7-before/diagnostic/measurements.json",
+      "bytes": 297103,
+      "sha256": "46eda86c52310d1a542dde8b3703e0b6921bc0d803cff27a5c4000630f48f040"
+    },
+    {
+      "file": "fixed/01-station-street.jpg",
+      "bytes": 119047,
+      "sha256": "2a96b14095cdd53ae4f8f64b3798ef97e1b3e87d4d29ca7afae80e6e6ae65523"
+    },
+    {
+      "file": "fixed/02-station-port.jpg",
+      "bytes": 116106,
+      "sha256": "37fdc5e798e4cdb75f14b51493eb4e944b087a83ecce58f6fc9346deb0ff1852"
+    },
+    {
+      "file": "fixed/03-island-aerial.jpg",
+      "bytes": 55224,
+      "sha256": "c7a762a504e36b36ea34a5f89369daa0ed857532650f9e727b356eac33991ced"
+    },
+    {
+      "file": "fixed/04-shop-interior.jpg",
+      "bytes": 103243,
+      "sha256": "1fb10367a0262ed07331017ca46f898625470c03094a8da23cd9a092df846164"
+    },
+    {
+      "file": "fixed/16-city-context.jpg",
+      "bytes": 111678,
+      "sha256": "fe113390e80bf14d2274b32d00675d154fa5c6ff815125dfa7128ca365b2108c"
+    },
+    {
+      "file": "fixed/18-town-shop-balconies.jpg",
+      "bytes": 96705,
+      "sha256": "dde608c94811ef4c0187a4393215fbd1cac1ebd837cf6e797da2657f49dc3a13"
+    },
+    {
+      "file": "fixed/19-town-rear-stairs.jpg",
+      "bytes": 119148,
+      "sha256": "5a03580430798dcf7c3c05f5ede536665fd9c26e0ac019ed1a5c2eff1e6523ba"
+    },
+    {
+      "file": "fixed/walking-third.jpg",
+      "bytes": 116794,
+      "sha256": "2b14ca9f83d2553ef3708a4e897b14089cc358cf5130ef1f6e6535013cae58be"
+    },
+    {
+      "file": "fixed/walking-first.jpg",
+      "bytes": 110186,
+      "sha256": "c630466e9b264c2af05c56dd2f9bf54175601c89bbde597bdbb1900bdd2122a2"
+    },
+    {
+      "file": "fixed/source-manifest.json",
+      "bytes": 24528,
+      "sha256": "3d195ca224013265c7c089d631f68da0591704c2f35c042e8a0c5f6b391f0cb5"
+    },
+    {
+      "file": "fixed/run-config.json",
+      "bytes": 1087,
+      "sha256": "d031ed31accd36391f3843a574633dc746c895f8030452c7ffde56043ed8e233"
+    },
+    {
+      "file": "fixed/frame-samples-island-aerial.json",
+      "bytes": 11376,
+      "sha256": "8fd5d873deebc0ac8b17a0e28ba83aa736d89de5cafe001345af52c5e9f64a8e"
+    },
+    {
+      "file": "fixed/frame-samples-shop-interior.json",
+      "bytes": 11128,
+      "sha256": "729c689ee467f2c45aa66438854e2d4ba66c45081e1e18f802f9b2331bc8719a"
+    },
+    {
+      "file": "fixed/frame-samples-station-port.json",
+      "bytes": 11195,
+      "sha256": "dc6d035c49b224375d3d5e77729159566fdf24523c7fd94f9ee1691eb8a0f370"
+    },
+    {
+      "file": "fixed/frame-samples-station-street.json",
+      "bytes": 11425,
+      "sha256": "b7e94d7872261ee1054de0a52444e546eaee5947d8fc99b6a0102f7aa2bc1b72"
+    },
+    {
+      "file": "fixed/frame-samples-walking-first.json",
+      "bytes": 11334,
+      "sha256": "77139ceadb1ac36953436095e2d803681048b1b734154da9e44a6d96ca5dfaf7"
+    },
+    {
+      "file": "fixed/frame-samples-walking-third.json",
+      "bytes": 11369,
+      "sha256": "b4ceb40726a01c0b061cfc69af0112b188c0928d5b71dc3855c3c84ccaf7bb43"
+    },
+    {
+      "file": "fixed/frame-samples.json",
+      "bytes": 55551,
+      "sha256": "3cb92ac2bf5884b45268c6b818c608c377aa50a989e38a903ee5cc3a77b6e36b"
+    },
+    {
+      "file": "fixed/render-report.json.gz",
+      "bytes": 65766,
+      "sha256": "05383d2aefabfd913c1a4662386fbcabe17648675f05bce455c70a0fdc79c3dc",
+      "originalBytes": 440927,
+      "originalSha256": "71b9fdb1f3a9302070d5e295a563823d308d777085f75ebe9670b979920c1f56"
+    },
+    {
+      "file": "fixed/measurements.json",
+      "bytes": 40593,
+      "sha256": "5118b4ee604ff9710ee99a7824fd6f26fbde269d2522556286de7eac195b6091"
+    },
+    {
+      "file": "fixed/diagnostic/19-rear-reference-capture.jpg",
+      "bytes": 153138,
+      "sha256": "1a706a30395a7d1bbb61761e484c6ae7f90b79f83db52dd288fc46f31e61cff5"
+    },
+    {
+      "file": "fixed/diagnostic/20-rear-eye-capture.jpg",
+      "bytes": 162860,
+      "sha256": "18b7563081980dd1cd743da8f11a96730d525a8db1a4c9ab95eb03236b0988cf"
+    },
+    {
+      "file": "fixed/diagnostic/21-front-eye-capture.jpg",
+      "bytes": 94614,
+      "sha256": "98f3975359390c7adaa02102e82fd0be1c172410771e9b8bde5bb8cdb48d2f01"
+    },
+    {
+      "file": "fixed/diagnostic/22-low-house-entry-capture.jpg",
+      "bytes": 84981,
+      "sha256": "1e57fd83268ea8466705182d5d4ffb6ffa292c085ccd8b2099f2b22cbea86d64"
+    },
+    {
+      "file": "fixed/diagnostic/20-rear-eye-capture.png",
+      "bytes": 2552381,
+      "sha256": "a5ebc5134921efac62421e3277cdde7b4192cc2c89d43c72f8a979f323bccf0e"
+    },
+    {
+      "file": "fixed/diagnostic/source-manifest.json",
+      "bytes": 23639,
+      "sha256": "69f6ac324487af399ef79622f7ce0611a562761daa9af4f51da36df0ff76ccd2"
+    },
+    {
+      "file": "fixed/diagnostic/run-config.json",
+      "bytes": 566,
+      "sha256": "93ee8097922b241122af82dbac7855d1c27f33cd393eecd4a0ce3c3a9d1ad126"
+    },
+    {
+      "file": "fixed/diagnostic/meadow-report.json.gz",
+      "bytes": 43712,
+      "sha256": "524bcb893627e2b230001afee98a065aef626965b43d20b6d33bf5b85737d529",
+      "originalBytes": 594678,
+      "originalSha256": "471f2625777151449277d3d52312a463fd4b7df5426c058d908ed441538d98ff"
+    },
+    {
+      "file": "fixed/diagnostic/measurements.json",
+      "bytes": 296288,
+      "sha256": "fba9b9bae961f7e399c1c52d272bf5c836a58ab20df82e4fd8830e2b5f4511ef"
+    },
+    {
+      "file": "cpu/x51-c7-town-cpu-driver.mjs",
+      "bytes": 12265,
+      "sha256": "7c3a0d08cdf5b76764f2e0d74ce70a3e614c1bdf965eff695dde4c94b2c9cf3a"
+    },
+    {
+      "file": "cpu/x51-c7-town-cpu-result.jsonl",
+      "bytes": 44244,
+      "sha256": "73e4cb626143ca9315cfd86e76315937e4566e0a95ff51059f9c5f567e255cce"
+    },
+    {
+      "file": "cpu/x51-c7-town-audit.json",
+      "bytes": 59342,
+      "sha256": "f137c89e8ca5906186c7ded27b2b15560314a5c0d50e27301e26c73c60ab2cdd"
+    },
+    {
+      "file": "cpu/x51-c7-meadow-replay.mjs",
+      "bytes": 15279,
+      "sha256": "3008dc18ad26da14f1248cc6b4dfb33cb8256de27013fee859f744364867cf5c"
+    },
+    {
+      "file": "cpu/x51-c7-meadow-result.json",
+      "bytes": 320810,
+      "sha256": "a946b91849704ffbf2c18c9d392546ff94a95b265efe47b37f8ccfa90531ea23"
+    },
+    {
+      "file": "cpu/x51-c7-meadow-cpu-output.json",
+      "bytes": 9136,
+      "sha256": "88109146766bc04169d964b265fb2b45355bcf1f603ee5dd196dd3fa019f747a"
+    },
+    {
+      "file": "cpu/x51-c7-meadow-analysis.json",
+      "bytes": 3074,
+      "sha256": "fe324ef18249670eaefce20251bf67cda2cafc32b3a8f54ba7513ed4b95f9715"
+    },
+    {
+      "file": "cpu/x51-c7-fixed-meadow-replay.mjs",
+      "bytes": 19545,
+      "sha256": "e0a5a87ef4bcefe652eaa2b759340e1d3bc8087b57555fa27314e4a3fac8b010"
+    },
+    {
+      "file": "cpu/x51-c7-fixed-meadow-result.json",
+      "bytes": 322468,
+      "sha256": "f498ae035be3cd4d0e6daee8334c4ee948ee4b408b7fbe0fbd56cf02ed089c19"
+    },
+    {
+      "file": "cpu/x51-c7-fixed-meadow-cpu-output.json",
+      "bytes": 10642,
+      "sha256": "9c2657fe24a7ffd54f8457d570719d099541c1d1299f0b6f3404b9a5a14c3fc1"
+    },
+    {
+      "file": "c7-ci-summary.json",
+      "bytes": 6166,
+      "sha256": "0d858e1882f23bb7ac2d3b90345a77adb1853d1dff21b1c729718c6478967257"
+    },
+    {
+      "file": "diagnose-meadow.cjs",
+      "bytes": 13018,
+      "sha256": "2028b4431faffe0c81af6380f49d468e19935bd4a2bae89644467a5f260774b3"
+    },
+    {
+      "file": "cpu/terrain-cpu-methods.mjs",
+      "bytes": 2177,
+      "sha256": "940189d67d7d3e9b7ac0952d189009de6ad2347abe276d88032698548a684388"
+    }
+  ]
+}

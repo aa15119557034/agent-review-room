@@ -1,0 +1,8 @@
+{
+  "fixture": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base",
+  "output": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-meadow-c7",
+  "runtime": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-meadow-c7\\runtime-igYxT4",
+  "startedAt": "2026-11-17T05:28:19.995Z",
+  "timeoutMs": 180000,
+  "driverSha256": "2028b4431faffe0c81af6380f49d468e19935bd4a2bae89644467a5f260774b3"
+}
