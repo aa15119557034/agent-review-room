@@ -6,6 +6,7 @@ import { createStationWalker } from './station-view.js';
 import { blendStationGround } from './transition.js';
 import { addStreetscape } from './streetscape.js';
 import { applyWetRoad } from './wet-road.js';
+import { addStationTexturedProps } from './textured-props.js';
 
 // Keep the upstream dependency order. Characters and camera-centred petal shaders
 // are deliberately omitted; the shared island supplies its own petal field.
@@ -79,6 +80,8 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
     await new Promise(resolve => setTimeout(resolve, 0));
   }
   const streetscape = addStreetscape({ ctx, root });
+  onProgress('textured-props');
+  const texturedProps = await addStationTexturedProps({ ctx, root });
   // Facade drops and batching bake matrixWorld. Finish while the detached root
   // is identity, then attach/translate exactly once.
   const wires = ctx.wires.build();
@@ -112,7 +115,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   const walkers = new Set();
   const station = {
     root, ctx, physics: ctx.physics, camera, localCamera, bounds, moduleStats, batch,
-    timings: { trimMs, batchMs }, removedMeshes, groundBlend, streetscape, wetRoad,
+    timings: { trimMs, batchMs }, removedMeshes, groundBlend, streetscape, wetRoad, texturedProps,
     toLocal(position, target = new THREE.Vector3()) { return target.copy(position).applyMatrix4(inverse); },
     toWorld(position, target = new THREE.Vector3()) { return target.copy(position).applyMatrix4(root.matrixWorld); },
     cameraToWorld(position, quaternion) {
@@ -154,7 +157,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
       for (const walker of walkers) walker.dispose();
       wetRoad.dispose();
       root.removeFromParent();
-      const geometries = new Set(), materials = new Set(), textures = new Set();
+      const geometries = new Set(), materials = new Set(), textures = new Set(texturedProps.textures);
       root.traverse(object => {
         if (object.geometry) geometries.add(object.geometry);
         for (const material of Array.isArray(object.material) ? object.material : object.material ? [object.material] : []) materials.add(material);

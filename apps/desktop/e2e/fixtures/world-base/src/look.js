@@ -26,7 +26,11 @@ float wbAO(vec2 uv, float d0) {
     vec2 dir = vec2(cos(a), sin(a))/uRes;
     for (int k = 0; k < 2; k++) {
       vec2 o = dir*rpx*(k == 0 ? 0.45 : 1.0);
-      float c = 0.5*(1.0/wbDepth(uv+o) + 1.0/wbDepth(uv-o)) - i0;
+      vec2 aUV = uv+o, bUV = uv-o, edge = 0.5/uRes;
+      // Clamping a sample at the screen edge breaks the symmetric plane test.
+      if (any(lessThan(aUV, edge)) || any(greaterThan(aUV, 1.0-edge)) ||
+          any(lessThan(bUV, edge)) || any(greaterThan(bUV, 1.0-edge))) continue;
+      float c = 0.5*(1.0/wbDepth(aUV) + 1.0/wbDepth(bUV)) - i0;
       float dz = c*d0*d0; // concavity in metres towards the camera
       occ += smoothstep(lo, lo + 0.35, dz)*(1.0 - smoothstep(1.5*R, 3.0*R, dz));
     }
@@ -72,7 +76,7 @@ export function createLook(renderer, camera) {
   mat.fragmentShader = insert(mat.fragmentShader, 'void main(){', `${OUTLINES}\nvoid main(){`, 'composite entry');
   mat.fragmentShader = insert(mat.fragmentShader, 'col *= uExposure;', `
     // Contact shadows (ZZZ refs: crates, benches, eaves all sit in soft dark creases).
-    col *= mix(1.0, wbAO(uv, wbDepth(uv)), uAO*uToon);
+    if (uAO*uToon > 0.0) col *= mix(1.0, wbAO(uv, wbDepth(uv)), uAO*uToon);
     float edge = wbEdge(uv)*uToon;
     vec3 line = mix(col*vec3(0.42,0.38,0.50),vec3(0.027,0.020,0.051),0.35);
     col = mix(col,line,edge*0.45); // ZZZ scenes keep only faint silhouettes; strong lines are for characters

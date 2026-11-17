@@ -25,6 +25,9 @@ function sceneFiles() {
     }
   };
   hash(path.join(fixture, 'index.html'));
+  for (const name of ['city-assets.json', 'prop-assets.json', 'scripts/prepare-props.cjs', 'scripts/baseline.cjs', 'scripts/diagnose-wet-road.cjs']) hash(path.join(fixture, name));
+  const props = require('./prepare-props.cjs').verifyPreparedAssets(fixture);
+  for (const file of props.files) files[file.path] = file.sha256;
   for (const name of ['src', 'upstream', 'vendor']) if (fs.existsSync(path.join(fixture, name))) walk(path.join(fixture, name));
   return files;
 }

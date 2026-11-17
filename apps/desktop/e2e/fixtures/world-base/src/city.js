@@ -142,6 +142,39 @@ export async function createCity({ scene, station, island, skyline }) {
     }
     addUtilityPoles(H, frame, visibleGround, stats);
     vegetationClearAreas.push(...addLotPlanting(H, frame, placements, heightAt, ctx, stats));
+    const shop = placements.find(p => p.name === 'town-apartment-4f');
+    const supportY = shop.baseY + .02;
+    const crateSource = station.texturedProps;
+    const crateGroup = new THREE.Group(); crateGroup.name = 'city-textured-crate';
+    crateGroup.position.set(5.55, supportY - crateSource.bounds.min[1], -122.58);
+    const crate = crateSource.cratePrototype.clone(true), borrowedAssetTextures = new Set();
+    crate.traverse(mesh => {
+      if (!mesh.isMesh) return;
+      mesh.geometry = mesh.geometry.clone(); geometries.add(mesh.geometry);
+      mesh.material = Array.isArray(mesh.material) ? mesh.material.map(clone) : clone(mesh.material);
+      for (const material of Array.isArray(mesh.material) ? mesh.material : [mesh.material])
+        for (const value of Object.values(material)) if (value?.isTexture) borrowedAssetTextures.add(value);
+    });
+    crateGroup.add(crate); root.add(crateGroup);
+    const signRoot = new THREE.Group(); signRoot.name = 'city-laundry-a-frame'; root.add(signRoot);
+    const C = station.ctx.services.shopsA.buildContext;
+    const sign = C.P.aFrame({ k: station.ctx.kit(signRoot) }, 4.55, supportY, -122.35, .35, null, null, { w: .45, h: .68 });
+    // Kit primitives are station cache entries. Never release their originals
+    // from the city; preserve shared textures but own these geometry copies.
+    const signGeometry = new Map();
+    sign.traverse(mesh => {
+      if (!mesh.isMesh) return;
+      if (!signGeometry.has(mesh.geometry)) signGeometry.set(mesh.geometry, mesh.geometry.clone());
+      mesh.geometry = signGeometry.get(mesh.geometry); geometries.add(mesh.geometry);
+      mesh.material = Array.isArray(mesh.material) ? mesh.material.map(clone) : clone(mesh.material);
+    });
+    const potStart = gb.tris;
+    H.P.pot(frame, 6.25, supportY, -122.7, ctx.rng('town-laundry-pot'), .8, 'terra');
+    stats.texturedProps = { crate: { position: crateGroup.position.toArray(), triangles: crateSource.stats.crateTriangles },
+      sign: { position: [4.55, supportY, -122.35], rotationY: .35, size: [.45, .68], blank: true },
+      pot: { position: [6.25, supportY, -122.7], triangles: gb.tris - potStart },
+      view: { position: [7.8, supportY + 1.6, -122.15], target: [3.8, shop.baseY + 1.05, -123.25] },
+      walkable: false, borrowedAssetTextures: borrowedAssetTextures.size };
     gb.flush(root, 'town-edge-kit');
     const laundry = H.laundry.build();
     if (laundry) { ownedMaterials.add(laundry.material); ownedMaterials.add(laundry.customDepthMaterial); }

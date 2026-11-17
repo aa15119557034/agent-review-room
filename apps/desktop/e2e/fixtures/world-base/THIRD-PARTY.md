@@ -8,10 +8,14 @@
 | kiarashfa / Sakuragaoka | [MIT](./upstream/sakuragaoka/LICENSE) | 复用站区、商店、程序化纹理、批处理和物理；trains.js、trains/car.js、vehicles/cars.js 增加默认保持上游行为的 people 开关，组合设为 false；core/physics.js 增加使用现有空间格及碰撞体的镜头球体扫掠。 |
 | Three.js authors / r187 | [MIT](./upstream/petalwake/vendor/three/LICENSE) | 复用 Petalwake 所固定的 three.core/module、GLTFLoader、BufferGeometryUtils、SkeletonUtils；另从官方 r187 标签补充 RoundedBoxGeometry，SHA-256 见 sources.json。 |
 | Arseny Kapoulkine / meshoptimizer 1.1 | [MIT](./upstream/petalwake/vendor/three/examples/jsm/libs/MESHOPT-LICENSE.md) | Petalwake 随附的 meshopt decoder，保留文件内版权声明，并补齐官方 v1.1 的完整许可文本及其哈希。 |
+| Fabi_G / Plastic Crate 02 | [CC0 1.0](https://polyhaven.com/license) | [官方来源](https://polyhaven.com/a/plastic_crate_02)。glTF、BIN及贴图保持官方原字节；原导出遗漏独立Opacity，按同款blend清单补齐。适配层仅克隆材质接官方alphaMap、alphaTest=0.5、关闭混合并写深度；保留原尺度、色因子、法线和其他贴图。 |
+| Dimitrios Savva / Worn Shutter | [CC0 1.0](https://polyhaven.com/license) | [官方来源](https://polyhaven.com/a/worn_shutter)。仅使用三张1K原图于原工具棚两扇门，不加载作者完整门模型；色图sRGB、GL法线/ARM数据色域，ARM分别用于AO/粗糙度/金属度。1.37m是预览选用的纹理重复尺度，不声称为经认证的建筑尺寸。 |
 | Quaternius / Downtown City MegaKit Standard（历史试装，已退休） | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)；原 License_Standard.txt 随本地历史文件保留 | [作者来源](https://quaternius.com/packs/downtowncitymegakit.html)。当前场景不再加载三栋免费版建筑；试装曾关闭顶点控制色、调整底色并共享兼容纹理，原二进制始终未改。26项原文件哈希、许可和旧截图保留于 retiredAssets.downtown 及历史证据。 |
 | mirzaev3d / High-Rise Building #01（历史试装，已退休） | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) | [作者来源](https://www.fab.com/listings/ca10b839-7882-42f8-ab60-496610708a6c)。当前场景不加载该模型；保留作者[原MTL文本](./upstream/mirzaev-highrise/High-Rise-Building.mtl)及旧试装证据。旧试装使用官方GLB原始几何，按MTL及Three r187 MTLLoader的Phong/sRGB约定恢复三种材质颜色与高光，并增加摆放、地基与道路。来源、哈希与历史恢复参数保留于 city-assets.json 的 retiredAssets.highrise。未声称作者为本项目背书。 |
 
 `src/look.js` 的色阶阈值、描边及阴影调色依据 Sakuragaoka 的 MIT 实现，HDR 合成复用 Petalwake 的 MIT 实现；`src/station-view.js` 的步行碰撞流程依据 Sakuragaoka Player/Physics。以上来源的版权和许可持续适用。
+
+新增9个道具文件的官方URL、作者、size、MD5及SHA256见 [prop-assets.json](./prop-assets.json)。原文件只保存于 `.local/textured-props/`；没有复制官网预览图或从用户参考图提取贴图。原Painted Wooden Bench因造型偏复古未接入运行。现成纸箱、矮牌和花盆继续复用桜ヶ丘MIT构件；工具棚门按原完整包围范围精确匹配后局部换材质，未改上游几何或全局共享材质。
 
 局部地表适配集中在 `src/transition.js`、`src/island.js` 和 `src/station.js`：填缝带与站区底土地表外缘共享 Petalwake 地表着色及纹理，植被在边缘渐变恢复。`src/look.js` 对地形已校正漫反射做四档量化，并局部调整浅水散射、远景焦散和岸边泡沫；未改写上游 `water.js`。`scripts/analyze-caustics.cjs` 直接执行固定源码中的纹理生成函数进行 CPU 分布测量，其来源仍为上述 Petalwake MIT 代码。
 

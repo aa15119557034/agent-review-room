@@ -44,12 +44,14 @@ worldBase.look = look;
 worldBase.styleState = { toon: true, flightEffects: false };
 let island, station, walker;
 const toWorld = (values) => station.toWorld(new THREE.Vector3(...values)).toArray();
-const labels = { 'station-street': '车站区街道', 'station-port': '车站望向港镇', 'island-aerial': '全岛俯视', 'shop-interior': '便利店室内' };
+const labels = { 'station-street': '车站区街道', 'station-port': '车站望向港镇', 'island-aerial': '全岛俯视', 'shop-interior': '便利店室内', 'service-corner': '车站服务角', 'laundry-details': '洗衣店前细节' };
 function setView(name) {
   const view = worldBase.views.find(item => item.name === name);
   if (!view) throw new Error(`Unknown fixed camera: ${name}`);
   walker.setEnabled(false);
   if (document.pointerLockElement === canvas) document.exitPointerLock();
+  camera.fov = view.fov;
+  camera.updateProjectionMatrix();
   camera.position.fromArray(view.position);
   camera.lookAt(new THREE.Vector3(...view.target));
   camera.updateMatrixWorld();
@@ -61,6 +63,8 @@ function setView(name) {
 }
 worldBase.setView = setView;
 function startWalking() {
+  camera.fov = 58;
+  camera.updateProjectionMatrix();
   walker.setPose(station.spawn, 4, -8);
   walker.setEnabled(true);
   walker.setView(worldBase.cameraMode);
@@ -123,10 +127,12 @@ async function init() {
   walker = station.createWalker(canvas);
   worldBase.walker = walker;
   worldBase.views = [
-    { name: 'station-street', position: toWorld([-1.2, 2.4, 36]), target: toWorld([0, 2.0, -25]) },
-    { name: 'station-port', position: toWorld([-65, 15, -28]), target: [-45, 21, 1036] },
-    { name: 'island-aerial', position: [2100, 2350, 2450], target: [-150, 70, -150] },
-    { name: 'shop-interior', position: toWorld([-8.3, 1.9134, 8]), target: toWorld([-12.8, 1.7134, 8]) },
+    { name: 'station-street', fov: 58, position: toWorld([-1.2, 2.4, 36]), target: toWorld([0, 2.0, -25]) },
+    { name: 'station-port', fov: 58, position: toWorld([-65, 15, -28]), target: [-45, 21, 1036] },
+    { name: 'island-aerial', fov: 58, position: [2100, 2350, 2450], target: [-150, 70, -150] },
+    { name: 'shop-interior', fov: 58, position: toWorld([-8.3, 1.9134, 8]), target: toWorld([-12.8, 1.7134, 8]) },
+    { name: 'service-corner', fov: 55, position: toWorld(station.texturedProps.stats.view.position), target: toWorld(station.texturedProps.stats.view.target) },
+    { name: 'laundry-details', fov: 55, position: toWorld(worldBase.city.stats.texturedProps.view.position), target: toWorld(worldBase.city.stats.texturedProps.view.target) },
   ];
   setView('station-street');
   document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));

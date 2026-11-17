@@ -4,13 +4,26 @@ const path = require('node:path');
 const cp = require('node:child_process');
 const crypto = require('node:crypto');
 const { createStaticServer, cleanEnvironment } = require('./baseline.cjs');
+const { verifyPreparedAssets } = require('./prepare-props.cjs');
 const fixture = path.resolve(__dirname, '..');
 const digest = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
-const targets = [
+const petalTargets = [
   ['menhir', '/assets/models/menhir.glb', '.local/petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e/assets/models/menhir.glb'],
   ['boulders', '/assets/models/boulders.glb', '.local/petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e/assets/models/boulders.glb'],
   ['lighthouse', '/assets/models/lighthouse.glb', '.local/petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e/assets/models/lighthouse.glb'],
 ];
+
+function buildTargets(root = fixture) {
+  const placements = JSON.parse(fs.readFileSync(path.join(root, '.local/petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e/assets/terrain/props.json'), 'utf8'));
+  for (const [name] of petalTargets) if (!Array.isArray(placements[name]) || !placements[name].length) throw new Error('Transport target is no longer listed in current Petalwake props: ' + name);
+  const propAssets = verifyPreparedAssets(root);
+  const targets = petalTargets.map(([name, url, file]) => { const bytes = fs.readFileSync(path.join(root, file)); return { name, url, file, bytes: bytes.length, sha256: digest(bytes) }; });
+  for (const file of propAssets.files) {
+    const relative = file.path.slice(propAssets.preparedRoot.length + 1);
+    targets.push({ name: 'prop-' + relative.replace(/[^A-Za-z0-9_.-]/g, '-'), url: propAssets.route + relative, file: file.path, bytes: file.bytes, md5: file.md5, sha256: file.sha256 });
+  }
+  return { targets, propAssets };
+}
 
 function launch() {
   const args = {};
@@ -27,14 +40,14 @@ function launch() {
   for (const key of Object.keys(args)) if (!['electron', 'output', 'timeout-ms'].includes(key)) throw new Error('Unknown --' + key);
   if (typeof args.electron !== 'string' || !fs.statSync(args.electron).isFile()) throw new Error('--electron must name an existing executable');
   if (typeof args.output !== 'string') throw new Error('--output must name a new directory');
-  const placements = JSON.parse(fs.readFileSync(path.join(fixture, '.local/petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e/assets/terrain/props.json'), 'utf8'));
-  for (const [name] of targets) if (!Array.isArray(placements[name]) || !placements[name].length) throw new Error('Transport target is no longer listed in current Petalwake props: ' + name);
+  const { targets, propAssets } = buildTargets();
+  const methods = ['native', 'fileloader'], repeats = 3;
   const config = { output: path.resolve(args.output), runtime: null, startedAt: new Date().toISOString(),
     timeoutMs: Number(args['timeout-ms'] ?? 180000), terminalWaitMs: 3000,
-    targetScope: 'Current Petalwake props referenced by assets/terrain/props.json and src/island.js loadProps: menhir, boulders, lighthouse. This run does not retest retired city BIN/GLB assets.',
+    targetScope: 'Current Petalwake props referenced by assets/terrain/props.json and src/island.js loadProps: menhir, boulders, lighthouse; plus every pinned prop-assets.json file (crate original glTF/BIN/maps, official supplemental opacity and shutter maps). This run does not retest retired city BIN/GLB assets.',
     head: cp.execFileSync('git', ['rev-parse', 'HEAD'], { cwd: fixture, encoding: 'utf8', windowsHide: true }).trim(),
-    targets: targets.map(([name, url, file]) => { const bytes = fs.readFileSync(path.join(fixture, file)); return { name, url, file, bytes: bytes.length, sha256: digest(bytes) }; }),
-    scripts: Object.fromEntries(['diagnose-asset-transport.cjs', 'baseline.cjs', '../upstream/petalwake/vendor/three/build/three.core.js', '../src/island.js', '../.local/petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e/assets/terrain/props.json'].map(file => [file, digest(fs.readFileSync(path.resolve(__dirname, file)))])),
+    targets, propAssets, methods, repeats, expectedCaseCount: targets.length * methods.length * repeats,
+    scripts: Object.fromEntries(['diagnose-asset-transport.cjs', 'baseline.cjs', 'prepare-props.cjs', '../prop-assets.json', '../upstream/petalwake/vendor/three/build/three.core.js', '../src/island.js', '../.local/petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e/assets/terrain/props.json'].map(file => [file, digest(fs.readFileSync(path.resolve(__dirname, file)))])),
   };
   if (!Number.isFinite(config.timeoutMs) || config.timeoutMs < 10000) throw new Error('Invalid timeout');
   if (fs.existsSync(config.output)) throw new Error('Output exists; preserve previous evidence');
@@ -133,7 +146,7 @@ async function host() {
   app.commandLine.appendSwitch('disable-webgl');
   const report = { config, ok: false, bytesIntegrity: false, transportClean: false, cases: [], networkRequests: [],
     networkFailures: [], httpErrors: [], exceptions: [], consoleErrors: [], documentAnchors: [], stageHistory: [],
-    method: 'No scene, canvas or WebGL. Per target: native fetch arrayBuffer x3 then unchanged Three FileLoader arraybuffer x3, sequential, unique query per case, no retries. SHA-256 compares transmitted bytes with local files at launch, not an author-provided asset audit. Original reader/fetch promises are observed without replacement. All CDP terminal evidence is collected for 3 seconds after the final case.' };
+    method: 'No scene, canvas or WebGL. Per target: native fetch arrayBuffer x3 then unchanged Three FileLoader arraybuffer x3, sequential, unique query per case, no retries. SHA-256 compares transmitted bytes with local files at launch. Textured prop inputs additionally pass pinned size/MD5/SHA-256 and dependency checks before launch; Petal target hashes remain local transport references. Original reader/fetch promises are observed without replacement. All CDP terminal evidence is collected for 3 seconds after the final case.' };
   let win, server, timeout, expired = false;
   const requests = new Map();
   const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -184,7 +197,7 @@ async function host() {
     await evaluate('(' + installObservers.toString() + ')()');
     await evaluate("import('/upstream/petalwake/vendor/three/build/three.core.js').then(m => { window.__transportThree=m; })");
     report.pageClock = await evaluate('({timeOriginMs:performance.timeOrigin,nowMs:performance.now(),threeRevision:window.__transportThree.REVISION})');
-    for (const target of config.targets) for (const method of ['native', 'fileloader']) for (let repeat = 1; repeat <= 3; repeat++) {
+    for (const target of config.targets) for (const method of config.methods) for (let repeat = 1; repeat <= config.repeats; repeat++) {
       const id = `${target.name}-${method}-${repeat}`, url = target.url + '?transportCase=' + id;
       stage(id);
       const row = { id, method, url, hostStartedWallTime: Date.now() / 1000, expectedBytes: target.bytes, expectedSha256: target.sha256 };
@@ -218,8 +231,8 @@ async function host() {
       row.transportClean = matches.length === 1 && matches[0].terminals.length === 1 && matches[0].terminals[0].method === 'Network.loadingFinished' &&
         matches[0].events.some(e => e.method === 'Network.responseReceived' && e.response.status === 200);
     }
-    report.bytesIntegrity = report.cases.length === 18 && report.cases.every(r => r.bytesIntegrity);
-    report.transportClean = report.cases.length === 18 && report.cases.every(r => r.transportClean) && !report.missingTerminal.length && !report.networkFailures.length && !report.httpErrors.length;
+    report.bytesIntegrity = report.cases.length === config.expectedCaseCount && report.cases.every(r => r.bytesIntegrity);
+    report.transportClean = report.cases.length === config.expectedCaseCount && report.cases.every(r => r.transportClean) && !report.missingTerminal.length && !report.networkFailures.length && !report.httpErrors.length;
     try {
       report.inputsUnchanged = config.targets.every(t => digest(fs.readFileSync(path.join(fixture, t.file))) === t.sha256) &&
         Object.entries(config.scripts).every(([file, hash]) => digest(fs.readFileSync(path.resolve(__dirname, file))) === hash);
@@ -231,5 +244,9 @@ async function host() {
   }
 }
 
-if (process.versions.electron) host().catch(error => { console.error(error); require('electron').app.exit(1); });
-else { try { launch(); } catch (error) { console.error(error); process.exitCode = 1; } }
+module.exports = { buildTargets };
+const direct = require.main === module || (process.versions.electron && process.argv[1] && path.resolve(process.argv[1]) === __filename);
+if (direct) {
+  if (process.versions.electron) host().catch(error => { console.error(error); require('electron').app.exit(1); });
+  else { try { launch(); } catch (error) { console.error(error); process.exitCode = 1; } }
+}

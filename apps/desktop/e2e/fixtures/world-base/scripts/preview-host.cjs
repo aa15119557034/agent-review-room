@@ -67,6 +67,8 @@ function instrumentPage() {
   requestAnimationFrame(frame);
 }
 
+const CORE_VIEWS = ['station-street', 'station-port', 'island-aerial', 'shop-interior'];
+
 function snapshot() {
   const f = window.worldBase || window.PW || window.__ctx;
   const renderer = f?.renderer;
@@ -109,6 +111,7 @@ function snapshot() {
     skyline: f.skyline ? { ...f.skyline.stats, placements: f.skyline.placements,
       approaches: f.skyline.approaches, vegetationClear: f.skyline.vegetationClear } : null,
     city: f.city ? { ...f.city.stats, placements: f.city.placements, vegetationClear: f.city.vegetationClear } : null,
+    texturedProps: f.station?.texturedProps?.stats || null,
   };
 }
 
@@ -154,7 +157,7 @@ function lookState() {
 async function captureFixtureVideo(win, config) {
   const evaluate = code => win.webContents.executeJavaScript(code, true);
   const cdp = (method, params) => win.webContents.debugger.sendCommand(method, params);
-  const viewNames = await evaluate('window.worldBase?.views.map(view => view.name) || []');
+  const viewNames = await evaluate('window.worldBase ? ' + JSON.stringify(CORE_VIEWS) + ' : []');
   const savedUi = await evaluate('document.body.classList.contains("hide-ui")');
   const framesDirectory = path.join(config.output, 'video-frames');
   fs.mkdirSync(framesDirectory, { recursive: true });
@@ -340,7 +343,8 @@ app.whenReady().then(async () => {
       return { detail, image };
     };
     await capture('00-default');
-    for (const [index, name] of report.scene.views.entries()) {
+    const measuredViews = config.scene === 'combined' ? CORE_VIEWS : report.scene.views;
+    for (const [index, name] of measuredViews.entries()) {
       stage(`capturing-view:${name}`);
       await evaluate(`window.__worldCapture.selectView(${JSON.stringify(name)})`);
       await pause(1500);
@@ -447,15 +451,17 @@ app.whenReady().then(async () => {
         if (!p) throw new Error('Missing apartment shop for town detail capture');
         const [x,z] = p.frontage, y = p.baseY;
         return [
-          { name: '18-town-shop-balconies', position: [x+12,y+7,z+16], target: [x,y+4,z-4] },
-          { name: '19-town-rear-stairs', position: [x-15,y+10,z-25], target: [x,y+6,z-10] },
+          { name: '18-town-shop-balconies', fov: 58, position: [x+12,y+7,z+16], target: [x,y+4,z-4] },
+          { name: '19-town-rear-stairs', fov: 58, position: [x-15,y+10,z-25], target: [x,y+6,z-10] },
+          { name: '23-service-corner', fov: 55, eyeHeight: 1.6, ...window.worldBase.station.texturedProps.stats.view },
+          { name: '24-laundry-details', fov: 55, eyeHeight: 1.6, walkable: false, ...window.worldBase.city.stats.texturedProps.view },
         ];
       })()`);
       const townUiHidden = await evaluate('document.body.classList.contains("hide-ui")');
       report.townDetailCaptures = [];
       try {
         for (const view of townViews) {
-          await evaluate(`(() => { const w = window.worldBase; w.walker.setEnabled(false); w.station.toWorld(w.camera.position.fromArray(${JSON.stringify(view.position)}), w.camera.position); const target = w.camera.position.clone().fromArray(${JSON.stringify(view.target)}); w.camera.lookAt(w.station.toWorld(target)); w.camera.updateMatrixWorld(); w.look.pipeline.hasPrev = false; document.body.classList.add('hide-ui'); })()`);
+          await evaluate(`(() => { const w = window.worldBase; w.walker.setEnabled(false); w.camera.fov = ${view.fov}; w.camera.updateProjectionMatrix(); w.station.toWorld(w.camera.position.fromArray(${JSON.stringify(view.position)}), w.camera.position); const target = w.camera.position.clone().fromArray(${JSON.stringify(view.target)}); w.camera.lookAt(w.station.toWorld(target)); w.camera.updateMatrixWorld(); w.look.pipeline.hasPrev = false; document.body.classList.add('hide-ui'); })()`);
           await pause(500);
           const shot = await capture(view.name);
           report.townDetailCaptures.push({ ...view, afterPerformanceMeasurements: true, capture: shot.detail });

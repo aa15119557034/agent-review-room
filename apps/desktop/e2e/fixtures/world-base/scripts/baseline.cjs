@@ -4,6 +4,7 @@ const path = require('node:path');
 const cp = require('node:child_process');
 const http = require('node:http');
 const crypto = require('node:crypto');
+const { verifyPreparedAssets } = require('./prepare-props.cjs');
 
 const fixture = path.resolve(__dirname, '..');
 const originals = {
@@ -33,6 +34,10 @@ function createStaticServer(root = fixture) {
     if (pathname.startsWith('/city-assets/')) {
       base = path.join(root, '.local', 'city');
       relative = pathname.slice('/city-assets/'.length);
+    }
+    if (pathname.startsWith('/prop-assets/')) {
+      base = path.join(root, '.local', 'textured-props');
+      relative = pathname.slice('/prop-assets/'.length);
     }
     if (base === root && (pathname.startsWith('/.local/') || pathname.startsWith('/artifacts/'))) { res.writeHead(403).end(); return; }
     const file = path.resolve(base, relative.replace(/^\/+/, '') || 'index.html');
@@ -123,14 +128,19 @@ function main() {
   if (scene === 'combined') {
     const cityManifest = JSON.parse(fs.readFileSync(path.join(fixture, 'city-assets.json'), 'utf8'));
     if (Object.keys(cityManifest.projects).length) throw new Error('Generated city manifest must not require an external asset project');
+    const propAssets = verifyPreparedAssets(fixture);
     const files = {};
     const hashFile = file => { files[path.relative(fixture, file).replace(/\\/g, '/')] = crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex'); };
     const walk = directory => { for (const entry of fs.readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) { const file = path.join(directory, entry.name); if (entry.isDirectory()) walk(file); else if (/\.(?:js|mjs|html|css|json)$/.test(entry.name)) hashFile(file); } };
     hashFile(path.join(fixture, 'index.html'));
     hashFile(path.join(fixture, 'city-assets.json'));
+    hashFile(path.join(fixture, 'prop-assets.json'));
+    hashFile(path.join(__dirname, 'prepare-props.cjs'));
+    hashFile(__filename);
+    for (const file of propAssets.files) files[file.path] = file.sha256;
     for (const directory of ['src', 'upstream', 'vendor']) if (fs.existsSync(path.join(fixture, directory))) walk(path.join(fixture, directory));
     const head = cp.execFileSync('git', ['rev-parse', 'HEAD'], { cwd: fixture, encoding: 'utf8', windowsHide: true }).trim();
-    const manifest = { head, capturedAt: config.startedAt, scope: 'Scene HTML/JS/CSS/JSON in index.html, src, upstream and vendor plus city-assets.json. Current generated city has no external city asset package; retired binary files are not runtime inputs or verified by this capture. Petalwake .local binaries remain covered by the original preparation manifest. Capture scripts excluded.', files,
+    const manifest = { head, capturedAt: config.startedAt, scope: 'Scene HTML/JS/CSS/JSON in index.html, src, upstream and vendor plus city-assets.json, prop-assets.json, scripts/prepare-props.cjs and scripts/baseline.cjs. All pinned textured prop files verified before launch with byte count, MD5, SHA-256, realpath containment and glTF dependency closure; their actual SHA-256 values are included. Current generated city has no external city asset package; retired binary files are not runtime inputs or verified by this capture. Petalwake .local binaries remain covered by the original preparation manifest. Other capture scripts excluded.', files, propAssets,
       cityAssets: { manifest: 'city-assets.json', runtime: cityManifest.currentRuntime, requiredExternalProjects: [], verifiedBeforeLaunch: false, retiredAssetsVerified: false } };
     const manifestText = JSON.stringify(manifest, null, 2);
     fs.writeFileSync(path.join(output, 'source-manifest.json'), manifestText);
