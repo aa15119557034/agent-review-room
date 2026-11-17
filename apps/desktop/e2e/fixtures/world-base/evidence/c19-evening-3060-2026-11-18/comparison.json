@@ -1,0 +1,498 @@
+{
+  "sourceBefore": "b0259599bd51178c2d4980243a9c87553eac1a66",
+  "sourceAfter": "6e6d3eb1e05bbb3f37491eed2cc183ff9f385385",
+  "dimensions": [
+    1440,
+    900
+  ],
+  "DPR": 1,
+  "passingControls": "Same world camera, FOV, clock 14, AO .55, toon, hidden HUD, renderer, post parameters other than intentional bloom. Views from the second capture at both revisions. Daylight is the earlier genuine PBR run. The fixed animation time is independent of the evening preset.",
+  "pairs": [
+    {
+      "id": "01",
+      "view": "station-street",
+      "label": "站前主街",
+      "camera": {
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58
+      },
+      "sceneTime": 14,
+      "stationTime": 14,
+      "ao": 0.55,
+      "afternoon": {
+        "sourceHead": "b0259599bd51178c2d4980243a9c87553eac1a66",
+        "relativeToFixture": "evidence/street-upgrade-2026-11-18/images/01-after.jpg",
+        "jpegSha256": "2b094de979c6d6660c4b4dfb35103ff6b01354931a9b9c15825fef5f38962447",
+        "originalPngSha256": "225b72fab1cd617af7022f6b70c80d64a4276aaef95d4c3cf4ad860de2cf4077"
+      },
+      "evening": {
+        "sourceHead": "6e6d3eb1e05bbb3f37491eed2cc183ff9f385385",
+        "image": "images/01-evening.jpg",
+        "jpegSha256": "111ef5f0dcba12f83cb4c7cfa6cedff18e3b0f1a788adb7699808e4ba8c70027",
+        "originalPngSha256": "450ef4f84da113d6ed0bd844183ddceb526b90c3292af77477f773d9c37e0afc",
+        "warmup": "450ef4f84da113d6ed0bd844183ddceb526b90c3292af77477f773d9c37e0afc",
+        "repeat": "450ef4f84da113d6ed0bd844183ddceb526b90c3292af77477f773d9c37e0afc"
+      }
+    },
+    {
+      "id": "20",
+      "view": "20-rear-eye",
+      "label": "公寓后廊",
+      "camera": {
+        "position": [
+          273,
+          14.755245542526229,
+          758
+        ],
+        "quaternion": [
+          -0.00013011891877658623,
+          0.9145142483742376,
+          -0.00029414054360230415,
+          -0.40455356390830466
+        ],
+        "fov": 58
+      },
+      "sceneTime": 14,
+      "stationTime": 14,
+      "ao": 0.55,
+      "afternoon": {
+        "sourceHead": "b0259599bd51178c2d4980243a9c87553eac1a66",
+        "relativeToFixture": "evidence/street-upgrade-2026-11-18/images/20-after.jpg",
+        "jpegSha256": "dac7e27bee88b2565a84f9b6d4c7d848ea176431902454ee93f014dee970a1cf",
+        "originalPngSha256": "9d8b9d7816d2b8f4ae0a4d7d3ceb021e7ad1f7648d98d2874a82e2970d57e5da"
+      },
+      "evening": {
+        "sourceHead": "6e6d3eb1e05bbb3f37491eed2cc183ff9f385385",
+        "image": "images/20-evening.jpg",
+        "jpegSha256": "bb3ddfe4866601ed6f990971d4037495a2ba6245606140c6e027146e4a874938",
+        "originalPngSha256": "8b2bf12f8eb01bc288ac7954113ee6e70120cd30c7fa693f2797c1104e6a87af",
+        "warmup": "8b2bf12f8eb01bc288ac7954113ee6e70120cd30c7fa693f2797c1104e6a87af",
+        "repeat": "8b2bf12f8eb01bc288ac7954113ee6e70120cd30c7fa693f2797c1104e6a87af"
+      }
+    },
+    {
+      "id": "21",
+      "view": "21-front-eye",
+      "label": "洗衣店前",
+      "camera": {
+        "position": [
+          274,
+          12.87812709172567,
+          783
+        ],
+        "quaternion": [
+          0.07422133960767584,
+          -0.5103582416049142,
+          0.044271975994965136,
+          0.8556083508909221
+        ],
+        "fov": 58
+      },
+      "sceneTime": 14,
+      "stationTime": 14,
+      "ao": 0.55,
+      "afternoon": {
+        "sourceHead": "b0259599bd51178c2d4980243a9c87553eac1a66",
+        "relativeToFixture": "evidence/street-upgrade-2026-11-18/images/21-after.jpg",
+        "jpegSha256": "f9a6821b5a5bdaab98259594c6804698bfd8e86354203512ffa2c0919c4fcb5c",
+        "originalPngSha256": "03579cdaf5473d390678dfdca2ea2c9e4ec01ae22adf940b82f9adf176f86e69"
+      },
+      "evening": {
+        "sourceHead": "6e6d3eb1e05bbb3f37491eed2cc183ff9f385385",
+        "image": "images/21-evening.jpg",
+        "jpegSha256": "cfcd702054705356795d7b1e1f910d1ff0ae8579442f03eb034fea12908114d7",
+        "originalPngSha256": "04788c2064ecc885b95ac48c0ab46557b8f5856a4656a3eb99dbaaf7d1e6131a",
+        "warmup": "04788c2064ecc885b95ac48c0ab46557b8f5856a4656a3eb99dbaaf7d1e6131a",
+        "repeat": "04788c2064ecc885b95ac48c0ab46557b8f5856a4656a3eb99dbaaf7d1e6131a"
+      }
+    },
+    {
+      "id": "23",
+      "view": "service-corner",
+      "label": "维修角",
+      "camera": {
+        "position": [
+          308.4,
+          9.612,
+          872.9
+        ],
+        "quaternion": [
+          -0.08432325046436126,
+          0.5331397072650681,
+          0.05351200213385738,
+          0.8401119613456697
+        ],
+        "fov": 55
+      },
+      "sceneTime": 14,
+      "stationTime": 14,
+      "ao": 0.55,
+      "afternoon": {
+        "sourceHead": "b0259599bd51178c2d4980243a9c87553eac1a66",
+        "relativeToFixture": "evidence/street-upgrade-2026-11-18/images/23-after.jpg",
+        "jpegSha256": "fd0383601f15205ef0fd856b60ecc9ce646eccd317dedfd5b0dc97a7f7d82b9f",
+        "originalPngSha256": "2da9a5656e3b284b400edaf5e85b6fa36c6f28968b15dcfd3f6428809fba4580"
+      },
+      "evening": {
+        "sourceHead": "6e6d3eb1e05bbb3f37491eed2cc183ff9f385385",
+        "image": "images/23-evening.jpg",
+        "jpegSha256": "f4094429a5c310cb9a37c95fecb6ee717ad2c6b20e76d58424dd0383f0f691e1",
+        "originalPngSha256": "56c4a1e21a5fb9b3e541037b64e5caea32dc8dc3c334b3e858a3040a418a105e",
+        "warmup": "56c4a1e21a5fb9b3e541037b64e5caea32dc8dc3c334b3e858a3040a418a105e",
+        "repeat": "56c4a1e21a5fb9b3e541037b64e5caea32dc8dc3c334b3e858a3040a418a105e"
+      }
+    },
+    {
+      "id": "24",
+      "view": "laundry-details",
+      "label": "洗衣店细节",
+      "camera": {
+        "position": [
+          288,
+          14.384808464050293,
+          777.9
+        ],
+        "quaternion": [
+          -0.15522850149956677,
+          0.6173580660361093,
+          0.12595148976979553,
+          0.7608609287163607
+        ],
+        "fov": 55
+      },
+      "sceneTime": 14,
+      "stationTime": 14,
+      "ao": 0.55,
+      "afternoon": {
+        "sourceHead": "b0259599bd51178c2d4980243a9c87553eac1a66",
+        "relativeToFixture": "evidence/street-upgrade-2026-11-18/images/24-after.jpg",
+        "jpegSha256": "0cf46a6423a0b13c02e2867807c5c53ed02d9481d5eabe1fd3a2f74089df477f",
+        "originalPngSha256": "156020f9e72b5aca88e1f8abb72476ba2ea8723cd29e08986c7e875c6b612684"
+      },
+      "evening": {
+        "sourceHead": "6e6d3eb1e05bbb3f37491eed2cc183ff9f385385",
+        "image": "images/24-evening.jpg",
+        "jpegSha256": "0b883088a21a31c64472393e9235c6d8fab6370d3e8cdf5a67b24b21cafab529",
+        "originalPngSha256": "78440e25b83adfccbb06c4a46974d5f0c21a4ec4fbca5c04349d7156e9bcce7c",
+        "warmup": "78440e25b83adfccbb06c4a46974d5f0c21a4ec4fbca5c04349d7156e9bcce7c",
+        "repeat": "78440e25b83adfccbb06c4a46974d5f0c21a4ec4fbca5c04349d7156e9bcce7c"
+      }
+    },
+    {
+      "id": "04",
+      "view": "shop-interior",
+      "label": "便利店内",
+      "camera": {
+        "position": [
+          271.7,
+          9.9134,
+          908
+        ],
+        "quaternion": [
+          -0.015701859235384273,
+          0.7069324236562871,
+          0.015701859235384273,
+          0.7069324236562871
+        ],
+        "fov": 58
+      },
+      "sceneTime": 14,
+      "stationTime": 14,
+      "ao": 0.55,
+      "afternoon": {
+        "sourceHead": "b0259599bd51178c2d4980243a9c87553eac1a66",
+        "relativeToFixture": "evidence/street-upgrade-2026-11-18/images/04-after.jpg",
+        "jpegSha256": "9421103e0357283c1c29e42fff3996672d8693da246eb33e747fb847815d7f5f",
+        "originalPngSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05"
+      },
+      "evening": {
+        "sourceHead": "6e6d3eb1e05bbb3f37491eed2cc183ff9f385385",
+        "image": "images/04-evening.jpg",
+        "jpegSha256": "e2d4bb94e8dd2e27682a1ef9573c79a8ee6f7768770658d28f3422139c03af26",
+        "originalPngSha256": "f56b6490014e37a088970b9cfe61fd1aff82bc60908901085256ea9628d320f3",
+        "warmup": "f56b6490014e37a088970b9cfe61fd1aff82bc60908901085256ea9628d320f3",
+        "repeat": "f56b6490014e37a088970b9cfe61fd1aff82bc60908901085256ea9628d320f3"
+      }
+    },
+    {
+      "id": "03",
+      "view": "island-aerial",
+      "label": "全岛鸟瞰",
+      "camera": {
+        "position": [
+          2100,
+          2350,
+          2450
+        ],
+        "quaternion": [
+          -0.27043683246052963,
+          0.3343071089193487,
+          0.10076912073943207,
+          0.8971890886987558
+        ],
+        "fov": 58
+      },
+      "sceneTime": 14,
+      "stationTime": 14,
+      "ao": 0.55,
+      "afternoon": {
+        "sourceHead": "b0259599bd51178c2d4980243a9c87553eac1a66",
+        "relativeToFixture": "evidence/street-upgrade-2026-11-18/images/03-after.jpg",
+        "jpegSha256": "2708d956d8057170fa39719248381a3a0c7c3b5aee86e3319a11532699795531",
+        "originalPngSha256": "074a8e66e8e9e34dca0e62480c7bc95449dffc288fea9b2f141b6adfb11a17b8"
+      },
+      "evening": {
+        "sourceHead": "6e6d3eb1e05bbb3f37491eed2cc183ff9f385385",
+        "image": "images/03-evening.jpg",
+        "jpegSha256": "1d43e990145d6e7e1f2accda2e018d833c6c54fc93d1b495987416f18f61ea9b",
+        "originalPngSha256": "178430d45b634ba560b96289d530e2408e779d641c120a45d80dec8a6fa8352f",
+        "warmup": "178430d45b634ba560b96289d530e2408e779d641c120a45d80dec8a6fa8352f",
+        "repeat": "178430d45b634ba560b96289d530e2408e779d641c120a45d80dec8a6fa8352f"
+      }
+    },
+    {
+      "id": "detail",
+      "view": "street-detail",
+      "label": "商店橱窗近景",
+      "camera": {
+        "position": [
+          284.4,
+          10.281286274509803,
+          924
+        ],
+        "quaternion": [
+          -0.12465537443110519,
+          -0.38126635888515065,
+          -0.05196769176958736,
+          0.914547079280253
+        ],
+        "fov": 58
+      },
+      "sceneTime": 14,
+      "stationTime": 14,
+      "ao": 0.55,
+      "afternoon": {
+        "sourceHead": "b0259599bd51178c2d4980243a9c87553eac1a66",
+        "relativeToFixture": "evidence/street-upgrade-2026-11-18/images/detail-after.jpg",
+        "jpegSha256": "755238ac64ac5db7e69189c5c001fb7b17c8654bb7432645f60e0df4f7c60ca3",
+        "originalPngSha256": "c2a4835a7f60e3597e823c9fa2aa2434a9eeab3ffa9b6cde94e031f92c603287"
+      },
+      "evening": {
+        "sourceHead": "6e6d3eb1e05bbb3f37491eed2cc183ff9f385385",
+        "image": "images/detail-evening.jpg",
+        "jpegSha256": "53e467ecd8500bd5ce44f93bdbf228100019d6928b5b61512bb4e2d54ef45a51",
+        "originalPngSha256": "8e44322b154d7b70cb001db577e3fe56adefea271a6fabb738c5cd4f8aa4c8ea",
+        "warmup": "d24404a25061c83fd34cfed484ab0cd01da081d852034c92f6d28178289993b2",
+        "repeat": "d24404a25061c83fd34cfed484ab0cd01da081d852034c92f6d28178289993b2"
+      }
+    }
+  ],
+  "afternoonLights": [
+    {
+      "type": "DirectionalLight",
+      "name": "",
+      "color": [
+        1,
+        0.775822218312646,
+        0.55201140150344
+      ],
+      "intensity": 2.1,
+      "position": [
+        198.3349607968577,
+        97.47086455531951,
+        795.4735164292183
+      ],
+      "target": [
+        280,
+        8,
+        900
+      ],
+      "castShadow": true,
+      "shadow": {
+        "mapSize": [
+          4096,
+          4096
+        ],
+        "bias": -0.0002,
+        "normalBias": 0.035,
+        "camera": {
+          "near": 1,
+          "far": 400,
+          "left": -150,
+          "right": 150,
+          "top": 150,
+          "bottom": -150
+        }
+      }
+    },
+    {
+      "type": "HemisphereLight",
+      "name": "",
+      "color": [
+        0.623960391667596,
+        0.7454042095350284,
+        1
+      ],
+      "groundColor": [
+        0.3915724777393922,
+        0.33245153633549385,
+        0.29613827078752575
+      ],
+      "intensity": 1.05,
+      "position": [
+        0,
+        1,
+        0
+      ],
+      "castShadow": false,
+      "shadow": null
+    }
+  ],
+  "eveningLights": [
+    {
+      "type": "DirectionalLight",
+      "name": "",
+      "color": [
+        1,
+        0.55201140150344,
+        0.2788942634659966
+      ],
+      "intensity": 2.3,
+      "position": [
+        125.87402547312934,
+        41.2658705308415,
+        927.1765677370728
+      ],
+      "target": [
+        280,
+        8,
+        900
+      ],
+      "castShadow": true,
+      "shadow": {
+        "mapSize": [
+          4096,
+          4096
+        ],
+        "bias": -0.0002,
+        "normalBias": 0.035,
+        "camera": {
+          "near": 1,
+          "far": 400,
+          "left": -150,
+          "right": 150,
+          "top": 150,
+          "bottom": -150
+        }
+      }
+    },
+    {
+      "type": "HemisphereLight",
+      "name": "",
+      "color": [
+        0.3915724777393922,
+        0.45641102317066595,
+        0.8387990117372213
+      ],
+      "groundColor": [
+        0.2541520943200296,
+        0.15592646369776456,
+        0.10702310296918527
+      ],
+      "intensity": 0.95,
+      "position": [
+        0,
+        1,
+        0
+      ],
+      "castShadow": false,
+      "shadow": null
+    }
+  ],
+  "afternoonPost": {
+    "exposure": 1.02,
+    "blur": 0,
+    "bloom": 0.12,
+    "distortion": 0,
+    "fringe": 0,
+    "vignette": 0.12,
+    "rays": 0,
+    "saturation": 1,
+    "contrast": 1.05,
+    "speed": 0
+  },
+  "eveningPost": {
+    "exposure": 1.02,
+    "blur": 0,
+    "bloom": 0.2,
+    "distortion": 0,
+    "fringe": 0,
+    "vignette": 0.12,
+    "rays": 0,
+    "saturation": 1,
+    "contrast": 1.05,
+    "speed": 0
+  },
+  "runtimeDusk": {
+    "preset": "evening",
+    "lightMapURL": "http://127.0.0.1:58475/assets/terrain/light-evening.png",
+    "dimensions": [
+      4096,
+      4096
+    ],
+    "sunDirection": [
+      -0.9632873407929416,
+      0.20791169081775934,
+      0.16985354835670516
+    ],
+    "bloom": 0.2,
+    "glow": {
+      "lamps": 13,
+      "prints": 1
+    },
+    "towns": [
+      {
+        "id": "cairnwick",
+        "mapSize": [
+          2048,
+          2048
+        ],
+        "shadowToSun": [
+          -0.9632873407929418,
+          0.20791169081775934,
+          0.16985354835670508
+        ],
+        "dotWithEveningSun": 1
+      },
+      {
+        "id": "larkhaven",
+        "mapSize": [
+          4096,
+          4096
+        ],
+        "shadowToSun": [
+          -0.9632873407929418,
+          0.20791169081775934,
+          0.16985354835670508
+        ],
+        "dotWithEveningSun": 1
+      }
+    ],
+    "townShadowParams": [
+      1,
+      1,
+      440.0664838152349,
+      239.86626294153353
+    ]
+  }
+}

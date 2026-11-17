@@ -1,0 +1,20 @@
+{
+  "beforeSha256": "7c44be7d97ada82b4e22e30a8e57a7d321a07b0cd7e7c1dfe78cc5f9559b9a95",
+  "afterSha256": "debb02a7b38a1810fcd8b7ccac8f8d077dad030093a9a0398d16b32a13c08152",
+  "width": 4096,
+  "height": 4096,
+  "changedPixelsRGBA": [
+    2247469,
+    0,
+    0,
+    0
+  ],
+  "sunConfigSha256": "21fc7c0ae165814efb3de9b2d3d211d488c874d910be760d48e593a3f6d1c2ef",
+  "bakeScriptSha256": "9116f72e47ff1743988d8f98b2529ab3fb9c1e2cd31138c68501462ee1a30158",
+  "upstreamBakerSha256": "16daa2de30709d3d9c23f2f80c572a26c61286d143bb06a041494bcd846fa6ea",
+  "sourceInputs": {
+    "meta.json": "113110f6eac1693a0ef3e3791482881986bf3050d0b0c339e79fe5481c10e336",
+    "height.u16": "8506105e460640026e7aaa182d95d5b3ea2b46568dbbb38446ea1c87f7da2c48",
+    "props.json": "e7ede80757854c2952f47b584127bca156b2d606dca6f8f359d25b3070de4574"
+  }
+}

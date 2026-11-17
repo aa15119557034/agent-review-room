@@ -1,0 +1,318 @@
+{
+  "sourceHead": "6e6d3eb1e05bbb3f37491eed2cc183ff9f385385",
+  "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "manifestFiles": 237,
+  "sourceManifestSha256": "ab3a6fe3898735ad4570dc810d86407c3497595dc447e691981d9be642eedbcd",
+  "pbrFiles": 9,
+  "propFiles": 9,
+  "terrainMapBeforeAfter": "debb02a7b38a1810fcd8b7ccac8f8d077dad030093a9a0398d16b32a13c08152",
+  "failures": {
+    "normal": {
+      "exit": 1,
+      "renderOk": true,
+      "transportClean": false,
+      "stage": "complete",
+      "failure": null,
+      "exceptions": [],
+      "networkFailures": [
+        {
+          "url": "http://127.0.0.1:58325/assets/models/boulders.glb",
+          "type": "Fetch",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "68264.130",
+          "timestamp": 1959272.111462,
+          "stage": "waiting-for-ready-frame",
+          "receivedWallTime": 1794949093.057
+        },
+        {
+          "url": "http://127.0.0.1:58325/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+          "type": "Fetch",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "68264.244",
+          "timestamp": 1959283.676689,
+          "stage": "waiting-for-ready-frame",
+          "receivedWallTime": 1794949104.622
+        }
+      ],
+      "httpErrors": []
+    },
+    "fixed": {
+      "exit": 1,
+      "renderOk": true,
+      "transportClean": false,
+      "stage": "complete",
+      "failure": null,
+      "exceptions": [],
+      "networkFailures": [
+        {
+          "stage": "loading",
+          "url": "http://127.0.0.1:58475/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "66788.249",
+          "timestamp": 1959388.757128,
+          "type": "Fetch"
+        }
+      ],
+      "httpErrors": []
+    },
+    "town": {
+      "exit": 1,
+      "renderOk": true,
+      "transportClean": false,
+      "stage": "complete",
+      "failure": null,
+      "exceptions": [],
+      "networkFailures": [
+        {
+          "url": "http://127.0.0.1:58566/assets/models/boulders.glb",
+          "stage": "loading",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "54848.130",
+          "timestamp": 1959421.149391,
+          "type": "Fetch"
+        },
+        {
+          "url": "http://127.0.0.1:58566/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+          "stage": "loading",
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "54848.249",
+          "timestamp": 1959432.639337,
+          "type": "Fetch"
+        }
+      ],
+      "httpErrors": []
+    }
+  },
+  "normal": {
+    "process": {
+      "pid": 67964,
+      "executable": "D:\\codex\\2026-11-16\\world-implementation\\runtime-path-probe\\electron.exe",
+      "preview": false
+    },
+    "startedAt": "2026-11-17T20:58:09.627Z",
+    "lastStage": "2026-11-17T20:59:53.720Z",
+    "behavior": {
+      "ok": true,
+      "checks": [
+        {
+          "name": "closed shop door blocks the walking capsule",
+          "passed": true,
+          "evidence": {
+            "displacement": 0.34999999999999964,
+            "candidate": {
+              "x": -7.23,
+              "z": 8
+            }
+          }
+        },
+        {
+          "name": "approaching opens the real shop door collider",
+          "passed": true,
+          "evidence": {
+            "displacement": 0,
+            "candidate": {
+              "x": -7.58,
+              "z": 8
+            }
+          }
+        },
+        {
+          "name": "adjacent storefront wall remains solid",
+          "passed": true,
+          "evidence": {
+            "displacement": 0.40000000000000036,
+            "candidate": {
+              "x": -7.1,
+              "z": 12
+            }
+          }
+        },
+        {
+          "name": "open entrance provides a continuous capsule-width passage",
+          "passed": true,
+          "evidence": {
+            "maxCorrection": 0
+          }
+        },
+        {
+          "name": "interior floor uses its raised walkable surface",
+          "passed": true,
+          "evidence": {
+            "expectedFloor": 0.4134,
+            "maxHeightError": 0
+          }
+        },
+        {
+          "name": "W3 sidewalk walking clears existing furniture and new planters",
+          "passed": true,
+          "evidence": {
+            "endLotX": 3.9674163653903243,
+            "minLotZ": 1.061816375746971,
+            "maxLotZ": 1.1500000000000001,
+            "radius": 0.3,
+            "step": 0.1,
+            "inputDistance": 8
+          }
+        },
+        {
+          "name": "W3 planters leave the existing garden gate approach clear",
+          "passed": true,
+          "evidence": {
+            "maxCorrection": 0
+          }
+        },
+        {
+          "name": "low planter tops support approaching feet and release them on exit",
+          "passed": true,
+          "evidence": [
+            {
+              "id": "w3-planter-south",
+              "expectedTop": 1.1152975042415103,
+              "onTop": 1.1152975042415103,
+              "initialFeet": 0.8553631994889643,
+              "finalFeet": 0.8553631994889643,
+              "supported": true,
+              "returnedToSidewalk": true
+            },
+            {
+              "id": "w3-planter-north",
+              "expectedTop": 1.00881568627451,
+              "onTop": 1.00881568627451,
+              "initialFeet": 0.7488156862745098,
+              "finalFeet": 0.7488156862745098,
+              "supported": true,
+              "returnedToSidewalk": true
+            }
+          ]
+        },
+        {
+          "name": "first person camera is 1.52m above world-space feet",
+          "passed": true,
+          "evidence": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "camera": [
+              281.6,
+              10.331999999999999,
+              934
+            ],
+            "error": 0
+          }
+        },
+        {
+          "name": "third person camera follows within its obstruction-limited boom",
+          "passed": true,
+          "evidence": {
+            "followDistance": 4.224038352098614,
+            "maximum": 4.224038352098617
+          }
+        },
+        {
+          "name": "view switching preserves the body and collision position",
+          "passed": true,
+          "evidence": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "initialFeet": [
+              281.6,
+              8.812,
+              934
+            ]
+          }
+        },
+        {
+          "name": "station local/world coordinates round-trip at its nonzero placement",
+          "passed": true,
+          "evidence": {
+            "local": [
+              1.6000000000000227,
+              0.8119999999999994,
+              34
+            ],
+            "world": [
+              281.6,
+              8.812,
+              934
+            ]
+          }
+        },
+        {
+          "name": "real shop wall shortens third-person boom with near-plane clearance",
+          "passed": true,
+          "evidence": {
+            "shortened": 0.7951227548559752,
+            "cameraLotZ": -2.290597833643244,
+            "streetSideWallZ": -2.6,
+            "clearance": 0.30940216635678375,
+            "raycastCalls": 0
+          }
+        },
+        {
+          "name": "camera collision never scans rendered triangles",
+          "passed": true,
+          "evidence": {
+            "raycastCalls": 0
+          }
+        }
+      ]
+    },
+    "look": true,
+    "walking": [
+      {
+        "mode": "third",
+        "ok": true,
+        "horizontalDistance": 9.46674564172064
+      },
+      {
+        "mode": "first",
+        "ok": true,
+        "horizontalDistance": 9.419088447291713
+      }
+    ],
+    "earliestWarmup": {
+      "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+      "unsupportedDrawPaths": [
+        "ANGLE_instanced_arrays",
+        "WEBGL_multi_draw"
+      ],
+      "frameCount": 976,
+      "sampleMs": 15107.699999999997,
+      "fps": 64.60281843033687,
+      "p95FrameMs": 15.5,
+      "drawCalls": {
+        "mean": 1604.0245901639344,
+        "min": 1602,
+        "max": 1607
+      },
+      "triangles": {
+        "mean": 8386245.442622951,
+        "min": 8386120,
+        "max": 8386440
+      },
+      "framesWithoutDraws": 0,
+      "samplesFile": "frame-samples.json"
+    }
+  },
+  "fixed": {
+    "completedAt": "2026-11-17T21:00:38.296Z",
+    "driverSha256": "5eddda779081484ca0bbd8342e52acfbf62fdbaaf4d14a5cd47e0edd37c9e386",
+    "frames": 24,
+    "restoreUnchanged": true
+  },
+  "town": {
+    "startedAt": "2026-11-17T21:00:39.023Z",
+    "completedAt": "2026-11-17T21:02:07.745Z",
+    "driverSha256": "3d519cffcff439e98e3487a54c51926bc9956afe66d303166043f27144294747"
+  }
+}

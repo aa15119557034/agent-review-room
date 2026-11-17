@@ -1,0 +1,1019 @@
+{
+  "source": "6e6d3eb1e05bbb3f37491eed2cc183ff9f385385",
+  "actualExit": 1,
+  "candidateOnly": true,
+  "bakeValid": true,
+  "rangeUnclipped": false,
+  "restoreEqual": true,
+  "sourceUnchanged": true,
+  "transportClean": false,
+  "networkFailures": [
+    {
+      "url": "http://127.0.0.1:58720/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "49032.249",
+      "timestamp": 1959569.694395,
+      "type": "Fetch",
+      "stage": "loading"
+    }
+  ],
+  "httpErrors": [],
+  "exceptions": [],
+  "clippedPixelCount": 98,
+  "totalPixels": 393216,
+  "faces": [
+    {
+      "name": "px",
+      "pixels": 65536,
+      "clippedPixels": 16,
+      "over2": [
+        16,
+        4,
+        4
+      ],
+      "linearMaximum": [
+        2.658203125,
+        2.734375,
+        2.939453125
+      ],
+      "renderedHDRsha256": "1659f91cdf931fc08524901a812690e772abd50b1f190fad173742d96b99931e",
+      "candidateSha256": "311243fb1c2b7574595b3e3357f36a8ec94d306b6501bb81d6deb77a343e5cc5",
+      "shippedSha256": "d15de12913e8dff806b64befdd0ac2fd6b6231d00b032f6e65dcb7166ce2b089"
+    },
+    {
+      "name": "nx",
+      "pixels": 65536,
+      "clippedPixels": 47,
+      "over2": [
+        47,
+        45,
+        1
+      ],
+      "linearMaximum": [
+        2.728515625,
+        2.4453125,
+        2.41796875
+      ],
+      "renderedHDRsha256": "665ed35963694ba7e8e56ae9e05105b2f4964e9158e718d3badf87c7fa596686",
+      "candidateSha256": "1e6fff210733ffcfc71c408bd6c664daf1cba14e1130cabc09726ce7cb96532e",
+      "shippedSha256": "68b524cbe4227b142373e4237fde4d900eeb558c270bbac09ecc682416514934"
+    },
+    {
+      "name": "py",
+      "pixels": 65536,
+      "clippedPixels": 0,
+      "over2": [
+        0,
+        0,
+        0
+      ],
+      "linearMaximum": [
+        1.392578125,
+        0.515625,
+        0.5947265625
+      ],
+      "renderedHDRsha256": "cc7aecb267cc14dc7d18ffc6718a7f64d46a2449d966deb46dac91dbb5d3bc72",
+      "candidateSha256": "d287e185b48aa2364bd54f1a8f9f1bc01dcdef9b345feef41f047467caf214a3",
+      "shippedSha256": "5423e68955eb3d3bcde767d97b121540ee94904426e797875de959176e981c1a"
+    },
+    {
+      "name": "ny",
+      "pixels": 65536,
+      "clippedPixels": 0,
+      "over2": [
+        0,
+        0,
+        0
+      ],
+      "linearMaximum": [
+        0.0948486328125,
+        0.1083984375,
+        0.185791015625
+      ],
+      "renderedHDRsha256": "72d3abff3f5e9f6c7b6e93fc89a3c9e2ab433b518b59de0cd0aa77598dd7b40d",
+      "candidateSha256": "99534baa04a60156502c6dca7c07da468f5d3203866de8530904d48851cd294e",
+      "shippedSha256": "7b824f864fb448646ec6bce33dde28fcf4edffeaf408d6ce63473518c06c7090"
+    },
+    {
+      "name": "pz",
+      "pixels": 65536,
+      "clippedPixels": 26,
+      "over2": [
+        26,
+        25,
+        25
+      ],
+      "linearMaximum": [
+        2.658203125,
+        2.734375,
+        2.939453125
+      ],
+      "renderedHDRsha256": "f17964872801a20e4474fa4b273e08a4fcc46f5742bb880cffc38cb8f19b04b1",
+      "candidateSha256": "cb72dfa06cad1e5b6d27dcd154a8b40effdf9b76c7c465b847661805d9bddf0d",
+      "shippedSha256": "20ac46fa7e4f3787f91e98cfe7d1ff1bfa86fa5e9307dd852e77181988b903c9"
+    },
+    {
+      "name": "nz",
+      "pixels": 65536,
+      "clippedPixels": 9,
+      "over2": [
+        9,
+        8,
+        0
+      ],
+      "linearMaximum": [
+        5.0390625,
+        2.4453125,
+        1.953125
+      ],
+      "renderedHDRsha256": "164088372e32ecca5cf0462ff3a540daa843ec2532f809e36fd97b029f690abb",
+      "candidateSha256": "48f18396776415554b3de4fb1a6bed67c64b6cc7e426c36d356ebfca4d88f490",
+      "shippedSha256": "9e696e3934cd740e903dd57dfb18a90bb29247f8a5ffd8d964b3c652c092402e"
+    }
+  ],
+  "clipped": [
+    {
+      "face": "px",
+      "rawPixelIndex": 28932,
+      "rgbF16Bits": [
+        16721,
+        16760,
+        16865
+      ]
+    },
+    {
+      "face": "px",
+      "rawPixelIndex": 28933,
+      "rgbF16Bits": [
+        16721,
+        16760,
+        16865
+      ]
+    },
+    {
+      "face": "px",
+      "rawPixelIndex": 28937,
+      "rgbF16Bits": [
+        16721,
+        16760,
+        16865
+      ]
+    },
+    {
+      "face": "px",
+      "rawPixelIndex": 28938,
+      "rgbF16Bits": [
+        16721,
+        16760,
+        16865
+      ]
+    },
+    {
+      "face": "px",
+      "rawPixelIndex": 30354,
+      "rgbF16Bits": [
+        16488,
+        16303,
+        15854
+      ]
+    },
+    {
+      "face": "px",
+      "rawPixelIndex": 30355,
+      "rgbF16Bits": [
+        16488,
+        16303,
+        15854
+      ]
+    },
+    {
+      "face": "px",
+      "rawPixelIndex": 30610,
+      "rgbF16Bits": [
+        16488,
+        16303,
+        15854
+      ]
+    },
+    {
+      "face": "px",
+      "rawPixelIndex": 30611,
+      "rgbF16Bits": [
+        16488,
+        16303,
+        15854
+      ]
+    },
+    {
+      "face": "px",
+      "rawPixelIndex": 30612,
+      "rgbF16Bits": [
+        16488,
+        16303,
+        15854
+      ]
+    },
+    {
+      "face": "px",
+      "rawPixelIndex": 30867,
+      "rgbF16Bits": [
+        16488,
+        16303,
+        15854
+      ]
+    },
+    {
+      "face": "px",
+      "rawPixelIndex": 30868,
+      "rgbF16Bits": [
+        16488,
+        16303,
+        15854
+      ]
+    },
+    {
+      "face": "px",
+      "rawPixelIndex": 31123,
+      "rgbF16Bits": [
+        16488,
+        16303,
+        15854
+      ]
+    },
+    {
+      "face": "px",
+      "rawPixelIndex": 31124,
+      "rgbF16Bits": [
+        16488,
+        16303,
+        15854
+      ]
+    },
+    {
+      "face": "px",
+      "rawPixelIndex": 31125,
+      "rgbF16Bits": [
+        16488,
+        16303,
+        15854
+      ]
+    },
+    {
+      "face": "px",
+      "rawPixelIndex": 32201,
+      "rgbF16Bits": [
+        16704,
+        16380,
+        15503
+      ]
+    },
+    {
+      "face": "px",
+      "rawPixelIndex": 32457,
+      "rgbF16Bits": [
+        16703,
+        16380,
+        15503
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29193,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29194,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29195,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29196,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29197,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29198,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29199,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29200,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29201,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29202,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29203,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29204,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29205,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29206,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29207,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29208,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29209,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29210,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29211,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29212,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29213,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29214,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29231,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29232,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29233,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29234,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29235,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29236,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29237,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29238,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29239,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29240,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29241,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29242,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29243,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29244,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29245,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29246,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29247,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29248,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29249,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29250,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29251,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29252,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 29941,
+      "rgbF16Bits": [
+        16704,
+        16201,
+        15201
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 30197,
+      "rgbF16Bits": [
+        16704,
+        16201,
+        15201
+      ]
+    },
+    {
+      "face": "nx",
+      "rawPixelIndex": 32286,
+      "rgbF16Bits": [
+        16479,
+        16532,
+        16598
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 28917,
+      "rgbF16Bits": [
+        16721,
+        16760,
+        16865
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 29165,
+      "rgbF16Bits": [
+        16721,
+        16760,
+        16865
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 29166,
+      "rgbF16Bits": [
+        16721,
+        16760,
+        16865
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 30239,
+      "rgbF16Bits": [
+        16450,
+        16257,
+        15850
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32222,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32223,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32224,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32225,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32226,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32227,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32228,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32230,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32231,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32232,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32233,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32234,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32235,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32236,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32237,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32239,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32240,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32241,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32242,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32243,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32244,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "pz",
+      "rawPixelIndex": 32245,
+      "rgbF16Bits": [
+        16555,
+        16648,
+        16757
+      ]
+    },
+    {
+      "face": "nz",
+      "rawPixelIndex": 29684,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nz",
+      "rawPixelIndex": 29685,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nz",
+      "rawPixelIndex": 29686,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nz",
+      "rawPixelIndex": 29687,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nz",
+      "rawPixelIndex": 29688,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nz",
+      "rawPixelIndex": 29933,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nz",
+      "rawPixelIndex": 29934,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nz",
+      "rawPixelIndex": 29935,
+      "rgbF16Bits": [
+        16757,
+        16612,
+        16336
+      ]
+    },
+    {
+      "face": "nz",
+      "rawPixelIndex": 32656,
+      "rgbF16Bits": [
+        17674,
+        14209,
+        13314
+      ]
+    }
+  ]
+}
