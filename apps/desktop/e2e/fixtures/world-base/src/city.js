@@ -59,7 +59,7 @@ export async function createCity({ scene, station, island, skyline }) {
   shopGlass.onBeforeCompile = houseGlass.onBeforeCompile;
   shopGlass.customProgramCacheKey = houseGlass.customProgramCacheKey;
   shopGlass.uniforms.uTint.value.set('#e6eef0');
-  shopGlass.uniforms.uOpacity.value = 0.14;
+  shopGlass.uniforms.uOpacity.value = 0.08; // thinner veil: the shop interior keeps its colours behind the pane
   shopGlass.uniforms.uStreaks.value = 0;
   ownedMaterials.add(shopGlass);
   H.shopGlass = shopGlass;
@@ -88,8 +88,15 @@ export async function createCity({ scene, station, island, skyline }) {
     const cx = (lot.minX + lot.maxX) / 2, cz = (lot.minZ + lot.maxZ) / 2;
     frame.boxB(M.concrete, '#cdc6b6', lot.maxX - lot.minX, top - bottom, lot.maxZ - lot.minZ,
       cx, bottom - root.position.y, cz, { uv: { world: 2 }, shadow: false });
-    frame.boxB(M.plain, '#e6e1d4', lot.maxX - lot.minX + 0.08, 0.09, lot.maxZ - lot.minZ + 0.08,
-      cx, top - 0.07 - root.position.y, cz, { shadow: false });
+    // The walkable top is textured paving in a mid warm grey; only a narrow pale
+    // rim marks the edge. (A full pale slab read as one blank sheet in front of
+    // the laundromat at eye height.)
+    const sx = lot.maxX - lot.minX + 0.08, sz = lot.maxZ - lot.minZ + 0.08, y0 = top - 0.07 - root.position.y, rim = 0.2;
+    frame.boxB(M.concrete, '#b8b1a3', sx, 0.09, sz, cx, y0, cz, { uv: { world: 1.2 }, shadow: false });
+    for (const side of [-1, 1]) {
+      frame.boxB(M.plain, '#e6e1d4', sx, 0.095, rim, cx, y0, cz + side * (sz - rim) / 2, { shadow: false });
+      frame.boxB(M.plain, '#e6e1d4', rim, 0.095, sz - 2 * rim, cx + side * (sx - rim) / 2, y0, cz, { shadow: false });
+    }
     vegetationClearAreas.push({ name, ...lot });
     return { top, bottom, height: top - bottom };
   };

@@ -24,7 +24,8 @@ export function buildTownApartment(H, F, spec) {
   const trim = accent, start = gb.tris, clothStart = H.laundry.I.length / 3;
   const garmentStart = H.laundry.count;
   const r = H.ctx.rng(`town-apartment-${floors}-${F.origin.x}-${F.origin.z}`);
-  const uv = { world: 3 };
+  // 1.5 m per tile: the shared plaster grime reads as wall grain, not metre-wide rings.
+  const uv = { world: 1.5 };
   const at = name => ({ uv: { rect: A.rects[name], white: A.white } });
   const face = F.sub(0, 0, front), rear = F.sub(0, 0, back, Math.PI);
   const S = { frameColor: PAL.frame[4], sillColor: PAL.frame[4], grilleColor: PAL.frame[4],
@@ -162,7 +163,10 @@ export function buildTownApartment(H, F, spec) {
 
 function buildLaundryShop(H, F, front, accent) {
   const { M } = H;
-  F.boxB(M.plain, '#f6efe2', 5.8, 2.35, .12, 0, .14, front - 2.2);
+  // Muted teal tile wall and a darker floor behind the glass: the white machines
+  // and warm ceiling strips now read in front of something instead of white on white.
+  F.boxB(M.plain, '#86aaa3', 5.8, 2.35, .12, 0, .14, front - 2.2);
+  F.box(M.plain, '#8d969a', 5.8, .01, 2.1, 0, .14, front - 1.1, { shadow: false });
   // Warm ceiling strips make the shop read as open and lit from the street.
   for (const z of [front - .6, front - 1.6]) F.box(M.lamp, null, 4.6, .04, .16, 0, 2.3, z, { shadow: false });
   // Visible front-load machines identify the small shop without a new text atlas.
