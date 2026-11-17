@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { createIsland, clearVegetationAreas } from './island.js';
-import { applyEveningGlow, applyEveningSakura } from './evening-glow.js';
+import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from './evening-glow.js';
 import { createStation } from './station.js';
 import { createLook } from './look.js';
 import { createSkyline } from './skyline.js';
@@ -165,6 +165,7 @@ async function init() {
   if (island.timeOfDay === 'evening') {
     worldBase.eveningGlow = applyEveningGlow(scene, look);
     worldBase.eveningSakura = applyEveningSakura(scene);
+    worldBase.crossingHalos = fadeDistantCrossingHalos(scene);
   }
   stage('场景已就绪');
   document.querySelector('#loading').hidden = true;

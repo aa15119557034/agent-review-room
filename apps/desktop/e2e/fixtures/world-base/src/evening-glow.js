@@ -63,3 +63,26 @@ export function applyEveningSakura(scene) {
   if (seen.size === 0) throw new Error('No sakura crown materials found for the evening grade');
   return { materials: [...seen].map((m) => m.name) };
 }
+
+// Crossing halos (#254 C21): upstream keeps a 7 px minimum sprite so distant lamps sparkle; from
+// the island aerial five of them bloomed into one red-orange blob over the station. Keep the
+// minimum size (lamps still read as points) but fade a halo by how much it was enlarged, so a
+// lamp seen at its true size (the street views) is unchanged.
+export function fadeDistantCrossingHalos(scene, { floor = 0.12 } = {}) {
+  const sizeNeedle = 's = max(s, minPx);';
+  const alphaNeedle = 'float a = (core * 1.2 + halo + streak) * vFace * uOn;';
+  const materials = new Set();
+  scene.traverse((object) => { if (object.name === 'crossing-halo') materials.add(object.material); });
+  if (materials.size === 0) throw new Error('No crossing halos found');
+  for (const material of materials) {
+    if (!material.vertexShader.includes(sizeNeedle) || !material.fragmentShader.includes(alphaNeedle)) throw new Error('Crossing halo shader changed upstream');
+    material.vertexShader = material.vertexShader
+      .replace('varying vec2 vUv; varying float vFace;', 'varying vec2 vUv; varying float vFace; varying float vKeep;')
+      .replace(sizeNeedle, `vKeep = mix(${floor.toFixed(2)}, 1.0, clamp(s / max(minPx, 1e-4), 0.0, 1.0));\n    ${sizeNeedle}`);
+    material.fragmentShader = material.fragmentShader
+      .replace('varying vec2 vUv; varying float vFace;', 'varying vec2 vUv; varying float vFace; varying float vKeep;')
+      .replace(alphaNeedle, alphaNeedle.replace('* uOn;', '* uOn * vKeep;'));
+    material.needsUpdate = true;
+  }
+  return { materials: materials.size };
+}
