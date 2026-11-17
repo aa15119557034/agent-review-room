@@ -1,0 +1,210 @@
+{
+  "sourceHashes": {
+    "src/city.js": "bc6a468278fa62c19d590220ab3f90bc98cbb6555cea276bdd0a0769f913a250",
+    "src/town-plants.js": "9b7255e95d0d4dec5dcd6b1dc66a265717b36975386a95453e2d01ab58350f66",
+    "src/city-apartments.js": "19ee6ebae5c7cabe8277101bbffeb15623b9afd0641ca67c1324eee7e0b9a2cd",
+    "src/apartment-surfaces.js": "985cd57bc1c1f52a7432d8faf1c974dc20f494ecafe7fd87e1d79bf253f72f6f",
+    "src/town-paving.js": "fc9892556293276a04a1c11cb77d09906a0244d52b3f91bd1439b07876248c35",
+    "src/neighborhood-props.js": "038827681103391c021bf9dbcf0e1ee392c863aeea860f326fe40a95d5b1a5e6",
+    "src/streetscape.js": "2322509508ed7225a998b720de2a3d54ab7734df7b4627c610f97221ae72cc64",
+    "src/street-reflections.js": "fb5d9bb320b76a97dd490497a3d4e5db7de5806e20f3a722c126e10dde4b8c2e"
+  },
+  "sourceAfter": "41c4fa8e5e84cc2a9e0087deb2097059a4aa95d2",
+  "checks": [
+    {
+      "name": "all 23 plants replaced; no clump material remains",
+      "passed": true
+    },
+    {
+      "name": "all existing clear rectangles and six stair geometries remain",
+      "passed": true
+    },
+    {
+      "name": "station texture cache remains unchanged",
+      "passed": true
+    },
+    {
+      "name": "material and texture cost is the actual deduplicated set",
+      "passed": true
+    },
+    {
+      "name": "independent owners dispose each actual resource once; borrowed textures survive",
+      "passed": true
+    }
+  ],
+  "continuous": [
+    {
+      "name": "town-apartment-4f-hedge--6.000000000000001",
+      "raysHit": 250,
+      "canopyTriangles": 1696,
+      "cards": 1718,
+      "bounds": {
+        "min": [
+          -6.111826277586099,
+          3.6670249892605753,
+          -121.72654520656057
+        ],
+        "max": [
+          0.6032297057227672,
+          4.922774265403196,
+          -120.8725689843259
+        ]
+      }
+    },
+    {
+      "name": "town-apartment-4f-hedge-3.5",
+      "raysHit": 172,
+      "canopyTriangles": 1216,
+      "cards": 1207,
+      "bounds": {
+        "min": [
+          3.377977578061564,
+          3.3501004827684966,
+          -121.72912566346797
+        ],
+        "max": [
+          8.162035094146473,
+          4.339600041705811,
+          -120.87399151555462
+        ]
+      }
+    }
+  ],
+  "sampling": "Two horizontal rays per 5 cm of hedge length at 0.22 and 0.42 metres above terrain, excluding 12 cm rounded tips. Stairs/clearance and resource ownership checked in the whole city.",
+  "actualTriangles": 80758,
+  "counts": {
+    "cards": 4940,
+    "plantTriangles": 35040,
+    "canopyTriangles": 2912,
+    "ownedTextures": 10,
+    "newTexturePixels": 10485760
+  },
+  "disposal": {
+    "materials": {
+      "resources": 38,
+      "counts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "geometries": {
+      "resources": 43,
+      "counts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "textures": {
+      "resources": 10,
+      "counts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "instances": {
+      "resources": 8,
+      "counts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    }
+  },
+  "borrowedTextureDisposeEvents": 0,
+  "scope": [
+    "Actual whole-city geometry, original terrain and real material factories. See source hashes.",
+    "Canvas draw and JPEG image pixels mocked; image files exist but GPU texture contents/shaders/visual quality are not validated.",
+    "Mock renderer exposes anisotropy only, no WebGL context. No GPU/performance/photographic acceptance.",
+    "This pass preserves and checks existing six stair clearances; no new physics enabled for background city."
+  ]
+}

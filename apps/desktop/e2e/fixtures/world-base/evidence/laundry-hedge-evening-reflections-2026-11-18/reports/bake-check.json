@@ -1,0 +1,83 @@
+{
+  "sourceHead": "41c4fa8e5e84cc2a9e0087deb2097059a4aa95d2",
+  "total": 393216,
+  "limited": 98,
+  "sourceMax": 5.0390625,
+  "mappedMax": 2,
+  "maxQuantizationError": 0.007643018004986013,
+  "method": "Every RGBA8 PNG pixel independently reconstructed from original float16. Unaffected HDR samples verified unchanged before quantization. Over-range colours scaled together in scene-linear RGB.",
+  "faces": [
+    {
+      "face": "px",
+      "texels": 65536,
+      "limited": 16,
+      "sourceMax": 2.939453125,
+      "mappedMax": 2,
+      "decodedMax": 2,
+      "maxQuantizationError": 0.006545876766187675,
+      "differentFromAfternoon": 65108,
+      "faceSha256": "a9c371f9af03b3bc7c2fbd02c3d9a42b53e6019e323f661f888346d91b4a30ca",
+      "sourceHDRsha256": "1659f91cdf931fc08524901a812690e772abd50b1f190fad173742d96b99931e"
+    },
+    {
+      "face": "nx",
+      "texels": 65536,
+      "limited": 47,
+      "sourceMax": 2.728515625,
+      "mappedMax": 2,
+      "decodedMax": 2,
+      "maxQuantizationError": 0.007643018004986013,
+      "differentFromAfternoon": 63232,
+      "faceSha256": "57ce3526a4a5e58a3525ca6b863ce2d76a8a44494d823dd6af1620980729f338",
+      "sourceHDRsha256": "665ed35963694ba7e8e56ae9e05105b2f4964e9158e718d3badf87c7fa596686"
+    },
+    {
+      "face": "py",
+      "texels": 65536,
+      "limited": 0,
+      "sourceMax": 1.392578125,
+      "mappedMax": 1.392578125,
+      "decodedMax": 1.3877435225839798,
+      "maxQuantizationError": 0.007125998233812325,
+      "differentFromAfternoon": 64213,
+      "faceSha256": "d287e185b48aa2364bd54f1a8f9f1bc01dcdef9b345feef41f047467caf214a3",
+      "sourceHDRsha256": "cc7aecb267cc14dc7d18ffc6718a7f64d46a2449d966deb46dac91dbb5d3bc72"
+    },
+    {
+      "face": "ny",
+      "texels": 65536,
+      "limited": 0,
+      "sourceMax": 0.185791015625,
+      "mappedMax": 0.185791015625,
+      "decodedMax": 0.1861179256933749,
+      "maxQuantizationError": 0.0021579647558749027,
+      "differentFromAfternoon": 65536,
+      "faceSha256": "99534baa04a60156502c6dca7c07da468f5d3203866de8530904d48851cd294e",
+      "sourceHDRsha256": "72d3abff3f5e9f6c7b6e93fc89a3c9e2ab433b518b59de0cd0aa77598dd7b40d"
+    },
+    {
+      "face": "pz",
+      "texels": 65536,
+      "limited": 26,
+      "sourceMax": 2.939453125,
+      "mappedMax": 2,
+      "decodedMax": 2,
+      "maxQuantizationError": 0.00746985066623429,
+      "differentFromAfternoon": 64827,
+      "faceSha256": "b142b174ca3630e0cfb6498a01a29166e3c5d5e85e0274e52e5347f84208709e",
+      "sourceHDRsha256": "f17964872801a20e4474fa4b273e08a4fcc46f5742bb880cffc38cb8f19b04b1"
+    },
+    {
+      "face": "nz",
+      "texels": 65536,
+      "limited": 9,
+      "sourceMax": 5.0390625,
+      "mappedMax": 2,
+      "decodedMax": 2,
+      "maxQuantizationError": 0.007643018004986013,
+      "differentFromAfternoon": 63923,
+      "faceSha256": "67bcf1712eb52d99e0f9a026e364e059a8d5bfc50e0ebab34e6aca8d02f167f7",
+      "sourceHDRsha256": "164088372e32ecca5cf0462ff3a540daa843ec2532f809e36fd97b029f690abb"
+    }
+  ]
+}
