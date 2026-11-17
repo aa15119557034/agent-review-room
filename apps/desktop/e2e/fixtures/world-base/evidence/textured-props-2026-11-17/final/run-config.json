@@ -1,0 +1,25 @@
+{
+  "scene": "combined",
+  "fixture": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base",
+  "output": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-props-c8-framing-fixed",
+  "runtime": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-props-c8-framing-fixed\\runtime-OkPYaM",
+  "source": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base",
+  "preview": false,
+  "videoOnly": false,
+  "ffmpeg": null,
+  "width": 1440,
+  "height": 900,
+  "sampleMs": 15000,
+  "warmupMs": 5000,
+  "timeoutMs": 180000,
+  "videoMs": 0,
+  "query": "",
+  "proxy": "",
+  "startedAt": "2026-11-17T07:17:49.690Z",
+  "entrySha256": "74d6b0e94e7235e32554b49da4e161c4afbfc9c0459ddf25c25dcbb8fe65e126",
+  "sourceManifest": {
+    "file": "source-manifest.json",
+    "head": "38087c701e41279b1d4c5721ba4d7b1e16eef0e9",
+    "sha256": "ab41932ae51c0cd0a589e0a142fcc43d7a1d963a79879d41499126be3a4be787"
+  }
+}

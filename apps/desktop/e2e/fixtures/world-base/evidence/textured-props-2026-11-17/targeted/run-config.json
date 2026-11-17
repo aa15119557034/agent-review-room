@@ -1,0 +1,8 @@
+{
+  "fixture": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base",
+  "output": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-props-c8-integration-v1",
+  "runtime": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-props-c8-integration-v1\\runtime-qxJXlk",
+  "startedAt": "2026-11-17T07:00:23.535Z",
+  "timeoutMs": 240000,
+  "driverSha256": "4573bb8f3cea5cd636425eff8b68d78890499b379b05d448b3d2a25d92dbd5bc"
+}

@@ -1,0 +1,31 @@
+{
+  "purpose": "One CPU-only Electron entry-semantics probe; no BrowserWindow, app.whenReady, renderer, asset fetch, canvas or WebGL.",
+  "executable": "D:/codex/2026-11-16/world-implementation/runtime-path-probe/electron.exe",
+  "exeSha256": "c99a56d653220a8bf209b0b9ae2424ec1f1580946d1bf3395a968eb211a4f1b5",
+  "args": [
+    "D:/codex/2026-11-16/world-implementation/handoff/x51-c8-transport-entry-probe/entry.cjs"
+  ],
+  "cwd": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base",
+  "driverSha256": "f4897a462e444bbb1b9d522263a35db7291ac626f690bf5f3c89b853456e34bb",
+  "fixtureScriptSha256": "07d717503cd749d2b9949f801a3ff90e47cc4456926715e85e23b0dc0e1d2210",
+  "environmentKeys": [
+    "SYSTEMROOT",
+    "WINDIR",
+    "SYSTEMDRIVE",
+    "PATH",
+    "LOCALAPPDATA",
+    "APPDATA",
+    "USERPROFILE",
+    "TEMP",
+    "TMP"
+  ],
+  "environmentWhitelistValues": {
+    "LOCALAPPDATA": "D:\\codex\\2026-11-16\\world-implementation\\handoff\\x51-c8-transport-entry-probe\\runtime\\local",
+    "APPDATA": "D:\\codex\\2026-11-16\\world-implementation\\handoff\\x51-c8-transport-entry-probe\\runtime\\roaming",
+    "USERPROFILE": "D:\\codex\\2026-11-16\\world-implementation\\handoff\\x51-c8-transport-entry-probe\\runtime\\profile",
+    "TEMP": "D:\\codex\\2026-11-16\\world-implementation\\handoff\\x51-c8-transport-entry-probe\\runtime\\temp",
+    "TMP": "D:\\codex\\2026-11-16\\world-implementation\\handoff\\x51-c8-transport-entry-probe\\runtime\\temp"
+  },
+  "electronRunAsNodePresent": false,
+  "startedAt": "2026-11-17T06:38:54.789Z"
+}

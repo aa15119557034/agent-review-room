@@ -1,0 +1,3784 @@
+{
+  "sourceCommit": "5cf3ef7d784ff069b87fef9b8051de63b6695e48",
+  "sourceVerification": {
+    "commit": "5cf3ef7d784ff069b87fef9b8051de63b6695e48",
+    "manifestSha256": "27df22b138e5cbb5de9392a9a5d0e17d338c9a8e69ab00ada802c834d290293a",
+    "trackedFilesVerifiedAgainstCommit": 204,
+    "ignoredFilesVerifiedAgainstPinnedManifestAndDisk": 9,
+    "separatePropManifestFilesVerified": 9
+  },
+  "stage": "complete",
+  "completedAt": "2026-11-17T07:01:45.204Z",
+  "ok": false,
+  "renderOk": true,
+  "transportClean": false,
+  "versions": {
+    "node": "24.22.0",
+    "acorn": "8.18.0",
+    "ada": "4.0.0",
+    "amaro": "1.1.11",
+    "ares": "1.34.8",
+    "brotli": "1.2.0",
+    "cldr": "48.0",
+    "icu": "78.2",
+    "llhttp": "9.4.3",
+    "merve": "1.2.2",
+    "modules": "149",
+    "napi": "10",
+    "nbytes": "0.1.4",
+    "ncrypto": "0.0.1",
+    "nghttp2": "1.70.0",
+    "nghttp3": "",
+    "ngtcp2": "",
+    "openssl": "0.0.0",
+    "simdjson": "4.6.11",
+    "simdutf": "7.7.0",
+    "sqlite": "3.53.4",
+    "tz": "2026d",
+    "undici": "7.29.1",
+    "unicode": "17.0",
+    "uv": "1.52.1",
+    "uvwasi": "0.0.23",
+    "v8": "15.2.124.43-electron.0",
+    "zlib": "1.3.2.1-motley",
+    "zstd": "1.6.0",
+    "electron": "44.9.0",
+    "chrome": "152.0.7977.167"
+  },
+  "performance": [
+    {
+      "phase": "A1",
+      "view": "station-street",
+      "ao": 0.55,
+      "warmupMs": 2000.0999999999985,
+      "sampleMs": 5015.300000000003,
+      "frameCount": 326,
+      "fps": 65.0010966442685,
+      "frozen": {
+        "camera": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58,
+        "time": 14,
+        "quality": "medium",
+        "terrainNodes": 200,
+        "shells": [
+          {
+            "kind": "grass",
+            "active": 0
+          },
+          {
+            "kind": "grass",
+            "active": 0
+          },
+          {
+            "kind": "grass",
+            "active": 10
+          },
+          {
+            "kind": "flower",
+            "active": 0
+          },
+          {
+            "kind": "flower",
+            "active": 0
+          },
+          {
+            "kind": "flower",
+            "active": 9
+          },
+          {
+            "kind": "flower",
+            "active": 13
+          }
+        ]
+      },
+      "timeAfter": 14,
+      "method": "Native RAF manual renders with main RAF frozen, dt0/time14, WebGL draw-call wrappers across all passes; wrapper and diagnostic overhead included; no station/walker/island per-frame updates. Tests AO contribution only; shadows4096 and props unchanged. Unsupported extension draw paths: ANGLE_instanced_arrays/WEBGL_multi_draw.",
+      "framesFile": "frames-station-street-A1.json"
+    },
+    {
+      "phase": "B",
+      "view": "station-street",
+      "ao": 0,
+      "warmupMs": 2000,
+      "sampleMs": 5000,
+      "frameCount": 325,
+      "fps": 65,
+      "frozen": {
+        "camera": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58,
+        "time": 14,
+        "quality": "medium",
+        "terrainNodes": 200,
+        "shells": [
+          {
+            "kind": "grass",
+            "active": 0
+          },
+          {
+            "kind": "grass",
+            "active": 0
+          },
+          {
+            "kind": "grass",
+            "active": 10
+          },
+          {
+            "kind": "flower",
+            "active": 0
+          },
+          {
+            "kind": "flower",
+            "active": 0
+          },
+          {
+            "kind": "flower",
+            "active": 9
+          },
+          {
+            "kind": "flower",
+            "active": 13
+          }
+        ]
+      },
+      "timeAfter": 14,
+      "method": "Native RAF manual renders with main RAF frozen, dt0/time14, WebGL draw-call wrappers across all passes; wrapper and diagnostic overhead included; no station/walker/island per-frame updates. Tests AO contribution only; shadows4096 and props unchanged. Unsupported extension draw paths: ANGLE_instanced_arrays/WEBGL_multi_draw.",
+      "framesFile": "frames-station-street-B.json"
+    },
+    {
+      "phase": "A2",
+      "view": "station-street",
+      "ao": 0.55,
+      "warmupMs": 2000,
+      "sampleMs": 5015.300000000003,
+      "frameCount": 326,
+      "fps": 65.0010966442685,
+      "frozen": {
+        "camera": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58,
+        "time": 14,
+        "quality": "medium",
+        "terrainNodes": 200,
+        "shells": [
+          {
+            "kind": "grass",
+            "active": 0
+          },
+          {
+            "kind": "grass",
+            "active": 0
+          },
+          {
+            "kind": "grass",
+            "active": 10
+          },
+          {
+            "kind": "flower",
+            "active": 0
+          },
+          {
+            "kind": "flower",
+            "active": 0
+          },
+          {
+            "kind": "flower",
+            "active": 9
+          },
+          {
+            "kind": "flower",
+            "active": 13
+          }
+        ]
+      },
+      "timeAfter": 14,
+      "method": "Native RAF manual renders with main RAF frozen, dt0/time14, WebGL draw-call wrappers across all passes; wrapper and diagnostic overhead included; no station/walker/island per-frame updates. Tests AO contribution only; shadows4096 and props unchanged. Unsupported extension draw paths: ANGLE_instanced_arrays/WEBGL_multi_draw.",
+      "framesFile": "frames-station-street-A2.json"
+    },
+    {
+      "phase": "A1",
+      "view": "island-aerial",
+      "ao": 0.55,
+      "warmupMs": 2000,
+      "sampleMs": 5000.0999999999985,
+      "frameCount": 325,
+      "fps": 64.9987000259995,
+      "frozen": {
+        "camera": [
+          2100,
+          2350,
+          2450
+        ],
+        "quaternion": [
+          -0.27043683246052963,
+          0.3343071089193487,
+          0.10076912073943207,
+          0.8971890886987558
+        ],
+        "fov": 58,
+        "time": 14,
+        "quality": "medium",
+        "terrainNodes": 41,
+        "shells": [
+          {
+            "kind": "grass",
+            "active": 0
+          },
+          {
+            "kind": "grass",
+            "active": 0
+          },
+          {
+            "kind": "grass",
+            "active": 0
+          },
+          {
+            "kind": "flower",
+            "active": 0
+          },
+          {
+            "kind": "flower",
+            "active": 0
+          },
+          {
+            "kind": "flower",
+            "active": 0
+          },
+          {
+            "kind": "flower",
+            "active": 0
+          }
+        ]
+      },
+      "timeAfter": 14,
+      "method": "Native RAF manual renders with main RAF frozen, dt0/time14, WebGL draw-call wrappers across all passes; wrapper and diagnostic overhead included; no station/walker/island per-frame updates. Tests AO contribution only; shadows4096 and props unchanged. Unsupported extension draw paths: ANGLE_instanced_arrays/WEBGL_multi_draw.",
+      "framesFile": "frames-island-aerial-A1.json"
+    },
+    {
+      "phase": "B",
+      "view": "island-aerial",
+      "ao": 0,
+      "warmupMs": 2015.300000000003,
+      "sampleMs": 5015.300000000003,
+      "frameCount": 326,
+      "fps": 65.0010966442685,
+      "frozen": {
+        "camera": [
+          2100,
+          2350,
+          2450
+        ],
+        "quaternion": [
+          -0.27043683246052963,
+          0.3343071089193487,
+          0.10076912073943207,
+          0.8971890886987558
+        ],
+        "fov": 58,
+        "time": 14,
+        "quality": "medium",
+        "terrainNodes": 41,
+        "shells": [
+          {
+            "kind": "grass",
+            "active": 0
+          },
+          {
+            "kind": "grass",
+            "active": 0
+          },
+          {
+            "kind": "grass",
+            "active": 0
+          },
+          {
+            "kind": "flower",
+            "active": 0
+          },
+          {
+            "kind": "flower",
+            "active": 0
+          },
+          {
+            "kind": "flower",
+            "active": 0
+          },
+          {
+            "kind": "flower",
+            "active": 0
+          }
+        ]
+      },
+      "timeAfter": 14,
+      "method": "Native RAF manual renders with main RAF frozen, dt0/time14, WebGL draw-call wrappers across all passes; wrapper and diagnostic overhead included; no station/walker/island per-frame updates. Tests AO contribution only; shadows4096 and props unchanged. Unsupported extension draw paths: ANGLE_instanced_arrays/WEBGL_multi_draw.",
+      "framesFile": "frames-island-aerial-B.json"
+    },
+    {
+      "phase": "A2",
+      "view": "island-aerial",
+      "ao": 0.55,
+      "warmupMs": 2000,
+      "sampleMs": 5000.100000000006,
+      "frameCount": 323,
+      "fps": 64.59870802583941,
+      "frozen": {
+        "camera": [
+          2100,
+          2350,
+          2450
+        ],
+        "quaternion": [
+          -0.27043683246052963,
+          0.3343071089193487,
+          0.10076912073943207,
+          0.8971890886987558
+        ],
+        "fov": 58,
+        "time": 14,
+        "quality": "medium",
+        "terrainNodes": 41,
+        "shells": [
+          {
+            "kind": "grass",
+            "active": 0
+          },
+          {
+            "kind": "grass",
+            "active": 0
+          },
+          {
+            "kind": "grass",
+            "active": 0
+          },
+          {
+            "kind": "flower",
+            "active": 0
+          },
+          {
+            "kind": "flower",
+            "active": 0
+          },
+          {
+            "kind": "flower",
+            "active": 0
+          },
+          {
+            "kind": "flower",
+            "active": 0
+          }
+        ]
+      },
+      "timeAfter": 14,
+      "method": "Native RAF manual renders with main RAF frozen, dt0/time14, WebGL draw-call wrappers across all passes; wrapper and diagnostic overhead included; no station/walker/island per-frame updates. Tests AO contribution only; shadows4096 and props unchanged. Unsupported extension draw paths: ANGLE_instanced_arrays/WEBGL_multi_draw.",
+      "framesFile": "frames-island-aerial-A2.json"
+    }
+  ],
+  "sourceUnchanged": true,
+  "driverUnchanged": true,
+  "changedSourceFiles": [],
+  "restore": {
+    "hookCountRestored": 3,
+    "view": "station-street",
+    "fov": 58,
+    "walking": false,
+    "feet": [
+      281.6,
+      8.812,
+      934
+    ],
+    "time": 34.392300000000006,
+    "frozen": false
+  },
+  "assetsUnchanged": true,
+  "assetFiles": 9,
+  "integration": {
+    "checks": [
+      {
+        "name": "two original shed panel surfaces retain replacement material after batching",
+        "passed": true,
+        "evidence": {
+          "panels": [
+            {
+              "center": [
+                23.65,
+                1.025,
+                -28.688
+              ],
+              "size": [
+                1.12,
+                1.65,
+                0.02
+              ],
+              "triangles": 12
+            },
+            {
+              "center": [
+                24.7,
+                1.025,
+                -28.67
+              ],
+              "size": [
+                1.12,
+                1.65,
+                0.02
+              ],
+              "triangles": 12
+            }
+          ],
+          "renderMeshes": 1
+        }
+      },
+      {
+        "name": "replacement shutter has loaded diffuse/normal/ARM maps",
+        "passed": true,
+        "evidence": [
+          {
+            "uuid": "f414d624-24d5-4cae-a500-7eef956c0bcf",
+            "name": "tool-shed-worn-shutter",
+            "type": "MeshStandardMaterial",
+            "vertexColors": false,
+            "metalness": 1,
+            "roughness": 1,
+            "aoMapIntensity": 1,
+            "envMap": false,
+            "sceneEnvironment": false,
+            "alphaTest": 0,
+            "transparent": false,
+            "depthWrite": true,
+            "normalScale": [
+              1,
+              1
+            ],
+            "clippingPlanes": 4,
+            "maps": {
+              "map": {
+                "uuid": "c4395ce1-497e-4a60-beb9-3b5ca34f329f",
+                "type": 1009,
+                "colorSpace": "srgb",
+                "flipY": true,
+                "channel": 0,
+                "image": {
+                  "width": 1024,
+                  "height": 1024
+                },
+                "repeat": [
+                  0.8175182481751825,
+                  1.2043795620437954
+                ],
+                "url": "http://127.0.0.1:59194/prop-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg"
+              },
+              "alphaMap": null,
+              "normalMap": {
+                "uuid": "c77973be-b56c-47de-88fb-3b019d9ae6cd",
+                "type": 1009,
+                "colorSpace": "",
+                "flipY": true,
+                "channel": 0,
+                "image": {
+                  "width": 1024,
+                  "height": 1024
+                },
+                "repeat": [
+                  0.8175182481751825,
+                  1.2043795620437954
+                ],
+                "url": "http://127.0.0.1:59194/prop-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg"
+              },
+              "roughnessMap": {
+                "uuid": "1ac6c350-15b8-4deb-8629-0dc95af2d754",
+                "type": 1009,
+                "colorSpace": "",
+                "flipY": true,
+                "channel": 0,
+                "image": {
+                  "width": 1024,
+                  "height": 1024
+                },
+                "repeat": [
+                  0.8175182481751825,
+                  1.2043795620437954
+                ],
+                "url": "http://127.0.0.1:59194/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+              },
+              "metalnessMap": {
+                "uuid": "1ac6c350-15b8-4deb-8629-0dc95af2d754",
+                "type": 1009,
+                "colorSpace": "",
+                "flipY": true,
+                "channel": 0,
+                "image": {
+                  "width": 1024,
+                  "height": 1024
+                },
+                "repeat": [
+                  0.8175182481751825,
+                  1.2043795620437954
+                ],
+                "url": "http://127.0.0.1:59194/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+              },
+              "aoMap": {
+                "uuid": "1ac6c350-15b8-4deb-8629-0dc95af2d754",
+                "type": 1009,
+                "colorSpace": "",
+                "flipY": true,
+                "channel": 0,
+                "image": {
+                  "width": 1024,
+                  "height": 1024
+                },
+                "repeat": [
+                  0.8175182481751825,
+                  1.2043795620437954
+                ],
+                "url": "http://127.0.0.1:59194/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "station crate retains source dimensions and cutout material",
+        "passed": true,
+        "evidence": {
+          "name": "station-textured-service-props",
+          "bounds": {
+            "worldMin": [
+              305.7972493052483,
+              8.012,
+              871.447249302268
+            ],
+            "worldMax": [
+              306.30275069475175,
+              8.266089161753655,
+              871.852750697732
+            ],
+            "size": [
+              0.505501389503479,
+              0.2540891617536545,
+              0.4055013954639435
+            ],
+            "position": [
+              26.05,
+              0.012015959143638611,
+              -28.35
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "matrixWorld": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              306.05,
+              8.012015959143639,
+              871.65,
+              1
+            ]
+          },
+          "meshes": [
+            {
+              "uuid": "436af978-8146-4fae-813f-c896a47658a9",
+              "geometry": "eab6aeb1-7b1a-453e-b3b0-430239d5a789",
+              "triangles": 5840,
+              "material": {
+                "uuid": "781a4bdf-f13c-4775-b489-9254cd354f5b",
+                "name": "plastic-crate-02-official-cutout",
+                "type": "MeshStandardMaterial",
+                "vertexColors": false,
+                "metalness": 0,
+                "roughness": 1,
+                "aoMapIntensity": 1,
+                "envMap": false,
+                "sceneEnvironment": false,
+                "alphaTest": 0.5,
+                "transparent": false,
+                "depthWrite": true,
+                "normalScale": [
+                  1,
+                  -1
+                ],
+                "clippingPlanes": 4,
+                "maps": {
+                  "map": {
+                    "uuid": "7536089f-c5b6-4e79-9713-1da53a572447",
+                    "type": 1009,
+                    "colorSpace": "srgb",
+                    "flipY": false,
+                    "channel": 0,
+                    "image": {
+                      "width": 1024,
+                      "height": 1024
+                    },
+                    "repeat": [
+                      1,
+                      1
+                    ],
+                    "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_diff_1k.jpg"
+                  },
+                  "alphaMap": {
+                    "uuid": "ae75d391-3c6e-4d6d-b650-a704d2d6eb6e",
+                    "type": 1009,
+                    "colorSpace": "",
+                    "flipY": false,
+                    "channel": 0,
+                    "image": {
+                      "width": 1024,
+                      "height": 1024
+                    },
+                    "repeat": [
+                      1,
+                      1
+                    ],
+                    "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_opacity_1k.png"
+                  },
+                  "normalMap": {
+                    "uuid": "00923ba8-efa7-43a1-bac1-15fd4aac3f63",
+                    "type": 1009,
+                    "colorSpace": "",
+                    "flipY": false,
+                    "channel": 0,
+                    "image": {
+                      "width": 1024,
+                      "height": 1024
+                    },
+                    "repeat": [
+                      1,
+                      1
+                    ],
+                    "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_nor_gl_1k.jpg"
+                  },
+                  "roughnessMap": {
+                    "uuid": "79aaa2d2-4dbd-4e6d-b6c5-dc5dbc603145",
+                    "type": 1009,
+                    "colorSpace": "",
+                    "flipY": false,
+                    "channel": 0,
+                    "image": {
+                      "width": 1024,
+                      "height": 1024
+                    },
+                    "repeat": [
+                      1,
+                      1
+                    ],
+                    "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg"
+                  },
+                  "metalnessMap": {
+                    "uuid": "79aaa2d2-4dbd-4e6d-b6c5-dc5dbc603145",
+                    "type": 1009,
+                    "colorSpace": "",
+                    "flipY": false,
+                    "channel": 0,
+                    "image": {
+                      "width": 1024,
+                      "height": 1024
+                    },
+                    "repeat": [
+                      1,
+                      1
+                    ],
+                    "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg"
+                  },
+                  "aoMap": null
+                }
+              },
+              "uv": {
+                "count": 4744,
+                "min": [
+                  0.003901209682226181,
+                  0.004015207290649414
+                ],
+                "max": [
+                  0.9960395097732544,
+                  0.9960993528366089
+                ],
+                "uv1": false,
+                "uv2": false
+              },
+              "castShadow": true,
+              "receiveShadow": true
+            }
+          ]
+        }
+      },
+      {
+        "name": "city clone owns geometry/material while borrowing source textures without station clip",
+        "passed": true,
+        "evidence": {
+          "relations": [
+            {
+              "geometryIndependent": true,
+              "materialIndependent": true,
+              "mapsBorrowed": true,
+              "normalScalePreserved": true,
+              "noStationClip": true,
+              "triangles": 5840
+            }
+          ],
+          "city": {
+            "name": "city-textured-crate",
+            "bounds": {
+              "worldMin": [
+                285.2972493052483,
+                12.784808464050293,
+                777.217249302268
+              ],
+              "worldMax": [
+                285.80275069475175,
+                13.038897625803948,
+                777.6227506977319
+              ],
+              "size": [
+                0.505501389503479,
+                0.2540891617536545,
+                0.4055013954639435
+              ],
+              "position": [
+                5.55,
+                4.784824423193932,
+                -122.58
+              ],
+              "quaternion": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "matrixWorld": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                285.55,
+                12.784824423193932,
+                777.42,
+                1
+              ]
+            },
+            "meshes": [
+              {
+                "uuid": "b035cc03-5eac-4af7-a7a1-504c9ee12c45",
+                "geometry": "31e8db8c-bf7c-4796-b49e-32dfcf19ff27",
+                "triangles": 5840,
+                "material": {
+                  "uuid": "3e422f9e-34aa-4b4e-8dc8-ed0fd8e7e0a6",
+                  "name": "plastic-crate-02-official-cutout",
+                  "type": "MeshStandardMaterial",
+                  "vertexColors": false,
+                  "metalness": 0,
+                  "roughness": 1,
+                  "aoMapIntensity": 1,
+                  "envMap": false,
+                  "sceneEnvironment": false,
+                  "alphaTest": 0.5,
+                  "transparent": false,
+                  "depthWrite": true,
+                  "normalScale": [
+                    1,
+                    -1
+                  ],
+                  "clippingPlanes": 0,
+                  "maps": {
+                    "map": {
+                      "uuid": "7536089f-c5b6-4e79-9713-1da53a572447",
+                      "type": 1009,
+                      "colorSpace": "srgb",
+                      "flipY": false,
+                      "channel": 0,
+                      "image": {
+                        "width": 1024,
+                        "height": 1024
+                      },
+                      "repeat": [
+                        1,
+                        1
+                      ],
+                      "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_diff_1k.jpg"
+                    },
+                    "alphaMap": {
+                      "uuid": "ae75d391-3c6e-4d6d-b650-a704d2d6eb6e",
+                      "type": 1009,
+                      "colorSpace": "",
+                      "flipY": false,
+                      "channel": 0,
+                      "image": {
+                        "width": 1024,
+                        "height": 1024
+                      },
+                      "repeat": [
+                        1,
+                        1
+                      ],
+                      "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_opacity_1k.png"
+                    },
+                    "normalMap": {
+                      "uuid": "00923ba8-efa7-43a1-bac1-15fd4aac3f63",
+                      "type": 1009,
+                      "colorSpace": "",
+                      "flipY": false,
+                      "channel": 0,
+                      "image": {
+                        "width": 1024,
+                        "height": 1024
+                      },
+                      "repeat": [
+                        1,
+                        1
+                      ],
+                      "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_nor_gl_1k.jpg"
+                    },
+                    "roughnessMap": {
+                      "uuid": "79aaa2d2-4dbd-4e6d-b6c5-dc5dbc603145",
+                      "type": 1009,
+                      "colorSpace": "",
+                      "flipY": false,
+                      "channel": 0,
+                      "image": {
+                        "width": 1024,
+                        "height": 1024
+                      },
+                      "repeat": [
+                        1,
+                        1
+                      ],
+                      "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg"
+                    },
+                    "metalnessMap": {
+                      "uuid": "79aaa2d2-4dbd-4e6d-b6c5-dc5dbc603145",
+                      "type": 1009,
+                      "colorSpace": "",
+                      "flipY": false,
+                      "channel": 0,
+                      "image": {
+                        "width": 1024,
+                        "height": 1024
+                      },
+                      "repeat": [
+                        1,
+                        1
+                      ],
+                      "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg"
+                    },
+                    "aoMap": null
+                  }
+                },
+                "uv": {
+                  "count": 4744,
+                  "min": [
+                    0.003901209682226181,
+                    0.004015207290649414
+                  ],
+                  "max": [
+                    0.9960395097732544,
+                    0.9960993528366089
+                  ],
+                  "uv1": false,
+                  "uv2": false
+                },
+                "castShadow": true,
+                "receiveShadow": true
+              }
+            ]
+          },
+          "walkable": false,
+          "limitation": "Identity/lifetime contract inspection only; city.dispose is not invoked in a restorable live scene."
+        }
+      },
+      {
+        "name": "town detail remains background-only",
+        "passed": true,
+        "evidence": {
+          "townWalkable": false,
+          "connectionsWalkable": false,
+          "stationBounds": {
+            "x0": -92,
+            "x1": 92,
+            "z0": -97,
+            "z1": 128
+          }
+        }
+      },
+      {
+        "name": "real service stack collider blocks capsule approach while front point is clear",
+        "passed": true,
+        "evidence": {
+          "collision": {
+            "x": 26.05,
+            "z": -28.35,
+            "width": 0.58,
+            "depth": 0.46,
+            "y0": 0.012,
+            "y1": 0.5460891617536545
+          },
+          "matchingColliders": 1,
+          "center": {
+            "input": [
+              26.05,
+              -28.35,
+              0
+            ],
+            "output": [
+              26.05,
+              -27.82
+            ],
+            "correction": 0.5300000000000011
+          },
+          "front": {
+            "input": [
+              26.05,
+              -27.150000000000002,
+              0
+            ],
+            "output": [
+              26.05,
+              -27.150000000000002
+            ],
+            "correction": 0
+          },
+          "resolvedSteps": [
+            [
+              26.05,
+              -27.200000000000003
+            ],
+            [
+              26.05,
+              -27.250000000000004
+            ],
+            [
+              26.05,
+              -27.300000000000004
+            ],
+            [
+              26.05,
+              -27.350000000000005
+            ],
+            [
+              26.05,
+              -27.400000000000006
+            ],
+            [
+              26.05,
+              -27.450000000000006
+            ],
+            [
+              26.05,
+              -27.500000000000007
+            ],
+            [
+              26.05,
+              -27.550000000000008
+            ],
+            [
+              26.05,
+              -27.60000000000001
+            ],
+            [
+              26.05,
+              -27.65000000000001
+            ],
+            [
+              26.05,
+              -27.70000000000001
+            ],
+            [
+              26.05,
+              -27.75000000000001
+            ],
+            [
+              26.05,
+              -27.80000000000001
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ]
+          ],
+          "expectedFrontCapsuleBoundary": -27.82,
+          "scope": "Programmatic calls to production station.physics.resolve, not a keyboard walk, no town walkability assertion."
+        }
+      },
+      {
+        "name": "service-corner UI applies configured FOV and camera",
+        "passed": true,
+        "evidence": {
+          "camera": [
+            306.35,
+            9.612,
+            872.9
+          ],
+          "fov": 55,
+          "configured": {
+            "name": "service-corner",
+            "fov": 55,
+            "position": [
+              306.35,
+              9.612,
+              872.9
+            ],
+            "target": [
+              304.4,
+              8.85,
+              871.22
+            ]
+          },
+          "buttonActive": true
+        }
+      },
+      {
+        "name": "service-corner UI walk resets FOV58 and station spawn",
+        "passed": true,
+        "evidence": {
+          "from": "service-corner",
+          "to": "walking",
+          "fov": 58,
+          "enabled": true,
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "spawn": [
+            281.6,
+            8.812,
+            934
+          ]
+        }
+      },
+      {
+        "name": "laundry-details UI applies configured FOV and camera",
+        "passed": true,
+        "evidence": {
+          "camera": [
+            287.8,
+            14.384808464050293,
+            777.85
+          ],
+          "fov": 55,
+          "configured": {
+            "name": "laundry-details",
+            "fov": 55,
+            "position": [
+              287.8,
+              14.384808464050293,
+              777.85
+            ],
+            "target": [
+              283.8,
+              13.814808464050294,
+              776.75
+            ]
+          },
+          "buttonActive": true
+        }
+      },
+      {
+        "name": "laundry-details UI walk resets FOV58 and station spawn",
+        "passed": true,
+        "evidence": {
+          "from": "laundry-details",
+          "to": "walking",
+          "fov": 58,
+          "enabled": true,
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "spawn": [
+            281.6,
+            8.812,
+            934
+          ]
+        }
+      }
+    ],
+    "passed": true
+  },
+  "renderedSubjects": [
+    {
+      "view": "service-corner",
+      "draws": {
+        "stationCrate": 1,
+        "shutters": 1,
+        "cityCrate": 1
+      },
+      "passed": true
+    },
+    {
+      "view": "laundry-details",
+      "draws": {
+        "stationCrate": 0,
+        "shutters": 0,
+        "cityCrate": 1
+      },
+      "passed": true
+    }
+  ],
+  "walkTransitions": [
+    {
+      "from": "service-corner",
+      "to": "walking",
+      "fov": 58,
+      "enabled": true,
+      "feet": [
+        281.6,
+        8.812,
+        934
+      ],
+      "spawn": [
+        281.6,
+        8.812,
+        934
+      ]
+    },
+    {
+      "from": "laundry-details",
+      "to": "walking",
+      "fov": 58,
+      "enabled": true,
+      "feet": [
+        281.6,
+        8.812,
+        934
+      ],
+      "spawn": [
+        281.6,
+        8.812,
+        934
+      ]
+    }
+  ],
+  "networkFailures": [
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "44304.235",
+      "timestamp": 1909016.800241,
+      "type": "Fetch"
+    },
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "44304.240",
+      "timestamp": 1909016.813384,
+      "type": "Fetch"
+    }
+  ],
+  "httpErrors": [],
+  "exceptions": [],
+  "strictExpectedProcessExitFromReport": 1,
+  "exitEvidence": "Expected from driver/report ok, not a persisted OS process exit observation. Preserve console/runner exit separately.",
+  "initial": {
+    "views": [
+      {
+        "name": "service-corner",
+        "fov": 55,
+        "position": [
+          306.35,
+          9.612,
+          872.9
+        ],
+        "target": [
+          304.4,
+          8.85,
+          871.22
+        ]
+      },
+      {
+        "name": "laundry-details",
+        "fov": 55,
+        "position": [
+          287.8,
+          14.384808464050293,
+          777.85
+        ],
+        "target": [
+          283.8,
+          13.814808464050294,
+          776.75
+        ]
+      }
+    ],
+    "checks": [
+      {
+        "name": "two original shed panel surfaces retain replacement material after batching",
+        "passed": true,
+        "evidence": {
+          "panels": [
+            {
+              "center": [
+                23.65,
+                1.025,
+                -28.688
+              ],
+              "size": [
+                1.12,
+                1.65,
+                0.02
+              ],
+              "triangles": 12
+            },
+            {
+              "center": [
+                24.7,
+                1.025,
+                -28.67
+              ],
+              "size": [
+                1.12,
+                1.65,
+                0.02
+              ],
+              "triangles": 12
+            }
+          ],
+          "renderMeshes": 1
+        }
+      },
+      {
+        "name": "replacement shutter has loaded diffuse/normal/ARM maps",
+        "passed": true,
+        "evidence": [
+          {
+            "uuid": "f414d624-24d5-4cae-a500-7eef956c0bcf",
+            "name": "tool-shed-worn-shutter",
+            "type": "MeshStandardMaterial",
+            "vertexColors": false,
+            "metalness": 1,
+            "roughness": 1,
+            "aoMapIntensity": 1,
+            "envMap": false,
+            "sceneEnvironment": false,
+            "alphaTest": 0,
+            "transparent": false,
+            "depthWrite": true,
+            "normalScale": [
+              1,
+              1
+            ],
+            "clippingPlanes": 4,
+            "maps": {
+              "map": {
+                "uuid": "c4395ce1-497e-4a60-beb9-3b5ca34f329f",
+                "type": 1009,
+                "colorSpace": "srgb",
+                "flipY": true,
+                "channel": 0,
+                "image": {
+                  "width": 1024,
+                  "height": 1024
+                },
+                "repeat": [
+                  0.8175182481751825,
+                  1.2043795620437954
+                ],
+                "url": "http://127.0.0.1:59194/prop-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg"
+              },
+              "alphaMap": null,
+              "normalMap": {
+                "uuid": "c77973be-b56c-47de-88fb-3b019d9ae6cd",
+                "type": 1009,
+                "colorSpace": "",
+                "flipY": true,
+                "channel": 0,
+                "image": {
+                  "width": 1024,
+                  "height": 1024
+                },
+                "repeat": [
+                  0.8175182481751825,
+                  1.2043795620437954
+                ],
+                "url": "http://127.0.0.1:59194/prop-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg"
+              },
+              "roughnessMap": {
+                "uuid": "1ac6c350-15b8-4deb-8629-0dc95af2d754",
+                "type": 1009,
+                "colorSpace": "",
+                "flipY": true,
+                "channel": 0,
+                "image": {
+                  "width": 1024,
+                  "height": 1024
+                },
+                "repeat": [
+                  0.8175182481751825,
+                  1.2043795620437954
+                ],
+                "url": "http://127.0.0.1:59194/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+              },
+              "metalnessMap": {
+                "uuid": "1ac6c350-15b8-4deb-8629-0dc95af2d754",
+                "type": 1009,
+                "colorSpace": "",
+                "flipY": true,
+                "channel": 0,
+                "image": {
+                  "width": 1024,
+                  "height": 1024
+                },
+                "repeat": [
+                  0.8175182481751825,
+                  1.2043795620437954
+                ],
+                "url": "http://127.0.0.1:59194/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+              },
+              "aoMap": {
+                "uuid": "1ac6c350-15b8-4deb-8629-0dc95af2d754",
+                "type": 1009,
+                "colorSpace": "",
+                "flipY": true,
+                "channel": 0,
+                "image": {
+                  "width": 1024,
+                  "height": 1024
+                },
+                "repeat": [
+                  0.8175182481751825,
+                  1.2043795620437954
+                ],
+                "url": "http://127.0.0.1:59194/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "station crate retains source dimensions and cutout material",
+        "passed": true,
+        "evidence": {
+          "name": "station-textured-service-props",
+          "bounds": {
+            "worldMin": [
+              305.7972493052483,
+              8.012,
+              871.447249302268
+            ],
+            "worldMax": [
+              306.30275069475175,
+              8.266089161753655,
+              871.852750697732
+            ],
+            "size": [
+              0.505501389503479,
+              0.2540891617536545,
+              0.4055013954639435
+            ],
+            "position": [
+              26.05,
+              0.012015959143638611,
+              -28.35
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "matrixWorld": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              306.05,
+              8.012015959143639,
+              871.65,
+              1
+            ]
+          },
+          "meshes": [
+            {
+              "uuid": "436af978-8146-4fae-813f-c896a47658a9",
+              "geometry": "eab6aeb1-7b1a-453e-b3b0-430239d5a789",
+              "triangles": 5840,
+              "material": {
+                "uuid": "781a4bdf-f13c-4775-b489-9254cd354f5b",
+                "name": "plastic-crate-02-official-cutout",
+                "type": "MeshStandardMaterial",
+                "vertexColors": false,
+                "metalness": 0,
+                "roughness": 1,
+                "aoMapIntensity": 1,
+                "envMap": false,
+                "sceneEnvironment": false,
+                "alphaTest": 0.5,
+                "transparent": false,
+                "depthWrite": true,
+                "normalScale": [
+                  1,
+                  -1
+                ],
+                "clippingPlanes": 4,
+                "maps": {
+                  "map": {
+                    "uuid": "7536089f-c5b6-4e79-9713-1da53a572447",
+                    "type": 1009,
+                    "colorSpace": "srgb",
+                    "flipY": false,
+                    "channel": 0,
+                    "image": {
+                      "width": 1024,
+                      "height": 1024
+                    },
+                    "repeat": [
+                      1,
+                      1
+                    ],
+                    "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_diff_1k.jpg"
+                  },
+                  "alphaMap": {
+                    "uuid": "ae75d391-3c6e-4d6d-b650-a704d2d6eb6e",
+                    "type": 1009,
+                    "colorSpace": "",
+                    "flipY": false,
+                    "channel": 0,
+                    "image": {
+                      "width": 1024,
+                      "height": 1024
+                    },
+                    "repeat": [
+                      1,
+                      1
+                    ],
+                    "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_opacity_1k.png"
+                  },
+                  "normalMap": {
+                    "uuid": "00923ba8-efa7-43a1-bac1-15fd4aac3f63",
+                    "type": 1009,
+                    "colorSpace": "",
+                    "flipY": false,
+                    "channel": 0,
+                    "image": {
+                      "width": 1024,
+                      "height": 1024
+                    },
+                    "repeat": [
+                      1,
+                      1
+                    ],
+                    "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_nor_gl_1k.jpg"
+                  },
+                  "roughnessMap": {
+                    "uuid": "79aaa2d2-4dbd-4e6d-b6c5-dc5dbc603145",
+                    "type": 1009,
+                    "colorSpace": "",
+                    "flipY": false,
+                    "channel": 0,
+                    "image": {
+                      "width": 1024,
+                      "height": 1024
+                    },
+                    "repeat": [
+                      1,
+                      1
+                    ],
+                    "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg"
+                  },
+                  "metalnessMap": {
+                    "uuid": "79aaa2d2-4dbd-4e6d-b6c5-dc5dbc603145",
+                    "type": 1009,
+                    "colorSpace": "",
+                    "flipY": false,
+                    "channel": 0,
+                    "image": {
+                      "width": 1024,
+                      "height": 1024
+                    },
+                    "repeat": [
+                      1,
+                      1
+                    ],
+                    "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg"
+                  },
+                  "aoMap": null
+                }
+              },
+              "uv": {
+                "count": 4744,
+                "min": [
+                  0.003901209682226181,
+                  0.004015207290649414
+                ],
+                "max": [
+                  0.9960395097732544,
+                  0.9960993528366089
+                ],
+                "uv1": false,
+                "uv2": false
+              },
+              "castShadow": true,
+              "receiveShadow": true
+            }
+          ]
+        }
+      },
+      {
+        "name": "city clone owns geometry/material while borrowing source textures without station clip",
+        "passed": true,
+        "evidence": {
+          "relations": [
+            {
+              "geometryIndependent": true,
+              "materialIndependent": true,
+              "mapsBorrowed": true,
+              "normalScalePreserved": true,
+              "noStationClip": true,
+              "triangles": 5840
+            }
+          ],
+          "city": {
+            "name": "city-textured-crate",
+            "bounds": {
+              "worldMin": [
+                285.2972493052483,
+                12.784808464050293,
+                777.217249302268
+              ],
+              "worldMax": [
+                285.80275069475175,
+                13.038897625803948,
+                777.6227506977319
+              ],
+              "size": [
+                0.505501389503479,
+                0.2540891617536545,
+                0.4055013954639435
+              ],
+              "position": [
+                5.55,
+                4.784824423193932,
+                -122.58
+              ],
+              "quaternion": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ],
+              "matrixWorld": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                285.55,
+                12.784824423193932,
+                777.42,
+                1
+              ]
+            },
+            "meshes": [
+              {
+                "uuid": "b035cc03-5eac-4af7-a7a1-504c9ee12c45",
+                "geometry": "31e8db8c-bf7c-4796-b49e-32dfcf19ff27",
+                "triangles": 5840,
+                "material": {
+                  "uuid": "3e422f9e-34aa-4b4e-8dc8-ed0fd8e7e0a6",
+                  "name": "plastic-crate-02-official-cutout",
+                  "type": "MeshStandardMaterial",
+                  "vertexColors": false,
+                  "metalness": 0,
+                  "roughness": 1,
+                  "aoMapIntensity": 1,
+                  "envMap": false,
+                  "sceneEnvironment": false,
+                  "alphaTest": 0.5,
+                  "transparent": false,
+                  "depthWrite": true,
+                  "normalScale": [
+                    1,
+                    -1
+                  ],
+                  "clippingPlanes": 0,
+                  "maps": {
+                    "map": {
+                      "uuid": "7536089f-c5b6-4e79-9713-1da53a572447",
+                      "type": 1009,
+                      "colorSpace": "srgb",
+                      "flipY": false,
+                      "channel": 0,
+                      "image": {
+                        "width": 1024,
+                        "height": 1024
+                      },
+                      "repeat": [
+                        1,
+                        1
+                      ],
+                      "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_diff_1k.jpg"
+                    },
+                    "alphaMap": {
+                      "uuid": "ae75d391-3c6e-4d6d-b650-a704d2d6eb6e",
+                      "type": 1009,
+                      "colorSpace": "",
+                      "flipY": false,
+                      "channel": 0,
+                      "image": {
+                        "width": 1024,
+                        "height": 1024
+                      },
+                      "repeat": [
+                        1,
+                        1
+                      ],
+                      "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_opacity_1k.png"
+                    },
+                    "normalMap": {
+                      "uuid": "00923ba8-efa7-43a1-bac1-15fd4aac3f63",
+                      "type": 1009,
+                      "colorSpace": "",
+                      "flipY": false,
+                      "channel": 0,
+                      "image": {
+                        "width": 1024,
+                        "height": 1024
+                      },
+                      "repeat": [
+                        1,
+                        1
+                      ],
+                      "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_nor_gl_1k.jpg"
+                    },
+                    "roughnessMap": {
+                      "uuid": "79aaa2d2-4dbd-4e6d-b6c5-dc5dbc603145",
+                      "type": 1009,
+                      "colorSpace": "",
+                      "flipY": false,
+                      "channel": 0,
+                      "image": {
+                        "width": 1024,
+                        "height": 1024
+                      },
+                      "repeat": [
+                        1,
+                        1
+                      ],
+                      "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg"
+                    },
+                    "metalnessMap": {
+                      "uuid": "79aaa2d2-4dbd-4e6d-b6c5-dc5dbc603145",
+                      "type": 1009,
+                      "colorSpace": "",
+                      "flipY": false,
+                      "channel": 0,
+                      "image": {
+                        "width": 1024,
+                        "height": 1024
+                      },
+                      "repeat": [
+                        1,
+                        1
+                      ],
+                      "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg"
+                    },
+                    "aoMap": null
+                  }
+                },
+                "uv": {
+                  "count": 4744,
+                  "min": [
+                    0.003901209682226181,
+                    0.004015207290649414
+                  ],
+                  "max": [
+                    0.9960395097732544,
+                    0.9960993528366089
+                  ],
+                  "uv1": false,
+                  "uv2": false
+                },
+                "castShadow": true,
+                "receiveShadow": true
+              }
+            ]
+          },
+          "walkable": false,
+          "limitation": "Identity/lifetime contract inspection only; city.dispose is not invoked in a restorable live scene."
+        }
+      },
+      {
+        "name": "town detail remains background-only",
+        "passed": true,
+        "evidence": {
+          "townWalkable": false,
+          "connectionsWalkable": false,
+          "stationBounds": {
+            "x0": -92,
+            "x1": 92,
+            "z0": -97,
+            "z1": 128
+          }
+        }
+      },
+      {
+        "name": "real service stack collider blocks capsule approach while front point is clear",
+        "passed": true,
+        "evidence": {
+          "collision": {
+            "x": 26.05,
+            "z": -28.35,
+            "width": 0.58,
+            "depth": 0.46,
+            "y0": 0.012,
+            "y1": 0.5460891617536545
+          },
+          "matchingColliders": 1,
+          "center": {
+            "input": [
+              26.05,
+              -28.35,
+              0
+            ],
+            "output": [
+              26.05,
+              -27.82
+            ],
+            "correction": 0.5300000000000011
+          },
+          "front": {
+            "input": [
+              26.05,
+              -27.150000000000002,
+              0
+            ],
+            "output": [
+              26.05,
+              -27.150000000000002
+            ],
+            "correction": 0
+          },
+          "resolvedSteps": [
+            [
+              26.05,
+              -27.200000000000003
+            ],
+            [
+              26.05,
+              -27.250000000000004
+            ],
+            [
+              26.05,
+              -27.300000000000004
+            ],
+            [
+              26.05,
+              -27.350000000000005
+            ],
+            [
+              26.05,
+              -27.400000000000006
+            ],
+            [
+              26.05,
+              -27.450000000000006
+            ],
+            [
+              26.05,
+              -27.500000000000007
+            ],
+            [
+              26.05,
+              -27.550000000000008
+            ],
+            [
+              26.05,
+              -27.60000000000001
+            ],
+            [
+              26.05,
+              -27.65000000000001
+            ],
+            [
+              26.05,
+              -27.70000000000001
+            ],
+            [
+              26.05,
+              -27.75000000000001
+            ],
+            [
+              26.05,
+              -27.80000000000001
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ],
+            [
+              26.05,
+              -27.82
+            ]
+          ],
+          "expectedFrontCapsuleBoundary": -27.82,
+          "scope": "Programmatic calls to production station.physics.resolve, not a keyboard walk, no town walkability assertion."
+        }
+      }
+    ],
+    "stationStats": {
+      "assets": [
+        "plastic_crate_02",
+        "worn_shutter"
+      ],
+      "source": "Poly Haven / CC0-1.0",
+      "crateTriangles": 5840,
+      "cratePrimitives": 1,
+      "ownedTextures": 7,
+      "alphaTest": 0.5,
+      "normalScale": [
+        1,
+        -1
+      ],
+      "shutterPanels": [
+        {
+          "center": [
+            23.65,
+            1.025,
+            -28.688
+          ],
+          "size": [
+            1.12,
+            1.65,
+            0.02
+          ]
+        },
+        {
+          "center": [
+            24.7,
+            1.025,
+            -28.67
+          ],
+          "size": [
+            1.12,
+            1.65,
+            0.02
+          ]
+        }
+      ],
+      "crate": {
+        "position": [
+          26.05,
+          0.012015959143638611,
+          -28.35
+        ],
+        "supportY": 0.012,
+        "bounds": {
+          "min": [
+            -0.2527506947517395,
+            -0.00001595914363861084,
+            -0.20275069773197174
+          ],
+          "max": [
+            0.2527506947517395,
+            0.25407320261001587,
+            0.20275069773197174
+          ],
+          "size": [
+            0.505501389503479,
+            0.2540891617536545,
+            0.4055013954639435
+          ]
+        }
+      },
+      "carton": {
+        "position": [
+          26.05,
+          0.2660891617536545,
+          -28.35
+        ],
+        "size": [
+          0.58,
+          0.28,
+          0.46
+        ]
+      },
+      "collision": {
+        "x": 26.05,
+        "z": -28.35,
+        "width": 0.58,
+        "depth": 0.46,
+        "y0": 0.012,
+        "y1": 0.5460891617536545
+      },
+      "view": {
+        "position": [
+          26.35,
+          1.612,
+          -27.1
+        ],
+        "target": [
+          24.4,
+          0.85,
+          -28.78
+        ]
+      },
+      "ownership": "Station owns source crate geometry, adapted materials and seven textures; city clones geometry/materials and borrows textures. Dispose city first."
+    },
+    "cityStats": {
+      "crate": {
+        "position": [
+          5.55,
+          4.784824423193932,
+          -122.58
+        ],
+        "triangles": 5840
+      },
+      "sign": {
+        "position": [
+          4.55,
+          4.784808464050293,
+          -122.35
+        ],
+        "rotationY": 0.35,
+        "size": [
+          0.45,
+          0.68
+        ],
+        "blank": true
+      },
+      "pot": {
+        "position": [
+          6.25,
+          4.784808464050293,
+          -122.7
+        ],
+        "triangles": 141
+      },
+      "view": {
+        "position": [
+          7.8,
+          6.384808464050293,
+          -122.15
+        ],
+        "target": [
+          3.8,
+          5.8148084640502935,
+          -123.25
+        ]
+      },
+      "walkable": false,
+      "borrowedAssetTextures": 4
+    },
+    "sourceCrate": {
+      "name": "station-textured-service-props",
+      "bounds": {
+        "worldMin": [
+          305.7972493052483,
+          8.012,
+          871.447249302268
+        ],
+        "worldMax": [
+          306.30275069475175,
+          8.266089161753655,
+          871.852750697732
+        ],
+        "size": [
+          0.505501389503479,
+          0.2540891617536545,
+          0.4055013954639435
+        ],
+        "position": [
+          26.05,
+          0.012015959143638611,
+          -28.35
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "matrixWorld": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          306.05,
+          8.012015959143639,
+          871.65,
+          1
+        ]
+      },
+      "meshes": [
+        {
+          "uuid": "436af978-8146-4fae-813f-c896a47658a9",
+          "geometry": "eab6aeb1-7b1a-453e-b3b0-430239d5a789",
+          "triangles": 5840,
+          "material": {
+            "uuid": "781a4bdf-f13c-4775-b489-9254cd354f5b",
+            "name": "plastic-crate-02-official-cutout",
+            "type": "MeshStandardMaterial",
+            "vertexColors": false,
+            "metalness": 0,
+            "roughness": 1,
+            "aoMapIntensity": 1,
+            "envMap": false,
+            "sceneEnvironment": false,
+            "alphaTest": 0.5,
+            "transparent": false,
+            "depthWrite": true,
+            "normalScale": [
+              1,
+              -1
+            ],
+            "clippingPlanes": 4,
+            "maps": {
+              "map": {
+                "uuid": "7536089f-c5b6-4e79-9713-1da53a572447",
+                "type": 1009,
+                "colorSpace": "srgb",
+                "flipY": false,
+                "channel": 0,
+                "image": {
+                  "width": 1024,
+                  "height": 1024
+                },
+                "repeat": [
+                  1,
+                  1
+                ],
+                "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_diff_1k.jpg"
+              },
+              "alphaMap": {
+                "uuid": "ae75d391-3c6e-4d6d-b650-a704d2d6eb6e",
+                "type": 1009,
+                "colorSpace": "",
+                "flipY": false,
+                "channel": 0,
+                "image": {
+                  "width": 1024,
+                  "height": 1024
+                },
+                "repeat": [
+                  1,
+                  1
+                ],
+                "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_opacity_1k.png"
+              },
+              "normalMap": {
+                "uuid": "00923ba8-efa7-43a1-bac1-15fd4aac3f63",
+                "type": 1009,
+                "colorSpace": "",
+                "flipY": false,
+                "channel": 0,
+                "image": {
+                  "width": 1024,
+                  "height": 1024
+                },
+                "repeat": [
+                  1,
+                  1
+                ],
+                "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_nor_gl_1k.jpg"
+              },
+              "roughnessMap": {
+                "uuid": "79aaa2d2-4dbd-4e6d-b6c5-dc5dbc603145",
+                "type": 1009,
+                "colorSpace": "",
+                "flipY": false,
+                "channel": 0,
+                "image": {
+                  "width": 1024,
+                  "height": 1024
+                },
+                "repeat": [
+                  1,
+                  1
+                ],
+                "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg"
+              },
+              "metalnessMap": {
+                "uuid": "79aaa2d2-4dbd-4e6d-b6c5-dc5dbc603145",
+                "type": 1009,
+                "colorSpace": "",
+                "flipY": false,
+                "channel": 0,
+                "image": {
+                  "width": 1024,
+                  "height": 1024
+                },
+                "repeat": [
+                  1,
+                  1
+                ],
+                "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg"
+              },
+              "aoMap": null
+            }
+          },
+          "uv": {
+            "count": 4744,
+            "min": [
+              0.003901209682226181,
+              0.004015207290649414
+            ],
+            "max": [
+              0.9960395097732544,
+              0.9960993528366089
+            ],
+            "uv1": false,
+            "uv2": false
+          },
+          "castShadow": true,
+          "receiveShadow": true
+        }
+      ]
+    },
+    "cityCrate": {
+      "name": "city-textured-crate",
+      "bounds": {
+        "worldMin": [
+          285.2972493052483,
+          12.784808464050293,
+          777.217249302268
+        ],
+        "worldMax": [
+          285.80275069475175,
+          13.038897625803948,
+          777.6227506977319
+        ],
+        "size": [
+          0.505501389503479,
+          0.2540891617536545,
+          0.4055013954639435
+        ],
+        "position": [
+          5.55,
+          4.784824423193932,
+          -122.58
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "matrixWorld": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          285.55,
+          12.784824423193932,
+          777.42,
+          1
+        ]
+      },
+      "meshes": [
+        {
+          "uuid": "b035cc03-5eac-4af7-a7a1-504c9ee12c45",
+          "geometry": "31e8db8c-bf7c-4796-b49e-32dfcf19ff27",
+          "triangles": 5840,
+          "material": {
+            "uuid": "3e422f9e-34aa-4b4e-8dc8-ed0fd8e7e0a6",
+            "name": "plastic-crate-02-official-cutout",
+            "type": "MeshStandardMaterial",
+            "vertexColors": false,
+            "metalness": 0,
+            "roughness": 1,
+            "aoMapIntensity": 1,
+            "envMap": false,
+            "sceneEnvironment": false,
+            "alphaTest": 0.5,
+            "transparent": false,
+            "depthWrite": true,
+            "normalScale": [
+              1,
+              -1
+            ],
+            "clippingPlanes": 0,
+            "maps": {
+              "map": {
+                "uuid": "7536089f-c5b6-4e79-9713-1da53a572447",
+                "type": 1009,
+                "colorSpace": "srgb",
+                "flipY": false,
+                "channel": 0,
+                "image": {
+                  "width": 1024,
+                  "height": 1024
+                },
+                "repeat": [
+                  1,
+                  1
+                ],
+                "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_diff_1k.jpg"
+              },
+              "alphaMap": {
+                "uuid": "ae75d391-3c6e-4d6d-b650-a704d2d6eb6e",
+                "type": 1009,
+                "colorSpace": "",
+                "flipY": false,
+                "channel": 0,
+                "image": {
+                  "width": 1024,
+                  "height": 1024
+                },
+                "repeat": [
+                  1,
+                  1
+                ],
+                "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_opacity_1k.png"
+              },
+              "normalMap": {
+                "uuid": "00923ba8-efa7-43a1-bac1-15fd4aac3f63",
+                "type": 1009,
+                "colorSpace": "",
+                "flipY": false,
+                "channel": 0,
+                "image": {
+                  "width": 1024,
+                  "height": 1024
+                },
+                "repeat": [
+                  1,
+                  1
+                ],
+                "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_nor_gl_1k.jpg"
+              },
+              "roughnessMap": {
+                "uuid": "79aaa2d2-4dbd-4e6d-b6c5-dc5dbc603145",
+                "type": 1009,
+                "colorSpace": "",
+                "flipY": false,
+                "channel": 0,
+                "image": {
+                  "width": 1024,
+                  "height": 1024
+                },
+                "repeat": [
+                  1,
+                  1
+                ],
+                "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg"
+              },
+              "metalnessMap": {
+                "uuid": "79aaa2d2-4dbd-4e6d-b6c5-dc5dbc603145",
+                "type": 1009,
+                "colorSpace": "",
+                "flipY": false,
+                "channel": 0,
+                "image": {
+                  "width": 1024,
+                  "height": 1024
+                },
+                "repeat": [
+                  1,
+                  1
+                ],
+                "url": "http://127.0.0.1:59194/prop-assets/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg"
+              },
+              "aoMap": null
+            }
+          },
+          "uv": {
+            "count": 4744,
+            "min": [
+              0.003901209682226181,
+              0.004015207290649414
+            ],
+            "max": [
+              0.9960395097732544,
+              0.9960993528366089
+            ],
+            "uv1": false,
+            "uv2": false
+          },
+          "castShadow": true,
+          "receiveShadow": true
+        }
+      ]
+    },
+    "shutters": [
+      {
+        "bounds": {
+          "worldMin": [
+            303.0900001525879,
+            8.200000002980232,
+            871.3020000457764
+          ],
+          "worldMax": [
+            305.26000022888184,
+            9.850000023841858,
+            871.3400001525879
+          ],
+          "size": [
+            2.1700000762939453,
+            1.6500000208616257,
+            0.03800010681152344
+          ],
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "matrixWorld": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            280,
+            8,
+            900,
+            1
+          ]
+        },
+        "material": {
+          "uuid": "f414d624-24d5-4cae-a500-7eef956c0bcf",
+          "name": "tool-shed-worn-shutter",
+          "type": "MeshStandardMaterial",
+          "vertexColors": false,
+          "metalness": 1,
+          "roughness": 1,
+          "aoMapIntensity": 1,
+          "envMap": false,
+          "sceneEnvironment": false,
+          "alphaTest": 0,
+          "transparent": false,
+          "depthWrite": true,
+          "normalScale": [
+            1,
+            1
+          ],
+          "clippingPlanes": 4,
+          "maps": {
+            "map": {
+              "uuid": "c4395ce1-497e-4a60-beb9-3b5ca34f329f",
+              "type": 1009,
+              "colorSpace": "srgb",
+              "flipY": true,
+              "channel": 0,
+              "image": {
+                "width": 1024,
+                "height": 1024
+              },
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "url": "http://127.0.0.1:59194/prop-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg"
+            },
+            "alphaMap": null,
+            "normalMap": {
+              "uuid": "c77973be-b56c-47de-88fb-3b019d9ae6cd",
+              "type": 1009,
+              "colorSpace": "",
+              "flipY": true,
+              "channel": 0,
+              "image": {
+                "width": 1024,
+                "height": 1024
+              },
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "url": "http://127.0.0.1:59194/prop-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg"
+            },
+            "roughnessMap": {
+              "uuid": "1ac6c350-15b8-4deb-8629-0dc95af2d754",
+              "type": 1009,
+              "colorSpace": "",
+              "flipY": true,
+              "channel": 0,
+              "image": {
+                "width": 1024,
+                "height": 1024
+              },
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "url": "http://127.0.0.1:59194/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+            },
+            "metalnessMap": {
+              "uuid": "1ac6c350-15b8-4deb-8629-0dc95af2d754",
+              "type": 1009,
+              "colorSpace": "",
+              "flipY": true,
+              "channel": 0,
+              "image": {
+                "width": 1024,
+                "height": 1024
+              },
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "url": "http://127.0.0.1:59194/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+            },
+            "aoMap": {
+              "uuid": "1ac6c350-15b8-4deb-8629-0dc95af2d754",
+              "type": 1009,
+              "colorSpace": "",
+              "flipY": true,
+              "channel": 0,
+              "image": {
+                "width": 1024,
+                "height": 1024
+              },
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "url": "http://127.0.0.1:59194/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+            }
+          }
+        },
+        "uv": {
+          "count": 48,
+          "min": [
+            0,
+            0
+          ],
+          "max": [
+            1,
+            1
+          ],
+          "uv1": false,
+          "uv2": false
+        },
+        "imageBytes": {
+          "diffuse": {
+            "uuid": "c4395ce1-497e-4a60-beb9-3b5ca34f329f",
+            "width": 1024,
+            "height": 1024,
+            "channelsRGB": [
+              {
+                "min": 29,
+                "max": 153,
+                "mean": 65.31399917602539
+              },
+              {
+                "min": 26,
+                "max": 146,
+                "mean": 60.20156002044678
+              },
+              {
+                "min": 19,
+                "max": 139,
+                "mean": 54.23767852783203
+              }
+            ],
+            "method": "Canvas2D image byte sample; no texture or asset mutation"
+          },
+          "arm": {
+            "uuid": "1ac6c350-15b8-4deb-8629-0dc95af2d754",
+            "width": 1024,
+            "height": 1024,
+            "channelsRGB": [
+              {
+                "min": 110,
+                "max": 252,
+                "mean": 211.1074619293213
+              },
+              {
+                "min": 162,
+                "max": 203,
+                "mean": 186.16565132141113
+              },
+              {
+                "min": 0,
+                "max": 18,
+                "mean": 0.6510152816772461
+              }
+            ],
+            "method": "Canvas2D image byte sample; no texture or asset mutation"
+          }
+        },
+        "compiledUV": [
+          "#define USE_AOMAP",
+          "#define AOMAP_UV uv",
+          "\tvarying vec2 vUv;",
+          "#ifdef USE_AOMAP",
+          "\tuniform mat3 aoMapTransform;",
+          "\tvarying vec2 vAoMapUv;",
+          "\tvUv = vec3( uv, 1 ).xy;",
+          "#ifdef USE_AOMAP",
+          "\tvAoMapUv = ( aoMapTransform * vec3( AOMAP_UV, 1 ) ).xy;"
+        ]
+      }
+    ],
+    "method": "Fixed time14; real UI detail selection at configured eye1.6/FOV55; one warmup + two retained fresh PNG frames each. Real scene material/geometry/texture identity, renderer submission hooks and station capsule solver probes. No city walkability claim, no destructive disposal check, no quality/shadow/look modification."
+  },
+  "selectedImages": [
+    "service-corner-capture-2.jpg",
+    "service-corner-capture-2.png",
+    "service-corner-shutter-ao-off-capture-2.jpg",
+    "service-corner-shutter-ao-off-capture-2.png",
+    "laundry-details-capture-2.jpg",
+    "laundry-details-capture-2.png",
+    "laundry-details-world-ao-off-capture-2.jpg",
+    "laundry-details-world-ao-off-capture-2.png"
+  ],
+  "captures": [
+    {
+      "name": "service-corner-capture-2",
+      "view": {
+        "name": "service-corner",
+        "fov": 55,
+        "position": [
+          306.35,
+          9.612,
+          872.9
+        ],
+        "target": [
+          304.4,
+          8.85,
+          871.22
+        ]
+      },
+      "pass": "capture-2",
+      "variant": "original",
+      "camera": {
+        "position": [
+          306.35,
+          9.612,
+          872.9
+        ],
+        "quaternion": [
+          -0.130373050046536,
+          0.4124000551376955,
+          0.05976354832314889,
+          0.89964291840475
+        ],
+        "fov": 55,
+        "near": 0.2,
+        "far": 16000
+      },
+      "draws": {
+        "stationCrate": 1,
+        "shutters": 1,
+        "cityCrate": 1
+      },
+      "diagnostic": {
+        "worldAO": 0.55,
+        "shutterAOMaps": [
+          "1ac6c350-15b8-4deb-8629-0dc95af2d754"
+        ]
+      },
+      "projectedSubjects": {
+        "stationCrate": {
+          "corners": [
+            [
+              1082.3561820619832,
+              1011.3540548294725,
+              0.7733870556881344
+            ],
+            [
+              967.4743992755551,
+              1148.6074316644676,
+              0.7353252915260546
+            ],
+            [
+              1097.7956333416066,
+              910.8592325192059,
+              0.7637303541404197
+            ],
+            [
+              979.8785250521494,
+              1037.2690252622506,
+              0.7220577838952591
+            ],
+            [
+              1381.613551014479,
+              1226.0707544341467,
+              0.7138439204264129
+            ],
+            [
+              1296.244320119227,
+              1455.0189212645719,
+              0.6503542538536445
+            ],
+            [
+              1417.613169062769,
+              1109.4201030335714,
+              0.6982722781093088
+            ],
+            [
+              1335.0229944716418,
+              1326.154804833589,
+              0.6268229711423661
+            ]
+          ],
+          "pixelBounds": {
+            "minX": 967.4743992755551,
+            "maxX": 1417.613169062769,
+            "minY": 910.8592325192059,
+            "maxY": 1455.0189212645719
+          },
+          "scope": "Projected world AABB corners, not visible-pixel segmentation"
+        },
+        "stationCarton": {
+          "corners": [
+            [
+              1086.3747859437574,
+              892.654949692344,
+              0.769731623807932
+            ],
+            [
+              951.2643733716291,
+              1031.4470237345179,
+              0.7239770795634729
+            ],
+            [
+              1103.9444745603923,
+              773.856584464424,
+              0.7586877881759682
+            ],
+            [
+              964.6860864508075,
+              895.7310259103626,
+              0.7079562980899539
+            ],
+            [
+              1452.4586860977258,
+              1116.3813495015809,
+              0.6959774160884348
+            ],
+            [
+              1364.5083537122318,
+              1374.748405850548,
+              0.6108034823994143
+            ],
+            [
+              1499.5568001220918,
+              971.4758572115576,
+              0.6764267328042889
+            ],
+            [
+              1418.5338134078518,
+              1207.5047876531992,
+              0.5781772622619007
+            ]
+          ],
+          "pixelBounds": {
+            "minX": 951.2643733716291,
+            "maxX": 1499.5568001220918,
+            "minY": 773.856584464424,
+            "maxY": 1374.748405850548
+          },
+          "scope": "Projected world AABB corners, not visible-pixel segmentation"
+        },
+        "cityCrate": {
+          "corners": [
+            [
+              1403.7251539775566,
+              155.5720914625873,
+              0.9946396691747083
+            ],
+            [
+              1402.4816712483703,
+              155.44006162975333,
+              0.9946212056727657
+            ],
+            [
+              1404.3897507292513,
+              152.44767329841454,
+              0.9946344345075907
+            ],
+            [
+              1403.1473359372153,
+              152.3047922347761,
+              0.9946159350326459
+            ],
+            [
+              1410.9812464024835,
+              155.38075690425157,
+              0.9946129122977687
+            ],
+            [
+              1409.7565655730778,
+              155.2474095671398,
+              0.9945942645515362
+            ],
+            [
+              1411.6562365793022,
+              152.2406130792062,
+              0.9946076254592836
+            ],
+            [
+              1410.4326832930997,
+              152.09630482995527,
+              0.9945889411999888
+            ]
+          ],
+          "pixelBounds": {
+            "minX": 1402.4816712483703,
+            "maxX": 1411.6562365793022,
+            "minY": 152.09630482995527,
+            "maxY": 155.5720914625873
+          },
+          "scope": "Projected world AABB corners, not visible-pixel segmentation"
+        }
+      },
+      "time": 14,
+      "params": {
+        "exposure": 1.02,
+        "blur": 0,
+        "bloom": 0.12,
+        "distortion": 0,
+        "fringe": 0,
+        "vignette": 0.12,
+        "rays": 0,
+        "saturation": 1,
+        "contrast": 1.05,
+        "speed": 0
+      },
+      "renderer": {
+        "name": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "precision": "highp",
+        "pixelRatio": 1,
+        "glError": 0
+      },
+      "render": {
+        "frame": 187,
+        "calls": 1102,
+        "triangles": 7577526,
+        "points": 0,
+        "lines": 0
+      },
+      "errors": [],
+      "clock": {
+        "timeOrigin": 1794898823956.7,
+        "now": 34786.699999809265
+      },
+      "pngSha256": "b0fd5920f2556cd7af1a3de2ccdb70e3299efaaa03ae54d4ec1d3c8567f2b073"
+    },
+    {
+      "name": "service-corner-shutter-ao-off-capture-2",
+      "view": {
+        "name": "service-corner",
+        "fov": 55,
+        "position": [
+          306.35,
+          9.612,
+          872.9
+        ],
+        "target": [
+          304.4,
+          8.85,
+          871.22
+        ]
+      },
+      "pass": "capture-2",
+      "variant": "shutter-ao-off",
+      "camera": {
+        "position": [
+          306.35,
+          9.612,
+          872.9
+        ],
+        "quaternion": [
+          -0.130373050046536,
+          0.4124000551376955,
+          0.05976354832314889,
+          0.89964291840475
+        ],
+        "fov": 55,
+        "near": 0.2,
+        "far": 16000
+      },
+      "draws": {
+        "stationCrate": 1,
+        "shutters": 1,
+        "cityCrate": 1
+      },
+      "diagnostic": {
+        "worldAO": 0.55,
+        "shutterAOMaps": [
+          null
+        ]
+      },
+      "projectedSubjects": {
+        "stationCrate": {
+          "corners": [
+            [
+              1082.3561820619832,
+              1011.3540548294725,
+              0.7733870556881344
+            ],
+            [
+              967.4743992755551,
+              1148.6074316644676,
+              0.7353252915260546
+            ],
+            [
+              1097.7956333416066,
+              910.8592325192059,
+              0.7637303541404197
+            ],
+            [
+              979.8785250521494,
+              1037.2690252622506,
+              0.7220577838952591
+            ],
+            [
+              1381.613551014479,
+              1226.0707544341467,
+              0.7138439204264129
+            ],
+            [
+              1296.244320119227,
+              1455.0189212645719,
+              0.6503542538536445
+            ],
+            [
+              1417.613169062769,
+              1109.4201030335714,
+              0.6982722781093088
+            ],
+            [
+              1335.0229944716418,
+              1326.154804833589,
+              0.6268229711423661
+            ]
+          ],
+          "pixelBounds": {
+            "minX": 967.4743992755551,
+            "maxX": 1417.613169062769,
+            "minY": 910.8592325192059,
+            "maxY": 1455.0189212645719
+          },
+          "scope": "Projected world AABB corners, not visible-pixel segmentation"
+        },
+        "stationCarton": {
+          "corners": [
+            [
+              1086.3747859437574,
+              892.654949692344,
+              0.769731623807932
+            ],
+            [
+              951.2643733716291,
+              1031.4470237345179,
+              0.7239770795634729
+            ],
+            [
+              1103.9444745603923,
+              773.856584464424,
+              0.7586877881759682
+            ],
+            [
+              964.6860864508075,
+              895.7310259103626,
+              0.7079562980899539
+            ],
+            [
+              1452.4586860977258,
+              1116.3813495015809,
+              0.6959774160884348
+            ],
+            [
+              1364.5083537122318,
+              1374.748405850548,
+              0.6108034823994143
+            ],
+            [
+              1499.5568001220918,
+              971.4758572115576,
+              0.6764267328042889
+            ],
+            [
+              1418.5338134078518,
+              1207.5047876531992,
+              0.5781772622619007
+            ]
+          ],
+          "pixelBounds": {
+            "minX": 951.2643733716291,
+            "maxX": 1499.5568001220918,
+            "minY": 773.856584464424,
+            "maxY": 1374.748405850548
+          },
+          "scope": "Projected world AABB corners, not visible-pixel segmentation"
+        },
+        "cityCrate": {
+          "corners": [
+            [
+              1403.7251539775566,
+              155.5720914625873,
+              0.9946396691747083
+            ],
+            [
+              1402.4816712483703,
+              155.44006162975333,
+              0.9946212056727657
+            ],
+            [
+              1404.3897507292513,
+              152.44767329841454,
+              0.9946344345075907
+            ],
+            [
+              1403.1473359372153,
+              152.3047922347761,
+              0.9946159350326459
+            ],
+            [
+              1410.9812464024835,
+              155.38075690425157,
+              0.9946129122977687
+            ],
+            [
+              1409.7565655730778,
+              155.2474095671398,
+              0.9945942645515362
+            ],
+            [
+              1411.6562365793022,
+              152.2406130792062,
+              0.9946076254592836
+            ],
+            [
+              1410.4326832930997,
+              152.09630482995527,
+              0.9945889411999888
+            ]
+          ],
+          "pixelBounds": {
+            "minX": 1402.4816712483703,
+            "maxX": 1411.6562365793022,
+            "minY": 152.09630482995527,
+            "maxY": 155.5720914625873
+          },
+          "scope": "Projected world AABB corners, not visible-pixel segmentation"
+        }
+      },
+      "time": 14,
+      "params": {
+        "exposure": 1.02,
+        "blur": 0,
+        "bloom": 0.12,
+        "distortion": 0,
+        "fringe": 0,
+        "vignette": 0.12,
+        "rays": 0,
+        "saturation": 1,
+        "contrast": 1.05,
+        "speed": 0
+      },
+      "renderer": {
+        "name": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "precision": "highp",
+        "pixelRatio": 1,
+        "glError": 0
+      },
+      "render": {
+        "frame": 238,
+        "calls": 1102,
+        "triangles": 7577526,
+        "points": 0,
+        "lines": 0
+      },
+      "errors": [],
+      "clock": {
+        "timeOrigin": 1794898823956.7,
+        "now": 35159.799999952316
+      },
+      "pngSha256": "35847142f2e8e2123067e959506e80f0484a3d6153325f11186a2fb4f63e7104"
+    },
+    {
+      "name": "laundry-details-capture-2",
+      "view": {
+        "name": "laundry-details",
+        "fov": 55,
+        "position": [
+          287.8,
+          14.384808464050293,
+          777.85
+        ],
+        "target": [
+          283.8,
+          13.814808464050294,
+          776.75
+        ]
+      },
+      "pass": "capture-2",
+      "variant": "original",
+      "camera": {
+        "position": [
+          287.8,
+          14.384808464050293,
+          777.85
+        ],
+        "quaternion": [
+          -0.05425793580391406,
+          0.60474112901073,
+          0.041351243902739726,
+          0.7934950018196851
+        ],
+        "fov": 55,
+        "near": 0.2,
+        "far": 16000
+      },
+      "draws": {
+        "stationCrate": 0,
+        "shutters": 0,
+        "cityCrate": 1
+      },
+      "diagnostic": {
+        "worldAO": 0.55,
+        "shutterAOMaps": [
+          "1ac6c350-15b8-4deb-8629-0dc95af2d754"
+        ]
+      },
+      "projectedSubjects": {
+        "stationCrate": {
+          "corners": [
+            [
+              2526.069661291446,
+              195.304841896794,
+              1.009802449176322
+            ],
+            [
+              2529.619407698735,
+              195.6578236563341,
+              1.0097770575938394
+            ],
+            [
+              2524.544074301601,
+              200.83437869298956,
+              1.0097941901655538
+            ],
+            [
+              2528.094788559475,
+              201.17271520957524,
+              1.0097688414058856
+            ],
+            [
+              2502.20222653223,
+              196.89040282666923,
+              1.0096883925712878
+            ],
+            [
+              2505.7719319017415,
+              197.23520780824543,
+              1.0096635891816128
+            ],
+            [
+              2500.7143469092107,
+              202.3541662078582,
+              1.0096803250443727
+            ],
+            [
+              2504.2848955530053,
+              202.6846716982429,
+              1.0096555629987936
+            ]
+          ],
+          "pixelBounds": {
+            "minX": 2500.7143469092107,
+            "maxX": 2529.619407698735,
+            "minY": 195.304841896794,
+            "maxY": 202.6846716982429
+          },
+          "scope": "Projected world AABB corners, not visible-pixel segmentation"
+        },
+        "stationCarton": {
+          "corners": [
+            [
+              2526.0831246423386,
+              200.69813088647842,
+              1.0098043980879425
+            ],
+            [
+              2530.109305493228,
+              201.08260642546867,
+              1.0097755925125511
+            ],
+            [
+              2524.401762849556,
+              206.78721195245728,
+              1.0097952940187267
+            ],
+            [
+              2528.4291544985967,
+              207.15341165560025,
+              1.0097665419722697
+            ],
+            [
+              2498.7396529154926,
+              202.44252338864408,
+              1.0096737051708713
+            ],
+            [
+              2502.7916517991775,
+              202.81680598376192,
+              1.0096456632685447
+            ],
+            [
+              2497.105855742542,
+              208.44870181982463,
+              1.0096648427009227
+            ],
+            [
+              2501.158887549758,
+              208.8052019397865,
+              1.009636852213975
+            ]
+          ],
+          "pixelBounds": {
+            "minX": 2497.105855742542,
+            "maxX": 2530.109305493228,
+            "minY": 200.69813088647842,
+            "maxY": 208.8052019397865
+          },
+          "scope": "Projected world AABB corners, not visible-pixel segmentation"
+        },
+        "cityCrate": {
+          "corners": [
+            [
+              703.3265625293417,
+              834.3779099130401,
+              0.8558641789449644
+            ],
+            [
+              575.9889601707904,
+              854.4649059204697,
+              0.8501089397107746
+            ],
+            [
+              703.1161053177977,
+              759.8169227698264,
+              0.8540445371025248
+            ],
+            [
+              574.0976869734384,
+              777.1519760573539,
+              0.8481401168510487
+            ],
+            [
+              750.369952272485,
+              940.3873815920945,
+              0.8254908035344506
+            ],
+            [
+              597.1888026240949,
+              970.080101492981,
+              0.8169833738281757
+            ],
+            [
+              750.8352946058196,
+              851.5006921051454,
+              0.822816510547532
+            ],
+            [
+              595.2138338311986,
+              877.2685761969543,
+              0.8140398189420439
+            ]
+          ],
+          "pixelBounds": {
+            "minX": 574.0976869734384,
+            "maxX": 750.8352946058196,
+            "minY": 759.8169227698264,
+            "maxY": 970.080101492981
+          },
+          "scope": "Projected world AABB corners, not visible-pixel segmentation"
+        }
+      },
+      "time": 14,
+      "params": {
+        "exposure": 1.02,
+        "blur": 0,
+        "bloom": 0.12,
+        "distortion": 0,
+        "fringe": 0,
+        "vignette": 0.12,
+        "rays": 0,
+        "saturation": 1,
+        "contrast": 1.05,
+        "speed": 0
+      },
+      "renderer": {
+        "name": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "precision": "highp",
+        "pixelRatio": 1,
+        "glError": 0
+      },
+      "render": {
+        "frame": 289,
+        "calls": 838,
+        "triangles": 8221820,
+        "points": 0,
+        "lines": 0
+      },
+      "errors": [],
+      "clock": {
+        "timeOrigin": 1794898823956.7,
+        "now": 35490.59999990463
+      },
+      "pngSha256": "06845b3011ca70c2c52ad19c78222d0ef8e2e8ddc945d975ded845f8f934e079"
+    },
+    {
+      "name": "laundry-details-world-ao-off-capture-2",
+      "view": {
+        "name": "laundry-details",
+        "fov": 55,
+        "position": [
+          287.8,
+          14.384808464050293,
+          777.85
+        ],
+        "target": [
+          283.8,
+          13.814808464050294,
+          776.75
+        ]
+      },
+      "pass": "capture-2",
+      "variant": "world-ao-off",
+      "camera": {
+        "position": [
+          287.8,
+          14.384808464050293,
+          777.85
+        ],
+        "quaternion": [
+          -0.05425793580391406,
+          0.60474112901073,
+          0.041351243902739726,
+          0.7934950018196851
+        ],
+        "fov": 55,
+        "near": 0.2,
+        "far": 16000
+      },
+      "draws": {
+        "stationCrate": 0,
+        "shutters": 0,
+        "cityCrate": 1
+      },
+      "diagnostic": {
+        "worldAO": 0,
+        "shutterAOMaps": [
+          "1ac6c350-15b8-4deb-8629-0dc95af2d754"
+        ]
+      },
+      "projectedSubjects": {
+        "stationCrate": {
+          "corners": [
+            [
+              2526.069661291446,
+              195.304841896794,
+              1.009802449176322
+            ],
+            [
+              2529.619407698735,
+              195.6578236563341,
+              1.0097770575938394
+            ],
+            [
+              2524.544074301601,
+              200.83437869298956,
+              1.0097941901655538
+            ],
+            [
+              2528.094788559475,
+              201.17271520957524,
+              1.0097688414058856
+            ],
+            [
+              2502.20222653223,
+              196.89040282666923,
+              1.0096883925712878
+            ],
+            [
+              2505.7719319017415,
+              197.23520780824543,
+              1.0096635891816128
+            ],
+            [
+              2500.7143469092107,
+              202.3541662078582,
+              1.0096803250443727
+            ],
+            [
+              2504.2848955530053,
+              202.6846716982429,
+              1.0096555629987936
+            ]
+          ],
+          "pixelBounds": {
+            "minX": 2500.7143469092107,
+            "maxX": 2529.619407698735,
+            "minY": 195.304841896794,
+            "maxY": 202.6846716982429
+          },
+          "scope": "Projected world AABB corners, not visible-pixel segmentation"
+        },
+        "stationCarton": {
+          "corners": [
+            [
+              2526.0831246423386,
+              200.69813088647842,
+              1.0098043980879425
+            ],
+            [
+              2530.109305493228,
+              201.08260642546867,
+              1.0097755925125511
+            ],
+            [
+              2524.401762849556,
+              206.78721195245728,
+              1.0097952940187267
+            ],
+            [
+              2528.4291544985967,
+              207.15341165560025,
+              1.0097665419722697
+            ],
+            [
+              2498.7396529154926,
+              202.44252338864408,
+              1.0096737051708713
+            ],
+            [
+              2502.7916517991775,
+              202.81680598376192,
+              1.0096456632685447
+            ],
+            [
+              2497.105855742542,
+              208.44870181982463,
+              1.0096648427009227
+            ],
+            [
+              2501.158887549758,
+              208.8052019397865,
+              1.009636852213975
+            ]
+          ],
+          "pixelBounds": {
+            "minX": 2497.105855742542,
+            "maxX": 2530.109305493228,
+            "minY": 200.69813088647842,
+            "maxY": 208.8052019397865
+          },
+          "scope": "Projected world AABB corners, not visible-pixel segmentation"
+        },
+        "cityCrate": {
+          "corners": [
+            [
+              703.3265625293417,
+              834.3779099130401,
+              0.8558641789449644
+            ],
+            [
+              575.9889601707904,
+              854.4649059204697,
+              0.8501089397107746
+            ],
+            [
+              703.1161053177977,
+              759.8169227698264,
+              0.8540445371025248
+            ],
+            [
+              574.0976869734384,
+              777.1519760573539,
+              0.8481401168510487
+            ],
+            [
+              750.369952272485,
+              940.3873815920945,
+              0.8254908035344506
+            ],
+            [
+              597.1888026240949,
+              970.080101492981,
+              0.8169833738281757
+            ],
+            [
+              750.8352946058196,
+              851.5006921051454,
+              0.822816510547532
+            ],
+            [
+              595.2138338311986,
+              877.2685761969543,
+              0.8140398189420439
+            ]
+          ],
+          "pixelBounds": {
+            "minX": 574.0976869734384,
+            "maxX": 750.8352946058196,
+            "minY": 759.8169227698264,
+            "maxY": 970.080101492981
+          },
+          "scope": "Projected world AABB corners, not visible-pixel segmentation"
+        }
+      },
+      "time": 14,
+      "params": {
+        "exposure": 1.02,
+        "blur": 0,
+        "bloom": 0.12,
+        "distortion": 0,
+        "fringe": 0,
+        "vignette": 0.12,
+        "rays": 0,
+        "saturation": 1,
+        "contrast": 1.05,
+        "speed": 0
+      },
+      "renderer": {
+        "name": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "precision": "highp",
+        "pixelRatio": 1,
+        "glError": 0
+      },
+      "render": {
+        "frame": 340,
+        "calls": 838,
+        "triangles": 8221820,
+        "points": 0,
+        "lines": 0
+      },
+      "errors": [],
+      "clock": {
+        "timeOrigin": 1794898823956.7,
+        "now": 35795.699999809265
+      },
+      "pngSha256": "9bf7a6d31685e98edf82f06c5216036784044c7c7ecf912b464c2f2f3603968a"
+    }
+  ],
+  "visualAssessment": "Initial 5cf3 integration is not visually accepted: dark shed doors and clipped detail framing were observed by the root reviewer. Loaded textures/renderOk do not establish style or framing acceptance. Original images and diagnostic variants are retained."
+}

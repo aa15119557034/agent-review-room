@@ -1,0 +1,2500 @@
+{
+  "sourceCommit": "5cf3ef7d784ff069b87fef9b8051de63b6695e48",
+  "sourceVerification": {
+    "commit": "5cf3ef7d784ff069b87fef9b8051de63b6695e48",
+    "manifestSha256": "03f1ffa420f3051e64a06aef0fc51444f73f209e4a9512681a5133fa6071d156",
+    "trackedFilesVerifiedAgainstCommit": 204,
+    "ignoredFilesVerifiedAgainstPinnedManifestAndDisk": 9,
+    "separatePropManifestFilesVerified": 9
+  },
+  "stage": "complete",
+  "completedAt": "2026-11-17T07:08:51.559Z",
+  "ok": false,
+  "renderOk": true,
+  "transportClean": false,
+  "versions": {
+    "node": "24.22.0",
+    "acorn": "8.18.0",
+    "ada": "4.0.0",
+    "amaro": "1.1.11",
+    "ares": "1.34.8",
+    "brotli": "1.2.0",
+    "cldr": "48.0",
+    "icu": "78.2",
+    "llhttp": "9.4.3",
+    "merve": "1.2.2",
+    "modules": "149",
+    "napi": "10",
+    "nbytes": "0.1.4",
+    "ncrypto": "0.0.1",
+    "nghttp2": "1.70.0",
+    "nghttp3": "",
+    "ngtcp2": "",
+    "openssl": "0.0.0",
+    "simdjson": "4.6.11",
+    "simdutf": "7.7.0",
+    "sqlite": "3.53.4",
+    "tz": "2026d",
+    "undici": "7.29.1",
+    "unicode": "17.0",
+    "uv": "1.52.1",
+    "uvwasi": "0.0.23",
+    "v8": "15.2.124.43-electron.0",
+    "zlib": "1.3.2.1-motley",
+    "zstd": "1.6.0",
+    "electron": "44.9.0",
+    "chrome": "152.0.7977.167"
+  },
+  "sourceUnchanged": true,
+  "driverUnchanged": true,
+  "changedSourceFiles": [],
+  "restore": {
+    "restored": true,
+    "materials": true,
+    "normalMaps": true,
+    "temporaryMaterialsDisposed": 1,
+    "view": "station-street",
+    "fov": 58,
+    "time": 34.174800000000005,
+    "frozen": false
+  },
+  "assetsUnchanged": true,
+  "assetFiles": 9,
+  "networkFailures": [
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:59876/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "52608.235",
+      "timestamp": 1909484.031525,
+      "type": "Fetch"
+    },
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:59876/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "52608.240",
+      "timestamp": 1909484.046233,
+      "type": "Fetch"
+    }
+  ],
+  "httpErrors": [],
+  "exceptions": [],
+  "strictExpectedProcessExitFromReport": 1,
+  "exitEvidence": "Expected from driver/report ok, not a persisted OS process exit observation. Preserve console/runner exit separately.",
+  "initial": {
+    "cases": [
+      {
+        "name": "00-original",
+        "kind": "original"
+      },
+      {
+        "name": "01-normal-off",
+        "kind": "normal-off"
+      },
+      {
+        "name": "02-restored-normal",
+        "kind": "original"
+      },
+      {
+        "name": "03-shadow-off",
+        "kind": "shadow-off"
+      },
+      {
+        "name": "04-restored-shadow",
+        "kind": "original"
+      },
+      {
+        "name": "05-basic-map-only",
+        "kind": "basic"
+      },
+      {
+        "name": "06-restored-basic",
+        "kind": "original"
+      },
+      {
+        "name": "07-service-candidate",
+        "kind": "original",
+        "candidate": true,
+        "position": [
+          28.4,
+          1.612,
+          -27.1
+        ],
+        "target": [
+          25,
+          0.85,
+          -28.7
+        ]
+      },
+      {
+        "name": "08-laundry-candidate",
+        "kind": "original",
+        "candidate": true,
+        "position": [
+          8,
+          6.384808464050293,
+          -122.1
+        ],
+        "target": [
+          5.15,
+          5.144808464050294,
+          -122.7
+        ]
+      }
+    ],
+    "originalView": {
+      "name": "service-corner",
+      "fov": 55,
+      "position": [
+        306.35,
+        9.612,
+        872.9
+      ],
+      "target": [
+        304.4,
+        8.85,
+        871.22
+      ]
+    },
+    "originalMaterials": [
+      {
+        "uuid": "f747009a-b879-4abc-abd5-0e274b9c6e8b",
+        "type": "MeshStandardMaterial",
+        "name": "tool-shed-worn-shutter",
+        "colorRGB": [
+          1,
+          1,
+          1
+        ],
+        "vertexColors": false,
+        "side": 0,
+        "opacity": 1,
+        "transparent": false,
+        "metalness": 1,
+        "roughness": 1,
+        "normalScale": [
+          1,
+          1
+        ],
+        "aoMapIntensity": 1,
+        "map": {
+          "uuid": "222538bb-e2de-4dac-807c-8980fd12cd63",
+          "channel": 0,
+          "colorSpace": "srgb",
+          "repeat": [
+            0.8175182481751825,
+            1.2043795620437954
+          ],
+          "flipY": true,
+          "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg"
+        },
+        "normalMap": {
+          "uuid": "2dee73df-9c4b-44b2-a546-37dc46f5225a",
+          "channel": 0,
+          "colorSpace": "",
+          "repeat": [
+            0.8175182481751825,
+            1.2043795620437954
+          ],
+          "flipY": true,
+          "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg"
+        },
+        "aoMap": {
+          "uuid": "a9d70ef6-42b9-4000-a196-e92f0fb5ff8d",
+          "channel": 0,
+          "colorSpace": "",
+          "repeat": [
+            0.8175182481751825,
+            1.2043795620437954
+          ],
+          "flipY": true,
+          "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+        },
+        "metalnessMap": {
+          "uuid": "a9d70ef6-42b9-4000-a196-e92f0fb5ff8d",
+          "channel": 0,
+          "colorSpace": "",
+          "repeat": [
+            0.8175182481751825,
+            1.2043795620437954
+          ],
+          "flipY": true,
+          "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+        },
+        "clippingPlanes": [
+          {
+            "normal": [
+              1,
+              0,
+              0
+            ],
+            "constant": -188
+          },
+          {
+            "normal": [
+              -1,
+              0,
+              0
+            ],
+            "constant": 372
+          },
+          {
+            "normal": [
+              0,
+              0,
+              1
+            ],
+            "constant": -803
+          },
+          {
+            "normal": [
+              0,
+              0,
+              -1
+            ],
+            "constant": 1028
+          }
+        ],
+        "envMap": false
+      }
+    ],
+    "originalLights": [
+      {
+        "type": "DirectionalLight",
+        "color": [
+          1,
+          0.775822218312646,
+          0.55201140150344
+        ],
+        "intensity": 2.1,
+        "position": [
+          198.3349607968577,
+          97.47086455531951,
+          795.4735164292183
+        ],
+        "target": [
+          280,
+          8,
+          900
+        ],
+        "targetToLight": [
+          -0.5104064950196394,
+          0.559192903470747,
+          -0.6532905223173857
+        ],
+        "shadowSize": [
+          4096,
+          4096
+        ]
+      },
+      {
+        "type": "HemisphereLight",
+        "color": [
+          0.623960391667596,
+          0.7454042095350284,
+          1
+        ],
+        "groundColor": [
+          0.3915724777393922,
+          0.33245153633549385,
+          0.29613827078752575
+        ],
+        "intensity": 1.05,
+        "position": [
+          0,
+          1,
+          0
+        ],
+        "targetToLight": null
+      }
+    ],
+    "originalGeometry": [
+      {
+        "geometry": "dc50c611-2d6a-4d8a-89f5-52231297baa9",
+        "vertices": 48,
+        "triangles": 24,
+        "normal": {
+          "count": 48,
+          "min": [
+            -1,
+            -1,
+            -1
+          ],
+          "max": [
+            1,
+            1,
+            1
+          ],
+          "unique": [
+            "1,0,0",
+            "-1,0,0",
+            "0,1,0",
+            "0,-1,0",
+            "0,0,1",
+            "0,0,-1"
+          ]
+        },
+        "uvCount": 48,
+        "bounds": {
+          "min": [
+            303.0900001525879,
+            8.200000002980232,
+            871.3020000457764
+          ],
+          "max": [
+            305.26000022888184,
+            9.850000023841858,
+            871.3400001525879
+          ],
+          "size": [
+            2.1700000762939453,
+            1.6500000208616257,
+            0.03800010681152344
+          ]
+        },
+        "matrixWorld": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          280,
+          8,
+          900,
+          1
+        ]
+      }
+    ],
+    "method": "One cause sequence at service-corner/time14, same lights/post/quality. Each state warmup+two retained renders, explicit original restores. Basic material diagnostic only, original color/map/side/clipping/opacity retained. Two runtime-only camera candidates; source presets unchanged. Actual GL uniforms queried in shutter onAfterRender; null means absent/optimized, no inferred value."
+  },
+  "selectedImages": [
+    "00-original-capture-2.jpg",
+    "01-normal-off-capture-2.jpg",
+    "03-shadow-off-capture-2.jpg",
+    "05-basic-map-only-capture-2.jpg",
+    "07-service-candidate-capture-2.jpg",
+    "08-laundry-candidate-capture-2.jpg"
+  ],
+  "captures": [
+    {
+      "name": "00-original-capture-2",
+      "case": {
+        "name": "00-original",
+        "kind": "original"
+      },
+      "pass": "capture-2",
+      "camera": {
+        "position": [
+          306.35,
+          9.612,
+          872.9
+        ],
+        "quaternion": [
+          -0.130373050046536,
+          0.4124000551376955,
+          0.05976354832314889,
+          0.89964291840475
+        ],
+        "fov": 55,
+        "near": 0.2,
+        "far": 16000
+      },
+      "time": 14,
+      "lookParams": {
+        "exposure": 1.02,
+        "blur": 0,
+        "bloom": 0.12,
+        "distortion": 0,
+        "fringe": 0,
+        "vignette": 0.12,
+        "rays": 0,
+        "saturation": 1,
+        "contrast": 1.05,
+        "speed": 0
+      },
+      "ao": 0.55,
+      "toon": 1,
+      "lights": [
+        {
+          "type": "DirectionalLight",
+          "color": [
+            1,
+            0.775822218312646,
+            0.55201140150344
+          ],
+          "intensity": 2.1,
+          "position": [
+            198.3349607968577,
+            97.47086455531951,
+            795.4735164292183
+          ],
+          "target": [
+            280,
+            8,
+            900
+          ],
+          "targetToLight": [
+            -0.5104064950196394,
+            0.559192903470747,
+            -0.6532905223173857
+          ],
+          "shadowSize": [
+            4096,
+            4096
+          ]
+        },
+        {
+          "type": "HemisphereLight",
+          "color": [
+            0.623960391667596,
+            0.7454042095350284,
+            1
+          ],
+          "groundColor": [
+            0.3915724777393922,
+            0.33245153633549385,
+            0.29613827078752575
+          ],
+          "intensity": 1.05,
+          "position": [
+            0,
+            1,
+            0
+          ],
+          "targetToLight": null
+        }
+      ],
+      "shutters": [
+        {
+          "geometry": {
+            "geometry": "dc50c611-2d6a-4d8a-89f5-52231297baa9",
+            "vertices": 48,
+            "triangles": 24,
+            "normal": {
+              "count": 48,
+              "min": [
+                -1,
+                -1,
+                -1
+              ],
+              "max": [
+                1,
+                1,
+                1
+              ],
+              "unique": [
+                "1,0,0",
+                "-1,0,0",
+                "0,1,0",
+                "0,-1,0",
+                "0,0,1",
+                "0,0,-1"
+              ]
+            },
+            "uvCount": 48,
+            "bounds": {
+              "min": [
+                303.0900001525879,
+                8.200000002980232,
+                871.3020000457764
+              ],
+              "max": [
+                305.26000022888184,
+                9.850000023841858,
+                871.3400001525879
+              ],
+              "size": [
+                2.1700000762939453,
+                1.6500000208616257,
+                0.03800010681152344
+              ]
+            },
+            "matrixWorld": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              280,
+              8,
+              900,
+              1
+            ]
+          },
+          "material": {
+            "uuid": "f747009a-b879-4abc-abd5-0e274b9c6e8b",
+            "type": "MeshStandardMaterial",
+            "name": "tool-shed-worn-shutter",
+            "colorRGB": [
+              1,
+              1,
+              1
+            ],
+            "vertexColors": false,
+            "side": 0,
+            "opacity": 1,
+            "transparent": false,
+            "metalness": 1,
+            "roughness": 1,
+            "normalScale": [
+              1,
+              1
+            ],
+            "aoMapIntensity": 1,
+            "map": {
+              "uuid": "222538bb-e2de-4dac-807c-8980fd12cd63",
+              "channel": 0,
+              "colorSpace": "srgb",
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "flipY": true,
+              "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg"
+            },
+            "normalMap": {
+              "uuid": "2dee73df-9c4b-44b2-a546-37dc46f5225a",
+              "channel": 0,
+              "colorSpace": "",
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "flipY": true,
+              "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg"
+            },
+            "aoMap": {
+              "uuid": "a9d70ef6-42b9-4000-a196-e92f0fb5ff8d",
+              "channel": 0,
+              "colorSpace": "",
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "flipY": true,
+              "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+            },
+            "metalnessMap": {
+              "uuid": "a9d70ef6-42b9-4000-a196-e92f0fb5ff8d",
+              "channel": 0,
+              "colorSpace": "",
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "flipY": true,
+              "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+            },
+            "clippingPlanes": [
+              {
+                "normal": [
+                  1,
+                  0,
+                  0
+                ],
+                "constant": -188
+              },
+              {
+                "normal": [
+                  -1,
+                  0,
+                  0
+                ],
+                "constant": 372
+              },
+              {
+                "normal": [
+                  0,
+                  0,
+                  1
+                ],
+                "constant": -803
+              },
+              {
+                "normal": [
+                  0,
+                  0,
+                  -1
+                ],
+                "constant": 1028
+              }
+            ],
+            "envMap": false
+          },
+          "receiveShadow": true
+        }
+      ],
+      "gpuUniformsAfterDraw": [
+        {
+          "mesh": "160ffbb9-c660-44fa-8947-5eac72ece205",
+          "material": "f747009a-b879-4abc-abd5-0e274b9c6e8b",
+          "type": "MeshStandardMaterial",
+          "uniforms": {
+            "diffuse": [
+              1,
+              1,
+              1
+            ],
+            "opacity": 1,
+            "normalScale": [
+              1,
+              1
+            ],
+            "normalMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313
+            ],
+            "modelMatrix": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              280,
+              8,
+              900,
+              1
+            ],
+            "modelViewMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              0,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              0,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313,
+              0,
+              -37.730079650878906,
+              -0.8999996185302734,
+              -2.6386044025421143,
+              1
+            ],
+            "viewMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              0,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              0,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313,
+              0,
+              461.3592224121094,
+              218.40371704101562,
+              -771.5857543945312,
+              1
+            ],
+            "ambientLightColor": [
+              0,
+              0,
+              0
+            ],
+            "receiveShadow": true,
+            "directionalLights[0].direction": [
+              0.16179165244102478,
+              0.7670040130615234,
+              -0.6209092736244202
+            ],
+            "directionalLights[0].color": [
+              2.0999999046325684,
+              1.6292266845703125,
+              1.1592239141464233
+            ],
+            "hemisphereLights[0].direction": [
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769
+            ],
+            "hemisphereLights[0].skyColor": [
+              0.6551584005355835,
+              0.7826744318008423,
+              1.0499999523162842
+            ],
+            "hemisphereLights[0].groundColor": [
+              0.41115111112594604,
+              0.349074125289917,
+              0.31094518303871155
+            ]
+          }
+        }
+      ],
+      "render": {
+        "frame": 187,
+        "calls": 1102,
+        "triangles": 7577526,
+        "points": 0,
+        "lines": 0
+      },
+      "renderer": {
+        "name": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "glError": 0
+      },
+      "errors": [],
+      "pngSha256": "b7dfd4db0f7259cc3c69c1bd980859049cd566838ad34cce7fce0e797ce71b23"
+    },
+    {
+      "name": "01-normal-off-capture-2",
+      "case": {
+        "name": "01-normal-off",
+        "kind": "normal-off"
+      },
+      "pass": "capture-2",
+      "camera": {
+        "position": [
+          306.35,
+          9.612,
+          872.9
+        ],
+        "quaternion": [
+          -0.130373050046536,
+          0.4124000551376955,
+          0.05976354832314889,
+          0.89964291840475
+        ],
+        "fov": 55,
+        "near": 0.2,
+        "far": 16000
+      },
+      "time": 14,
+      "lookParams": {
+        "exposure": 1.02,
+        "blur": 0,
+        "bloom": 0.12,
+        "distortion": 0,
+        "fringe": 0,
+        "vignette": 0.12,
+        "rays": 0,
+        "saturation": 1,
+        "contrast": 1.05,
+        "speed": 0
+      },
+      "ao": 0.55,
+      "toon": 1,
+      "lights": [
+        {
+          "type": "DirectionalLight",
+          "color": [
+            1,
+            0.775822218312646,
+            0.55201140150344
+          ],
+          "intensity": 2.1,
+          "position": [
+            198.3349607968577,
+            97.47086455531951,
+            795.4735164292183
+          ],
+          "target": [
+            280,
+            8,
+            900
+          ],
+          "targetToLight": [
+            -0.5104064950196394,
+            0.559192903470747,
+            -0.6532905223173857
+          ],
+          "shadowSize": [
+            4096,
+            4096
+          ]
+        },
+        {
+          "type": "HemisphereLight",
+          "color": [
+            0.623960391667596,
+            0.7454042095350284,
+            1
+          ],
+          "groundColor": [
+            0.3915724777393922,
+            0.33245153633549385,
+            0.29613827078752575
+          ],
+          "intensity": 1.05,
+          "position": [
+            0,
+            1,
+            0
+          ],
+          "targetToLight": null
+        }
+      ],
+      "shutters": [
+        {
+          "geometry": {
+            "geometry": "dc50c611-2d6a-4d8a-89f5-52231297baa9",
+            "vertices": 48,
+            "triangles": 24,
+            "normal": {
+              "count": 48,
+              "min": [
+                -1,
+                -1,
+                -1
+              ],
+              "max": [
+                1,
+                1,
+                1
+              ],
+              "unique": [
+                "1,0,0",
+                "-1,0,0",
+                "0,1,0",
+                "0,-1,0",
+                "0,0,1",
+                "0,0,-1"
+              ]
+            },
+            "uvCount": 48,
+            "bounds": {
+              "min": [
+                303.0900001525879,
+                8.200000002980232,
+                871.3020000457764
+              ],
+              "max": [
+                305.26000022888184,
+                9.850000023841858,
+                871.3400001525879
+              ],
+              "size": [
+                2.1700000762939453,
+                1.6500000208616257,
+                0.03800010681152344
+              ]
+            },
+            "matrixWorld": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              280,
+              8,
+              900,
+              1
+            ]
+          },
+          "material": {
+            "uuid": "f747009a-b879-4abc-abd5-0e274b9c6e8b",
+            "type": "MeshStandardMaterial",
+            "name": "tool-shed-worn-shutter",
+            "colorRGB": [
+              1,
+              1,
+              1
+            ],
+            "vertexColors": false,
+            "side": 0,
+            "opacity": 1,
+            "transparent": false,
+            "metalness": 1,
+            "roughness": 1,
+            "normalScale": [
+              1,
+              1
+            ],
+            "aoMapIntensity": 1,
+            "map": {
+              "uuid": "222538bb-e2de-4dac-807c-8980fd12cd63",
+              "channel": 0,
+              "colorSpace": "srgb",
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "flipY": true,
+              "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg"
+            },
+            "normalMap": null,
+            "aoMap": {
+              "uuid": "a9d70ef6-42b9-4000-a196-e92f0fb5ff8d",
+              "channel": 0,
+              "colorSpace": "",
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "flipY": true,
+              "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+            },
+            "metalnessMap": {
+              "uuid": "a9d70ef6-42b9-4000-a196-e92f0fb5ff8d",
+              "channel": 0,
+              "colorSpace": "",
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "flipY": true,
+              "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+            },
+            "clippingPlanes": [
+              {
+                "normal": [
+                  1,
+                  0,
+                  0
+                ],
+                "constant": -188
+              },
+              {
+                "normal": [
+                  -1,
+                  0,
+                  0
+                ],
+                "constant": 372
+              },
+              {
+                "normal": [
+                  0,
+                  0,
+                  1
+                ],
+                "constant": -803
+              },
+              {
+                "normal": [
+                  0,
+                  0,
+                  -1
+                ],
+                "constant": 1028
+              }
+            ],
+            "envMap": false
+          },
+          "receiveShadow": true
+        }
+      ],
+      "gpuUniformsAfterDraw": [
+        {
+          "mesh": "160ffbb9-c660-44fa-8947-5eac72ece205",
+          "material": "f747009a-b879-4abc-abd5-0e274b9c6e8b",
+          "type": "MeshStandardMaterial",
+          "uniforms": {
+            "diffuse": [
+              1,
+              1,
+              1
+            ],
+            "opacity": 1,
+            "normalScale": null,
+            "normalMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313
+            ],
+            "modelMatrix": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              280,
+              8,
+              900,
+              1
+            ],
+            "modelViewMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              0,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              0,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313,
+              0,
+              -37.730079650878906,
+              -0.8999996185302734,
+              -2.6386044025421143,
+              1
+            ],
+            "viewMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              0,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              0,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313,
+              0,
+              461.3592224121094,
+              218.40371704101562,
+              -771.5857543945312,
+              1
+            ],
+            "ambientLightColor": [
+              0,
+              0,
+              0
+            ],
+            "receiveShadow": true,
+            "directionalLights[0].direction": [
+              0.16179165244102478,
+              0.7670040130615234,
+              -0.6209092736244202
+            ],
+            "directionalLights[0].color": [
+              2.0999999046325684,
+              1.6292266845703125,
+              1.1592239141464233
+            ],
+            "hemisphereLights[0].direction": [
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769
+            ],
+            "hemisphereLights[0].skyColor": [
+              0.6551584005355835,
+              0.7826744318008423,
+              1.0499999523162842
+            ],
+            "hemisphereLights[0].groundColor": [
+              0.41115111112594604,
+              0.349074125289917,
+              0.31094518303871155
+            ]
+          }
+        }
+      ],
+      "render": {
+        "frame": 238,
+        "calls": 1102,
+        "triangles": 7577526,
+        "points": 0,
+        "lines": 0
+      },
+      "renderer": {
+        "name": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "glError": 0
+      },
+      "errors": [],
+      "pngSha256": "b0c532acbd9223e008ec259557c32c8caa45dcb3eaa2b2fefcc900e7c6f81ec4"
+    },
+    {
+      "name": "03-shadow-off-capture-2",
+      "case": {
+        "name": "03-shadow-off",
+        "kind": "shadow-off"
+      },
+      "pass": "capture-2",
+      "camera": {
+        "position": [
+          306.35,
+          9.612,
+          872.9
+        ],
+        "quaternion": [
+          -0.130373050046536,
+          0.4124000551376955,
+          0.05976354832314889,
+          0.89964291840475
+        ],
+        "fov": 55,
+        "near": 0.2,
+        "far": 16000
+      },
+      "time": 14,
+      "lookParams": {
+        "exposure": 1.02,
+        "blur": 0,
+        "bloom": 0.12,
+        "distortion": 0,
+        "fringe": 0,
+        "vignette": 0.12,
+        "rays": 0,
+        "saturation": 1,
+        "contrast": 1.05,
+        "speed": 0
+      },
+      "ao": 0.55,
+      "toon": 1,
+      "lights": [
+        {
+          "type": "DirectionalLight",
+          "color": [
+            1,
+            0.775822218312646,
+            0.55201140150344
+          ],
+          "intensity": 2.1,
+          "position": [
+            198.3349607968577,
+            97.47086455531951,
+            795.4735164292183
+          ],
+          "target": [
+            280,
+            8,
+            900
+          ],
+          "targetToLight": [
+            -0.5104064950196394,
+            0.559192903470747,
+            -0.6532905223173857
+          ],
+          "shadowSize": [
+            4096,
+            4096
+          ]
+        },
+        {
+          "type": "HemisphereLight",
+          "color": [
+            0.623960391667596,
+            0.7454042095350284,
+            1
+          ],
+          "groundColor": [
+            0.3915724777393922,
+            0.33245153633549385,
+            0.29613827078752575
+          ],
+          "intensity": 1.05,
+          "position": [
+            0,
+            1,
+            0
+          ],
+          "targetToLight": null
+        }
+      ],
+      "shutters": [
+        {
+          "geometry": {
+            "geometry": "dc50c611-2d6a-4d8a-89f5-52231297baa9",
+            "vertices": 48,
+            "triangles": 24,
+            "normal": {
+              "count": 48,
+              "min": [
+                -1,
+                -1,
+                -1
+              ],
+              "max": [
+                1,
+                1,
+                1
+              ],
+              "unique": [
+                "1,0,0",
+                "-1,0,0",
+                "0,1,0",
+                "0,-1,0",
+                "0,0,1",
+                "0,0,-1"
+              ]
+            },
+            "uvCount": 48,
+            "bounds": {
+              "min": [
+                303.0900001525879,
+                8.200000002980232,
+                871.3020000457764
+              ],
+              "max": [
+                305.26000022888184,
+                9.850000023841858,
+                871.3400001525879
+              ],
+              "size": [
+                2.1700000762939453,
+                1.6500000208616257,
+                0.03800010681152344
+              ]
+            },
+            "matrixWorld": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              280,
+              8,
+              900,
+              1
+            ]
+          },
+          "material": {
+            "uuid": "f747009a-b879-4abc-abd5-0e274b9c6e8b",
+            "type": "MeshStandardMaterial",
+            "name": "tool-shed-worn-shutter",
+            "colorRGB": [
+              1,
+              1,
+              1
+            ],
+            "vertexColors": false,
+            "side": 0,
+            "opacity": 1,
+            "transparent": false,
+            "metalness": 1,
+            "roughness": 1,
+            "normalScale": [
+              1,
+              1
+            ],
+            "aoMapIntensity": 1,
+            "map": {
+              "uuid": "222538bb-e2de-4dac-807c-8980fd12cd63",
+              "channel": 0,
+              "colorSpace": "srgb",
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "flipY": true,
+              "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg"
+            },
+            "normalMap": {
+              "uuid": "2dee73df-9c4b-44b2-a546-37dc46f5225a",
+              "channel": 0,
+              "colorSpace": "",
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "flipY": true,
+              "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg"
+            },
+            "aoMap": {
+              "uuid": "a9d70ef6-42b9-4000-a196-e92f0fb5ff8d",
+              "channel": 0,
+              "colorSpace": "",
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "flipY": true,
+              "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+            },
+            "metalnessMap": {
+              "uuid": "a9d70ef6-42b9-4000-a196-e92f0fb5ff8d",
+              "channel": 0,
+              "colorSpace": "",
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "flipY": true,
+              "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+            },
+            "clippingPlanes": [
+              {
+                "normal": [
+                  1,
+                  0,
+                  0
+                ],
+                "constant": -188
+              },
+              {
+                "normal": [
+                  -1,
+                  0,
+                  0
+                ],
+                "constant": 372
+              },
+              {
+                "normal": [
+                  0,
+                  0,
+                  1
+                ],
+                "constant": -803
+              },
+              {
+                "normal": [
+                  0,
+                  0,
+                  -1
+                ],
+                "constant": 1028
+              }
+            ],
+            "envMap": false
+          },
+          "receiveShadow": false
+        }
+      ],
+      "gpuUniformsAfterDraw": [
+        {
+          "mesh": "160ffbb9-c660-44fa-8947-5eac72ece205",
+          "material": "f747009a-b879-4abc-abd5-0e274b9c6e8b",
+          "type": "MeshStandardMaterial",
+          "uniforms": {
+            "diffuse": [
+              1,
+              1,
+              1
+            ],
+            "opacity": 1,
+            "normalScale": [
+              1,
+              1
+            ],
+            "normalMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313
+            ],
+            "modelMatrix": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              280,
+              8,
+              900,
+              1
+            ],
+            "modelViewMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              0,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              0,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313,
+              0,
+              -37.730079650878906,
+              -0.8999996185302734,
+              -2.6386044025421143,
+              1
+            ],
+            "viewMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              0,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              0,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313,
+              0,
+              461.3592224121094,
+              218.40371704101562,
+              -771.5857543945312,
+              1
+            ],
+            "ambientLightColor": [
+              0,
+              0,
+              0
+            ],
+            "receiveShadow": false,
+            "directionalLights[0].direction": [
+              0.16179165244102478,
+              0.7670040130615234,
+              -0.6209092736244202
+            ],
+            "directionalLights[0].color": [
+              2.0999999046325684,
+              1.6292266845703125,
+              1.1592239141464233
+            ],
+            "hemisphereLights[0].direction": [
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769
+            ],
+            "hemisphereLights[0].skyColor": [
+              0.6551584005355835,
+              0.7826744318008423,
+              1.0499999523162842
+            ],
+            "hemisphereLights[0].groundColor": [
+              0.41115111112594604,
+              0.349074125289917,
+              0.31094518303871155
+            ]
+          }
+        }
+      ],
+      "render": {
+        "frame": 340,
+        "calls": 1102,
+        "triangles": 7577526,
+        "points": 0,
+        "lines": 0
+      },
+      "renderer": {
+        "name": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "glError": 0
+      },
+      "errors": [],
+      "pngSha256": "b0fd5920f2556cd7af1a3de2ccdb70e3299efaaa03ae54d4ec1d3c8567f2b073"
+    },
+    {
+      "name": "05-basic-map-only-capture-2",
+      "case": {
+        "name": "05-basic-map-only",
+        "kind": "basic"
+      },
+      "pass": "capture-2",
+      "camera": {
+        "position": [
+          306.35,
+          9.612,
+          872.9
+        ],
+        "quaternion": [
+          -0.130373050046536,
+          0.4124000551376955,
+          0.05976354832314889,
+          0.89964291840475
+        ],
+        "fov": 55,
+        "near": 0.2,
+        "far": 16000
+      },
+      "time": 14,
+      "lookParams": {
+        "exposure": 1.02,
+        "blur": 0,
+        "bloom": 0.12,
+        "distortion": 0,
+        "fringe": 0,
+        "vignette": 0.12,
+        "rays": 0,
+        "saturation": 1,
+        "contrast": 1.05,
+        "speed": 0
+      },
+      "ao": 0.55,
+      "toon": 1,
+      "lights": [
+        {
+          "type": "DirectionalLight",
+          "color": [
+            1,
+            0.775822218312646,
+            0.55201140150344
+          ],
+          "intensity": 2.1,
+          "position": [
+            198.3349607968577,
+            97.47086455531951,
+            795.4735164292183
+          ],
+          "target": [
+            280,
+            8,
+            900
+          ],
+          "targetToLight": [
+            -0.5104064950196394,
+            0.559192903470747,
+            -0.6532905223173857
+          ],
+          "shadowSize": [
+            4096,
+            4096
+          ]
+        },
+        {
+          "type": "HemisphereLight",
+          "color": [
+            0.623960391667596,
+            0.7454042095350284,
+            1
+          ],
+          "groundColor": [
+            0.3915724777393922,
+            0.33245153633549385,
+            0.29613827078752575
+          ],
+          "intensity": 1.05,
+          "position": [
+            0,
+            1,
+            0
+          ],
+          "targetToLight": null
+        }
+      ],
+      "shutters": [
+        {
+          "geometry": {
+            "geometry": "dc50c611-2d6a-4d8a-89f5-52231297baa9",
+            "vertices": 48,
+            "triangles": 24,
+            "normal": {
+              "count": 48,
+              "min": [
+                -1,
+                -1,
+                -1
+              ],
+              "max": [
+                1,
+                1,
+                1
+              ],
+              "unique": [
+                "1,0,0",
+                "-1,0,0",
+                "0,1,0",
+                "0,-1,0",
+                "0,0,1",
+                "0,0,-1"
+              ]
+            },
+            "uvCount": 48,
+            "bounds": {
+              "min": [
+                303.0900001525879,
+                8.200000002980232,
+                871.3020000457764
+              ],
+              "max": [
+                305.26000022888184,
+                9.850000023841858,
+                871.3400001525879
+              ],
+              "size": [
+                2.1700000762939453,
+                1.6500000208616257,
+                0.03800010681152344
+              ]
+            },
+            "matrixWorld": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              280,
+              8,
+              900,
+              1
+            ]
+          },
+          "material": {
+            "uuid": "c148bad0-253b-409f-8cf3-9a2b5bcb5b1f",
+            "type": "MeshBasicMaterial",
+            "name": "DIAGNOSTIC-map-only",
+            "colorRGB": [
+              1,
+              1,
+              1
+            ],
+            "vertexColors": false,
+            "side": 0,
+            "opacity": 1,
+            "transparent": false,
+            "aoMapIntensity": 1,
+            "map": {
+              "uuid": "222538bb-e2de-4dac-807c-8980fd12cd63",
+              "channel": 0,
+              "colorSpace": "srgb",
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "flipY": true,
+              "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg"
+            },
+            "normalMap": null,
+            "aoMap": null,
+            "metalnessMap": null,
+            "clippingPlanes": [
+              {
+                "normal": [
+                  1,
+                  0,
+                  0
+                ],
+                "constant": -188
+              },
+              {
+                "normal": [
+                  -1,
+                  0,
+                  0
+                ],
+                "constant": 372
+              },
+              {
+                "normal": [
+                  0,
+                  0,
+                  1
+                ],
+                "constant": -803
+              },
+              {
+                "normal": [
+                  0,
+                  0,
+                  -1
+                ],
+                "constant": 1028
+              }
+            ],
+            "envMap": false
+          },
+          "receiveShadow": true
+        }
+      ],
+      "gpuUniformsAfterDraw": [
+        {
+          "mesh": "160ffbb9-c660-44fa-8947-5eac72ece205",
+          "material": "c148bad0-253b-409f-8cf3-9a2b5bcb5b1f",
+          "type": "MeshBasicMaterial",
+          "uniforms": {
+            "diffuse": [
+              1,
+              1,
+              1
+            ],
+            "opacity": 1,
+            "normalScale": null,
+            "normalMatrix": null,
+            "modelMatrix": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              280,
+              8,
+              900,
+              1
+            ],
+            "modelViewMatrix": [
+              0.6527090072631836,
+              -0.2150634080171585,
+              0.7264424562454224,
+              0,
+              -2.7755575615628914e-17,
+              0.9588623642921448,
+              0.2838713526725769,
+              0,
+              -0.7576087117195129,
+              -0.18528540432453156,
+              0.6258581280708313,
+              0,
+              -37.730079650878906,
+              -0.8999996185302734,
+              -2.6386044025421143,
+              1
+            ],
+            "viewMatrix": null,
+            "ambientLightColor": null,
+            "receiveShadow": null,
+            "directionalLights[0].direction": null,
+            "directionalLights[0].color": null,
+            "hemisphereLights[0].direction": null,
+            "hemisphereLights[0].skyColor": null,
+            "hemisphereLights[0].groundColor": null
+          }
+        }
+      ],
+      "render": {
+        "frame": 442,
+        "calls": 1102,
+        "triangles": 7577526,
+        "points": 0,
+        "lines": 0
+      },
+      "renderer": {
+        "name": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "glError": 0
+      },
+      "errors": [],
+      "pngSha256": "d2419fe92bbcdbba3d701305b01d846d4990a59dbc733737451ffd1e9405787e"
+    },
+    {
+      "name": "07-service-candidate-capture-2",
+      "case": {
+        "name": "07-service-candidate",
+        "kind": "original",
+        "candidate": true,
+        "position": [
+          28.4,
+          1.612,
+          -27.1
+        ],
+        "target": [
+          25,
+          0.85,
+          -28.7
+        ]
+      },
+      "pass": "capture-2",
+      "camera": {
+        "position": [
+          308.4,
+          9.612,
+          872.9
+        ],
+        "quaternion": [
+          -0.08432325046436126,
+          0.5331397072650681,
+          0.05351200213385738,
+          0.8401119613456697
+        ],
+        "fov": 55,
+        "near": 0.2,
+        "far": 16000
+      },
+      "time": 14,
+      "lookParams": {
+        "exposure": 1.02,
+        "blur": 0,
+        "bloom": 0.12,
+        "distortion": 0,
+        "fringe": 0,
+        "vignette": 0.12,
+        "rays": 0,
+        "saturation": 1,
+        "contrast": 1.05,
+        "speed": 0
+      },
+      "ao": 0.55,
+      "toon": 1,
+      "lights": [
+        {
+          "type": "DirectionalLight",
+          "color": [
+            1,
+            0.775822218312646,
+            0.55201140150344
+          ],
+          "intensity": 2.1,
+          "position": [
+            198.3349607968577,
+            97.47086455531951,
+            795.4735164292183
+          ],
+          "target": [
+            280,
+            8,
+            900
+          ],
+          "targetToLight": [
+            -0.5104064950196394,
+            0.559192903470747,
+            -0.6532905223173857
+          ],
+          "shadowSize": [
+            4096,
+            4096
+          ]
+        },
+        {
+          "type": "HemisphereLight",
+          "color": [
+            0.623960391667596,
+            0.7454042095350284,
+            1
+          ],
+          "groundColor": [
+            0.3915724777393922,
+            0.33245153633549385,
+            0.29613827078752575
+          ],
+          "intensity": 1.05,
+          "position": [
+            0,
+            1,
+            0
+          ],
+          "targetToLight": null
+        }
+      ],
+      "shutters": [
+        {
+          "geometry": {
+            "geometry": "dc50c611-2d6a-4d8a-89f5-52231297baa9",
+            "vertices": 48,
+            "triangles": 24,
+            "normal": {
+              "count": 48,
+              "min": [
+                -1,
+                -1,
+                -1
+              ],
+              "max": [
+                1,
+                1,
+                1
+              ],
+              "unique": [
+                "1,0,0",
+                "-1,0,0",
+                "0,1,0",
+                "0,-1,0",
+                "0,0,1",
+                "0,0,-1"
+              ]
+            },
+            "uvCount": 48,
+            "bounds": {
+              "min": [
+                303.0900001525879,
+                8.200000002980232,
+                871.3020000457764
+              ],
+              "max": [
+                305.26000022888184,
+                9.850000023841858,
+                871.3400001525879
+              ],
+              "size": [
+                2.1700000762939453,
+                1.6500000208616257,
+                0.03800010681152344
+              ]
+            },
+            "matrixWorld": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              280,
+              8,
+              900,
+              1
+            ]
+          },
+          "material": {
+            "uuid": "f747009a-b879-4abc-abd5-0e274b9c6e8b",
+            "type": "MeshStandardMaterial",
+            "name": "tool-shed-worn-shutter",
+            "colorRGB": [
+              1,
+              1,
+              1
+            ],
+            "vertexColors": false,
+            "side": 0,
+            "opacity": 1,
+            "transparent": false,
+            "metalness": 1,
+            "roughness": 1,
+            "normalScale": [
+              1,
+              1
+            ],
+            "aoMapIntensity": 1,
+            "map": {
+              "uuid": "222538bb-e2de-4dac-807c-8980fd12cd63",
+              "channel": 0,
+              "colorSpace": "srgb",
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "flipY": true,
+              "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg"
+            },
+            "normalMap": {
+              "uuid": "2dee73df-9c4b-44b2-a546-37dc46f5225a",
+              "channel": 0,
+              "colorSpace": "",
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "flipY": true,
+              "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg"
+            },
+            "aoMap": {
+              "uuid": "a9d70ef6-42b9-4000-a196-e92f0fb5ff8d",
+              "channel": 0,
+              "colorSpace": "",
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "flipY": true,
+              "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+            },
+            "metalnessMap": {
+              "uuid": "a9d70ef6-42b9-4000-a196-e92f0fb5ff8d",
+              "channel": 0,
+              "colorSpace": "",
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "flipY": true,
+              "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+            },
+            "clippingPlanes": [
+              {
+                "normal": [
+                  1,
+                  0,
+                  0
+                ],
+                "constant": -188
+              },
+              {
+                "normal": [
+                  -1,
+                  0,
+                  0
+                ],
+                "constant": 372
+              },
+              {
+                "normal": [
+                  0,
+                  0,
+                  1
+                ],
+                "constant": -803
+              },
+              {
+                "normal": [
+                  0,
+                  0,
+                  -1
+                ],
+                "constant": 1028
+              }
+            ],
+            "envMap": false
+          },
+          "receiveShadow": true
+        }
+      ],
+      "gpuUniformsAfterDraw": [
+        {
+          "mesh": "160ffbb9-c660-44fa-8947-5eac72ece205",
+          "material": "f747009a-b879-4abc-abd5-0e274b9c6e8b",
+          "type": "MeshStandardMaterial",
+          "uniforms": {
+            "diffuse": [
+              1,
+              1,
+              1
+            ],
+            "opacity": 1,
+            "normalScale": [
+              1,
+              1
+            ],
+            "normalMatrix": [
+              0.4257970452308655,
+              -0.17982429265975952,
+              0.8867694735527039,
+              2.7755575615628914e-17,
+              0.98005211353302,
+              0.19874069094657898,
+              -0.9048187136650085,
+              -0.08462319523096085,
+              0.41730329394340515
+            ],
+            "modelMatrix": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              280,
+              8,
+              900,
+              1
+            ],
+            "modelViewMatrix": [
+              0.4257970452308655,
+              -0.17982429265975952,
+              0.8867694735527039,
+              0,
+              2.7755575615628914e-17,
+              0.98005211353302,
+              0.19874069094657898,
+              0,
+              -0.9048187136650085,
+              -0.08462319523096085,
+              0.41730329394340515,
+              0,
+              -36.613224029541016,
+              1.2338773012161255,
+              -14.195704460144043,
+              1
+            ],
+            "viewMatrix": [
+              0.4257970452308655,
+              -0.17982429265975952,
+              0.8867694735527039,
+              0,
+              2.7755575615628914e-17,
+              0.98005211353302,
+              0.19874069094657898,
+              0,
+              -0.9048187136650085,
+              -0.08462319523096085,
+              0.41730329394340515,
+              0,
+              658.5004272460938,
+              119.90513610839844,
+              -639.654052734375,
+              1
+            ],
+            "ambientLightColor": [
+              0,
+              0,
+              0
+            ],
+            "receiveShadow": true,
+            "directionalLights[0].direction": [
+              0.37377992272377014,
+              0.6951051950454712,
+              -0.6140987873077393
+            ],
+            "directionalLights[0].color": [
+              2.0999999046325684,
+              1.6292266845703125,
+              1.1592239141464233
+            ],
+            "hemisphereLights[0].direction": [
+              2.7755575615628914e-17,
+              0.98005211353302,
+              0.19874069094657898
+            ],
+            "hemisphereLights[0].skyColor": [
+              0.6551584005355835,
+              0.7826744318008423,
+              1.0499999523162842
+            ],
+            "hemisphereLights[0].groundColor": [
+              0.41115111112594604,
+              0.349074125289917,
+              0.31094518303871155
+            ]
+          }
+        }
+      ],
+      "render": {
+        "frame": 544,
+        "calls": 1130,
+        "triangles": 7577392,
+        "points": 0,
+        "lines": 0
+      },
+      "renderer": {
+        "name": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "glError": 0
+      },
+      "errors": [],
+      "pngSha256": "50e4c06546144902e0e9fcc745424c641be84ba00bc30c544ae1dc11cfdfd198"
+    },
+    {
+      "name": "08-laundry-candidate-capture-2",
+      "case": {
+        "name": "08-laundry-candidate",
+        "kind": "original",
+        "candidate": true,
+        "position": [
+          8,
+          6.384808464050293,
+          -122.1
+        ],
+        "target": [
+          5.15,
+          5.144808464050294,
+          -122.7
+        ]
+      },
+      "pass": "capture-2",
+      "camera": {
+        "position": [
+          288,
+          14.384808464050293,
+          777.9
+        ],
+        "quaternion": [
+          -0.15522850149956677,
+          0.6173580660361093,
+          0.12595148976979553,
+          0.7608609287163607
+        ],
+        "fov": 55,
+        "near": 0.2,
+        "far": 16000
+      },
+      "time": 14,
+      "lookParams": {
+        "exposure": 1.02,
+        "blur": 0,
+        "bloom": 0.12,
+        "distortion": 0,
+        "fringe": 0,
+        "vignette": 0.12,
+        "rays": 0,
+        "saturation": 1,
+        "contrast": 1.05,
+        "speed": 0
+      },
+      "ao": 0.55,
+      "toon": 1,
+      "lights": [
+        {
+          "type": "DirectionalLight",
+          "color": [
+            1,
+            0.775822218312646,
+            0.55201140150344
+          ],
+          "intensity": 2.1,
+          "position": [
+            198.3349607968577,
+            97.47086455531951,
+            795.4735164292183
+          ],
+          "target": [
+            280,
+            8,
+            900
+          ],
+          "targetToLight": [
+            -0.5104064950196394,
+            0.559192903470747,
+            -0.6532905223173857
+          ],
+          "shadowSize": [
+            4096,
+            4096
+          ]
+        },
+        {
+          "type": "HemisphereLight",
+          "color": [
+            0.623960391667596,
+            0.7454042095350284,
+            1
+          ],
+          "groundColor": [
+            0.3915724777393922,
+            0.33245153633549385,
+            0.29613827078752575
+          ],
+          "intensity": 1.05,
+          "position": [
+            0,
+            1,
+            0
+          ],
+          "targetToLight": null
+        }
+      ],
+      "shutters": [
+        {
+          "geometry": {
+            "geometry": "dc50c611-2d6a-4d8a-89f5-52231297baa9",
+            "vertices": 48,
+            "triangles": 24,
+            "normal": {
+              "count": 48,
+              "min": [
+                -1,
+                -1,
+                -1
+              ],
+              "max": [
+                1,
+                1,
+                1
+              ],
+              "unique": [
+                "1,0,0",
+                "-1,0,0",
+                "0,1,0",
+                "0,-1,0",
+                "0,0,1",
+                "0,0,-1"
+              ]
+            },
+            "uvCount": 48,
+            "bounds": {
+              "min": [
+                303.0900001525879,
+                8.200000002980232,
+                871.3020000457764
+              ],
+              "max": [
+                305.26000022888184,
+                9.850000023841858,
+                871.3400001525879
+              ],
+              "size": [
+                2.1700000762939453,
+                1.6500000208616257,
+                0.03800010681152344
+              ]
+            },
+            "matrixWorld": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              280,
+              8,
+              900,
+              1
+            ]
+          },
+          "material": {
+            "uuid": "f747009a-b879-4abc-abd5-0e274b9c6e8b",
+            "type": "MeshStandardMaterial",
+            "name": "tool-shed-worn-shutter",
+            "colorRGB": [
+              1,
+              1,
+              1
+            ],
+            "vertexColors": false,
+            "side": 0,
+            "opacity": 1,
+            "transparent": false,
+            "metalness": 1,
+            "roughness": 1,
+            "normalScale": [
+              1,
+              1
+            ],
+            "aoMapIntensity": 1,
+            "map": {
+              "uuid": "222538bb-e2de-4dac-807c-8980fd12cd63",
+              "channel": 0,
+              "colorSpace": "srgb",
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "flipY": true,
+              "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg"
+            },
+            "normalMap": {
+              "uuid": "2dee73df-9c4b-44b2-a546-37dc46f5225a",
+              "channel": 0,
+              "colorSpace": "",
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "flipY": true,
+              "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg"
+            },
+            "aoMap": {
+              "uuid": "a9d70ef6-42b9-4000-a196-e92f0fb5ff8d",
+              "channel": 0,
+              "colorSpace": "",
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "flipY": true,
+              "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+            },
+            "metalnessMap": {
+              "uuid": "a9d70ef6-42b9-4000-a196-e92f0fb5ff8d",
+              "channel": 0,
+              "colorSpace": "",
+              "repeat": [
+                0.8175182481751825,
+                1.2043795620437954
+              ],
+              "flipY": true,
+              "url": "http://127.0.0.1:59876/prop-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg"
+            },
+            "clippingPlanes": [
+              {
+                "normal": [
+                  1,
+                  0,
+                  0
+                ],
+                "constant": -188
+              },
+              {
+                "normal": [
+                  -1,
+                  0,
+                  0
+                ],
+                "constant": 372
+              },
+              {
+                "normal": [
+                  0,
+                  0,
+                  1
+                ],
+                "constant": -803
+              },
+              {
+                "normal": [
+                  0,
+                  0,
+                  -1
+                ],
+                "constant": 1028
+              }
+            ],
+            "envMap": false
+          },
+          "receiveShadow": true
+        }
+      ],
+      "gpuUniformsAfterDraw": [],
+      "render": {
+        "frame": 595,
+        "calls": 865,
+        "triangles": 8823757,
+        "points": 0,
+        "lines": 0
+      },
+      "renderer": {
+        "name": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "glError": 0
+      },
+      "errors": [],
+      "pngSha256": "36b9486c9bd2ee4923c45bbec9ee0c1254149495c9a43af8074da785f4bc1b00"
+    }
+  ],
+  "diagnosticBoundary": "Basic map-only is an unlit causal diagnostic, not a material fix or accepted scene variant. The root reviewer observed that normal-off and receiveShadow-off separately remained dark, while Basic revealed the source texture; actual light and white material-color state were inspected. Candidate views test framing only. Full report retains all 9 states / 27 captures including restored states; this archive selects the predetermined second-frame JPGs."
+}

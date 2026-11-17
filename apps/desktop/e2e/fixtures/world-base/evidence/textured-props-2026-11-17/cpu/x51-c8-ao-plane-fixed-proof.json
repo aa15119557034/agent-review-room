@@ -1,0 +1,111 @@
+{
+  "scope": "CPU mathematical replay of the original single-plane counterexample with the reviewed two-dimensional texel-center guard. Not GLSL compilation, not GPU validation; denominator remains16.",
+  "sourceSha256": "5e8590a41fc998943342ad878a2b9a6a38e0698eac0a165d1ecb873e3b4caf89",
+  "cases": [
+    {
+      "x": 0,
+      "old": {
+        "xPixel": 0,
+        "d0": 9.994794377928162,
+        "r": 48,
+        "outOfBoundsPairs": 16,
+        "skippedPairs": 0,
+        "ao": 0.94270797238272,
+        "compositeMultiplier": 0.968489384810496
+      },
+      "fixed": {
+        "xPixel": 0,
+        "d0": 9.994794377928162,
+        "r": 48,
+        "outOfBoundsPairs": 16,
+        "skippedPairs": 16,
+        "ao": 1,
+        "compositeMultiplier": 1
+      }
+    },
+    {
+      "x": 1,
+      "old": {
+        "xPixel": 1,
+        "d0": 9.98439937597504,
+        "r": 48,
+        "outOfBoundsPairs": 16,
+        "skippedPairs": 0,
+        "ao": 0.9481490545469307,
+        "compositeMultiplier": 0.9714819800008119
+      },
+      "fixed": {
+        "xPixel": 1,
+        "d0": 9.98439937597504,
+        "r": 48,
+        "outOfBoundsPairs": 16,
+        "skippedPairs": 16,
+        "ao": 1,
+        "compositeMultiplier": 1
+      }
+    },
+    {
+      "x": 10,
+      "old": {
+        "xPixel": 10,
+        "d0": 9.891808346213292,
+        "r": 48,
+        "outOfBoundsPairs": 12,
+        "skippedPairs": 0,
+        "ao": 0.9837036376501406,
+        "compositeMultiplier": 0.9910370007075774
+      },
+      "fixed": {
+        "xPixel": 10,
+        "d0": 9.891808346213292,
+        "r": 48,
+        "outOfBoundsPairs": 12,
+        "skippedPairs": 12,
+        "ao": 1,
+        "compositeMultiplier": 1
+      }
+    },
+    {
+      "x": 47,
+      "old": {
+        "xPixel": 47,
+        "d0": 9.528535980148883,
+        "r": 48,
+        "outOfBoundsPairs": 0,
+        "skippedPairs": 0,
+        "ao": 1,
+        "compositeMultiplier": 1
+      },
+      "fixed": {
+        "xPixel": 47,
+        "d0": 9.528535980148883,
+        "r": 48,
+        "outOfBoundsPairs": 0,
+        "skippedPairs": 2,
+        "ao": 1,
+        "compositeMultiplier": 1
+      }
+    },
+    {
+      "x": 100,
+      "old": {
+        "xPixel": 100,
+        "d0": 9.052333804809052,
+        "r": 48,
+        "outOfBoundsPairs": 0,
+        "skippedPairs": 0,
+        "ao": 1,
+        "compositeMultiplier": 1
+      },
+      "fixed": {
+        "xPixel": 100,
+        "d0": 9.052333804809052,
+        "r": 48,
+        "outOfBoundsPairs": 0,
+        "skippedPairs": 0,
+        "ao": 1,
+        "compositeMultiplier": 1
+      }
+    }
+  ]
+}

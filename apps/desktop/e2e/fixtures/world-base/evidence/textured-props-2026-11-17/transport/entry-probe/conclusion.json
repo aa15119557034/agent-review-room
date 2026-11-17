@@ -1,0 +1,39 @@
+{
+  "finding": "Confirmed Electron CJS entry guard defect; native breakpoint exit cause not established.",
+  "script": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/scripts/diagnose-asset-transport.cjs",
+  "lines": [
+    247,
+    250
+  ],
+  "sourceSha256AtProbe": "07d717503cd749d2b9949f801a3ff90e47cc4456926715e85e23b0dc0e1d2210",
+  "sourceUnchangedDuringProbe": true,
+  "evidence": {
+    "processExit": 0,
+    "requireMainFilename": "electron",
+    "mainEqualsModule": false,
+    "electronArgvMatches": true,
+    "importsComplete": true,
+    "importedExports": [
+      "buildTargets"
+    ],
+    "failedOriginalLogHex": "0d0a"
+  },
+  "interpretation": [
+    "On this executable, the newly added require.main===module condition is false for a directly launched .cjs entry, so the host call is skipped. No bootstrap/report is therefore expected even after JavaScript was entered.",
+    "The standalone probe reached first-JS and imported the actual transport script/dependencies successfully with a fresh clean environment. It did not execute host, app.whenReady, renderer or transport.",
+    "This proves an entry guard semantic bug, not the exact cause of the previous native 0x80000003 exit. Different script/profile paths and no full application startup limit causal claims; no second Electron probe or transport retry was performed."
+  ],
+  "minimalFix": "const direct = require.main === module || (process.versions.electron && process.argv[1] && path.resolve(process.argv[1]) === __filename); if (direct) { existing Electron/Node branches }",
+  "unmodified": [
+    "fixture source",
+    "original failed artifact directory",
+    "system configuration",
+    "installed software"
+  ],
+  "probeFiles": [
+    "launch.json",
+    "entry.cjs",
+    "entry-evidence.json",
+    "process-result.json"
+  ]
+}

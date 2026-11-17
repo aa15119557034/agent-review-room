@@ -1,0 +1,231 @@
+{
+  "createdAt": "2026-11-17T07:26:05.096Z",
+  "sourceChecks": [
+    {
+      "label": "original-c8",
+      "artifact": "gpu-town-c8",
+      "commit": "5463714131eba64f83a828ba509c023072f4d4ea",
+      "manifestSha256": "210e979899e7581455bec3cbcc424cc3af56f1c85ba8057acc8517f9772f40dd",
+      "trackedFilesVerifiedAgainstCommit": 199,
+      "ignoredFilesVerifiedAgainstPinnedManifestAndDisk": 0
+    },
+    {
+      "label": "meadow",
+      "artifact": "gpu-meadow-c7-c8",
+      "commit": "5463714131eba64f83a828ba509c023072f4d4ea",
+      "manifestSha256": "89f068f52dbdb8d8bc659ff9d850942bd08839e2f527857db72e87ad092e112c",
+      "trackedFilesVerifiedAgainstCommit": 198,
+      "ignoredFilesVerifiedAgainstPinnedManifestAndDisk": 0
+    },
+    {
+      "label": "ao",
+      "artifact": "gpu-ao-c8-v1",
+      "commit": "5463714131eba64f83a828ba509c023072f4d4ea",
+      "manifestSha256": "0e6dc0f0ac7c6e55284b5e98c3bf4886e7c0e5ef9d6e9590aec5a28eab3402c8",
+      "trackedFilesVerifiedAgainstCommit": 198,
+      "ignoredFilesVerifiedAgainstPinnedManifestAndDisk": 0
+    },
+    {
+      "label": "integrated",
+      "artifact": "gpu-props-c8-v1",
+      "commit": "5cf3ef7d784ff069b87fef9b8051de63b6695e48",
+      "manifestSha256": "67a607e32e83a521df147dc4f080944e14eac6290be5117d0f05c493e20379b7",
+      "trackedFilesVerifiedAgainstCommit": 203,
+      "ignoredFilesVerifiedAgainstPinnedManifestAndDisk": 9
+    },
+    {
+      "label": "targeted",
+      "artifact": "gpu-props-c8-integration-v1",
+      "commit": "5cf3ef7d784ff069b87fef9b8051de63b6695e48",
+      "manifestSha256": "27df22b138e5cbb5de9392a9a5d0e17d338c9a8e69ab00ada802c834d290293a",
+      "trackedFilesVerifiedAgainstCommit": 204,
+      "ignoredFilesVerifiedAgainstPinnedManifestAndDisk": 9,
+      "separatePropManifestFilesVerified": 9
+    },
+    {
+      "label": "shutter-cause",
+      "artifact": "gpu-shutter-c8-cause-v1",
+      "commit": "5cf3ef7d784ff069b87fef9b8051de63b6695e48",
+      "manifestSha256": "03f1ffa420f3051e64a06aef0fc51444f73f209e4a9512681a5133fa6071d156",
+      "trackedFilesVerifiedAgainstCommit": 204,
+      "ignoredFilesVerifiedAgainstPinnedManifestAndDisk": 9,
+      "separatePropManifestFilesVerified": 9
+    },
+    {
+      "label": "shutter-grade-driver-failed",
+      "artifact": "gpu-shutter-c8-grade-v1",
+      "commit": "5cf3ef7d784ff069b87fef9b8051de63b6695e48",
+      "manifestSha256": "24861da97b59de252ed92916b06e8891919e5e2ae11542c005b6a9c9715181b9",
+      "trackedFilesVerifiedAgainstCommit": 204,
+      "ignoredFilesVerifiedAgainstPinnedManifestAndDisk": 9,
+      "separatePropManifestFilesVerified": 9
+    },
+    {
+      "label": "shutter-grade",
+      "artifact": "gpu-shutter-c8-grade-v2",
+      "commit": "5cf3ef7d784ff069b87fef9b8051de63b6695e48",
+      "manifestSha256": "86691f5785fa103af0885088192a6b92035d85a7804871e737ffab74b7f5ee13",
+      "trackedFilesVerifiedAgainstCommit": 204,
+      "ignoredFilesVerifiedAgainstPinnedManifestAndDisk": 9,
+      "separatePropManifestFilesVerified": 9
+    },
+    {
+      "label": "final",
+      "artifact": "gpu-props-c8-framing-fixed",
+      "commit": "38087c701e41279b1d4c5721ba4d7b1e16eef0e9",
+      "manifestSha256": "ab41932ae51c0cd0a589e0a142fcc43d7a1d963a79879d41499126be3a4be787",
+      "trackedFilesVerifiedAgainstCommit": 203,
+      "ignoredFilesVerifiedAgainstPinnedManifestAndDisk": 9
+    }
+  ],
+  "outcomes": [
+    {
+      "label": "original-c8",
+      "artifact": "gpu-town-c8",
+      "stage": "complete",
+      "ok": false,
+      "renderOk": true,
+      "transportClean": false,
+      "strictExpectedExit": 1
+    },
+    {
+      "label": "meadow",
+      "artifact": "gpu-meadow-c7-c8",
+      "stage": "complete",
+      "ok": false,
+      "renderOk": true,
+      "transportClean": false,
+      "sourceUnchanged": true,
+      "driverUnchanged": true,
+      "strictExpectedExit": 1
+    },
+    {
+      "label": "ao",
+      "artifact": "gpu-ao-c8-v1",
+      "stage": "complete",
+      "ok": false,
+      "renderOk": true,
+      "transportClean": false,
+      "sourceUnchanged": true,
+      "driverUnchanged": true,
+      "strictExpectedExit": 1
+    },
+    {
+      "label": "integrated",
+      "artifact": "gpu-props-c8-v1",
+      "stage": "complete",
+      "ok": false,
+      "renderOk": true,
+      "transportClean": false,
+      "strictExpectedExit": 1
+    },
+    {
+      "label": "targeted",
+      "artifact": "gpu-props-c8-integration-v1",
+      "stage": "complete",
+      "ok": false,
+      "renderOk": true,
+      "transportClean": false,
+      "sourceUnchanged": true,
+      "driverUnchanged": true,
+      "strictExpectedExit": 1
+    },
+    {
+      "label": "shutter-cause",
+      "artifact": "gpu-shutter-c8-cause-v1",
+      "stage": "complete",
+      "ok": false,
+      "renderOk": true,
+      "transportClean": false,
+      "sourceUnchanged": true,
+      "driverUnchanged": true,
+      "strictExpectedExit": 1
+    },
+    {
+      "label": "shutter-grade-driver-failed",
+      "artifact": "gpu-shutter-c8-grade-v1",
+      "stage": "complete",
+      "ok": false,
+      "renderOk": false,
+      "transportClean": false,
+      "sourceUnchanged": true,
+      "driverUnchanged": true,
+      "strictExpectedExit": 1
+    },
+    {
+      "label": "shutter-grade",
+      "artifact": "gpu-shutter-c8-grade-v2",
+      "stage": "complete",
+      "ok": false,
+      "renderOk": true,
+      "transportClean": false,
+      "sourceUnchanged": true,
+      "driverUnchanged": true,
+      "strictExpectedExit": 1
+    },
+    {
+      "label": "final",
+      "artifact": "gpu-props-c8-framing-fixed",
+      "stage": "complete",
+      "ok": true,
+      "renderOk": true,
+      "transportClean": true,
+      "strictExpectedExit": 0
+    },
+    {
+      "label": "transport-entry-fixed",
+      "ok": false,
+      "bytesIntegrity": true,
+      "transportClean": false,
+      "count": 72,
+      "bytesPass": 72,
+      "transportPass": 49,
+      "strictExpectedExit": 1
+    }
+  ],
+  "ci": [
+    {
+      "label": "original-c8",
+      "head": "5463714131eba64f83a828ba509c023072f4d4ea",
+      "job": 133854905175,
+      "url": "https://github.com/aa15119557034/agent-review-room/actions/runs/44028628798/job/133854905175",
+      "result": "success",
+      "completedAt": "2026-11-17T06:09:45Z",
+      "tests": 1615,
+      "passed": 1615,
+      "types": 9,
+      "builds": 2,
+      "allExitZero": true
+    },
+    {
+      "label": "initial-props",
+      "head": "5cf3ef7d784ff069b87fef9b8051de63b6695e48",
+      "job": 133874231831,
+      "url": "https://github.com/aa15119557034/agent-review-room/actions/runs/44034570878/job/133874231831",
+      "result": "success",
+      "completedAt": "2026-11-17T06:58:55Z",
+      "tests": 1615,
+      "passed": 1615,
+      "types": 9,
+      "builds": 2,
+      "allExitZero": true
+    },
+    {
+      "label": "final",
+      "head": "38087c701e41279b1d4c5721ba4d7b1e16eef0e9",
+      "job": 133884190970,
+      "url": "https://github.com/aa15119557034/agent-review-room/actions/runs/44037615195/job/133884190970",
+      "result": "success",
+      "completedAt": "2026-11-17T07:22:35Z",
+      "tests": 1615,
+      "passed": 1615,
+      "types": 9,
+      "builds": 2,
+      "allExitZero": true
+    }
+  ],
+  "finalCI": "Explicit final-head CI summary included and head verified",
+  "method": "Predetermined C8 original, meadow, AO, integrated and targeted runs. Source manifests verified against each exact commit. Nine ignored asset files verified against the integrated commit prop-assets.json and actual byte size/MD5/SHA; never git show ignored files. Images are copied without decoding, resizing or recompression. Full reports are lossless gzip with original hashes. AO presents predetermined capture-2, preserving every capture record in the full report. Failure runs and transport failures are retained.",
+  "limitations": "Not whole-world/style acceptance. AO causal stills do not establish performance. Targeted two-view sequential AO A-B-A frame samples support only that bounded experiment, not universal FPS or a release benchmark. The early transport config HEAD records a dirty working tree, not a clean 5463714 source claim. Old driver is supported by frozen hash records only. An entry-guard defect is proved; the native 0x80000003 cause is not. CPU texture stubs and metadata do not prove visibility. Absolute paths inside original reports remain original forensic data and may require the original workspace to replay. No asset originals, runtime caches or user profiles are archived.",
+  "imagesSelection": "No best-of selection: fixed named baseline views, AO second capture of both states, explicitly named targeted views. Omitted warmup/first AO image pixels remain in original local artifact directories; all their report records remain archived."
+}

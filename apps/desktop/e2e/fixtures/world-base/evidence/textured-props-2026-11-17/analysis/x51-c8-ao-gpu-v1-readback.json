@@ -1,0 +1,159 @@
+{
+  "report": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-ao-c8-v1/ao-report.json",
+  "pairs": [
+    {
+      "view": "20-rear-eye",
+      "onCapture1Equals2": true,
+      "offCapture1Equals2": true,
+      "onOffDiffer": true,
+      "identicalFields": {
+        "camera": true,
+        "lights": true,
+        "depth": true,
+        "time": true,
+        "stationTime": true,
+        "params": true,
+        "quality": true,
+        "dimensions": true
+      },
+      "gpu": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+        "precision": "highp",
+        "maxTextureSize": 16384
+      },
+      "depth": {
+        "texture": {
+          "class": "DepthTexture",
+          "isDepthTexture": true,
+          "type": 1015,
+          "format": 1026,
+          "internalFormat": null,
+          "minFilter": 1003,
+          "magFilter": 1003,
+          "wrapS": 1001,
+          "wrapT": 1001,
+          "width": 1440,
+          "height": 900
+        },
+        "sceneTarget": {
+          "class": "WebGLRenderTarget",
+          "width": 1440,
+          "height": 900,
+          "samples": 4,
+          "depthBuffer": true
+        },
+        "boundToSceneDepth": true,
+        "near": 0.2,
+        "far": 16000,
+        "reversed": 0,
+        "projectionScale": 811.8214898721407
+      }
+    },
+    {
+      "view": "21-front-eye",
+      "onCapture1Equals2": true,
+      "offCapture1Equals2": true,
+      "onOffDiffer": true,
+      "identicalFields": {
+        "camera": true,
+        "lights": true,
+        "depth": true,
+        "time": true,
+        "stationTime": true,
+        "params": true,
+        "quality": true,
+        "dimensions": true
+      },
+      "gpu": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+        "precision": "highp",
+        "maxTextureSize": 16384
+      },
+      "depth": {
+        "texture": {
+          "class": "DepthTexture",
+          "isDepthTexture": true,
+          "type": 1015,
+          "format": 1026,
+          "internalFormat": null,
+          "minFilter": 1003,
+          "magFilter": 1003,
+          "wrapS": 1001,
+          "wrapT": 1001,
+          "width": 1440,
+          "height": 900
+        },
+        "sceneTarget": {
+          "class": "WebGLRenderTarget",
+          "width": 1440,
+          "height": 900,
+          "samples": 4,
+          "depthBuffer": true
+        },
+        "boundToSceneDepth": true,
+        "near": 0.2,
+        "far": 16000,
+        "reversed": 0,
+        "projectionScale": 811.8214898721407
+      }
+    },
+    {
+      "view": "station-street",
+      "onCapture1Equals2": true,
+      "offCapture1Equals2": true,
+      "onOffDiffer": true,
+      "identicalFields": {
+        "camera": true,
+        "lights": true,
+        "depth": true,
+        "time": true,
+        "stationTime": true,
+        "params": true,
+        "quality": true,
+        "dimensions": true
+      },
+      "gpu": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+        "precision": "highp",
+        "maxTextureSize": 16384
+      },
+      "depth": {
+        "texture": {
+          "class": "DepthTexture",
+          "isDepthTexture": true,
+          "type": 1015,
+          "format": 1026,
+          "internalFormat": null,
+          "minFilter": 1003,
+          "magFilter": 1003,
+          "wrapS": 1001,
+          "wrapT": 1001,
+          "width": 1440,
+          "height": 900
+        },
+        "sceneTarget": {
+          "class": "WebGLRenderTarget",
+          "width": 1440,
+          "height": 900,
+          "samples": 4,
+          "depthBuffer": true
+        },
+        "boundToSceneDepth": true,
+        "near": 0.2,
+        "far": 16000,
+        "reversed": 0,
+        "projectionScale": 811.8214898721407
+      }
+    }
+  ],
+  "visualObservation": "Viewed capture-2 JPEG pairs: AO-on adds repeated bands across shop window/wall/mailbox and rear facade near stair. Those added bands disappear in AO-off; existing cast shadows remain. A/B attribution applies to AO contribution; no assertion yet which sampling/normal issue explains every band."
+}

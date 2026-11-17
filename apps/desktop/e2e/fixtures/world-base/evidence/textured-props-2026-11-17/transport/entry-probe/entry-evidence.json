@@ -1,0 +1,21 @@
+{
+  "stage": "imports-complete",
+  "versions": {
+    "electron": "44.9.0",
+    "node": "24.22.0",
+    "chrome": "152.0.7977.167"
+  },
+  "argv": [
+    "D:\\codex\\2026-11-16\\world-implementation\\runtime-path-probe\\electron.exe",
+    "D:/codex/2026-11-16/world-implementation/handoff/x51-c8-transport-entry-probe/entry.cjs"
+  ],
+  "moduleFilename": "D:\\codex\\2026-11-16\\world-implementation\\handoff\\x51-c8-transport-entry-probe\\entry.cjs",
+  "moduleId": "D:\\codex\\2026-11-16\\world-implementation\\handoff\\x51-c8-transport-entry-probe\\entry.cjs",
+  "requireMainDefined": true,
+  "requireMainFilename": "electron",
+  "mainEqualsModule": false,
+  "electronArgvMatches": true,
+  "importedExports": [
+    "buildTargets"
+  ]
+}

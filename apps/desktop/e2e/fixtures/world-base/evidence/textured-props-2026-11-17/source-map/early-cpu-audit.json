@@ -1,0 +1,32 @@
+{
+  "scope": "Historical pre-commit CPU audit, not a source-manifest or final material verification. A source mismatch is preserved explicitly, never relabeled as a clean commit pass.",
+  "files": [
+    {
+      "file": "src/textured-props.js",
+      "auditedSha256": "163bffe5c58f65652b9d8597766476c6e3fff66f89aa9bfc3fa60f72cfe8567c",
+      "comparisonCommit": "5cf3ef7d784ff069b87fef9b8051de63b6695e48",
+      "committedSha256": "3bce7ebe97de2ec87828e757f6883e3d5cf5ec795faa96ff72d47f59a9bd63c4",
+      "exactCommitMatch": false,
+      "singleTokenCheck": {
+        "tokenRemovedFromCommittedSourceInMemory": "aoMap: arm, ",
+        "reversedSha256": "163bffe5c58f65652b9d8597766476c6e3fff66f89aa9bfc3fa60f72cfe8567c",
+        "matchesHistoricalAudit": true
+      },
+      "exactDifference": "Historical CPU source lacked only the shutter aoMap: arm binding; committed GPU source has it. No historical file was rewritten or whole-commit CPU success inferred."
+    },
+    {
+      "file": "src/station.js",
+      "auditedSha256": "5dd6442a1300eaede6d9efdc0c9319a895e4008462a823c60e295fd50f0198c5",
+      "comparisonCommit": "5cf3ef7d784ff069b87fef9b8051de63b6695e48",
+      "committedSha256": "5dd6442a1300eaede6d9efdc0c9319a895e4008462a823c60e295fd50f0198c5",
+      "exactCommitMatch": true
+    },
+    {
+      "file": "src/city.js",
+      "auditedSha256": "a2b7768e9bed0b2bdb64e1033cce5733093a242abf9d71f386465c3a42dd4725",
+      "comparisonCommit": "5cf3ef7d784ff069b87fef9b8051de63b6695e48",
+      "committedSha256": "a2b7768e9bed0b2bdb64e1033cce5733093a242abf9d71f386465c3a42dd4725",
+      "exactCommitMatch": true
+    }
+  ]
+}

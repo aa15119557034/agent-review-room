@@ -1,0 +1,69 @@
+{
+  "source": "Actual shell process results observed in this task, not inferred from report.ok. Original artifact reports and config are unchanged.",
+  "runs": [
+    {
+      "artifact": "gpu-town-c8",
+      "exitCode": 1,
+      "observer": "root"
+    },
+    {
+      "artifact": "gpu-meadow-c7-c8",
+      "exitCode": 1,
+      "observer": "root"
+    },
+    {
+      "artifact": "gpu-ao-c8-v1",
+      "exitCode": 1,
+      "observer": "runtime_harness"
+    },
+    {
+      "artifact": "gpu-props-c8-v1",
+      "exitCode": 1,
+      "observer": "root",
+      "execSession": 63199
+    },
+    {
+      "artifact": "gpu-props-c8-integration-v1",
+      "exitCode": 1,
+      "observer": "runtime_harness",
+      "execSession": 41397
+    },
+    {
+      "artifact": "gpu-shutter-c8-cause-v1",
+      "exitCode": 1,
+      "observer": "runtime_harness",
+      "execSession": 32594
+    },
+    {
+      "artifact": "gpu-shutter-c8-grade-v1",
+      "exitCode": 1,
+      "observer": "runtime_harness",
+      "execSession": 34003,
+      "scope": "External driver interface error, zero saved captures"
+    },
+    {
+      "artifact": "gpu-shutter-c8-grade-v2",
+      "exitCode": 1,
+      "observer": "runtime_harness",
+      "execSession": 23374
+    },
+    {
+      "artifact": "gpu-props-c8-framing-fixed",
+      "exitCode": 0,
+      "observer": "root",
+      "execSession": 11486
+    },
+    {
+      "artifact": "asset-transport-props-c8",
+      "exitCode": 2147483651,
+      "exitHex": "0x80000003",
+      "observer": "root",
+      "causeEstablished": false
+    },
+    {
+      "artifact": "asset-transport-props-c8-entry-fixed",
+      "exitCode": 1,
+      "observer": "root"
+    }
+  ]
+}

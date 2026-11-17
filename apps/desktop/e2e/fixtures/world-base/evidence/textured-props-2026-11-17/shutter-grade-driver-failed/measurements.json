@@ -1,0 +1,114 @@
+{
+  "sourceCommit": "5cf3ef7d784ff069b87fef9b8051de63b6695e48",
+  "sourceVerification": {
+    "commit": "5cf3ef7d784ff069b87fef9b8051de63b6695e48",
+    "manifestSha256": "24861da97b59de252ed92916b06e8891919e5e2ae11542c005b6a9c9715181b9",
+    "trackedFilesVerifiedAgainstCommit": 204,
+    "ignoredFilesVerifiedAgainstPinnedManifestAndDisk": 9,
+    "separatePropManifestFilesVerified": 9
+  },
+  "stage": "complete",
+  "completedAt": "2026-11-17T07:14:40.027Z",
+  "ok": false,
+  "renderOk": false,
+  "transportClean": false,
+  "versions": {
+    "node": "24.22.0",
+    "acorn": "8.18.0",
+    "ada": "4.0.0",
+    "amaro": "1.1.11",
+    "ares": "1.34.8",
+    "brotli": "1.2.0",
+    "cldr": "48.0",
+    "icu": "78.2",
+    "llhttp": "9.4.3",
+    "merve": "1.2.2",
+    "modules": "149",
+    "napi": "10",
+    "nbytes": "0.1.4",
+    "ncrypto": "0.0.1",
+    "nghttp2": "1.70.0",
+    "nghttp3": "",
+    "ngtcp2": "",
+    "openssl": "0.0.0",
+    "simdjson": "4.6.11",
+    "simdutf": "7.7.0",
+    "sqlite": "3.53.4",
+    "tz": "2026d",
+    "undici": "7.29.1",
+    "unicode": "17.0",
+    "uv": "1.52.1",
+    "uvwasi": "0.0.23",
+    "v8": "15.2.124.43-electron.0",
+    "zlib": "1.3.2.1-motley",
+    "zstd": "1.6.0",
+    "electron": "44.9.0",
+    "chrome": "152.0.7977.167"
+  },
+  "sourceUnchanged": true,
+  "driverUnchanged": true,
+  "changedSourceFiles": [],
+  "restore": {
+    "contrast": 1.05,
+    "uploadedContrast": 1.05,
+    "materialsUnchanged": true,
+    "view": "station-street",
+    "fov": 58,
+    "time": 34.217800000000004,
+    "frozen": false
+  },
+  "assetsUnchanged": true,
+  "assetFiles": 9,
+  "networkFailures": [
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:60209/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "57788.240",
+      "timestamp": 1909838.168472,
+      "type": "Fetch"
+    }
+  ],
+  "httpErrors": [],
+  "exceptions": [],
+  "failure": "TypeError: Cannot read properties of undefined (reading 'glError')\n    at D:\\codex\\2026-11-16\\world-implementation\\handoff\\x51-c8-shutter-grade-gpu.cjs:95:132\n    at async host (D:\\codex\\2026-11-16\\world-implementation\\handoff\\x51-c8-shutter-grade-gpu.cjs:65:9)",
+  "strictExpectedProcessExitFromReport": 1,
+  "exitEvidence": "Expected from driver/report ok, not a persisted OS process exit observation. Preserve console/runner exit separately.",
+  "initial": {
+    "cases": [
+      {
+        "name": "00-contrast-original",
+        "contrast": 1.05
+      },
+      {
+        "name": "01-contrast-neutral",
+        "contrast": 1
+      },
+      {
+        "name": "02-contrast-restored",
+        "contrast": 1.05
+      }
+    ],
+    "roi": [
+      {
+        "name": "door-interior-upper",
+        "x": 759,
+        "y": 360,
+        "width": 12,
+        "height": 18
+      },
+      {
+        "name": "door-interior-lower",
+        "x": 759,
+        "y": 450,
+        "width": 12,
+        "height": 18
+      }
+    ],
+    "method": "Fixed original service camera/time14. All original materials/lights/quality/post settings preserved except contrast1.05->1->1.05. One warmup+two retained captures per state. No update during state changes. Small ROIs selected in shutter interior away from grille/sign; raw linear readback explicitly typed and validated. No performance measurement."
+  },
+  "selectedImages": [],
+  "captures": [],
+  "diagnosticBoundary": "Grade v1 failed in the external host while reading nonexistent shot.renderer.glError, before saving any capture. This is a diagnostic-driver interface failure, not evidence that the scene or contrast hypothesis failed. Preserve original report flags, TypeError, restoration and source/assets checks. The unchanged v1 driver is hash-verified separately from the v2 interface repair; no failure artifacts were overwritten."
+}

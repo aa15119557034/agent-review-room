@@ -1,0 +1,60 @@
+{
+  "source": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/.local/textured-props/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg",
+  "sha256": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93",
+  "method": "Existing FFmpeg CPU JPEG decode -hwaccel none to rgb24. This is source-file pixel statistics, not Chromium texture/GPU readback; JPEG/color decoder rounding may differ from browser.",
+  "command": [
+    "E:/AI/ComfyUI-aki-v3.2-core037/python/Lib/site-packages/imageio_ffmpeg/binaries/ffmpeg-win-x86_64-v7.1.exe",
+    "-hide_banner",
+    "-loglevel",
+    "error",
+    "-hwaccel",
+    "none",
+    "-i",
+    "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/.local/textured-props/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg",
+    "-f",
+    "rawvideo",
+    "-pix_fmt",
+    "rgb24",
+    "pipe:1"
+  ],
+  "exit": 0,
+  "decodedBytes": 3145728,
+  "expectedBytes": 3145728,
+  "channelsRGB": [
+    {
+      "min": 26,
+      "max": 222,
+      "mean": 126.70103454589844
+    },
+    {
+      "min": 3,
+      "max": 243,
+      "mean": 128.6019630432129
+    },
+    {
+      "min": 103,
+      "max": 255,
+      "mean": 236.33374309539795
+    }
+  ],
+  "runtimeBinding": {
+    "uuid": "c77973be-b56c-47de-88fb-3b019d9ae6cd",
+    "type": 1009,
+    "colorSpace": "",
+    "flipY": true,
+    "channel": 0,
+    "image": {
+      "width": 1024,
+      "height": 1024
+    },
+    "repeat": [
+      0.8175182481751825,
+      1.2043795620437954
+    ],
+    "url": "http://127.0.0.1:59194/prop-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg"
+  },
+  "runtimeNormalScale": [
+    1,
+    1
+  ]
+}

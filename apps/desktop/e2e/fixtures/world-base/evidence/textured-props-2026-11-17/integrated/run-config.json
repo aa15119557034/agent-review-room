@@ -1,0 +1,25 @@
+{
+  "scene": "combined",
+  "fixture": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base",
+  "output": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-props-c8-v1",
+  "runtime": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-props-c8-v1\\runtime-cA6y6l",
+  "source": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base",
+  "preview": false,
+  "videoOnly": false,
+  "ffmpeg": null,
+  "width": 1440,
+  "height": 900,
+  "sampleMs": 15000,
+  "warmupMs": 5000,
+  "timeoutMs": 180000,
+  "videoMs": 0,
+  "query": "",
+  "proxy": "",
+  "startedAt": "2026-11-17T06:53:31.585Z",
+  "entrySha256": "74d6b0e94e7235e32554b49da4e161c4afbfc9c0459ddf25c25dcbb8fe65e126",
+  "sourceManifest": {
+    "file": "source-manifest.json",
+    "head": "5cf3ef7d784ff069b87fef9b8051de63b6695e48",
+    "sha256": "67a607e32e83a521df147dc4f080944e14eac6290be5117d0f05c493e20379b7"
+  }
+}
