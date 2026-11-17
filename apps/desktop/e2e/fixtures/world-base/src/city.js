@@ -6,7 +6,9 @@ import { visibleBankHeight } from './skyline.js';
 // Author dimensions, never stretched storeys. These lots stay outside the
 // station's walkable area and the two existing apartment yards.
 const SITES = [
-  { name: 'curved-tower', file: 'highrise/high_rise_building.glb', center: [-40, -235], maximumRelief: 3 },
+  // The curved glass tower (highrise/high_rise_building.glb) was dropped in
+  // X-51 polish: a lone corporate tower in a meadow contradicts the #252 ZZZ
+  // breakdown (dense mid-rise blocks), and its 740k triangles have no LOD.
   { name: 'brick-large', file: 'downtown/Building_Large_2.gltf', center: [35, -135], maximumRelief: 1.5 },
   { name: 'brick-medium', file: 'downtown/Building_Medium_2_001.gltf', center: [-16, -135], maximumRelief: 1.5 },
   { name: 'brick-small', file: 'downtown/Building_Small_1.gltf', center: [9, -135], maximumRelief: 1.5 },
@@ -83,7 +85,14 @@ export async function createCity({ scene, station, island, skyline }) {
           processedMaterials.add(material);
           // Standard exports contain red control colours. Keep the source
           // attributes, but do not multiply these into the painted facade.
-          if (site.file.startsWith('downtown/')) material.vertexColors = false;
+          if (site.file.startsWith('downtown/')) {
+            material.vertexColors = false;
+            // The free Standard facades are authored dark for PBR with an
+            // environment map; this scene has none. Lift them towards the
+            // station's light plaster/brick values so they read as backdrop.
+            material.color.multiplyScalar(1.35);
+            if ('envMapIntensity' in material) material.envMapIntensity = 0;
+          }
           for (const [slot, texture] of Object.entries(material)) {
             if (!texture?.isTexture) continue;
             const textureIndex = gltf.parser.associations.get(texture)?.textures;
@@ -154,7 +163,7 @@ function batchConnections(root, owned) {
     for (const mesh of meshes) { mesh.removeFromParent(); mesh.geometry.dispose(); owned.delete(mesh.geometry); }
     owned.add(geometry);
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.name = material.map ? 'city-roads' : 'city-foundations-and-stairs'; root.add(mesh);
+    mesh.name = material.map ? 'city-roads' : meshes[0].name === 'city-block-paving' ? 'city-block-paving' : 'city-foundations-and-stairs'; root.add(mesh);
   }
   return { meshesBefore: before, meshesAfter: groups.size, triangles, originalBuildingMeshesChanged: 0 };
 }
@@ -170,15 +179,21 @@ function buildConnections({ root, station, island, placements, foundation, geome
   const roads = [
     { name: 'city-front-street', minX: -27, maxX: 49, minZ: -124.5, maxZ: -118 },
     { name: 'city-east-link', minX: 49, maxX: 54, minZ: -124.5, maxZ: -101 },
-    { name: 'city-tower-link', minX: -5.5, maxX: 1.5, minZ: -196, maxZ: -124.5 },
   ];
+  // One paved city block under the three mid-rises, joining the front street,
+  // so the buildings stand on a lot instead of being pushed into the meadow.
+  const paving = new THREE.MeshToonMaterial({ color: '#c6c2b8', gradientMap: station.ctx.mat.gradientMap });
+  materials.add(paving);
+  const block = placements.reduce((box, p) => ({ minX: Math.min(box.minX, p.footprint.minX - 2.5), maxX: Math.max(box.maxX, p.footprint.maxX + 2.5),
+    minZ: Math.min(box.minZ, p.footprint.minZ - 2.5), maxZ: -124.5 }), { minX: Infinity, maxX: -Infinity, minZ: Infinity, maxZ: -124.5 });
+  roads.push({ name: 'city-block-paving', ...block, material: paving });
   for (const road of roads) {
     const nx = Math.ceil(road.maxX - road.minX), nz = Math.ceil(road.maxZ - road.minZ);
     const vertices = [], uv = [], indices = [];
     for (let j = 0; j <= nz; j++) for (let i = 0; i <= nx; i++) {
       const x = road.minX + (road.maxX - road.minX) * i / nx;
       const z = road.minZ + (road.maxZ - road.minZ) * j / nz;
-      vertices.push(x, ground(x, z) + 0.06, z); uv.push(x / 4, z / 4);
+      vertices.push(x, ground(x, z) + (road.material ? 0.03 : 0.06), z); uv.push(x / 4, z / 4);
       if (i < nx && j < nz) {
         const a = j * (nx + 1) + i, c = a + nx + 1;
         indices.push(a, c, a + 1, a + 1, c, c + 1);
@@ -188,8 +203,9 @@ function buildConnections({ root, station, island, placements, foundation, geome
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
     geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
     geometry.setIndex(indices); geometry.computeVertexNormals(); geometries.add(geometry);
-    const mesh = new THREE.Mesh(geometry, asphalt); mesh.name = road.name; root.add(mesh);
-    clearAreas.push(road); report.roads.push({ ...road, triangles: indices.length / 3, groundOffset: 0.06 });
+    const mesh = new THREE.Mesh(geometry, road.material || asphalt); mesh.name = road.name; root.add(mesh);
+    const { material: _unused, ...area } = road;
+    clearAreas.push(area); report.roads.push({ ...area, triangles: indices.length / 3, groundOffset: road.material ? 0.03 : 0.06 });
   }
   const stairs = (name, x, width, highZ, lowZ, top) => {
     const low = Math.max(...[-0.5, 0, 0.5].map(side => ground(x + side * width, lowZ))) + 0.065;
@@ -215,11 +231,9 @@ function buildConnections({ root, station, island, placements, foundation, geome
     clearAreas.push({ name, minX: x - width / 2, maxX: x + width / 2, minZ: Math.min(highZ, lowZ), maxZ: Math.max(highZ, lowZ) });
     report.stairs.push({ name, x, width, highZ, lowZ, steps: count, rise: drop / count, tread: run / count, top, bottom: low, minClearance });
   };
-  for (const placement of placements.filter(p => p.name !== 'curved-tower')) {
+  for (const placement of placements) {
     stairs(placement.name + '-entry', placement.center[0], 2.4, placement.footprint.maxZ, -124.51, placement.foundation.top - root.position.y);
   }
-  const tower = placements.find(p => p.name === 'curved-tower');
-  stairs('tower-entry', -2, 4, tower.footprint.maxZ, -196, tower.foundation.top - root.position.y);
   const r5 = station.ctx.services.houses.buildContext.L.ROADS.R5;
   stairs('station-levee-link', 51.5, 5, r5.z - r5.halfW - 0.03, -101, r5.y + 0.03);
   return { clearAreas, report };

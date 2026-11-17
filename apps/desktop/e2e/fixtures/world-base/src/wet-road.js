@@ -28,29 +28,81 @@ function makeMask(root, layout) {
   const excluded = new Uint8Array(SIZE * SIZE);
   const inverse = root.matrixWorld.clone().invert();
   const transform = new THREE.Matrix4(), p = new THREE.Vector3();
-  // Conservatively reserve whole decal triangles, including their transparent
-  // atlas margins, so markings and manhole covers remain dry. 12 cm also leaves
-  // room for the mask's linear filtering without a sharp water/paint boundary.
+  // Keep markings and manhole covers dry using their real painted shape:
+  // rasterise each decal triangle, sample the decal's own alpha at the
+  // interpolated UV, then dilate ~12 cm so linear mask filtering never bleeds
+  // water onto paint. Triangles without readable alpha fall back to their
+  // exact triangle (not its bounding box).
+  const alphaCache = new Map();
+  const readAlpha = texture => {
+    if (!texture?.image) return null;
+    if (alphaCache.has(texture)) return alphaCache.get(texture);
+    let entry = null;
+    try {
+      const image = texture.image, w = image.width, h = image.height;
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const g = canvas.getContext('2d', { willReadFrequently: true });
+      g.drawImage(image, 0, 0);
+      entry = { w, h, data: g.getImageData(0, 0, w, h).data, flipY: texture.flipY };
+    } catch { entry = null; }
+    alphaCache.set(texture, entry);
+    return entry;
+  };
+  const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
+  const ua = new THREE.Vector2(), ub = new THREE.Vector2(), uc = new THREE.Vector2();
+  const cellX = width / SIZE, cellZ = depth / SIZE;
+  let alphaTriangles = 0, solidTriangles = 0;
   root.traverse(mesh => {
     if (!mesh.isMesh || !DECALS.has(mesh.name)) return;
-    const geometry = mesh.geometry, position = geometry.attributes.position, index = geometry.index;
+    const geometry = mesh.geometry, position = geometry.attributes.position, uvs = geometry.attributes.uv, index = geometry.index;
+    const material = Array.isArray(mesh.material) ? mesh.material[0] : mesh.material;
+    const alpha = uvs ? readAlpha(material?.map) : null;
     transform.multiplyMatrices(inverse, mesh.matrixWorld);
     const count = index ? index.count : position.count;
     for (let i = 0; i < count; i += 3) {
-      let x0 = Infinity, z0 = Infinity, x1 = -Infinity, z1 = -Infinity;
-      for (let j = 0; j < 3; j++) {
-        p.fromBufferAttribute(position, index ? index.getX(i + j) : i + j).applyMatrix4(transform);
-        x0 = Math.min(x0, p.x); x1 = Math.max(x1, p.x);
-        z0 = Math.min(z0, p.z); z1 = Math.max(z1, p.z);
+      const ia = index ? index.getX(i) : i, ib = index ? index.getX(i + 1) : i + 1, ic = index ? index.getX(i + 2) : i + 2;
+      a.fromBufferAttribute(position, ia).applyMatrix4(transform);
+      b.fromBufferAttribute(position, ib).applyMatrix4(transform);
+      c.fromBufferAttribute(position, ic).applyMatrix4(transform);
+      const x0 = Math.min(a.x, b.x, c.x), x1 = Math.max(a.x, b.x, c.x), z0 = Math.min(a.z, b.z, c.z), z1 = Math.max(a.z, b.z, c.z);
+      if (x1 < BOUNDS.x0 || x0 > BOUNDS.x1 || z1 < BOUNDS.z0 || z0 > BOUNDS.z1) continue;
+      const det = (b.z - c.z) * (a.x - c.x) + (c.x - b.x) * (a.z - c.z);
+      if (Math.abs(det) < 1e-9) continue;
+      if (alpha) { ua.fromBufferAttribute(uvs, ia); ub.fromBufferAttribute(uvs, ib); uc.fromBufferAttribute(uvs, ic); alphaTriangles++; }
+      else solidTriangles++;
+      const ax = Math.max(0, Math.floor((x0 - BOUNDS.x0) / cellX)), bx = Math.min(SIZE - 1, Math.ceil((x1 - BOUNDS.x0) / cellX));
+      const az = Math.max(0, Math.floor((z0 - BOUNDS.z0) / cellZ)), bz = Math.min(SIZE - 1, Math.ceil((z1 - BOUNDS.z0) / cellZ));
+      for (let row = az; row <= bz; row++) for (let col = ax; col <= bx; col++) {
+        const x = BOUNDS.x0 + (col + 0.5) * cellX, z = BOUNDS.z0 + (row + 0.5) * cellZ;
+        const l1 = ((b.z - c.z) * (x - c.x) + (c.x - b.x) * (z - c.z)) / det;
+        const l2 = ((c.z - a.z) * (x - c.x) + (a.x - c.x) * (z - c.z)) / det;
+        const l3 = 1 - l1 - l2;
+        if (l1 < -1e-4 || l2 < -1e-4 || l3 < -1e-4) continue;
+        if (alpha) {
+          const u = ua.x * l1 + ub.x * l2 + uc.x * l3, v = ua.y * l1 + ub.y * l2 + uc.y * l3;
+          const px = Math.min(alpha.w - 1, Math.max(0, Math.floor(u * alpha.w)));
+          const py = Math.min(alpha.h - 1, Math.max(0, Math.floor((alpha.flipY ? 1 - v : v) * alpha.h)));
+          if (alpha.data[(py * alpha.w + px) * 4 + 3] < 20) continue;
+        }
+        excluded[row * SIZE + col] = 1;
       }
-      if (x1 + 0.12 < BOUNDS.x0 || x0 - 0.12 > BOUNDS.x1 || z1 + 0.12 < BOUNDS.z0 || z0 - 0.12 > BOUNDS.z1) continue;
-      const ax = Math.max(0, Math.floor((x0 - 0.12 - BOUNDS.x0) / width * SIZE));
-      const bx = Math.min(SIZE - 1, Math.ceil((x1 + 0.12 - BOUNDS.x0) / width * SIZE));
-      const az = Math.max(0, Math.floor((z0 - 0.12 - BOUNDS.z0) / depth * SIZE));
-      const bz = Math.min(SIZE - 1, Math.ceil((z1 + 0.12 - BOUNDS.z0) / depth * SIZE));
-      for (let y = az; y <= bz; y++) excluded.fill(1, y * SIZE + ax, y * SIZE + bx + 1);
     }
   });
+  // Separable 12 cm dilation (the mask is anisotropic: 8 m x 30 m over 512^2).
+  const dilate = (src, radius, horizontal) => {
+    const out = new Uint8Array(src.length);
+    for (let row = 0; row < SIZE; row++) for (let col = 0; col < SIZE; col++) {
+      if (!src[row * SIZE + col]) continue;
+      for (let k = -radius; k <= radius; k++) {
+        const r = horizontal ? row : row + k, q = horizontal ? col + k : col;
+        if (r >= 0 && r < SIZE && q >= 0 && q < SIZE) out[r * SIZE + q] = 1;
+      }
+    }
+    return out;
+  };
+  const dry = dilate(dilate(excluded, Math.ceil(0.12 / cellX), true), Math.ceil(0.12 / cellZ), false);
+  excluded.set(dry);
   const groups = GROUPS.map(group => {
     const slope = layout.streetSlopeX(group.z), scale = Math.hypot(1, slope);
     return { ...group, x: layout.streetCenterX(group.z) + group.offset / scale,
@@ -91,6 +143,7 @@ function makeMask(root, layout) {
   return { texture, stats: {
     maskSize: SIZE, maskChannels: 2, maskBaseBytes: data.byteLength,
     bounds: { ...BOUNDS }, patchGroups: groups.length,
+    dryDecalTriangles: { alphaShaped: alphaTriangles, solid: solidTriangles }, dryDilationM: 0.12,
     wetAreaM2: wetPixels * pixelArea, puddleAreaM2: puddlePixels * pixelArea,
     wetEquivalentAreaM2: wetSum * pixelArea, puddleEquivalentAreaM2: puddleSum * pixelArea,
   } };
