@@ -5,7 +5,7 @@ import { test } from "node:test";
 import {
   ControlCommand, ControlQuery, NodeHealth, ProjectResearchCapability, ProjectResearchPlan,
   ProjectResearchPreview, ProjectResearchQuery, ProjectResearchRemoteEvent, ProjectResearchSource,
-  ProjectResearchTarget, ProjectSourcePreview, ProjectSourcesCurrent, RemoteEvent, StartRunRequest,
+  ProjectResearchTarget, ProjectResearchStartRunRequest, ProjectSourcePreview, ProjectSourcesCurrent, RemoteEvent, StartRunRequest,
   StructuredRemoteEvent, PROJECT_RESEARCH_COMMANDS, PROJECT_RESEARCH_MAX_BODY_BYTES,
   PROJECT_RESEARCH_QUERIES, canRunProjectResearch, projectResearchApprovalContent,
 } from "../src/index";
@@ -99,12 +99,12 @@ test("research previews reject mixed projects, snapshots and hidden prompt input
 });
 
 test("structured display alone cannot negotiate project research", () => {
-  const capable = NodeHealth.parse(fullHealth), optedIn = StartRunRequest.parse(optIn);
+  const capable = NodeHealth.parse(fullHealth), optedIn = ProjectResearchStartRunRequest.parse(optIn);
   assert.equal(canRunProjectResearch(capable, optedIn), true);
   assert.equal(canRunProjectResearch(NodeHealth.parse(health), optedIn), false);
   assert.equal(canRunProjectResearch(NodeHealth.parse({ ...health, capabilities: { structuredResults: capability } }), optedIn), false);
   assert.equal(canRunProjectResearch(capable, StartRunRequest.parse({ ...start, structuredResults: { version: 1 } })), false);
-  assert.equal(canRunProjectResearch(capable, StartRunRequest.parse({ ...optIn, profileId: "other-search" })), false);
+  assert.equal(canRunProjectResearch(capable, ProjectResearchStartRunRequest.parse({ ...optIn, profileId: "other-search" })), false);
   for (const profiles of [[], [target.profileId, target.profileId], ["unknown"]]) {
     assert.equal(NodeHealth.safeParse({ ...fullHealth, capabilities: { ...fullHealth.capabilities, projectResearch: { version: 1, profiles } } }).success, false);
   }
@@ -115,13 +115,15 @@ test("structured display alone cannot negotiate project research", () => {
 });
 
 test("research starts reject chat, world, image, model selection and implicit downgrade", () => {
+  assert.equal(StartRunRequest.safeParse(optIn).success, false, "existing HTTP handler must not accept the unimplemented feature");
+  assert.equal(ProjectResearchStartRunRequest.safeParse(start).success, false, "research parser cannot infer opt-in");
   for (const patch of [
     { structuredResults: undefined }, { chat: { memory: null } }, { kind: "image" },
     { model: { id: "deepseek-chat", effort: null } }, { attachments: [] }, { imageSlot: "slot" },
     { expectedWorldProfile: {} }, { snapshot: { ...start.snapshot, commitSha: "a".repeat(40) } },
     { snapshot: { ...start.snapshot, content: "x".repeat(129) } }, { projectResearch: { version: 2 } },
     { projectResearch: { version: 1, upload: true } },
-  ]) assert.equal(StartRunRequest.safeParse({ ...optIn, ...patch }).success, false);
+  ]) assert.equal(ProjectResearchStartRunRequest.safeParse({ ...optIn, ...patch }).success, false);
 });
 
 test("research completion carries the original once with mandatory metadata or explicit no-original", () => {

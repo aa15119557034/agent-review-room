@@ -286,15 +286,13 @@ export const RunLimits = z
   })
   .strict();
 
-export const StartRunRequest = z
+const startRunRequestBase = z
   .object({
     protocol: z.literal(REMOTE_PROTOCOL_VERSION),
     runId: RunId,
     profileId: ProfileId,
     /** 不支持的节点必须省略；仅能力声明且本次开启才可发 result_display，正文仍完整。 */
     structuredResults: StructuredResultOptIn.optional(),
-    /** P2-C11b: independently negotiated, project-only Search/Fetch; participates in RunId identity. */
-    projectResearch: ProjectResearchOptIn.optional(),
     /**
      * 先从 health.capabilities.runFence 协商取得。与当前账本不同则 409 run_ledger_mismatch，不能准入。
      * 最终准入处（所有 await 校验之后）再次按同 RunId 原子核对 fence；持久 admitted 后才可 spawn。
@@ -362,7 +360,9 @@ export const StartRunRequest = z
      */
     kind: RunKind.optional(),
   })
-  .strict()
+  .strict();
+
+export const StartRunRequest = startRunRequestBase
   .refine(
     (r) => !r.chat?.memory || occursExactlyOnce(r.snapshot.content, r.chat.memory.marker),
     "chat.memory.marker 必须在 snapshot.content 里恰好出现一次",
@@ -381,16 +381,6 @@ export const StartRunRequest = z
   )
   .refine((r) => r.kind !== "image" || r.attachments === undefined, "image Run 不能带附件")
   .superRefine((r, ctx) => {
-    if (r.projectResearch !== undefined) {
-      const reject = (key: string, message: string) => ctx.addIssue({ code: "custom", path: [key], message });
-      if (r.structuredResults?.version !== 1) reject("structuredResults", "检索须同时协商结构化结果");
-      for (const key of ["chat", "model", "attachments", "imageSlot", "expectedWorldProfile"] as const) {
-        if (r[key] !== undefined) reject(key, "首片项目检索不接受此字段");
-      }
-      if (r.kind === "image") reject("kind", "项目检索只接受 text Run");
-      if (r.snapshot.commitSha !== undefined) reject("snapshot", "项目检索不发送工程 commit");
-      if (!ProjectResearchQuery.safeParse(r.snapshot.content).success) reject("snapshot", "检索正文须为原样批准的查询");
-    }
     if (r.structuredResults !== undefined && (r.kind === "image" || r.expectedWorldProfile !== undefined)) {
       ctx.addIssue({ code: "custom", path: ["structuredResults"], message: "首片结构化结果仅用于普通文本 Run" });
     }
@@ -405,6 +395,27 @@ export const StartRunRequest = z
     if (r.imageSlot !== undefined) reject(["imageSlot"], "世界请求不能携带图片槽位");
     if (r.kind === "image") reject(["kind"], "世界请求只接受 text Run");
   });
+
+/**
+ * P2-C11b candidate wire parser: existing HTTP handlers still use StartRunRequest and reject this flag.
+ * Wiring must explicitly choose this parser, check both capabilities and compare both opt-ins for idempotency.
+ */
+export const ProjectResearchStartRunRequest = startRunRequestBase.extend({
+  projectResearch: ProjectResearchOptIn,
+}).superRefine((r, ctx) => {
+  const { projectResearch: _, ...legacy } = r;
+  const checked = StartRunRequest.safeParse(legacy);
+  if (!checked.success) for (const issue of checked.error.issues) ctx.addIssue(issue);
+  const reject = (key: string, message: string) => ctx.addIssue({ code: "custom", path: [key], message });
+  if (r.structuredResults?.version !== 1) reject("structuredResults", "检索须同时协商结构化结果");
+  for (const key of ["chat", "model", "attachments", "imageSlot", "expectedWorldProfile"] as const) {
+    if (r[key] !== undefined) reject(key, "首片项目检索不接受此字段");
+  }
+  if (r.kind === "image") reject("kind", "项目检索只接受 text Run");
+  if (r.snapshot.commitSha !== undefined) reject("snapshot", "项目检索不发送工程 commit");
+  if (!ProjectResearchQuery.safeParse(r.snapshot.content).success) reject("snapshot", "检索正文须为原样批准的查询");
+});
+export type ProjectResearchStartRunRequest = z.infer<typeof ProjectResearchStartRunRequest>;
 
 export const StartRunResponse = z.object({
   runId: RunId,
@@ -694,8 +705,8 @@ export const canEmitStructuredResults = (health: NodeHealth, request: StartRunRe
   health.capabilities.structuredResults.profiles.includes(request.profileId) &&
   request.kind !== "image" && request.expectedWorldProfile === undefined;
 /** Parsed objects only; missing capability is unsupported, never inferred from a profile's name. */
-export const canRunProjectResearch = (health: NodeHealth, request: StartRunRequest): boolean =>
-  canEmitStructuredResults(health, request) && request.projectResearch?.version === 1 &&
+export const canRunProjectResearch = (health: NodeHealth, request: StartRunRequest | ProjectResearchStartRunRequest): boolean =>
+  canEmitStructuredResults(health, request) && "projectResearch" in request && request.projectResearch.version === 1 &&
   health.capabilities?.projectResearch?.version === 1 &&
   health.capabilities.projectResearch.profiles.includes(request.profileId);
 export type RemoteRunSummary = z.infer<typeof RemoteRunSummary>;
