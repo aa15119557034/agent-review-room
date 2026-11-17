@@ -1,0 +1,74 @@
+{
+  "createdAt": "2026-11-17T10:51:09.298Z",
+  "head": "e1f32af2cfcde2e1e958a0dffb87f8d219886d5c",
+  "checks": [
+    {
+      "artifact": "gpu-town-c11",
+      "head": "e1f32af2cfcde2e1e958a0dffb87f8d219886d5c",
+      "sha256": "e0a3e2416076ff8b382af87bd3f923de15807b4c2def1e0bbc1891e358395036",
+      "trackedFilesVerified": 203,
+      "pinnedIgnoredFilesVerified": 9,
+      "receipt": "embedded"
+    },
+    {
+      "artifact": "gpu-look-c11-v1",
+      "head": "e1f32af2cfcde2e1e958a0dffb87f8d219886d5c",
+      "sha256": "c006a737c54e6a783c1d28d930d277f1b53d13f0022e5de972c118d61ef100cd",
+      "trackedFilesVerified": 204,
+      "pinnedIgnoredFilesVerified": 9,
+      "receipt": "separate prop-assets-manifest.json"
+    },
+    {
+      "artifact": "gpu-ao-c11-samples-v1",
+      "head": "e1f32af2cfcde2e1e958a0dffb87f8d219886d5c",
+      "sha256": "d2c00dbb2c4da08648506c2abb98a942775bd82e7caf2c6dfe2eeaf781598595",
+      "trackedFilesVerified": 204,
+      "pinnedIgnoredFilesVerified": 9,
+      "receipt": "separate prop-assets-manifest.json"
+    }
+  ],
+  "outcomes": [
+    {
+      "artifact": "gpu-town-c11",
+      "ok": false,
+      "renderOk": true,
+      "transportClean": false,
+      "strictExpectedExitFromReport": 1
+    },
+    {
+      "artifact": "gpu-look-c11-v1",
+      "ok": false,
+      "renderOk": true,
+      "transportClean": false,
+      "sourceUnchanged": true,
+      "driverUnchanged": true,
+      "assetsUnchanged": true,
+      "strictExpectedExitFromReport": 1
+    },
+    {
+      "artifact": "gpu-ao-c11-samples-v1",
+      "ok": false,
+      "renderOk": true,
+      "transportClean": false,
+      "sourceUnchanged": true,
+      "driverUnchanged": true,
+      "assetsUnchanged": true,
+      "strictExpectedExitFromReport": 1
+    }
+  ],
+  "ci": {
+    "head": "e1f32af2cfcde2e1e958a0dffb87f8d219886d5c",
+    "run": 44062872240,
+    "job": 133968983325,
+    "url": "https://github.com/aa15119557034/agent-review-room/actions/runs/44062872240/job/133968983325",
+    "result": "success",
+    "completedAt": "2026-11-17T10:18:34Z",
+    "tests": 1615,
+    "passed": 1615,
+    "types": 9,
+    "builds": 2,
+    "allExitZero": true
+  },
+  "method": "Tracked source checked against exact commit via read-only review_git show. Nine ignored assets checked against that commit prop-assets.json and actual size/MD5/SHA. Baseline embedded receipt and diagnostic separate receipt verified independently. All original report records retained, selected predetermined capture-2 images copied unchanged. Warmup/first-capture pixels remain in original artifact directories. Logs gzip prevents *.log ignore and newline conversion.",
+  "limitations": "No whole-world or style acceptance is inferred, no assets/cache/user profiles copied, no GPU or scene execution in this script. Absolute original paths in reports are forensic metadata; replay drivers still require the original workspace layout and local assets."
+}

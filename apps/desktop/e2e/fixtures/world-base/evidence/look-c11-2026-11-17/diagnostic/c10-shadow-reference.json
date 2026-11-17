@@ -1,0 +1,103 @@
+{
+  "sourceHead": "53cb20a8c017eba04bc8dae1437a8179071a1b9d",
+  "reportPath": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-look-c10-v1\\look-report.json",
+  "reportSha256": "4dee83930e1457bc14fcda50f596aec92f0199f73813b21c7cfeae2f74b93aeb",
+  "citySourceSha256": "4ffadf3750ab7b3468036a53e07010626aa08fc1b74b7657d0b4c466a5779cc3",
+  "actualLightMeshes": [
+    {
+      "role": "city-warm-lamp",
+      "owner": "city",
+      "mesh": "town-edge-kit",
+      "uuid": "1315c757-8fe2-41ad-a4d7-d0dffe597bfa",
+      "material": {
+        "uuid": "7a89aa25-233a-4f81-b5dd-39a33f731213",
+        "name": "",
+        "type": "MeshBasicMaterial",
+        "colorRGB": [
+          1.25,
+          0.8673397016071122,
+          0.4394157493623079
+        ],
+        "toneMapped": false,
+        "vertexColors": false,
+        "opacity": 1,
+        "transparent": false,
+        "side": 0,
+        "depthWrite": true,
+        "fog": true,
+        "map": null,
+        "clipPlanes": 0,
+        "clipIntersection": false,
+        "clipShadows": false,
+        "softClip": null
+      },
+      "worldBounds": {
+        "min": [
+          258.4933338165283,
+          14.908957958221436,
+          767.3650054931641
+        ],
+        "max": [
+          305.3999996185303,
+          26.378957748413086,
+          777.8899993896484
+        ]
+      },
+      "triangles": 480,
+      "castShadow": true,
+      "receiveShadow": true,
+      "sourceHouseLampIdentity": false
+    },
+    {
+      "role": "city-laundry-white-sign",
+      "owner": "city",
+      "mesh": "town-edge-kit",
+      "uuid": "5758d8a5-a85e-4fa5-bedc-283404cc8d51",
+      "material": {
+        "uuid": "68d1b41a-529b-4ba7-a736-27482f19270a",
+        "name": "",
+        "type": "MeshBasicMaterial",
+        "colorRGB": [
+          1.03070975637775,
+          1.011565756417941,
+          0.9279950963148503
+        ],
+        "toneMapped": false,
+        "vertexColors": false,
+        "opacity": 1,
+        "transparent": false,
+        "side": 0,
+        "depthWrite": true,
+        "fog": true,
+        "map": null,
+        "clipPlanes": 0,
+        "clipIntersection": false,
+        "clipShadows": false,
+        "softClip": null
+      },
+      "worldBounds": {
+        "min": [
+          279.02499997615814,
+          14.919808387756348,
+          777.7925033569336
+        ],
+        "max": [
+          279.67500001192093,
+          15.469808578491211,
+          777.8375015258789
+        ]
+      },
+      "triangles": 12,
+      "castShadow": true,
+      "receiveShadow": true,
+      "sourceHouseLampIdentity": false
+    }
+  ],
+  "coverage": "C10 captured actual flags for two city light batches only, not all mesh geometry signatures. Whole-city prior cast=true/receive=true is a source-derived inference from the old unconditional traversal, not a historic GPU mesh audit.",
+  "sourceInference": {
+    "castShadow": true,
+    "receiveShadow": true,
+    "code": "geometries.add(object.geometry); object.castShadow = true; object.receiveShadow = true; object.userData.walkable = false;",
+    "reference": "handoff/x51-c10-cast-shadow-erratum.md"
+  }
+}

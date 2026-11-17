@@ -1,0 +1,115 @@
+{
+  "artifact": "gpu-ao-c11-samples-v1",
+  "records": [
+    {
+      "group": "captures",
+      "name": "shop-interior-ao-on-warmup",
+      "view": "shop-interior",
+      "pass": "warmup",
+      "time": 14,
+      "camera": {
+        "position": [
+          271.7,
+          9.9134,
+          908
+        ],
+        "quaternion": [
+          -0.015701859235384273,
+          0.7069324236562871,
+          0.015701859235384273,
+          0.7069324236562871
+        ],
+        "fov": 58
+      },
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "shop-interior-ao-on-warmup.png",
+          "bytes": 1961094,
+          "sha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+          "copiedToArchive": false
+        },
+        "jpg": {
+          "filename": "shop-interior-ao-on-warmup.jpg",
+          "bytes": 124927,
+          "sha256": "a237f43acc360e690bea44020b3895defd6cbe864722e3d429b8b8e17d14d84a",
+          "copiedToArchive": false
+        }
+      }
+    },
+    {
+      "group": "captures",
+      "name": "shop-interior-ao-on-capture-1",
+      "view": "shop-interior",
+      "pass": "capture-1",
+      "time": 14,
+      "camera": {
+        "position": [
+          271.7,
+          9.9134,
+          908
+        ],
+        "quaternion": [
+          -0.015701859235384273,
+          0.7069324236562871,
+          0.015701859235384273,
+          0.7069324236562871
+        ],
+        "fov": 58
+      },
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "shop-interior-ao-on-capture-1.png",
+          "bytes": 1961094,
+          "sha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+          "copiedToArchive": false
+        },
+        "jpg": {
+          "filename": "shop-interior-ao-on-capture-1.jpg",
+          "bytes": 124927,
+          "sha256": "a237f43acc360e690bea44020b3895defd6cbe864722e3d429b8b8e17d14d84a",
+          "copiedToArchive": false
+        }
+      }
+    },
+    {
+      "group": "captures",
+      "name": "shop-interior-ao-on-capture-2",
+      "view": "shop-interior",
+      "pass": "capture-2",
+      "time": 14,
+      "camera": {
+        "position": [
+          271.7,
+          9.9134,
+          908
+        ],
+        "quaternion": [
+          -0.015701859235384273,
+          0.7069324236562871,
+          0.015701859235384273,
+          0.7069324236562871
+        ],
+        "fov": 58
+      },
+      "uploadedAO": 0.55,
+      "files": {
+        "png": {
+          "filename": "shop-interior-ao-on-capture-2.png",
+          "bytes": 1961094,
+          "sha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+          "copiedToArchive": true
+        },
+        "jpg": {
+          "filename": "shop-interior-ao-on-capture-2.jpg",
+          "bytes": 124927,
+          "sha256": "a237f43acc360e690bea44020b3895defd6cbe864722e3d429b8b8e17d14d84a",
+          "copiedToArchive": true
+        }
+      }
+    }
+  ],
+  "allCaptureMetadata": "look-report.json.gz",
+  "note": "Every original capture is indexed and its PNG/JPG bytes hashed. Only predetermined second-frame images are copied; other pixels remain in the original artifact directory, while all metadata remains in the full report."
+}
