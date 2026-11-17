@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { hedgeGeometry, SHRUB_COLORS } from '../upstream/sakuragaoka/src/world/lib/foliage.js';
+import { hedgeGeometry } from '../upstream/sakuragaoka/src/world/lib/foliage.js';
 
 // Original evergreen sprigs. One cutout atlas and four instanced folded-card pools;
 // no transparent sorting, lobe meshes, extra lights or station texture-cache entries.
@@ -137,7 +137,8 @@ export function createTownPlants({ root, frame, materials, gradientMap }) {
   function addClippedCanopy(x0, x1, z, ground, random) {
     const center = (x0 + x1) / 2, base = ground(center, z);
     const geometry = hedgeGeometry({
-      length: x1 - x0 - .12, h: .62, d: .46, spacing: .13, colors: SHRUB_COLORS.privet,
+      length: x1 - x0 - .12, h: .62, d: .46, spacing: .13,
+      colors: { top: '#71815a', mid: '#51664d', base: '#3a5041' },
       seed: Math.floor(random() * 65536), ground: x => ground(center + x, z) - base,
     });
     const mesh = new THREE.Mesh(geometry, materials.plain);
@@ -148,16 +149,30 @@ export function createTownPlants({ root, frame, materials, gradientMap }) {
     active.canopyTriangles = geometry.index.count / 3;
     canopyTriangles += active.canopyTriangles;
 
-    // Root the visible sprigs in the continuous crown, including its street-facing flank.
-    const { position, normal } = geometry.attributes;
+    // Sample by surface area so the visible tips do not trace the canopy's vertex rings.
+    const { position } = geometry.attributes;
+    const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
+    const ab = new THREE.Vector3(), ac = new THREE.Vector3(), normal = new THREE.Vector3(), tip = new THREE.Vector3();
     for (let i = 0; i < position.count; i++) {
-      const x = center + position.getX(i), y = base + position.getY(i), pz = z + position.getZ(i);
-      include([x, y, pz]);
-      if (y < ground(x, pz) + .08 || random() < .24) continue;
-      const direction = [normal.getX(i) + .45 * (random() - .5), .75 + normal.getY(i), normal.getZ(i)];
-      const length = .12 + .055 * random();
-      card([x, y - .025, pz], direction, length * .92, length, random() * 2 * Math.PI,
-        Math.floor(random() * 3), .95 + .28 * random());
+      a.fromBufferAttribute(position, i).add(mesh.position);
+      include(a.toArray());
+    }
+    for (let i = 0; i < geometry.index.count; i += 3) {
+      a.fromBufferAttribute(position, geometry.index.getX(i)).add(mesh.position);
+      b.fromBufferAttribute(position, geometry.index.getX(i + 1)).add(mesh.position);
+      c.fromBufferAttribute(position, geometry.index.getX(i + 2)).add(mesh.position);
+      ab.subVectors(b, a); ac.subVectors(c, a); normal.crossVectors(ab, ac);
+      const count = Math.floor(normal.length() * .5 * 160 + random());
+      normal.normalize();
+      for (let j = 0; j < count; j++) {
+        const t = Math.sqrt(random()), u = random();
+        tip.copy(a).addScaledVector(ab, t * (1 - u)).addScaledVector(ac, t * u);
+        if (tip.y < ground(tip.x, tip.z) + .08) continue;
+        const direction = [normal.x + .9 * (random() - .5), .55 + normal.y, normal.z + .45 * (random() - .5)];
+        const length = .095 + .05 * random();
+        card(tip.toArray(), direction, length, length, random() * 2 * Math.PI,
+          Math.floor(random() * 3), 1 + .32 * random());
+      }
     }
   }
   return {
