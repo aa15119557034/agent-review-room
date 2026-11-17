@@ -448,6 +448,8 @@ describe("世界：开局 / 首次读取的回应晚于推送（C-59b，林离 #
     const t = setup({ seed: false });
     await t.actions.world.load();
     t.store.set((s) => ({ ...s, world: { ...s.world, settings: null } }));
+    const seen: (number | null)[] = [];
+    t.store.subscribe(() => seen.push(t.w().settings?.dayRealMinutes ?? null));
     t.hold("world.reset");
     const starting = t.actions.world.start(["claude"]);
     await tick();
@@ -459,13 +461,16 @@ describe("世界：开局 / 首次读取的回应晚于推送（C-59b，林离 #
     await t.advance(30);
     await t.release("world.reset");
     await starting;
+    assert.ok(!seen.includes(WORLD_DAY_REAL_MINUTES_DEFAULT), "开局回应里的 24 分钟没有写进状态");
     assert.equal(t.w().settings?.dayRealMinutes, 12);
     assert.equal(t.w().settings?.dailyCognitionLimit, 7);
   });
 
-  it("新窗口首次读取晚于推送、期间设置又保存过：重读拿到现在的设置", async () => {
+  it("新窗口首次读取晚于推送、期间设置又保存过：旧设置一刻也不进状态，重读拿到现在的设置", async () => {
     const t = await opened();
     t.store.set((s) => ({ ...s, world: { ...s.world, settings: null } }));
+    const seen: (number | null)[] = [];
+    t.store.subscribe(() => seen.push(t.w().settings?.dayRealMinutes ?? null));
     t.hold("world.get");
     const loading = t.actions.world.load();
     await tick();
@@ -473,8 +478,27 @@ describe("世界：开局 / 首次读取的回应晚于推送（C-59b，林离 #
     await t.advance(30);
     await t.release("world.get");
     await loading;
+    assert.ok(!seen.includes(WORLD_DAY_REAL_MINUTES_DEFAULT), "过期回应里的 24 分钟没有在重读之前写进状态");
     assert.equal(t.w().settings?.dayRealMinutes, 12);
     assert.equal(t.w().settings?.dailyCognitionLimit, 7);
+  });
+
+  it("首次读取过期、重读又失败：设置留空，不用旧值", async () => {
+    const t = await opened();
+    t.store.set((s) => ({ ...s, world: { ...s.world, settings: null } }));
+    t.hold("world.get");
+    const loading = t.actions.world.load();
+    await tick();
+    await other(t).command({ type: "world.settings.save", settings: saved });
+    await t.advance(30);
+    const query = t.client.query;
+    let calls = 0;
+    t.client.query = ((req: { type: string }) => (req.type === "world.get" && ++calls >= 1 ? Promise.reject(new Error("network")) : query(req as never))) as typeof query;
+    await t.release("world.get");
+    await loading;
+    t.client.query = query;
+    assert.equal(t.w().settings, null);
+    assert.equal(t.w().loaded, true);
   });
 
   it("只选一位开局、推送先到：设置里的居民是这一位，不是开局页默认的两位", async () => {

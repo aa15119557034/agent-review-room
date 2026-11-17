@@ -157,9 +157,7 @@ export function applyWorldState(state: WorldUiState, data: WorldState): WorldUiS
     };
   }
   const next = applySnapshot(done, data.world);
-  // 快照比手里的旧：设置照旧不拿旧的盖新的。但手里还没有设置时（还没配置秘书 → settings 是 null，
-  // 刚开局的推送又抢在 reset 回应前到了），这份就是唯一的，收下；否则开局后设置一直是 null。
-  if (next === done) return state.settings || !data.settings ? done : { ...done, settings: data.settings };
+  if (next === done) return done;
   const withRest: WorldUiState = { ...next, settings: data.settings, budgets: data.budgets };
   return data.scene ? applyScene(withRest, data.scene) : withRest;
 }
