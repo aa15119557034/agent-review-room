@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { hedgeGeometry, SHRUB_COLORS } from '../upstream/sakuragaoka/src/world/lib/foliage.js';
 
 // Original evergreen sprigs. One cutout atlas and four instanced folded-card pools;
 // no transparent sorting, lobe meshes, extra lights or station texture-cache entries.
@@ -93,7 +94,7 @@ export function createTownPlants({ root, frame, materials, gradientMap }) {
   material.customProgramCacheKey = () => 'town-leaf-mip-alpha';
   const pools = Array.from({ length: 4 }, () => []), records = [];
   const temp = new THREE.Vector3(), up = new THREE.Vector3(0, 1, 0);
-  let active = null, finished = false, branchTriangles = 0;
+  let active = null, finished = false, branchTriangles = 0, canopyTriangles = 0;
   const include = p => active.bounds.expandByPoint(new THREE.Vector3(...p));
   function branch(a, b, radius, tip = radius * .48) {
     const direction = new THREE.Vector3(...b).sub(new THREE.Vector3(...a)), length = direction.length();
@@ -122,7 +123,7 @@ export function createTownPlants({ root, frame, materials, gradientMap }) {
     const b = active.bounds, f = active.footprint;
     if (b.min.x < f.minX - 1e-5 || b.max.x > f.maxX + 1e-5 || b.min.z < f.minZ - 1e-5 || b.max.z > f.maxZ + 1e-5)
       throw new Error('Town plant escaped protected footprint: ' + active.name + ' ' + JSON.stringify({ min:b.min.toArray(),max:b.max.toArray(),f }));
-    const record = { ...active, bounds: { min: b.min.toArray(), max: b.max.toArray() }, triangles: active.cards * 4 + active.branchTriangles };
+    const record = { ...active, bounds: { min: b.min.toArray(), max: b.max.toArray() }, triangles: active.cards * 4 + active.branchTriangles + (active.canopyTriangles ?? 0) };
     records.push(record); active = null; return record;
   }
   function fan(point, angle, count, r, scale, flower = false, lift = .8) {
@@ -133,9 +134,35 @@ export function createTownPlants({ root, frame, materials, gradientMap }) {
         scale * (.70 + r() * .15), scale, a + r() * 2.5, variant, .80 + r() * .19);
     }
   }
+  function addClippedCanopy(x0, x1, z, ground, random) {
+    const center = (x0 + x1) / 2, base = ground(center, z);
+    const geometry = hedgeGeometry({
+      length: x1 - x0 - .12, h: .62, d: .46, spacing: .13, colors: SHRUB_COLORS.privet,
+      seed: Math.floor(random() * 65536), ground: x => ground(center + x, z) - base,
+    });
+    const mesh = new THREE.Mesh(geometry, materials.plain);
+    mesh.name = active.name + '-canopy';
+    mesh.position.set(center, base, z);
+    mesh.castShadow = mesh.receiveShadow = true;
+    root.add(mesh);
+    active.canopyTriangles = geometry.index.count / 3;
+    canopyTriangles += active.canopyTriangles;
+
+    // Root the visible sprigs in the continuous crown, including its street-facing flank.
+    const { position, normal } = geometry.attributes;
+    for (let i = 0; i < position.count; i++) {
+      const x = center + position.getX(i), y = base + position.getY(i), pz = z + position.getZ(i);
+      include([x, y, pz]);
+      if (y < ground(x, pz) + .08 || random() < .24) continue;
+      const direction = [normal.getX(i) + .45 * (random() - .5), .75 + normal.getY(i), normal.getZ(i)];
+      const length = .12 + .055 * random();
+      card([x, y - .025, pz], direction, length * .92, length, random() * 2 * Math.PI,
+        Math.floor(random() * 3), .95 + .28 * random());
+    }
+  }
   return {
     texture, material, records,
-    hedge({ name, x0, x1, z, ground, random:r, footprint }) {
+    hedge({ name, x0, x1, z, ground, random:r, footprint, canopyRandom }) {
       begin(name, 'hedge', footprint); const n = Math.max(2, Math.ceil((x1 - x0) / .38));
       for (let i = 0; i < n; i++) {
         const x = x0 + .12 + (x1 - x0 - .24) * (i + .5) / n, y = ground(x, z), h = .44 + r() * .06;
@@ -147,6 +174,7 @@ export function createTownPlants({ root, frame, materials, gradientMap }) {
           branch(base,tip,.008,.0035); fan(tip,a,2,r,.27,false,.8);
         }
       }
+      if (canopyRandom) addClippedCanopy(x0, x1, z, ground, canopyRandom);
       return end();
     },
     shrub({ name, x, y, z, random:r, footprint, scale=1, flowers=true }) {
@@ -194,7 +222,7 @@ export function createTownPlants({ root, frame, materials, gradientMap }) {
         root.add(mesh);cards+=list.length;draws++;
       }
       return { system:'Original veined leaf sprigs on folded cutout cards; connected woody stems',
-        records, plants:records.length, cards, leafTriangles:cards*4, branchTriangles,totalTriangles:cards*4+branchTriangles,
+        records, plants:records.length, cards, leafTriangles:cards*4, branchTriangles,canopyTriangles,totalTriangles:cards*4+branchTriangles+canopyTriangles,
         leafDrawCalls:draws,shadowDrawCalls:draws,transparentDrawCalls:0,lobeMeshes:0,
         atlas:{width:1024,height:1024,colorSpace:texture.colorSpace,alphaTest:material.alphaTest,mipmaps:true,variants:4},
         ownedTextures:1,newTexturePixels:1024*1024,textureRGBA8WithMipsEstimateBytes:Math.ceil(1024*1024*4*4/3),

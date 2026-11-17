@@ -271,13 +271,22 @@ async function prepareBake() {
             if (error)
                 throw Error('Bake readback GL error ' + error);
             const roundTripMax = [0, 0, 0], roundTripSum = [0, 0, 0];
+            let limitedPixels = 0, mappedPeak = 0, maxEncodingError = 0;
             const min = [Infinity, Infinity, Infinity], max = [-Infinity, -Infinity, -Infinity], sum = [0, 0, 0], negative = [0, 0, 0], over2 = [0, 0, 0], nonFinite = [0, 0, 0];
             const canvas = document.createElement('canvas');
             canvas.width = canvas.height = 256;
             const context = canvas.getContext('2d'), image = context.createImageData(256, 256);
             for (let i = 0; i < bits.length; i += 4) {
+                const red = T.DataUtils.fromHalfFloat(bits[i]);
+                const green = T.DataUtils.fromHalfFloat(bits[i + 1]);
+                const blue = T.DataUtils.fromHalfFloat(bits[i + 2]);
+                const peak = Math.max(red, green, blue);
+                // The cube decodes to [0,2]. Limit all channels together so bright coloured lamps retain their hue.
+                const gain = peak > 2 ? 2 / peak : 1;
+                if (peak > 2) limitedPixels++;
+                const rgb = [red, green, blue];
                 for (let k = 0; k < 3; k++) {
-                    const v = T.DataUtils.fromHalfFloat(bits[i + k]);
+                    const v = rgb[k];
                     if (!Number.isFinite(v))
                         nonFinite[k]++;
                     else {
@@ -289,10 +298,13 @@ async function prepareBake() {
                         if (v > 2)
                             over2[k]++;
                     }
-                    const x = Math.min(1, Math.max(0, v / 2));
+                    const mapped = v * gain;
+                    mappedPeak = Math.max(mappedPeak, mapped);
+                    const x = mapped / 2;
                     image.data[i + k] = Math.round(255 * (x <= .0031308 ? 12.92 * x : 1.055 * Math.pow(x, 1 / 2.4) - .055));
                     const encoded = image.data[i + k] / 255;
                     const decoded = 2 * (encoded <= .04045 ? encoded / 12.92 : Math.pow((encoded + .055) / 1.055, 2.4));
+                    maxEncodingError = Math.max(maxEncodingError, Math.abs(decoded - mapped));
                     const error = Math.abs(decoded - v);
                     roundTripMax[k] = Math.max(roundTripMax[k], error);
                     roundTripSum[k] += error;
@@ -320,6 +332,7 @@ async function prepareBake() {
                 nonFinite,
                 over2,
                 over2Fraction: over2.map(x => x / 65536),
+                limitedPixels, mappedPeak, maxEncodingError,
                 samples,
                 quantization: {
                     maxAbsLinearError: roundTripMax,
@@ -362,7 +375,7 @@ async function prepareBake() {
         edgesMatch: edges.every(x => x.neighbor.dot > 1 - 1e-10),
         dimensions: [256, 256],
         type: 'RGBA binary16 HalfFloat; independent 2D target per face render, no mipmaps',
-        encoding: 'PNG RGB8 = sRGB(clamp(linearRGB / 2,0,1)); alpha255. Readback bottom row0 is PNG row0, no flip. Runtime must sRGB decode *2 with CubeTexture.flipY=false; face order px,nx,py,ny,pz,nz. PNG is encoded texture data, not display-exposure screenshot.',
+        encoding: 'PNG RGB8 = sRGB(linearRGB / max(2, peakRGB)); alpha255. Linear radiance up to 2 is preserved, brighter texels retain RGB ratios. Bottom row0 is PNG row0, no flip. Runtime sRGB decode *2 with CubeTexture.flipY=false; face order px,nx,py,ny,pz,nz.',
         sourceStats: JSON.parse(JSON.stringify(ref.stats))
     };
 }
@@ -481,6 +494,9 @@ async function host() {
                 }
                 report.rangeUnclipped = report.faces.every(f => f.negative.every(n => n === 0) && f.over2.every(n => n === 0));
                 report.bakeValid = report.faces.length === 6 && report.preparation.edgesMatch && report.faces.every(f => f.glError === 0 && !f.nonFinite.some(Boolean));
+                // Half an sRGB8 step at the bright end is less than .009 linear at this scale.
+                report.encodingValid = report.bakeValid && report.faces.every(f => f.negative.every(n => n === 0) &&
+                    f.mappedPeak <= 2 && f.maxEncodingError < .009);
                 await pause(3000);
             })(), deadline]);
     }
@@ -507,7 +523,7 @@ async function host() {
         const assets = JSON.parse(fs.readFileSync(path.join(config.output, 'prop-assets-manifest.json')));
         report.assetsUnchanged = assets.files.every(f => hash(fs.readFileSync(path.join(fixture, f.path))) === f.sha256);
         report.transportClean = !report.networkFailures.length && !report.httpErrors.length;
-        report.ok = report.bakeValid && report.rangeUnclipped && report.restore?.equal && report.sourceUnchanged && report.driverUnchanged && report.assetsUnchanged && report.transportClean && !report.exceptions.length && !report.failure && !report.restoreFailure;
+        report.ok = report.encodingValid && report.restore?.equal && report.sourceUnchanged && report.driverUnchanged && report.assetsUnchanged && report.transportClean && !report.exceptions.length && !report.failure && !report.restoreFailure;
         report.stage = 'complete';
         report.completedAt = new Date().toISOString();
         write();

@@ -435,7 +435,8 @@ function addLotPlanting(plants, placements, ground, ctx, stats) {
       if (x1 - x0 > 1) {
         const name = p.name + '-hedge-' + x0;
         const footprint = { name, minX: x0 - .2, maxX: x1 + .2, minZ: z - .5, maxZ: z + .5 };
-        triangles += plants.hedge({ name, x0, x1, z, ground, random: r, footprint }).triangles;
+        const canopyRandom = p.model?.features?.shop ? ctx.rng(name + '-clipped-canopy') : undefined;
+        triangles += plants.hedge({ name, x0, x1, z, ground, random: r, footprint, canopyRandom }).triangles;
         clearAreas.push(footprint);
       }
     }
