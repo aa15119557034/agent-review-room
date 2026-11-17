@@ -27,14 +27,17 @@ vec3 wbNormal(vec2 uv, vec3 P) {
   vec3 n = normalize(cross(dx, dy));
   return dot(n, P) > 0.0 ? -n : n;
 }
-// Crease AO. A sample occludes by the receiver cosine (how far it rises above the
-// centre's plane), so a square corner is darkest right at the crease and fades
-// out monotonically with distance. The sample's own plane is only a gate: the
-// centre must not lie behind it. A mailbox, railing or hedge standing in front
-// of a wall shows the camera its front face, which points away from the wall
-// behind, so depth steps no longer leave rings on the far side. (Round 9
-// weighted by both cosines; their product is zero at the crease itself and
-// peaks at a distance set by each sample radius, which drew one band per radius.)
+// Crease AO by distance to the occluding plane. A sample on another surface
+// occludes when it rises above the centre's plane (up) and the centre lies in
+// front of the sample's own plane; the amount depends only on h, the centre's
+// distance to that plane. h does not change with where on the plane a sample
+// happens to land, so a wall below a ceiling darkens monotonically with its
+// distance to the ceiling, whatever the projected sample radius. (Round 10
+// weighted by up and by the sample's distance L; under a grazing ceiling an
+// outer tap moves towards the crease as the pixel moves away from it, L shrinks,
+// and the weight rose again: the second band on the shop's back wall.)
+// A mailbox or hedge standing in front of a wall shows the camera its front
+// face; the wall behind it is behind that plane (h < 0) and gets nothing.
 float wbAO(vec2 uv, float d0) {
   if (d0 > 90.0 || d0 >= uFar*0.9) return 1.0;
   const float R = 0.8;
@@ -49,15 +52,20 @@ float wbAO(vec2 uv, float d0) {
       if (any(lessThan(s, edge)) || any(greaterThan(s, 1.0 - edge))) continue;
       vec3 S = wbPos(s), v = S - P;
       float L = length(v);
-      vec3 vn = v/max(L, 1e-4);
-      float up = dot(n, vn) - 0.08;
-      if (up <= 0.0 || L > 1.6*R) continue;
-      float facing = smoothstep(-0.3, -0.05, dot(wbNormal(s, S), -vn));
-      occ += up*facing*(1.0 - smoothstep(0.6*R, 1.6*R, L));
+      // The occluder must rise clearly above the centre's plane, by angle and by
+      // height: millimetre grout, product faces and panel seams are not creases.
+      float rise = dot(n, v);
+      float up = smoothstep(0.06, 0.25, rise/max(L, 1e-4))*smoothstep(0.03, 0.12, rise);
+      if (up <= 0.0 || L > 2.5*R) continue;
+      float h = dot(wbNormal(s, S), P - S);   // centre's height above the sample's plane
+      float near = smoothstep(-0.04, 0.0, h)*(1.0 - smoothstep(0.0, 0.6*R, h));
+      // Loose range cut only for occluders far beyond the radius (no effect near a crease).
+      occ += up*near*(1.0 - smoothstep(1.5*R, 2.5*R, L));
     }
   }
-  // At a square corner about half the samples land on the other face with up ~0.9.
-  return 1.0 - min(1.0, occ/16.0*2.0)*(1.0 - smoothstep(50.0, 90.0, d0));
+  // At a crease about half the samples land on the other face with near ~1;
+  // 1.4 keeps the deepest corner near 70% before uAO (contact shade, not soot).
+  return 1.0 - min(1.0, occ/16.0*1.4)*(1.0 - smoothstep(50.0, 90.0, d0));
 }
 float wbEdge(vec2 uv) {
   vec2 px = max(1.0, uRes.y/1100.0)/uRes;
