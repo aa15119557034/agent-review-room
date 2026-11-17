@@ -17,13 +17,16 @@
 
 `sources.json` 登记来源、作者、commit 和归档哈希，`source-files.json` 登记每个原始文件的 SHA-256。Petalwake 的全部二进制资产及原项目副本都只在 `.local/`，不进 Git。Three.js 使用 Petalwake 固定的 r187，额外的 RoundedBoxGeometry 来自 Three.js r187，许可和哈希一并保留。
 
-当前背景建筑登记在 [city-assets.json](./city-assets.json) 的 `projects.downtown`：Quaternius Downtown City MegaKit **免费 Standard** 的三栋完整建筑（CC0 1.0）。先从清单所列官方入口取得指定版本，再执行：
+当前背景建筑复用站区已有的 MIT 程序化构件与纹理，不需要另行下载城市模型。[city-assets.json](./city-assets.json) 保留前两组候选的来源、许可和固定哈希：Quaternius Downtown City MegaKit **免费 Standard** 三栋完整楼（CC0 1.0）和 mirzaev3d 高层（CC BY 4.0）均在 `retiredAssets`。
+
+已有历史文件可以显式做只读核验：
 
 ```bat
-node scripts\prepare-city.cjs --downtown=<Standard解包目录>
+node scripts\prepare-city.cjs --retired=downtown
+node scripts\prepare-city.cjs --retired=highrise
 ```
 
-脚本只复制已核对哈希的26项依赖至 `.local/city/downtown/`，不改变原文件，也不安装软件。无参数运行会复核这26项文件；组合基线启动前会自动做这次校验。已退休的 mirzaev3d 高层在 `retiredAssets.highrise` 保留官方来源、许可、原文件哈希和材质核对依据；当前准备和运行不需要其 GLB 或 OBJ 包。
+该脚本只核验本机已保存的历史文件，不下载或复制。组合基线不调用它，也不需要 `.local/city/`；原候选二进制、许可、材质核对依据和失败记录仍保留。
 
 在本目录使用已有 Electron 运行，无需构建桌面应用：
 
@@ -51,10 +54,12 @@ node scripts\baseline.cjs --scene=combined --electron=D:\codex\2026-11-16\world-
 
 这组补充提供近景和近郊层次，尚不是参考图里的都市天际线、密集商业街或完整湿地反射效果。固定四机位之外，采集脚本另拍花箱、侧墙、背景及干湿路面细节，镜头坐标随报告保存。
 
-`src/city.js` 当前保留三栋原比例中层作为站后候选背景，复用原贴图并按颜色空间、采样及UV语义共享相同纹理；免费版中的顶点控制色不作为门面染色，底色有局部风格适配。地基采全部双线性高度格点极值，街区铺地和道路贴实际地表，堤顶连接采过渡网格并使用台阶；只合批适配层新增的铺地、道路、地基与台阶，原建筑几何不变。背景仍不可步行，无LOD，也未实现作者收费版的假室内shader。场景释放时，先释放 city 和 skyline，再释放 station；它们借用站区渐变与道路贴图。
+`src/city.js` 与 `src/city-apartments.js` 用站区现有 `GB` / `Frame`、门窗图集、材质和公寓构件搭建3／4／5层日式公寓，保持真实层高，合批阳台、外廊、楼梯、屋顶设施及小店；低层住宅和连续小路衔接镇边。它们属于不可步行背景，不扩展物理或修改地形，不调整全局光照、曝光和后期。场景释放时，先释放 city 和 skyline，再释放 station，以保护借用纹理。
 
 ## 当前状态
 
-当前三栋中层、井盖修正、资产清理与五轮交替步行对照见 [第四轮回验](./evidence/city-polish-2026-11-17/README.md)。高层已退休；固定机位约65 FPS，但最新一次第三人称57.633、第一人称65.000，步行性能仍有波动，材质与地块风格也尚未最终验收。湿面两机位严格恢复通过。资源取消复现与已知Chromium终结状态缺陷吻合，本机运行时未修复，仍保留transportClean=false。含塔楼的早期试装和失败记录见 [76a000d历史试装](./evidence/city-background-2026-11-17/README.md)。
+第5轮根据[C酱本机图评审](https://github.com/aa15119557034/agent-review-room/pull/254#issuecomment-6935791702)停止美式砖楼的材质调整，改用站区套件生成日式公寓；当前替换仍待实际画面与性能验收。
+
+前一版三栋中层、井盖修正、资产清理与五轮交替步行对照见 [第四轮回验](./evidence/city-polish-2026-11-17/README.md)：固定机位约65 FPS，末次第三人称57.633、第一人称65.000；这是旧版数据，不能当作替换后表现。步行帧时波动原因未明，湿面两机位严格恢复通过。资源取消复现与已知Chromium终结状态缺陷吻合，本机运行时未修复，仍保留transportClean=false。含塔楼的早期试装和失败记录见 [76a000d历史试装](./evidence/city-background-2026-11-17/README.md)。
 
 第三轮湿面精修、正常运行GPU复测和严格干湿对照见 [9417b6e本机验收](./evidence/gpu-wet-9417b6e/README.md)。第二轮精修单独复测见 [a7fe1e7 GPU证据](./evidence/gpu-polish-a7fe1e7/README.md)；花箱、外机、公寓及湿面诊断的早期失败历史见 [街景补充与交接](./evidence/streetscape-2026-11-17/README.md)。之前的地表对照、录像及未通过的诊断限制见 [地表与浅水修正](./evidence/terrain-water-2026-11-17/README.md)；首轮录像、原版基线和性能修复历史见 [EVIDENCE.md](./EVIDENCE.md)，旧录像不代表当前场景参数。第三方许可和修改范围见 [THIRD-PARTY.md](./THIRD-PARTY.md)。

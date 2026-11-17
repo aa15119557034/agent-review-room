@@ -8,8 +8,8 @@ const fixture = path.resolve(__dirname, '..');
 const digest = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
 const targets = [
   ['menhir', '/assets/models/menhir.glb', '.local/petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e/assets/models/menhir.glb'],
-  ['large-bin', '/city-assets/downtown/Building_Large_2.bin', '.local/city/downtown/Building_Large_2.bin'],
-  ['medium-bin', '/city-assets/downtown/Building_Medium_2_001.bin', '.local/city/downtown/Building_Medium_2_001.bin'],
+  ['boulders', '/assets/models/boulders.glb', '.local/petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e/assets/models/boulders.glb'],
+  ['lighthouse', '/assets/models/lighthouse.glb', '.local/petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e/assets/models/lighthouse.glb'],
 ];
 
 function launch() {
@@ -27,11 +27,14 @@ function launch() {
   for (const key of Object.keys(args)) if (!['electron', 'output', 'timeout-ms'].includes(key)) throw new Error('Unknown --' + key);
   if (typeof args.electron !== 'string' || !fs.statSync(args.electron).isFile()) throw new Error('--electron must name an existing executable');
   if (typeof args.output !== 'string') throw new Error('--output must name a new directory');
+  const placements = JSON.parse(fs.readFileSync(path.join(fixture, '.local/petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e/assets/terrain/props.json'), 'utf8'));
+  for (const [name] of targets) if (!Array.isArray(placements[name]) || !placements[name].length) throw new Error('Transport target is no longer listed in current Petalwake props: ' + name);
   const config = { output: path.resolve(args.output), runtime: null, startedAt: new Date().toISOString(),
     timeoutMs: Number(args['timeout-ms'] ?? 180000), terminalWaitMs: 3000,
+    targetScope: 'Current Petalwake props referenced by assets/terrain/props.json and src/island.js loadProps: menhir, boulders, lighthouse. This run does not retest retired city BIN/GLB assets.',
     head: cp.execFileSync('git', ['rev-parse', 'HEAD'], { cwd: fixture, encoding: 'utf8', windowsHide: true }).trim(),
     targets: targets.map(([name, url, file]) => { const bytes = fs.readFileSync(path.join(fixture, file)); return { name, url, file, bytes: bytes.length, sha256: digest(bytes) }; }),
-    scripts: Object.fromEntries(['diagnose-asset-transport.cjs', 'baseline.cjs', '../upstream/petalwake/vendor/three/build/three.core.js'].map(file => [file, digest(fs.readFileSync(path.resolve(__dirname, file)))])),
+    scripts: Object.fromEntries(['diagnose-asset-transport.cjs', 'baseline.cjs', '../upstream/petalwake/vendor/three/build/three.core.js', '../src/island.js', '../.local/petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e/assets/terrain/props.json'].map(file => [file, digest(fs.readFileSync(path.resolve(__dirname, file)))])),
   };
   if (!Number.isFinite(config.timeoutMs) || config.timeoutMs < 10000) throw new Error('Invalid timeout');
   if (fs.existsSync(config.output)) throw new Error('Output exists; preserve previous evidence');

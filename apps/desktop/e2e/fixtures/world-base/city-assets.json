@@ -1,9 +1,159 @@
 {
-  "version": 1,
+  "version": 2,
   "preparedRoot": ".local/city",
-  "notes": "projects contains current runtime dependencies only. retiredAssets preserves prior author, license, hash and material evidence without requiring downloads. Binary assets remain local and are not committed. Prepare with scripts/prepare-city.cjs; original bytes are preserved.",
-  "projects": {
+  "notes": "Current city geometry is generated from the station building toolkit; projects lists external city runtime dependencies and is empty. retiredAssets preserves complete prior source, license and hash records. Historical acquisition instructions describe the original import, not a runtime preparation requirement. scripts/prepare-city.cjs now performs explicit read-only retired-file verification; no downloads or copies. Local historical files and evidence are retained.",
+  "projects": {},
+  "retiredAssets": {
+    "highrise": {
+      "retirement": {
+        "commit": "cc079586460ee5f6e9d623e956a58a56906f4e1d",
+        "reason": "Removed from the current scene in favor of the three mid-rise buildings; retained as provenance and historical trial evidence only. Not consumed by prepare-city or runtime loading."
+      },
+      "title": "High-Rise Building #01 (official Fab-converted GLB)",
+      "author": "mirzaev3d",
+      "source": "https://www.fab.com/listings/ca10b839-7882-42f8-ab60-496610708a6c",
+      "license": {
+        "id": "CC-BY-4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/",
+        "evidence": "Official author listing licenses.name=CC-BY and slug=cc-by; Fab EULA CC-BY section links CC BY 4.0.",
+        "platformLicensePage": "https://www.fab.com/eula?lang=en",
+        "attribution": "High-Rise Building #01 by mirzaev3d, CC BY 4.0. Source: https://www.fab.com/listings/ca10b839-7882-42f8-ab60-496610708a6c . Original GLB bytes preserved; runtime placement/material changes must be identified in scene credits."
+      },
+      "acquisition": {
+        "mode": "Official free Fab Converted Files GLB, then explicit local file input; no automated download in prepare-city.cjs.",
+        "listingId": "ca10b839-7882-42f8-ab60-496610708a6c",
+        "fileId": "9d36501f-6860-42cf-bc23-e7961fd03a84",
+        "formatsEndpoint": "https://www.fab.com/i/listings/ca10b839-7882-42f8-ab60-496610708a6c/asset-formats/converted-files",
+        "steps": [
+          "Use the official author listing and its Converted Files entry high_rise_building.glb. This is not the original OBJ source ZIP.",
+          "The public converted-files metadata identifies the pinned file ID; the official download-info request returned HTTP 200 anonymously in the acquisition audit. Do not reuse or commit expiring signed URLs, and do not bypass a future login or payment requirement.",
+          "The pinned original GLB remains identified below for historical evidence. Current prepare-city accepts only Downtown and does not require this retired asset."
+        ],
+        "downloadInfoEndpoint": "https://www.fab.com/i/listings/ca10b839-7882-42f8-ab60-496610708a6c/asset-formats/converted-files/files/9d36501f-6860-42cf-bc23-e7961fd03a84/download-info"
+      },
+      "sourceType": "file",
+      "entryPoints": [
+        {
+          "path": "highrise/high_rise_building.glb",
+          "sizeXYZ": [
+            116.48381042480469,
+            105.40562285482883,
+            65.92617797851562
+          ],
+          "triangles": 740180,
+          "primitives": 36,
+          "materials": 6
+        }
+      ],
+      "adaptationNotes": [
+        "Original converted GLB audit before adapter restoration: 36 primitive draws per instance before batching; all 6 materials doubleSided; no LOD extension. _GlassReal has no alpha/transmission and no baseColorFactor, so original converted glass appearance needs later visual verification. No GPU rendering performed.",
+        "No external image or buffer files: the official converted GLB embeds its resources."
+      ],
+      "files": [
+        {
+          "sourcePath": "high_rise_building.glb",
+          "destination": "highrise/high_rise_building.glb",
+          "bytes": 31791824,
+          "sha256": "9102f1255aa4303e3424b6985decca0d74fa31152186f08a9ffd4ee078225b40"
+        }
+      ],
+      "originalObj": {
+        "author": "mirzaev3d",
+        "license": "CC-BY-4.0",
+        "source": "https://www.fab.com/listings/ca10b839-7882-42f8-ab60-496610708a6c",
+        "downloadInfoEndpoint": "https://www.fab.com/i/listings/ca10b839-7882-42f8-ab60-496610708a6c/asset-formats/obj/files/5b0ec506-d3b6-4048-a689-ba5cf4cacf10/download-info",
+        "fileId": "5b0ec506-d3b6-4048-a689-ba5cf4cacf10",
+        "archive": {
+          "name": "source.zip",
+          "bytes": 45285929,
+          "sha256": "2980676b2e21e30d5a28e8e2585c788616a555af733ea22444daaa573cb6bf29",
+          "runtimeRequired": false
+        },
+        "entries": [
+          {
+            "name": "High-Rise Building.mtl",
+            "size": 1218,
+            "crc32": "949ffeed"
+          },
+          {
+            "name": "High-Rise Building.obj",
+            "size": 45284449,
+            "crc32": "c796a718"
+          }
+        ],
+        "materialEvidence": {
+          "originalName": "High-Rise Building.mtl",
+          "path": "upstream/mirzaev-highrise/High-Rise-Building.mtl",
+          "bytes": 1218,
+          "sha256": "2bbc3049156a79251f9ced4655e5fcb8f45096be565d9029a3c857e8bb3aa399",
+          "modified": false,
+          "runtimeRequired": false
+        },
+        "limitations": "OBJ package contains only OBJ and MTL. Ceramic material references absolute C:/ JPEG paths absent from ZIP. MTL glass is itself opaque d1, Ni1 and illum2; do not invent transmission/IOR1.5 as author values. Kd/Ks/Ns provide source evidence, not exact Blender node graph or guaranteed screenshot appearance."
+      },
+      "materialRestoration": {
+        "adapter": "src/city.js:restoreTowerMaterials",
+        "source": "upstream/mirzaev-highrise/High-Rise-Building.mtl",
+        "sourceSha256": "2bbc3049156a79251f9ced4655e5fcb8f45096be565d9029a3c857e8bb3aa399",
+        "method": "MeshPhongMaterial using the author MTL Kd/Ks/Ns values. Kd and Ks are converted from sRGB to Three working color space, following Three r187 MTLLoader; opacity remains 1. No inferred transparency or IOR is introduced.",
+        "loaderConvention": "https://raw.githubusercontent.com/mrdoob/three.js/r187/examples/jsm/loaders/MTLLoader.js",
+        "parameters": {
+          "AO": {
+            "Kd": [
+              0.8,
+              0.8,
+              0.8
+            ],
+            "Ks": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "Ns": 250,
+            "Ni": 1.45,
+            "d": 1,
+            "illum": 3
+          },
+          "_GlassReal": {
+            "Kd": [
+              0.8,
+              0.8,
+              0.8
+            ],
+            "Ks": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "Ns": 360,
+            "Ni": 1,
+            "d": 1,
+            "illum": 2
+          },
+          "_WhiteGrey": {
+            "Kd": [
+              0.196078,
+              0.196078,
+              0.196078
+            ],
+            "Ks": [
+              0.752941,
+              0.752941,
+              0.752941
+            ],
+            "Ns": 200,
+            "Ni": 1,
+            "d": 1,
+            "illum": 3
+          }
+        },
+        "limitations": "Ni and illum are recorded as source facts, not implemented as a physical transmission/IOR model. This restores documented MTL parameters, not the missing Blender node graph or a guaranteed match to the author preview. The 45 MB OBJ package is provenance only and is not required by prepare-city or runtime loading."
+      }
+    },
     "downtown": {
+      "retirement": {
+        "reason": "Replaced by generated Japanese apartments from the existing station building toolkit. Retained for historical provenance and explicit local verification only; no runtime preparation."
+      },
       "title": "Downtown City MegaKit Standard",
       "author": "Quaternius",
       "source": "https://quaternius.itch.io/downtown-city-megakit",
@@ -265,152 +415,10 @@
       ]
     }
   },
-  "retiredAssets": {
-    "highrise": {
-      "retirement": {
-        "commit": "cc079586460ee5f6e9d623e956a58a56906f4e1d",
-        "reason": "Removed from the current scene in favor of the three mid-rise buildings; retained as provenance and historical trial evidence only. Not consumed by prepare-city or runtime loading."
-      },
-      "title": "High-Rise Building #01 (official Fab-converted GLB)",
-      "author": "mirzaev3d",
-      "source": "https://www.fab.com/listings/ca10b839-7882-42f8-ab60-496610708a6c",
-      "license": {
-        "id": "CC-BY-4.0",
-        "url": "https://creativecommons.org/licenses/by/4.0/",
-        "evidence": "Official author listing licenses.name=CC-BY and slug=cc-by; Fab EULA CC-BY section links CC BY 4.0.",
-        "platformLicensePage": "https://www.fab.com/eula?lang=en",
-        "attribution": "High-Rise Building #01 by mirzaev3d, CC BY 4.0. Source: https://www.fab.com/listings/ca10b839-7882-42f8-ab60-496610708a6c . Original GLB bytes preserved; runtime placement/material changes must be identified in scene credits."
-      },
-      "acquisition": {
-        "mode": "Official free Fab Converted Files GLB, then explicit local file input; no automated download in prepare-city.cjs.",
-        "listingId": "ca10b839-7882-42f8-ab60-496610708a6c",
-        "fileId": "9d36501f-6860-42cf-bc23-e7961fd03a84",
-        "formatsEndpoint": "https://www.fab.com/i/listings/ca10b839-7882-42f8-ab60-496610708a6c/asset-formats/converted-files",
-        "steps": [
-          "Use the official author listing and its Converted Files entry high_rise_building.glb. This is not the original OBJ source ZIP.",
-          "The public converted-files metadata identifies the pinned file ID; the official download-info request returned HTTP 200 anonymously in the acquisition audit. Do not reuse or commit expiring signed URLs, and do not bypass a future login or payment requirement.",
-          "The pinned original GLB remains identified below for historical evidence. Current prepare-city accepts only Downtown and does not require this retired asset."
-        ],
-        "downloadInfoEndpoint": "https://www.fab.com/i/listings/ca10b839-7882-42f8-ab60-496610708a6c/asset-formats/converted-files/files/9d36501f-6860-42cf-bc23-e7961fd03a84/download-info"
-      },
-      "sourceType": "file",
-      "entryPoints": [
-        {
-          "path": "highrise/high_rise_building.glb",
-          "sizeXYZ": [
-            116.48381042480469,
-            105.40562285482883,
-            65.92617797851562
-          ],
-          "triangles": 740180,
-          "primitives": 36,
-          "materials": 6
-        }
-      ],
-      "adaptationNotes": [
-        "Original converted GLB audit before adapter restoration: 36 primitive draws per instance before batching; all 6 materials doubleSided; no LOD extension. _GlassReal has no alpha/transmission and no baseColorFactor, so original converted glass appearance needs later visual verification. No GPU rendering performed.",
-        "No external image or buffer files: the official converted GLB embeds its resources."
-      ],
-      "files": [
-        {
-          "sourcePath": "high_rise_building.glb",
-          "destination": "highrise/high_rise_building.glb",
-          "bytes": 31791824,
-          "sha256": "9102f1255aa4303e3424b6985decca0d74fa31152186f08a9ffd4ee078225b40"
-        }
-      ],
-      "originalObj": {
-        "author": "mirzaev3d",
-        "license": "CC-BY-4.0",
-        "source": "https://www.fab.com/listings/ca10b839-7882-42f8-ab60-496610708a6c",
-        "downloadInfoEndpoint": "https://www.fab.com/i/listings/ca10b839-7882-42f8-ab60-496610708a6c/asset-formats/obj/files/5b0ec506-d3b6-4048-a689-ba5cf4cacf10/download-info",
-        "fileId": "5b0ec506-d3b6-4048-a689-ba5cf4cacf10",
-        "archive": {
-          "name": "source.zip",
-          "bytes": 45285929,
-          "sha256": "2980676b2e21e30d5a28e8e2585c788616a555af733ea22444daaa573cb6bf29",
-          "runtimeRequired": false
-        },
-        "entries": [
-          {
-            "name": "High-Rise Building.mtl",
-            "size": 1218,
-            "crc32": "949ffeed"
-          },
-          {
-            "name": "High-Rise Building.obj",
-            "size": 45284449,
-            "crc32": "c796a718"
-          }
-        ],
-        "materialEvidence": {
-          "originalName": "High-Rise Building.mtl",
-          "path": "upstream/mirzaev-highrise/High-Rise-Building.mtl",
-          "bytes": 1218,
-          "sha256": "2bbc3049156a79251f9ced4655e5fcb8f45096be565d9029a3c857e8bb3aa399",
-          "modified": false,
-          "runtimeRequired": false
-        },
-        "limitations": "OBJ package contains only OBJ and MTL. Ceramic material references absolute C:/ JPEG paths absent from ZIP. MTL glass is itself opaque d1, Ni1 and illum2; do not invent transmission/IOR1.5 as author values. Kd/Ks/Ns provide source evidence, not exact Blender node graph or guaranteed screenshot appearance."
-      },
-      "materialRestoration": {
-        "adapter": "src/city.js:restoreTowerMaterials",
-        "source": "upstream/mirzaev-highrise/High-Rise-Building.mtl",
-        "sourceSha256": "2bbc3049156a79251f9ced4655e5fcb8f45096be565d9029a3c857e8bb3aa399",
-        "method": "MeshPhongMaterial using the author MTL Kd/Ks/Ns values. Kd and Ks are converted from sRGB to Three working color space, following Three r187 MTLLoader; opacity remains 1. No inferred transparency or IOR is introduced.",
-        "loaderConvention": "https://raw.githubusercontent.com/mrdoob/three.js/r187/examples/jsm/loaders/MTLLoader.js",
-        "parameters": {
-          "AO": {
-            "Kd": [
-              0.8,
-              0.8,
-              0.8
-            ],
-            "Ks": [
-              0.5,
-              0.5,
-              0.5
-            ],
-            "Ns": 250,
-            "Ni": 1.45,
-            "d": 1,
-            "illum": 3
-          },
-          "_GlassReal": {
-            "Kd": [
-              0.8,
-              0.8,
-              0.8
-            ],
-            "Ks": [
-              0.5,
-              0.5,
-              0.5
-            ],
-            "Ns": 360,
-            "Ni": 1,
-            "d": 1,
-            "illum": 2
-          },
-          "_WhiteGrey": {
-            "Kd": [
-              0.196078,
-              0.196078,
-              0.196078
-            ],
-            "Ks": [
-              0.752941,
-              0.752941,
-              0.752941
-            ],
-            "Ns": 200,
-            "Ni": 1,
-            "d": 1,
-            "illum": 3
-          }
-        },
-        "limitations": "Ni and illum are recorded as source facts, not implemented as a physical transmission/IOR model. This restores documented MTL parameters, not the missing Blender node graph or a guaranteed match to the author preview. The 45 MB OBJ package is provenance only and is not required by prepare-city or runtime loading."
-      }
-    }
+  "currentRuntime": {
+    "kind": "generated",
+    "entry": "src/city.js",
+    "externalAssetProjects": [],
+    "description": "Japanese apartment background built from the station code toolkit and its existing resources; no external city GLB, glTF, BIN or image package is required."
   }
 }

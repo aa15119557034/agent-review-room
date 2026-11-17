@@ -439,6 +439,31 @@ app.whenReady().then(async () => {
         await evaluate(`window.__worldCapture.walkingInputAbort.abort(); window.worldBase.walker.setView(${JSON.stringify(savedView.mode)}); window.__worldCapture.selectView(${JSON.stringify(savedView.name)})`);
       }
       writeReport();
+      stage('capturing-town-details');
+      // Capture construction details after every performance measurement so
+      // these extra views do not alter the ordinary walking warmup sequence.
+      const townViews = await evaluate(`(() => {
+        const p = window.worldBase.city.placements.find(p => p.type === 'apartment' && p.model.features.shop);
+        if (!p) throw new Error('Missing apartment shop for town detail capture');
+        const [x,z] = p.frontage, y = p.baseY;
+        return [
+          { name: '18-town-shop-balconies', position: [x+12,y+7,z+16], target: [x,y+4,z-4] },
+          { name: '19-town-rear-stairs', position: [x-15,y+10,z-25], target: [x,y+6,z-10] },
+        ];
+      })()`);
+      const townUiHidden = await evaluate('document.body.classList.contains("hide-ui")');
+      report.townDetailCaptures = [];
+      try {
+        for (const view of townViews) {
+          await evaluate(`(() => { const w = window.worldBase; w.walker.setEnabled(false); w.station.toWorld(w.camera.position.fromArray(${JSON.stringify(view.position)}), w.camera.position); const target = w.camera.position.clone().fromArray(${JSON.stringify(view.target)}); w.camera.lookAt(w.station.toWorld(target)); w.camera.updateMatrixWorld(); w.look.pipeline.hasPrev = false; document.body.classList.add('hide-ui'); })()`);
+          await pause(500);
+          const shot = await capture(view.name);
+          report.townDetailCaptures.push({ ...view, afterPerformanceMeasurements: true, capture: shot.detail });
+        }
+      } finally {
+        await evaluate(`document.body.classList.toggle('hide-ui', ${townUiHidden}); window.__worldCapture.selectView(${JSON.stringify(savedView.name)})`);
+      }
+      writeReport();
     }
   } else {
     report.scene = report.firstReady;

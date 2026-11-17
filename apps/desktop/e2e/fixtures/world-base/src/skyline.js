@@ -203,7 +203,7 @@ function buildApproach(H, placement, boundaryZ, ground) {
 
 // These small terrain/quad helpers follow houses.js. Its original closures capture
 // the station H/GB/physics, so they cannot safely be borrowed for this independent GB.
-function backgroundContext(source, ctx, gb, M, heightAt) {
+export function backgroundContext(source, ctx, gb, M, heightAt) {
   const L = { ...source.L, heightAt }, tex = source.tex;
   const H = { ctx, L, M, tex, A: source.A, gb, slab: source.slab, poly: source.poly, blobRaw: source.blobRaw, lod: 2, bnd: source.bnd, antennaAz: source.antennaAz, dishAz: source.dishAz };
   H.gy = (fr,x,z) => { const p = fr.w(x,0,z); return heightAt(p.x,p.z)-p.y; };

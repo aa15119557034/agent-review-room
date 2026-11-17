@@ -29,6 +29,7 @@ function createStaticServer(root = fixture) {
       base = path.join(root, '.local', originals.petalwake, 'assets');
       relative = pathname.slice('/assets/'.length);
     }
+    // Optional historical files remain addressable for explicit diagnostics; the current scene does not use this route.
     if (pathname.startsWith('/city-assets/')) {
       base = path.join(root, '.local', 'city');
       relative = pathname.slice('/city-assets/'.length);
@@ -120,7 +121,8 @@ function main() {
   if (config.videoOnly && config.videoMs <= 0) throw new Error('--video-only requires a positive --video-ms');
   if (!config.preview && config.videoMs > 0 && (!config.ffmpeg || !fs.existsSync(config.ffmpeg))) throw new Error('Video capture requires --ffmpeg=<existing executable>; nothing is installed automatically');
   if (scene === 'combined') {
-    cp.execFileSync(process.execPath, [path.join(__dirname, 'prepare-city.cjs')], { cwd: fixture, encoding: 'utf8', windowsHide: true });
+    const cityManifest = JSON.parse(fs.readFileSync(path.join(fixture, 'city-assets.json'), 'utf8'));
+    if (Object.keys(cityManifest.projects).length) throw new Error('Generated city manifest must not require an external asset project');
     const files = {};
     const hashFile = file => { files[path.relative(fixture, file).replace(/\\/g, '/')] = crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex'); };
     const walk = directory => { for (const entry of fs.readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) { const file = path.join(directory, entry.name); if (entry.isDirectory()) walk(file); else if (/\.(?:js|mjs|html|css|json)$/.test(entry.name)) hashFile(file); } };
@@ -128,8 +130,8 @@ function main() {
     hashFile(path.join(fixture, 'city-assets.json'));
     for (const directory of ['src', 'upstream', 'vendor']) if (fs.existsSync(path.join(fixture, directory))) walk(path.join(fixture, directory));
     const head = cp.execFileSync('git', ['rev-parse', 'HEAD'], { cwd: fixture, encoding: 'utf8', windowsHide: true }).trim();
-    const manifest = { head, capturedAt: config.startedAt, scope: 'Scene HTML/JS/CSS/JSON in index.html, src, upstream and vendor plus city-assets.json. City binary hashes verified before launch; Petalwake .local binaries remain covered by the original preparation manifest. Capture scripts excluded.', files,
-      cityAssets: { manifest: 'city-assets.json', verifiedBeforeLaunch: true } };
+    const manifest = { head, capturedAt: config.startedAt, scope: 'Scene HTML/JS/CSS/JSON in index.html, src, upstream and vendor plus city-assets.json. Current generated city has no external city asset package; retired binary files are not runtime inputs or verified by this capture. Petalwake .local binaries remain covered by the original preparation manifest. Capture scripts excluded.', files,
+      cityAssets: { manifest: 'city-assets.json', runtime: cityManifest.currentRuntime, requiredExternalProjects: [], verifiedBeforeLaunch: false, retiredAssetsVerified: false } };
     const manifestText = JSON.stringify(manifest, null, 2);
     fs.writeFileSync(path.join(output, 'source-manifest.json'), manifestText);
     config.sourceManifest = { file: 'source-manifest.json', head, sha256: crypto.createHash('sha256').update(manifestText).digest('hex') };
