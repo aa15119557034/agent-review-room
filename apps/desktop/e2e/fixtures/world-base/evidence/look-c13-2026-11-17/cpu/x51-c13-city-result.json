@@ -1,0 +1,3695 @@
+{
+  "sourceHashes": {
+    "src/city.js": "3a122eb3951cc8aa2962f69adc476f0993f5270e2c40b625aed114caa4a82538",
+    "src/city-apartments.js": "57e0db5f29f4b41fabc69f014628715b8aabf535ae2da8813a1e8792b5c035a2",
+    "src/streetscape.js": "c145191868bb32538dde34daee7229b8b04117b3713e7c2865506596d3d35998",
+    "src/look.js": "3bb978f9ef4222dea0ec102b2dc9d8667faa06f8a5c099dbcbc73e75342fcc6a",
+    "upstream/sakuragaoka/src/world/houses/gb.js": "1eff740f7c981529cfbdf4dd070309905d147cf4d9897a5bffcda5040ea2c1c5",
+    "upstream/sakuragaoka/src/world/houses/props.js": "9dec02c33081cfefa6d302dd5d91a3f1b05ff618c0dcf2c3000d198df127f4f2"
+  },
+  "head": "1677ea3167905a180d8b26c48a4b0c0ffece4325",
+  "dirtySource": false,
+  "densityPrimitives": [
+    {
+      "role": "plain",
+      "color": "#62786a",
+      "triangles": 12,
+      "min": [
+        -0.86,
+        4.784808464050293,
+        -123.14
+      ],
+      "max": [
+        -0.44000000000000006,
+        5.4048084640502925,
+        -122.72000000000001
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at townSortingBins (file:///<fixture>/src/city-apartments.js:205:7)\n    at createCity (file:///<fixture>/src/city.js:193:5)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "color": "#4c5f53",
+      "triangles": 12,
+      "min": [
+        -0.88,
+        5.404808464050293,
+        -123.16000000000001
+      ],
+      "max": [
+        -0.42000000000000004,
+        5.464808464050294,
+        -122.7
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at townSortingBins (file:///<fixture>/src/city-apartments.js:206:7)\n    at createCity (file:///<fixture>/src/city.js:193:5)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "atlas",
+      "color": "#ffffff",
+      "triangles": 12,
+      "min": [
+        -0.8,
+        5.174808464050294,
+        -122.72
+      ],
+      "max": [
+        -0.5,
+        5.294808464050293,
+        -122.71000000000001
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at townSortingBins (file:///<fixture>/src/city-apartments.js:207:7)\n    at createCity (file:///<fixture>/src/city.js:193:5)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "color": "#55687f",
+      "triangles": 12,
+      "min": [
+        -0.36,
+        4.784808464050293,
+        -123.14
+      ],
+      "max": [
+        0.05999999999999997,
+        5.4048084640502925,
+        -122.72000000000001
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at townSortingBins (file:///<fixture>/src/city-apartments.js:205:7)\n    at createCity (file:///<fixture>/src/city.js:193:5)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "color": "#43536a",
+      "triangles": 12,
+      "min": [
+        -0.38,
+        5.404808464050293,
+        -123.16000000000001
+      ],
+      "max": [
+        0.07999999999999999,
+        5.464808464050294,
+        -122.7
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at townSortingBins (file:///<fixture>/src/city-apartments.js:206:7)\n    at createCity (file:///<fixture>/src/city.js:193:5)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "atlas",
+      "color": "#ffffff",
+      "triangles": 12,
+      "min": [
+        -0.30000000000000004,
+        5.174808464050294,
+        -122.72
+      ],
+      "max": [
+        -2.7755575615628914e-17,
+        5.294808464050293,
+        -122.71000000000001
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at townSortingBins (file:///<fixture>/src/city-apartments.js:207:7)\n    at createCity (file:///<fixture>/src/city.js:193:5)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "color": "#c9b27a",
+      "triangles": 16,
+      "min": [
+        7.185000000335276,
+        5.062624620196651,
+        -131.37112687778875
+      ],
+      "max": [
+        7.214999999664724,
+        6.346992307903935,
+        -131.10887312221126
+      ],
+      "stack": "    at Frame.cyl (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:167:13)\n    at P.broom (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:381:7)\n    at createCity (file:///<fixture>/src/city.js:197:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "color": "#a88f5a",
+      "triangles": 20,
+      "min": [
+        7.057341527938843,
+        4.900546873768956,
+        -131.44729490576157
+      ],
+      "max": [
+        7.342658472061157,
+        5.373027732008594,
+        -131.18032640907495
+      ],
+      "stack": "    at Frame.cyl (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:167:13)\n    at P.broom (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:382:7)\n    at createCity (file:///<fixture>/src/city.js:197:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "color": "#4f7fc4",
+      "triangles": 12,
+      "min": [
+        6.72,
+        4.904808464050293,
+        -131.37
+      ],
+      "max": [
+        6.9799999999999995,
+        4.9448084640502925,
+        -131.14999999999998
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at P.dustpan (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:384:35)\n    at createCity (file:///<fixture>/src/city.js:198:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "color": "#4f7fc4",
+      "triangles": 12,
+      "min": [
+        6.835,
+        4.956811779628056,
+        -131.2443683313664
+      ],
+      "max": [
+        6.864999999999999,
+        5.45280514847253,
+        -131.11563166863363
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at P.dustpan (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:384:96)\n    at createCity (file:///<fixture>/src/city.js:198:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "color": "#e2ded2",
+      "triangles": 16,
+      "min": [
+        7.009999999403954,
+        4.904808464050293,
+        -131.88000000059606
+      ],
+      "max": [
+        7.290000000596047,
+        5.164808464050293,
+        -131.59999999940396
+      ],
+      "stack": "    at Frame.cyl (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:167:13)\n    at P.bucket (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:376:7)\n    at createCity (file:///<fixture>/src/city.js:199:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "color": "#e2ded2",
+      "triangles": 32,
+      "min": [
+        7.049999998509884,
+        4.904808464050293,
+        -131.84000000149013
+      ],
+      "max": [
+        7.2500000014901165,
+        4.924808464050293,
+        -131.6399999985099
+      ],
+      "stack": "    at Frame.cyl (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:167:13)\n    at P.bucket (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:377:7)\n    at createCity (file:///<fixture>/src/city.js:199:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "color": "#8a8f96",
+      "triangles": 12,
+      "min": [
+        7.0200000000000005,
+        5.218808464050293,
+        -131.746
+      ],
+      "max": [
+        7.28,
+        5.230808464050294,
+        -131.734
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at P.bucket (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:378:7)\n    at createCity (file:///<fixture>/src/city.js:199:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "color": "#5f6166",
+      "triangles": 12,
+      "min": [
+        5.03,
+        6.0248084640502935,
+        -131.08999999999997
+      ],
+      "max": [
+        5.2700000000000005,
+        6.384808464050293,
+        -131
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at P.elecMeter (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:282:7)\n    at createCity (file:///<fixture>/src/city.js:200:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "atlas",
+      "color": "#ffffff",
+      "triangles": 12,
+      "min": [
+        5.065,
+        6.089808464050293,
+        -131.125
+      ],
+      "max": [
+        5.235,
+        6.339808464050293,
+        -131.015
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at P.elecMeter (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:283:7)\n    at createCity (file:///<fixture>/src/city.js:200:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "color": "#8d9197",
+      "triangles": 12,
+      "min": [
+        5.0249999999999995,
+        6.4048084640502925,
+        -131.055
+      ],
+      "max": [
+        5.075,
+        7.704808464050293,
+        -131.005
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at P.elecMeter (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:284:7)\n    at createCity (file:///<fixture>/src/city.js:200:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "atlas",
+      "color": "#ffffff",
+      "triangles": 12,
+      "min": [
+        6.92,
+        7.754808464050294,
+        -131.55
+      ],
+      "max": [
+        7.380000000000001,
+        8.024808464050293,
+        -131.19
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at createCity (file:///<fixture>/src/city.js:204:10)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "atlas",
+      "color": "#eee2cf",
+      "triangles": 12,
+      "min": [
+        6.95,
+        8.024808464050293,
+        -131.52
+      ],
+      "max": [
+        7.29,
+        8.204808464050293,
+        -131.22
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at createCity (file:///<fixture>/src/city.js:205:10)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    }
+  ],
+  "bucketEquivalence": {
+    "oldRngCalls": 0,
+    "oldTriangles": 72,
+    "newTriangles": 72,
+    "perBin": [
+      {
+        "role": "plain",
+        "type": "MeshToonMaterial",
+        "positionsEqual": true,
+        "normalsEqual": true,
+        "uvEqual": true,
+        "indicesEqual": true,
+        "colorsEqual": false,
+        "flagsEqual": true
+      },
+      {
+        "role": "atlas",
+        "type": "MeshToonMaterial",
+        "positionsEqual": true,
+        "normalsEqual": true,
+        "uvEqual": true,
+        "indicesEqual": true,
+        "colorsEqual": true,
+        "flagsEqual": true
+      }
+    ]
+  },
+  "sharedProbeDisposals": {
+    "geometries": 0,
+    "materials": 0
+  },
+  "placements": [
+    {
+      "name": "town-apartment-3f",
+      "type": "apartment",
+      "center": [
+        -17,
+        -123.5
+      ],
+      "frontage": [
+        -17,
+        -123.5
+      ],
+      "floors": 3,
+      "baseY": 5.3180401484171576,
+      "floorHeight": 2.85,
+      "height": 10.735000000000001,
+      "footprint": {
+        "minX": -24.7,
+        "maxX": -11.25,
+        "minZ": -134.95000000000002,
+        "maxZ": -123.35
+      },
+      "ground": {
+        "min": 11.911900393168086,
+        "max": 13.268040148417157,
+        "relief": 1.356139755249071,
+        "samples": 110,
+        "method": "All bilinear grid and footprint boundary intersections"
+      },
+      "foundation": {
+        "top": 13.318040148417158,
+        "bottom": 11.861900393168085,
+        "height": 1.4561397552490725
+      },
+      "model": {
+        "bounds": {
+          "minX": -7.55,
+          "maxX": 5.7,
+          "minZ": -11.3,
+          "maxZ": 0,
+          "minY": 0,
+          "maxY": 10.735000000000001
+        },
+        "groundSupportBounds": {
+          "minX": -7.55,
+          "maxX": 5.6,
+          "minZ": -11.3,
+          "maxZ": 0
+        },
+        "supportSamples": [
+          {
+            "x": -7.55,
+            "z": -11.3
+          },
+          {
+            "x": -7.55,
+            "z": -5.125
+          },
+          {
+            "x": -7.55,
+            "z": 0
+          },
+          {
+            "x": 0,
+            "z": -11.3
+          },
+          {
+            "x": 0,
+            "z": -5.125
+          },
+          {
+            "x": 0,
+            "z": 0
+          },
+          {
+            "x": 5.6,
+            "z": -11.3
+          },
+          {
+            "x": 5.6,
+            "z": -5.125
+          },
+          {
+            "x": 5.6,
+            "z": 0
+          }
+        ],
+        "floors": 3,
+        "floorHeight": 2.85,
+        "height": 10.735000000000001,
+        "entrances": [
+          {
+            "x": 0,
+            "y": 0.14,
+            "z": 0,
+            "width": 1.02
+          }
+        ],
+        "triangles": 2986,
+        "laundryTriangles": 48,
+        "garments": 2,
+        "features": {
+          "balconies": 2,
+          "rearCorridor": true,
+          "stairFlights": 2,
+          "stairTreads": 32,
+          "roofTank": true,
+          "bicycleShelter": true,
+          "mailboxes": 3,
+          "shop": null,
+          "walkable": false
+        }
+      },
+      "scale": 1,
+      "staticTriangles": 2986,
+      "worldOrigin": [
+        263,
+        13.318040148417158,
+        776.5
+      ]
+    },
+    {
+      "name": "town-apartment-4f",
+      "type": "apartment",
+      "center": [
+        2,
+        -122
+      ],
+      "frontage": [
+        2,
+        -122
+      ],
+      "floors": 4,
+      "baseY": 4.764808464050294,
+      "floorHeight": 2.85,
+      "height": 13.585,
+      "footprint": {
+        "minX": -6.200000000000001,
+        "maxX": 8.25,
+        "minZ": -133.45000000000002,
+        "maxZ": -121.85
+      },
+      "ground": {
+        "min": 11.467428440517818,
+        "max": 12.714808464050293,
+        "relief": 1.2473800235324752,
+        "samples": 110,
+        "method": "All bilinear grid and footprint boundary intersections"
+      },
+      "foundation": {
+        "top": 12.764808464050294,
+        "bottom": 11.417428440517817,
+        "height": 1.3473800235324767
+      },
+      "model": {
+        "bounds": {
+          "minX": -8.05,
+          "maxX": 6.2,
+          "minZ": -11.3,
+          "maxZ": 0,
+          "minY": 0,
+          "maxY": 13.585
+        },
+        "groundSupportBounds": {
+          "minX": -8.05,
+          "maxX": 6.1,
+          "minZ": -11.3,
+          "maxZ": 0
+        },
+        "supportSamples": [
+          {
+            "x": -8.05,
+            "z": -11.3
+          },
+          {
+            "x": -8.05,
+            "z": -5.125
+          },
+          {
+            "x": -8.05,
+            "z": 0
+          },
+          {
+            "x": 0,
+            "z": -11.3
+          },
+          {
+            "x": 0,
+            "z": -5.125
+          },
+          {
+            "x": 0,
+            "z": 0
+          },
+          {
+            "x": 6.1,
+            "z": -11.3
+          },
+          {
+            "x": 6.1,
+            "z": -5.125
+          },
+          {
+            "x": 6.1,
+            "z": 0
+          }
+        ],
+        "floors": 4,
+        "floorHeight": 2.85,
+        "height": 13.585,
+        "entrances": [
+          {
+            "x": 0,
+            "y": 0.14,
+            "z": 0,
+            "width": 1.2
+          }
+        ],
+        "triangles": 4588,
+        "laundryTriangles": 48,
+        "garments": 2,
+        "features": {
+          "balconies": 3,
+          "rearCorridor": true,
+          "stairFlights": 3,
+          "stairTreads": 48,
+          "roofTank": true,
+          "bicycleShelter": true,
+          "mailboxes": 3,
+          "shop": "laundromat",
+          "walkable": false
+        }
+      },
+      "scale": 1,
+      "staticTriangles": 4588,
+      "worldOrigin": [
+        282,
+        12.764808464050294,
+        778
+      ]
+    },
+    {
+      "name": "town-apartment-5f",
+      "type": "apartment",
+      "center": [
+        22,
+        -121
+      ],
+      "frontage": [
+        22,
+        -121
+      ],
+      "floors": 5,
+      "baseY": 4.643957901000977,
+      "floorHeight": 2.85,
+      "height": 16.435,
+      "footprint": {
+        "minX": 13.799999999999999,
+        "maxX": 28.25,
+        "minZ": -133.45000000000002,
+        "maxZ": -120.85
+      },
+      "ground": {
+        "min": 11.284379045698369,
+        "max": 12.593957901000977,
+        "relief": 1.3095788553026075,
+        "samples": 110,
+        "method": "All bilinear grid and footprint boundary intersections"
+      },
+      "foundation": {
+        "top": 12.643957901000977,
+        "bottom": 11.234379045698368,
+        "height": 1.409578855302609
+      },
+      "model": {
+        "bounds": {
+          "minX": -8.05,
+          "maxX": 6.2,
+          "minZ": -12.3,
+          "maxZ": 0,
+          "minY": 0,
+          "maxY": 16.435
+        },
+        "groundSupportBounds": {
+          "minX": -8.05,
+          "maxX": 6.1,
+          "minZ": -12.3,
+          "maxZ": 0
+        },
+        "supportSamples": [
+          {
+            "x": -8.05,
+            "z": -12.3
+          },
+          {
+            "x": -8.05,
+            "z": -5.625
+          },
+          {
+            "x": -8.05,
+            "z": 0
+          },
+          {
+            "x": 0,
+            "z": -12.3
+          },
+          {
+            "x": 0,
+            "z": -5.625
+          },
+          {
+            "x": 0,
+            "z": 0
+          },
+          {
+            "x": 6.1,
+            "z": -12.3
+          },
+          {
+            "x": 6.1,
+            "z": -5.625
+          },
+          {
+            "x": 6.1,
+            "z": 0
+          }
+        ],
+        "floors": 5,
+        "floorHeight": 2.85,
+        "height": 16.435,
+        "entrances": [
+          {
+            "x": 0,
+            "y": 0.14,
+            "z": 0,
+            "width": 1.02
+          }
+        ],
+        "triangles": 4928,
+        "laundryTriangles": 96,
+        "garments": 4,
+        "features": {
+          "balconies": 4,
+          "rearCorridor": true,
+          "stairFlights": 4,
+          "stairTreads": 64,
+          "roofTank": true,
+          "bicycleShelter": true,
+          "mailboxes": 3,
+          "shop": null,
+          "walkable": false
+        }
+      },
+      "scale": 1,
+      "staticTriangles": 4928,
+      "worldOrigin": [
+        302,
+        12.643957901000977,
+        779
+      ]
+    },
+    {
+      "name": "town-house-0",
+      "type": "low-house",
+      "center": [
+        -37,
+        -126.5
+      ],
+      "floors": 2,
+      "footprint": {
+        "minX": -42.05023296657734,
+        "maxX": -31.94976703342266,
+        "minZ": -131.4996700184522,
+        "maxZ": -121.50032998154778
+      },
+      "ground": {
+        "min": 11.101207744342059,
+        "max": 12.215555652798646,
+        "relief": 1.1143479084565868,
+        "samples": 72,
+        "method": "All bilinear grid and footprint boundary intersections"
+      },
+      "foundation": {
+        "top": 12.265555652798646,
+        "bottom": 11.051207744342058,
+        "height": 1.2143479084565882
+      },
+      "sourceSize": [
+        9.80046593315468,
+        8.556545406579971,
+        9.699340036904427
+      ],
+      "scale": 1
+    },
+    {
+      "name": "town-house-1",
+      "type": "low-house",
+      "center": [
+        -50,
+        -127
+      ],
+      "floors": 2,
+      "footprint": {
+        "minX": -54.16661962163774,
+        "maxX": -45.83338037836226,
+        "minZ": -131.83192623024547,
+        "maxZ": -122.16807376975453
+      },
+      "ground": {
+        "min": 11.188034454869921,
+        "max": 12.267841223382806,
+        "relief": 1.079806768512885,
+        "samples": 63,
+        "method": "All bilinear grid and footprint boundary intersections"
+      },
+      "foundation": {
+        "top": 12.317841223382807,
+        "bottom": 11.13803445486992,
+        "height": 1.1798067685128864
+      },
+      "sourceSize": [
+        8.033239243275489,
+        8.24363163113594,
+        9.363852460490925
+      ],
+      "scale": 1
+    }
+  ],
+  "vegetationClearAreas": [
+    {
+      "name": "town-apartment-3f",
+      "minX": -24.7,
+      "maxX": -11.25,
+      "minZ": -134.95000000000002,
+      "maxZ": -123.35
+    },
+    {
+      "name": "town-apartment-4f",
+      "minX": -6.200000000000001,
+      "maxX": 8.25,
+      "minZ": -133.45000000000002,
+      "maxZ": -121.85
+    },
+    {
+      "name": "town-apartment-5f",
+      "minX": 13.799999999999999,
+      "maxX": 28.25,
+      "minZ": -133.45000000000002,
+      "maxZ": -120.85
+    },
+    {
+      "name": "town-house-0",
+      "minX": -42.05023296657734,
+      "maxX": -31.94976703342266,
+      "minZ": -131.4996700184522,
+      "maxZ": -121.50032998154778
+    },
+    {
+      "name": "town-house-1",
+      "minX": -54.16661962163774,
+      "maxX": -45.83338037836226,
+      "minZ": -131.83192623024547,
+      "maxZ": -122.16807376975453
+    },
+    {
+      "name": "town-front-lane",
+      "minX": -56,
+      "maxX": 37,
+      "minZ": -118.5,
+      "maxZ": -115.8
+    },
+    {
+      "name": "town-levee-lane",
+      "minX": 32,
+      "maxX": 37,
+      "minZ": -115.8,
+      "maxZ": -101
+    },
+    {
+      "name": "town-apartment-3f-entry",
+      "minX": -18.1,
+      "maxX": -15.9,
+      "minZ": -123.5,
+      "maxZ": -118.51
+    },
+    {
+      "name": "town-apartment-4f-entry",
+      "minX": 0.8999999999999999,
+      "maxX": 3.1,
+      "minZ": -122,
+      "maxZ": -118.51
+    },
+    {
+      "name": "town-apartment-5f-entry",
+      "minX": 20.9,
+      "maxX": 23.1,
+      "minZ": -121,
+      "maxZ": -118.51
+    },
+    {
+      "name": "town-house-0-entry",
+      "minX": -38.1,
+      "maxX": -35.9,
+      "minZ": -121.50032998154778,
+      "maxZ": -118.51
+    },
+    {
+      "name": "town-house-1-entry",
+      "minX": -51.1,
+      "maxX": -48.9,
+      "minZ": -122.16807376975453,
+      "maxZ": -118.51
+    },
+    {
+      "name": "town-levee-stairs",
+      "minX": 32,
+      "maxX": 37,
+      "minZ": -101,
+      "maxZ": -94.53
+    },
+    {
+      "name": "town-tree--57.5",
+      "minX": -58.4,
+      "maxX": -56.6,
+      "minZ": -123.4,
+      "maxZ": -121.6
+    },
+    {
+      "name": "town-tree-30.5",
+      "minX": 29.6,
+      "maxX": 31.4,
+      "minZ": -127.9,
+      "maxZ": -126.1
+    },
+    {
+      "name": "town-apartment-3f-hedge--24.5",
+      "minX": -24.7,
+      "maxX": -18.3,
+      "minZ": -123.3,
+      "maxZ": -122.3
+    },
+    {
+      "name": "town-apartment-3f-hedge--15.5",
+      "minX": -15.7,
+      "maxX": -11.25,
+      "minZ": -123.3,
+      "maxZ": -122.3
+    },
+    {
+      "name": "town-apartment-3f-bush--24.4",
+      "minX": -25.7,
+      "maxX": -23.099999999999998,
+      "minZ": -136.85000000000002,
+      "maxZ": -134.25
+    },
+    {
+      "name": "town-apartment-3f-bush--11.55",
+      "minX": -12.850000000000001,
+      "maxX": -10.25,
+      "minZ": -136.85000000000002,
+      "maxZ": -134.25
+    },
+    {
+      "name": "town-apartment-4f-hedge--6.000000000000001",
+      "minX": -6.200000000000001,
+      "maxX": 0.7,
+      "minZ": -121.8,
+      "maxZ": -120.8
+    },
+    {
+      "name": "town-apartment-4f-hedge-3.5",
+      "minX": 3.3,
+      "maxX": 8.25,
+      "minZ": -121.8,
+      "maxZ": -120.8
+    },
+    {
+      "name": "town-apartment-4f-bush--5.900000000000001",
+      "minX": -7.200000000000001,
+      "maxX": -4.600000000000001,
+      "minZ": -135.35000000000002,
+      "maxZ": -132.75
+    },
+    {
+      "name": "town-apartment-4f-bush-7.95",
+      "minX": 6.65,
+      "maxX": 9.25,
+      "minZ": -135.35000000000002,
+      "maxZ": -132.75
+    },
+    {
+      "name": "town-apartment-5f-hedge-13.999999999999998",
+      "minX": 13.799999999999999,
+      "maxX": 20.7,
+      "minZ": -120.8,
+      "maxZ": -119.8
+    },
+    {
+      "name": "town-apartment-5f-hedge-23.5",
+      "minX": 23.3,
+      "maxX": 28.25,
+      "minZ": -120.8,
+      "maxZ": -119.8
+    },
+    {
+      "name": "town-apartment-5f-bush-14.1",
+      "minX": 12.799999999999999,
+      "maxX": 15.4,
+      "minZ": -135.35000000000002,
+      "maxZ": -132.75
+    },
+    {
+      "name": "town-apartment-5f-bush-27.95",
+      "minX": 26.65,
+      "maxX": 29.25,
+      "minZ": -135.35000000000002,
+      "maxZ": -132.75
+    },
+    {
+      "name": "town-house-0-hedge--41.85023296657734",
+      "minX": -42.05023296657734,
+      "maxX": -38.3,
+      "minZ": -121.45032998154778,
+      "maxZ": -120.45032998154778
+    },
+    {
+      "name": "town-house-0-hedge--35.5",
+      "minX": -35.7,
+      "maxX": -31.949767033422663,
+      "minZ": -121.45032998154778,
+      "maxZ": -120.45032998154778
+    },
+    {
+      "name": "town-house-0-bush--41.75023296657734",
+      "minX": -43.05023296657734,
+      "maxX": -40.450232966577346,
+      "minZ": -133.3996700184522,
+      "maxZ": -130.7996700184522
+    },
+    {
+      "name": "town-house-0-bush--32.24976703342266",
+      "minX": -33.549767033422654,
+      "maxX": -30.949767033422656,
+      "minZ": -133.3996700184522,
+      "maxZ": -130.7996700184522
+    },
+    {
+      "name": "town-house-1-hedge--53.96661962163774",
+      "minX": -54.16661962163774,
+      "maxX": -51.3,
+      "minZ": -122.11807376975453,
+      "maxZ": -121.11807376975453
+    },
+    {
+      "name": "town-house-1-hedge--48.5",
+      "minX": -48.7,
+      "maxX": -45.83338037836226,
+      "minZ": -122.11807376975453,
+      "maxZ": -121.11807376975453
+    },
+    {
+      "name": "town-house-1-bush--53.866619621637746",
+      "minX": -55.16661962163774,
+      "maxX": -52.56661962163775,
+      "minZ": -133.73192623024548,
+      "maxZ": -131.13192623024545
+    },
+    {
+      "name": "town-house-1-bush--46.133380378362254",
+      "minX": -47.43338037836225,
+      "maxX": -44.83338037836226,
+      "minZ": -133.73192623024548,
+      "maxZ": -131.13192623024545
+    }
+  ],
+  "foundationAndFloorPrimitives": [
+    {
+      "role": "concrete",
+      "type": "MeshToonMaterial",
+      "color": "#cdc6b6",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -24.700000000000003,
+        3.861900393168085,
+        -134.95000000000002
+      ],
+      "max": [
+        -11.250000000000002,
+        5.3180401484171576,
+        -123.35
+      ],
+      "uvMin": [
+        -3.3625,
+        -2.9000000000000057
+      ],
+      "uvMax": [
+        3.3625,
+        2.9000000000000057
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:89:11)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "concrete",
+      "type": "MeshToonMaterial",
+      "color": "#b8b1a3",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -24.735,
+        5.248040148417157,
+        -134.985
+      ],
+      "max": [
+        -11.215000000000002,
+        5.338040148417157,
+        -123.315
+      ],
+      "uvMin": [
+        -5.633333333333334,
+        -4.86250000000001
+      ],
+      "uvMax": [
+        5.633333333333334,
+        4.86250000000001
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:96:11)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#e6e1d4",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -24.740000000000002,
+        5.248040148417157,
+        -134.99
+      ],
+      "max": [
+        -11.21,
+        5.343040148417158,
+        -134.79000000000002
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:98:13)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#e6e1d4",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -24.740000000000002,
+        5.248040148417157,
+        -134.79000000000002
+      ],
+      "max": [
+        -24.54,
+        5.343040148417158,
+        -123.50999999999999
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:99:13)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#e6e1d4",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -24.740000000000002,
+        5.248040148417157,
+        -123.50999999999999
+      ],
+      "max": [
+        -11.21,
+        5.343040148417158,
+        -123.31
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:98:13)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#e6e1d4",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -11.410000000000002,
+        5.248040148417157,
+        -134.79000000000002
+      ],
+      "max": [
+        -11.210000000000003,
+        5.343040148417158,
+        -123.50999999999999
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:99:13)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "concrete",
+      "type": "MeshToonMaterial",
+      "color": "#cdc6b6",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -6.200000000000001,
+        3.417428440517817,
+        -133.45000000000002
+      ],
+      "max": [
+        8.25,
+        4.764808464050294,
+        -121.85
+      ],
+      "uvMin": [
+        -3.6125000000000003,
+        -2.9000000000000057
+      ],
+      "uvMax": [
+        3.6125000000000003,
+        2.9000000000000057
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:89:11)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "concrete",
+      "type": "MeshToonMaterial",
+      "color": "#b8b1a3",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -6.235000000000001,
+        4.694808464050293,
+        -133.485
+      ],
+      "max": [
+        8.285,
+        4.784808464050293,
+        -121.815
+      ],
+      "uvMin": [
+        -6.050000000000001,
+        -4.86250000000001
+      ],
+      "uvMax": [
+        6.050000000000001,
+        4.86250000000001
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:96:11)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#e6e1d4",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -6.240000000000001,
+        4.694808464050293,
+        -133.49
+      ],
+      "max": [
+        8.29,
+        4.789808464050294,
+        -133.29000000000002
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:98:13)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#e6e1d4",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -6.240000000000001,
+        4.694808464050293,
+        -133.29000000000002
+      ],
+      "max": [
+        -6.040000000000002,
+        4.789808464050294,
+        -122.00999999999999
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:99:13)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#e6e1d4",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -6.240000000000001,
+        4.694808464050293,
+        -122.00999999999999
+      ],
+      "max": [
+        8.29,
+        4.789808464050294,
+        -121.81
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:98:13)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#e6e1d4",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        8.090000000000002,
+        4.694808464050293,
+        -133.29000000000002
+      ],
+      "max": [
+        8.290000000000001,
+        4.789808464050294,
+        -122.00999999999999
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:99:13)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#8d969a",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -0.8999999999999999,
+        4.8998084640502935,
+        -125.39999999999999
+      ],
+      "max": [
+        4.9,
+        4.909808464050293,
+        -123.3
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildLaundryShop (file:///<fixture>/src/city-apartments.js:170:5)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:150:13)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "concrete",
+      "type": "MeshToonMaterial",
+      "color": "#cdc6b6",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        13.799999999999997,
+        3.2343790456983683,
+        -133.45000000000002
+      ],
+      "max": [
+        28.25,
+        4.643957901000977,
+        -120.85
+      ],
+      "uvMin": [
+        -3.6125000000000003,
+        -3.1500000000000057
+      ],
+      "uvMax": [
+        3.6125000000000003,
+        3.1500000000000057
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:89:11)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "concrete",
+      "type": "MeshToonMaterial",
+      "color": "#b8b1a3",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        13.764999999999997,
+        4.573957901000977,
+        -133.485
+      ],
+      "max": [
+        28.285,
+        4.663957901000977,
+        -120.815
+      ],
+      "uvMin": [
+        -6.050000000000001,
+        -5.2791666666666766
+      ],
+      "uvMax": [
+        6.050000000000001,
+        5.2791666666666766
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:96:11)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#e6e1d4",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        13.759999999999998,
+        4.573957901000977,
+        -133.49
+      ],
+      "max": [
+        28.29,
+        4.668957901000978,
+        -133.29000000000002
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:98:13)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#e6e1d4",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        13.759999999999998,
+        4.573957901000977,
+        -133.29000000000002
+      ],
+      "max": [
+        13.959999999999997,
+        4.668957901000978,
+        -121.00999999999999
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:99:13)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#e6e1d4",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        13.759999999999998,
+        4.573957901000977,
+        -121.00999999999999
+      ],
+      "max": [
+        28.29,
+        4.668957901000978,
+        -120.81
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:98:13)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#e6e1d4",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        28.089999999999996,
+        4.573957901000977,
+        -133.29000000000002
+      ],
+      "max": [
+        28.29,
+        4.668957901000978,
+        -121.00999999999999
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:99:13)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "concrete",
+      "type": "MeshToonMaterial",
+      "color": "#cdc6b6",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -42.05023296657734,
+        3.051207744342058,
+        -131.4996700184522
+      ],
+      "max": [
+        -31.94976703342266,
+        4.265555652798646,
+        -121.5003299815478
+      ],
+      "uvMin": [
+        -2.52511648328867,
+        -2.499835009226107
+      ],
+      "uvMax": [
+        2.52511648328867,
+        2.499835009226107
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:89:11)\n    at createCity (file:///<fixture>/src/city.js:138:56)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "concrete",
+      "type": "MeshToonMaterial",
+      "color": "#b8b1a3",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -42.08523296657734,
+        4.195555652798646,
+        -131.5346700184522
+      ],
+      "max": [
+        -31.91476703342266,
+        4.285555652798646,
+        -121.46532998154778
+      ],
+      "uvMin": [
+        -4.237694138814451,
+        -4.195558348710179
+      ],
+      "uvMax": [
+        4.237694138814451,
+        4.195558348710179
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:96:11)\n    at createCity (file:///<fixture>/src/city.js:138:56)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#e6e1d4",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -42.09023296657734,
+        4.195555652798646,
+        -131.5396700184522
+      ],
+      "max": [
+        -31.90976703342266,
+        4.290555652798647,
+        -131.3396700184522
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:98:13)\n    at createCity (file:///<fixture>/src/city.js:138:56)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#e6e1d4",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -42.09023296657734,
+        4.195555652798646,
+        -131.3396700184522
+      ],
+      "max": [
+        -41.89023296657734,
+        4.290555652798647,
+        -121.66032998154779
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:99:13)\n    at createCity (file:///<fixture>/src/city.js:138:56)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#e6e1d4",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -42.09023296657734,
+        4.195555652798646,
+        -121.66032998154778
+      ],
+      "max": [
+        -31.90976703342266,
+        4.290555652798647,
+        -121.46032998154779
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:98:13)\n    at createCity (file:///<fixture>/src/city.js:138:56)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#e6e1d4",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -32.10976703342266,
+        4.195555652798646,
+        -131.3396700184522
+      ],
+      "max": [
+        -31.90976703342266,
+        4.290555652798647,
+        -121.66032998154779
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:99:13)\n    at createCity (file:///<fixture>/src/city.js:138:56)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "concrete",
+      "type": "MeshToonMaterial",
+      "color": "#cdc6b6",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -54.16661962163774,
+        3.1380344548699206,
+        -131.83192623024547
+      ],
+      "max": [
+        -45.83338037836226,
+        4.317841223382807,
+        -122.16807376975453
+      ],
+      "uvMin": [
+        -2.415963115122736,
+        -2.415963115122736
+      ],
+      "uvMax": [
+        2.415963115122736,
+        2.415963115122736
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:89:11)\n    at createCity (file:///<fixture>/src/city.js:138:56)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "concrete",
+      "type": "MeshToonMaterial",
+      "color": "#b8b1a3",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -54.20161962163775,
+        4.247841223382807,
+        -131.86692623024547
+      ],
+      "max": [
+        -45.79838037836225,
+        4.3378412233828065,
+        -122.13307376975453
+      ],
+      "uvMin": [
+        -4.055771858537893,
+        -4.055771858537893
+      ],
+      "uvMax": [
+        4.055771858537893,
+        4.055771858537893
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:96:11)\n    at createCity (file:///<fixture>/src/city.js:138:56)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#e6e1d4",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -54.20661962163774,
+        4.247841223382807,
+        -131.87192623024546
+      ],
+      "max": [
+        -45.79338037836226,
+        4.342841223382807,
+        -131.67192623024548
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:98:13)\n    at createCity (file:///<fixture>/src/city.js:138:56)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#e6e1d4",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -54.20661962163774,
+        4.247841223382807,
+        -131.67192623024548
+      ],
+      "max": [
+        -54.00661962163774,
+        4.342841223382807,
+        -122.32807376975452
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:99:13)\n    at createCity (file:///<fixture>/src/city.js:138:56)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#e6e1d4",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -54.20661962163774,
+        4.247841223382807,
+        -122.32807376975452
+      ],
+      "max": [
+        -45.79338037836226,
+        4.342841223382807,
+        -122.12807376975454
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:98:13)\n    at createCity (file:///<fixture>/src/city.js:138:56)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    },
+    {
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "color": "#e6e1d4",
+      "shadow": false,
+      "receive": true,
+      "triangles": 12,
+      "min": [
+        -45.99338037836226,
+        4.247841223382807,
+        -131.67192623024548
+      ],
+      "max": [
+        -45.79338037836226,
+        4.342841223382807,
+        -122.32807376975452
+      ],
+      "uvMin": [
+        0,
+        0
+      ],
+      "uvMax": [
+        1,
+        1
+      ],
+      "stack": "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:99:13)\n    at createCity (file:///<fixture>/src/city.js:138:56)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64"
+    }
+  ],
+  "kitBudgets": [
+    {
+      "source": "houses/props.js",
+      "name": "wateringCan",
+      "lod": 1,
+      "triangles": 68
+    },
+    {
+      "source": "houses/props.js",
+      "name": "bucket",
+      "lod": 1,
+      "triangles": 60
+    },
+    {
+      "source": "houses/props.js",
+      "name": "broom",
+      "lod": 1,
+      "triangles": 36
+    },
+    {
+      "source": "houses/props.js",
+      "name": "dustpan",
+      "lod": 1,
+      "triangles": 24
+    },
+    {
+      "source": "houses/props.js",
+      "name": "umbrellaFolded",
+      "lod": 1,
+      "triangles": 36
+    },
+    {
+      "source": "houses/props.js",
+      "name": "bins-one",
+      "lod": 1,
+      "triangles": 36
+    },
+    {
+      "source": "houses/props.js",
+      "name": "sillPot",
+      "lod": 1,
+      "triangles": 172
+    },
+    {
+      "source": "houses/props.js",
+      "name": "pot-seed-c12",
+      "lod": 1,
+      "triangles": 126
+    },
+    {
+      "source": "houses/props.js",
+      "name": "planter-.7m",
+      "lod": 1,
+      "triangles": 164
+    },
+    {
+      "source": "houses/props.js",
+      "name": "elecMeter",
+      "lod": 1,
+      "triangles": 36
+    },
+    {
+      "source": "houses/props.js",
+      "name": "ventHood",
+      "lod": 1,
+      "triangles": 24
+    },
+    {
+      "source": "houses/props.js",
+      "name": "acUnit",
+      "lod": 1,
+      "triangles": 36
+    },
+    {
+      "source": "shopsA/common.js",
+      "name": "carton",
+      "triangles": 12
+    },
+    {
+      "source": "shopsA/common.js",
+      "name": "crate",
+      "triangles": 12
+    },
+    {
+      "source": "shopsA/common.js",
+      "name": "aFrame",
+      "triangles": 136,
+      "atlasRegions": 0
+    },
+    {
+      "source": "shopsA/common.js",
+      "name": "umbrellaStand",
+      "triangles": 192
+    },
+    {
+      "source": "shopsA/common.js",
+      "name": "pipe",
+      "triangles": 32
+    }
+  ],
+  "glass": [
+    {
+      "name": "town-edge-kit",
+      "triangles": 110,
+      "opacity": 0.38,
+      "transparent": true,
+      "depthWrite": false,
+      "depthTest": true,
+      "side": 2,
+      "renderOrder": 0,
+      "castShadow": false,
+      "receiveShadow": true
+    },
+    {
+      "name": "town-edge-kit",
+      "triangles": 36,
+      "opacity": 0.08,
+      "transparent": true,
+      "depthWrite": false,
+      "depthTest": true,
+      "side": 2,
+      "renderOrder": 0,
+      "castShadow": false,
+      "receiveShadow": true
+    }
+  ],
+  "stats": {
+    "buildings": 5,
+    "apartments": 3,
+    "lowHouses": 2,
+    "modelTriangles": 29553,
+    "modelPrimitives": 136,
+    "connections": {
+      "roads": [
+        {
+          "name": "town-front-lane",
+          "minX": -56,
+          "maxX": 37,
+          "minZ": -118.5,
+          "maxZ": -115.8,
+          "triangles": 558,
+          "groundOffset": 0.06
+        },
+        {
+          "name": "town-levee-lane",
+          "minX": 32,
+          "maxX": 37,
+          "minZ": -115.8,
+          "maxZ": -101,
+          "triangles": 150,
+          "groundOffset": 0.06
+        }
+      ],
+      "stairs": [
+        {
+          "name": "town-apartment-3f-entry",
+          "x": -17,
+          "width": 2.2,
+          "highZ": -123.5,
+          "lowZ": -118.51,
+          "steps": 12,
+          "rise": 0.16522699094701745,
+          "tread": 0.4158333333333329,
+          "top": 5.458040148417157,
+          "bottom": 3.4753162570529477,
+          "minClearance": 0.1520745146716722
+        },
+        {
+          "name": "town-apartment-4f-entry",
+          "x": 2,
+          "width": 2.2,
+          "highZ": -122,
+          "lowZ": -118.51,
+          "steps": 9,
+          "rise": 0.16519691556765836,
+          "tread": 0.3877777777777772,
+          "top": 4.904808464050293,
+          "bottom": 3.418036223941368,
+          "minClearance": 0.16489170203975156
+        },
+        {
+          "name": "town-apartment-5f-entry",
+          "x": 22,
+          "width": 2.2,
+          "highZ": -121,
+          "lowZ": -118.51,
+          "steps": 8,
+          "rise": 0.16888438367843667,
+          "tread": 0.31124999999999936,
+          "top": 4.783957901000977,
+          "bottom": 3.4328828315734836,
+          "minClearance": 0.19491120815277263
+        },
+        {
+          "name": "town-house-0-entry",
+          "x": -37,
+          "width": 2.2,
+          "highZ": -121.50032998154778,
+          "lowZ": -118.51,
+          "steps": 8,
+          "rise": 0.16701789847613763,
+          "tread": 0.3737912476934717,
+          "top": 4.265555652798646,
+          "bottom": 2.929412464989545,
+          "minClearance": 0.1903727568173812
+        },
+        {
+          "name": "town-house-1-entry",
+          "x": -50,
+          "width": 2.2,
+          "highZ": -122.16807376975453,
+          "lowZ": -118.51,
+          "steps": 9,
+          "rise": 0.1703773724573469,
+          "tread": 0.4064526410838359,
+          "top": 4.317841223382807,
+          "bottom": 2.7844448712666847,
+          "minClearance": 0.1884255007462241
+        },
+        {
+          "name": "town-levee-stairs",
+          "x": 34.5,
+          "width": 5,
+          "highZ": -94.53,
+          "lowZ": -101,
+          "steps": 10,
+          "rise": 0.17436214139726358,
+          "tread": 0.6469999999999999,
+          "top": 3.23,
+          "bottom": 1.4863785860273642,
+          "minClearance": 0.030398222222221882
+        }
+      ],
+      "walkable": false
+    },
+    "trees": [
+      {
+        "x": -57.5,
+        "y": 3.5195525222354185,
+        "z": -122.5,
+        "triangles": 364
+      },
+      {
+        "x": 30.5,
+        "y": 4.387975295384702,
+        "z": -127,
+        "triangles": 364
+      }
+    ],
+    "poles": [
+      {
+        "x": -28,
+        "z": -116.2,
+        "height": 7.4
+      },
+      {
+        "x": 30.4,
+        "z": -116.2,
+        "height": 7.4
+      }
+    ],
+    "planting": [
+      {
+        "name": "town-apartment-3f",
+        "hedgeZ": -122.8,
+        "triangles": 1538
+      },
+      {
+        "name": "town-apartment-4f",
+        "hedgeZ": -121.3,
+        "triangles": 1634
+      },
+      {
+        "name": "town-apartment-5f",
+        "hedgeZ": -120.3,
+        "triangles": 1636
+      },
+      {
+        "name": "town-house-0",
+        "hedgeZ": -120.95032998154778,
+        "triangles": 1274
+      },
+      {
+        "name": "town-house-1",
+        "hedgeZ": -121.61807376975453,
+        "triangles": 1132
+      }
+    ],
+    "densityProps": {
+      "gbTriangles": 252,
+      "umbrellaTriangles": 192,
+      "laundry": {
+        "umbrellaStand": [
+          3.65,
+          4.784808464050293,
+          -123
+        ],
+        "sortingBins": [
+          -0.4,
+          4.784808464050293,
+          -122.93
+        ],
+        "binCount": 2
+      },
+      "rear": {
+        "origin": [
+          2,
+          4.904808464050293,
+          -131
+        ],
+        "rotationY": 3.141592653589793,
+        "broom": [
+          -5.2,
+          0,
+          0.14
+        ],
+        "dustpan": [
+          -4.85,
+          0,
+          0.26
+        ],
+        "bucket": [
+          -5.15,
+          0,
+          0.74
+        ],
+        "meter": [
+          -3.15,
+          1.3
+        ],
+        "parcels": [
+          {
+            "center": [
+              -5.15,
+              2.85,
+              0.37
+            ],
+            "size": [
+              0.46,
+              0.27,
+              0.36
+            ]
+          },
+          {
+            "center": [
+              -5.12,
+              3.12,
+              0.37
+            ],
+            "size": [
+              0.34,
+              0.18,
+              0.3
+            ]
+          }
+        ]
+      },
+      "source": "Pinned Sakuragaoka MIT builders and existing house atlas; no new textures",
+      "walkable": false,
+      "totalTriangles": 444
+    },
+    "texturedProps": {
+      "crate": {
+        "position": [
+          5.55,
+          4.784824423193932,
+          -122.58
+        ],
+        "triangles": 5840
+      },
+      "sign": {
+        "position": [
+          4.55,
+          4.784808464050293,
+          -122.35
+        ],
+        "rotationY": 0.35,
+        "size": [
+          0.45,
+          0.68
+        ],
+        "blank": true
+      },
+      "pot": {
+        "position": [
+          6.25,
+          4.784808464050293,
+          -122.7
+        ],
+        "triangles": 141
+      },
+      "view": {
+        "position": [
+          8,
+          6.384808464050293,
+          -122.1
+        ],
+        "target": [
+          5.15,
+          5.144808464050294,
+          -122.7
+        ]
+      },
+      "walkable": false,
+      "borrowedAssetTextures": 4
+    },
+    "totalTriangles": 29553,
+    "materials": 29,
+    "geometries": 26,
+    "borrowedTextures": 13,
+    "uniqueTextures": 13,
+    "ownedTextures": 0,
+    "newTexturePixels": 0,
+    "ownedTextureRGBA8WithMipsEstimateBytes": 0,
+    "textureCacheEntriesAdded": 0,
+    "laundryItems": 8,
+    "suppressedPhysicsCalls": 0,
+    "ownership": "Own emitted geometry, far instances and material clones; borrow all station atlases, far facade textures and gradient maps. Dispose before station.",
+    "limitation": "Background only: no new physics or navigable interiors. Foundations and stairs are CPU checked; camera composition and visible CDLOD contacts need GPU acceptance."
+  },
+  "meshes": [
+    {
+      "name": "houses-far",
+      "uuid": "c7b5c7da-0d9b-4828-8543-7671cbc3b5bf",
+      "materialUUID": "0b3959d2-d990-4daf-b857-dee175ce7274",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 12,
+      "worldBounds": {
+        "min": [
+          238.8472600132227,
+          12.265555652798646,
+          769.3901099711657
+        ],
+        "max": [
+          247.1527399867773,
+          18.81555584353351,
+          777.6098900288343
+        ]
+      }
+    },
+    {
+      "name": "houses-far",
+      "uuid": "095d244a-df25-441a-a3d3-aac19a099f16",
+      "materialUUID": "3899115d-8341-4175-aaf9-12bd5de7ec67",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 12,
+      "worldBounds": {
+        "min": [
+          238.09976703342267,
+          18.51457394637879,
+          768.6503299815478
+        ],
+        "max": [
+          247.90023296657733,
+          20.822101059378618,
+          778.3496700184522
+        ]
+      }
+    },
+    {
+      "name": "houses-far",
+      "uuid": "b1c09bdf-858b-42ef-9815-61dc916124fa",
+      "materialUUID": "0b3959d2-d990-4daf-b857-dee175ce7274",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 12,
+      "worldBounds": {
+        "min": [
+          226.59608491510153,
+          12.317841223382807,
+          769.0322657302022
+        ],
+        "max": [
+          233.40391508489847,
+          18.86784141411767,
+          776.9677342697978
+        ]
+      }
+    },
+    {
+      "name": "houses-far",
+      "uuid": "659e9714-eb4e-4d98-a66a-81df45ac3964",
+      "materialUUID": "3899115d-8341-4175-aaf9-12bd5de7ec67",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 12,
+      "worldBounds": {
+        "min": [
+          225.98338037836226,
+          18.613796585144666,
+          768.3180737697545
+        ],
+        "max": [
+          234.01661962163774,
+          20.561472854518748,
+          777.6819262302455
+        ]
+      }
+    },
+    {
+      "name": "plastic_crate_02",
+      "uuid": "7b1df10e-f5c7-4fb5-a61c-028895f3a1f6",
+      "materialUUID": "cb30aeaf-b66d-4324-96cd-d92086d6e347",
+      "role": null,
+      "type": "MeshStandardMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 5840,
+      "worldBounds": {
+        "min": [
+          285.2972493052483,
+          12.784808464050293,
+          777.217249302268
+        ],
+        "max": [
+          285.80275069475175,
+          13.038897625803948,
+          777.6227506977319
+        ]
+      }
+    },
+    {
+      "name": "",
+      "uuid": "d772a6b2-b062-43c5-8b6d-ded1d9c0a779",
+      "materialUUID": "444adcd1-2b16-4291-b788-6a1cd26b8e64",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 12,
+      "worldBounds": {
+        "min": [
+          284.3362514852529,
+          13.392171476442105,
+          777.566301506157
+        ],
+        "max": [
+          284.7731920754678,
+          13.44380791373256,
+          777.7595692432625
+        ]
+      }
+    },
+    {
+      "name": "",
+      "uuid": "31afc930-6d39-48fe-a3d2-229f5c0ffbcf",
+      "materialUUID": "444adcd1-2b16-4291-b788-6a1cd26b8e64",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 12,
+      "worldBounds": {
+        "min": [
+          284.33602368443104,
+          12.780575969190421,
+          777.7060092154433
+        ],
+        "max": [
+          284.4539572517277,
+          13.441409499978631,
+          777.928716024758
+        ]
+      }
+    },
+    {
+      "name": "",
+      "uuid": "93cb0299-ddb9-4bb9-86f0-eb63b846c186",
+      "materialUUID": "444adcd1-2b16-4291-b788-6a1cd26b8e64",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 12,
+      "worldBounds": {
+        "min": [
+          284.7174090058471,
+          12.780575969190421,
+          777.5667927056163
+        ],
+        "max": [
+          284.83534257314375,
+          13.441409499978631,
+          777.7894995149311
+        ]
+      }
+    },
+    {
+      "name": "",
+      "uuid": "e07eed95-7f3c-482c-8ba7-547f64927661",
+      "materialUUID": "444adcd1-2b16-4291-b788-6a1cd26b8e64",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 12,
+      "worldBounds": {
+        "min": [
+          284.3904338450002,
+          12.854926795562193,
+          777.7147347394924
+        ],
+        "max": [
+          284.8273744352151,
+          12.906563232852648,
+          777.908002476598
+        ]
+      }
+    },
+    {
+      "name": "",
+      "uuid": "083504b6-923e-478a-a46e-472e2fe22bbc",
+      "materialUUID": "6dd5d7cf-b820-42f7-9714-aa33db478429",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 12,
+      "worldBounds": {
+        "min": [
+          284.38462844822396,
+          12.90783298131061,
+          777.5984571521772
+        ],
+        "max": [
+          284.7770623879674,
+          13.410089038015569,
+          777.8705456436728
+        ]
+      }
+    },
+    {
+      "name": "",
+      "uuid": "c654ba87-940f-4a28-9f03-945f14fac87d",
+      "materialUUID": "444adcd1-2b16-4291-b788-6a1cd26b8e64",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 12,
+      "worldBounds": {
+        "min": [
+          284.3268079245322,
+          13.392171476442105,
+          777.5404307567375
+        ],
+        "max": [
+          284.76374851474714,
+          13.44380791373256,
+          777.733698493843
+        ]
+      }
+    },
+    {
+      "name": "",
+      "uuid": "2604df31-e614-483f-9252-9827c23a9479",
+      "materialUUID": "444adcd1-2b16-4291-b788-6a1cd26b8e64",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 12,
+      "worldBounds": {
+        "min": [
+          284.2646574268563,
+          12.780575969190421,
+          777.5105004850689
+        ],
+        "max": [
+          284.3825909941529,
+          13.441409499978631,
+          777.7332072943836
+        ]
+      }
+    },
+    {
+      "name": "",
+      "uuid": "245762cc-e456-4bc7-af5c-337c6ff5400c",
+      "materialUUID": "444adcd1-2b16-4291-b788-6a1cd26b8e64",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 12,
+      "worldBounds": {
+        "min": [
+          284.64604274827235,
+          12.780575969190421,
+          777.3712839752419
+        ],
+        "max": [
+          284.763976315569,
+          13.441409499978631,
+          777.5939907845567
+        ]
+      }
+    },
+    {
+      "name": "",
+      "uuid": "fcdbc58e-8900-41c7-b08b-85b12a87cde3",
+      "materialUUID": "444adcd1-2b16-4291-b788-6a1cd26b8e64",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 12,
+      "worldBounds": {
+        "min": [
+          284.2726255647849,
+          12.854926795562193,
+          777.391997523402
+        ],
+        "max": [
+          284.70956615499983,
+          12.906563232852648,
+          777.5852652605075
+        ]
+      }
+    },
+    {
+      "name": "",
+      "uuid": "f32745a8-f598-4631-a712-63adf03d2064",
+      "materialUUID": "6dd5d7cf-b820-42f7-9714-aa33db478429",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 12,
+      "worldBounds": {
+        "min": [
+          284.3229376120326,
+          12.90783298131061,
+          777.4294543563271
+        ],
+        "max": [
+          284.71537155177606,
+          13.410089038015569,
+          777.7015428478228
+        ]
+      }
+    },
+    {
+      "name": "",
+      "uuid": "365cf4d2-2d79-4220-949d-9a38c80763fc",
+      "materialUUID": "1c38f7a3-ec90-4c56-85bf-fe77c2e84f40",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 16,
+      "worldBounds": {
+        "min": [
+          284.4913788599558,
+          13.066408464050294,
+          777.4983287747145
+        ],
+        "max": [
+          284.60862114004425,
+          13.074408464050293,
+          777.8016712252854
+        ]
+      }
+    },
+    {
+      "name": "",
+      "uuid": "b58087ed-ec41-4db3-ae4b-12e920e161ca",
+      "materialUUID": "35087a2d-421d-4fcc-9366-c48b9698260c",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 12,
+      "worldBounds": {
+        "min": [
+          283.4,
+          12.789808464050292,
+          776.89
+        ],
+        "max": [
+          283.9,
+          12.839808464050293,
+          777.11
+        ]
+      }
+    },
+    {
+      "name": "",
+      "uuid": "0855f3a7-6332-475c-a6c7-a348967f46df",
+      "materialUUID": "35087a2d-421d-4fcc-9366-c48b9698260c",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 12,
+      "worldBounds": {
+        "min": [
+          283.4,
+          13.319808464050293,
+          776.89
+        ],
+        "max": [
+          283.9,
+          13.349808464050295,
+          777.11
+        ]
+      }
+    },
+    {
+      "name": "",
+      "uuid": "e4ac00e5-fc5e-4544-b9fe-d7fc38913c24",
+      "materialUUID": "35087a2d-421d-4fcc-9366-c48b9698260c",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 12,
+      "worldBounds": {
+        "min": [
+          283.4,
+          12.809808464050294,
+          776.9
+        ],
+        "max": [
+          283.41999999999996,
+          13.359808464050294,
+          777.1
+        ]
+      }
+    },
+    {
+      "name": "",
+      "uuid": "7b5fcc66-73dc-4578-bb9c-c06359f8d837",
+      "materialUUID": "35087a2d-421d-4fcc-9366-c48b9698260c",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 12,
+      "worldBounds": {
+        "min": [
+          283.88,
+          12.809808464050294,
+          776.9
+        ],
+        "max": [
+          283.9,
+          13.359808464050294,
+          777.1
+        ]
+      }
+    },
+    {
+      "name": "",
+      "uuid": "949fd517-816f-4525-a20a-1b03f4269c5c",
+      "materialUUID": "1ca58720-7657-4b0d-91e6-9345df1167b8",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 32,
+      "worldBounds": {
+        "min": [
+          283.43422649466845,
+          12.831063679752383,
+          776.9401829139036
+        ],
+        "max": [
+          283.56577350533155,
+          13.458553248348203,
+          777.0598170860964
+        ]
+      }
+    },
+    {
+      "name": "",
+      "uuid": "1f645250-38d9-4790-8c80-7aa603fc3f37",
+      "materialUUID": "da548590-53f9-4982-b34c-974b562e8ce2",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 16,
+      "worldBounds": {
+        "min": [
+          283.462,
+          13.439808464050293,
+          776.992
+        ],
+        "max": [
+          283.47799999999995,
+          13.689808464050293,
+          777.008
+        ]
+      }
+    },
+    {
+      "name": "",
+      "uuid": "8d178b4c-3514-4f65-b4ff-f5f33b4e7888",
+      "materialUUID": "f79e207e-047b-436c-8904-0176fdb787e5",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 32,
+      "worldBounds": {
+        "min": [
+          283.61499999985097,
+          12.834808461666107,
+          776.964999999851
+        ],
+        "max": [
+          283.685000000149,
+          13.454808466434478,
+          777.035000000149
+        ]
+      }
+    },
+    {
+      "name": "",
+      "uuid": "f4058a2a-f3ea-4b85-88ce-df8b69fae03b",
+      "materialUUID": "da548590-53f9-4982-b34c-974b562e8ce2",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 16,
+      "worldBounds": {
+        "min": [
+          283.642,
+          13.439808464050293,
+          776.992
+        ],
+        "max": [
+          283.65799999999996,
+          13.689808464050293,
+          777.008
+        ]
+      }
+    },
+    {
+      "name": "",
+      "uuid": "b38299d3-4f77-4cbe-ac77-f5fb3fe95fe5",
+      "materialUUID": "9b2b9e7c-619b-4f5b-bdd0-7e19461c6061",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 32,
+      "worldBounds": {
+        "min": [
+          283.7342264946684,
+          12.831063679752383,
+          776.9401829139036
+        ],
+        "max": [
+          283.8657735053315,
+          13.458553248348203,
+          777.0598170860964
+        ]
+      }
+    },
+    {
+      "name": "",
+      "uuid": "9e13c3d1-d022-465c-9341-8044154bbd92",
+      "materialUUID": "da548590-53f9-4982-b34c-974b562e8ce2",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 16,
+      "worldBounds": {
+        "min": [
+          283.822,
+          13.439808464050293,
+          776.992
+        ],
+        "max": [
+          283.83799999999997,
+          13.689808464050293,
+          777.008
+        ]
+      }
+    },
+    {
+      "name": "town-edge-kit",
+      "uuid": "6f336fe0-598f-41a8-9f87-5f98cff778d8",
+      "materialUUID": "9c635d3c-48d6-407d-a96b-ddf4e0a96e79",
+      "role": "concrete",
+      "type": "MeshToonMaterial",
+      "castShadow": false,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 856,
+      "worldBounds": {
+        "min": [
+          225.79838180541992,
+          9.326889872550964,
+          765.0149993896484
+        ],
+        "max": [
+          317,
+          18.584674835205078,
+          805.4700012207031
+        ]
+      }
+    },
+    {
+      "name": "town-edge-kit",
+      "uuid": "de12bc2a-fbf7-4563-994a-7105677f88d5",
+      "materialUUID": "0fac9085-bffd-4d23-a8ef-2a125c2a631f",
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "castShadow": false,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 756,
+      "worldBounds": {
+        "min": [
+          225.7933807373047,
+          12.195555686950684,
+          765.0099945068359
+        ],
+        "max": [
+          311.3999996185303,
+          18.39716148376465,
+          783.8600006103516
+        ]
+      }
+    },
+    {
+      "name": "town-edge-kit",
+      "uuid": "3fadc88b-3081-4e53-8f82-a3f012ae58aa",
+      "materialUUID": "0fac9085-bffd-4d23-a8ef-2a125c2a631f",
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 5374,
+      "worldBounds": {
+        "min": [
+          222.4051399230957,
+          11.392670392990112,
+          766.4400024414062
+        ],
+        "max": [
+          310.5916175842285,
+          28.82895851135254,
+          778.8949966430664
+        ]
+      }
+    },
+    {
+      "name": "town-edge-kit",
+      "uuid": "0e98a5f0-8021-45b9-9dde-5b2662fe6dae",
+      "materialUUID": "9c635d3c-48d6-407d-a96b-ddf4e0a96e79",
+      "role": "concrete",
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 600,
+      "worldBounds": {
+        "min": [
+          257.5,
+          12.64395809173584,
+          767.5
+        ],
+        "max": [
+          308,
+          26.893957138061523,
+          777.75
+        ]
+      }
+    },
+    {
+      "name": "town-edge-kit",
+      "uuid": "40cd9b89-8b41-42fb-9643-e8f98f98ab45",
+      "materialUUID": "f68ecc76-bd74-4737-917b-a3c8a5c77b2d",
+      "role": "atlas",
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 806,
+      "worldBounds": {
+        "min": [
+          257.4750003814697,
+          12.813957691192627,
+          767.4024963378906
+        ],
+        "max": [
+          308.0249996185303,
+          26.518957138061523,
+          778.5899963378906
+        ]
+      }
+    },
+    {
+      "name": "town-edge-kit",
+      "uuid": "ee539621-10de-4490-98be-adbd35053eb6",
+      "materialUUID": "8a5a0ace-08dd-4346-a80d-e35c65d47329",
+      "role": "glass",
+      "type": "ShaderMaterial",
+      "castShadow": false,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 110,
+      "worldBounds": {
+        "min": [
+          257.4619998931885,
+          12.973958015441895,
+          770.8549957275391
+        ],
+        "max": [
+          308.0380001068115,
+          26.233957290649414,
+          777.7880020141602
+        ]
+      }
+    },
+    {
+      "name": "town-edge-kit",
+      "uuid": "adad68e1-7d5d-4f7f-a101-dc2e808f8491",
+      "materialUUID": "21d475e1-f8b6-427b-99aa-d2b63f3f4c52",
+      "role": "lamp",
+      "type": "MeshBasicMaterial",
+      "castShadow": false,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 480,
+      "worldBounds": {
+        "min": [
+          258.4933338165283,
+          14.908957958221436,
+          767.3650054931641
+        ],
+        "max": [
+          305.3999996185303,
+          26.378957748413086,
+          777.8899993896484
+        ]
+      }
+    },
+    {
+      "name": "town-edge-kit",
+      "uuid": "204a8480-3d01-402d-a273-d83cf780c66d",
+      "materialUUID": "eab46290-ba0f-4260-a952-cee580e3eb45",
+      "role": "metal",
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 5364,
+      "worldBounds": {
+        "min": [
+          255.64249992370605,
+          12.64395809173584,
+          765.3150024414062
+        ],
+        "max": [
+          308.0200004577637,
+          29.07895851135254,
+          778.4800033569336
+        ]
+      }
+    },
+    {
+      "name": "town-edge-kit",
+      "uuid": "d184914f-292d-4043-8f25-46ab5c16f1c6",
+      "materialUUID": "f7c83400-3b63-4b3e-a1c1-2e8f2d679327",
+      "role": "poly",
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 36,
+      "worldBounds": {
+        "min": [
+          255.54999923706055,
+          14.733957767486572,
+          771.5
+        ],
+        "max": [
+          295.8500003814697,
+          15.468039989471436,
+          777.5
+        ]
+      }
+    },
+    {
+      "name": "town-edge-kit",
+      "uuid": "7ae5f84a-e433-4bff-a637-45269cda1a97",
+      "materialUUID": "279df8e1-94c5-4602-aa69-3516e42565e6",
+      "role": "glass",
+      "type": "ShaderMaterial",
+      "castShadow": false,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 36,
+      "worldBounds": {
+        "min": [
+          279.02999997138977,
+          12.94480848312378,
+          776.7689971923828
+        ],
+        "max": [
+          284.96999979019165,
+          15.084808349609375,
+          776.7809982299805
+        ]
+      }
+    },
+    {
+      "name": "town-edge-kit",
+      "uuid": "563bbe9a-05d7-4b76-87e5-5b0f55246052",
+      "materialUUID": "432f5045-d0ab-4fff-9ba0-23971a780d65",
+      "role": "lamp",
+      "type": "MeshBasicMaterial",
+      "castShadow": false,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 12,
+      "worldBounds": {
+        "min": [
+          279.02499997615814,
+          14.919808387756348,
+          777.7925033569336
+        ],
+        "max": [
+          279.67500001192093,
+          15.469808578491211,
+          777.8375015258789
+        ]
+      }
+    },
+    {
+      "name": "town-edge-kit",
+      "uuid": "f4ec40c3-9182-44b1-961b-66b9269a931b",
+      "materialUUID": "c38d60d1-fd3e-4648-b0eb-8721b8cf91b5",
+      "role": "asphalt",
+      "type": "MeshToonMaterial",
+      "castShadow": false,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 708,
+      "worldBounds": {
+        "min": [
+          224,
+          9.477016687393188,
+          781.5
+        ],
+        "max": [
+          317,
+          11.667486667633057,
+          799
+        ]
+      }
+    },
+    {
+      "name": "town-edge-kit",
+      "uuid": "a3ebc48b-a34d-47f1-b31f-5e80c6fe9d12",
+      "materialUUID": "3dfc8920-d4d2-4d4b-9cf8-f46538b557b2",
+      "role": "foliage",
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 7418,
+      "worldBounds": {
+        "min": [
+          221.71555709838867,
+          10.947718381881714,
+          763.5174407958984
+        ],
+        "max": [
+          311.1078643798828,
+          14.924540996551514,
+          780.1031646728516
+        ]
+      }
+    },
+    {
+      "name": "town-edge-kit",
+      "uuid": "3bea5f5d-384d-4963-ad61-7d88a03fd03b",
+      "materialUUID": "0fac9085-bffd-4d23-a8ef-2a125c2a631f",
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "castShadow": false,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 565,
+      "worldBounds": {
+        "min": [
+          225.2731056213379,
+          12.530353546142578,
+          763.6920166015625
+        ],
+        "max": [
+          308.9848575592041,
+          14.409939765930176,
+          777.4785766601562
+        ]
+      }
+    },
+    {
+      "name": "town-edge-kit",
+      "uuid": "c43fabbc-d9e4-4e74-9c7e-3cc627291021",
+      "materialUUID": "88dce51f-8165-4f88-bd68-6ae86fb8d058",
+      "role": "soil",
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 24,
+      "worldBounds": {
+        "min": [
+          286.1465401649475,
+          12.939423561096191,
+          777.180534362793
+        ],
+        "max": [
+          286.3534598350525,
+          12.959423542022705,
+          777.4194641113281
+        ]
+      }
+    },
+    {
+      "name": "houses-laundry",
+      "uuid": "ca278880-5633-49af-b364-7435264aee89",
+      "materialUUID": "f61c5e50-d990-480f-8029-1adf477fd074",
+      "role": null,
+      "type": "MeshToonMaterial",
+      "castShadow": true,
+      "receiveShadow": true,
+      "instanceCount": 1,
+      "triangles": 192,
+      "worldBounds": {
+        "min": [
+          258.6133327484131,
+          17.103958129882812,
+          775.9055252075195
+        ],
+        "max": [
+          306.3472328186035,
+          23.443958282470703,
+          778.4494094848633
+        ]
+      }
+    }
+  ],
+  "trace": [
+    {
+      "key": "9c635d3c-48d6-407d-a96b-ddf4e0a96e79|false|true|false",
+      "materialUUID": "9c635d3c-48d6-407d-a96b-ddf4e0a96e79",
+      "role": "concrete",
+      "type": "MeshToonMaterial",
+      "shadow": false,
+      "receive": true,
+      "noOutline": false,
+      "triangles": 856,
+      "sources": {
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:89:11)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 36,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:96:11)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 36,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:89:11)\n    at createCity (file:///<fixture>/src/city.js:138:56)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 24,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:96:11)\n    at createCity (file:///<fixture>/src/city.js:138:56)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 24,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at stairs (file:///<fixture>/src/city.js:280:13)\n    at addConnections (file:///<fixture>/src/city.js:287:5)\n    at createCity (file:///<fixture>/src/city.js:145:25)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 552,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at stairs (file:///<fixture>/src/city.js:280:13)\n    at addConnections (file:///<fixture>/src/city.js:291:3)\n    at createCity (file:///<fixture>/src/city.js:145:25)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 120,
+        "    at Frame.cyl (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:167:13)\n    at addUtilityPoles (file:///<fixture>/src/city.js:326:11)\n    at createCity (file:///<fixture>/src/city.js:156:5)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 64
+      },
+      "min": [
+        -54.20161962163775,
+        1.3268898995717398,
+        -134.985
+      ],
+      "max": [
+        37,
+        10.584674584070848,
+        -94.53
+      ]
+    },
+    {
+      "key": "0fac9085-bffd-4d23-a8ef-2a125c2a631f|false|true|false",
+      "materialUUID": "0fac9085-bffd-4d23-a8ef-2a125c2a631f",
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "shadow": false,
+      "receive": true,
+      "noOutline": false,
+      "triangles": 756,
+      "sources": {
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:98:13)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 72,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:99:13)\n    at createCity (file:///<fixture>/src/city.js:112:55)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 72,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildLaundryShop (file:///<fixture>/src/city-apartments.js:170:5)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:150:13)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 12,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:98:13)\n    at createCity (file:///<fixture>/src/city.js:138:56)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 48,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at foundation (file:///<fixture>/src/city.js:99:13)\n    at createCity (file:///<fixture>/src/city.js:138:56)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 48,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at addUtilityPoles (file:///<fixture>/src/city.js:327:11)\n    at createCity (file:///<fixture>/src/city.js:156:5)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 24,
+        "    at Frame.cyl (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:167:13)\n    at addUtilityPoles (file:///<fixture>/src/city.js:328:41)\n    at createCity (file:///<fixture>/src/city.js:156:5)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 96,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.beam (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:181:13)\n    at addUtilityPoles (file:///<fixture>/src/city.js:334:11)\n    at createCity (file:///<fixture>/src/city.js:156:5)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 384
+      },
+      "min": [
+        -54.20661962163774,
+        4.195555652798646,
+        -134.99
+      ],
+      "max": [
+        31.4,
+        10.397161787503483,
+        -116.14
+      ]
+    },
+    {
+      "key": "0fac9085-bffd-4d23-a8ef-2a125c2a631f|true|true|false",
+      "materialUUID": "0fac9085-bffd-4d23-a8ef-2a125c2a631f",
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "shadow": true,
+      "receive": true,
+      "noOutline": false,
+      "triangles": 5374,
+      "sources": {
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:41:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 144,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:51:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 144,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildWindow (file:///<fixture>/upstream/sakuragaoka/src/world/houses/house.js:193:6)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:60:16)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 124,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildWindow (file:///<fixture>/upstream/sakuragaoka/src/world/houses/house.js:194:6)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:60:16)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 124,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildWindow (file:///<fixture>/upstream/sakuragaoka/src/world/houses/house.js:195:6)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:60:16)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 186,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildWindow (file:///<fixture>/upstream/sakuragaoka/src/world/houses/house.js:196:6)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:60:16)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 186,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildWindow (file:///<fixture>/upstream/sakuragaoka/src/world/houses/house.js:197:68)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:60:16)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 186,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildWindow (file:///<fixture>/upstream/sakuragaoka/src/world/houses/house.js:202:6)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:60:16)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 310,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:63:12)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 432,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:57:16)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 24,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildWindow (file:///<fixture>/upstream/sakuragaoka/src/world/houses/house.js:193:6)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:87:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 96,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildWindow (file:///<fixture>/upstream/sakuragaoka/src/world/houses/house.js:194:6)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:87:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 96,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildWindow (file:///<fixture>/upstream/sakuragaoka/src/world/houses/house.js:195:6)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:87:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 144,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildWindow (file:///<fixture>/upstream/sakuragaoka/src/world/houses/house.js:196:6)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:87:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 144,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildWindow (file:///<fixture>/upstream/sakuragaoka/src/world/houses/house.js:197:68)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:87:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 144,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildWindow (file:///<fixture>/upstream/sakuragaoka/src/world/houses/house.js:202:6)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:87:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 240,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:90:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 144,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:68:11)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 324,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:69:11)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 324,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildWindow (file:///<fixture>/upstream/sakuragaoka/src/world/houses/house.js:198:61)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:60:16)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 54,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:73:9)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 108,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:75:11)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 432,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:93:9)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 216,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:117:5)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 36,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:120:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 72,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:126:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 72,
+        "    at Frame.cyl (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:167:13)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:133:5)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 120,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at P.acUnit (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:271:7)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:136:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 36,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at P.acUnit (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:273:7)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:136:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 36,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:148:5)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 36,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildLaundryShop (file:///<fixture>/src/city-apartments.js:169:5)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:150:13)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 12,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildLaundryShop (file:///<fixture>/src/city-apartments.js:175:7)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:150:13)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 48,
+        "    at Frame.cyl (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:167:13)\n    at buildLaundryShop (file:///<fixture>/src/city-apartments.js:177:7)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:150:13)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 192,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildLaundryShop (file:///<fixture>/src/city-apartments.js:178:7)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:150:13)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 48,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildLaundryShop (file:///<fixture>/src/city-apartments.js:187:5)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:150:13)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 12,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildLaundryShop (file:///<fixture>/src/city-apartments.js:188:5)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:150:13)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 12,
+        "    at Frame.cyl (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:167:13)\n    at buildLaundryShop (file:///<fixture>/src/city-apartments.js:193:5)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:150:13)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 48,
+        "    at Frame.cyl (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:167:13)\n    at P.tree (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:187:7)\n    at createCity (file:///<fixture>/src/city.js:152:11)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 48,
+        "    at Frame.cyl (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:167:13)\n    at P.pot (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:212:7)\n    at createCity (file:///<fixture>/src/city.js:190:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 28,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at townSortingBins (file:///<fixture>/src/city-apartments.js:205:7)\n    at createCity (file:///<fixture>/src/city.js:193:5)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 24,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at townSortingBins (file:///<fixture>/src/city-apartments.js:206:7)\n    at createCity (file:///<fixture>/src/city.js:193:5)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 24,
+        "    at Frame.cyl (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:167:13)\n    at P.broom (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:381:7)\n    at createCity (file:///<fixture>/src/city.js:197:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 16,
+        "    at Frame.cyl (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:167:13)\n    at P.broom (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:382:7)\n    at createCity (file:///<fixture>/src/city.js:197:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 20,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at P.dustpan (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:384:35)\n    at createCity (file:///<fixture>/src/city.js:198:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 12,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at P.dustpan (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:384:96)\n    at createCity (file:///<fixture>/src/city.js:198:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 12,
+        "    at Frame.cyl (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:167:13)\n    at P.bucket (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:376:7)\n    at createCity (file:///<fixture>/src/city.js:199:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 16,
+        "    at Frame.cyl (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:167:13)\n    at P.bucket (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:377:7)\n    at createCity (file:///<fixture>/src/city.js:199:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 32,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at P.bucket (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:378:7)\n    at createCity (file:///<fixture>/src/city.js:199:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 12,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at P.elecMeter (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:282:7)\n    at createCity (file:///<fixture>/src/city.js:200:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 12,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at P.elecMeter (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:284:7)\n    at createCity (file:///<fixture>/src/city.js:200:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 12
+      },
+      "min": [
+        -57.594861341402506,
+        3.3926702835389335,
+        -133.56
+      ],
+      "max": [
+        30.591617600591146,
+        20.828957901000976,
+        -121.105
+      ]
+    },
+    {
+      "key": "9c635d3c-48d6-407d-a96b-ddf4e0a96e79|true|true|false",
+      "materialUUID": "9c635d3c-48d6-407d-a96b-ddf4e0a96e79",
+      "role": "concrete",
+      "type": "MeshToonMaterial",
+      "shadow": true,
+      "receive": true,
+      "noOutline": false,
+      "triangles": 600,
+      "sources": {
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:42:35)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 288,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:44:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 144,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:50:14)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 132,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:47:37)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 24,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:49:9)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 12
+      },
+      "min": [
+        -22.5,
+        4.643957901000977,
+        -132.5
+      ],
+      "max": [
+        28,
+        18.893957901000977,
+        -122.25
+      ]
+    },
+    {
+      "key": "f68ecc76-bd74-4737-917b-a3c8a5c77b2d|true|true|false",
+      "materialUUID": "f68ecc76-bd74-4737-917b-a3c8a5c77b2d",
+      "role": "atlas",
+      "type": "MeshToonMaterial",
+      "shadow": true,
+      "receive": true,
+      "noOutline": false,
+      "triangles": 806,
+      "sources": {
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildWindow (file:///<fixture>/upstream/sakuragaoka/src/world/houses/house.js:190:17)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:60:16)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 62,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:64:12)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 432,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:58:16)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 24,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildWindow (file:///<fixture>/upstream/sakuragaoka/src/world/houses/house.js:190:17)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:87:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 48,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at P.acUnit (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:272:7)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:136:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 36,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:137:8)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 36,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:146:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 108,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at townSortingBins (file:///<fixture>/src/city-apartments.js:207:7)\n    at createCity (file:///<fixture>/src/city.js:193:5)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 24,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at P.elecMeter (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:283:7)\n    at createCity (file:///<fixture>/src/city.js:200:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 12,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at createCity (file:///<fixture>/src/city.js:204:10)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 12,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at createCity (file:///<fixture>/src/city.js:205:10)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 12
+      },
+      "min": [
+        -22.525,
+        4.813957901000977,
+        -132.5975
+      ],
+      "max": [
+        28.025,
+        18.518957901000974,
+        -121.41
+      ]
+    },
+    {
+      "key": "8a5a0ace-08dd-4346-a80d-e35c65d47329|false|true|false",
+      "materialUUID": "8a5a0ace-08dd-4346-a80d-e35c65d47329",
+      "role": "glass",
+      "type": "ShaderMaterial",
+      "shadow": false,
+      "receive": true,
+      "noOutline": false,
+      "triangles": 110,
+      "sources": {
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildWindow (file:///<fixture>/upstream/sakuragaoka/src/world/houses/house.js:199:17)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:60:16)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 62,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildWindow (file:///<fixture>/upstream/sakuragaoka/src/world/houses/house.js:199:17)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:87:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 48
+      },
+      "min": [
+        -22.538,
+        4.973957901000977,
+        -129.145
+      ],
+      "max": [
+        28.038,
+        18.233957901000977,
+        -122.212
+      ]
+    },
+    {
+      "key": "21d475e1-f8b6-427b-99aa-d2b63f3f4c52|false|true|false",
+      "materialUUID": "21d475e1-f8b6-427b-99aa-d2b63f3f4c52",
+      "role": "lamp",
+      "type": "MeshBasicMaterial",
+      "shadow": false,
+      "receive": true,
+      "noOutline": false,
+      "triangles": 480,
+      "sources": {
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:66:12)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 432,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:59:16)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 24,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildLaundryShop (file:///<fixture>/src/city-apartments.js:172:48)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:150:13)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 24
+      },
+      "min": [
+        -21.506666666666668,
+        6.908957901000977,
+        -132.635
+      ],
+      "max": [
+        25.400000000000002,
+        18.378957901000977,
+        -122.11
+      ]
+    },
+    {
+      "key": "eab46290-ba0f-4260-a952-cee580e3eb45|true|true|false",
+      "materialUUID": "eab46290-ba0f-4260-a952-cee580e3eb45",
+      "role": "metal",
+      "type": "MeshToonMaterial",
+      "shadow": true,
+      "receive": true,
+      "noOutline": false,
+      "triangles": 5364,
+      "sources": {
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:79:11)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 48,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.beam (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:181:13)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:80:41)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 96,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:103:9)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 1728,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.beam (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:181:13)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:107:9)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 216,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.beam (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:181:13)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:108:9)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 216,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:109:38)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 1080,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:114:9)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 216,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:121:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 72,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:123:9)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 504,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:127:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 72,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:128:36)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 216,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:132:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 144,
+        "    at Frame.cyl (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:167:13)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:134:5)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 120,
+        "    at Frame.cyl (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:167:13)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:135:5)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 72,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:142:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 144,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:145:7)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 108,
+        "    at Frame.cyl (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:167:13)\n    at buildLaundryShop (file:///<fixture>/src/city-apartments.js:176:7)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:150:13)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 192,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildLaundryShop (file:///<fixture>/src/city-apartments.js:180:39)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:150:13)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 48,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildLaundryShop (file:///<fixture>/src/city-apartments.js:181:5)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:150:13)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 12,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildLaundryShop (file:///<fixture>/src/city-apartments.js:186:5)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:150:13)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 12,
+        "    at Frame.cyl (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:167:13)\n    at buildLaundryShop (file:///<fixture>/src/city-apartments.js:192:5)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:150:13)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 48
+      },
+      "min": [
+        -24.357499999999998,
+        4.643957901000977,
+        -134.685
+      ],
+      "max": [
+        28.02,
+        21.078957901000976,
+        -121.52
+      ]
+    },
+    {
+      "key": "f7c83400-3b63-4b3e-a1c1-2e8f2d679327|true|true|false",
+      "materialUUID": "f7c83400-3b63-4b3e-a1c1-2e8f2d679327",
+      "role": "poly",
+      "type": "MeshToonMaterial",
+      "shadow": true,
+      "receive": true,
+      "noOutline": false,
+      "triangles": 36,
+      "sources": {
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:143:5)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 36
+      },
+      "min": [
+        -24.45,
+        6.733957901000977,
+        -128.5
+      ],
+      "max": [
+        15.85,
+        7.468040148417158,
+        -122.5
+      ]
+    },
+    {
+      "key": "279df8e1-94c5-4602-aa69-3516e42565e6|false|true|false",
+      "materialUUID": "279df8e1-94c5-4602-aa69-3516e42565e6",
+      "role": "glass",
+      "type": "ShaderMaterial",
+      "shadow": false,
+      "receive": true,
+      "noOutline": false,
+      "triangles": 36,
+      "sources": {
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildLaundryShop (file:///<fixture>/src/city-apartments.js:184:34)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:150:13)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 24,
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.boxB (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:160:49)\n    at buildLaundryShop (file:///<fixture>/src/city-apartments.js:185:5)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:150:13)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 12
+      },
+      "min": [
+        -0.97,
+        4.944808464050293,
+        -123.231
+      ],
+      "max": [
+        4.97,
+        7.084808464050294,
+        -123.219
+      ]
+    },
+    {
+      "key": "432f5045-d0ab-4fff-9ba0-23971a780d65|false|true|false",
+      "materialUUID": "432f5045-d0ab-4fff-9ba0-23971a780d65",
+      "role": "lamp",
+      "type": "MeshBasicMaterial",
+      "shadow": false,
+      "receive": true,
+      "noOutline": false,
+      "triangles": 12,
+      "sources": {
+        "    at GB.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:110:10)\n    at Frame.box (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:158:48)\n    at buildLaundryShop (file:///<fixture>/src/city-apartments.js:191:5)\n    at buildTownApartment (file:///<fixture>/src/city-apartments.js:150:13)\n    at createCity (file:///<fixture>/src/city.js:114:24)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 12
+      },
+      "min": [
+        -0.9749999999999999,
+        6.919808464050293,
+        -122.2075
+      ],
+      "max": [
+        -0.3249999999999999,
+        7.469808464050294,
+        -122.16250000000001
+      ]
+    },
+    {
+      "key": "c38d60d1-fd3e-4648-b0eb-8721b8cf91b5|false|true|false",
+      "materialUUID": "c38d60d1-fd3e-4648-b0eb-8721b8cf91b5",
+      "role": "asphalt",
+      "type": "MeshToonMaterial",
+      "shadow": false,
+      "receive": true,
+      "noOutline": false,
+      "triangles": 708,
+      "sources": {
+        "    at GB.mesh (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:113:47)\n    at addConnections (file:///<fixture>/src/city.js:262:10)\n    at createCity (file:///<fixture>/src/city.js:145:25)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 708
+      },
+      "min": [
+        -56,
+        1.4770166651407943,
+        -118.5
+      ],
+      "max": [
+        37,
+        3.6674866453806607,
+        -101
+      ]
+    },
+    {
+      "key": "3dfc8920-d4d2-4d4b-9cf8-f46538b557b2|true|true|false",
+      "materialUUID": "3dfc8920-d4d2-4d4b-9cf8-f46538b557b2",
+      "role": "foliage",
+      "type": "MeshToonMaterial",
+      "shadow": true,
+      "receive": true,
+      "noOutline": false,
+      "triangles": 7418,
+      "sources": {
+        "    at Frame.raw (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:162:42)\n    at P.tree (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:202:9)\n    at createCity (file:///<fixture>/src/city.js:152:11)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 680,
+        "    at Frame.raw (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:162:42)\n    at P.hedge (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:143:7)\n    at addLotPlanting (file:///<fixture>/src/city.js:305:13)\n    at createCity (file:///<fixture>/src/city.js:157:34)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 5160,
+        "    at Frame.raw (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:162:42)\n    at P.bush (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:117:7)\n    at addLotPlanting (file:///<fixture>/src/city.js:311:11)\n    at createCity (file:///<fixture>/src/city.js:157:34)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 1504,
+        "    at Frame.raw (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:162:42)\n    at P.bush (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:117:7)\n    at P.pot (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:216:21)\n    at createCity (file:///<fixture>/src/city.js:190:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 74
+      },
+      "min": [
+        -58.28444408734616,
+        2.9477183442694606,
+        -136.48256260244708
+      ],
+      "max": [
+        31.107864933403256,
+        6.924541188312051,
+        -119.89683242440223
+      ]
+    },
+    {
+      "key": "0fac9085-bffd-4d23-a8ef-2a125c2a631f|false|true|true",
+      "materialUUID": "0fac9085-bffd-4d23-a8ef-2a125c2a631f",
+      "role": "plain",
+      "type": "MeshToonMaterial",
+      "shadow": false,
+      "receive": true,
+      "noOutline": true,
+      "triangles": 565,
+      "sources": {
+        "    at Frame.raw (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:162:42)\n    at P.bush (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:130:7)\n    at addLotPlanting (file:///<fixture>/src/city.js:311:11)\n    at createCity (file:///<fixture>/src/city.js:157:34)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 550,
+        "    at Frame.raw (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:162:42)\n    at P.bush (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:130:7)\n    at P.pot (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:216:21)\n    at createCity (file:///<fixture>/src/city.js:190:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 15
+      },
+      "min": [
+        -54.72689448730526,
+        4.530353554454352,
+        -136.30798537201574
+      ],
+      "max": [
+        28.9848576546073,
+        6.409939896265681,
+        -122.52142313647313
+      ]
+    },
+    {
+      "key": "88dce51f-8165-4f88-bd68-6ae86fb8d058|true|true|false",
+      "materialUUID": "88dce51f-8165-4f88-bd68-6ae86fb8d058",
+      "role": "soil",
+      "type": "MeshToonMaterial",
+      "shadow": true,
+      "receive": true,
+      "noOutline": false,
+      "triangles": 24,
+      "sources": {
+        "    at Frame.cyl (file:///<fixture>/upstream/sakuragaoka/src/world/houses/gb.js:167:13)\n    at P.pot (file:///<fixture>/upstream/sakuragaoka/src/world/houses/props.js:214:7)\n    at createCity (file:///<fixture>/src/city.js:190:9)\n    at file:///D:/codex/2026-11-16/world-implementation/handoff/x51-c13-city-cpu.mjs:22:64": 24
+      },
+      "min": [
+        6.1465399488806725,
+        4.93942360725278,
+        -122.81946537345648
+      ],
+      "max": [
+        6.3534600511193275,
+        4.95942360725278,
+        -122.58053462654352
+      ]
+    }
+  ],
+  "ownership": {
+    "textureDisposals": 0,
+    "geometryDisposals": 26,
+    "materialDisposals": 24
+  },
+  "limitations": [
+    "CPU builds actual city/upstream GB/materials/GLTF geometry from current source; image pixels/canvas painting are placeholders.",
+    "No shader/GPU execution, no visual acceptance. Actual topology/mesh flags and primitive origin stacks are captured after city final traversal."
+  ]
+}
