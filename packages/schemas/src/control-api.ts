@@ -269,7 +269,7 @@ const def = <Req extends z.ZodTypeAny, Res extends z.ZodTypeAny>(
   scope: ControlScope,
 ) => ({ request, response, scope });
 
-// P2-C11b: reviewable contracts only. Do not register these in COMMANDS / QUERIES until wiring lands.
+// P2-C11b contract; P2-S07b supplies the main-process handlers.
 export const ProjectResearchTarget = z.object({
   nodeId: NodeId,
   baseUrl: NodeBaseUrl.refine((url) => {
@@ -377,6 +377,7 @@ export const PROJECT_RESEARCH_QUERIES = {
 } as const;
 
 export const COMMANDS = {
+  ...PROJECT_RESEARCH_COMMANDS,
   "workspace.openRestored": def(z.object({type:z.literal("workspace.openRestored")}).strict(), WorkspaceFileResult, "admin"),
   "workspace.useDefaultData": def(z.object({type:z.literal("workspace.useDefaultData")}).strict(), WorkspaceFileResult, "admin"),
   "workspace.backup": def(z.object({ type: z.literal("workspace.backup") }).strict(), WorkspaceFileResult, "admin"),
@@ -1197,6 +1198,7 @@ export const chatSendIntentJson = (req: CommandRequest<"chat.send">): string =>
 // ================================================================ Queries
 
 export const QUERIES = {
+  ...PROJECT_RESEARCH_QUERIES,
   "workspace.sources": def(z.object({type:z.literal("workspace.sources"),projectId:ProjectId}).strict(), z.array(WorkspaceItem).max(200), "read"),
   "workspace.search": def(WorkspaceSearchRequest, WorkspaceSearchPage, "read"),
   "workspace.item": def(WorkspaceItemKey.extend({ type: z.literal("workspace.item") }).strict(), WorkspaceItem, "read"),

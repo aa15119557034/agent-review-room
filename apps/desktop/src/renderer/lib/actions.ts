@@ -1,4 +1,5 @@
 import { createWorkspaceActions } from "./workspace-actions";
+import { createResearchActions } from "./research-actions";
 import type { ContributionType, NodeTestResult, TextSelection } from "@room/schemas";
 import { appendEvents, applyEvent, emptyDraft, type AppState } from "./state";
 import { ControlFailure, describeFailure, type RoomClient } from "./client";
@@ -99,7 +100,11 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
     ...disc,
     chat,
     openWorkspace() { store.set(s=>({...s,view:"workspace"})); },
-    workspace: createWorkspaceActions(client, fail),
+    workspace: createWorkspaceActions(client, fail, () => {
+      loadToken++;
+      store.set((s) => ({ ...s, currentProjectId: null, sourceRevision: s.sourceRevision + 1, snapshots: {}, messages: [], approvals: [], runs: [], runEvents: {} }));
+    }),
+    research: createResearchActions(store, client, fail, () => loadToken),
     agentConsole,
     notes,
     packs,
@@ -114,6 +119,7 @@ export function createActions(store: Store<AppState>, client: RoomClient) {
     async start(): Promise<() => void> {
       // 先订阅再查询：查询期间推来的事件不会丢；重复的由 applyEvent 去重
       const unsubscribe = client.onEvent((e) => {
+        if (e.type === "chat.message.updated") store.set((s) => ({ ...s, sourceRevision: s.sourceRevision + 1 }));
         store.set((s) => applyEvent(s, e));
         chat.onChatEvent(e);
         agentConsole.onEvent(e);

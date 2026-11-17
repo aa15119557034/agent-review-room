@@ -1,8 +1,9 @@
 import type { CommandRequest, NoteScope, QueryRequest, WorkspaceItemKey } from "@room/schemas";
 import type { RoomClient } from "./client";
 
-export function createWorkspaceActions(client:RoomClient,fail:(error:unknown)=>void){
+export function createWorkspaceActions(client:RoomClient,fail:(error:unknown)=>void,onSwitch?:()=>void){
   async function attempt<T>(operation:()=>Promise<T>):Promise<T|null>{try{return await operation();}catch(error){fail(error);return null;}}
+  async function switchData(type:"workspace.openRestored"|"workspace.useDefaultData") { const result=await client.command({type});if(!result.cancelled)onSwitch?.();return result; }
   return {
     search:(q:Omit<QueryRequest<"workspace.search">,"type">)=>attempt(()=>client.query({type:"workspace.search",...q})),
     item:(key:WorkspaceItemKey)=>attempt(()=>client.query({type:"workspace.item",kind:key.kind,id:key.id})),
@@ -13,8 +14,8 @@ export function createWorkspaceActions(client:RoomClient,fail:(error:unknown)=>v
     saveDecision:(q:Omit<CommandRequest<"workspace.decision.save">,"type">)=>attempt(()=>client.command({type:"workspace.decision.save",...q})),
     preview:(scope:NoteScope)=>attempt(()=>client.query({type:"workspace.export.preview",scope})),
     exportScope:(q:Omit<CommandRequest<"workspace.export">,"type">)=>attempt(()=>client.command({type:"workspace.export",...q})),
-    openRestored:()=>attempt(()=>client.command({type:"workspace.openRestored"})),
-    useDefaultData:()=>attempt(()=>client.command({type:"workspace.useDefaultData"})),
+    openRestored:()=>attempt(()=>switchData("workspace.openRestored")),
+    useDefaultData:()=>attempt(()=>switchData("workspace.useDefaultData")),
     backup:()=>attempt(()=>client.command({type:"workspace.backup"})),
     restore:()=>attempt(()=>client.command({type:"workspace.restore"})),
     exportDiagnostics:()=>attempt(()=>client.command({type:"workspace.diagnostics.export"})),

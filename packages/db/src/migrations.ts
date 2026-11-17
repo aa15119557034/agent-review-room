@@ -2,6 +2,7 @@ import { SCHEMA_V25 } from "./schema-v25";
 import { SCHEMA_V26 } from "./schema-v26";
 import { SCHEMA_V27 } from "./schema-v27";
 import { SCHEMA_V28 } from "./schema-v28";
+import { SCHEMA_V29 } from "./schema-v29";
 import type { Database } from "better-sqlite3";
 import { SCHEMA_V1, SCHEMA_V2 } from "./schema";
 import { SCHEMA_V3, SCHEMA_V3_REBUILD } from "./schema-v3";
@@ -237,6 +238,7 @@ export const MIGRATIONS: readonly Migration[] = [
   },
   { version: 27, name: "shared-world", up: (db) => { db.exec(SCHEMA_V27); } },
   { version: 28, name: "immutable-source-references", up: (db) => { db.exec(SCHEMA_V28); } },
+  { version: 29, name: "project-research-authorization", up: (db) => { db.exec(SCHEMA_V29); } },
 ];
 
 /** 当前代码支持的最新 schema 版本 */

@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, realpathSync } from "node:fs";
 import { resolve } from "node:path";
-import type { RunRow, SqliteDatabase } from "@room/db";
+import { assertOrdinarySnapshot, type RunRow, type SqliteDatabase } from "@room/db";
 import { testReviewerNode } from "@room/remote-client";
 import {
   BatchModel,
@@ -231,6 +231,7 @@ export function resolveRunTarget(
   settings: SettingsStore,
   run: RunRow,
 ): RunTarget {
+  assertOrdinarySnapshot(db, run.snapshot_id);
   // 先看有没有 Turn：有 Turn 的 Run 一定是讨论室的，必须按 agent -> node 走，
   // 不能因为查不到 agent 就悄悄回落到 Phase 0 的 Reviewer 设置
   const turn = db.prepare("SELECT agent FROM turns WHERE run_id = ?").get(run.id) as { agent: string } | undefined;

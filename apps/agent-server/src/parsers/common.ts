@@ -5,7 +5,7 @@
  * 进程退出码是 0 也一样（流可能被截断）。
  */
 
-import type { ResultDisplay } from "@room/schemas";
+import type { ResultDisplay, SourceReference } from "@room/schemas";
 
 export type ParserOutput =
   | { kind: "result_display"; result: ResultDisplay }
@@ -15,7 +15,7 @@ export type ParserOutput =
   | { kind: "rate_limit"; info: unknown };
 
 export type ParserVerdict =
-  | { ok: true; finalText: string }
+  | { ok: true; finalText: string; source?: SourceReference | null }
   | { ok: false; reason: "incomplete_output" | "internal" | "quota_exhausted"; message: string };
 
 export interface OutputParser {

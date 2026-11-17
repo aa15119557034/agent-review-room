@@ -6,7 +6,7 @@ import { effortLabel, modelLabel } from "../../lib/models";
 import { useActions, useAppState } from "../hooks";
 import { imageSrc } from "../../lib/media";
 import { HoldButton } from "../HoldButton";
-import { SourceReferences } from "../SourceReferences";
+import { CurrentSourceReferences } from "../CurrentSourceReferences";
 
 /**
  * 发送前确认（C-22；C-33b 照草案「确认第 2 轮」重排）。
@@ -164,7 +164,7 @@ export function ConfirmView() {
               </ul>
             </section>
           )}
-          <SourceReferences references={snapshot?.sourceRefs} />
+          {snapshot && <CurrentSourceReferences projectId={snapshot.projectId} owner={{ kind: "snapshot", id: snapshot.id }} references={snapshot.sourceRefs} />}
           {snapshot ? <pre className="confirm-prompt">{snapshot.content}</pre> : <p>正在加载内容……</p>}
         </div>
       </div>
