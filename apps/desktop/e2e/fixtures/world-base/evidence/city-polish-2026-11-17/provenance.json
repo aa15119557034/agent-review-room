@@ -1,0 +1,641 @@
+{
+  "commits": {
+    "polish": "cc079586460ee5f6e9d623e956a58a56906f4e1d",
+    "cleanup": "4f504b271eba8e20d67e6a6c07affbf3b36dcf51"
+  },
+  "verifiedCaptures": [
+    {
+      "run": "gpu-city-cc07958",
+      "commit": "cc079586460ee5f6e9d623e956a58a56906f4e1d",
+      "sourceFiles": 198
+    },
+    {
+      "run": "wet-road-cc07958",
+      "commit": "cc079586460ee5f6e9d623e956a58a56906f4e1d",
+      "sourceFiles": 197
+    },
+    {
+      "run": "walking-profile-cc07958-v1",
+      "commit": "cc079586460ee5f6e9d623e956a58a56906f4e1d",
+      "sourceFiles": 198
+    },
+    {
+      "run": "gpu-city-cleanup",
+      "commit": "4f504b271eba8e20d67e6a6c07affbf3b36dcf51",
+      "sourceFiles": 198
+    },
+    {
+      "run": "wet-road-city-cleanup",
+      "commit": "4f504b271eba8e20d67e6a6c07affbf3b36dcf51",
+      "sourceFiles": 197
+    }
+  ],
+  "method": "Preserve named image/sample bytes. Full large reports are losslessly gzip-compressed with original hashes; readable summaries retain actual outcomes. Old diagnostic source/report/trace evidence is copied from the frozen handoff bundle. Runtime user-data, caches and model binaries excluded.",
+  "files": [
+    {
+      "file": "cc07958/render-report.json.gz",
+      "bytes": 54370,
+      "sha256": "a4ee0906a8296acb6312d13c333c4d0387f34e5becd36cb945d66d16b4567e93",
+      "originalBytes": 371127,
+      "originalSha256": "47956ba541a885e19ab411d1c2aa9a33f7bb4600fa44e479f9124ff94bc1d757"
+    },
+    {
+      "file": "cc07958/01-station-street.jpg",
+      "bytes": 118965,
+      "sha256": "20080410e8bc52f390adc7c927831d8606471e7a16891733c42319506e0e4907"
+    },
+    {
+      "file": "cc07958/02-station-port.jpg",
+      "bytes": 116246,
+      "sha256": "6ff58aeb7af5206d9da2677293f8576745b15aac018af1e17582a439b9230d4c"
+    },
+    {
+      "file": "cc07958/03-island-aerial.jpg",
+      "bytes": 55256,
+      "sha256": "32f2d4cdf74fe0577f12f506c6f3635145e7d391b3656571055dfb6bc977bccc"
+    },
+    {
+      "file": "cc07958/04-shop-interior.jpg",
+      "bytes": 103294,
+      "sha256": "ea35b0ba43514b44212acae13484e5f1bd9e71810ecafeca8936d26e1cc43368"
+    },
+    {
+      "file": "cc07958/16-city-context.jpg",
+      "bytes": 105947,
+      "sha256": "bac2a7db4bb5b7494eafb41cffb188827a2ac6dd47930f6dd35c6e8858f44ca3"
+    },
+    {
+      "file": "cc07958/17-city-grounding.jpg",
+      "bytes": 167108,
+      "sha256": "dd6c7af58234bd47ea473c629c56592d36a66142e2a524a8cac2b56282f0938b"
+    },
+    {
+      "file": "cc07958/walking-third.jpg",
+      "bytes": 116720,
+      "sha256": "b9a0f228be794c444c29bd46314fa98c8a3391d3d86255612f31cc4dfd60a13b"
+    },
+    {
+      "file": "cc07958/walking-first.jpg",
+      "bytes": 110019,
+      "sha256": "3efa96125bd04182724e59f875b4f9fb8408406c8e79ad95621e6950b84dcfc9"
+    },
+    {
+      "file": "cc07958/source-manifest.json",
+      "bytes": 23973,
+      "sha256": "8861d217b58f53853197b31d3192db471aeaaff35389b4421365dbcb09d53cbd"
+    },
+    {
+      "file": "cc07958/frame-samples-island-aerial.json",
+      "bytes": 11426,
+      "sha256": "6a9053be542a499014f776b702e245a9ae2cdc8788f27bd7e6dbe0edebf3632f"
+    },
+    {
+      "file": "cc07958/frame-samples-shop-interior.json",
+      "bytes": 11151,
+      "sha256": "f56cc3df56b8e6a368caac8f779a80e1ac8d4364c296fb6754a4e5eabdce5954"
+    },
+    {
+      "file": "cc07958/frame-samples-station-port.json",
+      "bytes": 11101,
+      "sha256": "bfc3d14055d6a57d217c0904832843d7562133801a4c9d5e4d738b42b31ceb0a"
+    },
+    {
+      "file": "cc07958/frame-samples-station-street.json",
+      "bytes": 11485,
+      "sha256": "9843dc11ffa98443a0c39f8750d1db2cb1766830ff2836177ba8cef57a7ce8a0"
+    },
+    {
+      "file": "cc07958/frame-samples-walking-first.json",
+      "bytes": 11176,
+      "sha256": "9d0426a6a2e75629f69adfd1a896c41620d8db609bb40c04ec4e45d98d722f63"
+    },
+    {
+      "file": "cc07958/frame-samples-walking-third.json",
+      "bytes": 11314,
+      "sha256": "715f95c4aa69bf44a70f98b2c468fbc9d770917552b3f67d5b68aedb005e7661"
+    },
+    {
+      "file": "cc07958/frame-samples.json",
+      "bytes": 54955,
+      "sha256": "389a56265f43ac074ae45c3a67b13be6c406729d7e3251bc768593a43b2bde1a"
+    },
+    {
+      "file": "cc07958/measurements.json",
+      "bytes": 119237,
+      "sha256": "f68a58f0d7c8f037804ebe2f721bfb3717f5e831a3aaa1a921278ada357873d5"
+    },
+    {
+      "file": "wet-cc07958/wet-road-report.json.gz",
+      "bytes": 55781,
+      "sha256": "885cebe4d91bbaf8aa22198418a1f6d0b31c671e3847a297889fb8af4515249f",
+      "originalBytes": 1537969,
+      "originalSha256": "d43c591af6b724078455dd58efedd4374ff72d732bea6fdf5ed98217de4ab017"
+    },
+    {
+      "file": "wet-cc07958/source-manifest.json",
+      "bytes": 23681,
+      "sha256": "572868750b4626965e4eae204ed58e0aecc7b1ceaacd624d5ca3f37a9b7c8d07"
+    },
+    {
+      "file": "wet-cc07958/detail-on-A1.png",
+      "bytes": 2187302,
+      "sha256": "26333da592213216a147a8af69ec5dd93f771f2caf01f71eafaddcab8a88022a"
+    },
+    {
+      "file": "wet-cc07958/detail-on-A1.jpg",
+      "bytes": 213324,
+      "sha256": "0e0ca725596a56c97a0bece544badb5f8dd825c9fcc8c4ebd738c25a0949b2ee"
+    },
+    {
+      "file": "wet-cc07958/detail-off-B.png",
+      "bytes": 2192652,
+      "sha256": "7bd1e7c2707f524db047ed1b2ea93914d4f4cf4e4f66e60bec7d0fafc58d1f94"
+    },
+    {
+      "file": "wet-cc07958/detail-off-B.jpg",
+      "bytes": 213615,
+      "sha256": "e10f185fc61816db8a8813430548b94ceb95f63b6fe7ad27087c4a208b0ea3c6"
+    },
+    {
+      "file": "wet-cc07958/detail-on-A2.png",
+      "bytes": 2187302,
+      "sha256": "26333da592213216a147a8af69ec5dd93f771f2caf01f71eafaddcab8a88022a"
+    },
+    {
+      "file": "wet-cc07958/detail-on-A2.jpg",
+      "bytes": 213324,
+      "sha256": "0e0ca725596a56c97a0bece544badb5f8dd825c9fcc8c4ebd738c25a0949b2ee"
+    },
+    {
+      "file": "wet-cc07958/station-street-on-A1.png",
+      "bytes": 2664242,
+      "sha256": "8773036bef4a0f82c2918d1c174b5ebfc075cead7b8777cb879010361d70c8c9"
+    },
+    {
+      "file": "wet-cc07958/station-street-on-A1.jpg",
+      "bytes": 350079,
+      "sha256": "e82d8273f9a1bb70ecd8aa7396663fa5a44779d67399aa7a3865d5c5650282a4"
+    },
+    {
+      "file": "wet-cc07958/station-street-off-B.png",
+      "bytes": 2669152,
+      "sha256": "3d8b7c782b01f062a34ebfcbf6d1a33b9624536c3326b6660493f02d8beb2bda"
+    },
+    {
+      "file": "wet-cc07958/station-street-off-B.jpg",
+      "bytes": 350773,
+      "sha256": "cf0c52da60ddbe2f0f749a4627153e4623eb23f5d4a8fefa5a1f165fe2bacf88"
+    },
+    {
+      "file": "wet-cc07958/station-street-on-A2.png",
+      "bytes": 2664242,
+      "sha256": "8773036bef4a0f82c2918d1c174b5ebfc075cead7b8777cb879010361d70c8c9"
+    },
+    {
+      "file": "wet-cc07958/station-street-on-A2.jpg",
+      "bytes": 350079,
+      "sha256": "e82d8273f9a1bb70ecd8aa7396663fa5a44779d67399aa7a3865d5c5650282a4"
+    },
+    {
+      "file": "wet-cc07958/diagnosis.json",
+      "bytes": 160941,
+      "sha256": "9b25a1977b8adad3baae8e8d5c9a13554b312ccb04cd3393da679e07b84dea38"
+    },
+    {
+      "file": "final/render-report.json.gz",
+      "bytes": 54489,
+      "sha256": "5e25db6ca899b62f5168d57a43c88be82bf3d478127fbea33bac1cf5d94e0954",
+      "originalBytes": 371877,
+      "originalSha256": "5cb74034a184f707239015f4105915c7fe609b54623e383d6014d30ff3e3b6d1"
+    },
+    {
+      "file": "final/01-station-street.jpg",
+      "bytes": 118931,
+      "sha256": "d260749ee66ab00e0ef1f4c75348b0ece247ca15e5c99f281a1a5ca267da83a3"
+    },
+    {
+      "file": "final/02-station-port.jpg",
+      "bytes": 116118,
+      "sha256": "522b84b8d4d25315fe16e1dce497562eb2c71fc44c0a766073632199d850e162"
+    },
+    {
+      "file": "final/03-island-aerial.jpg",
+      "bytes": 55266,
+      "sha256": "61790b1daf5af3caeceda01d73043f934fb04f4f8017272d7d34f9cfae887fea"
+    },
+    {
+      "file": "final/04-shop-interior.jpg",
+      "bytes": 103277,
+      "sha256": "6f74716b7b63d526318ab3af4ac505a6eb10cc9da4a62055651f67f5b6532f9b"
+    },
+    {
+      "file": "final/16-city-context.jpg",
+      "bytes": 105735,
+      "sha256": "ce3e1980e6243a96d04eae95ab72d51a08fc836fea7b254d3e636a0236ffb552"
+    },
+    {
+      "file": "final/17-city-grounding.jpg",
+      "bytes": 166822,
+      "sha256": "bb63da0b197aaf9abcb27a618c46006177b293c5db7091583aa40e16c9654a12"
+    },
+    {
+      "file": "final/walking-third.jpg",
+      "bytes": 117281,
+      "sha256": "46d108b2b20f5b614ca9116183fa68e3a448c8a6451e39703d8bde7511f15dd7"
+    },
+    {
+      "file": "final/walking-first.jpg",
+      "bytes": 109933,
+      "sha256": "d76eb293d4aa62cd250d52723f42ba6a77022f0e7e33a51ad6829e71c96e1fed"
+    },
+    {
+      "file": "final/source-manifest.json",
+      "bytes": 23973,
+      "sha256": "642b3da8cfe77f17e9778854cbb025b946e41d58ead0f831bf4684efdbeeb317"
+    },
+    {
+      "file": "final/frame-samples-island-aerial.json",
+      "bytes": 11287,
+      "sha256": "5275a57af1a8d6247c76ba3f619dc2291165592e889ad836d886b1fd55dcc11a"
+    },
+    {
+      "file": "final/frame-samples-shop-interior.json",
+      "bytes": 11118,
+      "sha256": "26b3efab1105c95cabaadf39df3a206a723516480bdaa5d28ff1bb5aa6e084b6"
+    },
+    {
+      "file": "final/frame-samples-station-port.json",
+      "bytes": 11225,
+      "sha256": "e91ebba6fdbe2316bd7afcacb841c7be67c548748030248bde58a4b0d548bd76"
+    },
+    {
+      "file": "final/frame-samples-station-street.json",
+      "bytes": 11348,
+      "sha256": "8c50f6ed9dd846ff63834ef6869e808f4c5dfbb7a2d71ec71711eefac6877a71"
+    },
+    {
+      "file": "final/frame-samples-walking-first.json",
+      "bytes": 11252,
+      "sha256": "88c997507657ce2af40eb585b4d9a6b72b898ab43dc8ea6e954e0a59d7837807"
+    },
+    {
+      "file": "final/frame-samples-walking-third.json",
+      "bytes": 10155,
+      "sha256": "35423ecd87c6a1f3eb9bf279c06f31572114f1b88f962b9b9f41377cde8c3ac7"
+    },
+    {
+      "file": "final/frame-samples.json",
+      "bytes": 55017,
+      "sha256": "ad63f2b292c045561b9f24cddb31b83d3b0129a28fdce5c08ced0c6fbc558448"
+    },
+    {
+      "file": "final/measurements.json",
+      "bytes": 118950,
+      "sha256": "78309e50696d69f9300bf74abea415783d0d263e26850369a9f59cfbf7bc179a"
+    },
+    {
+      "file": "wet-final/wet-road-report.json.gz",
+      "bytes": 56298,
+      "sha256": "4016538a5183503528446991e2897926926fb4d546d42955d459a5a47d4a488d",
+      "originalBytes": 1538088,
+      "originalSha256": "9fb0f95e25e021b7f3d0a5f01b9f19809227afb4570548c2248128649f8e71b2"
+    },
+    {
+      "file": "wet-final/source-manifest.json",
+      "bytes": 23681,
+      "sha256": "24a358afa84e09e4beb570977d8268f674726b0c71c5a6bade9367a664034c7d"
+    },
+    {
+      "file": "wet-final/detail-on-A1.png",
+      "bytes": 2187302,
+      "sha256": "26333da592213216a147a8af69ec5dd93f771f2caf01f71eafaddcab8a88022a"
+    },
+    {
+      "file": "wet-final/detail-on-A1.jpg",
+      "bytes": 213324,
+      "sha256": "0e0ca725596a56c97a0bece544badb5f8dd825c9fcc8c4ebd738c25a0949b2ee"
+    },
+    {
+      "file": "wet-final/detail-off-B.png",
+      "bytes": 2192652,
+      "sha256": "7bd1e7c2707f524db047ed1b2ea93914d4f4cf4e4f66e60bec7d0fafc58d1f94"
+    },
+    {
+      "file": "wet-final/detail-off-B.jpg",
+      "bytes": 213615,
+      "sha256": "e10f185fc61816db8a8813430548b94ceb95f63b6fe7ad27087c4a208b0ea3c6"
+    },
+    {
+      "file": "wet-final/detail-on-A2.png",
+      "bytes": 2187302,
+      "sha256": "26333da592213216a147a8af69ec5dd93f771f2caf01f71eafaddcab8a88022a"
+    },
+    {
+      "file": "wet-final/detail-on-A2.jpg",
+      "bytes": 213324,
+      "sha256": "0e0ca725596a56c97a0bece544badb5f8dd825c9fcc8c4ebd738c25a0949b2ee"
+    },
+    {
+      "file": "wet-final/station-street-on-A1.png",
+      "bytes": 2664242,
+      "sha256": "8773036bef4a0f82c2918d1c174b5ebfc075cead7b8777cb879010361d70c8c9"
+    },
+    {
+      "file": "wet-final/station-street-on-A1.jpg",
+      "bytes": 350079,
+      "sha256": "e82d8273f9a1bb70ecd8aa7396663fa5a44779d67399aa7a3865d5c5650282a4"
+    },
+    {
+      "file": "wet-final/station-street-off-B.png",
+      "bytes": 2669152,
+      "sha256": "3d8b7c782b01f062a34ebfcbf6d1a33b9624536c3326b6660493f02d8beb2bda"
+    },
+    {
+      "file": "wet-final/station-street-off-B.jpg",
+      "bytes": 350773,
+      "sha256": "cf0c52da60ddbe2f0f749a4627153e4623eb23f5d4a8fefa5a1f165fe2bacf88"
+    },
+    {
+      "file": "wet-final/station-street-on-A2.png",
+      "bytes": 2664242,
+      "sha256": "8773036bef4a0f82c2918d1c174b5ebfc075cead7b8777cb879010361d70c8c9"
+    },
+    {
+      "file": "wet-final/station-street-on-A2.jpg",
+      "bytes": 350079,
+      "sha256": "e82d8273f9a1bb70ecd8aa7396663fa5a44779d67399aa7a3865d5c5650282a4"
+    },
+    {
+      "file": "wet-final/diagnosis.json",
+      "bytes": 160968,
+      "sha256": "1673e558ed8b0d97a03146cba781dd20e363498628819c882734ba13b28ac246"
+    },
+    {
+      "file": "walking-cc07958/report.json.gz",
+      "bytes": 58109,
+      "sha256": "95fbcf0e081d580d3669e07cbc36221cb577878e70aacade2c3ea5948a3a7da5",
+      "originalBytes": 1517265,
+      "originalSha256": "3dc10bef48489479c06c1de4aae7595bab453aca8a5c00d17f9f20854e159a22"
+    },
+    {
+      "file": "walking-cc07958/source-manifest.json",
+      "bytes": 23653,
+      "sha256": "4f537d2576761872bca321805155718f13b96f3c37bac062af27a2d0bb49d7e1"
+    },
+    {
+      "file": "walking-cc07958/run-config.json",
+      "bytes": 1452,
+      "sha256": "0e43cb77dd0906361d4923d3bd7ea6c29e254086c86badc089ec4fbba594fe4a"
+    },
+    {
+      "file": "walking-cc07958/frames-third-route-warmup.json",
+      "bytes": 73046,
+      "sha256": "4731daf2ed9a7d874e37bc6c9c7ba51a1cd53020fb961a1568cc025569265f9d"
+    },
+    {
+      "file": "walking-cc07958/frames-first-route-warmup.json",
+      "bytes": 71474,
+      "sha256": "7ce50f2635519fc416f7b6b738a06fb97fc15ba458d8048b687ded84951ab46c"
+    },
+    {
+      "file": "walking-cc07958/frames-third-A1.json",
+      "bytes": 72290,
+      "sha256": "6e5af0ea09420b9f9464550e145659a4a32fd69dd0a0f56c7804c30c420240df"
+    },
+    {
+      "file": "walking-cc07958/frames-third-B1.json",
+      "bytes": 71828,
+      "sha256": "85305097a246f6e371a6136106354057d46accf62dc32910fbf1fb98baa5ce8f"
+    },
+    {
+      "file": "walking-cc07958/frames-third-A2.json",
+      "bytes": 71894,
+      "sha256": "714ff50eec19a2dff82328f286fbf8fc190aa3f5ff54f7447456f15065d04cbe"
+    },
+    {
+      "file": "walking-cc07958/frames-third-B2.json",
+      "bytes": 70968,
+      "sha256": "43b116155f5df1becf49ef1445f128824d958bd69a2755a4e6461de1a4664875"
+    },
+    {
+      "file": "walking-cc07958/frames-third-A3.json",
+      "bytes": 72049,
+      "sha256": "0de942fe0c63a9e97168434655a64d776052df24b4c601371887f9f1c6595ce7"
+    },
+    {
+      "file": "walking-cc07958/frames-third-B3.json",
+      "bytes": 65365,
+      "sha256": "78cd5f33ffc73a08ae0bdc1fda4007bf34db56df4c219740a5c6a055d764e82e"
+    },
+    {
+      "file": "walking-cc07958/frames-third-A4.json",
+      "bytes": 72009,
+      "sha256": "876eb4485d30d92e79420b243649cdf4ff4edbf694a451f081c222b8dd646745"
+    },
+    {
+      "file": "walking-cc07958/frames-third-B4.json",
+      "bytes": 71688,
+      "sha256": "2f012ec398573c6aa3be35b557af429927e2ce0b6ed8a883c09e5d2946f641c0"
+    },
+    {
+      "file": "walking-cc07958/frames-third-A5.json",
+      "bytes": 70860,
+      "sha256": "044d7472a04505d15f6e60c33569faecbbdddddeda486566fff3ddbe113d2ac2"
+    },
+    {
+      "file": "walking-cc07958/frames-third-B5.json",
+      "bytes": 71787,
+      "sha256": "79f23fe48e8f70e67cba41bc357271bc896722d2e9221627f12fded4e9af1396"
+    },
+    {
+      "file": "walking-cc07958/frames-first-A1.json",
+      "bytes": 71266,
+      "sha256": "34c62798cf4f6de37e8fd71e72aee41e2f0a5983e4c72614bacd9ea816f5eed4"
+    },
+    {
+      "file": "walking-cc07958/frames-first-B1.json",
+      "bytes": 71482,
+      "sha256": "a6905eba2b2633e027081cd4b4767cad882468fb2cdc72e9ff40af99bbe2ee0f"
+    },
+    {
+      "file": "walking-cc07958/frames-first-A2.json",
+      "bytes": 71774,
+      "sha256": "a7c4a39f5c9dd1abc51c61201c547e7e1034f85efbc9fe47801f3613e5160eeb"
+    },
+    {
+      "file": "walking-cc07958/frames-first-B2.json",
+      "bytes": 71513,
+      "sha256": "08554498b225bfefe73dbe96b2d59d119b2f473ffd9b99be124c527d2885c060"
+    },
+    {
+      "file": "walking-cc07958/frames-first-A3.json",
+      "bytes": 71040,
+      "sha256": "6821f6a3f473e2f4ccb14f1d0560848dbf912276fc629eca4bee1f3f59dcf36e"
+    },
+    {
+      "file": "walking-cc07958/frames-first-B3.json",
+      "bytes": 71761,
+      "sha256": "0882ed5bdaa9619b03e4d78a91829c55aaed22ab4449983ee249d32a0e28788b"
+    },
+    {
+      "file": "walking-cc07958/frames-first-A4.json",
+      "bytes": 71789,
+      "sha256": "f96ef2279c1d93fe4fd2ac6d6e8f5f9ee6c07b9514c77bcc7dda61c61bcf43e5"
+    },
+    {
+      "file": "walking-cc07958/frames-first-B4.json",
+      "bytes": 69941,
+      "sha256": "7b1570c4fbbcc89d0130b378ec60d6f6275a421c6c6a4e66d19cdc4360800e9c"
+    },
+    {
+      "file": "walking-cc07958/frames-first-A5.json",
+      "bytes": 65056,
+      "sha256": "bcce6252f8bfe43ad7a6b07cfc3cb23f6251f06d644a65633eaa1931540a5f5e"
+    },
+    {
+      "file": "walking-cc07958/frames-first-B5.json",
+      "bytes": 71882,
+      "sha256": "e8a45b18e3d755dcf0cadf78c2f906dc8d556e9d12be2839301fccb1ae414146"
+    },
+    {
+      "file": "walking-cc07958/driver.cjs",
+      "bytes": 23627,
+      "sha256": "2306ccb235a36ab18b9d88c14a0ab67747bca9f7ab07ddd96172d16d90077adc"
+    },
+    {
+      "file": "walking-cc07958/analysis.json",
+      "bytes": 63416,
+      "sha256": "c4cf11bd5d5c604bec063dd6f3bb71fa3bb1500e54b0a9ced7040d3201b781cb"
+    },
+    {
+      "file": "walking-cc07958/measurements.json",
+      "bytes": 191021,
+      "sha256": "ba9540fab5dd1fda939dad8bc923bc73fc11cf1ce3a6f466caf27dd43a44d619"
+    },
+    {
+      "file": "walking-before/provenance.json",
+      "bytes": 4081,
+      "sha256": "d2d77cf42c46f59c63b17947bf6c09674903e2ff8820f05f9bfad174921d7ee3"
+    },
+    {
+      "file": "walking-before/v1/driver.cjs",
+      "bytes": 22238,
+      "sha256": "d7ab2ff39f4f6a6daab43a29cd4db0b22bac993e8a14a5b241341aeec2ea515d"
+    },
+    {
+      "file": "walking-before/v1/frames-first-A1.json",
+      "bytes": 40187,
+      "sha256": "55c581dcd9b3fe4f18842bbae636c88e0f176d58f763140340bab872610311dc"
+    },
+    {
+      "file": "walking-before/v1/frames-first-A2.json",
+      "bytes": 26150,
+      "sha256": "f3faabb330469e9dadb01ef02f5527513a0bb6556362af74c9658a03a6c3b22c"
+    },
+    {
+      "file": "walking-before/v1/frames-first-B.json",
+      "bytes": 48878,
+      "sha256": "ca6106d232354b64cefdabdf93ed18af86d1b5efbe3ab4a4d0343fd903be9521"
+    },
+    {
+      "file": "walking-before/v1/frames-third-A1.json",
+      "bytes": 49976,
+      "sha256": "06688b1fc2bcb423477d08a108626e5cc32d3d577c396843f293523783062be9"
+    },
+    {
+      "file": "walking-before/v1/frames-third-A2.json",
+      "bytes": 32096,
+      "sha256": "0a81d52c603e2ac63382c6d09a045c90cde7887b1f70b902b0a4b3f20296dda7"
+    },
+    {
+      "file": "walking-before/v1/frames-third-B.json",
+      "bytes": 48999,
+      "sha256": "c7be068115975d93a29eaee449ae51275b6c1d50afa335643503818582d3b7a2"
+    },
+    {
+      "file": "walking-before/v1/run-config.json",
+      "bytes": 1429,
+      "sha256": "aaaec98f7493ac38986e14914a4b8d90fbff7dff8e7846896671194ad2da1d48"
+    },
+    {
+      "file": "walking-before/v1/source-manifest.json",
+      "bytes": 23653,
+      "sha256": "d09f4d1daed7765eab0003a087b0c82f9070ed205425f1b6c598c0419de05197"
+    },
+    {
+      "file": "walking-before/v1/walking-profile-report.json",
+      "bytes": 1376115,
+      "sha256": "8e9828a74768e06dadb65aab3d2b54c1b8082c54cd68bc2399304b3627fe9aad"
+    },
+    {
+      "file": "walking-before/v1/walking-trace.json.gz",
+      "bytes": 3238257,
+      "sha256": "8a15b44c5246f146e57ca895b0d5298260d76174825ac1a1c13bdcf806fc06e3"
+    },
+    {
+      "file": "walking-before/v2/driver.cjs",
+      "bytes": 22407,
+      "sha256": "3ad84b8afe4bdb8490bf9c8a6e1c95ac8d45a06597a766ad716da3836559c4dc"
+    },
+    {
+      "file": "walking-before/v2/frames-first-A1.json",
+      "bytes": 48641,
+      "sha256": "c478e45a89b77dae4a835771ec840ab793560064639d469a82b7c13088ad6739"
+    },
+    {
+      "file": "walking-before/v2/frames-first-A2.json",
+      "bytes": 48866,
+      "sha256": "71ef25a7a6cedc412e8e05ac3f7616d2eca5e72ed51c6ec01d29acf738c16712"
+    },
+    {
+      "file": "walking-before/v2/frames-first-B.json",
+      "bytes": 48705,
+      "sha256": "fcf1e5d445153ef3d60d938b0be53c4d3dcda8ee4ee583353c667de9e77a2a52"
+    },
+    {
+      "file": "walking-before/v2/frames-third-A1.json",
+      "bytes": 33760,
+      "sha256": "818a358774b73b24cb5879b3ab394b45ef21f4e34123d23e45d511ef384fb662"
+    },
+    {
+      "file": "walking-before/v2/frames-third-A2.json",
+      "bytes": 49326,
+      "sha256": "e2e7a03b6c140de407a3a60335fa8051da13d2003c2f31bd90ee87eff39be223"
+    },
+    {
+      "file": "walking-before/v2/frames-third-B.json",
+      "bytes": 48247,
+      "sha256": "105eed546f36574f3469e0ba5e3c5efc8b6905da64fa351f33df6a00bae0638b"
+    },
+    {
+      "file": "walking-before/v2/run-config.json",
+      "bytes": 1429,
+      "sha256": "27d7c063b5cb98b48d2bb27ef6bf035041aff1d314b39f4961fbd39ad18447c0"
+    },
+    {
+      "file": "walking-before/v2/source-manifest.json",
+      "bytes": 23653,
+      "sha256": "d09f4d1daed7765eab0003a087b0c82f9070ed205425f1b6c598c0419de05197"
+    },
+    {
+      "file": "walking-before/v2/walking-profile-report.json",
+      "bytes": 1376660,
+      "sha256": "a6dc8fc701b24b0ac120d5301d7a452807285ff92ac0ee221bd7c9aa4f1301b8"
+    },
+    {
+      "file": "walking-before/x51-walking-profile-v1-v2-comparison.json",
+      "bytes": 24457,
+      "sha256": "7f3ffc390688c51a9e684076e5bb3ed74d9daa6972c86b3d08e8ca7974bc0c7c"
+    },
+    {
+      "file": "walking-before/x51-walking-trace-analysis.json",
+      "bytes": 38867,
+      "sha256": "3f69622f62357505aee8628ac8d878a93a780521997722bafd79b08cc4f0de45"
+    },
+    {
+      "file": "transport-current/report.json",
+      "bytes": 176224,
+      "sha256": "5524cab9c3ec8d62f64ef73fbac6534b92ad76f5b71bd4e321802e93e1da7657"
+    }
+  ]
+}

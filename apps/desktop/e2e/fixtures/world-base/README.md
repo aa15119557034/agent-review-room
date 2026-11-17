@@ -47,7 +47,7 @@ node scripts\baseline.cjs --scene=combined --electron=D:\codex\2026-11-16\world-
 
 - `src/streetscape.js`：W3低墙两只花箱、W2二层侧墙外机及支架。复用已有图集和造型；门口及既有自行车留空，低花箱按原物理台阶规则提供顶面。
 - `src/skyline.js`：站区北侧两组原比例公寓，保留外廊、楼梯、阳台、院落和晾衣；台阶与小路接到原有堤顶路，按真实地形及接缝表面落地。只清理院落和连接处的草花，属于不可步行背景；没有扩大地图导航范围。释放时先调用 `worldBase.skyline.dispose()`，再释放 station，以保持借用纹理的所有权顺序。
-- `src/wet-road.js`：五组局部湿区。C酱第三轮扩大湿区并调整底色与天光混合，本机两个机位的固定帧开/关/开已确认可见响应和严格恢复。当前公式只有天光近似，**没有店铺倒影**，不新增全屏 pass 或反射渲染目标；井盖周围的保守矩形排除区仍需改善。调试开关为 `worldBase.station.wetRoad.setEnabled(false/true)`，专用验收脚本为 `scripts/diagnose-wet-road.cjs`。
+- `src/wet-road.js`：五组局部湿区。C酱第三轮扩大湿区并调整底色与天光混合，第四轮按贴花alpha改善井盖干区；采样遵守贴图矩阵、wrap和flipY，读取失败明确报错。本机两个机位的固定帧开/关/开确认可见响应和严格恢复。当前公式只有天光近似，**没有店铺倒影**，不新增全屏pass或反射渲染目标。调试开关为 `worldBase.station.wetRoad.setEnabled(false/true)`，专用验收脚本为 `scripts/diagnose-wet-road.cjs`。
 
 这组补充提供近景和近郊层次，尚不是参考图里的都市天际线、密集商业街或完整湿地反射效果。固定四机位之外，采集脚本另拍花箱、侧墙、背景及干湿路面细节，镜头坐标随报告保存。
 
@@ -55,6 +55,6 @@ node scripts\baseline.cjs --scene=combined --electron=D:\codex\2026-11-16\world-
 
 ## 当前状态
 
-当前楼群候选、四机位/步行性能及独立资源复现见 [76a000d楼群试装](./evidence/city-background-2026-11-17/README.md)。固定机位约65 FPS，步行约60 FPS；材质和地块融合仍待精修，尚未通过城市质量验收。资源取消复现与已知Chromium终结状态缺陷吻合，本机运行时未修复，仍保留transportClean=false。
+当前三栋中层、井盖修正、资产清理与五轮交替步行对照见 [第四轮回验](./evidence/city-polish-2026-11-17/README.md)。高层已退休；固定机位约65 FPS，但最新一次第三人称57.633、第一人称65.000，步行性能仍有波动，材质与地块风格也尚未最终验收。湿面两机位严格恢复通过。资源取消复现与已知Chromium终结状态缺陷吻合，本机运行时未修复，仍保留transportClean=false。含塔楼的早期试装和失败记录见 [76a000d历史试装](./evidence/city-background-2026-11-17/README.md)。
 
 第三轮湿面精修、正常运行GPU复测和严格干湿对照见 [9417b6e本机验收](./evidence/gpu-wet-9417b6e/README.md)。第二轮精修单独复测见 [a7fe1e7 GPU证据](./evidence/gpu-polish-a7fe1e7/README.md)；花箱、外机、公寓及湿面诊断的早期失败历史见 [街景补充与交接](./evidence/streetscape-2026-11-17/README.md)。之前的地表对照、录像及未通过的诊断限制见 [地表与浅水修正](./evidence/terrain-water-2026-11-17/README.md)；首轮录像、原版基线和性能修复历史见 [EVIDENCE.md](./EVIDENCE.md)，旧录像不代表当前场景参数。第三方许可和修改范围见 [THIRD-PARTY.md](./THIRD-PARTY.md)。

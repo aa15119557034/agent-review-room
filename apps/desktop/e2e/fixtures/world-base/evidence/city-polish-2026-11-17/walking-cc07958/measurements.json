@@ -1,0 +1,7244 @@
+{
+  "sourceCommit": "cc079586460ee5f6e9d623e956a58a56906f4e1d",
+  "protocol": {
+    "routeReference": "gpu-city-v4 original before.feet per mode; source target is cc07958, not the old route reference source.",
+    "sequence": "Per mode: one separately retained 3-second real-W route warmup with city visible, then A/B alternated for five rounds. Every segment resets to the same mode-specific start after 1500ms stationary preparation.",
+    "visibility": "A: city.root.visible=true, B: false. This includes three midrises AND their city connections/foundations; skyline/station remain unchanged.",
+    "explicitCompilation": false,
+    "explicitTextureInitialization": false,
+    "statistics": "CPU values are milliseconds per observed RAF bucket. Mean and linearly interpolated median/Q1/Q3/IQR include every sampled frame. p95 retains the original floor(n*.95) rank convention."
+  },
+  "limitations": [
+    "CPU wrappers, all-pass draw counters and per-frame renderer.info snapshots add measurement overhead; CDP timeline/CPU profiling is disabled.",
+    "CPU render duration measures JS and synchronous submission, not completed GPU execution. RAF buckets cover work since the previous observer callback.",
+    "Animation and wall-clock time continue. AB is route/visibility controlled, not identical pixels or frozen animation; fixed order remains a confounder.",
+    "The complete reference route means the original three-second W segment, not a longer traversal of the whole station. Warmup samples are retained separately, never discarded.",
+    "renderer.info calls/triangles are last-pass/autoReset-dependent counters, separate from the instrumented all-pass draws/triangles. Stable resource counts do not establish an environmental cause; higher medians alone do not establish steady-state city cost.",
+    "Restoration covers methods, visibility, camera, input listeners, walker pose/mode/enabled; elapsed simulation, shader caches and physics internal transient history cannot be rewound. The isolated process exits."
+  ],
+  "profileComplete": true,
+  "ok": false,
+  "transportClean": false,
+  "sourceUnchanged": true,
+  "driverUnchanged": true,
+  "warmups": [
+    {
+      "label": "third-route-warmup",
+      "role": "route-warmup",
+      "round": null,
+      "route": {
+        "mode": "third",
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": true,
+      "warmupStart": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 36006.10000014305,
+        "islandTime": 35.9785,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1062
+      },
+      "warmupEnd": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 37529.40000009537,
+        "islandTime": 37.517,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1072
+      },
+      "before": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 37529.90000009537,
+        "islandTime": 37.517,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1072
+      },
+      "end": {
+        "feet": [
+          280.96289799788394,
+          8.556892473095134,
+          924.8890168962548
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.2486552525952,
+            11.107040128061115,
+            928.975536026315
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175224,
+            0.00428809162949011,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 40576,
+        "islandTime": 40.5631,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1072
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.96008067063207,
+          8.555764362705728,
+          924.8487272394904
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.2458379253434,
+            11.10591201767171,
+            928.9352463695506
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175223,
+            0.004288091629490108,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 40596.5,
+        "islandTime": 40.5785,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1072
+      },
+      "samplesFile": "frames-third-route-warmup.json",
+      "summary": {
+        "frameCount": 196,
+        "durationMs": 3015.199999999997,
+        "fps": 65.00397983550019,
+        "frameMs": {
+          "mean": 15.383673469387741,
+          "median": 15.400000000001455,
+          "q1": 15.30000000000291,
+          "q3": 15.400000000001455,
+          "iqr": 0.09999999999854481,
+          "p95": 15.5,
+          "min": 15.19999999999709,
+          "max": 15.599999999998545
+        },
+        "framesOver22Ms": 0,
+        "draws": {
+          "mean": 1524.25,
+          "median": 1528,
+          "q1": 1519,
+          "q3": 1530,
+          "iqr": 11,
+          "p95": 1531,
+          "min": 1506,
+          "max": 1531
+        },
+        "triangles": {
+          "mean": 8440151.010204082,
+          "median": 8440286,
+          "q1": 8417734,
+          "q3": 8447318,
+          "iqr": 29584,
+          "p95": 8489150,
+          "min": 8416198,
+          "max": 8504884
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1072,
+            "median": 1072,
+            "q1": 1072,
+            "q3": 1072,
+            "iqr": 0,
+            "p95": 1072,
+            "min": 1072,
+            "max": 1072
+          },
+          "calls": {
+            "mean": 1524.25,
+            "median": 1528,
+            "q1": 1519,
+            "q3": 1530,
+            "iqr": 11,
+            "p95": 1531,
+            "min": 1506,
+            "max": 1531
+          },
+          "triangles": {
+            "mean": 8440151.010204082,
+            "median": 8440286,
+            "q1": 8417734,
+            "q3": 8447318,
+            "iqr": 29584,
+            "p95": 8489150,
+            "min": 8416198,
+            "max": 8504884
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.3173469244217386,
+            "median": 0.2999999523162842,
+            "q1": 0.2999999523162842,
+            "q3": 0.39999985694885254,
+            "iqr": 0.09999990463256836,
+            "p95": 0.5,
+            "min": 0.19999980926513672,
+            "max": 0.6000001430511475,
+            "totalCalls": 196
+          },
+          "walker": {
+            "mean": 0.10867347644299877,
+            "median": 0.09999990463256836,
+            "q1": 0.09999990463256836,
+            "q3": 0.10000014305114746,
+            "iqr": 2.384185791015625e-7,
+            "p95": 0.20000004768371582,
+            "min": 0,
+            "max": 0.2999999523162842,
+            "totalCalls": 196
+          },
+          "island": {
+            "mean": 0.15663266060303668,
+            "median": 0.1499999761581421,
+            "q1": 0.09999990463256836,
+            "q3": 0.20000004768371582,
+            "iqr": 0.10000014305114746,
+            "p95": 0.2999999523162842,
+            "min": 0,
+            "max": 0.39999985694885254,
+            "totalCalls": 196
+          },
+          "render": {
+            "mean": 11.164285714528999,
+            "median": 10.850000023841858,
+            "q1": 10.400000095367432,
+            "q3": 11.5,
+            "iqr": 1.0999999046325684,
+            "p95": 13.5,
+            "min": 9.799999952316284,
+            "max": 17.40000009536743,
+            "totalCalls": 196
+          }
+        }
+      },
+      "horizontalDistance": 9.13323119590381,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 37545.800000190735,
+          "label": "third-route-warmup"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 40578.700000047684,
+          "label": "third-route-warmup"
+        }
+      ],
+      "routeValid": true
+    },
+    {
+      "label": "first-route-warmup",
+      "role": "route-warmup",
+      "round": null,
+      "route": {
+        "mode": "first",
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": true,
+      "warmupStart": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 86683.80000019073,
+        "islandTime": 86.6708,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1075
+      },
+      "warmupEnd": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 88205.60000014305,
+        "islandTime": 88.1942,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "before": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 88206,
+        "islandTime": 88.1942,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "end": {
+        "feet": [
+          280.28147489190354,
+          8.284037949384462,
+          915.1442124780166
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.28147489190354,
+            9.804037949384464,
+            915.1442124780166
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 91250.80000019073,
+        "islandTime": 91.24,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.28147489190354,
+          8.284037949384462,
+          915.1442124780166
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.28147489190354,
+            9.804037949384464,
+            915.1442124780166
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 91253.5,
+        "islandTime": 91.24,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "samplesFile": "frames-first-route-warmup.json",
+      "summary": {
+        "frameCount": 196,
+        "durationMs": 3015.199999999997,
+        "fps": 65.00397983550019,
+        "frameMs": {
+          "mean": 15.383673469387741,
+          "median": 15.39999999999418,
+          "q1": 15.30000000000291,
+          "q3": 15.400000000008731,
+          "iqr": 0.10000000000582077,
+          "p95": 15.5,
+          "min": 15.19999999999709,
+          "max": 15.60000000000582
+        },
+        "framesOver22Ms": 0,
+        "draws": {
+          "mean": 1361.4897959183672,
+          "median": 1360.5,
+          "q1": 1338.75,
+          "q3": 1381,
+          "iqr": 42.25,
+          "p95": 1423,
+          "min": 1292,
+          "max": 1428
+        },
+        "triangles": {
+          "mean": 8220966.12244898,
+          "median": 8228086,
+          "q1": 8214552,
+          "q3": 8251309,
+          "iqr": 36757,
+          "p95": 8309896,
+          "min": 8078572,
+          "max": 8317528
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1076,
+            "median": 1076,
+            "q1": 1076,
+            "q3": 1076,
+            "iqr": 0,
+            "p95": 1076,
+            "min": 1076,
+            "max": 1076
+          },
+          "calls": {
+            "mean": 1361.4897959183672,
+            "median": 1360.5,
+            "q1": 1338.75,
+            "q3": 1381,
+            "iqr": 42.25,
+            "p95": 1423,
+            "min": 1292,
+            "max": 1428
+          },
+          "triangles": {
+            "mean": 8220966.12244898,
+            "median": 8228086,
+            "q1": 8214552,
+            "q3": 8251309,
+            "iqr": 36757,
+            "p95": 8309896,
+            "min": 8078572,
+            "max": 8317528
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.31785714139743726,
+            "median": 0.2999999523162842,
+            "q1": 0.2999999523162842,
+            "q3": 0.39999985694885254,
+            "iqr": 0.09999990463256836,
+            "p95": 0.40000009536743164,
+            "min": 0.19999980926513672,
+            "max": 0.5,
+            "totalCalls": 196
+          },
+          "walker": {
+            "mean": 0.043367342073090225,
+            "median": 0,
+            "q1": 0,
+            "q3": 0.09999990463256836,
+            "iqr": 0.09999990463256836,
+            "p95": 0.10000014305114746,
+            "min": 0,
+            "max": 0.20000004768371582,
+            "totalCalls": 196
+          },
+          "island": {
+            "mean": 0.15153062100313147,
+            "median": 0.19999980926513672,
+            "q1": 0.09999990463256836,
+            "q3": 0.20000004768371582,
+            "iqr": 0.10000014305114746,
+            "p95": 0.20000004768371582,
+            "min": 0,
+            "max": 0.39999985694885254,
+            "totalCalls": 196
+          },
+          "render": {
+            "mean": 10.316326533045087,
+            "median": 10.099999904632568,
+            "q1": 9.700000047683716,
+            "q3": 10.700000047683716,
+            "iqr": 1,
+            "p95": 12.099999904632568,
+            "min": 9.099999904632568,
+            "max": 18.799999952316284,
+            "totalCalls": 196
+          }
+        }
+      },
+      "horizontalDistance": 9.13250682591373,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 88221.5,
+          "label": "first-route-warmup"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 91253.40000009537,
+          "label": "first-route-warmup"
+        }
+      ],
+      "routeValid": true
+    }
+  ],
+  "cases": [
+    {
+      "label": "third-A1",
+      "role": "measurement",
+      "round": 1,
+      "route": {
+        "mode": "third",
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": true,
+      "warmupStart": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 40629.300000190735,
+        "islandTime": 40.609300000000005,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1072
+      },
+      "warmupEnd": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 42144.5,
+        "islandTime": 42.1323,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1072
+      },
+      "before": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 42145,
+        "islandTime": 42.1323,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1072
+      },
+      "end": {
+        "feet": [
+          280.96290017984575,
+          8.556893346793355,
+          924.8890480997627
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.24865743455706,
+            11.107041001759338,
+            928.9755672298229
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175224,
+            0.00428809162949011,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 45189.200000047684,
+        "islandTime": 45.1785,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1072
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.96290017984575,
+          8.556893346793355,
+          924.8890480997627
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.24865743455706,
+            11.107041001759338,
+            928.9755672298229
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175224,
+            0.00428809162949011,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 45191.60000014305,
+        "islandTime": 45.1785,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1072
+      },
+      "samplesFile": "frames-third-A1.json",
+      "summary": {
+        "frameCount": 195,
+        "durationMs": 3015.300000000003,
+        "fps": 64.67018207143562,
+        "frameMs": {
+          "mean": 15.463076923076938,
+          "median": 15.400000000001455,
+          "q1": 15.30000000000291,
+          "q3": 15.400000000001455,
+          "iqr": 0.09999999999854481,
+          "p95": 15.5,
+          "min": 15.19999999999709,
+          "max": 30.799999999995634
+        },
+        "framesOver22Ms": 1,
+        "draws": {
+          "mean": 1524.246153846154,
+          "median": 1528,
+          "q1": 1519,
+          "q3": 1530,
+          "iqr": 11,
+          "p95": 1531,
+          "min": 1506,
+          "max": 1531
+        },
+        "triangles": {
+          "mean": 8440135.087179488,
+          "median": 8440286,
+          "q1": 8417734,
+          "q3": 8447318,
+          "iqr": 29584,
+          "p95": 8489150,
+          "min": 8416198,
+          "max": 8504884
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1072,
+            "median": 1072,
+            "q1": 1072,
+            "q3": 1072,
+            "iqr": 0,
+            "p95": 1072,
+            "min": 1072,
+            "max": 1072
+          },
+          "calls": {
+            "mean": 1524.246153846154,
+            "median": 1528,
+            "q1": 1519,
+            "q3": 1530,
+            "iqr": 11,
+            "p95": 1531,
+            "min": 1506,
+            "max": 1531
+          },
+          "triangles": {
+            "mean": 8440135.087179488,
+            "median": 8440286,
+            "q1": 8417734,
+            "q3": 8447318,
+            "iqr": 29584,
+            "p95": 8489150,
+            "min": 8416198,
+            "max": 8504884
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.3035897401662973,
+            "median": 0.2999999523162842,
+            "q1": 0.2999999523162842,
+            "q3": 0.3000001907348633,
+            "iqr": 2.384185791015625e-7,
+            "p95": 0.40000009536743164,
+            "min": 0.19999980926513672,
+            "max": 0.6999998092651367,
+            "totalCalls": 195
+          },
+          "walker": {
+            "mean": 0.08051282075735239,
+            "median": 0.09999990463256836,
+            "q1": 0,
+            "q3": 0.10000014305114746,
+            "iqr": 0.10000014305114746,
+            "p95": 0.20000004768371582,
+            "min": 0,
+            "max": 0.20000004768371582,
+            "totalCalls": 195
+          },
+          "island": {
+            "mean": 0.16358973918816982,
+            "median": 0.19999980926513672,
+            "q1": 0.09999990463256836,
+            "q3": 0.20000004768371582,
+            "iqr": 0.10000014305114746,
+            "p95": 0.2999999523162842,
+            "min": 0,
+            "max": 0.3000001907348633,
+            "totalCalls": 195
+          },
+          "render": {
+            "mean": 11.714358976559762,
+            "median": 11.199999809265137,
+            "q1": 10.700000047683716,
+            "q3": 11.900000095367432,
+            "iqr": 1.2000000476837158,
+            "p95": 15.200000047683716,
+            "min": 10,
+            "max": 25.300000190734863,
+            "totalCalls": 195
+          }
+        }
+      },
+      "horizontalDistance": 9.133199916200137,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 42160.300000190735,
+          "label": "third-A1"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 45191.5,
+          "label": "third-A1"
+        }
+      ],
+      "routeValid": true
+    },
+    {
+      "label": "third-B1",
+      "role": "measurement",
+      "round": 1,
+      "route": {
+        "mode": "third",
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": false,
+      "warmupStart": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 45209.10000014305,
+        "islandTime": 45.194,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1072
+      },
+      "warmupEnd": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 46731.10000014305,
+        "islandTime": 46.7169,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1073
+      },
+      "before": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 46731.5,
+        "islandTime": 46.7169,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1073
+      },
+      "end": {
+        "feet": [
+          280.96290301141516,
+          8.556894480606575,
+          924.889088593092
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.2486602661265,
+            11.107042135572556,
+            928.9756077231522
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175223,
+            0.004288091629490108,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 49774.300000190735,
+        "islandTime": 49.7632,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1073
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.96290301141516,
+          8.556894480606575,
+          924.889088593092
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.2486602661265,
+            11.107042135572556,
+            928.9756077231522
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175223,
+            0.004288091629490108,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 49777.10000014305,
+        "islandTime": 49.7632,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1073
+      },
+      "samplesFile": "frames-third-B1.json",
+      "summary": {
+        "frameCount": 195,
+        "durationMs": 3000.0999999999985,
+        "fps": 64.99783340555318,
+        "frameMs": {
+          "mean": 15.385128205128197,
+          "median": 15.400000000001455,
+          "q1": 15.30000000000291,
+          "q3": 15.400000000001455,
+          "iqr": 0.09999999999854481,
+          "p95": 15.5,
+          "min": 15.19999999999709,
+          "max": 15.60000000000582
+        },
+        "framesOver22Ms": 0,
+        "draws": {
+          "mean": 1481.3076923076924,
+          "median": 1485,
+          "q1": 1476.5,
+          "q3": 1486.5,
+          "iqr": 10,
+          "p95": 1487,
+          "min": 1462,
+          "max": 1488
+        },
+        "triangles": {
+          "mean": 8344442.928205128,
+          "median": 8344647,
+          "q1": 8321839,
+          "q3": 8351423,
+          "iqr": 29584,
+          "p95": 8393487,
+          "min": 8320303,
+          "max": 8408989
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1073,
+            "median": 1073,
+            "q1": 1073,
+            "q3": 1073,
+            "iqr": 0,
+            "p95": 1073,
+            "min": 1073,
+            "max": 1073
+          },
+          "calls": {
+            "mean": 1481.3076923076924,
+            "median": 1485,
+            "q1": 1476.5,
+            "q3": 1486.5,
+            "iqr": 10,
+            "p95": 1487,
+            "min": 1462,
+            "max": 1488
+          },
+          "triangles": {
+            "mean": 8344442.928205128,
+            "median": 8344647,
+            "q1": 8321839,
+            "q3": 8351423,
+            "iqr": 29584,
+            "p95": 8393487,
+            "min": 8320303,
+            "max": 8408989
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.29589743491930837,
+            "median": 0.2999999523162842,
+            "q1": 0.20000004768371582,
+            "q3": 0.3000001907348633,
+            "iqr": 0.10000014305114746,
+            "p95": 0.40000009536743164,
+            "min": 0.09999990463256836,
+            "max": 0.5,
+            "totalCalls": 195
+          },
+          "walker": {
+            "mean": 0.06615384419759114,
+            "median": 0.09999990463256836,
+            "q1": 0,
+            "q3": 0.10000014305114746,
+            "iqr": 0.10000014305114746,
+            "p95": 0.19999980926513672,
+            "min": 0,
+            "max": 0.20000004768371582,
+            "totalCalls": 195
+          },
+          "island": {
+            "mean": 0.15076922759031638,
+            "median": 0.10000014305114746,
+            "q1": 0.09999990463256836,
+            "q3": 0.20000004768371582,
+            "iqr": 0.10000014305114746,
+            "p95": 0.2999999523162842,
+            "min": 0,
+            "max": 0.3000001907348633,
+            "totalCalls": 195
+          },
+          "render": {
+            "mean": 10.578974360686082,
+            "median": 10.400000095367432,
+            "q1": 10.099999904632568,
+            "q3": 10.850000023841858,
+            "iqr": 0.7500001192092896,
+            "p95": 11.700000047683716,
+            "min": 9.599999904632568,
+            "max": 18,
+            "totalCalls": 195
+          }
+        }
+      },
+      "horizontalDistance": 9.13315932399029,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 46748.60000014305,
+          "label": "third-B1"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 49776.90000009537,
+          "label": "third-B1"
+        }
+      ],
+      "routeValid": true
+    },
+    {
+      "label": "third-A2",
+      "role": "measurement",
+      "round": 2,
+      "route": {
+        "mode": "third",
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": true,
+      "warmupStart": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 49808.40000009537,
+        "islandTime": 49.794,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1073
+      },
+      "warmupEnd": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 51328.5,
+        "islandTime": 51.317,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1073
+      },
+      "before": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 51329,
+        "islandTime": 51.317,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1073
+      },
+      "end": {
+        "feet": [
+          280.96623364669773,
+          8.558228129107324,
+          924.9367188966902
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.251990901409,
+            11.108375784073306,
+            929.0232380267504
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175224,
+            0.00428809162949011,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 54359,
+        "islandTime": 54.3478,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1073
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.96623364669773,
+          8.558228129107324,
+          924.9367188966902
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.251990901409,
+            11.108375784073306,
+            929.0232380267504
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175224,
+            0.00428809162949011,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 54361.300000190735,
+        "islandTime": 54.3478,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1073
+      },
+      "samplesFile": "frames-third-A2.json",
+      "summary": {
+        "frameCount": 195,
+        "durationMs": 3000.100000000006,
+        "fps": 64.99783340555302,
+        "frameMs": {
+          "mean": 15.385128205128234,
+          "median": 15.400000000001455,
+          "q1": 15.30000000000291,
+          "q3": 15.400000000001455,
+          "iqr": 0.09999999999854481,
+          "p95": 15.5,
+          "min": 15.19999999999709,
+          "max": 15.60000000000582
+        },
+        "framesOver22Ms": 0,
+        "draws": {
+          "mean": 1524.2153846153847,
+          "median": 1528,
+          "q1": 1519.5,
+          "q3": 1529.5,
+          "iqr": 10,
+          "p95": 1532,
+          "min": 1504,
+          "max": 1533
+        },
+        "triangles": {
+          "mean": 8440163.753846154,
+          "median": 8440430,
+          "q1": 8417750,
+          "q3": 8447206,
+          "iqr": 29456,
+          "p95": 8489294,
+          "min": 8416342,
+          "max": 8504772
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1073,
+            "median": 1073,
+            "q1": 1073,
+            "q3": 1073,
+            "iqr": 0,
+            "p95": 1073,
+            "min": 1073,
+            "max": 1073
+          },
+          "calls": {
+            "mean": 1524.2153846153847,
+            "median": 1528,
+            "q1": 1519.5,
+            "q3": 1529.5,
+            "iqr": 10,
+            "p95": 1532,
+            "min": 1504,
+            "max": 1533
+          },
+          "triangles": {
+            "mean": 8440163.753846154,
+            "median": 8440430,
+            "q1": 8417750,
+            "q3": 8447206,
+            "iqr": 29456,
+            "p95": 8489294,
+            "min": 8416342,
+            "max": 8504772
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.2866666696010492,
+            "median": 0.2999999523162842,
+            "q1": 0.20000004768371582,
+            "q3": 0.3000001907348633,
+            "iqr": 0.10000014305114746,
+            "p95": 0.40000009536743164,
+            "min": 0.09999990463256836,
+            "max": 0.5,
+            "totalCalls": 195
+          },
+          "walker": {
+            "mean": 0.0661538527562068,
+            "median": 0.09999990463256836,
+            "q1": 0,
+            "q3": 0.10000014305114746,
+            "iqr": 0.10000014305114746,
+            "p95": 0.10000014305114746,
+            "min": 0,
+            "max": 0.20000004768371582,
+            "totalCalls": 195
+          },
+          "island": {
+            "mean": 0.1384615299029228,
+            "median": 0.10000014305114746,
+            "q1": 0.09999990463256836,
+            "q3": 0.20000004768371582,
+            "iqr": 0.10000014305114746,
+            "p95": 0.20000004768371582,
+            "min": 0,
+            "max": 0.40000009536743164,
+            "totalCalls": 195
+          },
+          "render": {
+            "mean": 10.707692306469648,
+            "median": 10.5,
+            "q1": 10.299999952316284,
+            "q3": 10.899999976158142,
+            "iqr": 0.6000000238418579,
+            "p95": 11.799999952316284,
+            "min": 9.799999952316284,
+            "max": 16.09999990463257,
+            "totalCalls": 195
+          }
+        }
+      },
+      "horizontalDistance": 9.0854127120451,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 51344.800000190735,
+          "label": "third-A2"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 54361.200000047684,
+          "label": "third-A2"
+        }
+      ],
+      "routeValid": true
+    },
+    {
+      "label": "third-B2",
+      "role": "measurement",
+      "round": 2,
+      "route": {
+        "mode": "third",
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": false,
+      "warmupStart": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 54376.700000047684,
+        "islandTime": 54.363099999999996,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1073
+      },
+      "warmupEnd": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 55901.200000047684,
+        "islandTime": 55.8864,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1073
+      },
+      "before": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 55901.60000014305,
+        "islandTime": 55.8864,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1073
+      },
+      "end": {
+        "feet": [
+          280.9628635338242,
+          8.55687867304269,
+          924.8885240372389
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.2486207885355,
+            11.10702632800867,
+            928.9750431672991
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175223,
+            0.004288091629490108,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 58954.10000014305,
+        "islandTime": 58.9324,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1073
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.9567310182991,
+          8.554423099423198,
+          924.8008249794
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.24248827301034,
+            11.10457075438918,
+            928.8873441094602
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175224,
+            0.00428809162949011,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 58993,
+        "islandTime": 58.9631,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1073
+      },
+      "samplesFile": "frames-third-B2.json",
+      "summary": {
+        "frameCount": 192,
+        "durationMs": 3015.300000000003,
+        "fps": 63.67525619341353,
+        "frameMs": {
+          "mean": 15.704687500000015,
+          "median": 15.400000000001455,
+          "q1": 15.30000000000291,
+          "q3": 15.400000000001455,
+          "iqr": 0.09999999999854481,
+          "p95": 15.5,
+          "min": 15.19999999999709,
+          "max": 30.900000000001455
+        },
+        "framesOver22Ms": 4,
+        "draws": {
+          "mean": 1479.6458333333333,
+          "median": 1483,
+          "q1": 1474,
+          "q3": 1486,
+          "iqr": 12,
+          "p95": 1488,
+          "min": 1461,
+          "max": 1490
+        },
+        "triangles": {
+          "mean": 8344718.09375,
+          "median": 8344351,
+          "q1": 8322031,
+          "q3": 8351359,
+          "iqr": 29328,
+          "p95": 8393191,
+          "min": 8320495,
+          "max": 8408925
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1073,
+            "median": 1073,
+            "q1": 1073,
+            "q3": 1073,
+            "iqr": 0,
+            "p95": 1073,
+            "min": 1073,
+            "max": 1073
+          },
+          "calls": {
+            "mean": 1479.6458333333333,
+            "median": 1483,
+            "q1": 1474,
+            "q3": 1486,
+            "iqr": 12,
+            "p95": 1488,
+            "min": 1461,
+            "max": 1490
+          },
+          "triangles": {
+            "mean": 8344718.09375,
+            "median": 8344351,
+            "q1": 8322031,
+            "q3": 8351359,
+            "iqr": 29328,
+            "p95": 8393191,
+            "min": 8320495,
+            "max": 8408925
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.3031249977648258,
+            "median": 0.2999999523162842,
+            "q1": 0.2749999761581421,
+            "q3": 0.3000001907348633,
+            "iqr": 0.02500021457672119,
+            "p95": 0.40000009536743164,
+            "min": 0.09999990463256836,
+            "max": 0.6000001430511475,
+            "totalCalls": 192
+          },
+          "walker": {
+            "mean": 0.07395833358168602,
+            "median": 0.09999990463256836,
+            "q1": 0,
+            "q3": 0.10000014305114746,
+            "iqr": 0.10000014305114746,
+            "p95": 0.20000004768371582,
+            "min": 0,
+            "max": 0.20000004768371582,
+            "totalCalls": 192
+          },
+          "island": {
+            "mean": 0.1567708303531011,
+            "median": 0.19999980926513672,
+            "q1": 0.09999990463256836,
+            "q3": 0.20000004768371582,
+            "iqr": 0.10000014305114746,
+            "p95": 0.20000004768371582,
+            "min": 0,
+            "max": 0.2999999523162842,
+            "totalCalls": 192
+          },
+          "render": {
+            "mean": 12.196354168156782,
+            "median": 11.25,
+            "q1": 10.600000143051147,
+            "q3": 12.699999868869781,
+            "iqr": 2.099999725818634,
+            "p95": 18,
+            "min": 9.600000143051147,
+            "max": 21,
+            "totalCalls": 192
+          }
+        }
+      },
+      "horizontalDistance": 9.133725258431232,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 55916.200000047684,
+          "label": "third-B2"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 58974.90000009537,
+          "label": "third-B2"
+        }
+      ],
+      "routeValid": true
+    },
+    {
+      "label": "third-A3",
+      "role": "measurement",
+      "round": 3,
+      "route": {
+        "mode": "third",
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": true,
+      "warmupStart": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 59048.800000190735,
+        "islandTime": 59.024699999999996,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1073
+      },
+      "warmupEnd": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 60577.700000047684,
+        "islandTime": 60.5631,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1073
+      },
+      "before": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 60578.10000014305,
+        "islandTime": 60.5631,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1073
+      },
+      "end": {
+        "feet": [
+          280.9662318204383,
+          8.558227397838994,
+          924.9366927799641
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.2519890751496,
+            11.108375052804975,
+            929.0232119100243
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175224,
+            0.00428809162949011,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 63608,
+        "islandTime": 63.593900000000005,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1073
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.96290164638174,
+          8.55689393402173,
+          924.8890690722046
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.24865890109305,
+            11.107041588987713,
+            928.9755882022648
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175224,
+            0.00428809162949011,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 63623.40000009537,
+        "islandTime": 63.609300000000005,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1073
+      },
+      "samplesFile": "frames-third-A3.json",
+      "summary": {
+        "frameCount": 195,
+        "durationMs": 3000,
+        "fps": 65,
+        "frameMs": {
+          "mean": 15.384615384615385,
+          "median": 15.400000000001455,
+          "q1": 15.30000000000291,
+          "q3": 15.400000000001455,
+          "iqr": 0.09999999999854481,
+          "p95": 15.5,
+          "min": 15.19999999999709,
+          "max": 15.60000000000582
+        },
+        "framesOver22Ms": 0,
+        "draws": {
+          "mean": 1521.6871794871795,
+          "median": 1525,
+          "q1": 1516,
+          "q3": 1527,
+          "iqr": 11,
+          "p95": 1529,
+          "min": 1503,
+          "max": 1529
+        },
+        "triangles": {
+          "mean": 8440012.656410256,
+          "median": 8440126,
+          "q1": 8417622,
+          "q3": 8447158,
+          "iqr": 29536,
+          "p95": 8488990,
+          "min": 8416086,
+          "max": 8504724
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1073,
+            "median": 1073,
+            "q1": 1073,
+            "q3": 1073,
+            "iqr": 0,
+            "p95": 1073,
+            "min": 1073,
+            "max": 1073
+          },
+          "calls": {
+            "mean": 1521.6871794871795,
+            "median": 1525,
+            "q1": 1516,
+            "q3": 1527,
+            "iqr": 11,
+            "p95": 1529,
+            "min": 1503,
+            "max": 1529
+          },
+          "triangles": {
+            "mean": 8440012.656410256,
+            "median": 8440126,
+            "q1": 8417622,
+            "q3": 8447158,
+            "iqr": 29536,
+            "p95": 8488990,
+            "min": 8416086,
+            "max": 8504724
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.3153846068259997,
+            "median": 0.2999999523162842,
+            "q1": 0.2999999523162842,
+            "q3": 0.39999985694885254,
+            "iqr": 0.09999990463256836,
+            "p95": 0.40000009536743164,
+            "min": 0.19999980926513672,
+            "max": 0.5,
+            "totalCalls": 195
+          },
+          "walker": {
+            "mean": 0.06923077045342861,
+            "median": 0.09999990463256836,
+            "q1": 0,
+            "q3": 0.10000014305114746,
+            "iqr": 0.10000014305114746,
+            "p95": 0.20000004768371582,
+            "min": 0,
+            "max": 0.2999999523162842,
+            "totalCalls": 195
+          },
+          "island": {
+            "mean": 0.16461538657163963,
+            "median": 0.19999980926513672,
+            "q1": 0.10000014305114746,
+            "q3": 0.20000004768371582,
+            "iqr": 0.09999990463256836,
+            "p95": 0.2999999523162842,
+            "min": 0,
+            "max": 0.3000001907348633,
+            "totalCalls": 195
+          },
+          "render": {
+            "mean": 13.147179488646678,
+            "median": 12.799999952316284,
+            "q1": 12.400000095367432,
+            "q3": 13.300000190734863,
+            "iqr": 0.9000000953674316,
+            "p95": 15.699999809265137,
+            "min": 11.899999856948853,
+            "max": 20.399999856948853,
+            "totalCalls": 195
+          }
+        }
+      },
+      "horizontalDistance": 9.085438892545561,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 60593,
+          "label": "third-A3"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 63623.40000009537,
+          "label": "third-A3"
+        }
+      ],
+      "routeValid": true
+    },
+    {
+      "label": "third-B3",
+      "role": "measurement",
+      "round": 3,
+      "route": {
+        "mode": "third",
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": false,
+      "warmupStart": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 63654.40000009537,
+        "islandTime": 63.64,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1073
+      },
+      "warmupEnd": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 65160,
+        "islandTime": 65.1477,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1074
+      },
+      "before": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 65160.40000009537,
+        "islandTime": 65.1477,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1074
+      },
+      "end": {
+        "feet": [
+          280.96623082295673,
+          8.558226998428756,
+          924.9366785153128
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.251988077668,
+            11.108374653394739,
+            929.023197645373
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175223,
+            0.004288091629490108,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 68196.90000009537,
+        "islandTime": 68.1785,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1074
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.9600833216483,
+          8.55576542422209,
+          924.8487651507888
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.2458405763596,
+            11.10591307918807,
+            928.935284280849
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175224,
+            0.00428809162949011,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 68234.5,
+        "islandTime": 68.2093,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1074
+      },
+      "samplesFile": "frames-third-B3.json",
+      "summary": {
+        "frameCount": 177,
+        "durationMs": 3000,
+        "fps": 59,
+        "frameMs": {
+          "mean": 16.949152542372882,
+          "median": 15.39999999999418,
+          "q1": 15.39999999999418,
+          "q3": 15.400000000008731,
+          "iqr": 1.4551915228366852e-11,
+          "p95": 30.80000000000291,
+          "min": 15.19999999999709,
+          "max": 30.90000000000873
+        },
+        "framesOver22Ms": 18,
+        "draws": {
+          "mean": 1463.8474576271187,
+          "median": 1468,
+          "q1": 1458,
+          "q3": 1469,
+          "iqr": 11,
+          "p95": 1470,
+          "min": 1445,
+          "max": 1477
+        },
+        "triangles": {
+          "mean": 8254893.395480226,
+          "median": 8254523,
+          "q1": 8231959,
+          "q3": 8261543,
+          "iqr": 29584,
+          "p95": 8303375,
+          "min": 8230423,
+          "max": 8319109
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1074,
+            "median": 1074,
+            "q1": 1074,
+            "q3": 1074,
+            "iqr": 0,
+            "p95": 1074,
+            "min": 1074,
+            "max": 1074
+          },
+          "calls": {
+            "mean": 1463.8474576271187,
+            "median": 1468,
+            "q1": 1458,
+            "q3": 1469,
+            "iqr": 11,
+            "p95": 1470,
+            "min": 1445,
+            "max": 1477
+          },
+          "triangles": {
+            "mean": 8254893.395480226,
+            "median": 8254523,
+            "q1": 8231959,
+            "q3": 8261543,
+            "iqr": 29584,
+            "p95": 8303375,
+            "min": 8230423,
+            "max": 8319109
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.3548022623116014,
+            "median": 0.3000001907348633,
+            "q1": 0.2999999523162842,
+            "q3": 0.40000009536743164,
+            "iqr": 0.10000014305114746,
+            "p95": 0.5,
+            "min": 0.19999980926513672,
+            "max": 1.3000001907348633,
+            "totalCalls": 177
+          },
+          "walker": {
+            "mean": 0.07627118778767558,
+            "median": 0.09999990463256836,
+            "q1": 0,
+            "q3": 0.10000014305114746,
+            "iqr": 0.10000014305114746,
+            "p95": 0.20000004768371582,
+            "min": 0,
+            "max": 0.20000004768371582,
+            "totalCalls": 177
+          },
+          "island": {
+            "mean": 0.1672316419202729,
+            "median": 0.20000004768371582,
+            "q1": 0.10000014305114746,
+            "q3": 0.20000004768371582,
+            "iqr": 0.09999990463256836,
+            "p95": 0.2999999523162842,
+            "min": 0,
+            "max": 0.2999999523162842,
+            "totalCalls": 177
+          },
+          "render": {
+            "mean": 14.327118645953593,
+            "median": 13.400000095367432,
+            "q1": 11.100000143051147,
+            "q3": 17.200000047683716,
+            "iqr": 6.099999904632568,
+            "p95": 20.5,
+            "min": 10.200000047683716,
+            "max": 21.90000009536743,
+            "totalCalls": 177
+          }
+        }
+      },
+      "horizontalDistance": 9.08545319202971,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 65176.40000009537,
+          "label": "third-B3"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 68218.60000014305,
+          "label": "third-B3"
+        }
+      ],
+      "routeValid": true
+    },
+    {
+      "label": "third-A4",
+      "role": "measurement",
+      "round": 4,
+      "route": {
+        "mode": "third",
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": true,
+      "warmupStart": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 68280.40000009537,
+        "islandTime": 68.24010000000001,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1074
+      },
+      "warmupEnd": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 69792.40000009537,
+        "islandTime": 69.77860000000001,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1074
+      },
+      "before": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 69792.90000009537,
+        "islandTime": 69.77860000000001,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1074
+      },
+      "end": {
+        "feet": [
+          280.9629239590959,
+          8.556902868448732,
+          924.8893881588833
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.24868121380723,
+            11.107050523414713,
+            928.9759072889435
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175224,
+            0.00428809162949011,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 72847.40000009537,
+        "islandTime": 72.8246,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1075
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.95676981906394,
+          8.554438635973288,
+          924.8013798561888
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.24252707377525,
+            11.104586290939269,
+            928.887898986249
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175223,
+            0.004288091629490108,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 72876.60000014305,
+        "islandTime": 72.85539999999999,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1075
+      },
+      "samplesFile": "frames-third-A4.json",
+      "summary": {
+        "frameCount": 195,
+        "durationMs": 3000,
+        "fps": 65,
+        "frameMs": {
+          "mean": 15.384615384615385,
+          "median": 15.39999999999418,
+          "q1": 15.30000000000291,
+          "q3": 15.400000000008731,
+          "iqr": 0.10000000000582077,
+          "p95": 15.5,
+          "min": 15.19999999999709,
+          "max": 15.60000000000582
+        },
+        "framesOver22Ms": 0,
+        "draws": {
+          "mean": 1501.825641025641,
+          "median": 1505,
+          "q1": 1496,
+          "q3": 1507,
+          "iqr": 11,
+          "p95": 1513,
+          "min": 1483,
+          "max": 1513
+        },
+        "triangles": {
+          "mean": 8296447.63076923,
+          "median": 8290226,
+          "q1": 8286224,
+          "q3": 8324838,
+          "iqr": 38614,
+          "p95": 8335550,
+          "min": 8262598,
+          "max": 8351284
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1074.302564102564,
+            "median": 1074,
+            "q1": 1074,
+            "q3": 1075,
+            "iqr": 1,
+            "p95": 1075,
+            "min": 1074,
+            "max": 1075
+          },
+          "calls": {
+            "mean": 1501.825641025641,
+            "median": 1505,
+            "q1": 1496,
+            "q3": 1507,
+            "iqr": 11,
+            "p95": 1513,
+            "min": 1483,
+            "max": 1513
+          },
+          "triangles": {
+            "mean": 8296447.63076923,
+            "median": 8290226,
+            "q1": 8286224,
+            "q3": 8324838,
+            "iqr": 38614,
+            "p95": 8335550,
+            "min": 8262598,
+            "max": 8351284
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.33333333700131146,
+            "median": 0.2999999523162842,
+            "q1": 0.2999999523162842,
+            "q3": 0.40000009536743164,
+            "iqr": 0.10000014305114746,
+            "p95": 0.40000009536743164,
+            "min": 0.19999980926513672,
+            "max": 0.6000001430511475,
+            "totalCalls": 195
+          },
+          "walker": {
+            "mean": 0.07538460829319098,
+            "median": 0.09999990463256836,
+            "q1": 0,
+            "q3": 0.10000014305114746,
+            "iqr": 0.10000014305114746,
+            "p95": 0.20000004768371582,
+            "min": 0,
+            "max": 0.2999999523162842,
+            "totalCalls": 195
+          },
+          "island": {
+            "mean": 0.1579487213721642,
+            "median": 0.19999980926513672,
+            "q1": 0.09999990463256836,
+            "q3": 0.20000004768371582,
+            "iqr": 0.10000014305114746,
+            "p95": 0.2999999523162842,
+            "min": 0,
+            "max": 0.3000001907348633,
+            "totalCalls": 195
+          },
+          "render": {
+            "mean": 12.989743590966249,
+            "median": 12.699999809265137,
+            "q1": 12.299999952316284,
+            "q3": 13.200000047683716,
+            "iqr": 0.9000000953674316,
+            "p95": 16.600000143051147,
+            "min": 11.300000190734863,
+            "max": 20.600000143051147,
+            "totalCalls": 195
+          }
+        }
+      },
+      "horizontalDistance": 9.132859026689808,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 69812.30000019073,
+          "label": "third-A4"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 72862.10000014305,
+          "label": "third-A4"
+        }
+      ],
+      "routeValid": true
+    },
+    {
+      "label": "third-B4",
+      "role": "measurement",
+      "round": 4,
+      "route": {
+        "mode": "third",
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": false,
+      "warmupStart": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 72918.30000019073,
+        "islandTime": 72.9015,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1075
+      },
+      "warmupEnd": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 74424.30000019073,
+        "islandTime": 74.4093,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1075
+      },
+      "before": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 74424.70000004768,
+        "islandTime": 74.4093,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1075
+      },
+      "end": {
+        "feet": [
+          280.9662075627661,
+          8.5582176846145,
+          924.9363458790892
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.25196481747736,
+            11.10836533958048,
+            929.0228650091494
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175224,
+            0.00428809162949011,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 77450.30000019073,
+        "islandTime": 77.4401,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1075
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.9662075627661,
+          8.5582176846145,
+          924.9363458790892
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.25196481747736,
+            11.10836533958048,
+            929.0228650091494
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175224,
+            0.00428809162949011,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 77453,
+        "islandTime": 77.4401,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1075
+      },
+      "samplesFile": "frames-third-B4.json",
+      "summary": {
+        "frameCount": 195,
+        "durationMs": 3000.100000000006,
+        "fps": 64.99783340555302,
+        "frameMs": {
+          "mean": 15.385128205128234,
+          "median": 15.39999999999418,
+          "q1": 15.30000000000291,
+          "q3": 15.400000000008731,
+          "iqr": 0.10000000000582077,
+          "p95": 15.5,
+          "min": 15.19999999999709,
+          "max": 15.60000000000582
+        },
+        "framesOver22Ms": 0,
+        "draws": {
+          "mean": 1459.1641025641027,
+          "median": 1462,
+          "q1": 1457,
+          "q3": 1464,
+          "iqr": 7,
+          "p95": 1465,
+          "min": 1444,
+          "max": 1465
+        },
+        "triangles": {
+          "mean": 8190761.676923077,
+          "median": 8190839,
+          "q1": 8168287,
+          "q3": 8197871,
+          "iqr": 29584,
+          "p95": 8239959,
+          "min": 8166751,
+          "max": 8255693
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1075,
+            "median": 1075,
+            "q1": 1075,
+            "q3": 1075,
+            "iqr": 0,
+            "p95": 1075,
+            "min": 1075,
+            "max": 1075
+          },
+          "calls": {
+            "mean": 1459.1641025641027,
+            "median": 1462,
+            "q1": 1457,
+            "q3": 1464,
+            "iqr": 7,
+            "p95": 1465,
+            "min": 1444,
+            "max": 1465
+          },
+          "triangles": {
+            "mean": 8190761.676923077,
+            "median": 8190839,
+            "q1": 8168287,
+            "q3": 8197871,
+            "iqr": 29584,
+            "p95": 8239959,
+            "min": 8166751,
+            "max": 8255693
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.2989743513938708,
+            "median": 0.2999999523162842,
+            "q1": 0.2999999523162842,
+            "q3": 0.3000001907348633,
+            "iqr": 2.384185791015625e-7,
+            "p95": 0.40000009536743164,
+            "min": 0.19999980926513672,
+            "max": 0.5,
+            "totalCalls": 195
+          },
+          "walker": {
+            "mean": 0.0615384639837803,
+            "median": 0.09999990463256836,
+            "q1": 0,
+            "q3": 0.10000002384185791,
+            "iqr": 0.10000002384185791,
+            "p95": 0.10000014305114746,
+            "min": 0,
+            "max": 0.3000001907348633,
+            "totalCalls": 195
+          },
+          "island": {
+            "mean": 0.14358974603506236,
+            "median": 0.10000014305114746,
+            "q1": 0.09999990463256836,
+            "q3": 0.20000004768371582,
+            "iqr": 0.10000014305114746,
+            "p95": 0.20000004768371582,
+            "min": 0,
+            "max": 0.3000001907348633,
+            "totalCalls": 195
+          },
+          "render": {
+            "mean": 10.396923072521503,
+            "median": 10.200000047683716,
+            "q1": 9.799999952316284,
+            "q3": 10.800000190734863,
+            "iqr": 1.000000238418579,
+            "p95": 11.5,
+            "min": 9.199999809265137,
+            "max": 15.199999809265137,
+            "totalCalls": 195
+          }
+        }
+      },
+      "horizontalDistance": 9.085786640517027,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 74437.30000019073,
+          "label": "third-B4"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 77452.80000019073,
+          "label": "third-B4"
+        }
+      ],
+      "routeValid": true
+    },
+    {
+      "label": "third-A5",
+      "role": "measurement",
+      "round": 5,
+      "route": {
+        "mode": "third",
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": true,
+      "warmupStart": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 77470.10000014305,
+        "islandTime": 77.4555,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1075
+      },
+      "warmupEnd": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 78977.90000009537,
+        "islandTime": 78.96310000000001,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1075
+      },
+      "before": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 78978.30000019073,
+        "islandTime": 78.96310000000001,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1075
+      },
+      "end": {
+        "feet": [
+          280.9662314437769,
+          8.558227247016735,
+          924.9366873934548
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.25198869848816,
+            11.108374901982716,
+            929.023206523515
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175223,
+            0.004288091629490108,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 82007.80000019073,
+        "islandTime": 81.9939,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1075
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.96009892825174,
+          8.555771673397242,
+          924.8489883356158
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            281.24585618296305,
+            11.105919328363225,
+            928.935507465676
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175223,
+            0.004288091629490108,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 82043.5,
+        "islandTime": 82.0246,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1075
+      },
+      "samplesFile": "frames-third-A5.json",
+      "summary": {
+        "frameCount": 192,
+        "durationMs": 3000,
+        "fps": 64,
+        "frameMs": {
+          "mean": 15.625,
+          "median": 15.39999999999418,
+          "q1": 15.30000000000291,
+          "q3": 15.400000000008731,
+          "iqr": 0.10000000000582077,
+          "p95": 15.5,
+          "min": 15.19999999999709,
+          "max": 30.80000000000291
+        },
+        "framesOver22Ms": 3,
+        "draws": {
+          "mean": 1502.3958333333333,
+          "median": 1504.5,
+          "q1": 1499,
+          "q3": 1510,
+          "iqr": 11,
+          "p95": 1511,
+          "min": 1486,
+          "max": 1511
+        },
+        "triangles": {
+          "mean": 8286333.427083333,
+          "median": 8286622,
+          "q1": 8264070,
+          "q3": 8293910,
+          "iqr": 29840,
+          "p95": 8335742,
+          "min": 8262534,
+          "max": 8351476
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1075,
+            "median": 1075,
+            "q1": 1075,
+            "q3": 1075,
+            "iqr": 0,
+            "p95": 1075,
+            "min": 1075,
+            "max": 1075
+          },
+          "calls": {
+            "mean": 1502.3958333333333,
+            "median": 1504.5,
+            "q1": 1499,
+            "q3": 1510,
+            "iqr": 11,
+            "p95": 1511,
+            "min": 1486,
+            "max": 1511
+          },
+          "triangles": {
+            "mean": 8286333.427083333,
+            "median": 8286622,
+            "q1": 8264070,
+            "q3": 8293910,
+            "iqr": 29840,
+            "p95": 8335742,
+            "min": 8262534,
+            "max": 8351476
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.32343749701976776,
+            "median": 0.2999999523162842,
+            "q1": 0.2999999523162842,
+            "q3": 0.39999985694885254,
+            "iqr": 0.09999990463256836,
+            "p95": 0.40000009536743164,
+            "min": 0.09999990463256836,
+            "max": 0.5,
+            "totalCalls": 192
+          },
+          "walker": {
+            "mean": 0.06562500074505806,
+            "median": 0.09999990463256836,
+            "q1": 0,
+            "q3": 0.10000014305114746,
+            "iqr": 0.10000014305114746,
+            "p95": 0.10000014305114746,
+            "min": 0,
+            "max": 0.20000004768371582,
+            "totalCalls": 192
+          },
+          "island": {
+            "mean": 0.15416666368643442,
+            "median": 0.19999980926513672,
+            "q1": 0.09999990463256836,
+            "q3": 0.20000004768371582,
+            "iqr": 0.10000014305114746,
+            "p95": 0.20000004768371582,
+            "min": 0,
+            "max": 0.2999999523162842,
+            "totalCalls": 192
+          },
+          "render": {
+            "mean": 12.568229168653488,
+            "median": 12.450000047683716,
+            "q1": 10.599999904632568,
+            "q3": 13.524999976158142,
+            "iqr": 2.9250000715255737,
+            "p95": 16.899999856948853,
+            "min": 9.700000047683716,
+            "max": 19.700000047683716,
+            "totalCalls": 192
+          }
+        }
+      },
+      "horizontalDistance": 9.08544429220818,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 78991,
+          "label": "third-A5"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 82026.5,
+          "label": "third-A5"
+        }
+      ],
+      "routeValid": true
+    },
+    {
+      "label": "third-B5",
+      "role": "measurement",
+      "round": 5,
+      "route": {
+        "mode": "third",
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": false,
+      "warmupStart": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 82086.30000019073,
+        "islandTime": 82.0708,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1075
+      },
+      "warmupEnd": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 83604.40000009537,
+        "islandTime": 83.5785,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1075
+      },
+      "before": {
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.8857572547113,
+            11.36214765496598,
+            938.0865191300602
+          ],
+          "quaternion": [
+            -0.1227948780024292,
+            0.034635056521752264,
+            0.004288091629490116,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 83619.10000014305,
+        "islandTime": 83.59389999999999,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1075
+      },
+      "end": {
+        "feet": [
+          280.96287870020956,
+          8.55688474594631,
+          924.8887409266539
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.2486359549208,
+            11.107032400912292,
+            928.9752600567141
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175223,
+            0.004288091629490108,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 86652,
+        "islandTime": 86.6401,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1075
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.96287870020956,
+          8.55688474594631,
+          924.8887409266539
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "third",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            281.2486359549208,
+            11.107032400912292,
+            928.9752600567141
+          ],
+          "quaternion": [
+            -0.12279487800242911,
+            0.03463505652175223,
+            0.004288091629490108,
+            0.9918182510249952
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 86654.90000009537,
+        "islandTime": 86.6401,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1075
+      },
+      "samplesFile": "frames-third-B5.json",
+      "summary": {
+        "frameCount": 195,
+        "durationMs": 3000.100000000006,
+        "fps": 64.99783340555302,
+        "frameMs": {
+          "mean": 15.385128205128234,
+          "median": 15.39999999999418,
+          "q1": 15.30000000000291,
+          "q3": 15.400000000008731,
+          "iqr": 0.10000000000582077,
+          "p95": 15.5,
+          "min": 15.19999999999709,
+          "max": 15.60000000000582
+        },
+        "framesOver22Ms": 0,
+        "draws": {
+          "mean": 1459.4102564102564,
+          "median": 1462,
+          "q1": 1456,
+          "q3": 1467,
+          "iqr": 11,
+          "p95": 1468,
+          "min": 1443,
+          "max": 1468
+        },
+        "triangles": {
+          "mean": 8190897.697435898,
+          "median": 8191005,
+          "q1": 8168223,
+          "q3": 8198063,
+          "iqr": 29840,
+          "p95": 8239639,
+          "min": 8166687,
+          "max": 8255629
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1075,
+            "median": 1075,
+            "q1": 1075,
+            "q3": 1075,
+            "iqr": 0,
+            "p95": 1075,
+            "min": 1075,
+            "max": 1075
+          },
+          "calls": {
+            "mean": 1459.4102564102564,
+            "median": 1462,
+            "q1": 1456,
+            "q3": 1467,
+            "iqr": 11,
+            "p95": 1468,
+            "min": 1443,
+            "max": 1468
+          },
+          "triangles": {
+            "mean": 8190897.697435898,
+            "median": 8191005,
+            "q1": 8168223,
+            "q3": 8198063,
+            "iqr": 29840,
+            "p95": 8239639,
+            "min": 8166687,
+            "max": 8255629
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.3343589746035062,
+            "median": 0.2999999523162842,
+            "q1": 0.2999999523162842,
+            "q3": 0.40000009536743164,
+            "iqr": 0.10000014305114746,
+            "p95": 0.40000009536743164,
+            "min": 0.19999980926513672,
+            "max": 0.5,
+            "totalCalls": 195
+          },
+          "walker": {
+            "mean": 0.06820513407389323,
+            "median": 0.09999990463256836,
+            "q1": 0,
+            "q3": 0.10000014305114746,
+            "iqr": 0.10000014305114746,
+            "p95": 0.19999980926513672,
+            "min": 0,
+            "max": 0.20000004768371582,
+            "totalCalls": 195
+          },
+          "island": {
+            "mean": 0.15435897142459185,
+            "median": 0.19999980926513672,
+            "q1": 0.09999990463256836,
+            "q3": 0.20000004768371582,
+            "iqr": 0.10000014305114746,
+            "p95": 0.2999999523162842,
+            "min": 0,
+            "max": 0.40000009536743164,
+            "totalCalls": 195
+          },
+          "render": {
+            "mean": 12.025641024418366,
+            "median": 11.800000190734863,
+            "q1": 11.400000095367432,
+            "q3": 12.350000023841858,
+            "iqr": 0.9499999284744263,
+            "p95": 14.200000047683716,
+            "min": 10.400000095367432,
+            "max": 16.59999990463257,
+            "totalCalls": 195
+          }
+        }
+      },
+      "horizontalDistance": 9.133507839394369,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 83633.60000014305,
+          "label": "third-B5"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 86654.70000004768,
+          "label": "third-B5"
+        }
+      ],
+      "routeValid": true
+    },
+    {
+      "label": "first-A1",
+      "role": "measurement",
+      "round": 1,
+      "route": {
+        "mode": "first",
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": true,
+      "warmupStart": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 91269.10000014305,
+        "islandTime": 91.2554,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "warmupEnd": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 92775.90000009537,
+        "islandTime": 92.7632,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "before": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 92776.10000014305,
+        "islandTime": 92.7632,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "end": {
+        "feet": [
+          280.28475902777285,
+          8.28535297865272,
+          915.1911778090257
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.28475902777285,
+            9.805352978652719,
+            915.1911778090257
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 95805.20000004768,
+        "islandTime": 95.7939,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.28475902777285,
+          8.28535297865272,
+          915.1911778090257
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.28475902777285,
+            9.805352978652719,
+            915.1911778090257
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 95807.70000004768,
+        "islandTime": 95.7939,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "samplesFile": "frames-first-A1.json",
+      "summary": {
+        "frameCount": 195,
+        "durationMs": 3000,
+        "fps": 65,
+        "frameMs": {
+          "mean": 15.384615384615385,
+          "median": 15.39999999999418,
+          "q1": 15.30000000000291,
+          "q3": 15.400000000008731,
+          "iqr": 0.10000000000582077,
+          "p95": 15.5,
+          "min": 15.19999999999709,
+          "max": 15.60000000000582
+        },
+        "framesOver22Ms": 0,
+        "draws": {
+          "mean": 1360.2205128205128,
+          "median": 1361,
+          "q1": 1339,
+          "q3": 1381,
+          "iqr": 42,
+          "p95": 1419,
+          "min": 1293,
+          "max": 1424
+        },
+        "triangles": {
+          "mean": 8221741.887179487,
+          "median": 8228244,
+          "q1": 8214734,
+          "q3": 8251309,
+          "iqr": 36575,
+          "p95": 8309640,
+          "min": 8079636,
+          "max": 8317272
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1076,
+            "median": 1076,
+            "q1": 1076,
+            "q3": 1076,
+            "iqr": 0,
+            "p95": 1076,
+            "min": 1076,
+            "max": 1076
+          },
+          "calls": {
+            "mean": 1360.2205128205128,
+            "median": 1361,
+            "q1": 1339,
+            "q3": 1381,
+            "iqr": 42,
+            "p95": 1419,
+            "min": 1293,
+            "max": 1424
+          },
+          "triangles": {
+            "mean": 8221741.887179487,
+            "median": 8228244,
+            "q1": 8214734,
+            "q3": 8251309,
+            "iqr": 36575,
+            "p95": 8309640,
+            "min": 8079636,
+            "max": 8317272
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.3133333291762914,
+            "median": 0.2999999523162842,
+            "q1": 0.2999999523162842,
+            "q3": 0.39999985694885254,
+            "iqr": 0.09999990463256836,
+            "p95": 0.40000009536743164,
+            "min": 0.19999980926513672,
+            "max": 0.5,
+            "totalCalls": 195
+          },
+          "walker": {
+            "mean": 0.05076922147701948,
+            "median": 0,
+            "q1": 0,
+            "q3": 0.09999990463256836,
+            "iqr": 0.09999990463256836,
+            "p95": 0.10000014305114746,
+            "min": 0,
+            "max": 0.20000004768371582,
+            "totalCalls": 195
+          },
+          "island": {
+            "mean": 0.15333335338494716,
+            "median": 0.19999980926513672,
+            "q1": 0.10000014305114746,
+            "q3": 0.20000004768371582,
+            "iqr": 0.09999990463256836,
+            "p95": 0.20000004768371582,
+            "min": 0,
+            "max": 0.3000001907348633,
+            "totalCalls": 195
+          },
+          "render": {
+            "mean": 10.528205119646513,
+            "median": 10.200000047683716,
+            "q1": 9.75,
+            "q3": 10.799999952316284,
+            "iqr": 1.0499999523162842,
+            "p95": 13.099999904632568,
+            "min": 8.700000047683716,
+            "max": 18,
+            "totalCalls": 195
+          }
+        }
+      },
+      "horizontalDistance": 9.085426810352939,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 92790.80000019073,
+          "label": "first-A1"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 95807.60000014305,
+          "label": "first-A1"
+        }
+      ],
+      "routeValid": true
+    },
+    {
+      "label": "first-B1",
+      "role": "measurement",
+      "round": 1,
+      "route": {
+        "mode": "first",
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": false,
+      "warmupStart": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 95824.60000014305,
+        "islandTime": 95.8092,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "warmupEnd": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 97345.20000004768,
+        "islandTime": 97.33239999999999,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "before": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 97345.60000014305,
+        "islandTime": 97.33239999999999,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "end": {
+        "feet": [
+          280.2814294867758,
+          8.28401976832428,
+          915.1435631544385
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.2814294867758,
+            9.804019768324281,
+            915.1435631544385
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 100387.80000019073,
+        "islandTime": 100.3786,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.2814294867758,
+          8.28401976832428,
+          915.1435631544385
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.2814294867758,
+            9.804019768324281,
+            915.1435631544385
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 100390.5,
+        "islandTime": 100.3786,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "samplesFile": "frames-first-B1.json",
+      "summary": {
+        "frameCount": 196,
+        "durationMs": 3015.4000000000087,
+        "fps": 64.99966836903874,
+        "frameMs": {
+          "mean": 15.384693877551065,
+          "median": 15.39999999999418,
+          "q1": 15.30000000000291,
+          "q3": 15.400000000008731,
+          "iqr": 0.10000000000582077,
+          "p95": 15.5,
+          "min": 15.19999999999709,
+          "max": 15.599999999991269
+        },
+        "framesOver22Ms": 0,
+        "draws": {
+          "mean": 1316.8622448979593,
+          "median": 1317.5,
+          "q1": 1295.75,
+          "q3": 1338,
+          "iqr": 42.25,
+          "p95": 1376,
+          "min": 1247,
+          "max": 1381
+        },
+        "triangles": {
+          "mean": 8125164.989795919,
+          "median": 8132397,
+          "q1": 8118705,
+          "q3": 8155462,
+          "iqr": 36757,
+          "p95": 8213793,
+          "min": 7982597,
+          "max": 8221425
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1076,
+            "median": 1076,
+            "q1": 1076,
+            "q3": 1076,
+            "iqr": 0,
+            "p95": 1076,
+            "min": 1076,
+            "max": 1076
+          },
+          "calls": {
+            "mean": 1316.8622448979593,
+            "median": 1317.5,
+            "q1": 1295.75,
+            "q3": 1338,
+            "iqr": 42.25,
+            "p95": 1376,
+            "min": 1247,
+            "max": 1381
+          },
+          "triangles": {
+            "mean": 8125164.989795919,
+            "median": 8132397,
+            "q1": 8118705,
+            "q3": 8155462,
+            "iqr": 36757,
+            "p95": 8213793,
+            "min": 7982597,
+            "max": 8221425
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.2933673554537248,
+            "median": 0.2999999523162842,
+            "q1": 0.2999999523162842,
+            "q3": 0.3000001907348633,
+            "iqr": 2.384185791015625e-7,
+            "p95": 0.40000009536743164,
+            "min": 0.09999990463256836,
+            "max": 0.5,
+            "totalCalls": 196
+          },
+          "walker": {
+            "mean": 0.043877549317418316,
+            "median": 0,
+            "q1": 0,
+            "q3": 0.09999990463256836,
+            "iqr": 0.09999990463256836,
+            "p95": 0.10000014305114746,
+            "min": 0,
+            "max": 0.20000004768371582,
+            "totalCalls": 196
+          },
+          "island": {
+            "mean": 0.14540816326530612,
+            "median": 0.10000014305114746,
+            "q1": 0.09999990463256836,
+            "q3": 0.20000004768371582,
+            "iqr": 0.10000014305114746,
+            "p95": 0.20000004768371582,
+            "min": 0,
+            "max": 0.3000001907348633,
+            "totalCalls": 196
+          },
+          "render": {
+            "mean": 9.165306118069863,
+            "median": 9.099999904632568,
+            "q1": 8.800000131130219,
+            "q3": 9.300000011920929,
+            "iqr": 0.49999988079071045,
+            "p95": 9.900000095367432,
+            "min": 8.299999952316284,
+            "max": 16.90000009536743,
+            "totalCalls": 196
+          }
+        }
+      },
+      "horizontalDistance": 9.133157735073775,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 97359.60000014305,
+          "label": "first-B1"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 100390.40000009537,
+          "label": "first-B1"
+        }
+      ],
+      "routeValid": true
+    },
+    {
+      "label": "first-A2",
+      "role": "measurement",
+      "round": 2,
+      "route": {
+        "mode": "first",
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": true,
+      "warmupStart": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 100406.70000004768,
+        "islandTime": 100.39389999999999,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "warmupEnd": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 101917,
+        "islandTime": 101.9016,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "before": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 101928.30000019073,
+        "islandTime": 101.9169,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "end": {
+        "feet": [
+          280.28142601885196,
+          8.284018379702893,
+          915.1435135608176
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.28142601885196,
+            9.804018379702892,
+            915.1435135608176
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 104973.40000009537,
+        "islandTime": 104.96310000000001,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.28142601885196,
+          8.284018379702893,
+          915.1435135608176
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.28142601885196,
+            9.804018379702892,
+            915.1435135608176
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 104976,
+        "islandTime": 104.96310000000001,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "samplesFile": "frames-first-A2.json",
+      "summary": {
+        "frameCount": 196,
+        "durationMs": 3015.300000000003,
+        "fps": 65.0018240307763,
+        "frameMs": {
+          "mean": 15.384183673469403,
+          "median": 15.39999999999418,
+          "q1": 15.30000000000291,
+          "q3": 15.400000000008731,
+          "iqr": 0.10000000000582077,
+          "p95": 15.5,
+          "min": 15.19999999999709,
+          "max": 15.60000000000582
+        },
+        "framesOver22Ms": 0,
+        "draws": {
+          "mean": 1362.3010204081634,
+          "median": 1361,
+          "q1": 1343.75,
+          "q3": 1381,
+          "iqr": 37.25,
+          "p95": 1419,
+          "min": 1297,
+          "max": 1424
+        },
+        "triangles": {
+          "mean": 8249960.510204081,
+          "median": 8255658,
+          "q1": 8219341.5,
+          "q3": 8285568,
+          "iqr": 66226.5,
+          "p95": 8309640,
+          "min": 8142244,
+          "max": 8317272
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1076,
+            "median": 1076,
+            "q1": 1076,
+            "q3": 1076,
+            "iqr": 0,
+            "p95": 1076,
+            "min": 1076,
+            "max": 1076
+          },
+          "calls": {
+            "mean": 1362.3010204081634,
+            "median": 1361,
+            "q1": 1343.75,
+            "q3": 1381,
+            "iqr": 37.25,
+            "p95": 1419,
+            "min": 1297,
+            "max": 1424
+          },
+          "triangles": {
+            "mean": 8249960.510204081,
+            "median": 8255658,
+            "q1": 8219341.5,
+            "q3": 8285568,
+            "iqr": 66226.5,
+            "p95": 8309640,
+            "min": 8142244,
+            "max": 8317272
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.29438774683037583,
+            "median": 0.2999999523162842,
+            "q1": 0.20000004768371582,
+            "q3": 0.3000001907348633,
+            "iqr": 0.10000014305114746,
+            "p95": 0.40000009536743164,
+            "min": 0.09999990463256836,
+            "max": 0.40000009536743164,
+            "totalCalls": 196
+          },
+          "walker": {
+            "mean": 0.04285714456013271,
+            "median": 0,
+            "q1": 0,
+            "q3": 0.09999990463256836,
+            "iqr": 0.09999990463256836,
+            "p95": 0.10000014305114746,
+            "min": 0,
+            "max": 0.19999980926513672,
+            "totalCalls": 196
+          },
+          "island": {
+            "mean": 0.14591836807679157,
+            "median": 0.10000014305114746,
+            "q1": 0.09999990463256836,
+            "q3": 0.20000004768371582,
+            "iqr": 0.10000014305114746,
+            "p95": 0.20000004768371582,
+            "min": 0,
+            "max": 0.3000001907348633,
+            "totalCalls": 196
+          },
+          "render": {
+            "mean": 9.991836741262553,
+            "median": 9.649999976158142,
+            "q1": 9.400000095367432,
+            "q3": 10.125000059604645,
+            "iqr": 0.7249999642372131,
+            "p95": 12.299999952316284,
+            "min": 8.799999952316284,
+            "max": 15.299999952316284,
+            "totalCalls": 196
+          }
+        }
+      },
+      "horizontalDistance": 9.133207449797272,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 101944.30000019073,
+          "label": "first-A2"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 104975.90000009537,
+          "label": "first-A2"
+        }
+      ],
+      "routeValid": true
+    },
+    {
+      "label": "first-B2",
+      "role": "measurement",
+      "round": 2,
+      "route": {
+        "mode": "first",
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": false,
+      "warmupStart": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 104994.30000019073,
+        "islandTime": 104.9785,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "warmupEnd": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 106501.30000019073,
+        "islandTime": 106.4862,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "before": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 106501.70000004768,
+        "islandTime": 106.4862,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "end": {
+        "feet": [
+          280.2847347318888,
+          8.285343250127498,
+          915.1908303616964
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.2847347318888,
+            9.805343250127498,
+            915.1908303616964
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 109526.70000004768,
+        "islandTime": 109.517,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.2847347318888,
+          8.285343250127498,
+          915.1908303616964
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.2847347318888,
+            9.805343250127498,
+            915.1908303616964
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 109529.40000009537,
+        "islandTime": 109.517,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "samplesFile": "frames-first-B2.json",
+      "summary": {
+        "frameCount": 195,
+        "durationMs": 3000,
+        "fps": 65,
+        "frameMs": {
+          "mean": 15.384615384615385,
+          "median": 15.39999999999418,
+          "q1": 15.30000000000291,
+          "q3": 15.400000000008731,
+          "iqr": 0.10000000000582077,
+          "p95": 15.5,
+          "min": 15.19999999999709,
+          "max": 15.60000000000582
+        },
+        "framesOver22Ms": 0,
+        "draws": {
+          "mean": 1328.8615384615384,
+          "median": 1325,
+          "q1": 1309.5,
+          "q3": 1345.5,
+          "iqr": 36,
+          "p95": 1385,
+          "min": 1273,
+          "max": 1390
+        },
+        "triangles": {
+          "mean": 8228765.666666667,
+          "median": 8237073,
+          "q1": 8189800,
+          "q3": 8275317,
+          "iqr": 85517,
+          "p95": 8285747,
+          "min": 8137429,
+          "max": 8299017
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1076,
+            "median": 1076,
+            "q1": 1076,
+            "q3": 1076,
+            "iqr": 0,
+            "p95": 1076,
+            "min": 1076,
+            "max": 1076
+          },
+          "calls": {
+            "mean": 1328.8615384615384,
+            "median": 1325,
+            "q1": 1309.5,
+            "q3": 1345.5,
+            "iqr": 36,
+            "p95": 1385,
+            "min": 1273,
+            "max": 1390
+          },
+          "triangles": {
+            "mean": 8228765.666666667,
+            "median": 8237073,
+            "q1": 8189800,
+            "q3": 8275317,
+            "iqr": 85517,
+            "p95": 8285747,
+            "min": 8137429,
+            "max": 8299017
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.3071794962271666,
+            "median": 0.2999999523162842,
+            "q1": 0.20000004768371582,
+            "q3": 0.39999985694885254,
+            "iqr": 0.19999980926513672,
+            "p95": 0.40000009536743164,
+            "min": 0.10000014305114746,
+            "max": 0.6000001430511475,
+            "totalCalls": 195
+          },
+          "walker": {
+            "mean": 0.05435897386991061,
+            "median": 0.09999990463256836,
+            "q1": 0,
+            "q3": 0.09999990463256836,
+            "iqr": 0.09999990463256836,
+            "p95": 0.10000014305114746,
+            "min": 0,
+            "max": 0.20000004768371582,
+            "totalCalls": 195
+          },
+          "island": {
+            "mean": 0.16051281170967296,
+            "median": 0.19999980926513672,
+            "q1": 0.09999990463256836,
+            "q3": 0.20000004768371582,
+            "iqr": 0.10000014305114746,
+            "p95": 0.2999999523162842,
+            "min": 0,
+            "max": 0.3000001907348633,
+            "totalCalls": 195
+          },
+          "render": {
+            "mean": 10.361538472542396,
+            "median": 9.799999952316284,
+            "q1": 9.300000190734863,
+            "q3": 10.75,
+            "iqr": 1.4499998092651367,
+            "p95": 14,
+            "min": 8.5,
+            "max": 18,
+            "totalCalls": 195
+          }
+        }
+      },
+      "horizontalDistance": 9.085775106113221,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 106513.30000019073,
+          "label": "first-B2"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 109529.30000019073,
+          "label": "first-B2"
+        }
+      ],
+      "routeValid": true
+    },
+    {
+      "label": "first-A3",
+      "role": "measurement",
+      "round": 3,
+      "route": {
+        "mode": "first",
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": true,
+      "warmupStart": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 109545.90000009537,
+        "islandTime": 109.5324,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "warmupEnd": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 111071.20000004768,
+        "islandTime": 111.05539999999999,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "before": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 111085.30000019073,
+        "islandTime": 111.0708,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "end": {
+        "feet": [
+          280.2847369470601,
+          8.285344137123396,
+          915.1908620401213
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.2847369470601,
+            9.805344137123395,
+            915.1908620401213
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 114114.80000019073,
+        "islandTime": 114.1017,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.28142839751035,
+          8.284019332162087,
+          915.1435475772174
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.28142839751035,
+            9.804019332162088,
+            915.1435475772174
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 114129.90000009537,
+        "islandTime": 114.117,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "samplesFile": "frames-first-A3.json",
+      "summary": {
+        "frameCount": 194,
+        "durationMs": 3000.0999999999913,
+        "fps": 64.66451118296075,
+        "frameMs": {
+          "mean": 15.464432989690676,
+          "median": 15.39999999999418,
+          "q1": 15.30000000000291,
+          "q3": 15.400000000008731,
+          "iqr": 0.10000000000582077,
+          "p95": 15.5,
+          "min": 15.10000000000582,
+          "max": 30.5
+        },
+        "framesOver22Ms": 1,
+        "draws": {
+          "mean": 1382.7577319587629,
+          "median": 1382,
+          "q1": 1360,
+          "q3": 1405,
+          "iqr": 45,
+          "p95": 1444,
+          "min": 1314,
+          "max": 1449
+        },
+        "triangles": {
+          "mean": 8375151.43814433,
+          "median": 8381598,
+          "q1": 8368243,
+          "q3": 8405013,
+          "iqr": 36770,
+          "p95": 8463408,
+          "min": 8233148,
+          "max": 8471040
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1076,
+            "median": 1076,
+            "q1": 1076,
+            "q3": 1076,
+            "iqr": 0,
+            "p95": 1076,
+            "min": 1076,
+            "max": 1076
+          },
+          "calls": {
+            "mean": 1382.7577319587629,
+            "median": 1382,
+            "q1": 1360,
+            "q3": 1405,
+            "iqr": 45,
+            "p95": 1444,
+            "min": 1314,
+            "max": 1449
+          },
+          "triangles": {
+            "mean": 8375151.43814433,
+            "median": 8381598,
+            "q1": 8368243,
+            "q3": 8405013,
+            "iqr": 36770,
+            "p95": 8463408,
+            "min": 8233148,
+            "max": 8471040
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.33350514874015885,
+            "median": 0.2999999523162842,
+            "q1": 0.2999999523162842,
+            "q3": 0.39999985694885254,
+            "iqr": 0.09999990463256836,
+            "p95": 0.5,
+            "min": 0.19999980926513672,
+            "max": 0.6000001430511475,
+            "totalCalls": 194
+          },
+          "walker": {
+            "mean": 0.048969077080795446,
+            "median": 0,
+            "q1": 0,
+            "q3": 0.09999990463256836,
+            "iqr": 0.09999990463256836,
+            "p95": 0.10000014305114746,
+            "min": 0,
+            "max": 0.20000004768371582,
+            "totalCalls": 194
+          },
+          "island": {
+            "mean": 0.16185567428156272,
+            "median": 0.19999992847442627,
+            "q1": 0.09999990463256836,
+            "q3": 0.20000004768371582,
+            "iqr": 0.10000014305114746,
+            "p95": 0.2999999523162842,
+            "min": 0,
+            "max": 0.2999999523162842,
+            "totalCalls": 194
+          },
+          "render": {
+            "mean": 12.577835043681036,
+            "median": 12.200000047683716,
+            "q1": 11.700000047683716,
+            "q3": 13.100000083446503,
+            "iqr": 1.4000000357627869,
+            "p95": 15.299999952316284,
+            "min": 10.799999952316284,
+            "max": 19.299999952316284,
+            "totalCalls": 194
+          }
+        }
+      },
+      "horizontalDistance": 9.085743350332862,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 111101.10000014305,
+          "label": "first-A3"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 114129.80000019073,
+          "label": "first-A3"
+        }
+      ],
+      "routeValid": true
+    },
+    {
+      "label": "first-B3",
+      "role": "measurement",
+      "round": 3,
+      "route": {
+        "mode": "first",
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": false,
+      "warmupStart": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 114160.70000004768,
+        "islandTime": 114.1477,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "warmupEnd": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 115683.30000019073,
+        "islandTime": 115.6708,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "before": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 115683.70000004768,
+        "islandTime": 115.6708,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "end": {
+        "feet": [
+          280.2814494859284,
+          8.28402777635809,
+          915.1438491556461
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.2814494859284,
+            9.80402777635809,
+            915.1438491556461
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 118726.60000014305,
+        "islandTime": 118.7169,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.2814494859284,
+          8.28402777635809,
+          915.1438491556461
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.2814494859284,
+            9.80402777635809,
+            915.1438491556461
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 118729.20000004768,
+        "islandTime": 118.7169,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "samplesFile": "frames-first-B3.json",
+      "summary": {
+        "frameCount": 196,
+        "durationMs": 3015.199999999997,
+        "fps": 65.00397983550019,
+        "frameMs": {
+          "mean": 15.383673469387741,
+          "median": 15.39999999999418,
+          "q1": 15.30000000000291,
+          "q3": 15.400000000008731,
+          "iqr": 0.10000000000582077,
+          "p95": 15.5,
+          "min": 15.19999999999709,
+          "max": 15.599999999991269
+        },
+        "framesOver22Ms": 0,
+        "draws": {
+          "mean": 1340.3775510204082,
+          "median": 1340,
+          "q1": 1317.75,
+          "q3": 1363,
+          "iqr": 45.25,
+          "p95": 1402,
+          "min": 1269,
+          "max": 1407
+        },
+        "triangles": {
+          "mean": 8278813.969387755,
+          "median": 8285949,
+          "q1": 8272257,
+          "q3": 8309206,
+          "iqr": 36949,
+          "p95": 8367601,
+          "min": 8136149,
+          "max": 8375233
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1076,
+            "median": 1076,
+            "q1": 1076,
+            "q3": 1076,
+            "iqr": 0,
+            "p95": 1076,
+            "min": 1076,
+            "max": 1076
+          },
+          "calls": {
+            "mean": 1340.3775510204082,
+            "median": 1340,
+            "q1": 1317.75,
+            "q3": 1363,
+            "iqr": 45.25,
+            "p95": 1402,
+            "min": 1269,
+            "max": 1407
+          },
+          "triangles": {
+            "mean": 8278813.969387755,
+            "median": 8285949,
+            "q1": 8272257,
+            "q3": 8309206,
+            "iqr": 36949,
+            "p95": 8367601,
+            "min": 8136149,
+            "max": 8375233
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.30306121524499385,
+            "median": 0.2999999523162842,
+            "q1": 0.2999999523162842,
+            "q3": 0.3000001907348633,
+            "iqr": 2.384185791015625e-7,
+            "p95": 0.40000009536743164,
+            "min": 0.09999990463256836,
+            "max": 0.6000001430511475,
+            "totalCalls": 196
+          },
+          "walker": {
+            "mean": 0.0464285709420029,
+            "median": 0,
+            "q1": 0,
+            "q3": 0.09999990463256836,
+            "iqr": 0.09999990463256836,
+            "p95": 0.10000014305114746,
+            "min": 0,
+            "max": 0.20000004768371582,
+            "totalCalls": 196
+          },
+          "island": {
+            "mean": 0.1545918425735162,
+            "median": 0.1499999761581421,
+            "q1": 0.09999990463256836,
+            "q3": 0.20000004768371582,
+            "iqr": 0.10000014305114746,
+            "p95": 0.2999999523162842,
+            "min": 0,
+            "max": 0.40000009536743164,
+            "totalCalls": 196
+          },
+          "render": {
+            "mean": 10.665816328963455,
+            "median": 10.599999904632568,
+            "q1": 10.099999904632568,
+            "q3": 11.099999904632568,
+            "iqr": 1,
+            "p95": 12.100000143051147,
+            "min": 8.899999856948853,
+            "max": 15.200000047683716,
+            "totalCalls": 196
+          }
+        }
+      },
+      "horizontalDistance": 9.132871035480434,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 115699,
+          "label": "first-B3"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 118729.10000014305,
+          "label": "first-B3"
+        }
+      ],
+      "routeValid": true
+    },
+    {
+      "label": "first-A4",
+      "role": "measurement",
+      "round": 4,
+      "route": {
+        "mode": "first",
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": true,
+      "warmupStart": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 118748,
+        "islandTime": 118.7324,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "warmupEnd": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 120255.30000019073,
+        "islandTime": 120.24,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "before": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 120268.80000019073,
+        "islandTime": 120.2554,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "end": {
+        "feet": [
+          280.28145406030774,
+          8.284029608024893,
+          915.1439145723176
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.28145406030774,
+            9.804029608024893,
+            915.1439145723176
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 123312.20000004768,
+        "islandTime": 123.30160000000001,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.28145406030774,
+          8.284029608024893,
+          915.1439145723176
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.28145406030774,
+            9.804029608024893,
+            915.1439145723176
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 123314.90000009537,
+        "islandTime": 123.30160000000001,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "samplesFile": "frames-first-A4.json",
+      "summary": {
+        "frameCount": 196,
+        "durationMs": 3015.4000000000087,
+        "fps": 64.99966836903874,
+        "frameMs": {
+          "mean": 15.384693877551065,
+          "median": 15.39999999999418,
+          "q1": 15.30000000000291,
+          "q3": 15.400000000008731,
+          "iqr": 0.10000000000582077,
+          "p95": 15.5,
+          "min": 15.19999999999709,
+          "max": 15.60000000000582
+        },
+        "framesOver22Ms": 0,
+        "draws": {
+          "mean": 1382.2448979591836,
+          "median": 1382.5,
+          "q1": 1361.75,
+          "q3": 1403,
+          "iqr": 41.25,
+          "p95": 1441,
+          "min": 1313,
+          "max": 1446
+        },
+        "triangles": {
+          "mean": 8374432.081632653,
+          "median": 8381662,
+          "q1": 8368104,
+          "q3": 8404861,
+          "iqr": 36757,
+          "p95": 8463192,
+          "min": 8232044,
+          "max": 8470824
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1076,
+            "median": 1076,
+            "q1": 1076,
+            "q3": 1076,
+            "iqr": 0,
+            "p95": 1076,
+            "min": 1076,
+            "max": 1076
+          },
+          "calls": {
+            "mean": 1382.2448979591836,
+            "median": 1382.5,
+            "q1": 1361.75,
+            "q3": 1403,
+            "iqr": 41.25,
+            "p95": 1441,
+            "min": 1313,
+            "max": 1446
+          },
+          "triangles": {
+            "mean": 8374432.081632653,
+            "median": 8381662,
+            "q1": 8368104,
+            "q3": 8404861,
+            "iqr": 36757,
+            "p95": 8463192,
+            "min": 8232044,
+            "max": 8470824
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.3183673449925014,
+            "median": 0.2999999523162842,
+            "q1": 0.2999999523162842,
+            "q3": 0.39999985694885254,
+            "iqr": 0.09999990463256836,
+            "p95": 0.40000009536743164,
+            "min": 0.19999980926513672,
+            "max": 0.6000001430511475,
+            "totalCalls": 196
+          },
+          "walker": {
+            "mean": 0.046938780619173635,
+            "median": 0,
+            "q1": 0,
+            "q3": 0.09999990463256836,
+            "iqr": 0.09999990463256836,
+            "p95": 0.10000014305114746,
+            "min": 0,
+            "max": 0.20000004768371582,
+            "totalCalls": 196
+          },
+          "island": {
+            "mean": 0.15561223759943124,
+            "median": 0.19999980926513672,
+            "q1": 0.09999990463256836,
+            "q3": 0.20000004768371582,
+            "iqr": 0.10000014305114746,
+            "p95": 0.2999999523162842,
+            "min": 0,
+            "max": 0.2999999523162842,
+            "totalCalls": 196
+          },
+          "render": {
+            "mean": 11.072959180997342,
+            "median": 11,
+            "q1": 10.374999940395355,
+            "q3": 11.5,
+            "iqr": 1.1250000596046448,
+            "p95": 12.799999952316284,
+            "min": 9,
+            "max": 18.5,
+            "totalCalls": 196
+          }
+        }
+      },
+      "horizontalDistance": 9.132805459068056,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 120283.40000009537,
+          "label": "first-A4"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 123314.90000009537,
+          "label": "first-A4"
+        }
+      ],
+      "routeValid": true
+    },
+    {
+      "label": "first-B4",
+      "role": "measurement",
+      "round": 4,
+      "route": {
+        "mode": "first",
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": false,
+      "warmupStart": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 123331.60000014305,
+        "islandTime": 123.31689999999999,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "warmupEnd": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 124835.90000009537,
+        "islandTime": 124.8246,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "before": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 124836.20000004768,
+        "islandTime": 124.8246,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "end": {
+        "feet": [
+          280.2847818964569,
+          8.285362135700408,
+          915.1915048464432
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.2847818964569,
+            9.80536213570041,
+            915.1915048464432
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 127877.90000009537,
+        "islandTime": 127.85539999999999,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.27863439514846,
+          8.28290056149374,
+          915.1035914819194
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.27863439514846,
+            9.80290056149374,
+            915.1035914819194
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 127907.40000009537,
+        "islandTime": 127.8862,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "samplesFile": "frames-first-B4.json",
+      "summary": {
+        "frameCount": 191,
+        "durationMs": 3000,
+        "fps": 63.666666666666664,
+        "frameMs": {
+          "mean": 15.706806282722512,
+          "median": 15.39999999999418,
+          "q1": 15.30000000000291,
+          "q3": 15.400000000008731,
+          "iqr": 0.10000000000582077,
+          "p95": 15.5,
+          "min": 15.19999999999709,
+          "max": 30.80000000000291
+        },
+        "framesOver22Ms": 4,
+        "draws": {
+          "mean": 1340.9057591623036,
+          "median": 1341,
+          "q1": 1321,
+          "q3": 1362,
+          "iqr": 41,
+          "p95": 1399,
+          "min": 1273,
+          "max": 1404
+        },
+        "triangles": {
+          "mean": 8279955.2931937175,
+          "median": 8285997,
+          "q1": 8272493,
+          "q3": 8310049.5,
+          "iqr": 37556.5,
+          "p95": 8367393,
+          "min": 8137389,
+          "max": 8375025
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1076,
+            "median": 1076,
+            "q1": 1076,
+            "q3": 1076,
+            "iqr": 0,
+            "p95": 1076,
+            "min": 1076,
+            "max": 1076
+          },
+          "calls": {
+            "mean": 1340.9057591623036,
+            "median": 1341,
+            "q1": 1321,
+            "q3": 1362,
+            "iqr": 41,
+            "p95": 1399,
+            "min": 1273,
+            "max": 1404
+          },
+          "triangles": {
+            "mean": 8279955.2931937175,
+            "median": 8285997,
+            "q1": 8272493,
+            "q3": 8310049.5,
+            "iqr": 37556.5,
+            "p95": 8367393,
+            "min": 8137389,
+            "max": 8375025
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.3314136173088513,
+            "median": 0.3000001907348633,
+            "q1": 0.2999999523162842,
+            "q3": 0.39999985694885254,
+            "iqr": 0.09999990463256836,
+            "p95": 0.5,
+            "min": 0.19999980926513672,
+            "max": 0.5,
+            "totalCalls": 191
+          },
+          "walker": {
+            "mean": 0.05916230716006294,
+            "median": 0.09999990463256836,
+            "q1": 0,
+            "q3": 0.10000002384185791,
+            "iqr": 0.10000002384185791,
+            "p95": 0.20000004768371582,
+            "min": 0,
+            "max": 0.40000009536743164,
+            "totalCalls": 191
+          },
+          "island": {
+            "mean": 0.16020942483272851,
+            "median": 0.19999980926513672,
+            "q1": 0.10000002384185791,
+            "q3": 0.20000004768371582,
+            "iqr": 0.10000002384185791,
+            "p95": 0.20000004768371582,
+            "min": 0,
+            "max": 0.3000001907348633,
+            "totalCalls": 191
+          },
+          "render": {
+            "mean": 12.31413613064751,
+            "median": 11.5,
+            "q1": 10.5,
+            "q3": 14.149999856948853,
+            "iqr": 3.6499998569488525,
+            "p95": 17.399999856948853,
+            "min": 9.099999904632568,
+            "max": 19.299999952316284,
+            "totalCalls": 191
+          }
+        }
+      },
+      "horizontalDistance": 9.085098974343401,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 124852.5,
+          "label": "first-B4"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 127893.30000019073,
+          "label": "first-B4"
+        }
+      ],
+      "routeValid": true
+    },
+    {
+      "label": "first-A5",
+      "role": "measurement",
+      "round": 5,
+      "route": {
+        "mode": "first",
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": true,
+      "warmupStart": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 127956.40000009537,
+        "islandTime": 127.9324,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "warmupEnd": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 129477.90000009537,
+        "islandTime": 129.4554,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "before": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 129494.70000004768,
+        "islandTime": 129.4708,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "end": {
+        "feet": [
+          280.2810860811509,
+          8.283882262305763,
+          915.1386522252059
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.2810860811509,
+            9.803882262305763,
+            915.1386522252059
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 132529,
+        "islandTime": 132.5169,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.2810860811509,
+          8.283882262305763,
+          915.1386522252059
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": true,
+        "camera": {
+          "position": [
+            280.2810860811509,
+            9.803882262305763,
+            915.1386522252059
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 132531.70000004768,
+        "islandTime": 132.5169,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "samplesFile": "frames-first-A5.json",
+      "summary": {
+        "frameCount": 177,
+        "durationMs": 3000,
+        "fps": 59,
+        "frameMs": {
+          "mean": 16.949152542372882,
+          "median": 15.39999999999418,
+          "q1": 15.39999999999418,
+          "q3": 15.400000000023283,
+          "iqr": 2.9103830456733704e-11,
+          "p95": 30.80000000000291,
+          "min": 15.10000000000582,
+          "max": 30.90000000000873
+        },
+        "framesOver22Ms": 18,
+        "draws": {
+          "mean": 1381.231638418079,
+          "median": 1382,
+          "q1": 1356,
+          "q3": 1404,
+          "iqr": 48,
+          "p95": 1442,
+          "min": 1313,
+          "max": 1447
+        },
+        "triangles": {
+          "mean": 8371935.785310734,
+          "median": 8381844,
+          "q1": 8367624,
+          "q3": 8404909,
+          "iqr": 37285,
+          "p95": 8463240,
+          "min": 8232044,
+          "max": 8470872
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1076,
+            "median": 1076,
+            "q1": 1076,
+            "q3": 1076,
+            "iqr": 0,
+            "p95": 1076,
+            "min": 1076,
+            "max": 1076
+          },
+          "calls": {
+            "mean": 1381.231638418079,
+            "median": 1382,
+            "q1": 1356,
+            "q3": 1404,
+            "iqr": 48,
+            "p95": 1442,
+            "min": 1313,
+            "max": 1447
+          },
+          "triangles": {
+            "mean": 8371935.785310734,
+            "median": 8381844,
+            "q1": 8367624,
+            "q3": 8404909,
+            "iqr": 37285,
+            "p95": 8463240,
+            "min": 8232044,
+            "max": 8470872
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.3429378439477608,
+            "median": 0.3000001907348633,
+            "q1": 0.2999999523162842,
+            "q3": 0.40000009536743164,
+            "iqr": 0.10000014305114746,
+            "p95": 0.5,
+            "min": 0.10000014305114746,
+            "max": 0.5999999046325684,
+            "totalCalls": 177
+          },
+          "walker": {
+            "mean": 0.05084746032111389,
+            "median": 0,
+            "q1": 0,
+            "q3": 0.09999990463256836,
+            "iqr": 0.09999990463256836,
+            "p95": 0.10000014305114746,
+            "min": 0,
+            "max": 0.20000004768371582,
+            "totalCalls": 177
+          },
+          "island": {
+            "mean": 0.17740112778830663,
+            "median": 0.20000004768371582,
+            "q1": 0.10000014305114746,
+            "q3": 0.20000004768371582,
+            "iqr": 0.09999990463256836,
+            "p95": 0.2999999523162842,
+            "min": 0,
+            "max": 1.2000000476837158,
+            "totalCalls": 177
+          },
+          "render": {
+            "mean": 15.233333338451924,
+            "median": 15.100000143051147,
+            "q1": 13,
+            "q3": 17.100000143051147,
+            "iqr": 4.1000001430511475,
+            "p95": 19.899999856948853,
+            "min": 10.5,
+            "max": 21.600000143051147,
+            "totalCalls": 177
+          }
+        }
+      },
+      "horizontalDistance": 9.138080656295108,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 129510.40000009537,
+          "label": "first-A5"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 132531.60000014305,
+          "label": "first-A5"
+        }
+      ],
+      "routeValid": true
+    },
+    {
+      "label": "first-B5",
+      "role": "measurement",
+      "round": 5,
+      "route": {
+        "mode": "first",
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yawDegrees": 4,
+        "pitchDegrees": -8
+      },
+      "cityVisible": false,
+      "warmupStart": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 132562.30000019073,
+        "islandTime": 132.5478,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "warmupEnd": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 134083.40000009537,
+        "islandTime": 134.0709,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "before": {
+        "feet": [
+          280.9185263645234,
+          8.539125243336416,
+          924.2544729763006
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.9185263645234,
+            10.059125243336416,
+            924.2544729763006
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 134083.80000019073,
+        "islandTime": 134.0709,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "end": {
+        "feet": [
+          280.2814493432059,
+          8.284027719209323,
+          915.1438471146187
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.2814493432059,
+            9.804027719209323,
+            915.1438471146187
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 137127.5,
+        "islandTime": 137.1169,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "afterKeyUp": {
+        "feet": [
+          280.2814493432059,
+          8.284027719209323,
+          915.1438471146187
+        ],
+        "yaw": 0.06981317007977318,
+        "pitch": -0.13962634015954636,
+        "mode": "first",
+        "enabled": true,
+        "cityVisible": false,
+        "camera": {
+          "position": [
+            280.2814493432059,
+            9.804027719209323,
+            915.1438471146187
+          ],
+          "quaternion": [
+            -0.06971397998507722,
+            0.03481448328257625,
+            0.0024344658254111962,
+            0.9969563611936845
+          ]
+        },
+        "timeOriginMs": 1794879991472.4,
+        "nowMs": 137130.10000014305,
+        "islandTime": 137.1169,
+        "programs": 107,
+        "textures": 232,
+        "geometries": 1076
+      },
+      "samplesFile": "frames-first-B5.json",
+      "summary": {
+        "frameCount": 196,
+        "durationMs": 3015.2999999999884,
+        "fps": 65.00182403077662,
+        "frameMs": {
+          "mean": 15.384183673469328,
+          "median": 15.39999999999418,
+          "q1": 15.299999999988358,
+          "q3": 15.400000000023283,
+          "iqr": 0.1000000000349246,
+          "p95": 15.5,
+          "min": 15.199999999982538,
+          "max": 15.60000000000582
+        },
+        "framesOver22Ms": 0,
+        "draws": {
+          "mean": 1339.8724489795918,
+          "median": 1340.5,
+          "q1": 1318.75,
+          "q3": 1361,
+          "iqr": 42.25,
+          "p95": 1399,
+          "min": 1270,
+          "max": 1404
+        },
+        "triangles": {
+          "mean": 8278765.010204081,
+          "median": 8285997,
+          "q1": 8272305,
+          "q3": 8309062,
+          "iqr": 36757,
+          "p95": 8367393,
+          "min": 8136197,
+          "max": 8375025
+        },
+        "rendererInfo": {
+          "programs": {
+            "mean": 107,
+            "median": 107,
+            "q1": 107,
+            "q3": 107,
+            "iqr": 0,
+            "p95": 107,
+            "min": 107,
+            "max": 107
+          },
+          "textures": {
+            "mean": 232,
+            "median": 232,
+            "q1": 232,
+            "q3": 232,
+            "iqr": 0,
+            "p95": 232,
+            "min": 232,
+            "max": 232
+          },
+          "geometries": {
+            "mean": 1076,
+            "median": 1076,
+            "q1": 1076,
+            "q3": 1076,
+            "iqr": 0,
+            "p95": 1076,
+            "min": 1076,
+            "max": 1076
+          },
+          "calls": {
+            "mean": 1339.8724489795918,
+            "median": 1340.5,
+            "q1": 1318.75,
+            "q3": 1361,
+            "iqr": 42.25,
+            "p95": 1399,
+            "min": 1270,
+            "max": 1404
+          },
+          "triangles": {
+            "mean": 8278765.010204081,
+            "median": 8285997,
+            "q1": 8272305,
+            "q3": 8309062,
+            "iqr": 36757,
+            "p95": 8367393,
+            "min": 8136197,
+            "max": 8375025
+          }
+        },
+        "cpu": {
+          "station": {
+            "mean": 0.3015306008105375,
+            "median": 0.2999999523162842,
+            "q1": 0.2999999523162842,
+            "q3": 0.3000001907348633,
+            "iqr": 2.384185791015625e-7,
+            "p95": 0.40000009536743164,
+            "min": 0.19999980926513672,
+            "max": 0.5,
+            "totalCalls": 196
+          },
+          "walker": {
+            "mean": 0.04744899151276569,
+            "median": 0,
+            "q1": 0,
+            "q3": 0.09999990463256836,
+            "iqr": 0.09999990463256836,
+            "p95": 0.10000014305114746,
+            "min": 0,
+            "max": 0.20000004768371582,
+            "totalCalls": 196
+          },
+          "island": {
+            "mean": 0.1591836785783573,
+            "median": 0.19999980926513672,
+            "q1": 0.09999990463256836,
+            "q3": 0.20000004768371582,
+            "iqr": 0.10000014305114746,
+            "p95": 0.2999999523162842,
+            "min": 0,
+            "max": 0.39999985694885254,
+            "totalCalls": 196
+          },
+          "render": {
+            "mean": 10.320408159372757,
+            "median": 10.099999904632568,
+            "q1": 9.400000095367432,
+            "q3": 10.699999809265137,
+            "iqr": 1.299999713897705,
+            "p95": 12.5,
+            "min": 8.899999856948853,
+            "max": 17.40000009536743,
+            "totalCalls": 196
+          }
+        }
+      },
+      "horizontalDistance": 9.132873081491828,
+      "inputEvents": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 134100.40000009537,
+          "label": "first-B5"
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true,
+          "repeat": false,
+          "nowMs": 137130,
+          "label": "first-B5"
+        }
+      ],
+      "routeValid": true
+    }
+  ],
+  "restore": {
+    "cityVisible": true,
+    "walkerEnabled": false,
+    "mode": "third",
+    "feet": [
+      281.6,
+      8.812,
+      934
+    ],
+    "methodsRestored": true,
+    "inputsRemoved": true
+  },
+  "networkFailures": [
+    {
+      "method": "Network.loadingFailed",
+      "stage": "loading-scene",
+      "receivedWallTime": 1794879994.04,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "15220.114",
+      "timestamp": 1890173.094724,
+      "type": "Fetch"
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "loading-scene",
+      "receivedWallTime": 1794880013.414,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "15220.234",
+      "timestamp": 1890192.466263,
+      "type": "Fetch"
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "loading-scene",
+      "receivedWallTime": 1794880013.799,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "15220.271",
+      "timestamp": 1890192.85208,
+      "type": "Fetch"
+    }
+  ]
+}

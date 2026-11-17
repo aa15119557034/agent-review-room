@@ -1,0 +1,3330 @@
+{
+  "sourceCommit": "4f504b271eba8e20d67e6a6c07affbf3b36dcf51",
+  "stage": "complete",
+  "completedAt": "2026-11-17T01:58:37.882Z",
+  "ok": false,
+  "renderOk": true,
+  "transportClean": false,
+  "versions": {
+    "node": "24.22.0",
+    "acorn": "8.18.0",
+    "ada": "4.0.0",
+    "amaro": "1.1.11",
+    "ares": "1.34.8",
+    "brotli": "1.2.0",
+    "cldr": "48.0",
+    "icu": "78.2",
+    "llhttp": "9.4.3",
+    "merve": "1.2.2",
+    "modules": "149",
+    "napi": "10",
+    "nbytes": "0.1.4",
+    "ncrypto": "0.0.1",
+    "nghttp2": "1.70.0",
+    "nghttp3": "",
+    "ngtcp2": "",
+    "openssl": "0.0.0",
+    "simdjson": "4.6.11",
+    "simdutf": "7.7.0",
+    "sqlite": "3.53.4",
+    "tz": "2026d",
+    "undici": "7.29.1",
+    "unicode": "17.0",
+    "uv": "1.52.1",
+    "uvwasi": "0.0.23",
+    "v8": "15.2.124.43-electron.0",
+    "zlib": "1.3.2.1-motley",
+    "zstd": "1.6.0",
+    "electron": "44.9.0",
+    "chrome": "152.0.7977.167"
+  },
+  "dimensions": {
+    "viewport": [
+      1440,
+      900
+    ],
+    "canvas": [
+      1440,
+      900
+    ],
+    "pixelRatio": 1
+  },
+  "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "timing": {
+    "timeOriginMs": 1794880620605.9,
+    "performanceNowMs": 34816.10000014305,
+    "firstWebGLDrawMs": 2177.9000000953674,
+    "sceneReadyMs": 34684.700000047684,
+    "firstReadyFrameMs": 34721.10000014305,
+    "navigation": {
+      "name": "http://127.0.0.1:61611/",
+      "entryType": "navigation",
+      "startTime": 0,
+      "duration": 491.80000019073486,
+      "navigationId": 7682,
+      "initiatorType": "navigation",
+      "deliveryType": "",
+      "nextHopProtocol": "http/1.1",
+      "renderBlockingStatus": "non-blocking",
+      "contentType": "text/html",
+      "contentEncoding": "",
+      "workerStart": 0,
+      "workerRouterEvaluationStart": 0,
+      "workerCacheLookupStart": 0,
+      "workerMatchedSourceType": "",
+      "workerFinalSourceType": "",
+      "redirectStart": 0,
+      "redirectEnd": 0,
+      "fetchStart": 0.20000004768371582,
+      "domainLookupStart": 5.700000047683716,
+      "domainLookupEnd": 5.700000047683716,
+      "connectStart": 5.700000047683716,
+      "secureConnectionStart": 0,
+      "connectEnd": 6.1000001430511475,
+      "requestStart": 6.300000190734863,
+      "responseStart": 15.300000190734863,
+      "firstInterimResponseStart": 0,
+      "finalResponseHeadersStart": 15.300000190734863,
+      "responseEnd": 15.700000047683716,
+      "transferSize": 2342,
+      "encodedBodySize": 2042,
+      "decodedBodySize": 2042,
+      "responseStatus": 200,
+      "serverTiming": [],
+      "unloadEventStart": 0,
+      "unloadEventEnd": 0,
+      "domInteractive": 28,
+      "domContentLoadedEventStart": 491.5,
+      "domContentLoadedEventEnd": 491.5,
+      "domComplete": 491.60000014305115,
+      "loadEventStart": 491.7000000476837,
+      "loadEventEnd": 491.80000019073486,
+      "type": "navigate",
+      "redirectCount": 0,
+      "activationStart": 0,
+      "criticalCHRestart": 0,
+      "notRestoredReasons": null,
+      "confidence": {}
+    }
+  },
+  "performance": {
+    "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+    "unsupportedDrawPaths": [
+      "ANGLE_instanced_arrays",
+      "WEBGL_multi_draw"
+    ],
+    "frameCount": 979,
+    "sampleMs": 15107.599999999999,
+    "fps": 64.80182159972465,
+    "p95FrameMs": 15.5,
+    "drawCalls": {
+      "mean": 1520.0704800817161,
+      "min": 1518,
+      "max": 1523
+    },
+    "triangles": {
+      "mean": 8338353.055158325,
+      "min": 8338227,
+      "max": 8338547
+    },
+    "framesWithoutDraws": 0,
+    "samplesFile": "frame-samples.json"
+  },
+  "views": [
+    {
+      "name": "station-street",
+      "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+      "unsupportedDrawPaths": [
+        "ANGLE_instanced_arrays",
+        "WEBGL_multi_draw"
+      ],
+      "frameCount": 202,
+      "sampleMs": 3107.800000000003,
+      "fps": 64.99774760280579,
+      "p95FrameMs": 15.5,
+      "drawCalls": {
+        "mean": 1518,
+        "min": 1518,
+        "max": 1518
+      },
+      "triangles": {
+        "mean": 8338227,
+        "min": 8338227,
+        "max": 8338227
+      },
+      "framesWithoutDraws": 0,
+      "samplesFile": "frame-samples-station-street.json",
+      "capture": {
+        "file": "01-station-street.png",
+        "jpeg": "01-station-street.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 96.4395385439691,
+          "nonBlackFraction": 0.9669479606188467,
+          "notBlack": true
+        }
+      }
+    },
+    {
+      "name": "station-port",
+      "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+      "unsupportedDrawPaths": [
+        "ANGLE_instanced_arrays",
+        "WEBGL_multi_draw"
+      ],
+      "frameCount": 203,
+      "sampleMs": 3123,
+      "fps": 65.00160102465578,
+      "p95FrameMs": 15.5,
+      "drawCalls": {
+        "mean": 812.5812807881773,
+        "min": 806,
+        "max": 813
+      },
+      "triangles": {
+        "mean": 7922580.413793104,
+        "min": 7919904,
+        "max": 7922736
+      },
+      "framesWithoutDraws": 0,
+      "samplesFile": "frame-samples-station-port.json",
+      "capture": {
+        "file": "02-station-port.png",
+        "jpeg": "02-station-port.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 172.84429207688905,
+          "nonBlackFraction": 1,
+          "notBlack": true
+        }
+      }
+    },
+    {
+      "name": "island-aerial",
+      "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+      "unsupportedDrawPaths": [
+        "ANGLE_instanced_arrays",
+        "WEBGL_multi_draw"
+      ],
+      "frameCount": 203,
+      "sampleMs": 3123,
+      "fps": 65.00160102465578,
+      "p95FrameMs": 15.5,
+      "drawCalls": {
+        "mean": 1755,
+        "min": 1755,
+        "max": 1755
+      },
+      "triangles": {
+        "mean": 7808957,
+        "min": 7808957,
+        "max": 7808957
+      },
+      "framesWithoutDraws": 0,
+      "samplesFile": "frame-samples-island-aerial.json",
+      "capture": {
+        "file": "03-island-aerial.png",
+        "jpeg": "03-island-aerial.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 106.51851014667494,
+          "nonBlackFraction": 0.9998744223427768,
+          "notBlack": true
+        }
+      }
+    },
+    {
+      "name": "shop-interior",
+      "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+      "unsupportedDrawPaths": [
+        "ANGLE_instanced_arrays",
+        "WEBGL_multi_draw"
+      ],
+      "frameCount": 202,
+      "sampleMs": 3107.600000000006,
+      "fps": 65.00193075041821,
+      "p95FrameMs": 15.5,
+      "drawCalls": {
+        "mean": 882,
+        "min": 882,
+        "max": 882
+      },
+      "triangles": {
+        "mean": 7509455,
+        "min": 7509455,
+        "max": 7509455
+      },
+      "framesWithoutDraws": 0,
+      "samplesFile": "frame-samples-shop-interior.json",
+      "capture": {
+        "file": "04-shop-interior.png",
+        "jpeg": "04-shop-interior.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 152.26302658897427,
+          "nonBlackFraction": 1,
+          "notBlack": true
+        }
+      }
+    }
+  ],
+  "behaviorValidation": {
+    "ok": true,
+    "checks": [
+      {
+        "name": "closed shop door blocks the walking capsule",
+        "passed": true,
+        "evidence": {
+          "displacement": 0.34999999999999964,
+          "candidate": {
+            "x": -7.23,
+            "z": 8
+          }
+        }
+      },
+      {
+        "name": "approaching opens the real shop door collider",
+        "passed": true,
+        "evidence": {
+          "displacement": 0,
+          "candidate": {
+            "x": -7.58,
+            "z": 8
+          }
+        }
+      },
+      {
+        "name": "adjacent storefront wall remains solid",
+        "passed": true,
+        "evidence": {
+          "displacement": 0.40000000000000036,
+          "candidate": {
+            "x": -7.1,
+            "z": 12
+          }
+        }
+      },
+      {
+        "name": "open entrance provides a continuous capsule-width passage",
+        "passed": true,
+        "evidence": {
+          "maxCorrection": 0
+        }
+      },
+      {
+        "name": "interior floor uses its raised walkable surface",
+        "passed": true,
+        "evidence": {
+          "expectedFloor": 0.4134,
+          "maxHeightError": 0
+        }
+      },
+      {
+        "name": "W3 sidewalk walking clears existing furniture and new planters",
+        "passed": true,
+        "evidence": {
+          "endLotX": 3.9674163653903243,
+          "minLotZ": 1.061816375746971,
+          "maxLotZ": 1.1500000000000001,
+          "radius": 0.3,
+          "step": 0.1,
+          "inputDistance": 8
+        }
+      },
+      {
+        "name": "W3 planters leave the existing garden gate approach clear",
+        "passed": true,
+        "evidence": {
+          "maxCorrection": 0
+        }
+      },
+      {
+        "name": "low planter tops support approaching feet and release them on exit",
+        "passed": true,
+        "evidence": [
+          {
+            "id": "w3-planter-south",
+            "expectedTop": 1.1152975042415103,
+            "onTop": 1.1152975042415103,
+            "initialFeet": 0.8553631994889643,
+            "finalFeet": 0.8553631994889643,
+            "supported": true,
+            "returnedToSidewalk": true
+          },
+          {
+            "id": "w3-planter-north",
+            "expectedTop": 1.00881568627451,
+            "onTop": 1.00881568627451,
+            "initialFeet": 0.7488156862745098,
+            "finalFeet": 0.7488156862745098,
+            "supported": true,
+            "returnedToSidewalk": true
+          }
+        ]
+      },
+      {
+        "name": "first person camera is 1.52m above world-space feet",
+        "passed": true,
+        "evidence": {
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "camera": [
+            281.6,
+            10.331999999999999,
+            934
+          ],
+          "error": 0
+        }
+      },
+      {
+        "name": "third person camera follows within its obstruction-limited boom",
+        "passed": true,
+        "evidence": {
+          "followDistance": 4.224038352098614,
+          "maximum": 4.224038352098617
+        }
+      },
+      {
+        "name": "view switching preserves the body and collision position",
+        "passed": true,
+        "evidence": {
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "initialFeet": [
+            281.6,
+            8.812,
+            934
+          ]
+        }
+      },
+      {
+        "name": "station local/world coordinates round-trip at its nonzero placement",
+        "passed": true,
+        "evidence": {
+          "local": [
+            1.6000000000000227,
+            0.8119999999999994,
+            34
+          ],
+          "world": [
+            281.6,
+            8.812,
+            934
+          ]
+        }
+      },
+      {
+        "name": "real shop wall shortens third-person boom with near-plane clearance",
+        "passed": true,
+        "evidence": {
+          "shortened": 0.7951227548559752,
+          "cameraLotZ": -2.290597833643244,
+          "streetSideWallZ": -2.6,
+          "clearance": 0.30940216635678375,
+          "raycastCalls": 0
+        }
+      },
+      {
+        "name": "camera collision never scans rendered triangles",
+        "passed": true,
+        "evidence": {
+          "raycastCalls": 0
+        }
+      }
+    ]
+  },
+  "walkingValidation": {
+    "ok": true,
+    "method": "Electron sendInputEvent holds W for each measured segment; positions come from the live walker, with no per-frame pose overrides.",
+    "segments": [
+      {
+        "mode": "third",
+        "before": {
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "mode": "third",
+          "timeMs": 89313.70000004768
+        },
+        "after": {
+          "feet": [
+            280.9332771473498,
+            8.545031731958751,
+            924.4654189985268
+          ],
+          "mode": "third",
+          "timeMs": 92501.20000004768
+        },
+        "distance": 9.56159120084308,
+        "horizontalDistance": 9.557863476525435,
+        "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+        "unsupportedDrawPaths": [
+          "ANGLE_instanced_arrays",
+          "WEBGL_multi_draw"
+        ],
+        "frameCount": 180,
+        "sampleMs": 3123.2000000000116,
+        "fps": 57.63319672131126,
+        "p95FrameMs": 30.80000000000291,
+        "drawCalls": {
+          "mean": 1500.8277777777778,
+          "min": 1480,
+          "max": 1511
+        },
+        "triangles": {
+          "mean": 8286127.788888888,
+          "min": 8262534,
+          "max": 8351220
+        },
+        "framesWithoutDraws": 0,
+        "samplesFile": "frame-samples-walking-third.json",
+        "capture": {
+          "file": "walking-third.png",
+          "jpeg": "walking-third.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 111.01970732034202,
+            "nonBlackFraction": 0.9938215792646172,
+            "notBlack": true
+          }
+        },
+        "ok": true
+      },
+      {
+        "mode": "first",
+        "before": {
+          "feet": [
+            280.91779317250683,
+            8.538831659575155,
+            924.2439878419699
+          ],
+          "mode": "first",
+          "timeMs": 93352.20000004768
+        },
+        "after": {
+          "feet": [
+            280.2607576170044,
+            8.275742366030208,
+            914.847941643936
+          ],
+          "mode": "first",
+          "timeMs": 96490.5
+        },
+        "distance": 9.422663946738187,
+        "horizontalDistance": 9.418990385215483,
+        "method": "RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included",
+        "unsupportedDrawPaths": [
+          "ANGLE_instanced_arrays",
+          "WEBGL_multi_draw"
+        ],
+        "frameCount": 202,
+        "sampleMs": 3107.699999999997,
+        "fps": 64.99983910930919,
+        "p95FrameMs": 15.5,
+        "drawCalls": {
+          "mean": 1358.2277227722773,
+          "min": 1285,
+          "max": 1424
+        },
+        "triangles": {
+          "mean": 8217345.113861386,
+          "min": 8052552,
+          "max": 8317272
+        },
+        "framesWithoutDraws": 0,
+        "samplesFile": "frame-samples-walking-first.json",
+        "capture": {
+          "file": "walking-first.png",
+          "jpeg": "walking-first.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 112.41988982653591,
+            "nonBlackFraction": 0.9958308217801889,
+            "notBlack": true
+          }
+        },
+        "ok": true
+      }
+    ],
+    "viewSwitch": {
+      "before": [
+        280.9177934083116,
+        8.538831753995774,
+        924.2439912141348
+      ],
+      "after": [
+        280.9177934083116,
+        8.538831753995774,
+        924.2439912141348
+      ],
+      "distance": 0,
+      "mode": "first"
+    },
+    "inputEvents": [
+      {
+        "type": "keydown",
+        "code": "KeyW",
+        "key": "w",
+        "trusted": true,
+        "timeMs": 89330.80000019073
+      },
+      {
+        "type": "keyup",
+        "code": "KeyW",
+        "key": "w",
+        "trusted": true,
+        "timeMs": 92486
+      },
+      {
+        "type": "keydown",
+        "code": "KeyW",
+        "key": "w",
+        "trusted": true,
+        "timeMs": 93367.70000004768
+      },
+      {
+        "type": "keyup",
+        "code": "KeyW",
+        "key": "w",
+        "trusted": true,
+        "timeMs": 96490.40000009537
+      }
+    ]
+  },
+  "lookValidation": {
+    "ok": true,
+    "method": "Actual pipeline uniforms/parameters and UI state; central-pixel nonblack smoke checks. Images retain animation.",
+    "toon": {
+      "on": {
+        "state": {
+          "toon": 1,
+          "blur": 0,
+          "rays": 0,
+          "toonCheckbox": true,
+          "effectsCheckbox": false,
+          "currentView": "station-street"
+        },
+        "capture": {
+          "file": "05-street-toon-on.png",
+          "jpeg": "05-street-toon-on.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 96.40928270042187,
+            "nonBlackFraction": 0.9668474984930681,
+            "notBlack": true
+          }
+        }
+      },
+      "off": {
+        "state": {
+          "toon": 0,
+          "blur": 0,
+          "rays": 0,
+          "toonCheckbox": false,
+          "effectsCheckbox": false,
+          "currentView": "station-street"
+        },
+        "capture": {
+          "file": "06-street-toon-off.png",
+          "jpeg": "06-street-toon-off.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 56.39275668073133,
+            "nonBlackFraction": 0.7760699216395419,
+            "notBlack": true
+          }
+        }
+      },
+      "difference": {
+        "meanAbsoluteRgbDifference": 40.55896193415638,
+        "isolatedFromAnimation": false
+      }
+    },
+    "flightEffects": {
+      "on": {
+        "state": {
+          "toon": 1,
+          "blur": 1,
+          "rays": 0.55,
+          "toonCheckbox": true,
+          "effectsCheckbox": true,
+          "currentView": "station-street"
+        },
+        "capture": {
+          "file": "07-flight-effects-on.png",
+          "jpeg": "07-flight-effects-on.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 96.47273290469508,
+            "nonBlackFraction": 0.9672242314647378,
+            "notBlack": true
+          }
+        }
+      },
+      "off": {
+        "state": {
+          "toon": 1,
+          "blur": 0,
+          "rays": 0,
+          "toonCheckbox": true,
+          "effectsCheckbox": false,
+          "currentView": "station-street"
+        },
+        "capture": {
+          "file": "08-flight-effects-off.png",
+          "jpeg": "08-flight-effects-off.jpg",
+          "jpegWidth": 960,
+          "pixels": {
+            "width": 1440,
+            "height": 900,
+            "samples": 39816,
+            "meanRgb": 96.43053881186826,
+            "nonBlackFraction": 0.9671488848704038,
+            "notBlack": true
+          }
+        }
+      },
+      "difference": {
+        "meanAbsoluteRgbDifference": 1.8277139917695473,
+        "isolatedFromAnimation": false
+      }
+    }
+  },
+  "city": {
+    "buildings": 3,
+    "modelTriangles": 89078,
+    "modelPrimitives": 37,
+    "texturesBeforeSharing": 52,
+    "duplicateTexturesRemoved": 33,
+    "connections": {
+      "roads": [
+        {
+          "name": "city-front-street",
+          "minX": -27,
+          "maxX": 49,
+          "minZ": -124.5,
+          "maxZ": -118,
+          "triangles": 1064,
+          "groundOffset": 0.06
+        },
+        {
+          "name": "city-east-link",
+          "minX": 49,
+          "maxX": 54,
+          "minZ": -124.5,
+          "maxZ": -101,
+          "triangles": 240,
+          "groundOffset": 0.06
+        },
+        {
+          "name": "city-block-paving",
+          "minX": -26.277841567993164,
+          "maxX": 48.072054862976074,
+          "minZ": -146.07229804992676,
+          "maxZ": -124.5,
+          "triangles": 3300,
+          "groundOffset": 0.03
+        }
+      ],
+      "stairs": [
+        {
+          "name": "brick-large-entry",
+          "x": 35,
+          "width": 2.4,
+          "highZ": -126.42770195007324,
+          "lowZ": -124.51,
+          "steps": 6,
+          "rise": 0.16612555525038042,
+          "tread": 0.31961699167887286,
+          "top": 5.135419654846192,
+          "bottom": 4.13866632334391,
+          "minClearance": 0.20146478938533718
+        },
+        {
+          "name": "brick-medium-entry",
+          "x": -16,
+          "width": 2.4,
+          "highZ": -128.22215920686722,
+          "lowZ": -124.51,
+          "steps": 7,
+          "rise": 0.16557110196068298,
+          "tread": 0.5303084581238876,
+          "top": 5.586599159240723,
+          "bottom": 4.4276014455159425,
+          "minClearance": 0.18479525363760185
+        },
+        {
+          "name": "brick-small-entry",
+          "x": 9,
+          "width": 2.4,
+          "highZ": -127.48199582099915,
+          "lowZ": -124.51,
+          "steps": 6,
+          "rise": 0.15729584762434792,
+          "tread": 0.49533263683319007,
+          "top": 4.793684109454848,
+          "bottom": 3.84990902370876,
+          "minClearance": 0.15905606230811475
+        },
+        {
+          "name": "station-levee-link",
+          "x": 51.5,
+          "width": 5,
+          "highZ": -94.53,
+          "lowZ": -101,
+          "steps": 10,
+          "rise": 0.17485331545935673,
+          "tread": 0.6469999999999999,
+          "top": 3.23,
+          "bottom": 1.4814668454064326,
+          "minClearance": 0.030398222222221882
+        }
+      ],
+      "walkable": false
+    },
+    "connectionBatching": {
+      "meshesBefore": 35,
+      "meshesAfter": 3,
+      "triangles": 4988,
+      "originalBuildingMeshesChanged": 0
+    },
+    "decodedImagesReleased": 33,
+    "uniqueTextures": 19,
+    "textureRGBA8WithMipsEstimateBytes": 328553813.3333334,
+    "materials": 40,
+    "geometries": 40,
+    "limitation": "Original model scales, no LOD or navigable interior. Texture memory is a format estimate, not measured VRAM. Backgrounds do not cast into the station shadow map.",
+    "placements": [
+      {
+        "name": "brick-large",
+        "file": "downtown/Building_Large_2.gltf",
+        "scale": 1,
+        "center": [
+          35,
+          -135
+        ],
+        "sourceSize": [
+          20.64410972595215,
+          28.000038146972656,
+          16.644596099853516
+        ],
+        "footprint": {
+          "minX": 24.427945137023926,
+          "maxX": 45.572054862976074,
+          "minZ": -143.57229804992676,
+          "maxZ": -126.42770195007324
+        },
+        "ground": {
+          "min": 11.960624694824219,
+          "max": 13.085419654846191,
+          "relief": 1.1247949600219727,
+          "samples": 224,
+          "method": "All bilinear grid and footprint boundary intersections"
+        },
+        "foundation": {
+          "top": 13.135419654846192,
+          "bottom": 11.910624694824218,
+          "height": 1.224794960021974
+        },
+        "worldOrigin": [
+          313.9999990463257,
+          13.135419654846192,
+          773
+        ]
+      },
+      {
+        "name": "brick-medium",
+        "file": "downtown/Building_Medium_2_001.gltf",
+        "scale": 1,
+        "center": [
+          -16,
+          -135
+        ],
+        "sourceSize": [
+          15.055683135986328,
+          25.00865962356329,
+          13.055681586265564
+        ],
+        "footprint": {
+          "minX": -23.777841567993164,
+          "maxX": -8.222158432006836,
+          "minZ": -141.77784079313278,
+          "maxZ": -128.22215920686722
+        },
+        "ground": {
+          "min": 12.497896540087368,
+          "max": 13.536599159240723,
+          "relief": 1.038702619153355,
+          "samples": 144,
+          "method": "All bilinear grid and footprint boundary intersections"
+        },
+        "foundation": {
+          "top": 13.586599159240723,
+          "bottom": 12.447896540087367,
+          "height": 1.1387026191533565
+        },
+        "worldOrigin": [
+          264.00003814697266,
+          13.596874307096005,
+          770.9598186612129
+        ]
+      },
+      {
+        "name": "brick-small",
+        "file": "downtown/Building_Small_1.gltf",
+        "scale": 1,
+        "center": [
+          9,
+          -135
+        ],
+        "sourceSize": [
+          12.460000991821289,
+          17.025969891808927,
+          14.536008358001709
+        ],
+        "footprint": {
+          "minX": 2.5199995040893555,
+          "maxX": 15.480000495910645,
+          "minZ": -142.51800417900085,
+          "maxZ": -127.48199582099915
+        },
+        "ground": {
+          "min": 11.932525909115602,
+          "max": 12.743684109454847,
+          "relief": 0.8111582003392446,
+          "samples": 132,
+          "method": "All bilinear grid and footprint boundary intersections"
+        },
+        "foundation": {
+          "top": 12.793684109454848,
+          "bottom": 11.882525909115602,
+          "height": 0.911158200339246
+        },
+        "worldOrigin": [
+          290,
+          12.805631174115337,
+          769.9619963169098
+        ]
+      }
+    ],
+    "vegetationClear": {
+      "areas": [
+        {
+          "name": "brick-large",
+          "minX": 24.427945137023926,
+          "maxX": 45.572054862976074,
+          "minZ": -143.57229804992676,
+          "maxZ": -126.42770195007324
+        },
+        {
+          "name": "brick-medium",
+          "minX": -23.777841567993164,
+          "maxX": -8.222158432006836,
+          "minZ": -141.77784079313278,
+          "maxZ": -128.22215920686722
+        },
+        {
+          "name": "brick-small",
+          "minX": 2.5199995040893555,
+          "maxX": 15.480000495910645,
+          "minZ": -142.51800417900085,
+          "maxZ": -127.48199582099915
+        },
+        {
+          "name": "city-front-street",
+          "minX": -27,
+          "maxX": 49,
+          "minZ": -124.5,
+          "maxZ": -118
+        },
+        {
+          "name": "city-east-link",
+          "minX": 49,
+          "maxX": 54,
+          "minZ": -124.5,
+          "maxZ": -101
+        },
+        {
+          "name": "city-block-paving",
+          "minX": -26.277841567993164,
+          "maxX": 48.072054862976074,
+          "minZ": -146.07229804992676,
+          "maxZ": -124.5
+        },
+        {
+          "name": "brick-large-entry",
+          "minX": 33.8,
+          "maxX": 36.2,
+          "minZ": -126.42770195007324,
+          "maxZ": -124.51
+        },
+        {
+          "name": "brick-medium-entry",
+          "minX": -17.2,
+          "maxX": -14.8,
+          "minZ": -128.22215920686722,
+          "maxZ": -124.51
+        },
+        {
+          "name": "brick-small-entry",
+          "minX": 7.8,
+          "maxX": 10.2,
+          "minZ": -127.48199582099915,
+          "maxZ": -124.51
+        },
+        {
+          "name": "station-levee-link",
+          "minX": 49,
+          "maxX": 54,
+          "minZ": -101,
+          "maxZ": -94.53
+        }
+      ],
+      "changedTexels": 337,
+      "texelSizeM": 3,
+      "channels": "R flowers / A grass; G species and B wetness retained"
+    }
+  },
+  "wetRoad": {
+    "maskSize": 512,
+    "maskChannels": 2,
+    "maskBaseBytes": 524288,
+    "bounds": {
+      "x0": -4,
+      "z0": 4,
+      "x1": 4,
+      "z1": 34
+    },
+    "patchGroups": 5,
+    "dryDecalTriangles": {
+      "alphaShaped": 409,
+      "solid": 0
+    },
+    "dryDilationM": 0.12,
+    "wetAreaM2": 49.40826416015625,
+    "puddleAreaM2": 19.7442626953125,
+    "wetEquivalentAreaM2": 30.34641400505398,
+    "puddleEquivalentAreaM2": 9.229115205652558,
+    "materials": 1,
+    "extraPasses": 0,
+    "extraRenderTargets": 0,
+    "reflection": "analytic sky only"
+  },
+  "exceptions": [],
+  "networkFailures": [
+    {
+      "url": "http://127.0.0.1:61611/city-assets/downtown/Building_Large_2.bin",
+      "type": "Fetch",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64532.234",
+      "timestamp": 1890821.326793,
+      "stage": "waiting-for-ready-frame",
+      "receivedWallTime": 1794880642.275
+    },
+    {
+      "url": "http://127.0.0.1:61611/city-assets/downtown/Building_Medium_2_001.bin",
+      "type": "Fetch",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "64532.254",
+      "timestamp": 1890821.521597,
+      "stage": "waiting-for-ready-frame",
+      "receivedWallTime": 1794880642.471
+    }
+  ],
+  "networkEvidence": {
+    "scope": "Same-requestId CDP lifecycle for local GLB and BIN assets; main-document clock anchors. All failures remain in networkFailures.",
+    "documentAnchors": [
+      {
+        "requestId": "A18852CB08A1AD0C24B539B781726ADD",
+        "url": "http://127.0.0.1:61611/",
+        "frameId": "419148E1388E44A239E57E85F49AF486",
+        "loaderId": "A18852CB08A1AD0C24B539B781726ADD",
+        "timestamp": 1890799.659854,
+        "wallTime": 1794880620.606193,
+        "stage": "navigating",
+        "receivedWallTime": 1794880620.606
+      }
+    ],
+    "requests": [
+      {
+        "requestId": "64532.104",
+        "url": "http://127.0.0.1:61611/assets/town/larkhaven.bin",
+        "events": [
+          {
+            "method": "Network.requestWillBeSent",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880621.552,
+            "documentURL": "http://127.0.0.1:61611/",
+            "frameId": "419148E1388E44A239E57E85F49AF486",
+            "hasUserGesture": true,
+            "initiator": {
+              "stack": {
+                "callFrames": [
+                  {
+                    "columnNumber": 103,
+                    "functionName": "",
+                    "lineNumber": 37,
+                    "scriptId": "30",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/src/world/town.js"
+                  },
+                  {
+                    "columnNumber": 34,
+                    "functionName": "load",
+                    "lineNumber": 36,
+                    "scriptId": "30",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/src/world/town.js"
+                  }
+                ]
+              },
+              "type": "script"
+            },
+            "loaderId": "A18852CB08A1AD0C24B539B781726ADD",
+            "redirectHasExtraInfo": false,
+            "request": {
+              "headers": {
+                "Referer": "http://127.0.0.1:61611/",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+                "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+                "sec-ch-ua-mobile": "?0",
+                "sec-ch-ua-platform": "\"Windows\""
+              },
+              "initialPriority": "High",
+              "isSameSite": true,
+              "method": "GET",
+              "mixedContentType": "none",
+              "referrerPolicy": "strict-origin-when-cross-origin",
+              "url": "http://127.0.0.1:61611/assets/town/larkhaven.bin"
+            },
+            "requestId": "64532.104",
+            "timestamp": 1890800.605819,
+            "type": "Fetch",
+            "wallTime": 1794880621.552155,
+            "documentRelativeMs": 946.25830078125
+          },
+          {
+            "method": "Network.responseReceived",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880621.569,
+            "frameId": "419148E1388E44A239E57E85F49AF486",
+            "hasExtraInfo": true,
+            "loaderId": "A18852CB08A1AD0C24B539B781726ADD",
+            "requestId": "64532.104",
+            "response": {
+              "alternateProtocolUsage": "unspecifiedReason",
+              "charset": "",
+              "connectionId": 51,
+              "connectionReused": true,
+              "encodedDataLength": 194,
+              "fromDiskCache": false,
+              "fromPrefetchCache": false,
+              "fromServiceWorker": false,
+              "headers": {
+                "Cache-Control": "no-store",
+                "Connection": "keep-alive",
+                "Content-Length": "49242248",
+                "Content-Type": "application/octet-stream",
+                "Date": "Tue, 17 Nov 2026 01:57:01 GMT",
+                "Keep-Alive": "timeout=5"
+              },
+              "mimeType": "application/octet-stream",
+              "protocol": "http/1.1",
+              "remoteIPAddress": "127.0.0.1",
+              "remotePort": 61611,
+              "responseTime": 1794880621566.575,
+              "securityState": "secure",
+              "status": 200,
+              "statusText": "OK",
+              "timing": {
+                "connectEnd": -1,
+                "connectStart": -1,
+                "dnsEnd": -1,
+                "dnsStart": -1,
+                "proxyEnd": -1,
+                "proxyStart": -1,
+                "pushEnd": 0,
+                "pushStart": 0,
+                "receiveHeadersEnd": 14.108,
+                "receiveHeadersStart": 14.095,
+                "requestTime": 1890800.606155,
+                "sendEnd": 0.71,
+                "sendStart": 0.681,
+                "sslEnd": -1,
+                "sslStart": -1,
+                "workerFetchStart": -1,
+                "workerReady": -1,
+                "workerRespondWithSettled": -1,
+                "workerStart": -1
+              },
+              "url": "http://127.0.0.1:61611/assets/town/larkhaven.bin"
+            },
+            "timestamp": 1890800.623458,
+            "type": "Fetch",
+            "documentRelativeMs": 963.897216796875
+          },
+          {
+            "method": "Network.loadingFinished",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880621.861,
+            "encodedDataLength": 49242442,
+            "requestId": "64532.104",
+            "timestamp": 1890800.896024,
+            "documentRelativeMs": 1236.463134765625
+          }
+        ],
+        "documentRequestId": "A18852CB08A1AD0C24B539B781726ADD"
+      },
+      {
+        "requestId": "64532.106",
+        "url": "http://127.0.0.1:61611/assets/town/cairnwick.bin",
+        "events": [
+          {
+            "method": "Network.requestWillBeSent",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880621.552,
+            "documentURL": "http://127.0.0.1:61611/",
+            "frameId": "419148E1388E44A239E57E85F49AF486",
+            "hasUserGesture": true,
+            "initiator": {
+              "stack": {
+                "callFrames": [
+                  {
+                    "columnNumber": 103,
+                    "functionName": "",
+                    "lineNumber": 37,
+                    "scriptId": "30",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/src/world/town.js"
+                  },
+                  {
+                    "columnNumber": 34,
+                    "functionName": "load",
+                    "lineNumber": 36,
+                    "scriptId": "30",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/src/world/town.js"
+                  }
+                ]
+              },
+              "type": "script"
+            },
+            "loaderId": "A18852CB08A1AD0C24B539B781726ADD",
+            "redirectHasExtraInfo": false,
+            "request": {
+              "headers": {
+                "Referer": "http://127.0.0.1:61611/",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+                "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+                "sec-ch-ua-mobile": "?0",
+                "sec-ch-ua-platform": "\"Windows\""
+              },
+              "initialPriority": "High",
+              "isSameSite": true,
+              "method": "GET",
+              "mixedContentType": "none",
+              "referrerPolicy": "strict-origin-when-cross-origin",
+              "url": "http://127.0.0.1:61611/assets/town/cairnwick.bin"
+            },
+            "requestId": "64532.106",
+            "timestamp": 1890800.605914,
+            "type": "Fetch",
+            "wallTime": 1794880621.552248,
+            "documentRelativeMs": 946.353271484375
+          },
+          {
+            "method": "Network.responseReceived",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880621.569,
+            "frameId": "419148E1388E44A239E57E85F49AF486",
+            "hasExtraInfo": true,
+            "loaderId": "A18852CB08A1AD0C24B539B781726ADD",
+            "requestId": "64532.106",
+            "response": {
+              "alternateProtocolUsage": "unspecifiedReason",
+              "charset": "",
+              "connectionId": 63,
+              "connectionReused": true,
+              "encodedDataLength": 194,
+              "fromDiskCache": false,
+              "fromPrefetchCache": false,
+              "fromServiceWorker": false,
+              "headers": {
+                "Cache-Control": "no-store",
+                "Connection": "keep-alive",
+                "Content-Length": "10427172",
+                "Content-Type": "application/octet-stream",
+                "Date": "Tue, 17 Nov 2026 01:57:01 GMT",
+                "Keep-Alive": "timeout=5"
+              },
+              "mimeType": "application/octet-stream",
+              "protocol": "http/1.1",
+              "remoteIPAddress": "127.0.0.1",
+              "remotePort": 61611,
+              "responseTime": 1794880621565.978,
+              "securityState": "secure",
+              "status": 200,
+              "statusText": "OK",
+              "timing": {
+                "connectEnd": -1,
+                "connectStart": -1,
+                "dnsEnd": -1,
+                "dnsStart": -1,
+                "proxyEnd": -1,
+                "proxyStart": -1,
+                "pushEnd": 0,
+                "pushStart": 0,
+                "receiveHeadersEnd": 13.355,
+                "receiveHeadersStart": 13.343,
+                "requestTime": 1890800.60631,
+                "sendEnd": 0.749,
+                "sendStart": 0.723,
+                "sslEnd": -1,
+                "sslStart": -1,
+                "workerFetchStart": -1,
+                "workerReady": -1,
+                "workerRespondWithSettled": -1,
+                "workerStart": -1
+              },
+              "url": "http://127.0.0.1:61611/assets/town/cairnwick.bin"
+            },
+            "timestamp": 1890800.623189,
+            "type": "Fetch",
+            "documentRelativeMs": 963.628173828125
+          },
+          {
+            "method": "Network.loadingFinished",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880621.75,
+            "encodedDataLength": 10427366,
+            "requestId": "64532.106",
+            "timestamp": 1890800.783694,
+            "documentRelativeMs": 1124.13330078125
+          }
+        ],
+        "documentRequestId": "A18852CB08A1AD0C24B539B781726ADD"
+      },
+      {
+        "requestId": "64532.108",
+        "url": "http://127.0.0.1:61611/assets/town/fields.bin",
+        "events": [
+          {
+            "method": "Network.requestWillBeSent",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880621.552,
+            "documentURL": "http://127.0.0.1:61611/",
+            "frameId": "419148E1388E44A239E57E85F49AF486",
+            "hasUserGesture": true,
+            "initiator": {
+              "stack": {
+                "callFrames": [
+                  {
+                    "columnNumber": 103,
+                    "functionName": "",
+                    "lineNumber": 37,
+                    "scriptId": "30",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/src/world/town.js"
+                  },
+                  {
+                    "columnNumber": 34,
+                    "functionName": "load",
+                    "lineNumber": 36,
+                    "scriptId": "30",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/src/world/town.js"
+                  }
+                ]
+              },
+              "type": "script"
+            },
+            "loaderId": "A18852CB08A1AD0C24B539B781726ADD",
+            "redirectHasExtraInfo": false,
+            "request": {
+              "headers": {
+                "Referer": "http://127.0.0.1:61611/",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+                "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+                "sec-ch-ua-mobile": "?0",
+                "sec-ch-ua-platform": "\"Windows\""
+              },
+              "initialPriority": "High",
+              "isSameSite": true,
+              "method": "GET",
+              "mixedContentType": "none",
+              "referrerPolicy": "strict-origin-when-cross-origin",
+              "url": "http://127.0.0.1:61611/assets/town/fields.bin"
+            },
+            "requestId": "64532.108",
+            "timestamp": 1890800.605994,
+            "type": "Fetch",
+            "wallTime": 1794880621.552327,
+            "documentRelativeMs": 946.43310546875
+          },
+          {
+            "method": "Network.responseReceived",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880621.569,
+            "frameId": "419148E1388E44A239E57E85F49AF486",
+            "hasExtraInfo": true,
+            "loaderId": "A18852CB08A1AD0C24B539B781726ADD",
+            "requestId": "64532.108",
+            "response": {
+              "alternateProtocolUsage": "unspecifiedReason",
+              "charset": "",
+              "connectionId": 55,
+              "connectionReused": true,
+              "encodedDataLength": 194,
+              "fromDiskCache": false,
+              "fromPrefetchCache": false,
+              "fromServiceWorker": false,
+              "headers": {
+                "Cache-Control": "no-store",
+                "Connection": "keep-alive",
+                "Content-Length": "12404076",
+                "Content-Type": "application/octet-stream",
+                "Date": "Tue, 17 Nov 2026 01:57:01 GMT",
+                "Keep-Alive": "timeout=5"
+              },
+              "mimeType": "application/octet-stream",
+              "protocol": "http/1.1",
+              "remoteIPAddress": "127.0.0.1",
+              "remotePort": 61611,
+              "responseTime": 1794880621566.232,
+              "securityState": "secure",
+              "status": 200,
+              "statusText": "OK",
+              "timing": {
+                "connectEnd": -1,
+                "connectStart": -1,
+                "dnsEnd": -1,
+                "dnsStart": -1,
+                "proxyEnd": -1,
+                "proxyStart": -1,
+                "pushEnd": 0,
+                "pushStart": 0,
+                "receiveHeadersEnd": 12.995,
+                "receiveHeadersStart": 12.981,
+                "requestTime": 1890800.606926,
+                "sendEnd": 1.342,
+                "sendStart": 1.284,
+                "sslEnd": -1,
+                "sslStart": -1,
+                "workerFetchStart": -1,
+                "workerReady": -1,
+                "workerRespondWithSettled": -1,
+                "workerStart": -1
+              },
+              "url": "http://127.0.0.1:61611/assets/town/fields.bin"
+            },
+            "timestamp": 1890800.623338,
+            "type": "Fetch",
+            "documentRelativeMs": 963.777099609375
+          },
+          {
+            "method": "Network.loadingFinished",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880621.774,
+            "encodedDataLength": 12404270,
+            "requestId": "64532.108",
+            "timestamp": 1890800.805822,
+            "documentRelativeMs": 1146.26123046875
+          }
+        ],
+        "documentRequestId": "A18852CB08A1AD0C24B539B781726ADD"
+      },
+      {
+        "requestId": "64532.110",
+        "url": "http://127.0.0.1:61611/assets/models/lighthouse.glb",
+        "events": [
+          {
+            "method": "Network.requestWillBeSent",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880623.223,
+            "documentURL": "http://127.0.0.1:61611/",
+            "frameId": "419148E1388E44A239E57E85F49AF486",
+            "hasUserGesture": true,
+            "initiator": {
+              "stack": {
+                "callFrames": [
+                  {
+                    "columnNumber": 2,
+                    "functionName": "load",
+                    "lineNumber": 45624,
+                    "scriptId": "43",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/build/three.core.js"
+                  },
+                  {
+                    "columnNumber": 9,
+                    "functionName": "load",
+                    "lineNumber": 328,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 9,
+                    "functionName": "",
+                    "lineNumber": 45331,
+                    "scriptId": "43",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/build/three.core.js"
+                  },
+                  {
+                    "columnNumber": 9,
+                    "functionName": "loadAsync",
+                    "lineNumber": 45329,
+                    "scriptId": "43",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/build/three.core.js"
+                  },
+                  {
+                    "columnNumber": 13,
+                    "functionName": "",
+                    "lineNumber": 98,
+                    "scriptId": "11",
+                    "url": "http://127.0.0.1:61611/src/island.js"
+                  },
+                  {
+                    "columnNumber": 62,
+                    "functionName": "loadProps",
+                    "lineNumber": 96,
+                    "scriptId": "11",
+                    "url": "http://127.0.0.1:61611/src/island.js"
+                  }
+                ]
+              },
+              "type": "script"
+            },
+            "loaderId": "A18852CB08A1AD0C24B539B781726ADD",
+            "redirectHasExtraInfo": false,
+            "request": {
+              "headers": {
+                "Referer": "http://127.0.0.1:61611/",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+                "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+                "sec-ch-ua-mobile": "?0",
+                "sec-ch-ua-platform": "\"Windows\""
+              },
+              "initialPriority": "High",
+              "isSameSite": true,
+              "method": "GET",
+              "mixedContentType": "none",
+              "referrerPolicy": "strict-origin-when-cross-origin",
+              "url": "http://127.0.0.1:61611/assets/models/lighthouse.glb"
+            },
+            "requestId": "64532.110",
+            "timestamp": 1890802.274825,
+            "type": "Fetch",
+            "wallTime": 1794880623.222728,
+            "documentRelativeMs": 2615.264404296875
+          },
+          {
+            "method": "Network.responseReceived",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880623.236,
+            "frameId": "419148E1388E44A239E57E85F49AF486",
+            "hasExtraInfo": true,
+            "loaderId": "A18852CB08A1AD0C24B539B781726ADD",
+            "requestId": "64532.110",
+            "response": {
+              "alternateProtocolUsage": "unspecifiedReason",
+              "charset": "",
+              "connectionId": 51,
+              "connectionReused": true,
+              "encodedDataLength": 186,
+              "fromDiskCache": false,
+              "fromPrefetchCache": false,
+              "fromServiceWorker": false,
+              "headers": {
+                "Cache-Control": "no-store",
+                "Connection": "keep-alive",
+                "Content-Length": "4857788",
+                "Content-Type": "model/gltf-binary",
+                "Date": "Tue, 17 Nov 2026 01:57:03 GMT",
+                "Keep-Alive": "timeout=5"
+              },
+              "mimeType": "model/gltf-binary",
+              "protocol": "http/1.1",
+              "remoteIPAddress": "127.0.0.1",
+              "remotePort": 61611,
+              "responseTime": 1794880623235.579,
+              "securityState": "secure",
+              "status": 200,
+              "statusText": "OK",
+              "timing": {
+                "connectEnd": -1,
+                "connectStart": -1,
+                "dnsEnd": -1,
+                "dnsStart": -1,
+                "proxyEnd": -1,
+                "proxyStart": -1,
+                "pushEnd": 0,
+                "pushStart": 0,
+                "receiveHeadersEnd": 12.605,
+                "receiveHeadersStart": 12.585,
+                "requestTime": 1890802.276669,
+                "sendEnd": 0.426,
+                "sendStart": 0.342,
+                "sslEnd": -1,
+                "sslStart": -1,
+                "workerFetchStart": -1,
+                "workerReady": -1,
+                "workerRespondWithSettled": -1,
+                "workerStart": -1
+              },
+              "url": "http://127.0.0.1:61611/assets/models/lighthouse.glb"
+            },
+            "timestamp": 1890802.290486,
+            "type": "Fetch",
+            "documentRelativeMs": 2630.92529296875
+          },
+          {
+            "method": "Network.loadingFinished",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880623.279,
+            "encodedDataLength": 4857974,
+            "requestId": "64532.110",
+            "timestamp": 1890802.314444,
+            "documentRelativeMs": 2654.88330078125
+          }
+        ],
+        "documentRequestId": "A18852CB08A1AD0C24B539B781726ADD"
+      },
+      {
+        "requestId": "64532.112",
+        "url": "http://127.0.0.1:61611/assets/models/menhir.glb",
+        "events": [
+          {
+            "method": "Network.requestWillBeSent",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880623.223,
+            "documentURL": "http://127.0.0.1:61611/",
+            "frameId": "419148E1388E44A239E57E85F49AF486",
+            "hasUserGesture": true,
+            "initiator": {
+              "stack": {
+                "callFrames": [
+                  {
+                    "columnNumber": 2,
+                    "functionName": "load",
+                    "lineNumber": 45624,
+                    "scriptId": "43",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/build/three.core.js"
+                  },
+                  {
+                    "columnNumber": 9,
+                    "functionName": "load",
+                    "lineNumber": 328,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 9,
+                    "functionName": "",
+                    "lineNumber": 45331,
+                    "scriptId": "43",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/build/three.core.js"
+                  },
+                  {
+                    "columnNumber": 9,
+                    "functionName": "loadAsync",
+                    "lineNumber": 45329,
+                    "scriptId": "43",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/build/three.core.js"
+                  },
+                  {
+                    "columnNumber": 13,
+                    "functionName": "",
+                    "lineNumber": 98,
+                    "scriptId": "11",
+                    "url": "http://127.0.0.1:61611/src/island.js"
+                  },
+                  {
+                    "columnNumber": 62,
+                    "functionName": "loadProps",
+                    "lineNumber": 96,
+                    "scriptId": "11",
+                    "url": "http://127.0.0.1:61611/src/island.js"
+                  }
+                ]
+              },
+              "type": "script"
+            },
+            "loaderId": "A18852CB08A1AD0C24B539B781726ADD",
+            "redirectHasExtraInfo": false,
+            "request": {
+              "headers": {
+                "Referer": "http://127.0.0.1:61611/",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+                "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+                "sec-ch-ua-mobile": "?0",
+                "sec-ch-ua-platform": "\"Windows\""
+              },
+              "initialPriority": "High",
+              "isSameSite": true,
+              "method": "GET",
+              "mixedContentType": "none",
+              "referrerPolicy": "strict-origin-when-cross-origin",
+              "url": "http://127.0.0.1:61611/assets/models/menhir.glb"
+            },
+            "requestId": "64532.112",
+            "timestamp": 1890802.276624,
+            "type": "Fetch",
+            "wallTime": 1794880623.222963,
+            "documentRelativeMs": 2617.063232421875
+          },
+          {
+            "method": "Network.responseReceived",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880623.236,
+            "frameId": "419148E1388E44A239E57E85F49AF486",
+            "hasExtraInfo": true,
+            "loaderId": "A18852CB08A1AD0C24B539B781726ADD",
+            "requestId": "64532.112",
+            "response": {
+              "alternateProtocolUsage": "unspecifiedReason",
+              "charset": "",
+              "connectionId": 63,
+              "connectionReused": true,
+              "encodedDataLength": 185,
+              "fromDiskCache": false,
+              "fromPrefetchCache": false,
+              "fromServiceWorker": false,
+              "headers": {
+                "Cache-Control": "no-store",
+                "Connection": "keep-alive",
+                "Content-Length": "620588",
+                "Content-Type": "model/gltf-binary",
+                "Date": "Tue, 17 Nov 2026 01:57:03 GMT",
+                "Keep-Alive": "timeout=5"
+              },
+              "mimeType": "model/gltf-binary",
+              "protocol": "http/1.1",
+              "remoteIPAddress": "127.0.0.1",
+              "remotePort": 61611,
+              "responseTime": 1794880623235.412,
+              "securityState": "secure",
+              "status": 200,
+              "statusText": "OK",
+              "timing": {
+                "connectEnd": -1,
+                "connectStart": -1,
+                "dnsEnd": -1,
+                "dnsStart": -1,
+                "proxyEnd": -1,
+                "proxyStart": -1,
+                "pushEnd": 0,
+                "pushStart": 0,
+                "receiveHeadersEnd": 12.283,
+                "receiveHeadersStart": 12.257,
+                "requestTime": 1890802.27683,
+                "sendEnd": 0.545,
+                "sendStart": 0.517,
+                "sslEnd": -1,
+                "sslStart": -1,
+                "workerFetchStart": -1,
+                "workerReady": -1,
+                "workerRespondWithSettled": -1,
+                "workerStart": -1
+              },
+              "url": "http://127.0.0.1:61611/assets/models/menhir.glb"
+            },
+            "timestamp": 1890802.289868,
+            "type": "Fetch",
+            "documentRelativeMs": 2630.307373046875
+          },
+          {
+            "method": "Network.loadingFinished",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880623.245,
+            "encodedDataLength": 620773,
+            "requestId": "64532.112",
+            "timestamp": 1890802.296977,
+            "documentRelativeMs": 2637.416259765625
+          }
+        ],
+        "documentRequestId": "A18852CB08A1AD0C24B539B781726ADD"
+      },
+      {
+        "requestId": "64532.114",
+        "url": "http://127.0.0.1:61611/assets/models/boulders.glb",
+        "events": [
+          {
+            "method": "Network.requestWillBeSent",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880623.223,
+            "documentURL": "http://127.0.0.1:61611/",
+            "frameId": "419148E1388E44A239E57E85F49AF486",
+            "hasUserGesture": true,
+            "initiator": {
+              "stack": {
+                "callFrames": [
+                  {
+                    "columnNumber": 2,
+                    "functionName": "load",
+                    "lineNumber": 45624,
+                    "scriptId": "43",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/build/three.core.js"
+                  },
+                  {
+                    "columnNumber": 9,
+                    "functionName": "load",
+                    "lineNumber": 328,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 9,
+                    "functionName": "",
+                    "lineNumber": 45331,
+                    "scriptId": "43",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/build/three.core.js"
+                  },
+                  {
+                    "columnNumber": 9,
+                    "functionName": "loadAsync",
+                    "lineNumber": 45329,
+                    "scriptId": "43",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/build/three.core.js"
+                  },
+                  {
+                    "columnNumber": 13,
+                    "functionName": "",
+                    "lineNumber": 98,
+                    "scriptId": "11",
+                    "url": "http://127.0.0.1:61611/src/island.js"
+                  },
+                  {
+                    "columnNumber": 62,
+                    "functionName": "loadProps",
+                    "lineNumber": 96,
+                    "scriptId": "11",
+                    "url": "http://127.0.0.1:61611/src/island.js"
+                  }
+                ]
+              },
+              "type": "script"
+            },
+            "loaderId": "A18852CB08A1AD0C24B539B781726ADD",
+            "redirectHasExtraInfo": false,
+            "request": {
+              "headers": {
+                "Referer": "http://127.0.0.1:61611/",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+                "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+                "sec-ch-ua-mobile": "?0",
+                "sec-ch-ua-platform": "\"Windows\""
+              },
+              "initialPriority": "High",
+              "isSameSite": true,
+              "method": "GET",
+              "mixedContentType": "none",
+              "referrerPolicy": "strict-origin-when-cross-origin",
+              "url": "http://127.0.0.1:61611/assets/models/boulders.glb"
+            },
+            "requestId": "64532.114",
+            "timestamp": 1890802.276755,
+            "type": "Fetch",
+            "wallTime": 1794880623.223091,
+            "documentRelativeMs": 2617.1943359375
+          },
+          {
+            "method": "Network.responseReceived",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880623.236,
+            "frameId": "419148E1388E44A239E57E85F49AF486",
+            "hasExtraInfo": true,
+            "loaderId": "A18852CB08A1AD0C24B539B781726ADD",
+            "requestId": "64532.114",
+            "response": {
+              "alternateProtocolUsage": "unspecifiedReason",
+              "charset": "",
+              "connectionId": 67,
+              "connectionReused": true,
+              "encodedDataLength": 185,
+              "fromDiskCache": false,
+              "fromPrefetchCache": false,
+              "fromServiceWorker": false,
+              "headers": {
+                "Cache-Control": "no-store",
+                "Connection": "keep-alive",
+                "Content-Length": "669820",
+                "Content-Type": "model/gltf-binary",
+                "Date": "Tue, 17 Nov 2026 01:57:03 GMT",
+                "Keep-Alive": "timeout=5"
+              },
+              "mimeType": "model/gltf-binary",
+              "protocol": "http/1.1",
+              "remoteIPAddress": "127.0.0.1",
+              "remotePort": 61611,
+              "responseTime": 1794880623235.713,
+              "securityState": "secure",
+              "status": 200,
+              "statusText": "OK",
+              "timing": {
+                "connectEnd": -1,
+                "connectStart": -1,
+                "dnsEnd": -1,
+                "dnsStart": -1,
+                "proxyEnd": -1,
+                "proxyStart": -1,
+                "pushEnd": 0,
+                "pushStart": 0,
+                "receiveHeadersEnd": 12.179,
+                "receiveHeadersStart": 12.159,
+                "requestTime": 1890802.277229,
+                "sendEnd": 0.589,
+                "sendStart": 0.561,
+                "sslEnd": -1,
+                "sslStart": -1,
+                "workerFetchStart": -1,
+                "workerReady": -1,
+                "workerRespondWithSettled": -1,
+                "workerStart": -1
+              },
+              "url": "http://127.0.0.1:61611/assets/models/boulders.glb"
+            },
+            "timestamp": 1890802.290799,
+            "type": "Fetch",
+            "documentRelativeMs": 2631.238037109375
+          },
+          {
+            "method": "Network.loadingFinished",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880623.256,
+            "encodedDataLength": 670005,
+            "requestId": "64532.114",
+            "timestamp": 1890802.297408,
+            "documentRelativeMs": 2637.847412109375
+          }
+        ],
+        "documentRequestId": "A18852CB08A1AD0C24B539B781726ADD"
+      },
+      {
+        "requestId": "64532.116",
+        "url": "http://127.0.0.1:61611/assets/models/tree.glb",
+        "events": [
+          {
+            "method": "Network.requestWillBeSent",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880623.223,
+            "documentURL": "http://127.0.0.1:61611/",
+            "frameId": "419148E1388E44A239E57E85F49AF486",
+            "hasUserGesture": true,
+            "initiator": {
+              "stack": {
+                "callFrames": [
+                  {
+                    "columnNumber": 2,
+                    "functionName": "load",
+                    "lineNumber": 45624,
+                    "scriptId": "43",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/build/three.core.js"
+                  },
+                  {
+                    "columnNumber": 9,
+                    "functionName": "load",
+                    "lineNumber": 328,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 9,
+                    "functionName": "",
+                    "lineNumber": 45331,
+                    "scriptId": "43",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/build/three.core.js"
+                  },
+                  {
+                    "columnNumber": 9,
+                    "functionName": "loadAsync",
+                    "lineNumber": 45329,
+                    "scriptId": "43",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/build/three.core.js"
+                  },
+                  {
+                    "columnNumber": 13,
+                    "functionName": "",
+                    "lineNumber": 98,
+                    "scriptId": "11",
+                    "url": "http://127.0.0.1:61611/src/island.js"
+                  },
+                  {
+                    "columnNumber": 62,
+                    "functionName": "loadProps",
+                    "lineNumber": 96,
+                    "scriptId": "11",
+                    "url": "http://127.0.0.1:61611/src/island.js"
+                  }
+                ]
+              },
+              "type": "script"
+            },
+            "loaderId": "A18852CB08A1AD0C24B539B781726ADD",
+            "redirectHasExtraInfo": false,
+            "request": {
+              "headers": {
+                "Referer": "http://127.0.0.1:61611/",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+                "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+                "sec-ch-ua-mobile": "?0",
+                "sec-ch-ua-platform": "\"Windows\""
+              },
+              "initialPriority": "High",
+              "isSameSite": true,
+              "method": "GET",
+              "mixedContentType": "none",
+              "referrerPolicy": "strict-origin-when-cross-origin",
+              "url": "http://127.0.0.1:61611/assets/models/tree.glb"
+            },
+            "requestId": "64532.116",
+            "timestamp": 1890802.276866,
+            "type": "Fetch",
+            "wallTime": 1794880623.223202,
+            "documentRelativeMs": 2617.30517578125
+          },
+          {
+            "method": "Network.responseReceived",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880623.242,
+            "frameId": "419148E1388E44A239E57E85F49AF486",
+            "hasExtraInfo": true,
+            "loaderId": "A18852CB08A1AD0C24B539B781726ADD",
+            "requestId": "64532.116",
+            "response": {
+              "alternateProtocolUsage": "unspecifiedReason",
+              "charset": "",
+              "connectionId": 55,
+              "connectionReused": true,
+              "encodedDataLength": 186,
+              "fromDiskCache": false,
+              "fromPrefetchCache": false,
+              "fromServiceWorker": false,
+              "headers": {
+                "Cache-Control": "no-store",
+                "Connection": "keep-alive",
+                "Content-Length": "2687820",
+                "Content-Type": "model/gltf-binary",
+                "Date": "Tue, 17 Nov 2026 01:57:03 GMT",
+                "Keep-Alive": "timeout=5"
+              },
+              "mimeType": "model/gltf-binary",
+              "protocol": "http/1.1",
+              "remoteIPAddress": "127.0.0.1",
+              "remotePort": 61611,
+              "responseTime": 1794880623242.32,
+              "securityState": "secure",
+              "status": 200,
+              "statusText": "OK",
+              "timing": {
+                "connectEnd": -1,
+                "connectStart": -1,
+                "dnsEnd": -1,
+                "dnsStart": -1,
+                "proxyEnd": -1,
+                "proxyStart": -1,
+                "pushEnd": 0,
+                "pushStart": 0,
+                "receiveHeadersEnd": 18.531,
+                "receiveHeadersStart": 18.502,
+                "requestTime": 1890802.277493,
+                "sendEnd": 13.175,
+                "sendStart": 13.127,
+                "sslEnd": -1,
+                "sslStart": -1,
+                "workerFetchStart": -1,
+                "workerReady": -1,
+                "workerRespondWithSettled": -1,
+                "workerStart": -1
+              },
+              "url": "http://127.0.0.1:61611/assets/models/tree.glb"
+            },
+            "timestamp": 1890802.296495,
+            "type": "Fetch",
+            "documentRelativeMs": 2636.93408203125
+          },
+          {
+            "method": "Network.loadingFinished",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880623.269,
+            "encodedDataLength": 2688006,
+            "requestId": "64532.116",
+            "timestamp": 1890802.308927,
+            "documentRelativeMs": 2649.3662109375
+          }
+        ],
+        "documentRequestId": "A18852CB08A1AD0C24B539B781726ADD"
+      },
+      {
+        "requestId": "64532.234",
+        "url": "http://127.0.0.1:61611/city-assets/downtown/Building_Large_2.bin",
+        "events": [
+          {
+            "method": "Network.requestWillBeSent",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880642.227,
+            "documentURL": "http://127.0.0.1:61611/",
+            "frameId": "419148E1388E44A239E57E85F49AF486",
+            "hasUserGesture": true,
+            "initiator": {
+              "stack": {
+                "callFrames": [
+                  {
+                    "columnNumber": 2,
+                    "functionName": "load",
+                    "lineNumber": 45624,
+                    "scriptId": "43",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/build/three.core.js"
+                  },
+                  {
+                    "columnNumber": 10,
+                    "functionName": "",
+                    "lineNumber": 3146,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 9,
+                    "functionName": "loadBuffer",
+                    "lineNumber": 3144,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "getDependency",
+                    "lineNumber": 3027,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 14,
+                    "functionName": "loadBufferView",
+                    "lineNumber": 3167,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 39,
+                    "functionName": "",
+                    "lineNumber": 3021,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 18,
+                    "functionName": "_invokeOne",
+                    "lineNumber": 2948,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "getDependency",
+                    "lineNumber": 3019,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 33,
+                    "functionName": "loadAccessor",
+                    "lineNumber": 3206,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "getDependency",
+                    "lineNumber": 3015,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 16,
+                    "functionName": "assignAttributeAccessor",
+                    "lineNumber": 4940,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 16,
+                    "functionName": "addPrimitiveAttributes",
+                    "lineNumber": 4956,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "loadGeometries",
+                    "lineNumber": 3909,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "loadMesh",
+                    "lineNumber": 3966,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 33,
+                    "functionName": "",
+                    "lineNumber": 3009,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 18,
+                    "functionName": "_invokeOne",
+                    "lineNumber": 2948,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "getDependency",
+                    "lineNumber": 3007,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 16,
+                    "functionName": "createNodeMesh",
+                    "lineNumber": 4303,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 36,
+                    "functionName": "",
+                    "lineNumber": 4443,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 18,
+                    "functionName": "_invokeOne",
+                    "lineNumber": 2948,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 29,
+                    "functionName": "_loadNodeShallow",
+                    "lineNumber": 4441,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 29,
+                    "functionName": "loadNode",
+                    "lineNumber": 4344,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 33,
+                    "functionName": "",
+                    "lineNumber": 3001,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 18,
+                    "functionName": "_invokeOne",
+                    "lineNumber": 2948,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "getDependency",
+                    "lineNumber": 2999,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 24,
+                    "functionName": "loadScene",
+                    "lineNumber": 4594,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "getDependency",
+                    "lineNumber": 2995,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 18,
+                    "functionName": "",
+                    "lineNumber": 3105,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 36,
+                    "functionName": "getDependencies",
+                    "lineNumber": 3103,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 11,
+                    "functionName": "",
+                    "lineNumber": 2774,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  }
+                ]
+              },
+              "type": "script"
+            },
+            "loaderId": "A18852CB08A1AD0C24B539B781726ADD",
+            "redirectHasExtraInfo": false,
+            "request": {
+              "headers": {
+                "Referer": "http://127.0.0.1:61611/",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+                "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+                "sec-ch-ua-mobile": "?0",
+                "sec-ch-ua-platform": "\"Windows\""
+              },
+              "initialPriority": "High",
+              "isSameSite": true,
+              "method": "GET",
+              "mixedContentType": "none",
+              "referrerPolicy": "strict-origin-when-cross-origin",
+              "url": "http://127.0.0.1:61611/city-assets/downtown/Building_Large_2.bin"
+            },
+            "requestId": "64532.234",
+            "timestamp": 1890821.278161,
+            "type": "Fetch",
+            "wallTime": 1794880642.224557,
+            "documentRelativeMs": 21618.600341796875
+          },
+          {
+            "method": "Network.responseReceived",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880642.238,
+            "frameId": "419148E1388E44A239E57E85F49AF486",
+            "hasExtraInfo": true,
+            "loaderId": "A18852CB08A1AD0C24B539B781726ADD",
+            "requestId": "64532.234",
+            "response": {
+              "alternateProtocolUsage": "unspecifiedReason",
+              "charset": "",
+              "connectionId": 920,
+              "connectionReused": true,
+              "encodedDataLength": 193,
+              "fromDiskCache": false,
+              "fromPrefetchCache": false,
+              "fromServiceWorker": false,
+              "headers": {
+                "Cache-Control": "no-store",
+                "Connection": "keep-alive",
+                "Content-Length": "3345228",
+                "Content-Type": "application/octet-stream",
+                "Date": "Tue, 17 Nov 2026 01:57:22 GMT",
+                "Keep-Alive": "timeout=5"
+              },
+              "mimeType": "application/octet-stream",
+              "protocol": "http/1.1",
+              "remoteIPAddress": "127.0.0.1",
+              "remotePort": 61611,
+              "responseTime": 1794880642237.527,
+              "securityState": "secure",
+              "status": 200,
+              "statusText": "OK",
+              "timing": {
+                "connectEnd": -1,
+                "connectStart": -1,
+                "dnsEnd": -1,
+                "dnsStart": -1,
+                "proxyEnd": -1,
+                "proxyStart": -1,
+                "pushEnd": 0,
+                "pushStart": 0,
+                "receiveHeadersEnd": 12.74,
+                "receiveHeadersStart": 12.699,
+                "requestTime": 1890821.278504,
+                "sendEnd": 0.26,
+                "sendStart": 0.181,
+                "sslEnd": -1,
+                "sslStart": -1,
+                "workerFetchStart": -1,
+                "workerReady": -1,
+                "workerRespondWithSettled": -1,
+                "workerStart": -1
+              },
+              "url": "http://127.0.0.1:61611/city-assets/downtown/Building_Large_2.bin"
+            },
+            "timestamp": 1890821.291676,
+            "type": "Fetch",
+            "documentRelativeMs": 21632.115234375
+          },
+          {
+            "method": "Network.loadingFailed",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880642.275,
+            "canceled": true,
+            "errorText": "net::ERR_ABORTED",
+            "requestId": "64532.234",
+            "timestamp": 1890821.326793,
+            "type": "Fetch",
+            "documentRelativeMs": 21667.232177734375
+          }
+        ],
+        "documentRequestId": "A18852CB08A1AD0C24B539B781726ADD"
+      },
+      {
+        "requestId": "64532.254",
+        "url": "http://127.0.0.1:61611/city-assets/downtown/Building_Medium_2_001.bin",
+        "events": [
+          {
+            "method": "Network.requestWillBeSent",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880642.428,
+            "documentURL": "http://127.0.0.1:61611/",
+            "frameId": "419148E1388E44A239E57E85F49AF486",
+            "hasUserGesture": true,
+            "initiator": {
+              "stack": {
+                "callFrames": [
+                  {
+                    "columnNumber": 2,
+                    "functionName": "load",
+                    "lineNumber": 45624,
+                    "scriptId": "43",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/build/three.core.js"
+                  },
+                  {
+                    "columnNumber": 10,
+                    "functionName": "",
+                    "lineNumber": 3146,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 9,
+                    "functionName": "loadBuffer",
+                    "lineNumber": 3144,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "getDependency",
+                    "lineNumber": 3027,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 14,
+                    "functionName": "loadBufferView",
+                    "lineNumber": 3167,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 39,
+                    "functionName": "",
+                    "lineNumber": 3021,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 18,
+                    "functionName": "_invokeOne",
+                    "lineNumber": 2948,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "getDependency",
+                    "lineNumber": 3019,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 33,
+                    "functionName": "loadAccessor",
+                    "lineNumber": 3206,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "getDependency",
+                    "lineNumber": 3015,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 16,
+                    "functionName": "assignAttributeAccessor",
+                    "lineNumber": 4940,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 16,
+                    "functionName": "addPrimitiveAttributes",
+                    "lineNumber": 4956,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "loadGeometries",
+                    "lineNumber": 3909,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "loadMesh",
+                    "lineNumber": 3966,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 33,
+                    "functionName": "",
+                    "lineNumber": 3009,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 18,
+                    "functionName": "_invokeOne",
+                    "lineNumber": 2948,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "getDependency",
+                    "lineNumber": 3007,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 16,
+                    "functionName": "createNodeMesh",
+                    "lineNumber": 4303,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 36,
+                    "functionName": "",
+                    "lineNumber": 4443,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 18,
+                    "functionName": "_invokeOne",
+                    "lineNumber": 2948,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 29,
+                    "functionName": "_loadNodeShallow",
+                    "lineNumber": 4441,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 29,
+                    "functionName": "loadNode",
+                    "lineNumber": 4344,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 33,
+                    "functionName": "",
+                    "lineNumber": 3001,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 18,
+                    "functionName": "_invokeOne",
+                    "lineNumber": 2948,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "getDependency",
+                    "lineNumber": 2999,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 24,
+                    "functionName": "loadScene",
+                    "lineNumber": 4594,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "getDependency",
+                    "lineNumber": 2995,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 18,
+                    "functionName": "",
+                    "lineNumber": 3105,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 36,
+                    "functionName": "getDependencies",
+                    "lineNumber": 3103,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 11,
+                    "functionName": "",
+                    "lineNumber": 2774,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  }
+                ]
+              },
+              "type": "script"
+            },
+            "loaderId": "A18852CB08A1AD0C24B539B781726ADD",
+            "redirectHasExtraInfo": false,
+            "request": {
+              "headers": {
+                "Referer": "http://127.0.0.1:61611/",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+                "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+                "sec-ch-ua-mobile": "?0",
+                "sec-ch-ua-platform": "\"Windows\""
+              },
+              "initialPriority": "High",
+              "isSameSite": true,
+              "method": "GET",
+              "mixedContentType": "none",
+              "referrerPolicy": "strict-origin-when-cross-origin",
+              "url": "http://127.0.0.1:61611/city-assets/downtown/Building_Medium_2_001.bin"
+            },
+            "requestId": "64532.254",
+            "timestamp": 1890821.480093,
+            "type": "Fetch",
+            "wallTime": 1794880642.426481,
+            "documentRelativeMs": 21820.5322265625
+          },
+          {
+            "method": "Network.responseReceived",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880642.439,
+            "frameId": "419148E1388E44A239E57E85F49AF486",
+            "hasExtraInfo": true,
+            "loaderId": "A18852CB08A1AD0C24B539B781726ADD",
+            "requestId": "64532.254",
+            "response": {
+              "alternateProtocolUsage": "unspecifiedReason",
+              "charset": "",
+              "connectionId": 946,
+              "connectionReused": true,
+              "encodedDataLength": 193,
+              "fromDiskCache": false,
+              "fromPrefetchCache": false,
+              "fromServiceWorker": false,
+              "headers": {
+                "Cache-Control": "no-store",
+                "Connection": "keep-alive",
+                "Content-Length": "2443288",
+                "Content-Type": "application/octet-stream",
+                "Date": "Tue, 17 Nov 2026 01:57:22 GMT",
+                "Keep-Alive": "timeout=5"
+              },
+              "mimeType": "application/octet-stream",
+              "protocol": "http/1.1",
+              "remoteIPAddress": "127.0.0.1",
+              "remotePort": 61611,
+              "responseTime": 1794880642438.694,
+              "securityState": "secure",
+              "status": 200,
+              "statusText": "OK",
+              "timing": {
+                "connectEnd": -1,
+                "connectStart": -1,
+                "dnsEnd": -1,
+                "dnsStart": -1,
+                "proxyEnd": -1,
+                "proxyStart": -1,
+                "pushEnd": 0,
+                "pushStart": 0,
+                "receiveHeadersEnd": 12.007,
+                "receiveHeadersStart": 11.967,
+                "requestTime": 1890821.480402,
+                "sendEnd": 0.287,
+                "sendStart": 0.211,
+                "sslEnd": -1,
+                "sslStart": -1,
+                "workerFetchStart": -1,
+                "workerReady": -1,
+                "workerRespondWithSettled": -1,
+                "workerStart": -1
+              },
+              "url": "http://127.0.0.1:61611/city-assets/downtown/Building_Medium_2_001.bin"
+            },
+            "timestamp": 1890821.493073,
+            "type": "Fetch",
+            "documentRelativeMs": 21833.51220703125
+          },
+          {
+            "method": "Network.loadingFailed",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880642.471,
+            "canceled": true,
+            "errorText": "net::ERR_ABORTED",
+            "requestId": "64532.254",
+            "timestamp": 1890821.521597,
+            "type": "Fetch",
+            "documentRelativeMs": 21862.0361328125
+          }
+        ],
+        "documentRequestId": "A18852CB08A1AD0C24B539B781726ADD"
+      },
+      {
+        "requestId": "64532.271",
+        "url": "http://127.0.0.1:61611/city-assets/downtown/Building_Small_1.bin",
+        "events": [
+          {
+            "method": "Network.requestWillBeSent",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880642.603,
+            "documentURL": "http://127.0.0.1:61611/",
+            "frameId": "419148E1388E44A239E57E85F49AF486",
+            "hasUserGesture": true,
+            "initiator": {
+              "stack": {
+                "callFrames": [
+                  {
+                    "columnNumber": 2,
+                    "functionName": "load",
+                    "lineNumber": 45624,
+                    "scriptId": "43",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/build/three.core.js"
+                  },
+                  {
+                    "columnNumber": 10,
+                    "functionName": "",
+                    "lineNumber": 3146,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 9,
+                    "functionName": "loadBuffer",
+                    "lineNumber": 3144,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "getDependency",
+                    "lineNumber": 3027,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 14,
+                    "functionName": "loadBufferView",
+                    "lineNumber": 3167,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 39,
+                    "functionName": "",
+                    "lineNumber": 3021,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 18,
+                    "functionName": "_invokeOne",
+                    "lineNumber": 2948,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "getDependency",
+                    "lineNumber": 3019,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 33,
+                    "functionName": "loadAccessor",
+                    "lineNumber": 3206,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "getDependency",
+                    "lineNumber": 3015,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 16,
+                    "functionName": "assignAttributeAccessor",
+                    "lineNumber": 4940,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 16,
+                    "functionName": "addPrimitiveAttributes",
+                    "lineNumber": 4956,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "loadGeometries",
+                    "lineNumber": 3909,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "loadMesh",
+                    "lineNumber": 3966,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 33,
+                    "functionName": "",
+                    "lineNumber": 3009,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 18,
+                    "functionName": "_invokeOne",
+                    "lineNumber": 2948,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "getDependency",
+                    "lineNumber": 3007,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 16,
+                    "functionName": "createNodeMesh",
+                    "lineNumber": 4303,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 36,
+                    "functionName": "",
+                    "lineNumber": 4443,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 18,
+                    "functionName": "_invokeOne",
+                    "lineNumber": 2948,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 29,
+                    "functionName": "_loadNodeShallow",
+                    "lineNumber": 4441,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 29,
+                    "functionName": "loadNode",
+                    "lineNumber": 4344,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 33,
+                    "functionName": "",
+                    "lineNumber": 3001,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 18,
+                    "functionName": "_invokeOne",
+                    "lineNumber": 2948,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "getDependency",
+                    "lineNumber": 2999,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 24,
+                    "functionName": "loadScene",
+                    "lineNumber": 4594,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 23,
+                    "functionName": "getDependency",
+                    "lineNumber": 2995,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 18,
+                    "functionName": "",
+                    "lineNumber": 3105,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 36,
+                    "functionName": "getDependencies",
+                    "lineNumber": 3103,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  },
+                  {
+                    "columnNumber": 11,
+                    "functionName": "",
+                    "lineNumber": 2774,
+                    "scriptId": "22",
+                    "url": "http://127.0.0.1:61611/upstream/petalwake/vendor/three/examples/jsm/loaders/GLTFLoader.js"
+                  }
+                ]
+              },
+              "type": "script"
+            },
+            "loaderId": "A18852CB08A1AD0C24B539B781726ADD",
+            "redirectHasExtraInfo": false,
+            "request": {
+              "headers": {
+                "Referer": "http://127.0.0.1:61611/",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+                "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+                "sec-ch-ua-mobile": "?0",
+                "sec-ch-ua-platform": "\"Windows\""
+              },
+              "initialPriority": "High",
+              "isSameSite": true,
+              "method": "GET",
+              "mixedContentType": "none",
+              "referrerPolicy": "strict-origin-when-cross-origin",
+              "url": "http://127.0.0.1:61611/city-assets/downtown/Building_Small_1.bin"
+            },
+            "requestId": "64532.271",
+            "timestamp": 1890821.654458,
+            "type": "Fetch",
+            "wallTime": 1794880642.600848,
+            "documentRelativeMs": 21994.897216796875
+          },
+          {
+            "method": "Network.responseReceived",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880642.614,
+            "frameId": "419148E1388E44A239E57E85F49AF486",
+            "hasExtraInfo": true,
+            "loaderId": "A18852CB08A1AD0C24B539B781726ADD",
+            "requestId": "64532.271",
+            "response": {
+              "alternateProtocolUsage": "unspecifiedReason",
+              "charset": "",
+              "connectionId": 946,
+              "connectionReused": true,
+              "encodedDataLength": 193,
+              "fromDiskCache": false,
+              "fromPrefetchCache": false,
+              "fromServiceWorker": false,
+              "headers": {
+                "Cache-Control": "no-store",
+                "Connection": "keep-alive",
+                "Content-Length": "1556100",
+                "Content-Type": "application/octet-stream",
+                "Date": "Tue, 17 Nov 2026 01:57:22 GMT",
+                "Keep-Alive": "timeout=5"
+              },
+              "mimeType": "application/octet-stream",
+              "protocol": "http/1.1",
+              "remoteIPAddress": "127.0.0.1",
+              "remotePort": 61611,
+              "responseTime": 1794880642614.12,
+              "securityState": "secure",
+              "status": 200,
+              "statusText": "OK",
+              "timing": {
+                "connectEnd": -1,
+                "connectStart": -1,
+                "dnsEnd": -1,
+                "dnsStart": -1,
+                "proxyEnd": -1,
+                "proxyStart": -1,
+                "pushEnd": 0,
+                "pushStart": 0,
+                "receiveHeadersEnd": 13.048,
+                "receiveHeadersStart": 13.032,
+                "requestTime": 1890821.654763,
+                "sendEnd": 0.259,
+                "sendStart": 0.186,
+                "sslEnd": -1,
+                "sslStart": -1,
+                "workerFetchStart": -1,
+                "workerReady": -1,
+                "workerRespondWithSettled": -1,
+                "workerStart": -1
+              },
+              "url": "http://127.0.0.1:61611/city-assets/downtown/Building_Small_1.bin"
+            },
+            "timestamp": 1890821.668442,
+            "type": "Fetch",
+            "documentRelativeMs": 22008.88134765625
+          },
+          {
+            "method": "Network.loadingFinished",
+            "stage": "waiting-for-ready-frame",
+            "receivedWallTime": 1794880642.628,
+            "encodedDataLength": 1556293,
+            "requestId": "64532.271",
+            "timestamp": 1890821.677436,
+            "documentRelativeMs": 22017.875244140625
+          }
+        ],
+        "documentRequestId": "A18852CB08A1AD0C24B539B781726ADD"
+      }
+    ],
+    "clockNote": "CDP timestamps are monotonic seconds. Document-relative milliseconds = (document.wallTime + event.timestamp - document.timestamp) * 1000 - performance.timeOrigin. stage is the host stage when the event was received, not proof of its emission time.",
+    "pageClock": {
+      "timeOriginMs": 1794880620605.9,
+      "performanceNowMs": 97274.20000004768
+    }
+  },
+  "streetscapeCaptures": [
+    {
+      "name": "09-streetscape-planters",
+      "position": [
+        -2.2,
+        1.8,
+        33.5
+      ],
+      "target": [
+        -5.6,
+        0.8,
+        27.5
+      ],
+      "wet": true,
+      "coordinateSpace": "station local",
+      "capture": {
+        "file": "09-streetscape-planters.png",
+        "jpeg": "09-streetscape-planters.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 88.47335242113103,
+          "nonBlackFraction": 0.9775969459513764,
+          "notBlack": true
+        }
+      },
+      "interpretation": "Qualitative scene capture; animation remains active, not an isolated pixel comparison."
+    },
+    {
+      "name": "10-streetscape-sidewall",
+      "position": [
+        -3.5,
+        3.6,
+        25.8
+      ],
+      "target": [
+        -9.15,
+        3.9,
+        22.365
+      ],
+      "wet": true,
+      "coordinateSpace": "station local",
+      "capture": {
+        "file": "10-streetscape-sidewall.png",
+        "jpeg": "10-streetscape-sidewall.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 66.37854966177785,
+          "nonBlackFraction": 0.811332127787824,
+          "notBlack": true
+        }
+      },
+      "interpretation": "Qualitative scene capture; animation remains active, not an isolated pixel comparison."
+    },
+    {
+      "name": "11-streetscape-skyline",
+      "position": [
+        1,
+        19,
+        -72
+      ],
+      "target": [
+        -28,
+        5,
+        -104
+      ],
+      "wet": true,
+      "coordinateSpace": "station local",
+      "capture": {
+        "file": "11-streetscape-skyline.png",
+        "jpeg": "11-streetscape-skyline.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 134.7006982117772,
+          "nonBlackFraction": 0.9960066305003014,
+          "notBlack": true
+        }
+      },
+      "interpretation": "Qualitative scene capture; animation remains active, not an isolated pixel comparison."
+    },
+    {
+      "name": "12-street-dry",
+      "position": [
+        -1.2,
+        2.4,
+        36
+      ],
+      "target": [
+        0,
+        2,
+        -25
+      ],
+      "wet": false,
+      "coordinateSpace": "station local",
+      "capture": {
+        "file": "12-street-dry.png",
+        "jpeg": "12-street-dry.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 98.41915310428047,
+          "nonBlackFraction": 0.9643108298171589,
+          "notBlack": true
+        }
+      },
+      "interpretation": "Qualitative scene capture; animation remains active, not an isolated pixel comparison."
+    },
+    {
+      "name": "13-street-wet",
+      "position": [
+        -1.2,
+        2.4,
+        36
+      ],
+      "target": [
+        0,
+        2,
+        -25
+      ],
+      "wet": true,
+      "coordinateSpace": "station local",
+      "capture": {
+        "file": "13-street-wet.png",
+        "jpeg": "13-street-wet.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 98.53769841269927,
+          "nonBlackFraction": 0.9641852521599357,
+          "notBlack": true
+        }
+      },
+      "interpretation": "Qualitative scene capture; animation remains active, not an isolated pixel comparison."
+    },
+    {
+      "name": "14-road-wet-detail",
+      "position": [
+        2,
+        1.35,
+        31
+      ],
+      "target": [
+        -1.85,
+        0.65,
+        28
+      ],
+      "wet": true,
+      "coordinateSpace": "station local",
+      "capture": {
+        "file": "14-road-wet-detail.png",
+        "jpeg": "14-road-wet-detail.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 80.05306911794727,
+          "nonBlackFraction": 0.9850813743218807,
+          "notBlack": true
+        }
+      },
+      "interpretation": "Qualitative scene capture; animation remains active, not an isolated pixel comparison."
+    },
+    {
+      "name": "15-road-dry-detail",
+      "position": [
+        2,
+        1.35,
+        31
+      ],
+      "target": [
+        -1.85,
+        0.65,
+        28
+      ],
+      "wet": false,
+      "coordinateSpace": "station local",
+      "capture": {
+        "file": "15-road-dry-detail.png",
+        "jpeg": "15-road-dry-detail.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 79.77472205478806,
+          "nonBlackFraction": 0.9849809121961021,
+          "notBlack": true
+        }
+      },
+      "interpretation": "Qualitative scene capture; animation remains active, not an isolated pixel comparison."
+    },
+    {
+      "name": "16-city-context",
+      "position": [
+        100,
+        66,
+        -70
+      ],
+      "target": [
+        -15,
+        40,
+        -185
+      ],
+      "wet": true,
+      "coordinateSpace": "station local",
+      "capture": {
+        "file": "16-city-context.png",
+        "jpeg": "16-city-context.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 185.88776706181886,
+          "nonBlackFraction": 1,
+          "notBlack": true
+        }
+      },
+      "interpretation": "Qualitative scene capture; animation remains active, not an isolated pixel comparison."
+    },
+    {
+      "name": "17-city-grounding",
+      "position": [
+        -108,
+        22,
+        -125
+      ],
+      "target": [
+        -35,
+        12,
+        -181
+      ],
+      "wet": true,
+      "coordinateSpace": "station local",
+      "capture": {
+        "file": "17-city-grounding.png",
+        "jpeg": "17-city-grounding.jpg",
+        "jpegWidth": 960,
+        "pixels": {
+          "width": 1440,
+          "height": 900,
+          "samples": 39816,
+          "meanRgb": 161.58805505324477,
+          "nonBlackFraction": 1,
+          "notBlack": true
+        }
+      },
+      "interpretation": "Qualitative scene capture; animation remains active, not an isolated pixel comparison."
+    }
+  ]
+}

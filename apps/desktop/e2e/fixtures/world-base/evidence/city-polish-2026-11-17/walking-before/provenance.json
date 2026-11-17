@@ -1,0 +1,124 @@
+{
+  "sourceCommit": "76a000dbded2ed581f41eae5446b37137a1aafe4",
+  "handoffCommit": "053f5c0a6c29529dda94e1399ff560f6643be5d2",
+  "note": "Only explicit diagnostic files copied. Isolated Electron runtime profiles are excluded. No fixture or branch source was modified.",
+  "files": [
+    {
+      "file": "v1/walking-profile-report.json",
+      "bytes": 1376115,
+      "sha256": "8e9828a74768e06dadb65aab3d2b54c1b8082c54cd68bc2399304b3627fe9aad"
+    },
+    {
+      "file": "v1/run-config.json",
+      "bytes": 1429,
+      "sha256": "aaaec98f7493ac38986e14914a4b8d90fbff7dff8e7846896671194ad2da1d48"
+    },
+    {
+      "file": "v1/source-manifest.json",
+      "bytes": 23653,
+      "sha256": "d09f4d1daed7765eab0003a087b0c82f9070ed205425f1b6c598c0419de05197"
+    },
+    {
+      "file": "v1/frames-third-A1.json",
+      "bytes": 49976,
+      "sha256": "06688b1fc2bcb423477d08a108626e5cc32d3d577c396843f293523783062be9"
+    },
+    {
+      "file": "v1/frames-third-B.json",
+      "bytes": 48999,
+      "sha256": "c7be068115975d93a29eaee449ae51275b6c1d50afa335643503818582d3b7a2"
+    },
+    {
+      "file": "v1/frames-third-A2.json",
+      "bytes": 32096,
+      "sha256": "0a81d52c603e2ac63382c6d09a045c90cde7887b1f70b902b0a4b3f20296dda7"
+    },
+    {
+      "file": "v1/frames-first-A1.json",
+      "bytes": 40187,
+      "sha256": "55c581dcd9b3fe4f18842bbae636c88e0f176d58f763140340bab872610311dc"
+    },
+    {
+      "file": "v1/frames-first-B.json",
+      "bytes": 48878,
+      "sha256": "ca6106d232354b64cefdabdf93ed18af86d1b5efbe3ab4a4d0343fd903be9521"
+    },
+    {
+      "file": "v1/frames-first-A2.json",
+      "bytes": 26150,
+      "sha256": "f3faabb330469e9dadb01ef02f5527513a0bb6556362af74c9658a03a6c3b22c"
+    },
+    {
+      "file": "v1/driver.cjs",
+      "bytes": 22238,
+      "sha256": "d7ab2ff39f4f6a6daab43a29cd4db0b22bac993e8a14a5b241341aeec2ea515d"
+    },
+    {
+      "file": "v2/walking-profile-report.json",
+      "bytes": 1376660,
+      "sha256": "a6dc8fc701b24b0ac120d5301d7a452807285ff92ac0ee221bd7c9aa4f1301b8"
+    },
+    {
+      "file": "v2/run-config.json",
+      "bytes": 1429,
+      "sha256": "27d7c063b5cb98b48d2bb27ef6bf035041aff1d314b39f4961fbd39ad18447c0"
+    },
+    {
+      "file": "v2/source-manifest.json",
+      "bytes": 23653,
+      "sha256": "d09f4d1daed7765eab0003a087b0c82f9070ed205425f1b6c598c0419de05197"
+    },
+    {
+      "file": "v2/frames-third-A1.json",
+      "bytes": 33760,
+      "sha256": "818a358774b73b24cb5879b3ab394b45ef21f4e34123d23e45d511ef384fb662"
+    },
+    {
+      "file": "v2/frames-third-B.json",
+      "bytes": 48247,
+      "sha256": "105eed546f36574f3469e0ba5e3c5efc8b6905da64fa351f33df6a00bae0638b"
+    },
+    {
+      "file": "v2/frames-third-A2.json",
+      "bytes": 49326,
+      "sha256": "e2e7a03b6c140de407a3a60335fa8051da13d2003c2f31bd90ee87eff39be223"
+    },
+    {
+      "file": "v2/frames-first-A1.json",
+      "bytes": 48641,
+      "sha256": "c478e45a89b77dae4a835771ec840ab793560064639d469a82b7c13088ad6739"
+    },
+    {
+      "file": "v2/frames-first-B.json",
+      "bytes": 48705,
+      "sha256": "fcf1e5d445153ef3d60d938b0be53c4d3dcda8ee4ee583353c667de9e77a2a52"
+    },
+    {
+      "file": "v2/frames-first-A2.json",
+      "bytes": 48866,
+      "sha256": "71ef25a7a6cedc412e8e05ac3f7616d2eca5e72ed51c6ec01d29acf738c16712"
+    },
+    {
+      "file": "v2/driver.cjs",
+      "bytes": 22407,
+      "sha256": "3ad84b8afe4bdb8490bf9c8a6e1c95ac8d45a06597a766ad716da3836559c4dc"
+    },
+    {
+      "file": "v1/walking-trace.json.gz",
+      "bytes": 3238257,
+      "sha256": "8a15b44c5246f146e57ca895b0d5298260d76174825ac1a1c13bdcf806fc06e3",
+      "originalBytes": 42707057,
+      "originalSha256": "4b4a068ea8777a58f01a4530aeac78ff2aa481ac95e5b859365ae0653c0430d6"
+    },
+    {
+      "file": "x51-walking-trace-analysis.json",
+      "bytes": 38867,
+      "sha256": "3f69622f62357505aee8628ac8d878a93a780521997722bafd79b08cc4f0de45"
+    },
+    {
+      "file": "x51-walking-profile-v1-v2-comparison.json",
+      "bytes": 24457,
+      "sha256": "7f3ffc390688c51a9e684076e5bb3ed74d9daa6972c86b3d08e8ca7974bc0c7c"
+    }
+  ]
+}

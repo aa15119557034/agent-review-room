@@ -1,0 +1,37 @@
+{
+  "fixture": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base",
+  "output": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\walking-profile-76a-v2",
+  "expectedCommit": "76a000dbded2ed581f41eae5446b37137a1aafe4",
+  "head": "053f5c0a6c29529dda94e1399ff560f6643be5d2",
+  "startedAt": "2026-11-17T01:33:59.001Z",
+  "timeoutMs": 180000,
+  "warmupMs": 1500,
+  "sampleMs": 3000,
+  "referenceFile": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-city-v4\\render-report.json",
+  "referenceSha256": "b8cd9a2a4f6a24bffdcb1726d0993fe007acb90db83599f8afce79d6c815ee35",
+  "routes": [
+    {
+      "mode": "third",
+      "feet": [
+        281.6,
+        8.812,
+        934
+      ],
+      "yawDegrees": 4,
+      "pitchDegrees": -8
+    },
+    {
+      "mode": "first",
+      "feet": [
+        280.9185263645234,
+        8.539125243336416,
+        924.2544729763006
+      ],
+      "yawDegrees": 4,
+      "pitchDegrees": -8
+    }
+  ],
+  "scriptSha256": "3ad84b8afe4bdb8490bf9c8a6e1c95ac8d45a06597a766ad716da3836559c4dc",
+  "baselineSha256": "39bd75c2984b8fed1b655130789bcd4cb524aab257c2fbd5f55bc8916e0c5cdf",
+  "runtime": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\walking-profile-76a-v2\\runtime-yoJ6ZK"
+}

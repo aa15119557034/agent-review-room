@@ -1,0 +1,747 @@
+{
+  "purpose": "Read-only comparison of completed v1 and v2 walking profiles; original drivers and evidence unchanged.",
+  "method": "Read final reports and compare source-manifest files; copy per-case metrics without filtering frames, resampling, retries or rewriting evidence. A1/A2 city visible; B city hidden. No averaging of A1/A2 to hide their spread.",
+  "inputs": [
+    {
+      "version": "v1",
+      "reportFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-76a-v1/walking-profile-report.json",
+      "sha256": "8e9828a74768e06dadb65aab3d2b54c1b8082c54cd68bc2399304b3627fe9aad",
+      "expectedCommit": "76a000dbded2ed581f41eae5446b37137a1aafe4",
+      "head": "053f5c0a6c29529dda94e1399ff560f6643be5d2",
+      "traceEnabled": true,
+      "profileComplete": true,
+      "sourceUnchanged": true,
+      "driverUnchanged": true,
+      "transportClean": false,
+      "ok": false,
+      "networkFailures": [
+        {
+          "requestId": "56504.112",
+          "stage": "loading-scene",
+          "errorText": "net::ERR_ABORTED"
+        },
+        {
+          "requestId": "56504.233",
+          "stage": "loading-scene",
+          "errorText": "net::ERR_ABORTED"
+        },
+        {
+          "requestId": "56504.239",
+          "stage": "loading-scene",
+          "errorText": "net::ERR_ABORTED"
+        },
+        {
+          "requestId": "56504.276",
+          "stage": "loading-scene",
+          "errorText": "net::ERR_ABORTED"
+        }
+      ],
+      "cases": [
+        {
+          "label": "third-A1",
+          "cityVisible": true,
+          "summary": {
+            "frameCount": 195,
+            "durationMs": 3000,
+            "fps": 65,
+            "frameMs": {
+              "mean": 15.384615384615385,
+              "p95": 15.5,
+              "max": 15.5
+            },
+            "framesOver22Ms": 0,
+            "draws": {
+              "mean": 1558.3487179487179,
+              "p95": 1565,
+              "max": 1565
+            },
+            "triangles": {
+              "mean": 9167856.287179487,
+              "p95": 9216850,
+              "max": 9232584
+            },
+            "cpu": {
+              "station": {
+                "mean": 0.3184615367498153,
+                "p95": 0.5,
+                "max": 0.7000000476837158,
+                "totalCalls": 195
+              },
+              "walker": {
+                "mean": 0.10769231502826397,
+                "p95": 0.20000004768371582,
+                "max": 0.2999999523162842,
+                "totalCalls": 195
+              },
+              "island": {
+                "mean": 0.16461537312238644,
+                "p95": 0.2999999523162842,
+                "max": 0.5,
+                "totalCalls": 195
+              },
+              "render": {
+                "mean": 12.326153854223397,
+                "p95": 13.100000143051147,
+                "max": 13.799999952316284,
+                "totalCalls": 195
+              }
+            }
+          },
+          "horizontalDistance": 9.085766801464986,
+          "routeValid": true
+        },
+        {
+          "label": "third-B",
+          "cityVisible": false,
+          "summary": {
+            "frameCount": 193,
+            "durationMs": 3000,
+            "fps": 64.33333333333333,
+            "frameMs": {
+              "mean": 15.544041450777202,
+              "p95": 15.5,
+              "max": 30.80000000000291
+            },
+            "framesOver22Ms": 2,
+            "draws": {
+              "mean": 1481.1917098445597,
+              "p95": 1488,
+              "max": 1488
+            },
+            "triangles": {
+              "mean": 8344530.046632124,
+              "p95": 8393303,
+              "max": 8409037
+            },
+            "cpu": {
+              "station": {
+                "mean": 0.3000000066707789,
+                "p95": 0.40000009536743164,
+                "max": 0.5999999046325684,
+                "totalCalls": 193
+              },
+              "walker": {
+                "mean": 0.07461140069319176,
+                "p95": 0.20000004768371582,
+                "max": 0.7000000476837158,
+                "totalCalls": 193
+              },
+              "island": {
+                "mean": 0.16580309769032534,
+                "p95": 0.2999999523162842,
+                "max": 0.39999985694885254,
+                "totalCalls": 193
+              },
+              "render": {
+                "mean": 13.80000000543545,
+                "p95": 16.90000009536743,
+                "max": 18.200000047683716,
+                "totalCalls": 193
+              }
+            }
+          },
+          "horizontalDistance": 9.133378295462046,
+          "routeValid": true
+        },
+        {
+          "label": "third-A2",
+          "cityVisible": true,
+          "summary": {
+            "frameCount": 127,
+            "durationMs": 3015.4000000000015,
+            "fps": 42.11713205544868,
+            "frameMs": {
+              "mean": 23.743307086614184,
+              "p95": 46.099999999998545,
+              "max": 46.30000000000291
+            },
+            "framesOver22Ms": 60,
+            "draws": {
+              "mean": 1559.9212598425197,
+              "p95": 1567,
+              "max": 1567
+            },
+            "triangles": {
+              "mean": 9162584.94488189,
+              "p95": 9216778,
+              "max": 9232792
+            },
+            "cpu": {
+              "station": {
+                "mean": 0.37007873077092207,
+                "p95": 0.5999999046325684,
+                "max": 0.7999999523162842,
+                "totalCalls": 127
+              },
+              "walker": {
+                "mean": 0.08188976640776387,
+                "p95": 0.20000004768371582,
+                "max": 0.20000004768371582,
+                "totalCalls": 127
+              },
+              "island": {
+                "mean": 0.18740158381424551,
+                "p95": 0.2999999523162842,
+                "max": 0.6000001430511475,
+                "totalCalls": 127
+              },
+              "render": {
+                "mean": 22.19370078665065,
+                "p95": 33.700000047683716,
+                "max": 42.39999985694885,
+                "totalCalls": 127
+              }
+            }
+          },
+          "horizontalDistance": 9.182757979269946,
+          "routeValid": true
+        },
+        {
+          "label": "first-A1",
+          "cityVisible": true,
+          "summary": {
+            "frameCount": 160,
+            "durationMs": 3000,
+            "fps": 53.333333333333336,
+            "frameMs": {
+              "mean": 18.75,
+              "p95": 30.80000000000291,
+              "max": 46.19999999999709
+            },
+            "framesOver22Ms": 33,
+            "draws": {
+              "mean": 1409.04375,
+              "p95": 1472,
+              "max": 1483
+            },
+            "triangles": {
+              "mean": 9098470.60625,
+              "p95": 9181884,
+              "max": 9201996
+            },
+            "cpu": {
+              "station": {
+                "mean": 0.3462499901652336,
+                "p95": 0.5999999046325684,
+                "max": 1.1000001430511475,
+                "totalCalls": 160
+              },
+              "walker": {
+                "mean": 0.05062500387430191,
+                "p95": 0.10000014305114746,
+                "max": 0.20000004768371582,
+                "totalCalls": 160
+              },
+              "island": {
+                "mean": 0.19312500208616257,
+                "p95": 0.3000001907348633,
+                "max": 0.7000000476837158,
+                "totalCalls": 160
+              },
+              "render": {
+                "mean": 17.02124999165535,
+                "p95": 28.90000009536743,
+                "max": 33.80000019073486,
+                "totalCalls": 160
+              }
+            }
+          },
+          "horizontalDistance": 9.278383601924896,
+          "routeValid": true
+        },
+        {
+          "label": "first-B",
+          "cityVisible": false,
+          "summary": {
+            "frameCount": 195,
+            "durationMs": 3000,
+            "fps": 65,
+            "frameMs": {
+              "mean": 15.384615384615385,
+              "p95": 15.5,
+              "max": 15.599999999998545
+            },
+            "framesOver22Ms": 0,
+            "draws": {
+              "mean": 1338.7846153846153,
+              "p95": 1402,
+              "max": 1407
+            },
+            "triangles": {
+              "mean": 8278237.77948718,
+              "p95": 8367601,
+              "max": 8375233
+            },
+            "cpu": {
+              "station": {
+                "mean": 0.3123076927967561,
+                "p95": 0.40000009536743164,
+                "max": 0.6000001430511475,
+                "totalCalls": 195
+              },
+              "walker": {
+                "mean": 0.05435896897927309,
+                "p95": 0.10000014305114746,
+                "max": 0.20000004768371582,
+                "totalCalls": 195
+              },
+              "island": {
+                "mean": 0.16000000758048816,
+                "p95": 0.2999999523162842,
+                "max": 0.3000001907348633,
+                "totalCalls": 195
+              },
+              "render": {
+                "mean": 13.052820515021299,
+                "p95": 14.300000190734863,
+                "max": 16.90000009536743,
+                "totalCalls": 195
+              }
+            }
+          },
+          "horizontalDistance": 9.133192790915858,
+          "routeValid": true
+        },
+        {
+          "label": "first-A2",
+          "cityVisible": true,
+          "summary": {
+            "frameCount": 106,
+            "durationMs": 3015.4000000000015,
+            "fps": 35.15288187305165,
+            "frameMs": {
+              "mean": 28.44716981132077,
+              "p95": 30.900000000001455,
+              "max": 46.299999999995634
+            },
+            "framesOver22Ms": 87,
+            "draws": {
+              "mean": 1416.9716981132076,
+              "p95": 1478,
+              "max": 1480
+            },
+            "triangles": {
+              "mean": 9105295.603773585,
+              "p95": 9201180,
+              "max": 9208796
+            },
+            "cpu": {
+              "station": {
+                "mean": 0.5075471671122425,
+                "p95": 0.7999999523162842,
+                "max": 1.2000000476837158,
+                "totalCalls": 106
+              },
+              "walker": {
+                "mean": 0.06981131940517786,
+                "p95": 0.20000004768371582,
+                "max": 0.20000004768371582,
+                "totalCalls": 106
+              },
+              "island": {
+                "mean": 0.2330188683743747,
+                "p95": 0.40000009536743164,
+                "max": 1.7000000476837158,
+                "totalCalls": 106
+              },
+              "render": {
+                "mean": 26.551886783455902,
+                "p95": 31.100000143051147,
+                "max": 35.09999990463257,
+                "totalCalls": 106
+              }
+            }
+          },
+          "horizontalDistance": 9.188143997797988,
+          "routeValid": true
+        }
+      ]
+    },
+    {
+      "version": "v2",
+      "reportFile": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/walking-profile-76a-v2/walking-profile-report.json",
+      "sha256": "a6dc8fc701b24b0ac120d5301d7a452807285ff92ac0ee221bd7c9aa4f1301b8",
+      "expectedCommit": "76a000dbded2ed581f41eae5446b37137a1aafe4",
+      "head": "053f5c0a6c29529dda94e1399ff560f6643be5d2",
+      "traceEnabled": false,
+      "profileComplete": true,
+      "sourceUnchanged": true,
+      "driverUnchanged": true,
+      "transportClean": false,
+      "ok": false,
+      "networkFailures": [
+        {
+          "requestId": "61468.114",
+          "stage": "loading-scene",
+          "errorText": "net::ERR_ABORTED"
+        },
+        {
+          "requestId": "61468.233",
+          "stage": "loading-scene",
+          "errorText": "net::ERR_ABORTED"
+        },
+        {
+          "requestId": "61468.239",
+          "stage": "loading-scene",
+          "errorText": "net::ERR_ABORTED"
+        },
+        {
+          "requestId": "61468.259",
+          "stage": "loading-scene",
+          "errorText": "net::ERR_ABORTED"
+        },
+        {
+          "requestId": "61468.276",
+          "stage": "loading-scene",
+          "errorText": "net::ERR_ABORTED"
+        }
+      ],
+      "cases": [
+        {
+          "label": "third-A1",
+          "cityVisible": true,
+          "summary": {
+            "frameCount": 132,
+            "durationMs": 3015.199999999997,
+            "fps": 43.778190501459314,
+            "frameMs": {
+              "mean": 22.84242424242422,
+              "p95": 30.80000000000291,
+              "max": 46.200000000004366
+            },
+            "framesOver22Ms": 63,
+            "draws": {
+              "mean": 1556.0227272727273,
+              "p95": 1565,
+              "max": 1565
+            },
+            "triangles": {
+              "mean": 9170931.969696969,
+              "p95": 9216850,
+              "max": 9232584
+            },
+            "cpu": {
+              "station": {
+                "mean": 0.4553030386115565,
+                "p95": 0.6000001430511475,
+                "max": 0.8999998569488525,
+                "totalCalls": 132
+              },
+              "walker": {
+                "mean": 0.14848486040577744,
+                "p95": 0.2999999523162842,
+                "max": 0.3000001907348633,
+                "totalCalls": 132
+              },
+              "island": {
+                "mean": 0.24015150648174863,
+                "p95": 0.3000001907348633,
+                "max": 0.5,
+                "totalCalls": 132
+              },
+              "render": {
+                "mean": 21.026515155127555,
+                "p95": 28.700000047683716,
+                "max": 32.200000047683716,
+                "totalCalls": 132
+              }
+            }
+          },
+          "horizontalDistance": 9.267688393917236,
+          "routeValid": true
+        },
+        {
+          "label": "third-B",
+          "cityVisible": false,
+          "summary": {
+            "frameCount": 188,
+            "durationMs": 3015.300000000003,
+            "fps": 62.34868835605075,
+            "frameMs": {
+              "mean": 16.038829787234057,
+              "p95": 15.599999999998545,
+              "max": 30.900000000001455
+            },
+            "framesOver22Ms": 8,
+            "draws": {
+              "mean": 1480.8936170212767,
+              "p95": 1488,
+              "max": 1488
+            },
+            "triangles": {
+              "mean": 8344617.308510638,
+              "p95": 8393303,
+              "max": 8409037
+            },
+            "cpu": {
+              "station": {
+                "mean": 0.3196808442156366,
+                "p95": 0.5,
+                "max": 0.6000001430511475,
+                "totalCalls": 188
+              },
+              "walker": {
+                "mean": 0.09946807775091618,
+                "p95": 0.20000004768371582,
+                "max": 0.3000001907348633,
+                "totalCalls": 188
+              },
+              "island": {
+                "mean": 0.18138298836160213,
+                "p95": 0.2999999523162842,
+                "max": 0.40000009536743164,
+                "totalCalls": 188
+              },
+              "render": {
+                "mean": 14.178723406284414,
+                "p95": 17.799999952316284,
+                "max": 21.700000047683716,
+                "totalCalls": 188
+              }
+            }
+          },
+          "horizontalDistance": 9.180702180799956,
+          "routeValid": true
+        },
+        {
+          "label": "third-A2",
+          "cityVisible": true,
+          "summary": {
+            "frameCount": 195,
+            "durationMs": 3000,
+            "fps": 65,
+            "frameMs": {
+              "mean": 15.384615384615385,
+              "p95": 15.5,
+              "max": 15.69999999999709
+            },
+            "framesOver22Ms": 0,
+            "draws": {
+              "mean": 1558.3487179487179,
+              "p95": 1564,
+              "max": 1565
+            },
+            "triangles": {
+              "mean": 9167992.553846154,
+              "p95": 9217034,
+              "max": 9232536
+            },
+            "cpu": {
+              "station": {
+                "mean": 0.29589743980994593,
+                "p95": 0.40000009536743164,
+                "max": 0.6000001430511475,
+                "totalCalls": 195
+              },
+              "walker": {
+                "mean": 0.06871795042967185,
+                "p95": 0.20000004768371582,
+                "max": 0.20000004768371582,
+                "totalCalls": 195
+              },
+              "island": {
+                "mean": 0.15692306420741936,
+                "p95": 0.20000004768371582,
+                "max": 0.3000001907348633,
+                "totalCalls": 195
+              },
+              "render": {
+                "mean": 12.738461543352177,
+                "p95": 14.099999904632568,
+                "max": 17.100000143051147,
+                "totalCalls": 195
+              }
+            }
+          },
+          "horizontalDistance": 9.132849120647546,
+          "routeValid": true
+        },
+        {
+          "label": "first-A1",
+          "cityVisible": true,
+          "summary": {
+            "frameCount": 195,
+            "durationMs": 3000.0999999999985,
+            "fps": 64.99783340555318,
+            "frameMs": {
+              "mean": 15.385128205128197,
+              "p95": 15.5,
+              "max": 15.599999999998545
+            },
+            "framesOver22Ms": 0,
+            "draws": {
+              "mean": 1418.6051282051283,
+              "p95": 1476,
+              "max": 1485
+            },
+            "triangles": {
+              "mean": 9113252.020512821,
+              "p95": 9201212,
+              "max": 9209100
+            },
+            "cpu": {
+              "station": {
+                "mean": 0.27128204932579625,
+                "p95": 0.40000009536743164,
+                "max": 0.5,
+                "totalCalls": 195
+              },
+              "walker": {
+                "mean": 0.04769230989309458,
+                "p95": 0.10000014305114746,
+                "max": 0.20000004768371582,
+                "totalCalls": 195
+              },
+              "island": {
+                "mean": 0.15179487252846743,
+                "p95": 0.20000004768371582,
+                "max": 0.40000009536743164,
+                "totalCalls": 195
+              },
+              "render": {
+                "mean": 10.543076929679284,
+                "p95": 11.800000190734863,
+                "max": 12.900000095367432,
+                "totalCalls": 195
+              }
+            }
+          },
+          "horizontalDistance": 9.08506400304733,
+          "routeValid": true
+        },
+        {
+          "label": "first-B",
+          "cityVisible": false,
+          "summary": {
+            "frameCount": 196,
+            "durationMs": 3015.5,
+            "fps": 64.99751285027358,
+            "frameMs": {
+              "mean": 15.385204081632653,
+              "p95": 15.5,
+              "max": 15.599999999998545
+            },
+            "framesOver22Ms": 0,
+            "draws": {
+              "mean": 1339.3367346938776,
+              "p95": 1398,
+              "max": 1403
+            },
+            "triangles": {
+              "mean": 8278746.6122448975,
+              "p95": 8367345,
+              "max": 8374977
+            },
+            "cpu": {
+              "station": {
+                "mean": 0.26377551288020856,
+                "p95": 0.39999985694885254,
+                "max": 0.40000009536743164,
+                "totalCalls": 196
+              },
+              "walker": {
+                "mean": 0.04642858067337347,
+                "p95": 0.10000014305114746,
+                "max": 0.20000004768371582,
+                "totalCalls": 196
+              },
+              "island": {
+                "mean": 0.14540815475035687,
+                "p95": 0.20000004768371582,
+                "max": 0.2999999523162842,
+                "totalCalls": 196
+              },
+              "render": {
+                "mean": 10.02244897521272,
+                "p95": 10.899999856948853,
+                "max": 15,
+                "totalCalls": 196
+              }
+            }
+          },
+          "horizontalDistance": 9.13350084666556,
+          "routeValid": true
+        },
+        {
+          "label": "first-A2",
+          "cityVisible": true,
+          "summary": {
+            "frameCount": 195,
+            "durationMs": 3000.0999999999985,
+            "fps": 64.99783340555318,
+            "frameMs": {
+              "mean": 15.385128205128197,
+              "p95": 15.5,
+              "max": 15.60000000000582
+            },
+            "framesOver22Ms": 0,
+            "draws": {
+              "mean": 1415.9128205128204,
+              "p95": 1476,
+              "max": 1481
+            },
+            "triangles": {
+              "mean": 9113153.682051282,
+              "p95": 9201212,
+              "max": 9208844
+            },
+            "cpu": {
+              "station": {
+                "mean": 0.2907692359044002,
+                "p95": 0.40000009536743164,
+                "max": 0.5,
+                "totalCalls": 195
+              },
+              "walker": {
+                "mean": 0.052307694997542946,
+                "p95": 0.10000014305114746,
+                "max": 0.20000004768371582,
+                "totalCalls": 195
+              },
+              "island": {
+                "mean": 0.1492307614057492,
+                "p95": 0.2999999523162842,
+                "max": 0.2999999523162842,
+                "totalCalls": 195
+              },
+              "render": {
+                "mean": 11.722564107943803,
+                "p95": 13.399999856948853,
+                "max": 16,
+                "totalCalls": 195
+              }
+            }
+          },
+          "horizontalDistance": 9.086111885123595,
+          "routeValid": true
+        }
+      ]
+    }
+  ],
+  "comparability": {
+    "all198SourceHashesEqual": true,
+    "sameRoutes": true,
+    "sameReferenceHash": true,
+    "sameBaselineHelperHash": true
+  },
+  "conclusions": [
+    {
+      "title": "Disabling Tracing did not remove all slow segments or establish Tracing as the sole cause.",
+      "detail": "v1 third A1/B/A2 FPS=65/64.3333/42.1171; v2=43.7782/62.3487/65. The slow visible segment moved from A2 to A1. v2 first A1/B/A2 all reach about 64.998 FPS, versus v1 53.3333/65/35.1529. These separate sequential runs retain order/run drift, so neither a stable city FPS cost nor a causal profiler penalty is established."
+    },
+    {
+      "title": "The slow no-trace segment still concentrates measured wall time in rendering.",
+      "detail": "v2 third-A1 render mean=21.0265ms, versus B=14.1787ms and A2=12.7385ms; station/walker/island means all stay below 0.46ms individually. v2 first render means=10.5431/10.0224/11.7226ms even though FPS is nearly identical. Roughly 65 FPS is a cadence ceiling observed here, not proof of equal workload or unlimited headroom. These wrappers measure CPU-side wall duration/submission, not completed GPU time."
+    },
+    {
+      "title": "The comparison uses identical recorded scene inputs but remains a transport-failing diagnostic, not a new all-green baseline.",
+      "detail": "All 198 manifest file hashes match across v1/v2; expected source commit, route config, 1500ms warmup, 3000ms sample, reference hash and baseline helper hash match. Both report profileComplete/sourceUnchanged/driverUnchanged=true and transportClean/ok=false. v1 has 4 and v2 has 5 ERR_ABORTED events, all recorded during loading-scene. No further rerun is proposed."
+    }
+  ],
+  "limitations": [
+    "Only one completed process per configuration; not randomized or interleaved across processes.",
+    "Animation and runtime caches/history continue; start routes match but sampled durations and traveled distances differ slightly.",
+    "CPU wrappers and all-pass draw counting remain enabled in v2.",
+    "FPS near 65 limits inference from FPS equality; no GPU timer or thermal/power telemetry."
+  ]
+}

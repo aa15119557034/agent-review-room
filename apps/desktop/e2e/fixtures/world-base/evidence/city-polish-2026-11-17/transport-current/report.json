@@ -1,0 +1,4987 @@
+{
+  "config": {
+    "output": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\asset-transport-city-cleanup",
+    "runtime": "D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\asset-transport-city-cleanup\\runtime-2vUcgw",
+    "startedAt": "2026-11-17T01:56:46.857Z",
+    "timeoutMs": 60000,
+    "terminalWaitMs": 3000,
+    "head": "4f504b271eba8e20d67e6a6c07affbf3b36dcf51",
+    "targets": [
+      {
+        "name": "menhir",
+        "url": "/assets/models/menhir.glb",
+        "file": ".local/petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e/assets/models/menhir.glb",
+        "bytes": 620588,
+        "sha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c"
+      },
+      {
+        "name": "large-bin",
+        "url": "/city-assets/downtown/Building_Large_2.bin",
+        "file": ".local/city/downtown/Building_Large_2.bin",
+        "bytes": 3345228,
+        "sha256": "e25636464da7b96a346f89314e498099ce33d3b0e9b1f8d9cba3eee94b63fac3"
+      },
+      {
+        "name": "medium-bin",
+        "url": "/city-assets/downtown/Building_Medium_2_001.bin",
+        "file": ".local/city/downtown/Building_Medium_2_001.bin",
+        "bytes": 2443288,
+        "sha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d"
+      }
+    ],
+    "scripts": {
+      "diagnose-asset-transport.cjs": "401f999a4d2dcf72ce271fc71bcbf9cb4c65ff6018d03feabaaf9f6811ff8d9a",
+      "baseline.cjs": "39bd75c2984b8fed1b655130789bcd4cb524aab257c2fbd5f55bc8916e0c5cdf",
+      "../upstream/petalwake/vendor/three/build/three.core.js": "613e370f76638fdef83926642bf256dc9615684922de1ce1f63a8583e5d78578"
+    }
+  },
+  "ok": false,
+  "bytesIntegrity": true,
+  "transportClean": false,
+  "cases": [
+    {
+      "id": "menhir-native-1",
+      "method": "native",
+      "url": "/assets/models/menhir.glb?transportCase=menhir-native-1",
+      "hostStartedWallTime": 1794880607.354,
+      "expectedBytes": 620588,
+      "expectedSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "started": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 50.40000009536743
+      },
+      "status": 200,
+      "fulfilled": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 59.200000047683716
+      },
+      "actualBytes": 620588,
+      "actualSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "hashed": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 60.299999952316284
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "48024.3"
+      ],
+      "transportClean": true
+    },
+    {
+      "id": "menhir-native-2",
+      "method": "native",
+      "url": "/assets/models/menhir.glb?transportCase=menhir-native-2",
+      "hostStartedWallTime": 1794880607.373,
+      "expectedBytes": 620588,
+      "expectedSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "started": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 69.60000014305115
+      },
+      "status": 200,
+      "fulfilled": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 77
+      },
+      "actualBytes": 620588,
+      "actualSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "hashed": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 77.40000009536743
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "48024.4"
+      ],
+      "transportClean": true
+    },
+    {
+      "id": "menhir-native-3",
+      "method": "native",
+      "url": "/assets/models/menhir.glb?transportCase=menhir-native-3",
+      "hostStartedWallTime": 1794880607.383,
+      "expectedBytes": 620588,
+      "expectedSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "started": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 87.20000004768372
+      },
+      "status": 200,
+      "fulfilled": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 93.5
+      },
+      "actualBytes": 620588,
+      "actualSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "hashed": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 94.10000014305115
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "48024.5"
+      ],
+      "transportClean": true
+    },
+    {
+      "id": "menhir-fileloader-1",
+      "method": "fileloader",
+      "url": "/assets/models/menhir.glb?transportCase=menhir-fileloader-1",
+      "hostStartedWallTime": 1794880607.4,
+      "expectedBytes": 620588,
+      "expectedSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "started": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 105.10000014305115
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 115.29999995231628
+      },
+      "actualBytes": 620588,
+      "actualSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "hashed": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 115.90000009536743
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "48024.6"
+      ],
+      "transportClean": true
+    },
+    {
+      "id": "menhir-fileloader-2",
+      "method": "fileloader",
+      "url": "/assets/models/menhir.glb?transportCase=menhir-fileloader-2",
+      "hostStartedWallTime": 1794880607.425,
+      "expectedBytes": 620588,
+      "expectedSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "started": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 128.29999995231628
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 135.60000014305115
+      },
+      "actualBytes": 620588,
+      "actualSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "hashed": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 136.20000004768372
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "48024.7"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "menhir-fileloader-3",
+      "method": "fileloader",
+      "url": "/assets/models/menhir.glb?transportCase=menhir-fileloader-3",
+      "hostStartedWallTime": 1794880607.449,
+      "expectedBytes": 620588,
+      "expectedSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "started": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 154.20000004768372
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 162
+      },
+      "actualBytes": 620588,
+      "actualSha256": "82d68e3300134f1eb851707528d09cca01d6fb5db91e597b14de15b9e7bacb6c",
+      "hashed": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 162.60000014305115
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "48024.8"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "large-bin-native-1",
+      "method": "native",
+      "url": "/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-native-1",
+      "hostStartedWallTime": 1794880607.475,
+      "expectedBytes": 3345228,
+      "expectedSha256": "e25636464da7b96a346f89314e498099ce33d3b0e9b1f8d9cba3eee94b63fac3",
+      "started": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 179
+      },
+      "status": 200,
+      "fulfilled": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 201.10000014305115
+      },
+      "actualBytes": 3345228,
+      "actualSha256": "e25636464da7b96a346f89314e498099ce33d3b0e9b1f8d9cba3eee94b63fac3",
+      "hashed": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 205.29999995231628
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "48024.9"
+      ],
+      "transportClean": true
+    },
+    {
+      "id": "large-bin-native-2",
+      "method": "native",
+      "url": "/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-native-2",
+      "hostStartedWallTime": 1794880607.512,
+      "expectedBytes": 3345228,
+      "expectedSha256": "e25636464da7b96a346f89314e498099ce33d3b0e9b1f8d9cba3eee94b63fac3",
+      "started": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 208
+      },
+      "status": 200,
+      "fulfilled": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 228
+      },
+      "actualBytes": 3345228,
+      "actualSha256": "e25636464da7b96a346f89314e498099ce33d3b0e9b1f8d9cba3eee94b63fac3",
+      "hashed": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 232.10000014305115
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "48024.10"
+      ],
+      "transportClean": true
+    },
+    {
+      "id": "large-bin-native-3",
+      "method": "native",
+      "url": "/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-native-3",
+      "hostStartedWallTime": 1794880607.538,
+      "expectedBytes": 3345228,
+      "expectedSha256": "e25636464da7b96a346f89314e498099ce33d3b0e9b1f8d9cba3eee94b63fac3",
+      "started": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 242.29999995231628
+      },
+      "status": 200,
+      "fulfilled": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 260.2999999523163
+      },
+      "actualBytes": 3345228,
+      "actualSha256": "e25636464da7b96a346f89314e498099ce33d3b0e9b1f8d9cba3eee94b63fac3",
+      "hashed": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 263.60000014305115
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "48024.11"
+      ],
+      "transportClean": true
+    },
+    {
+      "id": "large-bin-fileloader-1",
+      "method": "fileloader",
+      "url": "/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-fileloader-1",
+      "hostStartedWallTime": 1794880607.57,
+      "expectedBytes": 3345228,
+      "expectedSha256": "e25636464da7b96a346f89314e498099ce33d3b0e9b1f8d9cba3eee94b63fac3",
+      "started": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 273.60000014305115
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 289.10000014305115
+      },
+      "actualBytes": 3345228,
+      "actualSha256": "e25636464da7b96a346f89314e498099ce33d3b0e9b1f8d9cba3eee94b63fac3",
+      "hashed": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 292.40000009536743
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "48024.12"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "large-bin-fileloader-2",
+      "method": "fileloader",
+      "url": "/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-fileloader-2",
+      "hostStartedWallTime": 1794880607.599,
+      "expectedBytes": 3345228,
+      "expectedSha256": "e25636464da7b96a346f89314e498099ce33d3b0e9b1f8d9cba3eee94b63fac3",
+      "started": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 302.90000009536743
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 320.2999999523163
+      },
+      "actualBytes": 3345228,
+      "actualSha256": "e25636464da7b96a346f89314e498099ce33d3b0e9b1f8d9cba3eee94b63fac3",
+      "hashed": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 325.60000014305115
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "48024.13"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "large-bin-fileloader-3",
+      "method": "fileloader",
+      "url": "/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-fileloader-3",
+      "hostStartedWallTime": 1794880607.632,
+      "expectedBytes": 3345228,
+      "expectedSha256": "e25636464da7b96a346f89314e498099ce33d3b0e9b1f8d9cba3eee94b63fac3",
+      "started": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 335.7000000476837
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 350.7000000476837
+      },
+      "actualBytes": 3345228,
+      "actualSha256": "e25636464da7b96a346f89314e498099ce33d3b0e9b1f8d9cba3eee94b63fac3",
+      "hashed": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 354.90000009536743
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "48024.14"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "medium-bin-native-1",
+      "method": "native",
+      "url": "/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-1",
+      "hostStartedWallTime": 1794880607.661,
+      "expectedBytes": 2443288,
+      "expectedSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "started": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 365.2999999523163
+      },
+      "status": 200,
+      "fulfilled": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 378.90000009536743
+      },
+      "actualBytes": 2443288,
+      "actualSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "hashed": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 381.40000009536743
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "48024.15"
+      ],
+      "transportClean": true
+    },
+    {
+      "id": "medium-bin-native-2",
+      "method": "native",
+      "url": "/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-2",
+      "hostStartedWallTime": 1794880607.688,
+      "expectedBytes": 2443288,
+      "expectedSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "started": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 390.90000009536743
+      },
+      "status": 200,
+      "fulfilled": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 406.2000000476837
+      },
+      "actualBytes": 2443288,
+      "actualSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "hashed": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 409.10000014305115
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "48024.16"
+      ],
+      "transportClean": true
+    },
+    {
+      "id": "medium-bin-native-3",
+      "method": "native",
+      "url": "/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-3",
+      "hostStartedWallTime": 1794880607.716,
+      "expectedBytes": 2443288,
+      "expectedSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "started": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 419.10000014305115
+      },
+      "status": 200,
+      "fulfilled": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 435.7000000476837
+      },
+      "actualBytes": 2443288,
+      "actualSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "hashed": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 438.7000000476837
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "48024.17"
+      ],
+      "transportClean": true
+    },
+    {
+      "id": "medium-bin-fileloader-1",
+      "method": "fileloader",
+      "url": "/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-1",
+      "hostStartedWallTime": 1794880607.746,
+      "expectedBytes": 2443288,
+      "expectedSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "started": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 448.5
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 462.2999999523163
+      },
+      "actualBytes": 2443288,
+      "actualSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "hashed": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 464.60000014305115
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "48024.18"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "medium-bin-fileloader-2",
+      "method": "fileloader",
+      "url": "/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-2",
+      "hostStartedWallTime": 1794880607.774,
+      "expectedBytes": 2443288,
+      "expectedSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "started": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 478.2999999523163
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 491.2000000476837
+      },
+      "actualBytes": 2443288,
+      "actualSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "hashed": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 494.40000009536743
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "48024.19"
+      ],
+      "transportClean": false
+    },
+    {
+      "id": "medium-bin-fileloader-3",
+      "method": "fileloader",
+      "url": "/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-3",
+      "hostStartedWallTime": 1794880607.804,
+      "expectedBytes": 2443288,
+      "expectedSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "started": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 509
+      },
+      "fulfilled": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 522
+      },
+      "actualBytes": 2443288,
+      "actualSha256": "8a8bd4462ff5f784e0ea7fbe753b009713f4017192c9d82b467f445eae88a35d",
+      "hashed": {
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 525.4000000953674
+      },
+      "bytesIntegrity": true,
+      "requestIds": [
+        "48024.20"
+      ],
+      "transportClean": false
+    }
+  ],
+  "networkRequests": [
+    {
+      "requestId": "7A12FFBBBD5885609E6A0AB45913BD16",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "loading-document",
+          "receivedWallTime": 1794880607.305,
+          "documentURL": "http://127.0.0.1:61602/__asset_transport.html",
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasUserGesture": false,
+          "initiator": {
+            "type": "other"
+          },
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Upgrade-Insecure-Requests": "1",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36"
+            },
+            "initialPriority": "VeryHigh",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:61602/__asset_transport.html"
+          },
+          "requestId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "timestamp": 1890786.35952,
+          "type": "Document",
+          "wallTime": 1794880607.305857,
+          "documentRelativeMs": 0.2568359375
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "loading-document",
+          "receivedWallTime": 1794880607.315,
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasExtraInfo": true,
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "requestId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": false,
+            "encodedDataLength": 181,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Type": "text/html",
+              "Date": "Tue, 17 Nov 2026 01:56:47 GMT",
+              "Keep-Alive": "timeout=5",
+              "Transfer-Encoding": "chunked"
+            },
+            "mimeType": "text/html",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 61602,
+            "responseTime": 1794880607314.395,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": 3.632,
+              "connectStart": 3.283,
+              "dnsEnd": 3.283,
+              "dnsStart": 3.273,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 7.454,
+              "receiveHeadersStart": 7.37,
+              "requestTime": 1890786.3607,
+              "sendEnd": 3.865,
+              "sendStart": 3.76,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:61602/__asset_transport.html"
+          },
+          "timestamp": 1890786.369294,
+          "type": "Document",
+          "documentRelativeMs": 10.03076171875
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "loading-document",
+          "receivedWallTime": 1794880607.322,
+          "encodedDataLength": 295,
+          "requestId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "timestamp": 1890786.36864,
+          "documentRelativeMs": 9.376953125
+        }
+      ],
+      "url": "http://127.0.0.1:61602/__asset_transport.html",
+      "caseId": null,
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "loading-document",
+          "receivedWallTime": 1794880607.322,
+          "encodedDataLength": 295,
+          "requestId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "timestamp": 1890786.36864,
+          "documentRelativeMs": 9.376953125
+        }
+      ]
+    },
+    {
+      "requestId": "48024.2",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "loading-document",
+          "receivedWallTime": 1794880607.324,
+          "documentURL": "http://127.0.0.1:61602/__asset_transport.html",
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 0,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "7",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "redirectHasExtraInfo": false,
+          "renderBlockingBehavior": "NonBlocking",
+          "request": {
+            "headers": {
+              "Origin": "http://127.0.0.1:61602",
+              "Referer": "",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+          },
+          "requestId": "48024.2",
+          "timestamp": 1890786.37882,
+          "type": "Script",
+          "wallTime": 1794880607.32519,
+          "documentRelativeMs": 19.556884765625
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "loading-document",
+          "receivedWallTime": 1794880607.351,
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasExtraInfo": true,
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "requestId": "48024.2",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 184,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "1474799",
+              "Content-Type": "text/javascript",
+              "Date": "Tue, 17 Nov 2026 01:56:47 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "text/javascript",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 61602,
+            "responseTime": 1794880607334.606,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 6.041,
+              "receiveHeadersStart": 6.001,
+              "requestTime": 1890786.382281,
+              "sendEnd": 0.396,
+              "sendStart": 0.279,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+          },
+          "timestamp": 1890786.404943,
+          "type": "Script",
+          "documentRelativeMs": 45.679931640625
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "loading-document",
+          "receivedWallTime": 1794880607.351,
+          "encodedDataLength": 1474983,
+          "requestId": "48024.2",
+          "timestamp": 1890786.392504,
+          "documentRelativeMs": 33.240966796875
+        }
+      ],
+      "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js",
+      "caseId": null,
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "loading-document",
+          "receivedWallTime": 1794880607.351,
+          "encodedDataLength": 1474983,
+          "requestId": "48024.2",
+          "timestamp": 1890786.392504,
+          "documentRelativeMs": 33.240966796875
+        }
+      ]
+    },
+    {
+      "requestId": "48024.3",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "menhir-native-1",
+          "receivedWallTime": 1794880607.356,
+          "documentURL": "http://127.0.0.1:61602/__asset_transport.html",
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 31,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 45,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "10",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:61602/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-native-1"
+          },
+          "requestId": "48024.3",
+          "timestamp": 1890786.410358,
+          "type": "Fetch",
+          "wallTime": 1794880607.356734,
+          "documentRelativeMs": 51.0947265625
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "menhir-native-1",
+          "receivedWallTime": 1794880607.361,
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasExtraInfo": true,
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "requestId": "48024.3",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 185,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "620588",
+              "Content-Type": "model/gltf-binary",
+              "Date": "Tue, 17 Nov 2026 01:56:47 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "model/gltf-binary",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 61602,
+            "responseTime": 1794880607360.968,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 3.953,
+              "receiveHeadersStart": 3.914,
+              "requestTime": 1890786.410729,
+              "sendEnd": 0.426,
+              "sendStart": 0.303,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-native-1"
+          },
+          "timestamp": 1890786.415293,
+          "type": "Fetch",
+          "documentRelativeMs": 56.02978515625
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "menhir-native-1",
+          "receivedWallTime": 1794880607.364,
+          "encodedDataLength": 620773,
+          "requestId": "48024.3",
+          "timestamp": 1890786.41673,
+          "documentRelativeMs": 57.466796875
+        }
+      ],
+      "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-native-1",
+      "caseId": "menhir-native-1",
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "menhir-native-1",
+          "receivedWallTime": 1794880607.364,
+          "encodedDataLength": 620773,
+          "requestId": "48024.3",
+          "timestamp": 1890786.41673,
+          "documentRelativeMs": 57.466796875
+        }
+      ]
+    },
+    {
+      "requestId": "48024.4",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "menhir-native-2",
+          "receivedWallTime": 1794880607.375,
+          "documentURL": "http://127.0.0.1:61602/__asset_transport.html",
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 31,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 45,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "12",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:61602/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-native-2"
+          },
+          "requestId": "48024.4",
+          "timestamp": 1890786.429043,
+          "type": "Fetch",
+          "wallTime": 1794880607.375415,
+          "documentRelativeMs": 69.780029296875
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "menhir-native-2",
+          "receivedWallTime": 1794880607.379,
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasExtraInfo": true,
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "requestId": "48024.4",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 185,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "620588",
+              "Content-Type": "model/gltf-binary",
+              "Date": "Tue, 17 Nov 2026 01:56:47 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "model/gltf-binary",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 61602,
+            "responseTime": 1794880607379.291,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 3.556,
+              "receiveHeadersStart": 3.509,
+              "requestTime": 1890786.429457,
+              "sendEnd": 0.358,
+              "sendStart": 0.264,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-native-2"
+          },
+          "timestamp": 1890786.433478,
+          "type": "Fetch",
+          "documentRelativeMs": 74.215087890625
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "menhir-native-2",
+          "receivedWallTime": 1794880607.381,
+          "encodedDataLength": 620773,
+          "requestId": "48024.4",
+          "timestamp": 1890786.434691,
+          "documentRelativeMs": 75.427734375
+        }
+      ],
+      "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-native-2",
+      "caseId": "menhir-native-2",
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "menhir-native-2",
+          "receivedWallTime": 1794880607.381,
+          "encodedDataLength": 620773,
+          "requestId": "48024.4",
+          "timestamp": 1890786.434691,
+          "documentRelativeMs": 75.427734375
+        }
+      ]
+    },
+    {
+      "requestId": "48024.5",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "menhir-native-3",
+          "receivedWallTime": 1794880607.392,
+          "documentURL": "http://127.0.0.1:61602/__asset_transport.html",
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 31,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 45,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "13",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:61602/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-native-3"
+          },
+          "requestId": "48024.5",
+          "timestamp": 1890786.44669,
+          "type": "Fetch",
+          "wallTime": 1794880607.393057,
+          "documentRelativeMs": 87.427001953125
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "menhir-native-3",
+          "receivedWallTime": 1794880607.396,
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasExtraInfo": true,
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "requestId": "48024.5",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 185,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "620588",
+              "Content-Type": "model/gltf-binary",
+              "Date": "Tue, 17 Nov 2026 01:56:47 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "model/gltf-binary",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 61602,
+            "responseTime": 1794880607396.291,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 2.984,
+              "receiveHeadersStart": 2.944,
+              "requestTime": 1890786.447022,
+              "sendEnd": 0.319,
+              "sendStart": 0.229,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-native-3"
+          },
+          "timestamp": 1890786.450402,
+          "type": "Fetch",
+          "documentRelativeMs": 91.138916015625
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "menhir-native-3",
+          "receivedWallTime": 1794880607.398,
+          "encodedDataLength": 620773,
+          "requestId": "48024.5",
+          "timestamp": 1890786.451633,
+          "documentRelativeMs": 92.369873046875
+        }
+      ],
+      "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-native-3",
+      "caseId": "menhir-native-3",
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "menhir-native-3",
+          "receivedWallTime": 1794880607.398,
+          "encodedDataLength": 620773,
+          "requestId": "48024.5",
+          "timestamp": 1890786.451633,
+          "documentRelativeMs": 92.369873046875
+        }
+      ]
+    },
+    {
+      "requestId": "48024.6",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "menhir-fileloader-1",
+          "receivedWallTime": 1794880607.412,
+          "documentURL": "http://127.0.0.1:61602/__asset_transport.html",
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 2,
+                  "functionName": "load",
+                  "lineNumber": 45624,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "",
+                  "lineNumber": 45331,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "loadAsync",
+                  "lineNumber": 45329,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 29,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 52,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "14",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:61602/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-fileloader-1"
+          },
+          "requestId": "48024.6",
+          "timestamp": 1890786.46519,
+          "type": "Fetch",
+          "wallTime": 1794880607.413195,
+          "documentRelativeMs": 105.9267578125
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "menhir-fileloader-1",
+          "receivedWallTime": 1794880607.417,
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasExtraInfo": true,
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "requestId": "48024.6",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 185,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "620588",
+              "Content-Type": "model/gltf-binary",
+              "Date": "Tue, 17 Nov 2026 01:56:47 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "model/gltf-binary",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 61602,
+            "responseTime": 1794880607416.652,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 3.167,
+              "receiveHeadersStart": 3.13,
+              "requestTime": 1890786.467197,
+              "sendEnd": 0.362,
+              "sendStart": 0.264,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-fileloader-1"
+          },
+          "timestamp": 1890786.47079,
+          "type": "Fetch",
+          "documentRelativeMs": 111.52685546875
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "menhir-fileloader-1",
+          "receivedWallTime": 1794880607.42,
+          "encodedDataLength": 620773,
+          "requestId": "48024.6",
+          "timestamp": 1890786.47212,
+          "documentRelativeMs": 112.85693359375
+        }
+      ],
+      "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-fileloader-1",
+      "caseId": "menhir-fileloader-1",
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "menhir-fileloader-1",
+          "receivedWallTime": 1794880607.42,
+          "encodedDataLength": 620773,
+          "requestId": "48024.6",
+          "timestamp": 1890786.47212,
+          "documentRelativeMs": 112.85693359375
+        }
+      ]
+    },
+    {
+      "requestId": "48024.7",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "menhir-fileloader-2",
+          "receivedWallTime": 1794880607.433,
+          "documentURL": "http://127.0.0.1:61602/__asset_transport.html",
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 2,
+                  "functionName": "load",
+                  "lineNumber": 45624,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "",
+                  "lineNumber": 45331,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "loadAsync",
+                  "lineNumber": 45329,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 29,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 52,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "15",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:61602/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-fileloader-2"
+          },
+          "requestId": "48024.7",
+          "timestamp": 1890786.48782,
+          "type": "Fetch",
+          "wallTime": 1794880607.434196,
+          "documentRelativeMs": 128.556884765625
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "menhir-fileloader-2",
+          "receivedWallTime": 1794880607.438,
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasExtraInfo": true,
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "requestId": "48024.7",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 185,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "620588",
+              "Content-Type": "model/gltf-binary",
+              "Date": "Tue, 17 Nov 2026 01:56:47 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "model/gltf-binary",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 61602,
+            "responseTime": 1794880607438.383,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 3.944,
+              "receiveHeadersStart": 3.904,
+              "requestTime": 1890786.488154,
+              "sendEnd": 0.325,
+              "sendStart": 0.229,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-fileloader-2"
+          },
+          "timestamp": 1890786.492509,
+          "type": "Fetch",
+          "documentRelativeMs": 133.245849609375
+        },
+        {
+          "method": "Network.loadingFailed",
+          "stage": "menhir-fileloader-2",
+          "receivedWallTime": 1794880607.44,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "48024.7",
+          "timestamp": 1890786.494597,
+          "type": "Fetch",
+          "documentRelativeMs": 135.333740234375
+        }
+      ],
+      "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-fileloader-2",
+      "caseId": "menhir-fileloader-2",
+      "terminals": [
+        {
+          "method": "Network.loadingFailed",
+          "stage": "menhir-fileloader-2",
+          "receivedWallTime": 1794880607.44,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "48024.7",
+          "timestamp": 1890786.494597,
+          "type": "Fetch",
+          "documentRelativeMs": 135.333740234375
+        }
+      ]
+    },
+    {
+      "requestId": "48024.8",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "menhir-fileloader-3",
+          "receivedWallTime": 1794880607.459,
+          "documentURL": "http://127.0.0.1:61602/__asset_transport.html",
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 2,
+                  "functionName": "load",
+                  "lineNumber": 45624,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "",
+                  "lineNumber": 45331,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "loadAsync",
+                  "lineNumber": 45329,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 29,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 52,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "16",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:61602/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-fileloader-3"
+          },
+          "requestId": "48024.8",
+          "timestamp": 1890786.513815,
+          "type": "Fetch",
+          "wallTime": 1794880607.460204,
+          "documentRelativeMs": 154.5517578125
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "menhir-fileloader-3",
+          "receivedWallTime": 1794880607.464,
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasExtraInfo": true,
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "requestId": "48024.8",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 185,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "620588",
+              "Content-Type": "model/gltf-binary",
+              "Date": "Tue, 17 Nov 2026 01:56:47 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "model/gltf-binary",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 61602,
+            "responseTime": 1794880607464.418,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 3.901,
+              "receiveHeadersStart": 3.855,
+              "requestTime": 1890786.514239,
+              "sendEnd": 0.397,
+              "sendStart": 0.295,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-fileloader-3"
+          },
+          "timestamp": 1890786.518579,
+          "type": "Fetch",
+          "documentRelativeMs": 159.31591796875
+        },
+        {
+          "method": "Network.loadingFailed",
+          "stage": "menhir-fileloader-3",
+          "receivedWallTime": 1794880607.466,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "48024.8",
+          "timestamp": 1890786.520918,
+          "type": "Fetch",
+          "documentRelativeMs": 161.65478515625
+        }
+      ],
+      "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-fileloader-3",
+      "caseId": "menhir-fileloader-3",
+      "terminals": [
+        {
+          "method": "Network.loadingFailed",
+          "stage": "menhir-fileloader-3",
+          "receivedWallTime": 1794880607.466,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "48024.8",
+          "timestamp": 1890786.520918,
+          "type": "Fetch",
+          "documentRelativeMs": 161.65478515625
+        }
+      ]
+    },
+    {
+      "requestId": "48024.9",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "large-bin-native-1",
+          "receivedWallTime": 1794880607.484,
+          "documentURL": "http://127.0.0.1:61602/__asset_transport.html",
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 31,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 45,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "17",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:61602/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-native-1"
+          },
+          "requestId": "48024.9",
+          "timestamp": 1890786.538448,
+          "type": "Fetch",
+          "wallTime": 1794880607.484836,
+          "documentRelativeMs": 179.18505859375
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "large-bin-native-1",
+          "receivedWallTime": 1794880607.488,
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasExtraInfo": true,
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "requestId": "48024.9",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 193,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "3345228",
+              "Content-Type": "application/octet-stream",
+              "Date": "Tue, 17 Nov 2026 01:56:47 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "application/octet-stream",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 61602,
+            "responseTime": 1794880607488.248,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 3.142,
+              "receiveHeadersStart": 3.095,
+              "requestTime": 1890786.538828,
+              "sendEnd": 0.323,
+              "sendStart": 0.23,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-native-1"
+          },
+          "timestamp": 1890786.542497,
+          "type": "Fetch",
+          "documentRelativeMs": 183.23388671875
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "large-bin-native-1",
+          "receivedWallTime": 1794880607.506,
+          "encodedDataLength": 3345421,
+          "requestId": "48024.9",
+          "timestamp": 1890786.552579,
+          "documentRelativeMs": 193.31591796875
+        }
+      ],
+      "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-native-1",
+      "caseId": "large-bin-native-1",
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "large-bin-native-1",
+          "receivedWallTime": 1794880607.506,
+          "encodedDataLength": 3345421,
+          "requestId": "48024.9",
+          "timestamp": 1890786.552579,
+          "documentRelativeMs": 193.31591796875
+        }
+      ]
+    },
+    {
+      "requestId": "48024.10",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "large-bin-native-2",
+          "receivedWallTime": 1794880607.513,
+          "documentURL": "http://127.0.0.1:61602/__asset_transport.html",
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 31,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 45,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "18",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:61602/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-native-2"
+          },
+          "requestId": "48024.10",
+          "timestamp": 1890786.567426,
+          "type": "Fetch",
+          "wallTime": 1794880607.513804,
+          "documentRelativeMs": 208.162841796875
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "large-bin-native-2",
+          "receivedWallTime": 1794880607.517,
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasExtraInfo": true,
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "requestId": "48024.10",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 193,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "3345228",
+              "Content-Type": "application/octet-stream",
+              "Date": "Tue, 17 Nov 2026 01:56:47 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "application/octet-stream",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 61602,
+            "responseTime": 1794880607517.616,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 3.489,
+              "receiveHeadersStart": 3.448,
+              "requestTime": 1890786.567844,
+              "sendEnd": 0.64,
+              "sendStart": 0.495,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-native-2"
+          },
+          "timestamp": 1890786.571741,
+          "type": "Fetch",
+          "documentRelativeMs": 212.47802734375
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "large-bin-native-2",
+          "receivedWallTime": 1794880607.532,
+          "encodedDataLength": 3345421,
+          "requestId": "48024.10",
+          "timestamp": 1890786.579717,
+          "documentRelativeMs": 220.453857421875
+        }
+      ],
+      "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-native-2",
+      "caseId": "large-bin-native-2",
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "large-bin-native-2",
+          "receivedWallTime": 1794880607.532,
+          "encodedDataLength": 3345421,
+          "requestId": "48024.10",
+          "timestamp": 1890786.579717,
+          "documentRelativeMs": 220.453857421875
+        }
+      ]
+    },
+    {
+      "requestId": "48024.11",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "large-bin-native-3",
+          "receivedWallTime": 1794880607.547,
+          "documentURL": "http://127.0.0.1:61602/__asset_transport.html",
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 31,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 45,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "19",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:61602/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-native-3"
+          },
+          "requestId": "48024.11",
+          "timestamp": 1890786.601777,
+          "type": "Fetch",
+          "wallTime": 1794880607.548147,
+          "documentRelativeMs": 242.513916015625
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "large-bin-native-3",
+          "receivedWallTime": 1794880607.551,
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasExtraInfo": true,
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "requestId": "48024.11",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 193,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "3345228",
+              "Content-Type": "application/octet-stream",
+              "Date": "Tue, 17 Nov 2026 01:56:47 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "application/octet-stream",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 61602,
+            "responseTime": 1794880607551.363,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 2.948,
+              "receiveHeadersStart": 2.907,
+              "requestTime": 1890786.602131,
+              "sendEnd": 0.341,
+              "sendStart": 0.244,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-native-3"
+          },
+          "timestamp": 1890786.605488,
+          "type": "Fetch",
+          "documentRelativeMs": 246.224853515625
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "large-bin-native-3",
+          "receivedWallTime": 1794880607.565,
+          "encodedDataLength": 3345421,
+          "requestId": "48024.11",
+          "timestamp": 1890786.613438,
+          "documentRelativeMs": 254.1748046875
+        }
+      ],
+      "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-native-3",
+      "caseId": "large-bin-native-3",
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "large-bin-native-3",
+          "receivedWallTime": 1794880607.565,
+          "encodedDataLength": 3345421,
+          "requestId": "48024.11",
+          "timestamp": 1890786.613438,
+          "documentRelativeMs": 254.1748046875
+        }
+      ]
+    },
+    {
+      "requestId": "48024.12",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "large-bin-fileloader-1",
+          "receivedWallTime": 1794880607.579,
+          "documentURL": "http://127.0.0.1:61602/__asset_transport.html",
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 2,
+                  "functionName": "load",
+                  "lineNumber": 45624,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "",
+                  "lineNumber": 45331,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "loadAsync",
+                  "lineNumber": 45329,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 29,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 52,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "20",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:61602/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-fileloader-1"
+          },
+          "requestId": "48024.12",
+          "timestamp": 1890786.633181,
+          "type": "Fetch",
+          "wallTime": 1794880607.579558,
+          "documentRelativeMs": 273.91796875
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "large-bin-fileloader-1",
+          "receivedWallTime": 1794880607.583,
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasExtraInfo": true,
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "requestId": "48024.12",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 193,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "3345228",
+              "Content-Type": "application/octet-stream",
+              "Date": "Tue, 17 Nov 2026 01:56:47 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "application/octet-stream",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 61602,
+            "responseTime": 1794880607582.855,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 3.037,
+              "receiveHeadersStart": 2.987,
+              "requestTime": 1890786.633543,
+              "sendEnd": 0.308,
+              "sendStart": 0.219,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-fileloader-1"
+          },
+          "timestamp": 1890786.637124,
+          "type": "Fetch",
+          "documentRelativeMs": 277.86083984375
+        },
+        {
+          "method": "Network.loadingFailed",
+          "stage": "large-bin-fileloader-1",
+          "receivedWallTime": 1794880607.594,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "48024.12",
+          "timestamp": 1890786.647182,
+          "type": "Fetch",
+          "documentRelativeMs": 287.9189453125
+        }
+      ],
+      "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-fileloader-1",
+      "caseId": "large-bin-fileloader-1",
+      "terminals": [
+        {
+          "method": "Network.loadingFailed",
+          "stage": "large-bin-fileloader-1",
+          "receivedWallTime": 1794880607.594,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "48024.12",
+          "timestamp": 1890786.647182,
+          "type": "Fetch",
+          "documentRelativeMs": 287.9189453125
+        }
+      ]
+    },
+    {
+      "requestId": "48024.13",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "large-bin-fileloader-2",
+          "receivedWallTime": 1794880607.608,
+          "documentURL": "http://127.0.0.1:61602/__asset_transport.html",
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 2,
+                  "functionName": "load",
+                  "lineNumber": 45624,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "",
+                  "lineNumber": 45331,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "loadAsync",
+                  "lineNumber": 45329,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 29,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 52,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "21",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:61602/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-fileloader-2"
+          },
+          "requestId": "48024.13",
+          "timestamp": 1890786.662486,
+          "type": "Fetch",
+          "wallTime": 1794880607.60888,
+          "documentRelativeMs": 303.222900390625
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "large-bin-fileloader-2",
+          "receivedWallTime": 1794880607.613,
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasExtraInfo": true,
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "requestId": "48024.13",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 193,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "3345228",
+              "Content-Type": "application/octet-stream",
+              "Date": "Tue, 17 Nov 2026 01:56:47 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "application/octet-stream",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 61602,
+            "responseTime": 1794880607613.512,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 4.323,
+              "receiveHeadersStart": 4.277,
+              "requestTime": 1890786.66291,
+              "sendEnd": 0.432,
+              "sendStart": 0.314,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-fileloader-2"
+          },
+          "timestamp": 1890786.667695,
+          "type": "Fetch",
+          "documentRelativeMs": 308.431884765625
+        },
+        {
+          "method": "Network.loadingFailed",
+          "stage": "large-bin-fileloader-2",
+          "receivedWallTime": 1794880607.625,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "48024.13",
+          "timestamp": 1890786.678352,
+          "type": "Fetch",
+          "documentRelativeMs": 319.089111328125
+        }
+      ],
+      "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-fileloader-2",
+      "caseId": "large-bin-fileloader-2",
+      "terminals": [
+        {
+          "method": "Network.loadingFailed",
+          "stage": "large-bin-fileloader-2",
+          "receivedWallTime": 1794880607.625,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "48024.13",
+          "timestamp": 1890786.678352,
+          "type": "Fetch",
+          "documentRelativeMs": 319.089111328125
+        }
+      ]
+    },
+    {
+      "requestId": "48024.14",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "large-bin-fileloader-3",
+          "receivedWallTime": 1794880607.641,
+          "documentURL": "http://127.0.0.1:61602/__asset_transport.html",
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 2,
+                  "functionName": "load",
+                  "lineNumber": 45624,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "",
+                  "lineNumber": 45331,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "loadAsync",
+                  "lineNumber": 45329,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 29,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 52,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "22",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:61602/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-fileloader-3"
+          },
+          "requestId": "48024.14",
+          "timestamp": 1890786.695386,
+          "type": "Fetch",
+          "wallTime": 1794880607.641763,
+          "documentRelativeMs": 336.122802734375
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "large-bin-fileloader-3",
+          "receivedWallTime": 1794880607.645,
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasExtraInfo": true,
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "requestId": "48024.14",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 193,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "3345228",
+              "Content-Type": "application/octet-stream",
+              "Date": "Tue, 17 Nov 2026 01:56:47 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "application/octet-stream",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 61602,
+            "responseTime": 1794880607644.963,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 2.899,
+              "receiveHeadersStart": 2.868,
+              "requestTime": 1890786.695771,
+              "sendEnd": 0.391,
+              "sendStart": 0.265,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-fileloader-3"
+          },
+          "timestamp": 1890786.699045,
+          "type": "Fetch",
+          "documentRelativeMs": 339.78173828125
+        },
+        {
+          "method": "Network.loadingFailed",
+          "stage": "large-bin-fileloader-3",
+          "receivedWallTime": 1794880607.655,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "48024.14",
+          "timestamp": 1890786.708453,
+          "type": "Fetch",
+          "documentRelativeMs": 349.18994140625
+        }
+      ],
+      "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-fileloader-3",
+      "caseId": "large-bin-fileloader-3",
+      "terminals": [
+        {
+          "method": "Network.loadingFailed",
+          "stage": "large-bin-fileloader-3",
+          "receivedWallTime": 1794880607.655,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "48024.14",
+          "timestamp": 1890786.708453,
+          "type": "Fetch",
+          "documentRelativeMs": 349.18994140625
+        }
+      ]
+    },
+    {
+      "requestId": "48024.15",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "medium-bin-native-1",
+          "receivedWallTime": 1794880607.67,
+          "documentURL": "http://127.0.0.1:61602/__asset_transport.html",
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 31,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 45,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "23",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:61602/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-1"
+          },
+          "requestId": "48024.15",
+          "timestamp": 1890786.724747,
+          "type": "Fetch",
+          "wallTime": 1794880607.671113,
+          "documentRelativeMs": 365.48388671875
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "medium-bin-native-1",
+          "receivedWallTime": 1794880607.674,
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasExtraInfo": true,
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "requestId": "48024.15",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 193,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "2443288",
+              "Content-Type": "application/octet-stream",
+              "Date": "Tue, 17 Nov 2026 01:56:47 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "application/octet-stream",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 61602,
+            "responseTime": 1794880607674.164,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 2.753,
+              "receiveHeadersStart": 2.714,
+              "requestTime": 1890786.725125,
+              "sendEnd": 0.392,
+              "sendStart": 0.294,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-1"
+          },
+          "timestamp": 1890786.728357,
+          "type": "Fetch",
+          "documentRelativeMs": 369.093994140625
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "medium-bin-native-1",
+          "receivedWallTime": 1794880607.683,
+          "encodedDataLength": 2443481,
+          "requestId": "48024.15",
+          "timestamp": 1890786.73365,
+          "documentRelativeMs": 374.386962890625
+        }
+      ],
+      "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-1",
+      "caseId": "medium-bin-native-1",
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "medium-bin-native-1",
+          "receivedWallTime": 1794880607.683,
+          "encodedDataLength": 2443481,
+          "requestId": "48024.15",
+          "timestamp": 1890786.73365,
+          "documentRelativeMs": 374.386962890625
+        }
+      ]
+    },
+    {
+      "requestId": "48024.16",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "medium-bin-native-2",
+          "receivedWallTime": 1794880607.696,
+          "documentURL": "http://127.0.0.1:61602/__asset_transport.html",
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 31,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 45,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "24",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:61602/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-2"
+          },
+          "requestId": "48024.16",
+          "timestamp": 1890786.750269,
+          "type": "Fetch",
+          "wallTime": 1794880607.696642,
+          "documentRelativeMs": 391.005859375
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "medium-bin-native-2",
+          "receivedWallTime": 1794880607.701,
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasExtraInfo": true,
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "requestId": "48024.16",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 193,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "2443288",
+              "Content-Type": "application/octet-stream",
+              "Date": "Tue, 17 Nov 2026 01:56:47 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "application/octet-stream",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 61602,
+            "responseTime": 1794880607701.433,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 4.429,
+              "receiveHeadersStart": 4.39,
+              "requestTime": 1890786.750718,
+              "sendEnd": 0.458,
+              "sendStart": 0.323,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-2"
+          },
+          "timestamp": 1890786.755643,
+          "type": "Fetch",
+          "documentRelativeMs": 396.3798828125
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "medium-bin-native-2",
+          "receivedWallTime": 1794880607.711,
+          "encodedDataLength": 2443481,
+          "requestId": "48024.16",
+          "timestamp": 1890786.761186,
+          "documentRelativeMs": 401.9228515625
+        }
+      ],
+      "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-2",
+      "caseId": "medium-bin-native-2",
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "medium-bin-native-2",
+          "receivedWallTime": 1794880607.711,
+          "encodedDataLength": 2443481,
+          "requestId": "48024.16",
+          "timestamp": 1890786.761186,
+          "documentRelativeMs": 401.9228515625
+        }
+      ]
+    },
+    {
+      "requestId": "48024.17",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "medium-bin-native-3",
+          "receivedWallTime": 1794880607.724,
+          "documentURL": "http://127.0.0.1:61602/__asset_transport.html",
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 31,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 45,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "25",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:61602/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-3"
+          },
+          "requestId": "48024.17",
+          "timestamp": 1890786.778547,
+          "type": "Fetch",
+          "wallTime": 1794880607.724917,
+          "documentRelativeMs": 419.283935546875
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "medium-bin-native-3",
+          "receivedWallTime": 1794880607.728,
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasExtraInfo": true,
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "requestId": "48024.17",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 193,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "2443288",
+              "Content-Type": "application/octet-stream",
+              "Date": "Tue, 17 Nov 2026 01:56:47 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "application/octet-stream",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 61602,
+            "responseTime": 1794880607728.305,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 3.082,
+              "receiveHeadersStart": 3.006,
+              "requestTime": 1890786.778974,
+              "sendEnd": 0.475,
+              "sendStart": 0.331,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-3"
+          },
+          "timestamp": 1890786.782529,
+          "type": "Fetch",
+          "documentRelativeMs": 423.26611328125
+        },
+        {
+          "method": "Network.loadingFinished",
+          "stage": "medium-bin-native-3",
+          "receivedWallTime": 1794880607.74,
+          "encodedDataLength": 2443481,
+          "requestId": "48024.17",
+          "timestamp": 1890786.789404,
+          "documentRelativeMs": 430.140869140625
+        }
+      ],
+      "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-3",
+      "caseId": "medium-bin-native-3",
+      "terminals": [
+        {
+          "method": "Network.loadingFinished",
+          "stage": "medium-bin-native-3",
+          "receivedWallTime": 1794880607.74,
+          "encodedDataLength": 2443481,
+          "requestId": "48024.17",
+          "timestamp": 1890786.789404,
+          "documentRelativeMs": 430.140869140625
+        }
+      ]
+    },
+    {
+      "requestId": "48024.18",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "medium-bin-fileloader-1",
+          "receivedWallTime": 1794880607.754,
+          "documentURL": "http://127.0.0.1:61602/__asset_transport.html",
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 2,
+                  "functionName": "load",
+                  "lineNumber": 45624,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "",
+                  "lineNumber": 45331,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "loadAsync",
+                  "lineNumber": 45329,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 29,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 52,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "26",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:61602/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-1"
+          },
+          "requestId": "48024.18",
+          "timestamp": 1890786.808102,
+          "type": "Fetch",
+          "wallTime": 1794880607.754487,
+          "documentRelativeMs": 448.8388671875
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "medium-bin-fileloader-1",
+          "receivedWallTime": 1794880607.759,
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasExtraInfo": true,
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "requestId": "48024.18",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 193,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "2443288",
+              "Content-Type": "application/octet-stream",
+              "Date": "Tue, 17 Nov 2026 01:56:47 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "application/octet-stream",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 61602,
+            "responseTime": 1794880607758.524,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 3.757,
+              "receiveHeadersStart": 3.71,
+              "requestTime": 1890786.80849,
+              "sendEnd": 0.377,
+              "sendStart": 0.27,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-1"
+          },
+          "timestamp": 1890786.813126,
+          "type": "Fetch",
+          "documentRelativeMs": 453.863037109375
+        },
+        {
+          "method": "Network.loadingFailed",
+          "stage": "medium-bin-fileloader-1",
+          "receivedWallTime": 1794880607.767,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "48024.18",
+          "timestamp": 1890786.820547,
+          "type": "Fetch",
+          "documentRelativeMs": 461.283935546875
+        }
+      ],
+      "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-1",
+      "caseId": "medium-bin-fileloader-1",
+      "terminals": [
+        {
+          "method": "Network.loadingFailed",
+          "stage": "medium-bin-fileloader-1",
+          "receivedWallTime": 1794880607.767,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "48024.18",
+          "timestamp": 1890786.820547,
+          "type": "Fetch",
+          "documentRelativeMs": 461.283935546875
+        }
+      ]
+    },
+    {
+      "requestId": "48024.19",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "medium-bin-fileloader-2",
+          "receivedWallTime": 1794880607.784,
+          "documentURL": "http://127.0.0.1:61602/__asset_transport.html",
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 2,
+                  "functionName": "load",
+                  "lineNumber": 45624,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "",
+                  "lineNumber": 45331,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "loadAsync",
+                  "lineNumber": 45329,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 29,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 52,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "27",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:61602/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-2"
+          },
+          "requestId": "48024.19",
+          "timestamp": 1890786.837953,
+          "type": "Fetch",
+          "wallTime": 1794880607.784329,
+          "documentRelativeMs": 478.68994140625
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "medium-bin-fileloader-2",
+          "receivedWallTime": 1794880607.788,
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasExtraInfo": true,
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "requestId": "48024.19",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 193,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "2443288",
+              "Content-Type": "application/octet-stream",
+              "Date": "Tue, 17 Nov 2026 01:56:47 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "application/octet-stream",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 61602,
+            "responseTime": 1794880607788.141,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 3.486,
+              "receiveHeadersStart": 3.446,
+              "requestTime": 1890786.838371,
+              "sendEnd": 0.371,
+              "sendStart": 0.269,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-2"
+          },
+          "timestamp": 1890786.84232,
+          "type": "Fetch",
+          "documentRelativeMs": 483.056884765625
+        },
+        {
+          "method": "Network.loadingFailed",
+          "stage": "medium-bin-fileloader-2",
+          "receivedWallTime": 1794880607.796,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "48024.19",
+          "timestamp": 1890786.849284,
+          "type": "Fetch",
+          "documentRelativeMs": 490.020751953125
+        }
+      ],
+      "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-2",
+      "caseId": "medium-bin-fileloader-2",
+      "terminals": [
+        {
+          "method": "Network.loadingFailed",
+          "stage": "medium-bin-fileloader-2",
+          "receivedWallTime": 1794880607.796,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "48024.19",
+          "timestamp": 1890786.849284,
+          "type": "Fetch",
+          "documentRelativeMs": 490.020751953125
+        }
+      ]
+    },
+    {
+      "requestId": "48024.20",
+      "events": [
+        {
+          "method": "Network.requestWillBeSent",
+          "stage": "medium-bin-fileloader-3",
+          "receivedWallTime": 1794880607.814,
+          "documentURL": "http://127.0.0.1:61602/__asset_transport.html",
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasUserGesture": true,
+          "initiator": {
+            "stack": {
+              "callFrames": [
+                {
+                  "columnNumber": 28,
+                  "functionName": "window.fetch",
+                  "lineNumber": 12,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 2,
+                  "functionName": "load",
+                  "lineNumber": 45624,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "",
+                  "lineNumber": 45331,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 9,
+                  "functionName": "loadAsync",
+                  "lineNumber": 45329,
+                  "scriptId": "8",
+                  "url": "http://127.0.0.1:61602/upstream/petalwake/vendor/three/build/three.core.js"
+                },
+                {
+                  "columnNumber": 29,
+                  "functionName": "window.__readAsset",
+                  "lineNumber": 52,
+                  "scriptId": "6",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 7,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "28",
+                  "url": ""
+                },
+                {
+                  "columnNumber": 98604,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 93431,
+                  "functionName": "",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 35957,
+                  "functionName": "emit",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                },
+                {
+                  "columnNumber": 92645,
+                  "functionName": "onMessage",
+                  "lineNumber": 1,
+                  "scriptId": "3",
+                  "url": "node:electron/js2c/sandbox_bundle"
+                }
+              ]
+            },
+            "type": "script"
+          },
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "redirectHasExtraInfo": false,
+          "request": {
+            "headers": {
+              "Referer": "http://127.0.0.1:61602/__asset_transport.html",
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.7977.167 Electron/44.9.0 Safari/537.36",
+              "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Windows\""
+            },
+            "initialPriority": "High",
+            "isSameSite": true,
+            "method": "GET",
+            "mixedContentType": "none",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-3"
+          },
+          "requestId": "48024.20",
+          "timestamp": 1890786.868659,
+          "type": "Fetch",
+          "wallTime": 1794880607.815049,
+          "documentRelativeMs": 509.39599609375
+        },
+        {
+          "method": "Network.responseReceived",
+          "stage": "medium-bin-fileloader-3",
+          "receivedWallTime": 1794880607.819,
+          "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+          "hasExtraInfo": true,
+          "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+          "requestId": "48024.20",
+          "response": {
+            "alternateProtocolUsage": "unspecifiedReason",
+            "charset": "",
+            "connectionId": 25,
+            "connectionReused": true,
+            "encodedDataLength": 193,
+            "fromDiskCache": false,
+            "fromPrefetchCache": false,
+            "fromServiceWorker": false,
+            "headers": {
+              "Cache-Control": "no-store",
+              "Connection": "keep-alive",
+              "Content-Length": "2443288",
+              "Content-Type": "application/octet-stream",
+              "Date": "Tue, 17 Nov 2026 01:56:47 GMT",
+              "Keep-Alive": "timeout=5"
+            },
+            "mimeType": "application/octet-stream",
+            "protocol": "http/1.1",
+            "remoteIPAddress": "127.0.0.1",
+            "remotePort": 61602,
+            "responseTime": 1794880607818.979,
+            "securityState": "secure",
+            "status": 200,
+            "statusText": "OK",
+            "timing": {
+              "connectEnd": -1,
+              "connectStart": -1,
+              "dnsEnd": -1,
+              "dnsStart": -1,
+              "proxyEnd": -1,
+              "proxyStart": -1,
+              "pushEnd": 0,
+              "pushStart": 0,
+              "receiveHeadersEnd": 3.525,
+              "receiveHeadersStart": 3.484,
+              "requestTime": 1890786.869171,
+              "sendEnd": 0.365,
+              "sendStart": 0.262,
+              "sslEnd": -1,
+              "sslStart": -1,
+              "workerFetchStart": -1,
+              "workerReady": -1,
+              "workerRespondWithSettled": -1,
+              "workerStart": -1
+            },
+            "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-3"
+          },
+          "timestamp": 1890786.873154,
+          "type": "Fetch",
+          "documentRelativeMs": 513.890869140625
+        },
+        {
+          "method": "Network.loadingFailed",
+          "stage": "medium-bin-fileloader-3",
+          "receivedWallTime": 1794880607.827,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "48024.20",
+          "timestamp": 1890786.880103,
+          "type": "Fetch",
+          "documentRelativeMs": 520.840087890625
+        }
+      ],
+      "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-3",
+      "caseId": "medium-bin-fileloader-3",
+      "terminals": [
+        {
+          "method": "Network.loadingFailed",
+          "stage": "medium-bin-fileloader-3",
+          "receivedWallTime": 1794880607.827,
+          "canceled": true,
+          "errorText": "net::ERR_ABORTED",
+          "requestId": "48024.20",
+          "timestamp": 1890786.880103,
+          "type": "Fetch",
+          "documentRelativeMs": 520.840087890625
+        }
+      ]
+    }
+  ],
+  "networkFailures": [
+    {
+      "method": "Network.loadingFailed",
+      "stage": "menhir-fileloader-2",
+      "receivedWallTime": 1794880607.44,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "48024.7",
+      "timestamp": 1890786.494597,
+      "type": "Fetch",
+      "documentRelativeMs": 135.333740234375
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "menhir-fileloader-3",
+      "receivedWallTime": 1794880607.466,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "48024.8",
+      "timestamp": 1890786.520918,
+      "type": "Fetch",
+      "documentRelativeMs": 161.65478515625
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "large-bin-fileloader-1",
+      "receivedWallTime": 1794880607.594,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "48024.12",
+      "timestamp": 1890786.647182,
+      "type": "Fetch",
+      "documentRelativeMs": 287.9189453125
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "large-bin-fileloader-2",
+      "receivedWallTime": 1794880607.625,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "48024.13",
+      "timestamp": 1890786.678352,
+      "type": "Fetch",
+      "documentRelativeMs": 319.089111328125
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "large-bin-fileloader-3",
+      "receivedWallTime": 1794880607.655,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "48024.14",
+      "timestamp": 1890786.708453,
+      "type": "Fetch",
+      "documentRelativeMs": 349.18994140625
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "medium-bin-fileloader-1",
+      "receivedWallTime": 1794880607.767,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "48024.18",
+      "timestamp": 1890786.820547,
+      "type": "Fetch",
+      "documentRelativeMs": 461.283935546875
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "medium-bin-fileloader-2",
+      "receivedWallTime": 1794880607.796,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "48024.19",
+      "timestamp": 1890786.849284,
+      "type": "Fetch",
+      "documentRelativeMs": 490.020751953125
+    },
+    {
+      "method": "Network.loadingFailed",
+      "stage": "medium-bin-fileloader-3",
+      "receivedWallTime": 1794880607.827,
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "48024.20",
+      "timestamp": 1890786.880103,
+      "type": "Fetch",
+      "documentRelativeMs": 520.840087890625
+    }
+  ],
+  "httpErrors": [],
+  "exceptions": [],
+  "consoleErrors": [],
+  "documentAnchors": [
+    {
+      "requestId": "7A12FFBBBD5885609E6A0AB45913BD16",
+      "loaderId": "7A12FFBBBD5885609E6A0AB45913BD16",
+      "frameId": "AA17D47B3552C42E5B21BF56CD0F6DEC",
+      "url": "http://127.0.0.1:61602/__asset_transport.html",
+      "timestamp": 1890786.35952,
+      "wallTime": 1794880607.305857
+    }
+  ],
+  "stageHistory": [
+    {
+      "name": "bootstrap",
+      "wallTime": 1794880607.016
+    },
+    {
+      "name": "app-ready",
+      "wallTime": 1794880607.105
+    },
+    {
+      "name": "server-ready",
+      "wallTime": 1794880607.119
+    },
+    {
+      "name": "window-created",
+      "wallTime": 1794880607.148
+    },
+    {
+      "name": "renderer-initialized",
+      "wallTime": 1794880607.276
+    },
+    {
+      "name": "enabling-network",
+      "wallTime": 1794880607.277
+    },
+    {
+      "name": "enabling-runtime",
+      "wallTime": 1794880607.287
+    },
+    {
+      "name": "loading-document",
+      "wallTime": 1794880607.294
+    },
+    {
+      "name": "menhir-native-1",
+      "wallTime": 1794880607.354
+    },
+    {
+      "name": "menhir-native-2",
+      "wallTime": 1794880607.373
+    },
+    {
+      "name": "menhir-native-3",
+      "wallTime": 1794880607.383
+    },
+    {
+      "name": "menhir-fileloader-1",
+      "wallTime": 1794880607.4
+    },
+    {
+      "name": "menhir-fileloader-2",
+      "wallTime": 1794880607.425
+    },
+    {
+      "name": "menhir-fileloader-3",
+      "wallTime": 1794880607.448
+    },
+    {
+      "name": "large-bin-native-1",
+      "wallTime": 1794880607.475
+    },
+    {
+      "name": "large-bin-native-2",
+      "wallTime": 1794880607.511
+    },
+    {
+      "name": "large-bin-native-3",
+      "wallTime": 1794880607.538
+    },
+    {
+      "name": "large-bin-fileloader-1",
+      "wallTime": 1794880607.569
+    },
+    {
+      "name": "large-bin-fileloader-2",
+      "wallTime": 1794880607.598
+    },
+    {
+      "name": "large-bin-fileloader-3",
+      "wallTime": 1794880607.631
+    },
+    {
+      "name": "medium-bin-native-1",
+      "wallTime": 1794880607.661
+    },
+    {
+      "name": "medium-bin-native-2",
+      "wallTime": 1794880607.687
+    },
+    {
+      "name": "medium-bin-native-3",
+      "wallTime": 1794880607.715
+    },
+    {
+      "name": "medium-bin-fileloader-1",
+      "wallTime": 1794880607.745
+    },
+    {
+      "name": "medium-bin-fileloader-2",
+      "wallTime": 1794880607.774
+    },
+    {
+      "name": "medium-bin-fileloader-3",
+      "wallTime": 1794880607.803
+    },
+    {
+      "name": "waiting-for-terminal-events",
+      "wallTime": 1794880607.832
+    },
+    {
+      "name": "complete",
+      "wallTime": 1794880610.851
+    }
+  ],
+  "method": "No scene, canvas or WebGL. Per target: native fetch arrayBuffer x3 then unchanged Three FileLoader arraybuffer x3, sequential, unique query per case, no retries. SHA-256 compares transmitted bytes with local files at launch, not an author-provided asset audit. Original reader/fetch promises are observed without replacement. All CDP terminal evidence is collected for 3 seconds after the final case.",
+  "stage": "complete",
+  "runtime": {
+    "electron": "44.9.0",
+    "chrome": "152.0.7977.167"
+  },
+  "pageClock": {
+    "timeOriginMs": 1794880607305.6,
+    "nowMs": 48.90000009536743,
+    "threeRevision": "187"
+  },
+  "pageTrace": {
+    "events": [
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 50.40000009536743,
+        "caseId": "menhir-native-1"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 50.700000047683716,
+        "caseId": "menhir-native-1",
+        "url": "/assets/models/menhir.glb?transportCase=menhir-native-1",
+        "signalPresent": false,
+        "signalAborted": null
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 56.299999952316284,
+        "caseId": "menhir-native-1",
+        "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-native-1",
+        "status": 200
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 59.200000047683716,
+        "caseId": "menhir-native-1",
+        "bytes": 620588
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 69.60000014305115,
+        "caseId": "menhir-native-2"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 69.60000014305115,
+        "caseId": "menhir-native-2",
+        "url": "/assets/models/menhir.glb?transportCase=menhir-native-2",
+        "signalPresent": false,
+        "signalAborted": null
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 74.29999995231628,
+        "caseId": "menhir-native-2",
+        "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-native-2",
+        "status": 200
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 77,
+        "caseId": "menhir-native-2",
+        "bytes": 620588
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 87.20000004768372,
+        "caseId": "menhir-native-3"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 87.20000004768372,
+        "caseId": "menhir-native-3",
+        "url": "/assets/models/menhir.glb?transportCase=menhir-native-3",
+        "signalPresent": false,
+        "signalAborted": null
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 91.20000004768372,
+        "caseId": "menhir-native-3",
+        "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-native-3",
+        "status": 200
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 93.5,
+        "caseId": "menhir-native-3",
+        "bytes": 620588
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 105.10000014305115,
+        "caseId": "menhir-fileloader-1"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 105.60000014305115,
+        "caseId": "menhir-fileloader-1",
+        "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-fileloader-1",
+        "signalPresent": true,
+        "signalAborted": false
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 111.60000014305115,
+        "caseId": "menhir-fileloader-1",
+        "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-fileloader-1",
+        "status": 200
+      },
+      {
+        "type": "reader-eof",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 113.70000004768372,
+        "caseId": "menhir-fileloader-1"
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 115.29999995231628,
+        "caseId": "menhir-fileloader-1",
+        "bytes": 620588
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 128.29999995231628,
+        "caseId": "menhir-fileloader-2"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 128.40000009536743,
+        "caseId": "menhir-fileloader-2",
+        "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-fileloader-2",
+        "signalPresent": true,
+        "signalAborted": false
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 133.29999995231628,
+        "caseId": "menhir-fileloader-2",
+        "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-fileloader-2",
+        "status": 200
+      },
+      {
+        "type": "reader-eof",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 135.29999995231628,
+        "caseId": "menhir-fileloader-2"
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 135.60000014305115,
+        "caseId": "menhir-fileloader-2",
+        "bytes": 620588
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 154.20000004768372,
+        "caseId": "menhir-fileloader-3"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 154.40000009536743,
+        "caseId": "menhir-fileloader-3",
+        "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-fileloader-3",
+        "signalPresent": true,
+        "signalAborted": false
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 159.40000009536743,
+        "caseId": "menhir-fileloader-3",
+        "url": "http://127.0.0.1:61602/assets/models/menhir.glb?transportCase=menhir-fileloader-3",
+        "status": 200
+      },
+      {
+        "type": "reader-eof",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 161.70000004768372,
+        "caseId": "menhir-fileloader-3"
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 162,
+        "caseId": "menhir-fileloader-3",
+        "bytes": 620588
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 179,
+        "caseId": "large-bin-native-1"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 179,
+        "caseId": "large-bin-native-1",
+        "url": "/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-native-1",
+        "signalPresent": false,
+        "signalAborted": null
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 183.40000009536743,
+        "caseId": "large-bin-native-1",
+        "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-native-1",
+        "status": 200
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 201.10000014305115,
+        "caseId": "large-bin-native-1",
+        "bytes": 3345228
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 208,
+        "caseId": "large-bin-native-2"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 208,
+        "caseId": "large-bin-native-2",
+        "url": "/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-native-2",
+        "signalPresent": false,
+        "signalAborted": null
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 212.5,
+        "caseId": "large-bin-native-2",
+        "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-native-2",
+        "status": 200
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 228,
+        "caseId": "large-bin-native-2",
+        "bytes": 3345228
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 242.29999995231628,
+        "caseId": "large-bin-native-3"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 242.29999995231628,
+        "caseId": "large-bin-native-3",
+        "url": "/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-native-3",
+        "signalPresent": false,
+        "signalAborted": null
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 246.29999995231628,
+        "caseId": "large-bin-native-3",
+        "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-native-3",
+        "status": 200
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 260.2999999523163,
+        "caseId": "large-bin-native-3",
+        "bytes": 3345228
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 273.60000014305115,
+        "caseId": "large-bin-fileloader-1"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 273.7000000476837,
+        "caseId": "large-bin-fileloader-1",
+        "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-fileloader-1",
+        "signalPresent": true,
+        "signalAborted": false
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 277.90000009536743,
+        "caseId": "large-bin-fileloader-1",
+        "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-fileloader-1",
+        "status": 200
+      },
+      {
+        "type": "reader-eof",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 287.90000009536743,
+        "caseId": "large-bin-fileloader-1"
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 289.10000014305115,
+        "caseId": "large-bin-fileloader-1",
+        "bytes": 3345228
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 302.90000009536743,
+        "caseId": "large-bin-fileloader-2"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 303,
+        "caseId": "large-bin-fileloader-2",
+        "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-fileloader-2",
+        "signalPresent": true,
+        "signalAborted": false
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 308.5,
+        "caseId": "large-bin-fileloader-2",
+        "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-fileloader-2",
+        "status": 200
+      },
+      {
+        "type": "reader-eof",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 319,
+        "caseId": "large-bin-fileloader-2"
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 320.2999999523163,
+        "caseId": "large-bin-fileloader-2",
+        "bytes": 3345228
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 335.7000000476837,
+        "caseId": "large-bin-fileloader-3"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 335.90000009536743,
+        "caseId": "large-bin-fileloader-3",
+        "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-fileloader-3",
+        "signalPresent": true,
+        "signalAborted": false
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 339.90000009536743,
+        "caseId": "large-bin-fileloader-3",
+        "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Large_2.bin?transportCase=large-bin-fileloader-3",
+        "status": 200
+      },
+      {
+        "type": "reader-eof",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 349.2000000476837,
+        "caseId": "large-bin-fileloader-3"
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 350.7000000476837,
+        "caseId": "large-bin-fileloader-3",
+        "bytes": 3345228
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 365.2999999523163,
+        "caseId": "medium-bin-native-1"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 365.2999999523163,
+        "caseId": "medium-bin-native-1",
+        "url": "/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-1",
+        "signalPresent": false,
+        "signalAborted": null
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 369.2000000476837,
+        "caseId": "medium-bin-native-1",
+        "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-1",
+        "status": 200
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 378.90000009536743,
+        "caseId": "medium-bin-native-1",
+        "bytes": 2443288
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 390.90000009536743,
+        "caseId": "medium-bin-native-2"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 390.90000009536743,
+        "caseId": "medium-bin-native-2",
+        "url": "/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-2",
+        "signalPresent": false,
+        "signalAborted": null
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 396.5,
+        "caseId": "medium-bin-native-2",
+        "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-2",
+        "status": 200
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 406.2000000476837,
+        "caseId": "medium-bin-native-2",
+        "bytes": 2443288
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 419.10000014305115,
+        "caseId": "medium-bin-native-3"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 419.10000014305115,
+        "caseId": "medium-bin-native-3",
+        "url": "/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-3",
+        "signalPresent": false,
+        "signalAborted": null
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 423.2999999523163,
+        "caseId": "medium-bin-native-3",
+        "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-native-3",
+        "status": 200
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 435.7000000476837,
+        "caseId": "medium-bin-native-3",
+        "bytes": 2443288
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 448.5,
+        "caseId": "medium-bin-fileloader-1"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 448.60000014305115,
+        "caseId": "medium-bin-fileloader-1",
+        "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-1",
+        "signalPresent": true,
+        "signalAborted": false
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 453.90000009536743,
+        "caseId": "medium-bin-fileloader-1",
+        "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-1",
+        "status": 200
+      },
+      {
+        "type": "reader-eof",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 461.2000000476837,
+        "caseId": "medium-bin-fileloader-1"
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 462.2999999523163,
+        "caseId": "medium-bin-fileloader-1",
+        "bytes": 2443288
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 478.2999999523163,
+        "caseId": "medium-bin-fileloader-2"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 478.5,
+        "caseId": "medium-bin-fileloader-2",
+        "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-2",
+        "signalPresent": true,
+        "signalAborted": false
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 483.10000014305115,
+        "caseId": "medium-bin-fileloader-2",
+        "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-2",
+        "status": 200
+      },
+      {
+        "type": "reader-eof",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 490,
+        "caseId": "medium-bin-fileloader-2"
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 491.2000000476837,
+        "caseId": "medium-bin-fileloader-2",
+        "bytes": 2443288
+      },
+      {
+        "type": "case-started",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 509,
+        "caseId": "medium-bin-fileloader-3"
+      },
+      {
+        "type": "fetch",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 509.2000000476837,
+        "caseId": "medium-bin-fileloader-3",
+        "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-3",
+        "signalPresent": true,
+        "signalAborted": false
+      },
+      {
+        "type": "fetch-response",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 514,
+        "caseId": "medium-bin-fileloader-3",
+        "url": "http://127.0.0.1:61602/city-assets/downtown/Building_Medium_2_001.bin?transportCase=medium-bin-fileloader-3",
+        "status": 200
+      },
+      {
+        "type": "reader-eof",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 520.7999999523163,
+        "caseId": "medium-bin-fileloader-3"
+      },
+      {
+        "type": "body-fulfilled",
+        "timeOriginMs": 1794880607305.6,
+        "nowMs": 522,
+        "caseId": "medium-bin-fileloader-3",
+        "bytes": 2443288
+      }
+    ],
+    "activeCase": null
+  },
+  "finalClock": {
+    "timeOriginMs": 1794880607305.6,
+    "nowMs": 3535.7999999523163
+  },
+  "missingTerminal": [],
+  "inputsUnchanged": true,
+  "evidenceCutoffWallTime": 1794880610.851
+}
