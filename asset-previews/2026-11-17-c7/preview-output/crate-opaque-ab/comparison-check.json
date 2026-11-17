@@ -1,0 +1,38 @@
+{
+  "strictRecordedCameraLightingTransformRendererMatch": true,
+  "onlyRecordedMaterialChanges": [
+    "transparent",
+    "depthWrite"
+  ],
+  "originalMaterialRestored": true,
+  "originalToRestored": {
+    "width": 1440,
+    "height": 900,
+    "channels": 3,
+    "changedChannels": 282,
+    "maxChannelDifference": 5,
+    "meanChannelDifference": 0.00007510288065843622
+  },
+  "originalToOpaque": {
+    "width": 1440,
+    "height": 900,
+    "channels": 3,
+    "changedChannels": 294331,
+    "maxChannelDifference": 208,
+    "meanChannelDifference": 2.2505380658436214
+  },
+  "sourceFilesUnchanged": true,
+  "gpuErrors": [
+    0,
+    0,
+    0
+  ],
+  "exceptions": [],
+  "failedRequests": [],
+  "exitCode": 0,
+  "pngHashes": {
+    "01-crate-original.png": "771c9c5de66b35aae9e828c44644d4381b19caf4be7a9f14e8e5f6aab84011e0",
+    "02-crate-adapted-opaque.png": "0da116fe563127fd18e3cd6281843d21726ec06431be3f30379e85eb7eee5c01",
+    "03-crate-original-restored.png": "5c4a58409d6bbfda6c983630edda0c1a0e866e9f5d7e31a21db55ebf5717a16b"
+  }
+}

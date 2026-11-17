@@ -1,0 +1,59 @@
+{
+  "files": [
+    {
+      "path": "01-crate-original.jpg",
+      "bytes": 38517,
+      "sha256": "99801b9dddcf7dac4238e8da02fb7430bdca90b08e615b5f26209bbc1fdf9d04"
+    },
+    {
+      "path": "01-crate-original.png",
+      "bytes": 267818,
+      "sha256": "1d0dc4191b888356fdbb102485cbfa872917222c4e380316c8f4c6ee9c49f604"
+    },
+    {
+      "path": "02-crate-opaque-control.jpg",
+      "bytes": 43660,
+      "sha256": "ecdc1d06d4e1d56685adea903ba0ad32f4d36a8b987644cf8dbda59fe7f39a36"
+    },
+    {
+      "path": "02-crate-opaque-control.png",
+      "bytes": 292350,
+      "sha256": "0da116fe563127fd18e3cd6281843d21726ec06431be3f30379e85eb7eee5c01"
+    },
+    {
+      "path": "03-crate-official-mask.jpg",
+      "bytes": 45371,
+      "sha256": "f759350a12c49875f0463df9ae95515623c7d6d3b04f4937eefac63bd99f0981"
+    },
+    {
+      "path": "03-crate-official-mask.png",
+      "bytes": 304544,
+      "sha256": "e80c9cdde6bdd372487a9403095d8894bf2f645e6c3db11c77670f1601ce2cf0"
+    },
+    {
+      "path": "04-crate-original-restored.jpg",
+      "bytes": 38506,
+      "sha256": "fb4bab12099069165c7fabfa44f99c4e11bd0570e503d986c9b7ada21477d2ba"
+    },
+    {
+      "path": "04-crate-original-restored.png",
+      "bytes": 267804,
+      "sha256": "e82a1e0ce0258f275ef56424cafa69aad80bc663014ce743b46e3c900c290b35"
+    },
+    {
+      "path": "comparison-check.json",
+      "bytes": 2366,
+      "sha256": "0fc3e73733ea275b082b694bd119ac8e74751d6a03be790507980dd90b4996c8"
+    },
+    {
+      "path": "preview-report.json",
+      "bytes": 27204,
+      "sha256": "ff5016d45e37f4e1a1365f985182011ecbf71e69ab9c7c6eb6222382e463db3d"
+    },
+    {
+      "path": "README.md",
+      "bytes": 3433,
+      "sha256": "c675c79edd0e8defbf3507eee44a41596726c92926f71613f8932fea8bf6d782"
+    }
+  ]
+}

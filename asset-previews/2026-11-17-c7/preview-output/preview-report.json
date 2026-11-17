@@ -1,0 +1,752 @@
+{
+  "createdAt": "2026-11-17T05:50:35.491Z",
+  "note": "Independent asset preview, not scene acceptance or FPS evidence",
+  "captures": [
+    {
+      "id": "plastic_crate_02",
+      "three": "187",
+      "size": [
+        1440,
+        900
+      ],
+      "pixelRatio": 1,
+      "camera": {
+        "position": [
+          0.78,
+          0.61,
+          0.97
+        ],
+        "target": [
+          0,
+          0.12,
+          0
+        ],
+        "fov": 38,
+        "near": 0.01,
+        "far": 100
+      },
+      "renderer": {
+        "outputColorSpace": "srgb",
+        "toneMapping": 4,
+        "exposure": 1,
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "device": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "contextLost": false,
+        "error": 0
+      },
+      "lighting": {
+        "hemisphere": 0.8,
+        "key": 2.2,
+        "environment": "Viewer-only neutral grayscale gradient 64x32, SRGB 155..220, PMREM",
+        "environmentIntensity": 0.65
+      },
+      "transform": {
+        "position": [
+          0,
+          0.00001595914363861084,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "materials": [
+        {
+          "name": "plastic_crate_02",
+          "type": "MeshStandardMaterial",
+          "color": [
+            1,
+            0.40816283226013184,
+            0
+          ],
+          "opacity": 1,
+          "transparent": true,
+          "alphaTest": 0,
+          "side": 0,
+          "depthWrite": false,
+          "metalness": 0,
+          "roughness": 1,
+          "map": true,
+          "normalMap": true,
+          "aoMap": false,
+          "roughnessMap": true,
+          "metalnessMap": true,
+          "normalScale": [
+            1,
+            -1
+          ],
+          "normalColorSpace": "",
+          "mapColorSpace": "srgb"
+        }
+      ],
+      "failures": [],
+      "loaded": [
+        {
+          "url": "/downloads/plastic_crate_02/plastic_crate_02_1k.gltf",
+          "count": 1,
+          "total": 6
+        },
+        {
+          "url": "/downloads/plastic_crate_02/plastic_crate_02.bin",
+          "count": 2,
+          "total": 6
+        },
+        {
+          "url": "/downloads/plastic_crate_02/textures/plastic_crate_02_diff_1k.jpg",
+          "count": 3,
+          "total": 6
+        },
+        {
+          "url": "/downloads/plastic_crate_02/textures/plastic_crate_02_nor_gl_1k.jpg",
+          "count": 4,
+          "total": 6
+        },
+        {
+          "url": "/downloads/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg",
+          "count": 5,
+          "total": 6
+        },
+        {
+          "url": "/downloads/plastic_crate_02/plastic_crate_02_1k.gltf",
+          "count": 6,
+          "total": 6
+        },
+        {
+          "url": "/downloads/painted_wooden_bench/painted_wooden_bench_1k.gltf",
+          "count": 7,
+          "total": 12
+        },
+        {
+          "url": "/downloads/painted_wooden_bench/painted_wooden_bench.bin",
+          "count": 8,
+          "total": 12
+        },
+        {
+          "url": "/downloads/painted_wooden_bench/textures/painted_wooden_bench_arm_1k.jpg",
+          "count": 9,
+          "total": 12
+        },
+        {
+          "url": "/downloads/painted_wooden_bench/textures/painted_wooden_bench_diff_1k.jpg",
+          "count": 10,
+          "total": 12
+        },
+        {
+          "url": "/downloads/painted_wooden_bench/textures/painted_wooden_bench_nor_gl_1k.jpg",
+          "count": 11,
+          "total": 12
+        },
+        {
+          "url": "/downloads/painted_wooden_bench/painted_wooden_bench_1k.gltf",
+          "count": 12,
+          "total": 12
+        },
+        {
+          "url": "/downloads/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+          "count": 13,
+          "total": 15
+        },
+        {
+          "url": "/downloads/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg",
+          "count": 14,
+          "total": 15
+        },
+        {
+          "url": "/downloads/worn_shutter/textures/worn_shutter_diff_1k.jpg",
+          "count": 15,
+          "total": 15
+        }
+      ],
+      "note": "Independent neutral asset preview only. Not fixture acceptance or FPS evidence.",
+      "png": "01-plastic_crate_02.png",
+      "jpg": "01-plastic_crate_02.jpg",
+      "captureSize": {
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "id": "painted_wooden_bench",
+      "three": "187",
+      "size": [
+        1440,
+        900
+      ],
+      "pixelRatio": 1,
+      "camera": {
+        "position": [
+          1.62,
+          1.08,
+          1.95
+        ],
+        "target": [
+          0,
+          0.43,
+          0
+        ],
+        "fov": 38,
+        "near": 0.01,
+        "far": 100
+      },
+      "renderer": {
+        "outputColorSpace": "srgb",
+        "toneMapping": 4,
+        "exposure": 1,
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "device": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "contextLost": false,
+        "error": 0
+      },
+      "lighting": {
+        "hemisphere": 0.8,
+        "key": 2.2,
+        "environment": "Viewer-only neutral grayscale gradient 64x32, SRGB 155..220, PMREM",
+        "environmentIntensity": 0.65
+      },
+      "transform": {
+        "position": [
+          0,
+          0.0004994967021048069,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "materials": [
+        {
+          "name": "painted_wooden_bench",
+          "type": "MeshStandardMaterial",
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "opacity": 1,
+          "transparent": false,
+          "alphaTest": 0,
+          "side": 2,
+          "depthWrite": true,
+          "metalness": 0,
+          "roughness": 1,
+          "map": true,
+          "normalMap": true,
+          "aoMap": false,
+          "roughnessMap": true,
+          "metalnessMap": true,
+          "normalScale": [
+            1,
+            -1
+          ],
+          "normalColorSpace": "",
+          "mapColorSpace": "srgb"
+        }
+      ],
+      "failures": [],
+      "loaded": [
+        {
+          "url": "/downloads/plastic_crate_02/plastic_crate_02_1k.gltf",
+          "count": 1,
+          "total": 6
+        },
+        {
+          "url": "/downloads/plastic_crate_02/plastic_crate_02.bin",
+          "count": 2,
+          "total": 6
+        },
+        {
+          "url": "/downloads/plastic_crate_02/textures/plastic_crate_02_diff_1k.jpg",
+          "count": 3,
+          "total": 6
+        },
+        {
+          "url": "/downloads/plastic_crate_02/textures/plastic_crate_02_nor_gl_1k.jpg",
+          "count": 4,
+          "total": 6
+        },
+        {
+          "url": "/downloads/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg",
+          "count": 5,
+          "total": 6
+        },
+        {
+          "url": "/downloads/plastic_crate_02/plastic_crate_02_1k.gltf",
+          "count": 6,
+          "total": 6
+        },
+        {
+          "url": "/downloads/painted_wooden_bench/painted_wooden_bench_1k.gltf",
+          "count": 7,
+          "total": 12
+        },
+        {
+          "url": "/downloads/painted_wooden_bench/painted_wooden_bench.bin",
+          "count": 8,
+          "total": 12
+        },
+        {
+          "url": "/downloads/painted_wooden_bench/textures/painted_wooden_bench_arm_1k.jpg",
+          "count": 9,
+          "total": 12
+        },
+        {
+          "url": "/downloads/painted_wooden_bench/textures/painted_wooden_bench_diff_1k.jpg",
+          "count": 10,
+          "total": 12
+        },
+        {
+          "url": "/downloads/painted_wooden_bench/textures/painted_wooden_bench_nor_gl_1k.jpg",
+          "count": 11,
+          "total": 12
+        },
+        {
+          "url": "/downloads/painted_wooden_bench/painted_wooden_bench_1k.gltf",
+          "count": 12,
+          "total": 12
+        },
+        {
+          "url": "/downloads/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+          "count": 13,
+          "total": 15
+        },
+        {
+          "url": "/downloads/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg",
+          "count": 14,
+          "total": 15
+        },
+        {
+          "url": "/downloads/worn_shutter/textures/worn_shutter_diff_1k.jpg",
+          "count": 15,
+          "total": 15
+        }
+      ],
+      "note": "Independent neutral asset preview only. Not fixture acceptance or FPS evidence.",
+      "png": "02-painted_wooden_bench.png",
+      "jpg": "02-painted_wooden_bench.jpg",
+      "captureSize": {
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "id": "worn_shutter",
+      "three": "187",
+      "size": [
+        1440,
+        900
+      ],
+      "pixelRatio": 1,
+      "camera": {
+        "position": [
+          0.72,
+          0.94,
+          2.15
+        ],
+        "target": [
+          0,
+          0.685,
+          0
+        ],
+        "fov": 38,
+        "near": 0.01,
+        "far": 100
+      },
+      "renderer": {
+        "outputColorSpace": "srgb",
+        "toneMapping": 4,
+        "exposure": 1,
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "device": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "contextLost": false,
+        "error": 0
+      },
+      "lighting": {
+        "hemisphere": 0.8,
+        "key": 2.2,
+        "environment": "Viewer-only neutral grayscale gradient 64x32, SRGB 155..220, PMREM",
+        "environmentIntensity": 0.65
+      },
+      "transform": {
+        "position": [
+          0,
+          0.685,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "materials": [
+        {
+          "name": "",
+          "type": "MeshStandardMaterial",
+          "color": [
+            1,
+            1,
+            1
+          ],
+          "opacity": 1,
+          "transparent": false,
+          "alphaTest": 0,
+          "side": 0,
+          "depthWrite": true,
+          "metalness": 1,
+          "roughness": 1,
+          "map": true,
+          "normalMap": true,
+          "aoMap": true,
+          "roughnessMap": true,
+          "metalnessMap": true,
+          "normalScale": [
+            1,
+            1
+          ],
+          "normalColorSpace": "",
+          "mapColorSpace": "srgb"
+        }
+      ],
+      "failures": [],
+      "loaded": [
+        {
+          "url": "/downloads/plastic_crate_02/plastic_crate_02_1k.gltf",
+          "count": 1,
+          "total": 6
+        },
+        {
+          "url": "/downloads/plastic_crate_02/plastic_crate_02.bin",
+          "count": 2,
+          "total": 6
+        },
+        {
+          "url": "/downloads/plastic_crate_02/textures/plastic_crate_02_diff_1k.jpg",
+          "count": 3,
+          "total": 6
+        },
+        {
+          "url": "/downloads/plastic_crate_02/textures/plastic_crate_02_nor_gl_1k.jpg",
+          "count": 4,
+          "total": 6
+        },
+        {
+          "url": "/downloads/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg",
+          "count": 5,
+          "total": 6
+        },
+        {
+          "url": "/downloads/plastic_crate_02/plastic_crate_02_1k.gltf",
+          "count": 6,
+          "total": 6
+        },
+        {
+          "url": "/downloads/painted_wooden_bench/painted_wooden_bench_1k.gltf",
+          "count": 7,
+          "total": 12
+        },
+        {
+          "url": "/downloads/painted_wooden_bench/painted_wooden_bench.bin",
+          "count": 8,
+          "total": 12
+        },
+        {
+          "url": "/downloads/painted_wooden_bench/textures/painted_wooden_bench_arm_1k.jpg",
+          "count": 9,
+          "total": 12
+        },
+        {
+          "url": "/downloads/painted_wooden_bench/textures/painted_wooden_bench_diff_1k.jpg",
+          "count": 10,
+          "total": 12
+        },
+        {
+          "url": "/downloads/painted_wooden_bench/textures/painted_wooden_bench_nor_gl_1k.jpg",
+          "count": 11,
+          "total": 12
+        },
+        {
+          "url": "/downloads/painted_wooden_bench/painted_wooden_bench_1k.gltf",
+          "count": 12,
+          "total": 12
+        },
+        {
+          "url": "/downloads/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+          "count": 13,
+          "total": 15
+        },
+        {
+          "url": "/downloads/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg",
+          "count": 14,
+          "total": 15
+        },
+        {
+          "url": "/downloads/worn_shutter/textures/worn_shutter_diff_1k.jpg",
+          "count": 15,
+          "total": 15
+        }
+      ],
+      "note": "Independent neutral asset preview only. Not fixture acceptance or FPS evidence.",
+      "png": "03-worn_shutter.png",
+      "jpg": "03-worn_shutter.jpg",
+      "captureSize": {
+        "width": 1440,
+        "height": 900
+      }
+    }
+  ],
+  "requests": [
+    {
+      "url": "/",
+      "status": 200,
+      "bytes": 608
+    },
+    {
+      "url": "/preview/viewer.js",
+      "status": 200,
+      "bytes": 6023
+    },
+    {
+      "url": "/three/examples/jsm/loaders/GLTFLoader.js",
+      "status": 200,
+      "bytes": 119861
+    },
+    {
+      "url": "/three/build/three.module.js",
+      "status": 200,
+      "bytes": 658900
+    },
+    {
+      "url": "/three/examples/jsm/utils/BufferGeometryUtils.js",
+      "status": 200,
+      "bytes": 39153
+    },
+    {
+      "url": "/three/examples/jsm/utils/SkeletonUtils.js",
+      "status": 200,
+      "bytes": 11535
+    },
+    {
+      "url": "/three/build/three.core.js",
+      "status": 200,
+      "bytes": 1474799
+    },
+    {
+      "url": "/downloads/plastic_crate_02/plastic_crate_02_1k.gltf",
+      "status": 200,
+      "bytes": 2947
+    },
+    {
+      "url": "/downloads/plastic_crate_02/plastic_crate_02.bin",
+      "status": 200,
+      "bytes": 186848
+    },
+    {
+      "url": "/downloads/plastic_crate_02/textures/plastic_crate_02_diff_1k.jpg",
+      "status": 200,
+      "bytes": 492862
+    },
+    {
+      "url": "/downloads/plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg",
+      "status": 200,
+      "bytes": 597561
+    },
+    {
+      "url": "/downloads/plastic_crate_02/textures/plastic_crate_02_nor_gl_1k.jpg",
+      "status": 200,
+      "bytes": 558561
+    },
+    {
+      "url": "/downloads/painted_wooden_bench/painted_wooden_bench_1k.gltf",
+      "status": 200,
+      "bytes": 2835
+    },
+    {
+      "url": "/downloads/painted_wooden_bench/painted_wooden_bench.bin",
+      "status": 200,
+      "bytes": 25444
+    },
+    {
+      "url": "/downloads/painted_wooden_bench/textures/painted_wooden_bench_diff_1k.jpg",
+      "status": 200,
+      "bytes": 545216
+    },
+    {
+      "url": "/downloads/painted_wooden_bench/textures/painted_wooden_bench_nor_gl_1k.jpg",
+      "status": 200,
+      "bytes": 830104
+    },
+    {
+      "url": "/downloads/painted_wooden_bench/textures/painted_wooden_bench_arm_1k.jpg",
+      "status": 200,
+      "bytes": 586040
+    },
+    {
+      "url": "/downloads/worn_shutter/textures/worn_shutter_diff_1k.jpg",
+      "status": 200,
+      "bytes": 560285
+    },
+    {
+      "url": "/downloads/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+      "status": 200,
+      "bytes": 445738
+    },
+    {
+      "url": "/downloads/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg",
+      "status": 200,
+      "bytes": 717669
+    }
+  ],
+  "failedRequests": [],
+  "exceptions": [],
+  "consoleMessages": [
+    {
+      "level": 2,
+      "message": "THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.",
+      "line": 2015,
+      "source": "http://127.0.0.1:54524/three/build/three.core.js"
+    }
+  ],
+  "originalHashesBefore": [
+    {
+      "path": "plastic_crate_02/plastic_crate_02_1k.gltf",
+      "bytes": 2947,
+      "sha256": "531f7ba7d4b501759b04fb704db1948bcaab34d8342e71e3f5877d9f0340dba7"
+    },
+    {
+      "path": "plastic_crate_02/textures/plastic_crate_02_nor_gl_1k.jpg",
+      "bytes": 558561,
+      "sha256": "492b4cb03b043fb30a21b5de1cdf91dfbcd9bb7d080957af69a333d622050f30"
+    },
+    {
+      "path": "plastic_crate_02/textures/plastic_crate_02_diff_1k.jpg",
+      "bytes": 492862,
+      "sha256": "f153478d5f44f39ab27a967850caac27b35ee8f04185d0d4eaf7ad501742fb15"
+    },
+    {
+      "path": "plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg",
+      "bytes": 597561,
+      "sha256": "f0c667358c7afd46be37b40c30435b63ae3dba8432b45c507f3298fc6f163418"
+    },
+    {
+      "path": "plastic_crate_02/plastic_crate_02.bin",
+      "bytes": 186848,
+      "sha256": "f51696aa04643b5c1948da88be8ce1d4e92596ae4908b0132cd690f8fb8e0b63"
+    },
+    {
+      "path": "painted_wooden_bench/painted_wooden_bench_1k.gltf",
+      "bytes": 2835,
+      "sha256": "2289ab82f3fe3045bf18f7b9541743d2c65b9f071cb34bbe424d2bc998f3e507"
+    },
+    {
+      "path": "painted_wooden_bench/textures/painted_wooden_bench_diff_1k.jpg",
+      "bytes": 545216,
+      "sha256": "9bc533313091ee71eaca5fa6334b71d27935d9d75311f64df6a53c28a67c435c"
+    },
+    {
+      "path": "painted_wooden_bench/textures/painted_wooden_bench_nor_gl_1k.jpg",
+      "bytes": 830104,
+      "sha256": "a0f53740d77fc61aac01de0b7e1ae6109445d1756839f739ae31fdf10c9911f2"
+    },
+    {
+      "path": "painted_wooden_bench/textures/painted_wooden_bench_arm_1k.jpg",
+      "bytes": 586040,
+      "sha256": "878785565eeff706b8f1e4db7e3d794a544e9cf0e56cee424d9a271ab4ead47e"
+    },
+    {
+      "path": "painted_wooden_bench/painted_wooden_bench.bin",
+      "bytes": 25444,
+      "sha256": "5799bcb20924105cccd6424de8cdb8e67eb57fddc19c395befeac634a7b2e013"
+    },
+    {
+      "path": "worn_shutter/textures/worn_shutter_nor_gl_1k.jpg",
+      "bytes": 717669,
+      "sha256": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93"
+    },
+    {
+      "path": "worn_shutter/textures/worn_shutter_diff_1k.jpg",
+      "bytes": 560285,
+      "sha256": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08"
+    },
+    {
+      "path": "worn_shutter/textures/worn_shutter_arm_1k.jpg",
+      "bytes": 445738,
+      "sha256": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd"
+    }
+  ],
+  "originalHashesAfter": [
+    {
+      "path": "plastic_crate_02/plastic_crate_02_1k.gltf",
+      "bytes": 2947,
+      "sha256": "531f7ba7d4b501759b04fb704db1948bcaab34d8342e71e3f5877d9f0340dba7"
+    },
+    {
+      "path": "plastic_crate_02/textures/plastic_crate_02_nor_gl_1k.jpg",
+      "bytes": 558561,
+      "sha256": "492b4cb03b043fb30a21b5de1cdf91dfbcd9bb7d080957af69a333d622050f30"
+    },
+    {
+      "path": "plastic_crate_02/textures/plastic_crate_02_diff_1k.jpg",
+      "bytes": 492862,
+      "sha256": "f153478d5f44f39ab27a967850caac27b35ee8f04185d0d4eaf7ad501742fb15"
+    },
+    {
+      "path": "plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg",
+      "bytes": 597561,
+      "sha256": "f0c667358c7afd46be37b40c30435b63ae3dba8432b45c507f3298fc6f163418"
+    },
+    {
+      "path": "plastic_crate_02/plastic_crate_02.bin",
+      "bytes": 186848,
+      "sha256": "f51696aa04643b5c1948da88be8ce1d4e92596ae4908b0132cd690f8fb8e0b63"
+    },
+    {
+      "path": "painted_wooden_bench/painted_wooden_bench_1k.gltf",
+      "bytes": 2835,
+      "sha256": "2289ab82f3fe3045bf18f7b9541743d2c65b9f071cb34bbe424d2bc998f3e507"
+    },
+    {
+      "path": "painted_wooden_bench/textures/painted_wooden_bench_diff_1k.jpg",
+      "bytes": 545216,
+      "sha256": "9bc533313091ee71eaca5fa6334b71d27935d9d75311f64df6a53c28a67c435c"
+    },
+    {
+      "path": "painted_wooden_bench/textures/painted_wooden_bench_nor_gl_1k.jpg",
+      "bytes": 830104,
+      "sha256": "a0f53740d77fc61aac01de0b7e1ae6109445d1756839f739ae31fdf10c9911f2"
+    },
+    {
+      "path": "painted_wooden_bench/textures/painted_wooden_bench_arm_1k.jpg",
+      "bytes": 586040,
+      "sha256": "878785565eeff706b8f1e4db7e3d794a544e9cf0e56cee424d9a271ab4ead47e"
+    },
+    {
+      "path": "painted_wooden_bench/painted_wooden_bench.bin",
+      "bytes": 25444,
+      "sha256": "5799bcb20924105cccd6424de8cdb8e67eb57fddc19c395befeac634a7b2e013"
+    },
+    {
+      "path": "worn_shutter/textures/worn_shutter_nor_gl_1k.jpg",
+      "bytes": 717669,
+      "sha256": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93"
+    },
+    {
+      "path": "worn_shutter/textures/worn_shutter_diff_1k.jpg",
+      "bytes": 560285,
+      "sha256": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08"
+    },
+    {
+      "path": "worn_shutter/textures/worn_shutter_arm_1k.jpg",
+      "bytes": 445738,
+      "sha256": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd"
+    }
+  ],
+  "originalBytesUnchanged": true,
+  "exitCode": 0
+}

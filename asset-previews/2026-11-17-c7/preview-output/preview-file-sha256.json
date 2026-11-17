@@ -1,0 +1,49 @@
+{
+  "files": [
+    {
+      "path": "preview/index.html",
+      "bytes": 608,
+      "sha256": "af3bc035a2743a478be7818a7502ec5c4d662fc45c8423cba5ca04add0faf5b9"
+    },
+    {
+      "path": "preview/viewer.js",
+      "bytes": 6023,
+      "sha256": "685fb30b180c05752b7355729a7f5e55ed632671400b4c21ff88cd052debe9bb"
+    },
+    {
+      "path": "preview/electron-main.cjs",
+      "bytes": 4964,
+      "sha256": "e14bb9b7d8c643c837456c5306db5da8dd97c12030b874b36f1075547128e34c"
+    },
+    {
+      "path": "preview-output/01-plastic_crate_02.jpg",
+      "bytes": 38513,
+      "sha256": "8706f01908432b7a6da2ffb1ad410ef0ac5f03d970bbdc4c43bc5acc8116e88e"
+    },
+    {
+      "path": "preview-output/01-plastic_crate_02.png",
+      "bytes": 267803,
+      "sha256": "b88e34cbaf6eb2c0de9f265f72e293b52a7ccb355b3f2def3ada3a8d202e451c"
+    },
+    {
+      "path": "preview-output/02-painted_wooden_bench.jpg",
+      "bytes": 33165,
+      "sha256": "6469704bd951ae7145a0a3db617c97c0e78aac1fe6b4d3526cdd856d7a32e050"
+    },
+    {
+      "path": "preview-output/02-painted_wooden_bench.png",
+      "bytes": 297882,
+      "sha256": "2ca2d1fc0e8937d5322ae987fbbb44205052312da88083b42a0dc319ca1db30f"
+    },
+    {
+      "path": "preview-output/03-worn_shutter.jpg",
+      "bytes": 71007,
+      "sha256": "4b5bd3c5213ca7c5686babf7283944d679254ef0d3e46b84816b56e1c02a6f6a"
+    },
+    {
+      "path": "preview-output/03-worn_shutter.png",
+      "bytes": 733710,
+      "sha256": "6914aea6b37c814f3fe3e902de2bd54422cdf05c1571fa192bb09590af682f19"
+    }
+  ]
+}

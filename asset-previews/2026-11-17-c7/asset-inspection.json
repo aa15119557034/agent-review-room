@@ -1,0 +1,597 @@
+{
+  "createdAt": "2026-11-17T05:38:40.940Z",
+  "method": "CPU original glTF JSON + original BIN accessor/index reads + node matrix transforms + JPEG SOF markers; no renderer",
+  "filesRehashed": 13,
+  "totalBytes": 5552110,
+  "assets": [
+    {
+      "id": "plastic_crate_02",
+      "generator": "Khronos glTF Blender I/O v5.1.20",
+      "scene": 0,
+      "nodeCount": 1,
+      "meshCount": 1,
+      "materialCount": 1,
+      "totalTriangles": 5840,
+      "nodes": [
+        {
+          "index": 0,
+          "name": "plastic_crate_02",
+          "mesh": 0,
+          "matrixWorld": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "bounds": {
+            "min": [
+              -0.2527506947517395,
+              -0.00001595914363861084,
+              -0.20275069773197174
+            ],
+            "max": [
+              0.2527506947517395,
+              0.25407320261001587,
+              0.20275069773197174
+            ],
+            "size": [
+              0.505501389503479,
+              0.2540891617536545,
+              0.4055013954639435
+            ]
+          }
+        }
+      ],
+      "primitives": [
+        {
+          "node": 0,
+          "mesh": 0,
+          "primitive": 0,
+          "material": 0,
+          "triangles": 5840,
+          "vertices": 4744,
+          "indexCount": 17520,
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "TEXCOORD_0": 2
+          },
+          "mode": 4,
+          "localBounds": {
+            "min": [
+              -0.2527506947517395,
+              -0.00001595914363861084,
+              -0.20275069773197174
+            ],
+            "max": [
+              0.2527506947517395,
+              0.25407320261001587,
+              0.20275069773197174
+            ]
+          },
+          "uv0Range": {
+            "min": [
+              0.003901209682226181,
+              0.004015207290649414
+            ],
+            "max": [
+              0.9960395097732544,
+              0.9960993528366089
+            ]
+          }
+        }
+      ],
+      "worldBounds": {
+        "min": [
+          -0.2527506947517395,
+          -0.00001595914363861084,
+          -0.20275069773197174
+        ],
+        "max": [
+          0.2527506947517395,
+          0.25407320261001587,
+          0.20275069773197174
+        ],
+        "size": [
+          0.505501389503479,
+          0.2540891617536545,
+          0.4055013954639435
+        ]
+      },
+      "materials": [
+        {
+          "source": {
+            "alphaMode": "BLEND",
+            "name": "plastic_crate_02",
+            "normalTexture": {
+              "index": 0
+            },
+            "pbrMetallicRoughness": {
+              "baseColorFactor": [
+                1,
+                0.40816283226013184,
+                0,
+                1
+              ],
+              "baseColorTexture": {
+                "index": 1
+              },
+              "metallicFactor": 0,
+              "metallicRoughnessTexture": {
+                "index": 2
+              }
+            }
+          },
+          "effectiveDefaults": {
+            "alphaMode": "BLEND",
+            "doubleSided": false,
+            "baseColorFactor": [
+              1,
+              0.40816283226013184,
+              0,
+              1
+            ],
+            "metallicFactor": 0,
+            "roughnessFactor": 1
+          },
+          "hasOcclusionTexture": false
+        }
+      ],
+      "images": [
+        {
+          "mimeType": "image/jpeg",
+          "name": "plastic_crate_02_nor_gl",
+          "uri": "textures/plastic_crate_02_nor_gl_1k.jpg"
+        },
+        {
+          "mimeType": "image/jpeg",
+          "name": "plastic_crate_02_diff-plastic_crate_02_opacity",
+          "uri": "textures/plastic_crate_02_diff_1k.jpg"
+        },
+        {
+          "mimeType": "image/jpeg",
+          "name": "plastic_crate_02_rough",
+          "uri": "textures/plastic_crate_02_arm_1k.jpg"
+        }
+      ],
+      "textures": [
+        {
+          "sampler": 0,
+          "source": 0
+        },
+        {
+          "sampler": 0,
+          "source": 1
+        },
+        {
+          "sampler": 0,
+          "source": 2
+        }
+      ],
+      "samplers": [
+        {
+          "magFilter": 9729,
+          "minFilter": 9987
+        }
+      ],
+      "accessors": [
+        {
+          "bufferView": 0,
+          "componentType": 5126,
+          "count": 4744,
+          "max": [
+            0.2527506947517395,
+            0.25407320261001587,
+            0.20275069773197174
+          ],
+          "min": [
+            -0.2527506947517395,
+            -0.00001595914363861084,
+            -0.20275069773197174
+          ],
+          "type": "VEC3"
+        },
+        {
+          "bufferView": 1,
+          "componentType": 5126,
+          "count": 4744,
+          "type": "VEC3"
+        },
+        {
+          "bufferView": 2,
+          "componentType": 5126,
+          "count": 4744,
+          "type": "VEC2"
+        },
+        {
+          "bufferView": 3,
+          "componentType": 5123,
+          "count": 17520,
+          "type": "SCALAR"
+        }
+      ],
+      "bufferViews": [
+        {
+          "buffer": 0,
+          "byteLength": 56928,
+          "byteOffset": 0,
+          "target": 34962
+        },
+        {
+          "buffer": 0,
+          "byteLength": 56928,
+          "byteOffset": 56928,
+          "target": 34962
+        },
+        {
+          "buffer": 0,
+          "byteLength": 37952,
+          "byteOffset": 113856,
+          "target": 34962
+        },
+        {
+          "buffer": 0,
+          "byteLength": 35040,
+          "byteOffset": 151808,
+          "target": 34963
+        }
+      ],
+      "dependencies": [
+        "plastic_crate_02.bin",
+        "textures/plastic_crate_02_nor_gl_1k.jpg",
+        "textures/plastic_crate_02_diff_1k.jpg",
+        "textures/plastic_crate_02_arm_1k.jpg"
+      ],
+      "dependencyClosure": "exact match to selected official API include set",
+      "extensionsUsed": [],
+      "extensionsRequired": [],
+      "animations": 0,
+      "skins": 0
+    },
+    {
+      "id": "painted_wooden_bench",
+      "generator": "Khronos glTF Blender I/O v4.0.44",
+      "scene": 0,
+      "nodeCount": 1,
+      "meshCount": 1,
+      "materialCount": 1,
+      "totalTriangles": 630,
+      "nodes": [
+        {
+          "index": 0,
+          "name": "painted_wooden_bench",
+          "mesh": 0,
+          "matrixWorld": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "bounds": {
+            "min": [
+              -0.5760610699653625,
+              -0.0004994967021048069,
+              -0.25369879603385925
+            ],
+            "max": [
+              0.5888825058937073,
+              0.8887919783592224,
+              0.24284429848194122
+            ],
+            "size": [
+              1.1649435758590698,
+              0.8892914750613272,
+              0.4965430945158005
+            ]
+          }
+        }
+      ],
+      "primitives": [
+        {
+          "node": 0,
+          "mesh": 0,
+          "primitive": 0,
+          "material": 0,
+          "triangles": 630,
+          "vertices": 677,
+          "indexCount": 1890,
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "TEXCOORD_0": 2
+          },
+          "mode": 4,
+          "localBounds": {
+            "min": [
+              -0.5760610699653625,
+              -0.0004994967021048069,
+              -0.25369879603385925
+            ],
+            "max": [
+              0.5888825058937073,
+              0.8887919783592224,
+              0.24284429848194122
+            ]
+          },
+          "uv0Range": {
+            "min": [
+              0.003995697014033794,
+              0.003997623920440674
+            ],
+            "max": [
+              0.9945679903030396,
+              0.9960068464279175
+            ]
+          }
+        }
+      ],
+      "worldBounds": {
+        "min": [
+          -0.5760610699653625,
+          -0.0004994967021048069,
+          -0.25369879603385925
+        ],
+        "max": [
+          0.5888825058937073,
+          0.8887919783592224,
+          0.24284429848194122
+        ],
+        "size": [
+          1.1649435758590698,
+          0.8892914750613272,
+          0.4965430945158005
+        ]
+      },
+      "materials": [
+        {
+          "source": {
+            "doubleSided": true,
+            "name": "painted_wooden_bench",
+            "normalTexture": {
+              "index": 0
+            },
+            "pbrMetallicRoughness": {
+              "baseColorTexture": {
+                "index": 1
+              },
+              "metallicFactor": 0,
+              "metallicRoughnessTexture": {
+                "index": 2
+              }
+            }
+          },
+          "effectiveDefaults": {
+            "alphaMode": "OPAQUE",
+            "doubleSided": true,
+            "baseColorFactor": [
+              1,
+              1,
+              1,
+              1
+            ],
+            "metallicFactor": 0,
+            "roughnessFactor": 1
+          },
+          "hasOcclusionTexture": false
+        }
+      ],
+      "images": [
+        {
+          "mimeType": "image/jpeg",
+          "name": "painted_wooden_bench_nor_gl",
+          "uri": "textures/painted_wooden_bench_nor_gl_1k.jpg"
+        },
+        {
+          "mimeType": "image/jpeg",
+          "name": "painted_wooden_bench_diff",
+          "uri": "textures/painted_wooden_bench_diff_1k.jpg"
+        },
+        {
+          "mimeType": "image/jpeg",
+          "name": "painted_wooden_bench_rough",
+          "uri": "textures/painted_wooden_bench_arm_1k.jpg"
+        }
+      ],
+      "textures": [
+        {
+          "sampler": 0,
+          "source": 0
+        },
+        {
+          "sampler": 0,
+          "source": 1
+        },
+        {
+          "sampler": 0,
+          "source": 2
+        }
+      ],
+      "samplers": [
+        {
+          "magFilter": 9729,
+          "minFilter": 9987
+        }
+      ],
+      "accessors": [
+        {
+          "bufferView": 0,
+          "componentType": 5126,
+          "count": 677,
+          "max": [
+            0.5888825058937073,
+            0.8887919783592224,
+            0.24284429848194122
+          ],
+          "min": [
+            -0.5760610699653625,
+            -0.0004994967021048069,
+            -0.25369879603385925
+          ],
+          "type": "VEC3"
+        },
+        {
+          "bufferView": 1,
+          "componentType": 5126,
+          "count": 677,
+          "type": "VEC3"
+        },
+        {
+          "bufferView": 2,
+          "componentType": 5126,
+          "count": 677,
+          "type": "VEC2"
+        },
+        {
+          "bufferView": 3,
+          "componentType": 5123,
+          "count": 1890,
+          "type": "SCALAR"
+        }
+      ],
+      "bufferViews": [
+        {
+          "buffer": 0,
+          "byteLength": 8124,
+          "byteOffset": 0,
+          "target": 34962
+        },
+        {
+          "buffer": 0,
+          "byteLength": 8124,
+          "byteOffset": 8124,
+          "target": 34962
+        },
+        {
+          "buffer": 0,
+          "byteLength": 5416,
+          "byteOffset": 16248,
+          "target": 34962
+        },
+        {
+          "buffer": 0,
+          "byteLength": 3780,
+          "byteOffset": 21664,
+          "target": 34963
+        }
+      ],
+      "dependencies": [
+        "painted_wooden_bench.bin",
+        "textures/painted_wooden_bench_nor_gl_1k.jpg",
+        "textures/painted_wooden_bench_diff_1k.jpg",
+        "textures/painted_wooden_bench_arm_1k.jpg"
+      ],
+      "dependencyClosure": "exact match to selected official API include set",
+      "extensionsUsed": [],
+      "extensionsRequired": [],
+      "animations": 0,
+      "skins": 0
+    }
+  ],
+  "images": [
+    {
+      "path": "plastic_crate_02/textures/plastic_crate_02_nor_gl_1k.jpg",
+      "format": "JPEG",
+      "bits": 8,
+      "height": 1024,
+      "width": 1024,
+      "components": 3,
+      "alpha": false
+    },
+    {
+      "path": "plastic_crate_02/textures/plastic_crate_02_diff_1k.jpg",
+      "format": "JPEG",
+      "bits": 8,
+      "height": 1024,
+      "width": 1024,
+      "components": 3,
+      "alpha": false
+    },
+    {
+      "path": "plastic_crate_02/textures/plastic_crate_02_arm_1k.jpg",
+      "format": "JPEG",
+      "bits": 8,
+      "height": 1024,
+      "width": 1024,
+      "components": 3,
+      "alpha": false
+    },
+    {
+      "path": "painted_wooden_bench/textures/painted_wooden_bench_diff_1k.jpg",
+      "format": "JPEG",
+      "bits": 8,
+      "height": 1024,
+      "width": 1024,
+      "components": 3,
+      "alpha": false
+    },
+    {
+      "path": "painted_wooden_bench/textures/painted_wooden_bench_nor_gl_1k.jpg",
+      "format": "JPEG",
+      "bits": 8,
+      "height": 1024,
+      "width": 1024,
+      "components": 3,
+      "alpha": false
+    },
+    {
+      "path": "painted_wooden_bench/textures/painted_wooden_bench_arm_1k.jpg",
+      "format": "JPEG",
+      "bits": 8,
+      "height": 1024,
+      "width": 1024,
+      "components": 3,
+      "alpha": false
+    },
+    {
+      "path": "worn_shutter/textures/worn_shutter_nor_gl_1k.jpg",
+      "format": "JPEG",
+      "bits": 8,
+      "height": 1024,
+      "width": 1024,
+      "components": 3,
+      "alpha": false
+    },
+    {
+      "path": "worn_shutter/textures/worn_shutter_diff_1k.jpg",
+      "format": "JPEG",
+      "bits": 8,
+      "height": 1024,
+      "width": 1024,
+      "components": 3,
+      "alpha": false
+    },
+    {
+      "path": "worn_shutter/textures/worn_shutter_arm_1k.jpg",
+      "format": "JPEG",
+      "bits": 8,
+      "height": 1024,
+      "width": 1024,
+      "components": 3,
+      "alpha": false
+    }
+  ]
+}

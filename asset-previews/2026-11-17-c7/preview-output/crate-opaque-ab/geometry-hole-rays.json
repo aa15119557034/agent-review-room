@@ -1,0 +1,122 @@
+{
+  "method": "Original source triangles, orthographic rays in -Z or -X, barycentric intersections; no face culling or textures",
+  "gridTest": {
+    "wall": "+Z",
+    "xRange": [
+      -0.23,
+      0.23
+    ],
+    "xStep": 0.0005,
+    "yRows": [
+      0.05,
+      0.075,
+      0.095,
+      0.14,
+      0.17,
+      0.19
+    ],
+    "samples": 5526,
+    "frontWallHits": 5526,
+    "behindOriginPlane": 0,
+    "noHit": 0
+  },
+  "probes": [
+    {
+      "axis": "-Z from z=0.5",
+      "lateral": 0,
+      "y": 0.075,
+      "firstSurface": 0.1907390058040619
+    },
+    {
+      "axis": "-Z from z=0.5",
+      "lateral": 0.15,
+      "y": 0.075,
+      "firstSurface": 0.1907390058040619
+    },
+    {
+      "axis": "-Z from z=0.5",
+      "lateral": 0,
+      "y": 0.17,
+      "firstSurface": 0.1907390058040619
+    },
+    {
+      "axis": "-Z from z=0.5",
+      "lateral": 0.15,
+      "y": 0.17,
+      "firstSurface": 0.1907390058040619
+    },
+    {
+      "axis": "-Z from z=0.5",
+      "lateral": 0,
+      "y": 0.225,
+      "firstSurface": null
+    },
+    {
+      "axis": "-Z from z=0.5",
+      "lateral": 0.15,
+      "y": 0.225,
+      "firstSurface": 0.1907390058040619
+    },
+    {
+      "axis": "-Z from z=0.5",
+      "lateral": 0,
+      "y": 0.235,
+      "firstSurface": null
+    },
+    {
+      "axis": "-Z from z=0.5",
+      "lateral": 0.15,
+      "y": 0.235,
+      "firstSurface": 0.20240901410579684
+    },
+    {
+      "axis": "-X from x=0.5",
+      "lateral": 0,
+      "y": 0.075,
+      "firstSurface": 0.24073900282382965
+    },
+    {
+      "axis": "-X from x=0.5",
+      "lateral": 0.15,
+      "y": 0.075,
+      "firstSurface": 0.24073900282382965
+    },
+    {
+      "axis": "-X from x=0.5",
+      "lateral": 0,
+      "y": 0.17,
+      "firstSurface": 0.24073900282382965
+    },
+    {
+      "axis": "-X from x=0.5",
+      "lateral": 0.15,
+      "y": 0.17,
+      "firstSurface": 0.24073900282382968
+    },
+    {
+      "axis": "-X from x=0.5",
+      "lateral": 0,
+      "y": 0.225,
+      "firstSurface": null
+    },
+    {
+      "axis": "-X from x=0.5",
+      "lateral": 0.15,
+      "y": 0.225,
+      "firstSurface": 0.24073900282382965
+    },
+    {
+      "axis": "-X from x=0.5",
+      "lateral": 0,
+      "y": 0.235,
+      "firstSurface": null
+    },
+    {
+      "axis": "-X from x=0.5",
+      "lateral": 0.15,
+      "y": 0.235,
+      "firstSurface": 0.24073900282382965
+    }
+  ],
+  "conclusion": "All tested grille-region rays hit the near +Z wall. Small grille cutouts are not established as geometry; opaque preview alone must not be treated as restoration of source opacity intent."
+}

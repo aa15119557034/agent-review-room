@@ -1,0 +1,41 @@
+{
+  "createdAt": "2026-11-17T05:33:52.996Z",
+  "files": [
+    {
+      "path": "plastic_crate_02.info.json",
+      "url": "https://api.polyhaven.com/info/plastic_crate_02",
+      "bytes": 1054,
+      "sha256": "6850bfbb454e1053a78da73c2762d55421db61ea082fa9164da4b2e5ab7839bf"
+    },
+    {
+      "path": "plastic_crate_02.files.json",
+      "url": "https://api.polyhaven.com/files/plastic_crate_02",
+      "bytes": 24834,
+      "sha256": "a0760ce332409c9a8eead44c97eca39d608aa831dc5adff564ca53d89a68249b"
+    },
+    {
+      "path": "painted_wooden_bench.info.json",
+      "url": "https://api.polyhaven.com/info/painted_wooden_bench",
+      "bytes": 972,
+      "sha256": "e8a0914d0b8fdad9034ef94935488f72dc22e1687f1d62787bc677d46e4581d4"
+    },
+    {
+      "path": "painted_wooden_bench.files.json",
+      "url": "https://api.polyhaven.com/files/painted_wooden_bench",
+      "bytes": 20775,
+      "sha256": "015c4afeb96530eae14bdf8f483495a71d54de5ed543e902035e8382e76f2f8c"
+    },
+    {
+      "path": "worn_shutter.info.json",
+      "url": "https://api.polyhaven.com/info/worn_shutter",
+      "bytes": 926,
+      "sha256": "70f2c3df36e4da88c8c65cd46bd77ce81474dbde2977e2426cfa52286c8abf37"
+    },
+    {
+      "path": "worn_shutter.files.json",
+      "url": "https://api.polyhaven.com/files/worn_shutter",
+      "bytes": 25853,
+      "sha256": "ad2eb31cbd90b658f7b47db9c60760004f53633791459980105d5ffcf6e4529a"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "path": "supplemental/plastic_crate_02/textures/plastic_crate_02_opacity_1k.png",
+  "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/plastic_crate_02/plastic_crate_02_opacity_1k.png",
+  "bytes": 16785,
+  "md5": "1b087615419b81cc55241fa7cdbe36f7",
+  "sha256": "2f755d95d8c28792c54b31427523bdd5ada6ddc003762ac6d057530d224fa170",
+  "metadataSource": "meta/plastic_crate_02.files.json: blend.1k.blend.include[\"textures/plastic_crate_02_opacity_1k.png\"]",
+  "source": "https://polyhaven.com/a/plastic_crate_02",
+  "author": "Fabi_G",
+  "license": "CC0-1.0",
+  "licenseSource": "https://polyhaven.com/license",
+  "modified": false,
+  "original13Files": "unchanged; separate receipt retained"
+}
