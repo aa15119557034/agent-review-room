@@ -1,0 +1,436 @@
+{
+  "sourceBefore": "e78c52ce50205f85a4af02bfa78fb8f230b3644b",
+  "archiveBefore": "8091a903abfe913921deb6565875251d598154cb",
+  "sourceAfter": "b949ffeb135f5b0798155aa5579740a841d94d0d",
+  "dimensions": [
+    1440,
+    900
+  ],
+  "DPR": 1,
+  "controls": "Exact camera position, quaternion, FOV, GPU, station and island clock 14, AO .55, hidden HUD, same lighting, shaders except selected crossing halo change, same post settings and materials. Both sets are capture-2 (third fixed render).",
+  "lights": [
+    {
+      "type": "DirectionalLight",
+      "name": "",
+      "color": [
+        1,
+        0.55201140150344,
+        0.2788942634659966
+      ],
+      "intensity": 2.3,
+      "position": [
+        125.87402547312934,
+        41.2658705308415,
+        927.1765677370728
+      ],
+      "target": [
+        280,
+        8,
+        900
+      ],
+      "castShadow": true,
+      "shadow": {
+        "mapSize": [
+          4096,
+          4096
+        ],
+        "bias": -0.0002,
+        "normalBias": 0.035,
+        "camera": {
+          "near": 1,
+          "far": 400,
+          "left": -150,
+          "right": 150,
+          "top": 150,
+          "bottom": -150
+        }
+      }
+    },
+    {
+      "type": "HemisphereLight",
+      "name": "",
+      "color": [
+        0.45641102317066595,
+        0.5028864580233624,
+        0.8069522576650873
+      ],
+      "groundColor": [
+        0.3515325994898463,
+        0.21586050010324417,
+        0.13843161502267545
+      ],
+      "intensity": 1.6,
+      "position": [
+        0,
+        1,
+        0
+      ],
+      "castShadow": false,
+      "shadow": null
+    }
+  ],
+  "post": {
+    "exposure": 1.02,
+    "blur": 0,
+    "bloom": 0.2,
+    "distortion": 0,
+    "fringe": 0,
+    "vignette": 0.12,
+    "rays": 0,
+    "saturation": 1,
+    "contrast": 1.05,
+    "speed": 0
+  },
+  "pairs": [
+    {
+      "id": "01",
+      "view": "station-street",
+      "label": "站前主街",
+      "camera": {
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58
+      },
+      "time": 14,
+      "stationTime": 14,
+      "ao": 0.55,
+      "before": {
+        "image": "../c20-evening-corridor-sakura-3060-2026-11-18/images/01-evening.jpg",
+        "jpegSha256": "24a1734b04216695879fa367dbf25558a4b32553eb6b8015911e13831af909e9",
+        "pngSha256": "226f93762522b2609c5bd8b2f42e3f99d6139d1dcc805fb14bbb1d99ca999e1d"
+      },
+      "after": {
+        "image": "images/01-evening.jpg",
+        "jpegSha256": "c4cb3469862799919e83004b1d5a28e04a5462e83033c019ab086b413ff40b48",
+        "pngSha256": "315c4e9834d677bd5394a8fbf64b79ae5674f1765ccee9af916a73ad8bda9216",
+        "repeatSha256": "315c4e9834d677bd5394a8fbf64b79ae5674f1765ccee9af916a73ad8bda9216",
+        "warmupSha256": "315c4e9834d677bd5394a8fbf64b79ae5674f1765ccee9af916a73ad8bda9216"
+      },
+      "pixelDifferences": {
+        "pixels": 1296000,
+        "changed": 1580,
+        "deltaOver8": 207,
+        "maxChannelDelta": 72,
+        "positiveRedCodeSum": 0
+      }
+    },
+    {
+      "id": "20",
+      "view": "20-rear-eye",
+      "label": "公寓后廊",
+      "camera": {
+        "position": [
+          273,
+          14.755245542526229,
+          758
+        ],
+        "quaternion": [
+          -0.00013011891877658623,
+          0.9145142483742376,
+          -0.00029414054360230415,
+          -0.40455356390830466
+        ],
+        "fov": 58
+      },
+      "time": 14,
+      "stationTime": 14,
+      "ao": 0.55,
+      "before": {
+        "image": "../c20-evening-corridor-sakura-3060-2026-11-18/images/20-evening.jpg",
+        "jpegSha256": "cde4b02d765904b3c5f17cbdf537914eb5af9e3d987b1b613de32189772c047e",
+        "pngSha256": "2d6e47e67a320c72fd240be1f0ade742019314f8e069b4bf3c88a55036b2b26f"
+      },
+      "after": {
+        "image": "images/20-evening.jpg",
+        "jpegSha256": "cde4b02d765904b3c5f17cbdf537914eb5af9e3d987b1b613de32189772c047e",
+        "pngSha256": "2d6e47e67a320c72fd240be1f0ade742019314f8e069b4bf3c88a55036b2b26f",
+        "repeatSha256": "2d6e47e67a320c72fd240be1f0ade742019314f8e069b4bf3c88a55036b2b26f",
+        "warmupSha256": "2d6e47e67a320c72fd240be1f0ade742019314f8e069b4bf3c88a55036b2b26f"
+      },
+      "pixelDifferences": {
+        "pixels": 1296000,
+        "changed": 0,
+        "deltaOver8": 0,
+        "maxChannelDelta": 0,
+        "positiveRedCodeSum": 0
+      }
+    },
+    {
+      "id": "21",
+      "view": "21-front-eye",
+      "label": "洗衣店前",
+      "camera": {
+        "position": [
+          274,
+          12.87812709172567,
+          783
+        ],
+        "quaternion": [
+          0.07422133960767584,
+          -0.5103582416049142,
+          0.044271975994965136,
+          0.8556083508909221
+        ],
+        "fov": 58
+      },
+      "time": 14,
+      "stationTime": 14,
+      "ao": 0.55,
+      "before": {
+        "image": "../c20-evening-corridor-sakura-3060-2026-11-18/images/21-evening.jpg",
+        "jpegSha256": "251f47572e94991ac0ac7da30fba04103bb3fd4ac9bb835c26d6f493fbdcac6e",
+        "pngSha256": "a086375211fa53161a4821bcd99454cf4035bd4a25c1dcf5750b7ab4517ffadf"
+      },
+      "after": {
+        "image": "images/21-evening.jpg",
+        "jpegSha256": "251f47572e94991ac0ac7da30fba04103bb3fd4ac9bb835c26d6f493fbdcac6e",
+        "pngSha256": "a086375211fa53161a4821bcd99454cf4035bd4a25c1dcf5750b7ab4517ffadf",
+        "repeatSha256": "a086375211fa53161a4821bcd99454cf4035bd4a25c1dcf5750b7ab4517ffadf",
+        "warmupSha256": "a086375211fa53161a4821bcd99454cf4035bd4a25c1dcf5750b7ab4517ffadf"
+      },
+      "pixelDifferences": {
+        "pixels": 1296000,
+        "changed": 0,
+        "deltaOver8": 0,
+        "maxChannelDelta": 0,
+        "positiveRedCodeSum": 0
+      }
+    },
+    {
+      "id": "23",
+      "view": "service-corner",
+      "label": "维修角",
+      "camera": {
+        "position": [
+          308.4,
+          9.612,
+          872.9
+        ],
+        "quaternion": [
+          -0.08432325046436126,
+          0.5331397072650681,
+          0.05351200213385738,
+          0.8401119613456697
+        ],
+        "fov": 55
+      },
+      "time": 14,
+      "stationTime": 14,
+      "ao": 0.55,
+      "before": {
+        "image": "../c20-evening-corridor-sakura-3060-2026-11-18/images/23-evening.jpg",
+        "jpegSha256": "dcaf1a8b9e777febf184154bcc8cacc9d959357355a97a26ae907c4639aa9e39",
+        "pngSha256": "d6107b9d418110fee0701b2e1422f26c27c8d6cf135ea9e8b19d4505b71871c5"
+      },
+      "after": {
+        "image": "images/23-evening.jpg",
+        "jpegSha256": "dcaf1a8b9e777febf184154bcc8cacc9d959357355a97a26ae907c4639aa9e39",
+        "pngSha256": "d6107b9d418110fee0701b2e1422f26c27c8d6cf135ea9e8b19d4505b71871c5",
+        "repeatSha256": "d6107b9d418110fee0701b2e1422f26c27c8d6cf135ea9e8b19d4505b71871c5",
+        "warmupSha256": "d6107b9d418110fee0701b2e1422f26c27c8d6cf135ea9e8b19d4505b71871c5"
+      },
+      "pixelDifferences": {
+        "pixels": 1296000,
+        "changed": 0,
+        "deltaOver8": 0,
+        "maxChannelDelta": 0,
+        "positiveRedCodeSum": 0
+      }
+    },
+    {
+      "id": "24",
+      "view": "laundry-details",
+      "label": "洗衣店细节",
+      "camera": {
+        "position": [
+          288,
+          14.384808464050293,
+          777.9
+        ],
+        "quaternion": [
+          -0.15522850149956677,
+          0.6173580660361093,
+          0.12595148976979553,
+          0.7608609287163607
+        ],
+        "fov": 55
+      },
+      "time": 14,
+      "stationTime": 14,
+      "ao": 0.55,
+      "before": {
+        "image": "../c20-evening-corridor-sakura-3060-2026-11-18/images/24-evening.jpg",
+        "jpegSha256": "668c4511af08a3540dc60827bd42619ae0c8a74d9c5f5312b4cbaa9b1ac281d8",
+        "pngSha256": "3157807f8872a7a93abfd91f9eb1f888a826ccba217fbd3a90c718695440b651"
+      },
+      "after": {
+        "image": "images/24-evening.jpg",
+        "jpegSha256": "668c4511af08a3540dc60827bd42619ae0c8a74d9c5f5312b4cbaa9b1ac281d8",
+        "pngSha256": "3157807f8872a7a93abfd91f9eb1f888a826ccba217fbd3a90c718695440b651",
+        "repeatSha256": "3157807f8872a7a93abfd91f9eb1f888a826ccba217fbd3a90c718695440b651",
+        "warmupSha256": "3157807f8872a7a93abfd91f9eb1f888a826ccba217fbd3a90c718695440b651"
+      },
+      "pixelDifferences": {
+        "pixels": 1296000,
+        "changed": 0,
+        "deltaOver8": 0,
+        "maxChannelDelta": 0,
+        "positiveRedCodeSum": 0
+      }
+    },
+    {
+      "id": "04",
+      "view": "shop-interior",
+      "label": "便利店内",
+      "camera": {
+        "position": [
+          271.7,
+          9.9134,
+          908
+        ],
+        "quaternion": [
+          -0.015701859235384273,
+          0.7069324236562871,
+          0.015701859235384273,
+          0.7069324236562871
+        ],
+        "fov": 58
+      },
+      "time": 14,
+      "stationTime": 14,
+      "ao": 0.55,
+      "before": {
+        "image": "../c20-evening-corridor-sakura-3060-2026-11-18/images/04-evening.jpg",
+        "jpegSha256": "557bb8805ddbc8151bbf45d974eb42868f7f6f5fb1478c0f971f3c5d94573c5f",
+        "pngSha256": "c213a0c5cf4b178a6c6e0c5c5850bd5a0ea37285181a6c0631eb6d0c85963dd0"
+      },
+      "after": {
+        "image": "images/04-evening.jpg",
+        "jpegSha256": "557bb8805ddbc8151bbf45d974eb42868f7f6f5fb1478c0f971f3c5d94573c5f",
+        "pngSha256": "c213a0c5cf4b178a6c6e0c5c5850bd5a0ea37285181a6c0631eb6d0c85963dd0",
+        "repeatSha256": "c213a0c5cf4b178a6c6e0c5c5850bd5a0ea37285181a6c0631eb6d0c85963dd0",
+        "warmupSha256": "c213a0c5cf4b178a6c6e0c5c5850bd5a0ea37285181a6c0631eb6d0c85963dd0"
+      },
+      "pixelDifferences": {
+        "pixels": 1296000,
+        "changed": 0,
+        "deltaOver8": 0,
+        "maxChannelDelta": 0,
+        "positiveRedCodeSum": 0
+      }
+    },
+    {
+      "id": "03",
+      "view": "island-aerial",
+      "label": "全岛鸟瞰",
+      "camera": {
+        "position": [
+          2100,
+          2350,
+          2450
+        ],
+        "quaternion": [
+          -0.27043683246052963,
+          0.3343071089193487,
+          0.10076912073943207,
+          0.8971890886987558
+        ],
+        "fov": 58
+      },
+      "time": 14,
+      "stationTime": 14,
+      "ao": 0.55,
+      "before": {
+        "image": "../c20-evening-corridor-sakura-3060-2026-11-18/images/03-evening.jpg",
+        "jpegSha256": "9445a9a6557af6713c3ff2d2fabcee9cd304ae3106c102270d1a22ec74652620",
+        "pngSha256": "153a3cfceaffee14bb9ae4031dbed923f2e7114ac8544723804c1431b456e158"
+      },
+      "after": {
+        "image": "images/03-evening.jpg",
+        "jpegSha256": "408692e51ed8d95fe7d1edb6fe5fd8d1f77b6f371cafe0a97bf018f19f3c048e",
+        "pngSha256": "746dd1d2335dd777669762063e8cde97ea439cfa8226b86a59e63246f1d55c5e",
+        "repeatSha256": "746dd1d2335dd777669762063e8cde97ea439cfa8226b86a59e63246f1d55c5e",
+        "warmupSha256": "746dd1d2335dd777669762063e8cde97ea439cfa8226b86a59e63246f1d55c5e"
+      },
+      "pixelDifferences": {
+        "pixels": 1296000,
+        "changed": 1063,
+        "deltaOver8": 164,
+        "maxChannelDelta": 143,
+        "positiveRedCodeSum": 183
+      }
+    },
+    {
+      "id": "detail",
+      "view": "street-detail",
+      "label": "商店橱窗近景",
+      "camera": {
+        "position": [
+          284.4,
+          10.281286274509803,
+          924
+        ],
+        "quaternion": [
+          -0.12465537443110519,
+          -0.38126635888515065,
+          -0.05196769176958736,
+          0.914547079280253
+        ],
+        "fov": 58
+      },
+      "time": 14,
+      "stationTime": 14,
+      "ao": 0.55,
+      "before": {
+        "image": "../c20-evening-corridor-sakura-3060-2026-11-18/images/detail-evening.jpg",
+        "jpegSha256": "857a5ec6bf65e0d74f6d595316522b6d1369b94d03fc2394441fb96f6fa5e1ea",
+        "pngSha256": "c23993afcf80fe5f2432c8b4f444776674535859ff487b6b35478bbfef9a7465"
+      },
+      "after": {
+        "image": "images/detail-evening.jpg",
+        "jpegSha256": "857a5ec6bf65e0d74f6d595316522b6d1369b94d03fc2394441fb96f6fa5e1ea",
+        "pngSha256": "c23993afcf80fe5f2432c8b4f444776674535859ff487b6b35478bbfef9a7465",
+        "repeatSha256": "c23993afcf80fe5f2432c8b4f444776674535859ff487b6b35478bbfef9a7465",
+        "warmupSha256": "c23993afcf80fe5f2432c8b4f444776674535859ff487b6b35478bbfef9a7465"
+      },
+      "pixelDifferences": {
+        "pixels": 1296000,
+        "changed": 0,
+        "deltaOver8": 0,
+        "maxChannelDelta": 0,
+        "positiveRedCodeSum": 0
+      }
+    }
+  ],
+  "afternoonControl": {
+    "sourceBefore": "e78c52ce50205f85a4af02bfa78fb8f230b3644b",
+    "sourceAfter": "b949ffeb135f5b0798155aa5579740a841d94d0d",
+    "beforePngSha256": "5187f920ae5b735ad1cd2aa2b29ceff43ae29be5561f4b193a4ad14da49e3d99",
+    "afterPngSha256": "5187f920ae5b735ad1cd2aa2b29ceff43ae29be5561f4b193a4ad14da49e3d99",
+    "samePNG": true,
+    "view": "station-street",
+    "camera": {
+      "position": [
+        278.8,
+        10.4,
+        936
+      ],
+      "quaternion": [
+        -0.003277842930440423,
+        -0.009834585659995631,
+        -0.000032237959341941705,
+        0.9999462663720154
+      ],
+      "fov": 58
+    }
+  }
+}

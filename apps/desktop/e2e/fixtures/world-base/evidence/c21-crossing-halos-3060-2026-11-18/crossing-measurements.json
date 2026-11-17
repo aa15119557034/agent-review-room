@@ -1,0 +1,1163 @@
+{
+  "sourceBefore": "e78c52ce50205f85a4af02bfa78fb8f230b3644b",
+  "baselineStreetCaptureHead": "8091a903abfe913921deb6565875251d598154cb",
+  "sourceAfter": "b949ffeb135f5b0798155aa5579740a841d94d0d",
+  "method": "Frozen 1440x900 native sRGB PNGs on RTX 3060 Laptop at scene/station time 14. Only visibility of all five named crossing-halo meshes is temporarily set false and then restored. Lamps, materials, camera, solar lighting and bloom stay fixed in a sequence. Rectangles use original PNG coordinates (left, top, right, bottom exclusive). Every published crop magnifies with nearest-neighbour and has no colour grading.",
+  "warmPredicate": "R>=170, R-G>=45, R-B>=50 on 8-bit displayed pixels. Red-code sum is sum(max(ON.R-OFF.R,0)) in the same region under 8-bit display encoding, not photometric intensity.",
+  "nearSurvey": {
+    "views": {
+      "station-street": {
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58
+      },
+      "crossing-south-approach": {
+        "position": [
+          267,
+          9.6,
+          871.4
+        ],
+        "quaternion": [
+          0.05215616838604781,
+          0.17004339802240223,
+          -0.009012891298993289,
+          0.9840140978048604
+        ],
+        "fov": 58
+      }
+    },
+    "nearTarget": [
+      264.15,
+      10.5028,
+      863.4
+    ],
+    "eyeToPostMetres": 8.540348227092391
+  },
+  "views": {
+    "03": {
+      "view": "island-aerial",
+      "measurementRect": [
+        614,
+        586,
+        655,
+        617
+      ],
+      "displayCrop": [
+        590,
+        574,
+        668,
+        646
+      ],
+      "scale": 4,
+      "before": {
+        "source": "e78c52ce50205f85a4af02bfa78fb8f230b3644b",
+        "camera": {
+          "position": [
+            2100,
+            2350,
+            2450
+          ],
+          "quaternion": [
+            -0.27043683246052963,
+            0.3343071089193487,
+            0.10076912073943207,
+            0.8971890886987558
+          ],
+          "fov": 58
+        },
+        "samples": {
+          "on": {
+            "warmPixels": 57,
+            "saturatedRedPixels": 0,
+            "maxRed": 255,
+            "maxDisplayLuma": 217.422,
+            "pngSha256": "1402cec2bc6b7f8d070ed672298149f8e088db6ef2c8c44b2a78100055cafbf1",
+            "halos": [
+              {
+                "id": 20604,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20644,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20875,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20876,
+                "original": true,
+                "visible": true,
+                "on": 1
+              },
+              {
+                "id": 20879,
+                "original": true,
+                "visible": true,
+                "on": 1
+              }
+            ]
+          },
+          "off": {
+            "warmPixels": 0,
+            "saturatedRedPixels": 0,
+            "maxRed": 199,
+            "maxDisplayLuma": 158.565,
+            "pngSha256": "18d90acdf527009eb6e33e8d279c7e331496d76a0947836adab63c857b1ba708",
+            "halos": [
+              {
+                "id": 20604,
+                "original": true,
+                "visible": false,
+                "on": 0
+              },
+              {
+                "id": 20644,
+                "original": true,
+                "visible": false,
+                "on": 0
+              },
+              {
+                "id": 20875,
+                "original": true,
+                "visible": false,
+                "on": 0
+              },
+              {
+                "id": 20876,
+                "original": true,
+                "visible": false,
+                "on": 1
+              },
+              {
+                "id": 20879,
+                "original": true,
+                "visible": false,
+                "on": 1
+              }
+            ]
+          },
+          "restored": {
+            "warmPixels": 57,
+            "saturatedRedPixels": 0,
+            "maxRed": 255,
+            "maxDisplayLuma": 217.422,
+            "pngSha256": "1402cec2bc6b7f8d070ed672298149f8e088db6ef2c8c44b2a78100055cafbf1",
+            "halos": [
+              {
+                "id": 20604,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20644,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20875,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20876,
+                "original": true,
+                "visible": true,
+                "on": 1
+              },
+              {
+                "id": 20879,
+                "original": true,
+                "visible": true,
+                "on": 1
+              }
+            ]
+          }
+        },
+        "onMinusOffROI": {
+          "pixels": 1271,
+          "changed": 506,
+          "deltaOver8": 154,
+          "maxChannelDelta": 224,
+          "positiveRedCodeSum": 12996
+        },
+        "onMinusRestoredROI": {
+          "pixels": 1271,
+          "changed": 0,
+          "deltaOver8": 0,
+          "maxChannelDelta": 0,
+          "positiveRedCodeSum": 0
+        },
+        "onMinusRestoredFull": {
+          "pixels": 1296000,
+          "changed": 0,
+          "deltaOver8": 0,
+          "maxChannelDelta": 0,
+          "positiveRedCodeSum": 0
+        },
+        "onVsPrimaryROI": {
+          "pixels": 1271,
+          "changed": 0,
+          "deltaOver8": 0,
+          "maxChannelDelta": 0,
+          "positiveRedCodeSum": 0
+        }
+      },
+      "after": {
+        "source": "b949ffeb135f5b0798155aa5579740a841d94d0d",
+        "camera": {
+          "position": [
+            2100,
+            2350,
+            2450
+          ],
+          "quaternion": [
+            -0.27043683246052963,
+            0.3343071089193487,
+            0.10076912073943207,
+            0.8971890886987558
+          ],
+          "fov": 58
+        },
+        "samples": {
+          "on": {
+            "warmPixels": 1,
+            "saturatedRedPixels": 0,
+            "maxRed": 199,
+            "maxDisplayLuma": 158.565,
+            "pngSha256": "37e6bbd0ac757b33fc37055544a0a3ae4d6643e031858a09119007f5409fe32c",
+            "halos": [
+              {
+                "id": 20604,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20644,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20875,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20876,
+                "original": true,
+                "visible": true,
+                "on": 1
+              },
+              {
+                "id": 20879,
+                "original": true,
+                "visible": true,
+                "on": 1
+              }
+            ]
+          },
+          "off": {
+            "warmPixels": 0,
+            "saturatedRedPixels": 0,
+            "maxRed": 199,
+            "maxDisplayLuma": 158.565,
+            "pngSha256": "d0ee7c364e2c6e0cabdde8768a1dcd350435a8e564213856a1769fc4446dd405",
+            "halos": [
+              {
+                "id": 20604,
+                "original": true,
+                "visible": false,
+                "on": 0
+              },
+              {
+                "id": 20644,
+                "original": true,
+                "visible": false,
+                "on": 0
+              },
+              {
+                "id": 20875,
+                "original": true,
+                "visible": false,
+                "on": 0
+              },
+              {
+                "id": 20876,
+                "original": true,
+                "visible": false,
+                "on": 1
+              },
+              {
+                "id": 20879,
+                "original": true,
+                "visible": false,
+                "on": 1
+              }
+            ]
+          },
+          "restored": {
+            "warmPixels": 1,
+            "saturatedRedPixels": 0,
+            "maxRed": 199,
+            "maxDisplayLuma": 158.565,
+            "pngSha256": "37e6bbd0ac757b33fc37055544a0a3ae4d6643e031858a09119007f5409fe32c",
+            "halos": [
+              {
+                "id": 20604,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20644,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20875,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20876,
+                "original": true,
+                "visible": true,
+                "on": 1
+              },
+              {
+                "id": 20879,
+                "original": true,
+                "visible": true,
+                "on": 1
+              }
+            ]
+          }
+        },
+        "onMinusOffROI": {
+          "pixels": 1271,
+          "changed": 195,
+          "deltaOver8": 76,
+          "maxChannelDelta": 114,
+          "positiveRedCodeSum": 3105
+        },
+        "onMinusRestoredROI": {
+          "pixels": 1271,
+          "changed": 0,
+          "deltaOver8": 0,
+          "maxChannelDelta": 0,
+          "positiveRedCodeSum": 0
+        },
+        "onMinusRestoredFull": {
+          "pixels": 1296000,
+          "changed": 0,
+          "deltaOver8": 0,
+          "maxChannelDelta": 0,
+          "positiveRedCodeSum": 0
+        },
+        "onVsPrimaryROI": {
+          "pixels": 1271,
+          "changed": 0,
+          "deltaOver8": 0,
+          "maxChannelDelta": 0,
+          "positiveRedCodeSum": 0
+        }
+      },
+      "afterVsBeforeROI": {
+        "on": {
+          "pixels": 1271,
+          "changed": 471,
+          "deltaOver8": 152,
+          "maxChannelDelta": 143,
+          "positiveRedCodeSum": 0
+        },
+        "off": {
+          "pixels": 1271,
+          "changed": 0,
+          "deltaOver8": 0,
+          "maxChannelDelta": 0,
+          "positiveRedCodeSum": 0
+        },
+        "restored": {
+          "pixels": 1271,
+          "changed": 471,
+          "deltaOver8": 152,
+          "maxChannelDelta": 143,
+          "positiveRedCodeSum": 0
+        }
+      }
+    },
+    "01": {
+      "view": "station-street",
+      "measurementRect": [
+        525,
+        412,
+        665,
+        465
+      ],
+      "displayCrop": [
+        507,
+        389,
+        694,
+        479
+      ],
+      "scale": 3,
+      "before": {
+        "source": "8091a903abfe913921deb6565875251d598154cb",
+        "camera": {
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -0.000032237959341941705,
+            0.9999462663720154
+          ],
+          "fov": 58
+        },
+        "samples": {
+          "on": {
+            "warmPixels": 243,
+            "saturatedRedPixels": 52,
+            "maxRed": 255,
+            "maxDisplayLuma": 251.362,
+            "pngSha256": "226f93762522b2609c5bd8b2f42e3f99d6139d1dcc805fb14bbb1d99ca999e1d",
+            "halos": [
+              {
+                "id": 20604,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20644,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20875,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20876,
+                "original": true,
+                "visible": true,
+                "on": 1
+              },
+              {
+                "id": 20879,
+                "original": true,
+                "visible": true,
+                "on": 1
+              }
+            ]
+          },
+          "off": {
+            "warmPixels": 135,
+            "saturatedRedPixels": 15,
+            "maxRed": 255,
+            "maxDisplayLuma": 251.362,
+            "pngSha256": "8b57893eed58120ddf50e482e234fa80aacc41b44c308594a5bde1045b07661d",
+            "halos": [
+              {
+                "id": 20604,
+                "original": true,
+                "visible": false,
+                "on": 0
+              },
+              {
+                "id": 20644,
+                "original": true,
+                "visible": false,
+                "on": 0
+              },
+              {
+                "id": 20875,
+                "original": true,
+                "visible": false,
+                "on": 0
+              },
+              {
+                "id": 20876,
+                "original": true,
+                "visible": false,
+                "on": 1
+              },
+              {
+                "id": 20879,
+                "original": true,
+                "visible": false,
+                "on": 1
+              }
+            ]
+          },
+          "restored": {
+            "warmPixels": 243,
+            "saturatedRedPixels": 52,
+            "maxRed": 255,
+            "maxDisplayLuma": 251.362,
+            "pngSha256": "226f93762522b2609c5bd8b2f42e3f99d6139d1dcc805fb14bbb1d99ca999e1d",
+            "halos": [
+              {
+                "id": 20604,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20644,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20875,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20876,
+                "original": true,
+                "visible": true,
+                "on": 1
+              },
+              {
+                "id": 20879,
+                "original": true,
+                "visible": true,
+                "on": 1
+              }
+            ]
+          }
+        },
+        "onMinusOffROI": {
+          "pixels": 7420,
+          "changed": 1589,
+          "deltaOver8": 333,
+          "maxChannelDelta": 216,
+          "positiveRedCodeSum": 22342
+        },
+        "onMinusRestoredROI": {
+          "pixels": 7420,
+          "changed": 0,
+          "deltaOver8": 0,
+          "maxChannelDelta": 0,
+          "positiveRedCodeSum": 0
+        },
+        "onMinusRestoredFull": {
+          "pixels": 1296000,
+          "changed": 0,
+          "deltaOver8": 0,
+          "maxChannelDelta": 0,
+          "positiveRedCodeSum": 0
+        },
+        "onVsPrimaryROI": {
+          "pixels": 7420,
+          "changed": 0,
+          "deltaOver8": 0,
+          "maxChannelDelta": 0,
+          "positiveRedCodeSum": 0
+        }
+      },
+      "after": {
+        "source": "b949ffeb135f5b0798155aa5579740a841d94d0d",
+        "camera": {
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -0.000032237959341941705,
+            0.9999462663720154
+          ],
+          "fov": 58
+        },
+        "samples": {
+          "on": {
+            "warmPixels": 215,
+            "saturatedRedPixels": 39,
+            "maxRed": 255,
+            "maxDisplayLuma": 251.362,
+            "pngSha256": "315c4e9834d677bd5394a8fbf64b79ae5674f1765ccee9af916a73ad8bda9216",
+            "halos": [
+              {
+                "id": 20604,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20644,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20875,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20876,
+                "original": true,
+                "visible": true,
+                "on": 1
+              },
+              {
+                "id": 20879,
+                "original": true,
+                "visible": true,
+                "on": 1
+              }
+            ]
+          },
+          "off": {
+            "warmPixels": 135,
+            "saturatedRedPixels": 15,
+            "maxRed": 255,
+            "maxDisplayLuma": 251.362,
+            "pngSha256": "8b57893eed58120ddf50e482e234fa80aacc41b44c308594a5bde1045b07661d",
+            "halos": [
+              {
+                "id": 20604,
+                "original": true,
+                "visible": false,
+                "on": 0
+              },
+              {
+                "id": 20644,
+                "original": true,
+                "visible": false,
+                "on": 0
+              },
+              {
+                "id": 20875,
+                "original": true,
+                "visible": false,
+                "on": 0
+              },
+              {
+                "id": 20876,
+                "original": true,
+                "visible": false,
+                "on": 1
+              },
+              {
+                "id": 20879,
+                "original": true,
+                "visible": false,
+                "on": 1
+              }
+            ]
+          },
+          "restored": {
+            "warmPixels": 215,
+            "saturatedRedPixels": 39,
+            "maxRed": 255,
+            "maxDisplayLuma": 251.362,
+            "pngSha256": "315c4e9834d677bd5394a8fbf64b79ae5674f1765ccee9af916a73ad8bda9216",
+            "halos": [
+              {
+                "id": 20604,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20644,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20875,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20876,
+                "original": true,
+                "visible": true,
+                "on": 1
+              },
+              {
+                "id": 20879,
+                "original": true,
+                "visible": true,
+                "on": 1
+              }
+            ]
+          }
+        },
+        "onMinusOffROI": {
+          "pixels": 7420,
+          "changed": 1124,
+          "deltaOver8": 298,
+          "maxChannelDelta": 211,
+          "positiveRedCodeSum": 17120
+        },
+        "onMinusRestoredROI": {
+          "pixels": 7420,
+          "changed": 0,
+          "deltaOver8": 0,
+          "maxChannelDelta": 0,
+          "positiveRedCodeSum": 0
+        },
+        "onMinusRestoredFull": {
+          "pixels": 1296000,
+          "changed": 0,
+          "deltaOver8": 0,
+          "maxChannelDelta": 0,
+          "positiveRedCodeSum": 0
+        },
+        "onVsPrimaryROI": {
+          "pixels": 7420,
+          "changed": 0,
+          "deltaOver8": 0,
+          "maxChannelDelta": 0,
+          "positiveRedCodeSum": 0
+        }
+      },
+      "afterVsBeforeROI": {
+        "on": {
+          "pixels": 7420,
+          "changed": 969,
+          "deltaOver8": 207,
+          "maxChannelDelta": 72,
+          "positiveRedCodeSum": 0
+        },
+        "off": {
+          "pixels": 7420,
+          "changed": 0,
+          "deltaOver8": 0,
+          "maxChannelDelta": 0,
+          "positiveRedCodeSum": 0
+        },
+        "restored": {
+          "pixels": 7420,
+          "changed": 969,
+          "deltaOver8": 207,
+          "maxChannelDelta": 72,
+          "positiveRedCodeSum": 0
+        }
+      }
+    },
+    "near": {
+      "view": "crossing-south-approach",
+      "measurementRect": [
+        701,
+        393,
+        800,
+        499
+      ],
+      "displayCrop": [
+        632,
+        349,
+        875,
+        525
+      ],
+      "scale": 2,
+      "before": {
+        "source": "8091a903abfe913921deb6565875251d598154cb",
+        "camera": {
+          "position": [
+            267,
+            9.6,
+            871.4
+          ],
+          "quaternion": [
+            0.05215616838604781,
+            0.17004339802240223,
+            -0.009012891298993289,
+            0.9840140978048604
+          ],
+          "fov": 58
+        },
+        "samples": {
+          "on": {
+            "warmPixels": 2826,
+            "saturatedRedPixels": 1243,
+            "maxRed": 255,
+            "maxDisplayLuma": 254.567,
+            "pngSha256": "5fb1b51591d0f3a7e2379da503e8dae00c52f6e99edc48351ac399d1136e530d",
+            "halos": [
+              {
+                "id": 20604,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20644,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20875,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20876,
+                "original": true,
+                "visible": true,
+                "on": 1
+              },
+              {
+                "id": 20879,
+                "original": true,
+                "visible": true,
+                "on": 1
+              }
+            ]
+          },
+          "off": {
+            "warmPixels": 677,
+            "saturatedRedPixels": 470,
+            "maxRed": 255,
+            "maxDisplayLuma": 254.567,
+            "pngSha256": "1295340e51877dae2ff11bb82f1f2c462e552ae5656a0106883560009ad47477",
+            "halos": [
+              {
+                "id": 20604,
+                "original": true,
+                "visible": false,
+                "on": 0
+              },
+              {
+                "id": 20644,
+                "original": true,
+                "visible": false,
+                "on": 0
+              },
+              {
+                "id": 20875,
+                "original": true,
+                "visible": false,
+                "on": 0
+              },
+              {
+                "id": 20876,
+                "original": true,
+                "visible": false,
+                "on": 1
+              },
+              {
+                "id": 20879,
+                "original": true,
+                "visible": false,
+                "on": 1
+              }
+            ]
+          },
+          "restored": {
+            "warmPixels": 2826,
+            "saturatedRedPixels": 1243,
+            "maxRed": 255,
+            "maxDisplayLuma": 254.567,
+            "pngSha256": "cb052829ac4084972a66c169605d8a4525550f23684e4393f62c5af241070bad",
+            "halos": [
+              {
+                "id": 20604,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20644,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20875,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20876,
+                "original": true,
+                "visible": true,
+                "on": 1
+              },
+              {
+                "id": 20879,
+                "original": true,
+                "visible": true,
+                "on": 1
+              }
+            ]
+          }
+        },
+        "onMinusOffROI": {
+          "pixels": 10494,
+          "changed": 9918,
+          "deltaOver8": 7107,
+          "maxChannelDelta": 221,
+          "positiveRedCodeSum": 471427
+        },
+        "onMinusRestoredROI": {
+          "pixels": 10494,
+          "changed": 0,
+          "deltaOver8": 0,
+          "maxChannelDelta": 0,
+          "positiveRedCodeSum": 0
+        },
+        "onMinusRestoredFull": {
+          "pixels": 1296000,
+          "changed": 1,
+          "deltaOver8": 0,
+          "maxChannelDelta": 1,
+          "positiveRedCodeSum": 0
+        }
+      },
+      "after": {
+        "source": "b949ffeb135f5b0798155aa5579740a841d94d0d",
+        "camera": {
+          "position": [
+            267,
+            9.6,
+            871.4
+          ],
+          "quaternion": [
+            0.05215616838604781,
+            0.17004339802240223,
+            -0.009012891298993289,
+            0.9840140978048604
+          ],
+          "fov": 58
+        },
+        "samples": {
+          "on": {
+            "warmPixels": 2826,
+            "saturatedRedPixels": 1243,
+            "maxRed": 255,
+            "maxDisplayLuma": 254.567,
+            "pngSha256": "b0687378e4182523cc60b39ff663a0e0fbb4ed8066ae328af324bbba4b447079",
+            "halos": [
+              {
+                "id": 20604,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20644,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20875,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20876,
+                "original": true,
+                "visible": true,
+                "on": 1
+              },
+              {
+                "id": 20879,
+                "original": true,
+                "visible": true,
+                "on": 1
+              }
+            ]
+          },
+          "off": {
+            "warmPixels": 677,
+            "saturatedRedPixels": 470,
+            "maxRed": 255,
+            "maxDisplayLuma": 254.567,
+            "pngSha256": "1295340e51877dae2ff11bb82f1f2c462e552ae5656a0106883560009ad47477",
+            "halos": [
+              {
+                "id": 20604,
+                "original": true,
+                "visible": false,
+                "on": 0
+              },
+              {
+                "id": 20644,
+                "original": true,
+                "visible": false,
+                "on": 0
+              },
+              {
+                "id": 20875,
+                "original": true,
+                "visible": false,
+                "on": 0
+              },
+              {
+                "id": 20876,
+                "original": true,
+                "visible": false,
+                "on": 1
+              },
+              {
+                "id": 20879,
+                "original": true,
+                "visible": false,
+                "on": 1
+              }
+            ]
+          },
+          "restored": {
+            "warmPixels": 2826,
+            "saturatedRedPixels": 1243,
+            "maxRed": 255,
+            "maxDisplayLuma": 254.567,
+            "pngSha256": "5fb1b51591d0f3a7e2379da503e8dae00c52f6e99edc48351ac399d1136e530d",
+            "halos": [
+              {
+                "id": 20604,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20644,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20875,
+                "original": true,
+                "visible": true,
+                "on": 0
+              },
+              {
+                "id": 20876,
+                "original": true,
+                "visible": true,
+                "on": 1
+              },
+              {
+                "id": 20879,
+                "original": true,
+                "visible": true,
+                "on": 1
+              }
+            ]
+          }
+        },
+        "onMinusOffROI": {
+          "pixels": 10494,
+          "changed": 9918,
+          "deltaOver8": 7107,
+          "maxChannelDelta": 221,
+          "positiveRedCodeSum": 471427
+        },
+        "onMinusRestoredROI": {
+          "pixels": 10494,
+          "changed": 0,
+          "deltaOver8": 0,
+          "maxChannelDelta": 0,
+          "positiveRedCodeSum": 0
+        },
+        "onMinusRestoredFull": {
+          "pixels": 1296000,
+          "changed": 1,
+          "deltaOver8": 0,
+          "maxChannelDelta": 1,
+          "positiveRedCodeSum": 0
+        }
+      },
+      "afterVsBeforeROI": {
+        "on": {
+          "pixels": 10494,
+          "changed": 0,
+          "deltaOver8": 0,
+          "maxChannelDelta": 0,
+          "positiveRedCodeSum": 0
+        },
+        "off": {
+          "pixels": 10494,
+          "changed": 0,
+          "deltaOver8": 0,
+          "maxChannelDelta": 0,
+          "positiveRedCodeSum": 0
+        },
+        "restored": {
+          "pixels": 10494,
+          "changed": 0,
+          "deltaOver8": 0,
+          "maxChannelDelta": 0,
+          "positiveRedCodeSum": 0
+        }
+      }
+    }
+  },
+  "previousArtChecks": {
+    "C20CrownROI_01": {
+      "pixels": 247000,
+      "changed": 35,
+      "deltaOver8": 0,
+      "maxChannelDelta": 1,
+      "positiveRedCodeSum": 0
+    },
+    "C20CorridorROI_20": {
+      "pixels": 312975,
+      "changed": 0,
+      "deltaOver8": 0,
+      "maxChannelDelta": 0,
+      "positiveRedCodeSum": 0
+    }
+  },
+  "isolationPanels": {
+    "columns": [
+      "on",
+      "hidden",
+      "restored"
+    ],
+    "rows": [
+      "C20",
+      "C21"
+    ],
+    "headerPixels": 26,
+    "gapPixels": 3
+  }
+}
