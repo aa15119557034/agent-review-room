@@ -148,7 +148,7 @@ export async function createCity({ scene, station, island, skyline }) {
     const borrowedTextures = new Set();
     root.traverse(object => {
       if (!object.isMesh) return;
-      geometries.add(object.geometry); object.castShadow = false; object.receiveShadow = false; object.userData.walkable = false;
+      geometries.add(object.geometry); object.castShadow = true; object.receiveShadow = true; object.userData.walkable = false; // ZZZ-style contact/cast shadows
       const instances = object.isInstancedMesh ? object.count : 1;
       stats.modelTriangles += (object.geometry.index?.count ?? object.geometry.attributes.position.count) / 3 * instances;
       stats.modelPrimitives += object.geometry.groups.length || 1;

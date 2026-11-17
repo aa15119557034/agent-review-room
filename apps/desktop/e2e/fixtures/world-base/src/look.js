@@ -10,6 +10,29 @@ float wbDepth(vec2 uv) {
   float z = texture(tWorldDepth, uv).r;
   return uNear*uFar / mix(uFar+(uNear-uFar)*z, uNear+(uFar-uNear)*z, uReversed);
 }
+uniform float uProjScale, uAO;
+// Depth-only crease AO. Pairs of opposite samples are compared in inverse depth,
+// which is affine across any plane, so flat ground at grazing angles stays clean
+// and only concave contacts (wall/ground, under eaves and balconies) darken.
+float wbAO(vec2 uv, float d0) {
+  if (d0 > 90.0 || d0 >= uFar*0.9) return 1.0;
+  const float R = 0.8;
+  float rpx = clamp(R*uProjScale/d0, 3.0, 48.0);
+  // Depth-buffer precision falls with distance: ignore concavity below ~1 cm per metre.
+  float lo = max(0.08, 0.012*d0), i0 = 1.0/d0, occ = 0.0;
+  // Fixed 8 directions x 2 radii (no per-pixel noise: no blur pass to clean it up).
+  for (int i = 0; i < 8; i++) {
+    float a = float(i)*0.3927 + 0.2;
+    vec2 dir = vec2(cos(a), sin(a))/uRes;
+    for (int k = 0; k < 2; k++) {
+      vec2 o = dir*rpx*(k == 0 ? 0.45 : 1.0);
+      float c = 0.5*(1.0/wbDepth(uv+o) + 1.0/wbDepth(uv-o)) - i0;
+      float dz = c*d0*d0; // concavity in metres towards the camera
+      occ += smoothstep(lo, lo + 0.35, dz)*(1.0 - smoothstep(1.5*R, 3.0*R, dz));
+    }
+  }
+  return 1.0 - occ/16.0*(1.0 - smoothstep(50.0, 90.0, d0));
+}
 float wbEdge(vec2 uv) {
   vec2 px = max(1.0, uRes.y/1100.0)/uRes;
   float d0 = wbDepth(uv), dl = wbDepth(uv-vec2(px.x,0.0)), dr = wbDepth(uv+vec2(px.x,0.0));
@@ -43,10 +66,13 @@ export function createLook(renderer, camera) {
   const mat = pipeline.finalMat;
   Object.assign(mat.uniforms, {
     tWorldDepth: pipeline.uDepth, uNear: { value: camera.near }, uFar: { value: camera.far },
+    uProjScale: { value: 1 }, uAO: { value: 0.55 },
     uReversed: { value: pipeline.reversed ? 1 : 0 }, uToon: toon, uHaze: { value: 1 },
   });
   mat.fragmentShader = insert(mat.fragmentShader, 'void main(){', `${OUTLINES}\nvoid main(){`, 'composite entry');
   mat.fragmentShader = insert(mat.fragmentShader, 'col *= uExposure;', `
+    // Contact shadows (ZZZ refs: crates, benches, eaves all sit in soft dark creases).
+    col *= mix(1.0, wbAO(uv, wbDepth(uv)), uAO*uToon);
     float edge = wbEdge(uv)*uToon;
     vec3 line = mix(col*vec3(0.42,0.38,0.50),vec3(0.027,0.020,0.051),0.35);
     col = mix(col,line,edge*0.45); // ZZZ scenes keep only faint silhouettes; strong lines are for characters
@@ -120,11 +146,13 @@ export function createLook(renderer, camera) {
   return {
     pipeline, applyIsland,
     setToon(value) { toon.value = value ? 1 : 0; },
+    setAO(value) { mat.uniforms.uAO.value = value; },
     setFlightEffects(value) { pipeline.params.blur = value ? 1 : 0; pipeline.params.rays = value ? 0.55 : 0; pipeline.hasPrev = false; },
     setSize(width, height, ratio) { pipeline.setSize(width, height, ratio); },
     render(scene, dt) {
       mat.uniforms.uNear.value = camera.near;
       mat.uniforms.uFar.value = camera.far;
+      mat.uniforms.uProjScale.value = 0.5 * mat.uniforms.uRes.value.y / Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2);
       mat.uniforms.uHaze.value = 1 - THREE.MathUtils.smoothstep(camera.position.y, 120, 600);
       pipeline.render(scene, camera, dt);
     },

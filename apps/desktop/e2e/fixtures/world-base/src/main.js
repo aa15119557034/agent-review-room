@@ -92,9 +92,11 @@ async function init() {
   sun.position.copy(island.U.uSunDir.value).multiplyScalar(160).add(new THREE.Vector3(...island.stationPlacement.position));
   sun.target.position.set(...island.stationPlacement.position);
   sun.castShadow = true;
-  sun.shadow.mapSize.set(2048, 2048);
+  // One cascade covers the station and the town edge behind it (local z≈-140);
+  // 4096 over ±150 m keeps the street at ~7 cm/texel (was ~10 cm at 2048/±105).
+  sun.shadow.mapSize.set(4096, 4096);
   sun.shadow.camera.layers.enableAll();
-  Object.assign(sun.shadow.camera, { left: -100, right: 100, top: 105, bottom: -105, near: 1, far: 400 });
+  Object.assign(sun.shadow.camera, { left: -150, right: 150, top: 150, bottom: -150, near: 1, far: 400 });
   sun.shadow.bias = -0.0002;
   sun.shadow.normalBias = 0.035;
   scene.add(sun, sun.target, new THREE.HemisphereLight(0xcfe0ff, 0xa89c94, 1.05));
