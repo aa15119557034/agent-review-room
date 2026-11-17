@@ -24,9 +24,9 @@ export function buildTownApartment(H, F, spec) {
   const trim = accent, start = gb.tris, clothStart = H.laundry.I.length / 3;
   const garmentStart = H.laundry.count;
   const r = H.ctx.rng(`town-apartment-${floors}-${F.origin.x}-${F.origin.z}`);
-  // Wall planes use the kit's concrete wash (soft blotches only). The plaster map
-  // carries trowel arcs that read as rings at eye height at any tile size.
-  const uv = { world: 3 }, wallMat = M.concrete;
+  // Wall planes use a low-contrast copy of the kit concrete wash (city.js). The
+  // plaster map carries trowel arcs that read as rings at eye height at any tile size.
+  const uv = { world: 3 }, wallMat = H.wallWash;
   const at = name => ({ uv: { rect: A.rects[name], white: A.white } });
   const face = F.sub(0, 0, front), rear = F.sub(0, 0, back, Math.PI);
   const S = { frameColor: PAL.frame[4], sillColor: PAL.frame[4], grilleColor: PAL.frame[4],

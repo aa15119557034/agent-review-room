@@ -68,6 +68,24 @@ export async function createCity({ scene, station, island, skyline }) {
   signLight.color.set('#f3f1e8').multiplyScalar(1.15);
   ownedMaterials.add(signLight);
   H.signLight = signLight;
+  // Apartment walls get their own low-contrast copy of the kit concrete wash: the
+  // map is pulled 70% towards its mean, so blotches, dark specks and the tile's
+  // centre seams stay as faint grain while the wall keeps its base colour and the
+  // lighting keeps the structure. Paving and other concrete keep the shared map.
+  const concrete = M.concrete, wallWash = concrete.clone();
+  const concreteCompile = concrete.onBeforeCompile, concreteKey = concrete.customProgramCacheKey;
+  wallWash.onBeforeCompile = (shader, renderer) => {
+    concreteCompile?.call(wallWash, shader, renderer);
+    if (!shader.fragmentShader.includes('#include <map_fragment>')) throw new Error('Wall wash: map chunk missing');
+    shader.fragmentShader = shader.fragmentShader.replace('#include <map_fragment>', `#ifdef USE_MAP
+      vec4 sampledDiffuseColor = texture2D( map, vMapUv );
+      sampledDiffuseColor.rgb = mix( vec3( 0.93 ), sampledDiffuseColor.rgb, 0.3 );
+      diffuseColor *= sampledDiffuseColor;
+    #endif`);
+  };
+  wallWash.customProgramCacheKey = () => (concreteKey ? concreteKey.call(concrete) : '') + '|town-wall-wash';
+  ownedMaterials.add(wallWash);
+  H.wallWash = wallWash;
   const dispose = () => {
     if (disposed) return; disposed = true; root.removeFromParent();
     root.traverse(object => { if (object.isMesh) { geometries.add(object.geometry); if (object.isInstancedMesh) object.dispose(); if (object.customDepthMaterial) ownedMaterials.add(object.customDepthMaterial); } });
