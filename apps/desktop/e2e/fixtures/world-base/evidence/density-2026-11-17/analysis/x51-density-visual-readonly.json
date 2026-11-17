@@ -1,0 +1,26 @@
+{
+  "artifactDirectory": "artifacts/gpu-density-v1",
+  "source": "0d97731bd7cb4f4634f4c9fdc0e1033ae7585f2a",
+  "kind": "Independent visual inspection of existing JPEGs; not a new GPU run or baseline pass.",
+  "files": [
+    "21-front-eye-ao-on-capture-2.jpg",
+    "laundry-details-ao-on-capture-2.jpg",
+    "20-rear-eye-ao-on-capture-2.jpg",
+    "service-corner-ao-on-capture-2.jpg",
+    "street-detail-ao-on-capture-2.jpg"
+  ],
+  "blockerFound": false,
+  "observations": {
+    "laundryFront": "Sorting bins and umbrella rack are visible beside the glazing; central entry and front stairs remain visually open.",
+    "laundryClose": "Umbrella rack, A-frame, crate, pot and AC provide depth; the two sorting bins largely overlap each other in this angle. No apparent displaced support or blocked entrance.",
+    "rear": "Ground housekeeping group is small but visible beside the door; rear steel stairs and door faces remain clear. First-floor parcel centers are hidden by corridor parapet; do not claim both boxes readable.",
+    "service": "Two labelled bins clearly visible, proportional to .68m source height; shed door/front stays clear. Crate/carton stays visible; dustpan is mostly occluded, only blue edge readable.",
+    "street": "Wall meter and vertical pipe are visible on the unwindowed wall, below the visual sign/window activity. It adds a small layer without new ground clutter or door obstruction."
+  },
+  "scopeLimits": [
+    "No full-scene collision proof from images. Refer to separately scoped CPU and normal-v2 behavior results.",
+    "Two zones reuse the same bin kit; contextual repetition is visible but not itself a functional or scale defect.",
+    "Service bins become a strong foreground block and laundry shelf glass still reads pale; these are optional material/composition priorities for C, not authorization for more props.",
+    "No claim that occluded dustpan/parcels achieve readable density; do not enlarge/move them merely to force these static views."
+  ]
+}

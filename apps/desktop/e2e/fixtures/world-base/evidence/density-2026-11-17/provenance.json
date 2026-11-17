@@ -1,0 +1,577 @@
+{
+  "head": "6b0e9c4c7453bdd612e77c03cde9f81112ae9cc3",
+  "createdAt": "2026-11-17T11:53:28.796Z",
+  "files": [
+    {
+      "file": "source-map/0d97731bd7cb4f4634f4c9fdc0e1033ae7585f2a/pinned-assets.json",
+      "bytes": 2344,
+      "sha256": "9fd5a696a7888da3431ad0a6fa31711d5c29df561c0c54010721d61d1eda85a0",
+      "generatedSummary": true
+    },
+    {
+      "file": "source-map/0d97731bd7cb4f4634f4c9fdc0e1033ae7585f2a/prop-assets.json",
+      "bytes": 6576,
+      "sha256": "6a4b86e144b50835b1152f4aa32ac4c5e50e352956979cd4ca5fc5f21561810a",
+      "exactCommit": "0d97731bd7cb4f4634f4c9fdc0e1033ae7585f2a"
+    },
+    {
+      "file": "source-map/6b0e9c4c7453bdd612e77c03cde9f81112ae9cc3/pinned-assets.json",
+      "bytes": 2344,
+      "sha256": "5ff68b4a4f72f2a6d5b561bd599cd3c3c4c0a046c3b79101c4e91c2d8352b8a7",
+      "generatedSummary": true
+    },
+    {
+      "file": "source-map/6b0e9c4c7453bdd612e77c03cde9f81112ae9cc3/prop-assets.json",
+      "bytes": 6576,
+      "sha256": "6a4b86e144b50835b1152f4aa32ac4c5e50e352956979cd4ca5fc5f21561810a",
+      "exactCommit": "6b0e9c4c7453bdd612e77c03cde9f81112ae9cc3"
+    },
+    {
+      "file": "failed-baseline/source-manifest.json",
+      "bytes": 30609,
+      "sha256": "cb2d1faeb9023f22a6a96895afcc6543afcd29908cfc15777f5a8043d2e0ab73",
+      "source": "artifacts/gpu-town-density-v1/source-manifest.json"
+    },
+    {
+      "file": "failed-baseline/run-config.json",
+      "bytes": 1091,
+      "sha256": "bee6f01594dbff418c0cd30e9807227be8ef7262bd0823396c7ccdc4e72d4fdb",
+      "source": "artifacts/gpu-town-density-v1/run-config.json"
+    },
+    {
+      "file": "failed-baseline/process.json",
+      "bytes": 135,
+      "sha256": "8038e23395b4a1e2379bb7944ce2cc3789a713186fafa63676bcfef518f63a6e",
+      "source": "artifacts/gpu-town-density-v1/process.json"
+    },
+    {
+      "file": "failed-baseline/electron.log.gz",
+      "bytes": 526,
+      "sha256": "49e048abdf328ebf80c5787e1c37a4ee076458074b16efe4dfde1bd2b68b304f",
+      "source": "artifacts/gpu-town-density-v1/electron.log",
+      "originalBytes": 1253,
+      "originalSha256": "607758426f1711b55abc4a285810e03e95364c4ba323506424ea4d89b416c0b8",
+      "losslessGzip": true
+    },
+    {
+      "file": "failed-baseline/render-report.json.gz",
+      "bytes": 5994,
+      "sha256": "2b33dac701789d33bbb9d42c8696e85d4071d42d1a7f6e0a7ecfe0299ad16b38",
+      "source": "artifacts/gpu-town-density-v1/render-report.json",
+      "originalBytes": 75249,
+      "originalSha256": "18aaf4ed38ec8737652659ab01f88a84fc60cffa3e42ecc40ff36690982c8ce1",
+      "losslessGzip": true
+    },
+    {
+      "file": "failed-baseline/measurements.json",
+      "bytes": 3440,
+      "sha256": "77837d526524e2b1aa8053425f3d82fbbe17b3ec29d972ec2d86a8ff7138f359",
+      "generatedSummary": true
+    },
+    {
+      "file": "diagnostic/source-manifest.json",
+      "bytes": 25541,
+      "sha256": "d5b40f9b847d955dc65710c6d630c1e850dae826a26ba47950faecff1b4098cc",
+      "source": "artifacts/gpu-density-v1/source-manifest.json"
+    },
+    {
+      "file": "diagnostic/run-config.json",
+      "bytes": 2863,
+      "sha256": "f57c6ad265c06fa67789c49172aa5502e7ef481f99d1becdee704811cd3e0e64",
+      "source": "artifacts/gpu-density-v1/run-config.json"
+    },
+    {
+      "file": "diagnostic/process.json",
+      "bytes": 13,
+      "sha256": "2e60f2aba87ee756246c7b0485365f40c3894ec1d43f54c357738a94f5fc600c",
+      "source": "artifacts/gpu-density-v1/process.json"
+    },
+    {
+      "file": "diagnostic/electron.log.gz",
+      "bytes": 136,
+      "sha256": "65300fe542da1bbd846a662386b1805d3ccbb9d82a13e630230ec9840dacc153",
+      "source": "artifacts/gpu-density-v1/electron.log",
+      "originalBytes": 148,
+      "originalSha256": "182a78621c32b8fb63fe80c9de526ccecde3a3c49052cfc9c8979aa8c1bc3511",
+      "losslessGzip": true
+    },
+    {
+      "file": "diagnostic/look-report.json.gz",
+      "bytes": 271386,
+      "sha256": "dba9a2166c453926934371860e01e36124e6253646147f9f3731b43b7495d984",
+      "source": "artifacts/gpu-density-v1/look-report.json",
+      "originalBytes": 4869182,
+      "originalSha256": "516d7a199511232f19c3461cd41da6f18a69f34173c525bac384b33a7f593d82",
+      "losslessGzip": true
+    },
+    {
+      "file": "diagnostic/x51-density-diagnostic-gpu.cjs",
+      "bytes": 33014,
+      "sha256": "b4ce1fadde511ad1e50e08839e8686bce803e488103cb2118970b486d9ed1f83",
+      "source": "../../../../../../handoff/x51-density-diagnostic-gpu.cjs"
+    },
+    {
+      "file": "diagnostic/prop-assets-manifest.json",
+      "bytes": 3941,
+      "sha256": "dd8734fb67c85176d5061a76463eb61801dff175053a82b1c5bb0c22e2723ccc",
+      "source": "artifacts/gpu-density-v1/prop-assets-manifest.json"
+    },
+    {
+      "file": "diagnostic/c12-reference.json",
+      "bytes": 2335,
+      "sha256": "14e762b4fc6306247ba923288de030cdd3ef99d461df7a00627cfdf7aaa7cbe9",
+      "source": "artifacts/gpu-density-v1/c12-reference.json"
+    },
+    {
+      "file": "diagnostic/city-shadow-audit.json",
+      "bytes": 188315,
+      "sha256": "d71b7d95b389a6011cb31c7c54949b5c7ae4f385a909fd54883a2a0e2a5a1659",
+      "source": "artifacts/gpu-density-v1/city-shadow-audit.json"
+    },
+    {
+      "file": "diagnostic/capture-index.json",
+      "bytes": 20247,
+      "sha256": "ee4ead3898ec35d98d15e6d8ea8a4ee823387145275ef367d74306993245bd12",
+      "generatedSummary": true
+    },
+    {
+      "file": "diagnostic/service-corner-ao-on-capture-2.jpg",
+      "bytes": 94752,
+      "sha256": "991250cc350add6ae660cb977bd0af0cc0ad09e580634391e47b6cd1813b915b",
+      "source": "artifacts/gpu-density-v1/service-corner-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/laundry-details-ao-on-capture-2.jpg",
+      "bytes": 67487,
+      "sha256": "f737e07cdb2e9ddc6b0fbfddc6c2104180919a42a2ee948aea268cd8c38042bb",
+      "source": "artifacts/gpu-density-v1/laundry-details-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/shop-interior-ao-on-capture-2.jpg",
+      "bytes": 124927,
+      "sha256": "a237f43acc360e690bea44020b3895defd6cbe864722e3d429b8b8e17d14d84a",
+      "source": "artifacts/gpu-density-v1/shop-interior-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/20-rear-eye-ao-on-capture-2.jpg",
+      "bytes": 166820,
+      "sha256": "8e14f18299284cbf1290fbbc1c9b10052ffd965d11b2515202f4da2a16d831f2",
+      "source": "artifacts/gpu-density-v1/20-rear-eye-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/21-front-eye-ao-on-capture-2.jpg",
+      "bytes": 87977,
+      "sha256": "6cfe7716a1b58cf229d86262114d4984910d2367957bc4e8c187329ba055f657",
+      "source": "artifacts/gpu-density-v1/21-front-eye-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/station-street-ao-on-capture-2.jpg",
+      "bytes": 146114,
+      "sha256": "92601145cb2956080969025e6883415cff9bef716fb83cf0406e57ba242b53a2",
+      "source": "artifacts/gpu-density-v1/station-street-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/street-detail-ao-on-capture-2.jpg",
+      "bytes": 100928,
+      "sha256": "44c427946eaa2c0cc75f9f748f2918f378ab38ae929ae97afcee601f44180b80",
+      "source": "artifacts/gpu-density-v1/street-detail-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/service-corner-ao-on-capture-2.png",
+      "bytes": 2007242,
+      "sha256": "ba21500a920fa0f1b4a6ef5cf5413fb102976258581904fc7964b33b5732834f",
+      "source": "artifacts/gpu-density-v1/service-corner-ao-on-capture-2.png"
+    },
+    {
+      "file": "diagnostic/laundry-details-ao-on-capture-2.png",
+      "bytes": 1961557,
+      "sha256": "e0d299e687b8983a901d2466d465fe4455c886739104706aec0b532f81cb0ef4",
+      "source": "artifacts/gpu-density-v1/laundry-details-ao-on-capture-2.png"
+    },
+    {
+      "file": "diagnostic/street-detail-ao-on-capture-2.png",
+      "bytes": 2253934,
+      "sha256": "22aa98db0ec637a9415dba2ef4e01f4f3811014c0b0f95fa12c9d78b8ec0f650",
+      "source": "artifacts/gpu-density-v1/street-detail-ao-on-capture-2.png"
+    },
+    {
+      "file": "diagnostic/measurements.json",
+      "bytes": 32346,
+      "sha256": "4e80fd1fa9740e40b05b649909ba59fd2271cca1f137fd1224b7c4751756549a",
+      "generatedSummary": true
+    },
+    {
+      "file": "baseline/source-manifest.json",
+      "bytes": 30609,
+      "sha256": "967c72f3d19152cc8f996711fa803c71081e55d9472fc44483a034638d03dc47",
+      "source": "artifacts/gpu-town-density-v2/source-manifest.json"
+    },
+    {
+      "file": "baseline/run-config.json",
+      "bytes": 1091,
+      "sha256": "3e1b4063383140333634b358fdb341a76df2b243a4e6dc51d31e1d694d6fd9a5",
+      "source": "artifacts/gpu-town-density-v2/run-config.json"
+    },
+    {
+      "file": "baseline/process.json",
+      "bytes": 135,
+      "sha256": "773b21b95598b7b1bc74d1a3fbafaa2ad76a1776aa9d8eb2d53d7b35efc88b17",
+      "source": "artifacts/gpu-town-density-v2/process.json"
+    },
+    {
+      "file": "baseline/electron.log.gz",
+      "bytes": 834,
+      "sha256": "7b5543a3fb6a394f8eec368b3e1de1b6e20ce9dfe9f6a6b40e5276a67bcb1c78",
+      "source": "artifacts/gpu-town-density-v2/electron.log",
+      "originalBytes": 1838,
+      "originalSha256": "6cab29134819e56e70ac258bef263a9aba865b5717baeaabba05d7f3e39de9a8",
+      "losslessGzip": true
+    },
+    {
+      "file": "baseline/render-report.json.gz",
+      "bytes": 75270,
+      "sha256": "6463df0720033254b2c4f0e35f7155edd6d7069eb1ebc51e6f22962da649ee8c",
+      "source": "artifacts/gpu-town-density-v2/render-report.json",
+      "originalBytes": 508176,
+      "originalSha256": "4fb6557d2bbe5830874d2787210e7800649679e7572b51981f0b6a84a06f455a",
+      "losslessGzip": true
+    },
+    {
+      "file": "baseline/01-station-street.jpg",
+      "bytes": 113922,
+      "sha256": "284c8ae14aec85d40968ae5720309141067d9072afe32117700f11d1680e30d2",
+      "source": "artifacts/gpu-town-density-v2/01-station-street.jpg"
+    },
+    {
+      "file": "baseline/02-station-port.jpg",
+      "bytes": 117163,
+      "sha256": "b187f4b40599d9da801f13140e43f161ad544f2e199f9c85efc47cf0a4fe467c",
+      "source": "artifacts/gpu-town-density-v2/02-station-port.jpg"
+    },
+    {
+      "file": "baseline/03-island-aerial.jpg",
+      "bytes": 54533,
+      "sha256": "28065481639338b6bfdb0a43b1a3688fc8bafbf35917acfafb99d9b8861d433f",
+      "source": "artifacts/gpu-town-density-v2/03-island-aerial.jpg"
+    },
+    {
+      "file": "baseline/04-shop-interior.jpg",
+      "bytes": 106277,
+      "sha256": "99adb97b6775545ba52cfe8f00a70004a5f4cdd4690184a2af76ff68ccbc4c60",
+      "source": "artifacts/gpu-town-density-v2/04-shop-interior.jpg"
+    },
+    {
+      "file": "baseline/19-town-rear-stairs.jpg",
+      "bytes": 123870,
+      "sha256": "7ac5d091b5237146d1228e87acad4a09eae1931880f5b5357ccbc5abb330591c",
+      "source": "artifacts/gpu-town-density-v2/19-town-rear-stairs.jpg"
+    },
+    {
+      "file": "baseline/23-service-corner.jpg",
+      "bytes": 75464,
+      "sha256": "71dac3a4933ebc7ae5eb8db68630f60066c0a8afd3ec7cf7d0e8c376da02afec",
+      "source": "artifacts/gpu-town-density-v2/23-service-corner.jpg"
+    },
+    {
+      "file": "baseline/24-laundry-details.jpg",
+      "bytes": 52131,
+      "sha256": "92eecc0a1b47f5f2d20170b71dcdc744b9ff7763c16cf689cae8227247829812",
+      "source": "artifacts/gpu-town-density-v2/24-laundry-details.jpg"
+    },
+    {
+      "file": "baseline/walking-first.jpg",
+      "bytes": 108052,
+      "sha256": "79a8fe5a0c7f7dc026de8769c72e224ee3fd059465a398c5a96b2360e8e86f7a",
+      "source": "artifacts/gpu-town-density-v2/walking-first.jpg"
+    },
+    {
+      "file": "baseline/walking-third.jpg",
+      "bytes": 112802,
+      "sha256": "ad27a32aa8faea31a34d1bd059e0c0ddb0e9a7be132b85cb3ecccbf3ea51ec7b",
+      "source": "artifacts/gpu-town-density-v2/walking-third.jpg"
+    },
+    {
+      "file": "baseline/frame-samples-island-aerial.json",
+      "bytes": 11247,
+      "sha256": "13235a238547b69f5239c87597352737d6d213c4b8fa66ff6fe03e8a80b3aab9",
+      "source": "artifacts/gpu-town-density-v2/frame-samples-island-aerial.json"
+    },
+    {
+      "file": "baseline/frame-samples-shop-interior.json",
+      "bytes": 11228,
+      "sha256": "145d9f7f14ccbbd42c3ebd06f383341bce1b0aeda8d66d976c7bca240d95fa46",
+      "source": "artifacts/gpu-town-density-v2/frame-samples-shop-interior.json"
+    },
+    {
+      "file": "baseline/frame-samples-station-port.json",
+      "bytes": 11093,
+      "sha256": "f88e00d12434c456fb009f0357106fbc839c26d7e49312e9e6235b4e8d5af8e0",
+      "source": "artifacts/gpu-town-density-v2/frame-samples-station-port.json"
+    },
+    {
+      "file": "baseline/frame-samples-station-street.json",
+      "bytes": 11476,
+      "sha256": "63884dc49e699225a23bc53be37955e9035970dc25dcbb4133c8f5e3a46eb673",
+      "source": "artifacts/gpu-town-density-v2/frame-samples-station-street.json"
+    },
+    {
+      "file": "baseline/frame-samples-walking-first.json",
+      "bytes": 11262,
+      "sha256": "d0e446f32ddbb69ee9e078860ce94928cc14a791fd142b1d8e4c29368d794c6b",
+      "source": "artifacts/gpu-town-density-v2/frame-samples-walking-first.json"
+    },
+    {
+      "file": "baseline/frame-samples-walking-third.json",
+      "bytes": 11475,
+      "sha256": "529ece0e6734a47bf3fed2c5eba6fa763811058972e8468ed5c6c322265d12cc",
+      "source": "artifacts/gpu-town-density-v2/frame-samples-walking-third.json"
+    },
+    {
+      "file": "baseline/frame-samples.json",
+      "bytes": 54974,
+      "sha256": "03228c0fb1b23e65c28aee0c52e6a310ed6028924276acb104ece6becb8075e8",
+      "source": "artifacts/gpu-town-density-v2/frame-samples.json"
+    },
+    {
+      "file": "baseline/measurements.json",
+      "bytes": 70253,
+      "sha256": "9652593e4a9f25de80ab387da1530fca82a8e5e75ad73fb3de0ee8c3f0640db0",
+      "generatedSummary": true
+    },
+    {
+      "file": "source-map/metadata-fix-source-change.json",
+      "bytes": 903,
+      "sha256": "d8591991284e64ab66feeedcd2ca7a4e9419beb6a2ebf7eefcb9837b83b8d11b",
+      "generatedSummary": true
+    },
+    {
+      "file": "analysis/x51-density-v1-analysis.json",
+      "bytes": 290240,
+      "sha256": "43e68d542231bc146544798d6bf76764b1474d1f7687fd60c8d5a98d265ebb97",
+      "source": "../../../../../../handoff/x51-density-v1-analysis.json"
+    },
+    {
+      "file": "analysis/x51-density-v1-analysis.md",
+      "bytes": 4413,
+      "sha256": "36dfe98d91b4938483585edfc3589d8852a0e9e227200f5f9dfc8f578f2361b6",
+      "source": "../../../../../../handoff/x51-density-v1-analysis.md"
+    },
+    {
+      "file": "analysis/x51-density-v1-numeric.json",
+      "bytes": 251241,
+      "sha256": "d805c423e6c8182e7e9690f3c9e438ab891e9c521be128feae4489a6ff5b6adc",
+      "source": "../../../../../../handoff/x51-density-v1-numeric.json"
+    },
+    {
+      "file": "analysis/x51-density-offline-analysis.cjs",
+      "bytes": 4586,
+      "sha256": "9d5b53a516f8d6a90640f3572026660df58e8ff9a9107fb73c82ff6a5b2808ed",
+      "source": "../../../../../../handoff/x51-density-offline-analysis.cjs"
+    },
+    {
+      "file": "cpu/x51-density-station-cpu.mjs.gz",
+      "bytes": 2842,
+      "sha256": "c5a3b58f7a511aef5db57c3c3eab2e625f826e67f7b408168449cd247a8af06b",
+      "source": "../../../../../../handoff/x51-density-station-cpu.mjs",
+      "originalBytes": 6497,
+      "originalSha256": "c7cdc1d80ebb5f69a8fc1724b451be1e351c3bb962c785e39e71c4c4dbc7eeb2",
+      "losslessGzip": true,
+      "note": "Frozen executed driver retains its original trailing whitespace via lossless compression."
+    },
+    {
+      "file": "cpu/x51-density-station-result.json",
+      "bytes": 65522,
+      "sha256": "8425083a478502496680bcd1ab9eedd5303f3fa0ec95d9a5c4b921aa01cbc149",
+      "source": "../../../../../../handoff/x51-density-station-result.json"
+    },
+    {
+      "file": "cpu/x51-density-station-stderr.txt.gz",
+      "bytes": 223,
+      "sha256": "b763d1f2ca48f8876376ea3dc98a407c532e9cfaf0267863d0ea88646c454811",
+      "source": "../../../../../../handoff/x51-density-station-stderr.txt",
+      "originalBytes": 28212,
+      "originalSha256": "fd9e66fa23dd8c21bc633779fcbb9a0497fade802115b75528bac5f495fdffe3",
+      "losslessGzip": true
+    },
+    {
+      "file": "cpu/x51-density-station-initial.json",
+      "bytes": 838,
+      "sha256": "e9f705588a46ab4be558b37c4eea99405557f41811c5b6e34b5cbaa88d466ed9",
+      "source": "../../../../../../handoff/x51-density-station-initial.json"
+    },
+    {
+      "file": "cpu/x51-density-station-initial-stderr.txt.gz",
+      "bytes": 223,
+      "sha256": "b763d1f2ca48f8876376ea3dc98a407c532e9cfaf0267863d0ea88646c454811",
+      "source": "../../../../../../handoff/x51-density-station-initial-stderr.txt",
+      "originalBytes": 28212,
+      "originalSha256": "fd9e66fa23dd8c21bc633779fcbb9a0497fade802115b75528bac5f495fdffe3",
+      "losslessGzip": true
+    },
+    {
+      "file": "cpu/x51-density-station-colliders.json",
+      "bytes": 454811,
+      "sha256": "a607d53d5b150a5b3594a22d99581bcefea1b2d28dd4eb37dd7f66824983f48e",
+      "source": "../../../../../../handoff/x51-density-station-colliders.json"
+    },
+    {
+      "file": "cpu/x51-density-city-cpu.mjs",
+      "bytes": 14156,
+      "sha256": "b92aa57605cb307e23f92172ef61e19fcbdd1ca968390785b24e48dda208f843",
+      "source": "../../../../../../handoff/x51-density-city-cpu.mjs"
+    },
+    {
+      "file": "cpu/x51-density-city-result.json",
+      "bytes": 147999,
+      "sha256": "f2e9f24abba935b0b677874532afd58533950add687a7c5581a969ca474a35b9",
+      "source": "../../../../../../handoff/x51-density-city-result.json"
+    },
+    {
+      "file": "cpu/x51-density-city-stderr.txt.gz",
+      "bytes": 122,
+      "sha256": "a7d5ca200582dd5a6cb1f5867d56656ccb0ebbb6093986702fba10d2c719e1ce",
+      "source": "../../../../../../handoff/x51-density-city-stderr.txt",
+      "originalBytes": 302,
+      "originalSha256": "88e5e87bb1ee2effd49823df359dcb4015570ecbd885218a03921fcf3d020871",
+      "losslessGzip": true
+    },
+    {
+      "file": "cpu/x51-density-cpu-audit.json",
+      "bytes": 8326,
+      "sha256": "e89436cb151b3919ec1b15bec1a9807815a74bbf6746134bf602e285b7675181",
+      "source": "../../../../../../handoff/x51-density-cpu-audit.json"
+    },
+    {
+      "file": "cpu/x51-density-cpu-source-binding-0d97731.json",
+      "bytes": 3217,
+      "sha256": "9531f054dfb66b07a9c4060d3949f729d5b208205a2cfc11b65dac68646370af",
+      "source": "../../../../../../handoff/x51-density-cpu-source-binding-0d97731.json"
+    },
+    {
+      "file": "cpu/x51-density-cpu-metadata-note-6b0e9c4.json",
+      "bytes": 900,
+      "sha256": "5d151f268a23b6b3de80a4bb0f1c59abb4d6a02ce5de17be0a790adddcce5e0d",
+      "source": "../../../../../../handoff/x51-density-cpu-metadata-note-6b0e9c4.json"
+    },
+    {
+      "file": "analysis/x51-density-visual-readonly.json",
+      "bytes": 1996,
+      "sha256": "afef96bcf0b25a5941b370594525e48723551f1737a7d44c077f627f4f41f7db",
+      "source": "../../../../../../handoff/x51-density-visual-readonly.json"
+    },
+    {
+      "file": "cpu/scope.json",
+      "bytes": 258,
+      "sha256": "e9daac5834187a21638b2583f0aad05b82d10376dd9e8699da554ba005110a20",
+      "generatedSummary": true
+    },
+    {
+      "file": "ci/x51-density-ci-summary.json",
+      "bytes": 6385,
+      "sha256": "e857b005eefbda467a46f073267c9545ce28db1c6bddb03320736cc252a00794",
+      "source": "../../../../../../handoff/x51-density-ci-summary.json"
+    },
+    {
+      "file": "ci/x51-density-ci-summary.cjs",
+      "bytes": 1942,
+      "sha256": "1725a18e213af1d2ea8eb7da48bb1bc32a5af98db7463fc0d9fe86f137926433",
+      "source": "../../../../../../handoff/x51-density-ci-summary.cjs"
+    },
+    {
+      "file": "ci/x51-density-ci-jobs.json",
+      "bytes": 4139,
+      "sha256": "edc435fdf18670188cfae7b2fcaaaae42f2f8e15e75fd9993a7442f39b180a22",
+      "source": "../../../../../../handoff/x51-density-ci-jobs.json"
+    },
+    {
+      "file": "ci/x51-density-ci-checks.json",
+      "bytes": 5322,
+      "sha256": "04721003987016a77bed7e665c33ac0ea39c28c7e49bb2dde052bce46a0cc734",
+      "source": "../../../../../../handoff/x51-density-ci-checks.json"
+    },
+    {
+      "file": "ci/x51-density-ci-log.json.gz",
+      "bytes": 5999,
+      "sha256": "07f08afd4ba3dea82096e7080fa8d086b1c17a22802c0a7b5e00230bd0cb74b9",
+      "source": "../../../../../../handoff/x51-density-ci-log.json",
+      "originalBytes": 29285,
+      "originalSha256": "2e40d52d24da163126c7389dd02780344a730c5dedfa1c9ee3256b8d7cf69089",
+      "losslessGzip": true
+    },
+    {
+      "file": "ci/x51-density-metadata-ci-summary.json",
+      "bytes": 6386,
+      "sha256": "125177b526cbd1a214dc6b7f9e8ca9296ad726b5cdf9fed8d4faba8b80c93648",
+      "source": "../../../../../../handoff/x51-density-metadata-ci-summary.json"
+    },
+    {
+      "file": "ci/x51-density-metadata-ci-summary.cjs",
+      "bytes": 1978,
+      "sha256": "5718bfb62505ce3863c254933214108ffbf554d91d4895826cf2f4716282b32d",
+      "source": "../../../../../../handoff/x51-density-metadata-ci-summary.cjs"
+    },
+    {
+      "file": "ci/x51-density-metadata-ci-jobs.json",
+      "bytes": 4139,
+      "sha256": "46e962f7a2c58773a3f5951ea54d11d533fbd79489085bdcd421e26989c8fed1",
+      "source": "../../../../../../handoff/x51-density-metadata-ci-jobs.json"
+    },
+    {
+      "file": "ci/x51-density-metadata-ci-checks.json",
+      "bytes": 5322,
+      "sha256": "f37155edf4d25a8f3f9de3b6ab1c566be6fc91049466b5e129fe10d93950d018",
+      "source": "../../../../../../handoff/x51-density-metadata-ci-checks.json"
+    },
+    {
+      "file": "ci/x51-density-metadata-ci-log.json.gz",
+      "bytes": 6124,
+      "sha256": "5e9b424423e07b23ea1e6f8997996bd0e7be55aea2636f70976d6224bce1327b",
+      "source": "../../../../../../handoff/x51-density-metadata-ci-log.json",
+      "originalBytes": 29839,
+      "originalSha256": "7a2ddb029fcc34a58944da69ce2dd68096ab3e7b604a90dec57773b0e6e59a53",
+      "losslessGzip": true
+    },
+    {
+      "file": "prior-references.json",
+      "bytes": 476,
+      "sha256": "b602c44ea8bc422ba6101de9d6733f8b5b55cdd1526e3a3f4ada1d2b1b068f51",
+      "generatedSummary": true
+    },
+    {
+      "file": "curate-density.cjs",
+      "bytes": 14993,
+      "sha256": "3f85cdb65f59670f1ad5f895d733020e301f70a31995e725b90e9d0dca34a81f",
+      "source": "../../../../../../handoff/x51-curate-density.cjs"
+    },
+    {
+      "file": "x51-curation-core.cjs",
+      "bytes": 4538,
+      "sha256": "22d93af7ae3d4c560784326b5ae2d8b2ab0cd63fc2a7ed9618c57e9b6b383a89",
+      "source": "../../../../../../handoff/x51-curation-core.cjs"
+    },
+    {
+      "file": "verify-evidence.cjs",
+      "bytes": 3569,
+      "sha256": "b7287c3d4d3a03987e6692bce15f37ca0ecc2579a1bcbc9252e018596885fadd",
+      "source": "../../../../../../handoff/x51-verify-evidence.cjs"
+    },
+    {
+      "file": "README.md",
+      "bytes": 6775,
+      "sha256": "9e95d8fa7b461159ee8809464f4d183ea3ea340a4bf7194d457fd93c7b2edac3",
+      "source": "../../../../../../handoff/x51-density-evidence-readme.md"
+    },
+    {
+      "file": ".gitattributes",
+      "bytes": 86,
+      "sha256": "7d5cf34924e48f80bc1647256616f3b71eae38610009529eed16b01b797f8517"
+    },
+    {
+      "file": "summary.json",
+      "bytes": 2118,
+      "sha256": "74cb551fb141f763042e7e1f29444251ef404a9609eea1400fbfab4186ac09f5",
+      "generatedSummary": true
+    }
+  ],
+  "countExcludesThisInventory": true
+}

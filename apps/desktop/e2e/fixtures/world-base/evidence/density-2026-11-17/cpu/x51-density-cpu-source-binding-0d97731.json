@@ -1,0 +1,79 @@
+{
+  "targetCommit": "0d97731bd7cb4f4634f4c9fdc0e1033ae7585f2a",
+  "kind": "Post-hoc source-byte binding only; original dirty CPU reports retained unchanged.",
+  "reports": [
+    {
+      "report": "x51-density-station-result.json",
+      "reportSha256": "8425083a478502496680bcd1ab9eedd5303f3fa0ec95d9a5c4b921aa01cbc149",
+      "sources": [
+        {
+          "path": "src/streetscape.js",
+          "cpuSha256": "80506146d9ef8633de99bbd3be40e5b917da8673d3ed1f2141d1fb444f58a9c7",
+          "commitSha256": "80506146d9ef8633de99bbd3be40e5b917da8673d3ed1f2141d1fb444f58a9c7",
+          "bytes": 8486,
+          "matches": true
+        },
+        {
+          "path": "src/city.js",
+          "cpuSha256": "840e276e5536ca31d906f98659742632a0be35f51feafb032f3ecbea90af95a4",
+          "commitSha256": "840e276e5536ca31d906f98659742632a0be35f51feafb032f3ecbea90af95a4",
+          "bytes": 23943,
+          "matches": true
+        },
+        {
+          "path": "src/city-apartments.js",
+          "cpuSha256": "61767c5d8e8079f68f8c2a02252ac4f7b291e1ffb0813169c1a5d21c5e510705",
+          "commitSha256": "61767c5d8e8079f68f8c2a02252ac4f7b291e1ffb0813169c1a5d21c5e510705",
+          "bytes": 11286,
+          "matches": true
+        }
+      ]
+    },
+    {
+      "report": "x51-density-city-result.json",
+      "reportSha256": "f2e9f24abba935b0b677874532afd58533950add687a7c5581a969ca474a35b9",
+      "sources": [
+        {
+          "path": "src/city.js",
+          "cpuSha256": "840e276e5536ca31d906f98659742632a0be35f51feafb032f3ecbea90af95a4",
+          "commitSha256": "840e276e5536ca31d906f98659742632a0be35f51feafb032f3ecbea90af95a4",
+          "bytes": 23943,
+          "matches": true
+        },
+        {
+          "path": "src/city-apartments.js",
+          "cpuSha256": "61767c5d8e8079f68f8c2a02252ac4f7b291e1ffb0813169c1a5d21c5e510705",
+          "commitSha256": "61767c5d8e8079f68f8c2a02252ac4f7b291e1ffb0813169c1a5d21c5e510705",
+          "bytes": 11286,
+          "matches": true
+        },
+        {
+          "path": "src/look.js",
+          "cpuSha256": "3bb978f9ef4222dea0ec102b2dc9d8667faa06f8a5c099dbcbc73e75342fcc6a",
+          "commitSha256": "3bb978f9ef4222dea0ec102b2dc9d8667faa06f8a5c099dbcbc73e75342fcc6a",
+          "bytes": 11766,
+          "matches": true
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/houses/gb.js",
+          "cpuSha256": "1eff740f7c981529cfbdf4dd070309905d147cf4d9897a5bffcda5040ea2c1c5",
+          "commitSha256": "1eff740f7c981529cfbdf4dd070309905d147cf4d9897a5bffcda5040ea2c1c5",
+          "bytes": 13294,
+          "matches": true
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/houses/props.js",
+          "cpuSha256": "9dec02c33081cfefa6d302dd5d91a3f1b05ff618c0dcf2c3000d198df127f4f2",
+          "commitSha256": "9dec02c33081cfefa6d302dd5d91a3f1b05ff618c0dcf2c3000d198df127f4f2",
+          "bytes": 30739,
+          "matches": true
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Binds only explicitly hashed source files in each CPU report; does not establish all transitive inputs or GPU behavior.",
+    "Does not rerun CPU or convert dirty-sampled reports into clean-checkout reports."
+  ],
+  "allMatch": true
+}

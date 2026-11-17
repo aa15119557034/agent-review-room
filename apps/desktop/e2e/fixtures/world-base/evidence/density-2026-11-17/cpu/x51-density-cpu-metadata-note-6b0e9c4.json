@@ -1,0 +1,12 @@
+{
+  "originalSourceBinding": "x51-density-cpu-source-binding-0d97731.json",
+  "cpuReportsUnchanged": true,
+  "from": "0d97731bd7cb4f4634f4c9fdc0e1033ae7585f2a",
+  "to": "6b0e9c4c7453bdd612e77c03cde9f81112ae9cc3",
+  "path": "src/streetscape.js",
+  "oldSha256": "80506146d9ef8633de99bbd3be40e5b917da8673d3ed1f2141d1fb444f58a9c7",
+  "newSha256": "28fe675f8ff59e9ff1c2e73eb60f9f6a6bb0374e68014a04970fe149a5f4942e",
+  "onlyExactMetadataReplacement": true,
+  "change": "One grouped labelledBins metadata row becomes two labelledBin rows, each with single footprint, per-bin position/label/size/36-triangle metadata. Existing draw/flush, collider creation, meshes, placement and stats code unchanged.",
+  "scope": "Source-diff reasoning only. Old CPU results remain sampled from dirty bytes later bound to0d97731; no CPU/GPU rerun for this binding. Does not label prior baseline snapshot failure a pass."
+}

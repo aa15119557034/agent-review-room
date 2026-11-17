@@ -1,0 +1,277 @@
+{
+  "commands": [
+    {
+      "command": "node D:/codex/2026-11-16/world-implementation/handoff/x51-density-station-cpu.mjs",
+      "exitCode": 0
+    },
+    {
+      "command": "node D:/codex/2026-11-16/world-implementation/handoff/x51-density-city-cpu.mjs",
+      "exitCode": 0
+    }
+  ],
+  "sourceState": "Uncommitted density changes on C12 base e38dd51a294da3a498b9404c0f27b854d16a2fd5; exact source SHA is authoritative, not C12 head alone.",
+  "stationSourceHashes": {
+    "src/streetscape.js": "80506146d9ef8633de99bbd3be40e5b917da8673d3ed1f2141d1fb444f58a9c7",
+    "src/city.js": "840e276e5536ca31d906f98659742632a0be35f51feafb032f3ecbea90af95a4",
+    "src/city-apartments.js": "61767c5d8e8079f68f8c2a02252ac4f7b291e1ffb0813169c1a5d21c5e510705"
+  },
+  "citySourceHashes": {
+    "src/city.js": "840e276e5536ca31d906f98659742632a0be35f51feafb032f3ecbea90af95a4",
+    "src/city-apartments.js": "61767c5d8e8079f68f8c2a02252ac4f7b291e1ffb0813169c1a5d21c5e510705",
+    "src/look.js": "3bb978f9ef4222dea0ec102b2dc9d8667faa06f8a5c099dbcbc73e75342fcc6a",
+    "upstream/sakuragaoka/src/world/houses/gb.js": "1eff740f7c981529cfbdf4dd070309905d147cf4d9897a5bffcda5040ea2c1c5",
+    "upstream/sakuragaoka/src/world/houses/props.js": "9dec02c33081cfefa6d302dd5d91a3f1b05ff618c0dcf2c3000d198df127f4f2"
+  },
+  "files": {
+    "x51-density-station-cpu.mjs": {
+      "bytes": 6497,
+      "sha256": "c7cdc1d80ebb5f69a8fc1724b451be1e351c3bb962c785e39e71c4c4dbc7eeb2"
+    },
+    "x51-density-station-result.json": {
+      "bytes": 65522,
+      "sha256": "8425083a478502496680bcd1ab9eedd5303f3fa0ec95d9a5c4b921aa01cbc149"
+    },
+    "x51-density-station-stderr.txt": {
+      "bytes": 28212,
+      "sha256": "fd9e66fa23dd8c21bc633779fcbb9a0497fade802115b75528bac5f495fdffe3"
+    },
+    "x51-density-station-initial.json": {
+      "bytes": 838,
+      "sha256": "e9f705588a46ab4be558b37c4eea99405557f41811c5b6e34b5cbaa88d466ed9"
+    },
+    "x51-density-station-initial-stderr.txt": {
+      "bytes": 28212,
+      "sha256": "fd9e66fa23dd8c21bc633779fcbb9a0497fade802115b75528bac5f495fdffe3"
+    },
+    "x51-density-station-colliders.json": {
+      "bytes": 454811,
+      "sha256": "a607d53d5b150a5b3594a22d99581bcefea1b2d28dd4eb37dd7f66824983f48e"
+    },
+    "x51-density-city-cpu.mjs": {
+      "bytes": 14156,
+      "sha256": "b92aa57605cb307e23f92172ef61e19fcbdd1ca968390785b24e48dda208f843"
+    },
+    "x51-density-city-result.json": {
+      "bytes": 147999,
+      "sha256": "f2e9f24abba935b0b677874532afd58533950add687a7c5581a969ca474a35b9"
+    },
+    "x51-density-city-stderr.txt": {
+      "bytes": 302,
+      "sha256": "88e5e87bb1ee2effd49823df359dcb4015570ecbd885218a03921fcf3d020871"
+    }
+  },
+  "station": {
+    "triangles": 2424,
+    "addedTriangles": 132,
+    "objects": 4,
+    "colliders": 6,
+    "newTexturePixels": 0,
+    "colliderOverlaps": [
+      {
+        "id": "service-sorting-bin-0",
+        "count": 0
+      },
+      {
+        "id": "service-sorting-bin-1",
+        "count": 0
+      },
+      {
+        "id": "service-dustpan-base",
+        "count": 0
+      },
+      {
+        "id": "service-dustpan-handle",
+        "count": 0
+      },
+      {
+        "id": "e2-front-side-meter",
+        "count": 0
+      },
+      {
+        "id": "e2-front-side-meter-pipe",
+        "count": 0
+      }
+    ],
+    "support": [
+      {
+        "id": "service-sorting-bin-0",
+        "base": 0.012,
+        "visibleMin": 0.012,
+        "visibleMax": 0.012
+      },
+      {
+        "id": "service-sorting-bin-1",
+        "base": 0.012,
+        "visibleMin": 0.012,
+        "visibleMax": 0.012
+      },
+      {
+        "id": "service-dustpan-base",
+        "base": 0.012,
+        "visibleMin": 0.012,
+        "visibleMax": 0.012
+      }
+    ],
+    "sampledPathChanges": 0,
+    "pathScope": "Local x=-4/+4, z2..36 every.25m, radius.28,height1.6; compare resolve before/after at baseline ground. Not full dynamic navigation proof.",
+    "fixedStreetRays": [
+      {
+        "target": [
+          6.6,
+          1.421,
+          21.875
+        ],
+        "ndc": [
+          0.6322335199899948,
+          -0.11908972115814818,
+          0.9860954599728073
+        ],
+        "hits": [
+          {
+            "distance": 16.16521159774904,
+            "name": "e2-front-side-meter",
+            "material": "MeshToonMaterial",
+            "alphaTest": 0,
+            "point": [
+              6.6,
+              1.421,
+              21.875
+            ]
+          }
+        ]
+      },
+      {
+        "target": [
+          6.53,
+          1.421,
+          21.875
+        ],
+        "ndc": [
+          0.6264104203652083,
+          -0.11910241660241185,
+          0.986094109815831
+        ],
+        "hits": [
+          {
+            "distance": 16.1315518782292,
+            "name": "e2-front-side-meter",
+            "material": "MeshToonMaterial",
+            "alphaTest": 0,
+            "point": [
+              6.53,
+              1.421,
+              21.875
+            ]
+          }
+        ]
+      },
+      {
+        "target": [
+          6.67,
+          1.421,
+          21.875
+        ],
+        "ndc": [
+          0.6380554970388014,
+          -0.11907702816130966,
+          0.9860968098695005
+        ],
+        "hits": [
+          {
+            "distance": 16.1991038641031,
+            "name": "e2-front-side-meter",
+            "material": "MeshToonMaterial",
+            "alphaTest": 0,
+            "point": [
+              6.669999999999999,
+              1.421,
+              21.875
+            ]
+          }
+        ]
+      }
+    ],
+    "localToWorld": "station offset [280,8,900], yaw0; add coordinates componentwise. Source metadata remains local.",
+    "placements": [
+      {
+        "id": "service-sorting-bins",
+        "kind": "labelledBins",
+        "count": 2,
+        "localPosition": [
+          26.4,
+          0.012,
+          -29.18
+        ],
+        "size": [
+          0.96,
+          0.68,
+          0.46
+        ],
+        "triangles": 72,
+        "labels": [
+          "bin_burn",
+          "bin_res"
+        ]
+      },
+      {
+        "id": "service-dustpan",
+        "kind": "dustpan",
+        "localPosition": [
+          25.72,
+          0.012,
+          -29.22
+        ],
+        "triangles": 24
+      },
+      {
+        "id": "e2-front-side-meter",
+        "kind": "elecMeter",
+        "lot": "E2",
+        "lotPosition": [
+          3.5,
+          1.05,
+          -1.8
+        ],
+        "localPosition": [
+          6.6,
+          1.421,
+          21.82
+        ],
+        "triangles": 36,
+        "atlasRegion": "elec_meter"
+      }
+    ],
+    "limitations": [
+      "All14upstream modules really built; canvas/image pixels mocked; no GPU or screenshot acceptance.",
+      "Ray first hits only three meter face points from fixed01. Raster/texture/detail readability awaits GPU.",
+      "Geometry AABB overlaps are broad-phase candidates for consolidated old meshes, not proof of physical penetration.",
+      "textured-props runs later than streetscape; old official crate and carton were not loaded in this station ray driver. Their fixed source footprint is x25.76..26.34,z-28.58..-28.12; new bins end atz-28.95 and pan ends atz-29.11, leaving clear separation.",
+      "Initial inventory run accidentally requested nonexistent boxes/circles fields; it only reports physicsKeys/lots. Corrected collider inventory is separate."
+    ]
+  },
+  "city": {
+    "totalTriangles": 29553,
+    "delta": 444,
+    "newTexturePixels": 0,
+    "connectionsEqualC12": true,
+    "ownership": {
+      "textureDisposals": 0,
+      "geometryDisposals": 26,
+      "materialDisposals": 25
+    },
+    "sharedPrototypeDisposals": {
+      "geometries": 0,
+      "materials": 0
+    },
+    "supportNotes": [
+      "Rear floor4.904808464; dustpan/bucket sit on it. Original broom bristles penetrate4.26mm, not suspended.",
+      "Parcel bottom7.754808464 equals first-floor corridor top; upper parcel bottom8.024808464 equals lower box top.",
+      "Nearest rear door-to-parcel clearance.405m; door-to-meter.215m. No central stair landing overlap."
+    ],
+    "limitations": [
+      "Mock image/canvas pixels, no GPU.",
+      "Root-mesh material disposals counted25; customDepthMaterial not individually event-counted.",
+      "Kit source geometry and material probes saw zero dispose events; borrowed textures zero."
+    ]
+  }
+}

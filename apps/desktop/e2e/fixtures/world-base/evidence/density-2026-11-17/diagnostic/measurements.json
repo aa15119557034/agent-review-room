@@ -1,0 +1,1247 @@
+{
+  "source": {
+    "head": "0d97731bd7cb4f4634f4c9fdc0e1033ae7585f2a",
+    "sha256": "d5b40f9b847d955dc65710c6d630c1e850dae826a26ba47950faecff1b4098cc",
+    "trackedFilesVerified": 204,
+    "pinnedIgnoredFilesVerified": 9,
+    "receipt": "separate"
+  },
+  "stage": "complete",
+  "ok": false,
+  "renderOk": true,
+  "transportClean": false,
+  "actualExit": 1,
+  "session": 55536,
+  "pid": 52044,
+  "exceptions": [],
+  "networkFailures": [
+    {
+      "stage": "loading",
+      "url": "http://127.0.0.1:55558/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "56348.240",
+      "timestamp": 1925864.614014,
+      "type": "Fetch"
+    }
+  ],
+  "initial": {
+    "densityStats": {
+      "gbTriangles": 252,
+      "umbrellaTriangles": 192,
+      "laundry": {
+        "umbrellaStand": [
+          3.65,
+          4.784808464050293,
+          -123
+        ],
+        "sortingBins": [
+          -0.4,
+          4.784808464050293,
+          -122.93
+        ],
+        "binCount": 2
+      },
+      "rear": {
+        "origin": [
+          2,
+          4.904808464050293,
+          -131
+        ],
+        "rotationY": 3.141592653589793,
+        "broom": [
+          -5.2,
+          0,
+          0.14
+        ],
+        "dustpan": [
+          -4.85,
+          0,
+          0.26
+        ],
+        "bucket": [
+          -5.15,
+          0,
+          0.74
+        ],
+        "meter": [
+          -3.15,
+          1.3
+        ],
+        "parcels": [
+          {
+            "center": [
+              -5.15,
+              2.85,
+              0.37
+            ],
+            "size": [
+              0.46,
+              0.27,
+              0.36
+            ]
+          },
+          {
+            "center": [
+              -5.12,
+              3.12,
+              0.37
+            ],
+            "size": [
+              0.34,
+              0.18,
+              0.3
+            ]
+          }
+        ]
+      },
+      "source": "Pinned Sakuragaoka MIT builders and existing house atlas; no new textures",
+      "walkable": false,
+      "totalTriangles": 444
+    },
+    "streetscapeStats": {
+      "triangles": 2424,
+      "densityTriangles": 132,
+      "densityObjects": 4,
+      "densityColliders": 6,
+      "newTexturePixels": 0,
+      "coordinates": "station-local; apply station.toWorld after placement"
+    },
+    "streetscapeInstances": [
+      {
+        "id": "w3-planter-south",
+        "kind": "planter",
+        "lot": "W3",
+        "lotPosition": [
+          -3.2,
+          0.23929750424151042,
+          0.17
+        ],
+        "size": [
+          1.4,
+          0.26,
+          0.28
+        ],
+        "footprint": {
+          "id": "w3-planter-south",
+          "type": "walk",
+          "x": -4.63,
+          "z": 30.2,
+          "width": 1.4,
+          "depth": 0.28,
+          "rotationY": 1.5707963267948966,
+          "y0": 0.8552975042415104,
+          "y1": 1.1152975042415103
+        }
+      },
+      {
+        "id": "w3-planter-north",
+        "kind": "planter",
+        "lot": "W3",
+        "lotPosition": [
+          0.6,
+          0.1328156862745098,
+          0.17
+        ],
+        "size": [
+          1.2,
+          0.26,
+          0.28
+        ],
+        "footprint": {
+          "id": "w3-planter-north",
+          "type": "walk",
+          "x": -4.63,
+          "z": 26.4,
+          "width": 1.2,
+          "depth": 0.28,
+          "rotationY": 1.5707963267948966,
+          "y0": 0.7488156862745098,
+          "y1": 1.00881568627451
+        }
+      },
+      {
+        "id": "w2-side-air-conditioner",
+        "kind": "acUnit",
+        "lot": "W2",
+        "lotPosition": [
+          -3.365,
+          3.24,
+          -4.35
+        ],
+        "size": [
+          0.8,
+          0.66,
+          0.316
+        ],
+        "footprint": {
+          "id": "w2-side-air-conditioner",
+          "type": "box",
+          "x": -9.149999999999999,
+          "z": 22.378,
+          "width": 0.8,
+          "depth": 0.316,
+          "rotationY": 0,
+          "y0": 3.632,
+          "y1": 4.292
+        },
+        "duct": {
+          "id": "w2-side-air-conditioner-duct",
+          "type": "box",
+          "x": -8.689999999999998,
+          "z": 22.16,
+          "width": 0.1,
+          "depth": 0.08,
+          "rotationY": 0,
+          "y0": 3.902,
+          "y1": 5.302
+        },
+        "connector": {
+          "id": "w2-side-air-conditioner-connector",
+          "type": "box",
+          "x": -8.689999999999998,
+          "z": 22.24,
+          "width": 0.1,
+          "depth": 0.22,
+          "rotationY": 0,
+          "y0": 3.8520000000000003,
+          "y1": 3.952
+        },
+        "supports": [
+          {
+            "id": "w2-side-air-conditioner-bracket-0-wall",
+            "type": "box",
+            "x": -9.437999999999999,
+            "z": 22.165,
+            "width": 0.04,
+            "depth": 0.03,
+            "rotationY": 0,
+            "y0": 3.3520000000000003,
+            "y1": 3.632
+          },
+          {
+            "id": "w2-side-air-conditioner-bracket-0-arm",
+            "type": "box",
+            "x": -9.437999999999999,
+            "z": 22.3125,
+            "width": 0.04,
+            "depth": 0.325,
+            "rotationY": 0,
+            "y0": 3.6020000000000003,
+            "y1": 3.632
+          },
+          {
+            "id": "w2-side-air-conditioner-bracket-1-wall",
+            "type": "box",
+            "x": -8.861999999999998,
+            "z": 22.165,
+            "width": 0.04,
+            "depth": 0.03,
+            "rotationY": 0,
+            "y0": 3.3520000000000003,
+            "y1": 3.632
+          },
+          {
+            "id": "w2-side-air-conditioner-bracket-1-arm",
+            "type": "box",
+            "x": -8.861999999999998,
+            "z": 22.3125,
+            "width": 0.04,
+            "depth": 0.325,
+            "rotationY": 0,
+            "y0": 3.6020000000000003,
+            "y1": 3.632
+          }
+        ]
+      },
+      {
+        "id": "service-sorting-bins",
+        "kind": "labelledBins",
+        "count": 2,
+        "localPosition": [
+          26.4,
+          0.012,
+          -29.18
+        ],
+        "size": [
+          0.96,
+          0.68,
+          0.46
+        ],
+        "triangles": 72,
+        "labels": [
+          "bin_burn",
+          "bin_res"
+        ],
+        "footprints": [
+          {
+            "id": "service-sorting-bin-0",
+            "type": "box",
+            "x": 26.15,
+            "z": -29.18,
+            "width": 0.46,
+            "depth": 0.46,
+            "rotationY": 0,
+            "y0": 0.012,
+            "y1": 0.6920000000000001
+          },
+          {
+            "id": "service-sorting-bin-1",
+            "type": "box",
+            "x": 26.65,
+            "z": -29.18,
+            "width": 0.46,
+            "depth": 0.46,
+            "rotationY": 0,
+            "y0": 0.012,
+            "y1": 0.6920000000000001
+          }
+        ]
+      },
+      {
+        "id": "service-dustpan",
+        "kind": "dustpan",
+        "localPosition": [
+          25.72,
+          0.012,
+          -29.22
+        ],
+        "triangles": 24,
+        "footprint": {
+          "id": "service-dustpan-base",
+          "type": "walk",
+          "x": 25.72,
+          "z": -29.22,
+          "width": 0.26,
+          "depth": 0.22,
+          "rotationY": 0,
+          "y0": 0.012,
+          "y1": 0.052000000000000005
+        },
+        "handle": {
+          "id": "service-dustpan-handle",
+          "type": "box",
+          "x": 25.72,
+          "z": -29.299999999999997,
+          "width": 0.03,
+          "depth": 0.12873666273276785,
+          "rotationY": 0,
+          "y0": 0.06400331557776368,
+          "y1": 0.5599966844222364
+        }
+      },
+      {
+        "id": "e2-front-side-meter",
+        "kind": "elecMeter",
+        "lot": "E2",
+        "lotPosition": [
+          3.5,
+          1.05,
+          -1.8
+        ],
+        "localPosition": [
+          6.6,
+          1.421,
+          21.82
+        ],
+        "triangles": 36,
+        "atlasRegion": "elec_meter",
+        "footprint": {
+          "id": "e2-front-side-meter",
+          "type": "box",
+          "x": 6.6,
+          "z": 21.8125,
+          "width": 0.24,
+          "depth": 0.125,
+          "rotationY": 0,
+          "y0": 1.241,
+          "y1": 1.601
+        },
+        "pipe": {
+          "id": "e2-front-side-meter-pipe",
+          "type": "box",
+          "x": 6.699999999999999,
+          "z": 21.78,
+          "width": 0.05,
+          "depth": 0.05,
+          "rotationY": 0,
+          "y0": 1.621,
+          "y1": 2.921
+        }
+      }
+    ],
+    "lightMaterials": [
+      {
+        "role": "city-warm-lamp",
+        "owner": "city",
+        "mesh": "town-edge-kit",
+        "uuid": "86a51a0c-7754-484d-961f-2305fca88083",
+        "material": {
+          "uuid": "c0464002-feab-437c-a8e6-271a96f7d99c",
+          "name": "",
+          "type": "MeshBasicMaterial",
+          "colorRGB": [
+            1.25,
+            0.8673397016071122,
+            0.4394157493623079
+          ],
+          "toneMapped": false,
+          "vertexColors": false,
+          "opacity": 1,
+          "transparent": false,
+          "side": 0,
+          "depthWrite": true,
+          "fog": true,
+          "map": null,
+          "normalMap": null,
+          "roughnessMap": null,
+          "shaderUniforms": null,
+          "clipPlanes": 0,
+          "clipIntersection": false,
+          "clipShadows": false,
+          "softClip": null
+        },
+        "worldBounds": {
+          "min": [
+            258.4933338165283,
+            14.908957958221436,
+            767.3650054931641
+          ],
+          "max": [
+            305.3999996185303,
+            26.378957748413086,
+            777.8899993896484
+          ]
+        },
+        "triangles": 480,
+        "castShadow": false,
+        "receiveShadow": true,
+        "sourceHouseLampIdentity": false
+      },
+      {
+        "role": "city-laundry-white-sign",
+        "owner": "city",
+        "mesh": "town-edge-kit",
+        "uuid": "105e596a-9408-48fa-8bef-fd77f2105122",
+        "material": {
+          "uuid": "524d2ab6-7f42-4751-addf-66736af786e1",
+          "name": "",
+          "type": "MeshBasicMaterial",
+          "colorRGB": [
+            1.03070975637775,
+            1.011565756417941,
+            0.9279950963148503
+          ],
+          "toneMapped": false,
+          "vertexColors": false,
+          "opacity": 1,
+          "transparent": false,
+          "side": 0,
+          "depthWrite": true,
+          "fog": true,
+          "map": null,
+          "normalMap": null,
+          "roughnessMap": null,
+          "shaderUniforms": null,
+          "clipPlanes": 0,
+          "clipIntersection": false,
+          "clipShadows": false,
+          "softClip": null
+        },
+        "worldBounds": {
+          "min": [
+            279.02499997615814,
+            14.919808387756348,
+            777.7925033569336
+          ],
+          "max": [
+            279.67500001192093,
+            15.469808578491211,
+            777.8375015258789
+          ]
+        },
+        "triangles": 12,
+        "castShadow": false,
+        "receiveShadow": true,
+        "sourceHouseLampIdentity": false
+      }
+    ],
+    "lightMaterialIdentification": "Exact runtime MeshBasicMaterial colors matched to existing factories; no new material factory/cache calls. Missing or occluded ROI is recorded, not treated as a style pass.",
+    "cityStats": {
+      "buildings": 5,
+      "apartments": 3,
+      "lowHouses": 2,
+      "modelTriangles": 29553,
+      "modelPrimitives": 136,
+      "connections": {
+        "roads": [
+          {
+            "name": "town-front-lane",
+            "minX": -56,
+            "maxX": 37,
+            "minZ": -118.5,
+            "maxZ": -115.8,
+            "triangles": 558,
+            "groundOffset": 0.06
+          },
+          {
+            "name": "town-levee-lane",
+            "minX": 32,
+            "maxX": 37,
+            "minZ": -115.8,
+            "maxZ": -101,
+            "triangles": 150,
+            "groundOffset": 0.06
+          }
+        ],
+        "stairs": [
+          {
+            "name": "town-apartment-3f-entry",
+            "x": -17,
+            "width": 2.2,
+            "highZ": -123.5,
+            "lowZ": -118.51,
+            "steps": 12,
+            "rise": 0.16522699094701745,
+            "tread": 0.4158333333333329,
+            "top": 5.458040148417157,
+            "bottom": 3.4753162570529477,
+            "minClearance": 0.1520745146716722
+          },
+          {
+            "name": "town-apartment-4f-entry",
+            "x": 2,
+            "width": 2.2,
+            "highZ": -122,
+            "lowZ": -118.51,
+            "steps": 9,
+            "rise": 0.16519691556765836,
+            "tread": 0.3877777777777772,
+            "top": 4.904808464050293,
+            "bottom": 3.418036223941368,
+            "minClearance": 0.16489170203975156
+          },
+          {
+            "name": "town-apartment-5f-entry",
+            "x": 22,
+            "width": 2.2,
+            "highZ": -121,
+            "lowZ": -118.51,
+            "steps": 8,
+            "rise": 0.16888438367843667,
+            "tread": 0.31124999999999936,
+            "top": 4.783957901000977,
+            "bottom": 3.4328828315734836,
+            "minClearance": 0.19491120815277263
+          },
+          {
+            "name": "town-house-0-entry",
+            "x": -37,
+            "width": 2.2,
+            "highZ": -121.50032998154778,
+            "lowZ": -118.51,
+            "steps": 8,
+            "rise": 0.16701789847613763,
+            "tread": 0.3737912476934717,
+            "top": 4.265555652798646,
+            "bottom": 2.929412464989545,
+            "minClearance": 0.1903727568173812
+          },
+          {
+            "name": "town-house-1-entry",
+            "x": -50,
+            "width": 2.2,
+            "highZ": -122.16807376975453,
+            "lowZ": -118.51,
+            "steps": 9,
+            "rise": 0.1703773724573469,
+            "tread": 0.4064526410838359,
+            "top": 4.317841223382807,
+            "bottom": 2.7844448712666847,
+            "minClearance": 0.1884255007462241
+          },
+          {
+            "name": "town-levee-stairs",
+            "x": 34.5,
+            "width": 5,
+            "highZ": -94.53,
+            "lowZ": -101,
+            "steps": 10,
+            "rise": 0.17436214139726358,
+            "tread": 0.6469999999999999,
+            "top": 3.23,
+            "bottom": 1.4863785860273642,
+            "minClearance": 0.030398222222221882
+          }
+        ],
+        "walkable": false
+      },
+      "trees": [
+        {
+          "x": -57.5,
+          "y": 3.5195525222354185,
+          "z": -122.5,
+          "triangles": 364
+        },
+        {
+          "x": 30.5,
+          "y": 4.387975295384702,
+          "z": -127,
+          "triangles": 364
+        }
+      ],
+      "poles": [
+        {
+          "x": -28,
+          "z": -116.2,
+          "height": 7.4
+        },
+        {
+          "x": 30.4,
+          "z": -116.2,
+          "height": 7.4
+        }
+      ],
+      "planting": [
+        {
+          "name": "town-apartment-3f",
+          "hedgeZ": -122.8,
+          "triangles": 1538
+        },
+        {
+          "name": "town-apartment-4f",
+          "hedgeZ": -121.3,
+          "triangles": 1634
+        },
+        {
+          "name": "town-apartment-5f",
+          "hedgeZ": -120.3,
+          "triangles": 1636
+        },
+        {
+          "name": "town-house-0",
+          "hedgeZ": -120.95032998154778,
+          "triangles": 1274
+        },
+        {
+          "name": "town-house-1",
+          "hedgeZ": -121.61807376975453,
+          "triangles": 1132
+        }
+      ],
+      "densityProps": {
+        "gbTriangles": 252,
+        "umbrellaTriangles": 192,
+        "laundry": {
+          "umbrellaStand": [
+            3.65,
+            4.784808464050293,
+            -123
+          ],
+          "sortingBins": [
+            -0.4,
+            4.784808464050293,
+            -122.93
+          ],
+          "binCount": 2
+        },
+        "rear": {
+          "origin": [
+            2,
+            4.904808464050293,
+            -131
+          ],
+          "rotationY": 3.141592653589793,
+          "broom": [
+            -5.2,
+            0,
+            0.14
+          ],
+          "dustpan": [
+            -4.85,
+            0,
+            0.26
+          ],
+          "bucket": [
+            -5.15,
+            0,
+            0.74
+          ],
+          "meter": [
+            -3.15,
+            1.3
+          ],
+          "parcels": [
+            {
+              "center": [
+                -5.15,
+                2.85,
+                0.37
+              ],
+              "size": [
+                0.46,
+                0.27,
+                0.36
+              ]
+            },
+            {
+              "center": [
+                -5.12,
+                3.12,
+                0.37
+              ],
+              "size": [
+                0.34,
+                0.18,
+                0.3
+              ]
+            }
+          ]
+        },
+        "source": "Pinned Sakuragaoka MIT builders and existing house atlas; no new textures",
+        "walkable": false,
+        "totalTriangles": 444
+      },
+      "texturedProps": {
+        "crate": {
+          "position": [
+            5.55,
+            4.784824423193932,
+            -122.58
+          ],
+          "triangles": 5840
+        },
+        "sign": {
+          "position": [
+            4.55,
+            4.784808464050293,
+            -122.35
+          ],
+          "rotationY": 0.35,
+          "size": [
+            0.45,
+            0.68
+          ],
+          "blank": true
+        },
+        "pot": {
+          "position": [
+            6.25,
+            4.784808464050293,
+            -122.7
+          ],
+          "triangles": 141
+        },
+        "view": {
+          "position": [
+            8,
+            6.384808464050293,
+            -122.1
+          ],
+          "target": [
+            5.15,
+            5.144808464050294,
+            -122.7
+          ]
+        },
+        "walkable": false,
+        "borrowedAssetTextures": 4
+      },
+      "totalTriangles": 29553,
+      "materials": 30,
+      "geometries": 26,
+      "borrowedTextures": 14,
+      "uniqueTextures": 14,
+      "ownedTextures": 0,
+      "newTexturePixels": 0,
+      "ownedTextureRGBA8WithMipsEstimateBytes": 0,
+      "textureCacheEntriesAdded": 0,
+      "laundryItems": 8,
+      "suppressedPhysicsCalls": 0,
+      "ownership": "Own emitted geometry, far instances and material clones; borrow all station atlases, far facade textures and gradient maps. Dispose before station.",
+      "limitation": "Background only: no new physics or navigable interiors. Foundations and stairs are CPU checked; camera composition and visible CDLOD contacts need GPU acceptance."
+    },
+    "views": [
+      {
+        "name": "service-corner",
+        "fov": 55,
+        "position": [
+          308.4,
+          9.612,
+          872.9
+        ],
+        "target": [
+          305,
+          8.85,
+          871.3
+        ],
+        "space": "preset"
+      },
+      {
+        "name": "laundry-details",
+        "fov": 55,
+        "position": [
+          288,
+          14.384808464050293,
+          777.9
+        ],
+        "target": [
+          285.15,
+          13.144808464050293,
+          777.3
+        ],
+        "space": "preset"
+      },
+      {
+        "name": "shop-interior",
+        "fov": 58,
+        "position": [
+          271.7,
+          9.9134,
+          908
+        ],
+        "target": [
+          267.2,
+          9.7134,
+          908
+        ],
+        "space": "preset"
+      },
+      {
+        "name": "20-rear-eye",
+        "space": "station-local",
+        "fov": 58,
+        "position": [
+          -7,
+          6.755245542526229,
+          -142
+        ],
+        "target": [
+          4,
+          6.764808464050294,
+          -132
+        ]
+      },
+      {
+        "name": "21-front-eye",
+        "space": "station-local",
+        "fov": 58,
+        "position": [
+          -6,
+          4.87812709172567,
+          -117
+        ],
+        "target": [
+          4,
+          6.864808464050293,
+          -122.4
+        ]
+      },
+      {
+        "name": "station-street",
+        "fov": 58,
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "target": [
+          280,
+          10,
+          875
+        ],
+        "space": "preset"
+      },
+      {
+        "name": "street-detail",
+        "space": "station-local",
+        "fov": 58,
+        "position": [
+          4.4,
+          2.281286274509804,
+          24
+        ],
+        "target": [
+          6.6,
+          1.421,
+          21.82
+        ]
+      }
+    ],
+    "roi": [],
+    "defaultAO": 0.55,
+    "method": "Actual frozen density scene and pinned nine assets. Main RAF frozen/time14; per view select once, AO .55 only. Each state retains one warmup plus two fresh render captures. Six cameras are copied from actual C12 capture-2 references. Seventh street-detail is the new configured station-local eye-height1.6m view/FOV58, with no historic same-camera A/B. Current preset definitions are retained as metadata. 20/21 formulas and FOV58 match C8 AO experiment. No contrast ABA, UI/physics test, performance claim, source/material/quality/light replacement. Density-only 21 renders, default AO .55 only; no GPU tap, HDR readback, shadow-flag ABA, or AO toggle. No full-frame identity assumed across revisions."
+  },
+  "restore": {
+    "ao": 0.55,
+    "contrast": 1.05,
+    "uploadedContrast": 1.05,
+    "materialsUnchanged": true,
+    "view": "station-street",
+    "fov": 58,
+    "time": 34.4334,
+    "frozen": false,
+    "lightMaterialsUnchanged": true,
+    "shadowState": {
+      "bins": [
+        {
+          "uuid": "f7b36e2c-cfd5-4e1c-bc02-23f42600bbe7",
+          "name": "houses-far",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "c682aa74-03d5-4f69-8603-24588434b96c",
+          "name": "houses-far",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "289778e1-eb3c-4280-96da-090896d84801",
+          "name": "houses-far",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "91bfde8b-f19e-4917-94de-6d72046318d4",
+          "name": "houses-far",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "485880fd-c7d0-423a-8039-322491ee664d",
+          "name": "plastic_crate_02",
+          "type": "MeshStandardMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "d4f94f66-83b1-4d2f-b26c-56bb8d2c0a4e",
+          "name": "",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "58281855-860d-42cd-8be4-62ac6ec4e7c1",
+          "name": "",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "aeff798b-7763-4491-81ea-861d0215dd4f",
+          "name": "",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "7c060632-2191-475c-ae6f-3b6b0716d99f",
+          "name": "",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "17c0cd3d-6310-4da1-8e06-03584b3df463",
+          "name": "",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "b5835ec2-c37d-445d-9996-26d64501195b",
+          "name": "",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "d0f7dc19-79a7-496b-ab89-592157086376",
+          "name": "",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "35125d6c-6cf5-4b21-8bd9-3bce65eacf56",
+          "name": "",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "b1ffc401-96f3-445b-8941-c8c1f1fe7e19",
+          "name": "",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "7397b8d4-7569-4e34-85ab-1a1a33510b9f",
+          "name": "",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "f6b8f207-6376-440e-a2ad-5b8d38153730",
+          "name": "",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "788f1e23-e737-46b4-b40c-945d31025e9d",
+          "name": "",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "13ec7897-84cd-4013-b4fd-0b869645a7b0",
+          "name": "",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "aab3cd0f-82a8-41ba-89b1-3f7a80b30a82",
+          "name": "",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "392ac222-3b0e-4ae0-9fcb-15aa68e31728",
+          "name": "",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "3ec4ea32-18dd-40d2-bc51-42c0db7f8960",
+          "name": "",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "5e62b402-f51d-41b0-bfb1-315ed163c1b2",
+          "name": "",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "80147106-62c0-46e0-ab63-359a2d89ffd3",
+          "name": "",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "cf1bc7c3-6888-4959-b8d2-2d7dbc5aecf8",
+          "name": "",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "1dfb8f52-148f-4221-90c2-dd3ccff7ea8c",
+          "name": "",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "3142b467-9108-4603-8040-387c5af14948",
+          "name": "",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "ba1d9d9c-5d36-42c0-8c43-49c10d4de5cd",
+          "name": "town-edge-kit",
+          "type": "MeshToonMaterial",
+          "cast": false,
+          "receive": true,
+          "isDiagnosticBin": true
+        },
+        {
+          "uuid": "0162aeb8-25ee-45e1-a910-c329c776c553",
+          "name": "town-edge-kit",
+          "type": "MeshToonMaterial",
+          "cast": false,
+          "receive": true,
+          "isDiagnosticBin": true
+        },
+        {
+          "uuid": "13842a58-6eb6-44dc-af37-c26ec67a197a",
+          "name": "town-edge-kit",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "362ff5af-2d16-4a07-b798-b5fb90855dc6",
+          "name": "town-edge-kit",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "d6573212-4bac-46aa-8f18-6c9c3225dfcb",
+          "name": "town-edge-kit",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "e0e781b7-563d-41ad-88db-53a82ce3528e",
+          "name": "town-edge-kit",
+          "type": "ShaderMaterial",
+          "cast": false,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "86a51a0c-7754-484d-961f-2305fca88083",
+          "name": "town-edge-kit",
+          "type": "MeshBasicMaterial",
+          "cast": false,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "278763e5-9d04-430e-9ee3-8cac4ec663ad",
+          "name": "town-edge-kit",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "03c6a00f-b7f7-4bd2-ac61-f3c473c02590",
+          "name": "town-edge-kit",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "1c2add7f-b570-4084-a88e-bcf5e7231c5f",
+          "name": "town-edge-kit",
+          "type": "ShaderMaterial",
+          "cast": false,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "105e596a-9408-48fa-8bef-fd77f2105122",
+          "name": "town-edge-kit",
+          "type": "MeshBasicMaterial",
+          "cast": false,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "e4fa8846-c814-46bf-a7b4-3907082422f4",
+          "name": "town-edge-kit",
+          "type": "MeshToonMaterial",
+          "cast": false,
+          "receive": true,
+          "isDiagnosticBin": true
+        },
+        {
+          "uuid": "2caae7c0-f6da-4800-9582-ab2880e0b3ab",
+          "name": "town-edge-kit",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "8a262402-1b0d-467b-a6fa-103d0663462b",
+          "name": "town-edge-kit",
+          "type": "MeshToonMaterial",
+          "cast": false,
+          "receive": true,
+          "isDiagnosticBin": true
+        },
+        {
+          "uuid": "a57d6a57-8fff-4f42-afee-53186ad6711d",
+          "name": "town-edge-kit",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        },
+        {
+          "uuid": "4c0016fb-a6e0-4179-aa37-6463b4818220",
+          "name": "houses-laundry",
+          "type": "MeshToonMaterial",
+          "cast": true,
+          "receive": true,
+          "isDiagnosticBin": false
+        }
+      ],
+      "materialsAndGeometryUnchanged": true,
+      "originalFlags": true,
+      "lastRequestedRefresh": null,
+      "rendererNeedsUpdate": false
+    }
+  },
+  "sourceUnchanged": true,
+  "driverUnchanged": true,
+  "assetsUnchanged": true,
+  "selectedImages": [
+    "service-corner-ao-on-capture-2.jpg",
+    "laundry-details-ao-on-capture-2.jpg",
+    "shop-interior-ao-on-capture-2.jpg",
+    "20-rear-eye-ao-on-capture-2.jpg",
+    "21-front-eye-ao-on-capture-2.jpg",
+    "station-street-ao-on-capture-2.jpg",
+    "street-detail-ao-on-capture-2.jpg",
+    "service-corner-ao-on-capture-2.png",
+    "laundry-details-ao-on-capture-2.png",
+    "street-detail-ao-on-capture-2.png"
+  ],
+  "frameSamples": [],
+  "scope": "Fixed-time density readback/visual evidence, not performance or navigation proof."
+}
