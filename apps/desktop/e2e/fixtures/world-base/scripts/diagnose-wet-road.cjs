@@ -31,7 +31,9 @@ function sceneFiles() {
   for (const file of props.files) files[file.path] = file.sha256;
   const surfaces = require('./prepare-apartments.cjs').verifyPreparedAssets(fixture);
   for (const file of surfaces.files) files[file.path] = file.sha256;
-  for (const face of ['px', 'nx', 'py', 'ny', 'pz', 'nz']) hash(path.join(fixture, 'src', 'street-env', face + '.png'));
+  for (const directory of ['street-env', 'street-env-evening']) {
+    for (const face of ['px', 'nx', 'py', 'ny', 'pz', 'nz']) hash(path.join(fixture, 'src', directory, face + '.png'));
+  }
   for (const name of ['src', 'upstream', 'vendor']) if (fs.existsSync(path.join(fixture, name))) walk(path.join(fixture, name));
   return files;
 }

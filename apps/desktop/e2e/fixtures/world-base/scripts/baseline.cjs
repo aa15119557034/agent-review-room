@@ -143,14 +143,16 @@ function main() {
     hashFile(path.join(fixture, 'prop-assets.json'));
     hashFile(path.join(fixture, 'apartment-assets.json'));
     hashFile(path.join(__dirname, 'prepare-apartments.cjs'));
-    for (const face of ['px', 'nx', 'py', 'ny', 'pz', 'nz']) hashFile(path.join(fixture, 'src', 'street-env', face + '.png'));
+    for (const directory of ['street-env', 'street-env-evening']) {
+      for (const face of ['px', 'nx', 'py', 'ny', 'pz', 'nz']) hashFile(path.join(fixture, 'src', directory, face + '.png'));
+    }
     hashFile(path.join(__dirname, 'prepare-props.cjs'));
     hashFile(__filename);
     for (const file of propAssets.files) files[file.path] = file.sha256;
     for (const file of apartmentAssets.files) files[file.path] = file.sha256;
     for (const directory of ['src', 'upstream', 'vendor']) if (fs.existsSync(path.join(fixture, directory))) walk(path.join(fixture, directory));
     const head = cp.execFileSync('git', ['rev-parse', 'HEAD'], { cwd: fixture, encoding: 'utf8', windowsHide: true }).trim();
-    const manifest = { head, capturedAt: config.startedAt, scope: 'Scene code, six baked street reflection faces, prepared props and apartment PBR assets. The pinned upstream Petalwake files are covered by the original preparation manifest.', files, propAssets, apartmentAssets,
+    const manifest = { head, capturedAt: config.startedAt, scope: 'Scene code, afternoon and evening street reflection faces, prepared props and apartment PBR assets. The pinned upstream Petalwake files are covered by the original preparation manifest.', files, propAssets, apartmentAssets,
       cityAssets: { manifest: 'city-assets.json', runtime: cityManifest.currentRuntime, requiredExternalProjects: [], verifiedBeforeLaunch: false, retiredAssetsVerified: false } };
     const manifestText = JSON.stringify(manifest, null, 2);
     fs.writeFileSync(path.join(output, 'source-manifest.json'), manifestText);

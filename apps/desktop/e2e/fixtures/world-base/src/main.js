@@ -112,7 +112,7 @@ async function init() {
   stage('正在安放车站、店铺与碰撞体…');
   station = await createStation({
     scene, renderer, camera, offset: island.stationPlacement.position,
-    rotationY: island.stationPlacement.rotationY, sunDir: island.U.uSunDir.value,
+    rotationY: island.stationPlacement.rotationY, sunDir: island.U.uSunDir.value, evening,
     groundMaterial: island.transition.material,
     onProgress: stage,
   });

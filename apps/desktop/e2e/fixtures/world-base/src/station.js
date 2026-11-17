@@ -65,7 +65,7 @@ function clipMaterials(root, bounds) {
 }
 
 export async function createStation({ scene, renderer, camera, offset = [280, 8, 900], rotationY = 0,
-  sunDir = new THREE.Vector3(...layout.SUN_DIR).normalize(), groundMaterial, onProgress = () => {} }) {
+  sunDir = new THREE.Vector3(...layout.SUN_DIR).normalize(), evening = false, groundMaterial, onProgress = () => {} }) {
   const root = new THREE.Group();
   root.name = 'Sakuragaoka';
   const localCamera = new THREE.PerspectiveCamera();
@@ -100,7 +100,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   const clipStart = performance.now();
   const removedMeshes = trimOutside(root, layout.WORLD.play);
   const groundBlend = blendStationGround({ root, terrainMaterial: groundMaterial, bounds: layout.WORLD.play });
-  const streetReflections = await createStreetReflections(root, layout);
+  const streetReflections = await createStreetReflections(root, layout, evening);
   const wetRoad = applyWetRoad({ root, ctx, reflections: streetReflections });
   // These textures belong to the island; the station owns only the blend mesh
   // and material. Disposing the district must not invalidate island rendering.

@@ -39,9 +39,9 @@ node scripts\prepare-props.cjs --download
 
 三栋公寓使用 Poly Haven 的抹灰、外墙砖和金属贴图。首次准备运行 `node scripts/prepare-apartments.cjs --download`，已有文件可运行 `node scripts/prepare-apartments.cjs` 核验。9 张原图共 4,932,249 字节，存放在 `.local/apartment-surfaces/`。每张图的作者、来源、尺寸以及 MD5 和 SHA-256 见 [公寓贴图清单](./apartment-assets.json)。
 
-主街的橱窗与积水共用 `src/street-env/` 中的六面街景。更改建筑或日照后，运行 `node scripts/bake-street-reflections.cjs --electron=<已有Electron路径> --output=<新目录>` 可生成新的六面 PNG 和逐面报告。烘焙范围取站区和程序天空，排除道口的镜头光晕。
+主街橱窗与积水共用当前时段的六面街景。默认傍晚从 `src/street-env-evening/` 读取，下午从 `src/street-env/` 读取。更改建筑或日照后，运行 `node scripts/bake-street-reflections.cjs --electron=<已有Electron路径> --output=<新目录>` 可生成新的六面 PNG 和逐面报告。默认烘焙傍晚站区与程序天空，排除道口的镜头光晕。线性 RGB 峰值超过 2 的像素按同一比例缩放三个通道，报告分别记录原始峰值、限幅数量及量化误差。
 
-默认是傍晚（太阳高 12°、方位 280°，参数在 `src/evening.json`）。地形的太阳阴影烘焙在 `light.png` 里，换太阳必须一起重烘：首次运行 `python3 scripts/bake-evening-light.py`（需要 numpy、numba、scipy、Pillow，约半分钟），在 `.local/petalwake-*/assets/terrain/` 生成 `light-evening.png`；只换 R 通道（太阳阴影），AO、岸距、陡度照抄原图。网址加 `?time=afternoon` 回到 Petalwake 原来的下午光照做对照。港镇自带的屋顶阴影不在这张图里，仍按原来的下午方向；`src/street-env/` 的倒影也还是下午天空烘的，需要按上面的方法重烘。
+默认是傍晚（太阳高 12°、方位 280°，参数在 `src/evening.json`）。地形的太阳阴影烘焙在 `light.png` 里，换太阳必须一起重烘：首次运行 `python3 scripts/bake-evening-light.py`（需要 numpy、numba、scipy、Pillow，约半分钟），在 `.local/petalwake-*/assets/terrain/` 生成 `light-evening.png`；只换 R 通道（太阳阴影），AO、岸距、陡度照抄原图。网址加 `?time=afternoon` 回到 Petalwake 原来的下午光照做对照。港镇阴影图在场景启动时按所选太阳方向生成。
 
 在本目录使用已有 Electron 运行，无需构建桌面应用：
 
@@ -65,7 +65,7 @@ node scripts\baseline.cjs --scene=combined --electron=D:\codex\2026-11-16\world-
 
 - `src/streetscape.js`：W3低墙两只花箱、W2二层侧墙外机及支架。复用已有图集和造型；门口及既有自行车留空，低花箱按原物理台阶规则提供顶面。
 - `src/skyline.js`：站区北侧两组原比例公寓，保留外廊、楼梯、阳台、院落和晾衣；台阶与小路接到原有堤顶路，按真实地形及接缝表面落地。只清理院落和连接处的草花，属于不可步行背景；没有扩大地图导航范围。释放时先调用 `worldBase.skyline.dispose()`，再释放 station，以保持借用纹理的所有权顺序。
-- `src/wet-road.js`：五组局部湿区。C酱第三轮扩大湿区并调整底色与天光混合，第四轮按贴花alpha改善井盖干区；采样遵守贴图矩阵、wrap和flipY，读取失败明确报错。本机两个机位的固定帧开/关/开确认可见响应和严格恢复。当前公式只有天光近似，**没有店铺倒影**，不新增全屏pass或反射渲染目标。调试开关为 `worldBase.station.wetRoad.setEnabled(false/true)`，专用验收脚本为 `scripts/diagnose-wet-road.cjs`。
+- `src/wet-road.js`：五组局部湿区。C酱第三轮扩大湿区并调整底色与天光混合，第四轮按贴花alpha改善井盖干区；采样遵守贴图矩阵、wrap和flipY，读取失败明确报错。本机两个机位的固定帧开/关/开确认可见响应和严格恢复。湿路与橱窗采样同一张街景立方体贴图，无需额外的运行时反射渲染。调试开关为 `worldBase.station.wetRoad.setEnabled(false/true)`，专用验收脚本为 `scripts/diagnose-wet-road.cjs`。
 
 这组补充提供近景和近郊层次，尚不是参考图里的都市天际线、密集商业街或完整湿地反射效果。固定四机位之外，采集脚本另拍花箱、侧墙、背景及干湿路面细节，镜头坐标随报告保存。
 

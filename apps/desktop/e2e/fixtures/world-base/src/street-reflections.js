@@ -52,7 +52,7 @@ function glassMaterial(original, uniforms) {
   return glass;
 }
 
-export async function createStreetReflections(root, layout) {
+export async function createStreetReflections(root, layout, evening = false) {
   const z = 18, x = layout.streetCenterX(z);
   const origin = new THREE.Vector3(x, layout.heightAt(x, z) + 1.9, z);
   const uniforms = {
@@ -92,7 +92,8 @@ export async function createStreetReflections(root, layout) {
   }
   const resolution = 256;
   const start = performance.now();
-  const faces = ['px', 'nx', 'py', 'ny', 'pz', 'nz'].map(face => new URL(`./street-env/${face}.png`, import.meta.url).href);
+  const directory = evening ? 'street-env-evening' : 'street-env';
+  const faces = ['px', 'nx', 'py', 'ny', 'pz', 'nz'].map(face => new URL(`./${directory}/${face}.png`, import.meta.url).href);
   const cube = await new THREE.CubeTextureLoader().loadAsync(faces);
   if (cube.image.length !== 6 || cube.image.some(face => face.width !== resolution || face.height !== resolution)) {
     cube.dispose();
