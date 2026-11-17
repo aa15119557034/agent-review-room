@@ -1,0 +1,161 @@
+{
+  "source": "e78c52ce50205f85a4af02bfa78fb8f230b3644b",
+  "camera": {
+    "position": [
+      2100,
+      2350,
+      2450
+    ],
+    "quaternion": [
+      -0.27043683246052963,
+      0.3343071089193487,
+      0.10076912073943207,
+      0.8971890886987558
+    ],
+    "fov": 58
+  },
+  "primaryPngSha256": "153a3cfceaffee14bb9ae4031dbed923f2e7114ac8544723804c1431b456e158",
+  "method": "Frozen 03 at scene/animation time 14. Toggle only visible on the five scene meshes named crossing-halo to false, leaving original lamp shells, shaders, bloom, colours, camera and scene time intact. Restore saved visibility and capture again. No scene source edits. Full PNGs checked pixel-for-pixel.",
+  "measureROI": [
+    614,
+    586,
+    655,
+    617
+  ],
+  "warmPredicate": "R>=170, R-G>=45, R-B>=50 on final 8-bit display pixels.",
+  "scale": "nearest 4x in the displayed crop",
+  "captures": [
+    {
+      "state": "on",
+      "pngSha256": "1402cec2bc6b7f8d070ed672298149f8e088db6ef2c8c44b2a78100055cafbf1",
+      "warmPixelsInROI": 57,
+      "maxDisplayLumaInROI": 217.42,
+      "halos": [
+        {
+          "id": 20604,
+          "original": true,
+          "visible": true,
+          "on": 0
+        },
+        {
+          "id": 20644,
+          "original": true,
+          "visible": true,
+          "on": 0
+        },
+        {
+          "id": 20875,
+          "original": true,
+          "visible": true,
+          "on": 0
+        },
+        {
+          "id": 20876,
+          "original": true,
+          "visible": true,
+          "on": 1
+        },
+        {
+          "id": 20879,
+          "original": true,
+          "visible": true,
+          "on": 1
+        }
+      ]
+    },
+    {
+      "state": "off",
+      "pngSha256": "18d90acdf527009eb6e33e8d279c7e331496d76a0947836adab63c857b1ba708",
+      "warmPixelsInROI": 0,
+      "maxDisplayLumaInROI": 158.56,
+      "halos": [
+        {
+          "id": 20604,
+          "original": true,
+          "visible": false,
+          "on": 0
+        },
+        {
+          "id": 20644,
+          "original": true,
+          "visible": false,
+          "on": 0
+        },
+        {
+          "id": 20875,
+          "original": true,
+          "visible": false,
+          "on": 0
+        },
+        {
+          "id": 20876,
+          "original": true,
+          "visible": false,
+          "on": 1
+        },
+        {
+          "id": 20879,
+          "original": true,
+          "visible": false,
+          "on": 1
+        }
+      ]
+    },
+    {
+      "state": "restored",
+      "pngSha256": "1402cec2bc6b7f8d070ed672298149f8e088db6ef2c8c44b2a78100055cafbf1",
+      "warmPixelsInROI": 57,
+      "maxDisplayLumaInROI": 217.42,
+      "halos": [
+        {
+          "id": 20604,
+          "original": true,
+          "visible": true,
+          "on": 0
+        },
+        {
+          "id": 20644,
+          "original": true,
+          "visible": true,
+          "on": 0
+        },
+        {
+          "id": 20875,
+          "original": true,
+          "visible": true,
+          "on": 0
+        },
+        {
+          "id": 20876,
+          "original": true,
+          "visible": true,
+          "on": 1
+        },
+        {
+          "id": 20879,
+          "original": true,
+          "visible": true,
+          "on": 1
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "matchingPrimaryPixels": false,
+    "primaryVsOnDifferentPixels": 50,
+    "primaryVsOnDifferentPixelsInROI": 0,
+    "restoredDifferentPixels": 0,
+    "onVsOffDifferentPixels": 1159,
+    "onVsOffChangedBoundingBox": [
+      228,
+      177,
+      949,
+      897
+    ],
+    "warmPixelCountsOnOffRestored": [
+      57,
+      0,
+      57
+    ]
+  }
+}

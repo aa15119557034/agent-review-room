@@ -1,0 +1,158 @@
+{
+  "sourceBefore": "41c4fa8e5e84cc2a9e0087deb2097059a4aa95d2",
+  "sourceAfter": "e78c52ce50205f85a4af02bfa78fb8f230b3644b",
+  "cropCoordinates": {
+    "20": {
+      "rect": [
+        640,
+        70,
+        1225,
+        605
+      ],
+      "scale": 1
+    },
+    "01": {
+      "rect": [
+        0,
+        0,
+        960,
+        270
+      ],
+      "scale": 1
+    },
+    "03": {
+      "rect": [
+        590,
+        574,
+        668,
+        646
+      ],
+      "scale": 4
+    }
+  },
+  "coordinateSystem": "Original 1440x900 final display PNG, rect = left/top/right/bottom (exclusive). Crops have no exposure or colour adjustments. Only 03 is magnified, using nearest-neighbour.",
+  "displayLuma": "sRGB code values 0..255 weighted .2126R+.7152G+.0722B; display brightness, not physical luminance.",
+  "crown": {
+    "rect": [
+      0,
+      0,
+      950,
+      260
+    ],
+    "selection": "Baseline pixels only: R>160, R-G>48, G-B>=5, same coordinates in current frame. A screen-colour measurement of warm highlights.",
+    "count": 2346,
+    "before": {
+      "medianRGB": [
+        226,
+        127,
+        120
+      ],
+      "medianBlueMinusGreen": -8,
+      "medianRedMinusGreen": 97,
+      "medianDisplayLuma": 147.49
+    },
+    "after": {
+      "medianRGB": [
+        239,
+        145,
+        157
+      ],
+      "medianBlueMinusGreen": 12,
+      "medianRedMinusGreen": 93,
+      "medianDisplayLuma": 166.06
+    },
+    "samePositionsStillOrange": 0,
+    "allOrangeInRectAfter": 0
+  },
+  "rearWall": {
+    "rectangles": [
+      [
+        935,
+        455,
+        995,
+        520
+      ],
+      [
+        1140,
+        464,
+        1200,
+        529
+      ]
+    ],
+    "count": 7800,
+    "before": {
+      "medianRGB": [
+        34,
+        36,
+        47
+      ],
+      "medianBlueMinusGreen": 11,
+      "medianRedMinusGreen": -2,
+      "medianDisplayLuma": 36.37
+    },
+    "after": {
+      "medianRGB": [
+        48,
+        47,
+        54
+      ],
+      "medianBlueMinusGreen": 7,
+      "medianRedMinusGreen": 2,
+      "medianDisplayLuma": 47.72
+    }
+  },
+  "aerialStation": {
+    "rect": [
+      614,
+      586,
+      655,
+      617
+    ],
+    "predicate": "R>=170, R-G>=45, R-B>=50 within the same station patch",
+    "before": {
+      "warmPixels": 62,
+      "maxRed": 255,
+      "maxDisplayLuma": 215.78
+    },
+    "after": {
+      "warmPixels": 57,
+      "maxRed": 255,
+      "maxDisplayLuma": 217.42
+    }
+  },
+  "rearRail": {
+    "xCenters": [
+      953,
+      964,
+      975,
+      987,
+      998,
+      1011,
+      1023,
+      1134,
+      1150,
+      1166,
+      1182
+    ],
+    "yRange": [
+      325,
+      340
+    ],
+    "wallOffsets": [
+      -4,
+      4
+    ],
+    "samplePairs": 165,
+    "method": "For each of 11 middle-balcony bars at y=325..339, subtract the displayed luma at the center from the mean at four pixels to its left and right. Use identical positions in both captures.",
+    "before": {
+      "medianRail": 25.66,
+      "medianFlanks": 37.33,
+      "medianPairContrast": 11.31
+    },
+    "after": {
+      "medianRail": 26.59,
+      "medianFlanks": 48.82,
+      "medianPairContrast": 22.34
+    }
+  }
+}
