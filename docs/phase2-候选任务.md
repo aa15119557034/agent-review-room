@@ -8,7 +8,7 @@
 
 > 11 月 17 日进展：P2-C11 与首片 P2-X11 fixture 已随 [#256](https://github.com/aa15119557034/agent-review-room/pull/256) 合并；P2-D08 随 [#259](https://github.com/aa15119557034/agent-review-room/pull/259) 合并。按 [合并后分工](https://github.com/aa15119557034/agent-review-room/pull/259#issuecomment-6926178061)，P2-S07 首片和 P2-C12 首片由林离负责、C酱评审，分别允许 agent-server 和 renderer 目录例外；#258 暂缓，仍归 C酱。S07 [独立生产端](design/P2-S07-独立检索首片.md) 已做真实 API 与隔离原件存储/备份验证；桌面接线、C12 接真和 P2-X12 完整验收仍未完成。
 
-> 同日后续：P2-S07 [#260](https://github.com/aa15119557034/agent-review-room/pull/260) 与 P2-C12 [#261](https://github.com/aa15119557034/agent-review-room/pull/261) 已合并。按 [#261 交接](https://github.com/aa15119557034/agent-review-room/pull/261#issuecomment-6932840416)，新增子任务 P2-C11b，由林离在独立契约 PR 中起草项目检索批准、原件先落库、取消/切库拒收及来源当前状态查询；允许 schemas 目录例外，C酱评审。上方计数是原候选任务数，本子任务单列。契约已随 [#262](https://github.com/aa15119557034/agent-review-room/pull/262) 批准合并；[P2-S07b 接线与 P2-X12 首片验收](design/P2-S07b-项目检索接线验收.md) 已实现并实测，待 C酱独立评审。聊天网页与上传授权仍不扩展。
+> 同日后续：P2-S07 [#260](https://github.com/aa15119557034/agent-review-room/pull/260) 与 P2-C12 [#261](https://github.com/aa15119557034/agent-review-room/pull/261) 已合并。按 [#261 交接](https://github.com/aa15119557034/agent-review-room/pull/261#issuecomment-6932840416)，新增子任务 P2-C11b，由林离在独立契约 PR 中起草项目检索批准、原件先落库、取消/切库拒收及来源当前状态查询；允许 schemas 目录例外，C酱评审。上方计数是原候选任务数，本子任务单列。契约已随 [#262](https://github.com/aa15119557034/agent-review-room/pull/262) 批准合并；[P2-S07b 接线与 P2-X12 首片验收](design/P2-S07b-项目检索接线验收.md) 已随 [#263](https://github.com/aa15119557034/agent-review-room/pull/263) 经 C酱评审合并。评审建议的取消语义说明、诊断与回归另作小片补充；节点探测缓存只列后续优化。聊天网页与上传授权仍不扩展。
 
 ## 产品方向和功能排序
 
