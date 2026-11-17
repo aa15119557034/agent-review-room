@@ -98,9 +98,11 @@ export function addStreetscape({ ctx, root }) {
   const bins = H.gb.flush(group, 'service-sorting-bins');
   const binCollisions = [-0.25, 0.25].map((dx, i) =>
     addBox('service-sorting-bin-' + i, yardFrame, binX + dx, binZ, 0.46, 0.46, yardY, yardY + 0.68));
-  instances.push({ id: 'service-sorting-bins', kind: 'labelledBins', count: 2,
-    localPosition: [binX, yardY, binZ], size: [0.96, 0.68, 0.46], triangles: 72,
-    labels: ['bin_burn', 'bin_res'], meshes: bins, footprints: binCollisions });
+  for (const [i, footprint] of binCollisions.entries()) {
+    instances.push({ id: 'service-sorting-bin-' + i, kind: 'labelledBin',
+      localPosition: [binX + (i ? .25 : -.25), yardY, binZ], size: [.46, .68, .46], triangles: 36,
+      atlasRegion: ['bin_burn', 'bin_res'][i], meshes: bins, footprint });
+  }
 
   const panX = 25.72, panZ = -29.22, panY = ground(yardFrame, panX, panZ) + 0.012;
   H.P.dustpan(yardFrame, panX, panY, panZ);
