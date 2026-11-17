@@ -3,6 +3,7 @@ import { createContext } from '../upstream/sakuragaoka/src/core/ctx.js';
 import { batchStatic } from '../upstream/sakuragaoka/src/core/batch2.js';
 import * as layout from '../upstream/sakuragaoka/src/world/layout.js';
 import { createStationWalker } from './station-view.js';
+import { createStationDetailLod } from './station-detail-lod.js';
 import { blendStationGround } from './transition.js';
 import { addStreetscape } from './streetscape.js';
 import { applyWetRoad } from './wet-road.js';
@@ -114,6 +115,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   root.updateWorldMatrix(true, true);
   streetReflections.setTransform(root.matrixWorld);
   clipMaterials(root, layout.WORLD.play);
+  const detailLod = createStationDetailLod({ root: ctx.staticRoot });
   const inverse = root.matrixWorld.clone().invert();
   const rotation = root.getWorldQuaternion(new THREE.Quaternion());
   const scratch = new THREE.Vector3();
@@ -122,7 +124,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   let disposed = false;
   const walkers = new Set();
   const station = {
-    root, ctx, physics: ctx.physics, camera, localCamera, bounds, moduleStats, batch,
+    root, ctx, physics: ctx.physics, camera, localCamera, bounds, moduleStats, batch, detailLod,
     timings: { trimMs, batchMs }, removedMeshes, groundBlend, streetscape, wetRoad, streetReflections, texturedProps,
     toLocal(position, target = new THREE.Vector3()) { return target.copy(position).applyMatrix4(inverse); },
     toWorld(position, target = new THREE.Vector3()) { return target.copy(position).applyMatrix4(root.matrixWorld); },
@@ -153,6 +155,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
       ctx.physics.refreshDynamic();
       renderer.getDrawingBufferSize(bufferSize);
       ctx.wires.setResolution(bufferSize.x, bufferSize.y);
+      detailLod.update(camera, bufferSize.x, bufferSize.y);
     },
     createWalker(dom) {
       const walker = createStationWalker(station, dom);
@@ -163,6 +166,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
       if (disposed) return;
       disposed = true;
       for (const walker of walkers) walker.dispose();
+      detailLod.dispose();
       wetRoad.dispose();
       streetReflections.dispose();
       root.removeFromParent();

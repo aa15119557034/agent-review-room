@@ -3,6 +3,7 @@ import { Frame } from '../upstream/sakuragaoka/src/world/houses/gb.js';
 import { MeshBuilder } from '../upstream/sakuragaoka/src/world/street/mesh.js';
 import { UTIL, uvOf } from '../upstream/sakuragaoka/src/world/street/textures.js';
 import { townSortingBins } from './city-apartments.js';
+import { makeNeighborhoodLabels, addShopMenu, addMaintenanceRack } from './neighborhood-props.js';
 
 /** Small additions to existing frontage assets. Call once after module builds,
  * before station trim/batching, while the district root is still at identity.
@@ -17,6 +18,7 @@ export function addStreetscape({ ctx, root }) {
   ctx.addStatic(group);
   const instances = [], collisions = [];
   const texturePixelsBefore = ctx.tex.pixels;
+  const detailLabels = makeNeighborhoodLabels(ctx);
   const addBox = (id, frame, x, z, width, depth, y0, y1, rotationY = 0) => {
     const position = frame.w(x, 0, z);
     const bounds = { x: position.x, z: position.z, width, depth,
@@ -193,6 +195,22 @@ export function addStreetscape({ ctx, root }) {
   instances.push({ id: 'e2-front-side-meter', kind: 'elecMeter', lot: 'E2',
     lotPosition: [3.5, 1.05, -1.8], localPosition: meterPosition.toArray(),
     triangles: 36, atlasRegion: 'elec_meter', meshes: meterMeshes, footprint: meterBody, pipe: meterPipe });
+  // Both displays are mounted on the existing wall returns, above the footpath.
+  const menu = eastFrame.sub(0.66, 1.63, 0);
+  let beforeDetail = H.gb.tris;
+  addShopMenu(menu, H.M, detailLabels);
+  const menuTris = H.gb.tris - beforeDetail;
+  instances.push({ id: 'wagashi-seasonal-menu', kind: 'shopMenu', localPosition: menu.origin.toArray(),
+    triangles: menuTris, meshes: H.gb.flush(group, 'wagashi-seasonal-menu'),
+    footprint: addBox('wagashi-seasonal-menu', menu, 0, .074, .75, .19, -.27, .42) });
+  const rack = yardFrame.sub(25.406, 1.38, -30.35, Math.PI / 2);
+  beforeDetail = H.gb.tris;
+  addMaintenanceRack(rack, H.M, detailLabels);
+  const rackTris = H.gb.tris - beforeDetail;
+  instances.push({ id: 'station-service-tool-rack', kind: 'maintenanceRack', localPosition: rack.origin.toArray(),
+    triangles: rackTris, meshes: H.gb.flush(group, 'station-service-tool-rack'),
+    footprint: addBox('station-service-tool-rack', rack, 0, .079, .80, .164, -.46, .37) });
+
   // The street-mouth marker stands beyond the full sidewalk envelope (which
   // reaches x=±4.925). It has its own footings, not utility-pole attachments.
   // z=10.8 was rejected because the original telecom spans cross the sign.
@@ -271,9 +289,10 @@ export function addStreetscape({ ctx, root }) {
   let triangles = 0;
   group.traverse(mesh => { if (mesh.isMesh) triangles +=
     (mesh.geometry.index?.count ?? mesh.geometry.attributes.position.count) / 3 * (mesh.isInstancedMesh ? mesh.count : 1); });
-  return { root: group, instances, collisions, addedColliders: collisions.length,
+  return { root: group, instances, collisions, detailLabels, addedColliders: collisions.length,
     stats: { triangles, densityTriangles: 132, densityObjects: 4, densityColliders: 6,
       serviceDetailTriangles: 18, serviceDetailObjects: 3, serviceDetailColliders: 0,
+      streetMenuTriangles: menuTris, serviceToolRackTriangles: rackTris,
       landmarkTriangles: gateTriangles, landmarkTexturePixels: 1024 * 128, landmarkColliders: gateCollisions.length,
       newTexturePixels: ctx.tex.pixels - texturePixelsBefore, coordinates: 'station-local; apply station.toWorld after placement' },
     views: { streetDetail: { position: [4.4, ctx.physics.groundHeight(4.4, 24) + 1.6, 24], target: meterPosition.toArray() } } };

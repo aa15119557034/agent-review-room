@@ -25,9 +25,13 @@ function sceneFiles() {
     }
   };
   hash(path.join(fixture, 'index.html'));
-  for (const name of ['city-assets.json', 'prop-assets.json', 'scripts/prepare-props.cjs', 'scripts/baseline.cjs', 'scripts/diagnose-wet-road.cjs']) hash(path.join(fixture, name));
+  for (const name of ['city-assets.json', 'prop-assets.json', 'apartment-assets.json', 'scripts/prepare-props.cjs',
+    'scripts/prepare-apartments.cjs', 'scripts/baseline.cjs', 'scripts/diagnose-wet-road.cjs']) hash(path.join(fixture, name));
   const props = require('./prepare-props.cjs').verifyPreparedAssets(fixture);
   for (const file of props.files) files[file.path] = file.sha256;
+  const surfaces = require('./prepare-apartments.cjs').verifyPreparedAssets(fixture);
+  for (const file of surfaces.files) files[file.path] = file.sha256;
+  for (const face of ['px', 'nx', 'py', 'ny', 'pz', 'nz']) hash(path.join(fixture, 'src', 'street-env', face + '.png'));
   for (const name of ['src', 'upstream', 'vendor']) if (fs.existsSync(path.join(fixture, name))) walk(path.join(fixture, name));
   return files;
 }

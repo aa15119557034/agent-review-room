@@ -37,6 +37,10 @@ node scripts\prepare-props.cjs --download
 
 两种方式择一；无参数只核验现存文件。size、官方MD5、SHA256、路径范围和glTF依赖闭包均会检查；坏文件和未完成的.part保留并明确报错，不覆盖。素材只放在忽略的 `.local/textured-props/`，组合基线启动前再逐个核验，实际文件哈希写入采集清单。
 
+三栋公寓使用 Poly Haven 的抹灰、外墙砖和金属贴图。首次准备运行 `node scripts/prepare-apartments.cjs --download`，已有文件可运行 `node scripts/prepare-apartments.cjs` 核验。9 张原图共 4,932,249 字节，存放在 `.local/apartment-surfaces/`。每张图的作者、来源、尺寸以及 MD5 和 SHA-256 见 [公寓贴图清单](./apartment-assets.json)。
+
+主街的橱窗与积水共用 `src/street-env/` 中的六面街景。更改建筑或日照后，运行 `node scripts/bake-street-reflections.cjs --electron=<已有Electron路径> --output=<新目录>` 可生成新的六面 PNG 和逐面报告。烘焙范围取站区和程序天空，排除道口的镜头光晕。
+
 在本目录使用已有 Electron 运行，无需构建桌面应用：
 
 ```bat

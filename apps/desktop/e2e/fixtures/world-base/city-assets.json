@@ -419,6 +419,7 @@
     "kind": "generated",
     "entry": "src/city.js",
     "externalAssetProjects": [],
-    "description": "Japanese apartment background built from the station code toolkit and its existing resources; no external city GLB, glTF, BIN or image package is required."
+    "surfaceManifest": "apartment-assets.json",
+    "description": "Original Japanese apartment geometry built with the station toolkit; the plaster, tile and metal surface maps are specified in apartment-assets.json."
   }
 }

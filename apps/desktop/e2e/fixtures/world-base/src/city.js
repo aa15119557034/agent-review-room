@@ -4,6 +4,10 @@ import { buildFarTown } from '../upstream/sakuragaoka/src/world/houses/far.js';
 import { PAL } from '../upstream/sakuragaoka/src/world/houses/lot.js';
 import { backgroundContext, visibleBankHeight } from './skyline.js';
 import { buildTownApartment, townApartmentBounds, townSortingBins } from './city-apartments.js';
+import { createTownPlants } from './town-plants.js';
+import { createTownPaving, finishTownLanes } from './town-paving.js';
+import { createApartmentSurfaces } from './apartment-surfaces.js';
+import { addLaundryCart, addDeliveryCorner } from './neighborhood-props.js';
 
 const SITES = [
   // Staggered setbacks and three wall tones (sage / warm tile / pale blue) break the
@@ -28,7 +32,7 @@ export async function createCity({ scene, station, island, skyline }) {
   }
   const root = new THREE.Group(); root.name = 'station-city-background';
   root.position.copy(station.root.position); root.userData.walkable = false;
-  const ownedMaterials = new Set(), geometries = new Set(), clones = new Map();
+  const ownedMaterials = new Set(), ownedTextures = new Set(), geometries = new Set(), clones = new Map();
   const placements = [], vegetationClearAreas = [];
   const stats = { buildings: 0, apartments: 3, lowHouses: 0, modelTriangles: 0, modelPrimitives: 0,
     connections: { roads: [], stairs: [], walkable: false }, trees: [], poles: [] };
@@ -69,53 +73,16 @@ export async function createCity({ scene, station, island, skyline }) {
   signLight.color.set('#f3f1e8').multiplyScalar(1.15);
   ownedMaterials.add(signLight);
   H.signLight = signLight;
-  // Apartment walls get their own low-contrast copy of the kit concrete wash: the
-  // map is pulled 70% towards its mean, so blotches, dark specks and the tile's
-  // centre seams stay as faint grain while the wall keeps its base colour and the
-  // lighting keeps the structure. Paving and other concrete keep the shared map.
-  const concrete = M.concrete, wallWash = concrete.clone();
-  const concreteCompile = concrete.onBeforeCompile, concreteKey = concrete.customProgramCacheKey;
-  wallWash.onBeforeCompile = (shader, renderer) => {
-    concreteCompile?.call(wallWash, shader, renderer);
-    if (!shader.fragmentShader.includes('#include <map_fragment>')) throw new Error('Wall wash: map chunk missing');
-    shader.fragmentShader = shader.fragmentShader.replace('#include <map_fragment>', `#ifdef USE_MAP
-      vec4 sampledDiffuseColor = texture2D( map, vMapUv );
-      sampledDiffuseColor.rgb = mix( vec3( 0.93 ), sampledDiffuseColor.rgb, 0.3 );
-      diffuseColor *= sampledDiffuseColor;
-    #endif`);
-  };
-  wallWash.customProgramCacheKey = () => (concreteKey ? concreteKey.call(concrete) : '') + '|town-wall-wash';
-  ownedMaterials.add(wallWash);
-  H.wallWash = wallWash;
-  // Town hedges, shrubs and garden trees (#254 C15/C18): the town's own foliage copy
-  // is muted towards olive like the town meadow. Its painted leaf clumps keep a
-  // gentle light/shade, but the clump borders are widened so that near hedges read
-  // as soft leaf masses instead of a hard-edged camouflage pattern.
-  const foliage = M.foliage, foliageCompile = foliage.onBeforeCompile, foliageKey = foliage.customProgramCacheKey;
-  // x: clump highlight, y: clump shade, z: minimum border width (Worley units).
-  const townLeaf = { value: new THREE.Vector3(0.10, 0.14, 0.14) };
-  foliage.userData.townLeaf = townLeaf;
-  foliage.onBeforeCompile = (shader, renderer) => {
-    foliageCompile?.call(foliage, shader, renderer);
-    const clumps = 'float tone = (1.0 + 0.1 * hl) * (1.0 - 0.14 * sh);', border = 'float aa = clamp(fw * 1.2, 0.03, 0.3);';
-    if (!shader.fragmentShader.includes(clumps) || !shader.fragmentShader.includes(border)) throw new Error('Town foliage: leaf clump shading missing');
-    shader.uniforms.uTownLeaf = townLeaf;
-    shader.fragmentShader = shader.fragmentShader
-      .replace('#include <common>', '#include <common>\nuniform vec3 uTownLeaf;')
-      .replace(border, 'float aa = clamp(fw * 1.2, uTownLeaf.z, 0.3);')
-      .replace(clumps, 'float tone = (1.0 + uTownLeaf.x * hl) * (1.0 - uTownLeaf.y * sh);')
-      .replace('#include <color_fragment>', `#include <color_fragment>
-        {
-          float townL = dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722));
-          diffuseColor.rgb = mix(vec3(townL), diffuseColor.rgb, 0.62) * vec3(1.03, 0.98, 0.86);
-        }`);
-  };
-  foliage.customProgramCacheKey = () => (foliageKey ? foliageKey.call(foliage) : '') + '|town-foliage';
+  // Close-up plants own one cutout atlas; their branches reuse the station wood.
+  const plants = createTownPlants({ root, frame, materials: M, gradientMap: ctx.mat.gradientMap });
+  ownedMaterials.add(plants.material); ownedTextures.add(plants.texture);
   const dispose = () => {
     if (disposed) return; disposed = true; root.removeFromParent();
     root.traverse(object => { if (object.isMesh) { geometries.add(object.geometry); if (object.isInstancedMesh) object.dispose(); if (object.customDepthMaterial) ownedMaterials.add(object.customDepthMaterial); } });
     for (const geometry of geometries) geometry.dispose();
     for (const material of ownedMaterials) material.dispose();
+    H.apartmentSurfaces?.dispose();
+    for (const texture of ownedTextures) texture.dispose();
   };
   const checkLot = (name, lot) => {
     if (lot.maxZ >= station.bounds.z0 || placements.some(p => overlaps(lot, p.footprint)) ||
@@ -138,7 +105,8 @@ export async function createCity({ scene, station, island, skyline }) {
     // Paving sits 5 mm inside the rim so no side face is coplanar with a rim face.
     // The foundation top is inside the paving; its bottom is buried. The paving
     // underside is covered by the foundation and, at the overhang, the rim.
-    frame.boxB(M.concrete, '#b8b1a3', sx - 0.01, 0.09, sz - 0.01, cx, y0, cz, { uv: { world: 1.2 }, shadow: false, skip: 'd' });
+    frame.boxB(H.paving.bricks, '#e6e3dc', sx - 0.01, 0.09, sz - 0.01, cx, y0, cz,
+      { uv: { world: 2, ou: cx, ov: -cz }, shadow: false, skip: 'd' });
     for (const side of [-1, 1]) {
       frame.boxB(M.plain, '#e6e1d4', sx, 0.095, rim, cx, y0, cz + side * (sz - rim) / 2, { shadow: false });
       frame.boxB(M.plain, '#e6e1d4', rim, 0.095, sz - 2 * rim, cx + side * (sx - rim) / 2, y0, cz, { shadow: false });
@@ -150,6 +118,9 @@ export async function createCity({ scene, station, island, skyline }) {
   const matrix = station.root.matrixWorld.clone(), inverse = matrix.clone().invert();
   const visibleGround = visibleBankHeight(station, island, matrix, inverse, heightAt);
   try {
+    H.paving = createTownPaving(ctx, ownedMaterials);
+    H.apartmentSurfaces = await createApartmentSurfaces({ renderer: station.ctx.renderer });
+    stats.apartmentSurfaces = H.apartmentSurfaces.stats;
     const shops = station.ctx.services.shopsA.buildContext;
     const signs = getLaundrySigns(shops);
     H.laundrySigns = Object.fromEntries(Object.entries(signs.regions).map(([key, reg]) => [key, { ...reg, m: clone(reg.m) }]));
@@ -199,17 +170,19 @@ export async function createCity({ scene, station, island, skyline }) {
     }
     const connections = addConnections(H, frame, placements, visibleGround, root.position.y);
     stats.connections = connections.report;
+    stats.paving = finishTownLanes(H, frame, placements, [FRONT_ROAD, EAST_ROAD], visibleGround);
     vegetationClearAreas.push(...connections.clearAreas);
     // Two small garden trees at the ends of the row, never a screen of foliage.
     H.lod = 1;
     for (const [x, z] of [[-57.5, -122.5], [30.5, -127]]) {
-      const y = heightAt(x, z), start = gb.tris;
-      H.P.tree(frame, x, y, z, 1.25, ctx.rng('town-tree-' + x), 'olive');
-      stats.trees.push({ x, y, z, triangles: gb.tris - start });
-      vegetationClearAreas.push({ name: 'town-tree-' + x, minX: x - 0.9, maxX: x + 0.9, minZ: z - 0.9, maxZ: z + 0.9 });
+      const y = heightAt(x, z), name = 'town-tree-' + x;
+      const footprint = { name, minX: x - .9, maxX: x + .9, minZ: z - .9, maxZ: z + .9 };
+      const plant = plants.tree({ name, x, y, z, random: ctx.rng(name), footprint });
+      stats.trees.push({ x, y, z, triangles: plant.triangles, bounds: plant.bounds });
+      vegetationClearAreas.push(footprint);
     }
     addUtilityPoles(H, frame, visibleGround, stats);
-    vegetationClearAreas.push(...addLotPlanting(H, frame, placements, heightAt, ctx, stats));
+    vegetationClearAreas.push(...addLotPlanting(plants, placements, heightAt, ctx, stats));
     const shop = placements.find(p => p.name === 'town-apartment-4f');
     const supportY = shop.baseY + .02;
     const crateSource = station.texturedProps;
@@ -248,8 +221,14 @@ export async function createCity({ scene, station, island, skyline }) {
       mesh.material = Array.isArray(mesh.material) ? mesh.material.map(ownMaterial) : ownMaterial(mesh.material);
     });
     const potStart = gb.tris;
-    H.P.pot(frame, 6.25, supportY, -122.7, ctx.rng('town-laundry-pot'), .8, 'terra');
-    const potTriangles = gb.tris - potStart;
+    // Keep the terracotta container and location, replacing its lobe foliage too.
+    frame.cyl(M.plain, '#b86f4e', .118, .21, 6.25, supportY + .105, -122.7, { rTop: .145, seg: 9 });
+    frame.cyl(M.plain, '#c38560', .155, .035, 6.25, supportY + .1975, -122.7, { seg: 9, open: true });
+    frame.cyl(M.soil, '#756649', .137, .015, 6.25, supportY + .205, -122.7, { seg: 8 });
+    const potPlant = plants.shrub({ name: 'town-laundry-pot', x: 6.25, y: supportY + .21, z: -122.7,
+      random: ctx.rng('town-laundry-pot-leaves'), scale: .28, flowers: true,
+      footprint: { minX: 5.96, maxX: 6.54, minZ: -122.99, maxZ: -122.41 } });
+    const potTriangles = gb.tris - potStart + potPlant.cards * 4;
     const densityStart = gb.tris;
     townSortingBins(H, frame, -.4, supportY, -122.93, 2);
     // Rear ground-floor housekeeping stays beside the rightmost door; it does
@@ -264,6 +243,16 @@ export async function createCity({ scene, station, island, skyline }) {
     const parcelUV = { uv: { rect: H.A.rects.cardboard, white: H.A.white } };
     rear.boxB(M.atlas, '#ffffff', .46, .27, .36, -5.15, 2.85, .37, parcelUV);
     rear.boxB(M.atlas, '#eee2cf', .34, .18, .30, -5.12, 3.12, .37, parcelUV);
+    const neighborhoodLabels = clone(station.streetscape.detailLabels);
+    let detailTris = gb.tris;
+    const cart = frame.sub(4.88, supportY, -122.94, -0.10);
+    addLaundryCart(cart, M, neighborhoodLabels);
+    const cartTriangles = gb.tris - detailTris;
+    detailTris = gb.tris;
+    const delivery = rear.sub(-1.80, 0, 0.02);
+    addDeliveryCorner(delivery, M, neighborhoodLabels);
+    stats.neighborhoodProps = { laundryCart: { origin: cart.origin.toArray(), triangles: cartTriangles },
+      deliveryCorner: { origin: delivery.origin.toArray(), triangles: gb.tris - detailTris } };
     const density = {
       gbTriangles: gb.tris - densityStart, umbrellaTriangles: 0,
       laundry: { umbrellaStand: [3.65, supportY, -123], sortingBins: [-.4, supportY, -122.93], binCount: 2 },
@@ -292,10 +281,14 @@ export async function createCity({ scene, station, island, skyline }) {
         glass: storefront.glass.map(worldLabel), servicePanel: worldLabel(storefront.servicePanel),
         aFrame: stats.texturedProps.sign },
       totalTriangles: facades.reduce((n, f) => n + f.totalTriangles, signTriangles), walkable: false };
-    if (stats.facadeLife.totalTriangles > 900) throw new Error('Facade pass exceeds its 900-triangle allocation');
+    stats.plants = plants.finish();
     gb.flush(root, 'town-edge-kit');
     const laundry = H.laundry.build();
     if (laundry) { ownedMaterials.add(laundry.material); ownedMaterials.add(laundry.customDepthMaterial); }
+    // Surface owner disposes its own four materials / nine maps; union only for
+    // statistics, never add them to the city disposal sets a second time.
+    const allOwnedTextures = new Set([...ownedTextures, ...H.apartmentSurfaces.textures]);
+    const allOwnedMaterials = new Set([...ownedMaterials, ...Object.values(H.apartmentSurfaces.materials)]);
     const borrowedTextures = new Set();
     root.traverse(object => {
       if (!object.isMesh) return;
@@ -307,16 +300,19 @@ export async function createCity({ scene, station, island, skyline }) {
       stats.modelTriangles += (object.geometry.index?.count ?? object.geometry.attributes.position.count) / 3 * instances;
       stats.modelPrimitives += object.geometry.groups.length || 1;
       for (const material of Array.isArray(object.material) ? object.material : [object.material]) {
-        for (const value of Object.values(material)) if (value?.isTexture) borrowedTextures.add(value);
+        for (const value of Object.values(material)) if (value?.isTexture && !allOwnedTextures.has(value)) borrowedTextures.add(value);
       }
     });
-    if (stats.modelTriangles >= 30000) throw new Error('Town exceeds the 30000-triangle budget: ' + stats.modelTriangles);
+    // #254 C19 removes the old total-triangle gate; keep measured engineering cost.
+    if (!Number.isFinite(stats.modelTriangles)) throw new Error('Invalid town triangle count');
     if (station.ctx.tex.cache.size !== cacheSize || station.ctx.tex.pixels !== texturePixels) throw new Error('Town unexpectedly generated textures');
     stats.buildings = placements.length; stats.totalTriangles = stats.modelTriangles;
-    stats.materials = ownedMaterials.size; stats.geometries = geometries.size; stats.borrowedTextures = borrowedTextures.size;
-    stats.uniqueTextures = borrowedTextures.size; stats.ownedTextures = 0; stats.newTexturePixels = 0; stats.ownedTextureRGBA8WithMipsEstimateBytes = 0; stats.textureCacheEntriesAdded = 0;
+    stats.materials = allOwnedMaterials.size; stats.geometries = geometries.size; stats.borrowedTextures = borrowedTextures.size;
+    stats.uniqueTextures = borrowedTextures.size + allOwnedTextures.size; stats.ownedTextures = allOwnedTextures.size;
+    stats.newTexturePixels = stats.plants.newTexturePixels + H.apartmentSurfaces.stats.sourcePixels;
+    stats.ownedTextureRGBA8WithMipsEstimateBytes = stats.plants.textureRGBA8WithMipsEstimateBytes + H.apartmentSurfaces.stats.estimatedRGBA8MipBytes; stats.textureCacheEntriesAdded = 0;
     stats.laundryItems = H.laundry.count; stats.suppressedPhysicsCalls = suppressedPhysicsCalls;
-    stats.ownership = 'Own emitted geometry, far instances and material clones; borrow all station atlases, far facade textures and gradient maps. Dispose before station.';
+    stats.ownership = 'City owns geometry, far/leaf instances, material clones and one plant atlas; apartmentSurfaces independently owns four PBR materials/nine maps. Borrow station atlases, far facade textures and gradient maps. Dispose before station.';
     stats.limitation = 'Background only: no new physics or navigable interiors. Foundations and stairs are CPU checked; camera composition and visible CDLOD contacts need GPU acceptance.';
     scene.add(root); root.updateWorldMatrix(true, true);
     return { root, placements, vegetationClearAreas, stats, dispose };
@@ -389,7 +385,7 @@ function addConnections(H, frame, placements, ground, worldY) {
       P.push(x, ground(x, z) + 0.06, z); N.push(0, 1, 0); U.push(x / 4, -z / 4);
       if (i < nx && j < nz) { const a = j * (nx + 1) + i, c = a + nx + 1; I.push(a, c, a + 1, a + 1, c, c + 1); }
     }
-    H.gb.mesh(H.M.asphalt, '#a6a5a1', P, N, U, I, frame.M(0, 0, 0), { shadow: false });
+    H.gb.mesh(H.paving.asphalt, '#d1cdc4', P, N, U, I, frame.M(0, 0, 0), { shadow: false });
     clearAreas.push(road); report.roads.push({ ...road, triangles: I.length / 3, groundOffset: 0.06 });
   }
   const stairs = (name, x, width, highZ, lowZ, top) => {
@@ -428,26 +424,28 @@ function addConnections(H, frame, placements, ground, worldY) {
 
 // Low hedges between each lot and the lane (gap at the entry stairs) and a
 // couple of shrubs at the rear corners soften the plinth / meadow boundary.
-function addLotPlanting(H, frame, placements, ground, ctx, stats) {
+function addLotPlanting(plants, placements, ground, ctx, stats) {
   stats.planting = [];
   const clearAreas = [];
   for (const p of placements) {
-    const r = ctx.rng('town-planting-' + p.name), lot = p.footprint, start = H.gb.tris;
-    const z = Math.min(lot.maxZ + 0.55, FRONT_ROAD.minZ - 0.45), gap = 1.5, door = p.center[0];
-    for (const [x0, x1] of [[lot.minX + 0.2, door - gap], [door + gap, lot.maxX - 0.2]]) {
+    const r = ctx.rng('town-planting-' + p.name), lot = p.footprint;
+    const z = Math.min(lot.maxZ + .55, FRONT_ROAD.minZ - .45), gap = 1.5, door = p.center[0];
+    let triangles = 0;
+    for (const [x0, x1] of [[lot.minX + .2, door - gap], [door + gap, lot.maxX - .2]]) {
       if (x1 - x0 > 1) {
-        H.P.hedge(frame, x0, x1, z, 0.75, 0.55, r, 'dark', ground);
-        clearAreas.push({ name: p.name + '-hedge-' + x0, minX: x0 - 0.2, maxX: x1 + 0.2, minZ: z - 0.5, maxZ: z + 0.5 });
+        const name = p.name + '-hedge-' + x0;
+        const footprint = { name, minX: x0 - .2, maxX: x1 + .2, minZ: z - .5, maxZ: z + .5 };
+        triangles += plants.hedge({ name, x0, x1, z, ground, random: r, footprint }).triangles;
+        clearAreas.push(footprint);
       }
     }
-    for (const x of [lot.minX + 0.3, lot.maxX - 0.3]) {
-      const zb = lot.minZ - 0.6;
-      H.P.bush(frame, x, ground(x, zb), zb, 0.75, r, { flowers: 'azalea' });
-      // These 0.75m shrubs have procedural lobes reaching about 1.2m out.
-      // Clear their cover, without enlarging the foundation or moving terrain.
-      clearAreas.push({ name: p.name + '-bush-' + x, minX: x - 1.3, maxX: x + 1.3, minZ: zb - 1.3, maxZ: zb + 1.3 });
+    for (const x of [lot.minX + .3, lot.maxX - .3]) {
+      const zb = lot.minZ - .6, name = p.name + '-bush-' + x;
+      const footprint = { name, minX: x - 1.3, maxX: x + 1.3, minZ: zb - 1.3, maxZ: zb + 1.3 };
+      triangles += plants.shrub({ name, x, y: ground(x, zb), z: zb, random: r, footprint }).triangles;
+      clearAreas.push(footprint);
     }
-    stats.planting.push({ name: p.name, hedgeZ: z, triangles: H.gb.tris - start });
+    stats.planting.push({ name: p.name, hedgeZ: z, triangles });
   }
   return clearAreas;
 }

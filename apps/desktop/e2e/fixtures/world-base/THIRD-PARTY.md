@@ -9,7 +9,9 @@
 | Three.js authors / r187 | [MIT](./upstream/petalwake/vendor/three/LICENSE) | 复用 Petalwake 所固定的 three.core/module、GLTFLoader、BufferGeometryUtils、SkeletonUtils；另从官方 r187 标签补充 RoundedBoxGeometry，SHA-256 见 sources.json。 |
 | Arseny Kapoulkine / meshoptimizer 1.1 | [MIT](./upstream/petalwake/vendor/three/examples/jsm/libs/MESHOPT-LICENSE.md) | Petalwake 随附的 meshopt decoder，保留文件内版权声明，并补齐官方 v1.1 的完整许可文本及其哈希。 |
 | Fabi_G / Plastic Crate 02 | [CC0 1.0](https://polyhaven.com/license) | [官方来源](https://polyhaven.com/a/plastic_crate_02)。glTF、BIN及贴图保持官方原字节；原导出遗漏独立Opacity，按同款blend清单补齐。适配层仅克隆材质接官方alphaMap、alphaTest=0.5、关闭混合并写深度；保留原尺度、色因子、法线和其他贴图。 |
-| Dimitrios Savva / Worn Shutter | [CC0 1.0](https://polyhaven.com/license) | [官方来源](https://polyhaven.com/a/worn_shutter)。仅使用三张1K原图于原工具棚两扇门，不加载作者完整门模型；色图sRGB、GL法线/ARM数据色域，ARM分别用于AO/粗糙度/金属度。1.37m是预览选用的纹理重复尺度，不声称为经认证的建筑尺寸。 |
+| Dimitrios Savva / Worn Shutter | [CC0 1.0](https://polyhaven.com/license) | 工具棚卷帘与公寓金属构件使用三张 1K 原图。颜色图使用 sRGB，GL 法线与 ARM 使用线性值。[官方来源](https://polyhaven.com/a/worn_shutter) |
+| Rob Tuytel / White Plaster 02 | [CC0 1.0](https://polyhaven.com/license) | 公寓外墙使用原始漫反射、GL 法线和 ARM 贴图。[官方来源](https://polyhaven.com/a/white_plaster_02) |
+| Charlotte Baglioni / Rectangular Facade Tiles | [CC0 1.0](https://polyhaven.com/license) | 公寓立面与阳台使用原始漫反射、GL 法线和 ARM 贴图。[官方来源](https://polyhaven.com/a/rectangular_facade_tiles) |
 | Quaternius / Downtown City MegaKit Standard（历史试装，已退休） | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)；原 License_Standard.txt 随本地历史文件保留 | [作者来源](https://quaternius.com/packs/downtowncitymegakit.html)。当前场景不再加载三栋免费版建筑；试装曾关闭顶点控制色、调整底色并共享兼容纹理，原二进制始终未改。26项原文件哈希、许可和旧截图保留于 retiredAssets.downtown 及历史证据。 |
 | mirzaev3d / High-Rise Building #01（历史试装，已退休） | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) | [作者来源](https://www.fab.com/listings/ca10b839-7882-42f8-ab60-496610708a6c)。当前场景不加载该模型；保留作者[原MTL文本](./upstream/mirzaev-highrise/High-Rise-Building.mtl)及旧试装证据。旧试装使用官方GLB原始几何，按MTL及Three r187 MTLLoader的Phong/sRGB约定恢复三种材质颜色与高光，并增加摆放、地基与道路。来源、哈希与历史恢复参数保留于 city-assets.json 的 retiredAssets.highrise。未声称作者为本项目背书。 |
 

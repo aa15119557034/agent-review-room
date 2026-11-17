@@ -1,232 +1,254 @@
-// Original fixture composition using the vendored Sakuragaoka house builders,
-// materials and atlases. Their upstream license remains applicable; no new assets.
+// Original three-building composition. Geometry/atlas helpers retain Sakuragaoka
+// MIT provenance; photo-source PBR maps are pinned separately in apartment-assets.json.
 import { buildWindow } from '../upstream/sakuragaoka/src/world/houses/house.js';
 import { PAL } from '../upstream/sakuragaoka/src/world/houses/lot.js';
 
+const FH = 2.85;
 export function townApartmentBounds({ width: w, depth: d }) {
   const groundSupportBounds = { minX: -w / 2 - 2.05, maxX: w / 2 + .10, minZ: -d - 2.30, maxZ: 0 };
-  return { groundSupportBounds, bounds: { ...groundSupportBounds, maxX: w / 2 + .2 } };
+  return { groundSupportBounds, bounds: { ...groundSupportBounds, maxX: w / 2 + .20 } };
 }
 
-/** Append a flat-base, non-enterable background apartment to H.gb / H.laundry.
- * F is the frontage centre, +Z faces the street. All returned bounds are F-local.
- * Caller owns terrain support, batching, laundry.build/update and all resources.
- * width/depth describe the main block; rear access and bicycle shelter extend it.
- */
+/** Append genuine storeys/openings/loggias to the existing GB. No scene-scale
+ * manipulation: the frontage/entrance and surveyed support footprint stay fixed.
+ * H.apartmentSurfaces is prepared asynchronously by the city owner beforehand. */
 export function buildTownApartment(H, F, spec) {
-  const { width: w, depth: d, floors, accent, shop, tone } = spec;
-  const { M, A, gb } = H;
-  const fh = 2.85, top = floors * fh, front = -1.25, back = -d;
-  const white = PAL.paint[(floors - 3) % PAL.paint.length], steel = PAL.metal[0];
-  // Two-tone facade: tinted wall planes recede behind white slabs and parapets,
-  // so the shaded street face keeps value structure without touching lighting.
-  const wall = tone || white;
-  const trim = accent, start = gb.tris, clothStart = H.laundry.I.length / 3;
-  const garmentStart = H.laundry.count;
-  const r = H.ctx.rng(`town-apartment-${floors}-${F.origin.x}-${F.origin.z}`);
-  // Wall planes use a low-contrast copy of the kit concrete wash (city.js). The
-  // plaster map carries trowel arcs that read as rings at eye height at any tile size.
-  const uv = { world: 3 }, wallMat = H.wallWash;
-  const at = name => ({ uv: { rect: A.rects[name], white: A.white } });
-  const face = F.sub(0, 0, front), rear = F.sub(0, 0, back, Math.PI);
-  const S = { frameColor: PAL.frame[4], sillColor: PAL.frame[4], grilleColor: PAL.frame[4],
-    shutterColor: PAL.shutter[0], shutterStyle: 'none', shutterClosed: 0,
-    trim, interiors: null, roof: { mat: 'metal', color: steel }, wall: { kind: 'paint', color: white },
-    floorY: 0, fh, groundMin: 0, lod: 0, rng: r };
-  const unit = w / 3;
-
+  const { width: w, depth: d, floors, shop } = spec;
+  if (![3, 4, 5].includes(floors) || !H.apartmentSurfaces?.materials) throw new Error('Apartment requires 3/4/5 floors and prepared PBR surfaces');
+  const { plaster, tile, metal, roof } = H.apartmentSurfaces.materials;
+  const { M, A, gb } = H, top = floors * FH, back = -d, baseFront = -1.25, unit = w / 3;
+  const start = gb.tris, clothStart = H.laundry.I.length / 3, garments = H.laundry.count;
+  const wall = floors === 3 ? '#f0e9d7' : floors === 4 ? '#ede9de' : '#dce4e4';
+  const trim = floors === 3 ? '#d1d0c1' : floors === 4 ? '#ded9ca' : '#c6cfd0';
+  const steel = '#87908e', dark = '#555e60', r = H.ctx.rng(`apartment-rebuild-${floors}`);
+  const S = { frameColor: dark, sillColor: '#a8aeaa', grilleColor: dark,
+    shutterColor: dark, shutterStyle: 'none', shutterClosed: 0, trim,
+    interiors: null, roof: { mat: 'metal', color: steel }, wall: { kind: 'paint', color: wall },
+    floorY: 0, fh: FH, groundMin: 0, lod: 0, rng: r };
+  const records = [], openings = [], balconies = [];
+  const record = (kind, position, extra = {}) => records.push({ kind, position, ...extra });
+  const detailStart = gb.tris;
   for (let fl = 0; fl < floors; fl++) {
-    const y = fl * fh;
-    // Individual storey shells and slabs: no scaled two-storey model.
-    F.boxB(M.plain, white, w, .14, d + front, 0, y, (back + front) / 2);
-    // Floor slabs cover the wall bottoms; the next slab / roof covers the tops.
-    for (const side of [-1, 1]) F.boxB(wallMat, wall, .2, fh, d + front,
-      side * (w / 2 - .1), y, (back + front) / 2, { uv, skip: 'td' });
-    F.boxB(wallMat, wall, w, fh, .18, 0, y, back + .09, { uv, skip: 'td' });
+    const y = fl * FH;
+    // 3F top storey retreats to form a terrace; 4F has deep sheltered loggias;
+    // 5F alternates the right bays around a continuous masonry service spine.
+    const front = floors === 3 && fl === floors - 1 ? -1.90 : baseFront;
+    F.boxB(plaster, trim, w, .16, d + front, 0, y, (back + front) / 2, { uv: { world: 1.5 } });
+    for (let bay = 0; bay < 3; bay++) {
+      const x = (bay - 1) * unit;
+      if (shop && fl === 0) continue;
+      const isSpine = floors === 5 && bay === 0;
+      const bayFront = floors === 4 && fl > 0 ? -1.70 : floors === 5 && fl > 0 && bay > 0 ? front - ((fl + bay) % 2) * .32 : front;
+      const ff = F.sub(x, 0, bayFront);
+      const entry = fl === 0 && bay === 1;
+      const opening = { x: 0, y: y + (entry ? .14 : isSpine ? .76 : .28), w: entry ? 1.12 : isSpine ? 1.24 : 2.18, h: entry ? 2.13 : isSpine ? 1.42 : 2.08 };
+      wallOpening(H, ff, unit, y + .14, FH - .14, opening, isSpine ? tile : plaster, isSpine ? '#c3c5bf' : wall);
+      if (entry) recessedDoor(H, ff, opening);
+      else recessedWindow(H, ff, opening, S, r, fl);
+      openings.push({ face: 'front', floor: fl + 1, ...opening, x, planeZ: bayFront, revealDepth: .26 });
+      if (fl > 0 && !isSpine) {
+        const outer = floors === 3 ? -.18 : floors === 4 ? -.24 : -.18 - ((fl + bay) % 2) * .12;
+        const bw = unit - (floors === 3 ? .30 : .12), slabTop = y + .16;
+        F.boxB(plaster, trim, bw, .16, outer - bayFront + .06, x, y, (outer + bayFront) / 2, { uv: { world: 1.5 } });
+        // Finish tile on a real slab, with a narrow metal drip at its exposed lip.
+        F.box(tile, '#b3b6ab', bw - .09, .014, outer - bayFront - .07, x, slabTop + .007, (outer + bayFront) / 2, { uv: { world: 2 }, skip: 'd' });
+        F.box(metal, steel, bw, .055, .035, x, y + .075, outer + .025, { uv: { world: 1 } });
+        const solid = floors === 5 ? .38 : 0;
+        if (solid) F.boxB(tile, '#c4c7c1', bw, solid, .11, x, slabTop, outer - .035, { uv: { world: 2 } });
+        railing(F, metal, dark, [x - bw / 2 + .055, slabTop + solid, outer - .04], [x + bw / 2 - .055, slabTop + solid, outer - .04], 1.02 - solid, floors === 3 ? .17 : .20);
+        for (const side of [-1, 1]) {
+          const bx = x + side * (bw / 2 - .045);
+          if (floors === 4) {
+            F.boxB(plaster, trim, .13, 2.20, outer - bayFront, bx, slabTop, (outer + bayFront) / 2, { uv: { world: 1.5 } });
+            F.box(metal, steel, .17, .035, outer - bayFront + .03, bx, slabTop + 2.22, (outer + bayFront) / 2, { uv: { world: 1 } });
+          } else railing(F, metal, dark, [bx, slabTop, bayFront + .09], [bx, slabTop, outer - .04], 1.02, .22);
+        }
+        // Balcony drain goes into the downpipe rather than ending over the lane.
+        F.box(metal, '#666e6b', .11, .018, .11, x + bw / 2 - .17, slabTop + .018, outer - .19);
+        balconies.push({ floor: fl + 1, bay, x, minZ: bayFront, maxZ: outer, width: bw, floorTop: slabTop, railHeight: 1.02, type: floors === 4 ? 'recessed-loggia' : floors === 3 ? 'open-cantilever' : 'staggered-tiled-loggia' });
+        if ((fl === 1 && bay === 0) || (floors === 5 && fl === 3 && bay === 2)) {
+          const z = (outer + bayFront) / 2;
+          for (const dx of [-.77, .77]) F.beam(metal, steel, [x + dx, y + 2.32, bayFront], [x + dx, y + 2.32, z], .025, .035);
+          F.box(metal, steel, 1.65, .025, .025, x, y + 2.32, z);
+          H.laundry.line(F, x - .72, x + .72, y + 2.30, z, r, 'apartment');
+          record('laundry', [x, y + 2.30, z], { floor: fl + 1 });
+        }
+      }
+    }
     if (shop && fl === 0) {
       const wing = (w - 6) / 2;
-      for (const side of [-1, 1]) F.boxB(wallMat, wall, wing, fh, .18,
-        side * (3 + wing / 2), y, front - .09, { uv, skip: 'td' });
-      // The shop header underside is exposed above the glazing.
-      F.boxB(wallMat, wall, 6, .49, .18, 0, 2.36, front - .09, { uv, skip: 't' });
-    } else F.boxB(wallMat, wall, w, fh, .18, 0, y, front - .09, { uv, skip: 'td' });
-    F.box(M.plain, trim, w + .08, .13, .14, 0, y + fh - .1, front + .02);
-
-    for (let u = 0; u < 3; u++) {
-      const x = (u - 1) * unit;
-      if (!(shop && fl === 0)) {
-        if (fl === 0 && u === 1) {
-          face.boxB(M.plain, steel, 1.14, 2.18, .08, 0, .14, .04, { skip: 'b' });
-          face.boxB(M.atlas, '#ffffff', 1.02, 2.06, .025, 0, .17, .095, at('door_steel'));
-          face.box(M.lamp, null, .34, .07, .08, 0, 2.48, .1, { shadow: false });
-        } else buildWindow(H, face, x, y + .3, 1.75, 1.92, 'std', S, r, 0, 'balc', fl);
-      }
-      // Generic steel doors deliberately have no invented upper-floor room labels.
-      // The steel backing sits flush against the opaque wall (local -Z).
-      rear.boxB(M.plain, steel, 1.03, 2.12, .07, x, y + .14, .035, { skip: 'b' });
-      rear.boxB(M.atlas, '#ffffff', .92, 2.02, .025, x, y + .18, .085, at('door_steel'));
-      // Corridor door lamps stay on at noon (ZZZ refs: small warm lights in the shade).
-      rear.box(M.lamp, null, .24, .07, .07, x + .72, y + 2.3, .1, { shadow: false });
-      if (fl > 0) {
-        F.boxB(M.plain, white, unit - .04, 1.05, .13, x, y + .14, -.185);
-        F.box(M.plain, trim, unit - .04, .055, .16, x, y + 1.215, -.185);
-      }
+      for (const side of [-1, 1]) F.boxB(plaster, wall, wing, FH - .16, .26, side * (3 + wing / 2), .16, baseFront - .13, { uv: { world: 1.5 } });
+      F.boxB(plaster, wall, 6, .49, .26, 0, 2.36, baseFront - .13, { uv: { world: 1.5 } });
     }
-    if (fl > 0) {
-      F.boxB(M.plain, white, w, .14, 1.1, 0, y, -.7);
-      for (const x of [-w / 2 + .06, -unit / 2, unit / 2, w / 2 - .06])
-        F.boxB(M.plain, white, .12, 1.85, 1.05, x, y + .14, -.725);
-      // A few inhabited balconies, not one clothes line per window.
-      if (fl === 1 || (floors === 5 && fl === 3)) {
-        const x = (fl === 1 ? -1 : 1) * unit;
-        F.box(M.metal, steel, 1.65, .025, .025, x, y + 2.22, -.57);
-        for (const dx of [-.75, .75]) F.beam(M.metal, steel,
-          [x + dx, y + 2.22, -1.24], [x + dx, y + 2.22, -.52], .025, .025);
-        H.laundry.line(F, x - .72, x + .72, y + 2.21, -.57, r, 'apartment');
-      }
+    if (floors === 5 && fl > 0) {
+      const planes = [front, front - ((fl + 1) % 2) * .32, front - ((fl + 2) % 2) * .32];
+      for (let j = 0; j < 2; j++) if (planes[j] !== planes[j + 1]) F.boxB(plaster, wall, .18, FH - .16,
+        Math.abs(planes[j] - planes[j + 1]) + .26, (j - .5) * unit, y + .16, (planes[j] + planes[j + 1]) / 2 - .13, { uv: { world: 1.5 } });
     }
+    // Two actual recessed openings per side per storey. There is no continuous
+    // wall behind the window: jambs/header/spandrel form the aperture perimeter.
     for (const side of [-1, 1]) {
-      const sf = F.sub(side * w / 2, 0, (front + back) / 2, side * Math.PI / 2);
-      buildWindow(H, sf, 0, y + .95, 1.1, 1.15, 'mid', S, r, 0, 'side', fl);
+      const sf = F.sub(side * w / 2, 0, (back + front) / 2, side * Math.PI / 2);
+      const length = d + front;
+      for (const sign of [-1, 1]) {
+        const ff = sf.sub(sign * length / 4, 0, 0);
+        const opening = { x: 0, y: y + .81, w: 1.24, h: 1.36 };
+        wallOpening(H, ff, length / 2, y + .16, FH - .16, opening, plaster, wall);
+        recessedWindow(H, ff, opening, S, r, fl);
+      }
     }
-    // Rear corridor leaves a central opening for both ends of the stair flight.
-    F.boxB(M.plain, white, w, .14, 1.05, 0, y, back - .525);
-    if (fl > 0) for (const side of [-1, 1]) {
-      const len = w / 2 - 2.65;
-      F.boxB(M.plain, white, len, .98, .12, side * (2.65 + len / 2), y + .14, back - 1);
+    // Open rear access, separated from the solid building by recessed doors.
+    const rear = F.sub(0, 0, back, Math.PI);
+    for (let bay = 0; bay < 3; bay++) {
+      const x = (bay - 1) * unit, ff = rear.sub(x, 0, 0);
+      const opening = { x: 0, y: y + .16, w: 1.03, h: 2.08 };
+      wallOpening(H, ff, unit, y + .16, FH - .16, opening, plaster, wall);
+      recessedDoor(H, ff, opening);
+      rear.box(M.lamp, null, .24, .065, .08, x + .75, y + 2.42, .045, { shadow: false });
+      if (bay === 0) H.P.elecMeter(rear, x + 1.0, y + 1.35);
     }
+    F.boxB(plaster, trim, w, .14, 1.05, 0, y, back - .525, { uv: { world: 1.5 } });
+    if (fl > 0) for (const side of [-1, 1]) railing(F, metal, dark,
+      [side < 0 ? -w / 2 + .08 : 2.66, y + .14, back - 1.01],
+      [side < 0 ? -2.66 : w / 2 - .08, y + .14, back - 1.01], 1.02, .18);
+    // Slender continuous stringcourses catch grazing light without hiding wall relief.
+    for (const side of [-1, 1]) F.box(plaster, trim, .16, .095, d + front, side * (w / 2 - .07), y + FH - .08, (back + front) / 2, { uv: { world: 1.5 } });
   }
-
-  // Alternating straight flights, 16 real treads per level; visual only, no collider.
-  const stairZ = back - 1.65, steps = 16, run = 4, rise = fh / steps;
-  for (let fl = 0; fl < floors - 1; fl++) {
-    const dir = fl % 2 ? -1 : 1, y = fl * fh + .14;
-    for (let i = 0; i < steps; i++) {
-      const x = dir * (-run / 2 + (i + .5) * run / steps);
-      F.box(M.metal, steel, run / steps + .01, .045, 1.05, x, y + (i + 1) * rise - .0225, stairZ);
+  const stairs = rearStairs(H, F, floors, back, steel);
+  const roofInfo = roofscape(H, F, spec, wall, trim, steel);
+  // Parallel downpipes pick up each slab via short elbows. All are wall-mounted.
+  for (const x of [-w / 2 + .28, w / 2 - .28]) {
+    const z = baseFront + .055;
+    F.cyl(metal, steel, .038, top + .10, x, top / 2 + .19, z, { seg: 8 });
+    for (let fl = 0; fl < floors; fl++) {
+      F.box(metal, '#687371', .12, .04, .12, x, fl * FH + .6, z - .02);
+      F.beam(metal, steel, [x, fl * FH + .21, z], [x, fl * FH + .14, -.28], .045, .045);
     }
-    for (const dz of [-.5, .5]) {
-      const a = [dir * -2, y, stairZ + dz], b = [dir * 2, y + fh, stairZ + dz];
-      F.beam(M.metal, steel, a, b, .07, .12);
-      F.beam(M.metal, steel, [a[0], a[1] + .95, a[2]], [b[0], b[1] + .95, b[2]], .04, .04);
-      for (let i = 0; i <= 4; i++) F.boxB(M.metal, steel, .035, .95, .035,
-        dir * (-2 + i), y + i * fh / 4, stairZ + dz);
-    }
-    // Landings join each end to the corridor, rather than ending over empty space.
-    for (const [x, level] of [[dir * -2.3, y], [dir * 2.3, y + fh]])
-      F.box(M.metal, steel, .6, .10, 1.25, x, level - .05, back - 1.55);
+    record('rainpipe', [x, .14, z], { top: top + .24, diameter: .076, gutterBottom: top + .1725 });
   }
-
-  F.box(M.plain, white, w + .4, .16, d + front + .3, 0, top + .08, (back + front) / 2);
-  // Low parapet and simple steel roof guard, without dense repeated balusters.
-  for (const z of [front, back]) {
-    F.boxB(M.plain, white, w, .35, .14, 0, top + .16, z);
-    F.box(M.metal, steel, w, .04, .04, 0, top + 1.05, z);
-    for (let x = -w / 2; x <= w / 2 + .01; x += w / 6)
-      F.boxB(M.metal, steel, .04, .7, .04, x, top + .35, z);
+  F.box(metal, steel, w - .36, .035, .14, 0, top + .19, baseFront + .045, { uv: { world: 1 } });
+  for (const z of [baseFront - .015, baseFront + .105]) F.box(metal, steel, w - .36, .10, .02, 0, top + .235, z, { uv: { world: 1 } });
+  // The west elevation is exposed to the fixed rear eye view. Put equipment
+  // between the two windows, with feet/brackets and a conduit into the building.
+  const west = F.sub(-w / 2, 0, (back + baseFront) / 2, -Math.PI / 2);
+  for (let fl = 1; fl < floors; fl++) {
+    H.P.acUnit(west, 0, fl * FH + .45, .16, 0);
+    west.box(metal, steel, .06, .58, .07, .52, fl * FH + .72, .05);
+    record('ac', [-w / 2 - .16, fl * FH + .45, (back + baseFront) / 2], { floor: fl + 1 });
   }
-  for (const x of [-w / 2, w / 2]) {
-    F.boxB(M.plain, white, .14, .35, d + front, x, top + .16, (back + front) / 2);
-    F.box(M.metal, steel, .04, .04, d + front, x, top + 1.05, (back + front) / 2);
-    for (let i = 1; i <= 3; i++) F.boxB(M.metal, steel, .04, .7, .04, x, top + .35, back + (d + front) * i / 4);
-  }
-  const tankX = w * .24, tankZ = back + 1.6;
-  for (const dx of [-.5, .5]) for (const dz of [-.5, .5])
-    F.boxB(M.metal, steel, .08, .55, .08, tankX + dx, top + .16, tankZ + dz);
-  F.cyl(M.plain, PAL.tile[0], .78, 1.25, tankX, top + 1.31, tankZ, { seg: 10 });
-  F.cyl(M.metal, steel, .81, .07, tankX, top + 1.97, tankZ, { seg: 10 });
-  F.cyl(M.metal, steel, .12, .18, tankX, top + 2.095, tankZ, { seg: 6 });
-  H.P.acUnit(face, w / 2 - .65, .16, .55, 0);
-  face.box(M.atlas, '#ffffff', 2.2, .55, .035, 0, top - .65, .035, at('apt_sign'));
-
-  // Bicycle shelter and unnumbered POST boxes reuse the house atlas.
+  // Shared, physically sized shelter/mailboxes remain in the surveyed footprint.
   const bx = -w / 2 - 1.05;
-  for (const dx of [-.78, .78]) for (const z of [-4.7, -1.8])
-    F.boxB(M.metal, steel, .055, 2.08, .055, bx + dx, 0, z);
-  F.box(M.poly, null, 1.8, .06, 3.5, bx, 2.12, -3.25);
+  for (const dx of [-.78, .78]) for (const z of [-4.7, -1.8]) F.boxB(metal, steel, .055, 2.08, .055, bx + dx, 0, z);
+  F.box(roof, '#a5aea7', 1.8, .06, 3.5, bx, 2.12, -3.25, { uv: { world: 1.5 } });
   for (let i = 0; i < 3; i++) {
-    F.box(M.metal, steel, 1.25, .04, .04, bx, .12, -2.2 - i * .8);
-    F.boxB(M.atlas, '#ffffff', .38, .3, .18, -w / 2 + .35 + i * .42, .95, -.5, at('mailbox'));
+    F.box(metal, steel, 1.25, .04, .04, bx, .12, -2.2 - i * .8);
+    F.boxB(M.atlas, '#ffffff', .38, .30, .18, -w / 2 + .35 + i * .42, .95, -.50, { uv: { rect: A.rects.mailbox, white: A.white } });
   }
-  F.boxB(M.plain, white, 1.38, .95, .2, -w / 2 + .77, 0, -.55);
-
-  const storefront = shop ? buildLaundryShop(H, F, front) : null;
-  const facade = addFacadeLife(H, F, spec);
-  const footprint = townApartmentBounds(spec), groundSupportBounds = footprint.groundSupportBounds;
-  const bounds = { ...footprint.bounds, minY: 0, maxY: top + 2.185 };
+  F.boxB(plaster, trim, 1.38, .95, .2, -w / 2 + .77, 0, -.55, { uv: { world: 1.5 } });
+  const storefront = shop ? buildLaundryShop(H, F, baseFront) : null;
+  const footprint = townApartmentBounds(spec), bounds = { ...footprint.bounds, minY: 0, maxY: roofInfo.maxY };
   const supportSamples = [];
-  for (const x of [groundSupportBounds.minX, 0, groundSupportBounds.maxX])
-    for (const z of [groundSupportBounds.minZ, (back + front) / 2, 0]) supportSamples.push({ x, z });
-  return { bounds, groundSupportBounds, supportSamples, floors, floorHeight: fh, height: bounds.maxY,
-    entrances: [{ x: 0, y: .14, z: 0, width: shop ? 1.2 : 1.02 }],
-    triangles: gb.tris - start, laundryTriangles: H.laundry.I.length / 3 - clothStart,
-    garments: H.laundry.count - garmentStart, facade, storefront,
-    features: { balconies: floors - 1, rearCorridor: true, stairFlights: floors - 1,
-      stairTreads: (floors - 1) * steps, roofTank: true, bicycleShelter: true, mailboxes: 3,
-      shop: shop ? 'laundromat' : null, walkable: false } };
+  for (const x of [footprint.groundSupportBounds.minX, 0, footprint.groundSupportBounds.maxX])
+    for (const z of [footprint.groundSupportBounds.minZ, (back + baseFront) / 2, 0]) supportSamples.push({ x, z });
+  const cloth = H.laundry.I.length / 3 - clothStart;
+  return { bounds, groundSupportBounds: footprint.groundSupportBounds, supportSamples,
+    floors, floorHeight: FH, height: bounds.maxY, entrances: [{ x: 0, y: .14, z: 0, width: shop ? 1.2 : 1.02 }],
+    triangles: gb.tris - start, laundryTriangles: cloth, garments: H.laundry.count - garments,
+    facade: { items: records, gbTriangles: gb.tris - detailStart, clothTriangles: cloth, totalTriangles: gb.tris - detailStart + cloth,
+      scope: 'Complete facade reconstruction, not the retired 900-triangle decoration allowance' },
+    architecture: { variant: floors === 3 ? 'terraced-open-balconies' : floors === 4 ? 'masonry-loggias-over-laundry' : 'staggered-loggias-service-spine', openings, balconies, roof: roofInfo },
+    storefront, features: { balconies: balconies.length, rearCorridor: true, stairFlights: floors - 1,
+      stairTreads: stairs.treads, roofTank: true, bicycleShelter: true, mailboxes: 3, shop: shop ? 'laundromat' : null, walkable: false } };
 }
 
-// A bounded first pass on the two buildings visible from the fixed front/rear
-// eye views. All positions below are apartment-local; the 3F building is intact.
-function addFacadeLife(H, F, { width: w, depth: d, floors }) {
-  const { M, gb, P } = H, start = gb.tris, clothStart = H.laundry.I.length / 3;
-  const items = [], steel = PAL.metal[0], fh = 2.85, front = -1.25;
-  const west = F.sub(-w / 2, 0, (front - d) / 2, -Math.PI / 2);
-  const rear = F.sub(0, 0, -d, Math.PI);
-  const record = (kind, position, triangles, extra = {}) => items.push({ kind, position, triangles, ...extra });
-  if (floors === 4 || floors === 5) {
-    // Keep the cases beside, rather than over, the side windows. The shallow
-    // base touches the wall; these are wall-mounted units above the corridor.
-    const levels = floors === 4 ? [1, 2] : [1, 2, 3, 4];
-    for (const fl of levels) {
-      const y = fl * fh + .9, u = floors === 5 ? 2.9 : 1.65;
-      P.acUnit(west, u, y, .15, 0);
-      record('ac', [-w / 2 - .15, y, (front - d) / 2 + u], 36, { face: 'west', floor: fl + 1 });
+function wallOpening(H, F, width, bottom, height, hole, material, color) {
+  const left = hole.x - hole.w / 2, right = hole.x + hole.w / 2, top = bottom + height, t = .26;
+  if (left <= -width / 2 || right >= width / 2 || hole.y < bottom - 1e-6 || hole.y + hole.h > top) throw new Error('Window/door aperture leaves its wall bay');
+  const block = (a, b, lo, hi) => { if (b - a > .001 && hi - lo > .001) F.boxB(material, color, b - a, hi - lo, t, (a + b) / 2, lo, -t / 2, { uv: { world: material === H.apartmentSurfaces.materials.tile ? 2 : 1.5, ou: (a + b) / 2, ov: (lo + hi) / 2 } }); };
+  block(-width / 2, left, bottom, top); block(right, width / 2, bottom, top);
+  block(left, right, bottom, hole.y); block(left, right, hole.y + hole.h, top);
+}
+
+function recessedWindow(H, F, o, S, r, fl) {
+  buildWindow(H, F.sub(0, 0, -.245), o.x, o.y, o.w, o.h, o.h > 1.7 ? 'std' : 'mid', S, r, 0, 'side', fl);
+  const m = H.apartmentSurfaces.materials.metal;
+  F.box(m, '#b0b5b0', o.w + .18, .045, .40, o.x, o.y - .027, -.035, { uv: { world: 1 }, skip: 'b' });
+  F.box(m, '#7d8987', o.w + .18, .035, .025, o.x, o.y - .056, .155, { uv: { world: 1 } });
+  F.box(m, '#b5bab4', o.w + .22, .035, .27, o.x, o.y + o.h + .025, -.035, { uv: { world: 1 } });
+}
+
+function recessedDoor(H, F, o) {
+  const { M, A } = H, m = H.apartmentSurfaces.materials.metal;
+  F.boxB(m, '#84918d', o.w, o.h, .045, o.x, o.y, -.21, { uv: { world: 1 } });
+  F.boxB(M.atlas, '#ffffff', o.w - .06, o.h - .06, .012, o.x, o.y + .03, -.181, { uv: { rect: A.rects.door_steel, white: A.white }, skip: 'rltdb' });
+  for (const side of [-1, 1]) F.boxB(m, '#646f70', .045, o.h, .24, o.x + side * (o.w / 2 - .02), o.y, -.12, { uv: { world: 1 } });
+  F.box(m, '#a3aaa4', o.w, .035, .30, o.x, o.y + .01, -.09, { uv: { world: 1 } });
+}
+
+function railing(F, mat, color, a, b, height, spacing) {
+  const dx = b[0] - a[0], dz = b[2] - a[2], length = Math.hypot(dx, dz), n = Math.ceil(length / spacing);
+  if (length <= .01) return;
+  F.beam(mat, color, [a[0], a[1] + height, a[2]], [b[0], b[1] + height, b[2]], .045, .045, { uv: { world: 1 } });
+  F.beam(mat, color, [a[0], a[1] + .09, a[2]], [b[0], b[1] + .09, b[2]], .025, .025, { uv: { world: 1 } });
+  for (let i = 0; i <= n; i++) F.boxB(mat, color, i === 0 || i === n ? .038 : .018, height, i === 0 || i === n ? .038 : .018,
+    a[0] + dx * i / n, a[1], a[2] + dz * i / n, { uv: { world: 1 }, skip: 'td' });
+}
+
+function rearStairs(H, F, floors, back, steel) {
+  const m = H.apartmentSurfaces.materials.metal, stairZ = back - 1.65, steps = 16, run = 4, rise = FH / steps;
+  for (let fl = 0; fl < floors - 1; fl++) {
+    const dir = fl % 2 ? -1 : 1, y = fl * FH + .14;
+    for (let i = 0; i < steps; i++) {
+      const x = dir * (-run / 2 + (i + .5) * run / steps);
+      F.box(m, steel, run / steps + .01, .045, 1.05, x, y + (i + 1) * rise - .0225, stairZ, { uv: { world: 1 } });
     }
-    if (floors === 4) for (const [fl, side] of [[1, 1], [2, 1], [1, -1]]) {
-      const x = side * (w / 3 - 1.1), y = fl * fh + 1.4;
-      P.acUnit(rear, x, y, .15, 0);
-      record('ac', [-x, y, -d - .15], 36, { face: 'rear', floor: fl + 1 });
+    for (const dz of [-.5, .5]) {
+      const a = [dir * -2, y, stairZ + dz], b = [dir * 2, y + FH, stairZ + dz];
+      F.beam(m, steel, a, b, .07, .12, { uv: { world: 1 } });
+      F.beam(m, steel, [a[0], a[1] + .95, a[2]], [b[0], b[1] + .95, b[2]], .04, .04);
+      for (let i = 0; i <= 8; i++) F.boxB(m, steel, .025, .95, .025, dir * (-2 + i / 2), y + i * FH / 8, stairZ + dz, { skip: 'td' });
     }
-    // Six-sided house-kit pipe recipe: top bend, two wall clips; the bottom
-    // finishes just above the supported plinth, without an extra ground box.
-    const pipeZ = floors === 4 ? [-d + .3, front - .3] : [front - .3];
-    for (const z of pipeZ) {
-      const x = -w / 2 - .045, y0 = .16, y1 = floors * fh - .2;
-      F.cyl(M.plain, '#a3a8a7', .032, y1 - y0, x, (y0 + y1) / 2, z, { seg: 6 });
-      const gutterX = -w / 2 - .23, gutterZ = Math.max(-d + .75, Math.min(front - .75, z));
-      F.beam(M.plain, '#a3a8a7', [x, y1, z], [gutterX, floors * fh + .08, z], .06, .06);
-      for (const t of [.3, .7]) F.box(M.plain, '#8c9596', .09, .035, .09, x + .015, y0 + (y1 - y0) * t, z);
-      F.box(M.plain, '#a3a8a7', .11, .09, 1.8, gutterX, floors * fh + .08, gutterZ);
-      record('rainpipe', [x, y0, z], 60, { top: y1, clips: 2 });
-      record('gutter', [gutterX, floors * fh + .08, gutterZ], 12, { length: 1.8 });
-    }
-    const railLevels = floors === 4 ? [1, 2] : [1];
-    for (const fl of railLevels) {
-      const x = floors === 5 ? -w / 3 : 0, y = fl * fh + 1.44, len = w / 3 - .22;
-      F.box(M.metal, steel, len, .035, .035, x, y, -.185);
-      for (const dx of [-len / 2 + .06, len / 2 - .06])
-        F.boxB(M.metal, steel, .025, .23, .025, x + dx, fl * fh + 1.215, -.185);
-      record('balcony-top-rail', [x, y, -.185], 36, { floor: fl + 1, length: len });
-    }
-    const y = fh + 2.22;
-    F.box(M.metal, steel, 1.65, .025, .025, 0, y, -.57);
-    for (const dx of [-.75, .75]) F.beam(M.metal, steel, [dx, y, -1.24], [dx, y, -.52], .025, .025);
-    const before = H.laundry.I.length / 3, count = H.laundry.count;
-    H.laundry.line(F, -.7, .7, y - .01, -.57, H.ctx.rng(12), 'apartment');
-    record('laundry-pole', [0, y, -.57], 36);
-    record('laundry', [0, y - .01, -.57], H.laundry.I.length / 3 - before, { garments: H.laundry.count - count });
+    for (const [x, level] of [[dir * -2.3, y], [dir * 2.3, y + FH]]) F.box(m, steel, .6, .10, 1.25, x, level - .05, back - 1.55, { uv: { world: 1 } });
   }
-  if (floors === 4) {
-    P.elecMeter(rear, -w / 3 + 1, 1.35);
-    record('electric-meter', [w / 3 - 1, 1.35, -d - .07], 36);
-    for (const [x, name] of [[-w / 3 - .72, 'plateH0'], [w / 3 + .72, 'plateH1']]) {
-      P.plate(rear, x, 1.65, 0, name);
-      record('nameplate', [-x, 1.65, -d - .012], 12, { atlas: name });
-    }
+  return { treads: (floors - 1) * steps };
+}
+
+function roofscape(H, F, { width: w, depth: d, floors }, wall, trim, steel) {
+  const { plaster, tile, metal, roof } = H.apartmentSurfaces.materials, top = floors * FH, back = -d, front = -1.25;
+  F.box(roof, '#a5ada8', w + .24, .17, d + front + .20, 0, top + .085, (back + front) / 2, { uv: { world: 1.5 } });
+  for (const z of [front, back]) {
+    F.boxB(plaster, trim, w, .46, .15, 0, top + .17, z, { uv: { world: 1.5 } });
+    F.box(metal, steel, w + .08, .045, .21, 0, top + .65, z, { uv: { world: 1 } });
   }
-  return { items, gbTriangles: gb.tris - start, clothTriangles: H.laundry.I.length / 3 - clothStart,
-    totalTriangles: gb.tris - start + H.laundry.I.length / 3 - clothStart };
+  for (const x of [-w / 2, w / 2]) {
+    F.boxB(plaster, trim, .15, .46, d + front, x, top + .17, (back + front) / 2, { uv: { world: 1.5 } });
+    F.box(metal, steel, .21, .045, d + front, x, top + .65, (back + front) / 2, { uv: { world: 1 } });
+  }
+  const equipmentX = floors === 5 ? -w * .25 : w * .25, equipmentZ = back + 2.1;
+  const roomHeight = floors === 3 ? 1.3 : floors === 4 ? 1.7 : 2.3;
+  F.boxB(plaster, wall, 2.45, roomHeight, 2.75, equipmentX, top + .17, equipmentZ, { uv: { world: 1.5 } });
+  F.box(roof, '#8e9b97', 2.65, .14, 2.95, equipmentX, top + .17 + roomHeight + .07, equipmentZ, { uv: { world: 1 } });
+  // Real louvres in front of the roof utility room, rather than a painted stripe.
+  F.box(metal, '#586561', 1.3, .95, .06, equipmentX, top + .85, equipmentZ + 1.40, { uv: { world: 1 } });
+  for (let i = 0; i < 9; i++) F.box(metal, steel, 1.30, .035, .09, equipmentX, top + .46 + i * .09, equipmentZ + 1.45, { rx: -.25 });
+  const tankX = -equipmentX, tankZ = back + 2.15;
+  for (const dx of [-.55, .55]) for (const dz of [-.55, .55]) F.boxB(metal, steel, .08, .5, .08, tankX + dx, top + .17, tankZ + dz);
+  F.cyl(metal, '#c9cfca', .85, 1.4, tankX, top + 1.37, tankZ, { seg: 20 });
+  for (const y of [top + .72, top + 2.04]) F.cyl(metal, steel, .875, .055, tankX, y, tankZ, { seg: 20 });
+  F.cyl(metal, '#c9cfca', .85, .08, tankX, top + 2.11, tankZ, { seg: 20, rTop: .75 });
+  F.cyl(metal, steel, .11, .24, tankX, top + 2.24, tankZ, { seg: 8 });
+  F.cyl(metal, steel, .045, 1.8, tankX + .90, top + 1.08, tankZ, { seg: 8 });
+  F.beam(metal, steel, [tankX + .90, top + .20, tankZ], [tankX + .90, top + .20, front], .07, .07);
+  if (floors === 3) {
+    // A short slatted terrace canopy makes the low building read independently.
+    for (const x of [-2.1, 2.1]) {
+      for (const z of [front - .65, front - 1.85]) F.boxB(metal, steel, .08, 1.65, .08, x, top + .17, z);
+      F.box(metal, steel, .08, .07, 1.60, x, top + 1.80, front - 1.25);
+    }
+    for (let i = 0; i < 8; i++) F.box(roof, '#9caba1', 4.4, .065, .10, 0, top + 1.85, front - .55 - i * .20, { uv: { world: 1 } });
+  }
+  return { parapetHeight: .46, headhouseHeight: roomHeight, tankRadius: .85,
+    maxY: top + Math.max(2.36, roomHeight + .31), sourceGeometry: 'Actual caps, rails, room, louvres, tank bands and connecting pipe; no scaled proxy' };
 }
 
 function buildLaundryShop(H, F, front) {
