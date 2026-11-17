@@ -85,6 +85,22 @@ float wbBand(float n) {
 }
 `;
 
+// Town greenery (#254 C15 review): inside the town and a feathered band around it
+// the meadow follows the ZZZ rule "muted base, bright accents" - olive, less
+// saturated grass and a thinner flower field. The open island keeps its colours.
+const TOWN = /* glsl */`
+uniform vec4 uTownRect;   // world min.xz, max.xz
+uniform vec3 uTownGreen;  // strength, feather start, feather end (metres outside the rect)
+float wbTownMask(vec2 xz) {
+  vec2 d = max(uTownRect.xy - xz, xz - uTownRect.zw);
+  return (1.0 - smoothstep(uTownGreen.y, uTownGreen.z, length(max(d, 0.0)))) * uTownGreen.x;
+}
+vec3 wbTownGreen(vec3 c, float k) {
+  float l = dot(c, vec3(0.2126, 0.7152, 0.0722));
+  return mix(c, mix(vec3(l), c, 0.62) * vec3(0.98, 0.95, 0.84) * 0.9, k);
+}
+`;
+
 function insert(source, needle, replacement, label) {
   if (!source.includes(needle)) throw new Error(`Pinned upstream shader changed: ${label}`);
   return source.replace(needle, replacement);
@@ -93,6 +109,11 @@ function insert(source, needle, replacement, label) {
 export function createLook(renderer, camera) {
   const pipeline = new Pipeline(renderer);
   const toon = { value: 1 };
+  // Empty rect until the town is placed: the mask is zero everywhere.
+  const townUniforms = {
+    uTownRect: { value: new THREE.Vector4(1e9, 1e9, -1e9, -1e9) },
+    uTownGreen: { value: new THREE.Vector3(1, 12, 55) },
+  };
   Object.assign(pipeline.params, {
     blur: 0, rays: 0, distortion: 0, fringe: 0,
     bloom: 0.12, exposure: 1.02, saturation: 1.0, contrast: 1.05, vignette: 0.12,
@@ -162,6 +183,40 @@ export function createLook(renderer, camera) {
         `${needle}\n  dif = mix(dif, ${band}, uWorldToon);`, 'island diffuse band');
       material.needsUpdate = true;
     }
+    // Town greenery: terrain sward under the blades, the blades and the flowers.
+    const terrain = island.terrain.material;
+    Object.assign(terrain.uniforms, townUniforms);
+    terrain.fragmentShader = insert(terrain.fragmentShader, 'void main(){', `${TOWN}\nvoid main(){`, 'terrain town entry');
+    terrain.fragmentShader = insert(terrain.fragmentShader, 'vec3 tint = meadowTint(P.xz, wet);',
+      `vec3 tint = meadowTint(P.xz, wet);
+  float wbTown = wbTownMask(P.xz);
+  tint = wbTownGreen(tint, wbTown);`, 'terrain town sward');
+    terrain.fragmentShader = insert(terrain.fragmentShader, 'tintAmt *= 1.0 - strippedFiltered(uv);',
+      `tintAmt *= 1.0 - strippedFiltered(uv);
+  tintAmt *= 1.0 - 0.75 * wbTown;`, 'terrain town flower wash');
+    terrain.needsUpdate = true;
+    const meadow = island.meadow, shell = Object.getPrototypeOf(meadow.shells[0]);
+    if (!shell.wbTownPatched) {
+      const material = shell.material;
+      shell.material = function wbTownMaterial() {
+        const m = material.call(this);
+        Object.assign(m.uniforms, townUniforms);
+        m.vertexShader = insert(m.vertexShader, 'void main(){', `${TOWN}\nvoid main(){`, 'meadow town entry');
+        if (this.kind === 'grass') {
+          m.vertexShader = insert(m.vertexShader, '* mix(0.88, 1.14, cl.w);',
+            `* mix(0.88, 1.14, cl.w);
+  vTint = wbTownGreen(vTint, wbTownMask(xz));`, 'grass town tint');
+        } else {
+          // Keep about a quarter of the flowers in the town core; they stay accents.
+          m.vertexShader = insert(m.vertexShader, 'float keep = step(r2.x, dens * 1.08) * step(0.03, dens);',
+            `float keep = step(r2.x, dens * 1.08) * step(0.03, dens);
+  keep *= step(wbTownMask(xz) * 0.75, hash12(xz * 5.31 + 3.3));`, 'flower town density');
+        }
+        return m;
+      };
+      shell.wbTownPatched = true;
+    }
+    for (const s of meadow.shells) for (const mesh of s.pool) { const old = mesh.material; mesh.material = s.material(); old.dispose(); }
     const water = island.water.material;
     // The shallow coefficient, rather than bloom, dominates the cyan halos.
     // Keep deep-water colour and the transmitted seabed independently calibrated.
@@ -190,6 +245,11 @@ export function createLook(renderer, camera) {
   return {
     pipeline, applyIsland,
     setToon(value) { toon.value = value ? 1 : 0; },
+    /** World-space town rect [minX, minZ, maxX, maxZ]; strength 0 restores the open-island meadow. */
+    setTownGreenery(rect, strength = 1) {
+      townUniforms.uTownRect.value.set(...rect);
+      townUniforms.uTownGreen.value.x = strength;
+    },
     setAO(value) { mat.uniforms.uAO.value = value; },
     setFlightEffects(value) { pipeline.params.blur = value ? 1 : 0; pipeline.params.rays = value ? 0.55 : 0; pipeline.hasPrev = false; },
     setSize(width, height, ratio) { pipeline.setSize(width, height, ratio); },

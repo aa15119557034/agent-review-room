@@ -87,6 +87,23 @@ export async function createCity({ scene, station, island, skyline }) {
   wallWash.customProgramCacheKey = () => (concreteKey ? concreteKey.call(concrete) : '') + '|town-wall-wash';
   ownedMaterials.add(wallWash);
   H.wallWash = wallWash;
+  // Town hedges, shrubs and garden trees (#254 C15): the town's own foliage copy is
+  // muted towards olive like the town meadow, and its painted leaf clumps get a
+  // little more light/shade so the masses stop reading as smooth blobs.
+  const foliage = M.foliage, foliageCompile = foliage.onBeforeCompile, foliageKey = foliage.customProgramCacheKey;
+  foliage.onBeforeCompile = (shader, renderer) => {
+    foliageCompile?.call(foliage, shader, renderer);
+    const clumps = 'float tone = (1.0 + 0.1 * hl) * (1.0 - 0.14 * sh);';
+    if (!shader.fragmentShader.includes(clumps)) throw new Error('Town foliage: leaf clump shading missing');
+    shader.fragmentShader = shader.fragmentShader
+      .replace(clumps, 'float tone = (1.0 + 0.16 * hl) * (1.0 - 0.26 * sh);')
+      .replace('#include <color_fragment>', `#include <color_fragment>
+        {
+          float townL = dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+          diffuseColor.rgb = mix(vec3(townL), diffuseColor.rgb, 0.62) * vec3(1.03, 0.98, 0.86);
+        }`);
+  };
+  foliage.customProgramCacheKey = () => (foliageKey ? foliageKey.call(foliage) : '') + '|town-foliage';
   const dispose = () => {
     if (disposed) return; disposed = true; root.removeFromParent();
     root.traverse(object => { if (object.isMesh) { geometries.add(object.geometry); if (object.isInstancedMesh) object.dispose(); if (object.customDepthMaterial) ownedMaterials.add(object.customDepthMaterial); } });

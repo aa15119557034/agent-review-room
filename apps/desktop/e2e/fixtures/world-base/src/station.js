@@ -79,6 +79,12 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
     moduleStats[name] = Math.round(performance.now() - start);
     await new Promise(resolve => setTimeout(resolve, 0));
   }
+  // Station yard gravel (#254 C15): the yards map 1.6 m onto a tile drawn as 1.5 m,
+  // so at eye height the stones read as 6-8 cm cobbles. Halve the stone size.
+  const gravel = ctx.tex.cache.get('st-gravel');
+  if (!gravel) throw new Error('Station gravel texture missing');
+  gravel.wrapS = gravel.wrapT = THREE.RepeatWrapping;
+  gravel.repeat.set(1.9, 1.9);
   const streetscape = addStreetscape({ ctx, root });
   onProgress('textured-props');
   const texturedProps = await addStationTexturedProps({ ctx, root });

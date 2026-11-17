@@ -124,6 +124,15 @@ async function init() {
   worldBase.city.vegetationClear = clearVegetationAreas(island.terrain,
     worldBase.city.vegetationClearAreas, station.root.matrixWorld, { flowers: 8, jitter: 2.5 });
   island.meadow._buildCoverGrid(); // Refresh the density cache before its first update.
+  {
+    // Town greenery covers the lots, their connections and planting (station frame, no rotation).
+    const areas = worldBase.city.vegetationClearAreas, o = station.root.position;
+    const rect = [Infinity, Infinity, -Infinity, -Infinity];
+    for (const a of areas) { rect[0] = Math.min(rect[0], a.minX); rect[1] = Math.min(rect[1], a.minZ); rect[2] = Math.max(rect[2], a.maxX); rect[3] = Math.max(rect[3], a.maxZ); }
+    if (island.stationPlacement.rotationY !== 0 || !areas.length) throw new Error('Town greenery expects an unrotated, non-empty town');
+    worldBase.townGreenRect = [rect[0] + o.x, rect[1] + o.z, rect[2] + o.x, rect[3] + o.z];
+    look.setTownGreenery(worldBase.townGreenRect);
+  }
   walker = station.createWalker(canvas);
   worldBase.walker = walker;
   worldBase.views = [
