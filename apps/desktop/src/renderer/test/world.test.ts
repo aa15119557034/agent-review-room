@@ -422,6 +422,102 @@ describe("世界：还没配置秘书时后台不给设置（C-59）", () => {
   });
 });
 
+describe("世界：开局 / 首次读取的回应晚于推送（C-59b，林离 #265）", () => {
+  const other = (t: ReturnType<typeof setup>) => createClient(t.bridge);
+  const saved = { dayRealMinutes: 12, dailyCognitionLimit: 7 };
+
+  it("settings 是 null 时开局：回应比之后的推送晚，按现在的状态重读，设置补上", async () => {
+    const t = setup({ seed: false });
+    await t.actions.world.load();
+    t.store.set((s) => ({ ...s, world: { ...s.world, settings: null } }));
+    t.hold("world.reset");
+    const starting = t.actions.world.start(["claude"]);
+    await tick();
+    await tick();
+    assert.ok(t.w().world, "新的一局靠推送先到了");
+    await t.advance(30);
+    const pushed = t.snap().lastSeq;
+    await t.release("world.reset");
+    await starting;
+    assert.ok(t.snap().lastSeq >= pushed, "回应里的旧快照没把推送来的新快照盖掉");
+    assert.equal(t.w().settings?.dayRealMinutes, WORLD_DAY_REAL_MINUTES_DEFAULT);
+    assert.deepEqual(t.w().settings?.residents, ["claude"]);
+  });
+
+  it("开局回应在路上时设置又保存过：不拿回应里的旧设置", async () => {
+    const t = setup({ seed: false });
+    await t.actions.world.load();
+    t.store.set((s) => ({ ...s, world: { ...s.world, settings: null } }));
+    const seen: (number | null)[] = [];
+    t.store.subscribe(() => seen.push(t.w().settings?.dayRealMinutes ?? null));
+    t.hold("world.reset");
+    const starting = t.actions.world.start(["claude"]);
+    await tick();
+    await tick();
+    const fresh = t.snap();
+    await other(t).command({ type: "world.pause", worldId: fresh.id });
+    await other(t).command({ type: "world.resume", worldId: fresh.id });
+    await other(t).command({ type: "world.settings.save", settings: saved });
+    await t.advance(30);
+    await t.release("world.reset");
+    await starting;
+    assert.ok(!seen.includes(WORLD_DAY_REAL_MINUTES_DEFAULT), "开局回应里的 24 分钟没有写进状态");
+    assert.equal(t.w().settings?.dayRealMinutes, 12);
+    assert.equal(t.w().settings?.dailyCognitionLimit, 7);
+  });
+
+  it("新窗口首次读取晚于推送、期间设置又保存过：旧设置一刻也不进状态，重读拿到现在的设置", async () => {
+    const t = await opened();
+    t.store.set((s) => ({ ...s, world: { ...s.world, settings: null } }));
+    const seen: (number | null)[] = [];
+    t.store.subscribe(() => seen.push(t.w().settings?.dayRealMinutes ?? null));
+    t.hold("world.get");
+    const loading = t.actions.world.load();
+    await tick();
+    await other(t).command({ type: "world.settings.save", settings: saved });
+    await t.advance(30);
+    await t.release("world.get");
+    await loading;
+    assert.ok(!seen.includes(WORLD_DAY_REAL_MINUTES_DEFAULT), "过期回应里的 24 分钟没有在重读之前写进状态");
+    assert.equal(t.w().settings?.dayRealMinutes, 12);
+    assert.equal(t.w().settings?.dailyCognitionLimit, 7);
+  });
+
+  it("首次读取过期、重读又失败：设置留空，不用旧值", async () => {
+    const t = await opened();
+    t.store.set((s) => ({ ...s, world: { ...s.world, settings: null } }));
+    t.hold("world.get");
+    const loading = t.actions.world.load();
+    await tick();
+    await other(t).command({ type: "world.settings.save", settings: saved });
+    await t.advance(30);
+    const query = t.client.query;
+    let calls = 0;
+    t.client.query = ((req: { type: string }) => (req.type === "world.get" && ++calls >= 1 ? Promise.reject(new Error("network")) : query(req as never))) as typeof query;
+    await t.release("world.get");
+    await loading;
+    t.client.query = query;
+    assert.equal(t.w().settings, null);
+    assert.equal(t.w().loaded, true);
+  });
+
+  it("只选一位开局、推送先到：设置里的居民是这一位，不是开局页默认的两位", async () => {
+    const t = setup({ seed: false });
+    await t.actions.world.load();
+    const before = t.w().settings;
+    t.store.set((s) => ({ ...s, world: { ...s.world, settings: before ? { ...before, residents: ["claude", "codex"] } : null } }));
+    t.hold("world.reset");
+    const starting = t.actions.world.start(["claude"]);
+    await tick();
+    await tick();
+    await t.advance(30);
+    await t.release("world.reset");
+    await starting;
+    assert.deepEqual(t.snap().residents.map((r) => r.agent), ["claude"]);
+    assert.deepEqual(t.w().settings?.residents, ["claude"]);
+  });
+});
+
 describe("世界：旧请求的回应晚到（林离 #230 第一轮）", () => {
   it("同一个会话里 runSeq 不能倒退：迟到的旧代快照丢掉，哪怕它的 lastSeq 更大", async () => {
     const t = await opened();
