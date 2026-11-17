@@ -91,13 +91,12 @@ export function clearVegetationAreas(terrain, areas, localToWorld, feather = nul
   return { areas, changedTexels: changed.size, texelSizeM: cell, feather: featherStats, channels: 'R flowers / A grass; G species and B wetness retained' };
 }
 
-// Outside the hard-cleared texels only: cover returns over an irregular band so the
-// lawn edge is not a ruler-straight rectangle. Grass (A) returns almost at once, flowers (R)
-// over a wandering band, giving lawn -> grass -> meadow. Multiplicative, so earlier zeros stay zero
-// and protected texels (already 0) are untouched.
-function featherVegetation(terrain, areas, localToWorld, { grass = 0.75, flowers = 8, jitter = 2.5 }, cleared) {
+// Feather flowers outside the protected footprint. The hard clear already includes
+// all bilinear support texels; attenuating grass again can erase another whole 3m
+// row even with a sub-metre ramp. Preserve A so lawn can recover at the hard edge.
+function featherVegetation(terrain, areas, localToWorld, { flowers = 8, jitter = 2.5 }, cleared) {
   const S = terrain.splatN, cell = World.size / S, inverse = localToWorld.clone().invert();
-  const reach = cell + Math.max(grass, flowers) + jitter;
+  const reach = cell + flowers + jitter;
   const world = new THREE.Box3(), point = new THREE.Vector3();
   for (const area of areas) for (const x of [area.minX - reach, area.maxX + reach]) for (const z of [area.minZ - reach, area.maxZ + reach])
     world.expandByPoint(point.set(x, 0, z).applyMatrix4(localToWorld));
@@ -114,22 +113,21 @@ function featherVegetation(terrain, areas, localToWorld, { grass = 0.75, flowers
   let touched = 0;
   for (let iz = iz0; iz <= iz1; iz++) for (let ix = ix0; ix <= ix1; ix++) {
     const index = (iz * S + ix) * 4;
-    if (cleared.has(index) || (!terrain.splat[index] && !terrain.splat[index + 3])) continue;
+    if (cleared.has(index) || !terrain.splat[index]) continue;
     point.set((ix + 0.5) * cell - World.half, 0, (iz + 0.5) * cell - World.half);
     const wx = point.x, wz = point.z; point.applyMatrix4(inverse);
     let d = Infinity;
     for (const a of areas) d = Math.min(d, Math.hypot(Math.max(a.minX - point.x, 0, point.x - a.maxX), Math.max(a.minZ - point.z, 0, point.z - a.maxZ)));
     // Distance beyond the bilinear guard texel, shifted by the wandering noise.
     const e = d - cell + (noise(wx, wz) - 0.5) * 2 * jitter;
-    // Grass only needs a short, straight ramp (bare lawn is what reads as a hard
-    // rectangle); the flower drift carries the irregular, noise-shifted edge.
-    const kA = smooth((d - cell) / grass), kR = smooth(e / flowers);
-    if (kA >= 1 && kR >= 1) continue;
-    terrain.splat[index] = Math.round(terrain.splat[index] * kR);
-    terrain.splat[index + 3] = Math.round(terrain.splat[index + 3] * kA);
+    const kR = smooth(e / flowers);
+    if (kR >= 1) continue;
+    const next = Math.round(terrain.splat[index] * kR);
+    if (next === terrain.splat[index]) continue;
+    terrain.splat[index] = next;
     touched++;
   }
-  return { grassFadeM: grass, flowerFadeM: flowers, jitterM: jitter, texels: touched };
+  return { flowerFadeM: flowers, jitterM: jitter, texels: touched };
 }
 
 async function loadProps(assetBase, terrain) {
