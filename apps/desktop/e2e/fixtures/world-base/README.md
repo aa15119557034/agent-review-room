@@ -58,7 +58,7 @@ node scripts\baseline.cjs --scene=combined --electron=D:\codex\2026-11-16\world-
 
 ## 当前状态
 
-第5轮根据[C酱本机图评审](https://github.com/aa15119557034/agent-review-room/pull/254#issuecomment-6935791702)停止美式砖楼的材质调整，改用站区套件生成日式公寓；当前替换仍待实际画面与性能验收。
+第5轮根据[C酱本机图评审](https://github.com/aa15119557034/agent-review-room/pull/254#issuecomment-6935791702)停止美式砖楼的材质调整，改用站区套件生成日式公寓。[替换后本机实拍](./evidence/town-kit-2026-11-17/README.md)统计整片镇边14,950三角形、无新增独立纹理；四机位约63.7–65 FPS，第三人称64.356、第一人称65.000，14／14行为检查通过。正面偏灰、洗衣店玻璃遮住机器和镇边排列仍待精修；本轮不标P2完成，也不以一次好结果宣称步行波动已修复。
 
 前一版三栋中层、井盖修正、资产清理与五轮交替步行对照见 [第四轮回验](./evidence/city-polish-2026-11-17/README.md)：固定机位约65 FPS，末次第三人称57.633、第一人称65.000；这是旧版数据，不能当作替换后表现。步行帧时波动原因未明，湿面两机位严格恢复通过。资源取消复现与已知Chromium终结状态缺陷吻合，本机运行时未修复，仍保留transportClean=false。含塔楼的早期试装和失败记录见 [76a000d历史试装](./evidence/city-background-2026-11-17/README.md)。
 
