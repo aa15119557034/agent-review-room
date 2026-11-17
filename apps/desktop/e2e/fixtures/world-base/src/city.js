@@ -6,9 +6,11 @@ import { backgroundContext, visibleBankHeight } from './skyline.js';
 import { buildTownApartment, townApartmentBounds } from './city-apartments.js';
 
 const SITES = [
-  { name: 'town-apartment-3f', x: -17, z: -122, width: 11, depth: 9, floors: 3, accent: PAL.siding[1], shop: false },
-  { name: 'town-apartment-4f', x: 2, z: -122, width: 12, depth: 9, floors: 4, accent: PAL.tile[0], shop: true },
-  { name: 'town-apartment-5f', x: 22, z: -122, width: 12, depth: 10, floors: 5, accent: PAL.plaster[0], shop: false },
+  // Staggered setbacks and three wall tones (sage / warm tile / pale blue) break the
+  // uniform front row; white slabs and parapets stay shared.
+  { name: 'town-apartment-3f', x: -17, z: -123.5, width: 11, depth: 9, floors: 3, accent: PAL.siding[1], tone: '#d5e2d8', shop: false },
+  { name: 'town-apartment-4f', x: 2, z: -122, width: 12, depth: 9, floors: 4, accent: PAL.tile[0], tone: '#f0dcc8', shop: true },
+  { name: 'town-apartment-5f', x: 22, z: -121, width: 12, depth: 10, floors: 5, accent: PAL.plaster[0], tone: '#d2dfe9', shop: false },
 ];
 const LOW_HOUSES = [{ x: -37, z: -126.5, seed: 0 }, { x: -50, z: -127, seed: 1 }];
 const FRONT_ROAD = { name: 'town-front-lane', minX: -56, maxX: 37, minZ: -118.5, maxZ: -115.8 };
@@ -124,6 +126,7 @@ export async function createCity({ scene, station, island, skyline }) {
       vegetationClearAreas.push({ name: 'town-tree-' + x, minX: x - 0.9, maxX: x + 0.9, minZ: z - 0.9, maxZ: z + 0.9 });
     }
     addUtilityPoles(H, frame, visibleGround, stats);
+    addLotPlanting(H, frame, placements, heightAt, ctx, stats);
     gb.flush(root, 'town-edge-kit');
     const laundry = H.laundry.build();
     if (laundry) { ownedMaterials.add(laundry.material); ownedMaterials.add(laundry.customDepthMaterial); }
@@ -192,6 +195,23 @@ function addConnections(H, frame, placements, ground, worldY) {
   const r5 = H.L.ROADS.R5;
   stairs('town-levee-stairs', 34.5, 5, r5.z - r5.halfW - 0.03, EAST_ROAD.maxZ, r5.y + 0.03);
   return { clearAreas, report };
+}
+
+// Low hedges between each lot and the lane (gap at the entry stairs) and a
+// couple of shrubs at the rear corners soften the plinth / meadow boundary.
+function addLotPlanting(H, frame, placements, ground, ctx, stats) {
+  stats.planting = [];
+  for (const p of placements) {
+    const r = ctx.rng('town-planting-' + p.name), lot = p.footprint, start = H.gb.tris;
+    const z = Math.min(lot.maxZ + 0.55, FRONT_ROAD.minZ - 0.45), gap = 1.5, door = p.center[0];
+    for (const [x0, x1] of [[lot.minX + 0.2, door - gap], [door + gap, lot.maxX - 0.2]])
+      if (x1 - x0 > 1) H.P.hedge(frame, x0, x1, z, 0.75, 0.55, r, 'dark', ground);
+    for (const x of [lot.minX + 0.3, lot.maxX - 0.3]) {
+      const zb = lot.minZ - 0.6;
+      H.P.bush(frame, x, ground(x, zb), zb, 0.75, r, { flowers: 'azalea' });
+    }
+    stats.planting.push({ name: p.name, hedgeZ: z, triangles: H.gb.tris - start });
+  }
 }
 
 function addUtilityPoles(H, frame, ground, stats) {

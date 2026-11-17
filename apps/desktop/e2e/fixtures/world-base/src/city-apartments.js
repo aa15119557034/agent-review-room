@@ -14,10 +14,13 @@ export function townApartmentBounds({ width: w, depth: d }) {
  * width/depth describe the main block; rear access and bicycle shelter extend it.
  */
 export function buildTownApartment(H, F, spec) {
-  const { width: w, depth: d, floors, accent, shop } = spec;
+  const { width: w, depth: d, floors, accent, shop, tone } = spec;
   const { M, A, gb } = H;
   const fh = 2.85, top = floors * fh, front = -1.25, back = -d;
   const white = PAL.paint[(floors - 3) % PAL.paint.length], steel = PAL.metal[0];
+  // Two-tone facade: tinted wall planes recede behind white slabs and parapets,
+  // so the shaded street face keeps value structure without touching lighting.
+  const wall = tone || white;
   const trim = accent, start = gb.tris, clothStart = H.laundry.I.length / 3;
   const garmentStart = H.laundry.count;
   const r = H.ctx.rng(`town-apartment-${floors}-${F.origin.x}-${F.origin.z}`);
@@ -34,15 +37,15 @@ export function buildTownApartment(H, F, spec) {
     const y = fl * fh;
     // Individual storey shells and slabs: no scaled two-storey model.
     F.boxB(M.plain, white, w, .14, d + front, 0, y, (back + front) / 2);
-    for (const side of [-1, 1]) F.boxB(M.plaster, white, .2, fh, d + front,
+    for (const side of [-1, 1]) F.boxB(M.plaster, wall, .2, fh, d + front,
       side * (w / 2 - .1), y, (back + front) / 2, { uv });
-    F.boxB(M.plaster, white, w, fh, .18, 0, y, back + .09, { uv });
+    F.boxB(M.plaster, wall, w, fh, .18, 0, y, back + .09, { uv });
     if (shop && fl === 0) {
       const wing = (w - 6) / 2;
-      for (const side of [-1, 1]) F.boxB(M.plaster, white, wing, fh, .18,
+      for (const side of [-1, 1]) F.boxB(M.plaster, wall, wing, fh, .18,
         side * (3 + wing / 2), y, front - .09, { uv });
-      F.boxB(M.plaster, white, 6, .49, .18, 0, 2.36, front - .09, { uv });
-    } else F.boxB(M.plaster, white, w, fh, .18, 0, y, front - .09, { uv });
+      F.boxB(M.plaster, wall, 6, .49, .18, 0, 2.36, front - .09, { uv });
+    } else F.boxB(M.plaster, wall, w, fh, .18, 0, y, front - .09, { uv });
     F.box(M.plain, trim, w + .08, .13, .14, 0, y + fh - .1, front + .02);
 
     for (let u = 0; u < 3; u++) {
@@ -156,7 +159,9 @@ export function buildTownApartment(H, F, spec) {
 
 function buildLaundryShop(H, F, front, accent) {
   const { M } = H;
-  F.boxB(M.plain, '#e8e5dc', 5.8, 2.35, .12, 0, .14, front - 2.2);
+  F.boxB(M.plain, '#f6efe2', 5.8, 2.35, .12, 0, .14, front - 2.2);
+  // Warm ceiling strips make the shop read as open and lit from the street.
+  for (const z of [front - .6, front - 1.6]) F.box(M.lamp, null, 4.6, .04, .16, 0, 2.3, z, { shadow: false });
   // Visible front-load machines identify the small shop without a new text atlas.
   for (const x of [-2.1, -1.2, 1.2, 2.1]) {
     F.boxB(M.plain, '#e9e9e2', .76, 1.25, .65, x, .14, front - .7);
@@ -166,8 +171,11 @@ function buildLaundryShop(H, F, front, accent) {
   }
   for (const x of [-3, -.6, .6, 3]) F.boxB(M.metal, '#8e949b', .055, 2.25, .07, x, .14, front + .035);
   F.box(M.metal, '#8e949b', 6, .055, .07, 0, 2.36, front + .035);
-  for (const x of [-1.8, 1.8]) F.boxB(M.glass, null, 2.34, 2.14, .012, x, .18, front + .025, { shadow: false });
-  F.boxB(M.glass, null, 1.14, 2.14, .012, 0, .18, front + .025, { shadow: false });
+  // Clear shop glass (cached station material, streaks off) instead of the
+  // house M.glass whose diagonal highlights hid the machines behind it.
+  const shopGlass = H.ctx.mat.glass({ tint: '#e6eef0', opacity: .14, streaks: false });
+  for (const x of [-1.8, 1.8]) F.boxB(shopGlass, null, 2.34, 2.14, .012, x, .18, front + .025, { shadow: false });
+  F.boxB(shopGlass, null, 1.14, 2.14, .012, 0, .18, front + .025, { shadow: false });
   F.box(M.metal, '#8e949b', .025, .4, .1, .47, 1.12, front + .09);
   F.box(M.plain, accent, 6.25, .11, 1.05, 0, 2.52, front + .525);
   F.box(M.plain, accent, 6.25, .23, .07, 0, 2.43, front + 1.015);
