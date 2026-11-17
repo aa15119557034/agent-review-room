@@ -87,16 +87,23 @@ export async function createCity({ scene, station, island, skyline }) {
   wallWash.customProgramCacheKey = () => (concreteKey ? concreteKey.call(concrete) : '') + '|town-wall-wash';
   ownedMaterials.add(wallWash);
   H.wallWash = wallWash;
-  // Town hedges, shrubs and garden trees (#254 C15): the town's own foliage copy is
-  // muted towards olive like the town meadow, and its painted leaf clumps get a
-  // little more light/shade so the masses stop reading as smooth blobs.
+  // Town hedges, shrubs and garden trees (#254 C15/C18): the town's own foliage copy
+  // is muted towards olive like the town meadow. Its painted leaf clumps keep a
+  // gentle light/shade, but the clump borders are widened so that near hedges read
+  // as soft leaf masses instead of a hard-edged camouflage pattern.
   const foliage = M.foliage, foliageCompile = foliage.onBeforeCompile, foliageKey = foliage.customProgramCacheKey;
+  // x: clump highlight, y: clump shade, z: minimum border width (Worley units).
+  const townLeaf = { value: new THREE.Vector3(0.10, 0.14, 0.14) };
+  foliage.userData.townLeaf = townLeaf;
   foliage.onBeforeCompile = (shader, renderer) => {
     foliageCompile?.call(foliage, shader, renderer);
-    const clumps = 'float tone = (1.0 + 0.1 * hl) * (1.0 - 0.14 * sh);';
-    if (!shader.fragmentShader.includes(clumps)) throw new Error('Town foliage: leaf clump shading missing');
+    const clumps = 'float tone = (1.0 + 0.1 * hl) * (1.0 - 0.14 * sh);', border = 'float aa = clamp(fw * 1.2, 0.03, 0.3);';
+    if (!shader.fragmentShader.includes(clumps) || !shader.fragmentShader.includes(border)) throw new Error('Town foliage: leaf clump shading missing');
+    shader.uniforms.uTownLeaf = townLeaf;
     shader.fragmentShader = shader.fragmentShader
-      .replace(clumps, 'float tone = (1.0 + 0.16 * hl) * (1.0 - 0.26 * sh);')
+      .replace('#include <common>', '#include <common>\nuniform vec3 uTownLeaf;')
+      .replace(border, 'float aa = clamp(fw * 1.2, uTownLeaf.z, 0.3);')
+      .replace(clumps, 'float tone = (1.0 + uTownLeaf.x * hl) * (1.0 - uTownLeaf.y * sh);')
       .replace('#include <color_fragment>', `#include <color_fragment>
         {
           float townL = dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722));
