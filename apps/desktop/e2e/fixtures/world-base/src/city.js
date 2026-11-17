@@ -3,7 +3,7 @@ import { GB, Frame } from '../upstream/sakuragaoka/src/world/houses/gb.js';
 import { buildFarTown } from '../upstream/sakuragaoka/src/world/houses/far.js';
 import { PAL } from '../upstream/sakuragaoka/src/world/houses/lot.js';
 import { backgroundContext, visibleBankHeight } from './skyline.js';
-import { buildTownApartment, townApartmentBounds } from './city-apartments.js';
+import { buildTownApartment, townApartmentBounds, townSortingBins } from './city-apartments.js';
 
 const SITES = [
   // Staggered setbacks and three wall tones (sage / warm tile / pale blue) break the
@@ -92,7 +92,8 @@ export async function createCity({ scene, station, island, skyline }) {
     // rim marks the edge. (A full pale slab read as one blank sheet in front of
     // the laundromat at eye height.)
     const sx = lot.maxX - lot.minX + 0.08, sz = lot.maxZ - lot.minZ + 0.08, y0 = top - 0.07 - root.position.y, rim = 0.2;
-    frame.boxB(M.concrete, '#b8b1a3', sx, 0.09, sz, cx, y0, cz, { uv: { world: 1.2 }, shadow: false });
+    // Paving sits 5 mm inside the rim so no side face is coplanar with a rim face.
+    frame.boxB(M.concrete, '#b8b1a3', sx - 0.01, 0.09, sz - 0.01, cx, y0, cz, { uv: { world: 1.2 }, shadow: false });
     for (const side of [-1, 1]) {
       frame.boxB(M.plain, '#e6e1d4', sx, 0.095, rim, cx, y0, cz + side * (sz - rim) / 2, { shadow: false });
       frame.boxB(M.plain, '#e6e1d4', rim, 0.095, sz - 2 * rim, cx + side * (sx - rim) / 2, y0, cz, { shadow: false });
@@ -189,7 +190,7 @@ export async function createCity({ scene, station, island, skyline }) {
     H.P.pot(frame, 6.25, supportY, -122.7, ctx.rng('town-laundry-pot'), .8, 'terra');
     const potTriangles = gb.tris - potStart;
     const densityStart = gb.tris;
-    H.P.bins(frame, -.4, supportY, -122.93, ctx.rng('town-laundry-sorting'), 2);
+    townSortingBins(H, frame, -.4, supportY, -122.93, 2);
     // Rear ground-floor housekeeping stays beside the rightmost door; it does
     // not occupy the central steel-stair landing or cross a door opening.
     const rear = Frame.at(gb, shop.center[0], shop.baseY + .14, -131, Math.PI);

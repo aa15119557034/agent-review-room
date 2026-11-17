@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { Frame } from '../upstream/sakuragaoka/src/world/houses/gb.js';
+import { townSortingBins } from './city-apartments.js';
 
 /** Small additions to existing frontage assets. Call once after module builds,
  * before station trim/batching, while the district root is still at identity.
@@ -94,7 +95,7 @@ export function addStreetscape({ ctx, root }) {
   const yardFrame = Frame.at(H.gb, 0, 0, 0);
   const binX = 26.4, binZ = -29.18;
   const yardY = ground(yardFrame, binX, binZ) + 0.012; // existing gravel patch lift
-  H.P.bins(yardFrame, binX, yardY, binZ, ctx.rng('service-sorting-bins'), 2);
+  townSortingBins(H, yardFrame, binX, yardY, binZ, 2);
   const bins = H.gb.flush(group, 'service-sorting-bins');
   const binCollisions = [-0.25, 0.25].map((dx, i) =>
     addBox('service-sorting-bin-' + i, yardFrame, binX + dx, binZ, 0.46, 0.46, yardY, yardY + 0.68));

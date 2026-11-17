@@ -24,8 +24,9 @@ export function buildTownApartment(H, F, spec) {
   const trim = accent, start = gb.tris, clothStart = H.laundry.I.length / 3;
   const garmentStart = H.laundry.count;
   const r = H.ctx.rng(`town-apartment-${floors}-${F.origin.x}-${F.origin.z}`);
-  // 1.5 m per tile: the shared plaster grime reads as wall grain, not metre-wide rings.
-  const uv = { world: 1.5 };
+  // Wall planes use the kit's concrete wash (soft blotches only). The plaster map
+  // carries trowel arcs that read as rings at eye height at any tile size.
+  const uv = { world: 3 }, wallMat = M.concrete;
   const at = name => ({ uv: { rect: A.rects[name], white: A.white } });
   const face = F.sub(0, 0, front), rear = F.sub(0, 0, back, Math.PI);
   const S = { frameColor: PAL.frame[4], sillColor: PAL.frame[4], grilleColor: PAL.frame[4],
@@ -38,15 +39,15 @@ export function buildTownApartment(H, F, spec) {
     const y = fl * fh;
     // Individual storey shells and slabs: no scaled two-storey model.
     F.boxB(M.plain, white, w, .14, d + front, 0, y, (back + front) / 2);
-    for (const side of [-1, 1]) F.boxB(M.plaster, wall, .2, fh, d + front,
+    for (const side of [-1, 1]) F.boxB(wallMat, wall, .2, fh, d + front,
       side * (w / 2 - .1), y, (back + front) / 2, { uv });
-    F.boxB(M.plaster, wall, w, fh, .18, 0, y, back + .09, { uv });
+    F.boxB(wallMat, wall, w, fh, .18, 0, y, back + .09, { uv });
     if (shop && fl === 0) {
       const wing = (w - 6) / 2;
-      for (const side of [-1, 1]) F.boxB(M.plaster, wall, wing, fh, .18,
+      for (const side of [-1, 1]) F.boxB(wallMat, wall, wing, fh, .18,
         side * (3 + wing / 2), y, front - .09, { uv });
-      F.boxB(M.plaster, wall, 6, .49, .18, 0, 2.36, front - .09, { uv });
-    } else F.boxB(M.plaster, wall, w, fh, .18, 0, y, front - .09, { uv });
+      F.boxB(wallMat, wall, 6, .49, .18, 0, 2.36, front - .09, { uv });
+    } else F.boxB(wallMat, wall, w, fh, .18, 0, y, front - .09, { uv });
     F.box(M.plain, trim, w + .08, .13, .14, 0, y + fh - .1, front + .02);
 
     for (let u = 0; u < 3; u++) {
@@ -190,4 +191,20 @@ function buildLaundryShop(H, F, front, accent) {
   F.box(H.signLight, null, .65, .55, .045, -2.65, 2.43, front + 1.065, { shadow: false });
   F.cyl(M.metal, '#8e949b', .2, .025, -2.65, 2.43, front + 1.1, { seg: 12, rx: Math.PI / 2 });
   F.cyl(M.plain, '#43586b', .14, .03, -2.65, 2.43, front + 1.12, { seg: 12, rx: Math.PI / 2 });
+}
+
+/** Sorting bins with the house kit's geometry, labels and footprint (0.42 m body,
+ * 0.46 m lid, 0.5 m pitch) but a restrained palette: the kit's colours read as
+ * toy-bright at 1.6 m beside the muted walls. Darker lids give each bin a top edge. */
+export function townSortingBins(H, F, x, y, z, n = 2) {
+  const { M, A } = H;
+  const labels = ['bin_burn', 'bin_res', 'bin_pla'];
+  const body = ['#62786a', '#55687f', '#7d8288'], lid = ['#4c5f53', '#43536a', '#62676d'];
+  for (let i = 0; i < n; i++) {
+    const bx = x + (i - (n - 1) / 2) * 0.5;
+    F.boxB(M.plain, body[i % 3], 0.42, 0.62, 0.42, bx, y, z);
+    F.boxB(M.plain, lid[i % 3], 0.46, 0.06, 0.46, bx, y + 0.62, z);
+    F.box(M.atlas, '#ffffff', 0.3, 0.12, 0.01, bx, y + 0.45, z + 0.215,
+      { uv: { rect: A.rects[labels[i % 3]], white: A.white } });
+  }
 }
