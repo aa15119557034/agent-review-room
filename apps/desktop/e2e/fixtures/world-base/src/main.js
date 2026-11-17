@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { createIsland, clearVegetationAreas } from './island.js';
-import { applyEveningGlow } from './evening-glow.js';
+import { applyEveningGlow, applyEveningSakura } from './evening-glow.js';
 import { createStation } from './station.js';
 import { createLook } from './look.js';
 import { createSkyline } from './skyline.js';
@@ -108,7 +108,7 @@ async function init() {
   Object.assign(sun.shadow.camera, { left: -150, right: 150, top: 150, bottom: -150, near: 1, far: 400 });
   sun.shadow.bias = -0.0002;
   sun.shadow.normalBias = 0.035;
-  scene.add(sun, sun.target, (evening ? new THREE.HemisphereLight(0xa8b4ec, 0x8a6e5c, 0.95) : new THREE.HemisphereLight(0xcfe0ff, 0xa89c94, 1.05)));
+  scene.add(sun, sun.target, (evening ? new THREE.HemisphereLight(0xb4bce8, 0xa08068, 1.6) : new THREE.HemisphereLight(0xcfe0ff, 0xa89c94, 1.05)));
   stage('正在安放车站、店铺与碰撞体…');
   station = await createStation({
     scene, renderer, camera, offset: island.stationPlacement.position,
@@ -162,7 +162,10 @@ async function init() {
     const view = worldBase.views[Number(event.key) - 1];
     if (view) setView(view.name);
   });
-  if (island.timeOfDay === 'evening') worldBase.eveningGlow = applyEveningGlow(scene, look);
+  if (island.timeOfDay === 'evening') {
+    worldBase.eveningGlow = applyEveningGlow(scene, look);
+    worldBase.eveningSakura = applyEveningSakura(scene);
+  }
   stage('场景已就绪');
   document.querySelector('#loading').hidden = true;
   let last = performance.now(), sampleStart = last, samples = 0;
