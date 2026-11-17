@@ -7,9 +7,72 @@
   "licenseFile": "upstream/sakuragaoka/LICENSE",
   "entries": [
     {
+      "asset": "C15 apartment facade life, laundry signage and service-corner attachments",
+      "reuse": "Existing MIT AC, laundry, meter/nameplate and six-sided rainpipe recipes; existing atlas vent, staff-only sign and drain decals. Thin rails, gutters and fictional laundry labels are fixture adaptations.",
+      "adapters": [
+        "src/city.js",
+        "src/city-apartments.js",
+        "src/streetscape.js"
+      ],
+      "license": "MIT pinned Sakuragaoka source and procedural atlases; no newly downloaded assets or bundled fonts",
+      "textureChange": "Three generated laundry label regions occupy unused space on the existing fifth lit shop-atlas page. Pixels are updated; texture objects, page count and allocated pixel capacity do not increase. Service details reuse existing pixels.",
+      "geometryBudget": {
+        "hiddenTrianglesRemoved": 516,
+        "facadeTrianglesAdded": 896,
+        "townTriangles": 29933,
+        "serviceTrianglesAdded": 18,
+        "streetscapeTriangles": 2442
+      },
+      "sources": [
+        {
+          "path": "src/world/houses/props.js",
+          "sha256": "9dec02c33081cfefa6d302dd5d91a3f1b05ff618c0dcf2c3000d198df127f4f2"
+        },
+        {
+          "path": "src/world/houses/laundry.js",
+          "sha256": "528293a90362a60d763b4103fa873b596d34f3e1aa58556c79a2396dd7883f56"
+        },
+        {
+          "path": "src/world/houses/gb.js",
+          "sha256": "1eff740f7c981529cfbdf4dd070309905d147cf4d9897a5bffcda5040ea2c1c5"
+        },
+        {
+          "path": "src/world/houses/lot.js",
+          "sha256": "53098c01453e67db3e21d410212c7ab7a332675abe79ce1b94e51c531af04327"
+        },
+        {
+          "path": "src/world/houses/house.js",
+          "sha256": "9d1713efe5670432938cfa05d96c6ef6acc75be6f3586674df62d9af77b91d4b"
+        },
+        {
+          "path": "src/world/houses/tex.js",
+          "sha256": "8d654174fa705a74554b5dccfa12638dd55430e662407910a88a434eb4a71b85"
+        },
+        {
+          "path": "src/world/shopsA/common.js",
+          "sha256": "552b5ee6f6ab4ffb5f0c1703e06c9cea4d4e624ee5528114c6fad486511b8306"
+        },
+        {
+          "path": "src/core/textures.js",
+          "sha256": "a4a4ff1e887eb6098a05b978c69db8e8d2f6947b363d1a3506f11ef30df0a390"
+        },
+        {
+          "path": "src/world/street/mesh.js",
+          "sha256": "cb2df575e36094f3a7c25833cc348c39359894ea604b89b633015734caa46c6f"
+        },
+        {
+          "path": "src/world/street/textures.js",
+          "sha256": "0844b9903cc29d359ec6361a9cba4be1791963c0eb9740a8848ca24891c4f598"
+        }
+      ]
+    },
+    {
       "asset": "Daily-life density in laundry frontage, rear corridors, service corner and street",
       "reuse": "Existing MIT umbrella stand, labelled sorting bins, cleaning tools, house-atlas parcels and utility meter; original high-detail crate remains in place",
-      "adapters": ["src/city.js", "src/streetscape.js"],
+      "adapters": [
+        "src/city.js",
+        "src/streetscape.js"
+      ],
       "license": "MIT (pinned Sakuragaoka source and procedurally generated atlas), not a new CC0 download",
       "sources": [
         {

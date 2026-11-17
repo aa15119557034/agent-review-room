@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import { Frame } from '../upstream/sakuragaoka/src/world/houses/gb.js';
+import { MeshBuilder } from '../upstream/sakuragaoka/src/world/street/mesh.js';
+import { UTIL, uvOf } from '../upstream/sakuragaoka/src/world/street/textures.js';
 import { townSortingBins } from './city-apartments.js';
 
 /** Small additions to existing frontage assets. Call once after module builds,
@@ -121,6 +123,63 @@ export function addStreetscape({ ctx, root }) {
   instances.push({ id: 'service-dustpan', kind: 'dustpan', localPosition: [panX, panY, panZ],
     triangles: 24, meshes: panMeshes, footprint: panBase, handle: panHandle });
 
+  // Thin details on the shed's east return, inside its existing collision
+  // envelope. Keep the south sliding doors, handle and original label clear.
+  const ventFrame = yardFrame.sub(25.406, 1.65, -29.65, Math.PI / 2);
+  ventFrame.box(H.M.atlas, '#ffffff', .32, .12, .012, 0, 0, 0,
+    { uv: { rect: H.A.rects.vent, white: H.A.white } });
+  const ventMeshes = H.gb.flush(group, 'shed-east-vent');
+  instances.push({ id: 'shed-east-vent', kind: 'wallVent', localPosition: [25.406, 1.65, -29.65],
+    triangles: 12, atlasRegion: 'vent', meshes: ventMeshes,
+    footprint: { type: 'decorative', x: 25.406, z: -29.65, width: .012, depth: .32,
+      rotationY: 0, y0: 1.59, y1: 1.71 } });
+
+  // Reuse the already-built station staff-only sign's geometry, UVs and
+  // material; do not rebuild its atlas or dispose these borrowed resources.
+  const staffSigns = [];
+  root.traverse(mesh => {
+    if (mesh.isMesh && mesh.material.map === ctx.tex.cache.get('st-atlas-misc') &&
+        mesh.position.distanceToSquared(new THREE.Vector3(4.35, 2.5, -35.47)) < 1e-10)
+      staffSigns.push(mesh);
+  });
+  if (staffSigns.length !== 1) throw new Error('Expected one original station staff-only sign');
+  const staffSign = new THREE.Mesh(staffSigns[0].geometry, staffSigns[0].material);
+  staffSign.name = 'shed-east-staff-sticker';
+  staffSign.position.set(25.402, 1.25, -29.72);
+  staffSign.rotation.y = Math.PI / 2;
+  staffSign.scale.setScalar(.22 / .42);
+  staffSign.receiveShadow = staffSigns[0].receiveShadow;
+  staffSign.renderOrder = staffSigns[0].renderOrder;
+  ctx.noOutline(staffSign);
+  group.add(staffSign);
+  instances.push({ id: staffSign.name, kind: 'staffSticker', localPosition: staffSign.position.toArray(),
+    triangles: 2, atlasRegion: 'misc/staffOnly', meshes: [staffSign],
+    footprint: { type: 'decorative', x: 25.402, z: -29.72, width: 0, depth: .22,
+      rotationY: 0, y0: 1.25 - .08 * .22 / .42, y1: 1.25 + .08 * .22 / .42 } });
+
+  // Two existing utility-atlas covers beside the toilet plinth. Their 5mm
+  // lift over the gravel is a surface detail, not a new hole or walk blocker.
+  const utilityDecals = root.getObjectByName('street-util-decals');
+  const drainBuilder = new MeshBuilder();
+  const drainY = ground(yardFrame, 21.98, -28.35) + .017;
+  for (const z0 of [-28.65, -28.35]) {
+    const ids = [[21.87, z0, 0, 0], [22.09, z0, 1, 0],
+      [22.09, z0 + .3, 1, 1], [21.87, z0 + .3, 0, 1]].map(([dx, dz, u, v]) =>
+      drainBuilder.vert(dx, drainY, dz, ...uvOf(UTIL.drain, u, v)));
+    drainBuilder.quad(...ids);
+  }
+  const drain = drainBuilder.mesh(utilityDecals.material,
+    { name: 'toilet-east-short-covered-drain', renderOrder: utilityDecals.renderOrder });
+  ctx.noOutline(drain);
+  group.add(drain);
+  instances.push({ id: drain.name, kind: 'coveredDrain', localPosition: [21.98, drainY, -28.35],
+    triangles: 4, atlasRegion: 'st-util/drain', meshes: [drain],
+    footprint: { type: 'decorative', x: 21.98, z: -28.35, width: .22, depth: .6,
+      rotationY: 0, y0: drainY, y1: drainY } });
+  // Vent/cover geometries join the station's normal batch/dispose ownership.
+  // All three materials and the sticker geometry are borrowed from the same
+  // station root, whose teardown deduplicates resources; no separate disposer.
+
   // E1 and W1 already have umbrella stands. Use the unwindowed south return
   // of E2 instead of filling another doorway: the original meter is deeper
   // along this wall at lot z=-3.2, while this front submeter reads from 01.
@@ -140,6 +199,7 @@ export function addStreetscape({ ctx, root }) {
     (mesh.geometry.index?.count ?? mesh.geometry.attributes.position.count) / 3 * (mesh.isInstancedMesh ? mesh.count : 1); });
   return { root: group, instances, collisions, addedColliders: collisions.length,
     stats: { triangles, densityTriangles: 132, densityObjects: 4, densityColliders: 6,
+      serviceDetailTriangles: 18, serviceDetailObjects: 3, serviceDetailColliders: 0,
       newTexturePixels: ctx.tex.pixels - texturePixelsBefore, coordinates: 'station-local; apply station.toWorld after placement' },
     views: { streetDetail: { position: [4.4, ctx.physics.groundHeight(4.4, 24) + 1.6, 24], target: meterPosition.toArray() } } };
 

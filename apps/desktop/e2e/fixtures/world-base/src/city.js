@@ -16,6 +16,7 @@ const LOW_HOUSES = [{ x: -37, z: -126.5, seed: 0 }, { x: -50, z: -127, seed: 1 }
 const FRONT_ROAD = { name: 'town-front-lane', minX: -56, maxX: 37, minZ: -118.5, maxZ: -115.8 };
 const EAST_ROAD = { name: 'town-levee-lane', minX: 32, maxX: 37, minZ: -115.8, maxZ: -101 };
 const overlaps = (a, b) => a.minX < b.maxX && a.maxX > b.minX && a.minZ < b.maxZ && a.maxZ > b.minZ;
+const laundryAtlasRegions = new WeakMap();
 
 /** Original station kit, local coordinates. Own emitted geometry/material clones;
  * borrow every atlas, gradient and source prototype. Dispose before station. */
@@ -105,13 +106,15 @@ export async function createCity({ scene, station, island, skyline }) {
     // exposed side reads as a finished retaining edge rather than a grey slab.
     const cx = (lot.minX + lot.maxX) / 2, cz = (lot.minZ + lot.maxZ) / 2;
     frame.boxB(M.concrete, '#cdc6b6', lot.maxX - lot.minX, top - bottom, lot.maxZ - lot.minZ,
-      cx, bottom - root.position.y, cz, { uv: { world: 2 }, shadow: false });
+      cx, bottom - root.position.y, cz, { uv: { world: 2 }, shadow: false, skip: 'td' });
     // The walkable top is textured paving in a mid warm grey; only a narrow pale
     // rim marks the edge. (A full pale slab read as one blank sheet in front of
     // the laundromat at eye height.)
     const sx = lot.maxX - lot.minX + 0.08, sz = lot.maxZ - lot.minZ + 0.08, y0 = top - 0.07 - root.position.y, rim = 0.2;
     // Paving sits 5 mm inside the rim so no side face is coplanar with a rim face.
-    frame.boxB(M.concrete, '#b8b1a3', sx - 0.01, 0.09, sz - 0.01, cx, y0, cz, { uv: { world: 1.2 }, shadow: false });
+    // The foundation top is inside the paving; its bottom is buried. The paving
+    // underside is covered by the foundation and, at the overhang, the rim.
+    frame.boxB(M.concrete, '#b8b1a3', sx - 0.01, 0.09, sz - 0.01, cx, y0, cz, { uv: { world: 1.2 }, shadow: false, skip: 'd' });
     for (const side of [-1, 1]) {
       frame.boxB(M.plain, '#e6e1d4', sx, 0.095, rim, cx, y0, cz + side * (sz - rim) / 2, { shadow: false });
       frame.boxB(M.plain, '#e6e1d4', rim, 0.095, sz - 2 * rim, cx + side * (sx - rim) / 2, y0, cz, { shadow: false });
@@ -123,6 +126,11 @@ export async function createCity({ scene, station, island, skyline }) {
   const matrix = station.root.matrixWorld.clone(), inverse = matrix.clone().invert();
   const visibleGround = visibleBankHeight(station, island, matrix, inverse, heightAt);
   try {
+    const shops = station.ctx.services.shopsA.buildContext;
+    const signs = getLaundrySigns(shops);
+    H.laundrySigns = Object.fromEntries(Object.entries(signs.regions).map(([key, reg]) => [key, { ...reg, m: clone(reg.m) }]));
+    stats.laundrySignAtlas = { ...signs.audit, reusedRegions: signs.reused, newTextures: 0,
+      text: ['さくら コインランドリー', '洗濯・乾燥', 'セルフサービス'], owner: 'station', pixelsUpdated: !signs.reused };
     for (const site of SITES) {
       const shape = townApartmentBounds(site), b = shape.groundSupportBounds;
       const lot = { minX: site.x + b.minX - 0.15, maxX: site.x + b.maxX + 0.15,
@@ -189,7 +197,10 @@ export async function createCity({ scene, station, island, skyline }) {
     crateGroup.add(crate); root.add(crateGroup);
     const signRoot = new THREE.Group(); signRoot.name = 'city-laundry-a-frame'; root.add(signRoot);
     const C = station.ctx.services.shopsA.buildContext;
-    C.P.aFrame({ k: station.ctx.kit(signRoot) }, 4.55, supportY, -122.35, .35, null, null, { w: .45, h: .68 });
+    const aFrame = C.P.aFrame({ k: station.ctx.kit(signRoot) }, 4.55, supportY, -122.35, .35, H.laundrySigns.aframe, null, { w: .45, h: .68 });
+    // This new label plane is not a shared kit primitive. Own it directly rather
+    // than cloning and losing the original allocation.
+    aFrame.traverse(mesh => { if (mesh.isMesh && mesh.material === H.laundrySigns.aframe.m) geometries.add(mesh.geometry); });
     // Keep the central entrance and the existing crate/pot clear. The rack sits
     // against the right pane, while labelled sorting bins flank the left pane.
     const umbrellas = C.P.umbrellaStand({ k: station.ctx.kit(signRoot) }, 3.65, supportY, -123.0, 0,
@@ -200,9 +211,12 @@ export async function createCity({ scene, station, island, skyline }) {
     const propGeometry = new Map();
     signRoot.traverse(mesh => {
       if (!mesh.isMesh) return;
-      if (!propGeometry.has(mesh.geometry)) propGeometry.set(mesh.geometry, mesh.geometry.clone());
-      mesh.geometry = propGeometry.get(mesh.geometry); geometries.add(mesh.geometry);
-      mesh.material = Array.isArray(mesh.material) ? mesh.material.map(clone) : clone(mesh.material);
+      if (!geometries.has(mesh.geometry)) {
+        if (!propGeometry.has(mesh.geometry)) propGeometry.set(mesh.geometry, mesh.geometry.clone());
+        mesh.geometry = propGeometry.get(mesh.geometry); geometries.add(mesh.geometry);
+      }
+      const ownMaterial = material => ownedMaterials.has(material) ? material : clone(material);
+      mesh.material = Array.isArray(mesh.material) ? mesh.material.map(ownMaterial) : ownMaterial(mesh.material);
     });
     const potStart = gb.tris;
     H.P.pot(frame, 6.25, supportY, -122.7, ctx.rng('town-laundry-pot'), .8, 'terra');
@@ -233,10 +247,18 @@ export async function createCity({ scene, station, island, skyline }) {
     density.totalTriangles = density.gbTriangles + density.umbrellaTriangles;
     stats.densityProps = density;
     stats.texturedProps = { crate: { position: crateGroup.position.toArray(), triangles: crateSource.stats.crateTriangles },
-      sign: { position: [4.55, supportY, -122.35], rotationY: .35, size: [.45, .68], blank: true },
+      sign: { position: [4.55, supportY, -122.35], rotationY: .35, size: [.45, .68], blank: false, text: 'さくら コインランドリー / 洗濯・乾燥 / セルフサービス' },
       pot: { position: [6.25, supportY, -122.7], triangles: potTriangles },
       view: { position: [8, supportY + 1.6, -122.1], target: [5.15, supportY + .36, -122.7] },
       walkable: false, borrowedAssetTextures: borrowedAssetTextures.size };
+    const facades = placements.filter(p => p.type === 'apartment').map(p => ({ name: p.name,
+      origin: [p.center[0], p.baseY, p.center[1]], ...p.model.facade }));
+    stats.facadeLife = { buildings: facades, signTriangles: 20,
+      signs: { horizontal: { position: [2.45, shop.baseY + 2.43, -122.1745], size: [4.56, .22] },
+        glass: [-1.8, 1.8].map(x => ({ position: [2 + x, shop.baseY + 1.18, -123.216], size: [.82, .30] })),
+        aFrame: stats.texturedProps.sign },
+      totalTriangles: facades.reduce((n, f) => n + f.totalTriangles, 20), walkable: false };
+    if (stats.facadeLife.totalTriangles > 900) throw new Error('Facade pass exceeds its 900-triangle allocation');
     gb.flush(root, 'town-edge-kit');
     const laundry = H.laundry.build();
     if (laundry) { ownedMaterials.add(laundry.material); ownedMaterials.add(laundry.customDepthMaterial); }
@@ -267,6 +289,36 @@ export async function createCity({ scene, station, island, skyline }) {
   } catch (error) { dispose(); throw error; }
 }
 
+function getLaundrySigns(C) {
+  const atlas = C.A.lit, cached = laundryAtlasRegions.get(atlas);
+  if (cached) return { ...cached, reused: true };
+  const requests = [['name', 512, 96], ['function', 256, 96], ['aframe', 192, 192]];
+  const page = atlas.pages.at(-1), before = { pages: atlas.pages.length, x: page.x, y: page.y, rowH: page.rowH };
+  let { x, y, rowH } = page;
+  // Same pad/row rule as the pinned Atlas.region. Reject before painting if any
+  // requested label would allocate another page; the station owns this texture.
+  for (const [, w, h] of requests) {
+    if (x + w + 8 > atlas.size) { x = 0; y += rowH; rowH = 0; }
+    if (y + h + 8 > atlas.size) throw new Error('Existing shop atlas has no room for the laundry labels');
+    x += w + 8; rowH = Math.max(rowH, h + 8);
+  }
+  const regions = {};
+  for (const [key, w, h] of requests) regions[key] = atlas.region(w, h, (g, W, H) => {
+    g.fillStyle = '#f0eee3'; g.fillRect(0, 0, W, H);
+    g.fillStyle = '#456969'; g.fillRect(0, 0, W, 5); g.fillRect(0, H - 5, W, 5);
+    const text = (s, yy, size) => C.U.text(g, s, W / 2, yy, size, C.F.sans, '#344e50', { maxW: W - 20, weight: 700 });
+    if (key === 'name') text('さくら コインランドリー', H / 2, 42);
+    else if (key === 'function') { text('洗濯・乾燥', 30, 30); text('セルフサービス', 69, 26); }
+    else { text('さくら', 33, 28); text('コインランドリー', 72, 25); text('洗濯・乾燥', 121, 27); text('セルフサービス', 157, 21); }
+  }, { bg: '#f0eee3' });
+  page.t.needsUpdate = true;
+  const result = { regions, audit: { page: before.pages - 1, before,
+    after: { pages: atlas.pages.length, x: page.x, y: page.y, rowH: page.rowH },
+    regions: requests.map(([key, w, h]) => ({ key, w, h, uv: [regions[key].u0, regions[key].v0, regions[key].u1, regions[key].v1] })) } };
+  laundryAtlasRegions.set(atlas, result);
+  return { ...result, reused: false };
+}
+
 function addConnections(H, frame, placements, ground, worldY) {
   const clearAreas = [], report = { roads: [], stairs: [], walkable: false };
   for (const road of [FRONT_ROAD, EAST_ROAD]) {
@@ -284,6 +336,7 @@ function addConnections(H, frame, placements, ground, worldY) {
     const low = Math.max(...[-0.5, 0, 0.5].map(side => ground(x + side * width, lowZ))) + 0.065;
     const drop = top - low, count = Math.ceil(drop / 0.18), run = Math.abs(lowZ - highZ);
     if (!(drop > 0 && run / count >= 0.25)) throw new Error('Town entrance cannot fit stairs: ' + name);
+    const uphillFace = highZ < lowZ ? 'b' : 'f';
     let minClearance = Infinity;
     for (let k = 0; k < count; k++) {
       const za = highZ + (lowZ - highZ) * k / count, zb = highZ + (lowZ - highZ) * (k + 1) / count, level = top - drop * k / count;
@@ -295,7 +348,10 @@ function addConnections(H, frame, placements, ground, worldY) {
       if (level < max + 0.005) throw new Error('Town stair intersects visible terrain: ' + name);
       minClearance = Math.min(minClearance, level - max);
       const bottom = min - 0.05;
-      frame.boxB(H.M.concrete, '#c5c1b7', width, level - bottom, Math.abs(zb - za), x, bottom, (za + zb) / 2, { uv: { world: 2 }, shadow: false });
+      // Bottoms are buried. Each later uphill face is covered by the preceding
+      // taller step above ground; keep the first face and every downhill riser.
+      frame.boxB(H.M.concrete, '#c5c1b7', width, level - bottom, Math.abs(zb - za), x, bottom, (za + zb) / 2,
+        { uv: { world: 2 }, shadow: false, skip: 'd' + (k ? uphillFace : '') });
     }
     clearAreas.push({ name, minX: x - width / 2, maxX: x + width / 2, minZ: Math.min(highZ, lowZ), maxZ: Math.max(highZ, lowZ) });
     report.stairs.push({ name, x, width, highZ, lowZ, steps: count, rise: drop / count, tread: run / count, top, bottom: low, minClearance });
