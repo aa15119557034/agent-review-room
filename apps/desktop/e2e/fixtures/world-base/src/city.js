@@ -63,6 +63,11 @@ export async function createCity({ scene, station, island, skyline }) {
   shopGlass.uniforms.uStreaks.value = 0;
   ownedMaterials.add(shopGlass);
   H.shopGlass = shopGlass;
+  // Neutral light-box face for the laundromat sign (M.lamp reads orange after the grade).
+  const signLight = M.lamp.clone();
+  signLight.color.set('#f3f1e8').multiplyScalar(1.15);
+  ownedMaterials.add(signLight);
+  H.signLight = signLight;
   const dispose = () => {
     if (disposed) return; disposed = true; root.removeFromParent();
     root.traverse(object => { if (object.isMesh) { geometries.add(object.geometry); if (object.isInstancedMesh) object.dispose(); if (object.customDepthMaterial) ownedMaterials.add(object.customDepthMaterial); } });

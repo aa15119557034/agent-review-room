@@ -27,14 +27,14 @@ vec3 wbNormal(vec2 uv, vec3 P) {
   vec3 n = normalize(cross(dx, dy));
   return dot(n, P) > 0.0 ? -n : n;
 }
-// Crease AO. A sample only occludes when the two surfaces face each other: it
-// must rise above the centre's plane AND the centre must lie in front of the
-// sample's own plane. A wall/ground or wall/eave corner passes both tests; a
-// mailbox, railing or hedge standing in front of a wall fails the second (its
-// front face points at the camera, away from the wall behind), so depth steps
-// no longer leave rings on the far side. Both factors fall to zero as a sample
-// slides onto the far face through the corner, so the result has no per-sample
-// on/off steps (the old pair test banded at every sample radius).
+// Crease AO. A sample occludes by the receiver cosine (how far it rises above the
+// centre's plane), so a square corner is darkest right at the crease and fades
+// out monotonically with distance. The sample's own plane is only a gate: the
+// centre must not lie behind it. A mailbox, railing or hedge standing in front
+// of a wall shows the camera its front face, which points away from the wall
+// behind, so depth steps no longer leave rings on the far side. (Round 9
+// weighted by both cosines; their product is zero at the crease itself and
+// peaks at a distance set by each sample radius, which drew one band per radius.)
 float wbAO(vec2 uv, float d0) {
   if (d0 > 90.0 || d0 >= uFar*0.9) return 1.0;
   const float R = 0.8;
@@ -52,14 +52,12 @@ float wbAO(vec2 uv, float d0) {
       vec3 vn = v/max(L, 1e-4);
       float up = dot(n, vn) - 0.08;
       if (up <= 0.0 || L > 1.6*R) continue;
-      float back = dot(wbNormal(s, S), -vn) - 0.08;
-      if (back <= 0.0) continue;
-      occ += up*back*(1.0 - smoothstep(0.6*R, 1.6*R, L));
+      float facing = smoothstep(-0.3, -0.05, dot(wbNormal(s, S), -vn));
+      occ += up*facing*(1.0 - smoothstep(0.6*R, 1.6*R, L));
     }
   }
-  // A square corner gives up*back ~0.35 on the half of the samples that land on
-  // the other face; scale so a square corner reads as fully occluded before uAO.
-  return 1.0 - min(1.0, occ/16.0*6.0)*(1.0 - smoothstep(50.0, 90.0, d0));
+  // At a square corner about half the samples land on the other face with up ~0.9.
+  return 1.0 - min(1.0, occ/16.0*2.0)*(1.0 - smoothstep(50.0, 90.0, d0));
 }
 float wbEdge(vec2 uv) {
   vec2 px = max(1.0, uRes.y/1100.0)/uRes;

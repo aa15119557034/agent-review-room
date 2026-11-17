@@ -54,11 +54,14 @@ export function buildTownApartment(H, F, spec) {
         if (fl === 0 && u === 1) {
           face.boxB(M.plain, steel, 1.14, 2.18, .08, 0, .14, .04);
           face.boxB(M.atlas, '#ffffff', 1.02, 2.06, .025, 0, .17, .095, at('door_steel'));
+          face.box(M.lamp, null, .34, .07, .08, 0, 2.48, .1, { shadow: false });
         } else buildWindow(H, face, x, y + .3, 1.75, 1.92, 'std', S, r, 0, 'balc', fl);
       }
       // Generic steel doors deliberately have no invented upper-floor room labels.
       rear.boxB(M.plain, steel, 1.03, 2.12, .07, x, y + .14, .035);
       rear.boxB(M.atlas, '#ffffff', .92, 2.02, .025, x, y + .18, .085, at('door_steel'));
+      // Corridor door lamps stay on at noon (ZZZ refs: small warm lights in the shade).
+      rear.box(M.lamp, null, .24, .07, .07, x + .72, y + 2.3, .1, { shadow: false });
       if (fl > 0) {
         F.boxB(M.plain, white, unit - .04, 1.05, .13, x, y + .14, -.185);
         F.box(M.plain, trim, unit - .04, .055, .16, x, y + 1.215, -.185);
@@ -179,7 +182,8 @@ function buildLaundryShop(H, F, front, accent) {
   F.box(M.plain, accent, 6.25, .11, 1.05, 0, 2.52, front + .525);
   F.box(M.plain, accent, 6.25, .23, .07, 0, 2.43, front + 1.015);
   // Washer-symbol sign (geometry); apartment name itself uses existing apt_sign.
-  F.box(M.plain, '#e9e9e2', .65, .55, .045, -2.65, 2.43, front + 1.065);
+  // Lit sign box: the one bright accent on the shaded street face.
+  F.box(H.signLight, null, .65, .55, .045, -2.65, 2.43, front + 1.065, { shadow: false });
   F.cyl(M.metal, '#8e949b', .2, .025, -2.65, 2.43, front + 1.1, { seg: 12, rx: Math.PI / 2 });
   F.cyl(M.plain, '#43586b', .14, .03, -2.65, 2.43, front + 1.12, { seg: 12, rx: Math.PI / 2 });
 }
