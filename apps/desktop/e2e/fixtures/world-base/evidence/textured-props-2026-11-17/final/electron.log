@@ -1,0 +1,28 @@
+
+[2026-11-17T07:17:49.906Z] bootstrap
+[2026-11-17T07:17:49.984Z] app-ready
+[2026-11-17T07:17:49.996Z] server-listening
+[2026-11-17T07:17:49.997Z] creating-window
+[2026-11-17T07:17:50.109Z] window-created
+[2026-11-17T07:17:50.110Z] initializing-renderer
+[2026-11-17T07:17:50.153Z] debugger-attached
+[2026-11-17T07:17:50.154Z] cdp:Runtime.enable
+[2026-11-17T07:17:50.157Z] cdp:Network.enable
+[2026-11-17T07:17:50.165Z] cdp:Page.enable
+[2026-11-17T07:17:50.174Z] cdp:Page.addScriptToEvaluateOnNewDocument
+[2026-11-17T07:17:50.183Z] navigating
+[2026-11-17T07:17:50.623Z] waiting-for-ready-frame
+[2026-11-17T07:18:25.094Z] scene-ready
+[2026-11-17T07:18:25.110Z] validating-station
+[2026-11-17T07:18:30.211Z] measuring
+[2026-11-17T07:18:45.351Z] capturing
+[2026-11-17T07:18:45.671Z] capturing-view:station-street
+[2026-11-17T07:18:50.737Z] capturing-view:station-port
+[2026-11-17T07:18:55.673Z] capturing-view:island-aerial
+[2026-11-17T07:19:00.709Z] capturing-view:shop-interior
+[2026-11-17T07:19:05.657Z] capturing-streetscape
+[2026-11-17T07:19:15.544Z] validating-look-controls
+[2026-11-17T07:19:20.000Z] validating-real-walking
+[2026-11-17T07:19:27.858Z] capturing-town-details
+[2026-11-17T07:19:31.402Z] complete
+{"ok":true,"performance":{"method":"RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included","unsupportedDrawPaths":["ANGLE_instanced_arrays","WEBGL_multi_draw"],"frameCount":982,"sampleMs":15123.099999999999,"fps":64.93377680502014,"p95FrameMs":15.5,"drawCalls":{"mean":1549.061099796334,"min":1547,"max":1552},"triangles":{"mean":8311617.490835031,"min":8311492,"max":8311812},"framesWithoutDraws":0,"samplesFile":"frame-samples.json"},"output":"D:\\codex\\2026-11-16\\world-implementation\\world-base\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\gpu-props-c8-framing-fixed"}

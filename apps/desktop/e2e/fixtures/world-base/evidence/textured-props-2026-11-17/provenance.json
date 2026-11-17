@@ -1281,6 +1281,12 @@
       "bytes": 1661,
       "sha256": "dede6d99267a06bf161c896eef7e876cd3b6f48a246a0c45d9f202b5ae2b2d7e",
       "source": "Task execution transcript"
+    },
+    {
+      "file": ".gitattributes",
+      "bytes": 85,
+      "sha256": "02a1583405f87bf7dd45aba48083c0bce942d97fc614e662b45250a667668a10",
+      "source": "Scoped archive rule preserving original captured log line endings; no global Git change"
     }
   ],
   "countExcludesThisInventory": true
