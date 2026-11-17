@@ -1,0 +1,65 @@
+{
+  "head": "0184c79d94094c7d76378302592572bf367be6c7",
+  "kind": "Static source review only",
+  "findings": [
+    {
+      "topic": "terrain/transition inheritance",
+      "result": "Both original ground shaders receive the same TOWN chunk/three insert operations and uniform objects inside applyIsland. Pinned insert checks throw if the expected shader site disappears."
+    },
+    {
+      "topic": "groundblend inheritance",
+      "result": "main calls applyIsland before createStation; groundMaterial is island.transition.material. blendStationGround copies its updated fragment and shallow-copies uniform records. uStationCutout remains independently zero. Existing stationGrass semantic mask, EqualDepth, derivative-before-clipping ordering and transparent edgeAlpha are unchanged."
+    },
+    {
+      "topic": "non-meadow surfaces",
+      "result": "Ground injection changes meadow floor tint and its flower-color wash only, before unchanged scree/beach/pebble/rock/town-mask compositing. No procedural grass/flower mesh code is inserted in terrain fragment. Core station pavement guard remains unchanged. Actual RGB outside grass-dominant surfaces still depends on original material mixture, not a binary biome exclusion."
+    },
+    {
+      "topic": "meadow ownership",
+      "result": "Pinned upstream Shell constructor stores this.meadow. Wrapper reads this.meadow.wbTownUniforms per material creation and returns original material if absent; it no longer closes over the first look uniform bundle. Prototype installed once via wbTownMaterial. Runtime/other agent owns cross-look CPU validation."
+    }
+  ],
+  "noStaticBlockerFound": true,
+  "sourceHashes": [
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/src/look.js",
+      "bytes": 15717,
+      "sha256": "25b0d55bf2b071c8645142b5307c043d9ff0556fad2c9238b9c0538341500c7f"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/src/main.js",
+      "bytes": 9920,
+      "sha256": "22e3b75c5a0fe3c325653cbfb570ced80192f47ee75305b68f5eb4858f51a780"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/src/transition.js",
+      "bytes": 9254,
+      "sha256": "e40398c9546a96a1639148fc12ad7397c0badb9bd50f04458de456401b71f6cd"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/src/island.js",
+      "bytes": 12736,
+      "sha256": "7d069b2261c81fb3defeb4618ddbc1fe32fc2a13705773510c4bfc9e2cde7df2"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/src/station.js",
+      "bytes": 9349,
+      "sha256": "35adf91d771c16410245830181f11cbc17b6b91eb869e7f1e8070a32b6e7d1dd"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/upstream/petalwake/src/world/terrain.js",
+      "bytes": 33332,
+      "sha256": "e3a4db83d503b2071a6ff03e10214cc0e12bf6fe17ab202f7643b6687a7ea367"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/upstream/petalwake/src/world/meadow.js",
+      "bytes": 26821,
+      "sha256": "4f9c6f0b6dedbd8209d8f2cfe8445407cb13fac883ddbfadf7e1d46f4409c52b"
+    }
+  ],
+  "limitations": [
+    "No new shader compilation, GPU readback, full CPU scene rebuild or image assessment here.",
+    "No assertion that visual seam is fixed until root real GPU check.",
+    "Repeated applyIsland on the same already-patched island was not tested; normal current main adopts each island once."
+  ]
+}

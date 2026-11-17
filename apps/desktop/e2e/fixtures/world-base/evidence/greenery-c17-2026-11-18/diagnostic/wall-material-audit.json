@@ -1,0 +1,210 @@
+{
+  "method": "Read actual rendered city-local material, renderer program map and GL shader source/link status after the 21 fixed captures. No forced compile or shader/material mutation. Canvas reads the existing map image; CPU EOTF means are not filtered GPU sample values.",
+  "material": {
+    "uuid": "ca8b0eb9-ec0b-43c9-9de6-eb03cb97b42b",
+    "name": "",
+    "type": "MeshToonMaterial",
+    "colorRGB": [
+      1,
+      1,
+      1
+    ],
+    "emissiveRGB": [
+      0,
+      0,
+      0
+    ],
+    "emissiveIntensity": 1,
+    "toneMapped": true,
+    "vertexColors": true,
+    "opacity": 1,
+    "transparent": false,
+    "side": 0,
+    "depthWrite": true,
+    "fog": true,
+    "map": {
+      "uuid": "bfecffda-fbf6-4032-8728-c877a34f27c7",
+      "name": "",
+      "type": 1009,
+      "colorSpace": "srgb",
+      "width": 256,
+      "height": 256,
+      "repeat": [
+        1,
+        1
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "matrix": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      "wrapS": 1000,
+      "wrapT": 1000,
+      "channel": 0
+    },
+    "normalMap": null,
+    "roughnessMap": null,
+    "normalScale": [
+      1,
+      1
+    ],
+    "shaderUniforms": null,
+    "clipPlanes": 0,
+    "clipIntersection": false,
+    "clipShadows": false,
+    "softClip": null
+  },
+  "customProgramCacheKey": "paint|town-wall-wash",
+  "hookSource": "(shader, renderer) => {\n    concreteCompile?.call(wallWash, shader, renderer);\n    if (!shader.fragmentShader.includes('#include <map_fragment>')) throw new Error('Wall wash: map chunk missing');\n    shader.fragmentShader = shader.fragmentShader.replace('#include <map_fragment>', `#ifdef USE_MAP\n      vec4 sampledDiffuseColor = texture2D( map, vMapUv );\n      sampledDiffuseColor.rgb = mix( vec3( 0.93 ), sampledDiffuseColor.rgb, 0.3 );\n      diffuseColor *= sampledDiffuseColor;\n    #endif`);\n  }",
+  "programs": [
+    {
+      "id": 70,
+      "cacheKey": "toon,TOON,,highp,srgb-linear,false,false,,,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,0,1,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,10486784,8520706,srgb,paint|town-wall-wash",
+      "linked": true,
+      "vertexCompiled": true,
+      "fragmentCompiled": true,
+      "programLog": "",
+      "vertexShaderSha256": "789a2aeff00b3196715f8550e1102bed57f15e53da8b7058c70870b1a5a7e96c",
+      "fragmentShaderSha256": "20161fadfe97cd73f1c38e3cb975eafd8c98540e885ea98f7527551990b92c06",
+      "containsWallMix": true,
+      "mapUniform": 1
+    }
+  ],
+  "meshCount": 1,
+  "triangles": 402,
+  "independentFromStationConcrete": true,
+  "stationRootUsesWallMaterial": false,
+  "sameTextureAsStationConcrete": true,
+  "sameMapOtherCityMaterials": [
+    {
+      "material": {
+        "uuid": "4e1a5dd9-8d4e-4fe5-a476-6913e0b9f1fe",
+        "name": "",
+        "type": "MeshToonMaterial",
+        "colorRGB": [
+          1,
+          1,
+          1
+        ],
+        "emissiveRGB": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "toneMapped": true,
+        "vertexColors": true,
+        "opacity": 1,
+        "transparent": false,
+        "side": 0,
+        "depthWrite": true,
+        "fog": true,
+        "map": {
+          "uuid": "bfecffda-fbf6-4032-8728-c877a34f27c7",
+          "name": "",
+          "type": 1009,
+          "colorSpace": "srgb",
+          "width": 256,
+          "height": 256,
+          "repeat": [
+            1,
+            1
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "matrix": [
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          "wrapS": 1000,
+          "wrapT": 1000,
+          "channel": 0
+        },
+        "normalMap": null,
+        "roughnessMap": null,
+        "normalScale": [
+          1,
+          1
+        ],
+        "shaderUniforms": null,
+        "clipPlanes": 0,
+        "clipIntersection": false,
+        "clipShadows": false,
+        "softClip": null
+      },
+      "key": "paint"
+    }
+  ],
+  "texture": {
+    "uuid": "bfecffda-fbf6-4032-8728-c877a34f27c7",
+    "name": "",
+    "type": 1009,
+    "colorSpace": "srgb",
+    "width": 256,
+    "height": 256,
+    "repeat": [
+      1,
+      1
+    ],
+    "offset": [
+      0,
+      0
+    ],
+    "matrix": [
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "wrapS": 1000,
+    "wrapT": 1000,
+    "channel": 0,
+    "rawRGBAMeanEncoded": [
+      0.9202757592289014,
+      0.9157745361323942,
+      0.9024685130398614
+    ],
+    "rawRGBAMeanLinear": [
+      0.8290668190691898,
+      0.819953806060267,
+      0.793365468369072
+    ],
+    "mixTargetLinear": [
+      0.93,
+      0.93,
+      0.93
+    ],
+    "mapWeight": 0.3,
+    "mixedMeanLinear": [
+      0.8997200457207569,
+      0.8969861418180801,
+      0.8890096405107216
+    ],
+    "note": "0.93 is the hard-coded neutral target, not a measured map mean. Encoded means are normalized 0..1; linear means use texture colorSpace EOTF."
+  },
+  "glError": 0
+}

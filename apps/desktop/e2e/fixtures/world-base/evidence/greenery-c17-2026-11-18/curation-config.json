@@ -1,0 +1,311 @@
+{
+  "schema": "x51-c17-curation-config-v1",
+  "head": "0184c79d94094c7d76378302592572bf367be6c7",
+  "output": "evidence/greenery-c17-2026-11-18",
+  "pending": [],
+  "cpu": [
+    "x51-c17-ground-chain-readonly.json",
+    "x51-c17-meadow-lifecycle-provenance.json",
+    "x51-c17-meadow-lifecycle-stderr.txt",
+    "x51-c17-meadow-lifecycle-stdout.txt",
+    "x51-c17-meadow-lifecycle.json",
+    "x51-c17-meadow-lifecycle.mjs",
+    "x51-c17-meadow-review.md"
+  ],
+  "ciPrefix": "x51-c17-source-ci-",
+  "frozenFiles": {
+    "x51-c17-ground-chain-readonly.json": {
+      "bytes": 3707,
+      "sha256": "02fc9e8fb4d703dbbc1cc249f7f1ef2a4bd370b4bb9f2f48a50080c64254b768"
+    },
+    "x51-c17-meadow-lifecycle-provenance.json": {
+      "bytes": 2284,
+      "sha256": "0c835548d3c3e8b2be1c800fe94b0d7f32bf825b9ce0862cd92c34eccbd9996c"
+    },
+    "x51-c17-meadow-lifecycle-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "x51-c17-meadow-lifecycle-stdout.txt": {
+      "bytes": 3071,
+      "sha256": "11fac7fd288988b6a405bdedf08e468ca33a80b0918400a01fbda654b1ad1ff6"
+    },
+    "x51-c17-meadow-lifecycle.json": {
+      "bytes": 3071,
+      "sha256": "11fac7fd288988b6a405bdedf08e468ca33a80b0918400a01fbda654b1ad1ff6"
+    },
+    "x51-c17-meadow-lifecycle.mjs": {
+      "bytes": 8241,
+      "sha256": "f459dfb40f432cc65fe80bc77ca600a1ccffc928d5551d2625ca36d51c9c860d"
+    },
+    "x51-c17-meadow-review.md": {
+      "bytes": 4073,
+      "sha256": "f55ddbf5f9405d5e077d7bc2fecf4ab41fe187e6a75a8166e24f8c8036c52f63"
+    },
+    "x51-c17-source-ci-checks.json": {
+      "bytes": 5322,
+      "sha256": "7262c7dfdc2c62f474d3fa81abb9b99e5849ef6dd4d881db7617eb824c990398"
+    },
+    "x51-c17-source-ci-jobs.json": {
+      "bytes": 4139,
+      "sha256": "534d7fc534447f4387cd83c90c88bdab0f42c4778974374a6b101671f606c04b"
+    },
+    "x51-c17-source-ci-log.json": {
+      "bytes": 31853,
+      "sha256": "7ded88d056f27d3e22392a5bf23d5d98c0ec6c2558aeca9057c95b722b91c101"
+    },
+    "x51-c17-source-ci-provenance.json": {
+      "bytes": 2767,
+      "sha256": "83300177f0d5238bc5cb9354523d40616eebc11335e3c6a60d52857f37610e4b"
+    },
+    "x51-c17-source-ci-run.json": {
+      "bytes": 16199,
+      "sha256": "2aa7d49d5121d8ff15883bd1883b8e346787b378000b62acb1ba3adcc6986076"
+    },
+    "x51-c17-source-ci-runs.json": {
+      "bytes": 17242,
+      "sha256": "30f5118ecb330cbcc1040b0ed730fa342371fa5da03b389485f1d7da84a733da"
+    },
+    "x51-c17-source-ci-summary.cjs": {
+      "bytes": 2521,
+      "sha256": "a74f03734ac14d9873d6ff4d961b9cc364a30dc057308684598ddde223ec9fa0"
+    },
+    "x51-c17-source-ci-summary.json": {
+      "bytes": 6774,
+      "sha256": "476f67e8c5436122861d495c817ec6f7116c782c13ed84b256aaa187758e88f6"
+    },
+    "x51-c17-normal-execution.json": {
+      "bytes": 5917,
+      "sha256": "5eef428f389f3fd8ec988919df3c8b358933e7f7f68487a6c03a0940c576d490"
+    },
+    "x51-c17-normal-stdout.txt": {
+      "bytes": 295,
+      "sha256": "46b3eb6849fbbabe355083cd7516f9a7fdc9c4d7f652ea7f32aad9fc155546e4"
+    },
+    "x51-c17-normal-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "x51-c17-targeted-execution.json": {
+      "bytes": 18404,
+      "sha256": "7c13bf94ee54359d616787e3a4b3651ed437f510afa547d3f6af2263b3c15f28"
+    },
+    "x51-c17-targeted-stdout.txt": {
+      "bytes": 158,
+      "sha256": "a4f113c00f8c7cc2087fdbb4b8aa8dc155f1f1969256f56b901c73a65c0bc5c2"
+    },
+    "x51-c17-targeted-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "x51-c17-diagnostic-gpu.cjs": {
+      "bytes": 51212,
+      "sha256": "16c0e570ba5a7888f6dedd7b1293440a0c7444fe1313772ce1080195c42f001c"
+    },
+    "x51-c17-diagnostic-validator.cjs": {
+      "bytes": 2940,
+      "sha256": "9ce0b777bb48b84931c4f23b22fa696109c9615be11a6131d21c8d2b2ad27a76"
+    },
+    "x51-c17-analysis-validator.cjs": {
+      "bytes": 3168,
+      "sha256": "c8722bd3f21d0a6766c83dd6209e7297e67095bb47d6f148129343f737dcdd1c"
+    },
+    "x51-c17-offline-analysis.cjs": {
+      "bytes": 6084,
+      "sha256": "48aa7de0f208944fd27cb90bb875aca920a7064b9b0b816f845349b27f355aeb"
+    },
+    "x51-c17-offline-analysis.json": {
+      "bytes": 168804,
+      "sha256": "dfb48464643964098b35b21eb76c330b37cd84120ddfb9978feb3bd66d36d53b"
+    },
+    "x51-c17-offline-analysis-stdout.json": {
+      "bytes": 14216,
+      "sha256": "c9184cedc86ab09da3db2a51255d8d109aca9d2f9bde5bd7dcea40ee1421ffc4"
+    },
+    "x51-c17-offline-analysis-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "readme": {
+    "file": "x51-c17-evidence-readme.md",
+    "bytes": 6714,
+    "sha256": "641de8631139c36825e831956b28cdffc75a7a255288a4e9dd7545a8e88554c1"
+  },
+  "analysis": {
+    "validationModule": "x51-c17-analysis-validator.cjs",
+    "execution": {
+      "actualExit": 0,
+      "toolChunk": "176cee",
+      "provenance": "Root supplied actual tool execution record in task message; not a contemporaneous supervisor receipt."
+    }
+  },
+  "runs": [
+    {
+      "label": "baseline",
+      "baseline": true,
+      "directory": "gpu-town-c17",
+      "report": "render-report.json",
+      "exit": 1,
+      "session": 97830,
+      "pid": 57788,
+      "execution": "x51-c17-normal-execution.json",
+      "images": [
+        "01-station-street.jpg",
+        "02-station-port.jpg",
+        "03-island-aerial.jpg",
+        "04-shop-interior.jpg",
+        "18-town-shop-balconies.jpg",
+        "19-town-rear-stairs.jpg",
+        "23-service-corner.jpg",
+        "24-laundry-details.jpg",
+        "walking-first.jpg",
+        "walking-third.jpg"
+      ]
+    },
+    {
+      "label": "diagnostic",
+      "baseline": false,
+      "directory": "gpu-look-c17-v1",
+      "report": "look-report.json",
+      "exit": 1,
+      "session": 44205,
+      "pid": 65632,
+      "driver": "x51-c17-diagnostic-gpu.cjs",
+      "validationModule": "x51-c17-diagnostic-validator.cjs",
+      "captureArrays": [
+        "captures",
+        "townCaptures"
+      ],
+      "expectedCaptureNames": [
+        "service-corner-ao-on-warmup",
+        "service-corner-ao-on-capture-1",
+        "service-corner-ao-on-capture-2",
+        "laundry-details-ao-on-warmup",
+        "laundry-details-ao-on-capture-1",
+        "laundry-details-ao-on-capture-2",
+        "shop-interior-ao-on-warmup",
+        "shop-interior-ao-on-capture-1",
+        "shop-interior-ao-on-capture-2",
+        "20-rear-eye-ao-on-warmup",
+        "20-rear-eye-ao-on-capture-1",
+        "20-rear-eye-ao-on-capture-2",
+        "21-front-eye-ao-on-warmup",
+        "21-front-eye-ao-on-capture-1",
+        "21-front-eye-ao-on-capture-2",
+        "station-street-ao-on-warmup",
+        "station-street-ao-on-capture-1",
+        "station-street-ao-on-capture-2",
+        "street-detail-ao-on-warmup",
+        "street-detail-ao-on-capture-1",
+        "street-detail-ao-on-capture-2",
+        "20-rear-eye-town-B-warmup",
+        "20-rear-eye-town-B-capture-1",
+        "20-rear-eye-town-B-capture-2",
+        "20-rear-eye-town-A2-warmup",
+        "20-rear-eye-town-A2-capture-1",
+        "20-rear-eye-town-A2-capture-2",
+        "21-front-eye-town-B-warmup",
+        "21-front-eye-town-B-capture-1",
+        "21-front-eye-town-B-capture-2",
+        "21-front-eye-town-A2-warmup",
+        "21-front-eye-town-A2-capture-1",
+        "21-front-eye-town-A2-capture-2",
+        "north-seam-central-town-A1-warmup",
+        "north-seam-central-town-A1-capture-1",
+        "north-seam-central-town-A1-capture-2",
+        "north-seam-central-town-B-warmup",
+        "north-seam-central-town-B-capture-1",
+        "north-seam-central-town-B-capture-2",
+        "north-seam-central-town-A2-warmup",
+        "north-seam-central-town-A2-capture-1",
+        "north-seam-central-town-A2-capture-2",
+        "north-seam-oblique-town-A1-warmup",
+        "north-seam-oblique-town-A1-capture-1",
+        "north-seam-oblique-town-A1-capture-2",
+        "north-seam-oblique-town-B-warmup",
+        "north-seam-oblique-town-B-capture-1",
+        "north-seam-oblique-town-B-capture-2",
+        "north-seam-oblique-town-A2-warmup",
+        "north-seam-oblique-town-A2-capture-1",
+        "north-seam-oblique-town-A2-capture-2"
+      ],
+      "images": [
+        "service-corner-ao-on-capture-2.jpg",
+        "laundry-details-ao-on-capture-2.jpg",
+        "shop-interior-ao-on-capture-2.jpg",
+        "20-rear-eye-ao-on-capture-2.jpg",
+        "21-front-eye-ao-on-capture-2.jpg",
+        "station-street-ao-on-capture-2.jpg",
+        "street-detail-ao-on-capture-2.jpg",
+        "20-rear-eye-town-B-capture-2.jpg",
+        "20-rear-eye-town-A2-capture-2.jpg",
+        "21-front-eye-town-B-capture-2.jpg",
+        "21-front-eye-town-A2-capture-2.jpg",
+        "north-seam-central-town-A1-capture-2.jpg",
+        "north-seam-central-town-B-capture-2.jpg",
+        "north-seam-central-town-A2-capture-2.jpg",
+        "north-seam-oblique-town-A1-capture-2.jpg",
+        "north-seam-oblique-town-B-capture-2.jpg",
+        "north-seam-oblique-town-A2-capture-2.jpg",
+        "north-seam-central-town-A1-capture-2.png",
+        "north-seam-central-town-B-capture-2.png",
+        "north-seam-central-town-A2-capture-2.png",
+        "north-seam-oblique-town-A1-capture-2.png",
+        "north-seam-oblique-town-B-capture-2.png",
+        "north-seam-oblique-town-A2-capture-2.png"
+      ],
+      "readbacks": [
+        "north-seam-candidates.json",
+        "scene-assets-audit.json",
+        "wall-material-audit.json",
+        "city-shadow-audit.json",
+        "c16-reference.json",
+        "c12-reference.json"
+      ],
+      "fullShaderFiles": [
+        "town-material-audit.json"
+      ],
+      "execution": "x51-c17-targeted-execution.json",
+      "observedContract": {
+        "renderOk": true,
+        "transportClean": false,
+        "sourceUnchanged": true,
+        "driverUnchanged": true,
+        "assetsUnchanged": true,
+        "restoreUnchanged": true,
+        "restoreTargetSha256": "fa00b985c764ec94c2952b9bda94a9c3dc1c7ba2e0a3203ae7b1851e000fa053",
+        "restoreStateSha256": "fa00b985c764ec94c2952b9bda94a9c3dc1c7ba2e0a3203ae7b1851e000fa053"
+      },
+      "readbackPairs": [
+        [
+          "town-material-audit.json",
+          "townAudit"
+        ],
+        [
+          "scene-assets-audit.json",
+          "sceneAssetsAudit"
+        ],
+        [
+          "wall-material-audit.json",
+          "wallMaterialAudit"
+        ],
+        [
+          "city-shadow-audit.json",
+          "cityShadowAudit"
+        ]
+      ],
+      "referenceArchives": [
+        {
+          "file": "c16-reference.json",
+          "archive": "evidence/greenery-c16-2026-11-18"
+        },
+        {
+          "file": "c12-reference.json",
+          "archive": "evidence/look-c12-2026-11-17"
+        }
+      ]
+    }
+  ],
+  "historicalSeamHead": "50e190b092fb2b30ab9ed19a28302d5638f947f4"
+}

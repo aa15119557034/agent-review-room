@@ -1,0 +1,654 @@
+{
+  "head": "0184c79d94094c7d76378302592572bf367be6c7",
+  "createdAt": "2026-11-17T17:55:30.356Z",
+  "files": [
+    {
+      "file": "source-map/pinned-assets.json",
+      "bytes": 2344,
+      "sha256": "48926d1d54a880d259ad8508f8ba457d3d6cb73dea42f761b0dc304155e943e6",
+      "generatedSummary": true
+    },
+    {
+      "file": "source-map/prop-assets.json",
+      "bytes": 6576,
+      "sha256": "6a4b86e144b50835b1152f4aa32ac4c5e50e352956979cd4ca5fc5f21561810a",
+      "exactCommit": "0184c79d94094c7d76378302592572bf367be6c7"
+    },
+    {
+      "file": "source-map/inherited-seam-candidates.json",
+      "bytes": 583,
+      "sha256": "19a1d0368988d2142541a228bfa2be894e5bf3d7e19cbd3a369c6a6934b49534",
+      "generatedSummary": true
+    },
+    {
+      "file": "cpu/x51-c17-ground-chain-readonly.json",
+      "bytes": 3707,
+      "sha256": "02fc9e8fb4d703dbbc1cc249f7f1ef2a4bd370b4bb9f2f48a50080c64254b768",
+      "source": "../../../../../../handoff/x51-c17-ground-chain-readonly.json"
+    },
+    {
+      "file": "cpu/x51-c17-meadow-lifecycle-provenance.json",
+      "bytes": 2284,
+      "sha256": "0c835548d3c3e8b2be1c800fe94b0d7f32bf825b9ce0862cd92c34eccbd9996c",
+      "source": "../../../../../../handoff/x51-c17-meadow-lifecycle-provenance.json"
+    },
+    {
+      "file": "cpu/x51-c17-meadow-lifecycle-stderr.txt.gz",
+      "bytes": 20,
+      "sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e",
+      "source": "../../../../../../handoff/x51-c17-meadow-lifecycle-stderr.txt",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "losslessGzip": true
+    },
+    {
+      "file": "cpu/x51-c17-meadow-lifecycle-stdout.txt.gz",
+      "bytes": 1300,
+      "sha256": "bffa0ee3a6e2d3974acd403051707f5e09ef60aa7f68d820fafea4269a8f6202",
+      "source": "../../../../../../handoff/x51-c17-meadow-lifecycle-stdout.txt",
+      "originalBytes": 3071,
+      "originalSha256": "11fac7fd288988b6a405bdedf08e468ca33a80b0918400a01fbda654b1ad1ff6",
+      "losslessGzip": true
+    },
+    {
+      "file": "cpu/x51-c17-meadow-lifecycle.json",
+      "bytes": 3071,
+      "sha256": "11fac7fd288988b6a405bdedf08e468ca33a80b0918400a01fbda654b1ad1ff6",
+      "source": "../../../../../../handoff/x51-c17-meadow-lifecycle.json"
+    },
+    {
+      "file": "cpu/x51-c17-meadow-lifecycle.mjs.gz",
+      "bytes": 3159,
+      "sha256": "9fe76634c722ee01368ff1e5a9b5b883af2bb26d6b4017b78132f41a51e4d24e",
+      "source": "../../../../../../handoff/x51-c17-meadow-lifecycle.mjs",
+      "originalBytes": 8241,
+      "originalSha256": "f459dfb40f432cc65fe80bc77ca600a1ccffc928d5551d2625ca36d51c9c860d",
+      "losslessGzip": true
+    },
+    {
+      "file": "cpu/x51-c17-meadow-review.md",
+      "bytes": 4073,
+      "sha256": "f55ddbf5f9405d5e077d7bc2fecf4ab41fe187e6a75a8166e24f8c8036c52f63",
+      "source": "../../../../../../handoff/x51-c17-meadow-review.md"
+    },
+    {
+      "file": "source-map/cpu-sources.json",
+      "bytes": 4742,
+      "sha256": "d187035be931efb401856af51266b3dff65f0ef4411b35a8d5a15d59ff249546",
+      "generatedSummary": true
+    },
+    {
+      "file": "baseline/source-manifest.json",
+      "bytes": 30609,
+      "sha256": "5cb72a83bdb041244260d84ae3e2613c3cc9791542bb93c023749eedf60858ef",
+      "source": "artifacts/gpu-town-c17/source-manifest.json"
+    },
+    {
+      "file": "baseline/run-config.json",
+      "bytes": 1077,
+      "sha256": "5385ed36b3d5bce734b54e5f04c2cf5dc8fcacf112e4fa7a0e001dddb33e30d5",
+      "source": "artifacts/gpu-town-c17/run-config.json"
+    },
+    {
+      "file": "baseline/process.json",
+      "bytes": 135,
+      "sha256": "f32808250b98d40d80104bef99d2204337e839fc8d8a9e4c7a3fa028621bcc21",
+      "source": "artifacts/gpu-town-c17/process.json"
+    },
+    {
+      "file": "baseline/render-report.json.gz",
+      "bytes": 89011,
+      "sha256": "15af2c3c1ad63900eb2a3a695440ec6c6d99e87f77fdb824b187762aadf45b75",
+      "source": "artifacts/gpu-town-c17/render-report.json",
+      "originalBytes": 659185,
+      "originalSha256": "155a9f72ce33c1258180a3c9fa1a9cde70131e8b19a2fd940871691365069a47",
+      "losslessGzip": true
+    },
+    {
+      "file": "baseline/electron.log.gz",
+      "bytes": 820,
+      "sha256": "22c4610c8fc23e04b1c7195f4e46d052818afd04f948c005c25f90f79ffda213",
+      "source": "artifacts/gpu-town-c17/electron.log",
+      "originalBytes": 1817,
+      "originalSha256": "12269b633f8714ec4f3d14118a87b62c2ac48e5722d2bcb488cc74beb8375e6f",
+      "losslessGzip": true
+    },
+    {
+      "file": "baseline/x51-c17-normal-execution.json",
+      "bytes": 5917,
+      "sha256": "5eef428f389f3fd8ec988919df3c8b358933e7f7f68487a6c03a0940c576d490",
+      "source": "../../../../../../handoff/x51-c17-normal-execution.json"
+    },
+    {
+      "file": "baseline/x51-c17-normal-stdout.txt.gz",
+      "bytes": 166,
+      "sha256": "dad3eba72b1e02b37b977fedc00a01073a441abcd80744594719f36c68b0ab4f",
+      "source": "../../../../../../handoff/x51-c17-normal-stdout.txt",
+      "originalBytes": 295,
+      "originalSha256": "46b3eb6849fbbabe355083cd7516f9a7fdc9c4d7f652ea7f32aad9fc155546e4",
+      "losslessGzip": true
+    },
+    {
+      "file": "baseline/x51-c17-normal-stderr.txt.gz",
+      "bytes": 20,
+      "sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e",
+      "source": "../../../../../../handoff/x51-c17-normal-stderr.txt",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "losslessGzip": true
+    },
+    {
+      "file": "baseline/01-station-street.jpg",
+      "bytes": 113954,
+      "sha256": "c0e1f5e3d0984f9dae3499259b5df89d299dc853495e4d6fe78c15eac91a8f62",
+      "source": "artifacts/gpu-town-c17/01-station-street.jpg"
+    },
+    {
+      "file": "baseline/02-station-port.jpg",
+      "bytes": 117611,
+      "sha256": "64cd6d55aaf43c08189d9d84b73c5a42bc5a88338952ea3bd94062c15660c216",
+      "source": "artifacts/gpu-town-c17/02-station-port.jpg"
+    },
+    {
+      "file": "baseline/03-island-aerial.jpg",
+      "bytes": 54506,
+      "sha256": "597240e8c6b4beda5d92e6478369badbe5c8a9981715c6b42e0583f15ab4d0c1",
+      "source": "artifacts/gpu-town-c17/03-island-aerial.jpg"
+    },
+    {
+      "file": "baseline/04-shop-interior.jpg",
+      "bytes": 106265,
+      "sha256": "602526f963e427f76a0c3b7d87dcb31d402ca6b3fe9708a5185e8c5ce31a7147",
+      "source": "artifacts/gpu-town-c17/04-shop-interior.jpg"
+    },
+    {
+      "file": "baseline/18-town-shop-balconies.jpg",
+      "bytes": 89184,
+      "sha256": "69a56df6782a2c1a693063d7597bb4e883305c828be915ef591a042ba06ef620",
+      "source": "artifacts/gpu-town-c17/18-town-shop-balconies.jpg"
+    },
+    {
+      "file": "baseline/19-town-rear-stairs.jpg",
+      "bytes": 118460,
+      "sha256": "04e969087068c6ca30ad1a7f4249e684b097c8bef3def59c3ad1d4efc08b163f",
+      "source": "artifacts/gpu-town-c17/19-town-rear-stairs.jpg"
+    },
+    {
+      "file": "baseline/23-service-corner.jpg",
+      "bytes": 78623,
+      "sha256": "7a4894e693e577e47c02129ef624994445b0fab4469a787f48009dbf114c0bdc",
+      "source": "artifacts/gpu-town-c17/23-service-corner.jpg"
+    },
+    {
+      "file": "baseline/24-laundry-details.jpg",
+      "bytes": 51967,
+      "sha256": "7d26cf292f62752a58a762cae151bce974136a0dfa5a039b2dd7fb9b6450264f",
+      "source": "artifacts/gpu-town-c17/24-laundry-details.jpg"
+    },
+    {
+      "file": "baseline/walking-first.jpg",
+      "bytes": 108064,
+      "sha256": "e4a0ee6277a2f8704b8b38be1528ca5de2ea43bf04f9846614128c54a10f9efb",
+      "source": "artifacts/gpu-town-c17/walking-first.jpg"
+    },
+    {
+      "file": "baseline/walking-third.jpg",
+      "bytes": 112657,
+      "sha256": "f7ff1f75832ae57c043f88d420223d681f80df7ab8bcc29fddde82021583c382",
+      "source": "artifacts/gpu-town-c17/walking-third.jpg"
+    },
+    {
+      "file": "baseline/frame-samples-island-aerial.json",
+      "bytes": 11428,
+      "sha256": "e04132037eab026302c7c0ee7b67462be4f4bd8b7e3f69e8a79028c5bc5f0906",
+      "source": "artifacts/gpu-town-c17/frame-samples-island-aerial.json"
+    },
+    {
+      "file": "baseline/frame-samples-shop-interior.json",
+      "bytes": 11227,
+      "sha256": "c0f33e5725abf85c1401080ab198343b9bd73b46df245179049e58a98edd796e",
+      "source": "artifacts/gpu-town-c17/frame-samples-shop-interior.json"
+    },
+    {
+      "file": "baseline/frame-samples-station-port.json",
+      "bytes": 11112,
+      "sha256": "f28adaeb041707aa45179b034c6af727587b9479dcce1d090a446d60f1b6cd55",
+      "source": "artifacts/gpu-town-c17/frame-samples-station-port.json"
+    },
+    {
+      "file": "baseline/frame-samples-station-street.json",
+      "bytes": 11475,
+      "sha256": "de869e0753148b3e7057d9da2746489baa3f60a2b07932b1ba59d1f470dc65c2",
+      "source": "artifacts/gpu-town-c17/frame-samples-station-street.json"
+    },
+    {
+      "file": "baseline/frame-samples-walking-first.json",
+      "bytes": 11279,
+      "sha256": "b5185f7dbec3876e1c639fa9ffab5385a4e94c2a2ebc436ccd40e9f0927d1ae8",
+      "source": "artifacts/gpu-town-c17/frame-samples-walking-first.json"
+    },
+    {
+      "file": "baseline/frame-samples-walking-third.json",
+      "bytes": 11298,
+      "sha256": "1cf324005857e218fba8ebe9a0949ca83cf539a43fbf6d91d660c456dfcc8a02",
+      "source": "artifacts/gpu-town-c17/frame-samples-walking-third.json"
+    },
+    {
+      "file": "baseline/frame-samples.json",
+      "bytes": 55108,
+      "sha256": "7571749f0b9d6425bdd94da414f645e9341c975efa8f0a898ce1e6747aa60d5e",
+      "source": "artifacts/gpu-town-c17/frame-samples.json"
+    },
+    {
+      "file": "baseline/measurements.json",
+      "bytes": 18683,
+      "sha256": "7b084d04719acc9f106087b152455f7217479d54268c38cad86f4fa8157df2ae",
+      "generatedSummary": true
+    },
+    {
+      "file": "diagnostic/source-manifest.json",
+      "bytes": 25563,
+      "sha256": "13cb3dd578e7cbc617e26a5da8c888cd2cec3669beb104d5d4e1e6350ade10b6",
+      "source": "artifacts/gpu-look-c17-v1/source-manifest.json"
+    },
+    {
+      "file": "diagnostic/run-config.json",
+      "bytes": 8062,
+      "sha256": "c3aab583c8b0b3a0e8a4cd7b98dafb03b292fdcf3ac41d11b827cd20ffb7fe66",
+      "source": "artifacts/gpu-look-c17-v1/run-config.json"
+    },
+    {
+      "file": "diagnostic/process.json",
+      "bytes": 13,
+      "sha256": "14ea065bb7cfd5d38d4d3c6847191001a1efd4d6648bea570eb3c31514335423",
+      "source": "artifacts/gpu-look-c17-v1/process.json"
+    },
+    {
+      "file": "diagnostic/look-report.json.gz",
+      "bytes": 724890,
+      "sha256": "b689336b523170a0672f3f723c803a8a0310cfbb9bb9da07b99a9d139233c628",
+      "source": "artifacts/gpu-look-c17-v1/look-report.json",
+      "originalBytes": 9708405,
+      "originalSha256": "0d711b43afd4a29ae9f8c17384d5323d968e781896b9a68515bf4a4809ffbb46",
+      "losslessGzip": true
+    },
+    {
+      "file": "diagnostic/electron.log.gz",
+      "bytes": 136,
+      "sha256": "65300fe542da1bbd846a662386b1805d3ccbb9d82a13e630230ec9840dacc153",
+      "source": "artifacts/gpu-look-c17-v1/electron.log",
+      "originalBytes": 148,
+      "originalSha256": "182a78621c32b8fb63fe80c9de526ccecde3a3c49052cfc9c8979aa8c1bc3511",
+      "losslessGzip": true
+    },
+    {
+      "file": "diagnostic/prop-assets-manifest.json",
+      "bytes": 3941,
+      "sha256": "dd8734fb67c85176d5061a76463eb61801dff175053a82b1c5bb0c22e2723ccc",
+      "source": "artifacts/gpu-look-c17-v1/prop-assets-manifest.json"
+    },
+    {
+      "file": "diagnostic/x51-c17-diagnostic-gpu.cjs",
+      "bytes": 51212,
+      "sha256": "16c0e570ba5a7888f6dedd7b1293440a0c7444fe1313772ce1080195c42f001c",
+      "source": "../../../../../../handoff/x51-c17-diagnostic-gpu.cjs"
+    },
+    {
+      "file": "diagnostic/x51-c17-targeted-execution.json",
+      "bytes": 18404,
+      "sha256": "7c13bf94ee54359d616787e3a4b3651ed437f510afa547d3f6af2263b3c15f28",
+      "source": "../../../../../../handoff/x51-c17-targeted-execution.json"
+    },
+    {
+      "file": "diagnostic/x51-c17-targeted-stdout.txt.gz",
+      "bytes": 147,
+      "sha256": "2ae384803aa871f86f057ec9fff86f3abc3be6fbf23fff1a2aca78670b562c67",
+      "source": "../../../../../../handoff/x51-c17-targeted-stdout.txt",
+      "originalBytes": 158,
+      "originalSha256": "a4f113c00f8c7cc2087fdbb4b8aa8dc155f1f1969256f56b901c73a65c0bc5c2",
+      "losslessGzip": true
+    },
+    {
+      "file": "diagnostic/x51-c17-targeted-stderr.txt.gz",
+      "bytes": 20,
+      "sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e",
+      "source": "../../../../../../handoff/x51-c17-targeted-stderr.txt",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "losslessGzip": true
+    },
+    {
+      "file": "analysis/x51-c17-diagnostic-validator.cjs",
+      "bytes": 2940,
+      "sha256": "9ce0b777bb48b84931c4f23b22fa696109c9615be11a6131d21c8d2b2ad27a76",
+      "source": "../../../../../../handoff/x51-c17-diagnostic-validator.cjs"
+    },
+    {
+      "file": "diagnostic/capture-index.json",
+      "bytes": 8685052,
+      "sha256": "6db3bde1d8e6581af91ebe860e012f863b880831bb2d4e9e04250d4b62dea257",
+      "generatedSummary": true
+    },
+    {
+      "file": "diagnostic/north-seam-candidates.json",
+      "bytes": 4481,
+      "sha256": "58d4705a0fa3c0404a8d4d336f28c4ffd997f66afa027540ffe9e3c36ee8cccf",
+      "source": "artifacts/gpu-look-c17-v1/north-seam-candidates.json"
+    },
+    {
+      "file": "diagnostic/scene-assets-audit.json",
+      "bytes": 75108,
+      "sha256": "e4d15fb91edcd165b9cbd010e835f233e3c62317b288952d6a7f547efc3624d8",
+      "source": "artifacts/gpu-look-c17-v1/scene-assets-audit.json"
+    },
+    {
+      "file": "diagnostic/wall-material-audit.json",
+      "bytes": 5221,
+      "sha256": "e9fbd1be6b86f72c6f890938619f9ce1e18218c7dda48632ca3d6061bfee59fc",
+      "source": "artifacts/gpu-look-c17-v1/wall-material-audit.json"
+    },
+    {
+      "file": "diagnostic/city-shadow-audit.json",
+      "bytes": 196947,
+      "sha256": "59c246dab52633a814e4d84ad1bfeb31643955d6f6463acb85b5e660d02e64b1",
+      "source": "artifacts/gpu-look-c17-v1/city-shadow-audit.json"
+    },
+    {
+      "file": "diagnostic/c16-reference.json",
+      "bytes": 2340,
+      "sha256": "dceb283e439cb01678e9ac6705c9bfba57e8b5e8ee00c7f09bf1b73e3e962c37",
+      "source": "artifacts/gpu-look-c17-v1/c16-reference.json"
+    },
+    {
+      "file": "diagnostic/c12-reference.json",
+      "bytes": 464,
+      "sha256": "0fa486026f78d76ee7c45b8a194390ac00606a2ed96136bb08393e28716227b4",
+      "source": "artifacts/gpu-look-c17-v1/c12-reference.json"
+    },
+    {
+      "file": "diagnostic/town-material-audit.json.gz",
+      "bytes": 52898,
+      "sha256": "7e6c0917ca70c1b962c0cd4b964f01b61c8869b819149f2f66069aae6e65f126",
+      "source": "artifacts/gpu-look-c17-v1/town-material-audit.json",
+      "originalBytes": 356795,
+      "originalSha256": "1e771a259a8f1a43e27bc2992982db16a52b4c7a7f119e32ad6c13db79b9a6e2",
+      "losslessGzip": true
+    },
+    {
+      "file": "diagnostic/service-corner-ao-on-capture-2.jpg",
+      "bytes": 98985,
+      "sha256": "bc839672be2221ce75706b10b6a112217bdfb2f76faad3f7b92b7d922217f019",
+      "source": "artifacts/gpu-look-c17-v1/service-corner-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/laundry-details-ao-on-capture-2.jpg",
+      "bytes": 66409,
+      "sha256": "602cd5396f70682a1a72bd2f32fe821e35804c905e09a2a55924eac5acfe6e7d",
+      "source": "artifacts/gpu-look-c17-v1/laundry-details-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/shop-interior-ao-on-capture-2.jpg",
+      "bytes": 124927,
+      "sha256": "a237f43acc360e690bea44020b3895defd6cbe864722e3d429b8b8e17d14d84a",
+      "source": "artifacts/gpu-look-c17-v1/shop-interior-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/20-rear-eye-ao-on-capture-2.jpg",
+      "bytes": 159247,
+      "sha256": "ea9487625f052bbb97b812e71c7a111dddcdcb3f4a3645a067b072aaf290464b",
+      "source": "artifacts/gpu-look-c17-v1/20-rear-eye-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/21-front-eye-ao-on-capture-2.jpg",
+      "bytes": 89963,
+      "sha256": "3098419829142f0df4cb64b55ed2b961d6686acb98467f13ed58a1943c088a70",
+      "source": "artifacts/gpu-look-c17-v1/21-front-eye-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/station-street-ao-on-capture-2.jpg",
+      "bytes": 146119,
+      "sha256": "af3856866c8a8b2502ff261a4e1d66cab2187c76e50400b6b1d0b0ce6f77d5f2",
+      "source": "artifacts/gpu-look-c17-v1/station-street-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/street-detail-ao-on-capture-2.jpg",
+      "bytes": 100887,
+      "sha256": "f72473769705125208989a4323aa9a41b103061d335a751a64e011f992a9a857",
+      "source": "artifacts/gpu-look-c17-v1/street-detail-ao-on-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/20-rear-eye-town-B-capture-2.jpg",
+      "bytes": 167880,
+      "sha256": "979caecaf439713b2deb63ebf7cb19a4374abae707337054d8207e5712e70cca",
+      "source": "artifacts/gpu-look-c17-v1/20-rear-eye-town-B-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/20-rear-eye-town-A2-capture-2.jpg",
+      "bytes": 159247,
+      "sha256": "ea9487625f052bbb97b812e71c7a111dddcdcb3f4a3645a067b072aaf290464b",
+      "source": "artifacts/gpu-look-c17-v1/20-rear-eye-town-A2-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/21-front-eye-town-B-capture-2.jpg",
+      "bytes": 90901,
+      "sha256": "4e3581a4f4b441d1e302d5a604a44f37b4766e5e5ea46e1e9da02610a242f700",
+      "source": "artifacts/gpu-look-c17-v1/21-front-eye-town-B-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/21-front-eye-town-A2-capture-2.jpg",
+      "bytes": 89963,
+      "sha256": "3098419829142f0df4cb64b55ed2b961d6686acb98467f13ed58a1943c088a70",
+      "source": "artifacts/gpu-look-c17-v1/21-front-eye-town-A2-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/north-seam-central-town-A1-capture-2.jpg",
+      "bytes": 184424,
+      "sha256": "f3537a84017a865ea4a4b93c6d04a4eca79200da86fb5d01e113e265bc82a688",
+      "source": "artifacts/gpu-look-c17-v1/north-seam-central-town-A1-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/north-seam-central-town-B-capture-2.jpg",
+      "bytes": 184238,
+      "sha256": "758a9e897868f1ae78984abc9fd9f76522f47df837678fdff4c2f4493fc23700",
+      "source": "artifacts/gpu-look-c17-v1/north-seam-central-town-B-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/north-seam-central-town-A2-capture-2.jpg",
+      "bytes": 184424,
+      "sha256": "f3537a84017a865ea4a4b93c6d04a4eca79200da86fb5d01e113e265bc82a688",
+      "source": "artifacts/gpu-look-c17-v1/north-seam-central-town-A2-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/north-seam-oblique-town-A1-capture-2.jpg",
+      "bytes": 186453,
+      "sha256": "648423c2586ae0dc1e468644fa06527890c38cc7efd3247aba3ac5afa46467cc",
+      "source": "artifacts/gpu-look-c17-v1/north-seam-oblique-town-A1-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/north-seam-oblique-town-B-capture-2.jpg",
+      "bytes": 186816,
+      "sha256": "da8cdb19a2b88375041c7a2f1944ab1c63c428293c0be30d8b173cd67a98b261",
+      "source": "artifacts/gpu-look-c17-v1/north-seam-oblique-town-B-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/north-seam-oblique-town-A2-capture-2.jpg",
+      "bytes": 186453,
+      "sha256": "648423c2586ae0dc1e468644fa06527890c38cc7efd3247aba3ac5afa46467cc",
+      "source": "artifacts/gpu-look-c17-v1/north-seam-oblique-town-A2-capture-2.jpg"
+    },
+    {
+      "file": "diagnostic/north-seam-central-town-A1-capture-2.png",
+      "bytes": 3262564,
+      "sha256": "236f8643330eb553cc7ce6155ff212fb06393efaf4414956dbbe772ff465fe08",
+      "source": "artifacts/gpu-look-c17-v1/north-seam-central-town-A1-capture-2.png"
+    },
+    {
+      "file": "diagnostic/north-seam-central-town-B-capture-2.png",
+      "bytes": 3205832,
+      "sha256": "5c7cf667687848292ae3b264822f4b58aa1659c982c10a7991b3a5ca960b5057",
+      "source": "artifacts/gpu-look-c17-v1/north-seam-central-town-B-capture-2.png"
+    },
+    {
+      "file": "diagnostic/north-seam-central-town-A2-capture-2.png",
+      "bytes": 3262564,
+      "sha256": "236f8643330eb553cc7ce6155ff212fb06393efaf4414956dbbe772ff465fe08",
+      "source": "artifacts/gpu-look-c17-v1/north-seam-central-town-A2-capture-2.png"
+    },
+    {
+      "file": "diagnostic/north-seam-oblique-town-A1-capture-2.png",
+      "bytes": 3279943,
+      "sha256": "0737e5f5f8dbbd87fc441f8ba24e6e1a8e611e5162bf60e67bd16a55d30bffb7",
+      "source": "artifacts/gpu-look-c17-v1/north-seam-oblique-town-A1-capture-2.png"
+    },
+    {
+      "file": "diagnostic/north-seam-oblique-town-B-capture-2.png",
+      "bytes": 3228096,
+      "sha256": "ba129700dee5e8ad328d1ad31a20b982d731fe3133bcf0cf6a76be2ec4ab2ec2",
+      "source": "artifacts/gpu-look-c17-v1/north-seam-oblique-town-B-capture-2.png"
+    },
+    {
+      "file": "diagnostic/north-seam-oblique-town-A2-capture-2.png",
+      "bytes": 3279943,
+      "sha256": "0737e5f5f8dbbd87fc441f8ba24e6e1a8e611e5162bf60e67bd16a55d30bffb7",
+      "source": "artifacts/gpu-look-c17-v1/north-seam-oblique-town-A2-capture-2.png"
+    },
+    {
+      "file": "diagnostic/measurements.json",
+      "bytes": 2509,
+      "sha256": "0438ce87a646bd300f06f2814278096de4350c5b3c8e15942c4ef15404b370e9",
+      "generatedSummary": true
+    },
+    {
+      "file": "ci/x51-c17-source-ci-checks.json",
+      "bytes": 5322,
+      "sha256": "7262c7dfdc2c62f474d3fa81abb9b99e5849ef6dd4d881db7617eb824c990398",
+      "source": "../../../../../../handoff/x51-c17-source-ci-checks.json"
+    },
+    {
+      "file": "ci/x51-c17-source-ci-runs.json",
+      "bytes": 17242,
+      "sha256": "30f5118ecb330cbcc1040b0ed730fa342371fa5da03b389485f1d7da84a733da",
+      "source": "../../../../../../handoff/x51-c17-source-ci-runs.json"
+    },
+    {
+      "file": "ci/x51-c17-source-ci-jobs.json",
+      "bytes": 4139,
+      "sha256": "534d7fc534447f4387cd83c90c88bdab0f42c4778974374a6b101671f606c04b",
+      "source": "../../../../../../handoff/x51-c17-source-ci-jobs.json"
+    },
+    {
+      "file": "ci/x51-c17-source-ci-run.json",
+      "bytes": 16199,
+      "sha256": "2aa7d49d5121d8ff15883bd1883b8e346787b378000b62acb1ba3adcc6986076",
+      "source": "../../../../../../handoff/x51-c17-source-ci-run.json"
+    },
+    {
+      "file": "ci/x51-c17-source-ci-log.json.gz",
+      "bytes": 6502,
+      "sha256": "61b854890871b21207bdc8b5fdad05c3f858e7bd42eaab32d4fa3aa718797bd9",
+      "source": "../../../../../../handoff/x51-c17-source-ci-log.json",
+      "originalBytes": 31853,
+      "originalSha256": "7ded88d056f27d3e22392a5bf23d5d98c0ec6c2558aeca9057c95b722b91c101",
+      "losslessGzip": true
+    },
+    {
+      "file": "ci/x51-c17-source-ci-summary.cjs",
+      "bytes": 2521,
+      "sha256": "a74f03734ac14d9873d6ff4d961b9cc364a30dc057308684598ddde223ec9fa0",
+      "source": "../../../../../../handoff/x51-c17-source-ci-summary.cjs"
+    },
+    {
+      "file": "ci/x51-c17-source-ci-summary.json",
+      "bytes": 6774,
+      "sha256": "476f67e8c5436122861d495c817ec6f7116c782c13ed84b256aaa187758e88f6",
+      "source": "../../../../../../handoff/x51-c17-source-ci-summary.json"
+    },
+    {
+      "file": "ci/x51-c17-source-ci-provenance.json",
+      "bytes": 2767,
+      "sha256": "83300177f0d5238bc5cb9354523d40616eebc11335e3c6a60d52857f37610e4b",
+      "source": "../../../../../../handoff/x51-c17-source-ci-provenance.json"
+    },
+    {
+      "file": "analysis/x51-c17-offline-analysis.cjs",
+      "bytes": 6084,
+      "sha256": "48aa7de0f208944fd27cb90bb875aca920a7064b9b0b816f845349b27f355aeb",
+      "source": "../../../../../../handoff/x51-c17-offline-analysis.cjs"
+    },
+    {
+      "file": "analysis/x51-c17-offline-analysis.json",
+      "bytes": 168804,
+      "sha256": "dfb48464643964098b35b21eb76c330b37cd84120ddfb9978feb3bd66d36d53b",
+      "source": "../../../../../../handoff/x51-c17-offline-analysis.json"
+    },
+    {
+      "file": "analysis/x51-c17-offline-analysis-stdout.json",
+      "bytes": 14216,
+      "sha256": "c9184cedc86ab09da3db2a51255d8d109aca9d2f9bde5bd7dcea40ee1421ffc4",
+      "source": "../../../../../../handoff/x51-c17-offline-analysis-stdout.json"
+    },
+    {
+      "file": "analysis/x51-c17-offline-analysis-stderr.txt.gz",
+      "bytes": 20,
+      "sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e",
+      "source": "../../../../../../handoff/x51-c17-offline-analysis-stderr.txt",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "losslessGzip": true
+    },
+    {
+      "file": "analysis/offline-execution-source.json",
+      "bytes": 168,
+      "sha256": "97e716e1a04c3da1ae6c10128a201bc33682620c11eb4cc2c6695ecd0cfbd6e4",
+      "generatedSummary": true
+    },
+    {
+      "file": "analysis/x51-c17-analysis-validator.cjs",
+      "bytes": 3168,
+      "sha256": "c8722bd3f21d0a6766c83dd6209e7297e67095bb47d6f148129343f737dcdd1c",
+      "source": "../../../../../../handoff/x51-c17-analysis-validator.cjs"
+    },
+    {
+      "file": "x51-curate-c17.cjs",
+      "bytes": 10138,
+      "sha256": "e91ecfcc9e80145437c89aefa1d1a7dc7a22c16db717b724b172f3fc2f03cbb5",
+      "source": "../../../../../../handoff/x51-curate-c17.cjs"
+    },
+    {
+      "file": "x51-curation-core.cjs",
+      "bytes": 4538,
+      "sha256": "22d93af7ae3d4c560784326b5ae2d8b2ab0cd63fc2a7ed9618c57e9b6b383a89",
+      "source": "../../../../../../handoff/x51-curation-core.cjs"
+    },
+    {
+      "file": "x51-verify-evidence.cjs",
+      "bytes": 3569,
+      "sha256": "b7287c3d4d3a03987e6692bce15f37ca0ecc2579a1bcbc9252e018596885fadd",
+      "source": "../../../../../../handoff/x51-verify-evidence.cjs"
+    },
+    {
+      "file": "curation-config.json",
+      "bytes": 11014,
+      "sha256": "0b27b5af088e60f332d10b367e3b9ba2692f7cfd908d805f983a4048f95811d6",
+      "source": "../../../../../../handoff/x51-c17-curation-config.json"
+    },
+    {
+      "file": "README.md",
+      "bytes": 6714,
+      "sha256": "641de8631139c36825e831956b28cdffc75a7a255288a4e9dd7545a8e88554c1",
+      "source": "../../../../../../handoff/x51-c17-evidence-readme.md"
+    },
+    {
+      "file": ".gitattributes",
+      "bytes": 86,
+      "sha256": "7d5cf34924e48f80bc1647256616f3b71eae38610009529eed16b01b797f8517"
+    },
+    {
+      "file": "summary.json",
+      "bytes": 10373,
+      "sha256": "0d25b5b066f46673846b7fbe524539a1749dc1cd111a69e4fac7d3b231a9c454",
+      "generatedSummary": true
+    }
+  ],
+  "countExcludesThisInventory": true
+}
