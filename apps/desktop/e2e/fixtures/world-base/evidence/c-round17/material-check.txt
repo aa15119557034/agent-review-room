@@ -1,0 +1,1 @@
+CHECK {"ground":[":true:true","station-island-ground-transition:true:true","env-terrain-ground-island-blend:true:true","env-terrain-levee-island-blend:true:true"],"ownMeadow":true,"freshMeadowPatched":false,"freshFlowerPatched":false}

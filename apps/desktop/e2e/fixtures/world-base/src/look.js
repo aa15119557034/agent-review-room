@@ -184,23 +184,32 @@ export function createLook(renderer, camera) {
       material.needsUpdate = true;
     }
     // Town greenery: terrain sward under the blades, the blades and the flowers.
-    const terrain = island.terrain.material;
-    Object.assign(terrain.uniforms, townUniforms);
-    terrain.fragmentShader = insert(terrain.fragmentShader, 'void main(){', `${TOWN}\nvoid main(){`, 'terrain town entry');
-    terrain.fragmentShader = insert(terrain.fragmentShader, 'vec3 tint = meadowTint(P.xz, wet);',
-      `vec3 tint = meadowTint(P.xz, wet);
+    // The transition ring copied the terrain shader before this patch; the station
+    // edge blends are created later from the transition, so patching both here
+    // (sharing this look's uniform objects) carries the town tint to all of them.
+    for (const [ground, label] of [[island.terrain.material, 'terrain'], [island.transition.material, 'transition']]) {
+      Object.assign(ground.uniforms, townUniforms);
+      ground.fragmentShader = insert(ground.fragmentShader, 'void main(){', `${TOWN}\nvoid main(){`, label + ' town entry');
+      ground.fragmentShader = insert(ground.fragmentShader, 'vec3 tint = meadowTint(P.xz, wet);',
+        `vec3 tint = meadowTint(P.xz, wet);
   float wbTown = wbTownMask(P.xz);
-  tint = wbTownGreen(tint, wbTown);`, 'terrain town sward');
-    terrain.fragmentShader = insert(terrain.fragmentShader, 'tintAmt *= 1.0 - strippedFiltered(uv);',
-      `tintAmt *= 1.0 - strippedFiltered(uv);
-  tintAmt *= 1.0 - 0.75 * wbTown;`, 'terrain town flower wash');
-    terrain.needsUpdate = true;
+  tint = wbTownGreen(tint, wbTown);`, label + ' town sward');
+      ground.fragmentShader = insert(ground.fragmentShader, 'tintAmt *= 1.0 - strippedFiltered(uv);',
+        `tintAmt *= 1.0 - strippedFiltered(uv);
+  tintAmt *= 1.0 - 0.75 * wbTown;`, label + ' town flower wash');
+      ground.needsUpdate = true;
+    }
+    // Meadow builds its shell materials lazily. The prototype wrapper is installed
+    // once and holds no look state: each Meadow carries the uniforms of the look
+    // that adopted it, and a Meadow no look adopted gets the upstream material.
     const meadow = island.meadow, shell = Object.getPrototypeOf(meadow.shells[0]);
-    if (!shell.wbTownPatched) {
+    if (!shell.wbTownMaterial) {
       const material = shell.material;
-      shell.material = function wbTownMaterial() {
+      shell.wbTownMaterial = function wbTownMaterial() {
         const m = material.call(this);
-        Object.assign(m.uniforms, townUniforms);
+        const uniforms = this.meadow.wbTownUniforms;
+        if (!uniforms) return m;
+        Object.assign(m.uniforms, uniforms);
         m.vertexShader = insert(m.vertexShader, 'void main(){', `${TOWN}\nvoid main(){`, 'meadow town entry');
         if (this.kind === 'grass') {
           m.vertexShader = insert(m.vertexShader, '* mix(0.88, 1.14, cl.w);',
@@ -214,8 +223,9 @@ export function createLook(renderer, camera) {
         }
         return m;
       };
-      shell.wbTownPatched = true;
+      shell.material = shell.wbTownMaterial;
     }
+    meadow.wbTownUniforms = townUniforms;
     for (const s of meadow.shells) for (const mesh of s.pool) { const old = mesh.material; mesh.material = s.material(); old.dispose(); }
     const water = island.water.material;
     // The shallow coefficient, rather than bloom, dominates the cyan halos.
