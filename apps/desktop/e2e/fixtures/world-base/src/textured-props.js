@@ -115,7 +115,7 @@ export async function addStationTexturedProps({ ctx, root }) {
       crate: { position: placed.position.toArray(), supportY: ground, bounds },
       carton: { position: [26.05, ground + size.y, -28.35], size: [.58, .28, .46] },
       collision: { x: collider.cx, z: collider.cz, width: .58, depth: .46, y0: collider.y0, y1: collider.y1 },
-      view: { position: [26.35, ctx.L.heightAt(26.35, -27.1) + .012 + 1.6, -27.1], target: [24.4, .85, -28.78] },
+      view: { position: [28.4, ctx.L.heightAt(28.4, -27.1) + .012 + 1.6, -27.1], target: [25, .85, -28.7] },
       ownership: 'Station owns source crate geometry, adapted materials and seven textures; city clones geometry/materials and borrows textures. Dispose city first.',
     } };
   } catch (error) {

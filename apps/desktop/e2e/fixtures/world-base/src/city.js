@@ -173,7 +173,7 @@ export async function createCity({ scene, station, island, skyline }) {
     stats.texturedProps = { crate: { position: crateGroup.position.toArray(), triangles: crateSource.stats.crateTriangles },
       sign: { position: [4.55, supportY, -122.35], rotationY: .35, size: [.45, .68], blank: true },
       pot: { position: [6.25, supportY, -122.7], triangles: gb.tris - potStart },
-      view: { position: [7.8, supportY + 1.6, -122.15], target: [3.8, shop.baseY + 1.05, -123.25] },
+      view: { position: [8, supportY + 1.6, -122.1], target: [5.15, supportY + .36, -122.7] },
       walkable: false, borrowedAssetTextures: borrowedAssetTextures.size };
     gb.flush(root, 'town-edge-kit');
     const laundry = H.laundry.build();
