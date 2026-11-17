@@ -1,0 +1,106 @@
+{
+  "frozenAt": "2026-11-17T14:04:17.860Z",
+  "scope": "Archive-preparation immutable file hashes; this is not a rerun or an assertion of historical driver identity.",
+  "files": {
+    "x51-c15-hidden-city-cpu.mjs": {
+      "bytes": 18590,
+      "sha256": "37fc3504284a0e01f793725bf0bec8fd76d9b61b1571c3bd91e8c503219af509"
+    },
+    "x51-c15-hidden-before.json": {
+      "bytes": 2031488,
+      "sha256": "7b65fd506cdff0a212409fbaaa6ff4fb38b5f78ecffbf6d14f14be555c1ad704"
+    },
+    "x51-c15-hidden-before-stderr.txt": {
+      "bytes": 302,
+      "sha256": "88e5e87bb1ee2effd49823df359dcb4015570ecbd885218a03921fcf3d020871"
+    },
+    "x51-c15-hidden-after.json": {
+      "bytes": 2034979,
+      "sha256": "189ed971f558d1afede180ec1c8d7775afcef67f8e4512728a1f8f4f9f73c9b0"
+    },
+    "x51-c15-hidden-after-stderr.txt": {
+      "bytes": 302,
+      "sha256": "88e5e87bb1ee2effd49823df359dcb4015570ecbd885218a03921fcf3d020871"
+    },
+    "x51-c15-hidden-proof.mjs": {
+      "bytes": 8398,
+      "sha256": "435c2645eb24ec5f5f16be0228c4d54f8d2ec3c824a417fb47560b80e7226f74"
+    },
+    "x51-c15-hidden-proof.json": {
+      "bytes": 215335,
+      "sha256": "d775309fbbdd33172cbd953e7c95a5611fb6cc08680fdb4b70939c439f5788d1"
+    },
+    "x51-c15-hidden-proof-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "x51-c15-hidden-audit.json": {
+      "bytes": 4878,
+      "sha256": "50f4c2900710bf24d35f1827f5fa8b6b88d775b97ffecb9ebea7d7890c4a34e9"
+    },
+    "x51-c15-hidden-audit.md": {
+      "bytes": 2085,
+      "sha256": "2a9e7e6b17a8cd4d7a9599aea031f179ac468f7e32212778918856f2f430d6dc"
+    },
+    "x51-c15-facade-city-cpu.mjs": {
+      "bytes": 19592,
+      "sha256": "3ff1f7729d7d5ecfcac499359a8ec370bc44dfc9d941183c6f32a16fcb86f4de"
+    },
+    "x51-c15-full-shops-setup.mjs": {
+      "bytes": 1280,
+      "sha256": "7033e1abe2c465cf7a5293cf1bf653ee32539c00e943f6d7d007cd6ac8868419"
+    },
+    "x51-c15-facade-extra-checks.mjs": {
+      "bytes": 4314,
+      "sha256": "f08b8c4d6cfd9b5fef0b6e3a2b3520ec47418ca38a152cacd02e097c925518b7"
+    },
+    "x51-c15-facade-city-result.json": {
+      "bytes": 2164308,
+      "sha256": "043062488cc0731e37dd9eced62e728a856fa69ddd9ef598e80ff491eda403f4"
+    },
+    "x51-c15-facade-city-stderr.txt": {
+      "bytes": 6858,
+      "sha256": "29c1947fa29c063a0e252409567c2f6858e0df58c17def81429b8aea48edc56f"
+    },
+    "x51-c15-facade-atlas-boundary.json": {
+      "bytes": 377,
+      "sha256": "d0697ca23907d6e14a6a6b1fd98154304fb71bd1c0852400b6e82ee85ccf16cc"
+    },
+    "x51-c15-facade-atlas-boundary-stderr.txt": {
+      "bytes": 6638,
+      "sha256": "765679ed3e26c27051df13e44374ef5c99e3eca82f45ce8f364585cbcd4d740e"
+    },
+    "x51-c15-facade-city-driver-failure1.txt": {
+      "bytes": 1300,
+      "sha256": "3bd0a1e344547ed52cd34e220b13904f13d10505d0ba83fa5c5cdb6dad87c592"
+    },
+    "x51-c15-facade-implementation.md": {
+      "bytes": 5057,
+      "sha256": "6218db855f0cf46ed70e6bfad9546cd37ddcaa144ba6765b156bf185fde21bfb"
+    },
+    "x51-c15-facade-audit.json": {
+      "bytes": 3104,
+      "sha256": "0ad7b7c46837f7c0b65c1958163a8c07dd825459d7562aa1a6b321d878e20cad"
+    },
+    "x51-p2-service-cpu.mjs": {
+      "bytes": 5580,
+      "sha256": "fdff738903906f964220e49b6fbb407a956c80e0b0c6232496f94e3b8da8036e"
+    },
+    "x51-p2-service-cpu-result.json": {
+      "bytes": 5669,
+      "sha256": "39d9b30b8d32f3b626cf488c8d789ae44e266d969077c3f3105da632ecd8e8be"
+    },
+    "x51-p2-service-cpu-stderr.txt": {
+      "bytes": 28212,
+      "sha256": "fd9e66fa23dd8c21bc633779fcbb9a0497fade802115b75528bac5f495fdffe3"
+    },
+    "x51-p2-service-cpu-final.json": {
+      "bytes": 5669,
+      "sha256": "82c477934410b881ae34e961f94f4a1f31ccf0ddf522085ae466ee08ecead54f"
+    },
+    "x51-p2-service-cpu-final-stderr.txt": {
+      "bytes": 28212,
+      "sha256": "fd9e66fa23dd8c21bc633779fcbb9a0497fade802115b75528bac5f495fdffe3"
+    }
+  }
+}

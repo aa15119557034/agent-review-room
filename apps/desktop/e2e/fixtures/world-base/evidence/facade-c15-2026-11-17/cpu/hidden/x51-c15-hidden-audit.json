@@ -1,0 +1,150 @@
+{
+  "head": "0904d870068e0138ba633b47faaf927feb684194",
+  "dirtySource": true,
+  "sourceHashes": {
+    "src/city.js": "cb5ff70b8d7a6e98dd50d9c66b8af1dbb531e72bba7c51dab2a4f30c7143587e",
+    "src/city-apartments.js": "bc5c88f6124672b7fd59ec1476c5f0c8e3049ba7553840b392b225096d198139",
+    "src/streetscape.js": "c145191868bb32538dde34daee7229b8b04117b3713e7c2865506596d3d35998",
+    "src/look.js": "3bb978f9ef4222dea0ec102b2dc9d8667faa06f8a5c099dbcbc73e75342fcc6a",
+    "upstream/sakuragaoka/src/world/houses/gb.js": "1eff740f7c981529cfbdf4dd070309905d147cf4d9897a5bffcda5040ea2c1c5",
+    "upstream/sakuragaoka/src/world/houses/props.js": "9dec02c33081cfefa6d302dd5d91a3f1b05ff618c0dcf2c3000d198df127f4f2"
+  },
+  "commands": [
+    {
+      "command": "node D:/codex/2026-11-16/world-implementation/handoff/x51-c15-hidden-city-cpu.mjs",
+      "exit": 0,
+      "output": "x51-c15-hidden-before.json",
+      "source": "0904d87 before edit"
+    },
+    {
+      "command": "node D:/codex/2026-11-16/world-implementation/handoff/x51-c15-hidden-city-cpu.mjs --candidate",
+      "exit": 0,
+      "output": "x51-c15-hidden-after.json",
+      "source": "dirty two-file candidate; hashes pinned in result"
+    },
+    {
+      "command": "node D:/codex/2026-11-16/world-implementation/handoff/x51-c15-hidden-proof.mjs",
+      "exit": 0,
+      "output": "x51-c15-hidden-proof.json"
+    },
+    {
+      "command": "node --check src/city.js",
+      "cwd": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base",
+      "exit": 0
+    },
+    {
+      "command": "node --check src/city-apartments.js",
+      "cwd": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base",
+      "exit": 0
+    },
+    {
+      "command": "git diff --check",
+      "cwd": "D:/codex/2026-11-16/world-implementation/world-base",
+      "exit": 0
+    }
+  ],
+  "before": 29553,
+  "after": 29037,
+  "saved": 516,
+  "strictHeadroom": 962,
+  "categories": {
+    "foundation": {
+      "faces": 15,
+      "triangles": 30,
+      "directions": {
+        "t": 5,
+        "d": 10
+      },
+      "solidCells": 599,
+      "groundCells": 5,
+      "minGroundGap": 0.05000000000000071
+    },
+    "wallTopBottom": {
+      "faces": 99,
+      "triangles": 198,
+      "directions": {
+        "t": 50,
+        "d": 49
+      },
+      "solidCells": 293,
+      "groundCells": 0,
+      "minGroundGap": null
+    },
+    "wallMountedDoor": {
+      "faces": 38,
+      "triangles": 76,
+      "directions": {
+        "b": 38
+      },
+      "solidCells": 38,
+      "groundCells": 0,
+      "minGroundGap": null
+    },
+    "stairs": {
+      "faces": 106,
+      "triangles": 212,
+      "directions": {
+        "d": 56,
+        "b": 41,
+        "f": 9
+      },
+      "solidCells": 53,
+      "groundCells": 103,
+      "minGroundGap": 0.049572366722450134
+    }
+  },
+  "boxCoordinatesAndMaterialsUnchanged": 1371,
+  "ownership": {
+    "textureDisposals": 0,
+    "geometryDisposals": 26,
+    "materialDisposals": 25
+  },
+  "limitations": [
+    "No GPU or visual acceptance. Image/canvas pixels mocked by reused CPU driver.",
+    "Continuous ground proof targets heightAt and explicit transition triangles; rendered CDLOD ground appearance still requires ordinary GPU acceptance.",
+    "Opaque coverage derives from source box volumes, not a screen-space fixed-camera cull. Existing all visible surface coordinates and cast/receive options remain unchanged.",
+    "Raw before/after reports preserve their dirty-source distinction; no clean-head rerun is claimed."
+  ],
+  "artifacts": [
+    {
+      "name": "x51-c15-hidden-city-cpu.mjs",
+      "bytes": 18590,
+      "sha256": "37fc3504284a0e01f793725bf0bec8fd76d9b61b1571c3bd91e8c503219af509"
+    },
+    {
+      "name": "x51-c15-hidden-before.json",
+      "bytes": 2031488,
+      "sha256": "7b65fd506cdff0a212409fbaaa6ff4fb38b5f78ecffbf6d14f14be555c1ad704"
+    },
+    {
+      "name": "x51-c15-hidden-before-stderr.txt",
+      "bytes": 302,
+      "sha256": "88e5e87bb1ee2effd49823df359dcb4015570ecbd885218a03921fcf3d020871"
+    },
+    {
+      "name": "x51-c15-hidden-after.json",
+      "bytes": 2034979,
+      "sha256": "189ed971f558d1afede180ec1c8d7775afcef67f8e4512728a1f8f4f9f73c9b0"
+    },
+    {
+      "name": "x51-c15-hidden-after-stderr.txt",
+      "bytes": 302,
+      "sha256": "88e5e87bb1ee2effd49823df359dcb4015570ecbd885218a03921fcf3d020871"
+    },
+    {
+      "name": "x51-c15-hidden-proof.mjs",
+      "bytes": 8398,
+      "sha256": "435c2645eb24ec5f5f16be0228c4d54f8d2ec3c824a417fb47560b80e7226f74"
+    },
+    {
+      "name": "x51-c15-hidden-proof.json",
+      "bytes": 215335,
+      "sha256": "d775309fbbdd33172cbd953e7c95a5611fb6cc08680fdb4b70939c439f5788d1"
+    },
+    {
+      "name": "x51-c15-hidden-proof-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

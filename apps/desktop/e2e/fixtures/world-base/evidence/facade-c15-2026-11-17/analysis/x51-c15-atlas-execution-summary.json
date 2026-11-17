@@ -1,0 +1,508 @@
+{
+  "schema": "x51-c15-atlas-execution-summary-v1",
+  "sourceHead": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+  "rawAudit": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c15-v1/scene-assets-audit.json",
+  "rawAuditSha256": "c0630cfcf4d3f743adbbe60df4addc7812c72ca1debf787807e75ad82d4bc625",
+  "receipt": "D:/codex/2026-11-16/world-implementation/handoff/x51-c15-execution-receipt.json",
+  "receiptSha256": "08425702d0525a626f0fc6637596b3ad5b0927e23336d0ed06ce1242103edbf7",
+  "pageCounts": {
+    "lit": 5,
+    "glow": 1,
+    "cut": 1,
+    "inner": 2
+  },
+  "laundryPage": {
+    "index": 4,
+    "width": 1024,
+    "height": 1024,
+    "version": 4,
+    "sourceVersion": 4,
+    "uploadedVersion": 4,
+    "hasGLTexture": true,
+    "rgbaSha256": "23a1ac5a73cd077a62d2a3b7aa7fbcd73bd31b27a4a3c0de2271e8cd1a6a9cb8",
+    "textureUUID": "63f5174e-e444-4148-bc21-276c95107e96",
+    "actualSceneMaterials": [
+      {
+        "material": {
+          "uuid": "8e8554a2-91ca-4812-ba12-62b4c8d7c8f9",
+          "name": "shopsA-atlas-4",
+          "type": "MeshToonMaterial",
+          "colorRGB": [
+            1,
+            1,
+            1
+          ],
+          "emissiveRGB": [
+            0,
+            0,
+            0
+          ],
+          "emissiveIntensity": 1,
+          "toneMapped": true,
+          "vertexColors": false,
+          "opacity": 1,
+          "transparent": false,
+          "side": 0,
+          "depthWrite": true,
+          "fog": true,
+          "map": {
+            "uuid": "63f5174e-e444-4148-bc21-276c95107e96",
+            "name": "",
+            "type": 1009,
+            "colorSpace": "srgb",
+            "width": 1024,
+            "height": 1024,
+            "repeat": [
+              1,
+              1
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "matrix": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ],
+            "wrapS": 1001,
+            "wrapT": 1001,
+            "channel": 0
+          },
+          "normalMap": null,
+          "roughnessMap": null,
+          "normalScale": [
+            1,
+            1
+          ],
+          "shaderUniforms": null,
+          "clipPlanes": 0,
+          "clipIntersection": false,
+          "clipShadows": false,
+          "softClip": null
+        },
+        "sameMaterialAsPage": false,
+        "meshes": [
+          {
+            "owner": "city",
+            "name": "",
+            "uuid": "89943a3d-f29a-4a51-9e06-1dd1d899b5e6",
+            "triangles": 2
+          },
+          {
+            "owner": "city",
+            "name": "town-edge-kit",
+            "uuid": "fa389643-c6d9-41ea-83a3-2b24fd1745fd",
+            "triangles": 6
+          }
+        ]
+      }
+    ]
+  },
+  "productionAllocationAudit": {
+    "page": 4,
+    "before": {
+      "pages": 5,
+      "x": 624,
+      "y": 0,
+      "rowH": 368
+    },
+    "after": {
+      "pages": 5,
+      "x": 984,
+      "y": 368,
+      "rowH": 200
+    },
+    "regions": [
+      {
+        "key": "name",
+        "w": 512,
+        "h": 96,
+        "uv": [
+          0.00390625,
+          0.54296875,
+          0.50390625,
+          0.63671875
+        ]
+      },
+      {
+        "key": "function",
+        "w": 256,
+        "h": 96,
+        "uv": [
+          0.51171875,
+          0.54296875,
+          0.76171875,
+          0.63671875
+        ]
+      },
+      {
+        "key": "aframe",
+        "w": 192,
+        "h": 192,
+        "uv": [
+          0.76953125,
+          0.44921875,
+          0.95703125,
+          0.63671875
+        ]
+      }
+    ],
+    "reusedRegions": false,
+    "newTextures": 0,
+    "text": [
+      "さくら コインランドリー",
+      "洗濯・乾燥",
+      "セルフサービス"
+    ],
+    "owner": "station",
+    "pixelsUpdated": true
+  },
+  "actualLaundryTextCalls": [
+    {
+      "text": "さくら コインランドリー",
+      "args": [
+        256,
+        48
+      ],
+      "font": "bold 42px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+      "fillStyle": "#344e50",
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        4,
+        372,
+        0,
+        1
+      ],
+      "page": {
+        "kind": "lit",
+        "index": 4
+      }
+    },
+    {
+      "text": "洗濯・乾燥",
+      "args": [
+        128,
+        30
+      ],
+      "font": "bold 30px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+      "fillStyle": "#344e50",
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        524,
+        372,
+        0,
+        1
+      ],
+      "page": {
+        "kind": "lit",
+        "index": 4
+      }
+    },
+    {
+      "text": "セルフサービス",
+      "args": [
+        128,
+        69
+      ],
+      "font": "bold 26px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+      "fillStyle": "#344e50",
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        524,
+        372,
+        0,
+        1
+      ],
+      "page": {
+        "kind": "lit",
+        "index": 4
+      }
+    },
+    {
+      "text": "さくら",
+      "args": [
+        96,
+        33
+      ],
+      "font": "bold 28px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+      "fillStyle": "#344e50",
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        788,
+        372,
+        0,
+        1
+      ],
+      "page": {
+        "kind": "lit",
+        "index": 4
+      }
+    },
+    {
+      "text": "コインランドリー",
+      "args": [
+        96,
+        72
+      ],
+      "font": "bold 25px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+      "fillStyle": "#344e50",
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        788,
+        372,
+        0,
+        1
+      ],
+      "page": {
+        "kind": "lit",
+        "index": 4
+      }
+    },
+    {
+      "text": "洗濯・乾燥",
+      "args": [
+        96,
+        121
+      ],
+      "font": "bold 27px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+      "fillStyle": "#344e50",
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        788,
+        372,
+        0,
+        1
+      ],
+      "page": {
+        "kind": "lit",
+        "index": 4
+      }
+    },
+    {
+      "text": "セルフサービス",
+      "args": [
+        96,
+        157
+      ],
+      "font": "bold 21px \"Noto Sans JP\", \"Yu Gothic UI\", \"Yu Gothic\", Meiryo, \"Hiragino Sans\", sans-serif",
+      "fillStyle": "#344e50",
+      "transform": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        788,
+        372,
+        0,
+        1
+      ],
+      "page": {
+        "kind": "lit",
+        "index": 4
+      }
+    }
+  ],
+  "regions": [
+    {
+      "key": "name",
+      "uv": [
+        0.00390625,
+        0.54296875,
+        0.50390625,
+        0.63671875
+      ],
+      "x": 4,
+      "y": 372,
+      "width": 512,
+      "height": 96,
+      "rgbaSha256": "51903e8addd463048d3f4f92bbbf50f3bb18613bdf60ff7368aa703f04fa67e9",
+      "uniqueRGBA": 199,
+      "file": "laundry-atlas-name.png",
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c15-v1/laundry-atlas-name.png",
+      "pngSha256": "78b7b16288752f32474d7884e5dcae52f78e0d87872eff04da67e2fbc70f945f",
+      "visuallyRead": true
+    },
+    {
+      "key": "function",
+      "uv": [
+        0.51171875,
+        0.54296875,
+        0.76171875,
+        0.63671875
+      ],
+      "x": 524,
+      "y": 372,
+      "width": 256,
+      "height": 96,
+      "rgbaSha256": "26cc1a9b5b92766931d46b398cef6c09d6584329b3b111d156f84346269f9d98",
+      "uniqueRGBA": 209,
+      "file": "laundry-atlas-function.png",
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c15-v1/laundry-atlas-function.png",
+      "pngSha256": "f72ec2bd1a2b3314e9d4b6f498fe10c3bcca11c2d0fe6b03de5d4be6c37b82d0",
+      "visuallyRead": true
+    },
+    {
+      "key": "aframe",
+      "uv": [
+        0.76953125,
+        0.44921875,
+        0.95703125,
+        0.63671875
+      ],
+      "x": 788,
+      "y": 372,
+      "width": 192,
+      "height": 192,
+      "rgbaSha256": "1a5a549571e640e71373db26debd43685c5439b99d15e7be9cef1e6918b8bb75",
+      "uniqueRGBA": 225,
+      "file": "laundry-atlas-aframe.png",
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c15-v1/laundry-atlas-aframe.png",
+      "pngSha256": "ac654f6283b29b4334b9844c2d3919c20b0034c4e2b087153473f490b89dfaae",
+      "visuallyRead": true
+    }
+  ],
+  "unuploadedPages": [
+    {
+      "kind": "lit",
+      "index": 1,
+      "actualSceneMaterials": 0
+    },
+    {
+      "kind": "glow",
+      "index": 0,
+      "actualSceneMaterials": 0
+    },
+    {
+      "kind": "cut",
+      "index": 0,
+      "actualSceneMaterials": 0
+    },
+    {
+      "kind": "inner",
+      "index": 0,
+      "actualSceneMaterials": 0
+    },
+    {
+      "kind": "inner",
+      "index": 1,
+      "actualSceneMaterials": 0
+    }
+  ],
+  "restoration": {
+    "sourceUnchanged": true,
+    "driverUnchanged": true,
+    "assetsUnchanged": true,
+    "restoreUnchanged": true,
+    "textObserver": {
+      "intact": true,
+      "restored": true
+    }
+  },
+  "visualObservations": [
+    {
+      "view": "service-corner",
+      "observation": "Vent and staff-only sticker are visible on the east shed wall; short cover is a small ground detail, not all service props readable at this scale."
+    },
+    {
+      "view": "laundry-details",
+      "observation": "A-frame now has visible lettering and glass carries function labels; scene perspective reduces legibility relative to the raw atlas."
+    },
+    {
+      "view": "21-front-eye",
+      "observation": "Horizontal laundry name, function signs and some new upper facade units are visible; do not claim all facade additions unobstructed."
+    },
+    {
+      "view": "20-rear-eye",
+      "observation": "Some added AC units and corridor details are visible with existing stair shadows; screenshot is not an installation-clearance measurement."
+    }
+  ],
+  "limits": [
+    "Production allocation before/after are source-reported metadata; raw audit independently reads current page count, versions, pixel bytes and object identity only.",
+    "Null uploadedVersion pages have zero matching material users in current station/city roots; not evidence of failed upload of the laundry page.",
+    "Actual fillText arguments and visually read raw crops confirm generated text, not universal screen-space legibility.",
+    "Same map object and uploadedVersion 4 show the rendered city material uses the updated page; no independent texel readback from GPU texture memory was attempted.",
+    "Full-frame comparison/repeat/performance analysis is owned by root x51-c15-offline-analysis.cjs; this file does not duplicate or pre-judge it.",
+    "CPU hidden-before/after/facade/service evidence retains each original sourceHashes/dirty status; not rewritten to the final commit."
+  ]
+}

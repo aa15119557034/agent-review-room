@@ -1,0 +1,123 @@
+{
+  "scope": "CPU only, no GPU, two owned source files dirty on 0904d87",
+  "actualExitCode": 0,
+  "totalTriangles": 29933,
+  "addedTriangles": 896,
+  "atlas": {
+    "page": 4,
+    "before": {
+      "pages": 5,
+      "x": 624,
+      "y": 0,
+      "rowH": 368
+    },
+    "after": {
+      "pages": 5,
+      "x": 984,
+      "y": 368,
+      "rowH": 200
+    },
+    "regions": [
+      {
+        "key": "name",
+        "w": 512,
+        "h": 96,
+        "uv": [
+          0.00390625,
+          0.54296875,
+          0.50390625,
+          0.63671875
+        ]
+      },
+      {
+        "key": "function",
+        "w": 256,
+        "h": 96,
+        "uv": [
+          0.51171875,
+          0.54296875,
+          0.76171875,
+          0.63671875
+        ]
+      },
+      {
+        "key": "aframe",
+        "w": 192,
+        "h": 192,
+        "uv": [
+          0.76953125,
+          0.44921875,
+          0.95703125,
+          0.63671875
+        ]
+      }
+    ],
+    "reusedRegions": false,
+    "newTextures": 0,
+    "text": [
+      "さくら コインランドリー",
+      "洗濯・乾燥",
+      "セルフサービス"
+    ],
+    "owner": "station",
+    "pixelsUpdated": true
+  },
+  "ownership": {
+    "materialCalls": 31,
+    "uniqueMaterials": 31,
+    "geometryCalls": 28,
+    "uniqueGeometries": 28,
+    "textureCalls": 0,
+    "sharedMaterialCalls": 0,
+    "sharedGeometryCalls": 0
+  },
+  "allNineAcInOneFixedView": true,
+  "files": {
+    "x51-c15-facade-city-cpu.mjs": {
+      "size": 19592,
+      "sha256": "3ff1f7729d7d5ecfcac499359a8ec370bc44dfc9d941183c6f32a16fcb86f4de"
+    },
+    "x51-c15-full-shops-setup.mjs": {
+      "size": 1280,
+      "sha256": "7033e1abe2c465cf7a5293cf1bf653ee32539c00e943f6d7d007cd6ac8868419"
+    },
+    "x51-c15-facade-extra-checks.mjs": {
+      "size": 4314,
+      "sha256": "f08b8c4d6cfd9b5fef0b6e3a2b3520ec47418ca38a152cacd02e097c925518b7"
+    },
+    "x51-c15-facade-city-result.json": {
+      "size": 2164308,
+      "sha256": "043062488cc0731e37dd9eced62e728a856fa69ddd9ef598e80ff491eda403f4"
+    },
+    "x51-c15-facade-city-stderr.txt": {
+      "size": 6858,
+      "sha256": "29c1947fa29c063a0e252409567c2f6858e0df58c17def81429b8aea48edc56f"
+    },
+    "x51-c15-facade-atlas-boundary.json": {
+      "size": 377,
+      "sha256": "d0697ca23907d6e14a6a6b1fd98154304fb71bd1c0852400b6e82ee85ccf16cc"
+    },
+    "x51-c15-facade-atlas-boundary-stderr.txt": {
+      "size": 6638,
+      "sha256": "765679ed3e26c27051df13e44374ef5c99e3eca82f45ce8f364585cbcd4d740e"
+    },
+    "x51-c15-facade-city-driver-failure1.txt": {
+      "size": 1300,
+      "sha256": "3bd0a1e344547ed52cd34e220b13904f13d10505d0ba83fa5c5cdb6dad87c592"
+    },
+    "x51-c15-facade-implementation.md": {
+      "size": 5057,
+      "sha256": "6218db855f0cf46ed70e6bfad9546cd37ddcaa144ba6765b156bf185fde21bfb"
+    }
+  },
+  "source": {
+    "src/city.js": {
+      "size": 29330,
+      "sha256": "5df31a8d2ae981e8c962bc7a5b9a5d76c9caeb4bae97990b65def4ca6b116ebe"
+    },
+    "src/city-apartments.js": {
+      "size": 17030,
+      "sha256": "adeb135b172fe99e3482df2eca15f1451598b94600916f24e4ca496520f93cc0"
+    }
+  }
+}

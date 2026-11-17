@@ -1,0 +1,118 @@
+{
+  "schema": "x51-c15-execution-receipt-v1",
+  "recordedAt": "2026-11-17T14:07:10.257Z",
+  "provenance": "Post-execution record by the agent that invoked tools.exec_command/write_stdin; session and exit are actual returned tool results. Original process.json and redirected stdout/stderr retain independent PID/child-exit text. This is not a contemporaneously generated process supervisor receipt.",
+  "sourceHead": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+  "gpuReleased": true,
+  "runs": [
+    {
+      "kind": "normal",
+      "directory": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-town-c15/",
+      "session": 87880,
+      "pid": 59144,
+      "actualExit": 1,
+      "completionToolChunk": "3c4842",
+      "command": "node scripts/baseline.cjs --scene=combined --electron=D:/codex/2026-11-16/world-implementation/runtime-path-probe/electron.exe --output=artifacts/gpu-town-c15 --stills",
+      "cwd": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/",
+      "stdout": "D:/codex/2026-11-16/world-implementation/handoff/x51-c15-normal-stdout.txt",
+      "stderr": "D:/codex/2026-11-16/world-implementation/handoff/x51-c15-normal-stderr.txt",
+      "report": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-town-c15/render-report.json",
+      "renderOk": true,
+      "transportClean": false,
+      "ok": false
+    },
+    {
+      "kind": "targeted",
+      "directory": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c15-v1/",
+      "session": 54034,
+      "pid": 67136,
+      "actualExit": 0,
+      "completionToolChunk": "9f69de",
+      "command": "node x51-c15-diagnostic-gpu.cjs gpu-look-c15-v1 96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+      "cwd": "D:/codex/2026-11-16/world-implementation/handoff/",
+      "stdout": "D:/codex/2026-11-16/world-implementation/handoff/x51-c15-targeted-stdout.txt",
+      "stderr": "D:/codex/2026-11-16/world-implementation/handoff/x51-c15-targeted-stderr.txt",
+      "report": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c15-v1/look-report.json",
+      "renderOk": true,
+      "transportClean": true,
+      "ok": true
+    }
+  ],
+  "serviceCPU": {
+    "command": "node x51-p2-service-cpu.mjs > x51-p2-service-cpu-final.json 2> x51-p2-service-cpu-final-stderr.txt",
+    "cwd": "D:/codex/2026-11-16/world-implementation/handoff/",
+    "actualExit": 0,
+    "completionToolChunk": "9c0262",
+    "observedWallTimeSeconds": 4.5764356,
+    "report": "D:/codex/2026-11-16/world-implementation/handoff/x51-p2-service-cpu-final.json",
+    "stderr": "D:/codex/2026-11-16/world-implementation/handoff/x51-p2-service-cpu-final-stderr.txt",
+    "sourceSha256": "3df4cc67dcf9a54ccf9ac924a6b0771da43e530d0669cc3051f16b0f3d924a9c",
+    "limit": "No original process/command receipt file was emitted for this CPU command; this records the actual execution agent tool result after the fact. Original report/stderr retained. Dirty-source CPU result is not relabelled as final HEAD."
+  },
+  "evidenceHashes": [
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-town-c15/render-report.json",
+      "sha256": "fd12c155017c0a44982fea56a01e594061ac8411c061e647cb5b9ee3733050cd"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c15-normal-stdout.txt",
+      "sha256": "b61bb6c5ecf3b254c3729ce33be6df0d383f9e889b9e8a53ca485c8438bc056d"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c15-normal-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-town-c15/process.json",
+      "sha256": "f8755d07d7b5c2202b0c42bf9746b0eaf301d489d62a11bc4f7e7d032994f2bb"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-town-c15/source-manifest.json",
+      "sha256": "53a2e7d627a9fda6a75d606a5d6ff147d0866510d5de6d86d559258d4922802f"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-town-c15/run-config.json",
+      "sha256": "598bebd92e0bb80296eb3fb0697155720f01b3e791d045cd05aa0ecf4199fbf9"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c15-v1/look-report.json",
+      "sha256": "fa6caf890da400d6a7b4d0d46939ceeaf3b2c4a36b5a962dfc3d8fa9f6b1d7f7"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c15-targeted-stdout.txt",
+      "sha256": "62b840a254cd93a5baa57feaa65422b0a0ab1026b7dc99d1accac427b6083d24"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c15-targeted-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c15-v1/process.json",
+      "sha256": "30f73542e37496edbd7f04dea0afe3c486097f4b3455bbd4c60020a19b36b266"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c15-v1/source-manifest.json",
+      "sha256": "cada74b58f38575da9f30f55baa515f523074567f571c3618a439c5069247e6a"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c15-v1/run-config.json",
+      "sha256": "eb85bdb8767d4b0ddb48353f3dd7d7c6dbc44aaa76f4ea1a56d59e8955e0fbca"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-p2-service-cpu-final.json",
+      "sha256": "82c477934410b881ae34e961f94f4a1f31ccf0ddf522085ae466ee08ecead54f"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-p2-service-cpu-final-stderr.txt",
+      "sha256": "fd9e66fa23dd8c21bc633779fcbb9a0497fade802115b75528bac5f495fdffe3"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-p2-service-cpu.mjs",
+      "sha256": "fdff738903906f964220e49b6fbb407a956c80e0b0c6232496f94e3b8da8036e"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c15-diagnostic-gpu.cjs",
+      "sha256": "8a1fba4e716674e26de42bd46133fcb1977c36edcc91e23d09f58f2a022b5b3e"
+    }
+  ]
+}

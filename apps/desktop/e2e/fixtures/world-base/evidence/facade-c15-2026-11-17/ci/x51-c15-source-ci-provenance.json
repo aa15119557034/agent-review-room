@@ -1,0 +1,58 @@
+{
+  "sourceHead": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+  "recordedAt": "2026-11-17T14:12:13.113Z",
+  "run": 44098778204,
+  "job": 134092853043,
+  "url": "https://github.com/aa15119557034/agent-review-room/actions/runs/44098778204/job/134092853043",
+  "scope": {
+    "ref": "refs/remotes/pull/254/merge",
+    "sha": "c0c1e493e84eced216706e060756d4e4df02116c",
+    "sourceHead": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+    "baseHead": "e8c37d659ae3e73934efb6e2a21fc822da9610e8",
+    "scope": "CI is associated with exact API head_sha; actual tested checkout is GitHub PR synthetic merge, not direct source-head checkout."
+  },
+  "command": "node D:/codex/2026-11-16/world-implementation/handoff/x51-c15-source-ci-summary.cjs",
+  "summaryExit": 0,
+  "limitations": [
+    "runs.json is the initial in_progress run-list response, retained as captured. checks.json, jobs.json and run.json are final success metadata.",
+    "log.json is the actual downloaded job log represented as a JSON string; test/type/build counts and per-row exit codes are parsed from that log, not inferred from green metadata.",
+    "No local test, CPU geometry, GPU, source edit, or GitHub write was performed."
+  ],
+  "files": [
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c15-source-ci-checks.json",
+      "bytes": 5322,
+      "sha256": "81ff8cef9959547cf3c3fc070c704bbaa966021255595004b789df60d3361e81"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c15-source-ci-runs.json",
+      "bytes": 17136,
+      "sha256": "400d4860535549106df3c0229e643b29f32a5e5e161129099daffcdfe862a28e"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c15-source-ci-jobs.json",
+      "bytes": 4139,
+      "sha256": "10e703fb253e52b31ab450fc444ee23fb2e0493ef28b396ba48d49320f53b7b4"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c15-source-ci-run.json",
+      "bytes": 16093,
+      "sha256": "2b7ccbc7332644dbfc350f24fde58cb9bb81beeacdf63ab233eb08a935f6ecca"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c15-source-ci-log.json",
+      "bytes": 29810,
+      "sha256": "4edaa82dbf809b17c7533d8265a02a5e9d2b1dc6e228f671006c0dfdbe3a0fef"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c15-source-ci-summary.cjs",
+      "bytes": 2521,
+      "sha256": "cca07db51d9c5751ab0eef9aceca24622f0dc147c5241f5db630debac185383c"
+    },
+    {
+      "path": "D:/codex/2026-11-16/world-implementation/handoff/x51-c15-source-ci-summary.json",
+      "bytes": 6774,
+      "sha256": "cab335325e43e36331fab548854fa253e2dca007d886d8417312c2c4ee9dcb0d"
+    }
+  ]
+}

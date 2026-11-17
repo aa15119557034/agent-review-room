@@ -1,0 +1,505 @@
+{
+  "head": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+  "outcomes": [
+    {
+      "artifact": "gpu-town-c15",
+      "head": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+      "pid": 59144,
+      "session": 87880,
+      "actualExit": 1,
+      "stage": "complete",
+      "renderOk": true,
+      "transportClean": false,
+      "source": {
+        "head": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+        "sha256": "53a2e7d627a9fda6a75d606a5d6ff147d0866510d5de6d86d559258d4922802f",
+        "trackedFilesVerified": 203,
+        "pinnedIgnoredFilesVerified": 9,
+        "receipt": "embedded"
+      }
+    },
+    {
+      "artifact": "gpu-look-c15-v1",
+      "head": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+      "pid": 67136,
+      "session": 54034,
+      "actualExit": 0,
+      "stage": "complete",
+      "renderOk": true,
+      "transportClean": true,
+      "source": {
+        "head": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+        "sha256": "cada74b58f38575da9f30f55baa515f523074567f571c3618a439c5069247e6a",
+        "trackedFilesVerified": 204,
+        "pinnedIgnoredFilesVerified": 9,
+        "receipt": "separate"
+      }
+    }
+  ],
+  "analysisSummary": {
+    "rootOfflineMethod": "Offline exact-camera/time/default-AO PNG comparison with C14 and current duplicate captures; original runtime report/frame samples. No GPU rerun or image editing.",
+    "comparisonViews": [
+      {
+        "view": "service-corner",
+        "cameraEqual": true,
+        "timeEqual": true,
+        "pixels": {
+          "changedPixels": 4904,
+          "meanAbsRGB": 0.05165869341563786,
+          "maxAbsRGB": 52,
+          "bounds": [
+            207,
+            0,
+            1346,
+            810
+          ]
+        }
+      },
+      {
+        "view": "laundry-details",
+        "cameraEqual": true,
+        "timeEqual": true,
+        "pixels": {
+          "changedPixels": 24786,
+          "meanAbsRGB": 0.429136316872428,
+          "maxAbsRGB": 139,
+          "bounds": [
+            149,
+            0,
+            1265,
+            886
+          ]
+        }
+      },
+      {
+        "view": "shop-interior",
+        "cameraEqual": true,
+        "timeEqual": true,
+        "pixels": {
+          "changedPixels": 0,
+          "meanAbsRGB": 0,
+          "maxAbsRGB": 0,
+          "bounds": null
+        }
+      },
+      {
+        "view": "20-rear-eye",
+        "cameraEqual": true,
+        "timeEqual": true,
+        "pixels": {
+          "changedPixels": 47431,
+          "meanAbsRGB": 0.6522448559670782,
+          "maxAbsRGB": 186,
+          "bounds": [
+            327,
+            0,
+            1439,
+            899
+          ]
+        }
+      },
+      {
+        "view": "21-front-eye",
+        "cameraEqual": true,
+        "timeEqual": true,
+        "pixels": {
+          "changedPixels": 52256,
+          "meanAbsRGB": 0.5517546296296296,
+          "maxAbsRGB": 175,
+          "bounds": [
+            0,
+            0,
+            1418,
+            899
+          ]
+        }
+      },
+      {
+        "view": "station-street",
+        "cameraEqual": true,
+        "timeEqual": true,
+        "pixels": {
+          "changedPixels": 83,
+          "meanAbsRGB": 0.000022376543209876542,
+          "maxAbsRGB": 1,
+          "bounds": [
+            573,
+            410,
+            1264,
+            643
+          ]
+        }
+      },
+      {
+        "view": "street-detail",
+        "cameraEqual": true,
+        "timeEqual": true,
+        "pixels": {
+          "changedPixels": 0,
+          "meanAbsRGB": 0,
+          "maxAbsRGB": 0,
+          "bounds": null
+        }
+      }
+    ],
+    "repeats": [
+      {
+        "view": "service-corner",
+        "pngEqual": true,
+        "cameraEqual": true,
+        "timeEqual": true,
+        "pixels": {
+          "changedPixels": 0,
+          "meanAbsRGB": 0,
+          "maxAbsRGB": 0,
+          "bounds": null
+        }
+      },
+      {
+        "view": "laundry-details",
+        "pngEqual": true,
+        "cameraEqual": true,
+        "timeEqual": true,
+        "pixels": {
+          "changedPixels": 0,
+          "meanAbsRGB": 0,
+          "maxAbsRGB": 0,
+          "bounds": null
+        }
+      },
+      {
+        "view": "shop-interior",
+        "pngEqual": true,
+        "cameraEqual": true,
+        "timeEqual": true,
+        "pixels": {
+          "changedPixels": 0,
+          "meanAbsRGB": 0,
+          "maxAbsRGB": 0,
+          "bounds": null
+        }
+      },
+      {
+        "view": "20-rear-eye",
+        "pngEqual": true,
+        "cameraEqual": true,
+        "timeEqual": true,
+        "pixels": {
+          "changedPixels": 0,
+          "meanAbsRGB": 0,
+          "maxAbsRGB": 0,
+          "bounds": null
+        }
+      },
+      {
+        "view": "21-front-eye",
+        "pngEqual": true,
+        "cameraEqual": true,
+        "timeEqual": true,
+        "pixels": {
+          "changedPixels": 0,
+          "meanAbsRGB": 0,
+          "maxAbsRGB": 0,
+          "bounds": null
+        }
+      },
+      {
+        "view": "station-street",
+        "pngEqual": false,
+        "cameraEqual": true,
+        "timeEqual": true,
+        "pixels": {
+          "changedPixels": 62,
+          "meanAbsRGB": 0.00001697530864197531,
+          "maxAbsRGB": 1,
+          "bounds": [
+            1006,
+            410,
+            1264,
+            474
+          ]
+        }
+      },
+      {
+        "view": "street-detail",
+        "pngEqual": true,
+        "cameraEqual": true,
+        "timeEqual": true,
+        "pixels": {
+          "changedPixels": 0,
+          "meanAbsRGB": 0,
+          "maxAbsRGB": 0,
+          "bounds": null
+        }
+      }
+    ],
+    "pageCounts": {
+      "lit": 5,
+      "glow": 1,
+      "cut": 1,
+      "inner": 2
+    },
+    "actualLaundryTextCalls": 7,
+    "atlasLimits": [
+      "Production allocation before/after are source-reported metadata; raw audit independently reads current page count, versions, pixel bytes and object identity only.",
+      "Null uploadedVersion pages have zero matching material users in current station/city roots; not evidence of failed upload of the laundry page.",
+      "Actual fillText arguments and visually read raw crops confirm generated text, not universal screen-space legibility.",
+      "Same map object and uploadedVersion 4 show the rendered city material uses the updated page; no independent texel readback from GPU texture memory was attempted.",
+      "Full-frame comparison/repeat/performance analysis is owned by root x51-c15-offline-analysis.cjs; this file does not duplicate or pre-judge it.",
+      "CPU hidden-before/after/facade/service evidence retains each original sourceHashes/dirty status; not rewritten to the final commit."
+    ],
+    "executionReceiptProvenance": "Post-execution record by the agent that invoked tools.exec_command/write_stdin; session and exit are actual returned tool results. Original process.json and redirected stdout/stderr retain independent PID/child-exit text. This is not a contemporaneously generated process supervisor receipt.",
+    "serviceCpuReceiptLimit": "No original process/command receipt file was emitted for this CPU command; this records the actual execution agent tool result after the fact. Original report/stderr retained. Dirty-source CPU result is not relabelled as final HEAD.",
+    "limits": [
+      "Pixel differences are full final encoded RGB, not material-isolated attribution.",
+      "Equal duplicate captures are a fixed-frame check, not walking stability.",
+      "Actual text calls and atlas crop show generated pixels; scene screenshots still require visual review.",
+      "Performance includes real baseline counting overhead and is a single run, not a causal benchmark."
+    ]
+  },
+  "ci": {
+    "head": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+    "actualCheckout": {
+      "ref": "refs/remotes/pull/254/merge",
+      "sha": "c0c1e493e84eced216706e060756d4e4df02116c",
+      "sourceHead": "96ddf39ce4ca6448acf1a59dcc49dbf4ca4908ac",
+      "baseHead": "e8c37d659ae3e73934efb6e2a21fc822da9610e8",
+      "scope": "CI is associated with exact API head_sha; actual tested checkout is GitHub PR synthetic merge, not direct source-head checkout."
+    },
+    "run": 44098778204,
+    "job": 134092853043,
+    "url": "https://github.com/aa15119557034/agent-review-room/actions/runs/44098778204/job/134092853043",
+    "result": "success",
+    "completedAt": "2026-11-17T14:07:57Z",
+    "tests": 1615,
+    "passed": 1615,
+    "types": 9,
+    "builds": 2,
+    "allExitZero": true,
+    "rows": [
+      {
+        "name": "tests-packages/schemas",
+        "code": 0,
+        "milliseconds": 4232,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-packages-schemas.log",
+        "tests": 236,
+        "pass": 236,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-packages/core",
+        "code": 0,
+        "milliseconds": 7692,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-packages-core.log",
+        "tests": 144,
+        "pass": 144,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-packages/db",
+        "code": 0,
+        "milliseconds": 114982,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-packages-db.log",
+        "tests": 230,
+        "pass": 230,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-packages/reviewer-client",
+        "code": 0,
+        "milliseconds": 423,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-packages-reviewer-client.log",
+        "tests": 15,
+        "pass": 15,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-packages/remote-client",
+        "code": 0,
+        "milliseconds": 9421,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-packages-remote-client.log",
+        "tests": 19,
+        "pass": 19,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-apps/agent-server",
+        "code": 0,
+        "milliseconds": 8439,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-apps-agent-server.log",
+        "tests": 218,
+        "pass": 218,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-apps/desktop",
+        "code": 0,
+        "milliseconds": 58482,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-apps-desktop.log",
+        "tests": 423,
+        "pass": 423,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-renderer",
+        "code": 0,
+        "milliseconds": 9084,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-renderer.log",
+        "tests": 271,
+        "pass": 271,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "tests-e2e",
+        "code": 0,
+        "milliseconds": 20183,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\tests-e2e.log",
+        "tests": 59,
+        "pass": 59,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-packages/schemas",
+        "code": 0,
+        "milliseconds": 3631,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-packages-schemas.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-packages/core",
+        "code": 0,
+        "milliseconds": 3738,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-packages-core.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-packages/db",
+        "code": 0,
+        "milliseconds": 4014,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-packages-db.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-packages/reviewer-client",
+        "code": 0,
+        "milliseconds": 3551,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-packages-reviewer-client.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-packages/remote-client",
+        "code": 0,
+        "milliseconds": 3858,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-packages-remote-client.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-apps/agent-server",
+        "code": 0,
+        "milliseconds": 4085,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-apps-agent-server.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-apps/desktop",
+        "code": 0,
+        "milliseconds": 4849,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-apps-desktop.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-renderer",
+        "code": 0,
+        "milliseconds": 7176,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-renderer.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "types-e2e",
+        "code": 0,
+        "milliseconds": 5528,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\types-e2e.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "build-desktop",
+        "code": 0,
+        "milliseconds": 772,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\build-desktop.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "build-agent-server",
+        "code": 0,
+        "milliseconds": 115,
+        "log": "D:\\a\\agent-review-room\\agent-review-room\\.verification\\build-agent-server.log",
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    ],
+    "source": "Read-only GitHub REST check-runs, jobs and actual job log; no GitHub write or local test execution.",
+    "logSha256": "4edaa82dbf809b17c7533d8265a02a5e9d2b1dc6e228f671006c0dfdbe3a0fef"
+  },
+  "scope": "Different dirty CPU stages retained separately; final GPU exact Git source/9asset bytes checked. Original failures and actual exits retained. Full reports/logs lossless gzip. No asset originals/cache/user profile. No scene execution or GitHub writes by curator."
+}
