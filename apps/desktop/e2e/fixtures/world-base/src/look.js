@@ -11,31 +11,55 @@ float wbDepth(vec2 uv) {
   return uNear*uFar / mix(uFar+(uNear-uFar)*z, uNear+(uFar-uNear)*z, uReversed);
 }
 uniform float uProjScale, uAO;
-// Depth-only crease AO. Pairs of opposite samples are compared in inverse depth,
-// which is affine across any plane, so flat ground at grazing angles stays clean
-// and only concave contacts (wall/ground, under eaves and balconies) darken.
+// View-space position from linear depth (uProjScale = focal length in pixels).
+vec3 wbPos(vec2 uv) {
+  float d = wbDepth(uv);
+  return vec3((uv - 0.5)*uRes*d/uProjScale, -d);
+}
+// Normal from the flatter of each pair of one-pixel differences, so a pixel on a
+// silhouette takes its own surface's slope, never the step to the background.
+vec3 wbNormal(vec2 uv, vec3 P) {
+  vec2 px = 1.0/uRes;
+  vec3 r = wbPos(uv + vec2(px.x, 0.0)), l = wbPos(uv - vec2(px.x, 0.0));
+  vec3 u = wbPos(uv + vec2(0.0, px.y)), b = wbPos(uv - vec2(0.0, px.y));
+  vec3 dx = abs(r.z - P.z) < abs(P.z - l.z) ? r - P : P - l;
+  vec3 dy = abs(u.z - P.z) < abs(P.z - b.z) ? u - P : P - b;
+  vec3 n = normalize(cross(dx, dy));
+  return dot(n, P) > 0.0 ? -n : n;
+}
+// Crease AO. A sample only occludes when the two surfaces face each other: it
+// must rise above the centre's plane AND the centre must lie in front of the
+// sample's own plane. A wall/ground or wall/eave corner passes both tests; a
+// mailbox, railing or hedge standing in front of a wall fails the second (its
+// front face points at the camera, away from the wall behind), so depth steps
+// no longer leave rings on the far side. Both factors fall to zero as a sample
+// slides onto the far face through the corner, so the result has no per-sample
+// on/off steps (the old pair test banded at every sample radius).
 float wbAO(vec2 uv, float d0) {
   if (d0 > 90.0 || d0 >= uFar*0.9) return 1.0;
   const float R = 0.8;
-  float rpx = clamp(R*uProjScale/d0, 3.0, 48.0);
-  // Depth-buffer precision falls with distance: ignore concavity below ~1 cm per metre.
-  float lo = max(0.08, 0.012*d0), i0 = 1.0/d0, occ = 0.0;
-  // Fixed 8 directions x 2 radii (no per-pixel noise: no blur pass to clean it up).
+  vec3 P = wbPos(uv), n = wbNormal(uv, P);
+  float rpx = clamp(R*uProjScale/d0, 3.0, 48.0), occ = 0.0;
+  vec2 edge = 1.5/uRes;
   for (int i = 0; i < 8; i++) {
-    float a = float(i)*0.3927 + 0.2;
+    float a = float(i)*0.7854 + 0.2;
     vec2 dir = vec2(cos(a), sin(a))/uRes;
     for (int k = 0; k < 2; k++) {
-      vec2 o = dir*rpx*(k == 0 ? 0.45 : 1.0);
-      vec2 aUV = uv+o, bUV = uv-o, edge = 0.5/uRes;
-      // Clamping a sample at the screen edge breaks the symmetric plane test.
-      if (any(lessThan(aUV, edge)) || any(greaterThan(aUV, 1.0-edge)) ||
-          any(lessThan(bUV, edge)) || any(greaterThan(bUV, 1.0-edge))) continue;
-      float c = 0.5*(1.0/wbDepth(aUV) + 1.0/wbDepth(bUV)) - i0;
-      float dz = c*d0*d0; // concavity in metres towards the camera
-      occ += smoothstep(lo, lo + 0.35, dz)*(1.0 - smoothstep(1.5*R, 3.0*R, dz));
+      vec2 s = uv + dir*rpx*(k == 0 ? 0.4 : 0.9);
+      if (any(lessThan(s, edge)) || any(greaterThan(s, 1.0 - edge))) continue;
+      vec3 S = wbPos(s), v = S - P;
+      float L = length(v);
+      vec3 vn = v/max(L, 1e-4);
+      float up = dot(n, vn) - 0.08;
+      if (up <= 0.0 || L > 1.6*R) continue;
+      float back = dot(wbNormal(s, S), -vn) - 0.08;
+      if (back <= 0.0) continue;
+      occ += up*back*(1.0 - smoothstep(0.6*R, 1.6*R, L));
     }
   }
-  return 1.0 - occ/16.0*(1.0 - smoothstep(50.0, 90.0, d0));
+  // A square corner gives up*back ~0.35 on the half of the samples that land on
+  // the other face; scale so a square corner reads as fully occluded before uAO.
+  return 1.0 - min(1.0, occ/16.0*6.0)*(1.0 - smoothstep(50.0, 90.0, d0));
 }
 float wbEdge(vec2 uv) {
   vec2 px = max(1.0, uRes.y/1100.0)/uRes;
@@ -94,6 +118,16 @@ export function createLook(renderer, camera) {
     float wbPeak = max(max(col.r, col.g), max(col.b, 1e-4));
     float wbClip = min(wbPeak, 0.72) + 0.28 * (1.0 - exp(-max(wbPeak - 0.72, 0.0) / 0.28));
     col = mix(acesFilm(col * 0.92), col * (wbClip / wbPeak), uToon * uHaze);`, 'tone curve');
+  // Upstream contrast pivots at 0.5 in linear light, so with 1.05 everything
+  // below ~0.024 goes negative and clamps to black (#254: shutters, dark PBR).
+  // Keep the curve above x0 and replace the bottom with a power toe that meets it
+  // in value and slope: true black stays black, dark detail keeps its ratios.
+  mat.fragmentShader = insert(mat.fragmentShader, 'col = (col - 0.5) * uContrast + 0.5;', `
+    const float wbX0 = 0.12;
+    float wbY0 = max((wbX0 - 0.5)*uContrast + 0.5, 1e-3);
+    float wbP = uContrast*wbX0/wbY0;
+    vec3 wbToe = wbY0*pow(max(col, 0.0)/wbX0, vec3(wbP));
+    col = mix(wbToe, (col - 0.5)*uContrast + 0.5, step(wbX0, col));`, 'contrast toe');
   mat.fragmentShader = insert(mat.fragmentShader, 'col = clamp(col, 0.0, 1.0);', `
     // ZZZ grade (#252 breakdown): muted base, punchy accents; cool shadows that
     // keep their detail, warm highlights.
