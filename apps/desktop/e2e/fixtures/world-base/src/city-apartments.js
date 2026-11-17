@@ -171,9 +171,8 @@ function buildLaundryShop(H, F, front, accent) {
   }
   for (const x of [-3, -.6, .6, 3]) F.boxB(M.metal, '#8e949b', .055, 2.25, .07, x, .14, front + .035);
   F.box(M.metal, '#8e949b', 6, .055, .07, 0, 2.36, front + .035);
-  // Clear shop glass (cached station material, streaks off) instead of the
-  // house M.glass whose diagonal highlights hid the machines behind it.
-  const shopGlass = H.ctx.mat.glass({ tint: '#e6eef0', opacity: .14, streaks: false });
+  // The city owns this clear-glass clone; shared house glass stays unchanged.
+  const shopGlass = H.shopGlass;
   for (const x of [-1.8, 1.8]) F.boxB(shopGlass, null, 2.34, 2.14, .012, x, .18, front + .025, { shadow: false });
   F.boxB(shopGlass, null, 1.14, 2.14, .012, 0, .18, front + .025, { shadow: false });
   F.box(M.metal, '#8e949b', .025, .4, .1, .47, 1.12, front + .09);

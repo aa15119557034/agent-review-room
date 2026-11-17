@@ -53,6 +53,16 @@ export async function createCity({ scene, station, island, skyline }) {
     return value;
   };
   const H = backgroundContext(source, ctx, gb, M, heightAt), frame = Frame.at(gb, 0, 0, 0);
+  // Keep the store-specific uniforms and GPU lifetime local to this background.
+  // The station's material cache is a source of prototypes, not a disposer.
+  const houseGlass = M.glass, shopGlass = houseGlass.clone();
+  shopGlass.onBeforeCompile = houseGlass.onBeforeCompile;
+  shopGlass.customProgramCacheKey = houseGlass.customProgramCacheKey;
+  shopGlass.uniforms.uTint.value.set('#e6eef0');
+  shopGlass.uniforms.uOpacity.value = 0.14;
+  shopGlass.uniforms.uStreaks.value = 0;
+  ownedMaterials.add(shopGlass);
+  H.shopGlass = shopGlass;
   const dispose = () => {
     if (disposed) return; disposed = true; root.removeFromParent();
     root.traverse(object => { if (object.isMesh) { geometries.add(object.geometry); if (object.isInstancedMesh) object.dispose(); if (object.customDepthMaterial) ownedMaterials.add(object.customDepthMaterial); } });
@@ -126,7 +136,7 @@ export async function createCity({ scene, station, island, skyline }) {
       vegetationClearAreas.push({ name: 'town-tree-' + x, minX: x - 0.9, maxX: x + 0.9, minZ: z - 0.9, maxZ: z + 0.9 });
     }
     addUtilityPoles(H, frame, visibleGround, stats);
-    addLotPlanting(H, frame, placements, heightAt, ctx, stats);
+    vegetationClearAreas.push(...addLotPlanting(H, frame, placements, heightAt, ctx, stats));
     gb.flush(root, 'town-edge-kit');
     const laundry = H.laundry.build();
     if (laundry) { ownedMaterials.add(laundry.material); ownedMaterials.add(laundry.customDepthMaterial); }
@@ -201,17 +211,26 @@ function addConnections(H, frame, placements, ground, worldY) {
 // couple of shrubs at the rear corners soften the plinth / meadow boundary.
 function addLotPlanting(H, frame, placements, ground, ctx, stats) {
   stats.planting = [];
+  const clearAreas = [];
   for (const p of placements) {
     const r = ctx.rng('town-planting-' + p.name), lot = p.footprint, start = H.gb.tris;
     const z = Math.min(lot.maxZ + 0.55, FRONT_ROAD.minZ - 0.45), gap = 1.5, door = p.center[0];
-    for (const [x0, x1] of [[lot.minX + 0.2, door - gap], [door + gap, lot.maxX - 0.2]])
-      if (x1 - x0 > 1) H.P.hedge(frame, x0, x1, z, 0.75, 0.55, r, 'dark', ground);
+    for (const [x0, x1] of [[lot.minX + 0.2, door - gap], [door + gap, lot.maxX - 0.2]]) {
+      if (x1 - x0 > 1) {
+        H.P.hedge(frame, x0, x1, z, 0.75, 0.55, r, 'dark', ground);
+        clearAreas.push({ name: p.name + '-hedge-' + x0, minX: x0 - 0.2, maxX: x1 + 0.2, minZ: z - 0.5, maxZ: z + 0.5 });
+      }
+    }
     for (const x of [lot.minX + 0.3, lot.maxX - 0.3]) {
       const zb = lot.minZ - 0.6;
       H.P.bush(frame, x, ground(x, zb), zb, 0.75, r, { flowers: 'azalea' });
+      // These 0.75m shrubs have procedural lobes reaching about 1.2m out.
+      // Clear their cover, without enlarging the foundation or moving terrain.
+      clearAreas.push({ name: p.name + '-bush-' + x, minX: x - 1.3, maxX: x + 1.3, minZ: zb - 1.3, maxZ: zb + 1.3 });
     }
     stats.planting.push({ name: p.name, hedgeZ: z, triangles: H.gb.tris - start });
   }
+  return clearAreas;
 }
 
 function addUtilityPoles(H, frame, ground, stats) {
