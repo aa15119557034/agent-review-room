@@ -17,7 +17,7 @@
 
 街景复用登记见 [streetscape-assets.json](./streetscape-assets.json)：花箱、外机、公寓及程序纹理均来自同一固定版本的 Sakuragaoka MIT 源码。`houses.js`、`shopsA.js` 各增加现有构建上下文的导出，使适配层复用已创建的材料和图集。`src/skyline.js` 直接调用原 `buildApartment`，其地形/四边形辅助函数按 `houses.js` 适配至独立几何与真实岛屿地形；`src/wet-road.js` 保留原沥青材质，借鉴原玻璃/沟渠的天光 Fresnel 思路。新支架和局部湿区 mask 在适配层生成。没有从用户参考图中提取贴图。
 
-`src/city-apartments.js` 的多层公寓沿用 Sakuragaoka MIT `houses/apartment.js` 的构造方式与 `buildWindow`、`GB` / `Frame`、阳台晾衣和道具，增加真实楼层、屋顶设施及首层店面；`src/city.js` 复用同套背景构建上下文、远景住宅、材质和图集，负责独立摆放、道路、地基及资源释放。没有从用户参考图中提取贴图，也没有新增外部城市贴图。
+`src/city-apartments.js` 的多层公寓沿用 Sakuragaoka MIT `houses/apartment.js` 的构造方式与 `buildWindow`、`GB` / `Frame`、阳台晾衣和道具，增加真实楼层、屋顶设施及首层店面；`src/city.js` 复用同套背景构建上下文、远景住宅、材质和图集，负责独立摆放、道路、地基及资源释放。第6轮使用同套程序化绿篱／灌木、墙色和错位退界；店面清玻璃从原玻璃另克隆独立uniforms并由city释放，新增植栽清除范围避免与原生花草叠加。没有从用户参考图中提取贴图，也没有新增外部城市贴图。
 
 已退休候选的作者、许可依据、原包及每项文件哈希见 [city-assets.json](./city-assets.json)。`.local/city/downtown/` 的26项历史文件保持官方原字节；它们和高层GLB/OBJ包都不再是准备或运行依赖。1218字节原MTL文本继续作为有署名和许可的历史核对依据保存，旧截图与资源传输报告不改写。图像内存估计不等于GPU实测；试装材质与场景截图属于修改后效果，不能当作作者原始展示。当前不包含付费Source版本的引擎项目或shader。
 

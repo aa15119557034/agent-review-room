@@ -1,0 +1,298 @@
+{
+  "sourceCommit": "05728c277e4606d3e9ffbddde8dccdcbec70407b",
+  "beforeSourceCommit": "9a392e23e2d8b6800cc91f2b1995d639f22ff3ca",
+  "createdAt": "2026-11-17T03:59:34.927Z",
+  "method": "Original selected screenshots, run config, process result and frame samples preserved byte-for-byte. Full reports losslessly gzip-compressed. Both 199-file capture manifests checked against their exact Git commits; fixed source also checked against working files. Runtime profiles, caches and binary models/textures excluded.",
+  "limits": "A pair of sequential normal runs, not a controlled performance-causality experiment. CPU probes do not validate pixels or rendered vegetation interpenetration. Both geometry probes use real geometry/height/splat data; the original probe uses mock materials, while the fixed probe and dedicated ownership probe use the real Three material factory, still without real rasterized texture pixels or GPU foliage shaders. Absolute dependency paths are preserved, and ignored Petalwake assets are required for reproduction.",
+  "files": [
+    {
+      "file": "c6-before/01-station-street.jpg",
+      "bytes": 119127,
+      "sha256": "2a6ce569fdc61e09917e5384a01b8deb0905b495647f557df301ec37f6474909"
+    },
+    {
+      "file": "c6-before/02-station-port.jpg",
+      "bytes": 116195,
+      "sha256": "43128284136abf1f756923045a19c9c54c15f73feefe2796c196b8ecc2610f46"
+    },
+    {
+      "file": "c6-before/03-island-aerial.jpg",
+      "bytes": 55315,
+      "sha256": "aeca0a0806d00ed01c6b189723b1ded868e8b07ae1c5f418540a01fa76b9d762"
+    },
+    {
+      "file": "c6-before/04-shop-interior.jpg",
+      "bytes": 103287,
+      "sha256": "185e222f54cc1d9d4003f024c60df2d3dcb209213f75514b3ad1a58138d72655"
+    },
+    {
+      "file": "c6-before/16-city-context.jpg",
+      "bytes": 112089,
+      "sha256": "6c67d0bc4971de5f43859559417fa5619c5ea2eb8b0e487ee20397caa1c67c40"
+    },
+    {
+      "file": "c6-before/17-city-grounding.jpg",
+      "bytes": 165364,
+      "sha256": "bddc206868def4fe8326c9d3fabd01b296b3dfadfb82446e5293d5e893384e07"
+    },
+    {
+      "file": "c6-before/18-town-shop-balconies.jpg",
+      "bytes": 98673,
+      "sha256": "f20df8fd00a74530ee22c7e4079c8cc79ce62098a0c871f909c1ec5f2f594a50"
+    },
+    {
+      "file": "c6-before/19-town-rear-stairs.jpg",
+      "bytes": 127520,
+      "sha256": "86b72e44047ab52065a2aa7c6dd3895087508c8fb80f52bbb1832dac2014bf72"
+    },
+    {
+      "file": "c6-before/walking-third.jpg",
+      "bytes": 116522,
+      "sha256": "2cb9b65b2452787128210ebc0e0c7e9e3dd4bafce0509522b3326c7525676138"
+    },
+    {
+      "file": "c6-before/walking-first.jpg",
+      "bytes": 110107,
+      "sha256": "7a64396e1cad476ef7da382754b22cfb66eabb247de8aa614f3c2b474f00f23e"
+    },
+    {
+      "file": "c6-before/source-manifest.json",
+      "bytes": 24528,
+      "sha256": "fdf2bc6d583349848b018a1913205078af45d2adb12fe74d76d55184d1b37a45"
+    },
+    {
+      "file": "c6-before/run-config.json",
+      "bytes": 1075,
+      "sha256": "6264a5ed0aa3db81ee73f7a8676e4b06faa3377bb5b86343a91065d7f0215ef8"
+    },
+    {
+      "file": "c6-before/process.json",
+      "bytes": 135,
+      "sha256": "982cdef27e25dd353f3f8f7455f93f30e1e433f03f19fd13f9fd48a8615890ed"
+    },
+    {
+      "file": "c6-before/frame-samples-island-aerial.json",
+      "bytes": 11368,
+      "sha256": "bf7d26f1bbe4af9b26e7dbefb85fb1cd41a5802249190fe4f3f34781ae08a17d"
+    },
+    {
+      "file": "c6-before/frame-samples-shop-interior.json",
+      "bytes": 11115,
+      "sha256": "b05a35c9af05f47ce7d2a8ed6a84fdbf6509a7fcee994ad4cd6be34cac09d990"
+    },
+    {
+      "file": "c6-before/frame-samples-station-port.json",
+      "bytes": 11226,
+      "sha256": "8878b1b9c7ef3d33ce0e94a505c52f69d031d4e67ca09bba65e47e6c8675f7e2"
+    },
+    {
+      "file": "c6-before/frame-samples-station-street.json",
+      "bytes": 11402,
+      "sha256": "28c9c8afc2878182f602d8f49869b05656815b25ba4e44f201f1f217f6ebee96"
+    },
+    {
+      "file": "c6-before/frame-samples-walking-first.json",
+      "bytes": 11271,
+      "sha256": "f0199f54f4f0e50a9460362eb47fe9475f70a3f03e19b8799678dbb0300af3e6"
+    },
+    {
+      "file": "c6-before/frame-samples-walking-third.json",
+      "bytes": 11481,
+      "sha256": "d86461994a991e356504e9e26f221a690c9ca5cd01ad55ee5c0283b3d598c0ff"
+    },
+    {
+      "file": "c6-before/frame-samples.json",
+      "bytes": 55616,
+      "sha256": "6234f04fab2065e689cf7a2e05a932244f7be28b760655c8033d46bb46d11921"
+    },
+    {
+      "file": "c6-before/render-report.json.gz",
+      "bytes": 62611,
+      "sha256": "2c6e833e6f7c9d912c0dc6eece6b81286456c2acbfdcb1240d355abc19304537",
+      "originalBytes": 408558,
+      "originalSha256": "a14c280cbc49124705cdd5f6f588820a8a0b31a2bacacb36ef610476b1e0c9b5"
+    },
+    {
+      "file": "c6-before/measurements.json",
+      "bytes": 40861,
+      "sha256": "4a568a72f57e6d26769938bcd661b72e552e2d862111bfecb9bfe35ddf7b309b"
+    },
+    {
+      "file": "fixed/01-station-street.jpg",
+      "bytes": 119087,
+      "sha256": "7cc04728a6b75bb93c39fc2f2d849f774c499ae81bfc07e6bb8bc1bbb67bfed6"
+    },
+    {
+      "file": "fixed/02-station-port.jpg",
+      "bytes": 116122,
+      "sha256": "43c2d639e2376cc66e7ae295a3677cfac699fdc3476d4de0bd22daa8084f2431"
+    },
+    {
+      "file": "fixed/03-island-aerial.jpg",
+      "bytes": 55367,
+      "sha256": "0898fd8408f38699a48c79496fa7d4e78fddfa787ee13901d22b1cbb8b96788a"
+    },
+    {
+      "file": "fixed/04-shop-interior.jpg",
+      "bytes": 103352,
+      "sha256": "b1d56ec2028c53816aec3395d34cf12c5d58d039fd42d5290783d6456cca1d04"
+    },
+    {
+      "file": "fixed/16-city-context.jpg",
+      "bytes": 111888,
+      "sha256": "b9de21933cf348f59e4f42b8a1750027138b873fe614a68c5ecf1567d5d8123d"
+    },
+    {
+      "file": "fixed/17-city-grounding.jpg",
+      "bytes": 164747,
+      "sha256": "d7a11a315bd996562cdcb0d3c18a42234162766da7cef5d027cdef88cf3f753c"
+    },
+    {
+      "file": "fixed/18-town-shop-balconies.jpg",
+      "bytes": 97936,
+      "sha256": "4f33493037b0ff842b4cedebc7d351fe7be2a6635fc96c6b1cf6288705851220"
+    },
+    {
+      "file": "fixed/19-town-rear-stairs.jpg",
+      "bytes": 122537,
+      "sha256": "fcced2af0fe87e8abec7a9abee9f70143f004693c4e982d05453caaa291a8ac9"
+    },
+    {
+      "file": "fixed/walking-third.jpg",
+      "bytes": 116672,
+      "sha256": "26afba995a56b0e4dfa587b40714e4660d2686adf3ce6df92f7841e1f91eadb3"
+    },
+    {
+      "file": "fixed/walking-first.jpg",
+      "bytes": 110205,
+      "sha256": "55cd57ff03605313a52ff6b12a68dfc83469ec10af829b060f721491ba57fb72"
+    },
+    {
+      "file": "fixed/source-manifest.json",
+      "bytes": 24528,
+      "sha256": "11184232bb703493a1f00d1f3bc490a8183ac94373f41ae6dd7bfff6fe123dc5"
+    },
+    {
+      "file": "fixed/run-config.json",
+      "bytes": 1087,
+      "sha256": "279b4530bced8bfee636f0df6d4e2eed917ed07b565a9fdfa69e14e38c5562d6"
+    },
+    {
+      "file": "fixed/process.json",
+      "bytes": 135,
+      "sha256": "5012f6945dead7ceea5b8d93ef96cb6e7a5a39901f8839a42740eccc8e09dfab"
+    },
+    {
+      "file": "fixed/frame-samples-island-aerial.json",
+      "bytes": 11359,
+      "sha256": "fbfba8c2ed065b42e9cd74c074d6d1a4fb724048d18c641d06d0dc7083fe30a4"
+    },
+    {
+      "file": "fixed/frame-samples-shop-interior.json",
+      "bytes": 11299,
+      "sha256": "829ff851b447e107f4fe951309346b7d7f2f926385dc99578b391232d86a6513"
+    },
+    {
+      "file": "fixed/frame-samples-station-port.json",
+      "bytes": 11253,
+      "sha256": "c2ff25dd5049cc4f8fddd88e47a1637de0e79a3bbcdbd88ee1c9204bc1e4cc20"
+    },
+    {
+      "file": "fixed/frame-samples-station-street.json",
+      "bytes": 11412,
+      "sha256": "36e9c4ae16156335e041912343bba76fb9f5c8613ec942408f4a84a6fb657f15"
+    },
+    {
+      "file": "fixed/frame-samples-walking-first.json",
+      "bytes": 11283,
+      "sha256": "88098924d17b5169c96aa93339145971686f2ef368ae77f9ac35a7bf6e001355"
+    },
+    {
+      "file": "fixed/frame-samples-walking-third.json",
+      "bytes": 11315,
+      "sha256": "69584890f4b2397ee11493d4339629f49d2ee5b1b58e15be667279c5ad61749e"
+    },
+    {
+      "file": "fixed/frame-samples.json",
+      "bytes": 55576,
+      "sha256": "248da47c1f2ef8a91c8dda3e0c745a10813e0298717b0faf74ee31b8659e52f3"
+    },
+    {
+      "file": "fixed/18-town-shop-balconies.png",
+      "bytes": 1618522,
+      "sha256": "a8246938f5b647ff441730c02c5b98b7054454ccfa312a148724cb2735a920c4"
+    },
+    {
+      "file": "fixed/19-town-rear-stairs.png",
+      "bytes": 1906869,
+      "sha256": "a49e3ad3ad3ddf97a68a3fc42107f08d44c57aae6c0c30f962a7c5f20e938876"
+    },
+    {
+      "file": "fixed/render-report.json.gz",
+      "bytes": 65854,
+      "sha256": "926f10487efc8d51a42ccc884dc406217531e20d84821fba0e44d8f7977e470d",
+      "originalBytes": 441233,
+      "originalSha256": "eaf168349a918ecab394996d08596c359dbb0ad741adfc5580e4b13e671116db"
+    },
+    {
+      "file": "fixed/measurements.json",
+      "bytes": 44905,
+      "sha256": "a496c69a10caaec691fe93ba40e470c9ce98abcb0836e24031db5c783506497b"
+    },
+    {
+      "file": "cpu/x51-c6-town-cpu-driver.mjs",
+      "bytes": 7266,
+      "sha256": "eedcff7adfdce32010bfa0a25541d23f0708bcf0e1e974ef6f659e9a402f4cf5"
+    },
+    {
+      "file": "cpu/x51-c6-town-cpu-result.jsonl",
+      "bytes": 15911,
+      "sha256": "491ce68d82dc4b2b7145a4a7cc97cea504779e7241df0f9351dd9c26a0d04a31"
+    },
+    {
+      "file": "cpu/x51-c6-town-audit.json",
+      "bytes": 27122,
+      "sha256": "74720671c736e13294ebf3dc199defe490fb008a28e88931a53032eef7182830"
+    },
+    {
+      "file": "cpu/x51-c6-rootfix-town-cpu-driver.mjs",
+      "bytes": 7709,
+      "sha256": "1a5d407c582f81b90043a9e5c8d283870000a652db8958d6c14428592bcdd130"
+    },
+    {
+      "file": "cpu/x51-c6-rootfix-town-cpu-result.jsonl",
+      "bytes": 18480,
+      "sha256": "5afc5b69b696ec1cb077e1e5345c9581e274d7c687293c6b8e9601a8623450b1"
+    },
+    {
+      "file": "cpu/x51-c6-rootfix-town-audit.json",
+      "bytes": 29455,
+      "sha256": "ef87cd024c8b788add3ec07611282836a913868321ed4625fa2a35a611756128"
+    },
+    {
+      "file": "cpu/x51-shop-glass-ownership-9a392e2.json",
+      "bytes": 5622,
+      "sha256": "a042b7e22d3638bd015895c5fbba3ff7b50c914430d4f01e9fb9e6cb626c88b5"
+    },
+    {
+      "file": "cpu/x51-shop-glass-patched-lifecycle.cjs",
+      "bytes": 7883,
+      "sha256": "8f09ba4ce653d6e1609e3ea4ea9cbd37ee68833da78747a14964a1b58f3ff9a4"
+    },
+    {
+      "file": "cpu/x51-shop-glass-patched-lifecycle.json",
+      "bytes": 3793,
+      "sha256": "704e77d3c15f4c9f135b428efbc5b49e810838185f89562267e09e25197c141e"
+    },
+    {
+      "file": "cpu/terrain-cpu-methods.mjs",
+      "bytes": 2177,
+      "sha256": "940189d67d7d3e9b7ac0952d189009de6ad2347abe276d88032698548a684388"
+    },
+    {
+      "file": "c6-ci-summary.json",
+      "bytes": 338,
+      "sha256": "3cb1900c9b9b5a64e38be0739cf1b1dbc0ede29c0a1599887c8a4427ad2e0eed"
+    }
+  ]
+}

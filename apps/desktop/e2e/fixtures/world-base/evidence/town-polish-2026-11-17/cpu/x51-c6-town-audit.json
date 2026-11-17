@@ -1,0 +1,1121 @@
+{
+  "sourceCommit": "9a392e23e2d8b6800cc91f2b1995d639f22ff3ca (parent supplied; no Git invoked)",
+  "files": {
+    "src/city.js": "aa85c5cc747bc7ed9be90e664724dc898651a7f2c7ba540197cac9b28d937033",
+    "src/city-apartments.js": "24980d2755706b63de9c737b365f80b3e2e949dc9e86181e1225a7a1213dee47",
+    "src/skyline.js": "4d9e6b0c847ab05a181e202b7c0902e43d2b3f4048fb2de3e00d1a86ae5f5650",
+    "src/island.js": "9ba6b5228eb343e5d637d7a4520e0a08a17924ee551d02ffd78b3f0fbd3e744f",
+    "upstream/sakuragaoka/src/world/houses/props.js": "9dec02c33081cfefa6d302dd5d91a3f1b05ff618c0dcf2c3000d198df127f4f2",
+    "upstream/sakuragaoka/src/world/lib/foliage.js": "6c54386dfe6daa83960800a3e443fe4fccf3268aeac3c69fbcbf50b6d1676016"
+  },
+  "checks": {
+    "totalTriangles": 22224,
+    "budget": 30000,
+    "stairs": [
+      {
+        "name": "town-apartment-3f-entry",
+        "x": -17,
+        "width": 2.2,
+        "highZ": -123.5,
+        "lowZ": -118.51,
+        "steps": 12,
+        "rise": 0.16522699094701745,
+        "tread": 0.4158333333333329,
+        "top": 5.458040148417157,
+        "bottom": 3.4753162570529477,
+        "minClearance": 0.1520745146716722
+      },
+      {
+        "name": "town-apartment-4f-entry",
+        "x": 2,
+        "width": 2.2,
+        "highZ": -122,
+        "lowZ": -118.51,
+        "steps": 9,
+        "rise": 0.16519691556765836,
+        "tread": 0.3877777777777772,
+        "top": 4.904808464050293,
+        "bottom": 3.418036223941368,
+        "minClearance": 0.16489170203975156
+      },
+      {
+        "name": "town-apartment-5f-entry",
+        "x": 22,
+        "width": 2.2,
+        "highZ": -121,
+        "lowZ": -118.51,
+        "steps": 8,
+        "rise": 0.16888438367843667,
+        "tread": 0.31124999999999936,
+        "top": 4.783957901000977,
+        "bottom": 3.4328828315734836,
+        "minClearance": 0.19491120815277263
+      },
+      {
+        "name": "town-house-0-entry",
+        "x": -37,
+        "width": 2.2,
+        "highZ": -121.50032998154778,
+        "lowZ": -118.51,
+        "steps": 8,
+        "rise": 0.16701789847613763,
+        "tread": 0.3737912476934717,
+        "top": 4.265555652798646,
+        "bottom": 2.929412464989545,
+        "minClearance": 0.1903727568173812
+      },
+      {
+        "name": "town-house-1-entry",
+        "x": -50,
+        "width": 2.2,
+        "highZ": -122.16807376975453,
+        "lowZ": -118.51,
+        "steps": 9,
+        "rise": 0.1703773724573469,
+        "tread": 0.4064526410838359,
+        "top": 4.317841223382807,
+        "bottom": 2.7844448712666847,
+        "minClearance": 0.1884255007462241
+      },
+      {
+        "name": "town-levee-stairs",
+        "x": 34.5,
+        "width": 5,
+        "highZ": -94.53,
+        "lowZ": -101,
+        "steps": 10,
+        "rise": 0.17436214139726358,
+        "tread": 0.6469999999999999,
+        "top": 3.23,
+        "bottom": 1.4863785860273642,
+        "minClearance": 0.030398222222221882
+      }
+    ],
+    "lotProps": [
+      {
+        "name": "town-apartment-3f",
+        "bounds": {
+          "minX": -24.7,
+          "maxX": -11.25,
+          "minZ": -134.95000000000002,
+          "maxZ": -123.35
+        },
+        "hits": []
+      },
+      {
+        "name": "town-apartment-4f",
+        "bounds": {
+          "minX": -6.200000000000001,
+          "maxX": 8.25,
+          "minZ": -133.45000000000002,
+          "maxZ": -121.85
+        },
+        "hits": []
+      },
+      {
+        "name": "town-apartment-5f",
+        "bounds": {
+          "minX": 13.799999999999999,
+          "maxX": 28.25,
+          "minZ": -133.45000000000002,
+          "maxZ": -120.85
+        },
+        "hits": []
+      },
+      {
+        "name": "town-house-0",
+        "bounds": {
+          "minX": -42.05023296657734,
+          "maxX": -31.94976703342266,
+          "minZ": -131.4996700184522,
+          "maxZ": -121.50032998154778
+        },
+        "hits": []
+      },
+      {
+        "name": "town-house-1",
+        "bounds": {
+          "minX": -54.16661962163774,
+          "maxX": -45.83338037836226,
+          "minZ": -131.83192623024547,
+          "maxZ": -122.16807376975453
+        },
+        "hits": []
+      }
+    ],
+    "coreAndExistingApartments": "createCity checkLot passed against unchanged two skyline footprints and core z0=-97",
+    "plantBounds": [
+      {
+        "kind": "hedge",
+        "args": {
+          "x0": -24.5,
+          "x1": -18.5,
+          "z": -122.8,
+          "h": 0.75,
+          "d": 0.55
+        },
+        "rootClear": null,
+        "uncoveredBBoxSamples": 0,
+        "total": 640,
+        "bounds": {
+          "minX": -24.643882513046265,
+          "maxX": -18.362706899642944,
+          "minY": 3.7565327202777303,
+          "maxY": 4.773503276507084,
+          "minZ": -123.19886897802353,
+          "maxZ": -122.39038227796554
+        },
+        "props": []
+      },
+      {
+        "kind": "hedge",
+        "args": {
+          "x0": -15.5,
+          "x1": -11.45,
+          "z": -122.8,
+          "h": 0.75,
+          "d": 0.55
+        },
+        "rootClear": null,
+        "uncoveredBBoxSamples": 0,
+        "total": 405,
+        "bounds": {
+          "minX": -15.635148620605468,
+          "maxX": -11.325974798202514,
+          "minY": 4.077368224594348,
+          "maxY": 5.100718970033878,
+          "minZ": -123.19583012461662,
+          "maxZ": -122.39864494204521
+        },
+        "props": []
+      },
+      {
+        "kind": "bush",
+        "args": {
+          "x": -24.4,
+          "y": 5.214221026102717,
+          "z": -135.55,
+          "radius": 0.75
+        },
+        "rootClear": true,
+        "uncoveredBBoxSamples": 0,
+        "total": 500,
+        "bounds": {
+          "minX": -25.493499139076853,
+          "maxX": -23.180155265506155,
+          "minY": 5.1061730868617845,
+          "maxY": 6.474411379496272,
+          "minZ": -136.47688776270763,
+          "maxZ": -134.6688297013143
+        },
+        "props": []
+      },
+      {
+        "kind": "bush",
+        "args": {
+          "x": -11.55,
+          "y": 5.14170966678196,
+          "z": -135.55,
+          "radius": 0.75
+        },
+        "rootClear": true,
+        "uncoveredBBoxSamples": 0,
+        "total": 420,
+        "bounds": {
+          "minX": -12.546150925771194,
+          "maxX": -10.561010498652069,
+          "minY": 5.033661727541028,
+          "maxY": 6.401900020175515,
+          "minZ": -136.48256260244708,
+          "maxZ": -134.60613337324207
+        },
+        "props": []
+      },
+      {
+        "kind": "hedge",
+        "args": {
+          "x0": -6.000000000000001,
+          "x1": 0.5,
+          "z": -121.3,
+          "h": 0.75,
+          "d": 0.55
+        },
+        "rootClear": null,
+        "uncoveredBBoxSamples": 0,
+        "total": 621,
+        "bounds": {
+          "minX": -6.119704723358154,
+          "maxX": 0.604350090026855,
+          "minY": 3.6412180663479776,
+          "maxY": 4.972587913407228,
+          "minZ": -121.70212106704712,
+          "maxZ": -120.90462233424186
+        },
+        "props": []
+      },
+      {
+        "kind": "hedge",
+        "args": {
+          "x0": 3.5,
+          "x1": 8.05,
+          "z": -121.3,
+          "h": 0.75,
+          "d": 0.55
+        },
+        "rootClear": null,
+        "uncoveredBBoxSamples": 0,
+        "total": 490,
+        "bounds": {
+          "minX": 3.3972252845764164,
+          "maxX": 8.173116111755371,
+          "minY": 3.327160938150367,
+          "maxY": 4.394288322395763,
+          "minZ": -121.70692129731178,
+          "maxZ": -120.89617158770561
+        },
+        "props": []
+      },
+      {
+        "kind": "bush",
+        "args": {
+          "x": -5.900000000000001,
+          "y": 4.683423023223899,
+          "z": -134.05,
+          "radius": 0.75
+        },
+        "rootClear": false,
+        "uncoveredBBoxSamples": 357,
+        "total": 483,
+        "bounds": {
+          "minX": -6.903673802047752,
+          "maxX": -4.9751382207943085,
+          "minY": 4.5753750839829666,
+          "maxY": 5.943613376617454,
+          "minZ": -135.17437968489995,
+          "maxZ": -132.98824590732758
+        },
+        "props": []
+      },
+      {
+        "kind": "bush",
+        "args": {
+          "x": 7.95,
+          "y": 4.619201982286244,
+          "z": -134.05,
+          "radius": 0.75
+        },
+        "rootClear": false,
+        "uncoveredBBoxSamples": 336,
+        "total": 441,
+        "bounds": {
+          "minX": 6.99350273933417,
+          "maxX": 8.93394385866921,
+          "minY": 4.511580111947327,
+          "maxY": 5.784249613549977,
+          "minZ": -135.0064071448432,
+          "maxZ": -133.0399993677483
+        },
+        "props": []
+      },
+      {
+        "kind": "hedge",
+        "args": {
+          "x0": 13.999999999999998,
+          "x1": 20.5,
+          "z": -120.3,
+          "h": 0.75,
+          "d": 0.55
+        },
+        "rootClear": null,
+        "uncoveredBBoxSamples": 0,
+        "total": 690,
+        "bounds": {
+          "minX": 13.893244981765747,
+          "maxX": 20.61759328842163,
+          "minY": 3.1370312052965548,
+          "maxY": 4.352226905822793,
+          "minZ": -120.70211954712867,
+          "maxZ": -119.89683242440223
+        },
+        "props": []
+      },
+      {
+        "kind": "hedge",
+        "args": {
+          "x0": 23.5,
+          "x1": 28.05,
+          "z": -120.3,
+          "h": 0.75,
+          "d": 0.55
+        },
+        "rootClear": null,
+        "uncoveredBBoxSamples": 0,
+        "total": 490,
+        "bounds": {
+          "minX": 23.45999994277954,
+          "maxX": 28.170050525665282,
+          "minY": 3.4809971490502636,
+          "maxY": 4.470358278751402,
+          "minZ": -120.70175133943557,
+          "maxZ": -119.90087731480598
+        },
+        "props": []
+      },
+      {
+        "kind": "bush",
+        "args": {
+          "x": 14.1,
+          "y": 4.150584744347473,
+          "z": -134.05,
+          "radius": 0.75
+        },
+        "rootClear": false,
+        "uncoveredBBoxSamples": 352,
+        "total": 440,
+        "bounds": {
+          "minX": 13.06832609831161,
+          "maxX": 15.149821179129347,
+          "minY": 4.053477915657898,
+          "maxY": 5.403353246582886,
+          "minZ": -134.94951257248405,
+          "maxZ": -133.13759636102506
+        },
+        "props": []
+      },
+      {
+        "kind": "bush",
+        "args": {
+          "x": 27.95,
+          "y": 4.571935564676917,
+          "z": -134.05,
+          "radius": 0.75
+        },
+        "rootClear": false,
+        "uncoveredBBoxSamples": 384,
+        "total": 504,
+        "bounds": {
+          "minX": 26.89027838937105,
+          "maxX": 29.097945810453304,
+          "minY": 4.4638876254359845,
+          "maxY": 5.832125918070472,
+          "minZ": -135.01093705820364,
+          "maxZ": -133.08279825490027
+        },
+        "props": []
+      },
+      {
+        "kind": "hedge",
+        "args": {
+          "x0": -41.85023296657734,
+          "x1": -38.5,
+          "z": -120.95032998154778,
+          "h": 0.75,
+          "d": 0.55
+        },
+        "rootClear": null,
+        "uncoveredBBoxSamples": 0,
+        "total": 333,
+        "bounds": {
+          "minX": -41.98618823679056,
+          "maxX": -38.38841480405893,
+          "minY": 2.9477183442694606,
+          "maxY": 3.9226645376665057,
+          "minZ": -121.34563183019776,
+          "maxZ": -120.55307858417649
+        },
+        "props": []
+      },
+      {
+        "kind": "hedge",
+        "args": {
+          "x0": -35.5,
+          "x1": -32.14976703342266,
+          "z": -120.95032998154778,
+          "h": 0.75,
+          "d": 0.55
+        },
+        "rootClear": null,
+        "uncoveredBBoxSamples": 0,
+        "total": 342,
+        "bounds": {
+          "minX": -35.638398583811856,
+          "maxX": -32.017658408564664,
+          "minY": 3.095136333279649,
+          "maxY": 4.074445884697477,
+          "minZ": -121.3253041727366,
+          "maxZ": -120.559681705934
+        },
+        "props": []
+      },
+      {
+        "kind": "bush",
+        "args": {
+          "x": -41.75023296657734,
+          "y": 4.018944703307653,
+          "z": -132.0996700184522,
+          "radius": 0.75
+        },
+        "rootClear": true,
+        "uncoveredBBoxSamples": 0,
+        "total": 437,
+        "bounds": {
+          "minX": -42.63629357323751,
+          "maxX": -40.871388132770726,
+          "minY": 3.9110630610256445,
+          "maxY": 5.2958886110453856,
+          "minZ": -133.20287445549224,
+          "maxZ": -131.02737936388178
+        },
+        "props": []
+      },
+      {
+        "kind": "bush",
+        "args": {
+          "x": -32.24976703342266,
+          "y": 4.226835363033702,
+          "z": -132.0996700184522,
+          "radius": 0.75
+        },
+        "rootClear": true,
+        "uncoveredBBoxSamples": 0,
+        "total": 462,
+        "bounds": {
+          "minX": -33.22797498733854,
+          "maxX": -31.237810299013372,
+          "minY": 4.11878742379277,
+          "maxY": 5.487025716427257,
+          "minZ": -133.08878832047867,
+          "maxZ": -131.04921016590282
+        },
+        "props": []
+      },
+      {
+        "kind": "hedge",
+        "args": {
+          "x0": -53.96661962163774,
+          "x1": -51.5,
+          "z": -121.61807376975453,
+          "h": 0.75,
+          "d": 0.55
+        },
+        "rootClear": null,
+        "uncoveredBBoxSamples": 0,
+        "total": 252,
+        "bounds": {
+          "minX": -54.092244690121845,
+          "maxX": -51.43954641169472,
+          "minY": 3.1288188735606,
+          "maxY": 4.151707683003121,
+          "minZ": -121.99734852547085,
+          "maxZ": -121.22501660222447
+        },
+        "props": []
+      },
+      {
+        "kind": "hedge",
+        "args": {
+          "x0": -48.5,
+          "x1": -46.03338037836226,
+          "z": -121.61807376975453,
+          "h": 0.75,
+          "d": 0.55
+        },
+        "rootClear": null,
+        "uncoveredBBoxSamples": 0,
+        "total": 252,
+        "bounds": {
+          "minX": -48.60927074605064,
+          "maxX": -45.91048782521324,
+          "minY": 3.021867829695029,
+          "maxY": 4.015871580078883,
+          "minZ": -122.00425607795155,
+          "maxZ": -121.22942761415875
+        },
+        "props": []
+      },
+      {
+        "kind": "bush",
+        "args": {
+          "x": -53.866619621637746,
+          "y": 4.301842019512764,
+          "z": -132.43192623024547,
+          "radius": 0.75
+        },
+        "rootClear": true,
+        "uncoveredBBoxSamples": 0,
+        "total": 441,
+        "bounds": {
+          "minX": -54.85347238320467,
+          "maxX": -52.88151176693884,
+          "minY": 4.194220149173847,
+          "maxY": 5.466889650776497,
+          "minZ": -133.3375734216059,
+          "maxZ": -131.43722069077424
+        },
+        "props": []
+      },
+      {
+        "kind": "bush",
+        "args": {
+          "x": -46.133380378362254,
+          "y": 4.137355068715081,
+          "z": -132.43192623024547,
+          "radius": 0.75
+        },
+        "rootClear": true,
+        "uncoveredBBoxSamples": 19,
+        "total": 437,
+        "bounds": {
+          "minX": -46.998964668280784,
+          "maxX": -45.255391253896505,
+          "minY": 4.040248240025506,
+          "maxY": 5.390123570950494,
+          "minZ": -133.516158501666,
+          "maxZ": -131.3884654387632
+        },
+        "props": []
+      }
+    ],
+    "plantRootSplat": [
+      {
+        "x": -24.4,
+        "z": -135.55,
+        "rootClear": true,
+        "bilinearFlower": 0,
+        "bilinearGrass": 0,
+        "pixels": [
+          {
+            "ix": 1108,
+            "iz": 1278,
+            "rgba": [
+              51,
+              51,
+              43,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1109,
+            "iz": 1278,
+            "rgba": [
+              53,
+              51,
+              10,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1108,
+            "iz": 1279,
+            "rgba": [
+              51,
+              51,
+              37,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1109,
+            "iz": 1279,
+            "rgba": [
+              52,
+              51,
+              13,
+              255
+            ],
+            "cleared": true
+          }
+        ]
+      },
+      {
+        "x": -11.55,
+        "z": -135.55,
+        "rootClear": true,
+        "bilinearFlower": 0,
+        "bilinearGrass": 0,
+        "pixels": [
+          {
+            "ix": 1112,
+            "iz": 1278,
+            "rgba": [
+              104,
+              51,
+              34,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1113,
+            "iz": 1278,
+            "rgba": [
+              104,
+              51,
+              13,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1112,
+            "iz": 1279,
+            "rgba": [
+              94,
+              51,
+              44,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1113,
+            "iz": 1279,
+            "rgba": [
+              102,
+              51,
+              0,
+              255
+            ],
+            "cleared": true
+          }
+        ]
+      },
+      {
+        "x": -5.900000000000001,
+        "z": -134.05,
+        "rootClear": false,
+        "bilinearFlower": 0.04860130718955261,
+        "bilinearGrass": 0.158888888888922,
+        "pixels": [
+          {
+            "ix": 1114,
+            "iz": 1278,
+            "rgba": [
+              90,
+              51,
+              30,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1115,
+            "iz": 1278,
+            "rgba": [
+              78,
+              51,
+              53,
+              255
+            ],
+            "cleared": false
+          },
+          {
+            "ix": 1114,
+            "iz": 1279,
+            "rgba": [
+              93,
+              51,
+              25,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1115,
+            "iz": 1279,
+            "rgba": [
+              80,
+              51,
+              50,
+              255
+            ],
+            "cleared": true
+          }
+        ]
+      },
+      {
+        "x": 7.95,
+        "z": -134.05,
+        "rootClear": false,
+        "bilinearFlower": 0.03703812636166801,
+        "bilinearGrass": 0.18333333333339397,
+        "pixels": [
+          {
+            "ix": 1119,
+            "iz": 1278,
+            "rgba": [
+              52,
+              51,
+              62,
+              255
+            ],
+            "cleared": false
+          },
+          {
+            "ix": 1120,
+            "iz": 1278,
+            "rgba": [
+              51,
+              51,
+              62,
+              255
+            ],
+            "cleared": false
+          },
+          {
+            "ix": 1119,
+            "iz": 1279,
+            "rgba": [
+              51,
+              51,
+              24,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1120,
+            "iz": 1279,
+            "rgba": [
+              51,
+              51,
+              70,
+              255
+            ],
+            "cleared": true
+          }
+        ]
+      },
+      {
+        "x": 14.1,
+        "z": -134.05,
+        "rootClear": false,
+        "bilinearFlower": 0.036666666666678796,
+        "bilinearGrass": 0.18333333333339397,
+        "pixels": [
+          {
+            "ix": 1121,
+            "iz": 1278,
+            "rgba": [
+              51,
+              51,
+              50,
+              255
+            ],
+            "cleared": false
+          },
+          {
+            "ix": 1122,
+            "iz": 1278,
+            "rgba": [
+              51,
+              51,
+              50,
+              255
+            ],
+            "cleared": false
+          },
+          {
+            "ix": 1121,
+            "iz": 1279,
+            "rgba": [
+              51,
+              51,
+              65,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1122,
+            "iz": 1279,
+            "rgba": [
+              51,
+              51,
+              70,
+              255
+            ],
+            "cleared": true
+          }
+        ]
+      },
+      {
+        "x": 27.95,
+        "z": -134.05,
+        "rootClear": false,
+        "bilinearFlower": 0.036666666666678796,
+        "bilinearGrass": 0.18333333333339394,
+        "pixels": [
+          {
+            "ix": 1126,
+            "iz": 1278,
+            "rgba": [
+              51,
+              51,
+              48,
+              255
+            ],
+            "cleared": false
+          },
+          {
+            "ix": 1127,
+            "iz": 1278,
+            "rgba": [
+              51,
+              51,
+              45,
+              255
+            ],
+            "cleared": false
+          },
+          {
+            "ix": 1126,
+            "iz": 1279,
+            "rgba": [
+              51,
+              51,
+              64,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1127,
+            "iz": 1279,
+            "rgba": [
+              51,
+              51,
+              66,
+              255
+            ],
+            "cleared": true
+          }
+        ]
+      },
+      {
+        "x": -41.75023296657734,
+        "z": -132.0996700184522,
+        "rootClear": true,
+        "bilinearFlower": 0,
+        "bilinearGrass": 0,
+        "pixels": [
+          {
+            "ix": 1102,
+            "iz": 1279,
+            "rgba": [
+              57,
+              51,
+              24,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1103,
+            "iz": 1279,
+            "rgba": [
+              56,
+              51,
+              132,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1102,
+            "iz": 1280,
+            "rgba": [
+              53,
+              51,
+              23,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1103,
+            "iz": 1280,
+            "rgba": [
+              53,
+              51,
+              137,
+              255
+            ],
+            "cleared": true
+          }
+        ]
+      },
+      {
+        "x": -32.24976703342266,
+        "z": -132.0996700184522,
+        "rootClear": true,
+        "bilinearFlower": 0,
+        "bilinearGrass": 0,
+        "pixels": [
+          {
+            "ix": 1106,
+            "iz": 1279,
+            "rgba": [
+              52,
+              51,
+              85,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1107,
+            "iz": 1279,
+            "rgba": [
+              52,
+              51,
+              64,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1106,
+            "iz": 1280,
+            "rgba": [
+              51,
+              51,
+              79,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1107,
+            "iz": 1280,
+            "rgba": [
+              51,
+              51,
+              51,
+              255
+            ],
+            "cleared": true
+          }
+        ]
+      },
+      {
+        "x": -53.866619621637746,
+        "z": -132.43192623024547,
+        "rootClear": true,
+        "bilinearFlower": 0,
+        "bilinearGrass": 0,
+        "pixels": [
+          {
+            "ix": 1098,
+            "iz": 1279,
+            "rgba": [
+              51,
+              51,
+              0,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1099,
+            "iz": 1279,
+            "rgba": [
+              51,
+              51,
+              19,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1098,
+            "iz": 1280,
+            "rgba": [
+              51,
+              51,
+              7,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1099,
+            "iz": 1280,
+            "rgba": [
+              51,
+              51,
+              34,
+              255
+            ],
+            "cleared": true
+          }
+        ]
+      },
+      {
+        "x": -46.133380378362254,
+        "z": -132.43192623024547,
+        "rootClear": true,
+        "bilinearFlower": 0,
+        "bilinearGrass": 0,
+        "pixels": [
+          {
+            "ix": 1101,
+            "iz": 1279,
+            "rgba": [
+              54,
+              51,
+              23,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1102,
+            "iz": 1279,
+            "rgba": [
+              57,
+              51,
+              24,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1101,
+            "iz": 1280,
+            "rgba": [
+              51,
+              51,
+              31,
+              255
+            ],
+            "cleared": true
+          },
+          {
+            "ix": 1102,
+            "iz": 1280,
+            "rgba": [
+              53,
+              51,
+              23,
+              255
+            ],
+            "cleared": true
+          }
+        ]
+      }
+    ]
+  },
+  "finding": "4F/5F rear bushes retain nonzero native flower/grass density at their roots; existing clear rectangles and 3m texel guard do not cover them. Actual vegetation instances/visible interpenetration not GPU-checked.",
+  "recommendation": "Add vegetation-clear rectangles for the actual added planting footprints, especially four rear bushes. Current bushes extend around 1.0–1.2m from centres despite radius=.75. Do not widen building foundation/terrain or move healthy geometry to hide foliage.",
+  "limitations": [
+    "Actual upstream GB/P geometry, current city source, exact height.u16 terrain flatten and transition raycast; materials/maps are mock CPU objects, atlas rects come from actual source, no pixel shader/render validation.",
+    "Plant AABBs are extracted per real P.hedge/bush call; horizontal AABB sampling is conservative and may include empty corners.",
+    "Root contact probe samples actual lower geometry vertices; rendered island CDLOD/mip behavior still requires GPU.",
+    "Splat PNG decoded as 8-bit RGBA, original rows match terrain pixels() convention. Density values apply current city clear texel mask; these points are outside station 12m fade. Existing skyline clear rectangles are farther south and do not reach these rear roots.",
+    "No repo files modified; no GPU or Git commands."
+  ]
+}

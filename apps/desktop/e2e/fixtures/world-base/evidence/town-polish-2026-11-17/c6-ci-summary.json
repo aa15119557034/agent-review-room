@@ -1,0 +1,12 @@
+{
+  "head": "9a392e23e2d8b6800cc91f2b1995d639f22ff3ca",
+  "status": "completed",
+  "result": "success",
+  "completedAt": "2026-11-17T03:41:29Z",
+  "url": "https://github.com/aa15119557034/agent-review-room/actions/runs/44011208287/job/133798378237",
+  "allExitZero": true,
+  "tests": 1614,
+  "passed": 1614,
+  "types": 9,
+  "builds": 2
+}
