@@ -137,7 +137,7 @@ function clearArea(name, bounds) {
   return { name, minX: bounds.minX-edge, maxX: bounds.maxX+edge, minZ: bounds.minZ-edge, maxZ: bounds.maxZ+edge, edge };
 }
 
-function visibleBankHeight(station, island, matrix, inverse, heightAt) {
+export function visibleBankHeight(station, island, matrix, inverse, heightAt) {
   // Inside the core, the visible levee is Sakuragaoka's original surface. In
   // the narrow join, sample its actual triangles, not the hidden island ground.
   island.transition.updateWorldMatrix(true, false);

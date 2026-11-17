@@ -3,5 +3,6 @@
 *.jpg -text
 *.webm -text
 upstream/** linguist-vendored
+upstream/mirzaev-highrise/*.mtl -text
 # Unified diff context represents an empty source line with a single space.
 evidence/upstream-changes.patch -whitespace

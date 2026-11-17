@@ -3,6 +3,7 @@ import { createIsland, clearVegetationAreas } from './island.js';
 import { createStation } from './station.js';
 import { createLook } from './look.js';
 import { createSkyline } from './skyline.js';
+import { createCity } from './city.js';
 
 const canvas = document.querySelector('#world');
 const loadMessage = document.querySelector('#load-message');
@@ -112,6 +113,10 @@ async function init() {
   worldBase.skyline = createSkyline({ scene, station, island });
   worldBase.skyline.vegetationClear = clearVegetationAreas(island.terrain,
     worldBase.skyline.vegetationClearAreas, station.root.matrixWorld);
+  stage('正在安放站后建筑…');
+  worldBase.city = await createCity({ scene, station, island, skyline: worldBase.skyline });
+  worldBase.city.vegetationClear = clearVegetationAreas(island.terrain,
+    worldBase.city.vegetationClearAreas, station.root.matrixWorld);
   island.meadow._buildCoverGrid(); // Refresh the density cache before its first update.
   walker = station.createWalker(canvas);
   worldBase.walker = walker;

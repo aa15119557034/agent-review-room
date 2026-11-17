@@ -6,9 +6,11 @@ const config = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
 fs.mkdirSync(path.join(config.runtime, 'user-data'), { recursive: true });
 app.setPath('userData', path.join(config.runtime, 'user-data'));
 app.commandLine.appendSwitch('force-device-scale-factor', '1');
-const report = { config, ok: false, renderOk: false, console: [], exceptions: [], networkFailures: [], captures: [], captureDetails: [], views: [] };
+const report = { config, ok: false, renderOk: false, console: [], exceptions: [], networkFailures: [], captures: [], captureDetails: [], views: [], stageHistory: [],
+  networkEvidence: { scope: 'Same-requestId CDP lifecycle for local GLB and BIN assets; main-document clock anchors. All failures remain in networkFailures.',
+    documentAnchors: [], requests: [], clockNote: 'CDP timestamps are monotonic seconds. Document-relative milliseconds = (document.wallTime + event.timestamp - document.timestamp) * 1000 - performance.timeOrigin. stage is the host stage when the event was received, not proof of its emission time.' } };
 const writeReport = () => fs.writeFileSync(path.join(config.output, 'render-report.json'), JSON.stringify(report, null, 2));
-const stage = name => { report.stage = name; report.stageAt = new Date().toISOString(); writeReport(); console.log(`[${report.stageAt}] ${name}`); };
+const stage = name => { report.stage = name; report.stageAt = new Date().toISOString(); report.stageHistory.push({ stage: name, wallTime: Date.parse(report.stageAt) / 1000 }); writeReport(); console.log(`[${report.stageAt}] ${name}`); };
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
 let server, win;
 stage('bootstrap');
@@ -92,9 +94,9 @@ function snapshot() {
     dimensions: { viewport: [innerWidth, innerHeight], canvas: [renderer.domElement.width, renderer.domElement.height], pixelRatio: renderer.getPixelRatio() },
     renderer: { version: gl.getParameter(gl.VERSION), shadingLanguage: gl.getParameter(gl.SHADING_LANGUAGE_VERSION), vendor: extension ? gl.getParameter(extension.UNMASKED_VENDOR_WEBGL) : null, gpu: extension ? gl.getParameter(extension.UNMASKED_RENDERER_WEBGL) : null, contextLost: gl.isContextLost(), info: { render: { ...renderer.info.render }, memory: { ...renderer.info.memory }, programs: renderer.info.programs?.length } },
     originalStats: window.PW?.stats || window.__stats || window.worldBase?.frameStats || null,
-    loadedProps: window.PW?.props?.counts || null,
+    loadedProps: window.worldBase?.island?.props?.counts || window.PW?.props?.counts || null,
     quality: window.PW ? { autoScaleEnabled: window.PW.auto.on, pipelineScale: window.PW.pipeline.scale } : window.__ctx?.quality || null,
-    timing: { firstWebGLDrawMs: window.__worldCapture.firstWebGLDrawMs, sceneReadyMs: window.__worldCapture.sceneReadyMs, firstReadyFrameMs: window.__worldCapture.firstReadyFrameMs, navigation: performance.getEntriesByType('navigation')[0]?.toJSON() },
+    timing: { timeOriginMs: performance.timeOrigin, performanceNowMs: performance.now(), firstWebGLDrawMs: window.__worldCapture.firstWebGLDrawMs, sceneReadyMs: window.__worldCapture.sceneReadyMs, firstReadyFrameMs: window.__worldCapture.firstReadyFrameMs, navigation: performance.getEntriesByType('navigation')[0]?.toJSON() },
     views: window.worldBase?.views?.map(v => typeof v === 'string' ? v : v.name) || [],
     streetscape: f.station?.streetscape ? {
       addedColliders: f.station.streetscape.addedColliders,
@@ -106,6 +108,7 @@ function snapshot() {
     wetProgram,
     skyline: f.skyline ? { ...f.skyline.stats, placements: f.skyline.placements,
       approaches: f.skyline.approaches, vegetationClear: f.skyline.vegetationClear } : null,
+    city: f.city ? { ...f.city.stats, placements: f.city.placements, vegetationClear: f.city.vegetationClear } : null,
   };
 }
 
@@ -242,6 +245,7 @@ app.whenReady().then(async () => {
   stage('server-listening');
   const route = config.scene === 'combined' ? '/' : `/original/${config.scene}/`;
   const url = `http://127.0.0.1:${server.address().port}${route}${config.query ? '?' + config.query : ''}`;
+  const serverOrigin = new URL(url).origin + '/';
   report.url = url;
   stage('creating-window');
   win = new BrowserWindow({ width: config.width, height: config.height, useContentSize: true, show: true, autoHideMenuBar: true, title: `World · ${config.scene}`, backgroundColor: '#222222', webPreferences: { contextIsolation: true, sandbox: true, nodeIntegration: false, backgroundThrottling: false } });
@@ -262,11 +266,30 @@ app.whenReady().then(async () => {
   win.webContents.debugger.attach('1.3');
   stage('debugger-attached');
   const requests = new Map();
+  const tracedRequests = new Map();
+  const lifecycle = new Set(['Network.requestWillBeSent', 'Network.responseReceived', 'Network.loadingFinished', 'Network.loadingFailed']);
   win.webContents.debugger.on('message', (_event, method, params) => {
-    if (method === 'Network.requestWillBeSent') requests.set(params.requestId, { url: params.request.url, type: params.type });
+    const received = { stage: report.stage, receivedWallTime: Date.now() / 1000 };
+    if (method === 'Network.requestWillBeSent') {
+      requests.set(params.requestId, { url: params.request.url, type: params.type });
+      if (params.type === 'Document' && params.request.url === url) {
+        report.networkEvidence.documentAnchors.push({ requestId: params.requestId, url: params.request.url, frameId: params.frameId,
+          loaderId: params.loaderId, timestamp: params.timestamp, wallTime: params.wallTime, ...received });
+      }
+      if (/\.(glb|bin)(?:[?#]|$)/.test(params.request.url) && params.request.url.startsWith(serverOrigin) && !tracedRequests.has(params.requestId)) {
+        const trace = { requestId: params.requestId, url: params.request.url, events: [] };
+        tracedRequests.set(params.requestId, trace);
+        report.networkEvidence.requests.push(trace);
+      }
+    }
+    // Retain complete params (including initiator, response and terminal byte
+    // counts) for local binary assets. No event-time file writes or URL joins.
+    if (lifecycle.has(method) && tracedRequests.has(params.requestId)) {
+      tracedRequests.get(params.requestId).events.push({ method, ...received, ...params });
+    }
     if (method === 'Runtime.exceptionThrown') report.exceptions.push(params.exceptionDetails);
-    if (method === 'Network.loadingFailed') report.networkFailures.push({ ...requests.get(params.requestId), ...params });
-    if (method === 'Network.responseReceived' && params.response.status >= 400) report.networkFailures.push({ url: params.response.url, status: params.response.status });
+    if (method === 'Network.loadingFailed') report.networkFailures.push({ ...requests.get(params.requestId), ...params, ...received });
+    if (method === 'Network.responseReceived' && params.response.status >= 400) report.networkFailures.push({ url: params.response.url, status: params.response.status, requestId: params.requestId, timestamp: params.timestamp, ...received });
   });
   const cdp = async (method, params) => { stage(`cdp:${method}`); return win.webContents.debugger.sendCommand(method, params); };
   await cdp('Runtime.enable'); await cdp('Network.enable'); await cdp('Page.enable');
@@ -275,7 +298,10 @@ app.whenReady().then(async () => {
   stage('navigating');
   await win.loadURL(url);
   stage('waiting-for-ready-frame');
-  while (!await evaluate('window.__worldCapture?.firstReadyFrameMs !== null && window.__worldCapture?.firstReadyFrameMs !== undefined')) await pause(100);
+  while (!await evaluate(`(() => {
+    if (window.worldBase?.errors.length) throw new Error('Scene initialization failed: ' + window.worldBase.errors.join('\\n'));
+    return window.__worldCapture?.firstReadyFrameMs !== null && window.__worldCapture?.firstReadyFrameMs !== undefined;
+  })()`)) await pause(100);
   report.firstReady = await evaluate(`(${snapshot.toString()})()`);
   stage('scene-ready');
   // Exercise the original start controls. This changes UI state, not scene code.
@@ -334,6 +360,8 @@ app.whenReady().then(async () => {
         { name: '13-street-wet', position: [-1.2, 2.4, 36], target: [0, 2.0, -25], wet: true },
         { name: '14-road-wet-detail', position: [2, 1.35, 31], target: [-1.85, 0.65, 28], wet: true },
         { name: '15-road-dry-detail', position: [2, 1.35, 31], target: [-1.85, 0.65, 28], wet: false },
+        { name: '16-city-context', position: [100, 66, -70], target: [-15, 40, -185], wet: true },
+        { name: '17-city-grounding', position: [-108, 22, -125], target: [-35, 12, -181], wet: true },
       ];
       const savedDetailView = await evaluate('window.worldBase.currentView');
       const savedUi = await evaluate('document.body.classList.contains("hide-ui")');
@@ -422,11 +450,22 @@ app.whenReady().then(async () => {
     report.video = await captureFixtureVideo(win, config);
   }
   report.finalScene = await evaluate(`(${snapshot.toString()})()`);
+  report.networkEvidence.pageClock = { timeOriginMs: report.finalScene.timing.timeOriginMs, performanceNowMs: report.finalScene.timing.performanceNowMs };
+  for (const trace of report.networkEvidence.requests) {
+    const request = trace.events.find(event => event.method === 'Network.requestWillBeSent');
+    const anchor = report.networkEvidence.documentAnchors.find(document => document.loaderId === request?.loaderId);
+    if (anchor) {
+      trace.documentRequestId = anchor.requestId;
+      for (const event of trace.events) if (Number.isFinite(event.timestamp)) {
+        event.documentRelativeMs = (anchor.wallTime + event.timestamp - anchor.timestamp) * 1000 - report.networkEvidence.pageClock.timeOriginMs;
+      }
+    }
+  }
   report.failedRequestTiming = await evaluate(`performance.getEntriesByType('resource').filter(entry => ${JSON.stringify(report.networkFailures.map(failure => failure.url).filter(Boolean))}.includes(entry.name)).map(entry => entry.toJSON())`);
+  report.failedRequestTimingNote = 'Resource Timing entries matched by URL only; they have no CDP requestId and do not establish response/completion of the failed request. Use networkEvidence for same-ID lifecycle evidence.';
   report.gpu = { features: app.getGPUFeatureStatus(), info: await app.getGPUInfo('complete') };
   report.versions = process.versions;
   report.completedAt = new Date().toISOString();
-  report.stage = 'complete';
   report.transportClean = report.networkFailures.length === 0;
   report.renderOk = report.exceptions.length === 0 && report.finalScene.errors.length === 0 && !report.finalScene.renderer.contextLost
     && !report.console.some(item => item.level === 'error' || item.level === 3)
@@ -435,7 +474,7 @@ app.whenReady().then(async () => {
       ? report.video.frameCount > 0 && report.video.views.length === 4
       : config.scene !== 'combined' || (report.behaviorValidation.ok === true && report.lookValidation.ok === true && report.walkingValidation.ok === true && report.views.length === 4));
   report.ok = report.renderOk && report.transportClean;
-  writeReport();
+  stage('complete');
   console.log(JSON.stringify({ ok: report.ok, performance: report.performance, output: config.output }));
   clearTimeout(deadline);
   server.close(); win.destroy(); app.exit(report.ok ? 0 : 1);

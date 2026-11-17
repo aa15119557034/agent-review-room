@@ -83,5 +83,5 @@
       ]
     }
   ],
-  "notes": "Existing pinned programmatic assets are reused; no new external model, texture package or character is downloaded. User reference images guide style and are not used as textures."
+  "notes": "This manifest covers the initial pinned programmatic additions. Later external city models and textures are recorded separately in city-assets.json. User reference images guide style and are not used as textures; no character is imported."
 }
