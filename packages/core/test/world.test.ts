@@ -470,6 +470,54 @@ describe("world time and invitations", () => {
     assert.ok(count(world, "ingredients") >= 0 && count(world, "ingredients") <= 16);
   });
 
+  it("skipLeisure leaves a healthy idle resident free without changing default leisure or evening invitations", () => {
+    for (const now of [480, 510, 540, 1080]) {
+      const h = fixture({ ...initial(), now });
+      const view = h.views.find((entry) => entry.agent === "claude")!;
+      const before = structuredClone(h.world);
+      const normal = chooseWorldRoutine(h.world, "claude", view.seen, view);
+      assert.ok(normal, "the default still proposes an idle activity or an evening invitation");
+      assert.deepEqual(chooseWorldRoutine(h.world, "claude", view.seen, view, { skipLeisure: false }), normal);
+      assert.equal(chooseWorldRoutine(h.world, "claude", view.seen, view, { skipLeisure: true }), null);
+      assert.deepEqual(h.world, before);
+    }
+  });
+
+  it("skipLeisure preserves food, sleep, invitation answers, due promises and joining", () => {
+    const choose = (h: ReturnType<typeof fixture>, agent: string) => {
+      const view = h.views.find((entry) => entry.agent === agent)!;
+      return chooseWorldRoutine(h.world, agent, view.seen, view, { skipLeisure: true });
+    };
+    const hungry = initial();
+    hungry.residents[0]!.satiety = 20;
+    const food = fixture(hungry);
+    assert.deepEqual(choose(food, "claude"), { type: "move", to: "kitchen" });
+    food.act(A, choose(food, "claude")!);
+    assert.deepEqual(choose(food, "claude"), { type: "start", activity: "cook", itemId: null });
+    food.act(A, choose(food, "claude")!);
+
+    const tired = initial();
+    tired.residents[0]!.energy = 20;
+    const sleep = fixture(tired);
+    assert.deepEqual(choose(sleep, "claude"), { type: "move", to: "room_1" });
+    sleep.act(A, choose(sleep, "claude")!);
+    assert.deepEqual(choose(sleep, "claude"), { type: "start", activity: "sleep", itemId: null });
+    sleep.act(A, choose(sleep, "claude")!);
+
+    const h = fixture();
+    h.act(A, { type: "start", activity: "read", itemId: null });
+    h.act(B, { type: "invite", to: A, activity: "set_table" });
+    const answer = choose(h, "claude");
+    assert.ok(answer?.type === "answer" && answer.answer === "later" && answer.dueAt !== null);
+    h.act(A, answer);
+    h.advance(answer.dueAt);
+    assert.deepEqual(choose(h, "claude"), { type: "start", activity: "set_table", itemId: null });
+    h.act(A, choose(h, "claude")!);
+    assert.deepEqual(choose(h, "codex"), { type: "join", activityId: h.world.activities[0]!.id });
+    h.act(B, choose(h, "codex")!);
+    assert.deepEqual(h.world.activities[0]!.participants, [A, B]);
+  });
+
   it("invites a housemate in the evening, shares the activity, and does not repeat or reciprocate that day", () => {
     const h = fixture({ ...initial(), now: 1080 });
     const choose = (agent: string) => chooseWorldRoutine(h.world, agent, h.views.find((v) => v.agent === agent)!.seen);
