@@ -1,4 +1,5 @@
-import { WorkspaceError } from "@room/db";
+import { WorkspaceError, ProjectResearchError } from "@room/db";
+import type { ProjectResearchService } from "./project-research";
 import type { WorkspaceService } from "./workspace";
 import { WorldError, type WorldService } from "./world";
 import type { PacksService } from "./packs";
@@ -40,6 +41,7 @@ import { SettingsError, type SettingsStore } from "./settings";
  */
 
 export interface IpcDeps {
+  readonly research?: ProjectResearchService;
   readonly world?: WorldService;
   readonly workspace?: WorkspaceService;
   readonly repo: Repository;
@@ -85,6 +87,7 @@ const errorResult = (error: ControlErrorCode, message: string): ControlResult<un
 });
 
 function mapError(error: unknown): ControlResult<unknown> {
+  if (error instanceof ProjectResearchError) return errorResult(error.code, error.message);
   if (error instanceof SourceUnavailableError) return errorResult(error.code, "引用的资料已撤回或不可用，请重新生成 Prompt 后再批准或恢复");
   if (error instanceof WorldError) return errorResult(error.code, error.message);
   if (error instanceof WorkspaceError) return errorResult(error.code, error.message);
@@ -128,6 +131,7 @@ function mapError(error: unknown): ControlResult<unknown> {
 
 export function createDispatcher(deps: IpcDeps) {
   const { repo, settings, orchestrator } = deps;
+  const research = () => { if (!deps.research) throw new ControlFailure("internal", "项目检索服务没有启动"); return deps.research; };
   const world = () => { if (!deps.world) throw new ControlFailure("internal", "世界服务没有启动"); return deps.world; };
   const workspace = () => { if (!deps.workspace) throw new ControlFailure("internal", "资料与维护服务没有启动"); return deps.workspace; };
 
@@ -265,6 +269,9 @@ export function createDispatcher(deps: IpcDeps) {
         deps.emit({ type: "approval.updated", approval: result.approval });
         return result;
       }
+
+      case "research.prepare": return research().prepare(command);
+      case "research.approve": return research().approve(command);
 
       case "approval.approve": {
         const node = settings.get();
@@ -495,6 +502,10 @@ export function createDispatcher(deps: IpcDeps) {
 
   async function runQuery(query: QueryRequest): Promise<unknown> {
     switch (query.type) {
+      case "research.preview": return research().preview(query);
+      case "research.result": return research().result(query);
+      case "sources.current": return research().sources(query);
+      case "sources.preview": return research().sourcePreview(query);
       case "world.get": return world().get();
       case "world.residentView": return world().residentView(query.worldId, query.agent);
       case "world.events": return world().events(query.worldId, query.before, query.limit);

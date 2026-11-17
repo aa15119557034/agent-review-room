@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
-import { SourceReferences, type ChatContent, type SourceReference } from "@room/schemas";
+import { ProjectSourcesCurrent, ProjectSourcePreview, PROJECT_RESEARCH_QUERIES, SourceReferences, type ChatContent, type SourceReference } from "@room/schemas";
 import type { SqliteDatabase } from "./database";
+import { ProjectResearchError } from "./research-plan";
 
 /** Local query scope, not an IPC request or an authorization supplied by a provider. */
 type Scope = { projectId: string } | { conversationId: string };
@@ -17,6 +18,28 @@ export class SourceUnavailableError extends Error {
 
 export function readSourceRefs(json: string | null | undefined): SourceReference[] | undefined {
   return json == null ? undefined : SourceReferences.parse(JSON.parse(json));
+}
+
+function ownerReferences(db: SqliteDatabase, projectId: string, owner: ProjectSourcesCurrent["owner"]): SourceReference[] {
+  const table = owner.kind === "message" ? "messages" : "prompt_snapshots";
+  const row = db.prepare("SELECT source_refs FROM " + table + " WHERE id = ? AND project_id = ?").get(owner.id, projectId) as { source_refs: string | null } | undefined;
+  if (!row) throw new ProjectResearchError("source owner not found in this project", "not_found");
+  return readSourceRefs(row.source_refs) ?? [];
+}
+
+export function currentProjectSources(db: SqliteDatabase, value: unknown): ProjectSourcesCurrent {
+  const { projectId, owner } = PROJECT_RESEARCH_QUERIES["sources.current"].request.parse(value);
+  return ProjectSourcesCurrent.parse({ projectId, owner, checkedAt: new Date().toISOString(), sources: ownerReferences(db, projectId, owner).map((reference, index) => ({
+    index, reference, currentStatus: resolveSourceReference(db, { projectId }, reference).reference.status,
+  })) });
+}
+
+export function previewProjectSource(db: SqliteDatabase, value: unknown): ProjectSourcePreview {
+  const { projectId, owner, index } = PROJECT_RESEARCH_QUERIES["sources.preview"].request.parse(value);
+  const reference = ownerReferences(db, projectId, owner)[index];
+  if (!reference) throw new ProjectResearchError("source index not found on this owner", "not_found");
+  const resolved = resolveSourceReference(db, { projectId }, reference);
+  return ProjectSourcePreview.parse({ projectId, owner, index, reference, checkedAt: new Date().toISOString(), status: resolved.reference.status, content: resolved.content });
 }
 
 export function mergeSourceRefs(lists: readonly (readonly SourceReference[] | undefined)[]): SourceReference[] | undefined {

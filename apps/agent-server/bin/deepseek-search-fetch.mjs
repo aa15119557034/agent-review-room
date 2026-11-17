@@ -97,30 +97,34 @@ async function main() {
     throw error;
   }
   display({ kind: "tool_step", stepId: "search", tool: "deepseek.search", status: "completed", summary: found.results.length ? "找到一条候选网页；摘要不视为原文" : "没有搜索结果" });
-  if (found.results.length === 0) return "没有找到资料。本次没有可读原文或引用。";
-  const url = pageUrl(found.results[0]?.url);
+  if (found.results.length === 0) return { text: "没有找到资料。本次没有可读原文或引用。", source: null };
   display({ kind: "tool_step", stepId: "fetch", tool: "deepseek.fetch", status: "started", summary: "正在取回网页正文" });
-  let page;
+  let page, url;
   try {
+    url = pageUrl(found.results[0]?.url);
     page = await request(base, key, "/v1/tools/fetch", { url });
     if (!page || typeof page.title !== "string" || typeof page.content !== "string" || !page.content.trim()) throw new ToolFailure("网页没有可读的完整正文");
     if (Buffer.byteLength(page.content, "utf8") > MAX_CONTENT_BYTES) throw new ToolFailure("网页正文超过 512 KiB，未截断后伪装为完整原文");
+    if (/[\uD800-\uDFFF]/u.test(page.content)) throw new ToolFailure("网页正文包含无效 Unicode");
   } catch (error) {
     display({ kind: "tool_step", stepId: "fetch", tool: "deepseek.fetch", status: "failed", summary: "未能取得可读原文" });
-    display({ kind: "citation", citationId: "page-1", source: { source: { kind: "web", url }, version: null, contentHash: null, retrievedAt: new Date().toISOString(), status: "missing" } });
+    if (url !== undefined) display({ kind: "citation", citationId: "page-1", source: { source: { kind: "web", url }, version: null, contentHash: null, retrievedAt: new Date().toISOString(), status: "missing" } });
     throw error;
   }
   const contentHash = createHash("sha256").update(page.content, "utf8").digest("hex");
   display({ kind: "tool_step", stepId: "fetch", tool: "deepseek.fetch", status: "completed", summary: "已取回一页正文" });
-  display({ kind: "citation", citationId: "page-1", ...(page.title ? { title: page.title.slice(0, 500) } : {}), source: { source: { kind: "web", url }, version: contentHash, contentHash, retrievedAt: new Date().toISOString(), status: "readable" } });
-  return page.content;
+  const source = { source: { kind: "web", url }, version: contentHash, contentHash, retrievedAt: new Date().toISOString(), status: "readable" };
+  let title = "";
+  for (const character of page.title) { if (title.length + character.length > 500) break; title += character; }
+  display({ kind: "citation", citationId: "page-1", ...(title ? { title } : {}), source });
+  return { text: page.content, source };
 }
 
-let text, failure;
-try { text = await main(); }
+let result, failure;
+try { result = await main(); }
 catch (error) { failure = error instanceof ToolFailure ? error : new ToolFailure("检索输入或服务响应无效"); }
 if (process.env.ROOM_STRUCTURED_RESULTS_VERSION === "1") {
   display({ kind: "usage", scope: "run", inputTokens: unknown, outputTokens: unknown, toolCalls: { status: "measured", value: toolCalls }, cost: unknown });
 }
 if (failure) { out({ type: "error", message: failure.message, quota: failure.quota }); process.exitCode = 1; }
-else out({ type: "done", text, finishReason: "stop" });
+else out({ type: "done", text: result.text, finishReason: "stop", ...(process.env.ROOM_PROJECT_RESEARCH_VERSION === "1" ? { source: result.source } : {}) });

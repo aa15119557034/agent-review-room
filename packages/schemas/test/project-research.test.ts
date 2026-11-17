@@ -46,13 +46,13 @@ const reference = {
 const complete = { type: "message_complete", seq: 1, ts, text, source: reference };
 const owner = { kind: "snapshot", id: plan.snapshotId };
 
-test("research contracts stay inactive in the existing control command/query registries", () => {
+test("research contracts register author, approve and read operations without accepting caller URLs or credentials", () => {
   const prepare = { type: "research.prepare", projectId: plan.projectId, nodeId: target.nodeId, profileId: target.profileId, query };
   assert.deepEqual(PROJECT_RESEARCH_COMMANDS["research.prepare"].request.parse(prepare), prepare);
-  assert.equal(ControlCommand.safeParse(prepare).success, false);
+  assert.equal(ControlCommand.safeParse(prepare).success, true);
   const current = { type: "sources.current", projectId: plan.projectId, owner };
   assert.deepEqual(PROJECT_RESEARCH_QUERIES["sources.current"].request.parse(current), current);
-  assert.equal(ControlQuery.safeParse(current).success, false);
+  assert.equal(ControlQuery.safeParse(current).success, true);
   assert.equal(PROJECT_RESEARCH_COMMANDS["research.prepare"].scope, "author");
   assert.equal(PROJECT_RESEARCH_COMMANDS["research.approve"].scope, "approve");
   for (const entry of Object.values(PROJECT_RESEARCH_QUERIES)) assert.equal(entry.scope, "read");

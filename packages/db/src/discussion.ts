@@ -14,6 +14,7 @@ import { appendRunEventTx } from "./run-lifecycle";
 import { cancelOpenBatchesTx, cancelRunningTurns } from "./discussion-turn";
 import { writeTransaction, type WriteQueue } from "./write-queue";
 import { assertPromptSourcesCurrent, isChatMessageCurrent, validateSourceRefs } from "./sources";
+import { assertOrdinarySnapshot } from "./research-plan";
 
 /**
  * 讨论室的写入路径（ADR-002 / D-21）。
@@ -1042,6 +1043,7 @@ export function approveBatch(
       if (actual !== snapshot.content_hash || actual !== item.content_hash || actual !== submitted.expectedContentHash) {
         throw new BatchApproveError("hash_mismatch", `snapshot content of ${item.recipient} does not match its hash`);
       }
+      assertOrdinarySnapshot(db, item.snapshot_id);
       assertPromptSourcesCurrent(db, item.snapshot_id, batch.project_id);
 
       // C-40：模型/强度也是盖章指纹的一部分。只比较 model + effort；

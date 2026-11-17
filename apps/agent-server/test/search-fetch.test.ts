@@ -4,7 +4,7 @@ import { createServer, type ServerResponse } from "node:http";
 import type { AddressInfo } from "node:net";
 import { fileURLToPath } from "node:url";
 import { it } from "node:test";
-import { NodeHealth, RemoteEvent, StructuredRemoteEvent, type StartRunRequest } from "@room/schemas";
+import { NodeHealth, ProjectResearchRemoteEvent, RemoteEvent, StructuredRemoteEvent, type StartRunRequest } from "@room/schemas";
 import { ServerConfig } from "../src/config";
 import { createAgentServer } from "../src/server";
 import { RoomJsonlParser } from "../src/parsers/room-jsonl";
@@ -37,7 +37,7 @@ async function harness(mode = "ok") {
       if (mode === "hold") { held = res; return; }
       if (mode === "404") return void res.writeHead(404).end(KEY);
       if (mode === "redirect") return void res.writeHead(302, { location: "http://127.0.0.1/secret" }).end();
-      res.end(JSON.stringify({ title: "<b>原始标题</b>", content: mode === "blank" ? " " : mode === "large" ? "x".repeat(512 * 1024 + 1) : TEXT }));
+      res.end(JSON.stringify({ title: mode === "unicode-title" ? "a".repeat(499) + "🧪结尾" : "<b>原始标题</b>", content: mode === "blank" ? " " : mode === "large" ? "x".repeat(512 * 1024 + 1) : mode === "unicode-large" ? "🧪".repeat(131073) : TEXT }));
     }
   });
   await new Promise<void>((resolve) => provider.listen(0, "127.0.0.1", resolve));
@@ -55,12 +55,12 @@ async function harness(mode = "ok") {
   const base = "http://127.0.0.1:" + (agent.server.address() as AddressInfo).port;
   const input = (query = "测试公开资料"): StartRunRequest => ({ protocol: 1, runId: "run_" + id(), profileId: "research", structuredResults: { version: 1 }, snapshot: { id: "snap_" + id(), content: query, contentHash: sha(query) }, limits: { idleTimeoutMs: 10_000, totalTimeoutMs: 20_000 } });
   const start = (request: unknown) => fetch(base + "/v1/runs", { method: "POST", headers: auth, body: JSON.stringify(request) });
-  const read = async (runId: string, after = -1) => {
+  const read = async (runId: string, after = -1, research = false) => {
     const res = await fetch(`${base}/v1/runs/${runId}/events?after=${after}`, { headers: auth });
     assert.equal(res.status, 200);
     const text = await res.text();
     assert.ok(!text.includes(KEY));
-    return text.split("\n").filter(Boolean).map((line) => StructuredRemoteEvent.parse(JSON.parse(line))).filter((event) => event.type !== "heartbeat");
+    return text.split("\n").filter(Boolean).map((line) => (research ? ProjectResearchRemoteEvent : StructuredRemoteEvent).parse(JSON.parse(line))).filter((event) => event.type !== "heartbeat");
   };
   return { base, input, start, read, seen, reached, close: async () => { held?.destroy(); await agent.close(); provider.closeAllConnections(); await new Promise<void>((resolve) => provider.close(() => resolve())); } };
 }
@@ -93,6 +93,63 @@ it("negotiates a project Search/Fetch run and returns original body, exact citat
     assert.deepEqual(await h.read(request.runId, 1), events.filter((e) => "seq" in e && e.seq > 1));
     assert.equal(h.seen.length, 2, "replay never reissues HTTP tools");
   } finally { await h.close(); }
+});
+
+it("research opt-in emits verified original before citation/usage and binds replay to mode and snapshot", async () => {
+  const h = await harness("unicode-title");
+  try {
+    const health = NodeHealth.parse(await (await fetch(h.base + "/v1/health", { headers: auth })).json());
+    assert.deepEqual(health.capabilities?.projectResearch, { version: 1, profiles: ["research"] });
+    const request = { ...h.input("🧪".repeat(128)), projectResearch: { version: 1 } };
+    assert.equal((await h.start(request)).status, 202);
+    const events = await h.read(request.runId, -1, true);
+    const complete = ProjectResearchRemoteEvent.parse(events.find((e) => e.type === "message_complete"));
+    assert.ok(complete.type === "message_complete" && complete.source !== null);
+    assert.equal(complete.text, TEXT);
+    assert.equal(complete.source.contentHash, sha(TEXT));
+    const citation = events.find((e) => e.type === "result_display" && e.result.block.kind === "citation");
+    assert.ok(citation?.type === "result_display" && citation.result.block.kind === "citation");
+    assert.ok(citation.seq > complete.seq);
+    assert.equal(citation.result.block.title, "a".repeat(499));
+    const usage = events.find((e) => e.type === "result_display" && e.result.block.kind === "usage");
+    assert.ok(usage && usage.seq > citation.seq);
+    assert.equal((await h.start(request)).status, 200);
+    assert.equal((await h.start({ ...request, projectResearch: undefined })).status, 409);
+    assert.equal((await h.start({ ...request, snapshot: { ...request.snapshot, id: "snap_" + id() } })).status, 409);
+    assert.deepEqual(await h.read(request.runId, complete.seq, true), events.filter((event) => event.seq > complete.seq));
+    assert.equal(h.seen.length, 2);
+  } finally { await h.close(); }
+});
+
+for (const mode of ["empty", "404", "private", "unicode-large"]) {
+  it(`research ${mode} reports no invented original and retains actual failed-call usage`, async () => {
+    const h = await harness(mode);
+    try {
+      const request = { ...h.input(), projectResearch: { version: 1 } };
+      assert.equal((await h.start(request)).status, 202);
+      const events = await h.read(request.runId, -1, true);
+      const complete = events.find((e) => e.type === "message_complete");
+      if (mode === "empty") assert.ok(complete && "source" in complete && complete.source === null);
+      else assert.equal(complete, undefined);
+      assert.equal(events.some((e) => e.type === "result_display" && e.result.block.kind === "citation" && e.result.block.source.status === "readable"), false);
+      const usage = events.find((e) => e.type === "result_display" && e.result.block.kind === "usage");
+      assert.ok(usage?.type === "result_display" && usage.result.block.kind === "usage");
+      assert.deepEqual(usage.result.block.toolCalls, { status: "measured", value: mode === "empty" || mode === "private" ? 1 : 2 });
+      if (mode === "private") assert.ok(events.some((e) => e.type === "result_display" && e.result.block.kind === "tool_step" && e.result.block.stepId === "fetch" && e.result.block.status === "failed"));
+    } finally { await h.close(); }
+  });
+}
+
+it("research parser requires one original metadata record, including explicit null for empty results", () => {
+  for (const done of [{ type: "done", text: "legacy" }, { type: "done", text: "x", source: {} }]) {
+    const parser = new RoomJsonlParser(true);
+    parser.push(JSON.stringify(done) + "\n");
+    assert.equal(parser.finish().verdict.ok, false);
+  }
+  const parser = new RoomJsonlParser(true);
+  parser.push(JSON.stringify({ type: "done", text: "empty", source: null }) + "\n");
+  parser.push(JSON.stringify({ type: "done", text: "second", source: null }) + "\n");
+  assert.equal(parser.finish().verdict.ok, false);
 });
 
 for (const mode of ["newline", "trailing"]) {

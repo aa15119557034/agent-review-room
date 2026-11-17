@@ -27,6 +27,8 @@ export interface AppState {
   status: SystemStatus | null;
   projects: Project[];
   currentProjectId: string | null;
+  /** Invalidates current source reads and open originals when chat material is withdrawn. */
+  sourceRevision: number;
   messages: Message[];
   contributions: Contribution[];
   approvals: Approval[];
@@ -78,6 +80,7 @@ export const initialState: AppState = {
   status: null,
   projects: [],
   currentProjectId: null,
+  sourceRevision: 0,
   messages: [],
   contributions: [],
   approvals: [],
@@ -216,7 +219,7 @@ export const runsNewestFirst = (s: AppState) =>
 
 /** 当前等待批准的那一项（同一项目最多一个：生成新的会让旧的失效） */
 export const readyApproval = (s: AppState) =>
-  [...s.approvals].reverse().find((a) => a.state === "READY_FOR_REVIEW") ?? null;
+  [...s.approvals].reverse().find((a) => a.state === "READY_FOR_REVIEW" && s.snapshots[a.snapshotId]?.adapterVersion !== "project-research-v1") ?? null;
 
 /** 已经处理过的审批，新的在前 */
 export const decidedApprovals = (s: AppState) =>

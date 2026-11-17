@@ -3,7 +3,7 @@ import { APPROVAL_TRANSITIONS, canTransition, type Approval, type PromptSnapshot
 import { decidedApprovals, readyApproval } from "../lib/state";
 import { useActions, useAppState } from "./hooks";
 import { APPROVAL_STATE_LABEL, CONTRIBUTION_TYPE_LABEL, RUN_STATE_LABEL, formatTime } from "./labels";
-import { SourceReferences } from "./SourceReferences";
+import { CurrentSourceReferences } from "./CurrentSourceReferences";
 
 // ------------------------------------------------------------ 第 2 步：勾选片段
 
@@ -122,7 +122,7 @@ function PendingApproval({ approval }: { approval: Approval }) {
   }, [actions, approval.snapshotId]);
 
   const canDecide = snapshot !== undefined && busy === null;
-  const canApprove = canDecide && !stale && reviewerConfigured && canTransition(APPROVAL_TRANSITIONS, approval.state, "APPROVED");
+  const canApprove = canDecide && snapshot.adapterVersion !== "project-research-v1" && !stale && reviewerConfigured && canTransition(APPROVAL_TRANSITIONS, approval.state, "APPROVED");
 
   const approve = async () => {
     if (!canApprove || !snapshot) return;
@@ -157,7 +157,7 @@ function PendingApproval({ approval }: { approval: Approval }) {
       ) : (
         <>
           <SnapshotFacts snapshot={snapshot} />
-          <SourceReferences references={snapshot.sourceRefs} />
+          <CurrentSourceReferences projectId={snapshot.projectId} owner={{ kind: "snapshot", id: snapshot.id }} references={snapshot.sourceRefs} />
           <pre className="prompt-text" data-expanded={expanded}>
             {snapshot.content}
           </pre>

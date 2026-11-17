@@ -9,6 +9,7 @@ import type { SqliteDatabase } from "./database";
 import { ulid } from "./ulid";
 import { type WriteQueue, writeTransaction } from "./write-queue";
 import { assertPromptSourcesCurrent, mergeSourceRefs, runSourceRefs, SourceUnavailableError, validateCurrentSourceRefs } from "./sources";
+import { assertOrdinarySnapshot, readResearchPlan, ProjectResearchError } from "./research-plan";
 
 /**
  * Run 生命周期（D-06）。
@@ -164,6 +165,7 @@ export async function createRunFromApproval(
       throw new ApprovalNotConsumableError(input.approvalId, "project_mismatch", approval.state);
     }
 
+    assertOrdinarySnapshot(db, approval.snapshot_id);
     insertRun(db, runId, approval, input.adapterId, now);
     return readRun(db, runId)!;
   });
@@ -173,6 +175,9 @@ export interface ApproveAndCreateRunInput {
   approvalId: string;
   /** 用户在界面上看到的 snapshot hash（AC-6 的防陈旧批准） */
   expectedSnapshotHash: string;
+  expectedResearchHash?: string;
+  /** Captured workspace/config guard, also checked after waiting for the writer. */
+  beforeWrite?: () => void;
   adapterId: string;
   decidedVia?: "desktop" | "mobile" | null;
   runId?: string;
@@ -193,6 +198,7 @@ export async function approveAndCreateRun(
   const runId = input.runId ?? "run_" + ulid();
 
   return writeTransaction(db, queue, () => {
+    input.beforeWrite?.();
     const approval = readApproval(db, input.approvalId);
     if (approval === undefined) throw new ApprovalNotConsumableError(input.approvalId, "not_found");
 
@@ -202,6 +208,10 @@ export async function approveAndCreateRun(
     if (snapshot === undefined) throw new ApprovalNotConsumableError(input.approvalId, "not_found");
     if (snapshot.content_hash !== input.expectedSnapshotHash) {
       throw new StaleSnapshotError(input.approvalId);
+    }
+    const research = readResearchPlan(db, approval.snapshot_id);
+    if (research ? research.researchHash !== input.expectedResearchHash || input.adapterId !== "remote:" + research.plan.target.profileId : input.expectedResearchHash !== undefined) {
+      throw new ProjectResearchError("research approval does not match its plan and target", "stale_snapshot");
     }
 
     const updated = db
@@ -380,6 +390,7 @@ export interface ReviewMessageRow {
 }
 
 export interface FinishRunInput {
+  signal?: AbortSignal;
   from: RunState;
   terminal: {
     type: TerminalType;
@@ -413,7 +424,8 @@ export async function finishRun(
   return writeTransaction(db, queue, () => {
     const run = readRun(db, runId);
     if (run === undefined || run.state !== input.from) throw new RunStateConflictError(runId, input.from, run?.state ?? null);
-    let terminal = input.terminal;
+    if (input.reviewerOutput !== undefined) assertOrdinarySnapshot(db, run.snapshot_id);
+    let terminal: FinishRunInput["terminal"] = input.signal?.aborted ? { type: "cancelled" } : input.terminal;
     let sourceRefs: ReturnType<typeof runSourceRefs>;
     if (terminal.type === "completed" && input.reviewerOutput !== undefined) {
       try { sourceRefs = validateCurrentSourceRefs(db, { projectId: run.project_id }, mergeSourceRefs([input.reviewerOutput.sourceRefs, runSourceRefs(db, runId)])); }
