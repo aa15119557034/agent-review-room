@@ -153,6 +153,11 @@ export async function createCity({ scene, station, island, skyline }) {
     const shops = station.ctx.services.shopsA.buildContext;
     const signs = getLaundrySigns(shops);
     H.laundrySigns = Object.fromEntries(Object.entries(signs.regions).map(([key, reg]) => [key, { ...reg, m: clone(reg.m) }]));
+    // The enclosed fascia is a lit sign, not a glowing whole storefront. Borrow
+    // the same atlas texture, but own this small unlit print material locally.
+    const signPrint = new THREE.MeshBasicMaterial({ map: signs.regions.name.m.map, color: '#ffffff' });
+    signPrint.name = 'city-laundry-fascia-print'; ownedMaterials.add(signPrint);
+    H.laundrySigns.name.m = signPrint; H.laundrySigns.icon.m = signPrint;
     stats.laundrySignAtlas = { ...signs.audit, reusedRegions: signs.reused, newTextures: 0,
       text: ['さくら コインランドリー', '洗濯・乾燥', 'セルフサービス'], owner: 'station', pixelsUpdated: !signs.reused };
     for (const site of SITES) {
@@ -221,7 +226,7 @@ export async function createCity({ scene, station, island, skyline }) {
     crateGroup.add(crate); root.add(crateGroup);
     const signRoot = new THREE.Group(); signRoot.name = 'city-laundry-a-frame'; root.add(signRoot);
     const C = station.ctx.services.shopsA.buildContext;
-    const aFrame = C.P.aFrame({ k: station.ctx.kit(signRoot) }, 4.55, supportY, -122.35, .35, H.laundrySigns.aframe, null, { w: .45, h: .68 });
+    const aFrame = C.P.aFrame({ k: station.ctx.kit(signRoot) }, 4.55, supportY, -122.35, .35, H.laundrySigns.aframe, null, { w: .45, h: .68, frame: '#326e70' });
     // This new label plane is not a shared kit primitive. Own it directly rather
     // than cloning and losing the original allocation.
     aFrame.traverse(mesh => { if (mesh.isMesh && mesh.material === H.laundrySigns.aframe.m) geometries.add(mesh.geometry); });
@@ -277,11 +282,16 @@ export async function createCity({ scene, station, island, skyline }) {
       walkable: false, borrowedAssetTextures: borrowedAssetTextures.size };
     const facades = placements.filter(p => p.type === 'apartment').map(p => ({ name: p.name,
       origin: [p.center[0], p.baseY, p.center[1]], ...p.model.facade }));
-    stats.facadeLife = { buildings: facades, signTriangles: 20,
-      signs: { horizontal: { position: [2.45, shop.baseY + 2.43, -122.1745], size: [4.56, .22] },
-        glass: [-1.8, 1.8].map(x => ({ position: [2 + x, shop.baseY + 1.18, -123.216], size: [.82, .30] })),
+    const storefront = shop.model.storefront;
+    const worldLabel = label => ({ ...label, position: [shop.center[0] + label.position[0], shop.baseY + label.position[1], shop.frontage[1] + label.position[2]] });
+    stats.laundryStorefront = { ...storefront, origin: [shop.center[0], shop.baseY, shop.frontage[1]],
+      scope: 'Local storefront composition; three existing atlas regions repainted, no new atlas page or image. Entry, machines and freestanding props retained.' };
+    const signTriangles = storefront.labelTriangles + storefront.labelBackingTriangles + 2; // A-frame print quad
+    stats.facadeLife = { buildings: facades, signTriangles,
+      signs: { horizontal: worldLabel(storefront.name),
+        glass: storefront.glass.map(worldLabel), servicePanel: worldLabel(storefront.servicePanel),
         aFrame: stats.texturedProps.sign },
-      totalTriangles: facades.reduce((n, f) => n + f.totalTriangles, 20), walkable: false };
+      totalTriangles: facades.reduce((n, f) => n + f.totalTriangles, signTriangles), walkable: false };
     if (stats.facadeLife.totalTriangles > 900) throw new Error('Facade pass exceeds its 900-triangle allocation');
     gb.flush(root, 'town-edge-kit');
     const laundry = H.laundry.build();
@@ -328,13 +338,39 @@ function getLaundrySigns(C) {
   }
   const regions = {};
   for (const [key, w, h] of requests) regions[key] = atlas.region(w, h, (g, W, H) => {
-    g.fillStyle = '#f0eee3'; g.fillRect(0, 0, W, H);
-    g.fillStyle = '#456969'; g.fillRect(0, 0, W, 5); g.fillRect(0, H - 5, W, 5);
-    const text = (s, yy, size) => C.U.text(g, s, W / 2, yy, size, C.F.sans, '#344e50', { maxW: W - 20, weight: 700 });
-    if (key === 'name') text('さくら コインランドリー', H / 2, 42);
-    else if (key === 'function') { text('洗濯・乾燥', 30, 30); text('セルフサービス', 69, 26); }
-    else { text('さくら', 33, 28); text('コインランドリー', 72, 25); text('洗濯・乾燥', 121, 27); text('セルフサービス', 157, 21); }
-  }, { bg: '#f0eee3' });
+    const teal = '#326e70', cream = '#eee9d9', ink = '#274e54', brass = '#c8ac79';
+    const fill = (color, x, y, width, height) => { g.fillStyle = color; g.fillRect(x, y, width, height); };
+    const text = (s, x, y, size, color, maxW) => C.U.text(g, s, x, y, size, C.F.sans, color, { maxW, weight: 700 });
+    fill(teal, 0, 0, W, H);
+    if (key === 'name') {
+      fill(brass, 0, H - 5, W, 2);
+      // This long physical fascia is wider than its packed atlas rectangle.
+      // Taller lettering in the bitmap counters that mapping, without a new page.
+      g.save(); g.translate(W / 2, 40); g.scale(1, 1.35);
+      text('さくら コインランドリー', 0, 0, 38, cream, W - 24); g.restore();
+      text('SAKURA LAUNDRY', W / 2, 79, 13, cream, W - 24);
+    } else if (key === 'function') {
+      fill(cream, 0, 42, W, H - 42); fill(brass, 0, 41, W, 3);
+      text('洗濯・乾燥', W / 2, 22, 29, cream, W - 18);
+      text('セルフサービス', W / 2, 70, 27, ink, W - 18);
+    } else {
+      // Original washer pictogram; its 48px square is also the fascia badge.
+      fill(cream, 12, 12, 48, 48); fill(ink, 16, 16, 40, 7);
+      g.fillStyle = teal; g.beginPath(); g.arc(36, 41, 14, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = cream; g.lineWidth = 2; g.beginPath(); g.arc(36, 41, 9, .2, Math.PI - .2); g.stroke();
+      text('さくら', 127, 29, 26, cream, 106);
+      text('LAUNDRY', 127, 52, 12, cream, 108);
+      fill(cream, 8, 76, W - 16, H - 84); fill(brass, 8, 76, W - 16, 3);
+      text('コインランドリー', W / 2, 95, 21, ink, W - 24);
+      text('洗濯・乾燥', W / 2, 126, 27, ink, W - 24);
+      text('セルフサービス', W / 2, 159, 20, ink, W - 24);
+    }
+  }, { bg: '#326e70' });
+  // Crop inside the already allocated A-frame region, with Canvas Y inverted
+  // into atlas V. This does not consume a fourth region or another texture.
+  const r = regions.aframe, du = r.u1 - r.u0, dv = r.v1 - r.v0;
+  regions.icon = { ...r, w: 48, h: 48, u0: r.u0 + du * 12 / 192, u1: r.u0 + du * 60 / 192,
+    v0: r.v1 - dv * 60 / 192, v1: r.v1 - dv * 12 / 192 };
   page.t.needsUpdate = true;
   const result = { regions, audit: { page: before.pages - 1, before,
     after: { pages: atlas.pages.length, x: page.x, y: page.y, rowH: page.rowH },

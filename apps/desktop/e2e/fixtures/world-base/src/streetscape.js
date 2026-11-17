@@ -193,6 +193,80 @@ export function addStreetscape({ ctx, root }) {
   instances.push({ id: 'e2-front-side-meter', kind: 'elecMeter', lot: 'E2',
     lotPosition: [3.5, 1.05, -1.8], localPosition: meterPosition.toArray(),
     triangles: 36, atlasRegion: 'elec_meter', meshes: meterMeshes, footprint: meterBody, pipe: meterPipe });
+  // The street-mouth marker stands beyond the full sidewalk envelope (which
+  // reaches x=±4.925). It has its own footings, not utility-pole attachments.
+  // z=10.8 was rejected because the original telecom spans cross the sign.
+  const landmark = new THREE.Group(); landmark.name = 'sakuragaoka-shopping-street-gate';
+  group.add(landmark);
+  const gateFrame = Frame.at(H.gb, 0, 0, 0), gateZ = 3.5;
+  const gateSteel = C.M.t('#36565a'), gateCream = C.M.t('#d8d3c4');
+  const gateCollisions = [];
+  for (const side of [-1, 1]) {
+    const gx = side * 5.15, gy = ground(gateFrame, gx, gateZ);
+    // Bury the footing in the existing forecourt tile; its top and the
+    // column shoe overlap, so the slender steel never floats above its base.
+    gateFrame.boxB(gateCream, '#ffffff', .34, .18, .34, gx, gy - .04, gateZ);
+    gateFrame.boxB(gateSteel, '#ffffff', .24, .06, .24, gx, gy + .11, gateZ);
+    gateFrame.boxB(gateSteel, '#ffffff', .18, 5.05 - gy, .18, gx, gy + .12, gateZ);
+    const foot = { id: 'shopping-gate-foot-' + side, type: 'walk', x: gx, z: gateZ,
+      width: .34, depth: .34, rotationY: 0, y0: gy - .04, y1: gy + .14 };
+    foot.collider = ctx.physics.addWalkBox(gx, gateZ, .34, .34, 0, foot.y1, foot.y0);
+    collisions.push(foot); gateCollisions.push(foot);
+    gateCollisions.push(addBox('shopping-gate-column-' + side, gateFrame, gx, gateZ, .18, .18, gy + .11, 5.17));
+    // Knee braces meet the column and underside of the cross-member.
+    gateFrame.beam(gateSteel, '#ffffff', [gx, 4.15, gateZ], [side * 4.25, 4.94, gateZ], .12, .12);
+    gateCollisions.push(addBox('shopping-gate-brace-' + side, gateFrame, side * 4.7, gateZ, 1.02, .12, 4.09, 5.0));
+    for (const dx of [-.075, .075]) {
+      gateFrame.box(gateCream, '#ffffff', .035, .035, .026, gx + dx, gy + .15, gateZ + .133);
+      gateFrame.box(gateCream, '#ffffff', .035, .035, .026, gx + dx, gy + .15, gateZ - .133);
+    }
+  }
+  gateFrame.box(gateSteel, '#ffffff', 10.5, .18, .24, 0, 4.95, gateZ);
+  gateFrame.box(gateSteel, '#ffffff', 7.5, 1.02, .22, 0, 5.54, gateZ);
+  gateFrame.box(gateCream, '#ffffff', 7.62, .06, .30, 0, 6.08, gateZ);
+  const gateBody = H.gb.flush(landmark, 'shopping-gate-frame');
+  gateCollisions.push(addBox('shopping-gate-crossmember', gateFrame, 0, gateZ, 10.5, .24, 4.86, 5.04));
+  gateCollisions.push(addBox('shopping-gate-lightbox', gateFrame, 0, gateZ, 7.62, .30, 5.03, 6.11));
+  const gateMap = ctx.tex.draw(1024, 128, (g, w, h) => {
+    g.fillStyle = '#eee9da'; g.fillRect(0, 0, w, h);
+    g.fillStyle = '#36565a'; g.fillRect(0, 0, w, 6);
+    g.fillStyle = '#b95e62'; g.fillRect(0, h - 11, w, 6);
+    // Original five-petal emblem: a restrained red accent, no borrowed logo.
+    g.save(); g.translate(59, 61); g.fillStyle = '#b95e62';
+    for (let i = 0; i < 5; i++) { g.save(); g.rotate(i * Math.PI * 2 / 5); g.beginPath(); g.ellipse(0, -20, 10, 20, 0, 0, Math.PI * 2); g.fill(); g.restore(); }
+    g.fillStyle = '#eee9da'; g.beginPath(); g.arc(0, 0, 7, 0, Math.PI * 2); g.fill(); g.restore();
+    g.fillStyle = '#283f43'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    ctx.tex.fitText(g, '桜ヶ丘 駅前商店街', 568, 63, 864, 88, ctx.tex.FONTS.sans, 800);
+  }, { key: 'streetscape-sakuragaoka-gate-v1', anisotropy: 8 });
+  gateMap.generateMipmaps = true; gateMap.minFilter = THREE.LinearMipmapLinearFilter;
+  gateMap.magFilter = THREE.LinearFilter;
+  const gateFaceMaterial = ctx.mat.toon('#ffffff', { map: gateMap, paint: 0,
+    emissive: '#ffffff', emissiveIntensity: .18, name: 'shopping-gate-lettering' });
+  gateFaceMaterial.emissiveMap = gateMap;
+  // One double-front mesh, correctly readable from either direction. Keep its
+  // mapped emission out of batch2, which intentionally reconstructs toon mats.
+  const faceP = [], faceN = [], faceUV = [], faceI = [];
+  for (const side of [1, -1]) {
+    const start = faceP.length / 3;
+    for (const [x, y, u, v] of [[-3.65, -.44, 0, 0], [3.65, -.44, 1, 0], [3.65, .44, 1, 1], [-3.65, .44, 0, 1]]) {
+      faceP.push(x * side, y, .116 * side); faceN.push(0, 0, side); faceUV.push(u, v);
+    }
+    faceI.push(start, start + 1, start + 2, start, start + 2, start + 3);
+  }
+  const faceGeometry = new THREE.BufferGeometry();
+  faceGeometry.setAttribute('position', new THREE.Float32BufferAttribute(faceP, 3));
+  faceGeometry.setAttribute('normal', new THREE.Float32BufferAttribute(faceN, 3));
+  faceGeometry.setAttribute('uv', new THREE.Float32BufferAttribute(faceUV, 2));
+  faceGeometry.setIndex(faceI);
+  const gateFace = new THREE.Mesh(faceGeometry, gateFaceMaterial);
+  gateFace.name = 'shopping-gate-lettering'; gateFace.position.set(0, 5.54, gateZ);
+  gateFace.userData.noBatch = true; gateFace.receiveShadow = true; gateFace.castShadow = false;
+  ctx.noOutline(gateFace); landmark.add(gateFace);
+  const gateTriangles = gateBody.reduce((n, m) => n + m.geometry.index.count / 3, 0) + 4;
+  instances.push({ id: landmark.name, kind: 'shoppingStreetLandmark', localPosition: [0, 5.54, gateZ],
+    text: '桜ヶ丘 駅前商店街', triangles: gateTriangles, meshes: [...gateBody, gateFace],
+    footprint: { type: 'overhead', x: 0, z: gateZ, width: 10.5, depth: .34, rotationY: 0, y0: 4.86, y1: 6.11 },
+    supports: gateCollisions, clearRoadWidth: 6, crossmemberBottom: 4.86 });
 
   let triangles = 0;
   group.traverse(mesh => { if (mesh.isMesh) triangles +=
@@ -200,6 +274,7 @@ export function addStreetscape({ ctx, root }) {
   return { root: group, instances, collisions, addedColliders: collisions.length,
     stats: { triangles, densityTriangles: 132, densityObjects: 4, densityColliders: 6,
       serviceDetailTriangles: 18, serviceDetailObjects: 3, serviceDetailColliders: 0,
+      landmarkTriangles: gateTriangles, landmarkTexturePixels: 1024 * 128, landmarkColliders: gateCollisions.length,
       newTexturePixels: ctx.tex.pixels - texturePixelsBefore, coordinates: 'station-local; apply station.toWorld after placement' },
     views: { streetDetail: { position: [4.4, ctx.physics.groundHeight(4.4, 24) + 1.6, 24], target: meterPosition.toArray() } } };
 

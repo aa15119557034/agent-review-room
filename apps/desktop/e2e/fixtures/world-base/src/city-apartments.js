@@ -150,7 +150,7 @@ export function buildTownApartment(H, F, spec) {
   }
   F.boxB(M.plain, white, 1.38, .95, .2, -w / 2 + .77, 0, -.55);
 
-  if (shop) buildLaundryShop(H, F, front, trim);
+  const storefront = shop ? buildLaundryShop(H, F, front) : null;
   const facade = addFacadeLife(H, F, spec);
   const footprint = townApartmentBounds(spec), groundSupportBounds = footprint.groundSupportBounds;
   const bounds = { ...footprint.bounds, minY: 0, maxY: top + 2.185 };
@@ -160,7 +160,7 @@ export function buildTownApartment(H, F, spec) {
   return { bounds, groundSupportBounds, supportSamples, floors, floorHeight: fh, height: bounds.maxY,
     entrances: [{ x: 0, y: .14, z: 0, width: shop ? 1.2 : 1.02 }],
     triangles: gb.tris - start, laundryTriangles: H.laundry.I.length / 3 - clothStart,
-    garments: H.laundry.count - garmentStart, facade,
+    garments: H.laundry.count - garmentStart, facade, storefront,
     features: { balconies: floors - 1, rearCorridor: true, stairFlights: floors - 1,
       stairTreads: (floors - 1) * steps, roofTank: true, bicycleShelter: true, mailboxes: 3,
       shop: shop ? 'laundromat' : null, walkable: false } };
@@ -229,12 +229,13 @@ function addFacadeLife(H, F, { width: w, depth: d, floors }) {
     totalTriangles: gb.tris - start + H.laundry.I.length / 3 - clothStart };
 }
 
-function buildLaundryShop(H, F, front, accent) {
-  const { M } = H;
-  // Muted teal tile wall and a darker floor behind the glass: the white machines
-  // and warm ceiling strips now read in front of something instead of white on white.
-  F.boxB(M.plain, '#86aaa3', 5.8, 2.35, .12, 0, .14, front - 2.2);
-  F.box(M.plain, '#8d969a', 5.8, .01, 2.1, 0, .14, front - 1.1, { shadow: false });
+function buildLaundryShop(H, F, front) {
+  const { M, gb } = H, start = gb.tris;
+  const teal = '#326e70', dark = '#274e54', cream = '#eee9d9', brass = '#c8ac79';
+  // Reuse the kit's ceramic/paving maps at a small, legible physical scale.
+  // The pale tiled backdrop keeps the actual white machine bodies readable.
+  F.boxB(M.tile, '#b2cac1', 5.8, 2.35, .12, 0, .14, front - 2.2, { uv: { world: 1.2 } });
+  F.box(M.paver, '#8d9b98', 5.8, .01, 2.1, 0, .14, front - 1.1, { uv: { world: 1.2 }, shadow: false });
   // Warm ceiling strips make the shop read as open and lit from the street.
   for (const z of [front - .6, front - 1.6]) F.box(M.lamp, null, 4.6, .04, .16, 0, 2.3, z, { shadow: false });
   // Visible front-load machines identify the small shop without a new text atlas.
@@ -242,7 +243,7 @@ function buildLaundryShop(H, F, front, accent) {
     F.boxB(M.plain, '#e9e9e2', .76, 1.25, .65, x, .14, front - .7);
     F.cyl(M.metal, '#8e949b', .265, .055, x, .77, front - .345, { seg: 12, rx: Math.PI / 2 });
     F.cyl(M.plain, '#43586b', .205, .06, x, .77, front - .31, { seg: 12, rx: Math.PI / 2 });
-    F.box(M.plain, accent, .5, .10, .02, x, 1.24, front - .365);
+    F.box(M.plain, teal, .5, .10, .02, x, 1.24, front - .365);
   }
   for (const x of [-3, -.6, .6, 3]) F.boxB(M.metal, '#8e949b', .055, 2.25, .07, x, .14, front + .035);
   F.box(M.metal, '#8e949b', 6, .055, .07, 0, 2.36, front + .035);
@@ -251,18 +252,37 @@ function buildLaundryShop(H, F, front, accent) {
   for (const x of [-1.8, 1.8]) F.boxB(shopGlass, null, 2.34, 2.14, .012, x, .18, front + .025, { shadow: false });
   F.boxB(shopGlass, null, 1.14, 2.14, .012, 0, .18, front + .025, { shadow: false });
   F.box(M.metal, '#8e949b', .025, .4, .1, .47, 1.12, front + .09);
-  F.box(M.plain, accent, 6.25, .11, 1.05, 0, 2.52, front + .525);
-  F.box(M.plain, accent, 6.25, .23, .07, 0, 2.43, front + 1.015);
-  // Washer-symbol sign (geometry); apartment name itself uses existing apt_sign.
-  // Lit sign box: the one bright accent on the shaded street face.
-  F.box(H.signLight, null, .65, .55, .045, -2.65, 2.43, front + 1.065, { shadow: false });
-  F.cyl(M.metal, '#8e949b', .2, .025, -2.65, 2.43, front + 1.1, { seg: 12, rx: Math.PI / 2 });
-  F.cyl(M.plain, '#43586b', .14, .03, -2.65, 2.43, front + 1.12, { seg: 12, rx: Math.PI / 2 });
-  // Borrow a spare region of the station's existing sign atlas. The residential
-  // apt_sign above stays a building name; these labels describe only this shop.
-  F.box(M.plain, '#e5e5da', 4.6, .24, .025, .45, 2.43, front + 1.062, { shadow: false });
-  atlasCard(F, H.laundrySigns.name, 4.56, .22, .45, 2.43, front + 1.0755);
-  for (const x of [-1.8, 1.8]) atlasCard(F, H.laundrySigns.function, .82, .30, x, 1.18, front + .034);
+  // One continuous enamel-colour portal, with a layered canopy below the next
+  // balcony slab. Side posts sit on the opaque wings, outside the 6m glazing.
+  for (const x of [-3.15, 3.15]) F.boxB(M.plain, teal, .2, 2.32, .12, x, .14, front + .06, { skip: 'b' });
+  F.box(M.plain, dark, 6.25, .11, 1.05, 0, 2.60, front + .525);
+  F.box(M.plain, teal, 6.25, .46, .07, 0, 2.55, front + 1.015);
+  F.box(M.metal, brass, 6.25, .035, .085, 0, 2.315, front + 1.015);
+  for (const x of [-2.8, 2.8]) F.beam(M.metal, dark,
+    [x, 2.12, front + .04], [x, 2.52, front + .88], .035, .05);
+  // The washer icon now uses a crop of the same A-frame artwork: replace the
+  // two 12-segment cylinders with a quad, spending those triangles on the portal.
+  F.box(H.signLight, null, .65, .55, .045, -2.65, 2.55, front + 1.065, { shadow: false });
+  atlasCard(F, H.laundrySigns.icon, .49, .49, -2.65, 2.55, front + 1.09);
+  F.box(M.plain, teal, 4.6, .44, .025, .45, 2.55, front + 1.062, { shadow: false });
+  atlasCard(F, H.laundrySigns.name, 4.56, .42, .45, 2.55, front + 1.0755);
+  // Functional labels sit above the drums; the narrow lower sash sits below
+  // them. Keep the central door, its handle and all four machine windows clear.
+  for (const x of [-1.8, 1.8]) {
+    atlasCard(F, H.laundrySigns.function, 1.06, .28, x, 1.76, front + .034);
+    F.box(M.plain, teal, 2.34, .045, .018, x, .42, front + .04, { shadow: false });
+  }
+  // A wall-mounted service panel catches the eye-height side view without
+  // putting another freestanding sign in the crate / umbrella / entry passage.
+  F.boxB(M.plain, teal, .60, 2.07, .08, 3.5, .16, front + .04, { skip: 'b' });
+  atlasCard(F, H.laundrySigns.aframe, .50, .78, 3.5, 1.47, front + .081);
+  return { palette: { teal, dark, cream, brass }, triangles: gb.tris - start,
+    labelTriangles: 10, labelBackingTriangles: 12,
+    name: { position: [.45, 2.55, front + 1.0755], size: [4.56, .42] },
+    glass: [-1.8, 1.8].map(x => ({ position: [x, 1.76, front + .034], size: [1.06, .28] })),
+    servicePanel: { position: [3.5, 1.47, front + .081], size: [.50, .78] },
+    canopy: { width: 6.25, projection: 1.05, fasciaHeight: .46, top: 2.825 },
+    entryWidth: 1.14, machineCount: 4, atlasRegions: 3, extraTexturePages: 0 };
 }
 
 function atlasCard(F, reg, w, h, x, y, z) {

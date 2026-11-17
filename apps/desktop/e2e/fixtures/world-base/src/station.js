@@ -6,6 +6,7 @@ import { createStationWalker } from './station-view.js';
 import { blendStationGround } from './transition.js';
 import { addStreetscape } from './streetscape.js';
 import { applyWetRoad } from './wet-road.js';
+import { createStreetReflections } from './street-reflections.js';
 import { addStationTexturedProps } from './textured-props.js';
 
 // Keep the upstream dependency order. Characters and camera-centred petal shaders
@@ -98,7 +99,8 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   const clipStart = performance.now();
   const removedMeshes = trimOutside(root, layout.WORLD.play);
   const groundBlend = blendStationGround({ root, terrainMaterial: groundMaterial, bounds: layout.WORLD.play });
-  const wetRoad = applyWetRoad({ root, ctx });
+  const streetReflections = createStreetReflections(root, layout);
+  const wetRoad = applyWetRoad({ root, ctx, reflections: streetReflections });
   // These textures belong to the island; the station owns only the blend mesh
   // and material. Disposing the district must not invalidate island rendering.
   const islandTextures = new Set(Object.values(groundMaterial.uniforms).map(uniform => uniform.value).filter(value => value?.isTexture));
@@ -110,7 +112,6 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   root.rotation.y = rotationY;
   scene.add(root);
   root.updateWorldMatrix(true, true);
-  wetRoad.setTransform(root.matrixWorld);
   clipMaterials(root, layout.WORLD.play);
   const inverse = root.matrixWorld.clone().invert();
   const rotation = root.getWorldQuaternion(new THREE.Quaternion());
@@ -121,7 +122,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   const walkers = new Set();
   const station = {
     root, ctx, physics: ctx.physics, camera, localCamera, bounds, moduleStats, batch,
-    timings: { trimMs, batchMs }, removedMeshes, groundBlend, streetscape, wetRoad, texturedProps,
+    timings: { trimMs, batchMs }, removedMeshes, groundBlend, streetscape, wetRoad, streetReflections, texturedProps,
     toLocal(position, target = new THREE.Vector3()) { return target.copy(position).applyMatrix4(inverse); },
     toWorld(position, target = new THREE.Vector3()) { return target.copy(position).applyMatrix4(root.matrixWorld); },
     cameraToWorld(position, quaternion) {
@@ -162,6 +163,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
       disposed = true;
       for (const walker of walkers) walker.dispose();
       wetRoad.dispose();
+      streetReflections.dispose();
       root.removeFromParent();
       const geometries = new Set(), materials = new Set(), textures = new Set(texturedProps.textures);
       root.traverse(object => {
