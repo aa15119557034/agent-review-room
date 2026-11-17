@@ -1,0 +1,1441 @@
+{
+  "createdAt": "2026-11-17T08:31:59.827Z",
+  "sourceHead": "1b63536ef0dae7c9f28d92efda01b0740e9a005a",
+  "artifactDirectory": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c9-v1",
+  "driver": "D:/codex/2026-11-16/world-implementation/handoff/x51-c9-look-diagnostic-gpu.cjs",
+  "report": "D:/codex/2026-11-16/world-implementation/world-base/apps/desktop/e2e/fixtures/world-base/artifacts/gpu-look-c9-v1/look-report.json",
+  "evidenceHashes": {
+    "look-report.json": "f628704a3d962fab215699da928ae2c35dcddac009579fdfae14ad72e6791034",
+    "source-manifest.json": "c8a8801f2c77f3a31a817ae7158d42908ae32b6784c7ef5d6be78804ec048ffd",
+    "prop-assets-manifest.json": "dd8734fb67c85176d5061a76463eb61801dff175053a82b1c5bb0c22e2723ccc",
+    "legacy-c8-reference.json": "526a7765b3294d99a8820da298b7c8539c4966b01ded0e08a1fa059e9b976614"
+  },
+  "driverSha256": "381585f315f33704f1032dc8f09186f927e50b17f674936e001d67336993e3b2",
+  "status": {
+    "exitCode": 1,
+    "renderOk": true,
+    "transportClean": false,
+    "ok": false,
+    "sourceUnchanged": true,
+    "driverUnchanged": true,
+    "assetsUnchanged": true,
+    "assetFiles": 9,
+    "captureCount": 42,
+    "exceptions": [],
+    "httpErrors": [],
+    "networkFailures": [
+      {
+        "stage": "loading",
+        "url": "http://127.0.0.1:51978/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+        "canceled": true,
+        "errorText": "net::ERR_ABORTED",
+        "requestId": "60732.235",
+        "timestamp": 1914096.04306,
+        "type": "Fetch"
+      }
+    ],
+    "restore": {
+      "ao": 0.55,
+      "contrast": 1.05,
+      "uploadedContrast": 1.05,
+      "materialsUnchanged": true,
+      "view": "station-street",
+      "fov": 58,
+      "time": 33.3152,
+      "frozen": false
+    }
+  },
+  "comparisons": [
+    {
+      "view": "service-corner",
+      "cameraEqual": true,
+      "time": [
+        14,
+        14
+      ],
+      "pipelineParamsEqual": true,
+      "contrast": [
+        1.05,
+        1.05
+      ],
+      "ao": [
+        0.55,
+        0
+      ],
+      "uploadedAO": [
+        0.55,
+        0
+      ],
+      "materialsUnchanged": true
+    },
+    {
+      "view": "laundry-details",
+      "cameraEqual": true,
+      "time": [
+        14,
+        14
+      ],
+      "pipelineParamsEqual": true,
+      "contrast": [
+        1.05,
+        1.05
+      ],
+      "ao": [
+        0.55,
+        0
+      ],
+      "uploadedAO": [
+        0.55,
+        0
+      ],
+      "materialsUnchanged": true
+    },
+    {
+      "view": "shop-interior",
+      "cameraEqual": true,
+      "time": [
+        14,
+        14
+      ],
+      "pipelineParamsEqual": true,
+      "contrast": [
+        1.05,
+        1.05
+      ],
+      "ao": [
+        0.55,
+        0
+      ],
+      "uploadedAO": [
+        0.55,
+        0
+      ],
+      "materialsUnchanged": true
+    },
+    {
+      "view": "20-rear-eye",
+      "cameraEqual": true,
+      "time": [
+        14,
+        14
+      ],
+      "pipelineParamsEqual": true,
+      "contrast": [
+        1.05,
+        1.05
+      ],
+      "ao": [
+        0.55,
+        0
+      ],
+      "uploadedAO": [
+        0.55,
+        0
+      ],
+      "materialsUnchanged": true
+    },
+    {
+      "view": "21-front-eye",
+      "cameraEqual": true,
+      "time": [
+        14,
+        14
+      ],
+      "pipelineParamsEqual": true,
+      "contrast": [
+        1.05,
+        1.05
+      ],
+      "ao": [
+        0.55,
+        0
+      ],
+      "uploadedAO": [
+        0.55,
+        0
+      ],
+      "materialsUnchanged": true
+    },
+    {
+      "view": "station-street",
+      "cameraEqual": true,
+      "time": [
+        14,
+        14
+      ],
+      "pipelineParamsEqual": true,
+      "contrast": [
+        1.05,
+        1.05
+      ],
+      "ao": [
+        0.55,
+        0
+      ],
+      "uploadedAO": [
+        0.55,
+        0
+      ],
+      "materialsUnchanged": true
+    },
+    {
+      "view": "service-corner-legacy-c8",
+      "cameraEqual": true,
+      "time": [
+        14,
+        14
+      ],
+      "pipelineParamsEqual": true,
+      "contrast": [
+        1.05,
+        1.05
+      ],
+      "ao": [
+        0.55,
+        0
+      ],
+      "uploadedAO": [
+        0.55,
+        0
+      ],
+      "materialsUnchanged": true
+    }
+  ],
+  "repeatCaptures": [
+    {
+      "name": "service-corner-ao-on",
+      "pngEqual": true,
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "materialsUnchanged": true
+    },
+    {
+      "name": "service-corner-ao-off",
+      "pngEqual": true,
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "materialsUnchanged": true
+    },
+    {
+      "name": "laundry-details-ao-on",
+      "pngEqual": false,
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "materialsUnchanged": true
+    },
+    {
+      "name": "laundry-details-ao-off",
+      "pngEqual": true,
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "materialsUnchanged": true
+    },
+    {
+      "name": "shop-interior-ao-on",
+      "pngEqual": true,
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "materialsUnchanged": true
+    },
+    {
+      "name": "shop-interior-ao-off",
+      "pngEqual": true,
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "materialsUnchanged": true
+    },
+    {
+      "name": "20-rear-eye-ao-on",
+      "pngEqual": true,
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "materialsUnchanged": true
+    },
+    {
+      "name": "20-rear-eye-ao-off",
+      "pngEqual": true,
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "materialsUnchanged": true
+    },
+    {
+      "name": "21-front-eye-ao-on",
+      "pngEqual": true,
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "materialsUnchanged": true
+    },
+    {
+      "name": "21-front-eye-ao-off",
+      "pngEqual": true,
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "materialsUnchanged": true
+    },
+    {
+      "name": "station-street-ao-on",
+      "pngEqual": true,
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "materialsUnchanged": true
+    },
+    {
+      "name": "station-street-ao-off",
+      "pngEqual": true,
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "materialsUnchanged": true
+    },
+    {
+      "name": "service-corner-legacy-c8-ao-on",
+      "pngEqual": true,
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "materialsUnchanged": true
+    },
+    {
+      "name": "service-corner-legacy-c8-ao-off",
+      "pngEqual": true,
+      "cameraEqual": true,
+      "timeEqual": true,
+      "paramsEqual": true,
+      "materialsUnchanged": true
+    }
+  ],
+  "laundryOnRepeatPixelDifference": {
+    "changedPixels": 1,
+    "changedChannels": 1,
+    "maxAbsRGB": 1,
+    "sumAbsRGB": 1,
+    "meanAbsRGB": 2.57201646090535e-7
+  },
+  "legacyCameraExactlyEqual": true,
+  "legacyHDR": [
+    {
+      "roi": {
+        "name": "door-interior-upper",
+        "x": 759,
+        "y": 360,
+        "width": 12,
+        "height": 18
+      },
+      "sceneC8C9": true,
+      "compC8C9": true,
+      "sceneOnOff": true,
+      "compOnOff": true
+    },
+    {
+      "roi": {
+        "name": "door-interior-lower",
+        "x": 759,
+        "y": 450,
+        "width": 12,
+        "height": 18
+      },
+      "sceneC8C9": true,
+      "compC8C9": true,
+      "sceneOnOff": true,
+      "compOnOff": true
+    }
+  ],
+  "legacyPoints": [
+    {
+      "x": 763,
+      "y": 369,
+      "c8": {
+        "comp": [
+          0.007007598876953125,
+          0.00672149658203125,
+          0.007312774658203125
+        ],
+        "final": [
+          0,
+          0,
+          5
+        ]
+      },
+      "c9on": {
+        "comp": [
+          0.007007598876953125,
+          0.00672149658203125,
+          0.007312774658203125
+        ],
+        "final": [
+          26,
+          31,
+          42
+        ]
+      },
+      "c9off": {
+        "comp": [
+          0.007007598876953125,
+          0.00672149658203125,
+          0.007312774658203125
+        ],
+        "final": [
+          26,
+          31,
+          42
+        ]
+      }
+    },
+    {
+      "x": 762,
+      "y": 459,
+      "c8": {
+        "comp": [
+          0.00829315185546875,
+          0.0070953369140625,
+          0.006641387939453125
+        ],
+        "final": [
+          0,
+          0,
+          3
+        ]
+      },
+      "c9on": {
+        "comp": [
+          0.00829315185546875,
+          0.0070953369140625,
+          0.006641387939453125
+        ],
+        "final": [
+          26,
+          31,
+          41
+        ]
+      },
+      "c9off": {
+        "comp": [
+          0.00829315185546875,
+          0.0070953369140625,
+          0.006641387939453125
+        ],
+        "final": [
+          26,
+          31,
+          41
+        ]
+      }
+    }
+  ],
+  "shopResidualAO": {
+    "roi": {
+      "x": 270,
+      "y": 280,
+      "width": 160,
+      "height": 50
+    },
+    "coordinateConvention": "Top-left image origin; x in [270,430), y in [280,330); original lossless 1440x900 PNG; RGB encoded output bytes, not linear luminance.",
+    "decode": "Existing FFmpeg 7.1 PNG decoder to raw RGBA only; no image modification or GPU execution.",
+    "rows": [
+      {
+        "y": 280,
+        "on": [
+          182.7000000000004,
+          162.0125000000003,
+          139.56874999999997
+        ],
+        "off": [
+          182.7000000000004,
+          162.0125000000003,
+          139.56874999999997
+        ],
+        "delta": [
+          0,
+          0,
+          0
+        ],
+        "maxAbsRGB": 0
+      },
+      {
+        "y": 281,
+        "on": [
+          185.21249999999958,
+          167.73750000000027,
+          150.63749999999956
+        ],
+        "off": [
+          185.21249999999958,
+          167.73750000000027,
+          150.63749999999956
+        ],
+        "delta": [
+          0,
+          0,
+          0
+        ],
+        "maxAbsRGB": 0
+      },
+      {
+        "y": 282,
+        "on": [
+          185.1937499999996,
+          167.7437500000003,
+          150.64999999999952
+        ],
+        "off": [
+          185.20624999999959,
+          167.7437500000003,
+          150.64999999999952
+        ],
+        "delta": [
+          -0.012499999999988631,
+          0,
+          0
+        ],
+        "maxAbsRGB": 1
+      },
+      {
+        "y": 283,
+        "on": [
+          185.09374999999966,
+          167.64375000000032,
+          150.61249999999953
+        ],
+        "off": [
+          185.21249999999958,
+          167.75625000000028,
+          150.67499999999953
+        ],
+        "delta": [
+          -0.11874999999992042,
+          -0.11249999999995453,
+          -0.0625
+        ],
+        "maxAbsRGB": 1
+      },
+      {
+        "y": 284,
+        "on": [
+          184.86249999999978,
+          167.4500000000004,
+          150.4499999999996
+        ],
+        "off": [
+          185.21874999999957,
+          167.74375000000026,
+          150.6749999999995
+        ],
+        "delta": [
+          -0.3562499999997897,
+          -0.29374999999987494,
+          -0.22499999999990905
+        ],
+        "maxAbsRGB": 1
+      },
+      {
+        "y": 285,
+        "on": [
+          184.00625000000025,
+          166.73125000000013,
+          149.86249999999984
+        ],
+        "off": [
+          185.20624999999959,
+          167.74375000000023,
+          150.6999999999995
+        ],
+        "delta": [
+          -1.199999999999335,
+          -1.0125000000001023,
+          -0.8374999999996646
+        ],
+        "maxAbsRGB": 2
+      },
+      {
+        "y": 286,
+        "on": [
+          182.6187500000004,
+          165.5249999999995,
+          148.94375000000028
+        ],
+        "off": [
+          185.21874999999957,
+          167.77500000000023,
+          150.71249999999952
+        ],
+        "delta": [
+          -2.59999999999917,
+          -2.250000000000739,
+          -1.768749999999244
+        ],
+        "maxAbsRGB": 3
+      },
+      {
+        "y": 287,
+        "on": [
+          180.6499999999994,
+          163.8250000000003,
+          147.5687500000001
+        ],
+        "off": [
+          185.2187499999996,
+          167.76250000000027,
+          150.69999999999953
+        ],
+        "delta": [
+          -4.568750000000193,
+          -3.9374999999999716,
+          -3.131249999999426
+        ],
+        "maxAbsRGB": 5
+      },
+      {
+        "y": 288,
+        "on": [
+          178.6250000000003,
+          162.11250000000038,
+          146.19999999999976
+        ],
+        "off": [
+          185.21249999999958,
+          167.73750000000024,
+          150.69999999999953
+        ],
+        "delta": [
+          -6.587499999999267,
+          -5.624999999999858,
+          -4.499999999999773
+        ],
+        "maxAbsRGB": 7
+      },
+      {
+        "y": 289,
+        "on": [
+          177.71250000000032,
+          161.37499999999974,
+          145.59374999999955
+        ],
+        "off": [
+          185.1937499999996,
+          167.72500000000025,
+          150.69999999999953
+        ],
+        "delta": [
+          -7.481249999999278,
+          -6.350000000000506,
+          -5.106249999999989
+        ],
+        "maxAbsRGB": 8
+      },
+      {
+        "y": 290,
+        "on": [
+          179.0875000000003,
+          162.53125000000028,
+          146.5374999999999
+        ],
+        "off": [
+          185.18124999999964,
+          167.73750000000024,
+          150.71874999999955
+        ],
+        "delta": [
+          -6.093749999999346,
+          -5.2062499999999545,
+          -4.181249999999636
+        ],
+        "maxAbsRGB": 7
+      },
+      {
+        "y": 291,
+        "on": [
+          178.80625000000043,
+          162.27500000000015,
+          146.3312499999998
+        ],
+        "off": [
+          185.18749999999963,
+          167.73750000000024,
+          150.70624999999953
+        ],
+        "delta": [
+          -6.3812499999991985,
+          -5.462500000000091,
+          -4.374999999999716
+        ],
+        "maxAbsRGB": 7
+      },
+      {
+        "y": 292,
+        "on": [
+          176.72499999999965,
+          160.48749999999964,
+          144.91249999999997
+        ],
+        "off": [
+          185.19374999999962,
+          167.74375000000023,
+          150.70624999999956
+        ],
+        "delta": [
+          -8.468749999999972,
+          -7.256250000000591,
+          -5.793749999999591
+        ],
+        "maxAbsRGB": 10
+      },
+      {
+        "y": 293,
+        "on": [
+          174.5625000000001,
+          158.65625000000037,
+          143.39375000000018
+        ],
+        "off": [
+          185.1812499999996,
+          167.74375000000023,
+          150.70624999999953
+        ],
+        "delta": [
+          -10.618749999999494,
+          -9.087499999999864,
+          -7.312499999999346
+        ],
+        "maxAbsRGB": 12
+      },
+      {
+        "y": 294,
+        "on": [
+          172.85625000000024,
+          157.20625000000018,
+          142.2812500000001
+        ],
+        "off": [
+          185.17499999999964,
+          167.7375000000002,
+          150.69999999999953
+        ],
+        "delta": [
+          -12.318749999999397,
+          -10.531250000000028,
+          -8.41874999999942
+        ],
+        "maxAbsRGB": 13
+      },
+      {
+        "y": 295,
+        "on": [
+          173.0500000000002,
+          157.3687500000003,
+          142.4187500000001
+        ],
+        "off": [
+          185.16249999999962,
+          167.72500000000022,
+          150.70624999999956
+        ],
+        "delta": [
+          -12.112499999999415,
+          -10.356249999999932,
+          -8.287499999999454
+        ],
+        "maxAbsRGB": 13
+      },
+      {
+        "y": 296,
+        "on": [
+          173.24375000000023,
+          157.55625000000023,
+          142.53125000000006
+        ],
+        "off": [
+          185.18124999999964,
+          167.74375000000023,
+          150.71874999999955
+        ],
+        "delta": [
+          -11.937499999999403,
+          -10.1875,
+          -8.187499999999488
+        ],
+        "maxAbsRGB": 12
+      },
+      {
+        "y": 297,
+        "on": [
+          173.61250000000027,
+          157.84375000000014,
+          142.76249999999996
+        ],
+        "off": [
+          185.17499999999964,
+          167.73750000000024,
+          150.68749999999952
+        ],
+        "delta": [
+          -11.562499999999375,
+          -9.893750000000097,
+          -7.924999999999557
+        ],
+        "maxAbsRGB": 12
+      },
+      {
+        "y": 298,
+        "on": [
+          177.51875000000038,
+          161.2062499999997,
+          145.48124999999956
+        ],
+        "off": [
+          185.16249999999962,
+          167.71875000000023,
+          150.69999999999953
+        ],
+        "delta": [
+          -7.643749999999244,
+          -6.512500000000529,
+          -5.218749999999972
+        ],
+        "maxAbsRGB": 8
+      },
+      {
+        "y": 299,
+        "on": [
+          180.19374999999954,
+          163.47500000000025,
+          147.30000000000027
+        ],
+        "off": [
+          185.15624999999963,
+          167.73125000000022,
+          150.70624999999953
+        ],
+        "delta": [
+          -4.962500000000091,
+          -4.256249999999966,
+          -3.406249999999261
+        ],
+        "maxAbsRGB": 6
+      },
+      {
+        "y": 300,
+        "on": [
+          180.6062499999994,
+          163.83125000000027,
+          147.60000000000008
+        ],
+        "off": [
+          185.16249999999965,
+          167.75000000000023,
+          150.72499999999954
+        ],
+        "delta": [
+          -4.5562500000002615,
+          -3.91874999999996,
+          -3.12499999999946
+        ],
+        "maxAbsRGB": 5
+      },
+      {
+        "y": 301,
+        "on": [
+          181.46874999999966,
+          164.58749999999998,
+          148.19375000000014
+        ],
+        "off": [
+          185.13749999999968,
+          167.73125000000024,
+          150.72499999999954
+        ],
+        "delta": [
+          -3.668750000000017,
+          -3.143750000000267,
+          -2.531249999999403
+        ],
+        "maxAbsRGB": 4
+      },
+      {
+        "y": 302,
+        "on": [
+          182.62500000000043,
+          165.55624999999955,
+          148.99375000000035
+        ],
+        "off": [
+          185.16874999999965,
+          167.75625000000022,
+          150.71874999999952
+        ],
+        "delta": [
+          -2.5437499999992212,
+          -2.2000000000006708,
+          -1.72499999999917
+        ],
+        "maxAbsRGB": 3
+      },
+      {
+        "y": 303,
+        "on": [
+          183.73125000000044,
+          166.51249999999968,
+          149.75
+        ],
+        "off": [
+          185.18124999999964,
+          167.75000000000023,
+          150.7249999999995
+        ],
+        "delta": [
+          -1.4499999999991928,
+          -1.2375000000005514,
+          -0.9749999999995111
+        ],
+        "maxAbsRGB": 2
+      },
+      {
+        "y": 304,
+        "on": [
+          183.39375000000035,
+          166.2312499999996,
+          149.51875000000013
+        ],
+        "off": [
+          185.16249999999965,
+          167.7375000000002,
+          150.73124999999953
+        ],
+        "delta": [
+          -1.7687499999993008,
+          -1.5062500000006196,
+          -1.2124999999994088
+        ],
+        "maxAbsRGB": 3
+      },
+      {
+        "y": 305,
+        "on": [
+          182.68750000000037,
+          165.6312499999996,
+          149.03125000000037
+        ],
+        "off": [
+          185.14999999999966,
+          167.72500000000025,
+          150.70624999999956
+        ],
+        "delta": [
+          -2.462499999999295,
+          -2.0937500000006537,
+          -1.6749999999991871
+        ],
+        "maxAbsRGB": 4
+      },
+      {
+        "y": 306,
+        "on": [
+          181.8499999999997,
+          164.92499999999995,
+          148.46250000000026
+        ],
+        "off": [
+          185.18124999999966,
+          167.75000000000026,
+          150.74374999999952
+        ],
+        "delta": [
+          -3.3312499999999545,
+          -2.8250000000003013,
+          -2.281249999999261
+        ],
+        "maxAbsRGB": 4
+      },
+      {
+        "y": 307,
+        "on": [
+          180.87499999999946,
+          164.08750000000038,
+          147.80625
+        ],
+        "off": [
+          185.15624999999966,
+          167.75000000000023,
+          150.74374999999952
+        ],
+        "delta": [
+          -4.281250000000199,
+          -3.662499999999852,
+          -2.937499999999517
+        ],
+        "maxAbsRGB": 5
+      },
+      {
+        "y": 308,
+        "on": [
+          179.80625000000003,
+          163.15625000000023,
+          147.08125000000004
+        ],
+        "off": [
+          185.14999999999966,
+          167.75625000000022,
+          150.73749999999953
+        ],
+        "delta": [
+          -5.3437499999996305,
+          -4.599999999999994,
+          -3.6562499999994884
+        ],
+        "maxAbsRGB": 7
+      },
+      {
+        "y": 309,
+        "on": [
+          178.71875000000045,
+          162.24374999999995,
+          146.3187499999997
+        ],
+        "off": [
+          185.18749999999963,
+          167.77500000000023,
+          150.76249999999953
+        ],
+        "delta": [
+          -6.468749999999176,
+          -5.531250000000284,
+          -4.443749999999824
+        ],
+        "maxAbsRGB": 8
+      },
+      {
+        "y": 310,
+        "on": [
+          177.6125000000001,
+          161.30624999999966,
+          145.57499999999976
+        ],
+        "off": [
+          185.17499999999964,
+          167.76250000000024,
+          150.75624999999954
+        ],
+        "delta": [
+          -7.562499999999545,
+          -6.45625000000058,
+          -5.181249999999778
+        ],
+        "maxAbsRGB": 9
+      },
+      {
+        "y": 311,
+        "on": [
+          176.66874999999965,
+          160.49374999999972,
+          144.93125
+        ],
+        "off": [
+          185.16874999999968,
+          167.76250000000022,
+          150.76874999999953
+        ],
+        "delta": [
+          -8.500000000000028,
+          -7.2687500000004945,
+          -5.8374999999995225
+        ],
+        "maxAbsRGB": 10
+      },
+      {
+        "y": 312,
+        "on": [
+          176.0499999999995,
+          159.95624999999995,
+          144.5125000000002
+        ],
+        "off": [
+          185.17499999999964,
+          167.78125000000017,
+          150.76249999999953
+        ],
+        "delta": [
+          -9.125000000000142,
+          -7.825000000000216,
+          -6.249999999999346
+        ],
+        "maxAbsRGB": 10
+      },
+      {
+        "y": 313,
+        "on": [
+          175.86874999999947,
+          159.80625,
+          144.3937500000002
+        ],
+        "off": [
+          185.18124999999966,
+          167.76250000000022,
+          150.78124999999955
+        ],
+        "delta": [
+          -9.312500000000199,
+          -7.95625000000021,
+          -6.387499999999335
+        ],
+        "maxAbsRGB": 10
+      },
+      {
+        "y": 314,
+        "on": [
+          176.3249999999995,
+          160.19374999999982,
+          144.71250000000006
+        ],
+        "off": [
+          185.18124999999966,
+          167.76250000000024,
+          150.78124999999955
+        ],
+        "delta": [
+          -8.85625000000016,
+          -7.568750000000421,
+          -6.068749999999483
+        ],
+        "maxAbsRGB": 10
+      },
+      {
+        "y": 315,
+        "on": [
+          177.51250000000044,
+          161.2249999999996,
+          145.55624999999966
+        ],
+        "off": [
+          185.19999999999965,
+          167.7750000000002,
+          150.80624999999955
+        ],
+        "delta": [
+          -7.687499999999204,
+          -6.550000000000608,
+          -5.249999999999886
+        ],
+        "maxAbsRGB": 8
+      },
+      {
+        "y": 316,
+        "on": [
+          177.4687500000005,
+          161.18124999999958,
+          145.5249999999997
+        ],
+        "off": [
+          185.18124999999966,
+          167.7687500000002,
+          150.80624999999952
+        ],
+        "delta": [
+          -7.712499999999153,
+          -6.587500000000631,
+          -5.2812499999998295
+        ],
+        "maxAbsRGB": 8
+      },
+      {
+        "y": 317,
+        "on": [
+          177.7312500000003,
+          161.41874999999968,
+          145.7249999999996
+        ],
+        "off": [
+          185.18124999999966,
+          167.80000000000018,
+          150.81249999999955
+        ],
+        "delta": [
+          -7.449999999999363,
+          -6.381250000000506,
+          -5.087499999999949
+        ],
+        "maxAbsRGB": 8
+      },
+      {
+        "y": 318,
+        "on": [
+          178.57500000000027,
+          162.15000000000038,
+          146.29374999999973
+        ],
+        "off": [
+          185.18749999999966,
+          167.80000000000018,
+          150.81249999999955
+        ],
+        "delta": [
+          -6.612499999999386,
+          -5.649999999999807,
+          -4.518749999999812
+        ],
+        "maxAbsRGB": 7
+      },
+      {
+        "y": 319,
+        "on": [
+          180.11249999999973,
+          163.47500000000025,
+          147.3562500000002
+        ],
+        "off": [
+          185.19999999999968,
+          167.81250000000023,
+          150.83124999999956
+        ],
+        "delta": [
+          -5.087499999999949,
+          -4.337499999999977,
+          -3.474999999999369
+        ],
+        "maxAbsRGB": 6
+      },
+      {
+        "y": 320,
+        "on": [
+          182.25625000000048,
+          165.29999999999967,
+          148.81875000000036
+        ],
+        "off": [
+          185.18749999999966,
+          167.8062500000002,
+          150.82499999999953
+        ],
+        "delta": [
+          -2.9312499999991815,
+          -2.5062500000005343,
+          -2.00624999999917
+        ],
+        "maxAbsRGB": 3
+      },
+      {
+        "y": 321,
+        "on": [
+          184.79999999999987,
+          167.49375000000038,
+          150.5874999999996
+        ],
+        "off": [
+          185.19374999999968,
+          167.81875000000016,
+          150.84374999999952
+        ],
+        "delta": [
+          -0.3937499999998124,
+          -0.3249999999997897,
+          -0.25624999999990905
+        ],
+        "maxAbsRGB": 1
+      },
+      {
+        "y": 322,
+        "on": [
+          185.14999999999966,
+          167.8250000000002,
+          150.84374999999955
+        ],
+        "off": [
+          185.14999999999966,
+          167.8250000000002,
+          150.84374999999955
+        ],
+        "delta": [
+          0,
+          0,
+          0
+        ],
+        "maxAbsRGB": 0
+      },
+      {
+        "y": 323,
+        "on": [
+          185.17499999999967,
+          167.84375000000017,
+          150.85624999999956
+        ],
+        "off": [
+          185.17499999999967,
+          167.84375000000017,
+          150.85624999999956
+        ],
+        "delta": [
+          0,
+          0,
+          0
+        ],
+        "maxAbsRGB": 0
+      },
+      {
+        "y": 324,
+        "on": [
+          185.1812499999997,
+          167.83125000000018,
+          150.88749999999953
+        ],
+        "off": [
+          185.1812499999997,
+          167.83125000000018,
+          150.88749999999953
+        ],
+        "delta": [
+          0,
+          0,
+          0
+        ],
+        "maxAbsRGB": 0
+      },
+      {
+        "y": 325,
+        "on": [
+          185.17499999999967,
+          167.8187500000002,
+          150.88749999999953
+        ],
+        "off": [
+          185.17499999999967,
+          167.8187500000002,
+          150.88749999999953
+        ],
+        "delta": [
+          0,
+          0,
+          0
+        ],
+        "maxAbsRGB": 0
+      },
+      {
+        "y": 326,
+        "on": [
+          185.1562499999997,
+          167.8187500000002,
+          150.86874999999952
+        ],
+        "off": [
+          185.1562499999997,
+          167.8187500000002,
+          150.86874999999952
+        ],
+        "delta": [
+          0,
+          0,
+          0
+        ],
+        "maxAbsRGB": 0
+      },
+      {
+        "y": 327,
+        "on": [
+          185.1499999999997,
+          167.85000000000016,
+          150.89999999999955
+        ],
+        "off": [
+          185.1499999999997,
+          167.85000000000016,
+          150.89999999999955
+        ],
+        "delta": [
+          0,
+          0,
+          0
+        ],
+        "maxAbsRGB": 0
+      },
+      {
+        "y": 328,
+        "on": [
+          185.1312499999997,
+          167.8187500000002,
+          150.89374999999956
+        ],
+        "off": [
+          185.1312499999997,
+          167.8187500000002,
+          150.89374999999956
+        ],
+        "delta": [
+          0,
+          0,
+          0
+        ],
+        "maxAbsRGB": 0
+      },
+      {
+        "y": 329,
+        "on": [
+          185.11874999999972,
+          167.8187500000002,
+          150.91874999999953
+        ],
+        "off": [
+          185.11874999999972,
+          167.8187500000002,
+          150.91874999999953
+        ],
+        "delta": [
+          0,
+          0,
+          0
+        ],
+        "maxAbsRGB": 0
+      }
+    ],
+    "observed": "AO-on produces two separated shallow horizontal dark bands above the left rear shelves/refrigerators. AO-off is visually much smoother here. Row 295 mean on-off RGB = [-12.1125,-10.35625,-8.2875], maximum per-channel difference 13; row 304 difference decreases then row 313 increases again. Both on and off capture-1/capture-2 are identical. This isolates an AO contribution at this view, not a unique shader mechanism.",
+    "recommendation": "Prioritize residual shop-interior AO banding before local emissive refinement. Do not hide it with global warm grade or intensity alone; reassess discrete view-space sampling/normal estimation and a spatially stable filtering method."
+  },
+  "visualReview": {
+    "inspectedCapture2Views": [
+      "service-corner",
+      "laundry-details",
+      "shop-interior",
+      "20-rear-eye",
+      "21-front-eye",
+      "station-street",
+      "service-corner-legacy-c8"
+    ],
+    "shopOriginalSizePNG": true,
+    "observations": [
+      "Legacy service shutter dark grooves remain visible in C9 default AO; exact HDR inputs match C8 and final dark pixels no longer collapse.",
+      "21-front-eye glazing/mailbox stepped duplicate bands are visibly reduced; 20-rear-eye retains shadows and contact shading. This is local image evidence, not an artifact-free guarantee.",
+      "Shop-interior retains shallow horizontal AO bands on rear wall near refrigerator upper edge; AO-off removes the added bands.",
+      "Laundry right-wall broad rings/grime exist with both AO states and must not be attributed entirely to AO.",
+      "Current service/laundry captures include crate/carton/pot in the frame; geometry inclusion is not overall style acceptance."
+    ]
+  },
+  "limitations": [
+    "No performance measurement in this diagnostic; parent normal baseline is separate.",
+    "Source and all nine asset manifests are unchanged; exact sceneRT/compRT equality is proven only for the two saved legacy door ROIs, not the entire scene.",
+    "One laundry AO-on repeat differs by one channel in one pixel by 1 LSB; strict whole-run bitwise repeat equality is false and no retry was run.",
+    "AO-on/off confirms added bands originate in AO path but does not by itself prove which reconstruction/sample/normal branch causes them.",
+    "Resource cancellation remains a strict transport failure even though rendering and capture complete.",
+    "Raw render results and failed statuses preserved; no product source, assets or images edited."
+  ],
+  "offlineReproduction": {
+    "driver": "D:/codex/2026-11-16/world-implementation/handoff/x51-c9-look-offline-analysis.cjs",
+    "sha256": "9c0940847a5616495aaf2df39a73373456cc6a30f2f9497db521402dff08b6d0",
+    "executed": true,
+    "exitCode": 0,
+    "comparisons": {
+      "pointsMatch": true,
+      "rowsMatch": true,
+      "hdrMatch": true,
+      "repeatMatch": true,
+      "laundryMatch": true
+    },
+    "output": "stdout only; existing evidence unchanged"
+  }
+}

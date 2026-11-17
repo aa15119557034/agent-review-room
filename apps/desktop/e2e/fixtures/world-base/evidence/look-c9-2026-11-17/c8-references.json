@@ -1,0 +1,32 @@
+[
+  {
+    "file": "../textured-props-2026-11-17/README.md",
+    "presentInCommit": "1b63536ef0dae7c9f28d92efda01b0740e9a005a",
+    "sha256": "8586040fe04f57dcd73755e30e3e8024b8bb1669c0759876c583c155eac226d1",
+    "copied": false
+  },
+  {
+    "file": "../textured-props-2026-11-17/final/23-service-corner.jpg",
+    "presentInCommit": "1b63536ef0dae7c9f28d92efda01b0740e9a005a",
+    "sha256": "09bde6b7e62a44670e694145d91b8b0274c418450c0e820afb6c7fad9118fd67",
+    "copied": false
+  },
+  {
+    "file": "../textured-props-2026-11-17/final/24-laundry-details.jpg",
+    "presentInCommit": "1b63536ef0dae7c9f28d92efda01b0740e9a005a",
+    "sha256": "0c163440dab77034f907c8403cc3f08b71286314d151c95c0374b3d8b89bd3cb",
+    "copied": false
+  },
+  {
+    "file": "../textured-props-2026-11-17/shutter-grade/grade-report.json.gz",
+    "presentInCommit": "1b63536ef0dae7c9f28d92efda01b0740e9a005a",
+    "sha256": "8936fea87afe0f52a495be8cfad3477a4d7bf4d4d4b46dfcdad13619ddbfb243",
+    "copied": false
+  },
+  {
+    "file": "../textured-props-2026-11-17/ao/measurements.json",
+    "presentInCommit": "1b63536ef0dae7c9f28d92efda01b0740e9a005a",
+    "sha256": "e5a3422a90bd253890b14c0a363c424c7d88300284aa2c1073f6580fd5ddb5a0",
+    "copied": false
+  }
+]

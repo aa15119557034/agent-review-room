@@ -1,0 +1,241 @@
+{
+  "sourceHashes": {
+    "src/look.js": "f7625d1aeec0770624d5dc24218ea80f8dcd802c732dc0c92454da62225a9b61",
+    "src/main.js": "b45f1a5da0629deaebbefd60d1a89e922e738a52adb0ae89c53597df5df97caf",
+    "upstream/petalwake/src/core/pipeline.js": "0495e8d0ce275729e2a4d2fb4a15707635956ad308fcc591a6a2cf5260359085"
+  },
+  "curve": {
+    "contrast": 1.05,
+    "knee": 0.12,
+    "kneeValue": 0.10099999999999998,
+    "power": 1.2475247524752477,
+    "black": 0,
+    "oldBlackThreshold": 0.023809523809523836,
+    "monotone": true,
+    "maxAboveError": 0,
+    "leftDerivativeAtKnee": 1.05,
+    "rightDerivativeAtKnee": 1.05,
+    "leftDerivativeAtBlack": 0,
+    "samples": [
+      {
+        "x": 0,
+        "old": -0.025000000000000022,
+        "toe": 0
+      },
+      {
+        "x": 0.001,
+        "old": -0.023950000000000027,
+        "toe": 0.000257330524060036
+      },
+      {
+        "x": 0.007,
+        "old": -0.017650000000000055,
+        "toe": 0.0029158959833025053
+      },
+      {
+        "x": 0.01,
+        "old": -0.014499999999999957,
+        "toe": 0.004550048824844714
+      },
+      {
+        "x": 0.0238095238,
+        "old": -1.000000082740371e-11,
+        "toe": 0.013428326506078996
+      },
+      {
+        "x": 0.06,
+        "old": 0.03799999999999998,
+        "toe": 0.0425381896302302
+      },
+      {
+        "x": 0.119999,
+        "old": 0.10099894999999992,
+        "toe": 0.1009989500010829
+      },
+      {
+        "x": 0.12,
+        "old": 0.10099999999999998,
+        "toe": 0.10099999999999998
+      },
+      {
+        "x": 0.2,
+        "old": 0.185,
+        "toe": 0.185
+      },
+      {
+        "x": 1,
+        "old": 1.025,
+        "toe": 1.025
+      }
+    ]
+  },
+  "projection": {
+    "width": 960,
+    "height": 600,
+    "fov": 55,
+    "focalPixels": 576.2946380913498,
+    "maxRelativeDepthError": 3.637978807091713e-12,
+    "maxProjectionError": 1.6566609195578508e-16
+  },
+  "ao": [
+    {
+      "name": "flat",
+      "samples": 170,
+      "minAO": 1,
+      "maxAO": 1,
+      "badNormals": 0,
+      "minCross": 0.00007527508477699009,
+      "lowest": [
+        {
+          "pixel": [
+            0,
+            0
+          ],
+          "ao": 1
+        },
+        {
+          "pixel": [
+            0,
+            1
+          ],
+          "ao": 1
+        },
+        {
+          "pixel": [
+            0,
+            150
+          ],
+          "ao": 1
+        },
+        {
+          "pixel": [
+            0,
+            180
+          ],
+          "ao": 1
+        }
+      ]
+    },
+    {
+      "name": "sloped",
+      "samples": 170,
+      "minAO": 1,
+      "maxAO": 1,
+      "badNormals": 0,
+      "minCross": 0.00003231269268187848,
+      "lowest": [
+        {
+          "pixel": [
+            0,
+            0
+          ],
+          "ao": 1
+        },
+        {
+          "pixel": [
+            0,
+            1
+          ],
+          "ao": 1
+        },
+        {
+          "pixel": [
+            0,
+            150
+          ],
+          "ao": 1
+        },
+        {
+          "pixel": [
+            0,
+            180
+          ],
+          "ao": 1
+        }
+      ]
+    },
+    {
+      "name": "parallelStep",
+      "samples": 170,
+      "minAO": 1,
+      "maxAO": 1,
+      "badNormals": 0,
+      "minCross": 0.00004817596001024932,
+      "lowest": [
+        {
+          "pixel": [
+            0,
+            0
+          ],
+          "ao": 1
+        },
+        {
+          "pixel": [
+            0,
+            1
+          ],
+          "ao": 1
+        },
+        {
+          "pixel": [
+            0,
+            150
+          ],
+          "ao": 1
+        },
+        {
+          "pixel": [
+            0,
+            180
+          ],
+          "ao": 1
+        }
+      ]
+    },
+    {
+      "name": "wallFloor",
+      "samples": 170,
+      "minAO": 0.4735278704981226,
+      "maxAO": 1,
+      "badNormals": 0,
+      "minCross": 0.000011148241307408128,
+      "lowest": [
+        {
+          "pixel": [
+            481,
+            180
+          ],
+          "ao": 0.4735278704981226
+        },
+        {
+          "pixel": [
+            480,
+            180
+          ],
+          "ao": 0.4735593057006833
+        },
+        {
+          "pixel": [
+            479,
+            180
+          ],
+          "ao": 0.4735912916837979
+        },
+        {
+          "pixel": [
+            478,
+            180
+          ],
+          "ao": 0.47362382855580565
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "CPU reference transcription checked against shader source markers; no shader compiler or GPU execution.",
+    "Depth sampled nearest with Float32 encoding; remaining JS arithmetic uses doubles, not every GPU Float32 operation.",
+    "Analytic fields exercise finite planes, corners, screen edges and parallel depth step; do not prove all actual scene depth discontinuities artifact-free.",
+    "Above .12 equality is only per-channel contrast-stage equality. Subsequent luma/chroma grading couples channels; AO change affects the whole image.",
+    "No current code sets camera.zoom, filmOffset or viewOffset; wbPos is correct for the current symmetric perspective camera."
+  ]
+}
