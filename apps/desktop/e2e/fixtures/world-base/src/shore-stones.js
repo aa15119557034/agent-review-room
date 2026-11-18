@@ -10,11 +10,12 @@ export function shoreStones(b,terrain,rows) {
   let seed=rows?29317:Math.round(12217+b.x*b.z);
   const rand=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
   const stones=[], wetland=b.id==='marsh', upland=b.id==='tarn';
+  const channel=b.id==='mountain-stream';
   const candidates=rows?rows.length*3:wetland?1600:upland?7400:4900;
   for(let i=0;i<candidates;i++){
     let cx,cz,level;
     if(rows){
-      const row=rows[Math.floor(rand()*rows.length)], across=(0.59+0.73*rand())*(rand()<0.5?-1:1)*row.hw;
+      const row=rows[Math.floor(rand()*rows.length)], across=((channel?0.23:0.59)+(channel?1.07:0.73)*rand())*(rand()<0.5?-1:1)*row.hw;
       cx=row.x-row.tz*across;cz=row.z+row.tx*across;level=row.y;
     }else{
       cx=b.x+(rand()*2-1)*b.rx*1.24;cz=b.z+(rand()*2-1)*b.rz*1.24;level=b.level;
@@ -25,8 +26,9 @@ export function shoreStones(b,terrain,rows) {
     const count=2+Math.floor(rand()*7);
     for(let j=0;j<count;j++){
       const x=cx+(rand()-0.5)*2.5,z=cz+(rand()-0.5)*2.5,y=terrain.heightAt(x,z);
-      if(y-level>1.25 || y-level< -0.75) continue;
-      const radius=(wetland?0.036:0.055)+(upland?0.43:0.24)*rand()**2;
+      if(y-level>1.25 || y-level< (channel?-1.25:-0.75)) continue;
+      const boulder=channel && j===0 && rand()<0.22;
+      const radius=boulder ? 0.68+rand()**1.7*1.72 : (wetland?0.036:0.055)+(upland?0.43:0.24)*rand()**2;
       stones.push({x,y,z,radius,level});
     }
   }
@@ -92,7 +94,7 @@ export function shoreStones(b,terrain,rows) {
       transform.scale.set(r,thin,r*(0.58+0.39*rand()));
       transform.rotation.set(0.19*(rand()-0.5),rand()*Math.PI,0.22*(rand()-0.5));
       transform.updateMatrix();mesh.setMatrixAt(i,transform.matrix);
-      const grey=0.20+rand()*0.21,warm=0.91+rand()*0.25;
+      const grey=channel ? 0.062+rand()*0.10 : 0.20+rand()*0.21,warm=0.91+rand()*0.25;
       color.setRGB(grey*warm,grey*(0.96+rand()*0.10),grey*(upland?1.03:0.83));
       mesh.setColorAt(i,color);
     }

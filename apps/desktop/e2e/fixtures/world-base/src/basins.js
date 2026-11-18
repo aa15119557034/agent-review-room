@@ -3,10 +3,10 @@ import { World } from '../upstream/petalwake/src/core/ctx.js';
 
 // Metres in Petalwake world space. Levels remain above the ocean datum even at the deepest point.
 export const basins = [
-  { id: 'tarn', name: '山地冰斗湖', x: 735, z: -824, rx: 173, rz: 103, level: 138, depth: 13, rim: 14, color: [0.030, 0.115, 0.132] },
-  { id: 'terrace', name: '西侧阶地湖', x: -1443, z: -370, rx: 195, rz: 95, level: 97, depth: 7.5, rim: 6, color: [0.050, 0.140, 0.110] },
-  { id: 'oxbow', name: '东侧牛轭湖', x: 1195, z: 660, rx: 154, rz: 86, level: 26, depth: 3.8, rim: 2.6, color: [0.092, 0.123, 0.057] },
-  { id: 'marsh', name: '南侧浅滩湿地', x: 615, z: 865, rx: 115, rz: 59, level: 10, depth: 1.45, rim: 1.75, color: [0.105, 0.132, 0.067] },
+  { id: 'tarn', name: '山地冰斗湖', x: 735, z: -824, rx: 173, rz: 103, level: 138, depth: 13, rim: 14, color: [0.018, 0.136, 0.264] },
+  { id: 'terrace', name: '西侧阶地湖', x: -1443, z: -370, rx: 195, rz: 95, level: 97, depth: 7.5, rim: 6, color: [0.023, 0.163, 0.276] },
+  { id: 'oxbow', name: '东侧牛轭湖', x: 1195, z: 660, rx: 154, rz: 86, level: 26, depth: 3.8, rim: 2.6, color: [0.032, 0.110, 0.195] },
+  { id: 'marsh', name: '南侧浅滩湿地', x: 615, z: 865, rx: 115, rz: 59, level: 10, depth: 1.45, rim: 1.75, color: [0.062, 0.140, 0.190] },
 ];
 
 const smooth = MathUtils.smoothstep;
@@ -101,7 +101,7 @@ export function carveBasins(terrain) {
 
 // Pack local coarse gravel, fine sediment and wet margins into one terrain sample.
 export function makeBankTexture() {
-  const size=2048, data=new Uint8Array(size*size*4);
+  const size=2048, data=new Uint8Array(size*size*8);
   for(const b of basins) visitGrid(b,size,(i,x,z,d)=>{
     const irregular=0.035*Math.sin(x*0.14+Math.sin(z*0.07))+0.018*Math.cos(z*0.21);
     const weight=1-smooth(d+irregular,1.01,1.22);
@@ -111,7 +111,7 @@ export function makeBankTexture() {
     data[i*4+2]=Math.round(255*(1-smooth(d+irregular,1.03,1.17)));
     data[i*4+3]=48*(1+basins.indexOf(b));
   });
-  const texture=new DataTexture(data,size,size,RGBAFormat);
+  const texture=new DataTexture(data,size,size*2,RGBAFormat);
   texture.magFilter=texture.minFilter=LinearFilter;texture.needsUpdate=true;
   return texture;
 }

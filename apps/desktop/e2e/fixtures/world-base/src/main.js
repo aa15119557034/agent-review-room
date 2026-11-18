@@ -86,7 +86,7 @@ function startWalking() {
   walker.setView(worldBase.cameraMode);
   worldBase.currentView = 'walking';
   document.querySelector('#mode').textContent = '步行';
-  document.querySelector('#walk').textContent = bank ? '回到水边' : returnView === 'coast' ? '回到海岸' : '回到街道';
+  document.querySelector('#walk').textContent = bank ? '回到观景点' : returnView === 'coast' ? '回到海岸' : '回到街道';
   document.querySelectorAll('[data-view]').forEach(button => button.classList.remove('active'));
   canvas.focus();
 }
@@ -185,6 +185,14 @@ async function init() {
   }
   worldBase.views.push(island.streamView);labels.stream='山溪 · 砾石滩';
   waterSelect.add(new Option(labels.stream,'stream'));
+  const geology=document.createElement('optgroup');
+  geology.label='特色地貌';
+  for(const view of island.landformViews){
+    worldBase.views.push(view);
+    labels[view.name]=view.label;
+    geology.append(new Option(view.label,view.name));
+  }
+  waterSelect.append(geology);
   waterSelect.addEventListener('change',()=>{ if(waterSelect.value) setView(waterSelect.value); });
   const pointer=new THREE.Vector2(), caster=new THREE.Raycaster();
   let press;
@@ -233,7 +241,7 @@ async function init() {
   stage('场景已就绪');
   document.querySelector('#loading').hidden = true;
   const rain=createRain(scene,renderer,station);
-  const mirrorOmit=[island.water.mesh,island.river.group,island.sky.mesh,rain.streaks];
+  const mirrorOmit=[island.water.mesh,island.river.group,...island.branches.map(b=>b.group),island.sky.mesh,rain.streaks];
   let sceneStart, weatherOffset=0;
   const weatherStart=document.querySelector('#weather-start');
   weatherStart.addEventListener('change',()=>{

@@ -16,7 +16,10 @@ async function main() {
   try {
     const { shapeIslandRelief } = await import(url('src/coast.js'));
     const { World } = await import(url('upstream/petalwake/src/core/ctx.js'));
-    const { carveBasins,basins,contour } = await import(url('src/basins.js'));
+    const { Terrain }=await import(url('upstream/petalwake/src/world/terrain.js'));
+    const { River }=await import(url('upstream/petalwake/src/world/river.js'));
+    const { sculptDistricts,sculptTributaries }=await import(url('src/landforms.js'));
+    const { carveBasins,basins,contour,makeBankTexture } = await import(url('src/basins.js'));
     const { createWeather } = await import(url('src/weather.js'));
     const { createRipples } = await import(url('src/water-ripples.js'));
     const source = require('../sources.json').petalwake;
@@ -31,7 +34,25 @@ async function main() {
     assert.equal(meta.world, World.size);
     const relief = shapeIslandRelief({ h, N:meta.n, cell:meta.cell, meta }, towns, station);
     const splatN=2048,splat=new Uint8Array(4*splatN*splatN).fill(150);
-    const freshwater=carveBasins({h,N:meta.n,cell:meta.cell,splat,splatN});
+    const terrain={h,N:meta.n,cell:meta.cell,splat,splatN,heightAt:Terrain.prototype.heightAt};
+    const freshwater=carveBasins(terrain);
+    const river=new River(terrain,meta,{cloudUniforms:{}});
+    const atlas=makeBankTexture();
+    sculptDistricts(terrain,atlas);
+    const drainage=sculptTributaries(terrain,river);
+    const weights=atlas.image.data.subarray(4*splatN*splatN);
+    const full=[0,0,0,0],transition=[0,0,0,0],step=[0,0,0,0];
+    for(let k=4*splatN;k<weights.length;k++){
+      const channel=k%4,value=weights[k];
+      if(value>240)full[channel]++;
+      if(value>15 && value<240)transition[channel]++;
+      step[channel]=Math.max(step[channel],Math.abs(value-weights[k-4]),Math.abs(value-weights[k-4*splatN]));
+    }
+    assert(full.every(n=>n>100) && transition.every(n=>n>100) && step.every(d=>d<40));
+    for(const rows of [drainage.upper,drainage.lower,drainage.fork]){
+      assert(rows.every((r,i)=>!i || r.y<=rows[i-1].y+0.0001),'uphill water surface');
+      assert(rows.every(r=>r.y>terrain.heightAt(r.x,r.z)),'dry gap at the confluence');
+    }
     const wetArea=freshwater.reduce((total,b)=>total+b.areaM2,0);
     assert(wetArea>140000 && freshwater.every(b=>b.areaM2>10000 && b.volumeM3/b.areaM2>0.25));
     assert.equal(contour(basins[2],basins[2].x,basins[2].z)>1,true,'oxbow encloses a dry central point bar');
@@ -79,7 +100,7 @@ async function main() {
     }
     assert(spread>0.001 && leak===0);
     console.log(JSON.stringify({samples:h.length, quadrants, signChanges, protectedChanges, relief,
-      freshwater,wetArea,stages:stages.map(s=>s.phase),contactWave:{spread,leak}}));
+      freshwater,wetArea,districts:{full,transition,maxTexelChange:step},stages:stages.map(s=>s.phase),contactWave:{spread,leak}}));
   } finally { hook.deregister(); }
 }
 main().catch(error=>{console.error(error);process.exitCode=1;});

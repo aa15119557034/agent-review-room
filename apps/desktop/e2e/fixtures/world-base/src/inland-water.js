@@ -119,9 +119,9 @@ void main(){
     reflected=geometry.rgb+sky*(1.0-geometry.a);
   }else reflected=reflectedBank(p+vec3(0,0.12,0),ray,sky);
   float nv=clamp(dot(n,v),0.0,1.0), fresnel=0.0204+0.9796*pow(1.0-nv,5.0);
-  vec3 bed=mix(vec3(0.18,0.14,0.087),vec3(0.38,0.335,0.22),texture(uNoiseTex,(p.xz+n.xz*depth)*0.09).g);
-  vec3 transmit=exp(-depth*vec3(0.9,0.45,0.58)/max(nv,0.30));
-  vec3 diffuse=mix(uDeep,bed,transmit)*(uAmbSky*0.72+uSunColor*0.35);
+  vec3 bed=mix(vec3(0.110,0.130,0.146),vec3(0.32,0.34,0.35),texture(uNoiseTex,(p.xz+n.xz*depth)*0.09).g);
+  vec3 transmit=exp(-depth*vec3(1.16,0.58,0.24)/max(nv,0.30));
+  vec3 diffuse=mix(uDeep,bed,transmit)*(vec3(0.16,0.20,0.25)+uAmbSky*0.68+uSunColor*0.23);
   diffuse*=1.0+focusing*0.40*(1.0-uCloudFlow.z*0.7)*exp(-0.7*depth);
   float gloss=mix(650.0,130.0,clamp(uWind.z/2.0+uRain*0.3,0.0,1.0));
   float sun=pow(max(dot(n,normalize(uSunDir+v)),0.0),gloss)*(1.0-uCloudFlow.z*0.93);
@@ -203,16 +203,16 @@ function marshReeds(b,terrain){
   return new THREE.Mesh(g,mat);
 }
 
-export function createInlandWater(terrain,sky,river) {
+export function createInlandWater(terrain,sky,river,streamLevelAt,branches) {
   const group=new THREE.Group();
   const sea={id:'sea'},stream={id:'river'};
-  const levelAt=(b,x,z)=>b===sea ? U.uSeaSetup.value : b===stream ? river.levelAt(x,z) : b.level;
+  const levelAt=(b,x,z)=>b===sea ? U.uSeaSetup.value : b===stream ? streamLevelAt(x,z) : b.level;
   const depthAt=(b,x,z)=>(b===stream || b===sea || contour(b,x,z)<1.09) ? levelAt(b,x,z)-terrain.heightAt(x,z) : 0;
   const waterAt=(x,z)=>{
     const lake=basinAt(x,z);
     if(lake) return lake;
     if(terrain.heightAt(x,z)<U.uSeaSetup.value) return sea;
-    if(river.levelAt(x,z)>terrain.heightAt(x,z)) return stream;
+    if(streamLevelAt(x,z)>terrain.heightAt(x,z)) return stream;
   };
   const ripples=createRipples(depthAt);
   U.uWaterPatch.value=ripples.patch; U.uWaterDisturbance.value=ripples.texture;
@@ -243,7 +243,9 @@ export function createInlandWater(terrain,sky,river) {
     floats.push(wood);group.add(wood.group);stoneGroups.push(shoreStones(b,terrain));
     if(b.id==='marsh' || b.id==='oxbow') group.add(marshReeds(b,terrain));
   }
-  stoneGroups.push(shoreStones(stream,terrain,river.rows));group.add(...stoneGroups);
+  stoneGroups.push(shoreStones(stream,terrain,river.rows));
+  for(const branch of branches)stoneGroups.push(shoreStones({id:'mountain-stream'},terrain,branch.rows));
+  group.add(...stoneGroups);
   let previous=new THREE.Vector3(Infinity,0,0), stride=0;
   function update(dt,weather,feet,eye){
     for(const shore of stoneGroups)for(const mesh of shore.children){

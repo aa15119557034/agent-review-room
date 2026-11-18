@@ -258,11 +258,6 @@ export function createLook(renderer, camera) {
     meadow.wbTownUniforms = townUniforms;
     for (const s of meadow.shells) for (const mesh of s.pool) { const old = mesh.material; mesh.material = s.material(); old.dispose(); }
     const water = island.water.material;
-    // The shallow coefficient, rather than bloom, dominates the cyan halos.
-    // Keep deep-water colour and the transmitted seabed independently calibrated.
-    water.fragmentShader = insert(water.fragmentShader, 'vec3 shallow = vec3(0.030, 0.420, 0.380);',
-      `vec3 shallow = vec3(0.030, 0.420, 0.380);
-  shallow *= 0.4;`, 'shallow water scatter');
     // Compute derivatives before the upstream shore discard. Both water LOD
     // corrections use the actual world-space pixel footprint, not camera height.
     water.fragmentShader = insert(water.fragmentShader, 'vec3 P = vWorld;',

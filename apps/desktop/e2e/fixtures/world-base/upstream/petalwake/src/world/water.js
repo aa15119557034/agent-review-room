@@ -330,17 +330,17 @@ void main(){
   float cb = texture(uRipple, cuv * 1.37 - vec2(0.0, uTime * 0.041)).a;
   float caust = pow(saturate(1.0 - abs(ca - cb) * 2.2), 5.0) * 1.6;
   float pathLen = depth * (1.0 + 1.0 / max(V.y, 0.25)) * 0.5;
-  vec3 absorb = exp(-pathLen * vec3(0.46, 0.105, 0.072));
+  vec3 absorb = exp(-pathLen * vec3(0.56, 0.155, 0.065));
   vec3 bedLit = bedCol * (uSunColor * 0.30 * sunVis * (0.55 + caust * exp(-depth * 0.22)) + uAmbSky * 0.5);
   // light scattered back out of the water column
-  vec3 deep = vec3(0.004, 0.105, 0.135);
-  vec3 shallow = vec3(0.030, 0.420, 0.380);
+  vec3 deep = vec3(0.004, 0.070, 0.235);
+  vec3 shallow = vec3(0.022, 0.185, 0.335);
   vec3 scat = mix(shallow, deep, saturate(1.0 - exp(-depth * 0.09)));
   scat *= (uSunColor * 0.42 * (0.35 + 0.65 * sunVis) + uAmbSky * 0.60);
   vec3 body = bedLit * absorb + scat * (1.0 - absorb * 0.9);
   // sunlight glowing through the thin crests
   float sss = pow(saturate(dot(V, -uSunDir) * 0.5 + 0.5), 3.0) * saturate(P.y * 0.9 + 0.25) * saturate(vAmp);
-  body += vec3(0.02, 0.36, 0.30) * uSunColor * 0.11 * sss * sunVis;
+  body += vec3(0.016, 0.22, 0.36) * uSunColor * 0.11 * sss * sunVis;
 
   // ---- reflection
   float ndv = saturate(dot(N, V));

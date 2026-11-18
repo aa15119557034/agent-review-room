@@ -16,6 +16,8 @@ import { createWeather } from './weather.js';
 import { basins, basinAt, carveBasins, makeBankTexture } from './basins.js';
 import { createInlandWater } from './inland-water.js';
 import { dressStreamBanks } from './stream-bank.js';
+import { fallMist } from './fall-mist.js';
+import { sculptDistricts, sculptTributaries, makeLandformViews } from './landforms.js';
 
 export const stationPlacement = Object.freeze({
   x: 280, y: 8, z: 900, position: Object.freeze([280, 8, 900]), rotationY: 0,
@@ -135,16 +137,23 @@ function featherVegetation(terrain, areas, localToWorld, { flowers = 8, jitter =
   return { flowerFadeM: flowers, jitterM: jitter, texels: touched };
 }
 
-async function loadProps(assetBase, terrain, placements) {
+async function loadProps(assetBase, terrain, placements, streamLevelAt) {
   const loader = new GLTFLoader();
   let removed = 0, reseated = 0;
+  const atlas=terrain.material.uniforms.uInlandBank.value.image;
+  const bareRock=(x,z)=>{
+    const size=atlas.width,i=Math.floor((x+World.half)*size/World.size),j=Math.floor((z+World.half)*size/World.size);
+    const k=4*((size+j)*size+i);
+    return Math.max(atlas.data[k],atlas.data[k+1],atlas.data[k+2])>210;
+  };
   const loaded = await Promise.all(Object.entries(placements).map(async ([name, placements]) => {
     const [gltf, info] = await Promise.all([
       loader.loadAsync(`${assetBase}/models/${name}.glb`), json(`${assetBase}/models/${name}.json`),
     ]);
     const list = placements.filter(([x, , z, , scale]) => {
       const basin = basinAt(x,z);
-      const remove = inRect(x, z, info.radius * scale) || (basin && terrain.heightAt(x,z)<basin.level);
+      const remove = inRect(x, z, info.radius * scale) || (basin && terrain.heightAt(x,z)<basin.level)
+        || (name==='tree' && (streamLevelAt(x,z)>terrain.heightAt(x,z) || bareRock(x,z)));
       if (remove) removed++;
       return !remove;
     }).map((placement) => {
@@ -208,7 +217,25 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
   const anchors = Object.values(propPlacements).flat().map(p => [p, terrain.heightAt(p[0], p[2])]);
   const relief = shapeIslandRelief(terrain, index.towns, stationRect);
   const basinStats = carveBasins(terrain);
-  terrain.material.uniforms.uInlandBank.value=makeBankTexture();
+  const atlas=makeBankTexture();
+  terrain.material.uniforms.uInlandBank.value=atlas;
+  const sky=new Sky(), river=new River(terrain,terrain.meta,sky);
+  sculptDistricts(terrain,atlas);
+  const drainage=sculptTributaries(terrain,river);
+  const branches=[drainage.upper,drainage.lower,drainage.fork].map((rows,index)=>{
+    const branch=new River(terrain,terrain.meta,sky,{rows,waterfall:index===0,plungeLevel:drainage.lower[0].y,ripple:river.material.uniforms.uRipple.value});
+    branch.mesh.frustumCulled=true;
+    return branch;
+  });
+  const fall=branches[0].fall;
+  branches[1].material.uniforms.uPlunge.value.set(fall.base.x,fall.base.z,fall.hw*1.9);
+  const streams=[river,...branches];
+  const streamLevelAt=(x,z)=>{
+    let level=-Infinity;
+    for(const stream of streams)level=Math.max(level,stream.levelAt(x,z));
+    return level;
+  };
+  const landformViews=makeLandformViews(terrain,branches[0].fall,drainage);
   terrain.material.uniforms.uBasinLevels.value.fromArray(basins.map(b=>b.level));
   const flatten = terrain.flattenRect({ ...stationRect, height: stationPlacement.y, blend, surface, approach: coastRoute });
   // Retain the authored burial depth of each rock or tree on the reshaped island.
@@ -229,7 +256,6 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
   scene.add(root);
   terrain.mainView.mesh.renderOrder = 500;
   const meadow = new Meadow(terrain, 'medium');
-  const sky = new Sky();
   const clouds = new CloudBaker(renderer);
   clouds.begin();
   while (!clouds.done) {
@@ -239,12 +265,13 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
   sky.cloudTex.value = clouds.texture;
   sky.cloudOn.value = 1;
   const water = new Water(sky);
-  const river = new River(terrain, terrain.meta, sky);
+  for(const branch of branches) dressStreamBanks(terrain,branch);
   const streamView=dressStreamBanks(terrain,river);
   water.material.uniforms.uFallBase.value.set(river.fall.base.x, river.fall.base.z, river.fall.hw * 1.6);
-  const { props, removed, reseated } = await loadProps(assetBase, terrain, propPlacements);
+  const { props, removed, reseated } = await loadProps(assetBase, terrain, propPlacements, streamLevelAt);
   const weather = createWeather(timeOfDay);
-  const inland = createInlandWater(terrain,sky,river);
+  const inland = createInlandWater(terrain,sky,river,streamLevelAt,branches);
+  root.add(...branches.map(branch=>branch.group),fallMist(fall),fallMist(river.fall));
   root.add(inland.group);
   root.add(terrain.mainView.mesh, meadow.group, sky.mesh, water.mesh, river.group, town.group, props.group, transition);
   if (props.overlay) root.add(props.overlay);
@@ -265,7 +292,7 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
     stats.meadow = { ...meadow.stats };
   }
   return {
-    ready: true, root, terrain, town, props, meadow, water, sky, river, inland, streamView, transition, U, stationPlacement, stats, update, timeOfDay, coastRoute, weather,
+    ready: true, root, terrain, town, props, meadow, water, sky, river, branches, streamLevelAt, landformViews, inland, streamView, transition, U, stationPlacement, stats, update, timeOfDay, coastRoute, weather,
     heightAt: (x, z) => terrain.heightAt(x, z),
     // Meadow allocates materials lazily as camera cells enter view.
     get materials() {

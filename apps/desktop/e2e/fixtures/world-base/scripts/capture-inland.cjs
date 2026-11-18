@@ -2,12 +2,14 @@
 // poses recorded by a current build, even when the older scene has no lake views.
 const fs=require('node:fs'), path=require('node:path'), cp=require('node:child_process');
 const {createStaticServer,cleanEnvironment}=require('./baseline.cjs');
-const [exe,dir,source,poses]=process.argv.slice(2);
+const landforms=process.argv.includes('--landforms');
+const afternoon=process.argv.includes('--afternoon');
+const [exe,dir,source,poses]=process.argv.slice(2).filter(v=>v!=='--landforms' && v!=='--afternoon');
 const output=path.resolve(dir),root=path.resolve(source||path.join(__dirname,'..'));
 if(!process.versions.electron){
   fs.mkdirSync(output,{recursive:true});
   const log=fs.openSync(path.join(output,'electron.log'),'w');
-  const child=cp.spawnSync(exe,[__filename,exe,output,root,...(poses?[path.resolve(poses)]:[])],
+  const child=cp.spawnSync(exe,[__filename,exe,output,root,...(poses?[path.resolve(poses)]:[]),...(landforms?['--landforms']:[]),...(afternoon?['--afternoon']:[])],
     {cwd:root,env:cleanEnvironment(path.join(output,'runtime')),stdio:['ignore',log,log],timeout:320000,windowsHide:true});
   fs.closeSync(log);console.log(output,child.status,child.error?.message??'');process.exit(child.status??1);
 }
@@ -26,7 +28,7 @@ app.whenReady().then(async()=>{
   const wc=win.webContents,ev=s=>wc.executeJavaScript(s);
   wc.on('console-message',e=>{if(e.level==='error')report.errors.push(e.message);if(e.level==='error'||e.message?.startsWith('[world-base]'))console.log(e.message);});
   wc.session.webRequest.onErrorOccurred(x=>report.requests.push({url:x.url,error:x.error}));
-  await win.loadURL('http://127.0.0.1:'+server.address().port);
+  await win.loadURL('http://127.0.0.1:'+server.address().port+(afternoon?'/?time=afternoon':''));
   while(!await ev('worldBase.ready')){if(await ev('worldBase.errors.length'))throw Error(await ev('worldBase.errors.join("\\n")'));await pause(250);}
   await ev("document.body.classList.add('hide-ui')");
   report.gpu=await ev("(()=>{const gl=worldBase.renderer.getContext();return gl.getParameter(gl.getExtension('WEBGL_debug_renderer_info').UNMASKED_RENDERER_WEBGL)})()");
@@ -52,6 +54,10 @@ app.whenReady().then(async()=>{
       report.samples.push({id,fps:1000*frames.length/frames.reduce((a,b)=>a+b),p95:sorted[Math.ceil(sorted.length*.95)-1],frames});
       console.log('sample',id,report.samples.at(-1).fps);save();
     }finally{if(walk)wc.sendInputEvent({type:'keyUp',keyCode:'W'});}
+  }
+  if(landforms){
+    await require('./capture-landforms.cjs')({ev,view,shot,sample,report,poses,wc});
+    finish();return;
   }
   const locations=['tarn','terrace','oxbow','marsh'];
   if(poses){

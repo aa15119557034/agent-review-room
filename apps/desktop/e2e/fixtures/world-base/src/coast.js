@@ -105,15 +105,21 @@ export function coastWalking(station, island) {
     physics: new Physics(height),
     wadingDepth(x,z){
       const wx=x+root.position.x,wz=z+root.position.z,b=basinAt(wx,wz);
-      const surface=b ? b.level : island.river.levelAt(wx,wz);
+      const surface=b ? b.level : island.streamLevelAt(wx,wz);
       return Math.max(0,surface-island.heightAt(wx,wz));
     },
     contains(x, z, radius) {
       const wx=x+root.position.x, wz=z+root.position.z;
       const basin=basinAt(wx,wz,1.46);
       if(basin) return basin.level-island.heightAt(wx,wz)<0.82;
+      const nearby=island.landformViews?.some(v=>Math.hypot(wx-v.feet[0],wz-v.feet[2])<95-radius);
+      if(nearby){
+        const floor=island.heightAt(wx,wz);
+        const gradient=Math.hypot(island.heightAt(wx+0.5,wz)-island.heightAt(wx-0.5,wz),island.heightAt(wx,wz+0.5)-island.heightAt(wx,wz-0.5));
+        return floor>0 && gradient<1.35 && island.streamLevelAt(wx,wz)-floor<0.82;
+      }
       const bank=island.streamView.feet;
-      if(Math.hypot(wx-bank[0],wz-bank[2])<36-radius) return island.river.levelAt(wx,wz)-island.heightAt(wx,wz)<0.82;
+      if(Math.hypot(wx-bank[0],wz-bank[2])<36-radius) return island.streamLevelAt(wx,wz)-island.heightAt(wx,wz)<0.82;
       if (z < bounds.z1 - radius) return false;
       return route.contains(x + root.position.x, z + root.position.z, height(x, z) + root.position.y, radius);
     },
