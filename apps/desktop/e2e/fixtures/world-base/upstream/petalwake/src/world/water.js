@@ -236,7 +236,10 @@ void main(){
     gl_Position = projectionMatrix * viewMatrix * vec4(vWorld, 1.0);
     return;
   }
-  float shelter = mix(0.30, 1.0, smoothstep(0.0, 110.0, off));
+  // Swell breaks at the beach. Carry a thin wash across the mean shore,
+  // then let only wind setup reach inland hollows below that level.
+  float swash = smoothstep(-5.0, 2.0, off);
+  float shelter = swash * mix(0.30, 1.0, smoothstep(0.0, 110.0, off));
   float amp = uSea * shelter / (1.0 + pow(r / 1400.0, 2.0));
   vec3 n; float fold;
   vec3 d = gerstner(xz, uTime, amp, n, fold);
@@ -383,6 +386,7 @@ void main(){
   float roll = pow(saturate(sin(ph) * 0.5 + 0.5), 5.0);
   float beachy = 1.0 - smoothstep(0.05, 0.45, cliffy);
   float surfBand = roll * smoothstep(46.0, 6.0, shoreD) * smoothstep(0.52, 0.30, bubbles * (1.0 - roll * 0.5)) * beachy;
+  surfBand *= smoothstep(-1.2, 2.8, off);
   float wash = smoothstep(7.5, 0.0, shoreD - (sin(uTime * 0.5 + setNoise * 6.0) * 0.5 + 0.5) * 3.0);
   // Resolve thin tongues of foam in the swash instead of filling the entire
   // landward half of the shore-distance mask with opaque white.
