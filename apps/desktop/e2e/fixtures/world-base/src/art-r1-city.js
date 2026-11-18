@@ -214,13 +214,13 @@ export function addBackAlley({ root, ctx, own, ownTexture, frame, M, A, sheet })
   stack(-2.7, -132.6, [[0.7, 0.46, 0.5, -0.06], [0.55, 0.38, 0.42, 0.15, 0.02]]);
   stack(-3.45, -132.5, [[0.44, 0.3, 0.36, 0.12]]);
   stack(-6.8, -132.55, [[0.66, 0.4, 0.48, 0.05], [0.6, 0.3, 0.44, -0.1], [0.4, 0.26, 0.34, 0.2, 0.05]]);
-  // Pipes run along the foot of the wall (two horizontal runs and a riser), with clips.
+  // Pipes run above the door heads (round 2: at hip height they crossed two doors and read as handrails),
+  // two horizontal runs fed by a riser beside the meters, with clips.
   const pipe = '#a7b5bb', clip = '#586369';
-  for (const [y, r] of [[0.46, 0.034], [0.64, 0.027]]) {
+  for (const [y, r] of [[2.34, 0.034], [2.5, 0.027]]) {
     frame.cyl(M.metal, pipe, r, 6.2, -0.8, FLOOR + y, -131.1, { rz: Math.PI / 2, seg: 8 });
     for (let x = -3.4; x < 2.4; x += 1.4) frame.box(M.metal, clip, 0.05, 0.1, 0.05, x, FLOOR + y, -131.07);
   }
-  frame.cyl(M.metal, pipe, 0.04, 2.3, -3.6, FLOOR + 1.15, -131.1, { seg: 8 });
-  frame.cyl(M.metal, pipe, 0.04, 0.2, -3.6, FLOOR + 0.55, -131.1, { rz: Math.PI / 2, seg: 8 });
+  frame.cyl(M.metal, pipe, 0.04, 2.5, -3.6, FLOOR + 1.25, -131.1, { seg: 8 });
   return { fence: runs.length, cardboardStacks: 4, pipeRuns: 3, spots: 3 };
 }

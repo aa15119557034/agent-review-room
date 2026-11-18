@@ -286,7 +286,7 @@ function buildLaundryShop(H, F, front) {
   // two 12-segment cylinders with a quad, spending those triangles on the portal.
   F.box(H.signLight, null, .65, .55, .045, -2.65, 2.55, front + 1.065, { shadow: false });
   atlasCard(F, H.laundrySigns.icon, .49, .49, -2.65, 2.55, front + 1.09);
-  F.box(M.plain, teal, 4.6, .44, .025, .45, 2.55, front + 1.062, { shadow: false });
+  F.box(H.signTeal || M.plain, H.signTeal ? null : teal, 5.3, .44, .025, .4, 2.55, front + 1.062, { shadow: false });
   atlasCard(F, H.laundrySigns.name, 4.56, .42, .45, 2.55, front + 1.0755);
   // Functional labels sit above the drums; the narrow lower sash sits below
   // them. Keep the central door, its handle and all four machine windows clear.
@@ -296,7 +296,7 @@ function buildLaundryShop(H, F, front) {
   }
   // A wall-mounted service panel catches the eye-height side view without
   // putting another freestanding sign in the crate / umbrella / entry passage.
-  F.boxB(M.plain, teal, .60, 2.07, .08, 3.5, .16, front + .04, { skip: 'b' });
+  F.boxB(H.signTeal || M.plain, H.signTeal ? null : teal, .60, 2.07, .08, 3.5, .16, front + .04, { skip: 'b' });
   atlasCard(F, H.laundrySigns.aframe, .50, .78, 3.5, 1.47, front + .081);
   return { palette: { teal, dark, cream, brass }, triangles: gb.tris - start,
     labelTriangles: 10, labelBackingTriangles: 12,

@@ -301,6 +301,8 @@ export function createLook(renderer, camera) {
             `* mix(0.88, 1.14, cl.w);
   vTint = wbTownGreen(vTint, wbTownMask(xz));`, 'grass town tint');
         } else {
+          // Art round 2 (island-ground.js): pastel petals island-wide.
+          if (this.meadow.wbPetals) m.vertexShader = this.meadow.wbPetals(m.vertexShader);
           // Keep about a quarter of the flowers in the town core; they stay accents.
           if (toonEnabled()) {
             // Round 28: petals are alpha-to-coverage, which keeps the output alpha as the coverage mask for the outline.
