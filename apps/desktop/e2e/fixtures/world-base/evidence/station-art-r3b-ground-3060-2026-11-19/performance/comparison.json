@@ -1,0 +1,4278 @@
+{
+  "sourceOfReference": "art-r3b-ground-3060-2026-11-18/performance/comparison.json",
+  "referenceSHA256": "558871dd39965207b5eea6f2048893c16935a9bbb7d4ddcb5502c218e148ff06",
+  "reference": [
+    {
+      "id": "02-r3b",
+      "source": "ffbcfa3e091bdb2d4a7cf94367d40868101c2ddc",
+      "routes": [
+        {
+          "id": "art-a-street",
+          "frames": 657,
+          "fps": 65.0006,
+          "rafMs": {
+            "count": 657,
+            "min": 15.099999999998545,
+            "p50": 15.400000000001455,
+            "p95": 15.5,
+            "max": 15.599999999998545,
+            "mean": 15.3845
+          },
+          "over20": 0,
+          "distanceXZ": 0,
+          "draw": {
+            "count": 657,
+            "min": 1589,
+            "p50": 1590,
+            "p95": 1592,
+            "max": 1592,
+            "mean": 1590.2572
+          },
+          "triangles": {
+            "count": 657,
+            "min": 8009880,
+            "p50": 8009944,
+            "p95": 8010072,
+            "max": 8010072,
+            "mean": 8009960.4627
+          },
+          "focus": {
+            "start": true,
+            "end": true,
+            "osRun": 0,
+            "osSamples": 20
+          }
+        },
+        {
+          "id": "art-b-konbini",
+          "frames": 656,
+          "fps": 64.901,
+          "rafMs": {
+            "count": 656,
+            "min": 15.099999999991269,
+            "p50": 15.400000000001455,
+            "p95": 15.5,
+            "max": 30.799999999995634,
+            "mean": 15.4081
+          },
+          "over20": 1,
+          "distanceXZ": 0,
+          "draw": {
+            "count": 656,
+            "min": 1048,
+            "p50": 1049,
+            "p95": 1050,
+            "max": 1050,
+            "mean": 1049.0366
+          },
+          "triangles": {
+            "count": 656,
+            "min": 7908922,
+            "p50": 7931422,
+            "p95": 7931462,
+            "max": 7931462,
+            "mean": 7923137.9146
+          },
+          "focus": {
+            "start": true,
+            "end": true,
+            "osRun": 0,
+            "osSamples": 20
+          }
+        },
+        {
+          "id": "art-c-alley",
+          "frames": 656,
+          "fps": 65,
+          "rafMs": {
+            "count": 656,
+            "min": 15.099999999991269,
+            "p50": 15.39999999999418,
+            "p95": 15.5,
+            "max": 15.60000000000582,
+            "mean": 15.3846
+          },
+          "over20": 0,
+          "distanceXZ": 0,
+          "draw": {
+            "count": 656,
+            "min": 982,
+            "p50": 982,
+            "p95": 987,
+            "max": 987,
+            "mean": 982.7988
+          },
+          "triangles": {
+            "count": 656,
+            "min": 8725783,
+            "p50": 8725783,
+            "p95": 8789455,
+            "max": 8789455,
+            "mean": 8731739.1585
+          },
+          "focus": {
+            "start": true,
+            "end": true,
+            "osRun": 0,
+            "osSamples": 20
+          }
+        },
+        {
+          "id": "art-d-laundry",
+          "frames": 656,
+          "fps": 64.9994,
+          "rafMs": {
+            "count": 656,
+            "min": 15.19999999999709,
+            "p50": 15.39999999999418,
+            "p95": 15.5,
+            "max": 15.700000000011642,
+            "mean": 15.3848
+          },
+          "over20": 0,
+          "distanceXZ": 0,
+          "draw": {
+            "count": 656,
+            "min": 900,
+            "p50": 902,
+            "p95": 902,
+            "max": 902,
+            "mean": 901.0091
+          },
+          "triangles": {
+            "count": 656,
+            "min": 8387642,
+            "p50": 8387770,
+            "p95": 8387770,
+            "max": 8387770,
+            "mean": 8387706.5854
+          },
+          "focus": {
+            "start": true,
+            "end": true,
+            "osRun": 0,
+            "osSamples": 20
+          }
+        },
+        {
+          "id": "walk-third",
+          "frames": 199,
+          "fps": 64.0345,
+          "rafMs": {
+            "count": 199,
+            "min": 15.19999999999709,
+            "p50": 15.39999999999418,
+            "p95": 15.5,
+            "max": 30.80000000000291,
+            "mean": 15.6166
+          },
+          "over20": 3,
+          "distanceXZ": 9.3656,
+          "draw": {
+            "count": 199,
+            "min": 1634,
+            "p50": 1657,
+            "p95": 1660,
+            "max": 1660,
+            "mean": 1653.6432
+          },
+          "triangles": {
+            "count": 199,
+            "min": 8313825,
+            "p50": 8340917,
+            "p95": 8390209,
+            "max": 8405943,
+            "mean": 8338962.6181
+          },
+          "focus": {
+            "start": true,
+            "end": true,
+            "osRun": 0,
+            "osSamples": 6
+          }
+        },
+        {
+          "id": "walk-first",
+          "frames": 180,
+          "fps": 57.635,
+          "rafMs": {
+            "count": 180,
+            "min": 15.19999999999709,
+            "p50": 15.39999999999418,
+            "p95": 30.80000000000291,
+            "max": 30.90000000000873,
+            "mean": 17.3506
+          },
+          "over20": 23,
+          "distanceXZ": 9.571,
+          "draw": {
+            "count": 180,
+            "min": 1441,
+            "p50": 1511,
+            "p95": 1578,
+            "max": 1584,
+            "mean": 1513.1667
+          },
+          "triangles": {
+            "count": 180,
+            "min": 8194939,
+            "p50": 8345415,
+            "p95": 8426689,
+            "max": 8433639,
+            "mean": 8336918.2833
+          },
+          "focus": {
+            "start": true,
+            "end": true,
+            "osRun": 0,
+            "osSamples": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "03-r3b",
+      "source": "ffbcfa3e091bdb2d4a7cf94367d40868101c2ddc",
+      "routes": [
+        {
+          "id": "art-a-street",
+          "frames": 654,
+          "fps": 64.7025,
+          "rafMs": {
+            "count": 654,
+            "min": 15.099999999998545,
+            "p50": 15.400000000001455,
+            "p95": 15.5,
+            "max": 30.89999999999418,
+            "mean": 15.4554
+          },
+          "over20": 3,
+          "distanceXZ": 0,
+          "draw": {
+            "count": 654,
+            "min": 1589,
+            "p50": 1590,
+            "p95": 1592,
+            "max": 1592,
+            "mean": 1590.3073
+          },
+          "triangles": {
+            "count": 654,
+            "min": 8009880,
+            "p50": 8009944,
+            "p95": 8010072,
+            "max": 8010072,
+            "mean": 8009963.6697
+          },
+          "focus": {
+            "start": true,
+            "end": true,
+            "osRun": 0,
+            "osSamples": 20
+          }
+        },
+        {
+          "id": "art-b-konbini",
+          "frames": 657,
+          "fps": 64.9993,
+          "rafMs": {
+            "count": 657,
+            "min": 15.19999999999709,
+            "p50": 15.400000000001455,
+            "p95": 15.5,
+            "max": 15.60000000000582,
+            "mean": 15.3848
+          },
+          "over20": 0,
+          "distanceXZ": 0,
+          "draw": {
+            "count": 657,
+            "min": 1048,
+            "p50": 1049,
+            "p95": 1050,
+            "max": 1050,
+            "mean": 1049.0807
+          },
+          "triangles": {
+            "count": 657,
+            "min": 7908922,
+            "p50": 7931422,
+            "p95": 7931462,
+            "max": 7931462,
+            "mean": 7924143.6743
+          },
+          "focus": {
+            "start": true,
+            "end": true,
+            "osRun": 0,
+            "osSamples": 20
+          }
+        },
+        {
+          "id": "art-c-alley",
+          "frames": 657,
+          "fps": 65.0006,
+          "rafMs": {
+            "count": 657,
+            "min": 13.80000000000291,
+            "p50": 15.39999999999418,
+            "p95": 15.5,
+            "max": 16.89999999999418,
+            "mean": 15.3845
+          },
+          "over20": 0,
+          "distanceXZ": 0,
+          "draw": {
+            "count": 657,
+            "min": 982,
+            "p50": 982,
+            "p95": 987,
+            "max": 987,
+            "mean": 983.003
+          },
+          "triangles": {
+            "count": 657,
+            "min": 8725783,
+            "p50": 8725783,
+            "p95": 8789455,
+            "max": 8789455,
+            "mean": 8734564.9848
+          },
+          "focus": {
+            "start": true,
+            "end": true,
+            "osRun": 0,
+            "osSamples": 20
+          }
+        },
+        {
+          "id": "art-d-laundry",
+          "frames": 656,
+          "fps": 64.9994,
+          "rafMs": {
+            "count": 656,
+            "min": 15.099999999991269,
+            "p50": 15.39999999999418,
+            "p95": 15.5,
+            "max": 15.60000000000582,
+            "mean": 15.3848
+          },
+          "over20": 0,
+          "distanceXZ": 0,
+          "draw": {
+            "count": 656,
+            "min": 900,
+            "p50": 900,
+            "p95": 902,
+            "max": 902,
+            "mean": 900.9909
+          },
+          "triangles": {
+            "count": 656,
+            "min": 8387642,
+            "p50": 8387642,
+            "p95": 8387770,
+            "max": 8387770,
+            "mean": 8387705.4146
+          },
+          "focus": {
+            "start": true,
+            "end": true,
+            "osRun": 0,
+            "osSamples": 20
+          }
+        },
+        {
+          "id": "walk-third",
+          "frames": 200,
+          "fps": 64.6747,
+          "rafMs": {
+            "count": 200,
+            "min": 15.19999999999709,
+            "p50": 15.39999999999418,
+            "p95": 15.5,
+            "max": 30.69999999999709,
+            "mean": 15.462
+          },
+          "over20": 1,
+          "distanceXZ": 9.3804,
+          "draw": {
+            "count": 200,
+            "min": 1634,
+            "p50": 1657,
+            "p95": 1664,
+            "max": 1664,
+            "mean": 1654.095
+          },
+          "triangles": {
+            "count": 200,
+            "min": 8313825,
+            "p50": 8340917,
+            "p95": 8390209,
+            "max": 8405943,
+            "mean": 8338970.35
+          },
+          "focus": {
+            "start": true,
+            "end": true,
+            "osRun": 0,
+            "osSamples": 6
+          }
+        },
+        {
+          "id": "walk-first",
+          "frames": 189,
+          "fps": 60.8167,
+          "rafMs": {
+            "count": 189,
+            "min": 15.19999999999709,
+            "p50": 15.39999999999418,
+            "p95": 30.69999999999709,
+            "max": 30.89999999999418,
+            "mean": 16.4429
+          },
+          "over20": 13,
+          "distanceXZ": 9.634,
+          "draw": {
+            "count": 189,
+            "min": 1438,
+            "p50": 1513,
+            "p95": 1573,
+            "max": 1583,
+            "mean": 1512.963
+          },
+          "triangles": {
+            "count": 189,
+            "min": 8193485,
+            "p50": 8342905,
+            "p95": 8371983,
+            "max": 8387831,
+            "mean": 8326699.291
+          },
+          "focus": {
+            "start": true,
+            "end": true,
+            "osRun": 0,
+            "osSamples": 6
+          }
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "id": "final-1",
+      "source": "eed4fb46eb7e78418fa319f6f24bdbfe654425a0",
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "canvas": [
+        1440,
+        900
+      ],
+      "dpr": 1,
+      "rawFile": "final-1.frames.json.gz",
+      "sha256": "fccb1aa31bbbdb6e0fe084778f837794955994f33bc481c6cb5ccf9d6bc892c4",
+      "sourceManifestSHA256": "bbc82f864e1e572f6aa9420fda8178e172ee82670c8fd7f8e527f6c16b157dcc",
+      "canonicalHostSHA256": "b225b1006b69f1dea71ec5aa54629dae614e00c1a0ed60c9a617f8293fa0a7e0",
+      "instrumentedHostSHA256": "1543034ca72e785a8a6cfb45932efa45b1d268a2444d9d06be0ddfa25b8fc5cc",
+      "outsideExit": 0,
+      "nativeExit": 1,
+      "renderOk": true,
+      "transportClean": false,
+      "exceptionCount": 0,
+      "canceled": [
+        {
+          "path": "/assets/models/menhir.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "path": "/mature-sakura/mature-sakura.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "path": "/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "path": "/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "routes": [
+        {
+          "id": "art-a-street",
+          "frames": 645,
+          "fps": 63.716289637459205,
+          "rafMs": {
+            "n": 645,
+            "min": 15.19999999999709,
+            "p50": 15.400000000001455,
+            "p95": 15.5,
+            "max": 30.80000000000291,
+            "mean": 15.694573643410864
+          },
+          "over20": 13,
+          "over33": 0,
+          "draw": {
+            "n": 645,
+            "min": 1588,
+            "p50": 1604,
+            "p95": 1605,
+            "max": 1607,
+            "mean": 1597.0232558139535
+          },
+          "triangles": {
+            "n": 645,
+            "min": 7758444,
+            "p50": 7848276,
+            "p95": 7848324,
+            "max": 7848452,
+            "mean": 7807730.9829457365
+          },
+          "walk": null,
+          "camera": {
+            "position": [
+              278.8,
+              10.488,
+              936
+            ],
+            "quaternion": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "fov": 35.63777782904556,
+            "hidden": true,
+            "target": [
+              280,
+              10.088000000000001,
+              875
+            ],
+            "currentView": "art-a-street",
+            "mode": "third"
+          },
+          "focus": {
+            "start": {
+              "wallMs": 1795018371170,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "art-a-street",
+                "walker": "third"
+              }
+            },
+            "end": {
+              "wallMs": 1795018381314,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "art-a-street",
+                "walker": "third"
+              }
+            },
+            "osRun": 0,
+            "osSamples": 20
+          },
+          "host": [
+            {
+              "utcMs": 1795018371287.705,
+              "measuredWindow": false,
+              "cpuPct": 33.93
+            },
+            {
+              "utcMs": 1795018371799.812,
+              "measuredWindow": false,
+              "cpuPct": 35.18
+            },
+            {
+              "utcMs": 1795018372314.3484,
+              "measuredWindow": false,
+              "cpuPct": 25.44
+            },
+            {
+              "utcMs": 1795018372827.222,
+              "measuredWindow": false,
+              "cpuPct": 29.23
+            },
+            {
+              "utcMs": 1795018373340.4412,
+              "measuredWindow": false,
+              "cpuPct": 19.85
+            },
+            {
+              "utcMs": 1795018373853.0952,
+              "measuredWindow": false,
+              "cpuPct": 25.32
+            },
+            {
+              "utcMs": 1795018374366.0186,
+              "measuredWindow": false,
+              "cpuPct": 21.77
+            },
+            {
+              "utcMs": 1795018374878.2676,
+              "measuredWindow": false,
+              "cpuPct": 20.88
+            },
+            {
+              "utcMs": 1795018375390.7979,
+              "measuredWindow": false,
+              "cpuPct": 27.02
+            },
+            {
+              "utcMs": 1795018375903.4211,
+              "measuredWindow": false,
+              "cpuPct": 31.12
+            },
+            {
+              "utcMs": 1795018376416.0798,
+              "measuredWindow": false,
+              "cpuPct": 38.88
+            },
+            {
+              "utcMs": 1795018376928.7673,
+              "measuredWindow": false,
+              "cpuPct": 59.79
+            },
+            {
+              "utcMs": 1795018377443.4026,
+              "measuredWindow": false,
+              "cpuPct": 28.79
+            },
+            {
+              "utcMs": 1795018377957.6035,
+              "measuredWindow": false,
+              "cpuPct": 30.28
+            },
+            {
+              "utcMs": 1795018378470.9004,
+              "measuredWindow": false,
+              "cpuPct": 31.07
+            },
+            {
+              "utcMs": 1795018378983.9656,
+              "measuredWindow": false,
+              "cpuPct": 25.64
+            },
+            {
+              "utcMs": 1795018379499.4028,
+              "measuredWindow": false,
+              "cpuPct": 36.65
+            },
+            {
+              "utcMs": 1795018380013.4824,
+              "measuredWindow": false,
+              "cpuPct": 23.88
+            },
+            {
+              "utcMs": 1795018380531.6711,
+              "measuredWindow": false,
+              "cpuPct": 31.96
+            },
+            {
+              "utcMs": 1795018381048.1514,
+              "measuredWindow": false,
+              "cpuPct": 21.95
+            }
+          ],
+          "device": [
+            {
+              "utcMs": 1795018371323,
+              "clock": 1965,
+              "load": 42,
+              "memoryClock": 7001,
+              "powerW": 81.65,
+              "tempC": 61,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018371833,
+              "clock": 1995,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 81.52,
+              "tempC": 61,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018372346,
+              "clock": 1995,
+              "load": 43,
+              "memoryClock": 7001,
+              "powerW": 84,
+              "tempC": 61,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018372858,
+              "clock": 1965,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 83.93,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018373373,
+              "clock": 1995,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 83.73,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018373880,
+              "clock": 1980,
+              "load": 46,
+              "memoryClock": 7001,
+              "powerW": 84.5,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018374394,
+              "clock": 1995,
+              "load": 42,
+              "memoryClock": 7001,
+              "powerW": 84.71,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018374896,
+              "clock": 1987,
+              "load": 43,
+              "memoryClock": 7001,
+              "powerW": 85.05,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018375406,
+              "clock": 1995,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 84.62,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018375920,
+              "clock": 1995,
+              "load": 44,
+              "memoryClock": 7001,
+              "powerW": 84.82,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018376431,
+              "clock": 1995,
+              "load": 44,
+              "memoryClock": 7001,
+              "powerW": 84.22,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018376943,
+              "clock": 1995,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 82.41,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018377458,
+              "clock": 1950,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 80,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018377969,
+              "clock": 1950,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 74.11,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018378481,
+              "clock": 1995,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 79.84,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018378994,
+              "clock": 1995,
+              "load": 44,
+              "memoryClock": 7001,
+              "powerW": 82.23,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018379508,
+              "clock": 1995,
+              "load": 43,
+              "memoryClock": 7001,
+              "powerW": 83.83,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018380023,
+              "clock": 1980,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 82.84,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018380537,
+              "clock": 1927,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 82.42,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018381049,
+              "clock": 1957,
+              "load": 45,
+              "memoryClock": 7001,
+              "powerW": 83.26,
+              "tempC": 63,
+              "state": "P0"
+            }
+          ],
+          "graphicsMHz": {
+            "n": 20,
+            "min": 1927,
+            "p50": 1995,
+            "p95": 1995,
+            "max": 1995,
+            "mean": 1980.3
+          },
+          "gpuLoadPct": {
+            "n": 20,
+            "min": 38,
+            "p50": 41,
+            "p95": 45,
+            "max": 46,
+            "mean": 41.55
+          }
+        },
+        {
+          "id": "art-b-konbini",
+          "frames": 656,
+          "fps": 64.80292403437716,
+          "rafMs": {
+            "n": 656,
+            "min": 15.19999999999709,
+            "p50": 15.39999999999418,
+            "p95": 15.5,
+            "max": 30.80000000000291,
+            "mean": 15.43140243902439
+          },
+          "over20": 2,
+          "over33": 0,
+          "draw": {
+            "n": 656,
+            "min": 1051,
+            "p50": 1051,
+            "p95": 1056,
+            "max": 1056,
+            "mean": 1052.3932926829268
+          },
+          "triangles": {
+            "n": 656,
+            "min": 7647961,
+            "p50": 7647961,
+            "p95": 7711633,
+            "max": 7711633,
+            "mean": 7663156.518292683
+          },
+          "walk": null,
+          "camera": {
+            "position": [
+              279.1,
+              9.8184,
+              912.8
+            ],
+            "quaternion": [
+              0.013653878147403252,
+              0.5849950384089397,
+              -0.009850566433920587,
+              0.8108620986267578
+            ],
+            "fov": 58,
+            "hidden": true,
+            "target": [
+              272.48,
+              10.0534,
+              910.6
+            ],
+            "currentView": "art-b-konbini",
+            "mode": "third"
+          },
+          "focus": {
+            "start": {
+              "wallMs": 1795018383277,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "art-b-konbini",
+                "walker": "third"
+              }
+            },
+            "end": {
+              "wallMs": 1795018393412,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "art-b-konbini",
+                "walker": "third"
+              }
+            },
+            "osRun": 0,
+            "osSamples": 20
+          },
+          "host": [
+            {
+              "utcMs": 1795018383616.289,
+              "measuredWindow": false,
+              "cpuPct": 17.87
+            },
+            {
+              "utcMs": 1795018384128.0754,
+              "measuredWindow": false,
+              "cpuPct": 22.73
+            },
+            {
+              "utcMs": 1795018384641.3958,
+              "measuredWindow": false,
+              "cpuPct": 17.04
+            },
+            {
+              "utcMs": 1795018385154.358,
+              "measuredWindow": false,
+              "cpuPct": 46.07
+            },
+            {
+              "utcMs": 1795018385669.4424,
+              "measuredWindow": false,
+              "cpuPct": 59.62
+            },
+            {
+              "utcMs": 1795018386182.5188,
+              "measuredWindow": false,
+              "cpuPct": 26.68
+            },
+            {
+              "utcMs": 1795018386696.7021,
+              "measuredWindow": false,
+              "cpuPct": 12.09
+            },
+            {
+              "utcMs": 1795018387211.0288,
+              "measuredWindow": false,
+              "cpuPct": 21.97
+            },
+            {
+              "utcMs": 1795018387724.6174,
+              "measuredWindow": false,
+              "cpuPct": 22.51
+            },
+            {
+              "utcMs": 1795018388239.7212,
+              "measuredWindow": false,
+              "cpuPct": 36.1
+            },
+            {
+              "utcMs": 1795018388752.2085,
+              "measuredWindow": false,
+              "cpuPct": 21.44
+            },
+            {
+              "utcMs": 1795018389265.4106,
+              "measuredWindow": false,
+              "cpuPct": 26.78
+            },
+            {
+              "utcMs": 1795018389778.7473,
+              "measuredWindow": false,
+              "cpuPct": 20.7
+            },
+            {
+              "utcMs": 1795018390291.714,
+              "measuredWindow": false,
+              "cpuPct": 14.18
+            },
+            {
+              "utcMs": 1795018390803.4106,
+              "measuredWindow": false,
+              "cpuPct": 17.56
+            },
+            {
+              "utcMs": 1795018391315.695,
+              "measuredWindow": false,
+              "cpuPct": 9.03
+            },
+            {
+              "utcMs": 1795018391827.009,
+              "measuredWindow": false,
+              "cpuPct": 19.91
+            },
+            {
+              "utcMs": 1795018392338.8354,
+              "measuredWindow": false,
+              "cpuPct": 19.3
+            },
+            {
+              "utcMs": 1795018392850.2913,
+              "measuredWindow": false,
+              "cpuPct": 25.73
+            },
+            {
+              "utcMs": 1795018393362.5728,
+              "measuredWindow": false,
+              "cpuPct": 69.81
+            }
+          ],
+          "device": [
+            {
+              "utcMs": 1795018383602,
+              "clock": 1995,
+              "load": 42,
+              "memoryClock": 7001,
+              "powerW": 82.89,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018384116,
+              "clock": 1995,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 82.33,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018384629,
+              "clock": 1995,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 82.48,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018385145,
+              "clock": 1995,
+              "load": 37,
+              "memoryClock": 7001,
+              "powerW": 82.54,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018385659,
+              "clock": 1920,
+              "load": 37,
+              "memoryClock": 7001,
+              "powerW": 79.98,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018386173,
+              "clock": 1965,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 72.3,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018386682,
+              "clock": 1980,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 111.21,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018387193,
+              "clock": 1995,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 83.26,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018387703,
+              "clock": 1950,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 82.75,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018388215,
+              "clock": 1950,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 79.87,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018388729,
+              "clock": 1950,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 76.91,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018389242,
+              "clock": 1950,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 76.03,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018389757,
+              "clock": 1972,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 75.17,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018390272,
+              "clock": 1995,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 77.64,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018390772,
+              "clock": 1980,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 80.91,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018391283,
+              "clock": 1980,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 80.93,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018391797,
+              "clock": 1980,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 80.32,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018392311,
+              "clock": 1905,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 79.43,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018392825,
+              "clock": 1890,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 75.7,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018393337,
+              "clock": 1972,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 72.2,
+              "tempC": 64,
+              "state": "P0"
+            }
+          ],
+          "graphicsMHz": {
+            "n": 20,
+            "min": 1890,
+            "p50": 1972,
+            "p95": 1995,
+            "max": 1995,
+            "mean": 1965.7
+          },
+          "gpuLoadPct": {
+            "n": 20,
+            "min": 37,
+            "p50": 39,
+            "p95": 41,
+            "max": 42,
+            "mean": 39.35
+          }
+        },
+        {
+          "id": "art-c-alley",
+          "frames": 657,
+          "fps": 64.99995053276207,
+          "rafMs": {
+            "n": 657,
+            "min": 15.099999999991269,
+            "p50": 15.39999999999418,
+            "p95": 15.5,
+            "max": 15.60000000000582,
+            "mean": 15.384627092846289
+          },
+          "over20": 0,
+          "over33": 0,
+          "draw": {
+            "n": 657,
+            "min": 977,
+            "p50": 977,
+            "p95": 979,
+            "max": 979,
+            "mean": 977.9893455098935
+          },
+          "triangles": {
+            "n": 657,
+            "min": 8579136,
+            "p50": 8579136,
+            "p95": 8579264,
+            "max": 8579264,
+            "mean": 8579199.318112632
+          },
+          "walk": null,
+          "camera": {
+            "position": [
+              287.65,
+              14.384808464050293,
+              767.3199999999999
+            ],
+            "quaternion": [
+              0.00512201791291099,
+              0.8012252009590126,
+              -0.006859231737600546,
+              0.5983016740914732
+            ],
+            "fov": 45,
+            "hidden": true,
+            "target": [
+              278.4,
+              14.55,
+              770.06
+            ],
+            "currentView": "art-c-alley",
+            "mode": "third"
+          },
+          "focus": {
+            "start": {
+              "wallMs": 1795018395469,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "art-c-alley",
+                "walker": "third"
+              }
+            },
+            "end": {
+              "wallMs": 1795018405586,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "art-c-alley",
+                "walker": "third"
+              }
+            },
+            "osRun": 0,
+            "osSamples": 19
+          },
+          "host": [
+            {
+              "utcMs": 1795018395950.6892,
+              "measuredWindow": false,
+              "cpuPct": 24.85
+            },
+            {
+              "utcMs": 1795018396465.313,
+              "measuredWindow": false,
+              "cpuPct": 18.34
+            },
+            {
+              "utcMs": 1795018396979.3555,
+              "measuredWindow": false,
+              "cpuPct": 42.69
+            },
+            {
+              "utcMs": 1795018397494.8362,
+              "measuredWindow": false,
+              "cpuPct": 18.43
+            },
+            {
+              "utcMs": 1795018398009.2905,
+              "measuredWindow": false,
+              "cpuPct": 50.89
+            },
+            {
+              "utcMs": 1795018398526.1416,
+              "measuredWindow": false,
+              "cpuPct": 71.09
+            },
+            {
+              "utcMs": 1795018399041.6157,
+              "measuredWindow": false,
+              "cpuPct": 40.47
+            },
+            {
+              "utcMs": 1795018399554.871,
+              "measuredWindow": false,
+              "cpuPct": 24.78
+            },
+            {
+              "utcMs": 1795018400067.9153,
+              "measuredWindow": false,
+              "cpuPct": 26.07
+            },
+            {
+              "utcMs": 1795018400580.6133,
+              "measuredWindow": false,
+              "cpuPct": 27.74
+            },
+            {
+              "utcMs": 1795018401096.9583,
+              "measuredWindow": false,
+              "cpuPct": 32.53
+            },
+            {
+              "utcMs": 1795018401609.2083,
+              "measuredWindow": false,
+              "cpuPct": 18.42
+            },
+            {
+              "utcMs": 1795018402121.1733,
+              "measuredWindow": false,
+              "cpuPct": 26.11
+            },
+            {
+              "utcMs": 1795018402634.088,
+              "measuredWindow": false,
+              "cpuPct": 22.28
+            },
+            {
+              "utcMs": 1795018403147.4448,
+              "measuredWindow": false,
+              "cpuPct": 15.25
+            },
+            {
+              "utcMs": 1795018403659.5173,
+              "measuredWindow": false,
+              "cpuPct": 10.63
+            },
+            {
+              "utcMs": 1795018404171.6094,
+              "measuredWindow": false,
+              "cpuPct": 15.42
+            },
+            {
+              "utcMs": 1795018404682.9714,
+              "measuredWindow": false,
+              "cpuPct": 13.61
+            },
+            {
+              "utcMs": 1795018405197.105,
+              "measuredWindow": false,
+              "cpuPct": 25.54
+            }
+          ],
+          "device": [
+            {
+              "utcMs": 1795018395904,
+              "clock": 1965,
+              "load": 40,
+              "memoryClock": 6001,
+              "powerW": 72.21,
+              "tempC": 64,
+              "state": "P3"
+            },
+            {
+              "utcMs": 1795018396419,
+              "clock": 1980,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 73.51,
+              "tempC": 65,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018396932,
+              "clock": 1927,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 78.91,
+              "tempC": 65,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018397442,
+              "clock": 1980,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 79.71,
+              "tempC": 65,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018397950,
+              "clock": 1980,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 79.99,
+              "tempC": 65,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018398463,
+              "clock": 1980,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 81.63,
+              "tempC": 65,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018398977,
+              "clock": 1950,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 80.31,
+              "tempC": 65,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018399486,
+              "clock": 1950,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 77.94,
+              "tempC": 65,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018399996,
+              "clock": 1920,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 75.59,
+              "tempC": 65,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018400506,
+              "clock": 1920,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 73.57,
+              "tempC": 65,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018401018,
+              "clock": 1920,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 72.72,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018401526,
+              "clock": 1875,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 72.37,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018402037,
+              "clock": 1942,
+              "load": 42,
+              "memoryClock": 7001,
+              "powerW": 70.34,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018402551,
+              "clock": 1980,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 73.14,
+              "tempC": 65,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018403066,
+              "clock": 1927,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 78.14,
+              "tempC": 65,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018403576,
+              "clock": 1927,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 77,
+              "tempC": 65,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018404089,
+              "clock": 1927,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 73.66,
+              "tempC": 65,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018404602,
+              "clock": 1927,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 73.58,
+              "tempC": 65,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018405115,
+              "clock": 1860,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 71.55,
+              "tempC": 64,
+              "state": "P0"
+            }
+          ],
+          "graphicsMHz": {
+            "n": 19,
+            "min": 1860,
+            "p50": 1927,
+            "p95": 1980,
+            "max": 1980,
+            "mean": 1938.7894736842106
+          },
+          "gpuLoadPct": {
+            "n": 19,
+            "min": 38,
+            "p50": 40,
+            "p95": 42,
+            "max": 42,
+            "mean": 39.8421052631579
+          }
+        },
+        {
+          "id": "art-d-laundry",
+          "frames": 658,
+          "fps": 64.99985182404596,
+          "rafMs": {
+            "n": 658,
+            "min": 15.19999999999709,
+            "p50": 15.39999999999418,
+            "p95": 15.5,
+            "max": 15.60000000000582,
+            "mean": 15.38465045592706
+          },
+          "over20": 0,
+          "over33": 0,
+          "draw": {
+            "n": 658,
+            "min": 909,
+            "p50": 914,
+            "p95": 914,
+            "max": 914,
+            "mean": 913.0227963525836
+          },
+          "triangles": {
+            "n": 658,
+            "min": 8307327,
+            "p50": 8370999,
+            "p95": 8370999,
+            "max": 8370999,
+            "mean": 8358887.486322189
+          },
+          "walk": null,
+          "camera": {
+            "position": [
+              283.5,
+              12.520055181715234,
+              783.8
+            ],
+            "quaternion": [
+              0.1297258927986663,
+              0.0767626424061459,
+              -0.010073721024303532,
+              0.9885227410703001
+            ],
+            "fov": 48,
+            "hidden": true,
+            "target": [
+              282.5,
+              14.25,
+              777.4
+            ],
+            "currentView": "art-d-laundry",
+            "mode": "third"
+          },
+          "focus": {
+            "start": {
+              "wallMs": 1795018407464,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "art-d-laundry",
+                "walker": "third"
+              }
+            },
+            "end": {
+              "wallMs": 1795018417586,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "art-d-laundry",
+                "walker": "third"
+              }
+            },
+            "osRun": 0,
+            "osSamples": 20
+          },
+          "host": [
+            {
+              "utcMs": 1795018407754.3396,
+              "measuredWindow": false,
+              "cpuPct": 17.19
+            },
+            {
+              "utcMs": 1795018408265.306,
+              "measuredWindow": false,
+              "cpuPct": 8.32
+            },
+            {
+              "utcMs": 1795018408776.974,
+              "measuredWindow": false,
+              "cpuPct": 13.62
+            },
+            {
+              "utcMs": 1795018409288.1477,
+              "measuredWindow": false,
+              "cpuPct": 17.94
+            },
+            {
+              "utcMs": 1795018409799.695,
+              "measuredWindow": false,
+              "cpuPct": 19.95
+            },
+            {
+              "utcMs": 1795018410311.1387,
+              "measuredWindow": false,
+              "cpuPct": 9.07
+            },
+            {
+              "utcMs": 1795018410824.1453,
+              "measuredWindow": false,
+              "cpuPct": 18.76
+            },
+            {
+              "utcMs": 1795018411334.8757,
+              "measuredWindow": false,
+              "cpuPct": 12.94
+            },
+            {
+              "utcMs": 1795018411846.5698,
+              "measuredWindow": false,
+              "cpuPct": 22.71
+            },
+            {
+              "utcMs": 1795018412357.6072,
+              "measuredWindow": false,
+              "cpuPct": 6.82
+            },
+            {
+              "utcMs": 1795018412870.266,
+              "measuredWindow": false,
+              "cpuPct": 21.51
+            },
+            {
+              "utcMs": 1795018413380.7903,
+              "measuredWindow": false,
+              "cpuPct": 6.84
+            },
+            {
+              "utcMs": 1795018413893.9387,
+              "measuredWindow": false,
+              "cpuPct": 28.02
+            },
+            {
+              "utcMs": 1795018414405.6895,
+              "measuredWindow": false,
+              "cpuPct": 6.82
+            },
+            {
+              "utcMs": 1795018414917.0203,
+              "measuredWindow": false,
+              "cpuPct": 19.6
+            },
+            {
+              "utcMs": 1795018415428.1511,
+              "measuredWindow": false,
+              "cpuPct": 7.08
+            },
+            {
+              "utcMs": 1795018415939.172,
+              "measuredWindow": false,
+              "cpuPct": 23.56
+            },
+            {
+              "utcMs": 1795018416450.1997,
+              "measuredWindow": false,
+              "cpuPct": 5.53
+            },
+            {
+              "utcMs": 1795018416962.3909,
+              "measuredWindow": false,
+              "cpuPct": 25.21
+            },
+            {
+              "utcMs": 1795018417472.9912,
+              "measuredWindow": false,
+              "cpuPct": 1.02
+            }
+          ],
+          "device": [
+            {
+              "utcMs": 1795018407683,
+              "clock": 1950,
+              "load": 32,
+              "memoryClock": 7001,
+              "powerW": 70.61,
+              "tempC": 65,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018408195,
+              "clock": 1732,
+              "load": 36,
+              "memoryClock": 7001,
+              "powerW": 70.64,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018408710,
+              "clock": 1672,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 55.53,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018409225,
+              "clock": 1650,
+              "load": 36,
+              "memoryClock": 7001,
+              "powerW": 52.41,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018409735,
+              "clock": 1672,
+              "load": 44,
+              "memoryClock": 7001,
+              "powerW": 51.29,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018410245,
+              "clock": 1680,
+              "load": 37,
+              "memoryClock": 7001,
+              "powerW": 51.64,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018410753,
+              "clock": 1680,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 52.22,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018411261,
+              "clock": 1680,
+              "load": 36,
+              "memoryClock": 6001,
+              "powerW": 51.63,
+              "tempC": 63,
+              "state": "P3"
+            },
+            {
+              "utcMs": 1795018411775,
+              "clock": 1635,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 50.35,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018412290,
+              "clock": 1620,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 49.92,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018412804,
+              "clock": 1605,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 49.35,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018413318,
+              "clock": 1597,
+              "load": 37,
+              "memoryClock": 7001,
+              "powerW": 48.89,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018413826,
+              "clock": 1642,
+              "load": 42,
+              "memoryClock": 7001,
+              "powerW": 48.5,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018414338,
+              "clock": 1687,
+              "load": 37,
+              "memoryClock": 7001,
+              "powerW": 49.85,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018414848,
+              "clock": 1687,
+              "load": 36,
+              "memoryClock": 7001,
+              "powerW": 51.47,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018415358,
+              "clock": 1687,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 52.58,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018415871,
+              "clock": 1687,
+              "load": 36,
+              "memoryClock": 7001,
+              "powerW": 52.21,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018416383,
+              "clock": 1605,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 51.83,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018416895,
+              "clock": 1590,
+              "load": 37,
+              "memoryClock": 7001,
+              "powerW": 49.7,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018417409,
+              "clock": 1582,
+              "load": 37,
+              "memoryClock": 7001,
+              "powerW": 48.71,
+              "tempC": 62,
+              "state": "P0"
+            }
+          ],
+          "graphicsMHz": {
+            "n": 20,
+            "min": 1582,
+            "p50": 1672,
+            "p95": 1732,
+            "max": 1950,
+            "mean": 1667
+          },
+          "gpuLoadPct": {
+            "n": 20,
+            "min": 32,
+            "p50": 37,
+            "p95": 42,
+            "max": 44,
+            "mean": 37.8
+          }
+        },
+        {
+          "id": "walk-third",
+          "frames": 202,
+          "fps": 64.68139609349984,
+          "rafMs": {
+            "n": 202,
+            "min": 15.19999999999709,
+            "p50": 15.39999999999418,
+            "p95": 15.5,
+            "max": 30.80000000000291,
+            "mean": 15.46039603960396
+          },
+          "over20": 1,
+          "over33": 0,
+          "draw": {
+            "n": 202,
+            "min": 916,
+            "p50": 1696,
+            "p95": 1699,
+            "max": 1700,
+            "mean": 1688.6683168316831
+          },
+          "triangles": {
+            "n": 202,
+            "min": 8283825,
+            "p50": 8333129,
+            "p95": 8382165,
+            "max": 8397899,
+            "mean": 8329370.871287129
+          },
+          "walk": {
+            "before": [
+              281.6,
+              8.812,
+              934
+            ],
+            "after": [
+              280.9362841099152,
+              8.546235775865378,
+              924.5084205666207
+            ],
+            "distance": 9.518467815028355,
+            "distanceXZ": 9.514756902985004
+          },
+          "focus": {
+            "start": {
+              "wallMs": 1795018422478,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "walking",
+                "walker": "third"
+              }
+            },
+            "end": {
+              "wallMs": 1795018425606,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "walking",
+                "walker": "third"
+              }
+            },
+            "osRun": 0,
+            "osSamples": 6
+          },
+          "host": [
+            {
+              "utcMs": 1795018422592.3552,
+              "measuredWindow": false,
+              "cpuPct": 32.07
+            },
+            {
+              "utcMs": 1795018423106.7952,
+              "measuredWindow": false,
+              "cpuPct": 17.43
+            },
+            {
+              "utcMs": 1795018423619.6682,
+              "measuredWindow": false,
+              "cpuPct": 24.59
+            },
+            {
+              "utcMs": 1795018424132.5266,
+              "measuredWindow": false,
+              "cpuPct": 18.17
+            },
+            {
+              "utcMs": 1795018424644.4236,
+              "measuredWindow": false,
+              "cpuPct": 18.81
+            },
+            {
+              "utcMs": 1795018425160.5864,
+              "measuredWindow": false,
+              "cpuPct": 23.65
+            }
+          ],
+          "device": [
+            {
+              "utcMs": 1795018422508,
+              "clock": 1957,
+              "load": 42,
+              "memoryClock": 7001,
+              "powerW": 85.49,
+              "tempC": 66,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018423022,
+              "clock": 1972,
+              "load": 43,
+              "memoryClock": 7001,
+              "powerW": 87.72,
+              "tempC": 67,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018423535,
+              "clock": 1972,
+              "load": 43,
+              "memoryClock": 7001,
+              "powerW": 87.73,
+              "tempC": 67,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018424035,
+              "clock": 1965,
+              "load": 44,
+              "memoryClock": 7001,
+              "powerW": 87.57,
+              "tempC": 67,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018424546,
+              "clock": 1980,
+              "load": 43,
+              "memoryClock": 7001,
+              "powerW": 87.51,
+              "tempC": 67,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018425061,
+              "clock": 1980,
+              "load": 43,
+              "memoryClock": 7001,
+              "powerW": 87.68,
+              "tempC": 66,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018425575,
+              "clock": 1980,
+              "load": 43,
+              "memoryClock": 7001,
+              "powerW": 86.75,
+              "tempC": 67,
+              "state": "P0"
+            }
+          ],
+          "graphicsMHz": {
+            "n": 7,
+            "min": 1957,
+            "p50": 1972,
+            "p95": 1980,
+            "max": 1980,
+            "mean": 1972.2857142857142
+          },
+          "gpuLoadPct": {
+            "n": 7,
+            "min": 42,
+            "p50": 43,
+            "p95": 44,
+            "max": 44,
+            "mean": 43
+          }
+        },
+        {
+          "id": "walk-first",
+          "frames": 202,
+          "fps": 64.99983910930919,
+          "rafMs": {
+            "n": 202,
+            "min": 15.099999999991269,
+            "p50": 15.39999999999418,
+            "p95": 15.5,
+            "max": 15.60000000000582,
+            "mean": 15.38465346534652
+          },
+          "over20": 0,
+          "over33": 0,
+          "draw": {
+            "n": 202,
+            "min": 1468,
+            "p50": 1547,
+            "p95": 1607,
+            "max": 1612,
+            "mean": 1544.1584158415842
+          },
+          "triangles": {
+            "n": 202,
+            "min": 8084539,
+            "p50": 8273290,
+            "p95": 8354973,
+            "max": 8362605,
+            "mean": 8258856.524752475
+          },
+          "walk": {
+            "before": [
+              280.9179864984214,
+              8.538909070877871,
+              924.2467525313525
+            ],
+            "after": [
+              280.25761952256676,
+              8.27448581447564,
+              914.8030648027013
+            ],
+            "distance": 9.47044043947285,
+            "distanceXZ": 9.466748251594966
+          },
+          "focus": {
+            "start": {
+              "wallMs": 1795018426420,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "walking",
+                "walker": "first"
+              }
+            },
+            "end": {
+              "wallMs": 1795018429542,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "walking",
+                "walker": "first"
+              }
+            },
+            "osRun": 0,
+            "osSamples": 6
+          },
+          "host": [
+            {
+              "utcMs": 1795018426701.6123,
+              "measuredWindow": false,
+              "cpuPct": 23.65
+            },
+            {
+              "utcMs": 1795018427213.446,
+              "measuredWindow": false,
+              "cpuPct": 23.99
+            },
+            {
+              "utcMs": 1795018427725.8171,
+              "measuredWindow": false,
+              "cpuPct": 17.43
+            },
+            {
+              "utcMs": 1795018428237.9365,
+              "measuredWindow": false,
+              "cpuPct": 22.3
+            },
+            {
+              "utcMs": 1795018428749.236,
+              "measuredWindow": false,
+              "cpuPct": 20.28
+            },
+            {
+              "utcMs": 1795018429261.2898,
+              "measuredWindow": false,
+              "cpuPct": 20.57
+            }
+          ],
+          "device": [
+            {
+              "utcMs": 1795018426601,
+              "clock": 1980,
+              "load": 43,
+              "memoryClock": 7001,
+              "powerW": 87.23,
+              "tempC": 67,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018427113,
+              "clock": 1980,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 86.76,
+              "tempC": 67,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018427623,
+              "clock": 1942,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 84.93,
+              "tempC": 67,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018428137,
+              "clock": 1957,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 81.52,
+              "tempC": 67,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018428638,
+              "clock": 1927,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 79.23,
+              "tempC": 67,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018429153,
+              "clock": 1942,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 79.22,
+              "tempC": 67,
+              "state": "P0"
+            }
+          ],
+          "graphicsMHz": {
+            "n": 6,
+            "min": 1927,
+            "p50": 1942,
+            "p95": 1980,
+            "max": 1980,
+            "mean": 1954.6666666666667
+          },
+          "gpuLoadPct": {
+            "n": 6,
+            "min": 40,
+            "p50": 41,
+            "p95": 43,
+            "max": 43,
+            "mean": 41.166666666666664
+          }
+        }
+      ]
+    },
+    {
+      "id": "final-2",
+      "source": "eed4fb46eb7e78418fa319f6f24bdbfe654425a0",
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "canvas": [
+        1440,
+        900
+      ],
+      "dpr": 1,
+      "rawFile": "final-2.frames.json.gz",
+      "sha256": "ccbdcf1cc32fdce5b99c7eb7e70bdcc63bd4ed32504ae05bcc530392e1d01355",
+      "sourceManifestSHA256": "bbc82f864e1e572f6aa9420fda8178e172ee82670c8fd7f8e527f6c16b157dcc",
+      "canonicalHostSHA256": "b225b1006b69f1dea71ec5aa54629dae614e00c1a0ed60c9a617f8293fa0a7e0",
+      "instrumentedHostSHA256": "1a5b3378ded4a349816a0ff4c725891bc288a565e5091936290a188f8cc2606d",
+      "outsideExit": 0,
+      "nativeExit": 1,
+      "renderOk": true,
+      "transportClean": false,
+      "exceptionCount": 0,
+      "canceled": [
+        {
+          "path": "/assets/models/menhir.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "path": "/mature-sakura/mature-sakura.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "path": "/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "path": "/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "routes": [
+        {
+          "id": "art-a-street",
+          "frames": 650,
+          "fps": 64.11204813335306,
+          "rafMs": {
+            "n": 650,
+            "min": 15.099999999998545,
+            "p50": 15.400000000001455,
+            "p95": 15.5,
+            "max": 30.89999999999418,
+            "mean": 15.597692307692308
+          },
+          "over20": 9,
+          "over33": 0,
+          "draw": {
+            "n": 650,
+            "min": 1588,
+            "p50": 1600,
+            "p95": 1605,
+            "max": 1607,
+            "mean": 1596.7815384615385
+          },
+          "triangles": {
+            "n": 650,
+            "min": 7758444,
+            "p50": 7847136,
+            "p95": 7848324,
+            "max": 7848452,
+            "mean": 7806309.44
+          },
+          "walk": null,
+          "camera": {
+            "position": [
+              278.8,
+              10.488,
+              936
+            ],
+            "quaternion": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "fov": 35.63777782904556,
+            "hidden": true,
+            "target": [
+              280,
+              10.088000000000001,
+              875
+            ],
+            "currentView": "art-a-street",
+            "mode": "third"
+          },
+          "focus": {
+            "start": {
+              "wallMs": 1795018924711,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "art-a-street",
+                "walker": "third"
+              }
+            },
+            "end": {
+              "wallMs": 1795018934852,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "art-a-street",
+                "walker": "third"
+              }
+            },
+            "osRun": 0,
+            "osSamples": 20
+          },
+          "host": [
+            {
+              "utcMs": 1795018924777.9177,
+              "measuredWindow": false,
+              "cpuPct": 21.65
+            },
+            {
+              "utcMs": 1795018925289.3743,
+              "measuredWindow": false,
+              "cpuPct": 18.65
+            },
+            {
+              "utcMs": 1795018925801.044,
+              "measuredWindow": false,
+              "cpuPct": 16.23
+            },
+            {
+              "utcMs": 1795018926312.4543,
+              "measuredWindow": false,
+              "cpuPct": 16.93
+            },
+            {
+              "utcMs": 1795018926823.9065,
+              "measuredWindow": false,
+              "cpuPct": 20.47
+            },
+            {
+              "utcMs": 1795018927334.811,
+              "measuredWindow": false,
+              "cpuPct": 24.31
+            },
+            {
+              "utcMs": 1795018927847.0852,
+              "measuredWindow": false,
+              "cpuPct": 24.03
+            },
+            {
+              "utcMs": 1795018928359.4043,
+              "measuredWindow": false,
+              "cpuPct": 32.15
+            },
+            {
+              "utcMs": 1795018928875.5032,
+              "measuredWindow": false,
+              "cpuPct": 51.54
+            },
+            {
+              "utcMs": 1795018929394.519,
+              "measuredWindow": false,
+              "cpuPct": 32.25
+            },
+            {
+              "utcMs": 1795018929909.4507,
+              "measuredWindow": false,
+              "cpuPct": 24.8
+            },
+            {
+              "utcMs": 1795018930423.6792,
+              "measuredWindow": false,
+              "cpuPct": 25.83
+            },
+            {
+              "utcMs": 1795018930938.7952,
+              "measuredWindow": false,
+              "cpuPct": 22.97
+            },
+            {
+              "utcMs": 1795018931452.4456,
+              "measuredWindow": false,
+              "cpuPct": 28.53
+            },
+            {
+              "utcMs": 1795018931968.378,
+              "measuredWindow": false,
+              "cpuPct": 25.72
+            },
+            {
+              "utcMs": 1795018932482.069,
+              "measuredWindow": false,
+              "cpuPct": 22.71
+            },
+            {
+              "utcMs": 1795018932996.0334,
+              "measuredWindow": false,
+              "cpuPct": 25.19
+            },
+            {
+              "utcMs": 1795018933510.9978,
+              "measuredWindow": false,
+              "cpuPct": 25.77
+            },
+            {
+              "utcMs": 1795018934023.8403,
+              "measuredWindow": false,
+              "cpuPct": 19.32
+            },
+            {
+              "utcMs": 1795018934536.47,
+              "measuredWindow": false,
+              "cpuPct": 22.26
+            }
+          ],
+          "device": [
+            {
+              "utcMs": 1795018924711,
+              "clock": 1972,
+              "load": 45,
+              "memoryClock": 7001,
+              "powerW": 84.79,
+              "tempC": 61,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018925225,
+              "clock": 1987,
+              "load": 44,
+              "memoryClock": 7001,
+              "powerW": 84.59,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018925735,
+              "clock": 1987,
+              "load": 42,
+              "memoryClock": 7001,
+              "powerW": 84.88,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018926236,
+              "clock": 1987,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 84.36,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018926748,
+              "clock": 1980,
+              "load": 42,
+              "memoryClock": 7001,
+              "powerW": 84.59,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018927262,
+              "clock": 1987,
+              "load": 45,
+              "memoryClock": 6001,
+              "powerW": 83.84,
+              "tempC": 62,
+              "state": "P3"
+            },
+            {
+              "utcMs": 1795018927775,
+              "clock": 1987,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 83.62,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018928285,
+              "clock": 1987,
+              "load": 44,
+              "memoryClock": 7001,
+              "powerW": 89.79,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018928795,
+              "clock": 1987,
+              "load": 44,
+              "memoryClock": 7001,
+              "powerW": 86,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018929308,
+              "clock": 1987,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 83.01,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018929821,
+              "clock": 1972,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 82.51,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018930334,
+              "clock": 1965,
+              "load": 42,
+              "memoryClock": 7001,
+              "powerW": 81.49,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018930849,
+              "clock": 1987,
+              "load": 42,
+              "memoryClock": 7001,
+              "powerW": 81.36,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018931360,
+              "clock": 1980,
+              "load": 42,
+              "memoryClock": 7001,
+              "powerW": 81.82,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018931875,
+              "clock": 1987,
+              "load": 44,
+              "memoryClock": 7001,
+              "powerW": 83.29,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018932390,
+              "clock": 1972,
+              "load": 45,
+              "memoryClock": 7001,
+              "powerW": 84.3,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018932905,
+              "clock": 1987,
+              "load": 44,
+              "memoryClock": 7001,
+              "powerW": 84.96,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018933407,
+              "clock": 1980,
+              "load": 42,
+              "memoryClock": 7001,
+              "powerW": 84.87,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018933919,
+              "clock": 1987,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 84.86,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018934431,
+              "clock": 1980,
+              "load": 43,
+              "memoryClock": 7001,
+              "powerW": 84.44,
+              "tempC": 63,
+              "state": "P0"
+            }
+          ],
+          "graphicsMHz": {
+            "n": 20,
+            "min": 1965,
+            "p50": 1987,
+            "p95": 1987,
+            "max": 1987,
+            "mean": 1982.25
+          },
+          "gpuLoadPct": {
+            "n": 20,
+            "min": 39,
+            "p50": 42,
+            "p95": 45,
+            "max": 45,
+            "mean": 42.45
+          }
+        },
+        {
+          "id": "art-b-konbini",
+          "frames": 657,
+          "fps": 64.99930746552165,
+          "rafMs": {
+            "n": 657,
+            "min": 15.10000000000582,
+            "p50": 15.39999999999418,
+            "p95": 15.5,
+            "max": 15.60000000000582,
+            "mean": 15.384779299847798
+          },
+          "over20": 0,
+          "over33": 0,
+          "draw": {
+            "n": 657,
+            "min": 1051,
+            "p50": 1051,
+            "p95": 1056,
+            "max": 1056,
+            "mean": 1052.3866057838661
+          },
+          "triangles": {
+            "n": 657,
+            "min": 7647961,
+            "p50": 7647961,
+            "p95": 7711633,
+            "max": 7711633,
+            "mean": 7662818.436834094
+          },
+          "walk": null,
+          "camera": {
+            "position": [
+              279.1,
+              9.8184,
+              912.8
+            ],
+            "quaternion": [
+              0.013653878147403252,
+              0.5849950384089397,
+              -0.009850566433920587,
+              0.8108620986267578
+            ],
+            "fov": 58,
+            "hidden": true,
+            "target": [
+              272.48,
+              10.0534,
+              910.6
+            ],
+            "currentView": "art-b-konbini",
+            "mode": "third"
+          },
+          "focus": {
+            "start": {
+              "wallMs": 1795018936808,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "art-b-konbini",
+                "walker": "third"
+              }
+            },
+            "end": {
+              "wallMs": 1795018946924,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "art-b-konbini",
+                "walker": "third"
+              }
+            },
+            "osRun": 0,
+            "osSamples": 20
+          },
+          "host": [
+            {
+              "utcMs": 1795018937101.355,
+              "measuredWindow": false,
+              "cpuPct": 20.04
+            },
+            {
+              "utcMs": 1795018937613.8542,
+              "measuredWindow": false,
+              "cpuPct": 14.54
+            },
+            {
+              "utcMs": 1795018938125.8308,
+              "measuredWindow": false,
+              "cpuPct": 24.25
+            },
+            {
+              "utcMs": 1795018938640.1511,
+              "measuredWindow": false,
+              "cpuPct": 15.67
+            },
+            {
+              "utcMs": 1795018939151.7122,
+              "measuredWindow": false,
+              "cpuPct": 18.38
+            },
+            {
+              "utcMs": 1795018939663.8186,
+              "measuredWindow": false,
+              "cpuPct": 9.35
+            },
+            {
+              "utcMs": 1795018940174.7761,
+              "measuredWindow": false,
+              "cpuPct": 22.36
+            },
+            {
+              "utcMs": 1795018940687.0122,
+              "measuredWindow": false,
+              "cpuPct": 16.3
+            },
+            {
+              "utcMs": 1795018941198.4487,
+              "measuredWindow": false,
+              "cpuPct": 18.43
+            },
+            {
+              "utcMs": 1795018941710.9897,
+              "measuredWindow": false,
+              "cpuPct": 16.15
+            },
+            {
+              "utcMs": 1795018942222.5098,
+              "measuredWindow": false,
+              "cpuPct": 12.54
+            },
+            {
+              "utcMs": 1795018942734.2314,
+              "measuredWindow": false,
+              "cpuPct": 15.95
+            },
+            {
+              "utcMs": 1795018943244.8533,
+              "measuredWindow": false,
+              "cpuPct": 12.86
+            },
+            {
+              "utcMs": 1795018943756.2717,
+              "measuredWindow": false,
+              "cpuPct": 19.95
+            },
+            {
+              "utcMs": 1795018944267.6506,
+              "measuredWindow": false,
+              "cpuPct": 26.43
+            },
+            {
+              "utcMs": 1795018944779.7893,
+              "measuredWindow": false,
+              "cpuPct": 15.67
+            },
+            {
+              "utcMs": 1795018945291.2905,
+              "measuredWindow": false,
+              "cpuPct": 11.34
+            },
+            {
+              "utcMs": 1795018945803.1843,
+              "measuredWindow": false,
+              "cpuPct": 12.76
+            },
+            {
+              "utcMs": 1795018946314.0752,
+              "measuredWindow": false,
+              "cpuPct": 9.83
+            },
+            {
+              "utcMs": 1795018946825.6255,
+              "measuredWindow": false,
+              "cpuPct": 15.6
+            }
+          ],
+          "device": [
+            {
+              "utcMs": 1795018936961,
+              "clock": 1987,
+              "load": 43,
+              "memoryClock": 7001,
+              "powerW": 80.42,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018937473,
+              "clock": 1942,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 80.11,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018937985,
+              "clock": 1942,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 78.21,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018938500,
+              "clock": 1942,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 75,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018939011,
+              "clock": 1942,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 74.79,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018939524,
+              "clock": 1882,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 73.59,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018940033,
+              "clock": 1867,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 70.38,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018940543,
+              "clock": 1852,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 68.36,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018941052,
+              "clock": 1972,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 70.53,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018941560,
+              "clock": 1980,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 76.12,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018942072,
+              "clock": 1980,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 79.6,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018942584,
+              "clock": 1980,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 79.98,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018943098,
+              "clock": 1912,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 79.62,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018943610,
+              "clock": 1897,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 76.23,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018944123,
+              "clock": 1882,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 71.37,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018944635,
+              "clock": 1860,
+              "load": 43,
+              "memoryClock": 7001,
+              "powerW": 69.45,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018945148,
+              "clock": 1972,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 71.76,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018945663,
+              "clock": 1972,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 76.88,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018946175,
+              "clock": 1972,
+              "load": 37,
+              "memoryClock": 7001,
+              "powerW": 79.08,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018946684,
+              "clock": 1972,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 79.25,
+              "tempC": 64,
+              "state": "P0"
+            }
+          ],
+          "graphicsMHz": {
+            "n": 20,
+            "min": 1852,
+            "p50": 1942,
+            "p95": 1980,
+            "max": 1987,
+            "mean": 1935.35
+          },
+          "gpuLoadPct": {
+            "n": 20,
+            "min": 37,
+            "p50": 39,
+            "p95": 43,
+            "max": 43,
+            "mean": 39.55
+          }
+        },
+        {
+          "id": "art-c-alley",
+          "frames": 657,
+          "fps": 65.00059361272712,
+          "rafMs": {
+            "n": 657,
+            "min": 15.19999999999709,
+            "p50": 15.39999999999418,
+            "p95": 15.5,
+            "max": 15.69999999999709,
+            "mean": 15.384474885844735
+          },
+          "over20": 0,
+          "over33": 0,
+          "draw": {
+            "n": 657,
+            "min": 977,
+            "p50": 977,
+            "p95": 979,
+            "max": 979,
+            "mean": 977.9984779299848
+          },
+          "triangles": {
+            "n": 657,
+            "min": 8579136,
+            "p50": 8579136,
+            "p95": 8579264,
+            "max": 8579264,
+            "mean": 8579199.902587518
+          },
+          "walk": null,
+          "camera": {
+            "position": [
+              287.65,
+              14.384808464050293,
+              767.3199999999999
+            ],
+            "quaternion": [
+              0.00512201791291099,
+              0.8012252009590126,
+              -0.006859231737600546,
+              0.5983016740914732
+            ],
+            "fov": 45,
+            "hidden": true,
+            "target": [
+              278.4,
+              14.55,
+              770.06
+            ],
+            "currentView": "art-c-alley",
+            "mode": "third"
+          },
+          "focus": {
+            "start": {
+              "wallMs": 1795018948796,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "art-c-alley",
+                "walker": "third"
+              }
+            },
+            "end": {
+              "wallMs": 1795018958909,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "art-c-alley",
+                "walker": "third"
+              }
+            },
+            "osRun": 0,
+            "osSamples": 20
+          },
+          "host": [
+            {
+              "utcMs": 1795018948871.1223,
+              "measuredWindow": false,
+              "cpuPct": 25.17
+            },
+            {
+              "utcMs": 1795018949381.9944,
+              "measuredWindow": false,
+              "cpuPct": 6.76
+            },
+            {
+              "utcMs": 1795018949892.9333,
+              "measuredWindow": false,
+              "cpuPct": 20.21
+            },
+            {
+              "utcMs": 1795018950404.4358,
+              "measuredWindow": false,
+              "cpuPct": 5.28
+            },
+            {
+              "utcMs": 1795018950916.9668,
+              "measuredWindow": false,
+              "cpuPct": 46.91
+            },
+            {
+              "utcMs": 1795018951428.3765,
+              "measuredWindow": false,
+              "cpuPct": 17.38
+            },
+            {
+              "utcMs": 1795018951940.0098,
+              "measuredWindow": false,
+              "cpuPct": 30.43
+            },
+            {
+              "utcMs": 1795018952451.9958,
+              "measuredWindow": false,
+              "cpuPct": 15.41
+            },
+            {
+              "utcMs": 1795018952963.9944,
+              "measuredWindow": false,
+              "cpuPct": 40.97
+            },
+            {
+              "utcMs": 1795018953475.3047,
+              "measuredWindow": false,
+              "cpuPct": 34.9
+            },
+            {
+              "utcMs": 1795018953987.533,
+              "measuredWindow": false,
+              "cpuPct": 48.83
+            },
+            {
+              "utcMs": 1795018954502.3733,
+              "measuredWindow": false,
+              "cpuPct": 23.73
+            },
+            {
+              "utcMs": 1795018955014.8052,
+              "measuredWindow": false,
+              "cpuPct": 28.69
+            },
+            {
+              "utcMs": 1795018955527.5999,
+              "measuredWindow": false,
+              "cpuPct": 19.61
+            },
+            {
+              "utcMs": 1795018956041.7368,
+              "measuredWindow": false,
+              "cpuPct": 26.64
+            },
+            {
+              "utcMs": 1795018956553.0293,
+              "measuredWindow": false,
+              "cpuPct": 12.22
+            },
+            {
+              "utcMs": 1795018957065.6814,
+              "measuredWindow": false,
+              "cpuPct": 34.34
+            },
+            {
+              "utcMs": 1795018957578.6157,
+              "measuredWindow": false,
+              "cpuPct": 7.28
+            },
+            {
+              "utcMs": 1795018958089.8274,
+              "measuredWindow": false,
+              "cpuPct": 16.93
+            },
+            {
+              "utcMs": 1795018958601.0984,
+              "measuredWindow": false,
+              "cpuPct": 13.88
+            }
+          ],
+          "device": [
+            {
+              "utcMs": 1795018949248,
+              "clock": 1987,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 69.6,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018949761,
+              "clock": 1980,
+              "load": 37,
+              "memoryClock": 7001,
+              "powerW": 78.99,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018950274,
+              "clock": 1980,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 78.93,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018950787,
+              "clock": 1920,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 78.78,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018951301,
+              "clock": 1905,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 70.79,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018951813,
+              "clock": 1890,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 69.31,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018952326,
+              "clock": 1867,
+              "load": 42,
+              "memoryClock": 7001,
+              "powerW": 68.15,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018952828,
+              "clock": 1972,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 69.73,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018953341,
+              "clock": 1972,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 78.24,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018953842,
+              "clock": 1972,
+              "load": 37,
+              "memoryClock": 7001,
+              "powerW": 77.97,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018954358,
+              "clock": 1972,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 76.99,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018954868,
+              "clock": 1890,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 70.51,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018955381,
+              "clock": 1882,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 67.07,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018955894,
+              "clock": 1867,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 68.38,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018956405,
+              "clock": 1845,
+              "load": 44,
+              "memoryClock": 7001,
+              "powerW": 67.07,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018956916,
+              "clock": 1957,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 69.88,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018957429,
+              "clock": 1957,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 75.65,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018957940,
+              "clock": 1957,
+              "load": 37,
+              "memoryClock": 7001,
+              "powerW": 75.81,
+              "tempC": 64,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018958453,
+              "clock": 1957,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 75.82,
+              "tempC": 64,
+              "state": "P0"
+            }
+          ],
+          "graphicsMHz": {
+            "n": 19,
+            "min": 1845,
+            "p50": 1957,
+            "p95": 1987,
+            "max": 1987,
+            "mean": 1933.1052631578948
+          },
+          "gpuLoadPct": {
+            "n": 19,
+            "min": 37,
+            "p50": 40,
+            "p95": 44,
+            "max": 44,
+            "mean": 39.473684210526315
+          }
+        },
+        {
+          "id": "art-d-laundry",
+          "frames": 658,
+          "fps": 64.99985182404605,
+          "rafMs": {
+            "n": 658,
+            "min": 15.19999999999709,
+            "p50": 15.39999999999418,
+            "p95": 15.5,
+            "max": 15.60000000000582,
+            "mean": 15.384650455927039
+          },
+          "over20": 0,
+          "over33": 0,
+          "draw": {
+            "n": 658,
+            "min": 909,
+            "p50": 914,
+            "p95": 914,
+            "max": 914,
+            "mean": 912.9422492401216
+          },
+          "triangles": {
+            "n": 658,
+            "min": 8307327,
+            "p50": 8370999,
+            "p95": 8370999,
+            "max": 8370999,
+            "mean": 8357880.9513677815
+          },
+          "walk": null,
+          "camera": {
+            "position": [
+              283.5,
+              12.520055181715234,
+              783.8
+            ],
+            "quaternion": [
+              0.1297258927986663,
+              0.0767626424061459,
+              -0.010073721024303532,
+              0.9885227410703001
+            ],
+            "fov": 48,
+            "hidden": true,
+            "target": [
+              282.5,
+              14.25,
+              777.4
+            ],
+            "currentView": "art-d-laundry",
+            "mode": "third"
+          },
+          "focus": {
+            "start": {
+              "wallMs": 1795018960780,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "art-d-laundry",
+                "walker": "third"
+              }
+            },
+            "end": {
+              "wallMs": 1795018970908,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "art-d-laundry",
+                "walker": "third"
+              }
+            },
+            "osRun": 0,
+            "osSamples": 20
+          },
+          "host": [
+            {
+              "utcMs": 1795018961157.8406,
+              "measuredWindow": false,
+              "cpuPct": 24.73
+            },
+            {
+              "utcMs": 1795018961669.9714,
+              "measuredWindow": false,
+              "cpuPct": 21.73
+            },
+            {
+              "utcMs": 1795018962181.7175,
+              "measuredWindow": false,
+              "cpuPct": 14.59
+            },
+            {
+              "utcMs": 1795018962693.0518,
+              "measuredWindow": false,
+              "cpuPct": 12.9
+            },
+            {
+              "utcMs": 1795018963204.752,
+              "measuredWindow": false,
+              "cpuPct": 10.07
+            },
+            {
+              "utcMs": 1795018963716.688,
+              "measuredWindow": false,
+              "cpuPct": 15.2
+            },
+            {
+              "utcMs": 1795018964227.3462,
+              "measuredWindow": false,
+              "cpuPct": 27.89
+            },
+            {
+              "utcMs": 1795018964739.0608,
+              "measuredWindow": false,
+              "cpuPct": 37.29
+            },
+            {
+              "utcMs": 1795018965250.8428,
+              "measuredWindow": false,
+              "cpuPct": 27.57
+            },
+            {
+              "utcMs": 1795018965763.0366,
+              "measuredWindow": false,
+              "cpuPct": 20.92
+            },
+            {
+              "utcMs": 1795018966274.598,
+              "measuredWindow": false,
+              "cpuPct": 10.1
+            },
+            {
+              "utcMs": 1795018966786.6863,
+              "measuredWindow": false,
+              "cpuPct": 20.47
+            },
+            {
+              "utcMs": 1795018967298.5417,
+              "measuredWindow": false,
+              "cpuPct": 6.85
+            },
+            {
+              "utcMs": 1795018967812.4763,
+              "measuredWindow": false,
+              "cpuPct": 23.12
+            },
+            {
+              "utcMs": 1795018968323.9365,
+              "measuredWindow": false,
+              "cpuPct": 12.13
+            },
+            {
+              "utcMs": 1795018968835.5317,
+              "measuredWindow": false,
+              "cpuPct": 49.38
+            },
+            {
+              "utcMs": 1795018969346.9302,
+              "measuredWindow": false,
+              "cpuPct": 45.21
+            },
+            {
+              "utcMs": 1795018969860.086,
+              "measuredWindow": false,
+              "cpuPct": 36.53
+            },
+            {
+              "utcMs": 1795018970371.0947,
+              "measuredWindow": false,
+              "cpuPct": 7.06
+            },
+            {
+              "utcMs": 1795018970883.4927,
+              "measuredWindow": false,
+              "cpuPct": 22.16
+            }
+          ],
+          "device": [
+            {
+              "utcMs": 1795018961013,
+              "clock": 1860,
+              "load": 34,
+              "memoryClock": 7001,
+              "powerW": 61.29,
+              "tempC": 63,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018961529,
+              "clock": 1732,
+              "load": 37,
+              "memoryClock": 7001,
+              "powerW": 59.93,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018962038,
+              "clock": 1702,
+              "load": 36,
+              "memoryClock": 7001,
+              "powerW": 56.66,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018962551,
+              "clock": 1680,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 53.71,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018963064,
+              "clock": 1650,
+              "load": 37,
+              "memoryClock": 7001,
+              "powerW": 52.34,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018963576,
+              "clock": 1627,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 51.06,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018964088,
+              "clock": 1612,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 50.11,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018964600,
+              "clock": 1597,
+              "load": 42,
+              "memoryClock": 7001,
+              "powerW": 49.22,
+              "tempC": 61,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018965111,
+              "clock": 1680,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 50.59,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018965625,
+              "clock": 1680,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 52.33,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018966135,
+              "clock": 1680,
+              "load": 37,
+              "memoryClock": 7001,
+              "powerW": 53.23,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018966647,
+              "clock": 1612,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 48.83,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018967159,
+              "clock": 1597,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 49.1,
+              "tempC": 62,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018967668,
+              "clock": 1590,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 48.72,
+              "tempC": 61,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018968181,
+              "clock": 1575,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 48.46,
+              "tempC": 61,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018968682,
+              "clock": 1575,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 47.74,
+              "tempC": 61,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018969196,
+              "clock": 1665,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 48.87,
+              "tempC": 61,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018969711,
+              "clock": 1665,
+              "load": 38,
+              "memoryClock": 7001,
+              "powerW": 51.49,
+              "tempC": 61,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018970223,
+              "clock": 1665,
+              "load": 37,
+              "memoryClock": 7001,
+              "powerW": 52.11,
+              "tempC": 61,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018970728,
+              "clock": 1665,
+              "load": 36,
+              "memoryClock": 7001,
+              "powerW": 47.03,
+              "tempC": 61,
+              "state": "P0"
+            }
+          ],
+          "graphicsMHz": {
+            "n": 20,
+            "min": 1575,
+            "p50": 1665,
+            "p95": 1732,
+            "max": 1860,
+            "mean": 1655.45
+          },
+          "gpuLoadPct": {
+            "n": 20,
+            "min": 34,
+            "p50": 38,
+            "p95": 41,
+            "max": 42,
+            "mean": 38.2
+          }
+        },
+        {
+          "id": "walk-third",
+          "frames": 194,
+          "fps": 62.11776760270232,
+          "rafMs": {
+            "n": 194,
+            "min": 15.19999999999709,
+            "p50": 15.39999999999418,
+            "p95": 15.599999999991269,
+            "max": 30.90000000000873,
+            "mean": 16.098453608247453
+          },
+          "over20": 9,
+          "over33": 0,
+          "draw": {
+            "n": 194,
+            "min": 916,
+            "p50": 1696,
+            "p95": 1699,
+            "max": 1700,
+            "mean": 1688.8917525773195
+          },
+          "triangles": {
+            "n": 194,
+            "min": 8283825,
+            "p50": 8333111,
+            "p95": 8382165,
+            "max": 8397899,
+            "mean": 8327982.020618557
+          },
+          "walk": {
+            "before": [
+              281.6,
+              8.812,
+              934
+            ],
+            "after": [
+              280.93013343417283,
+              8.543772930556116,
+              924.4204618055757
+            ],
+            "distance": 9.606675751540196,
+            "distanceXZ": 9.602930450359825
+          },
+          "focus": {
+            "start": {
+              "wallMs": 1795018975878,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "walking",
+                "walker": "third"
+              }
+            },
+            "end": {
+              "wallMs": 1795018979019,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "walking",
+                "walker": "third"
+              }
+            },
+            "osRun": 0,
+            "osSamples": 6
+          },
+          "host": [
+            {
+              "utcMs": 1795018976007.624,
+              "measuredWindow": false,
+              "cpuPct": 25.06
+            },
+            {
+              "utcMs": 1795018976520.2244,
+              "measuredWindow": false,
+              "cpuPct": 22.95
+            },
+            {
+              "utcMs": 1795018977032.7512,
+              "measuredWindow": false,
+              "cpuPct": 20.34
+            },
+            {
+              "utcMs": 1795018977545.3296,
+              "measuredWindow": false,
+              "cpuPct": 26.03
+            },
+            {
+              "utcMs": 1795018978058.6257,
+              "measuredWindow": false,
+              "cpuPct": 33.87
+            },
+            {
+              "utcMs": 1795018978572.0623,
+              "measuredWindow": false,
+              "cpuPct": 63.52
+            }
+          ],
+          "device": [
+            {
+              "utcMs": 1795018976360,
+              "clock": 1980,
+              "load": 46,
+              "memoryClock": 7001,
+              "powerW": 85.83,
+              "tempC": 65,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018976876,
+              "clock": 1980,
+              "load": 45,
+              "memoryClock": 7001,
+              "powerW": 86.85,
+              "tempC": 65,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018977389,
+              "clock": 1957,
+              "load": 44,
+              "memoryClock": 7001,
+              "powerW": 87.67,
+              "tempC": 65,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018977902,
+              "clock": 1980,
+              "load": 42,
+              "memoryClock": 7001,
+              "powerW": 87.07,
+              "tempC": 66,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018978412,
+              "clock": 1980,
+              "load": 36,
+              "memoryClock": 7001,
+              "powerW": 85.91,
+              "tempC": 65,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018978923,
+              "clock": 1980,
+              "load": 36,
+              "memoryClock": 7001,
+              "powerW": 80.15,
+              "tempC": 65,
+              "state": "P0"
+            }
+          ],
+          "graphicsMHz": {
+            "n": 6,
+            "min": 1957,
+            "p50": 1980,
+            "p95": 1980,
+            "max": 1980,
+            "mean": 1976.1666666666667
+          },
+          "gpuLoadPct": {
+            "n": 6,
+            "min": 36,
+            "p50": 42,
+            "p95": 46,
+            "max": 46,
+            "mean": 41.5
+          }
+        },
+        {
+          "id": "walk-first",
+          "frames": 201,
+          "fps": 64.35913035125344,
+          "rafMs": {
+            "n": 201,
+            "min": 15.10000000000582,
+            "p50": 15.39999999999418,
+            "p95": 15.5,
+            "max": 30.70000000001164,
+            "mean": 15.53781094527366
+          },
+          "over20": 2,
+          "over33": 0,
+          "draw": {
+            "n": 201,
+            "min": 1463,
+            "p50": 1543,
+            "p95": 1607,
+            "max": 1612,
+            "mean": 1541.636815920398
+          },
+          "triangles": {
+            "n": 201,
+            "min": 8060943,
+            "p50": 8272978,
+            "p95": 8342955,
+            "max": 8362605,
+            "mean": 8253975.756218906
+          },
+          "walk": {
+            "before": [
+              280.9151386574376,
+              8.537768742220933,
+              924.2060265078904
+            ],
+            "after": [
+              280.2441840165447,
+              8.269105987222517,
+              914.6109281150899
+            ],
+            "distance": 9.622280029888056,
+            "distanceXZ": 9.618528645154578
+          },
+          "focus": {
+            "start": {
+              "wallMs": 1795018979960,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "walking",
+                "walker": "first"
+              }
+            },
+            "end": {
+              "wallMs": 1795018983131,
+              "window": true,
+              "contents": true,
+              "page": {
+                "focused": true,
+                "visibility": "visible",
+                "view": "walking",
+                "walker": "first"
+              }
+            },
+            "osRun": 0,
+            "osSamples": 6
+          },
+          "host": [
+            {
+              "utcMs": 1795018980115.11,
+              "measuredWindow": false,
+              "cpuPct": 36.7
+            },
+            {
+              "utcMs": 1795018980631.538,
+              "measuredWindow": false,
+              "cpuPct": 37.33
+            },
+            {
+              "utcMs": 1795018981145.174,
+              "measuredWindow": false,
+              "cpuPct": 29.9
+            },
+            {
+              "utcMs": 1795018981661.126,
+              "measuredWindow": false,
+              "cpuPct": 37.71
+            },
+            {
+              "utcMs": 1795018982175.1143,
+              "measuredWindow": false,
+              "cpuPct": 26.67
+            },
+            {
+              "utcMs": 1795018982687.8782,
+              "measuredWindow": false,
+              "cpuPct": 40.23
+            }
+          ],
+          "device": [
+            {
+              "utcMs": 1795018980451,
+              "clock": 1965,
+              "load": 39,
+              "memoryClock": 7001,
+              "powerW": 81.95,
+              "tempC": 65,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018980960,
+              "clock": 1972,
+              "load": 43,
+              "memoryClock": 7001,
+              "powerW": 82.17,
+              "tempC": 66,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018981473,
+              "clock": 1972,
+              "load": 40,
+              "memoryClock": 7001,
+              "powerW": 83.74,
+              "tempC": 66,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018981984,
+              "clock": 1942,
+              "load": 43,
+              "memoryClock": 7001,
+              "powerW": 83.81,
+              "tempC": 65,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018982486,
+              "clock": 1965,
+              "load": 42,
+              "memoryClock": 7001,
+              "powerW": 82.63,
+              "tempC": 66,
+              "state": "P0"
+            },
+            {
+              "utcMs": 1795018982998,
+              "clock": 1972,
+              "load": 41,
+              "memoryClock": 7001,
+              "powerW": 82.9,
+              "tempC": 66,
+              "state": "P0"
+            }
+          ],
+          "graphicsMHz": {
+            "n": 6,
+            "min": 1942,
+            "p50": 1965,
+            "p95": 1972,
+            "max": 1972,
+            "mean": 1964.6666666666667
+          },
+          "gpuLoadPct": {
+            "n": 6,
+            "min": 39,
+            "p50": 41,
+            "p95": 43,
+            "max": 43,
+            "mean": 41.333333333333336
+          }
+        }
+      ]
+    }
+  ]
+}

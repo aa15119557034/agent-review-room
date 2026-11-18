@@ -1,0 +1,47 @@
+{
+  "storedFileIntegrity": 42,
+  "verifiedInstalledPNGs": 12,
+  "verifiedFinalRawFaces": 12,
+  "verifiedOldRawFaces": 12,
+  "verifiedInitialSignedFaces": 2,
+  "profiles": {
+    "afternoon": {
+      "texels": 393216,
+      "rawNegativeOrNonfinite": 0,
+      "rawPeak": 2.3984375,
+      "rawTexelsOver2": 1,
+      "mappedOrDecodedTexelsOver2": 0,
+      "maxDecodedLinearError": 0.0069956889153750534
+    },
+    "evening": {
+      "texels": 393216,
+      "rawNegativeOrNonfinite": 0,
+      "rawPeak": 2.939453125,
+      "rawTexelsOver2": 89,
+      "mappedOrDecodedTexelsOver2": 0,
+      "maxDecodedLinearError": 0.007643018004986013
+    }
+  },
+  "strictTransport": {
+    "initial-afternoon": {
+      "exit": 1,
+      "canceled": 4,
+      "strictClean": false
+    },
+    "final-afternoon": {
+      "exit": 1,
+      "canceled": 2,
+      "strictClean": false
+    },
+    "initial-evening": {
+      "exit": 1,
+      "canceled": 4,
+      "strictClean": false
+    },
+    "final-evening": {
+      "exit": 0,
+      "canceled": 3,
+      "strictClean": false
+    }
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "baseline": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+  "candidate": "2a7c6f12bb66f44a04a9dbbc2a4e2e7a22e93758",
+  "size": [
+    1440,
+    900
+  ],
+  "rows": {
+    "art-a-street": {
+      "before": "d84779b567c78031e43ac7b698b99dfc17d07248ec1317c1a08e4efbf852f50d",
+      "after": "c4e1fc59948bed3280cd59e96c7fdd27a78357922c895ed30e6d04f88f7da1d1",
+      "equalPixels": 979361,
+      "rgbChanged": 316639,
+      "over8": 203513,
+      "over24": 145004,
+      "bboxOver8": [
+        0,
+        0,
+        1355,
+        658
+      ]
+    },
+    "art-b-konbini": {
+      "before": "893d88f48bd2030678dc45438ac97fe7cee6368ba18b188c41e638ba509273eb",
+      "after": "893d88f48bd2030678dc45438ac97fe7cee6368ba18b188c41e638ba509273eb",
+      "equalPixels": 1296000,
+      "rgbChanged": 0,
+      "over8": 0,
+      "over24": 0,
+      "bboxOver8": null
+    },
+    "art-c-alley": {
+      "before": "63cc140ad85b3215092307eec34a54baaa81c85777f21f30fbd48961468e709b",
+      "after": "0126924ec025c1f075cbf27a1eec7d0e24068eb55136e19607d12de7b393f08c",
+      "equalPixels": 1214475,
+      "rgbChanged": 81525,
+      "over8": 24010,
+      "over24": 23631,
+      "bboxOver8": [
+        1148,
+        352,
+        1440,
+        511
+      ]
+    },
+    "art-d-laundry": {
+      "before": "239d42400a94bbda14db29e49845f0211a66c27d3bcef732c6e55f346d14bd46",
+      "after": "a2266e02bc04f124c44d8273860ad865e1c2e29612bc4d94c049f752a23d5608",
+      "equalPixels": 937482,
+      "rgbChanged": 358518,
+      "over8": 165534,
+      "over24": 160747,
+      "bboxOver8": [
+        0,
+        253,
+        1440,
+        670
+      ]
+    },
+    "sample-e-harbour": {
+      "before": "819d360cbac0989361732888f8452d85b0121d555a836984ca5bec6dbd982ee1",
+      "after": "e43a8d2b28e9cb8bd2521e182df6ad16491425e5f35fc810c8629b98ee417a60",
+      "equalPixels": 1291495,
+      "rgbChanged": 4505,
+      "over8": 3212,
+      "over24": 2608,
+      "bboxOver8": [
+        893,
+        385,
+        983,
+        554
+      ]
+    },
+    "sample-f-hillside": {
+      "before": "1414fb43cada5cb4c13222e1d3c8f29c8cdb302bb32a707f843b45fcd1207fcb",
+      "after": "1414fb43cada5cb4c13222e1d3c8f29c8cdb302bb32a707f843b45fcd1207fcb",
+      "equalPixels": 1296000,
+      "rgbChanged": 0,
+      "over8": 0,
+      "over24": 0,
+      "bboxOver8": null
+    },
+    "sample-g-rail": {
+      "before": "0174eb48c466b1a404eb1bc8d99218700f032bbe770f2a9e7903e0ed6f69515a",
+      "after": "1727205580aa283bd6310bb947424b9e08874dfc464aa4e1e048a0e0f8165587",
+      "equalPixels": 1291818,
+      "rgbChanged": 4182,
+      "over8": 2446,
+      "over24": 1705,
+      "bboxOver8": [
+        229,
+        363,
+        368,
+        449
+      ]
+    },
+    "sample-h-north": {
+      "before": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546",
+      "after": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546",
+      "equalPixels": 1296000,
+      "rgbChanged": 0,
+      "over8": 0,
+      "over24": 0,
+      "bboxOver8": null
+    },
+    "return-a": {
+      "before": "d84779b567c78031e43ac7b698b99dfc17d07248ec1317c1a08e4efbf852f50d",
+      "after": "c4e1fc59948bed3280cd59e96c7fdd27a78357922c895ed30e6d04f88f7da1d1",
+      "equalPixels": 979361,
+      "rgbChanged": 316639,
+      "over8": 203513,
+      "over24": 145004,
+      "bboxOver8": [
+        0,
+        0,
+        1355,
+        658
+      ]
+    }
+  },
+  "nativeNetwork": [
+    {
+      "url": "http://127.0.0.1:57559/assets/models/menhir.glb",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "url": "http://127.0.0.1:57559/assets/models/boulders.glb",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "url": "http://127.0.0.1:57559/mature-sakura/mature-sakura.glb",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "url": "http://127.0.0.1:57559/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "url": "http://127.0.0.1:57559/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    }
+  ],
+  "nativeExceptions": [],
+  "sameReturnA": true
+}

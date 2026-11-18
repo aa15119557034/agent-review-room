@@ -1,0 +1,811 @@
+{
+  "threshold": {
+    "fps": 60,
+    "p95Ms": 16.7
+  },
+  "description": "Chronological independent Electron sessions on the same 3060. Frozen source SHA for each session, 10s fixed cameras plus 3s measured walking per perspective.",
+  "runs": [
+    {
+      "id": "r3-control",
+      "source": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "canvas": [
+        1440,
+        900
+      ],
+      "dpr": 1,
+      "files": {
+        "frames": "r3-control.frames.json.gz",
+        "manifest": "r3-control.manifest.json",
+        "gpu": "r3-control.gpu.csv"
+      },
+      "framesSha256": "5ba0e978335ac60f0bdeb1a2224fd9007584f5fa42c50ff5b7c857a4bae5dbee",
+      "driverExit": 0,
+      "nativeExit": 1,
+      "renderOk": true,
+      "transportClean": false,
+      "jsExceptions": 0,
+      "network": [
+        {
+          "url": "/assets/models/menhir.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "fixedSeconds": 10,
+      "walkingSeconds": 3,
+      "inputs": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 108110.70000004768
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 111252.09999990463
+        },
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 112020.20000004768
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 115141.70000004768
+        }
+      ],
+      "readyMs": 46481.799999952316,
+      "hostSha": "b225b1006b69f1dea71ec5aa54629dae614e00c1a0ed60c9a617f8293fa0a7e0",
+      "probedHostSha": "117676071d2762bee1203c9ff109f3cd07f4783b02ec40a304e5b683df0f2028",
+      "art": null,
+      "trees": {
+        "W3": {
+          "bark": 7637,
+          "blob": 31312,
+          "cards": 6382
+        },
+        "plaza": {
+          "bark": 11382,
+          "blob": 55440,
+          "cards": 11952
+        }
+      },
+      "reflections": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 21
+      },
+      "segments": {
+        "art-a-street": {
+          "samples": 600,
+          "fps": 59.26979611190135,
+          "p95Ms": 30.799999999995634,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 31.099999999998545,
+          "drawCallsMean": 1583.32,
+          "submittedTrianglesMean": 7960103.493333333,
+          "pass": false
+        },
+        "art-b-konbini": {
+          "samples": 658,
+          "fps": 64.99920973605177,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 15.60000000000582,
+          "drawCallsMean": 1048.1337386018238,
+          "submittedTrianglesMean": 7856580.364741641,
+          "pass": true
+        },
+        "art-c-alley": {
+          "samples": 658,
+          "fps": 65.00049392472587,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 15.60000000000582,
+          "drawCallsMean": 970.0121580547112,
+          "submittedTrianglesMean": 8658435.778115502,
+          "pass": true
+        },
+        "art-d-laundry": {
+          "samples": 657,
+          "fps": 64.99995053276207,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 15.60000000000582,
+          "drawCallsMean": 906.2267884322679,
+          "submittedTrianglesMean": 8441728.709284628,
+          "pass": true
+        },
+        "walk-third": {
+          "samples": 200,
+          "fps": 64.35627634585039,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 30.79999999998836,
+          "drawCallsMean": 1677.015,
+          "submittedTrianglesMean": 8492197.205,
+          "pass": true
+        },
+        "walk-first": {
+          "samples": 202,
+          "fps": 64.99774760280609,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 15.5,
+          "drawCallsMean": 1533.7326732673268,
+          "submittedTrianglesMean": 8427263.143564356,
+          "pass": true
+        }
+      }
+    },
+    {
+      "id": "v2-candidate",
+      "source": "2a7c6f12bb66f44a04a9dbbc2a4e2e7a22e93758",
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "canvas": [
+        1440,
+        900
+      ],
+      "dpr": 1,
+      "files": {
+        "frames": "v2-candidate.frames.json.gz",
+        "manifest": "v2-candidate.manifest.json",
+        "gpu": "v2-candidate.gpu.csv"
+      },
+      "framesSha256": "7e61806ffb5fbba772a3eeb10e898a92d908b6aaf078239d8ef43b3ad017034d",
+      "driverExit": 0,
+      "nativeExit": 1,
+      "renderOk": true,
+      "transportClean": false,
+      "jsExceptions": 0,
+      "network": [
+        {
+          "url": "/mature-sakura/mature-sakura.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "url": "/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "url": "/station-art/alley-workshop.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "fixedSeconds": 10,
+      "walkingSeconds": 3,
+      "inputs": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 106583.40000009537
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 109781.5
+        },
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 110824
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 114074.40000009537
+        }
+      ],
+      "readyMs": 44833.40000009537,
+      "hostSha": "b225b1006b69f1dea71ec5aa54629dae614e00c1a0ed60c9a617f8293fa0a7e0",
+      "probedHostSha": "437115a0c5aa9c5dc398ab3635498ce26a19f45d714aba6414810c1df7afdb36",
+      "art": {
+        "buildings": [
+          "station-exchange",
+          "alley-workshop"
+        ],
+        "laundry": "Portal_wings"
+      },
+      "trees": {
+        "W3": {
+          "bark": 1550,
+          "blob": 22027,
+          "cards": 424
+        },
+        "plaza": {
+          "bark": 2309,
+          "blob": 13680,
+          "cards": 674
+        }
+      },
+      "reflections": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 16
+      },
+      "segments": {
+        "art-a-street": {
+          "samples": 573,
+          "fps": 56.51723627755585,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.900000000001455,
+          "maxMs": 46.30000000000291,
+          "drawCallsMean": 1602.7975567190226,
+          "submittedTrianglesMean": 7816809.424083769,
+          "pass": false
+        },
+        "art-b-konbini": {
+          "samples": 657,
+          "fps": 64.90042674253202,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 30.70000000001164,
+          "drawCallsMean": 1056.8234398782345,
+          "submittedTrianglesMean": 7670029.347031963,
+          "pass": true
+        },
+        "art-c-alley": {
+          "samples": 658,
+          "fps": 65.00049392472587,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "maxMs": 15.60000000000582,
+          "drawCallsMean": 981.6079027355623,
+          "submittedTrianglesMean": 8586292.607902735,
+          "pass": true
+        },
+        "art-d-laundry": {
+          "samples": 657,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.60000000000582,
+          "drawCallsMean": 914.4018264840182,
+          "submittedTrianglesMean": 8350909.678843227,
+          "pass": true
+        },
+        "walk-third": {
+          "samples": 185,
+          "fps": 59.23791226384886,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.90000000000873,
+          "maxMs": 31,
+          "drawCallsMean": 1690.6864864864865,
+          "submittedTrianglesMean": 8322723.8,
+          "pass": false
+        },
+        "walk-first": {
+          "samples": 168,
+          "fps": 53.26907223032527,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.90000000000873,
+          "maxMs": 30.90000000000873,
+          "drawCallsMean": 1543.8333333333333,
+          "submittedTrianglesMean": 8252105.613095238,
+          "pass": false
+        }
+      }
+    },
+    {
+      "id": "final-2ae05c5b",
+      "source": "2ae05c5b0715fba94a167fa103babb72ae0ef9cf",
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "canvas": [
+        1440,
+        900
+      ],
+      "dpr": 1,
+      "files": {
+        "frames": "final-2ae05c5b.frames.json.gz",
+        "manifest": "final-2ae05c5b.manifest.json",
+        "gpu": "final-2ae05c5b.gpu.csv"
+      },
+      "framesSha256": "71ede50dad43ea60417de382c87e0a620373440a2b1f3bbefdf2d2fcf1f4bbca",
+      "driverExit": 0,
+      "nativeExit": 1,
+      "renderOk": true,
+      "transportClean": false,
+      "jsExceptions": 0,
+      "network": [
+        {
+          "url": "/assets/models/boulders.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "url": "/mature-sakura/mature-sakura.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "url": "/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "fixedSeconds": 10,
+      "walkingSeconds": 3,
+      "inputs": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 106995.29999995232
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 110162.09999990463
+        },
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 110969.09999990463
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 114121.19999980927
+        }
+      ],
+      "readyMs": 45605.799999952316,
+      "hostSha": "b225b1006b69f1dea71ec5aa54629dae614e00c1a0ed60c9a617f8293fa0a7e0",
+      "probedHostSha": "437115a0c5aa9c5dc398ab3635498ce26a19f45d714aba6414810c1df7afdb36",
+      "art": {
+        "buildings": [
+          "station-exchange",
+          "alley-workshop"
+        ],
+        "laundry": "Portal_wings"
+      },
+      "trees": {
+        "W3": {
+          "bark": 1550,
+          "blob": 22027,
+          "cards": 424
+        },
+        "plaza": {
+          "bark": 2309,
+          "blob": 13680,
+          "cards": 674
+        }
+      },
+      "reflections": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 25
+      },
+      "segments": {
+        "art-a-street": {
+          "samples": 654,
+          "fps": 64.60471594669613,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999998545,
+          "maxMs": 30.80000000000291,
+          "drawCallsMean": 1601.6804281345567,
+          "submittedTrianglesMean": 7811220.960244648,
+          "pass": true
+        },
+        "art-b-konbini": {
+          "samples": 656,
+          "fps": 64.80292403437716,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 30.80000000000291,
+          "drawCallsMean": 1056.5243902439024,
+          "submittedTrianglesMean": 7665313.243902439,
+          "pass": true
+        },
+        "art-c-alley": {
+          "samples": 657,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.80000000000291,
+          "drawCallsMean": 980.6012176560122,
+          "submittedTrianglesMean": 8581793.388127854,
+          "pass": true
+        },
+        "art-d-laundry": {
+          "samples": 657,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.60000000000582,
+          "drawCallsMean": 914.7503805175038,
+          "submittedTrianglesMean": 8355366.153729072,
+          "pass": true
+        },
+        "walk-third": {
+          "samples": 203,
+          "fps": 64.99743852459022,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.60000000000582,
+          "drawCallsMean": 1692.0837438423646,
+          "submittedTrianglesMean": 8326580.054187193,
+          "pass": true
+        },
+        "walk-first": {
+          "samples": 203,
+          "fps": 64.99951970798233,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.60000000000582,
+          "drawCallsMean": 1546.7389162561576,
+          "submittedTrianglesMean": 8257887.157635468,
+          "pass": true
+        }
+      }
+    },
+    {
+      "id": "final-r3-control",
+      "source": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "canvas": [
+        1440,
+        900
+      ],
+      "dpr": 1,
+      "files": {
+        "frames": "final-r3-control.frames.json.gz",
+        "manifest": "final-r3-control.manifest.json",
+        "gpu": "final-r3-control.gpu.csv"
+      },
+      "framesSha256": "686c6088734fe821727ea8530a77a4170b913b168460eff370a913e757d3e7aa",
+      "driverExit": 0,
+      "nativeExit": 0,
+      "renderOk": true,
+      "transportClean": true,
+      "jsExceptions": 0,
+      "network": [],
+      "fixedSeconds": 10,
+      "walkingSeconds": 3,
+      "inputs": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 107138.10000014305
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 110342.20000004768
+        },
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 111207.60000014305
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 114386.90000009537
+        }
+      ],
+      "readyMs": 45144.60000014305,
+      "hostSha": "b225b1006b69f1dea71ec5aa54629dae614e00c1a0ed60c9a617f8293fa0a7e0",
+      "probedHostSha": "8b059f94d4df94a03b0ebfdbd0ca28ba94d39bb7227e3ef1d23bb7142ae5b4e4",
+      "art": null,
+      "trees": {
+        "W3": {
+          "bark": 7637,
+          "blob": 31312,
+          "cards": 6382
+        },
+        "plaza": {
+          "bark": 11382,
+          "blob": 55440,
+          "cards": 11952
+        }
+      },
+      "reflections": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 19
+      },
+      "segments": {
+        "art-a-street": {
+          "samples": 656,
+          "fps": 64.90101605706542,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999998545,
+          "maxMs": 30.799999999995634,
+          "drawCallsMean": 1586.4847560975609,
+          "submittedTrianglesMean": 7976840.926829268,
+          "pass": true
+        },
+        "art-b-konbini": {
+          "samples": 650,
+          "fps": 64.20894578789317,
+          "p95Ms": 15.5,
+          "p99Ms": 30.69999999999709,
+          "maxMs": 30.89999999999418,
+          "drawCallsMean": 1048.793846153846,
+          "submittedTrianglesMean": 7866579.76,
+          "pass": true
+        },
+        "art-c-alley": {
+          "samples": 656,
+          "fps": 64.90101605706542,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "maxMs": 30.69999999999709,
+          "drawCallsMean": 971.1798780487804,
+          "submittedTrianglesMean": 8663772.341463415,
+          "pass": true
+        },
+        "art-d-laundry": {
+          "samples": 657,
+          "fps": 65.00059361272702,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "maxMs": 15.60000000000582,
+          "drawCallsMean": 905.5768645357687,
+          "submittedTrianglesMean": 8433453.683409438,
+          "pass": true
+        },
+        "walk-third": {
+          "samples": 195,
+          "fps": 62.13159152461367,
+          "p95Ms": 15.60000000000582,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 30.80000000000291,
+          "drawCallsMean": 1679.7641025641026,
+          "submittedTrianglesMean": 8489192.856410256,
+          "pass": true
+        },
+        "walk-first": {
+          "samples": 203,
+          "fps": 65.00160102465578,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 15.60000000000582,
+          "drawCallsMean": 1527.384236453202,
+          "submittedTrianglesMean": 8416914.891625615,
+          "pass": true
+        }
+      }
+    },
+    {
+      "id": "final-repeat",
+      "source": "2ae05c5b0715fba94a167fa103babb72ae0ef9cf",
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "canvas": [
+        1440,
+        900
+      ],
+      "dpr": 1,
+      "files": {
+        "frames": "final-repeat.frames.json.gz",
+        "manifest": "final-repeat.manifest.json",
+        "gpu": "final-repeat.gpu.csv"
+      },
+      "framesSha256": "d0c5e2918c7f21d09c70b44f8d0092c07938c6bd5022b6f124ad8a8fa46a13d1",
+      "driverExit": 0,
+      "nativeExit": 1,
+      "renderOk": true,
+      "transportClean": false,
+      "jsExceptions": 0,
+      "network": [
+        {
+          "url": "/assets/models/boulders.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "url": "/mature-sakura/mature-sakura.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "fixedSeconds": 10,
+      "walkingSeconds": 3,
+      "inputs": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 106395.70000004768
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 109562.70000004768
+        },
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 110458.29999995232
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 113626.5
+        }
+      ],
+      "readyMs": 44583,
+      "hostSha": "b225b1006b69f1dea71ec5aa54629dae614e00c1a0ed60c9a617f8293fa0a7e0",
+      "probedHostSha": "437115a0c5aa9c5dc398ab3635498ce26a19f45d714aba6414810c1df7afdb36",
+      "art": {
+        "buildings": [
+          "station-exchange",
+          "alley-workshop"
+        ],
+        "laundry": "Portal_wings"
+      },
+      "trees": {
+        "W3": {
+          "bark": 1550,
+          "blob": 22027,
+          "cards": 424
+        },
+        "plaza": {
+          "bark": 2309,
+          "blob": 13680,
+          "cards": 674
+        }
+      },
+      "reflections": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 24
+      },
+      "segments": {
+        "art-a-street": {
+          "samples": 657,
+          "fps": 64.90042674253202,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 30.700000000004366,
+          "drawCallsMean": 1603.0593607305937,
+          "submittedTrianglesMean": 7818505.698630137,
+          "pass": true
+        },
+        "art-b-konbini": {
+          "samples": 657,
+          "fps": 64.9986644110053,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 15.599999999991269,
+          "drawCallsMean": 1056.896499238965,
+          "submittedTrianglesMean": 7671216.519025875,
+          "pass": true
+        },
+        "art-c-alley": {
+          "samples": 657,
+          "fps": 64.99930746552165,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.60000000000582,
+          "drawCallsMean": 981.9908675799087,
+          "submittedTrianglesMean": 8588045.461187216,
+          "pass": true
+        },
+        "art-d-laundry": {
+          "samples": 657,
+          "fps": 64.99995053276207,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 15.60000000000582,
+          "drawCallsMean": 914.3226788432268,
+          "submittedTrianglesMean": 8349336.412480975,
+          "pass": true
+        },
+        "walk-third": {
+          "samples": 170,
+          "fps": 54.43309532195565,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 46.19999999999709,
+          "drawCallsMean": 1690.6235294117646,
+          "submittedTrianglesMean": 8328206.388235294,
+          "pass": false
+        },
+        "walk-first": {
+          "samples": 202,
+          "fps": 64.67932502961818,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "maxMs": 30.79999999998836,
+          "drawCallsMean": 1582.3019801980197,
+          "submittedTrianglesMean": 8310219.272277228,
+          "pass": true
+        }
+      }
+    }
+  ]
+}

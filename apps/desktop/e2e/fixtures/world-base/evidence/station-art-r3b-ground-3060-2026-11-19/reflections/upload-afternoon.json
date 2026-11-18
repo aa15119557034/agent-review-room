@@ -1,0 +1,147 @@
+{
+  "time": "afternoon",
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "faces": [
+    {
+      "name": "px",
+      "pathname": "/src/street-env/px.png",
+      "width": 256,
+      "height": 256,
+      "framebufferStatus": 36053,
+      "imageRGBA": "b821f687d3fa1933a8005a3ddb5aee9f853371e218e493f1a55b067a60cf35b5",
+      "gpuRGBA": "b821f687d3fa1933a8005a3ddb5aee9f853371e218e493f1a55b067a60cf35b5",
+      "differentPixels": 0,
+      "maxChannelError": 0,
+      "requests": [
+        {
+          "http": 200,
+          "encoded": 108466,
+          "decoded": 108466
+        }
+      ],
+      "serverRequests": [
+        {
+          "pathname": "/src/street-env/px.png",
+          "http": 200,
+          "bytes": null
+        }
+      ]
+    },
+    {
+      "name": "nx",
+      "pathname": "/src/street-env/nx.png",
+      "width": 256,
+      "height": 256,
+      "framebufferStatus": 36053,
+      "imageRGBA": "988047b5594069319b122f16abeccbd0c400cef1d635db7578318ee91c1b397e",
+      "gpuRGBA": "988047b5594069319b122f16abeccbd0c400cef1d635db7578318ee91c1b397e",
+      "differentPixels": 0,
+      "maxChannelError": 0,
+      "requests": [],
+      "serverRequests": [
+        {
+          "pathname": "/src/street-env/nx.png",
+          "http": 200,
+          "bytes": null
+        }
+      ]
+    },
+    {
+      "name": "py",
+      "pathname": "/src/street-env/py.png",
+      "width": 256,
+      "height": 256,
+      "framebufferStatus": 36053,
+      "imageRGBA": "dce31a07f0660fc2db11838c19c07192b5f23e2f48c62c5bf8e8ecde46821f89",
+      "gpuRGBA": "dce31a07f0660fc2db11838c19c07192b5f23e2f48c62c5bf8e8ecde46821f89",
+      "differentPixels": 0,
+      "maxChannelError": 0,
+      "requests": [
+        {
+          "http": 200,
+          "encoded": 45508,
+          "decoded": 45508
+        }
+      ],
+      "serverRequests": [
+        {
+          "pathname": "/src/street-env/py.png",
+          "http": 200,
+          "bytes": null
+        }
+      ]
+    },
+    {
+      "name": "ny",
+      "pathname": "/src/street-env/ny.png",
+      "width": 256,
+      "height": 256,
+      "framebufferStatus": 36053,
+      "imageRGBA": "50d6f0ecf65728726fd812d61200373a147a83d75334d2383c3443d01416d177",
+      "gpuRGBA": "50d6f0ecf65728726fd812d61200373a147a83d75334d2383c3443d01416d177",
+      "differentPixels": 0,
+      "maxChannelError": 0,
+      "requests": [],
+      "serverRequests": [
+        {
+          "pathname": "/src/street-env/ny.png",
+          "http": 200,
+          "bytes": null
+        }
+      ]
+    },
+    {
+      "name": "pz",
+      "pathname": "/src/street-env/pz.png",
+      "width": 256,
+      "height": 256,
+      "framebufferStatus": 36053,
+      "imageRGBA": "450b9c6e81966e768b00eeb720bf09a4d653b2dea096ea3306c5e32ae650d046",
+      "gpuRGBA": "450b9c6e81966e768b00eeb720bf09a4d653b2dea096ea3306c5e32ae650d046",
+      "differentPixels": 0,
+      "maxChannelError": 0,
+      "requests": [],
+      "serverRequests": [
+        {
+          "pathname": "/src/street-env/pz.png",
+          "http": 200,
+          "bytes": null
+        }
+      ]
+    },
+    {
+      "name": "nz",
+      "pathname": "/src/street-env/nz.png",
+      "width": 256,
+      "height": 256,
+      "framebufferStatus": 36053,
+      "imageRGBA": "9324e4db951428c1afc7602eff256855ec0e48ae361ff2c43c3af9a2a6cfa25b",
+      "gpuRGBA": "9324e4db951428c1afc7602eff256855ec0e48ae361ff2c43c3af9a2a6cfa25b",
+      "differentPixels": 0,
+      "maxChannelError": 0,
+      "requests": [],
+      "serverRequests": [
+        {
+          "pathname": "/src/street-env/nz.png",
+          "http": 200,
+          "bytes": null
+        }
+      ]
+    }
+  ],
+  "panes": {
+    "W1": 8,
+    "E1": 4,
+    "W2": 5,
+    "E2": 5,
+    "E3": 5
+  },
+  "glassCount": 8,
+  "allGlassShare": true,
+  "wetShares": true,
+  "runtimeCaptures": 0,
+  "extraWetPasses": 0,
+  "beforeGL": 0,
+  "afterGL": 0,
+  "source": "eed4fb46eb7e78418fa319f6f24bdbfe654425a0"
+}

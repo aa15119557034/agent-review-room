@@ -1,0 +1,491 @@
+{
+  "afternoon": {
+    "profile": "afternoon",
+    "baselinePNGRevision": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+    "historicBakerScene": "d3793bac9576d49d296dd9a9db27f32b007c869f",
+    "historicBakerSHA256": "bee3350216d9b72232d5b0f98461c4aea0af16fa784315ebbbe2da9ee91754dc",
+    "historicBakerOK": false,
+    "formula": "legacy-channel",
+    "historicBakerDescription": "PNG RGB8 = sRGB(clamp(linearRGB / 2,0,1)); alpha255. Readback bottom row0 is PNG row0, no flip. Runtime must sRGB decode *2 with CubeTexture.flipY=false; face order px,nx,py,ny,pz,nz. PNG is encoded texture data, not display-exposure screenshot.",
+    "geometry": {
+      "stationOrigin": [
+        0,
+        2.264,
+        18
+      ],
+      "worldOrigin": [
+        280,
+        10.264,
+        918
+      ],
+      "faceOrder": [
+        "px",
+        "nx",
+        "py",
+        "ny",
+        "pz",
+        "nz"
+      ],
+      "raysPerFace": 9,
+      "matchedDirectedEdges": 24,
+      "excludedHalos": 5,
+      "panes": {
+        "W1": 8,
+        "E1": 4,
+        "W2": 5,
+        "E2": 5,
+        "E3": 5
+      },
+      "runtimePasses": 0
+    },
+    "faces": {
+      "px": {
+        "rawSHA256": "7f0a47e980460cdeb303183fe8c45c66825ce5a0fa7b54dbaa63d6c59afb031f",
+        "pngSHA256": "d15de12913e8dff806b64befdd0ac2fd6b6231d00b032f6e65dcb7166ce2b089",
+        "texels": 65536,
+        "rawPeak": 1.3994140625,
+        "rawMin": [
+          0.00519561767578125,
+          0.0033016204833984375,
+          0.0016813278198242188
+        ],
+        "rawMax": [
+          1.265625,
+          1.3017578125,
+          1.3994140625
+        ],
+        "rawOver2ByChannel": [
+          0,
+          0,
+          0
+        ],
+        "rawOver2Texels": 0,
+        "rawNegative": 0,
+        "rawNonfinite": 0,
+        "mappedPeak": 1.3994140625,
+        "mappedOver2Texels": 0,
+        "decodedPeak": 1.4022037838659462,
+        "decodedOver2Texels": 0,
+        "maxQuantizationError": 0.005634984889190675,
+        "maxDecodedVersusRaw": 0.005634984889190675,
+        "unchangedBeforeEncoding": 65536,
+        "rawArchive": "previous/afternoon/px.rgba16f.gz",
+        "archiveSHA256": "80fc8b84bcfa03e5eca2793b4ac793cfa3d5dda4bd36885bc9ffd2d9b9df8024"
+      },
+      "nx": {
+        "rawSHA256": "4a8f30509bf3801771353e12fb2f46917e63abc6b4938a39b913c772311c4bc4",
+        "pngSHA256": "68b524cbe4227b142373e4237fde4d900eeb558c270bbac09ecc682416514934",
+        "texels": 65536,
+        "rawPeak": 1.2998046875,
+        "rawMin": [
+          0.0041046142578125,
+          0.0054931640625,
+          0.0035915374755859375
+        ],
+        "rawMax": [
+          1.2998046875,
+          1.1650390625,
+          1.166015625
+        ],
+        "rawOver2ByChannel": [
+          0,
+          0,
+          0
+        ],
+        "rawOver2Texels": 0,
+        "rawNegative": 0,
+        "rawNonfinite": 0,
+        "mappedPeak": 1.2998046875,
+        "mappedOver2Texels": 0,
+        "decodedPeak": 1.3028112748396483,
+        "decodedOver2Texels": 0,
+        "maxQuantizationError": 0.005945833934862588,
+        "maxDecodedVersusRaw": 0.005945833934862588,
+        "unchangedBeforeEncoding": 65536,
+        "rawArchive": "previous/afternoon/nx.rgba16f.gz",
+        "archiveSHA256": "f634a0667ed5ce421a5496d649bf7c80895ef3f4c5c0541fb3e0b11d456d7f9d"
+      },
+      "py": {
+        "rawSHA256": "8a14769cf0073db86e2e76c484831b7fa01e1fcc4f4c2b579ec12e1733579fa6",
+        "pngSHA256": "5423e68955eb3d3bcde767d97b121540ee94904426e797875de959176e981c1a",
+        "texels": 65536,
+        "rawPeak": 1.03125,
+        "rawMin": [
+          0.00913238525390625,
+          0.0071563720703125,
+          0.007411956787109375
+        ],
+        "rawMax": [
+          1.03125,
+          0.58642578125,
+          0.87353515625
+        ],
+        "rawOver2ByChannel": [
+          0,
+          0,
+          0
+        ],
+        "rawOver2Texels": 0,
+        "rawNegative": 0,
+        "rawNonfinite": 0,
+        "mappedPeak": 1.03125,
+        "mappedOver2Texels": 0,
+        "decodedPeak": 1.0298353307530428,
+        "decodedOver2Texels": 0,
+        "maxQuantizationError": 0.005774338637859255,
+        "maxDecodedVersusRaw": 0.005774338637859255,
+        "unchangedBeforeEncoding": 65536,
+        "rawArchive": "previous/afternoon/py.rgba16f.gz",
+        "archiveSHA256": "ebadf191848514f7ec2dc701837f8648b3a0b26d773bbbc5711c15b84e669195"
+      },
+      "ny": {
+        "rawSHA256": "8d40fd14367180fb3ed3777fb9b6e6566242a60085dc7d75ab756ba4c417d580",
+        "pngSHA256": "7b824f864fb448646ec6bce33dde28fcf4edffeaf408d6ce63473518c06c7090",
+        "texels": 65536,
+        "rawPeak": 0.7021484375,
+        "rawMin": [
+          0.03173828125,
+          0.027801513671875,
+          0.031951904296875
+        ],
+        "rawMax": [
+          0.7021484375,
+          0.60302734375,
+          0.51513671875
+        ],
+        "rawOver2ByChannel": [
+          0,
+          0,
+          0
+        ],
+        "rawOver2Texels": 0,
+        "rawNegative": 0,
+        "rawNonfinite": 0,
+        "mappedPeak": 0.7021484375,
+        "mappedOver2Texels": 0,
+        "decodedPeak": 0.7030651990008787,
+        "decodedOver2Texels": 0,
+        "maxQuantizationError": 0.0048230115008787156,
+        "maxDecodedVersusRaw": 0.0048230115008787156,
+        "unchangedBeforeEncoding": 65536,
+        "rawArchive": "previous/afternoon/ny.rgba16f.gz",
+        "archiveSHA256": "f05ab0b25ec5cc1ad59852fa7c8b338bbc141099b27c4669b90ccb64189e69fc"
+      },
+      "pz": {
+        "rawSHA256": "b9e987bada0a859deb7201981d67119b94923234dd7e48a29abc121eccb5822d",
+        "pngSHA256": "20ac46fa7e4f3787f91e98cfe7d1ff1bfa86fa5e9307dd852e77181988b903c9",
+        "texels": 65536,
+        "rawPeak": 1.3994140625,
+        "rawMin": [
+          0.004459381103515625,
+          0.0030975341796875,
+          0.0018491744995117188
+        ],
+        "rawMax": [
+          1.3408203125,
+          1.3349609375,
+          1.3994140625
+        ],
+        "rawOver2ByChannel": [
+          0,
+          0,
+          0
+        ],
+        "rawOver2Texels": 0,
+        "rawNegative": 0,
+        "rawNonfinite": 0,
+        "mappedPeak": 1.3994140625,
+        "mappedOver2Texels": 0,
+        "decodedPeak": 1.4022037838659462,
+        "decodedOver2Texels": 0,
+        "maxQuantizationError": 0.0067098458501522185,
+        "maxDecodedVersusRaw": 0.0067098458501522185,
+        "unchangedBeforeEncoding": 65536,
+        "rawArchive": "previous/afternoon/pz.rgba16f.gz",
+        "archiveSHA256": "750ef0f53119f047a987dba010e247196684f2fabae2a78a92752e63bb7c1603"
+      },
+      "nz": {
+        "rawSHA256": "26f0e45615b6644efb54694747e486e9ea9c0f86c5744a45a8e8899beffdde9e",
+        "pngSHA256": "9e696e3934cd740e903dd57dfb18a90bb29247f8a5ffd8d964b3c652c092402e",
+        "texels": 65536,
+        "rawPeak": 2.3984375,
+        "rawMin": [
+          0.004611968994140625,
+          0.00469207763671875,
+          0.0025539398193359375
+        ],
+        "rawMax": [
+          2.3984375,
+          1.1650390625,
+          1.3203125
+        ],
+        "rawOver2ByChannel": [
+          1,
+          0,
+          0
+        ],
+        "rawOver2Texels": 1,
+        "rawNegative": 0,
+        "rawNonfinite": 0,
+        "mappedPeak": 2.0,
+        "mappedOver2Texels": 0,
+        "decodedPeak": 2.0,
+        "decodedOver2Texels": 0,
+        "maxQuantizationError": 0.006732801441164282,
+        "maxDecodedVersusRaw": 0.3984375,
+        "unchangedBeforeEncoding": 65535,
+        "rawArchive": "previous/afternoon/nz.rgba16f.gz",
+        "archiveSHA256": "794b189f68e303b341c8ce53ce2e66f1ed0f0ea9d31a48d5f83bf9410d13c621"
+      }
+    },
+    "rawPeak": 2.3984375,
+    "rawOver2Texels": 1,
+    "mappedOver2Texels": 0,
+    "nativeReport": "previous/afternoon/bake-report.json.gz"
+  },
+  "evening": {
+    "profile": "evening",
+    "baselinePNGRevision": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+    "historicBakerScene": "41c4fa8e5e84cc2a9e0087deb2097059a4aa95d2",
+    "historicBakerSHA256": "7731a0571894bcd8f35b49ce29610ea6147fc009f3c3c91f7a1003b560d8cfd2",
+    "historicBakerOK": true,
+    "formula": "peak",
+    "historicBakerDescription": "PNG RGB8 = sRGB(linearRGB / max(2, peakRGB)); alpha255. Linear radiance up to 2 is preserved, brighter texels retain RGB ratios. Bottom row0 is PNG row0, no flip. Runtime sRGB decode *2 with CubeTexture.flipY=false; face order px,nx,py,ny,pz,nz.",
+    "geometry": {
+      "stationOrigin": [
+        0,
+        2.264,
+        18
+      ],
+      "worldOrigin": [
+        280,
+        10.264,
+        918
+      ],
+      "faceOrder": [
+        "px",
+        "nx",
+        "py",
+        "ny",
+        "pz",
+        "nz"
+      ],
+      "raysPerFace": 9,
+      "matchedDirectedEdges": 24,
+      "excludedHalos": 5,
+      "panes": {
+        "W1": 8,
+        "E1": 4,
+        "W2": 5,
+        "E2": 5,
+        "E3": 5
+      },
+      "runtimePasses": 0
+    },
+    "faces": {
+      "px": {
+        "rawSHA256": "1659f91cdf931fc08524901a812690e772abd50b1f190fad173742d96b99931e",
+        "pngSHA256": "a9c371f9af03b3bc7c2fbd02c3d9a42b53e6019e323f661f888346d91b4a30ca",
+        "texels": 65536,
+        "rawPeak": 2.939453125,
+        "rawMin": [
+          0.0030498504638671875,
+          0.0014009475708007812,
+          0.0005497932434082031
+        ],
+        "rawMax": [
+          2.658203125,
+          2.734375,
+          2.939453125
+        ],
+        "rawOver2ByChannel": [
+          16,
+          4,
+          4
+        ],
+        "rawOver2Texels": 16,
+        "rawNegative": 0,
+        "rawNonfinite": 0,
+        "mappedPeak": 2.0,
+        "mappedOver2Texels": 0,
+        "decodedPeak": 2.0,
+        "decodedOver2Texels": 0,
+        "maxQuantizationError": 0.006545876766187675,
+        "maxDecodedVersusRaw": 0.939453125,
+        "unchangedBeforeEncoding": 65520,
+        "fixtureRawArchive": "evidence/laundry-hedge-evening-reflections-2026-11-18/hdr/px.rgba16f.gz",
+        "archiveSHA256": "a20d45745a1cfd3799218237d5b78b142054b1e793c3346e3c12b2acab9eb2de"
+      },
+      "nx": {
+        "rawSHA256": "665ed35963694ba7e8e56ae9e05105b2f4964e9158e718d3badf87c7fa596686",
+        "pngSHA256": "57ce3526a4a5e58a3525ca6b863ce2d76a8a44494d823dd6af1620980729f338",
+        "texels": 65536,
+        "rawPeak": 2.728515625,
+        "rawMin": [
+          0.0024089813232421875,
+          0.002750396728515625,
+          0.0011739730834960938
+        ],
+        "rawMax": [
+          2.728515625,
+          2.4453125,
+          2.41796875
+        ],
+        "rawOver2ByChannel": [
+          47,
+          45,
+          1
+        ],
+        "rawOver2Texels": 47,
+        "rawNegative": 0,
+        "rawNonfinite": 0,
+        "mappedPeak": 2.0,
+        "mappedOver2Texels": 0,
+        "decodedPeak": 2.0,
+        "decodedOver2Texels": 0,
+        "maxQuantizationError": 0.007643018004986013,
+        "maxDecodedVersusRaw": 0.728515625,
+        "unchangedBeforeEncoding": 65489,
+        "fixtureRawArchive": "evidence/laundry-hedge-evening-reflections-2026-11-18/hdr/nx.rgba16f.gz",
+        "archiveSHA256": "ee25ba0917dc0fdaaf584e8ffaa205214c2d6c8684e6726b8e1e5beb2fef5ec1"
+      },
+      "py": {
+        "rawSHA256": "cc7aecb267cc14dc7d18ffc6718a7f64d46a2449d966deb46dac91dbb5d3bc72",
+        "pngSHA256": "d287e185b48aa2364bd54f1a8f9f1bc01dcdef9b345feef41f047467caf214a3",
+        "texels": 65536,
+        "rawPeak": 1.392578125,
+        "rawMin": [
+          0.005359649658203125,
+          0.003047943115234375,
+          0.0024318695068359375
+        ],
+        "rawMax": [
+          1.392578125,
+          0.515625,
+          0.5947265625
+        ],
+        "rawOver2ByChannel": [
+          0,
+          0,
+          0
+        ],
+        "rawOver2Texels": 0,
+        "rawNegative": 0,
+        "rawNonfinite": 0,
+        "mappedPeak": 1.392578125,
+        "mappedOver2Texels": 0,
+        "decodedPeak": 1.3877435225839798,
+        "decodedOver2Texels": 0,
+        "maxQuantizationError": 0.007125998233812325,
+        "maxDecodedVersusRaw": 0.007125998233812325,
+        "unchangedBeforeEncoding": 65536,
+        "fixtureRawArchive": "evidence/laundry-hedge-evening-reflections-2026-11-18/hdr/py.rgba16f.gz",
+        "archiveSHA256": "b3230aaf56f891bc64575000387ba675a0263d07728989b8c501e8c3beb6693d"
+      },
+      "ny": {
+        "rawSHA256": "72d3abff3f5e9f6c7b6e93fc89a3c9e2ab433b518b59de0cd0aa77598dd7b40d",
+        "pngSHA256": "99534baa04a60156502c6dca7c07da468f5d3203866de8530904d48851cd294e",
+        "texels": 65536,
+        "rawPeak": 0.185791015625,
+        "rawMin": [
+          0.00428009033203125,
+          0.00499725341796875,
+          0.0115203857421875
+        ],
+        "rawMax": [
+          0.0948486328125,
+          0.1083984375,
+          0.185791015625
+        ],
+        "rawOver2ByChannel": [
+          0,
+          0,
+          0
+        ],
+        "rawOver2Texels": 0,
+        "rawNegative": 0,
+        "rawNonfinite": 0,
+        "mappedPeak": 0.185791015625,
+        "mappedOver2Texels": 0,
+        "decodedPeak": 0.1861179256933749,
+        "decodedOver2Texels": 0,
+        "maxQuantizationError": 0.0021579647558749027,
+        "maxDecodedVersusRaw": 0.0021579647558749027,
+        "unchangedBeforeEncoding": 65536,
+        "fixtureRawArchive": "evidence/laundry-hedge-evening-reflections-2026-11-18/hdr/ny.rgba16f.gz",
+        "archiveSHA256": "f114c9bee606ccf8b758299943ec464cc5e4c68635138016020bb1c21e82b6aa"
+      },
+      "pz": {
+        "rawSHA256": "f17964872801a20e4474fa4b273e08a4fcc46f5742bb880cffc38cb8f19b04b1",
+        "pngSHA256": "b142b174ca3630e0cfb6498a01a29166e3c5d5e85e0274e52e5347f84208709e",
+        "texels": 65536,
+        "rawPeak": 2.939453125,
+        "rawMin": [
+          0.0026111602783203125,
+          0.0013141632080078125,
+          0.0006046295166015625
+        ],
+        "rawMax": [
+          2.658203125,
+          2.734375,
+          2.939453125
+        ],
+        "rawOver2ByChannel": [
+          26,
+          25,
+          25
+        ],
+        "rawOver2Texels": 26,
+        "rawNegative": 0,
+        "rawNonfinite": 0,
+        "mappedPeak": 2.0,
+        "mappedOver2Texels": 0,
+        "decodedPeak": 2.0,
+        "decodedOver2Texels": 0,
+        "maxQuantizationError": 0.00746985066623429,
+        "maxDecodedVersusRaw": 0.939453125,
+        "unchangedBeforeEncoding": 65510,
+        "fixtureRawArchive": "evidence/laundry-hedge-evening-reflections-2026-11-18/hdr/pz.rgba16f.gz",
+        "archiveSHA256": "1d577c402f28675414a1e7e9800fd3f9d7c161bc06e7832e7d3dc8bc3852d0c4"
+      },
+      "nz": {
+        "rawSHA256": "164088372e32ecca5cf0462ff3a540daa843ec2532f809e36fd97b029f690abb",
+        "pngSHA256": "67bcf1712eb52d99e0f9a026e364e059a8d5bfc50e0ebab34e6aca8d02f167f7",
+        "texels": 65536,
+        "rawPeak": 5.0390625,
+        "rawMin": [
+          0.0026531219482421875,
+          0.0020046234130859375,
+          0.0008349418640136719
+        ],
+        "rawMax": [
+          5.0390625,
+          2.4453125,
+          1.953125
+        ],
+        "rawOver2ByChannel": [
+          9,
+          8,
+          0
+        ],
+        "rawOver2Texels": 9,
+        "rawNegative": 0,
+        "rawNonfinite": 0,
+        "mappedPeak": 2.0,
+        "mappedOver2Texels": 0,
+        "decodedPeak": 2.0,
+        "decodedOver2Texels": 0,
+        "maxQuantizationError": 0.007643018004986013,
+        "maxDecodedVersusRaw": 3.0390625,
+        "unchangedBeforeEncoding": 65527,
+        "fixtureRawArchive": "evidence/laundry-hedge-evening-reflections-2026-11-18/hdr/nz.rgba16f.gz",
+        "archiveSHA256": "e91c576f737c3378c2ec1143da68d6e7a9f6af28ed6436101acabd4a982c7980"
+      }
+    },
+    "rawPeak": 5.0390625,
+    "rawOver2Texels": 98,
+    "mappedOver2Texels": 0,
+    "fixtureNativeReport": "evidence/laundry-hedge-evening-reflections-2026-11-18/reports/bake.json.gz",
+    "reportArchiveSHA256": "400408bc4175ca837f9e01d139bb9c0a5d9dddfe7bfef86a47ceb503e00ff221"
+  }
+}

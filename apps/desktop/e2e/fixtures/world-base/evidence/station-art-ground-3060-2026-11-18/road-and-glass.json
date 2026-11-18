@@ -1,0 +1,50 @@
+{
+  "art-a-street": {
+    "roi": [
+      512,
+      672,
+      1000,
+      852
+    ],
+    "before": {
+      "pixels": 87840,
+      "lumaMean": 81.3008,
+      "lumaP95": 95.3878,
+      "lumaMax": 186.2302,
+      "allRGB250": 0
+    },
+    "after": {
+      "pixels": 87840,
+      "lumaMean": 84.895,
+      "lumaP95": 102.4858,
+      "lumaMax": 186.2302,
+      "allRGB250": 0
+    },
+    "changed": 56719,
+    "deltaGT8": 24595
+  },
+  "art-b-konbini": {
+    "roi": [
+      884,
+      400,
+      1324,
+      555
+    ],
+    "before": {
+      "pixels": 68200,
+      "lumaMean": 142.9474,
+      "lumaP95": 203.5678,
+      "lumaMax": 250.1496,
+      "allRGB250": 0
+    },
+    "after": {
+      "pixels": 68200,
+      "lumaMean": 146.7145,
+      "lumaP95": 206.2096,
+      "lumaMax": 250.1496,
+      "allRGB250": 2
+    },
+    "changed": 53245,
+    "deltaGT8": 14435
+  }
+}

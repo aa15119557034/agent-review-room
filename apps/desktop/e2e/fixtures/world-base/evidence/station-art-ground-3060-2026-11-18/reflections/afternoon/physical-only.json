@@ -1,0 +1,333 @@
+{
+  "scope": "Radiance and geometry only. Raw CDP transport status is independent.",
+  "profile": "afternoon",
+  "prior": "2a7c6f12bb66f44a04a9dbbc2a4e2e7a22e93758",
+  "source": "17c126adc9f8f053fab99479c92269e1460c3029",
+  "texels": 393216,
+  "rawNegativeChannels": 0,
+  "rawNonfiniteChannels": 0,
+  "rawPeak": 2.3984375,
+  "rawOver2Texels": 1,
+  "mappedPeak": 2.0,
+  "mappedOver2Texels": 0,
+  "decodedPeak": 2.0,
+  "decodedOver2Texels": 0,
+  "maxQuantizationError": 0.0069956889153750534,
+  "priorNegative": [
+    {
+      "face": "nz",
+      "x": 237,
+      "y": 139,
+      "channel": 2,
+      "rgb": [
+        0.229248046875,
+        0.10504150390625,
+        -0.0026607513427734375
+      ]
+    }
+  ],
+  "pixel": {
+    "face": "nz",
+    "x": 237,
+    "y": 139,
+    "priorLinearRGB": [
+      0.229248046875,
+      0.10504150390625,
+      -0.0026607513427734375
+    ],
+    "currentLinearRGB": [
+      0.229248046875,
+      0.10504150390625,
+      0.0
+    ]
+  },
+  "strictTransportClean": false,
+  "rawCDPFailures": [
+    {
+      "url": "http://127.0.0.1:60270/assets/models/boulders.glb",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "74300.150",
+      "timestamp": 2024911.426418,
+      "type": "Fetch",
+      "stage": "loading"
+    },
+    {
+      "url": "http://127.0.0.1:60270/mature-sakura/mature-sakura.glb",
+      "canceled": true,
+      "errorText": "net::ERR_ABORTED",
+      "requestId": "74300.235",
+      "timestamp": 2024920.341411,
+      "type": "Fetch",
+      "stage": "loading"
+    }
+  ],
+  "httpErrors": [],
+  "driverTransportClean": false,
+  "driverOK": false,
+  "geometry": {
+    "stationOrigin": [
+      0,
+      2.264,
+      18
+    ],
+    "worldOrigin": [
+      280,
+      10.264,
+      918
+    ],
+    "faceOrder": [
+      "px",
+      "nx",
+      "py",
+      "ny",
+      "pz",
+      "nz"
+    ],
+    "raysPerFace": 9,
+    "matchedDirectedEdges": 24,
+    "excludedHalos": 5,
+    "panes": {
+      "W1": 8,
+      "E1": 4,
+      "W2": 5,
+      "E2": 5,
+      "E3": 5
+    },
+    "runtimePasses": 0
+  },
+  "faces": {
+    "px": {
+      "rawSHA256": "aca5f5fdad9fdcb912a0ebe92c233c639b62ee51ac807590734a82d366440160",
+      "pngSHA256": "136854640535f7c45ddc446660ecb59b871c656379d45dcfcea00a6b97beb7dd",
+      "texels": 65536,
+      "rawPeak": 1.3994140625,
+      "rawMin": [
+        0.0073394775390625,
+        0.00569915771484375,
+        0.003925323486328125
+      ],
+      "rawMax": [
+        1.265625,
+        1.3017578125,
+        1.3994140625
+      ],
+      "rawOver2ByChannel": [
+        0,
+        0,
+        0
+      ],
+      "rawOver2Texels": 0,
+      "rawNegative": 0,
+      "rawNonfinite": 0,
+      "mappedPeak": 1.3994140625,
+      "mappedOver2Texels": 0,
+      "decodedPeak": 1.4022037838659462,
+      "decodedOver2Texels": 0,
+      "maxQuantizationError": 0.0067098458501522185,
+      "maxDecodedVersusRaw": 0.0067098458501522185,
+      "unchangedBeforeEncoding": 65536,
+      "oldStoredPNGSHA256": "d15de12913e8dff806b64befdd0ac2fd6b6231d00b032f6e65dcb7166ce2b089"
+    },
+    "nx": {
+      "rawSHA256": "3366312558dc908f0dfd825af85e2b13b84dc125fa9149086cda0d839008547a",
+      "pngSHA256": "42609c8be1b3833880675eba356b236ab5468627e73c6a890a6012466c171c04",
+      "texels": 65536,
+      "rawPeak": 1.2998046875,
+      "rawMin": [
+        0.0,
+        0.0091552734375,
+        0.0024585723876953125
+      ],
+      "rawMax": [
+        1.2998046875,
+        1.1650390625,
+        1.166015625
+      ],
+      "rawOver2ByChannel": [
+        0,
+        0,
+        0
+      ],
+      "rawOver2Texels": 0,
+      "rawNegative": 0,
+      "rawNonfinite": 0,
+      "mappedPeak": 1.2998046875,
+      "mappedOver2Texels": 0,
+      "decodedPeak": 1.3028112748396483,
+      "decodedOver2Texels": 0,
+      "maxQuantizationError": 0.006376136409858457,
+      "maxDecodedVersusRaw": 0.006376136409858457,
+      "unchangedBeforeEncoding": 65536,
+      "oldStoredPNGSHA256": "68b524cbe4227b142373e4237fde4d900eeb558c270bbac09ecc682416514934"
+    },
+    "py": {
+      "rawSHA256": "3025a62fedc425052ee0809908fc30cee9ce41285fb4228a9bbbe34320aa1d22",
+      "pngSHA256": "b2547b4cdca92bfb71750694767841a4967f45a41e6d40963ed1c613d1dde947",
+      "texels": 65536,
+      "rawPeak": 1.1796875,
+      "rawMin": [
+        0.01436614990234375,
+        0.0135650634765625,
+        0.0243072509765625
+      ],
+      "rawMax": [
+        1.1796875,
+        0.63623046875,
+        0.87353515625
+      ],
+      "rawOver2ByChannel": [
+        0,
+        0,
+        0
+      ],
+      "rawOver2Texels": 0,
+      "rawNegative": 0,
+      "rawNonfinite": 0,
+      "mappedPeak": 1.1796875,
+      "mappedOver2Texels": 0,
+      "decodedPeak": 1.1812376818386738,
+      "decodedOver2Texels": 0,
+      "maxQuantizationError": 0.006376136409858457,
+      "maxDecodedVersusRaw": 0.006376136409858457,
+      "unchangedBeforeEncoding": 65536,
+      "oldStoredPNGSHA256": "5423e68955eb3d3bcde767d97b121540ee94904426e797875de959176e981c1a"
+    },
+    "ny": {
+      "rawSHA256": "e9a14e71391e88f03b042c06bf0a09594d7975138b471e8aeab8a0d86c2b0655",
+      "pngSHA256": "a05b10f09a7bbd4648347f5ff9521ed3aa46cdfa665d665f981c534e1f7c1775",
+      "texels": 65536,
+      "rawPeak": 0.7509765625,
+      "rawMin": [
+        0.0338134765625,
+        0.02899169921875,
+        0.031463623046875
+      ],
+      "rawMax": [
+        0.7509765625,
+        0.62890625,
+        0.5068359375
+      ],
+      "rawOver2ByChannel": [
+        0,
+        0,
+        0
+      ],
+      "rawOver2Texels": 0,
+      "rawNegative": 0,
+      "rawNonfinite": 0,
+      "mappedPeak": 0.7509765625,
+      "mappedOver2Texels": 0,
+      "decodedPeak": 0.752524245981813,
+      "decodedOver2Texels": 0,
+      "maxQuantizationError": 0.004965652231813,
+      "maxDecodedVersusRaw": 0.004965652231813,
+      "unchangedBeforeEncoding": 65536,
+      "oldStoredPNGSHA256": "7b824f864fb448646ec6bce33dde28fcf4edffeaf408d6ce63473518c06c7090"
+    },
+    "pz": {
+      "rawSHA256": "b983925788ad23159c86e01235ff02ef78644f44fc3e239489132e200490daff",
+      "pngSHA256": "12645a285eea99e2f2ba52c43493fd9e4f6a9e540b566d6363da2a8bb0401de2",
+      "texels": 65536,
+      "rawPeak": 1.3994140625,
+      "rawMin": [
+        0.007022857666015625,
+        0.006259918212890625,
+        0.004985809326171875
+      ],
+      "rawMax": [
+        1.3408203125,
+        1.3349609375,
+        1.3994140625
+      ],
+      "rawOver2ByChannel": [
+        0,
+        0,
+        0
+      ],
+      "rawOver2Texels": 0,
+      "rawNegative": 0,
+      "rawNonfinite": 0,
+      "mappedPeak": 1.3994140625,
+      "mappedOver2Texels": 0,
+      "decodedPeak": 1.4022037838659462,
+      "decodedOver2Texels": 0,
+      "maxQuantizationError": 0.0067098458501522185,
+      "maxDecodedVersusRaw": 0.0067098458501522185,
+      "unchangedBeforeEncoding": 65536,
+      "oldStoredPNGSHA256": "20ac46fa7e4f3787f91e98cfe7d1ff1bfa86fa5e9307dd852e77181988b903c9"
+    },
+    "nz": {
+      "rawSHA256": "5268d4f38888cef1ddd8d9b2baecce276550ff65a0a713bb84891975d444e53d",
+      "pngSHA256": "64f30c512541d107a4181ab8ab01843b4f0130ed16c1f7471185ca02e576ce88",
+      "texels": 65536,
+      "rawPeak": 2.3984375,
+      "rawMin": [
+        0.0,
+        0.00800323486328125,
+        0.0
+      ],
+      "rawMax": [
+        2.3984375,
+        1.1650390625,
+        1.3203125
+      ],
+      "rawOver2ByChannel": [
+        1,
+        0,
+        0
+      ],
+      "rawOver2Texels": 1,
+      "rawNegative": 0,
+      "rawNonfinite": 0,
+      "mappedPeak": 2.0,
+      "mappedOver2Texels": 0,
+      "decodedPeak": 2.0,
+      "decodedOver2Texels": 0,
+      "maxQuantizationError": 0.0069956889153750534,
+      "maxDecodedVersusRaw": 0.3984375,
+      "unchangedBeforeEncoding": 65535,
+      "oldStoredPNGSHA256": "9e696e3934cd740e903dd57dfb18a90bb29247f8a5ffd8d964b3c652c092402e"
+    }
+  },
+  "versusPriorNative": {
+    "px": {
+      "rawRGBChangedTexels": 0,
+      "above0p01": 0,
+      "signedDiagnosticRawSHA256": "aca5f5fdad9fdcb912a0ebe92c233c639b62ee51ac807590734a82d366440160",
+      "postFixRawSHA256": "aca5f5fdad9fdcb912a0ebe92c233c639b62ee51ac807590734a82d366440160"
+    },
+    "nx": {
+      "rawRGBChangedTexels": 0,
+      "above0p01": 0,
+      "signedDiagnosticRawSHA256": "3366312558dc908f0dfd825af85e2b13b84dc125fa9149086cda0d839008547a",
+      "postFixRawSHA256": "3366312558dc908f0dfd825af85e2b13b84dc125fa9149086cda0d839008547a"
+    },
+    "py": {
+      "rawRGBChangedTexels": 0,
+      "above0p01": 0,
+      "signedDiagnosticRawSHA256": "3025a62fedc425052ee0809908fc30cee9ce41285fb4228a9bbbe34320aa1d22",
+      "postFixRawSHA256": "3025a62fedc425052ee0809908fc30cee9ce41285fb4228a9bbbe34320aa1d22"
+    },
+    "ny": {
+      "rawRGBChangedTexels": 0,
+      "above0p01": 0,
+      "signedDiagnosticRawSHA256": "e9a14e71391e88f03b042c06bf0a09594d7975138b471e8aeab8a0d86c2b0655",
+      "postFixRawSHA256": "e9a14e71391e88f03b042c06bf0a09594d7975138b471e8aeab8a0d86c2b0655"
+    },
+    "pz": {
+      "rawRGBChangedTexels": 0,
+      "above0p01": 0,
+      "signedDiagnosticRawSHA256": "b983925788ad23159c86e01235ff02ef78644f44fc3e239489132e200490daff",
+      "postFixRawSHA256": "b983925788ad23159c86e01235ff02ef78644f44fc3e239489132e200490daff"
+    },
+    "nz": {
+      "rawRGBChangedTexels": 2,
+      "above0p01": 0,
+      "signedDiagnosticRawSHA256": "dce0b42e8d2bcd20b7fe66f5b99f7c5059ce2d68c89d12c26cf4593545b8f8a7",
+      "postFixRawSHA256": "5268d4f38888cef1ddd8d9b2baecce276550ff65a0a713bb84891975d444e53d"
+    }
+  },
+  "panelSHA256": "412560f08a3614ea0beb7337b6c66bbae12cb0a4fd6a852dd4f9d6e4e7f5b532",
+  "oldStoredPNGRef": "47a5c12eba910682ccbf8bc9138510bc01737bf3"
+}
