@@ -1,0 +1,321 @@
+{
+  "source": "ffbcfa3e091bdb2d4a7cf94367d40868101c2ddc",
+  "CPUOnly": true,
+  "features": {
+    "2d_canvas": "disabled_software",
+    "direct_rendering_display_compositor": "disabled_off_ok",
+    "gpu_compositing": "disabled_software",
+    "multiple_raster_threads": "disabled_off",
+    "opengl": "disabled_off",
+    "rasterization": "disabled_software",
+    "raw_draw": "disabled_off_ok",
+    "skia_graphite": "disabled_off",
+    "trees_in_viz": "disabled_off",
+    "video_decode": "disabled_software",
+    "video_encode": "disabled_software",
+    "webgl": "disabled_off",
+    "webgpu": "disabled_off",
+    "webnn": "disabled_off"
+  },
+  "batch": {
+    "merged": 725,
+    "sources": 16362,
+    "sharedMaterials": 258,
+    "atlasTextures": 254,
+    "atlasPages": 5,
+    "groupsByKind": {
+      "MeshToonMaterial+map": 185,
+      "MeshToonMaterial": 221,
+      "MeshToonMaterial+atlas+tr": 36,
+      "MeshToonMaterial+atlas": 97,
+      "MeshBasicMaterial": 23,
+      "MeshToonMaterial+tr": 15,
+      "MeshToonMaterial+atlas+at": 30,
+      "MeshToonMaterial+map+tr": 5,
+      "ShaderMaterial": 3,
+      "MeshToonMaterial+map+at": 23,
+      "ShaderMaterial+tr": 66,
+      "MeshBasicMaterial+atlas+tr": 14,
+      "MeshBasicMaterial+atlas": 38,
+      "MeshStandardMaterial+map": 1
+    },
+    "nonAtlasReasons": {
+      "uv": 2466,
+      "tex:wrap": 204
+    }
+  },
+  "retainedSolo": [
+    "art-r1-e2-board",
+    "art-r1-e1-board"
+  ],
+  "boards": [
+    "W2",
+    "W4",
+    "W6",
+    "E3",
+    "E5"
+  ],
+  "flags": {
+    "flags": 14,
+    "triangles": 1512,
+    "clothTriangles": 336
+  },
+  "images": [
+    {
+      "material": "art-r3-w1-zone-SNACK",
+      "sourceType": "MeshBasicMaterial",
+      "vertexRGB": [
+        0.95,
+        0.95,
+        0.95
+      ],
+      "noBatch": false,
+      "sourceMeshes": null,
+      "triangles": null,
+      "printTriangles": 12,
+      "atlasPage": 4,
+      "pageSize": [
+        4096,
+        4096
+      ],
+      "tile": [
+        6,
+        2782,
+        256,
+        92
+      ],
+      "pixelsDifferent": 0,
+      "distinctRGB": 143,
+      "outputBatch": 717,
+      "outputMaterial": "MeshBasicMaterial",
+      "outputBatchSources": 3,
+      "outputBatchTriangles": 36,
+      "uvMaxError": 0,
+      "colorMaxError": 1.1920928910669204e-8
+    },
+    {
+      "material": "art-r3-w1-zone-BAKERY",
+      "sourceType": "MeshBasicMaterial",
+      "vertexRGB": [
+        0.95,
+        0.95,
+        0.95
+      ],
+      "noBatch": false,
+      "sourceMeshes": null,
+      "triangles": null,
+      "printTriangles": 12,
+      "atlasPage": 4,
+      "pageSize": [
+        4096,
+        4096
+      ],
+      "tile": [
+        274,
+        2782,
+        256,
+        92
+      ],
+      "pixelsDifferent": 0,
+      "distinctRGB": 184,
+      "outputBatch": 717,
+      "outputMaterial": "MeshBasicMaterial",
+      "outputBatchSources": 3,
+      "outputBatchTriangles": 36,
+      "uvMaxError": 0,
+      "colorMaxError": 1.1920928910669204e-8
+    },
+    {
+      "material": "art-r3-w1-zone-DRINK",
+      "sourceType": "MeshBasicMaterial",
+      "vertexRGB": [
+        0.95,
+        0.95,
+        0.95
+      ],
+      "noBatch": false,
+      "sourceMeshes": null,
+      "triangles": null,
+      "printTriangles": 12,
+      "atlasPage": 4,
+      "pageSize": [
+        4096,
+        4096
+      ],
+      "tile": [
+        542,
+        2782,
+        256,
+        92
+      ],
+      "pixelsDifferent": 0,
+      "distinctRGB": 141,
+      "outputBatch": 717,
+      "outputMaterial": "MeshBasicMaterial",
+      "outputBatchSources": 3,
+      "outputBatchTriangles": 36,
+      "uvMaxError": 0,
+      "colorMaxError": 1.1920928910669204e-8
+    },
+    {
+      "material": "art-r3-board-W2",
+      "sourceType": "MeshBasicMaterial",
+      "vertexRGB": [
+        0.86,
+        0.86,
+        0.86
+      ],
+      "noBatch": false,
+      "sourceMeshes": 3,
+      "triangles": 26,
+      "printTriangles": 2,
+      "atlasPage": 4,
+      "pageSize": [
+        4096,
+        4096
+      ],
+      "tile": [
+        3066,
+        6,
+        256,
+        440
+      ],
+      "pixelsDifferent": 0,
+      "distinctRGB": 311,
+      "outputBatch": 719,
+      "outputMaterial": "MeshBasicMaterial",
+      "outputBatchSources": 2,
+      "outputBatchTriangles": 4,
+      "uvMaxError": 0,
+      "colorMaxError": 1.4305114759416426e-8
+    },
+    {
+      "material": "art-r3-board-W4",
+      "sourceType": "MeshBasicMaterial",
+      "vertexRGB": [
+        0.86,
+        0.86,
+        0.86
+      ],
+      "noBatch": false,
+      "sourceMeshes": 3,
+      "triangles": 26,
+      "printTriangles": 2,
+      "atlasPage": 4,
+      "pageSize": [
+        4096,
+        4096
+      ],
+      "tile": [
+        3334,
+        6,
+        256,
+        440
+      ],
+      "pixelsDifferent": 0,
+      "distinctRGB": 389,
+      "outputBatch": 719,
+      "outputMaterial": "MeshBasicMaterial",
+      "outputBatchSources": 2,
+      "outputBatchTriangles": 4,
+      "uvMaxError": 0,
+      "colorMaxError": 1.4305114759416426e-8
+    },
+    {
+      "material": "art-r3-board-W6",
+      "sourceType": "MeshBasicMaterial",
+      "vertexRGB": [
+        0.86,
+        0.86,
+        0.86
+      ],
+      "noBatch": false,
+      "sourceMeshes": 3,
+      "triangles": 26,
+      "printTriangles": 2,
+      "atlasPage": 4,
+      "pageSize": [
+        4096,
+        4096
+      ],
+      "tile": [
+        3602,
+        6,
+        256,
+        440
+      ],
+      "pixelsDifferent": 0,
+      "distinctRGB": 366,
+      "outputBatch": 721,
+      "outputMaterial": "MeshBasicMaterial",
+      "outputBatchSources": 1,
+      "outputBatchTriangles": 2,
+      "uvMaxError": 0,
+      "colorMaxError": 1.4305114759416426e-8
+    },
+    {
+      "material": "art-r3-board-E3",
+      "sourceType": "MeshBasicMaterial",
+      "vertexRGB": [
+        0.86,
+        0.86,
+        0.86
+      ],
+      "noBatch": false,
+      "sourceMeshes": 3,
+      "triangles": 26,
+      "printTriangles": 2,
+      "atlasPage": 4,
+      "pageSize": [
+        4096,
+        4096
+      ],
+      "tile": [
+        6,
+        530,
+        256,
+        440
+      ],
+      "pixelsDifferent": 0,
+      "distinctRGB": 366,
+      "outputBatch": 722,
+      "outputMaterial": "MeshBasicMaterial",
+      "outputBatchSources": 2,
+      "outputBatchTriangles": 4,
+      "uvMaxError": 0,
+      "colorMaxError": 1.4305114759416426e-8
+    },
+    {
+      "material": "art-r3-board-E5",
+      "sourceType": "MeshBasicMaterial",
+      "vertexRGB": [
+        0.86,
+        0.86,
+        0.86
+      ],
+      "noBatch": false,
+      "sourceMeshes": 3,
+      "triangles": 26,
+      "printTriangles": 2,
+      "atlasPage": 4,
+      "pageSize": [
+        4096,
+        4096
+      ],
+      "tile": [
+        274,
+        530,
+        256,
+        440
+      ],
+      "pixelsDifferent": 0,
+      "distinctRGB": 352,
+      "outputBatch": 722,
+      "outputMaterial": "MeshBasicMaterial",
+      "outputBatchSources": 2,
+      "outputBatchTriangles": 4,
+      "uvMaxError": 0,
+      "colorMaxError": 1.4305114759416426e-8
+    }
+  ]
+}
