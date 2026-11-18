@@ -5,7 +5,7 @@ module.exports=async function captureLandforms({ev,view,shot,sample,report,poses
   const prior=poses?JSON.parse(fs.readFileSync(poses,'utf8')):null;
   await ev(`(()=>{const i=worldBase.island,update=i.update,weather=i.weather.update;
     i.update=dt=>update(dt,32);i.weather.update=()=>weather(0);document.body.classList.add('hide-ui');})()`);
-  const views=['caldera','gorge','cascade','cape','ravines','dunes','ocean','tarn-blue','ocean-column','lake-column'];
+  const views=['alpine','couloir','woodland','meadow','treeline','caldera','gorge','cascade','cape','ravines','dunes','ocean','tarn-blue','ocean-column','lake-column'];
   const fixed={
     ocean:[[269,19,1156],[313,0,1235]],
     'tarn-blue':[[805,172,-743],[735,138,-824]],
@@ -25,6 +25,16 @@ module.exports=async function captureLandforms({ev,view,shot,sample,report,poses
     await shot(id);
   }
   if(prior)return;
+  report.vegetation=await ev(`(()=>{const i=worldBase.island,trees=i.woodland.trees;
+    const bySpecies=i.stats.woodland,variants=new Set(trees.map(t=>t.variant)).size;
+    const roots=Math.max(...trees.map(t=>Math.abs(t.y+0.10-i.heightAt(t.x,t.z))));
+    const wet=trees.filter(t=>i.streamLevelAt(t.x,t.z)>t.y).length;
+    const high=trees.filter(t=>t.y>220),low=trees.filter(t=>t.y<110);
+    const pines=a=>a.filter(t=>(t.variant>>1)===2).length/Math.max(1,a.length);
+    return {bySpecies,trees:trees.length,variants,rootError:roots,wet,pineFractionHigh:pines(high),pineFractionLow:pines(low)};
+  })()`);
+  const v=report.vegetation;
+  if(v.variants!==8 || v.rootError>0.001 || v.wet || v.pineFractionHigh<=v.pineFractionLow || Math.min(...Object.values(v.bySpecies))<10)throw Error('Woodland placement failed: '+JSON.stringify(v));
   report.forms=await ev(`(()=>{const w=worldBase,i=w.island,h=i.heightAt;
     const rivers=i.branches.map(b=>({length:b.rows.at(-1).s, rise:Math.max(...b.rows.slice(1).map((r,j)=>r.y-b.rows[j].y)),
       wet:b.rows.filter(r=>r.y>h(r.x,r.z)).length,rows:b.rows.length,first:b.rows[0],last:b.rows.at(-1)}));
@@ -39,9 +49,9 @@ module.exports=async function captureLandforms({ev,view,shot,sample,report,poses
   })()`);
   const f=report.forms;
   if(f.rivers.some(r=>r.rise>0.002 || r.wet!==r.rows) || Math.max(...f.joins)>0.1 || f.fallHeight<12 || !Number.isFinite(f.pool) || Math.abs(f.fallBase[1]-f.pool)>0.3 || f.rimRange[1]-f.craterFloor<80 || f.districts.some((w,k)=>w[k]<128))throw Error('Landform geometry or connected-water check failed: '+JSON.stringify(f));
-  for(const id of ['caldera','cascade','dunes']){await view(id);await sample(id);}
+  for(const id of ['alpine','woodland','meadow','caldera','cascade','dunes']){await view(id);await sample(id);}
   report.walks={};
-  for(const id of views.slice(0,6)){
+  for(const id of ['alpine','couloir','woodland','meadow','treeline','caldera','gorge','cascade','cape','ravines','dunes']){
     await view(id);
     const start=await ev("(()=>{document.querySelector('#walk').click();document.querySelector('#world').focus();return worldBase.walker.worldPosition.toArray();})()");
     wc.sendInputEvent({type:'keyDown',keyCode:'W'});

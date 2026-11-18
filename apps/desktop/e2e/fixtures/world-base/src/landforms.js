@@ -170,11 +170,11 @@ export function sculptTributaries(terrain,river) {
 }
 
 export function makeLandformViews(terrain,fall,drainage) {
-  function lookout(name,label,eye,focus,entry,fov=54){
+  function lookout(name,label,eye,focus,entry,fov=54,clearSightline=true){
     const point=(p)=>[p[0],terrain.heightAt(p[0],p[1])+p[2],p[1]];
     const position=point(eye),target=point(focus),feet=point([entry[0],entry[1],0]);
     // Clear intervening ridges, including the near wall of the crater.
-    for(let k=1;k<38;k++){
+    for(let k=1;clearSightline && k<38;k++){
       const t=k/40,x=lerp(position[0],target[0],t),z=lerp(position[2],target[2],t);
       position[1]=Math.max(position[1],(terrain.heightAt(x,z)+1.8-t*target[1])/(1-t));
     }
@@ -183,7 +183,12 @@ export function makeLandformViews(terrain,fall,drainage) {
   }
   const {top,base}=fall,j=drainage.join;
   return [
-    lookout('caldera','火山口 · 破口与熔岩脊',[1184,132,177],[951,-80,14],[1043,23.1],57),
+    lookout('alpine','雪山群峰 · 西南全景',[1043,-132,1.7],[1385,-380,566-terrain.heightAt(1385,-380)],[1043,-132],35,false),
+    lookout('couloir','冰蚀雪槽 · 岩脊步道',[1173,-196,1.65],[1314,-430,523-terrain.heightAt(1314,-430)],[1173,-196],50,false),
+    lookout('woodland','山麓混交林 · 林下',[1063,436,1.65],[1077,456,4],[1063,436],63,false),
+    lookout('meadow','花草坡 · 林缘草甸',[1031,578,1.65],[1062,490,8],[1031,578],57,false),
+    lookout('treeline','北坡 · 针叶林带',[1058,-870,1.7],[1101,-853,5],[1058,-870],52,false),
+    lookout('caldera','火山口 · 破口与熔岩脊',[1184,132,177],[951,-80,14],[1034,30.5],57),
     lookout('gorge','汇流峡谷 · 双溪交汇',[j.x-45,j.z-48,72],[j.x+10,j.z-9,1],[674,-197]),
     lookout('cascade','悬谷瀑布 · 跌水潭',[base.x-26,base.z+12,8],[top.x,top.z,top.y-terrain.heightAt(top.x,top.z)-7],[565.4,-206],57),
     lookout('cape','海蚀岬 · 层状岩壁',[-2010,-676,126],[-1780,-598,20],[-1740,-536]),

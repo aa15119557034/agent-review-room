@@ -441,6 +441,8 @@ uniform vec4 uStationCutout; // fixture-owned ground: min xz, max xz; zero width
 uniform float uSeaSetup;
 uniform vec2 uBeachExit;
 uniform sampler2D uInlandBank;
+uniform sampler2D uAlpineSurface;
+uniform vec4 uAlpineRect;
 uniform vec4 uBasinLevels;
 uniform sampler2D uTintTex;
 ${NOISE}
@@ -539,6 +541,8 @@ void main(){
   // The lower atlas holds wet banks, the upper atlas the four feathered geological districts.
   vec4 bank = texture(uInlandBank,vec2(uv.x,uv.y*0.5));
   vec4 district=texture(uInlandBank,vec2(uv.x,0.5+uv.y*0.5));
+  float dryLand=1.0-smoothstep(0.0,0.02,bank.a);
+  float alpine=bank.g*dryLand, litter=bank.r*dryLand;
   float volcanic=district.r, headland=district.g, badland=district.b, dune=district.a;
   float bareRim=smoothstep(0.10,0.37,slope+(nzA.g-0.5)*0.11);
   rockW=max(rockW,max(volcanic*(0.36+0.64*bareRim),headland*(0.43+0.57*bareRim)));
@@ -546,7 +550,7 @@ void main(){
   sandW=max(sandW,dune*(0.84+0.16*nzA.r));
   int basinId=int(clamp(floor(bank.a*255.0/48.0+0.5)-1.0,0.0,3.0));
   float bankHeight=P.y-uBasinLevels[basinId];
-  pebW=max(pebW,bank.r); sandW=max(sandW,bank.g);
+  pebW=max(pebW,bank.r*(1.0-dryLand)); sandW=max(sandW,bank.g*(1.0-dryLand));
   float screeW = smoothstep(240.0, 310.0, P.y + (nzA.b - 0.5) * 70.0) * 0.85;
   screeW=max(screeW,volcanic*(0.72+0.28*nzA.r));
   rockW*=1.0-0.995*dune; screeW*=1.0-dune; pebW*=1.0-dune;
@@ -582,6 +586,9 @@ void main(){
   tintAmt *= 1.0 - town.a;
   vec3 fcol = texture(uTintTex, uv).rgb;
   meadow = mix(meadow, fcol, saturate(tintAmt));
+  vec3 duff=mix(vec3(0.077,0.053,0.029),vec3(0.155,0.135,0.063),nzA.g)*mix(0.65,1.40,mg.h);
+  meadow=mix(meadow,duff,litter);
+  shadowBaked*=1.0-bank.b*dryLand; ao*=1.0-litter*0.30;
   Mat m; m.c = meadow; m.h = mg.h; m.n = mg.n * 0.6 * nearK; m.r = 0.92;
 
   // ---- scree on the high slopes
@@ -596,7 +603,7 @@ void main(){
   // Wind setup and wave run-up leave a broken damp line above the surf.
   float runup = uSeaSetup + 0.12*sin(dot(P.xz, vec2(0.026,0.068)) - uTime*0.53);
   float strand = P.y - runup + (nzA.r-0.5)*0.24;
-  float dampMargin=bank.a>0.85 ? bank.b : bank.b*(1.0-smoothstep(0.05,0.43,bankHeight+(nzB.r-0.5)*0.16+(nzC.b-0.5)*0.07));
+  float dampMargin=(1.0-dryLand)*bank.b*(bank.a>0.85 ? 1.0 : 1.0-smoothstep(0.05,0.43,bankHeight+(nzB.r-0.5)*0.16+(nzC.b-0.5)*0.07));
   float wetLine = max(dampMargin,1.0 - smoothstep(0.14, 0.94, strand));
   if (sandW > 0.002){
     Mat ms = sampS(L_SAND, P.xz / 3.1, dPx.xz / 3.1, dPy.xz / 3.1);
@@ -628,7 +635,8 @@ void main(){
   if (rockW > 0.002){
     vec3 b = pow(abs(N), vec3(5.0)); b /= (b.x + b.y + b.z);
     // bedding dips gently east and wanders, matching the ledges cut into the heightfield
-    float bed = P.y - P.x * 0.022 + (nzA.a - 0.5) * 3.0;
+    float folded=(1.0-headland)*smoothstep(90.0,245.0,P.y);
+    float bed = P.y - P.x * 0.022 + (nzA.a - 0.5) * 3.0 + folded*(0.38*P.z-0.29*P.x+11.0*sin(P.x*0.018+P.z*0.01));
     const float S1 = 7.5, S2 = 26.0, S3 = 6.0;
     // every bed slides along the wall by its own amount, so the tile's seams never stack up the
     // face (the strata stay level: only the position along the wall shifts)
@@ -662,7 +670,7 @@ void main(){
     // thin partings inside the sandstone so it still reads as bedded
     float parting = smoothstep(0.80, 0.92, ntex(vec2(bed * 4.3, 23.0)).b);
     sandC *= 1.0 - 0.45 * parting;
-    vec3 wallC = mix(shaleC, sandC, unit);
+    vec3 wallC = mix(shaleC, sandC, mix(unit,0.87,folded));
     float wallH = mix(shaleH, sandH, unit);
     float wallR = mix(0.62, 0.86, unit);
     vec2 wnx = mix(shaleNx * 1.6, sx.n * 1.3, unit), wnz = mix(shaleNz * 1.6, sz.n * 1.3, unit);
@@ -717,6 +725,22 @@ void main(){
     lava=mix(lava,vec3(0.32,0.28,0.25),ashFloor*0.8);
     m.c=mix(m.c,lava*grain,volcanic*(0.66+0.24*bareRim));
   }
+  if(alpine>0.0){
+    vec2 surveyUV=(P.xz-uAlpineRect.xy)/uAlpineRect.zw;
+    vec3 pigment=textureGrad(uAlpineSurface,surveyUV,dPx.xz/uAlpineRect.zw,dPy.xz/uAlpineRect.zw).rgb;
+    float snow=smoothstep(0.34,0.72,dot(pigment,vec3(0.26,0.56,0.18)));
+    // The vertical projection supplies rock detail on faces foreshortened in the orthophoto.
+    float cliff=smoothstep(0.26,0.65,1.0-N.y)*(1.0-snow);
+    vec2 face=vec2(P.x*0.82+P.z*0.57,P.y-0.33*P.x+0.21*P.z)/18.0 + (nzA.rg-0.5)*0.41;
+    Mat fissures=samp(L_ROCK,face,dFdx(face),dFdy(face));
+    float joints=clamp(dot(fissures.c/uMean[1],vec3(0.25,0.55,0.20)),0.32,1.6);
+    pigment*=mix(1.0,0.62+0.23*joints,cliff);
+    float detail=(0.93+0.16*m.h)*mix(1.0,0.72+0.42*fissures.h,cliff);
+    m.c=mix(m.c,pigment*detail,alpine);
+    Nw=normalize(mix(Nw,N,alpine*(0.28+0.52*snow)));
+    m.r=mix(m.r,mix(0.92,0.83,snow),alpine);
+    rockAmt=max(rockAmt,alpine);
+  }
   if(headland>0.0){
     float beds=P.y+P.x*0.055+P.z*0.021;
     float chalkBed=ntex(vec2(beds*1.38,nzA.g*3.0+14.1)).b;
@@ -739,7 +763,7 @@ void main(){
   }
   // Baked topographic shadows describe the original island. In edited terrain
   // trace the new heightfield towards the sun, retaining a feathered boundary.
-  float edited=max(max(volcanic,headland),max(badland,dune));
+  float edited=max(alpine,max(max(volcanic,headland),max(badland,dune)));
   if(edited>0.01){
     float visibility=1.0;
     float travel=5.0;

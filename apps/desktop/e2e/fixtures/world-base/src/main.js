@@ -207,7 +207,8 @@ async function init() {
     island.inland.splashRay(caster.ray);
   });
   labels.coast = '南岸 · 潮间带';
-  setView('station-street');
+  const entry=new URLSearchParams(location.search).get('view');
+  setView(worldBase.views.some(view=>view.name===entry) ? entry : 'station-street');
   document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
   document.querySelector('#walk').addEventListener('click', () => walker.enabled ? setView(returnView) : startWalking());
   document.querySelector('#camera').addEventListener('click', () => {

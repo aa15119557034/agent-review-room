@@ -210,7 +210,7 @@ export function createLook(renderer, camera) {
       material.uniforms.uWorldToon = toon;
       material.fragmentShader = insert(material.fragmentShader, 'void main(){', `${BANDS}\nvoid main(){`, 'island bands entry');
       material.fragmentShader = insert(material.fragmentShader, needle,
-        `${needle}\n  dif = mix(dif, ${band}, uWorldToon);`, 'island diffuse band');
+        `${needle}\n  dif = mix(dif, ${band}, uWorldToon${material===island.town.material ? '' : '*(1.0-alpine)'});`, 'island diffuse band');
       material.needsUpdate = true;
     }
     // Town greenery: terrain sward under the blades, the blades and the flowers.

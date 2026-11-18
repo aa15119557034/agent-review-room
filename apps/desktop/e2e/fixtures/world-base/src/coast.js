@@ -101,8 +101,13 @@ export function coastWalking(station, island) {
     const t = THREE.MathUtils.clamp((z - bounds.z1) / 2, 0, 1);
     return THREE.MathUtils.lerp(station.physics.heightAt(x, bounds.z1), islandFloor(x, bounds.z1 + 2), t);
   };
+  const physics=new Physics(height);
+  for(const tree of island.woodland?.trees ?? []){
+    const y=tree.y-root.position.y;
+    physics.addCylinder(tree.x-root.position.x,tree.z-root.position.z,tree.radius,y-0.3,y+tree.height*0.83);
+  }
   return {
-    physics: new Physics(height),
+    physics,
     wadingDepth(x,z){
       const wx=x+root.position.x,wz=z+root.position.z,b=basinAt(wx,wz);
       const surface=b ? b.level : island.streamLevelAt(wx,wz);

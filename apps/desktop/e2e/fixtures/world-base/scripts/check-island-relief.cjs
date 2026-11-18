@@ -39,6 +39,10 @@ async function main() {
     const river=new River(terrain,meta,{cloudUniforms:{}});
     const atlas=makeBankTexture();
     sculptDistricts(terrain,atlas);
+    const {applyAlpine}=await import(url('src/alpine.js'));
+    const survey=fs.readFileSync(path.join(fixture,'src/alpine/relief.u16'));
+    applyAlpine(terrain,atlas,new Uint16Array(survey.buffer,survey.byteOffset,survey.length/2));
+    assert(terrain.heightAt(1288,-468)>630 && terrain.heightAt(1485,-296)>620,'survey summits');
     const drainage=sculptTributaries(terrain,river);
     const weights=atlas.image.data.subarray(4*splatN*splatN);
     const full=[0,0,0,0],transition=[0,0,0,0],step=[0,0,0,0];

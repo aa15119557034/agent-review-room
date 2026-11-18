@@ -1,5 +1,13 @@
 # 第三方来源与改动
 
+## 群峰与山麓植被
+
+东部山地使用瑞士联邦地形局的 swissALTI3D（2025 版，2 米高程）和 SWISSIMAGE（2021 版，10 厘米正射影像产品）。两套数据配准到 LV95 范围 E 2,650,000–2,654,000、N 1,158,000–1,161,000。场景按四分之一比例移植地形，重采样、调整影像亮度并融合原岛山脚。数据来源 © swisstopo。原始瓦片、生成算法与离线资源可由 `scripts/bake-alpine.py` 核对。[高程](https://www.swisstopo.admin.ch/en/height-model-swissalti3d) · [正射影像](https://www.swisstopo.admin.ch/en/orthoimage-swissimage-10) · [瑞士开放地理数据使用条件](https://www.swisstopo.admin.ch/en/terms-of-use-free-geodata-and-geoservices)
+
+橡树、山杨、松树与白蜡树的枝干和叶簇取自 Daniel Greenheck 的 EZ-Tree 1.1.0。各树种取两个种子，重新控制分枝预算、树冠尺寸与远景采样角度，另行生成林下蕨类与草穗。MIT 声明随模型保存在 `src/woodland/LICENSE.txt`。1.1.0 的橡树皮来自 Poly Haven 的 Bark Brown 02，桦树皮和松树皮来自 TextureCan，三者均以 CC0 提供。[EZ-Tree 源码](https://github.com/dgreenheck/ez-tree) · [叶片许可说明](https://github.com/dgreenheck/ez-tree/blob/main/src/app/public/textures/LICENSE.md) · [橡树皮](https://polyhaven.com/a/bark_brown_02) · [桦树皮](https://www.texturecan.com/details/221/) · [松树皮](https://www.texturecan.com/details/588/)
+
+重新生成树木时，将固定 [EZ-Tree 1.1.0 源包](https://registry.npmjs.org/@dgreenheck/ez-tree/-/ez-tree-1.1.0.tgz) 解压至 `artifacts/alpine/package`。SHA-256 为 `4147b49d22b01f09c9d7f3c3c34f788ad37841103a758da25e399af3cbce2f98`。依次运行 `node scripts/bake-woodland.cjs` 和 `node scripts/bake-woodland-lod.cjs <electron.exe>`。游戏直接读取生成好的本地资源。
+
 完整来源、作者、固定版本及归档校验见 [sources.json](./sources.json)，每个上游原始文件的 SHA-256 见 [source-files.json](./source-files.json)。该清单记录原始上游文件，不将修改后的适配文件伪装成原版。
 
 | 来源 | 保留的许可 | 使用与修改 |

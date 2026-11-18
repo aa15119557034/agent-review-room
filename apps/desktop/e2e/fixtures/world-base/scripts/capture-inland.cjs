@@ -28,8 +28,12 @@ app.whenReady().then(async()=>{
   const wc=win.webContents,ev=s=>wc.executeJavaScript(s);
   wc.on('console-message',e=>{if(e.level==='error')report.errors.push(e.message);if(e.level==='error'||e.message?.startsWith('[world-base]'))console.log(e.message);});
   wc.session.webRequest.onErrorOccurred(x=>report.requests.push({url:x.url,error:x.error}));
-  await win.loadURL('http://127.0.0.1:'+server.address().port+(afternoon?'/?time=afternoon':''));
+  const url=new URL('http://127.0.0.1:'+server.address().port);
+  if(afternoon)url.searchParams.set('time','afternoon');
+  if(landforms && !poses)url.searchParams.set('view','alpine');
+  await win.loadURL(url.href);
   while(!await ev('worldBase.ready')){if(await ev('worldBase.errors.length'))throw Error(await ev('worldBase.errors.join("\\n")'));await pause(250);}
+  if(landforms && !poses && await ev('worldBase.currentView')!=='alpine')throw Error('Direct mountain entry failed');
   await ev("document.body.classList.add('hide-ui')");
   report.gpu=await ev("(()=>{const gl=worldBase.renderer.getContext();return gl.getParameter(gl.getExtension('WEBGL_debug_renderer_info').UNMASKED_RENDERER_WEBGL)})()");
   async function shot(id){
