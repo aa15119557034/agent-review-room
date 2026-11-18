@@ -1,0 +1,841 @@
+{
+  "before": "de9f59b4a8b949cff5df5bccf8ec81ce8db7c69c",
+  "after": "7bf4e7ee6357d90c350351be3b90ea2b6f9c8d3e",
+  "panelFormat": "PNG, RGB, 1:1 native content; labels outside image. Before left / R1 right. Both 1440 x 900, DPR 1, default evening, station and island clock 14.",
+  "methods": {
+    "changed": "Count pixels with max absolute channel difference > 8 on decoded 8-bit sRGB; includes any changed surface or lighting.",
+    "Y": "Displayed-code-value luma Rec.709 weights, not scene-linear radiance.",
+    "pinkSelector": "R >= 160, R-G >= 30, B-G >= 10; applied only inside the named flower-slope rectangle.",
+    "roi": "[left,top,right,bottom), top-left origin, native pixels."
+  },
+  "views": {
+    "A": {
+      "panel": "A-previous-r1.png",
+      "previousSHA256": "eac71effc664979b826ee6df50bd3e5732f37bba3597e7b6339b1ac139f349a6",
+      "r1SHA256": "785c39bf89f070afa798470b7d731f9fd7fe6eaab87d3abcf906fc2896162b07",
+      "sameCameraAndLook": {
+        "eye": true,
+        "quat": true,
+        "fov": true,
+        "stationTime": true,
+        "islandTime": true,
+        "look": true,
+        "pixelRatio": true,
+        "dimensions": true,
+        "observed": true
+      },
+      "full": {
+        "pixels": 1296000,
+        "changedMaxChannelGt8": 162287,
+        "changedMaxChannelGt8Pct": 12.522,
+        "before": {
+          "medianY": 114.95,
+          "meanRGB": [
+            125.41000366210938,
+            109.9800033569336,
+            122.80000305175781
+          ],
+          "medianBlueMinusRed": 7.0,
+          "saturatedPixels": 139931,
+          "pinkSelectorPixels": 136631,
+          "allChannelsAtLeast250": 59
+        },
+        "after": {
+          "medianY": 111.87,
+          "meanRGB": [
+            122.6500015258789,
+            108.30000305175781,
+            121.7699966430664
+          ],
+          "medianBlueMinusRed": 9.0,
+          "saturatedPixels": 161644,
+          "pinkSelectorPixels": 142061,
+          "allChannelsAtLeast250": 57
+        }
+      },
+      "regions": {
+        "van": {
+          "roi": [
+            825,
+            448,
+            952,
+            592
+          ],
+          "pixels": 18288,
+          "changedMaxChannelGt8": 13348,
+          "changedMaxChannelGt8Pct": 72.988,
+          "before": {
+            "medianY": 116.24,
+            "meanRGB": [
+              134.0,
+              116.87999725341797,
+              121.66999816894531
+            ],
+            "medianBlueMinusRed": 7.0,
+            "saturatedPixels": 2957,
+            "pinkSelectorPixels": 103,
+            "allChannelsAtLeast250": 0
+          },
+          "after": {
+            "medianY": 127.39,
+            "meanRGB": [
+              131.10000610351562,
+              127.13999938964844,
+              146.86000061035156
+            ],
+            "medianBlueMinusRed": 25.0,
+            "saturatedPixels": 1182,
+            "pinkSelectorPixels": 406,
+            "allChannelsAtLeast250": 5
+          }
+        },
+        "new-street-flags": {
+          "roi": [
+            270,
+            415,
+            519,
+            596
+          ],
+          "pixels": 45069,
+          "changedMaxChannelGt8": 21929,
+          "changedMaxChannelGt8Pct": 48.657,
+          "before": {
+            "medianY": 116.17,
+            "meanRGB": [
+              111.86000061035156,
+              107.69000244140625,
+              122.02999877929688
+            ],
+            "medianBlueMinusRed": 19.0,
+            "saturatedPixels": 2275,
+            "pinkSelectorPixels": 738,
+            "allChannelsAtLeast250": 30
+          },
+          "after": {
+            "medianY": 102.48,
+            "meanRGB": [
+              107.55999755859375,
+              109.45999908447266,
+              113.9000015258789
+            ],
+            "medianBlueMinusRed": 23.0,
+            "saturatedPixels": 14346,
+            "pinkSelectorPixels": 859,
+            "allChannelsAtLeast250": 23
+          }
+        },
+        "road-control": {
+          "roi": [
+            610,
+            605,
+            778,
+            698
+          ],
+          "pixels": 15624,
+          "changedMaxChannelGt8": 2128,
+          "changedMaxChannelGt8Pct": 13.62,
+          "before": {
+            "medianY": 87.17,
+            "meanRGB": [
+              87.94999694824219,
+              88.91000366210938,
+              115.93000030517578
+            ],
+            "medianBlueMinusRed": 32.0,
+            "saturatedPixels": 92,
+            "pinkSelectorPixels": 30,
+            "allChannelsAtLeast250": 0
+          },
+          "after": {
+            "medianY": 85.17,
+            "meanRGB": [
+              84.04000091552734,
+              87.2699966430664,
+              115.06999969482422
+            ],
+            "medianBlueMinusRed": 32.0,
+            "saturatedPixels": 89,
+            "pinkSelectorPixels": 0,
+            "allChannelsAtLeast250": 0
+          }
+        }
+      },
+      "detailROIs": [
+        [
+          "Delivery van and cross-street",
+          [
+            775,
+            365,
+            1100,
+            645
+          ]
+        ],
+        [
+          "Pavement displays and banners",
+          [
+            243,
+            350,
+            522,
+            637
+          ]
+        ]
+      ]
+    },
+    "B": {
+      "panel": "B-previous-r1.png",
+      "previousSHA256": "dc95944b80cad0dac5e48465b981185811408aa1515da9ab6bcf6c09edbce1aa",
+      "r1SHA256": "6998455998a886a729c677a9a50a8c35d4cdfe480ad5f20d59c753957d77fdee",
+      "sameCameraAndLook": {
+        "eye": true,
+        "quat": true,
+        "fov": true,
+        "stationTime": true,
+        "islandTime": true,
+        "look": true,
+        "pixelRatio": true,
+        "dimensions": true,
+        "observed": true
+      },
+      "full": {
+        "pixels": 1296000,
+        "changedMaxChannelGt8": 162573,
+        "changedMaxChannelGt8Pct": 12.544,
+        "before": {
+          "medianY": 140.37,
+          "meanRGB": [
+            143.99000549316406,
+            144.85000610351562,
+            152.66000366210938
+          ],
+          "medianBlueMinusRed": 18.0,
+          "saturatedPixels": 158992,
+          "pinkSelectorPixels": 12043,
+          "allChannelsAtLeast250": 66
+        },
+        "after": {
+          "medianY": 139.6,
+          "meanRGB": [
+            133.07000732421875,
+            141.8300018310547,
+            150.7100067138672
+          ],
+          "medianBlueMinusRed": 19.0,
+          "saturatedPixels": 216606,
+          "pinkSelectorPixels": 13612,
+          "allChannelsAtLeast250": 64
+        }
+      },
+      "regions": {
+        "teal-sign": {
+          "roi": [
+            127,
+            166,
+            336,
+            196
+          ],
+          "pixels": 6270,
+          "changedMaxChannelGt8": 6270,
+          "changedMaxChannelGt8Pct": 100.0,
+          "before": {
+            "medianY": 216.8,
+            "meanRGB": [
+              194.75,
+              214.8800048828125,
+              154.24000549316406
+            ],
+            "medianBlueMinusRed": -19.0,
+            "saturatedPixels": 3212,
+            "pinkSelectorPixels": 0,
+            "allChannelsAtLeast250": 0
+          },
+          "after": {
+            "medianY": 150.75,
+            "meanRGB": [
+              1.0700000524520874,
+              192.61000061035156,
+              186.5800018310547
+            ],
+            "medianBlueMinusRed": 186.0,
+            "saturatedPixels": 6250,
+            "pinkSelectorPixels": 0,
+            "allChannelsAtLeast250": 0
+          }
+        },
+        "indoor-shelves": {
+          "roi": [
+            605,
+            410,
+            801,
+            492
+          ],
+          "pixels": 16072,
+          "changedMaxChannelGt8": 0,
+          "changedMaxChannelGt8Pct": 0.0,
+          "before": {
+            "medianY": 187.81,
+            "meanRGB": [
+              190.89999389648438,
+              173.02000427246094,
+              159.69000244140625
+            ],
+            "medianBlueMinusRed": -40.0,
+            "saturatedPixels": 1684,
+            "pinkSelectorPixels": 97,
+            "allChannelsAtLeast250": 0
+          },
+          "after": {
+            "medianY": 187.73,
+            "meanRGB": [
+              190.80999755859375,
+              172.97000122070312,
+              159.63999938964844
+            ],
+            "medianBlueMinusRed": -40.0,
+            "saturatedPixels": 1683,
+            "pinkSelectorPixels": 97,
+            "allChannelsAtLeast250": 0
+          }
+        },
+        "door-display": {
+          "roi": [
+            817,
+            522,
+            945,
+            654
+          ],
+          "pixels": 16896,
+          "changedMaxChannelGt8": 12903,
+          "changedMaxChannelGt8Pct": 76.367,
+          "before": {
+            "medianY": 135.31,
+            "meanRGB": [
+              144.9600067138672,
+              140.7100067138672,
+              151.8000030517578
+            ],
+            "medianBlueMinusRed": 15.0,
+            "saturatedPixels": 563,
+            "pinkSelectorPixels": 32,
+            "allChannelsAtLeast250": 0
+          },
+          "after": {
+            "medianY": 94.01,
+            "meanRGB": [
+              97.9800033569336,
+              96.23999786376953,
+              114.83999633789062
+            ],
+            "medianBlueMinusRed": 28.0,
+            "saturatedPixels": 6548,
+            "pinkSelectorPixels": 510,
+            "allChannelsAtLeast250": 0
+          }
+        },
+        "door-spill": {
+          "roi": [
+            949,
+            614,
+            1050,
+            639
+          ],
+          "pixels": 2525,
+          "changedMaxChannelGt8": 1477,
+          "changedMaxChannelGt8Pct": 58.495,
+          "before": {
+            "medianY": 117.75,
+            "meanRGB": [
+              121.61000061035156,
+              114.43000030517578,
+              111.29000091552734
+            ],
+            "medianBlueMinusRed": 24.0,
+            "saturatedPixels": 595,
+            "pinkSelectorPixels": 0,
+            "allChannelsAtLeast250": 0
+          },
+          "after": {
+            "medianY": 156.06,
+            "meanRGB": [
+              180.63999938964844,
+              130.44000244140625,
+              101.31999969482422
+            ],
+            "medianBlueMinusRed": -60.0,
+            "saturatedPixels": 1131,
+            "pinkSelectorPixels": 0,
+            "allChannelsAtLeast250": 0
+          }
+        }
+      },
+      "detailROIs": [
+        [
+          "Interior shelves and entrance stock",
+          [
+            540,
+            390,
+            970,
+            655
+          ]
+        ],
+        [
+          "Board, rack and glass door",
+          [
+            950,
+            430,
+            1330,
+            690
+          ]
+        ]
+      ]
+    },
+    "C": {
+      "panel": "C-previous-r1.png",
+      "previousSHA256": "65ce179f3039ddf3ec1e06031679e172e19907f25ccedfe10fe45cdcdacb83eb",
+      "r1SHA256": "102f3b2c58138b34b60525b91d496f79c2e70acc2e66749a10e9d4cd2c7d2c41",
+      "sameCameraAndLook": {
+        "eye": true,
+        "quat": true,
+        "fov": true,
+        "stationTime": true,
+        "islandTime": true,
+        "look": true,
+        "pixelRatio": true,
+        "dimensions": true,
+        "observed": true
+      },
+      "full": {
+        "pixels": 1296000,
+        "changedMaxChannelGt8": 471708,
+        "changedMaxChannelGt8Pct": 36.397,
+        "before": {
+          "medianY": 54.14,
+          "meanRGB": [
+            82.01000213623047,
+            78.19999694824219,
+            86.06999969482422
+          ],
+          "medianBlueMinusRed": 5.0,
+          "saturatedPixels": 14500,
+          "pinkSelectorPixels": 6679,
+          "allChannelsAtLeast250": 0
+        },
+        "after": {
+          "medianY": 49.16,
+          "meanRGB": [
+            74.30999755859375,
+            72.87000274658203,
+            82.5199966430664
+          ],
+          "medianBlueMinusRed": 13.0,
+          "saturatedPixels": 18253,
+          "pinkSelectorPixels": 4992,
+          "allChannelsAtLeast250": 0
+        }
+      },
+      "regions": {
+        "back-wall-by-pipes": {
+          "roi": [
+            610,
+            598,
+            850,
+            727
+          ],
+          "pixels": 30960,
+          "changedMaxChannelGt8": 18830,
+          "changedMaxChannelGt8Pct": 60.82,
+          "before": {
+            "medianY": 52.28,
+            "meanRGB": [
+              54.11000061035156,
+              53.380001068115234,
+              62.689998626708984
+            ],
+            "medianBlueMinusRed": 5.0,
+            "saturatedPixels": 0,
+            "pinkSelectorPixels": 0,
+            "allChannelsAtLeast250": 0
+          },
+          "after": {
+            "medianY": 47.3,
+            "meanRGB": [
+              50.47999954223633,
+              54.119998931884766,
+              68.05000305175781
+            ],
+            "medianBlueMinusRed": 15.0,
+            "saturatedPixels": 0,
+            "pinkSelectorPixels": 0,
+            "allChannelsAtLeast250": 0
+          }
+        },
+        "wall-without-posters": {
+          "roi": [
+            465,
+            378,
+            543,
+            561
+          ],
+          "pixels": 14274,
+          "changedMaxChannelGt8": 12322,
+          "changedMaxChannelGt8Pct": 86.325,
+          "before": {
+            "medianY": 51.86,
+            "meanRGB": [
+              53.06999969482422,
+              50.150001525878906,
+              57.0099983215332
+            ],
+            "medianBlueMinusRed": 4.0,
+            "saturatedPixels": 0,
+            "pinkSelectorPixels": 0,
+            "allChannelsAtLeast250": 0
+          },
+          "after": {
+            "medianY": 46.3,
+            "meanRGB": [
+              43.209999084472656,
+              45.7599983215332,
+              56.33000183105469
+            ],
+            "medianBlueMinusRed": 13.0,
+            "saturatedPixels": 0,
+            "pinkSelectorPixels": 0,
+            "allChannelsAtLeast250": 0
+          }
+        },
+        "right-flower-slope": {
+          "roi": [
+            1271,
+            437,
+            1440,
+            540
+          ],
+          "pixels": 17407,
+          "changedMaxChannelGt8": 0,
+          "changedMaxChannelGt8Pct": 0.0,
+          "before": {
+            "medianY": 121.32,
+            "meanRGB": [
+              165.60000610351562,
+              127.38999938964844,
+              114.0
+            ],
+            "medianBlueMinusRed": -53.0,
+            "saturatedPixels": 4874,
+            "pinkSelectorPixels": 3240,
+            "allChannelsAtLeast250": 0
+          },
+          "after": {
+            "medianY": 121.16,
+            "meanRGB": [
+              165.4199981689453,
+              127.2300033569336,
+              113.9000015258789
+            ],
+            "medianBlueMinusRed": -53.0,
+            "saturatedPixels": 4868,
+            "pinkSelectorPixels": 3240,
+            "allChannelsAtLeast250": 0
+          }
+        },
+        "front-warm-lamp": {
+          "roi": [
+            330,
+            125,
+            415,
+            190
+          ],
+          "pixels": 5525,
+          "changedMaxChannelGt8": 893,
+          "changedMaxChannelGt8Pct": 16.163,
+          "before": {
+            "medianY": 212.2,
+            "meanRGB": [
+              166.47999572753906,
+              141.75,
+              89.41000366210938
+            ],
+            "medianBlueMinusRed": -145.0,
+            "saturatedPixels": 3033,
+            "pinkSelectorPixels": 0,
+            "allChannelsAtLeast250": 0
+          },
+          "after": {
+            "medianY": 212.2,
+            "meanRGB": [
+              163.57000732421875,
+              140.4499969482422,
+              89.2300033569336
+            ],
+            "medianBlueMinusRed": -145.0,
+            "saturatedPixels": 2981,
+            "pinkSelectorPixels": 0,
+            "allChannelsAtLeast250": 0
+          }
+        }
+      },
+      "detailROIs": [
+        [
+          "Pipework behind stair and crates",
+          [
+            655,
+            492,
+            1080,
+            809
+          ]
+        ],
+        [
+          "Fence, stair and distant flowers",
+          [
+            1000,
+            336,
+            1440,
+            640
+          ]
+        ]
+      ]
+    },
+    "D": {
+      "panel": "D-previous-r1.png",
+      "previousSHA256": "43df9d76f3e2ab4ce48da48fbece35bdf87db2e6d47f1ec6c3925b35cfd93fec",
+      "r1SHA256": "8f29a3e7e38ad7004592a121677b445303646fddad310092c61030dfb3372589",
+      "sameCameraAndLook": {
+        "eye": true,
+        "quat": true,
+        "fov": true,
+        "stationTime": true,
+        "islandTime": true,
+        "look": true,
+        "pixelRatio": true,
+        "dimensions": true,
+        "observed": true
+      },
+      "full": {
+        "pixels": 1296000,
+        "changedMaxChannelGt8": 424075,
+        "changedMaxChannelGt8Pct": 32.722,
+        "before": {
+          "medianY": 76.14,
+          "meanRGB": [
+            104.38999938964844,
+            97.19000244140625,
+            95.80000305175781
+          ],
+          "medianBlueMinusRed": 5.0,
+          "saturatedPixels": 273846,
+          "pinkSelectorPixels": 185,
+          "allChannelsAtLeast250": 0
+        },
+        "after": {
+          "medianY": 76.45,
+          "meanRGB": [
+            99.73999786376953,
+            95.30999755859375,
+            96.16999816894531
+          ],
+          "medianBlueMinusRed": 12.0,
+          "saturatedPixels": 178386,
+          "pinkSelectorPixels": 2933,
+          "allChannelsAtLeast250": 0
+        }
+      },
+      "regions": {
+        "teal-sign": {
+          "roi": [
+            550,
+            242,
+            776,
+            301
+          ],
+          "pixels": 13334,
+          "changedMaxChannelGt8": 517,
+          "changedMaxChannelGt8Pct": 3.877,
+          "before": {
+            "medianY": 118.07,
+            "meanRGB": [
+              89.06999969482422,
+              146.11000061035156,
+              147.41000366210938
+            ],
+            "medianBlueMinusRed": 88.0,
+            "saturatedPixels": 8845,
+            "pinkSelectorPixels": 0,
+            "allChannelsAtLeast250": 0
+          },
+          "after": {
+            "medianY": 118.07,
+            "meanRGB": [
+              88.19999694824219,
+              145.7899932861328,
+              147.42999267578125
+            ],
+            "medianBlueMinusRed": 88.0,
+            "saturatedPixels": 8846,
+            "pinkSelectorPixels": 0,
+            "allChannelsAtLeast250": 0
+          }
+        },
+        "new-window-notices": {
+          "roi": [
+            327,
+            384,
+            550,
+            436
+          ],
+          "pixels": 11596,
+          "changedMaxChannelGt8": 3198,
+          "changedMaxChannelGt8Pct": 27.578,
+          "before": {
+            "medianY": 93.08,
+            "meanRGB": [
+              113.20999908447266,
+              109.69000244140625,
+              104.08000183105469
+            ],
+            "medianBlueMinusRed": 10.0,
+            "saturatedPixels": 1805,
+            "pinkSelectorPixels": 0,
+            "allChannelsAtLeast250": 0
+          },
+          "after": {
+            "medianY": 91.59,
+            "meanRGB": [
+              116.5199966430664,
+              111.9800033569336,
+              115.05000305175781
+            ],
+            "medianBlueMinusRed": 15.0,
+            "saturatedPixels": 1907,
+            "pinkSelectorPixels": 383,
+            "allChannelsAtLeast250": 0
+          }
+        },
+        "door-prices-board": {
+          "roi": [
+            371,
+            556,
+            451,
+            668
+          ],
+          "pixels": 8960,
+          "changedMaxChannelGt8": 8089,
+          "changedMaxChannelGt8Pct": 90.279,
+          "before": {
+            "medianY": 97.39,
+            "meanRGB": [
+              100.33999633789062,
+              101.2699966430664,
+              116.1500015258789
+            ],
+            "medianBlueMinusRed": 24.0,
+            "saturatedPixels": 688,
+            "pinkSelectorPixels": 0,
+            "allChannelsAtLeast250": 0
+          },
+          "after": {
+            "medianY": 156.86,
+            "meanRGB": [
+              142.64999389648438,
+              147.00999450683594,
+              177.97000122070312
+            ],
+            "medianBlueMinusRed": 23.0,
+            "saturatedPixels": 1087,
+            "pinkSelectorPixels": 0,
+            "allChannelsAtLeast250": 0
+          }
+        },
+        "old-star-poster": {
+          "roi": [
+            1219,
+            361,
+            1312,
+            463
+          ],
+          "pixels": 9486,
+          "changedMaxChannelGt8": 9135,
+          "changedMaxChannelGt8Pct": 96.3,
+          "before": {
+            "medianY": 52.41,
+            "meanRGB": [
+              82.44000244140625,
+              48.790000915527344,
+              129.22000122070312
+            ],
+            "medianBlueMinusRed": 25.0,
+            "saturatedPixels": 5254,
+            "pinkSelectorPixels": 163,
+            "allChannelsAtLeast250": 0
+          },
+          "after": {
+            "medianY": 44.37,
+            "meanRGB": [
+              51.290000915527344,
+              50.560001373291016,
+              51.65999984741211
+            ],
+            "medianBlueMinusRed": 13.0,
+            "saturatedPixels": 478,
+            "pinkSelectorPixels": 0,
+            "allChannelsAtLeast250": 0
+          }
+        },
+        "old-left-poster": {
+          "roi": [
+            51,
+            411,
+            86,
+            461
+          ],
+          "pixels": 1750,
+          "changedMaxChannelGt8": 0,
+          "changedMaxChannelGt8Pct": 0.0,
+          "before": {
+            "medianY": 198.94,
+            "meanRGB": [
+              222.1199951171875,
+              130.72999572753906,
+              104.83999633789062
+            ],
+            "medianBlueMinusRed": -103.0,
+            "saturatedPixels": 1464,
+            "pinkSelectorPixels": 13,
+            "allChannelsAtLeast250": 0
+          },
+          "after": {
+            "medianY": 198.94,
+            "meanRGB": [
+              222.10000610351562,
+              130.75,
+              104.94999694824219
+            ],
+            "medianBlueMinusRed": -103.0,
+            "saturatedPixels": 1463,
+            "pinkSelectorPixels": 13,
+            "allChannelsAtLeast250": 0
+          }
+        }
+      },
+      "detailROIs": [
+        [
+          "Washers, glazing and posted notices",
+          [
+            329,
+            362,
+            735,
+            629
+          ]
+        ],
+        [
+          "Right wall and original star poster",
+          [
+            1175,
+            316,
+            1440,
+            620
+          ]
+        ]
+      ]
+    }
+  }
+}

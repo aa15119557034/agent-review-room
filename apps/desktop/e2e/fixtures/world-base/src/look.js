@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import { Pipeline } from '../upstream/petalwake/src/core/pipeline.js';
+import { distanceToRoom } from './shadow-tint.js';
+import { toonEnabled, setToonLit } from './toon.js';
 
 // The depth source is the actual displaced terrain colour pass. Sakuragaoka's
 // normal override would outline Petalwake's undisplaced tile grid instead.
@@ -82,6 +84,35 @@ float wbEdge(vec2 uv) {
   return edge*(1.0-smoothstep(35.0,190.0,min(d0,dm)));
 }
 `;
+// Round 27 outline (only with ?toon not off): a line on the NEAR side of a depth step, plus faint creases.
+// Skips sky, and pixels whose coverage mask (scene alpha, see toon.js) is 0: foliage cut-outs, emissive, unlit.
+const LINES = /* glsl */`
+uniform float uLnOn, uLnC;
+uniform vec4 uLn, uLnS;   // width px / strength / fade near / fade far ; sil lo hi / crease lo hi
+uniform vec3 uLnCol;
+float wbLine(vec2 uv, float d0) {
+  if (d0 >= uFar*0.9 || d0 > uLn.w) return 0.0;
+  float mask = texture(tColor, uv).a;
+  if (mask < 0.95) return 0.0; // resolved MSAA alpha: any masked coverage at the edge pixel (blade tips, canopy cards, glass) skips the line
+  float thin = smoothstep(uLn.z, uLn.w, d0);
+  vec2 px = max(uLn.x*(uRes.y/1080.0)*(1.0 - 0.35*thin), 1.0)/uRes;
+  float dl = wbDepth(uv-vec2(px.x,0.0)), dr = wbDepth(uv+vec2(px.x,0.0));
+  float du = wbDepth(uv+vec2(0.0,px.y)), dd = wbDepth(uv-vec2(0.0,px.y));
+  // Depth step on the near side. The slope of the pixel's own surface (the flatter side) is removed first,
+  // so a grazing floor or wall is not a step however far it runs, and a small step can be a line.
+  float gx = min(abs(dr-d0), abs(d0-dl)), gy = min(abs(du-d0), abs(d0-dd));
+  float sx = max(max(dr, dl) - d0 - gx, 0.0), sy = max(max(du, dd) - d0 - gy, 0.0);
+  float sil = smoothstep(uLnS.x, uLnS.y, max(sx, sy)/d0);
+  // Crease: curvature of inverse depth, the same four taps (frames, sign edges, step sides)
+  float i0 = 1.0/max(d0,0.05);
+  float lap = max(abs(1.0/max(dl,0.05)+1.0/max(dr,0.05)-2.0*i0),abs(1.0/max(du,0.05)+1.0/max(dd,0.05)-2.0*i0))/i0;
+  // A crease is a bend in continuous depth. Both sides of a real depth step have a huge curvature, but the far side
+  // belongs to the line of the near side (and to its mask), so the crease is dropped wherever a neighbour is a step away.
+  float jump = max(max(abs(dl-d0), abs(dr-d0)), max(abs(du-d0), abs(dd-d0)))/d0;
+  float cr = smoothstep(uLnS.z, uLnS.w, lap)*uLnC*(1.0 - smoothstep(0.05, 0.12, jump));
+  return max(sil, cr)*(1.0 - thin);
+}
+`;
 const BANDS = /* glsl */`
 uniform float uWorldToon;
 float wbBand(float n) {
@@ -122,22 +153,28 @@ export function createLook(renderer, camera) {
     blur: 0, rays: 0, distortion: 0, fringe: 0,
     bloom: 0.12, exposure: 1.02, saturation: 1.0, contrast: 1.05, vignette: 0.12,
   });
+  // Round 28: the motion-blur pass wrote alpha = 1, which turned the outline coverage mask (scene alpha) off for
+  // every blurred pixel. Keep the centre pixel's alpha. Rewritten only with the toon on (round 26 stays as it was).
+  if (toonEnabled()) pipeline.blurMat.fragmentShader = insert(pipeline.blurMat.fragmentShader, 'gl_FragColor = vec4(acc / wsum, 1.0);', 'gl_FragColor = vec4(acc / wsum, c0.a);', 'blur keeps coverage mask');
   const mat = pipeline.finalMat;
-  // Round 24: composite shadow tint fades out while the camera is inside the shop box (see shadow-tint.js).
+  // Round 24: composite shadow tint fades out while the camera is inside any shop box (see shadow-tint.js).
   let shBase = 0, shBox = null, shFade = 1.5;
   const camIndoor = () => {
     if (!shBox) return 1;
-    const p = camera.position, dx = Math.max(shBox[0] - p.x, 0, p.x - shBox[3]), dy = Math.max(shBox[1] - p.y, 0, p.y - shBox[4]), dz = Math.max(shBox[2] - p.z, 0, p.z - shBox[5]);
-    return THREE.MathUtils.smoothstep(Math.hypot(dx, dy, dz), 0, shFade);
+    const p = camera.position;
+    let d = Infinity; // distance to the nearest room (0 inside any); weight 1 once the camera is shFade metres outside
+    for (const b of shBox) d = Math.min(d, distanceToRoom(b, p));
+    return THREE.MathUtils.smoothstep(d, 0, shFade);
   };
   Object.assign(mat.uniforms, {
     tWorldDepth: pipeline.uDepth, uNear: { value: camera.near }, uFar: { value: camera.far },
     uProjScale: { value: 1 }, uAO: { value: 0.55 }, uGroundFog:{value:0}, uFogHeight:{value:new THREE.Vector4()},
     uReversed: { value: pipeline.reversed ? 1 : 0 }, uToon: toon, uHaze: { value: 1 }, uLandscape:{value:0},
+    uLnOn: { value: 0 }, uLn: { value: new THREE.Vector4() }, uLnS: { value: new THREE.Vector4() }, uLnC: { value: 0 }, uLnCol: { value: new THREE.Vector3() },
     uShOn: { value: 0 }, uShAO: { value: new THREE.Vector3(1, 1, 1) }, uShMul: { value: new THREE.Vector3(1, 1, 1) },
     uShLift: { value: new THREE.Vector3() }, uShRange: { value: new THREE.Vector3(0.06, 0.42, 1) },
   });
-  mat.fragmentShader = insert(mat.fragmentShader, 'void main(){', `${OUTLINES}\nvoid main(){`, 'composite entry');
+  mat.fragmentShader = insert(mat.fragmentShader, 'void main(){', `${OUTLINES}\n${LINES}\nvoid main(){`, 'composite entry');
   mat.fragmentShader = insert(mat.fragmentShader, 'col *= uExposure;', `
     // Contact shadows (ZZZ refs: crates, benches, eaves all sit in soft dark creases).
     if (uAO*uToon > 0.0) {
@@ -145,9 +182,15 @@ export function createLook(renderer, camera) {
       col *= mix(1.0, wbA, wbAk);
       col *= mix(vec3(1.0), uShAO, (1.0 - wbA)*wbAk*uShOn); // creases fall into blue-violet, not grey
     }
-    float edge = wbEdge(uv)*uToon*(1.0-0.40*uLandscape);
-    vec3 line = mix(col*vec3(0.42,0.38,0.50),vec3(0.027,0.020,0.051),0.35);
-    col = mix(col,line,edge*0.45); // ZZZ scenes keep only faint silhouettes; strong lines are for characters
+    float outlineStrength = uToon*(1.0-0.40*uLandscape);
+    if (uLnOn > 0.5) {
+      float wbL27 = wbLine(uv, wbDepth(uv))*outlineStrength;
+      col = mix(col, col*uLnCol, wbL27*uLn.y); // round 27: dark, cool, hand-drawn line in the local colour
+    } else {
+      float edge = wbEdge(uv)*outlineStrength;
+      vec3 line = mix(col*vec3(0.42,0.38,0.50),vec3(0.027,0.020,0.051),0.35);
+      col = mix(col,line,edge*0.45); // ZZZ scenes keep only faint silhouettes; strong lines are for characters
+    }
     // Anime aerial perspective: distant land fades to a cool sky haze so the
     // island behind the station reads as backdrop. Sky (far plane) and high
     // aerial cameras are left alone.
@@ -197,6 +240,16 @@ export function createLook(renderer, camera) {
       float wbSh = (1.0 - smoothstep(uShRange.x, uShRange.y, wbL))*uShRange.z*uShOn*uToon*(1.0 - wbSky);
       col = mix(col, col*uShMul + uShLift, wbSh);
     }
+    // Separate street lettering and paving tones while retaining ink, sky and lamp cores.
+    if (uLnOn * uToon > 0.0) {
+      float luma = dot(col, vec3(0.2126, 0.7152, 0.0722));
+      float peak = max(col.r, max(col.g, col.b));
+      float midtones = smoothstep(0.035, 0.32, luma) * (1.0 - smoothstep(0.58, 1.0, peak));
+      float ink = 1.0 - smoothstep(0.025, 0.105, luma);
+      vec3 streetColor = col * (1.0 + 0.43 * midtones - 0.075 * ink);
+      streetColor *= mix(vec3(1.0), vec3(1.055, 1.036, 0.974), 1.0 - smoothstep(0.12, 0.57, luma));
+      col = mix(col, streetColor, (1.0 - wbSky) * uHaze);
+    }
     col = clamp(col, 0.0, 1.0);`, 'purple shadows');
 
   function applyIsland(island) {
@@ -242,11 +295,19 @@ export function createLook(renderer, camera) {
         Object.assign(m.uniforms, uniforms);
         m.vertexShader = insert(m.vertexShader, 'void main(){', `${TOWN}\nvoid main(){`, 'meadow town entry');
         if (this.kind === 'grass') {
+          // Round 27: coverage mask 0 (alpha is unused by the pipeline, colour is unchanged) so blades take no outline.
+          m.fragmentShader = insert(m.fragmentShader, 'gl_FragColor = vec4(col, 1.0);', 'gl_FragColor = vec4(col, 0.0);', 'grass outline mask');
           m.vertexShader = insert(m.vertexShader, '* mix(0.88, 1.14, cl.w);',
             `* mix(0.88, 1.14, cl.w);
   vTint = wbTownGreen(vTint, wbTownMask(xz));`, 'grass town tint');
         } else {
           // Keep about a quarter of the flowers in the town core; they stay accents.
+          if (toonEnabled()) {
+            // Round 28: petals are alpha-to-coverage, which keeps the output alpha as the coverage mask for the outline.
+            // Cut them out at 0.5 instead and write mask 0, so flowers take no outline.
+            m.fragmentShader = insert(m.fragmentShader, 'gl_FragColor = vec4(col, alpha);', 'if (alpha < 0.5) discard;\n  gl_FragColor = vec4(col, 0.0);', 'flower outline mask');
+            m.alphaToCoverage = false;
+          }
           m.vertexShader = insert(m.vertexShader, 'float keep = step(r2.x, dens * 1.08) * step(0.03, dens);',
             `float keep = step(r2.x, dens * 1.08) * step(0.03, dens);
   keep *= step(wbTownMask(xz) * 0.75, hash12(xz * 5.31 + 3.3));`, 'flower town density');
@@ -279,11 +340,16 @@ export function createLook(renderer, camera) {
   }
   return {
     pipeline, applyIsland,
-    setToon(value) { toon.value = value ? 1 : 0; },
+    setToon(value) { toon.value = value ? 1 : 0; setToonLit(value); },
     /** World-space town rect [minX, minZ, maxX, maxZ]; strength 0 restores the open-island meadow. */
     setTownGreenery(rect, strength = 1) {
       townUniforms.uTownRect.value.set(...rect);
       townUniforms.uTownGreen.value.x = strength;
+    },
+    /** Round 27: uniforms from toonLineUniforms(); null keeps the round 26 outline. */
+    setToonLines(u) {
+      if (!u) { mat.uniforms.uLnOn.value = 0; return; }
+      for (const [k, v] of Object.entries(u)) mat.uniforms[k].value.copy ? mat.uniforms[k].value.copy(v.value) : (mat.uniforms[k].value = v.value);
     },
     setAO(value) { mat.uniforms.uAO.value = value; },
     setGroundFog(value) { mat.uniforms.uGroundFog.value = value; },

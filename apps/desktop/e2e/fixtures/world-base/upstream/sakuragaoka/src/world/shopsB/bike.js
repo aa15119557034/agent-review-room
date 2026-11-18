@@ -165,6 +165,7 @@ export function buildBike(ctx, K, lot) {
   S.box(X1, -9.2, 4.5, -8.4, 0, 0.7);
 
   // ---------------------------------------------------------------- interior workshop (see bikeInt.js)
+  (ctx.services.shopInteriors ||= []).push({ lot: S.lot.id, box: [X0 + WT, FL, ZB + WT, X1 - WT, Y1, ZF - WT] }); // room shell incl. the back rooms behind the noren (inner wall faces, floor, ground-floor ceiling), lot local: [x0, y0, z0, x1, y1, z1]; read by src/shadow-tint.js
   buildBikeInterior(ctx, K, S, { FL, ZF, ZI, WT, X0, X1, safetyPoster: safetyPosterTex(K) });
 
   // ---------------------------------------------------------------- outside: air pump, repair sign, nobori, tyres, chair

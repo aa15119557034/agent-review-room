@@ -1,0 +1,4616 @@
+{
+  "source": "880a02a762fd2d92f4c9c28c0c2bb5d6ac884157",
+  "C26": "a281e7a8acb8557a6d8fe399a7c57eff195f5879",
+  "C27": "e00875bd88109c6b3eb685bbb5aec8d01ef4bf5c",
+  "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "clock": 14,
+  "resolution": [
+    1440,
+    900
+  ],
+  "sessions": {
+    "evening-off": {
+      "dir": "gpu-modern-after-c28-evening-off-880a02a-r2",
+      "exit": 1,
+      "stage": "complete",
+      "renderOk": true,
+      "sourceUnchanged": true,
+      "restoreUnchanged": true,
+      "assetsUnchanged": true,
+      "driverUnchanged": true,
+      "ok": false,
+      "captures": 27,
+      "stageTimestamps": [
+        {
+          "stage": "bootstrap",
+          "wallTimeMs": 1794994845483
+        },
+        {
+          "stage": "app-ready",
+          "wallTimeMs": 1794994845555
+        },
+        {
+          "stage": "loading",
+          "wallTimeMs": 1794994845727
+        },
+        {
+          "stage": "freezing",
+          "wallTimeMs": 1794994904753
+        },
+        {
+          "stage": "service-corner-ao-on-warmup",
+          "wallTimeMs": 1794994904879
+        },
+        {
+          "stage": "service-corner-ao-on-capture-1",
+          "wallTimeMs": 1794994905139
+        },
+        {
+          "stage": "service-corner-ao-on-capture-2",
+          "wallTimeMs": 1794994905322
+        },
+        {
+          "stage": "laundry-details-ao-on-warmup",
+          "wallTimeMs": 1794994905494
+        },
+        {
+          "stage": "laundry-details-ao-on-capture-1",
+          "wallTimeMs": 1794994905643
+        },
+        {
+          "stage": "laundry-details-ao-on-capture-2",
+          "wallTimeMs": 1794994905771
+        },
+        {
+          "stage": "shop-interior-ao-on-warmup",
+          "wallTimeMs": 1794994905900
+        },
+        {
+          "stage": "shop-interior-ao-on-capture-1",
+          "wallTimeMs": 1794994906062
+        },
+        {
+          "stage": "shop-interior-ao-on-capture-2",
+          "wallTimeMs": 1794994906173
+        },
+        {
+          "stage": "20-rear-eye-ao-on-warmup",
+          "wallTimeMs": 1794994906284
+        },
+        {
+          "stage": "20-rear-eye-ao-on-capture-1",
+          "wallTimeMs": 1794994906433
+        },
+        {
+          "stage": "20-rear-eye-ao-on-capture-2",
+          "wallTimeMs": 1794994906563
+        },
+        {
+          "stage": "21-front-eye-ao-on-warmup",
+          "wallTimeMs": 1794994906697
+        },
+        {
+          "stage": "21-front-eye-ao-on-capture-1",
+          "wallTimeMs": 1794994906820
+        },
+        {
+          "stage": "21-front-eye-ao-on-capture-2",
+          "wallTimeMs": 1794994906943
+        },
+        {
+          "stage": "station-street-ao-on-warmup",
+          "wallTimeMs": 1794994907308
+        },
+        {
+          "stage": "station-street-ao-on-capture-1",
+          "wallTimeMs": 1794994907446
+        },
+        {
+          "stage": "station-street-ao-on-capture-2",
+          "wallTimeMs": 1794994907579
+        },
+        {
+          "stage": "street-detail-ao-on-warmup",
+          "wallTimeMs": 1794994907715
+        },
+        {
+          "stage": "street-detail-ao-on-capture-1",
+          "wallTimeMs": 1794994907835
+        },
+        {
+          "stage": "street-detail-ao-on-capture-2",
+          "wallTimeMs": 1794994907971
+        },
+        {
+          "stage": "shop-door-eye-ao-on-warmup",
+          "wallTimeMs": 1794994908114
+        },
+        {
+          "stage": "shop-door-eye-ao-on-capture-1",
+          "wallTimeMs": 1794994908297
+        },
+        {
+          "stage": "shop-door-eye-ao-on-capture-2",
+          "wallTimeMs": 1794994908455
+        },
+        {
+          "stage": "van-side-ao-on-warmup",
+          "wallTimeMs": 1794994908580
+        },
+        {
+          "stage": "van-side-ao-on-capture-1",
+          "wallTimeMs": 1794994908696
+        },
+        {
+          "stage": "van-side-ao-on-capture-2",
+          "wallTimeMs": 1794994908818
+        }
+      ],
+      "networkFailures": [
+        {
+          "file": "menhir.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "file": "plastic_crate_02.bin",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "httpErrors": [],
+      "exceptions": [],
+      "gpuGenerations": [
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsA/konbini.js",
+          "status": 200,
+          "requestId": "70552.195",
+          "servedSha256": "df15e6a08f1ad3f3a79df30e87d80390eb81f6b780fcf8de2c7a0efd4705d2ca",
+          "diskSha256": "df15e6a08f1ad3f3a79df30e87d80390eb81f6b780fcf8de2c7a0efd4705d2ca",
+          "gitSha256": "df15e6a08f1ad3f3a79df30e87d80390eb81f6b780fcf8de2c7a0efd4705d2ca"
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsA/cafe.js",
+          "status": 200,
+          "requestId": "70552.198",
+          "servedSha256": "83b7a557a1c7ee21dfb3126c79b86ac24df75578c702043a9ec8a48b3ffe9870",
+          "diskSha256": "83b7a557a1c7ee21dfb3126c79b86ac24df75578c702043a9ec8a48b3ffe9870",
+          "gitSha256": "83b7a557a1c7ee21dfb3126c79b86ac24df75578c702043a9ec8a48b3ffe9870"
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsA/flower.js",
+          "status": 200,
+          "requestId": "70552.201",
+          "servedSha256": "308594755163fe0bb956e3f6dcfe5222fe3413924112fbd76de8e32e24ca5274",
+          "diskSha256": "308594755163fe0bb956e3f6dcfe5222fe3413924112fbd76de8e32e24ca5274",
+          "gitSha256": "308594755163fe0bb956e3f6dcfe5222fe3413924112fbd76de8e32e24ca5274"
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsA/books.js",
+          "status": 200,
+          "requestId": "70552.203",
+          "servedSha256": "0261e43a779dc465c6df1bb61f3a7f631273f2c6849167238883bb2f1545367f",
+          "diskSha256": "0261e43a779dc465c6df1bb61f3a7f631273f2c6849167238883bb2f1545367f",
+          "gitSha256": "0261e43a779dc465c6df1bb61f3a7f631273f2c6849167238883bb2f1545367f"
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsB/general.js",
+          "status": 200,
+          "requestId": "70552.207",
+          "servedSha256": "3c88d0ebffaebfd52103393d4ada19af664d9e721b89c34731fca1b09bd57ed2",
+          "diskSha256": "3c88d0ebffaebfd52103393d4ada19af664d9e721b89c34731fca1b09bd57ed2",
+          "gitSha256": "3c88d0ebffaebfd52103393d4ada19af664d9e721b89c34731fca1b09bd57ed2"
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsB/ramen.js",
+          "status": 200,
+          "requestId": "70552.208",
+          "servedSha256": "7933892092e6fcc34c60940f9957e86f6a65c3c8a9c5c16ee6695fe1b3568e2a",
+          "diskSha256": "7933892092e6fcc34c60940f9957e86f6a65c3c8a9c5c16ee6695fe1b3568e2a",
+          "gitSha256": "7933892092e6fcc34c60940f9957e86f6a65c3c8a9c5c16ee6695fe1b3568e2a"
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsB/bike.js",
+          "status": 200,
+          "requestId": "70552.209",
+          "servedSha256": "27a10e0a6a7216abdf2e7f5fdd1c654c58898fa761b6d62a02639cc4fabc8c99",
+          "diskSha256": "27a10e0a6a7216abdf2e7f5fdd1c654c58898fa761b6d62a02639cc4fabc8c99",
+          "gitSha256": "27a10e0a6a7216abdf2e7f5fdd1c654c58898fa761b6d62a02639cc4fabc8c99"
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsB/wagashi.js",
+          "status": 200,
+          "requestId": "70552.206",
+          "servedSha256": "96d7717b9cb59807a66e5d8d2ed3a32b73a382e06a6620416fb831f1a5f730cb",
+          "diskSha256": "96d7717b9cb59807a66e5d8d2ed3a32b73a382e06a6620416fb831f1a5f730cb",
+          "gitSha256": "96d7717b9cb59807a66e5d8d2ed3a32b73a382e06a6620416fb831f1a5f730cb"
+        }
+      ]
+    },
+    "evening-on": {
+      "dir": "gpu-modern-after-c28-evening-on-880a02a-r2",
+      "exit": 1,
+      "stage": "complete",
+      "renderOk": true,
+      "sourceUnchanged": true,
+      "restoreUnchanged": true,
+      "assetsUnchanged": true,
+      "driverUnchanged": true,
+      "ok": false,
+      "captures": 27,
+      "stageTimestamps": [
+        {
+          "stage": "bootstrap",
+          "wallTimeMs": 1794994914054
+        },
+        {
+          "stage": "app-ready",
+          "wallTimeMs": 1794994914109
+        },
+        {
+          "stage": "loading",
+          "wallTimeMs": 1794994914227
+        },
+        {
+          "stage": "freezing",
+          "wallTimeMs": 1794995165058
+        },
+        {
+          "stage": "service-corner-ao-on-warmup",
+          "wallTimeMs": 1794995165207
+        },
+        {
+          "stage": "service-corner-ao-on-capture-1",
+          "wallTimeMs": 1794995165454
+        },
+        {
+          "stage": "service-corner-ao-on-capture-2",
+          "wallTimeMs": 1794995165645
+        },
+        {
+          "stage": "laundry-details-ao-on-warmup",
+          "wallTimeMs": 1794995165795
+        },
+        {
+          "stage": "laundry-details-ao-on-capture-1",
+          "wallTimeMs": 1794995165925
+        },
+        {
+          "stage": "laundry-details-ao-on-capture-2",
+          "wallTimeMs": 1794995166071
+        },
+        {
+          "stage": "shop-interior-ao-on-warmup",
+          "wallTimeMs": 1794995166245
+        },
+        {
+          "stage": "shop-interior-ao-on-capture-1",
+          "wallTimeMs": 1794995166452
+        },
+        {
+          "stage": "shop-interior-ao-on-capture-2",
+          "wallTimeMs": 1794995166592
+        },
+        {
+          "stage": "20-rear-eye-ao-on-warmup",
+          "wallTimeMs": 1794995166754
+        },
+        {
+          "stage": "20-rear-eye-ao-on-capture-1",
+          "wallTimeMs": 1794995167010
+        },
+        {
+          "stage": "20-rear-eye-ao-on-capture-2",
+          "wallTimeMs": 1794995167153
+        },
+        {
+          "stage": "21-front-eye-ao-on-warmup",
+          "wallTimeMs": 1794995167300
+        },
+        {
+          "stage": "21-front-eye-ao-on-capture-1",
+          "wallTimeMs": 1794995167433
+        },
+        {
+          "stage": "21-front-eye-ao-on-capture-2",
+          "wallTimeMs": 1794995167566
+        },
+        {
+          "stage": "station-street-ao-on-warmup",
+          "wallTimeMs": 1794995167801
+        },
+        {
+          "stage": "station-street-ao-on-capture-1",
+          "wallTimeMs": 1794995167959
+        },
+        {
+          "stage": "station-street-ao-on-capture-2",
+          "wallTimeMs": 1794995168106
+        },
+        {
+          "stage": "street-detail-ao-on-warmup",
+          "wallTimeMs": 1794995168246
+        },
+        {
+          "stage": "street-detail-ao-on-capture-1",
+          "wallTimeMs": 1794995168368
+        },
+        {
+          "stage": "street-detail-ao-on-capture-2",
+          "wallTimeMs": 1794995168493
+        },
+        {
+          "stage": "shop-door-eye-ao-on-warmup",
+          "wallTimeMs": 1794995168618
+        },
+        {
+          "stage": "shop-door-eye-ao-on-capture-1",
+          "wallTimeMs": 1794995168741
+        },
+        {
+          "stage": "shop-door-eye-ao-on-capture-2",
+          "wallTimeMs": 1794995168877
+        },
+        {
+          "stage": "van-side-ao-on-warmup",
+          "wallTimeMs": 1794995169010
+        },
+        {
+          "stage": "van-side-ao-on-capture-1",
+          "wallTimeMs": 1794995169136
+        },
+        {
+          "stage": "van-side-ao-on-capture-2",
+          "wallTimeMs": 1794995169257
+        }
+      ],
+      "networkFailures": [
+        {
+          "file": "boulders.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "file": "plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "httpErrors": [],
+      "exceptions": [],
+      "gpuGenerations": [
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsA/konbini.js",
+          "status": 200,
+          "requestId": "19320.195",
+          "servedSha256": "df15e6a08f1ad3f3a79df30e87d80390eb81f6b780fcf8de2c7a0efd4705d2ca",
+          "diskSha256": "df15e6a08f1ad3f3a79df30e87d80390eb81f6b780fcf8de2c7a0efd4705d2ca",
+          "gitSha256": "df15e6a08f1ad3f3a79df30e87d80390eb81f6b780fcf8de2c7a0efd4705d2ca"
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsA/cafe.js",
+          "status": 200,
+          "requestId": "19320.198",
+          "servedSha256": "83b7a557a1c7ee21dfb3126c79b86ac24df75578c702043a9ec8a48b3ffe9870",
+          "diskSha256": "83b7a557a1c7ee21dfb3126c79b86ac24df75578c702043a9ec8a48b3ffe9870",
+          "gitSha256": "83b7a557a1c7ee21dfb3126c79b86ac24df75578c702043a9ec8a48b3ffe9870"
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsA/flower.js",
+          "status": 200,
+          "requestId": "19320.201",
+          "servedSha256": "308594755163fe0bb956e3f6dcfe5222fe3413924112fbd76de8e32e24ca5274",
+          "diskSha256": "308594755163fe0bb956e3f6dcfe5222fe3413924112fbd76de8e32e24ca5274",
+          "gitSha256": "308594755163fe0bb956e3f6dcfe5222fe3413924112fbd76de8e32e24ca5274"
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsA/books.js",
+          "status": 200,
+          "requestId": "19320.203",
+          "servedSha256": "0261e43a779dc465c6df1bb61f3a7f631273f2c6849167238883bb2f1545367f",
+          "diskSha256": "0261e43a779dc465c6df1bb61f3a7f631273f2c6849167238883bb2f1545367f",
+          "gitSha256": "0261e43a779dc465c6df1bb61f3a7f631273f2c6849167238883bb2f1545367f"
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsB/wagashi.js",
+          "status": 200,
+          "requestId": "19320.206",
+          "servedSha256": "96d7717b9cb59807a66e5d8d2ed3a32b73a382e06a6620416fb831f1a5f730cb",
+          "diskSha256": "96d7717b9cb59807a66e5d8d2ed3a32b73a382e06a6620416fb831f1a5f730cb",
+          "gitSha256": "96d7717b9cb59807a66e5d8d2ed3a32b73a382e06a6620416fb831f1a5f730cb"
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsB/bike.js",
+          "status": 200,
+          "requestId": "19320.209",
+          "servedSha256": "27a10e0a6a7216abdf2e7f5fdd1c654c58898fa761b6d62a02639cc4fabc8c99",
+          "diskSha256": "27a10e0a6a7216abdf2e7f5fdd1c654c58898fa761b6d62a02639cc4fabc8c99",
+          "gitSha256": "27a10e0a6a7216abdf2e7f5fdd1c654c58898fa761b6d62a02639cc4fabc8c99"
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsB/ramen.js",
+          "status": 200,
+          "requestId": "19320.208",
+          "servedSha256": "7933892092e6fcc34c60940f9957e86f6a65c3c8a9c5c16ee6695fe1b3568e2a",
+          "diskSha256": "7933892092e6fcc34c60940f9957e86f6a65c3c8a9c5c16ee6695fe1b3568e2a",
+          "gitSha256": "7933892092e6fcc34c60940f9957e86f6a65c3c8a9c5c16ee6695fe1b3568e2a"
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsB/general.js",
+          "status": 200,
+          "requestId": "19320.207",
+          "servedSha256": "3c88d0ebffaebfd52103393d4ada19af664d9e721b89c34731fca1b09bd57ed2",
+          "diskSha256": "3c88d0ebffaebfd52103393d4ada19af664d9e721b89c34731fca1b09bd57ed2",
+          "gitSha256": "3c88d0ebffaebfd52103393d4ada19af664d9e721b89c34731fca1b09bd57ed2"
+        }
+      ]
+    },
+    "afternoon-off": {
+      "dir": "gpu-modern-after-c28-afternoon-off-880a02a-r2",
+      "exit": 1,
+      "stage": "complete",
+      "renderOk": true,
+      "sourceUnchanged": true,
+      "restoreUnchanged": true,
+      "assetsUnchanged": true,
+      "driverUnchanged": true,
+      "ok": false,
+      "captures": 15,
+      "stageTimestamps": [
+        {
+          "stage": "bootstrap",
+          "wallTimeMs": 1794995174316
+        },
+        {
+          "stage": "app-ready",
+          "wallTimeMs": 1794995174370
+        },
+        {
+          "stage": "loading",
+          "wallTimeMs": 1794995174486
+        },
+        {
+          "stage": "freezing",
+          "wallTimeMs": 1794995215082
+        },
+        {
+          "stage": "station-street-ao-on-warmup",
+          "wallTimeMs": 1794995215472
+        },
+        {
+          "stage": "station-street-ao-on-capture-1",
+          "wallTimeMs": 1794995215681
+        },
+        {
+          "stage": "station-street-ao-on-capture-2",
+          "wallTimeMs": 1794995215885
+        },
+        {
+          "stage": "20-rear-eye-ao-on-warmup",
+          "wallTimeMs": 1794995216069
+        },
+        {
+          "stage": "20-rear-eye-ao-on-capture-1",
+          "wallTimeMs": 1794995216232
+        },
+        {
+          "stage": "20-rear-eye-ao-on-capture-2",
+          "wallTimeMs": 1794995216371
+        },
+        {
+          "stage": "shop-interior-ao-on-warmup",
+          "wallTimeMs": 1794995216508
+        },
+        {
+          "stage": "shop-interior-ao-on-capture-1",
+          "wallTimeMs": 1794995216691
+        },
+        {
+          "stage": "shop-interior-ao-on-capture-2",
+          "wallTimeMs": 1794995216805
+        },
+        {
+          "stage": "shop-door-eye-ao-on-warmup",
+          "wallTimeMs": 1794995216923
+        },
+        {
+          "stage": "shop-door-eye-ao-on-capture-1",
+          "wallTimeMs": 1794995217057
+        },
+        {
+          "stage": "shop-door-eye-ao-on-capture-2",
+          "wallTimeMs": 1794995217209
+        },
+        {
+          "stage": "van-side-ao-on-warmup",
+          "wallTimeMs": 1794995217351
+        },
+        {
+          "stage": "van-side-ao-on-capture-1",
+          "wallTimeMs": 1794995217485
+        },
+        {
+          "stage": "van-side-ao-on-capture-2",
+          "wallTimeMs": 1794995217615
+        }
+      ],
+      "networkFailures": [
+        {
+          "file": "boulders.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "file": "menhir.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "file": "plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "file": "plastic_crate_02.bin",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "httpErrors": [],
+      "exceptions": [],
+      "gpuGenerations": [
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsA/konbini.js",
+          "status": 200,
+          "requestId": "57932.193",
+          "servedSha256": "df15e6a08f1ad3f3a79df30e87d80390eb81f6b780fcf8de2c7a0efd4705d2ca",
+          "diskSha256": "df15e6a08f1ad3f3a79df30e87d80390eb81f6b780fcf8de2c7a0efd4705d2ca",
+          "gitSha256": "df15e6a08f1ad3f3a79df30e87d80390eb81f6b780fcf8de2c7a0efd4705d2ca"
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsA/cafe.js",
+          "status": 200,
+          "requestId": "57932.196",
+          "servedSha256": "83b7a557a1c7ee21dfb3126c79b86ac24df75578c702043a9ec8a48b3ffe9870",
+          "diskSha256": "83b7a557a1c7ee21dfb3126c79b86ac24df75578c702043a9ec8a48b3ffe9870",
+          "gitSha256": "83b7a557a1c7ee21dfb3126c79b86ac24df75578c702043a9ec8a48b3ffe9870"
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsA/flower.js",
+          "status": 200,
+          "requestId": "57932.199",
+          "servedSha256": "308594755163fe0bb956e3f6dcfe5222fe3413924112fbd76de8e32e24ca5274",
+          "diskSha256": "308594755163fe0bb956e3f6dcfe5222fe3413924112fbd76de8e32e24ca5274",
+          "gitSha256": "308594755163fe0bb956e3f6dcfe5222fe3413924112fbd76de8e32e24ca5274"
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsA/books.js",
+          "status": 200,
+          "requestId": "57932.201",
+          "servedSha256": "0261e43a779dc465c6df1bb61f3a7f631273f2c6849167238883bb2f1545367f",
+          "diskSha256": "0261e43a779dc465c6df1bb61f3a7f631273f2c6849167238883bb2f1545367f",
+          "gitSha256": "0261e43a779dc465c6df1bb61f3a7f631273f2c6849167238883bb2f1545367f"
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsB/wagashi.js",
+          "status": 200,
+          "requestId": "57932.204",
+          "servedSha256": "96d7717b9cb59807a66e5d8d2ed3a32b73a382e06a6620416fb831f1a5f730cb",
+          "diskSha256": "96d7717b9cb59807a66e5d8d2ed3a32b73a382e06a6620416fb831f1a5f730cb",
+          "gitSha256": "96d7717b9cb59807a66e5d8d2ed3a32b73a382e06a6620416fb831f1a5f730cb"
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsB/bike.js",
+          "status": 200,
+          "requestId": "57932.207",
+          "servedSha256": "27a10e0a6a7216abdf2e7f5fdd1c654c58898fa761b6d62a02639cc4fabc8c99",
+          "diskSha256": "27a10e0a6a7216abdf2e7f5fdd1c654c58898fa761b6d62a02639cc4fabc8c99",
+          "gitSha256": "27a10e0a6a7216abdf2e7f5fdd1c654c58898fa761b6d62a02639cc4fabc8c99"
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsB/ramen.js",
+          "status": 200,
+          "requestId": "57932.206",
+          "servedSha256": "7933892092e6fcc34c60940f9957e86f6a65c3c8a9c5c16ee6695fe1b3568e2a",
+          "diskSha256": "7933892092e6fcc34c60940f9957e86f6a65c3c8a9c5c16ee6695fe1b3568e2a",
+          "gitSha256": "7933892092e6fcc34c60940f9957e86f6a65c3c8a9c5c16ee6695fe1b3568e2a"
+        },
+        {
+          "path": "upstream/sakuragaoka/src/world/shopsB/general.js",
+          "status": 200,
+          "requestId": "57932.205",
+          "servedSha256": "3c88d0ebffaebfd52103393d4ada19af664d9e721b89c34731fca1b09bd57ed2",
+          "diskSha256": "3c88d0ebffaebfd52103393d4ada19af664d9e721b89c34731fca1b09bd57ed2",
+          "gitSha256": "3c88d0ebffaebfd52103393d4ada19af664d9e721b89c34731fca1b09bd57ed2"
+        }
+      ]
+    }
+  },
+  "nativeAudits": {
+    "evening-off": {
+      "laundry-details": {
+        "size": {
+          "css": [
+            1440,
+            900
+          ],
+          "buffer": [
+            1440,
+            900
+          ],
+          "canvas": [
+            1440,
+            900
+          ],
+          "devicePixelRatio": 1,
+          "rendererPixelRatio": 1,
+          "antialias": false,
+          "defaultFboSamples": 0,
+          "targets": {
+            "sceneRT": {
+              "width": 1440,
+              "height": 900,
+              "samples": 4,
+              "type": 1016,
+              "filter": 1006
+            },
+            "compRT": {
+              "width": 1440,
+              "height": 900,
+              "samples": 4,
+              "type": 1016,
+              "filter": 1006
+            },
+            "raysRT": {
+              "width": 720,
+              "height": 450,
+              "samples": 0,
+              "type": 1016,
+              "filter": 1006
+            }
+          }
+        },
+        "post": {
+          "params": {
+            "exposure": 1.02,
+            "blur": 0,
+            "bloom": 0.2,
+            "distortion": 0,
+            "fringe": 0,
+            "vignette": 0.12,
+            "rays": 0,
+            "saturation": 1,
+            "contrast": 1.05,
+            "speed": 0
+          },
+          "toon27": null,
+          "uniforms": {
+            "uBloom": 0.2,
+            "uRays": 0,
+            "uAO": 0.55,
+            "uHaze": 1,
+            "uLnOn": 0
+          },
+          "style": {
+            "toon": true,
+            "flightEffects": false
+          }
+        },
+        "posters": {
+          "mesh": "weathering-decals",
+          "map": "weathering-decal-atlas",
+          "size": [
+            1024,
+            1024
+          ],
+          "source": "baked",
+          "fingerprint": "1015:2741945:285456.7:910574.7",
+          "items": [
+            {
+              "planIndex": 8,
+              "area": "21-mailboxes",
+              "cell": 7,
+              "kind": "poster",
+              "pos": [
+                -3,
+                6.75,
+                -123.25
+              ],
+              "normal": [
+                0,
+                0,
+                1
+              ],
+              "right": [
+                0.9998,
+                0.0204,
+                0
+              ],
+              "w": 0.42,
+              "h": 0.5823,
+              "world": [
+                [
+                  276.7959899902344,
+                  14.45462417602539,
+                  776.7570190429688
+                ],
+                [
+                  277.2159118652344,
+                  14.463191986083984,
+                  776.7570190429688
+                ],
+                [
+                  277.2040100097656,
+                  15.04537582397461,
+                  776.7570190429688
+                ],
+                [
+                  276.7840881347656,
+                  15.036808013916016,
+                  776.7570190429688
+                ]
+              ],
+              "projected": [
+                [
+                  619.9287689516229,
+                  75.5767899494112,
+                  0.9611017799183396
+                ],
+                [
+                  623.628608562015,
+                  74.51727399154657,
+                  0.9596014260083675
+                ],
+                [
+                  621.2453542184197,
+                  17.832427194995343,
+                  0.9586936183418425
+                ],
+                [
+                  617.5559440345712,
+                  21.064195827532245,
+                  0.9602608106818417
+                ]
+              ],
+              "uv": [
+                [
+                  0.7890625,
+                  0.505859375
+                ],
+                [
+                  0.9609375,
+                  0.505859375
+                ],
+                [
+                  0.9609375,
+                  0.744140625
+                ],
+                [
+                  0.7890625,
+                  0.744140625
+                ]
+              ]
+            },
+            {
+              "planIndex": 14,
+              "area": "laundry",
+              "cell": 2,
+              "kind": "poster",
+              "pos": [
+                7.3662,
+                5.8325,
+                -123.25
+              ],
+              "normal": [
+                0,
+                0,
+                1
+              ],
+              "right": [
+                0.9998,
+                0.0209,
+                0
+              ],
+              "w": 0.4996,
+              "h": 0.6926,
+              "world": [
+                [
+                  287.1236877441406,
+                  13.481048583984375,
+                  776.7570190429688
+                ],
+                [
+                  287.6231994628906,
+                  13.491490364074707,
+                  776.7570190429688
+                ],
+                [
+                  287.60870361328125,
+                  14.183951377868652,
+                  776.7570190429688
+                ],
+                [
+                  287.1092224121094,
+                  14.17350959777832,
+                  776.7570190429688
+                ]
+              ],
+              "projected": [
+                [
+                  1316.318085610654,
+                  706.459937285647,
+                  0.705830084265377
+                ],
+                [
+                  1713.274861741089,
+                  1008.5037422179605,
+                  0.5584387856332371
+                ],
+                [
+                  2105.300303517857,
+                  373.34606738798476,
+                  0.3823815669721872
+                ],
+                [
+                  1453.7880781409049,
+                  262.19967441147264,
+                  0.6368550778338204
+                ]
+              ],
+              "uv": [
+                [
+                  0.5390625,
+                  0.755859375
+                ],
+                [
+                  0.7109375,
+                  0.755859375
+                ],
+                [
+                  0.7109375,
+                  0.994140625
+                ],
+                [
+                  0.5390625,
+                  0.994140625
+                ]
+              ]
+            },
+            {
+              "planIndex": 15,
+              "area": "laundry",
+              "cell": 5,
+              "kind": "poster",
+              "pos": [
+                6.1352,
+                6.5412,
+                -123.25
+              ],
+              "normal": [
+                0,
+                0,
+                1
+              ],
+              "right": [
+                1,
+                0.0004,
+                0
+              ],
+              "w": 0.4895,
+              "h": 0.6786,
+              "world": [
+                [
+                  285.8905944824219,
+                  14.201802253723145,
+                  776.7570190429688
+                ],
+                [
+                  286.3800964355469,
+                  14.201997756958008,
+                  776.7570190429688
+                ],
+                [
+                  286.37982177734375,
+                  14.880598068237305,
+                  776.7570190429688
+                ],
+                [
+                  285.89031982421875,
+                  14.880402565002441,
+                  776.7570190429688
+                ]
+              ],
+              "projected": [
+                [
+                  990.2572101161147,
+                  160.55941857165243,
+                  0.8171679758163266
+                ],
+                [
+                  1108.364136951079,
+                  180.28936726930186,
+                  0.7710230261064239
+                ],
+                [
+                  1177.9673250445958,
+                  -232.53120683432465,
+                  0.7299614853281121
+                ],
+                [
+                  1027.5766370688755,
+                  -160.3074885942484,
+                  0.7919002948914238
+                ]
+              ],
+              "uv": [
+                [
+                  0.2890625,
+                  0.505859375
+                ],
+                [
+                  0.4609375,
+                  0.505859375
+                ],
+                [
+                  0.4609375,
+                  0.744140625
+                ],
+                [
+                  0.2890625,
+                  0.744140625
+                ]
+              ]
+            },
+            {
+              "planIndex": 16,
+              "area": "laundry",
+              "cell": 9,
+              "kind": "sticker",
+              "pos": [
+                -2.5387,
+                5.7215,
+                -123.25
+              ],
+              "normal": [
+                0,
+                0,
+                1
+              ],
+              "right": [
+                0.9722,
+                -0.2344,
+                0
+              ],
+              "w": 0.2014,
+              "h": 0.2014,
+              "world": [
+                [
+                  277.33978271484375,
+                  13.64720344543457,
+                  776.7570190429688
+                ],
+                [
+                  277.53558349609375,
+                  13.599995613098145,
+                  776.7570190429688
+                ],
+                [
+                  277.5827941894531,
+                  13.795796394348145,
+                  776.7570190429688
+                ],
+                [
+                  277.3869934082031,
+                  13.84300422668457,
+                  776.7570190429688
+                ]
+              ],
+              "projected": [
+                [
+                  627.7971044330611,
+                  150.5499750468889,
+                  0.9604341059915954
+                ],
+                [
+                  629.840185897276,
+                  156.09775628794927,
+                  0.9598059663208766
+                ],
+                [
+                  629.6020346775256,
+                  138.27621384635188,
+                  0.9593180611222358
+                ],
+                [
+                  627.5383237410905,
+                  132.9438545192541,
+                  0.9599614115191873
+                ]
+              ],
+              "uv": [
+                [
+                  0.2822265625,
+                  0.2822265625
+                ],
+                [
+                  0.4677734375,
+                  0.2822265625
+                ],
+                [
+                  0.4677734375,
+                  0.4677734375
+                ],
+                [
+                  0.2822265625,
+                  0.4677734375
+                ]
+              ]
+            },
+            {
+              "planIndex": 17,
+              "area": "rear",
+              "cell": 0,
+              "kind": "poster",
+              "pos": [
+                -15.4089,
+                6.693,
+                -132.5
+              ],
+              "normal": [
+                0,
+                0,
+                -1
+              ],
+              "right": [
+                -0.9997,
+                0.0233,
+                0
+              ],
+              "w": 0.6142,
+              "h": 0.8514,
+              "world": [
+                [
+                  264.88818359375,
+                  14.260272026062012,
+                  767.4929809570312
+                ],
+                [
+                  264.274169921875,
+                  14.274582862854004,
+                  767.4929809570312
+                ],
+                [
+                  264.29400634765625,
+                  15.125727653503418,
+                  767.4929809570312
+                ],
+                [
+                  264.90802001953125,
+                  15.111416816711426,
+                  767.4929809570312
+                ]
+              ],
+              "projected": [
+                [
+                  925.3195502854577,
+                  87.08459770169844,
+                  0.9825039741388079
+                ],
+                [
+                  915.8359305910703,
+                  86.38947759247768,
+                  0.9829141094140587
+                ],
+                [
+                  918.9769682639252,
+                  51.72775972789809,
+                  0.98265307016115
+                ],
+                [
+                  928.6852544886891,
+                  51.58994381964943,
+                  0.9822301709592051
+                ]
+              ],
+              "uv": [
+                [
+                  0.0390625,
+                  0.755859375
+                ],
+                [
+                  0.2109375,
+                  0.755859375
+                ],
+                [
+                  0.2109375,
+                  0.994140625
+                ],
+                [
+                  0.0390625,
+                  0.994140625
+                ]
+              ]
+            },
+            {
+              "planIndex": 18,
+              "area": "rear",
+              "cell": 3,
+              "kind": "poster",
+              "pos": [
+                -12.3872,
+                6.756,
+                -132.5
+              ],
+              "normal": [
+                0,
+                0,
+                -1
+              ],
+              "right": [
+                -0.9998,
+                0.0221,
+                0
+              ],
+              "w": 0.6142,
+              "h": 0.8515,
+              "world": [
+                [
+                  267.9104309082031,
+                  14.323548316955566,
+                  767.4929809570312
+                ],
+                [
+                  267.2963562011719,
+                  14.337121963500977,
+                  767.4929809570312
+                ],
+                [
+                  267.315185546875,
+                  15.188451766967773,
+                  767.4929809570312
+                ],
+                [
+                  267.92926025390625,
+                  15.174878120422363,
+                  767.4929809570312
+                ]
+              ],
+              "projected": [
+                [
+                  980.1882602169703,
+                  84.82524502402087,
+                  0.9801085456076808
+                ],
+                [
+                  967.9824809270682,
+                  84.1310713653954,
+                  0.9806371246454086
+                ],
+                [
+                  972.4327475287278,
+                  44.73078974112946,
+                  0.9803021182496767
+                ],
+                [
+                  984.9787686218169,
+                  44.34403004061738,
+                  0.9797548567717309
+                ]
+              ],
+              "uv": [
+                [
+                  0.7890625,
+                  0.755859375
+                ],
+                [
+                  0.9609375,
+                  0.755859375
+                ],
+                [
+                  0.9609375,
+                  0.994140625
+                ],
+                [
+                  0.7890625,
+                  0.994140625
+                ]
+              ]
+            }
+          ],
+          "atlasPNGHash": "4a5b4b075719328a726a13bda385ed7c7829b774c84194057a2209de12f08dd5"
+        }
+      },
+      "station-street": {
+        "size": {
+          "css": [
+            1440,
+            900
+          ],
+          "buffer": [
+            1440,
+            900
+          ],
+          "canvas": [
+            1440,
+            900
+          ],
+          "devicePixelRatio": 1,
+          "rendererPixelRatio": 1,
+          "antialias": false,
+          "defaultFboSamples": 0,
+          "targets": {
+            "sceneRT": {
+              "width": 1440,
+              "height": 900,
+              "samples": 4,
+              "type": 1016,
+              "filter": 1006
+            },
+            "compRT": {
+              "width": 1440,
+              "height": 900,
+              "samples": 4,
+              "type": 1016,
+              "filter": 1006
+            },
+            "raysRT": {
+              "width": 720,
+              "height": 450,
+              "samples": 0,
+              "type": 1016,
+              "filter": 1006
+            }
+          }
+        },
+        "post": {
+          "params": {
+            "exposure": 1.02,
+            "blur": 0,
+            "bloom": 0.2,
+            "distortion": 0,
+            "fringe": 0,
+            "vignette": 0.12,
+            "rays": 0,
+            "saturation": 1,
+            "contrast": 1.05,
+            "speed": 0
+          },
+          "toon27": null,
+          "uniforms": {
+            "uBloom": 0.2,
+            "uRays": 0,
+            "uAO": 0.55,
+            "uHaze": 1,
+            "uLnOn": 0
+          },
+          "style": {
+            "toon": true,
+            "flightEffects": false
+          }
+        },
+        "signs": {
+          "gate": {
+            "xy": [
+              733,
+              365
+            ],
+            "hits": [
+              {
+                "object": [
+                  "static-batched",
+                  "static",
+                  "Sakuragaoka"
+                ],
+                "material": "MeshToonMaterial",
+                "map": null,
+                "size": [
+                  256,
+                  512
+                ],
+                "uv": [
+                  0.691924174245805,
+                  0.9774319199856936
+                ],
+                "distance": 48.73685555414071
+              }
+            ],
+            "mapSha256": "d2957be677f3c440c1a6ed86e9826f8113cda0a2459c17c5f2565e137091f6e7"
+          },
+          "valance": {
+            "xy": [
+              1268,
+              379
+            ],
+            "hits": [
+              {
+                "object": [
+                  "static-batched",
+                  "static",
+                  "Sakuragaoka"
+                ],
+                "material": "MeshToonMaterial",
+                "map": null,
+                "size": [
+                  4096,
+                  4096
+                ],
+                "uv": [
+                  0.13189792035935397,
+                  0.3345733116443398
+                ],
+                "distance": 11.741361335445502
+              },
+              {
+                "object": [
+                  "static-batched",
+                  "static",
+                  "Sakuragaoka"
+                ],
+                "material": "MeshToonMaterial",
+                "map": null,
+                "size": [
+                  512,
+                  512
+                ],
+                "uv": [
+                  -0.6435231164807294,
+                  1.0915518210739459
+                ],
+                "distance": 13.923939055727157
+              },
+              {
+                "object": [
+                  "static-batched",
+                  "static",
+                  "Sakuragaoka"
+                ],
+                "material": "MeshToonMaterial",
+                "map": null,
+                "size": [
+                  256,
+                  256
+                ],
+                "uv": [
+                  0.06241263538014263,
+                  0.1008075547693491
+                ],
+                "distance": 16.082149159542023
+              }
+            ],
+            "mapSha256": "9122f3561506c008a05cb390e67cdaa234ce6412d72f2d04d02a1d9357b1a3b1"
+          }
+        }
+      }
+    },
+    "evening-on": {
+      "laundry-details": {
+        "size": {
+          "css": [
+            1440,
+            900
+          ],
+          "buffer": [
+            1440,
+            900
+          ],
+          "canvas": [
+            1440,
+            900
+          ],
+          "devicePixelRatio": 1,
+          "rendererPixelRatio": 1,
+          "antialias": false,
+          "defaultFboSamples": 0,
+          "targets": {
+            "sceneRT": {
+              "width": 1440,
+              "height": 900,
+              "samples": 4,
+              "type": 1016,
+              "filter": 1006
+            },
+            "compRT": {
+              "width": 1440,
+              "height": 900,
+              "samples": 4,
+              "type": 1016,
+              "filter": 1006
+            },
+            "raysRT": {
+              "width": 720,
+              "height": 450,
+              "samples": 0,
+              "type": 1016,
+              "filter": 1006
+            }
+          }
+        },
+        "post": {
+          "params": {
+            "exposure": 1.02,
+            "blur": 0,
+            "bloom": 0.2,
+            "distortion": 0,
+            "fringe": 0,
+            "vignette": 0.12,
+            "rays": 0,
+            "saturation": 1,
+            "contrast": 1.05,
+            "speed": 0
+          },
+          "toon27": {
+            "lit": {
+              "levels": [
+                0,
+                0.45,
+                1
+              ],
+              "edges": [
+                0.16,
+                0.6
+              ],
+              "width": 0.03,
+              "strength": 1
+            },
+            "line": {
+              "width": 2,
+              "strength": 1,
+              "sil": [
+                0.006,
+                0.03
+              ],
+              "crease": [
+                0.035,
+                0.11
+              ],
+              "creaseWeight": 0.9,
+              "fade": [
+                50,
+                150
+              ],
+              "tint": [
+                0.11,
+                0.12,
+                0.22
+              ]
+            },
+            "rim": {
+              "color": [
+                1,
+                0.52,
+                0.22
+              ],
+              "strength": 0.3,
+              "power": 3
+            }
+          },
+          "uniforms": {
+            "uBloom": 0.2,
+            "uRays": 0,
+            "uAO": 0.55,
+            "uHaze": 1,
+            "uLnOn": 1
+          },
+          "style": {
+            "toon": true,
+            "flightEffects": false
+          }
+        },
+        "posters": {
+          "mesh": "weathering-decals",
+          "map": "weathering-decal-atlas",
+          "size": [
+            1024,
+            1024
+          ],
+          "source": "planned (scene changed)",
+          "fingerprint": "1675:2734865:471350.5:1508686.9",
+          "items": [
+            {
+              "planIndex": 7,
+              "area": "21-mailboxes",
+              "cell": 7,
+              "kind": "poster",
+              "pos": [
+                -3,
+                6.75,
+                -123.25
+              ],
+              "normal": [
+                0,
+                0,
+                1
+              ],
+              "right": [
+                0.9998,
+                0.0204,
+                0
+              ],
+              "w": 0.42,
+              "h": 0.5823,
+              "world": [
+                [
+                  276.7959899902344,
+                  14.45462417602539,
+                  776.7570190429688
+                ],
+                [
+                  277.2159118652344,
+                  14.463191986083984,
+                  776.7570190429688
+                ],
+                [
+                  277.2040100097656,
+                  15.04537582397461,
+                  776.7570190429688
+                ],
+                [
+                  276.7840881347656,
+                  15.036808013916016,
+                  776.7570190429688
+                ]
+              ],
+              "projected": [
+                [
+                  619.9287689516229,
+                  75.5767899494112,
+                  0.9611017799183396
+                ],
+                [
+                  623.628608562015,
+                  74.51727399154657,
+                  0.9596014260083675
+                ],
+                [
+                  621.2453542184197,
+                  17.832427194995343,
+                  0.9586936183418425
+                ],
+                [
+                  617.5559440345712,
+                  21.064195827532245,
+                  0.9602608106818417
+                ]
+              ],
+              "uv": [
+                [
+                  0.7890625,
+                  0.505859375
+                ],
+                [
+                  0.9609375,
+                  0.505859375
+                ],
+                [
+                  0.9609375,
+                  0.744140625
+                ],
+                [
+                  0.7890625,
+                  0.744140625
+                ]
+              ]
+            },
+            {
+              "planIndex": 10,
+              "area": "laundry",
+              "cell": 4,
+              "kind": "poster",
+              "pos": [
+                6.8631,
+                6.4335,
+                -123.25
+              ],
+              "normal": [
+                0,
+                0,
+                1
+              ],
+              "right": [
+                0.9996,
+                -0.027,
+                0
+              ],
+              "w": 0.4977,
+              "h": 0.6899,
+              "world": [
+                [
+                  286.60504150390625,
+                  14.095406532287598,
+                  776.7570190429688
+                ],
+                [
+                  287.1025390625,
+                  14.081969261169434,
+                  776.7570190429688
+                ],
+                [
+                  287.12115478515625,
+                  14.77159309387207,
+                  776.7570190429688
+                ],
+                [
+                  286.6236572265625,
+                  14.78503131866455,
+                  776.7570190429688
+                ]
+              ],
+              "projected": [
+                [
+                  1172.9923772216812,
+                  253.40244121300586,
+                  0.7478084265255939
+                ],
+                [
+                  1425.870243333567,
+                  330.8227462394717,
+                  0.6501570814286342
+                ],
+                [
+                  1666.2187870548867,
+                  -342.37088700674667,
+                  0.5329459008223554
+                ],
+                [
+                  1275.5915493477291,
+                  -207.49832538819234,
+                  0.6921042704199503
+                ]
+              ],
+              "uv": [
+                [
+                  0.0390625,
+                  0.505859375
+                ],
+                [
+                  0.2109375,
+                  0.505859375
+                ],
+                [
+                  0.2109375,
+                  0.744140625
+                ],
+                [
+                  0.0390625,
+                  0.744140625
+                ]
+              ]
+            },
+            {
+              "planIndex": 11,
+              "area": "rear",
+              "cell": 0,
+              "kind": "poster",
+              "pos": [
+                -0.0776,
+                6.7274,
+                -131
+              ],
+              "normal": [
+                0,
+                0,
+                -1
+              ],
+              "right": [
+                -0.9997,
+                -0.0252,
+                0
+              ],
+              "w": 0.5842,
+              "h": 0.81,
+              "world": [
+                [
+                  280.224609375,
+                  14.329882621765137,
+                  768.9929809570312
+                ],
+                [
+                  279.6405944824219,
+                  14.315160751342773,
+                  768.9929809570312
+                ],
+                [
+                  279.62017822265625,
+                  15.124917984008789,
+                  768.9929809570312
+                ],
+                [
+                  280.2041931152344,
+                  15.139639854431152,
+                  768.9929809570312
+                ]
+              ],
+              "projected": [
+                [
+                  1426.0309042840413,
+                  87.88401729947826,
+                  0.9541019952166028
+                ],
+                [
+                  1374.167569791988,
+                  89.0398657596499,
+                  0.9567434187308094
+                ],
+                [
+                  1395.6193011974517,
+                  4.206383033508337,
+                  0.9552972128839945
+                ],
+                [
+                  1450.6807914508156,
+                  -2.3517401593723064,
+                  0.9524705556554943
+                ]
+              ],
+              "uv": [
+                [
+                  0.0390625,
+                  0.755859375
+                ],
+                [
+                  0.2109375,
+                  0.755859375
+                ],
+                [
+                  0.2109375,
+                  0.994140625
+                ],
+                [
+                  0.0390625,
+                  0.994140625
+                ]
+              ]
+            },
+            {
+              "planIndex": 12,
+              "area": "rear",
+              "cell": 4,
+              "kind": "poster",
+              "pos": [
+                -18.7028,
+                6.7714,
+                -132.5
+              ],
+              "normal": [
+                0,
+                0,
+                -1
+              ],
+              "right": [
+                -0.9999,
+                0.0122,
+                0
+              ],
+              "w": 0.4788,
+              "h": 0.6638,
+              "world": [
+                [
+                  261.53253173828125,
+                  14.436612129211426,
+                  767.4929809570312
+                ],
+                [
+                  261.05377197265625,
+                  14.44245433807373,
+                  767.4929809570312
+                ],
+                [
+                  261.0618591308594,
+                  15.10618782043457,
+                  767.4929809570312
+                ],
+                [
+                  261.5406188964844,
+                  15.100346565246582,
+                  767.4929809570312
+                ]
+              ],
+              "projected": [
+                [
+                  878.631241884558,
+                  80.07174103494334,
+                  0.9845102051347638
+                ],
+                [
+                  872.7835169251133,
+                  79.89320796156419,
+                  0.9847639973196902
+                ],
+                [
+                  874.4130844426427,
+                  55.83533551627319,
+                  0.9846067705455807
+                ],
+                [
+                  880.3494542246793,
+                  55.61142707947215,
+                  0.9843476774045674
+                ]
+              ],
+              "uv": [
+                [
+                  0.0390625,
+                  0.505859375
+                ],
+                [
+                  0.2109375,
+                  0.505859375
+                ],
+                [
+                  0.2109375,
+                  0.744140625
+                ],
+                [
+                  0.0390625,
+                  0.744140625
+                ]
+              ]
+            },
+            {
+              "planIndex": 14,
+              "area": "rear",
+              "cell": 4,
+              "kind": "poster",
+              "pos": [
+                -22.0528,
+                7.2075,
+                -132.5
+              ],
+              "normal": [
+                0,
+                0,
+                -1
+              ],
+              "right": [
+                -1,
+                -0.005,
+                0
+              ],
+              "w": 0.575,
+              "h": 0.7972,
+              "world": [
+                [
+                  258.2366943359375,
+                  14.81033706665039,
+                  767.4929809570312
+                ],
+                [
+                  257.66168212890625,
+                  14.807462692260742,
+                  767.4929809570312
+                ],
+                [
+                  257.65771484375,
+                  15.604662895202637,
+                  767.4929809570312
+                ],
+                [
+                  258.2326965332031,
+                  15.607537269592285,
+                  767.4929809570312
+                ]
+              ],
+              "projected": [
+                [
+                  842.4662265389113,
+                  67.9821727051511,
+                  0.9860403544107882
+                ],
+                [
+                  836.7681160008023,
+                  68.32392461623539,
+                  0.9862895038093856
+                ],
+                [
+                  837.9946858639129,
+                  42.18313569068471,
+                  0.9861423373973036
+                ],
+                [
+                  843.7771465798279,
+                  41.358350753389196,
+                  0.9858877847218359
+                ]
+              ],
+              "uv": [
+                [
+                  0.0390625,
+                  0.505859375
+                ],
+                [
+                  0.2109375,
+                  0.505859375
+                ],
+                [
+                  0.2109375,
+                  0.744140625
+                ],
+                [
+                  0.0390625,
+                  0.744140625
+                ]
+              ]
+            }
+          ],
+          "atlasPNGHash": "4a5b4b075719328a726a13bda385ed7c7829b774c84194057a2209de12f08dd5"
+        }
+      },
+      "station-street": {
+        "size": {
+          "css": [
+            1440,
+            900
+          ],
+          "buffer": [
+            1440,
+            900
+          ],
+          "canvas": [
+            1440,
+            900
+          ],
+          "devicePixelRatio": 1,
+          "rendererPixelRatio": 1,
+          "antialias": false,
+          "defaultFboSamples": 0,
+          "targets": {
+            "sceneRT": {
+              "width": 1440,
+              "height": 900,
+              "samples": 4,
+              "type": 1016,
+              "filter": 1006
+            },
+            "compRT": {
+              "width": 1440,
+              "height": 900,
+              "samples": 4,
+              "type": 1016,
+              "filter": 1006
+            },
+            "raysRT": {
+              "width": 720,
+              "height": 450,
+              "samples": 0,
+              "type": 1016,
+              "filter": 1006
+            }
+          }
+        },
+        "post": {
+          "params": {
+            "exposure": 1.02,
+            "blur": 0,
+            "bloom": 0.2,
+            "distortion": 0,
+            "fringe": 0,
+            "vignette": 0.12,
+            "rays": 0,
+            "saturation": 1,
+            "contrast": 1.05,
+            "speed": 0
+          },
+          "toon27": {
+            "lit": {
+              "levels": [
+                0,
+                0.45,
+                1
+              ],
+              "edges": [
+                0.16,
+                0.6
+              ],
+              "width": 0.03,
+              "strength": 1
+            },
+            "line": {
+              "width": 2,
+              "strength": 1,
+              "sil": [
+                0.006,
+                0.03
+              ],
+              "crease": [
+                0.035,
+                0.11
+              ],
+              "creaseWeight": 0.9,
+              "fade": [
+                50,
+                150
+              ],
+              "tint": [
+                0.11,
+                0.12,
+                0.22
+              ]
+            },
+            "rim": {
+              "color": [
+                1,
+                0.52,
+                0.22
+              ],
+              "strength": 0.3,
+              "power": 3
+            }
+          },
+          "uniforms": {
+            "uBloom": 0.2,
+            "uRays": 0,
+            "uAO": 0.55,
+            "uHaze": 1,
+            "uLnOn": 1
+          },
+          "style": {
+            "toon": true,
+            "flightEffects": false
+          }
+        },
+        "signs": {
+          "gate": {
+            "xy": [
+              733,
+              365
+            ],
+            "hits": [
+              {
+                "object": [
+                  "static-batched",
+                  "static",
+                  "Sakuragaoka"
+                ],
+                "material": "sakura:barkOld",
+                "map": null,
+                "size": [
+                  256,
+                  512
+                ],
+                "uv": [
+                  0.691924174245805,
+                  0.9774319199856936
+                ],
+                "distance": 48.73685555414071
+              }
+            ],
+            "mapSha256": "d2957be677f3c440c1a6ed86e9826f8113cda0a2459c17c5f2565e137091f6e7"
+          },
+          "valance": {
+            "xy": [
+              1268,
+              379
+            ],
+            "hits": [
+              {
+                "object": [
+                  "shopsB-E3",
+                  "static",
+                  "Sakuragaoka"
+                ],
+                "material": "MeshToonMaterial",
+                "map": null,
+                "size": [
+                  1024,
+                  64
+                ],
+                "uv": [
+                  0.5217323113206154,
+                  0.5064417130392882
+                ],
+                "distance": 11.741361328806075
+              },
+              {
+                "object": [
+                  "static-batched",
+                  "static",
+                  "Sakuragaoka"
+                ],
+                "material": "MeshToonMaterial",
+                "map": null,
+                "size": [
+                  512,
+                  512
+                ],
+                "uv": [
+                  -0.6435231164807294,
+                  1.0915518210739459
+                ],
+                "distance": 13.923939055727157
+              },
+              {
+                "object": [
+                  "static-batched",
+                  "static",
+                  "Sakuragaoka"
+                ],
+                "material": "MeshToonMaterial",
+                "map": null,
+                "size": [
+                  256,
+                  256
+                ],
+                "uv": [
+                  0.06241263538014263,
+                  0.1008075547693491
+                ],
+                "distance": 16.082149159542023
+              }
+            ],
+            "mapSha256": "eebfebb0f1d02357330a7e31294ecf4f0cd363d691bf2cf1e047c4a1f9af01ad"
+          }
+        }
+      }
+    },
+    "afternoon-off": {
+      "station-street": {
+        "size": {
+          "css": [
+            1440,
+            900
+          ],
+          "buffer": [
+            1440,
+            900
+          ],
+          "canvas": [
+            1440,
+            900
+          ],
+          "devicePixelRatio": 1,
+          "rendererPixelRatio": 1,
+          "antialias": false,
+          "defaultFboSamples": 0,
+          "targets": {
+            "sceneRT": {
+              "width": 1440,
+              "height": 900,
+              "samples": 4,
+              "type": 1016,
+              "filter": 1006
+            },
+            "compRT": {
+              "width": 1440,
+              "height": 900,
+              "samples": 4,
+              "type": 1016,
+              "filter": 1006
+            },
+            "raysRT": {
+              "width": 720,
+              "height": 450,
+              "samples": 0,
+              "type": 1016,
+              "filter": 1006
+            }
+          }
+        },
+        "post": {
+          "params": {
+            "exposure": 1.02,
+            "blur": 0,
+            "bloom": 0.12,
+            "distortion": 0,
+            "fringe": 0,
+            "vignette": 0.12,
+            "rays": 0,
+            "saturation": 1,
+            "contrast": 1.05,
+            "speed": 0
+          },
+          "toon27": null,
+          "uniforms": {
+            "uBloom": 0.12,
+            "uRays": 0,
+            "uAO": 0.55,
+            "uHaze": 1,
+            "uLnOn": 0
+          },
+          "style": {
+            "toon": true,
+            "flightEffects": false
+          }
+        },
+        "signs": {
+          "gate": {
+            "xy": [
+              733,
+              365
+            ],
+            "hits": [
+              {
+                "object": [
+                  "static-batched",
+                  "static",
+                  "Sakuragaoka"
+                ],
+                "material": "MeshToonMaterial",
+                "map": null,
+                "size": [
+                  256,
+                  512
+                ],
+                "uv": [
+                  0.691924174245805,
+                  0.9774319199856936
+                ],
+                "distance": 48.73685555414071
+              }
+            ],
+            "mapSha256": "d2957be677f3c440c1a6ed86e9826f8113cda0a2459c17c5f2565e137091f6e7"
+          },
+          "valance": {
+            "xy": [
+              1268,
+              379
+            ],
+            "hits": [
+              {
+                "object": [
+                  "static-batched",
+                  "static",
+                  "Sakuragaoka"
+                ],
+                "material": "MeshToonMaterial",
+                "map": null,
+                "size": [
+                  4096,
+                  4096
+                ],
+                "uv": [
+                  0.13189792035935397,
+                  0.3345733116443398
+                ],
+                "distance": 11.741361335445502
+              },
+              {
+                "object": [
+                  "static-batched",
+                  "static",
+                  "Sakuragaoka"
+                ],
+                "material": "MeshToonMaterial",
+                "map": null,
+                "size": [
+                  512,
+                  512
+                ],
+                "uv": [
+                  -0.6435231164807294,
+                  1.0915518210739459
+                ],
+                "distance": 13.923939055727157
+              },
+              {
+                "object": [
+                  "static-batched",
+                  "static",
+                  "Sakuragaoka"
+                ],
+                "material": "MeshToonMaterial",
+                "map": null,
+                "size": [
+                  256,
+                  256
+                ],
+                "uv": [
+                  0.06241263538014263,
+                  0.1008075547693491
+                ],
+                "distance": 16.082149159542023
+              }
+            ],
+            "mapSha256": "9122f3561506c008a05cb390e67cdaa234ce6412d72f2d04d02a1d9357b1a3b1"
+          }
+        }
+      }
+    }
+  },
+  "pairs": {
+    "evening": [
+      {
+        "view": "service-corner",
+        "camera": {
+          "position": [
+            308.4,
+            9.612,
+            872.9
+          ],
+          "quaternion": [
+            -0.08432325046436126,
+            0.5331397072650681,
+            0.05351200213385738,
+            0.8401119613456697
+          ],
+          "fov": 55
+        },
+        "old26": "aa08357b53184a02cbd12399397e75f3bc8c7b41d1f11048ec92347a6d795950",
+        "old27": "bd2eb8e861d38cdae1ed32de39a01f386729984de6b79b131c39f6bd26777b75",
+        "c26OnVsC28Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c26OnVsC28On": {
+          "pixels": 1296000,
+          "changed": 717263,
+          "above4": 280660,
+          "above8": 181400,
+          "maximum": 204,
+          "meanRGBChange": [
+            -0.786,
+            -0.787,
+            -0.7724
+          ],
+          "meanYChange": -0.7857
+        },
+        "c27OnVsC28On": {
+          "pixels": 1296000,
+          "changed": 690872,
+          "above4": 251350,
+          "above8": 149329,
+          "maximum": 197,
+          "meanRGBChange": [
+            0.0053,
+            0.0322,
+            0.1353
+          ],
+          "meanYChange": 0.0339
+        },
+        "c28OffVsOn": {
+          "pixels": 1296000,
+          "changed": 717263,
+          "above4": 280660,
+          "above8": 181400,
+          "maximum": 204,
+          "meanRGBChange": [
+            -0.786,
+            -0.787,
+            -0.7724
+          ],
+          "meanYChange": -0.7857
+        },
+        "images": {
+          "off": {
+            "file": "images/evening-service-corner-off.jpg",
+            "pngSha256": "aa08357b53184a02cbd12399397e75f3bc8c7b41d1f11048ec92347a6d795950",
+            "jpgSha256": "f4b99cef8133843b545038550da6586461a61321579894e0617cfed0c35ea29b",
+            "shadowCameraAmount": 1
+          },
+          "on": {
+            "file": "images/evening-service-corner-on.jpg",
+            "pngSha256": "4b2eb8f801dbf058c8521443220f91b580a05b409e155e099e81e266095812e0",
+            "jpgSha256": "7d37b2191fc6e39ef981afc0ad54a2aeda1845625d03cf1f85ad392110c0901f",
+            "shadowCameraAmount": 1
+          }
+        },
+        "regions": {}
+      },
+      {
+        "view": "laundry-details",
+        "camera": {
+          "position": [
+            288,
+            14.384808464050293,
+            777.9
+          ],
+          "quaternion": [
+            -0.15522850149956677,
+            0.6173580660361093,
+            0.12595148976979553,
+            0.7608609287163607
+          ],
+          "fov": 55
+        },
+        "old26": "3cf21004fc7d8a88389a8b99f046d66d3489a21a023eefb88f2af3039bab4f14",
+        "old27": "7d13f445a1cfe60db1cf63189f17dc2a24843a4af453c9faa4657ac4a1d04085",
+        "c26OnVsC28Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c26OnVsC28On": {
+          "pixels": 1296000,
+          "changed": 849936,
+          "above4": 564948,
+          "above8": 422709,
+          "maximum": 178,
+          "meanRGBChange": [
+            1.8394,
+            -0.0245,
+            -5.2359
+          ],
+          "meanYChange": -0.0045
+        },
+        "c27OnVsC28On": {
+          "pixels": 1296000,
+          "changed": 618378,
+          "above4": 290476,
+          "above8": 185628,
+          "maximum": 203,
+          "meanRGBChange": [
+            -0.2365,
+            -1.0992,
+            -5.0389
+          ],
+          "meanYChange": -1.2002
+        },
+        "c28OffVsOn": {
+          "pixels": 1296000,
+          "changed": 849936,
+          "above4": 564948,
+          "above8": 422709,
+          "maximum": 178,
+          "meanRGBChange": [
+            1.8394,
+            -0.0245,
+            -5.2359
+          ],
+          "meanYChange": -0.0045
+        },
+        "images": {
+          "off": {
+            "file": "images/evening-laundry-details-off.jpg",
+            "pngSha256": "3cf21004fc7d8a88389a8b99f046d66d3489a21a023eefb88f2af3039bab4f14",
+            "jpgSha256": "f6ab2c8c4ad0e84a92a5e7bf3621a693f97f304f055bba5c4741f859b317191a",
+            "shadowCameraAmount": 1
+          },
+          "on": {
+            "file": "images/evening-laundry-details-on.jpg",
+            "pngSha256": "f9d96edbc005b397d78aeb33a0b53928523a1aecb21fc32f05fc7ae70cb1b29c",
+            "jpgSha256": "6e7fde7c573f6774fc21ba26fac1152f60648a9559913921850581651696fb61",
+            "shadowCameraAmount": 1
+          }
+        },
+        "regions": {
+          "sunlit-pavers": {
+            "rect": [
+              576,
+              705,
+              685,
+              806
+            ],
+            "26onVs28off": {
+              "pixels": 11009,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "27onVs28on": {
+              "pixels": 11009,
+              "changed": 11009,
+              "above4": 10652,
+              "above8": 41,
+              "maximum": 9,
+              "meanRGBChange": [
+                -6.8538,
+                -3.6908,
+                -0.9641
+              ],
+              "meanYChange": -4.1664
+            },
+            "28offVsOn": {
+              "pixels": 11009,
+              "changed": 11009,
+              "above4": 11008,
+              "above8": 11004,
+              "maximum": 27,
+              "meanRGBChange": [
+                21.2914,
+                11.3366,
+                3.2244
+              ],
+              "meanYChange": 12.8673
+            }
+          },
+          "perforated-crate": {
+            "rect": [
+              665,
+              537,
+              755,
+              579
+            ],
+            "26onVs28off": {
+              "pixels": 3780,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "27onVs28on": {
+              "pixels": 3780,
+              "changed": 952,
+              "above4": 257,
+              "above8": 155,
+              "maximum": 73,
+              "meanRGBChange": [
+                -1.8235,
+                -1.3558,
+                -1.068
+              ],
+              "meanYChange": -1.4345
+            },
+            "28offVsOn": {
+              "pixels": 3780,
+              "changed": 2033,
+              "above4": 1197,
+              "above8": 637,
+              "maximum": 75,
+              "meanRGBChange": [
+                -1.5873,
+                -1.3442,
+                -1.8577
+              ],
+              "meanYChange": -1.4329
+            }
+          }
+        }
+      },
+      {
+        "view": "shop-interior",
+        "camera": {
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            -0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            0.7069324236562871
+          ],
+          "fov": 58
+        },
+        "old26": "fc3d362422b711322a59eebf0d90a5e833d09635afabc21b825dd3c7882b7a9d",
+        "old27": "5c7428fa8327cd9818a2a724c4a9aeb0efe65a553b96637429ade1bbdbac918c",
+        "c26OnVsC28Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c26OnVsC28On": {
+          "pixels": 1296000,
+          "changed": 60232,
+          "above4": 42510,
+          "above8": 35071,
+          "maximum": 123,
+          "meanRGBChange": [
+            -0.086,
+            -0.171,
+            -0.2265
+          ],
+          "meanYChange": -0.1569
+        },
+        "c27OnVsC28On": {
+          "pixels": 1296000,
+          "changed": 77639,
+          "above4": 61832,
+          "above8": 54538,
+          "maximum": 123,
+          "meanRGBChange": [
+            1.499,
+            1.1796,
+            0.696
+          ],
+          "meanYChange": 1.2126
+        },
+        "c28OffVsOn": {
+          "pixels": 1296000,
+          "changed": 60232,
+          "above4": 42510,
+          "above8": 35071,
+          "maximum": 123,
+          "meanRGBChange": [
+            -0.086,
+            -0.171,
+            -0.2265
+          ],
+          "meanYChange": -0.1569
+        },
+        "images": {
+          "off": {
+            "file": "images/evening-shop-interior-off.jpg",
+            "pngSha256": "fc3d362422b711322a59eebf0d90a5e833d09635afabc21b825dd3c7882b7a9d",
+            "jpgSha256": "95993f35f7deefbc90170a5d7c1080f30cb19e52ff1ff4f397428e45d5b06bd3",
+            "shadowCameraAmount": 0
+          },
+          "on": {
+            "file": "images/evening-shop-interior-on.jpg",
+            "pngSha256": "cbae92515ec621056f4acaf30f6442d022fa1433d2b2663b5e5ba6b8db68cc16",
+            "jpgSha256": "b03c14c98aec45b1ec87a1809680890f14787bb5cd7f78374a949a7a25c8e87f",
+            "shadowCameraAmount": 0
+          }
+        },
+        "regions": {
+          "shelf": {
+            "rect": [
+              266,
+              454,
+              493,
+              575
+            ],
+            "26onVs28off": {
+              "pixels": 27467,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "27onVs28on": {
+              "pixels": 27467,
+              "changed": 1880,
+              "above4": 1591,
+              "above8": 1469,
+              "maximum": 109,
+              "meanRGBChange": [
+                1.0233,
+                0.7772,
+                0.4077
+              ],
+              "meanYChange": 0.8028
+            },
+            "28offVsOn": {
+              "pixels": 27467,
+              "changed": 1536,
+              "above4": 1273,
+              "above8": 1179,
+              "maximum": 109,
+              "meanRGBChange": [
+                -0.8157,
+                -0.7797,
+                -0.6723
+              ],
+              "meanYChange": -0.7796
+            }
+          }
+        }
+      },
+      {
+        "view": "20-rear-eye",
+        "camera": {
+          "position": [
+            273,
+            14.755245542526229,
+            758
+          ],
+          "quaternion": [
+            -0.00013011891877658623,
+            0.9145142483742376,
+            -0.00029414054360230415,
+            -0.40455356390830466
+          ],
+          "fov": 58
+        },
+        "old26": "f55e7a63d30bc49b62b5ef33033cb2850735b8e00da153bce1a07c47abc0ce2d",
+        "old27": "a0d837c381458e591438b63f3abb505cbb66dd87a5190e430edb2a35feb82330",
+        "c26OnVsC28Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c26OnVsC28On": {
+          "pixels": 1296000,
+          "changed": 360463,
+          "above4": 225042,
+          "above8": 173476,
+          "maximum": 198,
+          "meanRGBChange": [
+            1.1458,
+            1.4303,
+            -0.2972
+          ],
+          "meanYChange": 1.2451
+        },
+        "c27OnVsC28On": {
+          "pixels": 1296000,
+          "changed": 200759,
+          "above4": 109098,
+          "above8": 85784,
+          "maximum": 198,
+          "meanRGBChange": [
+            1.0521,
+            1.0279,
+            0.3404
+          ],
+          "meanYChange": 0.9834
+        },
+        "c28OffVsOn": {
+          "pixels": 1296000,
+          "changed": 360463,
+          "above4": 225042,
+          "above8": 173476,
+          "maximum": 198,
+          "meanRGBChange": [
+            1.1458,
+            1.4303,
+            -0.2972
+          ],
+          "meanYChange": 1.2451
+        },
+        "images": {
+          "off": {
+            "file": "images/evening-20-rear-eye-off.jpg",
+            "pngSha256": "f55e7a63d30bc49b62b5ef33033cb2850735b8e00da153bce1a07c47abc0ce2d",
+            "jpgSha256": "233d22a2f03732628e01aa4a661db3ecac891f9797d4536e2350209c0a7969e2",
+            "shadowCameraAmount": 1
+          },
+          "on": {
+            "file": "images/evening-20-rear-eye-on.jpg",
+            "pngSha256": "6cb06c5047f882f88e0d2856db6dee27237d41bbb3e674f78e50f360774773f5",
+            "jpgSha256": "83f0b4241593b66b02f5b6ec7889cfb1b6060bd4345ccacc9a7ef977b8cc396c",
+            "shadowCameraAmount": 1
+          }
+        },
+        "regions": {
+          "rear-wall": {
+            "rect": [
+              970,
+              495,
+              1015,
+              540
+            ],
+            "26onVs28off": {
+              "pixels": 2025,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "27onVs28on": {
+              "pixels": 2025,
+              "changed": 156,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 1,
+              "meanRGBChange": [
+                0.0257,
+                0.0356,
+                0.0188
+              ],
+              "meanYChange": 0.0322
+            },
+            "28offVsOn": {
+              "pixels": 2025,
+              "changed": 160,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 1,
+              "meanRGBChange": [
+                0.0267,
+                0.0365,
+                0.0188
+              ],
+              "meanYChange": 0.0332
+            }
+          },
+          "door": {
+            "rect": [
+              1048,
+              473,
+              1083,
+              520
+            ],
+            "26onVs28off": {
+              "pixels": 1645,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "27onVs28on": {
+              "pixels": 1645,
+              "changed": 17,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 1,
+              "meanRGBChange": [
+                0.0024,
+                0.0079,
+                0.0
+              ],
+              "meanYChange": 0.0062
+            },
+            "28offVsOn": {
+              "pixels": 1645,
+              "changed": 18,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 1,
+              "meanRGBChange": [
+                0.003,
+                0.0079,
+                0.0
+              ],
+              "meanYChange": 0.0063
+            }
+          },
+          "rail": {
+            "rect": [
+              666,
+              192,
+              847,
+              454
+            ],
+            "26onVs28off": {
+              "pixels": 47422,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "27onVs28on": {
+              "pixels": 47422,
+              "changed": 15074,
+              "above4": 6406,
+              "above8": 4834,
+              "maximum": 115,
+              "meanRGBChange": [
+                1.2845,
+                1.0816,
+                0.8652
+              ],
+              "meanYChange": 1.1092
+            },
+            "28offVsOn": {
+              "pixels": 47422,
+              "changed": 16101,
+              "above4": 5678,
+              "above8": 2604,
+              "maximum": 64,
+              "meanRGBChange": [
+                -1.1432,
+                -0.7645,
+                -0.9141
+              ],
+              "meanYChange": -0.8558
+            }
+          },
+          "grass": {
+            "rect": [
+              230,
+              755,
+              355,
+              830
+            ],
+            "26onVs28off": {
+              "pixels": 9375,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "27onVs28on": {
+              "pixels": 9375,
+              "changed": 590,
+              "above4": 538,
+              "above8": 505,
+              "maximum": 76,
+              "meanRGBChange": [
+                1.3286,
+                1.5061,
+                0.4678
+              ],
+              "meanYChange": 1.3934
+            },
+            "28offVsOn": {
+              "pixels": 9375,
+              "changed": 3859,
+              "above4": 2994,
+              "above8": 2588,
+              "maximum": 34,
+              "meanRGBChange": [
+                5.152,
+                5.7049,
+                0.4397
+              ],
+              "meanYChange": 5.2072
+            }
+          },
+          "flower": {
+            "rect": [
+              487,
+              710,
+              520,
+              743
+            ],
+            "26onVs28off": {
+              "pixels": 1089,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "27onVs28on": {
+              "pixels": 1089,
+              "changed": 266,
+              "above4": 218,
+              "above8": 216,
+              "maximum": 157,
+              "meanRGBChange": [
+                13.596,
+                -2.6208,
+                5.6492
+              ],
+              "meanYChange": 1.424
+            },
+            "28offVsOn": {
+              "pixels": 1089,
+              "changed": 441,
+              "above4": 358,
+              "above8": 328,
+              "maximum": 111,
+              "meanRGBChange": [
+                4.0882,
+                1.4004,
+                0.8871
+              ],
+              "meanYChange": 1.9347
+            }
+          }
+        }
+      },
+      {
+        "view": "21-front-eye",
+        "camera": {
+          "position": [
+            274,
+            12.87812709172567,
+            783
+          ],
+          "quaternion": [
+            0.07422133960767584,
+            -0.5103582416049142,
+            0.044271975994965136,
+            0.8556083508909221
+          ],
+          "fov": 58
+        },
+        "old26": "598bb6329c49bc04f41908e8bef5fc0f9062f5323156dca5d17a3cd30b583420",
+        "old27": "f364ee2fd434a6ff73383870dfc9f2e5cd7e6e2dd8ed15121ac8689e4ebdfd59",
+        "c26OnVsC28Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c26OnVsC28On": {
+          "pixels": 1296000,
+          "changed": 656854,
+          "above4": 422463,
+          "above8": 271216,
+          "maximum": 201,
+          "meanRGBChange": [
+            1.6047,
+            0.874,
+            -0.3227
+          ],
+          "meanYChange": 0.9429
+        },
+        "c27OnVsC28On": {
+          "pixels": 1296000,
+          "changed": 425650,
+          "above4": 145495,
+          "above8": 80366,
+          "maximum": 204,
+          "meanRGBChange": [
+            -0.7651,
+            -0.4497,
+            -0.3042
+          ],
+          "meanYChange": -0.5062
+        },
+        "c28OffVsOn": {
+          "pixels": 1296000,
+          "changed": 656854,
+          "above4": 422463,
+          "above8": 271216,
+          "maximum": 201,
+          "meanRGBChange": [
+            1.6047,
+            0.874,
+            -0.3227
+          ],
+          "meanYChange": 0.9429
+        },
+        "images": {
+          "off": {
+            "file": "images/evening-21-front-eye-off.jpg",
+            "pngSha256": "598bb6329c49bc04f41908e8bef5fc0f9062f5323156dca5d17a3cd30b583420",
+            "jpgSha256": "78b9bc05f1080ced49b541898b5576a62671a38d656c9ed41b6eca382ef97468",
+            "shadowCameraAmount": 1
+          },
+          "on": {
+            "file": "images/evening-21-front-eye-on.jpg",
+            "pngSha256": "e1a6fb1c16d6616e3691467ef48119ef6ee29682b4856f4fbfedf0daf3fb9721",
+            "jpgSha256": "44d91c7d088db60e1e04af07280715de0c58f2a1cc0381e93769f86470dae964",
+            "shadowCameraAmount": 1
+          }
+        },
+        "regions": {
+          "hedge": {
+            "rect": [
+              160,
+              650,
+              330,
+              726
+            ],
+            "26onVs28off": {
+              "pixels": 12920,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "27onVs28on": {
+              "pixels": 12920,
+              "changed": 2149,
+              "above4": 36,
+              "above8": 1,
+              "maximum": 10,
+              "meanRGBChange": [
+                0.0485,
+                0.0298,
+                -0.006
+              ],
+              "meanYChange": 0.0312
+            },
+            "28offVsOn": {
+              "pixels": 12920,
+              "changed": 12547,
+              "above4": 10176,
+              "above8": 5013,
+              "maximum": 21,
+              "meanRGBChange": [
+                6.9601,
+                5.8369,
+                1.5145
+              ],
+              "meanYChange": 5.7636
+            }
+          }
+        }
+      },
+      {
+        "view": "station-street",
+        "camera": {
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -3.2237959341941705e-05,
+            0.9999462663720154
+          ],
+          "fov": 58
+        },
+        "old26": "ed369553efa1c7639b91395dffcc9ad647e10909590cc580a5218101cce1f41c",
+        "old27": "946b0d2c01b917ae3b515f322325fb07cb0c34e42a215f0ec6454ecc5ead2e22",
+        "c26OnVsC28Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c26OnVsC28On": {
+          "pixels": 1296000,
+          "changed": 535929,
+          "above4": 326706,
+          "above8": 218180,
+          "maximum": 190,
+          "meanRGBChange": [
+            -0.5488,
+            -0.7402,
+            -1.165
+          ],
+          "meanYChange": -0.7302
+        },
+        "c27OnVsC28On": {
+          "pixels": 1296000,
+          "changed": 472073,
+          "above4": 271724,
+          "above8": 166093,
+          "maximum": 179,
+          "meanRGBChange": [
+            -0.1507,
+            -0.2032,
+            -0.5692
+          ],
+          "meanYChange": -0.2185
+        },
+        "c28OffVsOn": {
+          "pixels": 1296000,
+          "changed": 535929,
+          "above4": 326706,
+          "above8": 218180,
+          "maximum": 190,
+          "meanRGBChange": [
+            -0.5488,
+            -0.7402,
+            -1.165
+          ],
+          "meanYChange": -0.7302
+        },
+        "images": {
+          "off": {
+            "file": "images/evening-station-street-off.jpg",
+            "pngSha256": "ed369553efa1c7639b91395dffcc9ad647e10909590cc580a5218101cce1f41c",
+            "jpgSha256": "0acb8d06d759e6db6b588c743a57e6d35108f7a21c6951a94779bb2cdd29140e",
+            "shadowCameraAmount": 1
+          },
+          "on": {
+            "file": "images/evening-station-street-on.jpg",
+            "pngSha256": "d7dcd01ba610255cd396d63cb5c8ebfebc6ce8e7428ea9303ce2de112cd90897",
+            "jpgSha256": "62b5be9d53dbf509f06fc113641002e53871575257d3be890ecdeb586d017242",
+            "shadowCameraAmount": 1
+          }
+        },
+        "regions": {
+          "arch-sign": {
+            "rect": [
+              628,
+              335,
+              848,
+              398
+            ],
+            "26onVs28off": {
+              "pixels": 13860,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "27onVs28on": {
+              "pixels": 13860,
+              "changed": 5229,
+              "above4": 3068,
+              "above8": 2196,
+              "maximum": 165,
+              "meanRGBChange": [
+                0.438,
+                0.2445,
+                0.4603
+              ],
+              "meanYChange": 0.3012
+            },
+            "28offVsOn": {
+              "pixels": 13860,
+              "changed": 11532,
+              "above4": 9163,
+              "above8": 7830,
+              "maximum": 148,
+              "meanRGBChange": [
+                4.5846,
+                1.6435,
+                -0.7279
+              ],
+              "meanYChange": 2.0976
+            },
+            "clarity": {
+              "c26": {
+                "meanY": 134.869,
+                "P05": 57.885,
+                "P50": 135.691,
+                "P95": 205.686,
+                "P95minus05": 147.8,
+                "meanChannelSpread": 47.226
+              },
+              "c27": {
+                "meanY": 136.666,
+                "P05": 54.922,
+                "P50": 138.557,
+                "P95": 210.38,
+                "P95minus05": 155.458,
+                "meanChannelSpread": 52.298
+              },
+              "c28off": {
+                "meanY": 134.869,
+                "P05": 57.885,
+                "P50": 135.691,
+                "P95": 205.686,
+                "P95minus05": 147.8,
+                "meanChannelSpread": 47.226
+              },
+              "c28on": {
+                "meanY": 136.967,
+                "P05": 42.243,
+                "P50": 139.753,
+                "P95": 210.38,
+                "P95minus05": 168.136,
+                "meanChannelSpread": 52.562
+              }
+            },
+            "publishedNativeCrop": "native/evening-arch-sign-c28on.png"
+          },
+          "awning-text": {
+            "rect": [
+              1124,
+              337,
+              1428,
+              407
+            ],
+            "26onVs28off": {
+              "pixels": 21280,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "27onVs28on": {
+              "pixels": 21280,
+              "changed": 11707,
+              "above4": 6998,
+              "above8": 4128,
+              "maximum": 122,
+              "meanRGBChange": [
+                -0.011,
+                3.0485,
+                0.617
+              ],
+              "meanYChange": 2.2225
+            },
+            "28offVsOn": {
+              "pixels": 21280,
+              "changed": 11613,
+              "above4": 6869,
+              "above8": 3998,
+              "maximum": 122,
+              "meanRGBChange": [
+                -3.4559,
+                0.1405,
+                -1.6388
+              ],
+              "meanYChange": -0.7526
+            },
+            "clarity": {
+              "c26": {
+                "meanY": 96.641,
+                "P05": 58.078,
+                "P50": 95.209,
+                "P95": 138.069,
+                "P95minus05": 79.991,
+                "meanChannelSpread": 43.36
+              },
+              "c27": {
+                "meanY": 93.665,
+                "P05": 54.031,
+                "P50": 87.705,
+                "P95": 137.997,
+                "P95minus05": 83.966,
+                "meanChannelSpread": 42.722
+              },
+              "c28off": {
+                "meanY": 96.641,
+                "P05": 58.078,
+                "P50": 95.209,
+                "P95": 138.069,
+                "P95minus05": 79.991,
+                "meanChannelSpread": 43.36
+              },
+              "c28on": {
+                "meanY": 95.888,
+                "P05": 45.6,
+                "P50": 91.403,
+                "P95": 145.515,
+                "P95minus05": 99.915,
+                "meanChannelSpread": 41.469
+              }
+            },
+            "publishedNativeCrop": "native/evening-awning-text-c28on.png"
+          },
+          "window-mullions": {
+            "rect": [
+              1192,
+              167,
+              1339,
+              288
+            ],
+            "26onVs28off": {
+              "pixels": 17787,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "27onVs28on": {
+              "pixels": 17787,
+              "changed": 4527,
+              "above4": 2032,
+              "above8": 1670,
+              "maximum": 145,
+              "meanRGBChange": [
+                -2.7454,
+                -2.7396,
+                -2.591
+              ],
+              "meanYChange": -2.7301
+            },
+            "28offVsOn": {
+              "pixels": 17787,
+              "changed": 4530,
+              "above4": 2027,
+              "above8": 1700,
+              "maximum": 145,
+              "meanRGBChange": [
+                -3.4891,
+                -3.4816,
+                -3.2466
+              ],
+              "meanYChange": -3.4662
+            },
+            "clarity": {
+              "c26": {
+                "meanY": 93.825,
+                "P05": 51.065,
+                "P50": 83.907,
+                "P95": 139.428,
+                "P95minus05": 88.363,
+                "meanChannelSpread": 31.615
+              },
+              "c27": {
+                "meanY": 93.089,
+                "P05": 50.172,
+                "P50": 83.907,
+                "P95": 139.377,
+                "P95minus05": 89.205,
+                "meanChannelSpread": 31.707
+              },
+              "c28off": {
+                "meanY": 93.825,
+                "P05": 51.065,
+                "P50": 83.907,
+                "P95": 139.428,
+                "P95minus05": 88.363,
+                "meanChannelSpread": 31.615
+              },
+              "c28on": {
+                "meanY": 90.358,
+                "P05": 43.31,
+                "P50": 83.12,
+                "P95": 138.59,
+                "P95minus05": 95.28,
+                "meanChannelSpread": 31.619
+              }
+            },
+            "publishedNativeCrop": "native/evening-window-mullions-c28on.png"
+          },
+          "cherry-canopy": {
+            "rect": [
+              660,
+              40,
+              900,
+              180
+            ],
+            "26onVs28off": {
+              "pixels": 33600,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "27onVs28on": {
+              "pixels": 33600,
+              "changed": 16851,
+              "above4": 11435,
+              "above8": 10083,
+              "maximum": 134,
+              "meanRGBChange": [
+                4.4457,
+                2.7745,
+                2.716
+              ],
+              "meanYChange": 3.1256
+            },
+            "28offVsOn": {
+              "pixels": 33600,
+              "changed": 24641,
+              "above4": 18310,
+              "above8": 15928,
+              "maximum": 80,
+              "meanRGBChange": [
+                7.1305,
+                3.854,
+                3.2476
+              ],
+              "meanYChange": 4.5068
+            },
+            "clarity": {
+              "c26": {
+                "meanY": 112.223,
+                "P05": 45.15,
+                "P50": 112.597,
+                "P95": 161.073,
+                "P95minus05": 115.923,
+                "meanChannelSpread": 53.57
+              },
+              "c27": {
+                "meanY": 113.604,
+                "P05": 41.865,
+                "P50": 112.354,
+                "P95": 169.773,
+                "P95minus05": 127.908,
+                "meanChannelSpread": 56.133
+              },
+              "c28off": {
+                "meanY": 112.223,
+                "P05": 45.15,
+                "P50": 112.597,
+                "P95": 161.073,
+                "P95minus05": 115.923,
+                "meanChannelSpread": 53.57
+              },
+              "c28on": {
+                "meanY": 116.73,
+                "P05": 30.164,
+                "P50": 114.505,
+                "P95": 169.986,
+                "P95minus05": 139.822,
+                "meanChannelSpread": 57.612
+              }
+            },
+            "publishedNativeCrop": "native/evening-cherry-canopy-c28on.png"
+          },
+          "wet-road": {
+            "rect": [
+              706,
+              646,
+              978,
+              800
+            ],
+            "26onVs28off": {
+              "pixels": 41888,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "27onVs28on": {
+              "pixels": 41888,
+              "changed": 91,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 1,
+              "meanRGBChange": [
+                0.0005,
+                0.0005,
+                0.0007
+              ],
+              "meanYChange": 0.0005
+            },
+            "28offVsOn": {
+              "pixels": 41888,
+              "changed": 370,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 1,
+              "meanRGBChange": [
+                0.0048,
+                0.0027,
+                0.0013
+              ],
+              "meanYChange": 0.003
+            },
+            "clarity": {
+              "c26": {
+                "meanY": 81.809,
+                "P05": 72.324,
+                "P50": 81.4,
+                "P95": 95.338,
+                "P95minus05": 23.014,
+                "meanChannelSpread": 45.011
+              },
+              "c27": {
+                "meanY": 81.811,
+                "P05": 72.324,
+                "P50": 81.4,
+                "P95": 95.338,
+                "P95minus05": 23.014,
+                "meanChannelSpread": 45.009
+              },
+              "c28off": {
+                "meanY": 81.809,
+                "P05": 72.324,
+                "P50": 81.4,
+                "P95": 95.338,
+                "P95minus05": 23.014,
+                "meanChannelSpread": 45.011
+              },
+              "c28on": {
+                "meanY": 81.812,
+                "P05": 72.324,
+                "P50": 81.4,
+                "P95": 95.338,
+                "P95minus05": 23.014,
+                "meanChannelSpread": 45.009
+              }
+            },
+            "publishedNativeCrop": "native/evening-wet-road-c28on.png"
+          }
+        }
+      },
+      {
+        "view": "street-detail",
+        "camera": {
+          "position": [
+            284.4,
+            10.281286274509803,
+            924
+          ],
+          "quaternion": [
+            -0.12465537443110519,
+            -0.38126635888515065,
+            -0.05196769176958736,
+            0.914547079280253
+          ],
+          "fov": 58
+        },
+        "old26": "c09c0be2ef999d77dbbaac8c9e97aafca35e3371a031e6b4a3a451ec45cfde09",
+        "old27": "beead5a93564432ef2bb16d788e4acd3275ec10337cf4166044aa499574211c0",
+        "c26OnVsC28Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c26OnVsC28On": {
+          "pixels": 1296000,
+          "changed": 241995,
+          "above4": 131000,
+          "above8": 80362,
+          "maximum": 165,
+          "meanRGBChange": [
+            -0.9445,
+            -0.7068,
+            -0.7644
+          ],
+          "meanYChange": -0.7615
+        },
+        "c27OnVsC28On": {
+          "pixels": 1296000,
+          "changed": 245561,
+          "above4": 132044,
+          "above8": 79621,
+          "maximum": 166,
+          "meanRGBChange": [
+            0.223,
+            0.1696,
+            0.0048
+          ],
+          "meanYChange": 0.169
+        },
+        "c28OffVsOn": {
+          "pixels": 1296000,
+          "changed": 241995,
+          "above4": 131000,
+          "above8": 80362,
+          "maximum": 165,
+          "meanRGBChange": [
+            -0.9445,
+            -0.7068,
+            -0.7644
+          ],
+          "meanYChange": -0.7615
+        },
+        "images": {
+          "off": {
+            "file": "images/evening-street-detail-off.jpg",
+            "pngSha256": "c09c0be2ef999d77dbbaac8c9e97aafca35e3371a031e6b4a3a451ec45cfde09",
+            "jpgSha256": "14f6530a46c82f02f410c0ab876092c0d521dcf3c85370db6e7495cf526b6b0c",
+            "shadowCameraAmount": 1
+          },
+          "on": {
+            "file": "images/evening-street-detail-on.jpg",
+            "pngSha256": "f3987e187e4286e825b481494dd9282508fd826becb4ab6305f2f414f3713708",
+            "jpgSha256": "f9d8bb43e111d2c00e68abd1726de84697b7a4a7775481a85a0268da6efe391a",
+            "shadowCameraAmount": 1
+          }
+        },
+        "regions": {
+          "bench": {
+            "rect": [
+              965,
+              675,
+              1085,
+              700
+            ],
+            "26onVs28off": {
+              "pixels": 3000,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "27onVs28on": {
+              "pixels": 3000,
+              "changed": 214,
+              "above4": 214,
+              "above8": 214,
+              "maximum": 74,
+              "meanRGBChange": [
+                -1.6377,
+                -1.88,
+                -2.3383
+              ],
+              "meanYChange": -1.8616
+            },
+            "28offVsOn": {
+              "pixels": 3000,
+              "changed": 214,
+              "above4": 214,
+              "above8": 214,
+              "maximum": 77,
+              "meanRGBChange": [
+                -2.4243,
+                -2.786,
+                -3.3403
+              ],
+              "meanYChange": -2.7491
+            }
+          }
+        }
+      },
+      {
+        "view": "shop-door-eye",
+        "camera": {
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            -0.7069324236562871
+          ],
+          "fov": 58
+        },
+        "old26": "c4066f4b62da49d9eceee4b5415d12e6840d54842093d708b2e9bf3820d765df",
+        "old27": "94b26d7153a3b00a4eda3f263701f8d5fbfb650d31c7486d94c70f460ccb0a19",
+        "c26OnVsC28Off": {
+          "pixels": 1296000,
+          "changed": 1,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 1,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c26OnVsC28On": {
+          "pixels": 1296000,
+          "changed": 711514,
+          "above4": 415319,
+          "above8": 261897,
+          "maximum": 123,
+          "meanRGBChange": [
+            2.1639,
+            2.0279,
+            2.3785
+          ],
+          "meanYChange": 2.0821
+        },
+        "c27OnVsC28On": {
+          "pixels": 1296000,
+          "changed": 679252,
+          "above4": 382241,
+          "above8": 244523,
+          "maximum": 145,
+          "meanRGBChange": [
+            3.3754,
+            3.0753,
+            3.3354
+          ],
+          "meanYChange": 3.1579
+        },
+        "c28OffVsOn": {
+          "pixels": 1296000,
+          "changed": 711514,
+          "above4": 415319,
+          "above8": 261897,
+          "maximum": 123,
+          "meanRGBChange": [
+            2.1639,
+            2.0279,
+            2.3785
+          ],
+          "meanYChange": 2.0821
+        },
+        "images": {
+          "off": {
+            "file": "images/evening-shop-door-eye-off.jpg",
+            "pngSha256": "e268632de698dfad33e8b27e7f5ed819d6e3ce17313b0d5b650be3456ce040f7",
+            "jpgSha256": "0e68f317a219346c55ed4750519289535f9650fc13618ba5334125e48065b3c5",
+            "shadowCameraAmount": 0
+          },
+          "on": {
+            "file": "images/evening-shop-door-eye-on.jpg",
+            "pngSha256": "9091d2eeff420f95a52ea455960522494a17d58d213a3b6fbf56dc4cbabbb436",
+            "jpgSha256": "ca469f428f97122cc8464afc074dbfd250db2153a58e9e91e131767296ab1243",
+            "shadowCameraAmount": 0
+          }
+        },
+        "regions": {
+          "E2-sidewall": {
+            "rect": [
+              1020,
+              240,
+              1080,
+              360
+            ],
+            "26onVs28off": {
+              "pixels": 7200,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "27onVs28on": {
+              "pixels": 7200,
+              "changed": 28,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 1,
+              "meanRGBChange": [
+                0.0006,
+                -0.0006,
+                0.0014
+              ],
+              "meanYChange": -0.0002
+            },
+            "28offVsOn": {
+              "pixels": 7200,
+              "changed": 102,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 1,
+              "meanRGBChange": [
+                0.0067,
+                0.0042,
+                0.0033
+              ],
+              "meanYChange": 0.0046
+            }
+          }
+        },
+        "repeat": {
+          "sessions": {
+            "c26": {
+              "1vs2": {
+                "pixels": 1296000,
+                "changed": 0,
+                "above4": 0,
+                "above8": 0,
+                "maximum": 0,
+                "meanRGBChange": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "meanYChange": 0.0
+              },
+              "warmupVs2": {
+                "pixels": 1296000,
+                "changed": 0,
+                "above4": 0,
+                "above8": 0,
+                "maximum": 0,
+                "meanRGBChange": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "meanYChange": 0.0
+              }
+            },
+            "c28off": {
+              "1vs2": {
+                "pixels": 1296000,
+                "changed": 0,
+                "above4": 0,
+                "above8": 0,
+                "maximum": 0,
+                "meanRGBChange": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "meanYChange": 0.0
+              },
+              "warmupVs2": {
+                "pixels": 1296000,
+                "changed": 0,
+                "above4": 0,
+                "above8": 0,
+                "maximum": 0,
+                "meanRGBChange": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "meanYChange": 0.0
+              }
+            }
+          },
+          "differenceLocationsInRepeatOrWarmup": 0,
+          "points": [
+            [
+              846,
+              613
+            ]
+          ]
+        }
+      },
+      {
+        "view": "van-side",
+        "camera": {
+          "position": [
+            276.3147277851227,
+            11.210013480772632,
+            971.1462175645175
+          ],
+          "quaternion": [
+            -0.029182465008512196,
+            -0.7830517056478151,
+            -0.03684648464040197,
+            0.6201779958912754
+          ],
+          "fov": 47
+        },
+        "old26": "e01c45efe167eaba0a704b2aa6e80c93f48cc282058bb266426e6f36572b947f",
+        "old27": "2ceb82fcaaf1adb73a3a9af2c4ddf41726957884f95f54d0de6f8dceb410fd64",
+        "c26OnVsC28Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c26OnVsC28On": {
+          "pixels": 1296000,
+          "changed": 405746,
+          "above4": 133417,
+          "above8": 100510,
+          "maximum": 170,
+          "meanRGBChange": [
+            -0.9041,
+            -0.5259,
+            -0.3597
+          ],
+          "meanYChange": -0.5943
+        },
+        "c27OnVsC28On": {
+          "pixels": 1296000,
+          "changed": 250427,
+          "above4": 107088,
+          "above8": 87353,
+          "maximum": 167,
+          "meanRGBChange": [
+            -0.0361,
+            0.3429,
+            0.4026
+          ],
+          "meanYChange": 0.2667
+        },
+        "c28OffVsOn": {
+          "pixels": 1296000,
+          "changed": 405746,
+          "above4": 133417,
+          "above8": 100510,
+          "maximum": 170,
+          "meanRGBChange": [
+            -0.9041,
+            -0.5259,
+            -0.3597
+          ],
+          "meanYChange": -0.5943
+        },
+        "images": {
+          "off": {
+            "file": "images/evening-van-side-off.jpg",
+            "pngSha256": "e01c45efe167eaba0a704b2aa6e80c93f48cc282058bb266426e6f36572b947f",
+            "jpgSha256": "7768463071afacd55caa1e0f60f5f3f066880b7feb799c51b867eae937d12266",
+            "shadowCameraAmount": 1
+          },
+          "on": {
+            "file": "images/evening-van-side-on.jpg",
+            "pngSha256": "959ece1efeb5c31ce334c29b72b8792046c34b2be886549602c57ab9f1cbe8e3",
+            "jpgSha256": "eb6bc1ee39697e6a6ca76d4c769b6cf7dc89c903221f8d231f7e58d52b6a4014",
+            "shadowCameraAmount": 1
+          }
+        },
+        "regions": {
+          "windscreen": {
+            "rect": [
+              530,
+              245,
+              575,
+              358
+            ],
+            "26onVs28off": {
+              "pixels": 5085,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "27onVs28on": {
+              "pixels": 5085,
+              "changed": 1591,
+              "above4": 608,
+              "above8": 456,
+              "maximum": 136,
+              "meanRGBChange": [
+                -3.2836,
+                -3.1573,
+                -2.7363
+              ],
+              "meanYChange": -3.1538
+            },
+            "28offVsOn": {
+              "pixels": 5085,
+              "changed": 2547,
+              "above4": 702,
+              "above8": 567,
+              "maximum": 136,
+              "meanRGBChange": [
+                -6.7512,
+                -6.5058,
+                -5.1894
+              ],
+              "meanYChange": -6.4629
+            }
+          },
+          "fence": {
+            "rect": [
+              48,
+              740,
+              252,
+              868
+            ],
+            "26onVs28off": {
+              "pixels": 26112,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "27onVs28on": {
+              "pixels": 26112,
+              "changed": 3757,
+              "above4": 2635,
+              "above8": 2095,
+              "maximum": 49,
+              "meanRGBChange": [
+                1.7995,
+                2.6125,
+                2.3817
+              ],
+              "meanYChange": 2.423
+            },
+            "28offVsOn": {
+              "pixels": 26112,
+              "changed": 4363,
+              "above4": 1995,
+              "above8": 1455,
+              "maximum": 24,
+              "meanRGBChange": [
+                0.4768,
+                0.8352,
+                0.6296
+              ],
+              "meanYChange": 0.7442
+            }
+          }
+        }
+      }
+    ],
+    "afternoonOffOnly": [
+      {
+        "view": "station-street",
+        "camera": {
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -3.2237959341941705e-05,
+            0.9999462663720154
+          ],
+          "fov": 58
+        },
+        "c26OnVsC28Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "images": {
+          "off": {
+            "file": "images/afternoon-station-street-off.jpg",
+            "pngSha256": "c59110432ff05c553678c414991a0a24be9dbeb5f29f1773aeaf7d2419b9e0d4",
+            "jpgSha256": "9d01bcd8590efc56d23a00d5eeef4da24b207d6dbf0c596188a366fa416f2aac"
+          }
+        },
+        "regions": {
+          "arch-sign": {
+            "rect": [
+              628,
+              335,
+              848,
+              398
+            ],
+            "26onVs28off": {
+              "pixels": 13860,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "clarity": {
+              "c26": {
+                "meanY": 124.347,
+                "P05": 45.883,
+                "P50": 129.738,
+                "P95": 212.733,
+                "P95minus05": 166.85,
+                "meanChannelSpread": 30.736
+              },
+              "c27": {
+                "meanY": 123.276,
+                "P05": 43.251,
+                "P50": 131.156,
+                "P95": 223.743,
+                "P95minus05": 180.492,
+                "meanChannelSpread": 31.235
+              },
+              "c28off": {
+                "meanY": 124.347,
+                "P05": 45.883,
+                "P50": 129.738,
+                "P95": 212.733,
+                "P95minus05": 166.85,
+                "meanChannelSpread": 30.736
+              }
+            },
+            "publishedNativeCrop": "native/afternoon-arch-sign-c28off.png"
+          },
+          "awning-text": {
+            "rect": [
+              1124,
+              337,
+              1428,
+              407
+            ],
+            "26onVs28off": {
+              "pixels": 21280,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "clarity": {
+              "c26": {
+                "meanY": 119.073,
+                "P05": 59.311,
+                "P50": 118.326,
+                "P95": 182.354,
+                "P95minus05": 123.042,
+                "meanChannelSpread": 34.099
+              },
+              "c27": {
+                "meanY": 118.517,
+                "P05": 58.596,
+                "P50": 118.114,
+                "P95": 187.9,
+                "P95minus05": 129.304,
+                "meanChannelSpread": 33.688
+              },
+              "c28off": {
+                "meanY": 119.073,
+                "P05": 59.311,
+                "P50": 118.326,
+                "P95": 182.354,
+                "P95minus05": 123.042,
+                "meanChannelSpread": 34.099
+              }
+            },
+            "publishedNativeCrop": "native/afternoon-awning-text-c28off.png"
+          },
+          "window-mullions": {
+            "rect": [
+              1192,
+              167,
+              1339,
+              288
+            ],
+            "26onVs28off": {
+              "pixels": 17787,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "clarity": {
+              "c26": {
+                "meanY": 127.056,
+                "P05": 67.197,
+                "P50": 128.169,
+                "P95": 173.892,
+                "P95minus05": 106.695,
+                "meanChannelSpread": 26.934
+              },
+              "c27": {
+                "meanY": 128.694,
+                "P05": 66.257,
+                "P50": 130.097,
+                "P95": 175.042,
+                "P95minus05": 108.785,
+                "meanChannelSpread": 27.256
+              },
+              "c28off": {
+                "meanY": 127.056,
+                "P05": 67.197,
+                "P50": 128.169,
+                "P95": 173.892,
+                "P95minus05": 106.695,
+                "meanChannelSpread": 26.934
+              }
+            },
+            "publishedNativeCrop": "native/afternoon-window-mullions-c28off.png"
+          },
+          "cherry-canopy": {
+            "rect": [
+              660,
+              40,
+              900,
+              180
+            ],
+            "26onVs28off": {
+              "pixels": 33600,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "clarity": {
+              "c26": {
+                "meanY": 118.069,
+                "P05": 43.508,
+                "P50": 127.367,
+                "P95": 149.798,
+                "P95minus05": 106.289,
+                "meanChannelSpread": 53.718
+              },
+              "c27": {
+                "meanY": 116.956,
+                "P05": 40.87,
+                "P50": 128.683,
+                "P95": 151.08,
+                "P95minus05": 110.21,
+                "meanChannelSpread": 54.48
+              },
+              "c28off": {
+                "meanY": 118.069,
+                "P05": 43.508,
+                "P50": 127.367,
+                "P95": 149.798,
+                "P95minus05": 106.289,
+                "meanChannelSpread": 53.718
+              }
+            },
+            "publishedNativeCrop": "native/afternoon-cherry-canopy-c28off.png"
+          },
+          "wet-road": {
+            "rect": [
+              706,
+              646,
+              978,
+              800
+            ],
+            "26onVs28off": {
+              "pixels": 41888,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYChange": 0.0
+            },
+            "clarity": {
+              "c26": {
+                "meanY": 83.095,
+                "P05": 72.683,
+                "P50": 81.615,
+                "P95": 97.317,
+                "P95minus05": 24.634,
+                "meanChannelSpread": 41.762
+              },
+              "c27": {
+                "meanY": 83.861,
+                "P05": 72.683,
+                "P50": 81.419,
+                "P95": 107.658,
+                "P95minus05": 34.975,
+                "meanChannelSpread": 41.524
+              },
+              "c28off": {
+                "meanY": 83.095,
+                "P05": 72.683,
+                "P50": 81.615,
+                "P95": 97.317,
+                "P95minus05": 24.634,
+                "meanChannelSpread": 41.762
+              }
+            },
+            "publishedNativeCrop": "native/afternoon-wet-road-c28off.png"
+          }
+        }
+      },
+      {
+        "view": "20-rear-eye",
+        "camera": {
+          "position": [
+            273,
+            14.755245542526229,
+            758
+          ],
+          "quaternion": [
+            -0.00013011891877658623,
+            0.9145142483742376,
+            -0.00029414054360230415,
+            -0.40455356390830466
+          ],
+          "fov": 58
+        },
+        "c26OnVsC28Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "images": {
+          "off": {
+            "file": "images/afternoon-20-rear-eye-off.jpg",
+            "pngSha256": "139f61339be25a51f991a69b68aec8db6b85db50f3f4008ecdbaecc24ecd4d33",
+            "jpgSha256": "26952ae80ad12171c1a36ce3c391bad7e2a6c7bdfe4527080047c0c298b260bb"
+          }
+        },
+        "regions": {}
+      },
+      {
+        "view": "shop-interior",
+        "camera": {
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            -0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            0.7069324236562871
+          ],
+          "fov": 58
+        },
+        "c26OnVsC28Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "images": {
+          "off": {
+            "file": "images/afternoon-shop-interior-off.jpg",
+            "pngSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+            "jpgSha256": "08b66cf24a09b5568b2f4db4a4eed6bebcf58b1ddddc2ae244dcdaa4e632bdac"
+          }
+        },
+        "regions": {}
+      },
+      {
+        "view": "shop-door-eye",
+        "camera": {
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            -0.7069324236562871
+          ],
+          "fov": 58
+        },
+        "c26OnVsC28Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "images": {
+          "off": {
+            "file": "images/afternoon-shop-door-eye-off.jpg",
+            "pngSha256": "95e63d648aac5da668529e1845a752fe45c16073cb16dca77899bc155a2539d3",
+            "jpgSha256": "7761d86e777f3b24b6ab989a5db35dea733024df1ce7445e8da5390cf43025f7"
+          }
+        },
+        "regions": {}
+      },
+      {
+        "view": "van-side",
+        "camera": {
+          "position": [
+            276.3147277851227,
+            11.210013480772632,
+            971.1462175645175
+          ],
+          "quaternion": [
+            -0.029182465008512196,
+            -0.7830517056478151,
+            -0.03684648464040197,
+            0.6201779958912754
+          ],
+          "fov": 47
+        },
+        "c26OnVsC28Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "images": {
+          "off": {
+            "file": "images/afternoon-van-side-off.jpg",
+            "pngSha256": "a6efc1d5052692ab11ae54d8965f2babf64c8a61919aecca148e99aa19ee1391",
+            "jpgSha256": "b3a5658b61c2871a52f512112e1501b21b0d2d73a2d9cccb869ad4180c5d5d7a"
+          }
+        },
+        "regions": {}
+      }
+    ]
+  }
+}

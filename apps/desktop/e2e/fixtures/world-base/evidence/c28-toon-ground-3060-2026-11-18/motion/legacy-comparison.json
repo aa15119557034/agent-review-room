@@ -1,0 +1,210 @@
+{
+  "evening": {
+    "compared": 9,
+    "exact": 7,
+    "hemisphere": [
+      {
+        "colorLinear": [
+          0.45641102317066595,
+          0.5028864580233624,
+          0.8069522576650873
+        ],
+        "groundLinear": [
+          0.3515325994898463,
+          0.21586050010324417,
+          0.13843161502267545
+        ],
+        "intensity": 1.6
+      }
+    ],
+    "hemisphereMatchesC26EveryView": true,
+    "weathering": {
+      "posters": 10,
+      "stickers": 14,
+      "doodles": 2,
+      "rejected": 0,
+      "source": "baked",
+      "planMs": 2.5,
+      "rays": 0,
+      "drawCalls": 1,
+      "triangles": 52
+    },
+    "planFingerprint": "1015:2741945:285456.7:910574.7",
+    "rows": [
+      {
+        "view": "service-corner",
+        "bothPNGsHashMatch": true,
+        "c26SHA256": "aa08357b53184a02cbd12399397e75f3bc8c7b41d1f11048ec92347a6d795950",
+        "c28OffSHA256": "aa08357b53184a02cbd12399397e75f3bc8c7b41d1f11048ec92347a6d795950",
+        "differentRGBPixels": 0,
+        "maxChannelDelta": 0,
+        "meanRGBDelta": 0.0,
+        "pixelsOver8": 0
+      },
+      {
+        "view": "laundry-details",
+        "bothPNGsHashMatch": true,
+        "c26SHA256": "3cf21004fc7d8a88389a8b99f046d66d3489a21a023eefb88f2af3039bab4f14",
+        "c28OffSHA256": "3cf21004fc7d8a88389a8b99f046d66d3489a21a023eefb88f2af3039bab4f14",
+        "differentRGBPixels": 0,
+        "maxChannelDelta": 0,
+        "meanRGBDelta": 0.0,
+        "pixelsOver8": 0
+      },
+      {
+        "view": "shop-interior",
+        "bothPNGsHashMatch": true,
+        "c26SHA256": "fc3d362422b711322a59eebf0d90a5e833d09635afabc21b825dd3c7882b7a9d",
+        "c28OffSHA256": "fc3d362422b711322a59eebf0d90a5e833d09635afabc21b825dd3c7882b7a9d",
+        "differentRGBPixels": 0,
+        "maxChannelDelta": 0,
+        "meanRGBDelta": 0.0,
+        "pixelsOver8": 0
+      },
+      {
+        "view": "20-rear-eye",
+        "bothPNGsHashMatch": true,
+        "c26SHA256": "f55e7a63d30bc49b62b5ef33033cb2850735b8e00da153bce1a07c47abc0ce2d",
+        "c28OffSHA256": "f55e7a63d30bc49b62b5ef33033cb2850735b8e00da153bce1a07c47abc0ce2d",
+        "differentRGBPixels": 0,
+        "maxChannelDelta": 0,
+        "meanRGBDelta": 0.0,
+        "pixelsOver8": 0
+      },
+      {
+        "view": "21-front-eye",
+        "bothPNGsHashMatch": true,
+        "c26SHA256": "598bb6329c49bc04f41908e8bef5fc0f9062f5323156dca5d17a3cd30b583420",
+        "c28OffSHA256": "598bb6329c49bc04f41908e8bef5fc0f9062f5323156dca5d17a3cd30b583420",
+        "differentRGBPixels": 0,
+        "maxChannelDelta": 0,
+        "meanRGBDelta": 0.0,
+        "pixelsOver8": 0
+      },
+      {
+        "view": "station-street",
+        "bothPNGsHashMatch": true,
+        "c26SHA256": "ed369553efa1c7639b91395dffcc9ad647e10909590cc580a5218101cce1f41c",
+        "c28OffSHA256": "ed369553efa1c7639b91395dffcc9ad647e10909590cc580a5218101cce1f41c",
+        "differentRGBPixels": 0,
+        "maxChannelDelta": 0,
+        "meanRGBDelta": 0.0,
+        "pixelsOver8": 0
+      },
+      {
+        "view": "street-detail",
+        "bothPNGsHashMatch": true,
+        "c26SHA256": "c09c0be2ef999d77dbbaac8c9e97aafca35e3371a031e6b4a3a451ec45cfde09",
+        "c28OffSHA256": "c09c0be2ef999d77dbbaac8c9e97aafca35e3371a031e6b4a3a451ec45cfde09",
+        "differentRGBPixels": 0,
+        "maxChannelDelta": 0,
+        "meanRGBDelta": 0.0,
+        "pixelsOver8": 0
+      },
+      {
+        "view": "shop-door-eye",
+        "bothPNGsHashMatch": false,
+        "c26SHA256": "c4066f4b62da49d9eceee4b5415d12e6840d54842093d708b2e9bf3820d765df",
+        "c28OffSHA256": "e268632de698dfad33e8b27e7f5ed819d6e3ce17313b0d5b650be3456ce040f7",
+        "differentRGBPixels": 1,
+        "maxChannelDelta": 1,
+        "meanRGBDelta": 2.57e-07,
+        "pixelsOver8": 0
+      },
+      {
+        "view": "van-side",
+        "bothPNGsHashMatch": false,
+        "c26SHA256": "e01c45efe167eaba0a704b2aa6e80c93f48cc282058bb266426e6f36572b947f",
+        "c28OffSHA256": "83a553ed5f3a1e92510b4e31450bc8a757396942871537613adc1f7f51e87ad2",
+        "differentRGBPixels": 5,
+        "maxChannelDelta": 1,
+        "meanRGBDelta": 1.286e-06,
+        "pixelsOver8": 0
+      }
+    ]
+  },
+  "afternoon": {
+    "compared": 5,
+    "exact": 5,
+    "hemisphere": [
+      {
+        "colorLinear": [
+          0.623960391667596,
+          0.7454042095350284,
+          1
+        ],
+        "groundLinear": [
+          0.3915724777393922,
+          0.33245153633549385,
+          0.29613827078752575
+        ],
+        "intensity": 1.05
+      }
+    ],
+    "hemisphereMatchesC26EveryView": true,
+    "weathering": {
+      "posters": 10,
+      "stickers": 14,
+      "doodles": 2,
+      "rejected": 0,
+      "source": "baked",
+      "planMs": 2.3,
+      "rays": 0,
+      "drawCalls": 1,
+      "triangles": 52
+    },
+    "planFingerprint": "1015:2741945:285456.7:910574.7",
+    "rows": [
+      {
+        "view": "station-street",
+        "bothPNGsHashMatch": true,
+        "c26SHA256": "c59110432ff05c553678c414991a0a24be9dbeb5f29f1773aeaf7d2419b9e0d4",
+        "c28OffSHA256": "c59110432ff05c553678c414991a0a24be9dbeb5f29f1773aeaf7d2419b9e0d4",
+        "differentRGBPixels": 0,
+        "maxChannelDelta": 0,
+        "meanRGBDelta": 0.0,
+        "pixelsOver8": 0
+      },
+      {
+        "view": "20-rear-eye",
+        "bothPNGsHashMatch": true,
+        "c26SHA256": "139f61339be25a51f991a69b68aec8db6b85db50f3f4008ecdbaecc24ecd4d33",
+        "c28OffSHA256": "139f61339be25a51f991a69b68aec8db6b85db50f3f4008ecdbaecc24ecd4d33",
+        "differentRGBPixels": 0,
+        "maxChannelDelta": 0,
+        "meanRGBDelta": 0.0,
+        "pixelsOver8": 0
+      },
+      {
+        "view": "shop-interior",
+        "bothPNGsHashMatch": true,
+        "c26SHA256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+        "c28OffSHA256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+        "differentRGBPixels": 0,
+        "maxChannelDelta": 0,
+        "meanRGBDelta": 0.0,
+        "pixelsOver8": 0
+      },
+      {
+        "view": "shop-door-eye",
+        "bothPNGsHashMatch": true,
+        "c26SHA256": "95e63d648aac5da668529e1845a752fe45c16073cb16dca77899bc155a2539d3",
+        "c28OffSHA256": "95e63d648aac5da668529e1845a752fe45c16073cb16dca77899bc155a2539d3",
+        "differentRGBPixels": 0,
+        "maxChannelDelta": 0,
+        "meanRGBDelta": 0.0,
+        "pixelsOver8": 0
+      },
+      {
+        "view": "van-side",
+        "bothPNGsHashMatch": true,
+        "c26SHA256": "a6efc1d5052692ab11ae54d8965f2babf64c8a61919aecca148e99aa19ee1391",
+        "c28OffSHA256": "a6efc1d5052692ab11ae54d8965f2babf64c8a61919aecca148e99aa19ee1391",
+        "differentRGBPixels": 0,
+        "maxChannelDelta": 0,
+        "meanRGBDelta": 0.0,
+        "pixelsOver8": 0
+      }
+    ]
+  }
+}

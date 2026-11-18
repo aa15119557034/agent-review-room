@@ -1,0 +1,266 @@
+{
+  "rect": [
+    833,
+    464,
+    947,
+    518
+  ],
+  "width": 114,
+  "height": 54,
+  "pixels": 6156,
+  "factoryMaterial": {
+    "name": "vehicle-glass",
+    "uuid": "48e9e22d-1b8c-40dc-ae76-9519366d0f4c",
+    "custom": true,
+    "normal": false,
+    "alphaSourceZero": true,
+    "alphaDestinationZero": true,
+    "rgbSourceSrcAlpha": true,
+    "rgbDestination1MinusSrcAlpha": true,
+    "opacity": 0.46,
+    "owners": [
+      {
+        "object": "0d9d369c-27ae-4e31-bee0-292ab65cfd0f",
+        "path": "Sakuragaoka/static/vehicles/keiVan",
+        "matUUID": "48e9e22d-1b8c-40dc-ae76-9519366d0f4c",
+        "worldMin": [
+          279.9978629996041,
+          10.898433249601515,
+          970.7951612152366
+        ],
+        "worldMax": [
+          281.74450793157536,
+          11.765720807179518,
+          973.920562649965
+        ],
+        "namedNew": false,
+        "isNew": false,
+        "sharedBatch": false,
+        "newGlassTriangles": 0,
+        "otherGlassTriangles": 8
+      },
+      {
+        "object": "8fed69eb-ba78-464d-9930-903807429280",
+        "path": "Sakuragaoka/static/vehicles/keiCar",
+        "matUUID": "48e9e22d-1b8c-40dc-ae76-9519366d0f4c",
+        "worldMin": [
+          300.91999995708466,
+          8.91299997138977,
+          899.0140000104905
+        ],
+        "worldMax": [
+          303.62800002098083,
+          9.437999947547912,
+          900.3859999895096
+        ],
+        "namedNew": false,
+        "isNew": false,
+        "sharedBatch": false,
+        "newGlassTriangles": 0,
+        "otherGlassTriangles": 8
+      },
+      {
+        "object": "dbac5b31-85fe-4b8c-a457-49c56ade9777",
+        "path": "Sakuragaoka/static/vehicles/taxi",
+        "matUUID": "48e9e22d-1b8c-40dc-ae76-9519366d0f4c",
+        "worldMin": [
+          272.40000002384187,
+          8.933000011920928,
+          895.8639999985695
+        ],
+        "worldMax": [
+          274.8,
+          9.422999961853026,
+          897.3360000014305
+        ],
+        "namedNew": false,
+        "isNew": false,
+        "sharedBatch": false,
+        "newGlassTriangles": 0,
+        "otherGlassTriangles": 8
+      },
+      {
+        "object": "4e9d8bdc-647c-48b2-b488-a03fdf724957",
+        "path": "Sakuragaoka/static/vehicles/compact",
+        "matUUID": "48e9e22d-1b8c-40dc-ae76-9519366d0f4c",
+        "worldMin": [
+          268.6689999938011,
+          8.933000011920928,
+          844.938000011444
+        ],
+        "worldMax": [
+          270.13100000619886,
+          9.463000042915343,
+          848.120000052452
+        ],
+        "namedNew": false,
+        "isNew": false,
+        "sharedBatch": false,
+        "newGlassTriangles": 0,
+        "otherGlassTriangles": 8
+      },
+      {
+        "object": "1a5cf329-255b-4c94-9d3d-6e70a7d4d968",
+        "path": "Sakuragaoka/static/keiVan",
+        "matUUID": "48e9e22d-1b8c-40dc-ae76-9519366d0f4c",
+        "worldMin": [
+          281.3829999923706,
+          9.215904855502936,
+          910.7814335620191
+        ],
+        "worldMax": [
+          282.8170000076294,
+          10.083668842680774,
+          913.7702421161654
+        ],
+        "namedNew": true,
+        "isNew": true,
+        "sharedBatch": false,
+        "newGlassTriangles": 8,
+        "otherGlassTriangles": 0
+      }
+    ]
+  },
+  "oldCameraNewVanSharedMaterialCompare": {
+    "newMeshCount": 1,
+    "otherMeshCount": 4,
+    "mixedMeshes": 0,
+    "newGlazingTriangles": 8,
+    "otherGlazingTriangles": 32,
+    "hidingOnlyNewVanChangesHDRRGB": 4566,
+    "hidingOnlyOldVehiclesChangesHDRRGB": 0
+  },
+  "rgbVisibleContribution": 4566,
+  "normalVsFormalHDRRGBChanged": 0,
+  "normalVsFormalSceneAlphaChanged": 4566,
+  "formalRepeatHDRRGBChanged": 0,
+  "normalBlendEligibleAmongContributing": 4529,
+  "formalEligibleAmongContributing": 0,
+  "actualLineDifferenceInStableContributingPixels": {
+    "formal~normal": {
+      "changed": 1896,
+      "over8": 1701,
+      "maximum": 176,
+      "meanMaxChannelDelta": 43.6082
+    },
+    "formal~formal-no-line": {
+      "changed": 0,
+      "over8": 0,
+      "maximum": 0,
+      "meanMaxChannelDelta": 0.0
+    },
+    "normal~normal-no-line": {
+      "changed": 1896,
+      "over8": 1701,
+      "maximum": 176,
+      "meanMaxChannelDelta": 43.6082
+    },
+    "formal-no-line~normal-no-line": {
+      "changed": 0,
+      "over8": 0,
+      "maximum": 0,
+      "meanMaxChannelDelta": 0.0
+    },
+    "formal~formal-repeat": {
+      "changed": 0,
+      "over8": 0,
+      "maximum": 0,
+      "meanMaxChannelDelta": 0.0
+    },
+    "normal~normal-repeat": {
+      "changed": 0,
+      "over8": 0,
+      "maximum": 0,
+      "meanMaxChannelDelta": 0.0
+    }
+  },
+  "fullRectFinalDifference": {
+    "formal~normal": {
+      "changed": 1896,
+      "over8": 1701,
+      "maximum": 176,
+      "meanMaxChannelDelta": 32.3449
+    },
+    "formal~formal-no-line": {
+      "changed": 878,
+      "over8": 830,
+      "maximum": 173,
+      "meanMaxChannelDelta": 13.6569
+    },
+    "normal~normal-no-line": {
+      "changed": 2774,
+      "over8": 2531,
+      "maximum": 176,
+      "meanMaxChannelDelta": 46.0018
+    },
+    "formal-no-line~normal-no-line": {
+      "changed": 0,
+      "over8": 0,
+      "maximum": 0,
+      "meanMaxChannelDelta": 0.0
+    },
+    "formal~formal-repeat": {
+      "changed": 0,
+      "over8": 0,
+      "maximum": 0,
+      "meanMaxChannelDelta": 0.0
+    },
+    "normal~normal-repeat": {
+      "changed": 0,
+      "over8": 0,
+      "maximum": 0,
+      "meanMaxChannelDelta": 0.0
+    }
+  },
+  "actualLineDarkeningLuma": {
+    "normalOver8": 1700,
+    "formalOver8": 0
+  },
+  "isolatedSelectedGlazing": {
+    "subject": "new parked van",
+    "activePixels": 4566,
+    "ordinaryBlendAlphaAtLeast95": 4529,
+    "formalAlphaAtLeast95": 0,
+    "hdrRGBChangedBetweenBlends": 0,
+    "actualFinalDelta": {
+      "formal~normal": {
+        "changed": 1896,
+        "over8": 1701,
+        "maximum": 176,
+        "meanMaxChannelDelta": 43.6082
+      },
+      "formal~formal-no-line": {
+        "changed": 0,
+        "over8": 0,
+        "maximum": 0,
+        "meanMaxChannelDelta": 0.0
+      },
+      "normal~normal-no-line": {
+        "changed": 1896,
+        "over8": 1701,
+        "maximum": 176,
+        "meanMaxChannelDelta": 43.6082
+      },
+      "formal-no-line~normal-no-line": {
+        "changed": 0,
+        "over8": 0,
+        "maximum": 0,
+        "meanMaxChannelDelta": 0.0
+      },
+      "formal~formal-repeat": {
+        "changed": 0,
+        "over8": 0,
+        "maximum": 0,
+        "meanMaxChannelDelta": 0.0
+      },
+      "normal~normal-repeat": {
+        "changed": 0,
+        "over8": 0,
+        "maximum": 0,
+        "meanMaxChannelDelta": 0.0
+      }
+    },
+    "normalOutlineDarkenedOver8": 1700,
+    "formalOutlineDarkenedOver8": 0
+  }
+}

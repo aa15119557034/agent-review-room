@@ -1,0 +1,64 @@
+{
+  "source": "7bf4e7e",
+  "method": "Native makeKeiVan vertex geometry with production art-r1 placement and slope. Only atlas pixels and shader materials stubbed on CPU; no GPU. Raycast 0.5 m from planned center along inverse normal.",
+  "planned": {
+    "area": "main",
+    "cell": 10,
+    "kind": "sticker",
+    "pos": [
+      1.3625,
+      1.0346,
+      13.6663
+    ],
+    "normal": [
+      -1,
+      0,
+      0
+    ],
+    "right": [
+      0,
+      0.1709,
+      0.9853
+    ],
+    "w": 0.1375,
+    "h": 0.1375
+  },
+  "previousWall": {
+    "area": "main",
+    "cell": 10,
+    "kind": "sticker",
+    "pos": [
+      8.6,
+      1.0346,
+      13.6663
+    ],
+    "normal": [
+      -1,
+      0,
+      0
+    ],
+    "right": [
+      0,
+      -0.2326,
+      0.9726
+    ],
+    "w": 0.1542,
+    "h": 0.1542
+  },
+  "actualVehicleNode": "art-r1-kei-van",
+  "actualMeshIndex": 0,
+  "faceIndex": 65,
+  "point": [
+    1.3624999284744264,
+    1.0345999999999997,
+    13.6663
+  ],
+  "normal": [
+    -1,
+    0,
+    0
+  ],
+  "centerErrorMeters": 7.152557368605983e-8,
+  "distance": 0.4999999284744263,
+  "normalDot": 1
+}

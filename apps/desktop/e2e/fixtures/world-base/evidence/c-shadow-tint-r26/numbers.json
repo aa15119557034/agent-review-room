@@ -1,0 +1,554 @@
+{
+ "shop-door-eye/doorFrame": {
+  "offVsOn_r26": {
+   "px": 10200,
+   "above8": 0,
+   "above1": 0,
+   "max": 1,
+   "meanRGB": [
+    0.04,
+    0.03,
+    0.05
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 10200,
+   "above8": 0,
+   "above1": 0,
+   "max": 1,
+   "meanRGB": [
+    0.02,
+    0.02,
+    0.03
+   ]
+  }
+ },
+ "shop-door-eye/street": {
+  "offVsOn_r26": {
+   "px": 7520,
+   "above8": 6001,
+   "above1": 6083,
+   "max": 30,
+   "meanRGB": [
+    7.82,
+    8.03,
+    15.37
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 7520,
+   "above8": 0,
+   "above1": 0,
+   "max": 1,
+   "meanRGB": [
+    0.02,
+    0.01,
+    0.02
+   ]
+  }
+ },
+ "shop-door-eye/oppositeFacade": {
+  "offVsOn_r26": {
+   "px": 3200,
+   "above8": 2719,
+   "above1": 3200,
+   "max": 27,
+   "meanRGB": [
+    12.68,
+    12.94,
+    21.14
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 3200,
+   "above8": 2719,
+   "above1": 3200,
+   "max": 27,
+   "meanRGB": [
+    12.68,
+    12.94,
+    21.13
+   ]
+  }
+ },
+ "station-street/road": {
+  "offVsOn_r26": {
+   "px": 14091,
+   "above8": 14091,
+   "above1": 14091,
+   "max": 26,
+   "meanRGB": [
+    10.58,
+    10.49,
+    21.81
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 14091,
+   "above8": 0,
+   "above1": 0,
+   "max": 1,
+   "meanRGB": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ },
+ "station-street/E3upper": {
+  "offVsOn_r26": {
+   "px": 2880,
+   "above8": 2818,
+   "above1": 2879,
+   "max": 46,
+   "meanRGB": [
+    8.57,
+    11.23,
+    21.56
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 2880,
+   "above8": 2778,
+   "above1": 2879,
+   "max": 42,
+   "meanRGB": [
+    8.4,
+    11.02,
+    18.74
+   ]
+  }
+ },
+ "street-detail/pavement": {
+  "offVsOn_r26": {
+   "px": 5456,
+   "above8": 5456,
+   "above1": 5456,
+   "max": 27,
+   "meanRGB": [
+    13.69,
+    13.71,
+    26.48
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 5456,
+   "above8": 5456,
+   "above1": 5456,
+   "max": 27,
+   "meanRGB": [
+    13.69,
+    13.71,
+    26.44
+   ]
+  }
+ },
+ "street-detail/bench": {
+  "offVsOn_r26": {
+   "px": 1360,
+   "above8": 1360,
+   "above1": 1360,
+   "max": 38,
+   "meanRGB": [
+    9.65,
+    12.96,
+    28.82
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 1360,
+   "above8": 1360,
+   "above1": 1360,
+   "max": 38,
+   "meanRGB": [
+    9.64,
+    12.96,
+    28.78
+   ]
+  }
+ },
+ "shop-interior/full": {
+  "offVsOn_r26": {
+   "px": 576000,
+   "above8": 0,
+   "above1": 31,
+   "max": 7,
+   "meanRGB": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 576000,
+   "above8": 0,
+   "above1": 31,
+   "max": 7,
+   "meanRGB": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ },
+ "W2/full": {
+  "offVsOn_r26": {
+   "px": 576000,
+   "above8": 0,
+   "above1": 10,
+   "max": 8,
+   "meanRGB": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 576000,
+   "above8": 0,
+   "above1": 10,
+   "max": 8,
+   "meanRGB": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ },
+ "W4/full": {
+  "offVsOn_r26": {
+   "px": 576000,
+   "above8": 1,
+   "above1": 122,
+   "max": 19,
+   "meanRGB": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 576000,
+   "above8": 1,
+   "above1": 121,
+   "max": 19,
+   "meanRGB": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ },
+ "W6/full": {
+  "offVsOn_r26": {
+   "px": 576000,
+   "above8": 0,
+   "above1": 0,
+   "max": 0,
+   "meanRGB": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 576000,
+   "above8": 0,
+   "above1": 0,
+   "max": 0,
+   "meanRGB": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ },
+ "E1/full": {
+  "offVsOn_r26": {
+   "px": 576000,
+   "above8": 0,
+   "above1": 33,
+   "max": 4,
+   "meanRGB": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 576000,
+   "above8": 0,
+   "above1": 33,
+   "max": 4,
+   "meanRGB": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ },
+ "E2/full": {
+  "offVsOn_r26": {
+   "px": 576000,
+   "above8": 2018,
+   "above1": 5862,
+   "max": 117,
+   "meanRGB": [
+    -0.0,
+    -0.01,
+    -0.04
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 576000,
+   "above8": 4210,
+   "above1": 11567,
+   "max": 144,
+   "meanRGB": [
+    0.08,
+    0.1,
+    0.13
+   ]
+  }
+ },
+ "E3/full": {
+  "offVsOn_r26": {
+   "px": 576000,
+   "above8": 542,
+   "above1": 2029,
+   "max": 105,
+   "meanRGB": [
+    -0.0,
+    -0.01,
+    -0.01
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 576000,
+   "above8": 359,
+   "above1": 3152,
+   "max": 49,
+   "meanRGB": [
+    -0.0,
+    0.01,
+    0.03
+   ]
+  }
+ },
+ "E5/full": {
+  "offVsOn_r26": {
+   "px": 576000,
+   "above8": 0,
+   "above1": 0,
+   "max": 0,
+   "meanRGB": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 576000,
+   "above8": 0,
+   "above1": 0,
+   "max": 0,
+   "meanRGB": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ },
+ "20-rear-eye/full": {
+  "offVsOn_r26": {
+   "px": 576000,
+   "above8": 266872,
+   "above1": 470252,
+   "max": 125,
+   "meanRGB": [
+    6.2,
+    6.72,
+    13.53
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 576000,
+   "above8": 1002,
+   "above1": 1847,
+   "max": 146,
+   "meanRGB": [
+    0.01,
+    0.01,
+    0.01
+   ]
+  }
+ },
+ "21-front-eye/full": {
+  "offVsOn_r26": {
+   "px": 576000,
+   "above8": 259047,
+   "above1": 447862,
+   "max": 124,
+   "meanRGB": [
+    4.55,
+    5.4,
+    11.38
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 576000,
+   "above8": 600,
+   "above1": 1678,
+   "max": 115,
+   "meanRGB": [
+    -0.0,
+    -0.0,
+    0.0
+   ]
+  }
+ },
+ "laundry-details/full": {
+  "offVsOn_r26": {
+   "px": 576000,
+   "above8": 434651,
+   "above1": 565525,
+   "max": 229,
+   "meanRGB": [
+    8.08,
+    8.96,
+    18.42
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 576000,
+   "above8": 598,
+   "above1": 1300,
+   "max": 114,
+   "meanRGB": [
+    -0.0,
+    0.0,
+    -0.0
+   ]
+  }
+ },
+ "service-corner/full": {
+  "offVsOn_r26": {
+   "px": 576000,
+   "above8": 545679,
+   "above1": 558849,
+   "max": 147,
+   "meanRGB": [
+    11.64,
+    12.7,
+    24.49
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 576000,
+   "above8": 7851,
+   "above1": 11791,
+   "max": 187,
+   "meanRGB": [
+    0.6,
+    0.38,
+    0.27
+   ]
+  }
+ },
+ "van-side/full": {
+  "offVsOn_r26": {
+   "px": 576000,
+   "above8": 428907,
+   "above1": 508375,
+   "max": 200,
+   "meanRGB": [
+    9.0,
+    9.6,
+    18.34
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 576000,
+   "above8": 10248,
+   "above1": 22097,
+   "max": 203,
+   "meanRGB": [
+    0.01,
+    0.01,
+    -0.01
+   ]
+  }
+ },
+ "shop-door-eye/full": {
+  "offVsOn_r26": {
+   "px": 576000,
+   "above8": 322640,
+   "above1": 385465,
+   "max": 151,
+   "meanRGB": [
+    6.73,
+    6.92,
+    12.58
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 576000,
+   "above8": 179690,
+   "above1": 212522,
+   "max": 151,
+   "meanRGB": [
+    4.04,
+    4.29,
+    8.09
+   ]
+  }
+ },
+ "station-street/full": {
+  "offVsOn_r26": {
+   "px": 576000,
+   "above8": 476677,
+   "above1": 534507,
+   "max": 200,
+   "meanRGB": [
+    9.4,
+    9.55,
+    19.5
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 576000,
+   "above8": 129057,
+   "above1": 175496,
+   "max": 199,
+   "meanRGB": [
+    2.15,
+    2.38,
+    4.03
+   ]
+  }
+ },
+ "street-detail/full": {
+  "offVsOn_r26": {
+   "px": 576000,
+   "above8": 389946,
+   "above1": 550680,
+   "max": 151,
+   "meanRGB": [
+    8.93,
+    9.05,
+    17.57
+   ]
+  },
+  "a53On_vs_r26On": {
+   "px": 576000,
+   "above8": 375261,
+   "above1": 548030,
+   "max": 139,
+   "meanRGB": [
+    8.72,
+    8.82,
+    17.07
+   ]
+  }
+ }
+}

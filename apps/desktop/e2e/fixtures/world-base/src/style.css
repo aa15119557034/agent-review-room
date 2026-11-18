@@ -1,6 +1,7 @@
 :root{font-family:"Segoe UI","Microsoft YaHei",sans-serif;color:#f9f5ed;background:#182333;font-synthesis:none}
 #panel select{color:inherit;background:#283a4b;border:1px solid #ffffff35;border-radius:5px;padding:6px;font:inherit;font-size:12px}
 #weather{color:#dae3ee}#panel nav{max-width:640px}
+nav + nav{margin-top:7px}
 *{box-sizing:border-box}body{margin:0;overflow:hidden}#world{display:block;width:100vw;height:100vh;outline:none}
 .credits{margin-top:9px;max-width:500px;font-size:10px;line-height:1.6;color:#d4d9e0}.credits summary{cursor:pointer}.credits p{margin:6px 0 0}.credits a{color:inherit}
 #panel{position:absolute;left:24px;top:22px;max-width:calc(100vw - 48px);padding:18px 22px;background:#18283bd9;border:1px solid #ffffff23;border-radius:12px;backdrop-filter:blur(14px);box-shadow:0 8px 36px #17263b33}

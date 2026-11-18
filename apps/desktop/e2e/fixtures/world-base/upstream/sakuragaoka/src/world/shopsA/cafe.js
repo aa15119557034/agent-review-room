@@ -382,6 +382,7 @@ export function buildCafe(ctx, C) {
 
   // ---------------- interior
   const IX0 = X0 + WT, IX1 = X1 - WT, IZ0 = ZB + WT, IZ1 = ZF - WT;
+  (ctx.services.shopInteriors ||= []).push({ lot: S.lot.id, box: [IX0, FY, IZ0, IX1, C1, IZ1] }); // room shell (inner wall faces, floor, ground-floor ceiling), lot local: [x0, y0, z0, x1, y1, z1]; read by src/shadow-tint.js
   const mFloor = M.innerMap('#a67c58', T.planks, 0.22);
   { const fl = k.mesh(C.uvPlane(IX1 - IX0, IZ1 - IZ0, 1.6), mFloor, [(IX0 + IX1) / 2, FY + 0.004, (IZ0 + IZ1) / 2], [-Math.PI / 2, 0, 0]); fl.castShadow = false; }
   k.plane(IX1 - IX0, IZ1 - IZ0, M.inner('#efe3c8', 0.3), [(IX0 + IX1) / 2, C1, (IZ0 + IZ1) / 2], [Math.PI / 2, 0, 0]);

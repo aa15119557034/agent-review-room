@@ -1,7 +1,8 @@
 import { installIslandMap } from './island-map.js';
 import * as THREE from 'three';
 import { createIsland, clearVegetationAreas } from './island.js';
-import { loadShadowTint, shadowTintEnabled, installLitShadowTint, patchIslandShadowTint, shadowTintUniforms, shopInteriorBox } from './shadow-tint.js';
+import { loadShadowTint, shadowTintEnabled, installLitShadowTint, patchIslandShadowTint, shadowTintUniforms, shopInteriorBoxes } from './shadow-tint.js';
+import { loadToon, toonEnabled, installLitToon, installToonHook, toonLineUniforms, maskGlassAlpha } from './toon.js';
 import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from './evening-glow.js';
 import * as layoutModule from '../upstream/sakuragaoka/src/world/layout.js';
 import { createStation } from './station.js';
@@ -13,6 +14,7 @@ import { coastWalking } from './coast.js';
 import { createCity } from './city.js';
 import { applyWeathering, loadWeatheringParams } from './weathering.js';
 import { addWeatheringDecals, loadBakedDecals } from './weathering-decals.js';
+import { getMats as getVehicleMats } from '../upstream/sakuragaoka/src/world/vehicles/atlas.js';
 
 const canvas = document.querySelector('#world');
 const loadMessage = document.querySelector('#load-message');
@@ -48,11 +50,14 @@ function fail(error) {
 window.addEventListener('error', event => fail(event.error || event.message));
 window.addEventListener('unhandledrejection', event => fail(event.reason));
 
+if (toonEnabled()) installToonHook(); // round 28: before any material exists
 const look = createLook(renderer, camera);
 worldBase.look = look;
 worldBase.styleState = { toon: true, flightEffects: false };
 let island, station, walker;
 let returnView = 'station-street';
+let skyFill;
+let originalFillColor, toonFillColor;
 const toWorld = (values) => station.toWorld(new THREE.Vector3(...values)).toArray();
 const labels = { 'station-street': '车站区街道', 'station-port': '车站望向港镇', 'island-aerial': '全岛俯视', 'shop-interior': '便利店室内', 'service-corner': '车站服务角', 'laundry-details': '洗衣店前细节' };
 function setView(name) {
@@ -67,7 +72,7 @@ function setView(name) {
   camera.updateMatrixWorld();
   worldBase.currentView = name;
   look.pipeline.hasPrev = false;
-  document.querySelector('#mode').textContent = labels[name];
+  document.querySelector('#mode').textContent = view.label ?? labels[name];
   document.querySelector('#water-view').value = view.feet || view.overview ? name : '';
   document.querySelectorAll('[data-view]').forEach(button => button.classList.toggle('active', button.dataset.view === name));
   document.querySelector('#walk').textContent = view.overview ? '城镇总览' : '进入步行';
@@ -93,7 +98,12 @@ function startWalking() {
   canvas.focus();
 }
 worldBase.startWalking = startWalking;
-worldBase.setToon = value => { look.setToon(value); worldBase.styleState.toon = !!value; document.querySelector('#toon').checked = !!value; };
+worldBase.setToon = value => {
+  look.setToon(value);
+  if (toonFillColor) skyFill.color.copy(value ? toonFillColor : originalFillColor);
+  worldBase.styleState.toon = !!value;
+  document.querySelector('#toon').checked = !!value;
+};
 worldBase.setFlightEffects = value => { look.setFlightEffects(value); worldBase.styleState.flightEffects = !!value; document.querySelector('#effects').checked = !!value; };
 
 function resize() {
@@ -129,7 +139,7 @@ async function init() {
   Object.assign(sun.shadow.camera, { left: -150, right: 150, top: 150, bottom: -150, near: 1, far: 400 });
   sun.shadow.bias = -0.0002;
   sun.shadow.normalBias = 0.035;
-  const skyFill = evening ? new THREE.HemisphereLight(0xb4bce8, 0xa08068, 1.6) : new THREE.HemisphereLight(0xcfe0ff, 0xa89c94, 1.05);
+  skyFill = evening ? new THREE.HemisphereLight(0xb4bce8, 0xa08068, 1.6) : new THREE.HemisphereLight(0xcfe0ff, 0xa89c94, 1.05);
   const clearSun = sun.intensity, clearFill = skyFill.intensity;
   scene.add(sun, sun.target, skyFill);
   stage('正在安放车站、店铺与碰撞体…');
@@ -142,10 +152,21 @@ async function init() {
   worldBase.station = station;
   if (shadowTint) {
     // No program using the lit chunk has compiled yet (first render is after init), so the box can be known here.
-    const box = shopInteriorBox(layoutModule, station, shadowTintParams.indoorPad);
-    installLitShadowTint(shadowTint, box);
-    look.setShadowTint(shadowTintUniforms(shadowTint), box, shadowTintParams.indoorFade);
-    worldBase.shadowTint.indoorBox = box;
+    const boxes = shopInteriorBoxes(layoutModule, station, shadowTintParams.indoorPad);
+    installLitShadowTint(shadowTint, boxes);
+    look.setShadowTint(shadowTintUniforms(shadowTint), boxes, shadowTintParams.indoorFade);
+    worldBase.shadowTint.indoorBox = boxes;
+  }
+  // Round 27: outlines + cel bands (?toon=off keeps round 26). Same shop-room boxes as the shadow tint.
+  if (toonEnabled()) {
+    const toonAll = await loadToon(), toonP = toonAll[timeOfDay === 'afternoon' ? 'afternoon' : 'evening'];
+    originalFillColor = skyFill.color.clone();
+    toonFillColor = new THREE.Color(toonP.skyFill);
+    if (worldBase.styleState.toon) skyFill.color.copy(toonFillColor);
+    const toonBoxes = worldBase.shadowTint?.indoorBox || shopInteriorBoxes(layoutModule, station, 0.05);
+    installLitToon(toonP, toonBoxes);
+    look.setToonLines(toonLineUniforms(toonP));
+    worldBase.toon27 = { params: toonP };
   }
   // Interpolate the existing ramp values for softer boundaries between tones.
   const ramp = station.ctx.mat.gradientMap;
@@ -170,6 +191,9 @@ async function init() {
   }
   walker = station.createWalker(canvas, coastWalking(station, island));
   worldBase.walker = walker;
+  // Seed 252 fixes the hillside lot and sightline. The joined terrain reshapes its ground.
+  const hillsideX = 1040.6682, hillsideZ = 591.5865;
+  const hillsideEyeY = island.heightAt(hillsideX, hillsideZ) + 1.6;
   worldBase.views = [
     { name: 'station-street', fov: 58, position: toWorld([-1.2, 2.4, 36]), target: toWorld([0, 2.0, -25]) },
     { name: 'station-port', fov: 58, position: toWorld([-65, 15, -28]), target: [-45, 21, 1036] },
@@ -178,6 +202,29 @@ async function init() {
     { name: 'service-corner', fov: 55, position: toWorld(station.texturedProps.stats.view.position), target: toWorld(station.texturedProps.stats.view.target) },
     { name: 'laundry-details', fov: 55, position: toWorld(worldBase.city.stats.texturedProps.view.position), target: toWorld(worldBase.city.stats.texturedProps.view.target) },
     { name: 'coast', fov: 58, position: [270, island.heightAt(270, 1110) + 1.65, 1110], target: [-55, 3, 1230] },
+    // Ground-level art references for #252. Positions and targets are in the station frame.
+    {
+      name: 'art-a-street', label: 'A · 01 站前主街', fov: 35.63777782904556, // 35 mm on a 36 mm wide frame at 16:10.
+      position: toWorld([-1.2, 2.488, 36]), target: toWorld([0, 2.088, -25]),
+    },
+    {
+      name: 'art-b-konbini', label: 'B · 21 便利店正面', fov: 58,
+      position: toWorld([-0.9, 1.8184, 12.8]), target: toWorld([-7.52, 2.0534, 10.6]),
+    },
+    {
+      name: 'art-c-alley', label: 'C · 20 公寓后巷', fov: 45,
+      position: toWorld([7.65, 6.384808464050293, -132.68]), target: toWorld([-1.6, 6.55, -129.94]),
+    },
+    {
+      name: 'art-d-laundry', label: 'D · 24 洗衣店', fov: 48,
+      position: toWorld([3.5, 4.520055181715234, -116.2]), target: toWorld([2.5, 6.25, -122.6]),
+    },
+    // Seed 252 samples live at standing height on the quay, a hillside, the railway lane and the northern village street.
+    // Keep each location, direction and FOV fixed. F follows the local ground at the sampled point.
+    { name: 'sample-e-harbour', label: 'E · 拉克港码头', fov: 57, position: [-49.3148, 6.0969, 1121.5], target: [-24, 7.2, 1123.5] },
+    { name: 'sample-f-hillside', label: 'F · 东部山麓草坡', fov: 57, position: [hillsideX, hillsideEyeY, hillsideZ], target: [1062, hillsideEyeY + 41.2697, 490] },
+    { name: 'sample-g-rail', label: 'G · 铁路北侧小路', fov: 57, position: [337.8563, 9.6, 844.5], target: [268, 10.55, 857] },
+    { name: 'sample-h-north', label: 'H · 北端村道', fov: 57, position: [181.0601, 136.1623, -1212.8685], target: [180, 141.45, -1238] },
   ];
   const waterSelect=document.querySelector('#water-view');
   const settlements=document.createElement('optgroup');settlements.label='原岛聚落';
@@ -233,6 +280,7 @@ async function init() {
   addEventListener('keydown', event => {
     if (document.querySelector('#island-map').open) return;
     if (event.code === 'KeyH') document.body.classList.toggle('hide-ui');
+    if (!/^[1-6]$/.test(event.key)) return;
     const view = worldBase.views[Number(event.key) - 1];
     if (view) setView(view.name);
   });
@@ -246,13 +294,17 @@ async function init() {
     const weatheringStart = performance.now();
     const params = await loadWeatheringParams();
     worldBase.weathering = applyWeathering({ scene, station, island, city: worldBase.city, skyline: worldBase.skyline, params, timeOfDay: island.timeOfDay });
-    worldBase.weatheringDecals = addWeatheringDecals({ scene, station, wallMaterials: worldBase.weathering.wallMaterials,
+    worldBase.weatheringDecals = addWeatheringDecals({ scene, station, wallMaterials: worldBase.weathering.wallMaterials, vehicleBoxes: worldBase.weathering.vehicleBoxes,
       roots: [station.root, worldBase.city.root, worldBase.skyline.root], gradientMap: station.ctx.mat.gradientMap, explicit: params.decals.explicit,
       baked: await loadBakedDecals(), forcePlan: new URLSearchParams(location.search).get('decals') === 'plan' });
     worldBase.weatheringMs = +(performance.now() - weatheringStart).toFixed(1);
     // ?weathering=off keeps the previous look for before/after captures.
     if (new URLSearchParams(location.search).get('weathering') === 'off') { worldBase.weathering.setEnabled(false); worldBase.weatheringDecals.setEnabled(false); }
   }
+  // The vehicles' shared glass material is unnamed and its meshes carry no 'glass' name, so the
+  // name filter in maskGlassAlpha skipped it and outlines showed through the van windows.
+  getVehicleMats(station.ctx).glass.name ||= 'vehicle-glass';
+  if (toonEnabled()) maskGlassAlpha(scene);
   stage('场景已就绪');
   document.querySelector('#loading').hidden = true;
   const rain=createRain(scene,renderer,station);

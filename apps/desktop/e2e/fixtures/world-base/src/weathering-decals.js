@@ -131,7 +131,7 @@ function fingerprint(targets) {
   return `${targets.length}:${tris}:${sx.toFixed(1)}:${sz.toFixed(1)}`;
 }
 
-export function planWeatheringDecals({ station, wallMaterials, roots, explicit = [] }) {
+export function planWeatheringDecals({ station, wallMaterials, vehicleBoxes = [], roots, explicit = [] }) {
   const o = station.root.position, r = rng(2203), cells = cellTable();
   for (const root of roots) root.updateMatrixWorld(true);
   const targets = collectTargets(roots);
@@ -147,7 +147,8 @@ export function planWeatheringDecals({ station, wallMaterials, roots, explicit =
     const near = [];
     for (let i = 0; i < targets.length; i++) if (boxes[i].intersectsBox(segBox) && ray.ray.intersectsBox(boxes[i])) near.push(targets[i]);
     const hit = ray.intersectObjects(near, false)[0];
-    if (!hit || !hit.face) return null;
+    // Batched vehicle panels can share a material with walls. The first hit still occludes the wall behind it.
+    if (!hit || !hit.face || vehicleBoxes.some(box => box.containsPoint(hit.point))) return null;
     const mats = [].concat(hit.object.material);
     const material0 = mats[hit.face.materialIndex ?? 0] ?? mats[0];
     if (!wallMaterials.has(material0)) return null;
@@ -248,7 +249,7 @@ export async function loadBakedDecals() {
   } catch { return null; }
 }
 
-export function addWeatheringDecals({ scene, station, wallMaterials, roots, gradientMap, explicit = [], baked = null, forcePlan = false }) {
+export function addWeatheringDecals({ scene, station, wallMaterials, vehicleBoxes = [], roots, gradientMap, explicit = [], baked = null, forcePlan = false }) {
   const o = station.root.position;
   const { canvas } = drawAtlas(), cells = cellTable();
   const texture = new THREE.CanvasTexture(canvas);
@@ -259,7 +260,7 @@ export function addWeatheringDecals({ scene, station, wallMaterials, roots, grad
     for (const root of roots) root.updateMatrixWorld(true);
     if (baked.fingerprint === fingerprint(collectTargets(roots))) plan = baked; else source = 'planned (scene changed)';
   } else source = forcePlan ? 'planned (forced)' : 'planned (no baked file)';
-  if (!plan) plan = planWeatheringDecals({ station, wallMaterials, roots, explicit });
+  if (!plan) plan = planWeatheringDecals({ station, wallMaterials, vehicleBoxes, roots, explicit });
   const planMs = performance.now() - t0;
 
   const positions = [], uvs = [], indices = [], stats = { posters: 0, stickers: 0, doodles: 0, rejected: plan.stats?.rejected ?? 0, byArea: {} };

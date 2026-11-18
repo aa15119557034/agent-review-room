@@ -1,0 +1,847 @@
+{
+  "source": "4a8903840677d589f08e6a9934680b3b7b5f3d9c",
+  "cameras": {
+    "service-corner": {
+      "position": [
+        308.4,
+        9.612,
+        872.9
+      ],
+      "quaternion": [
+        -0.08432325046436126,
+        0.5331397072650681,
+        0.05351200213385738,
+        0.8401119613456697
+      ],
+      "fov": 55
+    },
+    "laundry-details": {
+      "position": [
+        288,
+        14.384808464050293,
+        777.9
+      ],
+      "quaternion": [
+        -0.15522850149956677,
+        0.6173580660361093,
+        0.12595148976979553,
+        0.7608609287163607
+      ],
+      "fov": 55
+    },
+    "shop-interior": {
+      "position": [
+        271.7,
+        9.9134,
+        908
+      ],
+      "quaternion": [
+        -0.015701859235384273,
+        0.7069324236562871,
+        0.015701859235384273,
+        0.7069324236562871
+      ],
+      "fov": 58
+    },
+    "20-rear-eye": {
+      "position": [
+        273,
+        14.755245542526229,
+        758
+      ],
+      "quaternion": [
+        -0.00013011891877658623,
+        0.9145142483742376,
+        -0.00029414054360230415,
+        -0.40455356390830466
+      ],
+      "fov": 58
+    },
+    "21-front-eye": {
+      "position": [
+        274,
+        12.87812709172567,
+        783
+      ],
+      "quaternion": [
+        0.07422133960767584,
+        -0.5103582416049142,
+        0.044271975994965136,
+        0.8556083508909221
+      ],
+      "fov": 58
+    },
+    "station-street": {
+      "position": [
+        278.8,
+        10.4,
+        936
+      ],
+      "quaternion": [
+        -0.003277842930440423,
+        -0.009834585659995631,
+        -0.000032237959341941705,
+        0.9999462663720154
+      ],
+      "fov": 58
+    },
+    "street-detail": {
+      "position": [
+        284.4,
+        10.281286274509803,
+        924
+      ],
+      "quaternion": [
+        -0.12465537443110519,
+        -0.38126635888515065,
+        -0.05196769176958736,
+        0.914547079280253
+      ],
+      "fov": 58
+    },
+    "van-side": {
+      "position": [
+        276.3147277851227,
+        11.210013480772632,
+        971.1462175645175
+      ],
+      "quaternion": [
+        -0.029182465008512196,
+        -0.7830517056478151,
+        -0.03684648464040197,
+        0.6201779958912754
+      ],
+      "fov": 47
+    },
+    "shop-door-eye": {
+      "position": [
+        271.7,
+        9.9134,
+        908
+      ],
+      "quaternion": [
+        0.015701859235384273,
+        0.7069324236562871,
+        0.015701859235384273,
+        -0.7069324236562871
+      ],
+      "fov": 58
+    }
+  },
+  "threshold": {
+    "fps": 60,
+    "p95Ms": 16.7
+  },
+  "runs": {
+    "ground-on": {
+      "started": "2026-11-18T03:43:51.556Z",
+      "ended": "2026-11-18T03:47:07.899Z",
+      "mode": "on",
+      "scene": "4a8903840677d589f08e6a9934680b3b7b5f3d9c",
+      "checkout": "4a8903840677d589f08e6a9934680b3b7b5f3d9c",
+      "filesChecked": 249,
+      "normal": {
+        "exit": 1,
+        "stage": "complete",
+        "renderOk": true,
+        "jsExceptions": 0,
+        "requests": [
+          {
+            "file": "plastic_crate_02_1k.gltf",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          },
+          {
+            "file": "plastic_crate_02.bin",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          }
+        ],
+        "transportClean": false
+      },
+      "town": {
+        "exit": 1,
+        "stage": "complete",
+        "renderOk": true,
+        "jsExceptions": 0,
+        "requests": [
+          {
+            "file": "menhir.glb",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          }
+        ],
+        "transportClean": false
+      },
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "normalHostSha256": "bf97985a81e4318956c62d7e600afcd026b13c548070997159b2310d18d9eaab",
+      "townHostSha256": "26726285587c2f78d23ab8262fb5e67c8078f15e229cd04335cf67100d6c0082",
+      "segments": {
+        "20": {
+          "frames": 658,
+          "ms": 10123.099999999999,
+          "fps": 64.999851824046,
+          "p95": 15.5,
+          "p99": 15.599999999998545,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1280.4300911854104,
+          "trianglesPerFrame": 9676362.069908815,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "1dc1179deaccc5b502b3571b3311a2ad28c95cdc3786803f62443fa0bf0a1b9b"
+        },
+        "21": {
+          "frames": 657,
+          "ms": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95": 15.5,
+          "p99": 15.599999999998545,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 852.0882800608828,
+          "trianglesPerFrame": 8796443.649923896,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "5af58c1d4933d6844742c00730e480d815b24374afb978823ece253c6eecdc7b"
+        },
+        "23": {
+          "frames": 657,
+          "ms": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95": 15.5,
+          "p99": 15.599999999991269,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1157.6027397260275,
+          "trianglesPerFrame": 7607514.846270928,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "9251bcf1b5fb4df22c130b3aa6111297816b8d46a838adc2f9ee47a742a1e415"
+        },
+        "24": {
+          "frames": 658,
+          "ms": 10123,
+          "fps": 65.00049392472587,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 909.3449848024316,
+          "trianglesPerFrame": 8867269.085106382,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "1d47b5284324681ac1ca0999f989e40c2e0ff04882cfb006a70ea461d112869b"
+        },
+        "station-street": {
+          "frames": 202,
+          "ms": 3107.5999999999985,
+          "fps": 65.00193075041835,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.599999999998545,
+          "over20": 0,
+          "drawsPerFrame": 1605.9356435643565,
+          "trianglesPerFrame": 8410758.297029704,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "f08f6cf5cb66efc06f721adf2f8928e887b7da46d7d09040e67161acc491b458"
+        },
+        "shop-interior": {
+          "frames": 203,
+          "ms": 3123.100000000006,
+          "fps": 64.99951970798233,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 947.1576354679803,
+          "trianglesPerFrame": 7693077.551724138,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "7528e1a54a93085eac67401e15dbc7293d4b2710c5b405511dc0518e9dc96ddf"
+        },
+        "window": {
+          "frames": 657,
+          "ms": 10107.600000000006,
+          "fps": 65.00059361272702,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 15.69999999999709,
+          "over20": 0,
+          "drawsPerFrame": 1186.3744292237443,
+          "trianglesPerFrame": 7851029.016742771,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "f17fb324e6ac24263d283188996e4d0c485c2a4a855604ff688135eb138c75a1"
+        },
+        "door": {
+          "frames": 658,
+          "ms": 10123,
+          "fps": 65.00049392472587,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1101.240121580547,
+          "trianglesPerFrame": 7515546.300911854,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "d76509114d01595a9ad1977dd7c1b79c9fb6f7956445b1990f13fbd188bf95e3"
+        },
+        "walking-third": {
+          "frames": 203,
+          "ms": 3123,
+          "fps": 65.00160102465578,
+          "p95": 15.5,
+          "p99": 15.599999999991269,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1586.6009852216748,
+          "trianglesPerFrame": 8358042.389162562,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "walk": {
+            "from": [
+              281.6,
+              8.812,
+              934
+            ],
+            "to": [
+              280.9429656408942,
+              8.54891118551458,
+              924.603970911235
+            ],
+            "distanceXZ": 9.418973234167467
+          },
+          "originalSha256": "f14564b1c7ac8f97d6b416cf48a1b59c9f8e6b0672e67a1cdee9429648ff9b1e"
+        },
+        "walking-first": {
+          "frames": 202,
+          "ms": 3107.699999999997,
+          "fps": 64.99983910930919,
+          "p95": 15.5,
+          "p99": 15.599999999991269,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1447.1336633663366,
+          "trianglesPerFrame": 8296613.465346535,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "walk": {
+            "from": [
+              280.92467560757257,
+              8.541587514968597,
+              924.3424112488784
+            ],
+            "to": [
+              280.27094250270613,
+              8.279820584266135,
+              914.9935922952192
+            ],
+            "distanceXZ": 9.371647816723412
+          },
+          "originalSha256": "4f8381e7ad583c34811e093e355f20caca19a11f2877a1072030ea158aef6214"
+        }
+      },
+      "summary": {
+        "n": 10,
+        "passes": 10,
+        "total": 4755,
+        "over20": 0,
+        "maximum": 15.69999999999709
+      },
+      "startup": {
+        "weathering": {
+          "totalMs": 669,
+          "source": "baked",
+          "planMs": 2,
+          "rays": 0,
+          "triangles": 52,
+          "vehicleVolumes": 4
+        },
+        "firstReadyFrameMs": 38255.59999990463,
+        "buildStartMs": 22100.799999952316,
+        "worldReadyStageMs": 22981.39999985695,
+        "stationBuildingsToReadyMs": 880.5999999046326
+      }
+    },
+    "ground-off": {
+      "started": "2026-11-18T03:47:08.962Z",
+      "ended": "2026-11-18T03:50:23.963Z",
+      "mode": "off",
+      "scene": "4a8903840677d589f08e6a9934680b3b7b5f3d9c",
+      "checkout": "4a8903840677d589f08e6a9934680b3b7b5f3d9c",
+      "filesChecked": 249,
+      "normal": {
+        "exit": 1,
+        "stage": "complete",
+        "renderOk": true,
+        "jsExceptions": 0,
+        "requests": [
+          {
+            "file": "plastic_crate_02.bin",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          }
+        ],
+        "transportClean": false
+      },
+      "town": {
+        "exit": 1,
+        "stage": "complete",
+        "renderOk": true,
+        "jsExceptions": 0,
+        "requests": [
+          {
+            "file": "menhir.glb",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          },
+          {
+            "file": "plastic_crate_02.bin",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          }
+        ],
+        "transportClean": false
+      },
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "normalHostSha256": "bf97985a81e4318956c62d7e600afcd026b13c548070997159b2310d18d9eaab",
+      "townHostSha256": "306a18abb561021747822d68b69a3ceb488a4574b26e682845f53b7745f49051",
+      "segments": {
+        "20": {
+          "frames": 658,
+          "ms": 10123.100000000006,
+          "fps": 64.99985182404596,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.69999999999709,
+          "over20": 0,
+          "drawsPerFrame": 1280.4224924012158,
+          "trianglesPerFrame": 9676360.732522797,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "4eed62fb63b8779218042f997bcd38109b687d010fe7fd1912fef97e31bc7889"
+        },
+        "21": {
+          "frames": 657,
+          "ms": 10107.800000000003,
+          "fps": 64.99930746552165,
+          "p95": 15.5,
+          "p99": 15.599999999998545,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 852.1491628614916,
+          "trianglesPerFrame": 8796447.546423135,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "93ed1cf1edeae26479f6c7d7c6e889b69fff25e27996df083401c842800e79d3"
+        },
+        "23": {
+          "frames": 657,
+          "ms": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1157.820395738204,
+          "trianglesPerFrame": 7611166.152207001,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "1c8475a61e1cf8d34726702178251ae6e39db5b3d7bb10c894c584ceb0560c5c"
+        },
+        "24": {
+          "frames": 657,
+          "ms": 10107.800000000003,
+          "fps": 64.99930746552165,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 15.69999999999709,
+          "over20": 0,
+          "drawsPerFrame": 910.1811263318112,
+          "trianglesPerFrame": 8871069.952815829,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "a32f05054cae05644b728dfe008e33d8bd96c6b3225bac93e8d4201a711fa634"
+        },
+        "station-street": {
+          "frames": 202,
+          "ms": 3123.100000000006,
+          "fps": 64.67932502961789,
+          "p95": 15.5,
+          "p99": 15.599999999998545,
+          "maximum": 30.69999999999709,
+          "over20": 1,
+          "drawsPerFrame": 1606.420792079208,
+          "trianglesPerFrame": 8413448.198019803,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "4443bf7a8dfe4574b3dd15ac666f94a70c2355423059966eabebfbb679ec6311"
+        },
+        "shop-interior": {
+          "frames": 203,
+          "ms": 3123.0999999999985,
+          "fps": 64.99951970798249,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.5,
+          "over20": 0,
+          "drawsPerFrame": 947.64039408867,
+          "trianglesPerFrame": 7698518.24137931,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "7ea8fef81252f3c14d5fcbb5b8c78a184bac65c364288a5a5d54e329eb740bf6"
+        },
+        "window": {
+          "frames": 658,
+          "ms": 10123.100000000006,
+          "fps": 64.99985182404596,
+          "p95": 15.5,
+          "p99": 15.599999999991269,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1186.1854103343464,
+          "trianglesPerFrame": 7847545.671732523,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "3742eea353f9478c67e34b71dbb7941224946cc4c5556591a2682979e841c6c3"
+        },
+        "door": {
+          "frames": 657,
+          "ms": 10107.599999999991,
+          "fps": 65.00059361272712,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1101.1385083713851,
+          "trianglesPerFrame": 7514231.949771689,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "d94e45aba8000ae64642a118d8595223bd53c42da3c18fadbcc33b5fe3098597"
+        },
+        "walking-third": {
+          "frames": 203,
+          "ms": 3123.0999999999913,
+          "fps": 64.99951970798263,
+          "p95": 15.5,
+          "p99": 15.599999999991269,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1586.4039408866995,
+          "trianglesPerFrame": 8358029.778325123,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "walk": {
+            "from": [
+              281.6,
+              8.812,
+              934
+            ],
+            "to": [
+              280.9429443114412,
+              8.548902644803688,
+              924.603665885846
+            ],
+            "distanceXZ": 9.419279004397405
+          },
+          "originalSha256": "c193c7d8bad6511e21d5cfbe37d73cd97ada8d141353478a10851a670a95cb1a"
+        },
+        "walking-first": {
+          "frames": 203,
+          "ms": 3123,
+          "fps": 65.00160102465578,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.599999999991269,
+          "over20": 0,
+          "drawsPerFrame": 1446.9901477832511,
+          "trianglesPerFrame": 8295900.369458128,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "walk": {
+            "from": [
+              280.92464739526747,
+              8.541576218235333,
+              924.342007794119
+            ],
+            "to": [
+              280.26760847770225,
+              8.278485578457724,
+              914.9459135163473
+            ],
+            "distanceXZ": 9.419038582359082
+          },
+          "originalSha256": "a2ed0b61867d66fa0748aecbfe561185b03e2904061a09f83556b1f9fc3155a6"
+        }
+      },
+      "summary": {
+        "n": 10,
+        "passes": 10,
+        "total": 4755,
+        "over20": 1,
+        "maximum": 30.69999999999709
+      },
+      "startup": {
+        "weathering": {
+          "totalMs": 636.3,
+          "source": "baked",
+          "planMs": 2,
+          "rays": 0,
+          "triangles": 52,
+          "vehicleVolumes": 4
+        },
+        "firstReadyFrameMs": 37421.40000009537,
+        "buildStartMs": 22170,
+        "worldReadyStageMs": 23022.400000095367,
+        "stationBuildingsToReadyMs": 852.4000000953674
+      }
+    },
+    "ground-on-repeat": {
+      "started": "2026-11-18T03:50:25.000Z",
+      "ended": "2026-11-18T03:53:41.951Z",
+      "mode": "on",
+      "scene": "4a8903840677d589f08e6a9934680b3b7b5f3d9c",
+      "checkout": "4a8903840677d589f08e6a9934680b3b7b5f3d9c",
+      "filesChecked": 249,
+      "normal": {
+        "exit": 1,
+        "stage": "complete",
+        "renderOk": true,
+        "jsExceptions": 0,
+        "requests": [
+          {
+            "file": "boulders.glb",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          },
+          {
+            "file": "plastic_crate_02_1k.gltf",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          },
+          {
+            "file": "plastic_crate_02.bin",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          }
+        ],
+        "transportClean": false
+      },
+      "town": {
+        "exit": 1,
+        "stage": "complete",
+        "renderOk": true,
+        "jsExceptions": 0,
+        "requests": [
+          {
+            "file": "boulders.glb",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          },
+          {
+            "file": "plastic_crate_02.bin",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          }
+        ],
+        "transportClean": false
+      },
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "normalHostSha256": "bf97985a81e4318956c62d7e600afcd026b13c548070997159b2310d18d9eaab",
+      "townHostSha256": "26726285587c2f78d23ab8262fb5e67c8078f15e229cd04335cf67100d6c0082",
+      "segments": {
+        "20": {
+          "frames": 657,
+          "ms": 10107.799999999996,
+          "fps": 64.99930746552171,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1280.4946727549468,
+          "trianglesPerFrame": 9676367.14916286,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "c6fda3457cb1d6596757401ba6d8737191ec8212b12ad64612764d508e53cd1c"
+        },
+        "21": {
+          "frames": 657,
+          "ms": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95": 15.5,
+          "p99": 15.599999999998545,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 852.0091324200913,
+          "trianglesPerFrame": 8796438.584474886,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "c3a59d0e13ebd3c80154d7715d62a2a0932e2b0ca5c209c6f21fa3c2b4abdd4e"
+        },
+        "23": {
+          "frames": 651,
+          "ms": 10107.699999999997,
+          "fps": 64.40634367858169,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 30.80000000000291,
+          "over20": 6,
+          "drawsPerFrame": 1157.4009216589861,
+          "trianglesPerFrame": 7604008.23655914,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "f0f24e527afa85a9b2c71591d130e3d48a65d92b23e49f19111228880d9ca232"
+        },
+        "24": {
+          "frames": 658,
+          "ms": 10123.100000000006,
+          "fps": 64.99985182404596,
+          "p95": 15.5,
+          "p99": 15.599999999991269,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 908.4908814589666,
+          "trianglesPerFrame": 8863380.92705167,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "e4183113ac167fab43d46d2fdd8a292ca6b1cf2ae7a79e1e7b66b02881411153"
+        },
+        "station-street": {
+          "frames": 201,
+          "ms": 3107.699999999997,
+          "fps": 64.67805772757994,
+          "p95": 15.5,
+          "p99": 15.599999999998545,
+          "maximum": 30.60000000000582,
+          "over20": 1,
+          "drawsPerFrame": 1605.9701492537313,
+          "trianglesPerFrame": 8410970.009950249,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "fe07bedc9893070b04f4ab5b87562d990fa2f739c565c0c71773f149fe97c848"
+        },
+        "shop-interior": {
+          "frames": 202,
+          "ms": 3107.7000000000044,
+          "fps": 64.99983910930905,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 947.1980198019802,
+          "trianglesPerFrame": 7693532.683168317,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "256f01450a399f979faa53f72b66808d180a4dab67d5322ca711c7741fbf190d"
+        },
+        "window": {
+          "frames": 658,
+          "ms": 10123.099999999991,
+          "fps": 64.99985182404605,
+          "p95": 15.5,
+          "p99": 15.599999999991269,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1186.6018237082067,
+          "trianglesPerFrame": 7854697.015197569,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "9da4ef362d11357264af67a7b0ab1116f216859c43505321a4a80dddee669602"
+        },
+        "door": {
+          "frames": 655,
+          "ms": 10123.099999999991,
+          "fps": 64.70349991603368,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 30.90000000000873,
+          "over20": 3,
+          "drawsPerFrame": 1101.3801526717557,
+          "trianglesPerFrame": 7516790.163358779,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "originalSha256": "f7bfb6d6ce898c6d58cab4928b50691d99554522f5ed224db1c20660d3498010"
+        },
+        "walking-third": {
+          "frames": 203,
+          "ms": 3123,
+          "fps": 65.00160102465578,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 15.80000000000291,
+          "over20": 0,
+          "drawsPerFrame": 1589.5418719211823,
+          "trianglesPerFrame": 8361643.482758621,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "walk": {
+            "from": [
+              281.6,
+              8.812,
+              934
+            ],
+            "to": [
+              280.93963393624836,
+              8.547577108820802,
+              924.5563253150286
+            ],
+            "distanceXZ": 9.466735176063814
+          },
+          "originalSha256": "e120bdde1711afac38ba5a0a52d0c22f71072f239a14f932a886814d039d9e76"
+        },
+        "walking-first": {
+          "frames": 202,
+          "ms": 3107.800000000003,
+          "fps": 64.99774760280579,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1446.1237623762377,
+          "trianglesPerFrame": 8295561.336633664,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "walk": {
+            "from": [
+              280.92134261934325,
+              8.540252924304054,
+              924.2947472965734
+            ],
+            "to": [
+              280.2675879819663,
+              8.278477371582701,
+              914.9456204136678
+            ],
+            "distanceXZ": 9.37195649790158
+          },
+          "originalSha256": "1232e34e7f07eda8ac520eea54f7412be63c51a8f16c4b0b819114005addeb7b"
+        }
+      },
+      "summary": {
+        "n": 10,
+        "passes": 10,
+        "total": 4744,
+        "over20": 10,
+        "maximum": 30.90000000000873
+      },
+      "startup": {
+        "weathering": {
+          "totalMs": 673.7,
+          "source": "baked",
+          "planMs": 1.8,
+          "rays": 0,
+          "triangles": 52,
+          "vehicleVolumes": 4
+        },
+        "firstReadyFrameMs": 38207.799999952316,
+        "buildStartMs": 22197.89999985695,
+        "worldReadyStageMs": 23089.599999904633,
+        "stationBuildingsToReadyMs": 891.7000000476837
+      }
+    }
+  },
+  "framesSha256": "77b851af43e71a207f586b5f934ba66ffcd6448089222596e6728ca4a104c7a4"
+}

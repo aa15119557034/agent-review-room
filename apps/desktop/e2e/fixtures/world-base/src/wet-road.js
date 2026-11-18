@@ -210,7 +210,7 @@ export function applyWetRoad({ root, ctx, reflections }) {
         vec3 V = normalize(cameraPosition - vWetWorld);
         float grazing = pow(1.0 - clamp(dot(N, V), 0.0, 1.0), 4.0);
         vec3 reflection = streetReflection(vWetWorld, reflect(-V, N), mix(4.0, 0.85, wetMask.g));
-        float weight = (0.055 + 0.76 * grazing) * wetMask.g + 0.13 * wetMask.r * grazing;
+        float weight = (0.03 + 0.2 * grazing) * wetMask.g + 0.05 * wetMask.r * grazing; // art r1: puddles were smearing the pink canopy across the road
         outgoingLight = mix(outgoingLight, reflection, weight);
       }
       #include <opaque_fragment>`);

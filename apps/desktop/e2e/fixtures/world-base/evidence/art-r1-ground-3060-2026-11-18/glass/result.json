@@ -1,0 +1,233 @@
+{
+  "source": "7bf4e7ee6357d90c350351be3b90ea2b6f9c8d3e",
+  "stage": "complete",
+  "exceptions": [],
+  "httpErrors": [],
+  "networkFailures": [
+    {
+      "path": "/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+      "message": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "path": "/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "message": "net::ERR_ABORTED",
+      "canceled": true
+    }
+  ],
+  "capture": {
+    "camera": {
+      "position": [
+        276.3147277851227,
+        11.210013480772632,
+        971.1462175645175
+      ],
+      "quaternion": [
+        -0.029182465008512196,
+        -0.7830517056478151,
+        -0.03684648464040197,
+        0.6201779958912754
+      ],
+      "fov": 47
+    },
+    "width": 1440,
+    "height": 900,
+    "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "rect": [
+      520,
+      268,
+      590,
+      390
+    ],
+    "clock": 14,
+    "frameStep": 0.016666666666666666,
+    "threshold": 0.95,
+    "msaa": 4,
+    "checked": true,
+    "effects": false,
+    "lineStrength": 1,
+    "material": {
+      "name": "vehicle-glass",
+      "uuid": "cb5c926d-e089-4104-ac5f-6e021b1bd00e",
+      "custom": true,
+      "normal": false,
+      "alphaSourceZero": true,
+      "alphaDestinationZero": true,
+      "rgbSourceSrcAlpha": true,
+      "rgbDestination1MinusSrcAlpha": true,
+      "opacity": 0.46,
+      "owners": [
+        {
+          "object": "42727ebe-9cc8-4ea1-905d-8004f83d8532",
+          "path": "Sakuragaoka/static/vehicles/keiVan",
+          "matUUID": "cb5c926d-e089-4104-ac5f-6e021b1bd00e",
+          "worldMin": [
+            279.9978629996041,
+            10.898433249601515,
+            970.7951612152366
+          ],
+          "worldMax": [
+            281.74450793157536,
+            11.765720807179518,
+            973.920562649965
+          ],
+          "namedNew": false,
+          "isNew": false,
+          "sharedBatch": false,
+          "newGlassTriangles": 0,
+          "otherGlassTriangles": 8
+        },
+        {
+          "object": "62c1f019-1aa4-44c4-9e71-30f9a2fd3a43",
+          "path": "Sakuragaoka/static/vehicles/keiCar",
+          "matUUID": "cb5c926d-e089-4104-ac5f-6e021b1bd00e",
+          "worldMin": [
+            300.91999995708466,
+            8.91299997138977,
+            899.0140000104905
+          ],
+          "worldMax": [
+            303.62800002098083,
+            9.437999947547912,
+            900.3859999895096
+          ],
+          "namedNew": false,
+          "isNew": false,
+          "sharedBatch": false,
+          "newGlassTriangles": 0,
+          "otherGlassTriangles": 8
+        },
+        {
+          "object": "504df564-31d8-4899-b323-f2dc5cd273ec",
+          "path": "Sakuragaoka/static/vehicles/taxi",
+          "matUUID": "cb5c926d-e089-4104-ac5f-6e021b1bd00e",
+          "worldMin": [
+            272.40000002384187,
+            8.933000011920928,
+            895.8639999985695
+          ],
+          "worldMax": [
+            274.8,
+            9.422999961853026,
+            897.3360000014305
+          ],
+          "namedNew": false,
+          "isNew": false,
+          "sharedBatch": false,
+          "newGlassTriangles": 0,
+          "otherGlassTriangles": 8
+        },
+        {
+          "object": "f9bac9cf-2a1c-457a-b943-27392bd87729",
+          "path": "Sakuragaoka/static/vehicles/compact",
+          "matUUID": "cb5c926d-e089-4104-ac5f-6e021b1bd00e",
+          "worldMin": [
+            268.6689999938011,
+            8.933000011920928,
+            844.938000011444
+          ],
+          "worldMax": [
+            270.13100000619886,
+            9.463000042915343,
+            848.120000052452
+          ],
+          "namedNew": false,
+          "isNew": false,
+          "sharedBatch": false,
+          "newGlassTriangles": 0,
+          "otherGlassTriangles": 8
+        },
+        {
+          "object": "b58a48f6-fdf2-4680-88ae-542f2214c432",
+          "path": "Sakuragaoka/static/art-r1-kei-van",
+          "matUUID": "cb5c926d-e089-4104-ac5f-6e021b1bd00e",
+          "worldMin": [
+            281.3829999923706,
+            9.215904855502936,
+            910.7814335620191
+          ],
+          "worldMax": [
+            282.8170000076294,
+            10.083668842680774,
+            913.7702421161654
+          ],
+          "namedNew": true,
+          "isNew": true,
+          "sharedBatch": false,
+          "newGlassTriangles": 8,
+          "otherGlassTriangles": 0
+        }
+      ]
+    },
+    "glError": 0,
+    "sceneErrors": []
+  },
+  "packetFormat": {
+    "modes": [
+      "formal",
+      "normal",
+      "hidden",
+      "formal-repeat",
+      "formal-no-line",
+      "normal-no-line",
+      "only-old-glazing",
+      "only-new-glazing",
+      "normal-repeat",
+      "formal-final"
+    ],
+    "bytesEach": 102480,
+    "origin": "bottom-left of ROI",
+    "layout": "Each capture contains all bottom-up pixels RGBA16F little-endian followed by all bottom-up pixels final RGBA8."
+  },
+  "sampleSHA256": "172c7ed6cd869edc413c607bfab8be9453d93c749793890cc070ff8dd1516a66",
+  "finished": "2026-11-18T12:28:57.235Z",
+  "exit": 0,
+  "signal": null,
+  "spawnError": null,
+  "sourceBefore": {
+    "head": "7bf4e7ee6357d90c350351be3b90ea2b6f9c8d3e",
+    "hashes": {
+      "index.html": "a88777bcd92755a96be5577c2891d705080b85dd02648e40a7d43c1fc0efdd52",
+      "scripts/baseline.cjs": "edf8568e4cfe576cfee6988b2fb87e529773d7ab8959cafc698eb59577a8b9a6",
+      "scripts/diagnose-surface.cjs": "f3f2d18f7f68423a54c7659acd77be3e7b33df6feef0292199779a3fa340544c",
+      "src/main.js": "7ffa824f2ee218ea9d4596336a50010b88227a837a89e820b331bbb63d8ed2a7",
+      "src/look.js": "acc887e3fd6f93433a3fdbca665fb24284128f87950f85f89e9758987094c6aa",
+      "src/toon.js": "b242dd51202ca3c32c13030f62e11dd1d28c0978f128e2523fd94fafd6c21653",
+      "src/toon.json": "5584a4a00209531246135d28bde31a89562f43ca5f72d8538f3dfeb7efb8b4de",
+      "src/weathering-decals.js": "dbeeac768f60e26abbac520980088bec08d69840710ea45fb50436becab377a4",
+      "src/weathering-decals.json": "2b6740fe8d3d03880e276ebe5e332a25ca37db47482d2bb15bbf083f2b745c62",
+      "src/weathering.json": "7e9245f9049957363768fa80dd311e3d47dfca4a001729a976b0b75db2853a14",
+      "src/station.js": "21fab2423eac100bcf8284c3239f4b6ae65ccdedfc5b15d254bf41e589405857",
+      "src/art-r1.js": "a3986609ec87f97446f5a98147038ffd66dc71a00068b86c4c4664bd4864c8b6",
+      "src/art-r1-city.js": "8f31d1ee6e84954a221281e9cb4027ceb69f5261de86ef4970fcbd87953bcf03",
+      "src/art-stock.js": "f422341f763aab3dc07c41ebfd814829d2073e323ee7acec58e9766b5f8b4755",
+      "src/city.js": "ef29caacdddc463cb6074de2f745fcb5537a4e2deaa581861adebb48ca6bff55",
+      "upstream/sakuragaoka/src/world/vehicles/cars.js": "b25d8056822d06eb242614961f50253726b9ecf70a64c36bb895662243517f5f",
+      "upstream/sakuragaoka/src/world/vehicles/atlas.js": "755371bc0edb1a6e85e8370303b83a5f5b23a157bab097245302da9c4d606e7e",
+      "upstream/petalwake/src/core/pipeline.js": "0495e8d0ce275729e2a4d2fb4a15707635956ad308fcc591a6a2cf5260359085"
+    }
+  },
+  "sourceAfter": {
+    "head": "7bf4e7ee6357d90c350351be3b90ea2b6f9c8d3e",
+    "hashes": {
+      "index.html": "a88777bcd92755a96be5577c2891d705080b85dd02648e40a7d43c1fc0efdd52",
+      "scripts/baseline.cjs": "edf8568e4cfe576cfee6988b2fb87e529773d7ab8959cafc698eb59577a8b9a6",
+      "scripts/diagnose-surface.cjs": "f3f2d18f7f68423a54c7659acd77be3e7b33df6feef0292199779a3fa340544c",
+      "src/main.js": "7ffa824f2ee218ea9d4596336a50010b88227a837a89e820b331bbb63d8ed2a7",
+      "src/look.js": "acc887e3fd6f93433a3fdbca665fb24284128f87950f85f89e9758987094c6aa",
+      "src/toon.js": "b242dd51202ca3c32c13030f62e11dd1d28c0978f128e2523fd94fafd6c21653",
+      "src/toon.json": "5584a4a00209531246135d28bde31a89562f43ca5f72d8538f3dfeb7efb8b4de",
+      "src/weathering-decals.js": "dbeeac768f60e26abbac520980088bec08d69840710ea45fb50436becab377a4",
+      "src/weathering-decals.json": "2b6740fe8d3d03880e276ebe5e332a25ca37db47482d2bb15bbf083f2b745c62",
+      "src/weathering.json": "7e9245f9049957363768fa80dd311e3d47dfca4a001729a976b0b75db2853a14",
+      "src/station.js": "21fab2423eac100bcf8284c3239f4b6ae65ccdedfc5b15d254bf41e589405857",
+      "src/art-r1.js": "a3986609ec87f97446f5a98147038ffd66dc71a00068b86c4c4664bd4864c8b6",
+      "src/art-r1-city.js": "8f31d1ee6e84954a221281e9cb4027ceb69f5261de86ef4970fcbd87953bcf03",
+      "src/art-stock.js": "f422341f763aab3dc07c41ebfd814829d2073e323ee7acec58e9766b5f8b4755",
+      "src/city.js": "ef29caacdddc463cb6074de2f745fcb5537a4e2deaa581861adebb48ca6bff55",
+      "upstream/sakuragaoka/src/world/vehicles/cars.js": "b25d8056822d06eb242614961f50253726b9ecf70a64c36bb895662243517f5f",
+      "upstream/sakuragaoka/src/world/vehicles/atlas.js": "755371bc0edb1a6e85e8370303b83a5f5b23a157bab097245302da9c4d606e7e",
+      "upstream/petalwake/src/core/pipeline.js": "0495e8d0ce275729e2a4d2fb4a15707635956ad308fcc591a6a2cf5260359085"
+    }
+  }
+}

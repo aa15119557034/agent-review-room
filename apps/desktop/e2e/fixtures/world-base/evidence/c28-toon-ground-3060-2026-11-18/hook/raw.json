@@ -1,0 +1,64 @@
+{
+  "mode": "raw",
+  "source": "880a02a762fd2d92f4c9c28c0c2bb5d6ac884157",
+  "regularIdsStable": false,
+  "customReplaced": true,
+  "defaultCacheKeyDistinct": true,
+  "customExcluded": true,
+  "paintUnchanged": true,
+  "customCacheKey": "sakura-mass1",
+  "crownMaskDefines": [
+    true,
+    true
+  ],
+  "calls": {
+    "realFoliage": {
+      "ok": true,
+      "owner": null,
+      "paint": 0.03,
+      "crown": false
+    },
+    "originalBare": {
+      "ok": true,
+      "owner": "sakura:blob",
+      "paint": null,
+      "crown": true
+    },
+    "cloneBare": {
+      "ok": true,
+      "owner": "sakura:blob",
+      "paint": null,
+      "crown": true
+    },
+    "cloneMethod": {
+      "ok": true,
+      "owner": "sakura:blob",
+      "paint": null,
+      "crown": true
+    },
+    "explicitReceiver": {
+      "ok": true,
+      "owner": "sakura:blob",
+      "paint": null,
+      "crown": true
+    }
+  },
+  "uniformsShareAcrossPrograms": true,
+  "batch": {
+    "merged": 0,
+    "sources": 0,
+    "sharedMaterials": 0,
+    "atlasTextures": 0,
+    "atlasPages": 0,
+    "groupsByKind": {
+      "MeshToonMaterial": 3,
+      "MeshToonMaterial+map": 2
+    },
+    "nonAtlasReasons": {
+      "uv": 2
+    }
+  },
+  "resultMeshes": 5,
+  "crownRetained": true,
+  "atlasColors": []
+}
