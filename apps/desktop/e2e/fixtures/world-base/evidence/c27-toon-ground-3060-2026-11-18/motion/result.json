@@ -1,0 +1,411 @@
+{
+  "source": "e00875bd88109c6b3eb685bbb5aec8d01ef4bf5c",
+  "stage": "complete",
+  "started": "2026-11-18T07:36:24.319Z",
+  "versions": {
+    "electron": "44.9.0",
+    "chrome": "152.0.7977.167"
+  },
+  "networkFailures": [],
+  "httpErrors": [],
+  "exceptions": [],
+  "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "width": 1440,
+  "height": 900,
+  "camera": {
+    "position": [
+      273,
+      14.755245542526229,
+      758
+    ],
+    "quaternion": [
+      -0.00013011891877658623,
+      0.9145142483742376,
+      -0.00029414054360230415,
+      -0.40455356390830466
+    ],
+    "fov": 58
+  },
+  "previousWorldYawDegrees": 0.9,
+  "step": 0.016666666666666666,
+  "clock": 14,
+  "maskReadout": "Resolved scene/comp texture alpha -> raw texelFetch -> unblended RGBA8, red byte. Screen origin top-left.",
+  "zones": {
+    "full": [
+      0,
+      0,
+      1440,
+      900
+    ],
+    "grass": [
+      230,
+      755,
+      355,
+      830
+    ],
+    "flower": [
+      487,
+      710,
+      520,
+      743
+    ],
+    "lamp": [
+      1110,
+      409,
+      1142,
+      428
+    ],
+    "facade": [
+      1000,
+      410,
+      1150,
+      545
+    ]
+  },
+  "meta": {
+    "off": {
+      "prev": [
+        -0.7452603975685974,
+        -0.0008708507146765166,
+        0.7504332791849864,
+        0.7504145185875142,
+        3.0561757742701174e-19,
+        1.804047382015414,
+        0.0006432876629341767,
+        0.0006432715809436282,
+        0.8461149424235487,
+        -0.0007670477346538061,
+        0.6609837221313961,
+        0.6609671977448976,
+        -437.8990378208228,
+        -25.79999766401477,
+        -706.3034434605831,
+        -705.8857910951511
+      ],
+      "current": [
+        -0.7584586525257523,
+        -0.0008586950178234826,
+        0.739958419032188,
+        0.7399399203029462,
+        2.4449406194160944e-19,
+        1.8040473820154137,
+        0.0006432876629341767,
+        0.0006432715809436282,
+        0.8343045177783284,
+        -0.0007806318343849837,
+        0.6726894718474428,
+        0.6726726548208594,
+        -425.34361233644256,
+        -25.79301942165942,
+        -712.3167649236325,
+        -711.8989622270431
+      ],
+      "strength": 0,
+      "effectsChecked": false,
+      "blur": 0,
+      "rays": 0,
+      "lines": 0.95,
+      "time": 14
+    },
+    "on": {
+      "prev": [
+        -0.7452603975685974,
+        -0.0008708507146765166,
+        0.7504332791849864,
+        0.7504145185875142,
+        3.0561757742701174e-19,
+        1.804047382015414,
+        0.0006432876629341767,
+        0.0006432715809436282,
+        0.8461149424235487,
+        -0.0007670477346538061,
+        0.6609837221313961,
+        0.6609671977448976,
+        -437.8990378208228,
+        -25.79999766401477,
+        -706.3034434605831,
+        -705.8857910951511
+      ],
+      "current": [
+        -0.7584586525257523,
+        -0.0008586950178234826,
+        0.739958419032188,
+        0.7399399203029462,
+        2.4449406194160944e-19,
+        1.8040473820154137,
+        0.0006432876629341767,
+        0.0006432715809436282,
+        0.8343045177783284,
+        -0.0007806318343849837,
+        0.6726894718474428,
+        0.6726726548208594,
+        -425.34361233644256,
+        -25.79301942165942,
+        -712.3167649236325,
+        -711.8989622270431
+      ],
+      "strength": 0.62,
+      "effectsChecked": true,
+      "blur": 1,
+      "rays": 0.55,
+      "lines": 0.95,
+      "time": 14
+    },
+    "on-no-line": {
+      "prev": [
+        -0.7452603975685974,
+        -0.0008708507146765166,
+        0.7504332791849864,
+        0.7504145185875142,
+        3.0561757742701174e-19,
+        1.804047382015414,
+        0.0006432876629341767,
+        0.0006432715809436282,
+        0.8461149424235487,
+        -0.0007670477346538061,
+        0.6609837221313961,
+        0.6609671977448976,
+        -437.8990378208228,
+        -25.79999766401477,
+        -706.3034434605831,
+        -705.8857910951511
+      ],
+      "current": [
+        -0.7584586525257523,
+        -0.0008586950178234826,
+        0.739958419032188,
+        0.7399399203029462,
+        2.4449406194160944e-19,
+        1.8040473820154137,
+        0.0006432876629341767,
+        0.0006432715809436282,
+        0.8343045177783284,
+        -0.0007806318343849837,
+        0.6726894718474428,
+        0.6726726548208594,
+        -425.34361233644256,
+        -25.79301942165942,
+        -712.3167649236325,
+        -711.8989622270431
+      ],
+      "strength": 0.62,
+      "effectsChecked": true,
+      "blur": 1,
+      "rays": 0.55,
+      "lines": 0,
+      "time": 14
+    },
+    "on-repeat": {
+      "prev": [
+        -0.7452603975685974,
+        -0.0008708507146765166,
+        0.7504332791849864,
+        0.7504145185875142,
+        3.0561757742701174e-19,
+        1.804047382015414,
+        0.0006432876629341767,
+        0.0006432715809436282,
+        0.8461149424235487,
+        -0.0007670477346538061,
+        0.6609837221313961,
+        0.6609671977448976,
+        -437.8990378208228,
+        -25.79999766401477,
+        -706.3034434605831,
+        -705.8857910951511
+      ],
+      "current": [
+        -0.7584586525257523,
+        -0.0008586950178234826,
+        0.739958419032188,
+        0.7399399203029462,
+        2.4449406194160944e-19,
+        1.8040473820154137,
+        0.0006432876629341767,
+        0.0006432715809436282,
+        0.8343045177783284,
+        -0.0007806318343849837,
+        0.6726894718474428,
+        0.6726726548208594,
+        -425.34361233644256,
+        -25.79301942165942,
+        -712.3167649236325,
+        -711.8989622270431
+      ],
+      "strength": 0.62,
+      "effectsChecked": true,
+      "blur": 1,
+      "rays": 0.55,
+      "lines": 0.95,
+      "time": 14
+    }
+  },
+  "metrics": {
+    "full": {
+      "pixels": 1296000,
+      "offSceneVsCompChanged": 0,
+      "onSceneVsCompChanged": 358057,
+      "offOnSceneChanged": 0,
+      "onRepeatSceneOrCompChanged": 0,
+      "onNoLineSceneOrCompChanged": 0,
+      "newlyEligible": 340954,
+      "zeroTo255": 315590,
+      "repeatRgbChanged": 0,
+      "stableNewLineChangedAbove1": 218381,
+      "stableNewLineChangedAbove8": 194922,
+      "maxStableNewLineDelta": 138
+    },
+    "grass": {
+      "pixels": 9375,
+      "offSceneVsCompChanged": 0,
+      "onSceneVsCompChanged": 8992,
+      "offOnSceneChanged": 0,
+      "onRepeatSceneOrCompChanged": 0,
+      "onNoLineSceneOrCompChanged": 0,
+      "newlyEligible": 8797,
+      "zeroTo255": 8439,
+      "repeatRgbChanged": 0,
+      "stableNewLineChangedAbove1": 5359,
+      "stableNewLineChangedAbove8": 4897,
+      "maxStableNewLineDelta": 80
+    },
+    "flower": {
+      "pixels": 1089,
+      "offSceneVsCompChanged": 0,
+      "onSceneVsCompChanged": 875,
+      "offOnSceneChanged": 0,
+      "onRepeatSceneOrCompChanged": 0,
+      "onNoLineSceneOrCompChanged": 0,
+      "newlyEligible": 814,
+      "zeroTo255": 752,
+      "repeatRgbChanged": 0,
+      "stableNewLineChangedAbove1": 452,
+      "stableNewLineChangedAbove8": 399,
+      "maxStableNewLineDelta": 138
+    },
+    "lamp": {
+      "pixels": 608,
+      "offSceneVsCompChanged": 0,
+      "onSceneVsCompChanged": 129,
+      "offOnSceneChanged": 0,
+      "onRepeatSceneOrCompChanged": 0,
+      "onNoLineSceneOrCompChanged": 0,
+      "newlyEligible": 118,
+      "zeroTo255": 98,
+      "repeatRgbChanged": 0,
+      "stableNewLineChangedAbove1": 0,
+      "stableNewLineChangedAbove8": 0,
+      "maxStableNewLineDelta": 0
+    },
+    "facade": {
+      "pixels": 20250,
+      "offSceneVsCompChanged": 0,
+      "onSceneVsCompChanged": 129,
+      "offOnSceneChanged": 0,
+      "onRepeatSceneOrCompChanged": 0,
+      "onNoLineSceneOrCompChanged": 0,
+      "newlyEligible": 118,
+      "zeroTo255": 98,
+      "repeatRgbChanged": 0,
+      "stableNewLineChangedAbove1": 0,
+      "stableNewLineChangedAbove8": 0,
+      "maxStableNewLineDelta": 0
+    }
+  },
+  "cancelled": {
+    "checked": false,
+    "uToon": 0,
+    "uLnOn": 1,
+    "observedCompiledSources": 70,
+    "examples": [
+      {
+        "name": "env-ground",
+        "litStrength": "1.0000",
+        "rimStrength": "0.2000"
+      },
+      {
+        "name": "foliage-clumps",
+        "litStrength": "1.0000",
+        "rimStrength": "0.2000"
+      },
+      {
+        "name": "env-sway-tufts",
+        "litStrength": "1.0000",
+        "rimStrength": "0.2000"
+      }
+    ],
+    "installedBandChunk": true
+  },
+  "errors": [],
+  "assets": {
+    "scene-mask.png": {
+      "sha256": "9bfdcab9f2087959d825c61dbc98caae7c286774d8edc47181bb3b7ac28d3a39",
+      "bytes": 170342
+    },
+    "effects-off-mask.png": {
+      "sha256": "9bfdcab9f2087959d825c61dbc98caae7c286774d8edc47181bb3b7ac28d3a39",
+      "bytes": 170342
+    },
+    "effects-on-mask.png": {
+      "sha256": "515bcb7e8875a0ac5105ef7eac7ffbe1793dbbab23b193235b824d1bbcc6fb40",
+      "bytes": 28703
+    },
+    "ground-jog.jpg": {
+      "sha256": "d18c5111c0c3be6f6c208151cd0050f4f459bf340dadd2b82ee0618a462e57eb",
+      "bytes": 287181
+    },
+    "ground-mask-crops.png": {
+      "sha256": "07df5b151e4d6e055579273790428e7b38dbbff66465c687933005851ac892fb",
+      "bytes": 61023
+    }
+  },
+  "finished": "2026-11-18T07:37:08.298Z",
+  "processExit": 0,
+  "processSignal": null,
+  "processError": null,
+  "sourceBefore": {
+    "src/main.js": {
+      "disk": "6cfbc52c2bdb88d06b490c71b63b9543386f8186f619632c241ddef460e54916",
+      "git": "6cfbc52c2bdb88d06b490c71b63b9543386f8186f619632c241ddef460e54916"
+    },
+    "src/look.js": {
+      "disk": "bc395d9505bae5eed6dcb32e0976394afb9848c9b16d076c2d5e1abf99ba3625",
+      "git": "bc395d9505bae5eed6dcb32e0976394afb9848c9b16d076c2d5e1abf99ba3625"
+    },
+    "src/toon.js": {
+      "disk": "87d114e4968aa5164ef08cf1579c8b9170f6915a0f1cfff2009431bcc025231d",
+      "git": "87d114e4968aa5164ef08cf1579c8b9170f6915a0f1cfff2009431bcc025231d"
+    },
+    "src/toon.json": {
+      "disk": "1d4355ec734d0aa73af5b370c9885d3e641f8a5ccf52a36b4d7e9bc2a483c143",
+      "git": "1d4355ec734d0aa73af5b370c9885d3e641f8a5ccf52a36b4d7e9bc2a483c143"
+    },
+    "upstream/petalwake/src/core/pipeline.js": {
+      "disk": "0495e8d0ce275729e2a4d2fb4a15707635956ad308fcc591a6a2cf5260359085",
+      "git": "0495e8d0ce275729e2a4d2fb4a15707635956ad308fcc591a6a2cf5260359085"
+    }
+  },
+  "sourceAfter": {
+    "src/main.js": {
+      "disk": "6cfbc52c2bdb88d06b490c71b63b9543386f8186f619632c241ddef460e54916",
+      "git": "6cfbc52c2bdb88d06b490c71b63b9543386f8186f619632c241ddef460e54916"
+    },
+    "src/look.js": {
+      "disk": "bc395d9505bae5eed6dcb32e0976394afb9848c9b16d076c2d5e1abf99ba3625",
+      "git": "bc395d9505bae5eed6dcb32e0976394afb9848c9b16d076c2d5e1abf99ba3625"
+    },
+    "src/toon.js": {
+      "disk": "87d114e4968aa5164ef08cf1579c8b9170f6915a0f1cfff2009431bcc025231d",
+      "git": "87d114e4968aa5164ef08cf1579c8b9170f6915a0f1cfff2009431bcc025231d"
+    },
+    "src/toon.json": {
+      "disk": "1d4355ec734d0aa73af5b370c9885d3e641f8a5ccf52a36b4d7e9bc2a483c143",
+      "git": "1d4355ec734d0aa73af5b370c9885d3e641f8a5ccf52a36b4d7e9bc2a483c143"
+    },
+    "upstream/petalwake/src/core/pipeline.js": {
+      "disk": "0495e8d0ce275729e2a4d2fb4a15707635956ad308fcc591a6a2cf5260359085",
+      "git": "0495e8d0ce275729e2a4d2fb4a15707635956ad308fcc591a6a2cf5260359085"
+    }
+  },
+  "sourceHeadAfter": "e00875bd88109c6b3eb685bbb5aec8d01ef4bf5c"
+}
