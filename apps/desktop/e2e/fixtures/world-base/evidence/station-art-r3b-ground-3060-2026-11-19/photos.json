@@ -1,0 +1,384 @@
+{
+  "sources": [
+    "ffbcfa3e091bdb2d4a7cf94367d40868101c2ddc",
+    "38fd2506da335b6cd3092c6269e14f68278d6a79",
+    "eed4fb46eb7e78418fa319f6f24bdbfe654425a0"
+  ],
+  "timeOfDay": "evening",
+  "clock": 14,
+  "canvas": [
+    1440,
+    900
+  ],
+  "photos": {
+    "art-a-street": {
+      "baseSHA256": "2efcc31e9d7518259d3f050291bc8a6198e8db8001409725bb227c7c88f9bc6a",
+      "beforeBakeSHA256": "904610e176c8845acd781e7e1de3436cf97f1f048bf753ef8aab545eac557b16",
+      "finalSHA256": "9d25a225050c064e638a88df96bf3304e250f24294feb387849c785bbeb3f577",
+      "eye": [
+        278.8,
+        10.488,
+        936
+      ],
+      "quaternion": [
+        -0.003277842930440409,
+        -0.009834585659995631,
+        -3.223795934194156e-05,
+        0.9999462663720154
+      ],
+      "fov": 35.63777782904556,
+      "R3bToFinal": {
+        "pixels": 1296000,
+        "different": 468098,
+        "delta_gt8": 244781,
+        "delta_gt24": 147143,
+        "max": 233
+      },
+      "cubeOnly": {
+        "pixels": 1296000,
+        "different": 5088,
+        "delta_gt8": 0,
+        "delta_gt24": 0,
+        "max": 5
+      },
+      "reflectionROI": {
+        "bounds": [
+          512,
+          672,
+          1000,
+          852
+        ],
+        "R3bToFinal": {
+          "pixels": 87840,
+          "different": 56726,
+          "delta_gt8": 24595,
+          "delta_gt24": 1589,
+          "max": 51
+        },
+        "cubeOnly": {
+          "pixels": 87840,
+          "different": 17,
+          "delta_gt8": 0,
+          "delta_gt24": 0,
+          "max": 1
+        },
+        "r3b": {
+          "meanLuma": 81.30094336065574,
+          "nearWhite": 0
+        },
+        "final": {
+          "meanLuma": 84.8952154485428,
+          "nearWhite": 0
+        }
+      }
+    },
+    "art-b-konbini": {
+      "baseSHA256": "3c54b8e6b58e92c88b07ec7ec180f18c48d3169c1f1921b960faf00e220a7eaa",
+      "beforeBakeSHA256": "074863793f0de0556ebcfd15c9dc2c5a3cce2561d652f3467e4facd98f75e52a",
+      "finalSHA256": "e1629725fe7997282e3672b787d870d7b33ffae4390f0ec064876524134053ea",
+      "eye": [
+        279.1,
+        9.8184,
+        912.8
+      ],
+      "quaternion": [
+        0.013653878147403252,
+        0.5849950384089397,
+        -0.009850566433920587,
+        0.8108620986267578
+      ],
+      "fov": 58,
+      "R3bToFinal": {
+        "pixels": 1296000,
+        "different": 189155,
+        "delta_gt8": 28117,
+        "delta_gt24": 1343,
+        "max": 62
+      },
+      "cubeOnly": {
+        "pixels": 1296000,
+        "different": 5980,
+        "delta_gt8": 0,
+        "delta_gt24": 0,
+        "max": 4
+      },
+      "reflectionROI": {
+        "bounds": [
+          884,
+          400,
+          1324,
+          555
+        ],
+        "R3bToFinal": {
+          "pixels": 68200,
+          "different": 53201,
+          "delta_gt8": 14575,
+          "delta_gt24": 339,
+          "max": 57
+        },
+        "cubeOnly": {
+          "pixels": 68200,
+          "different": 3672,
+          "delta_gt8": 0,
+          "delta_gt24": 0,
+          "max": 3
+        },
+        "r3b": {
+          "meanLuma": 143.21818574193549,
+          "nearWhite": 0
+        },
+        "final": {
+          "meanLuma": 147.00206350439882,
+          "nearWhite": 1
+        }
+      }
+    },
+    "art-c-alley": {
+      "baseSHA256": "cad6923a1f0b726c8dec94e3cb2dc7ef408009f1f6500e51497e05f6dfc0f6b3",
+      "beforeBakeSHA256": "144d42507f59485436f81a6cb615aa467d45a02cb5eb36b72eec6c70fcdc1343",
+      "finalSHA256": "144d42507f59485436f81a6cb615aa467d45a02cb5eb36b72eec6c70fcdc1343",
+      "eye": [
+        287.65,
+        14.384808464050293,
+        767.3199999999999
+      ],
+      "quaternion": [
+        0.00512201791291099,
+        0.8012252009590126,
+        -0.006859231737600546,
+        0.5983016740914732
+      ],
+      "fov": 45,
+      "R3bToFinal": {
+        "pixels": 1296000,
+        "different": 81529,
+        "delta_gt8": 24010,
+        "delta_gt24": 23631,
+        "max": 232
+      },
+      "cubeOnly": {
+        "pixels": 1296000,
+        "different": 0,
+        "delta_gt8": 0,
+        "delta_gt24": 0,
+        "max": 0
+      }
+    },
+    "art-d-laundry": {
+      "baseSHA256": "239d42400a94bbda14db29e49845f0211a66c27d3bcef732c6e55f346d14bd46",
+      "beforeBakeSHA256": "a2266e02bc04f124c44d8273860ad865e1c2e29612bc4d94c049f752a23d5608",
+      "finalSHA256": "a2266e02bc04f124c44d8273860ad865e1c2e29612bc4d94c049f752a23d5608",
+      "eye": [
+        283.5,
+        12.520055181715234,
+        783.8
+      ],
+      "quaternion": [
+        0.1297258927986663,
+        0.0767626424061459,
+        -0.010073721024303532,
+        0.9885227410703001
+      ],
+      "fov": 48,
+      "R3bToFinal": {
+        "pixels": 1296000,
+        "different": 358518,
+        "delta_gt8": 165534,
+        "delta_gt24": 160747,
+        "max": 187
+      },
+      "cubeOnly": {
+        "pixels": 1296000,
+        "different": 0,
+        "delta_gt8": 0,
+        "delta_gt24": 0,
+        "max": 0
+      }
+    },
+    "sample-e-harbour": {
+      "baseSHA256": "9b0f5917d5d5a3bd0171f1a9fa864c6caf4580d97d9e5784b8803575f5174435",
+      "beforeBakeSHA256": "243ad279810d95106ca3406e8990ad60535e020ae1e7e2cb207c89d50c29f98b",
+      "finalSHA256": "afa739f3f705e02f8a71b55f26dd9aaee835caba058f57a4dba7f5d1b23ba498",
+      "eye": [
+        -49.3148,
+        6.0969,
+        1121.5
+      ],
+      "quaternion": [
+        0.014730707497095328,
+        -0.7342518484654964,
+        0.01594041117183272,
+        0.6785301265038345
+      ],
+      "fov": 57,
+      "R3bToFinal": {
+        "pixels": 1296000,
+        "different": 2898,
+        "delta_gt8": 1704,
+        "delta_gt24": 1102,
+        "max": 220
+      },
+      "cubeOnly": {
+        "pixels": 1296000,
+        "different": 5578,
+        "delta_gt8": 3922,
+        "delta_gt24": 3274,
+        "max": 225
+      }
+    },
+    "sample-f-hillside": {
+      "baseSHA256": "1414fb43cada5cb4c13222e1d3c8f29c8cdb302bb32a707f843b45fcd1207fcb",
+      "beforeBakeSHA256": "1414fb43cada5cb4c13222e1d3c8f29c8cdb302bb32a707f843b45fcd1207fcb",
+      "finalSHA256": "1414fb43cada5cb4c13222e1d3c8f29c8cdb302bb32a707f843b45fcd1207fcb",
+      "eye": [
+        1040.6682,
+        61.5086,
+        591.5865
+      ],
+      "quaternion": [
+        0.18707634146308863,
+        -0.10146136691099782,
+        0.019429882402105244,
+        0.9768984149640014
+      ],
+      "fov": 57,
+      "R3bToFinal": {
+        "pixels": 1296000,
+        "different": 0,
+        "delta_gt8": 0,
+        "delta_gt24": 0,
+        "max": 0
+      },
+      "cubeOnly": {
+        "pixels": 1296000,
+        "different": 0,
+        "delta_gt8": 0,
+        "delta_gt24": 0,
+        "max": 0
+      }
+    },
+    "sample-g-rail": {
+      "baseSHA256": "9e8da2c62c583f4e096444c79366756b870b998906c8b370bc1f22d5b864dfbb",
+      "beforeBakeSHA256": "309ab7f5a4d5d1701adf5e93b2a5889717d53afde8b37561069b57a29449e361",
+      "finalSHA256": "309ab7f5a4d5d1701adf5e93b2a5889717d53afde8b37561069b57a29449e361",
+      "eye": [
+        337.8563,
+        9.6,
+        844.5
+      ],
+      "quaternion": [
+        0.0042956255745017925,
+        0.7668403876967841,
+        -0.005132508643737493,
+        0.6418029485387173
+      ],
+      "fov": 57,
+      "R3bToFinal": {
+        "pixels": 1296000,
+        "different": 4271,
+        "delta_gt8": 2447,
+        "delta_gt24": 1706,
+        "max": 224
+      },
+      "cubeOnly": {
+        "pixels": 1296000,
+        "different": 0,
+        "delta_gt8": 0,
+        "delta_gt24": 0,
+        "max": 0
+      }
+    },
+    "sample-h-north": {
+      "baseSHA256": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546",
+      "beforeBakeSHA256": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546",
+      "finalSHA256": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546",
+      "eye": [
+        181.0601,
+        136.1623,
+        -1212.8685
+      ],
+      "quaternion": [
+        0.1033905527383131,
+        0.02096399872548667,
+        -0.002179647308778166,
+        0.9944174945662979
+      ],
+      "fov": 57,
+      "R3bToFinal": {
+        "pixels": 1296000,
+        "different": 0,
+        "delta_gt8": 0,
+        "delta_gt24": 0,
+        "max": 0
+      },
+      "cubeOnly": {
+        "pixels": 1296000,
+        "different": 0,
+        "delta_gt8": 0,
+        "delta_gt24": 0,
+        "max": 0
+      }
+    },
+    "return-a": {
+      "baseSHA256": "2efcc31e9d7518259d3f050291bc8a6198e8db8001409725bb227c7c88f9bc6a",
+      "beforeBakeSHA256": "904610e176c8845acd781e7e1de3436cf97f1f048bf753ef8aab545eac557b16",
+      "finalSHA256": "9d25a225050c064e638a88df96bf3304e250f24294feb387849c785bbeb3f577",
+      "eye": [
+        278.8,
+        10.488,
+        936
+      ],
+      "quaternion": [
+        -0.003277842930440409,
+        -0.009834585659995631,
+        -3.223795934194156e-05,
+        0.9999462663720154
+      ],
+      "fov": 35.63777782904556,
+      "R3bToFinal": {
+        "pixels": 1296000,
+        "different": 468098,
+        "delta_gt8": 244781,
+        "delta_gt24": 147143,
+        "max": 233
+      },
+      "cubeOnly": {
+        "pixels": 1296000,
+        "different": 5088,
+        "delta_gt8": 0,
+        "delta_gt24": 0,
+        "max": 5
+      }
+    }
+  },
+  "assetNetwork": [
+    {
+      "pathname": "/mature-sakura/mature-sakura.glb",
+      "bytes": 1902104,
+      "status": 200,
+      "sha256": "7d0e715719b1e8a8591ab91daeddf28882070f9015cb5a76bf2ec70cf6620cd9"
+    },
+    {
+      "pathname": "/station-art/station-exchange.glb",
+      "bytes": 79160,
+      "status": 200,
+      "sha256": "03584bb83631b49b118727b9b37a2a021dee693365263acecef24e56b9621a78"
+    },
+    {
+      "pathname": "/station-art/alley-workshop.glb",
+      "bytes": 70344,
+      "status": 200,
+      "sha256": "b8286aa8f9cc5c735d7d847bcc4c1b8b71f31a6ca049aabb531e68c3252c8fc2"
+    },
+    {
+      "pathname": "/station-art/laundry-infill.glb",
+      "bytes": 60052,
+      "status": 200,
+      "sha256": "d945d0756f402227ae329d1408707a428c120646aa3bac73c927821d98183be6"
+    }
+  ],
+  "nativePhotoDriverExit": 0,
+  "nativeGL": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "exceptions": 0,
+  "cdpCanceled": 4
+}
