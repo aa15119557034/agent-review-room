@@ -1,0 +1,1 @@
+const p=require('path'),cp=require('child_process'),fs=require('fs');const [fixture,exe,file]=process.argv.slice(2);const f=cp.spawnSync(process.execPath,[p.join(__dirname,'probe-cpu.cjs'),exe,p.resolve(file)],{cwd:fixture,env:{...process.env,WORLD_FIXTURE:fixture},stdio:'inherit',windowsHide:true});if(f.error)throw f.error;process.exit(f.status??1);

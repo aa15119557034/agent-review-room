@@ -1,0 +1,1846 @@
+{
+  "source": "21154f79fc8c1fb1bc27735b203a9fa0b6db3b1a",
+  "ground": "on",
+  "startedAt": "2026-11-18T17:20:17.704Z",
+  "photos": {
+    "art-a-street": {
+      "absolute": false,
+      "stationGround": 8.868,
+      "plan": {
+        "source": "baked",
+        "rays": 0,
+        "fingerprint": "1061:2667664:298285.6:949273.1",
+        "items": 26
+      },
+      "streetReflection": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 15,
+        "cube": [
+          {
+            "path": "/src/street-env-evening/px.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/nx.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/py.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/ny.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/pz.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/nz.png",
+            "width": 256,
+            "height": 256
+          }
+        ]
+      },
+      "groundArt": {
+        "drifts": {
+          "before": 38116337,
+          "after": 16031177,
+          "ratio": 0.420585456572073
+        }
+      },
+      "water": {
+        "seconds": 14,
+        "sea": 0.8236869288321229,
+        "surge": 0.06163564814814816,
+        "probe": [
+          0,
+          1320
+        ],
+        "bed": -21.538521766662598,
+        "openWaterHeight": 0.41324728721874
+      },
+      "weather": {
+        "seconds": 14,
+        "phase": "海上低云",
+        "cover": 0.3243981481481482,
+        "rain": 0,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 0,
+        "windSpeed": 4.160094915508534,
+        "pressure": 1014.5046296296297,
+        "temperature": 19,
+        "dewPoint": 14.871527777777779,
+        "wind": 1.1184109152834814,
+        "sea": 0.8236869288321229,
+        "surge": 0.06163564814814816
+      },
+      "cloudFlow": [
+        26.061631944444446,
+        35.42372685185185,
+        0.3243981481481482,
+        0.0091
+      ],
+      "wetRoad": 0,
+      "groundFog": 0,
+      "view": {
+        "name": "art-a-street",
+        "label": "A · 01 站前主街",
+        "fov": 35.63777782904556,
+        "position": [
+          278.8,
+          10.488,
+          936
+        ],
+        "target": [
+          280,
+          10.088000000000001,
+          875
+        ]
+      },
+      "current": "art-a-street",
+      "eye": [
+        278.8,
+        10.488,
+        936
+      ],
+      "quaternion": [
+        -0.003277842930440409,
+        -0.009834585659995631,
+        -0.00003223795934194156,
+        0.9999462663720154
+      ],
+      "fov": 35.63777782904556,
+      "ground": 8.868,
+      "eyeHeight": 1.6199999999999992,
+      "time": 14,
+      "islandTime": 14,
+      "timeOfDay": "evening",
+      "buttonActive": true,
+      "hidden": true,
+      "canvas": [
+        1440,
+        900
+      ],
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "errors": [],
+      "file": "art-a-street.png",
+      "hashes": [
+        "6f7352b9e6e4870c051952b90cef5cedc669bc44b27825efbfeb06f0fd68ea1c",
+        "6f7352b9e6e4870c051952b90cef5cedc669bc44b27825efbfeb06f0fd68ea1c",
+        "6f7352b9e6e4870c051952b90cef5cedc669bc44b27825efbfeb06f0fd68ea1c"
+      ],
+      "captureSHA256": "6f7352b9e6e4870c051952b90cef5cedc669bc44b27825efbfeb06f0fd68ea1c"
+    },
+    "art-b-konbini": {
+      "absolute": false,
+      "stationGround": 8.218399999999999,
+      "plan": {
+        "source": "baked",
+        "rays": 0,
+        "fingerprint": "1061:2667664:298285.6:949273.1",
+        "items": 26
+      },
+      "streetReflection": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 15,
+        "cube": [
+          {
+            "path": "/src/street-env-evening/px.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/nx.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/py.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/ny.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/pz.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/nz.png",
+            "width": 256,
+            "height": 256
+          }
+        ]
+      },
+      "groundArt": {
+        "drifts": {
+          "before": 38116337,
+          "after": 16031177,
+          "ratio": 0.420585456572073
+        }
+      },
+      "water": {
+        "seconds": 14,
+        "sea": 0.8236869288321229,
+        "surge": 0.06163564814814816,
+        "probe": [
+          0,
+          1320
+        ],
+        "bed": -21.538521766662598,
+        "openWaterHeight": 0.41324728721874
+      },
+      "weather": {
+        "seconds": 14,
+        "phase": "海上低云",
+        "cover": 0.3243981481481482,
+        "rain": 0,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 0,
+        "windSpeed": 4.160094915508534,
+        "pressure": 1014.5046296296297,
+        "temperature": 19,
+        "dewPoint": 14.871527777777779,
+        "wind": 1.1184109152834814,
+        "sea": 0.8236869288321229,
+        "surge": 0.06163564814814816
+      },
+      "cloudFlow": [
+        26.061631944444446,
+        35.42372685185185,
+        0.3243981481481482,
+        0.0091
+      ],
+      "wetRoad": 0,
+      "groundFog": 0,
+      "view": {
+        "name": "art-b-konbini",
+        "label": "B · 21 便利店正面",
+        "fov": 58,
+        "position": [
+          279.1,
+          9.8184,
+          912.8
+        ],
+        "target": [
+          272.48,
+          10.0534,
+          910.6
+        ]
+      },
+      "current": "art-b-konbini",
+      "eye": [
+        279.1,
+        9.8184,
+        912.8
+      ],
+      "quaternion": [
+        0.013653878147403252,
+        0.5849950384089397,
+        -0.009850566433920587,
+        0.8108620986267578
+      ],
+      "fov": 58,
+      "ground": 8.218399999999999,
+      "eyeHeight": 1.6000000000000014,
+      "time": 14,
+      "islandTime": 14,
+      "timeOfDay": "evening",
+      "buttonActive": true,
+      "hidden": true,
+      "canvas": [
+        1440,
+        900
+      ],
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "errors": [],
+      "file": "art-b-konbini.png",
+      "hashes": [
+        "7f7cb8d013885ffd86192028d929a6f44a2d5137b76e8f8de57a5ac6c0fe8ce2",
+        "7f7cb8d013885ffd86192028d929a6f44a2d5137b76e8f8de57a5ac6c0fe8ce2",
+        "7f7cb8d013885ffd86192028d929a6f44a2d5137b76e8f8de57a5ac6c0fe8ce2"
+      ],
+      "captureSHA256": "7f7cb8d013885ffd86192028d929a6f44a2d5137b76e8f8de57a5ac6c0fe8ce2"
+    },
+    "art-c-alley": {
+      "absolute": false,
+      "stationGround": 8.873600000000001,
+      "plan": {
+        "source": "baked",
+        "rays": 0,
+        "fingerprint": "1061:2667664:298285.6:949273.1",
+        "items": 26
+      },
+      "streetReflection": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 15,
+        "cube": [
+          {
+            "path": "/src/street-env-evening/px.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/nx.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/py.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/ny.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/pz.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/nz.png",
+            "width": 256,
+            "height": 256
+          }
+        ]
+      },
+      "groundArt": {
+        "drifts": {
+          "before": 38116337,
+          "after": 16031177,
+          "ratio": 0.420585456572073
+        }
+      },
+      "water": {
+        "seconds": 14,
+        "sea": 0.8236869288321229,
+        "surge": 0.06163564814814816,
+        "probe": [
+          0,
+          1320
+        ],
+        "bed": -21.538521766662598,
+        "openWaterHeight": 0.41324728721874
+      },
+      "weather": {
+        "seconds": 14,
+        "phase": "海上低云",
+        "cover": 0.3243981481481482,
+        "rain": 0,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 0,
+        "windSpeed": 4.160094915508534,
+        "pressure": 1014.5046296296297,
+        "temperature": 19,
+        "dewPoint": 14.871527777777779,
+        "wind": 1.1184109152834814,
+        "sea": 0.8236869288321229,
+        "surge": 0.06163564814814816
+      },
+      "cloudFlow": [
+        26.061631944444446,
+        35.42372685185185,
+        0.3243981481481482,
+        0.0091
+      ],
+      "wetRoad": 0,
+      "groundFog": 0,
+      "view": {
+        "name": "art-c-alley",
+        "label": "C · 20 公寓后巷",
+        "fov": 45,
+        "position": [
+          287.65,
+          14.384808464050293,
+          767.3199999999999
+        ],
+        "target": [
+          278.4,
+          14.55,
+          770.06
+        ]
+      },
+      "current": "art-c-alley",
+      "eye": [
+        287.65,
+        14.384808464050293,
+        767.3199999999999
+      ],
+      "quaternion": [
+        0.00512201791291099,
+        0.8012252009590126,
+        -0.006859231737600546,
+        0.5983016740914732
+      ],
+      "fov": 45,
+      "time": 14,
+      "islandTime": 14,
+      "timeOfDay": "evening",
+      "buttonActive": true,
+      "hidden": true,
+      "canvas": [
+        1440,
+        900
+      ],
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "errors": [],
+      "file": "art-c-alley.png",
+      "hashes": [
+        "e167afb2a8a03db84df66d25ac66621372635127f8a9d3bdcfca19935424700d",
+        "e167afb2a8a03db84df66d25ac66621372635127f8a9d3bdcfca19935424700d",
+        "e167afb2a8a03db84df66d25ac66621372635127f8a9d3bdcfca19935424700d"
+      ],
+      "captureSHA256": "e167afb2a8a03db84df66d25ac66621372635127f8a9d3bdcfca19935424700d",
+      "stationExtrapolationOutsideBounds": {
+        "ground": 8.873600000000001,
+        "eyeMinusExtrapolatedGround": 5.511208464050291
+      },
+      "surfaceCheck": "Independent downward ray / geometry validation in geometry; these lots are outside the station physics bounds."
+    },
+    "art-d-laundry": {
+      "absolute": false,
+      "stationGround": 6.822933333333344,
+      "plan": {
+        "source": "baked",
+        "rays": 0,
+        "fingerprint": "1061:2667664:298285.6:949273.1",
+        "items": 26
+      },
+      "streetReflection": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 15,
+        "cube": [
+          {
+            "path": "/src/street-env-evening/px.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/nx.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/py.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/ny.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/pz.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/nz.png",
+            "width": 256,
+            "height": 256
+          }
+        ]
+      },
+      "groundArt": {
+        "drifts": {
+          "before": 38116337,
+          "after": 16031177,
+          "ratio": 0.420585456572073
+        }
+      },
+      "water": {
+        "seconds": 14,
+        "sea": 0.8236869288321229,
+        "surge": 0.06163564814814816,
+        "probe": [
+          0,
+          1320
+        ],
+        "bed": -21.538521766662598,
+        "openWaterHeight": 0.41324728721874
+      },
+      "weather": {
+        "seconds": 14,
+        "phase": "海上低云",
+        "cover": 0.3243981481481482,
+        "rain": 0,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 0,
+        "windSpeed": 4.160094915508534,
+        "pressure": 1014.5046296296297,
+        "temperature": 19,
+        "dewPoint": 14.871527777777779,
+        "wind": 1.1184109152834814,
+        "sea": 0.8236869288321229,
+        "surge": 0.06163564814814816
+      },
+      "cloudFlow": [
+        26.061631944444446,
+        35.42372685185185,
+        0.3243981481481482,
+        0.0091
+      ],
+      "wetRoad": 0,
+      "groundFog": 0,
+      "view": {
+        "name": "art-d-laundry",
+        "label": "D · 24 洗衣店",
+        "fov": 48,
+        "position": [
+          283.5,
+          12.520055181715234,
+          783.8
+        ],
+        "target": [
+          282.5,
+          14.25,
+          777.4
+        ]
+      },
+      "current": "art-d-laundry",
+      "eye": [
+        283.5,
+        12.520055181715234,
+        783.8
+      ],
+      "quaternion": [
+        0.1297258927986663,
+        0.0767626424061459,
+        -0.010073721024303532,
+        0.9885227410703001
+      ],
+      "fov": 48,
+      "time": 14,
+      "islandTime": 14,
+      "timeOfDay": "evening",
+      "buttonActive": true,
+      "hidden": true,
+      "canvas": [
+        1440,
+        900
+      ],
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "errors": [],
+      "file": "art-d-laundry.png",
+      "hashes": [
+        "e81fd0562f361aa415f4a107cddaf29bf8b02340f3679ed505c027e8080f1404",
+        "e81fd0562f361aa415f4a107cddaf29bf8b02340f3679ed505c027e8080f1404",
+        "e81fd0562f361aa415f4a107cddaf29bf8b02340f3679ed505c027e8080f1404"
+      ],
+      "captureSHA256": "e81fd0562f361aa415f4a107cddaf29bf8b02340f3679ed505c027e8080f1404",
+      "stationExtrapolationOutsideBounds": {
+        "ground": 6.822933333333344,
+        "eyeMinusExtrapolatedGround": 5.69712184838189
+      },
+      "surfaceCheck": "Independent downward ray / geometry validation in geometry; these lots are outside the station physics bounds."
+    },
+    "sample-e-harbour": {
+      "absolute": false,
+      "stationGround": 14.062000000000001,
+      "plan": {
+        "source": "baked",
+        "rays": 0,
+        "fingerprint": "1061:2667664:298285.6:949273.1",
+        "items": 26
+      },
+      "streetReflection": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 15,
+        "cube": [
+          {
+            "path": "/src/street-env-evening/px.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/nx.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/py.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/ny.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/pz.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/nz.png",
+            "width": 256,
+            "height": 256
+          }
+        ]
+      },
+      "groundArt": {
+        "drifts": {
+          "before": 38116337,
+          "after": 16031177,
+          "ratio": 0.420585456572073
+        }
+      },
+      "water": {
+        "seconds": 14,
+        "sea": 0.8236869288321229,
+        "surge": 0.06163564814814816,
+        "probe": [
+          0,
+          1320
+        ],
+        "bed": -21.538521766662598,
+        "openWaterHeight": 0.41324728721874
+      },
+      "weather": {
+        "seconds": 14,
+        "phase": "海上低云",
+        "cover": 0.3243981481481482,
+        "rain": 0,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 0,
+        "windSpeed": 4.160094915508534,
+        "pressure": 1014.5046296296297,
+        "temperature": 19,
+        "dewPoint": 14.871527777777779,
+        "wind": 1.1184109152834814,
+        "sea": 0.8236869288321229,
+        "surge": 0.06163564814814816
+      },
+      "cloudFlow": [
+        26.061631944444446,
+        35.42372685185185,
+        0.3243981481481482,
+        0.0091
+      ],
+      "wetRoad": 0,
+      "groundFog": 0,
+      "view": {
+        "name": "sample-e-harbour",
+        "label": "E · 拉克港码头",
+        "fov": 57,
+        "position": [
+          -49.3148,
+          6.0969,
+          1121.5
+        ],
+        "target": [
+          -24,
+          7.2,
+          1123.5
+        ]
+      },
+      "current": "sample-e-harbour",
+      "eye": [
+        -49.3148,
+        6.0969,
+        1121.5
+      ],
+      "quaternion": [
+        0.014730707497095328,
+        -0.7342518484654964,
+        0.01594041117183272,
+        0.6785301265038345
+      ],
+      "fov": 57,
+      "ground": 4.496910095214844,
+      "eyeHeight": 1.599989904785156,
+      "time": 14,
+      "islandTime": 14,
+      "timeOfDay": "evening",
+      "buttonActive": true,
+      "hidden": true,
+      "canvas": [
+        1440,
+        900
+      ],
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "errors": [],
+      "file": "sample-e-harbour.png",
+      "hashes": [
+        "62572cb5187a3104310bc313faa99a34416ff7158017c7c10c62ed5384a8b78e",
+        "62572cb5187a3104310bc313faa99a34416ff7158017c7c10c62ed5384a8b78e",
+        "62572cb5187a3104310bc313faa99a34416ff7158017c7c10c62ed5384a8b78e"
+      ],
+      "captureSHA256": "62572cb5187a3104310bc313faa99a34416ff7158017c7c10c62ed5384a8b78e"
+    },
+    "sample-f-hillside": {
+      "absolute": false,
+      "stationGround": 12.38827,
+      "plan": {
+        "source": "baked",
+        "rays": 0,
+        "fingerprint": "1061:2667664:298285.6:949273.1",
+        "items": 26
+      },
+      "streetReflection": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 15,
+        "cube": [
+          {
+            "path": "/src/street-env-evening/px.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/nx.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/py.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/ny.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/pz.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/nz.png",
+            "width": 256,
+            "height": 256
+          }
+        ]
+      },
+      "groundArt": {
+        "drifts": {
+          "before": 38116337,
+          "after": 16031177,
+          "ratio": 0.420585456572073
+        }
+      },
+      "water": {
+        "seconds": 14,
+        "sea": 0.8236869288321229,
+        "surge": 0.06163564814814816,
+        "probe": [
+          0,
+          1320
+        ],
+        "bed": -21.538521766662598,
+        "openWaterHeight": 0.41324728721874
+      },
+      "weather": {
+        "seconds": 14,
+        "phase": "海上低云",
+        "cover": 0.3243981481481482,
+        "rain": 0,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 0,
+        "windSpeed": 4.160094915508534,
+        "pressure": 1014.5046296296297,
+        "temperature": 19,
+        "dewPoint": 14.871527777777779,
+        "wind": 1.1184109152834814,
+        "sea": 0.8236869288321229,
+        "surge": 0.06163564814814816
+      },
+      "cloudFlow": [
+        26.061631944444446,
+        35.42372685185185,
+        0.3243981481481482,
+        0.0091
+      ],
+      "wetRoad": 0,
+      "groundFog": 0,
+      "view": {
+        "name": "sample-f-hillside",
+        "label": "F · 东部山麓草坡",
+        "fov": 57,
+        "position": [
+          1040.6682,
+          47.72941688707416,
+          591.5865
+        ],
+        "target": [
+          1062,
+          88.99911688707417,
+          490
+        ]
+      },
+      "current": "sample-f-hillside",
+      "eye": [
+        1040.6682,
+        47.72941688707416,
+        591.5865
+      ],
+      "quaternion": [
+        0.18707634146308869,
+        -0.10146136691099782,
+        0.019429882402105247,
+        0.9768984149640014
+      ],
+      "fov": 57,
+      "ground": 46.12941688707416,
+      "eyeHeight": 1.6000000000000014,
+      "time": 14,
+      "islandTime": 14,
+      "timeOfDay": "evening",
+      "buttonActive": true,
+      "hidden": true,
+      "canvas": [
+        1440,
+        900
+      ],
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "errors": [],
+      "file": "../joint-r3-ground-3060-2026-11-18/sample-f-hillside.png",
+      "hashes": [
+        "1b8c797c2469cbd41e86f7472acd9943da7cc120611e893c6478c15ffbd44534",
+        "1b8c797c2469cbd41e86f7472acd9943da7cc120611e893c6478c15ffbd44534",
+        "1b8c797c2469cbd41e86f7472acd9943da7cc120611e893c6478c15ffbd44534"
+      ],
+      "captureSHA256": "1b8c797c2469cbd41e86f7472acd9943da7cc120611e893c6478c15ffbd44534",
+      "reusedIdenticalFile": true
+    },
+    "sample-g-rail": {
+      "absolute": false,
+      "stationGround": 8,
+      "plan": {
+        "source": "baked",
+        "rays": 0,
+        "fingerprint": "1061:2667664:298285.6:949273.1",
+        "items": 26
+      },
+      "streetReflection": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 15,
+        "cube": [
+          {
+            "path": "/src/street-env-evening/px.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/nx.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/py.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/ny.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/pz.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/nz.png",
+            "width": 256,
+            "height": 256
+          }
+        ]
+      },
+      "groundArt": {
+        "drifts": {
+          "before": 38116337,
+          "after": 16031177,
+          "ratio": 0.420585456572073
+        }
+      },
+      "water": {
+        "seconds": 14,
+        "sea": 0.8236869288321229,
+        "surge": 0.06163564814814816,
+        "probe": [
+          0,
+          1320
+        ],
+        "bed": -21.538521766662598,
+        "openWaterHeight": 0.41324728721874
+      },
+      "weather": {
+        "seconds": 14,
+        "phase": "海上低云",
+        "cover": 0.3243981481481482,
+        "rain": 0,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 0,
+        "windSpeed": 4.160094915508534,
+        "pressure": 1014.5046296296297,
+        "temperature": 19,
+        "dewPoint": 14.871527777777779,
+        "wind": 1.1184109152834814,
+        "sea": 0.8236869288321229,
+        "surge": 0.06163564814814816
+      },
+      "cloudFlow": [
+        26.061631944444446,
+        35.42372685185185,
+        0.3243981481481482,
+        0.0091
+      ],
+      "wetRoad": 0,
+      "groundFog": 0,
+      "view": {
+        "name": "sample-g-rail",
+        "label": "G · 铁路北侧小路",
+        "fov": 57,
+        "position": [
+          337.8563,
+          9.6,
+          844.5
+        ],
+        "target": [
+          268,
+          10.55,
+          857
+        ]
+      },
+      "current": "sample-g-rail",
+      "eye": [
+        337.8563,
+        9.6,
+        844.5
+      ],
+      "quaternion": [
+        0.0042956255745017925,
+        0.7668403876967841,
+        -0.005132508643737493,
+        0.6418029485387173
+      ],
+      "fov": 57,
+      "ground": 8,
+      "eyeHeight": 1.5999999999999996,
+      "time": 14,
+      "islandTime": 14,
+      "timeOfDay": "evening",
+      "buttonActive": true,
+      "hidden": true,
+      "canvas": [
+        1440,
+        900
+      ],
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "errors": [],
+      "file": "sample-g-rail.png",
+      "hashes": [
+        "588fbd39862ca0065d57baa3bfe3f879367fd1d95526fd60c7d786721883fdf4",
+        "588fbd39862ca0065d57baa3bfe3f879367fd1d95526fd60c7d786721883fdf4",
+        "588fbd39862ca0065d57baa3bfe3f879367fd1d95526fd60c7d786721883fdf4"
+      ],
+      "captureSHA256": "588fbd39862ca0065d57baa3bfe3f879367fd1d95526fd60c7d786721883fdf4"
+    },
+    "sample-h-north": {
+      "absolute": false,
+      "stationGround": 48.47737,
+      "plan": {
+        "source": "baked",
+        "rays": 0,
+        "fingerprint": "1061:2667664:298285.6:949273.1",
+        "items": 26
+      },
+      "streetReflection": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 15,
+        "cube": [
+          {
+            "path": "/src/street-env-evening/px.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/nx.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/py.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/ny.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/pz.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/nz.png",
+            "width": 256,
+            "height": 256
+          }
+        ]
+      },
+      "groundArt": {
+        "drifts": {
+          "before": 38116337,
+          "after": 16031177,
+          "ratio": 0.420585456572073
+        }
+      },
+      "water": {
+        "seconds": 14,
+        "sea": 0.8236869288321229,
+        "surge": 0.06163564814814816,
+        "probe": [
+          0,
+          1320
+        ],
+        "bed": -21.538521766662598,
+        "openWaterHeight": 0.41324728721874
+      },
+      "weather": {
+        "seconds": 14,
+        "phase": "海上低云",
+        "cover": 0.3243981481481482,
+        "rain": 0,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 0,
+        "windSpeed": 4.160094915508534,
+        "pressure": 1014.5046296296297,
+        "temperature": 19,
+        "dewPoint": 14.871527777777779,
+        "wind": 1.1184109152834814,
+        "sea": 0.8236869288321229,
+        "surge": 0.06163564814814816
+      },
+      "cloudFlow": [
+        26.061631944444446,
+        35.42372685185185,
+        0.3243981481481482,
+        0.0091
+      ],
+      "wetRoad": 0,
+      "groundFog": 0,
+      "view": {
+        "name": "sample-h-north",
+        "label": "H · 北端村道",
+        "fov": 57,
+        "position": [
+          181.0601,
+          136.1623,
+          -1212.8685
+        ],
+        "target": [
+          180,
+          141.45,
+          -1238
+        ]
+      },
+      "current": "sample-h-north",
+      "eye": [
+        181.0601,
+        136.1623,
+        -1212.8685
+      ],
+      "quaternion": [
+        0.1033905527383131,
+        0.02096399872548667,
+        -0.002179647308778166,
+        0.9944174945662979
+      ],
+      "fov": 57,
+      "ground": 134.5623427734375,
+      "eyeHeight": 1.5999572265624806,
+      "time": 14,
+      "islandTime": 14,
+      "timeOfDay": "evening",
+      "buttonActive": true,
+      "hidden": true,
+      "canvas": [
+        1440,
+        900
+      ],
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "errors": [],
+      "file": "../joint-r3-ground-3060-2026-11-18/sample-h-north.png",
+      "hashes": [
+        "40427afb0f8ee274e0722b3a5cec133abea8f0d2a9e1de5b096ceab9628ee7dc",
+        "40427afb0f8ee274e0722b3a5cec133abea8f0d2a9e1de5b096ceab9628ee7dc",
+        "40427afb0f8ee274e0722b3a5cec133abea8f0d2a9e1de5b096ceab9628ee7dc"
+      ],
+      "captureSHA256": "40427afb0f8ee274e0722b3a5cec133abea8f0d2a9e1de5b096ceab9628ee7dc",
+      "reusedIdenticalFile": true
+    },
+    "return-a": {
+      "absolute": false,
+      "stationGround": 8.868,
+      "plan": {
+        "source": "baked",
+        "rays": 0,
+        "fingerprint": "1061:2667664:298285.6:949273.1",
+        "items": 26
+      },
+      "streetReflection": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 15,
+        "cube": [
+          {
+            "path": "/src/street-env-evening/px.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/nx.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/py.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/ny.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/pz.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/nz.png",
+            "width": 256,
+            "height": 256
+          }
+        ]
+      },
+      "groundArt": {
+        "drifts": {
+          "before": 38116337,
+          "after": 16031177,
+          "ratio": 0.420585456572073
+        }
+      },
+      "water": {
+        "seconds": 14,
+        "sea": 0.8236869288321229,
+        "surge": 0.06163564814814816,
+        "probe": [
+          0,
+          1320
+        ],
+        "bed": -21.538521766662598,
+        "openWaterHeight": 0.41324728721874
+      },
+      "weather": {
+        "seconds": 14,
+        "phase": "海上低云",
+        "cover": 0.3243981481481482,
+        "rain": 0,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 0,
+        "windSpeed": 4.160094915508534,
+        "pressure": 1014.5046296296297,
+        "temperature": 19,
+        "dewPoint": 14.871527777777779,
+        "wind": 1.1184109152834814,
+        "sea": 0.8236869288321229,
+        "surge": 0.06163564814814816
+      },
+      "cloudFlow": [
+        26.061631944444446,
+        35.42372685185185,
+        0.3243981481481482,
+        0.0091
+      ],
+      "wetRoad": 0,
+      "groundFog": 0,
+      "view": {
+        "name": "art-a-street",
+        "label": "A · 01 站前主街",
+        "fov": 35.63777782904556,
+        "position": [
+          278.8,
+          10.488,
+          936
+        ],
+        "target": [
+          280,
+          10.088000000000001,
+          875
+        ]
+      },
+      "current": "art-a-street",
+      "eye": [
+        278.8,
+        10.488,
+        936
+      ],
+      "quaternion": [
+        -0.003277842930440409,
+        -0.009834585659995631,
+        -0.00003223795934194156,
+        0.9999462663720154
+      ],
+      "fov": 35.63777782904556,
+      "ground": 8.868,
+      "eyeHeight": 1.6199999999999992,
+      "time": 14,
+      "islandTime": 14,
+      "timeOfDay": "evening",
+      "buttonActive": true,
+      "hidden": true,
+      "canvas": [
+        1440,
+        900
+      ],
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "errors": [],
+      "file": "art-a-street.png",
+      "hashes": [
+        "6f7352b9e6e4870c051952b90cef5cedc669bc44b27825efbfeb06f0fd68ea1c",
+        "6f7352b9e6e4870c051952b90cef5cedc669bc44b27825efbfeb06f0fd68ea1c",
+        "6f7352b9e6e4870c051952b90cef5cedc669bc44b27825efbfeb06f0fd68ea1c"
+      ],
+      "captureSHA256": "6f7352b9e6e4870c051952b90cef5cedc669bc44b27825efbfeb06f0fd68ea1c",
+      "reusedIdenticalFile": true
+    },
+    "storm-e": {
+      "absolute": false,
+      "stationGround": 14.062000000000001,
+      "plan": {
+        "source": "baked",
+        "rays": 0,
+        "fingerprint": "1061:2667664:298285.6:949273.1",
+        "items": 26
+      },
+      "streetReflection": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 15,
+        "cube": [
+          {
+            "path": "/src/street-env-evening/px.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/nx.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/py.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/ny.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/pz.png",
+            "width": 256,
+            "height": 256
+          },
+          {
+            "path": "/src/street-env-evening/nz.png",
+            "width": 256,
+            "height": 256
+          }
+        ]
+      },
+      "groundArt": {
+        "drifts": {
+          "before": 38116337,
+          "after": 16031177,
+          "ratio": 0.420585456572073
+        }
+      },
+      "water": {
+        "seconds": 54,
+        "sea": 1.144608749538461,
+        "surge": 0.19,
+        "probe": [
+          0,
+          1320
+        ],
+        "bed": -21.538521766662598,
+        "openWaterHeight": 0.8219835288006905
+      },
+      "weather": {
+        "seconds": 54,
+        "phase": "锋面阵雨",
+        "cover": 1,
+        "rain": 1,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 1,
+        "windSpeed": 8.556284240252891,
+        "pressure": 1007,
+        "temperature": 16,
+        "dewPoint": 15.9,
+        "wind": 1.6239726876290825,
+        "sea": 1.144608749538461,
+        "surge": 0.19
+      },
+      "cloudFlow": [
+        196.5,
+        249.85,
+        1,
+        0.0351
+      ],
+      "wetRoad": 1,
+      "groundFog": 0,
+      "view": {
+        "name": "sample-e-harbour",
+        "label": "E · 拉克港码头",
+        "fov": 57,
+        "position": [
+          -49.3148,
+          6.0969,
+          1121.5
+        ],
+        "target": [
+          -24,
+          7.2,
+          1123.5
+        ]
+      },
+      "current": "sample-e-harbour",
+      "eye": [
+        -49.3148,
+        6.0969,
+        1121.5
+      ],
+      "quaternion": [
+        0.014730707497095328,
+        -0.7342518484654964,
+        0.01594041117183272,
+        0.6785301265038345
+      ],
+      "fov": 57,
+      "ground": 4.496910095214844,
+      "eyeHeight": 1.599989904785156,
+      "time": 54,
+      "islandTime": 54,
+      "timeOfDay": "evening",
+      "buttonActive": true,
+      "hidden": true,
+      "canvas": [
+        1440,
+        900
+      ],
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "errors": [],
+      "file": "storm-e.png",
+      "hashes": [
+        "1401e4a8b3feb058b62bf0effdb3840d1596dcdc5853f973f519963978854721",
+        "1401e4a8b3feb058b62bf0effdb3840d1596dcdc5853f973f519963978854721",
+        "1401e4a8b3feb058b62bf0effdb3840d1596dcdc5853f973f519963978854721"
+      ],
+      "captureSHA256": "1401e4a8b3feb058b62bf0effdb3840d1596dcdc5853f973f519963978854721"
+    }
+  },
+  "exceptions": [],
+  "networkFailures": [
+    {
+      "url": "/assets/models/menhir.glb",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "url": "/mature-sakura/mature-sakura.glb",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "url": "/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    }
+  ],
+  "liveShore": [
+    {
+      "eye": [
+        656.2764394045487,
+        142.80404512034525,
+        -940.6795630254011
+      ],
+      "eyeHeight": 2.1500000000000057,
+      "quaternion": [
+        0.010101062926708376,
+        0.9557149939467164,
+        0.033031363576657605,
+        -0.2922597267730279
+      ],
+      "view": "tarn",
+      "lakeReflection": {
+        "captures": 1,
+        "on": 1,
+        "linked": true,
+        "width": 640,
+        "height": 400
+      },
+      "weather": {
+        "seconds": 48.0509,
+        "phase": "锋面阵雨",
+        "cover": 1,
+        "rain": 0.943889519811085,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 0.7306696950932081,
+        "windSpeed": 8.615653964930873,
+        "pressure": 1007.5611048018891,
+        "temperature": 16.56110480188915,
+        "dewPoint": 16.34888384151132,
+        "wind": 1.6308002059670503,
+        "sea": 1.1489427394399536,
+        "surge": 0.19
+      },
+      "waterTime": 50.0429,
+      "sea": 1.1489427394399536,
+      "cloudFlow": [
+        161.56712181882017,
+        212.6718145447098,
+        1,
+        0.031233084999999997
+      ],
+      "lakePoint": [
+        735,
+        -824
+      ],
+      "lakeSurface": 137.97910115284853,
+      "lakeRain": 0.943889519811085,
+      "glError": 0,
+      "file": "live-tarn-1.png",
+      "sha256": "6837f252e01b729d2714c5b6d755cf26caf7b4bbd8478c2a7a43cb8676e47473"
+    },
+    {
+      "eye": [
+        656.2764394045487,
+        142.80404512034525,
+        -940.6795630254011
+      ],
+      "eyeHeight": 2.1500000000000057,
+      "quaternion": [
+        0.010101062926708376,
+        0.9557149939467164,
+        0.033031363576657605,
+        -0.2922597267730279
+      ],
+      "view": "tarn",
+      "lakeReflection": {
+        "captures": 2,
+        "on": 1,
+        "linked": true,
+        "width": 640,
+        "height": 400
+      },
+      "weather": {
+        "seconds": 49.4356,
+        "phase": "锋面阵雨",
+        "cover": 1,
+        "rain": 0.9626351202118684,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 0.8206485770169683,
+        "windSpeed": 8.592401340701874,
+        "pressure": 1007.3736487978813,
+        "temperature": 16.373648797881316,
+        "dewPoint": 16.198919038305053,
+        "wind": 1.6281261541807157,
+        "sea": 1.1472452978712369,
+        "surge": 0.19
+      },
+      "waterTime": 51.4276,
+      "sea": 1.1472452978712369,
+      "cloudFlow": [
+        169.487306960069,
+        221.5711685465862,
+        1,
+        0.03213314
+      ],
+      "lakePoint": [
+        735,
+        -824
+      ],
+      "lakeSurface": 137.95937680760332,
+      "lakeRain": 0.9626351202118684,
+      "glError": 0,
+      "file": "live-tarn-2.png",
+      "sha256": "cccd721ff0dfa63d482e0eaabeaf31c1802d8a408432280826355fbccc57b377"
+    }
+  ],
+  "arrival": [
+    {
+      "view": "art-a-street",
+      "start": {
+        "view": "art-a-street",
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "eye": [
+          278.8,
+          10.488,
+          936
+        ],
+        "clock": 0.7959999999523134,
+        "focus": false,
+        "worldClock": "evening",
+        "terrain": 8.732000350952141,
+        "glError": 0
+      },
+      "end": {
+        "view": "art-a-street",
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "eye": [
+          278.8,
+          10.488,
+          936
+        ],
+        "clock": 4.31909999995232,
+        "focus": false,
+        "worldClock": "evening",
+        "terrain": 8.732000350952141,
+        "glError": 0
+      },
+      "fps": 64.99800444723184,
+      "p95Ms": 15.5,
+      "frameCount": 228
+    },
+    {
+      "view": "third",
+      "start": {
+        "view": "walking",
+        "feet": [
+          281.6,
+          8.812,
+          934
+        ],
+        "eye": [
+          281.8857572547113,
+          11.36214765496598,
+          938.0865191300602
+        ],
+        "clock": 5.134499999952314,
+        "focus": false,
+        "worldClock": "evening",
+        "terrain": 8.732000350952141,
+        "glError": 0
+      },
+      "end": {
+        "view": "walking",
+        "feet": [
+          280.94294303609996,
+          8.54890213413328,
+          924.6036476476172
+        ],
+        "eye": [
+          281.2287002908113,
+          11.099049789099261,
+          928.6901667776774
+        ],
+        "clock": 8.257599999952319,
+        "focus": true,
+        "worldClock": "evening",
+        "terrain": 8.468901724752472,
+        "glError": 0
+      },
+      "fps": 64.99983910930905,
+      "p95Ms": 15.5,
+      "frameCount": 202
+    }
+  ],
+  "modelRequests": [
+    {
+      "path": "/mature-sakura/mature-sakura.glb",
+      "decoded": 2193656
+    },
+    {
+      "path": "/station-art/station-exchange.glb",
+      "decoded": 79160
+    },
+    {
+      "path": "/station-art/alley-workshop.glb",
+      "decoded": 70344
+    },
+    {
+      "path": "/station-art/laundry-infill.glb",
+      "decoded": 60052
+    }
+  ],
+  "complete": true,
+  "finishedAt": "2026-11-18T17:21:17.854Z",
+  "engineExit": 0,
+  "prepared": {
+    "pin": "e4ed22eacde7fc320637468a794fcd99d01c0344a0458adcc214d6c78bd7b54d",
+    "parkedThenRestored": [
+      {
+        "f": "assets/terrain/light-evening.png",
+        "sha256": "debb02a7b38a1810fcd8b7ccac8f8d077dad030093a9a0398d16b32a13c08152"
+      },
+      {
+        "f": "tools/terrain/__pycache__/bake.bake_shadow-733.py313.1.nbc",
+        "sha256": "0c72a17d92b0806dc3b574a832f4ab6b290611f15c8674a1551442d5a658101d"
+      },
+      {
+        "f": "tools/terrain/__pycache__/bake.bake_shadow-733.py313.nbi",
+        "sha256": "4f6e98ffba70606bf26ab48fee98e1272c82b8941003c0a68a80a9f93ad44a3e"
+      },
+      {
+        "f": "tools/terrain/__pycache__/bake.cpython-313.pyc",
+        "sha256": "014bd64c340187c373fc02f4006f4f065f0501016828be42c08f4b9c53c5541a"
+      }
+    ]
+  },
+  "runtimeFiles": {
+    "stationArt": [
+      {
+        "path": "mature-sakura/mature-sakura.glb",
+        "bytes": 2193656,
+        "sha256": "14716b7af7db3bcae453b17ebe97a9fa0d4d38155731cc2b56ed28e4fa7b24f3"
+      },
+      {
+        "path": "station-art/alley-workshop.glb",
+        "bytes": 70344,
+        "sha256": "b8286aa8f9cc5c735d7d847bcc4c1b8b71f31a6ca049aabb531e68c3252c8fc2"
+      },
+      {
+        "path": "station-art/laundry-infill.glb",
+        "bytes": 60052,
+        "sha256": "d945d0756f402227ae329d1408707a428c120646aa3bac73c927821d98183be6"
+      },
+      {
+        "path": "station-art/station-exchange.glb",
+        "bytes": 79160,
+        "sha256": "03584bb83631b49b118727b9b37a2a021dee693365263acecef24e56b9621a78"
+      },
+      {
+        "path": ".local/station-art-releases/e4ed22eacde7fc320637468a794fcd99d01c0344a0458adcc214d6c78bd7b54d/mature-sakura.json",
+        "bytes": 413,
+        "sha256": "563132882dc38fbc5d21a87a7f7421e1d2bbab8fb6a4bc84f9da7d039b9db4ce"
+      },
+      {
+        "path": ".local/station-art-releases/e4ed22eacde7fc320637468a794fcd99d01c0344a0458adcc214d6c78bd7b54d/station-art-assets.json",
+        "bytes": 592,
+        "sha256": "988ebbd723e51e4a5179dd6b483174235a4bc2d99d098fa934493f0512d03486"
+      },
+      {
+        "path": ".local/station-art-releases/e4ed22eacde7fc320637468a794fcd99d01c0344a0458adcc214d6c78bd7b54d/station-art-notices/THIRD-PARTY.md",
+        "bytes": 1624,
+        "sha256": "d1a3d1709f98cf85897fc43560cea2b4198a5f10fd42fc4e550700dce077f7df"
+      },
+      {
+        "path": ".local/station-art-releases/e4ed22eacde7fc320637468a794fcd99d01c0344a0458adcc214d6c78bd7b54d/station-art-notices/licenses/LICENSE-Kenney.txt",
+        "bytes": 708,
+        "sha256": "c38cee408d022e57e44e49f1cd655c2fe0dc881a07b881276b795215cdc0de69"
+      },
+      {
+        "path": ".local/station-art-releases/e4ed22eacde7fc320637468a794fcd99d01c0344a0458adcc214d6c78bd7b54d/station-art-notices/licenses/LICENSE-Sakuragaoka.txt",
+        "bytes": 1089,
+        "sha256": "9b810ad4fc1139f94f7cfaf144a95069d13c4c822fac9f8b657ba6ae6f9de1f7"
+      },
+      {
+        "path": ".local/station-art-releases/e4ed22eacde7fc320637468a794fcd99d01c0344a0458adcc214d6c78bd7b54d/station-art-notices/licenses/LICENSE-station-art.txt",
+        "bytes": 1081,
+        "sha256": "1a998237a0242dccb8e46d7b19aaeeeffaba44e3120b57d64790c67f306689cc"
+      }
+    ],
+    "reflectionCube": [
+      {
+        "path": "/src/street-env-evening/px.png",
+        "width": 256,
+        "height": 256,
+        "sha256": "ab3bdb2513f2c392ae7bef3083e459bdf6f6a8083697004dd025afaa15a8b641"
+      },
+      {
+        "path": "/src/street-env-evening/nx.png",
+        "width": 256,
+        "height": 256,
+        "sha256": "a2744cdac877023f25c3cc62625f6221680113dca2bdb2a137bd6b8223d85fb5"
+      },
+      {
+        "path": "/src/street-env-evening/py.png",
+        "width": 256,
+        "height": 256,
+        "sha256": "276293728167c671aa5d4b8e1af0be712c776121b25da5f8f6b96c37a2824c33"
+      },
+      {
+        "path": "/src/street-env-evening/ny.png",
+        "width": 256,
+        "height": 256,
+        "sha256": "f059ee3868316ca6703f67246662fc02e8d24e1d22c7e5bf34b801fd9bed3730"
+      },
+      {
+        "path": "/src/street-env-evening/pz.png",
+        "width": 256,
+        "height": 256,
+        "sha256": "cc46592e883a81bd0d58c04c4c7243ea8409868a6bdbc1688d10f7e429872736"
+      },
+      {
+        "path": "/src/street-env-evening/nz.png",
+        "width": 256,
+        "height": 256,
+        "sha256": "ea9aa9bd84f057f9f50ccd95f6ae7ec09182bbdeab82c06aa52b31816520640e"
+      }
+    ]
+  }
+}

@@ -1,0 +1,1 @@
+const p=require('path'),cp=require('child_process');const [fixture,exe,file]=process.argv.slice(2);const r=cp.spawnSync(process.execPath,[p.join(__dirname,'probe-ground-rays.cjs'),exe,p.resolve(file)],{cwd:fixture,env:{...process.env,WORLD_FIXTURE:fixture},stdio:'inherit',windowsHide:true});if(r.error)throw r.error;process.exit(r.status??1);

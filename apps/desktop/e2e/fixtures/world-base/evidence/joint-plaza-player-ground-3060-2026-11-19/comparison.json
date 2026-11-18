@@ -1,0 +1,83 @@
+{
+  "art-a-street": {
+    "reference": "plaza-final-ground-3060-2026-11-19/art-a-street.png",
+    "changedPixels": 1258212,
+    "maxChannel": 109,
+    "meanAbsoluteRGB": 4.0263161008230455,
+    "fractionAnyChannelOver8": 0.19865817901234567
+  },
+  "art-b-konbini": {
+    "reference": "plaza-final-ground-3060-2026-11-19/art-b-konbini.png",
+    "changedPixels": 1169447,
+    "maxChannel": 42,
+    "meanAbsoluteRGB": 2.504756687242798,
+    "fractionAnyChannelOver8": 0.0740817901234568
+  },
+  "art-c-alley": {
+    "reference": "plaza-final-ground-3060-2026-11-19/art-c-alley.png",
+    "changedPixels": 1051062,
+    "maxChannel": 225,
+    "meanAbsoluteRGB": 2.157559927983539,
+    "fractionAnyChannelOver8": 0.1301844135802469
+  },
+  "art-d-laundry": {
+    "reference": "plaza-final-ground-3060-2026-11-19/art-d-laundry.png",
+    "changedPixels": 1077576,
+    "maxChannel": 63,
+    "meanAbsoluteRGB": 2.7943775720164608,
+    "fractionAnyChannelOver8": 0.2128155864197531
+  },
+  "sample-e-harbour": {
+    "reference": "joint-r3-ground-3060-2026-11-18/sample-e-harbour.png",
+    "changedPixels": 5690,
+    "maxChannel": 203,
+    "meanAbsoluteRGB": 0.18304809670781894,
+    "fractionAnyChannelOver8": 0.0029444444444444444
+  },
+  "sample-f-hillside": {
+    "reference": "joint-r3-ground-3060-2026-11-18/sample-f-hillside.png",
+    "changedPixels": 0,
+    "maxChannel": 0,
+    "meanAbsoluteRGB": 0.0,
+    "fractionAnyChannelOver8": 0.0
+  },
+  "sample-g-rail": {
+    "reference": "joint-r3-ground-3060-2026-11-18/sample-g-rail.png",
+    "changedPixels": 11718,
+    "maxChannel": 223,
+    "meanAbsoluteRGB": 0.07595576131687243,
+    "fractionAnyChannelOver8": 0.0019560185185185184
+  },
+  "sample-h-north": {
+    "reference": "joint-r3-ground-3060-2026-11-18/sample-h-north.png",
+    "changedPixels": 0,
+    "maxChannel": 0,
+    "meanAbsoluteRGB": 0.0,
+    "fractionAnyChannelOver8": 0.0
+  },
+  "storm-e": {
+    "reference": "joint-r3-ground-3060-2026-11-18/storm-e.png",
+    "changedPixels": 6188,
+    "maxChannel": 243,
+    "meanAbsoluteRGB": 0.1938559670781893,
+    "fractionAnyChannelOver8": 0.0032885802469135804
+  },
+  "A-return": {
+    "changedPixels": 0,
+    "maxChannel": 0,
+    "meanAbsoluteRGB": 0.0,
+    "fractionAnyChannelOver8": 0.0
+  },
+  "E-storm-vs-low-cloud": {
+    "changedPixels": 1295999,
+    "maxChannel": 250,
+    "meanAbsoluteRGB": 15.968153549382716,
+    "fractionAnyChannelOver8": 0.8886026234567901
+  },
+  "lake-live-pair": {
+    "changedPixels": 984952,
+    "maxChannel": 122,
+    "meanAbsoluteRGB": 3.3009529320987654,
+    "fractionAnyChannelOver8": 0.16072453703703704
+  }
+}
