@@ -1,0 +1,4 @@
+const fs=require('node:fs'),path=require('node:path');
+const j=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+const summary={groundControl:'off',source:j.stats.source,rays:j.stats.rays,count:j.plan.items.length,wallTargets:j.targets,fingerprint:j.plan.fingerprint,identicalAtSameIndex:j.rows.filter(r=>r.identicalInRuntimeIndex===r.index).length,passUsingSourceRules:j.rows.filter(r=>r.curvedException?r.curvedSnap.atOldCenter.pass&&r.curvedSnap.atSourceDirective.pass:r.ninePass).length,allNineUnderFlatRule:j.rows.filter(r=>r.ninePass).length,curvedException:j.rows.filter(r=>r.curvedException).map(r=>r.index),extraGeometryInFront:j.rows.filter(r=>r.extraGeometryInFront>0).map(r=>r.index),center:j.rows.filter(r=>r.centerPass).length,sceneErrors:j.sceneErrors};
+console.log(JSON.stringify(summary));fs.writeFileSync(path.join(process.argv[3]||'.','retained-summary.json'),JSON.stringify(summary,null,2)+'\n');

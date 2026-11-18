@@ -1,0 +1,298 @@
+{
+  "geometry": "7ffb5a118e5e05e8f584955b67813ac383f29c99",
+  "source": "1ea97233815bedc700751a04fe69ee7fb28b7a21",
+  "visual": [
+    {
+      "step": "photos",
+      "started": "2026-11-18T16:53:35.528Z",
+      "finished": "2026-11-18T16:54:23.809Z",
+      "exit": 0
+    },
+    {
+      "step": "afternoon",
+      "started": "2026-11-18T16:54:23.809Z",
+      "finished": "2026-11-18T16:55:09.694Z",
+      "exit": 0
+    },
+    {
+      "step": "evening",
+      "started": "2026-11-18T16:55:09.695Z",
+      "finished": "2026-11-18T16:55:56.395Z",
+      "exit": 0
+    }
+  ],
+  "timings": [
+    {
+      "n": "quiet-plaza-final-1",
+      "started": "2026-11-18T16:55:56.870Z",
+      "finished": "2026-11-18T16:58:06.750Z",
+      "exit": 0
+    },
+    {
+      "n": "quiet-plaza-final-2",
+      "started": "2026-11-18T16:58:06.751Z",
+      "finished": "2026-11-18T17:00:15.375Z",
+      "exit": 0
+    }
+  ],
+  "initialPhoto": {
+    "exit": 0,
+    "rawCDPClean": false,
+    "strictCanceled": 4,
+    "payloadIntegrity": null
+  },
+  "diagnosticPhoto": {
+    "started": "2026-11-18T17:00:15.618Z",
+    "finished": "2026-11-18T17:01:04.665Z",
+    "exit": 1
+  },
+  "photoReceiptRun": {
+    "started": "2026-11-18T17:01:55.147Z",
+    "finished": "2026-11-18T17:02:44.153Z",
+    "exit": 0
+  },
+  "auditedPhotos": {
+    "art-a-street": {
+      "file": "art-a-street.png",
+      "hashes": [
+        "d095a91a98660f836499f6868abe0c038f50d16b0d2c6d25e3fc12207d644695",
+        "d095a91a98660f836499f6868abe0c038f50d16b0d2c6d25e3fc12207d644695",
+        "d095a91a98660f836499f6868abe0c038f50d16b0d2c6d25e3fc12207d644695"
+      ]
+    },
+    "art-b-konbini": {
+      "file": "art-b-konbini.png",
+      "hashes": [
+        "3ccd4497a1244d3b07335069842550198c87b3e5277cd9305d1273c7c833c449",
+        "3ccd4497a1244d3b07335069842550198c87b3e5277cd9305d1273c7c833c449",
+        "3ccd4497a1244d3b07335069842550198c87b3e5277cd9305d1273c7c833c449"
+      ]
+    },
+    "art-c-alley": {
+      "file": "art-c-alley.png",
+      "hashes": [
+        "144d42507f59485436f81a6cb615aa467d45a02cb5eb36b72eec6c70fcdc1343",
+        "144d42507f59485436f81a6cb615aa467d45a02cb5eb36b72eec6c70fcdc1343",
+        "144d42507f59485436f81a6cb615aa467d45a02cb5eb36b72eec6c70fcdc1343"
+      ]
+    },
+    "art-d-laundry": {
+      "file": "art-d-laundry.png",
+      "hashes": [
+        "a2266e02bc04f124c44d8273860ad865e1c2e29612bc4d94c049f752a23d5608",
+        "a2266e02bc04f124c44d8273860ad865e1c2e29612bc4d94c049f752a23d5608",
+        "a2266e02bc04f124c44d8273860ad865e1c2e29612bc4d94c049f752a23d5608"
+      ]
+    },
+    "sample-e-harbour": {
+      "file": "sample-e-harbour.png",
+      "hashes": [
+        "40eb69b9a4b0c1cac11579defc982c7b4e3e1b9400f8e870b0f93cca309d86e2",
+        "40eb69b9a4b0c1cac11579defc982c7b4e3e1b9400f8e870b0f93cca309d86e2",
+        "40eb69b9a4b0c1cac11579defc982c7b4e3e1b9400f8e870b0f93cca309d86e2"
+      ]
+    },
+    "sample-f-hillside": {
+      "file": "sample-f-hillside.png",
+      "hashes": [
+        "1414fb43cada5cb4c13222e1d3c8f29c8cdb302bb32a707f843b45fcd1207fcb",
+        "1414fb43cada5cb4c13222e1d3c8f29c8cdb302bb32a707f843b45fcd1207fcb",
+        "1414fb43cada5cb4c13222e1d3c8f29c8cdb302bb32a707f843b45fcd1207fcb"
+      ]
+    },
+    "sample-g-rail": {
+      "file": "sample-g-rail.png",
+      "hashes": [
+        "371f762c76b0cf34259b004ecaff62578a56c148399791f971b511e1be66bd63",
+        "371f762c76b0cf34259b004ecaff62578a56c148399791f971b511e1be66bd63",
+        "371f762c76b0cf34259b004ecaff62578a56c148399791f971b511e1be66bd63"
+      ]
+    },
+    "sample-h-north": {
+      "file": "sample-h-north.png",
+      "hashes": [
+        "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546",
+        "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546",
+        "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546"
+      ]
+    },
+    "return-a": {
+      "file": "return-a.png",
+      "hashes": [
+        "d095a91a98660f836499f6868abe0c038f50d16b0d2c6d25e3fc12207d644695",
+        "d095a91a98660f836499f6868abe0c038f50d16b0d2c6d25e3fc12207d644695",
+        "d095a91a98660f836499f6868abe0c038f50d16b0d2c6d25e3fc12207d644695"
+      ]
+    }
+  },
+  "pixelRepeat": {
+    "diagnostic": {
+      "art-a-street.png": {
+        "changed": 0,
+        "maxRGB": [
+          0,
+          0,
+          0
+        ],
+        "over8": 0
+      },
+      "art-b-konbini.png": {
+        "changed": 0,
+        "maxRGB": [
+          0,
+          0,
+          0
+        ],
+        "over8": 0
+      },
+      "art-c-alley.png": {
+        "changed": 0,
+        "maxRGB": [
+          0,
+          0,
+          0
+        ],
+        "over8": 0
+      },
+      "art-d-laundry.png": {
+        "changed": 0,
+        "maxRGB": [
+          0,
+          0,
+          0
+        ],
+        "over8": 0
+      },
+      "return-a.png": {
+        "changed": 0,
+        "maxRGB": [
+          0,
+          0,
+          0
+        ],
+        "over8": 0
+      },
+      "sample-e-harbour.png": {
+        "changed": 6172,
+        "maxRGB": [
+          222,
+          191,
+          226
+        ],
+        "over8": 4109,
+        "alternateFile": "transport/diagnostic-sample-e-harbour.png"
+      },
+      "sample-f-hillside.png": {
+        "changed": 0,
+        "maxRGB": [
+          0,
+          0,
+          0
+        ],
+        "over8": 0
+      },
+      "sample-g-rail.png": {
+        "changed": 0,
+        "maxRGB": [
+          0,
+          0,
+          0
+        ],
+        "over8": 0
+      },
+      "sample-h-north.png": {
+        "changed": 0,
+        "maxRGB": [
+          0,
+          0,
+          0
+        ],
+        "over8": 0
+      }
+    },
+    "audited": {
+      "art-a-street.png": {
+        "changed": 0,
+        "maxRGB": [
+          0,
+          0,
+          0
+        ],
+        "over8": 0
+      },
+      "art-b-konbini.png": {
+        "changed": 0,
+        "maxRGB": [
+          0,
+          0,
+          0
+        ],
+        "over8": 0
+      },
+      "art-c-alley.png": {
+        "changed": 0,
+        "maxRGB": [
+          0,
+          0,
+          0
+        ],
+        "over8": 0
+      },
+      "art-d-laundry.png": {
+        "changed": 0,
+        "maxRGB": [
+          0,
+          0,
+          0
+        ],
+        "over8": 0
+      },
+      "return-a.png": {
+        "changed": 0,
+        "maxRGB": [
+          0,
+          0,
+          0
+        ],
+        "over8": 0
+      },
+      "sample-e-harbour.png": {
+        "changed": 5135,
+        "maxRGB": [
+          224,
+          191,
+          226
+        ],
+        "over8": 3663,
+        "alternateFile": "transport/audit-sample-e-harbour.png"
+      },
+      "sample-f-hillside.png": {
+        "changed": 0,
+        "maxRGB": [
+          0,
+          0,
+          0
+        ],
+        "over8": 0
+      },
+      "sample-g-rail.png": {
+        "changed": 0,
+        "maxRGB": [
+          0,
+          0,
+          0
+        ],
+        "over8": 0
+      },
+      "sample-h-north.png": {
+        "changed": 0,
+        "maxRGB": [
+          0,
+          0,
+          0
+        ],
+        "over8": 0
+      }
+    }
+  }
+}

@@ -15,6 +15,8 @@
 
 ## 本机准备
 
+站区的两棵老樱花、东侧交换所、后巷工房和洗衣店门翼来自项目的 Blender 交付包。`node scripts/prepare.cjs` 会用本检出的发行归档准备这四个 GLB。只准备本站区模型可离线运行 `node scripts/prepare-station-art.cjs`，用 `--verify` 可重新核对归档、模型、清单与许可。各版本分别安装在 `.local/station-art-releases/<SHA-256>/`。组合场景采集时将归档和逐文件哈希写入 `source-manifest.json`。[运行包](./assets/station-art/station-art-fixture.zip) · [发行 SHA-256](./assets/station-art/station-art.sha256) · [来源和许可](./THIRD-PARTY.md)
+
 运行 `node scripts/prepare.cjs` 下载固定版本并核对归档及 760 个原始文件的 SHA-256。已有原始副本如被修改或不完整会报错，保留现场，不改写清单掩盖差异。需要代理时设置 `WORLD_BASE_PROXY=http://127.0.0.1:7897`。只使用系统已有的 Node、curl、tar；不安装依赖。已提交的 `upstream/` 是 MIT 源码，准备脚本不会覆盖它；`--vendor-code` 仅供首次建立副本，目标存在时会报错。
 
 `sources.json` 登记来源、作者、commit 和归档哈希，`source-files.json` 登记每个原始文件的 SHA-256。Petalwake 的全部二进制资产及原项目副本都只在 `.local/`，不进 Git。Three.js 使用 Petalwake 固定的 r187，额外的 RoundedBoxGeometry 来自 Three.js r187，许可和哈希一并保留。

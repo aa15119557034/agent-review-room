@@ -1,0 +1,470 @@
+{
+  "afternoon": {
+    "source": "38fd2506da335b6cd3092c6269e14f68278d6a79",
+    "originalSource": "17c126adc9f8f053fab99479c92269e1460c3029",
+    "exit": 1,
+    "physicallyValid": true,
+    "strictTransportClean": false,
+    "canceled": 2,
+    "httpErrors": 0,
+    "jsExceptions": 0,
+    "usesSharedCube": true,
+    "batchedGlass": 8,
+    "panes": {
+      "W1": 8,
+      "E1": 4,
+      "W2": 5,
+      "E2": 5,
+      "E3": 5
+    },
+    "faces": [
+      {
+        "name": "px",
+        "rawSHA256": "83837d83cb3b7dc10a319926b1c48c167b2188b9d64b8778a257b6bb4d0c5d27",
+        "prevRawSHA256": "aca5f5fdad9fdcb912a0ebe92c233c639b62ee51ac807590734a82d366440160",
+        "pngSHA256": "15da45f8aeb8eb13d903ee9ec24011b3133a2128ecae3bf53ba2daa9861570f3",
+        "rawRGBChanged": 2935,
+        "encodedChanged": 2633,
+        "delta8": 441,
+        "delta24": 38,
+        "maxCodeDifference": 41,
+        "peak": 1.3994140625,
+        "rawOver2": 0,
+        "decodedLimit": 2,
+        "maxEncodingError": 0.0067098458501522185,
+        "visibleCardProjections": []
+      },
+      {
+        "name": "nx",
+        "rawSHA256": "83ee1240f06f8175fc61b54be185db851257b3db4a3adaa0c75cd622a529c4a1",
+        "prevRawSHA256": "3366312558dc908f0dfd825af85e2b13b84dc125fa9149086cda0d839008547a",
+        "pngSHA256": "b8cfd1bacfc9b6ffa8c3e078a8e393067bbc196a75f3f5c098880bd465595dd1",
+        "rawRGBChanged": 552,
+        "encodedChanged": 478,
+        "delta8": 427,
+        "delta24": 29,
+        "maxCodeDifference": 60,
+        "peak": 1.2998046875,
+        "rawOver2": 0,
+        "decodedLimit": 2,
+        "maxEncodingError": 0.006376136409858457,
+        "visibleCardProjections": [
+          {
+            "name": "art-r3-w1-zone-SNACK",
+            "roi": [
+              34,
+              128,
+              49,
+              135
+            ],
+            "pixels": 105,
+            "delta8": 8,
+            "max": 60,
+            "unobstructedOfNine": 0,
+            "notOpaqueBlockedOfNine": 0
+          },
+          {
+            "name": "art-r3-w1-zone-BAKERY",
+            "roi": [
+              1,
+              128,
+              15,
+              135
+            ],
+            "pixels": 98,
+            "delta8": 0,
+            "max": 0,
+            "unobstructedOfNine": 0,
+            "notOpaqueBlockedOfNine": 0
+          },
+          {
+            "name": "art-r3-board-W2",
+            "roi": [
+              211,
+              154,
+              232,
+              183
+            ],
+            "pixels": 609,
+            "delta8": 410,
+            "max": 35,
+            "unobstructedOfNine": 9,
+            "notOpaqueBlockedOfNine": 9
+          }
+        ]
+      },
+      {
+        "name": "py",
+        "rawSHA256": "3025a62fedc425052ee0809908fc30cee9ce41285fb4228a9bbbe34320aa1d22",
+        "prevRawSHA256": "3025a62fedc425052ee0809908fc30cee9ce41285fb4228a9bbbe34320aa1d22",
+        "pngSHA256": "b2547b4cdca92bfb71750694767841a4967f45a41e6d40963ed1c613d1dde947",
+        "rawRGBChanged": 0,
+        "encodedChanged": 0,
+        "delta8": 0,
+        "delta24": 0,
+        "maxCodeDifference": 0,
+        "peak": 1.1796875,
+        "rawOver2": 0,
+        "decodedLimit": 2,
+        "maxEncodingError": 0.006376136409858457,
+        "visibleCardProjections": []
+      },
+      {
+        "name": "ny",
+        "rawSHA256": "e9a14e71391e88f03b042c06bf0a09594d7975138b471e8aeab8a0d86c2b0655",
+        "prevRawSHA256": "e9a14e71391e88f03b042c06bf0a09594d7975138b471e8aeab8a0d86c2b0655",
+        "pngSHA256": "a05b10f09a7bbd4648347f5ff9521ed3aa46cdfa665d665f981c534e1f7c1775",
+        "rawRGBChanged": 0,
+        "encodedChanged": 0,
+        "delta8": 0,
+        "delta24": 0,
+        "maxCodeDifference": 0,
+        "peak": 0.7509765625,
+        "rawOver2": 0,
+        "decodedLimit": 2,
+        "maxEncodingError": 0.004965652231813,
+        "visibleCardProjections": []
+      },
+      {
+        "name": "pz",
+        "rawSHA256": "c21c0ff36e5210725a21132f6c060498eafafc1d3d09c46486458bc109eb4565",
+        "prevRawSHA256": "b983925788ad23159c86e01235ff02ef78644f44fc3e239489132e200490daff",
+        "pngSHA256": "cb02b0b02263639def756df5a084e25d2e6b1472f57272b196d21f5f0c40426d",
+        "rawRGBChanged": 774,
+        "encodedChanged": 624,
+        "delta8": 124,
+        "delta24": 11,
+        "maxCodeDifference": 35,
+        "peak": 1.3994140625,
+        "rawOver2": 0,
+        "decodedLimit": 2,
+        "maxEncodingError": 0.0067098458501522185,
+        "visibleCardProjections": [
+          {
+            "name": "art-r3-board-W4",
+            "roi": [
+              103,
+              130,
+              107,
+              137
+            ],
+            "pixels": 28,
+            "delta8": 4,
+            "max": 25,
+            "unobstructedOfNine": 9,
+            "notOpaqueBlockedOfNine": 9
+          },
+          {
+            "name": "art-r3-board-W6",
+            "roi": [
+              118,
+              127,
+              121,
+              132
+            ],
+            "pixels": 15,
+            "delta8": 3,
+            "max": 14,
+            "unobstructedOfNine": 9,
+            "notOpaqueBlockedOfNine": 9
+          },
+          {
+            "name": "art-r3-board-E3",
+            "roi": [
+              213,
+              144,
+              225,
+              166
+            ],
+            "pixels": 264,
+            "delta8": 0,
+            "max": 0,
+            "unobstructedOfNine": 0,
+            "notOpaqueBlockedOfNine": 0
+          },
+          {
+            "name": "art-r3-board-E5",
+            "roi": [
+              151,
+              129,
+              154,
+              136
+            ],
+            "pixels": 21,
+            "delta8": 0,
+            "max": 0,
+            "unobstructedOfNine": 0,
+            "notOpaqueBlockedOfNine": 0
+          }
+        ]
+      },
+      {
+        "name": "nz",
+        "rawSHA256": "be357fed5914627bde0d93ff8991a4043077626fb0bfb2f5086bc051d785ad7d",
+        "prevRawSHA256": "5268d4f38888cef1ddd8d9b2baecce276550ff65a0a713bb84891975d444e53d",
+        "pngSHA256": "bf0dd97d86e9b33d948418b9cfe97767d71640534b84852618a6a7a0e230f75d",
+        "rawRGBChanged": 259,
+        "encodedChanged": 239,
+        "delta8": 50,
+        "delta24": 13,
+        "maxCodeDifference": 189,
+        "peak": 2.3984375,
+        "rawOver2": 1,
+        "decodedLimit": 2,
+        "maxEncodingError": 0.0069956889153750534,
+        "visibleCardProjections": [
+          {
+            "name": "art-r3-w1-zone-DRINK",
+            "roi": [
+              229,
+              128,
+              240,
+              134
+            ],
+            "pixels": 66,
+            "delta8": 19,
+            "max": 84,
+            "unobstructedOfNine": 7,
+            "notOpaqueBlockedOfNine": 7
+          }
+        ]
+      }
+    ],
+    "originalReportSHA256": "2a5f15b44b12f4c0103758ae8931742cf948417cadee3c833a980826f640a881",
+    "sharedReportSHA256": "01866bbd4683da015792cf2f6e5e734e3f2033c3839516aa6ca648afc5f106f0"
+  },
+  "evening": {
+    "source": "38fd2506da335b6cd3092c6269e14f68278d6a79",
+    "originalSource": "17c126adc9f8f053fab99479c92269e1460c3029",
+    "exit": 1,
+    "physicallyValid": true,
+    "strictTransportClean": false,
+    "canceled": 3,
+    "httpErrors": 0,
+    "jsExceptions": 0,
+    "usesSharedCube": true,
+    "batchedGlass": 8,
+    "panes": {
+      "W1": 8,
+      "E1": 4,
+      "W2": 5,
+      "E2": 5,
+      "E3": 5
+    },
+    "faces": [
+      {
+        "name": "px",
+        "rawSHA256": "41b2151b3c9ff80ce490f9665d77b7f99db2de65c2111a671ebae448aa8c9d24",
+        "prevRawSHA256": "4dbfb000b44235f254c1af87cdb744694864d1755558a3932a8d5ee800da4f9d",
+        "pngSHA256": "ab3bdb2513f2c392ae7bef3083e459bdf6f6a8083697004dd025afaa15a8b641",
+        "rawRGBChanged": 2936,
+        "encodedChanged": 2603,
+        "delta8": 404,
+        "delta24": 45,
+        "maxCodeDifference": 43,
+        "peak": 2.939453125,
+        "rawOver2": 16,
+        "decodedLimit": 2,
+        "maxEncodingError": 0.006545876766187675,
+        "visibleCardProjections": []
+      },
+      {
+        "name": "nx",
+        "rawSHA256": "9ffc0105410cd7d7657672f107f76e165b0149bdcab0add78a0e2805188bd309",
+        "prevRawSHA256": "cf698bd81f7e287da405a83e1b6b3096e9ed9af21aba9cb908a6dc1c5023d01d",
+        "pngSHA256": "a2744cdac877023f25c3cc62625f6221680113dca2bdb2a137bd6b8223d85fb5",
+        "rawRGBChanged": 555,
+        "encodedChanged": 486,
+        "delta8": 424,
+        "delta24": 25,
+        "maxCodeDifference": 60,
+        "peak": 2.728515625,
+        "rawOver2": 47,
+        "decodedLimit": 2,
+        "maxEncodingError": 0.007643018004986013,
+        "visibleCardProjections": [
+          {
+            "name": "art-r3-w1-zone-SNACK",
+            "roi": [
+              34,
+              128,
+              49,
+              135
+            ],
+            "pixels": 105,
+            "delta8": 8,
+            "max": 60,
+            "unobstructedOfNine": 0,
+            "notOpaqueBlockedOfNine": 0
+          },
+          {
+            "name": "art-r3-w1-zone-BAKERY",
+            "roi": [
+              1,
+              128,
+              15,
+              135
+            ],
+            "pixels": 98,
+            "delta8": 0,
+            "max": 0,
+            "unobstructedOfNine": 0,
+            "notOpaqueBlockedOfNine": 0
+          },
+          {
+            "name": "art-r3-board-W2",
+            "roi": [
+              211,
+              154,
+              232,
+              183
+            ],
+            "pixels": 609,
+            "delta8": 408,
+            "max": 36,
+            "unobstructedOfNine": 9,
+            "notOpaqueBlockedOfNine": 9
+          }
+        ]
+      },
+      {
+        "name": "py",
+        "rawSHA256": "85cf2e0f65e24086179c41da451aca57db2563f136a66768b0f84c7736a52600",
+        "prevRawSHA256": "85cf2e0f65e24086179c41da451aca57db2563f136a66768b0f84c7736a52600",
+        "pngSHA256": "276293728167c671aa5d4b8e1af0be712c776121b25da5f8f6b96c37a2824c33",
+        "rawRGBChanged": 0,
+        "encodedChanged": 0,
+        "delta8": 0,
+        "delta24": 0,
+        "maxCodeDifference": 0,
+        "peak": 1.357421875,
+        "rawOver2": 0,
+        "decodedLimit": 2,
+        "maxEncodingError": 0.0067590376603516855,
+        "visibleCardProjections": []
+      },
+      {
+        "name": "ny",
+        "rawSHA256": "7d2dc6bdbb51590b9302e3720a402e18559c1c488ae5beb0998b144b4d82e242",
+        "prevRawSHA256": "7d2dc6bdbb51590b9302e3720a402e18559c1c488ae5beb0998b144b4d82e242",
+        "pngSHA256": "f059ee3868316ca6703f67246662fc02e8d24e1d22c7e5bf34b801fd9bed3730",
+        "rawRGBChanged": 0,
+        "encodedChanged": 0,
+        "delta8": 0,
+        "delta24": 0,
+        "maxCodeDifference": 0,
+        "peak": 0.4228515625,
+        "rawOver2": 0,
+        "decodedLimit": 2,
+        "maxEncodingError": 0.0035630773281104533,
+        "visibleCardProjections": []
+      },
+      {
+        "name": "pz",
+        "rawSHA256": "8ff7fce2f9eef3a64d4abe7a9f69e197580a7cca5c1062d29d75500d75265b4a",
+        "prevRawSHA256": "c9f81bacb5ab2c6ae2d7530e0907bf6bffc7cd6538ace95c943522208eb69e1d",
+        "pngSHA256": "cc46592e883a81bd0d58c04c4c7243ea8409868a6bdbc1688d10f7e429872736",
+        "rawRGBChanged": 772,
+        "encodedChanged": 621,
+        "delta8": 92,
+        "delta24": 7,
+        "maxCodeDifference": 35,
+        "peak": 2.939453125,
+        "rawOver2": 17,
+        "decodedLimit": 2,
+        "maxEncodingError": 0.00746985066623429,
+        "visibleCardProjections": [
+          {
+            "name": "art-r3-board-W4",
+            "roi": [
+              103,
+              130,
+              107,
+              137
+            ],
+            "pixels": 28,
+            "delta8": 5,
+            "max": 22,
+            "unobstructedOfNine": 9,
+            "notOpaqueBlockedOfNine": 9
+          },
+          {
+            "name": "art-r3-board-W6",
+            "roi": [
+              118,
+              127,
+              121,
+              132
+            ],
+            "pixels": 15,
+            "delta8": 3,
+            "max": 16,
+            "unobstructedOfNine": 9,
+            "notOpaqueBlockedOfNine": 9
+          },
+          {
+            "name": "art-r3-board-E3",
+            "roi": [
+              213,
+              144,
+              225,
+              166
+            ],
+            "pixels": 264,
+            "delta8": 0,
+            "max": 0,
+            "unobstructedOfNine": 0,
+            "notOpaqueBlockedOfNine": 0
+          },
+          {
+            "name": "art-r3-board-E5",
+            "roi": [
+              151,
+              129,
+              154,
+              136
+            ],
+            "pixels": 21,
+            "delta8": 0,
+            "max": 0,
+            "unobstructedOfNine": 0,
+            "notOpaqueBlockedOfNine": 0
+          }
+        ]
+      },
+      {
+        "name": "nz",
+        "rawSHA256": "0d0dd39e37b439142c9a25d2792e5168bf2c1f74ddb07b544653a467349e2d81",
+        "prevRawSHA256": "36c42a70165249ace0d6af7b9977ad6ec8b83eaeb0334e83af6a636c88322fba",
+        "pngSHA256": "b4d403630b187ffe76218c78ffeef8bb1156adf79d4f8701d617f67251283d60",
+        "rawRGBChanged": 259,
+        "encodedChanged": 238,
+        "delta8": 55,
+        "delta24": 14,
+        "maxCodeDifference": 138,
+        "peak": 2.728515625,
+        "rawOver2": 9,
+        "decodedLimit": 2,
+        "maxEncodingError": 0.007643018004986013,
+        "visibleCardProjections": [
+          {
+            "name": "art-r3-w1-zone-DRINK",
+            "roi": [
+              229,
+              128,
+              240,
+              134
+            ],
+            "pixels": 66,
+            "delta8": 19,
+            "max": 82,
+            "unobstructedOfNine": 7,
+            "notOpaqueBlockedOfNine": 7
+          }
+        ]
+      }
+    ],
+    "originalReportSHA256": "a4b480a6830a8c66f7340b5f9983432103fd8a84d4fb275665d41817a13afa5e",
+    "sharedReportSHA256": "dcbb7704f63e9327ac17083321a95af639ddbb83c16f96244465a125b1d32781"
+  }
+}

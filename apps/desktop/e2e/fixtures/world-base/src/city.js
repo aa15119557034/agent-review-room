@@ -4,6 +4,7 @@ import { buildFarTown } from '../upstream/sakuragaoka/src/world/houses/far.js';
 import { PAL } from '../upstream/sakuragaoka/src/world/houses/lot.js';
 import { backgroundContext, visibleBankHeight } from './skyline.js';
 import { buildTownApartment, townApartmentBounds, townSortingBins } from './city-apartments.js';
+import { addStationArt } from './station-art.js';
 import { createTownPlants } from './town-plants.js';
 import { createTownPaving, finishTownLanes } from './town-paving.js';
 import { createApartmentSurfaces } from './apartment-surfaces.js';
@@ -195,6 +196,9 @@ export async function createCity({ scene, station, island, skyline }) {
     addUtilityPoles(H, frame, visibleGround, stats);
     vegetationClearAreas.push(...addLotPlanting(plants, placements, heightAt, ctx, stats));
     const shop = placements.find(p => p.name === 'town-apartment-4f');
+    const stationArt = await addStationArt({ root, gb, concrete: M.concrete, heightAt, placements, vegetationClearAreas,
+      skyline, connections, shop, materials: ownedMaterials, geometries });
+    stats.stationArt = { buildings: stationArt.grounds.map(site => site.name), laundry: stationArt.portal.name };
     const supportY = shop.baseY + .02;
     const crateSource = station.texturedProps;
     const crateGroup = new THREE.Group(); crateGroup.name = 'city-textured-crate';
@@ -333,7 +337,7 @@ export async function createCity({ scene, station, island, skyline }) {
     stats.ownership = 'City owns geometry, far/leaf instances, material clones and one plant atlas; apartmentSurfaces independently owns four PBR materials/nine maps. Borrow station atlases, far facade textures and gradient maps. Dispose before station.';
     stats.limitation = 'Background only: no new physics or navigable interiors. Foundations and stairs are CPU checked; camera composition and visible CDLOD contacts need GPU acceptance.';
     scene.add(root); root.updateWorldMatrix(true, true);
-    return { root, placements, vegetationClearAreas, stats, dispose };
+    return { root, placements, vegetationClearAreas, laundryPortal: stationArt.portal, stats, dispose };
   } catch (error) { dispose(); throw error; }
 }
 
@@ -427,8 +431,10 @@ function addConnections(H, frame, placements, ground, worldY) {
       frame.boxB(H.M.concrete, '#a9adb3', width, level - bottom, Math.abs(zb - za), x, bottom, (za + zb) / 2,
         { uv: { world: 2 }, shadow: false, skip: 'd' + (k ? uphillFace : '') });
     }
-    clearAreas.push({ name, minX: x - width / 2, maxX: x + width / 2, minZ: Math.min(highZ, lowZ), maxZ: Math.max(highZ, lowZ) });
+    const area = { name, minX: x - width / 2, maxX: x + width / 2, minZ: Math.min(highZ, lowZ), maxZ: Math.max(highZ, lowZ) };
+    clearAreas.push(area);
     report.stairs.push({ name, x, width, highZ, lowZ, steps: count, rise: drop / count, tread: run / count, top, bottom: low, minClearance });
+    return area;
   };
   for (const placement of placements) {
     const doorway = placement.type === 'apartment' ? placement.model.entrances[0] : { x: 0, y: 0 };
@@ -437,7 +443,7 @@ function addConnections(H, frame, placements, ground, worldY) {
   }
   const r5 = H.L.ROADS.R5;
   stairs('town-levee-stairs', 34.5, 5, r5.z - r5.halfW - 0.03, EAST_ROAD.maxZ, r5.y + 0.03);
-  return { clearAreas, report };
+  return { clearAreas, report, stairs };
 }
 
 // Low hedges between each lot and the lane (gap at the entry stairs) and a

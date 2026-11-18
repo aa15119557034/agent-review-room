@@ -1,0 +1,488 @@
+{
+  "previous": "eed4fb46eb7e78418fa319f6f24bdbfe654425a0",
+  "final": "1ea97233815bedc700751a04fe69ee7fb28b7a21",
+  "startedAt": "2026-11-18T16:53:35.854Z",
+  "finishedAt": "2026-11-18T16:54:23.208Z",
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "exceptions": [],
+  "http": [
+    {
+      "pathname": "/mature-sakura/mature-sakura.glb",
+      "bytes": 2193656,
+      "status": 200,
+      "sha256": "14716b7af7db3bcae453b17ebe97a9fa0d4d38155731cc2b56ed28e4fa7b24f3"
+    },
+    {
+      "pathname": "/station-art/station-exchange.glb",
+      "bytes": 79160,
+      "status": 200,
+      "sha256": "03584bb83631b49b118727b9b37a2a021dee693365263acecef24e56b9621a78"
+    },
+    {
+      "pathname": "/station-art/alley-workshop.glb",
+      "bytes": 70344,
+      "status": 200,
+      "sha256": "b8286aa8f9cc5c735d7d847bcc4c1b8b71f31a6ca049aabb531e68c3252c8fc2"
+    },
+    {
+      "pathname": "/station-art/laundry-infill.glb",
+      "bytes": 60052,
+      "status": 200,
+      "sha256": "d945d0756f402227ae329d1408707a428c120646aa3bac73c927821d98183be6"
+    }
+  ],
+  "networkFailures": [
+    {
+      "path": "assets/models/boulders.glb",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "path": "assets/models/menhir.glb",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "path": "mature-sakura/mature-sakura.glb",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "path": "prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    }
+  ],
+  "returnA": {
+    "hashes": [
+      "d095a91a98660f836499f6868abe0c038f50d16b0d2c6d25e3fc12207d644695",
+      "d095a91a98660f836499f6868abe0c038f50d16b0d2c6d25e3fc12207d644695",
+      "d095a91a98660f836499f6868abe0c038f50d16b0d2c6d25e3fc12207d644695"
+    ],
+    "pixels": 1296000,
+    "changed": 0,
+    "over8": 0,
+    "maxRGB": [
+      0,
+      0,
+      0
+    ],
+    "meanAbsoluteRGB": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "photos": {
+    "art-a-street": {
+      "eye": [
+        278.8,
+        10.488,
+        936
+      ],
+      "quaternion": [
+        -0.003277842930440409,
+        -0.009834585659995631,
+        -3.223795934194156e-05,
+        0.9999462663720154
+      ],
+      "target": [
+        280,
+        10.088000000000001,
+        875
+      ],
+      "fov": 35.63777782904556,
+      "clock": 14,
+      "canvas": [
+        1440,
+        900
+      ],
+      "ground": 8.788000106811523,
+      "eyeHeight": 1.699999893188476,
+      "beforeSha256": "9d25a225050c064e638a88df96bf3304e250f24294feb387849c785bbeb3f577",
+      "afterHashes": [
+        "4c1bd8d7db9247cef9d7f8f46413d40203b757ce1ed6e088542ebca93b2342fa",
+        "d095a91a98660f836499f6868abe0c038f50d16b0d2c6d25e3fc12207d644695",
+        "d095a91a98660f836499f6868abe0c038f50d16b0d2c6d25e3fc12207d644695"
+      ],
+      "glError": 0,
+      "pixels": 1296000,
+      "changed": 116156,
+      "over8": 48847,
+      "maxRGB": [
+        231,
+        155,
+        169
+      ],
+      "meanAbsoluteRGB": [
+        1.68299,
+        1.0531,
+        0.95301
+      ],
+      "crownAndGate": {
+        "xyxy": [
+          397,
+          159,
+          915,
+          420
+        ],
+        "pixels": 135198,
+        "changed": 62720,
+        "over8": 39267,
+        "maxRGB": [
+          231,
+          155,
+          169
+        ],
+        "meanAbsoluteRGB": [
+          14.35366,
+          9.32253,
+          8.45439
+        ]
+      },
+      "gateText": {
+        "xyxy": [
+          618,
+          294,
+          872,
+          320
+        ],
+        "pixels": 6604,
+        "changed": 2370,
+        "over8": 0,
+        "maxRGB": [
+          2,
+          1,
+          1
+        ],
+        "meanAbsoluteRGB": [
+          0.24273,
+          0.11024,
+          0.08722
+        ]
+      }
+    },
+    "art-b-konbini": {
+      "eye": [
+        279.1,
+        9.8184,
+        912.8
+      ],
+      "quaternion": [
+        0.013653878147403252,
+        0.5849950384089397,
+        -0.009850566433920587,
+        0.8108620986267578
+      ],
+      "target": [
+        272.48,
+        10.0534,
+        910.6
+      ],
+      "fov": 58,
+      "clock": 14,
+      "canvas": [
+        1440,
+        900
+      ],
+      "ground": 8.138400077819822,
+      "eyeHeight": 1.679999922180178,
+      "beforeSha256": "e1629725fe7997282e3672b787d870d7b33ffae4390f0ec064876524134053ea",
+      "afterHashes": [
+        "3ccd4497a1244d3b07335069842550198c87b3e5277cd9305d1273c7c833c449",
+        "3ccd4497a1244d3b07335069842550198c87b3e5277cd9305d1273c7c833c449",
+        "3ccd4497a1244d3b07335069842550198c87b3e5277cd9305d1273c7c833c449"
+      ],
+      "glError": 0,
+      "pixels": 1296000,
+      "changed": 10492,
+      "over8": 1605,
+      "maxRGB": [
+        37,
+        19,
+        20
+      ],
+      "meanAbsoluteRGB": [
+        0.03538,
+        0.01361,
+        0.01445
+      ]
+    },
+    "art-c-alley": {
+      "eye": [
+        287.65,
+        14.384808464050293,
+        767.3199999999999
+      ],
+      "quaternion": [
+        0.00512201791291099,
+        0.8012252009590126,
+        -0.006859231737600546,
+        0.5983016740914732
+      ],
+      "target": [
+        278.4,
+        14.55,
+        770.06
+      ],
+      "fov": 45,
+      "clock": 14,
+      "canvas": [
+        1440,
+        900
+      ],
+      "ground": 12.594791867574052,
+      "eyeHeight": 1.7900165964762405,
+      "beforeSha256": "144d42507f59485436f81a6cb615aa467d45a02cb5eb36b72eec6c70fcdc1343",
+      "afterHashes": [
+        "144d42507f59485436f81a6cb615aa467d45a02cb5eb36b72eec6c70fcdc1343",
+        "144d42507f59485436f81a6cb615aa467d45a02cb5eb36b72eec6c70fcdc1343",
+        "144d42507f59485436f81a6cb615aa467d45a02cb5eb36b72eec6c70fcdc1343"
+      ],
+      "glError": 0,
+      "pixels": 1296000,
+      "changed": 0,
+      "over8": 0,
+      "maxRGB": [
+        0,
+        0,
+        0
+      ],
+      "meanAbsoluteRGB": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "art-d-laundry": {
+      "eye": [
+        283.5,
+        12.520055181715234,
+        783.8
+      ],
+      "quaternion": [
+        0.1297258927986663,
+        0.0767626424061459,
+        -0.010073721024303532,
+        0.9885227410703001
+      ],
+      "target": [
+        282.5,
+        14.25,
+        777.4
+      ],
+      "fov": 48,
+      "clock": 14,
+      "canvas": [
+        1440,
+        900
+      ],
+      "ground": 10.858280690511075,
+      "eyeHeight": 1.6617744912041594,
+      "beforeSha256": "a2266e02bc04f124c44d8273860ad865e1c2e29612bc4d94c049f752a23d5608",
+      "afterHashes": [
+        "a2266e02bc04f124c44d8273860ad865e1c2e29612bc4d94c049f752a23d5608",
+        "a2266e02bc04f124c44d8273860ad865e1c2e29612bc4d94c049f752a23d5608",
+        "a2266e02bc04f124c44d8273860ad865e1c2e29612bc4d94c049f752a23d5608"
+      ],
+      "glError": 0,
+      "pixels": 1296000,
+      "changed": 0,
+      "over8": 0,
+      "maxRGB": [
+        0,
+        0,
+        0
+      ],
+      "meanAbsoluteRGB": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "sample-e-harbour": {
+      "eye": [
+        -49.3148,
+        6.0969,
+        1121.5
+      ],
+      "quaternion": [
+        0.014730707497095328,
+        -0.7342518484654964,
+        0.01594041117183272,
+        0.6785301265038345
+      ],
+      "target": [
+        -24,
+        7.2,
+        1123.5
+      ],
+      "fov": 57,
+      "clock": 14,
+      "canvas": [
+        1440,
+        900
+      ],
+      "ground": 4.496910095214844,
+      "eyeHeight": 1.599989904785156,
+      "beforeSha256": "afa739f3f705e02f8a71b55f26dd9aaee835caba058f57a4dba7f5d1b23ba498",
+      "afterHashes": [
+        "ef51f86f570a79102686a8fb80417b5912fe4cac667a9c5e3fb572574b6489c4",
+        "ef51f86f570a79102686a8fb80417b5912fe4cac667a9c5e3fb572574b6489c4",
+        "ef51f86f570a79102686a8fb80417b5912fe4cac667a9c5e3fb572574b6489c4"
+      ],
+      "glError": 0,
+      "pixels": 1296000,
+      "changed": 5544,
+      "over8": 3853,
+      "maxRGB": [
+        222,
+        191,
+        210
+      ],
+      "meanAbsoluteRGB": [
+        0.33259,
+        0.27464,
+        0.18673
+      ]
+    },
+    "sample-f-hillside": {
+      "eye": [
+        1040.6682,
+        61.5086,
+        591.5865
+      ],
+      "quaternion": [
+        0.18707634146308863,
+        -0.10146136691099782,
+        0.019429882402105244,
+        0.9768984149640014
+      ],
+      "target": [
+        1062,
+        102.7783,
+        490
+      ],
+      "fov": 57,
+      "clock": 14,
+      "canvas": [
+        1440,
+        900
+      ],
+      "ground": 59.90856914767454,
+      "eyeHeight": 1.6000308523254603,
+      "beforeSha256": "1414fb43cada5cb4c13222e1d3c8f29c8cdb302bb32a707f843b45fcd1207fcb",
+      "afterHashes": [
+        "1414fb43cada5cb4c13222e1d3c8f29c8cdb302bb32a707f843b45fcd1207fcb",
+        "1414fb43cada5cb4c13222e1d3c8f29c8cdb302bb32a707f843b45fcd1207fcb",
+        "1414fb43cada5cb4c13222e1d3c8f29c8cdb302bb32a707f843b45fcd1207fcb"
+      ],
+      "glError": 0,
+      "pixels": 1296000,
+      "changed": 0,
+      "over8": 0,
+      "maxRGB": [
+        0,
+        0,
+        0
+      ],
+      "meanAbsoluteRGB": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "sample-g-rail": {
+      "eye": [
+        337.8563,
+        9.6,
+        844.5
+      ],
+      "quaternion": [
+        0.0042956255745017925,
+        0.7668403876967841,
+        -0.005132508643737493,
+        0.6418029485387173
+      ],
+      "target": [
+        268,
+        10.55,
+        857
+      ],
+      "fov": 57,
+      "clock": 14,
+      "canvas": [
+        1440,
+        900
+      ],
+      "ground": 8,
+      "eyeHeight": 1.5999999999999996,
+      "beforeSha256": "309ab7f5a4d5d1701adf5e93b2a5889717d53afde8b37561069b57a29449e361",
+      "afterHashes": [
+        "371f762c76b0cf34259b004ecaff62578a56c148399791f971b511e1be66bd63",
+        "371f762c76b0cf34259b004ecaff62578a56c148399791f971b511e1be66bd63",
+        "371f762c76b0cf34259b004ecaff62578a56c148399791f971b511e1be66bd63"
+      ],
+      "glError": 0,
+      "pixels": 1296000,
+      "changed": 4403,
+      "over8": 2315,
+      "maxRGB": [
+        227,
+        157,
+        176
+      ],
+      "meanAbsoluteRGB": [
+        0.08201,
+        0.06409,
+        0.06571
+      ]
+    },
+    "sample-h-north": {
+      "eye": [
+        181.0601,
+        136.1623,
+        -1212.8685
+      ],
+      "quaternion": [
+        0.1033905527383131,
+        0.02096399872548667,
+        -0.002179647308778166,
+        0.9944174945662979
+      ],
+      "target": [
+        180,
+        141.45,
+        -1238
+      ],
+      "fov": 57,
+      "clock": 14,
+      "canvas": [
+        1440,
+        900
+      ],
+      "ground": 134.5623427734375,
+      "eyeHeight": 1.5999572265624806,
+      "beforeSha256": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546",
+      "afterHashes": [
+        "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546",
+        "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546",
+        "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546"
+      ],
+      "glError": 0,
+      "pixels": 1296000,
+      "changed": 0,
+      "over8": 0,
+      "maxRGB": [
+        0,
+        0,
+        0
+      ],
+      "meanAbsoluteRGB": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  }
+}

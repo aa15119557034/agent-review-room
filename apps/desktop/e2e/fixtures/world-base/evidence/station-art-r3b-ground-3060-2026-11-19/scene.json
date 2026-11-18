@@ -1,0 +1,101 @@
+{
+  "source": "38fd2506da335b6cd3092c6269e14f68278d6a79",
+  "patched": "eed4fb46eb7e78418fa319f6f24bdbfe654425a0",
+  "installedFilesOnly": "8 static reflection PNGs",
+  "baked": "baked",
+  "fingerprint": "1061:2670406:298285.6:949273.1",
+  "planningRays": 0,
+  "decals": 26,
+  "originalPlanSHA256": "2e17ad7b2de399565ed74fabc4d8deda50d25f780dde5e36d1d086d8a8539fc3",
+  "planar9Of9": 22,
+  "curvedCheck": 4,
+  "obstruction": 0,
+  "stationColliders": 3147,
+  "originalColliderSHA256": "a0487644f831456ba4802d144d452d9d9709c5b80a26384f0931545fa4d2a541",
+  "clearAreas": 38,
+  "stairs": 7,
+  "portal": {
+    "placed": [
+      282,
+      12.764808464050294,
+      776.75
+    ],
+    "material": "Infill | baked ceramic and metal",
+    "inReceivers": true
+  },
+  "buildings": {
+    "buildings": [
+      "station-exchange",
+      "alley-workshop"
+    ],
+    "laundry": "Portal_wings"
+  },
+  "reflections": {
+    "resolution": 256,
+    "panes": {
+      "W1": 8,
+      "E1": 4,
+      "W2": 5,
+      "E2": 5,
+      "E3": 5
+    },
+    "loadedFaces": 6,
+    "captures": 0,
+    "facesAtLoad": 0,
+    "passesPerFrame": 0,
+    "loadMs": 38,
+    "batchedGlass": 8,
+    "sharedOnEveryGlass": true,
+    "faceSizes": [
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ]
+    ],
+    "wet": {
+      "maskSize": 512,
+      "maskChannels": 2,
+      "maskBaseBytes": 524288,
+      "bounds": {
+        "x0": -4,
+        "z0": 4,
+        "x1": 4,
+        "z1": 34
+      },
+      "patchGroups": 5,
+      "dryDecalTriangles": {
+        "alphaShaped": 409,
+        "solid": 0
+      },
+      "dryDilationM": 0.12,
+      "wetAreaM2": 64.38079833984375,
+      "puddleAreaM2": 40.982666015625,
+      "wetEquivalentAreaM2": 38.62331973805187,
+      "puddleEquivalentAreaM2": 24.821317784928304,
+      "materials": 1,
+      "extraPasses": 0,
+      "extraRenderTargets": 0,
+      "reflection": "shared station street cube"
+    }
+  }
+}

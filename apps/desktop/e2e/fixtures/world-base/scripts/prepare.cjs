@@ -3,6 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const { spawnSync } = require('node:child_process');
+const { prepareStationArt } = require('./prepare-station-art.cjs');
 const root = path.resolve(__dirname, '..');
 const sources = JSON.parse(fs.readFileSync(path.join(root, 'sources.json'), 'utf8'));
 const manifest = path.join(root, 'source-files.json');
@@ -60,3 +61,5 @@ for (const name of ['petalwake', 'sakuragaoka']) {
 // Hashes identify individual files; all upstream originals and binary assets stay local.
 if (!expected) fs.writeFileSync(manifest, `${JSON.stringify(inventory, null, 2)}\n`);
 console.log(`${inventory.length} upstream files inventoried; no assets copied into tracked source`);
+const stationArt = prepareStationArt(root);
+console.log(`Station art ${stationArt.sha256}: ${stationArt.files.length} files verified`);

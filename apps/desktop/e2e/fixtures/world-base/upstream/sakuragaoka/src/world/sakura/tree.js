@@ -428,7 +428,11 @@ export function makeTree(spec, env) {
       extra.push(e);
     }
   }
-  const surf = blossomSurface(pads.concat(extra), { h: spec.meshH ?? Q.h, smooth: Q.smooth, canopy, noise, spec, amp: Q.amp, freq: Q.freq, groundY: gy });
+  const mass = pads.concat(extra);
+  const style = env.blossomStyle; // Optional offline recipe for the two mature, painted trees.
+  const surf = blossomSurface(style ? mass.map(p => ({ ...p, rx: p.rx * style.width, rz: p.rz * style.width, ry: p.ry * style.height })) : mass,
+    { h: (spec.meshH ?? Q.h) * (style?.gridScale ?? 1), smooth: style?.smooth ?? Q.smooth, canopy, noise, spec,
+      amp: Q.amp * (style?.billow ?? 1), freq: Q.freq * (style?.frequency ?? 1), groundY: gy });
   if (surf) surf.emit(blob);
   const cardBase = Q.cardS * (spec.cardScale ?? 1);
   const density = (spec.cardDensity ?? 1) * Q.cardK;

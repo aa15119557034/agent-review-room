@@ -233,7 +233,8 @@ export function addBackAlley({ root, ctx, own, ownTexture, frame, M, A, sheet })
  *  26 baked weathering decals on these walls (checked in the cloud render, #254 round 3). */
 export function addRearCorridor(R, M, A, sheet, { unit, w, floorY, rng }) {
   const pipe = '#a7b5bb', clip = '#586369', len = w - 1.2;
-  for (const [y, r] of [[2.58, 0.034], [2.72, 0.027]]) {
+  // floorY already includes the 0.14 m floor finish: 2.44 / 2.58 above it clears the slab (8 cm) and the lamp tops (#254 round 3 check).
+  for (const [y, r] of [[2.44, 0.034], [2.58, 0.027]]) {
     R.cyl(M.metal, pipe, r, len, 0, floorY + y, 0.1, { rz: Math.PI / 2, seg: 8 });
     for (let x = -len / 2 + 0.4; x < len / 2; x += 1.4) R.box(M.metal, clip, 0.05, 0.1, 0.05, x, floorY + y, 0.075);
   }

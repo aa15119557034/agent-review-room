@@ -22,6 +22,12 @@ export function addArtR1Station({ ctx }) {
     m.emissiveMap = map; m.needsUpdate = true;
     return m;
   };
+  // Round 3b: unlit printed card. Unlike lit(), it can go through the district batcher (MeshBasic colour
+  // is baked and its canvas joins a shared atlas page), so a card costs no draw call of its own.
+  const flat = (w, h, draw, key, tone = 0.86) => {
+    const map = ctx.tex.draw(w, h, draw, { key, anisotropy: 8 });
+    return new THREE.MeshBasicMaterial({ map, color: new THREE.Color(tone, tone, tone), name: key });
+  };
   const sans = ctx.tex.FONTS.sans;
   const text = (g, s, x, y, size, colour, maxW, weight = 800) => {
     g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = colour;
@@ -67,14 +73,17 @@ export function addArtR1Station({ ctx }) {
     }
     return top;
   };
-  const board = (S, x, y, z, rot, w, h, draw, key) => {
+  const board = (S, x, y, z, rot, w, h, draw, key, o = {}) => {
     const g = S.k.group([x, y, z], rot), k = ctx.kit(g), lean = 0.2, ang = Math.atan2(lean, h);
     const frame = M.t('#4d5a60', { paint: 0.04 });
     for (const sgn of [1, -1]) {
       const b = new THREE.Group(); b.position.set(0, 0, sgn * lean); b.rotation.x = -sgn * ang; g.add(b);
       const kb = ctx.kit(b);
       kb.box(w, h, 0.03, frame, [0, h / 2, 0]);
-      if (sgn > 0) { const face = kb.plane(w - 0.06, h - 0.07, lit(256, Math.round(256 * h / w), draw, key, 0.35), [0, h / 2, 0.018]); face.userData.noBatch = true; }
+      if (sgn > 0) {
+        const face = kb.plane(w - 0.06, h - 0.07, (o.flat ? flat : lit)(256, Math.round(256 * h / w), draw, key, o.flat ? undefined : 0.35), [0, h / 2, 0.018]);
+        if (!o.flat) face.userData.noBatch = true;
+      }
     }
     note('a-board', 2 * 12 + 2);
   };
@@ -195,29 +204,31 @@ export function addArtR1Station({ ctx }) {
       // shelf lips in the category colour
       for (const y of [0.52, 0.9]) k.box(0.87, 0.046, 0.016, panel, [z.cx, FY + y - 0.014, Z1 + 0.34 + 0.002]);
       // lit header over the pink POP
-      const hdr = k.box(0.94, 0.34, 0.012, lit(256, 92, (g, w, h) => {
+      k.box(0.94, 0.34, 0.012, flat(256, 92, (g, w, h) => {
         g.fillStyle = z.bg; g.fillRect(0, 0, w, h);
         g.fillStyle = 'rgba(255,255,255,0.9)'; g.fillRect(0, h - 10, w, 4);
         text(g, z.label, w / 2, h * 0.4, 46, z.fg, w - 20);
         text(g, z.sub, w / 2, h * 0.8, 18, z.fg, w - 40, 700);
-      }, 'art-r3-w1-zone-' + z.sub, 0.5), [z.cx, FY + GH + 0.2, Z1 + 0.05]);
-      hdr.userData.noBatch = true;
+      }, 'art-r3-w1-zone-' + z.sub, 0.95), [z.cx, FY + GH + 0.2, Z1 + 0.05]);
       // low island of goods in the aisle, three tiers stepping back toward the end cap
       const iz = Z1 + 0.62;
       k.box(0.78, 0.12, 0.42, M.t('#e9ecef', { paint: 0.02 }), [z.cx, FY + 0.06, iz]);
       k.box(0.8, 0.1, 0.012, panel, [z.cx, FY + 0.06, iz + 0.216]);
+      // Round 3b (#254 林离): goods stand on two solid steps (0.78 wide, 0.13 high, 0.28 / 0.14 deep) and sit 10 cm further back.
+      k.box(0.78, 0.13, 0.28, M.t('#e9ecef', { paint: 0.02 }), [z.cx, FY + 0.12 + 0.065, iz - 0.07]);
+      k.box(0.78, 0.13, 0.14, M.t('#e9ecef', { paint: 0.02 }), [z.cx, FY + 0.25 + 0.065, iz - 0.14]);
       const r = ctx.rng('art-r3-island-' + z.sub);
       const tiers = [[0.12, 0.13, 0.36], [0.25, 0.04, 0.24], [0.38, -0.05, 0.12]];
       for (const [y, dz, depth] of tiers) {
         const tall = z.sub === 'DRINK';
         for (let x = -0.33; x <= 0.331; x += tall ? 0.085 : 0.13) {
           const c = z.goods[Math.floor(r() * z.goods.length)];
-          if (tall) stock.bottle(z.cx + x, FY + y, iz + dz + depth / 2 - 0.05, 0.07, 0.2, c);
-          else stock.box(z.cx + x, FY + y, iz + dz + depth / 2 - 0.06, 0.11, 0.12, 0.09, c, (r() - 0.5) * 0.12);
+          if (tall) stock.bottle(z.cx + x, FY + y, iz + dz + depth / 2 - 0.15, 0.07, 0.2, c);
+          else stock.box(z.cx + x, FY + y, iz + dz + depth / 2 - 0.16, 0.11, 0.12, 0.09, c, (r() - 0.5) * 0.12);
         }
       }
       S.box(z.cx, iz, 0.8, 0.44, -0.05, FY + 0.6);
-      note('w1-zone', 5 * 12 + 12);
+      note('w1-zone', 7 * 12 + 12);
     }
     stock.finish(S.g); stats.instancedMeshes += 2; note('w1-zone-stock', stock.triangles);
   }
@@ -283,7 +294,7 @@ export function addArtR1Station({ ctx }) {
         text(g, b[0], W / 2, H * 0.12, 48, '#ffffff', W - 20);
         text(g, b[2], W / 2, H * 0.48, 42, b[1], W - 24);
         text(g, b[3], W / 2, H * 0.74, 40, '#3a3a40', W - 24);
-      }, 'art-r3-board-' + lot.id);
+      }, 'art-r3-board-' + lot.id, { flat: true });
       stats.shopBoards.push(lot.id);
     }
   }

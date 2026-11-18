@@ -1,0 +1,9 @@
+{
+  "strictTransportClean": false,
+  "rawLoadingFailed": 3,
+  "httpErrors": 0,
+  "authoredReportTransportClean": true,
+  "authoredReportOK": true,
+  "physicalEvidence": "physical-only.json",
+  "formalTransportRule": "Zero raw Network.loadingFailed and HTTP errors; a receipt does not waive any cancellation."
+}

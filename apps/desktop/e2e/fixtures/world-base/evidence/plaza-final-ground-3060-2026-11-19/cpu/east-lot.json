@@ -1,0 +1,150 @@
+{
+  "comparedTo": "58a46094de1ac23493f35f1bea94683df5d49c2d",
+  "fields": [
+    "terrainChecks",
+    "allStairs",
+    "clearAreas",
+    "vegetation",
+    "portal",
+    "roots",
+    "stationArt"
+  ],
+  "allEqual": true,
+  "terrainChecks": [
+    {
+      "placement": {
+        "name": "station-exchange",
+        "type": "station-art",
+        "center": [
+          35,
+          -124.2
+        ],
+        "baseY": 4.430233103434214,
+        "yaw": 0,
+        "halfWidth": 3.15,
+        "halfDepth": 3.55,
+        "footprint": {
+          "minX": 31.85,
+          "maxX": 38.15,
+          "minZ": -127.75,
+          "maxZ": -120.65
+        },
+        "foundation": {
+          "top": 12.430233103434215,
+          "bottom": 11.52418612798056,
+          "height": 0.9060469754536546
+        },
+        "ground": {
+          "min": 11.60418612798056,
+          "max": 12.390233103434214,
+          "relief": 0.7860469754536545,
+          "samples": 961
+        },
+        "worldOrigin": [
+          315,
+          12.430233103434215,
+          775.8
+        ]
+      },
+      "registeredForClearing": {
+        "name": "station-exchange",
+        "minX": 31.85,
+        "maxX": 38.15,
+        "minZ": -127.75,
+        "maxZ": -120.65
+      },
+      "worldMeshBox": [
+        [
+          311.84999990463257,
+          12.430233103434215,
+          772.2800000190734
+        ],
+        [
+          318.0350000858307,
+          32.97023401896156,
+          779.7100000858306
+        ]
+      ],
+      "hasEntry": {
+        "name": "station-exchange-entry",
+        "x": 34.45,
+        "width": 1.64,
+        "highZ": -120.65,
+        "lowZ": -118.51,
+        "steps": 8,
+        "rise": 0.15835294672647732,
+        "tread": 0.26750000000000007,
+        "top": 4.750233103434215,
+        "bottom": 3.483409529622396,
+        "minClearance": 0.19502497863770074
+      }
+    },
+    {
+      "placement": {
+        "name": "alley-workshop",
+        "type": "station-art",
+        "center": [
+          -30,
+          -142.6
+        ],
+        "baseY": 5.143555140363213,
+        "yaw": 2.03,
+        "halfWidth": 2.72,
+        "halfDepth": 3.07,
+        "footprint": {
+          "minX": -33.95756323594602,
+          "maxX": -26.04243676405398,
+          "minZ": -146.39895327202598,
+          "maxZ": -138.801046727974
+        },
+        "foundation": {
+          "top": 13.143555140363212,
+          "bottom": 12.511274916676518,
+          "height": 0.6322802236866947
+        },
+        "ground": {
+          "min": 12.591274916676518,
+          "max": 13.103555140363213,
+          "relief": 0.5122802236866946,
+          "samples": 961
+        },
+        "worldOrigin": [
+          250,
+          13.143555140363212,
+          757.4
+        ]
+      },
+      "registeredForClearing": {
+        "name": "alley-workshop",
+        "minX": -33.95756323594602,
+        "maxX": -26.04243676405398,
+        "minZ": -146.39895327202598,
+        "maxZ": -138.801046727974
+      },
+      "worldMeshBox": [
+        [
+          245.98875188704156,
+          13.143555140363212,
+          753.3304749411756
+        ],
+        [
+          254.47737929497944,
+          17.883554911481376,
+          761.2390430654569
+        ]
+      ]
+    }
+  ],
+  "stairsCount": 7,
+  "clearCount": 38,
+  "portal": {
+    "placed": [
+      282,
+      12.764808464050294,
+      776.75
+    ],
+    "material": "Infill | baked ceramic and metal",
+    "inReceivers": true
+  },
+  "sha256": "bfe1ab38a823a980a1aec902356bf10b07cb1a05cc5127e9d0d6f5b519d77ffd"
+}
