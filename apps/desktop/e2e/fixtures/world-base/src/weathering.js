@@ -57,7 +57,8 @@ if (uWx > 0.0 && vWxMask.x > 0.01) {
   vec3 wxTilt = mix(vec3(1.03, 1.0, 0.94), vec3(0.96, 0.99, 1.03), b1);
   wxC = mix(wxC, wxC * wxTilt, uWxBlotch.z * 4.0 * wxK);
   float wxLum = dot(wxC, vec3(0.2126, 0.7152, 0.0722));
-  wxC = mix(vec3(wxLum), wxC, 1.0 + (0.5 - b1) * 2.0 * uWxBlotch.w * wxK);
+  // Extrapolating saturation on an already vivid paint can put one diffuse channel below zero.
+  wxC = max(vec3(0.0), mix(vec3(wxLum), wxC, 1.0 + (0.5 - b1) * 2.0 * uWxBlotch.w * wxK));
   wxC *= wxL * (1.0 + (smoothstep(0.0, 14.0, wxH) - 0.35) * uWxFreq.z * wxWall * wxK);
   // 1 wall foot grime
   float wxG = pow(1.0 - smoothstep(0.0, uWxGrime.x, wxH), 1.25) * (0.8 + 0.4 * wxT2.b) * wxWall;
