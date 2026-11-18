@@ -20,7 +20,7 @@ export async function loadShadowTint() {
 export const shadowTintEnabled = () => new URLSearchParams(location.search).get('shadowtint') !== 'off';
 
 /** Must run before the first program that uses lights_fragment_end is compiled. */
-export function installLitShadowTint(p) {
+export function installLitShadowTint(p, box) {
   const chunk = THREE.ShaderChunk.lights_fragment_end;
   if (chunk.includes('wbShadowTint')) return;
   THREE.ShaderChunk.lights_fragment_end = `${chunk}
@@ -29,7 +29,10 @@ export function installLitShadowTint(p) {
   float stLum = dot( diffuseColor.rgb, vec3( 0.2126, 0.7152, 0.0722 ) );
   float stSun = dot( reflectedLight.directDiffuse, vec3( 0.2126, 0.7152, 0.0722 ) ) / max( stLum, 0.03 );
   float stShade = 1.0 - smoothstep( ${p.sunLo.toFixed(3)}, ${p.sunHi.toFixed(3)}, stSun );
-  reflectedLight.indirectDiffuse += diffuseColor.rgb * ${vec3(p.fill)} * stShade;
+  // Inside the shop (padded box, world space) the fill is off: the room keeps its warm lamp-lit colours.
+  vec3 stW = cameraPosition + geometryPosition * mat3( viewMatrix );
+  float stIn = float( all( greaterThan( stW, ${vec3(box.slice(0, 3))} ) ) && all( lessThan( stW, ${vec3(box.slice(3))} ) ) );
+  reflectedLight.indirectDiffuse += diffuseColor.rgb * ${vec3(p.fill)} * stShade * ( 1.0 - stIn );
 }
 #endif`;
 }
@@ -58,6 +61,14 @@ export function patchIslandShadowTint(island, p) {
   let patched = 0;
   for (const m of seen) if (patchShader(m, edits)) patched++;
   return { patched };
+}
+
+/** World-space box [minX, minY, minZ, maxX, maxY, maxZ] of the convenience-store interior, padded. */
+export function shopInteriorBox(layout, station, pad) {
+  const lot = layout.LOTS.find((l) => l.kind === 'konbini'), f = layout.lotFrame(lot), o = station.root.position;
+  const xs = [], zs = [];
+  for (const lx of [-f.w / 2, f.w / 2]) for (const lz of [0, -f.depth]) { const c = layout.lotToWorld(lot, lx, lz); xs.push(c.x); zs.push(c.z); }
+  return [Math.min(...xs) + o.x - pad, o.y - 1, Math.min(...zs) + o.z - pad, Math.max(...xs) + o.x + pad, o.y + 7, Math.max(...zs) + o.z + pad];
 }
 
 /** Uniforms for the composite pass. */

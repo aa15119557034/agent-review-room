@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { createIsland, clearVegetationAreas } from './island.js';
-import { loadShadowTint, shadowTintEnabled, installLitShadowTint, patchIslandShadowTint, shadowTintUniforms } from './shadow-tint.js';
+import { loadShadowTint, shadowTintEnabled, installLitShadowTint, patchIslandShadowTint, shadowTintUniforms, shopInteriorBox } from './shadow-tint.js';
 import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from './evening-glow.js';
+import * as layoutModule from '../upstream/sakuragaoka/src/world/layout.js';
 import { createStation } from './station.js';
 import { createLook } from './look.js';
 import { createSkyline } from './skyline.js';
@@ -96,12 +97,12 @@ async function init() {
   // ?time=afternoon keeps Petalwake's original light for before/after comparison.
   const timeOfDay = new URLSearchParams(location.search).get('time') ?? 'evening';
   // Round 24: blue-violet shade. The lit-material chunk is patched before any program compiles.
-  const shadowTint = shadowTintEnabled() ? (await loadShadowTint())[timeOfDay === 'afternoon' ? 'afternoon' : 'evening'] : null;
-  if (shadowTint) installLitShadowTint(shadowTint);
+  const shadowTintParams = shadowTintEnabled() ? await loadShadowTint() : null;
+  const shadowTint = shadowTintParams ? shadowTintParams[timeOfDay === 'afternoon' ? 'afternoon' : 'evening'] : null;
   island = await createIsland({ scene, renderer, camera, timeOfDay });
   worldBase.island = island;
   look.applyIsland(island);
-  if (shadowTint) { worldBase.shadowTint = { island: patchIslandShadowTint(island, shadowTint) }; look.setShadowTint(shadowTintUniforms(shadowTint)); }
+  if (shadowTint) worldBase.shadowTint = { island: patchIslandShadowTint(island, shadowTint) };
   const evening = island.timeOfDay === 'evening';
   // Low golden-hour sun: warmer and a little weaker; the sky fill turns cooler so shade reads blue-violet.
   const sun = new THREE.DirectionalLight(evening ? 0xffc490 : 0xffe4c4, evening ? 2.3 : 2.1);
@@ -124,6 +125,13 @@ async function init() {
     onProgress: stage,
   });
   worldBase.station = station;
+  if (shadowTint) {
+    // No program using the lit chunk has compiled yet (first render is after init), so the box can be known here.
+    const box = shopInteriorBox(layoutModule, station, shadowTintParams.indoorPad);
+    installLitShadowTint(shadowTint, box);
+    look.setShadowTint(shadowTintUniforms(shadowTint), box, shadowTintParams.indoorFade);
+    worldBase.shadowTint.indoorBox = box;
+  }
   // Interpolate the existing ramp values for softer boundaries between tones.
   const ramp = station.ctx.mat.gradientMap;
   ramp.magFilter = ramp.minFilter = THREE.LinearFilter;

@@ -122,6 +122,13 @@ export function createLook(renderer, camera) {
     bloom: 0.12, exposure: 1.02, saturation: 1.0, contrast: 1.05, vignette: 0.12,
   });
   const mat = pipeline.finalMat;
+  // Round 24: composite shadow tint fades out while the camera is inside the shop box (see shadow-tint.js).
+  let shBase = 0, shBox = null, shFade = 1.5;
+  const camIndoor = () => {
+    if (!shBox) return 1;
+    const p = camera.position, dx = Math.max(shBox[0] - p.x, 0, p.x - shBox[3]), dy = Math.max(shBox[1] - p.y, 0, p.y - shBox[4]), dz = Math.max(shBox[2] - p.z, 0, p.z - shBox[5]);
+    return THREE.MathUtils.smoothstep(Math.hypot(dx, dy, dz), 0, shFade);
+  };
   Object.assign(mat.uniforms, {
     tWorldDepth: pipeline.uDepth, uNear: { value: camera.near }, uFar: { value: camera.far },
     uProjScale: { value: 1 }, uAO: { value: 0.55 },
@@ -276,13 +283,16 @@ export function createLook(renderer, camera) {
     },
     setAO(value) { mat.uniforms.uAO.value = value; },
     /** Round 24: uniforms from shadowTintUniforms(); null switches the composite tint off. */
-    setShadowTint(u) {
-      if (!u) { mat.uniforms.uShOn.value = 0; return; }
+    setShadowTint(u, indoorBox = null, fade = 1.5) {
+      shBox = indoorBox; shFade = fade;
+      if (!u) { shBase = 0; mat.uniforms.uShOn.value = 0; return; }
+      shBase = 1;
       for (const [k, v] of Object.entries(u)) mat.uniforms[k].value.copy ? mat.uniforms[k].value.copy(v.value) : (mat.uniforms[k].value = v.value);
     },
     setFlightEffects(value) { pipeline.params.blur = value ? 1 : 0; pipeline.params.rays = value ? 0.55 : 0; pipeline.hasPrev = false; },
     setSize(width, height, ratio) { pipeline.setSize(width, height, ratio); },
     render(scene, dt) {
+      mat.uniforms.uShOn.value = shBase * camIndoor();
       mat.uniforms.uNear.value = camera.near;
       mat.uniforms.uFar.value = camera.far;
       mat.uniforms.uProjScale.value = 0.5 * mat.uniforms.uRes.value.y / Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2);
