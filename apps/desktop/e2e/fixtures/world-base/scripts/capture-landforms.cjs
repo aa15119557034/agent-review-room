@@ -5,7 +5,7 @@ module.exports=async function captureLandforms({ev,view,shot,sample,report,poses
   const prior=poses?JSON.parse(fs.readFileSync(poses,'utf8')):null;
   await ev(`(()=>{const i=worldBase.island,update=i.update,weather=i.weather.update;
     i.update=dt=>update(dt,32);i.weather.update=()=>weather(0);document.body.classList.add('hide-ui');})()`);
-  const views=['alpine','couloir','woodland','meadow','treeline','caldera','gorge','cascade','cape','ravines','dunes','ocean','tarn-blue','ocean-column','lake-column'];
+  const views=['larkhaven','cairnwick','fields','alpine','couloir','woodland','meadow','treeline','sea-arch','caldera','gorge','cascade','cape','ravines','dunes','ocean','tarn-blue','ocean-column','lake-column'];
   const fixed={
     ocean:[[269,19,1156],[313,0,1235]],
     'tarn-blue':[[805,172,-743],[735,138,-824]],
@@ -14,7 +14,8 @@ module.exports=async function captureLandforms({ev,view,shot,sample,report,poses
   };
   for(const id of views){
     if(prior){
-      const q=prior.shots[id];await view('station-street');
+      const q=prior.shots[id];if(!q)continue;
+      await view('station-street');
       await ev(`(()=>{const c=worldBase.camera;c.position.fromArray(${JSON.stringify(q.position)});c.quaternion.fromArray(${JSON.stringify(q.rotation)});c.fov=${q.fov};c.updateProjectionMatrix();c.updateMatrixWorld();})()`);
     }else if(fixed[id]){
       await view('station-street');
@@ -25,6 +26,21 @@ module.exports=async function captureLandforms({ev,view,shot,sample,report,poses
     await shot(id);
   }
   if(prior)return;
+  await ev("document.querySelector('#open-map').click()");
+  await shot('island-map');
+  await ev("(()=>{const map=document.querySelector('#island-map');if(!map.open || map.querySelectorAll('[data-place]').length!==12)throw Error('Island chart failed');map.querySelector('[data-place=sea-arch]').click();if(map.open || worldBase.currentView!=='sea-arch')throw Error('Map selection failed');})()");
+  report.baseContent=await ev(`(async()=>{const w=worldBase,i=w.island;
+    const original=await (await fetch('/assets/terrain/props.json')).json(),index=await (await fetch('/assets/town/index.json')).json();
+    const towns=await Promise.all(index.towns.map(async t=>{
+      const meta=await (await fetch('/assets/town/'+t.id+'.json')).json();
+      const live=i.town.towns.find(k=>k.id===t.id);
+      return {id:t.id,name:t.name,originalFeatures:meta.buildings.length,loadedFeatures:i.town.buildings.filter(b=>b.town===t.id).length,
+        originalChunks:meta.chunks.length,loadedChunks:live.casters.length,attached:live.group.parent===i.town.group};
+    }));
+    return {towns,originalProps:Object.fromEntries(Object.entries(original).map(([k,v])=>[k,v.length])),loadedProps:i.props.counts,
+      boats:i.town.floaters.length,spinners:i.town.spinners.length,lamps:i.town.lamps.length,stationStages:w.stages,backgroundBuildings:w.city.stats.buildings};
+  })()`);
+  if(report.baseContent.towns.some(t=>!t.attached||t.loadedChunks!==t.originalChunks||t.loadedFeatures!==t.originalFeatures))throw Error('Original settlement missing');
   report.vegetation=await ev(`(()=>{const i=worldBase.island,trees=i.woodland.trees;
     const bySpecies=i.stats.woodland,variants=new Set(trees.map(t=>t.variant)).size;
     const roots=Math.max(...trees.map(t=>Math.abs(t.y+0.10-i.heightAt(t.x,t.z))));
@@ -61,6 +77,14 @@ module.exports=async function captureLandforms({ev,view,shot,sample,report,poses
     report.walks[id]=distance;
     if(distance<0.6)throw Error('Walking entry obstructed at '+id);
   }
+  await view('sea-arch');
+  await ev("worldBase.startWalking();worldBase.walker.setView('first');document.querySelector('#world').focus()");
+  const start=await ev('worldBase.walker.worldPosition.toArray()');
+  wc.sendInputEvent({type:'keyDown',keyCode:'W'});
+  try{await new Promise(done=>setTimeout(done,9000));}finally{wc.sendInputEvent({type:'keyUp',keyCode:'W'});}
+  const end=await ev('worldBase.walker.worldPosition.toArray()');
+  report.archCrossing={start,end,along:(end[0]+1888)*0.620-(end[2]+508)*0.785};
+  if(report.archCrossing.along<5)throw Error('Arch opening obstructed: '+JSON.stringify(report.archCrossing));
   report.route=await ev(`(async()=>{const w=worldBase;const station=(await import('./src/station-validation.js')).validateStation(w);
     const coast=(await import('./scripts/validate-environment.js')).validateEnvironment(w);
     return {station:station.ok,coast:coast.ok};})()`);

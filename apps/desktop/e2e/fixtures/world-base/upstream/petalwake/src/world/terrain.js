@@ -671,6 +671,7 @@ void main(){
     float parting = smoothstep(0.80, 0.92, ntex(vec2(bed * 4.3, 23.0)).b);
     sandC *= 1.0 - 0.45 * parting;
     vec3 wallC = mix(shaleC, sandC, mix(unit,0.87,folded));
+    wallC=mix(wallC,vec3(0.32,0.29,0.24)*(0.84+0.23*unit),0.45*headland);
     float wallH = mix(shaleH, sandH, unit);
     float wallR = mix(0.62, 0.86, unit);
     vec2 wnx = mix(shaleNx * 1.6, sx.n * 1.3, unit), wnz = mix(shaleNz * 1.6, sz.n * 1.3, unit);
@@ -707,7 +708,7 @@ void main(){
     m.c = mix(m.c, rc, rockAmt);
     m.r = mix(m.r, rr, rockAmt);
     m.h = mix(m.h, rh, rockAmt);
-    Nw = normalize(mix(Nw, rn, rockAmt));
+    Nw = normalize(mix(Nw, normalize(mix(rn,N,0.53*headland)), rockAmt));
   }
 
   // Deposits share the grain and relief of the native materials. Strata follow

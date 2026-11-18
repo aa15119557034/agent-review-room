@@ -20,6 +20,7 @@ import { fallMist } from './fall-mist.js';
 import { loadAlpine, applyAlpine, alpineRect, alpineLodRange } from './alpine.js';
 import { plantWoodland, createWoodland, shapeMeadows } from './woodland.js';
 import { createUnderstory } from './understory.js';
+import { createSeaArch } from './sea-arch.js';
 import { sculptDistricts, sculptTributaries, makeLandformViews } from './landforms.js';
 
 export const stationPlacement = Object.freeze({
@@ -242,7 +243,8 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
     for(const stream of streams)level=Math.max(level,stream.levelAt(x,z));
     return level;
   };
-  const landformViews=makeLandformViews(terrain,branches[0].fall,drainage);
+  const seaArch=createSeaArch(terrain);
+  const landformViews=[...makeLandformViews(terrain,branches[0].fall,drainage),seaArch.view];
   terrain.material.uniforms.uBasinLevels.value.fromArray(basins.map(b=>b.level));
   const flatten = terrain.flattenRect({ ...stationRect, height: stationPlacement.y, blend, surface, approach: coastRoute });
   // Retain the authored burial depth of each rock or tree on the reshaped island.
@@ -281,7 +283,7 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
     createWoodland(planted),loadProps(assetBase,terrain,propPlacements,streamLevelAt),
   ]);
   const understory=createUnderstory(terrain,atlas);
-  root.add(woodland.group,understory.group);
+  root.add(woodland.group,understory.group,seaArch.mesh);
   const weather = createWeather(timeOfDay);
   const inland = createInlandWater(terrain,sky,river,streamLevelAt,branches);
   root.add(...branches.map(branch=>branch.group),fallMist(fall),fallMist(river.fall));
@@ -307,7 +309,7 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
     stats.meadow = { ...meadow.stats };
   }
   return {
-    ready: true, root, terrain, town, props, meadow, woodland, water, sky, river, branches, streamLevelAt, landformViews, inland, streamView, transition, U, stationPlacement, stats, update, timeOfDay, coastRoute, weather,
+    ready: true, root, terrain, town, props, meadow, woodland, seaArch, water, sky, river, branches, streamLevelAt, landformViews, inland, streamView, transition, U, stationPlacement, stats, update, timeOfDay, coastRoute, weather,
     heightAt: (x, z) => terrain.heightAt(x, z),
     // Meadow allocates materials lazily as camera cells enter view.
     get materials() {

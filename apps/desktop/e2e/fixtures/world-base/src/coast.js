@@ -106,6 +106,7 @@ export function coastWalking(station, island) {
     const y=tree.y-root.position.y;
     physics.addCylinder(tree.x-root.position.x,tree.z-root.position.z,tree.radius,y-0.3,y+tree.height*0.83);
   }
+  for(const s of island.seaArch?.solids ?? [])physics.addBox(s.x-root.position.x,s.z-root.position.z,s.width,s.depth,island.seaArch.yaw,s.bottom-root.position.y,s.top-root.position.y);
   return {
     physics,
     wadingDepth(x,z){

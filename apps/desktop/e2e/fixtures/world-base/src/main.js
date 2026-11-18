@@ -1,3 +1,4 @@
+import { installIslandMap } from './island-map.js';
 import * as THREE from 'three';
 import { createIsland, clearVegetationAreas } from './island.js';
 import { loadShadowTint, shadowTintEnabled, installLitShadowTint, patchIslandShadowTint, shadowTintUniforms, shopInteriorBox } from './shadow-tint.js';
@@ -67,9 +68,10 @@ function setView(name) {
   worldBase.currentView = name;
   look.pipeline.hasPrev = false;
   document.querySelector('#mode').textContent = labels[name];
-  document.querySelector('#water-view').value = view.feet ? name : '';
+  document.querySelector('#water-view').value = view.feet || view.overview ? name : '';
   document.querySelectorAll('[data-view]').forEach(button => button.classList.toggle('active', button.dataset.view === name));
-  document.querySelector('#walk').textContent = '进入步行';
+  document.querySelector('#walk').textContent = view.overview ? '城镇总览' : '进入步行';
+  document.querySelector('#walk').disabled = Boolean(view.overview);
 }
 worldBase.setView = setView;
 function startWalking() {
@@ -178,6 +180,16 @@ async function init() {
     { name: 'coast', fov: 58, position: [270, island.heightAt(270, 1110) + 1.65, 1110], target: [-55, 3, 1230] },
   ];
   const waterSelect=document.querySelector('#water-view');
+  const settlements=document.createElement('optgroup');settlements.label='原岛聚落';
+  for(const v of [
+    {name:'larkhaven',label:'拉克港 · Larkhaven',position:[91,70,1171],target:[-48,18,1045]},
+    {name:'cairnwick',label:'凯恩维克 · Cairnwick',position:[284,191,-1093],target:[184,142,-1201]},
+    {name:'fields',label:'原野农庄 · The Meadows',position:[-354,82,337],target:[-434,49,264]},
+  ]){
+    worldBase.views.push({...v,overview:true,fov:53});
+    labels[v.name]=v.label;settlements.append(new Option(v.label,v.name));
+  }
+  waterSelect.append(settlements);
   for(const b of basins){
     worldBase.views.push(bankView(b,island.terrain));
     labels[b.id]=b.name;
@@ -193,6 +205,7 @@ async function init() {
     geology.append(new Option(view.label,view.name));
   }
   waterSelect.append(geology);
+  installIslandMap(island,walker,setView,()=>worldBase.currentView);
   waterSelect.addEventListener('change',()=>{ if(waterSelect.value) setView(waterSelect.value); });
   const pointer=new THREE.Vector2(), caster=new THREE.Raycaster();
   let press;
@@ -218,6 +231,7 @@ async function init() {
   document.querySelector('#toon').addEventListener('change', event => worldBase.setToon(event.target.checked));
   document.querySelector('#effects').addEventListener('change', event => worldBase.setFlightEffects(event.target.checked));
   addEventListener('keydown', event => {
+    if (document.querySelector('#island-map').open) return;
     if (event.code === 'KeyH') document.body.classList.toggle('hide-ui');
     const view = worldBase.views[Number(event.key) - 1];
     if (view) setView(view.name);

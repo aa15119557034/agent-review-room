@@ -22,7 +22,7 @@ export const QUALITY = {
 
 function grassShells(q) {
   return [
-    { cell: 7, per: 176 * q, segs: 5, width: 0.021, height: 0.50, fade: [-1, 0, 11, 16], lean: 1.0, root: 1.0 },
+    { cell: 7, per: 77 * q, segs: 5, width: 0.021, height: 0.50, fade: [-1, 0, 11, 16], lean: 1.0, root: 1.0 },
     { cell: 15, per: 42 * q, segs: 3, width: 0.046, height: 0.52, fade: [10, 15, 40, 52], lean: 1.0, root: 0.72 },
     { cell: 34, per: 6.2 * q, segs: 2, width: 0.150, height: 0.56, fade: [38, 50, 118, 150], lean: 0.9, root: 0.30 },
   ];
@@ -201,8 +201,7 @@ void main(){
   float w = wid * (1.0 - pow(t, 1.7)) * (0.55 + 0.45 * smoothstep(0.0, 0.25, t) + 0.0);
   // far shells: fatter, shorter taper so the cover holds
   vec3 P = root + c * fade + side * (position.x * w * fade);
-  vec3 n = normalize(cross(side, tg));
-  n = normalize(n + side * position.x * 0.55);
+  vec3 n = normalize(cross(side, tg) + side*position.x*0.24 + vec3(0.0,0.85,0.0));
 
   vWorld = P;
   vNormal = n;
@@ -252,7 +251,7 @@ void main(){
   // glossy sheen that rides the gust fronts
   vec3 H = normalize(uSunDir + V);
   float spec = pow(saturate(dot(N, H)), 26.0) * (0.10 + 0.34 * vInfo.z) * smoothstep(0.15, 0.7, t);
-  col += uSunColor * spec * sh * 0.22;
+  col += uSunColor * spec * sh * 0.07;
   col = applyAtmosphere(col, vWorld);
   gl_FragColor = vec4(col, 1.0);
 }
