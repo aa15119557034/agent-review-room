@@ -1,0 +1,216 @@
+{
+  "sample-e-harbour": {
+    "priorVsOn": {
+      "pixels": 1296000,
+      "any": 79053,
+      "rgbDeltaAbove8": 34279,
+      "meanAbsoluteChannelDelta": 0.7958,
+      "max": 223
+    },
+    "offVsOn": {
+      "pixels": 1296000,
+      "any": 79129,
+      "rgbDeltaAbove8": 34262,
+      "meanAbsoluteChannelDelta": 0.7871,
+      "max": 223
+    },
+    "priorVsOff": {
+      "pixels": 1296000,
+      "any": 6019,
+      "rgbDeltaAbove8": 4012,
+      "meanAbsoluteChannelDelta": 0.1919,
+      "max": 202
+    },
+    "distinctFrozenHashes": {
+      "prior": 1,
+      "off": 1,
+      "on": 1
+    },
+    "eye": [
+      -49.3148,
+      6.0969,
+      1121.5
+    ],
+    "eyeHeight": 1.599989904785156
+  },
+  "sample-f-hillside": {
+    "priorVsOn": {
+      "pixels": 1296000,
+      "any": 949056,
+      "rgbDeltaAbove8": 598535,
+      "meanAbsoluteChannelDelta": 8.2253,
+      "max": 144
+    },
+    "offVsOn": {
+      "pixels": 1296000,
+      "any": 949056,
+      "rgbDeltaAbove8": 598535,
+      "meanAbsoluteChannelDelta": 8.2253,
+      "max": 144
+    },
+    "priorVsOff": {
+      "pixels": 1296000,
+      "any": 0,
+      "rgbDeltaAbove8": 0,
+      "meanAbsoluteChannelDelta": 0.0,
+      "max": 0
+    },
+    "distinctFrozenHashes": {
+      "prior": 1,
+      "off": 1,
+      "on": 1
+    },
+    "eye": [
+      1040.6682,
+      47.72941688707416,
+      591.5865
+    ],
+    "eyeHeight": 1.6000000000000014
+  },
+  "sample-g-rail": {
+    "priorVsOn": {
+      "pixels": 1296000,
+      "any": 3420,
+      "rgbDeltaAbove8": 787,
+      "meanAbsoluteChannelDelta": 0.0132,
+      "max": 129
+    },
+    "offVsOn": {
+      "pixels": 1296000,
+      "any": 3420,
+      "rgbDeltaAbove8": 787,
+      "meanAbsoluteChannelDelta": 0.0132,
+      "max": 129
+    },
+    "priorVsOff": {
+      "pixels": 1296000,
+      "any": 0,
+      "rgbDeltaAbove8": 0,
+      "meanAbsoluteChannelDelta": 0.0,
+      "max": 0
+    },
+    "distinctFrozenHashes": {
+      "prior": 1,
+      "off": 2,
+      "on": 1
+    },
+    "eye": [
+      337.8563,
+      9.6,
+      844.5
+    ],
+    "eyeHeight": 1.5999999999999996
+  },
+  "sample-h-north": {
+    "priorVsOn": {
+      "pixels": 1296000,
+      "any": 426104,
+      "rgbDeltaAbove8": 298873,
+      "meanAbsoluteChannelDelta": 8.2767,
+      "max": 248
+    },
+    "offVsOn": {
+      "pixels": 1296000,
+      "any": 426104,
+      "rgbDeltaAbove8": 298873,
+      "meanAbsoluteChannelDelta": 8.2767,
+      "max": 248
+    },
+    "priorVsOff": {
+      "pixels": 1296000,
+      "any": 0,
+      "rgbDeltaAbove8": 0,
+      "meanAbsoluteChannelDelta": 0.0,
+      "max": 0
+    },
+    "distinctFrozenHashes": {
+      "prior": 1,
+      "off": 1,
+      "on": 1
+    },
+    "eye": [
+      181.0601,
+      136.1623,
+      -1212.8685
+    ],
+    "eyeHeight": 1.5999572265624806
+  },
+  "sample-f-absolute-254": {
+    "priorVsOn": {
+      "pixels": 1296000,
+      "any": 675655,
+      "rgbDeltaAbove8": 306986,
+      "meanAbsoluteChannelDelta": 4.4482,
+      "max": 211
+    },
+    "offVsOn": {
+      "pixels": 1296000,
+      "any": 675655,
+      "rgbDeltaAbove8": 306986,
+      "meanAbsoluteChannelDelta": 4.4482,
+      "max": 211
+    },
+    "priorVsOff": {
+      "pixels": 1296000,
+      "any": 0,
+      "rgbDeltaAbove8": 0,
+      "meanAbsoluteChannelDelta": 0.0,
+      "max": 0
+    },
+    "distinctFrozenHashes": {
+      "prior": 1,
+      "off": 1,
+      "on": 1
+    },
+    "eye": [
+      1040.6682,
+      61.5086,
+      591.5865
+    ],
+    "eyeHeight": 15.379183112925844
+  },
+  "weatherE": {
+    "pixels": 1296000,
+    "any": 1295999,
+    "rgbDeltaAbove8": 1151881,
+    "meanAbsoluteChannelDelta": 15.9372,
+    "max": 250,
+    "sky": {
+      "rect": [
+        1030,
+        80,
+        1390,
+        310
+      ],
+      "pixels": 82800,
+      "rgbDeltaAbove8": 71639
+    },
+    "sea": {
+      "rect": [
+        1260,
+        525,
+        1380,
+        566
+      ],
+      "pixels": 4920,
+      "rgbDeltaAbove8": 4916
+    }
+  },
+  "liveShore": {
+    "pixels": 1296000,
+    "any": 908355,
+    "rgbDeltaAbove8": 205822,
+    "meanAbsoluteChannelDelta": 3.1578,
+    "max": 145,
+    "lake": {
+      "rect": [
+        760,
+        515,
+        1230,
+        627
+      ],
+      "pixels": 52640,
+      "rgbDeltaAbove8": 26819
+    }
+  }
+}

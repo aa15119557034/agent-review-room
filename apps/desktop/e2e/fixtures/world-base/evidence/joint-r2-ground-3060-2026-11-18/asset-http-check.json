@@ -1,0 +1,14 @@
+[
+  {
+    "path": "/assets/models/boulders.glb",
+    "status": 200,
+    "bytes": 669820,
+    "type": "model/gltf-binary"
+  },
+  {
+    "path": "/assets/models/menhir.glb",
+    "status": 200,
+    "bytes": 620588,
+    "type": "model/gltf-binary"
+  }
+]
