@@ -243,12 +243,29 @@ async function captureFixtureVideo(win, config) {
 
 app.whenReady().then(async () => {
   stage('app-ready');
-  server = createStaticServer(config.fixture);
+  const audit = config.auditTransport ? require(path.join(config.fixture, 'scripts/acceptance-transport.cjs')).createTransportAudit() : null;
+  if (audit) server = createStaticServer(config.fixture, audit);
+  else {
+    server = createStaticServer(config.fixture);
+  }
   await new Promise((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve); });
   stage('server-listening');
   const route = config.scene === 'combined' ? '/' : `/original/${config.scene}/`;
   const url = `http://127.0.0.1:${server.address().port}${route}${config.query ? '?' + config.query : ''}`;
   const serverOrigin = new URL(url).origin + '/';
+  const failedRequests = [], httpErrors = [];
+  const finishAudit = async () => {
+    try {
+      report.transportAudit = await audit.finish({
+        origin: new URL(url).origin, failures: failedRequests, httpErrors,
+        readPage: code => win.webContents.executeJavaScript(code),
+      });
+    } catch (error) {
+      report.transportAuditFailure = String(error);
+      report.transportClean = report.networkFailures.length === 0;
+      throw error;
+    }
+  };
   report.url = url;
   stage('creating-window');
   win = new BrowserWindow({ width: config.width, height: config.height, useContentSize: true, show: true, autoHideMenuBar: true, title: `World · ${config.scene}`, backgroundColor: '#222222', webPreferences: { contextIsolation: true, sandbox: true, nodeIntegration: false, backgroundThrottling: false } });
@@ -272,6 +289,7 @@ app.whenReady().then(async () => {
   const tracedRequests = new Map();
   const lifecycle = new Set(['Network.requestWillBeSent', 'Network.responseReceived', 'Network.loadingFinished', 'Network.loadingFailed']);
   win.webContents.debugger.on('message', (_event, method, params) => {
+    audit?.cdp(method, params);
     const received = { stage: report.stage, receivedWallTime: Date.now() / 1000 };
     if (method === 'Network.requestWillBeSent') {
       requests.set(params.requestId, { url: params.request.url, type: params.type });
@@ -291,11 +309,20 @@ app.whenReady().then(async () => {
       tracedRequests.get(params.requestId).events.push({ method, ...received, ...params });
     }
     if (method === 'Runtime.exceptionThrown') report.exceptions.push(params.exceptionDetails);
-    if (method === 'Network.loadingFailed') report.networkFailures.push({ ...requests.get(params.requestId), ...params, ...received });
-    if (method === 'Network.responseReceived' && params.response.status >= 400) report.networkFailures.push({ url: params.response.url, status: params.response.status, requestId: params.requestId, timestamp: params.timestamp, ...received });
+    if (method === 'Network.loadingFailed') {
+      const failure = { ...requests.get(params.requestId), ...params, ...received };
+      report.networkFailures.push(failure);
+      if (audit) failedRequests.push(failure);
+    }
+    if (method === 'Network.responseReceived' && params.response.status >= 400) {
+      const httpError = { url: params.response.url, status: params.response.status, requestId: params.requestId, timestamp: params.timestamp, ...received };
+      report.networkFailures.push(httpError);
+      if (audit) httpErrors.push(httpError);
+    }
   });
   const cdp = async (method, params) => { stage(`cdp:${method}`); return win.webContents.debugger.sendCommand(method, params); };
   await cdp('Runtime.enable'); await cdp('Network.enable'); await cdp('Page.enable');
+  if (audit) await cdp('Page.addScriptToEvaluateOnNewDocument', { source: audit.pageSource });
   await cdp('Page.addScriptToEvaluateOnNewDocument', { source: `(${instrumentPage.toString()})()` });
   const evaluate = code => win.webContents.executeJavaScript(code, true);
   stage('navigating');
@@ -309,7 +336,13 @@ app.whenReady().then(async () => {
   stage('scene-ready');
   // Exercise the original start controls. This changes UI state, not scene code.
   report.startControl = await evaluate(`(() => { const button = document.getElementById(${JSON.stringify(config.scene === 'petalwake' ? 'start' : 'go')}); if (!button) return null; button.click(); return { id: button.id, disabled: button.disabled }; })()`);
-  if (config.preview) { clearTimeout(deadline); report.preview = true; writeReport(); return; }
+  if (config.preview) {
+    if (audit) {
+      await finishAudit();
+      report.transportClean = report.networkFailures.length === 0;
+    }
+    clearTimeout(deadline); report.preview = true; writeReport(); return;
+  }
   if (!config.videoOnly) {
     if (config.scene === 'combined') {
       stage('validating-station');
@@ -496,6 +529,7 @@ app.whenReady().then(async () => {
   report.failedRequestTimingNote = 'Resource Timing entries matched by URL only; they have no CDP requestId and do not establish response/completion of the failed request. Use networkEvidence for same-ID lifecycle evidence.';
   report.gpu = { features: app.getGPUFeatureStatus(), info: await app.getGPUInfo('complete') };
   report.versions = process.versions;
+  if (audit) await finishAudit();
   report.completedAt = new Date().toISOString();
   report.transportClean = report.networkFailures.length === 0;
   report.renderOk = report.exceptions.length === 0 && report.finalScene.errors.length === 0 && !report.finalScene.renderer.contextLost
@@ -504,7 +538,7 @@ app.whenReady().then(async () => {
     && (config.videoOnly
       ? report.video.frameCount > 0 && report.video.views.length === 4
       : config.scene !== 'combined' || (report.behaviorValidation.ok === true && report.lookValidation.ok === true && report.walkingValidation.ok === true && report.views.length === 4));
-  report.ok = report.renderOk && report.transportClean;
+  report.ok = report.renderOk && (audit ? report.transportAudit.payloadIntegrityClean === true : report.transportClean);
   stage('complete');
   console.log(JSON.stringify({ ok: report.ok, performance: report.performance, output: config.output }));
   clearTimeout(deadline);

@@ -15,9 +15,10 @@ const originals = {
 };
 const mime = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.css': 'text/css', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.glb': 'model/gltf-binary', '.gltf': 'model/gltf+json', '.bin': 'application/octet-stream', '.woff2': 'font/woff2', '.svg': 'image/svg+xml' };
 
-function createStaticServer(root = fixture) {
+function createStaticServer(root = fixture, audit) {
   let stationArtRelease;
   return http.createServer((req, res) => {
+    audit?.start(req, res);
     if (!['GET', 'HEAD'].includes(req.method)) { res.writeHead(405).end(); return; }
     let pathname;
     try { pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname); }
@@ -70,10 +71,12 @@ function createStaticServer(root = fixture) {
         const escape = text => text.replace(/[&<>\"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[char]));
         const entries = fs.readdirSync(real).filter(name => !name.startsWith('.')).sort();
         const html = '<!doctype html><title>Directory listing</title><ul>' + entries.map(name => `<li><a href="${encodeURIComponent(name)}">${escape(name)}</a></li>`).join('') + '</ul>';
+        audit?.generated?.(req, html);
         res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Content-Length': Buffer.byteLength(html), 'Cache-Control': 'no-store' });
         res.end(req.method === 'HEAD' ? undefined : html); return;
       }
       if (!stat.isFile()) { res.writeHead(404).end(); return; }
+      audit?.file(req, real, stat);
       res.writeHead(200, { 'Content-Type': mime[path.extname(real)] || 'application/octet-stream', 'Content-Length': stat.size, 'Cache-Control': 'no-store' });
       if (req.method === 'HEAD') res.end();
       else fs.createReadStream(real).on('error', () => res.destroy()).pipe(res);
@@ -108,11 +111,12 @@ function main() {
     return split < 0 ? [arg.slice(2), true] : [arg.slice(2, split), arg.slice(split + 1)];
   }));
   if (args.help) {
-    console.log('node scripts/baseline.cjs --scene=petalwake|sakuragaoka|combined --electron=<executable> [--output=<directory>] [--preview] [--stills] [--video-only] [--video-ms=8200 --ffmpeg=<existing-executable>] [--sample-ms=15000] [--warmup-ms=5000] [--timeout-ms=180000] [--query=q=high] [--proxy=http://127.0.0.1:7897]');
+    console.log('node scripts/baseline.cjs --scene=petalwake|sakuragaoka|combined --electron=<executable> [--output=<directory>] [--preview] [--stills] [--video-only] [--audit-transport] [--video-ms=8200 --ffmpeg=<existing-executable>] [--sample-ms=15000] [--warmup-ms=5000] [--timeout-ms=180000] [--query=q=high] [--proxy=http://127.0.0.1:7897]');
     return;
   }
-  const allowed = new Set(['scene', 'electron', 'ffmpeg', 'output', 'preview', 'stills', 'video-only', 'video-ms', 'sample-ms', 'warmup-ms', 'timeout-ms', 'query', 'proxy', 'width', 'height']);
+  const allowed = new Set(['scene', 'electron', 'ffmpeg', 'output', 'preview', 'stills', 'video-only', 'audit-transport', 'video-ms', 'sample-ms', 'warmup-ms', 'timeout-ms', 'query', 'proxy', 'width', 'height']);
   for (const name of Object.keys(args)) if (!allowed.has(name)) throw new Error(`Unknown --${name}`);
+  if (args['audit-transport'] !== undefined && args['audit-transport'] !== true) throw new Error('Use --audit-transport without a value');
   const scene = args.scene || 'combined';
   if (![...Object.keys(originals), 'combined'].includes(scene)) throw new Error('Unknown scene');
   if (args['video-only'] && (scene !== 'combined' || args.preview || args.stills)) throw new Error('--video-only requires combined capture mode without --preview/--stills');
@@ -125,6 +129,7 @@ function main() {
   const runtime = fs.mkdtempSync(path.join(output, 'runtime-'));
   const config = {
     scene, fixture, output, runtime, source,
+    ...(args['audit-transport'] ? { auditTransport: true } : {}),
     preview: args.preview === true, videoOnly: args['video-only'] === true,
     ffmpeg: typeof args.ffmpeg === 'string' ? path.resolve(args.ffmpeg) : null,
     width: numberArg(args, 'width', 1440, 1), height: numberArg(args, 'height', 900, 1),

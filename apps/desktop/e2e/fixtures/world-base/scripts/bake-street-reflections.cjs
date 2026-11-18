@@ -16,9 +16,10 @@ const head = () => cp.execFileSync('git', ['rev-parse', 'HEAD'], {
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
 function launch() {
     const args = Object.fromEntries(process.argv.slice(2).map(arg => {
+        if (arg === '--audit-transport') return ['auditTransport', true];
         const m = /^--(electron|output)=(.+)$/.exec(arg);
         if (!m)
-            throw Error('Usage: node scripts/bake-street-reflections.cjs --electron=<existing executable> --output=<new directory>');
+            throw Error('Usage: node scripts/bake-street-reflections.cjs --electron=<existing executable> --output=<new directory> [--audit-transport]');
         return [m[1], m[2]];
     }));
     if (!args.electron || !args.output)
@@ -32,6 +33,7 @@ function launch() {
         throw Error('Expected all nine pinned prop assets');
     const config = {
         fixture,
+        ...(args.auditTransport ? { auditTransport: true } : {}),
         output,
         head: head(),
         startedAt: new Date().toISOString(),
@@ -398,7 +400,7 @@ async function host() {
         report.stage = s;
         write();
     };
-    let win, server, timer;
+    let win, server, timer, audit;
     const deadline = new Promise((_, reject) => {
         timer = setTimeout(() => reject(Error('Bake timeout at ' + report.stage)), config.timeoutMs);
     });
@@ -407,7 +409,12 @@ async function host() {
                 write();
                 await app.whenReady();
                 stage('app-ready');
-                server = createStaticServer(fixture);
+                if (config.auditTransport) {
+                    audit = require(path.join(config.fixture, 'scripts/acceptance-transport.cjs')).createTransportAudit();
+                    server = createStaticServer(fixture, audit);
+                } else {
+                    server = createStaticServer(fixture);
+                }
                 await new Promise((resolve, reject) => {
                     server.once('error', reject);
                     server.listen(0, '127.0.0.1', resolve);
@@ -438,6 +445,7 @@ async function host() {
                         });
                 });
                 win.webContents.debugger.on('message', (_event, method, params) => {
+                    audit?.cdp(method, params);
                     if (method === 'Runtime.exceptionThrown')
                         report.exceptions.push(params);
                     if (method === 'Network.requestWillBeSent')
@@ -461,6 +469,7 @@ async function host() {
                 await cdp('Page.enable');
                 await cdp('Runtime.enable');
                 await cdp('Network.enable');
+                if (audit) await cdp('Page.addScriptToEvaluateOnNewDocument', { source: audit.pageSource });
                 await cdp('Page.addScriptToEvaluateOnNewDocument', { source: '(' + installGate.toString() + ')()' });
                 stage('loading');
                 await win.loadURL('http://127.0.0.1:' + server.address().port + '/');
@@ -513,6 +522,17 @@ async function host() {
             catch (e) {
                 report.restoreFailure = String(e);
             }
+            if (audit) {
+                try {
+                    report.transportAudit = await audit.finish({
+                        origin: 'http://127.0.0.1:' + server.address().port,
+                        failures: report.networkFailures, httpErrors: report.httpErrors,
+                        readPage: code => win.webContents.executeJavaScript(code),
+                    });
+                } catch (e) {
+                    report.transportAuditFailure = String(e);
+                }
+            }
             win.destroy();
         }
         server?.close();
@@ -523,7 +543,8 @@ async function host() {
         const assets = JSON.parse(fs.readFileSync(path.join(config.output, 'prop-assets-manifest.json')));
         report.assetsUnchanged = assets.files.every(f => hash(fs.readFileSync(path.join(fixture, f.path))) === f.sha256);
         report.transportClean = !report.networkFailures.length && !report.httpErrors.length;
-        report.ok = report.encodingValid && report.restore?.equal && report.sourceUnchanged && report.driverUnchanged && report.assetsUnchanged && report.transportClean && !report.exceptions.length && !report.failure && !report.restoreFailure;
+        const acceptedTransport = config.auditTransport ? report.transportAudit?.payloadIntegrityClean === true : report.transportClean;
+        report.ok = report.encodingValid && report.restore?.equal && report.sourceUnchanged && report.driverUnchanged && report.assetsUnchanged && acceptedTransport && !report.exceptions.length && !report.failure && !report.restoreFailure;
         report.stage = 'complete';
         report.completedAt = new Date().toISOString();
         write();
