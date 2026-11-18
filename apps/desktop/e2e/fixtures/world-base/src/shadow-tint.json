@@ -1,0 +1,73 @@
+{
+ "note": "Round 24 shadow tint. Shade is blue-violet, not grey: a sky-lit fill on every lit surface that is out of the sun, the same fill in the baked terrain shadow, a cool tint on AO creases, and a post split-tone that lifts and cools only the dark end. ?shadowtint=off restores round 23. fill = linear radiance multiplied by the surface albedo; sunLo/sunHi = how much direct light (relative to albedo) counts as 'in sun'.",
+ "evening": {
+  "fill": [
+   0.075,
+   0.08,
+   0.19
+  ],
+  "sunLo": 0.04,
+  "sunHi": 0.5,
+  "terrainFill": [
+   0.06,
+   0.065,
+   0.15
+  ],
+  "aoTint": [
+   0.94,
+   0.97,
+   1.1
+  ],
+  "post": {
+   "mul": [
+    0.97,
+    0.975,
+    1.08
+   ],
+   "lift": [
+    0.0025,
+    0.003,
+    0.007
+   ],
+   "lo": 0.05,
+   "hi": 0.38,
+   "strength": 0.5
+  }
+ },
+ "afternoon": {
+  "fill": [
+   0.075,
+   0.1,
+   0.19
+  ],
+  "sunLo": 0.04,
+  "sunHi": 0.5,
+  "terrainFill": [
+   0.055,
+   0.075,
+   0.14
+  ],
+  "aoTint": [
+   0.95,
+   0.98,
+   1.09
+  ],
+  "post": {
+   "mul": [
+    0.97,
+    0.99,
+    1.07
+   ],
+   "lift": [
+    0.002,
+    0.003,
+    0.006
+   ],
+   "lo": 0.05,
+   "hi": 0.38,
+   "strength": 0.5
+  }
+ },
+ "indoorPad": 0.3,
+ "indoorFade": 1.5
+}

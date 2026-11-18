@@ -75,6 +75,18 @@ node scripts\baseline.cjs --scene=combined --electron=D:\codex\2026-11-16\world-
 
 `src/city.js` 与 `src/city-apartments.js` 用站区现有 `GB` / `Frame`、门窗图集、材质和公寓构件搭建3／4／5层日式公寓，保持真实层高，合批阳台、外廊、楼梯、屋顶设施及小店；低层住宅和连续小路衔接镇边。它们属于不可步行背景，不扩展物理或修改地形，不调整全局光照、曝光和后期。场景释放时，先释放 city 和 skyline，再释放 station，以保护借用纹理。
 
+## 墙面／物体做旧（第22轮）
+
+`src/weathering.js` 把一个共享的做旧着色补丁套到不透明静态材质上（建筑墙面、矮墙、台阶、地基、招牌框；不碰玻璃、发光灯具、植物、地形、列车）。每个被改的材质都先 clone 成本模块自己的副本再挂补丁，`dispose()` 把网格换回原材质。参数全部在 `src/weathering.json`，`timeScale` 区分傍晚／下午。
+
+- 墙根变脏：按「世界高度 − 地面高度」0～0.8m 渐变压暗并偏暖褐／绿灰。地面高度来自启动时烘的一张半精度高度贴图（站区取 `ctx.L.heightAt`，镇区取地形，并把公寓地基顶面盖进去）。
+- 雨痕：沿墙方向 3.4 条／米的竖条噪声，竖向拉长，从每层楼板线（周期 2.85m）往下指数变淡，只压暗约 26%×噪声。
+- 斑驳：世界坐标低频＋中频噪声调明度、冷暖偏色、饱和度，另有极轻的下暗上亮竖向渐变；7 栋楼各有一个 seed（公寓、低层住宅、天际线公寓的占地矩形表）。
+- 转角磨亮：`fwidth(vNormal)` 找凸棱，亮度 +12%、去饱和 25%，22～60m 渐隐。
+- 海报／贴纸／涂鸦：`src/weathering-decals.js`，画布程序生成一张 1024² 图集，射线检测找平整空墙后合并成一个网格（1 次 draw call，`polygonOffset` + 7mm 离墙）。不含任何游戏素材。
+
+`?weathering=off` 关闭补丁与贴花做前后对照；`worldBase.weathering.setEnabled()` 同理。固定机位截图脚本见 `evidence/c-weathering/shot.cjs`。
+
 ## 当前状态
 
 第17轮源码`0184c79`的[3060地表与参数归属回验](./evidence/greenery-c17-2026-11-18/README.md)关闭C16交回的两项缺陷：两原机位的北侧亮绿细带消失，terrain／transition／两份站区edge blend实际共享TOWN参数；双look、未注册Meadow、质量重建和材质池重新归属的15条CPU断言全部通过。四组恢复后的PNG都与各自开启时完全相同。仍是定向回归关闭，不是整体风格／P2验收。

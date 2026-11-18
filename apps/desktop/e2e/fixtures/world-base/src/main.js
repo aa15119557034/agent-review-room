@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { createIsland, clearVegetationAreas } from './island.js';
+import { loadShadowTint, shadowTintEnabled, installLitShadowTint, patchIslandShadowTint, shadowTintUniforms, shopInteriorBox } from './shadow-tint.js';
 import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from './evening-glow.js';
+import * as layoutModule from '../upstream/sakuragaoka/src/world/layout.js';
 import { createStation } from './station.js';
 import { basins, basinAt, bankView } from './basins.js';
 import { createRain } from './rain.js';
@@ -8,6 +10,8 @@ import { createLook } from './look.js';
 import { createSkyline } from './skyline.js';
 import { coastWalking } from './coast.js';
 import { createCity } from './city.js';
+import { applyWeathering, loadWeatheringParams } from './weathering.js';
+import { addWeatheringDecals, loadBakedDecals } from './weathering-decals.js';
 
 const canvas = document.querySelector('#world');
 const loadMessage = document.querySelector('#load-message');
@@ -103,9 +107,13 @@ async function init() {
   stage('正在读取岛屿地形、港镇和云层…');
   // ?time=afternoon keeps Petalwake's original light for before/after comparison.
   const timeOfDay = new URLSearchParams(location.search).get('time') ?? 'evening';
+  // Round 24: blue-violet shade. The lit-material chunk is patched before any program compiles.
+  const shadowTintParams = shadowTintEnabled() ? await loadShadowTint() : null;
+  const shadowTint = shadowTintParams ? shadowTintParams[timeOfDay === 'afternoon' ? 'afternoon' : 'evening'] : null;
   island = await createIsland({ scene, renderer, camera, timeOfDay });
   worldBase.island = island;
   look.applyIsland(island);
+  if (shadowTint) worldBase.shadowTint = { island: patchIslandShadowTint(island, shadowTint) };
   const evening = island.timeOfDay === 'evening';
   // Low golden-hour sun: warmer and a little weaker; the sky fill turns cooler so shade reads blue-violet.
   const sun = new THREE.DirectionalLight(evening ? 0xffc490 : 0xffe4c4, evening ? 2.3 : 2.1);
@@ -130,6 +138,13 @@ async function init() {
     onProgress: stage,
   });
   worldBase.station = station;
+  if (shadowTint) {
+    // No program using the lit chunk has compiled yet (first render is after init), so the box can be known here.
+    const box = shopInteriorBox(layoutModule, station, shadowTintParams.indoorPad);
+    installLitShadowTint(shadowTint, box);
+    look.setShadowTint(shadowTintUniforms(shadowTint), box, shadowTintParams.indoorFade);
+    worldBase.shadowTint.indoorBox = box;
+  }
   // Interpolate the existing ramp values for softer boundaries between tones.
   const ramp = station.ctx.mat.gradientMap;
   ramp.magFilter = ramp.minFilter = THREE.LinearFilter;
@@ -202,6 +217,18 @@ async function init() {
     worldBase.eveningGlow = applyEveningGlow(scene, look);
     worldBase.eveningSakura = applyEveningSakura(scene);
     worldBase.crossingHalos = fadeDistantCrossingHalos(scene);
+  }
+  // Round 22: wall weathering + posters. After the evening glow, so emissive materials are already known.
+  {
+    const weatheringStart = performance.now();
+    const params = await loadWeatheringParams();
+    worldBase.weathering = applyWeathering({ scene, station, island, city: worldBase.city, skyline: worldBase.skyline, params, timeOfDay: island.timeOfDay });
+    worldBase.weatheringDecals = addWeatheringDecals({ scene, station, wallMaterials: worldBase.weathering.wallMaterials,
+      roots: [station.root, worldBase.city.root, worldBase.skyline.root], gradientMap: station.ctx.mat.gradientMap, explicit: params.decals.explicit,
+      baked: await loadBakedDecals(), forcePlan: new URLSearchParams(location.search).get('decals') === 'plan' });
+    worldBase.weatheringMs = +(performance.now() - weatheringStart).toFixed(1);
+    // ?weathering=off keeps the previous look for before/after captures.
+    if (new URLSearchParams(location.search).get('weathering') === 'off') { worldBase.weathering.setEnabled(false); worldBase.weatheringDecals.setEnabled(false); }
   }
   stage('场景已就绪');
   document.querySelector('#loading').hidden = true;
