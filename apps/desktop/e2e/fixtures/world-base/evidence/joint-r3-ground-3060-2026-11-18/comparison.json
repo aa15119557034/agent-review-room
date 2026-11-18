@@ -1,0 +1,54 @@
+{
+  "source": "8487a1c14f63b7f43316191327352c15dfd4967b",
+  "frames": {
+    "sample-e-harbour": {
+      "pixelsOver8": 17047,
+      "maxDelta": 203
+    },
+    "sample-f-hillside": {
+      "pixelsOver8": 281546,
+      "maxDelta": 102
+    },
+    "sample-g-rail": {
+      "pixelsOver8": 0,
+      "maxDelta": 0
+    },
+    "sample-h-north": {
+      "pixelsOver8": 0,
+      "maxDelta": 2
+    },
+    "sample-f-absolute-254": {
+      "pixelsOver8": 115113,
+      "maxDelta": 109
+    },
+    "return-e": {
+      "pixelsOver8": 17047,
+      "maxDelta": 203
+    },
+    "storm-e": {
+      "pixelsOver8": 13492,
+      "maxDelta": 152
+    }
+  },
+  "roi": [
+    35,
+    608,
+    400,
+    836
+  ],
+  "commonBluePixels": 73680,
+  "offR2OnR2OnR3": [
+    {
+      "uniqueRGB": 3584,
+      "topFiveShare": 0.029831704668838218
+    },
+    {
+      "uniqueRGB": 1139,
+      "topFiveShare": 0.3678338762214984
+    },
+    {
+      "uniqueRGB": 1778,
+      "topFiveShare": 0.10282301845819761
+    }
+  ]
+}
