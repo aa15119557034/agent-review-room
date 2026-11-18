@@ -1,0 +1,410 @@
+{
+  "source": "2c876b3bb5df225f14f716e804dd871a8be762f3",
+  "control": "363034ed1b6fa6c4ee7fbb05254156c937baf722",
+  "startedAt": "2026-11-18T13:49:31.075Z",
+  "finishedAt": "2026-11-18T13:50:18.577Z",
+  "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "timeSeconds": 14,
+  "canvas": [
+    1440,
+    900
+  ],
+  "day": "evening",
+  "photos": {
+    "art-a-street": {
+      "eye": [
+        278.8,
+        10.488,
+        936
+      ],
+      "target": [
+        280,
+        10.088000000000001,
+        875
+      ],
+      "quat": [
+        -0.003277842930440409,
+        -0.009834585659995631,
+        -3.223795934194156e-05,
+        0.9999462663720154
+      ],
+      "fov": 35.63777782904556,
+      "controlSHA256": "ef792661a2c0dae71bad283f7af6b7949ee7f731b4dee660e348fbe0b6ba27aa",
+      "candidateSHA256": "7c599d240d4ea8798cb7b0700200b1484a2095c918dca6d894d6ec130e1fd2d2",
+      "identicalRepeatedFrames": true,
+      "anyChange": {
+        "bbox": [
+          0,
+          0,
+          948,
+          847
+        ],
+        "pixels": 28338
+      },
+      "atLeast8": {
+        "bbox": [
+          343,
+          208,
+          419,
+          343
+        ],
+        "pixels": 8122
+      },
+      "meanRGB8Delta": 0.3112397119341564
+    },
+    "art-b-konbini": {
+      "eye": [
+        279.1,
+        9.8184,
+        912.8
+      ],
+      "target": [
+        272.48,
+        10.0534,
+        910.6
+      ],
+      "quat": [
+        0.013653878147403252,
+        0.5849950384089397,
+        -0.009850566433920587,
+        0.8108620986267578
+      ],
+      "fov": 58,
+      "controlSHA256": "6998455998a886a729c677a9a50a8c35d4cdfe480ad5f20d59c753957d77fdee",
+      "candidateSHA256": "6998455998a886a729c677a9a50a8c35d4cdfe480ad5f20d59c753957d77fdee",
+      "identicalRepeatedFrames": true,
+      "anyChange": {
+        "bbox": null,
+        "pixels": 0
+      },
+      "atLeast8": {
+        "bbox": null,
+        "pixels": 0
+      },
+      "meanRGB8Delta": 0.0
+    },
+    "art-c-alley": {
+      "eye": [
+        287.65,
+        14.384808464050293,
+        767.3199999999999
+      ],
+      "target": [
+        278.4,
+        14.55,
+        770.06
+      ],
+      "quat": [
+        0.00512201791291099,
+        0.8012252009590126,
+        -0.006859231737600546,
+        0.5983016740914732
+      ],
+      "fov": 45,
+      "controlSHA256": "055f41cdcdde6b2ce5992a60e69418e0d23b56cfb58fb32eca46818a4800bd16",
+      "candidateSHA256": "59f7619d28689e6ec8de567c5e13b9bfd8a4e5e0e9eb05c783f0915a67b77490",
+      "identicalRepeatedFrames": true,
+      "anyChange": {
+        "bbox": [
+          817,
+          135,
+          1403,
+          891
+        ],
+        "pixels": 1069
+      },
+      "atLeast8": {
+        "bbox": [
+          1074,
+          349,
+          1188,
+          534
+        ],
+        "pixels": 309
+      },
+      "meanRGB8Delta": 0.004064043209876543
+    },
+    "art-d-laundry": {
+      "eye": [
+        283.5,
+        12.520055181715234,
+        783.8
+      ],
+      "target": [
+        282.5,
+        14.25,
+        777.4
+      ],
+      "quat": [
+        0.1297258927986663,
+        0.0767626424061459,
+        -0.010073721024303532,
+        0.9885227410703001
+      ],
+      "fov": 48,
+      "controlSHA256": "239d42400a94bbda14db29e49845f0211a66c27d3bcef732c6e55f346d14bd46",
+      "candidateSHA256": "239d42400a94bbda14db29e49845f0211a66c27d3bcef732c6e55f346d14bd46",
+      "identicalRepeatedFrames": true,
+      "anyChange": {
+        "bbox": null,
+        "pixels": 0
+      },
+      "atLeast8": {
+        "bbox": null,
+        "pixels": 0
+      },
+      "meanRGB8Delta": 0.0
+    },
+    "sample-e-harbour": {
+      "eye": [
+        -49.3148,
+        6.0969,
+        1121.5
+      ],
+      "target": [
+        -24,
+        7.2,
+        1123.5
+      ],
+      "quat": [
+        0.014730707497095328,
+        -0.7342518484654964,
+        0.01594041117183272,
+        0.6785301265038345
+      ],
+      "fov": 57,
+      "controlSHA256": "f586fdaab277dc6859a2d05ddd49108d010613631015d42a0c6df3f6582cfb93",
+      "candidateSHA256": "2014464eed1ff42142c95b4e29e4a40a32875ba519115ccb912b2e8d02cda00a",
+      "identicalRepeatedFrames": true,
+      "anyChange": {
+        "bbox": [
+          746,
+          209,
+          1130,
+          695
+        ],
+        "pixels": 3368
+      },
+      "atLeast8": {
+        "bbox": [
+          879,
+          385,
+          993,
+          555
+        ],
+        "pixels": 2099
+      },
+      "meanRGB8Delta": 0.1032934670781893
+    },
+    "sample-f-hillside": {
+      "eye": [
+        1040.6682,
+        61.5086,
+        591.5865
+      ],
+      "target": [
+        1062,
+        102.7783,
+        490
+      ],
+      "quat": [
+        0.18707634146308863,
+        -0.10146136691099782,
+        0.019429882402105244,
+        0.9768984149640014
+      ],
+      "fov": 57,
+      "controlSHA256": "23926ee55e382ccb98f8f0c5b22cbc9abfd75ac676b1f7f0824b3abce56276b6",
+      "candidateSHA256": "23926ee55e382ccb98f8f0c5b22cbc9abfd75ac676b1f7f0824b3abce56276b6",
+      "identicalRepeatedFrames": true,
+      "anyChange": {
+        "bbox": null,
+        "pixels": 0
+      },
+      "atLeast8": {
+        "bbox": null,
+        "pixels": 0
+      },
+      "meanRGB8Delta": 0.0
+    },
+    "sample-g-rail": {
+      "eye": [
+        337.8563,
+        9.6,
+        844.5
+      ],
+      "target": [
+        268,
+        10.55,
+        857
+      ],
+      "quat": [
+        0.0042956255745017925,
+        0.7668403876967841,
+        -0.005132508643737493,
+        0.6418029485387173
+      ],
+      "fov": 57,
+      "controlSHA256": "0174eb48c466b1a404eb1bc8d99218700f032bbe770f2a9e7903e0ed6f69515a",
+      "candidateSHA256": "0174eb48c466b1a404eb1bc8d99218700f032bbe770f2a9e7903e0ed6f69515a",
+      "identicalRepeatedFrames": true,
+      "anyChange": {
+        "bbox": null,
+        "pixels": 0
+      },
+      "atLeast8": {
+        "bbox": null,
+        "pixels": 0
+      },
+      "meanRGB8Delta": 0.0
+    },
+    "sample-h-north": {
+      "eye": [
+        181.0601,
+        136.1623,
+        -1212.8685
+      ],
+      "target": [
+        180,
+        141.45,
+        -1238
+      ],
+      "quat": [
+        0.1033905527383131,
+        0.02096399872548667,
+        -0.002179647308778166,
+        0.9944174945662979
+      ],
+      "fov": 57,
+      "controlSHA256": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546",
+      "candidateSHA256": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546",
+      "identicalRepeatedFrames": true,
+      "anyChange": {
+        "bbox": null,
+        "pixels": 0
+      },
+      "atLeast8": {
+        "bbox": null,
+        "pixels": 0
+      },
+      "meanRGB8Delta": 0.0
+    },
+    "return-a": {
+      "eye": [
+        278.8,
+        10.488,
+        936
+      ],
+      "target": [
+        280,
+        10.088000000000001,
+        875
+      ],
+      "quat": [
+        -0.003277842930440409,
+        -0.009834585659995631,
+        -3.223795934194156e-05,
+        0.9999462663720154
+      ],
+      "fov": 35.63777782904556,
+      "controlSHA256": "ef792661a2c0dae71bad283f7af6b7949ee7f731b4dee660e348fbe0b6ba27aa",
+      "candidateSHA256": "7c599d240d4ea8798cb7b0700200b1484a2095c918dca6d894d6ec130e1fd2d2",
+      "identicalRepeatedFrames": true,
+      "anyChange": {
+        "bbox": [
+          0,
+          0,
+          948,
+          847
+        ],
+        "pixels": 28338
+      },
+      "atLeast8": {
+        "bbox": [
+          343,
+          208,
+          419,
+          343
+        ],
+        "pixels": 8122
+      },
+      "meanRGB8Delta": 0.3112397119341564
+    }
+  },
+  "office": {
+    "meshes": [
+      {
+        "name": "building-skyscraper-c_1",
+        "triangles": 1704,
+        "material": "kenney-station-office",
+        "map": [
+          512,
+          512
+        ]
+      }
+    ],
+    "site": {
+      "name": "town-house-0",
+      "type": "station-office",
+      "center": [
+        -37,
+        -126.5
+      ],
+      "footprint": {
+        "minX": -42.05023296657734,
+        "maxX": -31.94976703342266,
+        "minZ": -131.4996700184522,
+        "maxZ": -121.5003299815478
+      },
+      "ground": {
+        "min": 11.101207744342059,
+        "max": 12.215555652798646,
+        "relief": 1.1143479084565868,
+        "samples": 72,
+        "method": "All bilinear grid and footprint boundary intersections"
+      },
+      "foundation": {
+        "top": 12.265555652798646,
+        "bottom": 11.051207744342058,
+        "height": 1.2143479084565882
+      },
+      "sourceSize": [
+        1.2799996733665466,
+        4.079999923706055,
+        1.3878913521766663
+      ],
+      "scale": 6
+    }
+  },
+  "plan": {
+    "source": "baked",
+    "rays": 0,
+    "drawCalls": 1,
+    "triangles": 52
+  },
+  "controlNetwork": [
+    {
+      "url": "http://127.0.0.1:50434/assets/models/boulders.glb",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    }
+  ],
+  "network": [
+    {
+      "url": "http://127.0.0.1:54715/assets/models/boulders.glb",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "url": "http://127.0.0.1:54715/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "url": "http://127.0.0.1:54715/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    }
+  ],
+  "js": []
+}

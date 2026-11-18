@@ -1,0 +1,82 @@
+{
+  "order": [
+    "quiet-r2-control-01",
+    "quiet-r2-candidate-01",
+    "quiet-r2-candidate-02",
+    "quiet-r2-control-02"
+  ],
+  "control": [
+    {
+      "source": "363034ed1b6fa6c4ee7fbb05254156c937baf722",
+      "run": "quiet-r2-control-01",
+      "metrics": {
+        "art-a-street": {
+          "fps": 64.5065691988541,
+          "p95Ms": 15.5,
+          "frames": 653
+        },
+        "art-b-konbini": {
+          "fps": 64.99985182404596,
+          "p95Ms": 15.5,
+          "frames": 658
+        },
+        "art-c-alley": {
+          "fps": 64.99985182404596,
+          "p95Ms": 15.5,
+          "frames": 658
+        },
+        "art-d-laundry": {
+          "fps": 64.70349991603359,
+          "p95Ms": 15.5,
+          "frames": 655
+        },
+        "walk-third": {
+          "fps": 64.0324345195958,
+          "p95Ms": 15.5,
+          "frames": 199
+        },
+        "walk-first": {
+          "fps": 64.3570696721312,
+          "p95Ms": 15.5,
+          "frames": 201
+        }
+      }
+    },
+    {
+      "source": "363034ed1b6fa6c4ee7fbb05254156c937baf722",
+      "run": "quiet-r2-control-02",
+      "metrics": {
+        "art-a-street": {
+          "fps": 64.90170897955156,
+          "p95Ms": 15.5,
+          "frames": 657
+        },
+        "art-b-konbini": {
+          "fps": 64.90170897955151,
+          "p95Ms": 15.5,
+          "frames": 657
+        },
+        "art-c-alley": {
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "frames": 657
+        },
+        "art-d-laundry": {
+          "fps": 64.99930746552165,
+          "p95Ms": 15.5,
+          "frames": 657
+        },
+        "walk-third": {
+          "fps": 63.08746216345388,
+          "p95Ms": 15.5,
+          "frames": 198
+        },
+        "walk-first": {
+          "fps": 65.00193075041851,
+          "p95Ms": 15.5,
+          "frames": 202
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,2297 @@
+{
+  "order": [
+    "candidate-first",
+    "control-repeat",
+    "candidate-repeat"
+  ],
+  "runs": [
+    {
+      "id": "quiet-kenney-office-02",
+      "role": "candidate-first",
+      "head": "2c876b3bb5df225f14f716e804dd871a8be762f3",
+      "startedAt": "2026-11-18T13:53:59.756Z",
+      "finishedAt": "2026-11-18T13:56:02.038Z",
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "canvas": [
+        1440,
+        900
+      ],
+      "dpr": 1,
+      "canonicalHostSha256": "b225b1006b69f1dea71ec5aa54629dae614e00c1a0ed60c9a617f8293fa0a7e0",
+      "measuredHostSha256": "d295ce9188404b9c2f2c64f5606aafe93626d54bfb5d9c329d9472a60a441cc4",
+      "driverExit": 0,
+      "nativeExit": 1,
+      "renderOk": true,
+      "jsExceptions": 0,
+      "load": [
+        {
+          "file": "plastic_crate_02_1k.gltf",
+          "stage": "waiting-for-ready-frame",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "threshold": {
+        "fps": 60,
+        "p95Ms": 16.7
+      },
+      "walkingInputs": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 112262.70000004768
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 115460.59999990463
+        },
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 116419.79999995232
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 119632.20000004768
+        }
+      ],
+      "sourceFiles": 50,
+      "samples": "candidate-first.frames.json.gz",
+      "framesSha256": "2315d898d9badb92fa93b60a9e4c17de984ee1d7c6777380bce84280f534bf1c",
+      "fingerprint": "1050:2751839:295181.6:939614.8",
+      "decals": "baked",
+      "rays": 0,
+      "routes": {
+        "art-a-street": {
+          "frames": 617,
+          "durationMs": 10138.5,
+          "fps": 60.857128766582825,
+          "p95Ms": 30.700000000004366,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 30.900000000001455,
+          "over20Ms": 42,
+          "pass": false,
+          "samplesSha256": "52974e4a8e495fb89c7a931b5327990fb2ee795730c5488db7781321971a0f3c",
+          "camera": {
+            "position": [
+              278.8,
+              10.488,
+              936
+            ],
+            "quaternion": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "fov": 35.63777782904556,
+            "hidden": true,
+            "target": [
+              280,
+              10.088000000000001,
+              875
+            ],
+            "currentView": "art-a-street",
+            "mode": "third"
+          },
+          "draws": {
+            "n": 617,
+            "min": 1562,
+            "median": 1563,
+            "p95": 1578,
+            "max": 1578
+          },
+          "triangles": {
+            "n": 617,
+            "min": 7915916,
+            "median": 7915980,
+            "p95": 8005748,
+            "max": 8005748
+          },
+          "load": {
+            "samples": 20,
+            "osForegroundFrames": 0,
+            "begin": false,
+            "end": false,
+            "pageFocused": [
+              false,
+              false
+            ],
+            "pageVisible": [
+              "visible",
+              "visible"
+            ],
+            "cpu": {
+              "n": 20,
+              "min": 35.78,
+              "median": 40.38,
+              "p95": 52,
+              "max": 56.18
+            },
+            "busiestCore": {
+              "n": 20,
+              "min": 48.5,
+              "median": 63.6,
+              "p95": 75.8,
+              "max": 85.3
+            },
+            "externalElectron3DPct": {
+              "n": 20,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "knownPreview3DPct": {
+              "n": 20,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "clockMHz": {
+              "n": 20,
+              "min": 1807,
+              "median": 1972,
+              "p95": 1987,
+              "max": 1987
+            },
+            "deviceGpuPct": {
+              "n": 20,
+              "min": 35,
+              "median": 40,
+              "p95": 43,
+              "max": 46
+            },
+            "tempC": {
+              "n": 20,
+              "min": 61,
+              "median": 63,
+              "p95": 64,
+              "max": 64
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        "art-b-konbini": {
+          "frames": 653,
+          "durationMs": 10138.600000000006,
+          "fps": 64.40731461937541,
+          "p95Ms": 15.5,
+          "p99Ms": 15.700000000011642,
+          "maxMs": 30.90000000000873,
+          "over20Ms": 6,
+          "pass": true,
+          "samplesSha256": "a8294b9bc0756c48fd8bdb739460de9466c06cd2dabeb20c0c4c3221b2b34dec",
+          "camera": {
+            "position": [
+              279.1,
+              9.8184,
+              912.8
+            ],
+            "quaternion": [
+              0.013653878147403252,
+              0.5849950384089397,
+              -0.009850566433920587,
+              0.8108620986267578
+            ],
+            "fov": 58,
+            "hidden": true,
+            "target": [
+              272.48,
+              10.0534,
+              910.6
+            ],
+            "currentView": "art-b-konbini",
+            "mode": "third"
+          },
+          "draws": {
+            "n": 653,
+            "min": 1021,
+            "median": 1036,
+            "p95": 1038,
+            "max": 1038
+          },
+          "triangles": {
+            "n": 653,
+            "min": 7772742,
+            "median": 7840082,
+            "p95": 7840210,
+            "max": 7840210
+          },
+          "load": {
+            "samples": 19,
+            "osForegroundFrames": 0,
+            "begin": false,
+            "end": false,
+            "pageFocused": [
+              false,
+              false
+            ],
+            "pageVisible": [
+              "visible",
+              "visible"
+            ],
+            "cpu": {
+              "n": 19,
+              "min": 31.22,
+              "median": 39.07,
+              "p95": 68.38,
+              "max": 68.38
+            },
+            "busiestCore": {
+              "n": 19,
+              "min": 48.5,
+              "median": 57.6,
+              "p95": 79.5,
+              "max": 79.5
+            },
+            "externalElectron3DPct": {
+              "n": 19,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "knownPreview3DPct": {
+              "n": 19,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "clockMHz": {
+              "n": 20,
+              "min": 1852,
+              "median": 1950,
+              "p95": 1987,
+              "max": 1987
+            },
+            "deviceGpuPct": {
+              "n": 20,
+              "min": 36,
+              "median": 40,
+              "p95": 42,
+              "max": 43
+            },
+            "tempC": {
+              "n": 20,
+              "min": 63,
+              "median": 64,
+              "p95": 64,
+              "max": 65
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        "art-c-alley": {
+          "frames": 648,
+          "durationMs": 10107.600000000006,
+          "fps": 64.11017452214172,
+          "p95Ms": 15.5,
+          "p99Ms": 30.69999999999709,
+          "maxMs": 31,
+          "over20Ms": 9,
+          "pass": true,
+          "samplesSha256": "c6415905214a1f0bcc13732948a1f17edc339e9ae1bb23313398cb3e463a2821",
+          "camera": {
+            "position": [
+              287.65,
+              14.384808464050293,
+              767.3199999999999
+            ],
+            "quaternion": [
+              0.00512201791291099,
+              0.8012252009590126,
+              -0.006859231737600546,
+              0.5983016740914732
+            ],
+            "fov": 45,
+            "hidden": true,
+            "target": [
+              278.4,
+              14.55,
+              770.06
+            ],
+            "currentView": "art-c-alley",
+            "mode": "third"
+          },
+          "draws": {
+            "n": 648,
+            "min": 962,
+            "median": 962,
+            "p95": 964,
+            "max": 964
+          },
+          "triangles": {
+            "n": 648,
+            "min": 8657487,
+            "median": 8657487,
+            "p95": 8657615,
+            "max": 8657615
+          },
+          "load": {
+            "samples": 20,
+            "osForegroundFrames": 0,
+            "begin": false,
+            "end": false,
+            "pageFocused": [
+              false,
+              false
+            ],
+            "pageVisible": [
+              "visible",
+              "visible"
+            ],
+            "cpu": {
+              "n": 20,
+              "min": 27.47,
+              "median": 39.97,
+              "p95": 87.44,
+              "max": 90.76
+            },
+            "busiestCore": {
+              "n": 20,
+              "min": 48.7,
+              "median": 57.6,
+              "p95": 97.1,
+              "max": 100
+            },
+            "externalElectron3DPct": {
+              "n": 20,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "knownPreview3DPct": {
+              "n": 20,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "clockMHz": {
+              "n": 20,
+              "min": 1845,
+              "median": 1927,
+              "p95": 1987,
+              "max": 1987
+            },
+            "deviceGpuPct": {
+              "n": 20,
+              "min": 33,
+              "median": 40,
+              "p95": 42,
+              "max": 43
+            },
+            "tempC": {
+              "n": 20,
+              "min": 64,
+              "median": 65,
+              "p95": 65,
+              "max": 65
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        "art-d-laundry": {
+          "frames": 656,
+          "durationMs": 10107.800000000003,
+          "fps": 64.90037396861828,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "maxMs": 30.80000000000291,
+          "over20Ms": 1,
+          "pass": true,
+          "samplesSha256": "f62406fb6e49da72bc3bb4e186f81acbc4f4647c7e73bf4f050e731d2d489e85",
+          "camera": {
+            "position": [
+              283.5,
+              12.520055181715234,
+              783.8
+            ],
+            "quaternion": [
+              0.1297258927986663,
+              0.0767626424061459,
+              -0.010073721024303532,
+              0.9885227410703001
+            ],
+            "fov": 48,
+            "hidden": true,
+            "target": [
+              282.5,
+              14.25,
+              777.4
+            ],
+            "currentView": "art-d-laundry",
+            "mode": "third"
+          },
+          "draws": {
+            "n": 656,
+            "min": 901,
+            "median": 901,
+            "p95": 903,
+            "max": 903
+          },
+          "triangles": {
+            "n": 656,
+            "min": 8448678,
+            "median": 8448678,
+            "p95": 8448806,
+            "max": 8448806
+          },
+          "load": {
+            "samples": 19,
+            "osForegroundFrames": 0,
+            "begin": false,
+            "end": false,
+            "pageFocused": [
+              false,
+              false
+            ],
+            "pageVisible": [
+              "visible",
+              "visible"
+            ],
+            "cpu": {
+              "n": 19,
+              "min": 28.2,
+              "median": 43,
+              "p95": 77.54,
+              "max": 77.54
+            },
+            "busiestCore": {
+              "n": 19,
+              "min": 41.2,
+              "median": 63.6,
+              "p95": 82.4,
+              "max": 82.4
+            },
+            "externalElectron3DPct": {
+              "n": 19,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "knownPreview3DPct": {
+              "n": 19,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "clockMHz": {
+              "n": 20,
+              "min": 1642,
+              "median": 1785,
+              "p95": 1852,
+              "max": 1957
+            },
+            "deviceGpuPct": {
+              "n": 20,
+              "min": 34,
+              "median": 37,
+              "p95": 41,
+              "max": 43
+            },
+            "tempC": {
+              "n": 20,
+              "min": 62,
+              "median": 63,
+              "p95": 64,
+              "max": 64
+            },
+            "pStates": [
+              "P3",
+              "P0"
+            ]
+          }
+        },
+        "walk-third": {
+          "frames": 154,
+          "durationMs": 3123,
+          "fps": 49.31155939801473,
+          "p95Ms": 30.89999999999418,
+          "p99Ms": 30.90000000000873,
+          "maxMs": 30.90000000000873,
+          "over20Ms": 49,
+          "pass": false,
+          "samplesSha256": "c8b253e72fc96871037a6ffb16a95d9a49ef787bb716b0f00b5a335fb2adf78d",
+          "walk": {
+            "from": {
+              "feet": [
+                281.6,
+                8.812,
+                934
+              ],
+              "mode": "third",
+              "timeMs": 112242
+            },
+            "to": {
+              "feet": [
+                280.9194254823627,
+                8.539485266892493,
+                924.2673309604462
+              ],
+              "mode": "third",
+              "timeMs": 115477.40000009537
+            },
+            "distanceXZ": 9.756435225406166
+          },
+          "draws": {
+            "n": 154,
+            "min": 1645,
+            "median": 1671,
+            "p95": 1675,
+            "max": 1675
+          },
+          "triangles": {
+            "n": 154,
+            "min": 8463549,
+            "median": 8490641,
+            "p95": 8539933,
+            "max": 8555411
+          },
+          "load": {
+            "samples": 6,
+            "osForegroundFrames": 0,
+            "begin": false,
+            "end": false,
+            "pageFocused": [
+              true,
+              true
+            ],
+            "pageVisible": [
+              "visible",
+              "visible"
+            ],
+            "cpu": {
+              "n": 6,
+              "min": 46.97,
+              "median": 55,
+              "p95": 63.47,
+              "max": 63.47
+            },
+            "busiestCore": {
+              "n": 6,
+              "min": 69.7,
+              "median": 76.5,
+              "p95": 84.8,
+              "max": 84.8
+            },
+            "externalElectron3DPct": {
+              "n": 6,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "knownPreview3DPct": {
+              "n": 6,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "clockMHz": {
+              "n": 7,
+              "min": 1740,
+              "median": 1965,
+              "p95": 1987,
+              "max": 1987
+            },
+            "deviceGpuPct": {
+              "n": 7,
+              "min": 25,
+              "median": 34,
+              "p95": 35,
+              "max": 35
+            },
+            "tempC": {
+              "n": 7,
+              "min": 63,
+              "median": 64,
+              "p95": 65,
+              "max": 65
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        "walk-first": {
+          "frames": 175,
+          "durationMs": 3138.5999999999913,
+          "fps": 55.75734403874355,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.90000000000873,
+          "maxMs": 46.09999999999127,
+          "over20Ms": 28,
+          "pass": false,
+          "samplesSha256": "ccaa5a60892aa208d64752df8a82154561150637c73a8aad724536465513b895",
+          "walk": {
+            "from": {
+              "feet": [
+                280.9075883456887,
+                8.534745456544195,
+                924.0980520194356
+              ],
+              "mode": "first",
+              "timeMs": 116403.70000004768
+            },
+            "to": {
+              "feet": [
+                280.22724874837985,
+                8.262324789918688,
+                914.368742497096
+              ],
+              "mode": "first",
+              "timeMs": 119653.59999990463
+            },
+            "distanceXZ": 9.753067504593306
+          },
+          "draws": {
+            "n": 175,
+            "min": 1440,
+            "median": 1522,
+            "p95": 1584,
+            "max": 1589
+          },
+          "triangles": {
+            "n": 175,
+            "min": 8235083,
+            "median": 8429515,
+            "p95": 8500991,
+            "max": 8512757
+          },
+          "load": {
+            "samples": 6,
+            "osForegroundFrames": 0,
+            "begin": false,
+            "end": false,
+            "pageFocused": [
+              true,
+              true
+            ],
+            "pageVisible": [
+              "visible",
+              "visible"
+            ],
+            "cpu": {
+              "n": 6,
+              "min": 43.99,
+              "median": 48.23,
+              "p95": 57.93,
+              "max": 57.93
+            },
+            "busiestCore": {
+              "n": 6,
+              "min": 55.3,
+              "median": 69.7,
+              "p95": 88.2,
+              "max": 88.2
+            },
+            "externalElectron3DPct": {
+              "n": 6,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "knownPreview3DPct": {
+              "n": 6,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "clockMHz": {
+              "n": 6,
+              "min": 1807,
+              "median": 1927,
+              "p95": 1935,
+              "max": 1935
+            },
+            "deviceGpuPct": {
+              "n": 6,
+              "min": 34,
+              "median": 37,
+              "p95": 45,
+              "max": 45
+            },
+            "tempC": {
+              "n": 6,
+              "min": 64,
+              "median": 64,
+              "p95": 65,
+              "max": 65
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        }
+      },
+      "nativeAudit": {
+        "captureSHA256": "806ee4b60f3b15423a5a31c6980c84f7016096a1c76c65b5dd57ac197e632859",
+        "stage": "complete",
+        "strictOk": false,
+        "transportClean": false,
+        "renderOk": true,
+        "crateTriangles": 5840,
+        "officeRequests": [
+          {
+            "file": "building-skyscraper-c.glb",
+            "status": 200,
+            "finished": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "quiet-cross-r2-01",
+      "role": "control-repeat",
+      "head": "363034ed1b6fa6c4ee7fbb05254156c937baf722",
+      "startedAt": "2026-11-18T14:00:53.321Z",
+      "finishedAt": "2026-11-18T14:02:53.643Z",
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "canvas": [
+        1440,
+        900
+      ],
+      "dpr": 1,
+      "canonicalHostSha256": "b225b1006b69f1dea71ec5aa54629dae614e00c1a0ed60c9a617f8293fa0a7e0",
+      "measuredHostSha256": "f129c03503debebe75238cd8fa97d1ee3cbd8c899fe02963cfdad0a34d962d0d",
+      "driverExit": 0,
+      "nativeExit": 1,
+      "renderOk": true,
+      "jsExceptions": 0,
+      "load": [
+        {
+          "file": "plastic_crate_02_1k.gltf",
+          "stage": "waiting-for-ready-frame",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "file": "plastic_crate_02.bin",
+          "stage": "waiting-for-ready-frame",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "threshold": {
+        "fps": 60,
+        "p95Ms": 16.7
+      },
+      "walkingInputs": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 110579.90000009537
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 113776.10000014305
+        },
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 114725.70000004768
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 117921
+        }
+      ],
+      "sourceFiles": 50,
+      "samples": "control-repeat.frames.json.gz",
+      "framesSha256": "927483c91c58469f5a7d7cdad9e930ea44b16e521d0ff9df89c97793c21632e1",
+      "fingerprint": "1049:2750135:294938.6:938840.7",
+      "decals": "baked",
+      "rays": 0,
+      "routes": {
+        "art-a-street": {
+          "frames": 587,
+          "durationMs": 10123,
+          "fps": 57.98676281734664,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.900000000001455,
+          "maxMs": 46.200000000004366,
+          "over20Ms": 70,
+          "pass": false,
+          "samplesSha256": "b3bcff66ff6168adb7acef3dcb2574413f267b9822839da1d9758dfac8bb95ca",
+          "camera": {
+            "position": [
+              278.8,
+              10.488,
+              936
+            ],
+            "quaternion": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "fov": 35.63777782904556,
+            "hidden": true,
+            "target": [
+              280,
+              10.088000000000001,
+              875
+            ],
+            "currentView": "art-a-street",
+            "mode": "third"
+          },
+          "draws": {
+            "n": 587,
+            "min": 1564,
+            "median": 1565,
+            "p95": 1580,
+            "max": 1580
+          },
+          "triangles": {
+            "n": 587,
+            "min": 7912556,
+            "median": 7912620,
+            "p95": 8002388,
+            "max": 8002388
+          },
+          "load": {
+            "samples": 20,
+            "osForegroundFrames": 20,
+            "begin": true,
+            "end": true,
+            "pageFocused": [
+              true,
+              true
+            ],
+            "pageVisible": [
+              "visible",
+              "visible"
+            ],
+            "cpu": {
+              "n": 20,
+              "min": 30.43,
+              "median": 37.14,
+              "p95": 47.57,
+              "max": 71.88
+            },
+            "busiestCore": {
+              "n": 20,
+              "min": 51.4,
+              "median": 60.6,
+              "p95": 82.4,
+              "max": 85.3
+            },
+            "externalElectron3DPct": {
+              "n": 20,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "knownPreview3DPct": {
+              "n": 20,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "clockMHz": {
+              "n": 20,
+              "min": 1890,
+              "median": 1980,
+              "p95": 1987,
+              "max": 1987
+            },
+            "deviceGpuPct": {
+              "n": 20,
+              "min": 42,
+              "median": 59,
+              "p95": 64,
+              "max": 69
+            },
+            "tempC": {
+              "n": 20,
+              "min": 62,
+              "median": 63,
+              "p95": 64,
+              "max": 64
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        "art-b-konbini": {
+          "frames": 632,
+          "durationMs": 10107.800000000003,
+          "fps": 62.52597004293712,
+          "p95Ms": 15.60000000000582,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 30.90000000000873,
+          "over20Ms": 25,
+          "pass": true,
+          "samplesSha256": "93913a79690d25d5f5aa844b0de220e61d817d50e9f2e70e2d1f8e5a343074d9",
+          "camera": {
+            "position": [
+              279.1,
+              9.8184,
+              912.8
+            ],
+            "quaternion": [
+              0.013653878147403252,
+              0.5849950384089397,
+              -0.009850566433920587,
+              0.8108620986267578
+            ],
+            "fov": 58,
+            "hidden": true,
+            "target": [
+              272.48,
+              10.0534,
+              910.6
+            ],
+            "currentView": "art-b-konbini",
+            "mode": "third"
+          },
+          "draws": {
+            "n": 632,
+            "min": 1022,
+            "median": 1037,
+            "p95": 1039,
+            "max": 1042
+          },
+          "triangles": {
+            "n": 632,
+            "min": 7771062,
+            "median": 7838402,
+            "p95": 7838530,
+            "max": 7902074
+          },
+          "load": {
+            "samples": 19,
+            "osForegroundFrames": 19,
+            "begin": true,
+            "end": true,
+            "pageFocused": [
+              true,
+              true
+            ],
+            "pageVisible": [
+              "visible",
+              "visible"
+            ],
+            "cpu": {
+              "n": 19,
+              "min": 26.37,
+              "median": 41.21,
+              "p95": 96.34,
+              "max": 96.34
+            },
+            "busiestCore": {
+              "n": 19,
+              "min": 54.3,
+              "median": 70.6,
+              "p95": 100,
+              "max": 100
+            },
+            "externalElectron3DPct": {
+              "n": 19,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "knownPreview3DPct": {
+              "n": 19,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "clockMHz": {
+              "n": 20,
+              "min": 1950,
+              "median": 1987,
+              "p95": 1987,
+              "max": 1987
+            },
+            "deviceGpuPct": {
+              "n": 20,
+              "min": 49,
+              "median": 55,
+              "p95": 64,
+              "max": 65
+            },
+            "tempC": {
+              "n": 20,
+              "min": 64,
+              "median": 64,
+              "p95": 65,
+              "max": 65
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        "art-c-alley": {
+          "frames": 655,
+          "durationMs": 10107.600000000006,
+          "fps": 64.80272270370806,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 30.89999999999418,
+          "over20Ms": 2,
+          "pass": true,
+          "samplesSha256": "f37bccf619b78537c02458a80d0249977384466a68f6ecbf1bd36f05342e64d8",
+          "camera": {
+            "position": [
+              287.65,
+              14.384808464050293,
+              767.3199999999999
+            ],
+            "quaternion": [
+              0.00512201791291099,
+              0.8012252009590126,
+              -0.006859231737600546,
+              0.5983016740914732
+            ],
+            "fov": 45,
+            "hidden": true,
+            "target": [
+              278.4,
+              14.55,
+              770.06
+            ],
+            "currentView": "art-c-alley",
+            "mode": "third"
+          },
+          "draws": {
+            "n": 655,
+            "min": 964,
+            "median": 964,
+            "p95": 966,
+            "max": 966
+          },
+          "triangles": {
+            "n": 655,
+            "min": 8654127,
+            "median": 8654127,
+            "p95": 8654255,
+            "max": 8654255
+          },
+          "load": {
+            "samples": 20,
+            "osForegroundFrames": 20,
+            "begin": true,
+            "end": true,
+            "pageFocused": [
+              true,
+              true
+            ],
+            "pageVisible": [
+              "visible",
+              "visible"
+            ],
+            "cpu": {
+              "n": 20,
+              "min": 24.75,
+              "median": 34.32,
+              "p95": 63.02,
+              "max": 79.17
+            },
+            "busiestCore": {
+              "n": 20,
+              "min": 48.5,
+              "median": 59,
+              "p95": 76.5,
+              "max": 87.9
+            },
+            "externalElectron3DPct": {
+              "n": 20,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "knownPreview3DPct": {
+              "n": 20,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "clockMHz": {
+              "n": 20,
+              "min": 1957,
+              "median": 1987,
+              "p95": 1987,
+              "max": 1987
+            },
+            "deviceGpuPct": {
+              "n": 20,
+              "min": 53,
+              "median": 56,
+              "p95": 61,
+              "max": 62
+            },
+            "tempC": {
+              "n": 20,
+              "min": 65,
+              "median": 66,
+              "p95": 66,
+              "max": 66
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        "art-d-laundry": {
+          "frames": 658,
+          "durationMs": 10123.099999999991,
+          "fps": 64.99985182404605,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.799999999988358,
+          "over20Ms": 0,
+          "pass": true,
+          "samplesSha256": "ae2416e8b1faab6db2b6ae656057ae2163086608d0d2aac966f0e5819d952b2f",
+          "camera": {
+            "position": [
+              283.5,
+              12.520055181715234,
+              783.8
+            ],
+            "quaternion": [
+              0.1297258927986663,
+              0.0767626424061459,
+              -0.010073721024303532,
+              0.9885227410703001
+            ],
+            "fov": 48,
+            "hidden": true,
+            "target": [
+              282.5,
+              14.25,
+              777.4
+            ],
+            "currentView": "art-d-laundry",
+            "mode": "third"
+          },
+          "draws": {
+            "n": 658,
+            "min": 902,
+            "median": 902,
+            "p95": 902,
+            "max": 904
+          },
+          "triangles": {
+            "n": 658,
+            "min": 8446998,
+            "median": 8446998,
+            "p95": 8446998,
+            "max": 8447126
+          },
+          "load": {
+            "samples": 20,
+            "osForegroundFrames": 20,
+            "begin": true,
+            "end": true,
+            "pageFocused": [
+              true,
+              true
+            ],
+            "pageVisible": [
+              "visible",
+              "visible"
+            ],
+            "cpu": {
+              "n": 20,
+              "min": 26.17,
+              "median": 31.68,
+              "p95": 38.89,
+              "max": 40.68
+            },
+            "busiestCore": {
+              "n": 20,
+              "min": 39.4,
+              "median": 55.9,
+              "p95": 70.6,
+              "max": 75.8
+            },
+            "externalElectron3DPct": {
+              "n": 20,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "knownPreview3DPct": {
+              "n": 20,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "clockMHz": {
+              "n": 20,
+              "min": 1980,
+              "median": 1987,
+              "p95": 1987,
+              "max": 1987
+            },
+            "deviceGpuPct": {
+              "n": 20,
+              "min": 46,
+              "median": 52,
+              "p95": 59,
+              "max": 61
+            },
+            "tempC": {
+              "n": 20,
+              "min": 65,
+              "median": 66,
+              "p95": 66,
+              "max": 66
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        "walk-third": {
+          "frames": 183,
+          "durationMs": 3123.0999999999913,
+          "fps": 58.5956261406937,
+          "p95Ms": 30.69999999999709,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 30.90000000000873,
+          "over20Ms": 20,
+          "pass": false,
+          "samplesSha256": "e5744843018797c66726513cb711165bf5d04034590251376da3fafd51774d54",
+          "walk": {
+            "from": {
+              "feet": [
+                281.6,
+                8.812,
+                934
+              ],
+              "mode": "third",
+              "timeMs": 110563.79999995232
+            },
+            "to": {
+              "feet": [
+                280.9247717155181,
+                8.541625998382884,
+                924.3437856565315
+              ],
+              "mode": "third",
+              "timeMs": 113799.60000014305
+            },
+            "distanceXZ": 9.679793834745192
+          },
+          "draws": {
+            "n": 183,
+            "min": 1649,
+            "median": 1671,
+            "p95": 1677,
+            "max": 1677
+          },
+          "triangles": {
+            "n": 183,
+            "min": 8460149,
+            "median": 8487025,
+            "p95": 8536573,
+            "max": 8552307
+          },
+          "load": {
+            "samples": 7,
+            "osForegroundFrames": 7,
+            "begin": true,
+            "end": true,
+            "pageFocused": [
+              true,
+              true
+            ],
+            "pageVisible": [
+              "visible",
+              "visible"
+            ],
+            "cpu": {
+              "n": 7,
+              "min": 32.38,
+              "median": 41.09,
+              "p95": 45.5,
+              "max": 45.5
+            },
+            "busiestCore": {
+              "n": 7,
+              "min": 57.6,
+              "median": 62.9,
+              "p95": 84.8,
+              "max": 84.8
+            },
+            "externalElectron3DPct": {
+              "n": 7,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "knownPreview3DPct": {
+              "n": 7,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "clockMHz": {
+              "n": 6,
+              "min": 1957,
+              "median": 1965,
+              "p95": 1972,
+              "max": 1972
+            },
+            "deviceGpuPct": {
+              "n": 6,
+              "min": 56,
+              "median": 56,
+              "p95": 59,
+              "max": 59
+            },
+            "tempC": {
+              "n": 6,
+              "min": 67,
+              "median": 67,
+              "p95": 68,
+              "max": 68
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        "walk-first": {
+          "frames": 185,
+          "durationMs": 3123.0999999999913,
+          "fps": 59.2360154974226,
+          "p95Ms": 30.79999999998836,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 30.80000000000291,
+          "over20Ms": 18,
+          "pass": false,
+          "samplesSha256": "1ef5c23313fd5094055b641277d8da1e4c45fddf67798359afcde3b5fea0ea2c",
+          "walk": {
+            "from": {
+              "feet": [
+                280.9125063326819,
+                8.536714710282261,
+                924.1683825100807
+              ],
+              "mode": "first",
+              "timeMs": 114703.5
+            },
+            "to": {
+              "feet": [
+                280.2347938620948,
+                8.265345994205676,
+                914.4766426502027
+              ],
+              "mode": "first",
+              "timeMs": 117937.60000014305
+            },
+            "distanceXZ": 9.715406100845053
+          },
+          "draws": {
+            "n": 185,
+            "min": 1443,
+            "median": 1522,
+            "p95": 1586,
+            "max": 1591
+          },
+          "triangles": {
+            "n": 185,
+            "min": 8231771,
+            "median": 8422967,
+            "p95": 8497119,
+            "max": 8509909
+          },
+          "load": {
+            "samples": 7,
+            "osForegroundFrames": 7,
+            "begin": true,
+            "end": true,
+            "pageFocused": [
+              true,
+              true
+            ],
+            "pageVisible": [
+              "visible",
+              "visible"
+            ],
+            "cpu": {
+              "n": 7,
+              "min": 31.02,
+              "median": 36.25,
+              "p95": 41.17,
+              "max": 41.17
+            },
+            "busiestCore": {
+              "n": 7,
+              "min": 51.5,
+              "median": 60.6,
+              "p95": 75.8,
+              "max": 75.8
+            },
+            "externalElectron3DPct": {
+              "n": 7,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "knownPreview3DPct": {
+              "n": 7,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "clockMHz": {
+              "n": 6,
+              "min": 1950,
+              "median": 1972,
+              "p95": 1972,
+              "max": 1972
+            },
+            "deviceGpuPct": {
+              "n": 6,
+              "min": 56,
+              "median": 57,
+              "p95": 59,
+              "max": 59
+            },
+            "tempC": {
+              "n": 6,
+              "min": 67,
+              "median": 68,
+              "p95": 68,
+              "max": 68
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        }
+      },
+      "nativeAudit": {
+        "captureSHA256": "9d79b465dd787a8507e917d0339af85030806cb4c59322b14707559e5235ace3",
+        "stage": "complete",
+        "strictOk": false,
+        "transportClean": false,
+        "renderOk": true,
+        "crateTriangles": 5840,
+        "officeRequests": []
+      }
+    },
+    {
+      "id": "quiet-cross-kenney-01",
+      "role": "candidate-repeat",
+      "head": "2c876b3bb5df225f14f716e804dd871a8be762f3",
+      "startedAt": "2026-11-18T14:03:06.859Z",
+      "finishedAt": "2026-11-18T14:05:08.637Z",
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "canvas": [
+        1440,
+        900
+      ],
+      "dpr": 1,
+      "canonicalHostSha256": "b225b1006b69f1dea71ec5aa54629dae614e00c1a0ed60c9a617f8293fa0a7e0",
+      "measuredHostSha256": "d295ce9188404b9c2f2c64f5606aafe93626d54bfb5d9c329d9472a60a441cc4",
+      "driverExit": 0,
+      "nativeExit": 1,
+      "renderOk": true,
+      "jsExceptions": 0,
+      "load": [
+        {
+          "file": "menhir.glb",
+          "stage": "waiting-for-ready-frame",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "file": "plastic_crate_02.bin",
+          "stage": "waiting-for-ready-frame",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "threshold": {
+        "fps": 60,
+        "p95Ms": 16.7
+      },
+      "walkingInputs": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 111815.40000009537
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 115024.60000014305
+        },
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 115959.60000014305
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "key": "w",
+          "trusted": true,
+          "timeMs": 119166.40000009537
+        }
+      ],
+      "sourceFiles": 50,
+      "samples": "candidate-repeat.frames.json.gz",
+      "framesSha256": "8ba9321d91a3615d68bec26d4d9f11b816ca171efa5359ab0df4a894af9b2d8d",
+      "fingerprint": "1050:2751839:295181.6:939614.8",
+      "decals": "baked",
+      "rays": 0,
+      "routes": {
+        "art-a-street": {
+          "frames": 562,
+          "durationMs": 10107.700000000004,
+          "fps": 55.601175341571256,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.900000000001455,
+          "maxMs": 30.90000000000873,
+          "over20Ms": 95,
+          "pass": false,
+          "samplesSha256": "0448b4a315c2e73d17b5bed0322733a3003a61102fddab53533974c68521af6c",
+          "camera": {
+            "position": [
+              278.8,
+              10.488,
+              936
+            ],
+            "quaternion": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "fov": 35.63777782904556,
+            "hidden": true,
+            "target": [
+              280,
+              10.088000000000001,
+              875
+            ],
+            "currentView": "art-a-street",
+            "mode": "third"
+          },
+          "draws": {
+            "n": 562,
+            "min": 1562,
+            "median": 1563,
+            "p95": 1578,
+            "max": 1578
+          },
+          "triangles": {
+            "n": 562,
+            "min": 7915916,
+            "median": 7915980,
+            "p95": 8005748,
+            "max": 8005748
+          },
+          "load": {
+            "samples": 20,
+            "osForegroundFrames": 20,
+            "begin": true,
+            "end": true,
+            "pageFocused": [
+              true,
+              true
+            ],
+            "pageVisible": [
+              "visible",
+              "visible"
+            ],
+            "cpu": {
+              "n": 20,
+              "min": 32.83,
+              "median": 41.78,
+              "p95": 51.21,
+              "max": 52.82
+            },
+            "busiestCore": {
+              "n": 20,
+              "min": 48.5,
+              "median": 65.7,
+              "p95": 79.4,
+              "max": 87.9
+            },
+            "externalElectron3DPct": {
+              "n": 20,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "knownPreview3DPct": {
+              "n": 20,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "clockMHz": {
+              "n": 20,
+              "min": 1957,
+              "median": 1987,
+              "p95": 1987,
+              "max": 1987
+            },
+            "deviceGpuPct": {
+              "n": 20,
+              "min": 60,
+              "median": 66,
+              "p95": 71,
+              "max": 73
+            },
+            "tempC": {
+              "n": 20,
+              "min": 65,
+              "median": 65,
+              "p95": 66,
+              "max": 66
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        "art-b-konbini": {
+          "frames": 657,
+          "durationMs": 10123,
+          "fps": 64.90170897955151,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 30.59999999999127,
+          "over20Ms": 1,
+          "pass": true,
+          "samplesSha256": "daedd1b700066f42670b4b11da23cb95c475a3128855a3321ec5596770dfe8a6",
+          "camera": {
+            "position": [
+              279.1,
+              9.8184,
+              912.8
+            ],
+            "quaternion": [
+              0.013653878147403252,
+              0.5849950384089397,
+              -0.009850566433920587,
+              0.8108620986267578
+            ],
+            "fov": 58,
+            "hidden": true,
+            "target": [
+              272.48,
+              10.0534,
+              910.6
+            ],
+            "currentView": "art-b-konbini",
+            "mode": "third"
+          },
+          "draws": {
+            "n": 657,
+            "min": 1021,
+            "median": 1036,
+            "p95": 1038,
+            "max": 1038
+          },
+          "triangles": {
+            "n": 657,
+            "min": 7772742,
+            "median": 7840082,
+            "p95": 7840210,
+            "max": 7840210
+          },
+          "load": {
+            "samples": 20,
+            "osForegroundFrames": 20,
+            "begin": true,
+            "end": true,
+            "pageFocused": [
+              true,
+              true
+            ],
+            "pageVisible": [
+              "visible",
+              "visible"
+            ],
+            "cpu": {
+              "n": 20,
+              "min": 32.5,
+              "median": 41.36,
+              "p95": 44.48,
+              "max": 56.66
+            },
+            "busiestCore": {
+              "n": 20,
+              "min": 50,
+              "median": 63.6,
+              "p95": 70.6,
+              "max": 76.5
+            },
+            "externalElectron3DPct": {
+              "n": 20,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "knownPreview3DPct": {
+              "n": 20,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "clockMHz": {
+              "n": 20,
+              "min": 1965,
+              "median": 1972,
+              "p95": 1987,
+              "max": 1987
+            },
+            "deviceGpuPct": {
+              "n": 20,
+              "min": 60,
+              "median": 69,
+              "p95": 73,
+              "max": 76
+            },
+            "tempC": {
+              "n": 20,
+              "min": 66,
+              "median": 67,
+              "p95": 67,
+              "max": 68
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        "art-c-alley": {
+          "frames": 658,
+          "durationMs": 10123,
+          "fps": 65.00049392472587,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.60000000000582,
+          "over20Ms": 0,
+          "pass": true,
+          "samplesSha256": "f13fd389a0e02ecf8d315be28ce5f44ca0af57ce564efaaa4d3b0ba2c0c40e03",
+          "camera": {
+            "position": [
+              287.65,
+              14.384808464050293,
+              767.3199999999999
+            ],
+            "quaternion": [
+              0.00512201791291099,
+              0.8012252009590126,
+              -0.006859231737600546,
+              0.5983016740914732
+            ],
+            "fov": 45,
+            "hidden": true,
+            "target": [
+              278.4,
+              14.55,
+              770.06
+            ],
+            "currentView": "art-c-alley",
+            "mode": "third"
+          },
+          "draws": {
+            "n": 658,
+            "min": 962,
+            "median": 962,
+            "p95": 964,
+            "max": 964
+          },
+          "triangles": {
+            "n": 658,
+            "min": 8657487,
+            "median": 8657487,
+            "p95": 8657615,
+            "max": 8657615
+          },
+          "load": {
+            "samples": 20,
+            "osForegroundFrames": 20,
+            "begin": true,
+            "end": true,
+            "pageFocused": [
+              true,
+              true
+            ],
+            "pageVisible": [
+              "visible",
+              "visible"
+            ],
+            "cpu": {
+              "n": 20,
+              "min": 31.91,
+              "median": 39.38,
+              "p95": 45.97,
+              "max": 56.2
+            },
+            "busiestCore": {
+              "n": 20,
+              "min": 48.5,
+              "median": 63.6,
+              "p95": 69.7,
+              "max": 69.7
+            },
+            "externalElectron3DPct": {
+              "n": 20,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "knownPreview3DPct": {
+              "n": 20,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "clockMHz": {
+              "n": 20,
+              "min": 1942,
+              "median": 1965,
+              "p95": 1972,
+              "max": 1972
+            },
+            "deviceGpuPct": {
+              "n": 20,
+              "min": 64,
+              "median": 69,
+              "p95": 76,
+              "max": 76
+            },
+            "tempC": {
+              "n": 20,
+              "min": 68,
+              "median": 68,
+              "p95": 69,
+              "max": 69
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        "art-d-laundry": {
+          "frames": 656,
+          "durationMs": 10123,
+          "fps": 64.80292403437716,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 30.89999999999418,
+          "over20Ms": 2,
+          "pass": true,
+          "samplesSha256": "e595bb78a3c34c84ab5d57979a60705b2d2dfe9d26d473f809cbf43e557ad640",
+          "camera": {
+            "position": [
+              283.5,
+              12.520055181715234,
+              783.8
+            ],
+            "quaternion": [
+              0.1297258927986663,
+              0.0767626424061459,
+              -0.010073721024303532,
+              0.9885227410703001
+            ],
+            "fov": 48,
+            "hidden": true,
+            "target": [
+              282.5,
+              14.25,
+              777.4
+            ],
+            "currentView": "art-d-laundry",
+            "mode": "third"
+          },
+          "draws": {
+            "n": 656,
+            "min": 901,
+            "median": 901,
+            "p95": 903,
+            "max": 903
+          },
+          "triangles": {
+            "n": 656,
+            "min": 8448678,
+            "median": 8448678,
+            "p95": 8448806,
+            "max": 8448806
+          },
+          "load": {
+            "samples": 20,
+            "osForegroundFrames": 20,
+            "begin": true,
+            "end": true,
+            "pageFocused": [
+              true,
+              true
+            ],
+            "pageVisible": [
+              "visible",
+              "visible"
+            ],
+            "cpu": {
+              "n": 20,
+              "min": 32.14,
+              "median": 42.58,
+              "p95": 58.64,
+              "max": 73.14
+            },
+            "busiestCore": {
+              "n": 20,
+              "min": 45.5,
+              "median": 61.8,
+              "p95": 72.7,
+              "max": 81.8
+            },
+            "externalElectron3DPct": {
+              "n": 20,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "knownPreview3DPct": {
+              "n": 20,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "clockMHz": {
+              "n": 19,
+              "min": 1972,
+              "median": 1972,
+              "p95": 1972,
+              "max": 1972
+            },
+            "deviceGpuPct": {
+              "n": 19,
+              "min": 36,
+              "median": 65,
+              "p95": 70,
+              "max": 70
+            },
+            "tempC": {
+              "n": 19,
+              "min": 68,
+              "median": 68,
+              "p95": 69,
+              "max": 69
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        "walk-third": {
+          "frames": 156,
+          "durationMs": 3138.600000000006,
+          "fps": 49.7036895431083,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.90000000000873,
+          "maxMs": 46.39999999999418,
+          "over20Ms": 47,
+          "pass": false,
+          "samplesSha256": "35728d72418415aad7bd7a8361f2610c36c6b0763e276026b0bfda1ad43edf72",
+          "walk": {
+            "from": {
+              "feet": [
+                281.6,
+                8.812,
+                934
+              ],
+              "mode": "third",
+              "timeMs": 111793.90000009537
+            },
+            "to": {
+              "feet": [
+                280.92052974883825,
+                8.539927435789592,
+                924.2831227067711
+              ],
+              "mode": "third",
+              "timeMs": 115042.70000004768
+            },
+            "distanceXZ": 9.740604917246209
+          },
+          "draws": {
+            "n": 156,
+            "min": 1649,
+            "median": 1670,
+            "p95": 1676,
+            "max": 1676
+          },
+          "triangles": {
+            "n": 156,
+            "min": 8463293,
+            "median": 8490607,
+            "p95": 8539677,
+            "max": 8555667
+          },
+          "load": {
+            "samples": 6,
+            "osForegroundFrames": 6,
+            "begin": true,
+            "end": true,
+            "pageFocused": [
+              true,
+              true
+            ],
+            "pageVisible": [
+              "visible",
+              "visible"
+            ],
+            "cpu": {
+              "n": 6,
+              "min": 41.52,
+              "median": 45.33,
+              "p95": 48.47,
+              "max": 48.47
+            },
+            "busiestCore": {
+              "n": 6,
+              "min": 60.6,
+              "median": 63.6,
+              "p95": 78.8,
+              "max": 78.8
+            },
+            "externalElectron3DPct": {
+              "n": 6,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "knownPreview3DPct": {
+              "n": 6,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "clockMHz": {
+              "n": 7,
+              "min": 1935,
+              "median": 1972,
+              "p95": 1972,
+              "max": 1972
+            },
+            "deviceGpuPct": {
+              "n": 7,
+              "min": 56,
+              "median": 62,
+              "p95": 69,
+              "max": 69
+            },
+            "tempC": {
+              "n": 7,
+              "min": 68,
+              "median": 69,
+              "p95": 69,
+              "max": 69
+            },
+            "pStates": [
+              "P3",
+              "P0"
+            ]
+          }
+        },
+        "walk-first": {
+          "frames": 169,
+          "durationMs": 3138.399999999994,
+          "fps": 53.84909508029579,
+          "p95Ms": 30.89999999999418,
+          "p99Ms": 31,
+          "maxMs": 31,
+          "over20Ms": 35,
+          "pass": false,
+          "samplesSha256": "a00e74e184ab4774a6e8843045cedb934a3c668859d12c4ab1ca510a74a87dc2",
+          "walk": {
+            "from": {
+              "feet": [
+                280.9085311598267,
+                8.535122976913424,
+                924.1115348897652
+              ],
+              "mode": "first",
+              "timeMs": 115940.79999995232
+            },
+            "to": {
+              "feet": [
+                280.22785118206355,
+                8.262566015604168,
+                914.3773577001489
+              ],
+              "mode": "first",
+              "timeMs": 119181.70000004768
+            },
+            "distanceXZ": 9.75794705821739
+          },
+          "draws": {
+            "n": 169,
+            "min": 1440,
+            "median": 1524,
+            "p95": 1580,
+            "max": 1585
+          },
+          "triangles": {
+            "n": 169,
+            "min": 8235083,
+            "median": 8429707,
+            "p95": 8500735,
+            "max": 8512501
+          },
+          "load": {
+            "samples": 6,
+            "osForegroundFrames": 6,
+            "begin": true,
+            "end": true,
+            "pageFocused": [
+              true,
+              true
+            ],
+            "pageVisible": [
+              "visible",
+              "visible"
+            ],
+            "cpu": {
+              "n": 6,
+              "min": 35.09,
+              "median": 48.73,
+              "p95": 54.1,
+              "max": 54.1
+            },
+            "busiestCore": {
+              "n": 6,
+              "min": 60.6,
+              "median": 63.6,
+              "p95": 73.5,
+              "max": 73.5
+            },
+            "externalElectron3DPct": {
+              "n": 6,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "knownPreview3DPct": {
+              "n": 6,
+              "min": 0,
+              "median": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "clockMHz": {
+              "n": 6,
+              "min": 1972,
+              "median": 1972,
+              "p95": 1972,
+              "max": 1972
+            },
+            "deviceGpuPct": {
+              "n": 6,
+              "min": 60,
+              "median": 64,
+              "p95": 71,
+              "max": 71
+            },
+            "tempC": {
+              "n": 6,
+              "min": 68,
+              "median": 69,
+              "p95": 69,
+              "max": 69
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        }
+      },
+      "nativeAudit": {
+        "captureSHA256": "a47181a23f3d0f1b3aba07e933cf820a2046970ca5af8603dab2c245bde88b9f",
+        "stage": "complete",
+        "strictOk": false,
+        "transportClean": false,
+        "renderOk": true,
+        "crateTriangles": 5840,
+        "officeRequests": [
+          {
+            "file": "building-skyscraper-c.glb",
+            "status": 200,
+            "finished": true
+          }
+        ]
+      }
+    }
+  ]
+}

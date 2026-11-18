@@ -1,0 +1,83 @@
+{
+  "art-a-street": {
+    "intersects": true,
+    "bbox": [
+      338,
+      206,
+      422,
+      426
+    ]
+  },
+  "art-b-konbini": {
+    "intersects": false,
+    "bbox": [
+      1870,
+      181,
+      2065,
+      454
+    ]
+  },
+  "art-c-alley": {
+    "intersects": true,
+    "bbox": [
+      747,
+      -135,
+      979,
+      527
+    ]
+  },
+  "art-d-laundry": {
+    "intersects": false,
+    "bbox": [
+      -2955,
+      -772,
+      -661,
+      745
+    ]
+  },
+  "sample-e-harbour": {
+    "intersects": false,
+    "bbox": [
+      -470,
+      388,
+      -404,
+      467
+    ]
+  },
+  "sample-f-hillside": {
+    "intersects": false,
+    "bbox": [
+      2522,
+      647,
+      2631,
+      713
+    ]
+  },
+  "sample-g-rail": {
+    "intersects": false,
+    "bbox": [
+      1517,
+      168,
+      1689,
+      436
+    ]
+  },
+  "sample-h-north": {
+    "intersects": false,
+    "bbox": [
+      727,
+      570,
+      731,
+      582
+    ]
+  },
+  "return-a": {
+    "intersects": true,
+    "bbox": [
+      338,
+      206,
+      422,
+      426
+    ]
+  }
+}

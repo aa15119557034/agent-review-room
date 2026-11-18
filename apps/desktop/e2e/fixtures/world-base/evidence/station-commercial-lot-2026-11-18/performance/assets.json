@@ -1,0 +1,41 @@
+{
+  "shared": {
+    "apartment-surfaces": {
+      "files": 9,
+      "bytes": 4932249,
+      "sha256": "9e1cfb8998dde4c83cf6accfd2fa42e1094c34bb7f19482d65195ca9b8daba76"
+    },
+    "textured-props": {
+      "files": 9,
+      "bytes": 3579256,
+      "sha256": "1dc2af4a48d29e8644684117449de3abf7c01e507ab46170f9b882303bff8f2b"
+    },
+    "petalwake-25443cef0eba802052d9ef24c94ba3c4157b6f2e": {
+      "files": 603,
+      "bytes": 210615280,
+      "sha256": "0ee869d9c9d13958c08820e29138b98dd86f8b8c623f78dab902d9a4b24c6a3c"
+    },
+    "sakuragaoka-4112f57208b7e29998344ca71fef74202c2b2bdd": {
+      "files": 161,
+      "bytes": 5754668,
+      "sha256": "2da1f09043b23cd9b042dba22738aec39981a7d7246f7c4e93a56cd600d432e0"
+    }
+  },
+  "office": {
+    "project": "kenneyCommercial",
+    "files": [
+      {
+        "path": ".local/city/kenney-commercial-2.1/building-skyscraper-c.glb",
+        "sha256": "e73c357554f7561fedb8c1cbecf9d7163ba09ada264d661c59a0f0a180e0185f"
+      },
+      {
+        "path": ".local/city/kenney-commercial-2.1/Textures/colormap.png",
+        "sha256": "191bec3889aaaca5018380038fecc129ebb5c2182879a099b7b538b3fa050b5d"
+      },
+      {
+        "path": ".local/city/kenney-commercial-2.1/License.txt",
+        "sha256": "c38cee408d022e57e44e49f1cd655c2fe0dc881a07b881276b795215cdc0de69"
+      }
+    ]
+  }
+}
