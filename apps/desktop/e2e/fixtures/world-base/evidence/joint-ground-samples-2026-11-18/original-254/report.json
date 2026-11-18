@@ -1,0 +1,281 @@
+{
+  "source": "f608c8ae4e8edb5b4179b1579c13ea356e316f45",
+  "startedAt": "2026-11-18T13:12:04.397Z",
+  "finishedAt": "2026-11-18T13:13:01.202Z",
+  "errors": [],
+  "networkFailures": [
+    {
+      "url": "http://127.0.0.1:62088/assets/models/menhir.glb",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "url": "http://127.0.0.1:62088/assets/models/boulders.glb",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "url": "http://127.0.0.1:62088/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "url": "http://127.0.0.1:62088/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    }
+  ],
+  "complete": true,
+  "photos": {
+    "sample-e-harbour": {
+      "view": {
+        "name": "sample-e-harbour",
+        "label": "E · 拉克港码头",
+        "fov": 57,
+        "position": [
+          -49.3148,
+          6.0969,
+          1121.5
+        ],
+        "target": [
+          -24,
+          7.2,
+          1123.5
+        ]
+      },
+      "current": "sample-e-harbour",
+      "eye": [
+        -49.3148,
+        6.0969,
+        1121.5
+      ],
+      "quaternion": [
+        0.014730707497095328,
+        -0.7342518484654964,
+        0.01594041117183272,
+        0.6785301265038345
+      ],
+      "fov": 57,
+      "ground": 4.496910095214844,
+      "eyeHeight": 1.599989904785156,
+      "time": 14,
+      "islandTime": 14,
+      "timeOfDay": "evening",
+      "buttonActive": true,
+      "hidden": true,
+      "canvas": [
+        1440,
+        900
+      ],
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "errors": [],
+      "file": "sample-e-harbour.png",
+      "hashes": [
+        "5246c62deb7fc2add67edc2a0df9d297b02d1d0e2675ccf690d19ec188314e7d",
+        "5246c62deb7fc2add67edc2a0df9d297b02d1d0e2675ccf690d19ec188314e7d",
+        "5246c62deb7fc2add67edc2a0df9d297b02d1d0e2675ccf690d19ec188314e7d"
+      ]
+    },
+    "sample-f-hillside": {
+      "view": {
+        "name": "sample-f-hillside",
+        "label": "F · 东部山麓草坡",
+        "fov": 57,
+        "position": [
+          1040.6682,
+          61.5086,
+          591.5865
+        ],
+        "target": [
+          1062,
+          102.7783,
+          490
+        ]
+      },
+      "current": "sample-f-hillside",
+      "eye": [
+        1040.6682,
+        61.5086,
+        591.5865
+      ],
+      "quaternion": [
+        0.18707634146308863,
+        -0.10146136691099782,
+        0.019429882402105244,
+        0.9768984149640014
+      ],
+      "fov": 57,
+      "ground": 59.90856914767454,
+      "eyeHeight": 1.6000308523254603,
+      "time": 14,
+      "islandTime": 14,
+      "timeOfDay": "evening",
+      "buttonActive": true,
+      "hidden": true,
+      "canvas": [
+        1440,
+        900
+      ],
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "errors": [],
+      "file": "sample-f-hillside.png",
+      "hashes": [
+        "a6a200d51663a8dbda21365f0c378679240970039621e0813a251b7ad49f73ad",
+        "a6a200d51663a8dbda21365f0c378679240970039621e0813a251b7ad49f73ad",
+        "a6a200d51663a8dbda21365f0c378679240970039621e0813a251b7ad49f73ad"
+      ]
+    },
+    "sample-g-rail": {
+      "view": {
+        "name": "sample-g-rail",
+        "label": "G · 铁路北侧小路",
+        "fov": 57,
+        "position": [
+          337.8563,
+          9.6,
+          844.5
+        ],
+        "target": [
+          268,
+          10.55,
+          857
+        ]
+      },
+      "current": "sample-g-rail",
+      "eye": [
+        337.8563,
+        9.6,
+        844.5
+      ],
+      "quaternion": [
+        0.0042956255745017925,
+        0.7668403876967841,
+        -0.005132508643737493,
+        0.6418029485387173
+      ],
+      "fov": 57,
+      "ground": 8,
+      "eyeHeight": 1.5999999999999996,
+      "time": 14,
+      "islandTime": 14,
+      "timeOfDay": "evening",
+      "buttonActive": true,
+      "hidden": true,
+      "canvas": [
+        1440,
+        900
+      ],
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "errors": [],
+      "file": "sample-g-rail.png",
+      "hashes": [
+        "a7cb159a65e50e2e07be37f3c996e77d3c7a7d86d5ccbe9c5436d988ad2eff3e",
+        "a7cb159a65e50e2e07be37f3c996e77d3c7a7d86d5ccbe9c5436d988ad2eff3e",
+        "a7cb159a65e50e2e07be37f3c996e77d3c7a7d86d5ccbe9c5436d988ad2eff3e"
+      ]
+    },
+    "sample-h-north": {
+      "view": {
+        "name": "sample-h-north",
+        "label": "H · 北端村道",
+        "fov": 57,
+        "position": [
+          181.0601,
+          136.1623,
+          -1212.8685
+        ],
+        "target": [
+          180,
+          141.45,
+          -1238
+        ]
+      },
+      "current": "sample-h-north",
+      "eye": [
+        181.0601,
+        136.1623,
+        -1212.8685
+      ],
+      "quaternion": [
+        0.1033905527383131,
+        0.02096399872548667,
+        -0.002179647308778166,
+        0.9944174945662979
+      ],
+      "fov": 57,
+      "ground": 134.5623427734375,
+      "eyeHeight": 1.5999572265624806,
+      "time": 14,
+      "islandTime": 14,
+      "timeOfDay": "evening",
+      "buttonActive": true,
+      "hidden": true,
+      "canvas": [
+        1440,
+        900
+      ],
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "errors": [],
+      "file": "sample-h-north.png",
+      "hashes": [
+        "d26d9d990a81fd2f2499f987234b6935c8c1258809f43890a7bfc493c5fed182",
+        "d26d9d990a81fd2f2499f987234b6935c8c1258809f43890a7bfc493c5fed182",
+        "d26d9d990a81fd2f2499f987234b6935c8c1258809f43890a7bfc493c5fed182"
+      ]
+    },
+    "return-e": {
+      "view": {
+        "name": "sample-e-harbour",
+        "label": "E · 拉克港码头",
+        "fov": 57,
+        "position": [
+          -49.3148,
+          6.0969,
+          1121.5
+        ],
+        "target": [
+          -24,
+          7.2,
+          1123.5
+        ]
+      },
+      "current": "sample-e-harbour",
+      "eye": [
+        -49.3148,
+        6.0969,
+        1121.5
+      ],
+      "quaternion": [
+        0.014730707497095328,
+        -0.7342518484654964,
+        0.01594041117183272,
+        0.6785301265038345
+      ],
+      "fov": 57,
+      "ground": 4.496910095214844,
+      "eyeHeight": 1.599989904785156,
+      "time": 14,
+      "islandTime": 14,
+      "timeOfDay": "evening",
+      "buttonActive": true,
+      "hidden": true,
+      "canvas": [
+        1440,
+        900
+      ],
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "errors": [],
+      "file": "return-e.png",
+      "hashes": [
+        "5246c62deb7fc2add67edc2a0df9d297b02d1d0e2675ccf690d19ec188314e7d",
+        "5246c62deb7fc2add67edc2a0df9d297b02d1d0e2675ccf690d19ec188314e7d",
+        "5246c62deb7fc2add67edc2a0df9d297b02d1d0e2675ccf690d19ec188314e7d"
+      ]
+    }
+  }
+}
