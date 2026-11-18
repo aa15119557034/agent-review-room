@@ -56,6 +56,7 @@
  },
  "excludeName": "foliage|sakura|train|asphalt|glass|ground|env-|petal|grass|wet|hedge|canopy|plant|tree|shrub|flower|leaf|vegetation",
  "excludeNode": "^sakura(-|:|$)|^train|^dynamic$|hedge|canopy|plant|tree|shrub|flower|leaf|vegetation|crowd|people|character|petal",
+ "excludeVehicle": "^vehicles$|^kei(van|car)$|^taxi$|^compact$|truck|lorry|^bus$",
  "excludeStationMaps": [
   "lawn",
   "soil",
@@ -139,7 +140,8 @@
      0,
      0.95
     ],
-    "width": 0.16
+    "width": 0.16,
+    "curved": true
    },
    {
     "area": "01-right-shop",
@@ -154,7 +156,8 @@
      0,
      0
     ],
-    "width": 0.62
+    "width": 0.62,
+    "curved": true
    },
    {
     "area": "01-right-shop",
@@ -169,7 +172,8 @@
      0,
      0
     ],
-    "width": 0.34
+    "width": 0.34,
+    "curved": true
    },
    {
     "area": "01-right-shop",
@@ -199,7 +203,8 @@
      0,
      1
     ],
-    "width": 0.22
+    "width": 0.22,
+    "curved": true
    },
    {
     "area": "21-mailboxes",
@@ -231,6 +236,7 @@
     ],
     "width": 0.2
    }
-  ]
+  ],
+  "note": "explicit entries: pos/normal are station-local and approximate; the planner snaps them to the wall and runs the nine-point flat check, sliding along the wall / up / smaller when it fails. curved:true skips the check (poles, uneven shop fronts)."
  }
 }

@@ -6,7 +6,7 @@ import { createLook } from './look.js';
 import { createSkyline } from './skyline.js';
 import { createCity } from './city.js';
 import { applyWeathering, loadWeatheringParams } from './weathering.js';
-import { addWeatheringDecals } from './weathering-decals.js';
+import { addWeatheringDecals, loadBakedDecals } from './weathering-decals.js';
 
 const canvas = document.querySelector('#world');
 const loadMessage = document.querySelector('#load-message');
@@ -171,10 +171,13 @@ async function init() {
   }
   // Round 22: wall weathering + posters. After the evening glow, so emissive materials are already known.
   {
+    const weatheringStart = performance.now();
     const params = await loadWeatheringParams();
     worldBase.weathering = applyWeathering({ scene, station, island, city: worldBase.city, skyline: worldBase.skyline, params, timeOfDay: island.timeOfDay });
     worldBase.weatheringDecals = addWeatheringDecals({ scene, station, wallMaterials: worldBase.weathering.wallMaterials,
-      roots: [station.root, worldBase.city.root, worldBase.skyline.root], gradientMap: station.ctx.mat.gradientMap, explicit: params.decals.explicit });
+      roots: [station.root, worldBase.city.root, worldBase.skyline.root], gradientMap: station.ctx.mat.gradientMap, explicit: params.decals.explicit,
+      baked: await loadBakedDecals(), forcePlan: new URLSearchParams(location.search).get('decals') === 'plan' });
+    worldBase.weatheringMs = +(performance.now() - weatheringStart).toFixed(1);
     // ?weathering=off keeps the previous look for before/after captures.
     if (new URLSearchParams(location.search).get('weathering') === 'off') { worldBase.weathering.setEnabled(false); worldBase.weatheringDecals.setEnabled(false); }
   }

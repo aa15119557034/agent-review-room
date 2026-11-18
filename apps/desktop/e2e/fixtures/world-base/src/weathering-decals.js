@@ -4,6 +4,12 @@ import * as THREE from 'three';
 // one merged mesh (one draw call), placed by raycasting onto flat, free wall areas of already
 // weathered materials. Nothing here is taken from any game: shapes, palettes and pseudo-lettering
 // are drawn from scratch with a seeded random generator.
+//
+// Round 23: placement is split from building. planWeatheringDecals() does the ray work (run offline by
+// scripts/bake-weathering-decals.cjs) and the result lives in weathering-decals.json: position, normal,
+// tangent, size and atlas cell per decal. addWeatheringDecals() reads that file and builds the mesh with
+// zero rays. If the file is missing, or its scene fingerprint no longer matches (the scene changed), it
+// plans again at runtime, with rays restricted to the few meshes near each ray instead of the whole scene.
 
 const PALETTE = ['#c8f400', '#ff3d8b', '#19d3ff', '#ff8a1f', '#ffe21a', '#8a4dff', '#ff3b30', '#f4f1e8'];
 const INK = '#1b1a24';
@@ -101,22 +107,46 @@ const PLAN = [
   ['main', { poster: 6, sticker: 4, doodle: 1 }], ['laundry', { poster: 3, sticker: 2, doodle: 1 }], ['rear', { poster: 4, sticker: 3, doodle: 2 }],
 ];
 
-export function addWeatheringDecals({ scene, station, wallMaterials, roots, gradientMap, explicit = [] }) {
-  const o = station.root.position, r = rng(2203);
-  const { canvas, cells } = drawAtlas();
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace; texture.anisotropy = 4; texture.generateMipmaps = true; texture.minFilter = THREE.LinearMipmapLinearFilter; texture.name = 'weathering-decal-atlas';
-  const material = new THREE.MeshToonMaterial({ name: 'weathering-decals', map: texture, gradientMap, alphaTest: 0.5, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -4 });
+const up = new THREE.Vector3(0, 1, 0);
+const r3 = v => [+v.x.toFixed(4), +v.y.toFixed(4), +v.z.toFixed(4)];
+
+function collectTargets(roots) {
   const targets = [];
   for (const root of roots) root.traverse(m => {
     if (!m.isMesh || m.isInstancedMesh) return;
     for (let p = m; p; p = p.parent) if (p.userData?.noDecal) return;
     targets.push(m);
   });
+  return targets;
+}
+
+// Cheap scene fingerprint: how many candidate meshes and triangles there are, and the sum of their positions.
+// A change to the scene moves it, and the baked file is then ignored.
+function fingerprint(targets) {
+  let tris = 0, sx = 0, sz = 0;
+  for (const m of targets) {
+    const g = m.geometry; tris += (g.index ? g.index.count : g.attributes.position.count) / 3;
+    sx += m.matrixWorld.elements[12]; sz += m.matrixWorld.elements[14];
+  }
+  return `${targets.length}:${tris}:${sx.toFixed(1)}:${sz.toFixed(1)}`;
+}
+
+export function planWeatheringDecals({ station, wallMaterials, roots, explicit = [] }) {
+  const o = station.root.position, r = rng(2203), cells = cellTable();
+  for (const root of roots) root.updateMatrixWorld(true);
+  const targets = collectTargets(roots);
+  const boxes = targets.map(m => { if (!m.geometry.boundingBox) m.geometry.computeBoundingBox(); return m.geometry.boundingBox.clone().applyMatrix4(m.matrixWorld); });
   const ray = new THREE.Raycaster(); ray.far = 16;
-  const hitAt = (origin, dir) => {
-    ray.set(origin, dir);
-    const hit = ray.intersectObjects(targets, false)[0];
+  const stats = { rejected: 0, rays: 0, explicitAdjusted: [], explicitFailed: [] };
+  const segBox = new THREE.Box3(), end = new THREE.Vector3();
+  const hitAt = (origin, dir, far = 16) => {
+    stats.rays++;
+    ray.far = far; ray.set(origin, dir);
+    // Only meshes whose box meets the ray's reach can be hit: a handful instead of the whole scene.
+    end.copy(origin).addScaledVector(dir, far); segBox.setFromPoints([origin, end]).expandByScalar(0.05);
+    const near = [];
+    for (let i = 0; i < targets.length; i++) if (boxes[i].intersectsBox(segBox) && ray.ray.intersectsBox(boxes[i])) near.push(targets[i]);
+    const hit = ray.intersectObjects(near, false)[0];
     if (!hit || !hit.face) return null;
     const mats = [].concat(hit.object.material);
     const material0 = mats[hit.face.materialIndex ?? 0] ?? mats[0];
@@ -124,42 +154,51 @@ export function addWeatheringDecals({ scene, station, wallMaterials, roots, grad
     const normal = hit.face.normal.clone().transformDirection(hit.object.matrixWorld);
     return { point: hit.point, normal, distance: hit.distance };
   };
+  // Nine rays from 0.7 m in front of the wall over a 3x3 grid slightly larger than the decal: all must meet the same plane.
   const flat = (hit, w, h) => {
-    const up = new THREE.Vector3(0, 1, 0), right = new THREE.Vector3().crossVectors(up, hit.normal).normalize(), inward = hit.normal.clone().negate();
+    const right = new THREE.Vector3().crossVectors(up, hit.normal).normalize(), inward = hit.normal.clone().negate();
     for (const u of [-0.5, 0, 0.5]) for (const v of [-0.5, 0, 0.5]) {
-      // Probe a 3x3 grid slightly larger than the decal, from 0.7 m in front of the wall: every ray must meet the same plane.
       const origin = hit.point.clone().addScaledVector(hit.normal, 0.7).addScaledVector(right, u * (w + 0.06)).addScaledVector(up, v * (h + 0.06));
-      const hh = hitAt(origin, inward);
+      const hh = hitAt(origin, inward, 0.9);
       if (!hh || Math.abs(hh.distance - 0.7) > 0.012 || hh.normal.dot(hit.normal) < 0.995) return false;
     }
     return true;
   };
-  const positions = [], uvs = [], indices = [], placed = [], stats = { posters: 0, stickers: 0, doodles: 0, rejected: 0, byArea: {} };
-  const pushQuad = (hit, w, h, cell, roll) => {
-    const idx = cells.indexOf(cell), c = idx % 4, rr = Math.floor(idx / 4);
-    const up = new THREE.Vector3(0, 1, 0), right = new THREE.Vector3().crossVectors(up, hit.normal).normalize(), upv = new THREE.Vector3().crossVectors(hit.normal, right);
-    const q = new THREE.Quaternion().setFromAxisAngle(hit.normal, roll); right.applyQuaternion(q); upv.applyQuaternion(q);
-    const centre = hit.point.clone().addScaledVector(hit.normal, 0.007), base = positions.length / 3;
-    const hw = w / 2, hh = h / 2;
-    for (const [sx, sy, u, v] of [[-1, -1, 0, 0], [1, -1, 1, 0], [1, 1, 1, 1], [-1, 1, 0, 1]]) {
-      const p = centre.clone().addScaledVector(right, sx * hw).addScaledVector(upv, sy * hh);
-      positions.push(p.x, p.y, p.z);
-      const fu = (cell.w * (u - 0.5) / CELL + 0.5), fv = (cell.h * (v - 0.5) / CELL + 0.5);
-      uvs.push((c + fu) / 4, 1 - (rr + 1 - fv) / 4);
-    }
-    indices.push(base, base + 1, base + 2, base, base + 2, base + 3);
+  const items = [], placed = [];
+  const push = (area, cell, hit, w, h, roll) => {
+    const right = new THREE.Vector3().crossVectors(up, hit.normal).normalize();
+    right.applyQuaternion(new THREE.Quaternion().setFromAxisAngle(hit.normal, roll));
+    items.push({ area, cell: cells.indexOf(cell), kind: cell.kind, pos: r3(hit.point.clone().sub(o)), normal: r3(hit.normal), right: r3(right), w: +w.toFixed(4), h: +h.toFixed(4) });
+    placed.push({ point: hit.point.clone(), w });
   };
-  // Hand-placed decals (weathering.json): approximate station-local position + normal, snapped onto the
-  // real surface by a short ray; no flatness check, so they work on poles and uneven shop fronts.
-  stats.explicit = { placed: 0, missed: [] };
+  // Hand-placed decals: snap the approximate position onto the surface, then run the same flat check. Poles and
+  // other curved or uneven things opt out with "curved": true. A failed check looks for the nearest passing spot
+  // by sliding along the wall and then upwards.
   for (const e of explicit) {
     const cell = cells[e.cell], n = new THREE.Vector3(...e.normal).normalize(), p0 = new THREE.Vector3(...e.pos).add(o);
-    const hit = hitAt(p0.clone().addScaledVector(n, 0.5), n.clone().negate());
-    if (!hit || hit.distance > 1.2) { stats.explicit.missed.push(e.area + '#' + e.cell); continue; }
-    const w = e.width, h = w / cell.aspect;
-    pushQuad(hit, w, h, cell, e.roll ?? (cell.kind === 'poster' ? (r() - 0.5) * 0.05 : (r() - 0.5) * 0.4));
-    placed.push({ point: hit.point.clone(), w }); stats.explicit.placed++; stats[cell.kind + 's']++;
-    (stats.byArea[e.area] ??= []).push({ kind: cell.kind, at: [+(hit.point.x - o.x).toFixed(2), +(hit.point.y - o.y).toFixed(2), +(hit.point.z - o.z).toFixed(2)] });
+    const tag = e.area + '#' + e.cell, right0 = new THREE.Vector3().crossVectors(up, n).normalize();
+    const snap = p => { const hh = hitAt(p.clone().addScaledVector(n, 0.5), n.clone().negate(), 1.75); return hh && hh.distance < 1.2 ? hh : null; };
+    let hit = snap(p0), w = e.width, h = w / cell.aspect;
+    if (!hit) { stats.explicitFailed.push(tag); r(); continue; }
+    if (!e.curved && !flat(hit, w, h)) {
+      // Nearest passing spot: slide along the wall (+-1.5 m) and up (-0.2..+1.2 m); if the wall is too small, shrink to 88% then 76%.
+      const cand = [];
+      for (let du = -1.5; du <= 1.5001; du += 0.1) for (let dv = -0.2; dv <= 1.2001; dv += 0.1) cand.push([du, dv, Math.hypot(du, dv < 0 ? dv * 1.6 : dv)]);
+      cand.sort((a, b) => a[2] - b[2]);
+      let found = null;
+      for (const shrink of [1, 0.88, 0.76]) {
+        const ww = e.width * shrink, hh2 = ww / cell.aspect;
+        for (const [du, dv] of cand) {
+          const hh = snap(p0.clone().addScaledVector(right0, du).addScaledVector(up, dv));
+          if (hh && hh.normal.dot(n) > 0.9 && flat(hh, ww, hh2)) { found = { hh, du, dv, shrink, ww, hh2 }; break; }
+        }
+        if (found) break;
+      }
+      if (!found) { stats.explicitFailed.push(tag + ' (no flat spot)'); r(); continue; }
+      stats.explicitAdjusted.push({ at: tag, slide: +found.du.toFixed(2), up: +found.dv.toFixed(2), size: found.shrink });
+      hit = found.hh; w = found.ww; h = found.hh2;
+    }
+    push(e.area, cell, hit, w, h, e.roll ?? (cell.kind === 'poster' ? (r() - 0.5) * 0.05 : (r() - 0.5) * 0.4));
   }
   for (const [area, counts] of PLAN) {
     const spot = SPOTS[area], found = [];
@@ -184,11 +223,60 @@ export function addWeatheringDecals({ scene, station, wallMaterials, roots, grad
         const k = spot.scale ?? 1, w = k * (kind === 'poster' ? 0.42 + r() * 0.2 : kind === 'sticker' ? 0.16 + r() * 0.08 : 0.3 + r() * 0.15), h = w / cell.aspect;
         if (placed.some(p => p.point.distanceTo(hit.point) < (w + p.w) * 0.9 + 0.5)) continue;
         if (!flat(hit, w, h)) { stats.rejected++; continue; }
-        pushQuad(hit, w, h, cell, kind === 'poster' ? (r() - 0.5) * 0.06 : (r() - 0.5) * 0.5);
-        placed.push({ point: hit.point.clone(), w }); made++; stats[kind + 's']++;
-        (stats.byArea[area] ??= []).push({ kind, at: [+(hit.point.x - o.x).toFixed(2), +(hit.point.y - o.y).toFixed(2), +(hit.point.z - o.z).toFixed(2)] });
+        push(area, cell, hit, w, h, kind === 'poster' ? (r() - 0.5) * 0.06 : (r() - 0.5) * 0.5);
+        made++;
       }
     }
+  }
+  return { version: 1, fingerprint: fingerprint(targets), items, stats };
+}
+
+function cellTable() {
+  const cells = [];
+  for (let i = 0; i < 16; i++) {
+    if (i < 8) cells.push({ kind: 'poster', aspect: 176 / 244, w: 176, h: 244 });
+    else if (i < 12) cells.push({ kind: 'sticker', aspect: 1, w: 190, h: 190 });
+    else cells.push({ kind: 'doodle', aspect: 1, w: 200, h: 200 });
+  }
+  return cells;
+}
+
+export async function loadBakedDecals() {
+  try {
+    const response = await fetch(new URL('./weathering-decals.json', import.meta.url));
+    return response.ok ? await response.json() : null;
+  } catch { return null; }
+}
+
+export function addWeatheringDecals({ scene, station, wallMaterials, roots, gradientMap, explicit = [], baked = null, forcePlan = false }) {
+  const o = station.root.position;
+  const { canvas } = drawAtlas(), cells = cellTable();
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace; texture.anisotropy = 4; texture.generateMipmaps = true; texture.minFilter = THREE.LinearMipmapLinearFilter; texture.name = 'weathering-decal-atlas';
+  const material = new THREE.MeshToonMaterial({ name: 'weathering-decals', map: texture, gradientMap, alphaTest: 0.5, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -4 });
+  let plan = null, source = 'baked', t0 = performance.now();
+  if (baked && !forcePlan) {
+    for (const root of roots) root.updateMatrixWorld(true);
+    if (baked.fingerprint === fingerprint(collectTargets(roots))) plan = baked; else source = 'planned (scene changed)';
+  } else source = forcePlan ? 'planned (forced)' : 'planned (no baked file)';
+  if (!plan) plan = planWeatheringDecals({ station, wallMaterials, roots, explicit });
+  const planMs = performance.now() - t0;
+
+  const positions = [], uvs = [], indices = [], stats = { posters: 0, stickers: 0, doodles: 0, rejected: plan.stats?.rejected ?? 0, byArea: {} };
+  const n = new THREE.Vector3(), right = new THREE.Vector3(), upv = new THREE.Vector3(), centre = new THREE.Vector3(), p = new THREE.Vector3();
+  for (const it of plan.items) {
+    const cell = cells[it.cell], c = it.cell % 4, rr = Math.floor(it.cell / 4);
+    n.fromArray(it.normal); right.fromArray(it.right); upv.crossVectors(n, right);
+    centre.fromArray(it.pos).add(o).addScaledVector(n, 0.007);
+    const base = positions.length / 3, hw = it.w / 2, hh = it.h / 2;
+    for (const [sx, sy, u, v] of [[-1, -1, 0, 0], [1, -1, 1, 0], [1, 1, 1, 1], [-1, 1, 0, 1]]) {
+      p.copy(centre).addScaledVector(right, sx * hw).addScaledVector(upv, sy * hh);
+      positions.push(p.x, p.y, p.z);
+      const fu = (cell.w * (u - 0.5) / CELL + 0.5), fv = (cell.h * (v - 0.5) / CELL + 0.5);
+      uvs.push((c + fu) / 4, 1 - (rr + 1 - fv) / 4);
+    }
+    indices.push(base, base + 1, base + 2, base, base + 2, base + 3);
+    stats[cell.kind + 's']++; (stats.byArea[it.area] ??= []).push({ kind: cell.kind, at: it.pos.map(v => +v.toFixed(2)) });
   }
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
@@ -197,6 +285,7 @@ export function addWeatheringDecals({ scene, station, wallMaterials, roots, grad
   const mesh = new THREE.Mesh(geometry, material); mesh.name = 'weathering-decals'; mesh.receiveShadow = true; mesh.castShadow = false; mesh.frustumCulled = false; mesh.userData.noDecal = true; mesh.userData.walkable = false;
   scene.add(mesh);
   let disposed = false;
-  return { mesh, stats: { ...stats, drawCalls: 1, triangles: indices.length / 3 }, setEnabled(on) { mesh.visible = on; },
+  return { mesh, plan, stats: { ...stats, source, planMs: +planMs.toFixed(1), rays: plan.stats?.rays ?? 0, explicit: { placed: plan.items.filter(i => explicit.some(e => e.area === i.area)).length, adjusted: plan.stats?.explicitAdjusted ?? [], missed: plan.stats?.explicitFailed ?? [] }, drawCalls: 1, triangles: indices.length / 3 },
+    setEnabled(on) { mesh.visible = on; },
     dispose() { if (disposed) return; disposed = true; mesh.removeFromParent(); geometry.dispose(); material.dispose(); texture.dispose(); } };
 }
