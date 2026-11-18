@@ -735,7 +735,10 @@ void main(){
     vec2 face=vec2(P.x*0.82+P.z*0.57,P.y-0.33*P.x+0.21*P.z)/18.0 + (nzA.rg-0.5)*0.41;
     Mat fissures=samp(L_ROCK,face,dFdx(face),dFdy(face));
     float joints=clamp(dot(fissures.c/uMean[1],vec3(0.25,0.55,0.20)),0.32,1.6);
-    pigment*=mix(1.0,0.62+0.23*joints,cliff);
+    pigment*=mix(1.0,0.64+0.23*joints,cliff);
+    // Preserve clean limestone/snow separation and warm exposed faces under
+    // the station's original tone curve. Mid-scale survey structure does the work.
+    pigment=mix(pigment*vec3(1.04,0.995,0.945),pigment*vec3(0.99,1.01,1.035),snow);
     float detail=(0.93+0.16*m.h)*mix(1.0,0.72+0.42*fissures.h,cliff);
     m.c=mix(m.c,pigment*detail,alpine);
     Nw=normalize(mix(Nw,N,alpine*(0.28+0.52*snow)));

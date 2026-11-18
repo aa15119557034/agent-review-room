@@ -141,11 +141,11 @@ export function createLook(renderer, camera) {
   mat.fragmentShader = insert(mat.fragmentShader, 'col *= uExposure;', `
     // Contact shadows (ZZZ refs: crates, benches, eaves all sit in soft dark creases).
     if (uAO*uToon > 0.0) {
-      float wbA = wbAO(uv, wbDepth(uv)), wbAk = uAO*uToon*(1.0-0.48*uLandscape);
+      float wbA = wbAO(uv, wbDepth(uv)), wbAk = uAO*uToon*(1.0-0.18*uLandscape);
       col *= mix(1.0, wbA, wbAk);
       col *= mix(vec3(1.0), uShAO, (1.0 - wbA)*wbAk*uShOn); // creases fall into blue-violet, not grey
     }
-    float edge = wbEdge(uv)*uToon*(1.0-0.83*uLandscape);
+    float edge = wbEdge(uv)*uToon*(1.0-0.40*uLandscape);
     vec3 line = mix(col*vec3(0.42,0.38,0.50),vec3(0.027,0.020,0.051),0.35);
     col = mix(col,line,edge*0.45); // ZZZ scenes keep only faint silhouettes; strong lines are for characters
     // Anime aerial perspective: distant land fades to a cool sky haze so the
@@ -197,12 +197,6 @@ export function createLook(renderer, camera) {
       float wbSh = (1.0 - smoothstep(uShRange.x, uShRange.y, wbL))*uShRange.z*uShOn*uToon*(1.0 - wbSky);
       col = mix(col, col*uShMul + uShLift, wbSh);
     }
-    float nature=uLandscape*uToon*(1.0-step(uFar*0.9,wbDepth(uv)));
-    float mist=1.0-exp(-wbDepth(uv)*0.0013);
-    float y=dot(col,vec3(0.2126,0.7152,0.0722));
-    vec3 painted=mix(vec3(y),col,0.86);
-    painted=painted*(0.93-0.10*mist)+vec3(0.012,0.016,0.021)+mist*vec3(0.039,0.047,0.059);
-    col=mix(col,painted,nature);
     col = clamp(col, 0.0, 1.0);`, 'purple shadows');
 
   function applyIsland(island) {

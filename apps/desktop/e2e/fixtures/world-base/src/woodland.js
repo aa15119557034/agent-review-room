@@ -155,7 +155,7 @@ function treeMaterial(map,leaf,far=false){
           vP=(instanceMatrix*vec4(position,1.)).xyz;vN=normalize(mat3(instanceMatrix)*normal);vUv=uv;
           #ifdef LEAF
             vec3 crownN=normalize(vec3(vP.x-foot.x,2.7+(position.y-7.0)*0.30,vP.z-foot.z));
-            vN=normalize(crownN*0.84+vN*0.16);
+            vN=normalize(crownN*0.66+vN*0.34);
           #endif
           vHeight=clamp(position.y/13.,0.,1.);
           float bend=smoothstep(0.6,13.0,vP.y-foot.y);
@@ -178,7 +178,7 @@ function treeMaterial(map,leaf,far=false){
         #else
           if(pattern<vFade)discard;
         #endif
-        vec4 sampleColor=texture2D(map,vUv,0.65);
+        vec4 sampleColor=texture2D(map,vUv,0.18);
         #if defined(LEAF) || defined(DISTANT_TREE)
           if(sampleColor.a<0.36)discard;
         #endif
@@ -191,8 +191,7 @@ function treeMaterial(map,leaf,far=false){
         #endif
         float sun=texture2D(uLightTex,vP.xz*uWorld.y+0.5).r*cloudShadow(vP.xz,uTime);
         vec3 sky=mix(uAmbGround,uAmbSky,0.53+0.32*n.y);
-        vec3 pigment=mix(vec3(dot(sampleColor.rgb,vec3(0.23,0.60,0.17))),sampleColor.rgb,0.73);
-        pigment=pigment*0.86+vec3(0.022,0.027,0.021);
+        vec3 pigment=mix(vec3(dot(sampleColor.rgb,vec3(0.23,0.60,0.17))),sampleColor.rgb,0.88);
         float crownFill=mix(0.72,1.0,smoothstep(0.12,0.87,vHeight));
         vec3 color=pigment*vTone*(sky*crownFill+uSunColor*ndl*sun*mix(0.72,1.0,crownFill));
         gl_FragColor=vec4(applyAtmosphere(color,vP),1.);
