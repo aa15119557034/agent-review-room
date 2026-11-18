@@ -1,0 +1,481 @@
+{
+  "source": "363034ed1b6fa6c4ee7fbb05254156c937baf722",
+  "device": "CPU only; real GLB positions/wind and production placement/filter/reseating/Three r187. No renderer or GPU results.",
+  "cellMeters": 384,
+  "totalBatches": 64,
+  "originalInstances": {
+    "lighthouse": 1,
+    "menhir": 21,
+    "boulders": 87,
+    "tree": 53
+  },
+  "sourceMatrixCpuBytes": 10368,
+  "additionalGpuBufferBytes": 0,
+  "existingInstanceBufferSizes": [
+    64,
+    1344,
+    5568,
+    3392
+  ],
+  "framesChecked": 877,
+  "instanceInclusivityChecks": 142074,
+  "meshUploadMaskChanges": 380,
+  "registryOfOriginalCollisionBuckets": 159,
+  "wideSweep": "4 calibrated ground eyes × 72 headings × 3 nearby pitches, plus A-D re-entry and translated/rotated root checks. Every instance whose tree-padded individual sphere touched the frustum stayed in the compacted batch, authored order and each 64-byte matrix unchanged.",
+  "wind": {
+    "windR": [
+      0,
+      1
+    ],
+    "windG": [
+      0.00020550355839077383,
+      0.9855378270149231
+    ],
+    "blankWake": true,
+    "inputWindDir": [
+      0.361,
+      0.933
+    ],
+    "shaderBoundMeters": 0.5263759807932085,
+    "padding": 2
+  },
+  "materials": [
+    {
+      "transparent": false,
+      "outputAlphaOpaque": true,
+      "instanceId": false,
+      "casts": false
+    },
+    {
+      "transparent": false,
+      "outputAlphaOpaque": true,
+      "instanceId": false,
+      "casts": false
+    },
+    {
+      "transparent": false,
+      "outputAlphaOpaque": true,
+      "instanceId": false,
+      "casts": false
+    },
+    {
+      "transparent": false,
+      "outputAlphaOpaque": true,
+      "instanceId": false,
+      "casts": false
+    }
+  ],
+  "reseated": [
+    {
+      "name": "boulders",
+      "before": [
+        388.16,
+        10.58,
+        859.43,
+        4.757,
+        0.45
+      ],
+      "after": [
+        388.16,
+        9.008264148457789,
+        859.43,
+        4.757,
+        0.45
+      ]
+    }
+  ],
+  "views": {
+    "art-a-street": {
+      "originalDraws": 4,
+      "submittedDraws": 3,
+      "originalTriangles": 1398157,
+      "submittedTriangles": 826327,
+      "groups": [
+        {
+          "name": "lighthouse",
+          "source": 1,
+          "submitted": 0,
+          "individualFrustum": 0,
+          "indices": [],
+          "triangles": 0
+        },
+        {
+          "name": "menhir",
+          "source": 21,
+          "submitted": 4,
+          "individualFrustum": 4,
+          "indices": [
+            12,
+            17,
+            19,
+            20
+          ],
+          "triangles": 10400
+        },
+        {
+          "name": "boulders",
+          "source": 87,
+          "submitted": 32,
+          "individualFrustum": 32,
+          "indices": [
+            1,
+            2,
+            4,
+            9,
+            16,
+            22,
+            23,
+            29,
+            36,
+            38,
+            45,
+            46,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            81,
+            82,
+            85
+          ],
+          "triangles": 159968
+        },
+        {
+          "name": "tree",
+          "source": 53,
+          "submitted": 41,
+          "individualFrustum": 41,
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            48,
+            49,
+            50,
+            51
+          ],
+          "triangles": 655959
+        }
+      ]
+    },
+    "art-b-konbini": {
+      "originalDraws": 4,
+      "submittedDraws": 4,
+      "originalTriangles": 1398157,
+      "submittedTriangles": 417662,
+      "groups": [
+        {
+          "name": "lighthouse",
+          "source": 1,
+          "submitted": 1,
+          "individualFrustum": 1,
+          "indices": [
+            0
+          ],
+          "triangles": 60697
+        },
+        {
+          "name": "menhir",
+          "source": 21,
+          "submitted": 15,
+          "individualFrustum": 15,
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            13,
+            15,
+            18
+          ],
+          "triangles": 39000
+        },
+        {
+          "name": "boulders",
+          "source": 87,
+          "submitted": 22,
+          "individualFrustum": 22,
+          "indices": [
+            32,
+            34,
+            35,
+            37,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            47,
+            48,
+            51,
+            54,
+            75,
+            76,
+            77,
+            78,
+            79,
+            83,
+            84,
+            86
+          ],
+          "triangles": 109978
+        },
+        {
+          "name": "tree",
+          "source": 53,
+          "submitted": 13,
+          "individualFrustum": 8,
+          "indices": [
+            29,
+            30,
+            31,
+            32,
+            36,
+            37,
+            38,
+            39,
+            40,
+            45,
+            46,
+            47,
+            52
+          ],
+          "triangles": 207987
+        }
+      ]
+    },
+    "art-c-alley": {
+      "originalDraws": 4,
+      "submittedDraws": 1,
+      "originalTriangles": 1398157,
+      "submittedTriangles": 19996,
+      "groups": [
+        {
+          "name": "lighthouse",
+          "source": 1,
+          "submitted": 0,
+          "individualFrustum": 0,
+          "indices": [],
+          "triangles": 0
+        },
+        {
+          "name": "menhir",
+          "source": 21,
+          "submitted": 0,
+          "individualFrustum": 0,
+          "indices": [],
+          "triangles": 0
+        },
+        {
+          "name": "boulders",
+          "source": 87,
+          "submitted": 4,
+          "individualFrustum": 4,
+          "indices": [
+            47,
+            48,
+            51,
+            54
+          ],
+          "triangles": 19996
+        },
+        {
+          "name": "tree",
+          "source": 53,
+          "submitted": 0,
+          "individualFrustum": 0,
+          "indices": [],
+          "triangles": 0
+        }
+      ]
+    },
+    "art-d-laundry": {
+      "originalDraws": 4,
+      "submittedDraws": 4,
+      "originalTriangles": 1398157,
+      "submittedTriangles": 981014,
+      "groups": [
+        {
+          "name": "lighthouse",
+          "source": 1,
+          "submitted": 1,
+          "individualFrustum": 1,
+          "indices": [
+            0
+          ],
+          "triangles": 60697
+        },
+        {
+          "name": "menhir",
+          "source": 21,
+          "submitted": 4,
+          "individualFrustum": 4,
+          "indices": [
+            12,
+            13,
+            17,
+            19
+          ],
+          "triangles": 10400
+        },
+        {
+          "name": "boulders",
+          "source": 87,
+          "submitted": 38,
+          "individualFrustum": 38,
+          "indices": [
+            1,
+            2,
+            4,
+            9,
+            16,
+            22,
+            23,
+            29,
+            36,
+            38,
+            40,
+            41,
+            43,
+            44,
+            45,
+            46,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            77,
+            79,
+            81,
+            82,
+            85
+          ],
+          "triangles": 189962
+        },
+        {
+          "name": "tree",
+          "source": 53,
+          "submitted": 45,
+          "individualFrustum": 45,
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            48,
+            49,
+            50,
+            51
+          ],
+          "triangles": 719955
+        }
+      ]
+    }
+  }
+}

@@ -9,6 +9,7 @@ import { River } from '../upstream/petalwake/src/world/river.js';
 import { Meadow } from '../upstream/petalwake/src/world/meadow.js';
 import { Town } from '../upstream/petalwake/src/world/town.js';
 import { Props } from '../upstream/petalwake/src/world/props.js';
+import { createPropCellCulling } from './island-prop-cells.js';
 import { heightAt as stationHeight } from '../upstream/sakuragaoka/src/world/layout.js';
 import { createGroundTransition } from './transition.js';
 
@@ -226,6 +227,7 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
   const river = new River(terrain, terrain.meta, sky);
   water.material.uniforms.uFallBase.value.set(river.fall.base.x, river.fall.base.z, river.fall.hw * 1.6);
   const { props, removed, reseated } = await loadProps(assetBase, terrain);
+  const updatePropCells = createPropCellCulling(props);
   root.add(terrain.mainView.mesh, meadow.group, sky.mesh, water.mesh, river.group, town.group, props.group, transition);
   if (props.overlay) root.add(props.overlay);
   town.bakeShadows();
@@ -237,6 +239,7 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
     U.uTime.value = time;
     U.uCamPos.value.copy(camera.position);
     camera.updateMatrixWorld();
+    updatePropCells(camera);
     terrain.select(terrain.mainView, camera);
     meadow.update(camera);
     town.update(dt, time, camera);
