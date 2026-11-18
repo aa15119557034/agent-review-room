@@ -22,7 +22,7 @@ export const QUALITY = {
 
 function grassShells(q) {
   return [
-    { cell: 7, per: 176 * q, segs: 5, width: 0.021, height: 0.50, fade: [-1, 0, 11, 16], lean: 1.0, root: 1.0 },
+    { cell: 7, per: 77 * q, segs: 5, width: 0.021, height: 0.50, fade: [-1, 0, 11, 16], lean: 1.0, root: 1.0 },
     { cell: 15, per: 42 * q, segs: 3, width: 0.046, height: 0.52, fade: [10, 15, 40, 52], lean: 1.0, root: 0.72 },
     { cell: 34, per: 6.2 * q, segs: 2, width: 0.150, height: 0.56, fade: [38, 50, 118, 150], lean: 0.9, root: 0.30 },
   ];
@@ -50,17 +50,17 @@ function flowerShells(q) {
 function bladeGeometry(segs) {
   // position.x = side (-1/+1), position.y = t along the blade (0 root .. 1 tip)
   const pos = [], idx = [];
-  for (let i = 0; i < segs; i++) {
-    const t = i / segs;
-    pos.push(-1, t, 0, 1, t, 0);
+  // Resolve individual leaves splaying from one grass crown only in the near shell.
+  const leaves=segs>=5?3:1;
+  for(let leaf=0;leaf<leaves;leaf++){
+    const first=pos.length/3;
+    for(let i=0;i<segs;i++)pos.push(-1,i/segs,leaf,1,i/segs,leaf);
+    pos.push(0,1,leaf);
+    for(let i=0;i<segs-1;i++){
+      const a=first+i*2;idx.push(a,a+1,a+2,a+1,a+3,a+2);
+    }
+    const a=first+(segs-1)*2;idx.push(a,a+1,a+2);
   }
-  pos.push(0, 1, 0);
-  for (let i = 0; i < segs - 1; i++) {
-    const a = i * 2;
-    idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2);
-  }
-  const a = (segs - 1) * 2;
-  idx.push(a, a + 1, a + 2);
   const g = new THREE.InstancedBufferGeometry();
   g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(pos), 3));
   g.setIndex(idx);
@@ -114,6 +114,7 @@ const GRASS_VERT = /* glsl */`
 precision highp float;
 uniform float uTime;
 uniform float uSegs;
+uniform sampler2D uCanopy;
 uniform vec2 uBlade;    // width, height
 uniform float uLeanK;
 ${NOISE}
@@ -138,6 +139,8 @@ void main(){
   float y = terrainH(xz);
   vec4 splat = textureLod(uSplatTex, uv, 0.0);
   vec4 light = textureLod(uLightTex, uv, 0.0);
+  vec4 canopy=textureLod(uCanopy,vec2(uv.x,uv.y*0.5),0.0);
+  light.r*=1.0-canopy.b*(1.0-smoothstep(0.0,0.02,canopy.a));
   vec3 root = vec3(xz.x, y, xz.y);
   // in a town nothing grows on the paving, and the houses' shadows fall on what does grow
   splat.a *= 1.0 - smoothstep(0.08, 0.5, townMaskV(xz).a);
@@ -156,15 +159,22 @@ void main(){
   float hgt = uBlade.y * mix(0.50, 1.30, rnd.w) * mix(0.72, 1.28, cl.x) * mix(0.86, 1.22, wet) * (0.55 + 0.45 * cover);
   // flowers shade out the grass a little so the heads stand proud
   hgt *= 1.0 - 0.22 * splat.r;
-  float wid = uBlade.x * mix(0.7, 1.25, rnd.x);
+  // Sheltered moist grass has taller, broader leaves. Exposed tussocks stay
+  // wiry and short, with shared height and colour within individual clumps.
+  float shelter=smoothstep(0.22,0.72,wet)*(1.0-smoothstep(190.0,380.0,y));
+  float tuft=smoothstep(0.22,0.77,cl.y);
+  hgt*=mix(0.62+0.40*tuft,1.05+0.43*tuft,shelter);
+  float wid = uBlade.x * mix(0.7, 1.25, rnd.x)*mix(0.56,0.93,shelter);
 
   // ---- wind + wake
   float gust = windGust(xz, uTime);
   vec2 wdir = uWind.xy;
-  float ang = (rnd.y * 0.55 + cl.y) * 6.2831853;
+  float ang = (rnd.y * 0.55 + cl.y) * 6.2831853 + position.z*2.40;
+  hgt*=1.0-position.z*(0.13+0.06*rnd.z);
+  wid*=mix(0.60,1.0,step(uSegs,4.0));
   vec2 rdir = vec2(cos(ang), sin(ang));
   float flutter = sin(uTime * (3.4 + rnd.x * 3.1) + rnd.y * 6.2831) * (0.035 + 0.11 * gust);
-  vec2 lean = rdir * (0.16 + 0.26 * cl.z) + wdir * (0.10 + 0.82 * gust) * uWind.z * uLeanK + vec2(-wdir.y, wdir.x) * flutter;
+  vec2 lean = rdir * (0.21 + 0.42 * cl.z + 0.11*position.z) + wdir * (0.10 + 0.65 * gust) * uWind.z * uLeanK + vec2(-wdir.y, wdir.x) * flutter;
   vec4 wk = wakeAt(xz);
   // the wake drags blades along its push and whips them at the rider's passing speed
   float whip = sin(uTime * 23.0 + rnd.y * 40.0) * 0.5 * min(wk.z, 1.0);
@@ -191,8 +201,7 @@ void main(){
   float w = wid * (1.0 - pow(t, 1.7)) * (0.55 + 0.45 * smoothstep(0.0, 0.25, t) + 0.0);
   // far shells: fatter, shorter taper so the cover holds
   vec3 P = root + c * fade + side * (position.x * w * fade);
-  vec3 n = normalize(cross(side, tg));
-  n = normalize(n + side * position.x * 0.55);
+  vec3 n = normalize(cross(side, tg) + side*position.x*0.24 + vec3(0.0,0.85,0.0));
 
   vWorld = P;
   vNormal = n;
@@ -226,7 +235,7 @@ void main(){
   // colour runs from shaded thatch at the root to sun-bleached tips. In the sparse far shells a
   // blade stands in for a whole tuft, so it carries the canopy colour nearly root to tip.
   vec3 rootC = vTint * mix(1.05, 0.42, uRoot);
-  vec3 tipC = vTint * mix(1.30, 1.62, uRoot) + vec3(0.050, 0.060, 0.004) * uRoot;
+  vec3 tipC = vTint * mix(1.09, 1.27, uRoot) + vec3(0.018, 0.022, 0.006) * uRoot;
   vec3 alb = mix(rootC, tipC, pow(t, 1.25)) * mix(0.84, 1.16, vInfo.y);
   alb = mix(alb, vec3(0.50, 0.46, 0.20), smoothstep(0.80, 1.0, t) * 0.30 * vInfo.y);   // seed-head straw
 
@@ -235,14 +244,14 @@ void main(){
   float dif = saturate(ndl * 0.55 + 0.45);
   // light pouring through the blades when you look toward the sun
   float back = pow(saturate(dot(V, -uSunDir) * 0.5 + 0.5), 4.0);
-  vec3 trans = vTint * vec3(2.3, 2.5, 0.75) * back * (0.25 + 0.75 * t);
+  vec3 trans = vTint * vec3(1.42, 1.64, 0.65) * back * (0.25 + 0.75 * t);
   float ao = mix(mix(0.85, 0.24, uRoot), 1.0, smoothstep(0.0, 0.75, t)) * vAux.x;
   vec3 col = alb * (uSunColor * dif * sh * mix(mix(0.95, 0.55, uRoot), 1.0, t)) + trans * uSunColor * sh * 0.33;
   col += alb * mix(uAmbGround, uAmbSky, N.y * 0.5 + 0.5) * ao;
   // glossy sheen that rides the gust fronts
   vec3 H = normalize(uSunDir + V);
   float spec = pow(saturate(dot(N, H)), 26.0) * (0.10 + 0.34 * vInfo.z) * smoothstep(0.15, 0.7, t);
-  col += uSunColor * spec * sh * 0.22;
+  col += uSunColor * spec * sh * 0.07;
   col = applyAtmosphere(col, vWorld);
   gl_FragColor = vec4(col, 1.0);
 }
@@ -251,6 +260,7 @@ void main(){
 const FLOWER_VERT = /* glsl */`
 precision highp float;
 uniform float uTime;
+uniform sampler2D uCanopy;
 uniform vec4 uShell;    // candidates per m2 in this shell; fade-in start, fade-in end; hand-over distance
 uniform vec2 uField;    // candidates per m2 near the eye, distance at which thinning starts
 ${NOISE}
@@ -279,6 +289,8 @@ void main(){
   float y = terrainH(xz);
   vec4 splat = textureLod(uSplatTex, uv, 0.0);
   vec4 light = textureLod(uLightTex, uv, 0.0);
+  vec4 canopy=textureLod(uCanopy,vec2(uv.x,uv.y*0.5),0.0);
+  light.r*=1.0-canopy.b*(1.0-smoothstep(0.0,0.02,canopy.a));
   vec3 root = vec3(xz.x, y, xz.y);
   // in a town nothing grows on the paving, and the houses' shadows fall on what does grow
   splat.a *= 1.0 - smoothstep(0.08, 0.5, townMaskV(xz).a);
@@ -459,6 +471,7 @@ class Shell {
     const def = this.def;
     const uniforms = {
       ...shared(...SHARED),
+      uCanopy:this.meadow.terrain.material.uniforms.uInlandBank,
       uCell: { value: new THREE.Vector4() },
       uFade: { value: new THREE.Vector4(...(def.fade || [0, 0, 1e9, 1e9])) },
       uGridN: { value: this.n },
@@ -583,7 +596,8 @@ export class Meadow {
       for (let i = list.length; i < sh.active; i++) sh.pool[i].visible = false;
       sh.active = list.length;
       cells += list.length;
-      if (sh.kind === 'grass') blades += list.length * sh.n * sh.n; else flowers += list.length * sh.n * sh.n;
+      if (sh.kind === 'grass') blades += list.length * sh.n * sh.n * (sh.def.segs>=5 ? 3 : 1);
+      else flowers += list.length * sh.n * sh.n;
     }
     this.stats.cells = cells; this.stats.blades = blades; this.stats.flowers = flowers;
   }

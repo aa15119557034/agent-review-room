@@ -157,8 +157,8 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
       ctx.wires.setResolution(bufferSize.x, bufferSize.y);
       detailLod.update(camera, bufferSize.x, bufferSize.y);
     },
-    createWalker(dom) {
-      const walker = createStationWalker(station, dom);
+    createWalker(dom, coast) {
+      const walker = createStationWalker(station, dom, coast);
       walkers.add(walker);
       return walker;
     },

@@ -1,10 +1,18 @@
 # 第三方来源与改动
 
+## 群峰与山麓植被
+
+东部山地使用瑞士联邦地形局的 swissALTI3D（2025 版，2 米高程）和 SWISSIMAGE（2021 版，10 厘米正射影像产品）。两套数据配准到 LV95 范围 E 2,650,000–2,654,000、N 1,158,000–1,161,000。场景按四分之一比例移植地形，重采样、调整影像亮度并融合原岛山脚。数据来源 © swisstopo。原始瓦片、生成算法与离线资源可由 `scripts/bake-alpine.py` 核对。[高程](https://www.swisstopo.admin.ch/en/height-model-swissalti3d) · [正射影像](https://www.swisstopo.admin.ch/en/orthoimage-swissimage-10) · [瑞士开放地理数据使用条件](https://www.swisstopo.admin.ch/en/terms-of-use-free-geodata-and-geoservices)
+
+橡树、山杨、松树与白蜡树的枝干和叶簇取自 Daniel Greenheck 的 EZ-Tree 1.1.0。各树种取两个种子，重新控制分枝预算、树冠尺寸与远景采样角度，另行生成林下蕨类与草穗。MIT 声明随模型保存在 `src/woodland/LICENSE.txt`。1.1.0 的橡树皮来自 Poly Haven 的 Bark Brown 02，桦树皮和松树皮来自 TextureCan，三者均以 CC0 提供。[EZ-Tree 源码](https://github.com/dgreenheck/ez-tree) · [叶片许可说明](https://github.com/dgreenheck/ez-tree/blob/main/src/app/public/textures/LICENSE.md) · [橡树皮](https://polyhaven.com/a/bark_brown_02) · [桦树皮](https://www.texturecan.com/details/221/) · [松树皮](https://www.texturecan.com/details/588/)
+
+重新生成树木时，将固定 [EZ-Tree 1.1.0 源包](https://registry.npmjs.org/@dgreenheck/ez-tree/-/ez-tree-1.1.0.tgz) 解压至 `artifacts/alpine/package`。SHA-256 为 `4147b49d22b01f09c9d7f3c3c34f788ad37841103a758da25e399af3cbce2f98`。依次运行 `node scripts/bake-woodland.cjs` 和 `node scripts/bake-woodland-lod.cjs <electron.exe>`。游戏直接读取生成好的本地资源。
+
 完整来源、作者、固定版本及归档校验见 [sources.json](./sources.json)，每个上游原始文件的 SHA-256 见 [source-files.json](./source-files.json)。该清单记录原始上游文件，不将修改后的适配文件伪装成原版。
 
 | 来源 | 保留的许可 | 使用与修改 |
 |---|---|---|
-| Jacob Miller / Petalwake | [MIT](./upstream/petalwake/LICENSE) | 复用地形、港镇、植被、海面、河流、云及 HDR 管线；terrain.js 增加站区局部高度拟合与核心裁切。组合不运行其游戏 main、任务、飞行控制和角色。 |
+| Jacob Miller / Petalwake | [MIT](./upstream/petalwake/LICENSE) | 复用地形、港镇、植被、海面、河流、云及 HDR 管线；terrain.js 增加站区局部高度拟合、核心裁切与水岸泥沙材质。河流和海水接入局部浅水波和分深度水色。按原河带和抛体瀑布程序生成支流、悬谷跌水，并接入新的高程、地质材质权重、湿砾和落水雾。岩石、砂砾和沙丘共用原有地表纹理。组合不运行其游戏 main、任务、飞行控制和角色。 |
 | kiarashfa / Sakuragaoka | [MIT](./upstream/sakuragaoka/LICENSE) | 复用站区、商店、程序化纹理、批处理和物理；trains.js、trains/car.js、vehicles/cars.js 增加默认保持上游行为的 people 开关，组合设为 false；core/physics.js 增加使用现有空间格及碰撞体的镜头球体扫掠。 |
 | Three.js authors / r187 | [MIT](./upstream/petalwake/vendor/three/LICENSE) | 复用 Petalwake 所固定的 three.core/module、GLTFLoader、BufferGeometryUtils、SkeletonUtils；另从官方 r187 标签补充 RoundedBoxGeometry，SHA-256 见 sources.json。 |
 | Arseny Kapoulkine / meshoptimizer 1.1 | [MIT](./upstream/petalwake/vendor/three/examples/jsm/libs/MESHOPT-LICENSE.md) | Petalwake 随附的 meshopt decoder，保留文件内版权声明，并补齐官方 v1.1 的完整许可文本及其哈希。 |
@@ -19,7 +27,7 @@
 
 新增9个道具文件的官方URL、作者、size、MD5及SHA256见 [prop-assets.json](./prop-assets.json)。原文件只保存于 `.local/textured-props/`；没有复制官网预览图或从用户参考图提取贴图。原Painted Wooden Bench因造型偏复古未接入运行。现成纸箱、矮牌和花盆继续复用桜ヶ丘MIT构件；工具棚门按原完整包围范围精确匹配后局部换材质，未改上游几何或全局共享材质。
 
-局部地表适配集中在 `src/transition.js`、`src/island.js` 和 `src/station.js`：填缝带与站区底土地表外缘共享 Petalwake 地表着色及纹理，植被在边缘渐变恢复。`src/look.js` 对地形已校正漫反射做四档量化，并局部调整浅水散射、远景焦散和岸边泡沫；未改写上游 `water.js`。`scripts/analyze-caustics.cjs` 直接执行固定源码中的纹理生成函数进行 CPU 分布测量，其来源仍为上述 Petalwake MIT 代码。
+局部地表适配集中在 `src/transition.js`、`src/island.js` 和 `src/station.js`：填缝带与站区底土地表外缘共享 Petalwake 地表着色及纹理，植被在边缘渐变恢复。`src/look.js` 对地形已校正漫反射做四档量化，并局部调整浅水散射、远景焦散和岸边泡沫。整岛自然环境分支在本地适配的 `terrain.js`、`water.js`、`river.js`、`sky.js` 与共享着色代码中增加步道、风致增水和随风移动的云层。地形、岸距、云烘焙与纹理沿用上述 Petalwake 来源。`scripts/analyze-caustics.cjs` 直接执行固定源码中的纹理生成函数进行 CPU 分布测量，其来源仍为上述 Petalwake MIT 代码。
 
 街景复用登记见 [streetscape-assets.json](./streetscape-assets.json)：花箱、外机、公寓及程序纹理均来自同一固定版本的 Sakuragaoka MIT 源码。`houses.js`、`shopsA.js` 各增加现有构建上下文的导出，使适配层复用已创建的材料和图集。`src/skyline.js` 直接调用原 `buildApartment`，其地形/四边形辅助函数按 `houses.js` 适配至独立几何与真实岛屿地形；`src/wet-road.js` 保留原沥青材质，借鉴原玻璃/沟渠的天光 Fresnel 思路。新支架和局部湿区 mask 在适配层生成。没有从用户参考图中提取贴图。
 

@@ -6,7 +6,8 @@ import { distanceToRoom } from './shadow-tint.js';
 // normal override would outline Petalwake's undisplaced tile grid instead.
 const OUTLINES = /* glsl */`
 uniform sampler2D tWorldDepth;
-uniform float uNear, uFar, uReversed, uToon, uHaze;
+uniform float uNear, uFar, uReversed, uToon, uHaze, uGroundFog, uLandscape;
+uniform vec4 uFogHeight;
 float wbDepth(vec2 uv) {
   float z = texture(tWorldDepth, uv).r;
   return uNear*uFar / mix(uFar+(uNear-uFar)*z, uNear+(uFar-uNear)*z, uReversed);
@@ -134,8 +135,8 @@ export function createLook(renderer, camera) {
   };
   Object.assign(mat.uniforms, {
     tWorldDepth: pipeline.uDepth, uNear: { value: camera.near }, uFar: { value: camera.far },
-    uProjScale: { value: 1 }, uAO: { value: 0.55 },
-    uReversed: { value: pipeline.reversed ? 1 : 0 }, uToon: toon, uHaze: { value: 1 },
+    uProjScale: { value: 1 }, uAO: { value: 0.55 }, uGroundFog:{value:0}, uFogHeight:{value:new THREE.Vector4()},
+    uReversed: { value: pipeline.reversed ? 1 : 0 }, uToon: toon, uHaze: { value: 1 }, uLandscape:{value:0},
     uShOn: { value: 0 }, uShAO: { value: new THREE.Vector3(1, 1, 1) }, uShMul: { value: new THREE.Vector3(1, 1, 1) },
     uShLift: { value: new THREE.Vector3() }, uShRange: { value: new THREE.Vector3(0.06, 0.42, 1) },
   });
@@ -143,11 +144,11 @@ export function createLook(renderer, camera) {
   mat.fragmentShader = insert(mat.fragmentShader, 'col *= uExposure;', `
     // Contact shadows (ZZZ refs: crates, benches, eaves all sit in soft dark creases).
     if (uAO*uToon > 0.0) {
-      float wbA = wbAO(uv, wbDepth(uv)), wbAk = uAO*uToon;
+      float wbA = wbAO(uv, wbDepth(uv)), wbAk = uAO*uToon*(1.0-0.18*uLandscape);
       col *= mix(1.0, wbA, wbAk);
       col *= mix(vec3(1.0), uShAO, (1.0 - wbA)*wbAk*uShOn); // creases fall into blue-violet, not grey
     }
-    float edge = wbEdge(uv)*uToon;
+    float edge = wbEdge(uv)*uToon*(1.0-0.40*uLandscape);
     vec3 line = mix(col*vec3(0.42,0.38,0.50),vec3(0.027,0.020,0.051),0.35);
     col = mix(col,line,edge*0.45); // ZZZ scenes keep only faint silhouettes; strong lines are for characters
     // Anime aerial perspective: distant land fades to a cool sky haze so the
@@ -156,6 +157,14 @@ export function createLook(renderer, camera) {
     float wbD = wbDepth(uv);
     float wbHaze = (1.0-exp(-max(wbD-60.0,0.0)/750.0)) * (1.0-step(uFar*0.9,wbD)) * uHaze * uToon;
     col = mix(col, vec3(0.80,0.83,0.88)*max(dot(col,vec3(0.2126,0.7152,0.0722))*1.15,0.55), wbHaze*0.72);
+    if(uGroundFog>0.01){
+      vec3 ray=normalize(vec3((uv-0.5)*uRes/uProjScale,-1.0));
+      float rise=dot(ray,uFogHeight.xyz);
+      float distanceInFog=min(wbD/max(-ray.z,0.1),560.0);
+      float meanHeight=uFogHeight.w+0.5*distanceInFog*rise;
+      float optical=distanceInFog*0.010*exp(-max(meanHeight-18.0,0.0)/28.0);
+      col=mix(col,vec3(0.53,0.56,0.61),uGroundFog*(1.0-exp(-optical))*0.84);
+    }
     col *= uExposure;`, 'outline stage');
   // Station soft clip below the knee keeps anime mid-tones bright and saturated;
   // ACES stays for the high aerial view (whole-island HDR) and the toon-off comparison.
@@ -204,7 +213,7 @@ export function createLook(renderer, camera) {
       material.uniforms.uWorldToon = toon;
       material.fragmentShader = insert(material.fragmentShader, 'void main(){', `${BANDS}\nvoid main(){`, 'island bands entry');
       material.fragmentShader = insert(material.fragmentShader, needle,
-        `${needle}\n  dif = mix(dif, ${band}, uWorldToon);`, 'island diffuse band');
+        `${needle}\n  dif = mix(dif, ${band}, uWorldToon${material===island.town.material ? '' : '*(1.0-alpine)'});`, 'island diffuse band');
       material.needsUpdate = true;
     }
     // Town greenery: terrain sward under the blades, the blades and the flowers.
@@ -252,11 +261,6 @@ export function createLook(renderer, camera) {
     meadow.wbTownUniforms = townUniforms;
     for (const s of meadow.shells) for (const mesh of s.pool) { const old = mesh.material; mesh.material = s.material(); old.dispose(); }
     const water = island.water.material;
-    // The shallow coefficient, rather than bloom, dominates the cyan halos.
-    // Keep deep-water colour and the transmitted seabed independently calibrated.
-    water.fragmentShader = insert(water.fragmentShader, 'vec3 shallow = vec3(0.030, 0.420, 0.380);',
-      `vec3 shallow = vec3(0.030, 0.420, 0.380);
-  shallow *= 0.4;`, 'shallow water scatter');
     // Compute derivatives before the upstream shore discard. Both water LOD
     // corrections use the actual world-space pixel footprint, not camera height.
     water.fragmentShader = insert(water.fragmentShader, 'vec3 P = vWorld;',
@@ -285,6 +289,7 @@ export function createLook(renderer, camera) {
       townUniforms.uTownGreen.value.x = strength;
     },
     setAO(value) { mat.uniforms.uAO.value = value; },
+    setGroundFog(value) { mat.uniforms.uGroundFog.value = value; },
     /** Round 24: uniforms from shadowTintUniforms(); null switches the composite tint off. */
     setShadowTint(u, indoorBox = null, fade = 1.5) {
       shBox = indoorBox; shFade = fade;
@@ -296,6 +301,10 @@ export function createLook(renderer, camera) {
     setSize(width, height, ratio) { pipeline.setSize(width, height, ratio); },
     render(scene, dt) {
       mat.uniforms.uShOn.value = shBase * camIndoor();
+      const rect=townUniforms.uTownRect.value,p=camera.position;
+      mat.uniforms.uLandscape.value=THREE.MathUtils.smoothstep(Math.hypot(Math.max(rect.x-p.x,0,p.x-rect.z),Math.max(rect.y-p.z,0,p.z-rect.w)),30,230);
+      const basis = camera.matrixWorld.elements;
+      mat.uniforms.uFogHeight.value.set(basis[1], basis[5], basis[9], camera.position.y);
       mat.uniforms.uNear.value = camera.near;
       mat.uniforms.uFar.value = camera.far;
       mat.uniforms.uProjScale.value = 0.5 * mat.uniforms.uRes.value.y / Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2);

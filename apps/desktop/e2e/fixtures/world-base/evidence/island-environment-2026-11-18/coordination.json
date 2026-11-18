@@ -1,0 +1,15 @@
+{
+  "waitingSince": "2026-11-18T01:17:11.880Z",
+  "lastOtherFixture": "2026-11-18T01:31:50.234Z",
+  "firstIdle": "2026-11-18T01:33:35.019Z",
+  "begin": "2026-11-18T01:33:44.380Z",
+  "end": "2026-11-18T01:36:48.906Z",
+  "exit": 0,
+  "method": "Two idle polls 8 seconds apart after the parent C22 queue exited; checks the runtime Electron process and its queue.",
+  "repeat": {
+    "firstIdle": "2026-11-18T01:37:32.484Z",
+    "begin": "2026-11-18T01:37:41.858Z",
+    "end": "2026-11-18T01:40:45.505Z",
+    "exit": 0
+  }
+}

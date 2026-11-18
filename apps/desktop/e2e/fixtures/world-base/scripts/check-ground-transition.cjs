@@ -1,7 +1,5 @@
 const assert = require('node:assert/strict');
-const fs = require('node:fs');
 const path = require('node:path');
-const vm = require('node:vm');
 const { registerHooks } = require('node:module');
 const { pathToFileURL } = require('node:url');
 
@@ -10,7 +8,9 @@ async function main() {
   const url = relative => pathToFileURL(path.join(root, relative)).href;
   const threeUrl = url('upstream/petalwake/vendor/three/build/three.module.js');
   const hook = registerHooks({ resolve(specifier, context, next) {
-    return specifier === 'three' ? { url: threeUrl, shortCircuit: true } : next(specifier, context);
+    if (specifier === 'three') return { url: threeUrl, shortCircuit: true };
+    if (specifier.startsWith('three/addons/')) return { url: url('upstream/petalwake/vendor/three/examples/jsm/' + specifier.slice(13)), shortCircuit: true };
+    return next(specifier, context);
   } });
   try {
     const THREE = await import(threeUrl);
@@ -109,17 +109,12 @@ async function main() {
     assert.ok(!actual.group.children.find(object => object.name === 'env-terrain-ground').geometry.hasAttribute('stationGrass'));
     console.log(`PASS ${parkingVertices} real parking vertices remain gravel; paths, fields, corridor and masonry excluded; nearby grass still blends`);
 
-    // Execute the production mask function and its constants verbatim. It is
-    // module-private; extracting this pinned section avoids loading browser apps.
-    const source = fs.readFileSync(path.join(root, 'src/island.js'), 'utf8');
-    const constants = source.slice(source.indexOf('const stationRect ='), source.indexOf('async function json('));
-    const mask = source.slice(source.indexOf('function clearStationVegetation('), source.indexOf('async function loadProps('));
-    assert.ok(constants && mask.includes('terrain.splatTex = texture'));
+    const { clearStationVegetation } = await import(url('src/island.js'));
     const S = 1024, pixels = new Uint8Array(S * S * 4);
     for (let i = 0; i < pixels.length; i += 4) pixels.set([200, 77, 123, 220], i);
     let disposed = false;
     const field = { splatN: S, splat: pixels, splatTex: { dispose() { disposed = true; } } };
-    vm.runInNewContext(`${constants}\n${mask}\nclearStationVegetation(terrain);`, { THREE, World, U, terrain: field });
+    clearStationVegetation(field);
     assert.ok(disposed);
     assert.equal(field.splatTex.image.data, pixels);
     assert.equal(U.uSplatTex.value, field.splatTex);

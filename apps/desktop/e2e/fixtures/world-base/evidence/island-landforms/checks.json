@@ -1,0 +1,27 @@
+{
+  "check-island-relief": {
+    "exit": 0,
+    "stdout": "{\"samples\":16777216,\"quadrants\":[481538,909112,221309,700088],\"signChanges\":0,\"protectedChanges\":0,\"relief\":{\"shoreSamples\":335766,\"inlandSamples\":1904496,\"maxRise\":4.299999996467656,\"maxCut\":-4.299999967452532},\"freshwater\":[{\"id\":\"tarn\",\"areaM2\":56333.25,\"volumeM3\":271448},{\"id\":\"terrace\",\"areaM2\":58563,\"volumeM3\":162596},{\"id\":\"oxbow\",\"areaM2\":23472,\"volumeM3\":48916},{\"id\":\"marsh\",\"areaM2\":20549.25,\"volumeM3\":8857}],\"wetArea\":158917.5,\"districts\":{\"full\":[19321,7733,9531,7653],\"transition\":[14295,5796,7159,6257],\"maxTexelChange\":[21,23,18,31]},\"stages\":[\"晴间多云\",\"海上低云\",\"锋面阵雨\",\"雨后放晴\",\"辐射雾\"],\"contactWave\":{\"spread\":0.031164631247520447,\"leak\":0}}",
+    "stderr": ""
+  },
+  "check-ground-transition": {
+    "exit": 0,
+    "stdout": "PASS real terrain shader/uniform reuse, isolated cutout, unchanged 1,636-triangle seam\nPASS only base-soil edge triangles blend; centre/road/height untouched; shared attributes and EqualDepth\nPASS edge alpha does not discard; clipping follows terrain sampling and derivatives\nPASS 91 real parking vertices remain gravel; paths, fields, corridor and masonry excluded; nearby grass still blends\nPASS boundary channel 0 smooth profile: [\n    0,   0,  15.5,\n   31, 100, 184.5,\n  200\n]\nPASS boundary channel 3 smooth profile: [\n    0,   0,  17, 34,\n  110, 203, 220\n]\nPASS zero bilinear core, unchanged species/wetness, shared replacement GPU texture",
+    "stderr": ""
+  },
+  "check-camera-physics": {
+    "exit": 0,
+    "stdout": "PASS thin wall blocks a full segment; camera above its top stays clear\nPASS rotated and translated OBB gives the same physical clearance\nPASS cylinder sweep uses its radius and vertical interval\nPASS initial overlap returns zero rather than forcing a positive boom\nPASS walkable tops and sloped ramps have real height, not infinite walls\nPASS dynamic door refresh removes its camera collision when open\nPASS downward camera boom stops above terrain\n10,000 local camera sweeps, ms: 17.27\nPASS distant districts do not enter the local collision query\n8 camera physics checks passed",
+    "stderr": ""
+  },
+  "prepare-props": {
+    "exit": 0,
+    "stdout": "9 prop files verified: 3579256 bytes, size + MD5 + SHA-256 + glTF closure; original bytes unchanged",
+    "stderr": ""
+  },
+  "prepare-apartments": {
+    "exit": 0,
+    "stdout": "9 apartment files verified: 4932249 bytes, size + MD5 + SHA-256 + texture closure + JPEG dimensions; original bytes unchanged",
+    "stderr": ""
+  }
+}

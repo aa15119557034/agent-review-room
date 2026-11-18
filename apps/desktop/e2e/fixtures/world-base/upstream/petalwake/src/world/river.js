@@ -2,7 +2,7 @@
 // cliff as a waterfall. Water levels are read off the heightfield, so it always sits in its bed.
 import * as THREE from 'three';
 import { U, shared } from '../core/ctx.js';
-import { NOISE, NOISE_TEX, ATMOSPHERE, CLOUD_SHADOW, TERRAIN_LOOKUP, SHADOW } from '../shaders/common.js';
+import { NOISE, NOISE_TEX, ATMOSPHERE, CLOUD_SHADOW, TERRAIN_LOOKUP, SHADOW, WATER_CONTACT } from '../shaders/common.js';
 import { SKY_UNIFORMS, CLOUD_LOOKUP } from './sky.js';
 import { makeWaveNormalTexture } from './water.js';
 
@@ -10,40 +10,44 @@ const STEP = 1.5;         // metres between ribbon rows
 const DEPTH = 0.55;       // water depth over the middle of the channel
 const SPR_PUFF = 2;
 
-export class River {
-  constructor(terrain, meta, sky) {
-    this.terrain = terrain;
-    // ---- resample the path
-    const path = meta.river;
-    const rows = [];
-    let s0 = 0, next = 0;
-    for (let i = 0; i < path.length - 1; i++) {
-      const a = path[i], b = path[i + 1];
-      const dx = b[0] - a[0], dz = b[1] - a[1], len = Math.hypot(dx, dz);
-      for (; next <= s0 + len; next += STEP) {
-        const t = (next - s0) / len;
-        rows.push({ x: a[0] + dx * t, z: a[1] + dz * t, hw: a[2] + (b[2] - a[2]) * t, tx: dx / len, tz: dz / len, s: next });
-      }
-      s0 += len;
+function nativeRows(terrain, meta) {
+  // ---- resample the path
+  const path = meta.river;
+  const rows = [];
+  let s0 = 0, next = 0;
+  for (let i = 0; i < path.length - 1; i++) {
+    const a = path[i], b = path[i + 1];
+    const dx = b[0] - a[0], dz = b[1] - a[1], len = Math.hypot(dx, dz);
+    for (; next <= s0 + len; next += STEP) {
+      const t = (next - s0) / len;
+      rows.push({ x: a[0] + dx * t, z: a[1] + dz * t, hw: a[2] + (b[2] - a[2]) * t, tx: dx / len, tz: dz / len, s: next });
     }
-    // ---- water level: bed + depth, never rising downstream; stop at the brink
-    let level = Infinity, end = rows.length;
-    for (let i = 0; i < rows.length; i++) {
-      const bed = terrain.heightAt(rows[i].x, rows[i].z);
-      if (level < Infinity && bed < level - DEPTH - 3.0) { end = i; break; }   // the ground falls away: the brink
-      level = Math.min(level, bed + DEPTH);
-      rows[i].y = level;
-      if (bed < 0.3) { end = i; break; }
-    }
-    this.rows = rows.slice(0, end);
-    const R = this.rows, n = R.length;
-    // ease the surface so steps in the bed read as glides
-    for (let pass = 0; pass < 3; pass++) for (let i = 1; i < n - 1; i++) R[i].y = Math.min(R[i].y, (R[i - 1].y + R[i].y * 2 + R[i + 1].y) / 4 + 0.02);
-    for (let i = 0; i < n; i++) {
-      const a = R[Math.max(i - 2, 0)], b = R[Math.min(i + 2, n - 1)];
-      R[i].slope = Math.max(0, (a.y - b.y) / Math.max(b.s - a.s, 1e-3));
-    }
+    s0 += len;
+  }
+  // ---- water level: bed + depth, never rising downstream; stop at the brink
+  let level = Infinity, end = rows.length;
+  for (let i = 0; i < rows.length; i++) {
+    const bed = terrain.heightAt(rows[i].x, rows[i].z);
+    if (level < Infinity && bed < level - DEPTH - 3.0) { end = i; break; }   // the ground falls away: the brink
+    level = Math.min(level, bed + DEPTH);
+    rows[i].y = level;
+    if (bed < 0.3) { end = i; break; }
+  }
+  const R = rows.slice(0, end), n = R.length;
+  // ease the surface so steps in the bed read as glides
+  for (let pass = 0; pass < 3; pass++) for (let i = 1; i < n - 1; i++) R[i].y = Math.min(R[i].y, (R[i - 1].y + R[i].y * 2 + R[i + 1].y) / 4 + 0.02);
+  for (let i = 0; i < n; i++) {
+    const a = R[Math.max(i - 2, 0)], b = R[Math.min(i + 2, n - 1)];
+    R[i].slope = Math.max(0, (a.y - b.y) / Math.max(b.s - a.s, 1e-3));
+  }
 
+  return R;
+}
+
+export class River {
+  constructor(terrain, meta, sky, {rows: gradedRows, waterfall=true, plungeLevel=0, ripple: sharedRipple}={}) {
+    this.terrain = terrain;
+    const R=this.rows=gradedRows ?? nativeRows(terrain, meta), n=R.length;
     // ---- ribbon
     const AC = 5;
     const pos = new Float32Array(n * AC * 3), flow = new Float32Array(n * AC * 4), dir = new Float32Array(n * AC * 2);
@@ -66,20 +70,22 @@ export class River {
     g.setAttribute('aFlow', new THREE.BufferAttribute(flow, 4));
     g.setAttribute('aDir', new THREE.BufferAttribute(dir, 2));
     g.setIndex(idx);
-    const ripple = makeWaveNormalTexture();
+    const ripple = sharedRipple ?? makeWaveNormalTexture();
     const uniforms = {
       ...shared(...SKY_UNIFORMS, 'uTime', 'uHeightTex', 'uLightTex', 'uWorld', 'uNoiseTex', 'uWakeTex', 'uWake', 'uShadowTex', 'uShadowMat', 'uShadowOn'),
-      uRipple: { value: ripple },
-      uCloudTex: sky.cloudTex,
-      uCloudOn: sky.cloudOn,
+      uRipple: { value: ripple }, uPlunge:{value:new THREE.Vector3(0,0,0)}, ...shared('uWaterPatch','uWaterDisturbance'),
+      ...sky.cloudUniforms,
     };
-    this.material = new THREE.ShaderMaterial({ uniforms, vertexShader: RIVER_VERT, fragmentShader: RIVER_FRAG, side: THREE.DoubleSide });
+    this.material = new THREE.ShaderMaterial({ uniforms, vertexShader: RIVER_VERT, fragmentShader: RIVER_FRAG, side: THREE.DoubleSide, transparent:true, depthWrite:true });
     this.mesh = new THREE.Mesh(g, this.material);
     this.mesh.frustumCulled = false;
-    this.mesh.renderOrder = 12;
+    this.mesh.renderOrder = 509;
     this.group = new THREE.Group();
     this.group.add(this.mesh);
 
+    this._buildGrid();
+    this.acc = [0, 0, 0];
+    if (!waterfall) return;
     // ---- waterfall: a ballistic sheet from the brink to whatever it lands on
     const last = R[n - 1];
     const V0 = 5.0, G = 9.8;
@@ -88,11 +94,11 @@ export class River {
     for (let t = 0; t < 12; t += 0.02) {
       const x = top.x + last.tx * V0 * t, z = top.z + last.tz * V0 * t, y = top.y - 0.5 * G * t * t;
       T = t;
-      if (t > 0.3 && y < Math.max(terrain.heightAt(x, z), 0) + 0.2) break;
+      if (t > 0.3 && y < Math.max(terrain.heightAt(x, z), plungeLevel) + 0.2) break;
     }
     this.fall = {
       top, dir: new THREE.Vector2(last.tx, last.tz), T, hw: last.hw,
-      base: new THREE.Vector3(top.x + last.tx * V0 * T, Math.max(top.y - 0.5 * G * T * T, 0), top.z + last.tz * V0 * T),
+      base: new THREE.Vector3(top.x + last.tx * V0 * T, Math.max(top.y - 0.5 * G * T * T, plungeLevel), top.z + last.tz * V0 * T),
       height: 0.5 * G * T * T,
     };
     const FR = 56, FA = 7, layers = 3;
@@ -122,15 +128,12 @@ export class River {
     fg.setIndex(fidx);
     this.fallMat = new THREE.ShaderMaterial({
       uniforms: { ...shared(...SKY_UNIFORMS, 'uTime', 'uNoiseTex', 'uLightTex', 'uWorld') },
-      vertexShader: FALL_VERT, fragmentShader: FALL_FRAG, side: THREE.DoubleSide, alphaToCoverage: true,
+      vertexShader: FALL_VERT, fragmentShader: FALL_FRAG, side: THREE.DoubleSide, transparent:true, depthWrite:false,
     });
     this.fallMesh = new THREE.Mesh(fg, this.fallMat);
     this.fallMesh.frustumCulled = false;
-    this.fallMesh.renderOrder = 13;
+    this.fallMesh.renderOrder = 511;
     this.group.add(this.fallMesh);
-
-    this._buildGrid();
-    this.acc = [0, 0, 0];
   }
 
   /** Coarse grid of water levels so particles and the flight model can ask "is there river here?". */
@@ -140,16 +143,17 @@ export class River {
     for (const r of R) { x0 = Math.min(x0, r.x - 12); x1 = Math.max(x1, r.x + 12); z0 = Math.min(z0, r.z - 12); z1 = Math.max(z1, r.z + 12); }
     this.gx0 = x0; this.gz0 = z0;
     const W = (this.gw = Math.ceil((x1 - x0) / C)), H = (this.gh = Math.ceil((z1 - z0) / C));
-    const g = (this.grid = new Float32Array(W * H).fill(-Infinity));
-    for (const r of R) {
-      const rad = r.hw * 1.05, k = Math.ceil(rad / C);
+    const nearest=new Float32Array(W*H).fill(Infinity);
+    this.rowIds=new Int32Array(W*H).fill(-1);
+    for (let index=0;index<R.length;index++) {
+      const r=R[index],rad=r.hw*1.12+C, k=Math.ceil(rad/C);
       const cx = Math.floor((r.x - x0) / C), cz = Math.floor((r.z - z0) / C);
       for (let dz = -k; dz <= k; dz++) for (let dx = -k; dx <= k; dx++) {
         const ix = cx + dx, iz = cz + dz;
         if (ix < 0 || iz < 0 || ix >= W || iz >= H) continue;
         const px = x0 + (ix + 0.5) * C - r.x, pz = z0 + (iz + 0.5) * C - r.z;
-        if (px * px + pz * pz > rad * rad) continue;
-        g[iz * W + ix] = Math.max(g[iz * W + ix], r.y);
+        const d=px*px+pz*pz, key=iz*W+ix;
+        if(d<=rad*rad && d<nearest[key]){nearest[key]=d;this.rowIds[key]=index;}
       }
     }
   }
@@ -158,12 +162,17 @@ export class River {
   levelAt(x, z) {
     const ix = Math.floor((x - this.gx0) / this.gc), iz = Math.floor((z - this.gz0) / this.gc);
     if (ix < 0 || iz < 0 || ix >= this.gw || iz >= this.gh) return -Infinity;
-    return this.grid[iz * this.gw + ix];
+    const id=this.rowIds[iz*this.gw+ix];
+    if(id<0)return -Infinity;
+    const r=this.rows[id],dx=x-r.x,dz=z-r.z,along=dx*r.tx+dz*r.tz;
+    if(Math.abs(dz*r.tx-dx*r.tz)>r.hw*1.12 || (id===0 && along<0) || (id===this.rows.length-1 && along>0))return -Infinity;
+    return r.y-r.slope*along;
   }
 
   /** Mist: hanging at the foot of the fall and peeling off the sheet on the way down. */
   update(dt, sprites, camPos, sun) {
     const f = this.fall;
+    if (!f) return;
     const d = camPos.distanceTo(f.base);
     this.near = Math.max(0, 1 - d / 420);
     if (d > 900) return;
@@ -214,6 +223,8 @@ varying vec4 vFlow;
 varying vec2 vDir;
 uniform float uTime;
 uniform sampler2D uRipple;
+uniform vec3 uPlunge;
+${WATER_CONTACT}
 uniform sampler2D uWakeTex;
 uniform vec4 uWake;
 ${NOISE}
@@ -228,7 +239,9 @@ void main(){
   float bed = terrainH(P.xz);
   float depth = P.y - bed;
   float camD = distance(P, uCamPos);
-  if (depth < -0.02 && camD < 110.0) discard;
+  float edge=max(0.006,fwidth(depth));
+  float coverage=smoothstep(-edge,edge,depth)*(1.0-smoothstep(0.91,1.0,abs(vFlow.x)));
+  if(coverage<0.008) discard;
   depth = max(depth, 0.0);
   float u = vFlow.x, s = vFlow.y, slope = vFlow.z, w = vFlow.w;
   vec3 V = normalize(uCamPos - P);
@@ -240,24 +253,29 @@ void main(){
   vec2 rip = (r1.xy - 0.5) * 0.7 + (r2.xy - 0.5) * 0.5;
   vec2 across = vec2(-vDir.y, vDir.x);
   vec2 nxz = (across * rip.x + vDir * rip.y) * (0.28 + 1.4 * slope);
-  vec3 N = normalize(vec3(nxz.x, 1.0, nxz.y));
+  nxz -= contactSlope(P.xz);
+  vec2 gradient=vDir*slope+nxz;
+  vec2 impact=P.xz-uPlunge.xy;
+  float plunge=uPlunge.z>0.0 ? 1.0-smoothstep(0.0,uPlunge.z,length(impact)) : 0.0;
+  gradient+=impact/max(0.1,length(impact))*cos(length(impact)*3.5-uTime*5.0)*0.10*plunge;
+  vec3 N = normalize(vec3(gradient.x, 1.0, gradient.y));
 
   vec4 light = texture(uLightTex, worldUV(P.xz));
   float sun = light.r * cloudShadow(P.xz, uTime) * riderShadow(P);
-  // stony bed seen through clear, slightly peaty water
+  // Clear upland water transmits blue-green light farther than red.
   vec4 nz = ntex((P.xz + N.xz * 0.6) * 3.0);
-  vec3 bedCol = mix(vec3(0.26, 0.22, 0.14), vec3(0.52, 0.48, 0.38), nz.r) * (0.6 + 0.6 * nz.g);
-  vec3 absorb = exp(-max(depth, 0.0) * vec3(1.5, 0.62, 0.80));
+  vec3 bedCol = mix(vec3(0.135, 0.155, 0.174), vec3(0.39, 0.43, 0.46), nz.r) * (0.6 + 0.6 * nz.g);
+  vec3 absorb = exp(-max(depth, 0.0) * vec3(1.7, 0.80, 0.31));
   vec3 lightIn = uSunColor * 0.32 * (0.2 + 0.8 * sun) + uAmbSky * 0.55;
-  vec3 body = bedCol * absorb * lightIn + vec3(0.016, 0.115, 0.095) * (1.0 - absorb.g) * lightIn;
+  vec3 body = bedCol * absorb * lightIn + vec3(0.012, 0.143, 0.285) * (1.0 - absorb.g) * lightIn;
   float F = 0.02 + 0.98 * pow(1.0 - saturate(dot(N, V)), 5.0);
   vec3 R = reflect(-V, N); R.y = abs(R.y) + 0.02; R = normalize(R);
   vec3 sky = skyBase(R);
-  vec4 cl = sampleClouds(R);
+  vec4 cl = sampleClouds(R, P);
   sky = sky * (1.0 - cl.a) + cl.rgb;
   // toward the banks the water mirrors the grass leaning over it rather than the sky
   float bankRefl = smoothstep(0.35, 1.0, abs(u)) * (0.45 + 0.4 * (1.0 - saturate(dot(V, vec3(0.0, 1.0, 0.0)))));
-  sky = mix(sky * mix(0.72, 1.0, light.g), vec3(0.10, 0.19, 0.045) * (uSunColor * 0.3 * sun + uAmbSky * 0.6), bankRefl);
+  sky = mix(sky * mix(0.72, 1.0, light.g), vec3(0.075, 0.135, 0.12) * (uSunColor * 0.3 * sun + uAmbSky * 0.6), bankRefl);
   vec3 H = normalize(uSunDir + V);
   float spec = pow(saturate(dot(N, H)), 380.0) * 22.0 * sun;
   // from afar a stream is a thread of dulled sky, not a mirror
@@ -268,7 +286,9 @@ void main(){
   // white water: riffles on the steeps, a seam along each bank, the churn of our own wake
   float streak = ntex(vec2(f.x * 2.2, f.y * 0.45 - uTime * speed * 0.45)).b * 0.6 + ntex(vec2(f.x * 5.0, f.y * 1.3 - uTime * speed * 1.3) + 0.4).a * 0.4;
   float rapids = smoothstep(0.06, 0.34, slope);
-  float foam = smoothstep(0.78 - 0.62 * rapids, 0.92 - 0.50 * rapids, streak);
+  float lanes=ntex(vec2(f.x*1.9+0.36*sin(s*0.20-uTime),s*0.19-uTime*speed*0.23)).r;
+  float foam=smoothstep(0.72-0.13*rapids,0.85-0.12*rapids,streak*0.65+lanes*0.35)*mix(0.25,0.83,rapids);
+  foam=max(foam,plunge*smoothstep(0.32,0.72,streak));
   // a broken seam of froth where the current drags along the banks
   float bank = smoothstep(0.16, 0.02, depth) * smoothstep(0.52, 0.74, streak + 0.5 * rapids) * step(camD, 110.0);
   foam = max(foam, bank * 0.7);
@@ -283,7 +303,9 @@ void main(){
   vec3 foamCol = vec3(0.92, 0.95, 0.97) * (uSunColor * 0.30 * (0.25 + 0.75 * sun) + uAmbSky * 0.62);
   col = mix(col, foamCol, saturate(foam));
   col = applyAtmosphere(col, P);
-  gl_FragColor = vec4(col, 1.0);
+  float opticalDepth=depth/max(0.30,dot(N,V));
+  float alpha=(1.0-exp(-7.0*opticalDepth))+(exp(-7.0*opticalDepth))*max(F,foam)*smoothstep(0.0,0.04,depth);
+  gl_FragColor = vec4(col,coverage*alpha);
 }
 `;
 
@@ -323,7 +345,7 @@ void main(){
   if (alpha < 0.02) discard;
   float sun = texture(uLightTex, vWorld.xz * uWorld.y + 0.5).r;
   vec3 white = vec3(0.90, 0.94, 0.98) * (uSunColor * 0.30 * (0.3 + 0.7 * sun) + uAmbSky * 0.70);
-  vec3 glass = vec3(0.30, 0.55, 0.52) * (uSunColor * 0.2 * sun + uAmbSky * 0.6);
+  vec3 glass = vec3(0.24, 0.50, 0.64) * (uSunColor * 0.2 * sun + uAmbSky * 0.6);
   vec3 col = mix(glass, white, smoothstep(0.0, 0.10, k) * (0.6 + 0.4 * strands));
   col = applyAtmosphere(col, vWorld);
   gl_FragColor = vec4(col, clamp(alpha, 0.0, 1.0));

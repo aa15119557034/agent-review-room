@@ -1,9 +1,9 @@
 // Sky: analytic clear-sky gradient + sun, with a cloud layer baked into a lat-long texture.
 import * as THREE from 'three';
-import { U, shared } from '../core/ctx.js';
+import { shared } from '../core/ctx.js';
 import { NOISE, ATMOSPHERE } from '../shaders/common.js';
 
-export const SKY_UNIFORMS = ['uSunDir', 'uSunColor', 'uSkyZenith', 'uSkyMid', 'uSkyHorizon', 'uSunHalo', 'uAmbSky', 'uAmbGround', 'uFog', 'uCamPos'];
+export const SKY_UNIFORMS = ['uSunDir', 'uSunColor', 'uSkyZenith', 'uSkyMid', 'uSkyHorizon', 'uSunHalo', 'uAmbSky', 'uAmbGround', 'uFog', 'uCamPos', 'uCloudFlow', 'uNoiseTex'];
 
 const tri = () => {
   const g = new THREE.BufferGeometry();
@@ -21,13 +21,22 @@ vec2 cloudUV(vec3 d){
   float el = asin(clamp(d.y, -1.0, 1.0)) * 0.63661977;       // 0 at horizon, 1 at zenith
   return vec2(az, sqrt(clamp(el, 0.0, 1.0)));
 }
-vec4 sampleClouds(vec3 d){
+vec4 sampleClouds(vec3 d, vec3 origin){
   if (uCloudOn < 0.5 || d.y < -0.005) return vec4(0.0);
   vec2 uv = cloudUV(d);
   // manual gradients avoid the seam at the azimuth wrap
   vec2 dx = dFdx(uv), dy = dFdy(uv);
   dx.x -= floor(dx.x + 0.5); dy.x -= floor(dy.x + 0.5);
-  return textureGrad(uCloudTex, uv, dx, dy);
+  vec4 high = textureGrad(uCloudTex, uv - vec2(uCloudFlow.w, 0.0), dx, dy);
+  // A lower, wind-driven deck. Bounded projection near the horizon avoids
+  // infinitely thin bands. Use the same world plane in sky and reflected rays.
+  vec2 field = cloudDeck(origin, d);
+  high.rgb *= mix(vec3(1.0), vec3(0.62,0.68,0.77), uCloudFlow.z);
+  float thickness = smoothstep(0.18, 0.84, field.x * 0.73 + field.y * 0.27);
+  float low = uCloudFlow.z * (0.33 + 0.65 * thickness) * smoothstep(-0.005, 0.09, d.y);
+  vec3 under = mix(uSkyMid * 1.02, uSkyZenith * 0.86, thickness);
+  under += uSunHalo * (0.18 * (1.0 - thickness) * max(dot(d, uSunDir), 0.0));
+  return vec4(mix(high.rgb, under, low), low + high.a * (1.0 - low));
 }
 `;
 
@@ -35,18 +44,24 @@ export class Sky {
   constructor() {
     this.cloudTex = { value: null };
     this.cloudOn = { value: 0 };
+    this.cloudUniforms = { uCloudTex: this.cloudTex, uCloudOn: this.cloudOn };
     this.material = new THREE.ShaderMaterial({
       uniforms: {
         ...shared(...SKY_UNIFORMS),
         uProjInv: { value: new THREE.Vector2(1, 1) },
         uCamWorld: { value: new THREE.Matrix4() },
-        uCloudTex: this.cloudTex,
-        uCloudOn: this.cloudOn,
+        ...this.cloudUniforms,
         uEnv: { value: 0 },
       },
       vertexShader: /* glsl */`
         varying vec2 vNdc;
-        void main(){ vNdc = position.xy; gl_Position = vec4(position.xy, 0.0, 1.0); }
+        void main(){
+          vNdc = position.xy;
+          gl_Position = vec4(position.xy, 1.0, 1.0);
+          #ifdef USE_REVERSED_DEPTH_BUFFER
+          gl_Position.z = 0.0;
+          #endif
+        }
       `,
       fragmentShader: /* glsl */`
         precision highp float;
@@ -65,7 +80,7 @@ export class Sky {
           float disc = smoothstep(0.99982, 0.99994, mu);
           float corona = pow(max(mu, 0.0), 3000.0);
           vec3 sun = uSunColor * (disc * 55.0 + corona * 6.0) * (1.0 - uEnv);
-          vec4 cl = sampleClouds(d);
+          vec4 cl = sampleClouds(d, uCamPos);
           col = col * (1.0 - cl.a) + cl.rgb + sun * (1.0 - cl.a) * (1.0 - cl.a);
           // under the horizon: haze into deep sea colour (only ever seen in reflections / at great height)
           float below = smoothstep(0.0, -0.08, d.y);
@@ -73,12 +88,12 @@ export class Sky {
           gl_FragColor = vec4(col, 1.0);
         }
       `,
-      depthTest: false,
+      depthTest: true,
       depthWrite: false,
     });
     this.mesh = new THREE.Mesh(tri(), this.material);
     this.mesh.frustumCulled = false;
-    this.mesh.renderOrder = -1000;
+    this.mesh.renderOrder = 1000; // shade the sky only where opaque scenery left far depth
     const sync = (renderer, scene, camera) => {
       const u = this.material.uniforms;
       u.uProjInv.value.set(1 / camera.projectionMatrix.elements[0], 1 / camera.projectionMatrix.elements[5]);

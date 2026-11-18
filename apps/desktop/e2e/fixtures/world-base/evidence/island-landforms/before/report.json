@@ -1,0 +1,410 @@
+{
+  "start": "2026-11-18T08:26:03.545Z",
+  "errors": [],
+  "requests": [],
+  "shots": {
+    "caldera": {
+      "position": [
+        1184,
+        626.9467631022142,
+        132
+      ],
+      "rotation": [
+        -0.2937067093496304,
+        0.3829413546404195,
+        0.12985201972896046,
+        0.8661586117804763
+      ],
+      "fov": 57,
+      "size": [
+        1440,
+        900,
+        1
+      ],
+      "weather": {
+        "seconds": 0,
+        "phase": "晴间多云",
+        "cover": 0,
+        "rain": 0,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 0,
+        "windSpeed": 2.5,
+        "pressure": 1017,
+        "temperature": 19,
+        "dewPoint": 13,
+        "wind": 0.9275,
+        "sea": 0.7025,
+        "surge": 0
+      },
+      "feet": [
+        281.6,
+        8.812,
+        934
+      ]
+    },
+    "gorge": {
+      "position": [
+        624.5608947604736,
+        398.7741481233574,
+        -257.0730704454032
+      ],
+      "rotation": [
+        0.16458070549014986,
+        0.8293353536818131,
+        0.3184607664806266,
+        -0.4286009831141295
+      ],
+      "fov": 54,
+      "size": [
+        1440,
+        900,
+        1
+      ],
+      "weather": {
+        "seconds": 0,
+        "phase": "晴间多云",
+        "cover": 0,
+        "rain": 0,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 0,
+        "windSpeed": 2.5,
+        "pressure": 1017,
+        "temperature": 19,
+        "dewPoint": 13,
+        "wind": 0.9275,
+        "sea": 0.7025,
+        "surge": 0
+      },
+      "feet": [
+        281.6,
+        8.812,
+        934
+      ]
+    },
+    "cascade": {
+      "position": [
+        585.6246113217693,
+        276.8154616355524,
+        -166.8123888179968
+      ],
+      "rotation": [
+        0.22196536655257534,
+        -0.5165754300741416,
+        0.14070438254574982,
+        0.8149131719559549
+      ],
+      "fov": 57,
+      "size": [
+        1440,
+        900,
+        1
+      ],
+      "weather": {
+        "seconds": 0,
+        "phase": "晴间多云",
+        "cover": 0,
+        "rain": 0,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 0,
+        "windSpeed": 2.5,
+        "pressure": 1017,
+        "temperature": 19,
+        "dewPoint": 13,
+        "wind": 0.9275,
+        "sea": 0.7025,
+        "surge": 0
+      },
+      "feet": [
+        281.6,
+        8.812,
+        934
+      ]
+    },
+    "cape": {
+      "position": [
+        -2010,
+        79.23642349243164,
+        -676
+      ],
+      "rotation": [
+        -0.0687857948520115,
+        -0.8070772666372903,
+        -0.09596103420934976,
+        0.5785207688729328
+      ],
+      "fov": 54,
+      "size": [
+        1440,
+        900,
+        1
+      ],
+      "weather": {
+        "seconds": 0,
+        "phase": "晴间多云",
+        "cover": 0,
+        "rain": 0,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 0,
+        "windSpeed": 2.5,
+        "pressure": 1017,
+        "temperature": 19,
+        "dewPoint": 13,
+        "wind": 0.9275,
+        "sea": 0.7025,
+        "surge": 0
+      },
+      "feet": [
+        281.6,
+        8.812,
+        934
+      ]
+    },
+    "ravines": {
+      "position": [
+        1403,
+        162.61389584011502,
+        184
+      ],
+      "rotation": [
+        0.15850677093259055,
+        0.8414920783074754,
+        0.36445751805913673,
+        -0.3659745937144585
+      ],
+      "fov": 54,
+      "size": [
+        1440,
+        900,
+        1
+      ],
+      "weather": {
+        "seconds": 0,
+        "phase": "晴间多云",
+        "cover": 0,
+        "rain": 0,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 0,
+        "windSpeed": 2.5,
+        "pressure": 1017,
+        "temperature": 19,
+        "dewPoint": 13,
+        "wind": 0.9275,
+        "sea": 0.7025,
+        "surge": 0
+      },
+      "feet": [
+        281.6,
+        8.812,
+        934
+      ]
+    },
+    "dunes": {
+      "position": [
+        -1575,
+        18.07371099789937,
+        358
+      ],
+      "rotation": [
+        -0.028546994650767925,
+        -0.8052331537530175,
+        -0.03889558416024101,
+        0.5909921917641652
+      ],
+      "fov": 58,
+      "size": [
+        1440,
+        900,
+        1
+      ],
+      "weather": {
+        "seconds": 0,
+        "phase": "晴间多云",
+        "cover": 0,
+        "rain": 0,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 0,
+        "windSpeed": 2.5,
+        "pressure": 1017,
+        "temperature": 19,
+        "dewPoint": 13,
+        "wind": 0.9275,
+        "sea": 0.7025,
+        "surge": 0
+      },
+      "feet": [
+        281.6,
+        8.812,
+        934
+      ]
+    },
+    "ocean": {
+      "position": [
+        269,
+        19,
+        1156
+      ],
+      "rotation": [
+        0.025982222838812095,
+        0.962708727114556,
+        0.1000473633578833,
+        -0.25001471140507164
+      ],
+      "fov": 58,
+      "size": [
+        1440,
+        900,
+        1
+      ],
+      "weather": {
+        "seconds": 0,
+        "phase": "晴间多云",
+        "cover": 0,
+        "rain": 0,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 0,
+        "windSpeed": 2.5,
+        "pressure": 1017,
+        "temperature": 19,
+        "dewPoint": 13,
+        "wind": 0.9275,
+        "sea": 0.7025,
+        "surge": 0
+      },
+      "feet": [
+        281.6,
+        8.812,
+        934
+      ]
+    },
+    "tarn-blue": {
+      "position": [
+        805,
+        172,
+        -743
+      ],
+      "rotation": [
+        -0.1435317410251542,
+        0.34473049668966427,
+        0.053426738109103575,
+        0.9261236999588158
+      ],
+      "fov": 58,
+      "size": [
+        1440,
+        900,
+        1
+      ],
+      "weather": {
+        "seconds": 0,
+        "phase": "晴间多云",
+        "cover": 0,
+        "rain": 0,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 0,
+        "windSpeed": 2.5,
+        "pressure": 1017,
+        "temperature": 19,
+        "dewPoint": 13,
+        "wind": 0.9275,
+        "sea": 0.7025,
+        "surge": 0
+      },
+      "feet": [
+        281.6,
+        8.812,
+        934
+      ]
+    },
+    "ocean-column": {
+      "position": [
+        330,
+        20,
+        1450
+      ],
+      "rotation": [
+        -0.7026738135323082,
+        0,
+        0,
+        0.7115121304489215
+      ],
+      "fov": 58,
+      "size": [
+        1440,
+        900,
+        1
+      ],
+      "weather": {
+        "seconds": 0,
+        "phase": "晴间多云",
+        "cover": 0,
+        "rain": 0,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 0,
+        "windSpeed": 2.5,
+        "pressure": 1017,
+        "temperature": 19,
+        "dewPoint": 13,
+        "wind": 0.9275,
+        "sea": 0.7025,
+        "surge": 0
+      },
+      "feet": [
+        281.6,
+        8.812,
+        934
+      ]
+    },
+    "lake-column": {
+      "position": [
+        735,
+        164,
+        -824
+      ],
+      "rotation": [
+        -0.7036991757320646,
+        0,
+        0,
+        0.7104980436806372
+      ],
+      "fov": 58,
+      "size": [
+        1440,
+        900,
+        1
+      ],
+      "weather": {
+        "seconds": 0,
+        "phase": "晴间多云",
+        "cover": 0,
+        "rain": 0,
+        "fog": 0,
+        "regime": "海洋冷锋",
+        "wetness": 0,
+        "windSpeed": 2.5,
+        "pressure": 1017,
+        "temperature": 19,
+        "dewPoint": 13,
+        "wind": 0.9275,
+        "sea": 0.7025,
+        "surge": 0
+      },
+      "feet": [
+        281.6,
+        8.812,
+        934
+      ]
+    }
+  },
+  "samples": [],
+  "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "end": "2026-11-18T08:26:48.892Z"
+}

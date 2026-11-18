@@ -25,6 +25,9 @@ export const U = {
 
   // wind + wake
   uWind: { value: new THREE.Vector4(0.361, 0.933, 1, 0) }, // dir.xz (toward the SSE), strength, -
+  uCloudFlow: { value: new THREE.Vector4() }, // drift in metres, low cloud coverage, upper deck azimuth (turns)
+  uSeaSetup: { value: 0 }, // wind setup above mean sea level (metres)
+  uWaterPatch: { value: new THREE.Vector4() }, uWaterDisturbance: { value: null },
   uWakeTex: { value: null },
   uWake: { value: new THREE.Vector4(0, 0, 1 / 160, 0) }, // centre.xz, 1/extent, -
   uStripTex: { value: null },                            // world map: where the wake has stripped the flowers

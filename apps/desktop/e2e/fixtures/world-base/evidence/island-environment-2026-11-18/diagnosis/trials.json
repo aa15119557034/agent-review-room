@@ -1,0 +1,155 @@
+{
+  "base": "43a30f3c467252a28edfa879ac513f1be430279d",
+  "source": "b2865b83fd21bedf7def90b509aa33185d88eb4e",
+  "hardware": "RTX 3060 Laptop, ANGLE D3D11, 1440x900 CSS/device pixels, DPR 1",
+  "trials": [
+    {
+      "folder": "before",
+      "why": "Hidden renderer throttled to 1 Hz; did not move, excluded from performance comparison.",
+      "started": "2026-11-18T00:49:52.792Z",
+      "ended": "2026-11-18T00:50:59.652Z",
+      "errorCount": 1,
+      "networkFailures": 0,
+      "samples": [
+        {
+          "name": "coast",
+          "fps": 0.99237525016126,
+          "p95": 1015.4000000000015,
+          "distance": 0
+        },
+        {
+          "name": "street",
+          "fps": 0.99237525016126,
+          "p95": 1015.4000000000015,
+          "distance": 0
+        }
+      ]
+    },
+    {
+      "folder": "baseline",
+      "why": "Visible base, original scene, first pass.",
+      "started": "2026-11-18T00:51:28.437Z",
+      "ended": "2026-11-18T00:52:40.638Z",
+      "errorCount": 0,
+      "networkFailures": 0,
+      "samples": [
+        {
+          "name": "coast",
+          "fps": 64.99891668472186,
+          "p95": 15.5,
+          "distance": 0
+        },
+        {
+          "name": "street",
+          "fps": 61.832302794953435,
+          "p95": 30.599999999998545,
+          "distance": 0
+        },
+        {
+          "name": "walking-third",
+          "fps": 62.33229446175891,
+          "p95": 15.599999999998545,
+          "distance": 18.43776312453663
+        },
+        {
+          "name": "walking-first",
+          "fps": 62.833333333333336,
+          "p95": 15.5,
+          "distance": 18.480612850425388
+        }
+      ]
+    },
+    {
+      "folder": "first",
+      "why": "Initial implementation with full-screen sky and previous shoreline foam.",
+      "started": "2026-11-18T00:56:07.191Z",
+      "ended": "2026-11-18T00:58:25.483Z",
+      "errorCount": 0,
+      "networkFailures": 0,
+      "samples": [
+        {
+          "name": "coast-front",
+          "fps": 65,
+          "p95": 15.5,
+          "distance": 0
+        },
+        {
+          "name": "street-front",
+          "fps": 53.833333333333336,
+          "p95": 30.80000000000291,
+          "distance": 0
+        },
+        {
+          "name": "coast",
+          "fps": 65,
+          "p95": 15.5,
+          "distance": 0
+        },
+        {
+          "name": "street",
+          "fps": 52.863436123348016,
+          "p95": 30.80000000000291,
+          "distance": 0
+        },
+        {
+          "name": "walking-third",
+          "fps": 52,
+          "p95": 30.80000000000291,
+          "distance": 18.59931900369875
+        },
+        {
+          "name": "walking-first",
+          "fps": 57.5,
+          "p95": 30.79999999998836,
+          "distance": 18.482041276416012
+        }
+      ]
+    },
+    {
+      "folder": "gpu-final",
+      "why": "Intermediate optimization, before grading the southern exit.",
+      "started": "2026-11-18T01:02:32.875Z",
+      "ended": "2026-11-18T01:05:01.623Z",
+      "errorCount": 0,
+      "networkFailures": 0,
+      "samples": [
+        {
+          "name": "coast-front",
+          "fps": 65,
+          "p95": 15.5,
+          "distance": 0
+        },
+        {
+          "name": "street-front",
+          "fps": 59.16568057199041,
+          "p95": 30.80000000000291,
+          "distance": 0
+        },
+        {
+          "name": "coast",
+          "fps": 65,
+          "p95": 15.5,
+          "distance": 0
+        },
+        {
+          "name": "street",
+          "fps": 65.0009143351121,
+          "p95": 15.5,
+          "distance": 0
+        },
+        {
+          "name": "walking-third",
+          "fps": 64.99891668472186,
+          "p95": 15.5,
+          "distance": 18.480583795054876
+        },
+        {
+          "name": "walking-first",
+          "fps": 63.166666666666664,
+          "p95": 15.5,
+          "distance": 18.497740009987137
+        }
+      ]
+    }
+  ]
+}
