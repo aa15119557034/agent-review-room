@@ -12,6 +12,19 @@ import * as THREE from 'three';
 const f3 = (v) => v.map((x) => x.toFixed(4)).join(', ');
 const vec3 = (v) => `vec3(${f3(v)})`;
 
+/** Union bound of all boxes, so the common (outdoor) fragment pays one box test instead of one per shop. */
+const unionBox = (boxes) => [0, 1, 2].map((i) => Math.min(...boxes.map((b) => b[i]))).concat([3, 4, 5].map((i) => Math.max(...boxes.map((b) => b[i]))));
+const inBox = (b) => `all( greaterThan( stW, ${vec3(b.slice(0, 3))} ) ) && all( lessThan( stW, ${vec3(b.slice(3))} ) )`;
+function indoorGlsl(boxes) {
+  const u = unionBox(boxes);
+  // Inside any shop (padded box, world space) the fill is off: rooms keep their warm lamp-lit colours.
+  return `  vec3 stW = cameraPosition + geometryPosition * mat3( viewMatrix );
+  float stIn = 0.0;
+  if ( ${inBox(u)} ) {
+${boxes.map((b) => `    if ( ${inBox(b)} ) stIn = 1.0;`).join('\n')}
+  }`;
+}
+
 export async function loadShadowTint() {
   const json = await (await fetch(new URL('./shadow-tint.json', import.meta.url))).json();
   return json;
@@ -20,7 +33,7 @@ export async function loadShadowTint() {
 export const shadowTintEnabled = () => new URLSearchParams(location.search).get('shadowtint') !== 'off';
 
 /** Must run before the first program that uses lights_fragment_end is compiled. */
-export function installLitShadowTint(p, box) {
+export function installLitShadowTint(p, boxes) {
   const chunk = THREE.ShaderChunk.lights_fragment_end;
   if (chunk.includes('wbShadowTint')) return;
   THREE.ShaderChunk.lights_fragment_end = `${chunk}
@@ -29,9 +42,7 @@ export function installLitShadowTint(p, box) {
   float stLum = dot( diffuseColor.rgb, vec3( 0.2126, 0.7152, 0.0722 ) );
   float stSun = dot( reflectedLight.directDiffuse, vec3( 0.2126, 0.7152, 0.0722 ) ) / max( stLum, 0.03 );
   float stShade = 1.0 - smoothstep( ${p.sunLo.toFixed(3)}, ${p.sunHi.toFixed(3)}, stSun );
-  // Inside the shop (padded box, world space) the fill is off: the room keeps its warm lamp-lit colours.
-  vec3 stW = cameraPosition + geometryPosition * mat3( viewMatrix );
-  float stIn = float( all( greaterThan( stW, ${vec3(box.slice(0, 3))} ) ) && all( lessThan( stW, ${vec3(box.slice(3))} ) ) );
+${indoorGlsl(boxes)}
   reflectedLight.indirectDiffuse += diffuseColor.rgb * ${vec3(p.fill)} * stShade * ( 1.0 - stIn );
 }
 #endif`;
@@ -63,12 +74,19 @@ export function patchIslandShadowTint(island, p) {
   return { patched };
 }
 
-/** World-space box [minX, minY, minZ, maxX, maxY, maxZ] of the convenience-store interior, padded. */
-export function shopInteriorBox(layout, station, pad) {
-  const lot = layout.LOTS.find((l) => l.kind === 'konbini'), f = layout.lotFrame(lot), o = station.root.position;
-  const xs = [], zs = [];
-  for (const lx of [-f.w / 2, f.w / 2]) for (const lz of [0, -f.depth]) { const c = layout.lotToWorld(lot, lx, lz); xs.push(c.x); zs.push(c.z); }
-  return [Math.min(...xs) + o.x - pad, o.y - 1, Math.min(...zs) + o.z - pad, Math.max(...xs) + o.x + pad, o.y + 7, Math.max(...zs) + o.z + pad];
+/**
+ * World-space boxes [minX, minY, minZ, maxX, maxY, maxZ], padded: one per shop lot that has an interior
+ * (every lot whose owner is shopsA / shopsB in layout.LOTS: konbini, flower, bookstore, bicycle, cafe,
+ * wagashi, general, ramen). The layout has no separate interior extent, so the lot footprint
+ * (frontage width x STREET.lotDepth, the building volume) is used, as the convenience store always was.
+ */
+export function shopInteriorBoxes(layout, station, pad) {
+  const o = station.root.position;
+  return layout.LOTS.filter((l) => /^shops/.test(l.owner)).map((lot) => {
+    const f = layout.lotFrame(lot), xs = [], zs = [];
+    for (const lx of [-f.w / 2, f.w / 2]) for (const lz of [0, -f.depth]) { const c = layout.lotToWorld(lot, lx, lz); xs.push(c.x); zs.push(c.z); }
+    return [Math.min(...xs) + o.x - pad, o.y - 1, Math.min(...zs) + o.z - pad, Math.max(...xs) + o.x + pad, o.y + 7, Math.max(...zs) + o.z + pad];
+  });
 }
 
 /** Uniforms for the composite pass. */

@@ -122,12 +122,14 @@ export function createLook(renderer, camera) {
     bloom: 0.12, exposure: 1.02, saturation: 1.0, contrast: 1.05, vignette: 0.12,
   });
   const mat = pipeline.finalMat;
-  // Round 24: composite shadow tint fades out while the camera is inside the shop box (see shadow-tint.js).
+  // Round 24: composite shadow tint fades out while the camera is inside any shop box (see shadow-tint.js).
   let shBase = 0, shBox = null, shFade = 1.5;
   const camIndoor = () => {
     if (!shBox) return 1;
-    const p = camera.position, dx = Math.max(shBox[0] - p.x, 0, p.x - shBox[3]), dy = Math.max(shBox[1] - p.y, 0, p.y - shBox[4]), dz = Math.max(shBox[2] - p.z, 0, p.z - shBox[5]);
-    return THREE.MathUtils.smoothstep(Math.hypot(dx, dy, dz), 0, shFade);
+    const p = camera.position;
+    let d = Infinity; // distance to the nearest shop box (0 inside any)
+    for (const b of shBox) d = Math.min(d, Math.hypot(Math.max(b[0] - p.x, 0, p.x - b[3]), Math.max(b[1] - p.y, 0, p.y - b[4]), Math.max(b[2] - p.z, 0, p.z - b[5])));
+    return THREE.MathUtils.smoothstep(d, 0, shFade);
   };
   Object.assign(mat.uniforms, {
     tWorldDepth: pipeline.uDepth, uNear: { value: camera.near }, uFar: { value: camera.far },

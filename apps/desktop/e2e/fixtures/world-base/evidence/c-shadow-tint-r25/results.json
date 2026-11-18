@@ -1,0 +1,74 @@
+{
+ "04": {
+  "maxChannelDiff": 0,
+  "pixelsDiffGt2": 0,
+  "pixelsDiffGt8": 0,
+  "total": 576000
+ },
+ "20": {
+  "maxChannelDiff": 159,
+  "pixelsDiffGt2": 426437,
+  "pixelsDiffGt8": 267210,
+  "total": 576000
+ },
+ "W2": {
+  "maxChannelDiff": 0,
+  "pixelsDiffGt2": 0,
+  "pixelsDiffGt8": 0,
+  "total": 576000
+ },
+ "W4": {
+  "maxChannelDiff": 41,
+  "pixelsDiffGt2": 6,
+  "pixelsDiffGt8": 5,
+  "total": 576000
+ },
+ "W6": {
+  "maxChannelDiff": 0,
+  "pixelsDiffGt2": 0,
+  "pixelsDiffGt8": 0,
+  "total": 576000
+ },
+ "E1": {
+  "maxChannelDiff": 1,
+  "pixelsDiffGt2": 0,
+  "pixelsDiffGt8": 0,
+  "total": 576000
+ },
+ "E2": {
+  "maxChannelDiff": 156,
+  "pixelsDiffGt2": 79238,
+  "pixelsDiffGt8": 18005,
+  "total": 576000
+ },
+ "E3": {
+  "maxChannelDiff": 65,
+  "pixelsDiffGt2": 10495,
+  "pixelsDiffGt8": 2030,
+  "total": 576000
+ },
+ "E5": {
+  "maxChannelDiff": 0,
+  "pixelsDiffGt2": 0,
+  "pixelsDiffGt8": 0,
+  "total": 576000
+ },
+ "20-vs-4a89038": {
+  "maxChannelDiff": 135,
+  "pixelsDiffGt2": 1354,
+  "region": "x872-959,y239-365 animated sakura at frame edge"
+ },
+ "W4-on-vs-on-rerun": {
+  "maxChannelDiff": 41,
+  "pixelsDiffGt2": 4
+ },
+ "E2-on-vs-on-rerun": {
+  "maxChannelDiff": 144,
+  "pixelsDiffGt2": 8678
+ },
+ "E3-on-vs-on-rerun": {
+  "maxChannelDiff": 127,
+  "pixelsDiffGt2": 1954
+ },
+ "note": "Residual W4/E2/E3 diffs are animated cloth (noren) and foliage: the same views rendered twice with tint on differ by the same amount. 960x600 swiftshader, 2 manual frames, rAF stopped."
+}

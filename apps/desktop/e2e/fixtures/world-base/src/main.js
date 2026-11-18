@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { createIsland, clearVegetationAreas } from './island.js';
-import { loadShadowTint, shadowTintEnabled, installLitShadowTint, patchIslandShadowTint, shadowTintUniforms, shopInteriorBox } from './shadow-tint.js';
+import { loadShadowTint, shadowTintEnabled, installLitShadowTint, patchIslandShadowTint, shadowTintUniforms, shopInteriorBoxes } from './shadow-tint.js';
 import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from './evening-glow.js';
 import * as layoutModule from '../upstream/sakuragaoka/src/world/layout.js';
 import { createStation } from './station.js';
@@ -127,10 +127,10 @@ async function init() {
   worldBase.station = station;
   if (shadowTint) {
     // No program using the lit chunk has compiled yet (first render is after init), so the box can be known here.
-    const box = shopInteriorBox(layoutModule, station, shadowTintParams.indoorPad);
-    installLitShadowTint(shadowTint, box);
-    look.setShadowTint(shadowTintUniforms(shadowTint), box, shadowTintParams.indoorFade);
-    worldBase.shadowTint.indoorBox = box;
+    const boxes = shopInteriorBoxes(layoutModule, station, shadowTintParams.indoorPad);
+    installLitShadowTint(shadowTint, boxes);
+    look.setShadowTint(shadowTintUniforms(shadowTint), boxes, shadowTintParams.indoorFade);
+    worldBase.shadowTint.indoorBox = boxes;
   }
   // Interpolate the existing ramp values for softer boundaries between tones.
   const ramp = station.ctx.mat.gradientMap;
