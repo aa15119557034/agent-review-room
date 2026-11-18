@@ -338,6 +338,7 @@ export function buildFlower(ctx, C) {
   const IX0 = X0 + WT, IX1 = X1 - WT, IZ0 = ZB + WT, IZ1 = ZF - 0.2;
   { const fl = k.mesh(C.uvPlane(IX1 - IX0, IZ1 - IZ0, 0.6), M.innerMap('#c9a07c', T.tiles, 0.25), [0, FY + 0.004, (IZ0 + IZ1) / 2], [-Math.PI / 2, 0, 0]); fl.castShadow = false; }
   const CI = F2 - 0.05;
+  (ctx.services.shopInteriors ||= []).push({ lot: S.lot.id, box: [IX0, FY, IZ0, IX1, CI, IZ1] }); // room shell (inner wall faces, floor, ground-floor ceiling), lot local: [x0, y0, z0, x1, y1, z1]; read by src/shadow-tint.js
   k.plane(IX1 - IX0, IZ1 - IZ0, M.inner('#f1ece0', 0.3), [0, CI, (IZ0 + IZ1) / 2], [Math.PI / 2, 0, 0]);
   k.plane(IX1 - IX0, CI - FY, mIn, [0, (FY + CI) / 2, IZ0 + 0.005]);
   k.plane(IZ1 - IZ0, CI - FY, mIn, [IX0 + 0.005, (FY + CI) / 2, (IZ0 + IZ1) / 2], [0, Math.PI / 2, 0]);

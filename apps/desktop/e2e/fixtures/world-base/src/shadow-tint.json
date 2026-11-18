@@ -68,6 +68,6 @@
    "strength": 0.5
   }
  },
- "indoorPad": 0.3,
- "indoorFade": 1.5
+ "indoorPad": 0.05,
+ "indoorFade": 0.3
 }

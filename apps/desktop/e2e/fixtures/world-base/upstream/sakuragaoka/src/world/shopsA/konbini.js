@@ -387,6 +387,7 @@ export function buildKonbini(ctx, C) {
 
   // ---------------- interior shell skins (walls, ceiling) + modelled contents (intKonbini.js)
   const IX0 = X0 + WT, IX1 = X1 - WT, IZ0 = ZB + WT, IZ1 = ZF - WT;
+  (ctx.services.shopInteriors ||= []).push({ lot: S.lot.id, box: [IX0, FY, IZ0, IX1, CY, IZ1] }); // room shell (inner wall faces, floor, ground-floor ceiling), lot local: [x0, y0, z0, x1, y1, z1]; read by src/shadow-tint.js
   k.plane(IX1 - IX0, IZ1 - IZ0 + 0.1, mInW, [(IX0 + IX1) / 2, CY, (IZ0 + IZ1) / 2], [Math.PI / 2, 0, 0]);
   k.plane(IX1 - IX0, CY - FY, mIn, [(IX0 + IX1) / 2, (FY + CY) / 2, IZ0 + 0.005]);
   k.plane(IZ1 - IZ0, CY - FY, mIn, [IX0 + 0.005, (FY + CY) / 2, (IZ0 + IZ1) / 2], [0, Math.PI / 2, 0]);

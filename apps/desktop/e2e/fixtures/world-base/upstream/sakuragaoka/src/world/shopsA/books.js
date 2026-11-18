@@ -283,6 +283,7 @@ export function buildBooks(ctx, C) {
   // ---------------- interior: shell skins here, modelled contents in intBooks.js
   const IX0 = X0 + WT, IX1 = X1 - WT, IZ0 = ZB + WT, IZ1 = ZF - WT;
   const CI = F2 - 0.12;
+  (ctx.services.shopInteriors ||= []).push({ lot: S.lot.id, box: [IX0, FY, IZ0, IX1, CI, IZ1] }); // room shell (inner wall faces, floor, ground-floor ceiling), lot local: [x0, y0, z0, x1, y1, z1]; read by src/shadow-tint.js
   { const fl = k.mesh(C.uvPlane(IX1 - IX0, IZ1 - IZ0, 1.6), M.innerMap('#9c7454', T.planks, 0.22), [0, FY + 0.004, (IZ0 + IZ1) / 2], [-Math.PI / 2, 0, 0]); fl.castShadow = false; }
   k.plane(IX1 - IX0, IZ1 - IZ0, M.inner('#f1ead9', 0.3), [0, CI, (IZ0 + IZ1) / 2], [Math.PI / 2, 0, 0]);
   k.plane(IX1 - IX0, CI - FY, mIn, [0, (FY + CI) / 2, IZ0 + 0.005]);

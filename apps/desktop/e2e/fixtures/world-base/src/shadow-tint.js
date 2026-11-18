@@ -7,21 +7,26 @@ import * as THREE from 'three';
 //  2 Petalwake terrain / transition / town / prop shaders: the same fill, driven by the baked
 //    terrain shadow (uLightTex.r) and N.L, added where they sample it.
 //  3 the composite pass (look.js) cools and lifts only the dark end and tints AO creases.
+// Round 26: the indoor exclusion is the room itself (inner wall faces, floor, ground-floor ceiling, from ctx.services.shopInteriors),
+// not the whole lot, so facades, paving and upper floors keep the fill; the composite tint fades over 0.3 m outside the room.
 // ?shadowtint=off installs nothing, so the round 23 look is exactly what renders.
 
 const f3 = (v) => v.map((x) => x.toFixed(4)).join(', ');
 const vec3 = (v) => `vec3(${f3(v)})`;
 
-/** Union bound of all boxes, so the common (outdoor) fragment pays one box test instead of one per shop. */
-const unionBox = (boxes) => [0, 1, 2].map((i) => Math.min(...boxes.map((b) => b[i]))).concat([3, 4, 5].map((i) => Math.max(...boxes.map((b) => b[i]))));
-const inBox = (b) => `all( greaterThan( stW, ${vec3(b.slice(0, 3))} ) ) && all( lessThan( stW, ${vec3(b.slice(3))} ) )`;
+/** Union bound of all (world AABB of the) boxes, so the common (outdoor) fragment pays one box test instead of one per shop. */
+const unionBox = (boxes) => [0, 1, 2].map((i) => Math.min(...boxes.map((b) => b.aabb[i]))).concat([3, 4, 5].map((i) => Math.max(...boxes.map((b) => b.aabb[i]))));
+const inAabb = (b) => `all( greaterThan( stW, ${vec3(b.slice(0, 3))} ) ) && all( lessThan( stW, ${vec3(b.slice(3))} ) )`;
+/** One room: world position is taken into the lot frame (x along the frontage, z toward the street), y stays world. */
+const inRoom = (b) => `{ vec2 d = stW.xz - vec2( ${f3(b.o)} ); vec3 q = vec3( dot( d, vec2( ${f3(b.ex)} ) ), stW.y, dot( d, vec2( ${f3(b.ez)} ) ) );
+      if ( all( greaterThan( q, ${vec3(b.min)} ) ) && all( lessThan( q, ${vec3(b.max)} ) ) ) stIn = 1.0; }`;
 function indoorGlsl(boxes) {
   const u = unionBox(boxes);
-  // Inside any shop (padded box, world space) the fill is off: rooms keep their warm lamp-lit colours.
+  // Inside any room (inner wall faces, floor, ground-floor ceiling) the fill is off: rooms keep their warm lamp-lit colours.
   return `  vec3 stW = cameraPosition + geometryPosition * mat3( viewMatrix );
   float stIn = 0.0;
-  if ( ${inBox(u)} ) {
-${boxes.map((b) => `    if ( ${inBox(b)} ) stIn = 1.0;`).join('\n')}
+  if ( ${inAabb(u)} ) {
+${boxes.map((b) => `    ${inRoom(b)}`).join('\n')}
   }`;
 }
 
@@ -75,18 +80,32 @@ export function patchIslandShadowTint(island, p) {
 }
 
 /**
- * World-space boxes [minX, minY, minZ, maxX, maxY, maxZ], padded: one per shop lot that has an interior
- * (every lot whose owner is shopsA / shopsB in layout.LOTS: konbini, flower, bookstore, bicycle, cafe,
- * wagashi, general, ramen). The layout has no separate interior extent, so the lot footprint
- * (frontage width x STREET.lotDepth, the building volume) is used, as the convenience store always was.
+ * One oriented box per shop room, built from what the shop generators register while building
+ * (ctx.services.shopInteriors: lot id + [x0, y0, z0, x1, y1, z1] in lot space = inner faces of the
+ * walls, the floor and the ground-floor ceiling, e.g. shopsB: X0 + WT .. X1 - WT, ZI .. ZF - WT, FL .. Y1).
+ * `pad` grows each face by a few centimetres so the wall's inner skin and the floor/ceiling surfaces sit
+ * inside; it stays well under a wall thickness, so the outside of the facade, the paving in front of the
+ * shop and the street-facing upper floors are outside the box.
+ * Box: { id, o, ex, ez, min, max, aabb }. o = lot origin (world x, z), ex / ez = world directions of lot x / z,
+ * min / max = [lot x, world y, lot z], aabb = world-axis bounds (only for the cheap pre-test).
  */
 export function shopInteriorBoxes(layout, station, pad) {
-  const o = station.root.position;
-  return layout.LOTS.filter((l) => /^shops/.test(l.owner)).map((lot) => {
-    const f = layout.lotFrame(lot), xs = [], zs = [];
-    for (const lx of [-f.w / 2, f.w / 2]) for (const lz of [0, -f.depth]) { const c = layout.lotToWorld(lot, lx, lz); xs.push(c.x); zs.push(c.z); }
-    return [Math.min(...xs) + o.x - pad, o.y - 1, Math.min(...zs) + o.z - pad, Math.max(...xs) + o.x + pad, o.y + 7, Math.max(...zs) + o.z + pad];
+  const root = station.root.position, rooms = station.ctx.services.shopInteriors || [];
+  return rooms.map(({ lot: id, box }) => {
+    const lot = layout.lotById(id), f = layout.lotFrame(lot), c = Math.cos(f.rotY), s = Math.sin(f.rotY);
+    const o = [f.x + root.x, f.z + root.z], ex = [c, -s], ez = [s, c], y = f.y + root.y;
+    const min = [box[0] - pad, box[1] + y - pad, box[2] - pad], max = [box[3] + pad, box[4] + y + pad, box[5] + pad];
+    const xs = [], zs = [];
+    for (const lx of [min[0], max[0]]) for (const lz of [min[2], max[2]]) { xs.push(o[0] + lx * ex[0] + lz * ez[0]); zs.push(o[1] + lx * ex[1] + lz * ez[1]); }
+    return { id, o, ex, ez, min, max, aabb: [Math.min(...xs), min[1], Math.min(...zs), Math.max(...xs), max[1], Math.max(...zs)] };
   });
+}
+
+/** Distance from a world point to the box (0 inside). The lot frame is a rigid rotation, so it is measured there. */
+export function distanceToRoom(b, p) {
+  const dx = p.x - b.o[0], dz = p.z - b.o[1];
+  const q = [dx * b.ex[0] + dz * b.ex[1], p.y, dx * b.ez[0] + dz * b.ez[1]];
+  return Math.hypot(...q.map((v, i) => Math.max(b.min[i] - v, 0, v - b.max[i])));
 }
 
 /** Uniforms for the composite pass. */

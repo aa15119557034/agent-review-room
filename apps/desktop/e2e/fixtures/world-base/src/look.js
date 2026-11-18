@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { Pipeline } from '../upstream/petalwake/src/core/pipeline.js';
+import { distanceToRoom } from './shadow-tint.js';
 
 // The depth source is the actual displaced terrain colour pass. Sakuragaoka's
 // normal override would outline Petalwake's undisplaced tile grid instead.
@@ -127,8 +128,8 @@ export function createLook(renderer, camera) {
   const camIndoor = () => {
     if (!shBox) return 1;
     const p = camera.position;
-    let d = Infinity; // distance to the nearest shop box (0 inside any)
-    for (const b of shBox) d = Math.min(d, Math.hypot(Math.max(b[0] - p.x, 0, p.x - b[3]), Math.max(b[1] - p.y, 0, p.y - b[4]), Math.max(b[2] - p.z, 0, p.z - b[5])));
+    let d = Infinity; // distance to the nearest room (0 inside any); weight 1 once the camera is shFade metres outside
+    for (const b of shBox) d = Math.min(d, distanceToRoom(b, p));
     return THREE.MathUtils.smoothstep(d, 0, shFade);
   };
   Object.assign(mat.uniforms, {
