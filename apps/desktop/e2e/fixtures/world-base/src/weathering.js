@@ -210,9 +210,12 @@ export async function loadWeatheringParams() {
 export function applyWeathering({ scene, station, island, city, skyline, params, timeOfDay = 'evening' }) {
   const o = station.root.position;
   const ground = bakeGround({ island, station, city, params });
-  const rects = [];
-  for (const p of city.placements) rects.push(new THREE.Vector4(p.footprint.minX + o.x, p.footprint.minZ + o.z, p.footprint.maxX + o.x, p.footprint.maxZ + o.z));
-  for (const p of skyline.placements) { const r = p.footprint.localBounds; rects.push(new THREE.Vector4(r.minX + o.x, r.minZ + o.z, r.maxX + o.x, r.maxZ + o.z)); }
+  // The array position selects the building's dirt tint. Keep the original city and skyline indices.
+  const rects = [
+    ...city.placements.filter(p => p.type !== 'station-art').map(p => p.footprint),
+    ...skyline.placements.map(p => p.footprint.localBounds),
+    ...city.placements.filter(p => p.type === 'station-art').map(p => p.footprint),
+  ].map(r => new THREE.Vector4(r.minX + o.x, r.minZ + o.z, r.maxX + o.x, r.maxZ + o.z));
   const scale = params.timeScale[timeOfDay] ?? 1;
   const noiseTex = makeNoiseTextures();
   const rectCount = Math.min(16, rects.length);
@@ -285,7 +288,8 @@ export function applyWeathering({ scene, station, island, city, skyline, params,
   const api = {
     uniforms, stats: { vehicleVolumes: vehicleBoxes.length, materials: clones.size, meshes: swaps.length, classes: counts, groundSamples: ground.samples, buildingSeeds: rectCount,
       extraDrawCalls: 0, noiseTaps: '2 tiling-noise fetches (4 channels each) + 1 white-noise fetch x2 + 1 height texture + 6 derivatives/fragment; no loops, no procedural hashing' },
-    wallMaterials: new Set(clones.values()), vehicleBoxes,
+    // The authored laundry portal has its paint baked into COLOR_0. It still physically supports the five original decals.
+    wallMaterials: new Set([...clones.values(), city.laundryPortal.material]), vehicleBoxes,
     setEnabled(on) { uniforms.uWx.value = on ? scale : 0; },
     dispose() {
       if (disposed) return; disposed = true;

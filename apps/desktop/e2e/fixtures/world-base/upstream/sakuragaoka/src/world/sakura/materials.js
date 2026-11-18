@@ -164,6 +164,17 @@ function extend(m, shared, { key, rim = 0, sheen = 0, sway = false, noFlip = fal
   return m;
 }
 
+const FLOWERING_SPRIG = { key: 'sakura-cards3', rim: 1.0, sheen: 0.05, sway: true, noFlip: true, shade: 0.22, edgeFade: true };
+
+// Baked mature crowns carry real albedo and normals. Keep station lighting and flower wind.
+export function paintedSakuraMaterial(ctx, role, map, alphaTest) {
+  const name = 'sakura:' + (role === 'bark' ? 'barkOld' : role);
+  const opts = { name, map, vertexColors: role !== 'cards', paint: 0.04 };
+  if (role === 'cards') return extend(ctx.mat.toon('#ffffff', { ...opts, side: 'double', alphaTest }), ctx.shared, FLOWERING_SPRIG);
+  const material = ctx.mat.toon('#ffffff', opts);
+  return role === 'blob' ? extend(material, ctx.shared, { key: 'sakura-painted-mass', rim: 0.7, shade: 0.28 }) : material;
+}
+
 export function createSakuraMaterials(ctx, T) {
   const { mat, shared, palette: P } = ctx;
   const M = {};
@@ -188,7 +199,7 @@ export function createSakuraMaterials(ctx, T) {
   };
   M.blobDepth.customProgramCacheKey = () => 'sakura-dapple1';
   M.cards = extend(mat.toon('#ffffff', { map: T.blossom, alphaTest: 0.5, side: 'double', vertexColors: true, paint: 0.04, name: 'sakura:cards' }),
-    shared, { key: 'sakura-cards3', rim: 1.0, sheen: 0.05, sway: true, noFlip: true, shade: 0.22, edgeFade: true });
+    shared, FLOWERING_SPRIG);
   // ground plants: double sided, normals point up (no flip) so both faces read like the lit ground
   M.flora = extend(mat.toon('#ffffff', { map: T.flora, alphaTest: 0.5, side: 'double', vertexColors: true, paint: 0.05, name: 'sakura:flora' }),
     shared, { key: 'sakura-flora', noFlip: true });

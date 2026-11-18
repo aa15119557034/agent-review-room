@@ -10,6 +10,7 @@ import { applyWetRoad } from './wet-road.js';
 import { createStreetReflections } from './street-reflections.js';
 import { addStationTexturedProps } from './textured-props.js';
 import { addArtR1Station } from './art-r1.js';
+import { loadMatureSakura } from './mature-sakura.js';
 
 // Keep the upstream dependency order. Characters and camera-centred petal shaders
 // are deliberately omitted; the shared island supplies its own petal field.
@@ -74,11 +75,16 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
     quality: { name: 'medium', petals: 0, pixelRatio: 1 }, sunDir });
   ctx.people = false;
   const moduleStats = {};
+  let matureResources;
   for (const name of STATION_MODULES) {
     onProgress(name);
     const start = performance.now();
     const module = await import(`../upstream/sakuragaoka/src/world/${name}.js`);
-    await module.build(ctx);
+    if (name === 'sakura') {
+      const { variants, resources } = await loadMatureSakura(ctx);
+      matureResources = resources;
+      await module.build(ctx, variants);
+    } else await module.build(ctx);
     moduleStats[name] = Math.round(performance.now() - start);
     await new Promise(resolve => setTimeout(resolve, 0));
   }
@@ -172,9 +178,12 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
       wetRoad.dispose();
       streetReflections.dispose();
       root.removeFromParent();
-      const geometries = new Set(), materials = new Set(), textures = new Set(texturedProps.textures);
+      const { geometries, materials } = matureResources;
+      const textures = new Set(matureResources.textures);
+      for (const texture of texturedProps.textures) textures.add(texture);
       root.traverse(object => {
         if (object.geometry) geometries.add(object.geometry);
+        if (object.customDepthMaterial) materials.add(object.customDepthMaterial);
         for (const material of Array.isArray(object.material) ? object.material : object.material ? [object.material] : []) materials.add(material);
       });
       for (const material of materials) {
@@ -184,6 +193,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
       }
       for (const geometry of geometries) geometry.dispose();
       for (const texture of textures) if (!islandTextures.has(texture)) texture.dispose();
+      for (const texture of matureResources.textures) texture.source.data?.close?.();
     },
   };
   station.spawn = station.toWorld(new THREE.Vector3(layout.HERO.x, ctx.physics.groundHeight(layout.HERO.x, layout.HERO.z), layout.HERO.z));

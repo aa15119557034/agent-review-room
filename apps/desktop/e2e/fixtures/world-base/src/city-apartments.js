@@ -75,11 +75,6 @@ export function buildTownApartment(H, F, spec) {
         }
       }
     }
-    if (shop && fl === 0) {
-      const wing = (w - 6) / 2;
-      for (const side of [-1, 1]) F.boxB(plaster, wall, wing, FH - .16, .26, side * (3 + wing / 2), .16, baseFront - .13, { uv: { world: 1.5 } });
-      F.boxB(plaster, wall, 6, .49, .26, 0, 2.36, baseFront - .13, { uv: { world: 1.5 } });
-    }
     if (floors === 5 && fl > 0) {
       const planes = [front, front - ((fl + 1) % 2) * .32, front - ((fl + 2) % 2) * .32];
       for (let j = 0; j < 2; j++) if (planes[j] !== planes[j + 1]) F.boxB(plaster, wall, .18, FH - .16,
