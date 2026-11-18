@@ -150,20 +150,27 @@ app.whenReady().then(async () => {
       i.update=()=>update(0,time);
       const old=original.replace('float swash = smoothstep(-5.0, 2.0, off);','float swash = 1.0;');
       if(old===original)throw new Error('Shoreline comparison shader changed');
+      // Keep both compiled programs alive. Replacing vertexShader on one material
+      // can leave the previous program visible in an asynchronously captured frame.
+      const unbroken=new mat.constructor({uniforms:mat.uniforms,vertexShader:old,fragmentShader:mat.fragmentShader,
+        defines:{...mat.defines,WB_UNBROKEN_SWASH:1},side:mat.side});
       window.swashView = mode => {
         i.water.mesh.visible=mode!=='dry';
-        mat.vertexShader=mode==='unbroken'?old:original;
-        mat.needsUpdate=true;
+        i.water.mesh.material=mode==='unbroken'?unbroken:mat;
       };
-      window.restoreSwash = () => { window.swashView('adapted');i.update=update;i.weather.update=weather; };
+      window.restoreSwash = () => {
+        window.swashView('adapted');i.update=update;i.weather.update=weather;unbroken.dispose();
+      };
       return { time, unbrokenCrest:highest, ground:i.heightAt(295,1121), setup:i.U.uSeaSetup.value };
     })()`);
     const region = {x:310,y:693,width:400,height:110};
     const pixels = {};
     try {
       for (const mode of ['unbroken','adapted','dry']) {
-        await evaluate(`window.swashView('${mode}')`);
-        await pause(450);
+        await evaluate(`(async()=>{
+          window.swashView('${mode}');
+          for(let frame=0;frame<6;frame++)await new Promise(requestAnimationFrame);
+        })()`);
         const frame = await wc.capturePage();
         pixels[mode] = frame.crop(region).toBitmap();
         fs.writeFileSync(path.join(output,'swash-'+mode+'.jpg'),frame.toJPEG(92));
