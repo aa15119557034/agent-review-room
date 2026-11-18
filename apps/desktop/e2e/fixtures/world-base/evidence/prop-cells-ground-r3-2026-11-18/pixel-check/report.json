@@ -1,0 +1,862 @@
+{
+  "source": "ed69406bd6f12f66ec852edc95870ab7c1bbaaa7",
+  "baseline": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+  "test": "In one R3 candidate native process freeze all app RAF and fix station/island time. Replay the exact trusted A-H camera then compare candidate, full original instance matrix array, candidate restored. Same random seed and harbour animation state within each triplet. Hash the 1440x900 decoded BGRA8 pixels. KeyW on an unfrozen third-person camera verifies an actual walk before its pose is held.",
+  "samples": [
+    {
+      "view": "art-a-street",
+      "time": 14,
+      "camera": {
+        "current": "art-a-street",
+        "eye": [
+          278.8,
+          10.488,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440409,
+          -0.009834585659995631,
+          -0.00003223795934194156,
+          0.9999462663720154
+        ],
+        "fov": 35.63777782904556
+      },
+      "actualWalk": false,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "ground": true,
+      "sun": [
+        {
+          "map": true,
+          "auto": true
+        }
+      ],
+      "originalCounts": [
+        1,
+        21,
+        87,
+        53
+      ],
+      "candidateCounts": [
+        0,
+        4,
+        32,
+        41
+      ],
+      "trials": {
+        "candidate": {
+          "calls": 1593,
+          "triangles": 7437950,
+          "pixelSha256": "0fa9c246600c1a0d6d550ad7fee13127cfdb0dcf81717ed0647e1574f3339ac5"
+        },
+        "fullInstanceBuffer": {
+          "calls": 1594,
+          "triangles": 8009780,
+          "pixelSha256": "0fa9c246600c1a0d6d550ad7fee13127cfdb0dcf81717ed0647e1574f3339ac5"
+        },
+        "candidateRestored": {
+          "calls": 1593,
+          "triangles": 7437950,
+          "pixelSha256": "0fa9c246600c1a0d6d550ad7fee13127cfdb0dcf81717ed0647e1574f3339ac5"
+        }
+      },
+      "changedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      },
+      "restoredChangedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "art-b-konbini",
+      "time": 14,
+      "camera": {
+        "current": "art-b-konbini",
+        "eye": [
+          279.1,
+          9.8184,
+          912.8
+        ],
+        "quaternion": [
+          0.013653878147403252,
+          0.5849950384089397,
+          -0.009850566433920587,
+          0.8108620986267578
+        ],
+        "fov": 58
+      },
+      "actualWalk": false,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "ground": true,
+      "sun": [
+        {
+          "map": true,
+          "auto": true
+        }
+      ],
+      "originalCounts": [
+        1,
+        21,
+        87,
+        53
+      ],
+      "candidateCounts": [
+        1,
+        15,
+        22,
+        13
+      ],
+      "trials": {
+        "candidate": {
+          "calls": 1037,
+          "triangles": 6860943,
+          "pixelSha256": "08932d84801ac0f56c04000864f14c11e16d93f5aa8f3886919429332b35f17c"
+        },
+        "fullInstanceBuffer": {
+          "calls": 1037,
+          "triangles": 7841438,
+          "pixelSha256": "08932d84801ac0f56c04000864f14c11e16d93f5aa8f3886919429332b35f17c"
+        },
+        "candidateRestored": {
+          "calls": 1037,
+          "triangles": 6860943,
+          "pixelSha256": "08932d84801ac0f56c04000864f14c11e16d93f5aa8f3886919429332b35f17c"
+        }
+      },
+      "changedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      },
+      "restoredChangedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "art-c-alley",
+      "time": 14,
+      "camera": {
+        "current": "art-c-alley",
+        "eye": [
+          287.65,
+          14.384808464050293,
+          767.3199999999999
+        ],
+        "quaternion": [
+          0.00512201791291099,
+          0.8012252009590126,
+          -0.006859231737600546,
+          0.5983016740914732
+        ],
+        "fov": 45
+      },
+      "actualWalk": false,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "ground": true,
+      "sun": [
+        {
+          "map": true,
+          "auto": true
+        }
+      ],
+      "originalCounts": [
+        1,
+        21,
+        87,
+        53
+      ],
+      "candidateCounts": [
+        0,
+        0,
+        4,
+        0
+      ],
+      "trials": {
+        "candidate": {
+          "calls": 971,
+          "triangles": 7343882,
+          "pixelSha256": "1812f6a259f0a23d6ce44f7b58bdfc0713ad3ba57ac63bd73c9b355573c3d6e1"
+        },
+        "fullInstanceBuffer": {
+          "calls": 974,
+          "triangles": 8722043,
+          "pixelSha256": "1812f6a259f0a23d6ce44f7b58bdfc0713ad3ba57ac63bd73c9b355573c3d6e1"
+        },
+        "candidateRestored": {
+          "calls": 971,
+          "triangles": 7343882,
+          "pixelSha256": "1812f6a259f0a23d6ce44f7b58bdfc0713ad3ba57ac63bd73c9b355573c3d6e1"
+        }
+      },
+      "changedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      },
+      "restoredChangedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "art-d-laundry",
+      "time": 14,
+      "camera": {
+        "current": "art-d-laundry",
+        "eye": [
+          283.5,
+          12.520055181715234,
+          783.8
+        ],
+        "quaternion": [
+          0.1297258927986663,
+          0.0767626424061459,
+          -0.010073721024303532,
+          0.9885227410703001
+        ],
+        "fov": 48
+      },
+      "actualWalk": false,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "ground": true,
+      "sun": [
+        {
+          "map": true,
+          "auto": true
+        }
+      ],
+      "originalCounts": [
+        1,
+        21,
+        87,
+        53
+      ],
+      "candidateCounts": [
+        1,
+        4,
+        38,
+        45
+      ],
+      "trials": {
+        "candidate": {
+          "calls": 907,
+          "triangles": 8034099,
+          "pixelSha256": "0312d300f6639457a8b7b24939ba6f5e7f83e8f88af85f69c76d7e8cd7462521"
+        },
+        "fullInstanceBuffer": {
+          "calls": 907,
+          "triangles": 8451242,
+          "pixelSha256": "0312d300f6639457a8b7b24939ba6f5e7f83e8f88af85f69c76d7e8cd7462521"
+        },
+        "candidateRestored": {
+          "calls": 907,
+          "triangles": 8034099,
+          "pixelSha256": "0312d300f6639457a8b7b24939ba6f5e7f83e8f88af85f69c76d7e8cd7462521"
+        }
+      },
+      "changedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      },
+      "restoredChangedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "sample-e-harbour",
+      "time": 14,
+      "camera": {
+        "current": "sample-e-harbour",
+        "eye": [
+          -49.3148,
+          6.0969,
+          1121.5
+        ],
+        "quaternion": [
+          0.014730707497095328,
+          -0.7342518484654964,
+          0.01594041117183272,
+          0.6785301265038345
+        ],
+        "fov": 57
+      },
+      "actualWalk": false,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "ground": true,
+      "sun": [
+        {
+          "map": true,
+          "auto": true
+        }
+      ],
+      "originalCounts": [
+        1,
+        21,
+        87,
+        53
+      ],
+      "candidateCounts": [
+        0,
+        1,
+        22,
+        4
+      ],
+      "trials": {
+        "candidate": {
+          "calls": 1525,
+          "triangles": 7188645,
+          "pixelSha256": "950cda332a23748ffe37d62318523176af00d84f76820357d0aab484ceba9599"
+        },
+        "fullInstanceBuffer": {
+          "calls": 1526,
+          "triangles": 8410228,
+          "pixelSha256": "950cda332a23748ffe37d62318523176af00d84f76820357d0aab484ceba9599"
+        },
+        "candidateRestored": {
+          "calls": 1525,
+          "triangles": 7188645,
+          "pixelSha256": "950cda332a23748ffe37d62318523176af00d84f76820357d0aab484ceba9599"
+        }
+      },
+      "changedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      },
+      "restoredChangedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "sample-f-hillside",
+      "time": 14,
+      "camera": {
+        "current": "sample-f-hillside",
+        "eye": [
+          1040.6682,
+          61.5086,
+          591.5865
+        ],
+        "quaternion": [
+          0.18707634146308863,
+          -0.10146136691099782,
+          0.019429882402105244,
+          0.9768984149640014
+        ],
+        "fov": 57
+      },
+      "actualWalk": false,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "ground": true,
+      "sun": [
+        {
+          "map": true,
+          "auto": true
+        }
+      ],
+      "originalCounts": [
+        1,
+        21,
+        87,
+        53
+      ],
+      "candidateCounts": [
+        0,
+        4,
+        38,
+        6
+      ],
+      "trials": {
+        "candidate": {
+          "calls": 767,
+          "triangles": 7179421,
+          "pixelSha256": "f3019f01e7f27725ec88a21e4dc767f958c687ed41e8072734538aee2c18d231"
+        },
+        "fullInstanceBuffer": {
+          "calls": 768,
+          "triangles": 8281222,
+          "pixelSha256": "f3019f01e7f27725ec88a21e4dc767f958c687ed41e8072734538aee2c18d231"
+        },
+        "candidateRestored": {
+          "calls": 767,
+          "triangles": 7179421,
+          "pixelSha256": "f3019f01e7f27725ec88a21e4dc767f958c687ed41e8072734538aee2c18d231"
+        }
+      },
+      "changedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      },
+      "restoredChangedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "sample-g-rail",
+      "time": 14,
+      "camera": {
+        "current": "sample-g-rail",
+        "eye": [
+          337.8563,
+          9.6,
+          844.5
+        ],
+        "quaternion": [
+          0.0042956255745017925,
+          0.7668403876967841,
+          -0.005132508643737493,
+          0.6418029485387173
+        ],
+        "fov": 57
+      },
+      "actualWalk": false,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "ground": true,
+      "sun": [
+        {
+          "map": true,
+          "auto": true
+        }
+      ],
+      "originalCounts": [
+        1,
+        21,
+        87,
+        53
+      ],
+      "candidateCounts": [
+        0,
+        14,
+        13,
+        4
+      ],
+      "trials": {
+        "candidate": {
+          "calls": 1534,
+          "triangles": 7428499,
+          "pixelSha256": "25f524fe32b04bc40c77d098bed14ff1a5bcd4349ae831cbb304276b26a32daa"
+        },
+        "fullInstanceBuffer": {
+          "calls": 1535,
+          "triangles": 8661273,
+          "pixelSha256": "25f524fe32b04bc40c77d098bed14ff1a5bcd4349ae831cbb304276b26a32daa"
+        },
+        "candidateRestored": {
+          "calls": 1534,
+          "triangles": 7428499,
+          "pixelSha256": "25f524fe32b04bc40c77d098bed14ff1a5bcd4349ae831cbb304276b26a32daa"
+        }
+      },
+      "changedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      },
+      "restoredChangedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "sample-h-north",
+      "time": 14,
+      "camera": {
+        "current": "sample-h-north",
+        "eye": [
+          181.0601,
+          136.1623,
+          -1212.8685
+        ],
+        "quaternion": [
+          0.1033905527383131,
+          0.02096399872548667,
+          -0.002179647308778166,
+          0.9944174945662979
+        ],
+        "fov": 57
+      },
+      "actualWalk": false,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "ground": true,
+      "sun": [
+        {
+          "map": true,
+          "auto": true
+        }
+      ],
+      "originalCounts": [
+        1,
+        21,
+        87,
+        53
+      ],
+      "candidateCounts": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "trials": {
+        "candidate": {
+          "calls": 698,
+          "triangles": 5377068,
+          "pixelSha256": "01755f03c353d32404c20ea962018164731aab120c068c0f307a06c5972001dc"
+        },
+        "fullInstanceBuffer": {
+          "calls": 702,
+          "triangles": 6775225,
+          "pixelSha256": "01755f03c353d32404c20ea962018164731aab120c068c0f307a06c5972001dc"
+        },
+        "candidateRestored": {
+          "calls": 698,
+          "triangles": 5377068,
+          "pixelSha256": "01755f03c353d32404c20ea962018164731aab120c068c0f307a06c5972001dc"
+        }
+      },
+      "changedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      },
+      "restoredChangedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "return-a",
+      "time": 14,
+      "camera": {
+        "current": "art-a-street",
+        "eye": [
+          278.8,
+          10.488,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440409,
+          -0.009834585659995631,
+          -0.00003223795934194156,
+          0.9999462663720154
+        ],
+        "fov": 35.63777782904556
+      },
+      "actualWalk": false,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "ground": true,
+      "sun": [
+        {
+          "map": true,
+          "auto": true
+        }
+      ],
+      "originalCounts": [
+        1,
+        21,
+        87,
+        53
+      ],
+      "candidateCounts": [
+        0,
+        4,
+        32,
+        41
+      ],
+      "trials": {
+        "candidate": {
+          "calls": 1593,
+          "triangles": 7437950,
+          "pixelSha256": "0fa9c246600c1a0d6d550ad7fee13127cfdb0dcf81717ed0647e1574f3339ac5"
+        },
+        "fullInstanceBuffer": {
+          "calls": 1594,
+          "triangles": 8009780,
+          "pixelSha256": "0fa9c246600c1a0d6d550ad7fee13127cfdb0dcf81717ed0647e1574f3339ac5"
+        },
+        "candidateRestored": {
+          "calls": 1593,
+          "triangles": 7437950,
+          "pixelSha256": "4a5fe8e7477c4353919fe270505847c0422cfe1d434381818944de26fd41defa"
+        }
+      },
+      "changedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      },
+      "restoredChangedPixels": {
+        "count": 1,
+        "max": 1,
+        "bounds": [
+          613,
+          568,
+          613,
+          568
+        ]
+      }
+    },
+    {
+      "view": "a-new-wind",
+      "time": 47.3,
+      "camera": {
+        "current": "art-a-street",
+        "eye": [
+          278.8,
+          10.488,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440409,
+          -0.009834585659995631,
+          -0.00003223795934194156,
+          0.9999462663720154
+        ],
+        "fov": 35.63777782904556
+      },
+      "actualWalk": false,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "ground": true,
+      "sun": [
+        {
+          "map": true,
+          "auto": true
+        }
+      ],
+      "originalCounts": [
+        1,
+        21,
+        87,
+        53
+      ],
+      "candidateCounts": [
+        0,
+        4,
+        32,
+        41
+      ],
+      "trials": {
+        "candidate": {
+          "calls": 1593,
+          "triangles": 7437966,
+          "pixelSha256": "583719172381bc390cc16bc45f85890012c33f28c48fe3631a6c5d79d3922629"
+        },
+        "fullInstanceBuffer": {
+          "calls": 1594,
+          "triangles": 8009796,
+          "pixelSha256": "583719172381bc390cc16bc45f85890012c33f28c48fe3631a6c5d79d3922629"
+        },
+        "candidateRestored": {
+          "calls": 1593,
+          "triangles": 7437966,
+          "pixelSha256": "47f1be349d09b0275d43bd7971ae32c634e54d869acca285b8ddfbff8841ca55"
+        }
+      },
+      "changedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      },
+      "restoredChangedPixels": {
+        "count": 1,
+        "max": 1,
+        "bounds": [
+          394,
+          437,
+          394,
+          437
+        ]
+      }
+    },
+    {
+      "view": "harbor-new-time",
+      "time": 47.3,
+      "camera": {
+        "current": "sample-e-harbour",
+        "eye": [
+          -49.3148,
+          6.0969,
+          1121.5
+        ],
+        "quaternion": [
+          0.014730707497095328,
+          -0.7342518484654964,
+          0.01594041117183272,
+          0.6785301265038345
+        ],
+        "fov": 57
+      },
+      "actualWalk": false,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "ground": true,
+      "sun": [
+        {
+          "map": true,
+          "auto": true
+        }
+      ],
+      "originalCounts": [
+        1,
+        21,
+        87,
+        53
+      ],
+      "candidateCounts": [
+        0,
+        1,
+        22,
+        4
+      ],
+      "trials": {
+        "candidate": {
+          "calls": 1524,
+          "triangles": 7188597,
+          "pixelSha256": "9a947a9c246247b1b3d0203dbee9e0371ef952b5f39974498d6b8e2a31399316"
+        },
+        "fullInstanceBuffer": {
+          "calls": 1525,
+          "triangles": 8410180,
+          "pixelSha256": "9a947a9c246247b1b3d0203dbee9e0371ef952b5f39974498d6b8e2a31399316"
+        },
+        "candidateRestored": {
+          "calls": 1524,
+          "triangles": 7188597,
+          "pixelSha256": "9a947a9c246247b1b3d0203dbee9e0371ef952b5f39974498d6b8e2a31399316"
+        }
+      },
+      "changedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      },
+      "restoredChangedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      }
+    },
+    {
+      "view": "third-real-walk",
+      "time": 47.3,
+      "camera": {
+        "current": "walking",
+        "eye": [
+          281.5712118871722,
+          11.236197821900376,
+          933.5883108062886
+        ],
+        "quaternion": [
+          -0.1227948780024292,
+          0.034635056521752264,
+          0.004288091629490116,
+          0.9918182510249952
+        ],
+        "fov": 58
+      },
+      "actualWalk": true,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "glError": 0,
+      "ground": true,
+      "sun": [
+        {
+          "map": true,
+          "auto": true
+        }
+      ],
+      "originalCounts": [
+        1,
+        21,
+        87,
+        53
+      ],
+      "candidateCounts": [
+        1,
+        5,
+        52,
+        45
+      ],
+      "trials": {
+        "candidate": {
+          "calls": 1688,
+          "triangles": 8150620,
+          "pixelSha256": "bc9459cf2db0bf6eea12f905072676985d21848fc66cc14aa56a88f606dc1771"
+        },
+        "fullInstanceBuffer": {
+          "calls": 1688,
+          "triangles": 8495177,
+          "pixelSha256": "bc9459cf2db0bf6eea12f905072676985d21848fc66cc14aa56a88f606dc1771"
+        },
+        "candidateRestored": {
+          "calls": 1688,
+          "triangles": 8150620,
+          "pixelSha256": "bc9459cf2db0bf6eea12f905072676985d21848fc66cc14aa56a88f606dc1771"
+        }
+      },
+      "changedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      },
+      "restoredChangedPixels": {
+        "count": 0,
+        "max": 0,
+        "bounds": null
+      }
+    }
+  ],
+  "allPixelExact": true,
+  "allRestoresExact": false,
+  "strictNativeExit": 1,
+  "allTriangleDeltasNonnegative": true,
+  "walk": {
+    "before": [
+      281.6,
+      8.812,
+      934
+    ],
+    "after": [
+      281.2854546324609,
+      8.686050166934395,
+      929.5017916762284
+    ],
+    "distance": 4.509192490046094,
+    "keys": [
+      {
+        "type": "keydown",
+        "trusted": true
+      },
+      {
+        "type": "keyup",
+        "trusted": true
+      }
+    ]
+  },
+  "networkCanceledCount": 3,
+  "jsExceptionCount": 0
+}
