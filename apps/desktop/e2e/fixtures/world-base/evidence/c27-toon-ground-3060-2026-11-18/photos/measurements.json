@@ -1,0 +1,3061 @@
+{
+  "source": "e00875bd88109c6b3eb685bbb5aec8d01ef4bf5c",
+  "baseline": "a281e7a8acb8557a6d8fe399a7c57eff195f5879",
+  "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "size": [
+    1440,
+    900
+  ],
+  "DPR": 1,
+  "clock": 14,
+  "AO": 0.55,
+  "sessions": {
+    "evening-on": {
+      "dir": "gpu-modern-after-c27-evening-on-e00875b",
+      "exit": 0,
+      "headAfter": "e00875bd88109c6b3eb685bbb5aec8d01ef4bf5c",
+      "ok": true,
+      "renderOk": true,
+      "stage": "complete",
+      "sourceUnchanged": true,
+      "driverUnchanged": true,
+      "assetsUnchanged": true,
+      "restoreUnchanged": true,
+      "exceptions": [],
+      "httpErrors": [],
+      "transportClean": true,
+      "captureCount": 27,
+      "networkFailures": [],
+      "shopGeneratorSha256": {
+        "upstream/sakuragaoka/src/world/shopsA/konbini.js": "df15e6a08f1ad3f3a79df30e87d80390eb81f6b780fcf8de2c7a0efd4705d2ca",
+        "upstream/sakuragaoka/src/world/shopsA/cafe.js": "83b7a557a1c7ee21dfb3126c79b86ac24df75578c702043a9ec8a48b3ffe9870",
+        "upstream/sakuragaoka/src/world/shopsA/flower.js": "308594755163fe0bb956e3f6dcfe5222fe3413924112fbd76de8e32e24ca5274",
+        "upstream/sakuragaoka/src/world/shopsA/books.js": "0261e43a779dc465c6df1bb61f3a7f631273f2c6849167238883bb2f1545367f",
+        "upstream/sakuragaoka/src/world/shopsB/ramen.js": "7933892092e6fcc34c60940f9957e86f6a65c3c8a9c5c16ee6695fe1b3568e2a",
+        "upstream/sakuragaoka/src/world/shopsB/general.js": "3c88d0ebffaebfd52103393d4ada19af664d9e721b89c34731fca1b09bd57ed2",
+        "upstream/sakuragaoka/src/world/shopsB/bike.js": "27a10e0a6a7216abdf2e7f5fdd1c654c58898fa761b6d62a02639cc4fabc8c99",
+        "upstream/sakuragaoka/src/world/shopsB/wagashi.js": "96d7717b9cb59807a66e5d8d2ed3a32b73a382e06a6620416fb831f1a5f730cb"
+      }
+    },
+    "evening-off": {
+      "dir": "gpu-modern-after-c27-evening-off-e00875b",
+      "exit": 1,
+      "headAfter": "e00875bd88109c6b3eb685bbb5aec8d01ef4bf5c",
+      "ok": false,
+      "renderOk": true,
+      "stage": "complete",
+      "sourceUnchanged": true,
+      "driverUnchanged": true,
+      "assetsUnchanged": true,
+      "restoreUnchanged": true,
+      "exceptions": [],
+      "httpErrors": [],
+      "transportClean": false,
+      "captureCount": 27,
+      "networkFailures": [
+        {
+          "resource": "plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "resource": "plastic_crate_02.bin",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "shopGeneratorSha256": {
+        "upstream/sakuragaoka/src/world/shopsA/konbini.js": "df15e6a08f1ad3f3a79df30e87d80390eb81f6b780fcf8de2c7a0efd4705d2ca",
+        "upstream/sakuragaoka/src/world/shopsA/cafe.js": "83b7a557a1c7ee21dfb3126c79b86ac24df75578c702043a9ec8a48b3ffe9870",
+        "upstream/sakuragaoka/src/world/shopsA/flower.js": "308594755163fe0bb956e3f6dcfe5222fe3413924112fbd76de8e32e24ca5274",
+        "upstream/sakuragaoka/src/world/shopsA/books.js": "0261e43a779dc465c6df1bb61f3a7f631273f2c6849167238883bb2f1545367f",
+        "upstream/sakuragaoka/src/world/shopsB/ramen.js": "7933892092e6fcc34c60940f9957e86f6a65c3c8a9c5c16ee6695fe1b3568e2a",
+        "upstream/sakuragaoka/src/world/shopsB/bike.js": "27a10e0a6a7216abdf2e7f5fdd1c654c58898fa761b6d62a02639cc4fabc8c99",
+        "upstream/sakuragaoka/src/world/shopsB/general.js": "3c88d0ebffaebfd52103393d4ada19af664d9e721b89c34731fca1b09bd57ed2",
+        "upstream/sakuragaoka/src/world/shopsB/wagashi.js": "96d7717b9cb59807a66e5d8d2ed3a32b73a382e06a6620416fb831f1a5f730cb"
+      }
+    },
+    "afternoon-on": {
+      "dir": "gpu-modern-after-c27-afternoon-on-e00875b",
+      "exit": 1,
+      "headAfter": "e00875bd88109c6b3eb685bbb5aec8d01ef4bf5c",
+      "ok": false,
+      "renderOk": true,
+      "stage": "complete",
+      "sourceUnchanged": true,
+      "driverUnchanged": true,
+      "assetsUnchanged": true,
+      "restoreUnchanged": true,
+      "exceptions": [],
+      "httpErrors": [],
+      "transportClean": false,
+      "captureCount": 15,
+      "networkFailures": [
+        {
+          "resource": "plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "shopGeneratorSha256": {
+        "upstream/sakuragaoka/src/world/shopsA/konbini.js": "df15e6a08f1ad3f3a79df30e87d80390eb81f6b780fcf8de2c7a0efd4705d2ca",
+        "upstream/sakuragaoka/src/world/shopsA/cafe.js": "83b7a557a1c7ee21dfb3126c79b86ac24df75578c702043a9ec8a48b3ffe9870",
+        "upstream/sakuragaoka/src/world/shopsA/flower.js": "308594755163fe0bb956e3f6dcfe5222fe3413924112fbd76de8e32e24ca5274",
+        "upstream/sakuragaoka/src/world/shopsA/books.js": "0261e43a779dc465c6df1bb61f3a7f631273f2c6849167238883bb2f1545367f",
+        "upstream/sakuragaoka/src/world/shopsB/bike.js": "27a10e0a6a7216abdf2e7f5fdd1c654c58898fa761b6d62a02639cc4fabc8c99",
+        "upstream/sakuragaoka/src/world/shopsB/wagashi.js": "96d7717b9cb59807a66e5d8d2ed3a32b73a382e06a6620416fb831f1a5f730cb",
+        "upstream/sakuragaoka/src/world/shopsB/ramen.js": "7933892092e6fcc34c60940f9957e86f6a65c3c8a9c5c16ee6695fe1b3568e2a",
+        "upstream/sakuragaoka/src/world/shopsB/general.js": "3c88d0ebffaebfd52103393d4ada19af664d9e721b89c34731fca1b09bd57ed2"
+      }
+    },
+    "afternoon-off": {
+      "dir": "gpu-modern-after-c27-afternoon-off-e00875b",
+      "exit": 1,
+      "headAfter": "e00875bd88109c6b3eb685bbb5aec8d01ef4bf5c",
+      "ok": false,
+      "renderOk": true,
+      "stage": "complete",
+      "sourceUnchanged": true,
+      "driverUnchanged": true,
+      "assetsUnchanged": true,
+      "restoreUnchanged": true,
+      "exceptions": [],
+      "httpErrors": [],
+      "transportClean": false,
+      "captureCount": 15,
+      "networkFailures": [
+        {
+          "resource": "plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "shopGeneratorSha256": {
+        "upstream/sakuragaoka/src/world/shopsA/konbini.js": "df15e6a08f1ad3f3a79df30e87d80390eb81f6b780fcf8de2c7a0efd4705d2ca",
+        "upstream/sakuragaoka/src/world/shopsA/cafe.js": "83b7a557a1c7ee21dfb3126c79b86ac24df75578c702043a9ec8a48b3ffe9870",
+        "upstream/sakuragaoka/src/world/shopsA/flower.js": "308594755163fe0bb956e3f6dcfe5222fe3413924112fbd76de8e32e24ca5274",
+        "upstream/sakuragaoka/src/world/shopsA/books.js": "0261e43a779dc465c6df1bb61f3a7f631273f2c6849167238883bb2f1545367f",
+        "upstream/sakuragaoka/src/world/shopsB/wagashi.js": "96d7717b9cb59807a66e5d8d2ed3a32b73a382e06a6620416fb831f1a5f730cb",
+        "upstream/sakuragaoka/src/world/shopsB/bike.js": "27a10e0a6a7216abdf2e7f5fdd1c654c58898fa761b6d62a02639cc4fabc8c99",
+        "upstream/sakuragaoka/src/world/shopsB/ramen.js": "7933892092e6fcc34c60940f9957e86f6a65c3c8a9c5c16ee6695fe1b3568e2a",
+        "upstream/sakuragaoka/src/world/shopsB/general.js": "3c88d0ebffaebfd52103393d4ada19af664d9e721b89c34731fca1b09bd57ed2"
+      }
+    },
+    "band-isolation": {
+      "dir": "gpu-modern-after-c27-bands-off-e00875b",
+      "exit": 1,
+      "headAfter": "e00875bd88109c6b3eb685bbb5aec8d01ef4bf5c",
+      "ok": false,
+      "renderOk": true,
+      "stage": "complete",
+      "sourceUnchanged": true,
+      "driverUnchanged": true,
+      "assetsUnchanged": true,
+      "restoreUnchanged": true,
+      "exceptions": [],
+      "httpErrors": [],
+      "transportClean": false,
+      "captureCount": 27,
+      "networkFailures": [
+        {
+          "resource": "menhir.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "resource": "boulders.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "shopGeneratorSha256": {
+        "upstream/sakuragaoka/src/world/shopsA/konbini.js": "df15e6a08f1ad3f3a79df30e87d80390eb81f6b780fcf8de2c7a0efd4705d2ca",
+        "upstream/sakuragaoka/src/world/shopsA/cafe.js": "83b7a557a1c7ee21dfb3126c79b86ac24df75578c702043a9ec8a48b3ffe9870",
+        "upstream/sakuragaoka/src/world/shopsA/flower.js": "308594755163fe0bb956e3f6dcfe5222fe3413924112fbd76de8e32e24ca5274",
+        "upstream/sakuragaoka/src/world/shopsA/books.js": "0261e43a779dc465c6df1bb61f3a7f631273f2c6849167238883bb2f1545367f",
+        "upstream/sakuragaoka/src/world/shopsB/ramen.js": "7933892092e6fcc34c60940f9957e86f6a65c3c8a9c5c16ee6695fe1b3568e2a",
+        "upstream/sakuragaoka/src/world/shopsB/bike.js": "27a10e0a6a7216abdf2e7f5fdd1c654c58898fa761b6d62a02639cc4fabc8c99",
+        "upstream/sakuragaoka/src/world/shopsB/general.js": "3c88d0ebffaebfd52103393d4ada19af664d9e721b89c34731fca1b09bd57ed2",
+        "upstream/sakuragaoka/src/world/shopsB/wagashi.js": "96d7717b9cb59807a66e5d8d2ed3a32b73a382e06a6620416fb831f1a5f730cb"
+      }
+    }
+  },
+  "bandIsolation": {
+    "original": {
+      "lit": {
+        "levels": [
+          0,
+          0.55,
+          1
+        ],
+        "edges": [
+          0.16,
+          0.6
+        ],
+        "width": 0.045,
+        "strength": 1
+      },
+      "line": {
+        "width": 1.5,
+        "strength": 0.95,
+        "sil": [
+          0.025,
+          0.09
+        ],
+        "crease": [
+          0.06,
+          0.18
+        ],
+        "creaseWeight": 0.8,
+        "fade": [
+          35,
+          115
+        ],
+        "tint": [
+          0.2,
+          0.21,
+          0.34
+        ]
+      },
+      "rim": {
+        "color": [
+          1,
+          0.52,
+          0.22
+        ],
+        "strength": 0.2,
+        "power": 3
+      }
+    },
+    "actual": {
+      "lit": {
+        "levels": [
+          0,
+          0.55,
+          1
+        ],
+        "edges": [
+          0.16,
+          0.6
+        ],
+        "width": 0.045,
+        "strength": 0
+      },
+      "line": {
+        "width": 1.5,
+        "strength": 0.95,
+        "sil": [
+          0.025,
+          0.09
+        ],
+        "crease": [
+          0.06,
+          0.18
+        ],
+        "creaseWeight": 0.8,
+        "fade": [
+          35,
+          115
+        ],
+        "tint": [
+          0.2,
+          0.21,
+          0.34
+        ]
+      },
+      "rim": {
+        "color": [
+          1,
+          0.52,
+          0.22
+        ],
+        "strength": 0.2,
+        "power": 3
+      }
+    },
+    "changed": "evening.lit.strength",
+    "requestUrl": "http://127.0.0.1:51961/src/toon.json"
+  },
+  "pairs": {
+    "evening": [
+      {
+        "view": "service-corner",
+        "camera": {
+          "position": [
+            308.4,
+            9.612,
+            872.9
+          ],
+          "quaternion": [
+            -0.08432325046436126,
+            0.5331397072650681,
+            0.05351200213385738,
+            0.8401119613456697
+          ],
+          "fov": 55
+        },
+        "shadowCameraAmount": 1,
+        "c26OnVsC27Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c27OffVsOn": {
+          "pixels": 1296000,
+          "changed": 155304,
+          "above8": 91308,
+          "maximum": 130,
+          "meanRGBChange": [
+            -0.791,
+            -0.819,
+            -0.908
+          ],
+          "meanYChange": -0.82
+        },
+        "images": {
+          "off": {
+            "file": "images/evening-service-corner-off.jpg",
+            "pngSha256": "aa08357b53184a02cbd12399397e75f3bc8c7b41d1f11048ec92347a6d795950",
+            "jpegSha256": "7f6e36eb48483b0aea513db23e00016bde16cf05c29da49e2fc757b6343f4bdb"
+          },
+          "on": {
+            "file": "images/evening-service-corner-on.jpg",
+            "pngSha256": "bd2eb8e861d38cdae1ed32de39a01f386729984de6b79b131c39f6bd26777b75",
+            "jpegSha256": "6ef208892a2c8f6f16b2255f5bc851edaebdeae340b920f9fc9f9146db1c60ec"
+          }
+        },
+        "c26PngSha256": "aa08357b53184a02cbd12399397e75f3bc8c7b41d1f11048ec92347a6d795950",
+        "repeatCheck": {
+          "c27OffCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "c26OnCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "baselineDifferencesAlsoInEitherRepeat": 0
+        },
+        "isolated": {
+          "bandOffVsOn": {
+            "pixels": 1296000,
+            "changed": 82885,
+            "above8": 28144,
+            "maximum": 51,
+            "meanRGBChange": [
+              0.327,
+              0.155,
+              0.007
+            ],
+            "meanYChange": 0.181
+          },
+          "newLineZeroVsNominalAtBandOff": {
+            "pixels": 1296000,
+            "changed": 65782,
+            "above8": 54226,
+            "maximum": 133,
+            "meanRGBChange": [
+              -1.761,
+              -1.545,
+              -1.38
+            ],
+            "meanYChange": -1.579
+          },
+          "bandOffPngSha256": "fb109465805c67157ed2113e74fbe36596ed46f6dc372bf69df1655b0eaabe93",
+          "lineZeroPngSha256": "a0b242bd66d02878b4447af881265dbb36ff47060e14d78e2ba430224ceb4430",
+          "regions": {
+            "bicycle": {
+              "rect": [
+                1050,
+                455,
+                1180,
+                580
+              ],
+              "bandOffVsOn": {
+                "pixels": 16250,
+                "changed": 43,
+                "above8": 0,
+                "maximum": 1,
+                "meanRGBChange": [
+                  0.002,
+                  0.0,
+                  0.0
+                ],
+                "meanYChange": 0.001
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 16250,
+                "changed": 2942,
+                "above8": 2537,
+                "maximum": 62,
+                "meanRGBChange": [
+                  -4.805,
+                  -4.668,
+                  -5.058
+                ],
+                "meanYChange": -4.725
+              },
+              "allOffVsOn": {
+                "pixels": 16250,
+                "changed": 3575,
+                "above8": 2770,
+                "maximum": 62,
+                "meanRGBChange": [
+                  -3.418,
+                  -3.17,
+                  -3.501
+                ],
+                "meanYChange": -3.247
+              }
+            }
+          }
+        }
+      },
+      {
+        "view": "laundry-details",
+        "camera": {
+          "position": [
+            288,
+            14.384808464050293,
+            777.9
+          ],
+          "quaternion": [
+            -0.15522850149956677,
+            0.6173580660361093,
+            0.12595148976979553,
+            0.7608609287163607
+          ],
+          "fov": 55
+        },
+        "shadowCameraAmount": 1,
+        "c26OnVsC27Off": {
+          "pixels": 1296000,
+          "changed": 3,
+          "above8": 0,
+          "maximum": 1,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c27OffVsOn": {
+          "pixels": 1296000,
+          "changed": 709618,
+          "above8": 316558,
+          "maximum": 108,
+          "meanRGBChange": [
+            2.076,
+            1.075,
+            -0.197
+          ],
+          "meanYChange": 1.196
+        },
+        "images": {
+          "off": {
+            "file": "images/evening-laundry-details-off.jpg",
+            "pngSha256": "fbd02a33fce963dbc9c02f44a06f045dfef72b779e3c86179571d5e632667b83",
+            "jpegSha256": "ea4a46977dd4f2fe7c641f8aa1e5a1297a73e1e37eeed1aff433d86dfacffcff"
+          },
+          "on": {
+            "file": "images/evening-laundry-details-on.jpg",
+            "pngSha256": "7d13f445a1cfe60db1cf63189f17dc2a24843a4af453c9faa4657ac4a1d04085",
+            "jpegSha256": "b9cf6ec6ead7453ed9a7ae59eef5dd072dce1e11548bf13c9752f756525dea8e"
+          }
+        },
+        "c26PngSha256": "3cf21004fc7d8a88389a8b99f046d66d3489a21a023eefb88f2af3039bab4f14",
+        "repeatCheck": {
+          "c27OffCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 3,
+            "above8": 0,
+            "maximum": 1,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "c26OnCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 3,
+            "above8": 0,
+            "maximum": 1,
+            "meanRGBChange": [
+              -0.0,
+              -0.0,
+              0.0
+            ],
+            "meanYChange": -0.0
+          },
+          "baselineDifferencesAlsoInEitherRepeat": 3,
+          "baselineDifferenceCoordinates": [
+            {
+              "xy": [
+                813,
+                148
+              ],
+              "c26-1": [
+                131,
+                144,
+                155
+              ],
+              "c26-2": [
+                131,
+                143,
+                155
+              ],
+              "c27off-1": [
+                131,
+                143,
+                155
+              ],
+              "c27off-2": [
+                131,
+                144,
+                155
+              ]
+            },
+            {
+              "xy": [
+                808,
+                212
+              ],
+              "c26-1": [
+                139,
+                142,
+                156
+              ],
+              "c26-2": [
+                138,
+                142,
+                156
+              ],
+              "c27off-1": [
+                138,
+                142,
+                156
+              ],
+              "c27off-2": [
+                139,
+                142,
+                156
+              ]
+            },
+            {
+              "xy": [
+                811,
+                261
+              ],
+              "c26-1": [
+                138,
+                141,
+                154
+              ],
+              "c26-2": [
+                137,
+                141,
+                154
+              ],
+              "c27off-1": [
+                137,
+                141,
+                154
+              ],
+              "c27off-2": [
+                138,
+                141,
+                154
+              ]
+            }
+          ]
+        },
+        "isolated": {
+          "bandOffVsOn": {
+            "pixels": 1296000,
+            "changed": 667156,
+            "above8": 268221,
+            "maximum": 44,
+            "meanRGBChange": [
+              2.908,
+              1.862,
+              0.495
+            ],
+            "meanYChange": 1.986
+          },
+          "newLineZeroVsNominalAtBandOff": {
+            "pixels": 1296000,
+            "changed": 51972,
+            "above8": 42262,
+            "maximum": 131,
+            "meanRGBChange": [
+              -1.391,
+              -1.272,
+              -0.964
+            ],
+            "meanYChange": -1.275
+          },
+          "bandOffPngSha256": "83f271ba1deab3dd9809a238c8b173c8c955e4768129489be147c288c9c34b32",
+          "lineZeroPngSha256": "5c8c4d1e70a4e4148bb3d0d7f2784f7086632e21381a2b8a12fda015616e3c00",
+          "regions": {
+            "perforated-crate": {
+              "rect": [
+                665,
+                537,
+                755,
+                579
+              ],
+              "bandOffVsOn": {
+                "pixels": 3780,
+                "changed": 2019,
+                "above8": 370,
+                "maximum": 37,
+                "meanRGBChange": [
+                  -0.537,
+                  -0.226,
+                  -0.276
+                ],
+                "meanYChange": -0.296
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 3780,
+                "changed": 136,
+                "above8": 68,
+                "maximum": 26,
+                "meanRGBChange": [
+                  -0.34,
+                  -0.31,
+                  -0.265
+                ],
+                "meanYChange": -0.313
+              },
+              "allOffVsOn": {
+                "pixels": 3780,
+                "changed": 2150,
+                "above8": 597,
+                "maximum": 49,
+                "meanRGBChange": [
+                  0.236,
+                  0.012,
+                  -0.79
+                ],
+                "meanYChange": 0.002
+              }
+            },
+            "steps": {
+              "rect": [
+                166,
+                351,
+                476,
+                525
+              ],
+              "bandOffVsOn": {
+                "pixels": 53940,
+                "changed": 30663,
+                "above8": 20461,
+                "maximum": 14,
+                "meanRGBChange": [
+                  4.728,
+                  2.72,
+                  0.54
+                ],
+                "meanYChange": 2.99
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 53940,
+                "changed": 2745,
+                "above8": 2097,
+                "maximum": 87,
+                "meanRGBChange": [
+                  -1.893,
+                  -1.55,
+                  -1.005
+                ],
+                "meanYChange": -1.583
+              },
+              "allOffVsOn": {
+                "pixels": 53940,
+                "changed": 32378,
+                "above8": 22223,
+                "maximum": 79,
+                "meanRGBChange": [
+                  3.805,
+                  1.787,
+                  -0.307
+                ],
+                "meanYChange": 2.065
+              }
+            },
+            "sunlit-pavers": {
+              "rect": [
+                576,
+                705,
+                685,
+                806
+              ],
+              "bandOffVsOn": {
+                "pixels": 11009,
+                "changed": 11009,
+                "above8": 11008,
+                "maximum": 35,
+                "meanRGBChange": [
+                  28.144,
+                  15.026,
+                  4.188
+                ],
+                "meanYChange": 17.033
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 11009,
+                "changed": 0,
+                "above8": 0,
+                "maximum": 0,
+                "meanRGBChange": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "meanYChange": 0.0
+              },
+              "allOffVsOn": {
+                "pixels": 11009,
+                "changed": 11009,
+                "above8": 11008,
+                "maximum": 35,
+                "meanRGBChange": [
+                  28.145,
+                  15.027,
+                  4.188
+                ],
+                "meanYChange": 17.034
+              }
+            }
+          }
+        }
+      },
+      {
+        "view": "shop-interior",
+        "camera": {
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            -0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            0.7069324236562871
+          ],
+          "fov": 58
+        },
+        "shadowCameraAmount": 0,
+        "c26OnVsC27Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c27OffVsOn": {
+          "pixels": 1296000,
+          "changed": 62106,
+          "above8": 44985,
+          "maximum": 111,
+          "meanRGBChange": [
+            -1.585,
+            -1.351,
+            -0.922
+          ],
+          "meanYChange": -1.37
+        },
+        "images": {
+          "off": {
+            "file": "images/evening-shop-interior-off.jpg",
+            "pngSha256": "fc3d362422b711322a59eebf0d90a5e833d09635afabc21b825dd3c7882b7a9d",
+            "jpegSha256": "679ee15694a8a2f3712d7cac25fe2c17832d7ea0c519201315b1fe7bb511b207"
+          },
+          "on": {
+            "file": "images/evening-shop-interior-on.jpg",
+            "pngSha256": "5c7428fa8327cd9818a2a724c4a9aeb0efe65a553b96637429ade1bbdbac918c",
+            "jpegSha256": "93acb62781d76abbbe165ef320a38dce88c231b34556e893af28d857eedacd53"
+          }
+        },
+        "c26PngSha256": "fc3d362422b711322a59eebf0d90a5e833d09635afabc21b825dd3c7882b7a9d",
+        "repeatCheck": {
+          "c27OffCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "c26OnCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "baselineDifferencesAlsoInEitherRepeat": 0
+        },
+        "isolated": {
+          "bandOffVsOn": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "newLineZeroVsNominalAtBandOff": {
+            "pixels": 1296000,
+            "changed": 56566,
+            "above8": 46438,
+            "maximum": 123,
+            "meanRGBChange": [
+              -2.019,
+              -1.732,
+              -1.181
+            ],
+            "meanYChange": -1.754
+          },
+          "bandOffPngSha256": "5c7428fa8327cd9818a2a724c4a9aeb0efe65a553b96637429ade1bbdbac918c",
+          "lineZeroPngSha256": "930e31c3ab8b96bbd891ef729562a84c2a262604ad990df1ba2e5044d2890239",
+          "regions": {
+            "shelf": {
+              "rect": [
+                266,
+                454,
+                493,
+                575
+              ],
+              "bandOffVsOn": {
+                "pixels": 27467,
+                "changed": 0,
+                "above8": 0,
+                "maximum": 0,
+                "meanRGBChange": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "meanYChange": 0.0
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 27467,
+                "changed": 1198,
+                "above8": 1021,
+                "maximum": 104,
+                "meanRGBChange": [
+                  -2.599,
+                  -2.231,
+                  -1.56
+                ],
+                "meanYChange": -2.26
+              },
+              "allOffVsOn": {
+                "pixels": 27467,
+                "changed": 1253,
+                "above8": 1060,
+                "maximum": 98,
+                "meanRGBChange": [
+                  -1.839,
+                  -1.557,
+                  -1.08
+                ],
+                "meanYChange": -1.582
+              }
+            }
+          }
+        }
+      },
+      {
+        "view": "20-rear-eye",
+        "camera": {
+          "position": [
+            273,
+            14.755245542526229,
+            758
+          ],
+          "quaternion": [
+            -0.00013011891877658623,
+            0.9145142483742376,
+            -0.00029414054360230415,
+            -0.40455356390830466
+          ],
+          "fov": 58
+        },
+        "shadowCameraAmount": 1,
+        "c26OnVsC27Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c27OffVsOn": {
+          "pixels": 1296000,
+          "changed": 329248,
+          "above8": 177569,
+          "maximum": 139,
+          "meanRGBChange": [
+            0.094,
+            0.402,
+            -0.638
+          ],
+          "meanYChange": 0.262
+        },
+        "images": {
+          "off": {
+            "file": "images/evening-20-rear-eye-off.jpg",
+            "pngSha256": "f55e7a63d30bc49b62b5ef33033cb2850735b8e00da153bce1a07c47abc0ce2d",
+            "jpegSha256": "1809c963ec66a69d552e01f71f8ba75d12efe7b7b3a419a7f7235dbf97e44293"
+          },
+          "on": {
+            "file": "images/evening-20-rear-eye-on.jpg",
+            "pngSha256": "a0d837c381458e591438b63f3abb505cbb66dd87a5190e430edb2a35feb82330",
+            "jpegSha256": "6c516df072245171dc0b38768b6337e6b0c5ac92a432713eb9641209b8f838a1"
+          }
+        },
+        "c26PngSha256": "f55e7a63d30bc49b62b5ef33033cb2850735b8e00da153bce1a07c47abc0ce2d",
+        "repeatCheck": {
+          "c27OffCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "c26OnCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "baselineDifferencesAlsoInEitherRepeat": 0
+        },
+        "isolated": {
+          "bandOffVsOn": {
+            "pixels": 1296000,
+            "changed": 54957,
+            "above8": 5474,
+            "maximum": 39,
+            "meanRGBChange": [
+              0.148,
+              0.088,
+              0.026
+            ],
+            "meanYChange": 0.096
+          },
+          "newLineZeroVsNominalAtBandOff": {
+            "pixels": 1296000,
+            "changed": 130192,
+            "above8": 73864,
+            "maximum": 140,
+            "meanRGBChange": [
+              -1.979,
+              -1.713,
+              -0.987
+            ],
+            "meanYChange": -1.717
+          },
+          "bandOffPngSha256": "b94d6184053e6d25151d9cad583744aef501e19b1288ea76a53795105e673c58",
+          "lineZeroPngSha256": "018b8d601bf8fd836aaa4d668e082baffc087c6c1c78803ff7b773cfd1b46090",
+          "regions": {
+            "sunlit-upper-wall": {
+              "rect": [
+                486,
+                86,
+                509,
+                130
+              ],
+              "bandOffVsOn": {
+                "pixels": 1012,
+                "changed": 1012,
+                "above8": 0,
+                "maximum": 4,
+                "meanRGBChange": [
+                  3.165,
+                  2.134,
+                  0.648
+                ],
+                "meanYChange": 2.246
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 1012,
+                "changed": 0,
+                "above8": 0,
+                "maximum": 0,
+                "meanRGBChange": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "meanYChange": 0.0
+              },
+              "allOffVsOn": {
+                "pixels": 1012,
+                "changed": 1012,
+                "above8": 0,
+                "maximum": 4,
+                "meanRGBChange": [
+                  3.24,
+                  2.185,
+                  0.649
+                ],
+                "meanYChange": 2.298
+              }
+            },
+            "rear-shadow-wall": {
+              "rect": [
+                970,
+                495,
+                1015,
+                540
+              ],
+              "bandOffVsOn": {
+                "pixels": 2025,
+                "changed": 3,
+                "above8": 0,
+                "maximum": 1,
+                "meanRGBChange": [
+                  0.0,
+                  0.001,
+                  0.0
+                ],
+                "meanYChange": 0.001
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 2025,
+                "changed": 0,
+                "above8": 0,
+                "maximum": 0,
+                "meanRGBChange": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "meanYChange": 0.0
+              },
+              "allOffVsOn": {
+                "pixels": 2025,
+                "changed": 4,
+                "above8": 0,
+                "maximum": 1,
+                "meanRGBChange": [
+                  0.001,
+                  0.001,
+                  0.0
+                ],
+                "meanYChange": 0.001
+              }
+            },
+            "stair-rail": {
+              "rect": [
+                666,
+                192,
+                847,
+                454
+              ],
+              "bandOffVsOn": {
+                "pixels": 47422,
+                "changed": 112,
+                "above8": 0,
+                "maximum": 1,
+                "meanRGBChange": [
+                  0.001,
+                  0.001,
+                  0.0
+                ],
+                "meanYChange": 0.001
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 47422,
+                "changed": 13947,
+                "above8": 5629,
+                "maximum": 115,
+                "meanRGBChange": [
+                  -2.825,
+                  -2.248,
+                  -1.836
+                ],
+                "meanYChange": -2.341
+              },
+              "allOffVsOn": {
+                "pixels": 47422,
+                "changed": 14289,
+                "above8": 5062,
+                "maximum": 87,
+                "meanRGBChange": [
+                  -2.428,
+                  -1.846,
+                  -1.779
+                ],
+                "meanYChange": -1.965
+              }
+            },
+            "grass": {
+              "rect": [
+                230,
+                755,
+                355,
+                830
+              ],
+              "bandOffVsOn": {
+                "pixels": 9375,
+                "changed": 0,
+                "above8": 0,
+                "maximum": 0,
+                "meanRGBChange": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "meanYChange": 0.0
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 9375,
+                "changed": 527,
+                "above8": 463,
+                "maximum": 76,
+                "meanRGBChange": [
+                  -1.437,
+                  -1.631,
+                  -0.532
+                ],
+                "meanYChange": -1.51
+              },
+              "allOffVsOn": {
+                "pixels": 9375,
+                "changed": 3936,
+                "above8": 2728,
+                "maximum": 69,
+                "meanRGBChange": [
+                  3.823,
+                  4.199,
+                  -0.028
+                ],
+                "meanYChange": 3.814
+              }
+            },
+            "magenta-flower": {
+              "rect": [
+                487,
+                710,
+                520,
+                743
+              ],
+              "bandOffVsOn": {
+                "pixels": 1089,
+                "changed": 0,
+                "above8": 0,
+                "maximum": 0,
+                "meanRGBChange": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "meanYChange": 0.0
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 1089,
+                "changed": 191,
+                "above8": 180,
+                "maximum": 138,
+                "meanRGBChange": [
+                  -15.273,
+                  1.023,
+                  -6.332
+                ],
+                "meanYChange": -2.973
+              },
+              "allOffVsOn": {
+                "pixels": 1089,
+                "changed": 462,
+                "above8": 370,
+                "maximum": 137,
+                "meanRGBChange": [
+                  -9.508,
+                  4.021,
+                  -4.762
+                ],
+                "meanYChange": 0.511
+              }
+            },
+            "lamp": {
+              "rect": [
+                1110,
+                409,
+                1142,
+                428
+              ],
+              "bandOffVsOn": {
+                "pixels": 608,
+                "changed": 0,
+                "above8": 0,
+                "maximum": 0,
+                "meanRGBChange": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "meanYChange": 0.0
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 608,
+                "changed": 0,
+                "above8": 0,
+                "maximum": 0,
+                "meanRGBChange": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "meanYChange": 0.0
+              },
+              "allOffVsOn": {
+                "pixels": 608,
+                "changed": 2,
+                "above8": 0,
+                "maximum": 1,
+                "meanRGBChange": [
+                  0.003,
+                  0.0,
+                  0.0
+                ],
+                "meanYChange": 0.001
+              }
+            }
+          }
+        }
+      },
+      {
+        "view": "21-front-eye",
+        "camera": {
+          "position": [
+            274,
+            12.87812709172567,
+            783
+          ],
+          "quaternion": [
+            0.07422133960767584,
+            -0.5103582416049142,
+            0.044271975994965136,
+            0.8556083508909221
+          ],
+          "fov": 58
+        },
+        "shadowCameraAmount": 1,
+        "c26OnVsC27Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c27OffVsOn": {
+          "pixels": 1296000,
+          "changed": 657501,
+          "above8": 302994,
+          "maximum": 129,
+          "meanRGBChange": [
+            2.37,
+            1.324,
+            -0.018
+          ],
+          "meanYChange": 1.449
+        },
+        "images": {
+          "off": {
+            "file": "images/evening-21-front-eye-off.jpg",
+            "pngSha256": "598bb6329c49bc04f41908e8bef5fc0f9062f5323156dca5d17a3cd30b583420",
+            "jpegSha256": "c7575654fee02f09ea2bd5bcd04a59b220df9788c05a7535a28b3d8265dc1455"
+          },
+          "on": {
+            "file": "images/evening-21-front-eye-on.jpg",
+            "pngSha256": "f364ee2fd434a6ff73383870dfc9f2e5cd7e6e2dd8ed15121ac8689e4ebdfd59",
+            "jpegSha256": "a2191a36cbe403bc5161d6154109fb62a4473b8da2768d5e52daa5b7df5d3bab"
+          }
+        },
+        "c26PngSha256": "598bb6329c49bc04f41908e8bef5fc0f9062f5323156dca5d17a3cd30b583420",
+        "repeatCheck": {
+          "c27OffCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "c26OnCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "baselineDifferencesAlsoInEitherRepeat": 0
+        },
+        "isolated": {
+          "bandOffVsOn": {
+            "pixels": 1296000,
+            "changed": 593828,
+            "above8": 238535,
+            "maximum": 43,
+            "meanRGBChange": [
+              3.296,
+              2.062,
+              0.672
+            ],
+            "meanYChange": 2.224
+          },
+          "newLineZeroVsNominalAtBandOff": {
+            "pixels": 1296000,
+            "changed": 81382,
+            "above8": 61401,
+            "maximum": 137,
+            "meanRGBChange": [
+              -1.565,
+              -1.292,
+              -0.921
+            ],
+            "meanYChange": -1.323
+          },
+          "bandOffPngSha256": "3812e05cb8ba689169d12093b2e8ec823fd9e24bcb0aaae5fbb498dd0e8f7c30",
+          "lineZeroPngSha256": "1af0453d99f19aed8a3dbc9cca42dc028263d3766efb1d7f3b291cb00722a9f3",
+          "regions": {
+            "hedge": {
+              "rect": [
+                160,
+                650,
+                330,
+                726
+              ],
+              "bandOffVsOn": {
+                "pixels": 12920,
+                "changed": 11949,
+                "above8": 4895,
+                "maximum": 17,
+                "meanRGBChange": [
+                  6.671,
+                  5.634,
+                  1.499
+                ],
+                "meanYChange": 5.556
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 12920,
+                "changed": 1,
+                "above8": 0,
+                "maximum": 1,
+                "meanRGBChange": [
+                  -0.0,
+                  -0.0,
+                  0.0
+                ],
+                "meanYChange": -0.0
+              },
+              "allOffVsOn": {
+                "pixels": 12920,
+                "changed": 12502,
+                "above8": 4993,
+                "maximum": 18,
+                "meanRGBChange": [
+                  6.912,
+                  5.807,
+                  1.52
+                ],
+                "meanYChange": 5.732
+              }
+            },
+            "lightbox": {
+              "rect": [
+                468,
+                284,
+                528,
+                362
+              ],
+              "bandOffVsOn": {
+                "pixels": 4680,
+                "changed": 926,
+                "above8": 42,
+                "maximum": 21,
+                "meanRGBChange": [
+                  0.343,
+                  0.491,
+                  0.183
+                ],
+                "meanYChange": 0.438
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 4680,
+                "changed": 87,
+                "above8": 81,
+                "maximum": 121,
+                "meanRGBChange": [
+                  -0.746,
+                  -0.676,
+                  -0.451
+                ],
+                "meanYChange": -0.675
+              },
+              "allOffVsOn": {
+                "pixels": 4680,
+                "changed": 1030,
+                "above8": 85,
+                "maximum": 113,
+                "meanRGBChange": [
+                  -0.251,
+                  -0.037,
+                  -0.172
+                ],
+                "meanYChange": -0.092
+              }
+            },
+            "sunlit-stairs": {
+              "rect": [
+                688,
+                621,
+                883,
+                708
+              ],
+              "bandOffVsOn": {
+                "pixels": 16965,
+                "changed": 16610,
+                "above8": 8528,
+                "maximum": 23,
+                "meanRGBChange": [
+                  8.293,
+                  4.944,
+                  1.146
+                ],
+                "meanYChange": 5.382
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 16965,
+                "changed": 445,
+                "above8": 337,
+                "maximum": 89,
+                "meanRGBChange": [
+                  -1.303,
+                  -0.937,
+                  -0.447
+                ],
+                "meanYChange": -0.979
+              },
+              "allOffVsOn": {
+                "pixels": 16965,
+                "changed": 16585,
+                "above8": 8832,
+                "maximum": 71,
+                "meanRGBChange": [
+                  8.631,
+                  5.009,
+                  0.886
+                ],
+                "meanYChange": 5.482
+              }
+            }
+          }
+        }
+      },
+      {
+        "view": "station-street",
+        "camera": {
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -3.2237959341941705e-05,
+            0.9999462663720154
+          ],
+          "fov": 58
+        },
+        "shadowCameraAmount": 1,
+        "c26OnVsC27Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c27OffVsOn": {
+          "pixels": 1296000,
+          "changed": 243359,
+          "above8": 143315,
+          "maximum": 133,
+          "meanRGBChange": [
+            -0.398,
+            -0.537,
+            -0.596
+          ],
+          "meanYChange": -0.512
+        },
+        "images": {
+          "off": {
+            "file": "images/evening-station-street-off.jpg",
+            "pngSha256": "ed369553efa1c7639b91395dffcc9ad647e10909590cc580a5218101cce1f41c",
+            "jpegSha256": "800a311af4378b84daf806c87644f29eb59e013deacc0f5c2f100559a9944f00"
+          },
+          "on": {
+            "file": "images/evening-station-street-on.jpg",
+            "pngSha256": "946b0d2c01b917ae3b515f322325fb07cb0c34e42a215f0ec6454ecc5ead2e22",
+            "jpegSha256": "6ea735413d505037777ea0b376c14b4bda7aec0ce6859e624eaedb1e16a9d785"
+          }
+        },
+        "c26PngSha256": "ed369553efa1c7639b91395dffcc9ad647e10909590cc580a5218101cce1f41c",
+        "repeatCheck": {
+          "c27OffCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "c26OnCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "baselineDifferencesAlsoInEitherRepeat": 0
+        },
+        "isolated": {
+          "bandOffVsOn": {
+            "pixels": 1296000,
+            "changed": 148960,
+            "above8": 55947,
+            "maximum": 49,
+            "meanRGBChange": [
+              0.784,
+              0.397,
+              0.224
+            ],
+            "meanYChange": 0.466
+          },
+          "newLineZeroVsNominalAtBandOff": {
+            "pixels": 1296000,
+            "changed": 87263,
+            "above8": 71548,
+            "maximum": 141,
+            "meanRGBChange": [
+              -2.372,
+              -1.819,
+              -1.542
+            ],
+            "meanYChange": -1.917
+          },
+          "bandOffPngSha256": "5c1e5f1563af370022607effd005e4af60cb2213a5c5e5af933fe7005405ce75",
+          "lineZeroPngSha256": "c7d877b3f4cb8935dd384495c7fd73d417f76962ec475ce345daba8d59ff7028",
+          "regions": {
+            "E3-front": {
+              "rect": [
+                1220,
+                175,
+                1340,
+                230
+              ],
+              "bandOffVsOn": {
+                "pixels": 6600,
+                "changed": 15,
+                "above8": 0,
+                "maximum": 1,
+                "meanRGBChange": [
+                  0.002,
+                  0.0,
+                  0.0
+                ],
+                "meanYChange": 0.001
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 6600,
+                "changed": 366,
+                "above8": 247,
+                "maximum": 108,
+                "meanRGBChange": [
+                  -1.691,
+                  -1.708,
+                  -1.44
+                ],
+                "meanYChange": -1.685
+              },
+              "allOffVsOn": {
+                "pixels": 6600,
+                "changed": 442,
+                "above8": 286,
+                "maximum": 75,
+                "meanRGBChange": [
+                  -1.244,
+                  -1.216,
+                  -1.032
+                ],
+                "meanYChange": -1.209
+              }
+            },
+            "road": {
+              "rect": [
+                715,
+                720,
+                990,
+                835
+              ],
+              "bandOffVsOn": {
+                "pixels": 31625,
+                "changed": 83,
+                "above8": 0,
+                "maximum": 1,
+                "meanRGBChange": [
+                  0.001,
+                  0.001,
+                  0.0
+                ],
+                "meanYChange": 0.001
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 31625,
+                "changed": 0,
+                "above8": 0,
+                "maximum": 0,
+                "meanRGBChange": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "meanYChange": 0.0
+              },
+              "allOffVsOn": {
+                "pixels": 31625,
+                "changed": 89,
+                "above8": 0,
+                "maximum": 1,
+                "meanRGBChange": [
+                  0.002,
+                  0.001,
+                  0.0
+                ],
+                "meanYChange": 0.001
+              }
+            },
+            "sakura-canopy": {
+              "rect": [
+                390,
+                50,
+                650,
+                150
+              ],
+              "bandOffVsOn": {
+                "pixels": 26000,
+                "changed": 6631,
+                "above8": 2159,
+                "maximum": 43,
+                "meanRGBChange": [
+                  1.333,
+                  0.634,
+                  0.35
+                ],
+                "meanYChange": 0.762
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 26000,
+                "changed": 2181,
+                "above8": 1963,
+                "maximum": 124,
+                "meanRGBChange": [
+                  -3.294,
+                  -1.999,
+                  -1.966
+                ],
+                "meanYChange": -2.272
+              },
+              "allOffVsOn": {
+                "pixels": 26000,
+                "changed": 9295,
+                "above8": 4741,
+                "maximum": 98,
+                "meanRGBChange": [
+                  0.033,
+                  -0.153,
+                  -0.469
+                ],
+                "meanYChange": -0.136
+              }
+            }
+          }
+        }
+      },
+      {
+        "view": "street-detail",
+        "camera": {
+          "position": [
+            284.4,
+            10.281286274509803,
+            924
+          ],
+          "quaternion": [
+            -0.12465537443110519,
+            -0.38126635888515065,
+            -0.05196769176958736,
+            0.914547079280253
+          ],
+          "fov": 58
+        },
+        "shadowCameraAmount": 1,
+        "c26OnVsC27Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c27OffVsOn": {
+          "pixels": 1296000,
+          "changed": 83657,
+          "above8": 57991,
+          "maximum": 126,
+          "meanRGBChange": [
+            -1.168,
+            -0.876,
+            -0.769
+          ],
+          "meanYChange": -0.931
+        },
+        "images": {
+          "off": {
+            "file": "images/evening-street-detail-off.jpg",
+            "pngSha256": "c09c0be2ef999d77dbbaac8c9e97aafca35e3371a031e6b4a3a451ec45cfde09",
+            "jpegSha256": "54ebd71440a4063f59465402420a1b2d93e5508ed0af3caeb23f5a91552ab7df"
+          },
+          "on": {
+            "file": "images/evening-street-detail-on.jpg",
+            "pngSha256": "beead5a93564432ef2bb16d788e4acd3275ec10337cf4166044aa499574211c0",
+            "jpegSha256": "2d444f334e87146dbd0ba113afd5c47e5eb818eab5bc3f1702020b3829580e16"
+          }
+        },
+        "c26PngSha256": "c09c0be2ef999d77dbbaac8c9e97aafca35e3371a031e6b4a3a451ec45cfde09",
+        "repeatCheck": {
+          "c27OffCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "c26OnCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "baselineDifferencesAlsoInEitherRepeat": 0
+        },
+        "isolated": {
+          "bandOffVsOn": {
+            "pixels": 1296000,
+            "changed": 21176,
+            "above8": 6776,
+            "maximum": 43,
+            "meanRGBChange": [
+              0.098,
+              0.06,
+              0.016
+            ],
+            "meanYChange": 0.065
+          },
+          "newLineZeroVsNominalAtBandOff": {
+            "pixels": 1296000,
+            "changed": 65311,
+            "above8": 52252,
+            "maximum": 136,
+            "meanRGBChange": [
+              -1.646,
+              -1.231,
+              -0.98
+            ],
+            "meanYChange": -1.301
+          },
+          "bandOffPngSha256": "46afa7af2e47cbecf2315e6fb14652fbcc7ae5c8229b5f12c982bdabda782699",
+          "lineZeroPngSha256": "a797ea8f308b32e75d0bd45f8adb6d9e5ebdc442e2d2caf2e706b6be9a12210a",
+          "regions": {
+            "bench": {
+              "rect": [
+                965,
+                675,
+                1085,
+                700
+              ],
+              "bandOffVsOn": {
+                "pixels": 3000,
+                "changed": 0,
+                "above8": 0,
+                "maximum": 0,
+                "meanRGBChange": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "meanYChange": 0.0
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 3000,
+                "changed": 158,
+                "above8": 63,
+                "maximum": 52,
+                "meanRGBChange": [
+                  -0.807,
+                  -0.928,
+                  -1.023
+                ],
+                "meanYChange": -0.909
+              },
+              "allOffVsOn": {
+                "pixels": 3000,
+                "changed": 158,
+                "above8": 63,
+                "maximum": 52,
+                "meanRGBChange": [
+                  -0.787,
+                  -0.906,
+                  -1.002
+                ],
+                "meanYChange": -0.888
+              }
+            }
+          }
+        }
+      },
+      {
+        "view": "shop-door-eye",
+        "camera": {
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            -0.7069324236562871
+          ],
+          "fov": 58
+        },
+        "shadowCameraAmount": 0,
+        "c26OnVsC27Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c27OffVsOn": {
+          "pixels": 1296000,
+          "changed": 262929,
+          "above8": 109990,
+          "maximum": 144,
+          "meanRGBChange": [
+            -1.212,
+            -1.047,
+            -0.957
+          ],
+          "meanYChange": -1.076
+        },
+        "images": {
+          "off": {
+            "file": "images/evening-shop-door-eye-off.jpg",
+            "pngSha256": "c4066f4b62da49d9eceee4b5415d12e6840d54842093d708b2e9bf3820d765df",
+            "jpegSha256": "7bb93d5e37fdcd6452c7b970bfad55dfd8432929e1a661ddc2cbe47822ca477f"
+          },
+          "on": {
+            "file": "images/evening-shop-door-eye-on.jpg",
+            "pngSha256": "94b26d7153a3b00a4eda3f263701f8d5fbfb650d31c7486d94c70f460ccb0a19",
+            "jpegSha256": "2cd39f1bee202c566cb8e3b8b76106feb02cc7a5fb372bda74ed091c626651d4"
+          }
+        },
+        "c26PngSha256": "c4066f4b62da49d9eceee4b5415d12e6840d54842093d708b2e9bf3820d765df",
+        "repeatCheck": {
+          "c27OffCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "c26OnCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "baselineDifferencesAlsoInEitherRepeat": 0
+        },
+        "isolated": {
+          "bandOffVsOn": {
+            "pixels": 1296000,
+            "changed": 197062,
+            "above8": 40544,
+            "maximum": 49,
+            "meanRGBChange": [
+              0.377,
+              0.264,
+              0.087
+            ],
+            "meanYChange": 0.275
+          },
+          "newLineZeroVsNominalAtBandOff": {
+            "pixels": 1296000,
+            "changed": 72508,
+            "above8": 61943,
+            "maximum": 140,
+            "meanRGBChange": [
+              -2.358,
+              -1.949,
+              -1.476
+            ],
+            "meanYChange": -2.002
+          },
+          "bandOffPngSha256": "3b816daaef4b97661ec20bcd2013c88d293cd40f3580ab412991d3b1b472b62d",
+          "lineZeroPngSha256": "42849de8e78ed39f9f78f01f1d11e4cbd0bc19ce110e75a63ffd60f1baa893be",
+          "regions": {
+            "frame": {
+              "rect": [
+                680,
+                150,
+                730,
+                600
+              ],
+              "bandOffVsOn": {
+                "pixels": 22500,
+                "changed": 139,
+                "above8": 0,
+                "maximum": 1,
+                "meanRGBChange": [
+                  0.002,
+                  0.003,
+                  0.001
+                ],
+                "meanYChange": 0.003
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 22500,
+                "changed": 0,
+                "above8": 0,
+                "maximum": 0,
+                "meanRGBChange": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "meanYChange": 0.0
+              },
+              "allOffVsOn": {
+                "pixels": 22500,
+                "changed": 285,
+                "above8": 0,
+                "maximum": 1,
+                "meanRGBChange": [
+                  0.006,
+                  0.005,
+                  0.001
+                ],
+                "meanYChange": 0.005
+              }
+            },
+            "E2-sidewall": {
+              "rect": [
+                1020,
+                240,
+                1080,
+                360
+              ],
+              "bandOffVsOn": {
+                "pixels": 7200,
+                "changed": 50,
+                "above8": 0,
+                "maximum": 1,
+                "meanRGBChange": [
+                  0.003,
+                  0.003,
+                  0.001
+                ],
+                "meanYChange": 0.003
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 7200,
+                "changed": 0,
+                "above8": 0,
+                "maximum": 0,
+                "meanRGBChange": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "meanYChange": 0.0
+              },
+              "allOffVsOn": {
+                "pixels": 7200,
+                "changed": 92,
+                "above8": 0,
+                "maximum": 1,
+                "meanRGBChange": [
+                  0.006,
+                  0.005,
+                  0.002
+                ],
+                "meanYChange": 0.005
+              }
+            }
+          }
+        }
+      },
+      {
+        "view": "van-side",
+        "camera": {
+          "position": [
+            276.3147277851227,
+            11.210013480772632,
+            971.1462175645175
+          ],
+          "quaternion": [
+            -0.029182465008512196,
+            -0.7830517056478151,
+            -0.03684648464040197,
+            0.6201779958912754
+          ],
+          "fov": 47
+        },
+        "shadowCameraAmount": 1,
+        "c26OnVsC27Off": {
+          "pixels": 1296000,
+          "changed": 5,
+          "above8": 0,
+          "maximum": 1,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c27OffVsOn": {
+          "pixels": 1296000,
+          "changed": 311131,
+          "above8": 79615,
+          "maximum": 134,
+          "meanRGBChange": [
+            -0.868,
+            -0.869,
+            -0.762
+          ],
+          "meanYChange": -0.861
+        },
+        "images": {
+          "off": {
+            "file": "images/evening-van-side-off.jpg",
+            "pngSha256": "83a553ed5f3a1e92510b4e31450bc8a757396942871537613adc1f7f51e87ad2",
+            "jpegSha256": "a05a840b6e341c86ca0d78a5949a45afd9fcae1441d0bb45efe72bf6576ec808"
+          },
+          "on": {
+            "file": "images/evening-van-side-on.jpg",
+            "pngSha256": "2ceb82fcaaf1adb73a3a9af2c4ddf41726957884f95f54d0de6f8dceb410fd64",
+            "jpegSha256": "7f7fb912e5981c06423ccfe84c6ce83e988c01b2bfa3f20f324ebe9290262a49"
+          }
+        },
+        "c26PngSha256": "e01c45efe167eaba0a704b2aa6e80c93f48cc282058bb266426e6f36572b947f",
+        "repeatCheck": {
+          "c27OffCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "c26OnCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 5,
+            "above8": 0,
+            "maximum": 1,
+            "meanRGBChange": [
+              -0.0,
+              -0.0,
+              -0.0
+            ],
+            "meanYChange": -0.0
+          },
+          "baselineDifferencesAlsoInEitherRepeat": 5,
+          "baselineDifferenceCoordinates": [
+            {
+              "xy": [
+                440,
+                376
+              ],
+              "c26-1": [
+                158,
+                164,
+                177
+              ],
+              "c26-2": [
+                158,
+                164,
+                176
+              ],
+              "c27off-1": [
+                158,
+                164,
+                177
+              ],
+              "c27off-2": [
+                158,
+                164,
+                177
+              ]
+            },
+            {
+              "xy": [
+                439,
+                377
+              ],
+              "c26-1": [
+                192,
+                201,
+                206
+              ],
+              "c26-2": [
+                191,
+                201,
+                206
+              ],
+              "c27off-1": [
+                192,
+                201,
+                206
+              ],
+              "c27off-2": [
+                192,
+                201,
+                206
+              ]
+            },
+            {
+              "xy": [
+                439,
+                385
+              ],
+              "c26-1": [
+                190,
+                198,
+                204
+              ],
+              "c26-2": [
+                189,
+                198,
+                204
+              ],
+              "c27off-1": [
+                190,
+                198,
+                204
+              ],
+              "c27off-2": [
+                190,
+                198,
+                204
+              ]
+            },
+            {
+              "xy": [
+                433,
+                387
+              ],
+              "c26-1": [
+                152,
+                159,
+                172
+              ],
+              "c26-2": [
+                152,
+                158,
+                172
+              ],
+              "c27off-1": [
+                152,
+                159,
+                172
+              ],
+              "c27off-2": [
+                152,
+                159,
+                172
+              ]
+            },
+            {
+              "xy": [
+                436,
+                387
+              ],
+              "c26-1": [
+                152,
+                158,
+                172
+              ],
+              "c26-2": [
+                152,
+                158,
+                171
+              ],
+              "c27off-1": [
+                152,
+                158,
+                172
+              ],
+              "c27off-2": [
+                152,
+                158,
+                172
+              ]
+            }
+          ]
+        },
+        "isolated": {
+          "bandOffVsOn": {
+            "pixels": 1296000,
+            "changed": 261695,
+            "above8": 28986,
+            "maximum": 43,
+            "meanRGBChange": [
+              0.136,
+              0.116,
+              0.061
+            ],
+            "meanYChange": 0.116
+          },
+          "newLineZeroVsNominalAtBandOff": {
+            "pixels": 1296000,
+            "changed": 50657,
+            "above8": 45871,
+            "maximum": 132,
+            "meanRGBChange": [
+              -1.596,
+              -1.504,
+              -1.22
+            ],
+            "meanYChange": -1.503
+          },
+          "bandOffPngSha256": "0c2b1fed9e9594572e94ff130f207686543c5ae653a1318b37245f85a4c26522",
+          "lineZeroPngSha256": "db75fd2affd40889e22dc6b09d04a4ea2f5752edc7c6205f9030d70865672265",
+          "regions": {
+            "windscreen": {
+              "rect": [
+                530,
+                245,
+                575,
+                358
+              ],
+              "bandOffVsOn": {
+                "pixels": 5085,
+                "changed": 1858,
+                "above8": 29,
+                "maximum": 10,
+                "meanRGBChange": [
+                  0.103,
+                  0.057,
+                  0.016
+                ],
+                "meanYChange": 0.064
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 5085,
+                "changed": 456,
+                "above8": 449,
+                "maximum": 105,
+                "meanRGBChange": [
+                  -4.339,
+                  -4.192,
+                  -3.09
+                ],
+                "meanYChange": -4.144
+              },
+              "allOffVsOn": {
+                "pixels": 5085,
+                "changed": 2169,
+                "above8": 434,
+                "maximum": 101,
+                "meanRGBChange": [
+                  -3.468,
+                  -3.348,
+                  -2.453
+                ],
+                "meanYChange": -3.309
+              }
+            },
+            "fence": {
+              "rect": [
+                48,
+                740,
+                252,
+                868
+              ],
+              "bandOffVsOn": {
+                "pixels": 26112,
+                "changed": 4,
+                "above8": 0,
+                "maximum": 1,
+                "meanRGBChange": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "meanYChange": 0.0
+              },
+              "newLineZeroVsNominalAtBandOff": {
+                "pixels": 26112,
+                "changed": 1914,
+                "above8": 1914,
+                "maximum": 49,
+                "meanRGBChange": [
+                  -1.918,
+                  -2.684,
+                  -2.456
+                ],
+                "meanYChange": -2.505
+              },
+              "allOffVsOn": {
+                "pixels": 26112,
+                "changed": 3166,
+                "above8": 1914,
+                "maximum": 49,
+                "meanRGBChange": [
+                  -1.323,
+                  -1.777,
+                  -1.752
+                ],
+                "meanYChange": -1.679
+              }
+            }
+          }
+        }
+      }
+    ],
+    "afternoon": [
+      {
+        "view": "station-street",
+        "camera": {
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -3.2237959341941705e-05,
+            0.9999462663720154
+          ],
+          "fov": 58
+        },
+        "shadowCameraAmount": 1,
+        "c26OnVsC27Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c27OffVsOn": {
+          "pixels": 1296000,
+          "changed": 358915,
+          "above8": 155358,
+          "maximum": 126,
+          "meanRGBChange": [
+            0.009,
+            -0.172,
+            -0.365
+          ],
+          "meanYChange": -0.147
+        },
+        "images": {
+          "off": {
+            "file": "images/afternoon-station-street-off.jpg",
+            "pngSha256": "c59110432ff05c553678c414991a0a24be9dbeb5f29f1773aeaf7d2419b9e0d4",
+            "jpegSha256": "c2433265c94f65a94cc600e89ce50eb57c96692f84fb795fc0033bc3313504e1"
+          },
+          "on": {
+            "file": "images/afternoon-station-street-on.jpg",
+            "pngSha256": "4e4cad760ee7c107dabf6e3b6f70a6b3c2159770c4e8b148f14135552b661e8d",
+            "jpegSha256": "b93ef58cb42867ad38786cf0190f04bade3688e1dfb3c9e7f243e4f53dc3c080"
+          }
+        },
+        "c26PngSha256": "c59110432ff05c553678c414991a0a24be9dbeb5f29f1773aeaf7d2419b9e0d4",
+        "repeatCheck": {
+          "c27OffCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "c26OnCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "baselineDifferencesAlsoInEitherRepeat": 0
+        }
+      },
+      {
+        "view": "20-rear-eye",
+        "camera": {
+          "position": [
+            273,
+            14.755245542526229,
+            758
+          ],
+          "quaternion": [
+            -0.00013011891877658623,
+            0.9145142483742376,
+            -0.00029414054360230415,
+            -0.40455356390830466
+          ],
+          "fov": 58
+        },
+        "shadowCameraAmount": 1,
+        "c26OnVsC27Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c27OffVsOn": {
+          "pixels": 1296000,
+          "changed": 706302,
+          "above8": 349380,
+          "maximum": 132,
+          "meanRGBChange": [
+            2.41,
+            2.337,
+            0.382
+          ],
+          "meanYChange": 2.212
+        },
+        "images": {
+          "off": {
+            "file": "images/afternoon-20-rear-eye-off.jpg",
+            "pngSha256": "139f61339be25a51f991a69b68aec8db6b85db50f3f4008ecdbaecc24ecd4d33",
+            "jpegSha256": "0209570196aabf948e5396c3fff0c0a8ca93698c40e1122ee21d9754b680e85f"
+          },
+          "on": {
+            "file": "images/afternoon-20-rear-eye-on.jpg",
+            "pngSha256": "cd66e1f59b363ad7d96b92fb2a64cde993621d57012ecb413d34c6448e4a8669",
+            "jpegSha256": "7032852925957368dd6050d70485b635af3dd76dffa5fa0ecf8a45a3442a04ed"
+          }
+        },
+        "c26PngSha256": "139f61339be25a51f991a69b68aec8db6b85db50f3f4008ecdbaecc24ecd4d33",
+        "repeatCheck": {
+          "c27OffCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "c26OnCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "baselineDifferencesAlsoInEitherRepeat": 0
+        }
+      },
+      {
+        "view": "shop-interior",
+        "camera": {
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            -0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            0.7069324236562871
+          ],
+          "fov": 58
+        },
+        "shadowCameraAmount": 0,
+        "c26OnVsC27Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c27OffVsOn": {
+          "pixels": 1296000,
+          "changed": 62124,
+          "above8": 44291,
+          "maximum": 103,
+          "meanRGBChange": [
+            -1.43,
+            -1.255,
+            -0.894
+          ],
+          "meanYChange": -1.266
+        },
+        "images": {
+          "off": {
+            "file": "images/afternoon-shop-interior-off.jpg",
+            "pngSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+            "jpegSha256": "51273c2835b55d64296b6a2def3962720ab0d72873df846c62e2c3c712172264"
+          },
+          "on": {
+            "file": "images/afternoon-shop-interior-on.jpg",
+            "pngSha256": "316f3cb51c89c4b679aa5e28bdd6d82fd6a2722c33e9d4df8d091e0252293e7d",
+            "jpegSha256": "1419c0c46f08ea4b5e09b302c25ac049ac927f47b0871bb201dd5e5b5eb7bf11"
+          }
+        },
+        "c26PngSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+        "repeatCheck": {
+          "c27OffCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "c26OnCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "baselineDifferencesAlsoInEitherRepeat": 0
+        }
+      },
+      {
+        "view": "shop-door-eye",
+        "camera": {
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            -0.7069324236562871
+          ],
+          "fov": 58
+        },
+        "shadowCameraAmount": 0,
+        "c26OnVsC27Off": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c27OffVsOn": {
+          "pixels": 1296000,
+          "changed": 543618,
+          "above8": 145781,
+          "maximum": 128,
+          "meanRGBChange": [
+            -0.019,
+            -0.277,
+            -0.477
+          ],
+          "meanYChange": -0.236
+        },
+        "images": {
+          "off": {
+            "file": "images/afternoon-shop-door-eye-off.jpg",
+            "pngSha256": "95e63d648aac5da668529e1845a752fe45c16073cb16dca77899bc155a2539d3",
+            "jpegSha256": "f8a2466b9613c3c77cceb617c5a4911ba8653e1078a58c8cb41ef62edbf4054a"
+          },
+          "on": {
+            "file": "images/afternoon-shop-door-eye-on.jpg",
+            "pngSha256": "76d3ad73979179f7b91dd7b3e83856da595f2b4838f29cd562f785ecf7f23f55",
+            "jpegSha256": "ddb9f5e41884909cf2863bc349bf772bea303b4fc6946c95e96211f7a6ab4592"
+          }
+        },
+        "c26PngSha256": "95e63d648aac5da668529e1845a752fe45c16073cb16dca77899bc155a2539d3",
+        "repeatCheck": {
+          "c27OffCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "c26OnCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "baselineDifferencesAlsoInEitherRepeat": 0
+        }
+      },
+      {
+        "view": "van-side",
+        "camera": {
+          "position": [
+            276.3147277851227,
+            11.210013480772632,
+            971.1462175645175
+          ],
+          "quaternion": [
+            -0.029182465008512196,
+            -0.7830517056478151,
+            -0.03684648464040197,
+            0.6201779958912754
+          ],
+          "fov": 47
+        },
+        "shadowCameraAmount": 1,
+        "c26OnVsC27Off": {
+          "pixels": 1296000,
+          "changed": 1,
+          "above8": 0,
+          "maximum": 1,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYChange": 0.0
+        },
+        "c27OffVsOn": {
+          "pixels": 1296000,
+          "changed": 362357,
+          "above8": 88227,
+          "maximum": 125,
+          "meanRGBChange": [
+            -0.288,
+            -0.507,
+            -0.571
+          ],
+          "meanYChange": -0.465
+        },
+        "images": {
+          "off": {
+            "file": "images/afternoon-van-side-off.jpg",
+            "pngSha256": "1cf6378fe750b4fbc2d086c64ec649360a7cecb9c019d4497f9be141681849b2",
+            "jpegSha256": "b8f0c6065d154c0445a4d3b11052bc2507543010c23bf15a97a1d74a0a084021"
+          },
+          "on": {
+            "file": "images/afternoon-van-side-on.jpg",
+            "pngSha256": "956b847ff371169b30dbef9eae2863e73c7ebe395cdd4d0a79ff0f269a81d997",
+            "jpegSha256": "76a0fbb00c3158bdabc41f08feaaf4c238590d44276139f528ea2ad0899aafe6"
+          }
+        },
+        "c26PngSha256": "a6efc1d5052692ab11ae54d8965f2babf64c8a61919aecca148e99aa19ee1391",
+        "repeatCheck": {
+          "c27OffCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 1,
+            "above8": 0,
+            "maximum": 1,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "c26OnCapture1Vs2": {
+            "pixels": 1296000,
+            "changed": 0,
+            "above8": 0,
+            "maximum": 0,
+            "meanRGBChange": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "meanYChange": 0.0
+          },
+          "baselineDifferencesAlsoInEitherRepeat": 0,
+          "baselineDifferenceCoordinates": [
+            {
+              "xy": [
+                1040,
+                386
+              ],
+              "c26-1": [
+                189,
+                196,
+                203
+              ],
+              "c26-2": [
+                189,
+                196,
+                203
+              ],
+              "c27off-1": [
+                189,
+                197,
+                203
+              ],
+              "c27off-2": [
+                189,
+                197,
+                203
+              ]
+            }
+          ],
+          "baselineSinglePixelHistoricalWarmup": {
+            "xy": [
+              1040,
+              386
+            ],
+            "samples": {
+              "c24-afternoon-on-4a89038": {
+                "warmup": [
+                  189,
+                  197,
+                  203
+                ],
+                "capture-1": [
+                  189,
+                  197,
+                  203
+                ],
+                "capture-2": [
+                  189,
+                  197,
+                  203
+                ]
+              },
+              "c25-afternoon-on-a53236b": {
+                "warmup": [
+                  189,
+                  197,
+                  203
+                ],
+                "capture-1": [
+                  189,
+                  197,
+                  203
+                ],
+                "capture-2": [
+                  189,
+                  197,
+                  203
+                ]
+              },
+              "c26-afternoon-on-a281e7a": {
+                "warmup": [
+                  189,
+                  197,
+                  203
+                ],
+                "capture-1": [
+                  189,
+                  196,
+                  203
+                ],
+                "capture-2": [
+                  189,
+                  196,
+                  203
+                ]
+              },
+              "c27-afternoon-off-e00875b": {
+                "warmup": [
+                  189,
+                  197,
+                  203
+                ],
+                "capture-1": [
+                  189,
+                  197,
+                  203
+                ],
+                "capture-2": [
+                  189,
+                  197,
+                  203
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "publishedLosslessSamples": {
+    "24-pavers": {
+      "view": "laundry-details",
+      "region": "sunlit-pavers",
+      "rect": [
+        576,
+        705,
+        685,
+        806
+      ],
+      "images": {
+        "full": {
+          "file": "samples/24-pavers-full.png",
+          "sha256": "9d1ab79e3e9f7990db8490a22156b06d26eea50b1e25706b16032d2b044bd27b"
+        },
+        "no-bands": {
+          "file": "samples/24-pavers-no-bands.png",
+          "sha256": "acee7932df2938c867c7d514b171af87390dd874ca62396ebbbe78076e45af01"
+        },
+        "no-bands-line-zero": {
+          "file": "samples/24-pavers-no-bands-line-zero.png",
+          "sha256": "acee7932df2938c867c7d514b171af87390dd874ca62396ebbbe78076e45af01"
+        }
+      }
+    },
+    "20-rail": {
+      "view": "20-rear-eye",
+      "region": "stair-rail",
+      "rect": [
+        666,
+        192,
+        847,
+        454
+      ],
+      "images": {
+        "full": {
+          "file": "samples/20-rail-full.png",
+          "sha256": "ae6c3bb65d537242e561363a05fa02f91230c60a1d3ebb5cea9b37bceccdd5a1"
+        },
+        "no-bands": {
+          "file": "samples/20-rail-no-bands.png",
+          "sha256": "a572bd6961a356327816ea29f45f232638f63149b5cec6ec63f020af138604b6"
+        },
+        "no-bands-line-zero": {
+          "file": "samples/20-rail-no-bands-line-zero.png",
+          "sha256": "878e03ef7c16c28042c066f7ae042df47d04e83bc954ad15fad0036778cec749"
+        }
+      }
+    },
+    "04-shelf": {
+      "view": "shop-interior",
+      "region": "shelf",
+      "rect": [
+        266,
+        454,
+        493,
+        575
+      ],
+      "images": {
+        "full": {
+          "file": "samples/04-shelf-full.png",
+          "sha256": "6e7d9f5b17538977500de0f67248e68bb2903d7d5b1ca3c4a0dc19c5fd1dfe5f"
+        },
+        "no-bands": {
+          "file": "samples/04-shelf-no-bands.png",
+          "sha256": "6e7d9f5b17538977500de0f67248e68bb2903d7d5b1ca3c4a0dc19c5fd1dfe5f"
+        },
+        "no-bands-line-zero": {
+          "file": "samples/04-shelf-no-bands-line-zero.png",
+          "sha256": "a2faa4216ab95c58cbaeeadb7d056ebaa9ea00d5196e388894039118deff77d7"
+        }
+      }
+    }
+  }
+}
