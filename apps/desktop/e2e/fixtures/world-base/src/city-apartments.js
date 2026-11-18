@@ -107,6 +107,9 @@ export function buildTownApartment(H, F, spec) {
       rear.box(M.lamp, null, .24, .065, .08, x + .75, y + 2.42, .045, { shadow: false });
       if (bay === 0) H.P.elecMeter(rear, x + 1.0, y + 1.35);
     }
+    // Art round 3: the rear-corridor dressing is a rule for every apartment, not only the shot-C one
+    // (that one keeps its hand-placed fence, pipes and cardboard from round 1/2).
+    if (fl === 0 && !shop && H.artRearCorridor) H.artRearCorridor(rear, { unit, w, floorY: y + .14, rng: H.ctx.rng(`art-r3-rear-${floors}`) });
     F.boxB(plaster, trim, w, .14, 1.05, 0, y, back - .525, { uv: { world: 1.5 } });
     if (fl > 0) for (const side of [-1, 1]) railing(F, metal, dark,
       [side < 0 ? -w / 2 + .08 : 2.66, y + .14, back - 1.01],

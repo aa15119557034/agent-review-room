@@ -214,13 +214,37 @@ export function addBackAlley({ root, ctx, own, ownTexture, frame, M, A, sheet })
   stack(-2.7, -132.6, [[0.7, 0.46, 0.5, -0.06], [0.55, 0.38, 0.42, 0.15, 0.02]]);
   stack(-3.45, -132.5, [[0.44, 0.3, 0.36, 0.12]]);
   stack(-6.8, -132.55, [[0.66, 0.4, 0.48, 0.05], [0.6, 0.3, 0.44, -0.1], [0.4, 0.26, 0.34, 0.2, 0.05]]);
-  // Pipes run above the door heads (round 2: at hip height they crossed two doors and read as handrails),
+  // Pipes run above the door heads and the corridor lamps (round 3: 2.58 / 2.72 m clears both; round 2: at hip height they crossed two doors and read as handrails),
   // two horizontal runs fed by a riser beside the meters, with clips.
   const pipe = '#a7b5bb', clip = '#586369';
-  for (const [y, r] of [[2.34, 0.034], [2.5, 0.027]]) {
+  for (const [y, r] of [[2.58, 0.034], [2.72, 0.027]]) {
     frame.cyl(M.metal, pipe, r, 6.2, -0.8, FLOOR + y, -131.1, { rz: Math.PI / 2, seg: 8 });
     for (let x = -3.4; x < 2.4; x += 1.4) frame.box(M.metal, clip, 0.05, 0.1, 0.05, x, FLOOR + y, -131.07);
   }
-  frame.cyl(M.metal, pipe, 0.04, 2.5, -3.6, FLOOR + 1.25, -131.1, { seg: 8 });
+  frame.cyl(M.metal, pipe, 0.04, 2.72, -3.6, FLOOR + 1.36, -131.1, { seg: 8 });
   return { fence: runs.length, cardboardStacks: 4, pipeRuns: 3, spots: 3 };
+}
+
+/** Art round 3: rear-corridor dressing as a rule (city.js installs it as H.artRearCorridor for every
+ *  apartment without a shop). Frame R is the apartment's rear frame (x along the wall, z outward,
+ *  y up); doors sit at x = -unit, 0, unit (1.03 m wide) with lamps 0.75 m to their side at 2.42 m.
+ *  Two pipes run above the lamp heads, clipped at each bay; cardboard stacks stand in the gap between
+ *  the last two doors, against the wall; one paper notice beside the middle door. Placed clear of the
+ *  26 baked weathering decals on these walls (checked in the cloud render, #254 round 3). */
+export function addRearCorridor(R, M, A, sheet, { unit, w, floorY, rng }) {
+  const pipe = '#a7b5bb', clip = '#586369', len = w - 1.2;
+  for (const [y, r] of [[2.58, 0.034], [2.72, 0.027]]) {
+    R.cyl(M.metal, pipe, r, len, 0, floorY + y, 0.1, { rz: Math.PI / 2, seg: 8 });
+    for (let x = -len / 2 + 0.4; x < len / 2; x += 1.4) R.box(M.metal, clip, 0.05, 0.1, 0.05, x, floorY + y, 0.075);
+  }
+  const box = { uv: { rect: A.rects.cardboard, white: A.white } };
+  const gap = unit / 2;
+  let y = floorY, n = 0;
+  for (const [bw, bh, bd] of [[0.62, 0.42, 0.46], [0.5, 0.34, 0.4], [0.36, 0.22, 0.3]].slice(0, 2 + Math.floor(rng() * 2))) {
+    R.boxB(M.atlas, n % 2 ? '#d8b98f' : '#c9a373', bw, bh, bd, gap + (rng() - 0.5) * 0.12, y, 0.3, { ...box, ry: (rng() - 0.5) * 0.4 });
+    y += bh; n++;
+  }
+  R.boxB(M.atlas, '#c9a373', 0.44, 0.3, 0.36, gap + 0.62, floorY, 0.28, { ...box, ry: 0.12 });
+  noticeCard(R, sheet, rng() < 0.5 ? 'a4-grey' : 'hours', 0.24, 0.32, -0.85, floorY + 1.45, 0.012, (rng() - 0.5) * 0.08);
+  return { pipes: 2, cardboard: n + 1, notices: 1 };
 }

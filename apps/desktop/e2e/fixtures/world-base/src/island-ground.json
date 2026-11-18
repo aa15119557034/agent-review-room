@@ -15,8 +15,8 @@
  "rockLo": 0.05,
  "rockHi": 0.4,
  "rockEdge": 0.16,
- "rockPaint": 1.0,
- "rockFlatten": 0.8,
+ "rockPaint": 0.55,
+ "rockFlatten": 0.5,
  "rockDark": [
   0.15,
   0.14,
