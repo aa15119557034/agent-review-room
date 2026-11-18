@@ -26,21 +26,30 @@ const NOLINE_NAMES = /^sakura:(blob|cards)$/;
 export function installToonHook() {
   const proto = THREE.Material.prototype;
   if (Object.getOwnPropertyDescriptor(proto, 'onBeforeCompile').get) return;
-  const own = Symbol('toonOwnHook'), base = proto.onBeforeCompile;
+  const own = Symbol('toonOwnHook');
+  const wrappedHooks = new WeakMap();
+  function wrap(hook) {
+    const existing = wrappedHooks.get(hook);
+    if (existing) return existing;
+    function onBeforeCompile(shader, renderer) {
+      Object.assign(shader.uniforms, toonLitUniforms);
+      const result = hook.call(this, shader, renderer);
+      if (NOLINE_NAMES.test(this.name) && shader.fragmentShader && !shader.fragmentShader.includes('TOON_NOLINE')) {
+        shader.fragmentShader = `#define TOON_NOLINE\n${shader.fragmentShader}`;
+      }
+      return result;
+    }
+    // The station batcher saves the hook and compares it by identity. Clones can also assign an already wrapped hook.
+    onBeforeCompile.toString = () => hook.toString();
+    wrappedHooks.set(hook, onBeforeCompile);
+    wrappedHooks.set(onBeforeCompile, onBeforeCompile);
+    return onBeforeCompile;
+  }
+  const base = wrap(proto.onBeforeCompile);
   Object.defineProperty(proto, 'onBeforeCompile', {
     configurable: true,
-    get() {
-      const fn = this[own] || base, m = this;
-      const w = function (shader, renderer) {
-        Object.assign(shader.uniforms, toonLitUniforms);
-        const r = fn.call(m, shader, renderer);
-        if (NOLINE_NAMES.test(m.name) && shader.fragmentShader && !shader.fragmentShader.includes('TOON_NOLINE')) shader.fragmentShader = `#define TOON_NOLINE\n${shader.fragmentShader}`;
-        return r;
-      };
-      w.toString = () => fn.toString();
-      return w;
-    },
-    set(fn) { this[own] = fn; },
+    get() { return this[own] || base; },
+    set(hook) { this[own] = hook ? wrap(hook) : base; },
   });
 }
 
