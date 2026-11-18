@@ -1,0 +1,135 @@
+{
+  "time": "evening",
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "faces": [
+    {
+      "name": "px",
+      "pathname": "/src/street-env-evening/px.png",
+      "width": 256,
+      "height": 256,
+      "framebufferStatus": 36053,
+      "imageRGBA": "e62904c0fa92ae039aafdf0a9033f4df0e531f051a0e867f88d5f5e22c207394",
+      "gpuRGBA": "e62904c0fa92ae039aafdf0a9033f4df0e531f051a0e867f88d5f5e22c207394",
+      "differentPixels": 0,
+      "maxChannelError": 0,
+      "requests": [],
+      "serverRequests": [
+        {
+          "pathname": "/src/street-env-evening/px.png",
+          "http": 200,
+          "bytes": null
+        }
+      ]
+    },
+    {
+      "name": "nx",
+      "pathname": "/src/street-env-evening/nx.png",
+      "width": 256,
+      "height": 256,
+      "framebufferStatus": 36053,
+      "imageRGBA": "4de015c6ab9e249421553fd6a4984253e15627d4b8c617762f26a78ae4458539",
+      "gpuRGBA": "4de015c6ab9e249421553fd6a4984253e15627d4b8c617762f26a78ae4458539",
+      "differentPixels": 0,
+      "maxChannelError": 0,
+      "requests": [],
+      "serverRequests": [
+        {
+          "pathname": "/src/street-env-evening/nx.png",
+          "http": 200,
+          "bytes": null
+        }
+      ]
+    },
+    {
+      "name": "py",
+      "pathname": "/src/street-env-evening/py.png",
+      "width": 256,
+      "height": 256,
+      "framebufferStatus": 36053,
+      "imageRGBA": "e1c64eab550ea3987b8005debfedd16e6049c96eca560e27e45aa5fbe404ef65",
+      "gpuRGBA": "e1c64eab550ea3987b8005debfedd16e6049c96eca560e27e45aa5fbe404ef65",
+      "differentPixels": 0,
+      "maxChannelError": 0,
+      "requests": [],
+      "serverRequests": [
+        {
+          "pathname": "/src/street-env-evening/py.png",
+          "http": 200,
+          "bytes": null
+        }
+      ]
+    },
+    {
+      "name": "ny",
+      "pathname": "/src/street-env-evening/ny.png",
+      "width": 256,
+      "height": 256,
+      "framebufferStatus": 36053,
+      "imageRGBA": "0993de77f21f3d66f8ad591cab4ac80661cef6187c4fc4fa5d7c00a5c724dbd8",
+      "gpuRGBA": "0993de77f21f3d66f8ad591cab4ac80661cef6187c4fc4fa5d7c00a5c724dbd8",
+      "differentPixels": 0,
+      "maxChannelError": 0,
+      "requests": [],
+      "serverRequests": [
+        {
+          "pathname": "/src/street-env-evening/ny.png",
+          "http": 200,
+          "bytes": null
+        }
+      ]
+    },
+    {
+      "name": "pz",
+      "pathname": "/src/street-env-evening/pz.png",
+      "width": 256,
+      "height": 256,
+      "framebufferStatus": 36053,
+      "imageRGBA": "cc733d30bd4d9e7cc7011dc44b1c8cf13c5e4ab05eaffd31c5a270ebfa5068b2",
+      "gpuRGBA": "cc733d30bd4d9e7cc7011dc44b1c8cf13c5e4ab05eaffd31c5a270ebfa5068b2",
+      "differentPixels": 0,
+      "maxChannelError": 0,
+      "requests": [],
+      "serverRequests": [
+        {
+          "pathname": "/src/street-env-evening/pz.png",
+          "http": 200,
+          "bytes": null
+        }
+      ]
+    },
+    {
+      "name": "nz",
+      "pathname": "/src/street-env-evening/nz.png",
+      "width": 256,
+      "height": 256,
+      "framebufferStatus": 36053,
+      "imageRGBA": "ff7031402d2049cbe1b193be2fb77a9c4eb9c6d156db089084e03a11401c76a5",
+      "gpuRGBA": "ff7031402d2049cbe1b193be2fb77a9c4eb9c6d156db089084e03a11401c76a5",
+      "differentPixels": 0,
+      "maxChannelError": 0,
+      "requests": [],
+      "serverRequests": [
+        {
+          "pathname": "/src/street-env-evening/nz.png",
+          "http": 200,
+          "bytes": null
+        }
+      ]
+    }
+  ],
+  "panes": {
+    "W1": 8,
+    "E1": 4,
+    "W2": 5,
+    "E2": 5,
+    "E3": 5
+  },
+  "glassCount": 8,
+  "allGlassShare": true,
+  "wetShares": true,
+  "runtimeCaptures": 0,
+  "extraWetPasses": 0,
+  "beforeGL": 0,
+  "afterGL": 0,
+  "source": "1ea97233815bedc700751a04fe69ee7fb28b7a21"
+}

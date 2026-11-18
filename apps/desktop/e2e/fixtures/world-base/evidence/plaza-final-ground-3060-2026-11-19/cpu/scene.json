@@ -1,0 +1,399 @@
+{
+  "source": "7ffb5a118e5e05e8f584955b67813ac383f29c99",
+  "v2": "58a46094de1ac23493f35f1bea94683df5d49c2d",
+  "zipSha256": "e4ed22eacde7fc320637468a794fcd99d01c0344a0458adcc214d6c78bd7b54d",
+  "fullGlbSha256": "14716b7af7db3bcae453b17ebe97a9fa0d4d38155731cc2b56ed28e4fa7b24f3",
+  "zipBytes": 1194979,
+  "bakedFingerprint": "1061:2667664:298285.6:949273.1",
+  "decals": {
+    "items": 26,
+    "itemsSha256": "2e17ad7b2de399565ed74fabc4d8deda50d25f780dde5e36d1d086d8a8539fc3",
+    "source": "baked",
+    "planningRays": 0,
+    "planarNineOfNine": 22,
+    "curvedOriginalChecks": 4,
+    "obstructed": 0
+  },
+  "colliders": {
+    "count": 3147,
+    "sha256": "a0487644f831456ba4802d144d452d9d9709c5b80a26384f0931545fa4d2a541",
+    "fullArrayEqualV2": true
+  },
+  "plaza": {
+    "bark": 2309,
+    "blob": 9540,
+    "cards": 2072
+  },
+  "w3": {
+    "bark": 1550,
+    "blob": 22027,
+    "cards": 424
+  },
+  "buildingsUnchangedInZip": true,
+  "zipEntries": [
+    {
+      "path": ".local/mature-sakura/mature-sakura.glb",
+      "before": "7d0e715719b1e8a8591ab91daeddf28882070f9015cb5a76bf2ec70cf6620cd9",
+      "after": "14716b7af7db3bcae453b17ebe97a9fa0d4d38155731cc2b56ed28e4fa7b24f3",
+      "size": 2193656
+    },
+    {
+      "path": ".local/station-art/alley-workshop.glb",
+      "before": "b8286aa8f9cc5c735d7d847bcc4c1b8b71f31a6ca049aabb531e68c3252c8fc2",
+      "after": "b8286aa8f9cc5c735d7d847bcc4c1b8b71f31a6ca049aabb531e68c3252c8fc2",
+      "size": 70344
+    },
+    {
+      "path": ".local/station-art/laundry-infill.glb",
+      "before": "d945d0756f402227ae329d1408707a428c120646aa3bac73c927821d98183be6",
+      "after": "d945d0756f402227ae329d1408707a428c120646aa3bac73c927821d98183be6",
+      "size": 60052
+    },
+    {
+      "path": ".local/station-art/station-exchange.glb",
+      "before": "03584bb83631b49b118727b9b37a2a021dee693365263acecef24e56b9621a78",
+      "after": "03584bb83631b49b118727b9b37a2a021dee693365263acecef24e56b9621a78",
+      "size": 79160
+    },
+    {
+      "path": "mature-sakura.json",
+      "before": "96682b27459a3cbeb8eab2056ebda1bd8b00aeff9afa4251b6812d053eca134b",
+      "after": "563132882dc38fbc5d21a87a7f7421e1d2bbab8fb6a4bc84f9da7d039b9db4ce",
+      "size": 413
+    },
+    {
+      "path": "station-art-assets.json",
+      "before": "988ebbd723e51e4a5179dd6b483174235a4bc2d99d098fa934493f0512d03486",
+      "after": "988ebbd723e51e4a5179dd6b483174235a4bc2d99d098fa934493f0512d03486",
+      "size": 592
+    },
+    {
+      "path": "station-art-notices/THIRD-PARTY.md",
+      "before": "73fb82ea3a430591d3f3c747ed51b4b67d26ea9971f6df1c144c5fbbf868a60c",
+      "after": "d1a3d1709f98cf85897fc43560cea2b4198a5f10fd42fc4e550700dce077f7df",
+      "size": 1624
+    },
+    {
+      "path": "station-art-notices/licenses/LICENSE-Kenney.txt",
+      "before": "c38cee408d022e57e44e49f1cd655c2fe0dc881a07b881276b795215cdc0de69",
+      "after": "c38cee408d022e57e44e49f1cd655c2fe0dc881a07b881276b795215cdc0de69",
+      "size": 708
+    },
+    {
+      "path": "station-art-notices/licenses/LICENSE-Sakuragaoka.txt",
+      "before": "9b810ad4fc1139f94f7cfaf144a95069d13c4c822fac9f8b657ba6ae6f9de1f7",
+      "after": "9b810ad4fc1139f94f7cfaf144a95069d13c4c822fac9f8b657ba6ae6f9de1f7",
+      "size": 1089
+    },
+    {
+      "path": "station-art-notices/licenses/LICENSE-station-art.txt",
+      "before": "1a998237a0242dccb8e46d7b19aaeeeffaba44e3120b57d64790c67f306689cc",
+      "after": "1a998237a0242dccb8e46d7b19aaeeeffaba44e3120b57d64790c67f306689cc",
+      "size": 1081
+    }
+  ],
+  "stationStructures": {
+    "v2RuntimeFieldsEqual": [
+      "terrainChecks",
+      "allStairs",
+      "clearAreas",
+      "vegetation",
+      "portal",
+      "roots",
+      "stationArt"
+    ],
+    "eastAndAlley": [
+      {
+        "placement": {
+          "name": "station-exchange",
+          "type": "station-art",
+          "center": [
+            35,
+            -124.2
+          ],
+          "baseY": 4.430233103434214,
+          "yaw": 0,
+          "halfWidth": 3.15,
+          "halfDepth": 3.55,
+          "footprint": {
+            "minX": 31.85,
+            "maxX": 38.15,
+            "minZ": -127.75,
+            "maxZ": -120.65
+          },
+          "foundation": {
+            "top": 12.430233103434215,
+            "bottom": 11.52418612798056,
+            "height": 0.9060469754536546
+          },
+          "ground": {
+            "min": 11.60418612798056,
+            "max": 12.390233103434214,
+            "relief": 0.7860469754536545,
+            "samples": 961
+          },
+          "worldOrigin": [
+            315,
+            12.430233103434215,
+            775.8
+          ]
+        },
+        "registeredForClearing": {
+          "name": "station-exchange",
+          "minX": 31.85,
+          "maxX": 38.15,
+          "minZ": -127.75,
+          "maxZ": -120.65
+        },
+        "worldMeshBox": [
+          [
+            311.84999990463257,
+            12.430233103434215,
+            772.2800000190734
+          ],
+          [
+            318.0350000858307,
+            32.97023401896156,
+            779.7100000858306
+          ]
+        ],
+        "hasEntry": {
+          "name": "station-exchange-entry",
+          "x": 34.45,
+          "width": 1.64,
+          "highZ": -120.65,
+          "lowZ": -118.51,
+          "steps": 8,
+          "rise": 0.15835294672647732,
+          "tread": 0.26750000000000007,
+          "top": 4.750233103434215,
+          "bottom": 3.483409529622396,
+          "minClearance": 0.19502497863770074
+        }
+      },
+      {
+        "placement": {
+          "name": "alley-workshop",
+          "type": "station-art",
+          "center": [
+            -30,
+            -142.6
+          ],
+          "baseY": 5.143555140363213,
+          "yaw": 2.03,
+          "halfWidth": 2.72,
+          "halfDepth": 3.07,
+          "footprint": {
+            "minX": -33.95756323594602,
+            "maxX": -26.04243676405398,
+            "minZ": -146.39895327202598,
+            "maxZ": -138.801046727974
+          },
+          "foundation": {
+            "top": 13.143555140363212,
+            "bottom": 12.511274916676518,
+            "height": 0.6322802236866947
+          },
+          "ground": {
+            "min": 12.591274916676518,
+            "max": 13.103555140363213,
+            "relief": 0.5122802236866946,
+            "samples": 961
+          },
+          "worldOrigin": [
+            250,
+            13.143555140363212,
+            757.4
+          ]
+        },
+        "registeredForClearing": {
+          "name": "alley-workshop",
+          "minX": -33.95756323594602,
+          "maxX": -26.04243676405398,
+          "minZ": -146.39895327202598,
+          "maxZ": -138.801046727974
+        },
+        "worldMeshBox": [
+          [
+            245.98875188704156,
+            13.143555140363212,
+            753.3304749411756
+          ],
+          [
+            254.47737929497944,
+            17.883554911481376,
+            761.2390430654569
+          ]
+        ]
+      }
+    ],
+    "stairs": 7,
+    "clearAreas": 38,
+    "laundryPortal": {
+      "placed": [
+        282,
+        12.764808464050294,
+        776.75
+      ],
+      "material": "Infill | baked ceramic and metal",
+      "inReceivers": true
+    }
+  },
+  "corridors": {
+    "fourFloor": {
+      "groups": 16,
+      "sameIndicesAndVertexCoordinates": true
+    },
+    "threeFloor": {
+      "door": {
+        "pipes": {
+          "pairs": 30,
+          "minY": 0.30599999815225587,
+          "overlapXZ": 0
+        },
+        "clips": {
+          "pairs": 210,
+          "minY": 0.2900000000000009,
+          "overlapXZ": 4
+        }
+      },
+      "lamps": {
+        "pipes": {
+          "pairs": 6,
+          "minY": 0.09349999815225374,
+          "overlapXZ": 6
+        },
+        "clips": {
+          "pairs": 42,
+          "minY": 0.07749999999999879,
+          "overlapXZ": 0
+        }
+      },
+      "boxes": {
+        "pipes": {
+          "pairs": 8,
+          "minY": 1.425999998152255,
+          "overlapXZ": 6
+        },
+        "clips": {
+          "pairs": 56,
+          "minY": 1.4100000000000001,
+          "overlapXZ": 2
+        }
+      },
+      "notice": {
+        "pipes": {
+          "pairs": 2,
+          "minY": 0.792658122062452,
+          "overlapXZ": 0
+        },
+        "clips": {
+          "pairs": 14,
+          "minY": 0.7766581239101971,
+          "overlapXZ": 0
+        }
+      },
+      "slab": {
+        "pipes": {
+          "pairs": 2,
+          "minY": 0.10299999929964443,
+          "overlapXZ": 2
+        },
+        "clips": {
+          "pairs": 14,
+          "minY": 0.0799999999999983,
+          "overlapXZ": 14
+        }
+      }
+    },
+    "fiveFloor": {
+      "door": {
+        "pipes": {
+          "pairs": 30,
+          "minY": 0.30599999815225587,
+          "overlapXZ": 0
+        },
+        "clips": {
+          "pairs": 240,
+          "minY": 0.2900000000000009,
+          "overlapXZ": 2
+        }
+      },
+      "lamps": {
+        "pipes": {
+          "pairs": 6,
+          "minY": 0.09349999815225374,
+          "overlapXZ": 6
+        },
+        "clips": {
+          "pairs": 48,
+          "minY": 0.07749999999999879,
+          "overlapXZ": 2
+        }
+      },
+      "boxes": {
+        "pipes": {
+          "pairs": 8,
+          "minY": 1.425999998152255,
+          "overlapXZ": 6
+        },
+        "clips": {
+          "pairs": 64,
+          "minY": 1.4100000000000001,
+          "overlapXZ": 4
+        }
+      },
+      "notice": {
+        "pipes": {
+          "pairs": 2,
+          "minY": 0.7945766331573765,
+          "overlapXZ": 0
+        },
+        "clips": {
+          "pairs": 16,
+          "minY": 0.7785766350051215,
+          "overlapXZ": 0
+        }
+      },
+      "slab": {
+        "pipes": {
+          "pairs": 2,
+          "minY": 0.10299999929964265,
+          "overlapXZ": 2
+        },
+        "clips": {
+          "pairs": 16,
+          "minY": 0.0799999999999983,
+          "overlapXZ": 16
+        }
+      }
+    }
+  },
+  "w1": {
+    "source": "7ffb5a118e5e05e8f584955b67813ac383f29c99",
+    "items": 60,
+    "sampled": 51036,
+    "supported": 51036,
+    "unchangedBoxes": 3,
+    "packedCards": [
+      {
+        "sourceMaterial": "MeshBasicMaterial",
+        "batchMaterial": "MeshBasicMaterial",
+        "differentPixels": 0,
+        "groupObjectCount": 3
+      },
+      {
+        "sourceMaterial": "MeshBasicMaterial",
+        "batchMaterial": "MeshBasicMaterial",
+        "differentPixels": 0,
+        "groupObjectCount": 3
+      },
+      {
+        "sourceMaterial": "MeshBasicMaterial",
+        "batchMaterial": "MeshBasicMaterial",
+        "differentPixels": 0,
+        "groupObjectCount": 3
+      }
+    ]
+  }
+}
