@@ -70,8 +70,7 @@ export class River {
     const uniforms = {
       ...shared(...SKY_UNIFORMS, 'uTime', 'uHeightTex', 'uLightTex', 'uWorld', 'uNoiseTex', 'uWakeTex', 'uWake', 'uShadowTex', 'uShadowMat', 'uShadowOn'),
       uRipple: { value: ripple },
-      uCloudTex: sky.cloudTex,
-      uCloudOn: sky.cloudOn,
+      ...sky.cloudUniforms,
     };
     this.material = new THREE.ShaderMaterial({ uniforms, vertexShader: RIVER_VERT, fragmentShader: RIVER_FRAG, side: THREE.DoubleSide });
     this.mesh = new THREE.Mesh(g, this.material);
@@ -253,7 +252,7 @@ void main(){
   float F = 0.02 + 0.98 * pow(1.0 - saturate(dot(N, V)), 5.0);
   vec3 R = reflect(-V, N); R.y = abs(R.y) + 0.02; R = normalize(R);
   vec3 sky = skyBase(R);
-  vec4 cl = sampleClouds(R);
+  vec4 cl = sampleClouds(R, P);
   sky = sky * (1.0 - cl.a) + cl.rgb;
   // toward the banks the water mirrors the grass leaning over it rather than the sky
   float bankRefl = smoothstep(0.35, 1.0, abs(u)) * (0.45 + 0.4 * (1.0 - saturate(dot(V, vec3(0.0, 1.0, 0.0)))));

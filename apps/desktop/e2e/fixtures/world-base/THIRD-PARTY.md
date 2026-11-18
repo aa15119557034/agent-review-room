@@ -19,7 +19,7 @@
 
 新增9个道具文件的官方URL、作者、size、MD5及SHA256见 [prop-assets.json](./prop-assets.json)。原文件只保存于 `.local/textured-props/`；没有复制官网预览图或从用户参考图提取贴图。原Painted Wooden Bench因造型偏复古未接入运行。现成纸箱、矮牌和花盆继续复用桜ヶ丘MIT构件；工具棚门按原完整包围范围精确匹配后局部换材质，未改上游几何或全局共享材质。
 
-局部地表适配集中在 `src/transition.js`、`src/island.js` 和 `src/station.js`：填缝带与站区底土地表外缘共享 Petalwake 地表着色及纹理，植被在边缘渐变恢复。`src/look.js` 对地形已校正漫反射做四档量化，并局部调整浅水散射、远景焦散和岸边泡沫；未改写上游 `water.js`。`scripts/analyze-caustics.cjs` 直接执行固定源码中的纹理生成函数进行 CPU 分布测量，其来源仍为上述 Petalwake MIT 代码。
+局部地表适配集中在 `src/transition.js`、`src/island.js` 和 `src/station.js`：填缝带与站区底土地表外缘共享 Petalwake 地表着色及纹理，植被在边缘渐变恢复。`src/look.js` 对地形已校正漫反射做四档量化，并局部调整浅水散射、远景焦散和岸边泡沫。整岛自然环境分支在本地适配的 `terrain.js`、`water.js`、`river.js`、`sky.js` 与共享着色代码中增加步道、风致增水和随风移动的云层。地形、岸距、云烘焙与纹理沿用上述 Petalwake 来源。`scripts/analyze-caustics.cjs` 直接执行固定源码中的纹理生成函数进行 CPU 分布测量，其来源仍为上述 Petalwake MIT 代码。
 
 街景复用登记见 [streetscape-assets.json](./streetscape-assets.json)：花箱、外机、公寓及程序纹理均来自同一固定版本的 Sakuragaoka MIT 源码。`houses.js`、`shopsA.js` 各增加现有构建上下文的导出，使适配层复用已创建的材料和图集。`src/skyline.js` 直接调用原 `buildApartment`，其地形/四边形辅助函数按 `houses.js` 适配至独立几何与真实岛屿地形；`src/wet-road.js` 保留原沥青材质，借鉴原玻璃/沟渠的天光 Fresnel 思路。新支架和局部湿区 mask 在适配层生成。没有从用户参考图中提取贴图。
 

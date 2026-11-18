@@ -33,7 +33,10 @@ float remap(float v, float a, float b){ return clamp((v - a) / (b - a), 0.0, 1.0
 
 /** Tileable noise texture lookups (cheaper than hash noise in hot fragment paths). */
 export const NOISE_TEX = /* glsl */`
-uniform sampler2D uNoiseTex;   // RGBA: four independent tileable noise fields, 256px
+#ifndef ISLAND_NOISE_SAMPLER
+#define ISLAND_NOISE_SAMPLER
+uniform sampler2D uNoiseTex;
+#endif
 vec4 ntex(vec2 p){ return texture(uNoiseTex, p / 256.0); }
 `;
 
@@ -48,6 +51,18 @@ uniform vec3 uAmbSky;
 uniform vec3 uAmbGround;
 uniform vec4 uFog;
 uniform vec3 uCamPos;
+
+#ifndef ISLAND_NOISE_SAMPLER
+#define ISLAND_NOISE_SAMPLER
+uniform sampler2D uNoiseTex;
+#endif
+uniform vec4 uCloudFlow;
+// Sunlight on the ground, the visible cloud bank and its reflection intersect
+// the same drifting sheet. A curved horizon bounds its apparent distance.
+vec2 cloudDeck(vec3 origin, vec3 dir) {
+  vec2 uv = (origin.xz + dir.xz * (max(420.0-origin.y, 40.0) / max(dir.y+0.12, 0.12)) - uCloudFlow.xy) / 2900.0;
+  return texture(uNoiseTex, uv).rg;
+}
 
 // Clear-sky radiance for a view direction (no sun disc, no clouds).
 vec3 skyBase(vec3 d){
@@ -86,10 +101,9 @@ float cloudShadow(vec2 xz, float time);
 
 export const CLOUD_SHADOW = /* glsl */`
 float cloudShadow(vec2 xz, float time){
-  vec2 p = xz * 0.00042 + vec2(time * 0.0036, time * 0.0021);
-  float n = fbm4(p * 2.0 + 3.7);
-  n = n * 0.72 + 0.28 * fbm2(p * 7.0 - 1.3);
-  return mix(0.50, 1.0, smoothstep(0.50, 0.30, n));
+  vec2 field = cloudDeck(vec3(xz.x,0.0,xz.y), uSunDir);
+  float shade = smoothstep(0.32, 0.78, dot(field, vec2(0.73,0.27)));
+  return 1.0 - shade * mix(0.34, 0.52, uCloudFlow.z);
 }
 `;
 

@@ -31,7 +31,7 @@ export function waveHeight(x, z, t, shelter = 1) {
   let y = 0;
   const s = SEA_STATE.value * shelter;
   for (const w of WAVES) y += w.amp * s * Math.sin(w.k * (w.dx * x + w.dz * z) - w.w * t + w.ph);
-  return y;
+  return y + U.uSeaSetup.value;
 }
 
 const WAVE_GLSL = /* glsl */`
@@ -138,8 +138,8 @@ export class Water {
         uSea: SEA_STATE,
         uCenter: { value: new THREE.Vector2() },
         uRipple: { value: makeWaveNormalTexture() },
-        uCloudTex: sky.cloudTex,
-        uCloudOn: sky.cloudOn,
+        ...sky.cloudUniforms,
+        uSeaSetup: U.uSeaSetup,
         uReflTex: this.reflTex,
         uReflMat: this.reflMat,
         uReflOn: this.reflOn,
@@ -150,7 +150,7 @@ export class Water {
     });
     this.mesh = new THREE.Mesh(geo, this.material);
     this.mesh.frustumCulled = false;
-    this.mesh.renderOrder = 10;
+    this.mesh.renderOrder = 510; // terrain depth rejects water beneath the island
   }
 
   update(camera) {
@@ -213,6 +213,7 @@ export class Water {
 const VERT = /* glsl */`
 precision highp float;
 uniform vec2 uCenter;
+uniform float uSeaSetup;
 uniform float uTime;
 uniform vec3 uCamPos;
 ${TERRAIN_LOOKUP}
@@ -226,12 +227,21 @@ void main(){
   // waves calm down in shallow, sheltered water and fade out toward the horizon
   vec4 light = textureLod(uLightTex, worldUV(xz), 0.0);
   float off = shoreDist(light.b);                          // metres offshore (+) / inland (-)
+  // Dry interior vertices still close the radial grid, but their fragments are
+  // discarded below. Leave a guard beyond the shore mask for displaced triangles.
+  if (off < -45.0) {
+    vXZ0 = xz;
+    vAmp = 0.0;
+    vWorld = vec3(xz.x, uSeaSetup, xz.y);
+    gl_Position = projectionMatrix * viewMatrix * vec4(vWorld, 1.0);
+    return;
+  }
   float shelter = mix(0.30, 1.0, smoothstep(0.0, 110.0, off));
   float amp = uSea * shelter / (1.0 + pow(r / 1400.0, 2.0));
   vec3 n; float fold;
   vec3 d = gerstner(xz, uTime, amp, n, fold);
   d *= 1.0 - smoothstep(4000.0, 9000.0, r);
-  vWorld = vec3(xz.x, 0.0, xz.y) + d;
+  vWorld = vec3(xz.x, uSeaSetup, xz.y) + d;
   vXZ0 = xz;
   vAmp = amp;
   gl_Position = projectionMatrix * viewMatrix * vec4(vWorld, 1.0);
@@ -335,7 +345,7 @@ void main(){
   R.y = abs(R.y) + 0.015;
   R = normalize(R);
   vec3 sky = skyBase(R);
-  vec4 cl = sampleClouds(R);
+  vec4 cl = sampleClouds(R, P);
   sky = sky * (1.0 - cl.a) + cl.rgb;
   vec3 refl = sky;
   if (uReflOn > 0.5){
@@ -374,7 +384,11 @@ void main(){
   float beachy = 1.0 - smoothstep(0.05, 0.45, cliffy);
   float surfBand = roll * smoothstep(46.0, 6.0, shoreD) * smoothstep(0.52, 0.30, bubbles * (1.0 - roll * 0.5)) * beachy;
   float wash = smoothstep(7.5, 0.0, shoreD - (sin(uTime * 0.5 + setNoise * 6.0) * 0.5 + 0.5) * 3.0);
-  float lace = smoothstep(0.36, 0.60, bubbles + wash * 0.35) * wash * beachy;
+  // Resolve thin tongues of foam in the swash instead of filling the entire
+  // landward half of the shore-distance mask with opaque white.
+  float fringe = 1.0 - smoothstep(0.04, 0.15 + 0.08 * setNoise, depth);
+  float strands = smoothstep(0.47, 0.68, bubbles + 0.10 * sin(ph + setNoise * 11.0));
+  float lace = strands * (0.28 + 0.52 * fringe) * wash * beachy;
   // cliffs churn the water: a ragged collar of froth that surges, wider on some stretches than
   // others, with lace trailing off it
   float surge = sin(uTime * 0.9 + setNoise * 9.0 + shoreD * 0.25) * 0.5 + 0.5;

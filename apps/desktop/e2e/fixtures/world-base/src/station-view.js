@@ -3,8 +3,9 @@ import { STEP_HEIGHT } from '../upstream/sakuragaoka/src/core/physics.js';
 
 // The same capsule, substeps, step threshold and gravity as upstream Player,
 // with one removable input owner and a camera independent of the feet position.
-export function createStationWalker(station, dom) {
-  const physics = station.physics;
+export function createStationWalker(station, dom, coast) {
+  const bounds = station.bounds;
+  const physicsAt = z => coast && z > bounds.z1 ? coast.physics : station.physics;
   const position = station.toLocal(station.spawn);
   const worldPosition = station.spawn.clone();
   const velocity = new THREE.Vector3();
@@ -56,7 +57,7 @@ export function createStationWalker(station, dom) {
       const view = station.camera;
       const halfHeight = view.near * Math.tan(THREE.MathUtils.degToRad(view.getEffectiveFOV()) / 2);
       const clearance = Math.hypot(view.near, halfHeight, halfHeight * view.aspect) + 0.02;
-      const fraction = physics.sweepSphere(target, desired, clearance);
+      const fraction = physicsAt(position.z).sweepSphere(target, desired, clearance);
       camera.position.lerpVectors(target, desired, fraction);
       if (fraction > 1e-6) camera.lookAt(target);
     }
@@ -106,13 +107,19 @@ export function createStationWalker(station, dom) {
       for (let index = 0; index < count; index++) {
         const x = next.x, z = next.z;
         next.x += velocity.x * dt / count; next.z += velocity.z * dt / count;
+        const physics = physicsAt(next.z);
         physics.resolve(next, radius, position.y, height);
+        if (!coast?.contains(next.x, next.z, radius)) {
+          if (z > bounds.z1) { next.x = x; next.z = z; }
+          else {
+            next.x = THREE.MathUtils.clamp(next.x, bounds.x0 + radius, bounds.x1 - radius);
+            next.z = THREE.MathUtils.clamp(next.z, bounds.z0 + radius, bounds.z1 - radius);
+          }
+        }
         if (physics.groundHeight(next.x, next.z, position.y) - position.y > STEP_HEIGHT) { next.x = x; next.z = z; }
       }
-      const bounds = station.bounds;
-      position.x = THREE.MathUtils.clamp(next.x, bounds.x0 + radius, bounds.x1 - radius);
-      position.z = THREE.MathUtils.clamp(next.z, bounds.z0 + radius, bounds.z1 - radius);
-      const ground = physics.groundHeight(position.x, position.z, position.y);
+      position.x = next.x; position.z = next.z;
+      const ground = physicsAt(position.z).groundHeight(position.x, position.z, position.y);
       verticalSpeed -= 12 * dt; position.y += verticalSpeed * dt;
       grounded = position.y <= ground || position.y - ground < 0.06 && verticalSpeed <= 0;
       if (grounded) { position.y = ground; verticalSpeed = 0; }

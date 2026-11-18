@@ -4,6 +4,7 @@ import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from '
 import { createStation } from './station.js';
 import { createLook } from './look.js';
 import { createSkyline } from './skyline.js';
+import { coastWalking } from './coast.js';
 import { createCity } from './city.js';
 
 const canvas = document.querySelector('#world');
@@ -44,6 +45,7 @@ const look = createLook(renderer, camera);
 worldBase.look = look;
 worldBase.styleState = { toon: true, flightEffects: false };
 let island, station, walker;
+let returnView = 'station-street';
 const toWorld = (values) => station.toWorld(new THREE.Vector3(...values)).toArray();
 const labels = { 'station-street': '车站区街道', 'station-port': '车站望向港镇', 'island-aerial': '全岛俯视', 'shop-interior': '便利店室内', 'service-corner': '车站服务角', 'laundry-details': '洗衣店前细节' };
 function setView(name) {
@@ -66,12 +68,16 @@ worldBase.setView = setView;
 function startWalking() {
   camera.fov = 58;
   camera.updateProjectionMatrix();
-  walker.setPose(station.spawn, 4, -8);
+  returnView = worldBase.currentView === 'coast' ? 'coast' : 'station-street';
+  if (returnView === 'coast') {
+    const feet = new THREE.Vector3(287, island.heightAt(287, 1110), 1110);
+    walker.setPose(feet, 110, -4);
+  } else walker.setPose(station.spawn, 4, -8);
   walker.setEnabled(true);
   walker.setView(worldBase.cameraMode);
   worldBase.currentView = 'walking';
-  document.querySelector('#mode').textContent = '步行 · 车站区';
-  document.querySelector('#walk').textContent = '回到街道';
+  document.querySelector('#mode').textContent = '步行';
+  document.querySelector('#walk').textContent = returnView === 'coast' ? '回到海岸' : '回到街道';
   document.querySelectorAll('[data-view]').forEach(button => button.classList.remove('active'));
   canvas.focus();
 }
@@ -108,7 +114,9 @@ async function init() {
   Object.assign(sun.shadow.camera, { left: -150, right: 150, top: 150, bottom: -150, near: 1, far: 400 });
   sun.shadow.bias = -0.0002;
   sun.shadow.normalBias = 0.035;
-  scene.add(sun, sun.target, (evening ? new THREE.HemisphereLight(0xb4bce8, 0xa08068, 1.6) : new THREE.HemisphereLight(0xcfe0ff, 0xa89c94, 1.05)));
+  const skyFill = evening ? new THREE.HemisphereLight(0xb4bce8, 0xa08068, 1.6) : new THREE.HemisphereLight(0xcfe0ff, 0xa89c94, 1.05);
+  const clearSun = sun.intensity, clearFill = skyFill.intensity;
+  scene.add(sun, sun.target, skyFill);
   stage('正在安放车站、店铺与碰撞体…');
   station = await createStation({
     scene, renderer, camera, offset: island.stationPlacement.position,
@@ -138,7 +146,7 @@ async function init() {
     worldBase.townGreenRect = [rect[0] + o.x, rect[1] + o.z, rect[2] + o.x, rect[3] + o.z];
     look.setTownGreenery(worldBase.townGreenRect);
   }
-  walker = station.createWalker(canvas);
+  walker = station.createWalker(canvas, coastWalking(station, island));
   worldBase.walker = walker;
   worldBase.views = [
     { name: 'station-street', fov: 58, position: toWorld([-1.2, 2.4, 36]), target: toWorld([0, 2.0, -25]) },
@@ -147,10 +155,12 @@ async function init() {
     { name: 'shop-interior', fov: 58, position: toWorld([-8.3, 1.9134, 8]), target: toWorld([-12.8, 1.7134, 8]) },
     { name: 'service-corner', fov: 55, position: toWorld(station.texturedProps.stats.view.position), target: toWorld(station.texturedProps.stats.view.target) },
     { name: 'laundry-details', fov: 55, position: toWorld(worldBase.city.stats.texturedProps.view.position), target: toWorld(worldBase.city.stats.texturedProps.view.target) },
+    { name: 'coast', fov: 58, position: [270, island.heightAt(270, 1110) + 1.65, 1110], target: [-55, 3, 1230] },
   ];
+  labels.coast = '南岸 · 潮间带';
   setView('station-street');
   document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
-  document.querySelector('#walk').addEventListener('click', () => walker.enabled ? setView('station-street') : startWalking());
+  document.querySelector('#walk').addEventListener('click', () => walker.enabled ? setView(returnView) : startWalking());
   document.querySelector('#camera').addEventListener('click', () => {
     worldBase.cameraMode = walker.view === 'third' ? 'first' : 'third';
     walker.setView(worldBase.cameraMode);
@@ -169,16 +179,23 @@ async function init() {
   }
   stage('场景已就绪');
   document.querySelector('#loading').hidden = true;
+  let sceneStart;
   let last = performance.now(), sampleStart = last, samples = 0;
   function frame(now) {
     const dt = Math.min((now - last) / 1000, 0.05);
     last = now;
     try {
       renderer.info.reset();
+      island.weather.update(sceneStart === undefined ? 0 : Math.max(0, (now - sceneStart) / 1000));
+      const cover = island.weather.state.cover;
+      sun.intensity = clearSun * (1 - 0.66 * cover);
+      skyFill.intensity = clearFill * (1 + 0.13 * cover);
+      station.streetReflections.uniforms.uStreetOvercast.value = cover;
       station.update(dt, now / 1000, walker.worldPosition);
       walker.update(dt);
       island.update(dt, now / 1000);
       look.render(scene, dt);
+      sceneStart ??= performance.now(); // Start after first-frame compilation.
       worldBase.ready = true;
       worldBase.cameraMode = walker.view;
       document.querySelector('#camera').textContent = `${walker.view === 'first' ? '第一' : '第三'}人称 · V`;

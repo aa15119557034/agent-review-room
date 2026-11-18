@@ -164,23 +164,24 @@ export class Terrain {
 
   // ------------------------------------------------------------------ CPU queries
   /** Fixture integration: one heightfield drives the visible land and walking queries. */
-  flattenRect({ minX, maxX, minZ, maxZ, height, blend, surface }) {
+  flattenRect({ minX, maxX, minZ, maxZ, height, blend, surface, approach }) {
     const { cell, N, h } = this;
     // Keep bilinear samples exactly flat up to the requested rectangle's edges.
     minX -= cell; maxX += cell; minZ -= cell; maxZ += cell;
     const x0 = Math.max(0, Math.floor((minX - blend + World.half) / cell));
     const x1 = Math.min(N - 1, Math.ceil((maxX + blend + World.half) / cell));
     const z0 = Math.max(0, Math.floor((minZ - blend + World.half) / cell));
-    const z1 = Math.min(N - 1, Math.ceil((maxZ + blend + World.half) / cell));
+    const z1 = Math.min(N - 1, Math.ceil((maxZ + (approach?.maxBlend ?? blend) + World.half) / cell));
     let changed = 0, originalMin = Infinity, originalMax = -Infinity;
     for (let iz = z0; iz <= z1; iz++) for (let ix = x0; ix <= x1; ix++) {
       const x = (ix + 0.5) * cell - World.half;
       const z = (iz + 0.5) * cell - World.half;
       const distance = Math.hypot(Math.max(minX - x, 0, x - maxX), Math.max(minZ - z, 0, z - maxZ));
-      if (distance >= blend) continue;
+      const width = approach ? approach.blendAt(x, z, blend) : blend;
+      if (distance >= width) continue;
       const index = iz * N + ix;
       if (distance === 0) { originalMin = Math.min(originalMin, h[index]); originalMax = Math.max(originalMax, h[index]); }
-      const t = distance / blend;
+      const t = distance / width;
       const weight = 1 - t * t * (3 - 2 * t);
       const target = surface ? surface(x, z) : height;
       h[index] += (target - h[index]) * weight;
@@ -308,6 +309,8 @@ export class Terrain {
         uMean: { value: mats.mean },
         uGrassFade: { value: new THREE.Vector2(60, 150) },
         uClipY: { value: 0 },
+        uSeaSetup: U.uSeaSetup,
+        uBeachExit: { value: new THREE.Vector2(1e8, 1e8) },
         uStationCutout: { value: new THREE.Vector4() },
       },
       vertexShader: VERT,
@@ -435,6 +438,8 @@ uniform vec3 uMean[8];
 uniform vec2 uGrassFade;
 uniform float uClipY;      // 1 in the water-reflection pass: drop everything below sea level
 uniform vec4 uStationCutout; // fixture-owned ground: min xz, max xz; zero width disables it
+uniform float uSeaSetup;
+uniform vec2 uBeachExit;
 uniform sampler2D uTintTex;
 ${NOISE}
 ${NOISE_TEX}
@@ -571,12 +576,17 @@ void main(){
     m = mixMat(m, ms, hblend(screeW, m.h, ms.h, 1.2));
   }
   // ---- beach
-  float wetLine = smoothstep(1.05, 0.12, P.y);
+  // Wind setup and wave run-up leave a broken damp line above the surf.
+  float runup = uSeaSetup + 0.12*sin(dot(P.xz, vec2(0.026,0.068)) - uTime*0.53);
+  float strand = P.y - runup + (nzA.r-0.5)*0.24;
+  float wetLine = 1.0 - smoothstep(0.14, 0.94, strand);
   if (sandW > 0.002){
     Mat ms = sampS(L_SAND, P.xz / 3.1, dPx.xz / 3.1, dPy.xz / 3.1);
     Mat ms2 = samp(L_SAND, P.xz / 13.0, dPx.xz / 13.0, dPy.xz / 13.0);
     ms.c = mix(ms.c, ms2.c, 0.35) * vec3(1.04, 1.0, 0.94);
-    ms.c *= mix(1.0, 0.50, wetLine);
+    float wrack = (1.0-smoothstep(0.04, 0.17, abs(strand-0.94+(nzB.g-0.5)*0.4)))
+      * smoothstep(0.42, 0.73, nzC.r*0.6+nzB.b*0.4);
+    ms.c *= mix(vec3(1.0),vec3(0.41,0.46,0.51),wetLine) * (1.0-0.45*wrack);
     ms.r = mix(ms.r, 0.16, wetLine);
     m = mixMat(m, ms, hblend(sandW, m.h, 0.5 + 0.5 * ms.h, 0.6));
   }
@@ -690,6 +700,18 @@ void main(){
     m.r = mix(m.r, mix(0.82, 0.95, mp.r), paved);
     m.h = mix(m.h, mp.h, paved);
     Nw = normalize(mix(Nw, normalize(N + vec3(mp.n.x, 0.0, mp.n.y) * 0.85), paved));
+  }
+
+  // Worn path from Sakuragaoka's southern street end disperses onto the sand.
+  vec2 exitOffset = P.xz-uBeachExit;
+  if (abs(exitOffset.x) < 25.0 && exitOffset.y >= 0.0 && exitOffset.y < 74.0) {
+    float bend = 20.0*smoothstep(0.0,68.0,exitOffset.y)-13.0*smoothstep(60.0,100.0,exitOffset.y);
+    float edge = abs(exitOffset.x-bend)+(nzB.r-0.5)*1.4;
+    float trail = (1.0-smoothstep(1.45,3.0,edge))*(1.0-smoothstep(47.0,74.0,exitOffset.y));
+    Mat grit = sampS(L_PEB, P.xz / 2.5, dPx.xz / 2.5, dPy.xz / 2.5);
+    vec3 earth = mix(grit.c * vec3(0.77,0.68,0.56), vec3(0.29,0.235,0.165)*(0.72+0.50*grit.h), 0.63);
+    m.c = mix(m.c, earth, trail);
+    m.r = mix(m.r,0.82,trail);
   }
 
   // ---- light

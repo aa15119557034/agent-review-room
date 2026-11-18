@@ -43,6 +43,8 @@ node scripts\prepare-props.cjs --download
 
 默认是傍晚（太阳高 12°、方位 280°，参数在 `src/evening.json`）。地形的太阳阴影烘焙在 `light.png` 里，换太阳必须一起重烘：首次运行 `python3 scripts/bake-evening-light.py`（需要 numpy、numba、scipy、Pillow，约半分钟），在 `.local/petalwake-*/assets/terrain/` 生成 `light-evening.png`；只换 R 通道（太阳阴影），AO、岸距、陡度照抄原图。网址加 `?time=afternoon` 回到 Petalwake 原来的下午光照做对照。港镇阴影图在场景启动时按所选太阳方向生成。
 
+按 `7` 切到南岸，点「进入步行」可直接从沙滩起步。也可以从站前主街一直向南，沿路尽头的土径走到潮间带，再原路返回。场景开始后约 100 秒经历一次云层增厚、海风增强和放晴，街灯和烘焙的傍晚太阳保持原方向。
+
 在本目录使用已有 Electron 运行，无需构建桌面应用：
 
 ```bat
