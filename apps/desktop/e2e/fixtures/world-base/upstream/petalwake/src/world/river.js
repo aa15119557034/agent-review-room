@@ -2,7 +2,7 @@
 // cliff as a waterfall. Water levels are read off the heightfield, so it always sits in its bed.
 import * as THREE from 'three';
 import { U, shared } from '../core/ctx.js';
-import { NOISE, NOISE_TEX, ATMOSPHERE, CLOUD_SHADOW, TERRAIN_LOOKUP, SHADOW } from '../shaders/common.js';
+import { NOISE, NOISE_TEX, ATMOSPHERE, CLOUD_SHADOW, TERRAIN_LOOKUP, SHADOW, WATER_CONTACT } from '../shaders/common.js';
 import { SKY_UNIFORMS, CLOUD_LOOKUP } from './sky.js';
 import { makeWaveNormalTexture } from './water.js';
 
@@ -69,13 +69,13 @@ export class River {
     const ripple = makeWaveNormalTexture();
     const uniforms = {
       ...shared(...SKY_UNIFORMS, 'uTime', 'uHeightTex', 'uLightTex', 'uWorld', 'uNoiseTex', 'uWakeTex', 'uWake', 'uShadowTex', 'uShadowMat', 'uShadowOn'),
-      uRipple: { value: ripple },
+      uRipple: { value: ripple }, ...shared('uWaterPatch','uWaterDisturbance'),
       ...sky.cloudUniforms,
     };
-    this.material = new THREE.ShaderMaterial({ uniforms, vertexShader: RIVER_VERT, fragmentShader: RIVER_FRAG, side: THREE.DoubleSide });
+    this.material = new THREE.ShaderMaterial({ uniforms, vertexShader: RIVER_VERT, fragmentShader: RIVER_FRAG, side: THREE.DoubleSide, transparent:true, depthWrite:true });
     this.mesh = new THREE.Mesh(g, this.material);
     this.mesh.frustumCulled = false;
-    this.mesh.renderOrder = 12;
+    this.mesh.renderOrder = 509;
     this.group = new THREE.Group();
     this.group.add(this.mesh);
 
@@ -213,6 +213,7 @@ varying vec4 vFlow;
 varying vec2 vDir;
 uniform float uTime;
 uniform sampler2D uRipple;
+${WATER_CONTACT}
 uniform sampler2D uWakeTex;
 uniform vec4 uWake;
 ${NOISE}
@@ -227,7 +228,9 @@ void main(){
   float bed = terrainH(P.xz);
   float depth = P.y - bed;
   float camD = distance(P, uCamPos);
-  if (depth < -0.02 && camD < 110.0) discard;
+  float edge=max(0.006,fwidth(depth));
+  float coverage=smoothstep(-edge,edge,depth)*(1.0-smoothstep(0.91,1.0,abs(vFlow.x)));
+  if(coverage<0.008) discard;
   depth = max(depth, 0.0);
   float u = vFlow.x, s = vFlow.y, slope = vFlow.z, w = vFlow.w;
   vec3 V = normalize(uCamPos - P);
@@ -239,6 +242,7 @@ void main(){
   vec2 rip = (r1.xy - 0.5) * 0.7 + (r2.xy - 0.5) * 0.5;
   vec2 across = vec2(-vDir.y, vDir.x);
   vec2 nxz = (across * rip.x + vDir * rip.y) * (0.28 + 1.4 * slope);
+  nxz -= contactSlope(P.xz);
   vec3 N = normalize(vec3(nxz.x, 1.0, nxz.y));
 
   vec4 light = texture(uLightTex, worldUV(P.xz));
@@ -282,7 +286,9 @@ void main(){
   vec3 foamCol = vec3(0.92, 0.95, 0.97) * (uSunColor * 0.30 * (0.25 + 0.75 * sun) + uAmbSky * 0.62);
   col = mix(col, foamCol, saturate(foam));
   col = applyAtmosphere(col, P);
-  gl_FragColor = vec4(col, 1.0);
+  float opticalDepth=depth/max(0.30,dot(N,V));
+  float alpha=(1.0-exp(-7.0*opticalDepth))+(exp(-7.0*opticalDepth))*max(F,foam)*smoothstep(0.0,0.04,depth);
+  gl_FragColor = vec4(col,coverage*alpha);
 }
 `;
 

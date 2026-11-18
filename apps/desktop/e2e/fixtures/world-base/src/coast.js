@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { basinAt } from './basins.js';
 import { World } from '../upstream/petalwake/src/core/ctx.js';
 import { Physics } from '../upstream/sakuragaoka/src/core/physics.js';
 import { streetCenterX } from '../upstream/sakuragaoka/src/world/layout.js';
@@ -96,13 +97,23 @@ export function coastWalking(station, island) {
   const islandFloor = (x, z) => island.heightAt(x + root.position.x, z + root.position.z) - root.position.y;
   // The two-metre strip connects the road shoulder to the first island triangles.
   const height = (x, z) => {
-    if (z >= bounds.z1 + 2) return islandFloor(x, z);
+    if (z >= bounds.z1 + 2 || z < bounds.z0 || x < bounds.x0 || x > bounds.x1) return islandFloor(x, z);
     const t = THREE.MathUtils.clamp((z - bounds.z1) / 2, 0, 1);
     return THREE.MathUtils.lerp(station.physics.heightAt(x, bounds.z1), islandFloor(x, bounds.z1 + 2), t);
   };
   return {
     physics: new Physics(height),
+    wadingDepth(x,z){
+      const wx=x+root.position.x,wz=z+root.position.z,b=basinAt(wx,wz);
+      const surface=b ? b.level : island.river.levelAt(wx,wz);
+      return Math.max(0,surface-island.heightAt(wx,wz));
+    },
     contains(x, z, radius) {
+      const wx=x+root.position.x, wz=z+root.position.z;
+      const basin=basinAt(wx,wz,1.46);
+      if(basin) return basin.level-island.heightAt(wx,wz)<0.82;
+      const bank=island.streamView.feet;
+      if(Math.hypot(wx-bank[0],wz-bank[2])<36-radius) return island.river.levelAt(wx,wz)-island.heightAt(wx,wz)<0.82;
       if (z < bounds.z1 - radius) return false;
       return route.contains(x + root.position.x, z + root.position.z, height(x, z) + root.position.y, radius);
     },

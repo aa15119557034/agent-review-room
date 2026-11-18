@@ -310,7 +310,7 @@ export class Terrain {
         uGrassFade: { value: new THREE.Vector2(60, 150) },
         uClipY: { value: 0 },
         uSeaSetup: U.uSeaSetup,
-        uBeachExit: { value: new THREE.Vector2(1e8, 1e8) },
+        uBeachExit: { value: new THREE.Vector2(1e8, 1e8) }, uInlandBank: {value:null}, uBasinLevels:{value:new THREE.Vector4()},
         uStationCutout: { value: new THREE.Vector4() },
       },
       vertexShader: VERT,
@@ -440,6 +440,8 @@ uniform float uClipY;      // 1 in the water-reflection pass: drop everything be
 uniform vec4 uStationCutout; // fixture-owned ground: min xz, max xz; zero width disables it
 uniform float uSeaSetup;
 uniform vec2 uBeachExit;
+uniform sampler2D uInlandBank;
+uniform vec4 uBasinLevels;
 uniform sampler2D uTintTex;
 ${NOISE}
 ${NOISE_TEX}
@@ -534,6 +536,10 @@ void main(){
   float lowW = smoothstep(3.7, 2.1, P.y + (nzA.g - 0.5) * 1.4);
   float sandW = lowW * (1.0 - smoothstep(0.25, 0.6, cliffy));
   float pebW = lowW * smoothstep(0.25, 0.6, cliffy);
+  vec4 bank = texture(uInlandBank,uv);
+  int basinId=int(clamp(floor(bank.a*255.0/48.0+0.5)-1.0,0.0,3.0));
+  float bankHeight=P.y-uBasinLevels[basinId];
+  pebW=max(pebW,bank.r); sandW=max(sandW,bank.g);
   float screeW = smoothstep(240.0, 310.0, P.y + (nzA.b - 0.5) * 70.0) * 0.85;
   float nearK = 1.0 - smoothstep(uGrassFade.x, uGrassFade.y, dist);
 
@@ -579,7 +585,8 @@ void main(){
   // Wind setup and wave run-up leave a broken damp line above the surf.
   float runup = uSeaSetup + 0.12*sin(dot(P.xz, vec2(0.026,0.068)) - uTime*0.53);
   float strand = P.y - runup + (nzA.r-0.5)*0.24;
-  float wetLine = 1.0 - smoothstep(0.14, 0.94, strand);
+  float dampMargin=bank.a>0.85 ? bank.b : bank.b*(1.0-smoothstep(0.05,0.43,bankHeight+(nzB.r-0.5)*0.16+(nzC.b-0.5)*0.07));
+  float wetLine = max(dampMargin,1.0 - smoothstep(0.14, 0.94, strand));
   if (sandW > 0.002){
     Mat ms = sampS(L_SAND, P.xz / 3.1, dPx.xz / 3.1, dPy.xz / 3.1);
     Mat ms2 = samp(L_SAND, P.xz / 13.0, dPx.xz / 13.0, dPy.xz / 13.0);
@@ -587,6 +594,7 @@ void main(){
     float wrack = (1.0-smoothstep(0.04, 0.17, abs(strand-0.94+(nzB.g-0.5)*0.4)))
       * smoothstep(0.42, 0.73, nzC.r*0.6+nzB.b*0.4);
     ms.c *= mix(vec3(1.0),vec3(0.41,0.46,0.51),wetLine) * (1.0-0.45*wrack);
+    ms.c *= mix(vec3(1.0),vec3(0.39,0.48,0.35),bank.g);
     ms.r = mix(ms.r, 0.16, wetLine);
     m = mixMat(m, ms, hblend(sandW, m.h, 0.5 + 0.5 * ms.h, 0.6));
   }
@@ -733,7 +741,7 @@ void main(){
   float ndh = saturate(dot(Nw, H));
   float D = a * a / (3.14159 * pow(ndh * ndh * (a * a - 1.0) + 1.0, 2.0));
   float F = 0.04 + 0.96 * pow(1.0 - saturate(dot(V, H)), 5.0);
-  float specMask = max(rockAmt, lowW);
+  float specMask = max(max(rockAmt, lowW),dampMargin*0.62);
   col += uSunColor * sh * saturate(ndlRaw) * min(D, 40.0) * F * 0.25 * specMask;
   float fres = 0.04 + 0.96 * pow(1.0 - saturate(dot(Nw, V)), 5.0);
   vec3 R = reflect(-V, Nw);

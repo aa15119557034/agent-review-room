@@ -5,7 +5,8 @@ import { Pipeline } from '../upstream/petalwake/src/core/pipeline.js';
 // normal override would outline Petalwake's undisplaced tile grid instead.
 const OUTLINES = /* glsl */`
 uniform sampler2D tWorldDepth;
-uniform float uNear, uFar, uReversed, uToon, uHaze;
+uniform float uNear, uFar, uReversed, uToon, uHaze, uGroundFog;
+uniform vec4 uFogHeight;
 float wbDepth(vec2 uv) {
   float z = texture(tWorldDepth, uv).r;
   return uNear*uFar / mix(uFar+(uNear-uFar)*z, uNear+(uFar-uNear)*z, uReversed);
@@ -121,7 +122,7 @@ export function createLook(renderer, camera) {
   const mat = pipeline.finalMat;
   Object.assign(mat.uniforms, {
     tWorldDepth: pipeline.uDepth, uNear: { value: camera.near }, uFar: { value: camera.far },
-    uProjScale: { value: 1 }, uAO: { value: 0.55 },
+    uProjScale: { value: 1 }, uAO: { value: 0.55 }, uGroundFog:{value:0}, uFogHeight:{value:new THREE.Vector4()},
     uReversed: { value: pipeline.reversed ? 1 : 0 }, uToon: toon, uHaze: { value: 1 },
   });
   mat.fragmentShader = insert(mat.fragmentShader, 'void main(){', `${OUTLINES}\nvoid main(){`, 'composite entry');
@@ -137,6 +138,14 @@ export function createLook(renderer, camera) {
     float wbD = wbDepth(uv);
     float wbHaze = (1.0-exp(-max(wbD-60.0,0.0)/750.0)) * (1.0-step(uFar*0.9,wbD)) * uHaze * uToon;
     col = mix(col, vec3(0.80,0.83,0.88)*max(dot(col,vec3(0.2126,0.7152,0.0722))*1.15,0.55), wbHaze*0.72);
+    if(uGroundFog>0.01){
+      vec3 ray=normalize(vec3((uv-0.5)*uRes/uProjScale,-1.0));
+      float rise=dot(ray,uFogHeight.xyz);
+      float distanceInFog=min(wbD/max(-ray.z,0.1),560.0);
+      float meanHeight=uFogHeight.w+0.5*distanceInFog*rise;
+      float optical=distanceInFog*0.010*exp(-max(meanHeight-18.0,0.0)/28.0);
+      col=mix(col,vec3(0.53,0.56,0.61),uGroundFog*(1.0-exp(-optical))*0.84);
+    }
     col *= uExposure;`, 'outline stage');
   // Station soft clip below the knee keeps anime mid-tones bright and saturated;
   // ACES stays for the high aerial view (whole-island HDR) and the toon-off comparison.
@@ -261,9 +270,12 @@ export function createLook(renderer, camera) {
       townUniforms.uTownGreen.value.x = strength;
     },
     setAO(value) { mat.uniforms.uAO.value = value; },
+    setGroundFog(value){mat.uniforms.uGroundFog.value=value;},
     setFlightEffects(value) { pipeline.params.blur = value ? 1 : 0; pipeline.params.rays = value ? 0.55 : 0; pipeline.hasPrev = false; },
     setSize(width, height, ratio) { pipeline.setSize(width, height, ratio); },
     render(scene, dt) {
+      const basis=camera.matrixWorld.elements;
+      mat.uniforms.uFogHeight.value.set(basis[1],basis[5],basis[9],camera.position.y);
       mat.uniforms.uNear.value = camera.near;
       mat.uniforms.uFar.value = camera.far;
       mat.uniforms.uProjScale.value = 0.5 * mat.uniforms.uRes.value.y / Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2);

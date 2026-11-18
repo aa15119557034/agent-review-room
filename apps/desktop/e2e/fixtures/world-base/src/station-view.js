@@ -5,7 +5,8 @@ import { STEP_HEIGHT } from '../upstream/sakuragaoka/src/core/physics.js';
 // with one removable input owner and a camera independent of the feet position.
 export function createStationWalker(station, dom, coast) {
   const bounds = station.bounds;
-  const physicsAt = z => coast && z > bounds.z1 ? coast.physics : station.physics;
+  const outside = (x,z) => x<bounds.x0 || x>bounds.x1 || z<bounds.z0 || z>bounds.z1;
+  const physicsAt = (x,z) => coast && outside(x,z) ? coast.physics : station.physics;
   const position = station.toLocal(station.spawn);
   const worldPosition = station.spawn.clone();
   const velocity = new THREE.Vector3();
@@ -57,7 +58,7 @@ export function createStationWalker(station, dom, coast) {
       const view = station.camera;
       const halfHeight = view.near * Math.tan(THREE.MathUtils.degToRad(view.getEffectiveFOV()) / 2);
       const clearance = Math.hypot(view.near, halfHeight, halfHeight * view.aspect) + 0.02;
-      const fraction = physicsAt(position.z).sweepSphere(target, desired, clearance);
+      const fraction = physicsAt(position.x,position.z).sweepSphere(target, desired, clearance);
       camera.position.lerpVectors(target, desired, fraction);
       if (fraction > 1e-6) camera.lookAt(target);
     }
@@ -96,7 +97,9 @@ export function createStationWalker(station, dom, coast) {
       let sideways = Number(keys.has('KeyD') || keys.has('ArrowRight')) - Number(keys.has('KeyA') || keys.has('ArrowLeft'));
       const length = Math.hypot(forward, sideways);
       if (length > 1) { forward /= length; sideways /= length; }
-      const speed = keys.has('ShiftLeft') || keys.has('ShiftRight') ? 6.4 : 3.1;
+      const depth = coast && outside(position.x,position.z) ? coast.wadingDepth(position.x,position.z) : 0;
+      const speed = (keys.has('ShiftLeft') || keys.has('ShiftRight') ? 6.4 : 3.1)
+        / (1+1.6*depth);
       const vx = (-Math.sin(yaw) * forward + Math.cos(yaw) * sideways) * speed;
       const vz = (-Math.cos(yaw) * forward - Math.sin(yaw) * sideways) * speed;
       const acceleration = Math.min(1, (grounded ? 10 : 2.5) * dt);
@@ -107,10 +110,10 @@ export function createStationWalker(station, dom, coast) {
       for (let index = 0; index < count; index++) {
         const x = next.x, z = next.z;
         next.x += velocity.x * dt / count; next.z += velocity.z * dt / count;
-        const physics = physicsAt(next.z);
+        const physics = physicsAt(next.x,next.z);
         physics.resolve(next, radius, position.y, height);
         if (!coast?.contains(next.x, next.z, radius)) {
-          if (z > bounds.z1) { next.x = x; next.z = z; }
+          if (outside(x,z)) { next.x = x; next.z = z; }
           else {
             next.x = THREE.MathUtils.clamp(next.x, bounds.x0 + radius, bounds.x1 - radius);
             next.z = THREE.MathUtils.clamp(next.z, bounds.z0 + radius, bounds.z1 - radius);
@@ -119,7 +122,7 @@ export function createStationWalker(station, dom, coast) {
         if (physics.groundHeight(next.x, next.z, position.y) - position.y > STEP_HEIGHT) { next.x = x; next.z = z; }
       }
       position.x = next.x; position.z = next.z;
-      const ground = physicsAt(position.z).groundHeight(position.x, position.z, position.y);
+      const ground = physicsAt(position.x,position.z).groundHeight(position.x, position.z, position.y);
       verticalSpeed -= 12 * dt; position.y += verticalSpeed * dt;
       grounded = position.y <= ground || position.y - ground < 0.06 && verticalSpeed <= 0;
       if (grounded) { position.y = ground; verticalSpeed = 0; }

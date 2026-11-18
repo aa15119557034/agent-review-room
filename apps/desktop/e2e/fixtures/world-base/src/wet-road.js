@@ -171,7 +171,7 @@ export function applyWetRoad({ root, ctx, reflections }) {
   material.name = 'street-asphalt-wet';
   const uniforms = {
     ...reflections.uniforms,
-    uWetMask: { value: texture }, uWetEnabled: { value: 1 },
+    uWetMask: { value: texture }, uWetEnabled: { value: 1 }, uRainFilm: {value:0},
     uWetBounds: { value: new THREE.Vector4(BOUNDS.x0, BOUNDS.z0, BOUNDS.x1 - BOUNDS.x0, BOUNDS.z1 - BOUNDS.z0) },
   };
   const upstreamCompile = original.onBeforeCompile;
@@ -189,7 +189,7 @@ export function applyWetRoad({ root, ctx, reflections }) {
       vWetLocal = (uStreetWorldToLocal * wetWorld).xz;`);
     shader.fragmentShader = insert(shader.fragmentShader, '#include <common>', `#include <common>
       uniform sampler2D uWetMask;
-      uniform float uWetEnabled;
+      uniform float uWetEnabled, uRainFilm;
       uniform vec4 uWetBounds;
       ${STREET_REFLECTION_GLSL}
       varying vec3 vWetWorld;
@@ -197,7 +197,8 @@ export function applyWetRoad({ root, ctx, reflections }) {
     shader.fragmentShader = insert(shader.fragmentShader, '#include <map_fragment>', `#include <map_fragment>
       vec2 wetUV = (vWetLocal - uWetBounds.xy) / uWetBounds.zw;
       float wetInside = step(0.0, wetUV.x) * step(wetUV.x, 1.0) * step(0.0, wetUV.y) * step(wetUV.y, 1.0);
-      vec2 wetMask = texture2D(uWetMask, wetUV).rg * wetInside * uWetEnabled;
+      vec2 wetMask = texture2D(uWetMask, wetUV).rg;
+      wetMask = mix(wetMask, vec2(0.68+0.32*wetMask.r,0.15+0.85*wetMask.g),uRainFilm)*wetInside*uWetEnabled;
       // Wet asphalt reads darker and slightly cooler/more saturated.
       diffuseColor.rgb *= mix(vec3(1.0), vec3(0.42, 0.46, 0.52), wetMask.r);`);
     shader.fragmentShader = insert(shader.fragmentShader, '#include <opaque_fragment>', `
@@ -220,7 +221,7 @@ export function applyWetRoad({ root, ctx, reflections }) {
   mesh.material = material;
   let disposed = false;
   return {
-    material, maskTexture: texture,
+    material, maskTexture: texture, rainFilm:uniforms.uRainFilm,
     stats: { ...stats, materials: 1, extraPasses: 0, extraRenderTargets: 0, reflection: 'shared station street cube' },
     get enabled() { return uniforms.uWetEnabled.value === 1; },
     setEnabled(enabled) { uniforms.uWetEnabled.value = enabled ? 1 : 0; },

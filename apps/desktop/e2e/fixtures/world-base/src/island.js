@@ -13,6 +13,9 @@ import { heightAt as stationHeight } from '../upstream/sakuragaoka/src/world/lay
 import { createGroundTransition } from './transition.js';
 import { shapeIslandRelief, makeCoastRoute } from './coast.js';
 import { createWeather } from './weather.js';
+import { basins, basinAt, carveBasins, makeBankTexture } from './basins.js';
+import { createInlandWater } from './inland-water.js';
+import { dressStreamBanks } from './stream-bank.js';
 
 export const stationPlacement = Object.freeze({
   x: 280, y: 8, z: 900, position: Object.freeze([280, 8, 900]), rotationY: 0,
@@ -140,7 +143,8 @@ async function loadProps(assetBase, terrain, placements) {
       loader.loadAsync(`${assetBase}/models/${name}.glb`), json(`${assetBase}/models/${name}.json`),
     ]);
     const list = placements.filter(([x, , z, , scale]) => {
-      const remove = inRect(x, z, info.radius * scale);
+      const basin = basinAt(x,z);
+      const remove = inRect(x, z, info.radius * scale) || (basin && terrain.heightAt(x,z)<basin.level);
       if (remove) removed++;
       return !remove;
     }).map((placement) => {
@@ -203,6 +207,9 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
   const coastRoute = makeCoastRoute(stationPlacement);
   const anchors = Object.values(propPlacements).flat().map(p => [p, terrain.heightAt(p[0], p[2])]);
   const relief = shapeIslandRelief(terrain, index.towns, stationRect);
+  const basinStats = carveBasins(terrain);
+  terrain.material.uniforms.uInlandBank.value=makeBankTexture();
+  terrain.material.uniforms.uBasinLevels.value.fromArray(basins.map(b=>b.level));
   const flatten = terrain.flattenRect({ ...stationRect, height: stationPlacement.y, blend, surface, approach: coastRoute });
   // Retain the authored burial depth of each rock or tree on the reshaped island.
   for (const [p, original] of anchors) p[1] += terrain.heightAt(p[0], p[2]) - original;
@@ -233,15 +240,18 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
   sky.cloudOn.value = 1;
   const water = new Water(sky);
   const river = new River(terrain, terrain.meta, sky);
+  const streamView=dressStreamBanks(terrain,river);
   water.material.uniforms.uFallBase.value.set(river.fall.base.x, river.fall.base.z, river.fall.hw * 1.6);
   const { props, removed, reseated } = await loadProps(assetBase, terrain, propPlacements);
   const weather = createWeather(timeOfDay);
+  const inland = createInlandWater(terrain,sky,river);
+  root.add(inland.group);
   root.add(terrain.mainView.mesh, meadow.group, sky.mesh, water.mesh, river.group, town.group, props.group, transition);
   if (props.overlay) root.add(props.overlay);
   town.bakeShadows();
 
   const stats = { towns: town.towns.map((entry) => entry.id), townTriangles: town.tris,
-    props: props.counts, removedProps: removed, reseatedProps: reseated, flatten, relief,
+    props: props.counts, removedProps: removed, reseatedProps: reseated, flatten, relief, basins:basinStats,
     transition: { width: 2, spacing: 1, triangles: transition.geometry.index.count / 3 } };
   function update(dt, time) {
     U.uTime.value = time;
@@ -255,7 +265,7 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
     stats.meadow = { ...meadow.stats };
   }
   return {
-    ready: true, root, terrain, town, props, meadow, water, sky, river, transition, U, stationPlacement, stats, update, timeOfDay, coastRoute, weather,
+    ready: true, root, terrain, town, props, meadow, water, sky, river, inland, streamView, transition, U, stationPlacement, stats, update, timeOfDay, coastRoute, weather,
     heightAt: (x, z) => terrain.heightAt(x, z),
     // Meadow allocates materials lazily as camera cells enter view.
     get materials() {

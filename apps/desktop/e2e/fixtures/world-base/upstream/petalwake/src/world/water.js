@@ -2,7 +2,7 @@
 // sky + planar reflections, foam and the rider's wake.
 import * as THREE from 'three';
 import { U, World, shared } from '../core/ctx.js';
-import { NOISE, NOISE_TEX, ATMOSPHERE, CLOUD_SHADOW, TERRAIN_LOOKUP, SHADOW } from '../shaders/common.js';
+import { NOISE, NOISE_TEX, ATMOSPHERE, CLOUD_SHADOW, TERRAIN_LOOKUP, SHADOW, WATER_CONTACT } from '../shaders/common.js';
 import { SKY_UNIFORMS, CLOUD_LOOKUP } from './sky.js';
 
 const NW = 8;
@@ -139,7 +139,7 @@ export class Water {
         uCenter: { value: new THREE.Vector2() },
         uRipple: { value: makeWaveNormalTexture() },
         ...sky.cloudUniforms,
-        uSeaSetup: U.uSeaSetup,
+        uSeaSetup: U.uSeaSetup, ...shared('uWaterPatch','uWaterDisturbance'),
         uReflTex: this.reflTex,
         uReflMat: this.reflMat,
         uReflOn: this.reflOn,
@@ -258,6 +258,7 @@ varying vec2 vXZ0;
 varying float vAmp;
 uniform float uTime;
 uniform sampler2D uRipple;
+${WATER_CONTACT}
 uniform sampler2D uReflTex;
 uniform mat4 uReflMat;
 uniform float uReflOn;
@@ -304,7 +305,8 @@ void main(){
   vec4 r4 = texture(uRipple, P.xz / 2.3 + vec2(uTime * 0.31, -uTime * 0.23));
   vec4 r5 = texture(uRipple, P.xz.yx / 1.1 - vec2(uTime * 0.43, uTime * 0.37) + 0.6);
   vec2 ruffle = ((r4.xy - 0.5) * 1.3 + (r5.yx - 0.5) * 0.9) * smoothstep(0.12, 1.0, gale) * 1.7;
-  vec3 N = normalize(n + vec3(rip.x, 0.0, rip.y) * chop * (0.35 + 0.65 * rippleFade) + vec3(ruffle.x, 0.0, ruffle.y));
+  vec2 contact = contactSlope(P.xz);
+  vec3 N = normalize(n + vec3(rip.x, 0.0, rip.y) * chop * (0.35 + 0.65 * rippleFade) + vec3(ruffle.x-contact.x, 0.0, ruffle.y-contact.y));
   // looking along the surface the micro-normals average out
   float graze = 1.0 - saturate(dot(V, vec3(0.0, 1.0, 0.0)));
 

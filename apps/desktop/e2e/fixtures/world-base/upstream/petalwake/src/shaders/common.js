@@ -1,6 +1,18 @@
 // GLSL building blocks shared by every material so sky, haze, lighting and the meadow palette
 // agree everywhere by construction.
 
+export const WATER_CONTACT = /* glsl */`
+uniform vec4 uWaterPatch;
+uniform sampler2D uWaterDisturbance;
+vec2 contactSlope(vec2 p){
+  vec2 uv=(p-uWaterPatch.xy)*uWaterPatch.z+0.5;
+  if(uWaterPatch.z==0.0 || any(greaterThan(abs(uv-0.5),vec2(0.47)))) return vec2(0.0);
+  vec2 e=vec2(uWaterPatch.w*uWaterPatch.z,0.0);
+  return vec2(texture(uWaterDisturbance,uv+e).r-texture(uWaterDisturbance,uv-e).r,
+    texture(uWaterDisturbance,uv+e.yx).r-texture(uWaterDisturbance,uv-e.yx).r)/(2.0*uWaterPatch.w);
+}
+`;
+
 export const NOISE = /* glsl */`
 float hash11(float p){ p = fract(p * 0.1031); p *= p + 33.33; p *= p + p; return fract(p); }
 float hash12(vec2 p){ vec3 p3 = fract(vec3(p.xyx) * 0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
