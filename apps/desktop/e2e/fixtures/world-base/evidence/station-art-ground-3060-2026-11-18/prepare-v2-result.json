@@ -1,0 +1,23 @@
+{
+  "concurrentExits": [
+    0,
+    0,
+    0
+  ],
+  "archive": {
+    "sha256": "3ef6196ee62ad3b1bf9cfda4ea0feac017ccb64aac208ef4b8b82df0f7ea9d13",
+    "bytes": 1031291,
+    "files": 10
+  },
+  "routes": [
+    "mature-sakura/mature-sakura.glb",
+    "station-art/alley-workshop.glb",
+    "station-art/laundry-infill.glb",
+    "station-art/station-exchange.glb"
+  ],
+  "hiddenStatus": 403,
+  "corruptInstallPreserved": true,
+  "corruptArchiveRejected": true,
+  "nativePrepare": "petalwake: 25443cef0eba802052d9ef24c94ba3c4157b6f2e archive and 599 original files verified\nsakuragaoka: 4112f57208b7e29998344ca71fef74202c2b2bdd archive and 161 original files verified\n760 upstream files inventoried; no assets copied into tracked source\nStation art 3ef6196ee62ad3b1bf9cfda4ea0feac017ccb64aac208ef4b8b82df0f7ea9d13: 10 files verified",
+  "combinedPrelaunchIntentionalExit": 73
+}

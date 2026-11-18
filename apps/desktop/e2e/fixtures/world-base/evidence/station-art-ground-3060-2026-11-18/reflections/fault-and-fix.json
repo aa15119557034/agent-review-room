@@ -1,0 +1,270 @@
+{
+  "initial": "2a7c6f12bb66f44a04a9dbbc2a4e2e7a22e93758",
+  "fixed": "17c126adc9f8f053fab99479c92269e1460c3029",
+  "shader": "src/weathering.js",
+  "face": "nz",
+  "rawPixelXY": [
+    237,
+    139
+  ],
+  "clock": 14,
+  "rayDirection": [
+    -0.6485480681267237,
+    -0.06811235418682336,
+    -0.7581201161664447
+  ],
+  "firstForwardHit": {
+    "d": 11.029641649082128,
+    "path": "Sakuragaoka/static/shopsA:W1/w1-display-bottles",
+    "material": "art-stock",
+    "type": "MeshToonMaterial",
+    "color": [
+      1,
+      1,
+      1
+    ],
+    "position": [
+      272.8467472163577,
+      9.51274514144398,
+      909.6382067917236
+    ],
+    "face": 45,
+    "instance": 3,
+    "uv": [
+      0,
+      0
+    ],
+    "transparent": false,
+    "alphaTest": 0,
+    "depthWrite": true,
+    "blending": 1,
+    "userData": [
+      "toon",
+      "wxClass"
+    ],
+    "weatheringReplay": {
+      "face": [
+        135,
+        136,
+        137
+      ],
+      "bary": [
+        0.025359785713336302,
+        0.24108055840115172,
+        0.733559655885512
+      ],
+      "normal": [
+        0.6597628149687205,
+        0.31112998390238406,
+        0.6840403212541288
+      ],
+      "worldArea": 0.0006212388261922413,
+      "geometryArea": 0.05502312449303693,
+      "instanceScale": [
+        0.06499999761581421,
+        0.25999999046325684,
+        0.06499999761581421
+      ],
+      "albedo": [
+        0.9300000071525574,
+        0.4282464912440087,
+        0.06111971595852417
+      ],
+      "instanceColor": [
+        1,
+        0.4507857859134674,
+        0.06301001459360123
+      ],
+      "vertexColor": [
+        0.9300000071525574,
+        0.949999988079071,
+        0.9700000286102295
+      ],
+      "wxMask": [
+        0.7188465019242325,
+        0,
+        0
+      ],
+      "wxClass": 1,
+      "noiseRed": 0.25365745646193555,
+      "b1": 0.08190707860008482,
+      "wall": 1,
+      "pc": [
+        413.5072872969852,
+        9.51274514144398
+      ],
+      "predicted": {
+        "afternoon": {
+          "wxK": 0.6469618517318093,
+          "tilted": [
+            0.9381763082138306,
+            0.42811940985600677,
+            0.059954335078900384
+          ],
+          "lum": 0.5099759880479731,
+          "saturationFactor": 1.1514744955499165,
+          "afterSaturation": [
+            1.0030377357052667,
+            0.41572022596693636,
+            -0.008212467791129496
+          ]
+        },
+        "evening": {
+          "wxK": 0.7188465019242325,
+          "tilted": [
+            0.9390847861095276,
+            0.4281052897017843,
+            0.05982484831449775
+          ],
+          "lum": 0.5101496827699085,
+          "saturationFactor": 1.1683049950554627,
+          "afterSaturation": [
+            1.0112767065562167,
+            0.41429680853212525,
+            -0.0159670707218722
+          ]
+        }
+      }
+    }
+  },
+  "shaderRemedy": "Clamp post-saturation diffuse reflectance to a nonnegative minimum before lighting.",
+  "perProfile": {
+    "afternoon": {
+      "pixel": {
+        "face": "nz",
+        "x": 237,
+        "y": 139,
+        "priorLinearRGB": [
+          0.229248046875,
+          0.10504150390625,
+          -0.0026607513427734375
+        ],
+        "currentLinearRGB": [
+          0.229248046875,
+          0.10504150390625,
+          0.0
+        ]
+      },
+      "negativeInPrior": [
+        {
+          "face": "nz",
+          "x": 237,
+          "y": 139,
+          "channel": 2,
+          "rgb": [
+            0.229248046875,
+            0.10504150390625,
+            -0.0026607513427734375
+          ]
+        }
+      ],
+      "versusPrior": {
+        "px": {
+          "rawRGBChangedTexels": 0,
+          "above0p01": 0,
+          "signedDiagnosticRawSHA256": "aca5f5fdad9fdcb912a0ebe92c233c639b62ee51ac807590734a82d366440160",
+          "postFixRawSHA256": "aca5f5fdad9fdcb912a0ebe92c233c639b62ee51ac807590734a82d366440160"
+        },
+        "nx": {
+          "rawRGBChangedTexels": 0,
+          "above0p01": 0,
+          "signedDiagnosticRawSHA256": "3366312558dc908f0dfd825af85e2b13b84dc125fa9149086cda0d839008547a",
+          "postFixRawSHA256": "3366312558dc908f0dfd825af85e2b13b84dc125fa9149086cda0d839008547a"
+        },
+        "py": {
+          "rawRGBChangedTexels": 0,
+          "above0p01": 0,
+          "signedDiagnosticRawSHA256": "3025a62fedc425052ee0809908fc30cee9ce41285fb4228a9bbbe34320aa1d22",
+          "postFixRawSHA256": "3025a62fedc425052ee0809908fc30cee9ce41285fb4228a9bbbe34320aa1d22"
+        },
+        "ny": {
+          "rawRGBChangedTexels": 0,
+          "above0p01": 0,
+          "signedDiagnosticRawSHA256": "e9a14e71391e88f03b042c06bf0a09594d7975138b471e8aeab8a0d86c2b0655",
+          "postFixRawSHA256": "e9a14e71391e88f03b042c06bf0a09594d7975138b471e8aeab8a0d86c2b0655"
+        },
+        "pz": {
+          "rawRGBChangedTexels": 0,
+          "above0p01": 0,
+          "signedDiagnosticRawSHA256": "b983925788ad23159c86e01235ff02ef78644f44fc3e239489132e200490daff",
+          "postFixRawSHA256": "b983925788ad23159c86e01235ff02ef78644f44fc3e239489132e200490daff"
+        },
+        "nz": {
+          "rawRGBChangedTexels": 2,
+          "above0p01": 0,
+          "signedDiagnosticRawSHA256": "dce0b42e8d2bcd20b7fe66f5b99f7c5059ce2d68c89d12c26cf4593545b8f8a7",
+          "postFixRawSHA256": "5268d4f38888cef1ddd8d9b2baecce276550ff65a0a713bb84891975d444e53d"
+        }
+      }
+    },
+    "evening": {
+      "pixel": {
+        "face": "nz",
+        "x": 237,
+        "y": 139,
+        "priorLinearRGB": [
+          0.258544921875,
+          0.10137939453125,
+          -0.00557708740234375
+        ],
+        "currentLinearRGB": [
+          0.258544921875,
+          0.10137939453125,
+          0.0
+        ]
+      },
+      "negativeInPrior": [
+        {
+          "face": "nz",
+          "x": 237,
+          "y": 139,
+          "channel": 2,
+          "rgb": [
+            0.258544921875,
+            0.10137939453125,
+            -0.00557708740234375
+          ]
+        }
+      ],
+      "versusPrior": {
+        "px": {
+          "rawRGBChangedTexels": 0,
+          "above0p01": 0,
+          "signedDiagnosticRawSHA256": "4dbfb000b44235f254c1af87cdb744694864d1755558a3932a8d5ee800da4f9d",
+          "postFixRawSHA256": "4dbfb000b44235f254c1af87cdb744694864d1755558a3932a8d5ee800da4f9d"
+        },
+        "nx": {
+          "rawRGBChangedTexels": 0,
+          "above0p01": 0,
+          "signedDiagnosticRawSHA256": "cf698bd81f7e287da405a83e1b6b3096e9ed9af21aba9cb908a6dc1c5023d01d",
+          "postFixRawSHA256": "cf698bd81f7e287da405a83e1b6b3096e9ed9af21aba9cb908a6dc1c5023d01d"
+        },
+        "py": {
+          "rawRGBChangedTexels": 0,
+          "above0p01": 0,
+          "signedDiagnosticRawSHA256": "85cf2e0f65e24086179c41da451aca57db2563f136a66768b0f84c7736a52600",
+          "postFixRawSHA256": "85cf2e0f65e24086179c41da451aca57db2563f136a66768b0f84c7736a52600"
+        },
+        "ny": {
+          "rawRGBChangedTexels": 0,
+          "above0p01": 0,
+          "signedDiagnosticRawSHA256": "7d2dc6bdbb51590b9302e3720a402e18559c1c488ae5beb0998b144b4d82e242",
+          "postFixRawSHA256": "7d2dc6bdbb51590b9302e3720a402e18559c1c488ae5beb0998b144b4d82e242"
+        },
+        "pz": {
+          "rawRGBChangedTexels": 0,
+          "above0p01": 0,
+          "signedDiagnosticRawSHA256": "c9f81bacb5ab2c6ae2d7530e0907bf6bffc7cd6538ace95c943522208eb69e1d",
+          "postFixRawSHA256": "c9f81bacb5ab2c6ae2d7530e0907bf6bffc7cd6538ace95c943522208eb69e1d"
+        },
+        "nz": {
+          "rawRGBChangedTexels": 3,
+          "above0p01": 0,
+          "signedDiagnosticRawSHA256": "2e741668ef208b9afb7b57aefe5e71bd3a36842bc3475a12bc1e45f66c4944a5",
+          "postFixRawSHA256": "36c42a70165249ace0d6af7b9977ad6ec8b83eaeb0334e83af6a636c88322fba"
+        }
+      }
+    }
+  },
+  "originalRayDiagnosticSHA256": "0d9eb600d8831cc4cce530ca6b6632a35a3c9bb26dba53960606776a8e303606"
+}
