@@ -1,0 +1,26 @@
+[
+  {
+    "id": "quiet-r3cell-control-01",
+    "source": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+    "file": "quiet-r3cell-control-01.frames.json.gz",
+    "sha256": "403cd4887225d872c0d88f271e972f293452aa97837ff2f2de5fe0f3114b6658"
+  },
+  {
+    "id": "quiet-r3cell-candidate-01",
+    "source": "ed69406bd6f12f66ec852edc95870ab7c1bbaaa7",
+    "file": "quiet-r3cell-candidate-01.frames.json.gz",
+    "sha256": "3b24e8b95aae92c54310df6a2e76d673eb656f1745f6137dcd7b1444ff817bc3"
+  },
+  {
+    "id": "quiet-r3cell-candidate-02",
+    "source": "ed69406bd6f12f66ec852edc95870ab7c1bbaaa7",
+    "file": "quiet-r3cell-candidate-02.frames.json.gz",
+    "sha256": "059c907e3b3ef0f82b5b2dccf6e8dad3d3dad5800d525e33d20042328df127de"
+  },
+  {
+    "id": "quiet-r3cell-control-02",
+    "source": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+    "file": "quiet-r3cell-control-02.frames.json.gz",
+    "sha256": "62b5054a50d2a4d446b0a83da5dd0abd8860e6b6536051ffd428f6c784bf0541"
+  }
+]

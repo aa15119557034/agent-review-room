@@ -1,0 +1,43 @@
+{
+  "method": "Observation installed only after normal worldBase.ready. The control session only adds the RAF observer. The sparse session additionally samples the real production frame callback and four original method walls. Runs are independent and environmental conditions differ.",
+  "files": [
+    {
+      "file": "control.json.gz",
+      "sha256": "dfb6314774375be7ec6d456b3934d75675e6b85db7658ba70b66139a58557cfb",
+      "mode": "control",
+      "source": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+      "sourceMainSha256": "a24df689007b299a462bc48d4303aa128956cea93eacb6d2483e04b86b9ed1d2",
+      "exit": 0,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "rendererRevision": "187",
+      "jsExceptionCount": 0,
+      "assetFailures": [
+        {
+          "asset": "menhir.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "clock": "Live application clock and real keyboard input"
+    },
+    {
+      "file": "sparse.json.gz",
+      "sha256": "400cf4539aecba6fea1feb0d428529421da0a106c95aa221f6a9a4a609f119da",
+      "mode": "sparse",
+      "source": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+      "sourceMainSha256": "a24df689007b299a462bc48d4303aa128956cea93eacb6d2483e04b86b9ed1d2",
+      "exit": 0,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "rendererRevision": "187",
+      "jsExceptionCount": 0,
+      "assetFailures": [
+        {
+          "asset": "plastic_crate_02.bin",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "clock": "Live application clock and real keyboard input"
+    }
+  ]
+}

@@ -1,0 +1,1719 @@
+{
+  "source": "R3 delivered 47a5c12e and independent prop-cell experiment ed69406b",
+  "intervals": 11602,
+  "runs": [
+    {
+      "run": "quiet-r3cell-control-01",
+      "source": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+      "segments": {
+        "art-a-street": {
+          "intervals": 546,
+          "totalMs": 10138.4,
+          "fps": 53.855,
+          "p95": 30.8,
+          "excess20": 112,
+          "twoTicks": 111,
+          "threeOrMoreTicks": 1,
+          "maxConsecutive": 3,
+          "startToLastLongMs": 10061.6,
+          "longPools": 104,
+          "drawMedianFast": 1592,
+          "drawMedianSlow": 1592,
+          "triMedianFast": 8009684,
+          "triMedianSlow": 8009684,
+          "oneSecondBins": [
+            {
+              "frames": 50,
+              "long": 15,
+              "ms": 1015.3
+            },
+            {
+              "frames": 51,
+              "long": 14,
+              "ms": 999.9
+            },
+            {
+              "frames": 53,
+              "long": 12,
+              "ms": 1000.1
+            },
+            {
+              "frames": 52,
+              "long": 13,
+              "ms": 1000
+            },
+            {
+              "frames": 52,
+              "long": 14,
+              "ms": 1015.3
+            },
+            {
+              "frames": 55,
+              "long": 9,
+              "ms": 984.6
+            },
+            {
+              "frames": 61,
+              "long": 4,
+              "ms": 1000.1
+            },
+            {
+              "frames": 58,
+              "long": 7,
+              "ms": 999.9
+            },
+            {
+              "frames": 57,
+              "long": 8,
+              "ms": 1000.1
+            },
+            {
+              "frames": 50,
+              "long": 15,
+              "ms": 1000
+            },
+            {
+              "frames": 7,
+              "long": 1,
+              "ms": 123.1
+            }
+          ],
+          "host": {
+            "p50HostCpu": 49.07,
+            "p50Gpu": 35,
+            "graphicsMHz": 1830,
+            "foreground": [
+              20,
+              20
+            ]
+          }
+        },
+        "art-b-konbini": {
+          "intervals": 618,
+          "totalMs": 10123.2,
+          "fps": 61.048,
+          "p95": 30.7,
+          "excess20": 40,
+          "twoTicks": 40,
+          "threeOrMoreTicks": 0,
+          "maxConsecutive": 1,
+          "startToLastLongMs": 6138.4,
+          "longPools": 40,
+          "drawMedianFast": 1047,
+          "drawMedianSlow": 1052,
+          "triMedianFast": 7845106,
+          "triMedianSlow": 7908778,
+          "oneSecondBins": [
+            {
+              "frames": 57,
+              "long": 9,
+              "ms": 1015.5
+            },
+            {
+              "frames": 48,
+              "long": 16,
+              "ms": 984.5
+            },
+            {
+              "frames": 58,
+              "long": 7,
+              "ms": 1000.1
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 63,
+              "long": 2,
+              "ms": 1000
+            },
+            {
+              "frames": 61,
+              "long": 4,
+              "ms": 1000
+            },
+            {
+              "frames": 63,
+              "long": 2,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 8,
+              "long": 0,
+              "ms": 123
+            }
+          ],
+          "host": {
+            "p50HostCpu": 62.47,
+            "p50Gpu": 38,
+            "graphicsMHz": 1860,
+            "foreground": [
+              20,
+              20
+            ]
+          }
+        },
+        "art-c-alley": {
+          "intervals": 657,
+          "totalMs": 10107.7,
+          "fps": 65,
+          "p95": 15.5,
+          "excess20": 0,
+          "twoTicks": 0,
+          "threeOrMoreTicks": 0,
+          "maxConsecutive": 0,
+          "startToLastLongMs": null,
+          "longPools": 0,
+          "drawMedianFast": 971,
+          "drawMedianSlow": null,
+          "triMedianFast": 8658499,
+          "triMedianSlow": null,
+          "oneSecondBins": [
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 999.9
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 999.9
+            },
+            {
+              "frames": 66,
+              "long": 0,
+              "ms": 1015.4
+            },
+            {
+              "frames": 64,
+              "long": 0,
+              "ms": 984.6
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 7,
+              "long": 0,
+              "ms": 107.7
+            }
+          ],
+          "host": {
+            "p50HostCpu": 27.02,
+            "p50Gpu": 39,
+            "graphicsMHz": 1830,
+            "foreground": [
+              20,
+              20
+            ]
+          }
+        },
+        "art-d-laundry": {
+          "intervals": 657,
+          "totalMs": 10107.6,
+          "fps": 65.001,
+          "p95": 15.5,
+          "excess20": 0,
+          "twoTicks": 0,
+          "threeOrMoreTicks": 0,
+          "maxConsecutive": 0,
+          "startToLastLongMs": null,
+          "longPools": 0,
+          "drawMedianFast": 907,
+          "drawMedianSlow": null,
+          "triMedianFast": 8451242,
+          "triMedianSlow": null,
+          "oneSecondBins": [
+            {
+              "frames": 66,
+              "long": 0,
+              "ms": 1015.2
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 999.9
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 999.9
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 64,
+              "long": 0,
+              "ms": 984.7
+            },
+            {
+              "frames": 66,
+              "long": 0,
+              "ms": 1015.4
+            },
+            {
+              "frames": 64,
+              "long": 0,
+              "ms": 984.6
+            },
+            {
+              "frames": 66,
+              "long": 0,
+              "ms": 1015.3
+            },
+            {
+              "frames": 6,
+              "long": 0,
+              "ms": 92.3
+            }
+          ],
+          "host": {
+            "p50HostCpu": 17.99,
+            "p50Gpu": 39,
+            "graphicsMHz": 1515,
+            "foreground": [
+              20,
+              20
+            ]
+          }
+        },
+        "walk-third": {
+          "intervals": 201,
+          "totalMs": 3107.7,
+          "fps": 64.678,
+          "p95": 15.5,
+          "excess20": 1,
+          "twoTicks": 1,
+          "threeOrMoreTicks": 0,
+          "maxConsecutive": 1,
+          "startToLastLongMs": 0,
+          "longPools": 1,
+          "drawMedianFast": 1680,
+          "drawMedianSlow": 1683,
+          "triMedianFast": 8494537,
+          "triMedianSlow": 8468725,
+          "oneSecondBins": [
+            {
+              "frames": 64,
+              "long": 1,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 7,
+              "long": 0,
+              "ms": 107.6
+            }
+          ],
+          "host": {
+            "p50HostCpu": 21.15,
+            "p50Gpu": 40,
+            "graphicsMHz": 1957,
+            "foreground": [
+              6,
+              6
+            ]
+          }
+        },
+        "walk-first": {
+          "intervals": 203,
+          "totalMs": 3123,
+          "fps": 65.002,
+          "p95": 15.5,
+          "excess20": 0,
+          "twoTicks": 0,
+          "threeOrMoreTicks": 0,
+          "maxConsecutive": 0,
+          "startToLastLongMs": null,
+          "longPools": 0,
+          "drawMedianFast": 1532,
+          "drawMedianSlow": null,
+          "triMedianFast": 8435087,
+          "triMedianSlow": null,
+          "oneSecondBins": [
+            {
+              "frames": 66,
+              "long": 0,
+              "ms": 1015.3
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 7,
+              "long": 0,
+              "ms": 107.7
+            }
+          ],
+          "host": {
+            "p50HostCpu": 17.52,
+            "p50Gpu": 40,
+            "graphicsMHz": 1935,
+            "foreground": [
+              6,
+              6
+            ]
+          }
+        }
+      }
+    },
+    {
+      "run": "quiet-r3cell-candidate-01",
+      "source": "ed69406bd6f12f66ec852edc95870ab7c1bbaaa7",
+      "segments": {
+        "art-a-street": {
+          "intervals": 458,
+          "totalMs": 10138.5,
+          "fps": 45.174,
+          "p95": 30.9,
+          "excess20": 200,
+          "twoTicks": 199,
+          "threeOrMoreTicks": 1,
+          "maxConsecutive": 6,
+          "startToLastLongMs": 10061.5,
+          "longPools": 160,
+          "drawMedianFast": 1576,
+          "drawMedianSlow": 1576,
+          "triMedianFast": 7348086,
+          "triMedianSlow": 7348086,
+          "oneSecondBins": [
+            {
+              "frames": 38,
+              "long": 27,
+              "ms": 1000.1
+            },
+            {
+              "frames": 42,
+              "long": 24,
+              "ms": 1015.3
+            },
+            {
+              "frames": 44,
+              "long": 21,
+              "ms": 1000
+            },
+            {
+              "frames": 42,
+              "long": 21,
+              "ms": 984.7
+            },
+            {
+              "frames": 48,
+              "long": 17,
+              "ms": 999.9
+            },
+            {
+              "frames": 49,
+              "long": 16,
+              "ms": 1000.1
+            },
+            {
+              "frames": 49,
+              "long": 16,
+              "ms": 999.9
+            },
+            {
+              "frames": 42,
+              "long": 23,
+              "ms": 1000
+            },
+            {
+              "frames": 53,
+              "long": 13,
+              "ms": 1015.4
+            },
+            {
+              "frames": 44,
+              "long": 20,
+              "ms": 984.7
+            },
+            {
+              "frames": 7,
+              "long": 2,
+              "ms": 138.4
+            }
+          ],
+          "host": {
+            "p50HostCpu": 67.88,
+            "p50Gpu": 33,
+            "graphicsMHz": 1425,
+            "foreground": [
+              0,
+              20
+            ]
+          }
+        },
+        "art-b-konbini": {
+          "intervals": 643,
+          "totalMs": 10123.1,
+          "fps": 63.518,
+          "p95": 15.5,
+          "excess20": 15,
+          "twoTicks": 15,
+          "threeOrMoreTicks": 0,
+          "maxConsecutive": 1,
+          "startToLastLongMs": 3646.2,
+          "longPools": 15,
+          "drawMedianFast": 1047,
+          "drawMedianSlow": 1047,
+          "triMedianFast": 6864611,
+          "triMedianSlow": 6864611,
+          "oneSecondBins": [
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 66,
+              "long": 0,
+              "ms": 1015.4
+            },
+            {
+              "frames": 64,
+              "long": 0,
+              "ms": 984.6
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 999.9
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 62,
+              "long": 3,
+              "ms": 1000
+            },
+            {
+              "frames": 64,
+              "long": 1,
+              "ms": 1000
+            },
+            {
+              "frames": 60,
+              "long": 5,
+              "ms": 1000
+            },
+            {
+              "frames": 59,
+              "long": 6,
+              "ms": 1000
+            },
+            {
+              "frames": 8,
+              "long": 0,
+              "ms": 123.1
+            }
+          ],
+          "host": {
+            "p50HostCpu": 99.27,
+            "p50Gpu": 37,
+            "graphicsMHz": 1792,
+            "foreground": [
+              0,
+              19
+            ]
+          }
+        },
+        "art-c-alley": {
+          "intervals": 657,
+          "totalMs": 10123.1,
+          "fps": 64.901,
+          "p95": 15.5,
+          "excess20": 1,
+          "twoTicks": 1,
+          "threeOrMoreTicks": 0,
+          "maxConsecutive": 1,
+          "startToLastLongMs": 0,
+          "longPools": 1,
+          "drawMedianFast": 966,
+          "drawMedianSlow": 968,
+          "triMedianFast": 7280210,
+          "triMedianSlow": 7280338,
+          "oneSecondBins": [
+            {
+              "frames": 64,
+              "long": 1,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 66,
+              "long": 0,
+              "ms": 1015.3
+            },
+            {
+              "frames": 64,
+              "long": 0,
+              "ms": 984.6
+            },
+            {
+              "frames": 8,
+              "long": 0,
+              "ms": 123.1
+            }
+          ],
+          "host": {
+            "p50HostCpu": 49.93,
+            "p50Gpu": 36,
+            "graphicsMHz": 1687,
+            "foreground": [
+              0,
+              20
+            ]
+          }
+        },
+        "art-d-laundry": {
+          "intervals": 657,
+          "totalMs": 10107.7,
+          "fps": 65,
+          "p95": 15.5,
+          "excess20": 0,
+          "twoTicks": 0,
+          "threeOrMoreTicks": 0,
+          "maxConsecutive": 0,
+          "startToLastLongMs": null,
+          "longPools": 0,
+          "drawMedianFast": 907,
+          "drawMedianSlow": null,
+          "triMedianFast": 8034099,
+          "triMedianSlow": null,
+          "oneSecondBins": [
+            {
+              "frames": 66,
+              "long": 0,
+              "ms": 1015.4
+            },
+            {
+              "frames": 64,
+              "long": 0,
+              "ms": 984.6
+            },
+            {
+              "frames": 66,
+              "long": 0,
+              "ms": 1015.5
+            },
+            {
+              "frames": 64,
+              "long": 0,
+              "ms": 984.5
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 66,
+              "long": 0,
+              "ms": 1015.3
+            },
+            {
+              "frames": 64,
+              "long": 0,
+              "ms": 984.6
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 999.9
+            },
+            {
+              "frames": 66,
+              "long": 0,
+              "ms": 1015.4
+            },
+            {
+              "frames": 6,
+              "long": 0,
+              "ms": 92.3
+            }
+          ],
+          "host": {
+            "p50HostCpu": 26.02,
+            "p50Gpu": 39,
+            "graphicsMHz": 1462,
+            "foreground": [
+              0,
+              19
+            ]
+          }
+        },
+        "walk-third": {
+          "intervals": 181,
+          "totalMs": 3123.1,
+          "fps": 57.955,
+          "p95": 30.8,
+          "excess20": 22,
+          "twoTicks": 22,
+          "threeOrMoreTicks": 0,
+          "maxConsecutive": 1,
+          "startToLastLongMs": 2969.2,
+          "longPools": 22,
+          "drawMedianFast": 1683,
+          "drawMedianSlow": 1681,
+          "triMedianFast": 8149724,
+          "triMedianSlow": 8149724,
+          "oneSecondBins": [
+            {
+              "frames": 60,
+              "long": 5,
+              "ms": 1000.1
+            },
+            {
+              "frames": 57,
+              "long": 8,
+              "ms": 999.9
+            },
+            {
+              "frames": 58,
+              "long": 7,
+              "ms": 1000
+            },
+            {
+              "frames": 6,
+              "long": 2,
+              "ms": 123.1
+            }
+          ],
+          "host": {
+            "p50HostCpu": 33.63,
+            "p50Gpu": 38,
+            "graphicsMHz": 1852,
+            "foreground": [
+              0,
+              6
+            ]
+          }
+        },
+        "walk-first": {
+          "intervals": 189,
+          "totalMs": 3138.5,
+          "fps": 60.22,
+          "p95": 30.7,
+          "excess20": 15,
+          "twoTicks": 15,
+          "threeOrMoreTicks": 0,
+          "maxConsecutive": 1,
+          "startToLastLongMs": 2723.1,
+          "longPools": 15,
+          "drawMedianFast": 1533,
+          "drawMedianSlow": 1543,
+          "triMedianFast": 8085882,
+          "triMedianSlow": 8110815,
+          "oneSecondBins": [
+            {
+              "frames": 58,
+              "long": 7,
+              "ms": 1000
+            },
+            {
+              "frames": 59,
+              "long": 6,
+              "ms": 1000
+            },
+            {
+              "frames": 63,
+              "long": 2,
+              "ms": 1000.1
+            },
+            {
+              "frames": 9,
+              "long": 0,
+              "ms": 138.4
+            }
+          ],
+          "host": {
+            "p50HostCpu": 39.05,
+            "p50Gpu": 38,
+            "graphicsMHz": 1695,
+            "foreground": [
+              0,
+              6
+            ]
+          }
+        }
+      }
+    },
+    {
+      "run": "quiet-r3cell-candidate-02",
+      "source": "ed69406bd6f12f66ec852edc95870ab7c1bbaaa7",
+      "segments": {
+        "art-a-street": {
+          "intervals": 657,
+          "totalMs": 10123,
+          "fps": 64.902,
+          "p95": 15.5,
+          "excess20": 1,
+          "twoTicks": 1,
+          "threeOrMoreTicks": 0,
+          "maxConsecutive": 1,
+          "startToLastLongMs": 0,
+          "longPools": 1,
+          "drawMedianFast": 1591,
+          "drawMedianSlow": 1591,
+          "triMedianFast": 7437854,
+          "triMedianSlow": 7437854,
+          "oneSecondBins": [
+            {
+              "frames": 66,
+              "long": 0,
+              "ms": 1015.4
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 999.9
+            },
+            {
+              "frames": 64,
+              "long": 0,
+              "ms": 984.7
+            },
+            {
+              "frames": 66,
+              "long": 0,
+              "ms": 1015.3
+            },
+            {
+              "frames": 64,
+              "long": 1,
+              "ms": 1000
+            },
+            {
+              "frames": 64,
+              "long": 0,
+              "ms": 984.7
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 66,
+              "long": 0,
+              "ms": 1015.4
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 7,
+              "long": 0,
+              "ms": 107.6
+            }
+          ],
+          "host": {
+            "p50HostCpu": 19.85,
+            "p50Gpu": 40,
+            "graphicsMHz": 1815,
+            "foreground": [
+              0,
+              20
+            ]
+          }
+        },
+        "art-b-konbini": {
+          "intervals": 658,
+          "totalMs": 10123.1,
+          "fps": 65,
+          "p95": 15.5,
+          "excess20": 0,
+          "twoTicks": 0,
+          "threeOrMoreTicks": 0,
+          "maxConsecutive": 0,
+          "startToLastLongMs": null,
+          "longPools": 0,
+          "drawMedianFast": 1047,
+          "drawMedianSlow": null,
+          "triMedianFast": 6864611,
+          "triMedianSlow": null,
+          "oneSecondBins": [
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 66,
+              "long": 0,
+              "ms": 1015.4
+            },
+            {
+              "frames": 64,
+              "long": 0,
+              "ms": 984.6
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 8,
+              "long": 0,
+              "ms": 123.1
+            }
+          ],
+          "host": {
+            "p50HostCpu": 15.12,
+            "p50Gpu": 38,
+            "graphicsMHz": 1515,
+            "foreground": [
+              0,
+              20
+            ]
+          }
+        },
+        "art-c-alley": {
+          "intervals": 657,
+          "totalMs": 10107.7,
+          "fps": 65,
+          "p95": 15.5,
+          "excess20": 0,
+          "twoTicks": 0,
+          "threeOrMoreTicks": 0,
+          "maxConsecutive": 0,
+          "startToLastLongMs": null,
+          "longPools": 0,
+          "drawMedianFast": 968,
+          "drawMedianSlow": null,
+          "triMedianFast": 7280338,
+          "triMedianSlow": null,
+          "oneSecondBins": [
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 66,
+              "long": 0,
+              "ms": 1015.4
+            },
+            {
+              "frames": 64,
+              "long": 0,
+              "ms": 984.6
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 999.9
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 7,
+              "long": 0,
+              "ms": 107.7
+            }
+          ],
+          "host": {
+            "p50HostCpu": 17.57,
+            "p50Gpu": 39,
+            "graphicsMHz": 1425,
+            "foreground": [
+              0,
+              20
+            ]
+          }
+        },
+        "art-d-laundry": {
+          "intervals": 657,
+          "totalMs": 10107.7,
+          "fps": 65,
+          "p95": 15.5,
+          "excess20": 0,
+          "twoTicks": 0,
+          "threeOrMoreTicks": 0,
+          "maxConsecutive": 0,
+          "startToLastLongMs": null,
+          "longPools": 0,
+          "drawMedianFast": 907,
+          "drawMedianSlow": null,
+          "triMedianFast": 8034099,
+          "triMedianSlow": null,
+          "oneSecondBins": [
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 999.9
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 7,
+              "long": 0,
+              "ms": 107.6
+            }
+          ],
+          "host": {
+            "p50HostCpu": 15.34,
+            "p50Gpu": 39,
+            "graphicsMHz": 1522,
+            "foreground": [
+              0,
+              20
+            ]
+          }
+        },
+        "walk-third": {
+          "intervals": 202,
+          "totalMs": 3107.7,
+          "fps": 65,
+          "p95": 15.5,
+          "excess20": 0,
+          "twoTicks": 0,
+          "threeOrMoreTicks": 0,
+          "maxConsecutive": 0,
+          "startToLastLongMs": null,
+          "longPools": 0,
+          "drawMedianFast": 1677,
+          "drawMedianSlow": null,
+          "triMedianFast": 8149962,
+          "triMedianSlow": null,
+          "oneSecondBins": [
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 999.9
+            },
+            {
+              "frames": 7,
+              "long": 0,
+              "ms": 107.7
+            }
+          ],
+          "host": {
+            "p50HostCpu": 19.56,
+            "p50Gpu": 40,
+            "graphicsMHz": 1905,
+            "foreground": [
+              0,
+              7
+            ]
+          }
+        },
+        "walk-first": {
+          "intervals": 203,
+          "totalMs": 3123.1,
+          "fps": 65,
+          "p95": 15.5,
+          "excess20": 0,
+          "twoTicks": 0,
+          "threeOrMoreTicks": 0,
+          "maxConsecutive": 0,
+          "startToLastLongMs": null,
+          "longPools": 0,
+          "drawMedianFast": 1535,
+          "drawMedianSlow": null,
+          "triMedianFast": 8090722,
+          "triMedianSlow": null,
+          "oneSecondBins": [
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 8,
+              "long": 0,
+              "ms": 123.1
+            }
+          ],
+          "host": {
+            "p50HostCpu": 19.85,
+            "p50Gpu": 39,
+            "graphicsMHz": 1830,
+            "foreground": [
+              0,
+              6
+            ]
+          }
+        }
+      }
+    },
+    {
+      "run": "quiet-r3cell-control-02",
+      "source": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+      "segments": {
+        "art-a-street": {
+          "intervals": 567,
+          "totalMs": 10138.5,
+          "fps": 55.925,
+          "p95": 30.8,
+          "excess20": 90,
+          "twoTicks": 88,
+          "threeOrMoreTicks": 2,
+          "maxConsecutive": 28,
+          "startToLastLongMs": 9923.1,
+          "longPools": 24,
+          "drawMedianFast": 1592,
+          "drawMedianSlow": 1576,
+          "triMedianFast": 8009684,
+          "triMedianSlow": 7919852,
+          "oneSecondBins": [
+            {
+              "frames": 64,
+              "long": 1,
+              "ms": 1000.1
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 999.9
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 999.9
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 37,
+              "long": 27,
+              "ms": 1000
+            },
+            {
+              "frames": 34,
+              "long": 31,
+              "ms": 1000
+            },
+            {
+              "frames": 40,
+              "long": 25,
+              "ms": 1015.4
+            },
+            {
+              "frames": 58,
+              "long": 6,
+              "ms": 984.7
+            },
+            {
+              "frames": 9,
+              "long": 0,
+              "ms": 138.4
+            }
+          ],
+          "host": {
+            "p50HostCpu": 24.87,
+            "p50Gpu": 41,
+            "graphicsMHz": 1957,
+            "foreground": [
+              19,
+              19
+            ]
+          }
+        },
+        "art-b-konbini": {
+          "intervals": 651,
+          "totalMs": 10107.7,
+          "fps": 64.406,
+          "p95": 15.5,
+          "excess20": 6,
+          "twoTicks": 6,
+          "threeOrMoreTicks": 0,
+          "maxConsecutive": 1,
+          "startToLastLongMs": 5615.4,
+          "longPools": 6,
+          "drawMedianFast": 1047,
+          "drawMedianSlow": 1047,
+          "triMedianFast": 7845106,
+          "triMedianSlow": 7845106,
+          "oneSecondBins": [
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 62,
+              "long": 3,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 999.9
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 999.9
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 62,
+              "long": 3,
+              "ms": 999.9
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 7,
+              "long": 0,
+              "ms": 107.6
+            }
+          ],
+          "host": {
+            "p50HostCpu": 33.28,
+            "p50Gpu": 39,
+            "graphicsMHz": 1950,
+            "foreground": [
+              11,
+              20
+            ]
+          }
+        },
+        "art-c-alley": {
+          "intervals": 647,
+          "totalMs": 10107.7,
+          "fps": 64.011,
+          "p95": 15.5,
+          "excess20": 10,
+          "twoTicks": 10,
+          "threeOrMoreTicks": 0,
+          "maxConsecutive": 1,
+          "startToLastLongMs": 7123.1,
+          "longPools": 10,
+          "drawMedianFast": 971,
+          "drawMedianSlow": 971,
+          "triMedianFast": 8658499,
+          "triMedianSlow": 8658499,
+          "oneSecondBins": [
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 64,
+              "long": 1,
+              "ms": 999.9
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 60,
+              "long": 5,
+              "ms": 1000
+            },
+            {
+              "frames": 64,
+              "long": 1,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 62,
+              "long": 3,
+              "ms": 1000
+            },
+            {
+              "frames": 7,
+              "long": 0,
+              "ms": 107.7
+            }
+          ],
+          "host": {
+            "p50HostCpu": 31.43,
+            "p50Gpu": 42,
+            "graphicsMHz": 1987,
+            "foreground": [
+              0,
+              19
+            ]
+          }
+        },
+        "art-d-laundry": {
+          "intervals": 654,
+          "totalMs": 10107.8,
+          "fps": 64.703,
+          "p95": 15.5,
+          "excess20": 3,
+          "twoTicks": 3,
+          "threeOrMoreTicks": 0,
+          "maxConsecutive": 1,
+          "startToLastLongMs": 4861.6,
+          "longPools": 3,
+          "drawMedianFast": 907,
+          "drawMedianSlow": 902,
+          "triMedianFast": 8451242,
+          "triMedianSlow": 8387570,
+          "oneSecondBins": [
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 63,
+              "long": 2,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 999.9
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000.1
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 1,
+              "ms": 1015.4
+            },
+            {
+              "frames": 64,
+              "long": 0,
+              "ms": 984.6
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 1000
+            },
+            {
+              "frames": 7,
+              "long": 0,
+              "ms": 107.7
+            }
+          ],
+          "host": {
+            "p50HostCpu": 36,
+            "p50Gpu": 39,
+            "graphicsMHz": 1860,
+            "foreground": [
+              0,
+              20
+            ]
+          }
+        },
+        "walk-third": {
+          "intervals": 181,
+          "totalMs": 3138.4,
+          "fps": 57.673,
+          "p95": 30.8,
+          "excess20": 23,
+          "twoTicks": 23,
+          "threeOrMoreTicks": 0,
+          "maxConsecutive": 1,
+          "startToLastLongMs": 3030.8,
+          "longPools": 23,
+          "drawMedianFast": 1681,
+          "drawMedianSlow": 1680,
+          "triMedianFast": 8494263,
+          "triMedianSlow": 8494561,
+          "oneSecondBins": [
+            {
+              "frames": 58,
+              "long": 7,
+              "ms": 1000
+            },
+            {
+              "frames": 59,
+              "long": 6,
+              "ms": 1000
+            },
+            {
+              "frames": 57,
+              "long": 8,
+              "ms": 1000
+            },
+            {
+              "frames": 7,
+              "long": 2,
+              "ms": 138.4
+            }
+          ],
+          "host": {
+            "p50HostCpu": 30.12,
+            "p50Gpu": 43,
+            "graphicsMHz": 1972,
+            "foreground": [
+              0,
+              6
+            ]
+          }
+        },
+        "walk-first": {
+          "intervals": 201,
+          "totalMs": 3153.9,
+          "fps": 63.731,
+          "p95": 15.5,
+          "excess20": 4,
+          "twoTicks": 4,
+          "threeOrMoreTicks": 0,
+          "maxConsecutive": 1,
+          "startToLastLongMs": 1369.2,
+          "longPools": 4,
+          "drawMedianFast": 1530,
+          "drawMedianSlow": 1544,
+          "triMedianFast": 8430207,
+          "triMedianSlow": 8455526,
+          "oneSecondBins": [
+            {
+              "frames": 63,
+              "long": 2,
+              "ms": 1000
+            },
+            {
+              "frames": 63,
+              "long": 2,
+              "ms": 1000.1
+            },
+            {
+              "frames": 65,
+              "long": 0,
+              "ms": 999.9
+            },
+            {
+              "frames": 10,
+              "long": 0,
+              "ms": 153.9
+            }
+          ],
+          "host": {
+            "p50HostCpu": 30.34,
+            "p50Gpu": 41,
+            "graphicsMHz": 1957,
+            "foreground": [
+              0,
+              6
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "binsDefinition": "Intervals >20ms, 29-32ms two-tick-like band, runs of adjacent >20ms intervals. Approximate 0.5s system telemetry is aggregated by whole take; raw intervals have order but no per-frame wall-clock stamps."
+}

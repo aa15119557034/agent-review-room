@@ -1,0 +1,2690 @@
+{
+  "runs": [
+    {
+      "id": "original-control-01",
+      "mode": "control",
+      "native": {
+        "code": 0
+      },
+      "readyMs": 46491,
+      "source": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+      "mainSha256": "a24df689007b299a462bc48d4303aa128956cea93eacb6d2483e04b86b9ed1d2",
+      "timerQuery": null,
+      "stats": {
+        "queries": 0,
+        "resolved": 0,
+        "invalid": 0,
+        "disjointEvents": 0,
+        "skippedBusy": 0,
+        "skippedCap": 0,
+        "scheduled": 0,
+        "productionMatches": 0
+      },
+      "remaining": 0,
+      "segments": {
+        "art-a-street": {
+          "frames": 625,
+          "fps": 62.023,
+          "p95": 15.6,
+          "over20": 30,
+          "observerSeesSameStamp": 625,
+          "sampled": 0,
+          "sampledIndependentlyMatched": 0,
+          "clockAdvanceSec": 10.092,
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "to": [
+            281.6,
+            8.812,
+            934
+          ],
+          "move": 0,
+          "all": {
+            "frames": 0,
+            "raf": null,
+            "entryToNextEntry": null,
+            "callbackWall": null,
+            "station": null,
+            "walker": null,
+            "island": null,
+            "renderSubmit": null,
+            "unscopedInCallback": null,
+            "outsideCallback": null,
+            "callbackStartLag": null,
+            "nextCallbackStartLag": null,
+            "gpuElapsed": null,
+            "gpuStates": {},
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "normal": {
+            "frames": 0,
+            "raf": null,
+            "entryToNextEntry": null,
+            "callbackWall": null,
+            "station": null,
+            "walker": null,
+            "island": null,
+            "renderSubmit": null,
+            "unscopedInCallback": null,
+            "outsideCallback": null,
+            "callbackStartLag": null,
+            "nextCallbackStartLag": null,
+            "gpuElapsed": null,
+            "gpuStates": {},
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "long": {
+            "frames": 0,
+            "raf": null,
+            "entryToNextEntry": null,
+            "callbackWall": null,
+            "station": null,
+            "walker": null,
+            "island": null,
+            "renderSubmit": null,
+            "unscopedInCallback": null,
+            "outsideCallback": null,
+            "callbackStartLag": null,
+            "nextCallbackStartLag": null,
+            "gpuElapsed": null,
+            "gpuStates": {},
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "system": {
+            "samples": 0,
+            "front": 0,
+            "cpu": null,
+            "gfx": {
+              "n": 20,
+              "min": 1927,
+              "p50": 1987,
+              "p95": 1995,
+              "max": 1995,
+              "mean": 1978.7
+            },
+            "gpuUtil": {
+              "n": 20,
+              "min": 30,
+              "p50": 44,
+              "p95": 46,
+              "max": 46,
+              "mean": 42.75
+            },
+            "gpuPower": {
+              "n": 20,
+              "min": 67.47,
+              "p50": 85.58,
+              "p95": 86.21,
+              "max": 96.76,
+              "mean": 83.421
+            }
+          }
+        },
+        "art-b-konbini": {
+          "frames": 657,
+          "fps": 65.001,
+          "p95": 15.5,
+          "over20": 0,
+          "observerSeesSameStamp": 657,
+          "sampled": 0,
+          "sampledIndependentlyMatched": 0,
+          "clockAdvanceSec": 10.123,
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "to": [
+            281.6,
+            8.812,
+            934
+          ],
+          "move": 0,
+          "all": {
+            "frames": 0,
+            "raf": null,
+            "entryToNextEntry": null,
+            "callbackWall": null,
+            "station": null,
+            "walker": null,
+            "island": null,
+            "renderSubmit": null,
+            "unscopedInCallback": null,
+            "outsideCallback": null,
+            "callbackStartLag": null,
+            "nextCallbackStartLag": null,
+            "gpuElapsed": null,
+            "gpuStates": {},
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "normal": {
+            "frames": 0,
+            "raf": null,
+            "entryToNextEntry": null,
+            "callbackWall": null,
+            "station": null,
+            "walker": null,
+            "island": null,
+            "renderSubmit": null,
+            "unscopedInCallback": null,
+            "outsideCallback": null,
+            "callbackStartLag": null,
+            "nextCallbackStartLag": null,
+            "gpuElapsed": null,
+            "gpuStates": {},
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "long": {
+            "frames": 0,
+            "raf": null,
+            "entryToNextEntry": null,
+            "callbackWall": null,
+            "station": null,
+            "walker": null,
+            "island": null,
+            "renderSubmit": null,
+            "unscopedInCallback": null,
+            "outsideCallback": null,
+            "callbackStartLag": null,
+            "nextCallbackStartLag": null,
+            "gpuElapsed": null,
+            "gpuStates": {},
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "system": {
+            "samples": 0,
+            "front": 0,
+            "cpu": null,
+            "gfx": {
+              "n": 19,
+              "min": 1785,
+              "p50": 1987,
+              "p95": 1995,
+              "max": 1995,
+              "mean": 1928.474
+            },
+            "gpuUtil": {
+              "n": 19,
+              "min": 38,
+              "p50": 40,
+              "p95": 43,
+              "max": 43,
+              "mean": 39.842
+            },
+            "gpuPower": {
+              "n": 19,
+              "min": 62.41,
+              "p50": 80.51,
+              "p95": 82.63,
+              "max": 82.63,
+              "mean": 76.439
+            }
+          }
+        },
+        "art-c-alley": {
+          "frames": 656,
+          "fps": 65.001,
+          "p95": 15.5,
+          "over20": 0,
+          "observerSeesSameStamp": 656,
+          "sampled": 0,
+          "sampledIndependentlyMatched": 0,
+          "clockAdvanceSec": 10.108,
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "to": [
+            281.6,
+            8.812,
+            934
+          ],
+          "move": 0,
+          "all": {
+            "frames": 0,
+            "raf": null,
+            "entryToNextEntry": null,
+            "callbackWall": null,
+            "station": null,
+            "walker": null,
+            "island": null,
+            "renderSubmit": null,
+            "unscopedInCallback": null,
+            "outsideCallback": null,
+            "callbackStartLag": null,
+            "nextCallbackStartLag": null,
+            "gpuElapsed": null,
+            "gpuStates": {},
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "normal": {
+            "frames": 0,
+            "raf": null,
+            "entryToNextEntry": null,
+            "callbackWall": null,
+            "station": null,
+            "walker": null,
+            "island": null,
+            "renderSubmit": null,
+            "unscopedInCallback": null,
+            "outsideCallback": null,
+            "callbackStartLag": null,
+            "nextCallbackStartLag": null,
+            "gpuElapsed": null,
+            "gpuStates": {},
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "long": {
+            "frames": 0,
+            "raf": null,
+            "entryToNextEntry": null,
+            "callbackWall": null,
+            "station": null,
+            "walker": null,
+            "island": null,
+            "renderSubmit": null,
+            "unscopedInCallback": null,
+            "outsideCallback": null,
+            "callbackStartLag": null,
+            "nextCallbackStartLag": null,
+            "gpuElapsed": null,
+            "gpuStates": {},
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "system": {
+            "samples": 0,
+            "front": 0,
+            "cpu": null,
+            "gfx": {
+              "n": 20,
+              "min": 1732,
+              "p50": 1815,
+              "p95": 1980,
+              "max": 1980,
+              "mean": 1835.65
+            },
+            "gpuUtil": {
+              "n": 20,
+              "min": 37,
+              "p50": 40,
+              "p95": 41,
+              "max": 41,
+              "mean": 39.75
+            },
+            "gpuPower": {
+              "n": 20,
+              "min": 59.32,
+              "p50": 63.94,
+              "p95": 80.91,
+              "max": 81.67,
+              "mean": 65.295
+            }
+          }
+        },
+        "art-d-laundry": {
+          "frames": 657,
+          "fps": 65,
+          "p95": 15.5,
+          "over20": 0,
+          "observerSeesSameStamp": 657,
+          "sampled": 0,
+          "sampledIndependentlyMatched": 0,
+          "clockAdvanceSec": 10.123,
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "to": [
+            281.6,
+            8.812,
+            934
+          ],
+          "move": 0,
+          "all": {
+            "frames": 0,
+            "raf": null,
+            "entryToNextEntry": null,
+            "callbackWall": null,
+            "station": null,
+            "walker": null,
+            "island": null,
+            "renderSubmit": null,
+            "unscopedInCallback": null,
+            "outsideCallback": null,
+            "callbackStartLag": null,
+            "nextCallbackStartLag": null,
+            "gpuElapsed": null,
+            "gpuStates": {},
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "normal": {
+            "frames": 0,
+            "raf": null,
+            "entryToNextEntry": null,
+            "callbackWall": null,
+            "station": null,
+            "walker": null,
+            "island": null,
+            "renderSubmit": null,
+            "unscopedInCallback": null,
+            "outsideCallback": null,
+            "callbackStartLag": null,
+            "nextCallbackStartLag": null,
+            "gpuElapsed": null,
+            "gpuStates": {},
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "long": {
+            "frames": 0,
+            "raf": null,
+            "entryToNextEntry": null,
+            "callbackWall": null,
+            "station": null,
+            "walker": null,
+            "island": null,
+            "renderSubmit": null,
+            "unscopedInCallback": null,
+            "outsideCallback": null,
+            "callbackStartLag": null,
+            "nextCallbackStartLag": null,
+            "gpuElapsed": null,
+            "gpuStates": {},
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "system": {
+            "samples": 0,
+            "front": 0,
+            "cpu": null,
+            "gfx": {
+              "n": 20,
+              "min": 1635,
+              "p50": 1680,
+              "p95": 1747,
+              "max": 1770,
+              "mean": 1692.55
+            },
+            "gpuUtil": {
+              "n": 20,
+              "min": 35,
+              "p50": 39,
+              "p95": 42,
+              "max": 42,
+              "mean": 38.7
+            },
+            "gpuPower": {
+              "n": 20,
+              "min": 42.73,
+              "p50": 51.45,
+              "p95": 62.23,
+              "max": 67.54,
+              "mean": 52.678
+            }
+          }
+        },
+        "walk-third": {
+          "frames": 201,
+          "fps": 64.68,
+          "p95": 15.5,
+          "over20": 1,
+          "observerSeesSameStamp": 201,
+          "sampled": 0,
+          "sampledIndependentlyMatched": 0,
+          "clockAdvanceSec": 3.123,
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "to": [
+            280.9434697290697,
+            8.549113031823902,
+            924.6111797079965
+          ],
+          "move": 9.412,
+          "all": {
+            "frames": 0,
+            "raf": null,
+            "entryToNextEntry": null,
+            "callbackWall": null,
+            "station": null,
+            "walker": null,
+            "island": null,
+            "renderSubmit": null,
+            "unscopedInCallback": null,
+            "outsideCallback": null,
+            "callbackStartLag": null,
+            "nextCallbackStartLag": null,
+            "gpuElapsed": null,
+            "gpuStates": {},
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "normal": {
+            "frames": 0,
+            "raf": null,
+            "entryToNextEntry": null,
+            "callbackWall": null,
+            "station": null,
+            "walker": null,
+            "island": null,
+            "renderSubmit": null,
+            "unscopedInCallback": null,
+            "outsideCallback": null,
+            "callbackStartLag": null,
+            "nextCallbackStartLag": null,
+            "gpuElapsed": null,
+            "gpuStates": {},
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "long": {
+            "frames": 0,
+            "raf": null,
+            "entryToNextEntry": null,
+            "callbackWall": null,
+            "station": null,
+            "walker": null,
+            "island": null,
+            "renderSubmit": null,
+            "unscopedInCallback": null,
+            "outsideCallback": null,
+            "callbackStartLag": null,
+            "nextCallbackStartLag": null,
+            "gpuElapsed": null,
+            "gpuStates": {},
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "system": {
+            "samples": 0,
+            "front": 0,
+            "cpu": null,
+            "gfx": {
+              "n": 6,
+              "min": 1770,
+              "p50": 1965,
+              "p95": 1980,
+              "max": 1980,
+              "mean": 1937.333
+            },
+            "gpuUtil": {
+              "n": 6,
+              "min": 41,
+              "p50": 45,
+              "p95": 49,
+              "max": 49,
+              "mean": 45
+            },
+            "gpuPower": {
+              "n": 6,
+              "min": 57.62,
+              "p50": 85.89,
+              "p95": 87.68,
+              "max": 87.68,
+              "mean": 81.607
+            }
+          }
+        },
+        "walk-first": {
+          "frames": 202,
+          "fps": 65,
+          "p95": 15.5,
+          "over20": 0,
+          "observerSeesSameStamp": 202,
+          "sampled": 0,
+          "sampledIndependentlyMatched": 0,
+          "clockAdvanceSec": 3.123,
+          "feet": [
+            280.93906511873666,
+            8.547349343677737,
+            924.5481908456335
+          ],
+          "to": [
+            280.27424922308563,
+            8.281144656793584,
+            915.0408805997708
+          ],
+          "move": 9.531,
+          "all": {
+            "frames": 0,
+            "raf": null,
+            "entryToNextEntry": null,
+            "callbackWall": null,
+            "station": null,
+            "walker": null,
+            "island": null,
+            "renderSubmit": null,
+            "unscopedInCallback": null,
+            "outsideCallback": null,
+            "callbackStartLag": null,
+            "nextCallbackStartLag": null,
+            "gpuElapsed": null,
+            "gpuStates": {},
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "normal": {
+            "frames": 0,
+            "raf": null,
+            "entryToNextEntry": null,
+            "callbackWall": null,
+            "station": null,
+            "walker": null,
+            "island": null,
+            "renderSubmit": null,
+            "unscopedInCallback": null,
+            "outsideCallback": null,
+            "callbackStartLag": null,
+            "nextCallbackStartLag": null,
+            "gpuElapsed": null,
+            "gpuStates": {},
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "long": {
+            "frames": 0,
+            "raf": null,
+            "entryToNextEntry": null,
+            "callbackWall": null,
+            "station": null,
+            "walker": null,
+            "island": null,
+            "renderSubmit": null,
+            "unscopedInCallback": null,
+            "outsideCallback": null,
+            "callbackStartLag": null,
+            "nextCallbackStartLag": null,
+            "gpuElapsed": null,
+            "gpuStates": {},
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "system": {
+            "samples": 0,
+            "front": 0,
+            "cpu": null,
+            "gfx": {
+              "n": 6,
+              "min": 1920,
+              "p50": 1980,
+              "p95": 1980,
+              "max": 1980,
+              "mean": 1966.167
+            },
+            "gpuUtil": {
+              "n": 6,
+              "min": 39,
+              "p50": 42,
+              "p95": 48,
+              "max": 48,
+              "mean": 43.333
+            },
+            "gpuPower": {
+              "n": 6,
+              "min": 81.85,
+              "p50": 85.51,
+              "p95": 86.82,
+              "max": 86.82,
+              "mean": 84.808
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "original-sparse-01",
+      "mode": "sparse",
+      "native": {
+        "code": 0
+      },
+      "readyMs": 44671,
+      "source": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+      "mainSha256": "a24df689007b299a462bc48d4303aa128956cea93eacb6d2483e04b86b9ed1d2",
+      "timerQuery": true,
+      "stats": {
+        "queries": 369,
+        "resolved": 369,
+        "invalid": 0,
+        "disjointEvents": 0,
+        "skippedBusy": 0,
+        "skippedCap": 0,
+        "scheduled": 3265,
+        "productionMatches": 1
+      },
+      "remaining": 0,
+      "segments": {
+        "art-a-street": {
+          "frames": 624,
+          "fps": 61.829,
+          "p95": 30.5,
+          "over20": 32,
+          "observerSeesSameStamp": 624,
+          "sampled": 157,
+          "sampledIndependentlyMatched": 156,
+          "clockAdvanceSec": 10.108,
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "to": [
+            281.6,
+            8.812,
+            934
+          ],
+          "move": 0,
+          "all": {
+            "frames": 157,
+            "raf": {
+              "n": 157,
+              "min": 15.2,
+              "p50": 15.4,
+              "p95": 15.6,
+              "max": 30.8,
+              "mean": 16.069
+            },
+            "entryToNextEntry": {
+              "n": 157,
+              "min": 13.1,
+              "p50": 15.4,
+              "p95": 19.9,
+              "max": 24.9,
+              "mean": 16.083
+            },
+            "callbackWall": {
+              "n": 157,
+              "min": 11.3,
+              "p50": 14.5,
+              "p95": 19.7,
+              "max": 24.5,
+              "mean": 14.672
+            },
+            "station": {
+              "n": 157,
+              "min": 0.2,
+              "p50": 0.3,
+              "p95": 0.5,
+              "max": 0.9,
+              "mean": 0.313
+            },
+            "walker": {
+              "n": 157,
+              "min": 0,
+              "p50": 0,
+              "p95": 0,
+              "max": 0.1,
+              "mean": 0.001
+            },
+            "island": {
+              "n": 157,
+              "min": 0,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.6,
+              "mean": 0.172
+            },
+            "renderSubmit": {
+              "n": 157,
+              "min": 10.8,
+              "p50": 13.9,
+              "p95": 19,
+              "max": 23.3,
+              "mean": 14.108
+            },
+            "unscopedInCallback": {
+              "n": 157,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.2,
+              "max": 1,
+              "mean": 0.078
+            },
+            "outsideCallback": {
+              "n": 157,
+              "min": 0.1,
+              "p50": 0.4,
+              "p95": 3.6,
+              "max": 4.6,
+              "mean": 1.411
+            },
+            "callbackStartLag": {
+              "n": 157,
+              "min": 0,
+              "p50": 0.5,
+              "p95": 14.4,
+              "max": 17.4,
+              "mean": 3.759
+            },
+            "nextCallbackStartLag": {
+              "n": 157,
+              "min": 0,
+              "p50": 0.6,
+              "p95": 13.8,
+              "max": 15.4,
+              "mean": 3.773
+            },
+            "gpuElapsed": {
+              "n": 79,
+              "min": 11.18,
+              "p50": 13.214,
+              "p95": 15.994,
+              "max": 20.04,
+              "mean": 13.503
+            },
+            "gpuStates": {
+              "valid": 79,
+              "not-selected": 78
+            },
+            "callbackOver16_7": 24,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 60
+          },
+          "normal": {
+            "frames": 150,
+            "raf": {
+              "n": 150,
+              "min": 15.2,
+              "p50": 15.4,
+              "p95": 15.5,
+              "max": 15.6,
+              "mean": 15.384
+            },
+            "entryToNextEntry": {
+              "n": 150,
+              "min": 13.1,
+              "p50": 15.4,
+              "p95": 18.5,
+              "max": 24.9,
+              "mean": 15.924
+            },
+            "callbackWall": {
+              "n": 150,
+              "min": 11.3,
+              "p50": 14.3,
+              "p95": 18,
+              "max": 24.5,
+              "mean": 14.458
+            },
+            "station": {
+              "n": 150,
+              "min": 0.2,
+              "p50": 0.3,
+              "p95": 0.4,
+              "max": 0.9,
+              "mean": 0.309
+            },
+            "walker": {
+              "n": 150,
+              "min": 0,
+              "p50": 0,
+              "p95": 0,
+              "max": 0.1,
+              "mean": 0.001
+            },
+            "island": {
+              "n": 150,
+              "min": 0,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.6,
+              "mean": 0.171
+            },
+            "renderSubmit": {
+              "n": 150,
+              "min": 10.8,
+              "p50": 13.8,
+              "p95": 17.5,
+              "max": 23.3,
+              "mean": 13.902
+            },
+            "unscopedInCallback": {
+              "n": 150,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.2,
+              "max": 1,
+              "mean": 0.075
+            },
+            "outsideCallback": {
+              "n": 150,
+              "min": 0.1,
+              "p50": 0.7,
+              "p95": 3.6,
+              "max": 4.6,
+              "mean": 1.466
+            },
+            "callbackStartLag": {
+              "n": 150,
+              "min": 0,
+              "p50": 0.3,
+              "p95": 12.6,
+              "max": 14.9,
+              "mean": 3.237
+            },
+            "nextCallbackStartLag": {
+              "n": 150,
+              "min": 0,
+              "p50": 0.3,
+              "p95": 13.8,
+              "max": 15.4,
+              "mean": 3.777
+            },
+            "gpuElapsed": {
+              "n": 76,
+              "min": 11.18,
+              "p50": 13.162,
+              "p95": 15.994,
+              "max": 20.04,
+              "mean": 13.461
+            },
+            "gpuStates": {
+              "valid": 76,
+              "not-selected": 74
+            },
+            "callbackOver16_7": 18,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 53
+          },
+          "long": {
+            "frames": 7,
+            "raf": {
+              "n": 7,
+              "min": 30.7,
+              "p50": 30.7,
+              "p95": 30.8,
+              "max": 30.8,
+              "mean": 30.743
+            },
+            "entryToNextEntry": {
+              "n": 7,
+              "min": 16.1,
+              "p50": 19.6,
+              "p95": 21.9,
+              "max": 21.9,
+              "mean": 19.486
+            },
+            "callbackWall": {
+              "n": 7,
+              "min": 15.8,
+              "p50": 19.4,
+              "p95": 21.7,
+              "max": 21.7,
+              "mean": 19.257
+            },
+            "station": {
+              "n": 7,
+              "min": 0.2,
+              "p50": 0.4,
+              "p95": 0.5,
+              "max": 0.5,
+              "mean": 0.4
+            },
+            "walker": {
+              "n": 7,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.1,
+              "max": 0.1,
+              "mean": 0.014
+            },
+            "island": {
+              "n": 7,
+              "min": 0.1,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.3,
+              "mean": 0.186
+            },
+            "renderSubmit": {
+              "n": 7,
+              "min": 15,
+              "p50": 18.6,
+              "p95": 21.2,
+              "max": 21.2,
+              "mean": 18.529
+            },
+            "unscopedInCallback": {
+              "n": 7,
+              "min": 0.1,
+              "p50": 0.1,
+              "p95": 0.2,
+              "max": 0.2,
+              "mean": 0.129
+            },
+            "outsideCallback": {
+              "n": 7,
+              "min": 0.2,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.3,
+              "mean": 0.229
+            },
+            "callbackStartLag": {
+              "n": 7,
+              "min": 13.3,
+              "p50": 14.7,
+              "p95": 17.4,
+              "max": 17.4,
+              "mean": 14.943
+            },
+            "nextCallbackStartLag": {
+              "n": 7,
+              "min": 0.6,
+              "p50": 3.5,
+              "p95": 7.3,
+              "max": 7.3,
+              "mean": 3.686
+            },
+            "gpuElapsed": {
+              "n": 3,
+              "min": 13.563,
+              "p50": 14.659,
+              "p95": 15.452,
+              "max": 15.452,
+              "mean": 14.558
+            },
+            "gpuStates": {
+              "valid": 3,
+              "not-selected": 4
+            },
+            "callbackOver16_7": 6,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 7
+          },
+          "system": {
+            "samples": 20,
+            "front": 0,
+            "cpu": {
+              "n": 20,
+              "min": 14.79,
+              "p50": 27.1,
+              "p95": 46.27,
+              "max": 53,
+              "mean": 30.147
+            },
+            "gfx": {
+              "n": 20,
+              "min": 1942,
+              "p50": 1980,
+              "p95": 1995,
+              "max": 1995,
+              "mean": 1982.85
+            },
+            "gpuUtil": {
+              "n": 20,
+              "min": 36,
+              "p50": 41,
+              "p95": 45,
+              "max": 46,
+              "mean": 41.4
+            },
+            "gpuPower": {
+              "n": 20,
+              "min": 76.57,
+              "p50": 84.58,
+              "p95": 85.93,
+              "max": 86.6,
+              "mean": 82.876
+            }
+          }
+        },
+        "art-b-konbini": {
+          "frames": 656,
+          "fps": 65,
+          "p95": 15.5,
+          "over20": 0,
+          "observerSeesSameStamp": 656,
+          "sampled": 164,
+          "sampledIndependentlyMatched": 164,
+          "clockAdvanceSec": 10.108,
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "to": [
+            281.6,
+            8.812,
+            934
+          ],
+          "move": 0,
+          "all": {
+            "frames": 164,
+            "raf": {
+              "n": 164,
+              "min": 15.2,
+              "p50": 15.4,
+              "p95": 15.5,
+              "max": 15.6,
+              "mean": 15.383
+            },
+            "entryToNextEntry": {
+              "n": 164,
+              "min": 10,
+              "p50": 15.4,
+              "p95": 15.5,
+              "max": 22.9,
+              "mean": 15.349
+            },
+            "callbackWall": {
+              "n": 164,
+              "min": 9.5,
+              "p50": 10.7,
+              "p95": 13.1,
+              "max": 22.6,
+              "mean": 10.939
+            },
+            "station": {
+              "n": 164,
+              "min": 0.2,
+              "p50": 0.4,
+              "p95": 0.5,
+              "max": 0.6,
+              "mean": 0.374
+            },
+            "walker": {
+              "n": 164,
+              "min": 0,
+              "p50": 0,
+              "p95": 0,
+              "max": 0.1,
+              "mean": 0.001
+            },
+            "island": {
+              "n": 164,
+              "min": 0,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.4,
+              "mean": 0.191
+            },
+            "renderSubmit": {
+              "n": 164,
+              "min": 9,
+              "p50": 10.1,
+              "p95": 12.3,
+              "max": 21.6,
+              "mean": 10.301
+            },
+            "unscopedInCallback": {
+              "n": 164,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.2,
+              "max": 0.3,
+              "mean": 0.071
+            },
+            "outsideCallback": {
+              "n": 164,
+              "min": 0.3,
+              "p50": 4.7,
+              "p95": 5.5,
+              "max": 5.9,
+              "mean": 4.41
+            },
+            "callbackStartLag": {
+              "n": 164,
+              "min": 0.1,
+              "p50": 0.3,
+              "p95": 0.6,
+              "max": 9.7,
+              "mean": 0.399
+            },
+            "nextCallbackStartLag": {
+              "n": 164,
+              "min": 0.1,
+              "p50": 0.3,
+              "p95": 0.4,
+              "max": 9.1,
+              "mean": 0.365
+            },
+            "gpuElapsed": {
+              "n": 82,
+              "min": 9.229,
+              "p50": 13.209,
+              "p95": 14.765,
+              "max": 15.545,
+              "mean": 13.087
+            },
+            "gpuStates": {
+              "valid": 82,
+              "not-selected": 82
+            },
+            "callbackOver16_7": 1,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 1
+          },
+          "normal": {
+            "frames": 164,
+            "raf": {
+              "n": 164,
+              "min": 15.2,
+              "p50": 15.4,
+              "p95": 15.5,
+              "max": 15.6,
+              "mean": 15.383
+            },
+            "entryToNextEntry": {
+              "n": 164,
+              "min": 10,
+              "p50": 15.4,
+              "p95": 15.5,
+              "max": 22.9,
+              "mean": 15.349
+            },
+            "callbackWall": {
+              "n": 164,
+              "min": 9.5,
+              "p50": 10.7,
+              "p95": 13.1,
+              "max": 22.6,
+              "mean": 10.939
+            },
+            "station": {
+              "n": 164,
+              "min": 0.2,
+              "p50": 0.4,
+              "p95": 0.5,
+              "max": 0.6,
+              "mean": 0.374
+            },
+            "walker": {
+              "n": 164,
+              "min": 0,
+              "p50": 0,
+              "p95": 0,
+              "max": 0.1,
+              "mean": 0.001
+            },
+            "island": {
+              "n": 164,
+              "min": 0,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.4,
+              "mean": 0.191
+            },
+            "renderSubmit": {
+              "n": 164,
+              "min": 9,
+              "p50": 10.1,
+              "p95": 12.3,
+              "max": 21.6,
+              "mean": 10.301
+            },
+            "unscopedInCallback": {
+              "n": 164,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.2,
+              "max": 0.3,
+              "mean": 0.071
+            },
+            "outsideCallback": {
+              "n": 164,
+              "min": 0.3,
+              "p50": 4.7,
+              "p95": 5.5,
+              "max": 5.9,
+              "mean": 4.41
+            },
+            "callbackStartLag": {
+              "n": 164,
+              "min": 0.1,
+              "p50": 0.3,
+              "p95": 0.6,
+              "max": 9.7,
+              "mean": 0.399
+            },
+            "nextCallbackStartLag": {
+              "n": 164,
+              "min": 0.1,
+              "p50": 0.3,
+              "p95": 0.4,
+              "max": 9.1,
+              "mean": 0.365
+            },
+            "gpuElapsed": {
+              "n": 82,
+              "min": 9.229,
+              "p50": 13.209,
+              "p95": 14.765,
+              "max": 15.545,
+              "mean": 13.087
+            },
+            "gpuStates": {
+              "valid": 82,
+              "not-selected": 82
+            },
+            "callbackOver16_7": 1,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 1
+          },
+          "long": {
+            "frames": 0,
+            "raf": null,
+            "entryToNextEntry": null,
+            "callbackWall": null,
+            "station": null,
+            "walker": null,
+            "island": null,
+            "renderSubmit": null,
+            "unscopedInCallback": null,
+            "outsideCallback": null,
+            "callbackStartLag": null,
+            "nextCallbackStartLag": null,
+            "gpuElapsed": null,
+            "gpuStates": {},
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "system": {
+            "samples": 20,
+            "front": 0,
+            "cpu": {
+              "n": 20,
+              "min": 20.14,
+              "p50": 27.35,
+              "p95": 38.51,
+              "max": 39.45,
+              "mean": 28.923
+            },
+            "gfx": {
+              "n": 20,
+              "min": 1950,
+              "p50": 1980,
+              "p95": 1980,
+              "max": 1980,
+              "mean": 1977
+            },
+            "gpuUtil": {
+              "n": 20,
+              "min": 38,
+              "p50": 44,
+              "p95": 46,
+              "max": 48,
+              "mean": 43.4
+            },
+            "gpuPower": {
+              "n": 20,
+              "min": 79.91,
+              "p50": 83.04,
+              "p95": 83.7,
+              "max": 83.76,
+              "mean": 82.658
+            }
+          }
+        },
+        "art-c-alley": {
+          "frames": 654,
+          "fps": 64.801,
+          "p95": 15.5,
+          "over20": 2,
+          "observerSeesSameStamp": 654,
+          "sampled": 164,
+          "sampledIndependentlyMatched": 163,
+          "clockAdvanceSec": 10.108,
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "to": [
+            281.6,
+            8.812,
+            934
+          ],
+          "move": 0,
+          "all": {
+            "frames": 164,
+            "raf": {
+              "n": 164,
+              "min": 15.2,
+              "p50": 15.4,
+              "p95": 15.5,
+              "max": 15.6,
+              "mean": 15.387
+            },
+            "entryToNextEntry": {
+              "n": 164,
+              "min": 13.4,
+              "p50": 15.4,
+              "p95": 15.6,
+              "max": 21.9,
+              "mean": 15.468
+            },
+            "callbackWall": {
+              "n": 164,
+              "min": 9,
+              "p50": 10.1,
+              "p95": 15.1,
+              "max": 21.5,
+              "mean": 10.959
+            },
+            "station": {
+              "n": 164,
+              "min": 0.2,
+              "p50": 0.4,
+              "p95": 0.5,
+              "max": 0.6,
+              "mean": 0.373
+            },
+            "walker": {
+              "n": 164,
+              "min": 0,
+              "p50": 0,
+              "p95": 0,
+              "max": 0.1,
+              "mean": 0.002
+            },
+            "island": {
+              "n": 164,
+              "min": 0,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.3,
+              "mean": 0.184
+            },
+            "renderSubmit": {
+              "n": 164,
+              "min": 8.3,
+              "p50": 9.6,
+              "p95": 14.4,
+              "max": 20.6,
+              "mean": 10.33
+            },
+            "unscopedInCallback": {
+              "n": 164,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.2,
+              "max": 0.3,
+              "mean": 0.071
+            },
+            "outsideCallback": {
+              "n": 164,
+              "min": 0.3,
+              "p50": 5.2,
+              "p95": 6.1,
+              "max": 6.4,
+              "mean": 4.51
+            },
+            "callbackStartLag": {
+              "n": 164,
+              "min": 0.1,
+              "p50": 0.2,
+              "p95": 0.5,
+              "max": 10.8,
+              "mean": 0.398
+            },
+            "nextCallbackStartLag": {
+              "n": 164,
+              "min": 0.1,
+              "p50": 0.2,
+              "p95": 0.6,
+              "max": 10.8,
+              "mean": 0.479
+            },
+            "gpuElapsed": {
+              "n": 82,
+              "min": 6.297,
+              "p50": 14.893,
+              "p95": 16.054,
+              "max": 19.671,
+              "mean": 14.738
+            },
+            "gpuStates": {
+              "valid": 82,
+              "not-selected": 82
+            },
+            "callbackOver16_7": 3,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 7
+          },
+          "normal": {
+            "frames": 164,
+            "raf": {
+              "n": 164,
+              "min": 15.2,
+              "p50": 15.4,
+              "p95": 15.5,
+              "max": 15.6,
+              "mean": 15.387
+            },
+            "entryToNextEntry": {
+              "n": 164,
+              "min": 13.4,
+              "p50": 15.4,
+              "p95": 15.6,
+              "max": 21.9,
+              "mean": 15.468
+            },
+            "callbackWall": {
+              "n": 164,
+              "min": 9,
+              "p50": 10.1,
+              "p95": 15.1,
+              "max": 21.5,
+              "mean": 10.959
+            },
+            "station": {
+              "n": 164,
+              "min": 0.2,
+              "p50": 0.4,
+              "p95": 0.5,
+              "max": 0.6,
+              "mean": 0.373
+            },
+            "walker": {
+              "n": 164,
+              "min": 0,
+              "p50": 0,
+              "p95": 0,
+              "max": 0.1,
+              "mean": 0.002
+            },
+            "island": {
+              "n": 164,
+              "min": 0,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.3,
+              "mean": 0.184
+            },
+            "renderSubmit": {
+              "n": 164,
+              "min": 8.3,
+              "p50": 9.6,
+              "p95": 14.4,
+              "max": 20.6,
+              "mean": 10.33
+            },
+            "unscopedInCallback": {
+              "n": 164,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.2,
+              "max": 0.3,
+              "mean": 0.071
+            },
+            "outsideCallback": {
+              "n": 164,
+              "min": 0.3,
+              "p50": 5.2,
+              "p95": 6.1,
+              "max": 6.4,
+              "mean": 4.51
+            },
+            "callbackStartLag": {
+              "n": 164,
+              "min": 0.1,
+              "p50": 0.2,
+              "p95": 0.5,
+              "max": 10.8,
+              "mean": 0.398
+            },
+            "nextCallbackStartLag": {
+              "n": 164,
+              "min": 0.1,
+              "p50": 0.2,
+              "p95": 0.6,
+              "max": 10.8,
+              "mean": 0.479
+            },
+            "gpuElapsed": {
+              "n": 82,
+              "min": 6.297,
+              "p50": 14.893,
+              "p95": 16.054,
+              "max": 19.671,
+              "mean": 14.738
+            },
+            "gpuStates": {
+              "valid": 82,
+              "not-selected": 82
+            },
+            "callbackOver16_7": 3,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 7
+          },
+          "long": {
+            "frames": 0,
+            "raf": null,
+            "entryToNextEntry": null,
+            "callbackWall": null,
+            "station": null,
+            "walker": null,
+            "island": null,
+            "renderSubmit": null,
+            "unscopedInCallback": null,
+            "outsideCallback": null,
+            "callbackStartLag": null,
+            "nextCallbackStartLag": null,
+            "gpuElapsed": null,
+            "gpuStates": {},
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "system": {
+            "samples": 19,
+            "front": 0,
+            "cpu": {
+              "n": 19,
+              "min": 20.76,
+              "p50": 30.45,
+              "p95": 58.83,
+              "max": 58.83,
+              "mean": 35.771
+            },
+            "gfx": {
+              "n": 20,
+              "min": 1972,
+              "p50": 1980,
+              "p95": 1980,
+              "max": 1980,
+              "mean": 1979.2
+            },
+            "gpuUtil": {
+              "n": 20,
+              "min": 40,
+              "p50": 43,
+              "p95": 46,
+              "max": 47,
+              "mean": 43.45
+            },
+            "gpuPower": {
+              "n": 20,
+              "min": 79.82,
+              "p50": 83.2,
+              "p95": 84.19,
+              "max": 84.2,
+              "mean": 83.014
+            }
+          }
+        },
+        "art-d-laundry": {
+          "frames": 657,
+          "fps": 65,
+          "p95": 15.5,
+          "over20": 0,
+          "observerSeesSameStamp": 657,
+          "sampled": 164,
+          "sampledIndependentlyMatched": 164,
+          "clockAdvanceSec": 10.123,
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "to": [
+            281.6,
+            8.812,
+            934
+          ],
+          "move": 0,
+          "all": {
+            "frames": 164,
+            "raf": {
+              "n": 164,
+              "min": 15.2,
+              "p50": 15.4,
+              "p95": 15.5,
+              "max": 15.5,
+              "mean": 15.378
+            },
+            "entryToNextEntry": {
+              "n": 164,
+              "min": 15.2,
+              "p50": 15.4,
+              "p95": 15.5,
+              "max": 15.7,
+              "mean": 15.391
+            },
+            "callbackWall": {
+              "n": 164,
+              "min": 7.3,
+              "p50": 9,
+              "p95": 10.6,
+              "max": 13.1,
+              "mean": 9.139
+            },
+            "station": {
+              "n": 164,
+              "min": 0.2,
+              "p50": 0.3,
+              "p95": 0.5,
+              "max": 0.5,
+              "mean": 0.345
+            },
+            "walker": {
+              "n": 164,
+              "min": 0,
+              "p50": 0,
+              "p95": 0,
+              "max": 0.1,
+              "mean": 0.001
+            },
+            "island": {
+              "n": 164,
+              "min": 0,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.3,
+              "mean": 0.185
+            },
+            "renderSubmit": {
+              "n": 164,
+              "min": 6.9,
+              "p50": 8.5,
+              "p95": 10,
+              "max": 12.1,
+              "mean": 8.546
+            },
+            "unscopedInCallback": {
+              "n": 164,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.2,
+              "max": 0.4,
+              "mean": 0.062
+            },
+            "outsideCallback": {
+              "n": 164,
+              "min": 2.3,
+              "p50": 6.3,
+              "p95": 7.8,
+              "max": 8.1,
+              "mean": 6.252
+            },
+            "callbackStartLag": {
+              "n": 164,
+              "min": 0.1,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.3,
+              "mean": 0.205
+            },
+            "nextCallbackStartLag": {
+              "n": 164,
+              "min": 0.1,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.5,
+              "mean": 0.218
+            },
+            "gpuElapsed": {
+              "n": 82,
+              "min": 10.443,
+              "p50": 15.139,
+              "p95": 16.707,
+              "max": 17.094,
+              "mean": 14.868
+            },
+            "gpuStates": {
+              "valid": 82,
+              "not-selected": 82
+            },
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "normal": {
+            "frames": 164,
+            "raf": {
+              "n": 164,
+              "min": 15.2,
+              "p50": 15.4,
+              "p95": 15.5,
+              "max": 15.5,
+              "mean": 15.378
+            },
+            "entryToNextEntry": {
+              "n": 164,
+              "min": 15.2,
+              "p50": 15.4,
+              "p95": 15.5,
+              "max": 15.7,
+              "mean": 15.391
+            },
+            "callbackWall": {
+              "n": 164,
+              "min": 7.3,
+              "p50": 9,
+              "p95": 10.6,
+              "max": 13.1,
+              "mean": 9.139
+            },
+            "station": {
+              "n": 164,
+              "min": 0.2,
+              "p50": 0.3,
+              "p95": 0.5,
+              "max": 0.5,
+              "mean": 0.345
+            },
+            "walker": {
+              "n": 164,
+              "min": 0,
+              "p50": 0,
+              "p95": 0,
+              "max": 0.1,
+              "mean": 0.001
+            },
+            "island": {
+              "n": 164,
+              "min": 0,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.3,
+              "mean": 0.185
+            },
+            "renderSubmit": {
+              "n": 164,
+              "min": 6.9,
+              "p50": 8.5,
+              "p95": 10,
+              "max": 12.1,
+              "mean": 8.546
+            },
+            "unscopedInCallback": {
+              "n": 164,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.2,
+              "max": 0.4,
+              "mean": 0.062
+            },
+            "outsideCallback": {
+              "n": 164,
+              "min": 2.3,
+              "p50": 6.3,
+              "p95": 7.8,
+              "max": 8.1,
+              "mean": 6.252
+            },
+            "callbackStartLag": {
+              "n": 164,
+              "min": 0.1,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.3,
+              "mean": 0.205
+            },
+            "nextCallbackStartLag": {
+              "n": 164,
+              "min": 0.1,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.5,
+              "mean": 0.218
+            },
+            "gpuElapsed": {
+              "n": 82,
+              "min": 10.443,
+              "p50": 15.139,
+              "p95": 16.707,
+              "max": 17.094,
+              "mean": 14.868
+            },
+            "gpuStates": {
+              "valid": 82,
+              "not-selected": 82
+            },
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "long": {
+            "frames": 0,
+            "raf": null,
+            "entryToNextEntry": null,
+            "callbackWall": null,
+            "station": null,
+            "walker": null,
+            "island": null,
+            "renderSubmit": null,
+            "unscopedInCallback": null,
+            "outsideCallback": null,
+            "callbackStartLag": null,
+            "nextCallbackStartLag": null,
+            "gpuElapsed": null,
+            "gpuStates": {},
+            "callbackOver16_7": 0,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 0
+          },
+          "system": {
+            "samples": 19,
+            "front": 0,
+            "cpu": {
+              "n": 19,
+              "min": 7.02,
+              "p50": 24,
+              "p95": 33.84,
+              "max": 33.84,
+              "mean": 22.903
+            },
+            "gfx": {
+              "n": 19,
+              "min": 1695,
+              "p50": 1950,
+              "p95": 1980,
+              "max": 1980,
+              "mean": 1904.526
+            },
+            "gpuUtil": {
+              "n": 19,
+              "min": 32,
+              "p50": 38,
+              "p95": 44,
+              "max": 44,
+              "mean": 38.842
+            },
+            "gpuPower": {
+              "n": 19,
+              "min": 55.23,
+              "p50": 73.16,
+              "p95": 76.39,
+              "max": 76.39,
+              "mean": 69.818
+            }
+          }
+        },
+        "walk-third": {
+          "frames": 183,
+          "fps": 58.888,
+          "p95": 30.8,
+          "over20": 19,
+          "observerSeesSameStamp": 183,
+          "sampled": 46,
+          "sampledIndependentlyMatched": 45,
+          "clockAdvanceSec": 3.123,
+          "feet": [
+            281.6,
+            8.812,
+            934
+          ],
+          "to": [
+            280.94314945473604,
+            8.548984788005935,
+            924.6065995716406
+          ],
+          "move": 9.416,
+          "all": {
+            "frames": 46,
+            "raf": {
+              "n": 46,
+              "min": 15.3,
+              "p50": 15.4,
+              "p95": 30.8,
+              "max": 30.8,
+              "mean": 16.389
+            },
+            "entryToNextEntry": {
+              "n": 46,
+              "min": 14.8,
+              "p50": 16.7,
+              "p95": 19.1,
+              "max": 20.6,
+              "mean": 16.85
+            },
+            "callbackWall": {
+              "n": 46,
+              "min": 14.4,
+              "p50": 16.4,
+              "p95": 18.9,
+              "max": 20.4,
+              "mean": 16.557
+            },
+            "station": {
+              "n": 46,
+              "min": 0.3,
+              "p50": 0.3,
+              "p95": 0.5,
+              "max": 0.6,
+              "mean": 0.374
+            },
+            "walker": {
+              "n": 46,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.3,
+              "max": 0.3,
+              "mean": 0.135
+            },
+            "island": {
+              "n": 46,
+              "min": 0.1,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.3,
+              "mean": 0.17
+            },
+            "renderSubmit": {
+              "n": 46,
+              "min": 13.8,
+              "p50": 15.6,
+              "p95": 18.2,
+              "max": 19.8,
+              "mean": 15.82
+            },
+            "unscopedInCallback": {
+              "n": 46,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.1,
+              "max": 0.2,
+              "mean": 0.059
+            },
+            "outsideCallback": {
+              "n": 46,
+              "min": 0.1,
+              "p50": 0.3,
+              "p95": 0.7,
+              "max": 0.9,
+              "mean": 0.293
+            },
+            "callbackStartLag": {
+              "n": 46,
+              "min": 0.3,
+              "p50": 9.2,
+              "p95": 13.6,
+              "max": 15.1,
+              "mean": 8.089
+            },
+            "nextCallbackStartLag": {
+              "n": 46,
+              "min": 0.2,
+              "p50": 9.9,
+              "p95": 14.1,
+              "max": 15.4,
+              "mean": 8.55
+            },
+            "gpuElapsed": {
+              "n": 23,
+              "min": 11.986,
+              "p50": 14.371,
+              "p95": 15.617,
+              "max": 16.993,
+              "mean": 14.25
+            },
+            "gpuStates": {
+              "valid": 23,
+              "not-selected": 23
+            },
+            "callbackOver16_7": 18,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 36
+          },
+          "normal": {
+            "frames": 43,
+            "raf": {
+              "n": 43,
+              "min": 15.3,
+              "p50": 15.4,
+              "p95": 15.5,
+              "max": 15.6,
+              "mean": 15.384
+            },
+            "entryToNextEntry": {
+              "n": 43,
+              "min": 14.8,
+              "p50": 16.7,
+              "p95": 19.1,
+              "max": 20.6,
+              "mean": 16.8
+            },
+            "callbackWall": {
+              "n": 43,
+              "min": 14.4,
+              "p50": 16.4,
+              "p95": 18.9,
+              "max": 20.4,
+              "mean": 16.509
+            },
+            "station": {
+              "n": 43,
+              "min": 0.3,
+              "p50": 0.3,
+              "p95": 0.5,
+              "max": 0.6,
+              "mean": 0.372
+            },
+            "walker": {
+              "n": 43,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.3,
+              "max": 0.3,
+              "mean": 0.13
+            },
+            "island": {
+              "n": 43,
+              "min": 0.1,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.3,
+              "mean": 0.167
+            },
+            "renderSubmit": {
+              "n": 43,
+              "min": 13.8,
+              "p50": 15.6,
+              "p95": 18.2,
+              "max": 19.8,
+              "mean": 15.779
+            },
+            "unscopedInCallback": {
+              "n": 43,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.1,
+              "max": 0.2,
+              "mean": 0.06
+            },
+            "outsideCallback": {
+              "n": 43,
+              "min": 0.1,
+              "p50": 0.2,
+              "p95": 0.7,
+              "max": 0.9,
+              "mean": 0.291
+            },
+            "callbackStartLag": {
+              "n": 43,
+              "min": 0.3,
+              "p50": 8.5,
+              "p95": 13,
+              "max": 14.2,
+              "mean": 7.677
+            },
+            "nextCallbackStartLag": {
+              "n": 43,
+              "min": 0.2,
+              "p50": 10.2,
+              "p95": 14.1,
+              "max": 15.4,
+              "mean": 9.093
+            },
+            "gpuElapsed": {
+              "n": 21,
+              "min": 11.986,
+              "p50": 13.969,
+              "p95": 15.583,
+              "max": 16.993,
+              "mean": 14.145
+            },
+            "gpuStates": {
+              "valid": 21,
+              "not-selected": 22
+            },
+            "callbackOver16_7": 16,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 33
+          },
+          "long": {
+            "frames": 3,
+            "raf": {
+              "n": 3,
+              "min": 30.8,
+              "p50": 30.8,
+              "p95": 30.8,
+              "max": 30.8,
+              "mean": 30.8
+            },
+            "entryToNextEntry": {
+              "n": 3,
+              "min": 16.8,
+              "p50": 17.8,
+              "p95": 18.1,
+              "max": 18.1,
+              "mean": 17.567
+            },
+            "callbackWall": {
+              "n": 3,
+              "min": 16.5,
+              "p50": 17.5,
+              "p95": 17.7,
+              "max": 17.7,
+              "mean": 17.233
+            },
+            "station": {
+              "n": 3,
+              "min": 0.3,
+              "p50": 0.4,
+              "p95": 0.5,
+              "max": 0.5,
+              "mean": 0.4
+            },
+            "walker": {
+              "n": 3,
+              "min": 0.2,
+              "p50": 0.2,
+              "p95": 0.2,
+              "max": 0.2,
+              "mean": 0.2
+            },
+            "island": {
+              "n": 3,
+              "min": 0.2,
+              "p50": 0.2,
+              "p95": 0.2,
+              "max": 0.2,
+              "mean": 0.2
+            },
+            "renderSubmit": {
+              "n": 3,
+              "min": 15.7,
+              "p50": 16.5,
+              "p95": 17,
+              "max": 17,
+              "mean": 16.4
+            },
+            "unscopedInCallback": {
+              "n": 3,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.1,
+              "max": 0.1,
+              "mean": 0.033
+            },
+            "outsideCallback": {
+              "n": 3,
+              "min": 0.3,
+              "p50": 0.3,
+              "p95": 0.4,
+              "max": 0.4,
+              "mean": 0.333
+            },
+            "callbackStartLag": {
+              "n": 3,
+              "min": 13.3,
+              "p50": 13.6,
+              "p95": 15.1,
+              "max": 15.1,
+              "mean": 14
+            },
+            "nextCallbackStartLag": {
+              "n": 3,
+              "min": 0.6,
+              "p50": 0.6,
+              "p95": 1.1,
+              "max": 1.1,
+              "mean": 0.767
+            },
+            "gpuElapsed": {
+              "n": 2,
+              "min": 15.096,
+              "p50": 15.096,
+              "p95": 15.617,
+              "max": 15.617,
+              "mean": 15.356
+            },
+            "gpuStates": {
+              "valid": 2,
+              "not-selected": 1
+            },
+            "callbackOver16_7": 2,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 3
+          },
+          "system": {
+            "samples": 7,
+            "front": 0,
+            "cpu": {
+              "n": 7,
+              "min": 21.72,
+              "p50": 33.28,
+              "p95": 38.66,
+              "max": 38.66,
+              "mean": 32.249
+            },
+            "gfx": {
+              "n": 6,
+              "min": 1950,
+              "p50": 1972,
+              "p95": 1980,
+              "max": 1980,
+              "mean": 1969.833
+            },
+            "gpuUtil": {
+              "n": 6,
+              "min": 35,
+              "p50": 43,
+              "p95": 46,
+              "max": 46,
+              "mean": 41.833
+            },
+            "gpuPower": {
+              "n": 6,
+              "min": 77.11,
+              "p50": 81.94,
+              "p95": 84.69,
+              "max": 84.69,
+              "mean": 81.888
+            }
+          }
+        },
+        "walk-first": {
+          "frames": 167,
+          "fps": 53.473,
+          "p95": 30.8,
+          "over20": 36,
+          "observerSeesSameStamp": 167,
+          "sampled": 42,
+          "sampledIndependentlyMatched": 42,
+          "clockAdvanceSec": 3.138,
+          "feet": [
+            280.93745503796777,
+            8.546704637301502,
+            924.5251656179108
+          ],
+          "to": [
+            280.270780882719,
+            8.279755868608238,
+            914.9912810217228
+          ],
+          "move": 9.557,
+          "all": {
+            "frames": 42,
+            "raf": {
+              "n": 42,
+              "min": 15.3,
+              "p50": 15.4,
+              "p95": 30.8,
+              "max": 30.8,
+              "mean": 17.59
+            },
+            "entryToNextEntry": {
+              "n": 42,
+              "min": 14.7,
+              "p50": 18.1,
+              "p95": 24.3,
+              "max": 24.9,
+              "mean": 18.786
+            },
+            "callbackWall": {
+              "n": 42,
+              "min": 14.4,
+              "p50": 17.9,
+              "p95": 24,
+              "max": 24.6,
+              "mean": 18.514
+            },
+            "station": {
+              "n": 42,
+              "min": 0.3,
+              "p50": 0.4,
+              "p95": 0.6,
+              "max": 1.3,
+              "mean": 0.424
+            },
+            "walker": {
+              "n": 42,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.2,
+              "max": 0.2,
+              "mean": 0.11
+            },
+            "island": {
+              "n": 42,
+              "min": 0.1,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.3,
+              "mean": 0.195
+            },
+            "renderSubmit": {
+              "n": 42,
+              "min": 13.8,
+              "p50": 17.2,
+              "p95": 23.2,
+              "max": 23.5,
+              "mean": 17.719
+            },
+            "unscopedInCallback": {
+              "n": 42,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.2,
+              "max": 0.2,
+              "mean": 0.067
+            },
+            "outsideCallback": {
+              "n": 42,
+              "min": 0.1,
+              "p50": 0.3,
+              "p95": 0.4,
+              "max": 0.4,
+              "mean": 0.271
+            },
+            "callbackStartLag": {
+              "n": 42,
+              "min": 0.5,
+              "p50": 8.1,
+              "p95": 13.3,
+              "max": 13.6,
+              "mean": 7.312
+            },
+            "nextCallbackStartLag": {
+              "n": 42,
+              "min": 0.7,
+              "p50": 8.5,
+              "p95": 15.3,
+              "max": 15.5,
+              "mean": 8.507
+            },
+            "gpuElapsed": {
+              "n": 21,
+              "min": 12.712,
+              "p50": 14.848,
+              "p95": 20.492,
+              "max": 20.62,
+              "mean": 15.952
+            },
+            "gpuStates": {
+              "valid": 21,
+              "not-selected": 21
+            },
+            "callbackOver16_7": 28,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 34
+          },
+          "normal": {
+            "frames": 36,
+            "raf": {
+              "n": 36,
+              "min": 15.3,
+              "p50": 15.4,
+              "p95": 15.5,
+              "max": 15.5,
+              "mean": 15.392
+            },
+            "entryToNextEntry": {
+              "n": 36,
+              "min": 14.7,
+              "p50": 17.8,
+              "p95": 24.4,
+              "max": 24.9,
+              "mean": 18.494
+            },
+            "callbackWall": {
+              "n": 36,
+              "min": 14.4,
+              "p50": 17.7,
+              "p95": 24.1,
+              "max": 24.6,
+              "mean": 18.231
+            },
+            "station": {
+              "n": 36,
+              "min": 0.3,
+              "p50": 0.4,
+              "p95": 0.6,
+              "max": 1.3,
+              "mean": 0.414
+            },
+            "walker": {
+              "n": 36,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.2,
+              "max": 0.2,
+              "mean": 0.117
+            },
+            "island": {
+              "n": 36,
+              "min": 0.1,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.3,
+              "mean": 0.194
+            },
+            "renderSubmit": {
+              "n": 36,
+              "min": 13.8,
+              "p50": 16.7,
+              "p95": 23.3,
+              "max": 23.5,
+              "mean": 17.439
+            },
+            "unscopedInCallback": {
+              "n": 36,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.2,
+              "max": 0.2,
+              "mean": 0.067
+            },
+            "outsideCallback": {
+              "n": 36,
+              "min": 0.1,
+              "p50": 0.3,
+              "p95": 0.4,
+              "max": 0.4,
+              "mean": 0.264
+            },
+            "callbackStartLag": {
+              "n": 36,
+              "min": 0.5,
+              "p50": 7.6,
+              "p95": 12.3,
+              "max": 12.5,
+              "mean": 6.425
+            },
+            "nextCallbackStartLag": {
+              "n": 36,
+              "min": 0.8,
+              "p50": 9.8,
+              "p95": 15.3,
+              "max": 15.5,
+              "mean": 9.528
+            },
+            "gpuElapsed": {
+              "n": 19,
+              "min": 12.712,
+              "p50": 14.848,
+              "p95": 20.62,
+              "max": 20.62,
+              "mean": 15.911
+            },
+            "gpuStates": {
+              "not-selected": 17,
+              "valid": 19
+            },
+            "callbackOver16_7": 22,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 28
+          },
+          "long": {
+            "frames": 6,
+            "raf": {
+              "n": 6,
+              "min": 30.7,
+              "p50": 30.8,
+              "p95": 30.8,
+              "max": 30.8,
+              "mean": 30.783
+            },
+            "entryToNextEntry": {
+              "n": 6,
+              "min": 18.1,
+              "p50": 19.6,
+              "p95": 23.2,
+              "max": 23.2,
+              "mean": 20.533
+            },
+            "callbackWall": {
+              "n": 6,
+              "min": 17.7,
+              "p50": 19.2,
+              "p95": 22.9,
+              "max": 22.9,
+              "mean": 20.217
+            },
+            "station": {
+              "n": 6,
+              "min": 0.4,
+              "p50": 0.4,
+              "p95": 0.6,
+              "max": 0.6,
+              "mean": 0.483
+            },
+            "walker": {
+              "n": 6,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.1,
+              "max": 0.1,
+              "mean": 0.067
+            },
+            "island": {
+              "n": 6,
+              "min": 0.1,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.3,
+              "mean": 0.2
+            },
+            "renderSubmit": {
+              "n": 6,
+              "min": 17,
+              "p50": 18.4,
+              "p95": 22,
+              "max": 22,
+              "mean": 19.4
+            },
+            "unscopedInCallback": {
+              "n": 6,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.1,
+              "max": 0.1,
+              "mean": 0.067
+            },
+            "outsideCallback": {
+              "n": 6,
+              "min": 0.2,
+              "p50": 0.3,
+              "p95": 0.4,
+              "max": 0.4,
+              "mean": 0.317
+            },
+            "callbackStartLag": {
+              "n": 6,
+              "min": 10.2,
+              "p50": 12.8,
+              "p95": 13.6,
+              "max": 13.6,
+              "mean": 12.633
+            },
+            "nextCallbackStartLag": {
+              "n": 6,
+              "min": 0.7,
+              "p50": 1.7,
+              "p95": 4.2,
+              "max": 4.2,
+              "mean": 2.383
+            },
+            "gpuElapsed": {
+              "n": 2,
+              "min": 14.595,
+              "p50": 14.595,
+              "p95": 18.091,
+              "max": 18.091,
+              "mean": 16.343
+            },
+            "gpuStates": {
+              "valid": 2,
+              "not-selected": 4
+            },
+            "callbackOver16_7": 6,
+            "gapOver16_7": 0,
+            "callbackOver15_4": 6
+          },
+          "system": {
+            "samples": 6,
+            "front": 0,
+            "cpu": {
+              "n": 6,
+              "min": 34.5,
+              "p50": 43.63,
+              "p95": 78.91,
+              "max": 78.91,
+              "mean": 51.245
+            },
+            "gfx": {
+              "n": 7,
+              "min": 1740,
+              "p50": 1980,
+              "p95": 1980,
+              "max": 1980,
+              "mean": 1911.429
+            },
+            "gpuUtil": {
+              "n": 7,
+              "min": 27,
+              "p50": 39,
+              "p95": 40,
+              "max": 40,
+              "mean": 36
+            },
+            "gpuPower": {
+              "n": 7,
+              "min": 60.95,
+              "p50": 78.63,
+              "p95": 85.5,
+              "max": 85.5,
+              "mean": 74.411
+            }
+          }
+        }
+      }
+    }
+  ],
+  "meanings": {
+    "callbackWall": "Performance.now() elapsed from entry to exit of production main.js frame. Includes JS, main-thread stalls and synchronous WebGL call wall time.",
+    "renderSubmit": "Wall time inside unmodified look.render(scene, dt). May include synchronous driver work or waiting; is not GPU duration.",
+    "outsideCallback": "Actual next callback-entry time minus prior callback-exit; includes all browser/compositor scheduling, other callbacks/tasks, idle and presentation cadence; cannot identify present wait specifically.",
+    "clockAlignment": "A sampled producing frame is paired with the next production RAF. The passive observer ending at that next RAF is independently matched by timestamp.",
+    "deviceTelemetry": "0.5 s device and operating system samples apply to segment-level conditions; they are not per-frame GPU timing."
+  }
+}
