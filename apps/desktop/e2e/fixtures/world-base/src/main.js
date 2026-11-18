@@ -201,6 +201,12 @@ async function init() {
       name: 'art-d-laundry', label: 'D · 24 洗衣店', fov: 48,
       position: toWorld([3.5, 4.520055181715234, -116.2]), target: toWorld([2.5, 6.25, -122.6]),
     },
+    // Island-wide samples live at standing height on the quay, a hillside, the railway lane and the northern village street.
+    // Keep their world-space poses fixed so an environment change can be compared at the same eye position.
+    { name: 'sample-e-harbour', label: 'E · 拉克港码头', fov: 57, position: [-80, 6.0969, 1121.5], target: [-24, 7.2, 1123.5] },
+    { name: 'sample-f-hillside', label: 'F · 东部山麓草坡', fov: 57, position: [1031, 66.4589, 578], target: [1062, 102.7783, 490] },
+    { name: 'sample-g-rail', label: 'G · 铁路北侧小路', fov: 57, position: toWorld([38, 1.63, -55.5]), target: toWorld([-12, 2.55, -43]) },
+    { name: 'sample-h-north', label: 'H · 北端村道', fov: 57, position: [181, 135.5718, -1200], target: [180, 141.45, -1238] },
   ];
   setView('station-street');
   document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
