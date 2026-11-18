@@ -1,5 +1,5 @@
 {
- "note": "X-51 art round 2: island-wide ground. drift.* gathers flower density into drifts (scale in metres; keep = floor..1 by smoothstep(lo, hi, noise)). petal*: pastel pull on petals and the far flower wash. sward*: far grass mottling into three soft steps. rock*: cliff colour into three painted values; rockFlatten removes that share of the photographic normal detail. ?ground=off installs nothing.",
+ "note": "X-51 art round 2: island-wide ground. drift.* gathers flower density into drifts (scale in metres; keep = floor..1 by smoothstep(lo, hi, noise)). petal*: pastel pull on petals and the far flower wash. sward*: far grass mottling into three soft steps. rock*: cliff colour into three painted values; rockFlatten removes that share of the photographic normal detail. ?ground=off installs nothing. haze*: round 4 aerial perspective on terrain beyond hazeNear..hazeFar metres (toward the sky colour along the view ray, with hazeDesat saturation loss).",
  "drift": {
   "scale": 220,
   "lo": 0.5,
@@ -32,5 +32,10 @@
   0.42,
   0.35
  ],
- "thatchFlatten": 0.55
+ "thatchFlatten": 0.55,
+ "hazeNear": 120,
+ "hazeFar": 900,
+ "hazeAmt": 0.7,
+ "hazeDesat": 0.45,
+ "hazeGain": 0.92
 }

@@ -91,6 +91,18 @@ export function patchGroundShader(material, p, label) {
   }`, label + ' rock paint');
   s = insert(s, 'vec3 rn = normalize(N + nx * b.x + nz * b.z + ny * b.y);',
     `vec3 rn = normalize(N + (nx * b.x + nz * b.z + ny * b.y) * (1.0 - uWbGround * ${f(p.rockFlatten)}));`, label + ' rock normal');
+  // Round 4: aerial perspective. Distant land settles toward the sky colour along the view ray and
+  // loses saturation, so far hills read as a soft layer behind the town instead of a grey-green wall.
+  if (p.hazeAmt > 0) s = insert(s, 'col = applyAtmosphere(col, P);',
+    `{
+    float wbFar = smoothstep(${f(p.hazeNear)}, ${f(p.hazeFar)}, dist) * uWbGround;
+    vec3 wbD = -V;
+    vec3 wbSky = skyBase(normalize(vec3(wbD.x, max(wbD.y, 0.0) * 0.5 + 0.06, wbD.z)));
+    float wbL = dot(col, vec3(0.299, 0.587, 0.114));
+    col = mix(col, vec3(wbL), wbFar * ${f(p.hazeDesat)});
+    col = mix(col, wbSky * ${f(p.hazeGain)}, wbFar * ${f(p.hazeAmt)});
+  }
+  col = applyAtmosphere(col, P);`, label + ' aerial haze');
   material.fragmentShader = s;
   material.needsUpdate = true;
 }
