@@ -10,6 +10,7 @@ import { createSkyline } from './skyline.js';
 import { createCity } from './city.js';
 import { applyWeathering, loadWeatheringParams } from './weathering.js';
 import { addWeatheringDecals, loadBakedDecals } from './weathering-decals.js';
+import { groundEnabled, loadGround, applyFlowerDrifts, patchGroundShader, patchPetals } from './island-ground.js';
 import { getMats as getVehicleMats } from '../upstream/sakuragaoka/src/world/vehicles/atlas.js';
 
 const canvas = document.querySelector('#world');
@@ -111,7 +112,14 @@ async function init() {
   const shadowTint = shadowTintParams ? shadowTintParams[timeOfDay === 'afternoon' ? 'afternoon' : 'evening'] : null;
   island = await createIsland({ scene, renderer, camera, timeOfDay });
   worldBase.island = island;
+  // Art round 2: island-wide ground (flower drifts, pastel petals, painted sward and rock). ?ground=off skips it.
+  const groundParams = groundEnabled() ? await loadGround() : null;
+  if (groundParams) {
+    worldBase.ground = { drifts: applyFlowerDrifts(island.terrain, island.terrain.meta.world ?? 6144, groundParams.drift) };
+    island.meadow.wbPetals = (vertexShader) => patchPetals(vertexShader, groundParams);
+  }
   look.applyIsland(island);
+  if (groundParams) for (const [material, label] of [[island.terrain.material, 'terrain'], [island.transition.material, 'transition']]) patchGroundShader(material, groundParams, label);
   if (shadowTint) worldBase.shadowTint = { island: patchIslandShadowTint(island, shadowTint) };
   const evening = island.timeOfDay === 'evening';
   // Low golden-hour sun: warmer and a little weaker; the sky fill turns cooler so shade reads blue-violet.

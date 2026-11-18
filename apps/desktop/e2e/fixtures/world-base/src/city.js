@@ -74,6 +74,11 @@ export async function createCity({ scene, station, island, skyline }) {
   signLight.color.set('#f3f1e8').multiplyScalar(1.15);
   ownedMaterials.add(signLight);
   H.signLight = signLight;
+  // Art round 2 (D): the fascia band and the side panel become teal light boxes, not painted boards.
+  const signTeal = M.lamp.clone();
+  signTeal.color.set('#3c9c97').multiplyScalar(0.78);
+  ownedMaterials.add(signTeal);
+  H.signTeal = signTeal;
   // Close-up plants own one cutout atlas; their branches reuse the station wood.
   const plants = createTownPlants({ root, frame, materials: M, gradientMap: ctx.mat.gradientMap });
   ownedMaterials.add(plants.material); ownedTextures.add(plants.texture);

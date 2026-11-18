@@ -219,8 +219,9 @@ export function addArtR1Station({ ctx }) {
   // ---------------------------------------------------------------- A: nobori flag rows along both kerbs
   {
     const T = 256, designs = [
-      ['桜まつり', '#ff6f9f', '#ffffff'], ['本日特売', '#e63946', '#ffe14a'], ['営業中', '#ffd23f', '#d62828'], ['ラーメン', '#2b6cb0', '#ffffff'],
-      ['新茶入荷', '#2f9e66', '#ffffff'], ['春の新作', '#17a398', '#fff3c4'], ['お花見弁当', '#ff8a3d', '#ffffff'], ['クリーニング', '#7a5af8', '#ffffff'],
+      // Round 2: three colour families only (vermilion, indigo, sakura), all with white lettering.
+      ['桜まつり', '#ee8aa6', '#ffffff'], ['本日特売', '#d4473e', '#ffffff'], ['営業中', '#d4473e', '#ffffff'], ['ラーメン', '#2d4b78', '#ffffff'],
+      ['新茶入荷', '#2d4b78', '#ffffff'], ['春の新作', '#ee8aa6', '#ffffff'], ['お花見弁当', '#d4473e', '#ffffff'], ['クリーニング', '#2d4b78', '#ffffff'],
     ];
     const atlas = ctx.tex.draw(T * 4, T * 4, (g, w) => {
       designs.forEach(([label, bg, fg], i) => {
@@ -235,16 +236,22 @@ export function addArtR1Station({ ctx }) {
         chars.forEach((ch, n) => { g.font = `900 ${size}px ${sans}`; g.fillText(ch, T / 2, 60 + size * (n + 0.5)); });
         g.restore();
       });
-    }, { key: 'art-r1-nobori-atlas-v1', anisotropy: 8 });
+    }, { key: 'art-r1-nobori-atlas-v2', anisotropy: 8 });
     // The 4 x 4 grid holds eight 1:2 tiles: columns 0..3 in rows 0 (top half) and 1 (second half).
     const flagMat = ctx.mat.toon('#ffffff', { map: atlas, paint: 0.01, emissive: '#ffffff', emissiveIntensity: 0.22, name: 'art-r1-nobori' });
     flagMat.emissiveMap = atlas; flagMat.needsUpdate = true;
     const P = [], N = [], UV = [], I = [];
     const pole = M.t('#dfe2e4', { paint: 0.02 }), base = M.t('#6e7f88', { paint: 0.04 });
-    const rows = [
-      [1, [[8.0, 0], [13.5, 3], [19.0, 5], [25.0, 1]]],      // east kerb (street side of the frontage line)
-      [-1, [[17.0, 7], [21.0, 2], [25.5, 4]]],             // west kerb, clear of the W1 frontage (z 2.5..15.5)
-    ];
+    // Round 2: a rule, not a hand list. Every main-street shop lot gets a pair of nobori on its kerb,
+    // 1.2 m in from each lot end, with designs by shop kind. W1 (konbini) keeps its own entrance display.
+    const NOBORI_BY_KIND = { cafe: [5, 2], wagashi: [4, 0], general: [1, 6], ramen: [3, 2], flower: [0, 5], bookstore: [2, 1], bicycle: [2, 1] };
+    const rows = [[1, []], [-1, []]];
+    for (const lot of L.LOTS) {
+      const designs = NOBORI_BY_KIND[lot.kind];
+      if (!designs || lot.id === 'W1') continue;
+      rows[lot.side > 0 ? 0 : 1][1].push([lot.z0 + 1.2, designs[0]], [lot.z1 - 1.2, designs[1]]);
+    }
+    stats.noboriLots = rows.reduce((n, [, l]) => n + l.length / 2, 0);
     const group = new THREE.Group(); group.name = 'art-r1-nobori'; ctx.addStatic(group);
     const k = ctx.kit(group);
     for (const [side, list] of rows) for (const [z, di] of list) {
