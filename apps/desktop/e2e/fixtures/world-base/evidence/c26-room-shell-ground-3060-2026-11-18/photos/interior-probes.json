@@ -1,0 +1,1840 @@
+{
+  "source": "a281e7a8acb8557a6d8fe399a7c57eff195f5879",
+  "exit": 1,
+  "renderOk": true,
+  "stage": "complete",
+  "networkFailures": [
+    {
+      "resource": "boulders.glb",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    }
+  ],
+  "generators": [
+    {
+      "path": "upstream/sakuragaoka/src/world/shopsA/konbini.js",
+      "status": 200,
+      "requestId": "71100.194",
+      "servedSha256": "df15e6a08f1ad3f3a79df30e87d80390eb81f6b780fcf8de2c7a0efd4705d2ca",
+      "diskSha256": "df15e6a08f1ad3f3a79df30e87d80390eb81f6b780fcf8de2c7a0efd4705d2ca",
+      "gitSha256": "df15e6a08f1ad3f3a79df30e87d80390eb81f6b780fcf8de2c7a0efd4705d2ca"
+    },
+    {
+      "path": "upstream/sakuragaoka/src/world/shopsA/cafe.js",
+      "status": 200,
+      "requestId": "71100.197",
+      "servedSha256": "83b7a557a1c7ee21dfb3126c79b86ac24df75578c702043a9ec8a48b3ffe9870",
+      "diskSha256": "83b7a557a1c7ee21dfb3126c79b86ac24df75578c702043a9ec8a48b3ffe9870",
+      "gitSha256": "83b7a557a1c7ee21dfb3126c79b86ac24df75578c702043a9ec8a48b3ffe9870"
+    },
+    {
+      "path": "upstream/sakuragaoka/src/world/shopsA/flower.js",
+      "status": 200,
+      "requestId": "71100.200",
+      "servedSha256": "308594755163fe0bb956e3f6dcfe5222fe3413924112fbd76de8e32e24ca5274",
+      "diskSha256": "308594755163fe0bb956e3f6dcfe5222fe3413924112fbd76de8e32e24ca5274",
+      "gitSha256": "308594755163fe0bb956e3f6dcfe5222fe3413924112fbd76de8e32e24ca5274"
+    },
+    {
+      "path": "upstream/sakuragaoka/src/world/shopsA/books.js",
+      "status": 200,
+      "requestId": "71100.202",
+      "servedSha256": "0261e43a779dc465c6df1bb61f3a7f631273f2c6849167238883bb2f1545367f",
+      "diskSha256": "0261e43a779dc465c6df1bb61f3a7f631273f2c6849167238883bb2f1545367f",
+      "gitSha256": "0261e43a779dc465c6df1bb61f3a7f631273f2c6849167238883bb2f1545367f"
+    },
+    {
+      "path": "upstream/sakuragaoka/src/world/shopsB/wagashi.js",
+      "status": 200,
+      "requestId": "71100.205",
+      "servedSha256": "96d7717b9cb59807a66e5d8d2ed3a32b73a382e06a6620416fb831f1a5f730cb",
+      "diskSha256": "96d7717b9cb59807a66e5d8d2ed3a32b73a382e06a6620416fb831f1a5f730cb",
+      "gitSha256": "96d7717b9cb59807a66e5d8d2ed3a32b73a382e06a6620416fb831f1a5f730cb"
+    },
+    {
+      "path": "upstream/sakuragaoka/src/world/shopsB/bike.js",
+      "status": 200,
+      "requestId": "71100.208",
+      "servedSha256": "27a10e0a6a7216abdf2e7f5fdd1c654c58898fa761b6d62a02639cc4fabc8c99",
+      "diskSha256": "27a10e0a6a7216abdf2e7f5fdd1c654c58898fa761b6d62a02639cc4fabc8c99",
+      "gitSha256": "27a10e0a6a7216abdf2e7f5fdd1c654c58898fa761b6d62a02639cc4fabc8c99"
+    },
+    {
+      "path": "upstream/sakuragaoka/src/world/shopsB/ramen.js",
+      "status": 200,
+      "requestId": "71100.207",
+      "servedSha256": "7933892092e6fcc34c60940f9957e86f6a65c3c8a9c5c16ee6695fe1b3568e2a",
+      "diskSha256": "7933892092e6fcc34c60940f9957e86f6a65c3c8a9c5c16ee6695fe1b3568e2a",
+      "gitSha256": "7933892092e6fcc34c60940f9957e86f6a65c3c8a9c5c16ee6695fe1b3568e2a"
+    },
+    {
+      "path": "upstream/sakuragaoka/src/world/shopsB/general.js",
+      "status": 200,
+      "requestId": "71100.206",
+      "servedSha256": "3c88d0ebffaebfd52103393d4ada19af664d9e721b89c34731fca1b09bd57ed2",
+      "diskSha256": "3c88d0ebffaebfd52103393d4ada19af664d9e721b89c34731fca1b09bd57ed2",
+      "gitSha256": "3c88d0ebffaebfd52103393d4ada19af664d9e721b89c34731fca1b09bd57ed2"
+    }
+  ],
+  "W4croppedSamples": {
+    "rearHangingCard": {
+      "rect": [
+        525,
+        334,
+        621,
+        409
+      ],
+      "offVsOn": {
+        "changed": 10,
+        "maximum": 1
+      },
+      "onVsRepeat": {
+        "changed": 0,
+        "maximum": 0
+      }
+    },
+    "shelfBand": {
+      "rect": [
+        0,
+        365,
+        720,
+        374
+      ],
+      "offVsOn": {
+        "changed": 176,
+        "maximum": 3
+      },
+      "onVsRepeat": {
+        "changed": 0,
+        "maximum": 0
+      }
+    }
+  },
+  "views": {
+    "W2": {
+      "poseMatchesPrimary": true,
+      "primaryVsDiagnosticPngIdentity": true,
+      "room": {
+        "id": "W2",
+        "o": [
+          275.2,
+          919
+        ],
+        "ex": [
+          6.123233995736766e-17,
+          -1
+        ],
+        "ez": [
+          1,
+          6.123233995736766e-17
+        ],
+        "min": [
+          -2.9999999999999996,
+          8.501999999999999,
+          -11.05
+        ],
+        "max": [
+          2.9999999999999996,
+          11.592,
+          -2.6500000000000004
+        ],
+        "aabb": [
+          264.15,
+          8.501999999999999,
+          916,
+          272.55,
+          11.592,
+          922
+        ]
+      },
+      "samples": [
+        {
+          "xy": [
+            549,
+            386
+          ],
+          "hits": [
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                264.20499992370605,
+                10.070453293807665,
+                918.2629893128715
+              ],
+              "roomXYZ": [
+                0.7370106871285309,
+                10.070453293807665,
+                -10.995000076293934
+              ],
+              "inside": true,
+              "faceIndex": 3,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 6.995283847935565
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                264.19999980926514,
+                10.070452188202534,
+                918.2630343384283
+              ],
+              "roomXYZ": [
+                0.7369656615717297,
+                10.070452188202534,
+                -11.000000190734852
+              ],
+              "inside": true,
+              "faceIndex": 105,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 7.000284165220038
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.9950008392334,
+                10.070406859657444,
+                918.2648803347286
+              ],
+              "roomXYZ": [
+                0.73511966527144,
+                10.070406859657444,
+                -11.20499916076659
+              ],
+              "inside": false,
+              "faceIndex": 16820,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 7.205291451605404
+            },
+            {
+              "name": "houses",
+              "parents": [
+                "houses",
+                "houses",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                255.67596244812012,
+                10.068567387455376,
+                918.3397924871648
+              ],
+              "roomXYZ": [
+                0.6602075128351986,
+                10.068567387455376,
+                -19.52403755187987
+              ],
+              "inside": false,
+              "faceIndex": 2308,
+              "geometry": "BufferGeometry",
+              "material": "ShaderMaterial",
+              "opacity": 1,
+              "transparent": true,
+              "distance": 15.524667327658683
+            }
+          ]
+        },
+        {
+          "xy": [
+            548,
+            365
+          ],
+          "hits": [
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                264.20499992370605,
+                10.246106658405369,
+                918.2683775734029
+              ],
+              "roomXYZ": [
+                0.7316224265971407,
+                10.246106658405369,
+                -10.995000076293934
+              ],
+              "inside": true,
+              "faceIndex": 3,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 6.9975006029580085
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                264.19999980926514,
+                10.246231112044747,
+                918.2684264505564
+              ],
+              "roomXYZ": [
+                0.7315735494436233,
+                10.246231112044747,
+                -11.000000190734852
+              ],
+              "inside": true,
+              "faceIndex": 105,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 7.002502504806981
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.9950008392334,
+                10.251333568836667,
+                918.2704303579142
+              ],
+              "roomXYZ": [
+                0.7295696420858342,
+                10.251333568836667,
+                -11.20499916076659
+              ],
+              "inside": false,
+              "faceIndex": 16820,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 7.207574756523506
+            },
+            {
+              "name": "houses",
+              "parents": [
+                "houses",
+                "houses",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                255.67596244812012,
+                10.458395750341332,
+                918.351750679862
+              ],
+              "roomXYZ": [
+                0.6482493201380054,
+                10.458395750341332,
+                -19.52403755187987
+              ],
+              "inside": false,
+              "faceIndex": 2308,
+              "geometry": "BufferGeometry",
+              "material": "ShaderMaterial",
+              "opacity": 1,
+              "transparent": true,
+              "distance": 15.529586982817566
+            }
+          ]
+        },
+        {
+          "xy": [
+            557,
+            379
+          ],
+          "hits": [
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                264.20499992370605,
+                10.129201407486201,
+                918.1961224117186
+              ],
+              "roomXYZ": [
+                0.8038775882813518,
+                10.129201407486201,
+                -10.995000076293934
+              ],
+              "inside": true,
+              "faceIndex": 3,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 6.995235028507722
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                264.19999980926514,
+                10.12924229577505,
+                918.1961196399695
+              ],
+              "roomXYZ": [
+                0.8038803600304611,
+                10.12924229577505,
+                -11.000000190734852
+              ],
+              "inside": true,
+              "faceIndex": 105,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 7.000235310895451
+            },
+            {
+              "name": "houses",
+              "parents": [
+                "houses",
+                "houses",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                255.67596244812012,
+                10.198947360707772,
+                918.1913944495446
+              ],
+              "roomXYZ": [
+                0.808605550455353,
+                10.198947360707772,
+                -19.52403755187987
+              ],
+              "inside": false,
+              "faceIndex": 2308,
+              "geometry": "BufferGeometry",
+              "material": "ShaderMaterial",
+              "opacity": 1,
+              "transparent": true,
+              "distance": 15.524558982465997
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                255.66296195983887,
+                10.199053671818506,
+                918.1913872428913
+              ],
+              "roomXYZ": [
+                0.8086127571086751,
+                10.199053671818506,
+                -19.53703804016112
+              ],
+              "inside": false,
+              "faceIndex": 10906,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 15.537559907415364
+            }
+          ]
+        }
+      ]
+    },
+    "W4": {
+      "poseMatchesPrimary": true,
+      "primaryVsDiagnosticPngIdentity": true,
+      "room": {
+        "id": "W4",
+        "o": [
+          275.3049128199398,
+          935.8771917416019
+        ],
+        "ex": [
+          -0.02649827950039499,
+          -0.999648858941738
+        ],
+        "ez": [
+          0.999648858941738,
+          -0.02649827950039499
+        ],
+        "min": [
+          -3.8499999999999996,
+          9.014561368764852,
+          -12.05
+        ],
+        "max": [
+          3.8499999999999996,
+          11.894561368764855,
+          -2.45
+        ],
+        "aabb": [
+          263.15712569361534,
+          9.014561368764852,
+          932.0934644194522,
+          272.957791491609,
+          11.894561368764855,
+          940.0451441165073
+        ]
+      },
+      "samples": [
+        {
+          "xy": [
+            156,
+            368
+          ],
+          "hits": [
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.4345562824392,
+                10.739964651296788,
+                939.6280539310095
+              ],
+              "roomXYZ": [
+                -3.4350010823889843,
+                10.739964651296788,
+                -11.965579762606444
+              ],
+              "inside": true,
+              "faceIndex": 1897,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.676049998166231
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.42079947070926,
+                10.740236236482412,
+                939.6344237607018
+              ],
+              "roomXYZ": [
+                -3.44100414353028,
+                10.740236236482412,
+                -11.979500533282506
+              ],
+              "inside": true,
+              "faceIndex": 2780,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.691212397639752
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.40548209280485,
+                10.74053863016222,
+                939.6415161808422
+              ],
+              "roomXYZ": [
+                -3.4476881890698943,
+                10.74053863016222,
+                -11.995000469557844
+              ],
+              "inside": true,
+              "faceIndex": 10,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.708094812492279
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.4005409482842,
+                10.740636177593863,
+                939.6438040837153
+              ],
+              "roomXYZ": [
+                -3.4498443567377337,
+                10.740636177593863,
+                -12.000000504529599
+              ],
+              "inside": true,
+              "faceIndex": 408,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.713540813248066
+            }
+          ]
+        },
+        {
+          "xy": [
+            405,
+            369
+          ],
+          "hits": [
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.3660515958554,
+                10.739840317723953,
+                937.5690405819481
+              ],
+              "roomXYZ": [
+                -1.3748954811217773,
+                10.739840317723953,
+                -11.979500083163595
+              ],
+              "inside": true,
+              "faceIndex": 2780,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.098572140396513
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.350627297552,
+                10.74014195357505,
+                937.5721211729988
+              ],
+              "roomXYZ": [
+                -1.3775662730828964,
+                10.74014195357505,
+                -11.995000595725253
+              ],
+              "inside": true,
+              "faceIndex": 10,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.11430395540815
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.34565190430027,
+                10.740239251808557,
+                937.5731148747299
+              ],
+              "roomXYZ": [
+                -1.3784277865234997,
+                10.740239251808557,
+                -12.000000573298367
+              ],
+              "inside": true,
+              "faceIndex": 409,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.119378543872866
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                256.07231531005425,
+                10.882475808101418,
+                939.0257693281229
+              ],
+              "roomXYZ": [
+                -2.6378412473197166,
+                10.882475808101418,
+                -19.309276044159088
+              ],
+              "inside": false,
+              "faceIndex": 1528,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 15.537724815927506
+            }
+          ]
+        },
+        {
+          "xy": [
+            659,
+            369
+          ],
+          "hits": [
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.6016628743827,
+                10.7432279586792,
+                935.2346157878937
+              ],
+              "roomXYZ": [
+                0.9524663070281147,
+                10.7432279586792,
+                -11.68211329676447
+              ],
+              "inside": true,
+              "faceIndex": 570,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 7.742559774202859
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.30340329992544,
+                10.749370197702158,
+                935.2056374745252
+              ],
+              "roomXYZ": [
+                0.9893378104886277,
+                10.749370197702158,
+                -11.97950026459206
+              ],
+              "inside": true,
+              "faceIndex": 2792,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.04228672244299
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.2878573422058,
+                10.749690344970954,
+                935.204127059863
+              ],
+              "roomXYZ": [
+                0.991259635915001,
+                10.749690344970954,
+                -11.995000740097742
+              ],
+              "inside": true,
+              "faceIndex": 11,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.057909162974015
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.2828427593403,
+                10.749793613295587,
+                935.203639852859
+              ],
+              "roomXYZ": [
+                0.9918795496589369,
+                10.749793613295587,
+                -12.000000651989941
+              ],
+              "inside": true,
+              "faceIndex": 409,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.062948416522564
+            }
+          ]
+        },
+        {
+          "xy": [
+            709,
+            369
+          ],
+          "hits": [
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.6000720557758,
+                10.74493593985892,
+                934.7551947241867
+              ],
+              "roomXYZ": [
+                1.4317611802715686,
+                10.74493593985892,
+                -11.670999723425181
+              ],
+              "inside": true,
+              "faceIndex": 573,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 7.805119911774286
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.29015426304755,
+                10.751385635004242,
+                934.7058093262344
+              ],
+              "roomXYZ": [
+                1.4893415252768059,
+                10.751385635004242,
+                -11.979500063213534
+              ],
+              "inside": true,
+              "faceIndex": 2792,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.119014088763791
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.274582335212,
+                10.751709702191478,
+                934.7033279396504
+              ],
+              "roomXYZ": [
+                1.4922346698402493,
+                10.751709702191478,
+                -11.9950007706306
+              ],
+              "inside": true,
+              "faceIndex": 11,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.134785811416574
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.26955946439904,
+                10.751814233090505,
+                934.7025275452239
+              ],
+              "roomXYZ": [
+                1.4931678806501059,
+                10.751814233090505,
+                -12.000000668632184
+              ],
+              "inside": true,
+              "faceIndex": 409,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.139873127914564
+            }
+          ]
+        },
+        {
+          "xy": [
+            947,
+            370
+          ],
+          "hits": [
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.75784919604774,
+                10.740142655551487,
+                932.4024490962305
+              ],
+              "roomXYZ": [
+                3.7794998398764585,
+                10.740142655551487,
+                -11.450934273942325
+              ],
+              "inside": true,
+              "faceIndex": 2756,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.35615019796993
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.7268934846053,
+                10.740780682936592,
+                932.3877647628956
+              ],
+              "roomXYZ": [
+                3.794999290032959,
+                10.740780682936592,
+                -11.481490005994523
+              ],
+              "inside": true,
+              "faceIndex": 14,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.390418153779166
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.7169070957971,
+                10.740986512143579,
+                932.3830275607692
+              ],
+              "roomXYZ": [
+                3.7999994508550508,
+                10.740986512143579,
+                -11.49134736046555
+              ],
+              "inside": true,
+              "faceIndex": 474,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.401473080783752
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.2974915228793,
+                10.749631075902299,
+                932.184071122955
+              ],
+              "roomXYZ": [
+                4.009999817973141,
+                10.749631075902299,
+                -11.905343656057664
+              ],
+              "inside": false,
+              "faceIndex": 18033,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.865765892957603
+            }
+          ]
+        },
+        {
+          "xy": [
+            554,
+            334
+          ],
+          "hits": [
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.39954409315715,
+                11.073948188516948,
+                936.2097475235355
+              ],
+              "roomXYZ": [
+                -0.01696721986684574,
+                11.073948188516948,
+                -11.910000419068053
+              ],
+              "inside": true,
+              "faceIndex": 0,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 7.925143151738887
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.3295721098695,
+                11.078279078642732,
+                936.211752518285
+              ],
+              "roomXYZ": [
+                -0.01711737341005548,
+                11.078279078642732,
+                -11.980000961230708
+              ],
+              "inside": true,
+              "faceIndex": 3320,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 7.995277701416157
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.31457851205806,
+                11.079207101855175,
+                936.2121821485953
+              ],
+              "roomXYZ": [
+                -0.017149548313926122,
+                11.079207101855175,
+                -11.995000678638387
+              ],
+              "inside": true,
+              "faceIndex": 10,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.01030613395643
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.3095806120848,
+                11.07951644503264,
+                936.212325359674
+              ],
+              "roomXYZ": [
+                -0.01716027335492354,
+                11.07951644503264,
+                -12.000000618490954
+              ],
+              "inside": true,
+              "faceIndex": 409,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.015315645585046
+            }
+          ]
+        }
+      ]
+    },
+    "E1": {
+      "poseMatchesPrimary": true,
+      "primaryVsDiagnosticPngIdentity": true,
+      "room": {
+        "id": "E1",
+        "o": [
+          284.8,
+          908.5
+        ],
+        "ex": [
+          6.123233995736766e-17,
+          1
+        ],
+        "ez": [
+          -1,
+          6.123233995736766e-17
+        ],
+        "min": [
+          -5.23,
+          8.37115,
+          -12.63
+        ],
+        "max": [
+          5.23,
+          11.451150000000002,
+          -3.9699999999999998
+        ],
+        "aabb": [
+          288.77000000000004,
+          8.37115,
+          903.27,
+          297.43,
+          11.451150000000002,
+          913.73
+        ]
+      },
+      "samples": [
+        {
+          "xy": [
+            752,
+            388
+          ],
+          "hits": [
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                297.375,
+                9.921969329140332,
+                910.1869043383335
+              ],
+              "roomXYZ": [
+                1.6869043383335345,
+                9.921969329140332,
+                -12.574999999999989
+              ],
+              "inside": true,
+              "faceIndex": 3,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 7.1761158815074495
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                297.3799991607666,
+                9.921955581863307,
+                910.1881133857866
+              ],
+              "roomXYZ": [
+                1.6881133857865513,
+                9.921955581863307,
+                -12.57999916076659
+              ],
+              "inside": true,
+              "faceIndex": 9,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 7.18125918716642
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                297.57500076293945,
+                9.921419343648484,
+                910.2352745397203
+              ],
+              "roomXYZ": [
+                1.7352745397203089,
+                9.921419343648484,
+                -12.775000762939442
+              ],
+              "inside": false,
+              "faceIndex": 8620,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 7.381883430072818
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                297.61000061035156,
+                9.92132309697417,
+                910.2437392557691
+              ],
+              "roomXYZ": [
+                1.7437392557691291,
+                9.92132309697417,
+                -12.810000610351551
+              ],
+              "inside": false,
+              "faceIndex": 8632,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 7.4178924567200415
+            }
+          ]
+        },
+        {
+          "xy": [
+            1046,
+            396
+          ],
+          "hits": [
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                297.375,
+                9.84462487916062,
+                913.06042449583
+              ],
+              "roomXYZ": [
+                4.560424495830035,
+                9.84462487916062,
+                -12.574999999999989
+              ],
+              "inside": true,
+              "faceIndex": 3,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.334111451205821
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                297.3799991607666,
+                9.84455569713953,
+                913.0636930686212
+              ],
+              "roomXYZ": [
+                4.563693068621206,
+                9.84455569713953,
+                -12.57999916076659
+              ],
+              "inside": true,
+              "faceIndex": 9,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.34008472188557
+            },
+            {
+              "name": "houses",
+              "parents": [
+                "houses",
+                "houses",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                304.87161445617676,
+                9.74088127826188,
+                917.9618931985888
+              ],
+              "roomXYZ": [
+                9.46189319858877,
+                9.74088127826188,
+                -20.071614456176746
+              ],
+              "inside": false,
+              "faceIndex": 2737,
+              "geometry": "BufferGeometry",
+              "material": "ShaderMaterial",
+              "opacity": 1,
+              "transparent": true,
+              "distance": 17.291476380882916
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                304.884614944458,
+                9.740701368053662,
+                917.9703932337451
+              ],
+              "roomXYZ": [
+                9.470393233745087,
+                9.740701368053662,
+                -20.084614944457996
+              ],
+              "inside": false,
+              "faceIndex": 14153,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 17.30701007525652
+            }
+          ]
+        },
+        {
+          "xy": [
+            825,
+            357
+          ],
+          "hits": [
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                297.375,
+                10.198030572876867,
+                910.8570700297356
+              ],
+              "roomXYZ": [
+                2.3570700297356106,
+                10.198030572876867,
+                -12.574999999999989
+              ],
+              "inside": true,
+              "faceIndex": 3,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 7.366979825803766
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                297.3799991607666,
+                10.198214685748784,
+                910.8587594020678
+              ],
+              "roomXYZ": [
+                2.3587594020677907,
+                10.198214685748784,
+                -12.57999916076659
+              ],
+              "inside": true,
+              "faceIndex": 9,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 7.372259928529725
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                311.9477119445801,
+                10.7347254248759,
+                915.7816438758344
+              ],
+              "roomXYZ": [
+                7.281643875834449,
+                10.7347254248759,
+                -27.147711944580067
+              ],
+              "inside": false,
+              "faceIndex": 312051,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 22.758646478559402
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                312.01228994707367,
+                10.737103752370636,
+                915.803466796875
+              ],
+              "roomXYZ": [
+                7.303466796875002,
+                10.737103752370636,
+                -27.212289947073657
+              ],
+              "inside": false,
+              "faceIndex": 2011,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 22.826853624302913
+            }
+          ]
+        },
+        {
+          "xy": [
+            553,
+            355
+          ],
+          "hits": [
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                297.375,
+                10.19822846088001,
+                908.4741120926433
+              ],
+              "roomXYZ": [
+                -0.025887907356717872,
+                10.19822846088001,
+                -12.574999999999989
+              ],
+              "inside": true,
+              "faceIndex": 2,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 6.979783987975277
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                297.3799991607666,
+                10.198412715583316,
+                908.4740935381184
+              ],
+              "roomXYZ": [
+                -0.0259064618816175,
+                10.198412715583316,
+                -12.57999916076659
+              ],
+              "inside": true,
+              "faceIndex": 8,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 6.98478657754833
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                297.6000003814697,
+                10.206521328516661,
+                908.4732769974418
+              ],
+              "roomXYZ": [
+                -0.02672300255824133,
+                10.206521328516661,
+                -12.800000381469715
+              ],
+              "inside": false,
+              "faceIndex": 12276,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 7.204938691899395
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                304.26146125793457,
+                10.452043638098594,
+                908.4485527993012
+              ],
+              "roomXYZ": [
+                -0.05144720069881595,
+                10.452043638098594,
+                -19.46146125793456
+              ],
+              "inside": false,
+              "faceIndex": 2002,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 13.870968507250351
+            }
+          ]
+        }
+      ]
+    },
+    "shop-interior": {
+      "poseMatchesPrimary": true,
+      "primaryVsDiagnosticPngIdentity": true,
+      "room": {
+        "id": "W1",
+        "o": [
+          275.2,
+          909
+        ],
+        "ex": [
+          6.123233995736766e-17,
+          -1
+        ],
+        "ez": [
+          1,
+          6.123233995736766e-17
+        ],
+        "min": [
+          -5.85,
+          8.3634,
+          -11.850000000000001
+        ],
+        "max": [
+          5.85,
+          11.313400000000001,
+          -2.7500000000000004
+        ],
+        "aabb": [
+          263.34999999999997,
+          8.3634,
+          903.15,
+          272.45,
+          11.313400000000001,
+          914.85
+        ]
+      },
+      "samples": [
+        {
+          "xy": [
+            866,
+            423
+          ],
+          "hits": [
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.41200065612793,
+                9.815728387260428,
+                906.505053371504
+              ],
+              "roomXYZ": [
+                2.4949466284959945,
+                9.815728387260428,
+                -11.787999343872059
+              ],
+              "inside": true,
+              "faceIndex": 9,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.422311932599644
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.4050006866455,
+                9.815645894697372,
+                906.503790753067
+              ],
+              "roomXYZ": [
+                2.496209246932948,
+                9.815645894697372,
+                -11.79499931335448
+              ],
+              "inside": true,
+              "faceIndex": 3,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.429425341282908
+            },
+            {
+              "name": "",
+              "parents": [
+                "static-batched",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                263.3999996185303,
+                9.815586958593741,
+                906.5028886861619
+              ],
+              "roomXYZ": [
+                2.4971113138381034,
+                9.815586958593741,
+                -11.800000381469715
+              ],
+              "inside": true,
+              "faceIndex": 9,
+              "geometry": "BufferGeometry",
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 8.434507455061535
+            },
+            {
+              "name": "houses-far",
+              "parents": [
+                "houses-far",
+                "static",
+                "Sakuragaoka"
+              ],
+              "world": [
+                179.9330085311503,
+                8.831953238104669,
+                891.4475427890803
+              ],
+              "roomXYZ": [
+                17.552457210919663,
+                8.831953238104669,
+                -95.26699146884968
+              ],
+              "inside": false,
+              "faceIndex": 53,
+              "geometry": "IcosahedronGeometry",
+              "instance": 93,
+              "material": "MeshToonMaterial",
+              "color": "ffffff",
+              "opacity": 1,
+              "transparent": false,
+              "distance": 93.25413712035554
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
