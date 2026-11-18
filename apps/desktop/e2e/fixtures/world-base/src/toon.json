@@ -1,6 +1,7 @@
 {
  "note": "Round 28 toon (stronger): ZZZ-style outlines (post, near side of a depth step with the surface slope removed, plus inverse-depth creases) and 3-band cel light in the lit-material chunk. Both are runtime-switchable: lit bands / warm rim by uniform (uTbK, uTbRim), lines by uLnOn/uToon. ?toon=off installs nothing and restores round 26 pixel for pixel. lit.levels = direct-light level of the dark / middle / lit band relative to full sun; lit.edges = where the bands change; lit.width = smoothstep half-width. line.width in pixels at 1080 px height; sil = relative depth step that starts / completes a silhouette line; crease = inverse-depth curvature range; fade = metres where lines start thinning / vanish. line.tint multiplies the local colour (dark and cool, not black).",
  "evening": {
+  "skyFill": "#c9cbe2",
   "lit": {
    "levels": [
     0.0,
@@ -47,6 +48,7 @@
   }
  },
  "afternoon": {
+  "skyFill": "#e3eafa",
   "lit": {
    "levels": [
     0.0,

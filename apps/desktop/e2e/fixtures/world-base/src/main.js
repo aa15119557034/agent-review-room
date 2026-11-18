@@ -50,6 +50,8 @@ const look = createLook(renderer, camera);
 worldBase.look = look;
 worldBase.styleState = { toon: true, flightEffects: false };
 let island, station, walker;
+let skyFill;
+let originalFillColor, toonFillColor;
 const toWorld = (values) => station.toWorld(new THREE.Vector3(...values)).toArray();
 const labels = { 'station-street': '车站区街道', 'station-port': '车站望向港镇', 'island-aerial': '全岛俯视', 'shop-interior': '便利店室内', 'service-corner': '车站服务角', 'laundry-details': '洗衣店前细节' };
 function setView(name) {
@@ -82,7 +84,12 @@ function startWalking() {
   canvas.focus();
 }
 worldBase.startWalking = startWalking;
-worldBase.setToon = value => { look.setToon(value); worldBase.styleState.toon = !!value; document.querySelector('#toon').checked = !!value; };
+worldBase.setToon = value => {
+  look.setToon(value);
+  if (toonFillColor) skyFill.color.copy(value ? toonFillColor : originalFillColor);
+  worldBase.styleState.toon = !!value;
+  document.querySelector('#toon').checked = !!value;
+};
 worldBase.setFlightEffects = value => { look.setFlightEffects(value); worldBase.styleState.flightEffects = !!value; document.querySelector('#effects').checked = !!value; };
 
 function resize() {
@@ -118,7 +125,8 @@ async function init() {
   Object.assign(sun.shadow.camera, { left: -150, right: 150, top: 150, bottom: -150, near: 1, far: 400 });
   sun.shadow.bias = -0.0002;
   sun.shadow.normalBias = 0.035;
-  scene.add(sun, sun.target, (evening ? new THREE.HemisphereLight(0xb4bce8, 0xa08068, 1.6) : new THREE.HemisphereLight(0xcfe0ff, 0xa89c94, 1.05)));
+  skyFill = evening ? new THREE.HemisphereLight(0xb4bce8, 0xa08068, 1.6) : new THREE.HemisphereLight(0xcfe0ff, 0xa89c94, 1.05);
+  scene.add(sun, sun.target, skyFill);
   stage('正在安放车站、店铺与碰撞体…');
   station = await createStation({
     scene, renderer, camera, offset: island.stationPlacement.position,
@@ -137,6 +145,9 @@ async function init() {
   // Round 27: outlines + cel bands (?toon=off keeps round 26). Same shop-room boxes as the shadow tint.
   if (toonEnabled()) {
     const toonAll = await loadToon(), toonP = toonAll[timeOfDay === 'afternoon' ? 'afternoon' : 'evening'];
+    originalFillColor = skyFill.color.clone();
+    toonFillColor = new THREE.Color(toonP.skyFill);
+    if (worldBase.styleState.toon) skyFill.color.copy(toonFillColor);
     const toonBoxes = worldBase.shadowTint?.indoorBox || shopInteriorBoxes(layoutModule, station, 0.05);
     installLitToon(toonP, toonBoxes);
     look.setToonLines(toonLineUniforms(toonP));

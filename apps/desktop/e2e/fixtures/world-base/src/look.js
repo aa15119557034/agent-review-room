@@ -230,6 +230,16 @@ export function createLook(renderer, camera) {
       float wbSh = (1.0 - smoothstep(uShRange.x, uShRange.y, wbL))*uShRange.z*uShOn*uToon*(1.0 - wbSky);
       col = mix(col, col*uShMul + uShLift, wbSh);
     }
+    // Separate street lettering and paving tones while retaining ink, sky and lamp cores.
+    if (uLnOn * uToon > 0.0) {
+      float luma = dot(col, vec3(0.2126, 0.7152, 0.0722));
+      float peak = max(col.r, max(col.g, col.b));
+      float midtones = smoothstep(0.035, 0.32, luma) * (1.0 - smoothstep(0.58, 1.0, peak));
+      float ink = 1.0 - smoothstep(0.025, 0.105, luma);
+      vec3 streetColor = col * (1.0 + 0.43 * midtones - 0.075 * ink);
+      streetColor *= mix(vec3(1.0), vec3(1.055, 1.036, 0.974), 1.0 - smoothstep(0.12, 0.57, luma));
+      col = mix(col, streetColor, (1.0 - wbSky) * uHaze);
+    }
     col = clamp(col, 0.0, 1.0);`, 'purple shadows');
 
   function applyIsland(island) {
