@@ -36,7 +36,6 @@ export function addArtR1Station({ ctx }) {
     const lift = 0.02;
     const hF = L.heightAt(f.x + fx * d.wb / 2, f.z + fz * d.wb / 2) + lift, hR = L.heightAt(f.x - fx * d.wb / 2, f.z - fz * d.wb / 2) + lift;
     const y = (hF + hR) / 2 - 0.012;
-    van.name = 'art-r1-kei-van';
     van.position.set(f.x, y, f.z); van.rotation.y = rotY;
     van.userData.inner.rotation.x = Math.atan2(hR - hF, d.wb);
     ctx.addStatic(van);

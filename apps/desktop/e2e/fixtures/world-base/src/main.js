@@ -227,7 +227,7 @@ async function init() {
     const weatheringStart = performance.now();
     const params = await loadWeatheringParams();
     worldBase.weathering = applyWeathering({ scene, station, island, city: worldBase.city, skyline: worldBase.skyline, params, timeOfDay: island.timeOfDay });
-    worldBase.weatheringDecals = addWeatheringDecals({ scene, station, wallMaterials: worldBase.weathering.wallMaterials,
+    worldBase.weatheringDecals = addWeatheringDecals({ scene, station, wallMaterials: worldBase.weathering.wallMaterials, vehicleBoxes: worldBase.weathering.vehicleBoxes,
       roots: [station.root, worldBase.city.root, worldBase.skyline.root], gradientMap: station.ctx.mat.gradientMap, explicit: params.decals.explicit,
       baked: await loadBakedDecals(), forcePlan: new URLSearchParams(location.search).get('decals') === 'plan' });
     worldBase.weatheringMs = +(performance.now() - weatheringStart).toFixed(1);

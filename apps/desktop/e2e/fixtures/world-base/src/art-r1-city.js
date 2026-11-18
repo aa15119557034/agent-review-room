@@ -130,9 +130,9 @@ export function addLaundryNotices(F, sheet, glassZ, wallZ) {
   // Wings beside the portal (outer wall faces).
   const wz = wallZ + 0.012;
   put('blue-star', 0.4, 0.4, -4.4, 1.55, wz, 0.04);
-  put('a4-yellow', 0.26, 0.36, -3.9, 1.35, wz, -0.05);
+  put('a4-yellow', 0.26, 0.36, -3.52, 1.35, wz, -0.05);
   put('hours', 0.3, 0.3, -4.0, 0.9, wz, 0.02);
-  put('caution', 0.3, 0.3, 4.35, 1.4, wz, 0.0);
+  put('caution', 0.3, 0.3, 4.8, 1.4, wz, 0.0);
   put('mascot', 0.32, 0.32, 4.0, 0.9, wz, -0.04);
   put('a4-grey', 0.24, 0.34, 4.5, 0.85, wz, 0.05);
   return count;

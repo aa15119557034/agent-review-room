@@ -285,7 +285,7 @@ export function applyWeathering({ scene, station, island, city, skyline, params,
   const api = {
     uniforms, stats: { vehicleVolumes: vehicleBoxes.length, materials: clones.size, meshes: swaps.length, classes: counts, groundSamples: ground.samples, buildingSeeds: rectCount,
       extraDrawCalls: 0, noiseTaps: '2 tiling-noise fetches (4 channels each) + 1 white-noise fetch x2 + 1 height texture + 6 derivatives/fragment; no loops, no procedural hashing' },
-    wallMaterials: new Set(clones.values()),
+    wallMaterials: new Set(clones.values()), vehicleBoxes,
     setEnabled(on) { uniforms.uWx.value = on ? scale : 0; },
     dispose() {
       if (disposed) return; disposed = true;
