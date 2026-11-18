@@ -66,7 +66,7 @@ function setView(name) {
   camera.updateMatrixWorld();
   worldBase.currentView = name;
   look.pipeline.hasPrev = false;
-  document.querySelector('#mode').textContent = labels[name];
+  document.querySelector('#mode').textContent = view.label ?? labels[name];
   document.querySelectorAll('[data-view]').forEach(button => button.classList.toggle('active', button.dataset.view === name));
   document.querySelector('#walk').textContent = '进入步行';
 }
@@ -183,6 +183,23 @@ async function init() {
     { name: 'shop-interior', fov: 58, position: toWorld([-8.3, 1.9134, 8]), target: toWorld([-12.8, 1.7134, 8]) },
     { name: 'service-corner', fov: 55, position: toWorld(station.texturedProps.stats.view.position), target: toWorld(station.texturedProps.stats.view.target) },
     { name: 'laundry-details', fov: 55, position: toWorld(worldBase.city.stats.texturedProps.view.position), target: toWorld(worldBase.city.stats.texturedProps.view.target) },
+    // Ground-level art references for #252. Positions and targets are in the station frame.
+    {
+      name: 'art-a-street', label: 'A · 01 站前主街', fov: 35.63777782904556, // 35 mm on a 36 mm wide frame at 16:10.
+      position: toWorld([-1.2, 2.488, 36]), target: toWorld([0, 2.088, -25]),
+    },
+    {
+      name: 'art-b-konbini', label: 'B · 21 便利店正面', fov: 58,
+      position: toWorld([-0.9, 1.8184, 12.8]), target: toWorld([-7.52, 2.0534, 10.6]),
+    },
+    {
+      name: 'art-c-alley', label: 'C · 20 公寓后巷', fov: 45,
+      position: toWorld([7.65, 6.384808464050293, -132.68]), target: toWorld([-1.6, 6.55, -129.94]),
+    },
+    {
+      name: 'art-d-laundry', label: 'D · 24 洗衣店', fov: 48,
+      position: toWorld([3.5, 4.520055181715234, -116.2]), target: toWorld([2.5, 6.25, -122.6]),
+    },
   ];
   setView('station-street');
   document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
@@ -195,6 +212,7 @@ async function init() {
   document.querySelector('#effects').addEventListener('change', event => worldBase.setFlightEffects(event.target.checked));
   addEventListener('keydown', event => {
     if (event.code === 'KeyH') document.body.classList.toggle('hide-ui');
+    if (!/^[1-6]$/.test(event.key)) return;
     const view = worldBase.views[Number(event.key) - 1];
     if (view) setView(view.name);
   });
