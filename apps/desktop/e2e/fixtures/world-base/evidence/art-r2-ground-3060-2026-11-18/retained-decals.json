@@ -1,0 +1,6380 @@
+{
+  "plan": {
+    "version": 1,
+    "fingerprint": "1049:2750135:294938.6:938840.7",
+    "items": [
+      {
+        "area": "01-left-wall",
+        "cell": 0,
+        "kind": "poster",
+        "pos": [
+          -4.84,
+          1.55,
+          30.2
+        ],
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "right": [
+          0,
+          0.0105,
+          -0.9999
+        ],
+        "w": 0.484,
+        "h": 0.671
+      },
+      {
+        "area": "01-left-wall",
+        "cell": 9,
+        "kind": "sticker",
+        "pos": [
+          -4.84,
+          1.3,
+          29.3
+        ],
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "right": [
+          0,
+          -0.1831,
+          -0.9831
+        ],
+        "w": 0.3,
+        "h": 0.3
+      },
+      {
+        "area": "01-left-wall",
+        "cell": 3,
+        "kind": "poster",
+        "pos": [
+          -4.84,
+          1.45,
+          27.2
+        ],
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "right": [
+          0,
+          -0.0005,
+          -1
+        ],
+        "w": 0.44,
+        "h": 0.61
+      },
+      {
+        "area": "01-left-pole",
+        "cell": 10,
+        "kind": "sticker",
+        "pos": [
+          -3.3504,
+          1.75,
+          28.8388
+        ],
+        "normal": [
+          -0.309,
+          0,
+          0.9511
+        ],
+        "right": [
+          0.9436,
+          -0.1246,
+          0.3066
+        ],
+        "w": 0.16,
+        "h": 0.16
+      },
+      {
+        "area": "01-right-shop",
+        "cell": 5,
+        "kind": "poster",
+        "pos": [
+          6.4178,
+          1.5,
+          24.46
+        ],
+        "normal": [
+          -0.8506,
+          0,
+          -0.5258
+        ],
+        "right": [
+          -0.5258,
+          0.0032,
+          0.8506
+        ],
+        "w": 0.62,
+        "h": 0.8595
+      },
+      {
+        "area": "01-right-shop",
+        "cell": 11,
+        "kind": "sticker",
+        "pos": [
+          5.546,
+          3.05,
+          28.28
+        ],
+        "normal": [
+          -1,
+          0,
+          0
+        ],
+        "right": [
+          0,
+          0.0143,
+          0.9999
+        ],
+        "w": 0.34,
+        "h": 0.34
+      },
+      {
+        "area": "01-right-shop",
+        "cell": 8,
+        "kind": "sticker",
+        "pos": [
+          6.27,
+          1.5,
+          21.75
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "right": [
+          0.999,
+          -0.0442,
+          0
+        ],
+        "w": 0.34,
+        "h": 0.34
+      },
+      {
+        "area": "01-right-pole",
+        "cell": 8,
+        "kind": "sticker",
+        "pos": [
+          3.32,
+          1.9,
+          23.1306
+        ],
+        "normal": [
+          -0.812,
+          0.0065,
+          0.5836
+        ],
+        "right": [
+          0.5783,
+          -0.1261,
+          0.806
+        ],
+        "w": 0.22,
+        "h": 0.22
+      },
+      {
+        "area": "21-mailboxes",
+        "cell": 7,
+        "kind": "poster",
+        "pos": [
+          -3,
+          6.75,
+          -123.25
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "right": [
+          0.9998,
+          0.0204,
+          0
+        ],
+        "w": 0.42,
+        "h": 0.5823
+      },
+      {
+        "area": "21-mailboxes",
+        "cell": 9,
+        "kind": "sticker",
+        "pos": [
+          -1.85,
+          6.25,
+          -123.25
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "right": [
+          0.9943,
+          0.1066,
+          0
+        ],
+        "w": 0.2,
+        "h": 0.2
+      },
+      {
+        "area": "main",
+        "cell": 10,
+        "kind": "sticker",
+        "pos": [
+          8.6,
+          1.0346,
+          13.6663
+        ],
+        "normal": [
+          -1,
+          0,
+          0
+        ],
+        "right": [
+          0,
+          -0.2326,
+          0.9726
+        ],
+        "w": 0.1542,
+        "h": 0.1542
+      },
+      {
+        "area": "main",
+        "cell": 9,
+        "kind": "sticker",
+        "pos": [
+          6,
+          1.2023,
+          20.3267
+        ],
+        "normal": [
+          -1,
+          0,
+          0
+        ],
+        "right": [
+          0,
+          0.0329,
+          0.9995
+        ],
+        "w": 0.1198,
+        "h": 0.1198
+      },
+      {
+        "area": "main",
+        "cell": 9,
+        "kind": "sticker",
+        "pos": [
+          8.6,
+          1.1044,
+          6.0741
+        ],
+        "normal": [
+          -1,
+          0,
+          0
+        ],
+        "right": [
+          0,
+          0.0126,
+          0.9999
+        ],
+        "w": 0.1336,
+        "h": 0.1336
+      },
+      {
+        "area": "main",
+        "cell": 9,
+        "kind": "sticker",
+        "pos": [
+          5.0498,
+          1.1225,
+          14.6932
+        ],
+        "normal": [
+          -0.8525,
+          0,
+          0.5227
+        ],
+        "right": [
+          0.508,
+          0.2357,
+          0.8285
+        ],
+        "w": 0.1668,
+        "h": 0.1668
+      },
+      {
+        "area": "laundry",
+        "cell": 2,
+        "kind": "poster",
+        "pos": [
+          7.3662,
+          5.8325,
+          -123.25
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "right": [
+          0.9998,
+          0.0209,
+          0
+        ],
+        "w": 0.4996,
+        "h": 0.6926
+      },
+      {
+        "area": "laundry",
+        "cell": 5,
+        "kind": "poster",
+        "pos": [
+          6.1352,
+          6.5412,
+          -123.25
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "right": [
+          1,
+          0.0004,
+          0
+        ],
+        "w": 0.4895,
+        "h": 0.6786
+      },
+      {
+        "area": "laundry",
+        "cell": 9,
+        "kind": "sticker",
+        "pos": [
+          -2.5387,
+          5.7215,
+          -123.25
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "right": [
+          0.9722,
+          -0.2344,
+          0
+        ],
+        "w": 0.2014,
+        "h": 0.2014
+      },
+      {
+        "area": "rear",
+        "cell": 0,
+        "kind": "poster",
+        "pos": [
+          -15.4089,
+          6.693,
+          -132.5
+        ],
+        "normal": [
+          0,
+          0,
+          -1
+        ],
+        "right": [
+          -0.9997,
+          0.0233,
+          0
+        ],
+        "w": 0.6142,
+        "h": 0.8514
+      },
+      {
+        "area": "rear",
+        "cell": 3,
+        "kind": "poster",
+        "pos": [
+          -12.3872,
+          6.756,
+          -132.5
+        ],
+        "normal": [
+          0,
+          0,
+          -1
+        ],
+        "right": [
+          -0.9998,
+          0.0221,
+          0
+        ],
+        "w": 0.6142,
+        "h": 0.8515
+      },
+      {
+        "area": "rear",
+        "cell": 3,
+        "kind": "poster",
+        "pos": [
+          17.0424,
+          5.7812,
+          -131
+        ],
+        "normal": [
+          0,
+          0,
+          -1
+        ],
+        "right": [
+          -0.9998,
+          -0.0191,
+          0
+        ],
+        "w": 0.5632,
+        "h": 0.7808
+      },
+      {
+        "area": "rear",
+        "cell": 1,
+        "kind": "poster",
+        "pos": [
+          18.9672,
+          6.1088,
+          -131
+        ],
+        "normal": [
+          0,
+          0,
+          -1
+        ],
+        "right": [
+          -0.9998,
+          -0.0175,
+          0
+        ],
+        "w": 0.5543,
+        "h": 0.7684
+      },
+      {
+        "area": "rear",
+        "cell": 11,
+        "kind": "sticker",
+        "pos": [
+          -17.9696,
+          7.0959,
+          -132.5
+        ],
+        "normal": [
+          0,
+          0,
+          -1
+        ],
+        "right": [
+          -0.9929,
+          0.1189,
+          0
+        ],
+        "w": 0.1854,
+        "h": 0.1854
+      },
+      {
+        "area": "rear",
+        "cell": 10,
+        "kind": "sticker",
+        "pos": [
+          -0.2136,
+          6.4064,
+          -131
+        ],
+        "normal": [
+          0,
+          0,
+          -1
+        ],
+        "right": [
+          -0.9994,
+          0.0336,
+          0
+        ],
+        "w": 0.2309,
+        "h": 0.2309
+      },
+      {
+        "area": "rear",
+        "cell": 9,
+        "kind": "sticker",
+        "pos": [
+          -3.2254,
+          5.9523,
+          -131
+        ],
+        "normal": [
+          0,
+          0,
+          -1
+        ],
+        "right": [
+          -0.9956,
+          0.0938,
+          0
+        ],
+        "w": 0.1704,
+        "h": 0.1704
+      },
+      {
+        "area": "rear",
+        "cell": 13,
+        "kind": "doodle",
+        "pos": [
+          24.17,
+          5.6067,
+          -131
+        ],
+        "normal": [
+          0,
+          0,
+          -1
+        ],
+        "right": [
+          -0.9847,
+          0.174,
+          0
+        ],
+        "w": 0.3619,
+        "h": 0.3619
+      },
+      {
+        "area": "rear",
+        "cell": 14,
+        "kind": "doodle",
+        "pos": [
+          -21.703,
+          6.4346,
+          -132.5
+        ],
+        "normal": [
+          0,
+          0,
+          -1
+        ],
+        "right": [
+          -0.9793,
+          0.2026,
+          0
+        ],
+        "w": 0.3425,
+        "h": 0.3425
+      }
+    ]
+  },
+  "stats": {
+    "posters": 10,
+    "stickers": 14,
+    "doodles": 2,
+    "rejected": 0,
+    "byArea": {
+      "01-left-wall": [
+        {
+          "kind": "poster",
+          "at": [
+            -4.84,
+            1.55,
+            30.2
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            -4.84,
+            1.3,
+            29.3
+          ]
+        },
+        {
+          "kind": "poster",
+          "at": [
+            -4.84,
+            1.45,
+            27.2
+          ]
+        }
+      ],
+      "01-left-pole": [
+        {
+          "kind": "sticker",
+          "at": [
+            -3.35,
+            1.75,
+            28.84
+          ]
+        }
+      ],
+      "01-right-shop": [
+        {
+          "kind": "poster",
+          "at": [
+            6.42,
+            1.5,
+            24.46
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            5.55,
+            3.05,
+            28.28
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            6.27,
+            1.5,
+            21.75
+          ]
+        }
+      ],
+      "01-right-pole": [
+        {
+          "kind": "sticker",
+          "at": [
+            3.32,
+            1.9,
+            23.13
+          ]
+        }
+      ],
+      "21-mailboxes": [
+        {
+          "kind": "poster",
+          "at": [
+            -3,
+            6.75,
+            -123.25
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            -1.85,
+            6.25,
+            -123.25
+          ]
+        }
+      ],
+      "main": [
+        {
+          "kind": "sticker",
+          "at": [
+            8.6,
+            1.03,
+            13.67
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            6,
+            1.2,
+            20.33
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            8.6,
+            1.1,
+            6.07
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            5.05,
+            1.12,
+            14.69
+          ]
+        }
+      ],
+      "laundry": [
+        {
+          "kind": "poster",
+          "at": [
+            7.37,
+            5.83,
+            -123.25
+          ]
+        },
+        {
+          "kind": "poster",
+          "at": [
+            6.14,
+            6.54,
+            -123.25
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            -2.54,
+            5.72,
+            -123.25
+          ]
+        }
+      ],
+      "rear": [
+        {
+          "kind": "poster",
+          "at": [
+            -15.41,
+            6.69,
+            -132.5
+          ]
+        },
+        {
+          "kind": "poster",
+          "at": [
+            -12.39,
+            6.76,
+            -132.5
+          ]
+        },
+        {
+          "kind": "poster",
+          "at": [
+            17.04,
+            5.78,
+            -131
+          ]
+        },
+        {
+          "kind": "poster",
+          "at": [
+            18.97,
+            6.11,
+            -131
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            -17.97,
+            7.1,
+            -132.5
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            -0.21,
+            6.41,
+            -131
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            -3.23,
+            5.95,
+            -131
+          ]
+        },
+        {
+          "kind": "doodle",
+          "at": [
+            24.17,
+            5.61,
+            -131
+          ]
+        },
+        {
+          "kind": "doodle",
+          "at": [
+            -21.7,
+            6.43,
+            -132.5
+          ]
+        }
+      ]
+    },
+    "source": "baked",
+    "planMs": 2,
+    "rays": 0,
+    "explicit": {
+      "placed": 10,
+      "adjusted": [],
+      "missed": []
+    },
+    "drawCalls": 1,
+    "triangles": 52
+  },
+  "oldFingerprint": "1045:2749411:293818.6:935240.7",
+  "stationOrigin": [
+    280,
+    8,
+    900
+  ],
+  "vehicleBoxes": [
+    [
+      [
+        279.69786299960407,
+        9.698433249601516,
+        970.4951612152366
+      ],
+      [
+        282.04450793157537,
+        12.765720807179518,
+        974.2205626499649
+      ]
+    ],
+    [
+      [
+        300.61999995708464,
+        7.7129999713897694,
+        898.7140000104905
+      ],
+      [
+        303.92800002098085,
+        10.437999947547912,
+        900.6859999895096
+      ]
+    ],
+    [
+      [
+        272.10000002384186,
+        7.733000011920928,
+        895.5639999985696
+      ],
+      [
+        275.1,
+        10.422999961853026,
+        897.6360000014305
+      ]
+    ],
+    [
+      [
+        268.3689999938011,
+        7.733000011920928,
+        844.6380000114441
+      ],
+      [
+        270.4310000061989,
+        10.463000042915343,
+        848.420000052452
+      ]
+    ],
+    [
+      [
+        281.0829999923706,
+        8.015904855502937,
+        910.4814335620191
+      ],
+      [
+        283.11700000762943,
+        11.083668842680774,
+        914.0702421161653
+      ]
+    ]
+  ],
+  "targets": 1049,
+  "excludedCandidateMeshes": 143,
+  "rows": [
+    {
+      "index": 0,
+      "area": "01-left-wall",
+      "cell": 0,
+      "kind": "poster",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 0,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.1845,
+              930.472
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.55,
+              930.472
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.9155,
+              930.472
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.1845,
+              930.2
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.55,
+              930.2
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.9155,
+              930.2
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.1845,
+              929.928
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.55,
+              929.928
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.9155,
+              929.928
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "area": "01-left-wall",
+      "cell": 9,
+      "kind": "sticker",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 1,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.12,
+              929.48
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.3,
+              929.48
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.48,
+              929.48
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.12,
+              929.3
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.3,
+              929.3
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.48,
+              929.3
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.12,
+              929.12
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.3,
+              929.12
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.48,
+              929.12
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "area": "01-left-wall",
+      "cell": 3,
+      "kind": "poster",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 2,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.115,
+              927.45
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.45,
+              927.45
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.785,
+              927.45
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.115,
+              927.2
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.45,
+              927.2
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.785,
+              927.2
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.115,
+              926.95
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.45,
+              926.95
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              275.16,
+              9.785,
+              926.95
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "area": "01-left-pole",
+      "cell": 10,
+      "kind": "sticker",
+      "curvedException": true,
+      "curvedSnap": {
+        "atOldCenter": {
+          "pass": true,
+          "distance": 0.50004,
+          "worldHit": [
+            276.64961,
+            9.75,
+            928.83877
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0.00004,
+          "normalDotOld": 1
+        },
+        "atSourceDirective": {
+          "pass": true,
+          "distance": 0.5013,
+          "worldHit": [
+            276.6496,
+            9.75,
+            928.83876
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0.00004,
+          "normalDotOld": 1
+        }
+      },
+      "identicalInRuntimeIndex": 3,
+      "centerPass": true,
+      "ninePass": false,
+      "passed": 3,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": false,
+            "why": "no hit"
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": false,
+            "why": "no hit"
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": false,
+            "why": "no hit"
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.70004,
+            "depthError": 0.00004,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              276.64961,
+              9.64,
+              928.83877
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.70004,
+            "depthError": 0.00004,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              276.64961,
+              9.75,
+              928.83877
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.70004,
+            "depthError": 0.00004,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              276.64961,
+              9.86,
+              928.83877
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": false,
+            "why": "no hit"
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": false,
+            "why": "no hit"
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": false,
+            "why": "no hit"
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "area": "01-right-shop",
+      "cell": 5,
+      "kind": "poster",
+      "curvedException": true,
+      "curvedSnap": {
+        "atOldCenter": {
+          "pass": true,
+          "distance": 0.49998,
+          "worldHit": [
+            286.41779,
+            9.5,
+            924.45999
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0.00002,
+          "normalDotOld": 1
+        },
+        "atSourceDirective": {
+          "pass": true,
+          "distance": 0.53778,
+          "worldHit": [
+            286.41778,
+            9.5,
+            924.46
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0.00002,
+          "normalDotOld": 1
+        }
+      },
+      "identicalInRuntimeIndex": 4,
+      "centerPass": true,
+      "ninePass": false,
+      "passed": 1,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": false,
+            "vehicle": [],
+            "why": "off original plane",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.51446,
+            "depthError": -0.18554,
+            "dot": 0.55108,
+            "instance": null,
+            "worldHit": [
+              286.43875,
+              9.04025,
+              924.07324
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": false,
+            "vehicle": [],
+            "why": "off original plane",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.62156,
+            "depthError": -0.07844,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286.52986,
+              9.5,
+              924.12955
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": false,
+            "why": "no hit"
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": false,
+            "vehicle": [],
+            "why": "off original plane",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.66038,
+            "depthError": -0.03962,
+            "dot": 0.83445,
+            "instance": null,
+            "worldHit": [
+              286.3841,
+              9.04025,
+              924.43917
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.69998,
+            "depthError": -0.00002,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286.41779,
+              9.5,
+              924.45999
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": false,
+            "why": "no hit"
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": false,
+            "why": "no hit"
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": false,
+            "why": "no hit"
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": false,
+            "why": "no hit"
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "area": "01-right-shop",
+      "cell": 11,
+      "kind": "sticker",
+      "curvedException": true,
+      "curvedSnap": {
+        "atOldCenter": {
+          "pass": true,
+          "distance": 0.5,
+          "worldHit": [
+            285.546,
+            11.05,
+            928.28
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0,
+          "normalDotOld": 1
+        },
+        "atSourceDirective": {
+          "pass": true,
+          "distance": 0.496,
+          "worldHit": [
+            285.546,
+            11.05,
+            928.28
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0,
+          "normalDotOld": 1
+        }
+      },
+      "identicalInRuntimeIndex": 5,
+      "centerPass": true,
+      "ninePass": false,
+      "passed": 5,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": false,
+            "vehicle": [],
+            "why": "nearest material is not a wall",
+            "path": "Sakuragaoka/dynamic/shopsB-dyn-E3",
+            "material": "MeshToonMaterial",
+            "wall": false,
+            "distance": 0.20821,
+            "depthError": -0.49179,
+            "dot": 0.96753,
+            "instance": null,
+            "worldHit": [
+              285.05421,
+              10.85,
+              928.08
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": false,
+            "vehicle": [],
+            "why": "nearest material is not a wall",
+            "path": "Sakuragaoka/dynamic/shopsB-dyn-E3",
+            "material": "MeshToonMaterial",
+            "wall": false,
+            "distance": 0.21069,
+            "depthError": -0.48931,
+            "dot": 0.96059,
+            "instance": null,
+            "worldHit": [
+              285.05669,
+              11.05,
+              928.08
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              285.546,
+              11.25,
+              928.08
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": false,
+            "why": "no hit"
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              285.546,
+              11.05,
+              928.28
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              285.546,
+              11.25,
+              928.28
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": false,
+            "why": "no hit"
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              285.546,
+              11.05,
+              928.48
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              285.546,
+              11.25,
+              928.48
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "area": "01-right-shop",
+      "cell": 8,
+      "kind": "sticker",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 6,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286.07,
+              9.3,
+              921.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286.07,
+              9.5,
+              921.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286.07,
+              9.7,
+              921.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286.27,
+              9.3,
+              921.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286.27,
+              9.5,
+              921.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286.27,
+              9.7,
+              921.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286.47,
+              9.3,
+              921.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286.47,
+              9.5,
+              921.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286.47,
+              9.7,
+              921.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "area": "01-right-pole",
+      "cell": 8,
+      "kind": "sticker",
+      "curvedException": true,
+      "curvedSnap": {
+        "atOldCenter": {
+          "pass": true,
+          "distance": 0.49999,
+          "worldHit": [
+            283.31999,
+            9.9,
+            923.13061
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0.00001,
+          "normalDotOld": 1
+        },
+        "atSourceDirective": {
+          "pass": true,
+          "distance": 0.66938,
+          "worldHit": [
+            283.32,
+            9.9,
+            923.13062
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0.00002,
+          "normalDotOld": 1
+        }
+      },
+      "identicalInRuntimeIndex": 7,
+      "centerPass": true,
+      "ninePass": false,
+      "passed": 2,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": false,
+            "vehicle": [],
+            "why": "off original plane",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.73321,
+            "depthError": 0.03321,
+            "dot": 0.70711,
+            "instance": null,
+            "worldHit": [
+              283.26526,
+              9.75978,
+              922.99754
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": false,
+            "vehicle": [],
+            "why": "off original plane",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7345,
+            "depthError": 0.0345,
+            "dot": 0.70711,
+            "instance": null,
+            "worldHit": [
+              283.26631,
+              9.89978,
+              922.99678
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": false,
+            "vehicle": [],
+            "why": "off original plane",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7358,
+            "depthError": 0.0358,
+            "dot": 0.70711,
+            "instance": null,
+            "worldHit": [
+              283.26736,
+              10.03977,
+              922.99603
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.69907,
+            "depthError": -0.00093,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              283.31925,
+              9.76001,
+              923.13114
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.69999,
+            "depthError": -0.00001,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              283.31999,
+              9.9,
+              923.13061
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": false,
+            "vehicle": [],
+            "why": "nearest material is not a wall",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": false,
+            "distance": 0.69509,
+            "depthError": -0.00491,
+            "dot": 0.98997,
+            "instance": null,
+            "worldHit": [
+              283.31601,
+              10.04003,
+              923.13347
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": false,
+            "vehicle": [],
+            "why": "off original plane",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.81517,
+            "depthError": 0.11517,
+            "dot": 0.38273,
+            "instance": null,
+            "worldHit": [
+              283.49523,
+              9.75925,
+              923.17707
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": false,
+            "vehicle": [],
+            "why": "off original plane",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.81756,
+            "depthError": 0.11756,
+            "dot": 0.38273,
+            "instance": null,
+            "worldHit": [
+              283.49717,
+              9.89924,
+              923.17567
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": false,
+            "vehicle": [],
+            "why": "off original plane",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.81996,
+            "depthError": 0.11996,
+            "dot": 0.38273,
+            "instance": null,
+            "worldHit": [
+              283.49911,
+              10.03922,
+              923.17428
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "area": "21-mailboxes",
+      "cell": 7,
+      "kind": "poster",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 8,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              276.76,
+              14.42885,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              276.76,
+              14.75,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              276.76,
+              15.07115,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              277,
+              14.42885,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              277,
+              14.75,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              277,
+              15.07115,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              277.24,
+              14.42885,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              277.24,
+              14.75,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              277.24,
+              15.07115,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "area": "21-mailboxes",
+      "cell": 9,
+      "kind": "sticker",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 9,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              278.02,
+              14.12,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              278.02,
+              14.25,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              278.02,
+              14.38,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              278.15,
+              14.12,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              278.15,
+              14.25,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              278.15,
+              14.38,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              278.28,
+              14.12,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              278.28,
+              14.25,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              278.28,
+              14.38,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "area": "main",
+      "cell": 10,
+      "kind": "sticker",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 10,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              288.6,
+              8.9275,
+              913.5592
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              288.6,
+              9.0346,
+              913.5592
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              288.6,
+              9.1417,
+              913.5592
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              288.6,
+              8.9275,
+              913.6663
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              288.6,
+              9.0346,
+              913.6663
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              288.6,
+              9.1417,
+              913.6663
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              288.6,
+              8.9275,
+              913.7734
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              288.6,
+              9.0346,
+              913.7734
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              288.6,
+              9.1417,
+              913.7734
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "area": "main",
+      "cell": 9,
+      "kind": "sticker",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 11,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286,
+              9.1124,
+              920.2368
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286,
+              9.2023,
+              920.2368
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286,
+              9.2922,
+              920.2368
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286,
+              9.1124,
+              920.3267
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286,
+              9.2023,
+              920.3267
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286,
+              9.2922,
+              920.3267
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286,
+              9.1124,
+              920.4166
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286,
+              9.2023,
+              920.4166
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286,
+              9.2922,
+              920.4166
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "area": "main",
+      "cell": 9,
+      "kind": "sticker",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 12,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              288.6,
+              9.0076,
+              905.9773
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              288.6,
+              9.1044,
+              905.9773
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              288.6,
+              9.2012,
+              905.9773
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              288.6,
+              9.0076,
+              906.0741
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              288.6,
+              9.1044,
+              906.0741
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              288.6,
+              9.2012,
+              906.0741
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              288.6,
+              9.0076,
+              906.1709
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              288.6,
+              9.1044,
+              906.1709
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              288.6,
+              9.2012,
+              906.1709
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "area": "main",
+      "cell": 9,
+      "kind": "sticker",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 13,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.68903,
+            "depthError": -0.01097,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              284.98117,
+              9.0091,
+              914.60226
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.68903,
+            "depthError": -0.01097,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              284.98117,
+              9.1225,
+              914.60226
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.68903,
+            "depthError": -0.01097,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              284.98117,
+              9.2359,
+              914.60226
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.70002,
+            "depthError": 0.00002,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              285.04982,
+              9.0091,
+              914.69319
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.70002,
+            "depthError": 0.00002,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              285.04982,
+              9.1225,
+              914.69319
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.70002,
+            "depthError": 0.00002,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              285.04982,
+              9.2359,
+              914.69319
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.70002,
+            "depthError": 0.00002,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              285.10909,
+              9.0091,
+              914.78986
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.70002,
+            "depthError": 0.00002,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              285.10909,
+              9.1225,
+              914.78986
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "Sakuragaoka/static/static-batched",
+            "material": "MeshToonMaterial",
+            "wall": true,
+            "distance": 0.70002,
+            "depthError": 0.00002,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              285.10909,
+              9.2359,
+              914.78986
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "area": "laundry",
+      "cell": 2,
+      "kind": "poster",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 14,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              287.0864,
+              13.4562,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              287.0864,
+              13.8325,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              287.0864,
+              14.2088,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              287.3662,
+              13.4562,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              287.3662,
+              13.8325,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              287.3662,
+              14.2088,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              287.646,
+              13.4562,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              287.646,
+              13.8325,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              287.646,
+              14.2088,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 15,
+      "area": "laundry",
+      "cell": 5,
+      "kind": "poster",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 15,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              285.86045,
+              14.1719,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              285.86045,
+              14.5412,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              285.86045,
+              14.9105,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286.1352,
+              14.1719,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286.1352,
+              14.5412,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286.1352,
+              14.9105,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286.40995,
+              14.1719,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286.40995,
+              14.5412,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              286.40995,
+              14.9105,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 16,
+      "area": "laundry",
+      "cell": 9,
+      "kind": "sticker",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 16,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              277.3306,
+              13.5908,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              277.3306,
+              13.7215,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              277.3306,
+              13.8522,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              277.4613,
+              13.5908,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              277.4613,
+              13.7215,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              277.4613,
+              13.8522,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              277.592,
+              13.5908,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              277.592,
+              13.7215,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              277.592,
+              13.8522,
+              776.75
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 17,
+      "area": "rear",
+      "cell": 0,
+      "kind": "poster",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 17,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              264.9282,
+              14.2373,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              264.9282,
+              14.693,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              264.9282,
+              15.1487,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              264.5911,
+              14.2373,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              264.5911,
+              14.693,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              264.5911,
+              15.1487,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              264.254,
+              14.2373,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              264.254,
+              14.693,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              264.254,
+              15.1487,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 18,
+      "area": "rear",
+      "cell": 3,
+      "kind": "poster",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 18,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              267.9499,
+              14.30025,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              267.9499,
+              14.756,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              267.9499,
+              15.21175,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              267.6128,
+              14.30025,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              267.6128,
+              14.756,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              267.6128,
+              15.21175,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              267.2757,
+              14.30025,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              267.2757,
+              14.756,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              267.2757,
+              15.21175,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 19,
+      "area": "rear",
+      "cell": 3,
+      "kind": "poster",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 19,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              297.354,
+              13.3608,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              297.354,
+              13.7812,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              297.354,
+              14.2016,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              297.0424,
+              13.3608,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              297.0424,
+              13.7812,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              297.0424,
+              14.2016,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              296.7308,
+              13.3608,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              296.7308,
+              13.7812,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              296.7308,
+              14.2016,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 20,
+      "area": "rear",
+      "cell": 1,
+      "kind": "poster",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 20,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              299.27435,
+              13.6946,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              299.27435,
+              14.1088,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              299.27435,
+              14.523,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              298.9672,
+              13.6946,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              298.9672,
+              14.1088,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              298.9672,
+              14.523,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              298.66005,
+              13.6946,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              298.66005,
+              14.1088,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              298.66005,
+              14.523,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 21,
+      "area": "rear",
+      "cell": 11,
+      "kind": "sticker",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 21,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              262.1531,
+              14.9732,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              262.1531,
+              15.0959,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              262.1531,
+              15.2186,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              262.0304,
+              14.9732,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              262.0304,
+              15.0959,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              262.0304,
+              15.2186,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              261.9077,
+              14.9732,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              261.9077,
+              15.0959,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              261.9077,
+              15.2186,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 22,
+      "area": "rear",
+      "cell": 10,
+      "kind": "sticker",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 22,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              279.93185,
+              14.26095,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              279.93185,
+              14.4064,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              279.93185,
+              14.55185,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              279.7864,
+              14.26095,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              279.7864,
+              14.4064,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              279.7864,
+              14.55185,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              279.64095,
+              14.26095,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              279.64095,
+              14.4064,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              279.64095,
+              14.55185,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 23,
+      "area": "rear",
+      "cell": 9,
+      "kind": "sticker",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 23,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              276.8898,
+              13.8371,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              276.8898,
+              13.9523,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              276.8898,
+              14.0675,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              276.7746,
+              13.8371,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              276.7746,
+              13.9523,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              276.7746,
+              14.0675,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              276.6594,
+              13.8371,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              276.6594,
+              13.9523,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              276.6594,
+              14.0675,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 24,
+      "area": "rear",
+      "cell": 13,
+      "kind": "doodle",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 24,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              304.38095,
+              13.39575,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              304.38095,
+              13.6067,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              304.38095,
+              13.81765,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              304.17,
+              13.39575,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              304.17,
+              13.6067,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              304.17,
+              13.81765,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              303.95905,
+              13.39575,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              303.95905,
+              13.6067,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              303.95905,
+              13.81765,
+              769
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    },
+    {
+      "index": 25,
+      "area": "rear",
+      "cell": 14,
+      "kind": "doodle",
+      "curvedException": false,
+      "curvedSnap": null,
+      "identicalInRuntimeIndex": 25,
+      "centerPass": true,
+      "ninePass": true,
+      "passed": 9,
+      "extraGeometryInFront": 0,
+      "samples": [
+        {
+          "u": -0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              258.49825,
+              14.23335,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              258.49825,
+              14.4346,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": -0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              258.49825,
+              14.63585,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              258.297,
+              14.23335,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              258.297,
+              14.4346,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              258.297,
+              14.63585,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": -0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              258.09575,
+              14.23335,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              258.09575,
+              14.4346,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        },
+        {
+          "u": 0.5,
+          "v": 0.5,
+          "standard": {
+            "pass": true,
+            "vehicle": [],
+            "why": "pass",
+            "path": "station-city-background/town-edge-kit",
+            "material": "apartment-pbr-plaster",
+            "wall": true,
+            "distance": 0.7,
+            "depthError": 0,
+            "dot": 1,
+            "instance": null,
+            "worldHit": [
+              258.09575,
+              14.63585,
+              767.5
+            ]
+          },
+          "excludedGeometryInFront": null
+        }
+      ]
+    }
+  ],
+  "sceneErrors": []
+}

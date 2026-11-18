@@ -1,0 +1,830 @@
+{
+  "art-a-street": {
+    "previousToCurrent": {
+      "pixels": 1296000,
+      "changedGt8": 72311,
+      "changedAny": 189840,
+      "max": 248,
+      "pink": [
+        142059,
+        148303
+      ],
+      "medianDisplayLuma": [
+        111.872,
+        113.495
+      ]
+    },
+    "groundOffToOn": {
+      "pixels": 1296000,
+      "changedGt8": 19699,
+      "changedAny": 76083,
+      "max": 63,
+      "pink": [
+        148579,
+        148303
+      ],
+      "medianDisplayLuma": [
+        113.495,
+        113.495
+      ]
+    },
+    "regions": {
+      "van": {
+        "roi": [
+          825,
+          448,
+          952,
+          592
+        ],
+        "previousToCurrent": {
+          "pixels": 18288,
+          "changedGt8": 663,
+          "changedAny": 1595,
+          "max": 206,
+          "pink": [
+            406,
+            3
+          ],
+          "medianDisplayLuma": [
+            127.74,
+            129.968
+          ]
+        },
+        "groundOffToOn": {
+          "pixels": 18288,
+          "changedGt8": 0,
+          "changedAny": 88,
+          "max": 1,
+          "pink": [
+            3,
+            3
+          ],
+          "medianDisplayLuma": [
+            129.968,
+            129.968
+          ]
+        }
+      },
+      "new-street-flags": {
+        "roi": [
+          270,
+          415,
+          519,
+          596
+        ],
+        "previousToCurrent": {
+          "pixels": 45069,
+          "changedGt8": 19025,
+          "changedAny": 28847,
+          "max": 247,
+          "pink": [
+            859,
+            5896
+          ],
+          "medianDisplayLuma": [
+            102.483,
+            122.281
+          ]
+        },
+        "groundOffToOn": {
+          "pixels": 45069,
+          "changedGt8": 0,
+          "changedAny": 147,
+          "max": 1,
+          "pink": [
+            5896,
+            5896
+          ],
+          "medianDisplayLuma": [
+            122.281,
+            122.281
+          ]
+        }
+      },
+      "road-control": {
+        "roi": [
+          610,
+          605,
+          778,
+          698
+        ],
+        "previousToCurrent": {
+          "pixels": 15624,
+          "changedGt8": 0,
+          "changedAny": 112,
+          "max": 1,
+          "pink": [
+            0,
+            0
+          ],
+          "medianDisplayLuma": [
+            85.171,
+            85.171
+          ]
+        },
+        "groundOffToOn": {
+          "pixels": 15624,
+          "changedGt8": 0,
+          "changedAny": 9,
+          "max": 1,
+          "pink": [
+            0,
+            0
+          ],
+          "medianDisplayLuma": [
+            85.171,
+            85.171
+          ]
+        }
+      }
+    }
+  },
+  "art-b-konbini": {
+    "previousToCurrent": {
+      "pixels": 1296000,
+      "changedGt8": 0,
+      "changedAny": 0,
+      "max": 0,
+      "pink": [
+        13612,
+        13612
+      ],
+      "medianDisplayLuma": [
+        139.599,
+        139.599
+      ]
+    },
+    "groundOffToOn": {
+      "pixels": 1296000,
+      "changedGt8": 0,
+      "changedAny": 0,
+      "max": 0,
+      "pink": [
+        13612,
+        13612
+      ],
+      "medianDisplayLuma": [
+        139.599,
+        139.599
+      ]
+    },
+    "regions": {
+      "teal-sign": {
+        "roi": [
+          127,
+          166,
+          336,
+          196
+        ],
+        "previousToCurrent": {
+          "pixels": 6270,
+          "changedGt8": 0,
+          "changedAny": 0,
+          "max": 0,
+          "pink": [
+            0,
+            0
+          ],
+          "medianDisplayLuma": [
+            150.748,
+            150.748
+          ]
+        },
+        "groundOffToOn": {
+          "pixels": 6270,
+          "changedGt8": 0,
+          "changedAny": 0,
+          "max": 0,
+          "pink": [
+            0,
+            0
+          ],
+          "medianDisplayLuma": [
+            150.748,
+            150.748
+          ]
+        }
+      },
+      "indoor-shelves": {
+        "roi": [
+          605,
+          410,
+          801,
+          492
+        ],
+        "previousToCurrent": {
+          "pixels": 16072,
+          "changedGt8": 0,
+          "changedAny": 0,
+          "max": 0,
+          "pink": [
+            97,
+            97
+          ],
+          "medianDisplayLuma": [
+            187.735,
+            187.735
+          ]
+        },
+        "groundOffToOn": {
+          "pixels": 16072,
+          "changedGt8": 0,
+          "changedAny": 0,
+          "max": 0,
+          "pink": [
+            97,
+            97
+          ],
+          "medianDisplayLuma": [
+            187.735,
+            187.735
+          ]
+        }
+      },
+      "door-display": {
+        "roi": [
+          817,
+          522,
+          945,
+          654
+        ],
+        "previousToCurrent": {
+          "pixels": 16896,
+          "changedGt8": 0,
+          "changedAny": 0,
+          "max": 0,
+          "pink": [
+            510,
+            510
+          ],
+          "medianDisplayLuma": [
+            94.013,
+            94.013
+          ]
+        },
+        "groundOffToOn": {
+          "pixels": 16896,
+          "changedGt8": 0,
+          "changedAny": 0,
+          "max": 0,
+          "pink": [
+            510,
+            510
+          ],
+          "medianDisplayLuma": [
+            94.013,
+            94.013
+          ]
+        }
+      },
+      "door-spill": {
+        "roi": [
+          949,
+          614,
+          1050,
+          639
+        ],
+        "previousToCurrent": {
+          "pixels": 2525,
+          "changedGt8": 0,
+          "changedAny": 0,
+          "max": 0,
+          "pink": [
+            0,
+            0
+          ],
+          "medianDisplayLuma": [
+            156.061,
+            156.061
+          ]
+        },
+        "groundOffToOn": {
+          "pixels": 2525,
+          "changedGt8": 0,
+          "changedAny": 0,
+          "max": 0,
+          "pink": [
+            0,
+            0
+          ],
+          "medianDisplayLuma": [
+            156.061,
+            156.061
+          ]
+        }
+      }
+    }
+  },
+  "art-c-alley": {
+    "previousToCurrent": {
+      "pixels": 1296000,
+      "changedGt8": 22761,
+      "changedAny": 137621,
+      "max": 224,
+      "pink": [
+        5025,
+        1385
+      ],
+      "medianDisplayLuma": [
+        49.156,
+        49.156
+      ]
+    },
+    "groundOffToOn": {
+      "pixels": 1296000,
+      "changedGt8": 14508,
+      "changedAny": 100537,
+      "max": 220,
+      "pink": [
+        5025,
+        1385
+      ],
+      "medianDisplayLuma": [
+        49.156,
+        49.156
+      ]
+    },
+    "regions": {
+      "back-wall-by-pipes": {
+        "roi": [
+          610,
+          598,
+          850,
+          727
+        ],
+        "previousToCurrent": {
+          "pixels": 30960,
+          "changedGt8": 3243,
+          "changedAny": 12420,
+          "max": 113,
+          "pink": [
+            0,
+            0
+          ],
+          "medianDisplayLuma": [
+            47.297,
+            47.084
+          ]
+        },
+        "groundOffToOn": {
+          "pixels": 30960,
+          "changedGt8": 0,
+          "changedAny": 6,
+          "max": 1,
+          "pink": [
+            0,
+            0
+          ],
+          "medianDisplayLuma": [
+            47.084,
+            47.084
+          ]
+        }
+      },
+      "wall-without-posters": {
+        "roi": [
+          465,
+          378,
+          543,
+          561
+        ],
+        "previousToCurrent": {
+          "pixels": 14274,
+          "changedGt8": 0,
+          "changedAny": 40,
+          "max": 1,
+          "pink": [
+            0,
+            0
+          ],
+          "medianDisplayLuma": [
+            46.297,
+            46.297
+          ]
+        },
+        "groundOffToOn": {
+          "pixels": 14274,
+          "changedGt8": 0,
+          "changedAny": 0,
+          "max": 0,
+          "pink": [
+            0,
+            0
+          ],
+          "medianDisplayLuma": [
+            46.297,
+            46.297
+          ]
+        }
+      },
+      "right-flower-slope": {
+        "roi": [
+          1271,
+          437,
+          1440,
+          540
+        ],
+        "previousToCurrent": {
+          "pixels": 17407,
+          "changedGt8": 4881,
+          "changedAny": 14859,
+          "max": 172,
+          "pink": [
+            3240,
+            690
+          ],
+          "medianDisplayLuma": [
+            121.156,
+            134.438
+          ]
+        },
+        "groundOffToOn": {
+          "pixels": 17407,
+          "changedGt8": 4881,
+          "changedAny": 14859,
+          "max": 172,
+          "pink": [
+            3240,
+            690
+          ],
+          "medianDisplayLuma": [
+            121.156,
+            134.438
+          ]
+        }
+      },
+      "front-warm-lamp": {
+        "roi": [
+          330,
+          125,
+          415,
+          190
+        ],
+        "previousToCurrent": {
+          "pixels": 5525,
+          "changedGt8": 0,
+          "changedAny": 1,
+          "max": 1,
+          "pink": [
+            0,
+            0
+          ],
+          "medianDisplayLuma": [
+            212.203,
+            212.203
+          ]
+        },
+        "groundOffToOn": {
+          "pixels": 5525,
+          "changedGt8": 0,
+          "changedAny": 0,
+          "max": 0,
+          "pink": [
+            0,
+            0
+          ],
+          "medianDisplayLuma": [
+            212.203,
+            212.203
+          ]
+        }
+      }
+    }
+  },
+  "art-d-laundry": {
+    "previousToCurrent": {
+      "pixels": 1296000,
+      "changedGt8": 27814,
+      "changedAny": 110025,
+      "max": 128,
+      "pink": [
+        2851,
+        2857
+      ],
+      "medianDisplayLuma": [
+        76.443,
+        81.628
+      ]
+    },
+    "groundOffToOn": {
+      "pixels": 1296000,
+      "changedGt8": 513,
+      "changedAny": 3497,
+      "max": 26,
+      "pink": [
+        2857,
+        2857
+      ],
+      "medianDisplayLuma": [
+        81.729,
+        81.628
+      ]
+    },
+    "regions": {
+      "teal-sign": {
+        "roi": [
+          550,
+          242,
+          776,
+          301
+        ],
+        "previousToCurrent": {
+          "pixels": 13334,
+          "changedGt8": 410,
+          "changedAny": 2098,
+          "max": 115,
+          "pink": [
+            0,
+            0
+          ],
+          "medianDisplayLuma": [
+            118.072,
+            118.285
+          ]
+        },
+        "groundOffToOn": {
+          "pixels": 13334,
+          "changedGt8": 0,
+          "changedAny": 0,
+          "max": 0,
+          "pink": [
+            0,
+            0
+          ],
+          "medianDisplayLuma": [
+            118.285,
+            118.285
+          ]
+        }
+      },
+      "new-window-notices": {
+        "roi": [
+          327,
+          384,
+          550,
+          436
+        ],
+        "previousToCurrent": {
+          "pixels": 11596,
+          "changedGt8": 0,
+          "changedAny": 446,
+          "max": 1,
+          "pink": [
+            383,
+            383
+          ],
+          "medianDisplayLuma": [
+            91.587,
+            91.587
+          ]
+        },
+        "groundOffToOn": {
+          "pixels": 11596,
+          "changedGt8": 0,
+          "changedAny": 0,
+          "max": 0,
+          "pink": [
+            383,
+            383
+          ],
+          "medianDisplayLuma": [
+            91.587,
+            91.587
+          ]
+        }
+      },
+      "door-prices-board": {
+        "roi": [
+          371,
+          556,
+          451,
+          668
+        ],
+        "previousToCurrent": {
+          "pixels": 8960,
+          "changedGt8": 0,
+          "changedAny": 26,
+          "max": 1,
+          "pink": [
+            0,
+            0
+          ],
+          "medianDisplayLuma": [
+            156.865,
+            156.865
+          ]
+        },
+        "groundOffToOn": {
+          "pixels": 8960,
+          "changedGt8": 0,
+          "changedAny": 0,
+          "max": 0,
+          "pink": [
+            0,
+            0
+          ],
+          "medianDisplayLuma": [
+            156.865,
+            156.865
+          ]
+        }
+      },
+      "old-star-poster": {
+        "roi": [
+          1219,
+          361,
+          1312,
+          463
+        ],
+        "previousToCurrent": {
+          "pixels": 9486,
+          "changedGt8": 51,
+          "changedAny": 3474,
+          "max": 108,
+          "pink": [
+            189,
+            195
+          ],
+          "medianDisplayLuma": [
+            52.412,
+            52.983
+          ]
+        },
+        "groundOffToOn": {
+          "pixels": 9486,
+          "changedGt8": 0,
+          "changedAny": 0,
+          "max": 0,
+          "pink": [
+            195,
+            195
+          ],
+          "medianDisplayLuma": [
+            52.983,
+            52.983
+          ]
+        }
+      },
+      "old-left-poster": {
+        "roi": [
+          51,
+          411,
+          86,
+          461
+        ],
+        "previousToCurrent": {
+          "pixels": 1750,
+          "changedGt8": 0,
+          "changedAny": 6,
+          "max": 1,
+          "pink": [
+            13,
+            13
+          ],
+          "medianDisplayLuma": [
+            198.936,
+            198.936
+          ]
+        },
+        "groundOffToOn": {
+          "pixels": 1750,
+          "changedGt8": 0,
+          "changedAny": 0,
+          "max": 0,
+          "pink": [
+            13,
+            13
+          ],
+          "medianDisplayLuma": [
+            198.936,
+            198.936
+          ]
+        }
+      }
+    }
+  },
+  "sample-e-harbour": {
+    "previousToCurrent": {
+      "pixels": 1296000,
+      "changedGt8": 35003,
+      "changedAny": 84080,
+      "max": 255,
+      "pink": [
+        1296,
+        248
+      ],
+      "medianDisplayLuma": [
+        168.008,
+        168.063
+      ]
+    },
+    "groundOffToOn": {
+      "pixels": 1296000,
+      "changedGt8": 31438,
+      "changedAny": 79749,
+      "max": 255,
+      "pink": [
+        1296,
+        248
+      ],
+      "medianDisplayLuma": [
+        168.007,
+        168.063
+      ]
+    },
+    "regions": {}
+  },
+  "sample-f-hillside": {
+    "previousToCurrent": {
+      "pixels": 1296000,
+      "changedGt8": 563122,
+      "changedAny": 793445,
+      "max": 251,
+      "pink": [
+        3749,
+        1094
+      ],
+      "medianDisplayLuma": [
+        121.685,
+        119.63
+      ]
+    },
+    "groundOffToOn": {
+      "pixels": 1296000,
+      "changedGt8": 563122,
+      "changedAny": 793445,
+      "max": 251,
+      "pink": [
+        3749,
+        1094
+      ],
+      "medianDisplayLuma": [
+        121.685,
+        119.63
+      ]
+    },
+    "regions": {}
+  },
+  "sample-g-rail": {
+    "previousToCurrent": {
+      "pixels": 1296000,
+      "changedGt8": 754,
+      "changedAny": 2695,
+      "max": 148,
+      "pink": [
+        179595,
+        179489
+      ],
+      "medianDisplayLuma": [
+        119.572,
+        119.575
+      ]
+    },
+    "groundOffToOn": {
+      "pixels": 1296000,
+      "changedGt8": 754,
+      "changedAny": 2695,
+      "max": 148,
+      "pink": [
+        179595,
+        179489
+      ],
+      "medianDisplayLuma": [
+        119.572,
+        119.575
+      ]
+    },
+    "regions": {}
+  },
+  "sample-h-north": {
+    "previousToCurrent": {
+      "pixels": 1296000,
+      "changedGt8": 268492,
+      "changedAny": 398134,
+      "max": 242,
+      "pink": [
+        43101,
+        2801
+      ],
+      "medianDisplayLuma": [
+        142.455,
+        143.955
+      ]
+    },
+    "groundOffToOn": {
+      "pixels": 1296000,
+      "changedGt8": 268492,
+      "changedAny": 398134,
+      "max": 242,
+      "pink": [
+        43101,
+        2801
+      ],
+      "medianDisplayLuma": [
+        142.455,
+        143.955
+      ]
+    },
+    "regions": {}
+  }
+}

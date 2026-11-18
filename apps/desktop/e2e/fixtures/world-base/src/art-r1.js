@@ -175,6 +175,53 @@ export function addArtR1Station({ ctx }) {
     }
   }
 
+  // ---------------------------------------------------------------- B (round 3): category zones behind the glass
+  // The three gondola end caps all faced the window in the same sakura pink, so from the street the
+  // shop read as one pale mass. Each end cap now carries its own category colour (back panel and lit
+  // header) and a low stacked island of matching goods stands in the aisle in front of it: three
+  // colour zones at three depths (island, end cap, gondola rows) that read through the glass.
+  {
+    const S = C.space('W1'), k = S.k, FY = 0.30, GH = 1.42, Z1 = -4.6;
+    const stock = createStock(ctx, 'w1-zones');
+    const zones = [
+      { cx: -2.65, label: 'お菓子', sub: 'SNACK', bg: '#f08a24', fg: '#ffffff', goods: ['#f2b53b', '#e36b5d', '#ffd24a', '#f08a4b', '#ffffff'] },
+      { cx: -0.2, label: 'パン・カップ麺', sub: 'BAKERY', bg: '#f2c230', fg: '#5a3a12', goods: ['#f4e2b8', '#d98a2b', '#e36b5d', '#f2c230', '#ffffff'] },
+      { cx: 2.3, label: 'ドリンク', sub: 'DRINK', bg: '#2f78c4', fg: '#ffffff', goods: ['#7ec8ff', '#2f78c4', '#ffffff', '#7bd389', '#9fd6f2'] },
+    ];
+    for (const z of zones) {
+      const panel = M.t(z.bg, { paint: 0.02 });
+      // back panel just in front of the pink one (pink sits at z1 + 0.012..0.022)
+      k.box(0.84, GH - 0.13, 0.008, panel, [z.cx, FY + 0.13 + (GH - 0.13) / 2, Z1 + 0.027]);
+      // shelf lips in the category colour
+      for (const y of [0.52, 0.9]) k.box(0.87, 0.046, 0.016, panel, [z.cx, FY + y - 0.014, Z1 + 0.34 + 0.002]);
+      // lit header over the pink POP
+      const hdr = k.box(0.94, 0.34, 0.012, lit(256, 92, (g, w, h) => {
+        g.fillStyle = z.bg; g.fillRect(0, 0, w, h);
+        g.fillStyle = 'rgba(255,255,255,0.9)'; g.fillRect(0, h - 10, w, 4);
+        text(g, z.label, w / 2, h * 0.4, 46, z.fg, w - 20);
+        text(g, z.sub, w / 2, h * 0.8, 18, z.fg, w - 40, 700);
+      }, 'art-r3-w1-zone-' + z.sub, 0.5), [z.cx, FY + GH + 0.2, Z1 + 0.05]);
+      hdr.userData.noBatch = true;
+      // low island of goods in the aisle, three tiers stepping back toward the end cap
+      const iz = Z1 + 0.62;
+      k.box(0.78, 0.12, 0.42, M.t('#e9ecef', { paint: 0.02 }), [z.cx, FY + 0.06, iz]);
+      k.box(0.8, 0.1, 0.012, panel, [z.cx, FY + 0.06, iz + 0.216]);
+      const r = ctx.rng('art-r3-island-' + z.sub);
+      const tiers = [[0.12, 0.13, 0.36], [0.25, 0.04, 0.24], [0.38, -0.05, 0.12]];
+      for (const [y, dz, depth] of tiers) {
+        const tall = z.sub === 'DRINK';
+        for (let x = -0.33; x <= 0.331; x += tall ? 0.085 : 0.13) {
+          const c = z.goods[Math.floor(r() * z.goods.length)];
+          if (tall) stock.bottle(z.cx + x, FY + y, iz + dz + depth / 2 - 0.05, 0.07, 0.2, c);
+          else stock.box(z.cx + x, FY + y, iz + dz + depth / 2 - 0.06, 0.11, 0.12, 0.09, c, (r() - 0.5) * 0.12);
+        }
+      }
+      S.box(z.cx, iz, 0.8, 0.44, -0.05, FY + 0.6);
+      note('w1-zone', 5 * 12 + 12);
+    }
+    stock.finish(S.g); stats.instancedMeshes += 2; note('w1-zone-stock', stock.triangles);
+  }
+
   // ---------------------------------------------------------------- A: east and west shop fronts
   {
     const sec = (id, build) => { const S = C.space(id); build(S); return S; };
@@ -214,6 +261,31 @@ export function addArtR1Station({ ctx }) {
       planterPot(S, -2.7, gh(S, -2.7, 0.55) + 0.02, 0.55, 0.19, '#c27a5a', '#6aa36a');
       stock.finish(S.g);
     });
+  }
+
+  // ---------------------------------------------------------------- round 3: a folding board for every shop
+  // Rule: each main-street shop without a hand-dressed front (W1, E1, E2 have theirs) gets one A-board
+  // 0.7 m in front of its frontage, 1.6 m in from the lot's downstream end. Colours follow the nobori families.
+  {
+    const BOARDS = {
+      flower: ['季節の花', '#ee8aa6', 'チューリップ', '一束 ¥500'], bookstore: ['新刊入荷', '#2d4b78', '文庫フェア', '2冊で10%OFF'],
+      bicycle: ['修理承ります', '#2d4b78', 'パンク修理', '¥1,000〜'], general: ['本日特売', '#d4473e', 'お花見セット', '¥980'],
+      ramen: ['ラーメン', '#d4473e', '醤油らーめん', '¥750'],
+    };
+    stats.shopBoards = [];
+    for (const lot of L.LOTS) {
+      const b = BOARDS[lot.kind];
+      if (!b || ['W1', 'E1', 'E2'].includes(lot.id)) continue;
+      const S = C.space(lot.id), w = lot.z1 - lot.z0, lx = -(w / 2 - 1.6), lz = 0.7;
+      board(S, lx, gh(S, lx, lz) + 0.02, lz, 0.15, 0.5, 0.86, (g, W, H) => {
+        g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, H);
+        g.fillStyle = b[1]; g.fillRect(0, 0, W, H * 0.24);
+        text(g, b[0], W / 2, H * 0.12, 48, '#ffffff', W - 20);
+        text(g, b[2], W / 2, H * 0.48, 42, b[1], W - 24);
+        text(g, b[3], W / 2, H * 0.74, 40, '#3a3a40', W - 24);
+      }, 'art-r3-board-' + lot.id);
+      stats.shopBoards.push(lot.id);
+    }
   }
 
   // ---------------------------------------------------------------- A: nobori flag rows along both kerbs
@@ -286,7 +358,11 @@ export function addArtR1Station({ ctx }) {
     geo.setIndex(I);
     const mesh = new THREE.Mesh(geo, flagMat); mesh.name = 'art-r1-nobori-flags'; mesh.castShadow = true; mesh.receiveShadow = true;
     mesh.userData.noBatch = true; ctx.noOutline(mesh); group.add(mesh);
-    note('nobori', rows.reduce((n, [, l]) => n + l.length, 0) * (I.length / 3 / 10 + 36));
+    // Round 3: measured, not estimated: every mesh under the nobori group (cloth + poles), by index count.
+    let noboriTris = 0;
+    group.traverse(o => { if (o.isMesh) noboriTris += (o.geometry.index?.count ?? o.geometry.attributes.position.count) / 3; });
+    note('nobori', noboriTris);
+    stats.nobori = { flags: rows.reduce((n, [, l]) => n + l.length, 0), triangles: noboriTris, clothTriangles: I.length / 3 };
   }
 
   return { stats };

@@ -8,7 +8,7 @@ import { createTownPlants } from './town-plants.js';
 import { createTownPaving, finishTownLanes } from './town-paving.js';
 import { createApartmentSurfaces } from './apartment-surfaces.js';
 import { addLaundryCart, addDeliveryCorner } from './neighborhood-props.js';
-import { createNoticeSheet, addLaundryNotices, addStandingBoard, addBackAlley } from './art-r1-city.js';
+import { createNoticeSheet, addLaundryNotices, addStandingBoard, addBackAlley, addRearCorridor } from './art-r1-city.js';
 
 const SITES = [
   // Staggered setbacks and three wall tones (sage / warm tile / pale blue) break the
@@ -137,6 +137,11 @@ export async function createCity({ scene, station, island, skyline }) {
     H.laundrySigns.name.m = signPrint; H.laundrySigns.icon.m = signPrint;
     stats.laundrySignAtlas = { ...signs.audit, reusedRegions: signs.reused, newTextures: 0,
       text: ['さくら コインランドリー', '洗濯・乾燥', 'セルフサービス'], owner: 'station', pixelsUpdated: !signs.reused };
+    // Art round 1 notices; round 3 also uses them for the rear-corridor rule on every apartment.
+    const noticeSheet = createNoticeSheet(ctx, clone);
+    ownedTextures.add(noticeSheet.map);
+    stats.artRearCorridors = [];
+    H.artRearCorridor = (R, o) => stats.artRearCorridors.push(addRearCorridor(R, H.M, H.A, noticeSheet, o));
     for (const site of SITES) {
       const shape = townApartmentBounds(site), b = shape.groundSupportBounds;
       const lot = { minX: site.x + b.minX - 0.15, maxX: site.x + b.maxX + 0.15,
@@ -260,8 +265,6 @@ export async function createCity({ scene, station, island, skyline }) {
     // Art round 1 (D): paper notices on the glass and wings, a second standing board.
     const artStart = gb.tris;
     const noticeFrame = Frame.at(gb, shop.center[0], shop.baseY, shop.frontage[1]);
-    const noticeSheet = createNoticeSheet(ctx, clone);
-    ownedTextures.add(noticeSheet.map);
     const noticeCount = addLaundryNotices(noticeFrame, noticeSheet, -1.25 + 0.025, -1.25);
     addStandingBoard(noticeFrame, M, noticeSheet, 'prices', -1.55, supportY - shop.baseY, -0.55, 0.3);
     const alley = addBackAlley({ root, ctx, own: clone, ownTexture: texture => ownedTextures.add(texture), frame, M: H.M, A: H.A, sheet: noticeSheet });
