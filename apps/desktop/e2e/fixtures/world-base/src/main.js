@@ -2,12 +2,12 @@ import * as THREE from 'three';
 import { createIsland, clearVegetationAreas } from './island.js';
 import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from './evening-glow.js';
 import { createStation } from './station.js';
+import { basins, basinAt, bankView } from './basins.js';
+import { createRain } from './rain.js';
 import { createLook } from './look.js';
 import { createSkyline } from './skyline.js';
 import { coastWalking } from './coast.js';
 import { createCity } from './city.js';
-import { basins, basinAt, bankView } from './basins.js';
-import { createRain } from './rain.js';
 
 const canvas = document.querySelector('#world');
 const loadMessage = document.querySelector('#load-message');
@@ -203,10 +203,10 @@ async function init() {
     worldBase.eveningSakura = applyEveningSakura(scene);
     worldBase.crossingHalos = fadeDistantCrossingHalos(scene);
   }
-  const rain=createRain(scene,renderer,station);
-  const mirrorOmit=[island.water.mesh,island.river.group,island.sky.mesh,rain.streaks];
   stage('场景已就绪');
   document.querySelector('#loading').hidden = true;
+  const rain=createRain(scene,renderer,station);
+  const mirrorOmit=[island.water.mesh,island.river.group,island.sky.mesh,rain.streaks];
   let sceneStart, weatherOffset=0;
   const weatherStart=document.querySelector('#weather-start');
   weatherStart.addEventListener('change',()=>{
