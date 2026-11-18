@@ -11,6 +11,9 @@ float wbDepth(vec2 uv) {
   return uNear*uFar / mix(uFar+(uNear-uFar)*z, uNear+(uFar-uNear)*z, uReversed);
 }
 uniform float uProjScale, uAO;
+// Round 24 shadow tint (composite): AO crease tint, split-tone of the dark end.
+uniform float uShOn;
+uniform vec3 uShAO, uShMul, uShLift, uShRange;
 // View-space position from linear depth (uProjScale = focal length in pixels).
 vec3 wbPos(vec2 uv) {
   float d = wbDepth(uv);
@@ -123,11 +126,17 @@ export function createLook(renderer, camera) {
     tWorldDepth: pipeline.uDepth, uNear: { value: camera.near }, uFar: { value: camera.far },
     uProjScale: { value: 1 }, uAO: { value: 0.55 },
     uReversed: { value: pipeline.reversed ? 1 : 0 }, uToon: toon, uHaze: { value: 1 },
+    uShOn: { value: 0 }, uShAO: { value: new THREE.Vector3(1, 1, 1) }, uShMul: { value: new THREE.Vector3(1, 1, 1) },
+    uShLift: { value: new THREE.Vector3() }, uShRange: { value: new THREE.Vector3(0.06, 0.42, 1) },
   });
   mat.fragmentShader = insert(mat.fragmentShader, 'void main(){', `${OUTLINES}\nvoid main(){`, 'composite entry');
   mat.fragmentShader = insert(mat.fragmentShader, 'col *= uExposure;', `
     // Contact shadows (ZZZ refs: crates, benches, eaves all sit in soft dark creases).
-    if (uAO*uToon > 0.0) col *= mix(1.0, wbAO(uv, wbDepth(uv)), uAO*uToon);
+    if (uAO*uToon > 0.0) {
+      float wbA = wbAO(uv, wbDepth(uv)), wbAk = uAO*uToon;
+      col *= mix(1.0, wbA, wbAk);
+      col *= mix(vec3(1.0), uShAO, (1.0 - wbA)*wbAk*uShOn); // creases fall into blue-violet, not grey
+    }
     float edge = wbEdge(uv)*uToon;
     vec3 line = mix(col*vec3(0.42,0.38,0.50),vec3(0.027,0.020,0.051),0.35);
     col = mix(col,line,edge*0.45); // ZZZ scenes keep only faint silhouettes; strong lines are for characters
@@ -167,6 +176,11 @@ export function createLook(renderer, camera) {
     col = mix(col, col*vec3(0.92,0.98,1.07), (1.0-smoothstep(0.10,0.50,wbL))*0.6*uToon);
     col += vec3(0.035,0.016,-0.022)*smoothstep(0.50,1.0,wbL)*uToon;
     col = mix(col, col*1.04+0.012, (1.0-smoothstep(0.0,0.25,wbL))*uToon);
+    {
+      // Round 24: dark end goes cool blue-violet and is lifted by the sky, sky pixels and bright lights untouched.
+      float wbSh = (1.0 - smoothstep(uShRange.x, uShRange.y, wbL))*uShRange.z*uShOn*uToon*(1.0 - wbSky);
+      col = mix(col, col*uShMul + uShLift, wbSh);
+    }
     col = clamp(col, 0.0, 1.0);`, 'purple shadows');
 
   function applyIsland(island) {
@@ -261,6 +275,11 @@ export function createLook(renderer, camera) {
       townUniforms.uTownGreen.value.x = strength;
     },
     setAO(value) { mat.uniforms.uAO.value = value; },
+    /** Round 24: uniforms from shadowTintUniforms(); null switches the composite tint off. */
+    setShadowTint(u) {
+      if (!u) { mat.uniforms.uShOn.value = 0; return; }
+      for (const [k, v] of Object.entries(u)) mat.uniforms[k].value.copy ? mat.uniforms[k].value.copy(v.value) : (mat.uniforms[k].value = v.value);
+    },
     setFlightEffects(value) { pipeline.params.blur = value ? 1 : 0; pipeline.params.rays = value ? 0.55 : 0; pipeline.hasPrev = false; },
     setSize(width, height, ratio) { pipeline.setSize(width, height, ratio); },
     render(scene, dt) {

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { createIsland, clearVegetationAreas } from './island.js';
+import { loadShadowTint, shadowTintEnabled, installLitShadowTint, patchIslandShadowTint, shadowTintUniforms } from './shadow-tint.js';
 import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from './evening-glow.js';
 import { createStation } from './station.js';
 import { createLook } from './look.js';
@@ -94,9 +95,13 @@ async function init() {
   stage('正在读取岛屿地形、港镇和云层…');
   // ?time=afternoon keeps Petalwake's original light for before/after comparison.
   const timeOfDay = new URLSearchParams(location.search).get('time') ?? 'evening';
+  // Round 24: blue-violet shade. The lit-material chunk is patched before any program compiles.
+  const shadowTint = shadowTintEnabled() ? (await loadShadowTint())[timeOfDay === 'afternoon' ? 'afternoon' : 'evening'] : null;
+  if (shadowTint) installLitShadowTint(shadowTint);
   island = await createIsland({ scene, renderer, camera, timeOfDay });
   worldBase.island = island;
   look.applyIsland(island);
+  if (shadowTint) { worldBase.shadowTint = { island: patchIslandShadowTint(island, shadowTint) }; look.setShadowTint(shadowTintUniforms(shadowTint)); }
   const evening = island.timeOfDay === 'evening';
   // Low golden-hour sun: warmer and a little weaker; the sky fill turns cooler so shade reads blue-violet.
   const sun = new THREE.DirectionalLight(evening ? 0xffc490 : 0xffe4c4, evening ? 2.3 : 2.1);
