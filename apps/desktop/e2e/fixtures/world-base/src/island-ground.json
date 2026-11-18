@@ -35,7 +35,7 @@
  "thatchFlatten": 0.55,
  "hazeNear": 120,
  "hazeFar": 900,
- "hazeAmt": 0.7,
+ "hazeAmt": 0.5,
  "hazeDesat": 0.45,
  "hazeGain": 0.92
 }
