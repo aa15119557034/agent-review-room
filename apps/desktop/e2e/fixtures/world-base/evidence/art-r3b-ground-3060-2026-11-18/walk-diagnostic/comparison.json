@@ -1,0 +1,3701 @@
+{
+  "schema": 1,
+  "runs": [
+    {
+      "tag": "01-r3b",
+      "source": "ffbcfa3e091bdb2d4a7cf94367d40868101c2ddc",
+      "mainSha256": "a24df689007b299a462bc48d4303aa128956cea93eacb6d2483e04b86b9ed1d2",
+      "rawSha256": "d20fd6ccc1ef0982dd24471a4d1fe93d1ae384ccd8d7a9be4b96b8957c1ed1f5",
+      "modeOrder": [
+        "control",
+        "sparse",
+        "control"
+      ],
+      "showInactive": true,
+      "explicitFocus": false,
+      "exceptions": 0,
+      "networkCanceled": 2,
+      "uncanceledFailures": 0,
+      "exit": 0,
+      "windows": [
+        {
+          "trial": 1,
+          "mode": "control",
+          "id": "walk-third",
+          "host": [
+            {
+              "offsetMs": 349.9927,
+              "fg": false,
+              "hostCpu": 56.67,
+              "coreCpu": 76.5
+            },
+            {
+              "offsetMs": 863.9766,
+              "fg": false,
+              "hostCpu": 49.35,
+              "coreCpu": 69.7
+            },
+            {
+              "offsetMs": 1379.5432,
+              "fg": false,
+              "hostCpu": 37.25,
+              "coreCpu": 54.5
+            },
+            {
+              "offsetMs": 1895.1213,
+              "fg": false,
+              "hostCpu": 37.77,
+              "coreCpu": 63.6
+            },
+            {
+              "offsetMs": 2410.9136,
+              "fg": false,
+              "hostCpu": 64.54,
+              "coreCpu": 88.2
+            },
+            {
+              "offsetMs": 2950.4653,
+              "fg": false,
+              "hostCpu": 74.42,
+              "coreCpu": 90.9
+            }
+          ],
+          "device": [
+            {
+              "offsetMs": 221,
+              "pState": "P0",
+              "gpuMHz": 1650,
+              "memoryMHz": 7001,
+              "busyPct": 46,
+              "memBusyPct": 16,
+              "watts": 50.57,
+              "temperature": 62
+            },
+            {
+              "offsetMs": 722,
+              "pState": "P0",
+              "gpuMHz": 1762,
+              "memoryMHz": 7001,
+              "busyPct": 41,
+              "memBusyPct": 17,
+              "watts": 61.96,
+              "temperature": 63
+            },
+            {
+              "offsetMs": 1234,
+              "pState": "P0",
+              "gpuMHz": 1807,
+              "memoryMHz": 7001,
+              "busyPct": 42,
+              "memBusyPct": 17,
+              "watts": 71.71,
+              "temperature": 64
+            },
+            {
+              "offsetMs": 1739,
+              "pState": "P0",
+              "gpuMHz": 1882,
+              "memoryMHz": 7001,
+              "busyPct": 44,
+              "memBusyPct": 18,
+              "watts": 75.13,
+              "temperature": 65
+            },
+            {
+              "offsetMs": 2254,
+              "pState": "P0",
+              "gpuMHz": 1927,
+              "memoryMHz": 7001,
+              "busyPct": 47,
+              "memBusyPct": 19,
+              "watts": 78.08,
+              "temperature": 65
+            },
+            {
+              "offsetMs": 2754,
+              "pState": "P0",
+              "gpuMHz": 1957,
+              "memoryMHz": 7001,
+              "busyPct": 33,
+              "memBusyPct": 14,
+              "watts": 76.18,
+              "temperature": 64
+            }
+          ],
+          "walkDelta": 9.48436044824307
+        },
+        {
+          "trial": 1,
+          "mode": "control",
+          "id": "walk-first",
+          "host": [
+            {
+              "offsetMs": 266.3108,
+              "fg": false,
+              "hostCpu": 64.12,
+              "coreCpu": 81.8
+            },
+            {
+              "offsetMs": 783.6538,
+              "fg": false,
+              "hostCpu": 41.66,
+              "coreCpu": 74.3
+            },
+            {
+              "offsetMs": 1300.5708,
+              "fg": false,
+              "hostCpu": 63.97,
+              "coreCpu": 76.5
+            },
+            {
+              "offsetMs": 1818.8228,
+              "fg": false,
+              "hostCpu": 80.12,
+              "coreCpu": 88.2
+            },
+            {
+              "offsetMs": 2336.2461,
+              "fg": false,
+              "hostCpu": 92.45,
+              "coreCpu": 100
+            },
+            {
+              "offsetMs": 2864.0591,
+              "fg": false,
+              "hostCpu": 69.81,
+              "coreCpu": 78.8
+            }
+          ],
+          "device": [
+            {
+              "offsetMs": 69,
+              "pState": "P0",
+              "gpuMHz": 1957,
+              "memoryMHz": 7001,
+              "busyPct": 40,
+              "memBusyPct": 16,
+              "watts": 51.87,
+              "temperature": 65
+            },
+            {
+              "offsetMs": 585,
+              "pState": "P0",
+              "gpuMHz": 1957,
+              "memoryMHz": 7001,
+              "busyPct": 29,
+              "memBusyPct": 12,
+              "watts": 69.36,
+              "temperature": 65
+            },
+            {
+              "offsetMs": 1095,
+              "pState": "P0",
+              "gpuMHz": 1957,
+              "memoryMHz": 7001,
+              "busyPct": 37,
+              "memBusyPct": 16,
+              "watts": 78.24,
+              "temperature": 65
+            },
+            {
+              "offsetMs": 1608,
+              "pState": "P0",
+              "gpuMHz": 1755,
+              "memoryMHz": 7001,
+              "busyPct": 28,
+              "memBusyPct": 11,
+              "watts": 51.95,
+              "temperature": 64
+            },
+            {
+              "offsetMs": 2110,
+              "pState": "P0",
+              "gpuMHz": 1635,
+              "memoryMHz": 7001,
+              "busyPct": 29,
+              "memBusyPct": 11,
+              "watts": 50.68,
+              "temperature": 63
+            },
+            {
+              "offsetMs": 2625,
+              "pState": "P0",
+              "gpuMHz": 1560,
+              "memoryMHz": 7001,
+              "busyPct": 27,
+              "memBusyPct": 10,
+              "watts": 48.44,
+              "temperature": 62
+            },
+            {
+              "offsetMs": 3136,
+              "pState": "P0",
+              "gpuMHz": 1485,
+              "memoryMHz": 7001,
+              "busyPct": 36,
+              "memBusyPct": 13,
+              "watts": 45.52,
+              "temperature": 62
+            }
+          ],
+          "walkDelta": 9.662028089909775
+        },
+        {
+          "trial": 2,
+          "mode": "sparse",
+          "id": "walk-third",
+          "host": [
+            {
+              "offsetMs": 502.5273,
+              "fg": false,
+              "hostCpu": 58.74,
+              "coreCpu": 73.5
+            },
+            {
+              "offsetMs": 1020.4766,
+              "fg": false,
+              "hostCpu": 47.38,
+              "coreCpu": 75.7
+            },
+            {
+              "offsetMs": 1534.4119,
+              "fg": false,
+              "hostCpu": 43.05,
+              "coreCpu": 66.7
+            },
+            {
+              "offsetMs": 2049.1897,
+              "fg": false,
+              "hostCpu": 44.57,
+              "coreCpu": 66.7
+            },
+            {
+              "offsetMs": 2564.1785,
+              "fg": false,
+              "hostCpu": 50.45,
+              "coreCpu": 67.6
+            },
+            {
+              "offsetMs": 3081.0557,
+              "fg": false,
+              "hostCpu": 46.32,
+              "coreCpu": 64.7
+            }
+          ],
+          "device": [
+            {
+              "offsetMs": 221,
+              "pState": "P0",
+              "gpuMHz": 1890,
+              "memoryMHz": 7001,
+              "busyPct": 36,
+              "memBusyPct": 13,
+              "watts": 65.37,
+              "temperature": 64
+            },
+            {
+              "offsetMs": 729,
+              "pState": "P0",
+              "gpuMHz": 1747,
+              "memoryMHz": 7001,
+              "busyPct": 38,
+              "memBusyPct": 15,
+              "watts": 65.55,
+              "temperature": 64
+            },
+            {
+              "offsetMs": 1238,
+              "pState": "P0",
+              "gpuMHz": 1687,
+              "memoryMHz": 7001,
+              "busyPct": 34,
+              "memBusyPct": 13,
+              "watts": 50.72,
+              "temperature": 63
+            },
+            {
+              "offsetMs": 1744,
+              "pState": "P0",
+              "gpuMHz": 1920,
+              "memoryMHz": 7001,
+              "busyPct": 42,
+              "memBusyPct": 18,
+              "watts": 70.56,
+              "temperature": 65
+            },
+            {
+              "offsetMs": 2252,
+              "pState": "P0",
+              "gpuMHz": 1920,
+              "memoryMHz": 7001,
+              "busyPct": 37,
+              "memBusyPct": 15,
+              "watts": 74.34,
+              "temperature": 65
+            },
+            {
+              "offsetMs": 2767,
+              "pState": "P0",
+              "gpuMHz": 1920,
+              "memoryMHz": 7001,
+              "busyPct": 42,
+              "memBusyPct": 18,
+              "watts": 76.96,
+              "temperature": 66
+            }
+          ],
+          "walkDelta": 9.47621624762274
+        },
+        {
+          "trial": 2,
+          "mode": "sparse",
+          "id": "walk-first",
+          "host": [
+            {
+              "offsetMs": 398.6997,
+              "fg": false,
+              "hostCpu": 44.12,
+              "coreCpu": 58.8
+            },
+            {
+              "offsetMs": 914.6753,
+              "fg": false,
+              "hostCpu": 47.42,
+              "coreCpu": 81.1
+            },
+            {
+              "offsetMs": 1430.7964,
+              "fg": false,
+              "hostCpu": 43.45,
+              "coreCpu": 66.7
+            },
+            {
+              "offsetMs": 1943.9229,
+              "fg": false,
+              "hostCpu": 45.38,
+              "coreCpu": 60.6
+            },
+            {
+              "offsetMs": 2457.6804,
+              "fg": false,
+              "hostCpu": 41,
+              "coreCpu": 57.6
+            },
+            {
+              "offsetMs": 2972.5989,
+              "fg": false,
+              "hostCpu": 41.62,
+              "coreCpu": 65.6
+            }
+          ],
+          "device": [
+            {
+              "offsetMs": 83,
+              "pState": "P0",
+              "gpuMHz": 1920,
+              "memoryMHz": 7001,
+              "busyPct": 30,
+              "memBusyPct": 12,
+              "watts": 68.31,
+              "temperature": 65
+            },
+            {
+              "offsetMs": 592,
+              "pState": "P0",
+              "gpuMHz": 1920,
+              "memoryMHz": 7001,
+              "busyPct": 35,
+              "memBusyPct": 15,
+              "watts": 84.1,
+              "temperature": 65
+            },
+            {
+              "offsetMs": 1097,
+              "pState": "P0",
+              "gpuMHz": 1815,
+              "memoryMHz": 7001,
+              "busyPct": 35,
+              "memBusyPct": 15,
+              "watts": 75.05,
+              "temperature": 65
+            },
+            {
+              "offsetMs": 1606,
+              "pState": "P0",
+              "gpuMHz": 1875,
+              "memoryMHz": 7001,
+              "busyPct": 35,
+              "memBusyPct": 15,
+              "watts": 69.64,
+              "temperature": 65
+            },
+            {
+              "offsetMs": 2118,
+              "pState": "P0",
+              "gpuMHz": 1980,
+              "memoryMHz": 7001,
+              "busyPct": 42,
+              "memBusyPct": 18,
+              "watts": 79.55,
+              "temperature": 66
+            },
+            {
+              "offsetMs": 2629,
+              "pState": "P0",
+              "gpuMHz": 1965,
+              "memoryMHz": 7001,
+              "busyPct": 43,
+              "memBusyPct": 18,
+              "watts": 81.12,
+              "temperature": 66
+            },
+            {
+              "offsetMs": 3141,
+              "pState": "P0",
+              "gpuMHz": 1905,
+              "memoryMHz": 7001,
+              "busyPct": 45,
+              "memBusyPct": 19,
+              "watts": 88.23,
+              "temperature": 66
+            }
+          ],
+          "walkDelta": 9.567790690609598
+        },
+        {
+          "trial": 3,
+          "mode": "control",
+          "id": "walk-third",
+          "host": [
+            {
+              "offsetMs": 142.7576,
+              "fg": false,
+              "hostCpu": 28.54,
+              "coreCpu": 54.5
+            },
+            {
+              "offsetMs": 656.2114,
+              "fg": false,
+              "hostCpu": 33.08,
+              "coreCpu": 51.5
+            },
+            {
+              "offsetMs": 1170.0505,
+              "fg": false,
+              "hostCpu": 61.98,
+              "coreCpu": 76.5
+            },
+            {
+              "offsetMs": 1688.4773,
+              "fg": false,
+              "hostCpu": 72.31,
+              "coreCpu": 88.6
+            },
+            {
+              "offsetMs": 2204.5281,
+              "fg": false,
+              "hostCpu": 55.69,
+              "coreCpu": 72.7
+            },
+            {
+              "offsetMs": 2723.5232,
+              "fg": false,
+              "hostCpu": 41.66,
+              "coreCpu": 54.5
+            }
+          ],
+          "device": [
+            {
+              "offsetMs": 305,
+              "pState": "P0",
+              "gpuMHz": 1920,
+              "memoryMHz": 7001,
+              "busyPct": 43,
+              "memBusyPct": 18,
+              "watts": 70.04,
+              "temperature": 66
+            },
+            {
+              "offsetMs": 805,
+              "pState": "P0",
+              "gpuMHz": 1957,
+              "memoryMHz": 7001,
+              "busyPct": 45,
+              "memBusyPct": 18,
+              "watts": 78.2,
+              "temperature": 67
+            },
+            {
+              "offsetMs": 1322,
+              "pState": "P0",
+              "gpuMHz": 1980,
+              "memoryMHz": 7001,
+              "busyPct": 33,
+              "memBusyPct": 13,
+              "watts": 83.62,
+              "temperature": 67
+            },
+            {
+              "offsetMs": 1833,
+              "pState": "P0",
+              "gpuMHz": 1980,
+              "memoryMHz": 7001,
+              "busyPct": 33,
+              "memBusyPct": 14,
+              "watts": 77.79,
+              "temperature": 66
+            },
+            {
+              "offsetMs": 2347,
+              "pState": "P0",
+              "gpuMHz": 1980,
+              "memoryMHz": 7001,
+              "busyPct": 38,
+              "memBusyPct": 16,
+              "watts": 81.98,
+              "temperature": 67
+            },
+            {
+              "offsetMs": 2861,
+              "pState": "P0",
+              "gpuMHz": 1845,
+              "memoryMHz": 7001,
+              "busyPct": 38,
+              "memBusyPct": 16,
+              "watts": 80.44,
+              "temperature": 67
+            }
+          ],
+          "walkDelta": 9.463883547324784
+        },
+        {
+          "trial": 3,
+          "mode": "control",
+          "id": "walk-first",
+          "host": [
+            {
+              "offsetMs": 49.1353,
+              "fg": false,
+              "hostCpu": 33.73,
+              "coreCpu": 75.8
+            },
+            {
+              "offsetMs": 562.8196,
+              "fg": false,
+              "hostCpu": 26.38,
+              "coreCpu": 54.5
+            },
+            {
+              "offsetMs": 1076.0508,
+              "fg": false,
+              "hostCpu": 23.13,
+              "coreCpu": 57.6
+            },
+            {
+              "offsetMs": 1591.4617,
+              "fg": false,
+              "hostCpu": 24.32,
+              "coreCpu": 54.5
+            },
+            {
+              "offsetMs": 2105.4802,
+              "fg": false,
+              "hostCpu": 23.54,
+              "coreCpu": 45.5
+            },
+            {
+              "offsetMs": 2619.5,
+              "fg": false,
+              "hostCpu": 26.74,
+              "coreCpu": 75
+            },
+            {
+              "offsetMs": 3132.0386,
+              "fg": false,
+              "hostCpu": 23.11,
+              "coreCpu": 38.2
+            }
+          ],
+          "device": [
+            {
+              "offsetMs": 172,
+              "pState": "P0",
+              "gpuMHz": 1852,
+              "memoryMHz": 7001,
+              "busyPct": 40,
+              "memBusyPct": 17,
+              "watts": 74.75,
+              "temperature": 66
+            },
+            {
+              "offsetMs": 684,
+              "pState": "P0",
+              "gpuMHz": 1897,
+              "memoryMHz": 7001,
+              "busyPct": 42,
+              "memBusyPct": 17,
+              "watts": 71.13,
+              "temperature": 66
+            },
+            {
+              "offsetMs": 1195,
+              "pState": "P0",
+              "gpuMHz": 1980,
+              "memoryMHz": 7001,
+              "busyPct": 43,
+              "memBusyPct": 18,
+              "watts": 74.47,
+              "temperature": 67
+            },
+            {
+              "offsetMs": 1708,
+              "pState": "P0",
+              "gpuMHz": 1965,
+              "memoryMHz": 7001,
+              "busyPct": 43,
+              "memBusyPct": 18,
+              "watts": 82.04,
+              "temperature": 67
+            },
+            {
+              "offsetMs": 2221,
+              "pState": "P0",
+              "gpuMHz": 1980,
+              "memoryMHz": 7001,
+              "busyPct": 44,
+              "memBusyPct": 18,
+              "watts": 86.55,
+              "temperature": 67
+            },
+            {
+              "offsetMs": 2733,
+              "pState": "P0",
+              "gpuMHz": 1957,
+              "memoryMHz": 7001,
+              "busyPct": 42,
+              "memBusyPct": 18,
+              "watts": 86.84,
+              "temperature": 67
+            }
+          ],
+          "walkDelta": 9.628857172360322
+        }
+      ]
+    },
+    {
+      "tag": "02-r3b",
+      "source": "ffbcfa3e091bdb2d4a7cf94367d40868101c2ddc",
+      "mainSha256": "a24df689007b299a462bc48d4303aa128956cea93eacb6d2483e04b86b9ed1d2",
+      "rawSha256": "2a4c9d0e1f05a0aa35de0e08490c366eb83ec6155aacf0dcdcd08014e8aa2c7b",
+      "modeOrder": [
+        "sparse",
+        "control",
+        "sparse"
+      ],
+      "showInactive": true,
+      "explicitFocus": false,
+      "exceptions": 0,
+      "networkCanceled": 3,
+      "uncanceledFailures": 0,
+      "exit": 0,
+      "windows": [
+        {
+          "trial": 1,
+          "mode": "sparse",
+          "id": "walk-third",
+          "host": [
+            {
+              "offsetMs": 370.2131,
+              "fg": false,
+              "hostCpu": 75.6,
+              "coreCpu": 90.9
+            },
+            {
+              "offsetMs": 884.969,
+              "fg": false,
+              "hostCpu": 30.89,
+              "coreCpu": 75.8
+            },
+            {
+              "offsetMs": 1396.8643,
+              "fg": false,
+              "hostCpu": 31.09,
+              "coreCpu": 53.1
+            },
+            {
+              "offsetMs": 1910.5708,
+              "fg": false,
+              "hostCpu": 27.73,
+              "coreCpu": 87.9
+            },
+            {
+              "offsetMs": 2423.7639,
+              "fg": false,
+              "hostCpu": 37.81,
+              "coreCpu": 60.6
+            },
+            {
+              "offsetMs": 2939.9543,
+              "fg": false,
+              "hostCpu": 30.28,
+              "coreCpu": 60.6
+            }
+          ],
+          "device": [
+            {
+              "offsetMs": 79,
+              "pState": "P0",
+              "gpuMHz": 1522,
+              "memoryMHz": 7001,
+              "busyPct": 44,
+              "memBusyPct": 14,
+              "watts": 47.69,
+              "temperature": 63
+            },
+            {
+              "offsetMs": 593,
+              "pState": "P0",
+              "gpuMHz": 1650,
+              "memoryMHz": 7001,
+              "busyPct": 49,
+              "memBusyPct": 18,
+              "watts": 61.82,
+              "temperature": 64
+            },
+            {
+              "offsetMs": 1104,
+              "pState": "P0",
+              "gpuMHz": 1920,
+              "memoryMHz": 7001,
+              "busyPct": 44,
+              "memBusyPct": 18,
+              "watts": 81.36,
+              "temperature": 66
+            },
+            {
+              "offsetMs": 1619,
+              "pState": "P0",
+              "gpuMHz": 1897,
+              "memoryMHz": 7001,
+              "busyPct": 43,
+              "memBusyPct": 18,
+              "watts": 83.47,
+              "temperature": 66
+            },
+            {
+              "offsetMs": 2128,
+              "pState": "P0",
+              "gpuMHz": 1927,
+              "memoryMHz": 7001,
+              "busyPct": 43,
+              "memBusyPct": 18,
+              "watts": 82.74,
+              "temperature": 66
+            },
+            {
+              "offsetMs": 2639,
+              "pState": "P0",
+              "gpuMHz": 1980,
+              "memoryMHz": 7001,
+              "busyPct": 40,
+              "memBusyPct": 17,
+              "watts": 76.48,
+              "temperature": 66
+            },
+            {
+              "offsetMs": 3148,
+              "pState": "P0",
+              "gpuMHz": 1905,
+              "memoryMHz": 7001,
+              "busyPct": 43,
+              "memBusyPct": 18,
+              "watts": 78.76,
+              "temperature": 66
+            }
+          ],
+          "walkDelta": 9.48963785790407
+        },
+        {
+          "trial": 1,
+          "mode": "sparse",
+          "id": "walk-first",
+          "host": [
+            {
+              "offsetMs": 265.6328,
+              "fg": false,
+              "hostCpu": 35.93,
+              "coreCpu": 63.6
+            },
+            {
+              "offsetMs": 779.9626,
+              "fg": false,
+              "hostCpu": 37.38,
+              "coreCpu": 78.8
+            },
+            {
+              "offsetMs": 1297.2847,
+              "fg": false,
+              "hostCpu": 35.26,
+              "coreCpu": 60.6
+            },
+            {
+              "offsetMs": 1812.5437,
+              "fg": false,
+              "hostCpu": 33.13,
+              "coreCpu": 63.6
+            },
+            {
+              "offsetMs": 2327.1841,
+              "fg": false,
+              "hostCpu": 36.97,
+              "coreCpu": 66.7
+            },
+            {
+              "offsetMs": 2843.0554,
+              "fg": false,
+              "hostCpu": 28.03,
+              "coreCpu": 69.7
+            }
+          ],
+          "device": [
+            {
+              "offsetMs": 470,
+              "pState": "P0",
+              "gpuMHz": 1980,
+              "memoryMHz": 7001,
+              "busyPct": 39,
+              "memBusyPct": 17,
+              "watts": 83.98,
+              "temperature": 67
+            },
+            {
+              "offsetMs": 982,
+              "pState": "P0",
+              "gpuMHz": 1980,
+              "memoryMHz": 7001,
+              "busyPct": 36,
+              "memBusyPct": 15,
+              "watts": 81.91,
+              "temperature": 67
+            },
+            {
+              "offsetMs": 1493,
+              "pState": "P0",
+              "gpuMHz": 1980,
+              "memoryMHz": 7001,
+              "busyPct": 43,
+              "memBusyPct": 18,
+              "watts": 83.07,
+              "temperature": 67
+            },
+            {
+              "offsetMs": 2003,
+              "pState": "P0",
+              "gpuMHz": 1980,
+              "memoryMHz": 7001,
+              "busyPct": 42,
+              "memBusyPct": 18,
+              "watts": 83.65,
+              "temperature": 67
+            },
+            {
+              "offsetMs": 2517,
+              "pState": "P0",
+              "gpuMHz": 1965,
+              "memoryMHz": 7001,
+              "busyPct": 40,
+              "memBusyPct": 17,
+              "watts": 84.85,
+              "temperature": 67
+            },
+            {
+              "offsetMs": 3029,
+              "pState": "P0",
+              "gpuMHz": 1942,
+              "memoryMHz": 7001,
+              "busyPct": 42,
+              "memBusyPct": 18,
+              "watts": 84.3,
+              "temperature": 67
+            }
+          ],
+          "walkDelta": 9.574035877361492
+        },
+        {
+          "trial": 2,
+          "mode": "control",
+          "id": "walk-third",
+          "host": [
+            {
+              "offsetMs": 52.0081,
+              "fg": false,
+              "hostCpu": 22.1,
+              "coreCpu": 59.4
+            },
+            {
+              "offsetMs": 565.0183,
+              "fg": false,
+              "hostCpu": 33.33,
+              "coreCpu": 72.7
+            },
+            {
+              "offsetMs": 1078.9722,
+              "fg": false,
+              "hostCpu": 31.12,
+              "coreCpu": 67.6
+            },
+            {
+              "offsetMs": 1591.0381,
+              "fg": false,
+              "hostCpu": 31.89,
+              "coreCpu": 67.6
+            },
+            {
+              "offsetMs": 2104.2463,
+              "fg": false,
+              "hostCpu": 33.72,
+              "coreCpu": 75.8
+            },
+            {
+              "offsetMs": 2618.0759,
+              "fg": false,
+              "hostCpu": 31.19,
+              "coreCpu": 72.7
+            },
+            {
+              "offsetMs": 3131.8184,
+              "fg": false,
+              "hostCpu": 33.26,
+              "coreCpu": 63.6
+            }
+          ],
+          "device": [
+            {
+              "offsetMs": 228,
+              "pState": "P0",
+              "gpuMHz": 1980,
+              "memoryMHz": 7001,
+              "busyPct": 35,
+              "memBusyPct": 13,
+              "watts": 77.06,
+              "temperature": 67
+            },
+            {
+              "offsetMs": 740,
+              "pState": "P0",
+              "gpuMHz": 1965,
+              "memoryMHz": 7001,
+              "busyPct": 43,
+              "memBusyPct": 17,
+              "watts": 80.56,
+              "temperature": 68
+            },
+            {
+              "offsetMs": 1251,
+              "pState": "P0",
+              "gpuMHz": 1942,
+              "memoryMHz": 7001,
+              "busyPct": 45,
+              "memBusyPct": 18,
+              "watts": 85.39,
+              "temperature": 68
+            },
+            {
+              "offsetMs": 1763,
+              "pState": "P0",
+              "gpuMHz": 1950,
+              "memoryMHz": 7001,
+              "busyPct": 46,
+              "memBusyPct": 19,
+              "watts": 87.16,
+              "temperature": 68
+            },
+            {
+              "offsetMs": 2277,
+              "pState": "P0",
+              "gpuMHz": 1972,
+              "memoryMHz": 7001,
+              "busyPct": 42,
+              "memBusyPct": 18,
+              "watts": 87.9,
+              "temperature": 68
+            },
+            {
+              "offsetMs": 2788,
+              "pState": "P0",
+              "gpuMHz": 1957,
+              "memoryMHz": 7001,
+              "busyPct": 42,
+              "memBusyPct": 17,
+              "watts": 85,
+              "temperature": 68
+            }
+          ],
+          "walkDelta": 9.415421452328463
+        },
+        {
+          "trial": 2,
+          "mode": "control",
+          "id": "walk-first",
+          "host": [
+            {
+              "offsetMs": 470.9055,
+              "fg": false,
+              "hostCpu": 48.45,
+              "coreCpu": 72.7
+            },
+            {
+              "offsetMs": 988.8237,
+              "fg": false,
+              "hostCpu": 34.68,
+              "coreCpu": 60.6
+            },
+            {
+              "offsetMs": 1506.1484,
+              "fg": false,
+              "hostCpu": 33.86,
+              "coreCpu": 57.6
+            },
+            {
+              "offsetMs": 2021.1099,
+              "fg": false,
+              "hostCpu": 39.07,
+              "coreCpu": 60.6
+            },
+            {
+              "offsetMs": 2535.304,
+              "fg": false,
+              "hostCpu": 46.58,
+              "coreCpu": 67.6
+            },
+            {
+              "offsetMs": 3051.7986,
+              "fg": false,
+              "hostCpu": 70.08,
+              "coreCpu": 87.9
+            }
+          ],
+          "device": [
+            {
+              "offsetMs": 127,
+              "pState": "P0",
+              "gpuMHz": 1980,
+              "memoryMHz": 7001,
+              "busyPct": 44,
+              "memBusyPct": 18,
+              "watts": 85.7,
+              "temperature": 68
+            },
+            {
+              "offsetMs": 642,
+              "pState": "P0",
+              "gpuMHz": 1980,
+              "memoryMHz": 7001,
+              "busyPct": 37,
+              "memBusyPct": 15,
+              "watts": 78.74,
+              "temperature": 68
+            },
+            {
+              "offsetMs": 1149,
+              "pState": "P0",
+              "gpuMHz": 1920,
+              "memoryMHz": 7001,
+              "busyPct": 38,
+              "memBusyPct": 16,
+              "watts": 80.17,
+              "temperature": 67
+            },
+            {
+              "offsetMs": 1662,
+              "pState": "P0",
+              "gpuMHz": 1905,
+              "memoryMHz": 7001,
+              "busyPct": 41,
+              "memBusyPct": 17,
+              "watts": 78.07,
+              "temperature": 67
+            },
+            {
+              "offsetMs": 2173,
+              "pState": "P0",
+              "gpuMHz": 1912,
+              "memoryMHz": 7001,
+              "busyPct": 39,
+              "memBusyPct": 16,
+              "watts": 74.16,
+              "temperature": 67
+            },
+            {
+              "offsetMs": 2687,
+              "pState": "P0",
+              "gpuMHz": 1912,
+              "memoryMHz": 7001,
+              "busyPct": 42,
+              "memBusyPct": 18,
+              "watts": 73.5,
+              "temperature": 67
+            }
+          ],
+          "walkDelta": 9.605528789289846
+        },
+        {
+          "trial": 3,
+          "mode": "sparse",
+          "id": "walk-third",
+          "host": [
+            {
+              "offsetMs": 213.1487,
+              "fg": false,
+              "hostCpu": 50.55,
+              "coreCpu": 72.7
+            },
+            {
+              "offsetMs": 731.1235,
+              "fg": false,
+              "hostCpu": 70.42,
+              "coreCpu": 100
+            },
+            {
+              "offsetMs": 1245.4954,
+              "fg": false,
+              "hostCpu": 44.57,
+              "coreCpu": 97
+            },
+            {
+              "offsetMs": 1762.0012,
+              "fg": false,
+              "hostCpu": 25.73,
+              "coreCpu": 60.6
+            },
+            {
+              "offsetMs": 2275.2927,
+              "fg": false,
+              "hostCpu": 35.12,
+              "coreCpu": 63.6
+            },
+            {
+              "offsetMs": 2789.1582,
+              "fg": false,
+              "hostCpu": 33.38,
+              "coreCpu": 61.1
+            }
+          ],
+          "device": [
+            {
+              "offsetMs": 346,
+              "pState": "P0",
+              "gpuMHz": 1890,
+              "memoryMHz": 7001,
+              "busyPct": 37,
+              "memBusyPct": 15,
+              "watts": 76.47,
+              "temperature": 67
+            },
+            {
+              "offsetMs": 847,
+              "pState": "P0",
+              "gpuMHz": 1792,
+              "memoryMHz": 7001,
+              "busyPct": 30,
+              "memBusyPct": 12,
+              "watts": 59.99,
+              "temperature": 66
+            },
+            {
+              "offsetMs": 1360,
+              "pState": "P0",
+              "gpuMHz": 1942,
+              "memoryMHz": 7001,
+              "busyPct": 44,
+              "memBusyPct": 18,
+              "watts": 73.43,
+              "temperature": 67
+            },
+            {
+              "offsetMs": 1873,
+              "pState": "P0",
+              "gpuMHz": 1957,
+              "memoryMHz": 7001,
+              "busyPct": 43,
+              "memBusyPct": 18,
+              "watts": 90.69,
+              "temperature": 68
+            },
+            {
+              "offsetMs": 2385,
+              "pState": "P0",
+              "gpuMHz": 1957,
+              "memoryMHz": 7001,
+              "busyPct": 43,
+              "memBusyPct": 18,
+              "watts": 88.1,
+              "temperature": 68
+            },
+            {
+              "offsetMs": 2899,
+              "pState": "P0",
+              "gpuMHz": 1965,
+              "memoryMHz": 7001,
+              "busyPct": 43,
+              "memBusyPct": 18,
+              "watts": 86.56,
+              "temperature": 68
+            }
+          ],
+          "walkDelta": 9.430298621097785
+        },
+        {
+          "trial": 3,
+          "mode": "sparse",
+          "id": "walk-first",
+          "host": [
+            {
+              "offsetMs": 98.3882,
+              "fg": false,
+              "hostCpu": 65.89,
+              "coreCpu": 84.8
+            },
+            {
+              "offsetMs": 615.8442,
+              "fg": false,
+              "hostCpu": 41.07,
+              "coreCpu": 72.7
+            },
+            {
+              "offsetMs": 1130.0583,
+              "fg": false,
+              "hostCpu": 39.72,
+              "coreCpu": 66.7
+            },
+            {
+              "offsetMs": 1645.1926,
+              "fg": false,
+              "hostCpu": 32.67,
+              "coreCpu": 72.7
+            },
+            {
+              "offsetMs": 2159.0474,
+              "fg": false,
+              "hostCpu": 40.43,
+              "coreCpu": 68.8
+            },
+            {
+              "offsetMs": 2673.6929,
+              "fg": false,
+              "hostCpu": 32.73,
+              "coreCpu": 69.7
+            }
+          ],
+          "device": [
+            {
+              "offsetMs": 195,
+              "pState": "P0",
+              "gpuMHz": 1980,
+              "memoryMHz": 7001,
+              "busyPct": 30,
+              "memBusyPct": 13,
+              "watts": 72.23,
+              "temperature": 67
+            },
+            {
+              "offsetMs": 707,
+              "pState": "P0",
+              "gpuMHz": 1980,
+              "memoryMHz": 7001,
+              "busyPct": 33,
+              "memBusyPct": 14,
+              "watts": 74.21,
+              "temperature": 67
+            },
+            {
+              "offsetMs": 1220,
+              "pState": "P0",
+              "gpuMHz": 1972,
+              "memoryMHz": 7001,
+              "busyPct": 42,
+              "memBusyPct": 17,
+              "watts": 79.27,
+              "temperature": 68
+            },
+            {
+              "offsetMs": 1733,
+              "pState": "P0",
+              "gpuMHz": 1950,
+              "memoryMHz": 7001,
+              "busyPct": 41,
+              "memBusyPct": 17,
+              "watts": 81.9,
+              "temperature": 68
+            },
+            {
+              "offsetMs": 2244,
+              "pState": "P0",
+              "gpuMHz": 1950,
+              "memoryMHz": 7001,
+              "busyPct": 42,
+              "memBusyPct": 18,
+              "watts": 82.23,
+              "temperature": 68
+            },
+            {
+              "offsetMs": 2757,
+              "pState": "P0",
+              "gpuMHz": 1942,
+              "memoryMHz": 7001,
+              "busyPct": 42,
+              "memBusyPct": 18,
+              "watts": 82.68,
+              "temperature": 68
+            }
+          ],
+          "walkDelta": 9.600501406076075
+        }
+      ]
+    }
+  ],
+  "byView": {
+    "walk-third": {
+      "slowNext": {
+        "n": 23,
+        "bodyMs": {
+          "n": 23,
+          "min": 15.5,
+          "p50": 20.7,
+          "p95": 24.7,
+          "max": 26.5
+        },
+        "entryToNextMs": {
+          "n": 23,
+          "min": 15.9,
+          "p50": 20.9,
+          "p95": 25.1,
+          "max": 27.1
+        },
+        "afterExitToNextEntryMs": {
+          "n": 23,
+          "min": 0.2,
+          "p50": 0.3,
+          "p95": 0.4,
+          "max": 1.4
+        },
+        "otherBodyMs": {
+          "n": 23,
+          "min": 0,
+          "p50": 0.1,
+          "p95": 0.2,
+          "max": 0.2
+        },
+        "callbackOverheadMs": {
+          "n": 23,
+          "min": 0,
+          "p50": 0.1,
+          "p95": 0.1,
+          "max": 0.2
+        },
+        "stationMs": {
+          "n": 23,
+          "min": 0.3,
+          "p50": 0.4,
+          "p95": 0.5,
+          "max": 0.5
+        },
+        "walkerMs": {
+          "n": 23,
+          "min": 0,
+          "p50": 0.1,
+          "p95": 0.2,
+          "max": 0.2
+        },
+        "islandMs": {
+          "n": 23,
+          "min": 0.1,
+          "p50": 0.2,
+          "p95": 0.3,
+          "max": 0.3
+        },
+        "renderMs": {
+          "n": 23,
+          "min": 14.7,
+          "p50": 20,
+          "p95": 24.1,
+          "max": 25.6
+        },
+        "gpuMs": {
+          "n": 23,
+          "min": 13.9203,
+          "p50": 17.449,
+          "p95": 21.2244,
+          "max": 22.142
+        },
+        "draws": {
+          "n": 23,
+          "min": 1643,
+          "p50": 1663,
+          "p95": 1685,
+          "max": 1685
+        },
+        "triangles": {
+          "n": 23,
+          "min": 8314409,
+          "p50": 8404895,
+          "p95": 8494231,
+          "max": 8498713
+        },
+        "wallAtLeast15_4": 23,
+        "renderWallAtLeast15_4": 21,
+        "gpuAtLeast15_4": 19,
+        "gpuResolved": 23,
+        "outsideGapAtLeast15_4": 0,
+        "maxPeerNearestM": {
+          "n": 23,
+          "min": 0.0127,
+          "p50": 0.0143,
+          "p95": 0.045,
+          "max": 0.046
+        },
+        "xzFromSpawn": {
+          "n": 23,
+          "min": 0.2307,
+          "p50": 2.4708,
+          "p95": 8.6708,
+          "max": 8.7645
+        }
+      },
+      "normalNext": {
+        "n": 157,
+        "bodyMs": {
+          "n": 157,
+          "min": 12.6,
+          "p50": 15.7,
+          "p95": 21.6,
+          "max": 27.9
+        },
+        "entryToNextMs": {
+          "n": 157,
+          "min": 13.1,
+          "p50": 16,
+          "p95": 21.9,
+          "max": 28.3
+        },
+        "afterExitToNextEntryMs": {
+          "n": 157,
+          "min": 0.1,
+          "p50": 0.3,
+          "p95": 2.4,
+          "max": 3.2
+        },
+        "otherBodyMs": {
+          "n": 157,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.2,
+          "max": 0.2
+        },
+        "callbackOverheadMs": {
+          "n": 157,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.2,
+          "max": 0.3
+        },
+        "stationMs": {
+          "n": 157,
+          "min": 0.2,
+          "p50": 0.3,
+          "p95": 0.5,
+          "max": 0.6
+        },
+        "walkerMs": {
+          "n": 157,
+          "min": 0,
+          "p50": 0.1,
+          "p95": 0.2,
+          "max": 0.2
+        },
+        "islandMs": {
+          "n": 157,
+          "min": 0,
+          "p50": 0.2,
+          "p95": 0.3,
+          "max": 0.4
+        },
+        "renderMs": {
+          "n": 157,
+          "min": 12.1,
+          "p50": 15.1,
+          "p95": 20.9,
+          "max": 27
+        },
+        "gpuMs": {
+          "n": 157,
+          "min": 12.0115,
+          "p50": 14.4056,
+          "p95": 19.3833,
+          "max": 24.2575
+        },
+        "draws": {
+          "n": 157,
+          "min": 1639,
+          "p50": 1660,
+          "p95": 1684,
+          "max": 1685
+        },
+        "triangles": {
+          "n": 157,
+          "min": 8313825,
+          "p50": 8404555,
+          "p95": 8507439,
+          "max": 8559711
+        },
+        "wallAtLeast15_4": 97,
+        "renderWallAtLeast15_4": 68,
+        "gpuAtLeast15_4": 41,
+        "gpuResolved": 157,
+        "outsideGapAtLeast15_4": 0,
+        "maxPeerNearestM": {
+          "n": 157,
+          "min": 0.0097,
+          "p50": 0.0217,
+          "p95": 0.0456,
+          "max": 0.046
+        },
+        "xzFromSpawn": {
+          "n": 157,
+          "min": 0.0073,
+          "p50": 4.7238,
+          "p95": 9.0642,
+          "max": 9.4458
+        }
+      },
+      "sparsePairs": [
+        {
+          "run": "01-r3b",
+          "trial": 2,
+          "slowNext": {
+            "n": 12,
+            "bodyMs": {
+              "n": 12,
+              "min": 16.9,
+              "p50": 19.2,
+              "p95": 23.4,
+              "max": 23.4
+            },
+            "entryToNextMs": {
+              "n": 12,
+              "min": 17.3,
+              "p50": 19.9,
+              "p95": 23.8,
+              "max": 23.8
+            },
+            "afterExitToNextEntryMs": {
+              "n": 12,
+              "min": 0.2,
+              "p50": 0.3,
+              "p95": 1.4,
+              "max": 1.4
+            },
+            "otherBodyMs": {
+              "n": 12,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.2,
+              "max": 0.2
+            },
+            "callbackOverheadMs": {
+              "n": 12,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.1,
+              "max": 0.1
+            },
+            "stationMs": {
+              "n": 12,
+              "min": 0.3,
+              "p50": 0.4,
+              "p95": 0.5,
+              "max": 0.5
+            },
+            "walkerMs": {
+              "n": 12,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.2,
+              "max": 0.2
+            },
+            "islandMs": {
+              "n": 12,
+              "min": 0.1,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.3
+            },
+            "renderMs": {
+              "n": 12,
+              "min": 16.2,
+              "p50": 18.4,
+              "p95": 22.5,
+              "max": 22.5
+            },
+            "gpuMs": {
+              "n": 12,
+              "min": 14.7231,
+              "p50": 16.3584,
+              "p95": 19.4509,
+              "max": 19.4509
+            },
+            "draws": {
+              "n": 12,
+              "min": 1646,
+              "p50": 1662,
+              "p95": 1665,
+              "max": 1665
+            },
+            "triangles": {
+              "n": 12,
+              "min": 8377497,
+              "p50": 8379033,
+              "p95": 8453881,
+              "max": 8453881
+            },
+            "wallAtLeast15_4": 12,
+            "renderWallAtLeast15_4": 12,
+            "gpuAtLeast15_4": 11,
+            "gpuResolved": 12,
+            "outsideGapAtLeast15_4": 0,
+            "maxPeerNearestM": {
+              "n": 12,
+              "min": 0.0127,
+              "p50": 0.0138,
+              "p95": 0.046,
+              "max": 0.046
+            },
+            "xzFromSpawn": {
+              "n": 12,
+              "min": 0.2307,
+              "p50": 2.0878,
+              "p95": 8.7645,
+              "max": 8.7645
+            }
+          },
+          "normalNext": {
+            "n": 45,
+            "bodyMs": {
+              "n": 45,
+              "min": 14.9,
+              "p50": 16.9,
+              "p95": 22.4,
+              "max": 22.7
+            },
+            "entryToNextMs": {
+              "n": 45,
+              "min": 15.2,
+              "p50": 17.2,
+              "p95": 22.7,
+              "max": 25.7
+            },
+            "afterExitToNextEntryMs": {
+              "n": 45,
+              "min": 0.1,
+              "p50": 0.3,
+              "p95": 0.4,
+              "max": 3.2
+            },
+            "otherBodyMs": {
+              "n": 45,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.2,
+              "max": 0.2
+            },
+            "callbackOverheadMs": {
+              "n": 45,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.2,
+              "max": 0.3
+            },
+            "stationMs": {
+              "n": 45,
+              "min": 0.2,
+              "p50": 0.3,
+              "p95": 0.5,
+              "max": 0.6
+            },
+            "walkerMs": {
+              "n": 45,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.2,
+              "max": 0.2
+            },
+            "islandMs": {
+              "n": 45,
+              "min": 0.1,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.3
+            },
+            "renderMs": {
+              "n": 45,
+              "min": 14.3,
+              "p50": 16.1,
+              "p95": 21.7,
+              "max": 21.8
+            },
+            "gpuMs": {
+              "n": 45,
+              "min": 12.97,
+              "p50": 15.0692,
+              "p95": 19.3833,
+              "max": 19.6352
+            },
+            "draws": {
+              "n": 45,
+              "min": 1639,
+              "p50": 1661,
+              "p95": 1665,
+              "max": 1665
+            },
+            "triangles": {
+              "n": 45,
+              "min": 8378045,
+              "p50": 8404589,
+              "p95": 8454393,
+              "max": 8469615
+            },
+            "wallAtLeast15_4": 42,
+            "renderWallAtLeast15_4": 32,
+            "gpuAtLeast15_4": 16,
+            "gpuResolved": 45,
+            "outsideGapAtLeast15_4": 0,
+            "maxPeerNearestM": {
+              "n": 45,
+              "min": 0.0097,
+              "p50": 0.0138,
+              "p95": 0.0456,
+              "max": 0.0457
+            },
+            "xzFromSpawn": {
+              "n": 45,
+              "min": 0.0073,
+              "p50": 5.0445,
+              "p95": 9.1458,
+              "max": 9.4319
+            }
+          }
+        },
+        {
+          "run": "02-r3b",
+          "trial": 1,
+          "slowNext": {
+            "n": 4,
+            "bodyMs": {
+              "n": 4,
+              "min": 16,
+              "p50": 17.7,
+              "p95": 20.7,
+              "max": 20.7
+            },
+            "entryToNextMs": {
+              "n": 4,
+              "min": 16.5,
+              "p50": 17.9,
+              "p95": 20.9,
+              "max": 20.9
+            },
+            "afterExitToNextEntryMs": {
+              "n": 4,
+              "min": 0.2,
+              "p50": 0.2,
+              "p95": 0.4,
+              "max": 0.4
+            },
+            "otherBodyMs": {
+              "n": 4,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.2,
+              "max": 0.2
+            },
+            "callbackOverheadMs": {
+              "n": 4,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.1,
+              "max": 0.1
+            },
+            "stationMs": {
+              "n": 4,
+              "min": 0.3,
+              "p50": 0.3,
+              "p95": 0.5,
+              "max": 0.5
+            },
+            "walkerMs": {
+              "n": 4,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.1,
+              "max": 0.1
+            },
+            "islandMs": {
+              "n": 4,
+              "min": 0.1,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.3
+            },
+            "renderMs": {
+              "n": 4,
+              "min": 15.2,
+              "p50": 17,
+              "p95": 20,
+              "max": 20
+            },
+            "gpuMs": {
+              "n": 4,
+              "min": 14.165,
+              "p50": 14.5541,
+              "p95": 18.0992,
+              "max": 18.0992
+            },
+            "draws": {
+              "n": 4,
+              "min": 1643,
+              "p50": 1654,
+              "p95": 1660,
+              "max": 1660
+            },
+            "triangles": {
+              "n": 4,
+              "min": 8314409,
+              "p50": 8340883,
+              "p95": 8405943,
+              "max": 8405943
+            },
+            "wallAtLeast15_4": 4,
+            "renderWallAtLeast15_4": 3,
+            "gpuAtLeast15_4": 2,
+            "gpuResolved": 4,
+            "outsideGapAtLeast15_4": 0,
+            "maxPeerNearestM": {
+              "n": 4,
+              "min": 0.0211,
+              "p50": 0.0214,
+              "p95": 0.0342,
+              "max": 0.0342
+            },
+            "xzFromSpawn": {
+              "n": 4,
+              "min": 0.4535,
+              "p50": 5.8687,
+              "p95": 7.8719,
+              "max": 7.8719
+            }
+          },
+          "normalNext": {
+            "n": 61,
+            "bodyMs": {
+              "n": 61,
+              "min": 12.6,
+              "p50": 14.6,
+              "p95": 18.2,
+              "max": 20.6
+            },
+            "entryToNextMs": {
+              "n": 61,
+              "min": 13.1,
+              "p50": 15.4,
+              "p95": 18.5,
+              "max": 20.9
+            },
+            "afterExitToNextEntryMs": {
+              "n": 61,
+              "min": 0.1,
+              "p50": 0.3,
+              "p95": 2.5,
+              "max": 2.8
+            },
+            "otherBodyMs": {
+              "n": 61,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.2,
+              "max": 0.2
+            },
+            "callbackOverheadMs": {
+              "n": 61,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.2,
+              "max": 0.2
+            },
+            "stationMs": {
+              "n": 61,
+              "min": 0.2,
+              "p50": 0.4,
+              "p95": 0.5,
+              "max": 0.5
+            },
+            "walkerMs": {
+              "n": 61,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.2,
+              "max": 0.2
+            },
+            "islandMs": {
+              "n": 61,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.2,
+              "max": 0.3
+            },
+            "renderMs": {
+              "n": 61,
+              "min": 12.1,
+              "p50": 14,
+              "p95": 17.5,
+              "max": 19.9
+            },
+            "gpuMs": {
+              "n": 61,
+              "min": 12.0115,
+              "p50": 13.8527,
+              "p95": 15.0907,
+              "max": 18.0613
+            },
+            "draws": {
+              "n": 61,
+              "min": 1639,
+              "p50": 1657,
+              "p95": 1660,
+              "max": 1660
+            },
+            "triangles": {
+              "n": 61,
+              "min": 8313825,
+              "p50": 8341285,
+              "p95": 8404009,
+              "max": 8415947
+            },
+            "wallAtLeast15_4": 18,
+            "renderWallAtLeast15_4": 9,
+            "gpuAtLeast15_4": 3,
+            "gpuResolved": 61,
+            "outsideGapAtLeast15_4": 0,
+            "maxPeerNearestM": {
+              "n": 61,
+              "min": 0.0098,
+              "p50": 0.0257,
+              "p95": 0.042,
+              "max": 0.0427
+            },
+            "xzFromSpawn": {
+              "n": 61,
+              "min": 0.0493,
+              "p50": 4.4858,
+              "p95": 8.9687,
+              "max": 9.4458
+            }
+          }
+        },
+        {
+          "run": "02-r3b",
+          "trial": 3,
+          "slowNext": {
+            "n": 7,
+            "bodyMs": {
+              "n": 7,
+              "min": 15.5,
+              "p50": 22.9,
+              "p95": 26.5,
+              "max": 26.5
+            },
+            "entryToNextMs": {
+              "n": 7,
+              "min": 15.9,
+              "p50": 23.2,
+              "p95": 27.1,
+              "max": 27.1
+            },
+            "afterExitToNextEntryMs": {
+              "n": 7,
+              "min": 0.3,
+              "p50": 0.3,
+              "p95": 0.4,
+              "max": 0.4
+            },
+            "otherBodyMs": {
+              "n": 7,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.1,
+              "max": 0.1
+            },
+            "callbackOverheadMs": {
+              "n": 7,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.2,
+              "max": 0.2
+            },
+            "stationMs": {
+              "n": 7,
+              "min": 0.3,
+              "p50": 0.4,
+              "p95": 0.5,
+              "max": 0.5
+            },
+            "walkerMs": {
+              "n": 7,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.1,
+              "max": 0.1
+            },
+            "islandMs": {
+              "n": 7,
+              "min": 0.1,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.3
+            },
+            "renderMs": {
+              "n": 7,
+              "min": 14.7,
+              "p50": 22.1,
+              "p95": 25.6,
+              "max": 25.6
+            },
+            "gpuMs": {
+              "n": 7,
+              "min": 13.9203,
+              "p50": 19.3812,
+              "p95": 22.142,
+              "max": 22.142
+            },
+            "draws": {
+              "n": 7,
+              "min": 1667,
+              "p50": 1685,
+              "p95": 1685,
+              "max": 1685
+            },
+            "triangles": {
+              "n": 7,
+              "min": 8468177,
+              "p50": 8468689,
+              "p95": 8498713,
+              "max": 8498713
+            },
+            "wallAtLeast15_4": 7,
+            "renderWallAtLeast15_4": 6,
+            "gpuAtLeast15_4": 6,
+            "gpuResolved": 7,
+            "outsideGapAtLeast15_4": 0,
+            "maxPeerNearestM": {
+              "n": 7,
+              "min": 0.0127,
+              "p50": 0.0143,
+              "p95": 0.045,
+              "max": 0.045
+            },
+            "xzFromSpawn": {
+              "n": 7,
+              "min": 0.2307,
+              "p50": 1.0424,
+              "p95": 8.6708,
+              "max": 8.6708
+            }
+          },
+          "normalNext": {
+            "n": 51,
+            "bodyMs": {
+              "n": 51,
+              "min": 14.4,
+              "p50": 16.1,
+              "p95": 26.5,
+              "max": 27.9
+            },
+            "entryToNextMs": {
+              "n": 51,
+              "min": 14.7,
+              "p50": 16.5,
+              "p95": 27,
+              "max": 28.3
+            },
+            "afterExitToNextEntryMs": {
+              "n": 51,
+              "min": 0.1,
+              "p50": 0.3,
+              "p95": 1.2,
+              "max": 2.6
+            },
+            "otherBodyMs": {
+              "n": 51,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.1,
+              "max": 0.2
+            },
+            "callbackOverheadMs": {
+              "n": 51,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.1,
+              "max": 0.2
+            },
+            "stationMs": {
+              "n": 51,
+              "min": 0.2,
+              "p50": 0.3,
+              "p95": 0.5,
+              "max": 0.5
+            },
+            "walkerMs": {
+              "n": 51,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.2,
+              "max": 0.2
+            },
+            "islandMs": {
+              "n": 51,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.3,
+              "max": 0.4
+            },
+            "renderMs": {
+              "n": 51,
+              "min": 13.9,
+              "p50": 15.5,
+              "p95": 25.5,
+              "max": 27
+            },
+            "gpuMs": {
+              "n": 51,
+              "min": 13.226,
+              "p50": 14.9033,
+              "p95": 22.5884,
+              "max": 24.2575
+            },
+            "draws": {
+              "n": 51,
+              "min": 1661,
+              "p50": 1679,
+              "p95": 1685,
+              "max": 1685
+            },
+            "triangles": {
+              "n": 51,
+              "min": 8467337,
+              "p50": 8494775,
+              "p95": 8543761,
+              "max": 8559711
+            },
+            "wallAtLeast15_4": 37,
+            "renderWallAtLeast15_4": 27,
+            "gpuAtLeast15_4": 22,
+            "gpuResolved": 51,
+            "outsideGapAtLeast15_4": 0,
+            "maxPeerNearestM": {
+              "n": 51,
+              "min": 0.0098,
+              "p50": 0.0147,
+              "p95": 0.046,
+              "max": 0.046
+            },
+            "xzFromSpawn": {
+              "n": 51,
+              "min": 0.0073,
+              "p50": 4.9985,
+              "p95": 8.8617,
+              "max": 9.243
+            }
+          }
+        }
+      ],
+      "spatialFramesThenSlowNextByMetreFromSpawn": {
+        "0": {
+          "control": [
+            73,
+            3
+          ],
+          "sparse": [
+            61,
+            15
+          ]
+        },
+        "1": {
+          "control": [
+            58,
+            5
+          ],
+          "sparse": [
+            50,
+            13
+          ]
+        },
+        "2": {
+          "control": [
+            58,
+            5
+          ],
+          "sparse": [
+            60,
+            3
+          ]
+        },
+        "3": {
+          "control": [
+            54,
+            9
+          ],
+          "sparse": [
+            60,
+            3
+          ]
+        },
+        "4": {
+          "control": [
+            57,
+            7
+          ],
+          "sparse": [
+            59,
+            4
+          ]
+        },
+        "5": {
+          "control": [
+            56,
+            6
+          ],
+          "sparse": [
+            58,
+            5
+          ]
+        },
+        "6": {
+          "control": [
+            57,
+            7
+          ],
+          "sparse": [
+            57,
+            7
+          ]
+        },
+        "7": {
+          "control": [
+            50,
+            13
+          ],
+          "sparse": [
+            52,
+            9
+          ]
+        },
+        "8": {
+          "control": [
+            55,
+            7
+          ],
+          "sparse": [
+            54,
+            8
+          ]
+        },
+        "9": {
+          "control": [
+            22,
+            5
+          ],
+          "sparse": [
+            25,
+            4
+          ]
+        }
+      },
+      "perTrial": [
+        {
+          "run": "01-r3b",
+          "trial": 1,
+          "mode": "control",
+          "n": 177,
+          "fps": 56.3964,
+          "p95": 30.8,
+          "over20": 27,
+          "sampled": 0,
+          "matched": 0,
+          "slowSample": 0,
+          "focus": [
+            false,
+            true
+          ],
+          "os": [
+            0,
+            6
+          ],
+          "pose": [
+            [
+              281.6,
+              8.812,
+              934
+            ],
+            [
+              280.93866239198167,
+              8.547188084372076,
+              924.542431584717
+            ]
+          ]
+        },
+        {
+          "run": "01-r3b",
+          "trial": 2,
+          "mode": "sparse",
+          "n": 170,
+          "fps": 54.1677,
+          "p95": 30.8,
+          "over20": 34,
+          "sampled": 57,
+          "matched": 57,
+          "slowSample": 12,
+          "focus": [
+            true,
+            true
+          ],
+          "os": [
+            0,
+            6
+          ],
+          "pose": [
+            [
+              281.6,
+              8.812,
+              934
+            ],
+            [
+              280.9392302812122,
+              8.547415477814077,
+              924.5505527790742
+            ]
+          ]
+        },
+        {
+          "run": "01-r3b",
+          "trial": 3,
+          "mode": "control",
+          "n": 169,
+          "fps": 53.8474,
+          "p95": 30.8,
+          "over20": 35,
+          "sampled": 0,
+          "matched": 0,
+          "slowSample": 0,
+          "focus": [
+            true,
+            true
+          ],
+          "os": [
+            0,
+            6
+          ],
+          "pose": [
+            [
+              281.6,
+              8.812,
+              934
+            ],
+            [
+              280.940090231502,
+              8.547759817952622,
+              924.5628506411651
+            ]
+          ]
+        },
+        {
+          "run": "02-r3b",
+          "trial": 1,
+          "mode": "sparse",
+          "n": 195,
+          "fps": 62.1336,
+          "p95": 15.6,
+          "over20": 9,
+          "sampled": 65,
+          "matched": 65,
+          "slowSample": 4,
+          "focus": [
+            false,
+            true
+          ],
+          "os": [
+            0,
+            6
+          ],
+          "pose": [
+            [
+              281.6,
+              8.812,
+              934
+            ],
+            [
+              280.93829440201534,
+              8.547040734324646,
+              924.5371690830231
+            ]
+          ]
+        },
+        {
+          "run": "02-r3b",
+          "trial": 2,
+          "mode": "control",
+          "n": 197,
+          "fps": 63.0804,
+          "p95": 15.5,
+          "over20": 6,
+          "sampled": 0,
+          "matched": 0,
+          "slowSample": 0,
+          "focus": [
+            true,
+            true
+          ],
+          "os": [
+            0,
+            7
+          ],
+          "pose": [
+            [
+              281.6,
+              8.812,
+              934
+            ],
+            [
+              280.94346945840493,
+              8.549112923444698,
+              924.6111758373106
+            ]
+          ]
+        },
+        {
+          "run": "02-r3b",
+          "trial": 3,
+          "mode": "sparse",
+          "n": 174,
+          "fps": 55.7157,
+          "p95": 30.8,
+          "over20": 29,
+          "sampled": 58,
+          "matched": 58,
+          "slowSample": 7,
+          "focus": [
+            true,
+            true
+          ],
+          "os": [
+            0,
+            6
+          ],
+          "pose": [
+            [
+              281.6,
+              8.812,
+              934
+            ],
+            [
+              280.9424320841654,
+              8.548697539446755,
+              924.5963406945269
+            ]
+          ]
+        }
+      ]
+    },
+    "walk-first": {
+      "slowNext": {
+        "n": 15,
+        "bodyMs": {
+          "n": 15,
+          "min": 16.1,
+          "p50": 19.2,
+          "p95": 23.4,
+          "max": 23.4
+        },
+        "entryToNextMs": {
+          "n": 15,
+          "min": 16.4,
+          "p50": 19.5,
+          "p95": 23.7,
+          "max": 23.7
+        },
+        "afterExitToNextEntryMs": {
+          "n": 15,
+          "min": 0.2,
+          "p50": 0.3,
+          "p95": 0.4,
+          "max": 0.4
+        },
+        "otherBodyMs": {
+          "n": 15,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.1,
+          "max": 0.1
+        },
+        "callbackOverheadMs": {
+          "n": 15,
+          "min": 0,
+          "p50": 0.1,
+          "p95": 0.2,
+          "max": 0.2
+        },
+        "stationMs": {
+          "n": 15,
+          "min": 0.3,
+          "p50": 0.4,
+          "p95": 0.6,
+          "max": 0.6
+        },
+        "walkerMs": {
+          "n": 15,
+          "min": 0,
+          "p50": 0.1,
+          "p95": 0.1,
+          "max": 0.1
+        },
+        "islandMs": {
+          "n": 15,
+          "min": 0.1,
+          "p50": 0.2,
+          "p95": 0.3,
+          "max": 0.3
+        },
+        "renderMs": {
+          "n": 15,
+          "min": 15.4,
+          "p50": 18.6,
+          "p95": 22.6,
+          "max": 22.6
+        },
+        "gpuMs": {
+          "n": 15,
+          "min": 13.3274,
+          "p50": 16.0164,
+          "p95": 19.4222,
+          "max": 19.4222
+        },
+        "draws": {
+          "n": 15,
+          "min": 1494,
+          "p50": 1546,
+          "p95": 1595,
+          "max": 1595
+        },
+        "triangles": {
+          "n": 15,
+          "min": 8331815,
+          "p50": 8414415,
+          "p95": 8517097,
+          "max": 8517097
+        },
+        "wallAtLeast15_4": 15,
+        "renderWallAtLeast15_4": 15,
+        "gpuAtLeast15_4": 11,
+        "gpuResolved": 15,
+        "outsideGapAtLeast15_4": 0,
+        "maxPeerNearestM": {
+          "n": 15,
+          "min": 0.0135,
+          "p50": 0.0218,
+          "p95": 0.0434,
+          "max": 0.0434
+        },
+        "xzFromSpawn": {
+          "n": 15,
+          "min": 9.8845,
+          "p50": 11.3325,
+          "p95": 16.3534,
+          "max": 16.3534
+        }
+      },
+      "normalNext": {
+        "n": 175,
+        "bodyMs": {
+          "n": 175,
+          "min": 12.9,
+          "p50": 15.1,
+          "p95": 18.5,
+          "max": 22.7
+        },
+        "entryToNextMs": {
+          "n": 175,
+          "min": 13.5,
+          "p50": 15.5,
+          "p95": 18.9,
+          "max": 23
+        },
+        "afterExitToNextEntryMs": {
+          "n": 175,
+          "min": 0.1,
+          "p50": 0.3,
+          "p95": 1.1,
+          "max": 2.6
+        },
+        "otherBodyMs": {
+          "n": 175,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.1,
+          "max": 0.3
+        },
+        "callbackOverheadMs": {
+          "n": 175,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.1,
+          "max": 0.2
+        },
+        "stationMs": {
+          "n": 175,
+          "min": 0.2,
+          "p50": 0.3,
+          "p95": 0.5,
+          "max": 0.6
+        },
+        "walkerMs": {
+          "n": 175,
+          "min": 0,
+          "p50": 0.1,
+          "p95": 0.1,
+          "max": 0.2
+        },
+        "islandMs": {
+          "n": 175,
+          "min": 0,
+          "p50": 0.2,
+          "p95": 0.3,
+          "max": 0.4
+        },
+        "renderMs": {
+          "n": 175,
+          "min": 12.2,
+          "p50": 14.5,
+          "p95": 18,
+          "max": 21.8
+        },
+        "gpuMs": {
+          "n": 175,
+          "min": 11.9992,
+          "p50": 14.4538,
+          "p95": 16.0799,
+          "max": 18.2395
+        },
+        "draws": {
+          "n": 175,
+          "min": 1441,
+          "p50": 1515,
+          "p95": 1580,
+          "max": 1603
+        },
+        "triangles": {
+          "n": 175,
+          "min": 8194939,
+          "p50": 8354979,
+          "p95": 8461233,
+          "max": 8525535
+        },
+        "wallAtLeast15_4": 75,
+        "renderWallAtLeast15_4": 53,
+        "gpuAtLeast15_4": 20,
+        "gpuResolved": 175,
+        "outsideGapAtLeast15_4": 0,
+        "maxPeerNearestM": {
+          "n": 175,
+          "min": 0.0131,
+          "p50": 0.022,
+          "p95": 0.0439,
+          "max": 0.0791
+        },
+        "xzFromSpawn": {
+          "n": 175,
+          "min": 9.56,
+          "p50": 14.6363,
+          "p95": 18.6294,
+          "max": 18.9763
+        }
+      },
+      "sparsePairs": [
+        {
+          "run": "01-r3b",
+          "trial": 2,
+          "slowNext": {
+            "n": 5,
+            "bodyMs": {
+              "n": 5,
+              "min": 17.5,
+              "p50": 19.2,
+              "p95": 19.4,
+              "max": 19.4
+            },
+            "entryToNextMs": {
+              "n": 5,
+              "min": 17.8,
+              "p50": 19.5,
+              "p95": 19.7,
+              "max": 19.7
+            },
+            "afterExitToNextEntryMs": {
+              "n": 5,
+              "min": 0.2,
+              "p50": 0.3,
+              "p95": 0.4,
+              "max": 0.4
+            },
+            "otherBodyMs": {
+              "n": 5,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.1,
+              "max": 0.1
+            },
+            "callbackOverheadMs": {
+              "n": 5,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.1,
+              "max": 0.1
+            },
+            "stationMs": {
+              "n": 5,
+              "min": 0.3,
+              "p50": 0.3,
+              "p95": 0.5,
+              "max": 0.5
+            },
+            "walkerMs": {
+              "n": 5,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.1,
+              "max": 0.1
+            },
+            "islandMs": {
+              "n": 5,
+              "min": 0.2,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.3
+            },
+            "renderMs": {
+              "n": 5,
+              "min": 16.6,
+              "p50": 18.6,
+              "p95": 18.7,
+              "max": 18.7
+            },
+            "gpuMs": {
+              "n": 5,
+              "min": 14.7978,
+              "p50": 15.6324,
+              "p95": 16.3676,
+              "max": 16.3676
+            },
+            "draws": {
+              "n": 5,
+              "min": 1516,
+              "p50": 1546,
+              "p95": 1571,
+              "max": 1571
+            },
+            "triangles": {
+              "n": 5,
+              "min": 8331815,
+              "p50": 8388831,
+              "p95": 8414411,
+              "max": 8414411
+            },
+            "wallAtLeast15_4": 5,
+            "renderWallAtLeast15_4": 5,
+            "gpuAtLeast15_4": 4,
+            "gpuResolved": 5,
+            "outsideGapAtLeast15_4": 0,
+            "maxPeerNearestM": {
+              "n": 5,
+              "min": 0.0218,
+              "p50": 0.022,
+              "p95": 0.026,
+              "max": 0.026
+            },
+            "xzFromSpawn": {
+              "n": 5,
+              "min": 10.4306,
+              "p50": 11.3325,
+              "p95": 13.8603,
+              "max": 13.8603
+            }
+          },
+          "normalNext": {
+            "n": 59,
+            "bodyMs": {
+              "n": 59,
+              "min": 13.3,
+              "p50": 15,
+              "p95": 19.2,
+              "max": 22.2
+            },
+            "entryToNextMs": {
+              "n": 59,
+              "min": 13.5,
+              "p50": 15.3,
+              "p95": 19.4,
+              "max": 22.6
+            },
+            "afterExitToNextEntryMs": {
+              "n": 59,
+              "min": 0.1,
+              "p50": 0.3,
+              "p95": 0.5,
+              "max": 2.6
+            },
+            "otherBodyMs": {
+              "n": 59,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.1,
+              "max": 0.3
+            },
+            "callbackOverheadMs": {
+              "n": 59,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.1,
+              "max": 0.2
+            },
+            "stationMs": {
+              "n": 59,
+              "min": 0.2,
+              "p50": 0.3,
+              "p95": 0.4,
+              "max": 0.5
+            },
+            "walkerMs": {
+              "n": 59,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.2,
+              "max": 0.2
+            },
+            "islandMs": {
+              "n": 59,
+              "min": 0,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.4
+            },
+            "renderMs": {
+              "n": 59,
+              "min": 12.7,
+              "p50": 14.3,
+              "p95": 18.5,
+              "max": 21.3
+            },
+            "gpuMs": {
+              "n": 59,
+              "min": 11.9992,
+              "p50": 14.9934,
+              "p95": 15.6477,
+              "max": 17.8207
+            },
+            "draws": {
+              "n": 59,
+              "min": 1441,
+              "p50": 1514,
+              "p95": 1580,
+              "max": 1586
+            },
+            "triangles": {
+              "n": 59,
+              "min": 8194939,
+              "p50": 8340715,
+              "p95": 8434321,
+              "max": 8435655
+            },
+            "wallAtLeast15_4": 21,
+            "renderWallAtLeast15_4": 17,
+            "gpuAtLeast15_4": 8,
+            "gpuResolved": 59,
+            "outsideGapAtLeast15_4": 0,
+            "maxPeerNearestM": {
+              "n": 59,
+              "min": 0.0194,
+              "p50": 0.0221,
+              "p95": 0.0464,
+              "max": 0.0473
+            },
+            "xzFromSpawn": {
+              "n": 59,
+              "min": 9.5998,
+              "p50": 14.8142,
+              "p95": 18.6294,
+              "max": 18.9636
+            }
+          }
+        },
+        {
+          "run": "02-r3b",
+          "trial": 1,
+          "slowNext": {
+            "n": 3,
+            "bodyMs": {
+              "n": 3,
+              "min": 17.4,
+              "p50": 19.1,
+              "p95": 21.2,
+              "max": 21.2
+            },
+            "entryToNextMs": {
+              "n": 3,
+              "min": 17.8,
+              "p50": 19.4,
+              "p95": 21.5,
+              "max": 21.5
+            },
+            "afterExitToNextEntryMs": {
+              "n": 3,
+              "min": 0.2,
+              "p50": 0.3,
+              "p95": 0.4,
+              "max": 0.4
+            },
+            "otherBodyMs": {
+              "n": 3,
+              "min": 0,
+              "p50": 0,
+              "p95": 0,
+              "max": 0
+            },
+            "callbackOverheadMs": {
+              "n": 3,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.1,
+              "max": 0.1
+            },
+            "stationMs": {
+              "n": 3,
+              "min": 0.3,
+              "p50": 0.5,
+              "p95": 0.6,
+              "max": 0.6
+            },
+            "walkerMs": {
+              "n": 3,
+              "min": 0.1,
+              "p50": 0.1,
+              "p95": 0.1,
+              "max": 0.1
+            },
+            "islandMs": {
+              "n": 3,
+              "min": 0.2,
+              "p50": 0.2,
+              "p95": 0.2,
+              "max": 0.2
+            },
+            "renderMs": {
+              "n": 3,
+              "min": 16.6,
+              "p50": 18.2,
+              "p95": 20.6,
+              "max": 20.6
+            },
+            "gpuMs": {
+              "n": 3,
+              "min": 14.5428,
+              "p50": 15.8157,
+              "p95": 17.4694,
+              "max": 17.4694
+            },
+            "draws": {
+              "n": 3,
+              "min": 1494,
+              "p50": 1539,
+              "p95": 1572,
+              "max": 1572
+            },
+            "triangles": {
+              "n": 3,
+              "min": 8347893,
+              "p50": 8371161,
+              "p95": 8414415,
+              "max": 8414415
+            },
+            "wallAtLeast15_4": 3,
+            "renderWallAtLeast15_4": 3,
+            "gpuAtLeast15_4": 2,
+            "gpuResolved": 3,
+            "outsideGapAtLeast15_4": 0,
+            "maxPeerNearestM": {
+              "n": 3,
+              "min": 0.0135,
+              "p50": 0.0155,
+              "p95": 0.0382,
+              "max": 0.0382
+            },
+            "xzFromSpawn": {
+              "n": 3,
+              "min": 10.3033,
+              "p50": 11.6319,
+              "p95": 16.3534,
+              "max": 16.3534
+            }
+          },
+          "normalNext": {
+            "n": 61,
+            "bodyMs": {
+              "n": 61,
+              "min": 12.9,
+              "p50": 15,
+              "p95": 17.9,
+              "max": 19.9
+            },
+            "entryToNextMs": {
+              "n": 61,
+              "min": 13.9,
+              "p50": 15.4,
+              "p95": 18.3,
+              "max": 20.2
+            },
+            "afterExitToNextEntryMs": {
+              "n": 61,
+              "min": 0.1,
+              "p50": 0.3,
+              "p95": 1.8,
+              "max": 2.5
+            },
+            "otherBodyMs": {
+              "n": 61,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.1,
+              "max": 0.2
+            },
+            "callbackOverheadMs": {
+              "n": 61,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.1,
+              "max": 0.2
+            },
+            "stationMs": {
+              "n": 61,
+              "min": 0.2,
+              "p50": 0.4,
+              "p95": 0.5,
+              "max": 0.6
+            },
+            "walkerMs": {
+              "n": 61,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.1,
+              "max": 0.2
+            },
+            "islandMs": {
+              "n": 61,
+              "min": 0.1,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.3
+            },
+            "renderMs": {
+              "n": 61,
+              "min": 12.2,
+              "p50": 14.3,
+              "p95": 17.1,
+              "max": 19.3
+            },
+            "gpuMs": {
+              "n": 61,
+              "min": 12.7089,
+              "p50": 15.0303,
+              "p95": 15.788,
+              "max": 16.4413
+            },
+            "draws": {
+              "n": 61,
+              "min": 1441,
+              "p50": 1511,
+              "p95": 1578,
+              "max": 1584
+            },
+            "triangles": {
+              "n": 61,
+              "min": 8194939,
+              "p50": 8340523,
+              "p95": 8426705,
+              "max": 8435587
+            },
+            "wallAtLeast15_4": 25,
+            "renderWallAtLeast15_4": 13,
+            "gpuAtLeast15_4": 7,
+            "gpuResolved": 61,
+            "outsideGapAtLeast15_4": 0,
+            "maxPeerNearestM": {
+              "n": 61,
+              "min": 0.0131,
+              "p50": 0.0137,
+              "p95": 0.0354,
+              "max": 0.0382
+            },
+            "xzFromSpawn": {
+              "n": 61,
+              "min": 9.6416,
+              "p50": 14.4457,
+              "p95": 18.547,
+              "max": 18.9763
+            }
+          }
+        },
+        {
+          "run": "02-r3b",
+          "trial": 3,
+          "slowNext": {
+            "n": 7,
+            "bodyMs": {
+              "n": 7,
+              "min": 16.1,
+              "p50": 20.9,
+              "p95": 23.4,
+              "max": 23.4
+            },
+            "entryToNextMs": {
+              "n": 7,
+              "min": 16.4,
+              "p50": 21.3,
+              "p95": 23.7,
+              "max": 23.7
+            },
+            "afterExitToNextEntryMs": {
+              "n": 7,
+              "min": 0.2,
+              "p50": 0.3,
+              "p95": 0.3,
+              "max": 0.3
+            },
+            "otherBodyMs": {
+              "n": 7,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.1,
+              "max": 0.1
+            },
+            "callbackOverheadMs": {
+              "n": 7,
+              "min": 0,
+              "p50": 0.1,
+              "p95": 0.2,
+              "max": 0.2
+            },
+            "stationMs": {
+              "n": 7,
+              "min": 0.3,
+              "p50": 0.5,
+              "p95": 0.5,
+              "max": 0.5
+            },
+            "walkerMs": {
+              "n": 7,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.1,
+              "max": 0.1
+            },
+            "islandMs": {
+              "n": 7,
+              "min": 0.1,
+              "p50": 0.2,
+              "p95": 0.2,
+              "max": 0.2
+            },
+            "renderMs": {
+              "n": 7,
+              "min": 15.4,
+              "p50": 20.2,
+              "p95": 22.6,
+              "max": 22.6
+            },
+            "gpuMs": {
+              "n": 7,
+              "min": 13.3274,
+              "p50": 16.9585,
+              "p95": 19.4222,
+              "max": 19.4222
+            },
+            "draws": {
+              "n": 7,
+              "min": 1512,
+              "p50": 1589,
+              "p95": 1595,
+              "max": 1595
+            },
+            "triangles": {
+              "n": 7,
+              "min": 8426204,
+              "p50": 8504295,
+              "p95": 8517097,
+              "max": 8517097
+            },
+            "wallAtLeast15_4": 7,
+            "renderWallAtLeast15_4": 7,
+            "gpuAtLeast15_4": 5,
+            "gpuResolved": 7,
+            "outsideGapAtLeast15_4": 0,
+            "maxPeerNearestM": {
+              "n": 7,
+              "min": 0.02,
+              "p50": 0.0218,
+              "p95": 0.0434,
+              "max": 0.0434
+            },
+            "xzFromSpawn": {
+              "n": 7,
+              "min": 9.8845,
+              "p50": 10.3396,
+              "p95": 16.2488,
+              "max": 16.2488
+            }
+          },
+          "normalNext": {
+            "n": 55,
+            "bodyMs": {
+              "n": 55,
+              "min": 14.3,
+              "p50": 15.6,
+              "p95": 18.7,
+              "max": 22.7
+            },
+            "entryToNextMs": {
+              "n": 55,
+              "min": 14.5,
+              "p50": 15.8,
+              "p95": 19,
+              "max": 23
+            },
+            "afterExitToNextEntryMs": {
+              "n": 55,
+              "min": 0.1,
+              "p50": 0.3,
+              "p95": 0.8,
+              "max": 1.1
+            },
+            "otherBodyMs": {
+              "n": 55,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.2,
+              "max": 0.3
+            },
+            "callbackOverheadMs": {
+              "n": 55,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.2,
+              "max": 0.2
+            },
+            "stationMs": {
+              "n": 55,
+              "min": 0.2,
+              "p50": 0.3,
+              "p95": 0.5,
+              "max": 0.5
+            },
+            "walkerMs": {
+              "n": 55,
+              "min": 0,
+              "p50": 0,
+              "p95": 0.1,
+              "max": 0.2
+            },
+            "islandMs": {
+              "n": 55,
+              "min": 0,
+              "p50": 0.2,
+              "p95": 0.3,
+              "max": 0.3
+            },
+            "renderMs": {
+              "n": 55,
+              "min": 13.5,
+              "p50": 14.9,
+              "p95": 18.1,
+              "max": 21.8
+            },
+            "gpuMs": {
+              "n": 55,
+              "min": 12.4805,
+              "p50": 14.0165,
+              "p95": 16.5253,
+              "max": 18.2395
+            },
+            "draws": {
+              "n": 55,
+              "min": 1462,
+              "p50": 1531,
+              "p95": 1584,
+              "max": 1603
+            },
+            "triangles": {
+              "n": 55,
+              "min": 8290211,
+              "p50": 8430595,
+              "p95": 8496457,
+              "max": 8525535
+            },
+            "wallAtLeast15_4": 29,
+            "renderWallAtLeast15_4": 23,
+            "gpuAtLeast15_4": 5,
+            "gpuResolved": 55,
+            "outsideGapAtLeast15_4": 0,
+            "maxPeerNearestM": {
+              "n": 55,
+              "min": 0.0162,
+              "p50": 0.0218,
+              "p95": 0.0439,
+              "max": 0.0791
+            },
+            "xzFromSpawn": {
+              "n": 55,
+              "min": 9.56,
+              "p50": 14.7704,
+              "p95": 18.6333,
+              "max": 18.872
+            }
+          }
+        }
+      ],
+      "spatialFramesThenSlowNextByMetreFromSpawn": {
+        "9": {
+          "control": [
+            27,
+            6
+          ],
+          "sparse": [
+            31,
+            3
+          ]
+        },
+        "10": {
+          "control": [
+            52,
+            12
+          ],
+          "sparse": [
+            55,
+            9
+          ]
+        },
+        "11": {
+          "control": [
+            60,
+            4
+          ],
+          "sparse": [
+            56,
+            6
+          ]
+        },
+        "12": {
+          "control": [
+            56,
+            5
+          ],
+          "sparse": [
+            59,
+            4
+          ]
+        },
+        "13": {
+          "control": [
+            52,
+            11
+          ],
+          "sparse": [
+            56,
+            7
+          ]
+        },
+        "14": {
+          "control": [
+            54,
+            9
+          ],
+          "sparse": [
+            62,
+            1
+          ]
+        },
+        "15": {
+          "control": [
+            54,
+            10
+          ],
+          "sparse": [
+            63,
+            0
+          ]
+        },
+        "16": {
+          "control": [
+            51,
+            11
+          ],
+          "sparse": [
+            59,
+            4
+          ]
+        },
+        "17": {
+          "control": [
+            55,
+            8
+          ],
+          "sparse": [
+            63,
+            0
+          ]
+        },
+        "18": {
+          "control": [
+            54,
+            9
+          ],
+          "sparse": [
+            62,
+            1
+          ]
+        },
+        "19": {
+          "control": [
+            8,
+            1
+          ],
+          "sparse": [
+            6,
+            0
+          ]
+        }
+      },
+      "perTrial": [
+        {
+          "run": "01-r3b",
+          "trial": 1,
+          "mode": "control",
+          "n": 150,
+          "fps": 47.5617,
+          "p95": 30.8,
+          "over20": 55,
+          "sampled": 0,
+          "matched": 0,
+          "slowSample": 0,
+          "focus": [
+            true,
+            true
+          ],
+          "os": [
+            0,
+            6
+          ],
+          "pose": [
+            [
+              280.9329928941832,
+              8.544917911688025,
+              924.461353988858
+            ],
+            [
+              280.2592666497561,
+              8.275145354929725,
+              914.8266198189187
+            ]
+          ]
+        },
+        {
+          "run": "01-r3b",
+          "trial": 2,
+          "mode": "sparse",
+          "n": 193,
+          "fps": 61.7936,
+          "p95": 30.7,
+          "over20": 10,
+          "sampled": 64,
+          "matched": 64,
+          "slowSample": 5,
+          "focus": [
+            true,
+            true
+          ],
+          "os": [
+            0,
+            6
+          ],
+          "pose": [
+            [
+              280.9348458992972,
+              8.545659889503842,
+              924.4878531965658
+            ],
+            [
+              280.26769076070053,
+              8.278518526105245,
+              914.9470902180445
+            ]
+          ]
+        },
+        {
+          "run": "01-r3b",
+          "trial": 3,
+          "mode": "control",
+          "n": 202,
+          "fps": 64.3599,
+          "p95": 15.5,
+          "over20": 2,
+          "sampled": 0,
+          "matched": 0,
+          "slowSample": 0,
+          "focus": [
+            true,
+            true
+          ],
+          "os": [
+            0,
+            7
+          ],
+          "pose": [
+            [
+              280.93568516566944,
+              8.545995947415944,
+              924.4998552648551
+            ],
+            [
+              280.26427190537953,
+              8.277149552655317,
+              914.8981983091185
+            ]
+          ]
+        },
+        {
+          "run": "02-r3b",
+          "trial": 1,
+          "mode": "sparse",
+          "n": 194,
+          "fps": 62.1158,
+          "p95": 15.6,
+          "over20": 9,
+          "sampled": 64,
+          "matched": 64,
+          "slowSample": 3,
+          "focus": [
+            true,
+            true
+          ],
+          "os": [
+            0,
+            6
+          ],
+          "pose": [
+            [
+              280.9338786289306,
+              8.545272576404434,
+              924.4740205858726
+            ],
+            [
+              280.26628801796966,
+              8.27795684174736,
+              914.9270300624057
+            ]
+          ]
+        },
+        {
+          "run": "02-r3b",
+          "trial": 2,
+          "mode": "control",
+          "n": 174,
+          "fps": 55.4405,
+          "p95": 30.8,
+          "over20": 30,
+          "sampled": 0,
+          "matched": 0,
+          "slowSample": 0,
+          "focus": [
+            true,
+            true
+          ],
+          "os": [
+            0,
+            6
+          ],
+          "pose": [
+            [
+              280.9390541225221,
+              8.547344940588282,
+              924.5480335924386
+            ],
+            [
+              280.26926753354473,
+              8.279149895367048,
+              914.9696391202517
+            ]
+          ]
+        },
+        {
+          "run": "02-r3b",
+          "trial": 3,
+          "mode": "sparse",
+          "n": 188,
+          "fps": 59.9031,
+          "p95": 30.7,
+          "over20": 16,
+          "sampled": 62,
+          "matched": 62,
+          "slowSample": 7,
+          "focus": [
+            true,
+            true
+          ],
+          "os": [
+            0,
+            6
+          ],
+          "pose": [
+            [
+              280.9368923228782,
+              8.546479315682081,
+              924.5171184172171
+            ],
+            [
+              280.26745628970343,
+              8.278424639543896,
+              914.9437371265677
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  "notes": [
+    "Files ending in browser.json.gz contain same-frame production callback entry/body/exit/next timestamps, per-stage boundaries, raw GPU timer query results and per-frame eye and feet. Controls observe RAF and coordinates without wrapping the app callback.",
+    "showInactive in both processes. Trusted W delivered through Chromium CDP. Source kickoff uses ordinary camera buttons, third-person W then first-person W. Before each pair six stationary observations verify spawn; setPose clears velocity. After keyup recorded six samples following a 1.25 s settle.",
+    "Metrics grouped by time until the NEXT callback timestamp. Checked coordinates across trials within 0.12 m XZ. Driver render host wall can include GPU synchronization. GPU elapsed can include command-feed gaps. No compositor present trace."
+  ],
+  "systemSamples": {
+    "file": "system-samples.json.gz",
+    "sha256": "d77ef2919ea02849e2f65672c39c3adb8620b2eefd9e32e8fb4dc8d940c216d2",
+    "hostRows": 74,
+    "deviceRows": 75,
+    "method": "Route-window system samples retain the original wall timestamps, numeric machine/device counters and the test-process-tree foreground membership observed by Windows. Only samples inside one of the 12 browser route windows were exported. Window owners, names, paths and process identifiers omitted."
+  }
+}
