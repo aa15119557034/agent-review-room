@@ -55,7 +55,8 @@ app.whenReady().then(async () => {
   }
   const state = () => evaluate(`(() => { const w=worldBase, g=w.renderer.getContext(), ext=g.getExtension('WEBGL_debug_renderer_info');
     return { gpu:g.getParameter(ext.UNMASKED_RENDERER_WEBGL), camera:w.camera.position.toArray(), direction:w.camera.quaternion.toArray(),
-      fov:w.camera.fov, feet:w.walker.worldPosition.toArray(), weather:w.island.weather?.state, errors:w.errors, size:[innerWidth,innerHeight,devicePixelRatio] }; })()`);
+      fov:w.camera.fov, feet:w.walker.worldPosition.toArray(), sceneTime:w.island.U.uTime.value,
+      weather:w.island.weather?.state, errors:w.errors, size:[innerWidth,innerHeight,devicePixelRatio] }; })()`);
   async function view(name) {
     await evaluate(`(()=>{const w=worldBase; w.setView('station-street');
       const views={coast:[[270,2.58,1110],[-55,3,1230]],ridge:[[650,237.5,215],[-65,145,300]],
@@ -128,6 +129,55 @@ app.whenReady().then(async () => {
     if (trailShots.at(-1).feet[2] - trailShots[0].feet[2] < 80) throw new Error('Coastal walk did not reach the beach');
     report.environment = await evaluate(`import('./scripts/validate-environment.js').then(m=>m.validateEnvironment(worldBase))`);
     if (!report.environment.ok) throw new Error('Environment validation failed');
+
+    // Reproduce the detached crest at the same dry-beach camera. Compare both
+    // vertex treatments with the actual terrain rendered without the ocean.
+    report.swash = await evaluate(`(async () => {
+      const w=worldBase, i=w.island, mat=i.water.material;
+      const {waveHeight}=await import('./upstream/petalwake/src/world/water.js');
+      const update=i.update, weather=i.weather.update, original=mat.vertexShader;
+      w.setView('coast');
+      w.camera.position.set(296.2468964424,2.2020017328,1117.5008182022);
+      w.camera.quaternion.set(-0.00916364791,0.98320264422,0.05152746717,0.17485281835);
+      w.camera.updateMatrixWorld();
+      i.weather.update=()=>weather(50);
+      i.weather.update();
+      let time=0, highest=-Infinity;
+      for(let t=0;t<180;t+=0.05){
+        const y=waveHeight(295,1121,t,0.30);
+        if(y>highest){highest=y;time=t;}
+      }
+      i.update=()=>update(0,time);
+      const old=original.replace('float swash = smoothstep(-5.0, 2.0, off);','float swash = 1.0;');
+      if(old===original)throw new Error('Shoreline comparison shader changed');
+      window.swashView = mode => {
+        i.water.mesh.visible=mode!=='dry';
+        mat.vertexShader=mode==='unbroken'?old:original;
+        mat.needsUpdate=true;
+      };
+      window.restoreSwash = () => { window.swashView('adapted');i.update=update;i.weather.update=weather; };
+      return { time, unbrokenCrest:highest, ground:i.heightAt(295,1121), setup:i.U.uSeaSetup.value };
+    })()`);
+    const region = {x:310,y:693,width:400,height:110};
+    const pixels = {};
+    try {
+      for (const mode of ['unbroken','adapted','dry']) {
+        await evaluate(`window.swashView('${mode}')`);
+        await pause(450);
+        const frame = await wc.capturePage();
+        pixels[mode] = frame.crop(region).toBitmap();
+        fs.writeFileSync(path.join(output,'swash-'+mode+'.jpg'),frame.toJPEG(92));
+      }
+    } finally { await evaluate('window.restoreSwash()'); }
+    const changed = mode => {
+      let count=0;
+      for(let i=0;i<pixels.dry.length;i+=4) {
+        if([0,1,2].some(c=>Math.abs(pixels.dry[i+c]-pixels[mode][i+c])>4)) count++;
+      }
+      return count;
+    };
+    Object.assign(report.swash,{region, pixels:region.width*region.height, unbrokenPixels:changed('unbroken'), adaptedPixels:changed('adapted')});
+    if(report.swash.unbrokenPixels<500 || report.swash.adaptedPixels>220) throw new Error('Dry sand swash comparison failed');
   }
   if (report.requests.length) throw new Error('Network request failed; see requests');
   finish();
