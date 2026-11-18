@@ -1,0 +1,226 @@
+{
+  "rect": [
+    520,
+    268,
+    590,
+    390
+  ],
+  "width": 70,
+  "height": 122,
+  "pixels": 8540,
+  "factoryMaterial": {
+    "name": "vehicle-glass",
+    "uuid": "cb5c926d-e089-4104-ac5f-6e021b1bd00e",
+    "custom": true,
+    "normal": false,
+    "alphaSourceZero": true,
+    "alphaDestinationZero": true,
+    "rgbSourceSrcAlpha": true,
+    "rgbDestination1MinusSrcAlpha": true,
+    "opacity": 0.46,
+    "owners": [
+      {
+        "object": "42727ebe-9cc8-4ea1-905d-8004f83d8532",
+        "path": "Sakuragaoka/static/vehicles/keiVan",
+        "matUUID": "cb5c926d-e089-4104-ac5f-6e021b1bd00e",
+        "worldMin": [
+          279.9978629996041,
+          10.898433249601515,
+          970.7951612152366
+        ],
+        "worldMax": [
+          281.74450793157536,
+          11.765720807179518,
+          973.920562649965
+        ],
+        "namedNew": false,
+        "isNew": false,
+        "sharedBatch": false,
+        "newGlassTriangles": 0,
+        "otherGlassTriangles": 8
+      },
+      {
+        "object": "62c1f019-1aa4-44c4-9e71-30f9a2fd3a43",
+        "path": "Sakuragaoka/static/vehicles/keiCar",
+        "matUUID": "cb5c926d-e089-4104-ac5f-6e021b1bd00e",
+        "worldMin": [
+          300.91999995708466,
+          8.91299997138977,
+          899.0140000104905
+        ],
+        "worldMax": [
+          303.62800002098083,
+          9.437999947547912,
+          900.3859999895096
+        ],
+        "namedNew": false,
+        "isNew": false,
+        "sharedBatch": false,
+        "newGlassTriangles": 0,
+        "otherGlassTriangles": 8
+      },
+      {
+        "object": "504df564-31d8-4899-b323-f2dc5cd273ec",
+        "path": "Sakuragaoka/static/vehicles/taxi",
+        "matUUID": "cb5c926d-e089-4104-ac5f-6e021b1bd00e",
+        "worldMin": [
+          272.40000002384187,
+          8.933000011920928,
+          895.8639999985695
+        ],
+        "worldMax": [
+          274.8,
+          9.422999961853026,
+          897.3360000014305
+        ],
+        "namedNew": false,
+        "isNew": false,
+        "sharedBatch": false,
+        "newGlassTriangles": 0,
+        "otherGlassTriangles": 8
+      },
+      {
+        "object": "f9bac9cf-2a1c-457a-b943-27392bd87729",
+        "path": "Sakuragaoka/static/vehicles/compact",
+        "matUUID": "cb5c926d-e089-4104-ac5f-6e021b1bd00e",
+        "worldMin": [
+          268.6689999938011,
+          8.933000011920928,
+          844.938000011444
+        ],
+        "worldMax": [
+          270.13100000619886,
+          9.463000042915343,
+          848.120000052452
+        ],
+        "namedNew": false,
+        "isNew": false,
+        "sharedBatch": false,
+        "newGlassTriangles": 0,
+        "otherGlassTriangles": 8
+      },
+      {
+        "object": "b58a48f6-fdf2-4680-88ae-542f2214c432",
+        "path": "Sakuragaoka/static/art-r1-kei-van",
+        "matUUID": "cb5c926d-e089-4104-ac5f-6e021b1bd00e",
+        "worldMin": [
+          281.3829999923706,
+          9.215904855502936,
+          910.7814335620191
+        ],
+        "worldMax": [
+          282.8170000076294,
+          10.083668842680774,
+          913.7702421161654
+        ],
+        "namedNew": true,
+        "isNew": true,
+        "sharedBatch": false,
+        "newGlassTriangles": 8,
+        "otherGlassTriangles": 0
+      }
+    ]
+  },
+  "oldCameraNewVanSharedMaterialCompare": {
+    "newMeshCount": 1,
+    "otherMeshCount": 4,
+    "mixedMeshes": 0,
+    "newGlazingTriangles": 8,
+    "otherGlazingTriangles": 32,
+    "hidingOnlyNewVanChangesHDRRGB": 0,
+    "hidingOnlyOldVehiclesChangesHDRRGB": 8540
+  },
+  "rgbVisibleContribution": 8540,
+  "normalVsFormalHDRRGBChanged": 0,
+  "normalVsFormalSceneAlphaChanged": 8540,
+  "formalRepeatHDRRGBChanged": 0,
+  "normalBlendEligibleAmongContributing": 8468,
+  "formalEligibleAmongContributing": 0,
+  "actualLineDifferenceInStableContributingPixels": {
+    "formal~normal": {
+      "changed": 1175,
+      "over8": 1060,
+      "maximum": 167,
+      "meanMaxChannelDelta": 11.8881
+    },
+    "formal~formal-no-line": {
+      "changed": 0,
+      "over8": 0,
+      "maximum": 0,
+      "meanMaxChannelDelta": 0.0
+    },
+    "normal~normal-no-line": {
+      "changed": 1175,
+      "over8": 1060,
+      "maximum": 167,
+      "meanMaxChannelDelta": 11.8881
+    },
+    "formal-no-line~normal-no-line": {
+      "changed": 0,
+      "over8": 0,
+      "maximum": 0,
+      "meanMaxChannelDelta": 0.0
+    },
+    "formal~formal-repeat": {
+      "changed": 0,
+      "over8": 0,
+      "maximum": 0,
+      "meanMaxChannelDelta": 0.0
+    },
+    "normal~normal-repeat": {
+      "changed": 0,
+      "over8": 0,
+      "maximum": 0,
+      "meanMaxChannelDelta": 0.0
+    }
+  },
+  "fullRectFinalDifference": {
+    "formal~normal": {
+      "changed": 1175,
+      "over8": 1060,
+      "maximum": 167,
+      "meanMaxChannelDelta": 11.8881
+    },
+    "formal~formal-no-line": {
+      "changed": 0,
+      "over8": 0,
+      "maximum": 0,
+      "meanMaxChannelDelta": 0.0
+    },
+    "normal~normal-no-line": {
+      "changed": 1175,
+      "over8": 1060,
+      "maximum": 167,
+      "meanMaxChannelDelta": 11.8881
+    },
+    "formal-no-line~normal-no-line": {
+      "changed": 0,
+      "over8": 0,
+      "maximum": 0,
+      "meanMaxChannelDelta": 0.0
+    },
+    "formal~formal-repeat": {
+      "changed": 0,
+      "over8": 0,
+      "maximum": 0,
+      "meanMaxChannelDelta": 0.0
+    },
+    "normal~normal-repeat": {
+      "changed": 0,
+      "over8": 0,
+      "maximum": 0,
+      "meanMaxChannelDelta": 0.0
+    }
+  },
+  "actualLineDarkeningLuma": {
+    "normalOver8": 1060,
+    "formalOver8": 0
+  },
+  "c28Historical": {
+    "source": "b4f1350397fc00b1ff7320f1844788dd1d16b86e",
+    "visibleRGB": 8540,
+    "eligible": 8468,
+    "measuredDarkLinePixels": null,
+    "measurements": "../../c28-toon-ground-3060-2026-11-18/motion/result.json"
+  }
+}

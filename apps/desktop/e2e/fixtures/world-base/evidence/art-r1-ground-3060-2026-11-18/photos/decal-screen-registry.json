@@ -1,0 +1,336 @@
+{
+  "previousFingerprint": "1015:2741945:285456.7:910574.7",
+  "camera": {
+    "name": "art-d-laundry",
+    "label": "D · 24 洗衣店",
+    "fov": 48,
+    "position": [
+      283.5,
+      12.520055181715234,
+      783.8
+    ],
+    "target": [
+      282.5,
+      14.25,
+      777.4
+    ]
+  },
+  "previous": [
+    {
+      "area": "21-mailboxes",
+      "cell": 7,
+      "kind": "poster",
+      "stationCenter": [
+        -3,
+        6.75,
+        -123.25
+      ],
+      "cornersTopLeftPx": [
+        [
+          39.4,
+          473.8
+        ],
+        [
+          85.8,
+          470.9
+        ],
+        [
+          95.9,
+          402.2
+        ],
+        [
+          50.4,
+          405.5
+        ]
+      ]
+    },
+    {
+      "area": "21-mailboxes",
+      "cell": 9,
+      "kind": "sticker",
+      "stationCenter": [
+        -1.85,
+        6.25,
+        -123.25
+      ],
+      "cornersTopLeftPx": [
+        [
+          175.2,
+          506.8
+        ],
+        [
+          198.6,
+          503.4
+        ],
+        [
+          199.5,
+          478.8
+        ],
+        [
+          176.3,
+          482.3
+        ]
+      ]
+    },
+    {
+      "area": "laundry",
+      "cell": 2,
+      "kind": "poster",
+      "stationCenter": [
+        7.3662,
+        5.8325,
+        -123.25
+      ],
+      "cornersTopLeftPx": [
+        [
+          1453.6,
+          563.6
+        ],
+        [
+          1540.4,
+          560.1
+        ],
+        [
+          1515.5,
+          453.7
+        ],
+        [
+          1431.4,
+          458.3
+        ]
+      ]
+    },
+    {
+      "area": "laundry",
+      "cell": 5,
+      "kind": "poster",
+      "stationCenter": [
+        6.1352,
+        6.5412,
+        -123.25
+      ],
+      "cornersTopLeftPx": [
+        [
+          1232.6,
+          461.2
+        ],
+        [
+          1310.9,
+          458.4
+        ],
+        [
+          1295.8,
+          362.2
+        ],
+        [
+          1219.7,
+          365.9
+        ]
+      ]
+    },
+    {
+      "area": "laundry",
+      "cell": 9,
+      "kind": "sticker",
+      "stationCenter": [
+        -2.5387,
+        5.7215,
+        -123.25
+      ],
+      "cornersTopLeftPx": [
+        [
+          83,
+          571.3
+        ],
+        [
+          104.5,
+          576.8
+        ],
+        [
+          113.8,
+          551.7
+        ],
+        [
+          92.4,
+          546.4
+        ]
+      ]
+    }
+  ],
+  "currentFingerprint": "1045:2749411:293818.6:935240.7",
+  "source": "planned (scene changed)",
+  "rays": 3461,
+  "planMs": 204507.1,
+  "current": [
+    {
+      "area": "21-mailboxes",
+      "cell": 7,
+      "kind": "poster",
+      "stationCenter": [
+        -3,
+        6.75,
+        -123.25
+      ],
+      "cornersTopLeftPx": [
+        [
+          39.4,
+          473.8
+        ],
+        [
+          85.8,
+          470.9
+        ],
+        [
+          95.9,
+          402.2
+        ],
+        [
+          50.4,
+          405.5
+        ]
+      ]
+    },
+    {
+      "area": "laundry",
+      "cell": 6,
+      "kind": "poster",
+      "stationCenter": [
+        6.7414,
+        6.6716,
+        -123.25
+      ],
+      "cornersTopLeftPx": [
+        [
+          1327.9,
+          435.5
+        ],
+        [
+          1403.3,
+          433.4
+        ],
+        [
+          1387.9,
+          342.4
+        ],
+        [
+          1314.5,
+          345.5
+        ]
+      ]
+    },
+    {
+      "area": "laundry",
+      "cell": 9,
+      "kind": "sticker",
+      "stationCenter": [
+        7.7781,
+        6.1384,
+        -123.25
+      ],
+      "cornersTopLeftPx": [
+        [
+          1536.8,
+          476.4
+        ],
+        [
+          1567.3,
+          470.1
+        ],
+        [
+          1555.2,
+          442.8
+        ],
+        [
+          1524.9,
+          449.1
+        ]
+      ]
+    },
+    {
+      "area": "laundry",
+      "cell": 11,
+      "kind": "sticker",
+      "stationCenter": [
+        -1.8789,
+        6.5037,
+        -123.25
+      ],
+      "cornersTopLeftPx": [
+        [
+          178.3,
+          473.9
+        ],
+        [
+          198.2,
+          470.3
+        ],
+        [
+          198.5,
+          449.6
+        ],
+        [
+          178.7,
+          453.2
+        ]
+      ]
+    }
+  ],
+  "oldItems": 26,
+  "unchangedCompleteItems": 9,
+  "currentItems": 25,
+  "explicit": {
+    "placed": 9,
+    "adjusted": [
+      {
+        "at": "01-left-wall#0",
+        "slide": 0.4,
+        "up": 0.5,
+        "size": 0.88
+      },
+      {
+        "at": "01-left-wall#9",
+        "slide": -0.4,
+        "up": 0,
+        "size": 1
+      },
+      {
+        "at": "01-left-wall#3",
+        "slide": 0.2,
+        "up": 0.3,
+        "size": 0.88
+      }
+    ],
+    "missed": [
+      "21-mailboxes#9"
+    ]
+  },
+  "currentSceneReadyMs": 251389.5,
+  "oldMatchedItemIndexes": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1
+  ]
+}

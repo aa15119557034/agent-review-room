@@ -1,0 +1,928 @@
+{
+  "source": "df6e7308189e3685ed918572bffcd3bacb6b62f4",
+  "exit": 0,
+  "sourceSHA256": {
+    "index.html": "a88777bcd92755a96be5577c2891d705080b85dd02648e40a7d43c1fc0efdd52",
+    "scripts/baseline.cjs": "edf8568e4cfe576cfee6988b2fb87e529773d7ab8959cafc698eb59577a8b9a6",
+    "scripts/diagnose-surface.cjs": "f3f2d18f7f68423a54c7659acd77be3e7b33df6feef0292199779a3fa340544c",
+    "src/main.js": "5130148bfe653adce152faca7cecb0d968c5d82378004d2b9b953f0e42420e07",
+    "src/look.js": "acc887e3fd6f93433a3fdbca665fb24284128f87950f85f89e9758987094c6aa",
+    "src/toon.js": "b242dd51202ca3c32c13030f62e11dd1d28c0978f128e2523fd94fafd6c21653",
+    "src/toon.json": "5584a4a00209531246135d28bde31a89562f43ca5f72d8538f3dfeb7efb8b4de",
+    "src/weathering-decals.js": "b819152ebd2badc337e8ac1aa2cb6ac4974cfba845699ecac78719f7af3c2cd3",
+    "src/weathering-decals.json": "02a33c06db9e339753faad6fe81e73f217b43d8cadc01fafb7867722bae8a08a",
+    "src/weathering.json": "7e9245f9049957363768fa80dd311e3d47dfca4a001729a976b0b75db2853a14",
+    "src/weathering.js": "927f33447b91faf3e33f9285c2196d3832ffa99284d1d1b8a88c2590fca11812",
+    "src/station.js": "21fab2423eac100bcf8284c3239f4b6ae65ccdedfc5b15d254bf41e589405857",
+    "src/art-r1.js": "12acd8e3566adf710f20e5b6a2e07d1e1fd5c7ca25443b58a03af70e6be6d3d7",
+    "src/art-r1-city.js": "ee21114bd859722b9fe362609cd6b17441af8e0587feae60c929a9ff98a5c7cf",
+    "src/art-stock.js": "f422341f763aab3dc07c41ebfd814829d2073e323ee7acec58e9766b5f8b4755",
+    "src/city.js": "ef29caacdddc463cb6074de2f745fcb5537a4e2deaa581861adebb48ca6bff55",
+    "upstream/sakuragaoka/src/world/vehicles/cars.js": "b25d8056822d06eb242614961f50253726b9ecf70a64c36bb895662243517f5f",
+    "upstream/sakuragaoka/src/world/vehicles/atlas.js": "755371bc0edb1a6e85e8370303b83a5f5b23a157bab097245302da9c4d606e7e",
+    "upstream/petalwake/src/core/pipeline.js": "0495e8d0ce275729e2a4d2fb4a15707635956ad308fcc591a6a2cf5260359085"
+  },
+  "exceptions": [],
+  "httpErrors": [],
+  "networkFailures": [
+    {
+      "path": "/assets/models/menhir.glb",
+      "message": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "path": "/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+      "message": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "path": "/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "message": "net::ERR_ABORTED",
+      "canceled": true
+    }
+  ],
+  "runtimeCheckedFiles": 19,
+  "before": {
+    "posters": 10,
+    "stickers": 14,
+    "doodles": 2,
+    "rejected": 0,
+    "byArea": {
+      "01-left-wall": [
+        {
+          "kind": "poster",
+          "at": [
+            -4.84,
+            1.55,
+            30.2
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            -4.84,
+            1.3,
+            29.3
+          ]
+        },
+        {
+          "kind": "poster",
+          "at": [
+            -4.84,
+            1.45,
+            27.2
+          ]
+        }
+      ],
+      "01-left-pole": [
+        {
+          "kind": "sticker",
+          "at": [
+            -3.35,
+            1.75,
+            28.84
+          ]
+        }
+      ],
+      "01-right-shop": [
+        {
+          "kind": "poster",
+          "at": [
+            6.42,
+            1.5,
+            24.46
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            5.55,
+            3.05,
+            28.28
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            6.27,
+            1.5,
+            21.75
+          ]
+        }
+      ],
+      "01-right-pole": [
+        {
+          "kind": "sticker",
+          "at": [
+            3.32,
+            1.9,
+            23.13
+          ]
+        }
+      ],
+      "21-mailboxes": [
+        {
+          "kind": "poster",
+          "at": [
+            -3,
+            6.75,
+            -123.25
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            -1.85,
+            6.25,
+            -123.25
+          ]
+        }
+      ],
+      "main": [
+        {
+          "kind": "sticker",
+          "at": [
+            8.6,
+            1.03,
+            13.67
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            6,
+            1.2,
+            20.33
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            8.6,
+            1.1,
+            6.07
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            5.05,
+            1.12,
+            14.69
+          ]
+        }
+      ],
+      "laundry": [
+        {
+          "kind": "poster",
+          "at": [
+            7.37,
+            5.83,
+            -123.25
+          ]
+        },
+        {
+          "kind": "poster",
+          "at": [
+            6.14,
+            6.54,
+            -123.25
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            -2.54,
+            5.72,
+            -123.25
+          ]
+        }
+      ],
+      "rear": [
+        {
+          "kind": "poster",
+          "at": [
+            -15.41,
+            6.69,
+            -132.5
+          ]
+        },
+        {
+          "kind": "poster",
+          "at": [
+            -12.39,
+            6.76,
+            -132.5
+          ]
+        },
+        {
+          "kind": "poster",
+          "at": [
+            17.04,
+            5.78,
+            -131
+          ]
+        },
+        {
+          "kind": "poster",
+          "at": [
+            18.97,
+            6.11,
+            -131
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            -17.97,
+            7.1,
+            -132.5
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            -0.21,
+            6.41,
+            -131
+          ]
+        },
+        {
+          "kind": "sticker",
+          "at": [
+            -3.23,
+            5.95,
+            -131
+          ]
+        },
+        {
+          "kind": "doodle",
+          "at": [
+            24.17,
+            5.61,
+            -131
+          ]
+        },
+        {
+          "kind": "doodle",
+          "at": [
+            -21.7,
+            6.43,
+            -132.5
+          ]
+        }
+      ]
+    },
+    "source": "baked",
+    "planMs": 2.1,
+    "rays": 0,
+    "explicit": {
+      "placed": 10,
+      "adjusted": [],
+      "missed": []
+    },
+    "drawCalls": 1,
+    "triangles": 52,
+    "itemCount": 26,
+    "all26OldItemsIdentical": true,
+    "fingerprint": "1045:2749411:293818.6:935240.7"
+  },
+  "normalPlanInsideVehicles": [],
+  "newVan": {
+    "factoryName": "keiVan",
+    "position": [
+      282.1,
+      8.218,
+      912.5
+    ],
+    "group": "Sakuragaoka/static/keiVan",
+    "glazing": [
+      {
+        "path": "Sakuragaoka/static/keiVan",
+        "boxIds": [
+          4
+        ],
+        "expandedBounds": [
+          [
+            281.0829999923706,
+            8.015904855502937,
+            910.4814335620191
+          ],
+          [
+            283.11700000762943,
+            11.083668842680774,
+            914.0702421161653
+          ]
+        ]
+      }
+    ],
+    "boxIds": [
+      4
+    ]
+  },
+  "wxMask": {
+    "vertices": 9894,
+    "nonzero": 0,
+    "maxWeight": 0,
+    "contributors": [
+      {
+        "path": "Sakuragaoka/static/static-batched",
+        "vertices": 20,
+        "nonzero": 0,
+        "maxWeight": 0
+      },
+      {
+        "path": "Sakuragaoka/static/static-batched",
+        "vertices": 8,
+        "nonzero": 0,
+        "maxWeight": 0
+      },
+      {
+        "path": "Sakuragaoka/static/static-batched",
+        "vertices": 9866,
+        "nonzero": 0,
+        "maxWeight": 0
+      }
+    ]
+  },
+  "vehicleBoxes": [
+    {
+      "i": 0,
+      "min": [
+        279.69786299960407,
+        9.698433249601516,
+        970.4951612152366
+      ],
+      "max": [
+        282.04450793157537,
+        12.765720807179518,
+        974.2205626499649
+      ]
+    },
+    {
+      "i": 1,
+      "min": [
+        300.61999995708464,
+        7.7129999713897694,
+        898.7140000104905
+      ],
+      "max": [
+        303.92800002098085,
+        10.437999947547912,
+        900.6859999895096
+      ]
+    },
+    {
+      "i": 2,
+      "min": [
+        272.10000002384186,
+        7.733000011920928,
+        895.5639999985696
+      ],
+      "max": [
+        275.1,
+        10.422999961853026,
+        897.6360000014305
+      ]
+    },
+    {
+      "i": 3,
+      "min": [
+        268.3689999938011,
+        7.733000011920928,
+        844.6380000114441
+      ],
+      "max": [
+        270.4310000061989,
+        10.463000042915343,
+        848.420000052452
+      ]
+    },
+    {
+      "i": 4,
+      "min": [
+        281.0829999923706,
+        8.015904855502937,
+        910.4814335620191
+      ],
+      "max": [
+        283.11700000762943,
+        11.083668842680774,
+        914.0702421161653
+      ]
+    }
+  ],
+  "rawMisplaced": [
+    {
+      "index": 9,
+      "area": "main",
+      "cell": 10,
+      "anchor": [
+        281.3625,
+        9.0346,
+        913.6663
+      ],
+      "centerBoxes": [
+        4
+      ],
+      "quadIntersections": [
+        4
+      ],
+      "reverse": {
+        "index": 9,
+        "area": "main",
+        "cell": 10,
+        "hit": true,
+        "expected": [
+          281.3625,
+          9.0346,
+          913.6663
+        ],
+        "pointInside": [
+          4
+        ],
+        "object": "Sakuragaoka/static/static-batched",
+        "material": "MeshToonMaterial",
+        "isQualifiedWallMaterial": true,
+        "distance": 0.4999999523162728,
+        "gapFromRawR1Anchor": 4.768372718899627e-8,
+        "worldHit": [
+          281.3624999523163,
+          9.0346,
+          913.6663
+        ],
+        "hitInside": [
+          4
+        ],
+        "wxMaskAtFace": [
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  ],
+  "rawItemCount": 25,
+  "forced": {
+    "ms": 232022.10000014305,
+    "stats": {
+      "rejected": 161,
+      "rays": 3526,
+      "explicitAdjusted": [
+        {
+          "at": "01-left-wall#0",
+          "slide": 0.4,
+          "up": 0.5,
+          "size": 0.88
+        },
+        {
+          "at": "01-left-wall#9",
+          "slide": -0.4,
+          "up": 0,
+          "size": 1
+        },
+        {
+          "at": "01-left-wall#3",
+          "slide": 0.2,
+          "up": 0.3,
+          "size": 0.88
+        }
+      ],
+      "explicitFailed": []
+    },
+    "fingerprint": "1045:2749411:293818.6:935240.7",
+    "itemCount": 26,
+    "itemsInsideVehicles": [],
+    "normalStateUnchanged": true
+  },
+  "placement": [
+    {
+      "index": 0,
+      "area": "01-left-wall",
+      "cell": 0,
+      "kind": "poster",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 1,
+      "area": "01-left-wall",
+      "cell": 9,
+      "kind": "sticker",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 2,
+      "area": "01-left-wall",
+      "cell": 3,
+      "kind": "poster",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 3,
+      "area": "01-left-pole",
+      "cell": 10,
+      "kind": "sticker",
+      "curved": true,
+      "center": true,
+      "nine": 3,
+      "rulePass": true,
+      "snap": {
+        "atOldCenter": {
+          "pass": true,
+          "distance": 0.50004,
+          "worldHit": [
+            276.64961,
+            9.75,
+            928.83877
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0.00004,
+          "normalDotOld": 1
+        },
+        "atSourceDirective": {
+          "pass": true,
+          "distance": 0.5013,
+          "worldHit": [
+            276.6496,
+            9.75,
+            928.83876
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0.00004,
+          "normalDotOld": 1
+        }
+      },
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 4,
+      "area": "01-right-shop",
+      "cell": 5,
+      "kind": "poster",
+      "curved": true,
+      "center": true,
+      "nine": 1,
+      "rulePass": true,
+      "snap": {
+        "atOldCenter": {
+          "pass": true,
+          "distance": 0.49998,
+          "worldHit": [
+            286.41779,
+            9.5,
+            924.45999
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0.00002,
+          "normalDotOld": 1
+        },
+        "atSourceDirective": {
+          "pass": true,
+          "distance": 0.53778,
+          "worldHit": [
+            286.41778,
+            9.5,
+            924.46
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0.00002,
+          "normalDotOld": 1
+        }
+      },
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 5,
+      "area": "01-right-shop",
+      "cell": 11,
+      "kind": "sticker",
+      "curved": true,
+      "center": true,
+      "nine": 5,
+      "rulePass": true,
+      "snap": {
+        "atOldCenter": {
+          "pass": true,
+          "distance": 0.5,
+          "worldHit": [
+            285.546,
+            11.05,
+            928.28
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0,
+          "normalDotOld": 1
+        },
+        "atSourceDirective": {
+          "pass": true,
+          "distance": 0.496,
+          "worldHit": [
+            285.546,
+            11.05,
+            928.28
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0,
+          "normalDotOld": 1
+        }
+      },
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 6,
+      "area": "01-right-shop",
+      "cell": 8,
+      "kind": "sticker",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 7,
+      "area": "01-right-pole",
+      "cell": 8,
+      "kind": "sticker",
+      "curved": true,
+      "center": true,
+      "nine": 2,
+      "rulePass": true,
+      "snap": {
+        "atOldCenter": {
+          "pass": true,
+          "distance": 0.49999,
+          "worldHit": [
+            283.31999,
+            9.9,
+            923.13061
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0.00001,
+          "normalDotOld": 1
+        },
+        "atSourceDirective": {
+          "pass": true,
+          "distance": 0.66938,
+          "worldHit": [
+            283.32,
+            9.9,
+            923.13062
+          ],
+          "wall": true,
+          "material": "MeshToonMaterial",
+          "path": "Sakuragaoka/static/static-batched",
+          "distanceFromOldBakedCenter": 0.00002,
+          "normalDotOld": 1
+        }
+      },
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 8,
+      "area": "21-mailboxes",
+      "cell": 7,
+      "kind": "poster",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 9,
+      "area": "21-mailboxes",
+      "cell": 9,
+      "kind": "sticker",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 10,
+      "area": "main",
+      "cell": 10,
+      "kind": "sticker",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 11,
+      "area": "main",
+      "cell": 9,
+      "kind": "sticker",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 12,
+      "area": "main",
+      "cell": 9,
+      "kind": "sticker",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 13,
+      "area": "main",
+      "cell": 9,
+      "kind": "sticker",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 14,
+      "area": "laundry",
+      "cell": 2,
+      "kind": "poster",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 15,
+      "area": "laundry",
+      "cell": 5,
+      "kind": "poster",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 16,
+      "area": "laundry",
+      "cell": 9,
+      "kind": "sticker",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 17,
+      "area": "rear",
+      "cell": 0,
+      "kind": "poster",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 18,
+      "area": "rear",
+      "cell": 3,
+      "kind": "poster",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 19,
+      "area": "rear",
+      "cell": 3,
+      "kind": "poster",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 20,
+      "area": "rear",
+      "cell": 1,
+      "kind": "poster",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 21,
+      "area": "rear",
+      "cell": 11,
+      "kind": "sticker",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 22,
+      "area": "rear",
+      "cell": 10,
+      "kind": "sticker",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 23,
+      "area": "rear",
+      "cell": 9,
+      "kind": "sticker",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 24,
+      "area": "rear",
+      "cell": 13,
+      "kind": "doodle",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    },
+    {
+      "index": 25,
+      "area": "rear",
+      "cell": 14,
+      "kind": "doodle",
+      "curved": false,
+      "center": true,
+      "nine": 9,
+      "rulePass": true,
+      "snap": null,
+      "excludedMeshesInFront": 0
+    }
+  ]
+}
