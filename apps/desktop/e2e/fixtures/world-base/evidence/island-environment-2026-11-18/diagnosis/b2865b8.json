@@ -1,0 +1,274 @@
+{
+  "source": "b2865b83fd21bedf7def90b509aa33185d88eb4e",
+  "started": "2026-11-18T01:07:46.932Z",
+  "ended": "2026-11-18T01:10:48.348Z",
+  "frames": [
+    {
+      "name": "coast-front",
+      "fps": 65,
+      "p95": 15.5,
+      "over20ms": 0
+    },
+    {
+      "name": "street-front",
+      "fps": 65,
+      "p95": 15.5,
+      "over20ms": 0
+    },
+    {
+      "name": "coast",
+      "fps": 64.99891668472186,
+      "p95": 15.5,
+      "over20ms": 0
+    },
+    {
+      "name": "street",
+      "fps": 64.99983376001586,
+      "p95": 15.5,
+      "over20ms": 0
+    },
+    {
+      "name": "walking-third",
+      "fps": 65,
+      "p95": 15.5,
+      "over20ms": 0
+    },
+    {
+      "name": "walking-first",
+      "fps": 63,
+      "p95": 15.5,
+      "over20ms": 12
+    }
+  ],
+  "check": {
+    "ok": true,
+    "results": [
+      {
+        "name": "sky, sea and river share both moving cloud decks",
+        "ok": true,
+        "details": {}
+      },
+      {
+        "name": "CPU and GPU share the edited height field and sea level",
+        "ok": true,
+        "details": {
+          "worldMetres": 6144,
+          "samples": 16777216,
+          "shoreSamples": 335766,
+          "inlandSamples": 1904496,
+          "maxRise": 4.299999996467656,
+          "maxCut": -4.299999967452532
+        }
+      },
+      {
+        "name": "walked continuously through road exit to the swash limit",
+        "ok": true,
+        "details": {
+          "start": [
+            287,
+            11.304,
+            1023
+          ],
+          "shore": [
+            294.0125630675894,
+            -0.07610428059479446,
+            1130.4028998989595
+          ],
+          "closestWet": -0.07610428059479446
+        }
+      },
+      {
+        "name": "returned to station through the same seam",
+        "ok": true,
+        "details": {
+          "end": [
+            287.00144894703027,
+            11.30181721855014,
+            1022.9220435196478
+          ]
+        }
+      },
+      {
+        "name": "feet and first-person eye agree with terrain triangles and seam",
+        "ok": true,
+        "details": {
+          "routeSamples": 1716,
+          "maxError": 0.0019475047595886863,
+          "maxEyeError": 1.3322676295501878e-15,
+          "checkpoints": [
+            {
+              "direction": 1,
+              "frame": 0,
+              "feet": [
+                287,
+                11.30617,
+                1023.0775
+              ]
+            },
+            {
+              "direction": 1,
+              "frame": 130,
+              "feet": [
+                289.4824544813967,
+                10.702410437450581,
+                1042.8950496770767
+              ]
+            },
+            {
+              "direction": 1,
+              "frame": 260,
+              "feet": [
+                296.8425016948628,
+                8.165024036888676,
+                1061.6386933551157
+              ]
+            },
+            {
+              "direction": 1,
+              "frame": 390,
+              "feet": [
+                304.28912715392994,
+                4.693403780176599,
+                1080.3501847530383
+              ]
+            },
+            {
+              "direction": 1,
+              "frame": 520,
+              "feet": [
+                304.1833596641656,
+                1.6444639867430757,
+                1099.9284144868197
+              ]
+            },
+            {
+              "direction": 1,
+              "frame": 650,
+              "feet": [
+                295.9532403816053,
+                0.6515023933405288,
+                1118.3120086173108
+              ]
+            },
+            {
+              "direction": 1,
+              "frame": 780,
+              "feet": [
+                294.0125630675894,
+                -0.07610428059479446,
+                1130.4028998989595
+              ]
+            },
+            {
+              "direction": 1,
+              "frame": 910,
+              "feet": [
+                294.0125630675894,
+                -0.07610428059479446,
+                1130.4028998989595
+              ]
+            },
+            {
+              "direction": 1,
+              "frame": 1040,
+              "feet": [
+                294.0125630675894,
+                -0.07610428059479446,
+                1130.4028998989595
+              ]
+            },
+            {
+              "direction": -1,
+              "frame": 0,
+              "feet": [
+                294.0115513843437,
+                -0.07611945526654829,
+                1130.4028999542745
+              ]
+            },
+            {
+              "direction": -1,
+              "frame": 130,
+              "feet": [
+                298.94581284910134,
+                0.9250290803059018,
+                1111.251306787044
+              ]
+            },
+            {
+              "direction": -1,
+              "frame": 260,
+              "feet": [
+                306.2940999866143,
+                2.594249279117024,
+                1092.5803326677274
+              ]
+            },
+            {
+              "direction": -1,
+              "frame": 390,
+              "feet": [
+                301.717512166702,
+                6.083712898866383,
+                1073.1231097591021
+              ]
+            },
+            {
+              "direction": -1,
+              "frame": 520,
+              "feet": [
+                293.79347635481656,
+                9.267992932613698,
+                1054.597803083298
+              ]
+            },
+            {
+              "direction": -1,
+              "frame": 650,
+              "feet": [
+                287.6956982043754,
+                11.225685993244298,
+                1035.4386343497863
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "shot": {
+    "name": "trail-walk-32",
+    "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "camera": [
+      296.24689644237696,
+      2.2020017327630317,
+      1117.500818202235
+    ],
+    "direction": [
+      -0.0091636479110434,
+      0.9832026442191895,
+      0.051527467168741764,
+      0.1748528183488342
+    ],
+    "fov": 58,
+    "feet": [
+      296.24689644237696,
+      0.6820017327630321,
+      1117.500818202235
+    ],
+    "weather": {
+      "seconds": 145.17399999995231,
+      "cover": 1,
+      "wind": 1.6351728549791682,
+      "sea": 1.137910174059937,
+      "surge": 0.19
+    },
+    "errors": [],
+    "size": [
+      1440,
+      900,
+      1
+    ]
+  },
+  "discovery": "Crest crossing dry sand at peak weather on the walking route."
+}
