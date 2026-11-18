@@ -2,6 +2,8 @@
 
 交换所、巷后工房和洗衣店门翼由 station-art contributors 在 Blender 中建模，以 MIT 许可分发。两棵樱花沿用 Sakuragaoka `4112f57208b7e29998344ca71fef74202c2b2bdd` 的树种、树干、树皮与相应元数据，花冠和花枝经项目改作。发行 ZIP 中的 `station-art-notices/THIRD-PARTY.md` 记录美术来源，`station-art-notices/licenses/` 保留原作者与改作者许可。四个 GLB 的图像和几何均嵌入各自文件。Kenney 西侧楼的单独比选可独立进行。[站区运行包](./assets/station-art/station-art-fixture.zip) · [Sakuragaoka 许可](./upstream/sakuragaoka/LICENSE)
 
+[可编辑 Blender 制作源](./assets/station-art/station-art-authoring.zip)内含五份 .blend、广场花枝图集、固定母树、重建脚本和许可。解包后按 README 操作。用 Blender 5.2.2 从可编辑场景导出，以及从母树和配方重建再导出，两条路径均逐字节复现四个 GLB 和完整运行 ZIP。
+
 完整来源、作者、固定版本及归档校验见 [sources.json](./sources.json)，每个上游原始文件的 SHA-256 见 [source-files.json](./source-files.json)。该清单记录原始上游文件，不将修改后的适配文件伪装成原版。
 
 | 来源 | 保留的许可 | 使用与修改 |

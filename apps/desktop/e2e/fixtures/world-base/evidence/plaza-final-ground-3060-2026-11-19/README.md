@@ -75,3 +75,7 @@ node tools/timing.cjs <electron> <new-artifacts-folder-name>
 ```
 
 烘焙时使用 `7ffb5a11`，照片、显存回读与两次计时使用 `1ea97233`。帧时命令每调用一次建立新 Electron 进程，记录 RAF、路程、绘制负载、DOM 焦点和严格传输结果；本次另有半秒粒度的 Windows 与 Nvidia 外部监控数据保存在逐段比较中。
+
+## 原创素材制作源
+
+制作包内有五份可编辑 Blender 场景。独立目录中分别从已保存场景、从母树和造型配方重建，两条路径均重现同一份 1,194,979 字节的运行 ZIP 和全部四个 GLB。广场树为 13,921 个三角面，较上包少 2,742 个。其 512 × 512 RGBA 花枝图集独立于近处 W3。制作源 SHA-256 为 `9ad3538bb3341cf8fbc8152416e6686f7f90e5d83885da866cfa1f5295ec8417`。[可编辑源与 MIT 许可](../../assets/station-art/station-art-authoring.zip) · [逐件重建回执](authoring-rebuild.json)

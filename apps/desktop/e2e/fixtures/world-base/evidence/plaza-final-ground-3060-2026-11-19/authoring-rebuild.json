@@ -1,0 +1,444 @@
+{
+  "sourceZipSha256": "9ad3538bb3341cf8fbc8152416e6686f7f90e5d83885da866cfa1f5295ec8417",
+  "sourceZipBytes": 4237742,
+  "sourceZipMembers": 39,
+  "fixture": "58a46094de1ac23493f35f1bea94683df5d49c2d",
+  "runtimeZipSha256": "e4ed22eacde7fc320637468a794fcd99d01c0344a0458adcc214d6c78bd7b54d",
+  "steps": {
+    "from-editables": 0,
+    "regenerate": 0,
+    "from-recipes": 0
+  },
+  "comparisons": {
+    "from-editables": {
+      "mature-sakura.glb": {
+        "identicalBytes": true,
+        "bytes": 2193656,
+        "sha256": "14716b7af7db3bcae453b17ebe97a9fa0d4d38155731cc2b56ed28e4fa7b24f3"
+      },
+      "alley-workshop.glb": {
+        "identicalBytes": true,
+        "bytes": 70344,
+        "sha256": "b8286aa8f9cc5c735d7d847bcc4c1b8b71f31a6ca049aabb531e68c3252c8fc2"
+      },
+      "laundry-infill.glb": {
+        "identicalBytes": true,
+        "bytes": 60052,
+        "sha256": "d945d0756f402227ae329d1408707a428c120646aa3bac73c927821d98183be6"
+      },
+      "station-exchange.glb": {
+        "identicalBytes": true,
+        "bytes": 79160,
+        "sha256": "03584bb83631b49b118727b9b37a2a021dee693365263acecef24e56b9621a78"
+      }
+    },
+    "from-recipes": {
+      "mature-sakura.glb": {
+        "identicalBytes": true,
+        "bytes": 2193656,
+        "sha256": "14716b7af7db3bcae453b17ebe97a9fa0d4d38155731cc2b56ed28e4fa7b24f3"
+      },
+      "alley-workshop.glb": {
+        "identicalBytes": true,
+        "bytes": 70344,
+        "sha256": "b8286aa8f9cc5c735d7d847bcc4c1b8b71f31a6ca049aabb531e68c3252c8fc2"
+      },
+      "laundry-infill.glb": {
+        "identicalBytes": true,
+        "bytes": 60052,
+        "sha256": "d945d0756f402227ae329d1408707a428c120646aa3bac73c927821d98183be6"
+      },
+      "station-exchange.glb": {
+        "identicalBytes": true,
+        "bytes": 79160,
+        "sha256": "03584bb83631b49b118727b9b37a2a021dee693365263acecef24e56b9621a78"
+      }
+    }
+  },
+  "runtimeZipIdentical": {
+    "from-editables": true,
+    "from-recipes": true
+  },
+  "plazaAssembly": {
+    "from-editables": {
+      "baseSHA256": "7d0e715719b1e8a8591ab91daeddf28882070f9015cb5a76bf2ec70cf6620cd9",
+      "sha256": "14716b7af7db3bcae453b17ebe97a9fa0d4d38155731cc2b56ed28e4fa7b24f3",
+      "bytes": 2193656,
+      "triangles": {
+        "plaza-bark": 2309,
+        "plaza-blob": 9540,
+        "plaza-cards": 2072,
+        "w3-bark": 1550,
+        "w3-blob": 22027,
+        "w3-cards": 424
+      },
+      "totalTriangles": 37922,
+      "primitives": 6,
+      "materials": 4,
+      "unchangedAccessors": {
+        "plaza-bark": {
+          "POSITION": "39d70197c0bb38a7d84351dae26c5065147670d7c87b01e7338e1a1f50309757",
+          "NORMAL": "3e435957d71bfae21ba64d1cb3cf86c0d3fb6b17fff978fe1af4c8c2f9f45c72",
+          "TEXCOORD_0": "964b1323dc06de6d8f9e943d0dfecf59c9bbc9acc76d26be94b070ada49885d1",
+          "COLOR_0": "f68573796cf0ac9bec8d630b0a75effd96ddd667bfb91d40d14811d90af387d2",
+          "indices": "69fc39bc50dfa7e942fbcc9fe3a500f96b988ddc816006a9d4b2616058a899a4"
+        },
+        "w3-bark": {
+          "POSITION": "b45c09392a86d28acc69638ecd73114c15799925053e1f717b7c8046c866234a",
+          "NORMAL": "323f262d51a0ee45b3c7b75cd5775c90fb16f49327babe69677b48867bc952df",
+          "TEXCOORD_0": "46388b570dfeb9b85002358e8652e89cbd7229af01ea2305bea82ce81a0ae49a",
+          "COLOR_0": "50b490e58e2f9877662b3bf4a798b9fc4800849fed4a65cbdb2091b14452f915",
+          "indices": "c545632147ab43380ef8ee6e27a1bf3bd1377a6d78474716a1c07102603fe7ae"
+        },
+        "w3-blob": {
+          "POSITION": "d11b132d6078becad09f1792cc90e12078f0427b5c8e2505765269957d0862d3",
+          "NORMAL": "ca212369cedef4aa8ef9a1f9a6bdbc34f7bad2fa082d6e0b3ab046ad032d4e49",
+          "TEXCOORD_0": "23d3068998e23066549cb1fbbb29651adc54b7399209bf4da29fd918581f3a66",
+          "COLOR_0": "02857403959a975d63e5754220013a564afaee621ba50295ee4ad78bec42ff3e",
+          "indices": "14c6c211acf2dd367e446086cd918c7599ec78885088e5b04753dc3d34805805"
+        },
+        "w3-cards": {
+          "POSITION": "118414b1966fb805e94bb83d9afd66150d8657539734627642afd98ebc6c835e",
+          "NORMAL": "c544dc5af7b24f04ef6fe1534b6091cf2443058ec5e68ac61262a9c2afca8b83",
+          "TEXCOORD_0": "35817dec6fdcc6430649047863ae866b42e0cd4d187ec1e0a7a18f31c71e0dd7",
+          "indices": "640e7c55871e3124e0d8ba56deccd66f274a0db088b46e46f55957b7596d59a8"
+        }
+      },
+      "existingMaterialsAndImageBytesIdentical": true,
+      "allNodesSourceGeometryAndCollidersIdentical": true,
+      "addedImage": {
+        "name": "plaza-sprays",
+        "width": 512,
+        "height": 512,
+        "bytes": 183757,
+        "sha256": "87f25c385bb52791f6fc5946e4b46eedc8662dc4814395a608b06d66d28e78c1"
+      },
+      "degenerateTriangles": 0
+    },
+    "from-recipes": {
+      "baseSHA256": "7d0e715719b1e8a8591ab91daeddf28882070f9015cb5a76bf2ec70cf6620cd9",
+      "sha256": "14716b7af7db3bcae453b17ebe97a9fa0d4d38155731cc2b56ed28e4fa7b24f3",
+      "bytes": 2193656,
+      "triangles": {
+        "plaza-bark": 2309,
+        "plaza-blob": 9540,
+        "plaza-cards": 2072,
+        "w3-bark": 1550,
+        "w3-blob": 22027,
+        "w3-cards": 424
+      },
+      "totalTriangles": 37922,
+      "primitives": 6,
+      "materials": 4,
+      "unchangedAccessors": {
+        "plaza-bark": {
+          "POSITION": "39d70197c0bb38a7d84351dae26c5065147670d7c87b01e7338e1a1f50309757",
+          "NORMAL": "3e435957d71bfae21ba64d1cb3cf86c0d3fb6b17fff978fe1af4c8c2f9f45c72",
+          "TEXCOORD_0": "964b1323dc06de6d8f9e943d0dfecf59c9bbc9acc76d26be94b070ada49885d1",
+          "COLOR_0": "f68573796cf0ac9bec8d630b0a75effd96ddd667bfb91d40d14811d90af387d2",
+          "indices": "69fc39bc50dfa7e942fbcc9fe3a500f96b988ddc816006a9d4b2616058a899a4"
+        },
+        "w3-bark": {
+          "POSITION": "b45c09392a86d28acc69638ecd73114c15799925053e1f717b7c8046c866234a",
+          "NORMAL": "323f262d51a0ee45b3c7b75cd5775c90fb16f49327babe69677b48867bc952df",
+          "TEXCOORD_0": "46388b570dfeb9b85002358e8652e89cbd7229af01ea2305bea82ce81a0ae49a",
+          "COLOR_0": "50b490e58e2f9877662b3bf4a798b9fc4800849fed4a65cbdb2091b14452f915",
+          "indices": "c545632147ab43380ef8ee6e27a1bf3bd1377a6d78474716a1c07102603fe7ae"
+        },
+        "w3-blob": {
+          "POSITION": "d11b132d6078becad09f1792cc90e12078f0427b5c8e2505765269957d0862d3",
+          "NORMAL": "ca212369cedef4aa8ef9a1f9a6bdbc34f7bad2fa082d6e0b3ab046ad032d4e49",
+          "TEXCOORD_0": "23d3068998e23066549cb1fbbb29651adc54b7399209bf4da29fd918581f3a66",
+          "COLOR_0": "02857403959a975d63e5754220013a564afaee621ba50295ee4ad78bec42ff3e",
+          "indices": "14c6c211acf2dd367e446086cd918c7599ec78885088e5b04753dc3d34805805"
+        },
+        "w3-cards": {
+          "POSITION": "118414b1966fb805e94bb83d9afd66150d8657539734627642afd98ebc6c835e",
+          "NORMAL": "c544dc5af7b24f04ef6fe1534b6091cf2443058ec5e68ac61262a9c2afca8b83",
+          "TEXCOORD_0": "35817dec6fdcc6430649047863ae866b42e0cd4d187ec1e0a7a18f31c71e0dd7",
+          "indices": "640e7c55871e3124e0d8ba56deccd66f274a0db088b46e46f55957b7596d59a8"
+        }
+      },
+      "existingMaterialsAndImageBytesIdentical": true,
+      "allNodesSourceGeometryAndCollidersIdentical": true,
+      "addedImage": {
+        "name": "plaza-sprays",
+        "width": 512,
+        "height": 512,
+        "bytes": 183757,
+        "sha256": "87f25c385bb52791f6fc5946e4b46eedc8662dc4814395a608b06d66d28e78c1"
+      },
+      "degenerateTriangles": 0
+    }
+  },
+  "clearance": {
+    "from-editables": {
+      "plaza": {
+        "bark": {
+          "triangles": 2309,
+          "degenerate": 0,
+          "boxIntersections": [
+            0
+          ],
+          "minVsFloorSampleMetres": -2.90308
+        },
+        "blob": {
+          "triangles": 9540,
+          "degenerate": 0,
+          "boxIntersections": [
+            0
+          ],
+          "minVsFloorSampleMetres": 1.15592
+        },
+        "cards": {
+          "triangles": 2072,
+          "degenerate": 0,
+          "boxIntersections": [
+            0
+          ],
+          "minVsFloorSampleMetres": 0.42553
+        }
+      },
+      "w3": {
+        "bark": {
+          "triangles": 1550,
+          "degenerate": 0,
+          "boxIntersections": [
+            0,
+            0,
+            0
+          ],
+          "minVsFloorSampleMetres": -2.91133
+        },
+        "blob": {
+          "triangles": 22027,
+          "degenerate": 0,
+          "boxIntersections": [
+            0,
+            0,
+            0
+          ],
+          "minVsFloorSampleMetres": 0.19294
+        },
+        "cards": {
+          "triangles": 424,
+          "degenerate": 0,
+          "boxIntersections": [
+            0,
+            0,
+            0
+          ],
+          "minVsFloorSampleMetres": 0.4498
+        }
+      }
+    },
+    "from-recipes": {
+      "plaza": {
+        "bark": {
+          "triangles": 2309,
+          "degenerate": 0,
+          "boxIntersections": [
+            0
+          ],
+          "minVsFloorSampleMetres": -2.90308
+        },
+        "blob": {
+          "triangles": 9540,
+          "degenerate": 0,
+          "boxIntersections": [
+            0
+          ],
+          "minVsFloorSampleMetres": 1.15592
+        },
+        "cards": {
+          "triangles": 2072,
+          "degenerate": 0,
+          "boxIntersections": [
+            0
+          ],
+          "minVsFloorSampleMetres": 0.42553
+        }
+      },
+      "w3": {
+        "bark": {
+          "triangles": 1550,
+          "degenerate": 0,
+          "boxIntersections": [
+            0,
+            0,
+            0
+          ],
+          "minVsFloorSampleMetres": -2.91133
+        },
+        "blob": {
+          "triangles": 22027,
+          "degenerate": 0,
+          "boxIntersections": [
+            0,
+            0,
+            0
+          ],
+          "minVsFloorSampleMetres": 0.19294
+        },
+        "cards": {
+          "triangles": 424,
+          "degenerate": 0,
+          "boxIntersections": [
+            0,
+            0,
+            0
+          ],
+          "minVsFloorSampleMetres": 0.4498
+        }
+      }
+    }
+  },
+  "editableSources": {
+    "from-editables": {
+      "blender": "5.2.2 LTS",
+      "sources": [
+        {
+          "source": "station-art/source/station-buildings.blend",
+          "sha256": "056c5b5254b14997bb17e60f951a11a086c3cae32604d595cb49b710d25936f4",
+          "packed": {},
+          "meshes": [
+            "Workshop",
+            "Portal_wings",
+            "Shell",
+            "Front_cassette",
+            "Stepped_exchange"
+          ]
+        },
+        {
+          "source": "w3-blossom-edge/source/laundry-support.blend",
+          "sha256": "d05eae61a9b5cb12d63d5ddce93ff5ae471170d35943e7aa44d8cd5a6df7b89a",
+          "packed": {},
+          "meshes": [
+            "Portal_wings",
+            "Shell",
+            "Front_cassette"
+          ]
+        },
+        {
+          "source": "station-art/source/station-cherries.blend",
+          "sha256": "8b6ee67650a21dd97ed9ff27efefeb52a433eb8abb40510660b69e1454a16507",
+          "packed": {
+            "bark-paint": true,
+            "blossom-glaze.png": true,
+            "flower-sprays.png": true
+          },
+          "meshes": [
+            "plaza-bark",
+            "plaza-blob",
+            "plaza-cards",
+            "w3-bark",
+            "w3-blob",
+            "w3-cards"
+          ]
+        },
+        {
+          "source": "w3-blossom-edge/source/w3-blossom-edge.blend",
+          "sha256": "3169c6849577811b83e231448630b25b4b470d6b028e67160e83900750fadcb7",
+          "packed": {
+            "bark-paint": true,
+            "blossom-glaze.png": true,
+            "flower-sprays.png": true
+          },
+          "meshes": [
+            "w3-bark",
+            "w3-blob",
+            "w3-cards"
+          ]
+        },
+        {
+          "source": "plaza-blossom/source/plaza-blossom.blend",
+          "sha256": "e999127db56757639bd6d2ebc04748d6a2586a5aca7e5652bcd0febbf97123bc",
+          "packed": {
+            "bark-paint": true,
+            "blossom-glaze.png": true,
+            "flower-sprays.png": true,
+            "plaza-sprays.png": true
+          },
+          "meshes": [
+            "plaza-bark",
+            "plaza-blob",
+            "plaza-cards"
+          ]
+        }
+      ]
+    },
+    "from-recipes": {
+      "blender": "5.2.2 LTS",
+      "sources": [
+        {
+          "source": "station-art/source/station-buildings.blend",
+          "sha256": "0b2d0b2ed5a08a257548e3eb8a945bd8920d067a74761c661d8fbd6735a6cbac",
+          "packed": {},
+          "meshes": [
+            "Workshop",
+            "Portal_wings",
+            "Shell",
+            "Front_cassette",
+            "Stepped_exchange"
+          ]
+        },
+        {
+          "source": "w3-blossom-edge/source/laundry-support.blend",
+          "sha256": "3ddfcbc03fb58366d7714180b194c7eb2e778e085479d4ff4b043e0daa735009",
+          "packed": {},
+          "meshes": [
+            "Portal_wings",
+            "Shell",
+            "Front_cassette"
+          ]
+        },
+        {
+          "source": "station-art/source/station-cherries.blend",
+          "sha256": "aa39117519dded15543f33e52a435d191ae44a6307d43ae71380f63f1c48ea21",
+          "packed": {
+            "bark-paint": true,
+            "blossom-glaze.png": true,
+            "flower-sprays.png": true
+          },
+          "meshes": [
+            "plaza-bark",
+            "plaza-blob",
+            "plaza-cards",
+            "w3-bark",
+            "w3-blob",
+            "w3-cards"
+          ]
+        },
+        {
+          "source": "w3-blossom-edge/source/w3-blossom-edge.blend",
+          "sha256": "3667c6eb7c2f0462de66eb8e61299c5d8a0cba0af5c7fc1c475928b139d8e930",
+          "packed": {
+            "bark-paint": true,
+            "blossom-glaze.png": true,
+            "flower-sprays.png": true
+          },
+          "meshes": [
+            "w3-bark",
+            "w3-blob",
+            "w3-cards"
+          ]
+        },
+        {
+          "source": "plaza-blossom/source/plaza-blossom.blend",
+          "sha256": "7ae0a8945c571221f9716904ec7827c232de2f6fd40e455e696b75892df6555c",
+          "packed": {
+            "bark-paint": true,
+            "blossom-glaze.png": true,
+            "flower-sprays.png": true,
+            "plaza-sprays.png": true
+          },
+          "meshes": [
+            "plaza-bark",
+            "plaza-blob",
+            "plaza-cards"
+          ]
+        }
+      ]
+    }
+  }
+}
