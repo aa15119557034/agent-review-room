@@ -101,7 +101,7 @@ const PLAN = [
   ['main', { poster: 6, sticker: 4, doodle: 1 }], ['laundry', { poster: 3, sticker: 2, doodle: 1 }], ['rear', { poster: 4, sticker: 3, doodle: 2 }],
 ];
 
-export function addWeatheringDecals({ scene, station, wallMaterials, roots, gradientMap }) {
+export function addWeatheringDecals({ scene, station, wallMaterials, roots, gradientMap, explicit = [] }) {
   const o = station.root.position, r = rng(2203);
   const { canvas, cells } = drawAtlas();
   const texture = new THREE.CanvasTexture(canvas);
@@ -149,6 +149,18 @@ export function addWeatheringDecals({ scene, station, wallMaterials, roots, grad
     }
     indices.push(base, base + 1, base + 2, base, base + 2, base + 3);
   };
+  // Hand-placed decals (weathering.json): approximate station-local position + normal, snapped onto the
+  // real surface by a short ray; no flatness check, so they work on poles and uneven shop fronts.
+  stats.explicit = { placed: 0, missed: [] };
+  for (const e of explicit) {
+    const cell = cells[e.cell], n = new THREE.Vector3(...e.normal).normalize(), p0 = new THREE.Vector3(...e.pos).add(o);
+    const hit = hitAt(p0.clone().addScaledVector(n, 0.5), n.clone().negate());
+    if (!hit || hit.distance > 1.2) { stats.explicit.missed.push(e.area + '#' + e.cell); continue; }
+    const w = e.width, h = w / cell.aspect;
+    pushQuad(hit, w, h, cell, e.roll ?? (cell.kind === 'poster' ? (r() - 0.5) * 0.05 : (r() - 0.5) * 0.4));
+    placed.push({ point: hit.point.clone(), w }); stats.explicit.placed++; stats[cell.kind + 's']++;
+    (stats.byArea[e.area] ??= []).push({ kind: cell.kind, at: [+(hit.point.x - o.x).toFixed(2), +(hit.point.y - o.y).toFixed(2), +(hit.point.z - o.z).toFixed(2)] });
+  }
   for (const [area, counts] of PLAN) {
     const spot = SPOTS[area], found = [];
     for (let attempt = 0; attempt < 700 && found.length < 60; attempt++) {

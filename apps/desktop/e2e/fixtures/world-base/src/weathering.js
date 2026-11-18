@@ -12,9 +12,10 @@ import * as THREE from 'three';
 
 const GLSL_COMMON = /* glsl */`
 varying vec3 vWxPos;
+varying float vWxMask;
 uniform float uWx;
 uniform vec3 uWxGrime;     // height, strength, -
-uniform vec4 uWxRain;      // strength, period, fade, stripesPerMetre
+uniform vec4 uWxRain;      // strength, period, columnSkip (0..1), stripesPerMetre
 uniform float uWxStretch;
 uniform vec4 uWxBlotch;    // lightLow, lightMid, hue, sat
 uniform vec3 uWxFreq;      // low, mid, vertical gradient (+-)
@@ -33,7 +34,7 @@ float wxNoise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.0 - 2.0*f);
 
 const GLSL_BODY = /* glsl */`
 #include <normal_fragment_maps>
-if (uWx > 0.0) {
+if (uWx > 0.0 && vWxMask > 0.01) {
   vec3 wxP = vWxPos;
   vec3 wxN = normalize((vec4(normalize(vNormal), 0.0) * viewMatrix).xyz);
   float wxWall = 1.0 - smoothstep(0.45, 0.8, abs(wxN.y));
@@ -48,7 +49,7 @@ if (uWx > 0.0) {
   float wxH = max(wxP.y - wxGround, 0.0);
   float wxU = dot(wxP.xz, vec2(-wxN.z, wxN.x));
   vec2 wxPc = mix(wxP.xz, vec2(wxU, wxP.y), wxWall);
-  float wxK = uWx * uWxClass;
+  float wxK = uWx * uWxClass * vWxMask;
   vec3 wxC = diffuseColor.rgb;
   // 3 blotches: lightness, a warm/cool tilt and saturation
   float b1 = smoothstep(0.12, 0.88, wxNoise(wxPc * uWxFreq.x + wxSeed)), b2 = smoothstep(0.12, 0.88, wxNoise(wxPc * uWxFreq.y + wxSeed * 2.1 + 7.0));
@@ -56,18 +57,23 @@ if (uWx > 0.0) {
   vec3 wxTilt = mix(vec3(1.03, 1.0, 0.94), vec3(0.96, 0.99, 1.03), b1);
   wxC = mix(wxC, wxC * wxTilt, uWxBlotch.z * 4.0 * wxK);
   float wxLum = dot(wxC, vec3(0.2126, 0.7152, 0.0722));
-  wxC = mix(vec3(wxLum), wxC, 1.0 + (b2 - 0.5) * 2.0 * uWxBlotch.w * wxK);
+  wxC = mix(vec3(wxLum), wxC, 1.0 + (0.5 - b1) * 2.0 * uWxBlotch.w * wxK);
   wxC *= wxL * (1.0 + (smoothstep(0.0, 14.0, wxH) - 0.35) * uWxFreq.z * wxWall * wxK);
   // 1 wall foot grime
-  float wxG = pow(1.0 - smoothstep(0.0, uWxGrime.x, wxH), 1.6) * (0.65 + 0.7 * wxNoise(vec2(wxU * 2.3, wxP.y * 1.4) + wxSeed)) * wxWall;
+  float wxG = pow(1.0 - smoothstep(0.0, uWxGrime.x, wxH), 1.25) * (0.8 + 0.4 * wxNoise(vec2(wxU * 2.3, wxP.y * 1.4) + wxSeed)) * wxWall;
   vec3 wxDirt = mix(uWxTintA, uWxTintB, wxTone);
-  wxC = mix(wxC, wxC * wxDirt, clamp(wxG * uWxGrime.y, 0.0, 0.7) * wxK);
-  // 2 rain streaks under each storey ledge
-  float wxCol = floor(wxU * uWxRain.w);
-  float wxOff = wxHash(vec2(wxCol, wxSeed)) * uWxRain.y * 0.5;
-  float wxD = mod(wxH + wxOff, uWxRain.y);
-  float wxS = wxNoise(vec2(wxU * uWxRain.w + wxSeed, wxP.y * uWxStretch)) * 0.65 + wxNoise(vec2(wxU * uWxRain.w * 2.7 + 5.1, wxP.y * uWxStretch * 1.7)) * 0.35;
-  float wxStreak = smoothstep(0.42, 0.7, wxS) * exp(-wxD * uWxRain.z);
+  wxC = mix(wxC, wxC * wxDirt, clamp(wxG * uWxGrime.y, 0.0, 1.0) * wxK);
+  // 2 rain streaks: start under each storey slab / sill line, one narrow stripe per column, own length per stripe
+  float wxF = wxU * uWxRain.w, wxCol = floor(wxF), wxCu = fract(wxF);
+  float wxOff = wxHash(vec2(wxCol, wxSeed + 1.7)) * 0.18;
+  float wxStorey = floor((wxH + wxOff) / uWxRain.y);
+  float wxD = (wxStorey + 1.0) * uWxRain.y - (wxH + wxOff); // metres below the slab / sill line above
+  float wxId = wxHash(vec2(wxCol + wxStorey * 7.31, wxSeed));
+  float wxLen = mix(0.8, 2.4, wxHash(vec2(wxCol * 1.7, wxStorey + wxSeed)));
+  float wxCentre = 0.5 + (wxHash(vec2(wxCol, 4.2 + wxSeed)) - 0.5) * 0.3;
+  float wxWob = (wxNoise(vec2(wxP.y * 2.1 + wxCol * 3.0, wxSeed)) - 0.5) * 0.22;
+  float wxLat = 1.0 - smoothstep(0.12, 0.25, abs(wxCu - wxCentre - wxWob));
+  float wxStreak = step(uWxRain.z, wxId) * wxLat * exp(-wxD / wxLen * 2.4) * smoothstep(0.0, 0.05, wxD) * (0.65 + 0.35 * wxNoise(vec2(wxCol, wxP.y * 3.0)));
   wxC *= 1.0 - uWxRain.x * wxStreak * wxWall * wxK;
   // 4 convex edge wear
   float wxEd = smoothstep(0.12, 0.5, length(fwidth(vNormal)));
@@ -94,13 +100,13 @@ function patchMaterial(material, uniforms, wxClass) {
     if (!v.includes('#include <project_vertex>') || !f.includes('#include <normal_fragment_maps>') || !f.includes('#include <common>')) {
       throw new Error('Weathering: shader chunks missing for ' + material.type);
     }
-    shader.vertexShader = v.replace('#include <common>', '#include <common>\nvarying vec3 vWxPos;')
+    shader.vertexShader = v.replace('#include <common>', '#include <common>\nvarying vec3 vWxPos;\nvarying float vWxMask;\nattribute float wxMask;')
       .replace('#include <project_vertex>', `#include <project_vertex>
         { vec4 wxw = vec4(transformed, 1.0);
           #ifdef USE_INSTANCING
             wxw = instanceMatrix * wxw;
           #endif
-          vWxPos = (modelMatrix * wxw).xyz; }`);
+          vWxPos = (modelMatrix * wxw).xyz; vWxMask = wxMask; }`);
     shader.fragmentShader = f.replace('#include <common>', '#include <common>\n' + GLSL_COMMON)
       .replace('#include <normal_fragment_maps>', GLSL_BODY);
   };
@@ -114,6 +120,26 @@ function cloneOwned(material) {
   copy.customProgramCacheKey = material.customProgramCacheKey;
   copy.userData = { ...material.userData };
   return copy;
+}
+
+// Per-vertex weight: 1 on large, thick faces (walls, low walls, foundations, steps), 0 on thin or tiny
+// geometry (railing bars, signposts, bike frames, small props). Computed once per mesh from triangle size.
+function addMask(geometry) {
+  if (geometry.getAttribute('wxMask')) return false;
+  const pos = geometry.attributes.position, index = geometry.index, count = pos.count, mask = new Float32Array(count);
+  const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3(), ab = new THREE.Vector3(), ac = new THREE.Vector3(), bc = new THREE.Vector3();
+  const tris = (index ? index.count : count) / 3, ss = (lo, hi, x) => { const t = Math.min(1, Math.max(0, (x - lo) / (hi - lo))); return t * t * (3 - 2 * t); };
+  for (let t = 0; t < tris; t++) {
+    const i0 = index ? index.getX(t * 3) : t * 3, i1 = index ? index.getX(t * 3 + 1) : t * 3 + 1, i2 = index ? index.getX(t * 3 + 2) : t * 3 + 2;
+    a.fromBufferAttribute(pos, i0); b.fromBufferAttribute(pos, i1); c.fromBufferAttribute(pos, i2);
+    ab.subVectors(b, a); ac.subVectors(c, a); bc.subVectors(c, b);
+    const area = ab.cross(ac).length() / 2, longest = Math.sqrt(Math.max(ac.lengthSq(), bc.lengthSq(), b.distanceToSquared(a)));
+    const thin = longest > 1e-6 ? 2 * area / longest : 0;
+    const w = ss(0.11, 0.18, thin) * ss(0.02, 0.08, area);
+    if (w > mask[i0]) mask[i0] = w; if (w > mask[i1]) mask[i1] = w; if (w > mask[i2]) mask[i2] = w;
+  }
+  geometry.setAttribute('wxMask', new THREE.BufferAttribute(mask, 1));
+  return true;
 }
 
 function bakeGround({ island, station, city, params }) {
@@ -151,7 +177,7 @@ export function applyWeathering({ scene, station, island, city, skyline, params,
   const uniforms = {
     uWx: { value: scale },
     uWxGrime: { value: new THREE.Vector3(params.grime.height, params.grime.strength, 0) },
-    uWxRain: { value: new THREE.Vector4(params.rain.strength, params.rain.period, params.rain.fade, params.rain.stripesPerMetre) },
+    uWxRain: { value: new THREE.Vector4(params.rain.strength, params.rain.period, params.rain.skip, params.rain.stripesPerMetre) },
     uWxStretch: { value: params.rain.stretch },
     uWxBlotch: { value: new THREE.Vector4(params.blotch.lightLow, params.blotch.lightMid, params.blotch.hue, params.blotch.sat) },
     uWxFreq: { value: new THREE.Vector3(params.blotch.lowFreq, params.blotch.midFreq, params.blotch.vertical) },
@@ -181,7 +207,7 @@ export function applyWeathering({ scene, station, island, city, skyline, params,
     if (material.isMeshToonMaterial && material.vertexColors) return material.map ? 'atlas' : (local ? 'wall' : 'prop');
     return null;
   };
-  const clones = new Map(), swaps = [], counts = { wall: 0, prop: 0, atlas: 0 };
+  const maskedGeometries = [], clones = new Map(), swaps = [], counts = { wall: 0, prop: 0, atlas: 0 };
   scene.traverse(mesh => {
     if (!mesh.isMesh) return;
     const list = [].concat(mesh.material), next = list.map(m => {
@@ -191,17 +217,18 @@ export function applyWeathering({ scene, station, island, city, skyline, params,
       if (!c) { c = cloneOwned(m); patchMaterial(c, uniforms, params.classScale[cls]); clones.set(m, c); counts[cls]++; }
       return c;
     });
-    if (next.some((m, i) => m !== list[i])) { swaps.push([mesh, mesh.material]); mesh.material = Array.isArray(mesh.material) ? next : next[0]; }
+    if (next.some((m, i) => m !== list[i])) { if (addMask(mesh.geometry)) maskedGeometries.push(mesh.geometry); swaps.push([mesh, mesh.material]); mesh.material = Array.isArray(mesh.material) ? next : next[0]; }
   });
   let disposed = false;
   const api = {
     uniforms, stats: { materials: clones.size, meshes: swaps.length, classes: counts, groundSamples: ground.samples, buildingSeeds: uniforms.uWxRectCount.value,
-      extraDrawCalls: 0, noiseTaps: 'blotch 2 + grime 1 + rain 2 (2D value noise) + 1 height texture + 6 derivatives/fragment on patched materials' },
+      extraDrawCalls: 0, noiseTaps: 'blotch 2 + grime 1 + rain 1 (2D value noise) + ~8 scalar hashes + 1 height texture + 6 derivatives/fragment on patched materials' },
     wallMaterials: new Set(clones.values()),
     setEnabled(on) { uniforms.uWx.value = on ? scale : 0; },
     dispose() {
       if (disposed) return; disposed = true;
       for (const [mesh, original] of swaps) mesh.material = original;
+      for (const g of maskedGeometries) g.deleteAttribute('wxMask');
       for (const c of clones.values()) c.dispose();
       ground.texture.dispose();
     },
