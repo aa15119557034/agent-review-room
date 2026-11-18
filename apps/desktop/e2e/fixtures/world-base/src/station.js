@@ -9,6 +9,7 @@ import { addStreetscape } from './streetscape.js';
 import { applyWetRoad } from './wet-road.js';
 import { createStreetReflections } from './street-reflections.js';
 import { addStationTexturedProps } from './textured-props.js';
+import { addArtR1Station } from './art-r1.js';
 
 // Keep the upstream dependency order. Characters and camera-centred petal shaders
 // are deliberately omitted; the shared island supplies its own petal field.
@@ -88,6 +89,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   gravel.wrapS = gravel.wrapT = THREE.RepeatWrapping;
   gravel.repeat.set(1.9, 1.9);
   const streetscape = addStreetscape({ ctx, root });
+  const artR1 = addArtR1Station({ ctx });
   onProgress('textured-props');
   const texturedProps = await addStationTexturedProps({ ctx, root });
   // Facade drops and batching bake matrixWorld. Finish while the detached root
@@ -125,7 +127,7 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   const walkers = new Set();
   const station = {
     root, ctx, physics: ctx.physics, camera, localCamera, bounds, moduleStats, batch, detailLod,
-    timings: { trimMs, batchMs }, removedMeshes, groundBlend, streetscape, wetRoad, streetReflections, texturedProps,
+    timings: { trimMs, batchMs }, removedMeshes, artR1, groundBlend, streetscape, wetRoad, streetReflections, texturedProps,
     toLocal(position, target = new THREE.Vector3()) { return target.copy(position).applyMatrix4(inverse); },
     toWorld(position, target = new THREE.Vector3()) { return target.copy(position).applyMatrix4(root.matrixWorld); },
     cameraToWorld(position, quaternion) {

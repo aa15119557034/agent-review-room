@@ -10,6 +10,7 @@ import { createSkyline } from './skyline.js';
 import { createCity } from './city.js';
 import { applyWeathering, loadWeatheringParams } from './weathering.js';
 import { addWeatheringDecals, loadBakedDecals } from './weathering-decals.js';
+import { getMats as getVehicleMats } from '../upstream/sakuragaoka/src/world/vehicles/atlas.js';
 
 const canvas = document.querySelector('#world');
 const loadMessage = document.querySelector('#load-message');
@@ -233,6 +234,9 @@ async function init() {
     // ?weathering=off keeps the previous look for before/after captures.
     if (new URLSearchParams(location.search).get('weathering') === 'off') { worldBase.weathering.setEnabled(false); worldBase.weatheringDecals.setEnabled(false); }
   }
+  // The vehicles' shared glass material is unnamed and its meshes carry no 'glass' name, so the
+  // name filter in maskGlassAlpha skipped it and outlines showed through the van windows.
+  getVehicleMats(station.ctx).glass.name ||= 'vehicle-glass';
   if (toonEnabled()) maskGlassAlpha(scene);
   stage('场景已就绪');
   document.querySelector('#loading').hidden = true;
