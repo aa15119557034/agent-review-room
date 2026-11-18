@@ -1,0 +1,150 @@
+{
+  "baseline": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+  "candidate": "2ae05c5b0715fba94a167fa103babb72ae0ef9cf",
+  "size": [
+    1440,
+    900
+  ],
+  "rows": {
+    "art-a-street": {
+      "before": "d84779b567c78031e43ac7b698b99dfc17d07248ec1317c1a08e4efbf852f50d",
+      "after": "60d7bcf53e19e5d5bc0da42c891a72d54690d90c9dc279c0ff738c57ca95722e",
+      "equalPixels": 827749,
+      "rgbChanged": 468251,
+      "over8": 244785,
+      "over24": 147140,
+      "bboxOver8": [
+        0,
+        0,
+        1355,
+        900
+      ]
+    },
+    "art-b-konbini": {
+      "before": "893d88f48bd2030678dc45438ac97fe7cee6368ba18b188c41e638ba509273eb",
+      "after": "19682f934cd9c7ee68b6c4569472de6e80c6e6c026287163318fb94bcd8c377f",
+      "equalPixels": 1106695,
+      "rgbChanged": 189305,
+      "over8": 27974,
+      "over24": 1165,
+      "bboxOver8": [
+        172,
+        310,
+        1328,
+        611
+      ]
+    },
+    "art-c-alley": {
+      "before": "63cc140ad85b3215092307eec34a54baaa81c85777f21f30fbd48961468e709b",
+      "after": "0126924ec025c1f075cbf27a1eec7d0e24068eb55136e19607d12de7b393f08c",
+      "equalPixels": 1214475,
+      "rgbChanged": 81525,
+      "over8": 24010,
+      "over24": 23631,
+      "bboxOver8": [
+        1148,
+        352,
+        1440,
+        511
+      ]
+    },
+    "art-d-laundry": {
+      "before": "239d42400a94bbda14db29e49845f0211a66c27d3bcef732c6e55f346d14bd46",
+      "after": "a2266e02bc04f124c44d8273860ad865e1c2e29612bc4d94c049f752a23d5608",
+      "equalPixels": 937482,
+      "rgbChanged": 358518,
+      "over8": 165534,
+      "over24": 160747,
+      "bboxOver8": [
+        0,
+        253,
+        1440,
+        670
+      ]
+    },
+    "sample-e-harbour": {
+      "before": "819d360cbac0989361732888f8452d85b0121d555a836984ca5bec6dbd982ee1",
+      "after": "bbdbf4f2142522e05e64e29d3bbdb6820f42c3e17960dbb54245127a96116e3b",
+      "equalPixels": 1290910,
+      "rgbChanged": 5090,
+      "over8": 3671,
+      "over24": 3063,
+      "bboxOver8": [
+        412,
+        385,
+        986,
+        554
+      ]
+    },
+    "sample-f-hillside": {
+      "before": "1414fb43cada5cb4c13222e1d3c8f29c8cdb302bb32a707f843b45fcd1207fcb",
+      "after": "1414fb43cada5cb4c13222e1d3c8f29c8cdb302bb32a707f843b45fcd1207fcb",
+      "equalPixels": 1296000,
+      "rgbChanged": 0,
+      "over8": 0,
+      "over24": 0,
+      "bboxOver8": null
+    },
+    "sample-g-rail": {
+      "before": "0174eb48c466b1a404eb1bc8d99218700f032bbe770f2a9e7903e0ed6f69515a",
+      "after": "8693ca4bc09c7491955f92389949af639c92e4bfec2620679ee6a16cf4e4d06f",
+      "equalPixels": 1291697,
+      "rgbChanged": 4303,
+      "over8": 2447,
+      "over24": 1706,
+      "bboxOver8": [
+        229,
+        363,
+        695,
+        457
+      ]
+    },
+    "sample-h-north": {
+      "before": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546",
+      "after": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546",
+      "equalPixels": 1296000,
+      "rgbChanged": 0,
+      "over8": 0,
+      "over24": 0,
+      "bboxOver8": null
+    },
+    "return-a": {
+      "before": "d84779b567c78031e43ac7b698b99dfc17d07248ec1317c1a08e4efbf852f50d",
+      "after": "60d7bcf53e19e5d5bc0da42c891a72d54690d90c9dc279c0ff738c57ca95722e",
+      "equalPixels": 827749,
+      "rgbChanged": 468251,
+      "over8": 244785,
+      "over24": 147140,
+      "bboxOver8": [
+        0,
+        0,
+        1355,
+        900
+      ]
+    }
+  },
+  "nativeNetwork": [
+    {
+      "url": "http://127.0.0.1:60663/assets/models/menhir.glb",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "url": "http://127.0.0.1:60663/mature-sakura/mature-sakura.glb",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "url": "http://127.0.0.1:60663/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "url": "http://127.0.0.1:60663/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    }
+  ],
+  "nativeExceptions": [],
+  "sameReturnA": true
+}

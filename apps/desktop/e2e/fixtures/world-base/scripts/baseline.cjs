@@ -6,6 +6,7 @@ const http = require('node:http');
 const crypto = require('node:crypto');
 const { verifyPreparedAssets } = require('./prepare-props.cjs');
 const { verifyPreparedAssets: verifyApartmentAssets } = require('./prepare-apartments.cjs');
+const { releasePath: stationArtReleasePath, verifyStationArt } = require('./prepare-station-art.cjs');
 
 const fixture = path.resolve(__dirname, '..');
 const originals = {
@@ -15,6 +16,7 @@ const originals = {
 const mime = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.css': 'text/css', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.glb': 'model/gltf-binary', '.gltf': 'model/gltf+json', '.bin': 'application/octet-stream', '.woff2': 'font/woff2', '.svg': 'image/svg+xml' };
 
 function createStaticServer(root = fixture) {
+  let stationArtRelease;
   return http.createServer((req, res) => {
     if (!['GET', 'HEAD'].includes(req.method)) { res.writeHead(405).end(); return; }
     let pathname;
@@ -43,6 +45,13 @@ function createStaticServer(root = fixture) {
     if (pathname.startsWith('/apartment-assets/')) {
       base = path.join(root, '.local', 'apartment-surfaces');
       relative = pathname.slice('/apartment-assets/'.length);
+    }
+    const stationArt = /^\/(mature-sakura|station-art)\/(.*)$/.exec(pathname);
+    if (stationArt) {
+      try { stationArtRelease ??= stationArtReleasePath(root); }
+      catch { res.writeHead(503).end('Station art release is unavailable'); return; }
+      base = path.join(stationArtRelease, '.local', stationArt[1]);
+      relative = stationArt[2];
     }
     if (base === root && (pathname.startsWith('/.local/') || pathname.startsWith('/artifacts/'))) { res.writeHead(403).end(); return; }
     const file = path.resolve(base, relative.replace(/^\/+/, '') || 'index.html');
@@ -135,6 +144,7 @@ function main() {
     if (Object.keys(cityManifest.projects).length) throw new Error('Generated city manifest must not require an external asset project');
     const propAssets = verifyPreparedAssets(fixture);
     const apartmentAssets = verifyApartmentAssets(fixture);
+    const stationArt = verifyStationArt(fixture);
     const files = {};
     const hashFile = file => { files[path.relative(fixture, file).replace(/\\/g, '/')] = crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex'); };
     const walk = directory => { for (const entry of fs.readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) { const file = path.join(directory, entry.name); if (entry.isDirectory()) walk(file); else if (/\.(?:js|mjs|html|css|json)$/.test(entry.name)) hashFile(file); } };
@@ -143,6 +153,10 @@ function main() {
     hashFile(path.join(fixture, 'prop-assets.json'));
     hashFile(path.join(fixture, 'apartment-assets.json'));
     hashFile(path.join(__dirname, 'prepare-apartments.cjs'));
+    hashFile(path.join(__dirname, 'prepare-station-art.cjs'));
+    hashFile(path.join(fixture, 'assets', 'station-art', 'station-art.sha256'));
+    files[stationArt.archive] = stationArt.sha256;
+    for (const file of stationArt.files) files[file.path] = file.sha256;
     for (const directory of ['street-env', 'street-env-evening']) {
       for (const face of ['px', 'nx', 'py', 'ny', 'pz', 'nz']) hashFile(path.join(fixture, 'src', directory, face + '.png'));
     }
@@ -152,7 +166,7 @@ function main() {
     for (const file of apartmentAssets.files) files[file.path] = file.sha256;
     for (const directory of ['src', 'upstream', 'vendor']) if (fs.existsSync(path.join(fixture, directory))) walk(path.join(fixture, directory));
     const head = cp.execFileSync('git', ['rev-parse', 'HEAD'], { cwd: fixture, encoding: 'utf8', windowsHide: true }).trim();
-    const manifest = { head, capturedAt: config.startedAt, scope: 'Scene code, afternoon and evening street reflection faces, prepared props and apartment PBR assets. The pinned upstream Petalwake files are covered by the original preparation manifest.', files, propAssets, apartmentAssets,
+    const manifest = { head, capturedAt: config.startedAt, scope: 'Scene code, afternoon and evening street reflection faces, prepared props, apartment PBR assets and the station Blender delivery. The pinned upstream Petalwake files are covered by the original preparation manifest.', files, propAssets, apartmentAssets, stationArt,
       cityAssets: { manifest: 'city-assets.json', runtime: cityManifest.currentRuntime, requiredExternalProjects: [], verifiedBeforeLaunch: false, retiredAssetsVerified: false } };
     const manifestText = JSON.stringify(manifest, null, 2);
     fs.writeFileSync(path.join(output, 'source-manifest.json'), manifestText);

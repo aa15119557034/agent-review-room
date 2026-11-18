@@ -1,0 +1,90 @@
+{
+  "versionOne": "e72c6b90c88406c7e60b4daebb6aa7fae60b219cec22980d522d3a989e7d642d",
+  "versionTwo": "3ef6196ee62ad3b1bf9cfda4ea0feac017ccb64aac208ef4b8b82df0f7ea9d13",
+  "upstream": "https://github.com/kiarashfa/sakuragaoka/tree/4112f57208b7e29998344ca71fef74202c2b2bdd",
+  "rows": [
+    {
+      "name": ".local/mature-sakura/mature-sakura.glb",
+      "unchanged": false,
+      "bytes": 1902104,
+      "sha256": "7d0e715719b1e8a8591ab91daeddf28882070f9015cb5a76bf2ec70cf6620cd9",
+      "embeddedImageCount": 3,
+      "meshes": [
+        "plaza-bark",
+        "plaza-blob",
+        "plaza-cards",
+        "w3-bark",
+        "w3-blob",
+        "w3-cards"
+      ]
+    },
+    {
+      "name": ".local/station-art/alley-workshop.glb",
+      "unchanged": true,
+      "bytes": 70344,
+      "sha256": "b8286aa8f9cc5c735d7d847bcc4c1b8b71f31a6ca049aabb531e68c3252c8fc2",
+      "embeddedImageCount": 0,
+      "meshes": [
+        "Workshop"
+      ]
+    },
+    {
+      "name": ".local/station-art/laundry-infill.glb",
+      "unchanged": false,
+      "bytes": 60052,
+      "sha256": "d945d0756f402227ae329d1408707a428c120646aa3bac73c927821d98183be6",
+      "embeddedImageCount": 0,
+      "meshes": [
+        "Front_cassette",
+        "Portal_wings",
+        "Shell"
+      ]
+    },
+    {
+      "name": ".local/station-art/station-exchange.glb",
+      "unchanged": true,
+      "bytes": 79160,
+      "sha256": "03584bb83631b49b118727b9b37a2a021dee693365263acecef24e56b9621a78",
+      "embeddedImageCount": 0,
+      "meshes": [
+        "Stepped_exchange"
+      ]
+    },
+    {
+      "name": "mature-sakura.json",
+      "unchanged": false,
+      "bytes": 402,
+      "sha256": "96682b27459a3cbeb8eab2056ebda1bd8b00aeff9afa4251b6812d053eca134b"
+    },
+    {
+      "name": "station-art-assets.json",
+      "unchanged": false,
+      "bytes": 592,
+      "sha256": "988ebbd723e51e4a5179dd6b483174235a4bc2d99d098fa934493f0512d03486"
+    },
+    {
+      "name": "station-art-notices/THIRD-PARTY.md",
+      "unchanged": false,
+      "bytes": 1455,
+      "sha256": "73fb82ea3a430591d3f3c747ed51b4b67d26ea9971f6df1c144c5fbbf868a60c"
+    },
+    {
+      "name": "station-art-notices/licenses/LICENSE-Kenney.txt",
+      "unchanged": true,
+      "bytes": 708,
+      "sha256": "c38cee408d022e57e44e49f1cd655c2fe0dc881a07b881276b795215cdc0de69"
+    },
+    {
+      "name": "station-art-notices/licenses/LICENSE-Sakuragaoka.txt",
+      "unchanged": true,
+      "bytes": 1089,
+      "sha256": "9b810ad4fc1139f94f7cfaf144a95069d13c4c822fac9f8b657ba6ae6f9de1f7"
+    },
+    {
+      "name": "station-art-notices/licenses/LICENSE-station-art.txt",
+      "unchanged": true,
+      "bytes": 1081,
+      "sha256": "1a998237a0242dccb8e46d7b19aaeeeffaba44e3120b57d64790c67f306689cc"
+    }
+  ]
+}
