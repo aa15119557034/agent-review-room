@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { createIsland, clearVegetationAreas } from './island.js';
 import { loadShadowTint, shadowTintEnabled, installLitShadowTint, patchIslandShadowTint, shadowTintUniforms, shopInteriorBoxes } from './shadow-tint.js';
-import { loadToon, toonEnabled, installLitToon, toonLineUniforms } from './toon.js';
+import { loadToon, toonEnabled, installLitToon, installToonHook, toonLineUniforms, maskGlassAlpha } from './toon.js';
 import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from './evening-glow.js';
 import * as layoutModule from '../upstream/sakuragaoka/src/world/layout.js';
 import { createStation } from './station.js';
@@ -45,6 +45,7 @@ function fail(error) {
 window.addEventListener('error', event => fail(event.error || event.message));
 window.addEventListener('unhandledrejection', event => fail(event.reason));
 
+if (toonEnabled()) installToonHook(); // round 28: before any material exists
 const look = createLook(renderer, camera);
 worldBase.look = look;
 worldBase.styleState = { toon: true, flightEffects: false };
@@ -203,6 +204,7 @@ async function init() {
     // ?weathering=off keeps the previous look for before/after captures.
     if (new URLSearchParams(location.search).get('weathering') === 'off') { worldBase.weathering.setEnabled(false); worldBase.weatheringDecals.setEnabled(false); }
   }
+  if (toonEnabled()) maskGlassAlpha(scene);
   stage('场景已就绪');
   document.querySelector('#loading').hidden = true;
   let last = performance.now(), sampleStart = last, samples = 0;
