@@ -1,0 +1,14 @@
+{
+  "note": "Round 22 weathering. All strengths are multipliers on the shader constants; 0 disables a term. 'afternoon' scales the whole patch for ?time=afternoon.",
+  "timeScale": { "evening": 1.0, "afternoon": 0.9 },
+  "grime": { "height": 0.8, "strength": 1.0, "tints": [[0.5, 0.41, 0.31], [0.45, 0.5, 0.38]] },
+  "rain": { "strength": 0.26, "period": 2.85, "fade": 1.5, "stripesPerMetre": 3.4, "stretch": 0.3 },
+  "blotch": { "lightLow": 0.2, "lightMid": 0.1, "hue": 0.1, "sat": 0.2, "vertical": 0.14, "lowFreq": 0.17, "midFreq": 1.1 },
+  "edge": { "lift": 0.12, "desat": 0.25, "fadeStart": 22, "fadeEnd": 60 },
+  "classScale": { "wall": 1.0, "prop": 0.85, "atlas": 0.6 },
+  "ground": { "minX": -100, "maxX": 100, "minZ": -150, "maxZ": 135, "cell": 0.5 },
+  "excludeName": "foliage|sakura|train|asphalt|glass|ground|env-|petal|grass|wet|hedge|canopy|plant|tree|shrub|flower|leaf|vegetation",
+  "excludeNode": "^sakura(-|:|$)|^train|^dynamic$|hedge|canopy|plant|tree|shrub|flower|leaf|vegetation|crowd|people|character|petal",
+  "excludeStationMaps": ["lawn", "soil", "gravel", "asphalt", "paver", "kawara", "kawaraEdge", "ridge", "decal", "atlasCut"],
+  "stationMaps": ["plaster", "siding", "tile", "block", "concrete", "wood", "metal", "shutter"]
+}
