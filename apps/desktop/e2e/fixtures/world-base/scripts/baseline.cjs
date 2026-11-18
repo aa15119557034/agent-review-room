@@ -6,6 +6,7 @@ const http = require('node:http');
 const crypto = require('node:crypto');
 const { verifyPreparedAssets } = require('./prepare-props.cjs');
 const { verifyPreparedAssets: verifyApartmentAssets } = require('./prepare-apartments.cjs');
+const { verifyOffice } = require('./prepare-city.cjs');
 
 const fixture = path.resolve(__dirname, '..');
 const originals = {
@@ -31,7 +32,7 @@ function createStaticServer(root = fixture) {
       base = path.join(root, '.local', originals.petalwake, 'assets');
       relative = pathname.slice('/assets/'.length);
     }
-    // Optional historical files remain addressable for explicit diagnostics; the current scene does not use this route.
+    // The active commercial frontage and explicitly requested historical assets share this local route.
     if (pathname.startsWith('/city-assets/')) {
       base = path.join(root, '.local', 'city');
       relative = pathname.slice('/city-assets/'.length);
@@ -132,7 +133,7 @@ function main() {
   if (!config.preview && config.videoMs > 0 && (!config.ffmpeg || !fs.existsSync(config.ffmpeg))) throw new Error('Video capture requires --ffmpeg=<existing executable>; nothing is installed automatically');
   if (scene === 'combined') {
     const cityManifest = JSON.parse(fs.readFileSync(path.join(fixture, 'city-assets.json'), 'utf8'));
-    if (Object.keys(cityManifest.projects).length) throw new Error('Generated city manifest must not require an external asset project');
+    const office = verifyOffice();
     const propAssets = verifyPreparedAssets(fixture);
     const apartmentAssets = verifyApartmentAssets(fixture);
     const files = {};
@@ -150,10 +151,11 @@ function main() {
     hashFile(__filename);
     for (const file of propAssets.files) files[file.path] = file.sha256;
     for (const file of apartmentAssets.files) files[file.path] = file.sha256;
+    for (const file of office.files) files[file.path] = file.sha256;
     for (const directory of ['src', 'upstream', 'vendor']) if (fs.existsSync(path.join(fixture, directory))) walk(path.join(fixture, directory));
     const head = cp.execFileSync('git', ['rev-parse', 'HEAD'], { cwd: fixture, encoding: 'utf8', windowsHide: true }).trim();
-    const manifest = { head, capturedAt: config.startedAt, scope: 'Scene code, afternoon and evening street reflection faces, prepared props and apartment PBR assets. The pinned upstream Petalwake files are covered by the original preparation manifest.', files, propAssets, apartmentAssets,
-      cityAssets: { manifest: 'city-assets.json', runtime: cityManifest.currentRuntime, requiredExternalProjects: [], verifiedBeforeLaunch: false, retiredAssetsVerified: false } };
+    const manifest = { head, capturedAt: config.startedAt, scope: 'Scene code, afternoon and evening street reflection faces, prepared props, apartment PBR assets and the Kenney commercial frontage. The pinned upstream Petalwake files are covered by the original preparation manifest.', files, propAssets, apartmentAssets,
+      cityAssets: { manifest: 'city-assets.json', runtime: cityManifest.currentRuntime, requiredExternalProjects: [office.project], verifiedBeforeLaunch: true, retiredAssetsVerified: false } };
     const manifestText = JSON.stringify(manifest, null, 2);
     fs.writeFileSync(path.join(output, 'source-manifest.json'), manifestText);
     config.sourceManifest = { file: 'source-manifest.json', head, sha256: crypto.createHash('sha256').update(manifestText).digest('hex') };

@@ -1,20 +1,66 @@
-// Historical asset audit only. Current generated city requires no external city package.
-// No copies, downloads, conversion, installation or renderer; prior local evidence stays untouched.
+// Prepare the active CC0 building locally; historical city packages remain opt-in audits.
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
+const { execFileSync } = require('node:child_process');
 const root = path.resolve(__dirname, '..');
 const manifest = JSON.parse(fs.readFileSync(path.join(root, 'city-assets.json'), 'utf8'));
 const output = path.resolve(root, manifest.preparedRoot);
-const usage = 'node scripts/prepare-city.cjs --retired=<downtown|highrise>\nRead-only SHA-256 and glTF dependency-closure audit of an explicitly selected historical package in .local/city.\nCurrent city needs no external assets. This tool does not prepare or copy files; old acquisition instructions are historical.';
+const usage = 'node scripts/prepare-city.cjs [--verify|--retired=<downtown|highrise>]';
+const office = manifest.projects.kenneyCommercial;
+const digest = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
 function within(base, relative) {
   const resolved = path.resolve(base, relative), rel = path.relative(base, resolved);
   if (!rel || rel === '..' || rel.startsWith('..' + path.sep) || path.isAbsolute(rel)) throw new Error('Asset path escapes its root: ' + relative);
   return resolved;
 }
+function verifyOffice(directory = path.join(output, office.directory)) {
+  const files = office.files.map(expected => {
+    const file = within(directory, expected.path);
+    const bytes = fs.readFileSync(file);
+    if (bytes.length !== expected.bytes || digest(bytes) !== expected.sha256) throw new Error('Pinned Kenney asset mismatch: ' + file);
+    return { path: path.relative(root, file).replaceAll('\\', '/'), sha256: expected.sha256 };
+  });
+  return { project: 'kenneyCommercial', files };
+}
+function prepareOffice() {
+  const directory = path.join(output, office.directory);
+  if (fs.existsSync(directory)) return verifyOffice(directory);
+  const archives = path.join(root, '.local', 'archives'), archive = path.join(archives, office.archive);
+  fs.mkdirSync(archives, { recursive: true });
+  fs.mkdirSync(output, { recursive: true });
+  const stage = fs.mkdtempSync(path.join(output, '.kenney-'));
+  try {
+    if (!fs.existsSync(archive)) {
+      const args = ['--fail', '--location', '--silent', '--show-error', '--user-agent', 'AgentReviewRoom/1.0 (public asset preparation)', '--referer', office.source,
+        ...(process.env.WORLD_BASE_PROXY ? ['--proxy', process.env.WORLD_BASE_PROXY] : [])];
+      const reply = execFileSync('curl.exe', [...args, '-H', 'Accept: application/json', '-H', 'Sec-Fetch-Site: same-origin', office.downloadLink], { encoding: 'utf8', windowsHide: true });
+      const signed = new URL(JSON.parse(reply).url);
+      if (signed.origin !== new URL(office.source).origin) throw new Error('Unexpected Kenney download origin');
+      const part = path.join(stage, 'archive.zip');
+      execFileSync('curl.exe', [...args, signed.href, '-o', part], { windowsHide: true });
+      if (digest(fs.readFileSync(part)) !== office.sha256) throw new Error('Kenney archive SHA-256 mismatch');
+      try { fs.linkSync(part, archive); }
+      catch (error) { if (error.code !== 'EEXIST') throw error; }
+    }
+    if (digest(fs.readFileSync(archive)) !== office.sha256) throw new Error('Pinned Kenney archive differs: ' + archive);
+    const unpacked = path.join(stage, 'model');
+    for (const file of office.files) {
+      const dest = within(unpacked, file.path);
+      fs.mkdirSync(path.dirname(dest), { recursive: true });
+      fs.writeFileSync(dest, execFileSync('tar.exe', ['-xOf', archive, file.entry], { windowsHide: true }));
+    }
+    verifyOffice(unpacked);
+    try { fs.renameSync(unpacked, directory); }
+    catch (error) { if (!fs.existsSync(directory)) throw error; }
+    return verifyOffice(directory);
+  } finally { fs.rmSync(stage, { recursive: true, force: true }); }
+}
 function main() {
   const args = process.argv.slice(2);
-  if (!args.length || (args.length === 1 && args[0] === '--help')) { console.log(usage); return; }
+  if (!args.length) { console.log(JSON.stringify(prepareOffice())); return; }
+  if (args.length === 1 && args[0] === '--verify') { console.log(JSON.stringify(verifyOffice())); return; }
+  if (args.length === 1 && args[0] === '--help') { console.log(usage); return; }
   const match = args.length === 1 && /^--retired=([a-z]+)$/.exec(args[0]);
   if (!match || !Object.hasOwn(manifest.retiredAssets, match[1])) throw new Error('Select one known retired package explicitly.\n' + usage);
   const name = match[1], project = manifest.retiredAssets[name];
@@ -40,4 +86,7 @@ function main() {
   }
   console.log(JSON.stringify({ purpose: 'historical-read-only-audit', package: name, verifiedFiles: plan.length, verifiedReferences: references, runtimeDependency: false, modifiedFiles: 0 }));
 }
-try { main(); } catch (error) { console.error(error.message); process.exitCode = 1; }
+module.exports = { prepareOffice, verifyOffice };
+if (require.main === module) {
+  try { main(); } catch (error) { console.error(error.message); process.exitCode = 1; }
+}

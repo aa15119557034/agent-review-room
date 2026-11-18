@@ -1,8 +1,43 @@
 {
-  "version": 2,
+  "version": 3,
   "preparedRoot": ".local/city",
-  "notes": "Current city geometry is generated from the station building toolkit; projects lists external city runtime dependencies and is empty. retiredAssets preserves complete prior source, license and hash records. Historical acquisition instructions describe the original import, not a runtime preparation requirement. scripts/prepare-city.cjs now performs explicit read-only retired-file verification; no downloads or copies. Local historical files and evidence are retained.",
-  "projects": {},
+  "notes": "The station commercial frontage uses one original Kenney building and palette. Other station-edge buildings use the station toolkit. Retired packages remain available only for an explicit audit.",
+  "projects": {
+    "kenneyCommercial": {
+      "title": "City Kit (Commercial) 2.1",
+      "author": "Kenney",
+      "source": "https://kenney.nl/assets/city-kit-commercial",
+      "license": {
+        "id": "CC0-1.0",
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "file": "License.txt"
+      },
+      "downloadLink": "https://kenney.nl/download-link/6173736574732f636974792d6b69742d636f6d6d65726369616c",
+      "archive": "kenney-city-kit-commercial-2.1.zip",
+      "sha256": "f8b09b081c2bb88bcc126e2dec1cb40fd0dad7e7e591b6c26aaefe96fb35276b",
+      "directory": "kenney-commercial-2.1",
+      "files": [
+        {
+          "entry": "Models/GLB format/building-skyscraper-c.glb",
+          "path": "building-skyscraper-c.glb",
+          "bytes": 149524,
+          "sha256": "e73c357554f7561fedb8c1cbecf9d7163ba09ada264d661c59a0f0a180e0185f"
+        },
+        {
+          "entry": "Models/GLB format/Textures/colormap.png",
+          "path": "Textures/colormap.png",
+          "bytes": 11002,
+          "sha256": "191bec3889aaaca5018380038fecc129ebb5c2182879a099b7b538b3fa050b5d"
+        },
+        {
+          "entry": "License.txt",
+          "path": "License.txt",
+          "bytes": 708,
+          "sha256": "c38cee408d022e57e44e49f1cd655c2fe0dc881a07b881276b795215cdc0de69"
+        }
+      ]
+    }
+  },
   "retiredAssets": {
     "highrise": {
       "retirement": {
@@ -416,10 +451,12 @@
     }
   },
   "currentRuntime": {
-    "kind": "generated",
+    "kind": "station-kit-and-commercial-frontage",
     "entry": "src/city.js",
-    "externalAssetProjects": [],
+    "externalAssetProjects": [
+      "kenneyCommercial"
+    ],
     "surfaceManifest": "apartment-assets.json",
-    "description": "Original Japanese apartment geometry built with the station toolkit; the plaster, tile and metal surface maps are specified in apartment-assets.json."
+    "description": "The station commercial frontage uses the original Kenney GLB and atlas. Japanese apartments and the remaining low house use the station toolkit."
   }
 }

@@ -37,7 +37,11 @@ for (const name of ['petalwake', 'sakuragaoka']) {
   if (!fs.existsSync(path.join(original, 'LICENSE'))) run('tar.exe', ['-xf', zip, '-C', path.join(root, '.local')]);
   const projectFiles = [];
   for (const file of files(original)) {
-    projectFiles.push({ project: name, path: path.relative(original, file).replaceAll('\\', '/'), sha256: hash(file) });
+    const relative = path.relative(original, file).replaceAll('\\', '/');
+    // The supported evening bake writes its output and Python's local cache alongside its inputs.
+    if (name === 'petalwake' && (relative === 'assets/terrain/light-evening.png' ||
+        /^tools\/terrain\/__pycache__\/bake(?:\.cpython-\d+(?:\.opt-\d+)?\.pyc|\.bake_shadow-\d+\.py\d+\.(?:\d+\.nbc|nbi))$/.test(relative))) continue;
+    projectFiles.push({ project: name, path: relative, sha256: hash(file) });
   }
   if (expected) {
     const reference = new Map(expected.filter(file => file.project === name).map(file => [file.path, file.sha256]));
@@ -60,3 +64,5 @@ for (const name of ['petalwake', 'sakuragaoka']) {
 // Hashes identify individual files; all upstream originals and binary assets stay local.
 if (!expected) fs.writeFileSync(manifest, `${JSON.stringify(inventory, null, 2)}\n`);
 console.log(`${inventory.length} upstream files inventoried; no assets copied into tracked source`);
+const office = require('./prepare-city.cjs').prepareOffice();
+console.log(`${office.project}: ${office.files.length} prepared files verified`);

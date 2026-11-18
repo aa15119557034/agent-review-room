@@ -1,0 +1,337 @@
+{
+  "base": "363034ed1b6fa6c4ee7fbb05254156c937baf722",
+  "method": "Electron hardware acceleration and all WebGL canvas contexts disabled. Loaded the production GLTFLoader, the full terrain, station, city geometry, materials, matrix transforms and decal code. The native entry with the renewed on-disk bake reached scene-ready before rasterization.",
+  "runtimeSources": {
+    "src/city.js": "0973b5518a0efe49f9fb58f781fc923af92c258a8b509917622c495f1ac77619",
+    "src/weathering-decals.json": "f6b09272bd33819792b19d5594592dea621cb206e9dad45c6d32315693c3fbe6",
+    "src/weathering-decals.js": "b819152ebd2badc337e8ac1aa2cb6ac4974cfba845699ecac78719f7af3c2cd3",
+    "src/main.js": "a24df689007b299a462bc48d4303aa128956cea93eacb6d2483e04b86b9ed1d2",
+    "scripts/prepare.cjs": "6867940c5c7c33091f2e83beba73e398fb2cb777f12daba3c315d5453bd992c8",
+    "scripts/prepare-city.cjs": "d6fdf1e2943acc369d5ad3e046de15629d9759eba15388f86966cf1aa1ee3d8e",
+    "city-assets.json": "cd2f117127187a51ef8e51a626768178998f57980c77612eead3a2a1b61a1fc6"
+  },
+  "geometry": {
+    "fingerprint": "1050:2751839:295181.6:939614.8",
+    "meshes": [
+      {
+        "name": "building-skyscraper-c_1",
+        "material": "kenney-station-office",
+        "materialType": "MeshToonMaterial",
+        "tris": 1704,
+        "world": [
+          243.00000089406967,
+          12.265555652798646,
+          774.1159957831082
+        ],
+        "image": [
+          512,
+          512
+        ],
+        "casts": true,
+        "receives": true
+      }
+    ],
+    "bounds": [
+      [
+        239.16000097990036,
+        12.265555652798646,
+        769.9523219053922
+      ],
+      [
+        246.83999902009964,
+        36.745555195034974,
+        778.2796700184522
+      ]
+    ],
+    "site": {
+      "name": "town-house-0",
+      "type": "station-office",
+      "center": [
+        -37,
+        -126.5
+      ],
+      "footprint": {
+        "minX": -42.05023296657734,
+        "maxX": -31.94976703342266,
+        "minZ": -131.4996700184522,
+        "maxZ": -121.5003299815478
+      },
+      "ground": {
+        "min": 11.101207744342059,
+        "max": 12.215555652798646,
+        "relief": 1.1143479084565868,
+        "samples": 72,
+        "method": "All bilinear grid and footprint boundary intersections"
+      },
+      "foundation": {
+        "top": 12.265555652798646,
+        "bottom": 11.051207744342058,
+        "height": 1.2143479084565882
+      },
+      "sourceSize": [
+        1.2799996733665466,
+        4.079999923706055,
+        1.3878913521766663
+      ],
+      "scale": 6
+    },
+    "stairs": {
+      "name": "town-house-0-entry",
+      "x": -37,
+      "width": 2.2,
+      "highZ": -121.5003299815478,
+      "lowZ": -118.51,
+      "steps": 8,
+      "rise": 0.16701789847613763,
+      "tread": 0.3737912476934735,
+      "top": 4.265555652798646,
+      "bottom": 2.929412464989545,
+      "minClearance": 0.1903727568173812
+    },
+    "ownedOfficePixels": 262144,
+    "loweredCount": 1,
+    "offices": 1,
+    "errors": []
+  },
+  "previousTrial": {
+    "source": "f608c8ae4e8edb5b4179b1579c13ea356e316f45",
+    "minimum": [
+      239.16000097990036,
+      12.265555652798646,
+      769.9523219053922
+    ],
+    "maximum": [
+      246.83999902009964,
+      36.745555195034974,
+      778.2796700184522
+    ],
+    "matchesNewGeometry": true
+  },
+  "bake": {
+    "before": "1049:2750135:294938.6:938840.7",
+    "after": "1050:2751839:295181.6:939614.8",
+    "normalEntrySource": "baked",
+    "rays": 0,
+    "placed": 26,
+    "identicalItems": true,
+    "pixelRendering": false,
+    "rows": [
+      {
+        "index": 0,
+        "area": "01-left-wall",
+        "cell": 0,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      },
+      {
+        "index": 1,
+        "area": "01-left-wall",
+        "cell": 9,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      },
+      {
+        "index": 2,
+        "area": "01-left-wall",
+        "cell": 3,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      },
+      {
+        "index": 3,
+        "area": "01-left-pole",
+        "cell": 10,
+        "ninePointHits": 3,
+        "curved": true,
+        "curvedSourceSnap": true,
+        "curvedDistanceFromOriginalCenter": 0.00004,
+        "occlusions": 0
+      },
+      {
+        "index": 4,
+        "area": "01-right-shop",
+        "cell": 5,
+        "ninePointHits": 1,
+        "curved": true,
+        "curvedSourceSnap": true,
+        "curvedDistanceFromOriginalCenter": 0.00002,
+        "occlusions": 0
+      },
+      {
+        "index": 5,
+        "area": "01-right-shop",
+        "cell": 11,
+        "ninePointHits": 5,
+        "curved": true,
+        "curvedSourceSnap": true,
+        "curvedDistanceFromOriginalCenter": 0,
+        "occlusions": 0
+      },
+      {
+        "index": 6,
+        "area": "01-right-shop",
+        "cell": 8,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      },
+      {
+        "index": 7,
+        "area": "01-right-pole",
+        "cell": 8,
+        "ninePointHits": 2,
+        "curved": true,
+        "curvedSourceSnap": true,
+        "curvedDistanceFromOriginalCenter": 0.00002,
+        "occlusions": 0
+      },
+      {
+        "index": 8,
+        "area": "21-mailboxes",
+        "cell": 7,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      },
+      {
+        "index": 9,
+        "area": "21-mailboxes",
+        "cell": 9,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      },
+      {
+        "index": 10,
+        "area": "main",
+        "cell": 10,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      },
+      {
+        "index": 11,
+        "area": "main",
+        "cell": 9,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      },
+      {
+        "index": 12,
+        "area": "main",
+        "cell": 9,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      },
+      {
+        "index": 13,
+        "area": "main",
+        "cell": 9,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      },
+      {
+        "index": 14,
+        "area": "laundry",
+        "cell": 2,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      },
+      {
+        "index": 15,
+        "area": "laundry",
+        "cell": 5,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      },
+      {
+        "index": 16,
+        "area": "laundry",
+        "cell": 9,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      },
+      {
+        "index": 17,
+        "area": "rear",
+        "cell": 0,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      },
+      {
+        "index": 18,
+        "area": "rear",
+        "cell": 3,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      },
+      {
+        "index": 19,
+        "area": "rear",
+        "cell": 3,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      },
+      {
+        "index": 20,
+        "area": "rear",
+        "cell": 1,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      },
+      {
+        "index": 21,
+        "area": "rear",
+        "cell": 11,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      },
+      {
+        "index": 22,
+        "area": "rear",
+        "cell": 10,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      },
+      {
+        "index": 23,
+        "area": "rear",
+        "cell": 9,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      },
+      {
+        "index": 24,
+        "area": "rear",
+        "cell": 13,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      },
+      {
+        "index": 25,
+        "area": "rear",
+        "cell": 14,
+        "ninePointHits": 9,
+        "curved": false,
+        "occlusions": 0
+      }
+    ]
+  }
+}

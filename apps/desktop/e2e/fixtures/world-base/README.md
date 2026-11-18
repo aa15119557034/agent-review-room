@@ -17,7 +17,7 @@
 
 `sources.json` 登记来源、作者、commit 和归档哈希，`source-files.json` 登记每个原始文件的 SHA-256。Petalwake 的全部二进制资产及原项目副本都只在 `.local/`，不进 Git。Three.js 使用 Petalwake 固定的 r187，额外的 RoundedBoxGeometry 来自 Three.js r187，许可和哈希一并保留。
 
-当前背景建筑复用站区已有的 MIT 程序化构件与纹理，不需要另行下载城市模型。[city-assets.json](./city-assets.json) 保留前两组候选的来源、许可和固定哈希：Quaternius Downtown City MegaKit **免费 Standard** 三栋完整楼（CC0 1.0）和 mirzaev3d 高层（CC BY 4.0）均在 `retiredAssets`。
+站区后街的商业地块使用 Kenney City Kit (Commercial) 2.1 中的一栋办公楼。普通 `node scripts\prepare.cjs` 从作者站点取得压缩包，核对 SHA-256 后将原 GLB、原图集和许可放入 `.local/city/kenney-commercial-2.1/`。GLB 的相对贴图路径及源文件字节均保留。可单独执行 `node scripts\prepare-city.cjs --verify` 离线核验。站区的公寓和另一处低层住宅沿用 Sakuragaoka 构件。来源、哈希与历史候选均见 [city-assets.json](./city-assets.json)。
 
 已有历史文件可以显式做只读核验：
 
@@ -26,7 +26,7 @@ node scripts\prepare-city.cjs --retired=downtown
 node scripts\prepare-city.cjs --retired=highrise
 ```
 
-该脚本只核验本机已保存的历史文件，不下载或复制。组合基线不调用它，也不需要 `.local/city/`；原候选二进制、许可、材质核对依据和失败记录仍保留。
+两条 `--retired` 命令只读取已保存的历史候选。组合场景启动时核验当前商业地块的三项文件。
 
 当前带纹理道具还需按 [prop-assets.json](./prop-assets.json) 准备9个官方原文件，共3,579,256字节：周转箱glTF/BIN/三图及官方独立Opacity、卷帘三图。可用已有候选副本，或从清单固定URL下载：
 

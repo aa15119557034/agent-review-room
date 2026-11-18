@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { GB, Frame } from '../upstream/sakuragaoka/src/world/houses/gb.js';
 import { buildFarTown } from '../upstream/sakuragaoka/src/world/houses/far.js';
 import { PAL } from '../upstream/sakuragaoka/src/world/houses/lot.js';
@@ -17,7 +18,11 @@ const SITES = [
   { name: 'town-apartment-4f', x: 2, z: -122, width: 12, depth: 9, floors: 4, accent: PAL.tile[0], tone: '#f0dcc8', shop: true },
   { name: 'town-apartment-5f', x: 22, z: -121, width: 12, depth: 10, floors: 5, accent: PAL.plaster[0], tone: '#d2dfe9', shop: false },
 ];
-const LOW_HOUSES = [{ x: -37, z: -126.5, seed: 0 }, { x: -50, z: -127, seed: 1 }];
+// The existing commercial and residential parcels share a lane. Preserve their surveyed platforms and entry steps.
+const EDGE_LOTS = [
+  { name: 'town-house-0', use: 'station-office', x: -37, z: -126.5, width: 10.10046593315468, depth: 9.999340036904427 },
+  { name: 'town-house-1', use: 'low-house', x: -50, z: -127, seed: 1 },
+];
 const FRONT_ROAD = { name: 'town-front-lane', minX: -56, maxX: 37, minZ: -118.5, maxZ: -115.8 };
 const EAST_ROAD = { name: 'town-levee-lane', minX: 32, maxX: 37, minZ: -115.8, maxZ: -101 };
 const overlaps = (a, b) => a.minX < b.maxX && a.maxX > b.minX && a.minZ < b.maxZ && a.maxZ > b.minZ;
@@ -35,7 +40,7 @@ export async function createCity({ scene, station, island, skyline }) {
   root.position.copy(station.root.position); root.userData.walkable = false;
   const ownedMaterials = new Set(), ownedTextures = new Set(), geometries = new Set(), clones = new Map();
   const placements = [], vegetationClearAreas = [];
-  const stats = { buildings: 0, apartments: 3, lowHouses: 0, modelTriangles: 0, modelPrimitives: 0,
+  const stats = { buildings: 0, apartments: 3, lowHouses: 0, commercialOffices: 0, officeAtlasPixels: 0, modelTriangles: 0, modelPrimitives: 0,
     connections: { roads: [], stairs: [], walkable: false }, trees: [], poles: [] };
   const cacheSize = station.ctx.tex.cache.size, texturePixels = station.ctx.tex.pixels;
   const clone = material => {
@@ -154,8 +159,42 @@ export async function createCity({ scene, station, island, skyline }) {
     for (const key of ['houses_farfacade1', 'houses_farfacade2', 'houses_farfacade3', 'houses_farapt']) {
       if (!station.ctx.tex.cache.has(key)) throw new Error('Missing shared far-town texture: ' + key);
     }
-    for (const site of LOW_HOUSES) {
-      const group = new THREE.Group(); group.name = 'town-house-' + site.seed;
+    for (const site of EDGE_LOTS) {
+      if (site.use === 'station-office') {
+        const lot = { minX: site.x - site.width / 2, maxX: site.x + site.width / 2,
+          minZ: site.z - site.depth / 2, maxZ: site.z + site.depth / 2 };
+        const ground = checkLot(site.name, lot), base = foundation(site.name, lot, ground);
+        const { scene: office } = await new GLTFLoader().loadAsync('/city-assets/kenney-commercial-2.1/building-skyscraper-c.glb');
+        office.name = site.name;
+        office.traverse(mesh => {
+          if (!mesh.isMesh) return;
+          geometries.add(mesh.geometry);
+          const original = mesh.material, atlas = original.map;
+          const prototype = ctx.mat.toon('#ffffff', { paint: 0, side: 'double' });
+          const material = prototype.clone();
+          material.name = 'kenney-station-office';
+          material.onBeforeCompile = prototype.onBeforeCompile;
+          material.customProgramCacheKey = prototype.customProgramCacheKey;
+          material.map = atlas;
+          mesh.material = material;
+          original.dispose();
+          ownedMaterials.add(material);
+          if (!ownedTextures.has(atlas)) stats.officeAtlasPixels += atlas.image.width * atlas.image.height;
+          ownedTextures.add(atlas);
+          mesh.castShadow = mesh.receiveShadow = true;
+        });
+        office.scale.setScalar(6);
+        const bounds = new THREE.Box3().setFromObject(office), size = bounds.getSize(new THREE.Vector3());
+        const center = bounds.getCenter(new THREE.Vector3());
+        // The entrance faces +Z. Align it to the old steps, leaving the surveyed 22 cm landing.
+        office.position.set(site.x - center.x, base.top - root.position.y - bounds.min.y, lot.maxZ - 0.22 - bounds.max.z);
+        root.add(office);
+        placements.push({ name: site.name, type: site.use, center: [site.x, site.z], footprint: lot, ground,
+          foundation: base, sourceSize: size.multiplyScalar(1 / 6).toArray(), scale: 6 });
+        stats.commercialOffices++;
+        continue;
+      }
+      const group = new THREE.Group(); group.name = site.name;
       const farCtx = { ...ctx, rng: () => station.ctx.rng('city-edge-' + site.seed),
         mat: { ...ctx.mat, toon: (color, options) => clone(ctx.mat.toon(color, options)) },
         addStatic: mesh => group.add(mesh) };
@@ -324,10 +363,11 @@ export async function createCity({ scene, station, island, skyline }) {
     stats.buildings = placements.length; stats.totalTriangles = stats.modelTriangles;
     stats.materials = allOwnedMaterials.size; stats.geometries = geometries.size; stats.borrowedTextures = borrowedTextures.size;
     stats.uniqueTextures = borrowedTextures.size + allOwnedTextures.size; stats.ownedTextures = allOwnedTextures.size;
-    stats.newTexturePixels = stats.plants.newTexturePixels + H.apartmentSurfaces.stats.sourcePixels;
-    stats.ownedTextureRGBA8WithMipsEstimateBytes = stats.plants.textureRGBA8WithMipsEstimateBytes + H.apartmentSurfaces.stats.estimatedRGBA8MipBytes; stats.textureCacheEntriesAdded = 0;
+    const officeAtlasPixels = stats.officeAtlasPixels;
+    stats.newTexturePixels = stats.plants.newTexturePixels + H.apartmentSurfaces.stats.sourcePixels + officeAtlasPixels;
+    stats.ownedTextureRGBA8WithMipsEstimateBytes = stats.plants.textureRGBA8WithMipsEstimateBytes + H.apartmentSurfaces.stats.estimatedRGBA8MipBytes + Math.round(officeAtlasPixels * 4 * 4 / 3); stats.textureCacheEntriesAdded = 0;
     stats.laundryItems = H.laundry.count; stats.suppressedPhysicsCalls = suppressedPhysicsCalls;
-    stats.ownership = 'City owns geometry, far/leaf instances, material clones and one plant atlas; apartmentSurfaces independently owns four PBR materials/nine maps. Borrow station atlases, far facade textures and gradient maps. Dispose before station.';
+    stats.ownership = 'City owns geometry, far/leaf instances, material clones, the Kenney atlas and the plant atlas. Apartment surfaces own four PBR materials and nine maps. Station atlases, far facade textures and gradient maps are borrowed. Dispose before station.';
     stats.limitation = 'Background only: no new physics or navigable interiors. Foundations and stairs are CPU checked; camera composition and visible CDLOD contacts need GPU acceptance.';
     scene.add(root); root.updateWorldMatrix(true, true);
     return { root, placements, vegetationClearAreas, stats, dispose };
