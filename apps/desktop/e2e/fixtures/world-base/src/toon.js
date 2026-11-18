@@ -26,30 +26,33 @@ const NOLINE_NAMES = /^sakura:(blob|cards)$/;
 export function installToonHook() {
   const proto = THREE.Material.prototype;
   if (Object.getOwnPropertyDescriptor(proto, 'onBeforeCompile').get) return;
-  const own = Symbol('toonOwnHook');
-  const wrappedHooks = new WeakMap();
-  function wrap(hook) {
-    const existing = wrappedHooks.get(hook);
-    if (existing) return existing;
+  const base = proto.onBeforeCompile;
+  const hooks = new WeakMap();
+  const originals = new WeakMap();
+  function wrap(owner, hook) {
+    const original = originals.get(hook) || hook;
+    const existing = hooks.get(owner);
+    if (existing && originals.get(existing) === original) return existing;
     function onBeforeCompile(shader, renderer) {
+      // Foliage saves the previous hook and calls it as a plain function.
+      const material = this || owner;
       Object.assign(shader.uniforms, toonLitUniforms);
-      const result = hook.call(this, shader, renderer);
-      if (NOLINE_NAMES.test(this.name) && shader.fragmentShader && !shader.fragmentShader.includes('TOON_NOLINE')) {
+      const result = original.call(material, shader, renderer);
+      if (NOLINE_NAMES.test(material.name) && shader.fragmentShader && !shader.fragmentShader.includes('TOON_NOLINE')) {
         shader.fragmentShader = `#define TOON_NOLINE\n${shader.fragmentShader}`;
       }
       return result;
     }
     // The station batcher saves the hook and compares it by identity. Clones can also assign an already wrapped hook.
-    onBeforeCompile.toString = () => hook.toString();
-    wrappedHooks.set(hook, onBeforeCompile);
-    wrappedHooks.set(onBeforeCompile, onBeforeCompile);
+    onBeforeCompile.toString = () => original.toString();
+    hooks.set(owner, onBeforeCompile);
+    originals.set(onBeforeCompile, original);
     return onBeforeCompile;
   }
-  const base = wrap(proto.onBeforeCompile);
   Object.defineProperty(proto, 'onBeforeCompile', {
     configurable: true,
-    get() { return this[own] || base; },
-    set(hook) { this[own] = hook ? wrap(hook) : base; },
+    get() { return hooks.get(this) || wrap(this, base); },
+    set(hook) { wrap(this, hook || base); },
   });
 }
 
