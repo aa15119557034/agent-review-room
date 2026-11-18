@@ -1,0 +1,2406 @@
+{
+  "source": "b4f1350397fc00b1ff7320f1844788dd1d16b86e",
+  "order": [
+    "station-street",
+    "shop-interior",
+    "20",
+    "21",
+    "23",
+    "24",
+    "window",
+    "door",
+    "walking-third",
+    "walking-first"
+  ],
+  "threshold": {
+    "fps": 60,
+    "p95Ms": 16.7
+  },
+  "notes": {
+    "gpuProbe": "At frame interval boundaries, the probe checks linked light programs until it has measured at least four pairs and found an enabled pair, or exhausted the list. The native UI checkbox check scans all linked programs outside the measured routes.",
+    "duration": "3s native fixed views; 10s each at the six town/detail cameras; 3s each in the two walking modes.",
+    "fps": "1000 * count / sum(ms), RAF frame submission intervals on the RTX 3060 Laptop, 1440x900, DPR 1",
+    "p95": "nearest rank; nativeReportP95 records the pre-existing source convention for each segment",
+    "originalData": "Recreate original segment bytes with the included verify.cjs. The six town files use 2-space JSON plus LF; all four street/walk files use compact JSON.",
+    "runs": "Native preset evening, C28 toon default / ?toon=off / default. C26 shadow tint stays enabled throughout. The 6 town camera poses are checked before and after measurement. Both other fixed-camera positions were checked against their C27 native reports."
+  },
+  "cameras": {
+    "service-corner": {
+      "position": [
+        308.4,
+        9.612,
+        872.9
+      ],
+      "quaternion": [
+        -0.08432325046436126,
+        0.5331397072650681,
+        0.05351200213385738,
+        0.8401119613456697
+      ],
+      "fov": 55
+    },
+    "laundry-details": {
+      "position": [
+        288,
+        14.384808464050293,
+        777.9
+      ],
+      "quaternion": [
+        -0.15522850149956677,
+        0.6173580660361093,
+        0.12595148976979553,
+        0.7608609287163607
+      ],
+      "fov": 55
+    },
+    "shop-interior": {
+      "position": [
+        271.7,
+        9.9134,
+        908
+      ],
+      "quaternion": [
+        -0.015701859235384273,
+        0.7069324236562871,
+        0.015701859235384273,
+        0.7069324236562871
+      ],
+      "fov": 58
+    },
+    "20-rear-eye": {
+      "position": [
+        273,
+        14.755245542526229,
+        758
+      ],
+      "quaternion": [
+        -0.00013011891877658623,
+        0.9145142483742376,
+        -0.00029414054360230415,
+        -0.40455356390830466
+      ],
+      "fov": 58
+    },
+    "21-front-eye": {
+      "position": [
+        274,
+        12.87812709172567,
+        783
+      ],
+      "quaternion": [
+        0.07422133960767584,
+        -0.5103582416049142,
+        0.044271975994965136,
+        0.8556083508909221
+      ],
+      "fov": 58
+    },
+    "station-street": {
+      "position": [
+        278.8,
+        10.4,
+        936
+      ],
+      "quaternion": [
+        -0.003277842930440423,
+        -0.009834585659995631,
+        -0.000032237959341941705,
+        0.9999462663720154
+      ],
+      "fov": 58
+    },
+    "street-detail": {
+      "position": [
+        284.4,
+        10.281286274509803,
+        924
+      ],
+      "quaternion": [
+        -0.12465537443110519,
+        -0.38126635888515065,
+        -0.05196769176958736,
+        0.914547079280253
+      ],
+      "fov": 58
+    },
+    "van-side": {
+      "position": [
+        276.3147277851227,
+        11.210013480772632,
+        971.1462175645175
+      ],
+      "quaternion": [
+        -0.029182465008512196,
+        -0.7830517056478151,
+        -0.03684648464040197,
+        0.6201779958912754
+      ],
+      "fov": 47
+    },
+    "shop-door-eye": {
+      "position": [
+        271.7,
+        9.9134,
+        908
+      ],
+      "quaternion": [
+        0.015701859235384273,
+        0.7069324236562871,
+        0.015701859235384273,
+        -0.7069324236562871
+      ],
+      "fov": 58
+    }
+  },
+  "runs": {
+    "ground-on": {
+      "started": "2026-11-18T10:09:53.780Z",
+      "ended": "2026-11-18T10:13:18.520Z",
+      "mode": "on",
+      "scene": "b4f1350397fc00b1ff7320f1844788dd1d16b86e",
+      "checkout": "b4f1350397fc00b1ff7320f1844788dd1d16b86e",
+      "filesChecked": 251,
+      "normal": {
+        "exit": 1,
+        "stage": "complete",
+        "renderOk": true,
+        "jsExceptions": 0,
+        "requests": [
+          {
+            "file": "/assets/models/menhir.glb",
+            "stage": "waiting-for-ready-frame",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          },
+          {
+            "file": "/assets/models/boulders.glb",
+            "stage": "waiting-for-ready-frame",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          }
+        ],
+        "transportClean": false,
+        "shaderOrConsoleErrors": 0
+      },
+      "town": {
+        "exit": 1,
+        "stage": "complete",
+        "renderOk": true,
+        "jsExceptions": 0,
+        "requests": [
+          {
+            "file": "/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+            "stage": "loading",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          },
+          {
+            "file": "/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+            "stage": "loading",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          }
+        ],
+        "transportClean": false,
+        "shaderOrConsoleErrors": null
+      },
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "indoorBoxCount": 8,
+      "runtimeCheckbox": {
+        "on": {
+          "toon28": true,
+          "outline": 1,
+          "outlineGpu": 1,
+          "legacyToon": 1,
+          "legacyToonGpu": 1,
+          "skyFill": "c9cbe2",
+          "groundBounce": "a08068",
+          "fillIntensity": 1.6,
+          "groundGradeWeight": 1,
+          "gradeShader": true,
+          "materialHookStable": true,
+          "lineParamsGpu": [
+            2,
+            1,
+            50,
+            150
+          ],
+          "bands": [
+            0,
+            0.45,
+            1
+          ],
+          "rimStrength": 0.3,
+          "litGpu": {
+            "pairs": 70,
+            "enabled": 70,
+            "disabled": 0,
+            "mixed": 0,
+            "onlyBand": 0,
+            "onlyRim": 0
+          },
+          "shadowTint": true,
+          "decals": true,
+          "weathering": 1,
+          "timeOfDay": "evening",
+          "clouds": 1,
+          "water": true,
+          "wetRoad": true
+        },
+        "off": {
+          "toon28": true,
+          "outline": 1,
+          "outlineGpu": 1,
+          "legacyToon": 0,
+          "legacyToonGpu": 0,
+          "skyFill": "b4bce8",
+          "groundBounce": "a08068",
+          "fillIntensity": 1.6,
+          "groundGradeWeight": 0,
+          "gradeShader": true,
+          "materialHookStable": true,
+          "lineParamsGpu": [
+            2,
+            1,
+            50,
+            150
+          ],
+          "bands": [
+            0,
+            0.45,
+            1
+          ],
+          "rimStrength": 0.3,
+          "litGpu": {
+            "pairs": 70,
+            "enabled": 1,
+            "disabled": 69,
+            "mixed": 0,
+            "onlyBand": 0,
+            "onlyRim": 0
+          },
+          "shadowTint": true,
+          "decals": true,
+          "weathering": 1,
+          "timeOfDay": "evening",
+          "clouds": 1,
+          "water": true,
+          "wetRoad": true
+        }
+      },
+      "shaderChunks": {
+        "normal": {
+          "litBands": true,
+          "coverage": true,
+          "shadowTint": true
+        },
+        "town": {
+          "litBands": true,
+          "coverage": true,
+          "shadowTint": true
+        }
+      },
+      "roomGeneratorLotIds": [
+        "E1",
+        "E2",
+        "E3",
+        "E5",
+        "W1",
+        "W2",
+        "W4",
+        "W6"
+      ],
+      "tintedVolumeLotIds": [
+        "E1",
+        "E2",
+        "E3",
+        "E5",
+        "W1",
+        "W2",
+        "W4",
+        "W6"
+      ],
+      "normalHostSha256": "019060c6f509eb1eea493752e201a9396b12f689ca3fa675f9313d5cbe53dc41",
+      "townHostSha256": "5ff03aba38c659891b806ed913bd83d55b92bc24ec65e080138eda31d938ffb4",
+      "segments": {
+        "20": {
+          "frames": 658,
+          "ms": 10123,
+          "fps": 65.00049392472587,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1277.132218844985,
+          "trianglesPerFrame": 9660946.03343465,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "c9cbe2",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 1,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": [
+              2,
+              1,
+              50,
+              150
+            ],
+            "bands": [
+              0,
+              0.45,
+              1
+            ],
+            "rimStrength": 0.3,
+            "litGpu": {
+              "pairs": 4,
+              "enabled": 4,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "dc9850e1d3cc6b34c08db2de7303faaaba89297c5322e23d438f18d6b4302555"
+        },
+        "21": {
+          "frames": 657,
+          "ms": 10107.500000000007,
+          "fps": 65.00123670541673,
+          "p95": 15.5,
+          "p99": 15.599999999991269,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 851.9589041095891,
+          "trianglesPerFrame": 8796317.226788431,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "c9cbe2",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 1,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": [
+              2,
+              1,
+              50,
+              150
+            ],
+            "bands": [
+              0,
+              0.45,
+              1
+            ],
+            "rimStrength": 0.3,
+            "litGpu": {
+              "pairs": 4,
+              "enabled": 4,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "865b99366136f547d5ba384df423822380c1205e918c2ff4abb2d5f6c502f776"
+        },
+        "23": {
+          "frames": 654,
+          "ms": 10123,
+          "fps": 64.60535414402845,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 30.80000000000291,
+          "over20": 4,
+          "drawsPerFrame": 1153.6284403669724,
+          "trianglesPerFrame": 7575505.920489296,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "c9cbe2",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 1,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": [
+              2,
+              1,
+              50,
+              150
+            ],
+            "bands": [
+              0,
+              0.45,
+              1
+            ],
+            "rimStrength": 0.3,
+            "litGpu": {
+              "pairs": 4,
+              "enabled": 4,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "4be66d016b2b2661a565853e63dab02e84f94fa8eaccfd81ec7d050c4463c50d"
+        },
+        "24": {
+          "frames": 657,
+          "ms": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 907.7275494672755,
+          "trianglesPerFrame": 8861213.563165905,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "c9cbe2",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 1,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": [
+              2,
+              1,
+              50,
+              150
+            ],
+            "bands": [
+              0,
+              0.45,
+              1
+            ],
+            "rimStrength": 0.3,
+            "litGpu": {
+              "pairs": 4,
+              "enabled": 4,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "ef7f42d838a661a7e520805b490d71a9b1cd559b3f0901c41240a3ca3361a289"
+        },
+        "station-street": {
+          "frames": 173,
+          "ms": 3138.4000000000015,
+          "fps": 55.12362987509557,
+          "p95": 30.80000000000291,
+          "p99": 30.90000000000873,
+          "maximum": 31.09999999999127,
+          "over20": 31,
+          "drawsPerFrame": 1592.757225433526,
+          "trianglesPerFrame": 8337247.167630058,
+          "passed": false,
+          "nativeReportP95": 30.80000000000291,
+          "effects": {
+            "toon28": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "c9cbe2",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 1,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": [
+              2,
+              1,
+              50,
+              150
+            ],
+            "bands": [
+              0,
+              0.45,
+              1
+            ],
+            "rimStrength": 0.3,
+            "litGpu": {
+              "pairs": 4,
+              "enabled": 4,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "2e5112d25ec23082715aca8111ede47e3ec4d3c67ca80161b59f5412f65c4410"
+        },
+        "shop-interior": {
+          "frames": 203,
+          "ms": 3123.0999999999913,
+          "fps": 64.99951970798263,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.599999999991269,
+          "over20": 0,
+          "drawsPerFrame": 944.6945812807882,
+          "trianglesPerFrame": 7663198.63546798,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "c9cbe2",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 1,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": [
+              2,
+              1,
+              50,
+              150
+            ],
+            "bands": [
+              0,
+              0.45,
+              1
+            ],
+            "rimStrength": 0.3,
+            "litGpu": {
+              "pairs": 4,
+              "enabled": 4,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "d860a9b43b1961525269e8121af10afc935beade006733e38f89d42cf1a5605b"
+        },
+        "window": {
+          "frames": 658,
+          "ms": 10123.200000000012,
+          "fps": 64.99920973605177,
+          "p95": 15.5,
+          "p99": 15.599999999991269,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1188.29179331307,
+          "trianglesPerFrame": 7872186.674772036,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "c9cbe2",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 1,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": [
+              2,
+              1,
+              50,
+              150
+            ],
+            "bands": [
+              0,
+              0.45,
+              1
+            ],
+            "rimStrength": 0.3,
+            "litGpu": {
+              "pairs": 4,
+              "enabled": 4,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "c5a6ed0bc3f3f895b244dad1305931d2d14200d86489bff235f12ff9486ab295"
+        },
+        "door": {
+          "frames": 658,
+          "ms": 10123.199999999997,
+          "fps": 64.99920973605187,
+          "p95": 15.5,
+          "p99": 15.599999999991269,
+          "maximum": 15.69999999999709,
+          "over20": 0,
+          "drawsPerFrame": 1100.355623100304,
+          "trianglesPerFrame": 7521152.422492402,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "c9cbe2",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 1,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": [
+              2,
+              1,
+              50,
+              150
+            ],
+            "bands": [
+              0,
+              0.45,
+              1
+            ],
+            "rimStrength": 0.3,
+            "litGpu": {
+              "pairs": 4,
+              "enabled": 4,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "95b49285eb3ac75f9f81df0d305cf05758fb496f4b74d42ca9b0faf950c6b4ea"
+        },
+        "walking-third": {
+          "frames": 203,
+          "ms": 3123.100000000006,
+          "fps": 64.99951970798233,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.5,
+          "over20": 0,
+          "drawsPerFrame": 1591.270935960591,
+          "trianglesPerFrame": 8361753.945812807,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "walk": {
+            "from": [
+              281.6,
+              8.812,
+              934
+            ],
+            "to": [
+              280.93628192622464,
+              8.546234901474945,
+              924.5083893383909
+            ],
+            "distanceXZ": 9.514788207470932
+          },
+          "effects": {
+            "toon28": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "c9cbe2",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 1,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": [
+              2,
+              1,
+              50,
+              150
+            ],
+            "bands": [
+              0,
+              0.45,
+              1
+            ],
+            "rimStrength": 0.3,
+            "litGpu": {
+              "pairs": 4,
+              "enabled": 4,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "4ba99b461fae835149ec0ebd18a10024e873591b97cdc43758fe7103b1b63212"
+        },
+        "walking-first": {
+          "frames": 202,
+          "ms": 3107.699999999997,
+          "fps": 64.99983910930919,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.5,
+          "over20": 0,
+          "drawsPerFrame": 1443.930693069307,
+          "trianglesPerFrame": 8292813.623762377,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "walk": {
+            "from": [
+              280.91798701769375,
+              8.538909278804212,
+              924.2467599572933
+            ],
+            "to": [
+              280.2608997192523,
+              8.27579926642121,
+              914.8499738007574
+            ],
+            "distanceXZ": 9.41973215062071
+          },
+          "effects": {
+            "toon28": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "c9cbe2",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 1,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": [
+              2,
+              1,
+              50,
+              150
+            ],
+            "bands": [
+              0,
+              0.45,
+              1
+            ],
+            "rimStrength": 0.3,
+            "litGpu": {
+              "pairs": 4,
+              "enabled": 4,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "ea44b74abda2c5d4ed9913511235ce4120f558db67b8fd3ab7577da3223fd9d5"
+        }
+      },
+      "summary": {
+        "n": 10,
+        "passes": 9,
+        "total": 4723,
+        "over20": 35,
+        "maximum": 31.09999999999127
+      },
+      "startup": {
+        "weathering": {
+          "totalMs": 608.9,
+          "source": "baked",
+          "planMs": 2,
+          "rays": 0,
+          "triangles": 52,
+          "vehicleVolumes": 4
+        },
+        "firstReadyFrameMs": 41684.799999952316,
+        "buildStartMs": 21461.099999904633,
+        "worldReadyStageMs": 22279.200000047684,
+        "stationBuildingsToReadyMs": 818.1000001430511
+      },
+      "nativeFixedCameras": [
+        {
+          "name": "station-street",
+          "position": [
+            278.8,
+            10.4,
+            936
+          ]
+        },
+        {
+          "name": "shop-interior",
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ]
+        }
+      ],
+      "nativeSignals": {
+        "streetAndWalk": null,
+        "town": null
+      },
+      "verifiedAfterTown": 251
+    },
+    "ground-off": {
+      "started": "2026-11-18T10:13:18.818Z",
+      "ended": "2026-11-18T10:16:37.354Z",
+      "mode": "off",
+      "scene": "b4f1350397fc00b1ff7320f1844788dd1d16b86e",
+      "checkout": "b4f1350397fc00b1ff7320f1844788dd1d16b86e",
+      "filesChecked": 251,
+      "normal": {
+        "exit": 1,
+        "stage": "complete",
+        "renderOk": true,
+        "jsExceptions": 0,
+        "requests": [
+          {
+            "file": "/assets/models/menhir.glb",
+            "stage": "waiting-for-ready-frame",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          },
+          {
+            "file": "/assets/models/boulders.glb",
+            "stage": "waiting-for-ready-frame",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          }
+        ],
+        "transportClean": false,
+        "shaderOrConsoleErrors": 0
+      },
+      "town": {
+        "exit": 1,
+        "stage": "complete",
+        "renderOk": true,
+        "jsExceptions": 0,
+        "requests": [
+          {
+            "file": "/assets/models/boulders.glb",
+            "stage": "loading",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          }
+        ],
+        "transportClean": false,
+        "shaderOrConsoleErrors": null
+      },
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "indoorBoxCount": 8,
+      "runtimeCheckbox": {
+        "on": {
+          "toon28": false,
+          "outline": 0,
+          "outlineGpu": 0,
+          "legacyToon": 1,
+          "legacyToonGpu": 1,
+          "skyFill": "b4bce8",
+          "groundBounce": "a08068",
+          "fillIntensity": 1.6,
+          "groundGradeWeight": 0,
+          "gradeShader": true,
+          "materialHookStable": true,
+          "lineParamsGpu": null,
+          "bands": null,
+          "rimStrength": null,
+          "litGpu": {
+            "pairs": 0,
+            "enabled": 0,
+            "disabled": 0,
+            "mixed": 0,
+            "onlyBand": 0,
+            "onlyRim": 0
+          },
+          "shadowTint": true,
+          "decals": true,
+          "weathering": 1,
+          "timeOfDay": "evening",
+          "clouds": 1,
+          "water": true,
+          "wetRoad": true
+        },
+        "off": {
+          "toon28": false,
+          "outline": 0,
+          "outlineGpu": 0,
+          "legacyToon": 0,
+          "legacyToonGpu": 0,
+          "skyFill": "b4bce8",
+          "groundBounce": "a08068",
+          "fillIntensity": 1.6,
+          "groundGradeWeight": 0,
+          "gradeShader": true,
+          "materialHookStable": true,
+          "lineParamsGpu": null,
+          "bands": null,
+          "rimStrength": null,
+          "litGpu": {
+            "pairs": 0,
+            "enabled": 0,
+            "disabled": 0,
+            "mixed": 0,
+            "onlyBand": 0,
+            "onlyRim": 0
+          },
+          "shadowTint": true,
+          "decals": true,
+          "weathering": 1,
+          "timeOfDay": "evening",
+          "clouds": 1,
+          "water": true,
+          "wetRoad": true
+        }
+      },
+      "shaderChunks": {
+        "normal": {
+          "litBands": false,
+          "coverage": false,
+          "shadowTint": true
+        },
+        "town": {
+          "litBands": false,
+          "coverage": false,
+          "shadowTint": true
+        }
+      },
+      "roomGeneratorLotIds": [
+        "E1",
+        "E2",
+        "E3",
+        "E5",
+        "W1",
+        "W2",
+        "W4",
+        "W6"
+      ],
+      "tintedVolumeLotIds": [
+        "E1",
+        "E2",
+        "E3",
+        "E5",
+        "W1",
+        "W2",
+        "W4",
+        "W6"
+      ],
+      "normalHostSha256": "019060c6f509eb1eea493752e201a9396b12f689ca3fa675f9313d5cbe53dc41",
+      "townHostSha256": "3f02dc4752a69be17eac7300e94c7a857472fe8a2f63cb0bd736202b126a4bb0",
+      "segments": {
+        "20": {
+          "frames": 657,
+          "ms": 10107.599999999999,
+          "fps": 65.00059361272707,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1280.4931506849316,
+          "trianglesPerFrame": 9676367.563165905,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": false,
+            "outline": 0,
+            "outlineGpu": 0,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "b4bce8",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 0,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": null,
+            "bands": null,
+            "rimStrength": null,
+            "litGpu": {
+              "pairs": 0,
+              "enabled": 0,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "d57323540ea23390ce2ae93ca73f6283f65db18aa10f00af271f5926e9b0c9ad"
+        },
+        "21": {
+          "frames": 657,
+          "ms": 10107.799999999996,
+          "fps": 64.99930746552171,
+          "p95": 15.5,
+          "p99": 15.599999999998545,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 852,
+          "trianglesPerFrame": 8796438,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": false,
+            "outline": 0,
+            "outlineGpu": 0,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "b4bce8",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 0,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": null,
+            "bands": null,
+            "rimStrength": null,
+            "litGpu": {
+              "pairs": 0,
+              "enabled": 0,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "5d8717b3bbd59b3eea376dd937363516a8d29d3caa09ca1ff12b404f2d39bb23"
+        },
+        "23": {
+          "frames": 658,
+          "ms": 10123.100000000006,
+          "fps": 64.99985182404596,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1157.2613981762918,
+          "trianglesPerFrame": 7601951.665653495,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": false,
+            "outline": 0,
+            "outlineGpu": 0,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "b4bce8",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 0,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": null,
+            "bands": null,
+            "rimStrength": null,
+            "litGpu": {
+              "pairs": 0,
+              "enabled": 0,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "38a10c6504ef8a83c873ddfd1aa91f271eafb8e3125a99f784a5e830aef6edc4"
+        },
+        "24": {
+          "frames": 657,
+          "ms": 10107.700000000012,
+          "fps": 64.99995053276207,
+          "p95": 15.5,
+          "p99": 15.599999999991269,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 908.027397260274,
+          "trianglesPerFrame": 8861333.788432268,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": false,
+            "outline": 0,
+            "outlineGpu": 0,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "b4bce8",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 0,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": null,
+            "bands": null,
+            "rimStrength": null,
+            "litGpu": {
+              "pairs": 0,
+              "enabled": 0,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "604b33d7c41fc60503642071a5d9f5a62df4f1daafd7810af562efe583f12ed3"
+        },
+        "station-street": {
+          "frames": 202,
+          "ms": 3107.699999999997,
+          "fps": 64.99983910930919,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1604.6435643564357,
+          "trianglesPerFrame": 8404620.217821782,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": false,
+            "outline": 0,
+            "outlineGpu": 0,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "b4bce8",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 0,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": null,
+            "bands": null,
+            "rimStrength": null,
+            "litGpu": {
+              "pairs": 0,
+              "enabled": 0,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "d3b0bab30e1568727ec96583e43589afc315d61c02658c54e2dde4df49b52f4d"
+        },
+        "shop-interior": {
+          "frames": 202,
+          "ms": 3107.699999999997,
+          "fps": 64.99983910930919,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.599999999991269,
+          "over20": 0,
+          "drawsPerFrame": 947,
+          "trianglesPerFrame": 7691301,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": false,
+            "outline": 0,
+            "outlineGpu": 0,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "b4bce8",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 0,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": null,
+            "bands": null,
+            "rimStrength": null,
+            "litGpu": {
+              "pairs": 0,
+              "enabled": 0,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "e467bb4110b6fb2a8795c3f6d2343e92d8f4593d110dd6111a58f63aa65d5745"
+        },
+        "window": {
+          "frames": 657,
+          "ms": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 15.69999999999709,
+          "over20": 0,
+          "drawsPerFrame": 1186.75799086758,
+          "trianglesPerFrame": 7856704.06697108,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": false,
+            "outline": 0,
+            "outlineGpu": 0,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "b4bce8",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 0,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": null,
+            "bands": null,
+            "rimStrength": null,
+            "litGpu": {
+              "pairs": 0,
+              "enabled": 0,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "301cf79100d442c1580e0a7a956a34e5ceabd90cdf9ea2d158d1ee3dc5ae235a"
+        },
+        "door": {
+          "frames": 657,
+          "ms": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1101.4627092846272,
+          "trianglesPerFrame": 7517529.849315069,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": false,
+            "outline": 0,
+            "outlineGpu": 0,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "b4bce8",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 0,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": null,
+            "bands": null,
+            "rimStrength": null,
+            "litGpu": {
+              "pairs": 0,
+              "enabled": 0,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "72a097b5961906b349b7e7efdc6b7ae90d4ca824b8ca4f455074addfbbc9161e"
+        },
+        "walking-third": {
+          "frames": 203,
+          "ms": 3138.5,
+          "fps": 64.68057989485423,
+          "p95": 15.5,
+          "p99": 15.60000000000582,
+          "maximum": 30.69999999999709,
+          "over20": 1,
+          "drawsPerFrame": 1590.527093596059,
+          "trianglesPerFrame": 8361824.0344827585,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "walk": {
+            "from": [
+              281.6,
+              8.812,
+              934
+            ],
+            "to": [
+              280.9301736763747,
+              8.543789044284459,
+              924.4210372958735
+            ],
+            "distanceXZ": 9.60235355477335
+          },
+          "effects": {
+            "toon28": false,
+            "outline": 0,
+            "outlineGpu": 0,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "b4bce8",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 0,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": null,
+            "bands": null,
+            "rimStrength": null,
+            "litGpu": {
+              "pairs": 0,
+              "enabled": 0,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "4570b33129019c2b47e1ae96400e3b0e7cee3968dbe335feaca811eb2feb52f2"
+        },
+        "walking-first": {
+          "frames": 203,
+          "ms": 3123.199999999997,
+          "fps": 64.99743852459022,
+          "p95": 15.5,
+          "p99": 15.599999999991269,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1442.8226600985222,
+          "trianglesPerFrame": 8290760.083743842,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "walk": {
+            "from": [
+              280.9146970496447,
+              8.537591914222402,
+              924.1997112222286
+            ],
+            "to": [
+              280.25428368342966,
+              8.273150082254437,
+              914.7553600805156
+            ],
+            "distanceXZ": 9.467413284643877
+          },
+          "effects": {
+            "toon28": false,
+            "outline": 0,
+            "outlineGpu": 0,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "b4bce8",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 0,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": null,
+            "bands": null,
+            "rimStrength": null,
+            "litGpu": {
+              "pairs": 0,
+              "enabled": 0,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "2769d9a4bbeb514e949554c1627034ab4618bc70383cde2b25728c5a017c781b"
+        }
+      },
+      "summary": {
+        "n": 10,
+        "passes": 10,
+        "total": 4753,
+        "over20": 1,
+        "maximum": 30.69999999999709
+      },
+      "startup": {
+        "weathering": {
+          "totalMs": 620.6,
+          "source": "baked",
+          "planMs": 2.1,
+          "rays": 0,
+          "triangles": 52,
+          "vehicleVolumes": 4
+        },
+        "firstReadyFrameMs": 38984.90000009537,
+        "buildStartMs": 21488.60000014305,
+        "worldReadyStageMs": 22323,
+        "stationBuildingsToReadyMs": 834.3999998569489
+      },
+      "nativeFixedCameras": [
+        {
+          "name": "station-street",
+          "position": [
+            278.8,
+            10.4,
+            936
+          ]
+        },
+        {
+          "name": "shop-interior",
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ]
+        }
+      ],
+      "nativeSignals": {
+        "streetAndWalk": null,
+        "town": null
+      },
+      "verifiedAfterTown": 251
+    },
+    "ground-on-repeat": {
+      "started": "2026-11-18T10:16:37.664Z",
+      "ended": "2026-11-18T10:20:07.783Z",
+      "mode": "on",
+      "scene": "b4f1350397fc00b1ff7320f1844788dd1d16b86e",
+      "checkout": "b4f1350397fc00b1ff7320f1844788dd1d16b86e",
+      "filesChecked": 251,
+      "normal": {
+        "exit": 0,
+        "stage": "complete",
+        "renderOk": true,
+        "jsExceptions": 0,
+        "requests": [],
+        "transportClean": true,
+        "shaderOrConsoleErrors": 0
+      },
+      "town": {
+        "exit": 1,
+        "stage": "complete",
+        "renderOk": true,
+        "jsExceptions": 0,
+        "requests": [
+          {
+            "file": "/assets/models/boulders.glb",
+            "stage": "loading",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          },
+          {
+            "file": "/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+            "stage": "loading",
+            "error": "net::ERR_ABORTED",
+            "canceled": true
+          }
+        ],
+        "transportClean": false,
+        "shaderOrConsoleErrors": null
+      },
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "indoorBoxCount": 8,
+      "runtimeCheckbox": {
+        "on": {
+          "toon28": true,
+          "outline": 1,
+          "outlineGpu": 1,
+          "legacyToon": 1,
+          "legacyToonGpu": 1,
+          "skyFill": "c9cbe2",
+          "groundBounce": "a08068",
+          "fillIntensity": 1.6,
+          "groundGradeWeight": 1,
+          "gradeShader": true,
+          "materialHookStable": true,
+          "lineParamsGpu": [
+            2,
+            1,
+            50,
+            150
+          ],
+          "bands": [
+            0,
+            0.45,
+            1
+          ],
+          "rimStrength": 0.3,
+          "litGpu": {
+            "pairs": 70,
+            "enabled": 70,
+            "disabled": 0,
+            "mixed": 0,
+            "onlyBand": 0,
+            "onlyRim": 0
+          },
+          "shadowTint": true,
+          "decals": true,
+          "weathering": 1,
+          "timeOfDay": "evening",
+          "clouds": 1,
+          "water": true,
+          "wetRoad": true
+        },
+        "off": {
+          "toon28": true,
+          "outline": 1,
+          "outlineGpu": 1,
+          "legacyToon": 0,
+          "legacyToonGpu": 0,
+          "skyFill": "b4bce8",
+          "groundBounce": "a08068",
+          "fillIntensity": 1.6,
+          "groundGradeWeight": 0,
+          "gradeShader": true,
+          "materialHookStable": true,
+          "lineParamsGpu": [
+            2,
+            1,
+            50,
+            150
+          ],
+          "bands": [
+            0,
+            0.45,
+            1
+          ],
+          "rimStrength": 0.3,
+          "litGpu": {
+            "pairs": 70,
+            "enabled": 1,
+            "disabled": 69,
+            "mixed": 0,
+            "onlyBand": 0,
+            "onlyRim": 0
+          },
+          "shadowTint": true,
+          "decals": true,
+          "weathering": 1,
+          "timeOfDay": "evening",
+          "clouds": 1,
+          "water": true,
+          "wetRoad": true
+        }
+      },
+      "shaderChunks": {
+        "normal": {
+          "litBands": true,
+          "coverage": true,
+          "shadowTint": true
+        },
+        "town": {
+          "litBands": true,
+          "coverage": true,
+          "shadowTint": true
+        }
+      },
+      "roomGeneratorLotIds": [
+        "E1",
+        "E2",
+        "E3",
+        "E5",
+        "W1",
+        "W2",
+        "W4",
+        "W6"
+      ],
+      "tintedVolumeLotIds": [
+        "E1",
+        "E2",
+        "E3",
+        "E5",
+        "W1",
+        "W2",
+        "W4",
+        "W6"
+      ],
+      "normalHostSha256": "019060c6f509eb1eea493752e201a9396b12f689ca3fa675f9313d5cbe53dc41",
+      "townHostSha256": "5ff03aba38c659891b806ed913bd83d55b92bc24ec65e080138eda31d938ffb4",
+      "segments": {
+        "20": {
+          "frames": 656,
+          "ms": 10123.099999999999,
+          "fps": 64.8022838853711,
+          "p95": 15.5,
+          "p99": 15.599999999998545,
+          "maximum": 30.799999999995634,
+          "over20": 2,
+          "drawsPerFrame": 1273.2865853658536,
+          "trianglesPerFrame": 9644947.06707317,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "c9cbe2",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 1,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": [
+              2,
+              1,
+              50,
+              150
+            ],
+            "bands": [
+              0,
+              0.45,
+              1
+            ],
+            "rimStrength": 0.3,
+            "litGpu": {
+              "pairs": 4,
+              "enabled": 4,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "d07ffb26c59479e29229351449606a219e51017be00d6a09749bcc4078caa91b"
+        },
+        "21": {
+          "frames": 658,
+          "ms": 10123,
+          "fps": 65.00049392472587,
+          "p95": 15.5,
+          "p99": 15.599999999991269,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 850.7644376899696,
+          "trianglesPerFrame": 8781091.270516718,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "c9cbe2",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 1,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": [
+              2,
+              1,
+              50,
+              150
+            ],
+            "bands": [
+              0,
+              0.45,
+              1
+            ],
+            "rimStrength": 0.3,
+            "litGpu": {
+              "pairs": 4,
+              "enabled": 4,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "4327c8b78e31890200007d608b2270125feb0cf8179016e35278d760d84d44a1"
+        },
+        "23": {
+          "frames": 658,
+          "ms": 10123.100000000006,
+          "fps": 64.99985182404596,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1150.2188449848024,
+          "trianglesPerFrame": 7559126.62006079,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "c9cbe2",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 1,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": [
+              2,
+              1,
+              50,
+              150
+            ],
+            "bands": [
+              0,
+              0.45,
+              1
+            ],
+            "rimStrength": 0.3,
+            "litGpu": {
+              "pairs": 4,
+              "enabled": 4,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "f8e7f6ac7297d4e8ee1fb1487eee91817693b8838d1120f8bd9cdd244f676571"
+        },
+        "24": {
+          "frames": 658,
+          "ms": 10123,
+          "fps": 65.00049392472587,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 908.5,
+          "trianglesPerFrame": 8874054.173252279,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "c9cbe2",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 1,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": [
+              2,
+              1,
+              50,
+              150
+            ],
+            "bands": [
+              0,
+              0.45,
+              1
+            ],
+            "rimStrength": 0.3,
+            "litGpu": {
+              "pairs": 4,
+              "enabled": 4,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "6810db6f34d3aa37575fcb6575d500b5311e069b2f631ed743e2b47c5b830700"
+        },
+        "station-street": {
+          "frames": 202,
+          "ms": 3107.699999999997,
+          "fps": 64.99983910930919,
+          "p95": 15.5,
+          "p99": 15.599999999991269,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1591,
+          "trianglesPerFrame": 8323660,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "c9cbe2",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 1,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": [
+              2,
+              1,
+              50,
+              150
+            ],
+            "bands": [
+              0,
+              0.45,
+              1
+            ],
+            "rimStrength": 0.3,
+            "litGpu": {
+              "pairs": 4,
+              "enabled": 4,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "151a0a8889d895c118cb969e74b0278f8cee0a741f93b366a4387dc2cd351801"
+        },
+        "shop-interior": {
+          "frames": 202,
+          "ms": 3107.800000000003,
+          "fps": 64.99774760280579,
+          "p95": 15.5,
+          "p99": 15.5,
+          "maximum": 15.5,
+          "over20": 0,
+          "drawsPerFrame": 942.6386138613861,
+          "trianglesPerFrame": 7637124.287128713,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "c9cbe2",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 1,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": [
+              2,
+              1,
+              50,
+              150
+            ],
+            "bands": [
+              0,
+              0.45,
+              1
+            ],
+            "rimStrength": 0.3,
+            "litGpu": {
+              "pairs": 4,
+              "enabled": 4,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "9d4a5ee96926bcc37680a1a730e1477bec2538607e9dca1842a704513ecca2a8"
+        },
+        "window": {
+          "frames": 658,
+          "ms": 10123.200000000012,
+          "fps": 64.99920973605177,
+          "p95": 15.5,
+          "p99": 15.599999999991269,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1189.1580547112462,
+          "trianglesPerFrame": 7877317.17325228,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "c9cbe2",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 1,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": [
+              2,
+              1,
+              50,
+              150
+            ],
+            "bands": [
+              0,
+              0.45,
+              1
+            ],
+            "rimStrength": 0.3,
+            "litGpu": {
+              "pairs": 4,
+              "enabled": 4,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "5ecc95686283240532fe6515e6e1c967ad7625370b5390379eb82fa02f6e246e"
+        },
+        "door": {
+          "frames": 657,
+          "ms": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95": 15.5,
+          "p99": 15.599999999991269,
+          "maximum": 15.60000000000582,
+          "over20": 0,
+          "drawsPerFrame": 1096.3409436834095,
+          "trianglesPerFrame": 7499882.08066971,
+          "passed": true,
+          "nativeReportP95": 15.5,
+          "effects": {
+            "toon28": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "c9cbe2",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 1,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": [
+              2,
+              1,
+              50,
+              150
+            ],
+            "bands": [
+              0,
+              0.45,
+              1
+            ],
+            "rimStrength": 0.3,
+            "litGpu": {
+              "pairs": 4,
+              "enabled": 4,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "a0e256f5a73a09817747fd614624b97355365533df7fd09d3597ce09afbb849b"
+        },
+        "walking-third": {
+          "frames": 158,
+          "ms": 3138.5,
+          "fps": 50.342520312251075,
+          "p95": 30.80000000000291,
+          "p99": 30.90000000000873,
+          "maximum": 30.90000000000873,
+          "over20": 46,
+          "drawsPerFrame": 1591.4240506329113,
+          "trianglesPerFrame": 8359371.696202531,
+          "passed": false,
+          "nativeReportP95": 30.80000000000291,
+          "walk": {
+            "from": [
+              281.6,
+              8.812,
+              934
+            ],
+            "to": [
+              280.9249948287494,
+              8.541715337082914,
+              924.3469763243897
+            ],
+            "distanceXZ": 9.676595375601238
+          },
+          "effects": {
+            "toon28": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "c9cbe2",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 1,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": [
+              2,
+              1,
+              50,
+              150
+            ],
+            "bands": [
+              0,
+              0.45,
+              1
+            ],
+            "rimStrength": 0.3,
+            "litGpu": {
+              "pairs": 4,
+              "enabled": 4,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "7aae4483e2afa4cb46568a86eb06ca71dcb72d93cc3a22b5d66a1d4b3f22e0d0"
+        },
+        "walking-first": {
+          "frames": 133,
+          "ms": 3153.800000000003,
+          "fps": 42.17134884900751,
+          "p95": 30.80000000000291,
+          "p99": 30.90000000000873,
+          "maximum": 31,
+          "over20": 72,
+          "drawsPerFrame": 1440.7443609022557,
+          "trianglesPerFrame": 8287652.909774436,
+          "passed": false,
+          "nativeReportP95": 30.80000000000291,
+          "walk": {
+            "from": [
+              280.9146166053248,
+              8.537559702816008,
+              924.1985608148575
+            ],
+            "to": [
+              280.23086551539654,
+              8.263773010903641,
+              914.42046467513
+            ],
+            "distanceXZ": 9.801973253928608
+          },
+          "effects": {
+            "toon28": true,
+            "outline": 1,
+            "outlineGpu": 1,
+            "legacyToon": 1,
+            "legacyToonGpu": 1,
+            "skyFill": "c9cbe2",
+            "groundBounce": "a08068",
+            "fillIntensity": 1.6,
+            "groundGradeWeight": 1,
+            "gradeShader": true,
+            "materialHookStable": true,
+            "lineParamsGpu": [
+              2,
+              1,
+              50,
+              150
+            ],
+            "bands": [
+              0,
+              0.45,
+              1
+            ],
+            "rimStrength": 0.3,
+            "litGpu": {
+              "pairs": 4,
+              "enabled": 4,
+              "disabled": 0,
+              "mixed": 0,
+              "onlyBand": 0,
+              "onlyRim": 0
+            },
+            "shadowTint": true,
+            "decals": true,
+            "weathering": 1,
+            "timeOfDay": "evening",
+            "clouds": 1,
+            "water": true,
+            "wetRoad": true
+          },
+          "originalSha256": "b68164530476226e95c7c3b71e2bc6e5f88d8b47c8da03d79d34dfce2e970f88"
+        }
+      },
+      "summary": {
+        "n": 10,
+        "passes": 8,
+        "total": 4640,
+        "over20": 120,
+        "maximum": 31
+      },
+      "startup": {
+        "weathering": {
+          "totalMs": 664.9,
+          "source": "baked",
+          "planMs": 1.9,
+          "rays": 0,
+          "triangles": 52,
+          "vehicleVolumes": 4
+        },
+        "firstReadyFrameMs": 43031.299999952316,
+        "buildStartMs": 22186.900000095367,
+        "worldReadyStageMs": 23062.299999952316,
+        "stationBuildingsToReadyMs": 875.3999998569489
+      },
+      "nativeFixedCameras": [
+        {
+          "name": "station-street",
+          "position": [
+            278.8,
+            10.4,
+            936
+          ]
+        },
+        {
+          "name": "shop-interior",
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ]
+        }
+      ],
+      "nativeSignals": {
+        "streetAndWalk": null,
+        "town": null
+      },
+      "verifiedAfterTown": 251
+    }
+  },
+  "attempts": [
+    {
+      "key": "ground-on",
+      "mode": "on",
+      "attempt": 1,
+      "startedAt": "2026-11-18T10:09:53.576Z",
+      "finishedAt": "2026-11-18T10:13:18.619Z",
+      "valid": true,
+      "wrapperExit": 0
+    },
+    {
+      "key": "ground-off",
+      "mode": "off",
+      "attempt": 1,
+      "startedAt": "2026-11-18T10:13:18.619Z",
+      "finishedAt": "2026-11-18T10:16:37.453Z",
+      "valid": true,
+      "wrapperExit": 0
+    },
+    {
+      "key": "ground-on-repeat",
+      "mode": "on",
+      "attempt": 1,
+      "startedAt": "2026-11-18T10:16:37.454Z",
+      "finishedAt": "2026-11-18T10:20:07.884Z",
+      "valid": true,
+      "wrapperExit": 0
+    }
+  ],
+  "framesSha256": "717b9d3cc14440e2102db77cd429ec6d2fde1b1656e0fd09631eefe85464978f"
+}

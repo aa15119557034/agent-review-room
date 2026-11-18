@@ -1,0 +1,767 @@
+{
+  "source": "ca10742c32074e84d621c4d890ee266842d7285c",
+  "chosen": "grade-fill",
+  "finalSource": "b4f1350397fc00b1ff7320f1844788dd1d16b86e",
+  "displayLumaWeights": [
+    0.2126,
+    0.7152,
+    0.0722
+  ],
+  "rects": {
+    "arch": [
+      678,
+      353,
+      808,
+      377
+    ],
+    "awning": [
+      1202,
+      366,
+      1252,
+      395
+    ],
+    "street": [
+      706,
+      646,
+      978,
+      800
+    ]
+  },
+  "sessions": {
+    "evening": {
+      "captures": 50,
+      "version": {
+        "node": "24.22.0",
+        "acorn": "8.18.0",
+        "ada": "4.0.0",
+        "amaro": "1.1.11",
+        "ares": "1.34.8",
+        "brotli": "1.2.0",
+        "cldr": "48.0",
+        "icu": "78.2",
+        "llhttp": "9.4.3",
+        "merve": "1.2.2",
+        "modules": "149",
+        "napi": "10",
+        "nbytes": "0.1.4",
+        "ncrypto": "0.0.1",
+        "nghttp2": "1.70.0",
+        "nghttp3": "",
+        "ngtcp2": "",
+        "openssl": "0.0.0",
+        "simdjson": "4.6.11",
+        "simdutf": "7.7.0",
+        "sqlite": "3.53.4",
+        "tz": "2026d",
+        "undici": "7.29.1",
+        "unicode": "17.0",
+        "uv": "1.52.1",
+        "uvwasi": "0.0.23",
+        "v8": "15.2.124.43-electron.0",
+        "zlib": "1.3.2.1-motley",
+        "zstd": "1.6.0",
+        "electron": "44.9.0",
+        "chrome": "152.0.7977.167"
+      },
+      "sourceAndAssetsRestored": true,
+      "abortedRequests": [
+        "menhir.glb",
+        "boulders.glb",
+        "plastic_crate_02_1k.gltf",
+        "plastic_crate_02.bin"
+      ],
+      "street": {
+        "native": {
+          "luma248Percent": 0.00448,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 0.94398,
+          "hemi": "b4bce8",
+          "bloom": 0.2,
+          "arch": {
+            "p10": 81.43,
+            "p90": 209.66,
+            "span": 128.24
+          },
+          "awning": {
+            "p10": 73.34,
+            "p90": 123.91,
+            "span": 50.57
+          },
+          "street": {
+            "p10": 73.81,
+            "p90": 92.72,
+            "span": 18.9
+          }
+        },
+        "haze-only": {
+          "luma248Percent": 0.00448,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 0.96358,
+          "hemi": "b4bce8",
+          "bloom": 0.2,
+          "arch": {
+            "p10": 81.43,
+            "p90": 209.66,
+            "span": 128.24
+          },
+          "awning": {
+            "p10": 73.34,
+            "p90": 123.91,
+            "span": 50.57
+          },
+          "street": {
+            "p10": 73.81,
+            "p90": 92.72,
+            "span": 18.9
+          }
+        },
+        "bloom-only": {
+          "luma248Percent": 0.00432,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 0.84437,
+          "hemi": "b4bce8",
+          "bloom": 0.10800000000000001,
+          "arch": {
+            "p10": 78.44,
+            "p90": 209.59,
+            "span": 131.16
+          },
+          "awning": {
+            "p10": 72.27,
+            "p90": 123.19,
+            "span": 50.92
+          },
+          "street": {
+            "p10": 73.11,
+            "p90": 91.85,
+            "span": 18.74
+          }
+        },
+        "grade-only": {
+          "luma248Percent": 0.01289,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 1.08395,
+          "hemi": "b4bce8",
+          "bloom": 0.2,
+          "arch": {
+            "p10": 83.43,
+            "p90": 210.03,
+            "span": 126.6
+          },
+          "awning": {
+            "p10": 74.12,
+            "p90": 140.21,
+            "span": 66.08
+          },
+          "street": {
+            "p10": 74.46,
+            "p90": 97.57,
+            "span": 23.11
+          }
+        },
+        "fill-only": {
+          "luma248Percent": 0.00455,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 1.12238,
+          "hemi": "c9cbe2",
+          "bloom": 0.2,
+          "arch": {
+            "p10": 82.07,
+            "p90": 210.02,
+            "span": 127.95
+          },
+          "awning": {
+            "p10": 76.05,
+            "p90": 130.3,
+            "span": 54.25
+          },
+          "street": {
+            "p10": 77.88,
+            "p90": 96.32,
+            "span": 18.44
+          }
+        },
+        "post-only": {
+          "luma248Percent": 0.01304,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 0.99745,
+          "hemi": "b4bce8",
+          "bloom": 0.10800000000000001,
+          "arch": {
+            "p10": 80.22,
+            "p90": 209.66,
+            "span": 129.45
+          },
+          "awning": {
+            "p10": 72.34,
+            "p90": 139.09,
+            "span": 66.75
+          },
+          "street": {
+            "p10": 73.53,
+            "p90": 96.56,
+            "span": 23.03
+          }
+        },
+        "combined": {
+          "luma248Percent": 0.01343,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 1.17485,
+          "hemi": "c9cbe2",
+          "bloom": 0.10800000000000001,
+          "arch": {
+            "p10": 81.15,
+            "p90": 209.95,
+            "span": 128.8
+          },
+          "awning": {
+            "p10": 75.84,
+            "p90": 148.51,
+            "span": 72.67
+          },
+          "street": {
+            "p10": 78.1,
+            "p90": 100.91,
+            "span": 22.81
+          }
+        },
+        "bright": {
+          "luma248Percent": 0.02307,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 1.87886,
+          "hemi": "c9cbe2",
+          "bloom": 0.10800000000000001,
+          "arch": {
+            "p10": 87.29,
+            "p90": 210.47,
+            "span": 123.19
+          },
+          "awning": {
+            "p10": 81.41,
+            "p90": 156.8,
+            "span": 75.38
+          },
+          "street": {
+            "p10": 84.03,
+            "p90": 113.05,
+            "span": 29.02
+          }
+        },
+        "grade-fill": {
+          "luma248Percent": 0.01296,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 1.26736,
+          "hemi": "c9cbe2",
+          "bloom": 0.2,
+          "arch": {
+            "p10": 84.36,
+            "p90": 210.66,
+            "span": 126.3
+          },
+          "awning": {
+            "p10": 77.76,
+            "p90": 149.72,
+            "span": 71.96
+          },
+          "street": {
+            "p10": 79.1,
+            "p90": 102.08,
+            "span": 22.98
+          }
+        },
+        "bright-fill": {
+          "luma248Percent": 0.02454,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 1.924,
+          "hemi": "c9cbe2",
+          "bloom": 0.2,
+          "arch": {
+            "p10": 91.65,
+            "p90": 210.66,
+            "span": 119.02
+          },
+          "awning": {
+            "p10": 83.41,
+            "p90": 157.8,
+            "span": 74.38
+          },
+          "street": {
+            "p10": 85.24,
+            "p90": 114.37,
+            "span": 29.13
+          }
+        }
+      },
+      "indoor": {
+        "native": {
+          "luma248Percent": 0.07894,
+          "rgb254WhitePercent": 0.00023,
+          "anyChannel254Percent": 2.31026
+        },
+        "haze-only": {
+          "luma248Percent": 0.07894,
+          "rgb254WhitePercent": 0.00023,
+          "anyChannel254Percent": 2.31026
+        },
+        "bloom-only": {
+          "luma248Percent": 0.07778,
+          "rgb254WhitePercent": 0.00015,
+          "anyChannel254Percent": 2.22824
+        },
+        "grade-only": {
+          "luma248Percent": 0.13958,
+          "rgb254WhitePercent": 0.00023,
+          "anyChannel254Percent": 2.45586
+        },
+        "fill-only": {
+          "luma248Percent": 0.08002,
+          "rgb254WhitePercent": 0.00023,
+          "anyChannel254Percent": 2.31327
+        },
+        "post-only": {
+          "luma248Percent": 0.13711,
+          "rgb254WhitePercent": 0.00015,
+          "anyChannel254Percent": 2.42423
+        },
+        "combined": {
+          "luma248Percent": 0.13719,
+          "rgb254WhitePercent": 0.00023,
+          "anyChannel254Percent": 2.42515
+        },
+        "bright": {
+          "luma248Percent": 0.1625,
+          "rgb254WhitePercent": 0.00023,
+          "anyChannel254Percent": 2.62708
+        },
+        "grade-fill": {
+          "luma248Percent": 0.13927,
+          "rgb254WhitePercent": 0.00023,
+          "anyChannel254Percent": 2.4591
+        },
+        "bright-fill": {
+          "luma248Percent": 0.17855,
+          "rgb254WhitePercent": 0.00023,
+          "anyChannel254Percent": 2.69498
+        }
+      },
+      "sha256": {
+        "native-station-street": "1d917567cf201323175fe28bd46b2b85accf3a2d8d756f686d1558f77162c17a",
+        "native-shop-interior": "301331966d0ad500d49802e5c1fc16069d4ebca1c5048cf24950dc4487a4c196",
+        "native-20-rear-eye": "e3b4d1d571821be7a927d09b07d375007f44ec90256a315821ab02bde63ea544",
+        "native-shop-door-eye": "013e4a1744851a6496a0d14868306c61cd94b95da157868bfc6893e673c13107",
+        "native-van-side": "34003ec029b8f046d4e3b2e9cd8d6ad65fe4caccf8446e25ba86035d0f508efd",
+        "haze-only-station-street": "fd1960ebb010f8c0616962d0a25118bb4787fbb1bac5dffd2b39629c9579a41d",
+        "haze-only-shop-interior": "301331966d0ad500d49802e5c1fc16069d4ebca1c5048cf24950dc4487a4c196",
+        "haze-only-20-rear-eye": "eaad9489683cb18280b262e49d45c3ddc1fda4e6aca536621de23e5b37747678",
+        "haze-only-shop-door-eye": "fa053ba37835b725bbacb4277b8de5b14c2aca59d9a2834f6b5065f1b51e8661",
+        "haze-only-van-side": "c826f195f560731000b63544273653f21cbde799fdcd7289598cebb72bb169a9",
+        "bloom-only-station-street": "3f633c84a8d3baa1ac09b6d6c423c97a244aad5657da9f0c36907f996a90dd56",
+        "bloom-only-shop-interior": "b106767153d9469126e483ca8748502cee09c8342bd38db1b2220feeca46d08f",
+        "bloom-only-20-rear-eye": "980ad4a5b350398e9fa2aad731dc199d7b4755ef8ddf965f9897ac4a6a3edb1a",
+        "bloom-only-shop-door-eye": "4b35ecec7c1a4f1c1ecad53670c9d98aee33b720e03411b90c85cc0418c722a5",
+        "bloom-only-van-side": "80782f87cf06ed0e98e673ea4c798a02678c0c0565e3247e15f55b77628a6bc5",
+        "grade-only-station-street": "4917e464fedb37b7279104149de523b019143b7f05560a54448a4c033fc72672",
+        "grade-only-shop-interior": "eae0167a7f2da08050d78931396257ce01312ebbf4435c331144e41e617ad16a",
+        "grade-only-20-rear-eye": "1ac3a4d1d5a08ab85a99dc68e95396400ad44de84cfd611b63b0b63e01ecd605",
+        "grade-only-shop-door-eye": "1dbc7aa23ba850bd8a67cf75739f5fb57f91175be93c9f56f3c837f1fc301f6c",
+        "grade-only-van-side": "b0679ea1ba71f375b36e1715e815380c8f985f1e4ee94c9c0f09b5dfb47efb46",
+        "fill-only-station-street": "59bf7814dca1d10d945cc1df71e9be957bb7b6c60019b6045a42c82b6f2b213d",
+        "fill-only-shop-interior": "c4c363420cab1c6375bef301749795181cc276ae45fdf9ec53bfa124f7e27fc2",
+        "fill-only-20-rear-eye": "38c272471a9fa32e34d2b682e636ea7b88759c75ce3a9524b46940f3dc1fb09f",
+        "fill-only-shop-door-eye": "1fc70fed334a8c8b406ac18333114169c0cb0a47cbd279e5d0a4fc6edb36a6a5",
+        "fill-only-van-side": "07297e198796cca9f2aed8e79735ca118f5362cee36a4b9b917efa8ac9b35401",
+        "post-only-station-street": "9a11de76b02fcc7b1268cd3071fcd0ae09ed996d3796d7af1f38422b3c406053",
+        "post-only-shop-interior": "2b484ce71d0dfa85a506c8d6830b19e0c10c3c9870ffb58eeef8c08372302216",
+        "post-only-20-rear-eye": "2d0710701cbfcd1f59070dc2b572587361d8154c5e66b3af96c334fa06ec19e0",
+        "post-only-shop-door-eye": "3a0aefe624380434e5c521a6feb5020c34e7f64b732ec89a863bc692738f4126",
+        "post-only-van-side": "261a33ca3b8f7c95e9dbf5bfbf137c468f939fb20e61b4e6b334612a56b69754",
+        "combined-station-street": "e552b0102d2ceddc8bf43a3d76aa0103761e07f79ca80c64d9aa4b9ba0119cbe",
+        "combined-shop-interior": "d84ca76d370bb58be7c0cc7667a4ef06bbd9b5b040f86a6d46d03a70a458de6d",
+        "combined-20-rear-eye": "198b89668d0ba205bcb0cf6b299bb8e3f8045c1d1b98f37a8ac52429540d067f",
+        "combined-shop-door-eye": "95e6dc8d3484f39da7e5b0319d5cb629ebb004904d9300eee286baa04d6632cc",
+        "combined-van-side": "2551e975e573f1fa4f8c6c774941a7dd1b574940547e69d43daeedd9ec9d45d2",
+        "bright-station-street": "22793449c2251085d947b1e8f4a0f10967e96e05d5fd93529ef8857215f6b913",
+        "bright-shop-interior": "55c53758f46df46741b14410c0657b72abe78d273e3d823a375da4441e346723",
+        "bright-20-rear-eye": "e072cf8a641c23532d3399c329b9fc056d4891d8613ef72a136cb8476623161c",
+        "bright-shop-door-eye": "febd53bc29e7e54287a6ef20c75159b665bda298b145bfbde940578ac30227c7",
+        "bright-van-side": "08a050c658a1927f64c31650efc7a92896dcf7c175b1f8aed9e928ac2ceca534",
+        "grade-fill-station-street": "05fed950b0ecd8d6eaf550fea3655d8a2671c65e52711f1084e7dd07dc8b052d",
+        "grade-fill-shop-interior": "7a552bd4597de5a37f3b71e30b13f6e0e550df681d6e6fb8f1f2d6bb84650ea9",
+        "grade-fill-20-rear-eye": "e3743f7901cba06d5f7efcc50bdd5cb79f0a24deba1334bc1e0df76d0cacdc2e",
+        "grade-fill-shop-door-eye": "f80e43236a62a2faa5b7579baa2a6c2b3b9ac614ff6e97f0124f9f4b3fffa72c",
+        "grade-fill-van-side": "620eebbb8c7680ad14cc970af6901118b0ef3faf9a0588039c4531ad7dba8ccf",
+        "bright-fill-station-street": "0985d23034fb4f4cd7e38fc41f741318ee395379a7d44385d3929ca920adf5ea",
+        "bright-fill-shop-interior": "b692324126af98193fb9c42b22d2d52518f536e73557e48dfc0a62861f383f44",
+        "bright-fill-20-rear-eye": "9febb59ebb4e3c901b11ccc8c707650726da2fb4c16f095367418e5d93867a2f",
+        "bright-fill-shop-door-eye": "a2633e9764fd16839835270a70f76a3a8377c79e3b360be43fbbb36c9ebf13f7",
+        "bright-fill-van-side": "372a60e97056750ff75cffd1162343f5e039362668307a210b13557a399218a5"
+      }
+    },
+    "afternoon": {
+      "captures": 50,
+      "version": {
+        "node": "24.22.0",
+        "acorn": "8.18.0",
+        "ada": "4.0.0",
+        "amaro": "1.1.11",
+        "ares": "1.34.8",
+        "brotli": "1.2.0",
+        "cldr": "48.0",
+        "icu": "78.2",
+        "llhttp": "9.4.3",
+        "merve": "1.2.2",
+        "modules": "149",
+        "napi": "10",
+        "nbytes": "0.1.4",
+        "ncrypto": "0.0.1",
+        "nghttp2": "1.70.0",
+        "nghttp3": "",
+        "ngtcp2": "",
+        "openssl": "0.0.0",
+        "simdjson": "4.6.11",
+        "simdutf": "7.7.0",
+        "sqlite": "3.53.4",
+        "tz": "2026d",
+        "undici": "7.29.1",
+        "unicode": "17.0",
+        "uv": "1.52.1",
+        "uvwasi": "0.0.23",
+        "v8": "15.2.124.43-electron.0",
+        "zlib": "1.3.2.1-motley",
+        "zstd": "1.6.0",
+        "electron": "44.9.0",
+        "chrome": "152.0.7977.167"
+      },
+      "sourceAndAssetsRestored": true,
+      "abortedRequests": [
+        "menhir.glb"
+      ],
+      "street": {
+        "native": {
+          "luma248Percent": 0.00278,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 0.65316,
+          "hemi": "cfe0ff",
+          "bloom": 0.12,
+          "arch": {
+            "p10": 65.59,
+            "p90": 165.94,
+            "span": 100.35
+          },
+          "awning": {
+            "p10": 78.47,
+            "p90": 181.48,
+            "span": 103.01
+          },
+          "street": {
+            "p10": 74.68,
+            "p90": 95.48,
+            "span": 20.8
+          }
+        },
+        "haze-only": {
+          "luma248Percent": 0.00278,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 0.68673,
+          "hemi": "cfe0ff",
+          "bloom": 0.12,
+          "arch": {
+            "p10": 65.59,
+            "p90": 165.94,
+            "span": 100.35
+          },
+          "awning": {
+            "p10": 78.47,
+            "p90": 181.48,
+            "span": 103.01
+          },
+          "street": {
+            "p10": 74.68,
+            "p90": 95.48,
+            "span": 20.8
+          }
+        },
+        "bloom-only": {
+          "luma248Percent": 0.00278,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 0.63935,
+          "hemi": "cfe0ff",
+          "bloom": 0.0648,
+          "arch": {
+            "p10": 64.31,
+            "p90": 164.94,
+            "span": 100.63
+          },
+          "awning": {
+            "p10": 77.47,
+            "p90": 181.09,
+            "span": 103.62
+          },
+          "street": {
+            "p10": 74.4,
+            "p90": 95.27,
+            "span": 20.87
+          }
+        },
+        "grade-only": {
+          "luma248Percent": 0.01775,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 0.73889,
+          "hemi": "cfe0ff",
+          "bloom": 0.12,
+          "arch": {
+            "p10": 65.38,
+            "p90": 195.87,
+            "span": 130.49
+          },
+          "awning": {
+            "p10": 80.25,
+            "p90": 213.43,
+            "span": 133.17
+          },
+          "street": {
+            "p10": 75.54,
+            "p90": 101.62,
+            "span": 26.08
+          }
+        },
+        "fill-only": {
+          "luma248Percent": 0.00278,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 0.69691,
+          "hemi": "e3eafa",
+          "bloom": 0.12,
+          "arch": {
+            "p10": 66.24,
+            "p90": 168.36,
+            "span": 102.12
+          },
+          "awning": {
+            "p10": 80.42,
+            "p90": 183.85,
+            "span": 103.43
+          },
+          "street": {
+            "p10": 77.03,
+            "p90": 99.4,
+            "span": 22.36
+          }
+        },
+        "post-only": {
+          "luma248Percent": 0.01505,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 0.75332,
+          "hemi": "cfe0ff",
+          "bloom": 0.0648,
+          "arch": {
+            "p10": 63.38,
+            "p90": 195.09,
+            "span": 131.71
+          },
+          "awning": {
+            "p10": 78.54,
+            "p90": 212.82,
+            "span": 134.28
+          },
+          "street": {
+            "p10": 75.05,
+            "p90": 100.69,
+            "span": 25.65
+          }
+        },
+        "combined": {
+          "luma248Percent": 0.0152,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 0.79923,
+          "hemi": "e3eafa",
+          "bloom": 0.0648,
+          "arch": {
+            "p10": 64.1,
+            "p90": 198.22,
+            "span": 134.12
+          },
+          "awning": {
+            "p10": 80.75,
+            "p90": 215.06,
+            "span": 134.32
+          },
+          "street": {
+            "p10": 77.81,
+            "p90": 105.96,
+            "span": 28.15
+          }
+        },
+        "bright": {
+          "luma248Percent": 0.03696,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 1.81883,
+          "hemi": "e3eafa",
+          "bloom": 0.0648,
+          "arch": {
+            "p10": 67.1,
+            "p90": 201.29,
+            "span": 134.19
+          },
+          "awning": {
+            "p10": 87.61,
+            "p90": 218.28,
+            "span": 130.68
+          },
+          "street": {
+            "p10": 83.68,
+            "p90": 118.66,
+            "span": 34.99
+          }
+        },
+        "grade-fill": {
+          "luma248Percent": 0.01798,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 0.7838,
+          "hemi": "e3eafa",
+          "bloom": 0.12,
+          "arch": {
+            "p10": 66.09,
+            "p90": 199.0,
+            "span": 132.92
+          },
+          "awning": {
+            "p10": 82.27,
+            "p90": 215.63,
+            "span": 133.36
+          },
+          "street": {
+            "p10": 78.68,
+            "p90": 106.24,
+            "span": 27.57
+          }
+        },
+        "bright-fill": {
+          "luma248Percent": 0.04823,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 1.85764,
+          "hemi": "e3eafa",
+          "bloom": 0.12,
+          "arch": {
+            "p10": 69.09,
+            "p90": 202.0,
+            "span": 132.92
+          },
+          "awning": {
+            "p10": 89.39,
+            "p90": 219.25,
+            "span": 129.86
+          },
+          "street": {
+            "p10": 84.61,
+            "p90": 119.66,
+            "span": 35.05
+          }
+        }
+      },
+      "indoor": {
+        "native": {
+          "luma248Percent": 0.00556,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 1.95201
+        },
+        "haze-only": {
+          "luma248Percent": 0.00556,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 1.95201
+        },
+        "bloom-only": {
+          "luma248Percent": 0.00216,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 1.9304
+        },
+        "grade-only": {
+          "luma248Percent": 0.08758,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 2.19221
+        },
+        "fill-only": {
+          "luma248Percent": 0.0061,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 1.95231
+        },
+        "post-only": {
+          "luma248Percent": 0.0858,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 2.14907
+        },
+        "combined": {
+          "luma248Percent": 0.0865,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 2.14969
+        },
+        "bright": {
+          "luma248Percent": 0.11921,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 2.23634
+        },
+        "grade-fill": {
+          "luma248Percent": 0.08796,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 2.19352
+        },
+        "bright-fill": {
+          "luma248Percent": 0.11705,
+          "rgb254WhitePercent": 0.0,
+          "anyChannel254Percent": 2.26543
+        }
+      },
+      "sha256": {
+        "native-station-street": "f45b3e2ea6bac115f0072b5cdaf9c63c50ea65a520ce6ec43a6c5478f4a9f4b2",
+        "native-shop-interior": "36b933e5aa7f82c806543b7a7323676ceddc7c1c438239b2003272a73a0ae52d",
+        "native-20-rear-eye": "0a5b0f1023965efbb722d9f76e80f5bc6469c735d6e31431061b6a01dc43937b",
+        "native-shop-door-eye": "91ae60c185592172f345bc4c1941fc6e48f20b55290b46a409b070ed360e55f1",
+        "native-van-side": "bce591ffe224bf821cf22b117c55e8bd5bd3b1072b6009e66da60d9c0223b903",
+        "haze-only-station-street": "a4ef03f350cef544b92569447206265358a353cd8a8d32b40fa92b330ffe95d4",
+        "haze-only-shop-interior": "36b933e5aa7f82c806543b7a7323676ceddc7c1c438239b2003272a73a0ae52d",
+        "haze-only-20-rear-eye": "0194a13e71935a6f8440b98706b6ccb7a49d6059054ac32661d03fc90e954b84",
+        "haze-only-shop-door-eye": "5f3e3c16325021855bdf2355a6c93139d1a53e6f46bbdf48facc2bca46109dd2",
+        "haze-only-van-side": "12c458cbdec6672be8de7009b473dbff145fd558d6b3294bf454fc9af936022c",
+        "bloom-only-station-street": "4bc07c128a80a9a63391bdf145453f3f468a9e76331a55e067547a5db859749d",
+        "bloom-only-shop-interior": "4acb0a2e26f2eba05de07c6060df413ffc2469f2bb05d654be72583c842266df",
+        "bloom-only-20-rear-eye": "4390ea5e1dd19a90477c974077c976bf8c10d401240c8610be73e2c579baf99b",
+        "bloom-only-shop-door-eye": "5549437e06b0ecf33604767e8ded5591a657f8dcf86ced05757d813093242cf7",
+        "bloom-only-van-side": "b088b38f13d0de6a6485d512c1bde61c1e22bc4d9bfafbd7593e56010bb42bd4",
+        "grade-only-station-street": "5d1c4cb181d77f0a08811386d38489131c373e8ebd53e594f70fe2fbfbce8a1b",
+        "grade-only-shop-interior": "cfe7e25dec75f1bf549cfaf67b23345b30e573b4a0ea8d1c36bae1bd1aa4687d",
+        "grade-only-20-rear-eye": "5a513e41e1625caebec37e2dde55ca0196e437b0b820cc83ab25c3d4c7d03063",
+        "grade-only-shop-door-eye": "43255377de8b6ed0adc5c98684923ce8cefeed87c9dc1606456e4c9a723a7083",
+        "grade-only-van-side": "d6d1e1545b5f94c6a7a6002ef5f055782071809f37e3311500752c3c89b240ba",
+        "fill-only-station-street": "a07913487b9028a629f619212552aec6f7e1595f0c980ca7814a3bcaccdc01cf",
+        "fill-only-shop-interior": "a80b70bd6d78bca7e79b9a985376f4f091308f3594757166aecbe4d28f0ac162",
+        "fill-only-20-rear-eye": "033a203dc96a4e11f7ced52294c4a7770aaa4ae670e6b0cc63414a19bb99cda4",
+        "fill-only-shop-door-eye": "137fb48c144664c39de453b510d57a56e2054d0bc8b8194d8b37fdfd44132ce2",
+        "fill-only-van-side": "5ef0ba1789ee811f87ce696327068cbcf344454a358119c309cf2aafc2c53ee5",
+        "post-only-station-street": "32ec2c0dd28be43351fdb486f048fe34b6d7d0340d63dd4023f23936378048a8",
+        "post-only-shop-interior": "0f6c673e42884b49950011a6d81a324f6d135ac76a1e2487eb29edf8c8e5f639",
+        "post-only-20-rear-eye": "71096e8d6e883f16ef08affa0f9efa189c45951ff7356f2f2c1c81495d872054",
+        "post-only-shop-door-eye": "8ee8849372b863df037dba02e9296fc5da8ae7ba4f498d7f5672efc6b2b04cca",
+        "post-only-van-side": "b87a615a01fcfd3935943229b9772ad32fdccc38d033a8e0cbcba2a3e52759ba",
+        "combined-station-street": "f1b5d0b0d5b7233e568eff9f1972a6e6a3ba43e171b358d7d9fd9e7dc2104f2b",
+        "combined-shop-interior": "a97bf8996f44ab89ce8130799eaeb447ae44d655016e5da8d0f39215db0672f3",
+        "combined-20-rear-eye": "93cbd75065bd5caa7c2939f3143e6e561957c54c56361a620c864b104374fb08",
+        "combined-shop-door-eye": "fcf96f8bb36d723536a08d69ea00cc51e45ffc61aaa27edcd1fb5fba503c161a",
+        "combined-van-side": "c72bde19aafae69fd7459509050a85ce8d619477f0533ce3a4222dc8b9569b6c",
+        "bright-station-street": "4380e58ff19d4734ef80813d48fdd941cb2866a849afed593af38148d1ec9aa7",
+        "bright-shop-interior": "75998a8e35095301b43501e20507923c8004471db036e9ff728327c4a0d44654",
+        "bright-20-rear-eye": "ed0466741988a6dd6ba8827d0750dbe47789cc986fd7f89770df587696f1a376",
+        "bright-shop-door-eye": "71a2db16a72b0955bb31c5c3d7e5444ef3e8effa917311d06b697beb3df83926",
+        "bright-van-side": "b8427e782e16ecffbe5d8ba44f22bf0e2ffbb108a47c81ad990b63c0966417ff",
+        "grade-fill-station-street": "93f6a914fcd08d55bb64dac2833126a4e6ed710866dc3b9ac1e0ae96b4f39397",
+        "grade-fill-shop-interior": "fdf8fef3b324f8891ba9a2e5cec2d639c63610f7b382ebeba547d847be97d155",
+        "grade-fill-20-rear-eye": "83b53fa982c3f1d9c1f78baec38ba3f19efda9647769a91e8ae0981f3658ae72",
+        "grade-fill-shop-door-eye": "c3ae63c7fd6f4ac185ed0b646a51411b4ae8cbb1663a0b5c88307e0072437cae",
+        "grade-fill-van-side": "10191d37f0934e7b97fd56a688cec8405d167fa3541db1087e72d71df9bcd8b1",
+        "bright-fill-station-street": "3fb1fe87b8ccd798c0ce90fce392e8b48a087e25c7369899b55e416a5abf836f",
+        "bright-fill-shop-interior": "94b8d873cea01d056e0ae4b183caec9cc3b07f2a7093a1575534c50839526af9",
+        "bright-fill-20-rear-eye": "6111273d1af9ebd21fcc7cb89f98e1e9f4ac095b16bd04968d38b8456952a525",
+        "bright-fill-shop-door-eye": "7ce6261e6041ca89e4fda9aeaa6b72415ef2c29a1e3c6186d9145b7e49222389",
+        "bright-fill-van-side": "b081ec90f1ab5260a0b6d07a9fc03df5bc39b5c10b5a8f6b364027e9fe87aaff"
+      }
+    }
+  }
+}

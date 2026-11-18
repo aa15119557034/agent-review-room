@@ -1,0 +1,490 @@
+{
+  "evening": {
+    "files": [
+      "gpu-modern-after-c28-evening-on-880a02a-r2/station-street-ao-on-capture-2.png",
+      "gpu-modern-after-c28-clarity-evening-ca10742-c/native-station-street.png",
+      "gpu-modern-after-final-evening-on-b4f1350/station-street-ao-on-capture-2.png"
+    ],
+    "headers": [
+      "原始 C28 开",
+      "仅修回调 · ca10742",
+      "最终 · b4f1350"
+    ],
+    "panel": [
+      {
+        "column": 0,
+        "sourceRect": [
+          628,
+          335,
+          848,
+          398
+        ],
+        "destination": [
+          49,
+          81,
+          269,
+          144
+        ]
+      },
+      {
+        "column": 1,
+        "sourceRect": [
+          628,
+          335,
+          848,
+          398
+        ],
+        "destination": [
+          368,
+          81,
+          588,
+          144
+        ]
+      },
+      {
+        "column": 2,
+        "sourceRect": [
+          628,
+          335,
+          848,
+          398
+        ],
+        "destination": [
+          687,
+          81,
+          907,
+          144
+        ]
+      },
+      {
+        "column": 0,
+        "sourceRect": [
+          1124,
+          337,
+          1428,
+          407
+        ],
+        "destination": [
+          7,
+          181,
+          311,
+          251
+        ]
+      },
+      {
+        "column": 1,
+        "sourceRect": [
+          1124,
+          337,
+          1428,
+          407
+        ],
+        "destination": [
+          326,
+          181,
+          630,
+          251
+        ]
+      },
+      {
+        "column": 2,
+        "sourceRect": [
+          1124,
+          337,
+          1428,
+          407
+        ],
+        "destination": [
+          645,
+          181,
+          949,
+          251
+        ]
+      },
+      {
+        "column": 0,
+        "sourceRect": [
+          1192,
+          167,
+          1339,
+          288
+        ],
+        "destination": [
+          86,
+          288,
+          233,
+          409
+        ]
+      },
+      {
+        "column": 1,
+        "sourceRect": [
+          1192,
+          167,
+          1339,
+          288
+        ],
+        "destination": [
+          405,
+          288,
+          552,
+          409
+        ]
+      },
+      {
+        "column": 2,
+        "sourceRect": [
+          1192,
+          167,
+          1339,
+          288
+        ],
+        "destination": [
+          724,
+          288,
+          871,
+          409
+        ]
+      },
+      {
+        "column": 0,
+        "sourceRect": [
+          660,
+          40,
+          900,
+          180
+        ],
+        "destination": [
+          39,
+          446,
+          279,
+          586
+        ]
+      },
+      {
+        "column": 1,
+        "sourceRect": [
+          660,
+          40,
+          900,
+          180
+        ],
+        "destination": [
+          358,
+          446,
+          598,
+          586
+        ]
+      },
+      {
+        "column": 2,
+        "sourceRect": [
+          660,
+          40,
+          900,
+          180
+        ],
+        "destination": [
+          677,
+          446,
+          917,
+          586
+        ]
+      },
+      {
+        "column": 0,
+        "sourceRect": [
+          706,
+          646,
+          978,
+          800
+        ],
+        "destination": [
+          23,
+          623,
+          295,
+          777
+        ]
+      },
+      {
+        "column": 1,
+        "sourceRect": [
+          706,
+          646,
+          978,
+          800
+        ],
+        "destination": [
+          342,
+          623,
+          614,
+          777
+        ]
+      },
+      {
+        "column": 2,
+        "sourceRect": [
+          706,
+          646,
+          978,
+          800
+        ],
+        "destination": [
+          661,
+          623,
+          933,
+          777
+        ]
+      }
+    ],
+    "sha256": [
+      "d7dcd01ba610255cd396d63cb5c8ebfebc6ce8e7428ea9303ce2de112cd90897",
+      "1d917567cf201323175fe28bd46b2b85accf3a2d8d756f686d1558f77162c17a",
+      "05fed950b0ecd8d6eaf550fea3655d8a2671c65e52711f1084e7dd07dc8b052d"
+    ]
+  },
+  "afternoon": {
+    "files": [
+      "gpu-modern-after-c27-afternoon-on-e00875b/station-street-ao-on-capture-2.png",
+      "gpu-modern-after-c28-clarity-afternoon-ca10742-c/native-station-street.png",
+      "gpu-modern-after-final-afternoon-on-b4f1350/station-street-ao-on-capture-2.png"
+    ],
+    "headers": [
+      "C27 开",
+      "仅修回调 · ca10742",
+      "最终 · b4f1350"
+    ],
+    "panel": [
+      {
+        "column": 0,
+        "sourceRect": [
+          628,
+          335,
+          848,
+          398
+        ],
+        "destination": [
+          49,
+          81,
+          269,
+          144
+        ]
+      },
+      {
+        "column": 1,
+        "sourceRect": [
+          628,
+          335,
+          848,
+          398
+        ],
+        "destination": [
+          368,
+          81,
+          588,
+          144
+        ]
+      },
+      {
+        "column": 2,
+        "sourceRect": [
+          628,
+          335,
+          848,
+          398
+        ],
+        "destination": [
+          687,
+          81,
+          907,
+          144
+        ]
+      },
+      {
+        "column": 0,
+        "sourceRect": [
+          1124,
+          337,
+          1428,
+          407
+        ],
+        "destination": [
+          7,
+          181,
+          311,
+          251
+        ]
+      },
+      {
+        "column": 1,
+        "sourceRect": [
+          1124,
+          337,
+          1428,
+          407
+        ],
+        "destination": [
+          326,
+          181,
+          630,
+          251
+        ]
+      },
+      {
+        "column": 2,
+        "sourceRect": [
+          1124,
+          337,
+          1428,
+          407
+        ],
+        "destination": [
+          645,
+          181,
+          949,
+          251
+        ]
+      },
+      {
+        "column": 0,
+        "sourceRect": [
+          1192,
+          167,
+          1339,
+          288
+        ],
+        "destination": [
+          86,
+          288,
+          233,
+          409
+        ]
+      },
+      {
+        "column": 1,
+        "sourceRect": [
+          1192,
+          167,
+          1339,
+          288
+        ],
+        "destination": [
+          405,
+          288,
+          552,
+          409
+        ]
+      },
+      {
+        "column": 2,
+        "sourceRect": [
+          1192,
+          167,
+          1339,
+          288
+        ],
+        "destination": [
+          724,
+          288,
+          871,
+          409
+        ]
+      },
+      {
+        "column": 0,
+        "sourceRect": [
+          660,
+          40,
+          900,
+          180
+        ],
+        "destination": [
+          39,
+          446,
+          279,
+          586
+        ]
+      },
+      {
+        "column": 1,
+        "sourceRect": [
+          660,
+          40,
+          900,
+          180
+        ],
+        "destination": [
+          358,
+          446,
+          598,
+          586
+        ]
+      },
+      {
+        "column": 2,
+        "sourceRect": [
+          660,
+          40,
+          900,
+          180
+        ],
+        "destination": [
+          677,
+          446,
+          917,
+          586
+        ]
+      },
+      {
+        "column": 0,
+        "sourceRect": [
+          706,
+          646,
+          978,
+          800
+        ],
+        "destination": [
+          23,
+          623,
+          295,
+          777
+        ]
+      },
+      {
+        "column": 1,
+        "sourceRect": [
+          706,
+          646,
+          978,
+          800
+        ],
+        "destination": [
+          342,
+          623,
+          614,
+          777
+        ]
+      },
+      {
+        "column": 2,
+        "sourceRect": [
+          706,
+          646,
+          978,
+          800
+        ],
+        "destination": [
+          661,
+          623,
+          933,
+          777
+        ]
+      }
+    ],
+    "sha256": [
+      "4e4cad760ee7c107dabf6e3b6f70a6b3c2159770c4e8b148f14135552b661e8d",
+      "f45b3e2ea6bac115f0072b5cdaf9c63c50ea65a520ce6ec43a6c5478f4a9f4b2",
+      "93f6a914fcd08d55bb64dac2833126a4e6ed710866dc3b9ac1e0ae96b4f39397"
+    ]
+  }
+}
