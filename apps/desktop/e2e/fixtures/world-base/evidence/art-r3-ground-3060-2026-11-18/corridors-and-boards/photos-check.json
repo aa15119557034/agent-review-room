@@ -1,0 +1,111 @@
+{
+  "source": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+  "width": 1440,
+  "height": 900,
+  "C": {
+    "nativeSha256": [
+      "055f41cdcdde6b2ce5992a60e69418e0d23b56cfb58fb32eca46818a4800bd16",
+      "63cc140ad85b3215092307eec34a54baaa81c85777f21f30fbd48961468e709b"
+    ],
+    "sameCamera": true,
+    "lamps": [
+      {
+        "id": "town-apartment-4f-lamp0",
+        "bounds": [
+          331,
+          128,
+          413,
+          181
+        ],
+        "maskPx": 2937,
+        "nearerPipeOrClipAtR3": 0,
+        "lumaGT180": [
+          2937,
+          2937
+        ],
+        "pixelChange": 0,
+        "lumaMedian": [
+          213.5608,
+          213.5608
+        ]
+      },
+      {
+        "id": "town-apartment-4f-lamp1",
+        "bounds": [
+          750,
+          329,
+          772,
+          345
+        ],
+        "maskPx": 299,
+        "nearerPipeOrClipAtR3": 0,
+        "lumaGT180": [
+          166,
+          299
+        ],
+        "pixelChange": 248,
+        "lumaMedian": [
+          207.136,
+          211.1332
+        ]
+      },
+      {
+        "id": "town-apartment-4f-lamp2",
+        "bounds": [
+          858,
+          381,
+          870,
+          390
+        ],
+        "maskPx": 100,
+        "nearerPipeOrClipAtR3": 0,
+        "lumaGT180": [
+          56,
+          100
+        ],
+        "pixelChange": 82,
+        "lumaMedian": [
+          208.31849999999997,
+          210.41799999999998
+        ]
+      }
+    ]
+  },
+  "D": {
+    "nativeSha256": [
+      "239d42400a94bbda14db29e49845f0211a66c27d3bcef732c6e55f346d14bd46",
+      "239d42400a94bbda14db29e49845f0211a66c27d3bcef732c6e55f346d14bd46"
+    ],
+    "sameCamera": true,
+    "full": {
+      "changed": 0,
+      "changedGt8": 0,
+      "max": 0,
+      "changedBounds": null
+    },
+    "fascia": {
+      "roi": [
+        302,
+        204,
+        1136,
+        341
+      ],
+      "changed": 0,
+      "changedGt8": 0,
+      "max": 0,
+      "changedBounds": null
+    },
+    "servicePanel": {
+      "roi": [
+        1105,
+        336,
+        1255,
+        665
+      ],
+      "changed": 0,
+      "changedGt8": 0,
+      "max": 0,
+      "changedBounds": null
+    }
+  }
+}

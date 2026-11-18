@@ -1,0 +1,3810 @@
+{
+  "order": [
+    "quiet-r3cell-control-01",
+    "quiet-r3cell-candidate-01",
+    "quiet-r3cell-candidate-02",
+    "quiet-r3cell-control-02"
+  ],
+  "threshold": {
+    "fps": 60,
+    "p95Ms": 16.7
+  },
+  "sampleMethod": "R3 default native 1440x900, DPR 1. Three-second real W input per walking mode. FPS is 1000 times interval count divided by interval sum. Quantiles are nearest rank. Draw and triangle counts include all renderer passes. System series are whole-device or whole-host where indicated. Memory polling covered all sessions.",
+  "runs": [
+    {
+      "run": "quiet-r3cell-control-01",
+      "source": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+      "reviewerVariant": "R3 delivered",
+      "canvas": [
+        1440,
+        900
+      ],
+      "dpr": 1,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "driverExit": 0,
+      "nativeExit": 1,
+      "renderOk": true,
+      "transportClean": false,
+      "network": [
+        {
+          "file": "plastic_crate_02_1k.gltf",
+          "stage": "waiting-for-ready-frame",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "jsExceptionCount": 0,
+      "threshold": {
+        "fps": 60,
+        "p95Ms": 16.7
+      },
+      "walkingInputs": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true
+        },
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true
+        }
+      ],
+      "verifiedSourceFiles": 50,
+      "firstReadyMs": 45044.700000047684,
+      "shadowSunAuto": [
+        true
+      ],
+      "groundR2": true,
+      "propCountsOnFirstReady": null,
+      "staticShadowBatches": null,
+      "weathering": {
+        "fingerprint": "1057:2751069:297148.3:946248.3",
+        "appliedPlanSha256": "d655df2fcd07aa13a48fbf7b9a1a2d2e235c604c0aeb3261c4cb5690051807f0",
+        "count": 26,
+        "source": "baked",
+        "rays": 0,
+        "planningMs": 1.8
+      },
+      "file": "quiet-r3cell-control-01.frames.json.gz",
+      "sha256": "403cd4887225d872c0d88f271e972f293452aa97837ff2f2de5fe0f3114b6658",
+      "routes": {
+        "art-a-street": {
+          "frames": 546,
+          "durationMs": 10138.400000000001,
+          "fps": 53.854651621557636,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.900000000001455,
+          "maxMs": 46.099999999998545,
+          "over20Ms": 112,
+          "pass": false,
+          "draws": {
+            "n": 546,
+            "min": 1576,
+            "p50": 1592,
+            "p95": 1595,
+            "max": 1595,
+            "mean": 1586.174
+          },
+          "triangles": {
+            "n": 546,
+            "min": 7919852,
+            "p50": 8009684,
+            "p95": 8009860,
+            "max": 8009860,
+            "mean": 7975356.894
+          },
+          "frameSha256": "7e3e413e127ea7d4c75e9e1605988ebea7300c212e57b8bd34b71ba28ddb3c11",
+          "camera": {
+            "position": [
+              278.8,
+              10.488,
+              936
+            ],
+            "quaternion": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "fov": 35.63777782904556,
+            "hidden": true,
+            "target": [
+              280,
+              10.088000000000001,
+              875
+            ],
+            "currentView": "art-a-street",
+            "mode": "third"
+          },
+          "foreground": {
+            "osInRunSamples": 20,
+            "total": 20,
+            "browserWindowStart": true,
+            "browserWindowEnd": true,
+            "pageStart": true,
+            "pageEnd": true,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 20,
+              "min": 38.63,
+              "p50": 49.07,
+              "p95": 67.67,
+              "max": 69.87,
+              "mean": 50.475
+            },
+            "busiestCorePercent": {
+              "n": 20,
+              "min": 54.5,
+              "p50": 69.7,
+              "p95": 84.8,
+              "max": 87.9,
+              "mean": 69.905
+            },
+            "deviceGpuPercent": {
+              "n": 19,
+              "min": 26,
+              "p50": 35,
+              "p95": 41,
+              "max": 41,
+              "mean": 34.632
+            },
+            "memoryControllerPercent": {
+              "n": 19,
+              "min": 11,
+              "p50": 14,
+              "p95": 17,
+              "max": 17,
+              "mean": 14.579
+            },
+            "graphicsMHz": {
+              "n": 19,
+              "min": 1635,
+              "p50": 1830,
+              "p95": 1995,
+              "max": 1995,
+              "mean": 1820.842
+            },
+            "memoryMHz": {
+              "n": 19,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 19,
+              "min": 54.54,
+              "p50": 66.06,
+              "p95": 81.41,
+              "max": 81.41,
+              "mean": 65.302
+            },
+            "gpuTemperatureC": {
+              "n": 19,
+              "min": 60,
+              "p50": 61,
+              "p95": 63,
+              "max": 63,
+              "mean": 60.895
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 20,
+              "min": 24933.4,
+              "p50": 25346.1,
+              "p95": 25494.7,
+              "max": 25508.6,
+              "mean": 25343.425
+            },
+            "deviceUsedVramMiB": {
+              "n": 20,
+              "min": 5353.7,
+              "p50": 5353.7,
+              "p95": 5353.7,
+              "max": 5353.7,
+              "mean": 5353.7
+            },
+            "memoryCoverage": {
+              "samples": 20,
+              "firstOffsetMs": 225.2,
+              "lastGapMs": 138
+            }
+          }
+        },
+        "art-b-konbini": {
+          "frames": 618,
+          "durationMs": 10123.199999999997,
+          "fps": 61.04788999525844,
+          "p95Ms": 30.69999999999709,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 30.90000000000873,
+          "over20Ms": 40,
+          "pass": false,
+          "draws": {
+            "n": 618,
+            "min": 1047,
+            "p50": 1047,
+            "p95": 1052,
+            "max": 1052,
+            "mean": 1048.545
+          },
+          "triangles": {
+            "n": 618,
+            "min": 7845106,
+            "p50": 7845106,
+            "p95": 7908778,
+            "max": 7908778,
+            "mean": 7862750.803
+          },
+          "frameSha256": "21ac929cfd578ee580de8495d8a0020da814a226aef234bb9933c72d72430466",
+          "camera": {
+            "position": [
+              279.1,
+              9.8184,
+              912.8
+            ],
+            "quaternion": [
+              0.013653878147403252,
+              0.5849950384089397,
+              -0.009850566433920587,
+              0.8108620986267578
+            ],
+            "fov": 58,
+            "hidden": true,
+            "target": [
+              272.48,
+              10.0534,
+              910.6
+            ],
+            "currentView": "art-b-konbini",
+            "mode": "third"
+          },
+          "foreground": {
+            "osInRunSamples": 20,
+            "total": 20,
+            "browserWindowStart": true,
+            "browserWindowEnd": true,
+            "pageStart": true,
+            "pageEnd": true,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 20,
+              "min": 22.91,
+              "p50": 62.47,
+              "p95": 96.1,
+              "max": 100,
+              "mean": 60.963
+            },
+            "busiestCorePercent": {
+              "n": 20,
+              "min": 39.4,
+              "p50": 78.8,
+              "p95": 100,
+              "max": 100,
+              "mean": 76.095
+            },
+            "deviceGpuPercent": {
+              "n": 20,
+              "min": 30,
+              "p50": 38,
+              "p95": 41,
+              "max": 44,
+              "mean": 36.85
+            },
+            "memoryControllerPercent": {
+              "n": 20,
+              "min": 13,
+              "p50": 16,
+              "p95": 18,
+              "max": 18,
+              "mean": 16
+            },
+            "graphicsMHz": {
+              "n": 20,
+              "min": 1620,
+              "p50": 1860,
+              "p95": 1987,
+              "max": 1987,
+              "mean": 1844.05
+            },
+            "memoryMHz": {
+              "n": 20,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 20,
+              "min": 49.7,
+              "p50": 67.67,
+              "p95": 80.64,
+              "max": 82.4,
+              "mean": 67.318
+            },
+            "gpuTemperatureC": {
+              "n": 20,
+              "min": 61,
+              "p50": 63,
+              "p95": 63,
+              "max": 63,
+              "mean": 62.45
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 19,
+              "min": 25793.7,
+              "p50": 26167.8,
+              "p95": 26379.3,
+              "max": 26379.3,
+              "mean": 26114.621
+            },
+            "deviceUsedVramMiB": {
+              "n": 19,
+              "min": 5420.7,
+              "p50": 5420.7,
+              "p95": 5420.7,
+              "max": 5420.7,
+              "mean": 5420.7
+            },
+            "memoryCoverage": {
+              "samples": 19,
+              "firstOffsetMs": 341.5,
+              "lastGapMs": 475.4
+            }
+          }
+        },
+        "art-c-alley": {
+          "frames": 657,
+          "durationMs": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 15.69999999999709,
+          "over20Ms": 0,
+          "pass": true,
+          "draws": {
+            "n": 657,
+            "min": 969,
+            "p50": 971,
+            "p95": 984,
+            "max": 986,
+            "mean": 970.971
+          },
+          "triangles": {
+            "n": 657,
+            "min": 8658371,
+            "p50": 8658499,
+            "p95": 8725711,
+            "max": 8725839,
+            "mean": 8662841.654
+          },
+          "frameSha256": "559839c942b0f15bc6dfa4d3cdc272f45c95fb1ffd6c43e416c7e1839874f1e7",
+          "camera": {
+            "position": [
+              287.65,
+              14.384808464050293,
+              767.3199999999999
+            ],
+            "quaternion": [
+              0.00512201791291099,
+              0.8012252009590126,
+              -0.006859231737600546,
+              0.5983016740914732
+            ],
+            "fov": 45,
+            "hidden": true,
+            "target": [
+              278.4,
+              14.55,
+              770.06
+            ],
+            "currentView": "art-c-alley",
+            "mode": "third"
+          },
+          "foreground": {
+            "osInRunSamples": 20,
+            "total": 20,
+            "browserWindowStart": true,
+            "browserWindowEnd": true,
+            "pageStart": true,
+            "pageEnd": true,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 20,
+              "min": 11.69,
+              "p50": 27.02,
+              "p95": 35.89,
+              "max": 37.78,
+              "mean": 26.755
+            },
+            "busiestCorePercent": {
+              "n": 20,
+              "min": 23.5,
+              "p50": 54.5,
+              "p95": 75.8,
+              "max": 75.8,
+              "mean": 52.665
+            },
+            "deviceGpuPercent": {
+              "n": 20,
+              "min": 37,
+              "p50": 39,
+              "p95": 40,
+              "max": 40,
+              "mean": 38.75
+            },
+            "memoryControllerPercent": {
+              "n": 20,
+              "min": 15,
+              "p50": 16,
+              "p95": 16,
+              "max": 16,
+              "mean": 15.55
+            },
+            "graphicsMHz": {
+              "n": 20,
+              "min": 1747,
+              "p50": 1830,
+              "p95": 1867,
+              "max": 1867,
+              "mean": 1822.7
+            },
+            "memoryMHz": {
+              "n": 20,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 20,
+              "min": 60.36,
+              "p50": 65.38,
+              "p95": 68.54,
+              "max": 68.79,
+              "mean": 65.409
+            },
+            "gpuTemperatureC": {
+              "n": 20,
+              "min": 63,
+              "p50": 64,
+              "p95": 64,
+              "max": 64,
+              "mean": 63.65
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 20,
+              "min": 24099.4,
+              "p50": 24168.9,
+              "p95": 26339.6,
+              "max": 26341.6,
+              "mean": 24880.32
+            },
+            "deviceUsedVramMiB": {
+              "n": 20,
+              "min": 5427,
+              "p50": 5427,
+              "p95": 5439.5,
+              "max": 5439.5,
+              "mean": 5430.095
+            },
+            "memoryCoverage": {
+              "samples": 20,
+              "firstOffsetMs": 152.7,
+              "lastGapMs": 201.4
+            }
+          }
+        },
+        "art-d-laundry": {
+          "frames": 657,
+          "durationMs": 10107.600000000006,
+          "fps": 65.00059361272702,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "maxMs": 15.69999999999709,
+          "over20Ms": 0,
+          "pass": true,
+          "draws": {
+            "n": 657,
+            "min": 902,
+            "p50": 907,
+            "p95": 907,
+            "max": 907,
+            "mean": 905.613
+          },
+          "triangles": {
+            "n": 657,
+            "min": 8387570,
+            "p50": 8451242,
+            "p95": 8451242,
+            "max": 8451242,
+            "mean": 8433936.715
+          },
+          "frameSha256": "a1233c875abba0023d276ea7c41a05923a0c71fb2a16aaf94f4e3489098d6478",
+          "camera": {
+            "position": [
+              283.5,
+              12.520055181715234,
+              783.8
+            ],
+            "quaternion": [
+              0.1297258927986663,
+              0.0767626424061459,
+              -0.010073721024303532,
+              0.9885227410703001
+            ],
+            "fov": 48,
+            "hidden": true,
+            "target": [
+              282.5,
+              14.25,
+              777.4
+            ],
+            "currentView": "art-d-laundry",
+            "mode": "third"
+          },
+          "foreground": {
+            "osInRunSamples": 20,
+            "total": 20,
+            "browserWindowStart": true,
+            "browserWindowEnd": true,
+            "pageStart": true,
+            "pageEnd": true,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 20,
+              "min": 4.11,
+              "p50": 17.99,
+              "p95": 24.93,
+              "max": 32.23,
+              "mean": 17.279
+            },
+            "busiestCorePercent": {
+              "n": 20,
+              "min": 9.4,
+              "p50": 39.4,
+              "p95": 58.8,
+              "max": 63.6,
+              "mean": 39.75
+            },
+            "deviceGpuPercent": {
+              "n": 19,
+              "min": 33,
+              "p50": 39,
+              "p95": 42,
+              "max": 42,
+              "mean": 38.526
+            },
+            "memoryControllerPercent": {
+              "n": 19,
+              "min": 12,
+              "p50": 12,
+              "p95": 14,
+              "max": 14,
+              "mean": 12.895
+            },
+            "graphicsMHz": {
+              "n": 19,
+              "min": 1477,
+              "p50": 1515,
+              "p95": 1695,
+              "max": 1695,
+              "mean": 1534.421
+            },
+            "memoryMHz": {
+              "n": 19,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 19,
+              "min": 43.81,
+              "p50": 45.28,
+              "p95": 51.79,
+              "max": 51.79,
+              "mean": 45.966
+            },
+            "gpuTemperatureC": {
+              "n": 19,
+              "min": 62,
+              "p50": 62,
+              "p95": 63,
+              "max": 63,
+              "mean": 62.158
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 19,
+              "min": 24127.4,
+              "p50": 24145.9,
+              "p95": 24169,
+              "max": 24169,
+              "mean": 24146.779
+            },
+            "deviceUsedVramMiB": {
+              "n": 19,
+              "min": 5426.3,
+              "p50": 5426.3,
+              "p95": 5439.2,
+              "max": 5439.2,
+              "mean": 5428.495
+            },
+            "memoryCoverage": {
+              "samples": 19,
+              "firstOffsetMs": 467.8,
+              "lastGapMs": 420.8
+            }
+          }
+        },
+        "walk-third": {
+          "frames": 201,
+          "durationMs": 3107.699999999997,
+          "fps": 64.67805772757994,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 30.69999999999709,
+          "over20Ms": 1,
+          "pass": true,
+          "draws": {
+            "n": 201,
+            "min": 907,
+            "p50": 1680,
+            "p95": 1687,
+            "max": 1688,
+            "mean": 1675.592
+          },
+          "triangles": {
+            "n": 201,
+            "min": 8442929,
+            "p50": 8494537,
+            "p95": 8543829,
+            "max": 8559307,
+            "mean": 8486995.403
+          },
+          "frameSha256": "465d03e2c51b8be80ae48d806d006c0d8ab7576dacb9f1be158d769c03ffd1f1",
+          "walk": {
+            "from": [
+              281.6,
+              8.812,
+              934
+            ],
+            "to": [
+              280.94294172535217,
+              8.548901609285403,
+              924.6036289030501
+            ],
+            "distanceXZ": 9.419316077501529,
+            "mode": "third"
+          },
+          "foreground": {
+            "osInRunSamples": 6,
+            "total": 6,
+            "browserWindowStart": true,
+            "browserWindowEnd": true,
+            "pageStart": true,
+            "pageEnd": true,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 6,
+              "min": 20.82,
+              "p50": 21.15,
+              "p95": 36.77,
+              "max": 36.77,
+              "mean": 26.215
+            },
+            "busiestCorePercent": {
+              "n": 6,
+              "min": 46.9,
+              "p50": 60.6,
+              "p95": 72.7,
+              "max": 72.7,
+              "mean": 60.833
+            },
+            "deviceGpuPercent": {
+              "n": 6,
+              "min": 36,
+              "p50": 40,
+              "p95": 44,
+              "max": 44,
+              "mean": 40.5
+            },
+            "memoryControllerPercent": {
+              "n": 6,
+              "min": 16,
+              "p50": 17,
+              "p95": 18,
+              "max": 18,
+              "mean": 17.167
+            },
+            "graphicsMHz": {
+              "n": 6,
+              "min": 1950,
+              "p50": 1957,
+              "p95": 1987,
+              "max": 1987,
+              "mean": 1965.833
+            },
+            "memoryMHz": {
+              "n": 6,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 6,
+              "min": 84.81,
+              "p50": 86.02,
+              "p95": 87.39,
+              "max": 87.39,
+              "mean": 86.225
+            },
+            "gpuTemperatureC": {
+              "n": 6,
+              "min": 66,
+              "p50": 66,
+              "p95": 67,
+              "max": 67,
+              "mean": 66.333
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 6,
+              "min": 24080.7,
+              "p50": 24085.1,
+              "p95": 24099.6,
+              "max": 24099.6,
+              "mean": 24089.817
+            },
+            "deviceUsedVramMiB": {
+              "n": 6,
+              "min": 5430.9,
+              "p50": 5430.9,
+              "p95": 5436.9,
+              "max": 5436.9,
+              "mean": 5432.967
+            },
+            "memoryCoverage": {
+              "samples": 6,
+              "firstOffsetMs": 219.5,
+              "lastGapMs": 325.9
+            }
+          }
+        },
+        "walk-first": {
+          "frames": 203,
+          "durationMs": 3123,
+          "fps": 65.00160102465578,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.60000000000582,
+          "over20Ms": 0,
+          "pass": true,
+          "draws": {
+            "n": 203,
+            "min": 1457,
+            "p50": 1532,
+            "p95": 1597,
+            "max": 1656,
+            "mean": 1533.961
+          },
+          "triangles": {
+            "n": 203,
+            "min": 8283273,
+            "p50": 8435087,
+            "p95": 8516633,
+            "max": 8525275,
+            "mean": 8428107.384
+          },
+          "frameSha256": "f9aac1293bf3f339413ab8545b67c889f3aca1587155c050a452ab6519f6e46f",
+          "walk": {
+            "from": [
+              280.9246472332612,
+              8.541576153365,
+              924.3420054773214
+            ],
+            "to": [
+              280.2642791664879,
+              8.277152460138565,
+              914.8983021478059
+            ],
+            "distanceXZ": 9.466763890555033,
+            "mode": "first"
+          },
+          "foreground": {
+            "osInRunSamples": 6,
+            "total": 6,
+            "browserWindowStart": true,
+            "browserWindowEnd": true,
+            "pageStart": true,
+            "pageEnd": true,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 6,
+              "min": 13.58,
+              "p50": 17.52,
+              "p95": 25.5,
+              "max": 25.5,
+              "mean": 18.577
+            },
+            "busiestCorePercent": {
+              "n": 6,
+              "min": 27.3,
+              "p50": 48.5,
+              "p95": 72.7,
+              "max": 72.7,
+              "mean": 51.883
+            },
+            "deviceGpuPercent": {
+              "n": 6,
+              "min": 40,
+              "p50": 40,
+              "p95": 42,
+              "max": 42,
+              "mean": 40.5
+            },
+            "memoryControllerPercent": {
+              "n": 6,
+              "min": 17,
+              "p50": 17,
+              "p95": 18,
+              "max": 18,
+              "mean": 17.5
+            },
+            "graphicsMHz": {
+              "n": 6,
+              "min": 1897,
+              "p50": 1935,
+              "p95": 1965,
+              "max": 1965,
+              "mean": 1938.5
+            },
+            "memoryMHz": {
+              "n": 6,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 6,
+              "min": 78.79,
+              "p50": 81.07,
+              "p95": 87.26,
+              "max": 87.26,
+              "mean": 82.495
+            },
+            "gpuTemperatureC": {
+              "n": 6,
+              "min": 66,
+              "p50": 66,
+              "p95": 67,
+              "max": 67,
+              "mean": 66.5
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 6,
+              "min": 24070.3,
+              "p50": 24072.6,
+              "p95": 24079.4,
+              "max": 24079.4,
+              "mean": 24073.6
+            },
+            "deviceUsedVramMiB": {
+              "n": 6,
+              "min": 5427.3,
+              "p50": 5427.3,
+              "p95": 5427.3,
+              "max": 5427.3,
+              "mean": 5427.3
+            },
+            "memoryCoverage": {
+              "samples": 6,
+              "firstOffsetMs": 430.5,
+              "lastGapMs": 133.2
+            }
+          }
+        }
+      }
+    },
+    {
+      "run": "quiet-r3cell-candidate-01",
+      "source": "ed69406bd6f12f66ec852edc95870ab7c1bbaaa7",
+      "reviewerVariant": "R3 + spatially culled island props",
+      "canvas": [
+        1440,
+        900
+      ],
+      "dpr": 1,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "driverExit": 0,
+      "nativeExit": 0,
+      "renderOk": true,
+      "transportClean": true,
+      "network": [],
+      "jsExceptionCount": 0,
+      "threshold": {
+        "fps": 60,
+        "p95Ms": 16.7
+      },
+      "walkingInputs": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true
+        },
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true
+        }
+      ],
+      "verifiedSourceFiles": 51,
+      "firstReadyMs": 47905.10000014305,
+      "shadowSunAuto": [
+        true
+      ],
+      "groundR2": true,
+      "propCountsOnFirstReady": [
+        1,
+        6,
+        58,
+        45
+      ],
+      "staticShadowBatches": null,
+      "weathering": {
+        "fingerprint": "1057:2751069:297148.3:946248.3",
+        "appliedPlanSha256": "d655df2fcd07aa13a48fbf7b9a1a2d2e235c604c0aeb3261c4cb5690051807f0",
+        "count": 26,
+        "source": "baked",
+        "rays": 0,
+        "planningMs": 1.9
+      },
+      "file": "quiet-r3cell-candidate-01.frames.json.gz",
+      "sha256": "3b24e8b95aae92c54310df6a2e76d673eb656f1745f6137dcd7b1444ff817bc3",
+      "routes": {
+        "art-a-street": {
+          "frames": 458,
+          "durationMs": 10138.5,
+          "fps": 45.17433545396262,
+          "p95Ms": 30.89999999999418,
+          "p99Ms": 30.90000000000873,
+          "maxMs": 46.200000000004366,
+          "over20Ms": 200,
+          "pass": false,
+          "draws": {
+            "n": 458,
+            "min": 1575,
+            "p50": 1576,
+            "p95": 1591,
+            "max": 1591,
+            "mean": 1580.356
+          },
+          "triangles": {
+            "n": 458,
+            "min": 7348022,
+            "p50": 7348086,
+            "p95": 7437854,
+            "max": 7437854,
+            "mean": 7376763.965
+          },
+          "frameSha256": "13b26eacc4d007fb385ec128784c5dedf3fa01b5f3093a2b098f5ba31d9e3fb9",
+          "camera": {
+            "position": [
+              278.8,
+              10.488,
+              936
+            ],
+            "quaternion": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "fov": 35.63777782904556,
+            "hidden": true,
+            "target": [
+              280,
+              10.088000000000001,
+              875
+            ],
+            "currentView": "art-a-street",
+            "mode": "third"
+          },
+          "foreground": {
+            "osInRunSamples": 0,
+            "total": 20,
+            "browserWindowStart": false,
+            "browserWindowEnd": false,
+            "pageStart": false,
+            "pageEnd": false,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 20,
+              "min": 59.37,
+              "p50": 67.88,
+              "p95": 82.69,
+              "max": 83.55,
+              "mean": 69.777
+            },
+            "busiestCorePercent": {
+              "n": 20,
+              "min": 75.8,
+              "p50": 82.4,
+              "p95": 91.2,
+              "max": 91.2,
+              "mean": 84.115
+            },
+            "deviceGpuPercent": {
+              "n": 20,
+              "min": 24,
+              "p50": 33,
+              "p95": 36,
+              "max": 37,
+              "mean": 32.25
+            },
+            "memoryControllerPercent": {
+              "n": 20,
+              "min": 9,
+              "p50": 12,
+              "p95": 13,
+              "max": 13,
+              "mean": 11.7
+            },
+            "graphicsMHz": {
+              "n": 20,
+              "min": 1425,
+              "p50": 1425,
+              "p95": 1470,
+              "max": 1987,
+              "mean": 1457.6
+            },
+            "memoryMHz": {
+              "n": 20,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 20,
+              "min": 36.37,
+              "p50": 41.74,
+              "p95": 47.97,
+              "max": 66.05,
+              "mean": 42.729
+            },
+            "gpuTemperatureC": {
+              "n": 20,
+              "min": 58,
+              "p50": 59,
+              "p95": 60,
+              "max": 62,
+              "mean": 59.2
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 20,
+              "min": 24443.9,
+              "p50": 24503.8,
+              "p95": 24592.9,
+              "max": 24595.5,
+              "mean": 24519.375
+            },
+            "deviceUsedVramMiB": {
+              "n": 20,
+              "min": 5317.8,
+              "p50": 5317.8,
+              "p95": 5317.8,
+              "max": 5317.8,
+              "mean": 5317.8
+            },
+            "memoryCoverage": {
+              "samples": 20,
+              "firstOffsetMs": 216.7,
+              "lastGapMs": 132.6
+            }
+          }
+        },
+        "art-b-konbini": {
+          "frames": 643,
+          "durationMs": 10123.099999999991,
+          "fps": 63.51809228398421,
+          "p95Ms": 15.5,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 30.80000000000291,
+          "over20Ms": 15,
+          "pass": true,
+          "draws": {
+            "n": 643,
+            "min": 1032,
+            "p50": 1047,
+            "p95": 1049,
+            "max": 1052,
+            "mean": 1047.249
+          },
+          "triangles": {
+            "n": 643,
+            "min": 6797271,
+            "p50": 6864611,
+            "p95": 6864739,
+            "max": 6928283,
+            "mean": 6865198.621
+          },
+          "frameSha256": "44590b7df328271baa25cbdbccaa5e44692c2d9817edf4ef949fcfe048f096e4",
+          "camera": {
+            "position": [
+              279.1,
+              9.8184,
+              912.8
+            ],
+            "quaternion": [
+              0.013653878147403252,
+              0.5849950384089397,
+              -0.009850566433920587,
+              0.8108620986267578
+            ],
+            "fov": 58,
+            "hidden": true,
+            "target": [
+              272.48,
+              10.0534,
+              910.6
+            ],
+            "currentView": "art-b-konbini",
+            "mode": "third"
+          },
+          "foreground": {
+            "osInRunSamples": 0,
+            "total": 19,
+            "browserWindowStart": false,
+            "browserWindowEnd": false,
+            "pageStart": false,
+            "pageEnd": false,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 19,
+              "min": 66.67,
+              "p50": 99.27,
+              "p95": 100,
+              "max": 100,
+              "mean": 90.174
+            },
+            "busiestCorePercent": {
+              "n": 19,
+              "min": 75.8,
+              "p50": 100,
+              "p95": 100,
+              "max": 100,
+              "mean": 95.853
+            },
+            "deviceGpuPercent": {
+              "n": 20,
+              "min": 33,
+              "p50": 37,
+              "p95": 42,
+              "max": 44,
+              "mean": 37.55
+            },
+            "memoryControllerPercent": {
+              "n": 20,
+              "min": 13,
+              "p50": 15,
+              "p95": 17,
+              "max": 17,
+              "mean": 15.05
+            },
+            "graphicsMHz": {
+              "n": 20,
+              "min": 1605,
+              "p50": 1792,
+              "p95": 1815,
+              "max": 1815,
+              "mean": 1740.9
+            },
+            "memoryMHz": {
+              "n": 20,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 20,
+              "min": 35.83,
+              "p50": 57.5,
+              "p95": 61.04,
+              "max": 61.9,
+              "mean": 56.014
+            },
+            "gpuTemperatureC": {
+              "n": 20,
+              "min": 60,
+              "p50": 61,
+              "p95": 62,
+              "max": 62,
+              "mean": 61
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 19,
+              "min": 24395.2,
+              "p50": 24433.2,
+              "p95": 24737.5,
+              "max": 24737.5,
+              "mean": 24486.905
+            },
+            "deviceUsedVramMiB": {
+              "n": 19,
+              "min": 5384.7,
+              "p50": 5384.7,
+              "p95": 5384.7,
+              "max": 5384.7,
+              "mean": 5384.7
+            },
+            "memoryCoverage": {
+              "samples": 19,
+              "firstOffsetMs": 396.2,
+              "lastGapMs": 404.2
+            }
+          }
+        },
+        "art-c-alley": {
+          "frames": 657,
+          "durationMs": 10123.099999999991,
+          "fps": 64.9010678547086,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 30.90000000000873,
+          "over20Ms": 1,
+          "pass": true,
+          "draws": {
+            "n": 657,
+            "min": 966,
+            "p50": 966,
+            "p95": 968,
+            "max": 968,
+            "mean": 966.88
+          },
+          "triangles": {
+            "n": 657,
+            "min": 7280210,
+            "p50": 7280210,
+            "p95": 7280338,
+            "max": 7280338,
+            "mean": 7280266.304
+          },
+          "frameSha256": "16352d0c046e6a343badfb6234a64b4ef2bf2552f3e54d15017db9c2f1492d06",
+          "camera": {
+            "position": [
+              287.65,
+              14.384808464050293,
+              767.3199999999999
+            ],
+            "quaternion": [
+              0.00512201791291099,
+              0.8012252009590126,
+              -0.006859231737600546,
+              0.5983016740914732
+            ],
+            "fov": 45,
+            "hidden": true,
+            "target": [
+              278.4,
+              14.55,
+              770.06
+            ],
+            "currentView": "art-c-alley",
+            "mode": "third"
+          },
+          "foreground": {
+            "osInRunSamples": 0,
+            "total": 20,
+            "browserWindowStart": false,
+            "browserWindowEnd": false,
+            "pageStart": false,
+            "pageEnd": false,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 20,
+              "min": 36.22,
+              "p50": 49.93,
+              "p95": 87.69,
+              "max": 91.77,
+              "mean": 53.152
+            },
+            "busiestCorePercent": {
+              "n": 20,
+              "min": 45.5,
+              "p50": 66.7,
+              "p95": 97,
+              "max": 100,
+              "mean": 69.745
+            },
+            "deviceGpuPercent": {
+              "n": 20,
+              "min": 33,
+              "p50": 36,
+              "p95": 42,
+              "max": 43,
+              "mean": 36.85
+            },
+            "memoryControllerPercent": {
+              "n": 20,
+              "min": 12,
+              "p50": 13,
+              "p95": 14,
+              "max": 15,
+              "mean": 13.1
+            },
+            "graphicsMHz": {
+              "n": 20,
+              "min": 1500,
+              "p50": 1687,
+              "p95": 1717,
+              "max": 1717,
+              "mean": 1639.2
+            },
+            "memoryMHz": {
+              "n": 20,
+              "min": 6001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 6951
+            },
+            "gpuPowerW": {
+              "n": 20,
+              "min": 35.04,
+              "p50": 50.49,
+              "p95": 54.53,
+              "max": 55.1,
+              "mean": 49.838
+            },
+            "gpuTemperatureC": {
+              "n": 20,
+              "min": 62,
+              "p50": 62,
+              "p95": 63,
+              "max": 63,
+              "mean": 62.2
+            },
+            "pStates": [
+              "P0",
+              "P3"
+            ],
+            "hostUsedRamMiB": {
+              "n": 20,
+              "min": 24513.9,
+              "p50": 24619.2,
+              "p95": 24722.5,
+              "max": 24742.8,
+              "mean": 24630.155
+            },
+            "deviceUsedVramMiB": {
+              "n": 20,
+              "min": 5391.1,
+              "p50": 5391.1,
+              "p95": 5391.1,
+              "max": 5391.1,
+              "mean": 5391.1
+            },
+            "memoryCoverage": {
+              "samples": 20,
+              "firstOffsetMs": 192.8,
+              "lastGapMs": 118.4
+            }
+          }
+        },
+        "art-d-laundry": {
+          "frames": 657,
+          "durationMs": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 15.60000000000582,
+          "over20Ms": 0,
+          "pass": true,
+          "draws": {
+            "n": 657,
+            "min": 907,
+            "p50": 907,
+            "p95": 907,
+            "max": 909,
+            "mean": 907.043
+          },
+          "triangles": {
+            "n": 657,
+            "min": 8034099,
+            "p50": 8034099,
+            "p95": 8034099,
+            "max": 8034227,
+            "mean": 8034101.728
+          },
+          "frameSha256": "11b349822153fc5728da007919ecfc8903fd823ec6953f9b12aa3e9de538e64b",
+          "camera": {
+            "position": [
+              283.5,
+              12.520055181715234,
+              783.8
+            ],
+            "quaternion": [
+              0.1297258927986663,
+              0.0767626424061459,
+              -0.010073721024303532,
+              0.9885227410703001
+            ],
+            "fov": 48,
+            "hidden": true,
+            "target": [
+              282.5,
+              14.25,
+              777.4
+            ],
+            "currentView": "art-d-laundry",
+            "mode": "third"
+          },
+          "foreground": {
+            "osInRunSamples": 0,
+            "total": 19,
+            "browserWindowStart": false,
+            "browserWindowEnd": false,
+            "pageStart": false,
+            "pageEnd": false,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 19,
+              "min": 15.34,
+              "p50": 26.02,
+              "p95": 46.07,
+              "max": 46.07,
+              "mean": 26.857
+            },
+            "busiestCorePercent": {
+              "n": 19,
+              "min": 27.3,
+              "p50": 43.8,
+              "p95": 69.7,
+              "max": 69.7,
+              "mean": 45.121
+            },
+            "deviceGpuPercent": {
+              "n": 20,
+              "min": 35,
+              "p50": 39,
+              "p95": 43,
+              "max": 43,
+              "mean": 39.5
+            },
+            "memoryControllerPercent": {
+              "n": 20,
+              "min": 12,
+              "p50": 13,
+              "p95": 14,
+              "max": 14,
+              "mean": 12.8
+            },
+            "graphicsMHz": {
+              "n": 20,
+              "min": 1425,
+              "p50": 1462,
+              "p95": 1590,
+              "max": 1590,
+              "mean": 1482.8
+            },
+            "memoryMHz": {
+              "n": 20,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 20,
+              "min": 41.5,
+              "p50": 42.85,
+              "p95": 46.19,
+              "max": 50.08,
+              "mean": 43.648
+            },
+            "gpuTemperatureC": {
+              "n": 20,
+              "min": 61,
+              "p50": 62,
+              "p95": 62,
+              "max": 62,
+              "mean": 61.55
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 20,
+              "min": 24556.4,
+              "p50": 24570.4,
+              "p95": 24593,
+              "max": 24682,
+              "mean": 24577.425
+            },
+            "deviceUsedVramMiB": {
+              "n": 20,
+              "min": 5391.1,
+              "p50": 5403.4,
+              "p95": 5408,
+              "max": 5408,
+              "mean": 5402.09
+            },
+            "memoryCoverage": {
+              "samples": 20,
+              "firstOffsetMs": 27.8,
+              "lastGapMs": 341.8
+            }
+          }
+        },
+        "walk-third": {
+          "frames": 181,
+          "durationMs": 3123.100000000006,
+          "fps": 57.955236783964544,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.90000000000873,
+          "maxMs": 30.90000000000873,
+          "over20Ms": 22,
+          "pass": false,
+          "draws": {
+            "n": 181,
+            "min": 907,
+            "p50": 1683,
+            "p95": 1689,
+            "max": 1689,
+            "mean": 1676.785
+          },
+          "triangles": {
+            "n": 181,
+            "min": 8034099,
+            "p50": 8149724,
+            "p95": 8199272,
+            "max": 8215006,
+            "mean": 8146346.635
+          },
+          "frameSha256": "f4c620f8277e2262bdd37545d7c625716d2501379490bb5fd1edbf7cbc899912",
+          "walk": {
+            "from": [
+              281.6,
+              8.812,
+              934
+            ],
+            "to": [
+              280.9297905735536,
+              8.543635642768042,
+              924.4155586702872
+            ],
+            "distanceXZ": 9.607845558604962,
+            "mode": "third"
+          },
+          "foreground": {
+            "osInRunSamples": 0,
+            "total": 6,
+            "browserWindowStart": false,
+            "browserWindowEnd": false,
+            "pageStart": true,
+            "pageEnd": true,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 6,
+              "min": 27.61,
+              "p50": 33.63,
+              "p95": 45.35,
+              "max": 45.35,
+              "mean": 36.008
+            },
+            "busiestCorePercent": {
+              "n": 6,
+              "min": 50,
+              "p50": 61.8,
+              "p95": 72.7,
+              "max": 72.7,
+              "mean": 60.35
+            },
+            "deviceGpuPercent": {
+              "n": 6,
+              "min": 33,
+              "p50": 38,
+              "p95": 39,
+              "max": 39,
+              "mean": 37.167
+            },
+            "memoryControllerPercent": {
+              "n": 6,
+              "min": 14,
+              "p50": 15,
+              "p95": 17,
+              "max": 17,
+              "mean": 15.5
+            },
+            "graphicsMHz": {
+              "n": 6,
+              "min": 1785,
+              "p50": 1852,
+              "p95": 1950,
+              "max": 1950,
+              "mean": 1864.833
+            },
+            "memoryMHz": {
+              "n": 6,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 6,
+              "min": 67.68,
+              "p50": 69.36,
+              "p95": 75.44,
+              "max": 75.44,
+              "mean": 71.197
+            },
+            "gpuTemperatureC": {
+              "n": 6,
+              "min": 64,
+              "p50": 64,
+              "p95": 65,
+              "max": 65,
+              "mean": 64.333
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 6,
+              "min": 24624.7,
+              "p50": 24631.2,
+              "p95": 24804.1,
+              "max": 24804.1,
+              "mean": 24681.833
+            },
+            "deviceUsedVramMiB": {
+              "n": 6,
+              "min": 5404,
+              "p50": 5404.1,
+              "p95": 5404.4,
+              "max": 5404.4,
+              "mean": 5404.233
+            },
+            "memoryCoverage": {
+              "samples": 6,
+              "firstOffsetMs": 205.6,
+              "lastGapMs": 349
+            }
+          }
+        },
+        "walk-first": {
+          "frames": 189,
+          "durationMs": 3138.5,
+          "fps": 60.21985024693325,
+          "p95Ms": 30.69999999999709,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 30.80000000000291,
+          "over20Ms": 15,
+          "pass": false,
+          "draws": {
+            "n": 189,
+            "min": 1449,
+            "p50": 1534,
+            "p95": 1593,
+            "max": 1603,
+            "mean": 1529.153
+          },
+          "triangles": {
+            "n": 189,
+            "min": 7894038,
+            "p50": 8085882,
+            "p95": 8160590,
+            "max": 8179748,
+            "mean": 8074375.36
+          },
+          "frameSha256": "df676ea6836293e8334d408e0a8c765666706a24dd052cc79a5bf5dc4baf5d29",
+          "walk": {
+            "from": [
+              280.9166757133163,
+              8.538384208068846,
+              924.2280074310302
+            ],
+            "to": [
+              280.2373565674232,
+              8.26637214922691,
+              914.5132910438182
+            ],
+            "distanceXZ": 9.738438734517043,
+            "mode": "first"
+          },
+          "foreground": {
+            "osInRunSamples": 0,
+            "total": 6,
+            "browserWindowStart": false,
+            "browserWindowEnd": false,
+            "pageStart": true,
+            "pageEnd": true,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 6,
+              "min": 34.34,
+              "p50": 39.05,
+              "p95": 43.67,
+              "max": 43.67,
+              "mean": 39.707
+            },
+            "busiestCorePercent": {
+              "n": 6,
+              "min": 57.6,
+              "p50": 57.6,
+              "p95": 72.7,
+              "max": 72.7,
+              "mean": 60.617
+            },
+            "deviceGpuPercent": {
+              "n": 7,
+              "min": 33,
+              "p50": 38,
+              "p95": 40,
+              "max": 40,
+              "mean": 36.429
+            },
+            "memoryControllerPercent": {
+              "n": 7,
+              "min": 13,
+              "p50": 15,
+              "p95": 16,
+              "max": 16,
+              "mean": 14.857
+            },
+            "graphicsMHz": {
+              "n": 7,
+              "min": 1620,
+              "p50": 1695,
+              "p95": 1792,
+              "max": 1792,
+              "mean": 1683
+            },
+            "memoryMHz": {
+              "n": 7,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 7,
+              "min": 53.46,
+              "p50": 54.44,
+              "p95": 60.63,
+              "max": 60.63,
+              "mean": 55.719
+            },
+            "gpuTemperatureC": {
+              "n": 7,
+              "min": 63,
+              "p50": 63,
+              "p95": 64,
+              "max": 64,
+              "mean": 63.286
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 6,
+              "min": 24645,
+              "p50": 24894.4,
+              "p95": 24927.4,
+              "max": 24927.4,
+              "mean": 24863.233
+            },
+            "deviceUsedVramMiB": {
+              "n": 6,
+              "min": 5404.4,
+              "p50": 5404.4,
+              "p95": 5404.4,
+              "max": 5404.4,
+              "mean": 5404.4
+            },
+            "memoryCoverage": {
+              "samples": 6,
+              "firstOffsetMs": 177.2,
+              "lastGapMs": 435.8
+            }
+          }
+        }
+      }
+    },
+    {
+      "run": "quiet-r3cell-candidate-02",
+      "source": "ed69406bd6f12f66ec852edc95870ab7c1bbaaa7",
+      "reviewerVariant": "R3 + spatially culled island props",
+      "canvas": [
+        1440,
+        900
+      ],
+      "dpr": 1,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "driverExit": 0,
+      "nativeExit": 1,
+      "renderOk": true,
+      "transportClean": false,
+      "network": [
+        {
+          "file": "plastic_crate_02_1k.gltf",
+          "stage": "waiting-for-ready-frame",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "file": "plastic_crate_02.bin",
+          "stage": "waiting-for-ready-frame",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "jsExceptionCount": 0,
+      "threshold": {
+        "fps": 60,
+        "p95Ms": 16.7
+      },
+      "walkingInputs": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true
+        },
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true
+        }
+      ],
+      "verifiedSourceFiles": 51,
+      "firstReadyMs": 45266.699999809265,
+      "shadowSunAuto": [
+        true
+      ],
+      "groundR2": true,
+      "propCountsOnFirstReady": [
+        1,
+        6,
+        58,
+        45
+      ],
+      "staticShadowBatches": null,
+      "weathering": {
+        "fingerprint": "1057:2751069:297148.3:946248.3",
+        "appliedPlanSha256": "d655df2fcd07aa13a48fbf7b9a1a2d2e235c604c0aeb3261c4cb5690051807f0",
+        "count": 26,
+        "source": "baked",
+        "rays": 0,
+        "planningMs": 2.1
+      },
+      "file": "quiet-r3cell-candidate-02.frames.json.gz",
+      "sha256": "059c907e3b3ef0f82b5b2dccf6e8dad3d3dad5800d525e33d20042328df127de",
+      "routes": {
+        "art-a-street": {
+          "frames": 657,
+          "durationMs": 10123.000000000007,
+          "fps": 64.90170897955147,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999998545,
+          "maxMs": 30.80000000000291,
+          "over20Ms": 1,
+          "pass": true,
+          "draws": {
+            "n": 657,
+            "min": 1575,
+            "p50": 1591,
+            "p95": 1594,
+            "max": 1594,
+            "mean": 1585.163
+          },
+          "triangles": {
+            "n": 657,
+            "min": 7348022,
+            "p50": 7437854,
+            "p95": 7438030,
+            "max": 7438030,
+            "mean": 7403308.983
+          },
+          "frameSha256": "90897761467ba31a3deac9e187f333c56e4637490d5de7a00e966ae1e52c0456",
+          "camera": {
+            "position": [
+              278.8,
+              10.488,
+              936
+            ],
+            "quaternion": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "fov": 35.63777782904556,
+            "hidden": true,
+            "target": [
+              280,
+              10.088000000000001,
+              875
+            ],
+            "currentView": "art-a-street",
+            "mode": "third"
+          },
+          "foreground": {
+            "osInRunSamples": 0,
+            "total": 20,
+            "browserWindowStart": false,
+            "browserWindowEnd": false,
+            "pageStart": false,
+            "pageEnd": false,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 20,
+              "min": 11.87,
+              "p50": 19.85,
+              "p95": 27.78,
+              "max": 28.06,
+              "mean": 20.464
+            },
+            "busiestCorePercent": {
+              "n": 20,
+              "min": 27.3,
+              "p50": 48.5,
+              "p95": 69.7,
+              "max": 75.8,
+              "mean": 50.665
+            },
+            "deviceGpuPercent": {
+              "n": 20,
+              "min": 37,
+              "p50": 40,
+              "p95": 42,
+              "max": 42,
+              "mean": 40
+            },
+            "memoryControllerPercent": {
+              "n": 20,
+              "min": 17,
+              "p50": 17,
+              "p95": 18,
+              "max": 18,
+              "mean": 17.5
+            },
+            "graphicsMHz": {
+              "n": 20,
+              "min": 1770,
+              "p50": 1815,
+              "p95": 1890,
+              "max": 1972,
+              "mean": 1835.35
+            },
+            "memoryMHz": {
+              "n": 20,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 20,
+              "min": 65.14,
+              "p50": 67.42,
+              "p95": 71.88,
+              "max": 72.94,
+              "mean": 68.278
+            },
+            "gpuTemperatureC": {
+              "n": 20,
+              "min": 62,
+              "p50": 62,
+              "p95": 63,
+              "max": 63,
+              "mean": 62.3
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 19,
+              "min": 24328.3,
+              "p50": 24432.9,
+              "p95": 24656.4,
+              "max": 24656.4,
+              "mean": 24482.479
+            },
+            "deviceUsedVramMiB": {
+              "n": 19,
+              "min": 5158.7,
+              "p50": 5173.7,
+              "p95": 5317.3,
+              "max": 5317.3,
+              "mean": 5209.268
+            },
+            "memoryCoverage": {
+              "samples": 19,
+              "firstOffsetMs": 463.3,
+              "lastGapMs": 454
+            }
+          }
+        },
+        "art-b-konbini": {
+          "frames": 658,
+          "durationMs": 10123.099999999991,
+          "fps": 64.99985182404605,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "maxMs": 15.60000000000582,
+          "over20Ms": 0,
+          "pass": true,
+          "draws": {
+            "n": 658,
+            "min": 1047,
+            "p50": 1047,
+            "p95": 1052,
+            "max": 1052,
+            "mean": 1048.728
+          },
+          "triangles": {
+            "n": 658,
+            "min": 6864611,
+            "p50": 6864611,
+            "p95": 6928283,
+            "max": 6928283,
+            "mean": 6884787.128
+          },
+          "frameSha256": "c2b3052c0ffc4824dba8c8b6ea292925bd9cf979add8bc5b5fd181b733bbf69f",
+          "camera": {
+            "position": [
+              279.1,
+              9.8184,
+              912.8
+            ],
+            "quaternion": [
+              0.013653878147403252,
+              0.5849950384089397,
+              -0.009850566433920587,
+              0.8108620986267578
+            ],
+            "fov": 58,
+            "hidden": true,
+            "target": [
+              272.48,
+              10.0534,
+              910.6
+            ],
+            "currentView": "art-b-konbini",
+            "mode": "third"
+          },
+          "foreground": {
+            "osInRunSamples": 0,
+            "total": 20,
+            "browserWindowStart": false,
+            "browserWindowEnd": false,
+            "pageStart": false,
+            "pageEnd": false,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 20,
+              "min": 10.14,
+              "p50": 15.12,
+              "p95": 29.18,
+              "max": 37.76,
+              "mean": 17.169
+            },
+            "busiestCorePercent": {
+              "n": 20,
+              "min": 27.3,
+              "p50": 39.4,
+              "p95": 54.5,
+              "max": 54.5,
+              "mean": 39.895
+            },
+            "deviceGpuPercent": {
+              "n": 20,
+              "min": 32,
+              "p50": 38,
+              "p95": 41,
+              "max": 42,
+              "mean": 38.15
+            },
+            "memoryControllerPercent": {
+              "n": 20,
+              "min": 14,
+              "p50": 15,
+              "p95": 15,
+              "max": 15,
+              "mean": 14.65
+            },
+            "graphicsMHz": {
+              "n": 20,
+              "min": 1477,
+              "p50": 1515,
+              "p95": 1987,
+              "max": 1987,
+              "mean": 1579.15
+            },
+            "memoryMHz": {
+              "n": 20,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 20,
+              "min": 45.97,
+              "p50": 47.73,
+              "p95": 75.73,
+              "max": 78.7,
+              "mean": 52.674
+            },
+            "gpuTemperatureC": {
+              "n": 20,
+              "min": 61,
+              "p50": 61,
+              "p95": 64,
+              "max": 64,
+              "mean": 61.6
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 20,
+              "min": 24103.6,
+              "p50": 24121.4,
+              "p95": 24386.2,
+              "max": 24387.9,
+              "mean": 24177.715
+            },
+            "deviceUsedVramMiB": {
+              "n": 20,
+              "min": 5231.2,
+              "p50": 5231.6,
+              "p95": 5231.8,
+              "max": 5231.8,
+              "mean": 5231.56
+            },
+            "memoryCoverage": {
+              "samples": 20,
+              "firstOffsetMs": 213,
+              "lastGapMs": 192.2
+            }
+          }
+        },
+        "art-c-alley": {
+          "frames": 657,
+          "durationMs": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 15.69999999999709,
+          "over20Ms": 0,
+          "pass": true,
+          "draws": {
+            "n": 657,
+            "min": 966,
+            "p50": 968,
+            "p95": 981,
+            "max": 983,
+            "mean": 968.199
+          },
+          "triangles": {
+            "n": 657,
+            "min": 7280210,
+            "p50": 7280338,
+            "p95": 7347550,
+            "max": 7347678,
+            "mean": 7285705.616
+          },
+          "frameSha256": "dfa05fa0a796523748b82cf2d8e090878ed2518a47d7ccc25fe3177cdec7a2d4",
+          "camera": {
+            "position": [
+              287.65,
+              14.384808464050293,
+              767.3199999999999
+            ],
+            "quaternion": [
+              0.00512201791291099,
+              0.8012252009590126,
+              -0.006859231737600546,
+              0.5983016740914732
+            ],
+            "fov": 45,
+            "hidden": true,
+            "target": [
+              278.4,
+              14.55,
+              770.06
+            ],
+            "currentView": "art-c-alley",
+            "mode": "third"
+          },
+          "foreground": {
+            "osInRunSamples": 0,
+            "total": 20,
+            "browserWindowStart": false,
+            "browserWindowEnd": false,
+            "pageStart": false,
+            "pageEnd": false,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 20,
+              "min": 7.7,
+              "p50": 17.57,
+              "p95": 30.22,
+              "max": 62.27,
+              "mean": 19.279
+            },
+            "busiestCorePercent": {
+              "n": 20,
+              "min": 18.8,
+              "p50": 43.8,
+              "p95": 72.7,
+              "max": 76.5,
+              "mean": 41.755
+            },
+            "deviceGpuPercent": {
+              "n": 20,
+              "min": 37,
+              "p50": 39,
+              "p95": 40,
+              "max": 41,
+              "mean": 38.75
+            },
+            "memoryControllerPercent": {
+              "n": 20,
+              "min": 12,
+              "p50": 13,
+              "p95": 13,
+              "max": 13,
+              "mean": 12.75
+            },
+            "graphicsMHz": {
+              "n": 20,
+              "min": 1425,
+              "p50": 1425,
+              "p95": 1425,
+              "max": 1507,
+              "mean": 1429.1
+            },
+            "memoryMHz": {
+              "n": 20,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 20,
+              "min": 41.81,
+              "p50": 42.67,
+              "p95": 45.56,
+              "max": 45.77,
+              "mean": 42.931
+            },
+            "gpuTemperatureC": {
+              "n": 20,
+              "min": 60,
+              "p50": 60,
+              "p95": 61,
+              "max": 61,
+              "mean": 60.3
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 20,
+              "min": 24092.4,
+              "p50": 24131.9,
+              "p95": 24374.5,
+              "max": 24377.8,
+              "mean": 24188.595
+            },
+            "deviceUsedVramMiB": {
+              "n": 20,
+              "min": 5238.2,
+              "p50": 5238.2,
+              "p95": 5238.2,
+              "max": 5238.2,
+              "mean": 5238.2
+            },
+            "memoryCoverage": {
+              "samples": 20,
+              "firstOffsetMs": 79,
+              "lastGapMs": 319.3
+            }
+          }
+        },
+        "art-d-laundry": {
+          "frames": 657,
+          "durationMs": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 15.60000000000582,
+          "over20Ms": 0,
+          "pass": true,
+          "draws": {
+            "n": 657,
+            "min": 902,
+            "p50": 907,
+            "p95": 907,
+            "max": 907,
+            "mean": 905.536
+          },
+          "triangles": {
+            "n": 657,
+            "min": 7970427,
+            "p50": 8034099,
+            "p95": 8034099,
+            "max": 8034099,
+            "mean": 8015800.54
+          },
+          "frameSha256": "ff8512335e00a79f5b9145365f61d4b3633d0d10a6c2d0a29fbc4fe652527537",
+          "camera": {
+            "position": [
+              283.5,
+              12.520055181715234,
+              783.8
+            ],
+            "quaternion": [
+              0.1297258927986663,
+              0.0767626424061459,
+              -0.010073721024303532,
+              0.9885227410703001
+            ],
+            "fov": 48,
+            "hidden": true,
+            "target": [
+              282.5,
+              14.25,
+              777.4
+            ],
+            "currentView": "art-d-laundry",
+            "mode": "third"
+          },
+          "foreground": {
+            "osInRunSamples": 0,
+            "total": 20,
+            "browserWindowStart": false,
+            "browserWindowEnd": false,
+            "pageStart": false,
+            "pageEnd": false,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 20,
+              "min": 3.76,
+              "p50": 15.34,
+              "p95": 35.42,
+              "max": 37.07,
+              "mean": 17.949
+            },
+            "busiestCorePercent": {
+              "n": 20,
+              "min": 11.8,
+              "p50": 37.5,
+              "p95": 63.6,
+              "max": 72.7,
+              "mean": 38.965
+            },
+            "deviceGpuPercent": {
+              "n": 20,
+              "min": 37,
+              "p50": 39,
+              "p95": 41,
+              "max": 41,
+              "mean": 39.1
+            },
+            "memoryControllerPercent": {
+              "n": 20,
+              "min": 12,
+              "p50": 13,
+              "p95": 13,
+              "max": 13,
+              "mean": 12.55
+            },
+            "graphicsMHz": {
+              "n": 20,
+              "min": 1425,
+              "p50": 1522,
+              "p95": 1545,
+              "max": 1545,
+              "mean": 1498.7
+            },
+            "memoryMHz": {
+              "n": 20,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 20,
+              "min": 41.2,
+              "p50": 44.6,
+              "p95": 45.26,
+              "max": 45.33,
+              "mean": 43.592
+            },
+            "gpuTemperatureC": {
+              "n": 20,
+              "min": 60,
+              "p50": 60,
+              "p95": 60,
+              "max": 60,
+              "mean": 60
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 20,
+              "min": 24073.8,
+              "p50": 24127,
+              "p95": 24140.9,
+              "max": 24173.4,
+              "mean": 24127.085
+            },
+            "deviceUsedVramMiB": {
+              "n": 20,
+              "min": 5238.2,
+              "p50": 5238.2,
+              "p95": 5238.2,
+              "max": 5238.2,
+              "mean": 5238.2
+            },
+            "memoryCoverage": {
+              "samples": 20,
+              "firstOffsetMs": 361.1,
+              "lastGapMs": 21.1
+            }
+          }
+        },
+        "walk-third": {
+          "frames": 202,
+          "durationMs": 3107.699999999997,
+          "fps": 64.99983910930919,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "maxMs": 15.60000000000582,
+          "over20Ms": 0,
+          "pass": true,
+          "draws": {
+            "n": 202,
+            "min": 909,
+            "p50": 1677,
+            "p95": 1688,
+            "max": 1688,
+            "mean": 1674.436
+          },
+          "triangles": {
+            "n": 202,
+            "min": 8034144,
+            "p50": 8149962,
+            "p95": 8199016,
+            "max": 8214750,
+            "mean": 8137358.896
+          },
+          "frameSha256": "232689bd9b71f6789f3107bd73b2a11d08aee1578af0785c8c4396128ac500ca",
+          "walk": {
+            "from": [
+              281.6,
+              8.812,
+              934
+            ],
+            "to": [
+              280.9429432155832,
+              8.54890220600172,
+              924.6036502143471
+            ],
+            "distanceXZ": 9.419294714164494,
+            "mode": "third"
+          },
+          "foreground": {
+            "osInRunSamples": 0,
+            "total": 7,
+            "browserWindowStart": false,
+            "browserWindowEnd": false,
+            "pageStart": true,
+            "pageEnd": true,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 7,
+              "min": 17.44,
+              "p50": 19.56,
+              "p95": 28.97,
+              "max": 28.97,
+              "mean": 20.509
+            },
+            "busiestCorePercent": {
+              "n": 7,
+              "min": 43.8,
+              "p50": 57.6,
+              "p95": 66.7,
+              "max": 66.7,
+              "mean": 57.343
+            },
+            "deviceGpuPercent": {
+              "n": 7,
+              "min": 38,
+              "p50": 40,
+              "p95": 42,
+              "max": 42,
+              "mean": 40
+            },
+            "memoryControllerPercent": {
+              "n": 7,
+              "min": 17,
+              "p50": 17,
+              "p95": 18,
+              "max": 18,
+              "mean": 17.286
+            },
+            "graphicsMHz": {
+              "n": 7,
+              "min": 1852,
+              "p50": 1905,
+              "p95": 1980,
+              "max": 1980,
+              "mean": 1906.857
+            },
+            "memoryMHz": {
+              "n": 7,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 7,
+              "min": 70.72,
+              "p50": 75.55,
+              "p95": 81,
+              "max": 81,
+              "mean": 75.58
+            },
+            "gpuTemperatureC": {
+              "n": 7,
+              "min": 63,
+              "p50": 64,
+              "p95": 65,
+              "max": 65,
+              "mean": 64.143
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 6,
+              "min": 24126,
+              "p50": 24130.8,
+              "p95": 24149.2,
+              "max": 24149.2,
+              "mean": 24136.5
+            },
+            "deviceUsedVramMiB": {
+              "n": 6,
+              "min": 5238.3,
+              "p50": 5238.3,
+              "p95": 5238.3,
+              "max": 5238.3,
+              "mean": 5238.3
+            },
+            "memoryCoverage": {
+              "samples": 6,
+              "firstOffsetMs": 301.6,
+              "lastGapMs": 246.2
+            }
+          }
+        },
+        "walk-first": {
+          "frames": 203,
+          "durationMs": 3123.0999999999913,
+          "fps": 64.99951970798263,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 15.599999999991269,
+          "over20Ms": 0,
+          "pass": true,
+          "draws": {
+            "n": 203,
+            "min": 1455,
+            "p50": 1535,
+            "p95": 1596,
+            "max": 1660,
+            "mean": 1533.833
+          },
+          "triangles": {
+            "n": 203,
+            "min": 7938588,
+            "p50": 8090722,
+            "p95": 8171824,
+            "max": 8180974,
+            "mean": 8083541.626
+          },
+          "frameSha256": "61d1fff059ced826196cdce128b75cc3f8ebd2cc73a269fe9c67dfc517fa29f0",
+          "walk": {
+            "from": [
+              280.92465021771295,
+              8.541577348395144,
+              924.3420481569694
+            ],
+            "to": [
+              280.2642557538265,
+              8.27714308527217,
+              914.897967331149
+            ],
+            "distanceXZ": 9.467142308667498,
+            "mode": "first"
+          },
+          "foreground": {
+            "osInRunSamples": 0,
+            "total": 6,
+            "browserWindowStart": false,
+            "browserWindowEnd": false,
+            "pageStart": true,
+            "pageEnd": true,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 6,
+              "min": 12.46,
+              "p50": 19.85,
+              "p95": 21.57,
+              "max": 21.57,
+              "mean": 17.887
+            },
+            "busiestCorePercent": {
+              "n": 6,
+              "min": 23.5,
+              "p50": 48.5,
+              "p95": 72.7,
+              "max": 72.7,
+              "mean": 50.2
+            },
+            "deviceGpuPercent": {
+              "n": 6,
+              "min": 36,
+              "p50": 39,
+              "p95": 42,
+              "max": 42,
+              "mean": 39.167
+            },
+            "memoryControllerPercent": {
+              "n": 6,
+              "min": 16,
+              "p50": 17,
+              "p95": 17,
+              "max": 17,
+              "mean": 16.667
+            },
+            "graphicsMHz": {
+              "n": 6,
+              "min": 1792,
+              "p50": 1830,
+              "p95": 1890,
+              "max": 1890,
+              "mean": 1851.167
+            },
+            "memoryMHz": {
+              "n": 6,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 6,
+              "min": 66.94,
+              "p50": 68.1,
+              "p95": 74.15,
+              "max": 74.15,
+              "mean": 70.24
+            },
+            "gpuTemperatureC": {
+              "n": 6,
+              "min": 64,
+              "p50": 64,
+              "p95": 65,
+              "max": 65,
+              "mean": 64.167
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 7,
+              "min": 24131.2,
+              "p50": 24138.4,
+              "p95": 24145.6,
+              "max": 24145.6,
+              "mean": 24138.286
+            },
+            "deviceUsedVramMiB": {
+              "n": 7,
+              "min": 5238.3,
+              "p50": 5238.3,
+              "p95": 5238.3,
+              "max": 5238.3,
+              "mean": 5238.3
+            },
+            "memoryCoverage": {
+              "samples": 7,
+              "firstOffsetMs": 22.5,
+              "lastGapMs": 27.4
+            }
+          }
+        }
+      }
+    },
+    {
+      "run": "quiet-r3cell-control-02",
+      "source": "47a5c12eba910682ccbf8bc9138510bc01737bf3",
+      "reviewerVariant": "R3 delivered",
+      "canvas": [
+        1440,
+        900
+      ],
+      "dpr": 1,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "driverExit": 0,
+      "nativeExit": 0,
+      "renderOk": true,
+      "transportClean": true,
+      "network": [],
+      "jsExceptionCount": 0,
+      "threshold": {
+        "fps": 60,
+        "p95Ms": 16.7
+      },
+      "walkingInputs": [
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true
+        },
+        {
+          "type": "keydown",
+          "code": "KeyW",
+          "trusted": true
+        },
+        {
+          "type": "keyup",
+          "code": "KeyW",
+          "trusted": true
+        }
+      ],
+      "verifiedSourceFiles": 50,
+      "firstReadyMs": 43992,
+      "shadowSunAuto": [
+        true
+      ],
+      "groundR2": true,
+      "propCountsOnFirstReady": null,
+      "staticShadowBatches": null,
+      "weathering": {
+        "fingerprint": "1057:2751069:297148.3:946248.3",
+        "appliedPlanSha256": "d655df2fcd07aa13a48fbf7b9a1a2d2e235c604c0aeb3261c4cb5690051807f0",
+        "count": 26,
+        "source": "baked",
+        "rays": 0,
+        "planningMs": 1.9
+      },
+      "file": "quiet-r3cell-control-02.frames.json.gz",
+      "sha256": "62b5054a50d2a4d446b0a83da5dd0abd8860e6b6536051ffd428f6c784bf0541",
+      "routes": {
+        "art-a-street": {
+          "frames": 567,
+          "durationMs": 10138.5,
+          "fps": 55.9254327563249,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.900000000001455,
+          "maxMs": 46.200000000004366,
+          "over20Ms": 90,
+          "pass": false,
+          "draws": {
+            "n": 567,
+            "min": 1576,
+            "p50": 1592,
+            "p95": 1595,
+            "max": 1595,
+            "mean": 1588.894
+          },
+          "triangles": {
+            "n": 567,
+            "min": 7919852,
+            "p50": 8009684,
+            "p95": 8009860,
+            "max": 8009860,
+            "mean": 7988841.559
+          },
+          "frameSha256": "278d07df58e0a49abb6b5acb8be175a163897bca0c93ebb0c7c832d935d4ffab",
+          "camera": {
+            "position": [
+              278.8,
+              10.488,
+              936
+            ],
+            "quaternion": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "fov": 35.63777782904556,
+            "hidden": true,
+            "target": [
+              280,
+              10.088000000000001,
+              875
+            ],
+            "currentView": "art-a-street",
+            "mode": "third"
+          },
+          "foreground": {
+            "osInRunSamples": 19,
+            "total": 19,
+            "browserWindowStart": true,
+            "browserWindowEnd": true,
+            "pageStart": true,
+            "pageEnd": true,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 19,
+              "min": 19.13,
+              "p50": 24.87,
+              "p95": 100,
+              "max": 100,
+              "mean": 43.296
+            },
+            "busiestCorePercent": {
+              "n": 19,
+              "min": 42.4,
+              "p50": 60.6,
+              "p95": 100,
+              "max": 100,
+              "mean": 71.974
+            },
+            "deviceGpuPercent": {
+              "n": 20,
+              "min": 21,
+              "p50": 41,
+              "p95": 43,
+              "max": 43,
+              "mean": 37.15
+            },
+            "memoryControllerPercent": {
+              "n": 20,
+              "min": 9,
+              "p50": 17,
+              "p95": 19,
+              "max": 19,
+              "mean": 15.85
+            },
+            "graphicsMHz": {
+              "n": 20,
+              "min": 1425,
+              "p50": 1957,
+              "p95": 1987,
+              "max": 1987,
+              "mean": 1871.7
+            },
+            "memoryMHz": {
+              "n": 20,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 20,
+              "min": 39.81,
+              "p50": 80.81,
+              "p95": 86.13,
+              "max": 86.24,
+              "mean": 73.525
+            },
+            "gpuTemperatureC": {
+              "n": 20,
+              "min": 60,
+              "p50": 63,
+              "p95": 64,
+              "max": 64,
+              "mean": 62.7
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 19,
+              "min": 24330.9,
+              "p50": 24526.2,
+              "p95": 24568.1,
+              "max": 24568.1,
+              "mean": 24489.889
+            },
+            "deviceUsedVramMiB": {
+              "n": 19,
+              "min": 5348.1,
+              "p50": 5348.1,
+              "p95": 5348.1,
+              "max": 5348.1,
+              "mean": 5348.1
+            },
+            "memoryCoverage": {
+              "samples": 19,
+              "firstOffsetMs": 446.2,
+              "lastGapMs": 270.2
+            }
+          }
+        },
+        "art-b-konbini": {
+          "frames": 651,
+          "durationMs": 10107.699999999997,
+          "fps": 64.40634367858169,
+          "p95Ms": 15.5,
+          "p99Ms": 15.89999999999418,
+          "maxMs": 30.80000000000291,
+          "over20Ms": 6,
+          "pass": true,
+          "draws": {
+            "n": 651,
+            "min": 1047,
+            "p50": 1047,
+            "p95": 1052,
+            "max": 1052,
+            "mean": 1049.072
+          },
+          "triangles": {
+            "n": 651,
+            "min": 7845106,
+            "p50": 7845106,
+            "p95": 7908778,
+            "max": 7908778,
+            "mean": 7870810.522
+          },
+          "frameSha256": "535650f371ee467537a0dd92791dc61cd39faa40dec77512e3f4a6cb0f50e610",
+          "camera": {
+            "position": [
+              279.1,
+              9.8184,
+              912.8
+            ],
+            "quaternion": [
+              0.013653878147403252,
+              0.5849950384089397,
+              -0.009850566433920587,
+              0.8108620986267578
+            ],
+            "fov": 58,
+            "hidden": true,
+            "target": [
+              272.48,
+              10.0534,
+              910.6
+            ],
+            "currentView": "art-b-konbini",
+            "mode": "third"
+          },
+          "foreground": {
+            "osInRunSamples": 11,
+            "total": 20,
+            "browserWindowStart": true,
+            "browserWindowEnd": false,
+            "pageStart": true,
+            "pageEnd": false,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 20,
+              "min": 18.44,
+              "p50": 33.28,
+              "p95": 73.54,
+              "max": 74.06,
+              "mean": 37.252
+            },
+            "busiestCorePercent": {
+              "n": 20,
+              "min": 42.4,
+              "p50": 59.4,
+              "p95": 84.8,
+              "max": 87.9,
+              "mean": 59.355
+            },
+            "deviceGpuPercent": {
+              "n": 19,
+              "min": 34,
+              "p50": 39,
+              "p95": 43,
+              "max": 43,
+              "mean": 39.421
+            },
+            "memoryControllerPercent": {
+              "n": 19,
+              "min": 15,
+              "p50": 17,
+              "p95": 19,
+              "max": 19,
+              "mean": 17.421
+            },
+            "graphicsMHz": {
+              "n": 19,
+              "min": 1867,
+              "p50": 1950,
+              "p95": 1987,
+              "max": 1987,
+              "mean": 1941.684
+            },
+            "memoryMHz": {
+              "n": 19,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 19,
+              "min": 68.58,
+              "p50": 78.82,
+              "p95": 83.51,
+              "max": 83.51,
+              "mean": 76.981
+            },
+            "gpuTemperatureC": {
+              "n": 19,
+              "min": 63,
+              "p50": 64,
+              "p95": 65,
+              "max": 65,
+              "mean": 64.105
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 20,
+              "min": 24349.8,
+              "p50": 24383.5,
+              "p95": 24502.7,
+              "max": 24529.4,
+              "mean": 24409.07
+            },
+            "deviceUsedVramMiB": {
+              "n": 20,
+              "min": 5392.1,
+              "p50": 5405.5,
+              "p95": 5431.9,
+              "max": 5431.9,
+              "mean": 5413.695
+            },
+            "memoryCoverage": {
+              "samples": 20,
+              "firstOffsetMs": 279.6,
+              "lastGapMs": 28.8
+            }
+          }
+        },
+        "art-c-alley": {
+          "frames": 647,
+          "durationMs": 10107.699999999997,
+          "fps": 64.01060577579472,
+          "p95Ms": 15.5,
+          "p99Ms": 30.69999999999709,
+          "maxMs": 30.90000000000873,
+          "over20Ms": 10,
+          "pass": true,
+          "draws": {
+            "n": 647,
+            "min": 969,
+            "p50": 971,
+            "p95": 986,
+            "max": 986,
+            "mean": 972.411
+          },
+          "triangles": {
+            "n": 647,
+            "min": 8658371,
+            "p50": 8658499,
+            "p95": 8725839,
+            "max": 8725839,
+            "mean": 8669361.955
+          },
+          "frameSha256": "7b76ef1bac64218ccf5aac54c1f4c6f8374a384eab630905d9f788608cc52d5f",
+          "camera": {
+            "position": [
+              287.65,
+              14.384808464050293,
+              767.3199999999999
+            ],
+            "quaternion": [
+              0.00512201791291099,
+              0.8012252009590126,
+              -0.006859231737600546,
+              0.5983016740914732
+            ],
+            "fov": 45,
+            "hidden": true,
+            "target": [
+              278.4,
+              14.55,
+              770.06
+            ],
+            "currentView": "art-c-alley",
+            "mode": "third"
+          },
+          "foreground": {
+            "osInRunSamples": 0,
+            "total": 19,
+            "browserWindowStart": false,
+            "browserWindowEnd": false,
+            "pageStart": false,
+            "pageEnd": false,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 19,
+              "min": 15.01,
+              "p50": 31.43,
+              "p95": 81.71,
+              "max": 81.71,
+              "mean": 40.861
+            },
+            "busiestCorePercent": {
+              "n": 19,
+              "min": 45.5,
+              "p50": 55.9,
+              "p95": 97.1,
+              "max": 97.1,
+              "mean": 61.558
+            },
+            "deviceGpuPercent": {
+              "n": 20,
+              "min": 35,
+              "p50": 42,
+              "p95": 47,
+              "max": 47,
+              "mean": 42.35
+            },
+            "memoryControllerPercent": {
+              "n": 20,
+              "min": 14,
+              "p50": 17,
+              "p95": 19,
+              "max": 20,
+              "mean": 16.9
+            },
+            "graphicsMHz": {
+              "n": 20,
+              "min": 1950,
+              "p50": 1987,
+              "p95": 1987,
+              "max": 1987,
+              "mean": 1980
+            },
+            "memoryMHz": {
+              "n": 20,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 20,
+              "min": 78.02,
+              "p50": 83.9,
+              "p95": 84.32,
+              "max": 86.78,
+              "mean": 83.225
+            },
+            "gpuTemperatureC": {
+              "n": 20,
+              "min": 66,
+              "p50": 66,
+              "p95": 67,
+              "max": 67,
+              "mean": 66.35
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 20,
+              "min": 24380.8,
+              "p50": 24398.5,
+              "p95": 24540.6,
+              "max": 24554.4,
+              "mean": 24454.895
+            },
+            "deviceUsedVramMiB": {
+              "n": 20,
+              "min": 5364.6,
+              "p50": 5393.7,
+              "p95": 5421.9,
+              "max": 5421.9,
+              "mean": 5397.77
+            },
+            "memoryCoverage": {
+              "samples": 20,
+              "firstOffsetMs": 68.6,
+              "lastGapMs": 142.8
+            }
+          }
+        },
+        "art-d-laundry": {
+          "frames": 654,
+          "durationMs": 10107.800000000003,
+          "fps": 64.70250697481151,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "maxMs": 30.90000000000873,
+          "over20Ms": 3,
+          "pass": true,
+          "draws": {
+            "n": 654,
+            "min": 902,
+            "p50": 907,
+            "p95": 907,
+            "max": 907,
+            "mean": 905.295
+          },
+          "triangles": {
+            "n": 654,
+            "min": 8387570,
+            "p50": 8451242,
+            "p95": 8451242,
+            "max": 8451242,
+            "mean": 8428935.896
+          },
+          "frameSha256": "f775992252ef1d7df2c306bf87f91cca8be6a3fb0b6f34f64b344c2bc5dd77dc",
+          "camera": {
+            "position": [
+              283.5,
+              12.520055181715234,
+              783.8
+            ],
+            "quaternion": [
+              0.1297258927986663,
+              0.0767626424061459,
+              -0.010073721024303532,
+              0.9885227410703001
+            ],
+            "fov": 48,
+            "hidden": true,
+            "target": [
+              282.5,
+              14.25,
+              777.4
+            ],
+            "currentView": "art-d-laundry",
+            "mode": "third"
+          },
+          "foreground": {
+            "osInRunSamples": 0,
+            "total": 20,
+            "browserWindowStart": false,
+            "browserWindowEnd": false,
+            "pageStart": false,
+            "pageEnd": false,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 20,
+              "min": 14.42,
+              "p50": 36,
+              "p95": 80.58,
+              "max": 82.4,
+              "mean": 40.908
+            },
+            "busiestCorePercent": {
+              "n": 20,
+              "min": 28.1,
+              "p50": 54.5,
+              "p95": 90.9,
+              "max": 91.4,
+              "mean": 58.78
+            },
+            "deviceGpuPercent": {
+              "n": 20,
+              "min": 35,
+              "p50": 39,
+              "p95": 41,
+              "max": 41,
+              "mean": 38.7
+            },
+            "memoryControllerPercent": {
+              "n": 20,
+              "min": 13,
+              "p50": 14,
+              "p95": 15,
+              "max": 16,
+              "mean": 14.3
+            },
+            "graphicsMHz": {
+              "n": 20,
+              "min": 1762,
+              "p50": 1860,
+              "p95": 1882,
+              "max": 1987,
+              "mean": 1845.9
+            },
+            "memoryMHz": {
+              "n": 20,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 20,
+              "min": 54.73,
+              "p50": 64.91,
+              "p95": 77.07,
+              "max": 78.71,
+              "mean": 65.498
+            },
+            "gpuTemperatureC": {
+              "n": 20,
+              "min": 65,
+              "p50": 65,
+              "p95": 66,
+              "max": 67,
+              "mean": 65.55
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 19,
+              "min": 24571.9,
+              "p50": 24668.7,
+              "p95": 24837.5,
+              "max": 24837.5,
+              "mean": 24704.716
+            },
+            "deviceUsedVramMiB": {
+              "n": 19,
+              "min": 5370.6,
+              "p50": 5424.5,
+              "p95": 5448.5,
+              "max": 5448.5,
+              "mean": 5420.442
+            },
+            "memoryCoverage": {
+              "samples": 19,
+              "firstOffsetMs": 396.4,
+              "lastGapMs": 363.7
+            }
+          }
+        },
+        "walk-third": {
+          "frames": 181,
+          "durationMs": 3138.4000000000087,
+          "fps": 57.67269946469523,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.90000000000873,
+          "maxMs": 30.90000000000873,
+          "over20Ms": 23,
+          "pass": false,
+          "draws": {
+            "n": 181,
+            "min": 1661,
+            "p50": 1681,
+            "p95": 1688,
+            "max": 1688,
+            "mean": 1679.691
+          },
+          "triangles": {
+            "n": 181,
+            "min": 8443441,
+            "p50": 8494263,
+            "p95": 8543829,
+            "max": 8559563,
+            "mean": 8488032.414
+          },
+          "frameSha256": "17be2e7765715166f5b4b8b6a0a374472185528b56ab8e89e7a93e56f93c0471",
+          "walk": {
+            "from": [
+              281.6,
+              8.812,
+              934
+            ],
+            "to": [
+              280.9196980017034,
+              8.539594388720415,
+              924.2712281685863
+            ],
+            "distanceXZ": 9.752528500681015,
+            "mode": "third"
+          },
+          "foreground": {
+            "osInRunSamples": 0,
+            "total": 6,
+            "browserWindowStart": false,
+            "browserWindowEnd": false,
+            "pageStart": true,
+            "pageEnd": true,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 6,
+              "min": 26.98,
+              "p50": 30.12,
+              "p95": 37.23,
+              "max": 37.23,
+              "mean": 30.848
+            },
+            "busiestCorePercent": {
+              "n": 6,
+              "min": 45.5,
+              "p50": 55.9,
+              "p95": 69.4,
+              "max": 69.4,
+              "mean": 57.767
+            },
+            "deviceGpuPercent": {
+              "n": 7,
+              "min": 38,
+              "p50": 43,
+              "p95": 46,
+              "max": 46,
+              "mean": 42.857
+            },
+            "memoryControllerPercent": {
+              "n": 7,
+              "min": 15,
+              "p50": 17,
+              "p95": 18,
+              "max": 18,
+              "mean": 17
+            },
+            "graphicsMHz": {
+              "n": 7,
+              "min": 1957,
+              "p50": 1972,
+              "p95": 1972,
+              "max": 1972,
+              "mean": 1968.857
+            },
+            "memoryMHz": {
+              "n": 7,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 7,
+              "min": 80.5,
+              "p50": 86.04,
+              "p95": 86.32,
+              "max": 86.32,
+              "mean": 85.063
+            },
+            "gpuTemperatureC": {
+              "n": 7,
+              "min": 68,
+              "p50": 68,
+              "p95": 69,
+              "max": 69,
+              "mean": 68.143
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 6,
+              "min": 24660.1,
+              "p50": 24660.9,
+              "p95": 24670.5,
+              "max": 24670.5,
+              "mean": 24664.467
+            },
+            "deviceUsedVramMiB": {
+              "n": 6,
+              "min": 5354,
+              "p50": 5356.3,
+              "p95": 5358,
+              "max": 5358,
+              "mean": 5355.85
+            },
+            "memoryCoverage": {
+              "samples": 6,
+              "firstOffsetMs": 461.2,
+              "lastGapMs": 159.1
+            }
+          }
+        },
+        "walk-first": {
+          "frames": 201,
+          "durationMs": 3153.899999999994,
+          "fps": 63.73061923333028,
+          "p95Ms": 15.5,
+          "p99Ms": 30.79999999998836,
+          "maxMs": 30.89999999999418,
+          "over20Ms": 4,
+          "pass": true,
+          "draws": {
+            "n": 201,
+            "min": 1444,
+            "p50": 1530,
+            "p95": 1594,
+            "max": 1599,
+            "mean": 1526.065
+          },
+          "triangles": {
+            "n": 201,
+            "min": 8229599,
+            "p50": 8430207,
+            "p95": 8504359,
+            "max": 8516637,
+            "mean": 8414284.796
+          },
+          "frameSha256": "a0160d5a655afe9080517de41d910e8737d419a266b571cd5cdd8d765c368ba4",
+          "walk": {
+            "from": [
+              280.90558780505904,
+              8.533944402755639,
+              924.0694429555585
+            ],
+            "to": [
+              280.22477702251973,
+              8.261335064773784,
+              914.3333951704923
+            ],
+            "distanceXZ": 9.759822221470811,
+            "mode": "first"
+          },
+          "foreground": {
+            "osInRunSamples": 0,
+            "total": 6,
+            "browserWindowStart": false,
+            "browserWindowEnd": false,
+            "pageStart": true,
+            "pageEnd": true,
+            "visibleStart": "visible",
+            "visibleEnd": "visible"
+          },
+          "load": {
+            "hostCpuPercent": {
+              "n": 6,
+              "min": 23.16,
+              "p50": 30.34,
+              "p95": 44.62,
+              "max": 44.62,
+              "mean": 31.858
+            },
+            "busiestCorePercent": {
+              "n": 6,
+              "min": 42.4,
+              "p50": 51.5,
+              "p95": 66.7,
+              "max": 66.7,
+              "mean": 56.067
+            },
+            "deviceGpuPercent": {
+              "n": 6,
+              "min": 37,
+              "p50": 41,
+              "p95": 48,
+              "max": 48,
+              "mean": 42
+            },
+            "memoryControllerPercent": {
+              "n": 6,
+              "min": 15,
+              "p50": 18,
+              "p95": 18,
+              "max": 18,
+              "mean": 17.333
+            },
+            "graphicsMHz": {
+              "n": 6,
+              "min": 1942,
+              "p50": 1957,
+              "p95": 1972,
+              "max": 1972,
+              "mean": 1958.333
+            },
+            "memoryMHz": {
+              "n": 6,
+              "min": 7001,
+              "p50": 7001,
+              "p95": 7001,
+              "max": 7001,
+              "mean": 7001
+            },
+            "gpuPowerW": {
+              "n": 6,
+              "min": 83.62,
+              "p50": 84.95,
+              "p95": 86.49,
+              "max": 86.49,
+              "mean": 85.277
+            },
+            "gpuTemperatureC": {
+              "n": 6,
+              "min": 68,
+              "p50": 69,
+              "p95": 69,
+              "max": 69,
+              "mean": 68.667
+            },
+            "pStates": [
+              "P0"
+            ],
+            "hostUsedRamMiB": {
+              "n": 6,
+              "min": 24704.7,
+              "p50": 24707.8,
+              "p95": 24723.9,
+              "max": 24723.9,
+              "mean": 24714.15
+            },
+            "deviceUsedVramMiB": {
+              "n": 6,
+              "min": 5368.6,
+              "p50": 5369,
+              "p95": 5383.6,
+              "max": 5383.6,
+              "mean": 5371.4
+            },
+            "memoryCoverage": {
+              "samples": 6,
+              "firstOffsetMs": 434.4,
+              "lastGapMs": 185.8
+            }
+          }
+        }
+      }
+    }
+  ]
+}

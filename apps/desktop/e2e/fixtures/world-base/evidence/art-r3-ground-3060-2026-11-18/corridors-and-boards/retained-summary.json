@@ -1,0 +1,20 @@
+{
+  "groundControl": "off",
+  "source": "baked",
+  "rays": 0,
+  "count": 26,
+  "wallTargets": 1057,
+  "fingerprint": "1057:2751069:297148.3:946248.3",
+  "identicalAtSameIndex": 26,
+  "passUsingSourceRules": 26,
+  "allNineUnderFlatRule": 22,
+  "curvedException": [
+    3,
+    4,
+    5,
+    7
+  ],
+  "extraGeometryInFront": [],
+  "center": 26,
+  "sceneErrors": []
+}
