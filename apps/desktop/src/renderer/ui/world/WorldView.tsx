@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import type { WorldActivity, WorldPlace, WorldResident, WorldSnapshot } from "@room/schemas";
+import { WORLD_MAX_RESIDENTS } from "@room/schemas";
 import { agentColor, agentName } from "../../lib/discussion";
 import {
   ACTIVITY_DOING, ACTIVITY_LABEL, INVITABLE, REJECT_TEXT, activityProgress, budgetText, clockText, cognitionNote, commitmentViews,
@@ -50,15 +51,45 @@ function useWorldMinutes(world: WorldSnapshot): number {
 
 // ---------------------------------------------------------------- 还没开始
 
-function StartScreen({ notice }: { notice: ReactNode }) {
+/**
+ * 选谁住进来。新开的一局最多 4 位（契约 WORLD_MAX_RESIDENTS）；以前存下的名单可能更长，只带出前 4 位让你重选。
+ * 开始和重新开始都用它，提交时总是带上你选好的名单
+ */
+function useResidentChoice() {
   const agents = useAppState((s) => s.disc.agents);
   const settings = useAppState((s) => s.world.settings);
+  const [picked, setPicked] = useState<string[] | null>(null);
+  const chosen = picked ?? (settings?.residents ?? []).filter((a) => agents.some((x) => x.id === a)).slice(0, WORLD_MAX_RESIDENTS);
+  const full = chosen.length >= WORLD_MAX_RESIDENTS;
+  const toggle = (id: string) => {
+    if (chosen.includes(id)) setPicked(chosen.filter((a) => a !== id));
+    else if (!full) setPicked([...chosen, id]);
+  };
+  return { agents, chosen, full, toggle };
+}
+
+function ResidentPicker({ choice }: { choice: ReturnType<typeof useResidentChoice> }) {
+  const { agents, chosen, full, toggle } = choice;
+  return (
+    <fieldset className="world-start-people" style={agents.length === 0 ? { display: "none" } : undefined}>
+      <legend>谁住进来（最多 {WORLD_MAX_RESIDENTS} 位）</legend>
+      {agents.map((a) => (
+        <label key={a.id} style={{ "--agent": a.color } as CSSProperties}>
+          <input type="checkbox" checked={chosen.includes(a.id)} disabled={full && !chosen.includes(a.id)} onChange={() => toggle(a.id)} />
+          <Figure color={a.color} />
+          <span>{a.displayName}</span>
+        </label>
+      ))}
+    </fieldset>
+  );
+}
+
+function StartScreen({ notice }: { notice: ReactNode }) {
   const loaded = useAppState((s) => s.world.loaded);
   const starting = useAppState((s) => s.world.starting);
   const actions = useActions();
-  const [picked, setPicked] = useState<string[] | null>(null);
-  const chosen = picked ?? (settings?.residents ?? []).filter((a) => agents.some((x) => x.id === a));
-  const toggle = (id: string) => setPicked(chosen.includes(id) ? chosen.filter((a) => a !== id) : [...chosen, id]);
+  const choice = useResidentChoice();
+  const { agents, chosen } = choice;
   return (
     <main className="world world-empty">
       {notice}
@@ -66,16 +97,7 @@ function StartScreen({ notice }: { notice: ReactNode }) {
         <h1>小屋</h1>
         <p>秘书们住在这里过日子：自己做饭、看书、休息、互相说话。你也在这个家里，可以走到哪间屋、找谁说话、邀她一起做事。</p>
         {loaded && agents.length === 0 && <p className="world-start-hint" role="status">还没有配置秘书。先到「秘书」页配置至少一位，再回来开始。</p>}
-        <fieldset className="world-start-people" style={agents.length === 0 ? { display: "none" } : undefined}>
-          <legend>谁住进来</legend>
-          {agents.map((a) => (
-            <label key={a.id} style={{ "--agent": a.color } as CSSProperties}>
-              <input type="checkbox" checked={chosen.includes(a.id)} onChange={() => toggle(a.id)} />
-              <Figure color={a.color} />
-              <span>{a.displayName}</span>
-            </label>
-          ))}
-        </fieldset>
+        <ResidentPicker choice={choice} />
         <button type="button" className="button-primary" disabled={chosen.length === 0 || starting || !loaded} onClick={() => void actions.world.start(chosen)}>
           {starting ? "正在布置…" : "开始"}
         </button>
@@ -139,17 +161,28 @@ function WorldBar({ world, now }: { world: WorldSnapshot; now: number }) {
         )}
         <button type="button" className="button-outline" onClick={() => void actions.world.showReview()}>回顾</button>
         <button type="button" className="button-outline" onClick={() => void actions.world.showScenes()}>以前的对话</button>
-        {asking ? (
-          <span className="world-reset-ask">
-            重新开始会丢掉这一局，
-            <HoldButton className="button-outline world-reset" hint="按住 1 秒重新开始" onComplete={() => actions.world.reset().finally(() => setAsking(false))}>按住确认</HoldButton>
-            <button type="button" className="button-link" onClick={() => setAsking(false)}>算了</button>
-          </span>
-        ) : (
-          <button type="button" className="button-link" onClick={() => setAsking(true)}>重新开始</button>
-        )}
+        <button type="button" className="button-link" onClick={() => setAsking(true)}>重新开始</button>
       </div>
+      {asking && <RestartSheet onClose={() => setAsking(false)} />}
     </header>
+  );
+}
+
+/** 重新开始：先选好这一局谁住进来，再按住确认。名单总是跟着请求带过去，不沿用存着的（可能超过 4 位） */
+function RestartSheet({ onClose }: { onClose: () => void }) {
+  const actions = useActions();
+  const starting = useAppState((s) => s.world.starting);
+  const choice = useResidentChoice();
+  return (
+    <WorldSheet label="重新开始" onClose={onClose}>
+      <p className="resident-note">重新开始会开新的一局，现在这一局的进度不带过去。</p>
+      <ResidentPicker choice={choice} />
+      {choice.chosen.length === 0 ? (
+        <p className="resident-note" role="status">先选至少一位。</p>
+      ) : (
+        <HoldButton className="button-outline world-reset" hint="按住 1 秒重新开始" disabled={starting} onComplete={() => actions.world.reset(choice.chosen).finally(onClose)}>按住确认</HoldButton>
+      )}
+    </WorldSheet>
   );
 }
 

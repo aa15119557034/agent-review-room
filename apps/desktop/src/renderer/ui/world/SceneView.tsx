@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import type { WorldScene, WorldSceneLine, WorldSnapshot } from "@room/schemas";
 import { agentColor } from "../../lib/discussion";
-import { actorName, currentLine, dayClockText, placeKind, type WorldNames } from "../../lib/world";
+import { actorName, currentLine, currentLines, dayClockText, placeKind, type WorldNames } from "../../lib/world";
 import { useActions, useAppState } from "../hooks";
 import { Figure } from "./Figure";
 import { WorldSheet } from "./WorldSheet";
@@ -23,6 +23,7 @@ export function SceneView({ scene, world, names }: { scene: WorldScene; world: W
     root.current?.focus({ preventScroll: true });
   }, [scene.id]);
   const line = currentLine(scene);
+  const shown = currentLines(scene, useAppState((s) => s.world.sceneFrom));
   const place = world.places.find((p) => p.id === scene.placeId);
   // 立绘的表情：每位用她自己最后一句台词的表情
   const expressionOf = (agent: string) =>
@@ -72,10 +73,21 @@ export function SceneView({ scene, world, names }: { scene: WorldScene; world: W
         <div className="scene-box" aria-live="polite">
           {line ? (
             <>
-              <span className="scene-speaker" data-narration={line.speaker === null || undefined}>
-                {line.speaker ? actorName(line.speaker, names) : "旁白"}
+              <span className="scene-speaker" data-narration={shown[0]!.speaker === null || undefined}>
+                {shown[0]!.speaker ? actorName(shown[0]!.speaker, names) : "旁白"}
               </span>
-              <p key={scene.lines.length} className="scene-text">{line.text}</p>
+              <div className="scene-lines" tabIndex={0} aria-label="她说的话">
+              {shown.map((l, i) => {
+                // 这几句里换了说话的人（她说完，接一句旁白）：在那一句前面标出是谁
+                const changed = i > 0 && JSON.stringify(l.speaker) !== JSON.stringify(shown[i - 1]!.speaker);
+                return (
+                  <p key={`${scene.lines.length}-${i}`} className="scene-text" data-source={l.source} data-narration={l.speaker === null || undefined}>
+                    {changed && <span className="scene-text-who">{l.speaker ? actorName(l.speaker, names) : "旁白"}：</span>}
+                    {l.text}
+                  </p>
+                );
+              })}
+              </div>
             </>
           ) : (
             <p className="scene-text">…</p>
@@ -119,7 +131,7 @@ function Transcript({ lines, names }: { lines: readonly WorldSceneLine[]; names:
   return (
     <ol className="transcript">
       {lines.map((l, i) => (
-        <li key={i} data-who={l.speaker === null ? "narration" : l.speaker.kind} ref={i === lines.length - 1 ? end : undefined}>
+        <li key={i} data-who={l.speaker === null ? "narration" : l.speaker.kind} data-source={l.source} ref={i === lines.length - 1 ? end : undefined}>
           {l.speaker && <strong>{actorName(l.speaker, names)}</strong>}
           <span>{l.text}</span>
         </li>

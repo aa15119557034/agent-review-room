@@ -114,11 +114,12 @@ export function createWorldActions(store: Store<AppState>, client: RoomClient, f
     }
   }
 
-  async function reset(residents?: string[]) {
+  async function reset(residents: string[]) {
     if (resetting) return;
     const w = get();
-    // 还没配置秘书时后台给的 settings 是 null（C-59）：这时只有带着入住人选才能开始，其余用契约的默认值
-    if (!w.loaded || (!w.settings && !residents)) return;
+    // 开始和重新开始都要带着入住人选：存着的名单可能是改上限之前的 5～8 位，后台不接受省略名单沿用它。
+    // 还没配置秘书时后台给的 settings 是 null（C-59），流速和预算用契约的默认值
+    if (!w.loaded || residents.length === 0) return;
     const base = w.settings ?? { dayRealMinutes: WORLD_DAY_REAL_MINUTES_DEFAULT, dailyCognitionLimit: WORLD_DAILY_COGNITION_DEFAULT };
     resetting = true;
     const ctx = context();
@@ -129,7 +130,7 @@ export function createWorldActions(store: Store<AppState>, client: RoomClient, f
         requestId: newId("wact"),
         worldId: w.world?.id ?? null,
         confirm: true,
-        ...(residents ? { settings: { ...base, residents } } : {}),
+        settings: { ...base, residents },
       });
       // 回应到之前推送已经把新的一局送来了：同一局、同一个会话才照用（runSeq 交给 applySnapshot 判断）；
       // 局或会话对不上（中间又恢复 / 重开过）就不接这份旧回应，按现在的重读
@@ -162,8 +163,11 @@ export function createWorldActions(store: Store<AppState>, client: RoomClient, f
 
     /** 第一次开始：住进来的是这几位 */
     start: (residents: string[]) => reset(residents),
-    /** 重置 = 开新的一局（界面先问过了才调） */
-    reset: () => reset(),
+    /**
+     * 重置 = 开新的一局（界面先让你选好谁住进来、问过了才调）。名单总是带上：
+     * 存着的名单可能是改上限之前的 5～8 位，后台不接受省略名单沿用它
+     */
+    reset: (residents: string[]) => reset(residents),
 
     async pause() {
       const ctx = context();

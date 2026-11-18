@@ -37,6 +37,11 @@ export interface WorldUiState {
   world: WorldSnapshot | null;
   /** 现在开着的场景（剧情界面在 C-56） */
   scene: WorldScene | null;
+  /**
+   * 对话框从 scene.lines 的第几句开始显示：最近一次更新新添的那几句的开头。
+   * 她一次回话 main 是一起提交的（闲聊、事实句、动作没做成的说明），要一起看到；见 currentLines
+   */
+  sceneFrom: number;
   settings: WorldSettings | null;
   budgets: WorldBudget[];
   /** 时间线，新的在前。同一局内 seq 严格递减 */
@@ -69,6 +74,7 @@ export const initialWorld: WorldUiState = {
   loaded: false,
   world: null,
   scene: null,
+  sceneFrom: 0,
   settings: null,
   budgets: [],
   events: [],
@@ -91,6 +97,7 @@ function enterWorld(state: WorldUiState, world: WorldSnapshot): WorldUiState {
     ...state,
     world,
     scene: null,
+    sceneFrom: 0,
     events: [],
     eventsBefore: null,
     eventsLimit: WORLD_EVENTS_KEEP,
@@ -157,9 +164,16 @@ export function applyWorldState(state: WorldUiState, data: WorldState): WorldUiS
     };
   }
   const next = applySnapshot(done, data.world);
-  if (next === done) return done;
+  if (next === done) {
+    // 快照比手里的旧（推送先到、世界又往前走了一步）：设置、用量、场景都不用。
+    // 只有一种情况要留：手里还没有设置（刚开局，开局的回应比推送晚到），这一局的设置只能从这份回应里来
+    return done.settings === null && done.world?.id === data.world.id ? { ...done, settings: data.settings } : done;
+  }
   const withRest: WorldUiState = { ...next, settings: data.settings, budgets: data.budgets };
-  return data.scene ? applyScene(withRest, data.scene) : withRest;
+  if (!data.scene) return withRest;
+  const withScene = applyScene(withRest, data.scene);
+  // 整份读回来的、之前手里没有的场景（重开程序、重读）：不知道哪几句是一起来的，只显示最后一句
+  return withScene.scene && state.scene?.id !== withScene.scene.id ? { ...withScene, sceneFrom: Math.max(0, withScene.scene.lines.length - 1) } : withScene;
 }
 
 /**
@@ -178,7 +192,10 @@ export function applyScene(state: WorldUiState, sc: WorldScene): WorldUiState {
   if (state.closedScenes.includes(sc.id)) return state;
   if (sc.generation.session !== world.generation.session || sc.generation.runSeq !== world.generation.runSeq) return state;
   if (world.sceneId !== null && world.sceneId !== sc.id) return state;
-  return { ...state, scene: sc };
+  // 同一场对话多了几句：从新添的第一句开始显示。句数没变（继续后改挂代次、状态变化）保持原样；新的一场从头
+  const held = state.scene?.id === sc.id ? state.scene : null;
+  const sceneFrom = !held ? 0 : sc.lines.length > held.lines.length ? held.lines.length : Math.min(state.sceneFrom, Math.max(0, sc.lines.length - 1));
+  return { ...state, scene: sc, sceneFrom };
 }
 
 /**
@@ -511,6 +528,22 @@ export function budgetText(budgets: readonly WorldBudget[], agent: string): stri
 
 /** 场景里现在该显示的那一句：最后一句。没有台词时是 null */
 export const currentLine = (scene: Pick<WorldScene, "lines">) => scene.lines[scene.lines.length - 1] ?? null;
+
+/** 对话框里一次最多显示几句（闲聊、事实句、动作没做成的说明） */
+export const SCENE_SHOWN_MAX = 3;
+
+/**
+ * 对话框里现在该显示的台词：最近一次更新新添的那几句（from = WorldUiState.sceneFrom），最多 SCENE_SHOWN_MAX 句。
+ * 她一次回话可能是「闲聊（chat）→ 程序按证据写的话（model）→ 动作没做成的说明（rule）」，main 一起提交，
+ * 这里一起显示，后一句不盖掉前一句。按「哪次更新带来的」分，不按说话人或 source 猜：台词上没有回话的 id，
+ * 相邻两句是同一个人说的也不等于是同一次回话。
+ */
+export function currentLines(scene: Pick<WorldScene, "lines">, from: number): WorldScene["lines"] {
+  const n = scene.lines.length;
+  if (n === 0) return [];
+  const start = Math.max(Math.min(Math.max(0, from), n - 1), n - SCENE_SHOWN_MAX);
+  return scene.lines.slice(start);
+}
 
 /** 一间屋是哪一类，画面按它铺地板和摆设 */
 export function placeKind(p: Pick<WorldPlace, "id" | "owner">): "bedroom" | "kitchen" | "living" {
