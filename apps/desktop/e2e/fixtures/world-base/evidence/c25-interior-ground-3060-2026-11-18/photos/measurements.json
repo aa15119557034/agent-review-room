@@ -1,0 +1,2734 @@
+{
+  "source": "a53236b3e4d5e3f0134f2fdd7629384171a64531",
+  "previousSource": "4a8903840677d589f08e6a9934680b3b7b5f3d9c",
+  "size": [
+    1440,
+    900
+  ],
+  "ao": 0.55,
+  "time": 14,
+  "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "sessions": {
+    "shops-on": {
+      "artifact": "gpu-modern-after-c25-shops-on-a53236b",
+      "startedAt": "2026-11-18T04:44:18.873Z",
+      "finishedAt": "2026-11-18T04:45:07.569Z",
+      "exit": 1,
+      "ok": false,
+      "captures": 21,
+      "stage": "complete",
+      "sourceUnchanged": true,
+      "assetsUnchanged": true,
+      "restoreUnchanged": true,
+      "driverUnchanged": true,
+      "transportClean": false,
+      "exceptions": [],
+      "httpErrors": [],
+      "networkFailures": [
+        {
+          "resource": "plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "resource": "plastic_crate_02.bin",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ]
+    },
+    "shops-off": {
+      "artifact": "gpu-modern-after-c25-shops-off-a53236b",
+      "startedAt": "2026-11-18T04:45:07.611Z",
+      "finishedAt": "2026-11-18T04:45:52.928Z",
+      "exit": 0,
+      "ok": true,
+      "captures": 21,
+      "stage": "complete",
+      "sourceUnchanged": true,
+      "assetsUnchanged": true,
+      "restoreUnchanged": true,
+      "driverUnchanged": true,
+      "transportClean": true,
+      "exceptions": [],
+      "httpErrors": [],
+      "networkFailures": []
+    },
+    "shops-on-repeat": {
+      "artifact": "gpu-modern-after-c25-shops-on-repeat-a53236b",
+      "startedAt": "2026-11-18T04:45:52.965Z",
+      "finishedAt": "2026-11-18T04:46:40.163Z",
+      "exit": 1,
+      "ok": false,
+      "captures": 21,
+      "stage": "complete",
+      "sourceUnchanged": true,
+      "assetsUnchanged": true,
+      "restoreUnchanged": true,
+      "driverUnchanged": true,
+      "transportClean": false,
+      "exceptions": [],
+      "httpErrors": [],
+      "networkFailures": [
+        {
+          "resource": "plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "resource": "plastic_crate_02.bin",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ]
+    },
+    "evening-on": {
+      "artifact": "gpu-modern-after-c25-evening-on-a53236b",
+      "startedAt": "2026-11-18T04:46:40.203Z",
+      "finishedAt": "2026-11-18T04:47:28.233Z",
+      "exit": 1,
+      "ok": false,
+      "captures": 27,
+      "stage": "complete",
+      "sourceUnchanged": true,
+      "assetsUnchanged": true,
+      "restoreUnchanged": true,
+      "driverUnchanged": true,
+      "transportClean": false,
+      "exceptions": [],
+      "httpErrors": [],
+      "networkFailures": [
+        {
+          "resource": "plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ]
+    },
+    "evening-off": {
+      "artifact": "gpu-modern-after-c25-evening-off-a53236b",
+      "startedAt": "2026-11-18T04:47:28.272Z",
+      "finishedAt": "2026-11-18T04:48:14.259Z",
+      "exit": 1,
+      "ok": false,
+      "captures": 27,
+      "stage": "complete",
+      "sourceUnchanged": true,
+      "assetsUnchanged": true,
+      "restoreUnchanged": true,
+      "driverUnchanged": true,
+      "transportClean": false,
+      "exceptions": [],
+      "httpErrors": [],
+      "networkFailures": [
+        {
+          "resource": "menhir.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "resource": "plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ]
+    },
+    "afternoon-on": {
+      "artifact": "gpu-modern-after-c25-afternoon-on-a53236b",
+      "startedAt": "2026-11-18T04:48:14.299Z",
+      "finishedAt": "2026-11-18T04:49:01.580Z",
+      "exit": 1,
+      "ok": false,
+      "captures": 15,
+      "stage": "complete",
+      "sourceUnchanged": true,
+      "assetsUnchanged": true,
+      "restoreUnchanged": true,
+      "driverUnchanged": true,
+      "transportClean": false,
+      "exceptions": [],
+      "httpErrors": [],
+      "networkFailures": [
+        {
+          "resource": "plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "resource": "plastic_crate_02.bin",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ]
+    },
+    "afternoon-off": {
+      "artifact": "gpu-modern-after-c25-afternoon-off-a53236b",
+      "startedAt": "2026-11-18T04:49:01.622Z",
+      "finishedAt": "2026-11-18T04:49:46.743Z",
+      "exit": 1,
+      "ok": false,
+      "captures": 15,
+      "stage": "complete",
+      "sourceUnchanged": true,
+      "assetsUnchanged": true,
+      "restoreUnchanged": true,
+      "driverUnchanged": true,
+      "transportClean": false,
+      "exceptions": [],
+      "httpErrors": [],
+      "networkFailures": [
+        {
+          "resource": "plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ]
+    }
+  },
+  "pairs": {
+    "shops": [
+      {
+        "view": "W2",
+        "camera": {
+          "position": [
+            271.2,
+            10.072,
+            918.2
+          ],
+          "quaternion": [
+            -0.030263252125431236,
+            0.6335032752046837,
+            0.0248099322013837,
+            0.7727497674796766
+          ],
+          "fov": 58
+        },
+        "sources": {
+          "off": {
+            "file": "images/shops-W2-off.jpg",
+            "pngSha256": "b8b08942c378a5ec25e40fe435139e2b5cfa34400597594ebc49d638c818b2a8",
+            "jpegSha256": "53dfd7c404cb56913b325987c0f0e80504999a7e95e6f50383edc215c39614fa",
+            "cameraAmount": 0
+          },
+          "on": {
+            "file": "images/shops-W2-on.jpg",
+            "pngSha256": "b8b08942c378a5ec25e40fe435139e2b5cfa34400597594ebc49d638c818b2a8",
+            "jpegSha256": "53dfd7c404cb56913b325987c0f0e80504999a7e95e6f50383edc215c39614fa",
+            "cameraAmount": 0
+          },
+          "on-repeat": {
+            "file": "images/shops-W2-on-repeat.jpg",
+            "pngSha256": "b8b08942c378a5ec25e40fe435139e2b5cfa34400597594ebc49d638c818b2a8",
+            "jpegSha256": "53dfd7c404cb56913b325987c0f0e80504999a7e95e6f50383edc215c39614fa",
+            "cameraAmount": 0
+          }
+        },
+        "offVsOn": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 132.6064,
+          "meanYAfter": 132.6064
+        },
+        "c24OnVsC25On": {
+          "pixels": 1296000,
+          "changed": 1275673,
+          "above4": 1258898,
+          "above8": 1223661,
+          "maximum": 47,
+          "meanRGBChange": [
+            -10.0077,
+            -11.5094,
+            -24.5677
+          ],
+          "meanYBefore": 144.7393,
+          "meanYAfter": 132.6064
+        },
+        "c24PngSha256": "ab5b0f5c1d187ff95efa4957724ac3ddb826046b83e20eb11e8c889b511daff9",
+        "c24CameraAmount": 1,
+        "poseCheck": {
+          "kind": "flower",
+          "localXZ": [
+            0.8,
+            -4
+          ],
+          "floor": 0.552,
+          "capsuleRadius": 0.3
+        },
+        "onVsRepeat": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 132.6064,
+          "meanYAfter": 132.6064
+        },
+        "offVsRepeat": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 132.6064,
+          "meanYAfter": 132.6064
+        },
+        "residual": {
+          "offOnUnionAbove8": 0,
+          "unionExtent": null,
+          "unionLargestComponents": [],
+          "stableOnBothVsOffAbove8": 0,
+          "stableExtent": null,
+          "stableLargestComponents": [],
+          "anyDifferenceAcrossThree": 0,
+          "anyDifferenceExtent": null,
+          "anyDifferenceLargestComponents": []
+        }
+      },
+      {
+        "view": "W4",
+        "camera": {
+          "position": [
+            271.3063173841728,
+            10.584561368764852,
+            935.9831848596035
+          ],
+          "quaternion": [
+            -0.029931856222571915,
+            0.6436868290597327,
+            0.02520875141921839,
+            0.7642878181221926
+          ],
+          "fov": 58
+        },
+        "sources": {
+          "off": {
+            "file": "images/shops-W4-off.jpg",
+            "pngSha256": "3eec5a469a07e359725ff7769ec54908de912448074726ec6279df1a61ebd927",
+            "jpegSha256": "436dda9b6af886e984e0a6357c40f8aa30ed99bd7246c264299d807d18688583",
+            "cameraAmount": 0
+          },
+          "on": {
+            "file": "images/shops-W4-on.jpg",
+            "pngSha256": "3eec5a469a07e359725ff7769ec54908de912448074726ec6279df1a61ebd927",
+            "jpegSha256": "436dda9b6af886e984e0a6357c40f8aa30ed99bd7246c264299d807d18688583",
+            "cameraAmount": 0
+          },
+          "on-repeat": {
+            "file": "images/shops-W4-on-repeat.jpg",
+            "pngSha256": "3eec5a469a07e359725ff7769ec54908de912448074726ec6279df1a61ebd927",
+            "jpegSha256": "436dda9b6af886e984e0a6357c40f8aa30ed99bd7246c264299d807d18688583",
+            "cameraAmount": 0
+          }
+        },
+        "offVsOn": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 109.1313,
+          "meanYAfter": 109.1313
+        },
+        "c24OnVsC25On": {
+          "pixels": 1296000,
+          "changed": 1277095,
+          "above4": 1262804,
+          "above8": 998790,
+          "maximum": 45,
+          "meanRGBChange": [
+            -8.6817,
+            -9.1292,
+            -20.3125
+          ],
+          "meanYBefore": 118.9728,
+          "meanYAfter": 109.1313
+        },
+        "c24PngSha256": "d1a5dba332539f6a12620a3e2e97ab925a5e227f07f3626679f45a66fd7408c3",
+        "c24CameraAmount": 1,
+        "poseCheck": {
+          "kind": "bookstore",
+          "localXZ": [
+            0,
+            -4
+          ],
+          "floor": 1.0645613687648532,
+          "capsuleRadius": 0.3
+        },
+        "onVsRepeat": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 109.1313,
+          "meanYAfter": 109.1313
+        },
+        "offVsRepeat": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 109.1313,
+          "meanYAfter": 109.1313
+        },
+        "residual": {
+          "offOnUnionAbove8": 0,
+          "unionExtent": null,
+          "unionLargestComponents": [],
+          "stableOnBothVsOffAbove8": 0,
+          "stableExtent": null,
+          "stableLargestComponents": [],
+          "anyDifferenceAcrossThree": 0,
+          "anyDifferenceExtent": null,
+          "anyDifferenceLargestComponents": []
+        }
+      },
+      {
+        "view": "W6",
+        "camera": {
+          "position": [
+            272.3545853242057,
+            11.09226360616534,
+            954.9902279951181
+          ],
+          "quaternion": [
+            -0.02926252502762423,
+            0.6634495717742954,
+            0.025982721067131176,
+            0.747196940938237
+          ],
+          "fov": 58
+        },
+        "sources": {
+          "off": {
+            "file": "images/shops-W6-off.jpg",
+            "pngSha256": "6e0419b01c4f4336d516f3dd2259eda09cf4d59afbcd47e55a85c7d8042d4978",
+            "jpegSha256": "74fc3c93837ab4d6b3142e9aca6ae33673e30b0b165bb2902913f61f39131ba9",
+            "cameraAmount": 0
+          },
+          "on": {
+            "file": "images/shops-W6-on.jpg",
+            "pngSha256": "6e0419b01c4f4336d516f3dd2259eda09cf4d59afbcd47e55a85c7d8042d4978",
+            "jpegSha256": "74fc3c93837ab4d6b3142e9aca6ae33673e30b0b165bb2902913f61f39131ba9",
+            "cameraAmount": 0
+          },
+          "on-repeat": {
+            "file": "images/shops-W6-on-repeat.jpg",
+            "pngSha256": "6e0419b01c4f4336d516f3dd2259eda09cf4d59afbcd47e55a85c7d8042d4978",
+            "jpegSha256": "74fc3c93837ab4d6b3142e9aca6ae33673e30b0b165bb2902913f61f39131ba9",
+            "cameraAmount": 0
+          }
+        },
+        "offVsOn": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 116.4219,
+          "meanYAfter": 116.4219
+        },
+        "c24OnVsC25On": {
+          "pixels": 1296000,
+          "changed": 1295918,
+          "above4": 1295597,
+          "above8": 1294626,
+          "maximum": 54,
+          "meanRGBChange": [
+            -8.4531,
+            -11.6379,
+            -28.3534
+          ],
+          "meanYBefore": 128.5896,
+          "meanYAfter": 116.4219
+        },
+        "c24PngSha256": "efd00a9600b1ddabe2d7adeec5ab5945b54e80241eec31bf95f023a3237f9920",
+        "c24CameraAmount": 1,
+        "poseCheck": {
+          "kind": "bicycle",
+          "localXZ": [
+            -0.8,
+            -4
+          ],
+          "floor": 1.5722636061653388,
+          "capsuleRadius": 0.3
+        },
+        "onVsRepeat": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 116.4219,
+          "meanYAfter": 116.4219
+        },
+        "offVsRepeat": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 116.4219,
+          "meanYAfter": 116.4219
+        },
+        "residual": {
+          "offOnUnionAbove8": 0,
+          "unionExtent": null,
+          "unionLargestComponents": [],
+          "stableOnBothVsOffAbove8": 0,
+          "stableExtent": null,
+          "stableLargestComponents": [],
+          "anyDifferenceAcrossThree": 0,
+          "anyDifferenceExtent": null,
+          "anyDifferenceLargestComponents": []
+        }
+      },
+      {
+        "view": "E1",
+        "camera": {
+          "position": [
+            290.4,
+            9.94115,
+            908.5
+          ],
+          "quaternion": [
+            -0.0248099322013837,
+            -0.7727497674796765,
+            -0.030263252125431236,
+            0.6335032752046837
+          ],
+          "fov": 58
+        },
+        "sources": {
+          "off": {
+            "file": "images/shops-E1-off.jpg",
+            "pngSha256": "69adeab14adb229d5656f56757c5f25a83e5e87dcd6e10f185c18ec9961989db",
+            "jpegSha256": "688712361f714f92a29bcebfb01677f3ec22f24fa09dfd5c2d08108e57622fc4",
+            "cameraAmount": 0
+          },
+          "on": {
+            "file": "images/shops-E1-on.jpg",
+            "pngSha256": "69adeab14adb229d5656f56757c5f25a83e5e87dcd6e10f185c18ec9961989db",
+            "jpegSha256": "688712361f714f92a29bcebfb01677f3ec22f24fa09dfd5c2d08108e57622fc4",
+            "cameraAmount": 0
+          },
+          "on-repeat": {
+            "file": "images/shops-E1-on-repeat.jpg",
+            "pngSha256": "ffcc3d677e1ac0d310d19b713a858621bdee723add9d65e38d6b9cc8b5179dee",
+            "jpegSha256": "688712361f714f92a29bcebfb01677f3ec22f24fa09dfd5c2d08108e57622fc4",
+            "cameraAmount": 0
+          }
+        },
+        "offVsOn": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 108.6468,
+          "meanYAfter": 108.6468
+        },
+        "c24OnVsC25On": {
+          "pixels": 1296000,
+          "changed": 1282252,
+          "above4": 1056076,
+          "above8": 689916,
+          "maximum": 40,
+          "meanRGBChange": [
+            -7.1308,
+            -7.7905,
+            -16.6083
+          ],
+          "meanYBefore": 116.9337,
+          "meanYAfter": 108.6468
+        },
+        "c24PngSha256": "335516fdad6e5d07c5a9ebe326ec73d31cd26f013cdaab33ee9478ba45459cd0",
+        "c24CameraAmount": 1,
+        "poseCheck": {
+          "kind": "cafe",
+          "localXZ": [
+            0,
+            -5.6
+          ],
+          "floor": 0.42115,
+          "capsuleRadius": 0.3
+        },
+        "onVsRepeat": {
+          "pixels": 1296000,
+          "changed": 3,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 1,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            -0.0
+          ],
+          "meanYBefore": 108.6468,
+          "meanYAfter": 108.6468
+        },
+        "offVsRepeat": {
+          "pixels": 1296000,
+          "changed": 3,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 1,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            -0.0
+          ],
+          "meanYBefore": 108.6468,
+          "meanYAfter": 108.6468
+        },
+        "residual": {
+          "offOnUnionAbove8": 0,
+          "unionExtent": null,
+          "unionLargestComponents": [],
+          "stableOnBothVsOffAbove8": 0,
+          "stableExtent": null,
+          "stableLargestComponents": [],
+          "anyDifferenceAcrossThree": 3,
+          "anyDifferenceExtent": [
+            19,
+            345,
+            598,
+            443
+          ],
+          "anyDifferenceLargestComponents": [
+            {
+              "box": [
+                597,
+                345,
+                598,
+                347
+              ],
+              "pixels": 2
+            },
+            {
+              "box": [
+                19,
+                442,
+                20,
+                443
+              ],
+              "pixels": 1
+            }
+          ],
+          "differingPixels": [
+            {
+              "xy": [
+                597,
+                345
+              ],
+              "off": [
+                107,
+                111,
+                120
+              ],
+              "on": [
+                107,
+                111,
+                120
+              ],
+              "onRepeat": [
+                107,
+                112,
+                120
+              ]
+            },
+            {
+              "xy": [
+                597,
+                346
+              ],
+              "off": [
+                106,
+                111,
+                119
+              ],
+              "on": [
+                106,
+                111,
+                119
+              ],
+              "onRepeat": [
+                107,
+                111,
+                119
+              ]
+            },
+            {
+              "xy": [
+                19,
+                442
+              ],
+              "off": [
+                118,
+                126,
+                137
+              ],
+              "on": [
+                118,
+                126,
+                137
+              ],
+              "onRepeat": [
+                118,
+                126,
+                136
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "view": "E2",
+        "camera": {
+          "position": [
+            288.8,
+            10.129,
+            918.25
+          ],
+          "quaternion": [
+            -0.0248099322013837,
+            -0.7727497674796765,
+            -0.030263252125431236,
+            0.6335032752046837
+          ],
+          "fov": 58
+        },
+        "sources": {
+          "off": {
+            "file": "images/shops-E2-off.jpg",
+            "pngSha256": "0c612b48c50187cd21c1cc029ca9ce56298b02a754913bf362b5c9350ef7e946",
+            "jpegSha256": "84350c527780c89dbea5fee13f24c0eea5a980409245fb2d236849f895487440",
+            "cameraAmount": 0
+          },
+          "on": {
+            "file": "images/shops-E2-on.jpg",
+            "pngSha256": "fc9f0c5e8b42b8fb461bf0b545c8e3b4cc63cdb76422ce530c5190560c7033e9",
+            "jpegSha256": "84350c527780c89dbea5fee13f24c0eea5a980409245fb2d236849f895487440",
+            "cameraAmount": 0
+          },
+          "on-repeat": {
+            "file": "images/shops-E2-on-repeat.jpg",
+            "pngSha256": "fc9f0c5e8b42b8fb461bf0b545c8e3b4cc63cdb76422ce530c5190560c7033e9",
+            "jpegSha256": "84350c527780c89dbea5fee13f24c0eea5a980409245fb2d236849f895487440",
+            "cameraAmount": 0
+          }
+        },
+        "offVsOn": {
+          "pixels": 1296000,
+          "changed": 1,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 1,
+          "meanRGBChange": [
+            0.0,
+            -0.0,
+            0.0
+          ],
+          "meanYBefore": 111.0635,
+          "meanYAfter": 111.0635
+        },
+        "c24OnVsC25On": {
+          "pixels": 1296000,
+          "changed": 1292038,
+          "above4": 1286714,
+          "above8": 1146593,
+          "maximum": 43,
+          "meanRGBChange": [
+            -9.577,
+            -10.9356,
+            -22.8437
+          ],
+          "meanYBefore": 122.57,
+          "meanYAfter": 111.0635
+        },
+        "c24PngSha256": "9d99643568c3a1c7fe23ad9f12b4b7b1bab0ac0fd385ba260d345f9a6f893cd4",
+        "c24CameraAmount": 1,
+        "poseCheck": {
+          "kind": "wagashi",
+          "localXZ": [
+            0,
+            -4
+          ],
+          "floor": 0.609,
+          "capsuleRadius": 0.3
+        },
+        "onVsRepeat": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 111.0635,
+          "meanYAfter": 111.0635
+        },
+        "offVsRepeat": {
+          "pixels": 1296000,
+          "changed": 1,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 1,
+          "meanRGBChange": [
+            0.0,
+            -0.0,
+            0.0
+          ],
+          "meanYBefore": 111.0635,
+          "meanYAfter": 111.0635
+        },
+        "residual": {
+          "offOnUnionAbove8": 0,
+          "unionExtent": null,
+          "unionLargestComponents": [],
+          "stableOnBothVsOffAbove8": 0,
+          "stableExtent": null,
+          "stableLargestComponents": [],
+          "anyDifferenceAcrossThree": 1,
+          "anyDifferenceExtent": [
+            742,
+            886,
+            743,
+            887
+          ],
+          "anyDifferenceLargestComponents": [
+            {
+              "box": [
+                742,
+                886,
+                743,
+                887
+              ],
+              "pixels": 1
+            }
+          ],
+          "differingPixels": [
+            {
+              "xy": [
+                742,
+                886
+              ],
+              "off": [
+                145,
+                158,
+                163
+              ],
+              "on": [
+                145,
+                157,
+                163
+              ],
+              "onRepeat": [
+                145,
+                157,
+                163
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "view": "E3",
+        "camera": {
+          "position": [
+            288.8,
+            10.327,
+            927.05
+          ],
+          "quaternion": [
+            -0.0248099322013837,
+            -0.7727497674796765,
+            -0.030263252125431236,
+            0.6335032752046837
+          ],
+          "fov": 58
+        },
+        "sources": {
+          "off": {
+            "file": "images/shops-E3-off.jpg",
+            "pngSha256": "405688ea4e78907f3c71ba153caede314029ff095db2a8de9d0171dd173f1da4",
+            "jpegSha256": "7d31b7244a988e3727f53538a640fa584c83d2da0d6d382e08a1662c8736358a",
+            "cameraAmount": 0
+          },
+          "on": {
+            "file": "images/shops-E3-on.jpg",
+            "pngSha256": "405688ea4e78907f3c71ba153caede314029ff095db2a8de9d0171dd173f1da4",
+            "jpegSha256": "7d31b7244a988e3727f53538a640fa584c83d2da0d6d382e08a1662c8736358a",
+            "cameraAmount": 0
+          },
+          "on-repeat": {
+            "file": "images/shops-E3-on-repeat.jpg",
+            "pngSha256": "405688ea4e78907f3c71ba153caede314029ff095db2a8de9d0171dd173f1da4",
+            "jpegSha256": "7d31b7244a988e3727f53538a640fa584c83d2da0d6d382e08a1662c8736358a",
+            "cameraAmount": 0
+          }
+        },
+        "offVsOn": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 112.4923,
+          "meanYAfter": 112.4923
+        },
+        "c24OnVsC25On": {
+          "pixels": 1296000,
+          "changed": 1296000,
+          "above4": 1293870,
+          "above8": 1188030,
+          "maximum": 55,
+          "meanRGBChange": [
+            -8.8544,
+            -11.7464,
+            -26.6557
+          ],
+          "meanYBefore": 124.7003,
+          "meanYAfter": 112.4923
+        },
+        "c24PngSha256": "c20b619cb950ec3abe02fe92d322c1cbca4a06c1ad6efab306945d95a423069e",
+        "c24CameraAmount": 1,
+        "poseCheck": {
+          "kind": "general",
+          "localXZ": [
+            0.8,
+            -4
+          ],
+          "floor": 0.8069999999999999,
+          "capsuleRadius": 0.3
+        },
+        "onVsRepeat": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 112.4923,
+          "meanYAfter": 112.4923
+        },
+        "offVsRepeat": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 112.4923,
+          "meanYAfter": 112.4923
+        },
+        "residual": {
+          "offOnUnionAbove8": 0,
+          "unionExtent": null,
+          "unionLargestComponents": [],
+          "stableOnBothVsOffAbove8": 0,
+          "stableExtent": null,
+          "stableLargestComponents": [],
+          "anyDifferenceAcrossThree": 0,
+          "anyDifferenceExtent": null,
+          "anyDifferenceLargestComponents": []
+        }
+      },
+      {
+        "view": "E5",
+        "camera": {
+          "position": [
+            290.02224216336197,
+            10.807663604813587,
+            943.5630050933889
+          ],
+          "quaternion": [
+            -0.025568214388427005,
+            -0.7564623630849011,
+            -0.029625387390414152,
+            0.6528654502046825
+          ],
+          "fov": 58
+        },
+        "sources": {
+          "off": {
+            "file": "images/shops-E5-off.jpg",
+            "pngSha256": "b8b8f4af8d8b5b9771f6ee9c273445962776b9461ab448c88edd4cfd7016f0a3",
+            "jpegSha256": "1706fe66524c935a9d986d4c156d9b170b4a8db551ad8010074214060f7622bd",
+            "cameraAmount": 0
+          },
+          "on": {
+            "file": "images/shops-E5-on.jpg",
+            "pngSha256": "b8b8f4af8d8b5b9771f6ee9c273445962776b9461ab448c88edd4cfd7016f0a3",
+            "jpegSha256": "1706fe66524c935a9d986d4c156d9b170b4a8db551ad8010074214060f7622bd",
+            "cameraAmount": 0
+          },
+          "on-repeat": {
+            "file": "images/shops-E5-on-repeat.jpg",
+            "pngSha256": "b8b8f4af8d8b5b9771f6ee9c273445962776b9461ab448c88edd4cfd7016f0a3",
+            "jpegSha256": "1706fe66524c935a9d986d4c156d9b170b4a8db551ad8010074214060f7622bd",
+            "cameraAmount": 0
+          }
+        },
+        "offVsOn": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 132.6298,
+          "meanYAfter": 132.6298
+        },
+        "c24OnVsC25On": {
+          "pixels": 1296000,
+          "changed": 1270586,
+          "above4": 1247900,
+          "above8": 1245764,
+          "maximum": 53,
+          "meanRGBChange": [
+            -7.8949,
+            -11.1435,
+            -26.8084
+          ],
+          "meanYBefore": 144.2136,
+          "meanYAfter": 132.6298
+        },
+        "c24PngSha256": "f3539e19dde3eff1a190d759de6dab362d0b5f0af04e12fec74464398a28645b",
+        "c24CameraAmount": 1,
+        "poseCheck": {
+          "kind": "ramen",
+          "localXZ": [
+            0.8,
+            -4.8
+          ],
+          "floor": 1.287663604813587,
+          "capsuleRadius": 0.3
+        },
+        "onVsRepeat": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 132.6298,
+          "meanYAfter": 132.6298
+        },
+        "offVsRepeat": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 132.6298,
+          "meanYAfter": 132.6298
+        },
+        "residual": {
+          "offOnUnionAbove8": 0,
+          "unionExtent": null,
+          "unionLargestComponents": [],
+          "stableOnBothVsOffAbove8": 0,
+          "stableExtent": null,
+          "stableLargestComponents": [],
+          "anyDifferenceAcrossThree": 0,
+          "anyDifferenceExtent": null,
+          "anyDifferenceLargestComponents": []
+        }
+      }
+    ],
+    "evening": [
+      {
+        "view": "service-corner",
+        "camera": {
+          "position": [
+            308.4,
+            9.612,
+            872.9
+          ],
+          "quaternion": [
+            -0.08432325046436126,
+            0.5331397072650681,
+            0.05351200213385738,
+            0.8401119613456697
+          ],
+          "fov": 55
+        },
+        "sources": {
+          "off": {
+            "file": "images/evening-service-corner-off.jpg",
+            "pngSha256": "53148bd18ff282480aa552ccfe850ea0598e2f14a9c0f0fe001a537eb7d1a819",
+            "jpegSha256": "3fff2a42af2f76d07846b7241a73e1b384a6c70e1d3aedd8efb0a828024edfd7",
+            "cameraAmount": 0
+          },
+          "on": {
+            "file": "images/evening-service-corner-on.jpg",
+            "pngSha256": "aa08357b53184a02cbd12399397e75f3bc8c7b41d1f11048ec92347a6d795950",
+            "jpegSha256": "59f634254623bc47862693a35f4f565b173b4188920b33051f233f21d26eb175",
+            "cameraAmount": 1
+          }
+        },
+        "offVsOn": {
+          "pixels": 1296000,
+          "changed": 1273977,
+          "above4": 1243639,
+          "above8": 1201644,
+          "maximum": 65,
+          "meanRGBChange": [
+            11.3015,
+            12.3268,
+            23.6441
+          ],
+          "meanYBefore": 82.3435,
+          "meanYAfter": 95.2695
+        },
+        "c24OnVsC25On": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 95.2695,
+          "meanYAfter": 95.2695
+        },
+        "c24PngSha256": "aa08357b53184a02cbd12399397e75f3bc8c7b41d1f11048ec92347a6d795950",
+        "c24CameraAmount": 1
+      },
+      {
+        "view": "laundry-details",
+        "camera": {
+          "position": [
+            288,
+            14.384808464050293,
+            777.9
+          ],
+          "quaternion": [
+            -0.15522850149956677,
+            0.6173580660361093,
+            0.12595148976979553,
+            0.7608609287163607
+          ],
+          "fov": 55
+        },
+        "sources": {
+          "off": {
+            "file": "images/evening-laundry-details-off.jpg",
+            "pngSha256": "df58a15d4beb2cea636381d793ea471d5889ebbc4204d9f5c94fb84528fb7af8",
+            "jpegSha256": "54b868268823cbcca3de8419c737662df4286079ae8cf0778c5a40e7f5566f4e",
+            "cameraAmount": 0
+          },
+          "on": {
+            "file": "images/evening-laundry-details-on.jpg",
+            "pngSha256": "3cf21004fc7d8a88389a8b99f046d66d3489a21a023eefb88f2af3039bab4f14",
+            "jpegSha256": "49d3b231c9ef20419812ee4af0ab87b50fcd97f86dcfe28f94690bdb0ac192c5",
+            "cameraAmount": 1
+          }
+        },
+        "offVsOn": {
+          "pixels": 1296000,
+          "changed": 1276595,
+          "above4": 1237324,
+          "above8": 953099,
+          "maximum": 61,
+          "meanRGBChange": [
+            6.8047,
+            7.3124,
+            14.4974
+          ],
+          "meanYBefore": 78.2596,
+          "meanYAfter": 85.9828
+        },
+        "c24OnVsC25On": {
+          "pixels": 1296000,
+          "changed": 3,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 1,
+          "meanRGBChange": [
+            -0.0,
+            -0.0,
+            0.0
+          ],
+          "meanYBefore": 85.9828,
+          "meanYAfter": 85.9828
+        },
+        "c24PngSha256": "fbd02a33fce963dbc9c02f44a06f045dfef72b779e3c86179571d5e632667b83",
+        "c24CameraAmount": 1
+      },
+      {
+        "view": "shop-interior",
+        "camera": {
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            -0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            0.7069324236562871
+          ],
+          "fov": 58
+        },
+        "sources": {
+          "off": {
+            "file": "images/evening-shop-interior-off.jpg",
+            "pngSha256": "c213a0c5cf4b178a6c6e0c5c5850bd5a0ea37285181a6c0631eb6d0c85963dd0",
+            "jpegSha256": "2649470f827d7de97b230dc4cb9c1ceaa83ea5967af04feeff97136079856bff",
+            "cameraAmount": 0
+          },
+          "on": {
+            "file": "images/evening-shop-interior-on.jpg",
+            "pngSha256": "c213a0c5cf4b178a6c6e0c5c5850bd5a0ea37285181a6c0631eb6d0c85963dd0",
+            "jpegSha256": "2649470f827d7de97b230dc4cb9c1ceaa83ea5967af04feeff97136079856bff",
+            "cameraAmount": 0
+          }
+        },
+        "offVsOn": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 161.5303,
+          "meanYAfter": 161.5303
+        },
+        "c24OnVsC25On": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 161.5303,
+          "meanYAfter": 161.5303
+        },
+        "c24PngSha256": "c213a0c5cf4b178a6c6e0c5c5850bd5a0ea37285181a6c0631eb6d0c85963dd0",
+        "c24CameraAmount": 0
+      },
+      {
+        "view": "20-rear-eye",
+        "camera": {
+          "position": [
+            273,
+            14.755245542526229,
+            758
+          ],
+          "quaternion": [
+            -0.00013011891877658623,
+            0.9145142483742376,
+            -0.00029414054360230415,
+            -0.40455356390830466
+          ],
+          "fov": 58
+        },
+        "sources": {
+          "off": {
+            "file": "images/evening-20-rear-eye-off.jpg",
+            "pngSha256": "2ab1f31d47cfc63d4cd20386346009a5300e5faf004286a0d992daf5011a2767",
+            "jpegSha256": "17c7cf8bf1681b3aa53fda26e68b35a1604442945d5db4c3160357433620b67d",
+            "cameraAmount": 0
+          },
+          "on": {
+            "file": "images/evening-20-rear-eye-on.jpg",
+            "pngSha256": "f55e7a63d30bc49b62b5ef33033cb2850735b8e00da153bce1a07c47abc0ce2d",
+            "jpegSha256": "b66708683c25e00a26ad10afd7208a9437ddfe2b992ffbf76e3cd9892d579c71",
+            "cameraAmount": 1
+          }
+        },
+        "offVsOn": {
+          "pixels": 1296000,
+          "changed": 1097360,
+          "above4": 733158,
+          "above8": 521682,
+          "maximum": 64,
+          "meanRGBChange": [
+            4.158,
+            4.2761,
+            8.3628
+          ],
+          "meanYBefore": 86.2209,
+          "meanYAfter": 90.767
+        },
+        "c24OnVsC25On": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 90.767,
+          "meanYAfter": 90.767
+        },
+        "c24PngSha256": "f55e7a63d30bc49b62b5ef33033cb2850735b8e00da153bce1a07c47abc0ce2d",
+        "c24CameraAmount": 1,
+        "regions": {
+          "rearWall": {
+            "offVsOn": {
+              "rect": [
+                970,
+                495,
+                1015,
+                540
+              ],
+              "pixels": 2025,
+              "changed": 2025,
+              "above4": 2025,
+              "above8": 2024,
+              "maximum": 16,
+              "meanRGBChange": [
+                8.398,
+                8.0365,
+                12.517
+              ],
+              "meanYBefore": 43.2533,
+              "meanYAfter": 51.6902
+            },
+            "c24OnVsC25On": {
+              "rect": [
+                970,
+                495,
+                1015,
+                540
+              ],
+              "pixels": 2025,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYBefore": 51.6902,
+              "meanYAfter": 51.6902
+            }
+          },
+          "door": {
+            "offVsOn": {
+              "rect": [
+                1048,
+                473,
+                1083,
+                520
+              ],
+              "pixels": 1645,
+              "changed": 1645,
+              "above4": 1645,
+              "above8": 1645,
+              "maximum": 36,
+              "meanRGBChange": [
+                16.6608,
+                18.0778,
+                35.597
+              ],
+              "meanYBefore": 96.138,
+              "meanYAfter": 115.1795
+            },
+            "c24OnVsC25On": {
+              "rect": [
+                1048,
+                473,
+                1083,
+                520
+              ],
+              "pixels": 1645,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYBefore": 115.1795,
+              "meanYAfter": 115.1795
+            }
+          }
+        }
+      },
+      {
+        "view": "21-front-eye",
+        "camera": {
+          "position": [
+            274,
+            12.87812709172567,
+            783
+          ],
+          "quaternion": [
+            0.07422133960767584,
+            -0.5103582416049142,
+            0.044271975994965136,
+            0.8556083508909221
+          ],
+          "fov": 58
+        },
+        "sources": {
+          "off": {
+            "file": "images/evening-21-front-eye-off.jpg",
+            "pngSha256": "b2c7f4e0b27fa56d03ae072a05a75c728a204f0c619c294c9cfae4efcdcb345a",
+            "jpegSha256": "f4ec6cd76a7910b5642e7e91f7f64d16a4b45e3393b8492a0ee1a11ab816b0c3",
+            "cameraAmount": 0
+          },
+          "on": {
+            "file": "images/evening-21-front-eye-on.jpg",
+            "pngSha256": "598bb6329c49bc04f41908e8bef5fc0f9062f5323156dca5d17a3cd30b583420",
+            "jpegSha256": "07c4d082e9c46f37dd796e7b26c8864239d3527ff7eb4ecd29a6c979462e256a",
+            "cameraAmount": 1
+          }
+        },
+        "offVsOn": {
+          "pixels": 1296000,
+          "changed": 1024850,
+          "above4": 866828,
+          "above8": 512205,
+          "maximum": 62,
+          "meanRGBChange": [
+            3.2038,
+            3.6326,
+            7.5296
+          ],
+          "meanYBefore": 89.3934,
+          "meanYAfter": 93.2162
+        },
+        "c24OnVsC25On": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 93.2162,
+          "meanYAfter": 93.2162
+        },
+        "c24PngSha256": "598bb6329c49bc04f41908e8bef5fc0f9062f5323156dca5d17a3cd30b583420",
+        "c24CameraAmount": 1
+      },
+      {
+        "view": "station-street",
+        "camera": {
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -3.2237959341941705e-05,
+            0.9999462663720154
+          ],
+          "fov": 58
+        },
+        "sources": {
+          "off": {
+            "file": "images/evening-station-street-off.jpg",
+            "pngSha256": "9d6f43d37db9646c952550109035f925ac90a8411e5bb249387fb331859cdcdc",
+            "jpegSha256": "2ce64d38fd091fb0b11ee9164f3fce066d9aa3c6a05ce1fe890c704adaf07beb",
+            "cameraAmount": 0
+          },
+          "on": {
+            "file": "images/evening-station-street-on.jpg",
+            "pngSha256": "ed17e649ee94f183240528d316caf4054cbbae4df6557d38c792bdcc30b1de6a",
+            "jpegSha256": "5303f76cca578a58bf0943ddee9b4e97aaf486694b9fc3197581c6217f5d99c1",
+            "cameraAmount": 1
+          }
+        },
+        "offVsOn": {
+          "pixels": 1296000,
+          "changed": 1237031,
+          "above4": 893325,
+          "above8": 842068,
+          "maximum": 59,
+          "meanRGBChange": [
+            7.3516,
+            7.2727,
+            15.5337
+          ],
+          "meanYBefore": 90.1884,
+          "meanYAfter": 98.0744
+        },
+        "c24OnVsC25On": {
+          "pixels": 1296000,
+          "changed": 347359,
+          "above4": 252122,
+          "above8": 231242,
+          "maximum": 53,
+          "meanRGBChange": [
+            -2.2698,
+            -2.4859,
+            -4.2929
+          ],
+          "meanYBefore": 100.6448,
+          "meanYAfter": 98.0744
+        },
+        "c24PngSha256": "2c450b32eaf398bc2b68e11c47352f7f2f3fe89f929ef334d4aea5bddd73ba78",
+        "c24CameraAmount": 1,
+        "regions": {
+          "road": {
+            "offVsOn": {
+              "rect": [
+                715,
+                720,
+                990,
+                835
+              ],
+              "pixels": 31625,
+              "changed": 31625,
+              "above4": 31625,
+              "above8": 31625,
+              "maximum": 26,
+              "meanRGBChange": [
+                10.5796,
+                10.4968,
+                21.7936
+              ],
+              "meanYBefore": 71.0326,
+              "meanYAfter": 82.3626
+            },
+            "c24OnVsC25On": {
+              "rect": [
+                715,
+                720,
+                990,
+                835
+              ],
+              "pixels": 31625,
+              "changed": 147,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 1,
+              "meanRGBChange": [
+                -0.0013,
+                -0.0013,
+                -0.0019
+              ],
+              "meanYBefore": 82.364,
+              "meanYAfter": 82.3626
+            }
+          },
+          "exteriorShopFacade": {
+            "offVsOn": {
+              "rect": [
+                1220,
+                175,
+                1340,
+                230
+              ],
+              "pixels": 6600,
+              "changed": 6518,
+              "above4": 15,
+              "above8": 0,
+              "maximum": 5,
+              "meanRGBChange": [
+                0.1821,
+                0.2161,
+                2.7903
+              ],
+              "meanYBefore": 89.5914,
+              "meanYAfter": 89.9861
+            },
+            "c24OnVsC25On": {
+              "rect": [
+                1220,
+                175,
+                1340,
+                230
+              ],
+              "pixels": 6600,
+              "changed": 6600,
+              "above4": 6540,
+              "above8": 6341,
+              "maximum": 42,
+              "meanRGBChange": [
+                -8.3882,
+                -11.0379,
+                -18.6932
+              ],
+              "meanYBefore": 101.0134,
+              "meanYAfter": 89.9861
+            }
+          }
+        }
+      },
+      {
+        "view": "street-detail",
+        "camera": {
+          "position": [
+            284.4,
+            10.281286274509803,
+            924
+          ],
+          "quaternion": [
+            -0.12465537443110519,
+            -0.38126635888515065,
+            -0.05196769176958736,
+            0.914547079280253
+          ],
+          "fov": 58
+        },
+        "sources": {
+          "off": {
+            "file": "images/evening-street-detail-off.jpg",
+            "pngSha256": "7ba4dd5417b14a3dc152a268c317ee9c4654eefa9acfaae8940ef19fd3cc95ef",
+            "jpegSha256": "7e8585bef031c66499fc84620f09c5526282fd1d8b38b58f0abca83ff17334e3",
+            "cameraAmount": 0
+          },
+          "on": {
+            "file": "images/evening-street-detail-on.jpg",
+            "pngSha256": "6d54a5823ba17e3397660c98bc25586e38aa54695fc01cefa7832db88c7a1d76",
+            "jpegSha256": "e975c7aa5ea85a7b52c9472619d52901926ca7f94606483be5e28fe98bc3492b",
+            "cameraAmount": 0.012740740740746397
+          }
+        },
+        "offVsOn": {
+          "pixels": 1296000,
+          "changed": 124018,
+          "above4": 33769,
+          "above8": 29218,
+          "maximum": 45,
+          "meanRGBChange": [
+            0.2885,
+            0.2932,
+            0.5425
+          ],
+          "meanYBefore": 77.4745,
+          "meanYAfter": 77.7846
+        },
+        "c24OnVsC25On": {
+          "pixels": 1296000,
+          "changed": 1292497,
+          "above4": 1252036,
+          "above8": 1081657,
+          "maximum": 54,
+          "meanRGBChange": [
+            -10.6052,
+            -10.552,
+            -20.2992
+          ],
+          "meanYBefore": 89.0517,
+          "meanYAfter": 77.7846
+        },
+        "c24PngSha256": "7be6f4fbe7fb18757d34449f086298e8368a91642efc41fd558be7a52fe6e84d",
+        "c24CameraAmount": 1,
+        "regions": {
+          "outdoorPavement": {
+            "offVsOn": {
+              "rect": [
+                410,
+                725,
+                595,
+                790
+              ],
+              "pixels": 12025,
+              "changed": 499,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 1,
+              "meanRGBChange": [
+                -0.0011,
+                -0.0001,
+                0.0404
+              ],
+              "meanYBefore": 98.2289,
+              "meanYAfter": 98.2315
+            },
+            "c24OnVsC25On": {
+              "rect": [
+                410,
+                725,
+                595,
+                790
+              ],
+              "pixels": 12025,
+              "changed": 12025,
+              "above4": 12025,
+              "above8": 12025,
+              "maximum": 27,
+              "meanRGBChange": [
+                -13.7322,
+                -13.7775,
+                -26.4086
+              ],
+              "meanYBefore": 112.9113,
+              "meanYAfter": 98.2315
+            }
+          },
+          "outdoorBench": {
+            "offVsOn": {
+              "rect": [
+                965,
+                675,
+                1085,
+                700
+              ],
+              "pixels": 3000,
+              "changed": 154,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 1,
+              "meanRGBChange": [
+                0.0037,
+                0.0033,
+                0.0457
+              ],
+              "meanYBefore": 80.3207,
+              "meanYAfter": 80.3271
+            },
+            "c24OnVsC25On": {
+              "rect": [
+                965,
+                675,
+                1085,
+                700
+              ],
+              "pixels": 3000,
+              "changed": 3000,
+              "above4": 3000,
+              "above8": 3000,
+              "maximum": 39,
+              "meanRGBChange": [
+                -9.6867,
+                -13.0723,
+                -28.797
+              ],
+              "meanYBefore": 93.815,
+              "meanYAfter": 80.3271
+            }
+          }
+        }
+      },
+      {
+        "view": "shop-door-eye",
+        "camera": {
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            -0.7069324236562871
+          ],
+          "fov": 58
+        },
+        "sources": {
+          "off": {
+            "file": "images/evening-shop-door-eye-off.jpg",
+            "pngSha256": "11a7256455c77a53542b77f2ecaf9e87b9b52769469f5e185b8e3ddaf239caed",
+            "jpegSha256": "3b704d5187055d0a5f6606ad7b2e29ae9ca1e088dd798299d5a94c93266e4635",
+            "cameraAmount": 0
+          },
+          "on": {
+            "file": "images/evening-shop-door-eye-on.jpg",
+            "pngSha256": "85ac2d19f37e3368000e89664e66d7815b5a52477b99a9b54c0ba0a162c26910",
+            "jpegSha256": "3066f335368890dc3d222583859fc2d14b1f6bae1c3f18f184fdc928a6b2cbf9",
+            "cameraAmount": 0
+          }
+        },
+        "offVsOn": {
+          "pixels": 1296000,
+          "changed": 512004,
+          "above4": 351125,
+          "above8": 322310,
+          "maximum": 49,
+          "meanRGBChange": [
+            2.7057,
+            2.6495,
+            4.5115
+          ],
+          "meanYBefore": 103.3202,
+          "meanYAfter": 106.1161
+        },
+        "c24OnVsC25On": {
+          "pixels": 1296000,
+          "changed": 279057,
+          "above4": 157660,
+          "above8": 120652,
+          "maximum": 44,
+          "meanRGBChange": [
+            -1.2943,
+            -1.2197,
+            -2.084
+          ],
+          "meanYBefore": 107.414,
+          "meanYAfter": 106.1161
+        },
+        "c24PngSha256": "f94cb8ff5c106560f78e4ba95933a30ed50258641bd23e7b51c313f25d91629e",
+        "c24CameraAmount": 0,
+        "regions": {
+          "doorFrame": {
+            "offVsOn": {
+              "rect": [
+                680,
+                150,
+                730,
+                600
+              ],
+              "pixels": 22500,
+              "changed": 1541,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 1,
+              "meanRGBChange": [
+                0.0179,
+                0.018,
+                0.033
+              ],
+              "meanYBefore": 85.9669,
+              "meanYAfter": 85.9859
+            },
+            "c24OnVsC25On": {
+              "rect": [
+                680,
+                150,
+                730,
+                600
+              ],
+              "pixels": 22500,
+              "changed": 1820,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 1,
+              "meanRGBChange": [
+                -0.027,
+                -0.0229,
+                -0.0331
+              ],
+              "meanYBefore": 86.0105,
+              "meanYAfter": 85.9859
+            }
+          },
+          "outdoorStreet": {
+            "offVsOn": {
+              "rect": [
+                840,
+                600,
+                1080,
+                670
+              ],
+              "pixels": 16800,
+              "changed": 16116,
+              "above4": 13440,
+              "above8": 13214,
+              "maximum": 30,
+              "meanRGBChange": [
+                7.7962,
+                8.0087,
+                15.2989
+              ],
+              "meanYBefore": 101.3421,
+              "meanYAfter": 109.832
+            },
+            "c24OnVsC25On": {
+              "rect": [
+                840,
+                600,
+                1080,
+                670
+              ],
+              "pixels": 16800,
+              "changed": 564,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 1,
+              "meanRGBChange": [
+                -0.011,
+                -0.0093,
+                -0.0137
+              ],
+              "meanYBefore": 109.842,
+              "meanYAfter": 109.832
+            }
+          },
+          "exteriorShopFacade": {
+            "offVsOn": {
+              "rect": [
+                1020,
+                240,
+                1080,
+                360
+              ],
+              "pixels": 7200,
+              "changed": 178,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 1,
+              "meanRGBChange": [
+                0.0072,
+                0.0058,
+                0.0119
+              ],
+              "meanYBefore": 81.9729,
+              "meanYAfter": 81.9795
+            },
+            "c24OnVsC25On": {
+              "rect": [
+                1020,
+                240,
+                1080,
+                360
+              ],
+              "pixels": 7200,
+              "changed": 7200,
+              "above4": 6066,
+              "above8": 6027,
+              "maximum": 27,
+              "meanRGBChange": [
+                -12.5775,
+                -12.8267,
+                -20.9365
+              ],
+              "meanYBefore": 95.3387,
+              "meanYAfter": 81.9795
+            }
+          }
+        }
+      },
+      {
+        "view": "van-side",
+        "camera": {
+          "position": [
+            276.3147277851227,
+            11.210013480772632,
+            971.1462175645175
+          ],
+          "quaternion": [
+            -0.029182465008512196,
+            -0.7830517056478151,
+            -0.03684648464040197,
+            0.6201779958912754
+          ],
+          "fov": 47
+        },
+        "sources": {
+          "off": {
+            "file": "images/evening-van-side-off.jpg",
+            "pngSha256": "39d57a4633799020e4a70c9ebdeff07a5ad36feed3d78ba3b35573920bacd308",
+            "jpegSha256": "3f3a45ae1c0376daf8d06ff5997db3d07fd9f9c7d6c6c118c47804babdf5f48b",
+            "cameraAmount": 0
+          },
+          "on": {
+            "file": "images/evening-van-side-on.jpg",
+            "pngSha256": "83a553ed5f3a1e92510b4e31450bc8a757396942871537613adc1f7f51e87ad2",
+            "jpegSha256": "bba9709c75f8994a1ac7e790a50574a1db25a6ee322dff4fc055e255eef000e2",
+            "cameraAmount": 1
+          }
+        },
+        "offVsOn": {
+          "pixels": 1296000,
+          "changed": 1250114,
+          "above4": 1033762,
+          "above8": 962651,
+          "maximum": 63,
+          "meanRGBChange": [
+            9.0349,
+            9.6451,
+            18.3984
+          ],
+          "meanYBefore": 89.6107,
+          "meanYAfter": 99.7581
+        },
+        "c24OnVsC25On": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 99.7581,
+          "meanYAfter": 99.7581
+        },
+        "c24PngSha256": "83a553ed5f3a1e92510b4e31450bc8a757396942871537613adc1f7f51e87ad2",
+        "c24CameraAmount": 1
+      }
+    ],
+    "afternoon": [
+      {
+        "view": "station-street",
+        "camera": {
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -3.2237959341941705e-05,
+            0.9999462663720154
+          ],
+          "fov": 58
+        },
+        "sources": {
+          "off": {
+            "file": "images/afternoon-station-street-off.jpg",
+            "pngSha256": "8066116359cd79b7fd849c84260e85a1912adbe7273d0c05cc6863d7a9169a80",
+            "jpegSha256": "c2a12edd8162ed259e00f15bcec8ca736034aeb1a8b8f7720e5bb4cb6e3123c0",
+            "cameraAmount": 0
+          },
+          "on": {
+            "file": "images/afternoon-station-street-on.jpg",
+            "pngSha256": "d9ca2f80972b70a9a05dea5b0b6210b316f84bb0d9ebce09b7df96eacd05c64e",
+            "jpegSha256": "746ac334420f6e6f840ce551f3825be22c5cae35400c218f3bf361b5a09c165d",
+            "cameraAmount": 1
+          }
+        },
+        "offVsOn": {
+          "pixels": 1296000,
+          "changed": 1202854,
+          "above4": 864796,
+          "above8": 835422,
+          "maximum": 71,
+          "meanRGBChange": [
+            7.1435,
+            8.6416,
+            14.5584
+          ],
+          "meanYBefore": 97.8066,
+          "meanYAfter": 106.5569
+        },
+        "c24OnVsC25On": {
+          "pixels": 1296000,
+          "changed": 259233,
+          "above4": 177350,
+          "above8": 157536,
+          "maximum": 56,
+          "meanRGBChange": [
+            -1.6753,
+            -2.0641,
+            -3.014
+          ],
+          "meanYBefore": 108.6069,
+          "meanYAfter": 106.5569
+        },
+        "c24PngSha256": "6305e1f7dda660a6a9696e61270a58ab6bc1c1e6a434daffe933023666eede63",
+        "c24CameraAmount": 1,
+        "regions": {
+          "road": {
+            "offVsOn": {
+              "rect": [
+                715,
+                720,
+                990,
+                835
+              ],
+              "pixels": 31625,
+              "changed": 31625,
+              "above4": 31622,
+              "above8": 31494,
+              "maximum": 27,
+              "meanRGBChange": [
+                10.2033,
+                12.6117,
+                21.4729
+              ],
+              "meanYBefore": 71.5808,
+              "meanYAfter": 84.3203
+            },
+            "c24OnVsC25On": {
+              "rect": [
+                715,
+                720,
+                990,
+                835
+              ],
+              "pixels": 31625,
+              "changed": 53,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 1,
+              "meanRGBChange": [
+                -0.0004,
+                -0.0005,
+                -0.0008
+              ],
+              "meanYBefore": 84.3208,
+              "meanYAfter": 84.3203
+            }
+          },
+          "exteriorShopFacade": {
+            "offVsOn": {
+              "rect": [
+                1220,
+                175,
+                1340,
+                230
+              ],
+              "pixels": 6600,
+              "changed": 5160,
+              "above4": 1,
+              "above8": 0,
+              "maximum": 5,
+              "meanRGBChange": [
+                -0.1868,
+                0.0711,
+                1.2289
+              ],
+              "meanYBefore": 133.7167,
+              "meanYAfter": 133.8166
+            },
+            "c24OnVsC25On": {
+              "rect": [
+                1220,
+                175,
+                1340,
+                230
+              ],
+              "pixels": 6600,
+              "changed": 2436,
+              "above4": 1258,
+              "above8": 643,
+              "maximum": 40,
+              "meanRGBChange": [
+                -1.3548,
+                -1.772,
+                -2.7444
+              ],
+              "meanYBefore": 135.5701,
+              "meanYAfter": 133.8166
+            }
+          }
+        }
+      },
+      {
+        "view": "20-rear-eye",
+        "camera": {
+          "position": [
+            273,
+            14.755245542526229,
+            758
+          ],
+          "quaternion": [
+            -0.00013011891877658623,
+            0.9145142483742376,
+            -0.00029414054360230415,
+            -0.40455356390830466
+          ],
+          "fov": 58
+        },
+        "sources": {
+          "off": {
+            "file": "images/afternoon-20-rear-eye-off.jpg",
+            "pngSha256": "7d84202b135bdc651ba43c6331bca6480da74f455f55731027a0c6bcabfea9db",
+            "jpegSha256": "b2599babe854c89f5d38660a318d908035101acaf3e2258f4978d29ea905fbdc",
+            "cameraAmount": 0
+          },
+          "on": {
+            "file": "images/afternoon-20-rear-eye-on.jpg",
+            "pngSha256": "139f61339be25a51f991a69b68aec8db6b85db50f3f4008ecdbaecc24ecd4d33",
+            "jpegSha256": "c63d5aa19e5145332caf2a046746aab5ef64e666e53c507fa6e0bc85ee4bca0f",
+            "cameraAmount": 1
+          }
+        },
+        "offVsOn": {
+          "pixels": 1296000,
+          "changed": 964711,
+          "above4": 530684,
+          "above8": 262895,
+          "maximum": 58,
+          "meanRGBChange": [
+            1.7199,
+            2.4819,
+            4.5686
+          ],
+          "meanYBefore": 110.8758,
+          "meanYAfter": 113.3464
+        },
+        "c24OnVsC25On": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 113.3464,
+          "meanYAfter": 113.3464
+        },
+        "c24PngSha256": "139f61339be25a51f991a69b68aec8db6b85db50f3f4008ecdbaecc24ecd4d33",
+        "c24CameraAmount": 1,
+        "regions": {
+          "rearWall": {
+            "offVsOn": {
+              "rect": [
+                970,
+                495,
+                1015,
+                540
+              ],
+              "pixels": 2025,
+              "changed": 2025,
+              "above4": 1776,
+              "above8": 0,
+              "maximum": 6,
+              "meanRGBChange": [
+                1.0074,
+                2.1086,
+                4.9432
+              ],
+              "meanYBefore": 78.2998,
+              "meanYAfter": 80.379
+            },
+            "c24OnVsC25On": {
+              "rect": [
+                970,
+                495,
+                1015,
+                540
+              ],
+              "pixels": 2025,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYBefore": 80.379,
+              "meanYAfter": 80.379
+            }
+          },
+          "door": {
+            "offVsOn": {
+              "rect": [
+                1048,
+                473,
+                1083,
+                520
+              ],
+              "pixels": 1645,
+              "changed": 430,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 3,
+              "meanRGBChange": [
+                -0.0881,
+                0.0,
+                0.1891
+              ],
+              "meanYBefore": 183.6338,
+              "meanYAfter": 183.6287
+            },
+            "c24OnVsC25On": {
+              "rect": [
+                1048,
+                473,
+                1083,
+                520
+              ],
+              "pixels": 1645,
+              "changed": 0,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 0,
+              "meanRGBChange": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "meanYBefore": 183.6287,
+              "meanYAfter": 183.6287
+            }
+          }
+        }
+      },
+      {
+        "view": "shop-interior",
+        "camera": {
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            -0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            0.7069324236562871
+          ],
+          "fov": 58
+        },
+        "sources": {
+          "off": {
+            "file": "images/afternoon-shop-interior-off.jpg",
+            "pngSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+            "jpegSha256": "0ab31c00c53b54baedb7f8eddbd38942b269bb5c232d75d94a94d6799c0435e3",
+            "cameraAmount": 0
+          },
+          "on": {
+            "file": "images/afternoon-shop-interior-on.jpg",
+            "pngSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+            "jpegSha256": "0ab31c00c53b54baedb7f8eddbd38942b269bb5c232d75d94a94d6799c0435e3",
+            "cameraAmount": 0
+          }
+        },
+        "offVsOn": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 156.2992,
+          "meanYAfter": 156.2992
+        },
+        "c24OnVsC25On": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 0,
+          "meanRGBChange": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "meanYBefore": 156.2992,
+          "meanYAfter": 156.2992
+        },
+        "c24PngSha256": "16f4da4850f84b2008fe32cb69737ee8494514bab9690ea0b94926799bb65a05",
+        "c24CameraAmount": 0
+      },
+      {
+        "view": "shop-door-eye",
+        "camera": {
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            -0.7069324236562871
+          ],
+          "fov": 58
+        },
+        "sources": {
+          "off": {
+            "file": "images/afternoon-shop-door-eye-off.jpg",
+            "pngSha256": "5121525ca7853aa3285011e88aa14b371dc9fbb2393a01f689e55318d03816a7",
+            "jpegSha256": "e91aea5106908ca04005d0363e78ad31b78d8473abfe0c7ffddb9be13684a67a",
+            "cameraAmount": 0
+          },
+          "on": {
+            "file": "images/afternoon-shop-door-eye-on.jpg",
+            "pngSha256": "b8599407fb37bd21f79193177df78c8cd8098b9c174b636e5dc2f2e24fc2978f",
+            "jpegSha256": "f8b9bc32b8b535cce5246b984cf42f57f680329ad73c1d8b79d154a9d24ec710",
+            "cameraAmount": 0
+          }
+        },
+        "offVsOn": {
+          "pixels": 1296000,
+          "changed": 265276,
+          "above4": 177766,
+          "above8": 162069,
+          "maximum": 44,
+          "meanRGBChange": [
+            1.4761,
+            1.692,
+            2.3139
+          ],
+          "meanYBefore": 114.2115,
+          "meanYAfter": 115.9025
+        },
+        "c24OnVsC25On": {
+          "pixels": 1296000,
+          "changed": 192674,
+          "above4": 110548,
+          "above8": 85824,
+          "maximum": 40,
+          "meanRGBChange": [
+            -0.9256,
+            -1.0483,
+            -1.5117
+          ],
+          "meanYBefore": 116.9582,
+          "meanYAfter": 115.9025
+        },
+        "c24PngSha256": "029c8b3b8f33956ae7d8067b5a9362de39e0eeb0dddb4f586c68b7c0a6b45b9d",
+        "c24CameraAmount": 0,
+        "regions": {
+          "doorFrame": {
+            "offVsOn": {
+              "rect": [
+                680,
+                150,
+                730,
+                600
+              ],
+              "pixels": 22500,
+              "changed": 383,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 1,
+              "meanRGBChange": [
+                0.0045,
+                0.0053,
+                0.0078
+              ],
+              "meanYBefore": 82.571,
+              "meanYAfter": 82.5764
+            },
+            "c24OnVsC25On": {
+              "rect": [
+                680,
+                150,
+                730,
+                600
+              ],
+              "pixels": 22500,
+              "changed": 1357,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 1,
+              "meanRGBChange": [
+                -0.0194,
+                -0.0204,
+                -0.0251
+              ],
+              "meanYBefore": 82.5969,
+              "meanYAfter": 82.5764
+            }
+          },
+          "outdoorStreet": {
+            "offVsOn": {
+              "rect": [
+                840,
+                600,
+                1080,
+                670
+              ],
+              "pixels": 16800,
+              "changed": 6318,
+              "above4": 3777,
+              "above8": 3339,
+              "maximum": 31,
+              "meanRGBChange": [
+                1.7983,
+                2.2822,
+                3.8123
+              ],
+              "meanYBefore": 128.8399,
+              "meanYAfter": 131.1297
+            },
+            "c24OnVsC25On": {
+              "rect": [
+                840,
+                600,
+                1080,
+                670
+              ],
+              "pixels": 16800,
+              "changed": 170,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 1,
+              "meanRGBChange": [
+                -0.0032,
+                -0.0026,
+                -0.0044
+              ],
+              "meanYBefore": 131.1326,
+              "meanYAfter": 131.1297
+            }
+          },
+          "exteriorShopFacade": {
+            "offVsOn": {
+              "rect": [
+                1020,
+                240,
+                1080,
+                360
+              ],
+              "pixels": 7200,
+              "changed": 26,
+              "above4": 0,
+              "above8": 0,
+              "maximum": 1,
+              "meanRGBChange": [
+                0.0003,
+                0.001,
+                0.0024
+              ],
+              "meanYBefore": 124.505,
+              "meanYAfter": 124.506
+            },
+            "c24OnVsC25On": {
+              "rect": [
+                1020,
+                240,
+                1080,
+                360
+              ],
+              "pixels": 7200,
+              "changed": 3466,
+              "above4": 2266,
+              "above8": 2201,
+              "maximum": 27,
+              "meanRGBChange": [
+                -4.6161,
+                -5.3176,
+                -7.4614
+              ],
+              "meanYBefore": 129.8292,
+              "meanYAfter": 124.506
+            }
+          }
+        }
+      },
+      {
+        "view": "van-side",
+        "camera": {
+          "position": [
+            276.3147277851227,
+            11.210013480772632,
+            971.1462175645175
+          ],
+          "quaternion": [
+            -0.029182465008512196,
+            -0.7830517056478151,
+            -0.03684648464040197,
+            0.6201779958912754
+          ],
+          "fov": 47
+        },
+        "sources": {
+          "off": {
+            "file": "images/afternoon-van-side-off.jpg",
+            "pngSha256": "a37e640acb7ea82d203a680b118b8a6868fced9ecb415a7b2cfeb5c9bcf5544a",
+            "jpegSha256": "25fa72428a895bddd7b42c242ebca1afe64dde5cec72baa8e69758a1434b7fde",
+            "cameraAmount": 0
+          },
+          "on": {
+            "file": "images/afternoon-van-side-on.jpg",
+            "pngSha256": "9dd0ea607f1fc766a5f3480d28e4892bf4e2f44156e84864a7500e27a4468ee9",
+            "jpegSha256": "0076f68eba7c876d9c9846a7557aa939d5e44ebfd8d471b5831ad2f715b66c54",
+            "cameraAmount": 1
+          }
+        },
+        "offVsOn": {
+          "pixels": 1296000,
+          "changed": 1158842,
+          "above4": 946852,
+          "above8": 863245,
+          "maximum": 56,
+          "meanRGBChange": [
+            9.0585,
+            11.1056,
+            17.3894
+          ],
+          "meanYBefore": 92.1979,
+          "meanYAfter": 103.322
+        },
+        "c24OnVsC25On": {
+          "pixels": 1296000,
+          "changed": 2,
+          "above4": 0,
+          "above8": 0,
+          "maximum": 1,
+          "meanRGBChange": [
+            0.0,
+            -0.0,
+            0.0
+          ],
+          "meanYBefore": 103.322,
+          "meanYAfter": 103.322
+        },
+        "c24PngSha256": "1d8fd61ef2f380e935472ecd3ebbdd7035ccf072dbf0e6fda26748cd6587ea57",
+        "c24CameraAmount": 1
+      }
+    ]
+  },
+  "enabledShopBoxes": [
+    [
+      260.9,
+      7,
+      902.2,
+      275.5,
+      15,
+      915.8
+    ],
+    [
+      260.9,
+      7,
+      915.2,
+      275.5,
+      15,
+      922.8
+    ],
+    [
+      260.89721110687873,
+      7,
+      931.3286840910996,
+      275.71753050781643,
+      15,
+      940.7966753051098
+    ],
+    [
+      261.66841478823255,
+      7,
+      949.0918055559523,
+      276.9334265420023,
+      15,
+      959.7659177860809
+    ],
+    [
+      284.5,
+      7,
+      902.2,
+      299.1,
+      15,
+      914.8
+    ],
+    [
+      284.5,
+      7,
+      914.2,
+      299.1,
+      15,
+      922.3
+    ],
+    [
+      284.5,
+      7,
+      921.7,
+      299.1,
+      15,
+      930.8
+    ],
+    [
+      284.6727562070908,
+      7,
+      937.7537592181241,
+      299.6850919875739,
+      15,
+      947.5515664427837
+    ]
+  ]
+}
