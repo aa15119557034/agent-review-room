@@ -141,6 +141,14 @@ export class Pipeline {
     // 2 + 3. motion-blurred world, then the sharp layer, in one pass
     const shutter = dt > 0 ? Math.min((1 / 60) / dt, 2.0) : 1.0; // constant apparent streak length regardless of frame rate
     this.blurMat.uniforms.uStrength.value = this.hasPrev ? p.blur * 0.62 * shutter : 0;
+    // The fullscreen triangle copies an already-resolved world. Sharp geometry needs its own MSAA and depth.
+    const hasForeground = this.overlay.children.length !== 1 ||
+      this.overlay.children[0] !== this.blurQuad || this.blurQuad.children.length > 0;
+    if (this.compRT.depthBuffer !== hasForeground) {
+      this.compRT.dispose();
+      this.compRT.samples = hasForeground ? 4 : 0;
+      this.compRT.depthBuffer = hasForeground;
+    }
     r.setRenderTarget(this.compRT);
     r.render(this.overlay, camera);
 
