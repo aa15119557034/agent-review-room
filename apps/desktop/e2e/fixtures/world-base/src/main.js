@@ -5,6 +5,8 @@ import { createStation } from './station.js';
 import { createLook } from './look.js';
 import { createSkyline } from './skyline.js';
 import { createCity } from './city.js';
+import { applyWeathering, loadWeatheringParams } from './weathering.js';
+import { addWeatheringDecals } from './weathering-decals.js';
 
 const canvas = document.querySelector('#world');
 const loadMessage = document.querySelector('#load-message');
@@ -166,6 +168,15 @@ async function init() {
     worldBase.eveningGlow = applyEveningGlow(scene, look);
     worldBase.eveningSakura = applyEveningSakura(scene);
     worldBase.crossingHalos = fadeDistantCrossingHalos(scene);
+  }
+  // Round 22: wall weathering + posters. After the evening glow, so emissive materials are already known.
+  {
+    const params = await loadWeatheringParams();
+    worldBase.weathering = applyWeathering({ scene, station, island, city: worldBase.city, skyline: worldBase.skyline, params, timeOfDay: island.timeOfDay });
+    worldBase.weatheringDecals = addWeatheringDecals({ scene, station, wallMaterials: worldBase.weathering.wallMaterials,
+      roots: [station.root, worldBase.city.root, worldBase.skyline.root], gradientMap: station.ctx.mat.gradientMap, explicit: params.decals.explicit });
+    // ?weathering=off keeps the previous look for before/after captures.
+    if (new URLSearchParams(location.search).get('weathering') === 'off') { worldBase.weathering.setEnabled(false); worldBase.weatheringDecals.setEnabled(false); }
   }
   stage('场景已就绪');
   document.querySelector('#loading').hidden = true;
