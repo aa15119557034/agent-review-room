@@ -1,0 +1,156 @@
+{
+  "v2": {
+    "source": "eed4fb46eb7e78418fa319f6f24bdbfe654425a0",
+    "observedHead": "58a46094de1ac23493f35f1bea94683df5d49c2d",
+    "zipSHA256": "3ef6196ee62ad3b1bf9cfda4ea0feac017ccb64aac208ef4b8b82df0f7ea9d13",
+    "routes": [
+      {
+        "route": "src/main.js",
+        "bytes": 16803,
+        "sha256": "a24df689007b299a462bc48d4303aa128956cea93eacb6d2483e04b86b9ed1d2",
+        "expectedSHA256": "a24df689007b299a462bc48d4303aa128956cea93eacb6d2483e04b86b9ed1d2",
+        "match": "bytes"
+      },
+      {
+        "route": "src/station.js",
+        "bytes": 10454,
+        "sha256": "941f20102ff4455bbb7d4a9ef032dd26734a588372f3d08f90d8c990200a9c2a",
+        "expectedSHA256": "941f20102ff4455bbb7d4a9ef032dd26734a588372f3d08f90d8c990200a9c2a",
+        "match": "bytes"
+      },
+      {
+        "route": "src/mature-sakura.js",
+        "bytes": 1903,
+        "sha256": "397c5710a3b7d5a9737f7d5b5a2c75dc800fec356549b0a173c9d27022b9d6e8",
+        "expectedSHA256": "397c5710a3b7d5a9737f7d5b5a2c75dc800fec356549b0a173c9d27022b9d6e8",
+        "match": "bytes"
+      },
+      {
+        "route": "src/weathering-decals.json",
+        "bytes": 6479,
+        "sha256": "aa8ac740f2f518c17f00812210105da181384e68a660a29c21b388bd965f8162",
+        "expectedSHA256": "aa8ac740f2f518c17f00812210105da181384e68a660a29c21b388bd965f8162",
+        "match": "bytes"
+      },
+      {
+        "route": "src/street-env/nz.png",
+        "bytes": 125318,
+        "sha256": "bf0dd97d86e9b33d948418b9cfe97767d71640534b84852618a6a7a0e230f75d",
+        "expectedSHA256": "bf0dd97d86e9b33d948418b9cfe97767d71640534b84852618a6a7a0e230f75d",
+        "match": "bytes"
+      },
+      {
+        "route": "src/street-env-evening/nz.png",
+        "bytes": 114242,
+        "sha256": "b4d403630b187ffe76218c78ffeef8bb1156adf79d4f8701d617f67251283d60",
+        "expectedSHA256": "b4d403630b187ffe76218c78ffeef8bb1156adf79d4f8701d617f67251283d60",
+        "match": "bytes"
+      },
+      {
+        "route": "upstream/sakuragaoka/src/world/sakura.js",
+        "bytes": 5261,
+        "sha256": "d2a3eee978cecdd9ed841bb056310bf4afecdc64a722efdd6164d89a9d705b43",
+        "expectedSHA256": "d2a3eee978cecdd9ed841bb056310bf4afecdc64a722efdd6164d89a9d705b43",
+        "match": "bytes"
+      },
+      {
+        "route": "upstream/sakuragaoka/src/world/sakura/materials.js",
+        "bytes": 12401,
+        "sha256": "9b02c48970dc9c65eee1649671fb82573771d8920049fd5a57f6b1f42989189d",
+        "expectedSHA256": "9b02c48970dc9c65eee1649671fb82573771d8920049fd5a57f6b1f42989189d",
+        "match": "bytes"
+      },
+      {
+        "route": "upstream/sakuragaoka/src/core/batch2.js",
+        "bytes": 11814,
+        "sha256": "cc224240ab1ac2d61af1d3ad96136cc2559c5af29d912da1c167f5a0e69a6c7d",
+        "expectedSHA256": "cc224240ab1ac2d61af1d3ad96136cc2559c5af29d912da1c167f5a0e69a6c7d",
+        "match": "bytes"
+      },
+      {
+        "route": "mature-sakura/mature-sakura.glb",
+        "bytes": 1902104,
+        "sha256": "7d0e715719b1e8a8591ab91daeddf28882070f9015cb5a76bf2ec70cf6620cd9",
+        "expectedSHA256": "7d0e715719b1e8a8591ab91daeddf28882070f9015cb5a76bf2ec70cf6620cd9",
+        "match": "bytes"
+      }
+    ]
+  },
+  "final": {
+    "source": "1ea97233815bedc700751a04fe69ee7fb28b7a21",
+    "observedHead": "675f6602e699baf782a26e77ec719b0f23d79d37",
+    "zipSHA256": "e4ed22eacde7fc320637468a794fcd99d01c0344a0458adcc214d6c78bd7b54d",
+    "routes": [
+      {
+        "route": "src/main.js",
+        "bytes": 16803,
+        "sha256": "a24df689007b299a462bc48d4303aa128956cea93eacb6d2483e04b86b9ed1d2",
+        "expectedSHA256": "a24df689007b299a462bc48d4303aa128956cea93eacb6d2483e04b86b9ed1d2",
+        "match": "bytes"
+      },
+      {
+        "route": "src/station.js",
+        "bytes": 10454,
+        "sha256": "941f20102ff4455bbb7d4a9ef032dd26734a588372f3d08f90d8c990200a9c2a",
+        "expectedSHA256": "941f20102ff4455bbb7d4a9ef032dd26734a588372f3d08f90d8c990200a9c2a",
+        "match": "bytes"
+      },
+      {
+        "route": "src/mature-sakura.js",
+        "bytes": 1903,
+        "sha256": "397c5710a3b7d5a9737f7d5b5a2c75dc800fec356549b0a173c9d27022b9d6e8",
+        "expectedSHA256": "397c5710a3b7d5a9737f7d5b5a2c75dc800fec356549b0a173c9d27022b9d6e8",
+        "match": "bytes"
+      },
+      {
+        "route": "src/weathering-decals.json",
+        "bytes": 6479,
+        "sha256": "3b2342e39b3d4560279aa9e5d5002ccdaa69d1da64b4334799187edc8457ceb4",
+        "expectedSHA256": "3b2342e39b3d4560279aa9e5d5002ccdaa69d1da64b4334799187edc8457ceb4",
+        "match": "bytes"
+      },
+      {
+        "route": "src/street-env/nz.png",
+        "bytes": 125465,
+        "sha256": "79589520fcda4903d302a23280f8987f69ab7a675caee29c73a2a7ac1d058092",
+        "expectedSHA256": "79589520fcda4903d302a23280f8987f69ab7a675caee29c73a2a7ac1d058092",
+        "match": "bytes"
+      },
+      {
+        "route": "src/street-env-evening/nz.png",
+        "bytes": 114336,
+        "sha256": "ea9aa9bd84f057f9f50ccd95f6ae7ec09182bbdeab82c06aa52b31816520640e",
+        "expectedSHA256": "ea9aa9bd84f057f9f50ccd95f6ae7ec09182bbdeab82c06aa52b31816520640e",
+        "match": "bytes"
+      },
+      {
+        "route": "upstream/sakuragaoka/src/world/sakura.js",
+        "bytes": 5261,
+        "sha256": "d2a3eee978cecdd9ed841bb056310bf4afecdc64a722efdd6164d89a9d705b43",
+        "expectedSHA256": "d2a3eee978cecdd9ed841bb056310bf4afecdc64a722efdd6164d89a9d705b43",
+        "match": "bytes"
+      },
+      {
+        "route": "upstream/sakuragaoka/src/world/sakura/materials.js",
+        "bytes": 12401,
+        "sha256": "9b02c48970dc9c65eee1649671fb82573771d8920049fd5a57f6b1f42989189d",
+        "expectedSHA256": "9b02c48970dc9c65eee1649671fb82573771d8920049fd5a57f6b1f42989189d",
+        "match": "bytes"
+      },
+      {
+        "route": "upstream/sakuragaoka/src/core/batch2.js",
+        "bytes": 11814,
+        "sha256": "cc224240ab1ac2d61af1d3ad96136cc2559c5af29d912da1c167f5a0e69a6c7d",
+        "expectedSHA256": "cc224240ab1ac2d61af1d3ad96136cc2559c5af29d912da1c167f5a0e69a6c7d",
+        "match": "bytes"
+      },
+      {
+        "route": "mature-sakura/mature-sakura.glb",
+        "bytes": 2193656,
+        "sha256": "14716b7af7db3bcae453b17ebe97a9fa0d4d38155731cc2b56ed28e4fa7b24f3",
+        "expectedSHA256": "14716b7af7db3bcae453b17ebe97a9fa0d4d38155731cc2b56ed28e4fa7b24f3",
+        "match": "bytes"
+      }
+    ]
+  }
+}

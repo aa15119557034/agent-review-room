@@ -1,0 +1,52 @@
+{
+  "source": "58a46094de1ac23493f35f1bea94683df5d49c2d",
+  "tag": "04-v2",
+  "stage": "complete",
+  "start": 1795021802760,
+  "events": [
+    {
+      "stage": "loading",
+      "wall": 1795021802930
+    },
+    {
+      "stage": "ready",
+      "wall": 1795021851333
+    },
+    {
+      "stage": "control-A",
+      "wall": 1795021858035
+    },
+    {
+      "stage": "control-third",
+      "wall": 1795021869156
+    },
+    {
+      "stage": "sparse-A",
+      "wall": 1795021874458
+    },
+    {
+      "stage": "sparse-third",
+      "wall": 1795021885478
+    },
+    {
+      "stage": "complete",
+      "wall": 1795021889344
+    }
+  ],
+  "exceptions": [],
+  "network": [
+    {
+      "asset": "mature-sakura.glb",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    },
+    {
+      "asset": "plastic_crate_02_1k.gltf",
+      "error": "net::ERR_ABORTED",
+      "canceled": true
+    }
+  ],
+  "mainSha256": "a24df689007b299a462bc48d4303aa128956cea93eacb6d2483e04b86b9ed1d2",
+  "readyMs": 48403,
+  "rawSha256": "0fe4913e7e243722598d2e0884633c5aff8bc4c6b7409a77526a44a179f7287b"
+}

@@ -1,0 +1,5761 @@
+{
+  "runs": [
+    {
+      "tag": "01-v2",
+      "source": "58a46094de1ac23493f35f1bea94683df5d49c2d",
+      "readyMs": 44907,
+      "stage": "complete",
+      "exceptions": [],
+      "network": [
+        {
+          "asset": "menhir.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "asset": "boulders.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "asset": "mature-sakura.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "asset": "plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "rawSha256": "9fc9b5af8398c549b7c2eb2034e89668a0833925b728241727e995eb46c53ccd",
+      "originals": [
+        {
+          "part": "plaza/bark",
+          "live": false,
+          "tri": 2309,
+          "material": {
+            "name": "sakura:barkOld",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 445,
+              "name": "bark-paint",
+              "size": [
+                128,
+                256
+              ]
+            }
+          }
+        },
+        {
+          "part": "plaza/blob",
+          "live": true,
+          "tri": 13680,
+          "material": {
+            "name": "sakura:blob",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 444,
+              "name": "blossom-glaze",
+              "size": [
+                128,
+                128
+              ]
+            }
+          }
+        },
+        {
+          "part": "plaza/cards",
+          "live": true,
+          "tri": 674,
+          "material": {
+            "name": "sakura:cards",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0.48,
+            "transparent": false,
+            "side": 2,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 446,
+              "name": "flower-sprays",
+              "size": [
+                256,
+                256
+              ]
+            }
+          }
+        },
+        {
+          "part": "w3/bark",
+          "live": false,
+          "tri": 1550,
+          "material": {
+            "name": "sakura:barkOld",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 445,
+              "name": "bark-paint",
+              "size": [
+                128,
+                256
+              ]
+            }
+          }
+        },
+        {
+          "part": "w3/blob",
+          "live": true,
+          "tri": 22027,
+          "material": {
+            "name": "sakura:blob",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 444,
+              "name": "blossom-glaze",
+              "size": [
+                128,
+                128
+              ]
+            }
+          }
+        },
+        {
+          "part": "w3/cards",
+          "live": true,
+          "tri": 424,
+          "material": {
+            "name": "sakura:cards",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0.48,
+            "transparent": false,
+            "side": 2,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 446,
+              "name": "flower-sprays",
+              "size": [
+                256,
+                256
+              ]
+            }
+          }
+        }
+      ],
+      "meshes": [
+        {
+          "id": 19773,
+          "parts": [
+            "plaza/blob"
+          ],
+          "sourceCount": 1,
+          "name": "plaza-blob",
+          "tri": 13680,
+          "shadow": true,
+          "receive": false,
+          "layers": 1,
+          "depth": "MeshDepthMaterial",
+          "material": {
+            "name": "sakura:blob",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 444,
+              "name": "blossom-glaze",
+              "size": [
+                128,
+                128
+              ]
+            }
+          }
+        },
+        {
+          "id": 19777,
+          "parts": [
+            "plaza/cards"
+          ],
+          "sourceCount": 1,
+          "name": "plaza-cards",
+          "tri": 674,
+          "shadow": true,
+          "receive": false,
+          "layers": 2,
+          "depth": null,
+          "material": {
+            "name": "sakura:cards",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0.48,
+            "transparent": false,
+            "side": 2,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 446,
+              "name": "flower-sprays",
+              "size": [
+                256,
+                256
+              ]
+            }
+          }
+        },
+        {
+          "id": 19774,
+          "parts": [
+            "w3/blob"
+          ],
+          "sourceCount": 1,
+          "name": "w3-blob",
+          "tri": 22027,
+          "shadow": true,
+          "receive": false,
+          "layers": 1,
+          "depth": "MeshDepthMaterial",
+          "material": {
+            "name": "sakura:blob",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 444,
+              "name": "blossom-glaze",
+              "size": [
+                128,
+                128
+              ]
+            }
+          }
+        },
+        {
+          "id": 19778,
+          "parts": [
+            "w3/cards"
+          ],
+          "sourceCount": 1,
+          "name": "w3-cards",
+          "tri": 424,
+          "shadow": true,
+          "receive": false,
+          "layers": 2,
+          "depth": null,
+          "material": {
+            "name": "sakura:cards",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0.48,
+            "transparent": false,
+            "side": 2,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 446,
+              "name": "flower-sprays",
+              "size": [
+                256,
+                256
+              ]
+            }
+          }
+        },
+        {
+          "id": 23268,
+          "parts": [
+            "plaza/bark"
+          ],
+          "sourceCount": 1,
+          "name": "",
+          "tri": 2309,
+          "shadow": true,
+          "receive": true,
+          "layers": 1,
+          "depth": null,
+          "material": {
+            "name": "",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 445,
+              "name": "bark-paint",
+              "size": [
+                128,
+                256
+              ]
+            }
+          }
+        },
+        {
+          "id": 23269,
+          "parts": [
+            "w3/bark"
+          ],
+          "sourceCount": 1,
+          "name": "",
+          "tri": 1550,
+          "shadow": true,
+          "receive": true,
+          "layers": 1,
+          "depth": null,
+          "material": {
+            "name": "",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 445,
+              "name": "bark-paint",
+              "size": [
+                128,
+                256
+              ]
+            }
+          }
+        }
+      ],
+      "trials": [
+        {
+          "mode": "control",
+          "label": "A",
+          "start": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "eye": [
+              278.8,
+              10.488,
+              936
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.14,
+            "orientation": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "view": "art-a-street",
+            "walking": false,
+            "walkView": "third",
+            "hidden": true,
+            "focus": false,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2670406:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "end": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "eye": [
+              278.8,
+              10.488,
+              936
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.14,
+            "orientation": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "view": "art-a-street",
+            "walking": false,
+            "walkView": "third",
+            "hidden": true,
+            "focus": false,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2670406:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "travel": 0,
+          "fps": 65,
+          "frameMs": {
+            "n": 650,
+            "median": 15.4,
+            "p95": 15.5,
+            "min": 15.2,
+            "max": 15.6
+          },
+          "draws": {
+            "n": 650,
+            "median": 1605,
+            "p95": 1607,
+            "min": 1597,
+            "max": 1607
+          },
+          "triangles": {
+            "n": 650,
+            "median": 7848324,
+            "p95": 7848452,
+            "min": 7845444,
+            "max": 7848452
+          },
+          "sampleFrames": 0,
+          "timer": {},
+          "byPass": {},
+          "stats": {
+            "timer": false,
+            "disjoint": 0,
+            "invalid": 0,
+            "cap": 0,
+            "busy": 0,
+            "scheduled": 0,
+            "productionMatches": 0,
+            "maxPending": 0
+          },
+          "sys": {
+            "n": 19,
+            "foregroundRun": 0,
+            "cpuPct": {
+              "n": 19,
+              "median": 19.12,
+              "p95": 32.48,
+              "min": 13.46,
+              "max": 32.48
+            },
+            "gpuClockMHz": {
+              "n": 19,
+              "median": 1987,
+              "p95": 2002,
+              "min": 1972,
+              "max": 2002
+            },
+            "gpuUtilPercent": {
+              "n": 19,
+              "median": 41,
+              "p95": 43,
+              "min": 40,
+              "max": 43
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        {
+          "mode": "control",
+          "label": "third",
+          "start": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "eye": [
+              281.8857572547113,
+              11.36214765496598,
+              938.0865191300602
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.1227948780024292,
+              0.034635056521752264,
+              0.004288091629490116,
+              0.9918182510249952
+            ],
+            "view": "walking",
+            "walking": true,
+            "walkView": "third",
+            "hidden": true,
+            "focus": false,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2670406:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "end": {
+            "feet": [
+              280.942943750701,
+              8.548902420272842,
+              924.6036578668871
+            ],
+            "eye": [
+              281.22870100541223,
+              11.099050075238823,
+              928.6901769969473
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.12279487800242911,
+              0.03463505652175223,
+              0.004288091629490108,
+              0.9918182510249952
+            ],
+            "view": "walking",
+            "walking": true,
+            "walkView": "third",
+            "hidden": true,
+            "focus": true,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2670406:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "travel": 9.423,
+          "fps": 64.9998,
+          "frameMs": {
+            "n": 202,
+            "median": 15.4,
+            "p95": 15.5,
+            "min": 15,
+            "max": 15.7
+          },
+          "draws": {
+            "n": 202,
+            "median": 1693,
+            "p95": 1695,
+            "min": 1656,
+            "max": 1695
+          },
+          "triangles": {
+            "n": 202,
+            "median": 8284769,
+            "p95": 8320847,
+            "min": 8242057,
+            "max": 8373047
+          },
+          "sampleFrames": 0,
+          "timer": {},
+          "byPass": {},
+          "stats": {
+            "timer": false,
+            "disjoint": 0,
+            "invalid": 0,
+            "cap": 0,
+            "busy": 0,
+            "scheduled": 0,
+            "productionMatches": 0,
+            "maxPending": 0
+          },
+          "sys": {
+            "n": 6,
+            "foregroundRun": 0,
+            "cpuPct": {
+              "n": 6,
+              "median": 21.94,
+              "p95": 35.13,
+              "min": 18.12,
+              "max": 35.13
+            },
+            "gpuClockMHz": {
+              "n": 6,
+              "median": 1972,
+              "p95": 1987,
+              "min": 1920,
+              "max": 1987
+            },
+            "gpuUtilPercent": {
+              "n": 6,
+              "median": 42,
+              "p95": 46,
+              "min": 40,
+              "max": 46
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        {
+          "mode": "sparse",
+          "label": "A",
+          "start": {
+            "feet": [
+              280.92465573888455,
+              8.541579559175245,
+              924.3421271134016
+            ],
+            "eye": [
+              278.8,
+              10.488,
+              936
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "view": "art-a-street",
+            "walking": false,
+            "walkView": "third",
+            "hidden": true,
+            "focus": true,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2670406:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "end": {
+            "feet": [
+              280.92465573888455,
+              8.541579559175245,
+              924.3421271134016
+            ],
+            "eye": [
+              278.8,
+              10.488,
+              936
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "view": "art-a-street",
+            "walking": false,
+            "walkView": "third",
+            "hidden": true,
+            "focus": true,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2670406:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "travel": 0,
+          "fps": 55.4,
+          "frameMs": {
+            "n": 554,
+            "median": 15.4,
+            "p95": 30.8,
+            "min": 15.2,
+            "max": 46.1
+          },
+          "draws": {
+            "n": 554,
+            "median": 1584,
+            "p95": 1589,
+            "min": 1584,
+            "max": 1589
+          },
+          "triangles": {
+            "n": 554,
+            "median": 7694836,
+            "p95": 7758508,
+            "min": 7694836,
+            "max": 7758508
+          },
+          "sampleFrames": 185,
+          "timer": {
+            "full": {
+              "n": 27,
+              "median": 14.2336,
+              "p95": 17.4356,
+              "min": 12.7375,
+              "max": 21.8644,
+              "statuses": {
+                "valid": 27
+              }
+            },
+            "shadow0/map|plaza/blob#0": {
+              "n": 27,
+              "median": 0.0041,
+              "p95": 0.0051,
+              "min": 0.002,
+              "max": 0.0051,
+              "statuses": {
+                "valid": 27
+              }
+            },
+            "shadow0/map|plaza/cards#0": {
+              "n": 27,
+              "median": 0.002,
+              "p95": 0.002,
+              "min": 0,
+              "max": 0.0031,
+              "statuses": {
+                "valid": 27
+              }
+            },
+            "shadow0/map|plaza/bark#0": {
+              "n": 26,
+              "median": 0,
+              "p95": 0.001,
+              "min": 0,
+              "max": 0.001,
+              "statuses": {
+                "valid": 26
+              }
+            },
+            "world|plaza/blob#0": {
+              "n": 26,
+              "median": 0.0297,
+              "p95": 0.0369,
+              "min": 0.0276,
+              "max": 0.299,
+              "statuses": {
+                "valid": 26
+              }
+            },
+            "world|plaza/cards#0": {
+              "n": 26,
+              "median": 0.0061,
+              "p95": 0.0082,
+              "min": 0.0031,
+              "max": 0.0082,
+              "statuses": {
+                "valid": 26
+              }
+            },
+            "world|plaza/bark#0": {
+              "n": 26,
+              "median": 0.0031,
+              "p95": 0.0041,
+              "min": 0.002,
+              "max": 0.0041,
+              "statuses": {
+                "valid": 26
+              }
+            }
+          },
+          "byPass": {
+            "shadow0/map|plaza/blob": {
+              "draws": {
+                "n": 185,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 185,
+                "median": 13680,
+                "p95": 13680,
+                "min": 13680,
+                "max": 13680
+              }
+            },
+            "shadow0/map|plaza/cards": {
+              "draws": {
+                "n": 185,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 185,
+                "median": 674,
+                "p95": 674,
+                "min": 674,
+                "max": 674
+              }
+            },
+            "shadow0/map|w3/blob": {
+              "draws": {
+                "n": 185,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 185,
+                "median": 22027,
+                "p95": 22027,
+                "min": 22027,
+                "max": 22027
+              }
+            },
+            "shadow0/map|w3/cards": {
+              "draws": {
+                "n": 185,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 185,
+                "median": 424,
+                "p95": 424,
+                "min": 424,
+                "max": 424
+              }
+            },
+            "shadow0/map|plaza/bark": {
+              "draws": {
+                "n": 185,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 185,
+                "median": 2309,
+                "p95": 2309,
+                "min": 2309,
+                "max": 2309
+              }
+            },
+            "shadow0/map|w3/bark": {
+              "draws": {
+                "n": 185,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 185,
+                "median": 1550,
+                "p95": 1550,
+                "min": 1550,
+                "max": 1550
+              }
+            },
+            "world|w3/blob": {
+              "draws": {
+                "n": 185,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 185,
+                "median": 22027,
+                "p95": 22027,
+                "min": 22027,
+                "max": 22027
+              }
+            },
+            "world|plaza/blob": {
+              "draws": {
+                "n": 185,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 185,
+                "median": 13680,
+                "p95": 13680,
+                "min": 13680,
+                "max": 13680
+              }
+            },
+            "world|w3/cards": {
+              "draws": {
+                "n": 185,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 185,
+                "median": 424,
+                "p95": 424,
+                "min": 424,
+                "max": 424
+              }
+            },
+            "world|plaza/cards": {
+              "draws": {
+                "n": 185,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 185,
+                "median": 674,
+                "p95": 674,
+                "min": 674,
+                "max": 674
+              }
+            },
+            "world|w3/bark": {
+              "draws": {
+                "n": 185,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 185,
+                "median": 1550,
+                "p95": 1550,
+                "min": 1550,
+                "max": 1550
+              }
+            },
+            "world|plaza/bark": {
+              "draws": {
+                "n": 185,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 185,
+                "median": 2309,
+                "p95": 2309,
+                "min": 2309,
+                "max": 2309
+              }
+            }
+          },
+          "stats": {
+            "timer": true,
+            "disjoint": 0,
+            "invalid": 0,
+            "cap": 0,
+            "busy": 0,
+            "scheduled": 859,
+            "productionMatches": 1,
+            "maxPending": 3
+          },
+          "sys": {
+            "n": 19,
+            "foregroundRun": 0,
+            "cpuPct": {
+              "n": 19,
+              "median": 36.73,
+              "p95": 94.96,
+              "min": 15.29,
+              "max": 94.96
+            },
+            "gpuClockMHz": {
+              "n": 20,
+              "median": 1890,
+              "p95": 1987,
+              "min": 1485,
+              "max": 1987
+            },
+            "gpuUtilPercent": {
+              "n": 20,
+              "median": 39,
+              "p95": 43,
+              "min": 25,
+              "max": 44
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        {
+          "mode": "sparse",
+          "label": "third",
+          "start": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "eye": [
+              281.8857572547113,
+              11.36214765496598,
+              938.0865191300602
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.1227948780024292,
+              0.034635056521752264,
+              0.004288091629490116,
+              0.9918182510249952
+            ],
+            "view": "walking",
+            "walking": true,
+            "walkView": "third",
+            "hidden": true,
+            "focus": true,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2670406:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "end": {
+            "feet": [
+              280.9400699716103,
+              8.547751705514045,
+              924.5625609112159
+            ],
+            "eye": [
+              281.22582722632154,
+              11.097899360480028,
+              928.6490800412761
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.12279487800242911,
+              0.03463505652175224,
+              0.00428809162949011,
+              0.9918182510249952
+            ],
+            "view": "walking",
+            "walking": true,
+            "walkView": "third",
+            "hidden": true,
+            "focus": true,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2670406:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "travel": 9.4642,
+          "fps": 61.4963,
+          "frameMs": {
+            "n": 193,
+            "median": 15.4,
+            "p95": 30.7,
+            "min": 13.9,
+            "max": 30.8
+          },
+          "draws": {
+            "n": 193,
+            "median": 1674,
+            "p95": 1680,
+            "min": 1654,
+            "max": 1680
+          },
+          "triangles": {
+            "n": 193,
+            "median": 8179361,
+            "p95": 8228909,
+            "min": 8152269,
+            "max": 8244643
+          },
+          "sampleFrames": 65,
+          "timer": {
+            "full": {
+              "n": 10,
+              "median": 13.8988,
+              "p95": 16.7117,
+              "min": 13.1338,
+              "max": 16.7117,
+              "statuses": {
+                "valid": 10
+              }
+            },
+            "shadow0/map|plaza/blob#0": {
+              "n": 10,
+              "median": 0.0031,
+              "p95": 0.0041,
+              "min": 0.0031,
+              "max": 0.0041,
+              "statuses": {
+                "valid": 10
+              }
+            },
+            "shadow0/map|plaza/cards#0": {
+              "n": 9,
+              "median": 0.001,
+              "p95": 0.002,
+              "min": 0,
+              "max": 0.002,
+              "statuses": {
+                "valid": 9
+              }
+            },
+            "shadow0/map|plaza/bark#0": {
+              "n": 9,
+              "median": 0,
+              "p95": 0.001,
+              "min": 0,
+              "max": 0.001,
+              "statuses": {
+                "valid": 9
+              }
+            },
+            "world|plaza/blob#0": {
+              "n": 9,
+              "median": 0.0195,
+              "p95": 0.042,
+              "min": 0.0184,
+              "max": 0.042,
+              "statuses": {
+                "valid": 9
+              }
+            },
+            "world|plaza/cards#0": {
+              "n": 9,
+              "median": 0.0031,
+              "p95": 0.0041,
+              "min": 0.001,
+              "max": 0.0041,
+              "statuses": {
+                "valid": 9
+              }
+            },
+            "world|plaza/bark#0": {
+              "n": 9,
+              "median": 0.002,
+              "p95": 0.0082,
+              "min": 0.001,
+              "max": 0.0082,
+              "statuses": {
+                "valid": 9
+              }
+            }
+          },
+          "byPass": {
+            "shadow0/map|plaza/blob": {
+              "draws": {
+                "n": 65,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 65,
+                "median": 13680,
+                "p95": 13680,
+                "min": 13680,
+                "max": 13680
+              }
+            },
+            "shadow0/map|plaza/cards": {
+              "draws": {
+                "n": 65,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 65,
+                "median": 674,
+                "p95": 674,
+                "min": 674,
+                "max": 674
+              }
+            },
+            "shadow0/map|w3/blob": {
+              "draws": {
+                "n": 65,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 65,
+                "median": 22027,
+                "p95": 22027,
+                "min": 22027,
+                "max": 22027
+              }
+            },
+            "shadow0/map|w3/cards": {
+              "draws": {
+                "n": 65,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 65,
+                "median": 424,
+                "p95": 424,
+                "min": 424,
+                "max": 424
+              }
+            },
+            "shadow0/map|plaza/bark": {
+              "draws": {
+                "n": 65,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 65,
+                "median": 2309,
+                "p95": 2309,
+                "min": 2309,
+                "max": 2309
+              }
+            },
+            "shadow0/map|w3/bark": {
+              "draws": {
+                "n": 65,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 65,
+                "median": 1550,
+                "p95": 1550,
+                "min": 1550,
+                "max": 1550
+              }
+            },
+            "world|w3/blob": {
+              "draws": {
+                "n": 65,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 65,
+                "median": 22027,
+                "p95": 22027,
+                "min": 22027,
+                "max": 22027
+              }
+            },
+            "world|plaza/blob": {
+              "draws": {
+                "n": 65,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 65,
+                "median": 13680,
+                "p95": 13680,
+                "min": 13680,
+                "max": 13680
+              }
+            },
+            "world|w3/cards": {
+              "draws": {
+                "n": 65,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 65,
+                "median": 424,
+                "p95": 424,
+                "min": 424,
+                "max": 424
+              }
+            },
+            "world|plaza/cards": {
+              "draws": {
+                "n": 65,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 65,
+                "median": 674,
+                "p95": 674,
+                "min": 674,
+                "max": 674
+              }
+            },
+            "world|w3/bark": {
+              "draws": {
+                "n": 65,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 65,
+                "median": 1550,
+                "p95": 1550,
+                "min": 1550,
+                "max": 1550
+              }
+            },
+            "world|plaza/bark": {
+              "draws": {
+                "n": 65,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 65,
+                "median": 2309,
+                "p95": 2309,
+                "min": 2309,
+                "max": 2309
+              }
+            }
+          },
+          "stats": {
+            "timer": true,
+            "disjoint": 0,
+            "invalid": 0,
+            "cap": 0,
+            "busy": 0,
+            "scheduled": 859,
+            "productionMatches": 1,
+            "maxPending": 3
+          },
+          "sys": {
+            "n": 6,
+            "foregroundRun": 0,
+            "cpuPct": {
+              "n": 6,
+              "median": 24.02,
+              "p95": 36.98,
+              "min": 16.14,
+              "max": 36.98
+            },
+            "gpuClockMHz": {
+              "n": 6,
+              "median": 1987,
+              "p95": 1987,
+              "min": 1987,
+              "max": 1987
+            },
+            "gpuUtilPercent": {
+              "n": 6,
+              "median": 43,
+              "p95": 43,
+              "min": 39,
+              "max": 43
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "tag": "02-final",
+      "source": "1ea97233815bedc700751a04fe69ee7fb28b7a21",
+      "readyMs": 45995,
+      "stage": "complete",
+      "exceptions": [],
+      "network": [
+        {
+          "asset": "mature-sakura.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "asset": "plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "asset": "plastic_crate_02.bin",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "rawSha256": "426d43a1e5116c8f6675df6fb395c362aeceeda6bd3b542e20ef0af9066087a8",
+      "originals": [
+        {
+          "part": "plaza/bark",
+          "live": false,
+          "tri": 2309,
+          "material": {
+            "name": "sakura:barkOld",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 445,
+              "name": "bark-paint",
+              "size": [
+                128,
+                256
+              ]
+            }
+          }
+        },
+        {
+          "part": "plaza/blob",
+          "live": true,
+          "tri": 9540,
+          "material": {
+            "name": "sakura:blob",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 444,
+              "name": "blossom-glaze",
+              "size": [
+                128,
+                128
+              ]
+            }
+          }
+        },
+        {
+          "part": "plaza/cards",
+          "live": true,
+          "tri": 2072,
+          "material": {
+            "name": "sakura:cards",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0.48,
+            "transparent": false,
+            "side": 2,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 447,
+              "name": "plaza-sprays",
+              "size": [
+                512,
+                512
+              ]
+            }
+          }
+        },
+        {
+          "part": "w3/bark",
+          "live": false,
+          "tri": 1550,
+          "material": {
+            "name": "sakura:barkOld",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 445,
+              "name": "bark-paint",
+              "size": [
+                128,
+                256
+              ]
+            }
+          }
+        },
+        {
+          "part": "w3/blob",
+          "live": true,
+          "tri": 22027,
+          "material": {
+            "name": "sakura:blob",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 444,
+              "name": "blossom-glaze",
+              "size": [
+                128,
+                128
+              ]
+            }
+          }
+        },
+        {
+          "part": "w3/cards",
+          "live": true,
+          "tri": 424,
+          "material": {
+            "name": "sakura:cards",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0.48,
+            "transparent": false,
+            "side": 2,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 446,
+              "name": "flower-sprays",
+              "size": [
+                256,
+                256
+              ]
+            }
+          }
+        }
+      ],
+      "meshes": [
+        {
+          "id": 19773,
+          "parts": [
+            "plaza/blob"
+          ],
+          "sourceCount": 1,
+          "name": "plaza-blob",
+          "tri": 9540,
+          "shadow": true,
+          "receive": false,
+          "layers": 1,
+          "depth": "MeshDepthMaterial",
+          "material": {
+            "name": "sakura:blob",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 444,
+              "name": "blossom-glaze",
+              "size": [
+                128,
+                128
+              ]
+            }
+          }
+        },
+        {
+          "id": 19778,
+          "parts": [
+            "plaza/cards"
+          ],
+          "sourceCount": 1,
+          "name": "plaza-cards",
+          "tri": 2072,
+          "shadow": true,
+          "receive": false,
+          "layers": 2,
+          "depth": null,
+          "material": {
+            "name": "sakura:cards",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0.48,
+            "transparent": false,
+            "side": 2,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 447,
+              "name": "plaza-sprays",
+              "size": [
+                512,
+                512
+              ]
+            }
+          }
+        },
+        {
+          "id": 19774,
+          "parts": [
+            "w3/blob"
+          ],
+          "sourceCount": 1,
+          "name": "w3-blob",
+          "tri": 22027,
+          "shadow": true,
+          "receive": false,
+          "layers": 1,
+          "depth": "MeshDepthMaterial",
+          "material": {
+            "name": "sakura:blob",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 444,
+              "name": "blossom-glaze",
+              "size": [
+                128,
+                128
+              ]
+            }
+          }
+        },
+        {
+          "id": 19777,
+          "parts": [
+            "w3/cards"
+          ],
+          "sourceCount": 1,
+          "name": "w3-cards",
+          "tri": 424,
+          "shadow": true,
+          "receive": false,
+          "layers": 2,
+          "depth": null,
+          "material": {
+            "name": "sakura:cards",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0.48,
+            "transparent": false,
+            "side": 2,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 446,
+              "name": "flower-sprays",
+              "size": [
+                256,
+                256
+              ]
+            }
+          }
+        },
+        {
+          "id": 23268,
+          "parts": [
+            "plaza/bark"
+          ],
+          "sourceCount": 1,
+          "name": "",
+          "tri": 2309,
+          "shadow": true,
+          "receive": true,
+          "layers": 1,
+          "depth": null,
+          "material": {
+            "name": "",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 445,
+              "name": "bark-paint",
+              "size": [
+                128,
+                256
+              ]
+            }
+          }
+        },
+        {
+          "id": 23269,
+          "parts": [
+            "w3/bark"
+          ],
+          "sourceCount": 1,
+          "name": "",
+          "tri": 1550,
+          "shadow": true,
+          "receive": true,
+          "layers": 1,
+          "depth": null,
+          "material": {
+            "name": "",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 445,
+              "name": "bark-paint",
+              "size": [
+                128,
+                256
+              ]
+            }
+          }
+        }
+      ],
+      "trials": [
+        {
+          "mode": "control",
+          "label": "A",
+          "start": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "eye": [
+              278.8,
+              10.488,
+              936
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.14,
+            "orientation": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "view": "art-a-street",
+            "walking": false,
+            "walkView": "third",
+            "hidden": true,
+            "focus": false,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2667664:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "end": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "eye": [
+              278.8,
+              10.488,
+              936
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.14,
+            "orientation": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "view": "art-a-street",
+            "walking": false,
+            "walkView": "third",
+            "hidden": true,
+            "focus": false,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2667664:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "travel": 0,
+          "fps": 63.2,
+          "frameMs": {
+            "n": 632,
+            "median": 15.4,
+            "p95": 15.5,
+            "min": 15,
+            "max": 30.9
+          },
+          "draws": {
+            "n": 632,
+            "median": 1605,
+            "p95": 1607,
+            "min": 1588,
+            "max": 1607
+          },
+          "triangles": {
+            "n": 632,
+            "median": 7842840,
+            "p95": 7842968,
+            "min": 7752960,
+            "max": 7842968
+          },
+          "sampleFrames": 0,
+          "timer": {},
+          "byPass": {},
+          "stats": {
+            "timer": false,
+            "disjoint": 0,
+            "invalid": 0,
+            "cap": 0,
+            "busy": 0,
+            "scheduled": 0,
+            "productionMatches": 0,
+            "maxPending": 0
+          },
+          "sys": {
+            "n": 19,
+            "foregroundRun": 0,
+            "cpuPct": {
+              "n": 19,
+              "median": 26.93,
+              "p95": 48.77,
+              "min": 19.58,
+              "max": 48.77
+            },
+            "gpuClockMHz": {
+              "n": 20,
+              "median": 1972,
+              "p95": 1987,
+              "min": 1920,
+              "max": 1987
+            },
+            "gpuUtilPercent": {
+              "n": 20,
+              "median": 41,
+              "p95": 45,
+              "min": 32,
+              "max": 45
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        {
+          "mode": "control",
+          "label": "third",
+          "start": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "eye": [
+              281.8857572547113,
+              11.36214765496598,
+              938.0865191300602
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.1227948780024292,
+              0.034635056521752264,
+              0.004288091629490116,
+              0.9918182510249952
+            ],
+            "view": "walking",
+            "walking": true,
+            "walkView": "third",
+            "hidden": true,
+            "focus": false,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2667664:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "end": {
+            "feet": [
+              280.9429633424908,
+              8.548910265191001,
+              924.6039380425358
+            ],
+            "eye": [
+              281.22872059720214,
+              11.099057920156982,
+              928.690457172596
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.12279487800242911,
+              0.03463505652175223,
+              0.004288091629490108,
+              0.9918182510249952
+            ],
+            "view": "walking",
+            "walking": true,
+            "walkView": "third",
+            "hidden": true,
+            "focus": true,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2667664:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "travel": 9.4227,
+          "fps": 64.6814,
+          "frameMs": {
+            "n": 202,
+            "median": 15.4,
+            "p95": 15.5,
+            "min": 15.2,
+            "max": 30.8
+          },
+          "draws": {
+            "n": 202,
+            "median": 1679,
+            "p95": 1696,
+            "min": 1656,
+            "max": 1696
+          },
+          "triangles": {
+            "n": 202,
+            "median": 8277813,
+            "p95": 8306637,
+            "min": 8227817,
+            "max": 8306637
+          },
+          "sampleFrames": 0,
+          "timer": {},
+          "byPass": {},
+          "stats": {
+            "timer": false,
+            "disjoint": 0,
+            "invalid": 0,
+            "cap": 0,
+            "busy": 0,
+            "scheduled": 0,
+            "productionMatches": 0,
+            "maxPending": 0
+          },
+          "sys": {
+            "n": 6,
+            "foregroundRun": 0,
+            "cpuPct": {
+              "n": 6,
+              "median": 20.95,
+              "p95": 27.24,
+              "min": 19.76,
+              "max": 27.24
+            },
+            "gpuClockMHz": {
+              "n": 6,
+              "median": 1980,
+              "p95": 1987,
+              "min": 1957,
+              "max": 1987
+            },
+            "gpuUtilPercent": {
+              "n": 6,
+              "median": 42,
+              "p95": 45,
+              "min": 41,
+              "max": 45
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        {
+          "mode": "sparse",
+          "label": "A",
+          "start": {
+            "feet": [
+              280.9246813851405,
+              8.541589828414564,
+              924.3424938719487
+            ],
+            "eye": [
+              278.8,
+              10.488,
+              936
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "view": "art-a-street",
+            "walking": false,
+            "walkView": "third",
+            "hidden": true,
+            "focus": true,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2667664:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "end": {
+            "feet": [
+              280.9246813851405,
+              8.541589828414564,
+              924.3424938719487
+            ],
+            "eye": [
+              278.8,
+              10.488,
+              936
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "view": "art-a-street",
+            "walking": false,
+            "walkView": "third",
+            "hidden": true,
+            "focus": true,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2667664:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "travel": 0,
+          "fps": 64.9013,
+          "frameMs": {
+            "n": 649,
+            "median": 15.4,
+            "p95": 15.5,
+            "min": 15.1,
+            "max": 30.8
+          },
+          "draws": {
+            "n": 649,
+            "median": 1584,
+            "p95": 1589,
+            "min": 1584,
+            "max": 1589
+          },
+          "triangles": {
+            "n": 649,
+            "median": 7689352,
+            "p95": 7753024,
+            "min": 7689352,
+            "max": 7753024
+          },
+          "sampleFrames": 216,
+          "timer": {
+            "full": {
+              "n": 31,
+              "median": 13.0232,
+              "p95": 13.6561,
+              "min": 11.8938,
+              "max": 13.7953,
+              "statuses": {
+                "valid": 31
+              }
+            },
+            "shadow0/map|plaza/blob#0": {
+              "n": 31,
+              "median": 0.001,
+              "p95": 0.001,
+              "min": 0,
+              "max": 0.001,
+              "statuses": {
+                "valid": 31
+              }
+            },
+            "shadow0/map|plaza/cards#0": {
+              "n": 31,
+              "median": 0.0041,
+              "p95": 0.0051,
+              "min": 0.002,
+              "max": 0.0082,
+              "statuses": {
+                "valid": 31
+              }
+            },
+            "shadow0/map|plaza/bark#0": {
+              "n": 31,
+              "median": 0,
+              "p95": 0.001,
+              "min": 0,
+              "max": 0.0041,
+              "statuses": {
+                "valid": 31
+              }
+            },
+            "world|plaza/blob#0": {
+              "n": 31,
+              "median": 0.0102,
+              "p95": 0.0123,
+              "min": 0.0082,
+              "max": 0.0123,
+              "statuses": {
+                "valid": 31
+              }
+            },
+            "world|plaza/cards#0": {
+              "n": 31,
+              "median": 0.0553,
+              "p95": 0.0625,
+              "min": 0.0471,
+              "max": 0.0625,
+              "statuses": {
+                "valid": 31
+              }
+            },
+            "world|plaza/bark#0": {
+              "n": 30,
+              "median": 0.0041,
+              "p95": 0.0061,
+              "min": 0.0031,
+              "max": 0.0061,
+              "statuses": {
+                "valid": 30
+              }
+            }
+          },
+          "byPass": {
+            "shadow0/map|plaza/blob": {
+              "draws": {
+                "n": 216,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 216,
+                "median": 9540,
+                "p95": 9540,
+                "min": 9540,
+                "max": 9540
+              }
+            },
+            "shadow0/map|plaza/cards": {
+              "draws": {
+                "n": 216,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 216,
+                "median": 2072,
+                "p95": 2072,
+                "min": 2072,
+                "max": 2072
+              }
+            },
+            "shadow0/map|w3/blob": {
+              "draws": {
+                "n": 216,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 216,
+                "median": 22027,
+                "p95": 22027,
+                "min": 22027,
+                "max": 22027
+              }
+            },
+            "shadow0/map|w3/cards": {
+              "draws": {
+                "n": 216,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 216,
+                "median": 424,
+                "p95": 424,
+                "min": 424,
+                "max": 424
+              }
+            },
+            "shadow0/map|plaza/bark": {
+              "draws": {
+                "n": 216,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 216,
+                "median": 2309,
+                "p95": 2309,
+                "min": 2309,
+                "max": 2309
+              }
+            },
+            "shadow0/map|w3/bark": {
+              "draws": {
+                "n": 216,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 216,
+                "median": 1550,
+                "p95": 1550,
+                "min": 1550,
+                "max": 1550
+              }
+            },
+            "world|w3/blob": {
+              "draws": {
+                "n": 216,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 216,
+                "median": 22027,
+                "p95": 22027,
+                "min": 22027,
+                "max": 22027
+              }
+            },
+            "world|plaza/blob": {
+              "draws": {
+                "n": 216,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 216,
+                "median": 9540,
+                "p95": 9540,
+                "min": 9540,
+                "max": 9540
+              }
+            },
+            "world|plaza/cards": {
+              "draws": {
+                "n": 216,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 216,
+                "median": 2072,
+                "p95": 2072,
+                "min": 2072,
+                "max": 2072
+              }
+            },
+            "world|w3/cards": {
+              "draws": {
+                "n": 216,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 216,
+                "median": 424,
+                "p95": 424,
+                "min": 424,
+                "max": 424
+              }
+            },
+            "world|w3/bark": {
+              "draws": {
+                "n": 216,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 216,
+                "median": 1550,
+                "p95": 1550,
+                "min": 1550,
+                "max": 1550
+              }
+            },
+            "world|plaza/bark": {
+              "draws": {
+                "n": 216,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 216,
+                "median": 2309,
+                "p95": 2309,
+                "min": 2309,
+                "max": 2309
+              }
+            }
+          },
+          "stats": {
+            "timer": true,
+            "disjoint": 0,
+            "invalid": 0,
+            "cap": 0,
+            "busy": 0,
+            "scheduled": 952,
+            "productionMatches": 1,
+            "maxPending": 3
+          },
+          "sys": {
+            "n": 19,
+            "foregroundRun": 0,
+            "cpuPct": {
+              "n": 19,
+              "median": 21.45,
+              "p95": 27.44,
+              "min": 18.38,
+              "max": 27.44
+            },
+            "gpuClockMHz": {
+              "n": 19,
+              "median": 1980,
+              "p95": 1987,
+              "min": 1957,
+              "max": 1987
+            },
+            "gpuUtilPercent": {
+              "n": 19,
+              "median": 42,
+              "p95": 44,
+              "min": 40,
+              "max": 44
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        {
+          "mode": "sparse",
+          "label": "third",
+          "start": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "eye": [
+              281.8857572547113,
+              11.36214765496598,
+              938.0865191300602
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.1227948780024292,
+              0.034635056521752264,
+              0.004288091629490116,
+              0.9918182510249952
+            ],
+            "view": "walking",
+            "walking": true,
+            "walkView": "third",
+            "hidden": true,
+            "focus": true,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2667664:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "end": {
+            "feet": [
+              280.94345166816044,
+              8.549105799898905,
+              924.6109214249609
+            ],
+            "eye": [
+              281.2292089228717,
+              11.099253454864886,
+              928.6974405550211
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.12279487800242911,
+              0.03463505652175223,
+              0.004288091629490108,
+              0.9918182510249952
+            ],
+            "view": "walking",
+            "walking": true,
+            "walkView": "third",
+            "hidden": true,
+            "focus": true,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2667664:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "travel": 9.4157,
+          "fps": 61.7976,
+          "frameMs": {
+            "n": 193,
+            "median": 15.4,
+            "p95": 30.7,
+            "min": 15.2,
+            "max": 30.8
+          },
+          "draws": {
+            "n": 193,
+            "median": 1674,
+            "p95": 1680,
+            "min": 1654,
+            "max": 1680
+          },
+          "triangles": {
+            "n": 193,
+            "median": 8174099,
+            "p95": 8223169,
+            "min": 8146785,
+            "max": 8239159
+          },
+          "sampleFrames": 64,
+          "timer": {
+            "full": {
+              "n": 10,
+              "median": 14.2715,
+              "p95": 15.8935,
+              "min": 13.2076,
+              "max": 15.8935,
+              "statuses": {
+                "valid": 10
+              }
+            },
+            "shadow0/map|plaza/blob#0": {
+              "n": 9,
+              "median": 0.001,
+              "p95": 0.001,
+              "min": 0,
+              "max": 0.001,
+              "statuses": {
+                "valid": 9
+              }
+            },
+            "shadow0/map|plaza/cards#0": {
+              "n": 9,
+              "median": 0.0041,
+              "p95": 0.0051,
+              "min": 0.0031,
+              "max": 0.0051,
+              "statuses": {
+                "valid": 9
+              }
+            },
+            "shadow0/map|plaza/bark#0": {
+              "n": 9,
+              "median": 0,
+              "p95": 0.001,
+              "min": 0,
+              "max": 0.001,
+              "statuses": {
+                "valid": 9
+              }
+            },
+            "world|plaza/blob#0": {
+              "n": 9,
+              "median": 0.0072,
+              "p95": 0.0102,
+              "min": 0.0051,
+              "max": 0.0102,
+              "statuses": {
+                "valid": 9
+              }
+            },
+            "world|plaza/cards#0": {
+              "n": 9,
+              "median": 0.0328,
+              "p95": 0.0399,
+              "min": 0.0266,
+              "max": 0.0399,
+              "statuses": {
+                "valid": 9
+              }
+            },
+            "world|plaza/bark#0": {
+              "n": 9,
+              "median": 0.002,
+              "p95": 0.0061,
+              "min": 0.001,
+              "max": 0.0061,
+              "statuses": {
+                "valid": 9
+              }
+            }
+          },
+          "byPass": {
+            "shadow0/map|plaza/blob": {
+              "draws": {
+                "n": 64,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 64,
+                "median": 9540,
+                "p95": 9540,
+                "min": 9540,
+                "max": 9540
+              }
+            },
+            "shadow0/map|plaza/cards": {
+              "draws": {
+                "n": 64,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 64,
+                "median": 2072,
+                "p95": 2072,
+                "min": 2072,
+                "max": 2072
+              }
+            },
+            "shadow0/map|w3/blob": {
+              "draws": {
+                "n": 64,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 64,
+                "median": 22027,
+                "p95": 22027,
+                "min": 22027,
+                "max": 22027
+              }
+            },
+            "shadow0/map|w3/cards": {
+              "draws": {
+                "n": 64,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 64,
+                "median": 424,
+                "p95": 424,
+                "min": 424,
+                "max": 424
+              }
+            },
+            "shadow0/map|plaza/bark": {
+              "draws": {
+                "n": 64,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 64,
+                "median": 2309,
+                "p95": 2309,
+                "min": 2309,
+                "max": 2309
+              }
+            },
+            "shadow0/map|w3/bark": {
+              "draws": {
+                "n": 64,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 64,
+                "median": 1550,
+                "p95": 1550,
+                "min": 1550,
+                "max": 1550
+              }
+            },
+            "world|w3/blob": {
+              "draws": {
+                "n": 64,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 64,
+                "median": 22027,
+                "p95": 22027,
+                "min": 22027,
+                "max": 22027
+              }
+            },
+            "world|plaza/blob": {
+              "draws": {
+                "n": 64,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 64,
+                "median": 9540,
+                "p95": 9540,
+                "min": 9540,
+                "max": 9540
+              }
+            },
+            "world|plaza/cards": {
+              "draws": {
+                "n": 64,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 64,
+                "median": 2072,
+                "p95": 2072,
+                "min": 2072,
+                "max": 2072
+              }
+            },
+            "world|w3/cards": {
+              "draws": {
+                "n": 64,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 64,
+                "median": 424,
+                "p95": 424,
+                "min": 424,
+                "max": 424
+              }
+            },
+            "world|w3/bark": {
+              "draws": {
+                "n": 64,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 64,
+                "median": 1550,
+                "p95": 1550,
+                "min": 1550,
+                "max": 1550
+              }
+            },
+            "world|plaza/bark": {
+              "draws": {
+                "n": 64,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 64,
+                "median": 2309,
+                "p95": 2309,
+                "min": 2309,
+                "max": 2309
+              }
+            }
+          },
+          "stats": {
+            "timer": true,
+            "disjoint": 0,
+            "invalid": 0,
+            "cap": 0,
+            "busy": 0,
+            "scheduled": 952,
+            "productionMatches": 1,
+            "maxPending": 3
+          },
+          "sys": {
+            "n": 6,
+            "foregroundRun": 0,
+            "cpuPct": {
+              "n": 6,
+              "median": 24.14,
+              "p95": 37.36,
+              "min": 18.12,
+              "max": 37.36
+            },
+            "gpuClockMHz": {
+              "n": 7,
+              "median": 1965,
+              "p95": 1980,
+              "min": 1950,
+              "max": 1980
+            },
+            "gpuUtilPercent": {
+              "n": 7,
+              "median": 40,
+              "p95": 44,
+              "min": 38,
+              "max": 44
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "tag": "03-final",
+      "source": "1ea97233815bedc700751a04fe69ee7fb28b7a21",
+      "readyMs": 46085,
+      "stage": "complete",
+      "exceptions": [],
+      "network": [
+        {
+          "asset": "mature-sakura.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "asset": "plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "asset": "plastic_crate_02.bin",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "rawSha256": "fd1343b00d481a11d83de60105dc580c48fc3c866c5c1725a6aa6533058a8b27",
+      "originals": [
+        {
+          "part": "plaza/bark",
+          "live": false,
+          "tri": 2309,
+          "material": {
+            "name": "sakura:barkOld",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 445,
+              "name": "bark-paint",
+              "size": [
+                128,
+                256
+              ]
+            }
+          }
+        },
+        {
+          "part": "plaza/blob",
+          "live": true,
+          "tri": 9540,
+          "material": {
+            "name": "sakura:blob",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 444,
+              "name": "blossom-glaze",
+              "size": [
+                128,
+                128
+              ]
+            }
+          }
+        },
+        {
+          "part": "plaza/cards",
+          "live": true,
+          "tri": 2072,
+          "material": {
+            "name": "sakura:cards",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0.48,
+            "transparent": false,
+            "side": 2,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 446,
+              "name": "plaza-sprays",
+              "size": [
+                512,
+                512
+              ]
+            }
+          }
+        },
+        {
+          "part": "w3/bark",
+          "live": false,
+          "tri": 1550,
+          "material": {
+            "name": "sakura:barkOld",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 445,
+              "name": "bark-paint",
+              "size": [
+                128,
+                256
+              ]
+            }
+          }
+        },
+        {
+          "part": "w3/blob",
+          "live": true,
+          "tri": 22027,
+          "material": {
+            "name": "sakura:blob",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 444,
+              "name": "blossom-glaze",
+              "size": [
+                128,
+                128
+              ]
+            }
+          }
+        },
+        {
+          "part": "w3/cards",
+          "live": true,
+          "tri": 424,
+          "material": {
+            "name": "sakura:cards",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0.48,
+            "transparent": false,
+            "side": 2,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 447,
+              "name": "flower-sprays",
+              "size": [
+                256,
+                256
+              ]
+            }
+          }
+        }
+      ],
+      "meshes": [
+        {
+          "id": 19773,
+          "parts": [
+            "plaza/blob"
+          ],
+          "sourceCount": 1,
+          "name": "plaza-blob",
+          "tri": 9540,
+          "shadow": true,
+          "receive": false,
+          "layers": 1,
+          "depth": "MeshDepthMaterial",
+          "material": {
+            "name": "sakura:blob",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 444,
+              "name": "blossom-glaze",
+              "size": [
+                128,
+                128
+              ]
+            }
+          }
+        },
+        {
+          "id": 19777,
+          "parts": [
+            "plaza/cards"
+          ],
+          "sourceCount": 1,
+          "name": "plaza-cards",
+          "tri": 2072,
+          "shadow": true,
+          "receive": false,
+          "layers": 2,
+          "depth": null,
+          "material": {
+            "name": "sakura:cards",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0.48,
+            "transparent": false,
+            "side": 2,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 446,
+              "name": "plaza-sprays",
+              "size": [
+                512,
+                512
+              ]
+            }
+          }
+        },
+        {
+          "id": 19774,
+          "parts": [
+            "w3/blob"
+          ],
+          "sourceCount": 1,
+          "name": "w3-blob",
+          "tri": 22027,
+          "shadow": true,
+          "receive": false,
+          "layers": 1,
+          "depth": "MeshDepthMaterial",
+          "material": {
+            "name": "sakura:blob",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 444,
+              "name": "blossom-glaze",
+              "size": [
+                128,
+                128
+              ]
+            }
+          }
+        },
+        {
+          "id": 19778,
+          "parts": [
+            "w3/cards"
+          ],
+          "sourceCount": 1,
+          "name": "w3-cards",
+          "tri": 424,
+          "shadow": true,
+          "receive": false,
+          "layers": 2,
+          "depth": null,
+          "material": {
+            "name": "sakura:cards",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0.48,
+            "transparent": false,
+            "side": 2,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 447,
+              "name": "flower-sprays",
+              "size": [
+                256,
+                256
+              ]
+            }
+          }
+        },
+        {
+          "id": 23268,
+          "parts": [
+            "plaza/bark"
+          ],
+          "sourceCount": 1,
+          "name": "",
+          "tri": 2309,
+          "shadow": true,
+          "receive": true,
+          "layers": 1,
+          "depth": null,
+          "material": {
+            "name": "",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 445,
+              "name": "bark-paint",
+              "size": [
+                128,
+                256
+              ]
+            }
+          }
+        },
+        {
+          "id": 23269,
+          "parts": [
+            "w3/bark"
+          ],
+          "sourceCount": 1,
+          "name": "",
+          "tri": 1550,
+          "shadow": true,
+          "receive": true,
+          "layers": 1,
+          "depth": null,
+          "material": {
+            "name": "",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 445,
+              "name": "bark-paint",
+              "size": [
+                128,
+                256
+              ]
+            }
+          }
+        }
+      ],
+      "trials": [
+        {
+          "mode": "control",
+          "label": "A",
+          "start": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "eye": [
+              278.8,
+              10.488,
+              936
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.14,
+            "orientation": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "view": "art-a-street",
+            "walking": false,
+            "walkView": "third",
+            "hidden": true,
+            "focus": false,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2667664:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "end": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "eye": [
+              278.8,
+              10.488,
+              936
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.14,
+            "orientation": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "view": "art-a-street",
+            "walking": false,
+            "walkView": "third",
+            "hidden": true,
+            "focus": false,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2667664:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "travel": 0,
+          "fps": 59.7,
+          "frameMs": {
+            "n": 597,
+            "median": 15.4,
+            "p95": 30.8,
+            "min": 15.2,
+            "max": 31.1
+          },
+          "draws": {
+            "n": 597,
+            "median": 1604,
+            "p95": 1607,
+            "min": 1588,
+            "max": 1607
+          },
+          "triangles": {
+            "n": 597,
+            "median": 7842792,
+            "p95": 7842968,
+            "min": 7752960,
+            "max": 7842968
+          },
+          "sampleFrames": 0,
+          "timer": {},
+          "byPass": {},
+          "stats": {
+            "timer": false,
+            "disjoint": 0,
+            "invalid": 0,
+            "cap": 0,
+            "busy": 0,
+            "scheduled": 0,
+            "productionMatches": 0,
+            "maxPending": 0
+          },
+          "sys": {
+            "n": 20,
+            "foregroundRun": 0,
+            "cpuPct": {
+              "n": 20,
+              "median": 28.34,
+              "p95": 56.41,
+              "min": 22.05,
+              "max": 69.66
+            },
+            "gpuClockMHz": {
+              "n": 20,
+              "median": 1965,
+              "p95": 1987,
+              "min": 1770,
+              "max": 1987
+            },
+            "gpuUtilPercent": {
+              "n": 20,
+              "median": 39,
+              "p95": 42,
+              "min": 28,
+              "max": 43
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        {
+          "mode": "control",
+          "label": "third",
+          "start": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "eye": [
+              281.8857572547113,
+              11.36214765496598,
+              938.0865191300602
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.1227948780024292,
+              0.034635056521752264,
+              0.004288091629490116,
+              0.9918182510249952
+            ],
+            "view": "walking",
+            "walking": true,
+            "walkView": "third",
+            "hidden": true,
+            "focus": false,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2667664:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "end": {
+            "feet": [
+              280.9462728309121,
+              8.550235446094014,
+              924.6512659319291
+            ],
+            "eye": [
+              281.2320300856234,
+              11.100383101059995,
+              928.7377850619893
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.12279487800242911,
+              0.03463505652175223,
+              0.004288091629490108,
+              0.9918182510249952
+            ],
+            "view": "walking",
+            "walking": true,
+            "walkView": "third",
+            "hidden": true,
+            "focus": true,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2667664:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "travel": 9.3752,
+          "fps": 64.0345,
+          "frameMs": {
+            "n": 199,
+            "median": 15.4,
+            "p95": 15.5,
+            "min": 15.2,
+            "max": 30.8
+          },
+          "draws": {
+            "n": 199,
+            "median": 1679,
+            "p95": 1696,
+            "min": 1656,
+            "max": 1696
+          },
+          "triangles": {
+            "n": 199,
+            "median": 8263435,
+            "p95": 8306565,
+            "min": 8227817,
+            "max": 8306637
+          },
+          "sampleFrames": 0,
+          "timer": {},
+          "byPass": {},
+          "stats": {
+            "timer": false,
+            "disjoint": 0,
+            "invalid": 0,
+            "cap": 0,
+            "busy": 0,
+            "scheduled": 0,
+            "productionMatches": 0,
+            "maxPending": 0
+          },
+          "sys": {
+            "n": 6,
+            "foregroundRun": 0,
+            "cpuPct": {
+              "n": 6,
+              "median": 27.18,
+              "p95": 32.82,
+              "min": 19.35,
+              "max": 32.82
+            },
+            "gpuClockMHz": {
+              "n": 6,
+              "median": 1987,
+              "p95": 1987,
+              "min": 1972,
+              "max": 1987
+            },
+            "gpuUtilPercent": {
+              "n": 6,
+              "median": 42,
+              "p95": 47,
+              "min": 41,
+              "max": 47
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        {
+          "mode": "sparse",
+          "label": "A",
+          "start": {
+            "feet": [
+              280.92798761369875,
+              8.54291370400761,
+              924.3897751431289
+            ],
+            "eye": [
+              278.8,
+              10.488,
+              936
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "view": "art-a-street",
+            "walking": false,
+            "walkView": "third",
+            "hidden": true,
+            "focus": true,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2667664:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "end": {
+            "feet": [
+              280.92798761369875,
+              8.54291370400761,
+              924.3897751431289
+            ],
+            "eye": [
+              278.8,
+              10.488,
+              936
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "view": "art-a-street",
+            "walking": false,
+            "walkView": "third",
+            "hidden": true,
+            "focus": true,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2667664:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "travel": 0,
+          "fps": 64.3,
+          "frameMs": {
+            "n": 643,
+            "median": 15.4,
+            "p95": 15.5,
+            "min": 15.1,
+            "max": 30.8
+          },
+          "draws": {
+            "n": 643,
+            "median": 1584,
+            "p95": 1589,
+            "min": 1583,
+            "max": 1589
+          },
+          "triangles": {
+            "n": 643,
+            "median": 7689352,
+            "p95": 7753024,
+            "min": 7689288,
+            "max": 7753024
+          },
+          "sampleFrames": 215,
+          "timer": {
+            "full": {
+              "n": 31,
+              "median": 13.1451,
+              "p95": 13.9602,
+              "min": 12.5112,
+              "max": 14.6739,
+              "statuses": {
+                "valid": 31
+              }
+            },
+            "shadow0/map|plaza/blob#0": {
+              "n": 31,
+              "median": 0.001,
+              "p95": 0.001,
+              "min": 0,
+              "max": 0.0031,
+              "statuses": {
+                "valid": 31
+              }
+            },
+            "shadow0/map|plaza/cards#0": {
+              "n": 31,
+              "median": 0.0041,
+              "p95": 0.0051,
+              "min": 0.0031,
+              "max": 0.0051,
+              "statuses": {
+                "valid": 31
+              }
+            },
+            "shadow0/map|plaza/bark#0": {
+              "n": 31,
+              "median": 0,
+              "p95": 0.001,
+              "min": 0,
+              "max": 0.002,
+              "statuses": {
+                "valid": 31
+              }
+            },
+            "world|plaza/blob#0": {
+              "n": 31,
+              "median": 0.0102,
+              "p95": 0.0113,
+              "min": 0.0082,
+              "max": 0.0123,
+              "statuses": {
+                "valid": 31
+              }
+            },
+            "world|plaza/cards#0": {
+              "n": 30,
+              "median": 0.0522,
+              "p95": 0.0614,
+              "min": 0.0481,
+              "max": 0.0625,
+              "statuses": {
+                "valid": 30
+              }
+            },
+            "world|plaza/bark#0": {
+              "n": 30,
+              "median": 0.0041,
+              "p95": 0.0051,
+              "min": 0.0031,
+              "max": 0.0061,
+              "statuses": {
+                "valid": 30
+              }
+            }
+          },
+          "byPass": {
+            "shadow0/map|plaza/blob": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 9540,
+                "p95": 9540,
+                "min": 9540,
+                "max": 9540
+              }
+            },
+            "shadow0/map|plaza/cards": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 2072,
+                "p95": 2072,
+                "min": 2072,
+                "max": 2072
+              }
+            },
+            "shadow0/map|w3/blob": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 22027,
+                "p95": 22027,
+                "min": 22027,
+                "max": 22027
+              }
+            },
+            "shadow0/map|w3/cards": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 424,
+                "p95": 424,
+                "min": 424,
+                "max": 424
+              }
+            },
+            "shadow0/map|plaza/bark": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 2309,
+                "p95": 2309,
+                "min": 2309,
+                "max": 2309
+              }
+            },
+            "shadow0/map|w3/bark": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 1550,
+                "p95": 1550,
+                "min": 1550,
+                "max": 1550
+              }
+            },
+            "world|w3/blob": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 22027,
+                "p95": 22027,
+                "min": 22027,
+                "max": 22027
+              }
+            },
+            "world|plaza/blob": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 9540,
+                "p95": 9540,
+                "min": 9540,
+                "max": 9540
+              }
+            },
+            "world|plaza/cards": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 2072,
+                "p95": 2072,
+                "min": 2072,
+                "max": 2072
+              }
+            },
+            "world|w3/cards": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 424,
+                "p95": 424,
+                "min": 424,
+                "max": 424
+              }
+            },
+            "world|w3/bark": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 1550,
+                "p95": 1550,
+                "min": 1550,
+                "max": 1550
+              }
+            },
+            "world|plaza/bark": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 2309,
+                "p95": 2309,
+                "min": 2309,
+                "max": 2309
+              }
+            }
+          },
+          "stats": {
+            "timer": true,
+            "disjoint": 0,
+            "invalid": 0,
+            "cap": 0,
+            "busy": 0,
+            "scheduled": 953,
+            "productionMatches": 1,
+            "maxPending": 3
+          },
+          "sys": {
+            "n": 19,
+            "foregroundRun": 0,
+            "cpuPct": {
+              "n": 19,
+              "median": 22.26,
+              "p95": 41.27,
+              "min": 15.89,
+              "max": 41.27
+            },
+            "gpuClockMHz": {
+              "n": 19,
+              "median": 1965,
+              "p95": 1980,
+              "min": 1935,
+              "max": 1980
+            },
+            "gpuUtilPercent": {
+              "n": 19,
+              "median": 42,
+              "p95": 47,
+              "min": 35,
+              "max": 47
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        {
+          "mode": "sparse",
+          "label": "third",
+          "start": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "eye": [
+              281.8857572547113,
+              11.36214765496598,
+              938.0865191300602
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.1227948780024292,
+              0.034635056521752264,
+              0.004288091629490116,
+              0.9918182510249952
+            ],
+            "view": "walking",
+            "walking": true,
+            "walkView": "third",
+            "hidden": true,
+            "focus": true,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2667664:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "end": {
+            "feet": [
+              280.9423450365649,
+              8.548662683963636,
+              924.5950958558442
+            ],
+            "eye": [
+              281.2281022912762,
+              11.098810338929617,
+              928.6816149859044
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.12279487800242911,
+              0.03463505652175223,
+              0.004288091629490108,
+              0.9918182510249952
+            ],
+            "view": "walking",
+            "walking": true,
+            "walkView": "third",
+            "hidden": true,
+            "focus": true,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2667664:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "travel": 9.4315,
+          "fps": 63.3985,
+          "frameMs": {
+            "n": 198,
+            "median": 15.4,
+            "p95": 15.5,
+            "min": 15.2,
+            "max": 30.9
+          },
+          "draws": {
+            "n": 198,
+            "median": 1674,
+            "p95": 1680,
+            "min": 1650,
+            "max": 1680
+          },
+          "triangles": {
+            "n": 198,
+            "median": 8174099,
+            "p95": 8223169,
+            "min": 8146785,
+            "max": 8238903
+          },
+          "sampleFrames": 67,
+          "timer": {
+            "full": {
+              "n": 10,
+              "median": 14.6575,
+              "p95": 15.6498,
+              "min": 13.3857,
+              "max": 15.6498,
+              "statuses": {
+                "valid": 10
+              }
+            },
+            "shadow0/map|plaza/blob#0": {
+              "n": 10,
+              "median": 0.001,
+              "p95": 0.001,
+              "min": 0,
+              "max": 0.001,
+              "statuses": {
+                "valid": 10
+              }
+            },
+            "shadow0/map|plaza/cards#0": {
+              "n": 10,
+              "median": 0.0041,
+              "p95": 0.0041,
+              "min": 0.0031,
+              "max": 0.0041,
+              "statuses": {
+                "valid": 10
+              }
+            },
+            "shadow0/map|plaza/bark#0": {
+              "n": 10,
+              "median": 0,
+              "p95": 0.001,
+              "min": 0,
+              "max": 0.001,
+              "statuses": {
+                "valid": 10
+              }
+            },
+            "world|plaza/blob#0": {
+              "n": 9,
+              "median": 0.0082,
+              "p95": 0.0113,
+              "min": 0.0061,
+              "max": 0.0113,
+              "statuses": {
+                "valid": 9
+              }
+            },
+            "world|plaza/cards#0": {
+              "n": 9,
+              "median": 0.0338,
+              "p95": 0.041,
+              "min": 0.0297,
+              "max": 0.041,
+              "statuses": {
+                "valid": 9
+              }
+            },
+            "world|plaza/bark#0": {
+              "n": 9,
+              "median": 0.002,
+              "p95": 0.0041,
+              "min": 0.002,
+              "max": 0.0041,
+              "statuses": {
+                "valid": 9
+              }
+            }
+          },
+          "byPass": {
+            "shadow0/map|plaza/blob": {
+              "draws": {
+                "n": 67,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 67,
+                "median": 9540,
+                "p95": 9540,
+                "min": 9540,
+                "max": 9540
+              }
+            },
+            "shadow0/map|plaza/cards": {
+              "draws": {
+                "n": 67,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 67,
+                "median": 2072,
+                "p95": 2072,
+                "min": 2072,
+                "max": 2072
+              }
+            },
+            "shadow0/map|w3/blob": {
+              "draws": {
+                "n": 67,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 67,
+                "median": 22027,
+                "p95": 22027,
+                "min": 22027,
+                "max": 22027
+              }
+            },
+            "shadow0/map|w3/cards": {
+              "draws": {
+                "n": 67,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 67,
+                "median": 424,
+                "p95": 424,
+                "min": 424,
+                "max": 424
+              }
+            },
+            "shadow0/map|plaza/bark": {
+              "draws": {
+                "n": 67,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 67,
+                "median": 2309,
+                "p95": 2309,
+                "min": 2309,
+                "max": 2309
+              }
+            },
+            "shadow0/map|w3/bark": {
+              "draws": {
+                "n": 67,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 67,
+                "median": 1550,
+                "p95": 1550,
+                "min": 1550,
+                "max": 1550
+              }
+            },
+            "world|w3/blob": {
+              "draws": {
+                "n": 67,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 67,
+                "median": 22027,
+                "p95": 22027,
+                "min": 22027,
+                "max": 22027
+              }
+            },
+            "world|plaza/blob": {
+              "draws": {
+                "n": 67,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 67,
+                "median": 9540,
+                "p95": 9540,
+                "min": 9540,
+                "max": 9540
+              }
+            },
+            "world|plaza/cards": {
+              "draws": {
+                "n": 67,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 67,
+                "median": 2072,
+                "p95": 2072,
+                "min": 2072,
+                "max": 2072
+              }
+            },
+            "world|w3/cards": {
+              "draws": {
+                "n": 67,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 67,
+                "median": 424,
+                "p95": 424,
+                "min": 424,
+                "max": 424
+              }
+            },
+            "world|w3/bark": {
+              "draws": {
+                "n": 67,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 67,
+                "median": 1550,
+                "p95": 1550,
+                "min": 1550,
+                "max": 1550
+              }
+            },
+            "world|plaza/bark": {
+              "draws": {
+                "n": 67,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 67,
+                "median": 2309,
+                "p95": 2309,
+                "min": 2309,
+                "max": 2309
+              }
+            }
+          },
+          "stats": {
+            "timer": true,
+            "disjoint": 0,
+            "invalid": 0,
+            "cap": 0,
+            "busy": 0,
+            "scheduled": 953,
+            "productionMatches": 1,
+            "maxPending": 3
+          },
+          "sys": {
+            "n": 6,
+            "foregroundRun": 0,
+            "cpuPct": {
+              "n": 6,
+              "median": 24.51,
+              "p95": 31.2,
+              "min": 21.48,
+              "max": 31.2
+            },
+            "gpuClockMHz": {
+              "n": 7,
+              "median": 1972,
+              "p95": 1980,
+              "min": 1950,
+              "max": 1980
+            },
+            "gpuUtilPercent": {
+              "n": 7,
+              "median": 43,
+              "p95": 44,
+              "min": 37,
+              "max": 44
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "tag": "04-v2",
+      "source": "58a46094de1ac23493f35f1bea94683df5d49c2d",
+      "readyMs": 48403,
+      "stage": "complete",
+      "exceptions": [],
+      "network": [
+        {
+          "asset": "mature-sakura.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "asset": "plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "rawSha256": "0fe4913e7e243722598d2e0884633c5aff8bc4c6b7409a77526a44a179f7287b",
+      "originals": [
+        {
+          "part": "plaza/bark",
+          "live": false,
+          "tri": 2309,
+          "material": {
+            "name": "sakura:barkOld",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 445,
+              "name": "bark-paint",
+              "size": [
+                128,
+                256
+              ]
+            }
+          }
+        },
+        {
+          "part": "plaza/blob",
+          "live": true,
+          "tri": 13680,
+          "material": {
+            "name": "sakura:blob",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 444,
+              "name": "blossom-glaze",
+              "size": [
+                128,
+                128
+              ]
+            }
+          }
+        },
+        {
+          "part": "plaza/cards",
+          "live": true,
+          "tri": 674,
+          "material": {
+            "name": "sakura:cards",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0.48,
+            "transparent": false,
+            "side": 2,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 446,
+              "name": "flower-sprays",
+              "size": [
+                256,
+                256
+              ]
+            }
+          }
+        },
+        {
+          "part": "w3/bark",
+          "live": false,
+          "tri": 1550,
+          "material": {
+            "name": "sakura:barkOld",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 445,
+              "name": "bark-paint",
+              "size": [
+                128,
+                256
+              ]
+            }
+          }
+        },
+        {
+          "part": "w3/blob",
+          "live": true,
+          "tri": 22027,
+          "material": {
+            "name": "sakura:blob",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 444,
+              "name": "blossom-glaze",
+              "size": [
+                128,
+                128
+              ]
+            }
+          }
+        },
+        {
+          "part": "w3/cards",
+          "live": true,
+          "tri": 424,
+          "material": {
+            "name": "sakura:cards",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0.48,
+            "transparent": false,
+            "side": 2,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 446,
+              "name": "flower-sprays",
+              "size": [
+                256,
+                256
+              ]
+            }
+          }
+        }
+      ],
+      "meshes": [
+        {
+          "id": 19773,
+          "parts": [
+            "plaza/blob"
+          ],
+          "sourceCount": 1,
+          "name": "plaza-blob",
+          "tri": 13680,
+          "shadow": true,
+          "receive": false,
+          "layers": 1,
+          "depth": "MeshDepthMaterial",
+          "material": {
+            "name": "sakura:blob",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 444,
+              "name": "blossom-glaze",
+              "size": [
+                128,
+                128
+              ]
+            }
+          }
+        },
+        {
+          "id": 19777,
+          "parts": [
+            "plaza/cards"
+          ],
+          "sourceCount": 1,
+          "name": "plaza-cards",
+          "tri": 674,
+          "shadow": true,
+          "receive": false,
+          "layers": 2,
+          "depth": null,
+          "material": {
+            "name": "sakura:cards",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0.48,
+            "transparent": false,
+            "side": 2,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 446,
+              "name": "flower-sprays",
+              "size": [
+                256,
+                256
+              ]
+            }
+          }
+        },
+        {
+          "id": 19774,
+          "parts": [
+            "w3/blob"
+          ],
+          "sourceCount": 1,
+          "name": "w3-blob",
+          "tri": 22027,
+          "shadow": true,
+          "receive": false,
+          "layers": 1,
+          "depth": "MeshDepthMaterial",
+          "material": {
+            "name": "sakura:blob",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 444,
+              "name": "blossom-glaze",
+              "size": [
+                128,
+                128
+              ]
+            }
+          }
+        },
+        {
+          "id": 19778,
+          "parts": [
+            "w3/cards"
+          ],
+          "sourceCount": 1,
+          "name": "w3-cards",
+          "tri": 424,
+          "shadow": true,
+          "receive": false,
+          "layers": 2,
+          "depth": null,
+          "material": {
+            "name": "sakura:cards",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0.48,
+            "transparent": false,
+            "side": 2,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 446,
+              "name": "flower-sprays",
+              "size": [
+                256,
+                256
+              ]
+            }
+          }
+        },
+        {
+          "id": 23268,
+          "parts": [
+            "plaza/bark"
+          ],
+          "sourceCount": 1,
+          "name": "",
+          "tri": 2309,
+          "shadow": true,
+          "receive": true,
+          "layers": 1,
+          "depth": null,
+          "material": {
+            "name": "",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 445,
+              "name": "bark-paint",
+              "size": [
+                128,
+                256
+              ]
+            }
+          }
+        },
+        {
+          "id": 23269,
+          "parts": [
+            "w3/bark"
+          ],
+          "sourceCount": 1,
+          "name": "",
+          "tri": 1550,
+          "shadow": true,
+          "receive": true,
+          "layers": 1,
+          "depth": null,
+          "material": {
+            "name": "",
+            "type": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": false,
+            "side": 0,
+            "shadowSide": null,
+            "depthWrite": true,
+            "map": {
+              "id": 445,
+              "name": "bark-paint",
+              "size": [
+                128,
+                256
+              ]
+            }
+          }
+        }
+      ],
+      "trials": [
+        {
+          "mode": "control",
+          "label": "A",
+          "start": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "eye": [
+              278.8,
+              10.488,
+              936
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.14,
+            "orientation": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "view": "art-a-street",
+            "walking": false,
+            "walkView": "third",
+            "hidden": true,
+            "focus": false,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2670406:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "end": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "eye": [
+              278.8,
+              10.488,
+              936
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.14,
+            "orientation": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "view": "art-a-street",
+            "walking": false,
+            "walkView": "third",
+            "hidden": true,
+            "focus": false,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2670406:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "travel": 0,
+          "fps": 62.3006,
+          "frameMs": {
+            "n": 623,
+            "median": 15.4,
+            "p95": 15.6,
+            "min": 15.1,
+            "max": 30.9
+          },
+          "draws": {
+            "n": 623,
+            "median": 1604,
+            "p95": 1607,
+            "min": 1588,
+            "max": 1607
+          },
+          "triangles": {
+            "n": 623,
+            "median": 7848276,
+            "p95": 7848452,
+            "min": 7758444,
+            "max": 7848452
+          },
+          "sampleFrames": 0,
+          "timer": {},
+          "byPass": {},
+          "stats": {
+            "timer": false,
+            "disjoint": 0,
+            "invalid": 0,
+            "cap": 0,
+            "busy": 0,
+            "scheduled": 0,
+            "productionMatches": 0,
+            "maxPending": 0
+          },
+          "sys": {
+            "n": 20,
+            "foregroundRun": 0,
+            "cpuPct": {
+              "n": 20,
+              "median": 24.45,
+              "p95": 66.58,
+              "min": 17.86,
+              "max": 90.43
+            },
+            "gpuClockMHz": {
+              "n": 19,
+              "median": 1957,
+              "p95": 1987,
+              "min": 1912,
+              "max": 1987
+            },
+            "gpuUtilPercent": {
+              "n": 19,
+              "median": 39,
+              "p95": 46,
+              "min": 26,
+              "max": 46
+            },
+            "pStates": [
+              "P0",
+              "P3"
+            ]
+          }
+        },
+        {
+          "mode": "control",
+          "label": "third",
+          "start": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "eye": [
+              281.8857572547113,
+              11.36214765496598,
+              938.0865191300602
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.1227948780024292,
+              0.034635056521752264,
+              0.004288091629490116,
+              0.9918182510249952
+            ],
+            "view": "walking",
+            "walking": true,
+            "walkView": "third",
+            "hidden": true,
+            "focus": false,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2670406:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "end": {
+            "feet": [
+              280.9394098188377,
+              8.547487368028639,
+              924.5531202867371
+            ],
+            "eye": [
+              281.225167073549,
+              11.09763502299462,
+              928.6396394167973
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.12279487800242911,
+              0.03463505652175224,
+              0.00428809162949011,
+              0.9918182510249952
+            ],
+            "view": "walking",
+            "walking": true,
+            "walkView": "third",
+            "hidden": true,
+            "focus": true,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2670406:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "travel": 9.4736,
+          "fps": 55.7609,
+          "frameMs": {
+            "n": 175,
+            "median": 15.4,
+            "p95": 30.8,
+            "min": 15.2,
+            "max": 30.9
+          },
+          "draws": {
+            "n": 175,
+            "median": 1679,
+            "p95": 1682,
+            "min": 1656,
+            "max": 1682
+          },
+          "triangles": {
+            "n": 175,
+            "median": 8243079,
+            "p95": 8292389,
+            "min": 8216005,
+            "max": 8308123
+          },
+          "sampleFrames": 0,
+          "timer": {},
+          "byPass": {},
+          "stats": {
+            "timer": false,
+            "disjoint": 0,
+            "invalid": 0,
+            "cap": 0,
+            "busy": 0,
+            "scheduled": 0,
+            "productionMatches": 0,
+            "maxPending": 0
+          },
+          "sys": {
+            "n": 6,
+            "foregroundRun": 0,
+            "cpuPct": {
+              "n": 6,
+              "median": 26.41,
+              "p95": 34.98,
+              "min": 21.9,
+              "max": 34.98
+            },
+            "gpuClockMHz": {
+              "n": 7,
+              "median": 1755,
+              "p95": 1755,
+              "min": 1657,
+              "max": 1755
+            },
+            "gpuUtilPercent": {
+              "n": 7,
+              "median": 39,
+              "p95": 41,
+              "min": 35,
+              "max": 41
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        {
+          "mode": "sparse",
+          "label": "A",
+          "start": {
+            "feet": [
+              280.92425776193244,
+              8.541420201779285,
+              924.3364357778316
+            ],
+            "eye": [
+              278.8,
+              10.488,
+              936
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "view": "art-a-street",
+            "walking": false,
+            "walkView": "third",
+            "hidden": true,
+            "focus": true,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2670406:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "end": {
+            "feet": [
+              280.92425776193244,
+              8.541420201779285,
+              924.3364357778316
+            ],
+            "eye": [
+              278.8,
+              10.488,
+              936
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.003277842930440409,
+              -0.009834585659995631,
+              -0.00003223795934194156,
+              0.9999462663720154
+            ],
+            "view": "art-a-street",
+            "walking": false,
+            "walkView": "third",
+            "hidden": true,
+            "focus": true,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2670406:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "travel": 0,
+          "fps": 64.3994,
+          "frameMs": {
+            "n": 644,
+            "median": 15.4,
+            "p95": 15.5,
+            "min": 15.2,
+            "max": 30.8
+          },
+          "draws": {
+            "n": 644,
+            "median": 1584,
+            "p95": 1586,
+            "min": 1583,
+            "max": 1586
+          },
+          "triangles": {
+            "n": 644,
+            "median": 7694836,
+            "p95": 7694964,
+            "min": 7694772,
+            "max": 7694964
+          },
+          "sampleFrames": 215,
+          "timer": {
+            "full": {
+              "n": 31,
+              "median": 13.0017,
+              "p95": 14.9176,
+              "min": 11.9153,
+              "max": 19.8287,
+              "statuses": {
+                "valid": 31
+              }
+            },
+            "shadow0/map|plaza/blob#0": {
+              "n": 31,
+              "median": 0.0041,
+              "p95": 0.0041,
+              "min": 0.0031,
+              "max": 0.0051,
+              "statuses": {
+                "valid": 31
+              }
+            },
+            "shadow0/map|plaza/cards#0": {
+              "n": 31,
+              "median": 0.001,
+              "p95": 0.002,
+              "min": 0,
+              "max": 0.0041,
+              "statuses": {
+                "valid": 31
+              }
+            },
+            "shadow0/map|plaza/bark#0": {
+              "n": 31,
+              "median": 0,
+              "p95": 0.001,
+              "min": 0,
+              "max": 0.001,
+              "statuses": {
+                "valid": 31
+              }
+            },
+            "world|plaza/blob#0": {
+              "n": 31,
+              "median": 0.0297,
+              "p95": 0.0348,
+              "min": 0.0276,
+              "max": 0.0348,
+              "statuses": {
+                "valid": 31
+              }
+            },
+            "world|plaza/cards#0": {
+              "n": 30,
+              "median": 0.0061,
+              "p95": 0.0082,
+              "min": 0.0031,
+              "max": 0.0082,
+              "statuses": {
+                "valid": 30
+              }
+            },
+            "world|plaza/bark#0": {
+              "n": 30,
+              "median": 0.0031,
+              "p95": 0.0041,
+              "min": 0.002,
+              "max": 0.0041,
+              "statuses": {
+                "valid": 30
+              }
+            }
+          },
+          "byPass": {
+            "shadow0/map|plaza/blob": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 13680,
+                "p95": 13680,
+                "min": 13680,
+                "max": 13680
+              }
+            },
+            "shadow0/map|plaza/cards": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 674,
+                "p95": 674,
+                "min": 674,
+                "max": 674
+              }
+            },
+            "shadow0/map|w3/blob": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 22027,
+                "p95": 22027,
+                "min": 22027,
+                "max": 22027
+              }
+            },
+            "shadow0/map|w3/cards": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 424,
+                "p95": 424,
+                "min": 424,
+                "max": 424
+              }
+            },
+            "shadow0/map|plaza/bark": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 2309,
+                "p95": 2309,
+                "min": 2309,
+                "max": 2309
+              }
+            },
+            "shadow0/map|w3/bark": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 1550,
+                "p95": 1550,
+                "min": 1550,
+                "max": 1550
+              }
+            },
+            "world|w3/blob": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 22027,
+                "p95": 22027,
+                "min": 22027,
+                "max": 22027
+              }
+            },
+            "world|plaza/blob": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 13680,
+                "p95": 13680,
+                "min": 13680,
+                "max": 13680
+              }
+            },
+            "world|w3/cards": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 424,
+                "p95": 424,
+                "min": 424,
+                "max": 424
+              }
+            },
+            "world|plaza/cards": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 674,
+                "p95": 674,
+                "min": 674,
+                "max": 674
+              }
+            },
+            "world|w3/bark": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 1550,
+                "p95": 1550,
+                "min": 1550,
+                "max": 1550
+              }
+            },
+            "world|plaza/bark": {
+              "draws": {
+                "n": 215,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 215,
+                "median": 2309,
+                "p95": 2309,
+                "min": 2309,
+                "max": 2309
+              }
+            }
+          },
+          "stats": {
+            "timer": true,
+            "disjoint": 0,
+            "invalid": 0,
+            "cap": 0,
+            "busy": 0,
+            "scheduled": 922,
+            "productionMatches": 1,
+            "maxPending": 3
+          },
+          "sys": {
+            "n": 20,
+            "foregroundRun": 0,
+            "cpuPct": {
+              "n": 20,
+              "median": 22.38,
+              "p95": 31,
+              "min": 17.97,
+              "max": 32.48
+            },
+            "gpuClockMHz": {
+              "n": 19,
+              "median": 1972,
+              "p95": 1987,
+              "min": 1897,
+              "max": 1987
+            },
+            "gpuUtilPercent": {
+              "n": 19,
+              "median": 42,
+              "p95": 45,
+              "min": 39,
+              "max": 45
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        },
+        {
+          "mode": "sparse",
+          "label": "third",
+          "start": {
+            "feet": [
+              281.6,
+              8.812,
+              934
+            ],
+            "eye": [
+              281.8857572547113,
+              11.36214765496598,
+              938.0865191300602
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.1227948780024292,
+              0.034635056521752264,
+              0.004288091629490116,
+              0.9918182510249952
+            ],
+            "view": "walking",
+            "walking": true,
+            "walkView": "third",
+            "hidden": true,
+            "focus": true,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2670406:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "end": {
+            "feet": [
+              280.94498036979735,
+              8.549717920552554,
+              924.632782876877
+            ],
+            "eye": [
+              281.23073762450866,
+              11.099865575518535,
+              928.7193020069371
+            ],
+            "yaw": 0.06981317007977318,
+            "pitch": -0.13962634015954636,
+            "orientation": [
+              -0.12279487800242911,
+              0.03463505652175223,
+              0.004288091629490108,
+              0.9918182510249952
+            ],
+            "view": "walking",
+            "walking": true,
+            "walkView": "third",
+            "hidden": true,
+            "focus": true,
+            "visibility": "visible",
+            "canvas": [
+              1440,
+              900
+            ],
+            "clock": "evening",
+            "style": {
+              "toon": true,
+              "flightEffects": false
+            },
+            "fingerprint": "1061:2670406:298285.6:949273.1",
+            "planSource": "baked"
+          },
+          "travel": 9.3938,
+          "fps": 59.8533,
+          "frameMs": {
+            "n": 186,
+            "median": 15.4,
+            "p95": 30.7,
+            "min": 15.2,
+            "max": 30.9
+          },
+          "draws": {
+            "n": 186,
+            "median": 1674,
+            "p95": 1680,
+            "min": 1654,
+            "max": 1680
+          },
+          "triangles": {
+            "n": 186,
+            "median": 8179361,
+            "p95": 8228909,
+            "min": 8152269,
+            "max": 8244643
+          },
+          "sampleFrames": 62,
+          "timer": {
+            "full": {
+              "n": 9,
+              "median": 14.2039,
+              "p95": 21.8337,
+              "min": 13.6284,
+              "max": 21.8337,
+              "statuses": {
+                "valid": 9
+              }
+            },
+            "shadow0/map|plaza/blob#0": {
+              "n": 9,
+              "median": 0.0041,
+              "p95": 0.0041,
+              "min": 0.0031,
+              "max": 0.0041,
+              "statuses": {
+                "valid": 9
+              }
+            },
+            "shadow0/map|plaza/cards#0": {
+              "n": 9,
+              "median": 0.001,
+              "p95": 0.002,
+              "min": 0,
+              "max": 0.002,
+              "statuses": {
+                "valid": 9
+              }
+            },
+            "shadow0/map|plaza/bark#0": {
+              "n": 9,
+              "median": 0,
+              "p95": 0.0031,
+              "min": 0,
+              "max": 0.0031,
+              "statuses": {
+                "valid": 9
+              }
+            },
+            "world|plaza/blob#0": {
+              "n": 9,
+              "median": 0.0195,
+              "p95": 0.0246,
+              "min": 0.0164,
+              "max": 0.0246,
+              "statuses": {
+                "valid": 9
+              }
+            },
+            "world|plaza/cards#0": {
+              "n": 9,
+              "median": 0.0031,
+              "p95": 0.0041,
+              "min": 0.002,
+              "max": 0.0041,
+              "statuses": {
+                "valid": 9
+              }
+            },
+            "world|plaza/bark#0": {
+              "n": 8,
+              "median": 0.002,
+              "p95": 0.0041,
+              "min": 0.001,
+              "max": 0.0041,
+              "statuses": {
+                "valid": 8
+              }
+            }
+          },
+          "byPass": {
+            "shadow0/map|plaza/blob": {
+              "draws": {
+                "n": 62,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 62,
+                "median": 13680,
+                "p95": 13680,
+                "min": 13680,
+                "max": 13680
+              }
+            },
+            "shadow0/map|plaza/cards": {
+              "draws": {
+                "n": 62,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 62,
+                "median": 674,
+                "p95": 674,
+                "min": 674,
+                "max": 674
+              }
+            },
+            "shadow0/map|w3/blob": {
+              "draws": {
+                "n": 62,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 62,
+                "median": 22027,
+                "p95": 22027,
+                "min": 22027,
+                "max": 22027
+              }
+            },
+            "shadow0/map|w3/cards": {
+              "draws": {
+                "n": 62,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 62,
+                "median": 424,
+                "p95": 424,
+                "min": 424,
+                "max": 424
+              }
+            },
+            "shadow0/map|plaza/bark": {
+              "draws": {
+                "n": 62,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 62,
+                "median": 2309,
+                "p95": 2309,
+                "min": 2309,
+                "max": 2309
+              }
+            },
+            "shadow0/map|w3/bark": {
+              "draws": {
+                "n": 62,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 62,
+                "median": 1550,
+                "p95": 1550,
+                "min": 1550,
+                "max": 1550
+              }
+            },
+            "world|w3/blob": {
+              "draws": {
+                "n": 62,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 62,
+                "median": 22027,
+                "p95": 22027,
+                "min": 22027,
+                "max": 22027
+              }
+            },
+            "world|plaza/blob": {
+              "draws": {
+                "n": 62,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 62,
+                "median": 13680,
+                "p95": 13680,
+                "min": 13680,
+                "max": 13680
+              }
+            },
+            "world|w3/cards": {
+              "draws": {
+                "n": 62,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 62,
+                "median": 424,
+                "p95": 424,
+                "min": 424,
+                "max": 424
+              }
+            },
+            "world|plaza/cards": {
+              "draws": {
+                "n": 62,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 62,
+                "median": 674,
+                "p95": 674,
+                "min": 674,
+                "max": 674
+              }
+            },
+            "world|w3/bark": {
+              "draws": {
+                "n": 62,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 62,
+                "median": 1550,
+                "p95": 1550,
+                "min": 1550,
+                "max": 1550
+              }
+            },
+            "world|plaza/bark": {
+              "draws": {
+                "n": 62,
+                "median": 1,
+                "p95": 1,
+                "min": 1,
+                "max": 1
+              },
+              "triangles": {
+                "n": 62,
+                "median": 2309,
+                "p95": 2309,
+                "min": 2309,
+                "max": 2309
+              }
+            }
+          },
+          "stats": {
+            "timer": true,
+            "disjoint": 0,
+            "invalid": 0,
+            "cap": 0,
+            "busy": 0,
+            "scheduled": 922,
+            "productionMatches": 1,
+            "maxPending": 3
+          },
+          "sys": {
+            "n": 6,
+            "foregroundRun": 0,
+            "cpuPct": {
+              "n": 6,
+              "median": 21.63,
+              "p95": 84.74,
+              "min": 20.17,
+              "max": 84.74
+            },
+            "gpuClockMHz": {
+              "n": 6,
+              "median": 1972,
+              "p95": 1972,
+              "min": 1957,
+              "max": 1972
+            },
+            "gpuUtilPercent": {
+              "n": 6,
+              "median": 42,
+              "p95": 46,
+              "min": 39,
+              "max": 46
+            },
+            "pStates": [
+              "P0"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+# Preserve native telemetry line endings for the SHA-256 manifest.
+* -text whitespace=trailing-space,space-before-tab,cr-at-eol

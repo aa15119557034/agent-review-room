@@ -79,3 +79,5 @@ node tools/timing.cjs <electron> <new-artifacts-folder-name>
 ## 原创素材制作源
 
 制作包内有五份可编辑 Blender 场景。独立目录中分别从已保存场景、从母树和造型配方重建，两条路径均重现同一份 1,194,979 字节的运行 ZIP 和全部四个 GLB。广场树为 13,921 个三角面，较上包少 2,742 个。其 512 × 512 RGBA 花枝图集独立于近处 W3。制作源 SHA-256 为 `9ad3538bb3341cf8fbc8152416e6686f7f90e5d83885da866cfa1f5295ec8417`。[可编辑源与 MIT 许可](../../assets/station-art/station-art-authoring.zip) · [逐件重建回执](authoring-rebuild.json)
+
+四次原生交错复测中，广场树三个部件在主画面和同一盏灯的阴影图中各画一次。两组同位置第三人称实走里，新花枝单次主绘中位数增加 26.6、27.6 微秒，实体花冠分别减少 11.3、13.3 微秒。普通主街仍有一组 P95 到 30.8 ms，整帧的波动无法归给这棵树。 [逐笔 GPU 时间、同位帧与原始数据](tree-gpu/README.md)
