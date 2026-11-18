@@ -20,7 +20,7 @@ const inAabb = (b) => `all( greaterThan( stW, ${vec3(b.slice(0, 3))} ) ) && all(
 /** One room: world position is taken into the lot frame (x along the frontage, z toward the street), y stays world. */
 const inRoom = (b) => `{ vec2 d = stW.xz - vec2( ${f3(b.o)} ); vec3 q = vec3( dot( d, vec2( ${f3(b.ex)} ) ), stW.y, dot( d, vec2( ${f3(b.ez)} ) ) );
       if ( all( greaterThan( q, ${vec3(b.min)} ) ) && all( lessThan( q, ${vec3(b.max)} ) ) ) stIn = 1.0; }`;
-function indoorGlsl(boxes) {
+export function indoorGlsl(boxes) {
   const u = unionBox(boxes);
   // Inside any room (inner wall faces, floor, ground-floor ceiling) the fill is off: rooms keep their warm lamp-lit colours.
   return `  vec3 stW = cameraPosition + geometryPosition * mat3( viewMatrix );

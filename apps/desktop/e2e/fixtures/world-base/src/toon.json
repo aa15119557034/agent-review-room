@@ -1,0 +1,95 @@
+{
+ "note": "Round 27 toon: ZZZ-style thin outlines (post, depth based, near side of a depth step) and 3-band cel light in the lit-material chunk. ?toon=off installs nothing and restores round 26 pixel for pixel. lit.levels = direct-light level of the dark / middle / lit band relative to full sun; lit.edges = where the bands change (relative to full sun); lit.width = smoothstep width of those steps. line.width in pixels at 1100 px height; sil = relative depth step that starts / completes a silhouette line; crease = 1/depth curvature range; fade = metres where lines start thinning / vanish. line.tint multiplies the local colour (cool, not black).",
+ "evening": {
+  "lit": {
+   "levels": [
+    0.0,
+    0.55,
+    1.0
+   ],
+   "edges": [
+    0.16,
+    0.6
+   ],
+   "width": 0.045,
+   "strength": 1.0
+  },
+  "line": {
+   "width": 1.5,
+   "strength": 0.95,
+   "sil": [
+    0.025,
+    0.09
+   ],
+   "crease": [
+    0.06,
+    0.18
+   ],
+   "creaseWeight": 0.8,
+   "fade": [
+    35,
+    115
+   ],
+   "tint": [
+    0.2,
+    0.21,
+    0.34
+   ]
+  },
+  "rim": {
+   "color": [
+    1.0,
+    0.52,
+    0.22
+   ],
+   "strength": 0.2,
+   "power": 3.0
+  }
+ },
+ "afternoon": {
+  "lit": {
+   "levels": [
+    0.0,
+    0.55,
+    1.0
+   ],
+   "edges": [
+    0.16,
+    0.6
+   ],
+   "width": 0.045,
+   "strength": 1.0
+  },
+  "line": {
+   "width": 1.5,
+   "strength": 0.95,
+   "sil": [
+    0.025,
+    0.09
+   ],
+   "crease": [
+    0.06,
+    0.18
+   ],
+   "creaseWeight": 0.8,
+   "fade": [
+    35,
+    115
+   ],
+   "tint": [
+    0.22,
+    0.23,
+    0.34
+   ]
+  },
+  "rim": {
+   "color": [
+    1.0,
+    0.62,
+    0.34
+   ],
+   "strength": 0.14,
+   "power": 3.0
+  }
+ }
+}

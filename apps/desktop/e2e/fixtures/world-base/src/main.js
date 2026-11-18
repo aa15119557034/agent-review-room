@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { createIsland, clearVegetationAreas } from './island.js';
 import { loadShadowTint, shadowTintEnabled, installLitShadowTint, patchIslandShadowTint, shadowTintUniforms, shopInteriorBoxes } from './shadow-tint.js';
+import { loadToon, toonEnabled, installLitToon, toonLineUniforms } from './toon.js';
 import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from './evening-glow.js';
 import * as layoutModule from '../upstream/sakuragaoka/src/world/layout.js';
 import { createStation } from './station.js';
@@ -131,6 +132,14 @@ async function init() {
     installLitShadowTint(shadowTint, boxes);
     look.setShadowTint(shadowTintUniforms(shadowTint), boxes, shadowTintParams.indoorFade);
     worldBase.shadowTint.indoorBox = boxes;
+  }
+  // Round 27: outlines + cel bands (?toon=off keeps round 26). Same shop-room boxes as the shadow tint.
+  if (toonEnabled()) {
+    const toonAll = await loadToon(), toonP = toonAll[timeOfDay === 'afternoon' ? 'afternoon' : 'evening'];
+    const toonBoxes = worldBase.shadowTint?.indoorBox || shopInteriorBoxes(layoutModule, station, 0.05);
+    installLitToon(toonP, toonBoxes);
+    look.setToonLines(toonLineUniforms(toonP));
+    worldBase.toon27 = { params: toonP };
   }
   // Interpolate the existing ramp values for softer boundaries between tones.
   const ramp = station.ctx.mat.gradientMap;

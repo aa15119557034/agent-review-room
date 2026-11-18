@@ -82,6 +82,28 @@ float wbEdge(vec2 uv) {
   return edge*(1.0-smoothstep(35.0,190.0,min(d0,dm)));
 }
 `;
+// Round 27 outline (only with ?toon not off): a line on the NEAR side of a depth step, plus faint creases.
+// Skips sky, and pixels whose coverage mask (scene alpha, see toon.js) is 0: foliage cut-outs, emissive, unlit.
+const LINES = /* glsl */`
+uniform float uLnOn, uLnC;
+uniform vec4 uLn, uLnS;   // width px / strength / fade near / fade far ; sil lo hi / crease lo hi
+uniform vec3 uLnCol;
+float wbLine(vec2 uv, float d0) {
+  if (d0 >= uFar*0.9 || d0 > uLn.w) return 0.0;
+  float mask = texture(tColor, uv).a;
+  if (mask < 0.5) return 0.0;
+  float thin = smoothstep(uLn.z, uLn.w, d0);
+  vec2 px = max(uLn.x*max(1.0, uRes.y/1100.0)*(1.0 - 0.4*thin), 1.0)/uRes;
+  float dl = wbDepth(uv-vec2(px.x,0.0)), dr = wbDepth(uv+vec2(px.x,0.0));
+  float du = wbDepth(uv+vec2(0.0,px.y)), dd = wbDepth(uv-vec2(0.0,px.y));
+  float dm = max(max(dl,dr),max(du,dd));
+  float sil = smoothstep(uLnS.x, uLnS.y, (dm-d0)/d0);
+  float i0 = 1.0/max(d0,0.05);
+  float lap = max(abs(1.0/max(dl,0.05)+1.0/max(dr,0.05)-2.0*i0),abs(1.0/max(du,0.05)+1.0/max(dd,0.05)-2.0*i0))/i0;
+  float cr = smoothstep(uLnS.z, uLnS.w, lap)*uLnC;
+  return max(sil, cr)*(1.0 - thin);
+}
+`;
 const BANDS = /* glsl */`
 uniform float uWorldToon;
 float wbBand(float n) {
@@ -136,10 +158,11 @@ export function createLook(renderer, camera) {
     tWorldDepth: pipeline.uDepth, uNear: { value: camera.near }, uFar: { value: camera.far },
     uProjScale: { value: 1 }, uAO: { value: 0.55 },
     uReversed: { value: pipeline.reversed ? 1 : 0 }, uToon: toon, uHaze: { value: 1 },
+    uLnOn: { value: 0 }, uLn: { value: new THREE.Vector4() }, uLnS: { value: new THREE.Vector4() }, uLnC: { value: 0 }, uLnCol: { value: new THREE.Vector3() },
     uShOn: { value: 0 }, uShAO: { value: new THREE.Vector3(1, 1, 1) }, uShMul: { value: new THREE.Vector3(1, 1, 1) },
     uShLift: { value: new THREE.Vector3() }, uShRange: { value: new THREE.Vector3(0.06, 0.42, 1) },
   });
-  mat.fragmentShader = insert(mat.fragmentShader, 'void main(){', `${OUTLINES}\nvoid main(){`, 'composite entry');
+  mat.fragmentShader = insert(mat.fragmentShader, 'void main(){', `${OUTLINES}\n${LINES}\nvoid main(){`, 'composite entry');
   mat.fragmentShader = insert(mat.fragmentShader, 'col *= uExposure;', `
     // Contact shadows (ZZZ refs: crates, benches, eaves all sit in soft dark creases).
     if (uAO*uToon > 0.0) {
@@ -147,9 +170,14 @@ export function createLook(renderer, camera) {
       col *= mix(1.0, wbA, wbAk);
       col *= mix(vec3(1.0), uShAO, (1.0 - wbA)*wbAk*uShOn); // creases fall into blue-violet, not grey
     }
+    if (uLnOn > 0.5) {
+      float wbL27 = wbLine(uv, wbDepth(uv))*uToon;
+      col = mix(col, col*uLnCol, wbL27*uLn.y); // round 27: dark, cool, hand-drawn line in the local colour
+    } else {
     float edge = wbEdge(uv)*uToon;
     vec3 line = mix(col*vec3(0.42,0.38,0.50),vec3(0.027,0.020,0.051),0.35);
     col = mix(col,line,edge*0.45); // ZZZ scenes keep only faint silhouettes; strong lines are for characters
+    }
     // Anime aerial perspective: distant land fades to a cool sky haze so the
     // island behind the station reads as backdrop. Sky (far plane) and high
     // aerial cameras are left alone.
@@ -236,6 +264,8 @@ export function createLook(renderer, camera) {
         Object.assign(m.uniforms, uniforms);
         m.vertexShader = insert(m.vertexShader, 'void main(){', `${TOWN}\nvoid main(){`, 'meadow town entry');
         if (this.kind === 'grass') {
+          // Round 27: coverage mask 0 (alpha is unused by the pipeline, colour is unchanged) so blades take no outline.
+          m.fragmentShader = insert(m.fragmentShader, 'gl_FragColor = vec4(col, 1.0);', 'gl_FragColor = vec4(col, 0.0);', 'grass outline mask');
           m.vertexShader = insert(m.vertexShader, '* mix(0.88, 1.14, cl.w);',
             `* mix(0.88, 1.14, cl.w);
   vTint = wbTownGreen(vTint, wbTownMask(xz));`, 'grass town tint');
@@ -283,6 +313,11 @@ export function createLook(renderer, camera) {
     setTownGreenery(rect, strength = 1) {
       townUniforms.uTownRect.value.set(...rect);
       townUniforms.uTownGreen.value.x = strength;
+    },
+    /** Round 27: uniforms from toonLineUniforms(); null keeps the round 26 outline. */
+    setToonLines(u) {
+      if (!u) { mat.uniforms.uLnOn.value = 0; return; }
+      for (const [k, v] of Object.entries(u)) mat.uniforms[k].value.copy ? mat.uniforms[k].value.copy(v.value) : (mat.uniforms[k].value = v.value);
     },
     setAO(value) { mat.uniforms.uAO.value = value; },
     /** Round 24: uniforms from shadowTintUniforms(); null switches the composite tint off. */
