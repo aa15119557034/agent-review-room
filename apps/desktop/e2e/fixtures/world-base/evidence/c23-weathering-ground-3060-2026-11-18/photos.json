@@ -1,0 +1,2262 @@
+{
+  "sceneRevision": "343fbe1e6f9e89fa4dc9ce9a6e0c51159961d42d",
+  "checkout": "343fbe1e6f9e89fa4dc9ce9a6e0c51159961d42d",
+  "previous": "3739b437eb477001bee43640accd95cd62701cc1",
+  "size": [
+    1440,
+    900
+  ],
+  "sessions": {
+    "evening-on": {
+      "started": "2026-11-18T02:28:36.116Z",
+      "ended": "2026-11-18T02:29:20.936Z",
+      "exit": 1,
+      "stage": "complete",
+      "renderOk": true,
+      "transportClean": false,
+      "jsExceptions": 0,
+      "httpErrors": 0,
+      "requests": [
+        {
+          "file": "boulders.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "driver": "d03dd8a023fe921decdab73513994bb659af34b220d2035c2077c879dddb9c70",
+      "materials": {
+        "vehicleVolumes": 4,
+        "materials": 144,
+        "meshes": 379,
+        "classes": {
+          "wall": 23,
+          "prop": 20,
+          "atlas": 101
+        },
+        "groundSamples": 228000,
+        "buildingSeeds": 7,
+        "extraDrawCalls": 0,
+        "noiseTaps": "2 tiling-noise fetches (4 channels each) + 1 white-noise fetch x2 + 1 height texture + 6 derivatives/fragment; no loops, no procedural hashing"
+      },
+      "weatheringInitializationMs": 627,
+      "decals": {
+        "posters": 10,
+        "stickers": 14,
+        "doodles": 2,
+        "rejected": 0,
+        "byArea": {
+          "01-left-wall": [
+            {
+              "kind": "poster",
+              "at": [
+                -4.84,
+                1.55,
+                30.2
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -4.84,
+                1.3,
+                29.3
+              ]
+            },
+            {
+              "kind": "poster",
+              "at": [
+                -4.84,
+                1.45,
+                27.2
+              ]
+            }
+          ],
+          "01-left-pole": [
+            {
+              "kind": "sticker",
+              "at": [
+                -3.35,
+                1.75,
+                28.84
+              ]
+            }
+          ],
+          "01-right-shop": [
+            {
+              "kind": "poster",
+              "at": [
+                6.42,
+                1.5,
+                24.46
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                5.55,
+                3.05,
+                28.28
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                6.27,
+                1.5,
+                21.75
+              ]
+            }
+          ],
+          "01-right-pole": [
+            {
+              "kind": "sticker",
+              "at": [
+                3.32,
+                1.9,
+                23.13
+              ]
+            }
+          ],
+          "21-mailboxes": [
+            {
+              "kind": "poster",
+              "at": [
+                -3,
+                6.75,
+                -123.25
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -1.85,
+                6.25,
+                -123.25
+              ]
+            }
+          ],
+          "main": [
+            {
+              "kind": "sticker",
+              "at": [
+                8.6,
+                1.03,
+                13.67
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                6,
+                1.2,
+                20.33
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                8.6,
+                1.1,
+                6.07
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                5.05,
+                1.12,
+                14.69
+              ]
+            }
+          ],
+          "laundry": [
+            {
+              "kind": "poster",
+              "at": [
+                7.37,
+                5.83,
+                -123.25
+              ]
+            },
+            {
+              "kind": "poster",
+              "at": [
+                6.14,
+                6.54,
+                -123.25
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -2.54,
+                5.72,
+                -123.25
+              ]
+            }
+          ],
+          "rear": [
+            {
+              "kind": "poster",
+              "at": [
+                -15.41,
+                6.69,
+                -132.5
+              ]
+            },
+            {
+              "kind": "poster",
+              "at": [
+                -12.39,
+                6.76,
+                -132.5
+              ]
+            },
+            {
+              "kind": "poster",
+              "at": [
+                17.04,
+                5.78,
+                -131
+              ]
+            },
+            {
+              "kind": "poster",
+              "at": [
+                18.97,
+                6.11,
+                -131
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -17.97,
+                7.1,
+                -132.5
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -0.21,
+                6.41,
+                -131
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -3.23,
+                5.95,
+                -131
+              ]
+            },
+            {
+              "kind": "doodle",
+              "at": [
+                24.17,
+                5.61,
+                -131
+              ]
+            },
+            {
+              "kind": "doodle",
+              "at": [
+                -21.7,
+                6.43,
+                -132.5
+              ]
+            }
+          ]
+        },
+        "source": "baked",
+        "planMs": 1.8,
+        "rays": 0,
+        "explicit": {
+          "placed": 10,
+          "adjusted": [],
+          "missed": []
+        },
+        "drawCalls": 1,
+        "triangles": 52
+      },
+      "planFingerprint": "1015:2741945:285456.7:910574.7",
+      "leftWallItems": [
+        {
+          "area": "01-left-wall",
+          "cell": 0,
+          "kind": "poster",
+          "pos": [
+            -4.84,
+            1.55,
+            30.2
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            0.0105,
+            -0.9999
+          ],
+          "w": 0.484,
+          "h": 0.671
+        },
+        {
+          "area": "01-left-wall",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            -4.84,
+            1.3,
+            29.3
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.1831,
+            -0.9831
+          ],
+          "w": 0.3,
+          "h": 0.3
+        },
+        {
+          "area": "01-left-wall",
+          "cell": 3,
+          "kind": "poster",
+          "pos": [
+            -4.84,
+            1.45,
+            27.2
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.0005,
+            -1
+          ],
+          "w": 0.44,
+          "h": 0.61
+        }
+      ]
+    },
+    "evening-off": {
+      "started": "2026-11-18T02:29:21.639Z",
+      "ended": "2026-11-18T02:30:07.247Z",
+      "exit": 1,
+      "stage": "complete",
+      "renderOk": true,
+      "transportClean": false,
+      "jsExceptions": 0,
+      "httpErrors": 0,
+      "requests": [
+        {
+          "file": "boulders.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "file": "plastic_crate_02.bin",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "driver": "d03dd8a023fe921decdab73513994bb659af34b220d2035c2077c879dddb9c70",
+      "materials": {
+        "vehicleVolumes": 4,
+        "materials": 144,
+        "meshes": 379,
+        "classes": {
+          "wall": 23,
+          "prop": 20,
+          "atlas": 101
+        },
+        "groundSamples": 228000,
+        "buildingSeeds": 7,
+        "extraDrawCalls": 0,
+        "noiseTaps": "2 tiling-noise fetches (4 channels each) + 1 white-noise fetch x2 + 1 height texture + 6 derivatives/fragment; no loops, no procedural hashing"
+      },
+      "weatheringInitializationMs": 634,
+      "decals": {
+        "posters": 10,
+        "stickers": 14,
+        "doodles": 2,
+        "rejected": 0,
+        "byArea": {
+          "01-left-wall": [
+            {
+              "kind": "poster",
+              "at": [
+                -4.84,
+                1.55,
+                30.2
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -4.84,
+                1.3,
+                29.3
+              ]
+            },
+            {
+              "kind": "poster",
+              "at": [
+                -4.84,
+                1.45,
+                27.2
+              ]
+            }
+          ],
+          "01-left-pole": [
+            {
+              "kind": "sticker",
+              "at": [
+                -3.35,
+                1.75,
+                28.84
+              ]
+            }
+          ],
+          "01-right-shop": [
+            {
+              "kind": "poster",
+              "at": [
+                6.42,
+                1.5,
+                24.46
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                5.55,
+                3.05,
+                28.28
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                6.27,
+                1.5,
+                21.75
+              ]
+            }
+          ],
+          "01-right-pole": [
+            {
+              "kind": "sticker",
+              "at": [
+                3.32,
+                1.9,
+                23.13
+              ]
+            }
+          ],
+          "21-mailboxes": [
+            {
+              "kind": "poster",
+              "at": [
+                -3,
+                6.75,
+                -123.25
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -1.85,
+                6.25,
+                -123.25
+              ]
+            }
+          ],
+          "main": [
+            {
+              "kind": "sticker",
+              "at": [
+                8.6,
+                1.03,
+                13.67
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                6,
+                1.2,
+                20.33
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                8.6,
+                1.1,
+                6.07
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                5.05,
+                1.12,
+                14.69
+              ]
+            }
+          ],
+          "laundry": [
+            {
+              "kind": "poster",
+              "at": [
+                7.37,
+                5.83,
+                -123.25
+              ]
+            },
+            {
+              "kind": "poster",
+              "at": [
+                6.14,
+                6.54,
+                -123.25
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -2.54,
+                5.72,
+                -123.25
+              ]
+            }
+          ],
+          "rear": [
+            {
+              "kind": "poster",
+              "at": [
+                -15.41,
+                6.69,
+                -132.5
+              ]
+            },
+            {
+              "kind": "poster",
+              "at": [
+                -12.39,
+                6.76,
+                -132.5
+              ]
+            },
+            {
+              "kind": "poster",
+              "at": [
+                17.04,
+                5.78,
+                -131
+              ]
+            },
+            {
+              "kind": "poster",
+              "at": [
+                18.97,
+                6.11,
+                -131
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -17.97,
+                7.1,
+                -132.5
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -0.21,
+                6.41,
+                -131
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -3.23,
+                5.95,
+                -131
+              ]
+            },
+            {
+              "kind": "doodle",
+              "at": [
+                24.17,
+                5.61,
+                -131
+              ]
+            },
+            {
+              "kind": "doodle",
+              "at": [
+                -21.7,
+                6.43,
+                -132.5
+              ]
+            }
+          ]
+        },
+        "source": "baked",
+        "planMs": 1.9,
+        "rays": 0,
+        "explicit": {
+          "placed": 10,
+          "adjusted": [],
+          "missed": []
+        },
+        "drawCalls": 1,
+        "triangles": 52
+      },
+      "planFingerprint": "1015:2741945:285456.7:910574.7",
+      "leftWallItems": [
+        {
+          "area": "01-left-wall",
+          "cell": 0,
+          "kind": "poster",
+          "pos": [
+            -4.84,
+            1.55,
+            30.2
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            0.0105,
+            -0.9999
+          ],
+          "w": 0.484,
+          "h": 0.671
+        },
+        {
+          "area": "01-left-wall",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            -4.84,
+            1.3,
+            29.3
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.1831,
+            -0.9831
+          ],
+          "w": 0.3,
+          "h": 0.3
+        },
+        {
+          "area": "01-left-wall",
+          "cell": 3,
+          "kind": "poster",
+          "pos": [
+            -4.84,
+            1.45,
+            27.2
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.0005,
+            -1
+          ],
+          "w": 0.44,
+          "h": 0.61
+        }
+      ]
+    },
+    "afternoon-on": {
+      "started": "2026-11-18T02:38:49.993Z",
+      "ended": "2026-11-18T02:39:33.395Z",
+      "exit": 1,
+      "stage": "complete",
+      "renderOk": true,
+      "transportClean": false,
+      "jsExceptions": 0,
+      "httpErrors": 0,
+      "requests": [
+        {
+          "file": "boulders.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "driver": "d03dd8a023fe921decdab73513994bb659af34b220d2035c2077c879dddb9c70",
+      "materials": {
+        "vehicleVolumes": 4,
+        "materials": 144,
+        "meshes": 379,
+        "classes": {
+          "wall": 23,
+          "prop": 20,
+          "atlas": 101
+        },
+        "groundSamples": 228000,
+        "buildingSeeds": 7,
+        "extraDrawCalls": 0,
+        "noiseTaps": "2 tiling-noise fetches (4 channels each) + 1 white-noise fetch x2 + 1 height texture + 6 derivatives/fragment; no loops, no procedural hashing"
+      },
+      "weatheringInitializationMs": 666,
+      "decals": {
+        "posters": 10,
+        "stickers": 14,
+        "doodles": 2,
+        "rejected": 0,
+        "byArea": {
+          "01-left-wall": [
+            {
+              "kind": "poster",
+              "at": [
+                -4.84,
+                1.55,
+                30.2
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -4.84,
+                1.3,
+                29.3
+              ]
+            },
+            {
+              "kind": "poster",
+              "at": [
+                -4.84,
+                1.45,
+                27.2
+              ]
+            }
+          ],
+          "01-left-pole": [
+            {
+              "kind": "sticker",
+              "at": [
+                -3.35,
+                1.75,
+                28.84
+              ]
+            }
+          ],
+          "01-right-shop": [
+            {
+              "kind": "poster",
+              "at": [
+                6.42,
+                1.5,
+                24.46
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                5.55,
+                3.05,
+                28.28
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                6.27,
+                1.5,
+                21.75
+              ]
+            }
+          ],
+          "01-right-pole": [
+            {
+              "kind": "sticker",
+              "at": [
+                3.32,
+                1.9,
+                23.13
+              ]
+            }
+          ],
+          "21-mailboxes": [
+            {
+              "kind": "poster",
+              "at": [
+                -3,
+                6.75,
+                -123.25
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -1.85,
+                6.25,
+                -123.25
+              ]
+            }
+          ],
+          "main": [
+            {
+              "kind": "sticker",
+              "at": [
+                8.6,
+                1.03,
+                13.67
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                6,
+                1.2,
+                20.33
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                8.6,
+                1.1,
+                6.07
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                5.05,
+                1.12,
+                14.69
+              ]
+            }
+          ],
+          "laundry": [
+            {
+              "kind": "poster",
+              "at": [
+                7.37,
+                5.83,
+                -123.25
+              ]
+            },
+            {
+              "kind": "poster",
+              "at": [
+                6.14,
+                6.54,
+                -123.25
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -2.54,
+                5.72,
+                -123.25
+              ]
+            }
+          ],
+          "rear": [
+            {
+              "kind": "poster",
+              "at": [
+                -15.41,
+                6.69,
+                -132.5
+              ]
+            },
+            {
+              "kind": "poster",
+              "at": [
+                -12.39,
+                6.76,
+                -132.5
+              ]
+            },
+            {
+              "kind": "poster",
+              "at": [
+                17.04,
+                5.78,
+                -131
+              ]
+            },
+            {
+              "kind": "poster",
+              "at": [
+                18.97,
+                6.11,
+                -131
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -17.97,
+                7.1,
+                -132.5
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -0.21,
+                6.41,
+                -131
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -3.23,
+                5.95,
+                -131
+              ]
+            },
+            {
+              "kind": "doodle",
+              "at": [
+                24.17,
+                5.61,
+                -131
+              ]
+            },
+            {
+              "kind": "doodle",
+              "at": [
+                -21.7,
+                6.43,
+                -132.5
+              ]
+            }
+          ]
+        },
+        "source": "baked",
+        "planMs": 3,
+        "rays": 0,
+        "explicit": {
+          "placed": 10,
+          "adjusted": [],
+          "missed": []
+        },
+        "drawCalls": 1,
+        "triangles": 52
+      },
+      "planFingerprint": "1015:2741945:285456.7:910574.7",
+      "leftWallItems": [
+        {
+          "area": "01-left-wall",
+          "cell": 0,
+          "kind": "poster",
+          "pos": [
+            -4.84,
+            1.55,
+            30.2
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            0.0105,
+            -0.9999
+          ],
+          "w": 0.484,
+          "h": 0.671
+        },
+        {
+          "area": "01-left-wall",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            -4.84,
+            1.3,
+            29.3
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.1831,
+            -0.9831
+          ],
+          "w": 0.3,
+          "h": 0.3
+        },
+        {
+          "area": "01-left-wall",
+          "cell": 3,
+          "kind": "poster",
+          "pos": [
+            -4.84,
+            1.45,
+            27.2
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.0005,
+            -1
+          ],
+          "w": 0.44,
+          "h": 0.61
+        }
+      ]
+    },
+    "afternoon-off": {
+      "started": "2026-11-18T02:39:34.077Z",
+      "ended": "2026-11-18T02:40:16.493Z",
+      "exit": 1,
+      "stage": "complete",
+      "renderOk": true,
+      "transportClean": false,
+      "jsExceptions": 0,
+      "httpErrors": 0,
+      "requests": [
+        {
+          "file": "menhir.glb",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "file": "plastic_crate_02_1k.gltf",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "file": "plastic_crate_02.bin",
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "driver": "d03dd8a023fe921decdab73513994bb659af34b220d2035c2077c879dddb9c70",
+      "materials": {
+        "vehicleVolumes": 4,
+        "materials": 144,
+        "meshes": 379,
+        "classes": {
+          "wall": 23,
+          "prop": 20,
+          "atlas": 101
+        },
+        "groundSamples": 228000,
+        "buildingSeeds": 7,
+        "extraDrawCalls": 0,
+        "noiseTaps": "2 tiling-noise fetches (4 channels each) + 1 white-noise fetch x2 + 1 height texture + 6 derivatives/fragment; no loops, no procedural hashing"
+      },
+      "weatheringInitializationMs": 620.8,
+      "decals": {
+        "posters": 10,
+        "stickers": 14,
+        "doodles": 2,
+        "rejected": 0,
+        "byArea": {
+          "01-left-wall": [
+            {
+              "kind": "poster",
+              "at": [
+                -4.84,
+                1.55,
+                30.2
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -4.84,
+                1.3,
+                29.3
+              ]
+            },
+            {
+              "kind": "poster",
+              "at": [
+                -4.84,
+                1.45,
+                27.2
+              ]
+            }
+          ],
+          "01-left-pole": [
+            {
+              "kind": "sticker",
+              "at": [
+                -3.35,
+                1.75,
+                28.84
+              ]
+            }
+          ],
+          "01-right-shop": [
+            {
+              "kind": "poster",
+              "at": [
+                6.42,
+                1.5,
+                24.46
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                5.55,
+                3.05,
+                28.28
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                6.27,
+                1.5,
+                21.75
+              ]
+            }
+          ],
+          "01-right-pole": [
+            {
+              "kind": "sticker",
+              "at": [
+                3.32,
+                1.9,
+                23.13
+              ]
+            }
+          ],
+          "21-mailboxes": [
+            {
+              "kind": "poster",
+              "at": [
+                -3,
+                6.75,
+                -123.25
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -1.85,
+                6.25,
+                -123.25
+              ]
+            }
+          ],
+          "main": [
+            {
+              "kind": "sticker",
+              "at": [
+                8.6,
+                1.03,
+                13.67
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                6,
+                1.2,
+                20.33
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                8.6,
+                1.1,
+                6.07
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                5.05,
+                1.12,
+                14.69
+              ]
+            }
+          ],
+          "laundry": [
+            {
+              "kind": "poster",
+              "at": [
+                7.37,
+                5.83,
+                -123.25
+              ]
+            },
+            {
+              "kind": "poster",
+              "at": [
+                6.14,
+                6.54,
+                -123.25
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -2.54,
+                5.72,
+                -123.25
+              ]
+            }
+          ],
+          "rear": [
+            {
+              "kind": "poster",
+              "at": [
+                -15.41,
+                6.69,
+                -132.5
+              ]
+            },
+            {
+              "kind": "poster",
+              "at": [
+                -12.39,
+                6.76,
+                -132.5
+              ]
+            },
+            {
+              "kind": "poster",
+              "at": [
+                17.04,
+                5.78,
+                -131
+              ]
+            },
+            {
+              "kind": "poster",
+              "at": [
+                18.97,
+                6.11,
+                -131
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -17.97,
+                7.1,
+                -132.5
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -0.21,
+                6.41,
+                -131
+              ]
+            },
+            {
+              "kind": "sticker",
+              "at": [
+                -3.23,
+                5.95,
+                -131
+              ]
+            },
+            {
+              "kind": "doodle",
+              "at": [
+                24.17,
+                5.61,
+                -131
+              ]
+            },
+            {
+              "kind": "doodle",
+              "at": [
+                -21.7,
+                6.43,
+                -132.5
+              ]
+            }
+          ]
+        },
+        "source": "baked",
+        "planMs": 2.7,
+        "rays": 0,
+        "explicit": {
+          "placed": 10,
+          "adjusted": [],
+          "missed": []
+        },
+        "drawCalls": 1,
+        "triangles": 52
+      },
+      "planFingerprint": "1015:2741945:285456.7:910574.7",
+      "leftWallItems": [
+        {
+          "area": "01-left-wall",
+          "cell": 0,
+          "kind": "poster",
+          "pos": [
+            -4.84,
+            1.55,
+            30.2
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            0.0105,
+            -0.9999
+          ],
+          "w": 0.484,
+          "h": 0.671
+        },
+        {
+          "area": "01-left-wall",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            -4.84,
+            1.3,
+            29.3
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.1831,
+            -0.9831
+          ],
+          "w": 0.3,
+          "h": 0.3
+        },
+        {
+          "area": "01-left-wall",
+          "cell": 3,
+          "kind": "poster",
+          "pos": [
+            -4.84,
+            1.45,
+            27.2
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.0005,
+            -1
+          ],
+          "w": 0.44,
+          "h": 0.61
+        }
+      ]
+    }
+  },
+  "apartmentMaterials": {
+    "apartment-pbr-plaster": {
+      "type": "MeshStandardMaterial",
+      "maps": {
+        "map": {
+          "url": "/apartment-assets/white_plaster_02/white_plaster_02_diff_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-plaster-diff"
+        },
+        "normalMap": {
+          "url": "/apartment-assets/white_plaster_02/white_plaster_02_nor_gl_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-plaster-nor_gl"
+        },
+        "roughnessMap": {
+          "url": "/apartment-assets/white_plaster_02/white_plaster_02_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-plaster-arm"
+        },
+        "metalnessMap": {
+          "url": "/apartment-assets/white_plaster_02/white_plaster_02_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-plaster-arm"
+        },
+        "aoMap": {
+          "url": "/apartment-assets/white_plaster_02/white_plaster_02_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-plaster-arm"
+        }
+      }
+    },
+    "apartment-pbr-metal": {
+      "type": "MeshStandardMaterial",
+      "maps": {
+        "map": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-diff"
+        },
+        "normalMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-nor_gl"
+        },
+        "roughnessMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-arm"
+        },
+        "metalnessMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-arm"
+        },
+        "aoMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-arm"
+        }
+      }
+    },
+    "apartment-pbr-tile": {
+      "type": "MeshStandardMaterial",
+      "maps": {
+        "map": {
+          "url": "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_diff_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-tile-diff"
+        },
+        "normalMap": {
+          "url": "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_nor_gl_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-tile-nor_gl"
+        },
+        "roughnessMap": {
+          "url": "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-tile-arm"
+        },
+        "metalnessMap": {
+          "url": "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-tile-arm"
+        },
+        "aoMap": {
+          "url": "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-tile-arm"
+        }
+      }
+    },
+    "apartment-pbr-roof": {
+      "type": "MeshStandardMaterial",
+      "maps": {
+        "map": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-diff"
+        },
+        "normalMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-nor_gl"
+        },
+        "roughnessMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-arm"
+        },
+        "metalnessMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-arm"
+        },
+        "aoMap": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg",
+          "width": 1024,
+          "height": 1024,
+          "textureName": "apartment-metal-arm"
+        }
+      }
+    }
+  },
+  "pairs": {
+    "evening": [
+      {
+        "id": "01",
+        "view": "station-street",
+        "camera": {
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -3.2237959341941705e-05,
+            0.9999462663720154
+          ],
+          "fov": 58
+        },
+        "time": 14,
+        "stationTime": 14,
+        "ao": 0.55,
+        "c22versusC23": {
+          "pixels": 1296000,
+          "changed": 485084,
+          "above4": 246335,
+          "above8": 144098,
+          "maxChannelDelta": 136
+        },
+        "offVersusOn": {
+          "pixels": 1296000,
+          "changed": 484683,
+          "above4": 206972,
+          "above8": 84707,
+          "maxChannelDelta": 134
+        },
+        "c22On": {
+          "file": "images/evening-01-on.jpg",
+          "jpegSha256": "1e25db6ff5cd2596419d85441443cbcb01819627d966159afb5ba5980b87881e",
+          "pngSha256": "2b0dc859ad32dc55c4b3ac27b49799fe5ce6cfe28d95d517437ed097340b9573"
+        },
+        "on": {
+          "file": "images/evening-01-on.jpg",
+          "jpegSha256": "9774f1846283b2029fbdf8ba0cf356152502ed133560544e35d3377a64886369",
+          "pngSha256": "9d6f43d37db9646c952550109035f925ac90a8411e5bb249387fb331859cdcdc"
+        },
+        "off": {
+          "file": "images/evening-01-off.jpg",
+          "jpegSha256": "30372d8757133849c2f4ec911d2fb4334a73eb0ab6ae4b3e6c9fa53518a67d58",
+          "pngSha256": "4fac20d15a54e9689d8b89cd7ab9c1d26d45c09712e7c23ca5a34b508aaa21d7"
+        }
+      },
+      {
+        "id": "20",
+        "view": "20-rear-eye",
+        "camera": {
+          "position": [
+            273,
+            14.755245542526229,
+            758
+          ],
+          "quaternion": [
+            -0.00013011891877658623,
+            0.9145142483742376,
+            -0.00029414054360230415,
+            -0.40455356390830466
+          ],
+          "fov": 58
+        },
+        "time": 14,
+        "stationTime": 14,
+        "ao": 0.55,
+        "c22versusC23": {
+          "pixels": 1296000,
+          "changed": 525681,
+          "above4": 345766,
+          "above8": 187193,
+          "maxChannelDelta": 49
+        },
+        "offVersusOn": {
+          "pixels": 1296000,
+          "changed": 524695,
+          "above4": 244914,
+          "above8": 52136,
+          "maxChannelDelta": 84
+        },
+        "c22On": {
+          "file": "images/evening-20-on.jpg",
+          "jpegSha256": "8f21c446600c6f73e132a59a2658ee7231a9b6936a2b6bb63dbaa6bb99a8d38a",
+          "pngSha256": "f4bf02a34f50446c8a6c2f289bc9d479c7163de6286a99078cec42e2ef877e7a"
+        },
+        "on": {
+          "file": "images/evening-20-on.jpg",
+          "jpegSha256": "aa3aca66d7bfffa4b1369f9f91710f091910515e8e0ba13f782bfebee30d4897",
+          "pngSha256": "2ab1f31d47cfc63d4cd20386346009a5300e5faf004286a0d992daf5011a2767"
+        },
+        "off": {
+          "file": "images/evening-20-off.jpg",
+          "jpegSha256": "536254441b9af63872e5254ebf1cee73196d87c411964ab21599e21e1fc1874b",
+          "pngSha256": "e2034f91af5b663dd22f9741ce0f4bfdb39fec47494013ede74ebcddc74a5611"
+        }
+      },
+      {
+        "id": "21",
+        "view": "21-front-eye",
+        "camera": {
+          "position": [
+            274,
+            12.87812709172567,
+            783
+          ],
+          "quaternion": [
+            0.07422133960767584,
+            -0.5103582416049142,
+            0.044271975994965136,
+            0.8556083508909221
+          ],
+          "fov": 58
+        },
+        "time": 14,
+        "stationTime": 14,
+        "ao": 0.55,
+        "c22versusC23": {
+          "pixels": 1296000,
+          "changed": 531870,
+          "above4": 224715,
+          "above8": 105625,
+          "maxChannelDelta": 47
+        },
+        "offVersusOn": {
+          "pixels": 1296000,
+          "changed": 563418,
+          "above4": 261902,
+          "above8": 130853,
+          "maxChannelDelta": 194
+        },
+        "c22On": {
+          "file": "images/evening-21-on.jpg",
+          "jpegSha256": "8fed136b61beb1a3d1c5588f03376f42617529b3d2ef260fff8e683b4892a3e8",
+          "pngSha256": "70994cfb770d60973036a21f40fc3934ce73797d3b75284e3e4ff979b16cc238"
+        },
+        "on": {
+          "file": "images/evening-21-on.jpg",
+          "jpegSha256": "a4db66cb7694fe685bacee6cb58031866c7523904738b8ff1b46dcd4d062e72f",
+          "pngSha256": "b2c7f4e0b27fa56d03ae072a05a75c728a204f0c619c294c9cfae4efcdcb345a"
+        },
+        "off": {
+          "file": "images/evening-21-off.jpg",
+          "jpegSha256": "dd3227c778642260ebdcd18facd05d148026e6510dcbe62d02ebe853ef0223ff",
+          "pngSha256": "3c44d211f27a99e0d3e2ca9e001737118ff3814ebed7a414b099e7154f70c8fc"
+        }
+      },
+      {
+        "id": "23",
+        "view": "service-corner",
+        "camera": {
+          "position": [
+            308.4,
+            9.612,
+            872.9
+          ],
+          "quaternion": [
+            -0.08432325046436126,
+            0.5331397072650681,
+            0.05351200213385738,
+            0.8401119613456697
+          ],
+          "fov": 55
+        },
+        "time": 14,
+        "stationTime": 14,
+        "ao": 0.55,
+        "c22versusC23": {
+          "pixels": 1296000,
+          "changed": 971830,
+          "above4": 530385,
+          "above8": 239306,
+          "maxChannelDelta": 42
+        },
+        "offVersusOn": {
+          "pixels": 1296000,
+          "changed": 947424,
+          "above4": 316283,
+          "above8": 124561,
+          "maxChannelDelta": 42
+        },
+        "c22On": {
+          "file": "images/evening-23-on.jpg",
+          "jpegSha256": "068744b80ca5cefbfc60e90ffd9818d5a59ce79c076886b3aa05d20a8a1bf4fa",
+          "pngSha256": "7fda757320ae2e6c1b6d2bfcfe76d320195d29326fb69ab3fa7ad1fe3709a30c"
+        },
+        "on": {
+          "file": "images/evening-23-on.jpg",
+          "jpegSha256": "5c6916d5ad26fbe1ea2fb6e02a982fccb5722bd7ed8a5c8537ebb6258a1e6255",
+          "pngSha256": "53148bd18ff282480aa552ccfe850ea0598e2f14a9c0f0fe001a537eb7d1a819"
+        },
+        "off": {
+          "file": "images/evening-23-off.jpg",
+          "jpegSha256": "7b68ee29b72e4e0aaaba26fba545995c8559b3f487ec5e6cd8f086c77f31cb5b",
+          "pngSha256": "cf9fb8e8f642cdd43770c92de9f3d485c5e155186c9845a035a41f0fe857a878"
+        }
+      },
+      {
+        "id": "24",
+        "view": "laundry-details",
+        "camera": {
+          "position": [
+            288,
+            14.384808464050293,
+            777.9
+          ],
+          "quaternion": [
+            -0.15522850149956677,
+            0.6173580660361093,
+            0.12595148976979553,
+            0.7608609287163607
+          ],
+          "fov": 55
+        },
+        "time": 14,
+        "stationTime": 14,
+        "ao": 0.55,
+        "c22versusC23": {
+          "pixels": 1296000,
+          "changed": 745270,
+          "above4": 496257,
+          "above8": 253528,
+          "maxChannelDelta": 67
+        },
+        "offVersusOn": {
+          "pixels": 1296000,
+          "changed": 797757,
+          "above4": 625439,
+          "above8": 291692,
+          "maxChannelDelta": 169
+        },
+        "c22On": {
+          "file": "images/evening-24-on.jpg",
+          "jpegSha256": "f0e7ebc61c98ba3af8200c9556041499671eefd1e914dcc1fa8b715a2d1d1061",
+          "pngSha256": "eed8e20a5f8792a58b82211fc520fc08e6b33ba5cf99ace6e53584f364e5d442"
+        },
+        "on": {
+          "file": "images/evening-24-on.jpg",
+          "jpegSha256": "38a062168fce61ee8b1c97f27f274462a1fc26a6cf5f72a74256dcea4135018d",
+          "pngSha256": "df58a15d4beb2cea636381d793ea471d5889ebbc4204d9f5c94fb84528fb7af8"
+        },
+        "off": {
+          "file": "images/evening-24-off.jpg",
+          "jpegSha256": "721798b7dd3dbfc30360292132da29b67909e8dcb702dafdfea9f39f47807fc7",
+          "pngSha256": "0703b160b61ee4fa599775621675f5f76b26144756785b99bbe9ec7646ba2c85"
+        }
+      },
+      {
+        "id": "van",
+        "view": "van-side",
+        "camera": {
+          "position": [
+            276.3147277851227,
+            11.210013480772632,
+            971.1462175645175
+          ],
+          "quaternion": [
+            -0.029182465008512196,
+            -0.7830517056478151,
+            -0.03684648464040197,
+            0.6201779958912754
+          ],
+          "fov": 47
+        },
+        "time": 14,
+        "stationTime": 14,
+        "ao": 0.55,
+        "c22versusC23": {
+          "pixels": 1296000,
+          "changed": 812427,
+          "above4": 624305,
+          "above8": 519915,
+          "maxChannelDelta": 48
+        },
+        "offVersusOn": {
+          "pixels": 1296000,
+          "changed": 753589,
+          "above4": 598498,
+          "above8": 473757,
+          "maxChannelDelta": 42
+        },
+        "c22On": {
+          "file": "images/evening-van-on.jpg",
+          "jpegSha256": "2bf852c5ccaf4248e19ddf81d5998b6ff3a77456dfd802c559dca27a2689784e",
+          "pngSha256": "f0f452b82800f0b703a8707a34020813a98c294a9f94ba401e0197edb80b314c"
+        },
+        "vehicle": {
+          "name": "keiVan",
+          "x": 0.8557300687226022,
+          "z": 72.21476717045118,
+          "y": 1.890013480772633,
+          "rotY": -3.0340016125027476,
+          "W": 1.475,
+          "L": 3.5300000000000002,
+          "roofY": 3.890013480772633
+        },
+        "vehicleRegions": {
+          "door": {
+            "rect": [
+              452,
+              474,
+              648,
+              527
+            ],
+            "c22OffOn": {
+              "pixels": 10388,
+              "changed": 9484,
+              "above4": 9356,
+              "above8": 1639,
+              "maxChannelDelta": 10
+            },
+            "c23OffOn": {
+              "pixels": 10388,
+              "changed": 115,
+              "above4": 0,
+              "above8": 0,
+              "maxChannelDelta": 1
+            }
+          }
+        },
+        "on": {
+          "file": "images/evening-van-on.jpg",
+          "jpegSha256": "c9bcfce977b4639df7afcd25518fc9328bb3b48a15c17a8f99af3fde47017d8a",
+          "pngSha256": "e929fe4b9a42954e22b28452861b77d6661818a0d383e5d5e60955d7ed1d47e6"
+        },
+        "off": {
+          "file": "images/evening-van-off.jpg",
+          "jpegSha256": "65425ae29fb79c821f85486fcf1764d8b2beffba22d501ab490e506ea761dfdb",
+          "pngSha256": "877ac2861b38bbc922534e2b9082ab299f91a3e0a9f082c3deda3f86fe1131af"
+        }
+      },
+      {
+        "id": "04",
+        "view": "shop-interior",
+        "camera": {
+          "position": [
+            271.7,
+            9.9134,
+            908
+          ],
+          "quaternion": [
+            -0.015701859235384273,
+            0.7069324236562871,
+            0.015701859235384273,
+            0.7069324236562871
+          ],
+          "fov": 58
+        },
+        "time": 14,
+        "stationTime": 14,
+        "ao": 0.55,
+        "c22versusC23": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maxChannelDelta": 0
+        },
+        "offVersusOn": {
+          "pixels": 1296000,
+          "changed": 0,
+          "above4": 0,
+          "above8": 0,
+          "maxChannelDelta": 0
+        },
+        "c22On": {
+          "file": "images/evening-04-on.jpg",
+          "jpegSha256": "fedb65eaa73a2af412131a7d3d12b4655b6aaf85e2adaaf04b551ff2dba5503d",
+          "pngSha256": "c213a0c5cf4b178a6c6e0c5c5850bd5a0ea37285181a6c0631eb6d0c85963dd0"
+        },
+        "on": {
+          "file": "images/evening-04-on.jpg",
+          "jpegSha256": "fedb65eaa73a2af412131a7d3d12b4655b6aaf85e2adaaf04b551ff2dba5503d",
+          "pngSha256": "c213a0c5cf4b178a6c6e0c5c5850bd5a0ea37285181a6c0631eb6d0c85963dd0"
+        },
+        "off": {
+          "file": "images/evening-04-off.jpg",
+          "jpegSha256": "fedb65eaa73a2af412131a7d3d12b4655b6aaf85e2adaaf04b551ff2dba5503d",
+          "pngSha256": "c213a0c5cf4b178a6c6e0c5c5850bd5a0ea37285181a6c0631eb6d0c85963dd0"
+        }
+      },
+      {
+        "id": "detail",
+        "view": "street-detail",
+        "camera": {
+          "position": [
+            284.4,
+            10.281286274509803,
+            924
+          ],
+          "quaternion": [
+            -0.12465537443110519,
+            -0.38126635888515065,
+            -0.05196769176958736,
+            0.914547079280253
+          ],
+          "fov": 58
+        },
+        "time": 14,
+        "stationTime": 14,
+        "ao": 0.55,
+        "c22versusC23": {
+          "pixels": 1296000,
+          "changed": 805225,
+          "above4": 241948,
+          "above8": 48208,
+          "maxChannelDelta": 34
+        },
+        "offVersusOn": {
+          "pixels": 1296000,
+          "changed": 780665,
+          "above4": 171301,
+          "above8": 10861,
+          "maxChannelDelta": 97
+        },
+        "c22On": {
+          "file": "images/evening-detail-on.jpg",
+          "jpegSha256": "0144ec6a4378934a0e162e20827f7a451d1d3c44da2c7a6578a45a1713a4fb45",
+          "pngSha256": "c438f4eb4b1f7313d7db78bcbe6470a6db05697ffd5bb453e7fcc9091deb4a2a"
+        },
+        "on": {
+          "file": "images/evening-detail-on.jpg",
+          "jpegSha256": "8342aa01e2b9dc2e8304d52a27154ffa85e635d4abe0ac3f215edd70d35795eb",
+          "pngSha256": "7ba4dd5417b14a3dc152a268c317ee9c4654eefa9acfaae8940ef19fd3cc95ef"
+        },
+        "off": {
+          "file": "images/evening-detail-off.jpg",
+          "jpegSha256": "9e665135d23bc2772f74ddb3ed4aeb0010e30d0996e4ddc2776cda4dc08a8372",
+          "pngSha256": "70b4ba1ea61ef8c378ed130e306fc972b0a5a4e8f033619f7ca09f404fa7d048"
+        }
+      }
+    ],
+    "afternoon": [
+      {
+        "id": "01",
+        "view": "station-street",
+        "camera": {
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -3.2237959341941705e-05,
+            0.9999462663720154
+          ],
+          "fov": 58
+        },
+        "time": 14,
+        "stationTime": 14,
+        "ao": 0.55,
+        "c22versusC23": {
+          "pixels": 1296000,
+          "changed": 473235,
+          "above4": 238852,
+          "above8": 137153,
+          "maxChannelDelta": 104
+        },
+        "offVersusOn": {
+          "pixels": 1296000,
+          "changed": 475068,
+          "above4": 190198,
+          "above8": 68282,
+          "maxChannelDelta": 184
+        },
+        "c22On": {
+          "file": "images/afternoon-01-on.jpg",
+          "jpegSha256": "e713f9f8286b3ba116bab03a78ab61469ba1cab924628afd20bc8e787ffe4fd6",
+          "pngSha256": "9fb2f66d9f7ba09578ffc0990b83b859389a364535d664e508f691a50cdc4c7d"
+        },
+        "on": {
+          "file": "images/afternoon-01-on.jpg",
+          "jpegSha256": "999b564cd0c9aa46911bd2296db00e76519bf706293003bf6999c3e4de906015",
+          "pngSha256": "8066116359cd79b7fd849c84260e85a1912adbe7273d0c05cc6863d7a9169a80"
+        },
+        "off": {
+          "file": "images/afternoon-01-off.jpg",
+          "jpegSha256": "5143c2b2a1c5d29337bf91803ac3e884f237582418746f5644c997c1ac65e066",
+          "pngSha256": "2d488b838b164d5b25fb337d024e8e900c60b168a1e0b69129bb3055dae8b554"
+        }
+      },
+      {
+        "id": "20",
+        "view": "20-rear-eye",
+        "camera": {
+          "position": [
+            273,
+            14.755245542526229,
+            758
+          ],
+          "quaternion": [
+            -0.00013011891877658623,
+            0.9145142483742376,
+            -0.00029414054360230415,
+            -0.40455356390830466
+          ],
+          "fov": 58
+        },
+        "time": 14,
+        "stationTime": 14,
+        "ao": 0.55,
+        "c22versusC23": {
+          "pixels": 1296000,
+          "changed": 533184,
+          "above4": 366801,
+          "above8": 259966,
+          "maxChannelDelta": 65
+        },
+        "offVersusOn": {
+          "pixels": 1296000,
+          "changed": 533899,
+          "above4": 303241,
+          "above8": 118159,
+          "maxChannelDelta": 176
+        },
+        "c22On": {
+          "file": "images/afternoon-20-on.jpg",
+          "jpegSha256": "74ba264f1eaf88a0c0cbc58dc30233a9d6583378f3747c48129ca039b6004832",
+          "pngSha256": "4a0ad96166f34639b899423d5c52f50d391850045f3d2d6fd3ecc6403ec990cc"
+        },
+        "on": {
+          "file": "images/afternoon-20-on.jpg",
+          "jpegSha256": "abbfd5248c0dbb9aab52bdcc424911ec60ab56992ab581eabb5d546fe07a9fc7",
+          "pngSha256": "7d84202b135bdc651ba43c6331bca6480da74f455f55731027a0c6bcabfea9db"
+        },
+        "off": {
+          "file": "images/afternoon-20-off.jpg",
+          "jpegSha256": "a78f4a7daf9c77c39632ccf16b4eb3f0d6e3bea09f90aae54518e14fe9112586",
+          "pngSha256": "4daf3b478c0aa77d97c15510609c0da38a6fefa12a6cc5048a7a1eb19629a775"
+        }
+      },
+      {
+        "id": "van",
+        "view": "van-side",
+        "camera": {
+          "position": [
+            276.3147277851227,
+            11.210013480772632,
+            971.1462175645175
+          ],
+          "quaternion": [
+            -0.029182465008512196,
+            -0.7830517056478151,
+            -0.03684648464040197,
+            0.6201779958912754
+          ],
+          "fov": 47
+        },
+        "time": 14,
+        "stationTime": 14,
+        "ao": 0.55,
+        "c22versusC23": {
+          "pixels": 1296000,
+          "changed": 793319,
+          "above4": 612762,
+          "above8": 454802,
+          "maxChannelDelta": 55
+        },
+        "offVersusOn": {
+          "pixels": 1296000,
+          "changed": 738333,
+          "above4": 576256,
+          "above8": 346545,
+          "maxChannelDelta": 42
+        },
+        "c22On": {
+          "file": "images/afternoon-van-on.jpg",
+          "jpegSha256": "b09f724d773c6c7a806472e78b124dfb589f53d6356cdebe5456c1a91089853a",
+          "pngSha256": "813ff2563b4b02d6e267fcd364bf6d1891b4dceb0680f542dfcdaa022fdf7d6f"
+        },
+        "vehicle": {
+          "name": "keiVan",
+          "x": 0.8557300687226022,
+          "z": 72.21476717045118,
+          "y": 1.890013480772633,
+          "rotY": -3.0340016125027476,
+          "W": 1.475,
+          "L": 3.5300000000000002,
+          "roofY": 3.890013480772633
+        },
+        "vehicleRegions": {
+          "door": {
+            "rect": [
+              452,
+              474,
+              648,
+              527
+            ],
+            "c22OffOn": {
+              "pixels": 10388,
+              "changed": 9450,
+              "above4": 9183,
+              "above8": 149,
+              "maxChannelDelta": 9
+            },
+            "c23OffOn": {
+              "pixels": 10388,
+              "changed": 56,
+              "above4": 0,
+              "above8": 0,
+              "maxChannelDelta": 1
+            }
+          }
+        },
+        "on": {
+          "file": "images/afternoon-van-on.jpg",
+          "jpegSha256": "902fd0c14ebfa0bfd4fc7c232040432e213558f660d7b22293eebdf4c2da4a5c",
+          "pngSha256": "3f8ac882e442a4a1c5fb46337b2e411f67f5369558ea28bc38454f36e180ea97"
+        },
+        "off": {
+          "file": "images/afternoon-van-off.jpg",
+          "jpegSha256": "4e370cd78fb0c9d080b7ce5805840844e2b0e857272aca566087279c2344fc75",
+          "pngSha256": "34859dc3a3d6b4d8b822a09b7472a0138c733944c85b14ea847a5bfcc74becc8"
+        }
+      }
+    ]
+  },
+  "retainedStreetDetails": {
+    "reflectionFaces": {
+      "px": {
+        "texels": 65536,
+        "overBefore": 16,
+        "peakBefore": 2.939453125,
+        "peakAfter": 2.0,
+        "maxErrorVsClampedLinear": 0.006545876766187675,
+        "pngSha256": "a9c371f9af03b3bc7c2fbd02c3d9a42b53e6019e323f661f888346d91b4a30ca"
+      },
+      "nx": {
+        "texels": 65536,
+        "overBefore": 47,
+        "peakBefore": 2.728515625,
+        "peakAfter": 2.0,
+        "maxErrorVsClampedLinear": 0.007643018004986013,
+        "pngSha256": "57ce3526a4a5e58a3525ca6b863ce2d76a8a44494d823dd6af1620980729f338"
+      },
+      "py": {
+        "texels": 65536,
+        "overBefore": 0,
+        "peakBefore": 1.392578125,
+        "peakAfter": 1.3877435225839798,
+        "maxErrorVsClampedLinear": 0.007125998233812325,
+        "pngSha256": "d287e185b48aa2364bd54f1a8f9f1bc01dcdef9b345feef41f047467caf214a3"
+      },
+      "ny": {
+        "texels": 65536,
+        "overBefore": 0,
+        "peakBefore": 0.185791015625,
+        "peakAfter": 0.1861179256933749,
+        "maxErrorVsClampedLinear": 0.0021579647558749027,
+        "pngSha256": "99534baa04a60156502c6dca7c07da468f5d3203866de8530904d48851cd294e"
+      },
+      "pz": {
+        "texels": 65536,
+        "overBefore": 26,
+        "peakBefore": 2.939453125,
+        "peakAfter": 2.0,
+        "maxErrorVsClampedLinear": 0.00746985066623429,
+        "pngSha256": "b142b174ca3630e0cfb6498a01a29166e3c5d5e85e0274e52e5347f84208709e"
+      },
+      "nz": {
+        "texels": 65536,
+        "overBefore": 9,
+        "peakBefore": 5.0390625,
+        "peakAfter": 2.0,
+        "maxErrorVsClampedLinear": 0.007643018004986013,
+        "pngSha256": "67bcf1712eb52d99e0f9a026e364e059a8d5bfc50e0ebab34e6aca8d02f167f7"
+      }
+    },
+    "runtime": {
+      "faces": [
+        "/src/street-env-evening/px.png",
+        "/src/street-env-evening/nx.png",
+        "/src/street-env-evening/py.png",
+        "/src/street-env-evening/ny.png",
+        "/src/street-env-evening/pz.png",
+        "/src/street-env-evening/nz.png"
+      ],
+      "stats": {
+        "resolution": 256,
+        "panes": {
+          "W1": 8,
+          "E1": 4,
+          "W2": 5,
+          "E2": 5,
+          "E3": 5
+        },
+        "loadedFaces": 6,
+        "captures": 0,
+        "facesAtLoad": 0,
+        "passesPerFrame": 0,
+        "loadMs": 16
+      },
+      "sakura": {
+        "materials": [
+          "sakura:cards",
+          "sakura:blob"
+        ]
+      }
+    },
+    "hedgeComparison": {
+      "rect": [
+        15,
+        670,
+        600,
+        735
+      ],
+      "pixels": 38025,
+      "changed": 894,
+      "maxChannelDelta": 1
+    }
+  }
+}

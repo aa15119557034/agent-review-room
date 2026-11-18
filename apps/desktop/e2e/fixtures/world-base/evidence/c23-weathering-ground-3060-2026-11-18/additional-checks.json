@@ -1,0 +1,472 @@
+{
+  "joint": {
+    "parent": "343fbe1e6f9e89fa4dc9ce9a6e0c51159961d42d",
+    "environment": "789cd2bdc676021d725cb3216896b8bc5ab83db7",
+    "tree": "fb49284add62a3e85189a8d27256d44f6544c478",
+    "localCommit": "fd88a045e4894a724c5028ee907c77df51eccd56",
+    "started": "2026-11-18T02:40:25.766Z",
+    "ended": "2026-11-18T02:43:30.056Z",
+    "init": {
+      "initMs": 645.7,
+      "planSource": "baked",
+      "planMs": 2.2,
+      "rays": 0,
+      "fingerprint": "1015:2741945:285456.7:910574.7",
+      "vehicleVolumes": 4,
+      "leftWall": [
+        {
+          "area": "01-left-wall",
+          "cell": 0,
+          "kind": "poster",
+          "pos": [
+            -4.84,
+            1.55,
+            30.2
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            0.0105,
+            -0.9999
+          ],
+          "w": 0.484,
+          "h": 0.671
+        },
+        {
+          "area": "01-left-wall",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            -4.84,
+            1.3,
+            29.3
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.1831,
+            -0.9831
+          ],
+          "w": 0.3,
+          "h": 0.3
+        },
+        {
+          "area": "01-left-wall",
+          "cell": 3,
+          "kind": "poster",
+          "pos": [
+            -4.84,
+            1.45,
+            27.2
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.0005,
+            -1
+          ],
+          "w": 0.44,
+          "h": 0.61
+        }
+      ],
+      "weatherStrength": 1,
+      "decalTriangles": 52,
+      "decalVisible": true,
+      "materialCount": 144,
+      "routes": [
+        "station-street",
+        "station-port",
+        "island-aerial",
+        "shop-interior",
+        "service-corner",
+        "laundry-details",
+        "coast"
+      ],
+      "time": "evening",
+      "weather": {
+        "seconds": 0,
+        "cover": 0,
+        "wind": 1,
+        "sea": 0.62,
+        "surge": 0
+      },
+      "realSurfaces": {
+        "apartment-pbr-plaster": {
+          "url": "/apartment-assets/white_plaster_02/white_plaster_02_diff_1k.jpg",
+          "width": 1024,
+          "height": 1024
+        },
+        "apartment-pbr-metal": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg",
+          "width": 1024,
+          "height": 1024
+        },
+        "apartment-pbr-tile": {
+          "url": "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_diff_1k.jpg",
+          "width": 1024,
+          "height": 1024
+        },
+        "apartment-pbr-roof": {
+          "url": "/apartment-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg",
+          "width": 1024,
+          "height": 1024
+        }
+      },
+      "coastalRoute": true
+    },
+    "stationChecks": 14,
+    "islandChecks": 5,
+    "foot": {
+      "routeSamples": 1716,
+      "maxError": 0.0019475047595886863,
+      "maxEyeError": 1.3322676295501878e-15,
+      "checkpoints": [
+        {
+          "direction": 1,
+          "frame": 0,
+          "feet": [
+            287,
+            11.30617,
+            1023.0775
+          ]
+        },
+        {
+          "direction": 1,
+          "frame": 130,
+          "feet": [
+            289.4824544813967,
+            10.702410437450581,
+            1042.8950496770767
+          ]
+        },
+        {
+          "direction": 1,
+          "frame": 260,
+          "feet": [
+            296.8425016948628,
+            8.165024036888676,
+            1061.6386933551157
+          ]
+        },
+        {
+          "direction": 1,
+          "frame": 390,
+          "feet": [
+            304.28912715392994,
+            4.693403780176599,
+            1080.3501847530383
+          ]
+        },
+        {
+          "direction": 1,
+          "frame": 520,
+          "feet": [
+            304.1833596641656,
+            1.6444639867430757,
+            1099.9284144868197
+          ]
+        },
+        {
+          "direction": 1,
+          "frame": 650,
+          "feet": [
+            295.9532403816053,
+            0.6515023933405288,
+            1118.3120086173108
+          ]
+        },
+        {
+          "direction": 1,
+          "frame": 780,
+          "feet": [
+            294.0125630675894,
+            -0.07610428059479446,
+            1130.4028998989595
+          ]
+        },
+        {
+          "direction": 1,
+          "frame": 910,
+          "feet": [
+            294.0125630675894,
+            -0.07610428059479446,
+            1130.4028998989595
+          ]
+        },
+        {
+          "direction": 1,
+          "frame": 1040,
+          "feet": [
+            294.0125630675894,
+            -0.07610428059479446,
+            1130.4028998989595
+          ]
+        },
+        {
+          "direction": -1,
+          "frame": 0,
+          "feet": [
+            294.0115513843437,
+            -0.07611945526654829,
+            1130.4028999542745
+          ]
+        },
+        {
+          "direction": -1,
+          "frame": 130,
+          "feet": [
+            298.94581284910134,
+            0.9250290803059018,
+            1111.251306787044
+          ]
+        },
+        {
+          "direction": -1,
+          "frame": 260,
+          "feet": [
+            306.2940999866143,
+            2.594249279117024,
+            1092.5803326677274
+          ]
+        },
+        {
+          "direction": -1,
+          "frame": 390,
+          "feet": [
+            301.717512166702,
+            6.083712898866383,
+            1073.1231097591021
+          ]
+        },
+        {
+          "direction": -1,
+          "frame": 520,
+          "feet": [
+            293.79347635481656,
+            9.267992932613698,
+            1054.597803083298
+          ]
+        },
+        {
+          "direction": -1,
+          "frame": 650,
+          "feet": [
+            287.6956982043754,
+            11.225685993244298,
+            1035.4386343497863
+          ]
+        }
+      ]
+    },
+    "walkMeters": 93.84598423230682,
+    "clearPixels": 44000,
+    "changedDryPixels": 0,
+    "segments": {
+      "coast-front": {
+        "frames": 390,
+        "ms": 6000,
+        "fps": 65,
+        "p95": 15.5,
+        "over20": 0
+      },
+      "street-front": {
+        "frames": 391,
+        "ms": 6015.200000000012,
+        "fps": 65.00199494613634,
+        "p95": 15.5,
+        "over20": 0
+      },
+      "coast": {
+        "frames": 390,
+        "ms": 6000,
+        "fps": 65,
+        "p95": 15.5,
+        "over20": 0
+      },
+      "street": {
+        "frames": 388,
+        "ms": 6030.699999999997,
+        "fps": 64.33747326181043,
+        "p95": 15.5,
+        "over20": 4
+      },
+      "walking-third": {
+        "frames": 390,
+        "ms": 6000,
+        "fps": 65,
+        "p95": 15.5,
+        "over20": 0
+      },
+      "walking-first": {
+        "frames": 368,
+        "ms": 6000.100000000006,
+        "fps": 61.33231112814781,
+        "p95": 30.699999999982538,
+        "over20": 22
+      }
+    }
+  },
+  "paired": {
+    "source": "343fbe1e6f9e89fa4dc9ce9a6e0c51159961d42d",
+    "orders": [
+      [
+        "on",
+        "off"
+      ],
+      [
+        "off",
+        "on"
+      ],
+      [
+        "off",
+        "on"
+      ],
+      [
+        "on",
+        "off"
+      ]
+    ],
+    "runs": {
+      "0-on": {
+        "frames": 358,
+        "ms": 5507.699999999997,
+        "fps": 64.99990921800392,
+        "p95": 15.5,
+        "over20": 0,
+        "gpuSamples": 90,
+        "gpuMedian": 12.132352,
+        "gpuP95": 12.875776,
+        "cpuSubmitMedian": 11.5
+      },
+      "0-off": {
+        "frames": 358,
+        "ms": 5507.5,
+        "fps": 65.00226963231957,
+        "p95": 15.5,
+        "over20": 0,
+        "gpuSamples": 90,
+        "gpuMedian": 12.049408,
+        "gpuP95": 12.654592,
+        "cpuSubmitMedian": 11.5
+      },
+      "1-off": {
+        "frames": 358,
+        "ms": 5507.800000000003,
+        "fps": 64.99872907512979,
+        "p95": 15.5,
+        "over20": 0,
+        "gpuSamples": 90,
+        "gpuMedian": 12.131328,
+        "gpuP95": 12.964864,
+        "cpuSubmitMedian": 11.799999952316284
+      },
+      "1-on": {
+        "frames": 357,
+        "ms": 5507.800000000003,
+        "fps": 64.8171683793892,
+        "p95": 15.5,
+        "over20": 1,
+        "gpuSamples": 90,
+        "gpuMedian": 12.50304,
+        "gpuP95": 13.410304,
+        "cpuSubmitMedian": 11.799999952316284
+      },
+      "2-off": {
+        "frames": 358,
+        "ms": 5507.599999999991,
+        "fps": 65.00108940373313,
+        "p95": 15.5,
+        "over20": 0,
+        "gpuSamples": 89,
+        "gpuMedian": 13.06624,
+        "gpuP95": 13.96736,
+        "cpuSubmitMedian": 11.599999904632568
+      },
+      "2-on": {
+        "frames": 354,
+        "ms": 5507.699999999997,
+        "fps": 64.27365324908767,
+        "p95": 15.5,
+        "over20": 4,
+        "gpuSamples": 89,
+        "gpuMedian": 12.804096,
+        "gpuP95": 14.314496,
+        "cpuSubmitMedian": 13.399999856948853
+      },
+      "3-on": {
+        "frames": 349,
+        "ms": 5507.700000000012,
+        "fps": 63.3658332879422,
+        "p95": 15.5,
+        "over20": 9,
+        "gpuSamples": 87,
+        "gpuMedian": 12.82048,
+        "gpuP95": 15.599616,
+        "cpuSubmitMedian": 13.299999952316284
+      },
+      "3-off": {
+        "frames": 358,
+        "ms": 5507.699999999997,
+        "fps": 64.99990921800392,
+        "p95": 15.5,
+        "over20": 0,
+        "gpuSamples": 90,
+        "gpuMedian": 13.063168,
+        "gpuP95": 13.709312,
+        "cpuSubmitMedian": 11.700000047683716
+      }
+    },
+    "pooled": {
+      "on": {
+        "frames": 1418,
+        "ms": 22030.90000000001,
+        "fps": 64.36414308993275,
+        "p95": 15.5,
+        "over20": 14,
+        "gpuSamples": 356,
+        "gpuMedian": 12.48768,
+        "gpuP95": 14.00832,
+        "cpuSubmitMedian": 12.700000047683716
+      },
+      "off": {
+        "frames": 1432,
+        "ms": 22030.59999999999,
+        "fps": 65.00049930551145,
+        "p95": 15.5,
+        "over20": 0,
+        "gpuSamples": 359,
+        "gpuMedian": 12.490752,
+        "gpuP95": 13.686784,
+        "cpuSubmitMedian": 11.600000143051147
+      }
+    },
+    "started": "2026-11-18T02:43:42.304Z",
+    "ended": "2026-11-18T02:45:23.047Z",
+    "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "camera": [
+      278.8,
+      10.4,
+      936
+    ],
+    "quaternion": [
+      -0.003277842930440423,
+      -0.009834585659995631,
+      -0.000032237959341941705,
+      0.9999462663720154
+    ],
+    "rawSha256": "4ca28d670b337529f655194f3cbd1f44809cc324a9e3fad04c67f963adfadf07",
+    "method": "Fixed camera, station and island clocks at 14, standard renderer and native material uniform / decal visibility. Each interval warms 1.7 seconds then presents for 5.5 seconds. GPU TIME_ELAPSED_EXT around the full look.render every fourth frame; zero disjoint and zero outstanding queries."
+  }
+}
