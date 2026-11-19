@@ -138,7 +138,8 @@ export function createWorldActions(store: Store<AppState>, client: RoomClient, f
       if ((stillIn(ctx) || sameAsNow) && !isStaleState(get(), data)) {
         set((x) => applyWorldState(x, data));
         set((x) => (x.starting ? { ...x, starting: false } : x));
-        await loadEvents(true);
+        // 较新的推送可能让整个开局回执被丢弃，而推送不含设置。重读当前状态，不能回填旧回执的设置。
+        await load();
       } else {
         // 局 / 会话对不上，或推送已经送来更新的快照：这份回应里的设置也可能过时（回应在路上时又保存过），按现在的重读
         set((x) => ({ ...x, starting: false }));

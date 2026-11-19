@@ -420,6 +420,27 @@ describe("世界：还没配置秘书时后台不给设置（C-59）", () => {
     assert.equal(t.w().settings?.dayRealMinutes, WORLD_DAY_REAL_MINUTES_DEFAULT);
     assert.equal(t.w().settings?.dailyCognitionLimit, WORLD_DAILY_COGNITION_DEFAULT);
   });
+
+  it("首次开局回执落后于新快照：保留新代次，并重新读取设置", async () => {
+    const t = setup({ seed: false });
+    await t.actions.world.load();
+    t.store.set((s) => ({ ...s, world: { ...s.world, settings: null } }));
+    t.hold("world.reset");
+    const starting = t.actions.world.start(["claude"]);
+    await tick();
+    assert.equal(t.w().settings, null, "开局推送只有快照，不包含设置");
+    // 开局回执还没回来，已收到暂停/继续后的快照：其 runSeq 严格更新，无需依赖墙钟碰巧跨毫秒。
+    await t.actions.world.pause();
+    await t.actions.world.resume();
+    assert.equal(t.snap().generation.runSeq, 1);
+    const settings = { dayRealMinutes: 12, dailyCognitionLimit: 7 };
+    await t.client.command({ type: "world.settings.save", settings });
+    await t.release("world.reset");
+    await starting;
+    assert.equal(t.snap().generation.runSeq, 1, "旧回执不能退回开局代次");
+    assert.deepEqual(t.w().settings, { ...settings, residents: ["claude"] }, "重读当前设置，而不是回填旧回执的默认值");
+    assert.equal(t.w().starting, false);
+  });
 });
 
 describe("世界：开局 / 首次读取的回应晚于推送（C-59b，林离 #265）", () => {

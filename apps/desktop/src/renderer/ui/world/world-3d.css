@@ -1,0 +1,58 @@
+.world { grid-template-columns: minmax(0,1fr) 18rem; gap: 10px; }
+.world-stage { position:relative; overflow:hidden; background:#e4e8df; min-height:30rem; border-radius:20px; }
+.house-3d { display:grid; grid-template-rows:minmax(0,1fr) auto; height:100%; position:relative; min-height:30rem; }
+.house-3d-canvas { position:relative; min-height:0; overflow:hidden; }
+.house-3d-canvas canvas { width:100%;height:100%;display:block;touch-action:none; }
+.house-3d-name { position:absolute;transform:translate(-50%,-100%);display:grid;justify-items:center;gap:2px;border:0;padding:4px 9px;border-radius:10px;background:rgb(252 249 236 / .85);color:#34423b;font:600 12px/1.3 system-ui;cursor:pointer;box-shadow:0 2px 7px #28362820;white-space:nowrap; }
+.house-3d-name small { font-size:10px;font-weight:400; }
+.house-3d-name { max-width:144px; }
+.house-3d-name span,.house-3d-name small { max-width:126px;overflow:hidden;text-overflow:ellipsis; }
+.house-3d-name[data-selected] { background:#315c4c;color:#fff9e9; }
+.house-3d-tools { position:absolute;left:12px;top:12px;display:flex;align-items:center;gap:5px;color:#46564b;font-size:11px; }
+.house-3d-tools span { background:#f7f6e9cf;padding:6px 10px;border-radius:12px; }
+.house-3d-tools button { background:#f7f6e9e8;border:1px solid #b8c2b1;border-radius:10px;min-width:30px;height:29px;color:#344a3e;cursor:pointer; }
+.house-3d-rooms { display:flex;flex-wrap:wrap;gap:5px;justify-content:center;padding:9px;background:#f3f2e8; }
+.house-3d-rooms button { border:1px solid #d3d7c8;border-radius:10px;background:#fffdf4;color:#4a584c;padding:6px 10px;font:500 12px system-ui;cursor:pointer;display:flex;gap:7px;align-items:center; }
+.house-3d-rooms button[aria-current] { border-color:#4d8069;background:#dfe9d8; }
+.house-3d-rooms small { color:#567460;font-size:10px; }
+.house-3d-status,.house-3d-error { position:absolute;inset:40% 15% auto;text-align:center;background:#fff8e9eb;padding:20px;border-radius:16px;color:#4a584c; }
+.world-reset-people { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:15px;margin:18px 0;border:1px solid var(--edge);border-radius:12px; }
+.world-reset-people label { display:flex;gap:8px;align-items:center; }
+.world-start-people label:has(input:disabled) { opacity:.4; }
+.world-local-items { display:flex;flex-wrap:wrap;gap:5px;list-style:none;padding:0;margin:8px 0 0; }
+.world-local-items li { padding:4px 7px;border-radius:7px;background:var(--fill);font-size:12px; }
+.world-you { display:grid;grid-template-columns:minmax(0,1fr);gap:8px;align-items:start; }
+.world-you>p { min-width:0; }
+.world-you>.world-local-items { margin:0; }
+.world-you>button { justify-self:start; }
+.resident-tabs { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px; }
+.resident-tabs button { min-width:0;white-space:normal;overflow-wrap:anywhere; }
+.scene,.scene[data-kind="kitchen"],.scene[data-kind="bedroom"] { background:transparent;pointer-events:none;display:grid;grid-template-rows:auto minmax(180px,1fr) minmax(0,auto) auto;gap:8px;padding:12px; }
+.scene-top { grid-row:1;pointer-events:auto;background:#f9f6e9e8;border-radius:13px;padding:5px 10px; }
+.scene-box,.scene-backlog { grid-row:3;pointer-events:auto;min-height:70px;max-height:160px;overflow-y:auto;overscroll-behavior:contain;border-radius:15px;background:#fff9ebf2;padding:12px 17px;box-shadow:0 8px 30px #203e3520; }
+.scene-backlog { max-height:230px; }
+.scene-controls { grid-row:4;pointer-events:auto;background:#fff9ebf2;border-radius:13px;padding:9px 12px; }
+.scene .transcript { margin:0;gap:10px; }
+.scene .transcript li { display:grid;grid-template-columns:minmax(0,1fr);gap:3px;padding:0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.5; }
+.scene .transcript strong { color:#537361;font-size:12px; }
+.scene .transcript li[data-who="narration"] { color:#737468;font-style:normal; }
+.scene-source { margin-left:8px;font-size:10px;font-weight:400;color:#898e7a; }
+.scene-options { gap:6px; }
+.scene-option { padding:6px 11px;font-size:12px; }
+.scene-note { margin:0;font-size:12px; }
+.scene-say { margin-top:5px; }
+.world:has(.scene) .house-3d-tools,.world:has(.scene) .house-3d-name { visibility:hidden; }
+.visually-hidden { position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%); }
+@media(max-width:1080px) {
+  .world { grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto; }
+  .world-stage,.house-3d { min-height:36rem; }
+  .world-side { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start; }
+}
+@media(max-width:680px) {
+  .world-stage,.house-3d { min-height:35rem; }
+  .world-side { grid-template-columns:minmax(0,1fr); }
+  .house-3d-tools span { display:none; }
+  .scene { padding:8px;grid-template-rows:auto minmax(170px,1fr) minmax(0,auto) auto; }
+  .scene-box { max-height:150px; }
+  .scene-top { gap:4px;font-size:11px; }
+}
