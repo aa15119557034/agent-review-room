@@ -1,0 +1,99 @@
+{
+  "views": {
+    "art-a-street": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    },
+    "art-b-konbini": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    },
+    "art-c-alley": {
+      "pixels": 1296000,
+      "changed": 20287,
+      "over2": 9165,
+      "max": 217
+    },
+    "art-d-laundry": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    },
+    "sample-e-harbour": {
+      "pixels": 1296000,
+      "changed": 4490,
+      "over2": 3486,
+      "max": 227
+    },
+    "sample-f-hillside": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    },
+    "sample-g-rail": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    },
+    "sample-h-north": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    }
+  },
+  "regions": {
+    "c-doorsteps.jpg": {
+      "xyxy": [
+        360,
+        475,
+        990,
+        900
+      ],
+      "pixels": 267750,
+      "changed": 18495,
+      "over2": 8425,
+      "max": 136
+    },
+    "rear-4f-parcels-detail.jpg": {
+      "xyxy": [
+        500,
+        165,
+        1030,
+        760
+      ],
+      "pixels": 315350,
+      "changed": 9,
+      "over2": 0,
+      "max": 1
+    }
+  },
+  "historical": {},
+  "rear": {
+    "rear-3f": {
+      "pixels": 1296000,
+      "changed": 21360,
+      "over2": 10263,
+      "max": 100
+    },
+    "rear-5f": {
+      "pixels": 1296000,
+      "changed": 16869,
+      "over2": 6071,
+      "max": 104
+    },
+    "rear-4f-parcels": {
+      "pixels": 1296000,
+      "changed": 835,
+      "over2": 340,
+      "max": 87
+    }
+  }
+}
