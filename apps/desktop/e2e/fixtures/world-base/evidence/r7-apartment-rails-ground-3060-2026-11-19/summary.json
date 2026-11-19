@@ -1,0 +1,1296 @@
+{
+  "sources": {
+    "before": "9b0dadbd7fd3c117835465fe6ea8dd80c4215970",
+    "after": "eb000ad5f3bd976cfbb485fe3606442c82309ab5"
+  },
+  "cameras": [
+    {
+      "k": "A",
+      "name": "art-a-street",
+      "eye": [
+        278.8,
+        10.488,
+        936
+      ],
+      "target": [
+        280,
+        10.088000000000001,
+        875
+      ],
+      "fov": 35.63777782904556
+    },
+    {
+      "k": "B",
+      "name": "art-b-konbini",
+      "eye": [
+        279.1,
+        9.8184,
+        912.8
+      ],
+      "target": [
+        272.48,
+        10.0534,
+        910.6
+      ],
+      "fov": 58
+    },
+    {
+      "k": "C",
+      "name": "art-c-alley",
+      "eye": [
+        287.65,
+        14.384808464050293,
+        767.3199999999999
+      ],
+      "target": [
+        278.4,
+        14.55,
+        770.06
+      ],
+      "fov": 45
+    },
+    {
+      "k": "D",
+      "name": "art-d-laundry",
+      "eye": [
+        283.5,
+        12.520055181715234,
+        783.8
+      ],
+      "target": [
+        282.5,
+        14.25,
+        777.4
+      ],
+      "fov": 48
+    },
+    {
+      "k": "E",
+      "name": "sample-e-harbour",
+      "eye": [
+        -49.3148,
+        6.0969,
+        1121.5
+      ],
+      "target": [
+        -24,
+        7.2,
+        1123.5
+      ],
+      "fov": 57
+    },
+    {
+      "k": "F",
+      "name": "sample-f-hillside",
+      "eye": [
+        1040.6682,
+        61.5086,
+        591.5865
+      ],
+      "target": [
+        1062,
+        102.7783,
+        490
+      ],
+      "fov": 57
+    },
+    {
+      "k": "G",
+      "name": "sample-g-rail",
+      "eye": [
+        337.8563,
+        9.6,
+        844.5
+      ],
+      "target": [
+        268,
+        10.55,
+        857
+      ],
+      "fov": 57
+    },
+    {
+      "k": "H",
+      "name": "sample-h-north",
+      "eye": [
+        181.0601,
+        136.1623,
+        -1212.8685
+      ],
+      "target": [
+        180,
+        141.45,
+        -1238
+      ],
+      "fov": 57
+    }
+  ],
+  "photos": {
+    "before": {
+      "art-a-street": "257c8a9a8a26f50811c5fb6516b2adc1ca88c78696cceb9403f623553a3e75ae",
+      "art-b-konbini": "3ccd4497a1244d3b07335069842550198c87b3e5277cd9305d1273c7c833c449",
+      "art-c-alley": "1db4a574e1dc37e1d588f7a2de791240182c42a5893a751ba97952e20748d5b0",
+      "art-d-laundry": "f5085de12c751372dc63c2291e3ed7f057cef4431dd7ca368915f32a133add2b",
+      "sample-e-harbour": "cc0713c8ebad3fa6d5568cbdbf420ee7b67919a45e2b5e63d6fdf1bf912a0abc",
+      "sample-f-hillside": "dc7f66154f2c520de92d3a77198dd4db46fcede072a13e32b3c3adc7ddf76a2b",
+      "sample-g-rail": "6a6cab5920bff32c68b2d56808105cca8a97bb2e062f672d8d31d72cdbacfe8b",
+      "sample-h-north": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546"
+    },
+    "after": {
+      "art-a-street": "41d5bf1369bdcb9fb5bcefe4e02b0b6369517aff25cc3b4b0db5fbaa1aa483ef",
+      "art-b-konbini": "3ccd4497a1244d3b07335069842550198c87b3e5277cd9305d1273c7c833c449",
+      "art-c-alley": "fc30a4fa39865726805c5849c10f4a00e62778fe935cdd4081294249b1303011",
+      "art-d-laundry": "5c25e1ea0b0a3aa9bf817b33f0502aeee6e39d059c8119190533272344cae595",
+      "sample-e-harbour": "2a9e7ec1f9ccd95d58e1edd7870aff954c44be21afff3cb07f82b456d6e78e7e",
+      "sample-f-hillside": "dc7f66154f2c520de92d3a77198dd4db46fcede072a13e32b3c3adc7ddf76a2b",
+      "sample-g-rail": "6a6cab5920bff32c68b2d56808105cca8a97bb2e062f672d8d31d72cdbacfe8b",
+      "sample-h-north": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546"
+    }
+  },
+  "timing": [
+    {
+      "tag": "timing/1-before",
+      "source": "9b0dadbd7fd3c117835465fe6ea8dd80c4215970",
+      "segments": {
+        "art-a-street": {
+          "frames": 522,
+          "fps": 51.40932458783906,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.900000000001455,
+          "maxMs": 30.90000000000873,
+          "pass": false,
+          "durationMs": 10153.799999999996,
+          "calls": [
+            1588,
+            1604
+          ],
+          "triangles": [
+            7752960,
+            7842792
+          ]
+        },
+        "art-b-konbini": {
+          "frames": 584,
+          "fps": 57.69040798182357,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.90000000000873,
+          "maxMs": 31.10000000000582,
+          "pass": false,
+          "durationMs": 10123,
+          "calls": [
+            1037,
+            1054
+          ],
+          "triangles": [
+            7579951,
+            7647419
+          ]
+        },
+        "art-c-alley": {
+          "frames": 647,
+          "fps": 64.01123906763233,
+          "p95Ms": 15.5,
+          "p99Ms": 30.70000000001164,
+          "maxMs": 30.90000000000873,
+          "pass": true,
+          "durationMs": 10107.599999999991,
+          "calls": [
+            977,
+            979
+          ],
+          "triangles": [
+            8576394,
+            8576522
+          ]
+        },
+        "art-d-laundry": {
+          "frames": 654,
+          "fps": 64.70314710567193,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 30.80000000000291,
+          "pass": true,
+          "durationMs": 10107.699999999997,
+          "calls": [
+            914,
+            916
+          ],
+          "triangles": [
+            8368257,
+            8368385
+          ]
+        },
+        "sample-e-harbour": {
+          "frames": 537,
+          "fps": 53.04699153421387,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.90000000000873,
+          "maxMs": 31.10000000000582,
+          "pass": false,
+          "durationMs": 10123.099999999991,
+          "calls": [
+            1531,
+            1536
+          ],
+          "triangles": [
+            8237322,
+            8237626
+          ]
+        },
+        "sample-f-hillside": {
+          "frames": 657,
+          "fps": 64.99930746552165,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "maxMs": 15.69999999999709,
+          "pass": true,
+          "durationMs": 10107.800000000003,
+          "calls": [
+            774,
+            774
+          ],
+          "triangles": [
+            8197731,
+            8197731
+          ]
+        },
+        "sample-g-rail": {
+          "frames": 449,
+          "fps": 44.287066992819405,
+          "p95Ms": 30.89999999999418,
+          "p99Ms": 31,
+          "maxMs": 46.20000000001164,
+          "pass": false,
+          "durationMs": 10138.399999999994,
+          "calls": [
+            1544,
+            1547
+          ],
+          "triangles": [
+            8491759,
+            8491951
+          ]
+        },
+        "sample-h-north": {
+          "frames": 657,
+          "fps": 64.99995053276207,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 16.199999999982538,
+          "pass": true,
+          "durationMs": 10107.700000000012,
+          "calls": [
+            708,
+            710
+          ],
+          "triangles": [
+            6691734,
+            6691862
+          ]
+        },
+        "walk-third": {
+          "frames": 149,
+          "fps": 47.24159797083069,
+          "p95Ms": 30.89999999999418,
+          "p99Ms": 30.900000000023283,
+          "maxMs": 31,
+          "pass": false,
+          "durationMs": 3154,
+          "calls": [
+            1673,
+            1700
+          ],
+          "triangles": [
+            8300449,
+            8392567
+          ]
+        },
+        "walk-first": {
+          "frames": 175,
+          "fps": 55.76089727249564,
+          "p95Ms": 30.800000000017462,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 30.89999999999418,
+          "pass": false,
+          "durationMs": 3138.399999999994,
+          "calls": [
+            1459,
+            1610
+          ],
+          "triangles": [
+            8045071,
+            8349641
+          ]
+        }
+      }
+    },
+    {
+      "tag": "timing/2-after",
+      "source": "eb000ad5f3bd976cfbb485fe3606442c82309ab5",
+      "segments": {
+        "art-a-street": {
+          "frames": 559,
+          "fps": 55.13690523159476,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 31.09999999999127,
+          "pass": false,
+          "durationMs": 10138.399999999994,
+          "calls": [
+            1584,
+            1589
+          ],
+          "triangles": [
+            7689352,
+            7753024
+          ]
+        },
+        "art-b-konbini": {
+          "frames": 619,
+          "fps": 61.14727701988518,
+          "p95Ms": 30.69999999999709,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 31,
+          "pass": false,
+          "durationMs": 10123.100000000006,
+          "calls": [
+            1037,
+            1054
+          ],
+          "triangles": [
+            7579951,
+            7647419
+          ]
+        },
+        "art-c-alley": {
+          "frames": 652,
+          "fps": 64.40714800802122,
+          "p95Ms": 15.5,
+          "p99Ms": 15.69999999999709,
+          "maxMs": 30.90000000000873,
+          "pass": true,
+          "durationMs": 10123.100000000006,
+          "calls": [
+            977,
+            982
+          ],
+          "triangles": [
+            8576394,
+            8640066
+          ]
+        },
+        "art-d-laundry": {
+          "frames": 655,
+          "fps": 64.80208158136868,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 30.80000000000291,
+          "pass": true,
+          "durationMs": 10107.699999999997,
+          "calls": [
+            914,
+            916
+          ],
+          "triangles": [
+            8368257,
+            8368385
+          ]
+        },
+        "sample-e-harbour": {
+          "frames": 547,
+          "fps": 53.871987551335984,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.90000000000873,
+          "maxMs": 31.09999999999127,
+          "pass": false,
+          "durationMs": 10153.699999999997,
+          "calls": [
+            1531,
+            1536
+          ],
+          "triangles": [
+            8237322,
+            8237626
+          ]
+        },
+        "sample-f-hillside": {
+          "frames": 657,
+          "fps": 64.99930746552157,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.60000000000582,
+          "pass": true,
+          "durationMs": 10107.800000000017,
+          "calls": [
+            774,
+            774
+          ],
+          "triangles": [
+            8197731,
+            8197731
+          ]
+        },
+        "sample-g-rail": {
+          "frames": 525,
+          "fps": 51.6264799590921,
+          "p95Ms": 30.800000000017462,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 31,
+          "pass": false,
+          "durationMs": 10169.200000000012,
+          "calls": [
+            1544,
+            1547
+          ],
+          "triangles": [
+            8491759,
+            8491951
+          ]
+        },
+        "sample-h-north": {
+          "frames": 657,
+          "fps": 64.99995053276227,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999976717,
+          "maxMs": 15.799999999988358,
+          "pass": true,
+          "durationMs": 10107.699999999983,
+          "calls": [
+            708,
+            710
+          ],
+          "triangles": [
+            6691734,
+            6691862
+          ]
+        },
+        "walk-third": {
+          "frames": 170,
+          "fps": 54.16772877899526,
+          "p95Ms": 30.800000000017462,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 30.89999999999418,
+          "pass": false,
+          "durationMs": 3138.4000000000233,
+          "calls": [
+            1672,
+            1700
+          ],
+          "triangles": [
+            8300449,
+            8392567
+          ]
+        },
+        "walk-first": {
+          "frames": 188,
+          "fps": 59.901226700653176,
+          "p95Ms": 30.79999999998836,
+          "p99Ms": 31,
+          "maxMs": 31,
+          "pass": false,
+          "durationMs": 3138.5,
+          "calls": [
+            1460,
+            1609
+          ],
+          "triangles": [
+            8045071,
+            8349593
+          ]
+        }
+      }
+    },
+    {
+      "tag": "timing/3-after",
+      "source": "eb000ad5f3bd976cfbb485fe3606442c82309ab5",
+      "segments": {
+        "art-a-street": {
+          "frames": 473,
+          "fps": 46.65292394488446,
+          "p95Ms": 30.89999999999418,
+          "p99Ms": 31,
+          "maxMs": 31,
+          "pass": false,
+          "durationMs": 10138.699999999997,
+          "calls": [
+            1584,
+            1589
+          ],
+          "triangles": [
+            7689352,
+            7753024
+          ]
+        },
+        "art-b-konbini": {
+          "frames": 603,
+          "fps": 59.478013848612115,
+          "p95Ms": 30.79999999998836,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 31,
+          "pass": false,
+          "durationMs": 10138.200000000012,
+          "calls": [
+            1037,
+            1054
+          ],
+          "triangles": [
+            7579951,
+            7647419
+          ]
+        },
+        "art-c-alley": {
+          "frames": 632,
+          "fps": 62.336022725031036,
+          "p95Ms": 15.60000000000582,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 30.90000000000873,
+          "pass": true,
+          "durationMs": 10138.600000000006,
+          "calls": [
+            977,
+            982
+          ],
+          "triangles": [
+            8576394,
+            8640066
+          ]
+        },
+        "art-d-laundry": {
+          "frames": 648,
+          "fps": 64.0120121306715,
+          "p95Ms": 15.5,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 31,
+          "pass": true,
+          "durationMs": 10123.099999999991,
+          "calls": [
+            914,
+            916
+          ],
+          "triangles": [
+            8368257,
+            8368385
+          ]
+        },
+        "sample-e-harbour": {
+          "frames": 433,
+          "fps": 42.70890870354299,
+          "p95Ms": 30.90000000000873,
+          "p99Ms": 46.19999999999709,
+          "maxMs": 46.39999999999418,
+          "pass": false,
+          "durationMs": 10138.399999999994,
+          "calls": [
+            1531,
+            1535
+          ],
+          "triangles": [
+            8237322,
+            8237578
+          ]
+        },
+        "sample-f-hillside": {
+          "frames": 646,
+          "fps": 63.815074582633606,
+          "p95Ms": 15.60000000000582,
+          "p99Ms": 30.70000000001164,
+          "maxMs": 30.90000000000873,
+          "pass": true,
+          "durationMs": 10123,
+          "calls": [
+            774,
+            774
+          ],
+          "triangles": [
+            8197731,
+            8197731
+          ]
+        },
+        "sample-g-rail": {
+          "frames": 366,
+          "fps": 36.045618389174535,
+          "p95Ms": 46.19999999998254,
+          "p99Ms": 46.5,
+          "maxMs": 90.10000000000582,
+          "pass": false,
+          "durationMs": 10153.799999999988,
+          "calls": [
+            1544,
+            1547
+          ],
+          "triangles": [
+            8491759,
+            8491951
+          ]
+        },
+        "sample-h-north": {
+          "frames": 658,
+          "fps": 64.89983922988147,
+          "p95Ms": 15.5,
+          "p99Ms": 15.699999999982538,
+          "maxMs": 30.699999999982538,
+          "pass": true,
+          "durationMs": 10138.700000000012,
+          "calls": [
+            708,
+            710
+          ],
+          "triangles": [
+            6691734,
+            6691862
+          ]
+        },
+        "walk-third": {
+          "frames": 123,
+          "fps": 39.19069619244862,
+          "p95Ms": 30.89999999999418,
+          "p99Ms": 31.29999999998836,
+          "maxMs": 46.20000000001164,
+          "pass": false,
+          "durationMs": 3138.5,
+          "calls": [
+            1676,
+            1700
+          ],
+          "triangles": [
+            8300449,
+            8392519
+          ]
+        },
+        "walk-first": {
+          "frames": 114,
+          "fps": 36.1468704420066,
+          "p95Ms": 31.10000000000582,
+          "p99Ms": 46.20000000001164,
+          "maxMs": 46.30000000001746,
+          "pass": false,
+          "durationMs": 3153.7999999999884,
+          "calls": [
+            1455,
+            1607
+          ],
+          "triangles": [
+            8035637,
+            8337331
+          ]
+        }
+      }
+    },
+    {
+      "tag": "timing/4-before",
+      "source": "9b0dadbd7fd3c117835465fe6ea8dd80c4215970",
+      "segments": {
+        "art-a-street": {
+          "frames": 523,
+          "fps": 51.58604908072279,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.90000000000873,
+          "maxMs": 31,
+          "pass": false,
+          "durationMs": 10138.400000000001,
+          "calls": [
+            1584,
+            1589
+          ],
+          "triangles": [
+            7689352,
+            7753024
+          ]
+        },
+        "art-b-konbini": {
+          "frames": 626,
+          "fps": 61.74605209946439,
+          "p95Ms": 30.60000000000582,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 30.89999999999418,
+          "pass": false,
+          "durationMs": 10138.300000000003,
+          "calls": [
+            1037,
+            1054
+          ],
+          "triangles": [
+            7579951,
+            7647419
+          ]
+        },
+        "art-c-alley": {
+          "frames": 647,
+          "fps": 63.91322816133394,
+          "p95Ms": 15.5,
+          "p99Ms": 30.69999999999709,
+          "maxMs": 30.89999999999418,
+          "pass": true,
+          "durationMs": 10123.100000000006,
+          "calls": [
+            977,
+            982
+          ],
+          "triangles": [
+            8576394,
+            8640066
+          ]
+        },
+        "art-d-laundry": {
+          "frames": 657,
+          "fps": 64.90170897955151,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 30.69999999999709,
+          "pass": true,
+          "durationMs": 10123,
+          "calls": [
+            914,
+            916
+          ],
+          "triangles": [
+            8368257,
+            8368385
+          ]
+        },
+        "sample-e-harbour": {
+          "frames": 615,
+          "fps": 60.65926262008558,
+          "p95Ms": 30.79999999998836,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 31.5,
+          "pass": false,
+          "durationMs": 10138.600000000006,
+          "calls": [
+            1531,
+            1535
+          ],
+          "triangles": [
+            8237322,
+            8237578
+          ]
+        },
+        "sample-f-hillside": {
+          "frames": 657,
+          "fps": 64.99995053276227,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999976717,
+          "maxMs": 15.60000000000582,
+          "pass": true,
+          "durationMs": 10107.699999999983,
+          "calls": [
+            774,
+            774
+          ],
+          "triangles": [
+            8197731,
+            8197731
+          ]
+        },
+        "sample-g-rail": {
+          "frames": 567,
+          "fps": 56.01051061433747,
+          "p95Ms": 30.79999999998836,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 31,
+          "pass": false,
+          "durationMs": 10123.100000000006,
+          "calls": [
+            1544,
+            1547
+          ],
+          "triangles": [
+            8491759,
+            8491951
+          ]
+        },
+        "sample-h-north": {
+          "frames": 657,
+          "fps": 64.99995053276207,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.60000000000582,
+          "pass": true,
+          "durationMs": 10107.700000000012,
+          "calls": [
+            708,
+            710
+          ],
+          "triangles": [
+            6691734,
+            6691862
+          ]
+        },
+        "walk-third": {
+          "frames": 179,
+          "fps": 57.035432067295545,
+          "p95Ms": 30.800000000017462,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 30.900000000023283,
+          "pass": false,
+          "durationMs": 3138.399999999994,
+          "calls": [
+            1672,
+            1700
+          ],
+          "triangles": [
+            8300449,
+            8392519
+          ]
+        },
+        "walk-first": {
+          "frames": 187,
+          "fps": 59.58260315437311,
+          "p95Ms": 30.70000000001164,
+          "p99Ms": 30.800000000017462,
+          "maxMs": 30.900000000023283,
+          "pass": false,
+          "durationMs": 3138.5,
+          "calls": [
+            1458,
+            1613
+          ],
+          "triangles": [
+            8045391,
+            8349849
+          ]
+        }
+      }
+    }
+  ],
+  "legacy": {
+    "before": {
+      "01-station-street": {
+        "camera": {
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -3.2237959341941705e-05,
+            0.9999462663720154
+          ],
+          "fov": 58
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "e65125208e0bc4f542ab913a3d1d15d28918bc67816273c7807f713952d8ff0d",
+        "n": 407,
+        "durationMs": 6630.799999999996,
+        "fps": 61.380225613802295,
+        "p95Ms": 30.69999999999709,
+        "p99Ms": 30.80000000000291
+      },
+      "20-rear-eye": {
+        "camera": {
+          "position": [
+            273,
+            14.755245542526229,
+            758
+          ],
+          "quaternion": [
+            -0.00013011891877658623,
+            0.9145142483742376,
+            -0.00029414054360230415,
+            -0.40455356390830466
+          ],
+          "fov": 58
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "97d34fb01304c10a43c061a073212e559d8fd790c2f883689aaf04e2ab7ef628",
+        "n": 419,
+        "durationMs": 6523.0999999999985,
+        "fps": 64.23326332571938,
+        "p95Ms": 15.5,
+        "p99Ms": 30.69999999999709
+      },
+      "21-front-eye": {
+        "camera": {
+          "position": [
+            274,
+            12.87812709172567,
+            783
+          ],
+          "quaternion": [
+            0.07422133960767584,
+            -0.5103582416049142,
+            0.044271975994965136,
+            0.8556083508909221
+          ],
+          "fov": 58
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "13c05be7dec053d81c88c495e5b915bfa1836dc77b8ad06a95ac1c04153321c7",
+        "n": 423,
+        "durationMs": 6507.799999999996,
+        "fps": 64.99892436768191,
+        "p95Ms": 15.5,
+        "p99Ms": 15.60000000000582
+      },
+      "23-service-corner": {
+        "camera": {
+          "position": [
+            308.4,
+            9.612,
+            872.9
+          ],
+          "quaternion": [
+            -0.08432325046436126,
+            0.5331397072650681,
+            0.05351200213385738,
+            0.8401119613456697
+          ],
+          "fov": 55
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "f1b35772f0823191a02b5777ef9b6833511cf128ce19ca796703045b8ac6d10f",
+        "n": 429,
+        "durationMs": 6599.900000000009,
+        "fps": 65.00098486340694,
+        "p95Ms": 15.5,
+        "p99Ms": 15.599999999991269
+      },
+      "24-laundry-details": {
+        "camera": {
+          "position": [
+            288,
+            14.384808464050293,
+            777.9
+          ],
+          "quaternion": [
+            -0.15522850149956677,
+            0.6173580660361093,
+            0.12595148976979553,
+            0.7608609287163607
+          ],
+          "fov": 55
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "f76879c8c33c8ef0412c7540d428da277c35a93c9bf7d2020692561e5b316da7",
+        "n": 423,
+        "durationMs": 6507.800000000003,
+        "fps": 64.99892436768182,
+        "p95Ms": 15.5,
+        "p99Ms": 15.60000000000582
+      }
+    },
+    "after": {
+      "01-station-street": {
+        "camera": {
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -3.2237959341941705e-05,
+            0.9999462663720154
+          ],
+          "fov": 58
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "ddb0dbd2caf20ed98a3f1aef9ac75dd780538285ba74e5db10158af902e6feef",
+        "n": 409,
+        "durationMs": 6523.0999999999985,
+        "fps": 62.700249881191475,
+        "p95Ms": 15.5,
+        "p99Ms": 30.80000000000291
+      },
+      "20-rear-eye": {
+        "camera": {
+          "position": [
+            273,
+            14.755245542526229,
+            758
+          ],
+          "quaternion": [
+            -0.00013011891877658623,
+            0.9145142483742376,
+            -0.00029414054360230415,
+            -0.40455356390830466
+          ],
+          "fov": 58
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "030834d8a72431cab8cba99f32d8be6efe13b5763dc5ffff6a915dca498f3b18",
+        "n": 425,
+        "durationMs": 6600.0999999999985,
+        "fps": 64.3929637429736,
+        "p95Ms": 15.5,
+        "p99Ms": 15.60000000000582
+      },
+      "21-front-eye": {
+        "camera": {
+          "position": [
+            274,
+            12.87812709172567,
+            783
+          ],
+          "quaternion": [
+            0.07422133960767584,
+            -0.5103582416049142,
+            0.044271975994965136,
+            0.8556083508909221
+          ],
+          "fov": 58
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "441f2d32aed6abeac970ef25922777bd3342e468b8bc03d027500babd1401996",
+        "n": 423,
+        "durationMs": 6507.700000000004,
+        "fps": 64.99992316793947,
+        "p95Ms": 15.5,
+        "p99Ms": 15.599999999991269
+      },
+      "23-service-corner": {
+        "camera": {
+          "position": [
+            308.4,
+            9.612,
+            872.9
+          ],
+          "quaternion": [
+            -0.08432325046436126,
+            0.5331397072650681,
+            0.05351200213385738,
+            0.8401119613456697
+          ],
+          "fov": 55
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "f1b35772f0823191a02b5777ef9b6833511cf128ce19ca796703045b8ac6d10f",
+        "n": 423,
+        "durationMs": 6523.099999999991,
+        "fps": 64.84646870353062,
+        "p95Ms": 15.5,
+        "p99Ms": 15.599999999991269
+      },
+      "24-laundry-details": {
+        "camera": {
+          "position": [
+            288,
+            14.384808464050293,
+            777.9
+          ],
+          "quaternion": [
+            -0.15522850149956677,
+            0.6173580660361093,
+            0.12595148976979553,
+            0.7608609287163607
+          ],
+          "fov": 55
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "f34efab5cf222c1e28b286d5e01c47a1d58785ba4f992d759c3dd8a88c7490de",
+        "n": 423,
+        "durationMs": 6507.800000000003,
+        "fps": 64.99892436768182,
+        "p95Ms": 15.5,
+        "p99Ms": 15.60000000000582
+      }
+    }
+  },
+  "assets": {
+    "before": {
+      "textures": {
+        "/apartment-assets/white_plaster_02/white_plaster_02_diff_1k.jpg": "a1ebbe091bd1ae93d2abd5de8d69f9003a8d0ee6532bcf9a87c2492c97051f23",
+        "/apartment-assets/white_plaster_02/white_plaster_02_nor_gl_1k.jpg": "eb572ca3630d5bfde72e2601b1f02412da23ca005cd19384dced8690be4cb783",
+        "/apartment-assets/white_plaster_02/white_plaster_02_arm_1k.jpg": "2bb1115821715dfd8bbd1c5a294a5bb43b97d5c46b1aa8aa8f744bcaf5eeeb10",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_diff_1k.jpg": "583eafdfc03da4a74509ba545c5ea808c8bdc6e883763a804fcbe859c120afb9",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg": "6be9a4e34057fc90ab450624cf83d2f5bc67bf59d5c137617ea62d8206540011",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_nor_gl_1k.jpg": "8a7d8db468fe5bd37a2fc14ff6012855b14bec03dd413e034a376902a723b44c",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd"
+      },
+      "packages": {
+        "/mature-sakura/mature-sakura.glb": "14716b7af7db3bcae453b17ebe97a9fa0d4d38155731cc2b56ed28e4fa7b24f3",
+        "/station-art/station-exchange.glb": "03584bb83631b49b118727b9b37a2a021dee693365263acecef24e56b9621a78",
+        "/station-art/alley-workshop.glb": "b8286aa8f9cc5c735d7d847bcc4c1b8b71f31a6ca049aabb531e68c3252c8fc2",
+        "/station-art/laundry-infill.glb": "d945d0756f402227ae329d1408707a428c120646aa3bac73c927821d98183be6"
+      },
+      "decals": {
+        "posters": 10,
+        "stickers": 14,
+        "doodles": 2
+      },
+      "fingerprint": "1061:2667664:298285.6:949273.1",
+      "materials": [
+        {
+          "name": "apartment-pbr-metal",
+          "ao": 0.4,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-plaster",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-roof",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-tile",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        }
+      ]
+    },
+    "after": {
+      "textures": {
+        "/apartment-assets/white_plaster_02/white_plaster_02_diff_1k.jpg": "a1ebbe091bd1ae93d2abd5de8d69f9003a8d0ee6532bcf9a87c2492c97051f23",
+        "/apartment-assets/white_plaster_02/white_plaster_02_nor_gl_1k.jpg": "eb572ca3630d5bfde72e2601b1f02412da23ca005cd19384dced8690be4cb783",
+        "/apartment-assets/white_plaster_02/white_plaster_02_arm_1k.jpg": "2bb1115821715dfd8bbd1c5a294a5bb43b97d5c46b1aa8aa8f744bcaf5eeeb10",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_diff_1k.jpg": "583eafdfc03da4a74509ba545c5ea808c8bdc6e883763a804fcbe859c120afb9",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg": "6be9a4e34057fc90ab450624cf83d2f5bc67bf59d5c137617ea62d8206540011",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_nor_gl_1k.jpg": "8a7d8db468fe5bd37a2fc14ff6012855b14bec03dd413e034a376902a723b44c",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd"
+      },
+      "packages": {
+        "/mature-sakura/mature-sakura.glb": "14716b7af7db3bcae453b17ebe97a9fa0d4d38155731cc2b56ed28e4fa7b24f3",
+        "/station-art/station-exchange.glb": "03584bb83631b49b118727b9b37a2a021dee693365263acecef24e56b9621a78",
+        "/station-art/alley-workshop.glb": "b8286aa8f9cc5c735d7d847bcc4c1b8b71f31a6ca049aabb531e68c3252c8fc2",
+        "/station-art/laundry-infill.glb": "d945d0756f402227ae329d1408707a428c120646aa3bac73c927821d98183be6"
+      },
+      "decals": {
+        "posters": 10,
+        "stickers": 14,
+        "doodles": 2
+      },
+      "fingerprint": "1061:2667664:298285.6:949273.1",
+      "materials": [
+        {
+          "name": "apartment-pbr-metal",
+          "ao": 0.4,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-plaster",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-roof",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-tile",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        }
+      ]
+    }
+  }
+}

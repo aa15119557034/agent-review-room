@@ -1,0 +1,37 @@
+
+[2026-11-19T04:20:02.995Z] bootstrap
+[50356:1119/122003.117:ERROR:components\viz\host\persistent_cache_sandboxed_file_factory.cc:153] Failed to open persistent cache files in directory "C:\Users\QGNL66\.codex\visualizations\2026\11\19\01a1f1ef-c58a-7443-bbde-b793103a4827\x51-r7-before\apps\desktop\e2e\fixtures\world-base\artifacts\r7-native-1119-5-before\runtime\user-data\GPUPersistentCache\DawnGraphiteCache\2JA7WVZEGNYATM3CW7DYXTRCBKZ7YEUP", error: 2: 文件名或扩展名太长。 (0xCE)
+[2026-11-19T04:20:03.129Z] app-ready
+[2026-11-19T04:20:03.147Z] server-listening
+[2026-11-19T04:20:03.148Z] creating-window
+[2026-11-19T04:20:03.192Z] window-created
+[2026-11-19T04:20:03.192Z] initializing-renderer
+[2026-11-19T04:20:03.321Z] debugger-attached
+[2026-11-19T04:20:03.322Z] cdp:Runtime.enable
+[2026-11-19T04:20:03.325Z] cdp:Network.enable
+[2026-11-19T04:20:03.339Z] cdp:Page.enable
+[2026-11-19T04:20:03.355Z] cdp:Page.addScriptToEvaluateOnNewDocument
+[2026-11-19T04:20:03.358Z] cdp:Page.addScriptToEvaluateOnNewDocument
+[2026-11-19T04:20:03.370Z] navigating
+[2026-11-19T04:20:04.103Z] waiting-for-ready-frame
+[2026-11-19T04:20:56.519Z] scene-ready
+[2026-11-19T04:20:56.564Z] validating-station
+[2026-11-19T04:21:01.659Z] measuring
+[2026-11-19T04:21:04.896Z] capturing
+[2026-11-19T04:21:05.361Z] capturing-view:art-a-street
+[2026-11-19T04:21:17.666Z] capturing-view:art-b-konbini
+[2026-11-19T04:21:30.597Z] capturing-view:art-c-alley
+[2026-11-19T04:21:42.610Z] capturing-view:art-d-laundry
+[2026-11-19T04:21:54.627Z] capturing-view:sample-e-harbour
+[2026-11-19T04:22:06.650Z] capturing-view:sample-f-hillside
+[2026-11-19T04:22:18.611Z] capturing-view:sample-g-rail
+[2026-11-19T04:22:30.637Z] capturing-view:sample-h-north
+[2026-11-19T04:22:42.641Z] validating-look-controls
+[2026-11-19T04:22:47.175Z] validating-real-walking
+[2026-11-19T04:22:47.194Z] cdp:Input.dispatchKeyEvent
+[2026-11-19T04:22:50.329Z] cdp:Input.dispatchKeyEvent
+[2026-11-19T04:22:51.136Z] cdp:Input.dispatchKeyEvent
+[2026-11-19T04:22:54.272Z] cdp:Input.dispatchKeyEvent
+[2026-11-19T04:22:55.051Z] cdp:Input.dispatchKeyEvent
+[2026-11-19T04:22:55.361Z] complete
+{"ok":false,"performance":{"method":"RAF intervals with WebGL2 submission counters across all passes; instrumentation overhead included","unsupportedDrawPaths":["ANGLE_instanced_arrays","WEBGL_multi_draw"],"frameCount":142,"sampleMs":3138.5999999999985,"fps":45.24310202000894,"p95FrameMs":30.900000000001455,"drawCalls":{"mean":1686.838028169014,"min":1686,"max":1687},"triangles":{"mean":8222470.225352113,"min":8222430,"max":8222478},"framesWithoutDraws":0,"samplesFile":"frame-samples.json"},"output":"C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r7-before\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\r7-native-1119-5-before"}

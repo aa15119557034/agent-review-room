@@ -1,0 +1,52 @@
+{
+  "baseline": "9b0dadbd7fd3c117835465fe6ea8dd80c4215970",
+  "reference": "r6-painted-steel-ground-3060-2026-11-19/photos/after",
+  "repeat": "r7-apartment-rails-ground-3060-2026-11-19/photos/before",
+  "views": {
+    "art-a-street": {
+      "pixels_changed": 0,
+      "pixels_over_2": 0,
+      "max_delta": 0
+    },
+    "art-b-konbini": {
+      "pixels_changed": 0,
+      "pixels_over_2": 0,
+      "max_delta": 0
+    },
+    "art-c-alley": {
+      "pixels_changed": 0,
+      "pixels_over_2": 0,
+      "max_delta": 0
+    },
+    "art-d-laundry": {
+      "pixels_changed": 0,
+      "pixels_over_2": 0,
+      "max_delta": 0
+    },
+    "return-a": {
+      "pixels_changed": 1,
+      "pixels_over_2": 0,
+      "max_delta": 1
+    },
+    "sample-e-harbour": {
+      "pixels_changed": 3930,
+      "pixels_over_2": 3169,
+      "max_delta": 225
+    },
+    "sample-f-hillside": {
+      "pixels_changed": 0,
+      "pixels_over_2": 0,
+      "max_delta": 0
+    },
+    "sample-g-rail": {
+      "pixels_changed": 0,
+      "pixels_over_2": 0,
+      "max_delta": 0
+    },
+    "sample-h-north": {
+      "pixels_changed": 0,
+      "pixels_over_2": 0,
+      "max_delta": 0
+    }
+  }
+}
