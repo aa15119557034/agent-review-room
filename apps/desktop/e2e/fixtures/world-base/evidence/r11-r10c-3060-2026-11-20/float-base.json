@@ -1,0 +1,41 @@
+{
+  "label": "base",
+  "target": "http://127.0.0.1:4174/?time=evening",
+  "at": "2026-11-19T21:01:50.714Z",
+  "results": [
+    {
+      "point": [
+        274.27,
+        8.47,
+        914.08
+      ],
+      "found": true,
+      "patchY": 8.4659,
+      "patchDxz": 0.18,
+      "patchMesh": "shop-spill",
+      "patchMaterial": "shop-spill",
+      "instanceCount": 104,
+      "groundY": 8.2742,
+      "groundObject": "Mesh",
+      "groundMaterial": "MeshToonMaterial",
+      "gap": 0.1917,
+      "nearestHits": [
+        {
+          "y": 8.2742,
+          "object": "Mesh",
+          "material": "MeshToonMaterial"
+        },
+        {
+          "y": 8.2542,
+          "object": "Mesh",
+          "material": "env-ground"
+        },
+        {
+          "y": 0,
+          "object": "Mesh",
+          "material": "ShaderMaterial"
+        }
+      ]
+    }
+  ]
+}
