@@ -1,0 +1,10 @@
+cell=48��Ĭ�ϣ�3 ����λ��
+view                     GPU_P95   GPU_P50  calls      tris
+art-a-street               12.90     10.33   1614   7869119
+art-b-konbini              11.59     10.80   1046   7658842
+art-c-alley                11.53     10.62    989   8666201
+art-d-laundry               9.22      8.06    920   8394360
+sample-e-harbour           13.41     11.79   1536   8252589
+sample-f-hillside           9.16      7.71    778   8212950
+sample-g-rail              14.40     12.06   1548   8506994
+sample-h-north              9.06      7.22    714   6707081

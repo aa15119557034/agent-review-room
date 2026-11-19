@@ -115,7 +115,13 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   const islandTextures = new Set(Object.values(groundMaterial.uniforms).map(uniform => uniform.value).filter(value => value?.isTexture));
   const trimMs = Math.round(performance.now() - clipStart);
   const batchStart = performance.now();
-  const batch = batchStatic(ctx.staticRoot, { mat: ctx.mat });
+  // 允许用 ?nearCell= / ?farCell= 覆盖合批格子大小，便于实测调用数与帧时的曲线
+  const bq = new URLSearchParams(location.search);
+  const batchOpts = { mat: ctx.mat };
+  if (bq.has('nearCell')) batchOpts.nearCell = Number(bq.get('nearCell'));
+  if (bq.has('farCell')) batchOpts.farCell = Number(bq.get('farCell'));
+  if (bq.has('farR')) batchOpts.farR = Number(bq.get('farR'));
+  const batch = batchStatic(ctx.staticRoot, batchOpts);
   const batchMs = Math.round(performance.now() - batchStart);
   root.position.fromArray(offset);
   root.rotation.y = rotationY;
@@ -201,3 +207,4 @@ export async function createStation({ scene, renderer, camera, offset = [280, 8,
   station.update(0, 14);
   return station;
 }
+
