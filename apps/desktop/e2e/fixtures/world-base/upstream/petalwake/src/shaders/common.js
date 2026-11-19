@@ -83,17 +83,21 @@ vec3 skyBaseNew(vec3 d){
 
 // Clear-sky radiance for a view direction (no sun disc, no clouds).
 vec3 skyBase(vec3 d){
-  if (uFog.z > 0.5) return skyBaseNew(d);
+  vec3 c = vec3(0.0);
+  if (uFog.z > 0.5) {
+    c = skyBaseNew(d);
+  } else {
   float y = max(d.y, 0.0);
   float mu = dot(d, uSunDir);
   float hz = pow(1.0 - y, 5.0);
-  vec3 c = mix(uSkyMid, uSkyZenith, pow(y, 0.62));
+  c = mix(uSkyMid, uSkyZenith, pow(y, 0.62));
   c = mix(c, uSkyHorizon, hz);
   // forward-scattering glow around the sun, strongest in the thick air near the horizon
   float m = max(mu, 0.0);
   c += uSunHalo * (pow(m, 7.0) * 0.20 + pow(m, 40.0) * 0.28 + pow(m, 600.0) * 1.4) * (0.55 + 0.9 * hz);
   // slightly darker, bluer sky opposite the sun
   c *= 1.0 - 0.14 * pow(max(-mu, 0.0), 2.0) * (1.0 - hz);
+  }
   return c;
 }
 
@@ -336,21 +340,29 @@ uniform vec4 uTownRect1;
 export const TOWN_MASK = /* glsl */`
 ${TOWN_MASK_UNIFORMS}
 vec4 townMask(vec2 xz){
+  vec4 r = vec4(0.0);
   vec2 a = (xz - uTownRect0.xy) * uTownRect0.zw;
-  if (uTownRect0.z > 0.0 && a.x > 0.0 && a.x < 1.0 && a.y > 0.0 && a.y < 1.0) return texture(uTownMask0, a);
   vec2 b = (xz - uTownRect1.xy) * uTownRect1.zw;
-  if (uTownRect1.z > 0.0 && b.x > 0.0 && b.x < 1.0 && b.y > 0.0 && b.y < 1.0) return texture(uTownMask1, b);
-  return vec4(0.0);
+  if (uTownRect0.z > 0.0 && a.x > 0.0 && a.x < 1.0 && a.y > 0.0 && a.y < 1.0) {
+    r = texture(uTownMask0, a);
+  } else if (uTownRect1.z > 0.0 && b.x > 0.0 && b.x < 1.0 && b.y > 0.0 && b.y < 1.0) {
+    r = texture(uTownMask1, b);
+  }
+  return r;
 }
 `;
 export const TOWN_MASK_V = /* glsl */`
 ${TOWN_MASK_UNIFORMS}
 vec4 townMaskV(vec2 xz){
+  vec4 r = vec4(0.0);
   vec2 a = (xz - uTownRect0.xy) * uTownRect0.zw;
-  if (uTownRect0.z > 0.0 && a.x > 0.0 && a.x < 1.0 && a.y > 0.0 && a.y < 1.0) return textureLod(uTownMask0, a, 0.0);
   vec2 b = (xz - uTownRect1.xy) * uTownRect1.zw;
-  if (uTownRect1.z > 0.0 && b.x > 0.0 && b.x < 1.0 && b.y > 0.0 && b.y < 1.0) return textureLod(uTownMask1, b, 0.0);
-  return vec4(0.0);
+  if (uTownRect0.z > 0.0 && a.x > 0.0 && a.x < 1.0 && a.y > 0.0 && a.y < 1.0) {
+    r = textureLod(uTownMask0, a, 0.0);
+  } else if (uTownRect1.z > 0.0 && b.x > 0.0 && b.x < 1.0 && b.y > 0.0 && b.y < 1.0) {
+    r = textureLod(uTownMask1, b, 0.0);
+  }
+  return r;
 }
 `;
 
