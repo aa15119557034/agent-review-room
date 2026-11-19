@@ -154,13 +154,15 @@ export function buildTownApartment(H, F, spec) {
   }
   F.boxB(plaster, trim, 1.38, .95, .2, -w / 2 + .77, 0, -.55, { uv: { world: 1.5 } });
   const storefront = shop ? buildLaundryShop(H, F, baseFront) : null;
+  // Art round 10: the laundromat's street front for the shop light spill (city-root space; glass portal 6 m wide, 0.14 m deck).
+  const shopFronts = storefront ? [{ center: F.w(0, .14, baseFront).toArray(), normal: new THREE.Vector3(0, 0, 1).transformDirection(F.m).toArray(), width: 6, kind: 'laundry', name: spec.name }] : [];
   const footprint = townApartmentBounds(spec), bounds = { ...footprint.bounds, minY: 0, maxY: roofInfo.maxY };
   const supportSamples = [];
   for (const x of [footprint.groundSupportBounds.minX, 0, footprint.groundSupportBounds.maxX])
     for (const z of [footprint.groundSupportBounds.minZ, (back + baseFront) / 2, 0]) supportSamples.push({ x, z });
   const cloth = H.laundry.I.length / 3 - clothStart;
   return { bounds, groundSupportBounds: footprint.groundSupportBounds, supportSamples,
-    floors, floorHeight: FH, height: bounds.maxY, lamps, entrances: [{ x: 0, y: .14, z: 0, width: shop ? 1.2 : 1.02 }],
+    floors, floorHeight: FH, height: bounds.maxY, lamps, shopFronts, entrances: [{ x: 0, y: .14, z: 0, width: shop ? 1.2 : 1.02 }],
     triangles: gb.tris - start, laundryTriangles: cloth, garments: H.laundry.count - garments,
     facade: { items: records, gbTriangles: gb.tris - detailStart, clothTriangles: cloth, totalTriangles: gb.tris - detailStart + cloth,
       scope: 'Complete facade reconstruction, not the retired 900-triangle decoration allowance' },

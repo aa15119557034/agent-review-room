@@ -63,5 +63,25 @@
     "floorRadius": 1.2,
     "floorOut": 0.4,
     "falloff": 2.2
+  },
+  "shopSpill": {
+    "note": "Art round 10: shop light spilling on the paving in front of the door (shop-spill.js). Patch = street front wide, depth m out, strongest at the wall; edge = side fade in m; falloff = exponent of the outward ramp; step = paving height change that starts a new patch (landing / step / pavement); rayLift = m above the room floor where the ground rays start; wallOut = m outside the room's inner face. cool = convenience store / laundromat, warm = other shops.",
+    "strength": 0.6,
+    "cool": [
+      0.85,
+      0.95,
+      1.0
+    ],
+    "warm": [
+      1.0,
+      0.82,
+      0.6
+    ],
+    "depth": 3.0,
+    "edge": 0.8,
+    "falloff": 0.7,
+    "step": 0.09,
+    "wallOut": 0.25,
+    "rayLift": 0.2
   }
 }

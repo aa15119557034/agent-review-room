@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { createIsland, clearVegetationAreas } from './island.js';
 import { loadShadowTint, shadowTintEnabled, installLitShadowTint, patchIslandShadowTint, shadowTintUniforms, shopInteriorBoxes } from './shadow-tint.js';
 import { loadToon, toonEnabled, installLitToon, installToonHook, toonLineUniforms, maskGlassAlpha } from './toon.js';
+import { addShopSpill, loadShopSpill, shopFrontsFromRooms, groundSpillFronts } from './shop-spill.js';
 import { addDoorGlow, loadDoorGlow, resolveDoorLamps } from './door-glow.js';
 import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from './evening-glow.js';
 import * as layoutModule from '../upstream/sakuragaoka/src/world/layout.js';
@@ -256,6 +257,17 @@ async function init() {
     const lamps = resolveDoorLamps(worldBase.city.root, [...worldBase.city.placements.filter(p => p.type === 'apartment').flatMap(p => p.model.lamps ?? []),
       ...(station.ctx.services.doorLamps ?? [])]);
     if (params && lamps.length) worldBase.doorGlow = addDoorGlow({ parent: worldBase.city.root, lamps, params });
+  }
+  // Art round 10: indoor light spilling onto the paving in front of lit shops (evening only; ?shopspill=off skips it).
+  if (island.timeOfDay === 'evening' && new URLSearchParams(location.search).get('shopspill') !== 'off') {
+    const params = await loadShopSpill();
+    if (params) {
+      const rooms = station.ctx.services.shopInteriors ?? [];
+      const raw = [...shopFrontsFromRooms(layoutModule, rooms, params), ...worldBase.city.placements.filter(p => p.type === 'apartment').flatMap(p => p.model.shopFronts ?? [])];
+      worldBase.city.root.updateWorldMatrix(true, true);
+      const fronts = groundSpillFronts(raw, [station.root, worldBase.city.root], params, worldBase.city.root.position);
+      worldBase.shopSpill = addShopSpill({ parent: worldBase.city.root, fronts, params });
+    }
   }
   // The vehicles' shared glass material is unnamed and its meshes carry no 'glass' name, so the
   // name filter in maskGlassAlpha skipped it and outlines showed through the van windows.
