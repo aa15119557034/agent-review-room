@@ -14,7 +14,17 @@ export const U = {
   uSunHalo: { value: new THREE.Vector3() },
   uAmbSky: { value: new THREE.Vector3() },
   uAmbGround: { value: new THREE.Vector3() },
-  uFog: { value: new THREE.Vector4(1.5e-4, 1 / 420, 0, 0) }, // density, falloff, -, -
+  uFog: { value: new THREE.Vector4(1.5e-4, 1 / 420, 0, 0) }, // density, falloff, X-51 r14 sky-look flag (1 = new sky), -
+  // X-51 r14 sky look (src/sky.json). Read only while uFog.z = 1; all zero = Petalwake's own sky.
+  uSkyP0: { value: new THREE.Vector4() },  // horizon band, sun side: rgb, falloff
+  uSkyP1: { value: new THREE.Vector4() },  // horizon band, away from the sun: rgb, falloff
+  uSkyP2: { value: new THREE.Vector4() },  // zenith ramp power, wide halo, mid halo, tight halo
+  uSkyP3: { value: new THREE.Vector4() },  // sun core halo, dither amplitude, anti-sun darken, sun-side width
+  uSkyP4: { value: new THREE.Vector4() },  // clean pale-blue layer above the band: rgb, falloff
+  uCloudP0: { value: new THREE.Vector4() }, // sun light tint rgb, sun gain
+  uCloudP1: { value: new THREE.Vector4() }, // shade (low) rgb, ambient gain
+  uCloudP2: { value: new THREE.Vector4() }, // shade (top) rgb, cirrus amount
+  uCloudP3: { value: new THREE.Vector4() }, // rim gain, rim power, density gain, coverage noise scale (m)
 
   // terrain lookups
   uHeightTex: { value: null },

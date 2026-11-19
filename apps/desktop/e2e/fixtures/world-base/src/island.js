@@ -153,6 +153,24 @@ async function loadProps(assetBase, terrain) {
   return { props: new Props(loaded), removed, reseated };
 }
 
+/** Art round 14: new sky palette + cloud look from sky.json, flagged on through uFog.z (the old sky is every uniform at zero). */
+function applySkyLook(p) {
+  U.uSkyZenith.value.fromArray(p.zenith);
+  U.uSkyMid.value.fromArray(p.mid);
+  U.uSunHalo.value.fromArray(p.halo);
+  U.uFog.value.z = 1;
+  U.uSkyP0.value.set(...p.bandSun, p.bandSunK);
+  U.uSkyP1.value.set(...p.bandAnti, p.bandAntiK);
+  U.uSkyP2.value.set(p.zenithPow, p.haloWide, p.haloMid, p.haloTight);
+  U.uSkyP3.value.set(p.haloCore, p.dither, p.antiDarken, p.sunSideWidth);
+  U.uSkyP4.value.set(...p.low, p.lowK);
+  const c = p.cloud;
+  U.uCloudP0.value.set(...c.sunTint, c.sunGain);
+  U.uCloudP1.value.set(...c.shadeLow, c.ambGain);
+  U.uCloudP2.value.set(...c.shadeTop, c.cirrus);
+  U.uCloudP3.value.set(c.rimGain, c.rimPower, c.density, c.scale);
+}
+
 /** Adopt the native island into the caller's renderer and scene, without starting the game. */
 export async function createIsland({ scene, renderer, camera, assetBase = '/assets', timeOfDay = 'evening' }) {
   // Evening (#254 C19) moves the sun, sky palette and the terrain's baked sun
@@ -161,6 +179,9 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
   const evening = timeOfDay === 'evening' ? await json(new URL('./evening.json', import.meta.url)) : null;
   if (evening) ENV.evening = evening.env;
   applyEnv(timeOfDay);
+  const skyNew = new URLSearchParams(location.search).get('sky') !== 'old';
+  const skyLook = skyNew ? (await json(new URL('./sky.json', import.meta.url)))[timeOfDay] : null;
+  if (skyLook) applySkyLook(skyLook);
   U.uTime.value = 0;
   U.uShadowOn.value = 0;
   U.uRider.value.set(1e6, 1e6, 1e6, 0);
@@ -215,6 +236,10 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
   const meadow = new Meadow(terrain, 'medium');
   const sky = new Sky();
   const clouds = new CloudBaker(renderer);
+  if (skyLook) {
+    clouds.mat.uniforms.uCoverage.value = skyLook.cloud.coverage;
+    clouds.mat.uniforms.uSeed.value.fromArray(skyLook.cloud.seed);
+  }
   clouds.begin();
   while (!clouds.done) {
     clouds.step(2);

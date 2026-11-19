@@ -1,0 +1,149 @@
+{
+  "note": "X-51 art round 14: Shinkai-style sky and clouds (island.js applySkyLook; GLSL in upstream shaders/common.js skyBaseNew and world/clouds.js, switched by uFog.z). All colours linear. ?sky=old restores Petalwake's sky bit for bit. band = horizon colour on the sun side / away from it, with falloff k (bigger = thinner band); zenithPow < 1 pushes the deep blue lower; halo = Mie-like glow strengths (wide, mid, tight, core); dither = 8-bit band breaker; antiDarken = darker sky opposite the sun; sunSideWidth = how far around the horizon the warm band reaches (cos of azimuth to the sun). Clouds: sunTint x uSunColor lights the sunny edges, shade colours the shaded bases (low) and tops (top), rim = extra thin-edge gold lining (gain, power), density scales opacity, cirrus = streak layer opacity, coverage / seed drive the baked cloud map.",
+  "evening": {
+    "zenith": [
+      0.012,
+      0.04,
+      0.26
+    ],
+    "mid": [
+      0.14,
+      0.34,
+      0.66
+    ],
+    "zenithPow": 0.55,
+    "bandSun": [
+      1.6,
+      0.55,
+      0.16
+    ],
+    "bandSunK": 5.5,
+    "bandAnti": [
+      0.62,
+      0.3,
+      0.48
+    ],
+    "bandAntiK": 14.0,
+    "sunSideWidth": 0.9,
+    "halo": [
+      1.0,
+      0.52,
+      0.22
+    ],
+    "haloWide": 0.1,
+    "haloMid": 0.25,
+    "haloTight": 0.35,
+    "haloCore": 1.4,
+    "dither": 0.016,
+    "antiDarken": 0.1,
+    "cloud": {
+      "sunTint": [
+        1.0,
+        0.55,
+        0.14
+      ],
+      "sunGain": 1.35,
+      "shadeLow": [
+        0.22,
+        0.24,
+        0.62
+      ],
+      "shadeTop": [
+        0.4,
+        0.48,
+        0.82
+      ],
+      "ambGain": 1.0,
+      "rimGain": 1.0,
+      "rimPower": 3.0,
+      "density": 1.25,
+      "cirrus": 0.1,
+      "coverage": 0.5,
+      "seed": [
+        13.7,
+        4.1,
+        91.3
+      ],
+      "scale": 9000
+    },
+    "low": [
+      0.42,
+      0.62,
+      0.74
+    ],
+    "lowK": 5.0
+  },
+  "afternoon": {
+    "zenith": [
+      0.025,
+      0.1,
+      0.5
+    ],
+    "mid": [
+      0.13,
+      0.4,
+      0.88
+    ],
+    "zenithPow": 0.6,
+    "bandSun": [
+      0.72,
+      0.86,
+      1.0
+    ],
+    "bandSunK": 7.0,
+    "bandAnti": [
+      0.58,
+      0.78,
+      0.98
+    ],
+    "bandAntiK": 8.0,
+    "sunSideWidth": 0.9,
+    "halo": [
+      1.0,
+      0.8,
+      0.52
+    ],
+    "haloWide": 0.06,
+    "haloMid": 0.12,
+    "haloTight": 0.2,
+    "haloCore": 1.0,
+    "dither": 0.016,
+    "antiDarken": 0.05,
+    "cloud": {
+      "sunTint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sunGain": 1.0,
+      "shadeLow": [
+        0.42,
+        0.5,
+        0.75
+      ],
+      "shadeTop": [
+        0.85,
+        0.95,
+        1.15
+      ],
+      "ambGain": 0.9,
+      "rimGain": 0.25,
+      "rimPower": 3.0,
+      "density": 1.3,
+      "cirrus": 0.08,
+      "coverage": 0.58,
+      "seed": [
+        13.7,
+        4.1,
+        91.3
+      ],
+      "scale": 9000
+    },
+    "low": [
+      0.45,
+      0.7,
+      0.95
+    ],
+    "lowK": 5.0
+  }
+}

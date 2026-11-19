@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { U, shared } from '../core/ctx.js';
 import { NOISE, ATMOSPHERE } from '../shaders/common.js';
 
-export const SKY_UNIFORMS = ['uSunDir', 'uSunColor', 'uSkyZenith', 'uSkyMid', 'uSkyHorizon', 'uSunHalo', 'uAmbSky', 'uAmbGround', 'uFog', 'uCamPos'];
+export const SKY_UNIFORMS = ['uSunDir', 'uSunColor', 'uSkyZenith', 'uSkyMid', 'uSkyHorizon', 'uSunHalo', 'uAmbSky', 'uAmbGround', 'uFog', 'uCamPos', 'uSkyP0', 'uSkyP1', 'uSkyP2', 'uSkyP3', 'uSkyP4', 'uCloudP0', 'uCloudP1', 'uCloudP2', 'uCloudP3'];
 
 const tri = () => {
   const g = new THREE.BufferGeometry();
@@ -70,6 +70,11 @@ export class Sky {
           // under the horizon: haze into deep sea colour (only ever seen in reflections / at great height)
           float below = smoothstep(0.0, -0.08, d.y);
           col = mix(col, mix(uSkyHorizon * vec3(0.55, 0.7, 0.85), uAmbGround * 2.4, uEnv), below);
+          // X-51 r14: interleaved-gradient (blue-ish) noise breaks up the smooth gradient's 8-bit bands
+          if (uFog.z > 0.5) {
+            float n = fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715))));
+            col *= 1.0 + (n - 0.5) * uSkyP3.y;
+          }
           gl_FragColor = vec4(col, 1.0);
         }
       `,

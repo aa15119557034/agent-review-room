@@ -48,9 +48,42 @@ uniform vec3 uAmbSky;
 uniform vec3 uAmbGround;
 uniform vec4 uFog;
 uniform vec3 uCamPos;
+// X-51 r14: new sky look, active while uFog.z > 0.5 (see ctx.js / src/sky.json)
+uniform vec4 uSkyP0;
+uniform vec4 uSkyP1;
+uniform vec4 uSkyP2;
+uniform vec4 uSkyP3;
+uniform vec4 uSkyP4;
+uniform vec4 uCloudP0;
+uniform vec4 uCloudP1;
+uniform vec4 uCloudP2;
+uniform vec4 uCloudP3;
+
+// Dusk/day gradient: deep zenith -> clean light blue -> a warm band on the sun side and a rose band opposite.
+vec3 skyBaseNew(vec3 d){
+  float y = max(d.y, 0.0);
+  float mu = dot(d, uSunDir);
+  float hl = length(d.xz);
+  vec2 sh = uSunDir.xz / max(length(uSunDir.xz), 1e-4);
+  float side = hl > 1e-4 ? dot(d.xz / hl, sh) : 0.0;
+  float sunSide = smoothstep(-0.6, uSkyP3.w, side);
+  vec3 c = mix(uSkyMid, uSkyZenith, pow(y, uSkyP2.x));
+  c = mix(c, uSkyP4.rgb, exp(-y * uSkyP4.w));
+  vec3 bandCol = mix(uSkyP1.rgb, uSkyP0.rgb, sunSide);
+  float bw = exp(-y * mix(uSkyP1.w, uSkyP0.w, sunSide));
+  bw = bw * bw * (3.0 - 2.0 * bw);
+  c = mix(c, bandCol, bw);
+  // Mie-like forward scatter: broad glow + mid + tight core, stronger in the thick air near the horizon
+  float m = max(mu, 0.0);
+  float hz = pow(1.0 - y, 5.0);
+  c += uSunHalo * (pow(m, 3.0) * uSkyP2.y + pow(m, 14.0) * uSkyP2.z + pow(m, 90.0) * uSkyP2.w + pow(m, 600.0) * uSkyP3.x) * (0.55 + 0.9 * hz);
+  c *= 1.0 - uSkyP3.z * pow(max(-mu, 0.0), 2.0) * (1.0 - bw);
+  return c;
+}
 
 // Clear-sky radiance for a view direction (no sun disc, no clouds).
 vec3 skyBase(vec3 d){
+  if (uFog.z > 0.5) return skyBaseNew(d);
   float y = max(d.y, 0.0);
   float mu = dot(d, uSunDir);
   float hz = pow(1.0 - y, 5.0);

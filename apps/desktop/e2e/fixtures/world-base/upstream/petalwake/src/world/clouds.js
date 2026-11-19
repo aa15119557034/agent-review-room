@@ -114,6 +114,7 @@ ${ATMOSPHERE}
 const float RP = 520000.0;                 // a small planet pulls the cloud deck down to the horizon
 const float H0 = 1350.0, H1 = 4700.0;
 const float SIGMA = 0.045;
+#define NEWSKY (uFog.z > 0.5)
 
 float h13(vec3 p){ p = fract(p * 0.1031); p += dot(p, p.zyx + 31.32); return fract((p.x + p.y) * p.z); }
 vec3 h33(vec3 p){ p = fract(p * vec3(0.1031, 0.1030, 0.0973)); p += dot(p, p.yxz + 33.33); return fract((p.xxy + p.yxx) * p.zyx); }
@@ -139,7 +140,7 @@ float worley(vec3 p){
 float rm(float v, float a, float b){ return clamp((v - a) / (b - a), 0.0, 1.0); }
 
 float coverageAt(vec2 xz){
-  vec2 q = xz / 21000.0 + uSeed.xy;
+  vec2 q = xz / (NEWSKY ? uCloudP3.w : 21000.0) + uSeed.xy;
   q += 0.42 * vec2(vn2(q * 1.9 + 3.1), vn2(q * 1.9 - 7.3)) - 0.21;
   float c = fbm2d(q);
   return smoothstep(0.62 - uCoverage * 0.42, 0.86 - uCoverage * 0.30, c);
@@ -163,10 +164,10 @@ float density(vec3 p, float alt, int lod){
   if (base <= 0.0) return 0.0;
   if (lod == 0){
     float det = worley(q * 5.3 + 2.0) * 0.6 + vn3(q * 11.0) * 0.4;
-    base = rm(base, det * 0.46, 1.0);
+    base = rm(base, det * (NEWSKY ? 0.62 : 0.46), 1.0);
   }
   // denser toward the top where the updraft condenses
-  return base * mix(0.75, 1.25, hf);
+  return base * mix(0.75, 1.25, hf) * (NEWSKY ? uCloudP3.z : 1.0);
 }
 
 float hg(float mu, float g){ float g2 = g * g; return (1.0 - g2) / (12.566 * pow(1.0 + g2 - 2.0 * g * mu, 1.5)); }
@@ -221,11 +222,22 @@ void main(){
         // multiple scattering keeps the sunlit side luminous instead of going grey
         float beer = max(exp(-od * SIGMA), 0.62 * exp(-od * SIGMA * 0.22));
         float powder = 1.0 - exp(-d * 90.0 * SIGMA * 2.0);
+        vec3 S;
+        if (NEWSKY){
+          // lit edges: warm gold; shade: blue-violet; thin rims facing the sun get an extra silver-gold lining
+          float lit = exp(-od * SIGMA);
+          vec3 sun = uSunColor * uCloudP0.rgb * uCloudP0.w * beer * mix(1.0, powder, 0.35) * phase;
+          float rim = pow(clamp(lit, 0.0, 1.0), uCloudP3.y) * (1.0 - clamp(d * 1.6, 0.0, 1.0));
+          sun += uSunColor * uCloudP0.rgb * uCloudP3.x * rim * phase;
+          vec3 amb = mix(uCloudP1.rgb, uCloudP2.rgb, hf) * (0.70 + 0.30 * hf);
+          S = sun * 0.92 + amb * uCloudP1.w;
+        } else {
         vec3 sun = uSunColor * beer * mix(1.0, powder, 0.35) * phase;
         // sky light: lavender in the shaded bases, bright blue-white on top
         vec3 amb = mix(vec3(0.46, 0.52, 0.78), vec3(0.86, 0.96, 1.16), hf) * (0.70 + 0.30 * hf);
         amb += uAmbGround * 0.3 * (1.0 - hf);
-        vec3 S = sun * 0.92 + amb * 0.80;
+        S = sun * 0.92 + amb * 0.80;
+        }
         // aerial perspective: distant towers sink into the haze
         float fogT = exp(-t * 2.6e-5);
         S = mix(skyBase(normalize(vec3(rd.x, max(rd.y, 0.0) * 0.5 + 0.03, rd.z))), S, fogT);
@@ -248,7 +260,7 @@ void main(){
     float streak = fbm2d(vec2(q.x * 0.55, q.y * 3.2));
     float sheet = fbm2d(q * 0.33 + 9.0);
     float c = smoothstep(0.50, 0.85, streak) * smoothstep(0.42, 0.70, sheet);
-    c *= 0.55 * exp(-tc * 1.3e-5);
+    c *= (NEWSKY ? uCloudP2.w : 0.55) * exp(-tc * 1.3e-5);
     vec3 S = uSunColor * (0.22 + hg(mu, 0.7) * 1.6) + vec3(0.5, 0.62, 0.85) * 0.5;
     col += T * S * c;
     T *= 1.0 - c;
