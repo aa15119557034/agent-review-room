@@ -14,6 +14,8 @@ export async function loadToon() { return (await fetch(new URL('./toon.json', im
 /** Runtime strengths of the compiled-in lit toon (1 on, 0 off). Shared by every program that carries the chunk. */
 export const toonLitUniforms = { uTbK: { value: 1 }, uTbRim: { value: 1 } };
 export const setToonLit = (on) => { toonLitUniforms.uTbK.value = toonLitUniforms.uTbRim.value = on ? 1 : 0; };
+/** Round 12: ?grade=off leaves the final grade stage out of the shader altogether (round 11 pixels). */
+export const gradeEnabled = () => new URLSearchParams(location.search).get('grade') !== 'off';
 export const toonEnabled = () => new URLSearchParams(location.search).get('toon') !== 'off';
 
 const f = (x) => Number(x).toFixed(4);

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { Pipeline } from '../upstream/petalwake/src/core/pipeline.js';
 import { distanceToRoom } from './shadow-tint.js';
-import { toonEnabled, setToonLit } from './toon.js';
+import { toonEnabled, gradeEnabled, setToonLit } from './toon.js';
 
 // The depth source is the actual displaced terrain colour pass. Sakuragaoka's
 // normal override would outline Petalwake's undisplaced tile grid instead.
@@ -119,6 +119,37 @@ float wbBand(float n) {
 }
 `;
 
+// Round 12 grade: one fixed global curve as the very last colour step (sRGB, after tone mapping, before the dither).
+// Parameters live in toon.json ("grade"). Alpha is not touched (the output pass writes alpha 1; the outline mask is read upstream).
+const GRADE = /* glsl */`
+uniform float uGradeOn;
+uniform vec4 uGA, uGB, uGC, uGD, uGE; // pivot contrast floor toe / gain gainLo gainHi knee / cap peakKnee peakCap vibrance / vibPow skinKeep skyKeep skyGain / contrastHi
+vec3 wbGrade(vec3 c, float sky) {
+  float gain = uGB.x*mix(1.0, uGD.w, sky);
+  float Y = dot(c, vec3(0.2126, 0.7152, 0.0722));
+  float p = uGA.x;
+  float Y1 = Y < p ? p*pow(Y/p, uGA.y) : 1.0 - (1.0 - p)*pow((1.0 - Y)/(1.0 - p), uGE.x);
+  float Y2 = Y1 + uGA.z*pow(1.0 - Y1, uGA.w);
+  float t = clamp((Y2 - uGB.y)/(uGB.z - uGB.y), 0.0, 1.0);
+  float Y3 = Y2*(1.0 + gain*t*t*(3.0 - 2.0*t));
+  float Y4 = Y3 > uGB.w ? uGB.w + (uGC.x - uGB.w)*(1.0 - exp(-(Y3 - uGB.w)/(uGC.x - uGB.w))) : Y3;
+  // Ratio keeps hue and HSV saturation; the deepest darks (no ratio from black) take the lift additively.
+  float u = smoothstep(0.0, 0.08, Y);
+  c = max(c*(Y4/max(Y, 1e-4))*u + (c + (Y4 - Y))*(1.0 - u), 0.0);
+  float pk = max(max(c.r, c.g), c.b);
+  float pn = pk > uGC.y ? uGC.y + (uGC.z - uGC.y)*(1.0 - exp(-(pk - uGC.y)/(uGC.z - uGC.y))) : pk;
+  c *= pn/max(pk, 1e-4);
+  // Vibrance: strongest on weakly coloured pixels, none on near-neutrals (whites must not turn lilac); orange skin-like pixels and the sky keep a share.
+  float mx = max(max(c.r, c.g), c.b), mn = min(min(c.r, c.g), c.b);
+  float S = (mx - mn)/max(mx, 1e-4);
+  float hue = c.r >= c.g && c.g >= c.b ? (c.g - c.b)/max(c.r - c.b, 1e-4) : -1.0; // 0..1 = red .. yellow
+  float skin = smoothstep(0.12, 0.22, hue)*(1.0 - smoothstep(0.55, 0.70, hue))*smoothstep(0.18, 0.28, S)*(1.0 - smoothstep(0.55, 0.70, S))*smoothstep(0.30, 0.45, mx);
+  float amt = uGC.w*smoothstep(0.03, 0.25, S)*pow(1.0 - clamp(S, 0.0, 1.0), uGD.x)*mix(1.0, uGD.y, skin)*mix(1.0, uGD.z, sky);
+  float Yc = dot(c, vec3(0.2126, 0.7152, 0.0722));
+  return clamp(vec3(Yc) + (c - Yc)*(1.0 + amt), 0.0, 1.0);
+}
+`;
+
 // Town greenery (#254 C15 review): inside the town and a feathered band around it
 // the meadow follows the ZZZ rule "muted base, bright accents" - olive, less
 // saturated grass and a thinner flower field. The open island keeps its colours.
@@ -172,8 +203,9 @@ export function createLook(renderer, camera) {
     uLnOn: { value: 0 }, uLn: { value: new THREE.Vector4() }, uLnS: { value: new THREE.Vector4() }, uLnC: { value: 0 }, uLnCol: { value: new THREE.Vector3() },
     uShOn: { value: 0 }, uShAO: { value: new THREE.Vector3(1, 1, 1) }, uShMul: { value: new THREE.Vector3(1, 1, 1) },
     uShLift: { value: new THREE.Vector3() }, uShRange: { value: new THREE.Vector3(0.06, 0.42, 1) },
+    uGradeOn: { value: 0 }, uGA: { value: new THREE.Vector4() }, uGB: { value: new THREE.Vector4() }, uGC: { value: new THREE.Vector4() }, uGD: { value: new THREE.Vector4() }, uGE: { value: new THREE.Vector4() },
   });
-  mat.fragmentShader = insert(mat.fragmentShader, 'void main(){', `${OUTLINES}\n${LINES}\nvoid main(){`, 'composite entry');
+  mat.fragmentShader = insert(mat.fragmentShader, 'void main(){', `${OUTLINES}\n${LINES}\n${GRADE}\nvoid main(){`, 'composite entry');
   mat.fragmentShader = insert(mat.fragmentShader, 'col *= uExposure;', `
     // Contact shadows (ZZZ refs: crates, benches, eaves all sit in soft dark creases).
     if (uAO*uToon > 0.0) {
@@ -241,6 +273,12 @@ export function createLook(renderer, camera) {
       col = mix(col, streetColor, (1.0 - wbSky) * uHaze);
     }
     col = clamp(col, 0.0, 1.0);`, 'purple shadows');
+
+  // Round 12: last step before the dither, after toSRGB. Left out of the shader with ?grade=off.
+  if (gradeEnabled()) {
+    mat.fragmentShader = insert(mat.fragmentShader, 'col = toSRGB(col);', `col = toSRGB(col);
+    if (uGradeOn > 0.5) col = wbGrade(col, wbSky);`, 'grade stage');
+  }
 
   function applyIsland(island) {
     // Quantize terrain's calibrated diffuse, including its grass wrap-lighting.
@@ -347,6 +385,17 @@ export function createLook(renderer, camera) {
     setToonLines(u) {
       if (!u) { mat.uniforms.uLnOn.value = 0; return; }
       for (const [k, v] of Object.entries(u)) mat.uniforms[k].value.copy ? mat.uniforms[k].value.copy(v.value) : (mat.uniforms[k].value = v.value);
+    },
+    /** Round 12: params from toon.json (evening / afternoon).grade; null switches the grade off. */
+    setGrade(g) {
+      const u = mat.uniforms;
+      if (!g || !gradeEnabled()) { u.uGradeOn.value = 0; return; }
+      u.uGA.value.set(g.pivot, g.contrast, g.floor, g.toe);
+      u.uGB.value.set(g.gain, g.gainRange[0], g.gainRange[1], g.knee);
+      u.uGC.value.set(g.cap, g.peakKnee, g.peakCap, g.vibrance);
+      u.uGD.value.set(g.vibrancePower, g.skinKeep, g.skyKeep, g.skyGain);
+      u.uGE.value.set(g.contrastHi, 0, 0, 0);
+      u.uGradeOn.value = 1;
     },
     setAO(value) { mat.uniforms.uAO.value = value; },
     /** Round 24: uniforms from shadowTintUniforms(); null switches the composite tint off. */

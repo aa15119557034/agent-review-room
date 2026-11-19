@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { createIsland, clearVegetationAreas } from './island.js';
 import { loadShadowTint, shadowTintEnabled, installLitShadowTint, patchIslandShadowTint, shadowTintUniforms, shopInteriorBoxes } from './shadow-tint.js';
-import { loadToon, toonEnabled, installLitToon, installToonHook, toonLineUniforms, maskGlassAlpha } from './toon.js';
+import { loadToon, toonEnabled, gradeEnabled, installLitToon, installToonHook, toonLineUniforms, maskGlassAlpha } from './toon.js';
 import { addShopSpill, loadShopSpill, shopFrontsFromRooms, groundSpillFronts } from './shop-spill.js';
 import { addDoorGlow, loadDoorGlow, resolveDoorLamps } from './door-glow.js';
 import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from './evening-glow.js';
@@ -176,6 +176,12 @@ async function init() {
     installLitToon(toonP, toonBoxes);
     look.setToonLines(toonLineUniforms(toonP));
     worldBase.toon27 = { params: toonP };
+  }
+  // Round 12: fixed global grade (dark floor, highlight shoulder, vibrance). ?grade=off restores round 11.
+  if (gradeEnabled()) {
+    const gradeP = (await loadToon())[timeOfDay === 'afternoon' ? 'afternoon' : 'evening'].grade;
+    look.setGrade(gradeP);
+    worldBase.grade = { params: gradeP };
   }
   island.meadow._buildCoverGrid(); // Refresh the density cache before its first update.
   {
