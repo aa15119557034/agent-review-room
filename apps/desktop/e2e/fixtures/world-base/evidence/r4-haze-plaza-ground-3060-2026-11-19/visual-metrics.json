@@ -1,0 +1,1311 @@
+{
+  "art-a-street": {
+    "equalDepthClass": 1296000,
+    "trials": {
+      "before": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 114.181,
+          "lumaStd": 52.109,
+          "meanHorizontalLumaEdge": 6.67
+        },
+        "sky": {
+          "pixels": 103748,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 168.63,
+          "lumaStd": 23.136,
+          "meanHorizontalLumaEdge": 2.916
+        },
+        "nearUnder120m": {
+          "pixels": 1110606,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 103.908,
+          "lumaStd": 48.006,
+          "meanHorizontalLumaEdge": 6.85
+        },
+        "mid120to530m": {
+          "pixels": 13946,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 144.299,
+          "lumaStd": 44.083,
+          "meanHorizontalLumaEdge": 7.214
+        },
+        "distance530to850m": {
+          "pixels": 33365,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 199.228,
+          "lumaStd": 18.986,
+          "meanHorizontalLumaEdge": 3.206
+        },
+        "farOver530m": {
+          "pixels": 67700,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 193.062,
+          "lumaStd": 16.454,
+          "meanHorizontalLumaEdge": 2.956
+        },
+        "upperRightOver530m": {
+          "pixels": 66515,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 193.056,
+          "lumaStd": 16.529,
+          "meanHorizontalLumaEdge": 2.97
+        }
+      },
+      "haze050": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 111181,
+          "over2Levels": 69701,
+          "over8Levels": 58191,
+          "maxLevel": 50,
+          "meanMaxChannelDelta": 0.94,
+          "lumaMean": 114.43,
+          "lumaStd": 52.433,
+          "meanHorizontalLumaEdge": 6.621
+        },
+        "sky": {
+          "pixels": 103748,
+          "changed": 4074,
+          "over2Levels": 7,
+          "over8Levels": 0,
+          "maxLevel": 8,
+          "meanMaxChannelDelta": 0.04,
+          "lumaMean": 168.638,
+          "lumaStd": 23.134,
+          "meanHorizontalLumaEdge": 2.915
+        },
+        "nearUnder120m": {
+          "pixels": 1110606,
+          "changed": 34673,
+          "over2Levels": 810,
+          "over8Levels": 313,
+          "maxLevel": 50,
+          "meanMaxChannelDelta": 0.037,
+          "lumaMean": 103.918,
+          "lumaStd": 48.005,
+          "meanHorizontalLumaEdge": 6.85
+        },
+        "mid120to530m": {
+          "pixels": 13946,
+          "changed": 5380,
+          "over2Levels": 3074,
+          "over8Levels": 1430,
+          "maxLevel": 30,
+          "meanMaxChannelDelta": 1.93,
+          "lumaMean": 145.075,
+          "lumaStd": 44.86,
+          "meanHorizontalLumaEdge": 7.14
+        },
+        "distance530to850m": {
+          "pixels": 33365,
+          "changed": 33347,
+          "over2Levels": 33138,
+          "over8Levels": 29991,
+          "maxLevel": 42,
+          "meanMaxChannelDelta": 18.563,
+          "lumaMean": 202.131,
+          "lumaStd": 14.827,
+          "meanHorizontalLumaEdge": 2.017
+        },
+        "farOver530m": {
+          "pixels": 67700,
+          "changed": 67054,
+          "over2Levels": 65810,
+          "over8Levels": 56448,
+          "maxLevel": 42,
+          "meanMaxChannelDelta": 16.923,
+          "lumaMean": 197.5,
+          "lumaStd": 13.423,
+          "meanHorizontalLumaEdge": 1.955
+        },
+        "upperRightOver530m": {
+          "pixels": 66515,
+          "changed": 65929,
+          "over2Levels": 64723,
+          "over8Levels": 55425,
+          "maxLevel": 42,
+          "meanMaxChannelDelta": 16.887,
+          "lumaMean": 197.428,
+          "lumaStd": 13.436,
+          "meanHorizontalLumaEdge": 1.954
+        }
+      },
+      "haze070": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 121466,
+          "over2Levels": 70190,
+          "over8Levels": 62862,
+          "maxLevel": 68,
+          "meanMaxChannelDelta": 1.143,
+          "lumaMean": 114.523,
+          "lumaStd": 52.561,
+          "meanHorizontalLumaEdge": 6.605
+        },
+        "sky": {
+          "pixels": 103748,
+          "changed": 5212,
+          "over2Levels": 7,
+          "over8Levels": 2,
+          "maxLevel": 9,
+          "meanMaxChannelDelta": 0.051,
+          "lumaMean": 168.641,
+          "lumaStd": 23.132,
+          "meanHorizontalLumaEdge": 2.915
+        },
+        "nearUnder120m": {
+          "pixels": 1110606,
+          "changed": 43095,
+          "over2Levels": 859,
+          "over8Levels": 435,
+          "maxLevel": 68,
+          "meanMaxChannelDelta": 0.047,
+          "lumaMean": 103.922,
+          "lumaStd": 48.004,
+          "meanHorizontalLumaEdge": 6.851
+        },
+        "mid120to530m": {
+          "pixels": 13946,
+          "changed": 5859,
+          "over2Levels": 3446,
+          "over8Levels": 1909,
+          "maxLevel": 40,
+          "meanMaxChannelDelta": 2.707,
+          "lumaMean": 145.359,
+          "lumaStd": 45.156,
+          "meanHorizontalLumaEdge": 7.114
+        },
+        "distance530to850m": {
+          "pixels": 33365,
+          "changed": 33355,
+          "over2Levels": 33168,
+          "over8Levels": 31430,
+          "maxLevel": 54,
+          "meanMaxChannelDelta": 21.781,
+          "lumaMean": 203.075,
+          "lumaStd": 13.049,
+          "meanHorizontalLumaEdge": 1.556
+        },
+        "farOver530m": {
+          "pixels": 67700,
+          "changed": 67300,
+          "over2Levels": 65878,
+          "over8Levels": 60516,
+          "maxLevel": 54,
+          "meanMaxChannelDelta": 20.476,
+          "lumaMean": 199.15,
+          "lumaStd": 12.369,
+          "meanHorizontalLumaEdge": 1.599
+        },
+        "upperRightOver530m": {
+          "pixels": 66515,
+          "changed": 66164,
+          "over2Levels": 64790,
+          "over8Levels": 59468,
+          "maxLevel": 54,
+          "meanMaxChannelDelta": 20.393,
+          "lumaMean": 199.05,
+          "lumaStd": 12.343,
+          "meanHorizontalLumaEdge": 1.593
+        }
+      }
+    }
+  },
+  "art-b-konbini": {
+    "equalDepthClass": 1296000,
+    "trials": {
+      "before": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 140.446,
+          "lumaStd": 45.724,
+          "meanHorizontalLumaEdge": 4.263
+        },
+        "sky": {
+          "pixels": 209957,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 144.39,
+          "lumaStd": 14.175,
+          "meanHorizontalLumaEdge": 1.315
+        },
+        "nearUnder120m": {
+          "pixels": 1086043,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 139.683,
+          "lumaStd": 49.522,
+          "meanHorizontalLumaEdge": 4.764
+        }
+      },
+      "haze050": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 140.446,
+          "lumaStd": 45.724,
+          "meanHorizontalLumaEdge": 4.263
+        },
+        "sky": {
+          "pixels": 209957,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 144.39,
+          "lumaStd": 14.175,
+          "meanHorizontalLumaEdge": 1.315
+        },
+        "nearUnder120m": {
+          "pixels": 1086043,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 139.683,
+          "lumaStd": 49.522,
+          "meanHorizontalLumaEdge": 4.764
+        }
+      },
+      "haze070": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 140.446,
+          "lumaStd": 45.724,
+          "meanHorizontalLumaEdge": 4.263
+        },
+        "sky": {
+          "pixels": 209957,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 144.39,
+          "lumaStd": 14.175,
+          "meanHorizontalLumaEdge": 1.315
+        },
+        "nearUnder120m": {
+          "pixels": 1086043,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 139.683,
+          "lumaStd": 49.522,
+          "meanHorizontalLumaEdge": 4.764
+        }
+      }
+    }
+  },
+  "art-c-alley": {
+    "equalDepthClass": 1296000,
+    "trials": {
+      "before": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 71.892,
+          "lumaStd": 46.836,
+          "meanHorizontalLumaEdge": 3.299
+        },
+        "sky": {
+          "pixels": 94113,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 176.511,
+          "lumaStd": 20.642,
+          "meanHorizontalLumaEdge": 0.732
+        },
+        "nearUnder120m": {
+          "pixels": 1200990,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 63.648,
+          "lumaStd": 37.477,
+          "meanHorizontalLumaEdge": 3.097
+        },
+        "mid120to530m": {
+          "pixels": 897,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 133.295,
+          "lumaStd": 31.469,
+          "meanHorizontalLumaEdge": 6.955
+        }
+      },
+      "haze050": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 423,
+          "over2Levels": 16,
+          "over8Levels": 0,
+          "maxLevel": 5,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 71.892,
+          "lumaStd": 46.836,
+          "meanHorizontalLumaEdge": 3.299
+        },
+        "sky": {
+          "pixels": 94113,
+          "changed": 3,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 1,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 176.512,
+          "lumaStd": 20.642,
+          "meanHorizontalLumaEdge": 0.732
+        },
+        "nearUnder120m": {
+          "pixels": 1200990,
+          "changed": 25,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 1,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 63.648,
+          "lumaStd": 37.477,
+          "meanHorizontalLumaEdge": 3.097
+        },
+        "mid120to530m": {
+          "pixels": 897,
+          "changed": 395,
+          "over2Levels": 16,
+          "over8Levels": 0,
+          "maxLevel": 5,
+          "meanMaxChannelDelta": 0.543,
+          "lumaMean": 133.514,
+          "lumaStd": 31.397,
+          "meanHorizontalLumaEdge": 6.952
+        }
+      },
+      "haze070": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 502,
+          "over2Levels": 30,
+          "over8Levels": 0,
+          "maxLevel": 7,
+          "meanMaxChannelDelta": 0.001,
+          "lumaMean": 71.892,
+          "lumaStd": 46.836,
+          "meanHorizontalLumaEdge": 3.299
+        },
+        "sky": {
+          "pixels": 94113,
+          "changed": 3,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 1,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 176.512,
+          "lumaStd": 20.642,
+          "meanHorizontalLumaEdge": 0.732
+        },
+        "nearUnder120m": {
+          "pixels": 1200990,
+          "changed": 35,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 1,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 63.648,
+          "lumaStd": 37.477,
+          "meanHorizontalLumaEdge": 3.097
+        },
+        "mid120to530m": {
+          "pixels": 897,
+          "changed": 464,
+          "over2Levels": 30,
+          "over8Levels": 0,
+          "maxLevel": 7,
+          "meanMaxChannelDelta": 0.697,
+          "lumaMean": 133.604,
+          "lumaStd": 31.372,
+          "meanHorizontalLumaEdge": 6.927
+        }
+      }
+    }
+  },
+  "art-d-laundry": {
+    "equalDepthClass": 1296000,
+    "trials": {
+      "before": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 105.899,
+          "lumaStd": 54.849,
+          "meanHorizontalLumaEdge": 4.7
+        },
+        "sky": {
+          "pixels": 2346,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 150.424,
+          "lumaStd": 36.866,
+          "meanHorizontalLumaEdge": 2.129
+        },
+        "nearUnder120m": {
+          "pixels": 1293654,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 105.818,
+          "lumaStd": 54.843,
+          "meanHorizontalLumaEdge": 4.69
+        }
+      },
+      "haze050": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 105.899,
+          "lumaStd": 54.849,
+          "meanHorizontalLumaEdge": 4.7
+        },
+        "sky": {
+          "pixels": 2346,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 150.424,
+          "lumaStd": 36.866,
+          "meanHorizontalLumaEdge": 2.129
+        },
+        "nearUnder120m": {
+          "pixels": 1293654,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 105.818,
+          "lumaStd": 54.843,
+          "meanHorizontalLumaEdge": 4.69
+        }
+      },
+      "haze070": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 105.899,
+          "lumaStd": 54.849,
+          "meanHorizontalLumaEdge": 4.7
+        },
+        "sky": {
+          "pixels": 2346,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 150.424,
+          "lumaStd": 36.866,
+          "meanHorizontalLumaEdge": 2.129
+        },
+        "nearUnder120m": {
+          "pixels": 1293654,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 105.818,
+          "lumaStd": 54.843,
+          "meanHorizontalLumaEdge": 4.69
+        }
+      }
+    }
+  },
+  "sample-e-harbour": {
+    "equalDepthClass": 1293966,
+    "trials": {
+      "before": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 159.063,
+          "lumaStd": 41.61,
+          "meanHorizontalLumaEdge": 4.616
+        },
+        "sky": {
+          "pixels": 619298,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 162.776,
+          "lumaStd": 28.006,
+          "meanHorizontalLumaEdge": 0.614
+        },
+        "nearUnder120m": {
+          "pixels": 633924,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 153.968,
+          "lumaStd": 51.253,
+          "meanHorizontalLumaEdge": 7.45
+        },
+        "mid120to530m": {
+          "pixels": 28478,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 175.528,
+          "lumaStd": 28.525,
+          "meanHorizontalLumaEdge": 6.187
+        },
+        "distance530to850m": {
+          "pixels": 3049,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 200.543,
+          "lumaStd": 11.555,
+          "meanHorizontalLumaEdge": 2.77
+        },
+        "farOver530m": {
+          "pixels": 12266,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 201.875,
+          "lumaStd": 12.722,
+          "meanHorizontalLumaEdge": 2.615
+        }
+      },
+      "haze050": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 24160,
+          "over2Levels": 14646,
+          "over8Levels": 9750,
+          "maxLevel": 224,
+          "meanMaxChannelDelta": 0.422,
+          "lumaMean": 159.116,
+          "lumaStd": 41.637,
+          "meanHorizontalLumaEdge": 4.598
+        },
+        "sky": {
+          "pixels": 619298,
+          "changed": 2771,
+          "over2Levels": 373,
+          "over8Levels": 352,
+          "maxLevel": 88,
+          "meanMaxChannelDelta": 0.023,
+          "lumaMean": 162.777,
+          "lumaStd": 28.007,
+          "meanHorizontalLumaEdge": 0.614
+        },
+        "nearUnder120m": {
+          "pixels": 633924,
+          "changed": 6907,
+          "over2Levels": 1410,
+          "over8Levels": 987,
+          "maxLevel": 223,
+          "meanMaxChannelDelta": 0.128,
+          "lumaMean": 153.965,
+          "lumaStd": 51.257,
+          "meanHorizontalLumaEdge": 7.442
+        },
+        "mid120to530m": {
+          "pixels": 28478,
+          "changed": 6186,
+          "over2Levels": 4686,
+          "over8Levels": 1020,
+          "maxLevel": 59,
+          "meanMaxChannelDelta": 1.55,
+          "lumaMean": 175.952,
+          "lumaStd": 28.525,
+          "meanHorizontalLumaEdge": 6.175
+        },
+        "distance530to850m": {
+          "pixels": 3049,
+          "changed": 940,
+          "over2Levels": 893,
+          "over8Levels": 391,
+          "maxLevel": 35,
+          "meanMaxChannelDelta": 2.949,
+          "lumaMean": 201.878,
+          "lumaStd": 12.26,
+          "meanHorizontalLumaEdge": 2.775
+        },
+        "farOver530m": {
+          "pixels": 12266,
+          "changed": 6262,
+          "over2Levels": 6144,
+          "over8Levels": 5364,
+          "maxLevel": 39,
+          "meanMaxChannelDelta": 8.847,
+          "lumaMean": 205.602,
+          "lumaStd": 10.65,
+          "meanHorizontalLumaEdge": 1.981
+        }
+      },
+      "haze070": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 26544,
+          "over2Levels": 14760,
+          "over8Levels": 12989,
+          "maxLevel": 223,
+          "meanMaxChannelDelta": 0.463,
+          "lumaMean": 159.134,
+          "lumaStd": 41.652,
+          "meanHorizontalLumaEdge": 4.597
+        },
+        "sky": {
+          "pixels": 619298,
+          "changed": 3378,
+          "over2Levels": 379,
+          "over8Levels": 360,
+          "maxLevel": 88,
+          "meanMaxChannelDelta": 0.025,
+          "lumaMean": 162.778,
+          "lumaStd": 28.007,
+          "meanHorizontalLumaEdge": 0.614
+        },
+        "nearUnder120m": {
+          "pixels": 633924,
+          "changed": 8380,
+          "over2Levels": 1477,
+          "over8Levels": 1040,
+          "maxLevel": 223,
+          "meanMaxChannelDelta": 0.133,
+          "lumaMean": 153.968,
+          "lumaStd": 51.255,
+          "meanHorizontalLumaEdge": 7.443
+        },
+        "mid120to530m": {
+          "pixels": 28478,
+          "changed": 6477,
+          "over2Levels": 4747,
+          "over8Levels": 3931,
+          "maxLevel": 76,
+          "meanMaxChannelDelta": 1.918,
+          "lumaMean": 176.114,
+          "lumaStd": 28.54,
+          "meanHorizontalLumaEdge": 6.175
+        },
+        "distance530to850m": {
+          "pixels": 3049,
+          "changed": 954,
+          "over2Levels": 864,
+          "over8Levels": 484,
+          "maxLevel": 45,
+          "meanMaxChannelDelta": 3.502,
+          "lumaMean": 202.18,
+          "lumaStd": 12.311,
+          "meanHorizontalLumaEdge": 2.786
+        },
+        "farOver530m": {
+          "pixels": 12266,
+          "changed": 6277,
+          "over2Levels": 6125,
+          "over8Levels": 5636,
+          "maxLevel": 51,
+          "meanMaxChannelDelta": 11.945,
+          "lumaMean": 207.002,
+          "lumaStd": 10.265,
+          "meanHorizontalLumaEdge": 1.772
+        }
+      }
+    }
+  },
+  "sample-f-hillside": {
+    "equalDepthClass": 1296000,
+    "trials": {
+      "before": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 119.462,
+          "lumaStd": 28.529,
+          "meanHorizontalLumaEdge": 8.236
+        },
+        "sky": {
+          "pixels": 513583,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 124.342,
+          "lumaStd": 11.753,
+          "meanHorizontalLumaEdge": 0.495
+        },
+        "nearUnder120m": {
+          "pixels": 592235,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 106.939,
+          "lumaStd": 32.719,
+          "meanHorizontalLumaEdge": 16.066
+        },
+        "mid120to530m": {
+          "pixels": 142098,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 146.494,
+          "lumaStd": 27.152,
+          "meanHorizontalLumaEdge": 5.115
+        },
+        "distance530to850m": {
+          "pixels": 48084,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 141.693,
+          "lumaStd": 16.035,
+          "meanHorizontalLumaEdge": 2.695
+        },
+        "farOver530m": {
+          "pixels": 48084,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 141.693,
+          "lumaStd": 16.035,
+          "meanHorizontalLumaEdge": 2.695
+        }
+      },
+      "haze050": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 213342,
+          "over2Levels": 162959,
+          "over8Levels": 130528,
+          "maxLevel": 23,
+          "meanMaxChannelDelta": 1.687,
+          "lumaMean": 120.58,
+          "lumaStd": 29.228,
+          "meanHorizontalLumaEdge": 8.156
+        },
+        "sky": {
+          "pixels": 513583,
+          "changed": 16522,
+          "over2Levels": 4,
+          "over8Levels": 0,
+          "maxLevel": 5,
+          "meanMaxChannelDelta": 0.032,
+          "lumaMean": 124.353,
+          "lumaStd": 11.755,
+          "meanHorizontalLumaEdge": 0.494
+        },
+        "nearUnder120m": {
+          "pixels": 592235,
+          "changed": 16331,
+          "over2Levels": 229,
+          "over8Levels": 53,
+          "maxLevel": 16,
+          "meanMaxChannelDelta": 0.03,
+          "lumaMean": 106.946,
+          "lumaStd": 32.718,
+          "meanHorizontalLumaEdge": 16.066
+        },
+        "mid120to530m": {
+          "pixels": 142098,
+          "changed": 132405,
+          "over2Levels": 114674,
+          "over8Levels": 84239,
+          "maxLevel": 23,
+          "meanMaxChannelDelta": 9.709,
+          "lumaMean": 152.466,
+          "lumaStd": 23.806,
+          "meanHorizontalLumaEdge": 4.661
+        },
+        "distance530to850m": {
+          "pixels": 48084,
+          "changed": 48084,
+          "over2Levels": 48052,
+          "over8Levels": 46236,
+          "maxLevel": 23,
+          "meanMaxChannelDelta": 16.055,
+          "lumaMean": 153.985,
+          "lumaStd": 11.335,
+          "meanHorizontalLumaEdge": 1.844
+        },
+        "farOver530m": {
+          "pixels": 48084,
+          "changed": 48084,
+          "over2Levels": 48052,
+          "over8Levels": 46236,
+          "maxLevel": 23,
+          "meanMaxChannelDelta": 16.055,
+          "lumaMean": 153.985,
+          "lumaStd": 11.335,
+          "meanHorizontalLumaEdge": 1.844
+        }
+      },
+      "haze070": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 226343,
+          "over2Levels": 166874,
+          "over8Levels": 141776,
+          "maxLevel": 32,
+          "meanMaxChannelDelta": 2.302,
+          "lumaMean": 121.015,
+          "lumaStd": 29.605,
+          "meanHorizontalLumaEdge": 8.124
+        },
+        "sky": {
+          "pixels": 513583,
+          "changed": 22734,
+          "over2Levels": 4,
+          "over8Levels": 0,
+          "maxLevel": 7,
+          "meanMaxChannelDelta": 0.044,
+          "lumaMean": 124.357,
+          "lumaStd": 11.756,
+          "meanHorizontalLumaEdge": 0.494
+        },
+        "nearUnder120m": {
+          "pixels": 592235,
+          "changed": 22050,
+          "over2Levels": 258,
+          "over8Levels": 85,
+          "maxLevel": 19,
+          "meanMaxChannelDelta": 0.04,
+          "lumaMean": 106.949,
+          "lumaStd": 32.718,
+          "meanHorizontalLumaEdge": 16.065
+        },
+        "mid120to530m": {
+          "pixels": 142098,
+          "changed": 133475,
+          "over2Levels": 118529,
+          "over8Levels": 94002,
+          "maxLevel": 29,
+          "meanMaxChannelDelta": 13.067,
+          "lumaMean": 154.81,
+          "lumaStd": 22.685,
+          "meanHorizontalLumaEdge": 4.483
+        },
+        "distance530to850m": {
+          "pixels": 48084,
+          "changed": 48084,
+          "over2Levels": 48083,
+          "over8Levels": 47689,
+          "maxLevel": 32,
+          "meanMaxChannelDelta": 22.449,
+          "lumaMean": 158.702,
+          "lumaStd": 9.534,
+          "meanHorizontalLumaEdge": 1.513
+        },
+        "farOver530m": {
+          "pixels": 48084,
+          "changed": 48084,
+          "over2Levels": 48083,
+          "over8Levels": 47689,
+          "maxLevel": 32,
+          "meanMaxChannelDelta": 22.449,
+          "lumaMean": 158.702,
+          "lumaStd": 9.534,
+          "meanHorizontalLumaEdge": 1.513
+        }
+      }
+    }
+  },
+  "sample-g-rail": {
+    "equalDepthClass": 1296000,
+    "trials": {
+      "before": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 124.289,
+          "lumaStd": 50.188,
+          "meanHorizontalLumaEdge": 7.005
+        },
+        "sky": {
+          "pixels": 242278,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 177.491,
+          "lumaStd": 30.731,
+          "meanHorizontalLumaEdge": 2.022
+        },
+        "nearUnder120m": {
+          "pixels": 1051876,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 111.963,
+          "lumaStd": 45.573,
+          "meanHorizontalLumaEdge": 7.714
+        },
+        "mid120to530m": {
+          "pixels": 1846,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 165.566,
+          "lumaStd": 34.515,
+          "meanHorizontalLumaEdge": 14.656
+        }
+      },
+      "haze050": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 607,
+          "over2Levels": 184,
+          "over8Levels": 157,
+          "maxLevel": 30,
+          "meanMaxChannelDelta": 0.003,
+          "lumaMean": 124.29,
+          "lumaStd": 50.189,
+          "meanHorizontalLumaEdge": 7.006
+        },
+        "sky": {
+          "pixels": 242278,
+          "changed": 3,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 1,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 177.491,
+          "lumaStd": 30.731,
+          "meanHorizontalLumaEdge": 2.022
+        },
+        "nearUnder120m": {
+          "pixels": 1051876,
+          "changed": 251,
+          "over2Levels": 18,
+          "over8Levels": 10,
+          "maxLevel": 18,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 111.963,
+          "lumaStd": 45.573,
+          "meanHorizontalLumaEdge": 7.714
+        },
+        "mid120to530m": {
+          "pixels": 1846,
+          "changed": 353,
+          "over2Levels": 166,
+          "over8Levels": 147,
+          "maxLevel": 30,
+          "meanMaxChannelDelta": 1.749,
+          "lumaMean": 166.522,
+          "lumaStd": 34.671,
+          "meanHorizontalLumaEdge": 14.709
+        }
+      },
+      "haze070": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 713,
+          "over2Levels": 196,
+          "over8Levels": 179,
+          "maxLevel": 40,
+          "meanMaxChannelDelta": 0.004,
+          "lumaMean": 124.291,
+          "lumaStd": 50.189,
+          "meanHorizontalLumaEdge": 7.006
+        },
+        "sky": {
+          "pixels": 242278,
+          "changed": 4,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 1,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 177.491,
+          "lumaStd": 30.731,
+          "meanHorizontalLumaEdge": 2.022
+        },
+        "nearUnder120m": {
+          "pixels": 1051876,
+          "changed": 342,
+          "over2Levels": 29,
+          "over8Levels": 17,
+          "maxLevel": 24,
+          "meanMaxChannelDelta": 0.001,
+          "lumaMean": 111.963,
+          "lumaStd": 45.573,
+          "meanHorizontalLumaEdge": 7.714
+        },
+        "mid120to530m": {
+          "pixels": 1846,
+          "changed": 367,
+          "over2Levels": 167,
+          "over8Levels": 162,
+          "maxLevel": 40,
+          "meanMaxChannelDelta": 2.35,
+          "lumaMean": 166.868,
+          "lumaStd": 34.79,
+          "meanHorizontalLumaEdge": 14.731
+        }
+      }
+    }
+  },
+  "sample-h-north": {
+    "equalDepthClass": 1296000,
+    "trials": {
+      "before": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 147.41,
+          "lumaStd": 34.053,
+          "meanHorizontalLumaEdge": 6.894
+        },
+        "sky": {
+          "pixels": 786088,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 155.644,
+          "lumaStd": 27.44,
+          "meanHorizontalLumaEdge": 0.551
+        },
+        "nearUnder120m": {
+          "pixels": 509422,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 134.637,
+          "lumaStd": 38.934,
+          "meanHorizontalLumaEdge": 16.002
+        },
+        "farOver530m": {
+          "pixels": 490,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 215.437,
+          "lumaStd": 11.798,
+          "meanHorizontalLumaEdge": 4.519
+        }
+      },
+      "haze050": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 147.41,
+          "lumaStd": 34.053,
+          "meanHorizontalLumaEdge": 6.894
+        },
+        "sky": {
+          "pixels": 786088,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 155.644,
+          "lumaStd": 27.44,
+          "meanHorizontalLumaEdge": 0.551
+        },
+        "nearUnder120m": {
+          "pixels": 509422,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 134.637,
+          "lumaStd": 38.934,
+          "meanHorizontalLumaEdge": 16.002
+        },
+        "farOver530m": {
+          "pixels": 490,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 215.437,
+          "lumaStd": 11.798,
+          "meanHorizontalLumaEdge": 4.519
+        }
+      },
+      "haze070": {
+        "whole": {
+          "pixels": 1296000,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 147.41,
+          "lumaStd": 34.053,
+          "meanHorizontalLumaEdge": 6.894
+        },
+        "sky": {
+          "pixels": 786088,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 155.644,
+          "lumaStd": 27.44,
+          "meanHorizontalLumaEdge": 0.551
+        },
+        "nearUnder120m": {
+          "pixels": 509422,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 134.637,
+          "lumaStd": 38.934,
+          "meanHorizontalLumaEdge": 16.002
+        },
+        "farOver530m": {
+          "pixels": 490,
+          "changed": 0,
+          "over2Levels": 0,
+          "over8Levels": 0,
+          "maxLevel": 0,
+          "meanMaxChannelDelta": 0.0,
+          "lumaMean": 215.437,
+          "lumaStd": 11.798,
+          "meanHorizontalLumaEdge": 4.519
+        }
+      }
+    }
+  }
+}

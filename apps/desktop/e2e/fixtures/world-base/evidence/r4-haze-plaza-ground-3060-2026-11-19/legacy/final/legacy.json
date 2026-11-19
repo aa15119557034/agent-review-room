@@ -1,0 +1,265 @@
+{
+  "source": "e931ced959f91c39b9332ca2c3ed0f504b816971",
+  "cameraSource": "apps/desktop/e2e/fixtures/world-base/evidence/c28-toon-ground-3060-2026-11-18/timing/driver/x51-c28-ground28-cameras.json",
+  "cameraSourceSha256": "6bad70977d5f004c922085ebe824041882df5c5eca7849981512ca067a6a476d",
+  "start": "2026-11-18T23:57:32.937Z",
+  "views": {
+    "01-station-street": {
+      "camera": {
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58
+      },
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "time": 14,
+      "preset": "evening",
+      "size": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "pngSHA256": "0aa37c968bde5d2dd53be1abdd6b4b84d42ae0dbafafd345f90dda2f95a2de96",
+      "n": 422,
+      "durationMs": 6507.799999999996,
+      "fps": 64.84526260794743,
+      "p95Ms": 15.5,
+      "p99Ms": 15.599999999998545
+    },
+    "20-rear-eye": {
+      "camera": {
+        "position": [
+          273,
+          14.755245542526229,
+          758
+        ],
+        "quaternion": [
+          -0.00013011891877658623,
+          0.9145142483742376,
+          -0.00029414054360230415,
+          -0.40455356390830466
+        ],
+        "fov": 58
+      },
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "time": 14,
+      "preset": "evening",
+      "size": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "pngSHA256": "ce2b25b253690cbeb4d6db0feb2d46f4abab1b2bfdc88f83822e6d0aea555ca0",
+      "n": 423,
+      "durationMs": 6507.699999999997,
+      "fps": 64.99992316793954,
+      "p95Ms": 15.5,
+      "p99Ms": 15.599999999998545
+    },
+    "21-front-eye": {
+      "camera": {
+        "position": [
+          274,
+          12.87812709172567,
+          783
+        ],
+        "quaternion": [
+          0.07422133960767584,
+          -0.5103582416049142,
+          0.044271975994965136,
+          0.8556083508909221
+        ],
+        "fov": 58
+      },
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "time": 14,
+      "preset": "evening",
+      "size": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "pngSHA256": "0f7000d2905a3fe1c69336dd24c15f6e37b2a84d9c2e2e15e4c56dbb3b1b3c53",
+      "n": 428,
+      "durationMs": 6584.5999999999985,
+      "fps": 65.00015186951373,
+      "p95Ms": 15.5,
+      "p99Ms": 15.60000000000582
+    },
+    "23-service-corner": {
+      "camera": {
+        "position": [
+          308.4,
+          9.612,
+          872.9
+        ],
+        "quaternion": [
+          -0.08432325046436126,
+          0.5331397072650681,
+          0.05351200213385738,
+          0.8401119613456697
+        ],
+        "fov": 55
+      },
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "time": 14,
+      "preset": "evening",
+      "size": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "pngSHA256": "be6b5d842226f5b3c87324e0906b6089103e3e21948079cab43628b3ca8dfd17",
+      "n": 422,
+      "durationMs": 6507.699999999997,
+      "fps": 64.84625904697515,
+      "p95Ms": 15.5,
+      "p99Ms": 15.60000000000582
+    },
+    "24-laundry-details": {
+      "camera": {
+        "position": [
+          288,
+          14.384808464050293,
+          777.9
+        ],
+        "quaternion": [
+          -0.15522850149956677,
+          0.6173580660361093,
+          0.12595148976979553,
+          0.7608609287163607
+        ],
+        "fov": 55
+      },
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "time": 14,
+      "preset": "evening",
+      "size": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "pngSHA256": "7c53fd5411de6fb48dfb8e66171563fdc0efbf71e4a08356a4cd5adc843d5a4c",
+      "n": 428,
+      "durationMs": 6584.599999999991,
+      "fps": 65.0001518695138,
+      "p95Ms": 15.5,
+      "p99Ms": 15.5
+    }
+  },
+  "exceptions": [],
+  "stage": "complete",
+  "visibility": {
+    "street": {
+      "camera": {
+        "eye": [
+          278.8,
+          10.488,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440409,
+          -0.009834585659995631,
+          -0.00003223795934194156,
+          0.9999462663720154
+        ],
+        "fov": 35.63777782904556,
+        "walker": "third"
+      },
+      "passes": {
+        "shadow": {
+          "draws": 562,
+          "triangles": 2275177
+        },
+        "main color": {
+          "draws": 1007,
+          "triangles": 5414223
+        },
+        "other player-camera passes": {
+          "draws": 1,
+          "triangles": 1
+        },
+        "other cameras or fullscreen": {
+          "draws": 15,
+          "triangles": 15
+        }
+      },
+      "mainMeshes": 993,
+      "instancedMeshes": 127,
+      "totalInstances": 61183,
+      "outsideExpandedSphere": 32003,
+      "estimatedInstanceTriangles": 954886,
+      "cell64m": {
+        "estimatedTriangles": 767724,
+        "currentDraws": 127,
+        "hypotheticalDraws": 219
+      }
+    },
+    "first": {
+      "camera": {
+        "eye": [
+          281.36472059417275,
+          10.237789736725228,
+          930.6353477401867
+        ],
+        "quaternion": [
+          -0.06971397998507722,
+          0.03481448328257625,
+          0.0024344658254111962,
+          0.9969563611936845
+        ],
+        "fov": 58,
+        "walker": "first"
+      },
+      "passes": {
+        "shadow": {
+          "draws": 560,
+          "triangles": 2275049
+        },
+        "main color": {
+          "draws": 1087,
+          "triangles": 5889587
+        },
+        "other player-camera passes": {
+          "draws": 1,
+          "triangles": 1
+        },
+        "other cameras or fullscreen": {
+          "draws": 15,
+          "triangles": 15
+        }
+      },
+      "mainMeshes": 1073,
+      "instancedMeshes": 133,
+      "totalInstances": 61509,
+      "outsideExpandedSphere": 23881,
+      "estimatedInstanceTriangles": 637523,
+      "cell64m": {
+        "estimatedTriangles": 512191,
+        "currentDraws": 133,
+        "hypotheticalDraws": 282
+      }
+    }
+  },
+  "network": {
+    "coverage": {
+      "localHTTP": 272,
+      "serverReceipts": 272,
+      "paired": 272,
+      "get200SourceAndWire": 272,
+      "browserBlobs": 16
+    },
+    "clean": true,
+    "verifiedCanceled": 2,
+    "problems": []
+  },
+  "ok": true
+}
