@@ -1,0 +1,50 @@
+[
+  {
+    "test": "photos",
+    "arm": "after",
+    "id": "x51-next-after-9f8369ea-718",
+    "source": "77f28ef448a9f3a60c5aada18e9290f72c3a14f6",
+    "fixture": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r10-after\\apps\\desktop\\e2e\\fixtures\\world-base",
+    "output": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r10-evidence\\photos-after",
+    "log": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r10-evidence\\x51-next-after-9f8369ea-718.log",
+    "started": "2026-11-19T09:06:51.579Z",
+    "status": 1,
+    "ended": "2026-11-19T09:07:47.427Z"
+  },
+  {
+    "test": "timing",
+    "arm": "before",
+    "id": "x51-next-before-339b479d-83b",
+    "source": "4d94a1f41d17f18628e90e2c3f03914e37a3e471",
+    "fixture": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r9-after\\apps\\desktop\\e2e\\fixtures\\world-base",
+    "output": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r9-after\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\x51-next-before-339b479d-83b",
+    "log": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r10-evidence\\x51-next-before-339b479d-83b.log",
+    "started": "2026-11-19T09:10:00.066Z",
+    "status": 0,
+    "ended": "2026-11-19T09:12:53.020Z"
+  },
+  {
+    "test": "photos",
+    "arm": "after",
+    "id": "x51-next-after-412039a1-fdc",
+    "source": "b4abad9439a4689bc2aa72e0711d0171641b45b3",
+    "fixture": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r10b-after\\apps\\desktop\\e2e\\fixtures\\world-base",
+    "output": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r10b-evidence\\photos-after",
+    "log": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r10b-evidence\\x51-next-after-412039a1-fdc.log",
+    "started": "2026-11-19T09:13:00.874Z",
+    "status": 0,
+    "ended": "2026-11-19T09:13:58.582Z"
+  },
+  {
+    "test": "timing",
+    "arm": "after",
+    "id": "x51-next-after-dfedf808-29d",
+    "source": "b4abad9439a4689bc2aa72e0711d0171641b45b3",
+    "fixture": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r10b-after\\apps\\desktop\\e2e\\fixtures\\world-base",
+    "output": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r10b-after\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\x51-next-after-dfedf808-29d",
+    "log": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r10b-evidence\\x51-next-after-dfedf808-29d.log",
+    "started": "2026-11-19T09:13:58.850Z",
+    "status": 0,
+    "ended": "2026-11-19T09:16:51.632Z"
+  }
+]

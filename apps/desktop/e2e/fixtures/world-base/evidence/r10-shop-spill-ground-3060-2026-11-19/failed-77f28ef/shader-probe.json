@@ -1,0 +1,40 @@
+{
+  "sha": "77f28ef448a9f3a60c5aada18e9290f72c3a14f6",
+  "engine": "44.9.0",
+  "path": "src/door-glow.js",
+  "sourceSha256": "694223092042322ca8ce9af6eff773f05feff97a476ce85e9202c6fe57612f1e",
+  "prep": "Three-compatible WebGL2 syntax and builtin declarations only; production shader bodies unchanged.",
+  "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "compiler": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+  "variants": {
+    "wall": {
+      "vertex": {
+        "ok": false,
+        "log": "ERROR: 0:26: 'vEdge' : undeclared identifier\nERROR: 0:26: 'assign' : l-value required (can't modify a const)\nERROR: 0:26: '=' : dimension mismatch\nERROR: 0:26: 'assign' : cannot convert from 'in highp 2-component vector of float' to 'const highp float'\n\u0000"
+      },
+      "fragment": {
+        "ok": true,
+        "log": ""
+      },
+      "link": {
+        "ok": false,
+        "log": "Vertex shader is not compiled.\n\u0000"
+      }
+    },
+    "floor": {
+      "vertex": {
+        "ok": false,
+        "log": "ERROR: 0:26: 'vEdge' : undeclared identifier\nERROR: 0:26: 'assign' : l-value required (can't modify a const)\nERROR: 0:26: '=' : dimension mismatch\nERROR: 0:26: 'assign' : cannot convert from 'in highp 2-component vector of float' to 'const highp float'\n\u0000"
+      },
+      "fragment": {
+        "ok": true,
+        "log": ""
+      },
+      "link": {
+        "ok": false,
+        "log": "Vertex shader is not compiled.\n\u0000"
+      }
+    }
+  }
+}

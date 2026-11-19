@@ -1,0 +1,30 @@
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+1282 !== 0
+
+    at capture (C:\Users\QGNL66\AppData\Local\Temp\ground-r4-photo-nGGWiX\capture.cjs:95:54)
+node:child_process:981
+    throw err;
+    ^
+
+Error: Command failed: C:\PROGRAM FILES\NODEJS\node.exe C:\Users\QGNL66\AppData\Local\Temp\ground-r4-photo-nGGWiX\capture.cjs on D:\codex\2026-11-16\world-implementation\runtime-path-probe\electron.exe C:\Users\QGNL66\.codex\visualizations\2026\11\19\01a1f1ef-c58a-7443-bbde-b793103a4827\x51-r10-evidence\photos-after on
+    at genericNodeError (node:internal/errors:985:15)
+    at wrappedFn (node:internal/errors:539:14)
+    at checkExecSyncError (node:child_process:942:11)
+    at Object.execFileSync (node:child_process:978:15)
+    at Object.<anonymous> (C:\Users\QGNL66\.codex\visualizations\2026\11\19\01a1f1ef-c58a-7443-bbde-b793103a4827\x51-r8-evidence\ground-photos.cjs:12:50)
+    at Module._compile (node:internal/modules/cjs/loader:1872:14)
+    at Object..js (node:internal/modules/cjs/loader:2003:10)
+    at Module.load (node:internal/modules/cjs/loader:1594:32)
+    at Module._load (node:internal/modules/cjs/loader:1396:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19) {
+  status: 1,
+  signal: null,
+  output: [ null, null, null ],
+  pid: 72684,
+  stdout: null,
+  stderr: null
+}
+
+Node.js v24.19.0

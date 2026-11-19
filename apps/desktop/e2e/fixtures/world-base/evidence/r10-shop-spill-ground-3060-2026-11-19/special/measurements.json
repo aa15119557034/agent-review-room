@@ -1,0 +1,1756 @@
+{
+  "probe-84": {
+    "offOn": {
+      "pixels": 1296000,
+      "changed": 84174,
+      "over2": 36528,
+      "maxDelta": 166,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 1,
+        "after": 1,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 953,
+          "after": 953,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        3.493,
+        25.182,
+        78.905,
+        100.87
+      ],
+      "lumaGainOver5": 31000,
+      "medianRGBDelta_over2": [
+        37.0,
+        23.0,
+        11.0
+      ]
+    },
+    "sha256": [
+      "45f643ae809c0e25d526363646d5eb3ad791409a39bcc5c7f5ba08154830060b",
+      "0d21558a7cdccfdd055b60d7c7787127c9cf2cb27cdeed5cb08925615a7b0da3",
+      "0d21558a7cdccfdd055b60d7c7787127c9cf2cb27cdeed5cb08925615a7b0da3"
+    ],
+    "draw": {
+      "off": {
+        "visible": false,
+        "submissions": {
+          "door-glow-wall": 0,
+          "door-glow-floor": 0
+        },
+        "render": {
+          "frame": 136,
+          "calls": 960,
+          "triangles": 7151038,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "on": {
+        "visible": true,
+        "submissions": {
+          "door-glow-wall": 1,
+          "door-glow-floor": 1
+        },
+        "render": {
+          "frame": 153,
+          "calls": 962,
+          "triangles": 7151618,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "repeat-on": {
+        "visible": true,
+        "submissions": {
+          "door-glow-wall": 1,
+          "door-glow-floor": 1
+        },
+        "render": {
+          "frame": 170,
+          "calls": 962,
+          "triangles": 7151618,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    "independent": {
+      "pixels": 1296000,
+      "changed": 8756,
+      "over2": 2927,
+      "maxDelta": 104,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 1,
+        "after": 1,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 1034,
+          "after": 953,
+          "new": 0,
+          "lost": 81
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        -44.861,
+        -4.774,
+        -1.349,
+        3.868
+      ],
+      "lumaGainOver5": 1,
+      "medianRGBDelta_over2": [
+        -8.0,
+        -5.0,
+        -1.0
+      ]
+    },
+    "baselineOff": {
+      "pixels": 1296000,
+      "changed": 89899,
+      "over2": 38442,
+      "maxDelta": 166,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 1,
+        "after": 1,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 1034,
+          "after": 953,
+          "new": 0,
+          "lost": 81
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        -77.688,
+        -24.309,
+        -3.32,
+        -1.425
+      ],
+      "lumaGainOver5": 0,
+      "medianRGBDelta_over2": [
+        -36.0,
+        -22.0,
+        -10.0
+      ]
+    },
+    "baselineSha256": "402fae3cd3e943eb86e51b97dc9495a84a2049597ec7f541bea7ea5507c64882"
+  },
+  "shop-b": {
+    "offOn": {
+      "pixels": 1296000,
+      "changed": 148506,
+      "over2": 49455,
+      "maxDelta": 163,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 65,
+        "after": 65,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 12548,
+          "after": 13030,
+          "new": 483,
+          "lost": 1
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        5.213,
+        33.571,
+        72.846,
+        106.359
+      ],
+      "lumaGainOver5": 44559,
+      "medianRGBDelta_over2": [
+        28.0,
+        35.0,
+        32.0
+      ]
+    },
+    "sha256": [
+      "99765f5a8910ab9e4765dd1ab6e754bd586882ed2e61171e6a9f2007f0642d96",
+      "f42c202d574fe63d9f4cfeb1b1bd966390bdaa4652b4b316143a242f5dd2bf95",
+      "f42c202d574fe63d9f4cfeb1b1bd966390bdaa4652b4b316143a242f5dd2bf95"
+    ],
+    "draw": {
+      "off": {
+        "visible": false,
+        "submissions": {
+          "shop-spill": 0
+        },
+        "render": {
+          "frame": 187,
+          "calls": 1045,
+          "triangles": 7654787,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "on": {
+        "visible": true,
+        "submissions": {
+          "shop-spill": 1
+        },
+        "render": {
+          "frame": 204,
+          "calls": 1046,
+          "triangles": 7654995,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "repeat-on": {
+        "visible": true,
+        "submissions": {
+          "shop-spill": 1
+        },
+        "render": {
+          "frame": 221,
+          "calls": 1046,
+          "triangles": 7654995,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    "independent": {
+      "pixels": 1296000,
+      "changed": 148506,
+      "over2": 49455,
+      "maxDelta": 163,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 65,
+        "after": 65,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 12548,
+          "after": 13030,
+          "new": 483,
+          "lost": 1
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        5.213,
+        33.571,
+        72.846,
+        106.359
+      ],
+      "lumaGainOver5": 44559,
+      "medianRGBDelta_over2": [
+        28.0,
+        35.0,
+        32.0
+      ]
+    },
+    "baselineOff": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "maxDelta": 0,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 65,
+        "after": 65,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 12548,
+          "after": 12548,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": null,
+      "lumaGainOver5": 0,
+      "medianRGBDelta_over2": null
+    },
+    "baselineSha256": "99765f5a8910ab9e4765dd1ab6e754bd586882ed2e61171e6a9f2007f0642d96",
+    "regions": {
+      "vending-faces": {
+        "offOn": {
+          "pixels": 124372,
+          "changed": 1021,
+          "over2": 0,
+          "maxDelta": 1,
+          "allRGB255": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "allRGB250": {
+            "before": 64,
+            "after": 64,
+            "new": 0,
+            "lost": 0
+          },
+          "perChannel255": {
+            "R": {
+              "before": 1089,
+              "after": 1088,
+              "new": 0,
+              "lost": 1
+            },
+            "G": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "B": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            }
+          },
+          "lumaDeltaP10P50P90P99_over2": null,
+          "lumaGainOver5": 0,
+          "medianRGBDelta_over2": null,
+          "rect": [
+            28,
+            384,
+            555,
+            620
+          ]
+        },
+        "independent": {
+          "pixels": 124372,
+          "changed": 1021,
+          "over2": 0,
+          "maxDelta": 1,
+          "allRGB255": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "allRGB250": {
+            "before": 64,
+            "after": 64,
+            "new": 0,
+            "lost": 0
+          },
+          "perChannel255": {
+            "R": {
+              "before": 1089,
+              "after": 1088,
+              "new": 0,
+              "lost": 1
+            },
+            "G": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "B": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            }
+          },
+          "lumaDeltaP10P50P90P99_over2": null,
+          "lumaGainOver5": 0,
+          "medianRGBDelta_over2": null,
+          "rect": [
+            28,
+            384,
+            555,
+            620
+          ]
+        }
+      },
+      "vending-bases": {
+        "offOn": {
+          "pixels": 109752,
+          "changed": 6745,
+          "over2": 461,
+          "maxDelta": 136,
+          "allRGB255": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "allRGB250": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "perChannel255": {
+            "R": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "G": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "B": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            }
+          },
+          "lumaDeltaP10P50P90P99_over2": [
+            3.144,
+            48.624,
+            92.287,
+            122.299
+          ],
+          "lumaGainOver5": 355,
+          "medianRGBDelta_over2": [
+            43.0,
+            50.0,
+            49.0
+          ],
+          "rect": [
+            22,
+            620,
+            560,
+            824
+          ]
+        },
+        "independent": {
+          "pixels": 109752,
+          "changed": 6745,
+          "over2": 461,
+          "maxDelta": 136,
+          "allRGB255": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "allRGB250": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "perChannel255": {
+            "R": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "G": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "B": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            }
+          },
+          "lumaDeltaP10P50P90P99_over2": [
+            3.144,
+            48.624,
+            92.287,
+            122.299
+          ],
+          "lumaGainOver5": 355,
+          "medianRGBDelta_over2": [
+            43.0,
+            50.0,
+            49.0
+          ],
+          "rect": [
+            22,
+            620,
+            560,
+            824
+          ]
+        }
+      },
+      "edge-slit": {
+        "offOn": {
+          "pixels": 6120,
+          "changed": 1572,
+          "over2": 335,
+          "maxDelta": 136,
+          "allRGB255": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "allRGB250": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "perChannel255": {
+            "R": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "G": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "B": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            }
+          },
+          "lumaDeltaP10P50P90P99_over2": [
+            3.144,
+            60.477,
+            98.088,
+            122.513
+          ],
+          "lumaGainOver5": 249,
+          "medianRGBDelta_over2": [
+            49.0,
+            60.0,
+            69.0
+          ],
+          "rect": [
+            290,
+            660,
+            350,
+            762
+          ]
+        },
+        "independent": {
+          "pixels": 6120,
+          "changed": 1572,
+          "over2": 335,
+          "maxDelta": 136,
+          "allRGB255": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "allRGB250": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "perChannel255": {
+            "R": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "G": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "B": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            }
+          },
+          "lumaDeltaP10P50P90P99_over2": [
+            3.144,
+            60.477,
+            98.088,
+            122.513
+          ],
+          "lumaGainOver5": 249,
+          "medianRGBDelta_over2": [
+            49.0,
+            60.0,
+            69.0
+          ],
+          "rect": [
+            290,
+            660,
+            350,
+            762
+          ]
+        }
+      },
+      "platform-cut": {
+        "offOn": {
+          "pixels": 12800,
+          "changed": 11442,
+          "over2": 5229,
+          "maxDelta": 161,
+          "allRGB255": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "allRGB250": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "perChannel255": {
+            "R": {
+              "before": 60,
+              "after": 195,
+              "new": 135,
+              "lost": 0
+            },
+            "G": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "B": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            }
+          },
+          "lumaDeltaP10P50P90P99_over2": [
+            43.929,
+            65.857,
+            90.644,
+            115.01
+          ],
+          "lumaGainOver5": 5216,
+          "medianRGBDelta_over2": [
+            62.0,
+            67.0,
+            71.0
+          ],
+          "rect": [
+            555,
+            635,
+            715,
+            715
+          ]
+        },
+        "independent": {
+          "pixels": 12800,
+          "changed": 11442,
+          "over2": 5229,
+          "maxDelta": 161,
+          "allRGB255": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "allRGB250": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "perChannel255": {
+            "R": {
+              "before": 60,
+              "after": 195,
+              "new": 135,
+              "lost": 0
+            },
+            "G": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "B": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            }
+          },
+          "lumaDeltaP10P50P90P99_over2": [
+            43.929,
+            65.857,
+            90.644,
+            115.01
+          ],
+          "lumaGainOver5": 5216,
+          "medianRGBDelta_over2": [
+            62.0,
+            67.0,
+            71.0
+          ],
+          "rect": [
+            555,
+            635,
+            715,
+            715
+          ]
+        }
+      },
+      "door-landing": {
+        "offOn": {
+          "pixels": 116960,
+          "changed": 88358,
+          "over2": 40740,
+          "maxDelta": 163,
+          "allRGB255": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "allRGB250": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "perChannel255": {
+            "R": {
+              "before": 487,
+              "after": 970,
+              "new": 483,
+              "lost": 0
+            },
+            "G": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "B": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            }
+          },
+          "lumaDeltaP10P50P90P99_over2": [
+            5.715,
+            33.286,
+            66.958,
+            100.432
+          ],
+          "lumaGainOver5": 36833,
+          "medianRGBDelta_over2": [
+            27.0,
+            34.0,
+            32.0
+          ],
+          "rect": [
+            555,
+            603,
+            1235,
+            775
+          ]
+        },
+        "independent": {
+          "pixels": 116960,
+          "changed": 88358,
+          "over2": 40740,
+          "maxDelta": 163,
+          "allRGB255": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "allRGB250": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "perChannel255": {
+            "R": {
+              "before": 487,
+              "after": 970,
+              "new": 483,
+              "lost": 0
+            },
+            "G": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "B": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            }
+          },
+          "lumaDeltaP10P50P90P99_over2": [
+            5.715,
+            33.286,
+            66.958,
+            100.432
+          ],
+          "lumaGainOver5": 36833,
+          "medianRGBDelta_over2": [
+            27.0,
+            34.0,
+            32.0
+          ],
+          "rect": [
+            555,
+            603,
+            1235,
+            775
+          ]
+        }
+      },
+      "front-pavement": {
+        "offOn": {
+          "pixels": 84000,
+          "changed": 8903,
+          "over2": 0,
+          "maxDelta": 1,
+          "allRGB255": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "allRGB250": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "perChannel255": {
+            "R": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "G": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "B": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            }
+          },
+          "lumaDeltaP10P50P90P99_over2": null,
+          "lumaGainOver5": 0,
+          "medianRGBDelta_over2": null,
+          "rect": [
+            550,
+            785,
+            1350,
+            890
+          ]
+        },
+        "independent": {
+          "pixels": 84000,
+          "changed": 8903,
+          "over2": 0,
+          "maxDelta": 1,
+          "allRGB255": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "allRGB250": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "perChannel255": {
+            "R": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "G": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "B": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            }
+          },
+          "lumaDeltaP10P50P90P99_over2": null,
+          "lumaGainOver5": 0,
+          "medianRGBDelta_over2": null,
+          "rect": [
+            550,
+            785,
+            1350,
+            890
+          ]
+        }
+      }
+    }
+  },
+  "shop-b-edge": {
+    "offOn": {
+      "pixels": 1296000,
+      "changed": 38473,
+      "over2": 15972,
+      "maxDelta": 172,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 1567,
+        "after": 1567,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 3480,
+          "after": 3480,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 50,
+          "after": 50,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        4.14,
+        14.136,
+        49.409,
+        82.691
+      ],
+      "lumaGainOver5": 13921,
+      "medianRGBDelta_over2": [
+        15.0,
+        14.0,
+        11.0
+      ]
+    },
+    "sha256": [
+      "f50df7d351f5e73d1c5abbc23a6c49f1f5ed2370eb36db86831bf09e0be02848",
+      "5697a782e5f9a74e1e836f26d963acceb26eb0c1d2bb97c39d3713342dec98d2",
+      "5697a782e5f9a74e1e836f26d963acceb26eb0c1d2bb97c39d3713342dec98d2"
+    ],
+    "draw": {
+      "off": {
+        "visible": false,
+        "submissions": {
+          "shop-spill": 0
+        },
+        "render": {
+          "frame": 238,
+          "calls": 970,
+          "triangles": 7348890,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "on": {
+        "visible": true,
+        "submissions": {
+          "shop-spill": 1
+        },
+        "render": {
+          "frame": 255,
+          "calls": 971,
+          "triangles": 7349098,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "repeat-on": {
+        "visible": true,
+        "submissions": {
+          "shop-spill": 1
+        },
+        "render": {
+          "frame": 272,
+          "calls": 971,
+          "triangles": 7349098,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    }
+  },
+  "laundry-d": {
+    "offOn": {
+      "pixels": 1296000,
+      "changed": 17387,
+      "over2": 5179,
+      "maxDelta": 147,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 18667,
+          "after": 18667,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 2585,
+          "after": 2585,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        2.787,
+        12.715,
+        102.652,
+        139.509
+      ],
+      "lumaGainOver5": 3743,
+      "medianRGBDelta_over2": [
+        11.0,
+        13.0,
+        15.0
+      ]
+    },
+    "sha256": [
+      "5c25e1ea0b0a3aa9bf817b33f0502aeee6e39d059c8119190533272344cae595",
+      "6eab409d41e2ee80b7ff49dcfe5be66dd408a844a3d5eac9cdb3a015634c7ad2",
+      "6eab409d41e2ee80b7ff49dcfe5be66dd408a844a3d5eac9cdb3a015634c7ad2"
+    ],
+    "draw": {
+      "off": {
+        "visible": false,
+        "submissions": {
+          "shop-spill": 0
+        },
+        "render": {
+          "frame": 289,
+          "calls": 919,
+          "triangles": 8390305,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "on": {
+        "visible": true,
+        "submissions": {
+          "shop-spill": 1
+        },
+        "render": {
+          "frame": 306,
+          "calls": 920,
+          "triangles": 8390513,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "repeat-on": {
+        "visible": true,
+        "submissions": {
+          "shop-spill": 1
+        },
+        "render": {
+          "frame": 323,
+          "calls": 920,
+          "triangles": 8390513,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    "independent": {
+      "pixels": 1296000,
+      "changed": 17387,
+      "over2": 5179,
+      "maxDelta": 147,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 18667,
+          "after": 18667,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 2585,
+          "after": 2585,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        2.787,
+        12.715,
+        102.652,
+        139.509
+      ],
+      "lumaGainOver5": 3743,
+      "medianRGBDelta_over2": [
+        11.0,
+        13.0,
+        15.0
+      ]
+    },
+    "baselineOff": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "maxDelta": 0,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 18667,
+          "after": 18667,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 2585,
+          "after": 2585,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": null,
+      "lumaGainOver5": 0,
+      "medianRGBDelta_over2": null
+    },
+    "baselineSha256": "5c25e1ea0b0a3aa9bf817b33f0502aeee6e39d059c8119190533272344cae595",
+    "regions": {
+      "stairs": {
+        "offOn": {
+          "pixels": 170680,
+          "changed": 4239,
+          "over2": 1220,
+          "maxDelta": 56,
+          "allRGB255": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "allRGB250": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "perChannel255": {
+            "R": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "G": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "B": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            }
+          },
+          "lumaDeltaP10P50P90P99_over2": [
+            2.072,
+            4.93,
+            39.513,
+            53.362
+          ],
+          "lumaGainOver5": 600,
+          "medianRGBDelta_over2": [
+            4.0,
+            5.0,
+            6.0
+          ],
+          "rect": [
+            125,
+            649,
+            805,
+            900
+          ]
+        },
+        "independent": {
+          "pixels": 170680,
+          "changed": 4239,
+          "over2": 1220,
+          "maxDelta": 56,
+          "allRGB255": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "allRGB250": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "perChannel255": {
+            "R": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "G": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "B": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            }
+          },
+          "lumaDeltaP10P50P90P99_over2": [
+            2.072,
+            4.93,
+            39.513,
+            53.362
+          ],
+          "lumaGainOver5": 600,
+          "medianRGBDelta_over2": [
+            4.0,
+            5.0,
+            6.0
+          ],
+          "rect": [
+            125,
+            649,
+            805,
+            900
+          ]
+        }
+      },
+      "lower-steps": {
+        "offOn": {
+          "pixels": 120960,
+          "changed": 468,
+          "over2": 0,
+          "maxDelta": 1,
+          "allRGB255": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "allRGB250": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "perChannel255": {
+            "R": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "G": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "B": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            }
+          },
+          "lumaDeltaP10P50P90P99_over2": null,
+          "lumaGainOver5": 0,
+          "medianRGBDelta_over2": null,
+          "rect": [
+            150,
+            708,
+            780,
+            900
+          ]
+        },
+        "independent": {
+          "pixels": 120960,
+          "changed": 468,
+          "over2": 0,
+          "maxDelta": 1,
+          "allRGB255": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "allRGB250": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "perChannel255": {
+            "R": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "G": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "B": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            }
+          },
+          "lumaDeltaP10P50P90P99_over2": null,
+          "lumaGainOver5": 0,
+          "medianRGBDelta_over2": null,
+          "rect": [
+            150,
+            708,
+            780,
+            900
+          ]
+        }
+      },
+      "next-to-stairs": {
+        "offOn": {
+          "pixels": 24552,
+          "changed": 1684,
+          "over2": 8,
+          "maxDelta": 6,
+          "allRGB255": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "allRGB250": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "perChannel255": {
+            "R": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "G": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "B": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            }
+          },
+          "lumaDeltaP10P50P90P99_over2": [
+            2.77,
+            2.898,
+            3.669,
+            3.714
+          ],
+          "lumaGainOver5": 0,
+          "medianRGBDelta_over2": [
+            1.5,
+            3.0,
+            6.0
+          ],
+          "rect": [
+            811,
+            675,
+            1090,
+            763
+          ]
+        },
+        "independent": {
+          "pixels": 24552,
+          "changed": 1684,
+          "over2": 8,
+          "maxDelta": 6,
+          "allRGB255": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "allRGB250": {
+            "before": 0,
+            "after": 0,
+            "new": 0,
+            "lost": 0
+          },
+          "perChannel255": {
+            "R": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "G": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            },
+            "B": {
+              "before": 0,
+              "after": 0,
+              "new": 0,
+              "lost": 0
+            }
+          },
+          "lumaDeltaP10P50P90P99_over2": [
+            2.77,
+            2.898,
+            3.669,
+            3.714
+          ],
+          "lumaGainOver5": 0,
+          "medianRGBDelta_over2": [
+            1.5,
+            3.0,
+            6.0
+          ],
+          "rect": [
+            811,
+            675,
+            1090,
+            763
+          ]
+        }
+      }
+    }
+  },
+  "shop-warm": {
+    "offOn": {
+      "pixels": 1296000,
+      "changed": 339601,
+      "over2": 151974,
+      "maxDelta": 170,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 29516,
+          "after": 29518,
+          "new": 2,
+          "lost": 0
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        5.14,
+        45.703,
+        108.543,
+        118.968
+      ],
+      "lumaGainOver5": 136888,
+      "medianRGBDelta_over2": [
+        48.0,
+        46.0,
+        36.0
+      ]
+    },
+    "sha256": [
+      "55ab83f2cc69f93b7b42fdf5e74216079413fa2449b9c639d12668d19768b934",
+      "64ada0543285482ac571af26037922d5462ae7da980dedb0a05c84cd05e930c9",
+      "64ada0543285482ac571af26037922d5462ae7da980dedb0a05c84cd05e930c9"
+    ],
+    "draw": {
+      "off": {
+        "visible": false,
+        "submissions": {
+          "shop-spill": 0
+        },
+        "render": {
+          "frame": 340,
+          "calls": 982,
+          "triangles": 6680074,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "on": {
+        "visible": true,
+        "submissions": {
+          "shop-spill": 1
+        },
+        "render": {
+          "frame": 357,
+          "calls": 983,
+          "triangles": 6680282,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "repeat-on": {
+        "visible": true,
+        "submissions": {
+          "shop-spill": 1
+        },
+        "render": {
+          "frame": 374,
+          "calls": 983,
+          "triangles": 6680282,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    }
+  }
+}

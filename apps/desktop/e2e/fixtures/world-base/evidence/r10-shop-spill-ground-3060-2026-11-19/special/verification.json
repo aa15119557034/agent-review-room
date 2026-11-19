@@ -1,0 +1,24 @@
+{
+  "candidate": "b4abad9439a4689bc2aa72e0711d0171641b45b3",
+  "baseline": "4d94a1f41d17f18628e90e2c3f03914e37a3e471",
+  "sources": [
+    {
+      "file": "upstream/sakuragaoka/src/world/houses/house.js",
+      "baselineSha256": "7628a24d2b8868748ed90cb65b428d0e796d7952f0cab360be2141b8b9f7e19b",
+      "candidateSha256": "86c65f987388c89db3c5ea6be1db1d49eafdacc68cd7a3993d65522abd085fc8",
+      "served": {
+        "receipt": "0788b2ba-bdb6-4b10-8e3f-937389aab278-69",
+        "path": "/upstream/sakuragaoka/src/world/houses/house.js",
+        "method": "GET",
+        "range": false,
+        "status": 200,
+        "finished": true,
+        "wireBytes": 38903,
+        "wireSHA256": "86c65f987388c89db3c5ea6be1db1d49eafdacc68cd7a3993d65522abd085fc8",
+        "fileBytes": 38903,
+        "declared": 38903,
+        "sha256": "86c65f987388c89db3c5ea6be1db1d49eafdacc68cd7a3993d65522abd085fc8"
+      }
+    }
+  ]
+}
