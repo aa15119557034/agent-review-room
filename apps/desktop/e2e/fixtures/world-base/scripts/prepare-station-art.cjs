@@ -2,7 +2,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
-const { execFileSync } = require('node:child_process');
+const { listZip, readZipEntry, extractZip } = require('./zip.cjs');
 
 const fixture = path.resolve(__dirname, '..');
 const source = 'assets/station-art';
@@ -20,19 +20,15 @@ function releasePath(root) {
   return path.join(root, '.local', 'station-art-releases', pin);
 }
 
-function tar(...args) {
-  return execFileSync(process.platform === 'win32' ? 'tar.exe' : 'tar', args, { windowsHide: true });
-}
-
 function readRelease(root) {
   const directory = releasePath(root), pin = path.basename(directory);
   const archive = path.join(root, source, bundle), archiveBytes = fs.readFileSync(archive);
   if (sha256(archiveBytes) !== pin) throw new Error('Station art archive differs from the release SHA-256');
-  const entries = tar('-tf', archive).toString('utf8').trim().split(/\r?\n/);
+  const entries = listZip(archive);
   const notices = entries.filter(file => /^station-art-notices\/(?:THIRD-PARTY\.md|licenses\/LICENSE-[\w-]+\.txt)$/.test(file));
   if (!requiredNotices.every(file => notices.includes(file))) throw new Error('Station art attribution or MIT notices missing');
   const metadata = new Map();
-  for (const file of [...manifests, ...notices]) metadata.set(file, tar('-xOf', archive, file));
+  for (const file of [...manifests, ...notices]) metadata.set(file, readZipEntry(archive, file));
   const tree = JSON.parse(metadata.get(manifests[0])), models = JSON.parse(metadata.get(manifests[1]));
   if (tree.file !== 'mature-sakura.glb' || Object.keys(models).sort().join(',') !== buildings.join(',')) {
     throw new Error('Unexpected models in the station art delivery');
@@ -74,7 +70,7 @@ function prepareStationArt(root = fixture) {
     fs.mkdirSync(cache, { recursive: true });
     const stage = fs.mkdtempSync(path.join(cache, '.prepare-'));
     try {
-      tar('-xf', release.archive, '-C', stage, ...release.files.map(file => file.path));
+      extractZip(release.archive, stage, release.files.map(file => file.path));
       verifyDirectory(stage, release.files);
       try { fs.renameSync(stage, release.directory); }
       catch (error) {

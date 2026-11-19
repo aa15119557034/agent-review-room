@@ -4,6 +4,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { spawnSync } = require('node:child_process');
 const { prepareStationArt } = require('./prepare-station-art.cjs');
+const { extractZip } = require('./zip.cjs');
 const root = path.resolve(__dirname, '..');
 const sources = JSON.parse(fs.readFileSync(path.join(root, 'sources.json'), 'utf8'));
 const manifest = path.join(root, 'source-files.json');
@@ -29,15 +30,17 @@ for (const name of ['petalwake', 'sakuragaoka']) {
   if (!fs.existsSync(zip)) {
     const part = `${zip}.part`;
     const proxy = process.env.WORLD_BASE_PROXY;
-    run('curl.exe', [...(proxy ? ['--proxy', proxy] : []), '-L', '--fail', '--show-error', source.archive, '-o', part]);
+    run(process.platform === 'win32' ? 'curl.exe' : 'curl', [...(proxy ? ['--proxy', proxy] : []), '-L', '--fail', '--show-error', source.archive, '-o', part]);
     if (hash(part) !== source.sha256) throw new Error(`${name}: archive SHA-256 mismatch; not extracted`);
     fs.renameSync(part, zip);
   }
   if (hash(zip) !== source.sha256) throw new Error(`${name}: archive SHA-256 mismatch; not extracted`);
   const original = path.join(root, '.local', `${name}-${source.commit}`);
-  if (!fs.existsSync(path.join(original, 'LICENSE'))) run('tar.exe', ['-xf', zip, '-C', path.join(root, '.local')]);
+  if (!fs.existsSync(path.join(original, 'LICENSE'))) extractZip(zip, path.join(root, '.local'));
   const projectFiles = [];
   for (const file of files(original)) {
+    // The evening bake writes its generated shadow map next to the upstream light map.
+    if (name === 'petalwake' && file === path.join(original, 'assets', 'terrain', 'light-evening.png')) continue;
     projectFiles.push({ project: name, path: path.relative(original, file).replaceAll('\\', '/'), sha256: hash(file) });
   }
   if (expected) {
