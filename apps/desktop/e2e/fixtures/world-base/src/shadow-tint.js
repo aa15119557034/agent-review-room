@@ -19,12 +19,13 @@ const unionBox = (boxes) => [0, 1, 2].map((i) => Math.min(...boxes.map((b) => b.
 const inAabb = (b) => `all( greaterThan( stW, ${vec3(b.slice(0, 3))} ) ) && all( lessThan( stW, ${vec3(b.slice(3))} ) )`;
 /** One room: world position is taken into the lot frame (x along the frontage, z toward the street), y stays world. */
 const inRoom = (b) => `{ vec2 d = stW.xz - vec2( ${f3(b.o)} ); vec3 q = vec3( dot( d, vec2( ${f3(b.ex)} ) ), stW.y, dot( d, vec2( ${f3(b.ez)} ) ) );
-      if ( all( greaterThan( q, ${vec3(b.min)} ) ) && all( lessThan( q, ${vec3(b.max)} ) ) ) stIn = 1.0; }`;
+      if ( all( greaterThan( q, ${vec3(b.min)} ) ) && all( lessThan( q, ${vec3(b.max)} ) ) ) { stIn = 1.0;${b.lamp ? ` stLamp = ${vec3(b.lamp)};` : ''} } }`;
 export function indoorGlsl(boxes) {
   const u = unionBox(boxes);
   // Inside any room (inner wall faces, floor, ground-floor ceiling) the fill is off: rooms keep their warm lamp-lit colours.
   return `  vec3 stW = cameraPosition + geometryPosition * mat3( viewMatrix );
   float stIn = 0.0;
+  vec3 stLamp = vec3( 0.0 );
   if ( ${inAabb(u)} ) {
 ${boxes.map((b) => `    ${inRoom(b)}`).join('\n')}
   }`;
@@ -48,7 +49,7 @@ export function installLitShadowTint(p, boxes) {
   float stSun = dot( reflectedLight.directDiffuse, vec3( 0.2126, 0.7152, 0.0722 ) ) / max( stLum, 0.03 );
   float stShade = 1.0 - smoothstep( ${p.sunLo.toFixed(3)}, ${p.sunHi.toFixed(3)}, stSun );
 ${indoorGlsl(boxes)}
-  reflectedLight.indirectDiffuse += diffuseColor.rgb * ${vec3(p.fill)} * stShade * ( 1.0 - stIn );
+  reflectedLight.indirectDiffuse += diffuseColor.rgb * ${vec3(p.fill)} * stShade * ( 1.0 - stIn ) + diffuseColor.rgb * stLamp;
 }
 #endif`;
 }
@@ -89,15 +90,18 @@ export function patchIslandShadowTint(island, p) {
  * Box: { id, o, ex, ez, min, max, aabb }. o = lot origin (world x, z), ex / ez = world directions of lot x / z,
  * min / max = [lot x, world y, lot z], aabb = world-axis bounds (only for the cheap pre-test).
  */
-export function shopInteriorBoxes(layout, station, pad) {
+export function shopInteriorBoxes(layout, station, pad, lamps = null) {
   const root = station.root.position, rooms = station.ctx.services.shopInteriors || [];
-  return rooms.map(({ lot: id, box }) => {
-    const lot = layout.lotById(id), f = layout.lotFrame(lot), c = Math.cos(f.rotY), s = Math.sin(f.rotY);
+  return rooms.map(({ lot, frame, name, box }) => {
+    // A room is either in a shop lot (lot id) or in a town building with its own frame (station-root space: x, y, z, rotY).
+    const id = lot ?? name, f = frame ?? layout.lotFrame(layout.lotById(lot)), c = Math.cos(f.rotY), s = Math.sin(f.rotY);
     const o = [f.x + root.x, f.z + root.z], ex = [c, -s], ez = [s, c], y = f.y + root.y;
     const min = [box[0] - pad, box[1] + y - pad, box[2] - pad], max = [box[3] + pad, box[4] + y + pad, box[5] + pad];
     const xs = [], zs = [];
     for (const lx of [min[0], max[0]]) for (const lz of [min[2], max[2]]) { xs.push(o[0] + lx * ex[0] + lz * ez[0]); zs.push(o[1] + lx * ex[1] + lz * ez[1]); }
-    return { id, o, ex, ez, min, max, aabb: [Math.min(...xs), min[1], Math.min(...zs), Math.max(...xs), max[1], Math.max(...zs)] };
+    // Round 11: rooms whose own materials are plain lit toon (the laundromat) get their tube lights as an albedo-multiplied fill.
+    const lamp = lamps?.rooms?.[id] ? lamps.color.map((v) => v * lamps.rooms[id]) : null;
+    return { id, o, ex, ez, min, max, lamp, aabb: [Math.min(...xs), min[1], Math.min(...zs), Math.max(...xs), max[1], Math.max(...zs)] };
   });
 }
 

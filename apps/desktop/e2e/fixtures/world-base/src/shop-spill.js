@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 // Art round 10 (#254 X-51): indoor light spilling out of lit shops onto the paving in front of the door. Every shop room
-// registered in ctx.services.shopInteriors (round 26) and the laundromat (city-apartments.js) gets one horizontal patch:
+// registered in ctx.services.shopInteriors (round 26, the laundromat since round 11) gets one horizontal patch:
 // as wide as its street front, `depth` m out, strongest at the wall and smoothly gone at the far and side edges. One
 // InstancedMesh (one draw call), additive, depth-tested, no depth write, and the framebuffer alpha (outline coverage mask,
 // toon.js) is left alone, exactly as in door-glow.js. Strength and colours live in evening.json ("shopSpill"); evening only.
@@ -45,11 +45,11 @@ export async function loadShopSpill() {
 
 /** Shop rooms (lot id + [x0,y0,z0,x1,y1,z1] in lot space, +z toward the street) -> fronts in station-root space. */
 export function shopFrontsFromRooms(layout, rooms, p) {
-  return rooms.map(({ lot: id, box }) => {
-    const lot = layout.lotById(id), f = layout.lotFrame(lot), c = Math.cos(f.rotY), s = Math.sin(f.rotY);
+  return rooms.map(({ lot: id, frame, name, kind: roomKind, box }) => {
+    const lot = frame ? null : layout.lotById(id), f = frame ?? layout.lotFrame(lot), c = Math.cos(f.rotY), s = Math.sin(f.rotY);
     const ex = [c, -s], ez = [s, c], lz = box[5] + (p.wallOut ?? 0.25), lx = (box[0] + box[3]) / 2;
     return { center: [f.x + lx * ex[0] + lz * ez[0], f.y + box[1], f.z + lx * ex[1] + lz * ez[1]], normal: [ez[0], 0, ez[1]],
-      width: box[3] - box[0], kind: lot.kind, name: id };
+      width: box[3] - box[0], kind: roomKind ?? lot.kind, name: name ?? id };
   });
 }
 

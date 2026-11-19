@@ -146,9 +146,22 @@ async function init() {
     onProgress: stage,
   });
   worldBase.station = station;
+  // Interpolate the existing ramp values for softer boundaries between tones.
+  const ramp = station.ctx.mat.gradientMap;
+  ramp.magFilter = ramp.minFilter = THREE.LinearFilter;
+  ramp.needsUpdate = true;
+  worldBase.skyline = createSkyline({ scene, station, island });
+  worldBase.skyline.vegetationClear = clearVegetationAreas(island.terrain,
+    worldBase.skyline.vegetationClearAreas, station.root.matrixWorld);
+  stage('正在安放站后建筑…');
+  worldBase.city = await createCity({ scene, station, island, skyline: worldBase.skyline });
+  worldBase.city.vegetationClear = clearVegetationAreas(island.terrain,
+    worldBase.city.vegetationClearAreas, station.root.matrixWorld, { flowers: 8, jitter: 2.5 });
+  // Round 11: the shop-room boxes are installed after the town edge is built (the laundromat registers its room there). No program
+  // using the lit chunks has compiled yet: the first render is after init.
   if (shadowTint) {
     // No program using the lit chunk has compiled yet (first render is after init), so the box can be known here.
-    const boxes = shopInteriorBoxes(layoutModule, station, shadowTintParams.indoorPad);
+    const boxes = shopInteriorBoxes(layoutModule, station, shadowTintParams.indoorPad, shadowTintParams.indoorLamp);
     installLitShadowTint(shadowTint, boxes);
     look.setShadowTint(shadowTintUniforms(shadowTint), boxes, shadowTintParams.indoorFade);
     worldBase.shadowTint.indoorBox = boxes;
@@ -164,17 +177,6 @@ async function init() {
     look.setToonLines(toonLineUniforms(toonP));
     worldBase.toon27 = { params: toonP };
   }
-  // Interpolate the existing ramp values for softer boundaries between tones.
-  const ramp = station.ctx.mat.gradientMap;
-  ramp.magFilter = ramp.minFilter = THREE.LinearFilter;
-  ramp.needsUpdate = true;
-  worldBase.skyline = createSkyline({ scene, station, island });
-  worldBase.skyline.vegetationClear = clearVegetationAreas(island.terrain,
-    worldBase.skyline.vegetationClearAreas, station.root.matrixWorld);
-  stage('正在安放站后建筑…');
-  worldBase.city = await createCity({ scene, station, island, skyline: worldBase.skyline });
-  worldBase.city.vegetationClear = clearVegetationAreas(island.terrain,
-    worldBase.city.vegetationClearAreas, station.root.matrixWorld, { flowers: 8, jitter: 2.5 });
   island.meadow._buildCoverGrid(); // Refresh the density cache before its first update.
   {
     // Town greenery covers the lots, their connections and planting (station frame, no rotation).
@@ -263,7 +265,7 @@ async function init() {
     const params = await loadShopSpill();
     if (params) {
       const rooms = station.ctx.services.shopInteriors ?? [];
-      const raw = [...shopFrontsFromRooms(layoutModule, rooms, params), ...worldBase.city.placements.filter(p => p.type === 'apartment').flatMap(p => p.model.shopFronts ?? [])];
+      const raw = [...shopFrontsFromRooms(layoutModule, rooms, params)];
       worldBase.city.root.updateWorldMatrix(true, true);
       const t0 = performance.now();
       const fronts = groundSpillFronts(raw, [station.root, worldBase.city.root], params, worldBase.city.root.position);

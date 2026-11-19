@@ -69,5 +69,16 @@
   }
  },
  "indoorPad": 0.05,
- "indoorFade": 0.3
+ "indoorFade": 0.3,
+ "indoorLamp": {
+  "note": "Round 11: tube-light fill inside rooms whose materials are plain lit toon (the laundromat): albedo * color * strength, added where the outdoor fill is excluded.",
+  "color": [
+   0.85,
+   0.95,
+   1.0
+  ],
+  "rooms": {
+   "town-apartment-4f": 0.6
+  }
+ }
 }
