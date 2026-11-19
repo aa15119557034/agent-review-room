@@ -20,7 +20,7 @@ export function buildTownApartment(H, F, spec) {
   const start = gb.tris, clothStart = H.laundry.I.length / 3, garments = H.laundry.count;
   const wall = floors === 3 ? '#f0e9d7' : floors === 4 ? '#c6d3d6' : '#dce4e4';
   const trim = floors === 3 ? '#d1d0c1' : floors === 4 ? '#b9c6c9' : '#c6cfd0';
-  const steel = '#87908e', dark = '#555e60', r = H.ctx.rng(`apartment-rebuild-${floors}`);
+  const steel = '#7f9692', dark = '#4c6463', r = H.ctx.rng(`apartment-rebuild-${floors}`);
   const S = { frameColor: dark, sillColor: '#a8aeaa', grilleColor: dark,
     shutterColor: dark, shutterStyle: 'none', shutterClosed: 0, trim,
     interiors: null, roof: { mat: 'metal', color: steel }, wall: { kind: 'paint', color: wall },

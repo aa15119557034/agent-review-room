@@ -169,8 +169,8 @@ export function addBackAlley({ root, ctx, own, ownTexture, frame, M, A, sheet })
   tile.wrapS = tile.wrapT = THREE.RepeatWrapping;
   ownTexture(tile);
   const linkMat = own(ctx.mat.toon('#ffffff', { map: tile, alphaTest: 0.5, side: 'double', paint: 0, color: '#8aa3ab', emissive: '#6f8a92', emissiveIntensity: 0.16, name: 'art-r1-chainlink' }));
-  const netMat = own(ctx.mat.toon('#274a52', { transparent: true, opacity: 0.66, side: 'double', depthWrite: false, paint: 0, name: 'art-r1-shade-net' }));
-  const steel = own(ctx.mat.toon('#56676c', { paint: 0.04, name: 'art-r1-fence-steel' }));
+  const netMat = own(ctx.mat.toon('#2d5a56', { transparent: true, opacity: 0.66, side: 'double', depthWrite: false, paint: 0, name: 'art-r1-shade-net' }));
+  const steel = own(ctx.mat.toon('#55807a', { paint: 0.04, name: 'art-r1-fence-steel' }));
   const plane = (mat, w, h, x, y, z, uvScale, name) => {
     const geo = new THREE.PlaneGeometry(w, h);
     if (uvScale) { const uv = geo.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * w / uvScale, uv.getY(i) * h / uvScale); }

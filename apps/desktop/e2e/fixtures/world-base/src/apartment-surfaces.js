@@ -8,6 +8,7 @@ import * as THREE from 'three';
 // bounce scaled by its own albedo (sunlit faces are untouched), and the AO map is
 // softened. ?shadowtint=off turns the bounce off with the rest of the shade tint.
 export const FACADE_BOUNCE = { color: [0.12, 0.16, 0.17], sunLo: 0.04, sunHi: 0.5, aoMapIntensity: 0.4 };
+export const PAINTED_STEEL = { metalness: 0.15, normalScale: 0.5 };
 const bounceOn = () => typeof location === 'undefined' || new URLSearchParams(location.search).get('shadowtint') !== 'off';
 function addFacadeBounce(material) {
   const b = FACADE_BOUNCE, c = b.color.map(x => x.toFixed(3)).join(', ');
@@ -79,6 +80,15 @@ export async function createApartmentSurfaces({ renderer, assetBase = '/apartmen
     materials.roof.name = 'apartment-pbr-roof';
     materials.roof.metalness = .25;
     materials.roof.normalScale.set(.35, .35);
+    // Round 6 (#254 X-51, C酱): every apartment use of `metal` is painted steel trim
+    // (stairs, railings, door frames, sills, drips, gutters, tank legs). The shutter
+    // diffuse averages ~0.05 linear and its ARM marks it fully metallic, so with no
+    // environment map those parts rendered near-black on the whole island. Painted
+    // steel keeps the shutter's normal and roughness detail, takes its colour from the
+    // vertex colours, and is dielectric. The roof clone above keeps the shutter look.
+    Object.assign(materials.metal, { map: null, metalnessMap: null, metalness: PAINTED_STEEL.metalness });
+    materials.metal.normalScale.set(PAINTED_STEEL.normalScale, PAINTED_STEEL.normalScale);
+    materials.metal.userData.paintedSteel = true;
     if (bounceOn()) for (const material of Object.values(materials)) addFacadeBounce(material);
   } catch (error) {
     for (const material of Object.values(materials)) material.dispose();
