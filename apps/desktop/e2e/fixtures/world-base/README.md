@@ -4,6 +4,8 @@
 
 本轮顺序：原始项目基线 → 岛上场地与车站区拼接 → 步行及可切换镜头 → 基础着色对比 → 固定机位截图、录像与性能记录。完成后由林离在 PR 发布“可精修：着色和配色”，交给 C酱，同一时间只有一人修改分支。
 
+按 **M** 打开岛图，可以直接去东部雪脊、林缘草甸、海蚀拱门和三个原版聚落。雪脊用实测高程重塑，山脚保留原岛地势。林木根据坡度、海拔和土壤湿度分布。[同机位三版画面、原版场景清点和实机结果](./evidence/alpine-woodland/README.md)
+
 ## 上游来源
 
 - [Petalwake](https://github.com/jjcm/petalwake)，`25443cef0eba802052d9ef24c94ba3c4157b6f2e`，MIT；外部 AI 模型与材质另算，仅本机使用。
@@ -44,6 +46,10 @@ node scripts\prepare-props.cjs --download
 主街橱窗与积水共用当前时段的六面街景。默认傍晚从 `src/street-env-evening/` 读取，下午从 `src/street-env/` 读取。更改建筑或日照后，运行 `node scripts/bake-street-reflections.cjs --electron=<已有Electron路径> --output=<新目录>` 可生成新的六面 PNG 和逐面报告。默认烘焙傍晚站区与程序天空，排除道口的镜头光晕。线性 RGB 峰值超过 2 的像素按同一比例缩放三个通道，报告分别记录原始峰值、限幅数量及量化误差。
 
 默认是傍晚（太阳高 12°、方位 280°，参数在 `src/evening.json`）。地形的太阳阴影烘焙在 `light.png` 里，换太阳必须一起重烘：首次运行 `python3 scripts/bake-evening-light.py`（需要 numpy、numba、scipy、Pillow，约半分钟），在 `.local/petalwake-*/assets/terrain/` 生成 `light-evening.png`；只换 R 通道（太阳阴影），AO、岸距、陡度照抄原图。网址加 `?time=afternoon` 回到 Petalwake 原来的下午光照做对照。港镇阴影图在场景启动时按所选太阳方向生成。
+
+按 `7` 切到南岸，也可以从站前主街沿土径走到潮间带。「水域与地貌」可前往四座湖盆、原生溪滩，以及火山口、支流汇口、悬谷瀑布、海蚀岬、赭土沟谷和西南沙丘。在岸边点「进入步行」后，面向水域按 W 可涉入浅水。贴岸能看到水底的石头和泥沙，缓坡上的水线随波进退。点击水面或涉水会激起涟漪，浮木随波升沉。[地貌分布、同机位对照与光照实拍](./evidence/island-landforms/README.md)
+
+场景时钟依次推进海洋冷锋、干燥高压脊和湿润强锋，约 12 分钟后重复。云量、阵雨、风向、雾、路面湿度和海况联动。可以用「跳到天气阶段」查看首个天气过程的晴天、低云、阵雨、放晴或辐射雾，选择后时间继续流动。[地形分布、同机位画面与实测](./evidence/inland-water-weather/README.md)
 
 在本目录使用已有 Electron 运行，无需构建桌面应用：
 

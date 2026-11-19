@@ -164,23 +164,24 @@ export class Terrain {
 
   // ------------------------------------------------------------------ CPU queries
   /** Fixture integration: one heightfield drives the visible land and walking queries. */
-  flattenRect({ minX, maxX, minZ, maxZ, height, blend, surface }) {
+  flattenRect({ minX, maxX, minZ, maxZ, height, blend, surface, approach }) {
     const { cell, N, h } = this;
     // Keep bilinear samples exactly flat up to the requested rectangle's edges.
     minX -= cell; maxX += cell; minZ -= cell; maxZ += cell;
     const x0 = Math.max(0, Math.floor((minX - blend + World.half) / cell));
     const x1 = Math.min(N - 1, Math.ceil((maxX + blend + World.half) / cell));
     const z0 = Math.max(0, Math.floor((minZ - blend + World.half) / cell));
-    const z1 = Math.min(N - 1, Math.ceil((maxZ + blend + World.half) / cell));
+    const z1 = Math.min(N - 1, Math.ceil((maxZ + (approach?.maxBlend ?? blend) + World.half) / cell));
     let changed = 0, originalMin = Infinity, originalMax = -Infinity;
     for (let iz = z0; iz <= z1; iz++) for (let ix = x0; ix <= x1; ix++) {
       const x = (ix + 0.5) * cell - World.half;
       const z = (iz + 0.5) * cell - World.half;
       const distance = Math.hypot(Math.max(minX - x, 0, x - maxX), Math.max(minZ - z, 0, z - maxZ));
-      if (distance >= blend) continue;
+      const width = approach ? approach.blendAt(x, z, blend) : blend;
+      if (distance >= width) continue;
       const index = iz * N + ix;
       if (distance === 0) { originalMin = Math.min(originalMin, h[index]); originalMax = Math.max(originalMax, h[index]); }
-      const t = distance / blend;
+      const t = distance / width;
       const weight = 1 - t * t * (3 - 2 * t);
       const target = surface ? surface(x, z) : height;
       h[index] += (target - h[index]) * weight;
@@ -308,6 +309,8 @@ export class Terrain {
         uMean: { value: mats.mean },
         uGrassFade: { value: new THREE.Vector2(60, 150) },
         uClipY: { value: 0 },
+        uSeaSetup: U.uSeaSetup,
+        uBeachExit: { value: new THREE.Vector2(1e8, 1e8) }, uInlandBank: {value:null}, uBasinLevels:{value:new THREE.Vector4()},
         uStationCutout: { value: new THREE.Vector4() },
       },
       vertexShader: VERT,
@@ -435,6 +438,12 @@ uniform vec3 uMean[8];
 uniform vec2 uGrassFade;
 uniform float uClipY;      // 1 in the water-reflection pass: drop everything below sea level
 uniform vec4 uStationCutout; // fixture-owned ground: min xz, max xz; zero width disables it
+uniform float uSeaSetup;
+uniform vec2 uBeachExit;
+uniform sampler2D uInlandBank;
+uniform sampler2D uAlpineSurface;
+uniform vec4 uAlpineRect;
+uniform vec4 uBasinLevels;
 uniform sampler2D uTintTex;
 ${NOISE}
 ${NOISE_TEX}
@@ -529,7 +538,22 @@ void main(){
   float lowW = smoothstep(3.7, 2.1, P.y + (nzA.g - 0.5) * 1.4);
   float sandW = lowW * (1.0 - smoothstep(0.25, 0.6, cliffy));
   float pebW = lowW * smoothstep(0.25, 0.6, cliffy);
+  // The lower atlas holds wet banks, the upper atlas the four feathered geological districts.
+  vec4 bank = texture(uInlandBank,vec2(uv.x,uv.y*0.5));
+  vec4 district=texture(uInlandBank,vec2(uv.x,0.5+uv.y*0.5));
+  float dryLand=1.0-smoothstep(0.0,0.02,bank.a);
+  float alpine=bank.g*dryLand, litter=bank.r*dryLand;
+  float volcanic=district.r, headland=district.g, badland=district.b, dune=district.a;
+  float bareRim=smoothstep(0.10,0.37,slope+(nzA.g-0.5)*0.11);
+  rockW=max(rockW,max(volcanic*(0.36+0.64*bareRim),headland*(0.43+0.57*bareRim)));
+  rockW=max(rockW,badland*(0.20+0.80*bareRim));
+  sandW=max(sandW,dune*(0.84+0.16*nzA.r));
+  int basinId=int(clamp(floor(bank.a*255.0/48.0+0.5)-1.0,0.0,3.0));
+  float bankHeight=P.y-uBasinLevels[basinId];
+  pebW=max(pebW,bank.r*(1.0-dryLand)); sandW=max(sandW,bank.g*(1.0-dryLand));
   float screeW = smoothstep(240.0, 310.0, P.y + (nzA.b - 0.5) * 70.0) * 0.85;
+  screeW=max(screeW,volcanic*(0.72+0.28*nzA.r));
+  rockW*=1.0-0.995*dune; screeW*=1.0-dune; pebW*=1.0-dune;
   float nearK = 1.0 - smoothstep(uGrassFade.x, uGrassFade.y, dist);
 
   // ---- meadow floor
@@ -562,21 +586,34 @@ void main(){
   tintAmt *= 1.0 - town.a;
   vec3 fcol = texture(uTintTex, uv).rgb;
   meadow = mix(meadow, fcol, saturate(tintAmt));
+  vec3 duff=mix(vec3(0.077,0.053,0.029),vec3(0.155,0.135,0.063),nzA.g)*mix(0.65,1.40,mg.h);
+  meadow=mix(meadow,duff,litter);
+  shadowBaked*=1.0-bank.b*dryLand; ao*=1.0-litter*0.30;
   Mat m; m.c = meadow; m.h = mg.h; m.n = mg.n * 0.6 * nearK; m.r = 0.92;
 
   // ---- scree on the high slopes
   if (screeW > 0.002){
     Mat ms = sampS(L_SCREE, P.xz / 3.4, dPx.xz / 3.4, dPy.xz / 3.4);
     ms.c *= vec3(0.80, 0.78, 0.76);
+    float ash=dot(ms.c,vec3(0.28,0.54,0.18));
+    ms.c=mix(ms.c,ash*mix(vec3(0.47,0.45,0.47),vec3(0.75,0.39,0.225),smoothstep(0.48,0.77,nzA.b))*0.86,volcanic);
     m = mixMat(m, ms, hblend(screeW, m.h, ms.h, 1.2));
   }
   // ---- beach
-  float wetLine = smoothstep(1.05, 0.12, P.y);
+  // Wind setup and wave run-up leave a broken damp line above the surf.
+  float runup = uSeaSetup + 0.12*sin(dot(P.xz, vec2(0.026,0.068)) - uTime*0.53);
+  float strand = P.y - runup + (nzA.r-0.5)*0.24;
+  float dampMargin=(1.0-dryLand)*bank.b*(bank.a>0.85 ? 1.0 : 1.0-smoothstep(0.05,0.43,bankHeight+(nzB.r-0.5)*0.16+(nzC.b-0.5)*0.07));
+  float wetLine = max(dampMargin,1.0 - smoothstep(0.14, 0.94, strand));
   if (sandW > 0.002){
     Mat ms = sampS(L_SAND, P.xz / 3.1, dPx.xz / 3.1, dPy.xz / 3.1);
     Mat ms2 = samp(L_SAND, P.xz / 13.0, dPx.xz / 13.0, dPy.xz / 13.0);
     ms.c = mix(ms.c, ms2.c, 0.35) * vec3(1.04, 1.0, 0.94);
-    ms.c *= mix(1.0, 0.50, wetLine);
+    ms.c=mix(ms.c,vec3(0.51,0.405,0.267)*(0.40+0.53*ms.h+0.20*nzB.g),dune);
+    float wrack = (1.0-smoothstep(0.04, 0.17, abs(strand-0.94+(nzB.g-0.5)*0.4)))
+      * smoothstep(0.42, 0.73, nzC.r*0.6+nzB.b*0.4);
+    ms.c *= mix(vec3(1.0),vec3(0.41,0.46,0.51),wetLine) * (1.0-0.45*wrack);
+    ms.c *= mix(vec3(1.0),vec3(0.39,0.48,0.35),bank.g);
     ms.r = mix(ms.r, 0.16, wetLine);
     m = mixMat(m, ms, hblend(sandW, m.h, 0.5 + 0.5 * ms.h, 0.6));
   }
@@ -598,7 +635,8 @@ void main(){
   if (rockW > 0.002){
     vec3 b = pow(abs(N), vec3(5.0)); b /= (b.x + b.y + b.z);
     // bedding dips gently east and wanders, matching the ledges cut into the heightfield
-    float bed = P.y - P.x * 0.022 + (nzA.a - 0.5) * 3.0;
+    float folded=(1.0-headland)*smoothstep(90.0,245.0,P.y);
+    float bed = P.y - P.x * 0.022 + (nzA.a - 0.5) * 3.0 + folded*(0.38*P.z-0.29*P.x+11.0*sin(P.x*0.018+P.z*0.01));
     const float S1 = 7.5, S2 = 26.0, S3 = 6.0;
     // every bed slides along the wall by its own amount, so the tile's seams never stack up the
     // face (the strata stay level: only the position along the wall shifts)
@@ -632,7 +670,8 @@ void main(){
     // thin partings inside the sandstone so it still reads as bedded
     float parting = smoothstep(0.80, 0.92, ntex(vec2(bed * 4.3, 23.0)).b);
     sandC *= 1.0 - 0.45 * parting;
-    vec3 wallC = mix(shaleC, sandC, unit);
+    vec3 wallC = mix(shaleC, sandC, mix(unit,0.87,folded));
+    wallC=mix(wallC,vec3(0.32,0.29,0.24)*(0.84+0.23*unit),0.45*headland);
     float wallH = mix(shaleH, sandH, unit);
     float wallR = mix(0.62, 0.86, unit);
     vec2 wnx = mix(shaleNx * 1.6, sx.n * 1.3, unit), wnz = mix(shaleNz * 1.6, sz.n * 1.3, unit);
@@ -669,7 +708,76 @@ void main(){
     m.c = mix(m.c, rc, rockAmt);
     m.r = mix(m.r, rr, rockAmt);
     m.h = mix(m.h, rh, rockAmt);
-    Nw = normalize(mix(Nw, rn, rockAmt));
+    Nw = normalize(mix(Nw, normalize(mix(rn,N,0.53*headland)), rockAmt));
+  }
+
+  // Deposits share the grain and relief of the native materials. Strata follow
+  // elevation and bedding dip, while the cinder seams run down the cone.
+  float grain=0.57+0.48*m.h+0.19*(nzB.b-0.5)+0.11*(nzC.a-0.5);
+  if(volcanic>0.0){
+    float cinder=ntexA(P.xz*0.17+vec2(P.y*0.13,0.0)).b*0.62+nzA.r*0.38;
+    vec3 lava=mix(vec3(0.139,0.140,0.147),vec3(0.248,0.161,0.119),smoothstep(0.44,0.71,cinder));
+    vec2 cone=(P.xz-vec2(951.,-80.))/vec2(343.,290.);
+    float angle=atan(cone.y,cone.x), radius=length(cone);
+    float ribbons=abs(sin(3.0*angle+radius*3.6+0.42*sin(7.0*angle)+nzA.r*0.18));
+    float flow=(1.-smoothstep(0.06,0.24,ribbons))*smoothstep(0.34,0.53,radius);
+    lava=mix(lava,vec3(0.075,0.087,0.101),flow*0.72);
+    float ashFloor=(1.-smoothstep(0.13,0.31,radius))*smoothstep(0.23,0.69,nzA.g);
+    lava=mix(lava,vec3(0.32,0.28,0.25),ashFloor*0.8);
+    m.c=mix(m.c,lava*grain,volcanic*(0.66+0.24*bareRim));
+  }
+  if(alpine>0.0){
+    vec2 surveyUV=(P.xz-uAlpineRect.xy)/uAlpineRect.zw;
+    vec3 pigment=textureGrad(uAlpineSurface,surveyUV,dPx.xz/uAlpineRect.zw,dPy.xz/uAlpineRect.zw).rgb;
+    float snow=smoothstep(0.34,0.72,dot(pigment,vec3(0.26,0.56,0.18)));
+    // The vertical projection supplies rock detail on faces foreshortened in the orthophoto.
+    float cliff=smoothstep(0.26,0.65,1.0-N.y)*(1.0-snow);
+    vec2 face=vec2(P.x*0.82+P.z*0.57,P.y-0.33*P.x+0.21*P.z)/18.0 + (nzA.rg-0.5)*0.41;
+    Mat fissures=samp(L_ROCK,face,dFdx(face),dFdy(face));
+    float joints=clamp(dot(fissures.c/uMean[1],vec3(0.25,0.55,0.20)),0.32,1.6);
+    pigment*=mix(1.0,0.64+0.23*joints,cliff);
+    // Preserve clean limestone/snow separation and warm exposed faces under
+    // the station's original tone curve. Mid-scale survey structure does the work.
+    pigment=mix(pigment*vec3(1.04,0.995,0.945),pigment*vec3(0.99,1.01,1.035),snow);
+    float detail=(0.93+0.16*m.h)*mix(1.0,0.72+0.42*fissures.h,cliff);
+    m.c=mix(m.c,pigment*detail,alpine);
+    Nw=normalize(mix(Nw,N,alpine*(0.28+0.52*snow)));
+    m.r=mix(m.r,mix(0.92,0.83,snow),alpine);
+    rockAmt=max(rockAmt,alpine);
+  }
+  if(headland>0.0){
+    float beds=P.y+P.x*0.055+P.z*0.021;
+    float chalkBed=ntex(vec2(beds*1.38,nzA.g*3.0+14.1)).b;
+    vec3 chalk=mix(vec3(0.26,0.275,0.260),vec3(0.40,0.395,0.32),smoothstep(0.36,0.67,chalkBed));
+    m.c=mix(m.c,chalk*grain*(1.0-0.26*wetLine),headland*(0.78+0.13*bareRim));
+  }
+  if(badland>0.0){
+    float deposit=P.y+0.052*P.x-0.033*P.z+2.6*ntexA(P.xz*0.055).r;
+    float bedding=0.72*ntex(vec2(deposit*0.43,46.1+nzA.g)).r+0.28*nzB.g;
+    vec3 clay=mix(vec3(0.36,0.175,0.099),vec3(0.59,0.34,0.18),smoothstep(0.28,0.76,bedding));
+    clay=mix(clay,vec3(0.66,0.53,0.36),smoothstep(0.69,0.82,bedding)*0.45);
+    m.c=mix(m.c,clay*grain,badland*0.91);
+  }
+  if(dune>0.01){
+    float phase=(P.z+P.x*0.12+0.18*sin(P.x*0.8)+nzA.g*0.45)*26.0;
+    float fine=1.-smoothstep(0.48,2.1,fwidth(phase));
+    float ripple=cos(phase)*fine*dune;
+    Nw=normalize(Nw+vec3(0.022,0.0,0.105)*ripple);
+    m.c*=1.0+0.045*ripple;
+  }
+  // Baked topographic shadows describe the original island. In edited terrain
+  // trace the new heightfield towards the sun, retaining a feathered boundary.
+  float edited=max(alpine,max(max(volcanic,headland),max(badland,dune)));
+  if(edited>0.01){
+    float visibility=1.0;
+    float travel=5.0;
+    for(int i=0;i<8;i++){
+      vec3 q=P+uSunDir*travel;
+      visibility=min(visibility,smoothstep(-2.1,2.6,q.y-terrainH(q.xz)+1.6));
+      travel=travel*1.72+3.0;
+    }
+    shadowBaked=mix(shadowBaked,visibility,edited);
+    ao=mix(ao,0.89+0.11*N.y,edited);
   }
 
   // ---- towns: cobbled streets, flagged squares and quays, trodden earth round the houses
@@ -692,6 +800,18 @@ void main(){
     Nw = normalize(mix(Nw, normalize(N + vec3(mp.n.x, 0.0, mp.n.y) * 0.85), paved));
   }
 
+  // Worn path from Sakuragaoka's southern street end disperses onto the sand.
+  vec2 exitOffset = P.xz-uBeachExit;
+  if (abs(exitOffset.x) < 25.0 && exitOffset.y >= 0.0 && exitOffset.y < 74.0) {
+    float bend = 20.0*smoothstep(0.0,68.0,exitOffset.y)-13.0*smoothstep(60.0,100.0,exitOffset.y);
+    float edge = abs(exitOffset.x-bend)+(nzB.r-0.5)*1.4;
+    float trail = (1.0-smoothstep(1.45,3.0,edge))*(1.0-smoothstep(47.0,74.0,exitOffset.y));
+    Mat grit = sampS(L_PEB, P.xz / 2.5, dPx.xz / 2.5, dPy.xz / 2.5);
+    vec3 earth = mix(grit.c * vec3(0.77,0.68,0.56), vec3(0.29,0.235,0.165)*(0.72+0.50*grit.h), 0.63);
+    m.c = mix(m.c, earth, trail);
+    m.r = mix(m.r,0.82,trail);
+  }
+
   // ---- light
   float cs = cloudShadow(P.xz, uTime);
   float sh = shadowBaked * cs * riderShadow(P) * townShadow(P, N);
@@ -711,7 +831,7 @@ void main(){
   float ndh = saturate(dot(Nw, H));
   float D = a * a / (3.14159 * pow(ndh * ndh * (a * a - 1.0) + 1.0, 2.0));
   float F = 0.04 + 0.96 * pow(1.0 - saturate(dot(V, H)), 5.0);
-  float specMask = max(rockAmt, lowW);
+  float specMask = max(max(rockAmt, lowW),dampMargin*0.62);
   col += uSunColor * sh * saturate(ndlRaw) * min(D, 40.0) * F * 0.25 * specMask;
   float fres = 0.04 + 0.96 * pow(1.0 - saturate(dot(Nw, V)), 5.0);
   vec3 R = reflect(-V, Nw);

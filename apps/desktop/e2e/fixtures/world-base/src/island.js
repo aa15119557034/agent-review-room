@@ -11,6 +11,17 @@ import { Town } from '../upstream/petalwake/src/world/town.js';
 import { Props } from '../upstream/petalwake/src/world/props.js';
 import { heightAt as stationHeight } from '../upstream/sakuragaoka/src/world/layout.js';
 import { createGroundTransition } from './transition.js';
+import { shapeIslandRelief, makeCoastRoute } from './coast.js';
+import { createWeather } from './weather.js';
+import { basins, basinAt, carveBasins, makeBankTexture } from './basins.js';
+import { createInlandWater } from './inland-water.js';
+import { dressStreamBanks } from './stream-bank.js';
+import { fallMist } from './fall-mist.js';
+import { loadAlpine, applyAlpine, alpineRect, alpineLodRange } from './alpine.js';
+import { plantWoodland, createWoodland, shapeMeadows } from './woodland.js';
+import { createUnderstory } from './understory.js';
+import { createSeaArch } from './sea-arch.js';
+import { sculptDistricts, sculptTributaries, makeLandformViews } from './landforms.js';
 
 export const stationPlacement = Object.freeze({
   x: 280, y: 8, z: 900, position: Object.freeze([280, 8, 900]), rotationY: 0,
@@ -29,7 +40,7 @@ async function json(url) {
   return response.json();
 }
 
-function clearStationVegetation(terrain) {
+export function clearStationVegetation(terrain) {
   const S = terrain.splatN, cell = World.size / S;
   const fadeWidth = 12;
   const reach = cell + fadeWidth;
@@ -130,16 +141,24 @@ function featherVegetation(terrain, areas, localToWorld, { flowers = 8, jitter =
   return { flowerFadeM: flowers, jitterM: jitter, texels: touched };
 }
 
-async function loadProps(assetBase, terrain) {
-  const placements = await json(`${assetBase}/terrain/props.json`);
+async function loadProps(assetBase, terrain, placements, streamLevelAt) {
   const loader = new GLTFLoader();
   let removed = 0, reseated = 0;
+  const atlas=terrain.material.uniforms.uInlandBank.value.image;
+  const bareRock=(x,z)=>{
+    const size=atlas.width,i=Math.floor((x+World.half)*size/World.size),j=Math.floor((z+World.half)*size/World.size);
+    const k=4*((size+j)*size+i);
+    const bank=4*(j*size+i);
+    return Math.max(atlas.data[k],atlas.data[k+1],atlas.data[k+2],atlas.data[bank+3]===0 ? atlas.data[bank+1] : 0)>210;
+  };
   const loaded = await Promise.all(Object.entries(placements).map(async ([name, placements]) => {
     const [gltf, info] = await Promise.all([
       loader.loadAsync(`${assetBase}/models/${name}.glb`), json(`${assetBase}/models/${name}.json`),
     ]);
     const list = placements.filter(([x, , z, , scale]) => {
-      const remove = inRect(x, z, info.radius * scale);
+      const basin = basinAt(x,z);
+      const remove = inRect(x, z, info.radius * scale) || (basin && terrain.heightAt(x,z)<basin.level)
+        || (name==='tree' && (streamLevelAt(x,z)>terrain.heightAt(x,z) || bareRock(x,z)));
       if (remove) removed++;
       return !remove;
     }).map((placement) => {
@@ -175,7 +194,9 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
   const index = await json(`${assetBase}/town/index.json`);
   if (!index.towns.some((town) => town.id === 'larkhaven')) throw new Error('Petalwake assets contain no Larkhaven harbour.');
   await json(`${assetBase}/town/masks.json`);
-  const [terrain, town] = await Promise.all([Terrain.load(renderer, assetBase), Town.load(renderer, assetBase)]);
+  const [terrain, town, propPlacements, alpine] = await Promise.all([
+    Terrain.load(renderer, assetBase), Town.load(renderer, assetBase), json(`${assetBase}/terrain/props.json`), loadAlpine(),
+  ]);
   if (!town.towns.some((entry) => entry.id === 'larkhaven')) throw new Error('Larkhaven geometry failed to load.');
   if (evening) {
     // Terrain's constructor installed meta.sun and the afternoon light map; swap both
@@ -197,7 +218,39 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
     const localZ = THREE.MathUtils.clamp(z - stationPlacement.z, stationPlacement.bounds.minZ, stationPlacement.bounds.maxZ);
     return stationPlacement.y + stationHeight(localX, localZ) - 0.08;
   };
-  const flatten = terrain.flattenRect({ ...stationRect, height: stationPlacement.y, blend, surface });
+  const coastRoute = makeCoastRoute(stationPlacement);
+  const anchors = Object.values(propPlacements).flat().map(p => [p, terrain.heightAt(p[0], p[2])]);
+  const relief = shapeIslandRelief(terrain, index.towns, stationRect);
+  const basinStats = carveBasins(terrain);
+  const atlas=makeBankTexture();
+  terrain.material.uniforms.uInlandBank.value=atlas;
+  const sky=new Sky(), river=new River(terrain,terrain.meta,sky);
+  sculptDistricts(terrain,atlas);
+  applyAlpine(terrain,atlas,alpine.heights);
+  terrain.material.uniforms.uAlpineSurface = { value: alpine.surface };
+  terrain.material.uniforms.uAlpineRect = { value: alpineRect };
+  const drainage=sculptTributaries(terrain,river);
+  const branches=[drainage.upper,drainage.lower,drainage.fork].map((rows,index)=>{
+    const branch=new River(terrain,terrain.meta,sky,{rows,waterfall:index===0,plungeLevel:drainage.lower[0].y,ripple:river.material.uniforms.uRipple.value});
+    branch.mesh.frustumCulled=true;
+    return branch;
+  });
+  const fall=branches[0].fall;
+  branches[1].material.uniforms.uPlunge.value.set(fall.base.x,fall.base.z,fall.hw*1.9);
+  const streams=[river,...branches];
+  const streamLevelAt=(x,z)=>{
+    let level=-Infinity;
+    for(const stream of streams)level=Math.max(level,stream.levelAt(x,z));
+    return level;
+  };
+  const seaArch=createSeaArch(terrain);
+  const landformViews=[...makeLandformViews(terrain,branches[0].fall,drainage),seaArch.view];
+  terrain.material.uniforms.uBasinLevels.value.fromArray(basins.map(b=>b.level));
+  const flatten = terrain.flattenRect({ ...stationRect, height: stationPlacement.y, blend, surface, approach: coastRoute });
+  // Retain the authored burial depth of each rock or tree on the reshaped island.
+  for (const [p, original] of anchors) p[1] += terrain.heightAt(p[0], p[2]) - original;
+  clearStationVegetation(terrain);
+  coastRoute.markGround(terrain);
   // The station owns core colour and depth. Fitting a coarser island heightfield alone
   // cannot reproduce its narrow railway cut and levee without terrain poking through.
   terrain.material.uniforms.uStationCutout.value.set(stationRect.minX, stationRect.minZ, stationRect.maxX, stationRect.maxZ);
@@ -206,14 +259,12 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
     stationHeight: (x, z) => stationPlacement.y + stationHeight(x - stationPlacement.x, z - stationPlacement.z),
     islandHeight: (x, z) => terrain.heightAt(x, z),
   });
-  clearStationVegetation(terrain);
 
   const root = new THREE.Group();
   root.name = 'petalwake-island';
   scene.add(root);
   terrain.mainView.mesh.renderOrder = 500;
   const meadow = new Meadow(terrain, 'medium');
-  const sky = new Sky();
   const clouds = new CloudBaker(renderer);
   clouds.begin();
   while (!clouds.done) {
@@ -223,29 +274,42 @@ export async function createIsland({ scene, renderer, camera, assetBase = '/asse
   sky.cloudTex.value = clouds.texture;
   sky.cloudOn.value = 1;
   const water = new Water(sky);
-  const river = new River(terrain, terrain.meta, sky);
+  for(const branch of branches) dressStreamBanks(terrain,branch);
+  const streamView=dressStreamBanks(terrain,river);
   water.material.uniforms.uFallBase.value.set(river.fall.base.x, river.fall.base.z, river.fall.hw * 1.6);
-  const { props, removed, reseated } = await loadProps(assetBase, terrain);
+  shapeMeadows(terrain,index.towns,stationRect);
+  const planted=plantWoodland(terrain,atlas,index.towns,streamLevelAt,landformViews);
+  const [woodland,{props,removed,reseated}]=await Promise.all([
+    createWoodland(planted),loadProps(assetBase,terrain,propPlacements,streamLevelAt),
+  ]);
+  const understory=createUnderstory(terrain,atlas);
+  root.add(woodland.group,understory.group,seaArch.mesh);
+  const weather = createWeather(timeOfDay);
+  const inland = createInlandWater(terrain,sky,river,streamLevelAt,branches);
+  root.add(...branches.map(branch=>branch.group),fallMist(fall),fallMist(river.fall));
+  root.add(inland.group);
   root.add(terrain.mainView.mesh, meadow.group, sky.mesh, water.mesh, river.group, town.group, props.group, transition);
   if (props.overlay) root.add(props.overlay);
   town.bakeShadows();
 
   const stats = { towns: town.towns.map((entry) => entry.id), townTriangles: town.tris,
-    props: props.counts, removedProps: removed, reseatedProps: reseated, flatten,
-    transition: { width: 2, spacing: 1, triangles: transition.geometry.index.count / 3 } };
+    props: props.counts, removedProps: removed, reseatedProps: reseated, flatten, relief, basins:basinStats,
+    woodland:woodland.counts, transition: { width: 2, spacing: 1, triangles: transition.geometry.index.count / 3 } };
   function update(dt, time) {
     U.uTime.value = time;
     U.uCamPos.value.copy(camera.position);
     camera.updateMatrixWorld();
-    terrain.select(terrain.mainView, camera);
+    terrain.select(terrain.mainView, camera, alpineLodRange(camera.position.x,camera.position.z));
     meadow.update(camera);
+    woodland.update(camera);
+    understory.update(camera);
     town.update(dt, time, camera);
     water.update(camera);
     stats.terrainNodes = terrain.mainView.count;
     stats.meadow = { ...meadow.stats };
   }
   return {
-    ready: true, root, terrain, town, props, meadow, water, sky, river, transition, U, stationPlacement, stats, update, timeOfDay,
+    ready: true, root, terrain, town, props, meadow, woodland, seaArch, water, sky, river, branches, streamLevelAt, landformViews, inland, streamView, transition, U, stationPlacement, stats, update, timeOfDay, coastRoute, weather,
     heightAt: (x, z) => terrain.heightAt(x, z),
     // Meadow allocates materials lazily as camera cells enter view.
     get materials() {

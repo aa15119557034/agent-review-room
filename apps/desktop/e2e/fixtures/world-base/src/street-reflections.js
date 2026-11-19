@@ -5,6 +5,7 @@ import * as THREE from 'three';
 // before looking it up in the cube photographed from the middle of the block.
 export const STREET_REFLECTION_GLSL = /* glsl */`
   uniform samplerCube uStreetEnvironment;
+  uniform float uStreetOvercast;
   uniform mat4 uStreetWorldToLocal;
   uniform vec3 uStreetOrigin, uStreetMin, uStreetMax;
   vec3 streetReflection(vec3 worldPosition, vec3 worldRay, float lod) {
@@ -19,7 +20,8 @@ export const STREET_REFLECTION_GLSL = /* glsl */`
     // The sky is effectively at infinity above the eaves.
     vec3 dir = mix(fromProbe, r, smoothstep(0.40, 0.88, r.y)) * basis;
     // Each sRGB PNG stores half the measured linear radiance.
-    return 2.0 * textureLod(uStreetEnvironment, dir, lod).rgb;
+    vec3 radiance = 2.0 * textureLod(uStreetEnvironment, dir, lod).rgb;
+    return radiance * mix(vec3(1.0), vec3(0.57, 0.67, 0.80), uStreetOvercast);
   }`;
 
 const FRONTS = [
@@ -57,6 +59,7 @@ export async function createStreetReflections(root, layout, evening = false) {
   const origin = new THREE.Vector3(x, layout.heightAt(x, z) + 1.9, z);
   const uniforms = {
     uStreetEnvironment: { value: null },
+    uStreetOvercast: { value: 0 },
     uStreetWorldToLocal: { value: new THREE.Matrix4() },
     uStreetOrigin: { value: origin },
     uStreetMin: { value: new THREE.Vector3(x - 9.7, -1, -7) },

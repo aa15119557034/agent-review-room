@@ -1,0 +1,67 @@
+{
+  "sample-e-harbour": {
+    "left": "sample-e-harbour",
+    "right": "sample-e-harbour",
+    "sameAbsoluteEye": true,
+    "yEyeDelta_m": 0.0,
+    "quaternionMaxAbsDiff": 0.0,
+    "fov": 57,
+    "ground": 4.496910095214844,
+    "eyeHeight": 1.599989904785156,
+    "meanAbsoluteRGB8": 9.557229995727539,
+    "maxChannelDiffAtLeast8_pixels": 912710,
+    "pixels": 1296000
+  },
+  "sample-f-hillside": {
+    "left": "sample-f-hillside",
+    "right": "sample-f-hillside",
+    "sameAbsoluteEye": false,
+    "yEyeDelta_m": -13.779183112925843,
+    "quaternionMaxAbsDiff": 5.551115123125783e-17,
+    "fov": 57,
+    "ground": 46.12941688707416,
+    "eyeHeight": 1.6000000000000014,
+    "meanAbsoluteRGB8": 43.44142532348633,
+    "maxChannelDiffAtLeast8_pixels": 1227724,
+    "pixels": 1296000
+  },
+  "sample-g-rail": {
+    "left": "sample-g-rail",
+    "right": "sample-g-rail",
+    "sameAbsoluteEye": true,
+    "yEyeDelta_m": 0.0,
+    "quaternionMaxAbsDiff": 0.0,
+    "fov": 57,
+    "ground": 8,
+    "eyeHeight": 1.5999999999999996,
+    "meanAbsoluteRGB8": 3.781466484069824,
+    "maxChannelDiffAtLeast8_pixels": 214891,
+    "pixels": 1296000
+  },
+  "sample-h-north": {
+    "left": "sample-h-north",
+    "right": "sample-h-north",
+    "sameAbsoluteEye": true,
+    "yEyeDelta_m": 0.0,
+    "quaternionMaxAbsDiff": 0.0,
+    "fov": 57,
+    "ground": 134.5623427734375,
+    "eyeHeight": 1.5999572265624806,
+    "meanAbsoluteRGB8": 13.40168285369873,
+    "maxChannelDiffAtLeast8_pixels": 930482,
+    "pixels": 1296000
+  },
+  "sample-f-absolute-254": {
+    "left": "sample-f-hillside",
+    "right": "sample-f-absolute-254",
+    "sameAbsoluteEye": true,
+    "yEyeDelta_m": 0.0,
+    "quaternionMaxAbsDiff": 0.0,
+    "fov": 57,
+    "ground": 46.12941688707416,
+    "eyeHeight": 15.379183112925844,
+    "meanAbsoluteRGB8": 29.620542526245117,
+    "maxChannelDiffAtLeast8_pixels": 1137177,
+    "pixels": 1296000
+  }
+}

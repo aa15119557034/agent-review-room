@@ -1,0 +1,2328 @@
+{
+  "source": "21154f79fc8c1fb1bc27735b203a9fa0b6db3b1a",
+  "parents": [
+    "6485bf56fba0955c87c0728787fa4fc661f9378f",
+    "675f6602e699baf782a26e77ec719b0f23d79d37"
+  ],
+  "comparedToFinalGeometry": "7ffb5a118e5e05e8f584955b67813ac383f29c99",
+  "method": {
+    "electronSoftwareOnly": true,
+    "webglRequested": false,
+    "normalLoopStoppedBeforeFirstFrame": true,
+    "singleSceneBuiltForDecalsW1Statics": true,
+    "plannedOnFingerprintMiss": false,
+    "kinematics": "KeyW injection and synchronous execution of the production capsule for 1.5 s at station and 15 s/lake, 60 Hz, geometry only."
+  },
+  "decals": {
+    "fingerprint": "1061:2667664:298285.6:949273.1",
+    "source": "baked",
+    "rays": 0,
+    "count": 26,
+    "itemBytesSha256": "2e17ad7b2de399565ed74fabc4d8deda50d25f780dde5e36d1d086d8a8539fc3",
+    "allItemsAndOrderMatchFinal": true,
+    "planarNinePoint": 22,
+    "curvedOriginalSupports": 4,
+    "blocked": 0
+  },
+  "colliders": {
+    "count": 3147,
+    "jsonSha256": "a0487644f831456ba4802d144d452d9d9709c5b80a26384f0931545fa4d2a541",
+    "sameOrderedListAsFinal": true
+  },
+  "w1": {
+    "items": 60,
+    "footprintSamples": 51036,
+    "contacts": 51036,
+    "boxes": 3,
+    "solidsMatchFinal": true,
+    "allContactMeasurementsMatchFinal": true,
+    "printedCards": [
+      {
+        "name": "art-r3-w1-zone-SNACK",
+        "sourceMaterial": "MeshBasicMaterial",
+        "batchMaterial": "MeshBasicMaterial",
+        "groupMembers": 3,
+        "differentPixels": 0
+      },
+      {
+        "name": "art-r3-w1-zone-BAKERY",
+        "sourceMaterial": "MeshBasicMaterial",
+        "batchMaterial": "MeshBasicMaterial",
+        "groupMembers": 3,
+        "differentPixels": 0
+      },
+      {
+        "name": "art-r3-w1-zone-DRINK",
+        "sourceMaterial": "MeshBasicMaterial",
+        "batchMaterial": "MeshBasicMaterial",
+        "groupMembers": 3,
+        "differentPixels": 0
+      }
+    ],
+    "currentRenderReferences": [
+      {
+        "name": "art-r3-w1-zone-SNACK",
+        "corners": [
+          [
+            -9.344000000000001,
+            1.8634,
+            12.12
+          ],
+          [
+            -9.344000000000001,
+            2.2034,
+            12.12
+          ],
+          [
+            -9.344000000000001,
+            1.8634,
+            11.179999999999998
+          ],
+          [
+            -9.344000000000001,
+            2.2034,
+            11.179999999999998
+          ]
+        ],
+        "witnesses": [
+          {
+            "uv": [
+              0.1,
+              0.1
+            ],
+            "point": [
+              -9.344000000000001,
+              1.8973999999999998,
+              12.025999999999998
+            ],
+            "targetHit": true,
+            "distance": 11.09654935374056,
+            "opaque": {
+              "path": "Sakuragaoka/static",
+              "material": "MeshToonMaterial",
+              "distance": 6.686906205802813
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.1,
+              0.5
+            ],
+            "point": [
+              -9.344000000000001,
+              2.0334,
+              12.025999999999998
+            ],
+            "targetHit": true,
+            "distance": 11.09288908986293,
+            "opaque": {
+              "path": "Sakuragaoka/static",
+              "material": "MeshToonMaterial",
+              "distance": 6.6847004893717
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.1,
+              0.9
+            ],
+            "point": [
+              -9.344000000000001,
+              2.1694,
+              12.025999999999998
+            ],
+            "targetHit": true,
+            "distance": 11.090895417413332,
+            "opaque": {
+              "path": "Sakuragaoka/static",
+              "material": "MeshToonMaterial",
+              "distance": 6.683499079793768
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.5,
+              0.1
+            ],
+            "point": [
+              -9.344000000000001,
+              1.8973999999999998,
+              11.649999999999999
+            ],
+            "targetHit": true,
+            "distance": 11.30341680908919,
+            "opaque": {
+              "path": "Sakuragaoka/static",
+              "material": "MeshToonMaterial",
+              "distance": 6.408236301215917
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.5,
+              0.5
+            ],
+            "point": [
+              -9.344000000000001,
+              2.0334,
+              11.649999999999999
+            ],
+            "targetHit": true,
+            "distance": 11.299823554374646,
+            "opaque": {
+              "path": "Sakuragaoka/static",
+              "material": "MeshToonMaterial",
+              "distance": 6.406199180432868
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.5,
+              0.9
+            ],
+            "point": [
+              -9.344000000000001,
+              2.1694,
+              11.649999999999999
+            ],
+            "targetHit": true,
+            "distance": 11.297866398572786,
+            "opaque": {
+              "path": "Sakuragaoka/static",
+              "material": "MeshToonMaterial",
+              "distance": 6.405698484891381
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.9,
+              0.1
+            ],
+            "point": [
+              -9.344000000000001,
+              1.8973999999999998,
+              11.274
+            ],
+            "targetHit": true,
+            "distance": 11.518845756411537,
+            "opaque": {
+              "path": "Sakuragaoka/static",
+              "material": "MeshToonMaterial",
+              "distance": 6.173868405729623
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.9,
+              0.5
+            ],
+            "point": [
+              -9.344000000000001,
+              2.0334,
+              11.274
+            ],
+            "targetHit": true,
+            "distance": 11.515319724610343,
+            "opaque": {
+              "path": "Sakuragaoka/static",
+              "material": "MeshToonMaterial",
+              "distance": 6.171978523983195
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.9,
+              0.9
+            ],
+            "point": [
+              -9.344000000000001,
+              2.1694,
+              11.274
+            ],
+            "targetHit": true,
+            "distance": 11.513399200931064,
+            "opaque": {
+              "path": "Sakuragaoka/static",
+              "material": "MeshToonMaterial",
+              "distance": 6.170949162125528
+            },
+            "anyVisibleObstacle": true
+          }
+        ]
+      },
+      {
+        "name": "art-r3-w1-zone-BAKERY",
+        "corners": [
+          [
+            -9.344,
+            1.8634,
+            9.67
+          ],
+          [
+            -9.344,
+            2.2034,
+            9.67
+          ],
+          [
+            -9.344,
+            1.8634,
+            8.729999999999999
+          ],
+          [
+            -9.344,
+            2.2034,
+            8.729999999999999
+          ]
+        ],
+        "witnesses": [
+          {
+            "uv": [
+              0.1,
+              0.1
+            ],
+            "point": [
+              -9.344,
+              1.8973999999999998,
+              9.575999999999999
+            ],
+            "targetHit": true,
+            "distance": 12.586044158511443,
+            "opaque": {
+              "path": "Sakuragaoka/static",
+              "material": "MeshBasicMaterial",
+              "distance": 6.626396001476568
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.1,
+              0.5
+            ],
+            "point": [
+              -9.344,
+              2.0334,
+              9.575999999999999
+            ],
+            "targetHit": true,
+            "distance": 12.582817186941881,
+            "opaque": {
+              "path": "Sakuragaoka/static",
+              "material": "MeshBasicMaterial",
+              "distance": 6.624697041006057
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.1,
+              0.9
+            ],
+            "point": [
+              -9.344,
+              2.1694,
+              9.575999999999999
+            ],
+            "targetHit": true,
+            "distance": 12.581059619920733,
+            "opaque": {
+              "path": "Sakuragaoka/static",
+              "material": "MeshToonMaterial",
+              "distance": 6.625118135682785
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.5,
+              0.1
+            ],
+            "point": [
+              -9.344,
+              1.8973999999999998,
+              9.2
+            ],
+            "targetHit": true,
+            "distance": 12.840744976830589,
+            "opaque": {
+              "path": "Sakuragaoka/static",
+              "material": "MeshToonMaterial",
+              "distance": 6.865421028949826
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.5,
+              0.5
+            ],
+            "point": [
+              -9.344,
+              2.0334,
+              9.2
+            ],
+            "targetHit": true,
+            "distance": 12.837582029338703,
+            "opaque": {
+              "path": "Sakuragaoka/static",
+              "material": "MeshToonMaterial",
+              "distance": 6.863729930320934
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.5,
+              0.9
+            ],
+            "point": [
+              -9.344,
+              2.1694,
+              9.2
+            ],
+            "targetHit": true,
+            "distance": 12.83585934637802,
+            "opaque": {
+              "path": "Sakuragaoka/static",
+              "material": "MeshToonMaterial",
+              "distance": 6.842169079918749
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.9,
+              0.1
+            ],
+            "point": [
+              -9.344,
+              1.8973999999999998,
+              8.824
+            ],
+            "targetHit": true,
+            "distance": 13.101286484922005,
+            "opaque": {
+              "path": "Sakuragaoka/static",
+              "material": "MeshBasicMaterial",
+              "distance": 6.897664689915864
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.9,
+              0.5
+            ],
+            "point": [
+              -9.344,
+              2.0334,
+              8.824
+            ],
+            "targetHit": true,
+            "distance": 13.098186453093419,
+            "opaque": {
+              "path": "Sakuragaoka/static",
+              "material": "MeshBasicMaterial",
+              "distance": 6.896032561643098
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.9,
+              0.9
+            ],
+            "point": [
+              -9.344,
+              2.1694,
+              8.824
+            ],
+            "targetHit": true,
+            "distance": 13.096498049478724,
+            "opaque": {
+              "path": "Sakuragaoka/static",
+              "material": "MeshToonMaterial",
+              "distance": 6.891789883131447
+            },
+            "anyVisibleObstacle": true
+          }
+        ]
+      },
+      {
+        "name": "art-r3-w1-zone-DRINK",
+        "corners": [
+          [
+            -9.343999999999998,
+            1.8634,
+            7.169999999999999
+          ],
+          [
+            -9.343999999999998,
+            2.2034,
+            7.169999999999999
+          ],
+          [
+            -9.343999999999998,
+            1.8634,
+            6.2299999999999995
+          ],
+          [
+            -9.343999999999998,
+            2.2034,
+            6.2299999999999995
+          ]
+        ],
+        "witnesses": [
+          {
+            "uv": [
+              0.1,
+              0.1
+            ],
+            "point": [
+              -9.343999999999998,
+              1.8973999999999998,
+              7.076
+            ],
+            "targetHit": true,
+            "distance": 14.37979511536934,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.1,
+              0.5
+            ],
+            "point": [
+              -9.343999999999998,
+              2.0334,
+              7.076
+            ],
+            "targetHit": true,
+            "distance": 14.376970764385659,
+            "opaque": {
+              "path": "Sakuragaoka/static/shopsA:W1",
+              "material": "shopsA-atlas-0",
+              "distance": 11.521271092007689
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.1,
+              0.9
+            ],
+            "point": [
+              -9.343999999999998,
+              2.1694,
+              7.076
+            ],
+            "targetHit": true,
+            "distance": 14.375432555578978,
+            "opaque": {
+              "path": "Sakuragaoka/static/shopsA:W1",
+              "material": "shopsA-atlas-0",
+              "distance": 11.520038417826992
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.5,
+              0.1
+            ],
+            "point": [
+              -9.343999999999998,
+              1.8973999999999998,
+              6.699999999999999
+            ],
+            "targetHit": true,
+            "distance": 14.667471887138559,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.5,
+              0.5
+            ],
+            "point": [
+              -9.343999999999998,
+              2.0334,
+              6.699999999999999
+            ],
+            "targetHit": true,
+            "distance": 14.664702941416849,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.5,
+              0.9
+            ],
+            "point": [
+              -9.343999999999998,
+              2.1694,
+              6.699999999999999
+            ],
+            "targetHit": true,
+            "distance": 14.663194916524843,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.9,
+              0.1
+            ],
+            "point": [
+              -9.343999999999998,
+              1.8973999999999998,
+              6.323999999999999
+            ],
+            "targetHit": true,
+            "distance": 14.959067736994843,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.9,
+              0.5
+            ],
+            "point": [
+              -9.343999999999998,
+              2.0334,
+              6.323999999999999
+            ],
+            "targetHit": true,
+            "distance": 14.956352775994553,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.9,
+              0.9
+            ],
+            "point": [
+              -9.343999999999998,
+              2.1694,
+              6.323999999999999
+            ],
+            "targetHit": true,
+            "distance": 14.954874160620678,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          }
+        ]
+      },
+      {
+        "name": "art-r3-board-W2",
+        "corners": [
+          [
+            -3.8598730675958306,
+            0.6527087003208452,
+            21.08620678109763
+          ],
+          [
+            -4.03680936149885,
+            1.4221750416818104,
+            21.11294808645909
+          ],
+          [
+            -3.9256258458842144,
+            0.6527087003208452,
+            20.65114750680577
+          ],
+          [
+            -4.102562139787234,
+            1.4221750416818104,
+            20.677888812167232
+          ]
+        ],
+        "witnesses": [
+          {
+            "uv": [
+              0.1,
+              0.1
+            ],
+            "point": [
+              -3.884141974814971,
+              0.7296553344569416,
+              21.045374984204592
+            ],
+            "targetHit": true,
+            "distance": 5.168663388886831,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.1,
+              0.5
+            ],
+            "point": [
+              -3.954916492376179,
+              1.0374418710013278,
+              21.056071506349173
+            ],
+            "targetHit": true,
+            "distance": 5.146395083687331,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.1,
+              0.9
+            ],
+            "point": [
+              -4.025691009937387,
+              1.345228407545714,
+              21.066768028493758
+            ],
+            "targetHit": true,
+            "distance": 5.143480872637048,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.5,
+              0.1
+            ],
+            "point": [
+              -3.9104430861303245,
+              0.7296553344569416,
+              20.871351274487846
+            ],
+            "targetHit": true,
+            "distance": 5.088264618123538,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.5,
+              0.5
+            ],
+            "point": [
+              -3.9812176036915323,
+              1.0374418710013278,
+              20.88204779663243
+            ],
+            "targetHit": true,
+            "distance": 5.065642896398237,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.5,
+              0.9
+            ],
+            "point": [
+              -4.0519921212527406,
+              1.345228407545714,
+              20.892744318777016
+            ],
+            "targetHit": true,
+            "distance": 5.062682202510046,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.9,
+              0.1
+            ],
+            "point": [
+              -3.936744197445678,
+              0.7296553344569416,
+              20.697327564771104
+            ],
+            "targetHit": true,
+            "distance": 5.012758164970326,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.9,
+              0.5
+            ],
+            "point": [
+              -4.007518715006886,
+              1.0374418710013278,
+              20.70802408691569
+            ],
+            "targetHit": true,
+            "distance": 4.989794139066131,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.9,
+              0.9
+            ],
+            "point": [
+              -4.078293232568093,
+              1.345228407545714,
+              20.71872060906027
+            ],
+            "targetHit": true,
+            "distance": 4.986788413402031,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          }
+        ]
+      },
+      {
+        "name": "art-r3-board-W4",
+        "corners": [
+          [
+            -3.6801357648155744,
+            1.146111676352065,
+            38.687490867828274
+          ],
+          [
+            -3.8563013305374345,
+            1.9155780177130302,
+            38.71891129058908
+          ],
+          [
+            -3.7573937768532306,
+            1.146111676352065,
+            38.254326696207414
+          ],
+          [
+            -3.9335593425750908,
+            1.9155780177130302,
+            38.28574711896822
+          ]
+        ],
+        "witnesses": [
+          {
+            "uv": [
+              0.1,
+              0.1
+            ],
+            "point": [
+              -3.7054781225915256,
+              1.2230583104881614,
+              38.647316492942274
+            ],
+            "targetHit": true,
+            "distance": 21.002995169206088,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.1,
+              0.5
+            ],
+            "point": [
+              -3.77594434888027,
+              1.5308448470325475,
+              38.65988466204659
+            ],
+            "targetHit": true,
+            "distance": 21.014902009127514,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.1,
+              0.9
+            ],
+            "point": [
+              -3.846410575169014,
+              1.8386313835769337,
+              38.67245283115091
+            ],
+            "targetHit": true,
+            "distance": 21.03155055693158,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.5,
+              0.1
+            ],
+            "point": [
+              -3.7363813274065887,
+              1.2230583104881614,
+              38.474050824293926
+            ],
+            "targetHit": true,
+            "distance": 20.838206788985637,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.5,
+              0.5
+            ],
+            "point": [
+              -3.8068475536953326,
+              1.5308448470325475,
+              38.486618993398245
+            ],
+            "targetHit": true,
+            "distance": 20.85020773412257,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.5,
+              0.9
+            ],
+            "point": [
+              -3.8773137799840764,
+              1.8386313835769337,
+              38.499187162502565
+            ],
+            "targetHit": true,
+            "distance": 20.866987682260277,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.9,
+              0.1
+            ],
+            "point": [
+              -3.7672845322216513,
+              1.2230583104881614,
+              38.30078515564558
+            ],
+            "targetHit": true,
+            "distance": 20.67360322448315,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.9,
+              0.5
+            ],
+            "point": [
+              -3.837750758510395,
+              1.5308448470325475,
+              38.3133533247499
+            ],
+            "targetHit": true,
+            "distance": 20.685699665684446,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.9,
+              0.9
+            ],
+            "point": [
+              -3.9082169847991395,
+              1.8386313835769337,
+              38.32592149385422
+            ],
+            "targetHit": true,
+            "distance": 20.702612951857912,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          }
+        ]
+      },
+      {
+        "name": "art-r3-board-W6",
+        "corners": [
+          [
+            -2.5406534328366472,
+            1.655626443953438,
+            56.8804682461442
+          ],
+          [
+            -2.7149356948608263,
+            2.425092785314403,
+            56.92105448342121
+          ],
+          [
+            -2.6404487803398133,
+            1.655626443953438,
+            56.45193483015809
+          ],
+          [
+            -2.8147310423639924,
+            2.425092785314403,
+            56.4925210674351
+          ]
+        ],
+        "witnesses": [
+          {
+            "uv": [
+              0.1,
+              0.1
+            ],
+            "point": [
+              -2.5680611937893816,
+              1.7325730780895345,
+              56.84167352827328
+            ],
+            "targetHit": true,
+            "distance": 38.93010345921705,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.1,
+              0.5
+            ],
+            "point": [
+              -2.637774098599053,
+              2.0403596146339207,
+              56.85790802318409
+            ],
+            "targetHit": true,
+            "distance": 38.94797662466487,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.1,
+              0.9
+            ],
+            "point": [
+              -2.707487003408725,
+              2.348146151178307,
+              56.8741425180949
+            ],
+            "targetHit": true,
+            "distance": 38.96840416241778,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.5,
+              0.1
+            ],
+            "point": [
+              -2.607979332790648,
+              1.7325730780895345,
+              56.67026016187884
+            ],
+            "targetHit": true,
+            "distance": 38.76174650039634,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.5,
+              0.5
+            ],
+            "point": [
+              -2.67769223760032,
+              2.0403596146339207,
+              56.68649465678965
+            ],
+            "targetHit": true,
+            "distance": 38.7796972599205,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.5,
+              0.9
+            ],
+            "point": [
+              -2.7474051424099915,
+              2.348146151178307,
+              56.70272915170045
+            ],
+            "targetHit": true,
+            "distance": 38.8002133935006,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.9,
+              0.1
+            ],
+            "point": [
+              -2.647897471791915,
+              1.7325730780895345,
+              56.4988467954844
+            ],
+            "targetHit": true,
+            "distance": 38.593457738023844,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.9,
+              0.5
+            ],
+            "point": [
+              -2.7176103766015864,
+              2.0403596146339207,
+              56.51508129039521
+            ],
+            "targetHit": true,
+            "distance": 38.61148673629041,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.9,
+              0.9
+            ],
+            "point": [
+              -2.787323281411258,
+              2.348146151178307,
+              56.53131578530601
+            ],
+            "targetHit": true,
+            "distance": 38.63209220061512,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          }
+        ]
+      },
+      {
+        "name": "art-r3-board-E3",
+        "corners": [
+          [
+            3.8598730675958297,
+            0.7284734062031981,
+            23.41379321890237
+          ],
+          [
+            4.036809361498849,
+            1.4979397475641634,
+            23.38705191354091
+          ],
+          [
+            3.9256258458842135,
+            0.7284734062031981,
+            23.84885249319423
+          ],
+          [
+            4.102562139787233,
+            1.4979397475641634,
+            23.822111187832768
+          ]
+        ],
+        "witnesses": [
+          {
+            "uv": [
+              0.1,
+              0.1
+            ],
+            "point": [
+              3.88414197481497,
+              0.8054200403392946,
+              23.454625015795408
+            ],
+            "targetHit": true,
+            "distance": 6.853243643865612,
+            "opaque": {
+              "path": "Sakuragaoka/static/poles/pole-E0",
+              "material": "MeshToonMaterial",
+              "distance": 6.031818327608262
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.1,
+              0.5
+            ],
+            "point": [
+              3.954916492376178,
+              1.1132065768836807,
+              23.443928493650827
+            ],
+            "targetHit": true,
+            "distance": 6.826569226803477,
+            "opaque": {
+              "path": "Sakuragaoka/static/poles/pole-E0",
+              "material": "MeshToonMaterial",
+              "distance": 6.026828978915889
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.1,
+              0.9
+            ],
+            "point": [
+              4.025691009937386,
+              1.420993113428067,
+              23.433231971506242
+            ],
+            "targetHit": true,
+            "distance": 6.814459507143321,
+            "opaque": {
+              "path": "Sakuragaoka/static/art-r1-nobori/art-r1-nobori-flags",
+              "material": "art-r1-nobori",
+              "distance": 6.511483720490036
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.5,
+              0.1
+            ],
+            "point": [
+              3.9104430861303237,
+              0.8054200403392946,
+              23.628648725512154
+            ],
+            "targetHit": true,
+            "distance": 7.007189672314991,
+            "opaque": {
+              "path": "Sakuragaoka/static/poles/pole-E0",
+              "material": "MeshToonMaterial",
+              "distance": 6.005228825262642
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.5,
+              0.5
+            ],
+            "point": [
+              3.9812176036915314,
+              1.1132065768836807,
+              23.61795220336757
+            ],
+            "targetHit": true,
+            "distance": 6.9811034994443135,
+            "opaque": {
+              "path": "Sakuragaoka/static/poles/pole-E0",
+              "material": "MeshToonMaterial",
+              "distance": 5.967193844639691
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.5,
+              0.9
+            ],
+            "point": [
+              4.05199212125274,
+              1.420993113428067,
+              23.607255681222984
+            ],
+            "targetHit": true,
+            "distance": 6.969262302145716,
+            "opaque": {
+              "path": "Sakuragaoka/static/poles/pole-E0",
+              "material": "MeshToonMaterial",
+              "distance": 5.989106876489714
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.9,
+              0.1
+            ],
+            "point": [
+              3.936744197445677,
+              0.8054200403392946,
+              23.802672435228896
+            ],
+            "targetHit": true,
+            "distance": 7.1621517552626095,
+            "opaque": {
+              "path": "Sakuragaoka/static/poles/pole-E0",
+              "material": "MeshToonMaterial",
+              "distance": 6.002277109392185
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.9,
+              0.5
+            ],
+            "point": [
+              4.007518715006885,
+              1.1132065768836807,
+              23.79197591308431
+            ],
+            "targetHit": true,
+            "distance": 7.136632029996155,
+            "opaque": {
+              "path": "Sakuragaoka/static/poles/pole-E0",
+              "material": "MeshToonMaterial",
+              "distance": 5.948936686950995
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.9,
+              0.9
+            ],
+            "point": [
+              4.078293232568093,
+              1.420993113428067,
+              23.78127939093973
+            ],
+            "targetHit": true,
+            "distance": 7.12504931195026,
+            "opaque": {
+              "path": "Sakuragaoka/static/poles/pole-E0",
+              "material": "MeshToonMaterial",
+              "distance": 5.943165932355694
+            },
+            "anyVisibleObstacle": true
+          }
+        ]
+      },
+      {
+        "name": "art-r3-board-E5",
+        "corners": [
+          [
+            4.105403365171828,
+            1.1995353566323734,
+            40.2220358341403
+          ],
+          [
+            4.280759115331262,
+            1.9690016979933387,
+            40.186371981311524
+          ],
+          [
+            4.193095322473952,
+            1.1995353566323734,
+            40.653208793200264
+          ],
+          [
+            4.368451072633386,
+            1.9690016979933387,
+            40.61754494037149
+          ]
+        ],
+        "witnesses": [
+          {
+            "uv": [
+              0.1,
+              0.1
+            ],
+            "point": [
+              4.131708135917983,
+              1.27648199076847,
+              40.26158674476342
+            ],
+            "targetHit": false,
+            "distance": 22.66328414713088,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.1,
+              0.5
+            ],
+            "point": [
+              4.201850435981757,
+              1.584268527312856,
+              40.24732120363191
+            ],
+            "targetHit": false,
+            "distance": 22.650847284348806,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.1,
+              0.9
+            ],
+            "point": [
+              4.27199273604553,
+              1.8920550638572422,
+              40.2330556625004
+            ],
+            "targetHit": false,
+            "distance": 22.64281407122774,
+            "opaque": {
+              "path": "Sakuragaoka/static/art-r1-nobori/art-r1-nobori-flags",
+              "material": "art-r1-nobori",
+              "distance": 22.446759521894997
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.5,
+              0.1
+            ],
+            "point": [
+              4.166784918838833,
+              1.27648199076847,
+              40.43405592838741
+            ],
+            "targetHit": false,
+            "distance": 22.839092665349767,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.5,
+              0.5
+            ],
+            "point": [
+              4.236927218902607,
+              1.584268527312856,
+              40.419790387255894
+            ],
+            "targetHit": false,
+            "distance": 22.82675158978454,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.5,
+              0.9
+            ],
+            "point": [
+              4.30706951896638,
+              1.8920550638572422,
+              40.40552484612438
+            ],
+            "targetHit": false,
+            "distance": 22.81878030279069,
+            "opaque": {
+              "path": "Sakuragaoka/static/art-r1-nobori/art-r1-nobori-flags",
+              "material": "art-r1-nobori",
+              "distance": 22.446964147014512
+            },
+            "anyVisibleObstacle": true
+          },
+          {
+            "uv": [
+              0.9,
+              0.1
+            ],
+            "point": [
+              4.201861701759683,
+              1.27648199076847,
+              40.60652511201139
+            ],
+            "targetHit": false,
+            "distance": 23.014904110581757,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.9,
+              0.5
+            ],
+            "point": [
+              4.272004001823457,
+              1.584268527312856,
+              40.592259570879875
+            ],
+            "targetHit": false,
+            "distance": 23.002657359195922,
+            "opaque": null,
+            "anyVisibleObstacle": false
+          },
+          {
+            "uv": [
+              0.9,
+              0.9
+            ],
+            "point": [
+              4.34214630188723,
+              1.8920550638572422,
+              40.57799402974837
+            ],
+            "targetHit": false,
+            "distance": 22.994747051226028,
+            "opaque": {
+              "path": "Sakuragaoka/static/art-r1-nobori/art-r1-nobori-flags",
+              "material": "art-r1-nobori",
+              "distance": 22.447166148575047
+            },
+            "anyVisibleObstacle": true
+          }
+        ]
+      }
+    ]
+  },
+  "east": {
+    "finalMatched": true,
+    "sites": [
+      {
+        "name": "station-exchange",
+        "worldOrigin": [
+          315,
+          12.430233103434215,
+          775.8
+        ],
+        "ground": {
+          "min": 11.60418612798056,
+          "max": 12.390233103434214,
+          "relief": 0.7860469754536545,
+          "samples": 961
+        },
+        "worldMeshBox": [
+          [
+            311.84999990463257,
+            12.430233103434215,
+            772.2800000190734
+          ],
+          [
+            318.0350000858307,
+            32.97023401896156,
+            779.7100000858306
+          ]
+        ],
+        "steps": 8,
+        "hasClearing": true
+      },
+      {
+        "name": "alley-workshop",
+        "worldOrigin": [
+          250,
+          13.143555140363212,
+          757.4
+        ],
+        "ground": {
+          "min": 12.591274916676518,
+          "max": 13.103555140363213,
+          "relief": 0.5122802236866946,
+          "samples": 961
+        },
+        "worldMeshBox": [
+          [
+            245.98875188704156,
+            13.143555140363212,
+            753.3304749411756
+          ],
+          [
+            254.47737929497944,
+            17.883554911481376,
+            761.2390430654569
+          ]
+        ],
+        "hasClearing": true
+      }
+    ],
+    "portalMatches": true,
+    "skylineAndVisibleRoots": [
+      true,
+      false,
+      false
+    ]
+  },
+  "corridors": {
+    "allFinalRecordsMatch": true,
+    "fourFloorGroups": {
+      "groups": 16,
+      "sameIndicesAndVertexCoordinates": true
+    },
+    "pipeClipToSlabM": [
+      0.0799999999999983,
+      0.0799999999999983
+    ],
+    "pipeClipToLampM": [
+      0.07749999999999879,
+      0.07749999999999879
+    ]
+  },
+  "trees": {
+    "plaza": {
+      "bark": 2309,
+      "blob": 9540,
+      "cards": 2072
+    },
+    "w3": {
+      "bark": 1550,
+      "blob": 22027,
+      "cards": 424
+    }
+  },
+  "assets": {
+    "zipSHA256": "e4ed22eacde7fc320637468a794fcd99d01c0344a0458adcc214d6c78bd7b54d",
+    "glbs": [
+      {
+        "path": ".local/mature-sakura/mature-sakura.glb",
+        "sha256": "14716b7af7db3bcae453b17ebe97a9fa0d4d38155731cc2b56ed28e4fa7b24f3",
+        "bytes": 2193656
+      },
+      {
+        "path": ".local/station-art/alley-workshop.glb",
+        "sha256": "b8286aa8f9cc5c735d7d847bcc4c1b8b71f31a6ca049aabb531e68c3252c8fc2",
+        "bytes": 70344
+      },
+      {
+        "path": ".local/station-art/laundry-infill.glb",
+        "sha256": "d945d0756f402227ae329d1408707a428c120646aa3bac73c927821d98183be6",
+        "bytes": 60052
+      },
+      {
+        "path": ".local/station-art/station-exchange.glb",
+        "sha256": "03584bb83631b49b118727b9b37a2a021dee693365263acecef24e56b9621a78",
+        "bytes": 79160
+      }
+    ]
+  },
+  "reflections": {
+    "stationStreet": {
+      "resolution": 256,
+      "panes": {
+        "W1": 8,
+        "E1": 4,
+        "W2": 5,
+        "E2": 5,
+        "E3": 5
+      },
+      "loadedFaces": 6,
+      "captures": 0,
+      "facesAtLoad": 0,
+      "passesPerFrame": 0,
+      "loadMs": 15,
+      "batchedGlass": 8,
+      "sharedOnEveryGlass": true,
+      "faceSizes": [
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ]
+      ],
+      "wet": {
+        "maskSize": 512,
+        "maskChannels": 2,
+        "maskBaseBytes": 524288,
+        "bounds": {
+          "x0": -4,
+          "z0": 4,
+          "x1": 4,
+          "z1": 34
+        },
+        "patchGroups": 5,
+        "dryDecalTriangles": {
+          "alphaShaped": 409,
+          "solid": 0
+        },
+        "dryDilationM": 0.12,
+        "wetAreaM2": 64.38079833984375,
+        "puddleAreaM2": 40.982666015625,
+        "wetEquivalentAreaM2": 38.62331973805187,
+        "puddleEquivalentAreaM2": 24.821317784928304,
+        "materials": 1,
+        "extraPasses": 0,
+        "extraRenderTargets": 0,
+        "reflection": "shared station street cube"
+      }
+    },
+    "sharedLakeMap": true,
+    "sharedLakeTransform": true
+  },
+  "groundLandings": [
+    {
+      "id": "art-a-street",
+      "fixedEye": [
+        278.8,
+        10.488,
+        936
+      ],
+      "fixedViewHeight": 1.6199999999999992,
+      "start": [
+        281.6,
+        8.812,
+        934
+      ],
+      "from": [
+        281.6,
+        8.812,
+        934
+      ],
+      "spawnResidual": 0,
+      "eyeBegin": [
+        281.6,
+        10.331999999999999,
+        934
+      ],
+      "firstPersonEye": 1.5199999999999996,
+      "after": {
+        "feet": [
+          281.2936528181265,
+          8.689332873413582,
+          929.6190311933422
+        ],
+        "eye": [
+          281.2936528181265,
+          10.209332873413581,
+          929.6190311933422
+        ],
+        "residual": 0,
+        "eyeHeight": 1.5199999999999996
+      },
+      "travel": 4.393379508384851,
+      "maxAbsFloorResidual": 0,
+      "maxEyeHeightError": 1.3322676295501878e-15,
+      "maxWadingDepth": null,
+      "lastOneSecondDisplacement": null
+    },
+    {
+      "id": "tarn",
+      "fixedEye": [
+        656.2764394045487,
+        142.80404512034525,
+        -940.6795630254011
+      ],
+      "fixedViewHeight": 2.1500000000000057,
+      "start": [
+        661.4564394045486,
+        138.2379070702263,
+        -933.0020630254011
+      ],
+      "from": [
+        661.4564394045486,
+        138.2379070702263,
+        -933.0020630254012
+      ],
+      "spawnResidual": 1.1368683772161603e-13,
+      "eyeBegin": [
+        661.4564394045486,
+        139.7579070702263,
+        -933.0020630254012
+      ],
+      "firstPersonEye": 1.5200000000000102,
+      "after": {
+        "feet": [
+          672.0747148079607,
+          137.1813014490859,
+          -917.2642619810586
+        ],
+        "eye": [
+          672.0747148079607,
+          138.70130144908592,
+          -917.2642619810586
+        ],
+        "residual": 0,
+        "eyeHeight": 1.5200000000000102
+      },
+      "travel": 19.014272788951036,
+      "maxAbsFloorResidual": 0,
+      "maxEyeHeightError": 1.021405182655144e-14,
+      "maxWadingDepth": 0.8186985509140925,
+      "lastOneSecondDisplacement": 0
+    },
+    {
+      "id": "terrace",
+      "fixedEye": [
+        -1367.34516132224,
+        99.93744365082236,
+        -461.0222277841799
+      ],
+      "fixedViewHeight": 2.1500000000000057,
+      "start": [
+        -1371.5051613222402,
+        97.1031584342776,
+        -456.0172277841799
+      ],
+      "from": [
+        -1371.5051613222402,
+        97.1031584342776,
+        -456.0172277841798
+      ],
+      "spawnResidual": 1.1368683772161603e-13,
+      "eyeBegin": [
+        -1371.5051613222402,
+        98.6231584342776,
+        -456.0172277841798
+      ],
+      "firstPersonEye": 1.519999999999996,
+      "after": {
+        "feet": [
+          -1384.0902538794505,
+          96.18063135940935,
+          -440.87578830128973
+        ],
+        "eye": [
+          -1384.0902538794505,
+          97.70063135940934,
+          -440.87578830128973
+        ],
+        "residual": 0,
+        "eyeHeight": 1.519999999999996
+      },
+      "travel": 19.71037291609266,
+      "maxAbsFloorResidual": 0,
+      "maxEyeHeightError": 3.9968028886505635e-15,
+      "maxWadingDepth": 0.8193686405906533,
+      "lastOneSecondDisplacement": 0
+    },
+    {
+      "id": "oxbow",
+      "fixedEye": [
+        1053.5307743291514,
+        28.564634229364042,
+        680.0057490847664
+      ],
+      "fixedViewHeight": 2.1499999999999986,
+      "start": [
+        1055.0157743291516,
+        26.06101430256158,
+        679.7957490847665
+      ],
+      "from": [
+        1055.0157743291516,
+        26.06101430256158,
+        679.7957490847665
+      ],
+      "spawnResidual": 0,
+      "eyeBegin": [
+        1055.0157743291516,
+        27.58101430256158,
+        679.7957490847665
+      ],
+      "firstPersonEye": 1.5199999999999996,
+      "after": {
+        "feet": [
+          1058.6963794047128,
+          25.184191406259053,
+          679.2752594781215
+        ],
+        "eye": [
+          1058.6963794047128,
+          26.704191406259053,
+          679.2752594781215
+        ],
+        "residual": 0,
+        "eyeHeight": 1.5199999999999996
+      },
+      "travel": 3.8192383461042803,
+      "maxAbsFloorResidual": 0,
+      "maxEyeHeightError": 4.440892098500626e-16,
+      "maxWadingDepth": 0.8158085937409467,
+      "lastOneSecondDisplacement": 0
+    },
+    {
+      "id": "marsh",
+      "fixedEye": [
+        726.2397158929463,
+        12.360244866136131,
+        905.2356419187253
+      ],
+      "fixedViewHeight": 2.1500000000000004,
+      "start": [
+        719.4247158929463,
+        10.02159760564766,
+        902.7706419187252
+      ],
+      "from": [
+        719.4247158929463,
+        10.02159760564766,
+        902.7706419187252
+      ],
+      "spawnResidual": 0,
+      "eyeBegin": [
+        719.4247158929463,
+        11.54159760564766,
+        902.7706419187252
+      ],
+      "firstPersonEye": 1.5199999999999996,
+      "after": {
+        "feet": [
+          686.5736067447658,
+          9.452613682170846,
+          890.8883258438515
+        ],
+        "eye": [
+          686.5736067447658,
+          10.972613682170845,
+          890.8883258438515
+        ],
+        "residual": 0,
+        "eyeHeight": 1.5199999999999996
+      },
+      "travel": 34.938639788549985,
+      "maxAbsFloorResidual": 0,
+      "maxEyeHeightError": 4.440892098500626e-16,
+      "maxWadingDepth": 0.5473863178291545,
+      "lastOneSecondDisplacement": 1.6892567753365202
+    }
+  ],
+  "groundVisible": [
+    {
+      "name": "art-a-street",
+      "eye": [
+        278.8,
+        10.488,
+        936
+      ],
+      "stationLocal": [
+        -1.1999999999999886,
+        2.4879999999999995,
+        36
+      ],
+      "insideAuthoredStationBounds": true,
+      "visibleGeometry": {
+        "station": [
+          {
+            "floorY": 8.892000020183978,
+            "height": 1.5959999798160212,
+            "upDot": 0.9996082322705132,
+            "meshPath": "Sakuragaoka/static/static-batched",
+            "mesh": "",
+            "mat": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": true,
+            "opacity": 1,
+            "depthWrite": false,
+            "instance": null
+          },
+          {
+            "floorY": 8.888000028394334,
+            "height": 1.5999999716056656,
+            "upDot": 0.9996082315279872,
+            "meshPath": "Sakuragaoka/static/street/street-asphalt",
+            "mesh": "street-asphalt",
+            "mat": "street-asphalt-wet",
+            "alphaTest": 0,
+            "transparent": false,
+            "opacity": 1,
+            "depthWrite": true,
+            "instance": null
+          },
+          {
+            "floorY": 8.867999970912933,
+            "height": 1.6200000290870662,
+            "upDot": 0.9996082304255272,
+            "meshPath": "Sakuragaoka/static/env-terrain/env-terrain-ground",
+            "mesh": "env-terrain-ground",
+            "mat": "env-ground",
+            "alphaTest": 0,
+            "transparent": false,
+            "opacity": 1,
+            "depthWrite": true,
+            "instance": null
+          }
+        ],
+        "city": []
+      },
+      "topGround": {
+        "estimatedSurfaceY": 8.892000020183978,
+        "height": 1.5959999798160212,
+        "source": "Sakuragaoka/static/static-batched"
+      },
+      "terrain": {
+        "bilinear": 8.788000106811523,
+        "petalwakeTown": -1000000000
+      },
+      "capsule": {
+        "selectedPhysics": "station",
+        "stationFloorQuery": 8.868,
+        "coastFloorQuery": 11.443999999999999,
+        "selectedHeight": 1.6199999999999992,
+        "coastAllowsAtCameraXZ": false
+      },
+      "method": "Downward 5m segment from fixed eye, upward triangle normal y >=0.45, scene-visible material in station/city. Terrain and Petalwake town use their own height queries. CPU geometry cannot evaluate per-fragment shader discard."
+    },
+    {
+      "name": "art-b-konbini",
+      "eye": [
+        279.1,
+        9.8184,
+        912.8
+      ],
+      "stationLocal": [
+        -0.8999999999999773,
+        1.8184000000000005,
+        12.799999999999955
+      ],
+      "insideAuthoredStationBounds": true,
+      "visibleGeometry": {
+        "station": [
+          {
+            "floorY": 8.24239998987384,
+            "height": 1.57600001012616,
+            "upDot": 0.9996082310160039,
+            "meshPath": "Sakuragaoka/static/static-batched",
+            "mesh": "",
+            "mat": "MeshToonMaterial",
+            "alphaTest": 0,
+            "transparent": true,
+            "opacity": 1,
+            "depthWrite": false,
+            "instance": null
+          },
+          {
+            "floorY": 8.238400003314018,
+            "height": 1.5799999966859826,
+            "upDot": 0.9996082304255272,
+            "meshPath": "Sakuragaoka/static/street/street-asphalt",
+            "mesh": "street-asphalt",
+            "mat": "street-asphalt-wet",
+            "alphaTest": 0,
+            "transparent": false,
+            "opacity": 1,
+            "depthWrite": true,
+            "instance": null
+          },
+          {
+            "floorY": 8.21840000450611,
+            "height": 1.5999999954938904,
+            "upDot": 0.9996082300087846,
+            "meshPath": "Sakuragaoka/static/env-terrain/env-terrain-ground",
+            "mesh": "env-terrain-ground",
+            "mat": "env-ground",
+            "alphaTest": 0,
+            "transparent": false,
+            "opacity": 1,
+            "depthWrite": true,
+            "instance": null
+          }
+        ],
+        "city": []
+      },
+      "topGround": {
+        "estimatedSurfaceY": 8.24239998987384,
+        "height": 1.57600001012616,
+        "source": "Sakuragaoka/static/static-batched"
+      },
+      "terrain": {
+        "bilinear": 8.138400077819822,
+        "petalwakeTown": -1000000000
+      },
+      "capsule": {
+        "selectedPhysics": "station",
+        "stationFloorQuery": 8.218399999999999,
+        "coastFloorQuery": 11.443999999999999,
+        "selectedHeight": 1.6000000000000014,
+        "coastAllowsAtCameraXZ": false
+      },
+      "method": "Downward 5m segment from fixed eye, upward triangle normal y >=0.45, scene-visible material in station/city. Terrain and Petalwake town use their own height queries. CPU geometry cannot evaluate per-fragment shader discard."
+    },
+    {
+      "name": "art-c-alley",
+      "eye": [
+        287.65,
+        14.384808464050293,
+        767.3199999999999
+      ],
+      "stationLocal": [
+        7.649999999999977,
+        6.384808464050293,
+        -132.68000000000006
+      ],
+      "insideAuthoredStationBounds": false,
+      "visibleGeometry": {
+        "station": [],
+        "city": [
+          {
+            "floorY": 12.78480863571167,
+            "height": 1.599999828338623,
+            "upDot": 1,
+            "meshPath": "station-city-background/town-edge-kit",
+            "mesh": "town-edge-kit",
+            "mat": "town-st-pavers",
+            "alphaTest": 0,
+            "transparent": false,
+            "opacity": 1,
+            "depthWrite": true,
+            "instance": null
+          }
+        ]
+      },
+      "topGround": {
+        "estimatedSurfaceY": 12.78480863571167,
+        "height": 1.599999828338623,
+        "source": "station-city-background/town-edge-kit"
+      },
+      "terrain": {
+        "bilinear": 12.594791867574052,
+        "petalwakeTown": -1000000000
+      },
+      "capsule": {
+        "selectedPhysics": "coast",
+        "stationFloorQuery": 8.873600000000001,
+        "coastFloorQuery": 12.594791867574052,
+        "selectedHeight": 1.7900165964762405,
+        "coastAllowsAtCameraXZ": false
+      },
+      "method": "Downward 5m segment from fixed eye, upward triangle normal y >=0.45, scene-visible material in station/city. Terrain and Petalwake town use their own height queries. CPU geometry cannot evaluate per-fragment shader discard."
+    },
+    {
+      "name": "art-d-laundry",
+      "eye": [
+        283.5,
+        12.520055181715234,
+        783.8
+      ],
+      "stationLocal": [
+        3.5,
+        4.520055181715234,
+        -116.20000000000005
+      ],
+      "insideAuthoredStationBounds": false,
+      "visibleGeometry": {
+        "station": [],
+        "city": [
+          {
+            "floorY": 10.920055056032218,
+            "height": 1.6000001256830156,
+            "upDot": 0.9866099042545653,
+            "meshPath": "station-city-background/town-edge-kit",
+            "mesh": "town-edge-kit",
+            "mat": "town-st-asphalt",
+            "alphaTest": 0,
+            "transparent": false,
+            "opacity": 1,
+            "depthWrite": true,
+            "instance": null
+          }
+        ]
+      },
+      "topGround": {
+        "estimatedSurfaceY": 10.920055056032218,
+        "height": 1.6000001256830156,
+        "source": "station-city-background/town-edge-kit"
+      },
+      "terrain": {
+        "bilinear": 10.858280690511075,
+        "petalwakeTown": -1000000000
+      },
+      "capsule": {
+        "selectedPhysics": "coast",
+        "stationFloorQuery": 6.822933333333344,
+        "coastFloorQuery": 10.858280690511075,
+        "selectedHeight": 1.6617744912041594,
+        "coastAllowsAtCameraXZ": false
+      },
+      "method": "Downward 5m segment from fixed eye, upward triangle normal y >=0.45, scene-visible material in station/city. Terrain and Petalwake town use their own height queries. CPU geometry cannot evaluate per-fragment shader discard."
+    },
+    {
+      "name": "sample-e-harbour",
+      "eye": [
+        -49.3148,
+        6.0969,
+        1121.5
+      ],
+      "stationLocal": [
+        -329.3148,
+        -1.9031000000000002,
+        221.5
+      ],
+      "insideAuthoredStationBounds": false,
+      "visibleGeometry": {
+        "station": [],
+        "city": []
+      },
+      "topGround": {
+        "estimatedSurfaceY": 4.496910095214844,
+        "height": 1.599989904785156,
+        "source": "terrain heightAt"
+      },
+      "terrain": {
+        "bilinear": 4.496910095214844,
+        "petalwakeTown": -1000000000
+      },
+      "capsule": {
+        "selectedPhysics": "coast",
+        "stationFloorQuery": 14.062000000000001,
+        "coastFloorQuery": 4.496910095214844,
+        "selectedHeight": 1.599989904785156,
+        "coastAllowsAtCameraXZ": false
+      },
+      "method": "Downward 5m segment from fixed eye, upward triangle normal y >=0.45, scene-visible material in station/city. Terrain and Petalwake town use their own height queries. CPU geometry cannot evaluate per-fragment shader discard."
+    },
+    {
+      "name": "sample-f-hillside",
+      "eye": [
+        1040.6682,
+        47.72941688707416,
+        591.5865
+      ],
+      "stationLocal": [
+        760.6682000000001,
+        39.72941688707416,
+        -308.4135
+      ],
+      "insideAuthoredStationBounds": false,
+      "visibleGeometry": {
+        "station": [],
+        "city": []
+      },
+      "topGround": {
+        "estimatedSurfaceY": 46.12941688707416,
+        "height": 1.6000000000000014,
+        "source": "terrain heightAt"
+      },
+      "terrain": {
+        "bilinear": 46.12941688707416,
+        "petalwakeTown": -1000000000
+      },
+      "capsule": {
+        "selectedPhysics": "coast",
+        "stationFloorQuery": 12.38827,
+        "coastFloorQuery": 46.12941688707416,
+        "selectedHeight": 1.6000000000000014,
+        "coastAllowsAtCameraXZ": true
+      },
+      "method": "Downward 5m segment from fixed eye, upward triangle normal y >=0.45, scene-visible material in station/city. Terrain and Petalwake town use their own height queries. CPU geometry cannot evaluate per-fragment shader discard."
+    },
+    {
+      "name": "sample-g-rail",
+      "eye": [
+        337.8563,
+        9.6,
+        844.5
+      ],
+      "stationLocal": [
+        57.856299999999976,
+        1.5999999999999996,
+        -55.5
+      ],
+      "insideAuthoredStationBounds": true,
+      "visibleGeometry": {
+        "station": [
+          {
+            "floorY": 8.019999999552965,
+            "height": 1.5800000004470345,
+            "upDot": 1,
+            "meshPath": "Sakuragaoka/static/street/street-asphalt",
+            "mesh": "street-asphalt",
+            "mat": "street-asphalt-wet",
+            "alphaTest": 0,
+            "transparent": false,
+            "opacity": 1,
+            "depthWrite": true,
+            "instance": null
+          },
+          {
+            "floorY": 8,
+            "height": 1.5999999999999996,
+            "upDot": 1,
+            "meshPath": "Sakuragaoka/static/env-terrain/env-terrain-ground",
+            "mesh": "env-terrain-ground",
+            "mat": "env-ground",
+            "alphaTest": 0,
+            "transparent": false,
+            "opacity": 1,
+            "depthWrite": true,
+            "instance": null
+          }
+        ],
+        "city": []
+      },
+      "topGround": {
+        "estimatedSurfaceY": 8.019999999552965,
+        "height": 1.5800000004470345,
+        "source": "Sakuragaoka/static/street/street-asphalt"
+      },
+      "terrain": {
+        "bilinear": 7.920000076293945,
+        "petalwakeTown": -1000000000
+      },
+      "capsule": {
+        "selectedPhysics": "station",
+        "stationFloorQuery": 8,
+        "coastFloorQuery": 11.443999999999999,
+        "selectedHeight": 1.5999999999999996,
+        "coastAllowsAtCameraXZ": false
+      },
+      "method": "Downward 5m segment from fixed eye, upward triangle normal y >=0.45, scene-visible material in station/city. Terrain and Petalwake town use their own height queries. CPU geometry cannot evaluate per-fragment shader discard."
+    },
+    {
+      "name": "sample-h-north",
+      "eye": [
+        181.0601,
+        136.1623,
+        -1212.8685
+      ],
+      "stationLocal": [
+        -98.9399,
+        128.1623,
+        -2112.8685
+      ],
+      "insideAuthoredStationBounds": false,
+      "visibleGeometry": {
+        "station": [],
+        "city": []
+      },
+      "topGround": {
+        "estimatedSurfaceY": 134.5623427734375,
+        "height": 1.5999572265624806,
+        "source": "terrain heightAt"
+      },
+      "terrain": {
+        "bilinear": 134.5623427734375,
+        "petalwakeTown": -1000000000
+      },
+      "capsule": {
+        "selectedPhysics": "coast",
+        "stationFloorQuery": 48.47737,
+        "coastFloorQuery": 134.5623427734375,
+        "selectedHeight": 1.5999572265624806,
+        "coastAllowsAtCameraXZ": false
+      },
+      "method": "Downward 5m segment from fixed eye, upward triangle normal y >=0.45, scene-visible material in station/city. Terrain and Petalwake town use their own height queries. CPU geometry cannot evaluate per-fragment shader discard."
+    }
+  ],
+  "raw": {
+    "packedSceneStateAndW1": "83f601dae444206b7211a21dadf74c08dd8efc3c3e0634f5cd5223e7ac0c2286",
+    "corridors": "fbba970a99f0408889c73f558f80a2df85b7fe65a0c1051f62f296afea41ad6a"
+  },
+  "runtimeErrors": []
+}

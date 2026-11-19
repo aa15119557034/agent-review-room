@@ -1,3 +1,4 @@
+import { installIslandMap } from './island-map.js';
 import * as THREE from 'three';
 import { createIsland, clearVegetationAreas } from './island.js';
 import { loadShadowTint, shadowTintEnabled, installLitShadowTint, patchIslandShadowTint, shadowTintUniforms, shopInteriorBoxes } from './shadow-tint.js';
@@ -5,8 +6,11 @@ import { loadToon, toonEnabled, installLitToon, installToonHook, toonLineUniform
 import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from './evening-glow.js';
 import * as layoutModule from '../upstream/sakuragaoka/src/world/layout.js';
 import { createStation } from './station.js';
+import { basins, basinAt, bankView } from './basins.js';
+import { createRain } from './rain.js';
 import { createLook } from './look.js';
 import { createSkyline } from './skyline.js';
+import { coastWalking } from './coast.js';
 import { createCity } from './city.js';
 import { applyWeathering, loadWeatheringParams } from './weathering.js';
 import { addWeatheringDecals, loadBakedDecals } from './weathering-decals.js';
@@ -52,6 +56,7 @@ const look = createLook(renderer, camera);
 worldBase.look = look;
 worldBase.styleState = { toon: true, flightEffects: false };
 let island, station, walker;
+let returnView = 'station-street';
 let skyFill;
 let originalFillColor, toonFillColor;
 const toWorld = (values) => station.toWorld(new THREE.Vector3(...values)).toArray();
@@ -69,19 +74,27 @@ function setView(name) {
   worldBase.currentView = name;
   look.pipeline.hasPrev = false;
   document.querySelector('#mode').textContent = view.label ?? labels[name];
+  document.querySelector('#water-view').value = view.feet || view.overview ? name : '';
   document.querySelectorAll('[data-view]').forEach(button => button.classList.toggle('active', button.dataset.view === name));
-  document.querySelector('#walk').textContent = '进入步行';
+  document.querySelector('#walk').textContent = view.overview ? '城镇总览' : '进入步行';
+  document.querySelector('#walk').disabled = Boolean(view.overview);
 }
 worldBase.setView = setView;
 function startWalking() {
   camera.fov = 58;
   camera.updateProjectionMatrix();
-  walker.setPose(station.spawn, 4, -8);
+  const bank=worldBase.views.find(view=>view.name===worldBase.currentView && view.feet);
+  returnView = bank?.name ?? (worldBase.currentView === 'coast' ? 'coast' : 'station-street');
+  if(bank) walker.setPose(new THREE.Vector3(...bank.feet),bank.yaw,-7);
+  else if (returnView === 'coast') {
+    const feet = new THREE.Vector3(287, island.heightAt(287, 1110), 1110);
+    walker.setPose(feet, 110, -4);
+  } else walker.setPose(station.spawn, 4, -8);
   walker.setEnabled(true);
   walker.setView(worldBase.cameraMode);
   worldBase.currentView = 'walking';
-  document.querySelector('#mode').textContent = '步行 · 车站区';
-  document.querySelector('#walk').textContent = '回到街道';
+  document.querySelector('#mode').textContent = '步行';
+  document.querySelector('#walk').textContent = bank ? '回到观景点' : returnView === 'coast' ? '回到海岸' : '回到街道';
   document.querySelectorAll('[data-view]').forEach(button => button.classList.remove('active'));
   canvas.focus();
 }
@@ -135,6 +148,7 @@ async function init() {
   sun.shadow.bias = -0.0002;
   sun.shadow.normalBias = 0.035;
   skyFill = evening ? new THREE.HemisphereLight(0xb4bce8, 0xa08068, 1.6) : new THREE.HemisphereLight(0xcfe0ff, 0xa89c94, 1.05);
+  const clearSun = sun.intensity, clearFill = skyFill.intensity;
   scene.add(sun, sun.target, skyFill);
   stage('正在安放车站、店铺与碰撞体…');
   station = await createStation({
@@ -183,8 +197,11 @@ async function init() {
     worldBase.townGreenRect = [rect[0] + o.x, rect[1] + o.z, rect[2] + o.x, rect[3] + o.z];
     look.setTownGreenery(worldBase.townGreenRect);
   }
-  walker = station.createWalker(canvas);
+  walker = station.createWalker(canvas, coastWalking(station, island));
   worldBase.walker = walker;
+  // Seed 252 fixes the hillside lot and sightline. The joined terrain reshapes its ground.
+  const hillsideX = 1040.6682, hillsideZ = 591.5865;
+  const hillsideEyeY = island.heightAt(hillsideX, hillsideZ) + 1.6;
   worldBase.views = [
     { name: 'station-street', fov: 58, position: toWorld([-1.2, 2.4, 36]), target: toWorld([0, 2.0, -25]) },
     { name: 'station-port', fov: 58, position: toWorld([-65, 15, -28]), target: [-45, 21, 1036] },
@@ -192,6 +209,7 @@ async function init() {
     { name: 'shop-interior', fov: 58, position: toWorld([-8.3, 1.9134, 8]), target: toWorld([-12.8, 1.7134, 8]) },
     { name: 'service-corner', fov: 55, position: toWorld(station.texturedProps.stats.view.position), target: toWorld(station.texturedProps.stats.view.target) },
     { name: 'laundry-details', fov: 55, position: toWorld(worldBase.city.stats.texturedProps.view.position), target: toWorld(worldBase.city.stats.texturedProps.view.target) },
+    { name: 'coast', fov: 58, position: [270, island.heightAt(270, 1110) + 1.65, 1110], target: [-55, 3, 1230] },
     // Ground-level art references for #252. Positions and targets are in the station frame.
     {
       name: 'art-a-street', label: 'A · 01 站前主街', fov: 35.63777782904556, // 35 mm on a 36 mm wide frame at 16:10.
@@ -210,15 +228,57 @@ async function init() {
       position: toWorld([3.5, 4.520055181715234, -116.2]), target: toWorld([2.5, 6.25, -122.6]),
     },
     // Seed 252 samples live at standing height on the quay, a hillside, the railway lane and the northern village street.
-    // Keep their world-space poses fixed so an environment change can be compared at the same eye position.
+    // Keep each location, direction and FOV fixed. F follows the local ground at the sampled point.
     { name: 'sample-e-harbour', label: 'E · 拉克港码头', fov: 57, position: [-49.3148, 6.0969, 1121.5], target: [-24, 7.2, 1123.5] },
-    { name: 'sample-f-hillside', label: 'F · 东部山麓草坡', fov: 57, position: [1040.6682, 61.5086, 591.5865], target: [1062, 102.7783, 490] },
+    { name: 'sample-f-hillside', label: 'F · 东部山麓草坡', fov: 57, position: [hillsideX, hillsideEyeY, hillsideZ], target: [1062, hillsideEyeY + 41.2697, 490] },
     { name: 'sample-g-rail', label: 'G · 铁路北侧小路', fov: 57, position: [337.8563, 9.6, 844.5], target: [268, 10.55, 857] },
     { name: 'sample-h-north', label: 'H · 北端村道', fov: 57, position: [181.0601, 136.1623, -1212.8685], target: [180, 141.45, -1238] },
   ];
-  setView('station-street');
+  const waterSelect=document.querySelector('#water-view');
+  const settlements=document.createElement('optgroup');settlements.label='原岛聚落';
+  for(const v of [
+    {name:'larkhaven',label:'拉克港 · Larkhaven',position:[91,70,1171],target:[-48,18,1045]},
+    {name:'cairnwick',label:'凯恩维克 · Cairnwick',position:[284,191,-1093],target:[184,142,-1201]},
+    {name:'fields',label:'原野农庄 · The Meadows',position:[-354,82,337],target:[-434,49,264]},
+  ]){
+    worldBase.views.push({...v,overview:true,fov:53});
+    labels[v.name]=v.label;settlements.append(new Option(v.label,v.name));
+  }
+  waterSelect.append(settlements);
+  for(const b of basins){
+    worldBase.views.push(bankView(b,island.terrain));
+    labels[b.id]=b.name;
+    waterSelect.add(new Option(b.name,b.id));
+  }
+  worldBase.views.push(island.streamView);labels.stream='山溪 · 砾石滩';
+  waterSelect.add(new Option(labels.stream,'stream'));
+  const geology=document.createElement('optgroup');
+  geology.label='特色地貌';
+  for(const view of island.landformViews){
+    worldBase.views.push(view);
+    labels[view.name]=view.label;
+    geology.append(new Option(view.label,view.name));
+  }
+  waterSelect.append(geology);
+  installIslandMap(island,walker,setView,()=>worldBase.currentView);
+  waterSelect.addEventListener('change',()=>{ if(waterSelect.value) setView(waterSelect.value); });
+  const pointer=new THREE.Vector2(), caster=new THREE.Raycaster();
+  let press;
+  canvas.addEventListener('pointerdown',e=>{if(e.button===0) press=[e.clientX,e.clientY];});
+  canvas.addEventListener('pointerup',e=>{
+    if(!press || e.button!==0) return;
+    const moved=Math.hypot(e.clientX-press[0],e.clientY-press[1]);press=null;
+    if(moved>4) return;
+    const rect=canvas.getBoundingClientRect();
+    pointer.set(2*(e.clientX-rect.left)/rect.width-1,1-2*(e.clientY-rect.top)/rect.height);
+    caster.setFromCamera(pointer,camera);
+    island.inland.splashRay(caster.ray);
+  });
+  labels.coast = '南岸 · 潮间带';
+  const entry=new URLSearchParams(location.search).get('view');
+  setView(worldBase.views.some(view=>view.name===entry) ? entry : 'station-street');
   document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
-  document.querySelector('#walk').addEventListener('click', () => walker.enabled ? setView('station-street') : startWalking());
+  document.querySelector('#walk').addEventListener('click', () => walker.enabled ? setView(returnView) : startWalking());
   document.querySelector('#camera').addEventListener('click', () => {
     worldBase.cameraMode = walker.view === 'third' ? 'first' : 'third';
     walker.setView(worldBase.cameraMode);
@@ -226,6 +286,7 @@ async function init() {
   document.querySelector('#toon').addEventListener('change', event => worldBase.setToon(event.target.checked));
   document.querySelector('#effects').addEventListener('change', event => worldBase.setFlightEffects(event.target.checked));
   addEventListener('keydown', event => {
+    if (document.querySelector('#island-map').open) return;
     if (event.code === 'KeyH') document.body.classList.toggle('hide-ui');
     if (!/^[1-6]$/.test(event.key)) return;
     const view = worldBase.views[Number(event.key) - 1];
@@ -254,16 +315,36 @@ async function init() {
   if (toonEnabled()) maskGlassAlpha(scene);
   stage('场景已就绪');
   document.querySelector('#loading').hidden = true;
+  const rain=createRain(scene,renderer,station);
+  const mirrorOmit=[island.water.mesh,island.river.group,...island.branches.map(b=>b.group),island.sky.mesh,rain.streaks];
+  let sceneStart, weatherOffset=0;
+  const weatherStart=document.querySelector('#weather-start');
+  weatherStart.addEventListener('change',()=>{
+    weatherOffset=Number(weatherStart.value);
+    sceneStart=performance.now();
+    weatherStart.value='';
+  });
   let last = performance.now(), sampleStart = last, samples = 0;
   function frame(now) {
     const dt = Math.min((now - last) / 1000, 0.05);
     last = now;
     try {
       renderer.info.reset();
+      island.weather.update(weatherOffset+(sceneStart === undefined ? 0 : Math.max(0,(now-sceneStart)/1000)));
+      const cover = island.weather.state.cover;
+      sun.intensity = clearSun * (1 - 0.66 * cover);
+      skyFill.intensity = clearFill * (1 + 0.13 * cover);
+      station.streetReflections.uniforms.uStreetOvercast.value = cover;
+      station.wetRoad.rainFilm.value=island.weather.state.wetness;
+      rain.update(island.weather.state.rain);
+      look.setGroundFog(island.weather.state.fog);
       station.update(dt, now / 1000, walker.worldPosition);
       walker.update(dt);
+      island.inland.update(dt,island.weather.state,walker.enabled ? walker.worldPosition : null,camera.position);
       island.update(dt, now / 1000);
+      island.inland.reflection.update(renderer,scene,camera,basinAt(camera.position.x,camera.position.z,1.5),mirrorOmit,now/1000);
       look.render(scene, dt);
+      sceneStart ??= performance.now(); // Start after first-frame compilation.
       worldBase.ready = true;
       worldBase.cameraMode = walker.view;
       document.querySelector('#camera').textContent = `${walker.view === 'first' ? '第一' : '第三'}人称 · V`;
@@ -272,6 +353,7 @@ async function init() {
         const fps = 1000 * samples / (now - sampleStart);
         worldBase.frameStats = { fps, calls: renderer.info.render.calls, triangles: renderer.info.render.triangles };
         document.querySelector('#performance').textContent = `${fps.toFixed(0)} FPS · ${(renderer.info.render.triangles / 1e6).toFixed(2)} M tris`;
+        document.querySelector('#weather').textContent=island.weather.state.phase;
         sampleStart = now; samples = 0;
       }
       requestAnimationFrame(frame);

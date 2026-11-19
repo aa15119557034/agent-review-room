@@ -1,0 +1,417 @@
+[
+  {
+    "name": "art-a-street",
+    "eye": [
+      278.8,
+      10.488,
+      936
+    ],
+    "stationLocal": [
+      -1.1999999999999886,
+      2.4879999999999995,
+      36
+    ],
+    "insideAuthoredStationBounds": true,
+    "visibleGeometry": {
+      "station": [
+        {
+          "floorY": 8.892000020183978,
+          "height": 1.5959999798160212,
+          "upDot": 0.9996082322705132,
+          "meshPath": "Sakuragaoka/static/static-batched",
+          "mesh": "",
+          "mat": "MeshToonMaterial",
+          "alphaTest": 0,
+          "transparent": true,
+          "opacity": 1,
+          "depthWrite": false,
+          "instance": null
+        },
+        {
+          "floorY": 8.888000028394334,
+          "height": 1.5999999716056656,
+          "upDot": 0.9996082315279872,
+          "meshPath": "Sakuragaoka/static/street/street-asphalt",
+          "mesh": "street-asphalt",
+          "mat": "street-asphalt-wet",
+          "alphaTest": 0,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "instance": null
+        },
+        {
+          "floorY": 8.867999970912933,
+          "height": 1.6200000290870662,
+          "upDot": 0.9996082304255272,
+          "meshPath": "Sakuragaoka/static/env-terrain/env-terrain-ground",
+          "mesh": "env-terrain-ground",
+          "mat": "env-ground",
+          "alphaTest": 0,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "instance": null
+        }
+      ],
+      "city": []
+    },
+    "topGround": {
+      "estimatedSurfaceY": 8.892000020183978,
+      "height": 1.5959999798160212,
+      "source": "Sakuragaoka/static/static-batched"
+    },
+    "terrain": {
+      "bilinear": 8.788000106811523,
+      "petalwakeTown": -1000000000
+    },
+    "capsule": {
+      "selectedPhysics": "station",
+      "stationFloorQuery": 8.868,
+      "coastFloorQuery": 11.443999999999999,
+      "selectedHeight": 1.6199999999999992,
+      "coastAllowsAtCameraXZ": false
+    },
+    "method": "Downward 5m segment from fixed eye, upward triangle normal y >=0.45, scene-visible material in station/city. Terrain and Petalwake town use their own height queries. CPU geometry cannot evaluate per-fragment shader discard."
+  },
+  {
+    "name": "art-b-konbini",
+    "eye": [
+      279.1,
+      9.8184,
+      912.8
+    ],
+    "stationLocal": [
+      -0.8999999999999773,
+      1.8184000000000005,
+      12.799999999999955
+    ],
+    "insideAuthoredStationBounds": true,
+    "visibleGeometry": {
+      "station": [
+        {
+          "floorY": 8.24239998987384,
+          "height": 1.57600001012616,
+          "upDot": 0.9996082310160039,
+          "meshPath": "Sakuragaoka/static/static-batched",
+          "mesh": "",
+          "mat": "MeshToonMaterial",
+          "alphaTest": 0,
+          "transparent": true,
+          "opacity": 1,
+          "depthWrite": false,
+          "instance": null
+        },
+        {
+          "floorY": 8.238400003314018,
+          "height": 1.5799999966859826,
+          "upDot": 0.9996082304255272,
+          "meshPath": "Sakuragaoka/static/street/street-asphalt",
+          "mesh": "street-asphalt",
+          "mat": "street-asphalt-wet",
+          "alphaTest": 0,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "instance": null
+        },
+        {
+          "floorY": 8.21840000450611,
+          "height": 1.5999999954938904,
+          "upDot": 0.9996082300087846,
+          "meshPath": "Sakuragaoka/static/env-terrain/env-terrain-ground",
+          "mesh": "env-terrain-ground",
+          "mat": "env-ground",
+          "alphaTest": 0,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "instance": null
+        }
+      ],
+      "city": []
+    },
+    "topGround": {
+      "estimatedSurfaceY": 8.24239998987384,
+      "height": 1.57600001012616,
+      "source": "Sakuragaoka/static/static-batched"
+    },
+    "terrain": {
+      "bilinear": 8.138400077819822,
+      "petalwakeTown": -1000000000
+    },
+    "capsule": {
+      "selectedPhysics": "station",
+      "stationFloorQuery": 8.218399999999999,
+      "coastFloorQuery": 11.443999999999999,
+      "selectedHeight": 1.6000000000000014,
+      "coastAllowsAtCameraXZ": false
+    },
+    "method": "Downward 5m segment from fixed eye, upward triangle normal y >=0.45, scene-visible material in station/city. Terrain and Petalwake town use their own height queries. CPU geometry cannot evaluate per-fragment shader discard."
+  },
+  {
+    "name": "art-c-alley",
+    "eye": [
+      287.65,
+      14.384808464050293,
+      767.3199999999999
+    ],
+    "stationLocal": [
+      7.649999999999977,
+      6.384808464050293,
+      -132.68000000000006
+    ],
+    "insideAuthoredStationBounds": false,
+    "visibleGeometry": {
+      "station": [],
+      "city": [
+        {
+          "floorY": 12.78480863571167,
+          "height": 1.599999828338623,
+          "upDot": 1,
+          "meshPath": "station-city-background/town-edge-kit",
+          "mesh": "town-edge-kit",
+          "mat": "town-st-pavers",
+          "alphaTest": 0,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "instance": null
+        }
+      ]
+    },
+    "topGround": {
+      "estimatedSurfaceY": 12.78480863571167,
+      "height": 1.599999828338623,
+      "source": "station-city-background/town-edge-kit"
+    },
+    "terrain": {
+      "bilinear": 12.594791867574052,
+      "petalwakeTown": -1000000000
+    },
+    "capsule": {
+      "selectedPhysics": "coast",
+      "stationFloorQuery": 8.873600000000001,
+      "coastFloorQuery": 12.594791867574052,
+      "selectedHeight": 1.7900165964762405,
+      "coastAllowsAtCameraXZ": false
+    },
+    "method": "Downward 5m segment from fixed eye, upward triangle normal y >=0.45, scene-visible material in station/city. Terrain and Petalwake town use their own height queries. CPU geometry cannot evaluate per-fragment shader discard."
+  },
+  {
+    "name": "art-d-laundry",
+    "eye": [
+      283.5,
+      12.520055181715234,
+      783.8
+    ],
+    "stationLocal": [
+      3.5,
+      4.520055181715234,
+      -116.20000000000005
+    ],
+    "insideAuthoredStationBounds": false,
+    "visibleGeometry": {
+      "station": [],
+      "city": [
+        {
+          "floorY": 10.920055056032218,
+          "height": 1.6000001256830156,
+          "upDot": 0.9866099042545653,
+          "meshPath": "station-city-background/town-edge-kit",
+          "mesh": "town-edge-kit",
+          "mat": "town-st-asphalt",
+          "alphaTest": 0,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "instance": null
+        }
+      ]
+    },
+    "topGround": {
+      "estimatedSurfaceY": 10.920055056032218,
+      "height": 1.6000001256830156,
+      "source": "station-city-background/town-edge-kit"
+    },
+    "terrain": {
+      "bilinear": 10.858280690511075,
+      "petalwakeTown": -1000000000
+    },
+    "capsule": {
+      "selectedPhysics": "coast",
+      "stationFloorQuery": 6.822933333333344,
+      "coastFloorQuery": 10.858280690511075,
+      "selectedHeight": 1.6617744912041594,
+      "coastAllowsAtCameraXZ": false
+    },
+    "method": "Downward 5m segment from fixed eye, upward triangle normal y >=0.45, scene-visible material in station/city. Terrain and Petalwake town use their own height queries. CPU geometry cannot evaluate per-fragment shader discard."
+  },
+  {
+    "name": "sample-e-harbour",
+    "eye": [
+      -49.3148,
+      6.0969,
+      1121.5
+    ],
+    "stationLocal": [
+      -329.3148,
+      -1.9031000000000002,
+      221.5
+    ],
+    "insideAuthoredStationBounds": false,
+    "visibleGeometry": {
+      "station": [],
+      "city": []
+    },
+    "topGround": {
+      "estimatedSurfaceY": 4.496910095214844,
+      "height": 1.599989904785156,
+      "source": "terrain heightAt"
+    },
+    "terrain": {
+      "bilinear": 4.496910095214844,
+      "petalwakeTown": -1000000000
+    },
+    "capsule": {
+      "selectedPhysics": "coast",
+      "stationFloorQuery": 14.062000000000001,
+      "coastFloorQuery": 4.496910095214844,
+      "selectedHeight": 1.599989904785156,
+      "coastAllowsAtCameraXZ": false
+    },
+    "method": "Downward 5m segment from fixed eye, upward triangle normal y >=0.45, scene-visible material in station/city. Terrain and Petalwake town use their own height queries. CPU geometry cannot evaluate per-fragment shader discard."
+  },
+  {
+    "name": "sample-f-hillside",
+    "eye": [
+      1040.6682,
+      47.72941688707416,
+      591.5865
+    ],
+    "stationLocal": [
+      760.6682000000001,
+      39.72941688707416,
+      -308.4135
+    ],
+    "insideAuthoredStationBounds": false,
+    "visibleGeometry": {
+      "station": [],
+      "city": []
+    },
+    "topGround": {
+      "estimatedSurfaceY": 46.12941688707416,
+      "height": 1.6000000000000014,
+      "source": "terrain heightAt"
+    },
+    "terrain": {
+      "bilinear": 46.12941688707416,
+      "petalwakeTown": -1000000000
+    },
+    "capsule": {
+      "selectedPhysics": "coast",
+      "stationFloorQuery": 12.38827,
+      "coastFloorQuery": 46.12941688707416,
+      "selectedHeight": 1.6000000000000014,
+      "coastAllowsAtCameraXZ": true
+    },
+    "method": "Downward 5m segment from fixed eye, upward triangle normal y >=0.45, scene-visible material in station/city. Terrain and Petalwake town use their own height queries. CPU geometry cannot evaluate per-fragment shader discard."
+  },
+  {
+    "name": "sample-g-rail",
+    "eye": [
+      337.8563,
+      9.6,
+      844.5
+    ],
+    "stationLocal": [
+      57.856299999999976,
+      1.5999999999999996,
+      -55.5
+    ],
+    "insideAuthoredStationBounds": true,
+    "visibleGeometry": {
+      "station": [
+        {
+          "floorY": 8.019999999552965,
+          "height": 1.5800000004470345,
+          "upDot": 1,
+          "meshPath": "Sakuragaoka/static/street/street-asphalt",
+          "mesh": "street-asphalt",
+          "mat": "street-asphalt-wet",
+          "alphaTest": 0,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "instance": null
+        },
+        {
+          "floorY": 8,
+          "height": 1.5999999999999996,
+          "upDot": 1,
+          "meshPath": "Sakuragaoka/static/env-terrain/env-terrain-ground",
+          "mesh": "env-terrain-ground",
+          "mat": "env-ground",
+          "alphaTest": 0,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "instance": null
+        }
+      ],
+      "city": []
+    },
+    "topGround": {
+      "estimatedSurfaceY": 8.019999999552965,
+      "height": 1.5800000004470345,
+      "source": "Sakuragaoka/static/street/street-asphalt"
+    },
+    "terrain": {
+      "bilinear": 7.920000076293945,
+      "petalwakeTown": -1000000000
+    },
+    "capsule": {
+      "selectedPhysics": "station",
+      "stationFloorQuery": 8,
+      "coastFloorQuery": 11.443999999999999,
+      "selectedHeight": 1.5999999999999996,
+      "coastAllowsAtCameraXZ": false
+    },
+    "method": "Downward 5m segment from fixed eye, upward triangle normal y >=0.45, scene-visible material in station/city. Terrain and Petalwake town use their own height queries. CPU geometry cannot evaluate per-fragment shader discard."
+  },
+  {
+    "name": "sample-h-north",
+    "eye": [
+      181.0601,
+      136.1623,
+      -1212.8685
+    ],
+    "stationLocal": [
+      -98.9399,
+      128.1623,
+      -2112.8685
+    ],
+    "insideAuthoredStationBounds": false,
+    "visibleGeometry": {
+      "station": [],
+      "city": []
+    },
+    "topGround": {
+      "estimatedSurfaceY": 134.5623427734375,
+      "height": 1.5999572265624806,
+      "source": "terrain heightAt"
+    },
+    "terrain": {
+      "bilinear": 134.5623427734375,
+      "petalwakeTown": -1000000000
+    },
+    "capsule": {
+      "selectedPhysics": "coast",
+      "stationFloorQuery": 48.47737,
+      "coastFloorQuery": 134.5623427734375,
+      "selectedHeight": 1.5999572265624806,
+      "coastAllowsAtCameraXZ": false
+    },
+    "method": "Downward 5m segment from fixed eye, upward triangle normal y >=0.45, scene-visible material in station/city. Terrain and Petalwake town use their own height queries. CPU geometry cannot evaluate per-fragment shader discard."
+  }
+]

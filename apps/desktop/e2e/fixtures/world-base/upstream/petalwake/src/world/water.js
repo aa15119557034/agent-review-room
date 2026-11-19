@@ -2,7 +2,7 @@
 // sky + planar reflections, foam and the rider's wake.
 import * as THREE from 'three';
 import { U, World, shared } from '../core/ctx.js';
-import { NOISE, NOISE_TEX, ATMOSPHERE, CLOUD_SHADOW, TERRAIN_LOOKUP, SHADOW } from '../shaders/common.js';
+import { NOISE, NOISE_TEX, ATMOSPHERE, CLOUD_SHADOW, TERRAIN_LOOKUP, SHADOW, WATER_CONTACT } from '../shaders/common.js';
 import { SKY_UNIFORMS, CLOUD_LOOKUP } from './sky.js';
 
 const NW = 8;
@@ -31,7 +31,7 @@ export function waveHeight(x, z, t, shelter = 1) {
   let y = 0;
   const s = SEA_STATE.value * shelter;
   for (const w of WAVES) y += w.amp * s * Math.sin(w.k * (w.dx * x + w.dz * z) - w.w * t + w.ph);
-  return y;
+  return y + U.uSeaSetup.value;
 }
 
 const WAVE_GLSL = /* glsl */`
@@ -138,8 +138,8 @@ export class Water {
         uSea: SEA_STATE,
         uCenter: { value: new THREE.Vector2() },
         uRipple: { value: makeWaveNormalTexture() },
-        uCloudTex: sky.cloudTex,
-        uCloudOn: sky.cloudOn,
+        ...sky.cloudUniforms,
+        uSeaSetup: U.uSeaSetup, ...shared('uWaterPatch','uWaterDisturbance'),
         uReflTex: this.reflTex,
         uReflMat: this.reflMat,
         uReflOn: this.reflOn,
@@ -150,7 +150,7 @@ export class Water {
     });
     this.mesh = new THREE.Mesh(geo, this.material);
     this.mesh.frustumCulled = false;
-    this.mesh.renderOrder = 10;
+    this.mesh.renderOrder = 510; // terrain depth rejects water beneath the island
   }
 
   update(camera) {
@@ -213,6 +213,7 @@ export class Water {
 const VERT = /* glsl */`
 precision highp float;
 uniform vec2 uCenter;
+uniform float uSeaSetup;
 uniform float uTime;
 uniform vec3 uCamPos;
 ${TERRAIN_LOOKUP}
@@ -226,12 +227,24 @@ void main(){
   // waves calm down in shallow, sheltered water and fade out toward the horizon
   vec4 light = textureLod(uLightTex, worldUV(xz), 0.0);
   float off = shoreDist(light.b);                          // metres offshore (+) / inland (-)
-  float shelter = mix(0.30, 1.0, smoothstep(0.0, 110.0, off));
+  // Dry interior vertices still close the radial grid, but their fragments are
+  // discarded below. Leave a guard beyond the shore mask for displaced triangles.
+  if (off < -45.0) {
+    vXZ0 = xz;
+    vAmp = 0.0;
+    vWorld = vec3(xz.x, uSeaSetup, xz.y);
+    gl_Position = projectionMatrix * viewMatrix * vec4(vWorld, 1.0);
+    return;
+  }
+  // Swell breaks at the beach. Carry a thin wash across the mean shore,
+  // then let only wind setup reach inland hollows below that level.
+  float swash = smoothstep(-5.0, 2.0, off);
+  float shelter = swash * mix(0.30, 1.0, smoothstep(0.0, 110.0, off));
   float amp = uSea * shelter / (1.0 + pow(r / 1400.0, 2.0));
   vec3 n; float fold;
   vec3 d = gerstner(xz, uTime, amp, n, fold);
   d *= 1.0 - smoothstep(4000.0, 9000.0, r);
-  vWorld = vec3(xz.x, 0.0, xz.y) + d;
+  vWorld = vec3(xz.x, uSeaSetup, xz.y) + d;
   vXZ0 = xz;
   vAmp = amp;
   gl_Position = projectionMatrix * viewMatrix * vec4(vWorld, 1.0);
@@ -245,6 +258,7 @@ varying vec2 vXZ0;
 varying float vAmp;
 uniform float uTime;
 uniform sampler2D uRipple;
+${WATER_CONTACT}
 uniform sampler2D uReflTex;
 uniform mat4 uReflMat;
 uniform float uReflOn;
@@ -291,7 +305,8 @@ void main(){
   vec4 r4 = texture(uRipple, P.xz / 2.3 + vec2(uTime * 0.31, -uTime * 0.23));
   vec4 r5 = texture(uRipple, P.xz.yx / 1.1 - vec2(uTime * 0.43, uTime * 0.37) + 0.6);
   vec2 ruffle = ((r4.xy - 0.5) * 1.3 + (r5.yx - 0.5) * 0.9) * smoothstep(0.12, 1.0, gale) * 1.7;
-  vec3 N = normalize(n + vec3(rip.x, 0.0, rip.y) * chop * (0.35 + 0.65 * rippleFade) + vec3(ruffle.x, 0.0, ruffle.y));
+  vec2 contact = contactSlope(P.xz);
+  vec3 N = normalize(n + vec3(rip.x, 0.0, rip.y) * chop * (0.35 + 0.65 * rippleFade) + vec3(ruffle.x-contact.x, 0.0, ruffle.y-contact.y));
   // looking along the surface the micro-normals average out
   float graze = 1.0 - saturate(dot(V, vec3(0.0, 1.0, 0.0)));
 
@@ -315,17 +330,17 @@ void main(){
   float cb = texture(uRipple, cuv * 1.37 - vec2(0.0, uTime * 0.041)).a;
   float caust = pow(saturate(1.0 - abs(ca - cb) * 2.2), 5.0) * 1.6;
   float pathLen = depth * (1.0 + 1.0 / max(V.y, 0.25)) * 0.5;
-  vec3 absorb = exp(-pathLen * vec3(0.46, 0.105, 0.072));
+  vec3 absorb = exp(-pathLen * vec3(0.56, 0.155, 0.065));
   vec3 bedLit = bedCol * (uSunColor * 0.30 * sunVis * (0.55 + caust * exp(-depth * 0.22)) + uAmbSky * 0.5);
   // light scattered back out of the water column
-  vec3 deep = vec3(0.004, 0.105, 0.135);
-  vec3 shallow = vec3(0.030, 0.420, 0.380);
+  vec3 deep = vec3(0.004, 0.070, 0.235);
+  vec3 shallow = vec3(0.022, 0.185, 0.335);
   vec3 scat = mix(shallow, deep, saturate(1.0 - exp(-depth * 0.09)));
   scat *= (uSunColor * 0.42 * (0.35 + 0.65 * sunVis) + uAmbSky * 0.60);
   vec3 body = bedLit * absorb + scat * (1.0 - absorb * 0.9);
   // sunlight glowing through the thin crests
   float sss = pow(saturate(dot(V, -uSunDir) * 0.5 + 0.5), 3.0) * saturate(P.y * 0.9 + 0.25) * saturate(vAmp);
-  body += vec3(0.02, 0.36, 0.30) * uSunColor * 0.11 * sss * sunVis;
+  body += vec3(0.016, 0.22, 0.36) * uSunColor * 0.11 * sss * sunVis;
 
   // ---- reflection
   float ndv = saturate(dot(N, V));
@@ -335,7 +350,7 @@ void main(){
   R.y = abs(R.y) + 0.015;
   R = normalize(R);
   vec3 sky = skyBase(R);
-  vec4 cl = sampleClouds(R);
+  vec4 cl = sampleClouds(R, P);
   sky = sky * (1.0 - cl.a) + cl.rgb;
   vec3 refl = sky;
   if (uReflOn > 0.5){
@@ -373,8 +388,13 @@ void main(){
   float roll = pow(saturate(sin(ph) * 0.5 + 0.5), 5.0);
   float beachy = 1.0 - smoothstep(0.05, 0.45, cliffy);
   float surfBand = roll * smoothstep(46.0, 6.0, shoreD) * smoothstep(0.52, 0.30, bubbles * (1.0 - roll * 0.5)) * beachy;
+  surfBand *= smoothstep(-1.2, 2.8, off);
   float wash = smoothstep(7.5, 0.0, shoreD - (sin(uTime * 0.5 + setNoise * 6.0) * 0.5 + 0.5) * 3.0);
-  float lace = smoothstep(0.36, 0.60, bubbles + wash * 0.35) * wash * beachy;
+  // Resolve thin tongues of foam in the swash instead of filling the entire
+  // landward half of the shore-distance mask with opaque white.
+  float fringe = 1.0 - smoothstep(0.04, 0.15 + 0.08 * setNoise, depth);
+  float strands = smoothstep(0.47, 0.68, bubbles + 0.10 * sin(ph + setNoise * 11.0));
+  float lace = strands * (0.28 + 0.52 * fringe) * wash * beachy;
   // cliffs churn the water: a ragged collar of froth that surges, wider on some stretches than
   // others, with lace trailing off it
   float surge = sin(uTime * 0.9 + setNoise * 9.0 + shoreD * 0.25) * 0.5 + 0.5;
