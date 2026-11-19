@@ -1,0 +1,335 @@
+{
+  "variant": "before",
+  "head": "8fddab1578056af8b4f4a0d4191e749ba6e5f4dd",
+  "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "dimensions": {
+    "viewport": [
+      1440,
+      900
+    ],
+    "canvas": [
+      1440,
+      900
+    ],
+    "pixelRatio": 1
+  },
+  "versions": {
+    "node": "24.22.0",
+    "acorn": "8.18.0",
+    "ada": "4.0.0",
+    "amaro": "1.1.11",
+    "ares": "1.34.8",
+    "brotli": "1.2.0",
+    "cldr": "48.0",
+    "icu": "78.2",
+    "llhttp": "9.4.3",
+    "merve": "1.2.2",
+    "modules": "149",
+    "napi": "10",
+    "nbytes": "0.1.4",
+    "ncrypto": "0.0.1",
+    "nghttp2": "1.70.0",
+    "nghttp3": "",
+    "ngtcp2": "",
+    "openssl": "0.0.0",
+    "simdjson": "4.6.11",
+    "simdutf": "7.7.0",
+    "sqlite": "3.53.4",
+    "tz": "2026d",
+    "undici": "7.29.1",
+    "unicode": "17.0",
+    "uv": "1.52.1",
+    "uvwasi": "0.0.23",
+    "v8": "15.2.124.43-electron.0",
+    "zlib": "1.3.2.1-motley",
+    "zstd": "1.6.0",
+    "electron": "44.9.0",
+    "chrome": "152.0.7977.167"
+  },
+  "windows": [
+    {
+      "filename": "frame-samples.json",
+      "start": {
+        "wallMs": 1795048692273,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "station-street",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795048695439,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "station-street",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-art-a-street.json",
+      "start": {
+        "wallMs": 1795048697477,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-a-street",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795048707662,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-a-street",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-art-b-konbini.json",
+      "start": {
+        "wallMs": 1795048709837,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-b-konbini",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795048719972,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-b-konbini",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-art-c-alley.json",
+      "start": {
+        "wallMs": 1795048721909,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-c-alley",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795048732018,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-c-alley",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-art-d-laundry.json",
+      "start": {
+        "wallMs": 1795048733974,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-d-laundry",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795048744094,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-d-laundry",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-walking-third.json",
+      "start": {
+        "wallMs": 1795048749968,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": true,
+          "visibility": "visible",
+          "view": "walking",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795048753146,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": true,
+          "visibility": "visible",
+          "view": "walking",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-walking-first.json",
+      "start": {
+        "wallMs": 1795048754125,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": true,
+          "visibility": "visible",
+          "view": "walking",
+          "walker": "first"
+        }
+      },
+      "end": {
+        "wallMs": 1795048757306,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": true,
+          "visibility": "visible",
+          "view": "walking",
+          "walker": "first"
+        }
+      }
+    }
+  ],
+  "walking": [
+    {
+      "type": "keydown",
+      "code": "KeyW",
+      "key": "w",
+      "trusted": true,
+      "timeMs": 114811
+    },
+    {
+      "type": "keyup",
+      "code": "KeyW",
+      "key": "w",
+      "trusted": true,
+      "timeMs": 118047
+    },
+    {
+      "type": "keydown",
+      "code": "KeyW",
+      "key": "w",
+      "trusted": true,
+      "timeMs": 118967.79999995232
+    },
+    {
+      "type": "keyup",
+      "code": "KeyW",
+      "key": "w",
+      "trusted": true,
+      "timeMs": 122207.89999985695
+    }
+  ],
+  "network": {
+    "coverage": {
+      "localHTTP": 273,
+      "serverReceipts": 273,
+      "paired": 273,
+      "get200SourceAndWire": 273,
+      "browserBlobs": 16
+    },
+    "problems": [],
+    "clean": true
+  },
+  "samples": [
+    {
+      "name": "art-a-street",
+      "frames": 436,
+      "sampleMs": 10138.599999999999,
+      "fps": 43.003965044483465,
+      "p95Ms": 30.900000000001455,
+      "calls": 1587.8922018348624,
+      "triangles": 7741555.256880734,
+      "meters": null,
+      "over25ms": 220
+    },
+    {
+      "name": "art-b-konbini",
+      "frames": 643,
+      "sampleMs": 10123,
+      "fps": 63.51871974711054,
+      "p95Ms": 15.5,
+      "calls": 1046.1601866251945,
+      "triangles": 7617288.853810265,
+      "meters": null,
+      "over25ms": 15
+    },
+    {
+      "name": "art-c-alley",
+      "frames": 657,
+      "sampleMs": 10107.699999999997,
+      "fps": 64.99995053276217,
+      "p95Ms": 15.5,
+      "calls": 978.5981735159818,
+      "triangles": 8591294.669710808,
+      "meters": null,
+      "over25ms": 0
+    },
+    {
+      "name": "art-d-laundry",
+      "frames": 657,
+      "sampleMs": 10107.799999999988,
+      "fps": 64.99930746552175,
+      "p95Ms": 15.5,
+      "calls": 914.4535768645358,
+      "triangles": 8368286.02891933,
+      "meters": null,
+      "over25ms": 0
+    },
+    {
+      "name": "third",
+      "frames": 158,
+      "sampleMs": 3138.5,
+      "fps": 50.342520312251075,
+      "p95Ms": 30.80000000000291,
+      "calls": 1693.0379746835442,
+      "triangles": 8325729.341772152,
+      "meters": 9.815534109274223,
+      "over25ms": 46
+    },
+    {
+      "name": "first",
+      "frames": 172,
+      "sampleMs": 3138.5,
+      "fps": 54.80324996017206,
+      "p95Ms": 30.80000000000291,
+      "calls": 1540.0406976744187,
+      "triangles": 8244625.104651162,
+      "meters": 9.857471419320573,
+      "over25ms": 32
+    }
+  ]
+}

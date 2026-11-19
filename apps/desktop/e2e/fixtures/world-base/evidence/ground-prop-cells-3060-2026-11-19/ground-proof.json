@@ -1,0 +1,1496 @@
+{
+  "source": "f2c433cd83a04173e52cbac77382bcbe2728efbd",
+  "mode": "ground",
+  "views": {
+    "art-a-street": {
+      "key": "art-a-street",
+      "yaw": 0,
+      "time": 14,
+      "eye": [
+        278.8,
+        10.488,
+        936
+      ],
+      "q": [
+        -0.003277842930440409,
+        -0.009834585659995631,
+        -0.00003223795934194156,
+        0.9999462663720154
+      ],
+      "fov": 35.63777782904556,
+      "trials": {
+        "original": {
+          "worldHDR": "b3c0b46d12bb36b9cbcabc04646912d0428aac33f1d2b255e1076e0a9e99f7cc",
+          "delta": null,
+          "main": {
+            "calls": 4,
+            "triangles": 1398157,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 847947
+            }
+          }
+        },
+        "cells": {
+          "worldHDR": "aca21bc1234d400c97a0972b6a732fb19d6ff3969a90c3a33946b99a66fa811e",
+          "delta": {
+            "pixels": 2,
+            "alpha": 0,
+            "maxAbs": 0.000244140625
+          },
+          "main": {
+            "calls": 29,
+            "triangles": 841324,
+            "batches": [
+              "menhir-8",
+              "menhir-6",
+              "menhir-9",
+              "menhir-1",
+              "boulders-21",
+              "boulders-1",
+              "boulders-2",
+              "boulders-4",
+              "boulders-41",
+              "boulders-39",
+              "boulders-15",
+              "boulders-40",
+              "boulders-14",
+              "boulders-7",
+              "boulders-8",
+              "boulders-23",
+              "boulders-29",
+              "boulders-48",
+              "boulders-49",
+              "boulders-51",
+              "tree-10",
+              "tree-2",
+              "tree-3",
+              "tree-0",
+              "tree-4",
+              "tree-1",
+              "tree-5",
+              "tree-9",
+              "tree-8"
+            ],
+            "byClass": {
+              "menhir": 10400,
+              "boulders": 174965,
+              "tree": 655959
+            }
+          }
+        },
+        "restoreOriginal": {
+          "worldHDR": "8dca160e5db227683c8739a357ada03dcc0be1723903176534a0475c92851a84",
+          "delta": {
+            "pixels": 2,
+            "alpha": 0,
+            "maxAbs": 0.000244140625
+          },
+          "main": {
+            "calls": 4,
+            "triangles": 1398157,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 847947
+            }
+          }
+        }
+      },
+      "png": {
+        "original": {
+          "sha256": "e7938a5dcde2c136165cb67be76c40fdd0ec49d269454a2e7f2a5b071252fb74",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        },
+        "cells": {
+          "sha256": "e7938a5dcde2c136165cb67be76c40fdd0ec49d269454a2e7f2a5b071252fb74",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        },
+        "restoreOriginal": {
+          "sha256": "aaef41ea844df62edabf2c210f70b02bbcb4d2c0aa10d81adc075cc7392bf295",
+          "comparedTo": "original",
+          "pixels": 1,
+          "over2": 0,
+          "max": 1
+        }
+      }
+    },
+    "art-b-konbini": {
+      "key": "art-b-konbini",
+      "yaw": 0,
+      "time": 14,
+      "eye": [
+        279.1,
+        9.8184,
+        912.8
+      ],
+      "q": [
+        0.013653878147403252,
+        0.5849950384089397,
+        -0.009850566433920587,
+        0.8108620986267578
+      ],
+      "fov": 58,
+      "trials": {
+        "original": {
+          "worldHDR": "54b79a2c28b7172f3ee96cac0f8f431cbdc4e163671c83b638e883cbd42be1c5",
+          "delta": null,
+          "main": {
+            "calls": 4,
+            "triangles": 1398157,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 847947
+            }
+          }
+        },
+        "cells": {
+          "worldHDR": "8a0cb9656f3ed39bcdafbeac6861a858791a0f56aa8dd66ab4bdd563af7348bd",
+          "delta": {
+            "pixels": 2,
+            "alpha": 0,
+            "maxAbs": 0.00006103515625
+          },
+          "main": {
+            "calls": 29,
+            "triangles": 417662,
+            "batches": [
+              "lighthouse-0",
+              "menhir-4",
+              "menhir-7",
+              "menhir-0",
+              "menhir-2",
+              "boulders-28",
+              "boulders-30",
+              "boulders-17",
+              "boulders-20",
+              "boulders-26",
+              "boulders-31",
+              "boulders-25",
+              "boulders-37",
+              "boulders-34",
+              "boulders-19",
+              "boulders-27",
+              "boulders-46",
+              "boulders-22",
+              "boulders-24",
+              "boulders-42",
+              "boulders-45",
+              "boulders-43",
+              "boulders-50",
+              "boulders-44",
+              "tree-10",
+              "tree-7",
+              "tree-6",
+              "tree-14",
+              "tree-13"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 39000,
+              "boulders": 109978,
+              "tree": 207987
+            }
+          }
+        },
+        "restoreOriginal": {
+          "worldHDR": "2fd47c5502ada27c480fbc0af1d9a2d52b95816698d63cba60173ffae9a44102",
+          "delta": {
+            "pixels": 1,
+            "alpha": 0,
+            "maxAbs": 0.00006103515625
+          },
+          "main": {
+            "calls": 4,
+            "triangles": 1398157,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 847947
+            }
+          }
+        }
+      },
+      "png": {
+        "original": {
+          "sha256": "3ccd4497a1244d3b07335069842550198c87b3e5277cd9305d1273c7c833c449",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        },
+        "cells": {
+          "sha256": "3ccd4497a1244d3b07335069842550198c87b3e5277cd9305d1273c7c833c449",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        },
+        "restoreOriginal": {
+          "sha256": "3ccd4497a1244d3b07335069842550198c87b3e5277cd9305d1273c7c833c449",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        }
+      }
+    },
+    "art-c-alley": {
+      "key": "art-c-alley",
+      "yaw": 0,
+      "time": 14,
+      "eye": [
+        287.65,
+        14.384808464050293,
+        767.3199999999999
+      ],
+      "q": [
+        0.00512201791291099,
+        0.8012252009590126,
+        -0.006859231737600546,
+        0.5983016740914732
+      ],
+      "fov": 45,
+      "trials": {
+        "original": {
+          "worldHDR": "4b8dc8f86666c7362393d664677c2ae93b310be3ddf8c5e0608f881184c4012e",
+          "delta": null,
+          "main": {
+            "calls": 4,
+            "triangles": 1398157,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 847947
+            }
+          }
+        },
+        "cells": {
+          "worldHDR": "4b8dc8f86666c7362393d664677c2ae93b310be3ddf8c5e0608f881184c4012e",
+          "delta": {
+            "pixels": 0,
+            "alpha": 0,
+            "maxAbs": 0
+          },
+          "main": {
+            "calls": 4,
+            "triangles": 19996,
+            "batches": [
+              "boulders-30",
+              "boulders-31",
+              "boulders-37",
+              "boulders-34"
+            ],
+            "byClass": {
+              "boulders": 19996
+            }
+          }
+        },
+        "restoreOriginal": {
+          "worldHDR": "4b8dc8f86666c7362393d664677c2ae93b310be3ddf8c5e0608f881184c4012e",
+          "delta": {
+            "pixels": 0,
+            "alpha": 0,
+            "maxAbs": 0
+          },
+          "main": {
+            "calls": 4,
+            "triangles": 1398157,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 847947
+            }
+          }
+        }
+      },
+      "png": {
+        "original": {
+          "sha256": "04099b3466ff476ba3381bdfbc66917ecbf50c8611aa8881eaaf814de8bf2695",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        },
+        "cells": {
+          "sha256": "04099b3466ff476ba3381bdfbc66917ecbf50c8611aa8881eaaf814de8bf2695",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        },
+        "restoreOriginal": {
+          "sha256": "04099b3466ff476ba3381bdfbc66917ecbf50c8611aa8881eaaf814de8bf2695",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        }
+      }
+    },
+    "art-d-laundry": {
+      "key": "art-d-laundry",
+      "yaw": 0,
+      "time": 14,
+      "eye": [
+        283.5,
+        12.520055181715234,
+        783.8
+      ],
+      "q": [
+        0.1297258927986663,
+        0.0767626424061459,
+        -0.010073721024303532,
+        0.9885227410703001
+      ],
+      "fov": 48,
+      "trials": {
+        "original": {
+          "worldHDR": "9e7ba5348a8bd154184e12819a51a8dfc35db28aa2ae4283878cec281b376a15",
+          "delta": null,
+          "main": {
+            "calls": 4,
+            "triangles": 1398157,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 847947
+            }
+          }
+        },
+        "cells": {
+          "worldHDR": "9e7ba5348a8bd154184e12819a51a8dfc35db28aa2ae4283878cec281b376a15",
+          "delta": {
+            "pixels": 0,
+            "alpha": 0,
+            "maxAbs": 0
+          },
+          "main": {
+            "calls": 36,
+            "triangles": 981014,
+            "batches": [
+              "lighthouse-0",
+              "menhir-8",
+              "menhir-6",
+              "menhir-2",
+              "menhir-1",
+              "boulders-28",
+              "boulders-21",
+              "boulders-1",
+              "boulders-2",
+              "boulders-4",
+              "boulders-41",
+              "boulders-15",
+              "boulders-39",
+              "boulders-14",
+              "boulders-40",
+              "boulders-26",
+              "boulders-8",
+              "boulders-25",
+              "boulders-23",
+              "boulders-29",
+              "boulders-49",
+              "boulders-46",
+              "boulders-48",
+              "boulders-51",
+              "boulders-44",
+              "tree-10",
+              "tree-2",
+              "tree-3",
+              "tree-4",
+              "tree-0",
+              "tree-1",
+              "tree-8",
+              "tree-9",
+              "tree-5",
+              "tree-7",
+              "tree-6"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 10400,
+              "boulders": 189962,
+              "tree": 719955
+            }
+          }
+        },
+        "restoreOriginal": {
+          "worldHDR": "9e7ba5348a8bd154184e12819a51a8dfc35db28aa2ae4283878cec281b376a15",
+          "delta": {
+            "pixels": 0,
+            "alpha": 0,
+            "maxAbs": 0
+          },
+          "main": {
+            "calls": 4,
+            "triangles": 1398157,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 847947
+            }
+          }
+        }
+      },
+      "png": {
+        "original": {
+          "sha256": "a2266e02bc04f124c44d8273860ad865e1c2e29612bc4d94c049f752a23d5608",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        },
+        "cells": {
+          "sha256": "a2266e02bc04f124c44d8273860ad865e1c2e29612bc4d94c049f752a23d5608",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        },
+        "restoreOriginal": {
+          "sha256": "a2266e02bc04f124c44d8273860ad865e1c2e29612bc4d94c049f752a23d5608",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        }
+      }
+    },
+    "sample-e-harbour": {
+      "key": "sample-e-harbour",
+      "yaw": 0,
+      "time": 14,
+      "eye": [
+        -49.3148,
+        6.0969,
+        1121.5
+      ],
+      "q": [
+        0.014730707497095328,
+        -0.7342518484654964,
+        0.01594041117183272,
+        0.6785301265038345
+      ],
+      "fov": 57,
+      "trials": {
+        "original": {
+          "worldHDR": "a8450476a068dcccab7fcf63d1a7f84ed0a3bf3552ce0175e484aafe731e5b23",
+          "delta": null,
+          "main": {
+            "calls": 4,
+            "triangles": 1398157,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 847947
+            }
+          }
+        },
+        "cells": {
+          "worldHDR": "a8450476a068dcccab7fcf63d1a7f84ed0a3bf3552ce0175e484aafe731e5b23",
+          "delta": {
+            "pixels": 0,
+            "alpha": 0,
+            "maxAbs": 0
+          },
+          "main": {
+            "calls": 15,
+            "triangles": 151579,
+            "batches": [
+              "menhir-5",
+              "boulders-16",
+              "boulders-35",
+              "boulders-12",
+              "boulders-11",
+              "boulders-6",
+              "boulders-32",
+              "boulders-10",
+              "boulders-33",
+              "boulders-38",
+              "boulders-18",
+              "boulders-36",
+              "boulders-47",
+              "tree-12",
+              "tree-11"
+            ],
+            "byClass": {
+              "menhir": 2600,
+              "boulders": 84983,
+              "tree": 63996
+            }
+          }
+        },
+        "restoreOriginal": {
+          "worldHDR": "a8450476a068dcccab7fcf63d1a7f84ed0a3bf3552ce0175e484aafe731e5b23",
+          "delta": {
+            "pixels": 0,
+            "alpha": 0,
+            "maxAbs": 0
+          },
+          "main": {
+            "calls": 4,
+            "triangles": 1398157,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 847947
+            }
+          }
+        }
+      },
+      "png": {
+        "original": {
+          "sha256": "f41ec852f41c4fc4b7ae3adea5b63a190fa2fbc514bf3116e4068ed78423ad55",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        },
+        "cells": {
+          "sha256": "f41ec852f41c4fc4b7ae3adea5b63a190fa2fbc514bf3116e4068ed78423ad55",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        },
+        "restoreOriginal": {
+          "sha256": "f41ec852f41c4fc4b7ae3adea5b63a190fa2fbc514bf3116e4068ed78423ad55",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        }
+      }
+    },
+    "sample-f-hillside": {
+      "key": "sample-f-hillside",
+      "yaw": 0,
+      "time": 14,
+      "eye": [
+        1040.6682,
+        61.5086,
+        591.5865
+      ],
+      "q": [
+        0.18707634146308863,
+        -0.10146136691099782,
+        0.019429882402105244,
+        0.9768984149640014
+      ],
+      "fov": 57,
+      "trials": {
+        "original": {
+          "worldHDR": "9d092c6dbb2e9801344d1ac3e249acd520cdec394878f0281428ceae06f934e7",
+          "delta": null,
+          "main": {
+            "calls": 4,
+            "triangles": 1398157,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 847947
+            }
+          }
+        },
+        "cells": {
+          "worldHDR": "9d092c6dbb2e9801344d1ac3e249acd520cdec394878f0281428ceae06f934e7",
+          "delta": {
+            "pixels": 0,
+            "alpha": 0,
+            "maxAbs": 0
+          },
+          "main": {
+            "calls": 21,
+            "triangles": 281359,
+            "batches": [
+              "menhir-5",
+              "menhir-3",
+              "menhir-1",
+              "menhir-9",
+              "boulders-12",
+              "boulders-11",
+              "boulders-6",
+              "boulders-2",
+              "boulders-10",
+              "boulders-5",
+              "boulders-13",
+              "boulders-14",
+              "boulders-3",
+              "boulders-0",
+              "boulders-7",
+              "boulders-9",
+              "boulders-8",
+              "boulders-49",
+              "tree-5",
+              "tree-9",
+              "tree-8"
+            ],
+            "byClass": {
+              "menhir": 10400,
+              "boulders": 174965,
+              "tree": 95994
+            }
+          }
+        },
+        "restoreOriginal": {
+          "worldHDR": "9d092c6dbb2e9801344d1ac3e249acd520cdec394878f0281428ceae06f934e7",
+          "delta": {
+            "pixels": 0,
+            "alpha": 0,
+            "maxAbs": 0
+          },
+          "main": {
+            "calls": 4,
+            "triangles": 1398157,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 847947
+            }
+          }
+        }
+      },
+      "png": {
+        "original": {
+          "sha256": "dc7f66154f2c520de92d3a77198dd4db46fcede072a13e32b3c3adc7ddf76a2b",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        },
+        "cells": {
+          "sha256": "dc7f66154f2c520de92d3a77198dd4db46fcede072a13e32b3c3adc7ddf76a2b",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        },
+        "restoreOriginal": {
+          "sha256": "dc7f66154f2c520de92d3a77198dd4db46fcede072a13e32b3c3adc7ddf76a2b",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        }
+      }
+    },
+    "sample-g-rail": {
+      "key": "sample-g-rail",
+      "yaw": 0,
+      "time": 14,
+      "eye": [
+        337.8563,
+        9.6,
+        844.5
+      ],
+      "q": [
+        0.0042956255745017925,
+        0.7668403876967841,
+        -0.005132508643737493,
+        0.6418029485387173
+      ],
+      "fov": 57,
+      "trials": {
+        "original": {
+          "worldHDR": "3f6e7748b91aa70dd2d4d89a45131ba538f7a80a8b53695a682a8d24b919d182",
+          "delta": null,
+          "main": {
+            "calls": 4,
+            "triangles": 1398157,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 847947
+            }
+          }
+        },
+        "cells": {
+          "worldHDR": "7c95b66204db3e971bbd7d4f42f2c391c8234f2e7918c25188c26ee5d7de72fa",
+          "delta": {
+            "pixels": 6,
+            "alpha": 0,
+            "maxAbs": 0.00048828125
+          },
+          "main": {
+            "calls": 15,
+            "triangles": 160384,
+            "batches": [
+              "menhir-4",
+              "menhir-0",
+              "menhir-7",
+              "boulders-30",
+              "boulders-31",
+              "boulders-37",
+              "boulders-27",
+              "boulders-22",
+              "boulders-34",
+              "boulders-45",
+              "boulders-42",
+              "boulders-43",
+              "boulders-50",
+              "tree-14",
+              "tree-13"
+            ],
+            "byClass": {
+              "menhir": 36400,
+              "boulders": 59988,
+              "tree": 63996
+            }
+          }
+        },
+        "restoreOriginal": {
+          "worldHDR": "bdb6e1393a09f687d92ace68f8eb4586cd779ce997529aea816c2b19a4dd1ab0",
+          "delta": {
+            "pixels": 2,
+            "alpha": 0,
+            "maxAbs": 0.0001220703125
+          },
+          "main": {
+            "calls": 4,
+            "triangles": 1398157,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 847947
+            }
+          }
+        }
+      },
+      "png": {
+        "original": {
+          "sha256": "6a6cab5920bff32c68b2d56808105cca8a97bb2e062f672d8d31d72cdbacfe8b",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        },
+        "cells": {
+          "sha256": "a5256904bb6cdc059fe228822ee082faf400bd85e7090cd440f7f037f12af408",
+          "comparedTo": "original",
+          "pixels": 1,
+          "over2": 0,
+          "max": 1
+        },
+        "restoreOriginal": {
+          "sha256": "6a6cab5920bff32c68b2d56808105cca8a97bb2e062f672d8d31d72cdbacfe8b",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        }
+      }
+    },
+    "sample-h-north": {
+      "key": "sample-h-north",
+      "yaw": 0,
+      "time": 14,
+      "eye": [
+        181.0601,
+        136.1623,
+        -1212.8685
+      ],
+      "q": [
+        0.1033905527383131,
+        0.02096399872548667,
+        -0.002179647308778166,
+        0.9944174945662979
+      ],
+      "fov": 57,
+      "trials": {
+        "original": {
+          "worldHDR": "6a3a8b976340972bcab7c68d67bb5d64f185d19d277094a090a50ff4236e159d",
+          "delta": null,
+          "main": {
+            "calls": 4,
+            "triangles": 1398157,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 847947
+            }
+          }
+        },
+        "cells": {
+          "worldHDR": "6a3a8b976340972bcab7c68d67bb5d64f185d19d277094a090a50ff4236e159d",
+          "delta": {
+            "pixels": 0,
+            "alpha": 0,
+            "maxAbs": 0
+          },
+          "main": {
+            "calls": 0,
+            "triangles": 0,
+            "batches": [],
+            "byClass": {}
+          }
+        },
+        "restoreOriginal": {
+          "worldHDR": "6a3a8b976340972bcab7c68d67bb5d64f185d19d277094a090a50ff4236e159d",
+          "delta": {
+            "pixels": 0,
+            "alpha": 0,
+            "maxAbs": 0
+          },
+          "main": {
+            "calls": 4,
+            "triangles": 1398157,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 847947
+            }
+          }
+        }
+      },
+      "png": {
+        "original": {
+          "sha256": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        },
+        "cells": {
+          "sha256": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        },
+        "restoreOriginal": {
+          "sha256": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546",
+          "comparedTo": "original",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        }
+      }
+    },
+    "art-a-street-turn-180": {
+      "key": "art-a-street",
+      "yaw": 180,
+      "time": 14,
+      "eye": [
+        278.8,
+        10.488,
+        936
+      ],
+      "q": [
+        -0.000032237959341941766,
+        0.9999462663720154,
+        0.003277842930440409,
+        0.009834585659995692
+      ],
+      "fov": 35.63777782904556,
+      "trials": {
+        "cells": {
+          "worldHDR": "8734726ed51856ab6ac6676319a8898c2ceaa173b386af81f9babb3b4c333bb2",
+          "delta": null,
+          "main": {
+            "calls": 0,
+            "triangles": 0,
+            "batches": [],
+            "byClass": {}
+          }
+        },
+        "original": {
+          "worldHDR": "3523d7b033c14bd3e5a3c26b5e9c450a2dd8e098ea46c0dc5d9e2a54a6b7b1ee",
+          "delta": {
+            "pixels": 3,
+            "alpha": 0,
+            "maxAbs": 0.000244140625
+          },
+          "main": {
+            "calls": 4,
+            "triangles": 1398157,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 847947
+            }
+          }
+        },
+        "restoreCells": {
+          "worldHDR": "8734726ed51856ab6ac6676319a8898c2ceaa173b386af81f9babb3b4c333bb2",
+          "delta": {
+            "pixels": 0,
+            "alpha": 0,
+            "maxAbs": 0
+          },
+          "main": {
+            "calls": 0,
+            "triangles": 0,
+            "batches": [],
+            "byClass": {}
+          }
+        }
+      },
+      "png": {
+        "cells": {
+          "sha256": "a431b7028b294ceaaa2a6b97129412fc27a8704a7781acc9e477945d80e2fcdb",
+          "comparedTo": "cells",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        },
+        "original": {
+          "sha256": "a431b7028b294ceaaa2a6b97129412fc27a8704a7781acc9e477945d80e2fcdb",
+          "comparedTo": "cells",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        },
+        "restoreCells": {
+          "sha256": "a431b7028b294ceaaa2a6b97129412fc27a8704a7781acc9e477945d80e2fcdb",
+          "comparedTo": "cells",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        }
+      }
+    },
+    "sample-e-harbour-turn-90": {
+      "key": "sample-e-harbour",
+      "yaw": 90,
+      "time": 14,
+      "eye": [
+        -49.3148,
+        6.0969,
+        1121.5
+      ],
+      "q": [
+        0.021687755997376337,
+        -0.03940120745848258,
+        0.0008553896716330979,
+        0.9989877148389372
+      ],
+      "fov": 57,
+      "trials": {
+        "cells": {
+          "worldHDR": "d517e14bc995743af91c839e08a38856ad2e21f33d417c5496a4a0e6950adb6d",
+          "delta": null,
+          "main": {
+            "calls": 47,
+            "triangles": 1081195,
+            "batches": [
+              "lighthouse-0",
+              "menhir-8",
+              "menhir-6",
+              "menhir-2",
+              "menhir-3",
+              "menhir-9",
+              "menhir-1",
+              "boulders-28",
+              "boulders-12",
+              "boulders-21",
+              "boulders-20",
+              "boulders-17",
+              "boulders-1",
+              "boulders-2",
+              "boulders-4",
+              "boulders-41",
+              "boulders-39",
+              "boulders-15",
+              "boulders-13",
+              "boulders-26",
+              "boulders-40",
+              "boulders-14",
+              "boulders-0",
+              "boulders-3",
+              "boulders-19",
+              "boulders-25",
+              "boulders-7",
+              "boulders-9",
+              "boulders-46",
+              "boulders-8",
+              "boulders-23",
+              "boulders-29",
+              "boulders-48",
+              "boulders-51",
+              "boulders-44",
+              "boulders-49",
+              "tree-10",
+              "tree-2",
+              "tree-3",
+              "tree-0",
+              "tree-4",
+              "tree-1",
+              "tree-7",
+              "tree-6",
+              "tree-5",
+              "tree-9",
+              "tree-8"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 15600,
+              "boulders": 284943,
+              "tree": 719955
+            }
+          }
+        },
+        "original": {
+          "worldHDR": "d517e14bc995743af91c839e08a38856ad2e21f33d417c5496a4a0e6950adb6d",
+          "delta": {
+            "pixels": 0,
+            "alpha": 0,
+            "maxAbs": 0
+          },
+          "main": {
+            "calls": 4,
+            "triangles": 1398157,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 847947
+            }
+          }
+        },
+        "restoreCells": {
+          "worldHDR": "d517e14bc995743af91c839e08a38856ad2e21f33d417c5496a4a0e6950adb6d",
+          "delta": {
+            "pixels": 0,
+            "alpha": 0,
+            "maxAbs": 0
+          },
+          "main": {
+            "calls": 47,
+            "triangles": 1081195,
+            "batches": [
+              "lighthouse-0",
+              "menhir-8",
+              "menhir-6",
+              "menhir-2",
+              "menhir-3",
+              "menhir-9",
+              "menhir-1",
+              "boulders-28",
+              "boulders-12",
+              "boulders-21",
+              "boulders-20",
+              "boulders-17",
+              "boulders-1",
+              "boulders-2",
+              "boulders-4",
+              "boulders-41",
+              "boulders-39",
+              "boulders-15",
+              "boulders-13",
+              "boulders-26",
+              "boulders-40",
+              "boulders-14",
+              "boulders-0",
+              "boulders-3",
+              "boulders-19",
+              "boulders-25",
+              "boulders-7",
+              "boulders-9",
+              "boulders-46",
+              "boulders-8",
+              "boulders-23",
+              "boulders-29",
+              "boulders-48",
+              "boulders-51",
+              "boulders-44",
+              "boulders-49",
+              "tree-10",
+              "tree-2",
+              "tree-3",
+              "tree-0",
+              "tree-4",
+              "tree-1",
+              "tree-7",
+              "tree-6",
+              "tree-5",
+              "tree-9",
+              "tree-8"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 15600,
+              "boulders": 284943,
+              "tree": 719955
+            }
+          }
+        }
+      },
+      "png": {
+        "cells": {
+          "sha256": "9533919a6414a353b5345ac11b361970be7b06f4b4192dec88c802981051ad53",
+          "comparedTo": "cells",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        },
+        "original": {
+          "sha256": "9533919a6414a353b5345ac11b361970be7b06f4b4192dec88c802981051ad53",
+          "comparedTo": "cells",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        },
+        "restoreCells": {
+          "sha256": "9533919a6414a353b5345ac11b361970be7b06f4b4192dec88c802981051ad53",
+          "comparedTo": "cells",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        }
+      }
+    },
+    "sample-h-north-turn-180": {
+      "key": "sample-h-north",
+      "yaw": 180,
+      "time": 14,
+      "eye": [
+        181.0601,
+        136.1623,
+        -1212.8685
+      ],
+      "q": [
+        -0.0021796473087781596,
+        0.9944174945662979,
+        -0.1033905527383131,
+        -0.020963998725486606
+      ],
+      "fov": 57,
+      "trials": {
+        "cells": {
+          "worldHDR": "7adf62096f2b4b465872cd736fc5f04c6cb1d9616f47aa7d44bcdb9119739eee",
+          "delta": null,
+          "main": {
+            "calls": 35,
+            "triangles": 892115,
+            "batches": [
+              "menhir-6",
+              "menhir-4",
+              "boulders-23",
+              "boulders-14",
+              "boulders-40",
+              "boulders-39",
+              "boulders-15",
+              "boulders-41",
+              "boulders-4",
+              "boulders-2",
+              "boulders-20",
+              "boulders-17",
+              "boulders-1",
+              "boulders-10",
+              "boulders-21",
+              "boulders-6",
+              "boulders-11",
+              "boulders-12",
+              "boulders-28",
+              "boulders-18",
+              "boulders-38",
+              "boulders-16",
+              "boulders-30",
+              "boulders-33",
+              "boulders-32",
+              "boulders-35",
+              "tree-5",
+              "tree-1",
+              "tree-0",
+              "tree-4",
+              "tree-3",
+              "tree-2",
+              "tree-10",
+              "tree-11",
+              "tree-12"
+            ],
+            "byClass": {
+              "menhir": 5200,
+              "boulders": 214957,
+              "tree": 671958
+            }
+          }
+        },
+        "original": {
+          "worldHDR": "7adf62096f2b4b465872cd736fc5f04c6cb1d9616f47aa7d44bcdb9119739eee",
+          "delta": {
+            "pixels": 0,
+            "alpha": 0,
+            "maxAbs": 0
+          },
+          "main": {
+            "calls": 4,
+            "triangles": 1398157,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 847947
+            }
+          }
+        },
+        "restoreCells": {
+          "worldHDR": "7adf62096f2b4b465872cd736fc5f04c6cb1d9616f47aa7d44bcdb9119739eee",
+          "delta": {
+            "pixels": 0,
+            "alpha": 0,
+            "maxAbs": 0
+          },
+          "main": {
+            "calls": 35,
+            "triangles": 892115,
+            "batches": [
+              "menhir-6",
+              "menhir-4",
+              "boulders-23",
+              "boulders-14",
+              "boulders-40",
+              "boulders-39",
+              "boulders-15",
+              "boulders-41",
+              "boulders-4",
+              "boulders-2",
+              "boulders-20",
+              "boulders-17",
+              "boulders-1",
+              "boulders-10",
+              "boulders-21",
+              "boulders-6",
+              "boulders-11",
+              "boulders-12",
+              "boulders-28",
+              "boulders-18",
+              "boulders-38",
+              "boulders-16",
+              "boulders-30",
+              "boulders-33",
+              "boulders-32",
+              "boulders-35",
+              "tree-5",
+              "tree-1",
+              "tree-0",
+              "tree-4",
+              "tree-3",
+              "tree-2",
+              "tree-10",
+              "tree-11",
+              "tree-12"
+            ],
+            "byClass": {
+              "menhir": 5200,
+              "boulders": 214957,
+              "tree": 671958
+            }
+          }
+        }
+      },
+      "png": {
+        "cells": {
+          "sha256": "0909d42b705b9936cb678fb2131c05f2ee8d81b999f59df10666cab584df751f",
+          "comparedTo": "cells",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        },
+        "original": {
+          "sha256": "0909d42b705b9936cb678fb2131c05f2ee8d81b999f59df10666cab584df751f",
+          "comparedTo": "cells",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        },
+        "restoreCells": {
+          "sha256": "0909d42b705b9936cb678fb2131c05f2ee8d81b999f59df10666cab584df751f",
+          "comparedTo": "cells",
+          "pixels": 0,
+          "over2": 0,
+          "max": 0
+        }
+      }
+    }
+  },
+  "exceptions": [],
+  "stage": "complete",
+  "setup": {
+    "classes": {
+      "lighthouse": {
+        "instances": 1,
+        "cells": 1,
+        "sharedGeometry": true,
+        "sharedMaterial": true,
+        "castsShadow": false
+      },
+      "menhir": {
+        "instances": 21,
+        "cells": 10,
+        "sharedGeometry": true,
+        "sharedMaterial": true,
+        "castsShadow": false
+      },
+      "boulders": {
+        "instances": 87,
+        "cells": 52,
+        "sharedGeometry": true,
+        "sharedMaterial": true,
+        "castsShadow": false
+      },
+      "tree": {
+        "instances": 53,
+        "cells": 15,
+        "sharedGeometry": true,
+        "sharedMaterial": true,
+        "castsShadow": false
+      }
+    },
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "collisionCells": 159,
+    "collisionRecords": 2124
+  },
+  "network": {
+    "coverage": {
+      "localHTTP": 273,
+      "serverReceipts": 273,
+      "paired": 273,
+      "get200SourceAndWire": 273,
+      "browserBlobs": 16
+    },
+    "verifiedCanceled": 3,
+    "clean": true,
+    "problems": []
+  },
+  "ok": true
+}

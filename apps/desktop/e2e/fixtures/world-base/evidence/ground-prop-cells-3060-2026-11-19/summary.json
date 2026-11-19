@@ -1,0 +1,408 @@
+{
+  "groundSource": "f2c433cd83a04173e52cbac77382bcbe2728efbd",
+  "lakeSource": "9e6dfe0ce583c862fdaa1d858bfbe50533552e2f",
+  "ground": [
+    {
+      "name": "art-a-street",
+      "originalCalls": 4,
+      "cellCalls": 29,
+      "originalTriangles": 1398157,
+      "cellTriangles": 841324,
+      "changedPixels": 0,
+      "maxByteDifference": 0
+    },
+    {
+      "name": "art-b-konbini",
+      "originalCalls": 4,
+      "cellCalls": 29,
+      "originalTriangles": 1398157,
+      "cellTriangles": 417662,
+      "changedPixels": 0,
+      "maxByteDifference": 0
+    },
+    {
+      "name": "art-c-alley",
+      "originalCalls": 4,
+      "cellCalls": 4,
+      "originalTriangles": 1398157,
+      "cellTriangles": 19996,
+      "changedPixels": 0,
+      "maxByteDifference": 0
+    },
+    {
+      "name": "art-d-laundry",
+      "originalCalls": 4,
+      "cellCalls": 36,
+      "originalTriangles": 1398157,
+      "cellTriangles": 981014,
+      "changedPixels": 0,
+      "maxByteDifference": 0
+    },
+    {
+      "name": "sample-e-harbour",
+      "originalCalls": 4,
+      "cellCalls": 15,
+      "originalTriangles": 1398157,
+      "cellTriangles": 151579,
+      "changedPixels": 0,
+      "maxByteDifference": 0
+    },
+    {
+      "name": "sample-f-hillside",
+      "originalCalls": 4,
+      "cellCalls": 21,
+      "originalTriangles": 1398157,
+      "cellTriangles": 281359,
+      "changedPixels": 0,
+      "maxByteDifference": 0
+    },
+    {
+      "name": "sample-g-rail",
+      "originalCalls": 4,
+      "cellCalls": 15,
+      "originalTriangles": 1398157,
+      "cellTriangles": 160384,
+      "changedPixels": 1,
+      "maxByteDifference": 1
+    },
+    {
+      "name": "sample-h-north",
+      "originalCalls": 4,
+      "cellCalls": 0,
+      "originalTriangles": 1398157,
+      "cellTriangles": 0,
+      "changedPixels": 0,
+      "maxByteDifference": 0
+    },
+    {
+      "name": "art-a-street-turn-180",
+      "originalCalls": 4,
+      "cellCalls": 0,
+      "originalTriangles": 1398157,
+      "cellTriangles": 0,
+      "changedPixels": 0,
+      "maxByteDifference": 0
+    },
+    {
+      "name": "sample-e-harbour-turn-90",
+      "originalCalls": 4,
+      "cellCalls": 47,
+      "originalTriangles": 1398157,
+      "cellTriangles": 1081195,
+      "changedPixels": 0,
+      "maxByteDifference": 0
+    },
+    {
+      "name": "sample-h-north-turn-180",
+      "originalCalls": 4,
+      "cellCalls": 35,
+      "originalTriangles": 1398157,
+      "cellTriangles": 892115,
+      "changedPixels": 0,
+      "maxByteDifference": 0
+    }
+  ],
+  "lakeCamera": [
+    656.2764394045487,
+    142.80404512034525,
+    -940.6795630254011
+  ],
+  "lakeTarget": [
+    640,
+    400
+  ],
+  "timing": [
+    {
+      "round": 1,
+      "variant": "before",
+      "head": "8fddab1578056af8b4f4a0d4191e749ba6e5f4dd",
+      "samples": [
+        {
+          "name": "art-a-street",
+          "frames": 611,
+          "sampleMs": 10123.100000000006,
+          "fps": 60.35700526518553,
+          "p95Ms": 30.700000000004366,
+          "calls": 1593.0360065466448,
+          "triangles": 7779893.826513912,
+          "meters": null,
+          "over25ms": 47
+        },
+        {
+          "name": "art-b-konbini",
+          "frames": 641,
+          "sampleMs": 10123.099999999991,
+          "fps": 63.320524345309295,
+          "p95Ms": 15.599999999991269,
+          "calls": 1051.547581903276,
+          "triangles": 7643119.767550702,
+          "meters": null,
+          "over25ms": 17
+        },
+        {
+          "name": "art-c-alley",
+          "frames": 658,
+          "sampleMs": 10123.100000000006,
+          "fps": 64.99985182404596,
+          "p95Ms": 15.5,
+          "calls": 977.8449848024316,
+          "triangles": 8576448.079027355,
+          "meters": null,
+          "over25ms": 0
+        },
+        {
+          "name": "art-d-laundry",
+          "frames": 657,
+          "sampleMs": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "calls": 914.0882800608828,
+          "triangles": 8368262.649923896,
+          "meters": null,
+          "over25ms": 0
+        },
+        {
+          "name": "third",
+          "frames": 194,
+          "sampleMs": 3123.199999999997,
+          "fps": 62.11577868852465,
+          "p95Ms": 15.60000000000582,
+          "calls": 1692.541237113402,
+          "triangles": 8325571.412371134,
+          "meters": 9.812775829942582,
+          "over25ms": 8
+        },
+        {
+          "name": "first",
+          "frames": 188,
+          "sampleMs": 3123,
+          "fps": 60.19852705731668,
+          "p95Ms": 30.70000000001164,
+          "calls": 1540.5797872340424,
+          "triangles": 8242513.10106383,
+          "meters": 9.760013052761751,
+          "over25ms": 15
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "variant": "after",
+      "head": "f2c433cd83a04173e52cbac77382bcbe2728efbd",
+      "samples": [
+        {
+          "name": "art-a-street",
+          "frames": 610,
+          "sampleMs": 10123.100000000006,
+          "fps": 60.258221295848074,
+          "p95Ms": 30.70000000001164,
+          "calls": 1617.3639344262294,
+          "triangles": 7219152.527868852,
+          "meters": null,
+          "over25ms": 48
+        },
+        {
+          "name": "art-b-konbini",
+          "frames": 622,
+          "sampleMs": 10122.800000000003,
+          "fps": 61.44544987552849,
+          "p95Ms": 30.69999999999709,
+          "calls": 1075.8601286173634,
+          "triangles": 6659145.909967845,
+          "meters": null,
+          "over25ms": 36
+        },
+        {
+          "name": "art-c-alley",
+          "frames": 658,
+          "sampleMs": 10123,
+          "fps": 65.00049392472587,
+          "p95Ms": 15.5,
+          "calls": 977.7963525835867,
+          "triangles": 7198283.966565349,
+          "meters": null,
+          "over25ms": 0
+        },
+        {
+          "name": "art-d-laundry",
+          "frames": 658,
+          "sampleMs": 10123.099999999991,
+          "fps": 64.99985182404605,
+          "p95Ms": 15.5,
+          "calls": 946.1185410334347,
+          "triangles": 7951121.5866261395,
+          "meters": null,
+          "over25ms": 0
+        },
+        {
+          "name": "third",
+          "frames": 171,
+          "sampleMs": 3153.699999999997,
+          "fps": 54.22202492310624,
+          "p95Ms": 30.80000000000291,
+          "calls": 1731.6900584795321,
+          "triangles": 7959119.380116959,
+          "meters": 9.851676676820388,
+          "over25ms": 34
+        },
+        {
+          "name": "first",
+          "frames": 194,
+          "sampleMs": 3138.399999999994,
+          "fps": 61.81493754779517,
+          "p95Ms": 30.69999999999709,
+          "calls": 1577.5876288659795,
+          "triangles": 7896125.572164948,
+          "meters": 9.749487078509347,
+          "over25ms": 10
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "variant": "after",
+      "head": "f2c433cd83a04173e52cbac77382bcbe2728efbd",
+      "samples": [
+        {
+          "name": "art-a-street",
+          "frames": 551,
+          "sampleMs": 10123.200000000004,
+          "fps": 54.429429429429405,
+          "p95Ms": 30.80000000000291,
+          "calls": 1616.6624319419238,
+          "triangles": 7214941.8965517245,
+          "meters": null,
+          "over25ms": 107
+        },
+        {
+          "name": "art-b-konbini",
+          "frames": 618,
+          "sampleMs": 10122.899999999994,
+          "fps": 61.0496991968705,
+          "p95Ms": 30.69999999999709,
+          "calls": 1074.8640776699028,
+          "triangles": 6654414.446601942,
+          "meters": null,
+          "over25ms": 40
+        },
+        {
+          "name": "art-c-alley",
+          "frames": 653,
+          "sampleMs": 10123.100000000006,
+          "fps": 64.50593197735867,
+          "p95Ms": 15.5,
+          "calls": 977.7075038284839,
+          "triangles": 7198278.280245023,
+          "meters": null,
+          "over25ms": 5
+        },
+        {
+          "name": "art-d-laundry",
+          "frames": 657,
+          "sampleMs": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "calls": 946.1948249619483,
+          "triangles": 7951126.4687975645,
+          "meters": null,
+          "over25ms": 0
+        },
+        {
+          "name": "third",
+          "frames": 166,
+          "sampleMs": 3153.899999999994,
+          "fps": 52.633247725038935,
+          "p95Ms": 30.80000000000291,
+          "calls": 1731.2710843373493,
+          "triangles": 7960840.13253012,
+          "meters": 9.836594286972549,
+          "over25ms": 39
+        },
+        {
+          "name": "first",
+          "frames": 176,
+          "sampleMs": 3138.399999999994,
+          "fps": 56.07953097119562,
+          "p95Ms": 30.80000000000291,
+          "calls": 1576,
+          "triangles": 7893264.5397727275,
+          "meters": 9.818456618333366,
+          "over25ms": 27
+        }
+      ]
+    },
+    {
+      "round": 4,
+      "variant": "before",
+      "head": "8fddab1578056af8b4f4a0d4191e749ba6e5f4dd",
+      "samples": [
+        {
+          "name": "art-a-street",
+          "frames": 436,
+          "sampleMs": 10138.599999999999,
+          "fps": 43.003965044483465,
+          "p95Ms": 30.900000000001455,
+          "calls": 1587.8922018348624,
+          "triangles": 7741555.256880734,
+          "meters": null,
+          "over25ms": 220
+        },
+        {
+          "name": "art-b-konbini",
+          "frames": 643,
+          "sampleMs": 10123,
+          "fps": 63.51871974711054,
+          "p95Ms": 15.5,
+          "calls": 1046.1601866251945,
+          "triangles": 7617288.853810265,
+          "meters": null,
+          "over25ms": 15
+        },
+        {
+          "name": "art-c-alley",
+          "frames": 657,
+          "sampleMs": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "calls": 978.5981735159818,
+          "triangles": 8591294.669710808,
+          "meters": null,
+          "over25ms": 0
+        },
+        {
+          "name": "art-d-laundry",
+          "frames": 657,
+          "sampleMs": 10107.799999999988,
+          "fps": 64.99930746552175,
+          "p95Ms": 15.5,
+          "calls": 914.4535768645358,
+          "triangles": 8368286.02891933,
+          "meters": null,
+          "over25ms": 0
+        },
+        {
+          "name": "third",
+          "frames": 158,
+          "sampleMs": 3138.5,
+          "fps": 50.342520312251075,
+          "p95Ms": 30.80000000000291,
+          "calls": 1693.0379746835442,
+          "triangles": 8325729.341772152,
+          "meters": 9.815534109274223,
+          "over25ms": 46
+        },
+        {
+          "name": "first",
+          "frames": 172,
+          "sampleMs": 3138.5,
+          "fps": 54.80324996017206,
+          "p95Ms": 30.80000000000291,
+          "calls": 1540.0406976744187,
+          "triangles": 8244625.104651162,
+          "meters": 9.857471419320573,
+          "over25ms": 32
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,262 @@
+{
+  "source": "9e6dfe0ce583c862fdaa1d858bfbe50533552e2f",
+  "mode": "lake",
+  "views": {},
+  "exceptions": [],
+  "stage": "complete",
+  "setup": {
+    "classes": {
+      "lighthouse": {
+        "instances": 1,
+        "cells": 1,
+        "sharedGeometry": true,
+        "sharedMaterial": true,
+        "castsShadow": false
+      },
+      "menhir": {
+        "instances": 21,
+        "cells": 10,
+        "sharedGeometry": true,
+        "sharedMaterial": true,
+        "castsShadow": false
+      },
+      "boulders": {
+        "instances": 87,
+        "cells": 52,
+        "sharedGeometry": true,
+        "sharedMaterial": true,
+        "castsShadow": false
+      },
+      "tree": {
+        "instances": 50,
+        "cells": 13,
+        "sharedGeometry": true,
+        "sharedMaterial": true,
+        "castsShadow": false
+      }
+    },
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "collisionCells": 157,
+    "collisionRecords": 2094
+  },
+  "lake": {
+    "eye": [
+      656.2764394045487,
+      142.80404512034525,
+      -940.6795630254011
+    ],
+    "q": [
+      0.010101062926708376,
+      0.9557149939467164,
+      0.033031363576657605,
+      -0.2922597267730279
+    ],
+    "lake": [
+      735,
+      -824
+    ],
+    "size": [
+      640,
+      400
+    ],
+    "trials": {
+      "original": {
+        "mirrorHDR": "209cb2aee596ea82e88d5223e6e40899e16b2fa7b40df99b84aaebb0f4a3435a",
+        "delta": null,
+        "draws": {
+          "main": {
+            "calls": 4,
+            "triangles": 1350160,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 799950
+            }
+          },
+          "mirror": {
+            "calls": 4,
+            "triangles": 1350160,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 799950
+            }
+          }
+        },
+        "nonempty": 66351,
+        "frameClock": 52.5055,
+        "actualCaptures": 2
+      },
+      "cells": {
+        "mirrorHDR": "209cb2aee596ea82e88d5223e6e40899e16b2fa7b40df99b84aaebb0f4a3435a",
+        "delta": {
+          "pixels": 0,
+          "alpha": 0,
+          "maxAbs": 0
+        },
+        "draws": {
+          "main": {
+            "calls": 25,
+            "triangles": 316546,
+            "batches": [
+              "menhir-5",
+              "boulders-8",
+              "boulders-4",
+              "boulders-7",
+              "boulders-9",
+              "boulders-2",
+              "boulders-3",
+              "boulders-1",
+              "boulders-0",
+              "boulders-13",
+              "boulders-5",
+              "boulders-12",
+              "boulders-10",
+              "boulders-6",
+              "boulders-11",
+              "boulders-16",
+              "boulders-47",
+              "boulders-18",
+              "boulders-36",
+              "boulders-35",
+              "boulders-38",
+              "boulders-32",
+              "boulders-33",
+              "tree-10",
+              "tree-9"
+            ],
+            "byClass": {
+              "menhir": 2600,
+              "boulders": 249950,
+              "tree": 63996
+            }
+          },
+          "mirror": {
+            "calls": 16,
+            "triangles": 207559,
+            "batches": [
+              "menhir-5",
+              "boulders-11",
+              "boulders-10",
+              "boulders-12",
+              "boulders-6",
+              "boulders-1",
+              "boulders-5",
+              "boulders-4",
+              "boulders-2",
+              "boulders-8",
+              "boulders-14",
+              "boulders-13",
+              "boulders-9",
+              "boulders-0",
+              "boulders-7",
+              "boulders-3"
+            ],
+            "byClass": {
+              "menhir": 2600,
+              "boulders": 204959
+            }
+          }
+        },
+        "nonempty": 66351,
+        "frameClock": 52.5055,
+        "actualCaptures": 3
+      },
+      "restoreOriginal": {
+        "mirrorHDR": "209cb2aee596ea82e88d5223e6e40899e16b2fa7b40df99b84aaebb0f4a3435a",
+        "delta": {
+          "pixels": 0,
+          "alpha": 0,
+          "maxAbs": 0
+        },
+        "draws": {
+          "main": {
+            "calls": 4,
+            "triangles": 1350160,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 799950
+            }
+          },
+          "mirror": {
+            "calls": 4,
+            "triangles": 1350160,
+            "batches": [
+              "lighthouse-whole",
+              "menhir-whole",
+              "boulders-whole",
+              "tree-whole"
+            ],
+            "byClass": {
+              "lighthouse": 60697,
+              "menhir": 54600,
+              "boulders": 434913,
+              "tree": 799950
+            }
+          }
+        },
+        "nonempty": 66351,
+        "frameClock": 52.5055,
+        "actualCaptures": 4
+      }
+    },
+    "png": {
+      "original": {
+        "sha256": "1381ee864d70cc59a82291b0462764ffe11c5c0726ed2991437e4a2611636a9b",
+        "comparedTo": "original",
+        "pixels": 0,
+        "over2": 0,
+        "max": 0
+      },
+      "cells": {
+        "sha256": "bda85e6a6a2bdb1ff89e30c0dd2f106cfdb50994103c180f110693a78198105a",
+        "comparedTo": "original",
+        "pixels": 168,
+        "over2": 0,
+        "max": 1
+      },
+      "restoreOriginal": {
+        "sha256": "daf2d8d755f48e5bbcd50da13188299ed69907f1927d8072aac61889ef79d457",
+        "comparedTo": "original",
+        "pixels": 301,
+        "over2": 0,
+        "max": 1
+      }
+    }
+  },
+  "network": {
+    "coverage": {
+      "localHTTP": 302,
+      "serverReceipts": 302,
+      "paired": 302,
+      "get200SourceAndWire": 302,
+      "browserBlobs": 16
+    },
+    "verifiedCanceled": 4,
+    "clean": true,
+    "problems": []
+  },
+  "ok": true
+}
