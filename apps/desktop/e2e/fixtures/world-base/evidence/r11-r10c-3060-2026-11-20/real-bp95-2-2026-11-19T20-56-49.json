@@ -1,0 +1,208 @@
+{
+  "label": "bp95-2",
+  "at": "2026-11-19T20:56:49.709Z",
+  "url": "http://127.0.0.1:4174/?time=evening",
+  "expect": {
+    "width": 1440,
+    "height": 900
+  },
+  "flags": {
+    "vsyncOff": true,
+    "frameLimitOff": true,
+    "scale": "1"
+  },
+  "results": [
+    {
+      "view": "art-a-street",
+      "buffer": [
+        1440,
+        900
+      ],
+      "renderCalls": 1612,
+      "triangles": 7865144,
+      "rAFcount": 91,
+      "frameP50": 21.1,
+      "frameP95": 27.6,
+      "frameMax": 35.6,
+      "gpuCount": 1581,
+      "gpuSumMs": 1428.591,
+      "frameTotalCount": 93,
+      "gpuFrameP50": 15.138,
+      "gpuFrameP95": 19.284,
+      "gpuFrameMax": 22.483,
+      "gpuAvgPerFrame": 15.699,
+      "gpuP50": 0.006,
+      "gpuP95": 11.981,
+      "gpuMax": 20.489,
+      "timerQuery": true
+    },
+    {
+      "view": "art-b-konbini",
+      "buffer": [
+        1440,
+        900
+      ],
+      "renderCalls": 1046,
+      "triangles": 7654995,
+      "rAFcount": 124,
+      "frameP50": 14.9,
+      "frameP95": 33.5,
+      "frameMax": 36,
+      "gpuCount": 2142,
+      "gpuSumMs": 1873.109,
+      "frameTotalCount": 126,
+      "gpuFrameP50": 14.848,
+      "gpuFrameP95": 18.33,
+      "gpuFrameMax": 20.257,
+      "gpuAvgPerFrame": 15.106,
+      "gpuP50": 0.006,
+      "gpuP95": 11.469,
+      "gpuMax": 18.83,
+      "timerQuery": true
+    },
+    {
+      "view": "art-c-alley",
+      "buffer": [
+        1440,
+        900
+      ],
+      "renderCalls": 989,
+      "triangles": 8662354,
+      "rAFcount": 137,
+      "frameP50": 14.4,
+      "frameP95": 17.8,
+      "frameMax": 32.5,
+      "gpuCount": 2257,
+      "gpuSumMs": 1915.94,
+      "frameTotalCount": 133,
+      "gpuFrameP50": 14.808,
+      "gpuFrameP95": 16.733,
+      "gpuFrameMax": 20.717,
+      "gpuAvgPerFrame": 13.985,
+      "gpuP50": 0.006,
+      "gpuP95": 10.784,
+      "gpuMax": 19.025,
+      "timerQuery": true
+    },
+    {
+      "view": "art-d-laundry",
+      "buffer": [
+        1440,
+        900
+      ],
+      "renderCalls": 920,
+      "triangles": 8390513,
+      "rAFcount": 144,
+      "frameP50": 13.9,
+      "frameP95": 16.7,
+      "frameMax": 29.4,
+      "gpuCount": 2482,
+      "gpuSumMs": 1498.672,
+      "frameTotalCount": 146,
+      "gpuFrameP50": 10.174,
+      "gpuFrameP95": 13.145,
+      "gpuFrameMax": 16.62,
+      "gpuAvgPerFrame": 10.407,
+      "gpuP50": 0.006,
+      "gpuP95": 7.202,
+      "gpuMax": 15.596,
+      "timerQuery": true
+    },
+    {
+      "view": "sample-e-harbour",
+      "buffer": [
+        1440,
+        900
+      ],
+      "renderCalls": 1536,
+      "triangles": 8248742,
+      "rAFcount": 100,
+      "frameP50": 20,
+      "frameP95": 34.8,
+      "frameMax": 35.8,
+      "gpuCount": 1734,
+      "gpuSumMs": 1647.821,
+      "frameTotalCount": 102,
+      "gpuFrameP50": 15.971,
+      "gpuFrameP95": 19.692,
+      "gpuFrameMax": 21.211,
+      "gpuAvgPerFrame": 16.478,
+      "gpuP50": 0.006,
+      "gpuP95": 13.127,
+      "gpuMax": 20.437,
+      "timerQuery": true
+    },
+    {
+      "view": "sample-f-hillside",
+      "buffer": [
+        1440,
+        900
+      ],
+      "renderCalls": 780,
+      "triangles": 8209231,
+      "rAFcount": 170,
+      "frameP50": 11.4,
+      "frameP95": 14.8,
+      "frameMax": 16.6,
+      "gpuCount": 2924,
+      "gpuSumMs": 1789.942,
+      "frameTotalCount": 172,
+      "gpuFrameP50": 10.461,
+      "gpuFrameP95": 13.666,
+      "gpuFrameMax": 14.865,
+      "gpuAvgPerFrame": 10.529,
+      "gpuP50": 0.006,
+      "gpuP95": 6.826,
+      "gpuMax": 13.972,
+      "timerQuery": true
+    },
+    {
+      "view": "sample-g-rail",
+      "buffer": [
+        1440,
+        900
+      ],
+      "renderCalls": 1550,
+      "triangles": 8503275,
+      "rAFcount": 98,
+      "frameP50": 20,
+      "frameP95": 34.6,
+      "frameMax": 35.3,
+      "gpuCount": 1700,
+      "gpuSumMs": 1777.486,
+      "frameTotalCount": 100,
+      "gpuFrameP50": 18.126,
+      "gpuFrameP95": 22.528,
+      "gpuFrameMax": 24.994,
+      "gpuAvgPerFrame": 18.138,
+      "gpuP50": 0.006,
+      "gpuP95": 13.262,
+      "gpuMax": 23.762,
+      "timerQuery": true
+    },
+    {
+      "view": "sample-h-north",
+      "buffer": [
+        1440,
+        900
+      ],
+      "renderCalls": 714,
+      "triangles": 6703234,
+      "rAFcount": 170,
+      "frameP50": 11.4,
+      "frameP95": 14.9,
+      "frameMax": 30.4,
+      "gpuCount": 2924,
+      "gpuSumMs": 1640.323,
+      "frameTotalCount": 172,
+      "gpuFrameP50": 9.83,
+      "gpuFrameP95": 12.549,
+      "gpuFrameMax": 15.647,
+      "gpuAvgPerFrame": 9.649,
+      "gpuP50": 0.006,
+      "gpuP95": 6.274,
+      "gpuMax": 14.633,
+      "timerQuery": true
+    }
+  ]
+}
