@@ -3,31 +3,25 @@ import * as THREE from 'three';
 // Art round 10 (#254 X-51): indoor light spilling out of lit shops onto the paving in front of the door. Every shop room
 // registered in ctx.services.shopInteriors (round 26, the laundromat since round 11) gets one horizontal patch:
 // as wide as its street front, `depth` m out, strongest at the wall and smoothly gone at the far and side edges. One
-// InstancedMesh (one draw call), additive, depth-tested, no depth write, and the framebuffer alpha (outline coverage mask,
+// Mesh (one merged geometry, one draw call), additive, depth-tested, no depth write, and the framebuffer alpha (outline coverage mask,
 // toon.js) is left alone, exactly as in door-glow.js. Strength and colours live in evening.json ("shopSpill"); evening only.
 // The deck height is found with rays at build time so steps and kerbs do not leave the patch floating: it is laid at the
 // door landing and cut short where the paving drops away.
 
 const VERT = /* glsl */`
-attribute vec2 aSize;
-attribute vec2 aRange;
 attribute vec2 aSpan;
+attribute float aV;
 attribute vec3 aColor;
-varying vec2 vUv;
-varying vec2 vSize;
 varying float vV;
 varying vec3 vColor;
 varying vec2 vX;
 void main() {
-  vX = vec2( aSpan.x + uv.x * aSize.x, aSpan.y );
-  vUv = uv; vSize = aSize; vColor = aColor; vV = mix( aRange.x, aRange.y, uv.y );
-  gl_Position = projectionMatrix * modelViewMatrix * ( instanceMatrix * vec4( position, 1.0 ) );
+  vX = aSpan; vV = aV; vColor = aColor;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
 }`;
 // v = 0 at the wall, 1 at the far edge. Sides fade over uEdge metres, the far side by (1 - smoothstep(v))^uPow.
 const FRAG = /* glsl */`
 uniform float uStrength, uPow, uEdge;
-varying vec2 vUv;
-varying vec2 vSize;
 varying vec3 vColor;
 varying float vV;
 varying vec2 vX;
@@ -99,30 +93,45 @@ export function groundSpillFronts(fronts, roots, p, offset = new THREE.Vector3()
     }
     return best;
   };
-  const out = [], cell = p.cell ?? 0.25;
+  const out = [], cell = p.cell ?? 0.25, lift = 0.020, maxStep = p.maxStep ?? 0.03;
   for (const f of fronts) {
     tris = trianglesNear(f);
     n.fromArray(f.normal); t.set(-n.z, 0, n.x);
-    // The patch is cut into small flat cells, each laid at the paving height under its centre (lamp field stays one continuous function
-    // of the whole front: x along the front, v from the wall, see aSpan / aRange), so slopes and steps are followed without a big flat
-    // plane being clipped by the ground in an oblique line. Rays start only rayLift above the room floor, so tops of vending
-    // machines, crates and shelves are never taken for ground.
+    // One regular grid per front (cell m spacing), vertices shared between neighbouring cells so the patch is seamless. Every vertex takes
+    // the paving height under it (+ lift). A triangle is kept only if its centroid's paving height matches the triangle's own plane within
+    // maxStep, so slopes are followed, and the triangles bridging a step or kerb riser are dropped instead of floating. Rays start only
+    // rayLift above the room floor, so tops of vending machines, crates and shelves are never taken for ground.
     const cols = Math.max(1, Math.ceil(f.width / cell)), cw = f.width / cols, rows = Math.max(1, Math.ceil(p.depth / cell)), rd = p.depth / rows;
-    for (let j = 0; j < cols; j++) {
-      const off = (j + 0.5) * cw - f.width / 2, cx = f.center[0] + t.x * off, cz = f.center[2] + t.z * off;
-      for (let i = 0; i < rows; i++) {
-        const d = (i + 0.5) * rd, y = hit(cx + n.x * d, f.center[1] + p.rayLift, cz + n.z * d);
-        if (y == null) continue;
-        out.push({ ...f, center: [cx, f.center[1], cz], width: cw, x0: j * cw, totalW: f.width, floor: y + 0.008, d0: i * rd, d1: (i + 1) * rd, total: p.depth, ray: 'ok' });
-      }
+    const nx = cols + 1, ny = rows + 1, pos = new Float32Array(nx * ny * 3), span = new Float32Array(nx * ny * 2), vv = new Float32Array(nx * ny);
+    const ok = new Uint8Array(nx * ny), x0 = f.center[0] - t.x * f.width / 2, z0 = f.center[2] - t.z * f.width / 2;
+    for (let j = 0; j < nx; j++) for (let i = 0; i < ny; i++) {
+      const k = j * ny + i, d = i * rd, x = x0 + t.x * j * cw + n.x * d, z = z0 + t.z * j * cw + n.z * d, y = hit(x, f.center[1] + p.rayLift, z);
+      if (y != null) { ok[k] = 1; pos.set([x, y + lift, z], k * 3); }
+      span.set([j * cw, f.width], k * 2); vv[k] = i / rows;
     }
+    const idx = [];
+    const tri = (A, B, C) => {
+      if (!ok[A] || !ok[B] || !ok[C]) return;
+      const ya = pos[A * 3 + 1], yb = pos[B * 3 + 1], yc = pos[C * 3 + 1];
+      const cxm = (pos[A * 3] + pos[B * 3] + pos[C * 3]) / 3, czm = (pos[A * 3 + 2] + pos[B * 3 + 2] + pos[C * 3 + 2]) / 3;
+      const g = hit(cxm, f.center[1] + p.rayLift, czm);
+      if (g == null || Math.abs((ya + yb + yc) / 3 - lift - g) > maxStep) return;
+      idx.push(A, B, C);
+    };
+    for (let j = 0; j < cols; j++) for (let i = 0; i < rows; i++) {
+      const a = j * ny + i, b = (j + 1) * ny + i, c = (j + 1) * ny + i + 1, e = j * ny + i + 1;
+      // Split along the diagonal with the smaller height change, so a kerb edge is bridged as little as possible.
+      if (Math.abs(pos[a * 3 + 1] - pos[c * 3 + 1]) <= Math.abs(pos[b * 3 + 1] - pos[e * 3 + 1])) { tri(a, b, c); tri(a, c, e); } else { tri(a, b, e); tri(b, c, e); }
+    }
+    out.push({ ...f, positions: pos, span, v: vv, index: idx, vertexCount: nx * ny, cols, rows, ray: 'ok' });
   }
   return out;
 }
 
 export function addShopSpill({ parent, fronts, params: p }) {
-  const plane = new THREE.PlaneGeometry(1, 1), n = fronts.length;
-  const sizes = new Float32Array(n * 2), ranges = new Float32Array(n * 2), spans = new Float32Array(n * 2), colors = new Float32Array(n * 3);
+  const total = fronts.reduce((a, f) => a + f.vertexCount, 0), nIdx = fronts.reduce((a, f) => a + f.index.length, 0);
+  const positions = new Float32Array(total * 3), spans = new Float32Array(total * 2), vs = new Float32Array(total), colors = new Float32Array(total * 3);
+  const index = new Uint32Array(nIdx);
   const material = new THREE.ShaderMaterial({
     name: 'shop-spill', vertexShader: VERT, fragmentShader: FRAG,
     uniforms: { uStrength: { value: p.strength }, uPow: { value: p.falloff ?? 1.5 }, uEdge: { value: p.edge ?? 0.8 } },
@@ -134,28 +143,28 @@ export function addShopSpill({ parent, fronts, params: p }) {
     blendSrcAlpha: THREE.ZeroFactor, blendDstAlpha: THREE.OneFactor,
     polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -2,
   });
-  plane.setAttribute('aSize', new THREE.InstancedBufferAttribute(sizes, 2));
-  plane.setAttribute('aRange', new THREE.InstancedBufferAttribute(ranges, 2));
-  plane.setAttribute('aSpan', new THREE.InstancedBufferAttribute(spans, 2));
-  plane.setAttribute('aColor', new THREE.InstancedBufferAttribute(colors, 3));
-  const mesh = new THREE.InstancedMesh(plane, material, n);
+  // One merged geometry (one draw call): per front a shared-vertex grid, so neighbouring cells have no seam.
+  let vo = 0, io = 0;
+  for (const f of fronts) {
+    positions.set(f.positions, vo * 3); spans.set(f.span, vo * 2); vs.set(f.v, vo);
+    const col = /^(konbini|laundry)$/.test(f.kind) ? p.cool : p.warm;
+    for (let k = 0; k < f.vertexCount; k++) colors.set(col, (vo + k) * 3);
+    for (let k = 0; k < f.index.length; k++) index[io + k] = f.index[k] + vo;
+    vo += f.vertexCount; io += f.index.length;
+  }
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute('aSpan', new THREE.BufferAttribute(spans, 2));
+  geometry.setAttribute('aV', new THREE.BufferAttribute(vs, 1));
+  geometry.setAttribute('aColor', new THREE.BufferAttribute(colors, 3));
+  geometry.setIndex(new THREE.BufferAttribute(index, 1));
+  const mesh = new THREE.Mesh(geometry, material), n = fronts.length;
   mesh.name = 'shop-spill';
-  const nv = new THREE.Vector3(), pos = new THREE.Vector3(), q = new THREE.Quaternion(), scale = new THREE.Vector3(), m = new THREE.Matrix4();
-  const negZ = new THREE.Vector3(0, 0, -1), rotX = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
-  fronts.forEach((f, i) => {
-    nv.fromArray(f.normal).setY(0).normalize();
-    q.setFromUnitVectors(negZ, nv).multiply(rotX);          // plane +v -> outward, normal up
-    const len = f.d1 - f.d0;
-    pos.fromArray(f.center).addScaledVector(nv, f.d0 + len / 2); pos.y = f.floor + 0.012;
-    mesh.setMatrixAt(i, m.compose(pos, q, scale.set(f.width, len, 1)));
-    sizes.set([f.width, len], i * 2); ranges.set([f.d0 / f.total, f.d1 / f.total], i * 2); spans.set([f.x0, f.totalW], i * 2);
-    colors.set(/^(konbini|laundry)$/.test(f.kind) ? p.cool : p.warm, i * 3);
-  });
-  mesh.instanceMatrix.needsUpdate = true; mesh.castShadow = mesh.receiveShadow = false; mesh.frustumCulled = false;
+  mesh.castShadow = mesh.receiveShadow = false; mesh.frustumCulled = false;
   mesh.renderOrder = 2; mesh.userData.noDecal = true; mesh.userData.wbDoorGlow = true; mesh.userData.wbShopSpill = true; mesh.userData.walkable = false;
   parent.add(mesh);
-  return { mesh, fronts, count: n, drawCalls: 1, params: p,
+  return { mesh, fronts, count: n, triangles: nIdx / 3, drawCalls: 1, params: p,
     setStrength: (v = p.strength) => { material.uniforms.uStrength.value = v; },
     setEnabled: (on) => { mesh.visible = on; },
-    dispose() { mesh.removeFromParent(); plane.dispose(); material.dispose(); mesh.dispose(); } };
+    dispose() { mesh.removeFromParent(); geometry.dispose(); material.dispose(); } };
 }
