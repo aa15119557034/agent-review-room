@@ -1,5 +1,6 @@
 // Original three-building composition. Geometry/atlas helpers retain Sakuragaoka
 // MIT provenance; photo-source PBR maps are pinned separately in apartment-assets.json.
+import * as THREE from 'three';
 import { buildWindow } from '../upstream/sakuragaoka/src/world/houses/house.js';
 import { PAL } from '../upstream/sakuragaoka/src/world/houses/lot.js';
 
@@ -26,7 +27,7 @@ export function buildTownApartment(H, F, spec) {
     shutterColor: dark, shutterStyle: 'none', shutterClosed: 0, trim,
     interiors: null, roof: { mat: 'metal', color: steel }, wall: { kind: 'paint', color: wall },
     floorY: 0, fh: FH, groundMin: 0, lod: 0, rng: r };
-  const records = [], openings = [], balconies = [];
+  const records = [], openings = [], balconies = [], lamps = [];
   const record = (kind, position, extra = {}) => records.push({ kind, position, ...extra });
   const detailStart = gb.tris;
   for (let fl = 0; fl < floors; fl++) {
@@ -101,6 +102,10 @@ export function buildTownApartment(H, F, spec) {
       wallOpening(H, ff, unit, y + .16, FH - .16, opening, plaster, wall);
       recessedDoor(H, ff, opening);
       rear.box(M.lamp, null, .24, .065, .08, x + .75, y + 2.42, .045, { shadow: false });
+      // Art round 9: registered for the fake light pools (door-glow.js). City-root coordinates; the wall face is rear z = 0,
+      // outward is rear +z, the corridor slab top is 0.14 m above the storey line and 1.05 m deep.
+      lamps.push({ lamp: rear.w(x + .75, y + 2.42, 0).toArray(), floor: rear.w(x + .75, y + .14, 0).y,
+        normal: new THREE.Vector3(0, 0, 1).transformDirection(rear.m).toArray(), slabDepth: 1.05, floorIndex: fl });
       if (bay === 0) H.P.elecMeter(rear, x + 1.0, y + 1.35);
     }
     // Art round 3: the rear-corridor dressing is a rule for every apartment, not only the shot-C one
@@ -155,7 +160,7 @@ export function buildTownApartment(H, F, spec) {
     for (const z of [footprint.groundSupportBounds.minZ, (back + baseFront) / 2, 0]) supportSamples.push({ x, z });
   const cloth = H.laundry.I.length / 3 - clothStart;
   return { bounds, groundSupportBounds: footprint.groundSupportBounds, supportSamples,
-    floors, floorHeight: FH, height: bounds.maxY, entrances: [{ x: 0, y: .14, z: 0, width: shop ? 1.2 : 1.02 }],
+    floors, floorHeight: FH, height: bounds.maxY, lamps, entrances: [{ x: 0, y: .14, z: 0, width: shop ? 1.2 : 1.02 }],
     triangles: gb.tris - start, laundryTriangles: cloth, garments: H.laundry.count - garments,
     facade: { items: records, gbTriangles: gb.tris - detailStart, clothTriangles: cloth, totalTriangles: gb.tris - detailStart + cloth,
       scope: 'Complete facade reconstruction, not the retired 900-triangle decoration allowance' },

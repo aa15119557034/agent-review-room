@@ -43,5 +43,24 @@
       0.00016,
       0.00263
     ]
+  },
+  "doorGlow": {
+    "note": "Art round 9: fake lamp light pools (door-glow.js). Wall patch wallSize m (w,h) centred wallDrop under the lamp, stopping wallTop above it; floor patch radius floorRadius, centred floorOut off the wall.",
+    "color": [
+      1.0,
+      0.68,
+      0.38
+    ],
+    "wall": 0.35,
+    "floor": 0.3,
+    "wallSize": [
+      2.2,
+      2.6
+    ],
+    "wallDrop": 0.3,
+    "wallTop": 0.4,
+    "wallOffset": 0.015,
+    "floorRadius": 1.2,
+    "floorOut": 0.4
   }
 }

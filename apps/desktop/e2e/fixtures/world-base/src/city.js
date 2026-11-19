@@ -85,7 +85,7 @@ export async function createCity({ scene, station, island, skyline }) {
   ownedMaterials.add(plants.material); ownedTextures.add(plants.texture);
   const dispose = () => {
     if (disposed) return; disposed = true; root.removeFromParent();
-    root.traverse(object => { if (object.isMesh) { geometries.add(object.geometry); if (object.isInstancedMesh) object.dispose(); if (object.customDepthMaterial) ownedMaterials.add(object.customDepthMaterial); } });
+    root.traverse(object => { if (object.isMesh) { geometries.add(object.geometry); if (object.isInstancedMesh) object.dispose(); if (object.userData.wbDoorGlow) ownedMaterials.add(object.material); if (object.customDepthMaterial) ownedMaterials.add(object.customDepthMaterial); } });
     for (const geometry of geometries) geometry.dispose();
     for (const material of ownedMaterials) material.dispose();
     H.apartmentSurfaces?.dispose();
