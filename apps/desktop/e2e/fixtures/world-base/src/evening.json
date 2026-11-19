@@ -65,7 +65,7 @@
     "falloff": 2.2
   },
   "shopSpill": {
-    "note": "Art round 10: shop light spilling on the paving in front of the door (shop-spill.js). Patch = street front wide, depth m out, strongest at the wall; edge = side fade in m; falloff = exponent of the outward ramp; step = paving height change that starts a new patch (landing / step / pavement); rayLift = m above the room floor where the ground rays start; wallOut = m outside the room's inner face. cool = convenience store / laundromat, warm = other shops.",
+    "note": "Art round 10: shop light spilling on the paving in front of the door (shop-spill.js). Patch = street front wide, depth m out, strongest at the wall; edge = side fade in m; falloff = exponent of the outward ramp; cell = patch cell size in m (each cell is laid at the paving height under its centre); rayLift = m above the room floor where the ground rays start, so anything taller is not ground; wallOut = m outside the room's inner face. cool = convenience store / laundromat, warm = other shops.",
     "strength": 0.4,
     "cool": [
       0.85,
@@ -80,9 +80,8 @@
     "depth": 2.2,
     "edge": 1.2,
     "falloff": 1.4,
-    "step": 0.09,
     "wallOut": 0.25,
-    "rayLift": 0.2,
-    "column": 1.5
+    "rayLift": 0.3,
+    "cell": 0.25
   }
 }

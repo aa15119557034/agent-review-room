@@ -99,28 +99,22 @@ export function groundSpillFronts(fronts, roots, p, offset = new THREE.Vector3()
     }
     return best;
   };
-  const out = [], gap = p.step ?? 0.09, dd = 0.3;
+  const out = [], cell = p.cell ?? 0.25;
   for (const f of fronts) {
     tris = trianglesNear(f);
     n.fromArray(f.normal); t.set(-n.z, 0, n.x);
-    // Columns across the front, each with its own height series: a ramp or stair in the middle of the front must not be
-    // averaged with the flat paving beside it (that left a slab floating over the lower part).
-    const cols = Math.max(1, Math.ceil(f.width / (p.column ?? 1.5))), cw = f.width / cols;
+    // The patch is cut into small flat cells, each laid at the paving height under its centre (lamp field stays one continuous function
+    // of the whole front: x along the front, v from the wall, see aSpan / aRange), so slopes and steps are followed without a big flat
+    // plane being clipped by the ground in an oblique line. Rays start only rayLift above the room floor, so tops of vending
+    // machines, crates and shelves are never taken for ground.
+    const cols = Math.max(1, Math.ceil(f.width / cell)), cw = f.width / cols, rows = Math.max(1, Math.ceil(p.depth / cell)), rd = p.depth / rows;
     for (let j = 0; j < cols; j++) {
       const off = (j + 0.5) * cw - f.width / 2, cx = f.center[0] + t.x * off, cz = f.center[2] + t.z * off;
-      const hs = [];
-      for (let d = dd / 2; d < p.depth; d += dd) {
-        const ys = [-0.3, 0, 0.3].map(k => hit(cx + n.x * d + t.x * cw * k, f.center[1] + p.rayLift, cz + n.z * d + t.z * cw * k)).filter(y => y != null).sort((a, b) => a - b);
-        hs.push({ d, y: ys.length ? ys[(ys.length - 1) >> 1] : null });
+      for (let i = 0; i < rows; i++) {
+        const d = (i + 0.5) * rd, y = hit(cx + n.x * d, f.center[1] + p.rayLift, cz + n.z * d);
+        if (y == null) continue;
+        out.push({ ...f, center: [cx, f.center[1], cz], width: cw, x0: j * cw, totalW: f.width, floor: y + 0.008, d0: i * rd, d1: (i + 1) * rd, total: p.depth, ray: 'ok' });
       }
-      const runs = [];
-      for (const s of hs) {
-        if (s.y == null) break;
-        const last = runs[runs.length - 1];
-        if (last && Math.abs(s.y - last.prev) <= gap) { last.ys.push(s.y); last.prev = s.y; last.end = s.d + dd / 2; }
-        else runs.push({ start: last ? last.end : 0, end: s.d + dd / 2, ys: [s.y], prev: s.y });
-      }
-      for (const r of runs) out.push({ ...f, center: [cx, f.center[1], cz], width: cw, x0: j * cw, totalW: f.width, floor: Math.max(...r.ys), d0: r.start, d1: r.end, total: p.depth, ray: 'ok' });
     }
   }
   return out;
