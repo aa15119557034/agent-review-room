@@ -2,6 +2,27 @@ import * as THREE from 'three';
 
 // Source bytes and CC0 authors are pinned in apartment-assets.json. These are
 // Poly Haven diffuse / OpenGL normal / packed ARM images, not generated noise.
+// Round 5 (#254 X-51, C酱): shaded facade bounce. Rear corridors, eaves and north
+// faces only get sky ambient, and with the ARM AO the real plaster read as near-black.
+// Every apartment surface on the island that is out of the sun gets a cool teal-grey
+// bounce scaled by its own albedo (sunlit faces are untouched), and the AO map is
+// softened. ?shadowtint=off turns the bounce off with the rest of the shade tint.
+export const FACADE_BOUNCE = { color: [0.12, 0.16, 0.17], sunLo: 0.04, sunHi: 0.5, aoMapIntensity: 0.4 };
+const bounceOn = () => typeof location === 'undefined' || new URLSearchParams(location.search).get('shadowtint') !== 'off';
+function addFacadeBounce(material) {
+  const b = FACADE_BOUNCE, c = b.color.map(x => x.toFixed(3)).join(', ');
+  material.aoMapIntensity = b.aoMapIntensity;
+  material.onBeforeCompile = shader => {
+    shader.fragmentShader = shader.fragmentShader.replace('#include <lights_fragment_end>', `#include <lights_fragment_end>
+{ // wbFacadeBounce
+  float fbLum = dot( diffuseColor.rgb, vec3( 0.2126, 0.7152, 0.0722 ) );
+  float fbSun = dot( reflectedLight.directDiffuse, vec3( 0.2126, 0.7152, 0.0722 ) ) / max( fbLum, 0.03 );
+  reflectedLight.indirectDiffuse += diffuseColor.rgb * vec3( ${c} ) * ( 1.0 - smoothstep( ${b.sunLo.toFixed(3)}, ${b.sunHi.toFixed(3)}, fbSun ) );
+}`);
+  };
+  material.customProgramCacheKey = () => 'wbFacadeBounce:' + c;
+}
+
 const SETS = {
   plaster: ['white_plaster_02', 'white_plaster_02'],
   tile: ['rectangular_facade_tiles', 'rectangular_facade_tiles'],
@@ -58,6 +79,7 @@ export async function createApartmentSurfaces({ renderer, assetBase = '/apartmen
     materials.roof.name = 'apartment-pbr-roof';
     materials.roof.metalness = .25;
     materials.roof.normalScale.set(.35, .35);
+    if (bounceOn()) for (const material of Object.values(materials)) addFacadeBounce(material);
   } catch (error) {
     for (const material of Object.values(materials)) material.dispose();
     for (const texture of textures) texture.dispose();
