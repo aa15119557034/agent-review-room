@@ -1,0 +1,2253 @@
+{
+  "source": "9b0dadbd7fd3c117835465fe6ea8dd80c4215970",
+  "started": "2026-11-19T02:23:25.262Z",
+  "views": {
+    "art-c-alley": {
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "view": "art-c-alley",
+      "eye": [
+        287.65,
+        14.384808464050293,
+        767.3199999999999
+      ],
+      "quaternion": [
+        0.00512201791291099,
+        0.8012252009590126,
+        -0.006859231737600546,
+        0.5983016740914732
+      ],
+      "time": 14,
+      "size": [
+        1440,
+        900
+      ],
+      "materialEvidence": {
+        "art-r1-chainlink": {
+          "type": "MeshToonMaterial",
+          "color": "ffffff",
+          "normalScale": [
+            1,
+            1
+          ],
+          "ao": 1,
+          "normal": null,
+          "diffuse": null,
+          "hasDiffuse": true,
+          "rough": null,
+          "metalnessMap": null,
+          "aoMap": null,
+          "alphaTest": 0.5,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "art-r1-shade-net": {
+          "type": "MeshToonMaterial",
+          "color": "2d5a56",
+          "normalScale": [
+            1,
+            1
+          ],
+          "ao": 1,
+          "normal": null,
+          "diffuse": null,
+          "hasDiffuse": false,
+          "rough": null,
+          "metalnessMap": null,
+          "aoMap": null,
+          "alphaTest": 0,
+          "opacity": 0.66,
+          "markedPainted": false
+        },
+        "art-r1-fence-steel": {
+          "type": "MeshToonMaterial",
+          "color": "55807a",
+          "normalScale": [
+            1,
+            1
+          ],
+          "ao": 1,
+          "normal": null,
+          "diffuse": null,
+          "hasDiffuse": false,
+          "rough": null,
+          "metalnessMap": null,
+          "aoMap": null,
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "apartment-pbr-plaster": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0,
+          "normalScale": [
+            0.45,
+            0.45
+          ],
+          "ao": 0.4,
+          "normal": "apartment-plaster-nor_gl",
+          "diffuse": "apartment-plaster-diff",
+          "hasDiffuse": true,
+          "rough": "apartment-plaster-arm",
+          "metalnessMap": "apartment-plaster-arm",
+          "aoMap": "apartment-plaster-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "apartment-pbr-metal": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0.15,
+          "normalScale": [
+            0.5,
+            0.5
+          ],
+          "ao": 0.4,
+          "normal": "apartment-metal-nor_gl",
+          "diffuse": null,
+          "hasDiffuse": false,
+          "rough": "apartment-metal-arm",
+          "metalnessMap": null,
+          "aoMap": "apartment-metal-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": true
+        },
+        "apartment-pbr-tile": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0,
+          "normalScale": [
+            0.7,
+            0.7
+          ],
+          "ao": 0.4,
+          "normal": "apartment-tile-nor_gl",
+          "diffuse": "apartment-tile-diff",
+          "hasDiffuse": true,
+          "rough": "apartment-tile-arm",
+          "metalnessMap": "apartment-tile-arm",
+          "aoMap": "apartment-tile-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "apartment-pbr-roof": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0.25,
+          "normalScale": [
+            0.35,
+            0.35
+          ],
+          "ao": 0.4,
+          "normal": "apartment-metal-nor_gl",
+          "diffuse": "apartment-metal-diff",
+          "hasDiffuse": true,
+          "rough": "apartment-metal-arm",
+          "metalnessMap": "apartment-metal-arm",
+          "aoMap": "apartment-metal-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        }
+      },
+      "rays": [
+        {
+          "x": 990,
+          "y": 149,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 4.1668,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-plaster",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 19.9376,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-roof",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 27.1881,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 990,
+          "y": 213,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 4.346,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-plaster",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 19.6625,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-plaster",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 20.7856,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 990,
+          "y": 271,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 4.5482,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-plaster",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 19.4643,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-plaster",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 26.6536,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 990,
+          "y": 322,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 4.7245,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-plaster",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 19.3312,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-plaster",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 30.1729,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 990,
+          "y": 368,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 4.9193,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-plaster",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 19.2348,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-plaster",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 19.2449,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 990,
+          "y": 409,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 5.1571,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-plaster",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 19.1951,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-plaster",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 29.9604,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 990,
+          "y": 448,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 5.4011,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-plaster",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 19.1716,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-plaster",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 29.9237,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 990,
+          "y": 482,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 5.6509,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-plaster",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 19.1701,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-plaster",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 29.9213,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 990,
+          "y": 516,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 5.9061,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-plaster",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 19.1862,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-plaster",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 21.2354,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 990,
+          "y": 547,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 6.1662,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 18.9653,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 39.7366,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 990,
+          "y": 574,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 6.4298,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 19.0028,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 990,
+          "y": 600,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 6.6974,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "town-st-pavers",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 13.7052,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 13.7979,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 990,
+          "y": 625,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 6.9689,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "town-st-pavers",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 11.5582,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 990,
+          "y": 645,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.2403,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "town-st-pavers",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 10.281,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1234,
+          "y": 300,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/art-r1-fence-post",
+              "material": "art-r1-fence-steel",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 2.0595,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1234,
+          "y": 430,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/art-r1-fence-post",
+              "material": "art-r1-fence-steel",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 2.0403,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1234,
+          "y": 633,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/art-r1-fence-post",
+              "material": "art-r1-fence-steel",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 2.0579,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1158,
+          "y": 377,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 4.9663,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1166,
+          "y": 510,
+          "hits": []
+        }
+      ],
+      "renderCounts": {
+        "calls": 982,
+        "triangles": 8640066
+      },
+      "shots": {
+        "authored": {
+          "file": "art-c-alley-authored.png",
+          "sha256": "1db4a574e1dc37e1d588f7a2de791240182c42a5893a751ba97952e20748d5b0"
+        },
+        "apartmentMetalHidden": {
+          "file": "art-c-alley-apartmentMetalHidden.png",
+          "sha256": "0eb3e70b4fabeff0bbd882f083d715343bd226b2710b787f9c9e25e649496b81"
+        },
+        "restored": {
+          "file": "art-c-alley-restored.png",
+          "sha256": "1db4a574e1dc37e1d588f7a2de791240182c42a5893a751ba97952e20748d5b0"
+        }
+      },
+      "glError": 0,
+      "portal": "Scene/station-city-background/Portal_wings",
+      "portalMeshes": [
+        "Portal_wings"
+      ]
+    },
+    "art-d-laundry": {
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "view": "art-d-laundry",
+      "eye": [
+        283.5,
+        12.520055181715234,
+        783.8
+      ],
+      "quaternion": [
+        0.1297258927986663,
+        0.0767626424061459,
+        -0.010073721024303532,
+        0.9885227410703001
+      ],
+      "time": 14,
+      "size": [
+        1440,
+        900
+      ],
+      "materialEvidence": {
+        "art-r1-chainlink": {
+          "type": "MeshToonMaterial",
+          "color": "ffffff",
+          "normalScale": [
+            1,
+            1
+          ],
+          "ao": 1,
+          "normal": null,
+          "diffuse": null,
+          "hasDiffuse": true,
+          "rough": null,
+          "metalnessMap": null,
+          "aoMap": null,
+          "alphaTest": 0.5,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "art-r1-shade-net": {
+          "type": "MeshToonMaterial",
+          "color": "2d5a56",
+          "normalScale": [
+            1,
+            1
+          ],
+          "ao": 1,
+          "normal": null,
+          "diffuse": null,
+          "hasDiffuse": false,
+          "rough": null,
+          "metalnessMap": null,
+          "aoMap": null,
+          "alphaTest": 0,
+          "opacity": 0.66,
+          "markedPainted": false
+        },
+        "art-r1-fence-steel": {
+          "type": "MeshToonMaterial",
+          "color": "55807a",
+          "normalScale": [
+            1,
+            1
+          ],
+          "ao": 1,
+          "normal": null,
+          "diffuse": null,
+          "hasDiffuse": false,
+          "rough": null,
+          "metalnessMap": null,
+          "aoMap": null,
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "apartment-pbr-plaster": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0,
+          "normalScale": [
+            0.45,
+            0.45
+          ],
+          "ao": 0.4,
+          "normal": "apartment-plaster-nor_gl",
+          "diffuse": "apartment-plaster-diff",
+          "hasDiffuse": true,
+          "rough": "apartment-plaster-arm",
+          "metalnessMap": "apartment-plaster-arm",
+          "aoMap": "apartment-plaster-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "apartment-pbr-metal": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0.15,
+          "normalScale": [
+            0.5,
+            0.5
+          ],
+          "ao": 0.4,
+          "normal": "apartment-metal-nor_gl",
+          "diffuse": null,
+          "hasDiffuse": false,
+          "rough": "apartment-metal-arm",
+          "metalnessMap": null,
+          "aoMap": "apartment-metal-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": true
+        },
+        "apartment-pbr-tile": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0,
+          "normalScale": [
+            0.7,
+            0.7
+          ],
+          "ao": 0.4,
+          "normal": "apartment-tile-nor_gl",
+          "diffuse": "apartment-tile-diff",
+          "hasDiffuse": true,
+          "rough": "apartment-tile-arm",
+          "metalnessMap": "apartment-tile-arm",
+          "aoMap": "apartment-tile-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "apartment-pbr-roof": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0.25,
+          "normalScale": [
+            0.35,
+            0.35
+          ],
+          "ao": 0.4,
+          "normal": "apartment-metal-nor_gl",
+          "diffuse": "apartment-metal-diff",
+          "hasDiffuse": true,
+          "rough": "apartment-metal-arm",
+          "metalnessMap": "apartment-metal-arm",
+          "aoMap": "apartment-metal-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        }
+      },
+      "rays": [
+        {
+          "x": 600,
+          "y": 130,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.4878,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.5056,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.5216,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 628,
+          "y": 130,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.4312,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.4337,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.4496,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 656,
+          "y": 130,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.3802,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.369,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.3848,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 684,
+          "y": 130,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.3349,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.3114,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.3271,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 712,
+          "y": 130,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.295,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.2608,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.2765,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 740,
+          "y": 130,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.2606,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.2172,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.2327,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 769,
+          "y": 130,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.2306,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.1791,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.1946,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 798,
+          "y": 130,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.2063,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.1483,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.1637,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1047,
+          "y": 130,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.2122,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.1558,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.1712,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1079,
+          "y": 130,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.2381,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.1886,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.2041,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1112,
+          "y": 130,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.27,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.229,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.2446,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1145,
+          "y": 130,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.3069,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.276,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.2916,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1177,
+          "y": 130,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.3474,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.291,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.3273,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            }
+          ]
+        },
+        {
+          "x": 1211,
+          "y": 130,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.3951,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.3879,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.4037,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1244,
+          "y": 130,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.4458,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.4523,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.4682,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1279,
+          "y": 130,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.5041,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.5262,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.5423,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1313,
+          "y": 130,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.5648,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.6033,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.6053,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 600,
+          "y": 150,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.4033,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.3983,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.4142,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 627,
+          "y": 150,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.3492,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.3297,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.3454,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 655,
+          "y": 150,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.2987,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.2655,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.2812,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 683,
+          "y": 150,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.2538,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.2085,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.224,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 712,
+          "y": 150,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.213,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.1568,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.1722,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 740,
+          "y": 150,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.1792,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.1139,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.1292,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 769,
+          "y": 150,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.1499,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.0766,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.0919,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 799,
+          "y": 150,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.1255,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.0456,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.0609,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1049,
+          "y": 150,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.1384,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.0621,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.0773,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1081,
+          "y": 150,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.1651,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.096,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.1113,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1114,
+          "y": 150,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.1979,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.1376,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.153,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1147,
+          "y": 150,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.2357,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.1856,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.2011,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1180,
+          "y": 150,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.2784,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.2038,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.2397,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            }
+          ]
+        },
+        {
+          "x": 1213,
+          "y": 150,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.3255,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.2996,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.3153,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1247,
+          "y": 150,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.3787,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.367,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.3828,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1282,
+          "y": 150,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.4378,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.4421,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.4581,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1317,
+          "y": 150,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "apartment-pbr-metal",
+              "materialType": "MeshStandardMaterial",
+              "portal": false,
+              "distance": 7.5013,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 9.5135,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "ShaderMaterial",
+              "portal": false,
+              "distance": 9.5227,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": true
+            }
+          ]
+        },
+        {
+          "x": 254,
+          "y": 578,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshToonMaterial",
+              "portal": false,
+              "distance": 8.3859,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/Portal_wings",
+              "material": "Infill | baked ceramic and metal",
+              "materialType": "MeshPhysicalMaterial",
+              "portal": true,
+              "distance": 8.5275,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/Portal_wings",
+              "material": "Infill | baked ceramic and metal",
+              "materialType": "MeshPhysicalMaterial",
+              "portal": true,
+              "distance": 8.5529,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "x": 1208,
+          "y": 587,
+          "hits": [
+            {
+              "object": "Scene/station-city-background/town-edge-kit",
+              "material": "",
+              "materialType": "MeshBasicMaterial",
+              "portal": false,
+              "distance": 7.3312,
+              "vertexColors": false,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/Portal_wings",
+              "material": "Infill | baked ceramic and metal",
+              "materialType": "MeshPhysicalMaterial",
+              "portal": true,
+              "distance": 7.4121,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            },
+            {
+              "object": "Scene/station-city-background/Portal_wings",
+              "material": "Infill | baked ceramic and metal",
+              "materialType": "MeshPhysicalMaterial",
+              "portal": true,
+              "distance": 7.4342,
+              "vertexColors": true,
+              "alphaTest": 0,
+              "transparent": false
+            }
+          ]
+        }
+      ],
+      "renderCounts": {
+        "calls": 914,
+        "triangles": 8368257
+      },
+      "shots": {
+        "authored": {
+          "file": "art-d-laundry-authored.png",
+          "sha256": "f5085de12c751372dc63c2291e3ed7f057cef4431dd7ca368915f32a133add2b"
+        },
+        "portalHidden": {
+          "file": "art-d-laundry-portalHidden.png",
+          "sha256": "e43d5e6216c410ca083f3309fe44cca392e4bedbb77036fd7d3266e5aab3eb10"
+        },
+        "apartmentMetalHidden": {
+          "file": "art-d-laundry-apartmentMetalHidden.png",
+          "sha256": "7cca1cc87d9e148f3c7f4dd39ba4f8b20cd5184ef00b6ac83d6415077c706f3f"
+        },
+        "restored": {
+          "file": "art-d-laundry-restored.png",
+          "sha256": "f5085de12c751372dc63c2291e3ed7f057cef4431dd7ca368915f32a133add2b"
+        }
+      },
+      "glError": 0,
+      "portal": "Scene/station-city-background/Portal_wings",
+      "portalMeshes": [
+        "Portal_wings"
+      ]
+    },
+    "sample-e-harbour": {
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "view": "sample-e-harbour",
+      "eye": [
+        -49.3148,
+        6.0969,
+        1121.5
+      ],
+      "quaternion": [
+        0.014730707497095328,
+        -0.7342518484654964,
+        0.01594041117183272,
+        0.6785301265038345
+      ],
+      "size": [
+        1440,
+        900
+      ],
+      "time": 14,
+      "renderCounts": {
+        "calls": 1532,
+        "triangles": 8237370
+      },
+      "shots": {
+        "authored": {
+          "file": "sample-e-harbour-authored.png",
+          "sha256": "5d15aca214551e3cb5528abf3db0abb5c139fbd81554d63b95580eaacf450241"
+        },
+        "cityHidden": {
+          "file": "sample-e-harbour-cityHidden.png",
+          "sha256": "5d15aca214551e3cb5528abf3db0abb5c139fbd81554d63b95580eaacf450241"
+        },
+        "restored": {
+          "file": "sample-e-harbour-restored.png",
+          "sha256": "5d15aca214551e3cb5528abf3db0abb5c139fbd81554d63b95580eaacf450241"
+        }
+      },
+      "glError": 0
+    }
+  },
+  "exceptions": [],
+  "step": "complete",
+  "ok": true
+}

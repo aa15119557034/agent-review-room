@@ -1,0 +1,173 @@
+{
+  "source": "be0549d896b716b15cb7c4653e99a83fffcb0fdb",
+  "cameraSource": "apps/desktop/e2e/fixtures/world-base/evidence/c28-toon-ground-3060-2026-11-18/timing/driver/x51-c28-ground28-cameras.json",
+  "cameraSourceSha256": "6bad70977d5f004c922085ebe824041882df5c5eca7849981512ca067a6a476d",
+  "start": "2026-11-19T02:19:42.327Z",
+  "views": {
+    "01-station-street": {
+      "camera": {
+        "position": [
+          278.8,
+          10.4,
+          936
+        ],
+        "quaternion": [
+          -0.003277842930440423,
+          -0.009834585659995631,
+          -0.000032237959341941705,
+          0.9999462663720154
+        ],
+        "fov": 58
+      },
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "time": 14,
+      "preset": "evening",
+      "size": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "pngSHA256": "1b5ca27b84c74ae9480d1c59c6bf40bd231873fcf52c42bb15a2dcb7e786a985",
+      "n": 421,
+      "durationMs": 6507.899999999994,
+      "fps": 64.69060680096504,
+      "p95Ms": 15.5,
+      "p99Ms": 15.599999999998545
+    },
+    "20-rear-eye": {
+      "camera": {
+        "position": [
+          273,
+          14.755245542526229,
+          758
+        ],
+        "quaternion": [
+          -0.00013011891877658623,
+          0.9145142483742376,
+          -0.00029414054360230415,
+          -0.40455356390830466
+        ],
+        "fov": 58
+      },
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "time": 14,
+      "preset": "evening",
+      "size": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "pngSHA256": "f9672b6cf3f690dcefc54ef1fc474b78da3d7b0b03722f4a8b96df56b36de8c1",
+      "n": 428,
+      "durationMs": 6584.5,
+      "fps": 65.00113903865137,
+      "p95Ms": 15.5,
+      "p99Ms": 15.599999999998545
+    },
+    "21-front-eye": {
+      "camera": {
+        "position": [
+          274,
+          12.87812709172567,
+          783
+        ],
+        "quaternion": [
+          0.07422133960767584,
+          -0.5103582416049142,
+          0.044271975994965136,
+          0.8556083508909221
+        ],
+        "fov": 58
+      },
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "time": 14,
+      "preset": "evening",
+      "size": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "pngSHA256": "4d01dbe3936337acef5cc3dcaf0df5fe4ddaa955012a1026a44e4309a4d64e28",
+      "n": 422,
+      "durationMs": 6507.699999999997,
+      "fps": 64.84625904697515,
+      "p95Ms": 15.5,
+      "p99Ms": 15.500000000007276
+    },
+    "23-service-corner": {
+      "camera": {
+        "position": [
+          308.4,
+          9.612,
+          872.9
+        ],
+        "quaternion": [
+          -0.08432325046436126,
+          0.5331397072650681,
+          0.05351200213385738,
+          0.8401119613456697
+        ],
+        "fov": 55
+      },
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "time": 14,
+      "preset": "evening",
+      "size": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "pngSHA256": "36b78290a2723152beb886f2c2408284a9d9c4ed8b472f857f84aa5de5abd8fd",
+      "n": 424,
+      "durationMs": 6523.099999999991,
+      "fps": 64.9997700479834,
+      "p95Ms": 15.5,
+      "p99Ms": 15.5
+    },
+    "24-laundry-details": {
+      "camera": {
+        "position": [
+          288,
+          14.384808464050293,
+          777.9
+        ],
+        "quaternion": [
+          -0.15522850149956677,
+          0.6173580660361093,
+          0.12595148976979553,
+          0.7608609287163607
+        ],
+        "fov": 55
+      },
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "time": 14,
+      "preset": "evening",
+      "size": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "pngSHA256": "edfca05a48f0e6e4846e164160d49bae4ab67abfb84098c2da616edbe42b5e7a",
+      "n": 428,
+      "durationMs": 6584.699999999997,
+      "fps": 64.99916473035981,
+      "p95Ms": 15.5,
+      "p99Ms": 15.60000000000582
+    }
+  },
+  "exceptions": [],
+  "stage": "complete",
+  "network": {
+    "coverage": {
+      "localHTTP": 272,
+      "serverReceipts": 272,
+      "paired": 272,
+      "get200SourceAndWire": 272,
+      "browserBlobs": 16
+    },
+    "clean": true,
+    "verifiedCanceled": 4,
+    "problems": []
+  },
+  "ok": true
+}

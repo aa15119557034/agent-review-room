@@ -1,0 +1,53 @@
+{
+  "retainedOriginal": "be0549d896b716b15cb7c4653e99a83fffcb0fdb",
+  "faces": {
+    "px": {
+      "sha256": "ab3bdb2513f2c392ae7bef3083e459bdf6f6a8083697004dd025afaa15a8b641",
+      "texels": 65536,
+      "aboveOriginalLimit": 16,
+      "originalMax": 2.939453125,
+      "decodedMax": 2.0,
+      "mismatchedAgainstPinnedBake": 0
+    },
+    "nx": {
+      "sha256": "a2744cdac877023f25c3cc62625f6221680113dca2bdb2a137bd6b8223d85fb5",
+      "texels": 65536,
+      "aboveOriginalLimit": 47,
+      "originalMax": 2.728515625,
+      "decodedMax": 2.0,
+      "mismatchedAgainstPinnedBake": 0
+    },
+    "py": {
+      "sha256": "276293728167c671aa5d4b8e1af0be712c776121b25da5f8f6b96c37a2824c33",
+      "texels": 65536,
+      "aboveOriginalLimit": 0,
+      "originalMax": 1.357421875,
+      "decodedMax": 1.3590849392661877,
+      "mismatchedAgainstPinnedBake": 0
+    },
+    "ny": {
+      "sha256": "f059ee3868316ca6703f67246662fc02e8d24e1d22c7e5bf34b801fd9bed3730",
+      "texels": 65536,
+      "aboveOriginalLimit": 0,
+      "originalMax": 0.4228515625,
+      "decodedMax": 0.42446151482811045,
+      "mismatchedAgainstPinnedBake": 0
+    },
+    "pz": {
+      "sha256": "cc46592e883a81bd0d58c04c4c7243ea8409868a6bdbc1688d10f7e429872736",
+      "texels": 65536,
+      "aboveOriginalLimit": 17,
+      "originalMax": 2.939453125,
+      "decodedMax": 2.0,
+      "mismatchedAgainstPinnedBake": 0
+    },
+    "nz": {
+      "sha256": "ea9aa9bd84f057f9f50ccd95f6ae7ec09182bbdeab82c06aa52b31816520640e",
+      "texels": 65536,
+      "aboveOriginalLimit": 9,
+      "originalMax": 2.728515625,
+      "decodedMax": 2.0,
+      "mismatchedAgainstPinnedBake": 0
+    }
+  }
+}

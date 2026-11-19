@@ -1,0 +1,744 @@
+{
+  "before": {
+    "art-c-alley": {
+      "restore": {
+        "changed": 0,
+        "over2": 0,
+        "max": 0
+      },
+      "materialEvidence": {
+        "art-r1-chainlink": {
+          "type": "MeshToonMaterial",
+          "color": "ffffff",
+          "normalScale": [
+            1,
+            1
+          ],
+          "ao": 1,
+          "normal": null,
+          "diffuse": null,
+          "hasDiffuse": true,
+          "rough": null,
+          "metalnessMap": null,
+          "aoMap": null,
+          "alphaTest": 0.5,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "art-r1-shade-net": {
+          "type": "MeshToonMaterial",
+          "color": "274a52",
+          "normalScale": [
+            1,
+            1
+          ],
+          "ao": 1,
+          "normal": null,
+          "diffuse": null,
+          "hasDiffuse": false,
+          "rough": null,
+          "metalnessMap": null,
+          "aoMap": null,
+          "alphaTest": 0,
+          "opacity": 0.66,
+          "markedPainted": false
+        },
+        "art-r1-fence-steel": {
+          "type": "MeshToonMaterial",
+          "color": "56676c",
+          "normalScale": [
+            1,
+            1
+          ],
+          "ao": 1,
+          "normal": null,
+          "diffuse": null,
+          "hasDiffuse": false,
+          "rough": null,
+          "metalnessMap": null,
+          "aoMap": null,
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "apartment-pbr-plaster": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0,
+          "normalScale": [
+            0.45,
+            0.45
+          ],
+          "ao": 0.4,
+          "normal": "apartment-plaster-nor_gl",
+          "diffuse": "apartment-plaster-diff",
+          "hasDiffuse": true,
+          "rough": "apartment-plaster-arm",
+          "metalnessMap": "apartment-plaster-arm",
+          "aoMap": "apartment-plaster-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "apartment-pbr-metal": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 1,
+          "normalScale": [
+            0.7,
+            0.7
+          ],
+          "ao": 0.4,
+          "normal": "apartment-metal-nor_gl",
+          "diffuse": "apartment-metal-diff",
+          "hasDiffuse": true,
+          "rough": "apartment-metal-arm",
+          "metalnessMap": "apartment-metal-arm",
+          "aoMap": "apartment-metal-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "apartment-pbr-tile": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0,
+          "normalScale": [
+            0.7,
+            0.7
+          ],
+          "ao": 0.4,
+          "normal": "apartment-tile-nor_gl",
+          "diffuse": "apartment-tile-diff",
+          "hasDiffuse": true,
+          "rough": "apartment-tile-arm",
+          "metalnessMap": "apartment-tile-arm",
+          "aoMap": "apartment-tile-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "apartment-pbr-roof": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0.25,
+          "normalScale": [
+            0.35,
+            0.35
+          ],
+          "ao": 0.4,
+          "normal": "apartment-metal-nor_gl",
+          "diffuse": "apartment-metal-diff",
+          "hasDiffuse": true,
+          "rough": "apartment-metal-arm",
+          "metalnessMap": "apartment-metal-arm",
+          "aoMap": "apartment-metal-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        }
+      },
+      "treads": {
+        "count": 14,
+        "firstHitMaterials": [
+          "apartment-pbr-metal"
+        ],
+        "pixelSignal": {
+          "rgbMedian": [
+            26.5,
+            31.0,
+            43.0
+          ],
+          "lumaMedian": 30.91
+        },
+        "hideMetal": {
+          "changed": 14,
+          "over2": 14,
+          "max": 86
+        }
+      },
+      "fencePosts": {
+        "count": 3,
+        "firstHitMaterials": [
+          "art-r1-fence-steel"
+        ],
+        "pixelSignal": {
+          "rgbMedian": [
+            46.0,
+            54.0,
+            73.0
+          ],
+          "lumaMedian": 53.671
+        },
+        "hideMetal": {
+          "changed": 1,
+          "over2": 0,
+          "max": 1
+        }
+      }
+    },
+    "art-d-laundry": {
+      "restore": {
+        "changed": 0,
+        "over2": 0,
+        "max": 0
+      },
+      "materialEvidence": {
+        "art-r1-chainlink": {
+          "type": "MeshToonMaterial",
+          "color": "ffffff",
+          "normalScale": [
+            1,
+            1
+          ],
+          "ao": 1,
+          "normal": null,
+          "diffuse": null,
+          "hasDiffuse": true,
+          "rough": null,
+          "metalnessMap": null,
+          "aoMap": null,
+          "alphaTest": 0.5,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "art-r1-shade-net": {
+          "type": "MeshToonMaterial",
+          "color": "274a52",
+          "normalScale": [
+            1,
+            1
+          ],
+          "ao": 1,
+          "normal": null,
+          "diffuse": null,
+          "hasDiffuse": false,
+          "rough": null,
+          "metalnessMap": null,
+          "aoMap": null,
+          "alphaTest": 0,
+          "opacity": 0.66,
+          "markedPainted": false
+        },
+        "art-r1-fence-steel": {
+          "type": "MeshToonMaterial",
+          "color": "56676c",
+          "normalScale": [
+            1,
+            1
+          ],
+          "ao": 1,
+          "normal": null,
+          "diffuse": null,
+          "hasDiffuse": false,
+          "rough": null,
+          "metalnessMap": null,
+          "aoMap": null,
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "apartment-pbr-plaster": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0,
+          "normalScale": [
+            0.45,
+            0.45
+          ],
+          "ao": 0.4,
+          "normal": "apartment-plaster-nor_gl",
+          "diffuse": "apartment-plaster-diff",
+          "hasDiffuse": true,
+          "rough": "apartment-plaster-arm",
+          "metalnessMap": "apartment-plaster-arm",
+          "aoMap": "apartment-plaster-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "apartment-pbr-metal": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 1,
+          "normalScale": [
+            0.7,
+            0.7
+          ],
+          "ao": 0.4,
+          "normal": "apartment-metal-nor_gl",
+          "diffuse": "apartment-metal-diff",
+          "hasDiffuse": true,
+          "rough": "apartment-metal-arm",
+          "metalnessMap": "apartment-metal-arm",
+          "aoMap": "apartment-metal-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "apartment-pbr-tile": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0,
+          "normalScale": [
+            0.7,
+            0.7
+          ],
+          "ao": 0.4,
+          "normal": "apartment-tile-nor_gl",
+          "diffuse": "apartment-tile-diff",
+          "hasDiffuse": true,
+          "rough": "apartment-tile-arm",
+          "metalnessMap": "apartment-tile-arm",
+          "aoMap": "apartment-tile-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "apartment-pbr-roof": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0.25,
+          "normalScale": [
+            0.35,
+            0.35
+          ],
+          "ao": 0.4,
+          "normal": "apartment-metal-nor_gl",
+          "diffuse": "apartment-metal-diff",
+          "hasDiffuse": true,
+          "rough": "apartment-metal-arm",
+          "metalnessMap": "apartment-metal-arm",
+          "aoMap": "apartment-metal-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        }
+      },
+      "guardrailSamples": 34,
+      "guardrailMaterials": {
+        "apartment-pbr-metal  Scene/station-city-background/town-edge-kit": 34
+      },
+      "portalFirstHits": 0,
+      "sampleSignal": {
+        "rgbMedian": [
+          27.5,
+          32.5,
+          45.0
+        ],
+        "lumaMedian": 32.34
+      },
+      "samplesHidingPortal": {
+        "changed": 1,
+        "over2": 0,
+        "max": 1
+      },
+      "samplesHidingApartmentMetal": {
+        "changed": 34,
+        "over2": 34,
+        "max": 208
+      },
+      "upperHidingPortal": {
+        "changed": 7585,
+        "over2": 0,
+        "max": 1
+      },
+      "shopHidingPortal": {
+        "changed": 162974,
+        "over2": 95563,
+        "max": 187
+      }
+    },
+    "sample-e-harbour": {
+      "restore": {
+        "changed": 0,
+        "over2": 0,
+        "max": 0
+      },
+      "cityHidden": {
+        "changed": 0,
+        "over2": 0,
+        "max": 0
+      }
+    }
+  },
+  "after": {
+    "art-c-alley": {
+      "restore": {
+        "changed": 0,
+        "over2": 0,
+        "max": 0
+      },
+      "materialEvidence": {
+        "art-r1-chainlink": {
+          "type": "MeshToonMaterial",
+          "color": "ffffff",
+          "normalScale": [
+            1,
+            1
+          ],
+          "ao": 1,
+          "normal": null,
+          "diffuse": null,
+          "hasDiffuse": true,
+          "rough": null,
+          "metalnessMap": null,
+          "aoMap": null,
+          "alphaTest": 0.5,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "art-r1-shade-net": {
+          "type": "MeshToonMaterial",
+          "color": "2d5a56",
+          "normalScale": [
+            1,
+            1
+          ],
+          "ao": 1,
+          "normal": null,
+          "diffuse": null,
+          "hasDiffuse": false,
+          "rough": null,
+          "metalnessMap": null,
+          "aoMap": null,
+          "alphaTest": 0,
+          "opacity": 0.66,
+          "markedPainted": false
+        },
+        "art-r1-fence-steel": {
+          "type": "MeshToonMaterial",
+          "color": "55807a",
+          "normalScale": [
+            1,
+            1
+          ],
+          "ao": 1,
+          "normal": null,
+          "diffuse": null,
+          "hasDiffuse": false,
+          "rough": null,
+          "metalnessMap": null,
+          "aoMap": null,
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "apartment-pbr-plaster": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0,
+          "normalScale": [
+            0.45,
+            0.45
+          ],
+          "ao": 0.4,
+          "normal": "apartment-plaster-nor_gl",
+          "diffuse": "apartment-plaster-diff",
+          "hasDiffuse": true,
+          "rough": "apartment-plaster-arm",
+          "metalnessMap": "apartment-plaster-arm",
+          "aoMap": "apartment-plaster-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "apartment-pbr-metal": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0.15,
+          "normalScale": [
+            0.5,
+            0.5
+          ],
+          "ao": 0.4,
+          "normal": "apartment-metal-nor_gl",
+          "diffuse": null,
+          "hasDiffuse": false,
+          "rough": "apartment-metal-arm",
+          "metalnessMap": null,
+          "aoMap": "apartment-metal-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": true
+        },
+        "apartment-pbr-tile": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0,
+          "normalScale": [
+            0.7,
+            0.7
+          ],
+          "ao": 0.4,
+          "normal": "apartment-tile-nor_gl",
+          "diffuse": "apartment-tile-diff",
+          "hasDiffuse": true,
+          "rough": "apartment-tile-arm",
+          "metalnessMap": "apartment-tile-arm",
+          "aoMap": "apartment-tile-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "apartment-pbr-roof": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0.25,
+          "normalScale": [
+            0.35,
+            0.35
+          ],
+          "ao": 0.4,
+          "normal": "apartment-metal-nor_gl",
+          "diffuse": "apartment-metal-diff",
+          "hasDiffuse": true,
+          "rough": "apartment-metal-arm",
+          "metalnessMap": "apartment-metal-arm",
+          "aoMap": "apartment-metal-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        }
+      },
+      "treads": {
+        "count": 14,
+        "firstHitMaterials": [
+          "apartment-pbr-metal"
+        ],
+        "pixelSignal": {
+          "rgbMedian": [
+            79.5,
+            95.5,
+            113.5
+          ],
+          "lumaMedian": 93.398
+        },
+        "hideMetal": {
+          "changed": 14,
+          "over2": 14,
+          "max": 50
+        }
+      },
+      "fencePosts": {
+        "count": 3,
+        "firstHitMaterials": [
+          "art-r1-fence-steel"
+        ],
+        "pixelSignal": {
+          "rgbMedian": [
+            47.0,
+            68.0,
+            83.0
+          ],
+          "lumaMedian": 64.618
+        },
+        "hideMetal": {
+          "changed": 0,
+          "over2": 0,
+          "max": 0
+        }
+      }
+    },
+    "art-d-laundry": {
+      "restore": {
+        "changed": 0,
+        "over2": 0,
+        "max": 0
+      },
+      "materialEvidence": {
+        "art-r1-chainlink": {
+          "type": "MeshToonMaterial",
+          "color": "ffffff",
+          "normalScale": [
+            1,
+            1
+          ],
+          "ao": 1,
+          "normal": null,
+          "diffuse": null,
+          "hasDiffuse": true,
+          "rough": null,
+          "metalnessMap": null,
+          "aoMap": null,
+          "alphaTest": 0.5,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "art-r1-shade-net": {
+          "type": "MeshToonMaterial",
+          "color": "2d5a56",
+          "normalScale": [
+            1,
+            1
+          ],
+          "ao": 1,
+          "normal": null,
+          "diffuse": null,
+          "hasDiffuse": false,
+          "rough": null,
+          "metalnessMap": null,
+          "aoMap": null,
+          "alphaTest": 0,
+          "opacity": 0.66,
+          "markedPainted": false
+        },
+        "art-r1-fence-steel": {
+          "type": "MeshToonMaterial",
+          "color": "55807a",
+          "normalScale": [
+            1,
+            1
+          ],
+          "ao": 1,
+          "normal": null,
+          "diffuse": null,
+          "hasDiffuse": false,
+          "rough": null,
+          "metalnessMap": null,
+          "aoMap": null,
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "apartment-pbr-plaster": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0,
+          "normalScale": [
+            0.45,
+            0.45
+          ],
+          "ao": 0.4,
+          "normal": "apartment-plaster-nor_gl",
+          "diffuse": "apartment-plaster-diff",
+          "hasDiffuse": true,
+          "rough": "apartment-plaster-arm",
+          "metalnessMap": "apartment-plaster-arm",
+          "aoMap": "apartment-plaster-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "apartment-pbr-metal": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0.15,
+          "normalScale": [
+            0.5,
+            0.5
+          ],
+          "ao": 0.4,
+          "normal": "apartment-metal-nor_gl",
+          "diffuse": null,
+          "hasDiffuse": false,
+          "rough": "apartment-metal-arm",
+          "metalnessMap": null,
+          "aoMap": "apartment-metal-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": true
+        },
+        "apartment-pbr-tile": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0,
+          "normalScale": [
+            0.7,
+            0.7
+          ],
+          "ao": 0.4,
+          "normal": "apartment-tile-nor_gl",
+          "diffuse": "apartment-tile-diff",
+          "hasDiffuse": true,
+          "rough": "apartment-tile-arm",
+          "metalnessMap": "apartment-tile-arm",
+          "aoMap": "apartment-tile-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        },
+        "apartment-pbr-roof": {
+          "type": "MeshStandardMaterial",
+          "color": "ffffff",
+          "roughness": 1,
+          "metalness": 0.25,
+          "normalScale": [
+            0.35,
+            0.35
+          ],
+          "ao": 0.4,
+          "normal": "apartment-metal-nor_gl",
+          "diffuse": "apartment-metal-diff",
+          "hasDiffuse": true,
+          "rough": "apartment-metal-arm",
+          "metalnessMap": "apartment-metal-arm",
+          "aoMap": "apartment-metal-arm",
+          "alphaTest": 0,
+          "opacity": 1,
+          "markedPainted": false
+        }
+      },
+      "guardrailSamples": 34,
+      "guardrailMaterials": {
+        "apartment-pbr-metal  Scene/station-city-background/town-edge-kit": 34
+      },
+      "portalFirstHits": 0,
+      "sampleSignal": {
+        "rgbMedian": [
+          47.5,
+          62.0,
+          76.5
+        ],
+        "lumaMedian": 59.964
+      },
+      "samplesHidingPortal": {
+        "changed": 2,
+        "over2": 0,
+        "max": 1
+      },
+      "samplesHidingApartmentMetal": {
+        "changed": 34,
+        "over2": 34,
+        "max": 202
+      },
+      "upperHidingPortal": {
+        "changed": 7447,
+        "over2": 0,
+        "max": 1
+      },
+      "shopHidingPortal": {
+        "changed": 162898,
+        "over2": 95561,
+        "max": 187
+      }
+    },
+    "sample-e-harbour": {
+      "restore": {
+        "changed": 0,
+        "over2": 0,
+        "max": 0
+      },
+      "cityHidden": {
+        "changed": 0,
+        "over2": 0,
+        "max": 0
+      }
+    }
+  }
+}
