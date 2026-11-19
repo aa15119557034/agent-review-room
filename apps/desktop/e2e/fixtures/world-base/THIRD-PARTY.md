@@ -17,11 +17,12 @@
 | Rob Tuytel / White Plaster 02 | [CC0 1.0](https://polyhaven.com/license) | 公寓外墙使用原始漫反射、GL 法线和 ARM 贴图。[官方来源](https://polyhaven.com/a/white_plaster_02) |
 | Charlotte Baglioni / Rectangular Facade Tiles | [CC0 1.0](https://polyhaven.com/license) | 公寓立面与阳台使用原始漫反射、GL 法线和 ARM 贴图。[官方来源](https://polyhaven.com/a/rectangular_facade_tiles) |
 | Quaternius / Downtown City MegaKit Standard（历史试装，已退休） | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)；原 License_Standard.txt 随本地历史文件保留 | [作者来源](https://quaternius.com/packs/downtowncitymegakit.html)。当前场景不再加载三栋免费版建筑；试装曾关闭顶点控制色、调整底色并共享兼容纹理，原二进制始终未改。26项原文件哈希、许可和旧截图保留于 retiredAssets.downtown 及历史证据。 |
+| Kenney / City Kit Commercial 2.1 | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)；许可文本为发行 ZIP 内 `station-art-notices/licenses/LICENSE-Kenney.txt` | [官方来源](https://kenney.nl/assets/city-kit-commercial)。仅用作西侧办公楼比选候选，原包不在仓库中，由准备脚本下载。 |
 | mirzaev3d / High-Rise Building #01（历史试装，已退休） | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) | [作者来源](https://www.fab.com/listings/ca10b839-7882-42f8-ab60-496610708a6c)。当前场景不加载该模型；保留作者[原MTL文本](./upstream/mirzaev-highrise/High-Rise-Building.mtl)及旧试装证据。旧试装使用官方GLB原始几何，按MTL及Three r187 MTLLoader的Phong/sRGB约定恢复三种材质颜色与高光，并增加摆放、地基与道路。来源、哈希与历史恢复参数保留于 city-assets.json 的 retiredAssets.highrise。未声称作者为本项目背书。 |
 
 `src/look.js` 的色阶阈值、描边及阴影调色依据 Sakuragaoka 的 MIT 实现，HDR 合成复用 Petalwake 的 MIT 实现；`src/station-view.js` 的步行碰撞流程依据 Sakuragaoka Player/Physics。以上来源的版权和许可持续适用。
 
-新增9个道具文件的官方URL、作者、size、MD5及SHA256见 [prop-assets.json](./prop-assets.json)。原文件只保存于 `.local/textured-props/`；没有复制官网预览图或从用户参考图提取贴图。原Painted Wooden Bench因造型偏复古未接入运行。现成纸箱、矮牌和花盆继续复用桜ヶ丘MIT构件；工具棚门按原完整包围范围精确匹配后局部换材质，未改上游几何或全局共享材质。
+新增9个道具文件的官方URL、作者、size、MD5及SHA256见 [prop-assets.json](./prop-assets.json)。Poly Haven 原文件为 CC0，允许进仓库，存于 `assets/art-preview/downloads/`（共 14 个文件，另有补齐的 Opacity 图在 `assets/art-preview/supplemental/`）；没有复制官网预览图或从用户参考图提取贴图。原Painted Wooden Bench因造型偏复古未接入运行。现成纸箱、矮牌和花盆继续复用桜ヶ丘MIT构件；工具棚门按原完整包围范围精确匹配后局部换材质，未改上游几何或全局共享材质。
 
 局部地表适配集中在 `src/transition.js`、`src/island.js` 和 `src/station.js`：填缝带与站区底土地表外缘共享 Petalwake 地表着色及纹理，植被在边缘渐变恢复。`src/look.js` 对地形已校正漫反射做四档量化，并局部调整浅水散射、远景焦散和岸边泡沫；未改写上游 `water.js`。`scripts/analyze-caustics.cjs` 直接执行固定源码中的纹理生成函数进行 CPU 分布测量，其来源仍为上述 Petalwake MIT 代码。
 
@@ -40,3 +41,49 @@ Petalwake 的 `assets/` 包含上游说明的 Meshy/fal 生成模型或纹理。
 第15轮在上述固定MIT套件内增加稀疏立面生活物：外机、少量晾衣、金属顶栏、雨管／短檐沟、电表和姓氏牌；服务角复用已有百叶、职员贴纸和排水图集。逐项源码哈希见 streetscape-assets.json。洗衣店文字“さくら コインランドリー”“洗濯・乾燥”“セルフサービス”为本场景生成的虚构店招与功能说明，绘入既有第5页商店图集的空区；更新像素但没有新增纹理对象、图集页或像素容量。沿用原绘字函数和系统字体，不打包字体、不复制参考图、不声称原作者提供了此店铺。隐藏面删减仅适配层几何；上游文件保持。
 
 X-51 美术第1轮（art r1）：新增的备货、摊位、幟旗、洗衣店贴纸、铁丝网、纸箱、管线、小货车均为程序生成（几何与画布纹理），没有引入新的第三方资产，没有下载文件，参考图只放在被忽略的 `.local/`，`evidence/art-r1/` 仅含「上一轮｜这一轮」对比图。
+
+## 素材许可清单
+
+规则：能否入库看来源和许可，不看文件类型。以下以仓库实际文件和来源记录（sources.json、各 *-assets.json、`assets/`、发行 ZIP 内的 notices）为准，核对日期 2026-11-19。
+
+### 可进仓库
+
+| 素材 | 许可 | 仓库中的证据 |
+|---|---|---|
+| Sakuragaoka（kiarashfa） | MIT | `upstream/sakuragaoka/` 源码与 LICENSE |
+| Petalwake 代码（Jacob Miller） | MIT | `upstream/petalwake/` 与 LICENSE。其中 Meshy/fal 生成的素材另算，见下表，不随代码进仓库 |
+| Poly Haven 贴图与道具（Plastic Crate 02、Worn Shutter、White Plaster 02、Rectangular Facade Tiles） | CC0 1.0 | `assets/art-preview/downloads/`（14 个文件）、prop-assets.json |
+| Kenney City Kit Commercial | CC0 | 仅有发行 ZIP 内的 LICENSE-Kenney.txt 与来源链接；原包不入库。Kenney Train Kit：仓库中查不到使用记录，未列为已用 |
+| Quaternius Downtown City MegaKit Standard（已退休） | CC0 | city-assets.json 的 retiredAssets.downtown；原文件只在本地历史目录 |
+| three.js r187 | MIT | `upstream/petalwake/vendor/three/LICENSE` |
+| meshoptimizer 1.1 | MIT | `upstream/petalwake/vendor/three/examples/jsm/libs/MESHOPT-LICENSE.md` |
+| station-art（本项目改作） | MIT | `assets/station-art/`。再分发需同时附 station-art 自身和 Sakuragaoka 两份 MIT 文本（ZIP 的 `licenses/` 已含） |
+| 程序生成贴图与几何（本项目自有） | 项目自有 | 各 `src/*.js` 及 streetscape-assets.json |
+
+### 需署名或有限制
+
+| 素材 | 许可 | 状态与要求 |
+|---|---|---|
+| mirzaev3d / High-Rise Building #01 | CC BY 4.0 | 已退役，当前场景不加载，仅保留作者原 MTL 文本（`upstream/mirzaev-highrise/`）与历史证据。**恢复使用即需署名**（作者、来源链接、许可、是否修改） |
+| Wikimedia 洗衣店照片 | CC BY-SA 4.0 | 仅作参考，不进仓库，不提取贴图 |
+| Unsung Vale 音频（CC BY 4.0 / CC0 逐项） | 逐项署名 | 仓库中没有任何音频文件或来源记录，未使用；日后使用须逐项登记作者与许可 |
+
+### 只能放 `.local/`（已 gitignore）
+
+| 素材 | 原因 |
+|---|---|
+| Petalwake 内 Meshy/fal 生成的模型与贴图 | 上游未给出再分发许可，由固定版本下载脚本取回 |
+| World3DWorks 样品楼（BOOTH） | 禁止再分发 |
+| 人物 VRM（deepcoin-avatars 等） | 禁止再分发或非商用。仓库中没有 VRM 文件 |
+| 绝区零截图 | HoYoverse 版权，仅作参考，只贴 issue 评论 |
+| johansson-town、Portals、Low Poly Japanese City | 许可不明或含 NC |
+
+## Blender 插件
+
+PR #254 评论 6978845149 曾列出九个候选插件：Sapling Tree Gen、Modular Tree、Easy Tree、RC12、BlenderNation 风格化树、Building Tools、Buildify、buildingnodes、Grassify。各自许可尚未逐个确认。
+
+- 核查结果：在仓库全部已跟踪文件中搜索这些名字，没有命中；station-art 两个发行 ZIP 的脚本、元数据和 notices 中也没有任何插件来源记录。**目前仓库内没有用这些插件生成的产物。** 现有 station-art 为 Blender 脚本和手工建模。
+- 插件本身不进仓库。
+- 以 GPL 发布的插件（如 Sapling Tree Gen、Building Tools，须先确认其实际许可再写入）：按通行理解，用它生成的模型不受 GPL 约束。
+- 商品页授权的插件（如 Easy Tree、Buildify）：授权条款未核实，**其产物仅本机试做，不入库**。
+- 若今后要用任何插件产物入库，先在本文登记插件名、版本、许可和核实链接。
