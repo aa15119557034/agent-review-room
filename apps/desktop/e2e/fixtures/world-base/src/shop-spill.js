@@ -11,12 +11,15 @@ import * as THREE from 'three';
 const VERT = /* glsl */`
 attribute vec2 aSize;
 attribute vec2 aRange;
+attribute vec2 aSpan;
 attribute vec3 aColor;
 varying vec2 vUv;
 varying vec2 vSize;
 varying float vV;
 varying vec3 vColor;
+varying vec2 vX;
 void main() {
+  vX = vec2( aSpan.x + uv.x * aSize.x, aSpan.y );
   vUv = uv; vSize = aSize; vColor = aColor; vV = mix( aRange.x, aRange.y, uv.y );
   gl_Position = projectionMatrix * modelViewMatrix * ( instanceMatrix * vec4( position, 1.0 ) );
 }`;
@@ -27,10 +30,11 @@ varying vec2 vUv;
 varying vec2 vSize;
 varying vec3 vColor;
 varying float vV;
+varying vec2 vX;
 void main() {
   float along = pow( 1.0 - smoothstep( 0.0, 1.0, vV ), uPow );
   float e = max( uEdge, 1e-3 );
-  float side = smoothstep( 0.0, e, vUv.x * vSize.x ) * smoothstep( 0.0, e, ( 1.0 - vUv.x ) * vSize.x );
+  float side = smoothstep( 0.0, e, vX.x ) * smoothstep( 0.0, e, vX.y - vX.x );
   gl_FragColor = vec4( vColor * ( uStrength * along * side ), 0.0 );
 }`;
 
@@ -54,52 +58,91 @@ export function shopFrontsFromRooms(layout, rooms, p) {
  *  from the door; runs of equal height become one quad each, so a landing, a step and the pavement below are each covered
  *  at their own height and nothing floats. */
 export function groundSpillFronts(fronts, roots, p, offset = new THREE.Vector3()) {
-  const ray = new THREE.Raycaster(), down = new THREE.Vector3(0, -1, 0), o = new THREE.Vector3(), n = new THREE.Vector3(), t = new THREE.Vector3();
-  const hit = (x, y, z) => {
-    ray.set(o.set(x + offset.x, y + offset.y, z + offset.z), down); ray.far = 2.4;
-    for (const h of ray.intersectObjects(roots, true)) {
-      if (h.object.userData.wbDoorGlow || !h.face) continue;
-      if (h.object.material?.transparent && h.object.material.depthWrite === false) continue;
-      n.copy(h.face.normal).transformDirection(h.object.matrixWorld);
-      if (n.y > 0.8) return h.point.y - offset.y;
+  const n = new THREE.Vector3(), t = new THREE.Vector3();
+  const meshes = [];
+  for (const r of roots) { r.updateWorldMatrix(true, true); r.traverse(o => {
+    if (!o.isMesh || o.isInstancedMesh || o.isSkinnedMesh || o.userData.wbDoorGlow || !o.geometry.attributes.position) return;
+    const m = o.material; if (m && !Array.isArray(m) && m.transparent && m.depthWrite === false) return;
+    meshes.push(o);
+  }); }
+  const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3(), e1 = new THREE.Vector3(), e2 = new THREE.Vector3(), nn = new THREE.Vector3();
+  /** Up-facing triangles (projected to xz, with their plane) near one front, in parent space. */
+  const trianglesNear = (f) => {
+    const reach = f.width / 2 + p.depth + 1.5, x0 = f.center[0] - reach, x1 = f.center[0] + reach, z0 = f.center[2] - reach, z1 = f.center[2] + reach;
+    const y0 = f.center[1] - 2, y1 = f.center[1] + 1.2, out = [];
+    for (const o of meshes) {
+      const g = o.geometry; if (!g.boundingBox) g.computeBoundingBox();
+      const bb = new THREE.Box3().copy(g.boundingBox).applyMatrix4(o.matrixWorld);
+      if (bb.max.x - offset.x < x0 || bb.min.x - offset.x > x1 || bb.max.z - offset.z < z0 || bb.min.z - offset.z > z1 || bb.max.y - offset.y < y0 || bb.min.y - offset.y > y1) continue;
+      const pos = g.attributes.position, idx = g.index, count = idx ? idx.count : pos.count, mw = o.matrixWorld;
+      for (let i = 0; i < count; i += 3) {
+        const ia = idx ? idx.getX(i) : i, ib = idx ? idx.getX(i + 1) : i + 1, ic = idx ? idx.getX(i + 2) : i + 2;
+        a.fromBufferAttribute(pos, ia).applyMatrix4(mw).sub(offset); b.fromBufferAttribute(pos, ib).applyMatrix4(mw).sub(offset); c.fromBufferAttribute(pos, ic).applyMatrix4(mw).sub(offset);
+        if (Math.max(a.x, b.x, c.x) < x0 || Math.min(a.x, b.x, c.x) > x1 || Math.max(a.z, b.z, c.z) < z0 || Math.min(a.z, b.z, c.z) > z1) continue;
+        if (Math.min(a.y, b.y, c.y) > y1 || Math.max(a.y, b.y, c.y) < y0) continue;
+        nn.crossVectors(e1.subVectors(b, a), e2.subVectors(c, a));
+        if (nn.y <= 0.8 * nn.length() || nn.y < 1e-9) continue;       // up-facing only (winding-independent for the common +y case)
+        out.push([a.x, a.z, a.y, b.x, b.z, b.y, c.x, c.z, c.y]);
+      }
     }
-    return null;
+    return out;
+  };
+  let tris = [];
+  const hit = (x, y, z) => {
+    let best = null;
+    for (const T of tris) {
+      const d = (T[3] - T[0]) * (T[7] - T[1]) - (T[6] - T[0]) * (T[4] - T[1]); if (Math.abs(d) < 1e-9) continue;
+      const u = ((x - T[0]) * (T[7] - T[1]) - (T[6] - T[0]) * (z - T[1])) / d, v = ((T[3] - T[0]) * (z - T[1]) - (x - T[0]) * (T[4] - T[1])) / d;
+      if (u < -1e-4 || v < -1e-4 || u + v > 1 + 1e-4) continue;
+      const h = T[2] + u * (T[5] - T[2]) + v * (T[8] - T[2]);
+      if (h <= y && (best == null || h > best)) best = h;
+    }
+    return best;
   };
   const out = [], gap = p.step ?? 0.09, dd = 0.3;
   for (const f of fronts) {
+    tris = trianglesNear(f);
     n.fromArray(f.normal); t.set(-n.z, 0, n.x);
-    const hs = [];
-    for (let d = dd / 2; d < p.depth; d += dd) {
-      const ys = [-0.25, 0, 0.25].map(k => hit(f.center[0] + n.x * d + t.x * f.width * k, f.center[1] + p.rayLift, f.center[2] + n.z * d + t.z * f.width * k)).filter(y => y != null).sort((a, b) => a - b);
-      hs.push({ d, y: ys.length ? ys[(ys.length - 1) >> 1] : null });
+    // Columns across the front, each with its own height series: a ramp or stair in the middle of the front must not be
+    // averaged with the flat paving beside it (that left a slab floating over the lower part).
+    const cols = Math.max(1, Math.ceil(f.width / (p.column ?? 1.5))), cw = f.width / cols;
+    for (let j = 0; j < cols; j++) {
+      const off = (j + 0.5) * cw - f.width / 2, cx = f.center[0] + t.x * off, cz = f.center[2] + t.z * off;
+      const hs = [];
+      for (let d = dd / 2; d < p.depth; d += dd) {
+        const ys = [-0.3, 0, 0.3].map(k => hit(cx + n.x * d + t.x * cw * k, f.center[1] + p.rayLift, cz + n.z * d + t.z * cw * k)).filter(y => y != null).sort((a, b) => a - b);
+        hs.push({ d, y: ys.length ? ys[(ys.length - 1) >> 1] : null });
+      }
+      const runs = [];
+      for (const s of hs) {
+        if (s.y == null) break;
+        const last = runs[runs.length - 1];
+        if (last && Math.abs(s.y - last.prev) <= gap) { last.ys.push(s.y); last.prev = s.y; last.end = s.d + dd / 2; }
+        else runs.push({ start: last ? last.end : 0, end: s.d + dd / 2, ys: [s.y], prev: s.y });
+      }
+      for (const r of runs) out.push({ ...f, center: [cx, f.center[1], cz], width: cw, x0: j * cw, totalW: f.width, floor: Math.max(...r.ys), d0: r.start, d1: r.end, total: p.depth, ray: 'ok' });
     }
-    const runs = [];
-    for (const s of hs) {
-      if (s.y == null) break;
-      const last = runs[runs.length - 1];
-      if (last && Math.abs(s.y - last.prev) <= gap) { last.ys.push(s.y); last.prev = s.y; last.end = s.d + dd / 2; }
-      else runs.push({ start: last ? last.end : 0, end: s.d + dd / 2, ys: [s.y], prev: s.y });
-    }
-    if (!runs.length) { out.push({ ...f, floor: f.center[1], d0: 0, d1: 1.0, total: p.depth, ray: 'none' }); continue; }
-    for (const r of runs) out.push({ ...f, floor: r.ys.reduce((a, b) => a + b, 0) / r.ys.length, d0: r.start, d1: r.end, total: p.depth, ray: 'ok' });
   }
   return out;
 }
 
 export function addShopSpill({ parent, fronts, params: p }) {
   const plane = new THREE.PlaneGeometry(1, 1), n = fronts.length;
-  const sizes = new Float32Array(n * 2), ranges = new Float32Array(n * 2), colors = new Float32Array(n * 3);
+  const sizes = new Float32Array(n * 2), ranges = new Float32Array(n * 2), spans = new Float32Array(n * 2), colors = new Float32Array(n * 3);
   const material = new THREE.ShaderMaterial({
     name: 'shop-spill', vertexShader: VERT, fragmentShader: FRAG,
     uniforms: { uStrength: { value: p.strength }, uPow: { value: p.falloff ?? 1.5 }, uEdge: { value: p.edge ?? 0.8 } },
     transparent: true, depthTest: true, depthWrite: false, toneMapped: false, fog: false, side: THREE.DoubleSide,
     blending: THREE.CustomBlending, blendEquation: THREE.AddEquation, blendEquationAlpha: THREE.AddEquation,
+    // Additive. Screen blend (OneMinusDstColor) was tried in r10b and does nothing here: the scene target is HDR and lit paving
+    // is above 1, so (1 - dst) goes to zero or negative. Whitening is limited by low strength and by laying the patch on the real paving.
     blendSrc: THREE.OneFactor, blendDst: THREE.OneFactor,
     blendSrcAlpha: THREE.ZeroFactor, blendDstAlpha: THREE.OneFactor,
     polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -2,
   });
   plane.setAttribute('aSize', new THREE.InstancedBufferAttribute(sizes, 2));
   plane.setAttribute('aRange', new THREE.InstancedBufferAttribute(ranges, 2));
+  plane.setAttribute('aSpan', new THREE.InstancedBufferAttribute(spans, 2));
   plane.setAttribute('aColor', new THREE.InstancedBufferAttribute(colors, 3));
   const mesh = new THREE.InstancedMesh(plane, material, n);
   mesh.name = 'shop-spill';
@@ -111,7 +154,7 @@ export function addShopSpill({ parent, fronts, params: p }) {
     const len = f.d1 - f.d0;
     pos.fromArray(f.center).addScaledVector(nv, f.d0 + len / 2); pos.y = f.floor + 0.012;
     mesh.setMatrixAt(i, m.compose(pos, q, scale.set(f.width, len, 1)));
-    sizes.set([f.width, len], i * 2); ranges.set([f.d0 / f.total, f.d1 / f.total], i * 2);
+    sizes.set([f.width, len], i * 2); ranges.set([f.d0 / f.total, f.d1 / f.total], i * 2); spans.set([f.x0, f.totalW], i * 2);
     colors.set(/^(konbini|laundry)$/.test(f.kind) ? p.cool : p.warm, i * 3);
   });
   mesh.instanceMatrix.needsUpdate = true; mesh.castShadow = mesh.receiveShadow = false; mesh.frustumCulled = false;

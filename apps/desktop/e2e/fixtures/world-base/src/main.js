@@ -265,8 +265,10 @@ async function init() {
       const rooms = station.ctx.services.shopInteriors ?? [];
       const raw = [...shopFrontsFromRooms(layoutModule, rooms, params), ...worldBase.city.placements.filter(p => p.type === 'apartment').flatMap(p => p.model.shopFronts ?? [])];
       worldBase.city.root.updateWorldMatrix(true, true);
+      const t0 = performance.now();
       const fronts = groundSpillFronts(raw, [station.root, worldBase.city.root], params, worldBase.city.root.position);
       worldBase.shopSpill = addShopSpill({ parent: worldBase.city.root, fronts, params });
+      worldBase.shopSpill.buildMs = +(performance.now() - t0).toFixed(1);
     }
   }
   // The vehicles' shared glass material is unnamed and its meshes carry no 'glass' name, so the
