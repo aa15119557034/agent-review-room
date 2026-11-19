@@ -20,7 +20,8 @@ export function buildTownApartment(H, F, spec) {
   const start = gb.tris, clothStart = H.laundry.I.length / 3, garments = H.laundry.count;
   const wall = floors === 3 ? '#f0e9d7' : floors === 4 ? '#c6d3d6' : '#dce4e4';
   const trim = floors === 3 ? '#d1d0c1' : floors === 4 ? '#b9c6c9' : '#c6cfd0';
-  const steel = '#7f9692', dark = '#4c6463', r = H.ctx.rng(`apartment-rebuild-${floors}`);
+  // Round 7 (#254 X-51): railings are a lighter painted teal-grey so thin bars do not read as black lines against lit windows.
+  const steel = '#7f9692', dark = '#4c6463', rail = '#6d8985', r = H.ctx.rng(`apartment-rebuild-${floors}`);
   const S = { frameColor: dark, sillColor: '#a8aeaa', grilleColor: dark,
     shutterColor: dark, shutterStyle: 'none', shutterClosed: 0, trim,
     interiors: null, roof: { mat: 'metal', color: steel }, wall: { kind: 'paint', color: wall },
@@ -55,13 +56,13 @@ export function buildTownApartment(H, F, spec) {
         F.box(metal, steel, bw, .055, .035, x, y + .075, outer + .025, { uv: { world: 1 } });
         const solid = floors === 5 ? .38 : 0;
         if (solid) F.boxB(tile, '#c4c7c1', bw, solid, .11, x, slabTop, outer - .035, { uv: { world: 2 } });
-        railing(F, metal, dark, [x - bw / 2 + .055, slabTop + solid, outer - .04], [x + bw / 2 - .055, slabTop + solid, outer - .04], 1.02 - solid, floors === 3 ? .17 : .20);
+        railing(F, metal, rail, [x - bw / 2 + .055, slabTop + solid, outer - .04], [x + bw / 2 - .055, slabTop + solid, outer - .04], 1.02 - solid, floors === 3 ? .17 : .20);
         for (const side of [-1, 1]) {
           const bx = x + side * (bw / 2 - .045);
           if (floors === 4) {
             F.boxB(plaster, trim, .13, 2.20, outer - bayFront, bx, slabTop, (outer + bayFront) / 2, { uv: { world: 1.5 } });
             F.box(metal, steel, .17, .035, outer - bayFront + .03, bx, slabTop + 2.22, (outer + bayFront) / 2, { uv: { world: 1 } });
-          } else railing(F, metal, dark, [bx, slabTop, bayFront + .09], [bx, slabTop, outer - .04], 1.02, .22);
+          } else railing(F, metal, rail, [bx, slabTop, bayFront + .09], [bx, slabTop, outer - .04], 1.02, .22);
         }
         // Balcony drain goes into the downpipe rather than ending over the lane.
         F.box(metal, '#666e6b', .11, .018, .11, x + bw / 2 - .17, slabTop + .018, outer - .19);
@@ -106,7 +107,7 @@ export function buildTownApartment(H, F, spec) {
     // (that one keeps its hand-placed fence, pipes and cardboard from round 1/2).
     if (fl === 0 && !shop && H.artRearCorridor) H.artRearCorridor(rear, { unit, w, floorY: y + .14, rng: H.ctx.rng(`art-r3-rear-${floors}`) });
     F.boxB(plaster, trim, w, .14, 1.05, 0, y, back - .525, { uv: { world: 1.5 } });
-    if (fl > 0) for (const side of [-1, 1]) railing(F, metal, dark,
+    if (fl > 0) for (const side of [-1, 1]) railing(F, metal, rail,
       [side < 0 ? -w / 2 + .08 : 2.66, y + .14, back - 1.01],
       [side < 0 ? -2.66 : w / 2 - .08, y + .14, back - 1.01], 1.02, .18);
     // Slender continuous stringcourses catch grazing light without hiding wall relief.
