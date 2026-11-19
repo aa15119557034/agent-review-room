@@ -277,7 +277,8 @@ export function addDoorsteps(R, M, P, { unit, floorY, rng, ground, avoid = [] })
       small++;
     }
     const np = rng() < (ground ? .8 : .45) ? 1 + (rng() < .4 ? 1 : 0) : 0;
-    for (let i = 0; i < np; i++) { P.pot(R, x + s * (1.22 + i * .32), floorY, .24 + i * .06, rng, .95); pots++; }
+    // Pot scale .75 at z .2 keeps the widest foliage within ~0.5 m of the wall (r8 check: .95 reached 0.67 m).
+    for (let i = 0; i < np; i++) { P.pot(R, x + s * (1.22 + i * .3), floorY, .2, rng, .75); pots++; }
     const ox = x - s * .95;
     if (rng() < .3 && free(ox, .2)) { (rng() < .5 ? P.bucket : P.wateringCan)(R, ox, floorY, .22, rng); small++; }
   }

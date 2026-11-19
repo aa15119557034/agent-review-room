@@ -107,9 +107,9 @@ export function buildTownApartment(H, F, spec) {
     // (that one keeps its hand-placed fence, pipes and cardboard from round 1/2).
     if (fl === 0 && !shop && H.artRearCorridor) H.artRearCorridor(rear, { unit, w, floorY: y + .14, rng: H.ctx.rng(`art-r3-rear-${floors}`) });
     // Art round 8: doorstep life (umbrellas, pots, buckets) at every corridor door, clear of the round-3 cardboard
-    // and of the laundromat's hand-placed broom corner (shop rear, x -5.4..-4.6).
+    // and of the laundromat's hand-placed broom corner (shop rear, x -5.4..-4.6) and first-floor parcels (x -5.4..-4.8, #254 r8 check).
     if (H.artDoorsteps) H.artDoorsteps(rear, { unit, floorY: y + .14, ground: fl === 0, rng: H.ctx.rng(`art-r8-door-${floors}-${fl}`),
-      avoid: fl === 0 ? (shop ? [[-5.5, -4.5]] : [[unit / 2 - .5, unit / 2 + 1.0]]) : [] });
+      avoid: fl === 0 ? (shop ? [[-5.5, -4.5]] : [[unit / 2 - .5, unit / 2 + 1.0]]) : shop && fl === 1 ? [[-5.5, -4.6]] : [] });
     F.boxB(plaster, trim, w, .14, 1.05, 0, y, back - .525, { uv: { world: 1.5 } });
     if (fl > 0) for (const side of [-1, 1]) railing(F, metal, rail,
       [side < 0 ? -w / 2 + .08 : 2.66, y + .14, back - 1.01],
