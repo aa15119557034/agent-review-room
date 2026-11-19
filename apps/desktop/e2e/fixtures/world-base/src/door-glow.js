@@ -13,6 +13,7 @@ varying vec2 vUv;
 varying vec2 vSize;
 #ifdef USE_INSTANCING
 attribute vec2 aSize;
+attribute vec2 aEdge;
 #endif
 void main() {
   vUv = uv;
@@ -21,6 +22,7 @@ void main() {
 #ifdef USE_INSTANCING
   p = instanceMatrix * p;
   vSize = aSize;
+  vEdge = aEdge;
 #endif
   gl_Position = projectionMatrix * modelViewMatrix * p;
 }`;
@@ -36,15 +38,22 @@ uniform vec2 uFade;
 uniform float uFloorOut;
 varying vec2 vUv;
 varying vec2 vSize;
+varying vec2 vEdge;
 void main() {
 #ifdef FLOOR
   vec2 pm = ( vUv - vec2( 0.5, 0.0 ) ) * vSize - vec2( 0.0, uFloorOut );
   float r = length( pm / uRad );
+  // deck ends along the wall (metres from the lamp): gone within 0.15 m of the edge, so nothing hangs over the drop
+  float xm = ( vUv.x - 0.5 ) * vSize.x;
+  float edge = smoothstep( 0.0, 0.15, xm - vEdge.x ) * smoothstep( 0.0, 0.15, vEdge.y - xm );
 #else
   float r = length( ( vUv - uCenter ) / uRad );
 #endif
   float k = pow( 1.0 - smoothstep( 0.0, 1.0, r ), uPow );
   k *= 1.0 - smoothstep( uFade.x, uFade.y, vUv.y );
+#ifdef FLOOR
+  k *= edge;
+#endif
   gl_FragColor = vec4( uColor * ( uStrength * k ), 0.0 );
 }`;
 
@@ -84,9 +93,10 @@ export function resolveDoorLamps(parent, entries) {
       floor = e.floor == null ? null : parent.worldToLocal(v.set(e.lamp[0], e.floor, e.lamp[2]).applyMatrix4(m)).y;
       normal = n.fromArray(e.normal).transformDirection(m).transformDirection(new THREE.Matrix4().copy(parent.matrixWorld).invert()).toArray();
     } else { lamp = e.lamp; floor = e.floor; normal = e.normal; }
+    const tangent = e.tangent && !e.object ? e.tangent : null;
     const key = lamp.map(x => Math.round(x * 50)).join(',');
     if (seen.has(key)) continue; seen.add(key);
-    out.push({ lamp, floor, normal, slabDepth: e.slabDepth ?? 1.0 });
+    out.push({ lamp, floor, normal, slabDepth: e.slabDepth ?? 1.0, slabSide: e.slabSide && tangent ? e.slabSide : null, tangent });
   }
   return out;
 }
@@ -101,8 +111,9 @@ export function addDoorGlow({ parent, lamps, params: p }) {
   const plane = new THREE.PlaneGeometry(1, 1);
   const wallMesh = new THREE.InstancedMesh(plane, wallMat, lamps.length);
   const floorMesh = new THREE.InstancedMesh(plane, floorMat, lamps.length);
-  const floorSize = new Float32Array(lamps.length * 2).fill(1), wallSize = new Float32Array(lamps.length * 2).fill(1);
+  const floorEdge = new Float32Array(lamps.length * 2), floorSize = new Float32Array(lamps.length * 2).fill(1), wallSize = new Float32Array(lamps.length * 2).fill(1);
   wallMesh.name = 'door-glow-wall'; floorMesh.name = 'door-glow-floor';
+  for (let i = 0; i < lamps.length; i++) { floorEdge[i * 2] = -1e4; floorEdge[i * 2 + 1] = 1e4; }
   const n = new THREE.Vector3(), pos = new THREE.Vector3(), q = new THREE.Quaternion(), scale = new THREE.Vector3(), m = new THREE.Matrix4();
   const zAxis = new THREE.Vector3(0, 0, 1), negZ = new THREE.Vector3(0, 0, -1);
   const rotX = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
@@ -118,9 +129,13 @@ export function addDoorGlow({ parent, lamps, params: p }) {
     pos.fromArray(l.lamp).addScaledVector(n, slab / 2); pos.y = l.floor + 0.012;
     floorMesh.setMatrixAt(i, m.compose(pos, q, scale.set(2 * rad, slab, 1)));
     floorSize[i * 2] = 2 * rad; floorSize[i * 2 + 1] = slab;
+    // The floor quad's +x runs along (-n.z, 0, n.x); the registered ends are along `tangent`.
+    if (l.slabSide && l.tangent) { const sgn = Math.sign(l.tangent[0] * -n.z + l.tangent[2] * n.x) || 1; floorEdge.set(sgn > 0 ? l.slabSide : [-l.slabSide[1], -l.slabSide[0]], i * 2); }
   });
   floorMesh.geometry = plane.clone(); wallMesh.geometry = plane.clone();
   floorMesh.geometry.setAttribute('aSize', new THREE.InstancedBufferAttribute(floorSize, 2));
+  floorMesh.geometry.setAttribute('aEdge', new THREE.InstancedBufferAttribute(floorEdge, 2));
+  wallMesh.geometry.setAttribute('aEdge', new THREE.InstancedBufferAttribute(new Float32Array(lamps.length * 2), 2));
   wallMesh.geometry.setAttribute('aSize', new THREE.InstancedBufferAttribute(wallSize, 2));
   plane.dispose();
   for (const mesh of [wallMesh, floorMesh]) {
