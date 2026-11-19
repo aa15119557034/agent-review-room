@@ -1,0 +1,90 @@
+[
+  {
+    "i": 0,
+    "test": "photos",
+    "arm": "before",
+    "fixture": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r7-after\\apps\\desktop\\e2e\\fixtures\\world-base",
+    "sha": "eb000ad5f3bd976cfbb485fe3606442c82309ab5",
+    "id": "r8-native-1119-0-before",
+    "started": "2026-11-19T04:34:10.864Z",
+    "status": 0,
+    "ended": "2026-11-19T04:35:04.731Z"
+  },
+  {
+    "i": 1,
+    "test": "photos",
+    "arm": "after",
+    "fixture": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r8-after\\apps\\desktop\\e2e\\fixtures\\world-base",
+    "sha": "be8879045b4908695fa62342afc1a0b9ec05bb96",
+    "id": "r8-native-1119-1-after",
+    "started": "2026-11-19T04:35:04.802Z",
+    "status": 0,
+    "ended": "2026-11-19T04:36:01.343Z"
+  },
+  {
+    "i": 2,
+    "test": "timing",
+    "arm": "before",
+    "fixture": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r7-after\\apps\\desktop\\e2e\\fixtures\\world-base",
+    "sha": "eb000ad5f3bd976cfbb485fe3606442c82309ab5",
+    "id": "r8-native-1119-2-before",
+    "started": "2026-11-19T04:36:01.397Z",
+    "status": 0,
+    "ended": "2026-11-19T04:38:52.435Z"
+  },
+  {
+    "i": 3,
+    "test": "timing",
+    "arm": "after",
+    "fixture": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r8-after\\apps\\desktop\\e2e\\fixtures\\world-base",
+    "sha": "be8879045b4908695fa62342afc1a0b9ec05bb96",
+    "id": "r8-native-1119-3-after",
+    "started": "2026-11-19T04:38:52.498Z",
+    "status": 0,
+    "ended": "2026-11-19T04:41:43.976Z"
+  },
+  {
+    "i": 4,
+    "test": "timing",
+    "arm": "after",
+    "fixture": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r8-after\\apps\\desktop\\e2e\\fixtures\\world-base",
+    "sha": "be8879045b4908695fa62342afc1a0b9ec05bb96",
+    "id": "r8-native-1119-4-after",
+    "started": "2026-11-19T04:41:44.042Z",
+    "status": 0,
+    "ended": "2026-11-19T04:44:35.493Z"
+  },
+  {
+    "i": 5,
+    "test": "timing",
+    "arm": "before",
+    "fixture": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r7-after\\apps\\desktop\\e2e\\fixtures\\world-base",
+    "sha": "eb000ad5f3bd976cfbb485fe3606442c82309ab5",
+    "id": "r8-native-1119-5-before",
+    "started": "2026-11-19T04:44:35.555Z",
+    "status": 0,
+    "ended": "2026-11-19T04:47:25.890Z"
+  },
+  {
+    "i": 6,
+    "test": "legacy",
+    "arm": "before",
+    "fixture": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r7-after\\apps\\desktop\\e2e\\fixtures\\world-base",
+    "sha": "eb000ad5f3bd976cfbb485fe3606442c82309ab5",
+    "id": "r8-native-1119-6-before",
+    "started": "2026-11-19T04:47:25.948Z",
+    "status": 0,
+    "ended": "2026-11-19T04:48:53.970Z"
+  },
+  {
+    "i": 7,
+    "test": "legacy",
+    "arm": "after",
+    "fixture": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r8-after\\apps\\desktop\\e2e\\fixtures\\world-base",
+    "sha": "be8879045b4908695fa62342afc1a0b9ec05bb96",
+    "id": "r8-native-1119-7-after",
+    "started": "2026-11-19T04:48:54.038Z",
+    "status": 0,
+    "ended": "2026-11-19T04:50:22.267Z"
+  }
+]

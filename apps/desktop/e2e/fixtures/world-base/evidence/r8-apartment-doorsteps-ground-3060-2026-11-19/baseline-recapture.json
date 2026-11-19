@@ -1,0 +1,52 @@
+{
+  "source": "eb000ad5f3bd976cfbb485fe3606442c82309ab5",
+  "reference": "r7 photos-after",
+  "repeat": "r8 photos-before",
+  "views": {
+    "art-a-street": {
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    },
+    "art-b-konbini": {
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    },
+    "art-c-alley": {
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    },
+    "art-d-laundry": {
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    },
+    "return-a": {
+      "changed": 3,
+      "over2": 0,
+      "max": 1
+    },
+    "sample-e-harbour": {
+      "changed": 5088,
+      "over2": 3916,
+      "max": 222
+    },
+    "sample-f-hillside": {
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    },
+    "sample-g-rail": {
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    },
+    "sample-h-north": {
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    }
+  }
+}

@@ -1,0 +1,3994 @@
+{
+  "decals": {
+    "fingerprints": [
+      "1061:2667664:298285.6:949273.1",
+      "1063:2679304:298845.6:951073.1"
+    ],
+    "identicalItems": 26
+  },
+  "counts": {
+    "stands": 23,
+    "pots": 33,
+    "small": 22,
+    "triangles": 11640
+  },
+  "pieceCounts": {
+    "folded": 13,
+    "pot": 33,
+    "stand": 23,
+    "standUmbrella": 58,
+    "wateringCan": 4,
+    "bucket": 5
+  },
+  "clearance": {
+    "maxZ": 0.6690971619132942,
+    "remainingToSlabEdge": 0.3809028380867059,
+    "remainingToStairLanding": 0.2559028380867059,
+    "minDoorGap": 0.0714510082970925,
+    "minAvoidSpanGap": 1.1772934365909364,
+    "minSideEdgeGap": 0.10942613740762042,
+    "insideUpperParcel": [
+      {
+        "site": "4f",
+        "floor": 2,
+        "kind": "stand",
+        "anchor": [
+          -4.82,
+          0.21,
+          0.2
+        ],
+        "min": [
+          -4.929999999403954,
+          0,
+          0.09000000059604646
+        ],
+        "max": [
+          -4.710000000596047,
+          0.42,
+          0.30999999940395356
+        ],
+        "triangles": 32,
+        "parcelBoxHits": [
+          1
+        ],
+        "parcelInteriorVertex": {},
+        "wallSpaceVertex": null,
+        "doorGap": 0.19500000059604705,
+        "avoidGap": null,
+        "edgeGap": 1.0700000005960462
+      },
+      {
+        "site": "4f",
+        "floor": 2,
+        "kind": "standUmbrella",
+        "anchor": [
+          -4.857099035923748,
+          0.48,
+          0.16
+        ],
+        "min": [
+          -4.962706563409063,
+          0.12262916158246767,
+          0.12799999848008156
+        ],
+        "max": [
+          -4.768394548150778,
+          0.8335909904551503,
+          0.19200000151991845
+        ],
+        "triangles": 24,
+        "parcelBoxHits": [
+          1
+        ],
+        "parcelInteriorVertex": {
+          "1": [
+            -4.9356617002328615,
+            0.12867691824098199,
+            0.19200000151991845
+          ]
+        },
+        "wallSpaceVertex": null,
+        "doorGap": 0.2533945481507782,
+        "avoidGap": null,
+        "edgeGap": 1.0372934365909368
+      },
+      {
+        "site": "4f",
+        "floor": 2,
+        "kind": "pot",
+        "anchor": [
+          -5.22,
+          0,
+          0.24
+        ],
+        "min": [
+          -5.396071558455493,
+          0,
+          0.06298305093572415
+        ],
+        "max": [
+          -5.035375373437127,
+          0.4713243867626709,
+          0.44162451816278336
+        ],
+        "triangles": 140,
+        "parcelBoxHits": [
+          1,
+          2
+        ],
+        "parcelInteriorVertex": {
+          "1": [
+            -5.22,
+            0.16124624986231353,
+            0.3793188238143921
+          ],
+          "2": [
+            -5.2557743093621045,
+            0.43303153676896117,
+            0.3162281025295897
+          ]
+        },
+        "wallSpaceVertex": null,
+        "doorGap": 0.520375373437127,
+        "avoidGap": null,
+        "edgeGap": 0.6039284415445074
+      }
+    ]
+  },
+  "floors": [
+    {
+      "site": "3f",
+      "floor": 1,
+      "stands": 1,
+      "pots": 2,
+      "small": 2,
+      "triangles": 433
+    },
+    {
+      "site": "3f",
+      "floor": 2,
+      "stands": 2,
+      "pots": 6,
+      "small": 3,
+      "triangles": 2146
+    },
+    {
+      "site": "3f",
+      "floor": 3,
+      "stands": 2,
+      "pots": 2,
+      "small": 2,
+      "triangles": 689
+    },
+    {
+      "site": "4f",
+      "floor": 1,
+      "stands": 1,
+      "pots": 3,
+      "small": 2,
+      "triangles": 767
+    },
+    {
+      "site": "4f",
+      "floor": 2,
+      "stands": 3,
+      "pots": 2,
+      "small": 1,
+      "triangles": 661
+    },
+    {
+      "site": "4f",
+      "floor": 3,
+      "stands": 3,
+      "pots": 4,
+      "small": 1,
+      "triangles": 1188
+    },
+    {
+      "site": "4f",
+      "floor": 4,
+      "stands": 2,
+      "pots": 1,
+      "small": 2,
+      "triangles": 493
+    },
+    {
+      "site": "5f",
+      "floor": 1,
+      "stands": 3,
+      "pots": 3,
+      "small": 0,
+      "triangles": 830
+    },
+    {
+      "site": "5f",
+      "floor": 2,
+      "stands": 3,
+      "pots": 2,
+      "small": 1,
+      "triangles": 1123
+    },
+    {
+      "site": "5f",
+      "floor": 3,
+      "stands": 2,
+      "pots": 3,
+      "small": 1,
+      "triangles": 1592
+    },
+    {
+      "site": "5f",
+      "floor": 4,
+      "stands": 0,
+      "pots": 3,
+      "small": 4,
+      "triangles": 1141
+    },
+    {
+      "site": "5f",
+      "floor": 5,
+      "stands": 1,
+      "pots": 2,
+      "small": 3,
+      "triangles": 577
+    }
+  ],
+  "records": [
+    {
+      "site": "3f",
+      "floor": 1,
+      "kind": "folded",
+      "anchor": [
+        -4.306666666666667,
+        0.3,
+        0.07
+      ],
+      "min": [
+        -4.373936494483447,
+        -0.010197906666877643,
+        0.027414389615599104
+      ],
+      "max": [
+        -4.253117674963759,
+        0.6074753328469256,
+        0.12850567778501193
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.0714510082970925,
+      "avoidGap": 5.586451008297092,
+      "edgeGap": 1.1260635055165533
+    },
+    {
+      "site": "3f",
+      "floor": 1,
+      "kind": "pot",
+      "anchor": [
+        -4.886666666666667,
+        0,
+        0.24
+      ],
+      "min": [
+        -5.11216463909516,
+        0,
+        0.015368304676862787
+      ],
+      "max": [
+        -4.6565541408882,
+        0.4517273949246326,
+        0.4931891573387244
+      ],
+      "triangles": 165,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.474887474221533,
+      "avoidGap": 5.989887474221533,
+      "edgeGap": 0.38783536090484017
+    },
+    {
+      "site": "3f",
+      "floor": 1,
+      "kind": "folded",
+      "anchor": [
+        -0.64,
+        0.3,
+        0.07
+      ],
+      "min": [
+        -0.7072698278167802,
+        -0.010197906666877643,
+        0.027414389615599104
+      ],
+      "max": [
+        -0.5864510082970926,
+        0.6074753328469256,
+        0.12850567778501193
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.07145100829709261,
+      "avoidGap": 1.9197843416304259,
+      "edgeGap": 4.792730172183219
+    },
+    {
+      "site": "3f",
+      "floor": 1,
+      "kind": "stand",
+      "anchor": [
+        4.486666666666666,
+        0.21,
+        0.2
+      ],
+      "min": [
+        4.376666667262713,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        4.59666666607062,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604616,
+      "avoidGap": 1.5433333339293798,
+      "edgeGap": 0.9033333339293801
+    },
+    {
+      "site": "3f",
+      "floor": 1,
+      "kind": "standUmbrella",
+      "anchor": [
+        4.449567630742918,
+        0.48,
+        0.16
+      ],
+      "min": [
+        4.343960103257603,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        4.538272118515889,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.16229343659093676,
+      "avoidGap": 1.5106267699242704,
+      "edgeGap": 0.9617278814841113
+    },
+    {
+      "site": "3f",
+      "floor": 1,
+      "kind": "standUmbrella",
+      "anchor": [
+        4.486666666666666,
+        0.48,
+        0.2
+      ],
+      "min": [
+        4.458953854019443,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        4.51437947931389,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277624,
+      "avoidGap": 1.6256205206861098,
+      "edgeGap": 0.9856205206861102
+    },
+    {
+      "site": "3f",
+      "floor": 1,
+      "kind": "pot",
+      "anchor": [
+        4.886666666666667,
+        0,
+        0.24
+      ],
+      "min": [
+        4.723081016361558,
+        0,
+        0.06977419033987661
+      ],
+      "max": [
+        5.077682089806908,
+        0.42248918065790664,
+        0.4030880020965524
+      ],
+      "triangles": 140,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.5414143496948913,
+      "avoidGap": 1.889747683028225,
+      "edgeGap": 0.42231791019309206
+    },
+    {
+      "site": "3f",
+      "floor": 2,
+      "kind": "stand",
+      "anchor": [
+        -4.486666666666666,
+        0.21,
+        0.2
+      ],
+      "min": [
+        -4.59666666607062,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        -4.376666667262713,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604616,
+      "avoidGap": null,
+      "edgeGap": 0.9033333339293801
+    },
+    {
+      "site": "3f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        -4.523765702590414,
+        0.48,
+        0.16
+      ],
+      "min": [
+        -4.629373230075729,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        -4.435061214817444,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.25339454815077733,
+      "avoidGap": null,
+      "edgeGap": 0.8706267699242707
+    },
+    {
+      "site": "3f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        -4.486666666666666,
+        0.48,
+        0.2
+      ],
+      "min": [
+        -4.51437947931389,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        -4.458953854019443,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277624,
+      "avoidGap": null,
+      "edgeGap": 0.9856205206861102
+    },
+    {
+      "site": "3f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        -4.449567630742918,
+        0.48,
+        0.24000000000000002
+      ],
+      "min": [
+        -4.538272118515889,
+        0.12262916158246767,
+        0.20799999848008158
+      ],
+      "max": [
+        -4.343960103257603,
+        0.8335909904551503,
+        0.27200000151991843
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.16229343659093676,
+      "avoidGap": null,
+      "edgeGap": 0.9617278814841113
+    },
+    {
+      "site": "3f",
+      "floor": 2,
+      "kind": "pot",
+      "anchor": [
+        -4.886666666666667,
+        0,
+        0.24
+      ],
+      "min": [
+        -5.093926649490992,
+        0,
+        0.048462977409362784
+      ],
+      "max": [
+        -4.679406683842341,
+        0.5483177523023224,
+        0.4525900536775589
+      ],
+      "triangles": 226,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.4977400171756745,
+      "avoidGap": null,
+      "edgeGap": 0.4060733505090077
+    },
+    {
+      "site": "3f",
+      "floor": 2,
+      "kind": "pot",
+      "anchor": [
+        -5.206666666666667,
+        0,
+        0.3
+      ],
+      "min": [
+        -5.39057386259238,
+        0,
+        0.1300441950559616
+      ],
+      "max": [
+        -5.022759470740954,
+        0.9230409402864392,
+        0.48863672018051146
+      ],
+      "triangles": 610,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.8410928040742878,
+      "avoidGap": null,
+      "edgeGap": 0.10942613740762042
+    },
+    {
+      "site": "3f",
+      "floor": 2,
+      "kind": "wateringCan",
+      "anchor": [
+        -2.716666666666667,
+        0,
+        0.22
+      ],
+      "min": [
+        -2.816666668156783,
+        0,
+        0.11999999850988388
+      ],
+      "max": [
+        -2.4288579785722364,
+        0.31,
+        0.3200000014901161
+      ],
+      "triangles": 68,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.3349999985098835,
+      "avoidGap": null,
+      "edgeGap": 2.683333331843217
+    },
+    {
+      "site": "3f",
+      "floor": 2,
+      "kind": "folded",
+      "anchor": [
+        -0.64,
+        0.3,
+        0.07
+      ],
+      "min": [
+        -0.7072698278167802,
+        -0.010197906666877643,
+        0.027414389615599104
+      ],
+      "max": [
+        -0.5864510082970926,
+        0.6074753328469256,
+        0.12850567778501193
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.07145100829709261,
+      "avoidGap": null,
+      "edgeGap": 4.792730172183219
+    },
+    {
+      "site": "3f",
+      "floor": 2,
+      "kind": "pot",
+      "anchor": [
+        -1.22,
+        0,
+        0.24
+      ],
+      "min": [
+        -1.3994548034667968,
+        0,
+        0.07415882289409637
+      ],
+      "max": [
+        -1.040545196533203,
+        0.5473904746233177,
+        0.42406981229782104
+      ],
+      "triangles": 226,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.5255451965332031,
+      "avoidGap": null,
+      "edgeGap": 4.100545196533203
+    },
+    {
+      "site": "3f",
+      "floor": 2,
+      "kind": "pot",
+      "anchor": [
+        -1.54,
+        0,
+        0.3
+      ],
+      "min": [
+        -1.83497603292187,
+        0,
+        -0.03304936983495943
+      ],
+      "max": [
+        -1.1998717582888037,
+        0.5636722351583006,
+        0.6690971619132942
+      ],
+      "triangles": 249,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": [
+        -1.4822317330270232,
+        0.31180379866275565,
+        -0.03304936983495943
+      ],
+      "doorGap": 0.6848717582888036,
+      "avoidGap": null,
+      "edgeGap": 3.66502396707813
+    },
+    {
+      "site": "3f",
+      "floor": 2,
+      "kind": "bucket",
+      "anchor": [
+        0.95,
+        0,
+        0.22
+      ],
+      "min": [
+        0.8099999994039535,
+        0,
+        0.07999999940395355
+      ],
+      "max": [
+        1.0900000005960464,
+        0.326,
+        0.3600000005960464
+      ],
+      "triangles": 60,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.2949999994039535,
+      "avoidGap": null,
+      "edgeGap": 4.409999999403953
+    },
+    {
+      "site": "3f",
+      "floor": 2,
+      "kind": "stand",
+      "anchor": [
+        2.8466666666666667,
+        0.21,
+        0.2
+      ],
+      "min": [
+        2.736666667262713,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        2.9566666660706202,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604616,
+      "avoidGap": null,
+      "edgeGap": 2.5433333339293798
+    },
+    {
+      "site": "3f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        2.8095676307429187,
+        0.48,
+        0.16
+      ],
+      "min": [
+        2.7039601032576033,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        2.8982721185158886,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.2533945481507778,
+      "avoidGap": null,
+      "edgeGap": 2.6017278814841114
+    },
+    {
+      "site": "3f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        2.8466666666666667,
+        0.48,
+        0.2
+      ],
+      "min": [
+        2.818953854019443,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        2.87437947931389,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277624,
+      "avoidGap": null,
+      "edgeGap": 2.62562052068611
+    },
+    {
+      "site": "3f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        2.8837657025904146,
+        0.48,
+        0.24000000000000002
+      ],
+      "min": [
+        2.7950612148174447,
+        0.12262916158246767,
+        0.20799999848008158
+      ],
+      "max": [
+        2.98937323007573,
+        0.8335909904551503,
+        0.27200000151991843
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.1622934365909363,
+      "avoidGap": null,
+      "edgeGap": 2.51062676992427
+    },
+    {
+      "site": "3f",
+      "floor": 2,
+      "kind": "pot",
+      "anchor": [
+        2.4466666666666663,
+        0,
+        0.24
+      ],
+      "min": [
+        2.1199253882150475,
+        0,
+        -0.038875735754006935
+      ],
+      "max": [
+        2.741221187358775,
+        0.5508720710787931,
+        0.561480322849281
+      ],
+      "triangles": 249,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": [
+        2.430047580322863,
+        0.27010895481507247,
+        -0.038875735754006935
+      ],
+      "doorGap": 0.4104454793078913,
+      "avoidGap": null,
+      "edgeGap": 2.758778812641225
+    },
+    {
+      "site": "3f",
+      "floor": 2,
+      "kind": "pot",
+      "anchor": [
+        2.1266666666666665,
+        0,
+        0.3
+      ],
+      "min": [
+        1.92371358136336,
+        0,
+        0.11244313716888427
+      ],
+      "max": [
+        2.329619751969973,
+        0.5586720104027658,
+        0.5081724107265473
+      ],
+      "triangles": 226,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.8220469146966933,
+      "avoidGap": null,
+      "edgeGap": 3.170380248030027
+    },
+    {
+      "site": "3f",
+      "floor": 3,
+      "kind": "folded",
+      "anchor": [
+        -4.306666666666667,
+        0.3,
+        0.07
+      ],
+      "min": [
+        -4.373936494483447,
+        -0.010197906666877643,
+        0.027414389615599104
+      ],
+      "max": [
+        -4.253117674963759,
+        0.6074753328469256,
+        0.12850567778501193
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.0714510082970925,
+      "avoidGap": null,
+      "edgeGap": 1.1260635055165533
+    },
+    {
+      "site": "3f",
+      "floor": 3,
+      "kind": "pot",
+      "anchor": [
+        -4.886666666666667,
+        0,
+        0.24
+      ],
+      "min": [
+        -5.139716325379425,
+        0,
+        -0.010973103553900687
+      ],
+      "max": [
+        -4.645258045477785,
+        0.4546162780745083,
+        0.4854221121090254
+      ],
+      "triangles": 165,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": [
+        -4.9234595689800615,
+        0.23595036554199753,
+        -0.010973103553900687
+      ],
+      "doorGap": 0.46359137881111856,
+      "avoidGap": null,
+      "edgeGap": 0.3602836746205753
+    },
+    {
+      "site": "3f",
+      "floor": 3,
+      "kind": "stand",
+      "anchor": [
+        -0.82,
+        0.21,
+        0.2
+      ],
+      "min": [
+        -0.9299999994039535,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        -0.7100000005960464,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604639,
+      "avoidGap": null,
+      "edgeGap": 4.570000000596046
+    },
+    {
+      "site": "3f",
+      "floor": 3,
+      "kind": "standUmbrella",
+      "anchor": [
+        -0.8570990359237477,
+        0.48,
+        0.16
+      ],
+      "min": [
+        -0.962706563409063,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        -0.7683945481507777,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.25339454815077767,
+      "avoidGap": null,
+      "edgeGap": 4.537293436590937
+    },
+    {
+      "site": "3f",
+      "floor": 3,
+      "kind": "standUmbrella",
+      "anchor": [
+        -0.82,
+        0.48,
+        0.2
+      ],
+      "min": [
+        -0.8477128126472234,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        -0.7922871873527765,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277647,
+      "avoidGap": null,
+      "edgeGap": 4.652287187352776
+    },
+    {
+      "site": "3f",
+      "floor": 3,
+      "kind": "standUmbrella",
+      "anchor": [
+        -0.7829009640762522,
+        0.48,
+        0.24000000000000002
+      ],
+      "min": [
+        -0.8716054518492222,
+        0.12262916158246767,
+        0.20799999848008158
+      ],
+      "max": [
+        -0.6772934365909369,
+        0.8335909904551503,
+        0.27200000151991843
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.16229343659093687,
+      "avoidGap": null,
+      "edgeGap": 4.628394548150778
+    },
+    {
+      "site": "3f",
+      "floor": 3,
+      "kind": "pot",
+      "anchor": [
+        -1.22,
+        0,
+        0.24
+      ],
+      "min": [
+        -1.458291827384824,
+        0,
+        -0.05640595593602321
+      ],
+      "max": [
+        -0.9615256839366202,
+        0.4833128052779254,
+        0.529216519860654
+      ],
+      "triangles": 224,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": [
+        -1.235497228860795,
+        0.2590706793665764,
+        -0.05640595593602321
+      ],
+      "doorGap": 0.4465256839366202,
+      "avoidGap": null,
+      "edgeGap": 4.041708172615176
+    },
+    {
+      "site": "3f",
+      "floor": 3,
+      "kind": "wateringCan",
+      "anchor": [
+        0.95,
+        0,
+        0.22
+      ],
+      "min": [
+        0.8499999985098838,
+        0,
+        0.11999999850988388
+      ],
+      "max": [
+        1.2378086880944301,
+        0.31,
+        0.3200000014901161
+      ],
+      "triangles": 68,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.3349999985098838,
+      "avoidGap": null,
+      "edgeGap": 4.262191311905569
+    },
+    {
+      "site": "3f",
+      "floor": 3,
+      "kind": "stand",
+      "anchor": [
+        2.8466666666666667,
+        0.21,
+        0.2
+      ],
+      "min": [
+        2.736666667262713,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        2.9566666660706202,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604616,
+      "avoidGap": null,
+      "edgeGap": 2.5433333339293798
+    },
+    {
+      "site": "3f",
+      "floor": 3,
+      "kind": "standUmbrella",
+      "anchor": [
+        2.8095676307429187,
+        0.48,
+        0.16
+      ],
+      "min": [
+        2.7039601032576033,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        2.8982721185158886,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.2533945481507778,
+      "avoidGap": null,
+      "edgeGap": 2.6017278814841114
+    },
+    {
+      "site": "3f",
+      "floor": 3,
+      "kind": "standUmbrella",
+      "anchor": [
+        2.8466666666666667,
+        0.48,
+        0.2
+      ],
+      "min": [
+        2.818953854019443,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        2.87437947931389,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277624,
+      "avoidGap": null,
+      "edgeGap": 2.62562052068611
+    },
+    {
+      "site": "3f",
+      "floor": 3,
+      "kind": "standUmbrella",
+      "anchor": [
+        2.8837657025904146,
+        0.48,
+        0.24000000000000002
+      ],
+      "min": [
+        2.7950612148174447,
+        0.12262916158246767,
+        0.20799999848008158
+      ],
+      "max": [
+        2.98937323007573,
+        0.8335909904551503,
+        0.27200000151991843
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.1622934365909363,
+      "avoidGap": null,
+      "edgeGap": 2.51062676992427
+    },
+    {
+      "site": "4f",
+      "floor": 1,
+      "kind": "stand",
+      "anchor": [
+        -3.18,
+        0.21,
+        0.2
+      ],
+      "min": [
+        -3.2899999994039537,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        -3.0700000005960466,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604616,
+      "avoidGap": 1.2100000005960463,
+      "edgeGap": 2.7100000005960463
+    },
+    {
+      "site": "4f",
+      "floor": 1,
+      "kind": "standUmbrella",
+      "anchor": [
+        -3.217099035923748,
+        0.48,
+        0.16
+      ],
+      "min": [
+        -3.3227065634090636,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        -3.128394548150778,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.1622934365909363,
+      "avoidGap": 1.1772934365909364,
+      "edgeGap": 2.6772934365909364
+    },
+    {
+      "site": "4f",
+      "floor": 1,
+      "kind": "standUmbrella",
+      "anchor": [
+        -3.18,
+        0.48,
+        0.2
+      ],
+      "min": [
+        -3.2077128126472236,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        -3.1522871873527767,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277624,
+      "avoidGap": 1.2922871873527764,
+      "edgeGap": 2.7922871873527764
+    },
+    {
+      "site": "4f",
+      "floor": 1,
+      "kind": "standUmbrella",
+      "anchor": [
+        -3.142900964076252,
+        0.48,
+        0.24000000000000002
+      ],
+      "min": [
+        -3.231605451849222,
+        0.12262916158246767,
+        0.20799999848008158
+      ],
+      "max": [
+        -3.0372934365909368,
+        0.8335909904551503,
+        0.27200000151991843
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.2533945481507778,
+      "avoidGap": 1.268394548150778,
+      "edgeGap": 2.768394548150778
+    },
+    {
+      "site": "4f",
+      "floor": 1,
+      "kind": "folded",
+      "anchor": [
+        -0.64,
+        0.3,
+        0.07
+      ],
+      "min": [
+        -0.7072698278167802,
+        -0.010197906666877643,
+        0.027414389615599104
+      ],
+      "max": [
+        -0.5864510082970926,
+        0.6074753328469256,
+        0.12850567778501193
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.07145100829709261,
+      "avoidGap": 3.79273017218322,
+      "edgeGap": 5.292730172183219
+    },
+    {
+      "site": "4f",
+      "floor": 1,
+      "kind": "pot",
+      "anchor": [
+        -1.22,
+        0,
+        0.24
+      ],
+      "min": [
+        -1.4567376649070527,
+        0,
+        -0.05408693761600358
+      ],
+      "max": [
+        -0.9363757132650312,
+        0.4942635124947974,
+        0.5274582215706938
+      ],
+      "triangles": 165,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": [
+        -1.2290643229820204,
+        0.24903930885494086,
+        -0.05408693761600358
+      ],
+      "doorGap": 0.4213757132650312,
+      "avoidGap": 3.0432623350929475,
+      "edgeGap": 4.5432623350929475
+    },
+    {
+      "site": "4f",
+      "floor": 1,
+      "kind": "folded",
+      "anchor": [
+        3.36,
+        0.3,
+        0.07
+      ],
+      "min": [
+        3.29273017218322,
+        -0.010197906666877643,
+        0.027414389615599104
+      ],
+      "max": [
+        3.4135489917029074,
+        0.6074753328469256,
+        0.12850567778501193
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.0714510082970925,
+      "avoidGap": 7.792730172183219,
+      "edgeGap": 2.5864510082970926
+    },
+    {
+      "site": "4f",
+      "floor": 1,
+      "kind": "pot",
+      "anchor": [
+        2.7800000000000002,
+        0,
+        0.24
+      ],
+      "min": [
+        2.529957200635221,
+        0,
+        -0.053138276565485976
+      ],
+      "max": [
+        3.0453381944183375,
+        0.48426822475394443,
+        0.5225224119733515
+      ],
+      "triangles": 224,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": [
+        2.895064586811364,
+        0.26269909350985365,
+        -0.053138276565485976
+      ],
+      "doorGap": 0.43966180558166235,
+      "avoidGap": 7.029957200635221,
+      "edgeGap": 2.9546618055816625
+    },
+    {
+      "site": "4f",
+      "floor": 1,
+      "kind": "pot",
+      "anchor": [
+        2.46,
+        0,
+        0.3
+      ],
+      "min": [
+        2.3232227033376693,
+        0,
+        0.17359876930713652
+      ],
+      "max": [
+        2.5967772966623306,
+        0.4883804488801734,
+        0.44029477536678313
+      ],
+      "triangles": 226,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.8882227033376693,
+      "avoidGap": 6.823222703337669,
+      "edgeGap": 3.4032227033376694
+    },
+    {
+      "site": "4f",
+      "floor": 2,
+      "kind": "stand",
+      "anchor": [
+        -4.82,
+        0.21,
+        0.2
+      ],
+      "min": [
+        -4.929999999403954,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        -4.710000000596047,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [
+        1
+      ],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604705,
+      "avoidGap": null,
+      "edgeGap": 1.0700000005960462
+    },
+    {
+      "site": "4f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        -4.857099035923748,
+        0.48,
+        0.16
+      ],
+      "min": [
+        -4.962706563409063,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        -4.768394548150778,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [
+        1
+      ],
+      "parcelInteriorVertex": {
+        "1": [
+          -4.9356617002328615,
+          0.12867691824098199,
+          0.19200000151991845
+        ]
+      },
+      "wallSpaceVertex": null,
+      "doorGap": 0.2533945481507782,
+      "avoidGap": null,
+      "edgeGap": 1.0372934365909368
+    },
+    {
+      "site": "4f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        -4.82,
+        0.48,
+        0.2
+      ],
+      "min": [
+        -4.847712812647224,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        -4.792287187352777,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277713,
+      "avoidGap": null,
+      "edgeGap": 1.1522871873527762
+    },
+    {
+      "site": "4f",
+      "floor": 2,
+      "kind": "pot",
+      "anchor": [
+        -5.22,
+        0,
+        0.24
+      ],
+      "min": [
+        -5.396071558455493,
+        0,
+        0.06298305093572415
+      ],
+      "max": [
+        -5.035375373437127,
+        0.4713243867626709,
+        0.44162451816278336
+      ],
+      "triangles": 140,
+      "parcelBoxHits": [
+        1,
+        2
+      ],
+      "parcelInteriorVertex": {
+        "1": [
+          -5.22,
+          0.16124624986231353,
+          0.3793188238143921
+        ],
+        "2": [
+          -5.2557743093621045,
+          0.43303153676896117,
+          0.3162281025295897
+        ]
+      },
+      "wallSpaceVertex": null,
+      "doorGap": 0.520375373437127,
+      "avoidGap": null,
+      "edgeGap": 0.6039284415445074
+    },
+    {
+      "site": "4f",
+      "floor": 2,
+      "kind": "stand",
+      "anchor": [
+        -0.82,
+        0.21,
+        0.2
+      ],
+      "min": [
+        -0.9299999994039535,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        -0.7100000005960464,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604639,
+      "avoidGap": null,
+      "edgeGap": 5.070000000596046
+    },
+    {
+      "site": "4f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        -0.8570990359237477,
+        0.48,
+        0.16
+      ],
+      "min": [
+        -0.962706563409063,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        -0.7683945481507777,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.25339454815077767,
+      "avoidGap": null,
+      "edgeGap": 5.037293436590937
+    },
+    {
+      "site": "4f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        -0.82,
+        0.48,
+        0.2
+      ],
+      "min": [
+        -0.8477128126472234,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        -0.7922871873527765,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277647,
+      "avoidGap": null,
+      "edgeGap": 5.152287187352776
+    },
+    {
+      "site": "4f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        -0.7829009640762522,
+        0.48,
+        0.24000000000000002
+      ],
+      "min": [
+        -0.8716054518492222,
+        0.12262916158246767,
+        0.20799999848008158
+      ],
+      "max": [
+        -0.6772934365909369,
+        0.8335909904551503,
+        0.27200000151991843
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.16229343659093687,
+      "avoidGap": null,
+      "edgeGap": 5.128394548150778
+    },
+    {
+      "site": "4f",
+      "floor": 2,
+      "kind": "wateringCan",
+      "anchor": [
+        0.95,
+        0,
+        0.22
+      ],
+      "min": [
+        0.8499999985098838,
+        0,
+        0.11999999850988388
+      ],
+      "max": [
+        1.2378086880944301,
+        0.31,
+        0.3200000014901161
+      ],
+      "triangles": 68,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.3349999985098838,
+      "avoidGap": null,
+      "edgeGap": 4.762191311905569
+    },
+    {
+      "site": "4f",
+      "floor": 2,
+      "kind": "stand",
+      "anchor": [
+        3.18,
+        0.21,
+        0.2
+      ],
+      "min": [
+        3.0700000005960466,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        3.2899999994039537,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604616,
+      "avoidGap": null,
+      "edgeGap": 2.7100000005960463
+    },
+    {
+      "site": "4f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        3.142900964076252,
+        0.48,
+        0.16
+      ],
+      "min": [
+        3.0372934365909368,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        3.231605451849222,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.2533945481507778,
+      "avoidGap": null,
+      "edgeGap": 2.768394548150778
+    },
+    {
+      "site": "4f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        3.18,
+        0.48,
+        0.2
+      ],
+      "min": [
+        3.1522871873527767,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        3.2077128126472236,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277624,
+      "avoidGap": null,
+      "edgeGap": 2.7922871873527764
+    },
+    {
+      "site": "4f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        3.217099035923748,
+        0.48,
+        0.24000000000000002
+      ],
+      "min": [
+        3.128394548150778,
+        0.12262916158246767,
+        0.20799999848008158
+      ],
+      "max": [
+        3.3227065634090636,
+        0.8335909904551503,
+        0.27200000151991843
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.1622934365909363,
+      "avoidGap": null,
+      "edgeGap": 2.6772934365909364
+    },
+    {
+      "site": "4f",
+      "floor": 2,
+      "kind": "pot",
+      "anchor": [
+        2.7800000000000002,
+        0,
+        0.24
+      ],
+      "min": [
+        2.557175094779189,
+        0,
+        -0.0048825944119574305
+      ],
+      "max": [
+        3.028088720193631,
+        0.4247923856890855,
+        0.46027612903400106
+      ],
+      "triangles": 165,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": [
+        2.84548717009928,
+        0.20594817052694037,
+        -0.0048825944119574305
+      ],
+      "doorGap": 0.45691127980636903,
+      "avoidGap": null,
+      "edgeGap": 2.971911279806369
+    },
+    {
+      "site": "4f",
+      "floor": 3,
+      "kind": "stand",
+      "anchor": [
+        -4.82,
+        0.21,
+        0.2
+      ],
+      "min": [
+        -4.929999999403954,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        -4.710000000596047,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604705,
+      "avoidGap": null,
+      "edgeGap": 1.0700000005960462
+    },
+    {
+      "site": "4f",
+      "floor": 3,
+      "kind": "standUmbrella",
+      "anchor": [
+        -4.857099035923748,
+        0.48,
+        0.16
+      ],
+      "min": [
+        -4.962706563409063,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        -4.768394548150778,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.2533945481507782,
+      "avoidGap": null,
+      "edgeGap": 1.0372934365909368
+    },
+    {
+      "site": "4f",
+      "floor": 3,
+      "kind": "standUmbrella",
+      "anchor": [
+        -4.82,
+        0.48,
+        0.2
+      ],
+      "min": [
+        -4.847712812647224,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        -4.792287187352777,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277713,
+      "avoidGap": null,
+      "edgeGap": 1.1522871873527762
+    },
+    {
+      "site": "4f",
+      "floor": 3,
+      "kind": "standUmbrella",
+      "anchor": [
+        -4.782900964076252,
+        0.48,
+        0.24000000000000002
+      ],
+      "min": [
+        -4.871605451849223,
+        0.12262916158246767,
+        0.20799999848008158
+      ],
+      "max": [
+        -4.677293436590937,
+        0.8335909904551503,
+        0.27200000151991843
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.16229343659093765,
+      "avoidGap": null,
+      "edgeGap": 1.1283945481507773
+    },
+    {
+      "site": "4f",
+      "floor": 3,
+      "kind": "stand",
+      "anchor": [
+        -0.82,
+        0.21,
+        0.2
+      ],
+      "min": [
+        -0.9299999994039535,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        -0.7100000005960464,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604639,
+      "avoidGap": null,
+      "edgeGap": 5.070000000596046
+    },
+    {
+      "site": "4f",
+      "floor": 3,
+      "kind": "standUmbrella",
+      "anchor": [
+        -0.8570990359237477,
+        0.48,
+        0.16
+      ],
+      "min": [
+        -0.962706563409063,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        -0.7683945481507777,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.25339454815077767,
+      "avoidGap": null,
+      "edgeGap": 5.037293436590937
+    },
+    {
+      "site": "4f",
+      "floor": 3,
+      "kind": "standUmbrella",
+      "anchor": [
+        -0.82,
+        0.48,
+        0.2
+      ],
+      "min": [
+        -0.8477128126472234,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        -0.7922871873527765,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277647,
+      "avoidGap": null,
+      "edgeGap": 5.152287187352776
+    },
+    {
+      "site": "4f",
+      "floor": 3,
+      "kind": "pot",
+      "anchor": [
+        -1.22,
+        0,
+        0.24
+      ],
+      "min": [
+        -1.5193961581570605,
+        0,
+        -0.11299136256668951
+      ],
+      "max": [
+        -0.9162825871220548,
+        0.6077914293163409,
+        0.5801357718754632
+      ],
+      "triangles": 249,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": [
+        -1.2660578686487118,
+        0.37088236662093677,
+        -0.11299136256668951
+      ],
+      "doorGap": 0.4012825871220548,
+      "avoidGap": null,
+      "edgeGap": 4.48060384184294
+    },
+    {
+      "site": "4f",
+      "floor": 3,
+      "kind": "pot",
+      "anchor": [
+        -1.54,
+        0,
+        0.3
+      ],
+      "min": [
+        -1.719623767733574,
+        0,
+        0.13400267362594603
+      ],
+      "max": [
+        -1.3603762322664261,
+        0.5146874425844999,
+        0.4842431277036667
+      ],
+      "triangles": 226,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.8453762322664261,
+      "avoidGap": null,
+      "edgeGap": 4.280376232266426
+    },
+    {
+      "site": "4f",
+      "floor": 3,
+      "kind": "bucket",
+      "anchor": [
+        0.95,
+        0,
+        0.22
+      ],
+      "min": [
+        0.8099999994039535,
+        0,
+        0.07999999940395355
+      ],
+      "max": [
+        1.0900000005960464,
+        0.326,
+        0.3600000005960464
+      ],
+      "triangles": 60,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.2949999994039535,
+      "avoidGap": null,
+      "edgeGap": 4.909999999403953
+    },
+    {
+      "site": "4f",
+      "floor": 3,
+      "kind": "stand",
+      "anchor": [
+        3.18,
+        0.21,
+        0.2
+      ],
+      "min": [
+        3.0700000005960466,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        3.2899999994039537,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604616,
+      "avoidGap": null,
+      "edgeGap": 2.7100000005960463
+    },
+    {
+      "site": "4f",
+      "floor": 3,
+      "kind": "standUmbrella",
+      "anchor": [
+        3.142900964076252,
+        0.48,
+        0.16
+      ],
+      "min": [
+        3.0372934365909368,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        3.231605451849222,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.2533945481507778,
+      "avoidGap": null,
+      "edgeGap": 2.768394548150778
+    },
+    {
+      "site": "4f",
+      "floor": 3,
+      "kind": "standUmbrella",
+      "anchor": [
+        3.18,
+        0.48,
+        0.2
+      ],
+      "min": [
+        3.1522871873527767,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        3.2077128126472236,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277624,
+      "avoidGap": null,
+      "edgeGap": 2.7922871873527764
+    },
+    {
+      "site": "4f",
+      "floor": 3,
+      "kind": "pot",
+      "anchor": [
+        2.7800000000000002,
+        0,
+        0.24
+      ],
+      "min": [
+        2.4895058076348104,
+        0,
+        -0.04792421064993585
+      ],
+      "max": [
+        3.0601682833634225,
+        0.530175233946842,
+        0.5309211973954798
+      ],
+      "triangles": 249,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": [
+        2.724932760784635,
+        0.3336629383704324,
+        -0.04792421064993585
+      ],
+      "doorGap": 0.4248317166365774,
+      "avoidGap": null,
+      "edgeGap": 2.9398317166365775
+    },
+    {
+      "site": "4f",
+      "floor": 3,
+      "kind": "pot",
+      "anchor": [
+        2.46,
+        0,
+        0.3
+      ],
+      "min": [
+        2.2519004314188007,
+        0,
+        0.04025483336670088
+      ],
+      "max": [
+        2.6879390440346587,
+        0.44879586132359817,
+        0.539974971580124
+      ],
+      "triangles": 140,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.7970609559653412,
+      "avoidGap": null,
+      "edgeGap": 3.3120609559653413
+    },
+    {
+      "site": "4f",
+      "floor": 4,
+      "kind": "stand",
+      "anchor": [
+        -4.82,
+        0.21,
+        0.2
+      ],
+      "min": [
+        -4.929999999403954,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        -4.710000000596047,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604705,
+      "avoidGap": null,
+      "edgeGap": 1.0700000005960462
+    },
+    {
+      "site": "4f",
+      "floor": 4,
+      "kind": "standUmbrella",
+      "anchor": [
+        -4.857099035923748,
+        0.48,
+        0.16
+      ],
+      "min": [
+        -4.962706563409063,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        -4.768394548150778,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.2533945481507782,
+      "avoidGap": null,
+      "edgeGap": 1.0372934365909368
+    },
+    {
+      "site": "4f",
+      "floor": 4,
+      "kind": "standUmbrella",
+      "anchor": [
+        -4.82,
+        0.48,
+        0.2
+      ],
+      "min": [
+        -4.847712812647224,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        -4.792287187352777,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277713,
+      "avoidGap": null,
+      "edgeGap": 1.1522871873527762
+    },
+    {
+      "site": "4f",
+      "floor": 4,
+      "kind": "folded",
+      "anchor": [
+        -0.64,
+        0.3,
+        0.07
+      ],
+      "min": [
+        -0.7072698278167802,
+        -0.010197906666877643,
+        0.027414389615599104
+      ],
+      "max": [
+        -0.5864510082970926,
+        0.6074753328469256,
+        0.12850567778501193
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.07145100829709261,
+      "avoidGap": null,
+      "edgeGap": 5.292730172183219
+    },
+    {
+      "site": "4f",
+      "floor": 4,
+      "kind": "bucket",
+      "anchor": [
+        0.95,
+        0,
+        0.22
+      ],
+      "min": [
+        0.8099999994039535,
+        0,
+        0.07999999940395355
+      ],
+      "max": [
+        1.0900000005960464,
+        0.326,
+        0.3600000005960464
+      ],
+      "triangles": 60,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.2949999994039535,
+      "avoidGap": null,
+      "edgeGap": 4.909999999403953
+    },
+    {
+      "site": "4f",
+      "floor": 4,
+      "kind": "stand",
+      "anchor": [
+        3.18,
+        0.21,
+        0.2
+      ],
+      "min": [
+        3.0700000005960466,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        3.2899999994039537,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604616,
+      "avoidGap": null,
+      "edgeGap": 2.7100000005960463
+    },
+    {
+      "site": "4f",
+      "floor": 4,
+      "kind": "standUmbrella",
+      "anchor": [
+        3.142900964076252,
+        0.48,
+        0.16
+      ],
+      "min": [
+        3.0372934365909368,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        3.231605451849222,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.2533945481507778,
+      "avoidGap": null,
+      "edgeGap": 2.768394548150778
+    },
+    {
+      "site": "4f",
+      "floor": 4,
+      "kind": "standUmbrella",
+      "anchor": [
+        3.18,
+        0.48,
+        0.2
+      ],
+      "min": [
+        3.1522871873527767,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        3.2077128126472236,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277624,
+      "avoidGap": null,
+      "edgeGap": 2.7922871873527764
+    },
+    {
+      "site": "4f",
+      "floor": 4,
+      "kind": "pot",
+      "anchor": [
+        2.7800000000000002,
+        0,
+        0.24
+      ],
+      "min": [
+        2.444608792752142,
+        0,
+        -0.10561122243814297
+      ],
+      "max": [
+        3.0988791346040907,
+        0.5895610029337366,
+        0.5762411065904204
+      ],
+      "triangles": 249,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": [
+        2.7451176191114803,
+        0.3001239398131259,
+        -0.10561122243814297
+      ],
+      "doorGap": 0.3861208653959092,
+      "avoidGap": null,
+      "edgeGap": 2.9011208653959093
+    },
+    {
+      "site": "5f",
+      "floor": 1,
+      "kind": "stand",
+      "anchor": [
+        -4.82,
+        0.21,
+        0.2
+      ],
+      "min": [
+        -4.929999999403954,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        -4.710000000596047,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604705,
+      "avoidGap": 6.210000000596047,
+      "edgeGap": 1.0700000005960462
+    },
+    {
+      "site": "5f",
+      "floor": 1,
+      "kind": "standUmbrella",
+      "anchor": [
+        -4.857099035923748,
+        0.48,
+        0.16
+      ],
+      "min": [
+        -4.962706563409063,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        -4.768394548150778,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.2533945481507782,
+      "avoidGap": 6.268394548150778,
+      "edgeGap": 1.0372934365909368
+    },
+    {
+      "site": "5f",
+      "floor": 1,
+      "kind": "standUmbrella",
+      "anchor": [
+        -4.82,
+        0.48,
+        0.2
+      ],
+      "min": [
+        -4.847712812647224,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        -4.792287187352777,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277713,
+      "avoidGap": 6.292287187352777,
+      "edgeGap": 1.1522871873527762
+    },
+    {
+      "site": "5f",
+      "floor": 1,
+      "kind": "pot",
+      "anchor": [
+        -5.22,
+        0,
+        0.24
+      ],
+      "min": [
+        -5.39671138048172,
+        0,
+        0.0766941213607788
+      ],
+      "max": [
+        -5.04328861951828,
+        0.5126909944853514,
+        0.42125584721565246
+      ],
+      "triangles": 226,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.5282886195182801,
+      "avoidGap": 6.54328861951828,
+      "edgeGap": 0.6032886195182803
+    },
+    {
+      "site": "5f",
+      "floor": 1,
+      "kind": "stand",
+      "anchor": [
+        -0.82,
+        0.21,
+        0.2
+      ],
+      "min": [
+        -0.9299999994039535,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        -0.7100000005960464,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604639,
+      "avoidGap": 2.2100000005960463,
+      "edgeGap": 5.070000000596046
+    },
+    {
+      "site": "5f",
+      "floor": 1,
+      "kind": "standUmbrella",
+      "anchor": [
+        -0.8570990359237477,
+        0.48,
+        0.16
+      ],
+      "min": [
+        -0.962706563409063,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        -0.7683945481507777,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.25339454815077767,
+      "avoidGap": 2.268394548150778,
+      "edgeGap": 5.037293436590937
+    },
+    {
+      "site": "5f",
+      "floor": 1,
+      "kind": "standUmbrella",
+      "anchor": [
+        -0.82,
+        0.48,
+        0.2
+      ],
+      "min": [
+        -0.8477128126472234,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        -0.7922871873527765,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277647,
+      "avoidGap": 2.2922871873527764,
+      "edgeGap": 5.152287187352776
+    },
+    {
+      "site": "5f",
+      "floor": 1,
+      "kind": "pot",
+      "anchor": [
+        -1.22,
+        0,
+        0.24
+      ],
+      "min": [
+        -1.3977896441469069,
+        0,
+        0.03168929118171901
+      ],
+      "max": [
+        -1.0469361142404974,
+        0.5424665026696015,
+        0.4425322488323915
+      ],
+      "triangles": 140,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.5319361142404974,
+      "avoidGap": 2.5469361142404976,
+      "edgeGap": 4.602210355853093
+    },
+    {
+      "site": "5f",
+      "floor": 1,
+      "kind": "pot",
+      "anchor": [
+        -1.54,
+        0,
+        0.3
+      ],
+      "min": [
+        -1.842194104509891,
+        0,
+        -0.009070256297346146
+      ],
+      "max": [
+        -1.2357288192013198,
+        0.5900809956817653,
+        0.5959109323582099
+      ],
+      "triangles": 224,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": [
+        -1.5779221691939667,
+        0.3257770418265704,
+        -0.009070256297346146
+      ],
+      "doorGap": 0.7207288192013198,
+      "avoidGap": 2.73572881920132,
+      "edgeGap": 4.1578058954901085
+    },
+    {
+      "site": "5f",
+      "floor": 1,
+      "kind": "stand",
+      "anchor": [
+        4.82,
+        0.21,
+        0.2
+      ],
+      "min": [
+        4.710000000596047,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        4.929999999403954,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604705,
+      "avoidGap": 1.7100000005960467,
+      "edgeGap": 1.0700000005960462
+    },
+    {
+      "site": "5f",
+      "floor": 1,
+      "kind": "standUmbrella",
+      "anchor": [
+        4.782900964076252,
+        0.48,
+        0.16
+      ],
+      "min": [
+        4.677293436590937,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        4.871605451849223,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.16229343659093765,
+      "avoidGap": 1.6772934365909373,
+      "edgeGap": 1.1283945481507773
+    },
+    {
+      "site": "5f",
+      "floor": 1,
+      "kind": "standUmbrella",
+      "anchor": [
+        4.82,
+        0.48,
+        0.2
+      ],
+      "min": [
+        4.792287187352777,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        4.847712812647224,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277713,
+      "avoidGap": 1.7922871873527768,
+      "edgeGap": 1.1522871873527762
+    },
+    {
+      "site": "5f",
+      "floor": 2,
+      "kind": "stand",
+      "anchor": [
+        -4.82,
+        0.21,
+        0.2
+      ],
+      "min": [
+        -4.929999999403954,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        -4.710000000596047,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604705,
+      "avoidGap": null,
+      "edgeGap": 1.0700000005960462
+    },
+    {
+      "site": "5f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        -4.857099035923748,
+        0.48,
+        0.16
+      ],
+      "min": [
+        -4.962706563409063,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        -4.768394548150778,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.2533945481507782,
+      "avoidGap": null,
+      "edgeGap": 1.0372934365909368
+    },
+    {
+      "site": "5f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        -4.82,
+        0.48,
+        0.2
+      ],
+      "min": [
+        -4.847712812647224,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        -4.792287187352777,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277713,
+      "avoidGap": null,
+      "edgeGap": 1.1522871873527762
+    },
+    {
+      "site": "5f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        -4.782900964076252,
+        0.48,
+        0.24000000000000002
+      ],
+      "min": [
+        -4.871605451849223,
+        0.12262916158246767,
+        0.20799999848008158
+      ],
+      "max": [
+        -4.677293436590937,
+        0.8335909904551503,
+        0.27200000151991843
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.16229343659093765,
+      "avoidGap": null,
+      "edgeGap": 1.1283945481507773
+    },
+    {
+      "site": "5f",
+      "floor": 2,
+      "kind": "pot",
+      "anchor": [
+        -5.22,
+        0,
+        0.24
+      ],
+      "min": [
+        -5.474660343293657,
+        0,
+        -0.038910108809732835
+      ],
+      "max": [
+        -4.951525053919689,
+        0.5256972381453802,
+        0.5324029323388433
+      ],
+      "triangles": 165,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": [
+        -5.195775446805414,
+        0.29029832495278274,
+        -0.038910108809732835
+      ],
+      "doorGap": 0.43652505391968965,
+      "avoidGap": null,
+      "edgeGap": 0.5253396567063433
+    },
+    {
+      "site": "5f",
+      "floor": 2,
+      "kind": "stand",
+      "anchor": [
+        -0.82,
+        0.21,
+        0.2
+      ],
+      "min": [
+        -0.9299999994039535,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        -0.7100000005960464,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604639,
+      "avoidGap": null,
+      "edgeGap": 5.070000000596046
+    },
+    {
+      "site": "5f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        -0.8570990359237477,
+        0.48,
+        0.16
+      ],
+      "min": [
+        -0.962706563409063,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        -0.7683945481507777,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.25339454815077767,
+      "avoidGap": null,
+      "edgeGap": 5.037293436590937
+    },
+    {
+      "site": "5f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        -0.82,
+        0.48,
+        0.2
+      ],
+      "min": [
+        -0.8477128126472234,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        -0.7922871873527765,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277647,
+      "avoidGap": null,
+      "edgeGap": 5.152287187352776
+    },
+    {
+      "site": "5f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        -0.7829009640762522,
+        0.48,
+        0.24000000000000002
+      ],
+      "min": [
+        -0.8716054518492222,
+        0.12262916158246767,
+        0.20799999848008158
+      ],
+      "max": [
+        -0.6772934365909369,
+        0.8335909904551503,
+        0.27200000151991843
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.16229343659093687,
+      "avoidGap": null,
+      "edgeGap": 5.128394548150778
+    },
+    {
+      "site": "5f",
+      "floor": 2,
+      "kind": "pot",
+      "anchor": [
+        -1.22,
+        0,
+        0.24
+      ],
+      "min": [
+        -1.4173614990711212,
+        0,
+        0.057610546946525565
+      ],
+      "max": [
+        -1.0226385009288788,
+        0.9359709654252405,
+        0.44243701338768004
+      ],
+      "triangles": 610,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.5076385009288787,
+      "avoidGap": null,
+      "edgeGap": 4.582638500928879
+    },
+    {
+      "site": "5f",
+      "floor": 2,
+      "kind": "bucket",
+      "anchor": [
+        0.95,
+        0,
+        0.22
+      ],
+      "min": [
+        0.8099999994039535,
+        0,
+        0.07999999940395355
+      ],
+      "max": [
+        1.0900000005960464,
+        0.326,
+        0.3600000005960464
+      ],
+      "triangles": 60,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.2949999994039535,
+      "avoidGap": null,
+      "edgeGap": 4.909999999403953
+    },
+    {
+      "site": "5f",
+      "floor": 2,
+      "kind": "stand",
+      "anchor": [
+        3.18,
+        0.21,
+        0.2
+      ],
+      "min": [
+        3.0700000005960466,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        3.2899999994039537,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604616,
+      "avoidGap": null,
+      "edgeGap": 2.7100000005960463
+    },
+    {
+      "site": "5f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        3.142900964076252,
+        0.48,
+        0.16
+      ],
+      "min": [
+        3.0372934365909368,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        3.231605451849222,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.2533945481507778,
+      "avoidGap": null,
+      "edgeGap": 2.768394548150778
+    },
+    {
+      "site": "5f",
+      "floor": 2,
+      "kind": "standUmbrella",
+      "anchor": [
+        3.18,
+        0.48,
+        0.2
+      ],
+      "min": [
+        3.1522871873527767,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        3.2077128126472236,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277624,
+      "avoidGap": null,
+      "edgeGap": 2.7922871873527764
+    },
+    {
+      "site": "5f",
+      "floor": 3,
+      "kind": "folded",
+      "anchor": [
+        -4.64,
+        0.3,
+        0.07
+      ],
+      "min": [
+        -4.70726982781678,
+        -0.010197906666877643,
+        0.027414389615599104
+      ],
+      "max": [
+        -4.586451008297092,
+        0.6074753328469256,
+        0.12850567778501193
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.0714510082970925,
+      "avoidGap": null,
+      "edgeGap": 1.2927301721832203
+    },
+    {
+      "site": "5f",
+      "floor": 3,
+      "kind": "stand",
+      "anchor": [
+        -0.82,
+        0.21,
+        0.2
+      ],
+      "min": [
+        -0.9299999994039535,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        -0.7100000005960464,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604639,
+      "avoidGap": null,
+      "edgeGap": 5.070000000596046
+    },
+    {
+      "site": "5f",
+      "floor": 3,
+      "kind": "standUmbrella",
+      "anchor": [
+        -0.8570990359237477,
+        0.48,
+        0.16
+      ],
+      "min": [
+        -0.962706563409063,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        -0.7683945481507777,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.25339454815077767,
+      "avoidGap": null,
+      "edgeGap": 5.037293436590937
+    },
+    {
+      "site": "5f",
+      "floor": 3,
+      "kind": "standUmbrella",
+      "anchor": [
+        -0.82,
+        0.48,
+        0.2
+      ],
+      "min": [
+        -0.8477128126472234,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        -0.7922871873527765,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277647,
+      "avoidGap": null,
+      "edgeGap": 5.152287187352776
+    },
+    {
+      "site": "5f",
+      "floor": 3,
+      "kind": "standUmbrella",
+      "anchor": [
+        -0.7829009640762522,
+        0.48,
+        0.24000000000000002
+      ],
+      "min": [
+        -0.8716054518492222,
+        0.12262916158246767,
+        0.20799999848008158
+      ],
+      "max": [
+        -0.6772934365909369,
+        0.8335909904551503,
+        0.27200000151991843
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.16229343659093687,
+      "avoidGap": null,
+      "edgeGap": 5.128394548150778
+    },
+    {
+      "site": "5f",
+      "floor": 3,
+      "kind": "pot",
+      "anchor": [
+        -1.22,
+        0,
+        0.24
+      ],
+      "min": [
+        -1.3858280491828918,
+        0,
+        0.0867518389225006
+      ],
+      "max": [
+        -1.0541719508171081,
+        0.8892757666969451,
+        0.4100926274061203
+      ],
+      "triangles": 610,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.5391719508171081,
+      "avoidGap": null,
+      "edgeGap": 4.614171950817108
+    },
+    {
+      "site": "5f",
+      "floor": 3,
+      "kind": "pot",
+      "anchor": [
+        -1.54,
+        0,
+        0.3
+      ],
+      "min": [
+        -1.8040035438149515,
+        0,
+        0.04499628171562381
+      ],
+      "max": [
+        -1.2650248453731323,
+        0.4693102074488442,
+        0.5577124723653202
+      ],
+      "triangles": 140,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.7500248453731323,
+      "avoidGap": null,
+      "edgeGap": 4.195996456185048
+    },
+    {
+      "site": "5f",
+      "floor": 3,
+      "kind": "stand",
+      "anchor": [
+        3.18,
+        0.21,
+        0.2
+      ],
+      "min": [
+        3.0700000005960466,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        3.2899999994039537,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604616,
+      "avoidGap": null,
+      "edgeGap": 2.7100000005960463
+    },
+    {
+      "site": "5f",
+      "floor": 3,
+      "kind": "standUmbrella",
+      "anchor": [
+        3.142900964076252,
+        0.48,
+        0.16
+      ],
+      "min": [
+        3.0372934365909368,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        3.231605451849222,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.2533945481507778,
+      "avoidGap": null,
+      "edgeGap": 2.768394548150778
+    },
+    {
+      "site": "5f",
+      "floor": 3,
+      "kind": "standUmbrella",
+      "anchor": [
+        3.18,
+        0.48,
+        0.2
+      ],
+      "min": [
+        3.1522871873527767,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        3.2077128126472236,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277624,
+      "avoidGap": null,
+      "edgeGap": 2.7922871873527764
+    },
+    {
+      "site": "5f",
+      "floor": 3,
+      "kind": "standUmbrella",
+      "anchor": [
+        3.217099035923748,
+        0.48,
+        0.24000000000000002
+      ],
+      "min": [
+        3.128394548150778,
+        0.12262916158246767,
+        0.20799999848008158
+      ],
+      "max": [
+        3.3227065634090636,
+        0.8335909904551503,
+        0.27200000151991843
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.1622934365909363,
+      "avoidGap": null,
+      "edgeGap": 2.6772934365909364
+    },
+    {
+      "site": "5f",
+      "floor": 3,
+      "kind": "pot",
+      "anchor": [
+        2.7800000000000002,
+        0,
+        0.24
+      ],
+      "min": [
+        2.588101907372475,
+        0,
+        0.06265949249267577
+      ],
+      "max": [
+        2.9718980926275256,
+        0.9248067815451084,
+        0.43683310389518737
+      ],
+      "triangles": 610,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.5131019073724743,
+      "avoidGap": null,
+      "edgeGap": 3.0281019073724744
+    },
+    {
+      "site": "5f",
+      "floor": 4,
+      "kind": "folded",
+      "anchor": [
+        -4.64,
+        0.3,
+        0.07
+      ],
+      "min": [
+        -4.70726982781678,
+        -0.010197906666877643,
+        0.027414389615599104
+      ],
+      "max": [
+        -4.586451008297092,
+        0.6074753328469256,
+        0.12850567778501193
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.0714510082970925,
+      "avoidGap": null,
+      "edgeGap": 1.2927301721832203
+    },
+    {
+      "site": "5f",
+      "floor": 4,
+      "kind": "pot",
+      "anchor": [
+        -5.22,
+        0,
+        0.24
+      ],
+      "min": [
+        -5.357942910194397,
+        0,
+        0.11252157926559447
+      ],
+      "max": [
+        -5.082057089805603,
+        0.8645522657124307,
+        0.3814903700351715
+      ],
+      "triangles": 610,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.5670570898056031,
+      "avoidGap": null,
+      "edgeGap": 0.6420570898056033
+    },
+    {
+      "site": "5f",
+      "floor": 4,
+      "kind": "folded",
+      "anchor": [
+        -0.64,
+        0.3,
+        0.07
+      ],
+      "min": [
+        -0.7072698278167802,
+        -0.010197906666877643,
+        0.027414389615599104
+      ],
+      "max": [
+        -0.5864510082970926,
+        0.6074753328469256,
+        0.12850567778501193
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.07145100829709261,
+      "avoidGap": null,
+      "edgeGap": 5.292730172183219
+    },
+    {
+      "site": "5f",
+      "floor": 4,
+      "kind": "pot",
+      "anchor": [
+        -1.22,
+        0,
+        0.24
+      ],
+      "min": [
+        -1.482441681734951,
+        0,
+        -0.04676424934362611
+      ],
+      "max": [
+        -0.9408202126108375,
+        0.5193289926174611,
+        0.48597311306065927
+      ],
+      "triangles": 165,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": [
+        -1.1012520415203257,
+        0.2873377980154779,
+        -0.04676424934362611
+      ],
+      "doorGap": 0.42582021261083747,
+      "avoidGap": null,
+      "edgeGap": 4.517558318265049
+    },
+    {
+      "site": "5f",
+      "floor": 4,
+      "kind": "pot",
+      "anchor": [
+        -1.54,
+        0,
+        0.3
+      ],
+      "min": [
+        -1.7216050708293915,
+        0,
+        0.1321716785430908
+      ],
+      "max": [
+        -1.3583949291706086,
+        0.5430805702857557,
+        0.486275377869606
+      ],
+      "triangles": 226,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.8433949291706085,
+      "avoidGap": null,
+      "edgeGap": 4.2783949291706085
+    },
+    {
+      "site": "5f",
+      "floor": 4,
+      "kind": "wateringCan",
+      "anchor": [
+        0.95,
+        0,
+        0.22
+      ],
+      "min": [
+        0.8499999985098838,
+        0,
+        0.11999999850988388
+      ],
+      "max": [
+        1.2378086880944301,
+        0.31,
+        0.3200000014901161
+      ],
+      "triangles": 68,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.3349999985098838,
+      "avoidGap": null,
+      "edgeGap": 4.762191311905569
+    },
+    {
+      "site": "5f",
+      "floor": 4,
+      "kind": "folded",
+      "anchor": [
+        3.36,
+        0.3,
+        0.07
+      ],
+      "min": [
+        3.29273017218322,
+        -0.010197906666877643,
+        0.027414389615599104
+      ],
+      "max": [
+        3.4135489917029074,
+        0.6074753328469256,
+        0.12850567778501193
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.0714510082970925,
+      "avoidGap": null,
+      "edgeGap": 2.5864510082970926
+    },
+    {
+      "site": "5f",
+      "floor": 5,
+      "kind": "folded",
+      "anchor": [
+        -4.64,
+        0.3,
+        0.07
+      ],
+      "min": [
+        -4.70726982781678,
+        -0.010197906666877643,
+        0.027414389615599104
+      ],
+      "max": [
+        -4.586451008297092,
+        0.6074753328469256,
+        0.12850567778501193
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.0714510082970925,
+      "avoidGap": null,
+      "edgeGap": 1.2927301721832203
+    },
+    {
+      "site": "5f",
+      "floor": 5,
+      "kind": "stand",
+      "anchor": [
+        -0.82,
+        0.21,
+        0.2
+      ],
+      "min": [
+        -0.9299999994039535,
+        0,
+        0.09000000059604646
+      ],
+      "max": [
+        -0.7100000005960464,
+        0.42,
+        0.30999999940395356
+      ],
+      "triangles": 32,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.19500000059604639,
+      "avoidGap": null,
+      "edgeGap": 5.070000000596046
+    },
+    {
+      "site": "5f",
+      "floor": 5,
+      "kind": "standUmbrella",
+      "anchor": [
+        -0.8570990359237477,
+        0.48,
+        0.16
+      ],
+      "min": [
+        -0.962706563409063,
+        0.12262916158246767,
+        0.12799999848008156
+      ],
+      "max": [
+        -0.7683945481507777,
+        0.8335909904551503,
+        0.19200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.25339454815077767,
+      "avoidGap": null,
+      "edgeGap": 5.037293436590937
+    },
+    {
+      "site": "5f",
+      "floor": 5,
+      "kind": "standUmbrella",
+      "anchor": [
+        -0.82,
+        0.48,
+        0.2
+      ],
+      "min": [
+        -0.8477128126472234,
+        0.12,
+        0.16799999848008157
+      ],
+      "max": [
+        -0.7922871873527765,
+        0.84,
+        0.23200000151991845
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.27728718735277647,
+      "avoidGap": null,
+      "edgeGap": 5.152287187352776
+    },
+    {
+      "site": "5f",
+      "floor": 5,
+      "kind": "pot",
+      "anchor": [
+        -1.22,
+        0,
+        0.24
+      ],
+      "min": [
+        -1.5043409283453062,
+        0,
+        -0.04008606950800131
+      ],
+      "max": [
+        -0.9357435082773754,
+        0.4792917332820392,
+        0.5510024310081081
+      ],
+      "triangles": 224,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": [
+        -1.2109234442483423,
+        0.25970173315971634,
+        -0.04008606950800131
+      ],
+      "doorGap": 0.4207435082773754,
+      "avoidGap": null,
+      "edgeGap": 4.495659071654694
+    },
+    {
+      "site": "5f",
+      "floor": 5,
+      "kind": "folded",
+      "anchor": [
+        3.36,
+        0.3,
+        0.07
+      ],
+      "min": [
+        3.29273017218322,
+        -0.010197906666877643,
+        0.027414389615599104
+      ],
+      "max": [
+        3.4135489917029074,
+        0.6074753328469256,
+        0.12850567778501193
+      ],
+      "triangles": 24,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.0714510082970925,
+      "avoidGap": null,
+      "edgeGap": 2.5864510082970926
+    },
+    {
+      "site": "5f",
+      "floor": 5,
+      "kind": "pot",
+      "anchor": [
+        2.7800000000000002,
+        0,
+        0.24
+      ],
+      "min": [
+        2.5113531786412078,
+        0,
+        -0.011190109490610167
+      ],
+      "max": [
+        3.0598114001641177,
+        0.4351776668656803,
+        0.49385835385486165
+      ],
+      "triangles": 165,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": [
+        2.7784327550300802,
+        0.2244700266034082,
+        -0.011190109490610167
+      ],
+      "doorGap": 0.4251885998358822,
+      "avoidGap": null,
+      "edgeGap": 2.9401885998358823
+    },
+    {
+      "site": "5f",
+      "floor": 5,
+      "kind": "bucket",
+      "anchor": [
+        4.95,
+        0,
+        0.22
+      ],
+      "min": [
+        4.809999999403954,
+        0,
+        0.07999999940395355
+      ],
+      "max": [
+        5.090000000596047,
+        0.326,
+        0.3600000005960464
+      ],
+      "triangles": 60,
+      "parcelBoxHits": [],
+      "parcelInteriorVertex": {},
+      "wallSpaceVertex": null,
+      "doorGap": 0.29499999940395405,
+      "avoidGap": null,
+      "edgeGap": 0.9099999994039534
+    }
+  ]
+}

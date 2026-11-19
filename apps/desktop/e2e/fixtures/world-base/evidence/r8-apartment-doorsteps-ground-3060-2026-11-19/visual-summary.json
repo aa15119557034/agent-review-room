@@ -1,0 +1,130 @@
+{
+  "views": {
+    "art-a-street": {
+      "pixels": 1296000,
+      "changed": 1,
+      "over2": 0,
+      "max": 1
+    },
+    "art-b-konbini": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    },
+    "art-c-alley": {
+      "pixels": 1296000,
+      "changed": 56445,
+      "over2": 26670,
+      "max": 230
+    },
+    "art-d-laundry": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    },
+    "sample-e-harbour": {
+      "pixels": 1296000,
+      "changed": 4581,
+      "over2": 3582,
+      "max": 226
+    },
+    "sample-f-hillside": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    },
+    "sample-g-rail": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    },
+    "sample-h-north": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    }
+  },
+  "regions": {
+    "c-doorsteps.jpg": {
+      "xyxy": [
+        360,
+        475,
+        990,
+        900
+      ],
+      "pixels": 267750,
+      "changed": 42158,
+      "over2": 25047,
+      "max": 131
+    },
+    "rear-4f-parcels-detail.jpg": {
+      "xyxy": [
+        500,
+        165,
+        1030,
+        760
+      ],
+      "pixels": 315350,
+      "changed": 84968,
+      "over2": 50519,
+      "max": 188
+    }
+  },
+  "historical": {
+    "01-station-street": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    },
+    "20-rear-eye": {
+      "pixels": 1296000,
+      "changed": 21046,
+      "over2": 7748,
+      "max": 185
+    },
+    "21-front-eye": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    },
+    "23-service-corner": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    },
+    "24-laundry-details": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    }
+  },
+  "rear": {
+    "rear-3f": {
+      "pixels": 1296000,
+      "changed": 62206,
+      "over2": 29264,
+      "max": 103
+    },
+    "rear-5f": {
+      "pixels": 1296000,
+      "changed": 61851,
+      "over2": 24996,
+      "max": 128
+    },
+    "rear-4f-parcels": {
+      "pixels": 1296000,
+      "changed": 98362,
+      "over2": 53284,
+      "max": 188
+    }
+  }
+}

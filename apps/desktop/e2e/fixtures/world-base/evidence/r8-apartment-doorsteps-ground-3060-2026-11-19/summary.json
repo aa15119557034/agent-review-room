@@ -1,0 +1,3088 @@
+{
+  "sources": {
+    "before": "eb000ad5f3bd976cfbb485fe3606442c82309ab5",
+    "after": "be8879045b4908695fa62342afc1a0b9ec05bb96"
+  },
+  "cameras": [
+    {
+      "k": "A",
+      "name": "art-a-street",
+      "eye": [
+        278.8,
+        10.488,
+        936
+      ],
+      "target": [
+        280,
+        10.088000000000001,
+        875
+      ],
+      "fov": 35.63777782904556
+    },
+    {
+      "k": "B",
+      "name": "art-b-konbini",
+      "eye": [
+        279.1,
+        9.8184,
+        912.8
+      ],
+      "target": [
+        272.48,
+        10.0534,
+        910.6
+      ],
+      "fov": 58
+    },
+    {
+      "k": "C",
+      "name": "art-c-alley",
+      "eye": [
+        287.65,
+        14.384808464050293,
+        767.3199999999999
+      ],
+      "target": [
+        278.4,
+        14.55,
+        770.06
+      ],
+      "fov": 45
+    },
+    {
+      "k": "D",
+      "name": "art-d-laundry",
+      "eye": [
+        283.5,
+        12.520055181715234,
+        783.8
+      ],
+      "target": [
+        282.5,
+        14.25,
+        777.4
+      ],
+      "fov": 48
+    },
+    {
+      "k": "E",
+      "name": "sample-e-harbour",
+      "eye": [
+        -49.3148,
+        6.0969,
+        1121.5
+      ],
+      "target": [
+        -24,
+        7.2,
+        1123.5
+      ],
+      "fov": 57
+    },
+    {
+      "k": "F",
+      "name": "sample-f-hillside",
+      "eye": [
+        1040.6682,
+        61.5086,
+        591.5865
+      ],
+      "target": [
+        1062,
+        102.7783,
+        490
+      ],
+      "fov": 57
+    },
+    {
+      "k": "G",
+      "name": "sample-g-rail",
+      "eye": [
+        337.8563,
+        9.6,
+        844.5
+      ],
+      "target": [
+        268,
+        10.55,
+        857
+      ],
+      "fov": 57
+    },
+    {
+      "k": "H",
+      "name": "sample-h-north",
+      "eye": [
+        181.0601,
+        136.1623,
+        -1212.8685
+      ],
+      "target": [
+        180,
+        141.45,
+        -1238
+      ],
+      "fov": 57
+    }
+  ],
+  "photos": {
+    "before": {
+      "art-a-street": "41d5bf1369bdcb9fb5bcefe4e02b0b6369517aff25cc3b4b0db5fbaa1aa483ef",
+      "art-b-konbini": "3ccd4497a1244d3b07335069842550198c87b3e5277cd9305d1273c7c833c449",
+      "art-c-alley": "fc30a4fa39865726805c5849c10f4a00e62778fe935cdd4081294249b1303011",
+      "art-d-laundry": "5c25e1ea0b0a3aa9bf817b33f0502aeee6e39d059c8119190533272344cae595",
+      "sample-e-harbour": "817fb42e309a433290dd70c631442eda925a3a4fd6aff3bc2d2e819ea380cfa8",
+      "sample-f-hillside": "dc7f66154f2c520de92d3a77198dd4db46fcede072a13e32b3c3adc7ddf76a2b",
+      "sample-g-rail": "6a6cab5920bff32c68b2d56808105cca8a97bb2e062f672d8d31d72cdbacfe8b",
+      "sample-h-north": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546"
+    },
+    "after": {
+      "art-a-street": "584f49254364b4534d242a82b968345e89b72e85e1f4c879a4ab54684bd38c52",
+      "art-b-konbini": "3ccd4497a1244d3b07335069842550198c87b3e5277cd9305d1273c7c833c449",
+      "art-c-alley": "40e682d87ec6896fe175f7a4ec323e2973662b20a846aaa79ddd847348f98947",
+      "art-d-laundry": "5c25e1ea0b0a3aa9bf817b33f0502aeee6e39d059c8119190533272344cae595",
+      "sample-e-harbour": "e7a09059dded886c0543b41c883101cb5a42820e096e5c03b6d5e837d10d6441",
+      "sample-f-hillside": "dc7f66154f2c520de92d3a77198dd4db46fcede072a13e32b3c3adc7ddf76a2b",
+      "sample-g-rail": "6a6cab5920bff32c68b2d56808105cca8a97bb2e062f672d8d31d72cdbacfe8b",
+      "sample-h-north": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546"
+    }
+  },
+  "timing": [
+    {
+      "tag": "timing/1-before",
+      "source": "eb000ad5f3bd976cfbb485fe3606442c82309ab5",
+      "segments": {
+        "art-a-street": {
+          "frames": 570,
+          "fps": 56.221334516940416,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.900000000001455,
+          "maxMs": 30.90000000000873,
+          "pass": false,
+          "durationMs": 10138.499999999993,
+          "calls": [
+            1588,
+            1604
+          ],
+          "triangles": [
+            7752960,
+            7842792
+          ]
+        },
+        "art-b-konbini": {
+          "frames": 650,
+          "fps": 64.11268050185429,
+          "p95Ms": 15.5,
+          "p99Ms": 30.70000000001164,
+          "maxMs": 30.90000000000873,
+          "pass": true,
+          "durationMs": 10138.400000000009,
+          "calls": [
+            1037,
+            1054
+          ],
+          "triangles": [
+            7579951,
+            7647419
+          ]
+        },
+        "art-c-alley": {
+          "frames": 655,
+          "fps": 64.70349991603368,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 30.90000000000873,
+          "pass": true,
+          "durationMs": 10123.099999999991,
+          "calls": [
+            977,
+            979
+          ],
+          "triangles": [
+            8576394,
+            8576522
+          ]
+        },
+        "art-d-laundry": {
+          "frames": 657,
+          "fps": 65.00059361272712,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.69999999999709,
+          "pass": true,
+          "durationMs": 10107.599999999991,
+          "calls": [
+            914,
+            916
+          ],
+          "triangles": [
+            8368257,
+            8368385
+          ]
+        },
+        "sample-e-harbour": {
+          "frames": 578,
+          "fps": 56.92450117197501,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 30.90000000000873,
+          "pass": false,
+          "durationMs": 10153.800000000003,
+          "calls": [
+            1531,
+            1536
+          ],
+          "triangles": [
+            8237322,
+            8237626
+          ]
+        },
+        "sample-f-hillside": {
+          "frames": 658,
+          "fps": 65.00049392472587,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "maxMs": 16,
+          "pass": true,
+          "durationMs": 10123,
+          "calls": [
+            774,
+            774
+          ],
+          "triangles": [
+            8197731,
+            8197731
+          ]
+        },
+        "sample-g-rail": {
+          "frames": 596,
+          "fps": 58.78639627554647,
+          "p95Ms": 30.79999999998836,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 30.900000000023283,
+          "pass": false,
+          "durationMs": 10138.399999999994,
+          "calls": [
+            1544,
+            1547
+          ],
+          "triangles": [
+            8491759,
+            8491951
+          ]
+        },
+        "sample-h-north": {
+          "frames": 657,
+          "fps": 65.0005936127272,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 15.60000000000582,
+          "pass": true,
+          "durationMs": 10107.599999999977,
+          "calls": [
+            708,
+            710
+          ],
+          "triangles": [
+            6691734,
+            6691862
+          ]
+        },
+        "walk-third": {
+          "frames": 161,
+          "fps": 51.049527554061484,
+          "p95Ms": 30.800000000017462,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 30.900000000023283,
+          "pass": false,
+          "durationMs": 3153.8000000000175,
+          "calls": [
+            1673,
+            1700
+          ],
+          "triangles": [
+            8300485,
+            8392567
+          ]
+        },
+        "walk-first": {
+          "frames": 191,
+          "fps": 61.15326737745356,
+          "p95Ms": 30.70000000001164,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 30.89999999999418,
+          "pass": false,
+          "durationMs": 3123.2999999999884,
+          "calls": [
+            1457,
+            1610
+          ],
+          "triangles": [
+            8046441,
+            8349641
+          ]
+        }
+      }
+    },
+    {
+      "tag": "timing/2-after",
+      "source": "be8879045b4908695fa62342afc1a0b9ec05bb96",
+      "segments": {
+        "art-a-street": {
+          "frames": 546,
+          "fps": 53.77297169532587,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.900000000001455,
+          "maxMs": 31,
+          "pass": false,
+          "durationMs": 10153.800000000003,
+          "calls": [
+            1591,
+            1607
+          ],
+          "triangles": [
+            7775940,
+            7865772
+          ]
+        },
+        "art-b-konbini": {
+          "frames": 657,
+          "fps": 64.9010678547085,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 30.90000000000873,
+          "pass": true,
+          "durationMs": 10123.100000000006,
+          "calls": [
+            1038,
+            1055
+          ],
+          "triangles": [
+            7591291,
+            7658759
+          ]
+        },
+        "art-c-alley": {
+          "frames": 651,
+          "fps": 64.40570648410137,
+          "p95Ms": 15.5,
+          "p99Ms": 15.69999999999709,
+          "maxMs": 30.90000000000873,
+          "pass": true,
+          "durationMs": 10107.800000000003,
+          "calls": [
+            981,
+            983
+          ],
+          "triangles": [
+            8599406,
+            8599534
+          ]
+        },
+        "art-d-laundry": {
+          "frames": 658,
+          "fps": 64.99985182404605,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.60000000000582,
+          "pass": true,
+          "durationMs": 10123.099999999991,
+          "calls": [
+            917,
+            919
+          ],
+          "triangles": [
+            8391237,
+            8391365
+          ]
+        },
+        "sample-e-harbour": {
+          "frames": 613,
+          "fps": 60.462593085762194,
+          "p95Ms": 30.70000000001164,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 31,
+          "pass": false,
+          "durationMs": 10138.5,
+          "calls": [
+            1532,
+            1537
+          ],
+          "triangles": [
+            8248662,
+            8248966
+          ]
+        },
+        "sample-f-hillside": {
+          "frames": 657,
+          "fps": 64.9986644110052,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "maxMs": 15.60000000000582,
+          "pass": true,
+          "durationMs": 10107.900000000009,
+          "calls": [
+            775,
+            775
+          ],
+          "triangles": [
+            8209071,
+            8209071
+          ]
+        },
+        "sample-g-rail": {
+          "frames": 561,
+          "fps": 55.33362923509395,
+          "p95Ms": 30.800000000017462,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 31,
+          "pass": false,
+          "durationMs": 10138.5,
+          "calls": [
+            1545,
+            1548
+          ],
+          "triangles": [
+            8503099,
+            8503291
+          ]
+        },
+        "sample-h-north": {
+          "frames": 657,
+          "fps": 65.00059361272702,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 15.60000000000582,
+          "pass": true,
+          "durationMs": 10107.600000000006,
+          "calls": [
+            709,
+            711
+          ],
+          "triangles": [
+            6703074,
+            6703202
+          ]
+        },
+        "walk-third": {
+          "frames": 150,
+          "fps": 47.78896393526162,
+          "p95Ms": 30.89999999999418,
+          "p99Ms": 31,
+          "maxMs": 31,
+          "pass": false,
+          "durationMs": 3138.8000000000175,
+          "calls": [
+            1676,
+            1703
+          ],
+          "triangles": [
+            8323429,
+            8415547
+          ]
+        },
+        "walk-first": {
+          "frames": 186,
+          "fps": 59.26397960809304,
+          "p95Ms": 30.79999999998836,
+          "p99Ms": 30.800000000017462,
+          "maxMs": 30.800000000017462,
+          "pass": false,
+          "durationMs": 3138.5,
+          "calls": [
+            1459,
+            1613
+          ],
+          "triangles": [
+            8067923,
+            8372621
+          ]
+        }
+      }
+    },
+    {
+      "tag": "timing/3-after",
+      "source": "be8879045b4908695fa62342afc1a0b9ec05bb96",
+      "segments": {
+        "art-a-street": {
+          "frames": 605,
+          "fps": 59.58419098456722,
+          "p95Ms": 30.799999999995634,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 30.90000000000873,
+          "pass": false,
+          "durationMs": 10153.699999999997,
+          "calls": [
+            1591,
+            1607
+          ],
+          "triangles": [
+            7775940,
+            7865772
+          ]
+        },
+        "art-b-konbini": {
+          "frames": 654,
+          "fps": 64.60471594669613,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 30.80000000000291,
+          "pass": true,
+          "durationMs": 10123.100000000006,
+          "calls": [
+            1038,
+            1055
+          ],
+          "triangles": [
+            7591291,
+            7658759
+          ]
+        },
+        "art-c-alley": {
+          "frames": 657,
+          "fps": 64.90170897955151,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "maxMs": 30.79999999998836,
+          "pass": true,
+          "durationMs": 10123,
+          "calls": [
+            981,
+            983
+          ],
+          "triangles": [
+            8599406,
+            8599534
+          ]
+        },
+        "art-d-laundry": {
+          "frames": 657,
+          "fps": 65.00059361272702,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "maxMs": 15.60000000000582,
+          "pass": true,
+          "durationMs": 10107.600000000006,
+          "calls": [
+            917,
+            919
+          ],
+          "triangles": [
+            8391237,
+            8391365
+          ]
+        },
+        "sample-e-harbour": {
+          "frames": 591,
+          "fps": 58.292646841248704,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 30.90000000000873,
+          "pass": false,
+          "durationMs": 10138.5,
+          "calls": [
+            1532,
+            1537
+          ],
+          "triangles": [
+            8248662,
+            8248966
+          ]
+        },
+        "sample-f-hillside": {
+          "frames": 657,
+          "fps": 64.99995053276207,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 15.60000000000582,
+          "pass": true,
+          "durationMs": 10107.700000000012,
+          "calls": [
+            775,
+            775
+          ],
+          "triangles": [
+            8209071,
+            8209071
+          ]
+        },
+        "sample-g-rail": {
+          "frames": 505,
+          "fps": 49.81012970360507,
+          "p95Ms": 30.800000000017462,
+          "p99Ms": 30.900000000023283,
+          "maxMs": 30.900000000023283,
+          "pass": false,
+          "durationMs": 10138.5,
+          "calls": [
+            1545,
+            1548
+          ],
+          "triangles": [
+            8503099,
+            8503291
+          ]
+        },
+        "sample-h-north": {
+          "frames": 657,
+          "fps": 64.99995053276227,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999976717,
+          "maxMs": 15.60000000000582,
+          "pass": true,
+          "durationMs": 10107.699999999983,
+          "calls": [
+            709,
+            711
+          ],
+          "triangles": [
+            6703074,
+            6703202
+          ]
+        },
+        "walk-third": {
+          "frames": 161,
+          "fps": 51.04952755406195,
+          "p95Ms": 30.800000000017462,
+          "p99Ms": 30.900000000023283,
+          "maxMs": 30.900000000023283,
+          "pass": false,
+          "durationMs": 3153.7999999999884,
+          "calls": [
+            1676,
+            1703
+          ],
+          "triangles": [
+            8323429,
+            8415547
+          ]
+        },
+        "walk-first": {
+          "frames": 189,
+          "fps": 60.518731988472624,
+          "p95Ms": 30.79999999998836,
+          "p99Ms": 30.800000000017462,
+          "maxMs": 30.89999999999418,
+          "pass": false,
+          "durationMs": 3123,
+          "calls": [
+            1459,
+            1613
+          ],
+          "triangles": [
+            8067923,
+            8372621
+          ]
+        }
+      }
+    },
+    {
+      "tag": "timing/4-before",
+      "source": "eb000ad5f3bd976cfbb485fe3606442c82309ab5",
+      "segments": {
+        "art-a-street": {
+          "frames": 620,
+          "fps": 61.245455982298104,
+          "p95Ms": 30.69999999999709,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 30.900000000001455,
+          "pass": false,
+          "durationMs": 10123.199999999997,
+          "calls": [
+            1588,
+            1604
+          ],
+          "triangles": [
+            7752960,
+            7842792
+          ]
+        },
+        "art-b-konbini": {
+          "frames": 658,
+          "fps": 65.00049392472587,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.60000000000582,
+          "pass": true,
+          "durationMs": 10123,
+          "calls": [
+            1037,
+            1054
+          ],
+          "triangles": [
+            7579951,
+            7647419
+          ]
+        },
+        "art-c-alley": {
+          "frames": 658,
+          "fps": 64.99920973605177,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "maxMs": 15.69999999999709,
+          "pass": true,
+          "durationMs": 10123.200000000012,
+          "calls": [
+            977,
+            979
+          ],
+          "triangles": [
+            8576394,
+            8576522
+          ]
+        },
+        "art-d-laundry": {
+          "frames": 657,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.80000000000291,
+          "pass": true,
+          "durationMs": 10107.699999999997,
+          "calls": [
+            914,
+            916
+          ],
+          "triangles": [
+            8368257,
+            8368385
+          ]
+        },
+        "sample-e-harbour": {
+          "frames": 632,
+          "fps": 62.24270716382051,
+          "p95Ms": 15.60000000000582,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 31,
+          "pass": true,
+          "durationMs": 10153.799999999988,
+          "calls": [
+            1531,
+            1536
+          ],
+          "triangles": [
+            8237322,
+            8237626
+          ]
+        },
+        "sample-f-hillside": {
+          "frames": 658,
+          "fps": 64.99985182404605,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 15.60000000000582,
+          "pass": true,
+          "durationMs": 10123.099999999991,
+          "calls": [
+            774,
+            776
+          ],
+          "triangles": [
+            8197731,
+            8197859
+          ]
+        },
+        "sample-g-rail": {
+          "frames": 574,
+          "fps": 56.53055998739379,
+          "p95Ms": 30.79999999998836,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 31,
+          "pass": false,
+          "durationMs": 10153.800000000017,
+          "calls": [
+            1544,
+            1544
+          ],
+          "triangles": [
+            8491759,
+            8491759
+          ]
+        },
+        "sample-h-north": {
+          "frames": 658,
+          "fps": 64.99985182404596,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 15.60000000000582,
+          "pass": true,
+          "durationMs": 10123.100000000006,
+          "calls": [
+            708,
+            710
+          ],
+          "triangles": [
+            6691734,
+            6691862
+          ]
+        },
+        "walk-third": {
+          "frames": 162,
+          "fps": 51.61865918939596,
+          "p95Ms": 30.800000000017462,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 30.900000000023283,
+          "pass": false,
+          "durationMs": 3138.399999999994,
+          "calls": [
+            1673,
+            1700
+          ],
+          "triangles": [
+            8300449,
+            8392567
+          ]
+        },
+        "walk-first": {
+          "frames": 189,
+          "fps": 60.22368798394002,
+          "p95Ms": 30.79999999998836,
+          "p99Ms": 30.800000000017462,
+          "maxMs": 30.89999999999418,
+          "pass": false,
+          "durationMs": 3138.3000000000175,
+          "calls": [
+            1456,
+            1610
+          ],
+          "triangles": [
+            8045455,
+            8349641
+          ]
+        }
+      }
+    }
+  ],
+  "legacy": {
+    "before": {
+      "01-station-street": {
+        "camera": {
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -3.2237959341941705e-05,
+            0.9999462663720154
+          ],
+          "fov": 58
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "ddb0dbd2caf20ed98a3f1aef9ac75dd780538285ba74e5db10158af902e6feef",
+        "n": 387,
+        "durationMs": 6615.300000000003,
+        "fps": 58.500748265384765,
+        "p95Ms": 30.799999999995634,
+        "p99Ms": 30.900000000001455
+      },
+      "20-rear-eye": {
+        "camera": {
+          "position": [
+            273,
+            14.755245542526229,
+            758
+          ],
+          "quaternion": [
+            -0.00013011891877658623,
+            0.9145142483742376,
+            -0.00029414054360230415,
+            -0.40455356390830466
+          ],
+          "fov": 58
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "030834d8a72431cab8cba99f32d8be6efe13b5763dc5ffff6a915dca498f3b18",
+        "n": 427,
+        "durationMs": 6584.5999999999985,
+        "fps": 64.84828235579991,
+        "p95Ms": 15.5,
+        "p99Ms": 15.599999999998545
+      },
+      "21-front-eye": {
+        "camera": {
+          "position": [
+            274,
+            12.87812709172567,
+            783
+          ],
+          "quaternion": [
+            0.07422133960767584,
+            -0.5103582416049142,
+            0.044271975994965136,
+            0.8556083508909221
+          ],
+          "fov": 58
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "441f2d32aed6abeac970ef25922777bd3342e468b8bc03d027500babd1401996",
+        "n": 428,
+        "durationMs": 6584.699999999997,
+        "fps": 64.99916473035981,
+        "p95Ms": 15.5,
+        "p99Ms": 15.500000000007276
+      },
+      "23-service-corner": {
+        "camera": {
+          "position": [
+            308.4,
+            9.612,
+            872.9
+          ],
+          "quaternion": [
+            -0.08432325046436126,
+            0.5331397072650681,
+            0.05351200213385738,
+            0.8401119613456697
+          ],
+          "fov": 55
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "be6b5d842226f5b3c87324e0906b6089103e3e21948079cab43628b3ca8dfd17",
+        "n": 427,
+        "durationMs": 6600,
+        "fps": 64.6969696969697,
+        "p95Ms": 15.5,
+        "p99Ms": 15.599999999991269
+      },
+      "24-laundry-details": {
+        "camera": {
+          "position": [
+            288,
+            14.384808464050293,
+            777.9
+          ],
+          "quaternion": [
+            -0.15522850149956677,
+            0.6173580660361093,
+            0.12595148976979553,
+            0.7608609287163607
+          ],
+          "fov": 55
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "f34efab5cf222c1e28b286d5e01c47a1d58785ba4f992d759c3dd8a88c7490de",
+        "n": 423,
+        "durationMs": 6507.699999999997,
+        "fps": 64.99992316793954,
+        "p95Ms": 15.5,
+        "p99Ms": 15.599999999991269
+      }
+    },
+    "after": {
+      "01-station-street": {
+        "camera": {
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -3.2237959341941705e-05,
+            0.9999462663720154
+          ],
+          "fov": 58
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "ddb0dbd2caf20ed98a3f1aef9ac75dd780538285ba74e5db10158af902e6feef",
+        "n": 417,
+        "durationMs": 6507.699999999997,
+        "fps": 64.07793844215317,
+        "p95Ms": 15.5,
+        "p99Ms": 30.799999999995634
+      },
+      "20-rear-eye": {
+        "camera": {
+          "position": [
+            273,
+            14.755245542526229,
+            758
+          ],
+          "quaternion": [
+            -0.00013011891877658623,
+            0.9145142483742376,
+            -0.00029414054360230415,
+            -0.40455356390830466
+          ],
+          "fov": 58
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "4d77f4a6fae8c1aa68ccf3fcb8e6e1ca2aef2f129f6b5465b2b8ba34ba0ecfb7",
+        "n": 423,
+        "durationMs": 6507.5999999999985,
+        "fps": 65.00092199889362,
+        "p95Ms": 15.5,
+        "p99Ms": 15.5
+      },
+      "21-front-eye": {
+        "camera": {
+          "position": [
+            274,
+            12.87812709172567,
+            783
+          ],
+          "quaternion": [
+            0.07422133960767584,
+            -0.5103582416049142,
+            0.044271975994965136,
+            0.8556083508909221
+          ],
+          "fov": 58
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "441f2d32aed6abeac970ef25922777bd3342e468b8bc03d027500babd1401996",
+        "n": 428,
+        "durationMs": 6584.5999999999985,
+        "fps": 65.00015186951373,
+        "p95Ms": 15.5,
+        "p99Ms": 15.500000000007276
+      },
+      "23-service-corner": {
+        "camera": {
+          "position": [
+            308.4,
+            9.612,
+            872.9
+          ],
+          "quaternion": [
+            -0.08432325046436126,
+            0.5331397072650681,
+            0.05351200213385738,
+            0.8401119613456697
+          ],
+          "fov": 55
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "be6b5d842226f5b3c87324e0906b6089103e3e21948079cab43628b3ca8dfd17",
+        "n": 420,
+        "durationMs": 6600.099999999991,
+        "fps": 63.635399463644575,
+        "p95Ms": 15.5,
+        "p99Ms": 30.79999999998836
+      },
+      "24-laundry-details": {
+        "camera": {
+          "position": [
+            288,
+            14.384808464050293,
+            777.9
+          ],
+          "quaternion": [
+            -0.15522850149956677,
+            0.6173580660361093,
+            0.12595148976979553,
+            0.7608609287163607
+          ],
+          "fov": 55
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "f34efab5cf222c1e28b286d5e01c47a1d58785ba4f992d759c3dd8a88c7490de",
+        "n": 421,
+        "durationMs": 6507.800000000003,
+        "fps": 64.69160084821289,
+        "p95Ms": 15.5,
+        "p99Ms": 15.5
+      }
+    }
+  },
+  "assets": {
+    "before": {
+      "textures": {
+        "/apartment-assets/white_plaster_02/white_plaster_02_diff_1k.jpg": "a1ebbe091bd1ae93d2abd5de8d69f9003a8d0ee6532bcf9a87c2492c97051f23",
+        "/apartment-assets/white_plaster_02/white_plaster_02_nor_gl_1k.jpg": "eb572ca3630d5bfde72e2601b1f02412da23ca005cd19384dced8690be4cb783",
+        "/apartment-assets/white_plaster_02/white_plaster_02_arm_1k.jpg": "2bb1115821715dfd8bbd1c5a294a5bb43b97d5c46b1aa8aa8f744bcaf5eeeb10",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_diff_1k.jpg": "583eafdfc03da4a74509ba545c5ea808c8bdc6e883763a804fcbe859c120afb9",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg": "6be9a4e34057fc90ab450624cf83d2f5bc67bf59d5c137617ea62d8206540011",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_nor_gl_1k.jpg": "8a7d8db468fe5bd37a2fc14ff6012855b14bec03dd413e034a376902a723b44c",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd"
+      },
+      "packages": {
+        "/mature-sakura/mature-sakura.glb": "14716b7af7db3bcae453b17ebe97a9fa0d4d38155731cc2b56ed28e4fa7b24f3",
+        "/station-art/station-exchange.glb": "03584bb83631b49b118727b9b37a2a021dee693365263acecef24e56b9621a78",
+        "/station-art/alley-workshop.glb": "b8286aa8f9cc5c735d7d847bcc4c1b8b71f31a6ca049aabb531e68c3252c8fc2",
+        "/station-art/laundry-infill.glb": "d945d0756f402227ae329d1408707a428c120646aa3bac73c927821d98183be6"
+      },
+      "decals": {
+        "posters": 10,
+        "stickers": 14,
+        "doodles": 2
+      },
+      "fingerprint": "1061:2667664:298285.6:949273.1",
+      "materials": [
+        {
+          "name": "apartment-pbr-metal",
+          "ao": 0.4,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-plaster",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-roof",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-tile",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        }
+      ],
+      "bakedItems": [
+        {
+          "area": "01-left-wall",
+          "cell": 0,
+          "kind": "poster",
+          "pos": [
+            -4.84,
+            1.55,
+            30.2
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            0.0105,
+            -0.9999
+          ],
+          "w": 0.484,
+          "h": 0.671
+        },
+        {
+          "area": "01-left-wall",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            -4.84,
+            1.3,
+            29.3
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.1831,
+            -0.9831
+          ],
+          "w": 0.3,
+          "h": 0.3
+        },
+        {
+          "area": "01-left-wall",
+          "cell": 3,
+          "kind": "poster",
+          "pos": [
+            -4.84,
+            1.45,
+            27.2
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.0005,
+            -1
+          ],
+          "w": 0.44,
+          "h": 0.61
+        },
+        {
+          "area": "01-left-pole",
+          "cell": 10,
+          "kind": "sticker",
+          "pos": [
+            -3.3504,
+            1.75,
+            28.8388
+          ],
+          "normal": [
+            -0.309,
+            0,
+            0.9511
+          ],
+          "right": [
+            0.9436,
+            -0.1246,
+            0.3066
+          ],
+          "w": 0.16,
+          "h": 0.16
+        },
+        {
+          "area": "01-right-shop",
+          "cell": 5,
+          "kind": "poster",
+          "pos": [
+            6.4178,
+            1.5,
+            24.46
+          ],
+          "normal": [
+            -0.8506,
+            0,
+            -0.5258
+          ],
+          "right": [
+            -0.5258,
+            0.0032,
+            0.8506
+          ],
+          "w": 0.62,
+          "h": 0.8595
+        },
+        {
+          "area": "01-right-shop",
+          "cell": 11,
+          "kind": "sticker",
+          "pos": [
+            5.546,
+            3.05,
+            28.28
+          ],
+          "normal": [
+            -1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            0.0143,
+            0.9999
+          ],
+          "w": 0.34,
+          "h": 0.34
+        },
+        {
+          "area": "01-right-shop",
+          "cell": 8,
+          "kind": "sticker",
+          "pos": [
+            6.27,
+            1.5,
+            21.75
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            0.999,
+            -0.0442,
+            0
+          ],
+          "w": 0.34,
+          "h": 0.34
+        },
+        {
+          "area": "01-right-pole",
+          "cell": 8,
+          "kind": "sticker",
+          "pos": [
+            3.32,
+            1.9,
+            23.1306
+          ],
+          "normal": [
+            -0.812,
+            0.0065,
+            0.5836
+          ],
+          "right": [
+            0.5783,
+            -0.1261,
+            0.806
+          ],
+          "w": 0.22,
+          "h": 0.22
+        },
+        {
+          "area": "21-mailboxes",
+          "cell": 7,
+          "kind": "poster",
+          "pos": [
+            -3,
+            6.75,
+            -123.25
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            0.9998,
+            0.0204,
+            0
+          ],
+          "w": 0.42,
+          "h": 0.5823
+        },
+        {
+          "area": "21-mailboxes",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            -1.85,
+            6.25,
+            -123.25
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            0.9943,
+            0.1066,
+            0
+          ],
+          "w": 0.2,
+          "h": 0.2
+        },
+        {
+          "area": "main",
+          "cell": 10,
+          "kind": "sticker",
+          "pos": [
+            8.6,
+            1.0346,
+            13.6663
+          ],
+          "normal": [
+            -1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.2326,
+            0.9726
+          ],
+          "w": 0.1542,
+          "h": 0.1542
+        },
+        {
+          "area": "main",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            6,
+            1.2023,
+            20.3267
+          ],
+          "normal": [
+            -1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            0.0329,
+            0.9995
+          ],
+          "w": 0.1198,
+          "h": 0.1198
+        },
+        {
+          "area": "main",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            8.6,
+            1.1044,
+            6.0741
+          ],
+          "normal": [
+            -1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            0.0126,
+            0.9999
+          ],
+          "w": 0.1336,
+          "h": 0.1336
+        },
+        {
+          "area": "main",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            5.0498,
+            1.1225,
+            14.6932
+          ],
+          "normal": [
+            -0.8525,
+            0,
+            0.5227
+          ],
+          "right": [
+            0.508,
+            0.2357,
+            0.8285
+          ],
+          "w": 0.1668,
+          "h": 0.1668
+        },
+        {
+          "area": "laundry",
+          "cell": 2,
+          "kind": "poster",
+          "pos": [
+            7.3662,
+            5.8325,
+            -123.25
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            0.9998,
+            0.0209,
+            0
+          ],
+          "w": 0.4996,
+          "h": 0.6926
+        },
+        {
+          "area": "laundry",
+          "cell": 5,
+          "kind": "poster",
+          "pos": [
+            6.1352,
+            6.5412,
+            -123.25
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            1,
+            0.0004,
+            0
+          ],
+          "w": 0.4895,
+          "h": 0.6786
+        },
+        {
+          "area": "laundry",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            -2.5387,
+            5.7215,
+            -123.25
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            0.9722,
+            -0.2344,
+            0
+          ],
+          "w": 0.2014,
+          "h": 0.2014
+        },
+        {
+          "area": "rear",
+          "cell": 0,
+          "kind": "poster",
+          "pos": [
+            -15.4089,
+            6.693,
+            -132.5
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9997,
+            0.0233,
+            0
+          ],
+          "w": 0.6142,
+          "h": 0.8514
+        },
+        {
+          "area": "rear",
+          "cell": 3,
+          "kind": "poster",
+          "pos": [
+            -12.3872,
+            6.756,
+            -132.5
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9998,
+            0.0221,
+            0
+          ],
+          "w": 0.6142,
+          "h": 0.8515
+        },
+        {
+          "area": "rear",
+          "cell": 3,
+          "kind": "poster",
+          "pos": [
+            17.0424,
+            5.7812,
+            -131
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9998,
+            -0.0191,
+            0
+          ],
+          "w": 0.5632,
+          "h": 0.7808
+        },
+        {
+          "area": "rear",
+          "cell": 1,
+          "kind": "poster",
+          "pos": [
+            18.9672,
+            6.1088,
+            -131
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9998,
+            -0.0175,
+            0
+          ],
+          "w": 0.5543,
+          "h": 0.7684
+        },
+        {
+          "area": "rear",
+          "cell": 11,
+          "kind": "sticker",
+          "pos": [
+            -17.9696,
+            7.0959,
+            -132.5
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9929,
+            0.1189,
+            0
+          ],
+          "w": 0.1854,
+          "h": 0.1854
+        },
+        {
+          "area": "rear",
+          "cell": 10,
+          "kind": "sticker",
+          "pos": [
+            -0.2136,
+            6.4064,
+            -131
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9994,
+            0.0336,
+            0
+          ],
+          "w": 0.2309,
+          "h": 0.2309
+        },
+        {
+          "area": "rear",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            -3.2254,
+            5.9523,
+            -131
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9956,
+            0.0938,
+            0
+          ],
+          "w": 0.1704,
+          "h": 0.1704
+        },
+        {
+          "area": "rear",
+          "cell": 13,
+          "kind": "doodle",
+          "pos": [
+            24.17,
+            5.6067,
+            -131
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9847,
+            0.174,
+            0
+          ],
+          "w": 0.3619,
+          "h": 0.3619
+        },
+        {
+          "area": "rear",
+          "cell": 14,
+          "kind": "doodle",
+          "pos": [
+            -21.703,
+            6.4346,
+            -132.5
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9793,
+            0.2026,
+            0
+          ],
+          "w": 0.3425,
+          "h": 0.3425
+        }
+      ]
+    },
+    "after": {
+      "textures": {
+        "/apartment-assets/white_plaster_02/white_plaster_02_diff_1k.jpg": "a1ebbe091bd1ae93d2abd5de8d69f9003a8d0ee6532bcf9a87c2492c97051f23",
+        "/apartment-assets/white_plaster_02/white_plaster_02_nor_gl_1k.jpg": "eb572ca3630d5bfde72e2601b1f02412da23ca005cd19384dced8690be4cb783",
+        "/apartment-assets/white_plaster_02/white_plaster_02_arm_1k.jpg": "2bb1115821715dfd8bbd1c5a294a5bb43b97d5c46b1aa8aa8f744bcaf5eeeb10",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_diff_1k.jpg": "583eafdfc03da4a74509ba545c5ea808c8bdc6e883763a804fcbe859c120afb9",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg": "6be9a4e34057fc90ab450624cf83d2f5bc67bf59d5c137617ea62d8206540011",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_nor_gl_1k.jpg": "8a7d8db468fe5bd37a2fc14ff6012855b14bec03dd413e034a376902a723b44c",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd"
+      },
+      "packages": {
+        "/mature-sakura/mature-sakura.glb": "14716b7af7db3bcae453b17ebe97a9fa0d4d38155731cc2b56ed28e4fa7b24f3",
+        "/station-art/station-exchange.glb": "03584bb83631b49b118727b9b37a2a021dee693365263acecef24e56b9621a78",
+        "/station-art/alley-workshop.glb": "b8286aa8f9cc5c735d7d847bcc4c1b8b71f31a6ca049aabb531e68c3252c8fc2",
+        "/station-art/laundry-infill.glb": "d945d0756f402227ae329d1408707a428c120646aa3bac73c927821d98183be6"
+      },
+      "decals": {
+        "posters": 10,
+        "stickers": 14,
+        "doodles": 2
+      },
+      "fingerprint": "1063:2679304:298845.6:951073.1",
+      "materials": [
+        {
+          "name": "apartment-pbr-metal",
+          "ao": 0.4,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-plaster",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-roof",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-tile",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        }
+      ],
+      "bakedItems": [
+        {
+          "area": "01-left-wall",
+          "cell": 0,
+          "kind": "poster",
+          "pos": [
+            -4.84,
+            1.55,
+            30.2
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            0.0105,
+            -0.9999
+          ],
+          "w": 0.484,
+          "h": 0.671
+        },
+        {
+          "area": "01-left-wall",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            -4.84,
+            1.3,
+            29.3
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.1831,
+            -0.9831
+          ],
+          "w": 0.3,
+          "h": 0.3
+        },
+        {
+          "area": "01-left-wall",
+          "cell": 3,
+          "kind": "poster",
+          "pos": [
+            -4.84,
+            1.45,
+            27.2
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.0005,
+            -1
+          ],
+          "w": 0.44,
+          "h": 0.61
+        },
+        {
+          "area": "01-left-pole",
+          "cell": 10,
+          "kind": "sticker",
+          "pos": [
+            -3.3504,
+            1.75,
+            28.8388
+          ],
+          "normal": [
+            -0.309,
+            0,
+            0.9511
+          ],
+          "right": [
+            0.9436,
+            -0.1246,
+            0.3066
+          ],
+          "w": 0.16,
+          "h": 0.16
+        },
+        {
+          "area": "01-right-shop",
+          "cell": 5,
+          "kind": "poster",
+          "pos": [
+            6.4178,
+            1.5,
+            24.46
+          ],
+          "normal": [
+            -0.8506,
+            0,
+            -0.5258
+          ],
+          "right": [
+            -0.5258,
+            0.0032,
+            0.8506
+          ],
+          "w": 0.62,
+          "h": 0.8595
+        },
+        {
+          "area": "01-right-shop",
+          "cell": 11,
+          "kind": "sticker",
+          "pos": [
+            5.546,
+            3.05,
+            28.28
+          ],
+          "normal": [
+            -1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            0.0143,
+            0.9999
+          ],
+          "w": 0.34,
+          "h": 0.34
+        },
+        {
+          "area": "01-right-shop",
+          "cell": 8,
+          "kind": "sticker",
+          "pos": [
+            6.27,
+            1.5,
+            21.75
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            0.999,
+            -0.0442,
+            0
+          ],
+          "w": 0.34,
+          "h": 0.34
+        },
+        {
+          "area": "01-right-pole",
+          "cell": 8,
+          "kind": "sticker",
+          "pos": [
+            3.32,
+            1.9,
+            23.1306
+          ],
+          "normal": [
+            -0.812,
+            0.0065,
+            0.5836
+          ],
+          "right": [
+            0.5783,
+            -0.1261,
+            0.806
+          ],
+          "w": 0.22,
+          "h": 0.22
+        },
+        {
+          "area": "21-mailboxes",
+          "cell": 7,
+          "kind": "poster",
+          "pos": [
+            -3,
+            6.75,
+            -123.25
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            0.9998,
+            0.0204,
+            0
+          ],
+          "w": 0.42,
+          "h": 0.5823
+        },
+        {
+          "area": "21-mailboxes",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            -1.85,
+            6.25,
+            -123.25
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            0.9943,
+            0.1066,
+            0
+          ],
+          "w": 0.2,
+          "h": 0.2
+        },
+        {
+          "area": "main",
+          "cell": 10,
+          "kind": "sticker",
+          "pos": [
+            8.6,
+            1.0346,
+            13.6663
+          ],
+          "normal": [
+            -1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.2326,
+            0.9726
+          ],
+          "w": 0.1542,
+          "h": 0.1542
+        },
+        {
+          "area": "main",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            6,
+            1.2023,
+            20.3267
+          ],
+          "normal": [
+            -1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            0.0329,
+            0.9995
+          ],
+          "w": 0.1198,
+          "h": 0.1198
+        },
+        {
+          "area": "main",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            8.6,
+            1.1044,
+            6.0741
+          ],
+          "normal": [
+            -1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            0.0126,
+            0.9999
+          ],
+          "w": 0.1336,
+          "h": 0.1336
+        },
+        {
+          "area": "main",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            5.0498,
+            1.1225,
+            14.6932
+          ],
+          "normal": [
+            -0.8525,
+            0,
+            0.5227
+          ],
+          "right": [
+            0.508,
+            0.2357,
+            0.8285
+          ],
+          "w": 0.1668,
+          "h": 0.1668
+        },
+        {
+          "area": "laundry",
+          "cell": 2,
+          "kind": "poster",
+          "pos": [
+            7.3662,
+            5.8325,
+            -123.25
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            0.9998,
+            0.0209,
+            0
+          ],
+          "w": 0.4996,
+          "h": 0.6926
+        },
+        {
+          "area": "laundry",
+          "cell": 5,
+          "kind": "poster",
+          "pos": [
+            6.1352,
+            6.5412,
+            -123.25
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            1,
+            0.0004,
+            0
+          ],
+          "w": 0.4895,
+          "h": 0.6786
+        },
+        {
+          "area": "laundry",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            -2.5387,
+            5.7215,
+            -123.25
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            0.9722,
+            -0.2344,
+            0
+          ],
+          "w": 0.2014,
+          "h": 0.2014
+        },
+        {
+          "area": "rear",
+          "cell": 0,
+          "kind": "poster",
+          "pos": [
+            -15.4089,
+            6.693,
+            -132.5
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9997,
+            0.0233,
+            0
+          ],
+          "w": 0.6142,
+          "h": 0.8514
+        },
+        {
+          "area": "rear",
+          "cell": 3,
+          "kind": "poster",
+          "pos": [
+            -12.3872,
+            6.756,
+            -132.5
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9998,
+            0.0221,
+            0
+          ],
+          "w": 0.6142,
+          "h": 0.8515
+        },
+        {
+          "area": "rear",
+          "cell": 3,
+          "kind": "poster",
+          "pos": [
+            17.0424,
+            5.7812,
+            -131
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9998,
+            -0.0191,
+            0
+          ],
+          "w": 0.5632,
+          "h": 0.7808
+        },
+        {
+          "area": "rear",
+          "cell": 1,
+          "kind": "poster",
+          "pos": [
+            18.9672,
+            6.1088,
+            -131
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9998,
+            -0.0175,
+            0
+          ],
+          "w": 0.5543,
+          "h": 0.7684
+        },
+        {
+          "area": "rear",
+          "cell": 11,
+          "kind": "sticker",
+          "pos": [
+            -17.9696,
+            7.0959,
+            -132.5
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9929,
+            0.1189,
+            0
+          ],
+          "w": 0.1854,
+          "h": 0.1854
+        },
+        {
+          "area": "rear",
+          "cell": 10,
+          "kind": "sticker",
+          "pos": [
+            -0.2136,
+            6.4064,
+            -131
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9994,
+            0.0336,
+            0
+          ],
+          "w": 0.2309,
+          "h": 0.2309
+        },
+        {
+          "area": "rear",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            -3.2254,
+            5.9523,
+            -131
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9956,
+            0.0938,
+            0
+          ],
+          "w": 0.1704,
+          "h": 0.1704
+        },
+        {
+          "area": "rear",
+          "cell": 13,
+          "kind": "doodle",
+          "pos": [
+            24.17,
+            5.6067,
+            -131
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9847,
+            0.174,
+            0
+          ],
+          "w": 0.3619,
+          "h": 0.3619
+        },
+        {
+          "area": "rear",
+          "cell": 14,
+          "kind": "doodle",
+          "pos": [
+            -21.703,
+            6.4346,
+            -132.5
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9793,
+            0.2026,
+            0
+          ],
+          "w": 0.3425,
+          "h": 0.3425
+        }
+      ]
+    }
+  },
+  "city": {
+    "before": {
+      "geometries": 67,
+      "materials": 50,
+      "modelPrimitives": 232,
+      "totalTriangles": 84616,
+      "modelTriangles": 84616,
+      "ownedTextures": 12,
+      "uniqueTextures": 34,
+      "borrowedTextures": 22,
+      "newTexturePixels": 10485760,
+      "textureCacheEntriesAdded": 0,
+      "artDoorsteps": null
+    },
+    "after": {
+      "geometries": 69,
+      "materials": 51,
+      "modelPrimitives": 234,
+      "totalTriangles": 96256,
+      "modelTriangles": 96256,
+      "ownedTextures": 12,
+      "uniqueTextures": 34,
+      "borrowedTextures": 22,
+      "newTexturePixels": 10485760,
+      "textureCacheEntriesAdded": 0,
+      "artDoorsteps": [
+        {
+          "stands": 1,
+          "pots": 2,
+          "small": 2
+        },
+        {
+          "stands": 2,
+          "pots": 6,
+          "small": 3
+        },
+        {
+          "stands": 2,
+          "pots": 2,
+          "small": 2
+        },
+        {
+          "stands": 1,
+          "pots": 3,
+          "small": 2
+        },
+        {
+          "stands": 3,
+          "pots": 2,
+          "small": 1
+        },
+        {
+          "stands": 3,
+          "pots": 4,
+          "small": 1
+        },
+        {
+          "stands": 2,
+          "pots": 1,
+          "small": 2
+        },
+        {
+          "stands": 3,
+          "pots": 3,
+          "small": 0
+        },
+        {
+          "stands": 3,
+          "pots": 2,
+          "small": 1
+        },
+        {
+          "stands": 2,
+          "pots": 3,
+          "small": 1
+        },
+        {
+          "stands": 0,
+          "pots": 3,
+          "small": 4
+        },
+        {
+          "stands": 1,
+          "pots": 2,
+          "small": 3
+        }
+      ]
+    }
+  },
+  "rear": {
+    "before": {
+      "rear-3f": {
+        "view": {
+          "name": "rear-3f",
+          "position": [
+            265.4,
+            16.018040148417157,
+            759.7
+          ],
+          "target": [
+            263,
+            14.918040148417157,
+            767.32
+          ],
+          "fov": 46
+        },
+        "current": "rear-3f",
+        "location": {
+          "name": "town-apartment-3f",
+          "worldOrigin": [
+            263,
+            13.318040148417158,
+            776.5
+          ],
+          "floors": 3,
+          "floorHeight": 2.85
+        },
+        "eye": [
+          265.4,
+          16.018040148417157,
+          759.7
+        ],
+        "quaternion": [
+          -0.010388911631910734,
+          0.9860727199360694,
+          0.06756695961182412,
+          0.15161585498159616
+        ],
+        "fov": 46,
+        "time": 14,
+        "islandTime": 14,
+        "timeOfDay": "evening",
+        "hidden": true,
+        "canvas": [
+          1440,
+          900
+        ],
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "glError": 0,
+        "errors": [],
+        "geometry": {
+          "calls": 7055,
+          "triangles": 38017756,
+          "doorsteps": null
+        },
+        "file": "rear-3f.png",
+        "hashes": [
+          "f884b3ce2963658e2de7adb8e3f84439a94838f725fe6904106517a2f6439730",
+          "f884b3ce2963658e2de7adb8e3f84439a94838f725fe6904106517a2f6439730",
+          "f884b3ce2963658e2de7adb8e3f84439a94838f725fe6904106517a2f6439730"
+        ]
+      },
+      "rear-5f": {
+        "view": {
+          "name": "rear-5f",
+          "position": [
+            304.4,
+            15.343957901000977,
+            761.2
+          ],
+          "target": [
+            302,
+            14.243957901000977,
+            768.82
+          ],
+          "fov": 46
+        },
+        "current": "rear-5f",
+        "location": {
+          "name": "town-apartment-5f",
+          "worldOrigin": [
+            302,
+            12.643957901000977,
+            779
+          ],
+          "floors": 5,
+          "floorHeight": 2.85
+        },
+        "eye": [
+          304.4,
+          15.343957901000977,
+          761.2
+        ],
+        "quaternion": [
+          -0.010388911631910734,
+          0.9860727199360694,
+          0.06756695961182412,
+          0.15161585498159616
+        ],
+        "fov": 46,
+        "time": 14,
+        "islandTime": 14,
+        "timeOfDay": "evening",
+        "hidden": true,
+        "canvas": [
+          1440,
+          900
+        ],
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "glError": 0,
+        "errors": [],
+        "geometry": {
+          "calls": 12623,
+          "triangles": 67869304,
+          "doorsteps": null
+        },
+        "file": "rear-5f.png",
+        "hashes": [
+          "61999a23680d86934df75a7dea22795fb1f209e99efce85ba44ee7ea43ac5025",
+          "61999a23680d86934df75a7dea22795fb1f209e99efce85ba44ee7ea43ac5025",
+          "61999a23680d86934df75a7dea22795fb1f209e99efce85ba44ee7ea43ac5025"
+        ]
+      },
+      "rear-4f-parcels": {
+        "view": {
+          "name": "rear-4f-parcels",
+          "position": [
+            285.8,
+            16.934808464050292,
+            768.12
+          ],
+          "target": [
+            287.15,
+            15.954808464050293,
+            768.63
+          ],
+          "fov": 55
+        },
+        "current": "rear-4f-parcels",
+        "location": {
+          "name": "town-apartment-4f",
+          "worldOrigin": [
+            282,
+            12.764808464050294,
+            778
+          ],
+          "floors": 4,
+          "floorHeight": 2.85
+        },
+        "eye": [
+          285.8,
+          16.934808464050292,
+          768.12
+        ],
+        "quaternion": [
+          -0.1670938022035986,
+          -0.7862951614356933,
+          -0.24174408671590403,
+          0.5434881570980687
+        ],
+        "fov": 55,
+        "time": 14,
+        "islandTime": 14,
+        "timeOfDay": "evening",
+        "hidden": true,
+        "canvas": [
+          1440,
+          900
+        ],
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "glError": 0,
+        "errors": [],
+        "geometry": {
+          "calls": 15293,
+          "triangles": 94814179,
+          "doorsteps": null
+        },
+        "file": "rear-4f-parcels.png",
+        "hashes": [
+          "40ba40407567f17e5f4bd3a84af600cf0c4f0d9e6c94aaa77013661c8790783b",
+          "40ba40407567f17e5f4bd3a84af600cf0c4f0d9e6c94aaa77013661c8790783b",
+          "40ba40407567f17e5f4bd3a84af600cf0c4f0d9e6c94aaa77013661c8790783b"
+        ]
+      }
+    },
+    "after": {
+      "rear-3f": {
+        "view": {
+          "name": "rear-3f",
+          "position": [
+            265.4,
+            16.018040148417157,
+            759.7
+          ],
+          "target": [
+            263,
+            14.918040148417157,
+            767.32
+          ],
+          "fov": 46
+        },
+        "current": "rear-3f",
+        "location": {
+          "name": "town-apartment-3f",
+          "worldOrigin": [
+            263,
+            13.318040148417158,
+            776.5
+          ],
+          "floors": 3,
+          "floorHeight": 2.85
+        },
+        "eye": [
+          265.4,
+          16.018040148417157,
+          759.7
+        ],
+        "quaternion": [
+          -0.010388911631910734,
+          0.9860727199360694,
+          0.06756695961182412,
+          0.15161585498159616
+        ],
+        "fov": 46,
+        "time": 14,
+        "islandTime": 14,
+        "timeOfDay": "evening",
+        "hidden": true,
+        "canvas": [
+          1440,
+          900
+        ],
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "glError": 0,
+        "errors": [],
+        "geometry": {
+          "calls": 7074,
+          "triangles": 38110028,
+          "doorsteps": [
+            {
+              "stands": 1,
+              "pots": 2,
+              "small": 2
+            },
+            {
+              "stands": 2,
+              "pots": 6,
+              "small": 3
+            },
+            {
+              "stands": 2,
+              "pots": 2,
+              "small": 2
+            },
+            {
+              "stands": 1,
+              "pots": 3,
+              "small": 2
+            },
+            {
+              "stands": 3,
+              "pots": 2,
+              "small": 1
+            },
+            {
+              "stands": 3,
+              "pots": 4,
+              "small": 1
+            },
+            {
+              "stands": 2,
+              "pots": 1,
+              "small": 2
+            },
+            {
+              "stands": 3,
+              "pots": 3,
+              "small": 0
+            },
+            {
+              "stands": 3,
+              "pots": 2,
+              "small": 1
+            },
+            {
+              "stands": 2,
+              "pots": 3,
+              "small": 1
+            },
+            {
+              "stands": 0,
+              "pots": 3,
+              "small": 4
+            },
+            {
+              "stands": 1,
+              "pots": 2,
+              "small": 3
+            }
+          ]
+        },
+        "file": "rear-3f.png",
+        "hashes": [
+          "1637b5f29628d209b963f23587c286a88b4100fb22bd628f43dd8132220f75ed",
+          "1637b5f29628d209b963f23587c286a88b4100fb22bd628f43dd8132220f75ed",
+          "1637b5f29628d209b963f23587c286a88b4100fb22bd628f43dd8132220f75ed"
+        ]
+      },
+      "rear-5f": {
+        "view": {
+          "name": "rear-5f",
+          "position": [
+            304.4,
+            15.343957901000977,
+            761.2
+          ],
+          "target": [
+            302,
+            14.243957901000977,
+            768.82
+          ],
+          "fov": 46
+        },
+        "current": "rear-5f",
+        "location": {
+          "name": "town-apartment-5f",
+          "worldOrigin": [
+            302,
+            12.643957901000977,
+            779
+          ],
+          "floors": 5,
+          "floorHeight": 2.85
+        },
+        "eye": [
+          304.4,
+          15.343957901000977,
+          761.2
+        ],
+        "quaternion": [
+          -0.010388911631910734,
+          0.9860727199360694,
+          0.06756695961182412,
+          0.15161585498159616
+        ],
+        "fov": 46,
+        "time": 14,
+        "islandTime": 14,
+        "timeOfDay": "evening",
+        "hidden": true,
+        "canvas": [
+          1440,
+          900
+        ],
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "glError": 0,
+        "errors": [],
+        "geometry": {
+          "calls": 12651,
+          "triangles": 68030516,
+          "doorsteps": [
+            {
+              "stands": 1,
+              "pots": 2,
+              "small": 2
+            },
+            {
+              "stands": 2,
+              "pots": 6,
+              "small": 3
+            },
+            {
+              "stands": 2,
+              "pots": 2,
+              "small": 2
+            },
+            {
+              "stands": 1,
+              "pots": 3,
+              "small": 2
+            },
+            {
+              "stands": 3,
+              "pots": 2,
+              "small": 1
+            },
+            {
+              "stands": 3,
+              "pots": 4,
+              "small": 1
+            },
+            {
+              "stands": 2,
+              "pots": 1,
+              "small": 2
+            },
+            {
+              "stands": 3,
+              "pots": 3,
+              "small": 0
+            },
+            {
+              "stands": 3,
+              "pots": 2,
+              "small": 1
+            },
+            {
+              "stands": 2,
+              "pots": 3,
+              "small": 1
+            },
+            {
+              "stands": 0,
+              "pots": 3,
+              "small": 4
+            },
+            {
+              "stands": 1,
+              "pots": 2,
+              "small": 3
+            }
+          ]
+        },
+        "file": "rear-5f.png",
+        "hashes": [
+          "9ebc437a9977dbdc875b299af6bf58a52dc049d1326bfdb02b69c4793fe88b35",
+          "9ebc437a9977dbdc875b299af6bf58a52dc049d1326bfdb02b69c4793fe88b35",
+          "9ebc437a9977dbdc875b299af6bf58a52dc049d1326bfdb02b69c4793fe88b35"
+        ]
+      },
+      "rear-4f-parcels": {
+        "view": {
+          "name": "rear-4f-parcels",
+          "position": [
+            285.8,
+            16.934808464050292,
+            768.12
+          ],
+          "target": [
+            287.15,
+            15.954808464050293,
+            768.63
+          ],
+          "fov": 55
+        },
+        "current": "rear-4f-parcels",
+        "location": {
+          "name": "town-apartment-4f",
+          "worldOrigin": [
+            282,
+            12.764808464050294,
+            778
+          ],
+          "floors": 4,
+          "floorHeight": 2.85
+        },
+        "eye": [
+          285.8,
+          16.934808464050292,
+          768.12
+        ],
+        "quaternion": [
+          -0.1670938022035986,
+          -0.7862951614356933,
+          -0.24174408671590403,
+          0.5434881570980687
+        ],
+        "fov": 55,
+        "time": 14,
+        "islandTime": 14,
+        "timeOfDay": "evening",
+        "hidden": true,
+        "canvas": [
+          1440,
+          900
+        ],
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "glError": 0,
+        "errors": [],
+        "geometry": {
+          "calls": 15333,
+          "triangles": 95044427,
+          "doorsteps": [
+            {
+              "stands": 1,
+              "pots": 2,
+              "small": 2
+            },
+            {
+              "stands": 2,
+              "pots": 6,
+              "small": 3
+            },
+            {
+              "stands": 2,
+              "pots": 2,
+              "small": 2
+            },
+            {
+              "stands": 1,
+              "pots": 3,
+              "small": 2
+            },
+            {
+              "stands": 3,
+              "pots": 2,
+              "small": 1
+            },
+            {
+              "stands": 3,
+              "pots": 4,
+              "small": 1
+            },
+            {
+              "stands": 2,
+              "pots": 1,
+              "small": 2
+            },
+            {
+              "stands": 3,
+              "pots": 3,
+              "small": 0
+            },
+            {
+              "stands": 3,
+              "pots": 2,
+              "small": 1
+            },
+            {
+              "stands": 2,
+              "pots": 3,
+              "small": 1
+            },
+            {
+              "stands": 0,
+              "pots": 3,
+              "small": 4
+            },
+            {
+              "stands": 1,
+              "pots": 2,
+              "small": 3
+            }
+          ]
+        },
+        "file": "rear-4f-parcels.png",
+        "hashes": [
+          "bd4689850998d4dc8cae43ae26a5a02ec9e1d0939624b8bc3601034ed6699826",
+          "bd4689850998d4dc8cae43ae26a5a02ec9e1d0939624b8bc3601034ed6699826",
+          "bd4689850998d4dc8cae43ae26a5a02ec9e1d0939624b8bc3601034ed6699826"
+        ]
+      }
+    }
+  }
+}
