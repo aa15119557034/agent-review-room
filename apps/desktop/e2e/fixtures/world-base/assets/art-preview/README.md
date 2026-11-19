@@ -16,9 +16,17 @@ node scripts/art-preview.cjs prepare
 node scripts/art-preview.cjs serve 4173
 ```
 
-准备脚本从项目各自的 GitHub 来源下载固定上游，校验 760 个原文件，从当前检出还原 18 项真实道具及公寓材质、4 个 GLB，并按这版太阳方向烘焙傍晚光照。访问输出的本地地址，从画面面板选择 A 主街、B 便利店正面、C 公寓后巷、D 洗衣店或 E–H 地面视角。已有浏览器或原来使用的 SwiftShader 都可以连接这个地址。
+准备脚本从项目各自的 GitHub 来源下载固定上游。云端收到 codeload 的 HTTP 403 时会自动用 Git 获取同一提交。两条路径都逐文件校验同一份 760 项清单。已有完整的上游目录可以离线复用。随后脚本从当前检出还原 18 项真实道具及公寓材质、4 个 GLB，并按这版太阳方向烘焙傍晚光照。
+
+首次打开本地预览时，任选一个地面机位确认真贴图可见即可。已有浏览器或原来使用的 SwiftShader 都能连接。完整机位对照和帧时由林离在 3060 上复测。
 
 后续编辑 JS、颜色或材质参数后刷新即可。需要重新核对本机贴图时运行 `node scripts/art-preview.cjs verify`。更换发行素材或太阳方向后重新运行 `prepare`。已有 Python 位于独立环境时，可用 `WORLD_PREVIEW_PYTHON` 指定解释器。
+
+若两台机器的傍晚 PNG 文件哈希不同，可用已有的 Python 和 Pillow 直接比较解码后的 RGBA 像素。下面的命令读取已有光照图，无需启动场景或重新烘焙。
+
+```sh
+python3 scripts/bake-evening-light.py --fingerprint
+```
 
 ## 修改和同步
 

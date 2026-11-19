@@ -7,16 +7,32 @@ functions and parameters as Petalwake's tools/terrain/bake.py), G/B/A copied
 unchanged from light.png. The output stays in the local, ignored checkout.
 
 Usage: python3 scripts/bake-evening-light.py [path/to/.local/petalwake-<sha>]
+       python3 scripts/bake-evening-light.py --fingerprint [path/to/.local/petalwake-<sha>]
 Needs numpy, scipy, pillow and numba (as Petalwake's own bake does).
 """
-import glob, json, math, os, sys, time
+import hashlib, json, math, os, sys, time
+from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FIXTURE = os.path.dirname(HERE)
-root = sys.argv[1] if len(sys.argv) > 1 else (glob.glob(os.path.join(FIXTURE, '.local', 'petalwake-*')) or [None])[0]
-if not root or not os.path.isdir(os.path.join(root, 'tools', 'terrain')):
+fingerprint = sys.argv[1:2] == ['--fingerprint']
+args = sys.argv[2:] if fingerprint else sys.argv[1:]
+if len(args) > 1:
+    sys.exit('Expected at most one Petalwake source directory.')
+with open(os.path.join(FIXTURE, 'sources.json'), encoding='utf-8') as source_file:
+    commit = json.load(source_file)['petalwake']['commit']
+root = args[0] if args else os.path.join(FIXTURE, '.local', 'petalwake-' + commit)
+if not os.path.isdir(os.path.join(root, 'tools', 'terrain')):
     sys.exit('Petalwake checkout not found; pass its path (the .local/petalwake-<sha> folder).')
 evening = json.load(open(os.path.join(FIXTURE, 'src', 'evening.json')))
+path = os.path.join(root, 'assets', evening['lightMap'])
+if fingerprint:
+    with Image.open(path) as image:
+        pixels = image.convert('RGBA')
+        digest = hashlib.sha256(pixels.tobytes()).hexdigest()
+        print(f'Evening RGBA {pixels.width}x{pixels.height} SHA-256 {digest}')
+    sys.exit(0)
+
 meta = json.load(open(os.path.join(root, 'assets', 'terrain', 'meta.json')))
 N = int(meta['n'])
 
@@ -24,7 +40,6 @@ N = int(meta['n'])
 sys.argv = ['bake.py', str(N), '--keep-props']
 sys.path.insert(0, os.path.join(root, 'tools', 'terrain'))
 import numpy as np
-from PIL import Image
 from scipy import ndimage
 import bake
 
@@ -47,6 +62,6 @@ bake.stamp_shadows(shadow, scratch_ao, h, props, ML)
 print(f'prop shadows {time.time() - t0:.1f}s')
 out = light.copy()
 out[..., 0] = bake.to_u8(shadow)
-path = os.path.join(root, 'assets', 'terrain', os.path.basename(evening['lightMap']))
 Image.fromarray(out, 'RGBA').save(path, optimize=True)
 print('wrote', path, 'sun', SUN.round(4).tolist())
+print(f'Evening RGBA {out.shape[1]}x{out.shape[0]} SHA-256 {hashlib.sha256(out).hexdigest()}')
