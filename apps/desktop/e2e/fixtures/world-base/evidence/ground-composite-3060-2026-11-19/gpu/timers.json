@@ -1,0 +1,96 @@
+{
+  "scope": "Street A ABBA. Timer queries alternate the whole frame and the composite draw, without nesting.",
+  "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "source": "858e68285325786ee6f3b6f9f53a97044ef96601",
+  "timings": [
+    {
+      "index": 0,
+      "single": false,
+      "instrumented": false,
+      "n": 269,
+      "fps": 64.04761904761905,
+      "p95": 15.5,
+      "copyGPU": null,
+      "frameGPU": null,
+      "disjoint": 0
+    },
+    {
+      "index": 0,
+      "single": false,
+      "instrumented": true,
+      "n": 153,
+      "fps": 56.82873379638222,
+      "p95": 30.799999999995634,
+      "copyGPU": 0.299008,
+      "frameGPU": 15.695872,
+      "disjoint": 0
+    },
+    {
+      "index": 1,
+      "single": true,
+      "instrumented": false,
+      "n": 216,
+      "fps": 51.24190449078354,
+      "p95": 30.80000000000291,
+      "copyGPU": null,
+      "frameGPU": null,
+      "disjoint": 0
+    },
+    {
+      "index": 1,
+      "single": true,
+      "instrumented": true,
+      "n": 148,
+      "fps": 54.65893562802384,
+      "p95": 30.80000000000291,
+      "copyGPU": 0.059392,
+      "frameGPU": 14.944256,
+      "disjoint": 0
+    },
+    {
+      "index": 2,
+      "single": true,
+      "instrumented": false,
+      "n": 267,
+      "fps": 63.57294221290992,
+      "p95": 15.5,
+      "copyGPU": null,
+      "frameGPU": null,
+      "disjoint": 0
+    },
+    {
+      "index": 2,
+      "single": true,
+      "instrumented": true,
+      "n": 171,
+      "fps": 63.1578947368421,
+      "p95": 15.599999999991269,
+      "copyGPU": 0.060416,
+      "frameGPU": 14.391296,
+      "disjoint": 0
+    },
+    {
+      "index": 3,
+      "single": false,
+      "instrumented": false,
+      "n": 268,
+      "fps": 63.57641030507197,
+      "p95": 15.5,
+      "copyGPU": null,
+      "frameGPU": null,
+      "disjoint": 0
+    },
+    {
+      "index": 3,
+      "single": false,
+      "instrumented": true,
+      "n": 167,
+      "fps": 62.02874865356751,
+      "p95": 15.60000000000582,
+      "copyGPU": 0.299008,
+      "frameGPU": 14.839808,
+      "disjoint": 0
+    }
+  ],
+  "sha256": "39ac78a1f88f0e66d31ca734877f49ad360948a950410fcfd4635a264e467dec"
+}

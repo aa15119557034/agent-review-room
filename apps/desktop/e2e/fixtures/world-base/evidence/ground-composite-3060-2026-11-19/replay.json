@@ -1,0 +1,1889 @@
+{
+  "source": "1347d29dead4c3ce7c9edcffa759f6a972b26cdc",
+  "baseline": "858e68285325786ee6f3b6f9f53a97044ef96601",
+  "currentPipelineSHA256": "2cc376ca2f38db07266e0bbd07b0e61b957176f155ff10d63e6da0b2ab72b6b2",
+  "baselinePipelineSHA256": "0495e8d0ce275729e2a4d2fb4a15707635956ad308fcc591a6a2cf5260359085",
+  "startedAt": "2026-11-19T00:00:24.440Z",
+  "photos": {
+    "art-a-street": {
+      "name": "art-a-street",
+      "motion": false,
+      "clock": 14,
+      "lighting": "evening",
+      "position": [
+        278.8,
+        10.488,
+        936
+      ],
+      "quaternion": [
+        -0.003277842930440409,
+        -0.009834585659995631,
+        -0.00003223795934194156,
+        0.9999462663720154
+      ],
+      "fov": 35.63777782904556,
+      "previousMatrix": [
+        1.9440683106662622,
+        0.0004011619369884288,
+        0.019668394785845904,
+        0.019667903082122552,
+        1.0540854454720184e-19,
+        3.1110442515067214,
+        -0.006556131595282009,
+        -0.006555967694040893,
+        0.03824396676720479,
+        -0.02039239846357866,
+        -0.9998100682805097,
+        -0.9997850733412393,
+        -577.8025979078576,
+        -13.653191095925242,
+        930.0074311523721,
+        930.3841762572794
+      ],
+      "worldSkips": 3,
+      "trials": [
+        {
+          "arm": "before",
+          "colorSHA": "84c669c29bcec658683c776fcea6db7200d34ddb5b82c4f9ce1c47263332ff29",
+          "depthSHA": "27b0ecac10a574df9bf7ef9be50b5a151978971a8729e34a97980745eb774945",
+          "hdrSHA": "84c669c29bcec658683c776fcea6db7200d34ddb5b82c4f9ce1c47263332ff29",
+          "delta": null,
+          "nonOpaque": 194508,
+          "comp": {
+            "samples": 4,
+            "depthBits": 24,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        },
+        {
+          "arm": "after",
+          "colorSHA": "84c669c29bcec658683c776fcea6db7200d34ddb5b82c4f9ce1c47263332ff29",
+          "depthSHA": "27b0ecac10a574df9bf7ef9be50b5a151978971a8729e34a97980745eb774945",
+          "hdrSHA": "84c669c29bcec658683c776fcea6db7200d34ddb5b82c4f9ce1c47263332ff29",
+          "delta": {
+            "pixels": 0,
+            "channels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "maxAbs": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "nonOpaque": 194508,
+          "comp": {
+            "samples": 0,
+            "depthBits": 0,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        },
+        {
+          "arm": "restore",
+          "colorSHA": "84c669c29bcec658683c776fcea6db7200d34ddb5b82c4f9ce1c47263332ff29",
+          "depthSHA": "27b0ecac10a574df9bf7ef9be50b5a151978971a8729e34a97980745eb774945",
+          "hdrSHA": "84c669c29bcec658683c776fcea6db7200d34ddb5b82c4f9ce1c47263332ff29",
+          "delta": {
+            "pixels": 0,
+            "channels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "maxAbs": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "nonOpaque": 194508,
+          "comp": {
+            "samples": 4,
+            "depthBits": 24,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        }
+      ],
+      "pngSHA": {
+        "before": "5e86f6541c32b381164dda7706fe24f1c7d08ab620f92bccf59132905bba697c",
+        "after": "5e86f6541c32b381164dda7706fe24f1c7d08ab620f92bccf59132905bba697c",
+        "restore": "5e86f6541c32b381164dda7706fe24f1c7d08ab620f92bccf59132905bba697c"
+      },
+      "finalPixels": {
+        "after": {
+          "pixels": 0,
+          "channelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "maxLevelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "restore": {
+          "pixels": 0,
+          "channelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "maxLevelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "art-b-konbini": {
+      "name": "art-b-konbini",
+      "motion": false,
+      "clock": 14,
+      "lighting": "evening",
+      "position": [
+        279.1,
+        9.8184,
+        912.8
+      ],
+      "quaternion": [
+        0.013653878147403252,
+        0.5849950384089397,
+        -0.009850566433920587,
+        0.8108620986267578
+      ],
+      "fov": 58,
+      "previousMatrix": [
+        0.3555863172461874,
+        0.05763897198024906,
+        -0.9484553232801775,
+        -0.9484316121934839,
+        7.823809982131499e-18,
+        1.8030249971303096,
+        0.033668731264477496,
+        0.03366788955671723,
+        -1.069991554622653,
+        0.01915494537107913,
+        -0.315196633114248,
+        -0.31518875329691787,
+        877.4441499161469,
+        -51.27449184623277,
+        551.6947893630735,
+        552.0809921658043
+      ],
+      "worldSkips": 3,
+      "trials": [
+        {
+          "arm": "before",
+          "colorSHA": "8a0cb9656f3ed39bcdafbeac6861a858791a0f56aa8dd66ab4bdd563af7348bd",
+          "depthSHA": "4b5be87e4aa60a5f4f06a1b6b6ba77599bdf013f6523dca2464821a96ad957d2",
+          "hdrSHA": "8a0cb9656f3ed39bcdafbeac6861a858791a0f56aa8dd66ab4bdd563af7348bd",
+          "delta": null,
+          "nonOpaque": 397777,
+          "comp": {
+            "samples": 4,
+            "depthBits": 24,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        },
+        {
+          "arm": "after",
+          "colorSHA": "8a0cb9656f3ed39bcdafbeac6861a858791a0f56aa8dd66ab4bdd563af7348bd",
+          "depthSHA": "4b5be87e4aa60a5f4f06a1b6b6ba77599bdf013f6523dca2464821a96ad957d2",
+          "hdrSHA": "8a0cb9656f3ed39bcdafbeac6861a858791a0f56aa8dd66ab4bdd563af7348bd",
+          "delta": {
+            "pixels": 0,
+            "channels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "maxAbs": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "nonOpaque": 397777,
+          "comp": {
+            "samples": 0,
+            "depthBits": 0,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        },
+        {
+          "arm": "restore",
+          "colorSHA": "8a0cb9656f3ed39bcdafbeac6861a858791a0f56aa8dd66ab4bdd563af7348bd",
+          "depthSHA": "4b5be87e4aa60a5f4f06a1b6b6ba77599bdf013f6523dca2464821a96ad957d2",
+          "hdrSHA": "8a0cb9656f3ed39bcdafbeac6861a858791a0f56aa8dd66ab4bdd563af7348bd",
+          "delta": {
+            "pixels": 0,
+            "channels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "maxAbs": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "nonOpaque": 397777,
+          "comp": {
+            "samples": 4,
+            "depthBits": 24,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        }
+      ],
+      "pngSHA": {
+        "before": "3ccd4497a1244d3b07335069842550198c87b3e5277cd9305d1273c7c833c449",
+        "after": "3ccd4497a1244d3b07335069842550198c87b3e5277cd9305d1273c7c833c449",
+        "restore": "3ccd4497a1244d3b07335069842550198c87b3e5277cd9305d1273c7c833c449"
+      },
+      "finalPixels": {
+        "after": {
+          "pixels": 0,
+          "channelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "maxLevelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "restore": {
+          "pixels": 0,
+          "channelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "maxLevelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "art-c-alley": {
+      "name": "art-c-alley",
+      "motion": false,
+      "clock": 14,
+      "lighting": "evening",
+      "position": [
+        287.65,
+        14.384808464050293,
+        767.3199999999999
+      ],
+      "quaternion": [
+        0.00512201791291099,
+        0.8012252009590126,
+        -0.006859231737600546,
+        0.5983016740914732
+      ],
+      "fov": 45,
+      "previousMatrix": [
+        -0.4285496800800331,
+        0.03963066595961692,
+        -0.9587024591623389,
+        -0.9586784919004505,
+        1.963121691876657e-17,
+        2.4138597153039147,
+        0.01712103045922041,
+        0.017120602438809186,
+        -1.4467461827519297,
+        -0.011739245916686566,
+        0.28398321493025075,
+        0.2839761154386211,
+        1233.3895964242322,
+        -37.114912550225654,
+        57.21847415384121,
+        57.617038709930405
+      ],
+      "worldSkips": 3,
+      "trials": [
+        {
+          "arm": "before",
+          "colorSHA": "5887a20d34f4279bb44bf364fa380d8dfc8226b9f5d827f41cc5a04c304b346f",
+          "depthSHA": "f6cbd6b33a793ae2202e1d7a1845a0733e73e47e7c72fd922d03fa35f87f0ecf",
+          "hdrSHA": "5887a20d34f4279bb44bf364fa380d8dfc8226b9f5d827f41cc5a04c304b346f",
+          "delta": null,
+          "nonOpaque": 25516,
+          "comp": {
+            "samples": 4,
+            "depthBits": 24,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        },
+        {
+          "arm": "after",
+          "colorSHA": "5887a20d34f4279bb44bf364fa380d8dfc8226b9f5d827f41cc5a04c304b346f",
+          "depthSHA": "f6cbd6b33a793ae2202e1d7a1845a0733e73e47e7c72fd922d03fa35f87f0ecf",
+          "hdrSHA": "5887a20d34f4279bb44bf364fa380d8dfc8226b9f5d827f41cc5a04c304b346f",
+          "delta": {
+            "pixels": 0,
+            "channels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "maxAbs": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "nonOpaque": 25516,
+          "comp": {
+            "samples": 0,
+            "depthBits": 0,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        },
+        {
+          "arm": "restore",
+          "colorSHA": "5887a20d34f4279bb44bf364fa380d8dfc8226b9f5d827f41cc5a04c304b346f",
+          "depthSHA": "f6cbd6b33a793ae2202e1d7a1845a0733e73e47e7c72fd922d03fa35f87f0ecf",
+          "hdrSHA": "5887a20d34f4279bb44bf364fa380d8dfc8226b9f5d827f41cc5a04c304b346f",
+          "delta": {
+            "pixels": 0,
+            "channels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "maxAbs": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "nonOpaque": 25516,
+          "comp": {
+            "samples": 4,
+            "depthBits": 24,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        }
+      ],
+      "pngSHA": {
+        "before": "144d42507f59485436f81a6cb615aa467d45a02cb5eb36b72eec6c70fcdc1343",
+        "after": "144d42507f59485436f81a6cb615aa467d45a02cb5eb36b72eec6c70fcdc1343",
+        "restore": "144d42507f59485436f81a6cb615aa467d45a02cb5eb36b72eec6c70fcdc1343"
+      },
+      "finalPixels": {
+        "after": {
+          "pixels": 0,
+          "channelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "maxLevelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "restore": {
+          "pixels": 0,
+          "channelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "maxLevelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "art-d-laundry": {
+      "name": "art-d-laundry",
+      "motion": false,
+      "clock": 14,
+      "lighting": "evening",
+      "position": [
+        283.5,
+        12.520055181715234,
+        783.8
+      ],
+      "quaternion": [
+        0.1297258927986663,
+        0.0767626424061459,
+        -0.010073721024303532,
+        0.9885227410703001
+      ],
+      "fov": 48,
+      "previousMatrix": [
+        1.3869446005405421,
+        0.08946505603358629,
+        -0.14915331924525158,
+        -0.14914959045888027,
+        0,
+        2.1699846789860544,
+        0.2580270117582964,
+        0.25802056116363487,
+        -0.21671009383446047,
+        0.5725763586149504,
+        -0.9545812431696068,
+        -0.9545573789368305,
+        -223.3414227057936,
+        -501.3170211923018,
+        786.8552269767172,
+        787.2355508419944
+      ],
+      "worldSkips": 3,
+      "trials": [
+        {
+          "arm": "before",
+          "colorSHA": "9e7ba5348a8bd154184e12819a51a8dfc35db28aa2ae4283878cec281b376a15",
+          "depthSHA": "dbb788907b0dd7da39d395cc3a08dab556a51c3fa8f16f387ffbea9bf875fe74",
+          "hdrSHA": "9e7ba5348a8bd154184e12819a51a8dfc35db28aa2ae4283878cec281b376a15",
+          "delta": null,
+          "nonOpaque": 161258,
+          "comp": {
+            "samples": 4,
+            "depthBits": 24,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        },
+        {
+          "arm": "after",
+          "colorSHA": "9e7ba5348a8bd154184e12819a51a8dfc35db28aa2ae4283878cec281b376a15",
+          "depthSHA": "dbb788907b0dd7da39d395cc3a08dab556a51c3fa8f16f387ffbea9bf875fe74",
+          "hdrSHA": "9e7ba5348a8bd154184e12819a51a8dfc35db28aa2ae4283878cec281b376a15",
+          "delta": {
+            "pixels": 0,
+            "channels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "maxAbs": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "nonOpaque": 161258,
+          "comp": {
+            "samples": 0,
+            "depthBits": 0,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        },
+        {
+          "arm": "restore",
+          "colorSHA": "9e7ba5348a8bd154184e12819a51a8dfc35db28aa2ae4283878cec281b376a15",
+          "depthSHA": "dbb788907b0dd7da39d395cc3a08dab556a51c3fa8f16f387ffbea9bf875fe74",
+          "hdrSHA": "9e7ba5348a8bd154184e12819a51a8dfc35db28aa2ae4283878cec281b376a15",
+          "delta": {
+            "pixels": 0,
+            "channels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "maxAbs": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "nonOpaque": 161258,
+          "comp": {
+            "samples": 4,
+            "depthBits": 24,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        }
+      ],
+      "pngSHA": {
+        "before": "a2266e02bc04f124c44d8273860ad865e1c2e29612bc4d94c049f752a23d5608",
+        "after": "a2266e02bc04f124c44d8273860ad865e1c2e29612bc4d94c049f752a23d5608",
+        "restore": "a2266e02bc04f124c44d8273860ad865e1c2e29612bc4d94c049f752a23d5608"
+      },
+      "finalPixels": {
+        "after": {
+          "pixels": 0,
+          "channelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "maxLevelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "restore": {
+          "pixels": 0,
+          "channelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "maxLevelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "sample-e-harbour": {
+      "name": "sample-e-harbour",
+      "motion": false,
+      "clock": 14,
+      "lighting": "evening",
+      "position": [
+        -49.3148,
+        6.0969,
+        1121.5
+      ],
+      "quaternion": [
+        0.014730707497095328,
+        -0.7342518484654964,
+        0.01594041117183272,
+        0.6785301265038345
+      ],
+      "fov": 57,
+      "previousMatrix": [
+        -0.09066088105703018,
+        -0.07968273813977365,
+        0.9959792713517679,
+        0.9959543721812236,
+        -2.9952779937870402e-18,
+        1.8400356046762285,
+        0.04340009536824845,
+        0.0433990103794266,
+        1.14753103589125,
+        -0.006295348028803221,
+        0.07868750859985227,
+        0.0786855414367268,
+        -1291.4269799691883,
+        -8.087818558662994,
+        -39.79613336538932,
+        -39.39514347442883
+      ],
+      "worldSkips": 3,
+      "trials": [
+        {
+          "arm": "before",
+          "colorSHA": "a7675e1222b0c61b1d3cef4e238ca2afd805c6703a257dad7cdc9378de666091",
+          "depthSHA": "8bad7743b0e57331cf5b3b529609e74b95c08c52c82b92816a5874fc59940c3b",
+          "hdrSHA": "e8606710508db8ba7b0690e00512268c8f26f0f75f4c2333bdf66ffc6ab86b09",
+          "delta": null,
+          "nonOpaque": 13859,
+          "comp": {
+            "samples": 4,
+            "depthBits": 24,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        },
+        {
+          "arm": "after",
+          "colorSHA": "a7675e1222b0c61b1d3cef4e238ca2afd805c6703a257dad7cdc9378de666091",
+          "depthSHA": "8bad7743b0e57331cf5b3b529609e74b95c08c52c82b92816a5874fc59940c3b",
+          "hdrSHA": "e8606710508db8ba7b0690e00512268c8f26f0f75f4c2333bdf66ffc6ab86b09",
+          "delta": {
+            "pixels": 0,
+            "channels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "maxAbs": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "nonOpaque": 13859,
+          "comp": {
+            "samples": 0,
+            "depthBits": 0,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        },
+        {
+          "arm": "restore",
+          "colorSHA": "a7675e1222b0c61b1d3cef4e238ca2afd805c6703a257dad7cdc9378de666091",
+          "depthSHA": "8bad7743b0e57331cf5b3b529609e74b95c08c52c82b92816a5874fc59940c3b",
+          "hdrSHA": "e8606710508db8ba7b0690e00512268c8f26f0f75f4c2333bdf66ffc6ab86b09",
+          "delta": {
+            "pixels": 0,
+            "channels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "maxAbs": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "nonOpaque": 13859,
+          "comp": {
+            "samples": 4,
+            "depthBits": 24,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        }
+      ],
+      "pngSHA": {
+        "before": "97ab97933ccf486be4d6da3ed305a15973a6a13cadc56a2391aa2ec1142beda8",
+        "after": "97ab97933ccf486be4d6da3ed305a15973a6a13cadc56a2391aa2ec1142beda8",
+        "restore": "97ab97933ccf486be4d6da3ed305a15973a6a13cadc56a2391aa2ec1142beda8"
+      },
+      "finalPixels": {
+        "after": {
+          "pixels": 0,
+          "channelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "maxLevelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "restore": {
+          "pixels": 0,
+          "channelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "maxLevelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "sample-f-hillside": {
+      "name": "sample-f-hillside",
+      "motion": false,
+      "clock": 14,
+      "lighting": "evening",
+      "position": [
+        1040.6682,
+        61.5086,
+        591.5865
+      ],
+      "quaternion": [
+        0.18707634146308863,
+        -0.10146136691099782,
+        0.019429882402105244,
+        0.9768984149640014
+      ],
+      "fov": 57,
+      "previousMatrix": [
+        1.1265377429048167,
+        -0.1398347698288706,
+        0.19096992858971912,
+        0.19096515440118172,
+        1.597481596686422e-17,
+        1.711465309026234,
+        0.3694611641736354,
+        0.3694519277599862,
+        0.23655778891975696,
+        0.6659224652969092,
+        -0.9094388026645461,
+        -0.9094160669786755,
+        -1312.2963995355963,
+        -353.6989774079159,
+        316.15034243016504,
+        316.5424337704625
+      ],
+      "worldSkips": 3,
+      "trials": [
+        {
+          "arm": "before",
+          "colorSHA": "04e73416b575c240abba7718a4d693c9004e6b1a274cb73fb5af5a9c635be378",
+          "depthSHA": "8177838ca52499f491924a3feb8dcd90d0ad0976c0a56b4c5543ef20d9108f4a",
+          "hdrSHA": "04e73416b575c240abba7718a4d693c9004e6b1a274cb73fb5af5a9c635be378",
+          "delta": null,
+          "nonOpaque": 551020,
+          "comp": {
+            "samples": 4,
+            "depthBits": 24,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        },
+        {
+          "arm": "after",
+          "colorSHA": "04e73416b575c240abba7718a4d693c9004e6b1a274cb73fb5af5a9c635be378",
+          "depthSHA": "8177838ca52499f491924a3feb8dcd90d0ad0976c0a56b4c5543ef20d9108f4a",
+          "hdrSHA": "04e73416b575c240abba7718a4d693c9004e6b1a274cb73fb5af5a9c635be378",
+          "delta": {
+            "pixels": 0,
+            "channels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "maxAbs": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "nonOpaque": 551020,
+          "comp": {
+            "samples": 0,
+            "depthBits": 0,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        },
+        {
+          "arm": "restore",
+          "colorSHA": "04e73416b575c240abba7718a4d693c9004e6b1a274cb73fb5af5a9c635be378",
+          "depthSHA": "8177838ca52499f491924a3feb8dcd90d0ad0976c0a56b4c5543ef20d9108f4a",
+          "hdrSHA": "04e73416b575c240abba7718a4d693c9004e6b1a274cb73fb5af5a9c635be378",
+          "delta": {
+            "pixels": 0,
+            "channels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "maxAbs": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "nonOpaque": 551020,
+          "comp": {
+            "samples": 4,
+            "depthBits": 24,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        }
+      ],
+      "pngSHA": {
+        "before": "1414fb43cada5cb4c13222e1d3c8f29c8cdb302bb32a707f843b45fcd1207fcb",
+        "after": "1414fb43cada5cb4c13222e1d3c8f29c8cdb302bb32a707f843b45fcd1207fcb",
+        "restore": "1414fb43cada5cb4c13222e1d3c8f29c8cdb302bb32a707f843b45fcd1207fcb"
+      },
+      "finalPixels": {
+        "after": {
+          "pixels": 0,
+          "channelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "maxLevelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "restore": {
+          "pixels": 0,
+          "channelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "maxLevelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "sample-g-rail": {
+      "name": "sample-g-rail",
+      "motion": false,
+      "clock": 14,
+      "lighting": "evening",
+      "position": [
+        337.8563,
+        9.6,
+        844.5
+      ],
+      "quaternion": [
+        0.0042956255745017925,
+        0.7668403876967841,
+        -0.005132508643737493,
+        0.6418029485387173
+      ],
+      "fov": 57,
+      "previousMatrix": [
+        -0.20275715612383227,
+        0.02426760918538837,
+        -0.9843013563202733,
+        -0.9842767490939556,
+        -1.996851995858027e-18,
+        1.8416058816175018,
+        0.013385854797695567,
+        0.01338552015550865,
+        -1.1331091780266622,
+        -0.004342415999950679,
+        0.17612966839073077,
+        0.17612526520406083,
+        1025.4134834100366,
+        -22.211210800790997,
+        183.28240016925665,
+        183.67781316658994
+      ],
+      "worldSkips": 3,
+      "trials": [
+        {
+          "arm": "before",
+          "colorSHA": "0e587bc7a85d3a4d7e93aa677232e85498463ff31d5da171b9b698741148eec4",
+          "depthSHA": "3b1fe813f6554010097e13344f033cd02c2c58c5d9907536945eaf4296e94e20",
+          "hdrSHA": "0e587bc7a85d3a4d7e93aa677232e85498463ff31d5da171b9b698741148eec4",
+          "delta": null,
+          "nonOpaque": 252945,
+          "comp": {
+            "samples": 4,
+            "depthBits": 24,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        },
+        {
+          "arm": "after",
+          "colorSHA": "0e587bc7a85d3a4d7e93aa677232e85498463ff31d5da171b9b698741148eec4",
+          "depthSHA": "3b1fe813f6554010097e13344f033cd02c2c58c5d9907536945eaf4296e94e20",
+          "hdrSHA": "0e587bc7a85d3a4d7e93aa677232e85498463ff31d5da171b9b698741148eec4",
+          "delta": {
+            "pixels": 0,
+            "channels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "maxAbs": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "nonOpaque": 252945,
+          "comp": {
+            "samples": 0,
+            "depthBits": 0,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        },
+        {
+          "arm": "restore",
+          "colorSHA": "0e587bc7a85d3a4d7e93aa677232e85498463ff31d5da171b9b698741148eec4",
+          "depthSHA": "3b1fe813f6554010097e13344f033cd02c2c58c5d9907536945eaf4296e94e20",
+          "hdrSHA": "0e587bc7a85d3a4d7e93aa677232e85498463ff31d5da171b9b698741148eec4",
+          "delta": {
+            "pixels": 0,
+            "channels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "maxAbs": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "nonOpaque": 252945,
+          "comp": {
+            "samples": 4,
+            "depthBits": 24,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        }
+      ],
+      "pngSHA": {
+        "before": "371f762c76b0cf34259b004ecaff62578a56c148399791f971b511e1be66bd63",
+        "after": "371f762c76b0cf34259b004ecaff62578a56c148399791f971b511e1be66bd63",
+        "restore": "371f762c76b0cf34259b004ecaff62578a56c148399791f971b511e1be66bd63"
+      },
+      "finalPixels": {
+        "after": {
+          "pixels": 0,
+          "channelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "maxLevelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "restore": {
+          "pixels": 0,
+          "channelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "maxLevelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "sample-h-north": {
+      "name": "sample-h-north",
+      "motion": false,
+      "clock": 14,
+      "lighting": "evening",
+      "position": [
+        181.0601,
+        136.1623,
+        -1212.8685
+      ],
+      "quaternion": [
+        0.1033905527383131,
+        0.02096399872548667,
+        -0.002179647308778166,
+        0.9944174945662979
+      ],
+      "fov": 57,
+      "previousMatrix": [
+        1.1500840681562727,
+        0.01596800193663474,
+        -0.04124425539081684,
+        -0.04124322429732073,
+        -1.9968519958580273e-18,
+        1.8023777743484857,
+        0.2057232800962372,
+        0.2057181370785225,
+        -0.048512986517019414,
+        0.37854904317567506,
+        -0.9777662525745741,
+        -0.9777418087238078,
+        -267.0742095761991,
+        210.82313892129818,
+        -1206.8459590867685,
+        -1206.4157933148633
+      ],
+      "worldSkips": 3,
+      "trials": [
+        {
+          "arm": "before",
+          "colorSHA": "6a3a8b976340972bcab7c68d67bb5d64f185d19d277094a090a50ff4236e159d",
+          "depthSHA": "698c7e11c92228ac190c7c2da195bfec2dc2cf469ee4ba91d5d6533231fd33f4",
+          "hdrSHA": "e5d24cbf3d68aa7d4ebe087cbd2c064400561d60dfc13555b508dd2ff1acebcf",
+          "delta": null,
+          "nonOpaque": 272527,
+          "comp": {
+            "samples": 4,
+            "depthBits": 24,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        },
+        {
+          "arm": "after",
+          "colorSHA": "6a3a8b976340972bcab7c68d67bb5d64f185d19d277094a090a50ff4236e159d",
+          "depthSHA": "698c7e11c92228ac190c7c2da195bfec2dc2cf469ee4ba91d5d6533231fd33f4",
+          "hdrSHA": "e5d24cbf3d68aa7d4ebe087cbd2c064400561d60dfc13555b508dd2ff1acebcf",
+          "delta": {
+            "pixels": 0,
+            "channels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "maxAbs": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "nonOpaque": 272527,
+          "comp": {
+            "samples": 0,
+            "depthBits": 0,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        },
+        {
+          "arm": "restore",
+          "colorSHA": "6a3a8b976340972bcab7c68d67bb5d64f185d19d277094a090a50ff4236e159d",
+          "depthSHA": "698c7e11c92228ac190c7c2da195bfec2dc2cf469ee4ba91d5d6533231fd33f4",
+          "hdrSHA": "e5d24cbf3d68aa7d4ebe087cbd2c064400561d60dfc13555b508dd2ff1acebcf",
+          "delta": {
+            "pixels": 0,
+            "channels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "maxAbs": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "nonOpaque": 272527,
+          "comp": {
+            "samples": 4,
+            "depthBits": 24,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0,
+          "glError": 0
+        }
+      ],
+      "pngSHA": {
+        "before": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546",
+        "after": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546",
+        "restore": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546"
+      },
+      "finalPixels": {
+        "after": {
+          "pixels": 0,
+          "channelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "maxLevelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "restore": {
+          "pixels": 0,
+          "channelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "maxLevelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "motion-art-a-street": {
+      "name": "art-a-street",
+      "motion": true,
+      "clock": 14,
+      "lighting": "evening",
+      "position": [
+        279.1,
+        10.488,
+        936
+      ],
+      "quaternion": [
+        -0.003277842930440409,
+        -0.009834585659995631,
+        -0.00003223795934194156,
+        0.9999462663720154
+      ],
+      "fov": 35.63777782904556,
+      "previousMatrix": [
+        1.9440683106662622,
+        0.0004011619369884288,
+        0.019668394785845904,
+        0.019667903082122552,
+        1.0540854454720184e-19,
+        3.1110442515067214,
+        -0.006556131595282009,
+        -0.006555967694040893,
+        0.03824396676720479,
+        -0.02039239846357866,
+        -0.9998100682805097,
+        -0.9997850733412393,
+        -577.8025979078576,
+        -13.653191095925242,
+        930.0074311523721,
+        930.3841762572794
+      ],
+      "worldSkips": 3,
+      "trials": [
+        {
+          "arm": "before",
+          "colorSHA": "30cb4acb015e77b2c05a4e5f518644b12d1d310dcd4c358be47262ed4cd01528",
+          "depthSHA": "cedfc3590a85560d83b85b5afe65a4ee3c1587c1bf2091a16d51e61d14e40ffd",
+          "hdrSHA": "f7216b2883ed1ab43e23440d111c5bb0a8a82285b51ad2e2bf9c0d48d555712a",
+          "delta": null,
+          "nonOpaque": 196950,
+          "comp": {
+            "samples": 4,
+            "depthBits": 24,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0.62,
+          "glError": 0
+        },
+        {
+          "arm": "after",
+          "colorSHA": "30cb4acb015e77b2c05a4e5f518644b12d1d310dcd4c358be47262ed4cd01528",
+          "depthSHA": "cedfc3590a85560d83b85b5afe65a4ee3c1587c1bf2091a16d51e61d14e40ffd",
+          "hdrSHA": "f7216b2883ed1ab43e23440d111c5bb0a8a82285b51ad2e2bf9c0d48d555712a",
+          "delta": {
+            "pixels": 0,
+            "channels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "maxAbs": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "nonOpaque": 196950,
+          "comp": {
+            "samples": 0,
+            "depthBits": 0,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0.62,
+          "glError": 0
+        },
+        {
+          "arm": "restore",
+          "colorSHA": "30cb4acb015e77b2c05a4e5f518644b12d1d310dcd4c358be47262ed4cd01528",
+          "depthSHA": "cedfc3590a85560d83b85b5afe65a4ee3c1587c1bf2091a16d51e61d14e40ffd",
+          "hdrSHA": "f7216b2883ed1ab43e23440d111c5bb0a8a82285b51ad2e2bf9c0d48d555712a",
+          "delta": {
+            "pixels": 0,
+            "channels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "maxAbs": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "nonOpaque": 196950,
+          "comp": {
+            "samples": 4,
+            "depthBits": 24,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0.62,
+          "glError": 0
+        }
+      ],
+      "pngSHA": {
+        "before": "e22fdf60f3380f0589d905ca1599dbf1e6abaf8308e8c446aecde23ead7129db",
+        "after": "e22fdf60f3380f0589d905ca1599dbf1e6abaf8308e8c446aecde23ead7129db",
+        "restore": "e22fdf60f3380f0589d905ca1599dbf1e6abaf8308e8c446aecde23ead7129db"
+      },
+      "finalPixels": {
+        "after": {
+          "pixels": 0,
+          "channelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "maxLevelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "restore": {
+          "pixels": 0,
+          "channelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "maxLevelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "motion-art-b-konbini": {
+      "name": "art-b-konbini",
+      "motion": true,
+      "clock": 14,
+      "lighting": "evening",
+      "position": [
+        279.40000000000003,
+        9.8184,
+        912.8
+      ],
+      "quaternion": [
+        0.013653878147403252,
+        0.5849950384089397,
+        -0.009850566433920587,
+        0.8108620986267578
+      ],
+      "fov": 58,
+      "previousMatrix": [
+        0.3555863172461874,
+        0.05763897198024906,
+        -0.9484553232801775,
+        -0.9484316121934839,
+        7.823809982131499e-18,
+        1.8030249971303096,
+        0.033668731264477496,
+        0.03366788955671723,
+        -1.069991554622653,
+        0.01915494537107913,
+        -0.315196633114248,
+        -0.31518875329691787,
+        877.4441499161469,
+        -51.27449184623277,
+        551.6947893630735,
+        552.0809921658043
+      ],
+      "worldSkips": 3,
+      "trials": [
+        {
+          "arm": "before",
+          "colorSHA": "5336df6897595fdd2a288be9628ae8d19febafb7fb12ce48448aa453361d7d6f",
+          "depthSHA": "35dd6c23601eadb6e54a458e962b48c98e05f823efdeaea3392d160394b8ea63",
+          "hdrSHA": "88d41c2fca865d42944fd49b61bd77bd56a3c2de56713ef53ae0a8979d663e99",
+          "delta": null,
+          "nonOpaque": 364230,
+          "comp": {
+            "samples": 4,
+            "depthBits": 24,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0.62,
+          "glError": 0
+        },
+        {
+          "arm": "after",
+          "colorSHA": "5336df6897595fdd2a288be9628ae8d19febafb7fb12ce48448aa453361d7d6f",
+          "depthSHA": "35dd6c23601eadb6e54a458e962b48c98e05f823efdeaea3392d160394b8ea63",
+          "hdrSHA": "88d41c2fca865d42944fd49b61bd77bd56a3c2de56713ef53ae0a8979d663e99",
+          "delta": {
+            "pixels": 0,
+            "channels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "maxAbs": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "nonOpaque": 364230,
+          "comp": {
+            "samples": 0,
+            "depthBits": 0,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0.62,
+          "glError": 0
+        },
+        {
+          "arm": "restore",
+          "colorSHA": "5336df6897595fdd2a288be9628ae8d19febafb7fb12ce48448aa453361d7d6f",
+          "depthSHA": "35dd6c23601eadb6e54a458e962b48c98e05f823efdeaea3392d160394b8ea63",
+          "hdrSHA": "88d41c2fca865d42944fd49b61bd77bd56a3c2de56713ef53ae0a8979d663e99",
+          "delta": {
+            "pixels": 0,
+            "channels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "maxAbs": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "nonOpaque": 364230,
+          "comp": {
+            "samples": 4,
+            "depthBits": 24,
+            "width": 1440,
+            "height": 900
+          },
+          "scene": {
+            "samples": 4,
+            "depthBits": 32,
+            "width": 1440,
+            "height": 900
+          },
+          "blur": 0.62,
+          "glError": 0
+        }
+      ],
+      "pngSHA": {
+        "before": "14855513e378887adb4dc8062024822d547d54cff78f4c5197dcf1f3e9939dff",
+        "after": "14855513e378887adb4dc8062024822d547d54cff78f4c5197dcf1f3e9939dff",
+        "restore": "14855513e378887adb4dc8062024822d547d54cff78f4c5197dcf1f3e9939dff"
+      },
+      "finalPixels": {
+        "after": {
+          "pixels": 0,
+          "channelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "maxLevelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "restore": {
+          "pixels": 0,
+          "channelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "maxLevelsBGRA": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    }
+  },
+  "exceptions": [],
+  "network": {
+    "serverRequests": 273,
+    "filesComplete": 273,
+    "payloadIntegrityClean": true,
+    "reportedErrors": [
+      {
+        "url": "/assets/models/menhir.glb",
+        "error": "net::ERR_ABORTED"
+      },
+      {
+        "url": "/mature-sakura/mature-sakura.glb",
+        "error": "net::ERR_ABORTED"
+      },
+      {
+        "url": "/prop-assets/plastic_crate_02/plastic_crate_02_1k.gltf",
+        "error": "net::ERR_ABORTED"
+      },
+      {
+        "url": "/prop-assets/plastic_crate_02/plastic_crate_02.bin",
+        "error": "net::ERR_ABORTED"
+      }
+    ],
+    "httpErrors": [],
+    "problems": []
+  },
+  "stage": "complete",
+  "setup": {
+    "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "width": 1440,
+    "height": 900
+  },
+  "foreground": {
+    "x": 503,
+    "y": 315,
+    "depth": 0.9896988868713379,
+    "reversed": false,
+    "empty": {
+      "comp": {
+        "samples": 0,
+        "depthBits": 0,
+        "width": 1440,
+        "height": 900
+      },
+      "value": [
+        13351,
+        12675,
+        9324,
+        15360
+      ]
+    },
+    "behind": {
+      "comp": {
+        "samples": 4,
+        "depthBits": 24,
+        "width": 1440,
+        "height": 900
+      },
+      "value": [
+        13351,
+        12675,
+        9324,
+        15360
+      ]
+    },
+    "front": {
+      "comp": {
+        "samples": 4,
+        "depthBits": 24,
+        "width": 1440,
+        "height": 900
+      },
+      "value": [
+        17408,
+        0,
+        17408,
+        15360
+      ]
+    },
+    "nested": {
+      "comp": {
+        "samples": 4,
+        "depthBits": 24,
+        "width": 1440,
+        "height": 900
+      },
+      "value": [
+        17408,
+        0,
+        17408,
+        15360
+      ]
+    },
+    "removed": {
+      "comp": {
+        "samples": 0,
+        "depthBits": 0,
+        "width": 1440,
+        "height": 900
+      },
+      "value": [
+        13351,
+        12675,
+        9324,
+        15360
+      ]
+    },
+    "resize": [
+      {
+        "rw": 960,
+        "rh": 600,
+        "withMarker": false,
+        "comp": {
+          "samples": 0,
+          "depthBits": 0,
+          "width": 960,
+          "height": 600
+        },
+        "scene": {
+          "samples": 4,
+          "depthBits": 32,
+          "width": 960,
+          "height": 600
+        }
+      },
+      {
+        "rw": 960,
+        "rh": 600,
+        "withMarker": true,
+        "comp": {
+          "samples": 4,
+          "depthBits": 24,
+          "width": 960,
+          "height": 600
+        },
+        "scene": {
+          "samples": 4,
+          "depthBits": 32,
+          "width": 960,
+          "height": 600
+        }
+      },
+      {
+        "rw": 1440,
+        "rh": 900,
+        "withMarker": true,
+        "comp": {
+          "samples": 4,
+          "depthBits": 24,
+          "width": 1440,
+          "height": 900
+        },
+        "scene": {
+          "samples": 4,
+          "depthBits": 32,
+          "width": 1440,
+          "height": 900
+        }
+      },
+      {
+        "rw": 1440,
+        "rh": 900,
+        "withMarker": false,
+        "comp": {
+          "samples": 0,
+          "depthBits": 0,
+          "width": 1440,
+          "height": 900
+        },
+        "scene": {
+          "samples": 4,
+          "depthBits": 32,
+          "width": 1440,
+          "height": 900
+        }
+      }
+    ]
+  },
+  "ok": true,
+  "finishedAt": "2026-11-19T00:01:15.134Z"
+}

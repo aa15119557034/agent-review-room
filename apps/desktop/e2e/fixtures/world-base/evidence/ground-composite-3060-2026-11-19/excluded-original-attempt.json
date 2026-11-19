@@ -1,0 +1,17 @@
+{
+  "attempt": "composite-3060-1119run1-4-old",
+  "start": "2026-11-18T23:42:58.523Z",
+  "exit": 1,
+  "renderOk": true,
+  "coverage": {
+    "localHTTP": 273,
+    "serverReceipts": 273,
+    "paired": 273,
+    "get200SourceAndWire": 183,
+    "browserBlobs": 16
+  },
+  "verificationFailures": 90,
+  "changedIdentities": 90,
+  "reason": "Reference worktrees linked the shared cache during the measurement. 90 source identities failed verification. The run is excluded. The next clean original session after the R4 photographs supplies control 4.",
+  "replacement": "r4-haze-1119-a-before"
+}
