@@ -11,6 +11,7 @@ import * as THREE from 'three';
 const VERT = /* glsl */`
 varying vec2 vUv;
 varying vec2 vSize;
+varying vec2 vEdge;
 #ifdef USE_INSTANCING
 attribute vec2 aSize;
 attribute vec2 aEdge;
@@ -18,6 +19,7 @@ attribute vec2 aEdge;
 void main() {
   vUv = uv;
   vSize = vec2( 1.0 );
+  vEdge = vec2( 0.0 );
   vec4 p = vec4( position, 1.0 );
 #ifdef USE_INSTANCING
   p = instanceMatrix * p;
