@@ -9,7 +9,7 @@ import { createTownPlants } from './town-plants.js';
 import { createTownPaving, finishTownLanes } from './town-paving.js';
 import { createApartmentSurfaces } from './apartment-surfaces.js';
 import { addLaundryCart, addDeliveryCorner } from './neighborhood-props.js';
-import { createNoticeSheet, addLaundryNotices, addStandingBoard, addBackAlley, addRearCorridor } from './art-r1-city.js';
+import { createNoticeSheet, addLaundryNotices, addStandingBoard, addBackAlley, addRearCorridor, addDoorsteps } from './art-r1-city.js';
 
 const SITES = [
   // Staggered setbacks and three wall tones (sage / warm tile / pale blue) break the
@@ -143,6 +143,8 @@ export async function createCity({ scene, station, island, skyline }) {
     ownedTextures.add(noticeSheet.map);
     stats.artRearCorridors = [];
     H.artRearCorridor = (R, o) => stats.artRearCorridors.push(addRearCorridor(R, H.M, H.A, noticeSheet, o));
+    stats.artDoorsteps = [];
+    H.artDoorsteps = (R, o) => stats.artDoorsteps.push(addDoorsteps(R, H.M, H.P, o));
     for (const site of SITES) {
       const shape = townApartmentBounds(site), b = shape.groundSupportBounds;
       const lot = { minX: site.x + b.minX - 0.15, maxX: site.x + b.maxX + 0.15,

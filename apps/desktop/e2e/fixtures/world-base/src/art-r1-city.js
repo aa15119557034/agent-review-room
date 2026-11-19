@@ -249,3 +249,37 @@ export function addRearCorridor(R, M, A, sheet, { unit, w, floorY, rng }) {
   noticeCard(R, sheet, rng() < 0.5 ? 'a4-grey' : 'hours', 0.24, 0.32, -0.85, floorY + 1.45, 0.012, (rng() - 0.5) * 0.08);
   return { pipes: 2, cardboard: n + 1, notices: 1 };
 }
+
+/** Art round 8 (#254 X-51, C酱): doorstep life as a rule for every apartment corridor door on the island
+ *  (rear frame R: x along the wall, z outward, doors at x = -unit, 0, unit, lamps 0.75 m to +x at head height).
+ *  Each door gets, by its own seeded draw, an umbrella stand or a folded umbrella, potted plants and now and
+ *  then a bucket or watering can, all on the corridor floor within 0.5 m of the wall so the walkway, stair
+ *  landings and railings stay clear. `avoid` lists [x0, x1] floor spans already dressed (cardboard, broom). */
+export function addDoorsteps(R, M, P, { unit, floorY, rng, ground, avoid = [] }) {
+  const free = (x, half) => avoid.every(([a, b]) => x + half < a || x - half > b);
+  const pick = (list) => list[Math.floor(rng() * list.length)];
+  let stands = 0, pots = 0, small = 0;
+  for (const x of [-unit, 0, unit]) {
+    let s = -1;
+    if (!free(x + s * 1.05, .55)) s = 1;
+    if (!free(x + s * 1.05, .55)) continue;
+    if (rng() < .62) {
+      const sx = x + s * .82;
+      R.cyl(M.plain, pick(['#8a8f96', '#6b5a4c', '#c9c2b2', '#5f7c76']), .11, .42, sx, floorY + .21, .2, { seg: 8 });
+      for (let i = 0; i < 2 + Math.floor(rng() * 2); i++) {
+        const a = (i - 1) * .22, c = pick(['#3f5f8f', '#e9e4da', '#c84a57', '#4f7a52', '#e8b84a', '#3a3346']);
+        R.cyl(M.plain, c, .032, .72, sx + Math.sin(a) * .17, floorY + .48, .2 + (i - 1) * .04, { rz: a, seg: 6, rTop: .012 });
+      }
+      stands++;
+    } else {
+      const ux = x + s * .64;
+      R.cyl(M.plain, pick(['#3f5f8f', '#c84a57', '#6b5a8a', '#4f7a52']), .028, .62, ux, floorY + .3, .07, { rz: s * .14, rx: -.1, seg: 6, rTop: .012 });
+      small++;
+    }
+    const np = rng() < (ground ? .8 : .45) ? 1 + (rng() < .4 ? 1 : 0) : 0;
+    for (let i = 0; i < np; i++) { P.pot(R, x + s * (1.22 + i * .32), floorY, .24 + i * .06, rng, .95); pots++; }
+    const ox = x - s * .95;
+    if (rng() < .3 && free(ox, .2)) { (rng() < .5 ? P.bucket : P.wateringCan)(R, ox, floorY, .22, rng); small++; }
+  }
+  return { stands, pots, small };
+}
