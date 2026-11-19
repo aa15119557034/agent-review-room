@@ -292,6 +292,7 @@ function buildEntrance(H, face, du, dw, S, out) {
   if (lod >= 2 && cT !== 'none' && r() < 0.3) H.laundry.chime(FF, du - ls * (pw / 2 - 0.2), cT === 'roof' ? cy - 0.22 : cy - 0.1, 0.4);
   FF.box(M.plain, '#4b4d52', 0.14, 0.24, 0.12, lx, porchTop + 1.95, 0.08);
   FF.box(M.lamp, null, 0.1, 0.16, 0.02, lx, porchTop + 1.95, 0.145, { shadow: false });
+  (H.ctx.services.doorLamps ||= []).push({ lamp: FF.w(lx, porchTop + 1.95, 0).toArray(), floor: FF.w(lx, porchTop, 0).y, normal: [Math.sin(FF.ry), 0, Math.cos(FF.ry)], slabDepth: pd }); // door lamp on the wall face (station-root space), porch deck below; read by src/door-glow.js
   // intercom + nameplate beside the door (unless the gate pillar carries them)
   if (!S.gatePlate) {
     const ix = du - ls * (dw / 2 + 0.26);

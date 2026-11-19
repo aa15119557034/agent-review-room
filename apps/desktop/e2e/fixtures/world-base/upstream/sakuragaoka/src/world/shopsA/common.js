@@ -460,7 +460,8 @@ export function makeCommon(ctx) {
     k.box(0.04, 0.16, 0.05, M.t('#4f5358'), [0.33, 1.0, 0.07]);
     k.box(0.5, 0.04, 0.01, M.t('#7b8388'), [0, 1.65, 0.052]);
     if (o.hood !== false) { k.box(1.2, 0.05, 0.5, M.t('#8a9096'), [0, 2.32, 0.25]); k.box(1.2, 0.08, 0.02, M.t('#8a9096'), [0, 2.29, 0.5]); }
-    if (o.lamp !== false) { k.box(0.12, 0.16, 0.08, M.t('#e6e4dc'), [0.62, 2.0, 0.05]); k.box(0.08, 0.1, 0.02, M.glow('#ffe8c0', 1.1), [0.62, 2.0, 0.1]); }
+    if (o.lamp !== false) { k.box(0.12, 0.16, 0.08, M.t('#e6e4dc'), [0.62, 2.0, 0.05]); k.box(0.08, 0.1, 0.02, M.glow('#ffe8c0', 1.1), [0.62, 2.0, 0.1]);
+      (ctx.services.doorLamps ||= []).push({ object: gq, lamp: [0.62, 2.0, 0], floor: 0, normal: [0, 0, 1], slabDepth: 1.0 }); } // object-local (door group), floor = local y; read by src/door-glow.js
     if (o.label) { const reg = o.label; S.card(reg, 0.3, 0.1, [0, 1.5, 0.056], null, null, k); }
     return gq;
   };

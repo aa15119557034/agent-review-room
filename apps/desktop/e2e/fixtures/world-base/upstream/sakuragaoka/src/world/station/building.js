@@ -151,6 +151,7 @@ export function buildBuilding(A) {
     k.box(0.06, 0.06, 0.28, M.fascia, [x, 3.28, Z1 + 0.14]);
     k.box(0.2, 0.05, 0.2, M.fascia, [x, 3.42, Z1 + 0.3]);
     k.box(0.16, 0.24, 0.16, M.lampGlow, [x, 3.28, Z1 + 0.3]);
+    (ctx.services.doorLamps ||= []).push({ object: root, lamp: [x, 3.28, Z1], floor: null, normal: [0, 0, 1], slabDepth: 1.0 }); // wall lantern, no floor patch (deck is 2 m below); read by src/door-glow.js
     k.box(0.2, 0.03, 0.2, M.fascia, [x, 3.15, Z1 + 0.3]);
   }
 

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { createIsland, clearVegetationAreas } from './island.js';
 import { loadShadowTint, shadowTintEnabled, installLitShadowTint, patchIslandShadowTint, shadowTintUniforms, shopInteriorBoxes } from './shadow-tint.js';
 import { loadToon, toonEnabled, installLitToon, installToonHook, toonLineUniforms, maskGlassAlpha } from './toon.js';
-import { addDoorGlow, loadDoorGlow } from './door-glow.js';
+import { addDoorGlow, loadDoorGlow, resolveDoorLamps } from './door-glow.js';
 import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from './evening-glow.js';
 import * as layoutModule from '../upstream/sakuragaoka/src/world/layout.js';
 import { createStation } from './station.js';
@@ -252,7 +252,9 @@ async function init() {
   // Art round 9: warm fake light pools under the apartment corridor lamps (evening only; ?doorglow=off skips them).
   if (island.timeOfDay === 'evening' && new URLSearchParams(location.search).get('doorglow') !== 'off') {
     const params = await loadDoorGlow();
-    const lamps = worldBase.city.placements.filter(p => p.type === 'apartment').flatMap(p => p.model.lamps ?? []);
+    // Apartment corridor lamps (city-apartments.js) plus the upstream generators' registrations (house porch lamps, shop back doors, station lanterns).
+    const lamps = resolveDoorLamps(worldBase.city.root, [...worldBase.city.placements.filter(p => p.type === 'apartment').flatMap(p => p.model.lamps ?? []),
+      ...(station.ctx.services.doorLamps ?? [])]);
     if (params && lamps.length) worldBase.doorGlow = addDoorGlow({ parent: worldBase.city.root, lamps, params });
   }
   // The vehicles' shared glass material is unnamed and its meshes carry no 'glass' name, so the
