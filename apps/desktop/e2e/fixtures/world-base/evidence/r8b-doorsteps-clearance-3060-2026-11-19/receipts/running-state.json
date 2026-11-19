@@ -1,0 +1,38 @@
+[
+  {
+    "test": "photos",
+    "arm": "after",
+    "id": "x51-next-after-9671981c-d69",
+    "source": "6ef4686b630dd14f36945fdcf650bde7e582afd7",
+    "fixture": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r8b-after\\apps\\desktop\\e2e\\fixtures\\world-base",
+    "output": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r8b-evidence\\photos-after",
+    "log": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r8b-evidence\\x51-next-after-9671981c-d69.log",
+    "started": "2026-11-19T05:11:41.022Z",
+    "status": 0,
+    "ended": "2026-11-19T05:12:33.455Z"
+  },
+  {
+    "test": "timing",
+    "arm": "before",
+    "id": "x51-next-before-309e0be2-558",
+    "source": "be8879045b4908695fa62342afc1a0b9ec05bb96",
+    "fixture": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r8-after\\apps\\desktop\\e2e\\fixtures\\world-base",
+    "output": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r8-after\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\x51-next-before-309e0be2-558",
+    "log": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r8b-evidence\\x51-next-before-309e0be2-558.log",
+    "started": "2026-11-19T05:12:33.690Z",
+    "status": 0,
+    "ended": "2026-11-19T05:15:19.688Z"
+  },
+  {
+    "test": "timing",
+    "arm": "after",
+    "id": "x51-next-after-a11c8ced-64e",
+    "source": "6ef4686b630dd14f36945fdcf650bde7e582afd7",
+    "fixture": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r8b-after\\apps\\desktop\\e2e\\fixtures\\world-base",
+    "output": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r8b-after\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\x51-next-after-a11c8ced-64e",
+    "log": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r8b-evidence\\x51-next-after-a11c8ced-64e.log",
+    "started": "2026-11-19T05:15:19.689Z",
+    "status": 0,
+    "ended": "2026-11-19T05:18:05.343Z"
+  }
+]
