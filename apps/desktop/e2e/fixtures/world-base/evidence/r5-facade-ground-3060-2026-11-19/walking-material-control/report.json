@@ -1,0 +1,338 @@
+{
+  "started": "2026-11-19T01:39:47.007Z",
+  "runs": [
+    {
+      "i": 0,
+      "refined": false,
+      "timed": false,
+      "frames": 217,
+      "distance": 10.039327020864446,
+      "start": [
+        281.6,
+        8.812,
+        934
+      ],
+      "end": [
+        280.8996919482604,
+        8.531583591705138,
+        923.9851282751836
+      ],
+      "eye": [
+        281.8857572547113,
+        11.36214765496598,
+        938.0865191300602
+      ],
+      "mainCalls": 868,
+      "facadeCalls": {
+        "apartment-pbr-plaster": 217,
+        "apartment-pbr-metal": 217,
+        "apartment-pbr-tile": 217,
+        "apartment-pbr-roof": 217
+      },
+      "p50": 15.400000000001455,
+      "p95": 15.5,
+      "fps": 64.99954861424577,
+      "gpu50": null,
+      "gpu95": null,
+      "nQueries": 0,
+      "disjoint": 0,
+      "raw": "round-0.json"
+    },
+    {
+      "i": 1,
+      "refined": true,
+      "timed": false,
+      "frames": 217,
+      "distance": 10.079533210447922,
+      "start": [
+        281.6,
+        8.812,
+        934
+      ],
+      "end": [
+        280.8968873062524,
+        8.530460560724,
+        923.9450200258572
+      ],
+      "eye": [
+        281.8857572547113,
+        11.36214765496598,
+        938.0865191300602
+      ],
+      "mainCalls": 868,
+      "facadeCalls": {
+        "apartment-pbr-plaster": 217,
+        "apartment-pbr-metal": 217,
+        "apartment-pbr-tile": 217,
+        "apartment-pbr-roof": 217
+      },
+      "p50": 15.400000000001455,
+      "p95": 15.5,
+      "fps": 64.70165348670018,
+      "gpu50": null,
+      "gpu95": null,
+      "nQueries": 0,
+      "disjoint": 0,
+      "raw": "round-1.json"
+    },
+    {
+      "i": 2,
+      "refined": true,
+      "timed": false,
+      "frames": 217,
+      "distance": 10.079229262232596,
+      "start": [
+        281.6,
+        8.812,
+        934
+      ],
+      "end": [
+        280.8969085086081,
+        8.530469050542758,
+        923.9453232336699
+      ],
+      "eye": [
+        281.8857572547113,
+        11.36214765496598,
+        938.0865191300602
+      ],
+      "mainCalls": 868,
+      "facadeCalls": {
+        "apartment-pbr-plaster": 217,
+        "apartment-pbr-metal": 217,
+        "apartment-pbr-tile": 217,
+        "apartment-pbr-roof": 217
+      },
+      "p50": 15.400000000001455,
+      "p95": 15.5,
+      "fps": 64.70165348670032,
+      "gpu50": null,
+      "gpu95": null,
+      "nQueries": 0,
+      "disjoint": 0,
+      "raw": "round-2.json"
+    },
+    {
+      "i": 3,
+      "refined": false,
+      "timed": false,
+      "frames": 174,
+      "distance": 10.067967010813831,
+      "start": [
+        281.6,
+        8.812,
+        934
+      ],
+      "end": [
+        280.8976941235535,
+        8.530783625422687,
+        923.9565580508103
+      ],
+      "eye": [
+        281.8857572547113,
+        11.36214765496598,
+        938.0865191300602
+      ],
+      "mainCalls": 696,
+      "facadeCalls": {
+        "apartment-pbr-plaster": 174,
+        "apartment-pbr-metal": 174,
+        "apartment-pbr-tile": 174,
+        "apartment-pbr-roof": 174
+      },
+      "p50": 15.400000000001455,
+      "p95": 30.80000000000291,
+      "fps": 51.82123172777388,
+      "gpu50": null,
+      "gpu95": null,
+      "nQueries": 0,
+      "disjoint": 0,
+      "raw": "round-3.json"
+    },
+    {
+      "i": 4,
+      "refined": false,
+      "timed": true,
+      "frames": 200,
+      "distance": 10.048885111902477,
+      "start": [
+        281.6,
+        8.812,
+        934
+      ],
+      "end": [
+        280.8990252095339,
+        8.531316617080897,
+        923.9755934671749
+      ],
+      "eye": [
+        281.8857572547113,
+        11.36214765496598,
+        938.0865191300602
+      ],
+      "mainCalls": 800,
+      "facadeCalls": {
+        "apartment-pbr-plaster": 200,
+        "apartment-pbr-metal": 200,
+        "apartment-pbr-tile": 200,
+        "apartment-pbr-roof": 200
+      },
+      "p50": 15.39999999999418,
+      "p95": 30.80000000000291,
+      "fps": 59.882041405873906,
+      "gpu50": 14.286848,
+      "gpu95": 19.0976,
+      "nQueries": 40,
+      "disjoint": 0,
+      "raw": "round-4.json"
+    },
+    {
+      "i": 5,
+      "refined": true,
+      "timed": true,
+      "frames": 214,
+      "distance": 10.031943616971299,
+      "start": [
+        281.6,
+        8.812,
+        934
+      ],
+      "end": [
+        280.9002069884802,
+        8.531789823417325,
+        923.9924936934759
+      ],
+      "eye": [
+        281.8857572547113,
+        11.36214765496598,
+        938.0865191300602
+      ],
+      "mainCalls": 856,
+      "facadeCalls": {
+        "apartment-pbr-plaster": 214,
+        "apartment-pbr-metal": 214,
+        "apartment-pbr-tile": 214,
+        "apartment-pbr-roof": 214
+      },
+      "p50": 15.39999999999418,
+      "p95": 15.5,
+      "fps": 64.39519908093243,
+      "gpu50": 14.455808,
+      "gpu95": 15.37536,
+      "nQueries": 42,
+      "disjoint": 0,
+      "raw": "round-5.json"
+    },
+    {
+      "i": 6,
+      "refined": true,
+      "timed": true,
+      "frames": 214,
+      "distance": 10.087093788613549,
+      "start": [
+        281.6,
+        8.812,
+        934
+      ],
+      "end": [
+        280.8963599069801,
+        8.530249380216638,
+        923.93747786488
+      ],
+      "eye": [
+        281.8857572547113,
+        11.36214765496598,
+        938.0865191300602
+      ],
+      "mainCalls": 856,
+      "facadeCalls": {
+        "apartment-pbr-plaster": 214,
+        "apartment-pbr-metal": 214,
+        "apartment-pbr-tile": 214,
+        "apartment-pbr-roof": 214
+      },
+      "p50": 15.39999999999418,
+      "p95": 15.5,
+      "fps": 63.801108282162645,
+      "gpu50": 14.777344,
+      "gpu95": 16.14336,
+      "nQueries": 42,
+      "disjoint": 0,
+      "raw": "round-6.json"
+    },
+    {
+      "i": 7,
+      "refined": false,
+      "timed": true,
+      "frames": 217,
+      "distance": 10.039321710839989,
+      "start": [
+        281.6,
+        8.812,
+        934
+      ],
+      "end": [
+        280.899692318669,
+        8.531583740023647,
+        923.9851335722731
+      ],
+      "eye": [
+        281.8857572547113,
+        11.36214765496598,
+        938.0865191300602
+      ],
+      "mainCalls": 868,
+      "facadeCalls": {
+        "apartment-pbr-plaster": 217,
+        "apartment-pbr-metal": 217,
+        "apartment-pbr-tile": 217,
+        "apartment-pbr-roof": 217
+      },
+      "p50": 15.39999999999418,
+      "p95": 15.5,
+      "fps": 64.99954861424563,
+      "gpu50": 14.464,
+      "gpu95": 15.514624,
+      "nQueries": 43,
+      "disjoint": 0,
+      "raw": "round-7.json"
+    }
+  ],
+  "errors": [],
+  "ignoredRequests": [],
+  "step": "complete",
+  "setup": {
+    "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "names": [
+      "apartment-pbr-plaster",
+      "apartment-pbr-metal",
+      "apartment-pbr-tile",
+      "apartment-pbr-roof"
+    ]
+  },
+  "calibration": [
+    {
+      "v": false,
+      "draws": 212,
+      "frames": 53,
+      "facade": {
+        "apartment-pbr-plaster": 53,
+        "apartment-pbr-metal": 53,
+        "apartment-pbr-tile": 53,
+        "apartment-pbr-roof": 53
+      }
+    },
+    {
+      "v": true,
+      "draws": 212,
+      "frames": 53,
+      "facade": {
+        "apartment-pbr-plaster": 53,
+        "apartment-pbr-metal": 53,
+        "apartment-pbr-tile": 53,
+        "apartment-pbr-roof": 53
+      }
+    }
+  ],
+  "ok": true
+}
