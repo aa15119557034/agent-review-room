@@ -1,0 +1,1687 @@
+{
+  "sources": {
+    "base": "b477c3811f760810cf896934b987e28ab7a4e241",
+    "artist": "4b365b1e7be0019a24d5d207b15ba95be2398e14",
+    "after": "be0549d896b716b15cb7c4653e99a83fffcb0fdb"
+  },
+  "cameras": [
+    {
+      "k": "A",
+      "name": "art-a-street",
+      "eye": [
+        278.8,
+        10.488,
+        936
+      ],
+      "target": [
+        280,
+        10.088000000000001,
+        875
+      ],
+      "fov": 35.63777782904556
+    },
+    {
+      "k": "B",
+      "name": "art-b-konbini",
+      "eye": [
+        279.1,
+        9.8184,
+        912.8
+      ],
+      "target": [
+        272.48,
+        10.0534,
+        910.6
+      ],
+      "fov": 58
+    },
+    {
+      "k": "C",
+      "name": "art-c-alley",
+      "eye": [
+        287.65,
+        14.384808464050293,
+        767.3199999999999
+      ],
+      "target": [
+        278.4,
+        14.55,
+        770.06
+      ],
+      "fov": 45
+    },
+    {
+      "k": "D",
+      "name": "art-d-laundry",
+      "eye": [
+        283.5,
+        12.520055181715234,
+        783.8
+      ],
+      "target": [
+        282.5,
+        14.25,
+        777.4
+      ],
+      "fov": 48
+    },
+    {
+      "k": "E",
+      "name": "sample-e-harbour",
+      "eye": [
+        -49.3148,
+        6.0969,
+        1121.5
+      ],
+      "target": [
+        -24,
+        7.2,
+        1123.5
+      ],
+      "fov": 57
+    },
+    {
+      "k": "F",
+      "name": "sample-f-hillside",
+      "eye": [
+        1040.6682,
+        61.5086,
+        591.5865
+      ],
+      "target": [
+        1062,
+        102.7783,
+        490
+      ],
+      "fov": 57
+    },
+    {
+      "k": "G",
+      "name": "sample-g-rail",
+      "eye": [
+        337.8563,
+        9.6,
+        844.5
+      ],
+      "target": [
+        268,
+        10.55,
+        857
+      ],
+      "fov": 57
+    },
+    {
+      "k": "H",
+      "name": "sample-h-north",
+      "eye": [
+        181.0601,
+        136.1623,
+        -1212.8685
+      ],
+      "target": [
+        180,
+        141.45,
+        -1238
+      ],
+      "fov": 57
+    }
+  ],
+  "photos": {
+    "before": {
+      "materials": [
+        {
+          "name": "apartment-pbr-metal",
+          "ao": 0.65,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": false,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-plaster",
+          "ao": 0.65,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": false,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-roof",
+          "ao": 0.65,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": false,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-tile",
+          "ao": 0.65,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": false,
+          "shadowTint": true
+        }
+      ],
+      "decals": "1061:2667664:298285.6:949273.1",
+      "coverage": {
+        "localHTTP": 272,
+        "serverReceipts": 272,
+        "paired": 272,
+        "get200SourceAndWire": 272,
+        "browserBlobs": 16
+      },
+      "photos": {
+        "art-a-street": {
+          "sha256": "1a7c1a46f215b29c06a5d81d99b61da7499028b18f942c3e888ebcd279cf04ff",
+          "eye": [
+            278.8,
+            10.488,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440409,
+            -0.009834585659995631,
+            -0.00003223795934194156,
+            0.9999462663720154
+          ],
+          "fov": 35.63777782904556
+        },
+        "art-b-konbini": {
+          "sha256": "3ccd4497a1244d3b07335069842550198c87b3e5277cd9305d1273c7c833c449",
+          "eye": [
+            279.1,
+            9.8184,
+            912.8
+          ],
+          "quaternion": [
+            0.013653878147403252,
+            0.5849950384089397,
+            -0.009850566433920587,
+            0.8108620986267578
+          ],
+          "fov": 58
+        },
+        "art-c-alley": {
+          "sha256": "04099b3466ff476ba3381bdfbc66917ecbf50c8611aa8881eaaf814de8bf2695",
+          "eye": [
+            287.65,
+            14.384808464050293,
+            767.3199999999999
+          ],
+          "quaternion": [
+            0.00512201791291099,
+            0.8012252009590126,
+            -0.006859231737600546,
+            0.5983016740914732
+          ],
+          "fov": 45
+        },
+        "art-d-laundry": {
+          "sha256": "a2266e02bc04f124c44d8273860ad865e1c2e29612bc4d94c049f752a23d5608",
+          "eye": [
+            283.5,
+            12.520055181715234,
+            783.8
+          ],
+          "quaternion": [
+            0.1297258927986663,
+            0.0767626424061459,
+            -0.010073721024303532,
+            0.9885227410703001
+          ],
+          "fov": 48
+        },
+        "sample-e-harbour": {
+          "sha256": "04eb97ddc84c51aae06a4620c06d30559d36d6d3d87c2d371d39dd1f93978fe3",
+          "eye": [
+            -49.3148,
+            6.0969,
+            1121.5
+          ],
+          "quaternion": [
+            0.014730707497095328,
+            -0.7342518484654964,
+            0.01594041117183272,
+            0.6785301265038345
+          ],
+          "fov": 57
+        },
+        "sample-f-hillside": {
+          "sha256": "dc7f66154f2c520de92d3a77198dd4db46fcede072a13e32b3c3adc7ddf76a2b",
+          "eye": [
+            1040.6682,
+            61.5086,
+            591.5865
+          ],
+          "quaternion": [
+            0.18707634146308863,
+            -0.10146136691099782,
+            0.019429882402105244,
+            0.9768984149640014
+          ],
+          "fov": 57
+        },
+        "sample-g-rail": {
+          "sha256": "6a6cab5920bff32c68b2d56808105cca8a97bb2e062f672d8d31d72cdbacfe8b",
+          "eye": [
+            337.8563,
+            9.6,
+            844.5
+          ],
+          "quaternion": [
+            0.0042956255745017925,
+            0.7668403876967841,
+            -0.005132508643737493,
+            0.6418029485387173
+          ],
+          "fov": 57
+        },
+        "sample-h-north": {
+          "sha256": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546",
+          "eye": [
+            181.0601,
+            136.1623,
+            -1212.8685
+          ],
+          "quaternion": [
+            0.1033905527383131,
+            0.02096399872548667,
+            -0.002179647308778166,
+            0.9944174945662979
+          ],
+          "fov": 57
+        }
+      },
+      "textureHashes": {
+        "/apartment-assets/white_plaster_02/white_plaster_02_diff_1k.jpg": "a1ebbe091bd1ae93d2abd5de8d69f9003a8d0ee6532bcf9a87c2492c97051f23",
+        "/apartment-assets/white_plaster_02/white_plaster_02_nor_gl_1k.jpg": "eb572ca3630d5bfde72e2601b1f02412da23ca005cd19384dced8690be4cb783",
+        "/apartment-assets/white_plaster_02/white_plaster_02_arm_1k.jpg": "2bb1115821715dfd8bbd1c5a294a5bb43b97d5c46b1aa8aa8f744bcaf5eeeb10",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_diff_1k.jpg": "583eafdfc03da4a74509ba545c5ea808c8bdc6e883763a804fcbe859c120afb9",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg": "6be9a4e34057fc90ab450624cf83d2f5bc67bf59d5c137617ea62d8206540011",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_nor_gl_1k.jpg": "8a7d8db468fe5bd37a2fc14ff6012855b14bec03dd413e034a376902a723b44c",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd"
+      }
+    },
+    "after": {
+      "materials": [
+        {
+          "name": "apartment-pbr-metal",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-plaster",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-roof",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-tile",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        }
+      ],
+      "decals": "1061:2667664:298285.6:949273.1",
+      "coverage": {
+        "localHTTP": 272,
+        "serverReceipts": 272,
+        "paired": 272,
+        "get200SourceAndWire": 272,
+        "browserBlobs": 16
+      },
+      "photos": {
+        "art-a-street": {
+          "sha256": "16956f6b53d6d80f724d361b9071e30802df454ae7acafa5f4190e6a7c0866c7",
+          "eye": [
+            278.8,
+            10.488,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440409,
+            -0.009834585659995631,
+            -0.00003223795934194156,
+            0.9999462663720154
+          ],
+          "fov": 35.63777782904556
+        },
+        "art-b-konbini": {
+          "sha256": "3ccd4497a1244d3b07335069842550198c87b3e5277cd9305d1273c7c833c449",
+          "eye": [
+            279.1,
+            9.8184,
+            912.8
+          ],
+          "quaternion": [
+            0.013653878147403252,
+            0.5849950384089397,
+            -0.009850566433920587,
+            0.8108620986267578
+          ],
+          "fov": 58
+        },
+        "art-c-alley": {
+          "sha256": "75f72008d15a854a3fc2b3ee8d5d9a9b310c2e5a7ea3be8e34ddf60f20da6da4",
+          "eye": [
+            287.65,
+            14.384808464050293,
+            767.3199999999999
+          ],
+          "quaternion": [
+            0.00512201791291099,
+            0.8012252009590126,
+            -0.006859231737600546,
+            0.5983016740914732
+          ],
+          "fov": 45
+        },
+        "art-d-laundry": {
+          "sha256": "d21c7c34402a3c2029399eca78120233b9067500be2aeb3cbb31bc01c49829b5",
+          "eye": [
+            283.5,
+            12.520055181715234,
+            783.8
+          ],
+          "quaternion": [
+            0.1297258927986663,
+            0.0767626424061459,
+            -0.010073721024303532,
+            0.9885227410703001
+          ],
+          "fov": 48
+        },
+        "sample-e-harbour": {
+          "sha256": "517114deca7be78ab6113927c6be53c36f57aa8e65058d74b92a48c3f31a1737",
+          "eye": [
+            -49.3148,
+            6.0969,
+            1121.5
+          ],
+          "quaternion": [
+            0.014730707497095328,
+            -0.7342518484654964,
+            0.01594041117183272,
+            0.6785301265038345
+          ],
+          "fov": 57
+        },
+        "sample-f-hillside": {
+          "sha256": "dc7f66154f2c520de92d3a77198dd4db46fcede072a13e32b3c3adc7ddf76a2b",
+          "eye": [
+            1040.6682,
+            61.5086,
+            591.5865
+          ],
+          "quaternion": [
+            0.18707634146308863,
+            -0.10146136691099782,
+            0.019429882402105244,
+            0.9768984149640014
+          ],
+          "fov": 57
+        },
+        "sample-g-rail": {
+          "sha256": "6a6cab5920bff32c68b2d56808105cca8a97bb2e062f672d8d31d72cdbacfe8b",
+          "eye": [
+            337.8563,
+            9.6,
+            844.5
+          ],
+          "quaternion": [
+            0.0042956255745017925,
+            0.7668403876967841,
+            -0.005132508643737493,
+            0.6418029485387173
+          ],
+          "fov": 57
+        },
+        "sample-h-north": {
+          "sha256": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546",
+          "eye": [
+            181.0601,
+            136.1623,
+            -1212.8685
+          ],
+          "quaternion": [
+            0.1033905527383131,
+            0.02096399872548667,
+            -0.002179647308778166,
+            0.9944174945662979
+          ],
+          "fov": 57
+        }
+      },
+      "textureHashes": {
+        "/apartment-assets/white_plaster_02/white_plaster_02_diff_1k.jpg": "a1ebbe091bd1ae93d2abd5de8d69f9003a8d0ee6532bcf9a87c2492c97051f23",
+        "/apartment-assets/white_plaster_02/white_plaster_02_nor_gl_1k.jpg": "eb572ca3630d5bfde72e2601b1f02412da23ca005cd19384dced8690be4cb783",
+        "/apartment-assets/white_plaster_02/white_plaster_02_arm_1k.jpg": "2bb1115821715dfd8bbd1c5a294a5bb43b97d5c46b1aa8aa8f744bcaf5eeeb10",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_diff_1k.jpg": "583eafdfc03da4a74509ba545c5ea808c8bdc6e883763a804fcbe859c120afb9",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg": "6be9a4e34057fc90ab450624cf83d2f5bc67bf59d5c137617ea62d8206540011",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_nor_gl_1k.jpg": "8a7d8db468fe5bd37a2fc14ff6012855b14bec03dd413e034a376902a723b44c",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd"
+      }
+    },
+    "before-off": {
+      "materials": [
+        {
+          "name": "apartment-pbr-metal",
+          "ao": 0.65,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": false,
+          "shadowTint": false
+        },
+        {
+          "name": "apartment-pbr-plaster",
+          "ao": 0.65,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": false,
+          "shadowTint": false
+        },
+        {
+          "name": "apartment-pbr-roof",
+          "ao": 0.65,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": false,
+          "shadowTint": false
+        },
+        {
+          "name": "apartment-pbr-tile",
+          "ao": 0.65,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": false,
+          "shadowTint": false
+        }
+      ],
+      "decals": "1061:2667664:298285.6:949273.1",
+      "coverage": {
+        "localHTTP": 271,
+        "serverReceipts": 271,
+        "paired": 271,
+        "get200SourceAndWire": 271,
+        "browserBlobs": 16
+      },
+      "photos": {
+        "art-a-street": {
+          "sha256": "9a3be11978302345879b7b29849a5d54cfb3a3ee2e79d1130affe83f4dfba6b8",
+          "eye": [
+            278.8,
+            10.488,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440409,
+            -0.009834585659995631,
+            -0.00003223795934194156,
+            0.9999462663720154
+          ],
+          "fov": 35.63777782904556
+        },
+        "art-b-konbini": {
+          "sha256": "2ccf9e15cc219fc67e454709c6f7ecfe5f847fc7945cd94373a667e2d1d6b587",
+          "eye": [
+            279.1,
+            9.8184,
+            912.8
+          ],
+          "quaternion": [
+            0.013653878147403252,
+            0.5849950384089397,
+            -0.009850566433920587,
+            0.8108620986267578
+          ],
+          "fov": 58
+        },
+        "art-c-alley": {
+          "sha256": "1e839f95c38a04420a888d388c679564d23e9f31b8674f455fe48ebfb7844515",
+          "eye": [
+            287.65,
+            14.384808464050293,
+            767.3199999999999
+          ],
+          "quaternion": [
+            0.00512201791291099,
+            0.8012252009590126,
+            -0.006859231737600546,
+            0.5983016740914732
+          ],
+          "fov": 45
+        },
+        "art-d-laundry": {
+          "sha256": "2a08dc741e5c7d6875a035a83a11f2d346c0785a762147dc5828cc16a45b0ae2",
+          "eye": [
+            283.5,
+            12.520055181715234,
+            783.8
+          ],
+          "quaternion": [
+            0.1297258927986663,
+            0.0767626424061459,
+            -0.010073721024303532,
+            0.9885227410703001
+          ],
+          "fov": 48
+        },
+        "sample-e-harbour": {
+          "sha256": "5d84bd0d5af8aee70f8d6ea015b02a6a6eb2d566ffc57eab0d33ba2431428f90",
+          "eye": [
+            -49.3148,
+            6.0969,
+            1121.5
+          ],
+          "quaternion": [
+            0.014730707497095328,
+            -0.7342518484654964,
+            0.01594041117183272,
+            0.6785301265038345
+          ],
+          "fov": 57
+        },
+        "sample-f-hillside": {
+          "sha256": "9e6637b2927fb3133243e052e1dcf10662c927b92ea2214b0cd7c881feb6e1d7",
+          "eye": [
+            1040.6682,
+            61.5086,
+            591.5865
+          ],
+          "quaternion": [
+            0.18707634146308863,
+            -0.10146136691099782,
+            0.019429882402105244,
+            0.9768984149640014
+          ],
+          "fov": 57
+        },
+        "sample-g-rail": {
+          "sha256": "639271ad315d359dc2ede5feed124b4b2c3971535398b46dee1ff5235fa00723",
+          "eye": [
+            337.8563,
+            9.6,
+            844.5
+          ],
+          "quaternion": [
+            0.0042956255745017925,
+            0.7668403876967841,
+            -0.005132508643737493,
+            0.6418029485387173
+          ],
+          "fov": 57
+        },
+        "sample-h-north": {
+          "sha256": "9cf87b55689d7475b14eaaf5a669d369ee8e6d2a6a463556e2b957e6b702b6ad",
+          "eye": [
+            181.0601,
+            136.1623,
+            -1212.8685
+          ],
+          "quaternion": [
+            0.1033905527383131,
+            0.02096399872548667,
+            -0.002179647308778166,
+            0.9944174945662979
+          ],
+          "fov": 57
+        }
+      },
+      "textureHashes": {
+        "/apartment-assets/white_plaster_02/white_plaster_02_diff_1k.jpg": "a1ebbe091bd1ae93d2abd5de8d69f9003a8d0ee6532bcf9a87c2492c97051f23",
+        "/apartment-assets/white_plaster_02/white_plaster_02_nor_gl_1k.jpg": "eb572ca3630d5bfde72e2601b1f02412da23ca005cd19384dced8690be4cb783",
+        "/apartment-assets/white_plaster_02/white_plaster_02_arm_1k.jpg": "2bb1115821715dfd8bbd1c5a294a5bb43b97d5c46b1aa8aa8f744bcaf5eeeb10",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_diff_1k.jpg": "583eafdfc03da4a74509ba545c5ea808c8bdc6e883763a804fcbe859c120afb9",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg": "6be9a4e34057fc90ab450624cf83d2f5bc67bf59d5c137617ea62d8206540011",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_nor_gl_1k.jpg": "8a7d8db468fe5bd37a2fc14ff6012855b14bec03dd413e034a376902a723b44c",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd"
+      }
+    },
+    "after-off": {
+      "materials": [
+        {
+          "name": "apartment-pbr-metal",
+          "ao": 0.65,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": false,
+          "shadowTint": false
+        },
+        {
+          "name": "apartment-pbr-plaster",
+          "ao": 0.65,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": false,
+          "shadowTint": false
+        },
+        {
+          "name": "apartment-pbr-roof",
+          "ao": 0.65,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": false,
+          "shadowTint": false
+        },
+        {
+          "name": "apartment-pbr-tile",
+          "ao": 0.65,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": false,
+          "shadowTint": false
+        }
+      ],
+      "decals": "1061:2667664:298285.6:949273.1",
+      "coverage": {
+        "localHTTP": 271,
+        "serverReceipts": 271,
+        "paired": 271,
+        "get200SourceAndWire": 271,
+        "browserBlobs": 16
+      },
+      "photos": {
+        "art-a-street": {
+          "sha256": "9a3be11978302345879b7b29849a5d54cfb3a3ee2e79d1130affe83f4dfba6b8",
+          "eye": [
+            278.8,
+            10.488,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440409,
+            -0.009834585659995631,
+            -0.00003223795934194156,
+            0.9999462663720154
+          ],
+          "fov": 35.63777782904556
+        },
+        "art-b-konbini": {
+          "sha256": "2ccf9e15cc219fc67e454709c6f7ecfe5f847fc7945cd94373a667e2d1d6b587",
+          "eye": [
+            279.1,
+            9.8184,
+            912.8
+          ],
+          "quaternion": [
+            0.013653878147403252,
+            0.5849950384089397,
+            -0.009850566433920587,
+            0.8108620986267578
+          ],
+          "fov": 58
+        },
+        "art-c-alley": {
+          "sha256": "1e839f95c38a04420a888d388c679564d23e9f31b8674f455fe48ebfb7844515",
+          "eye": [
+            287.65,
+            14.384808464050293,
+            767.3199999999999
+          ],
+          "quaternion": [
+            0.00512201791291099,
+            0.8012252009590126,
+            -0.006859231737600546,
+            0.5983016740914732
+          ],
+          "fov": 45
+        },
+        "art-d-laundry": {
+          "sha256": "2a08dc741e5c7d6875a035a83a11f2d346c0785a762147dc5828cc16a45b0ae2",
+          "eye": [
+            283.5,
+            12.520055181715234,
+            783.8
+          ],
+          "quaternion": [
+            0.1297258927986663,
+            0.0767626424061459,
+            -0.010073721024303532,
+            0.9885227410703001
+          ],
+          "fov": 48
+        },
+        "sample-e-harbour": {
+          "sha256": "f56a221ee6e12a0b9584d069fad6f830fadf88d3ada0916b1af0748a486f9c7e",
+          "eye": [
+            -49.3148,
+            6.0969,
+            1121.5
+          ],
+          "quaternion": [
+            0.014730707497095328,
+            -0.7342518484654964,
+            0.01594041117183272,
+            0.6785301265038345
+          ],
+          "fov": 57
+        },
+        "sample-f-hillside": {
+          "sha256": "9e6637b2927fb3133243e052e1dcf10662c927b92ea2214b0cd7c881feb6e1d7",
+          "eye": [
+            1040.6682,
+            61.5086,
+            591.5865
+          ],
+          "quaternion": [
+            0.18707634146308863,
+            -0.10146136691099782,
+            0.019429882402105244,
+            0.9768984149640014
+          ],
+          "fov": 57
+        },
+        "sample-g-rail": {
+          "sha256": "36056ad45b9d29433c647024fe416b4339e31e7d47e5c9aa9498ac7c844e016c",
+          "eye": [
+            337.8563,
+            9.6,
+            844.5
+          ],
+          "quaternion": [
+            0.0042956255745017925,
+            0.7668403876967841,
+            -0.005132508643737493,
+            0.6418029485387173
+          ],
+          "fov": 57
+        },
+        "sample-h-north": {
+          "sha256": "9cf87b55689d7475b14eaaf5a669d369ee8e6d2a6a463556e2b957e6b702b6ad",
+          "eye": [
+            181.0601,
+            136.1623,
+            -1212.8685
+          ],
+          "quaternion": [
+            0.1033905527383131,
+            0.02096399872548667,
+            -0.002179647308778166,
+            0.9944174945662979
+          ],
+          "fov": 57
+        }
+      },
+      "textureHashes": {
+        "/apartment-assets/white_plaster_02/white_plaster_02_diff_1k.jpg": "a1ebbe091bd1ae93d2abd5de8d69f9003a8d0ee6532bcf9a87c2492c97051f23",
+        "/apartment-assets/white_plaster_02/white_plaster_02_nor_gl_1k.jpg": "eb572ca3630d5bfde72e2601b1f02412da23ca005cd19384dced8690be4cb783",
+        "/apartment-assets/white_plaster_02/white_plaster_02_arm_1k.jpg": "2bb1115821715dfd8bbd1c5a294a5bb43b97d5c46b1aa8aa8f744bcaf5eeeb10",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_diff_1k.jpg": "583eafdfc03da4a74509ba545c5ea808c8bdc6e883763a804fcbe859c120afb9",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg": "6be9a4e34057fc90ab450624cf83d2f5bc67bf59d5c137617ea62d8206540011",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_nor_gl_1k.jpg": "8a7d8db468fe5bd37a2fc14ff6012855b14bec03dd413e034a376902a723b44c",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd"
+      }
+    }
+  },
+  "timing": [
+    {
+      "variant": "before",
+      "tag": "1-before",
+      "source": "b477c3811f760810cf896934b987e28ab7a4e241",
+      "segments": {
+        "art-a-street": {
+          "frames": 653,
+          "durationMs": 10107.599999999999,
+          "fps": 64.60485179468915,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "pass": true
+        },
+        "art-b-konbini": {
+          "frames": 655,
+          "durationMs": 10107.600000000006,
+          "fps": 64.80272270370806,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "pass": true
+        },
+        "art-c-alley": {
+          "frames": 657,
+          "durationMs": 10107.700000000012,
+          "fps": 64.99995053276207,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "pass": true
+        },
+        "art-d-laundry": {
+          "frames": 657,
+          "durationMs": 10107.700000000012,
+          "fps": 64.99995053276207,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "pass": true
+        },
+        "sample-e-harbour": {
+          "frames": 657,
+          "durationMs": 10107.700000000012,
+          "fps": 64.99995053276207,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "pass": true
+        },
+        "sample-f-hillside": {
+          "frames": 657,
+          "durationMs": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "pass": true
+        },
+        "sample-g-rail": {
+          "frames": 621,
+          "durationMs": 10138.400000000009,
+          "fps": 61.25226860254078,
+          "p95Ms": 30.699999999982538,
+          "p99Ms": 30.800000000017462,
+          "pass": false
+        },
+        "sample-h-north": {
+          "frames": 657,
+          "durationMs": 10107.600000000006,
+          "fps": 65.00059361272702,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "pass": true
+        },
+        "walk-third": {
+          "frames": 203,
+          "durationMs": 3138.5,
+          "fps": 64.68057989485423,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "pass": true
+        },
+        "walk-first": {
+          "frames": 202,
+          "durationMs": 3123.0999999999767,
+          "fps": 64.6793250296185,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "pass": true
+        }
+      }
+    },
+    {
+      "variant": "after",
+      "tag": "2-after",
+      "source": "be0549d896b716b15cb7c4653e99a83fffcb0fdb",
+      "segments": {
+        "art-a-street": {
+          "frames": 658,
+          "durationMs": 10123.199999999997,
+          "fps": 64.99920973605187,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999998545,
+          "pass": true
+        },
+        "art-b-konbini": {
+          "frames": 657,
+          "durationMs": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "pass": true
+        },
+        "art-c-alley": {
+          "frames": 658,
+          "durationMs": 10123.099999999991,
+          "fps": 64.99985182404605,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "pass": true
+        },
+        "art-d-laundry": {
+          "frames": 656,
+          "durationMs": 10107.699999999997,
+          "fps": 64.90101605706542,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "pass": true
+        },
+        "sample-e-harbour": {
+          "frames": 657,
+          "durationMs": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "pass": true
+        },
+        "sample-f-hillside": {
+          "frames": 657,
+          "durationMs": 10107.600000000006,
+          "fps": 65.00059361272702,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "pass": true
+        },
+        "sample-g-rail": {
+          "frames": 658,
+          "durationMs": 10122.900000000009,
+          "fps": 65.0011360380918,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "pass": true
+        },
+        "sample-h-north": {
+          "frames": 658,
+          "durationMs": 10123.099999999977,
+          "fps": 64.99985182404615,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "pass": true
+        },
+        "walk-third": {
+          "frames": 184,
+          "durationMs": 3138.5,
+          "fps": 58.6267325155329,
+          "p95Ms": 30.79999999998836,
+          "p99Ms": 30.800000000017462,
+          "pass": false
+        },
+        "walk-first": {
+          "frames": 203,
+          "durationMs": 3123.100000000006,
+          "fps": 64.99951970798233,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "pass": true
+        }
+      }
+    },
+    {
+      "variant": "after",
+      "tag": "3-after",
+      "source": "be0549d896b716b15cb7c4653e99a83fffcb0fdb",
+      "segments": {
+        "art-a-street": {
+          "frames": 657,
+          "durationMs": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999998545,
+          "pass": true
+        },
+        "art-b-konbini": {
+          "frames": 657,
+          "durationMs": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "pass": true
+        },
+        "art-c-alley": {
+          "frames": 657,
+          "durationMs": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "pass": true
+        },
+        "art-d-laundry": {
+          "frames": 657,
+          "durationMs": 10107.600000000006,
+          "fps": 65.00059361272702,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "pass": true
+        },
+        "sample-e-harbour": {
+          "frames": 655,
+          "durationMs": 10138.400000000009,
+          "fps": 64.60585496725317,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "pass": true
+        },
+        "sample-f-hillside": {
+          "frames": 657,
+          "durationMs": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "pass": true
+        },
+        "sample-g-rail": {
+          "frames": 658,
+          "durationMs": 10123.200000000012,
+          "fps": 64.99920973605177,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "pass": true
+        },
+        "sample-h-north": {
+          "frames": 657,
+          "durationMs": 10107.599999999977,
+          "fps": 65.0005936127272,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "pass": true
+        },
+        "walk-third": {
+          "frames": 177,
+          "durationMs": 3138.2999999999884,
+          "fps": 56.399961762737995,
+          "p95Ms": 30.800000000017462,
+          "p99Ms": 30.89999999999418,
+          "pass": false
+        },
+        "walk-first": {
+          "frames": 189,
+          "durationMs": 3123.1999999999825,
+          "fps": 60.514856557377385,
+          "p95Ms": 30.79999999998836,
+          "p99Ms": 30.800000000017462,
+          "pass": false
+        }
+      }
+    },
+    {
+      "variant": "before",
+      "tag": "4-before",
+      "source": "b477c3811f760810cf896934b987e28ab7a4e241",
+      "segments": {
+        "art-a-street": {
+          "frames": 615,
+          "durationMs": 10123.099999999999,
+          "fps": 60.7521411425354,
+          "p95Ms": 30.700000000004366,
+          "p99Ms": 30.80000000000291,
+          "pass": false
+        },
+        "art-b-konbini": {
+          "frames": 658,
+          "durationMs": 10122.899999999994,
+          "fps": 65.00113603809189,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "pass": true
+        },
+        "art-c-alley": {
+          "frames": 658,
+          "durationMs": 10123,
+          "fps": 65.00049392472587,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "pass": true
+        },
+        "art-d-laundry": {
+          "frames": 657,
+          "durationMs": 10107.699999999997,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "pass": true
+        },
+        "sample-e-harbour": {
+          "frames": 569,
+          "durationMs": 10107.699999999997,
+          "fps": 56.293716671448514,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.89999999999418,
+          "pass": false
+        },
+        "sample-f-hillside": {
+          "frames": 658,
+          "durationMs": 10123.100000000006,
+          "fps": 64.99985182404596,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "pass": true
+        },
+        "sample-g-rail": {
+          "frames": 655,
+          "durationMs": 10122.999999999985,
+          "fps": 64.7041390892029,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "pass": true
+        },
+        "sample-h-north": {
+          "frames": 657,
+          "durationMs": 10107.800000000017,
+          "fps": 64.99930746552157,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999976717,
+          "pass": true
+        },
+        "walk-third": {
+          "frames": 197,
+          "durationMs": 3123,
+          "fps": 63.08037143772014,
+          "p95Ms": 15.5,
+          "p99Ms": 30.800000000017462,
+          "pass": true
+        },
+        "walk-first": {
+          "frames": 204,
+          "durationMs": 3138.5,
+          "fps": 64.9992034411343,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "pass": true
+        }
+      }
+    }
+  ],
+  "legacy": {
+    "before": {
+      "01-station-street": {
+        "camera": {
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -0.000032237959341941705,
+            0.9999462663720154
+          ],
+          "fov": 58
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "0aa37c968bde5d2dd53be1abdd6b4b84d42ae0dbafafd345f90dda2f95a2de96",
+        "n": 429,
+        "durationMs": 6600,
+        "fps": 65,
+        "p95Ms": 15.5,
+        "p99Ms": 15.599999999998545
+      },
+      "20-rear-eye": {
+        "camera": {
+          "position": [
+            273,
+            14.755245542526229,
+            758
+          ],
+          "quaternion": [
+            -0.00013011891877658623,
+            0.9145142483742376,
+            -0.00029414054360230415,
+            -0.40455356390830466
+          ],
+          "fov": 58
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "2ed6cfde43560229d43e2a83e0ba3cb3a1deec3c580927477f8bfcbbda16f647",
+        "n": 425,
+        "durationMs": 6600.0999999999985,
+        "fps": 64.3929637429736,
+        "p95Ms": 15.5,
+        "p99Ms": 15.60000000000582
+      },
+      "21-front-eye": {
+        "camera": {
+          "position": [
+            274,
+            12.87812709172567,
+            783
+          ],
+          "quaternion": [
+            0.07422133960767584,
+            -0.5103582416049142,
+            0.044271975994965136,
+            0.8556083508909221
+          ],
+          "fov": 58
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "0f7000d2905a3fe1c69336dd24c15f6e37b2a84d9c2e2e15e4c56dbb3b1b3c53",
+        "n": 427,
+        "durationMs": 6584.5999999999985,
+        "fps": 64.84828235579991,
+        "p95Ms": 15.5,
+        "p99Ms": 15.500000000007276
+      },
+      "23-service-corner": {
+        "camera": {
+          "position": [
+            308.4,
+            9.612,
+            872.9
+          ],
+          "quaternion": [
+            -0.08432325046436126,
+            0.5331397072650681,
+            0.05351200213385738,
+            0.8401119613456697
+          ],
+          "fov": 55
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "36b78290a2723152beb886f2c2408284a9d9c4ed8b472f857f84aa5de5abd8fd",
+        "n": 429,
+        "durationMs": 6600,
+        "fps": 65,
+        "p95Ms": 15.5,
+        "p99Ms": 15.60000000000582
+      },
+      "24-laundry-details": {
+        "camera": {
+          "position": [
+            288,
+            14.384808464050293,
+            777.9
+          ],
+          "quaternion": [
+            -0.15522850149956677,
+            0.6173580660361093,
+            0.12595148976979553,
+            0.7608609287163607
+          ],
+          "fov": 55
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "c38f2f1e464a8735d5d55360029bbc8f3694632116065c1d5838aa14e69c3b1e",
+        "n": 429,
+        "durationMs": 6600,
+        "fps": 65,
+        "p95Ms": 15.5,
+        "p99Ms": 15.60000000000582
+      }
+    },
+    "after": {
+      "01-station-street": {
+        "camera": {
+          "position": [
+            278.8,
+            10.4,
+            936
+          ],
+          "quaternion": [
+            -0.003277842930440423,
+            -0.009834585659995631,
+            -0.000032237959341941705,
+            0.9999462663720154
+          ],
+          "fov": 58
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "1b5ca27b84c74ae9480d1c59c6bf40bd231873fcf52c42bb15a2dcb7e786a985",
+        "n": 423,
+        "durationMs": 6507.5999999999985,
+        "fps": 65.00092199889362,
+        "p95Ms": 15.5,
+        "p99Ms": 15.5
+      },
+      "20-rear-eye": {
+        "camera": {
+          "position": [
+            273,
+            14.755245542526229,
+            758
+          ],
+          "quaternion": [
+            -0.00013011891877658623,
+            0.9145142483742376,
+            -0.00029414054360230415,
+            -0.40455356390830466
+          ],
+          "fov": 58
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "f9672b6cf3f690dcefc54ef1fc474b78da3d7b0b03722f4a8b96df56b36de8c1",
+        "n": 428,
+        "durationMs": 6584.699999999997,
+        "fps": 64.99916473035981,
+        "p95Ms": 15.5,
+        "p99Ms": 15.599999999998545
+      },
+      "21-front-eye": {
+        "camera": {
+          "position": [
+            274,
+            12.87812709172567,
+            783
+          ],
+          "quaternion": [
+            0.07422133960767584,
+            -0.5103582416049142,
+            0.044271975994965136,
+            0.8556083508909221
+          ],
+          "fov": 58
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "4d01dbe3936337acef5cc3dcaf0df5fe4ddaa955012a1026a44e4309a4d64e28",
+        "n": 429,
+        "durationMs": 6600,
+        "fps": 65,
+        "p95Ms": 15.5,
+        "p99Ms": 15.500000000007276
+      },
+      "23-service-corner": {
+        "camera": {
+          "position": [
+            308.4,
+            9.612,
+            872.9
+          ],
+          "quaternion": [
+            -0.08432325046436126,
+            0.5331397072650681,
+            0.05351200213385738,
+            0.8401119613456697
+          ],
+          "fov": 55
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "be6b5d842226f5b3c87324e0906b6089103e3e21948079cab43628b3ca8dfd17",
+        "n": 422,
+        "durationMs": 6507.599999999991,
+        "fps": 64.8472555166268,
+        "p95Ms": 15.5,
+        "p99Ms": 15.599999999991269
+      },
+      "24-laundry-details": {
+        "camera": {
+          "position": [
+            288,
+            14.384808464050293,
+            777.9
+          ],
+          "quaternion": [
+            -0.15522850149956677,
+            0.6173580660361093,
+            0.12595148976979553,
+            0.7608609287163607
+          ],
+          "fov": 55
+        },
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU (0x00002520) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "time": 14,
+        "preset": "evening",
+        "size": [
+          1440,
+          900
+        ],
+        "glError": 0,
+        "pngSHA256": "e7eeea26cab10852fb390ed5d84cc89ce37feeea51117ff749778ce710eb4cd5",
+        "n": 428,
+        "durationMs": 6584.600000000006,
+        "fps": 65.00015186951366,
+        "p95Ms": 15.5,
+        "p99Ms": 15.599999999991269
+      }
+    }
+  },
+  "sameFrame": {
+    "art-a-street": {
+      "disabled": [
+        "apartment-pbr-plaster",
+        "apartment-pbr-metal",
+        "apartment-pbr-tile",
+        "apartment-pbr-roof"
+      ],
+      "time": 14,
+      "eye": [
+        278.8,
+        10.488,
+        936
+      ],
+      "refinedVsBase": {
+        "changed": 3275,
+        "over2": 1989,
+        "max": 21
+      },
+      "refinedVsReturn": {
+        "changed": 2,
+        "over2": 0,
+        "max": 1
+      }
+    },
+    "art-b-konbini": {
+      "disabled": [],
+      "time": 14,
+      "eye": [
+        279.1,
+        9.8184,
+        912.8
+      ],
+      "refinedVsBase": {
+        "changed": 0,
+        "over2": 0,
+        "max": 0
+      },
+      "refinedVsReturn": {
+        "changed": 0,
+        "over2": 0,
+        "max": 0
+      }
+    },
+    "art-c-alley": {
+      "disabled": [],
+      "time": 14,
+      "eye": [
+        287.65,
+        14.384808464050293,
+        767.3199999999999
+      ],
+      "refinedVsBase": {
+        "changed": 723794,
+        "over2": 514917,
+        "max": 28
+      },
+      "refinedVsReturn": {
+        "changed": 0,
+        "over2": 0,
+        "max": 0
+      }
+    },
+    "art-d-laundry": {
+      "disabled": [],
+      "time": 14,
+      "eye": [
+        283.5,
+        12.520055181715234,
+        783.8
+      ],
+      "refinedVsBase": {
+        "changed": 369697,
+        "over2": 283450,
+        "max": 22
+      },
+      "refinedVsReturn": {
+        "changed": 0,
+        "over2": 0,
+        "max": 0
+      }
+    },
+    "sample-e-harbour": {
+      "disabled": [],
+      "time": 14,
+      "eye": [
+        -49.3148,
+        6.0969,
+        1121.5
+      ],
+      "refinedVsBase": {
+        "changed": 0,
+        "over2": 0,
+        "max": 0
+      },
+      "refinedVsReturn": {
+        "changed": 0,
+        "over2": 0,
+        "max": 0
+      }
+    },
+    "sample-f-hillside": {
+      "disabled": [],
+      "time": 14,
+      "eye": [
+        1040.6682,
+        61.5086,
+        591.5865
+      ],
+      "refinedVsBase": {
+        "changed": 0,
+        "over2": 0,
+        "max": 0
+      },
+      "refinedVsReturn": {
+        "changed": 0,
+        "over2": 0,
+        "max": 0
+      }
+    },
+    "sample-g-rail": {
+      "disabled": [],
+      "time": 14,
+      "eye": [
+        337.8563,
+        9.6,
+        844.5
+      ],
+      "refinedVsBase": {
+        "changed": 0,
+        "over2": 0,
+        "max": 0
+      },
+      "refinedVsReturn": {
+        "changed": 0,
+        "over2": 0,
+        "max": 0
+      }
+    },
+    "sample-h-north": {
+      "disabled": [],
+      "time": 14,
+      "eye": [
+        181.0601,
+        136.1623,
+        -1212.8685
+      ],
+      "refinedVsBase": {
+        "changed": 0,
+        "over2": 0,
+        "max": 0
+      },
+      "refinedVsReturn": {
+        "changed": 0,
+        "over2": 0,
+        "max": 0
+      }
+    }
+  },
+  "mask": {}
+}

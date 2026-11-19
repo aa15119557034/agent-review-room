@@ -1,0 +1,197 @@
+{
+  "art-a-street": {
+    "ids": [
+      32,
+      96,
+      160,
+      224
+    ],
+    "pixels": 2253,
+    "groups": {
+      "full shadow": {
+        "pixels": 240,
+        "lumaMedian": [
+          83.652,
+          97.084
+        ],
+        "meanDelta": 13.3585,
+        "p95AbsDelta": 19.005,
+        "changed": 233,
+        "over2": 229,
+        "maxByteDelta": 21
+      },
+      "full sun": {
+        "pixels": 0
+      },
+      "all visible interiors": {
+        "pixels": 1279,
+        "lumaMedian": [
+          81.726,
+          91.225
+        ],
+        "meanDelta": 10.3304,
+        "p95AbsDelta": 18.218,
+        "changed": 1255,
+        "over2": 1133,
+        "maxByteDelta": 21
+      }
+    }
+  },
+  "art-b-konbini": {
+    "ids": [],
+    "pixels": 0,
+    "groups": {
+      "full shadow": {
+        "pixels": 0
+      },
+      "full sun": {
+        "pixels": 0
+      },
+      "all visible interiors": {
+        "pixels": 0
+      }
+    }
+  },
+  "art-c-alley": {
+    "ids": [
+      32,
+      160,
+      224
+    ],
+    "pixels": 702141,
+    "groups": {
+      "full shadow": {
+        "pixels": 666871,
+        "lumaMedian": [
+          42.225,
+          52.583
+        ],
+        "meanDelta": 8.8378,
+        "p95AbsDelta": 14.358,
+        "changed": 655943,
+        "over2": 498621,
+        "maxByteDelta": 28
+      },
+      "full sun": {
+        "pixels": 0
+      },
+      "all visible interiors": {
+        "pixels": 666871,
+        "lumaMedian": [
+          42.225,
+          52.583
+        ],
+        "meanDelta": 8.8378,
+        "p95AbsDelta": 14.358,
+        "changed": 655943,
+        "over2": 498621,
+        "maxByteDelta": 28
+      }
+    }
+  },
+  "art-d-laundry": {
+    "ids": [
+      32,
+      160
+    ],
+    "pixels": 348327,
+    "groups": {
+      "full shadow": {
+        "pixels": 258232,
+        "lumaMedian": [
+          43.441,
+          54.655
+        ],
+        "meanDelta": 9.4289,
+        "p95AbsDelta": 15.218,
+        "changed": 250092,
+        "over2": 223898,
+        "maxByteDelta": 22
+      },
+      "full sun": {
+        "pixels": 432,
+        "lumaMedian": [
+          86.169,
+          87.169
+        ],
+        "meanDelta": 1.1267,
+        "p95AbsDelta": 1.715,
+        "changed": 432,
+        "over2": 0,
+        "maxByteDelta": 2
+      },
+      "all visible interiors": {
+        "pixels": 308437,
+        "lumaMedian": [
+          44.084,
+          54.872
+        ],
+        "meanDelta": 9.1255,
+        "p95AbsDelta": 15.146,
+        "changed": 299169,
+        "over2": 262355,
+        "maxByteDelta": 22
+      }
+    }
+  },
+  "sample-e-harbour": {
+    "ids": [],
+    "pixels": 0,
+    "groups": {
+      "full shadow": {
+        "pixels": 0
+      },
+      "full sun": {
+        "pixels": 0
+      },
+      "all visible interiors": {
+        "pixels": 0
+      }
+    }
+  },
+  "sample-f-hillside": {
+    "ids": [],
+    "pixels": 0,
+    "groups": {
+      "full shadow": {
+        "pixels": 0
+      },
+      "full sun": {
+        "pixels": 0
+      },
+      "all visible interiors": {
+        "pixels": 0
+      }
+    }
+  },
+  "sample-g-rail": {
+    "ids": [],
+    "pixels": 0,
+    "groups": {
+      "full shadow": {
+        "pixels": 0
+      },
+      "full sun": {
+        "pixels": 0
+      },
+      "all visible interiors": {
+        "pixels": 0
+      }
+    }
+  },
+  "sample-h-north": {
+    "ids": [],
+    "pixels": 0,
+    "groups": {
+      "full shadow": {
+        "pixels": 0
+      },
+      "full sun": {
+        "pixels": 0
+      },
+      "all visible interiors": {
+        "pixels": 0
+      }
+    }
+  }
+}

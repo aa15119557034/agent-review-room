@@ -1,0 +1,287 @@
+{
+  "windows": [
+    {
+      "filename": "frame-samples.json",
+      "start": {
+        "wallMs": 1795051506668,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "station-street",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795051509831,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "station-street",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-art-a-street.json",
+      "start": {
+        "wallMs": 1795051511966,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-a-street",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795051522110,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-a-street",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-art-b-konbini.json",
+      "start": {
+        "wallMs": 1795051524048,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-b-konbini",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795051534182,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-b-konbini",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-art-c-alley.json",
+      "start": {
+        "wallMs": 1795051536071,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-c-alley",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795051546197,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-c-alley",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-art-d-laundry.json",
+      "start": {
+        "wallMs": 1795051548116,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-d-laundry",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795051558228,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "art-d-laundry",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-sample-e-harbour.json",
+      "start": {
+        "wallMs": 1795051560131,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "sample-e-harbour",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795051570277,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "sample-e-harbour",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-sample-f-hillside.json",
+      "start": {
+        "wallMs": 1795051572530,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "sample-f-hillside",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795051582658,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "sample-f-hillside",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-sample-g-rail.json",
+      "start": {
+        "wallMs": 1795051584526,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "sample-g-rail",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795051594664,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "sample-g-rail",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-sample-h-north.json",
+      "start": {
+        "wallMs": 1795051596633,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "sample-h-north",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795051606750,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": false,
+          "visibility": "visible",
+          "view": "sample-h-north",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-walking-third.json",
+      "start": {
+        "wallMs": 1795051611977,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": true,
+          "visibility": "visible",
+          "view": "walking",
+          "walker": "third"
+        }
+      },
+      "end": {
+        "wallMs": 1795051615139,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": true,
+          "visibility": "visible",
+          "view": "walking",
+          "walker": "third"
+        }
+      }
+    },
+    {
+      "filename": "frame-samples-walking-first.json",
+      "start": {
+        "wallMs": 1795051616048,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": true,
+          "visibility": "visible",
+          "view": "walking",
+          "walker": "first"
+        }
+      },
+      "end": {
+        "wallMs": 1795051619203,
+        "window": false,
+        "contents": false,
+        "page": {
+          "focused": true,
+          "visibility": "visible",
+          "view": "walking",
+          "walker": "first"
+        }
+      }
+    }
+  ],
+  "coverage": {
+    "localHTTP": 273,
+    "serverReceipts": 273,
+    "paired": 273,
+    "get200SourceAndWire": 273,
+    "browserBlobs": 16
+  },
+  "problems": []
+}
