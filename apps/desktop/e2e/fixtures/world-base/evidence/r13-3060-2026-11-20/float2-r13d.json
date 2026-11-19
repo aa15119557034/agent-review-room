@@ -1,0 +1,82 @@
+{
+  "label": "r13d",
+  "target": "http://127.0.0.1:4175/?time=evening&grade=off",
+  "at": "2026-11-19T21:48:57.057Z",
+  "result": {
+    "found": true,
+    "meshVertices": 2980,
+    "drawCallsForMesh": 1,
+    "sampled": 332,
+    "gapP50": 0.02,
+    "gapP95": 0.02,
+    "gapMax": 8,
+    "gapMin": 0.02,
+    "outliers": [
+      {
+        "i": 2736,
+        "x": 280,
+        "y": 8,
+        "z": 900,
+        "gap": 8,
+        "referenced": false
+      },
+      {
+        "i": 2745,
+        "x": 280,
+        "y": 8,
+        "z": 900,
+        "gap": 8,
+        "referenced": false
+      },
+      {
+        "i": 2799,
+        "x": 280,
+        "y": 8,
+        "z": 900,
+        "gap": 8,
+        "referenced": false
+      },
+      {
+        "i": 2808,
+        "x": 280,
+        "y": 8,
+        "z": 900,
+        "gap": 8,
+        "referenced": false
+      },
+      {
+        "i": 2907,
+        "x": 280,
+        "y": 8,
+        "z": 900,
+        "gap": 8,
+        "referenced": false
+      },
+      {
+        "i": 2916,
+        "x": 280,
+        "y": 8,
+        "z": 900,
+        "gap": 8,
+        "referenced": false
+      },
+      {
+        "i": 2925,
+        "x": 280,
+        "y": 8,
+        "z": 900,
+        "gap": 8,
+        "referenced": false
+      },
+      {
+        "i": 2979,
+        "x": 280,
+        "y": 8,
+        "z": 900,
+        "gap": 8,
+        "referenced": false
+      }
+    ],
+    "outlierCount": 8
+  }
+}
