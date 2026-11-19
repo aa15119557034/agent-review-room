@@ -1,0 +1,48 @@
+{
+  "before": {
+    "source": "4eb8bfa622cea6a1ea70098838de3e7fffd1b5c1",
+    "paths": {
+      "src/world/houses/house.js": {
+        "vendored": "9d1713efe5670432938cfa05d96c6ef6acc75be6f3586674df62d9af77b91d4b",
+        "httpBody": "9d1713efe5670432938cfa05d96c6ef6acc75be6f3586674df62d9af77b91d4b",
+        "localOriginal": "9d1713efe5670432938cfa05d96c6ef6acc75be6f3586674df62d9af77b91d4b",
+        "pinnedOriginal": "9d1713efe5670432938cfa05d96c6ef6acc75be6f3586674df62d9af77b91d4b"
+      },
+      "src/world/shopsA/common.js": {
+        "vendored": "552b5ee6f6ab4ffb5f0c1703e06c9cea4d4e624ee5528114c6fad486511b8306",
+        "httpBody": "552b5ee6f6ab4ffb5f0c1703e06c9cea4d4e624ee5528114c6fad486511b8306",
+        "localOriginal": "552b5ee6f6ab4ffb5f0c1703e06c9cea4d4e624ee5528114c6fad486511b8306",
+        "pinnedOriginal": "552b5ee6f6ab4ffb5f0c1703e06c9cea4d4e624ee5528114c6fad486511b8306"
+      },
+      "src/world/station/building.js": {
+        "vendored": "eb97d221b489ecdbf97fd8af53471c4d6ac07ac3cda6378c007102f4089f2505",
+        "httpBody": "eb97d221b489ecdbf97fd8af53471c4d6ac07ac3cda6378c007102f4089f2505",
+        "localOriginal": "eb97d221b489ecdbf97fd8af53471c4d6ac07ac3cda6378c007102f4089f2505",
+        "pinnedOriginal": "eb97d221b489ecdbf97fd8af53471c4d6ac07ac3cda6378c007102f4089f2505"
+      }
+    }
+  },
+  "after": {
+    "source": "4d94a1f41d17f18628e90e2c3f03914e37a3e471",
+    "paths": {
+      "src/world/houses/house.js": {
+        "vendored": "7628a24d2b8868748ed90cb65b428d0e796d7952f0cab360be2141b8b9f7e19b",
+        "httpBody": "7628a24d2b8868748ed90cb65b428d0e796d7952f0cab360be2141b8b9f7e19b",
+        "localOriginal": "9d1713efe5670432938cfa05d96c6ef6acc75be6f3586674df62d9af77b91d4b",
+        "pinnedOriginal": "9d1713efe5670432938cfa05d96c6ef6acc75be6f3586674df62d9af77b91d4b"
+      },
+      "src/world/shopsA/common.js": {
+        "vendored": "36150b96a66a0337867e464c3a7281ba56592b06ccdfeae33bf8c79633b42b55",
+        "httpBody": "36150b96a66a0337867e464c3a7281ba56592b06ccdfeae33bf8c79633b42b55",
+        "localOriginal": "552b5ee6f6ab4ffb5f0c1703e06c9cea4d4e624ee5528114c6fad486511b8306",
+        "pinnedOriginal": "552b5ee6f6ab4ffb5f0c1703e06c9cea4d4e624ee5528114c6fad486511b8306"
+      },
+      "src/world/station/building.js": {
+        "vendored": "f99474bc7b90d7a17cb786552f1084753616ef9a977efc8ebfc392b579d7db4f",
+        "httpBody": "f99474bc7b90d7a17cb786552f1084753616ef9a977efc8ebfc392b579d7db4f",
+        "localOriginal": "eb97d221b489ecdbf97fd8af53471c4d6ac07ac3cda6378c007102f4089f2505",
+        "pinnedOriginal": "eb97d221b489ecdbf97fd8af53471c4d6ac07ac3cda6378c007102f4089f2505"
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "test": "photos",
+    "arm": "after",
+    "id": "x51-next-after-00b5d109-617",
+    "source": "4d94a1f41d17f18628e90e2c3f03914e37a3e471",
+    "fixture": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r9-after\\apps\\desktop\\e2e\\fixtures\\world-base",
+    "output": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r9-evidence\\photos-after",
+    "log": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r9-evidence\\x51-next-after-00b5d109-617.log",
+    "started": "2026-11-19T08:37:59.429Z",
+    "status": 0,
+    "ended": "2026-11-19T08:38:56.642Z"
+  },
+  {
+    "test": "timing",
+    "arm": "before",
+    "id": "x51-next-before-ab215634-14c",
+    "source": "4eb8bfa622cea6a1ea70098838de3e7fffd1b5c1",
+    "fixture": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r8c-after\\apps\\desktop\\e2e\\fixtures\\world-base",
+    "output": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r8c-after\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\x51-next-before-ab215634-14c",
+    "log": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r9-evidence\\x51-next-before-ab215634-14c.log",
+    "started": "2026-11-19T08:38:56.931Z",
+    "status": 0,
+    "ended": "2026-11-19T08:41:49.114Z"
+  },
+  {
+    "test": "timing",
+    "arm": "after",
+    "id": "x51-next-after-84100d7f-f52",
+    "source": "4d94a1f41d17f18628e90e2c3f03914e37a3e471",
+    "fixture": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r9-after\\apps\\desktop\\e2e\\fixtures\\world-base",
+    "output": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r9-after\\apps\\desktop\\e2e\\fixtures\\world-base\\artifacts\\x51-next-after-84100d7f-f52",
+    "log": "C:\\Users\\QGNL66\\.codex\\visualizations\\2026\\11\\19\\01a1f1ef-c58a-7443-bbde-b793103a4827\\x51-r9-evidence\\x51-next-after-84100d7f-f52.log",
+    "started": "2026-11-19T08:41:49.117Z",
+    "status": 0,
+    "ended": "2026-11-19T08:44:42.451Z"
+  }
+]

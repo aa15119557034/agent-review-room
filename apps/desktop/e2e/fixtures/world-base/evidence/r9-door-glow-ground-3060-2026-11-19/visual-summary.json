@@ -1,0 +1,442 @@
+{
+  "views": {
+    "art-a-street": {
+      "pixels": 1296000,
+      "changed": 4809,
+      "over2": 1494,
+      "max": 108
+    },
+    "art-b-konbini": {
+      "pixels": 1296000,
+      "changed": 2865,
+      "over2": 1080,
+      "max": 91
+    },
+    "art-c-alley": {
+      "pixels": 1296000,
+      "changed": 343599,
+      "over2": 202989,
+      "max": 183
+    },
+    "art-d-laundry": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    },
+    "sample-e-harbour": {
+      "pixels": 1296000,
+      "changed": 5425,
+      "over2": 4055,
+      "max": 224
+    },
+    "sample-f-hillside": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    },
+    "sample-g-rail": {
+      "pixels": 1296000,
+      "changed": 5126,
+      "over2": 1176,
+      "max": 142
+    },
+    "sample-h-north": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "max": 0
+    }
+  },
+  "regions": {
+    "c-door-light.jpg": {
+      "xyxy": [
+        200,
+        65,
+        870,
+        590
+      ],
+      "pixels": 351750,
+      "changed": 201018,
+      "over2": 137078,
+      "max": 183
+    }
+  },
+  "historical": {},
+  "highlights": {
+    "art-a-street": {
+      "pixels": 1296000,
+      "changed": 4809,
+      "over2": 1494,
+      "maxDelta": 108,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 60,
+        "after": 60,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 14038,
+          "after": 14138,
+          "new": 100,
+          "lost": 0
+        },
+        "G": {
+          "before": 46,
+          "after": 46,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 7,
+          "after": 7,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        1.396,
+        8.846,
+        47.977,
+        70.127
+      ],
+      "lumaGainOver5": 1004,
+      "medianRGBDelta_over2": [
+        14.0,
+        9.0,
+        4.0
+      ]
+    },
+    "art-b-konbini": {
+      "pixels": 1296000,
+      "changed": 2865,
+      "over2": 1080,
+      "maxDelta": 91,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 65,
+        "after": 65,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 12548,
+          "after": 12548,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        3.281,
+        15.732,
+        41.533,
+        54.898
+      ],
+      "lumaGainOver5": 883,
+      "medianRGBDelta_over2": [
+        22.0,
+        14.5,
+        8.0
+      ]
+    },
+    "art-c-alley": {
+      "pixels": 1296000,
+      "changed": 343599,
+      "over2": 202989,
+      "maxDelta": 183,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 4845,
+          "after": 4896,
+          "new": 51,
+          "lost": 0
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        3.14,
+        23.254,
+        95.314,
+        123.203
+      ],
+      "lumaGainOver5": 165809,
+      "medianRGBDelta_over2": [
+        35.0,
+        21.0,
+        11.0
+      ]
+    },
+    "art-d-laundry": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "maxDelta": 0,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 18667,
+          "after": 18667,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 2585,
+          "after": 2585,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": null,
+      "lumaGainOver5": 0,
+      "medianRGBDelta_over2": null
+    },
+    "sample-e-harbour": {
+      "pixels": 1296000,
+      "changed": 5425,
+      "over2": 4055,
+      "maxDelta": 224,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 52074,
+          "after": 52058,
+          "new": 47,
+          "lost": 63
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        -152.029,
+        1.882,
+        147.825,
+        172.131
+      ],
+      "lumaGainOver5": 1859,
+      "medianRGBDelta_over2": [
+        1.0,
+        2.0,
+        1.0
+      ]
+    },
+    "sample-f-hillside": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "maxDelta": 0,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 5192,
+          "after": 5192,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": null,
+      "lumaGainOver5": 0,
+      "medianRGBDelta_over2": null
+    },
+    "sample-g-rail": {
+      "pixels": 1296000,
+      "changed": 5126,
+      "over2": 1176,
+      "maxDelta": 142,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 26,
+        "after": 26,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 52703,
+          "after": 52703,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 21,
+          "after": 21,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        2.353,
+        16.942,
+        76.661,
+        83.725
+      ],
+      "lumaGainOver5": 914,
+      "medianRGBDelta_over2": [
+        26.0,
+        15.5,
+        8.0
+      ]
+    },
+    "sample-h-north": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "maxDelta": 0,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 8758,
+          "after": 8758,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": null,
+      "lumaGainOver5": 0,
+      "medianRGBDelta_over2": null
+    }
+  }
+}

@@ -1,0 +1,1967 @@
+{
+  "sources": {
+    "before": "4eb8bfa622cea6a1ea70098838de3e7fffd1b5c1",
+    "after": "4d94a1f41d17f18628e90e2c3f03914e37a3e471"
+  },
+  "cameras": [
+    {
+      "k": "A",
+      "name": "art-a-street",
+      "eye": [
+        278.8,
+        10.488,
+        936
+      ],
+      "target": [
+        280,
+        10.088000000000001,
+        875
+      ],
+      "fov": 35.63777782904556
+    },
+    {
+      "k": "B",
+      "name": "art-b-konbini",
+      "eye": [
+        279.1,
+        9.8184,
+        912.8
+      ],
+      "target": [
+        272.48,
+        10.0534,
+        910.6
+      ],
+      "fov": 58
+    },
+    {
+      "k": "C",
+      "name": "art-c-alley",
+      "eye": [
+        287.65,
+        14.384808464050293,
+        767.3199999999999
+      ],
+      "target": [
+        278.4,
+        14.55,
+        770.06
+      ],
+      "fov": 45
+    },
+    {
+      "k": "D",
+      "name": "art-d-laundry",
+      "eye": [
+        283.5,
+        12.520055181715234,
+        783.8
+      ],
+      "target": [
+        282.5,
+        14.25,
+        777.4
+      ],
+      "fov": 48
+    },
+    {
+      "k": "E",
+      "name": "sample-e-harbour",
+      "eye": [
+        -49.3148,
+        6.0969,
+        1121.5
+      ],
+      "target": [
+        -24,
+        7.2,
+        1123.5
+      ],
+      "fov": 57
+    },
+    {
+      "k": "F",
+      "name": "sample-f-hillside",
+      "eye": [
+        1040.6682,
+        61.5086,
+        591.5865
+      ],
+      "target": [
+        1062,
+        102.7783,
+        490
+      ],
+      "fov": 57
+    },
+    {
+      "k": "G",
+      "name": "sample-g-rail",
+      "eye": [
+        337.8563,
+        9.6,
+        844.5
+      ],
+      "target": [
+        268,
+        10.55,
+        857
+      ],
+      "fov": 57
+    },
+    {
+      "k": "H",
+      "name": "sample-h-north",
+      "eye": [
+        181.0601,
+        136.1623,
+        -1212.8685
+      ],
+      "target": [
+        180,
+        141.45,
+        -1238
+      ],
+      "fov": 57
+    }
+  ],
+  "photos": {
+    "before": {
+      "art-a-street": "584f49254364b4534d242a82b968345e89b72e85e1f4c879a4ab54684bd38c52",
+      "art-b-konbini": "3ccd4497a1244d3b07335069842550198c87b3e5277cd9305d1273c7c833c449",
+      "art-c-alley": "d5ed668a3e4a6f7f4ce5c73f4487557841f52d827409acd035744b84666d9002",
+      "art-d-laundry": "5c25e1ea0b0a3aa9bf817b33f0502aeee6e39d059c8119190533272344cae595",
+      "sample-e-harbour": "d162d1c8f929164beb13ce4dc475ec13ce314ee564db7d7fd6b23bd261c108c0",
+      "sample-f-hillside": "dc7f66154f2c520de92d3a77198dd4db46fcede072a13e32b3c3adc7ddf76a2b",
+      "sample-g-rail": "6a6cab5920bff32c68b2d56808105cca8a97bb2e062f672d8d31d72cdbacfe8b",
+      "sample-h-north": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546"
+    },
+    "after": {
+      "art-a-street": "54238115388eac631fb545962d5683ad266de2377b570000e14d18e8f6b053da",
+      "art-b-konbini": "99765f5a8910ab9e4765dd1ab6e754bd586882ed2e61171e6a9f2007f0642d96",
+      "art-c-alley": "e879c0627f1ec1af60e6084cae97466c7771d4a10d6abf89c702d036afee0129",
+      "art-d-laundry": "5c25e1ea0b0a3aa9bf817b33f0502aeee6e39d059c8119190533272344cae595",
+      "sample-e-harbour": "ef5109f527e892725aeaca6b4ea6e0f1140995aed2868f506aed7e9f188ae2d8",
+      "sample-f-hillside": "dc7f66154f2c520de92d3a77198dd4db46fcede072a13e32b3c3adc7ddf76a2b",
+      "sample-g-rail": "0628153166dd00fa98a0544beaba31cdc82cdd2af46326a174fdd213674ed5bc",
+      "sample-h-north": "efcadb5dbe95e91be8ebcb4c57f71c9c813abba78ed960c19e773604d90c6546"
+    }
+  },
+  "timing": [
+    {
+      "tag": "timing/1-before",
+      "source": "4eb8bfa622cea6a1ea70098838de3e7fffd1b5c1",
+      "segments": {
+        "art-a-street": {
+          "frames": 576,
+          "fps": 56.81313803817137,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.900000000001455,
+          "maxMs": 31,
+          "pass": false,
+          "durationMs": 10138.499999999993,
+          "calls": [
+            1591,
+            1607
+          ],
+          "triangles": [
+            7774428,
+            7864260
+          ]
+        },
+        "art-b-konbini": {
+          "frames": 658,
+          "fps": 65.00049392472587,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "maxMs": 15.69999999999709,
+          "pass": true,
+          "durationMs": 10123,
+          "calls": [
+            1038,
+            1055
+          ],
+          "triangles": [
+            7590535,
+            7658003
+          ]
+        },
+        "art-c-alley": {
+          "frames": 658,
+          "fps": 65.00049392472587,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.69999999999709,
+          "pass": true,
+          "durationMs": 10123,
+          "calls": [
+            981,
+            983
+          ],
+          "triangles": [
+            8597894,
+            8598022
+          ]
+        },
+        "art-d-laundry": {
+          "frames": 645,
+          "fps": 63.81399950531783,
+          "p95Ms": 15.5,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 30.90000000000873,
+          "pass": true,
+          "durationMs": 10107.5,
+          "calls": [
+            917,
+            919
+          ],
+          "triangles": [
+            8389725,
+            8389853
+          ]
+        },
+        "sample-e-harbour": {
+          "frames": 598,
+          "fps": 58.984247852204,
+          "p95Ms": 30.79999999998836,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 30.90000000000873,
+          "pass": false,
+          "durationMs": 10138.300000000003,
+          "calls": [
+            1532,
+            1537
+          ],
+          "triangles": [
+            8247906,
+            8248210
+          ]
+        },
+        "sample-f-hillside": {
+          "frames": 657,
+          "fps": 64.99995053276207,
+          "p95Ms": 15.5,
+          "p99Ms": 15.5,
+          "maxMs": 15.60000000000582,
+          "pass": true,
+          "durationMs": 10107.700000000012,
+          "calls": [
+            775,
+            775
+          ],
+          "triangles": [
+            8208315,
+            8208315
+          ]
+        },
+        "sample-g-rail": {
+          "frames": 503,
+          "fps": 49.61237251691552,
+          "p95Ms": 30.800000000017462,
+          "p99Ms": 30.900000000023283,
+          "maxMs": 46.09999999997672,
+          "pass": false,
+          "durationMs": 10138.600000000006,
+          "calls": [
+            1545,
+            1548
+          ],
+          "triangles": [
+            8502343,
+            8502535
+          ]
+        },
+        "sample-h-north": {
+          "frames": 657,
+          "fps": 64.99995053276227,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.700000000011642,
+          "pass": true,
+          "durationMs": 10107.699999999983,
+          "calls": [
+            709,
+            711
+          ],
+          "triangles": [
+            6702318,
+            6702446
+          ]
+        },
+        "walk-third": {
+          "frames": 142,
+          "fps": 45.46910022414345,
+          "p95Ms": 30.800000000017462,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 30.900000000023283,
+          "pass": false,
+          "durationMs": 3123,
+          "calls": [
+            1676,
+            1703
+          ],
+          "triangles": [
+            8321917,
+            8414035
+          ]
+        },
+        "walk-first": {
+          "frames": 170,
+          "fps": 53.90322785211511,
+          "p95Ms": 30.800000000017462,
+          "p99Ms": 30.900000000023283,
+          "maxMs": 30.900000000023283,
+          "pass": false,
+          "durationMs": 3153.7999999999884,
+          "calls": [
+            1460,
+            1613
+          ],
+          "triangles": [
+            8066097,
+            8371109
+          ]
+        }
+      }
+    },
+    {
+      "tag": "timing/2-after",
+      "source": "4d94a1f41d17f18628e90e2c3f03914e37a3e471",
+      "segments": {
+        "art-a-street": {
+          "frames": 553,
+          "fps": 54.62807468141855,
+          "p95Ms": 30.80000000000291,
+          "p99Ms": 30.900000000001455,
+          "maxMs": 30.90000000000873,
+          "pass": false,
+          "durationMs": 10123,
+          "calls": [
+            1589,
+            1609
+          ],
+          "triangles": [
+            7711400,
+            7864840
+          ]
+        },
+        "art-b-konbini": {
+          "frames": 618,
+          "fps": 60.957566431911005,
+          "p95Ms": 30.70000000001164,
+          "p99Ms": 30.80000000000291,
+          "maxMs": 31,
+          "pass": false,
+          "durationMs": 10138.199999999997,
+          "calls": [
+            1040,
+            1057
+          ],
+          "triangles": [
+            7591115,
+            7658583
+          ]
+        },
+        "art-c-alley": {
+          "frames": 658,
+          "fps": 65.00049392472587,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999991269,
+          "maxMs": 15.60000000000582,
+          "pass": true,
+          "durationMs": 10123,
+          "calls": [
+            983,
+            988
+          ],
+          "triangles": [
+            8598474,
+            8662146
+          ]
+        },
+        "art-d-laundry": {
+          "frames": 657,
+          "fps": 64.99995053276217,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.700000000011642,
+          "pass": true,
+          "durationMs": 10107.699999999997,
+          "calls": [
+            919,
+            921
+          ],
+          "triangles": [
+            8390305,
+            8390433
+          ]
+        },
+        "sample-e-harbour": {
+          "frames": 607,
+          "fps": 59.961869387835705,
+          "p95Ms": 30.70000000001164,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 30.90000000000873,
+          "pass": false,
+          "durationMs": 10123.100000000006,
+          "calls": [
+            1534,
+            1539
+          ],
+          "triangles": [
+            8248486,
+            8248790
+          ]
+        },
+        "sample-f-hillside": {
+          "frames": 657,
+          "fps": 65.00059361272702,
+          "p95Ms": 15.5,
+          "p99Ms": 15.60000000000582,
+          "maxMs": 15.700000000011642,
+          "pass": true,
+          "durationMs": 10107.600000000006,
+          "calls": [
+            777,
+            777
+          ],
+          "triangles": [
+            8208895,
+            8208895
+          ]
+        },
+        "sample-g-rail": {
+          "frames": 425,
+          "fps": 41.91982955890478,
+          "p95Ms": 30.89999999999418,
+          "p99Ms": 31,
+          "maxMs": 46.30000000001746,
+          "pass": false,
+          "durationMs": 10138.399999999994,
+          "calls": [
+            1547,
+            1550
+          ],
+          "triangles": [
+            8502923,
+            8503115
+          ]
+        },
+        "sample-h-north": {
+          "frames": 657,
+          "fps": 64.9986644110053,
+          "p95Ms": 15.5,
+          "p99Ms": 15.599999999976717,
+          "maxMs": 15.700000000011642,
+          "pass": true,
+          "durationMs": 10107.899999999994,
+          "calls": [
+            711,
+            713
+          ],
+          "triangles": [
+            6702898,
+            6703026
+          ]
+        },
+        "walk-third": {
+          "frames": 150,
+          "fps": 47.560163606962455,
+          "p95Ms": 30.89999999999418,
+          "p99Ms": 31,
+          "maxMs": 31,
+          "pass": false,
+          "durationMs": 3153.9000000000233,
+          "calls": [
+            1676,
+            1705
+          ],
+          "triangles": [
+            8322497,
+            8414615
+          ]
+        },
+        "walk-first": {
+          "frames": 151,
+          "fps": 48.11062257057278,
+          "p95Ms": 30.800000000017462,
+          "p99Ms": 30.89999999999418,
+          "maxMs": 31,
+          "pass": false,
+          "durationMs": 3138.600000000006,
+          "calls": [
+            1462,
+            1613
+          ],
+          "triangles": [
+            8066677,
+            8360371
+          ]
+        }
+      }
+    }
+  ],
+  "assets": {
+    "before": {
+      "textures": {
+        "/apartment-assets/white_plaster_02/white_plaster_02_diff_1k.jpg": "a1ebbe091bd1ae93d2abd5de8d69f9003a8d0ee6532bcf9a87c2492c97051f23",
+        "/apartment-assets/white_plaster_02/white_plaster_02_nor_gl_1k.jpg": "eb572ca3630d5bfde72e2601b1f02412da23ca005cd19384dced8690be4cb783",
+        "/apartment-assets/white_plaster_02/white_plaster_02_arm_1k.jpg": "2bb1115821715dfd8bbd1c5a294a5bb43b97d5c46b1aa8aa8f744bcaf5eeeb10",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_diff_1k.jpg": "583eafdfc03da4a74509ba545c5ea808c8bdc6e883763a804fcbe859c120afb9",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg": "6be9a4e34057fc90ab450624cf83d2f5bc67bf59d5c137617ea62d8206540011",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_nor_gl_1k.jpg": "8a7d8db468fe5bd37a2fc14ff6012855b14bec03dd413e034a376902a723b44c",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd"
+      },
+      "packages": {
+        "/mature-sakura/mature-sakura.glb": "14716b7af7db3bcae453b17ebe97a9fa0d4d38155731cc2b56ed28e4fa7b24f3",
+        "/station-art/station-exchange.glb": "03584bb83631b49b118727b9b37a2a021dee693365263acecef24e56b9621a78",
+        "/station-art/alley-workshop.glb": "b8286aa8f9cc5c735d7d847bcc4c1b8b71f31a6ca049aabb531e68c3252c8fc2",
+        "/station-art/laundry-infill.glb": "d945d0756f402227ae329d1408707a428c120646aa3bac73c927821d98183be6"
+      },
+      "decals": {
+        "posters": 10,
+        "stickers": 14,
+        "doodles": 2
+      },
+      "fingerprint": "1063:2678548:298845.6:951073.1",
+      "materials": [
+        {
+          "name": "apartment-pbr-metal",
+          "ao": 0.4,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-plaster",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-roof",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-tile",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        }
+      ],
+      "bakedItems": [
+        {
+          "area": "01-left-wall",
+          "cell": 0,
+          "kind": "poster",
+          "pos": [
+            -4.84,
+            1.55,
+            30.2
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            0.0105,
+            -0.9999
+          ],
+          "w": 0.484,
+          "h": 0.671
+        },
+        {
+          "area": "01-left-wall",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            -4.84,
+            1.3,
+            29.3
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.1831,
+            -0.9831
+          ],
+          "w": 0.3,
+          "h": 0.3
+        },
+        {
+          "area": "01-left-wall",
+          "cell": 3,
+          "kind": "poster",
+          "pos": [
+            -4.84,
+            1.45,
+            27.2
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.0005,
+            -1
+          ],
+          "w": 0.44,
+          "h": 0.61
+        },
+        {
+          "area": "01-left-pole",
+          "cell": 10,
+          "kind": "sticker",
+          "pos": [
+            -3.3504,
+            1.75,
+            28.8388
+          ],
+          "normal": [
+            -0.309,
+            0,
+            0.9511
+          ],
+          "right": [
+            0.9436,
+            -0.1246,
+            0.3066
+          ],
+          "w": 0.16,
+          "h": 0.16
+        },
+        {
+          "area": "01-right-shop",
+          "cell": 5,
+          "kind": "poster",
+          "pos": [
+            6.4178,
+            1.5,
+            24.46
+          ],
+          "normal": [
+            -0.8506,
+            0,
+            -0.5258
+          ],
+          "right": [
+            -0.5258,
+            0.0032,
+            0.8506
+          ],
+          "w": 0.62,
+          "h": 0.8595
+        },
+        {
+          "area": "01-right-shop",
+          "cell": 11,
+          "kind": "sticker",
+          "pos": [
+            5.546,
+            3.05,
+            28.28
+          ],
+          "normal": [
+            -1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            0.0143,
+            0.9999
+          ],
+          "w": 0.34,
+          "h": 0.34
+        },
+        {
+          "area": "01-right-shop",
+          "cell": 8,
+          "kind": "sticker",
+          "pos": [
+            6.27,
+            1.5,
+            21.75
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            0.999,
+            -0.0442,
+            0
+          ],
+          "w": 0.34,
+          "h": 0.34
+        },
+        {
+          "area": "01-right-pole",
+          "cell": 8,
+          "kind": "sticker",
+          "pos": [
+            3.32,
+            1.9,
+            23.1306
+          ],
+          "normal": [
+            -0.812,
+            0.0065,
+            0.5836
+          ],
+          "right": [
+            0.5783,
+            -0.1261,
+            0.806
+          ],
+          "w": 0.22,
+          "h": 0.22
+        },
+        {
+          "area": "21-mailboxes",
+          "cell": 7,
+          "kind": "poster",
+          "pos": [
+            -3,
+            6.75,
+            -123.25
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            0.9998,
+            0.0204,
+            0
+          ],
+          "w": 0.42,
+          "h": 0.5823
+        },
+        {
+          "area": "21-mailboxes",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            -1.85,
+            6.25,
+            -123.25
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            0.9943,
+            0.1066,
+            0
+          ],
+          "w": 0.2,
+          "h": 0.2
+        },
+        {
+          "area": "main",
+          "cell": 10,
+          "kind": "sticker",
+          "pos": [
+            8.6,
+            1.0346,
+            13.6663
+          ],
+          "normal": [
+            -1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.2326,
+            0.9726
+          ],
+          "w": 0.1542,
+          "h": 0.1542
+        },
+        {
+          "area": "main",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            6,
+            1.2023,
+            20.3267
+          ],
+          "normal": [
+            -1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            0.0329,
+            0.9995
+          ],
+          "w": 0.1198,
+          "h": 0.1198
+        },
+        {
+          "area": "main",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            8.6,
+            1.1044,
+            6.0741
+          ],
+          "normal": [
+            -1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            0.0126,
+            0.9999
+          ],
+          "w": 0.1336,
+          "h": 0.1336
+        },
+        {
+          "area": "main",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            5.0498,
+            1.1225,
+            14.6932
+          ],
+          "normal": [
+            -0.8525,
+            0,
+            0.5227
+          ],
+          "right": [
+            0.508,
+            0.2357,
+            0.8285
+          ],
+          "w": 0.1668,
+          "h": 0.1668
+        },
+        {
+          "area": "laundry",
+          "cell": 2,
+          "kind": "poster",
+          "pos": [
+            7.3662,
+            5.8325,
+            -123.25
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            0.9998,
+            0.0209,
+            0
+          ],
+          "w": 0.4996,
+          "h": 0.6926
+        },
+        {
+          "area": "laundry",
+          "cell": 5,
+          "kind": "poster",
+          "pos": [
+            6.1352,
+            6.5412,
+            -123.25
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            1,
+            0.0004,
+            0
+          ],
+          "w": 0.4895,
+          "h": 0.6786
+        },
+        {
+          "area": "laundry",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            -2.5387,
+            5.7215,
+            -123.25
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            0.9722,
+            -0.2344,
+            0
+          ],
+          "w": 0.2014,
+          "h": 0.2014
+        },
+        {
+          "area": "rear",
+          "cell": 0,
+          "kind": "poster",
+          "pos": [
+            -15.4089,
+            6.693,
+            -132.5
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9997,
+            0.0233,
+            0
+          ],
+          "w": 0.6142,
+          "h": 0.8514
+        },
+        {
+          "area": "rear",
+          "cell": 3,
+          "kind": "poster",
+          "pos": [
+            -12.3872,
+            6.756,
+            -132.5
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9998,
+            0.0221,
+            0
+          ],
+          "w": 0.6142,
+          "h": 0.8515
+        },
+        {
+          "area": "rear",
+          "cell": 3,
+          "kind": "poster",
+          "pos": [
+            17.0424,
+            5.7812,
+            -131
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9998,
+            -0.0191,
+            0
+          ],
+          "w": 0.5632,
+          "h": 0.7808
+        },
+        {
+          "area": "rear",
+          "cell": 1,
+          "kind": "poster",
+          "pos": [
+            18.9672,
+            6.1088,
+            -131
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9998,
+            -0.0175,
+            0
+          ],
+          "w": 0.5543,
+          "h": 0.7684
+        },
+        {
+          "area": "rear",
+          "cell": 11,
+          "kind": "sticker",
+          "pos": [
+            -17.9696,
+            7.0959,
+            -132.5
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9929,
+            0.1189,
+            0
+          ],
+          "w": 0.1854,
+          "h": 0.1854
+        },
+        {
+          "area": "rear",
+          "cell": 10,
+          "kind": "sticker",
+          "pos": [
+            -0.2136,
+            6.4064,
+            -131
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9994,
+            0.0336,
+            0
+          ],
+          "w": 0.2309,
+          "h": 0.2309
+        },
+        {
+          "area": "rear",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            -3.2254,
+            5.9523,
+            -131
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9956,
+            0.0938,
+            0
+          ],
+          "w": 0.1704,
+          "h": 0.1704
+        },
+        {
+          "area": "rear",
+          "cell": 13,
+          "kind": "doodle",
+          "pos": [
+            24.17,
+            5.6067,
+            -131
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9847,
+            0.174,
+            0
+          ],
+          "w": 0.3619,
+          "h": 0.3619
+        },
+        {
+          "area": "rear",
+          "cell": 14,
+          "kind": "doodle",
+          "pos": [
+            -21.703,
+            6.4346,
+            -132.5
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9793,
+            0.2026,
+            0
+          ],
+          "w": 0.3425,
+          "h": 0.3425
+        }
+      ]
+    },
+    "after": {
+      "textures": {
+        "/apartment-assets/white_plaster_02/white_plaster_02_diff_1k.jpg": "a1ebbe091bd1ae93d2abd5de8d69f9003a8d0ee6532bcf9a87c2492c97051f23",
+        "/apartment-assets/white_plaster_02/white_plaster_02_nor_gl_1k.jpg": "eb572ca3630d5bfde72e2601b1f02412da23ca005cd19384dced8690be4cb783",
+        "/apartment-assets/white_plaster_02/white_plaster_02_arm_1k.jpg": "2bb1115821715dfd8bbd1c5a294a5bb43b97d5c46b1aa8aa8f744bcaf5eeeb10",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_diff_1k.jpg": "583eafdfc03da4a74509ba545c5ea808c8bdc6e883763a804fcbe859c120afb9",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_arm_1k.jpg": "6be9a4e34057fc90ab450624cf83d2f5bc67bf59d5c137617ea62d8206540011",
+        "/apartment-assets/rectangular_facade_tiles/rectangular_facade_tiles_nor_gl_1k.jpg": "8a7d8db468fe5bd37a2fc14ff6012855b14bec03dd413e034a376902a723b44c",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_diff_1k.jpg": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_nor_gl_1k.jpg": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93",
+        "/apartment-assets/worn_shutter/textures/worn_shutter_arm_1k.jpg": "daeb8be23cd97a39d3b2bf11e6b57ccab7b5e1fbd65672472a8b93c8fe3e3fdd"
+      },
+      "packages": {
+        "/mature-sakura/mature-sakura.glb": "14716b7af7db3bcae453b17ebe97a9fa0d4d38155731cc2b56ed28e4fa7b24f3",
+        "/station-art/station-exchange.glb": "03584bb83631b49b118727b9b37a2a021dee693365263acecef24e56b9621a78",
+        "/station-art/alley-workshop.glb": "b8286aa8f9cc5c735d7d847bcc4c1b8b71f31a6ca049aabb531e68c3252c8fc2",
+        "/station-art/laundry-infill.glb": "d945d0756f402227ae329d1408707a428c120646aa3bac73c927821d98183be6"
+      },
+      "decals": {
+        "posters": 10,
+        "stickers": 14,
+        "doodles": 2
+      },
+      "fingerprint": "1063:2678548:298845.6:951073.1",
+      "materials": [
+        {
+          "name": "apartment-pbr-metal",
+          "ao": 0.4,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-plaster",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-roof",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        },
+        {
+          "name": "apartment-pbr-tile",
+          "ao": 0.4,
+          "tex": 1024,
+          "normal": 1024,
+          "arm": 1024,
+          "programCount": 1,
+          "bounce": true,
+          "shadowTint": true
+        }
+      ],
+      "bakedItems": [
+        {
+          "area": "01-left-wall",
+          "cell": 0,
+          "kind": "poster",
+          "pos": [
+            -4.84,
+            1.55,
+            30.2
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            0.0105,
+            -0.9999
+          ],
+          "w": 0.484,
+          "h": 0.671
+        },
+        {
+          "area": "01-left-wall",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            -4.84,
+            1.3,
+            29.3
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.1831,
+            -0.9831
+          ],
+          "w": 0.3,
+          "h": 0.3
+        },
+        {
+          "area": "01-left-wall",
+          "cell": 3,
+          "kind": "poster",
+          "pos": [
+            -4.84,
+            1.45,
+            27.2
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.0005,
+            -1
+          ],
+          "w": 0.44,
+          "h": 0.61
+        },
+        {
+          "area": "01-left-pole",
+          "cell": 10,
+          "kind": "sticker",
+          "pos": [
+            -3.3504,
+            1.75,
+            28.8388
+          ],
+          "normal": [
+            -0.309,
+            0,
+            0.9511
+          ],
+          "right": [
+            0.9436,
+            -0.1246,
+            0.3066
+          ],
+          "w": 0.16,
+          "h": 0.16
+        },
+        {
+          "area": "01-right-shop",
+          "cell": 5,
+          "kind": "poster",
+          "pos": [
+            6.4178,
+            1.5,
+            24.46
+          ],
+          "normal": [
+            -0.8506,
+            0,
+            -0.5258
+          ],
+          "right": [
+            -0.5258,
+            0.0032,
+            0.8506
+          ],
+          "w": 0.62,
+          "h": 0.8595
+        },
+        {
+          "area": "01-right-shop",
+          "cell": 11,
+          "kind": "sticker",
+          "pos": [
+            5.546,
+            3.05,
+            28.28
+          ],
+          "normal": [
+            -1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            0.0143,
+            0.9999
+          ],
+          "w": 0.34,
+          "h": 0.34
+        },
+        {
+          "area": "01-right-shop",
+          "cell": 8,
+          "kind": "sticker",
+          "pos": [
+            6.27,
+            1.5,
+            21.75
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            0.999,
+            -0.0442,
+            0
+          ],
+          "w": 0.34,
+          "h": 0.34
+        },
+        {
+          "area": "01-right-pole",
+          "cell": 8,
+          "kind": "sticker",
+          "pos": [
+            3.32,
+            1.9,
+            23.1306
+          ],
+          "normal": [
+            -0.812,
+            0.0065,
+            0.5836
+          ],
+          "right": [
+            0.5783,
+            -0.1261,
+            0.806
+          ],
+          "w": 0.22,
+          "h": 0.22
+        },
+        {
+          "area": "21-mailboxes",
+          "cell": 7,
+          "kind": "poster",
+          "pos": [
+            -3,
+            6.75,
+            -123.25
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            0.9998,
+            0.0204,
+            0
+          ],
+          "w": 0.42,
+          "h": 0.5823
+        },
+        {
+          "area": "21-mailboxes",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            -1.85,
+            6.25,
+            -123.25
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            0.9943,
+            0.1066,
+            0
+          ],
+          "w": 0.2,
+          "h": 0.2
+        },
+        {
+          "area": "main",
+          "cell": 10,
+          "kind": "sticker",
+          "pos": [
+            8.6,
+            1.0346,
+            13.6663
+          ],
+          "normal": [
+            -1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            -0.2326,
+            0.9726
+          ],
+          "w": 0.1542,
+          "h": 0.1542
+        },
+        {
+          "area": "main",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            6,
+            1.2023,
+            20.3267
+          ],
+          "normal": [
+            -1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            0.0329,
+            0.9995
+          ],
+          "w": 0.1198,
+          "h": 0.1198
+        },
+        {
+          "area": "main",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            8.6,
+            1.1044,
+            6.0741
+          ],
+          "normal": [
+            -1,
+            0,
+            0
+          ],
+          "right": [
+            0,
+            0.0126,
+            0.9999
+          ],
+          "w": 0.1336,
+          "h": 0.1336
+        },
+        {
+          "area": "main",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            5.0498,
+            1.1225,
+            14.6932
+          ],
+          "normal": [
+            -0.8525,
+            0,
+            0.5227
+          ],
+          "right": [
+            0.508,
+            0.2357,
+            0.8285
+          ],
+          "w": 0.1668,
+          "h": 0.1668
+        },
+        {
+          "area": "laundry",
+          "cell": 2,
+          "kind": "poster",
+          "pos": [
+            7.3662,
+            5.8325,
+            -123.25
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            0.9998,
+            0.0209,
+            0
+          ],
+          "w": 0.4996,
+          "h": 0.6926
+        },
+        {
+          "area": "laundry",
+          "cell": 5,
+          "kind": "poster",
+          "pos": [
+            6.1352,
+            6.5412,
+            -123.25
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            1,
+            0.0004,
+            0
+          ],
+          "w": 0.4895,
+          "h": 0.6786
+        },
+        {
+          "area": "laundry",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            -2.5387,
+            5.7215,
+            -123.25
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ],
+          "right": [
+            0.9722,
+            -0.2344,
+            0
+          ],
+          "w": 0.2014,
+          "h": 0.2014
+        },
+        {
+          "area": "rear",
+          "cell": 0,
+          "kind": "poster",
+          "pos": [
+            -15.4089,
+            6.693,
+            -132.5
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9997,
+            0.0233,
+            0
+          ],
+          "w": 0.6142,
+          "h": 0.8514
+        },
+        {
+          "area": "rear",
+          "cell": 3,
+          "kind": "poster",
+          "pos": [
+            -12.3872,
+            6.756,
+            -132.5
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9998,
+            0.0221,
+            0
+          ],
+          "w": 0.6142,
+          "h": 0.8515
+        },
+        {
+          "area": "rear",
+          "cell": 3,
+          "kind": "poster",
+          "pos": [
+            17.0424,
+            5.7812,
+            -131
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9998,
+            -0.0191,
+            0
+          ],
+          "w": 0.5632,
+          "h": 0.7808
+        },
+        {
+          "area": "rear",
+          "cell": 1,
+          "kind": "poster",
+          "pos": [
+            18.9672,
+            6.1088,
+            -131
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9998,
+            -0.0175,
+            0
+          ],
+          "w": 0.5543,
+          "h": 0.7684
+        },
+        {
+          "area": "rear",
+          "cell": 11,
+          "kind": "sticker",
+          "pos": [
+            -17.9696,
+            7.0959,
+            -132.5
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9929,
+            0.1189,
+            0
+          ],
+          "w": 0.1854,
+          "h": 0.1854
+        },
+        {
+          "area": "rear",
+          "cell": 10,
+          "kind": "sticker",
+          "pos": [
+            -0.2136,
+            6.4064,
+            -131
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9994,
+            0.0336,
+            0
+          ],
+          "w": 0.2309,
+          "h": 0.2309
+        },
+        {
+          "area": "rear",
+          "cell": 9,
+          "kind": "sticker",
+          "pos": [
+            -3.2254,
+            5.9523,
+            -131
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9956,
+            0.0938,
+            0
+          ],
+          "w": 0.1704,
+          "h": 0.1704
+        },
+        {
+          "area": "rear",
+          "cell": 13,
+          "kind": "doodle",
+          "pos": [
+            24.17,
+            5.6067,
+            -131
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9847,
+            0.174,
+            0
+          ],
+          "w": 0.3619,
+          "h": 0.3619
+        },
+        {
+          "area": "rear",
+          "cell": 14,
+          "kind": "doodle",
+          "pos": [
+            -21.703,
+            6.4346,
+            -132.5
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ],
+          "right": [
+            -0.9793,
+            0.2026,
+            0
+          ],
+          "w": 0.3425,
+          "h": 0.3425
+        }
+      ]
+    }
+  },
+  "geometrySources": {
+    "before": {
+      "src/city-apartments.js": "3e6a6d21821d059a3197ae6d865702f46e7403bd73e89fd7d3249e592033945c",
+      "src/city.js": "46d812ed50114986a7c94ab51d8d6dd86d353fd51ed978ded00ffe2c7dfa5e38",
+      "src/main.js": "a24df689007b299a462bc48d4303aa128956cea93eacb6d2483e04b86b9ed1d2",
+      "src/evening.json": "21fc7c0ae165814efb3de9b2d3d211d488c874d910be760d48e593a3f6d1c2ef",
+      "upstream/sakuragaoka/src/world/houses/house.js": "9d1713efe5670432938cfa05d96c6ef6acc75be6f3586674df62d9af77b91d4b",
+      "upstream/sakuragaoka/src/world/shopsA/common.js": "552b5ee6f6ab4ffb5f0c1703e06c9cea4d4e624ee5528114c6fad486511b8306",
+      "upstream/sakuragaoka/src/world/station/building.js": "eb97d221b489ecdbf97fd8af53471c4d6ac07ac3cda6378c007102f4089f2505"
+    },
+    "after": {
+      "src/city-apartments.js": "a56438ba6ecf3e13d4f3df0461ab164c5aaaacb21b1c2ecd0274611719511585",
+      "src/city.js": "27de585be222489489f403edab55b2201896e56f5ac7da25464af9edb889189e",
+      "src/main.js": "cc82713ce2bdde93d1a089ed4fff850cc1829c4ce37cf850ca80f3494c0a4bbc",
+      "src/evening.json": "542075b104d32bc764d800588b6c89b31b34a49fd5646697b45df91d8eff2cda",
+      "upstream/sakuragaoka/src/world/houses/house.js": "7628a24d2b8868748ed90cb65b428d0e796d7952f0cab360be2141b8b9f7e19b",
+      "upstream/sakuragaoka/src/world/shopsA/common.js": "36150b96a66a0337867e464c3a7281ba56592b06ccdfeae33bf8c79633b42b55",
+      "upstream/sakuragaoka/src/world/station/building.js": "f99474bc7b90d7a17cb786552f1084753616ef9a977efc8ebfc392b579d7db4f",
+      "src/door-glow.js": "0237e2695a84445bc1ef61d3416ccb000492ad713a3ebc666deb0ee86c398fbf"
+    }
+  },
+  "city": {
+    "before": {
+      "geometries": 69,
+      "materials": 51,
+      "modelPrimitives": 234,
+      "totalTriangles": 95500,
+      "modelTriangles": 95500,
+      "ownedTextures": 12,
+      "uniqueTextures": 34,
+      "borrowedTextures": 22,
+      "newTexturePixels": 10485760,
+      "textureCacheEntriesAdded": 0,
+      "artDoorsteps": [
+        {
+          "stands": 1,
+          "pots": 2,
+          "small": 2
+        },
+        {
+          "stands": 2,
+          "pots": 6,
+          "small": 3
+        },
+        {
+          "stands": 2,
+          "pots": 2,
+          "small": 2
+        },
+        {
+          "stands": 1,
+          "pots": 3,
+          "small": 2
+        },
+        {
+          "stands": 3,
+          "pots": 2,
+          "small": 1
+        },
+        {
+          "stands": 3,
+          "pots": 4,
+          "small": 1
+        },
+        {
+          "stands": 2,
+          "pots": 1,
+          "small": 2
+        },
+        {
+          "stands": 3,
+          "pots": 3,
+          "small": 0
+        },
+        {
+          "stands": 3,
+          "pots": 2,
+          "small": 1
+        },
+        {
+          "stands": 2,
+          "pots": 3,
+          "small": 1
+        },
+        {
+          "stands": 0,
+          "pots": 3,
+          "small": 4
+        },
+        {
+          "stands": 1,
+          "pots": 2,
+          "small": 3
+        }
+      ],
+      "apartmentTriangles": {
+        "town-apartment-3f": 12246,
+        "town-apartment-4f": 14291,
+        "town-apartment-5f": 19279
+      }
+    },
+    "after": {
+      "geometries": 69,
+      "materials": 51,
+      "modelPrimitives": 234,
+      "totalTriangles": 95500,
+      "modelTriangles": 95500,
+      "ownedTextures": 12,
+      "uniqueTextures": 34,
+      "borrowedTextures": 22,
+      "newTexturePixels": 10485760,
+      "textureCacheEntriesAdded": 0,
+      "artDoorsteps": [
+        {
+          "stands": 1,
+          "pots": 2,
+          "small": 2
+        },
+        {
+          "stands": 2,
+          "pots": 6,
+          "small": 3
+        },
+        {
+          "stands": 2,
+          "pots": 2,
+          "small": 2
+        },
+        {
+          "stands": 1,
+          "pots": 3,
+          "small": 2
+        },
+        {
+          "stands": 3,
+          "pots": 2,
+          "small": 1
+        },
+        {
+          "stands": 3,
+          "pots": 4,
+          "small": 1
+        },
+        {
+          "stands": 2,
+          "pots": 1,
+          "small": 2
+        },
+        {
+          "stands": 3,
+          "pots": 3,
+          "small": 0
+        },
+        {
+          "stands": 3,
+          "pots": 2,
+          "small": 1
+        },
+        {
+          "stands": 2,
+          "pots": 3,
+          "small": 1
+        },
+        {
+          "stands": 0,
+          "pots": 3,
+          "small": 4
+        },
+        {
+          "stands": 1,
+          "pots": 2,
+          "small": 3
+        }
+      ],
+      "apartmentTriangles": {
+        "town-apartment-3f": 12246,
+        "town-apartment-4f": 14291,
+        "town-apartment-5f": 19279
+      }
+    }
+  }
+}

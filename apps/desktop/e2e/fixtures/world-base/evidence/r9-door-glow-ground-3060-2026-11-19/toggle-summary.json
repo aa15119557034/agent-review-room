@@ -1,0 +1,1010 @@
+{
+  "corridor-c": {
+    "offOn": {
+      "pixels": 1296000,
+      "changed": 343599,
+      "over2": 202989,
+      "maxDelta": 183,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 4845,
+          "after": 4896,
+          "new": 51,
+          "lost": 0
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        3.14,
+        23.254,
+        95.314,
+        123.203
+      ],
+      "lumaGainOver5": 165809,
+      "medianRGBDelta_over2": [
+        35.0,
+        21.0,
+        11.0
+      ]
+    },
+    "repeat": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "maxDelta": 0,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 4896,
+          "after": 4896,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": null,
+      "lumaGainOver5": 0,
+      "medianRGBDelta_over2": null
+    },
+    "draw": {
+      "off": {
+        "visible": false,
+        "submissions": {
+          "door-glow-wall": 0,
+          "door-glow-floor": 0
+        },
+        "render": {
+          "frame": 136,
+          "calls": 988,
+          "triangles": 8661694,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "on": {
+        "visible": true,
+        "submissions": {
+          "door-glow-wall": 1,
+          "door-glow-floor": 1
+        },
+        "render": {
+          "frame": 153,
+          "calls": 990,
+          "triangles": 8662274,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "repeat-on": {
+        "visible": true,
+        "submissions": {
+          "door-glow-wall": 1,
+          "door-glow-floor": 1
+        },
+        "render": {
+          "frame": 170,
+          "calls": 990,
+          "triangles": 8662274,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    "lamp": null
+  },
+  "far-west": {
+    "offOn": {
+      "pixels": 1296000,
+      "changed": 98588,
+      "over2": 44386,
+      "maxDelta": 130,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 1681,
+          "after": 1681,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        3.353,
+        23.617,
+        63.267,
+        82.627
+      ],
+      "lumaGainOver5": 37203,
+      "medianRGBDelta_over2": [
+        33.0,
+        22.0,
+        11.0
+      ]
+    },
+    "repeat": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "maxDelta": 0,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 1681,
+          "after": 1681,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": null,
+      "lumaGainOver5": 0,
+      "medianRGBDelta_over2": null
+    },
+    "draw": {
+      "off": {
+        "visible": false,
+        "submissions": {
+          "door-glow-wall": 0,
+          "door-glow-floor": 0
+        },
+        "render": {
+          "frame": 187,
+          "calls": 905,
+          "triangles": 7190575,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "on": {
+        "visible": true,
+        "submissions": {
+          "door-glow-wall": 1,
+          "door-glow-floor": 1
+        },
+        "render": {
+          "frame": 204,
+          "calls": 907,
+          "triangles": 7191155,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "repeat-on": {
+        "visible": true,
+        "submissions": {
+          "door-glow-wall": 1,
+          "door-glow-floor": 1
+        },
+        "render": {
+          "frame": 221,
+          "calls": 907,
+          "triangles": 7191155,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    "lamp": {
+      "lamp": [
+        -47.23535980270942,
+        2.26,
+        -60.78028104063124
+      ],
+      "floor": 0.31,
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "slabDepth": 1.3878301859600468,
+      "index": 74
+    }
+  },
+  "far-middle": {
+    "offOn": {
+      "pixels": 1296000,
+      "changed": 88823,
+      "over2": 39739,
+      "maxDelta": 112,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 7361,
+          "after": 9915,
+          "new": 2554,
+          "lost": 0
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        2.353,
+        10.702,
+        38.294,
+        62.771
+      ],
+      "lumaGainOver5": 29406,
+      "medianRGBDelta_over2": [
+        21.0,
+        10.0,
+        2.0
+      ]
+    },
+    "repeat": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "maxDelta": 0,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 9915,
+          "after": 9915,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": null,
+      "lumaGainOver5": 0,
+      "medianRGBDelta_over2": null
+    },
+    "draw": {
+      "off": {
+        "visible": false,
+        "submissions": {
+          "door-glow-wall": 0,
+          "door-glow-floor": 0
+        },
+        "render": {
+          "frame": 238,
+          "calls": 1000,
+          "triangles": 7310521,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "on": {
+        "visible": true,
+        "submissions": {
+          "door-glow-wall": 1,
+          "door-glow-floor": 1
+        },
+        "render": {
+          "frame": 255,
+          "calls": 1002,
+          "triangles": 7311101,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "repeat-on": {
+        "visible": true,
+        "submissions": {
+          "door-glow-wall": 1,
+          "door-glow-floor": 1
+        },
+        "render": {
+          "frame": 272,
+          "calls": 1002,
+          "triangles": 7311101,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    "lamp": {
+      "lamp": [
+        9.728523235528264,
+        2.26,
+        -60.58174391984939
+      ],
+      "floor": 0.31,
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "slabDepth": 1.2291190929012372,
+      "index": 79
+    }
+  },
+  "far-east": {
+    "offOn": {
+      "pixels": 1296000,
+      "changed": 89899,
+      "over2": 38442,
+      "maxDelta": 166,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 1,
+        "after": 1,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 953,
+          "after": 1034,
+          "new": 81,
+          "lost": 0
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        3.32,
+        24.309,
+        77.688,
+        100.798
+      ],
+      "lumaGainOver5": 32087,
+      "medianRGBDelta_over2": [
+        36.0,
+        22.0,
+        10.0
+      ]
+    },
+    "repeat": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "maxDelta": 0,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 1,
+        "after": 1,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 1034,
+          "after": 1034,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": null,
+      "lumaGainOver5": 0,
+      "medianRGBDelta_over2": null
+    },
+    "draw": {
+      "off": {
+        "visible": false,
+        "submissions": {
+          "door-glow-wall": 0,
+          "door-glow-floor": 0
+        },
+        "render": {
+          "frame": 289,
+          "calls": 957,
+          "triangles": 7150702,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "on": {
+        "visible": true,
+        "submissions": {
+          "door-glow-wall": 1,
+          "door-glow-floor": 1
+        },
+        "render": {
+          "frame": 306,
+          "calls": 959,
+          "triangles": 7151282,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "repeat-on": {
+        "visible": true,
+        "submissions": {
+          "door-glow-wall": 1,
+          "door-glow-floor": 1
+        },
+        "render": {
+          "frame": 323,
+          "calls": 959,
+          "triangles": 7151282,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    "lamp": {
+      "lamp": [
+        59.25510607536883,
+        2.26,
+        -60.54088600534014
+      ],
+      "floor": 0.31,
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "slabDepth": 1.404403499723412,
+      "index": 84
+    }
+  },
+  "street-a": {
+    "offOn": {
+      "pixels": 1296000,
+      "changed": 4810,
+      "over2": 1494,
+      "maxDelta": 108,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 60,
+        "after": 60,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 14038,
+          "after": 14138,
+          "new": 100,
+          "lost": 0
+        },
+        "G": {
+          "before": 46,
+          "after": 46,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 7,
+          "after": 7,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        1.396,
+        8.846,
+        47.977,
+        70.127
+      ],
+      "lumaGainOver5": 1004,
+      "medianRGBDelta_over2": [
+        14.0,
+        9.0,
+        4.0
+      ]
+    },
+    "repeat": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "maxDelta": 0,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 60,
+        "after": 60,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 14138,
+          "after": 14138,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 46,
+          "after": 46,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 7,
+          "after": 7,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": null,
+      "lumaGainOver5": 0,
+      "medianRGBDelta_over2": null
+    },
+    "draw": {
+      "off": {
+        "visible": false,
+        "submissions": {
+          "door-glow-wall": 0,
+          "door-glow-floor": 0
+        },
+        "render": {
+          "frame": 340,
+          "calls": 1609,
+          "triangles": 7864356,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "on": {
+        "visible": true,
+        "submissions": {
+          "door-glow-wall": 1,
+          "door-glow-floor": 1
+        },
+        "render": {
+          "frame": 357,
+          "calls": 1611,
+          "triangles": 7864936,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "repeat-on": {
+        "visible": true,
+        "submissions": {
+          "door-glow-wall": 1,
+          "door-glow-floor": 1
+        },
+        "render": {
+          "frame": 374,
+          "calls": 1611,
+          "triangles": 7864936,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    "lamp": null
+  },
+  "shop-b": {
+    "offOn": {
+      "pixels": 1296000,
+      "changed": 2865,
+      "over2": 1080,
+      "maxDelta": 91,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 65,
+        "after": 65,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 12548,
+          "after": 12548,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        3.281,
+        15.732,
+        41.533,
+        54.898
+      ],
+      "lumaGainOver5": 883,
+      "medianRGBDelta_over2": [
+        22.0,
+        14.5,
+        8.0
+      ]
+    },
+    "repeat": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "maxDelta": 0,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 65,
+        "after": 65,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 12548,
+          "after": 12548,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": null,
+      "lumaGainOver5": 0,
+      "medianRGBDelta_over2": null
+    },
+    "draw": {
+      "off": {
+        "visible": false,
+        "submissions": {
+          "door-glow-wall": 0,
+          "door-glow-floor": 0
+        },
+        "render": {
+          "frame": 391,
+          "calls": 1043,
+          "triangles": 7654207,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "on": {
+        "visible": true,
+        "submissions": {
+          "door-glow-wall": 1,
+          "door-glow-floor": 1
+        },
+        "render": {
+          "frame": 408,
+          "calls": 1045,
+          "triangles": 7654787,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "repeat-on": {
+        "visible": true,
+        "submissions": {
+          "door-glow-wall": 1,
+          "door-glow-floor": 1
+        },
+        "render": {
+          "frame": 425,
+          "calls": 1045,
+          "triangles": 7654787,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    "lamp": null
+  },
+  "rail-g": {
+    "offOn": {
+      "pixels": 1296000,
+      "changed": 5126,
+      "over2": 1176,
+      "maxDelta": 142,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 26,
+        "after": 26,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 52703,
+          "after": 52703,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 21,
+          "after": 21,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        2.353,
+        16.942,
+        76.661,
+        83.725
+      ],
+      "lumaGainOver5": 914,
+      "medianRGBDelta_over2": [
+        26.0,
+        15.5,
+        8.0
+      ]
+    },
+    "repeat": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "maxDelta": 0,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 26,
+        "after": 26,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 52703,
+          "after": 52703,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 21,
+          "after": 21,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": null,
+      "lumaGainOver5": 0,
+      "medianRGBDelta_over2": null
+    },
+    "draw": {
+      "off": {
+        "visible": false,
+        "submissions": {
+          "door-glow-wall": 0,
+          "door-glow-floor": 0
+        },
+        "render": {
+          "frame": 442,
+          "calls": 1545,
+          "triangles": 8502343,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "on": {
+        "visible": true,
+        "submissions": {
+          "door-glow-wall": 1,
+          "door-glow-floor": 1
+        },
+        "render": {
+          "frame": 459,
+          "calls": 1547,
+          "triangles": 8502923,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "repeat-on": {
+        "visible": true,
+        "submissions": {
+          "door-glow-wall": 1,
+          "door-glow-floor": 1
+        },
+        "render": {
+          "frame": 476,
+          "calls": 1547,
+          "triangles": 8502923,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    "lamp": null
+  }
+}

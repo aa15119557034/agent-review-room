@@ -1,0 +1,60 @@
+{
+  "candidate": "4d94a1f41d17f18628e90e2c3f03914e37a3e471",
+  "baseline": "4eb8bfa622cea6a1ea70098838de3e7fffd1b5c1",
+  "sources": [
+    {
+      "file": "upstream/sakuragaoka/src/world/houses/house.js",
+      "baselineSha256": "9d1713efe5670432938cfa05d96c6ef6acc75be6f3586674df62d9af77b91d4b",
+      "candidateSha256": "7628a24d2b8868748ed90cb65b428d0e796d7952f0cab360be2141b8b9f7e19b",
+      "served": {
+        "receipt": "b45a774a-b164-48da-9d5c-16ba2218d514-71",
+        "path": "/upstream/sakuragaoka/src/world/houses/house.js",
+        "method": "GET",
+        "range": false,
+        "status": 200,
+        "finished": true,
+        "wireBytes": 38719,
+        "wireSHA256": "7628a24d2b8868748ed90cb65b428d0e796d7952f0cab360be2141b8b9f7e19b",
+        "fileBytes": 38719,
+        "declared": 38719,
+        "sha256": "7628a24d2b8868748ed90cb65b428d0e796d7952f0cab360be2141b8b9f7e19b"
+      }
+    },
+    {
+      "file": "upstream/sakuragaoka/src/world/shopsA/common.js",
+      "baselineSha256": "552b5ee6f6ab4ffb5f0c1703e06c9cea4d4e624ee5528114c6fad486511b8306",
+      "candidateSha256": "36150b96a66a0337867e464c3a7281ba56592b06ccdfeae33bf8c79633b42b55",
+      "served": {
+        "receipt": "b45a774a-b164-48da-9d5c-16ba2218d514-199",
+        "path": "/upstream/sakuragaoka/src/world/shopsA/common.js",
+        "method": "GET",
+        "range": false,
+        "status": 200,
+        "finished": true,
+        "wireBytes": 40740,
+        "wireSHA256": "36150b96a66a0337867e464c3a7281ba56592b06ccdfeae33bf8c79633b42b55",
+        "fileBytes": 40740,
+        "declared": 40740,
+        "sha256": "36150b96a66a0337867e464c3a7281ba56592b06ccdfeae33bf8c79633b42b55"
+      }
+    },
+    {
+      "file": "upstream/sakuragaoka/src/world/station/building.js",
+      "baselineSha256": "eb97d221b489ecdbf97fd8af53471c4d6ac07ac3cda6378c007102f4089f2505",
+      "candidateSha256": "f99474bc7b90d7a17cb786552f1084753616ef9a977efc8ebfc392b579d7db4f",
+      "served": {
+        "receipt": "b45a774a-b164-48da-9d5c-16ba2218d514-183",
+        "path": "/upstream/sakuragaoka/src/world/station/building.js",
+        "method": "GET",
+        "range": false,
+        "status": 200,
+        "finished": true,
+        "wireBytes": 28511,
+        "wireSHA256": "f99474bc7b90d7a17cb786552f1084753616ef9a977efc8ebfc392b579d7db4f",
+        "fileBytes": 28511,
+        "declared": 28511,
+        "sha256": "f99474bc7b90d7a17cb786552f1084753616ef9a977efc8ebfc392b579d7db4f"
+      }
+    }
+  ]
+}

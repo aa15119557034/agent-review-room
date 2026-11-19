@@ -1,0 +1,61 @@
+{
+  "source": "4d94a1f41d17f18628e90e2c3f03914e37a3e471",
+  "wallSize": [
+    2.0,
+    2.4
+  ],
+  "wallOffset": 0.015,
+  "poolCenterOut": 0.4,
+  "radius": 1.2,
+  "strength": 0.35,
+  "color": [
+    1.0,
+    0.55,
+    0.25
+  ],
+  "floorPlaneHeightOffset": 0.012,
+  "lateralDistanceFromLampToNearSideOfOwnHousePorch": 0.23000000000000004,
+  "crossSectionAtPoolCenter": [
+    {
+      "xOffset": 0.23,
+      "pastOwnPorchEdge": -2.7755575615628914e-17,
+      "shaderWeight": 0.800639846742644,
+      "additiveLinearRGB": [
+        0.280224,
+        0.154123,
+        0.070056
+      ]
+    },
+    {
+      "xOffset": 0.4,
+      "pastOwnPorchEdge": 0.16999999999999998,
+      "shaderWeight": 0.516732418929084,
+      "additiveLinearRGB": [
+        0.180856,
+        0.099471,
+        0.045214
+      ]
+    },
+    {
+      "xOffset": 0.65,
+      "pastOwnPorchEdge": 0.42,
+      "shaderWeight": 0.16235573306799855,
+      "additiveLinearRGB": [
+        0.056825,
+        0.031253,
+        0.014206
+      ]
+    },
+    {
+      "xOffset": 1.2,
+      "pastOwnPorchEdge": 0.97,
+      "shaderWeight": 0.0,
+      "additiveLinearRGB": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "scope": "Horizontal support by registered house porch only. Neighboring surfaces and occlusion require scene rays."
+}

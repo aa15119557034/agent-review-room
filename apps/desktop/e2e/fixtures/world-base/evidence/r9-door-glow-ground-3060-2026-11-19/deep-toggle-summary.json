@@ -1,0 +1,154 @@
+{
+  "far-west": {
+    "offOn": {
+      "pixels": 1296000,
+      "changed": 162615,
+      "over2": 69178,
+      "maxDelta": 167,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 1613,
+          "after": 5320,
+          "new": 3707,
+          "lost": 0
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": [
+        -7.026,
+        13.558,
+        73.127,
+        111.373
+      ],
+      "lumaGainOver5": 46673,
+      "medianRGBDelta_over2": [
+        18.0,
+        13.0,
+        6.0
+      ]
+    },
+    "repeat": {
+      "pixels": 1296000,
+      "changed": 0,
+      "over2": 0,
+      "maxDelta": 0,
+      "allRGB255": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "allRGB250": {
+        "before": 0,
+        "after": 0,
+        "new": 0,
+        "lost": 0
+      },
+      "perChannel255": {
+        "R": {
+          "before": 5320,
+          "after": 5320,
+          "new": 0,
+          "lost": 0
+        },
+        "G": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        },
+        "B": {
+          "before": 0,
+          "after": 0,
+          "new": 0,
+          "lost": 0
+        }
+      },
+      "lumaDeltaP10P50P90P99_over2": null,
+      "lumaGainOver5": 0,
+      "medianRGBDelta_over2": null
+    },
+    "draw": {
+      "off": {
+        "visible": false,
+        "submissions": {
+          "door-glow-wall": 0,
+          "door-glow-floor": 0
+        },
+        "render": {
+          "frame": 136,
+          "calls": 921,
+          "triangles": 7647092,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "on": {
+        "visible": true,
+        "submissions": {
+          "door-glow-wall": 1,
+          "door-glow-floor": 1
+        },
+        "render": {
+          "frame": 153,
+          "calls": 923,
+          "triangles": 7647672,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "repeat-on": {
+        "visible": true,
+        "submissions": {
+          "door-glow-wall": 1,
+          "door-glow-floor": 1
+        },
+        "render": {
+          "frame": 170,
+          "calls": 923,
+          "triangles": 7647672,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    "lamp": {
+      "lamp": [
+        -40.13532835908235,
+        2.26,
+        -74.45472790799104
+      ],
+      "floor": 0.31,
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "slabDepth": 1.42311034318991,
+      "index": 91
+    }
+  }
+}
