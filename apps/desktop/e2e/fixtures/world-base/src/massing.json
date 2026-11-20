@@ -323,40 +323,39 @@
  },
  "evening": {
   "walls": [
-   "#b4b8cf",
-   "#a9adc6",
-   "#c2aeb0",
-   "#97a1bf",
-   "#baa89c",
-   "#8693b2",
-   "#a9a2b6",
-   "#c4b5a2",
-   "#93a6aa",
-   "#b49fab",
-   "#7c89a8",
-   "#cdbaa6"
+   "#9ca1b4",
+   "#9298ab",
+   "#a1a5b1",
+   "#8791a4",
+   "#98a1a5",
+   "#7a849f",
+   "#9fa3ae",
+   "#8f999f",
+   "#979fae",
+   "#758095",
+   "#a6abb6"
   ],
   "roofs": [
-   "#6c748f",
-   "#7a7688",
-   "#606a86",
-   "#78828c"
+   "#5f6782",
+   "#6c717f",
+   "#54607a",
+   "#6a747d"
   ],
   "trims": [
-   "#e6ddd6",
-   "#a4abc2",
-   "#d6b4ac"
+   "#c6cad3",
+   "#8d95a8",
+   "#b1b5bd"
   ],
   "clutter": [
-   "#788096",
-   "#948f98",
-   "#6b7490",
-   "#a09a9e"
+   "#6c7488",
+   "#83858f",
+   "#5e6782",
+   "#8a8e94"
   ],
   "tanks": [
-   "#8fa3ba",
-   "#b49a86",
-   "#9aa8a0"
+   "#7f93aa",
+   "#938d86",
+   "#8a9a94"
   ],
   "signs": [
    "#e86b78",
@@ -378,14 +377,22 @@
    "#9ad0f0"
   ],
   "coolShare": 0.22,
-  "litChance": 0.24,
+  "litChance": 0.145,
   "windowGain": 2.6,
-  "signGain": 2.4,
-  "haze": {
-   "color": "#9488bd",
-   "start": 120,
-   "end": 950,
-   "max": 0.58
+  "signGain": 1.8,
+  "fog": {
+   "near": [
+    190,
+    0.42
+   ],
+   "far": [
+    850,
+    0.78
+   ],
+   "lumaMax": 0.95,
+   "windows": 0.9,
+   "litFade": 0.6,
+   "skyAt": 0.8
   }
  },
  "afternoon": {
@@ -443,11 +450,33 @@
   "litChance": 0.04,
   "windowGain": 1.0,
   "signGain": 1.0,
-  "haze": {
-   "color": "#bcd0e8",
-   "start": 120,
-   "end": 950,
-   "max": 0.6
+  "fog": {
+   "near": [
+    190,
+    0.34
+   ],
+   "far": [
+    850,
+    0.72
+   ],
+   "lumaMax": 1.4,
+   "windows": 0.9,
+   "litFade": 0.6,
+   "skyAt": 0.8
+  }
+ },
+ "raise": {
+  "tower-west-01": {
+   "height": 1.25,
+   "depth": 1.25,
+   "width": 1.1,
+   "maxHeight": 90
+  },
+  "tower-west-02": {
+   "height": 1.25,
+   "depth": 1.25,
+   "width": 1.1,
+   "maxHeight": 90
   }
  }
 }

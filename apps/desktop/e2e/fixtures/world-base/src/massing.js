@@ -23,22 +23,22 @@ const color = hex => new THREE.Color(hex);
 
 /** Growing indexed triangle soup: position / normal / colour / index. */
 class Part {
-  constructor() { this.pos = []; this.nrm = []; this.col = []; this.idx = []; }
+  constructor() { this.pos = []; this.nrm = []; this.col = []; this.fog = []; this.idx = []; this.fogv = [0, 0, 0, 0]; }
   quad(p0, p1, p2, p3, n, c) {
     const base = this.pos.length / 3;
     this.pos.push(...p0, ...p1, ...p2, ...p3);
-    for (let i = 0; i < 4; i++) { this.nrm.push(n[0], n[1], n[2]); this.col.push(c.r, c.g, c.b); }
+    for (let i = 0; i < 4; i++) { this.nrm.push(n[0], n[1], n[2]); this.col.push(c.r, c.g, c.b); this.fog.push(...this.fogv); }
     this.idx.push(base, base + 1, base + 2, base, base + 2, base + 3);
   }
   tri(p0, p1, p2, n, c) {
     const base = this.pos.length / 3;
     this.pos.push(...p0, ...p1, ...p2);
-    for (let i = 0; i < 3; i++) { this.nrm.push(n[0], n[1], n[2]); this.col.push(c.r, c.g, c.b); }
+    for (let i = 0; i < 3; i++) { this.nrm.push(n[0], n[1], n[2]); this.col.push(c.r, c.g, c.b); this.fog.push(...this.fogv); }
     this.idx.push(base, base + 1, base + 2);
   }
   get triangles() { return this.idx.length / 3; }
   freeze() {
-    return { pos: new Float32Array(this.pos), nrm: new Float32Array(this.nrm), col: new Float32Array(this.col),
+    return { pos: new Float32Array(this.pos), nrm: new Float32Array(this.nrm), col: new Float32Array(this.col), fog: new Float32Array(this.fog),
       idx: new Uint32Array(this.idx) };
   }
 }
@@ -47,10 +47,10 @@ class Part {
 function mergeParts(parts) {
   let v = 0, i = 0;
   for (const p of parts) { v += p.pos.length / 3; i += p.idx.length; }
-  const pos = new Float32Array(v * 3), nrm = new Float32Array(v * 3), col = new Float32Array(v * 3), idx = new Uint32Array(i);
+  const pos = new Float32Array(v * 3), nrm = new Float32Array(v * 3), col = new Float32Array(v * 3), fog = new Float32Array(v * 4), idx = new Uint32Array(i);
   let vo = 0, io = 0;
   for (const p of parts) {
-    pos.set(p.pos, vo * 3); nrm.set(p.nrm, vo * 3); col.set(p.col, vo * 3);
+    pos.set(p.pos, vo * 3); nrm.set(p.nrm, vo * 3); col.set(p.col, vo * 3); fog.set(p.fog, vo * 4);
     for (let k = 0; k < p.idx.length; k++) idx[io + k] = p.idx[k] + vo;
     vo += p.pos.length / 3; io += p.idx.length;
   }
@@ -58,6 +58,7 @@ function mergeParts(parts) {
   g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
   g.setAttribute('normal', new THREE.BufferAttribute(nrm, 3));
   g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  g.setAttribute('fogMix', new THREE.BufferAttribute(fog, 4));
   g.setIndex(new THREE.BufferAttribute(idx, 1));
   g.computeBoundingSphere(); g.computeBoundingBox();
   return g;
@@ -142,6 +143,53 @@ async function loadAvoidSets(assetBase) {
     for (const list of Object.values(props)) for (const p of list) out.props.push([p[0], p[2]]);
   } catch (error) { console.warn('[world-base] massing: avoid sets unavailable', error.message); }
   return out;
+}
+
+
+/** CPU copy of the sky shader (upstream shaders/common.js skyBase) at the near-horizon direction the terrain fog converges on
+ *  (applyAtmosphere uses y = 0.035). Same uniforms, so the fog colour is the sky's own horizon colour at this time of day. */
+function makeHorizonSky(U) {
+  const V = u => U[u].value;
+  const sm = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+  const mix = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+  return (dx, dz, elev = 0.035) /* elev = tan of the elevation angle */ => {
+    const h0 = Math.hypot(dx, dz) || 1, e = Math.max(0.035, elev), n = Math.hypot(dx / h0, e, dz / h0), d = [dx / h0 / n, e / n, dz / h0 / n], y = Math.max(d[1], 0);
+    const sun = V('uSunDir'), mu = d[0] * sun.x + d[1] * sun.y + d[2] * sun.z;
+    const arr = v => [v.x ?? v.r, v.y ?? v.g, v.z ?? v.b];
+    const mid = arr(V('uSkyMid')), zen = arr(V('uSkyZenith')), halo = arr(V('uSunHalo'));
+    const P0 = V('uSkyP0'), P1 = V('uSkyP1'), P2 = V('uSkyP2'), P3 = V('uSkyP3'), P4 = V('uSkyP4');
+    const hz = Math.pow(1 - y, 5), m = Math.max(mu, 0);
+    if (V('uFog').z <= 0.5) {
+      let c = mix(mid, zen, Math.pow(y, 0.62)); c = mix(c, arr(V('uSkyHorizon')), hz);
+      const g = Math.pow(m, 7) * 0.2 + Math.pow(m, 40) * 0.28 + Math.pow(m, 600) * 1.4, k = 0.55 + 0.9 * hz;
+      c = c.map((v, i) => v + halo[i] * g * k); const dk = 1 - 0.14 * Math.pow(Math.max(-mu, 0), 2) * (1 - hz);
+      return c.map(v => v * dk);
+    }
+    const hl = Math.hypot(d[0], d[2]), shl = Math.hypot(sun.x, sun.z) || 1e-4;
+    const side = hl > 1e-4 ? (d[0] / hl) * (sun.x / shl) + (d[2] / hl) * (sun.z / shl) : 0;
+    const sunSide = sm(-0.6, P3.w, side);
+    let c = mix(mid, zen, Math.pow(y, P2.x));
+    c = mix(c, [P4.x, P4.y, P4.z], Math.exp(-y * P4.w));
+    const band = mix([P1.x, P1.y, P1.z], [P0.x, P0.y, P0.z], sunSide);
+    let bw = Math.exp(-y * (P1.w + (P0.w - P1.w) * sunSide)); bw = bw * bw * (3 - 2 * bw);
+    c = mix(c, band, bw);
+    const g = Math.pow(m, 3) * P2.y + Math.pow(m, 14) * P2.z + Math.pow(m, 90) * P2.w + Math.pow(m, 600) * P3.x, k = 0.55 + 0.9 * hz;
+    c = c.map((v, i) => v + halo[i] * g * k);
+    const dk = 1 - P3.z * Math.pow(Math.max(-mu, 0), 2) * (1 - bw);
+    return c.map(v => v * dk);
+  };
+}
+
+/** Distance fog inside the lit / unlit fragment shaders: after lighting, mix the colour towards the vertex's fog colour (the sky horizon
+ *  seen in that direction) by the vertex's fog fraction, so the grade treats it exactly like the sky behind. */
+function addFog(material) {
+  material.onBeforeCompile = (shader) => {
+    shader.vertexShader = shader.vertexShader.replace('#include <common>', '#include <common>\nattribute vec4 fogMix;\nvarying vec4 vFogMix;')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvFogMix = fogMix;');
+    shader.fragmentShader = shader.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec4 vFogMix;')
+      .replace('#include <opaque_fragment>', 'outgoingLight = mix( outgoingLight, vFogMix.rgb, vFogMix.a );\n#include <opaque_fragment>');
+  };
+  material.customProgramCacheKey = () => 'massing-fog-1';
 }
 
 /**
@@ -246,6 +294,7 @@ export async function createMassing({ scene, station, island, city, skyline, par
   });
 
   // ---- geometry ----------------------------------------------------------------------------------------------------
+  const horizonSky = makeHorizonSky(island.U), fogStats = [], raised = [];
   const groups = []; // one per cluster
   const stats = { towers: 0, facades: 0, windows: 0, litWindows: 0, signs: 0, towerHeights: [], facadeFloors: [] };
   clusters.forEach(({ spec, index, accepted }) => {
@@ -254,15 +303,27 @@ export async function createMassing({ scene, station, island, city, skyline, par
     accepted.forEach((a, k) => {
       const rng = rngFrom(hash32(params.seed, index, k, 11));
       const id = `${spec.kind}-${spec.name}-${String(k).padStart(2, '0')}`;
+      // Per-slot composition overrides (massing.json "raise"): taller / wider so a block clears whatever stands in front of it.
+      const ov = params.raise?.[id];
+      if (ov) { const before = a.height; a.height = Math.round(Math.min(ov.maxHeight ?? P.heightRange[1], a.height * (ov.height ?? 1)) * 2) / 2; a.w = Math.round(a.w * (ov.width ?? 1) * 2) / 2; a.d = Math.round(a.d * (ov.depth ?? 1) * 2) / 2; raised.push({ id, from: before, to: a.height, footprint: [a.w, a.d] }); }
       const F = frameOf(a.cx, a.cz, a.yaw);
       const floorY = a.ground.max + 0.15, baseY = a.ground.min - P.skirt;
       // Aerial perspective baked into the vertex colours: seen from the cluster's reference eye, distant blocks drift towards the haze.
-      const eyeDist = spec.view ? Math.hypot(a.cx + ox - spec.view.eye[0], a.cz + oz - spec.view.eye[2]) : 0;
-      const hz = palette.haze, hk = spec.view ? Math.max(0, Math.min(1, (eyeDist - hz.start) / (hz.end - hz.start))) * hz.max : 0;
-      const hazeCol = color(hz.color);
-      const tint = c => (hk > 0 ? c.lerp(hazeCol, hk) : c);
+      // Fog (see addFog): linear in the distance from the cluster's reference eye, towards the sky's own horizon colour in that direction.
+      let fogRGBA = [0, 0, 0, 0], fogK = 0;
+      if (spec.view) {
+        const ex = a.cx + ox - spec.view.eye[0], ez = a.cz + oz - spec.view.eye[2], eyeDist = Math.hypot(ex, ez), fg = palette.fog;
+        fogK = Math.min(1, Math.max(0, fg.near[1] + (fg.far[1] - fg.near[1]) * (eyeDist - fg.near[0]) / (fg.far[0] - fg.near[0])));
+        // The sky behind a block is the sky at the elevation of its crown, not the thin orange line right on the horizon.
+        const crown = (a.ground.max + a.height * fg.skyAt - spec.view.eye[1]) / eyeDist;
+        const sky = horizonSky(ex, ez, Math.max(0, crown)), luma = sky[0] * 0.2126 + sky[1] * 0.7152 + sky[2] * 0.0722, cap = Math.min(1, fg.lumaMax / Math.max(luma, 1e-4));
+        fogRGBA = [sky[0] * cap, sky[1] * cap, sky[2] * cap, fogK];
+        fogStats.push({ id, dist: eyeDist, fog: fogK, rgb: fogRGBA.slice(0, 3) });
+      }
+      const tint = c => c;
       const wallCol = tint(color(pick(rng, palette.walls))), trimCol = tint(color(pick(rng, palette.trims))), roofCol = tint(color(pick(rng, palette.roofs)));
       const wall = new Part(), win = new Part();
+      wall.fogv = fogRGBA; win.fogv = [fogRGBA[0], fogRGBA[1], fogRGBA[2], fogRGBA[3] * palette.fog.windows];
       // Tiers: [y0, y1, w, d, offset]. Tower setbacks shrink the footprint and slide it off-centre.
       const tiers = [];
       const total = a.height;
@@ -328,7 +389,7 @@ export async function createMassing({ scene, station, island, city, skyline, par
         addBox(wall, F, [cx, cz], bottom, bottom + sh, nx ? thick : sw, nx ? sw : thick, tint(color('#59606f')), tint(color('#59606f')));
         const faceSign = { o: [cx, cz], half: thick / 2, n: [nx, nz] };
         const gain = palette.signGain;
-        const face = sc.clone().multiplyScalar(gain);
+        const face = sc.clone().multiplyScalar(gain * (1 - palette.fog.litFade * fogK));
         addPane(win, F, faceSign, 0, bottom + sh / 2, sw - 0.5, sh - 0.5, 0.03 + (a.d + a.w) * 0.0, face);
         sign = { face: best, width: sw, height: sh };
         stats.signs++;
@@ -358,7 +419,7 @@ export async function createMassing({ scene, station, island, city, skyline, par
               let c;
               if (lit) {
                 const hh = (hash32(b, f, a.cz | 0) % 100) / 100;
-                c = color(hh < palette.coolShare ? pick(rng, palette.litCool) : pick(rng, palette.litWarm)).lerp(hazeCol, hk * 0.35).multiplyScalar(palette.windowGain);
+                c = color(hh < palette.coolShare ? pick(rng, palette.litCool) : pick(rng, palette.litWarm)).multiplyScalar(palette.windowGain * (1 - palette.fog.litFade * fogK));
                 lcount++;
               } else c = glassCol;
               addPane(win, F, face, along, yc, bay * 0.56, fh * 0.52, off2, c);
@@ -384,6 +445,7 @@ export async function createMassing({ scene, station, island, city, skyline, par
   const wallMaterial = new THREE.MeshToonMaterial({ vertexColors: true, gradientMap: station.ctx.mat.gradientMap, name: 'massing-wall' });
   const windowMaterial = new THREE.MeshBasicMaterial({ vertexColors: true, name: 'massing-window', toneMapped: false });
   windowMaterial.polygonOffset = true; windowMaterial.polygonOffsetFactor = -2; windowMaterial.polygonOffsetUnits = -2;
+  addFog(wallMaterial); addFog(windowMaterial);
   windowMaterial.userData.wbEveningGlow = true; // gain is baked into the vertex colours; the generic glow pass leaves it alone
   const geometries = new Set();
   const build = group => {
@@ -438,6 +500,8 @@ export async function createMassing({ scene, station, island, city, skyline, par
     towerHeight: stats.towerHeights.length ? [Math.min(...stats.towerHeights), Math.max(...stats.towerHeights)] : null,
     facadeFloors: stats.facadeFloors.length ? [Math.min(...stats.facadeFloors), Math.max(...stats.facadeFloors)] : null,
     perCluster: Object.fromEntries(clusters.map(c => [c.spec.name, { placed: c.accepted.length, wanted: c.spec.count }])),
+    fog: fogStats.length ? { nearest: fogStats.reduce((m, f) => (f.dist < m.dist ? f : m)), farthest: fogStats.reduce((m, f) => (f.dist > m.dist ? f : m)), count: fogStats.length, all: fogStats.map(f => ({ id: f.id, dist: +f.dist.toFixed(0), fog: +f.fog.toFixed(3), rgb: f.rgb.map(v => +v.toFixed(2)) })) } : null, raised,
+    litShare: stats.windows ? stats.litWindows / stats.windows : 0,
     rejects, walkableRects: walkable.length, meshBoxes: meshBoxes.length, timeOfDay,
     note: 'Placeholder massing: slots only, no physics. Replace blocks by slot id.',
   };
