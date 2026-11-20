@@ -185,35 +185,6 @@ export function addShopGround(station, island, plans) {
  * 做法：凡是"顶面明显高于接缝地面、且向北越过主矩形边界"的 walk 盒，
  * 把它的北沿收回到边界上。
  */
-export function trimPlatformWalk(station, areas, margin = 0.8) {
-  const physics = station.ctx?.physics;
-  const items = physics?.items;
-  if (!items?.length || !areas?.length) return { trimmed: 0, items: [] };
-
-  // 每条 approach 的北端（真正需要被清空的边界）
-  const strips = areas.filter(a => a.name === 'approach');
-  if (!strips.length) return { trimmed: 0, items: [] };
-  const boundZ = Math.max(...strips.map(a => a.z1));   // 局部 z 最大（最靠南的边界）
-  const done = [];
-
-  for (const it of items) {
-    if (it.type !== 'walk' || it.top == null) continue;
-    const northEdge = it.cz - it.hd;
-    if (northEdge >= boundZ - 0.05) continue;          // 没越过边界
-    // 只在 approach 的 x 范围内裁
-    const hit = strips.find(a => it.cx + it.hw > a.x0 - margin && it.cx - it.hw < a.x1 + margin);
-    if (!hit) continue;
-    // 顶面必须"明显高于"接缝处的可行走面（否则是别的矮台，别动）
-    const keepNorth = boundZ - 0.05;
-    const southEdge = it.cz + it.hd;
-    if (southEdge <= keepNorth + 0.05) continue;        // 整块都在北边，管不了
-    const newHd = (southEdge - keepNorth) / 2;
-    const newCz = keepNorth + newHd;
-    done.push({ from: [+(it.cz - it.hd).toFixed(2), +(it.cz + it.hd).toFixed(2)], to: [+keepNorth.toFixed(2), +southEdge.toFixed(2)], top: +it.top.toFixed(2), x: [+(it.cx - it.hw).toFixed(1), +(it.cx + it.hw).toFixed(1)] });
-    it.hd = newHd; it.d = newHd * 2; it.cz = newCz;
-  }
-  return { trimmed: done.length, boundZ: +boundZ.toFixed(2), items: done };
-}
 
 /** 室内碰撞：后墙、左右墙、带门洞的前墙（由 box + entrances 推导） */
 export function addRoomCollision(station) {
@@ -307,5 +278,3 @@ export function clearBoundaryWalls(station, areas, margin = 0.25) {
   }
   return { cleared: done.length, items: done };
 }
-
-
