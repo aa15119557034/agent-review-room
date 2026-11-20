@@ -85,9 +85,25 @@ export function planShopEntry(room, placement, stair, mainBounds) {
     const cx = stair ? stair.x : (px0 + px1) / 2;
     areas.push({
       name: 'approach', x0: cx - halfW, x1: cx + halfW,
-      z0: backZ - 0.3, z1: Math.max(mainBounds.z0, backZ) + 0.5
+      z0: backZ - OVERLAP, z1: Math.max(mainBounds.z0, backZ) + OVERLAP   // 与主矩形重叠 OVERLAP(1.0m)，缩半径后仍连通
     });
     ground.approach = { cx, halfW, z0: backZ, z1: mainBounds.z0 };
+  }
+
+  // 断言：相邻块的重叠必须 >= 2×玩家半径 + 0.3（半径按 0.3 算 → 0.9），
+  // 否则收缩后会出现缝，高帧率慢走会卡在缝里（C酱 评审 #271 第 3 条）。
+  {
+    const R = 0.3, NEED = 2 * R + 0.3;
+    const order = ['room', 'plinth', 'stairs', 'approach'];
+    const byName = Object.fromEntries(areas.map(a => [a.name, a]));
+    for (let i = 0; i + 1 < order.length; i++) {
+      const a = byName[order[i]], b = byName[order[i + 1]];
+      if (!a || !b) continue;
+      const overlap = Math.min(a.z1, b.z1) - Math.max(a.z0, b.z0);
+      if (overlap < NEED - 1e-3) {
+        throw new Error('shop-entry: ' + order[i] + ' 与 ' + order[i + 1] + ' 的 z 重叠只有 ' + overlap.toFixed(2) + ' m，需要 >= ' + NEED.toFixed(1) + ' m（玩家半径 ' + R + '）');
+      }
+    }
   }
 
   return { areas, ground };
@@ -159,6 +175,46 @@ export function addShopGround(station, island, plans) {
   return stats;
 }
 
+/**
+ * 把**站区平台的 walk 盒**在接缝处截断（C酱 评审的情形 3）。
+ *
+ * 原因：`physics.resolve` 会把"顶部远高于玩家脚部的 walk 盒"当墙推人。
+ * 站区平台的 walk 盒向北越过了主矩形边界，玩家沿着地形斜坡降到平台下方后，
+ * 就被这个悬在头顶的平台盒挡住——表现就是"走到接缝前卡住、每帧被推回一个步长"。
+ *
+ * 做法：凡是"顶面明显高于接缝地面、且向北越过主矩形边界"的 walk 盒，
+ * 把它的北沿收回到边界上。
+ */
+export function trimPlatformWalk(station, areas, margin = 0.8) {
+  const physics = station.ctx?.physics;
+  const items = physics?.items;
+  if (!items?.length || !areas?.length) return { trimmed: 0, items: [] };
+
+  // 每条 approach 的北端（真正需要被清空的边界）
+  const strips = areas.filter(a => a.name === 'approach');
+  if (!strips.length) return { trimmed: 0, items: [] };
+  const boundZ = Math.max(...strips.map(a => a.z1));   // 局部 z 最大（最靠南的边界）
+  const done = [];
+
+  for (const it of items) {
+    if (it.type !== 'walk' || it.top == null) continue;
+    const northEdge = it.cz - it.hd;
+    if (northEdge >= boundZ - 0.05) continue;          // 没越过边界
+    // 只在 approach 的 x 范围内裁
+    const hit = strips.find(a => it.cx + it.hw > a.x0 - margin && it.cx - it.hw < a.x1 + margin);
+    if (!hit) continue;
+    // 顶面必须"明显高于"接缝处的可行走面（否则是别的矮台，别动）
+    const keepNorth = boundZ - 0.05;
+    const southEdge = it.cz + it.hd;
+    if (southEdge <= keepNorth + 0.05) continue;        // 整块都在北边，管不了
+    const newHd = (southEdge - keepNorth) / 2;
+    const newCz = keepNorth + newHd;
+    done.push({ from: [+(it.cz - it.hd).toFixed(2), +(it.cz + it.hd).toFixed(2)], to: [+keepNorth.toFixed(2), +southEdge.toFixed(2)], top: +it.top.toFixed(2), x: [+(it.cx - it.hw).toFixed(1), +(it.cx + it.hw).toFixed(1)] });
+    it.hd = newHd; it.d = newHd * 2; it.cz = newCz;
+  }
+  return { trimmed: done.length, boundZ: +boundZ.toFixed(2), items: done };
+}
+
 /** 室内碰撞：后墙、左右墙、带门洞的前墙（由 box + entrances 推导） */
 export function addRoomCollision(station) {
   const rooms = station.ctx?.services?.shopInteriors ?? [];
@@ -196,6 +252,60 @@ export function addRoomCollision(station) {
     wall(d1 - 0.02, r.z1 - WALL_T, d1, r.z1);
   }
   return { added, skipped };
+}
+
+
+
+
+
+
+
+/**
+ * 打通接缝处的**隐形边界墙**。
+ *
+ * 实测：`physics.resolve` 在接缝前每帧把玩家推回恰好一个步长，命中的实体是
+ * `{type:'box', cx:0, cz:-99.5, hw:10, hd:0.3, y0:-5, y1:20}` —— 一道横跨街道、
+ * 20 m 宽 0.6 m 厚 25 m 高的不可见边界墙，用来把玩家关在主矩形里。
+ *
+ * 做法：凡是「薄、宽、够高」且横跨某条 approach 的 box，把它在附加区那条带上**切开**，
+ * 两边保留、中间留出等于附加区宽度的口子。其它地方的可走范围完全不变。
+ */
+export function clearBoundaryWalls(station, areas, margin = 0.25) {
+  const physics = station.ctx?.physics;
+  const items = physics?.items;
+  if (!items?.length || !areas?.length) return { cleared: 0, items: [] };
+
+  const strips = areas.filter(a => a.name === 'approach');
+  if (!strips.length) return { cleared: 0, items: [] };
+  const done = [];
+
+  for (const it of items.slice()) {
+    if (it.type !== 'box') continue;
+    if ((it.hd ?? 0) > 0.8) continue;
+    if ((it.hw ?? 0) < 2 || (it.hw ?? 0) > 60) continue;
+    if ((it.y1 ?? 0) - (it.y0 ?? 0) < 2) continue;
+    for (const s of strips) {
+      const wallL = it.cx - it.hw, wallR = it.cx + it.hw;
+      const mid = (s.z0 + s.z1) / 2, half = (s.z1 - s.z0) / 2 + 1.0;
+      if (Math.abs(it.cz - mid) > half) continue;
+      const holeL = s.x0 - margin, holeR = s.x1 + margin;
+      if (wallR <= holeL || wallL >= holeR) continue;
+      if (holeL <= wallL && holeR >= wallR) continue;
+
+      const leftL = wallL, leftR = Math.min(wallR, holeL);
+      const rightL = Math.max(wallL, holeR), rightR = wallR;
+      done.push({ wall: [+wallL.toFixed(2), +wallR.toFixed(2)], hole: [+holeL.toFixed(2), +holeR.toFixed(2)], z: +it.cz.toFixed(2) });
+
+      if (rightR - rightL > 0.01) physics.addBox((rightL + rightR) / 2, it.cz, rightR - rightL, it.hd * 2, 0, it.y0, it.y1);
+      if (leftR - leftL > 0.01) {
+        it.cx = (leftL + leftR) / 2; it.hw = (leftR - leftL) / 2; it.w = it.hw * 2;
+      } else {
+        it.y0 = -999; it.y1 = -998;
+      }
+      break;
+    }
+  }
+  return { cleared: done.length, items: done };
 }
 
 
