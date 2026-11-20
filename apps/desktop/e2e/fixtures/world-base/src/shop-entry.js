@@ -284,6 +284,8 @@ export function makeCameraClamp(station, rooms) {
   const boxes = [];
   for (const room of rooms) {
     if (!room?.frame || !Array.isArray(room.box)) continue;
+    // 只处理轴对齐房间：未旋转的盒子套在转过的店上会盖到街面，把相机夹到错地方
+    if (!axisAligned(room)) continue;
     const [bx0, by0, bz0, bx1, by1, bz1] = room.box;
     const f = room.frame;
     boxes.push({
@@ -297,7 +299,8 @@ export function makeCameraClamp(station, rooms) {
   return function clampCamera(playerLocal, camLocal, margin = 0.25) {
     for (const b of boxes) {
       const inRoom = playerLocal.x >= b.x0 && playerLocal.x <= b.x1 &&
-                     playerLocal.z >= b.z0 && playerLocal.z <= b.z1;
+                     playerLocal.z >= b.z0 && playerLocal.z <= b.z1 &&
+                     playerLocal.y >= b.y0 - 0.3 && playerLocal.y <= b.y1;   // 只看 x/z 会把楼上/屋顶的玩家也拽进店里
       if (!inRoom) continue;
       camLocal.x = Math.min(Math.max(camLocal.x, b.x0 + margin), b.x1 - margin);
       camLocal.z = Math.min(Math.max(camLocal.z, b.z0 + margin), b.z1 - margin);
@@ -316,4 +319,5 @@ export function makeCameraClamp(station, rooms) {
     return false;
   };
 }
+
 
