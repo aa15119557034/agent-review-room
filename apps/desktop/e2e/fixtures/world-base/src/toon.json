@@ -1,6 +1,32 @@
 {
  "note": "Round 28 toon (stronger): ZZZ-style outlines (post, near side of a depth step with the surface slope removed, plus inverse-depth creases) and 3-band cel light in the lit-material chunk. Both are runtime-switchable: lit bands / warm rim by uniform (uTbK, uTbRim), lines by uLnOn/uToon. ?toon=off installs nothing and restores round 26 pixel for pixel. lit.levels = direct-light level of the dark / middle / lit band relative to full sun; lit.edges = where the bands change; lit.width = smoothstep half-width. line.width in pixels at 1080 px height; sil = relative depth step that starts / completes a silhouette line; crease = inverse-depth curvature range; fade = metres where lines start thinning / vanish. line.tint multiplies the local colour (dark and cool, not black). Round 17 form (ZZZ line/flat colour): evening/afternoon.form overrides line / lit (merged in by main.js) and ink = line colour derived from the local colour (darken multiplier, saturation boost sat, floor = additive violet floor, thinWidth = how much the line narrows towards fade[1]). ?form=old restores round 28 exactly. Round 19: form.outlineEmissive gives printed signs / light boxes / emissive panels the outline (their coverage mask is 0.8 instead of 0; emissiveInk = level their ink colour is scaled to before the darken, so the line stays dark on a glowing face; emissiveStep = depth step in metres that starts / completes a line on them, so only real silhouettes count and no creases); ?form=r18 switches it off and restores round 18 pixel for pixel. Round 20: form.flat flattens colour blocks. tex = share of the albedo pulled to its own low mip (bias = mip bias of that sample) on lit textured materials, except where the texel stands out from the low mip by more than keep (lo, hi: linear RGB distance, smoothstep) so lettering, prints and bold patterns stay; printed signs (TOON_SIGN), unlit / transparent / alpha-cut / shader materials and tree crowns are left alone. shadowNoise = share of the per-pixel interleaved-gradient noise kept in the sun shadow filter (0: five fixed taps), because the cel bands turned that dither into speckled strips along every shadow edge. ?form=r19 (or r18 / old) installs nothing and restores round 19 pixel for pixel.",
+ "reflNote": "Round 22 refl (wet road, evening only; afternoon on:0 keeps r21): the main street is cut into zones along street-local z (zones[].z = [from, to] in metres, contiguous; zones[].x = box walls left / right of the street centre). Each zone gets a res px HalfFloat cube baked once at load from the zone centre, probeHeight above the road, into a box that extends pad metres beyond the zone ends (far street content stays at its own direction) and yMax above the road. The road picks the zone by its z with a blend-metre linear cross-fade and box-projects the reflection ray. lod = [rough, puddle] mip level; reflection weight = (base + grazing * pow(1 - N.V, 4)) * puddle + dry * wet * grazing; ripple = share of the road's normal ripple the reflection keeps (1 = r21 ripple). Streak: streakTaps extra taps (max 8) whose elevation is lowered by up to streakLen (fraction of the ray elevation), mip + streakLod, keeping only what is above streakThresh, times streakGain. ?refl=old (or ?toon=off) installs nothing and bakes nothing: round 21 pixel for pixel.",
  "evening": {
+ "refl": {
+  "on": 1,
+  "res": 512,
+  "probeHeight": 1.5,
+  "yMax": 11,
+  "pad": 10,
+  "blend": 3.0,
+  "zones": [
+   { "z": [3.0, 9.5], "x": [-7.5, 8.6] },
+   { "z": [9.5, 15.0], "x": [-7.0, 7.5] },
+   { "z": [15.0, 22.25], "x": [-5.9, 6.0] },
+   { "z": [22.25, 29.0], "x": [-10.0, 6.8] },
+   { "z": [29.0, 36.0], "x": [-7.1, 6.5] }
+  ],
+  "lod": [3.0, 0.85],
+  "base": 0.10,
+  "grazing": 0.6,
+  "dry": 0.12,
+  "ripple": 0.3,
+  "streakLen": 0.7,
+  "streakTaps": 6,
+  "streakThresh": 0.65,
+  "streakGain": 1.4,
+  "streakLod": 1.5
+ },
   "skyFill": "#c9cbe2",
   "lit": {
    "levels": [
@@ -117,6 +143,7 @@
   }
  },
  "afternoon": {
+ "refl": { "on": 0 },
   "skyFill": "#e3eafa",
   "lit": {
    "levels": [

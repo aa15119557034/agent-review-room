@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { STREET_REFLECTION_GLSL } from './street-reflections.js';
+import { zoneGlsl } from './street-zones.js';
 
 const SIZE = 512;
 const BOUNDS = { x0: -4, z0: 4, x1: 4, z1: 34 };
@@ -159,7 +160,7 @@ function makeMask(root, layout) {
 /** Local standing water shares the station's captured street environment.
  * The road owns its material and mask. The station owns the reflection target.
  */
-export function applyWetRoad({ root, ctx, reflections }) {
+export function applyWetRoad({ root, ctx, reflections, zones = null }) {
   const targets = [];
   root.traverse(mesh => { if (mesh.isMesh && mesh.name === 'street-asphalt') targets.push(mesh); });
   if (targets.length !== 1) throw new Error(`Wet road expected one street-asphalt mesh, found ${targets.length}`);
@@ -173,6 +174,8 @@ export function applyWetRoad({ root, ctx, reflections }) {
     ...reflections.uniforms,
     uWetMask: { value: texture }, uWetEnabled: { value: 1 },
     uWetBounds: { value: new THREE.Vector4(BOUNDS.x0, BOUNDS.z0, BOUNDS.x1 - BOUNDS.x0, BOUNDS.z1 - BOUNDS.z0) },
+    // Art r22: zoned cubes (street-zones.js). Absent with ?refl=old: the shader below is then character for character the r21 one.
+    ...(zones ? zones.uniforms : {}),
   };
   const upstreamCompile = original.onBeforeCompile;
   const upstreamKey = original.customProgramCacheKey();
@@ -192,6 +195,7 @@ export function applyWetRoad({ root, ctx, reflections }) {
       uniform float uWetEnabled;
       uniform vec4 uWetBounds;
       ${STREET_REFLECTION_GLSL}
+      ${zones ? zoneGlsl(zones.count) : ''}
       varying vec3 vWetWorld;
       varying vec2 vWetLocal;`);
     shader.fragmentShader = insert(shader.fragmentShader, '#include <map_fragment>', `#include <map_fragment>
@@ -208,20 +212,30 @@ export function applyWetRoad({ root, ctx, reflections }) {
         N = normalize(N + (vec3(ripple.x, 0.0, ripple.y) * mat3(uStreetWorldToLocal)) * 0.009);
         vec3 V = normalize(cameraPosition - vWetWorld);
         float grazing = pow(1.0 - clamp(dot(N, V), 0.0, 1.0), 4.0);
+        ${zones ? `if (uReflOn > 0.5) {
+          vec3 streak = vec3(0.0);
+          // The shared ripple (0.009) shakes a close, tall mirror image into zigzags; the zoned path keeps uReflW.w of it.
+          vec3 zoneN = normalize(N + (vec3(ripple.x, 0.0, ripple.y) * mat3(uStreetWorldToLocal)) * 0.009 * (uReflW.w - 1.0));
+          vec3 zoneColor = zoneReflection(vWetWorld, reflect(-V, zoneN), mix(uReflLod.x, uReflLod.y, wetMask.g), streak);
+          float zoneWeight = (uReflW.x + uReflW.y * grazing) * wetMask.g + uReflW.z * wetMask.r * grazing;
+          outgoingLight = mix(outgoingLight, zoneColor, zoneWeight) + streak * uReflS.z * wetMask.g * (0.35 + 0.65 * grazing);
+        } else {` : ''}
         vec3 reflection = streetReflection(vWetWorld, reflect(-V, N), mix(4.0, 0.85, wetMask.g));
         float weight = (0.03 + 0.2 * grazing) * wetMask.g + 0.05 * wetMask.r * grazing; // art r1: puddles were smearing the pink canopy across the road
         outgoingLight = mix(outgoingLight, reflection, weight);
+        ${zones ? '}' : ''}
       }
       #include <opaque_fragment>`);
   };
   // The different callback deliberately opts out of batch2's material rewriting.
   // One isolated road material can still use its original single draw.
-  material.customProgramCacheKey = () => `${upstreamKey}|station-street-reflection-v2`;
+  material.customProgramCacheKey = () => `${upstreamKey}|station-street-reflection-v2${zones ? `|zones${zones.count}` : ''}`;
   mesh.material = material;
   let disposed = false;
   return {
     material, maskTexture: texture,
     stats: { ...stats, materials: 1, extraPasses: 0, extraRenderTargets: 0, reflection: 'shared station street cube' },
+    uniforms,
     get enabled() { return uniforms.uWetEnabled.value === 1; },
     setEnabled(enabled) { uniforms.uWetEnabled.value = enabled ? 1 : 0; },
     dispose() {

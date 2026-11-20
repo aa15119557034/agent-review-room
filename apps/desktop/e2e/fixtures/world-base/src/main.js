@@ -7,6 +7,7 @@ import { addDoorGlow, loadDoorGlow, resolveDoorLamps } from './door-glow.js';
 import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from './evening-glow.js';
 import * as layoutModule from '../upstream/sakuragaoka/src/world/layout.js';
 import { createStation } from './station.js';
+import { reflEnabled, bakeStreetZones } from './street-zones.js';
 import { createLook } from './look.js';
 import { createSkyline } from './skyline.js';
 import { createCity } from './city.js';
@@ -150,10 +151,14 @@ async function init() {
   skyFill = evening ? new THREE.HemisphereLight(0xb4bce8, 0xa08068, 1.6) : new THREE.HemisphereLight(0xcfe0ff, 0xa89c94, 1.05);
   scene.add(sun, sun.target, skyFill);
   stage('正在安放车站、店铺与碰撞体…');
+  // Art round 22: zoned street cubes + vertical neon streaks on the wet road. toon.json "refl" (absent / on:0 = off);
+  // ?refl=old or ?toon=off keeps round 21 pixel for pixel (nothing is installed or baked).
+  const reflParams = toonEnabled() && reflEnabled() ? (await loadToon())[timeOfDay === 'afternoon' ? 'afternoon' : 'evening'].refl : null;
+  const refl = reflParams && reflParams.on ? reflParams : null;
   station = await createStation({
     scene, renderer, camera, offset: island.stationPlacement.position,
     rotationY: island.stationPlacement.rotationY, sunDir: island.U.uSunDir.value, evening,
-    groundMaterial: island.transition.material,
+    groundMaterial: island.transition.material, refl,
     onProgress: stage,
   });
   worldBase.station = station;
@@ -298,6 +303,16 @@ async function init() {
   if (toonEnabled()) maskGlassAlpha(scene);
   // Round 19: printed signs / light boxes take the outline (?form=r18 leaves them masked out as before).
   if (toonEnabled() && signLinesEnabled(worldBase.toon27?.params)) worldBase.toonSigns = markSignMaterials(scene);
+  // Round 22: render the zone cubes last, once the whole world (glows, signs, weathering, toon chunks) is final and before the
+  // first frame, so every screenshot after worldBase.ready sees the same cubes.
+  if (refl) {
+    stage('正在烘焙湿路分区反射…');
+    const zonesBake = await bakeStreetZones({ world: worldBase, layout: layoutModule, params: refl, uniforms: station.zones.uniforms,
+      onProgress: (done, total) => stage(`正在烘焙湿路分区反射 ${done}/${total}…`) });
+    station.streetZones = zonesBake;
+    worldBase.refl = { params: refl, uniforms: station.zones.uniforms, bakeMs: zonesBake.ms, zones: zonesBake.zones, res: zonesBake.res };
+    console.info(`[world-base] street zone cubes: ${zonesBake.zones.length} zones x 6 faces @ ${zonesBake.res}px baked in ${zonesBake.ms} ms`);
+  }
   stage('场景已就绪');
   document.querySelector('#loading').hidden = true;
   let last = performance.now(), sampleStart = last, samples = 0;
