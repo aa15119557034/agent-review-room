@@ -66,9 +66,9 @@
    "skinKeep": 0.35,
    "skyKeep": 0.3,
    "skyGain": 0.4,
-   "frameSatCut": 1.0,
+   "frameSatCut": 1.2,
    "frameSatLo": 0.52,
-   "frameSatHi": 0.68
+   "frameSatHi": 0.64
   }
  },
  "afternoon": {
