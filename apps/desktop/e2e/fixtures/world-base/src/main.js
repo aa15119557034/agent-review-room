@@ -177,19 +177,20 @@ async function init() {
   worldBase.city = await createCity({ scene, station, island, skyline: worldBase.skyline });
   // #254：店铺室内可进入——附加可走区 + 室内碰撞，全部由 shopInteriors 推导
   {
-      const { walkExtrasFromRooms, addShopGround, addRoomCollision, clearBoundaryWalls, makeCameraClamp } = await import('./shop-entry.js');
-      const extras = walkExtrasFromRooms(station, worldBase.city);
+      const { walkExtrasFromRooms, addShopGround, addRoomCollision, clearBoundaryWalls, makeCameraClamp, addLotShopSolid } = await import('./shop-entry.js');
+      const extras = walkExtrasFromRooms(station, worldBase.city, layoutModule);
       station.walkExtra.push(...extras.areas);
       const trim = clearBoundaryWalls(station, extras.areas);
       const ground = addShopGround(station, island, extras.plans);
       const rooms = addRoomCollision(station);
+      const lotSolid = addLotShopSolid(station, extras.lotPlans);
       station.clampCamera = makeCameraClamp(station, station.ctx.services.shopInteriors || []);
       worldBase.shopEntry = {
         walkExtra: extras.areas, skippedExtras: extras.skipped,
         walls: rooms.added.length, skippedRooms: rooms.skipped,
         ground, trim
       };
-      if (extras.areas.length) console.log('[world-base] 店铺附加可走区 ' + extras.areas.length + ' 块，台阶 ' + ground.steps + ' 级，墙 ' + rooms.added.length + ' 面');
+      if (extras.areas.length) console.log('[world-base] 店铺附加可走区 ' + extras.areas.length + ' 块（其中 lot 店 ' + extras.lotPlans.length + ' 家），台阶 ' + ground.steps + ' 级，墙 ' + (rooms.added.length + lotSolid.walls) + ' 面');
   }
   worldBase.city.vegetationClear = clearVegetationAreas(island.terrain,
     worldBase.city.vegetationClearAreas, station.root.matrixWorld, { flowers: 8, jitter: 2.5 });
