@@ -27,7 +27,7 @@ const SIGN_MASK = 1.5;
  *  colour blocks stay, fine texture noise goes). Printed signs (TOON_SIGN), unlit, transparent, alpha-cut, shader materials and tree crowns are
  *  left out. ?form=r19 (or r18 / old) installs nothing and restores the round 19 pixels. */
 export const flatEnabled = (p) => !!(p && p.form && p.form.flat && p.form.flat.tex > 0) && formEnabled() && !['r18', 'r19'].includes(new URLSearchParams(location.search).get('form'));
-export const toonFlatUniforms = { uTfTex: { value: 0 }, uTfBias: { value: 0 }, uTfThr: { value: new THREE.Vector2(0, 0) }, uTfSh: { value: 1 } };
+export const toonFlatUniforms = { uTfTex: { value: 0 }, uTfBias: { value: 0 }, uTfThr: { value: new THREE.Vector2(0, 0) }, uTfSh: { value: 1 }, uTfCut: { value: new THREE.Vector2(0, 0.5) } };
 let flatActive = false;
 const LIT_FLAT = /^(MeshStandardMaterial|MeshPhysicalMaterial|MeshPhongMaterial|MeshLambertMaterial|MeshToonMaterial)$/;
 const flatEligible = (m) => flatActive && LIT_FLAT.test(m.type) && !!m.map && !m.transparent && !(m.alphaTest > 0) && !m.alphaToCoverage && !m.userData?.wbNoFlat && !NOLINE_NAMES.test(m.name);
@@ -133,6 +133,7 @@ export function installFlatColour(p) {
   toonFlatUniforms.uTfBias.value = p.form.flat.bias;
   toonFlatUniforms.uTfThr.value.set(...p.form.flat.keep);
   toonFlatUniforms.uTfSh.value = p.form.flat.shadowNoise;
+  toonFlatUniforms.uTfCut.value.set(p.form.flat.shadowCut ?? 0, p.form.flat.shadowCutAt ?? 0.5);
   const pars = THREE.ShaderChunk.map_pars_fragment;
   if (!pars.includes('uTfTex')) THREE.ShaderChunk.map_pars_fragment = `${pars}\nuniform float uTfTex;\nuniform float uTfBias;\nuniform vec2 uTfThr;`;
   // The sun's PCF takes 5 taps rotated per pixel by interleaved gradient noise: harmless when smooth, but the cel bands cut that
@@ -140,7 +141,17 @@ export function installFlatColour(p) {
   const sm = THREE.ShaderChunk.shadowmap_pars_fragment, noise = 'interleavedGradientNoise( gl_FragCoord.xy ) * PI2';
   if (!sm.includes('uTfSh')) {
     if (!sm.includes(noise)) throw new Error('Pinned three shadowmap_pars_fragment changed');
-    THREE.ShaderChunk.shadowmap_pars_fragment = `uniform float uTfSh;\n${sm.replace(noise, `${noise} * uTfSh`)}`;
+    // Round 20b: uTfCut.x = width in pixels of the edge (0: the filtered value as it is), uTfCut.y = filtered value where it flips (a sub-texel bar casts a value well above 0.5, so a higher flip keeps it). The filtered shadow is cut with a smoothstep
+    // whose half width follows fwidth() of the value itself (never narrower than a small floor), so a shadow edge is one clean step
+    // about uTfCut pixels wide instead of the wide gradient the bilinear PCF leaves when a texel covers many pixels.
+    const ret = 'return mix( 1.0, shadow, shadowIntensity );';
+    if (!sm.includes(ret)) throw new Error('Pinned three shadowmap_pars_fragment changed (return)');
+    const cut = `if ( uTfCut.x > 0.0 ) {
+				float tfW = max( fwidth( shadow ) * 0.5 * uTfCut.x, 0.02 );
+				shadow = smoothstep( uTfCut.y - tfW, uTfCut.y + tfW, shadow );
+			}
+			${ret}`;
+    THREE.ShaderChunk.shadowmap_pars_fragment = `uniform float uTfSh;\nuniform vec2 uTfCut;\n${sm.replace(noise, `${noise} * uTfSh`).replace(ret, cut)}`;
   }
   const frag = THREE.ShaderChunk.map_fragment;
   if (!frag.includes('wbFlatTex')) {
