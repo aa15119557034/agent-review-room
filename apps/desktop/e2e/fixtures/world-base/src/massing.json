@@ -453,16 +453,18 @@
   "fog": {
    "near": [
     190,
-    0.34
+    0.1
    ],
    "far": [
     850,
-    0.72
+    0.42
    ],
-   "lumaMax": 1.4,
-   "windows": 0.9,
+   "lumaMax": 0.9,
+   "windows": 0.35,
    "litFade": 0.6,
-   "skyAt": 0.8
+   "skyAt": 0.8,
+   "desat": 0.55,
+   "gain": 0.9
   }
  },
  "raise": {

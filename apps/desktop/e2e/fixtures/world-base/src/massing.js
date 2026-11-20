@@ -317,7 +317,8 @@ export async function createMassing({ scene, station, island, city, skyline, par
         // The sky behind a block is the sky at the elevation of its crown, not the thin orange line right on the horizon.
         const crown = (a.ground.max + a.height * fg.skyAt - spec.view.eye[1]) / eyeDist;
         const sky = horizonSky(ex, ez, Math.max(0, crown)), luma = sky[0] * 0.2126 + sky[1] * 0.7152 + sky[2] * 0.0722, cap = Math.min(1, fg.lumaMax / Math.max(luma, 1e-4));
-        fogRGBA = [sky[0] * cap, sky[1] * cap, sky[2] * cap, fogK];
+        const ds = fg.desat ?? 0, gl = luma * cap;
+        fogRGBA = sky.map(v => (gl + (v * cap - gl) * (1 - ds)) * (fg.gain ?? 1)).concat(fogK);
         fogStats.push({ id, dist: eyeDist, fog: fogK, rgb: fogRGBA.slice(0, 3) });
       }
       const tint = c => c;
