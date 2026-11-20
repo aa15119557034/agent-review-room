@@ -11,6 +11,7 @@ import { reflEnabled, bakeStreetZones, createReflControl } from './street-zones.
 import { createLook } from './look.js';
 import { createSkyline } from './skyline.js';
 import { createCity } from './city.js';
+import { massingEnabled, loadMassing, createMassing } from './massing.js';
 import { applyWeathering, loadWeatheringParams } from './weathering.js';
 import { addWeatheringDecals, loadBakedDecals } from './weathering-decals.js';
 import { groundEnabled, loadGround, applyFlowerDrifts, patchGroundShader, patchPetals } from './island-ground.js';
@@ -188,6 +189,15 @@ async function init() {
   }
   worldBase.city.vegetationClear = clearVegetationAreas(island.terrain,
     worldBase.city.vegetationClearAreas, station.root.matrixWorld, { flowers: 8, jitter: 2.5 });
+  // Art round 23: placeholder massing (far skyline towers + facade infill outside the walkable rects). Built before the
+  // weathering, glow and street-zone bake so reflections and outlines see it. ?massing=off installs nothing.
+  if (massingEnabled()) {
+    stage('正在安放远景楼群…');
+    const massingParams = await loadMassing();
+    worldBase.massing = await createMassing({ scene, station, island, city: worldBase.city, skyline: worldBase.skyline, params: massingParams, timeOfDay: island.timeOfDay });
+    worldBase.massing.vegetationClear = clearVegetationAreas(island.terrain,
+      worldBase.massing.vegetationClearAreas, station.root.matrixWorld, { flowers: 5, jitter: 2 });
+  }
   // Round 11: the shop-room boxes are installed after the town edge is built (the laundromat registers its room there). No program
   // using the lit chunks has compiled yet: the first render is after init.
   if (shadowTint) {

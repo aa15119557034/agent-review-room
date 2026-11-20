@@ -54,7 +54,7 @@
   "maxZ": 135,
   "cell": 0.5
  },
- "excludeName": "foliage|sakura|train|asphalt|glass|ground|env-|petal|grass|wet|hedge|canopy|plant|tree|shrub|flower|leaf|vegetation",
+ "excludeName": "foliage|sakura|train|asphalt|glass|ground|env-|petal|grass|wet|hedge|canopy|plant|tree|shrub|flower|leaf|vegetation|massing",
  "excludeNode": "^sakura(-|:|$)|^train|^dynamic$|hedge|canopy|plant|tree|shrub|flower|leaf|vegetation|crowd|people|character|petal",
  "excludeVehicle": "^vehicles$|^kei(van|car)$|^taxi$|^compact$|truck|lorry|^bus$",
  "excludeStationMaps": [

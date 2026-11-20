@@ -1,0 +1,453 @@
+{
+ "note": "Art round 23 (#254 X-51): placeholder massing. Two layers of procedural blocks that fix layout, height and composition so the real building modules can replace them slot by slot. tower = far skyline (25-80 m, stepped, rooftop clutter, lit windows); facade = 3-6 storey infill outside the walkable rects. Everything is merged per cluster: one wall mesh + one window mesh per cluster. Coordinates are station-local metres (x east, z south, origin = station frame); box = [x0, z0, x1, z1]. heightRange is above the terrain. face = direction the signs and the lit side look towards. ?massing=off installs nothing.",
+ "seed": 2311,
+ "tower": {
+  "heightRange": [
+   25,
+   80
+  ],
+  "footprint": [
+   [
+    15,
+    28
+   ],
+   [
+    14,
+    26
+   ]
+  ],
+  "minGround": 2.0,
+  "maxRelief": 7.0,
+  "gap": 7,
+  "minStreetDist": 120,
+  "boundsMargin": 40,
+  "setbackChance": 0.75,
+  "bay": 3.3,
+  "floor": 3.5,
+  "signChance": 0.35,
+  "skirt": 1.2
+ },
+ "facade": {
+  "floors": [
+   3,
+   6
+  ],
+  "footprint": [
+   [
+    9,
+    16
+   ],
+   [
+    8,
+    12
+   ]
+  ],
+  "minGround": 1.5,
+  "maxRelief": 3.2,
+  "gap": 3.5,
+  "boundsMargin": 3,
+  "lotMargin": 3,
+  "bay": 3.0,
+  "floor": 3.2,
+  "groundFloor": 3.8,
+  "signChance": 0.5,
+  "skirt": 0.8
+ },
+ "clusters": [
+  {
+   "name": "north",
+   "kind": "tower",
+   "box": [
+    -330,
+    -560,
+    380,
+    -255
+   ],
+   "count": 11,
+   "anchors": 3,
+   "yaw": 0,
+   "face": [
+    0,
+    1
+   ],
+   "centre": [
+    20,
+    -370
+   ],
+   "radius": 330,
+   "scale": 1.15,
+   "view": {
+    "eye": [
+     278.8,
+     10.5,
+     936
+    ],
+    "maxAngle": 13.5
+   }
+  },
+  {
+   "name": "west",
+   "kind": "tower",
+   "box": [
+    -470,
+    -120,
+    -200,
+    75
+   ],
+   "count": 8,
+   "anchors": 3,
+   "yaw": 0,
+   "face": [
+    1,
+    0
+   ],
+   "centre": [
+    -330,
+    -20
+   ],
+   "radius": 170,
+   "scale": 1.3,
+   "view": {
+    "eye": [
+     337.86,
+     9.6,
+     844.5
+    ],
+    "maxAngle": 15
+   }
+  },
+  {
+   "name": "east-coast",
+   "kind": "tower",
+   "box": [
+    150,
+    150,
+    520,
+    285
+   ],
+   "count": 4,
+   "anchors": 1,
+   "yaw": 0,
+   "face": [
+    -1,
+    -0.2
+   ],
+   "centre": [
+    320,
+    210
+   ],
+   "radius": 220,
+   "scale": 1.35,
+   "view": {
+    "eye": [
+     -49.3,
+     6.1,
+     1121.5
+    ],
+    "maxAngle": 12
+   }
+  },
+  {
+   "name": "east",
+   "kind": "tower",
+   "box": [
+    200,
+    -70,
+    520,
+    150
+   ],
+   "count": 6,
+   "anchors": 2,
+   "yaw": 0,
+   "face": [
+    -1,
+    0
+   ],
+   "scale": 1.4,
+   "view": {
+    "eye": [
+     -49.3,
+     6.1,
+     1121.5
+    ],
+    "maxAngle": 12.5
+   },
+   "centre": [
+    330,
+    40
+   ],
+   "radius": 200
+  },
+  {
+   "name": "facade-farbank-w",
+   "kind": "facade",
+   "box": [
+    -138,
+    -185,
+    -64,
+    -128
+   ],
+   "count": 7,
+   "yaw": 0,
+   "face": [
+    0.3,
+    1
+   ]
+  },
+  {
+   "name": "facade-farbank-e",
+   "kind": "facade",
+   "box": [
+    42,
+    -185,
+    138,
+    -128
+   ],
+   "count": 7,
+   "yaw": 0,
+   "face": [
+    -0.3,
+    1
+   ]
+  },
+  {
+   "name": "facade-farbank-back",
+   "kind": "facade",
+   "box": [
+    -70,
+    -215,
+    55,
+    -150
+   ],
+   "count": 6,
+   "yaw": 0,
+   "face": [
+    0,
+    1
+   ],
+   "tall": true
+  },
+  {
+   "name": "facade-flank-w",
+   "kind": "facade",
+   "box": [
+    -178,
+    -95,
+    -100,
+    128
+   ],
+   "count": 10,
+   "yaw": 0,
+   "face": [
+    1,
+    0
+   ]
+  },
+  {
+   "name": "facade-flank-e",
+   "kind": "facade",
+   "box": [
+    100,
+    -95,
+    178,
+    128
+   ],
+   "count": 10,
+   "yaw": 0,
+   "face": [
+    -1,
+    0
+   ]
+  },
+  {
+   "name": "facade-south",
+   "kind": "facade",
+   "box": [
+    -120,
+    134,
+    120,
+    205
+   ],
+   "count": 6,
+   "yaw": 0,
+   "face": [
+    0,
+    -1
+   ]
+  }
+ ],
+ "avoid": {
+  "corridors": [
+   {
+    "name": "R3 east-west",
+    "axis": "x",
+    "at": -2,
+    "half": 9,
+    "from": -400,
+    "to": 400
+   },
+   {
+    "name": "R4 lane",
+    "axis": "x",
+    "at": -55.5,
+    "half": 8,
+    "from": -400,
+    "to": 400
+   },
+   {
+    "name": "R6 alley",
+    "axis": "x",
+    "at": -71,
+    "half": 7,
+    "from": -400,
+    "to": 400
+   },
+   {
+    "name": "R5 levee",
+    "axis": "x",
+    "at": -93,
+    "half": 7,
+    "from": -400,
+    "to": 400
+   },
+   {
+    "name": "main street south",
+    "axis": "z",
+    "at": 8,
+    "half": 12,
+    "from": 100,
+    "to": 260
+   }
+  ],
+  "propRadius": 9
+ },
+ "evening": {
+  "walls": [
+   "#b4b8cf",
+   "#a9adc6",
+   "#c2aeb0",
+   "#97a1bf",
+   "#baa89c",
+   "#8693b2",
+   "#a9a2b6",
+   "#c4b5a2",
+   "#93a6aa",
+   "#b49fab",
+   "#7c89a8",
+   "#cdbaa6"
+  ],
+  "roofs": [
+   "#6c748f",
+   "#7a7688",
+   "#606a86",
+   "#78828c"
+  ],
+  "trims": [
+   "#e6ddd6",
+   "#a4abc2",
+   "#d6b4ac"
+  ],
+  "clutter": [
+   "#788096",
+   "#948f98",
+   "#6b7490",
+   "#a09a9e"
+  ],
+  "tanks": [
+   "#8fa3ba",
+   "#b49a86",
+   "#9aa8a0"
+  ],
+  "signs": [
+   "#e86b78",
+   "#f2b84b",
+   "#4fb5c0",
+   "#9a7ad8",
+   "#f08a4b"
+  ],
+  "glass": "#1b2240",
+  "glassMix": 0.9,
+  "litWarm": [
+   "#ffb455",
+   "#ffc46a",
+   "#ffd08a",
+   "#ffa94a"
+  ],
+  "litCool": [
+   "#aee0ff",
+   "#9ad0f0"
+  ],
+  "coolShare": 0.22,
+  "litChance": 0.24,
+  "windowGain": 2.6,
+  "signGain": 2.4,
+  "haze": {
+   "color": "#9488bd",
+   "start": 120,
+   "end": 950,
+   "max": 0.58
+  }
+ },
+ "afternoon": {
+  "walls": [
+   "#e9e1d4",
+   "#d3d9e4",
+   "#efdfcf",
+   "#c4cfdf",
+   "#e6d8c6",
+   "#b6c3d6",
+   "#ddd2c8",
+   "#f0e8d8",
+   "#d0dcda",
+   "#e2d0d3"
+  ],
+  "roofs": [
+   "#98a0b2",
+   "#aaa19f",
+   "#8a93a6",
+   "#a4adb2"
+  ],
+  "trims": [
+   "#f8f3ea",
+   "#c9cedc",
+   "#efd3c8"
+  ],
+  "clutter": [
+   "#a4aab7",
+   "#c0bcb6",
+   "#949dad",
+   "#cdc8c0"
+  ],
+  "tanks": [
+   "#98adc4",
+   "#bfa590",
+   "#a3b2aa"
+  ],
+  "signs": [
+   "#e86b78",
+   "#f2b84b",
+   "#4fb5c0",
+   "#9a7ad8",
+   "#f08a4b"
+  ],
+  "glass": "#3d5679",
+  "glassMix": 0.7,
+  "litWarm": [
+   "#ffe3b0",
+   "#ffd9a0"
+  ],
+  "litCool": [
+   "#d9efff"
+  ],
+  "coolShare": 0.3,
+  "litChance": 0.04,
+  "windowGain": 1.0,
+  "signGain": 1.0,
+  "haze": {
+   "color": "#bcd0e8",
+   "start": 120,
+   "end": 950,
+   "max": 0.6
+  }
+ }
+}
