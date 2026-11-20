@@ -109,10 +109,14 @@ async function init() {
   stage('正在读取岛屿地形、港镇和云层…');
   // ?time=afternoon keeps Petalwake's original light for before/after comparison.
   const timeOfDay = new URLSearchParams(location.search).get('time') ?? 'evening';
-  // ?shadow=static 只渲一次阴影贴图；?shadowEvery=N 每 N 帧重渲一次（默认行为不变）
+  // 阴影更新策略。默认 every30（每 30 帧重烘一次，实测与静态同速，但会动物体阴影跟得上）。
+  //   ?shadow=dynamic  回到旧行为（每帧重渲）
+  //   ?shadow=static   只渲一次
+  //   ?shadowEvery=N   每 N 帧重渲一次（配合 static 或单独用）
   const shadowQuery = new URLSearchParams(location.search);
-  const shadowStatic = shadowQuery.get('shadow') === 'static';
-  const shadowEvery = Math.max(0, Number(shadowQuery.get('shadowEvery') ?? 0) | 0);
+  const shadowMode = shadowQuery.get('shadow') ?? 'every30';
+  const shadowStatic = shadowMode === 'static';
+  const shadowEvery = shadowMode === 'dynamic' ? 0 : Math.max(1, Number(shadowQuery.get('shadowEvery') ?? 30) | 0);
   // Round 24: blue-violet shade. The lit-material chunk is patched before any program compiles.
   const shadowTintParams = shadowTintEnabled() ? await loadShadowTint() : null;
   const shadowTint = shadowTintParams ? shadowTintParams[timeOfDay === 'afternoon' ? 'afternoon' : 'evening'] : null;
@@ -322,4 +326,5 @@ async function init() {
   requestAnimationFrame(frame);
 }
 init().catch(fail);
+
 
