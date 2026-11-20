@@ -375,6 +375,9 @@ export function lotRoomGeom(frame, box) {
 }
 
 /** 一家 lot 店铺的可走区 + 地面 + 墙（全部站区局部） */
+// 门位覆盖表：上游各店的门/暖帘坐标不同，先留 null（用 lot 中间），有坐标了再填。
+const LOT_DOOR_X = { W1: null, E1: null, W2: null, W4: null, E2: null, E3: null, E5: null, W6: null };
+
 export function planLotShopEntry(geom, name, doorW = 1.4) {
   const a = geom.aabb;
   const areas = [
@@ -393,6 +396,7 @@ export function planLotShopEntry(geom, name, doorW = 1.4) {
     z1: a.z1 + 0.5 + (fz > 0 ? grow(fz) : 0)
   });
   return {
+    doorX: LOT_DOOR_X[name] ?? ((geom.lotX0 + geom.lotX1) / 2),
     areas,
     ground: {
       floor: { cx: geom.cx, cz: geom.cz, w: geom.hw * 2, d: geom.hd * 2, rotY: geom.rotY, y: geom.floorY },
@@ -435,13 +439,16 @@ export function addLotShopSolid(station, lotPlans) {
     wall(geom.lotX1 - T / 2, (geom.lotZ0 + geom.lotZ1) / 2, T, geom.lotZ1 - geom.lotZ0);
     // 前墙：中间留门洞
     const zf = geom.lotZ1 - T / 2;
-    const leftW = (0 - doorHalf) - geom.lotX0;
-    const rightW = geom.lotX1 - (0 + doorHalf);
+    const mid = plan.doorX;   // 优先用覆盖表，没有就 lot 中间
+    const leftW = (mid - doorHalf) - geom.lotX0;
+    const rightW = geom.lotX1 - (mid + doorHalf);
     if (leftW > 0.05) wall(geom.lotX0 + leftW / 2, zf, leftW, T);
-    if (rightW > 0.05) wall(0 + doorHalf + rightW / 2, zf, rightW, T);
+    if (rightW > 0.05) wall(mid + doorHalf + rightW / 2, zf, rightW, T);
     stats.doors++;
   }
   return stats;
 }
+
+
 
 
