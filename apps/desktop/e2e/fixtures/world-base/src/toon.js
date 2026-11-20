@@ -17,6 +17,12 @@ export const setToonLit = (on) => { toonLitUniforms.uTbK.value = toonLitUniforms
 /** Round 12: ?grade=off leaves the final grade stage out of the shader altogether (round 11 pixels). */
 export const gradeEnabled = () => new URLSearchParams(location.search).get('grade') !== 'off';
 export const formEnabled = () => new URLSearchParams(location.search).get('form') !== 'old';
+/** Round 19: outline for printed signs, light boxes and other emissive / unlit panels. form.outlineEmissive in toon.json;
+ *  ?form=r18 (or ?form=old) switches it off and restores the round 18 pixels. */
+export const signLinesEnabled = (p) => !!(p && p.form && p.form.outlineEmissive) && formEnabled() && new URLSearchParams(location.search).get('form') !== 'r18';
+// Coverage mask written by sign materials. Above 1 on purpose: the line test is mask >= 0.95 and an MSAA-resolved edge pixel that is
+// part foliage (mask 0) averages to something below 1, so no partly covered pixel can be mistaken for a sign. Alpha is half float.
+const SIGN_MASK = 1.5;
 export const toonEnabled = () => new URLSearchParams(location.search).get('toon') !== 'off';
 
 const f = (x) => Number(x).toFixed(4);
@@ -61,6 +67,7 @@ export function installToonHook() {
 
 /** Must run before the first program that uses these chunks is compiled. */
 export function installLitToon(p, boxes) {
+  const signs = signLinesEnabled(p);
   const pars = THREE.ShaderChunk.lights_pars_begin;
   if (!pars.includes('uTbK')) THREE.ShaderChunk.lights_pars_begin = `${pars}\nuniform float uTbK;\nuniform float uTbRim;`;
   const end = THREE.ShaderChunk.lights_fragment_end;
@@ -97,7 +104,10 @@ ${indoorGlsl(boxes)}
   tmM = 0.0;
 #endif
 #endif
-  gl_FragColor.a = tmM;
+${signs ? `#if defined( TOON_SIGN ) && ! defined( TOON_NOLINE )
+  tmM = ${f(SIGN_MASK)};
+#endif
+` : ''}  gl_FragColor.a = tmM;
 }
 #endif`;
   }
@@ -117,6 +127,8 @@ export function toonLineUniforms(p) {
     uLnS: { value: v4(l.sil, l.crease) }, uLnC: { value: l.creaseWeight }, uLnCol: { value: new THREE.Vector3(...l.tint) },
     uLnF: { value: k ? new THREE.Vector4(1, k.darken, k.sat, k.thinWidth) : new THREE.Vector4(0, 0, 0, 0.35) },
     uLnFl: { value: new THREE.Vector3(...(k ? k.floor : [0, 0, 0])) },
+    // round 19: sign outline on / emissive ink level / depth step in metres that starts and completes a line on a sign
+    uLnE: { value: signLinesEnabled(p) ? new THREE.Vector4(1, p.form.emissiveInk ?? 0.25, ...(p.form.emissiveStep ?? [0.03, 0.08])) : new THREE.Vector4() },
   };
 }
 
@@ -136,4 +148,38 @@ export function maskGlassAlpha(root) {
       (maskGlassAlpha.found ||= []).push(m.name || o.name);
     }
   });
+}
+
+/** Round 19: gives the outline mask to opaque emissive / unlit panels (the coverage mask used to be 0 on them, so signs had no
+ *  line). Marks materials with a TOON_SIGN define (part of three's program key, so lit and marked programs never mix).
+ *  Eligible: opaque MeshBasic with a map (printed cards, fascia prints), opaque lit materials whose emissive is mapped
+ *  (light-box prints), and anything with userData.wbSign. Left out: untextured unlit bodies (lamps, train lights), alpha cut-outs,
+ *  transparent / additive layers (glass, door-glow, shop-spill, halos: not OPAQUE, so the chunk never writes them), shader
+ *  materials (water, sky, grass), userData.wbNoSignLine, and materials whose every mesh is on the no-outline layer.
+ *  Run once after the scene is built, before the first frame. Returns the marked materials for the evidence log. */
+export function markSignMaterials(root) {
+  const info = new Map();
+  root.traverse((o) => {
+    if (!o.isMesh) return;
+    for (const m of [].concat(o.material || [])) {
+      let r = info.get(m);
+      if (!r) info.set(m, (r = { meshes: 0, outline: 0, instances: 0, names: new Set() }));
+      r.meshes++; r.instances += o.isInstancedMesh ? o.count : 1;
+      if (o.layers.test({ mask: 1 << 0 })) r.outline++;
+      if (r.names.size < 4) r.names.add(o.name || o.parent?.name || '-');
+    }
+  });
+  const marked = [];
+  for (const [m, r] of info) {
+    if (!m || m.isShaderMaterial || m.transparent || m.alphaTest > 0 || m.alphaToCoverage || m.depthWrite === false || m.blending !== THREE.NormalBlending) continue;
+    if (m.userData.wbNoSignLine || m.defines?.TOON_SIGN !== undefined) continue;
+    const emissive = m.emissive ? Math.max(m.emissive.r, m.emissive.g, m.emissive.b) * (m.emissiveIntensity ?? 1) : 0;
+    const printed = (m.isMeshBasicMaterial && !!m.map) || (!m.isMeshBasicMaterial && !!m.emissive && !!(m.emissiveMap || m.map) && emissive > 0.12);
+    if (!printed && !m.userData.wbSign) continue;
+    if (r.outline === 0) continue; // every user sits on the no-outline layer
+    m.defines = { ...(m.defines || {}), TOON_SIGN: 1 };
+    m.needsUpdate = true;
+    marked.push({ name: m.name || '-', type: m.type, map: !!m.map, emissive: +emissive.toFixed(2), meshes: r.meshes, instances: r.instances, parents: [...r.names] });
+  }
+  return marked;
 }

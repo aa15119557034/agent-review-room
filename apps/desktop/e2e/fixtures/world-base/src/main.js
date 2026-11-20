@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { createIsland, clearVegetationAreas } from './island.js';
 import { loadShadowTint, shadowTintEnabled, installLitShadowTint, patchIslandShadowTint, shadowTintUniforms, shopInteriorBoxes } from './shadow-tint.js';
-import { loadToon, toonEnabled, gradeEnabled, applyForm, installLitToon, installToonHook, toonLineUniforms, maskGlassAlpha } from './toon.js';
+import { loadToon, toonEnabled, gradeEnabled, applyForm, installLitToon, installToonHook, toonLineUniforms, maskGlassAlpha, signLinesEnabled, markSignMaterials } from './toon.js';
 import { addShopSpill, loadShopSpill, shopFrontsFromRooms, groundSpillFronts } from './shop-spill.js';
 import { addDoorGlow, loadDoorGlow, resolveDoorLamps } from './door-glow.js';
 import { applyEveningGlow, applyEveningSakura, fadeDistantCrossingHalos } from './evening-glow.js';
@@ -294,6 +294,8 @@ async function init() {
   // name filter in maskGlassAlpha skipped it and outlines showed through the van windows.
   getVehicleMats(station.ctx).glass.name ||= 'vehicle-glass';
   if (toonEnabled()) maskGlassAlpha(scene);
+  // Round 19: printed signs / light boxes take the outline (?form=r18 leaves them masked out as before).
+  if (toonEnabled() && signLinesEnabled(worldBase.toon27?.params)) worldBase.toonSigns = markSignMaterials(scene);
   stage('场景已就绪');
   document.querySelector('#loading').hidden = true;
   let last = performance.now(), sampleStart = last, samples = 0;

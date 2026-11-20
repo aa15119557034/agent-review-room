@@ -84,12 +84,15 @@ float wbEdge(vec2 uv) {
 }
 `;
 // Round 27 outline (only with ?toon not off): a line on the NEAR side of a depth step, plus faint creases.
-// Skips sky, and pixels whose coverage mask (scene alpha, see toon.js) is 0: foliage cut-outs, emissive, unlit.
+// Skips sky, and pixels whose coverage mask (scene alpha, see toon.js) is 0: foliage cut-outs, untextured emissive, unlit.
+// Round 19: printed signs / light boxes write mask 1.5 (above 1, so a half-covered edge pixel of foliage can never look like
+// one): the line test is unchanged, and the ink of a pixel above 1 is made from the dimmed colour (uLnE).
 const LINES = /* glsl */`
 uniform float uLnOn, uLnC;
 uniform vec4 uLn, uLnS;   // width px / strength / fade near / fade far ; sil lo hi / crease lo hi
 uniform vec3 uLnCol, uLnFl;
 uniform vec4 uLnF;       // round 17: form on / ink darken / ink saturation / thin-out of the width
+uniform vec4 uLnE;       // round 19: sign outline on / emissive ink level / sign step lo hi (metres)
 float wbLine(vec2 uv, float d0) {
   if (d0 >= uFar*0.9 || d0 > uLn.w) return 0.0;
   float mask = texture(tColor, uv).a;
@@ -110,6 +113,13 @@ float wbLine(vec2 uv, float d0) {
   // belongs to the line of the near side (and to its mask), so the crease is dropped wherever a neighbour is a step away.
   float jump = max(max(abs(dl-d0), abs(dr-d0)), max(abs(du-d0), abs(dd-d0)))/d0;
   float cr = smoothstep(uLnS.z, uLnS.w, lap)*uLnC*(1.0 - smoothstep(0.05, 0.12, jump));
+  if (uLnE.x > 0.5) {
+    // round 19: on a sign (mask above 1) only a real step in depth is a line: metres, not relative, so a bottle sample,
+    // a shelf lip or a poster on the wall inside the sign stays untouched; no creases there either
+    float wbS = clamp((mask - 1.0)*2.0, 0.0, 1.0);
+    sil *= mix(1.0, smoothstep(uLnE.z, uLnE.w, max(sx, sy)), wbS);
+    cr *= 1.0 - wbS;
+  }
   return max(sil, cr)*(1.0 - thin);
 }
 `;
@@ -212,7 +222,7 @@ export function createLook(renderer, camera) {
     tWorldDepth: pipeline.uDepth, uNear: { value: camera.near }, uFar: { value: camera.far },
     uProjScale: { value: 1 }, uAO: { value: 0.55 },
     uReversed: { value: pipeline.reversed ? 1 : 0 }, uToon: toon, uHaze: { value: 1 },
-    uLnOn: { value: 0 }, uLn: { value: new THREE.Vector4() }, uLnS: { value: new THREE.Vector4() }, uLnC: { value: 0 }, uLnCol: { value: new THREE.Vector3() }, uLnF: { value: new THREE.Vector4(0,0,0,0.35) }, uLnFl: { value: new THREE.Vector3() },
+    uLnOn: { value: 0 }, uLn: { value: new THREE.Vector4() }, uLnS: { value: new THREE.Vector4() }, uLnC: { value: 0 }, uLnCol: { value: new THREE.Vector3() }, uLnF: { value: new THREE.Vector4(0,0,0,0.35) }, uLnFl: { value: new THREE.Vector3() }, uLnE: { value: new THREE.Vector4() },
     uShOn: { value: 0 }, uShAO: { value: new THREE.Vector3(1, 1, 1) }, uShMul: { value: new THREE.Vector3(1, 1, 1) },
     uShLift: { value: new THREE.Vector3() }, uShRange: { value: new THREE.Vector3(0.06, 0.42, 1) },
     uGradeOn: { value: 0 }, uGA: { value: new THREE.Vector4() }, uGB: { value: new THREE.Vector4() }, uGC: { value: new THREE.Vector4() }, uGD: { value: new THREE.Vector4() }, uGE: { value: new THREE.Vector4() },
@@ -230,7 +240,14 @@ export function createLook(renderer, camera) {
       vec3 wbInk = col*uLnCol; // round 27: dark, cool, hand-drawn line in the local colour
       if (uLnF.x > 0.5) {
         // round 17: ink = the local colour, darkened and made more saturated (never black), plus a violet floor
-        wbInk = col*uLnF.y;
+        vec3 wbBase = col;
+        if (uLnE.x > 0.5) {
+          // round 19: a sign is brighter than 1 (emissive / light box); its ink comes from the colour scaled back to
+          // display range and dimmed again, so the line reads as a line and not as a darker glow
+          float wbSg = clamp((texture(tColor, uv).a - 1.0)*2.0, 0.0, 1.0);
+          wbBase = mix(col, col/max(max(col.r, max(col.g, col.b)), 1.0)*uLnE.y, wbSg);
+        }
+        wbInk = wbBase*uLnF.y;
         float wbIl = dot(wbInk, vec3(0.2126, 0.7152, 0.0722));
         wbInk = max(mix(vec3(wbIl), wbInk, uLnF.z), 0.0) + uLnFl;
       }

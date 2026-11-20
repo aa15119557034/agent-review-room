@@ -73,11 +73,13 @@ export async function createCity({ scene, station, island, skyline }) {
   // Neutral light-box face for the laundromat sign (M.lamp reads orange after the grade).
   const signLight = M.lamp.clone();
   signLight.color.set('#f3f1e8').multiplyScalar(1.15);
+  signLight.userData.wbSign = true; // round 19: light-box face takes the outline
   ownedMaterials.add(signLight);
   H.signLight = signLight;
   // Art round 2 (D): the fascia band and the side panel become teal light boxes, not painted boards.
   const signTeal = M.lamp.clone();
   signTeal.color.set('#3c9c97').multiplyScalar(0.78);
+  signTeal.userData.wbSign = true;
   ownedMaterials.add(signTeal);
   H.signTeal = signTeal;
   // Close-up plants own one cutout atlas; their branches reuse the station wood.
